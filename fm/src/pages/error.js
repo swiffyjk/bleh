@@ -1,5 +1,6 @@
-import { auth, page, root } from "../build/page";
-import { trans, tl } from "../build/trans";
+import {auth, page, root} from "../build/page";
+import {tl, trans} from "../build/trans";
+import {html, render} from "lighterhtml";
 
 export function bleh_error() {
     page.state.error = false;
@@ -20,7 +21,7 @@ export function bleh_error() {
     let reason = page_content.querySelector('p');
 
     page_content.classList.add('has-error');
-    page_content.innerHTML = (`
+    render(page_content, html`
         <div class="row">
             <div class="col-main">
                 <section class="error">

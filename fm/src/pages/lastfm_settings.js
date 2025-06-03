@@ -52,6 +52,8 @@ export function bleh_native_settings() {
         bleh_accounts();
     } else if (page.subpage == 'change-username_overview') {
         bleh_name_change();
+    } else if (page.subpage == 'applications_overview') {
+        bleh_applications();
     }
 
     if (ff('katsune')) return;
@@ -1101,4 +1103,33 @@ function bleh_name_change() {
     let token = page.structure.main.querySelector('[name="csrfmiddlewaretoken"]').getAttribute('value');
 
     return;
+}
+
+function bleh_applications() {
+    let session_types = page.structure.main.querySelectorAll('.api-sessions');
+
+    let suggested;
+    let connected;
+
+    if (session_types.length > 1) {
+        suggested = session_types[0];
+        connected = session_types[1];
+    } else {
+        connected = session_types[0];
+    }
+
+    render(page.structure.main, html`
+        <section class="applications">
+            <div class="section-intro">
+                <h3>Applications</h3>
+                <p>Connect your account to third-party services for a better scrobbling experience. Make sure you trust the services below.</p>
+            </div>
+            ${(suggested) ? html`
+            <h2>Suggested</h2>
+            ${suggested}
+            ` : ''}
+            <h2>Connected</h2>
+            ${connected}
+        </section>
+    `);
 }

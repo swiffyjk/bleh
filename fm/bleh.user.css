@@ -336,7 +336,7 @@ a,
     --h3-sat: calc(clamp(min(0), var(--sat), max(1.5)) * 60%);
     --h3-lit: calc(clamp(min(0.5), var(--lit), max(1.5)) * 70%);
     --h4: var(--l4-c);
-    --f4: var(--hue), calc(clamp(min(0), var(--sat), max(1.5)) * 26%), calc(clamp(min(0.5), var(--lit), max(1.5)) * 26%);
+    --f4: var(--hue), calc(clamp(min(0), var(--sat), max(1.5)) * 26%), calc(clamp(min(0.8), var(--lit), max(1.5)) * 26%);
     --g4: var(--hue), calc(clamp(min(0), var(--sat), max(1.5)) * 60%), calc(clamp(min(0.5), var(--lit), max(1.5)) * 15%);
 
     /* l2-c in dark modes, l4-c in light modes */
@@ -371,7 +371,7 @@ a,
         --h3-sat: calc(clamp(min(0), var(--sat), max(1.5)) * 50%);
         --h3-lit: calc(clamp(min(0.5), var(--lit), max(1.5)) * 70%);
         --h4: var(--l4-c);
-        --f4: var(--hue), calc(clamp(min(0), var(--sat), max(1.5)) * 32%), calc(clamp(min(0.5), var(--lit), max(1.5)) * 15%);
+        --f4: var(--hue), calc(clamp(min(0), var(--sat), max(1.5)) * 32%), calc(clamp(min(0.8), var(--lit), max(1.5)) * 15%);
         --g4: var(--hue), calc(clamp(min(0), var(--sat), max(1.5)) * 60%), calc(clamp(min(0.5), var(--lit), max(1.5)) * 10%);
 
         --avatar-generic-background: hsl(var(--b6));
@@ -400,7 +400,7 @@ a,
         --h3-sat: calc(clamp(min(0), var(--sat), max(1.5)) * 50%);
         --h3-lit: calc(clamp(min(0.5), var(--lit), max(1.1)) * 80%);
         --h4: var(--hue), calc(clamp(min(0), var(--sat), max(1.5)) * 60%), calc(clamp(min(0.7), var(--lit), max(1.1)) * 65%);
-        --f4: var(--hue), calc(clamp(min(0), var(--sat), max(1.5)) * 35%), calc(clamp(min(0.5), var(--lit), max(1.5)) * 73%);
+        --f4: var(--hue), calc(clamp(min(0), var(--sat), max(1.5)) * 35%), calc(clamp(min(0.8), var(--lit), max(1.5)) * 83%);
         --g4: var(--hue), calc(clamp(min(0), var(--sat), max(1.5)) * 70%), 92%;
 
         /* l2-c in dark modes, l4-c in light modes */
@@ -436,7 +436,7 @@ a,
         --h3-sat: calc(clamp(min(0), var(--sat), max(1.5)) * 50%);
         --h3-lit: calc(clamp(min(0.5), var(--lit), max(1.1)) * 80%);
         --h4: var(--hue), calc(clamp(min(0), var(--sat), max(1.5)) * 30%), calc(clamp(min(0.7), var(--lit), max(1.1)) * 55%);
-        --f4: var(--hue), calc(clamp(min(0), var(--sat), max(1.5)) * 43%), calc(clamp(min(0.5), var(--lit), max(1.5)) * 68%);
+        --f4: var(--hue), calc(clamp(min(0), var(--sat), max(1.5)) * 32%), calc(clamp(min(0.8), var(--lit), max(1.5)) * 68%);
         --g4: var(--hue), calc(clamp(min(0), var(--sat), max(1.5)) * 25%), 75%;
 
         /* l2-c in dark modes, l4-c in light modes */
@@ -3580,6 +3580,7 @@ button.navlist-more {
     --mask: var(--icon-16-bleh);
     --mask-size: var(--icon-size);
     --col: hsl(var(--l3-c)) !important;
+    --mask-colour: color-mix(in hsl, hsl(var(--l3-c)), hsl(var(--l4-c)) 30%) !important;
 }
 .secondary-nav-item--more > a {
     --mask: var(--icon-16-dots);
@@ -3871,6 +3872,7 @@ button.navlist-more {
 .header-new-on-tour,
 .label:not(.user-follow, .user-status--bleh-missing) {
     color: hsl(var(--l3-c)) !important;
+    --mask-colour: currentColor !important;
 }
 .label.user-status-subscriber {
     --mask: var(--icon-pro);
@@ -6055,6 +6057,10 @@ p + .chartlist {
     /* shout-form's get margin-top of 24px if on a subpage,
     most noteably the "shouts" tab */
     margin-top: unset !important;
+
+    .form-submit {
+        gap: var(--button-list-gap);
+    }
 }
 .btn-post-shout {
     position: relative;
@@ -10551,7 +10557,8 @@ text[style^="color: rgb(255, 172, 172)"] {
         }
 
         .sep {
-            margin: 4px 0;
+            margin: 6px var(--button-sides);
+            width: unset;
 
             &:first-child {
                 display: none;
@@ -12893,14 +12900,28 @@ table.table tr:nth-child(2n) td {
 
 
 /*     API SESSION     */
-.api-sessions {
-    width: var(--cards-width);
+.section-intro {
+    padding: var(--card-padding);
+    /*box-shadow: inset 0 0 0 1px var(--card-border-base);*/
+    background: hsl(var(--f4), 60%);
+    border-radius: var(--card-radius);
+
+    display: flex;
+    flex-direction: column;
+    gap: var(--card-gap);
+
+    h3 {
+        font-size: 20px;
+        line-height: 24px;
+    }
 }
-
-
+.applications {
+    h2 {
+        margin-top: var(--card-gap) !important;
+    }
+}
 .api-sessions {
     margin: unset;
-    margin-top: calc(-1 * var(--card-gap));
     display: grid;
     grid-template-columns: repeat(auto-fill, minmax(350px, 1fr));
     gap: var(--item-list-gap);
@@ -13738,7 +13759,8 @@ hr {
     [data-page-subpage="playlists_playlists"],
     [data-page-subpage="auth"],
     [data-page-type="bleh_setup"],
-    .has-error
+    .has-error,
+    [data-page-subpage="applications_overview"]
     ),
 .namespace--music_bookmarks_overview {
     .col-main {

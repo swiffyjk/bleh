@@ -988,7 +988,7 @@
     this.values = args;
   }
   var Hole = LighterHole;
-  var { render: render2, html: html2, svg } = createRender(Tagger);
+  var { render, html: html2, svg } = createRender(Tagger);
   function tta() {
     let out = [], i = 0, { length } = arguments;
     while (i < length)
@@ -7218,11 +7218,11 @@
         />
     `;
     if (!body) {
-      render2(notif, html2`
+      render(notif, html2`
             <div class="notification-title margin-below">${title}</div>
         `);
     } else {
-      render2(notif, html2`
+      render(notif, html2`
             <div class="notification-title">${title}</div>
             <div class="notification-body margin-below">${body}</div>
         `);
@@ -7610,7 +7610,7 @@
     header.setAttribute("data-kate-processed", "true");
     let inner_content_em = document.createElement("div");
     inner_content_em.classList.add("modal-inner-content");
-    render2(inner_content_em, inner_content);
+    render(inner_content_em, inner_content);
     inner_content_em.setAttribute("data-kate-processed", "true");
     if (allow_scroll)
       inner_content_em.classList.add("allow-scroll");
@@ -7956,13 +7956,12 @@
         let end = value.indexOf("\u201D");
         value = value.substring(start, end);
       }
-      let glacier_meta_item = document.createElement("div");
-      glacier_meta_item.classList.add("glacier-library-metadata-item");
-      glacier_meta_item.innerHTML = `
-            <div class="sub-text">${text2}</div>
-            <div class="glacier-library-metadata-item-value">${value}</div>
-        `;
-      glacier_meta.appendChild(glacier_meta_item);
+      glacier_meta.appendChild(html2.node`
+            <div class="glacier-library-metadata-item">
+                <div class="sub-text">${text2}</div>
+                <div class="glacier-library-metadata-item-value">${value}</div>
+            </div>
+        `);
     });
     if (first_run)
       glacier_top.appendChild(glacier_meta);
@@ -8543,18 +8542,18 @@
     let upper_wrap = document.createElement("div");
     upper_wrap.classList.add("glacier-library-top-upper");
     let current_suffix = window.location.search;
-    let metadata = document.createElement("div");
-    metadata.classList.add("glacier-library-metadata");
-    metadata.innerHTML = `
-        <div class="glacier-library-metadata-avatar">
-            ${image.outerHTML}
-        </div>
-        <div class="glacier-library-metadata-item">
-            <div class="sub-text">
-                ${trans_legacy.en[type].name}
+    let metadata = html2.node`
+        <div class="glacier-library-metadata">
+            <div class="glacier-library-metadata-avatar">
+                ${image}
             </div>
-            <div class="glacier-library-metadata-item-value glacier-library-metadata-focus" data-type="${type}">
-                <a href="${link}">${type == "artist" ? correct_artist(header_title) : correct_item_by_artist(header_title, artist)}</a>${duration ? ` <span class="glacier-library-track-duration">${duration.textContent}</span>` : ""}${type != "artist" ? trans_legacy.en.glacier.by_artist.replace("{a}", `<a href="${root}user/${page.name}/library/music/+noredirect/${sanitise(artist)}${current_suffix}">${correct_artist(artist)}</a>`) : ""}
+            <div class="glacier-library-metadata-item">
+                <div class="sub-text">
+                    ${tl(trans[type])}
+                </div>
+                <div class="glacier-library-metadata-item-value glacier-library-metadata-focus" data-type="${type}">
+                    <a href="${link}">${type == "artist" ? correct_artist(header_title) : correct_item_by_artist(header_title, artist)}</a>${duration ? ` <span class="glacier-library-track-duration">${duration.textContent}</span>` : ""}${type != "artist" ? trans_legacy.en.glacier.by_artist.replace("{a}", `<a href="${root}user/${page.name}/library/music/+noredirect/${sanitise(artist)}${current_suffix}">${correct_artist(artist)}</a>`) : ""}
+                </div>
             </div>
         </div>
     `;
@@ -9235,7 +9234,7 @@
         }
       });
     } else {
-      render2(bookmarks_panel, html2`
+      render(bookmarks_panel, html2`
             <div class="loading-data-container">
                 <div class="loading-data-text failed">${tl(trans.no_images_saved)}</div>
             </div>
@@ -9695,7 +9694,7 @@
         if (first_metadata_item != null)
           listens = clean_number(first_metadata_item.textContent.trim());
         listen_item.setAttribute("data-listens", listens);
-        render2(listen_item, html2`
+        render(listen_item, html2`
                 <img class="view-item-avatar" src="${shortcut_listens.avi}" alt="${shortcut_listens.name}">
                 <div class="info">
                     <h3>${shortcut_listens.name}</h3>
@@ -9917,7 +9916,7 @@
       header.textContent = tl(trans.find_on);
       link_group.appendChild(header);
       if (page.type == "album") {
-        render2(link_container, html2`
+        render(link_container, html2`
                 <a class="play-this-track-playlink music-link play-this-track-playlink--spotify" href="https://open.spotify.com/search/${sanitise(page.sister, " ")} ${sanitise(page.name, " ")}" target="_blank">
                     Spotify
                 </a>
@@ -9941,7 +9940,7 @@
                 </a>
             `);
       } else {
-        render2(link_container, html2`
+        render(link_container, html2`
                 <a class="play-this-track-playlink music-link play-this-track-playlink--spotify" href="https://open.spotify.com/search/${sanitise(page.name, " ")}" target="_blank">
                     Spotify
                 </a>
@@ -10009,7 +10008,7 @@
     listen_item.setAttribute("data-listens", listens);
     listen_item.setAttribute("id", `listen-item--${name}`);
     if (listens > -1) {
-      render2(listen_item, html2`
+      render(listen_item, html2`
             <img class="view-item-avatar" src="${avi}" alt="${name}">
             <div class="info">
                 <h3>${name}</h3>
@@ -10036,7 +10035,7 @@
       });
       register_menu(listen_item, menu);
     } else if (listens > -2) {
-      render2(listen_item, html2`
+      render(listen_item, html2`
             <img class="view-item-avatar" src="${avi}" alt="${name}">
             <div class="info">
                 <h3>${name}</h3>
@@ -10074,7 +10073,7 @@
         content: tl(trans.view_others_library)
       });
     } else {
-      render2(listen_item, html2`
+      render(listen_item, html2`
             ${avi[0] ? html2.node`<img class="view-item-avatar" src="${avi[0].getAttribute("src")}" alt="">` : ""}
             ${avi[1] ? html2.node`<img class="view-item-avatar" src="${avi[1].getAttribute("src")}" alt="">` : ""}
             ${avi[2] ? html2.node`<img class="view-item-avatar" src="${avi[2].getAttribute("src")}" alt="">` : ""}
@@ -10507,10 +10506,10 @@
             song_tags = formatted_title[1];
             artist.textContent = formatted_title[2];
           }
-          render2(name_elem, html2.node`
-                    <div class="title">${sanitise_text(song_title).trim()}</div>
+          render(name_elem, html2.node`
+                    <div class="title">${song_title.trim()}</div>
                     ${song_tags.map((tag) => html2.node`
-                        <div class="feat" data-bleh--tag-type="${tag.type}" data-bleh--tag-group="${tag.group}">${sanitise_text(tag.text)}</div>
+                        <div class="feat" data-bleh--tag-type="${tag.type}" data-bleh--tag-group="${tag.group}">${tag.text}</div>
                     `)}
                 `);
         } else {
@@ -10734,10 +10733,10 @@
             song_tags = formatted_title[1];
           }
           track_title.setAttribute("title", correct_item_by_artist(track_title.getAttribute("title"), track_artist));
-          render2(track_title, html2`
-                    <div class="title">${sanitise_text(song_title).trim()}</div>
+          render(track_title, html2`
+                    <div class="title">${song_title.trim()}</div>
                     ${song_tags.map((tag) => html2.node`
-                        <div class="feat" data-bleh--tag-type="${tag.type}" data-bleh--tag-group="${tag.group}">${sanitise_text(tag.text)}</div>
+                        <div class="feat" data-bleh--tag-type="${tag.type}" data-bleh--tag-group="${tag.group}">${tag.text}</div>
                     `)}
                 `);
           let song_artist_element = track.querySelector(".chartlist-artist");
@@ -10748,11 +10747,11 @@
           }
           if (song_artist_element.textContent.replaceAll("+", " ").trim() === track_artist || song_artist_element.textContent.trim() === "") {
             log("artist either matches or is blank, replacing", "tracks", "log");
-            render2(song_artist_element, html2`<a href="${root}music/${sanitise(formatted_title[2])}" title="${sanitise_text(formatted_title[2])}">${sanitise_text(formatted_title[2])}</a>`);
+            render(song_artist_element, html2`<a href="${root}music/${sanitise(formatted_title[2])}" title="${formatted_title[2]}">${formatted_title[2]}</a>`);
             let song_guests = formatted_title[3];
             for (let guest in song_guests) {
               song_artist_element.appendChild(html2.node`
-                            ,<a href="${root}music/${sanitise(song_guests[guest])}" title="${sanitise_text(song_guests[guest])}">${sanitise_text(song_guests[guest])}</a>
+                            ,<a href="${root}music/${sanitise(song_guests[guest])}" title="${song_guests[guest]}">${song_guests[guest]}</a>
                         `);
             }
           }
@@ -10770,10 +10769,10 @@
                                 <p class="artist">${song_artist_element.firstElementChild.textContent}</p>
                                 <div class="tags">
                                     ${song_tags.map((tag) => html2.node`
-                                        <div class="feat" data-bleh--tag-type="${tag.type}" data-bleh--tag-group="${tag.group}">${sanitise_text(tag.text)}</div>
+                                        <div class="feat" data-bleh--tag-type="${tag.type}" data-bleh--tag-group="${tag.group}">${tag.text}</div>
                                     `)}
                                 </div>
-                                ${is_album ? "" : html2.node`<p class="album">${image ? correct_item_by_artist(sanitise_text(image.getAttribute("alt")), track_artist) : album ? album.textContent : page.name}</p>`}
+                                ${is_album ? "" : html2.node`<p class="album">${image ? correct_item_by_artist(image.getAttribute("alt"), track_artist) : album ? album.textContent : page.name}</p>`}
                                 ${track_timestamp && track_timestamp_contents ? html2.node`<p class="timestamp">${track_timestamp_contents}</p>` : ""}
                             </div>
                         </div>
@@ -10941,7 +10940,7 @@
     get_grid(auth.name, type, range, 1, pages, page.name);
   }
   function get_grid(user, type, range, current_page, pages, next_user = null) {
-    render2(page.state.compare_modal.querySelector(".bleh-modal-body .compare-body"), html2`
+    render(page.state.compare_modal.querySelector(".bleh-modal-body .compare-body"), html2`
         <div class="loading-data-container">
             <div class="loading-data-text">${tl(trans.gathering_plays_for_user_pages).replace("{u}", user).replace("{current_page}", current_page).replace("{pages}", pages)}</div>
         </div>
@@ -11016,7 +11015,7 @@
     log("gathered shared values", "compare", "info", page.state.compare);
     page.state.compare_modal.querySelector(".bleh-modal-body .compare-body").innerHTML = "";
     if (page.state.compare.shared.length == 0) {
-      render2(page.state.compare_modal.querySelector(".bleh-modal-body .compare-body"), html2`
+      render(page.state.compare_modal.querySelector(".bleh-modal-body .compare-body"), html2`
             <div class="loading-data-container">
                 <div class="loading-data-text failed">${tl(trans.nothing_in_common)}</div>
             </div>
@@ -11563,7 +11562,7 @@
               page.structure.main.appendChild(side_actions);
             radio.classList = "btn stationlink js-playlink-station radio-button";
             let type = radio.getAttribute("data-analytics-label");
-            render2(radio, html2`
+            render(radio, html2`
                         <h3 class="sub-text">${tl(trans.radio)}</h3>
                         <h4>${tl(trans[type])}</h4>
                     `);
@@ -11605,7 +11604,7 @@
       checkbox.classList = "setting";
       checkbox.setAttribute("data-type", "toggle");
       checkbox.setAttribute("onclick", `_update_inbuilt_item('${id}')`);
-      render2(checkbox, html2`
+      render(checkbox, html2`
             <div class="heading">
                 <h5>${text2}</h5>
             </div>
@@ -11657,6 +11656,8 @@
       bleh_accounts();
     } else if (page.subpage == "change-username_overview") {
       bleh_name_change();
+    } else if (page.subpage == "applications_overview") {
+      bleh_applications();
     }
     if (ff("katsune")) return;
     let edit_header = document.createElement("section");
@@ -12025,7 +12026,7 @@
     let form_website = document.getElementById("id_homepage").value;
     let form_country = document.getElementById("id_country");
     let form_about_me = document.getElementById("id_about_me").textContent;
-    render2(update_picture, html2`
+    render(update_picture, html2`
        <h4>${tl(trans.profile)}</h4>
         <div class="banner-preview"></div>
         <div class="profile-container">
@@ -12194,7 +12195,7 @@
   };
   function update_about_me_preview(value) {
     let about_me = page.structure.main.querySelector("#about_me_preview");
-    render2(about_me, markdown(value, {
+    render(about_me, markdown(value, {
       allow_headers: true
     }));
     let banner = about_me.querySelector('img[alt="banner"]');
@@ -12604,6 +12605,31 @@
     let token = page.structure.main.querySelector('[name="csrfmiddlewaretoken"]').getAttribute("value");
     return;
   }
+  function bleh_applications() {
+    let session_types = page.structure.main.querySelectorAll(".api-sessions");
+    let suggested;
+    let connected;
+    if (session_types.length > 1) {
+      suggested = session_types[0];
+      connected = session_types[1];
+    } else {
+      connected = session_types[0];
+    }
+    render(page.structure.main, html2`
+        <section class="applications">
+            <div class="section-intro">
+                <h3>Applications</h3>
+                <p>Connect your account to third-party services for a better scrobbling experience. Make sure you trust the services below.</p>
+            </div>
+            ${suggested ? html2`
+            <h2>Suggested</h2>
+            ${suggested}
+            ` : ""}
+            <h2>Connected</h2>
+            ${connected}
+        </section>
+    `);
+  }
 
   // src/pages/obsession.js
   function bleh_obsession() {
@@ -12657,10 +12683,10 @@
       let song_title = formatted_title[0];
       let song_tags = formatted_title[1];
       page.corrected = formatted_title[4];
-      render2(track_title, html2.node`
+      render(track_title, html2.node`
             <div class="title">${sanitise_text(song_title).trim()}</div>
             ${song_tags.map((tag) => html2.node`
-                <div class="feat" data-bleh--tag-type="${tag.type}" data-bleh--tag-group="${tag.group}">${sanitise_text(tag.text)}</div>
+                <div class="feat" data-bleh--tag-type="${tag.type}" data-bleh--tag-group="${tag.group}">${tag.text}</div>
             `)}
         `);
       let song_guests = formatted_title[3];
@@ -12945,7 +12971,7 @@
               name = html2.node`
                             <div class="title">${sanitise_text(song_title).trim()}</div>
                             ${song_tags.map((tag) => html2.node`
-                                <div class="feat" data-bleh--tag-type="${tag.type}" data-bleh--tag-group="${tag.group}">${sanitise_text(tag.text)}</div>
+                                <div class="feat" data-bleh--tag-type="${tag.type}" data-bleh--tag-group="${tag.group}">${tag.text}</div>
                             `)}
                         `;
             } else if ((involved.type == "album" || involved.type == "track") && settings.corrections) {
@@ -12962,7 +12988,7 @@
             else
               involved_text = html2.node`${involved_text}<a class="involved--${involved.type}" href="${involved_link}">${name}</a>`;
           });
-          render2(activity_item, html2`
+          render(activity_item, html2`
                     <div class="type">${tl(trans.activity.listing[activity.type])}<div class="date">${moment(activity.date).fromNow(true)}</div></div>
                     <div class="name">${involved_text}</div>
                 `);
@@ -13613,15 +13639,15 @@
         song_title = formatted_title[0];
         song_tags = formatted_title[1];
       }
-      render2(name_elem, html2.node`
+      render(name_elem, html2.node`
             <div class="title">${sanitise_text(song_title).trim()}</div>
             ${song_tags.map((tag) => html2.node`
-                <div class="feat" data-bleh--tag-type="${tag.type}" data-bleh--tag-group="${tag.group}">${sanitise_text(tag.text)}</div>
+                <div class="feat" data-bleh--tag-type="${tag.type}" data-bleh--tag-group="${tag.group}">${tag.text}</div>
             `)}
         `);
       let song_artist_element = document.createElement("div");
       song_artist_element.classList.add("featured-item-artist");
-      song_artist_element.innerHTML = `<a href="${root}music/${sanitise(formatted_title[2])}">${sanitise_text(formatted_title[2])}</a>`;
+      song_artist_element.innerHTML = `<a href="${root}music/${sanitise(formatted_title[2])}">${formatted_title[2]}</a>`;
       let song_guests = formatted_title[3];
       for (let guest in song_guests) {
         song_artist_element.innerHTML = `${song_artist_element.innerHTML},`;
@@ -14106,7 +14132,7 @@
   }
   function bio_parse(text2, cache2 = false) {
     let temp = document.createElement("div");
-    render2(temp, markdown(text2.textContent, {
+    render(temp, markdown(text2.textContent, {
       allow_headers: true
     }));
     use_banner(temp, cache2);
@@ -15089,7 +15115,7 @@
     page.requested.setting = params.get("setting");
     let nav = document.createElement("nav");
     nav.classList.add("navlist", "secondary-nav", "navlist--more", "redesigned-navigation", "bleh-settings-navigation");
-    render2(nav, html2`
+    render(nav, html2`
         <ul class="navlist-items">
             <li class="navlist-item secondary-nav-item">
                 <a class="secondary-nav-item-link bleh--nav" data-bleh-page="home" onclick="_change_settings_page('home')">
@@ -15143,7 +15169,7 @@
             </li>
         </ul>
     `);
-    render2(page.structure.side, html2`
+    render(page.structure.side, html2`
         <div class="cta first priority sponsor colourful">
             ${auth.sponsor ? html2.node`
             <strong>${tl(trans.you_are_a_sponsor)}</strong>
@@ -16553,7 +16579,7 @@
       seasonal_timer_start();
     else
       seasonal_timer_end();
-    render2(page.structure.main, render_setting_page(page_id));
+    render(page.structure.main, render_setting_page(page_id));
     if (page_id == "themes") {
       show_theme_change_in_settings();
       display_colour_presets();
@@ -16641,7 +16667,7 @@
       feature_flag_element.classList.add("setting");
       feature_flag_element.setAttribute("data-type", "toggle");
       feature_flag_element.setAttribute("onclick", `_update_flag_toggle('${flag}', this)`);
-      render2(feature_flag_element, html2`
+      render(feature_flag_element, html2`
             <div class="heading">
                 <h5>${version.feature_flags[flag].name}</h5>
                 ${version.feature_flags[flag].notice ? `<p>${version.feature_flags[flag].notice}</p>` : ""}
@@ -17768,9 +17794,9 @@
           sister = formatted_title[2];
         }
         name = html2.node`
-                <div class="title">${sanitise_text(song_title).trim()}</div>
+                <div class="title">${song_title.trim()}</div>
                 ${song_tags.map((tag) => html2.node`
-                    <div class="feat" data-bleh--tag-type="${tag.type}" data-bleh--tag-group="${tag.group}">${sanitise_text(tag.text)}</div>
+                    <div class="feat" data-bleh--tag-type="${tag.type}" data-bleh--tag-group="${tag.group}">${tag.text}</div>
                 `)}
             `;
       } else if ((involved.type == "album" || involved.type == "track") && settings.corrections) {
@@ -17784,7 +17810,7 @@
       else
         involved_text = html2.node`${involved_text}<a class="involved--${involved.type}">${name}</a>`;
     });
-    render2(activity_item, html2`
+    render(activity_item, html2`
         <div class="type">
             ${tl(trans.activity.listing[activity.type])}
             <div class="date">
@@ -18100,10 +18126,10 @@
           let song_title = formatted_title[0];
           let song_tags = formatted_title[1];
           page.corrected = formatted_title[4];
-          render2(track_title, html2.node`
-                <div class="title">${sanitise_text(song_title).trim()}</div>
+          render(track_title, html2.node`
+                <div class="title">${song_title.trim()}</div>
                 ${song_tags.map((tag) => html2.node`
-                    <div class="feat" data-bleh--tag-type="${tag.type}" data-bleh--tag-group="${tag.group}">${sanitise_text(tag.text)}</div>
+                    <div class="feat" data-bleh--tag-type="${tag.type}" data-bleh--tag-group="${tag.group}">${tag.text}</div>
                 `)}
             `);
           let song_artist_element = document.body.querySelector('span[itemprop="byArtist"]');
@@ -18701,14 +18727,14 @@
       wiki.classList.remove("visible-lg");
     let about_artist_container = legacy_container.parentElement;
     about_artist_container.classList.add("about-artist-container");
-    render2(about_artist_container, html2`
+    render(about_artist_container, html2`
         <div class="about-artist-panel">
             <div class="avatar-side">
                 ${avatar3 != null ? html2.node`<img src="${avatar3.getAttribute("src")}"><a onclick=${() => expand_avatar(avatar3.getAttribute("src").replace("/300x300/", "/ar0/"))} class="bleh--avatar-clickable-link"></a>` : html2.node`<img class="missing-artist">`}
             </div>
             <div class="info-side">
                 <div class="sub-text">${tl(trans.about)}</div>
-                <h1><a href="${root}music/${sanitise(page.sister)}">${sanitise_text(page.sister)}</a></h1>
+                <h1><a href="${root}music/${sanitise(page.sister)}">${page.sister}</a></h1>
                 ${listeners != null ? html2.node([listeners.outerHTML]) : ""}
                 ${tags != null ? html2.node([tags.outerHTML]) : ""}
                 ${wiki != null ? html2.node([wiki.outerHTML]) : ""}
@@ -19279,7 +19305,7 @@
         let url_split = window.location.href.split("/");
         let album_url = `${url_split[url_split.length - 2]}/${url_split[url_split.length - 1]}`;
         let album_as_track_url = window.location.href.replace(album_url, `${url_split[url_split.length - 2]}/_/${url_split[url_split.length - 1]}`);
-        render2(tracklist, html2`
+        render(tracklist, html2`
                 <h3 class="text-18">${tl(trans.tracklist)}</h3>
                 <div class="loading-data-container">
                     <p class="loading-data-text failed">${tl(trans.failed_to_find_tracks)}</p>
@@ -19300,7 +19326,7 @@
           let url_split = window.location.href.split("/");
           let album_url = `${url_split[url_split.length - 2]}/${url_split[url_split.length - 1]}`;
           let album_as_track_url = window.location.href.replace(album_url, `${url_split[url_split.length - 2]}/_/${url_split[url_split.length - 1]}`);
-          render2(tracklist, html3`
+          render(tracklist, html3`
                         <h3 class="text-18">${tl(trans.tracklist)}</h3>
                         <div class="loading-data-container">
                             <p class="loading-data-text failed">${tl(trans.failed_to_find_tracks)}</p>
@@ -19310,7 +19336,7 @@
           return;
         }
         inner_tracklist.classList.remove("chartlist--with-image");
-        render2(tracklist, html3`
+        render(tracklist, html3`
                     <h3 class="text-18">${tl(trans.tracklist)}</h3>
                     <div class="alert alert-info">${tl(trans.sourced_from_own_plays)}</div>
                     ${html3.node([inner_tracklist.outerHTML])}
@@ -19857,7 +19883,7 @@
     let back_link = page_content.querySelector("a");
     let reason = page_content.querySelector("p");
     page_content.classList.add("has-error");
-    page_content.innerHTML = `
+    render(page_content, html2`
         <div class="row">
             <div class="col-main">
                 <section class="error">
@@ -19880,7 +19906,7 @@
                 </section>
             </div>
         </div>
-    `;
+    `);
   }
 
   // src/pages/chart.js
@@ -19895,21 +19921,21 @@
     let out_now = page.structure.side.querySelector(".more-link-fullwidth-right a");
     if (out_now)
       out_now.classList.add("btn", "out-now-btn");
-    let header = document.createElement("div");
-    header.classList.add("charts-header", "top-header");
-    header.innerHTML = `
-        <div class="left">
+    let header = html2.node`
+        <div class="charts-header top-header">
+            <div class="left">
 
-        </div>
-        <div class="middle">
-            <h2>${trans_legacy.en.charts.charts_for.replace("{date}", moment(/* @__PURE__ */ new Date()).format("MMMM Do YYYY"))}</h2>
-            ${out_now != null ? out_now.outerHTML : ""}
-        </div>
-        <div class="right">
-            <div class="view-buttons">
-                <button class="btn view-item glacier-configure-button panel-settings-button">
-                    ${tl(trans.settings)}
-                </button>
+            </div>
+            <div class="middle">
+                <h2>${trans_legacy.en.charts.charts_for.replace("{date}", moment(/* @__PURE__ */ new Date()).format("MMMM Do YYYY"))}</h2>
+                ${out_now != null ? out_now.outerHTML : ""}
+            </div>
+            <div class="right">
+                <div class="view-buttons">
+                    <button class="btn view-item glacier-configure-button panel-settings-button">
+                        ${tl(trans.settings)}
+                    </button>
+                </div>
             </div>
         </div>
     `;
@@ -19969,7 +19995,7 @@
       }
       let items = row.querySelectorAll(".globalchart-item");
       items.forEach((item, item_index) => {
-        let list_item = document.createElement("li");
+        let list_item;
         let image = item.querySelector(".globalchart-image img");
         let rank = item.querySelector(".globalchart-rank");
         let name = item.querySelector(".globalchart-name a");
@@ -19977,48 +20003,50 @@
         image.setAttribute("src", image.getAttribute("src").replace("/avatar70s/", "/avatar300s/"));
         if (index == 1) {
           name.textContent = correct_artist(name.textContent);
-          list_item.classList.add("music-bookmarks-artists-item-wrap", "charts-list-item");
-          list_item.innerHTML = `
-                    <div class="music-bookmarks-artists-item charts-list-item-inner">
-                        <div class="charts-list-rank">${rank.textContent.trim()}</div>
-                        <h3 class="music-bookmarks-artists-item-name">
-                            ${name.outerHTML}
-                        </h3>
-                        <div class="media-item">
-                            <span class="music-bookmarks-albums-item-image cover-art">
-                                ${image.outerHTML}
-                            </span>
-                            <div class="charts-list-rank-overlay-wrap">
-                                <div class="charts-list-rank-overlay">${rank.textContent}</div>
+          list_item = html2.node`
+                    <li class="music-bookmarks-artists-item-wrap charts-list-item">
+                        <div class="music-bookmarks-artists-item charts-list-item-inner">
+                            <div class="charts-list-rank">${rank.textContent.trim()}</div>
+                            <h3 class="music-bookmarks-artists-item-name">
+                                ${name.outerHTML}
+                            </h3>
+                            <div class="media-item">
+                                <span class="music-bookmarks-albums-item-image cover-art">
+                                    ${image.outerHTML}
+                                </span>
+                                <div class="charts-list-rank-overlay-wrap">
+                                    <div class="charts-list-rank-overlay">${rank.textContent}</div>
+                                </div>
                             </div>
+                            <a class="link-block-cover-link" href=${link}></a>
                         </div>
-                        <a class="link-block-cover-link" href="${link}"></a>
-                    </div>
+                    </li>
                 `;
         } else {
           let artist = item.querySelector(".globalchart-track-artist-name a");
           artist.textContent = correct_artist(artist.textContent);
           name.textContent = correct_item_by_artist(name.textContent, artist.textContent);
-          list_item.classList.add("music-bookmarks-albums-item-wrap", "charts-list-item");
-          list_item.innerHTML = `
-                    <div class="music-bookmarks-albums-item charts-list-item-inner">
-                        <div class="charts-list-rank">${rank.textContent.trim()}</div>
-                        <h3 class="music-bookmarks-albums-item-name">
-                            ${name.outerHTML}
-                        </h3>
-                        <p class="music-bookmarks-albums-item-artist">
-                            ${artist.outerHTML}
-                        </p>
-                        <div class="media-item">
-                            <span class="music-bookmarks-albums-item-image cover-art">
-                                ${image.outerHTML}
-                            </span>
-                            <div class="charts-list-rank-overlay-wrap">
-                                <div class="charts-list-rank-overlay">${rank.textContent}</div>
+          list_item = html2.node`
+                    <li class="music-bookmarks-albums-item-wrap charts-list-item">
+                        <div class="music-bookmarks-albums-item charts-list-item-inner">
+                            <div class="charts-list-rank">${rank.textContent.trim()}</div>
+                            <h3 class="music-bookmarks-albums-item-name">
+                                ${name.outerHTML}
+                            </h3>
+                            <p class="music-bookmarks-albums-item-artist">
+                                ${artist.outerHTML}
+                            </p>
+                            <div class="media-item">
+                                <span class="music-bookmarks-albums-item-image cover-art">
+                                    ${image.outerHTML}
+                                </span>
+                                <div class="charts-list-rank-overlay-wrap">
+                                    <div class="charts-list-rank-overlay">${rank.textContent}</div>
+                                </div>
                             </div>
+                            <a class="link-block-cover-link" href=${link}></a>
                         </div>
-                        <a class="link-block-cover-link" href="${link}"></a>
-                    </div>
+                    </li>
                 `;
         }
         list.appendChild(list_item);
@@ -20226,9 +20254,9 @@
               tooltip_sister = sister;
             }
             name = html2.node`
-                        <div class="title">${sanitise_text(song_title).trim()}</div>
+                        <div class="title">${song_title.trim()}</div>
                         ${song_tags.map((tag) => html2.node`
-                            <div class="feat" data-bleh--tag-type="${tag.type}" data-bleh--tag-group="${tag.group}">${sanitise_text(tag.text)}</div>
+                            <div class="feat" data-bleh--tag-type="${tag.type}" data-bleh--tag-group="${tag.group}">${tag.text}</div>
                         `)}
                     `;
           } else if ((involved.type == "album" || involved.type == "track") && settings.corrections) {
@@ -20245,7 +20273,7 @@
           else
             involved_text = html2.node`${involved_text}<a class="involved--${involved.type}" href="${involved_link}">${name}</a>`;
         });
-        render2(activity_item, html2`
+        render(activity_item, html2`
                 <div class="type">${tl(trans.activity.listing[activity.type])}<div class="date">${moment(activity.date).fromNow(true)}</div></div>
                 <div class="name">${involved_text}</div>
             `);
@@ -21282,7 +21310,7 @@
         text2 = page.name;
       else if (type == "event")
         text2 = tl(trans.artists);
-      render2(radio, html2`
+      render(radio, html2`
             <h3 class="sub-text">${tl(trans.radio)}</h3>
             <h4>${text2}</h4>
         `);
@@ -21336,7 +21364,7 @@
       let description = old.querySelector(".api-app-description").textContent.trim();
       let token = old.querySelector('form [name="csrfmiddlewaretoken"]').value;
       let cancel = old.querySelector(".form-submit a").getAttribute("href");
-      render(page.structure.main, html`
+      render(page.structure.main, html2`
             <section class="api-connector">
                 <div class="avatar">
                     <img src="${auth.avatar.replace("/avatar42s/", "/avatar170s/")}" alt="${tl(trans.your_avatar)}">
@@ -21345,7 +21373,7 @@
                     <h1>${page.name}</h1>
                     <div class="sub-text no-margin">${tl(trans.app_would_like_to_connect)}</div>
                     <div class="subtle">
-                        ${html.node([
+                        ${html2.node([
         tl(trans.logged_in_as).replace("{user}", `<a class="mention" href="${root}user/${auth.name}">@${auth.name}</a>`)
       ])}
                     </div>
@@ -21394,7 +21422,7 @@
   function bleh_users() {
     let users = page.structure.main.querySelectorAll(".user-list-about-me");
     users.forEach((user) => {
-      render2(user, markdown(user.textContent, {
+      render(user, markdown(user.textContent, {
         allow_headers: true,
         line_breaks: false
       }));
@@ -21790,7 +21818,7 @@
     }
   }
   function page_indicator() {
-    render2(page.structure.indicator, html2`
+    render(page.structure.indicator, html2`
         <div class="bleh">
             <strong>ver</strong>
             <span>${version.brand}</span>

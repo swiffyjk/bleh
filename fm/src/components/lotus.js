@@ -474,9 +474,9 @@ export function patch_header_title() {
 
             // combine
             render(track_title, html.node`
-                <div class="title">${sanitise_text(song_title).trim()}</div>
+                <div class="title">${song_title.trim()}</div>
                 ${song_tags.map((tag) => html.node`
-                    <div class="feat" data-bleh--tag-type="${tag.type}" data-bleh--tag-group="${tag.group}">${sanitise_text(tag.text)}</div>
+                    <div class="feat" data-bleh--tag-type="${tag.type}" data-bleh--tag-group="${tag.group}">${tag.text}</div>
                 `)}
             `);
 

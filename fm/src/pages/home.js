@@ -7,7 +7,7 @@ import {checkup_page_structure} from "../components/structure";
 import {register_background, update_page} from "../page";
 import {bleh_charts} from "./chart";
 import {bleh_native_settings} from './lastfm_settings';
-import {sanitise, sanitise_text} from "../build/tools"
+import {sanitise} from "../build/tools"
 import {correct_artist, correct_item_by_artist, name_includes} from '../components/lotus';
 import {html, render} from "lighterhtml";
 
@@ -254,9 +254,9 @@ export function bleh_home() {
 
                     // combine
                     name = html.node`
-                        <div class="title">${sanitise_text(song_title).trim()}</div>
+                        <div class="title">${song_title.trim()}</div>
                         ${song_tags.map((tag) => html.node`
-                            <div class="feat" data-bleh--tag-type="${tag.type}" data-bleh--tag-group="${tag.group}">${sanitise_text(tag.text)}</div>
+                            <div class="feat" data-bleh--tag-type="${tag.type}" data-bleh--tag-group="${tag.group}">${tag.text}</div>
                         `)}
                     `;
                 } else if ((involved.type == 'album' || involved.type == 'track') && settings.corrections) {

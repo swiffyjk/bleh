@@ -1,8 +1,9 @@
-import { log } from '../build/log';
-import { auth, page, root } from '../build/page';
-import { tl, trans } from '../build/trans';
-import { checkup_page_structure } from '../components/structure';
-import { register_background, update_page } from '../page';
+import {log} from '../build/log';
+import {auth, page, root} from '../build/page';
+import {tl, trans} from '../build/trans';
+import {checkup_page_structure} from '../components/structure';
+import {register_background, update_page} from '../page';
+import {html, render} from "lighterhtml";
 
 export function bleh_api() {
     page.structure.container = document.body.querySelector('.page-content');

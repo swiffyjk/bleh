@@ -1,13 +1,13 @@
-import { html } from "lighterhtml";
-import { settings } from "../build/config";
-import { log } from "../build/log";
-import { auth, page, root } from "../build/page";
-import { sanitise } from "../build/tools";
-import { lang, trans_legacy, trans, tl } from "../build/trans";
-import { prep_chart_colours } from "../chart";
-import { correct_artist, correct_item_by_artist } from "../components/lotus";
-import { refresh_all } from "../config";
-import { ff } from "../sku";
+import {html} from "lighterhtml";
+import {settings} from "../build/config";
+import {log} from "../build/log";
+import {auth, page, root} from "../build/page";
+import {sanitise} from "../build/tools";
+import {tl, trans, trans_legacy} from "../build/trans";
+import {prep_chart_colours} from "../chart";
+import {correct_artist, correct_item_by_artist} from "../components/lotus";
+import {refresh_all} from "../config";
+import {ff} from "../sku";
 
 export function bleh_user_library() {
     // date sidebar into its own panel
@@ -362,14 +362,12 @@ function bleh_glacier_library_top(static_page = false) {
             value = value.substring(start, end);
         }
 
-        let glacier_meta_item = document.createElement('div');
-        glacier_meta_item.classList.add('glacier-library-metadata-item');
-        glacier_meta_item.innerHTML = (`
-            <div class="sub-text">${text}</div>
-            <div class="glacier-library-metadata-item-value">${value}</div>
+        glacier_meta.appendChild(html.node`
+            <div class="glacier-library-metadata-item">
+                <div class="sub-text">${text}</div>
+                <div class="glacier-library-metadata-item-value">${value}</div>
+            </div>
         `);
-
-        glacier_meta.appendChild(glacier_meta_item);
     });
 
     if (first_run)
@@ -1081,21 +1079,21 @@ function bleh_glacier_library_focused() {
 
     let current_suffix = window.location.search;
 
-    let metadata = document.createElement('div');
-    metadata.classList.add('glacier-library-metadata');
-    metadata.innerHTML = (`
-        <div class="glacier-library-metadata-avatar">
-            ${image.outerHTML}
-        </div>
-        <div class="glacier-library-metadata-item">
-            <div class="sub-text">
-                ${trans_legacy.en[type].name}
+    let metadata = html.node`
+        <div class="glacier-library-metadata">
+            <div class="glacier-library-metadata-avatar">
+                ${image}
             </div>
-            <div class="glacier-library-metadata-item-value glacier-library-metadata-focus" data-type="${type}">
-                <a href="${link}">${(type == 'artist') ? correct_artist(header_title) : correct_item_by_artist(header_title, artist)}</a>${(duration) ? ` <span class="glacier-library-track-duration">${duration.textContent}</span>` : ''}${(type != 'artist') ? trans_legacy.en.glacier.by_artist.replace('{a}', `<a href="${root}user/${page.name}/library/music/+noredirect/${sanitise(artist)}${current_suffix}">${correct_artist(artist)}</a>`) : ''}
+            <div class="glacier-library-metadata-item">
+                <div class="sub-text">
+                    ${tl(trans[type])}
+                </div>
+                <div class="glacier-library-metadata-item-value glacier-library-metadata-focus" data-type="${type}">
+                    <a href="${link}">${(type == 'artist') ? correct_artist(header_title) : correct_item_by_artist(header_title, artist)}</a>${(duration) ? ` <span class="glacier-library-track-duration">${duration.textContent}</span>` : ''}${(type != 'artist') ? trans_legacy.en.glacier.by_artist.replace('{a}', `<a href="${root}user/${page.name}/library/music/+noredirect/${sanitise(artist)}${current_suffix}">${correct_artist(artist)}</a>`) : ''}
+                </div>
             </div>
         </div>
-    `);
+    `;
 
     upper_wrap.appendChild(metadata);
     header.appendChild(upper_wrap);

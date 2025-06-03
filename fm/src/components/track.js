@@ -2,7 +2,7 @@ import {html, render} from "lighterhtml";
 import {settings} from "../build/config";
 import {log} from "../build/log";
 import {page, root} from "../build/page";
-import {clamp_sat, return_artist_from_track, rgb_to_hsl, sanitise, sanitise_text} from "../build/tools";
+import {clamp_sat, return_artist_from_track, rgb_to_hsl, sanitise} from "../build/tools";
 import {bleh_glacier_insights} from "../pages/glacier";
 import {patch_artist_ranks_in_list_view} from "./colourful_counts";
 import {correct_artist, correct_item_by_artist, name_includes} from "./lotus";
@@ -200,9 +200,9 @@ export function patch_titles(search=page.structure.main) {
 
                 // parse tags into text
                 render(track_title, html`
-                    <div class="title">${sanitise_text(song_title).trim()}</div>
+                    <div class="title">${song_title.trim()}</div>
                     ${song_tags.map((tag) => html.node`
-                        <div class="feat" data-bleh--tag-type="${tag.type}" data-bleh--tag-group="${tag.group}">${sanitise_text(tag.text)}</div>
+                        <div class="feat" data-bleh--tag-type="${tag.type}" data-bleh--tag-group="${tag.group}">${tag.text}</div>
                     `)}
                 `);
 
@@ -217,13 +217,13 @@ export function patch_titles(search=page.structure.main) {
                 if (song_artist_element.textContent.replaceAll('+', ' ').trim() === track_artist || song_artist_element.textContent.trim() === '') {
                     log('artist either matches or is blank, replacing', 'tracks', 'log');
                     // replaces with corrected artist if applicable
-                    render(song_artist_element, html`<a href="${root}music/${sanitise(formatted_title[2])}" title="${sanitise_text(formatted_title[2])}">${sanitise_text(formatted_title[2])}</a>`);
+                    render(song_artist_element, html`<a href="${root}music/${sanitise(formatted_title[2])}" title="${formatted_title[2]}">${formatted_title[2]}</a>`);
 
                     // append guests
                     let song_guests = formatted_title[3];
                     for (let guest in song_guests) {
                         song_artist_element.appendChild(html.node`
-                            ,<a href="${root}music/${sanitise(song_guests[guest])}" title="${sanitise_text(song_guests[guest])}">${sanitise_text(song_guests[guest])}</a>
+                            ,<a href="${root}music/${sanitise(song_guests[guest])}" title="${song_guests[guest]}">${song_guests[guest]}</a>
                         `);
                     }
                 }
@@ -243,10 +243,10 @@ export function patch_titles(search=page.structure.main) {
                                 <p class="artist">${song_artist_element.firstElementChild.textContent}</p>
                                 <div class="tags">
                                     ${song_tags.map((tag) => html.node`
-                                        <div class="feat" data-bleh--tag-type="${tag.type}" data-bleh--tag-group="${tag.group}">${sanitise_text(tag.text)}</div>
+                                        <div class="feat" data-bleh--tag-type="${tag.type}" data-bleh--tag-group="${tag.group}">${tag.text}</div>
                                     `)}
                                 </div>
-                                ${(is_album) ? '' : html.node`<p class="album">${(image) ? correct_item_by_artist(sanitise_text(image.getAttribute('alt')), track_artist) : (album) ? album.textContent : page.name}</p>`}
+                                ${(is_album) ? '' : html.node`<p class="album">${(image) ? correct_item_by_artist(image.getAttribute('alt'), track_artist) : (album) ? album.textContent : page.name}</p>`}
                                 ${(track_timestamp && track_timestamp_contents) ? html.node`<p class="timestamp">${track_timestamp_contents}</p>` : ''}
                             </div>
                         </div>

@@ -237,7 +237,7 @@ export function bleh_profiles() {
                         name = html.node`
                             <div class="title">${sanitise_text(song_title).trim()}</div>
                             ${song_tags.map((tag) => html.node`
-                                <div class="feat" data-bleh--tag-type="${tag.type}" data-bleh--tag-group="${tag.group}">${sanitise_text(tag.text)}</div>
+                                <div class="feat" data-bleh--tag-type="${tag.type}" data-bleh--tag-group="${tag.group}">${tag.text}</div>
                             `)}
                         `;
                     } else if ((involved.type == 'album' || involved.type == 'track') && settings.corrections) {
@@ -1120,13 +1120,13 @@ function bleh_featured_profile_track(object, about_me) {
         render(name_elem, html.node`
             <div class="title">${sanitise_text(song_title).trim()}</div>
             ${song_tags.map((tag) => html.node`
-                <div class="feat" data-bleh--tag-type="${tag.type}" data-bleh--tag-group="${tag.group}">${sanitise_text(tag.text)}</div>
+                <div class="feat" data-bleh--tag-type="${tag.type}" data-bleh--tag-group="${tag.group}">${tag.text}</div>
             `)}
         `);
 
         let song_artist_element = document.createElement('div');
         song_artist_element.classList.add('featured-item-artist');
-        song_artist_element.innerHTML = `<a href="${root}music/${sanitise(formatted_title[2])}">${sanitise_text(formatted_title[2])}</a>`;
+        song_artist_element.innerHTML = `<a href="${root}music/${sanitise(formatted_title[2])}">${formatted_title[2]}</a>`;
 
         // append guests
         let song_guests = formatted_title[3];

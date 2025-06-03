@@ -4,7 +4,7 @@ import {album_track_corrections, artist_corrections, ranks} from "../build/music
 import {auth, page, root, theme_preview} from "../build/page";
 import {stored_season} from "../build/seasonal";
 import {sponsor_list} from "../build/sponsor";
-import {clamp_sat, hex_to_hsl, sanitise_text} from '../build/tools';
+import {clamp_sat, hex_to_hsl} from '../build/tools';
 import {lang, lang_info, tl, trans, trans_legacy} from "../build/trans";
 import {load_badges} from '../components/badge';
 import {dialog, dialog_rm} from "../components/dialog";
@@ -2908,9 +2908,9 @@ function activity_preview_new(parent, activity) {
 
             // combine
             name = html.node`
-                <div class="title">${sanitise_text(song_title).trim()}</div>
+                <div class="title">${song_title.trim()}</div>
                 ${song_tags.map((tag) => html.node`
-                    <div class="feat" data-bleh--tag-type="${tag.type}" data-bleh--tag-group="${tag.group}">${sanitise_text(tag.text)}</div>
+                    <div class="feat" data-bleh--tag-type="${tag.type}" data-bleh--tag-group="${tag.group}">${tag.text}</div>
                 `)}
             `;
         } else if ((involved.type == 'album' || involved.type == 'track') && settings.corrections) {
