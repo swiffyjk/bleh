@@ -5032,6 +5032,10 @@ better than the default selector '#app a' i suppose */
     .chartlist-more, .chartlist-play {
         z-index: 30;
     }
+    &.show-focus-controls,
+    .chartlist-more-menu {
+        z-index: 40;
+    }
 
     &.show-focus-controls {
         .chartlist-more {
@@ -21030,6 +21034,7 @@ h4 {
         --hue-over: var(--hue-neg);
         --sat-over: 1;
         --lit-over: 1;
+        max-width: 100%;
     }
 
     .error-type {
@@ -21842,6 +21847,7 @@ h4 {
             font: inherit;
             font-weight: var(--font-weight-medium);
             margin-top: 10px;
+            margin-bottom: unset;
             max-height: 36px;
 
             a {
@@ -21855,6 +21861,7 @@ h4 {
         .music-releases-item-artist {
             color: hsl(var(--c2), 80%);
             margin-top: 2px;
+            margin-bottom: unset;
         }
         .catalogue-overview-similar-artists-item-aux-text,
         .similar-albums-item-aux-text,
@@ -21870,6 +21877,7 @@ h4 {
             line-height: var(--line-height);
             color: hsl(var(--c3));
             margin-top: 4px;
+            margin-bottom: unset;
             cursor: default;
 
             & + .resource-list--release-list-item-aux-text,

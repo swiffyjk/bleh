@@ -18709,7 +18709,7 @@
                 ${wiki != null ? html2.node([wiki.outerHTML]) : ""}
             </div>
         </div>
-        ${page.sister_others.length > 0 ? html2.node`<div class="sep"></div><div class="sub-text">${trans_legacy.en.music.about_guests}</div>` : ""}
+        ${page.sister_others.length > 0 ? html2.node`<div class="sep"></div><div class="sub-text">${tl(trans.others_featured)}</div>` : ""}
     `);
     if (page.sister_others.length > 0) {
       about_artist_container.appendChild(html2.node`
@@ -19163,10 +19163,10 @@
                 <div class="info-side">
                     <div class="sub-text">${tl(trans.album)}</div>
                     <div class="title-container">
-                        <h1>${html2.node([title.innerHTML])}</h1>
+                        <h1>${title}</h1>
                         ${position ? position : ""}
                     </div>
-                    <h2>${html2.node([artist.innerHTML])}</h2>
+                    <h2>${artist}</h2>
                 </div>
         `;
       if (avatar3)
@@ -19375,7 +19375,7 @@
                 <div class="sub-text">${tl(trans.artist)}</div>
                 `}
                 <div class="title-container" data-multi="${page.multi}">
-                    <h1>${title.innerHTML}</h1>
+                    <h1>${title}</h1>
                     ${position ? position.outerHTML : ""}
                     ${on_tour ? on_tour.outerHTML : ""}
                 </div>
@@ -20663,10 +20663,10 @@
             <div class="info-side">
                 <div class="sub-text">${tl(trans.track)}</div>
                 <div class="title-container">
-                    <h1>${title.innerHTML}</h1>
+                    <h1>${title}</h1>
                     ${position ? position.outerHTML : ""}
                 </div>
-                <h2>${artist.innerHTML}</h2>
+                <h2>${artist}</h2>
             </div>
         `;
       let bg;

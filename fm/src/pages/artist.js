@@ -94,7 +94,7 @@ export function bleh_artists() {
                 <div class="sub-text">${tl(trans.artist)}</div>
                 `)}
                 <div class="title-container" data-multi="${page.multi}">
-                    <h1>${title.innerHTML}</h1>
+                    <h1>${title}</h1>
                     ${(position) ? position.outerHTML : ''}
                     ${(on_tour) ? on_tour.outerHTML : ''}
                 </div>

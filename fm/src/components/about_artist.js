@@ -1,7 +1,7 @@
 import {html, render} from "lighterhtml";
 import {page, root} from "../build/page";
 import {sanitise, sanitise_text} from "../build/tools";
-import {tl, trans, trans_legacy} from "../build/trans";
+import {tl, trans} from "../build/trans";
 import {expand_avatar} from "../avatar";
 
 export function bleh_about_artist() {
@@ -34,7 +34,7 @@ export function bleh_about_artist() {
                 ${(wiki != null) ? html.node([wiki.outerHTML]) : ''}
             </div>
         </div>
-        ${(page.sister_others.length > 0) ? html.node`<div class="sep"></div><div class="sub-text">${trans_legacy.en.music.about_guests}</div>` : ''}
+        ${(page.sister_others.length > 0) ? html.node`<div class="sep"></div><div class="sub-text">${tl(trans.others_featured)}</div>` : ''}
     `)
 
     // there are guest features

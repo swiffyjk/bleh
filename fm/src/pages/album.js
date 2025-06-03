@@ -79,10 +79,10 @@ export function bleh_albums() {
                 <div class="info-side">
                     <div class="sub-text">${tl(trans.album)}</div>
                     <div class="title-container">
-                        <h1>${html.node([title.innerHTML])}</h1>
+                        <h1>${title}</h1>
                         ${(position) ? position : ''}
                     </div>
-                    <h2>${html.node([artist.innerHTML])}</h2>
+                    <h2>${artist}</h2>
                 </div>
         `
 
