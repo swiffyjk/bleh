@@ -1,16 +1,16 @@
-import { html } from "lighterhtml";
-import { inbuilt_settings, settings, settings_base, settings_template } from "./build/config";
-import { log } from "./build/log";
-import { page, reload_pending } from "./build/page";
-import { stored_season } from "./build/seasonal";
-import { lang, trans_legacy } from "./build/trans";
-import { load_chart_colours } from "./chart";
-import { dialog, dialog_legacy, kill_window } from "./components/dialog";
-import { bleh_music_page_charts } from "./components/music";
-import { notify } from "./components/notify";
-import { load_skus, show_theme_change_in_menu, show_theme_change_in_settings } from "./pages/bleh_config";
-import { bleh_glacier_date_graph_generate, bleh_glacier_insights } from "./pages/glacier";
-import { bleh_profile_chart_render } from './pages/profile';
+import {html} from "lighterhtml";
+import {inbuilt_settings, settings, settings_base, settings_template} from "./build/config";
+import {log} from "./build/log";
+import {page, reload_pending} from "./build/page";
+import {stored_season} from "./build/seasonal";
+import {trans_legacy} from "./build/trans";
+import {load_chart_colours} from "./chart";
+import {dialog_legacy, kill_window} from "./components/dialog";
+import {bleh_music_page_charts} from "./components/music";
+import {notify} from "./components/notify";
+import {load_skus, show_theme_change_in_menu, show_theme_change_in_settings} from "./pages/bleh_config";
+import {bleh_glacier_date_graph_generate, bleh_glacier_insights} from "./pages/glacier";
+import {bleh_profile_chart_render} from './pages/profile';
 
 // create blank settings
 export function create_settings_template() {

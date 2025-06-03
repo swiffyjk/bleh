@@ -1552,6 +1552,185 @@
       type: "toggle"
     }
   };
+  var settings_store = {
+    theme: {
+      default: "dark",
+      type: "radio"
+    },
+    high_contrast: {
+      default: false
+    },
+    accent_type: {
+      default: "colour",
+      type: "radio"
+    },
+    hue: {
+      default: 255,
+      type: "range"
+    },
+    sat: {
+      default: 1,
+      type: "range"
+    },
+    sat_bg: {
+      default: 1,
+      type: "range"
+    },
+    lit: {
+      default: 1,
+      type: "range"
+    },
+    gloss: {
+      default: 0,
+      type: "range"
+    },
+    gendered_tags: {
+      default: true
+    },
+    dev: {
+      default: false
+    },
+    api_key: {
+      default: "",
+      type: "string"
+    },
+    profile_header_expand: {
+      default: true
+    },
+    accessible_name_colours: {
+      default: false
+    },
+    reduced_motion: {
+      default: false
+    },
+    underline_links: {
+      default: false
+    },
+    format_guest_features: {
+      default: true
+    },
+    show_guest_features: {
+      default: false
+    },
+    stacked_chartlist_info: {
+      default: true
+    },
+    show_remaster_tags: {
+      default: true
+    },
+    corrections: {
+      default: true
+    },
+    colourful_counts: {
+      default: true
+    },
+    colourful_tracks: {
+      default: true
+    },
+    feature_flags: {
+      default: {},
+      type: "other"
+    },
+    show_your_progress: {
+      default: true
+    },
+    travis: {
+      default: false
+    },
+    list_view: {
+      default: 1,
+      type: "radio"
+    },
+    chart_view: {
+      default: "line",
+      type: "radio"
+    },
+    chart_bar_axis: {
+      default: "horizontal",
+      type: "radio"
+    },
+    chart_insights_view: {
+      default: "pie",
+      type: "radio"
+    },
+    shout_markdown: {
+      default: true
+    },
+    bio_markdown: {
+      default: true
+    },
+    hue_from_album: {
+      default: true
+    },
+    seasonal: {
+      default: true
+    },
+    seasonal_particles: {
+      default: "all",
+      type: "options"
+    },
+    seasonal_overlays: {
+      default: true
+    },
+    profile_header_own: {
+      default: true
+    },
+    profile_header_others: {
+      default: true
+    },
+    profile_avi_background: {
+      default: false
+    },
+    profile_shortcut: {
+      default: "",
+      type: "string"
+    },
+    font: {
+      css: "custom_font",
+      default: "",
+      type: "string"
+    },
+    font_weight: {
+      css: "custom_font_weight",
+      default: 480,
+      min: 0,
+      max: 0,
+      step: 0,
+      type: "range"
+    },
+    font_weight_medium: {
+      css: "custom_font_weight_medium",
+      default: 650,
+      min: 0,
+      max: 0,
+      step: 0,
+      type: "range"
+    },
+    font_weight_bold: {
+      css: "custom_font_weight_bold",
+      default: 730,
+      min: 0,
+      max: 0,
+      step: 0,
+      type: "range"
+    },
+    font_emoji: {
+      default: true
+    },
+    show_bulk_edit_album: {
+      default: false
+    },
+    grid_glow: {
+      default: true
+    },
+    auth_menu_obsessions: {
+      deault: false
+    },
+    default_avatar_action: {
+      default: "expand",
+      type: "radio"
+    }
+  };
 
   // src/build/page.js
   var reload_pending = {
@@ -12008,8 +12187,8 @@
     custom_select(charts_panel.querySelector("#id_chart_range_top_tracks"), charts_panel.querySelector("#id_chart_range_top_tracks_select"));
     custom_select(charts_panel.querySelector("#id_chart_length_top_tracks"), charts_panel.querySelector("#id_chart_length_top_tracks_select"));
     for (let category in original_chart_settings) {
-      for (let setting in original_chart_settings[category]) {
-        update_inbuilt_item(setting, original_chart_settings[category][setting], false);
+      for (let setting2 in original_chart_settings[category]) {
+        update_inbuilt_item(setting2, original_chart_settings[category][setting2], false);
       }
     }
     let selects = document.body.querySelectorAll("select");
@@ -12443,8 +12622,8 @@
             </div>
         </form>
     `;
-    for (let setting in original_privacy_settings) {
-      update_inbuilt_item(setting, original_privacy_settings[setting], false);
+    for (let setting2 in original_privacy_settings) {
+      update_inbuilt_item(setting2, original_privacy_settings[setting2], false);
     }
     let selects = document.body.querySelectorAll("select");
     selects.forEach((select) => {
@@ -12598,8 +12777,8 @@
     old_panels.forEach((panel) => {
       page.structure.main.removeChild(panel);
     });
-    for (let setting in original_settings) {
-      update_inbuilt_item(setting, original_settings[setting], false);
+    for (let setting2 in original_settings) {
+      update_inbuilt_item(setting2, original_settings[setting2], false);
     }
     custom_select(communication_panel.querySelector('[name="language"]'), communication_panel.querySelector('[name="language"]').parentElement);
   }
@@ -13813,8 +13992,8 @@
           select.setAttribute("onchange", `_update_inbuilt_select('${select.getAttribute("id")}', this.value)`);
           update_inbuilt_select(select.getAttribute("id"), select.value);
         });
-        for (let setting in original_chart_settings) {
-          update_inbuilt_item(setting, original_chart_settings[setting], false, form2);
+        for (let setting2 in original_chart_settings) {
+          update_inbuilt_item(setting2, original_chart_settings[setting2], false, form2);
         }
         refresh_all(instance.popper);
       }
@@ -14536,9 +14715,9 @@
       else
         settings.theme_type = "dark";
     }
-    for (let setting in settings_template)
-      if (settings[setting] == void 0)
-        settings[setting] = settings_template[setting];
+    for (let setting2 in settings_template)
+      if (settings[setting2] == void 0)
+        settings[setting2] = settings_template[setting2];
     if (settings.seasonal_particles == true)
       settings.seasonal_particles = "all";
     else if (settings.seasonal_particles == false)
@@ -14549,14 +14728,14 @@
     } else if (settings.seasonal_particles_reduced == false) {
       delete settings.seasonal_particles_reduced;
     }
-    for (let setting in settings) {
-      if ((setting == "hue" || setting == "sat" || setting == "lit") && settings.hue == settings_base.hue.value && settings.sat == settings_base.sat.value && settings.lit == settings_base.lit.value) continue;
+    for (let setting2 in settings) {
+      if ((setting2 == "hue" || setting2 == "sat" || setting2 == "lit") && settings.hue == settings_base.hue.value && settings.sat == settings_base.sat.value && settings.lit == settings_base.lit.value) continue;
       try {
-        document.body.style.setProperty(`--${settings_base[setting].css}`, `${settings[setting]}${settings_base[setting].unit}`);
+        document.body.style.setProperty(`--${settings_base[setting2].css}`, `${settings[setting2]}${settings_base[setting2].unit}`);
       } catch (e) {
-        log(`information for ${setting} not accessible`, "settings", "log");
+        log(`information for ${setting2} not accessible`, "settings", "log");
       }
-      document.documentElement.setAttribute(`data-bleh--${setting}`, `${settings[setting]}`);
+      document.documentElement.setAttribute(`data-bleh--${setting2}`, `${settings[setting2]}`);
     }
     load_skus();
     localStorage.setItem("bleh", JSON.stringify(settings));
@@ -15104,6 +15283,38 @@
     return Math.floor(Math.random() * (b - a + 1)) + a;
   }
 
+  // src/components/settings.js
+  function setting({
+    id,
+    title,
+    body
+  }) {
+    let value = settings[id];
+    let type = settings_store[id].type || "toggle";
+    if (type === "toggle") {
+      let toggle;
+      return html2.node`
+            <div class="setting" data-type="toggle" onclick=${() => update_toggle(id, toggle)}>
+                <div class="heading">
+                    <h5>${title} (v2)</h5>
+                    ${body ? html2.node`<p>${body}</p>` : ""}
+                </div>
+                <div class="toggle-wrap">
+                    <button class="toggle" ref=${(el) => toggle = el} aria-checked=${value}>
+                        <div class="dot"></div>
+                    </button>
+                </div>
+            </div>
+        `;
+    }
+  }
+  function update_toggle(id, toggle) {
+    let value = settings[id];
+    settings[id] = !value;
+    toggle.setAttribute("aria-checked", !value);
+    localStorage.setItem("bleh", JSON.stringify(settings));
+  }
+
   // src/pages/bleh_config.js
   function bleh_settings() {
     page.name = auth.name;
@@ -15307,18 +15518,11 @@
                     <div id="colour_purple" class="palette options colours"></div>
                     <div id="colour_pink" class="palette options colours"></div>
                 </div>
-                <div class="setting" data-type="toggle" id="container-hue_from_album" onclick="_update_item('hue_from_album')">
-                    <button class="btn reset" onclick="_reset_item('hue_from_album')">${tl(trans.reset)}</button>
-                    <div class="heading">
-                        <h5>${tl(trans.hue_from_album.name)}</h5>
-                        <p>${tl(trans.hue_from_album.body)}</p>
-                    </div>
-                    <div class="toggle-wrap">
-                        <button class="toggle" id="toggle-hue_from_album" aria-checked="true">
-                            <div class="dot"></div>
-                        </button>
-                    </div>
-                </div>
+                ${setting({
+        id: "hue_from_album",
+        title: tl(trans.hue_from_album.name),
+        body: tl(trans.hue_from_album.body)
+      })}
                 <div class="setting" data-type="toggle" id="container-colourful_tracks" onclick="_update_item('colourful_tracks')">
                     <button class="btn reset" onclick="_reset_item('colourful_tracks')">${tl(trans.reset)}</button>
                     <div class="heading">
@@ -16542,19 +16746,19 @@
     scroll_to_setting(id);
   };
   function scroll_to_setting(id) {
-    let setting = document.body.querySelector(`#container-${id}`);
-    if (setting != null) {
-      let y = setting.getBoundingClientRect().top + window.scrollY - 300;
+    let setting2 = document.body.querySelector(`#container-${id}`);
+    if (setting2 != null) {
+      let y = setting2.getBoundingClientRect().top + window.scrollY - 300;
       window.scroll({
         top: y,
         behavior: "smooth"
       });
     }
   }
-  unsafeWindow._change_settings_page = function(page2, setting = null) {
-    change_settings_page(page2, setting);
+  unsafeWindow._change_settings_page = function(page2, setting2 = null) {
+    change_settings_page(page2, setting2);
   };
-  function change_settings_page(page_id, setting = null) {
+  function change_settings_page(page_id, setting2 = null) {
     page.structure.main.innerHTML = "";
     if (ff("bleh_settings_tabs")) {
       let btns = document.querySelectorAll(".bleh--nav");
@@ -16614,8 +16818,8 @@
         content: new Date(stored_season.next_start.replace("y0", stored_season.next_is_new_year ? stored_season.year + 1 : stored_season.year).replace("{offset}", stored_season.offset)).toLocaleString(lang)
       });
     }
-    if (setting != null) {
-      let setting_container = document.body.querySelector(`#container-${setting}`);
+    if (setting2 != null) {
+      let setting_container = document.body.querySelector(`#container-${setting2}`);
       if (setting_container != null) {
         let y = setting_container.getBoundingClientRect().top + window.scrollY - 300;
         window.scroll({

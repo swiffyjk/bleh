@@ -17,6 +17,7 @@ import {update_page} from "../page";
 import {seasonal_timer_end, seasonal_timer_start} from "../seasonal";
 import {ff} from "../sku";
 import {html, render} from "lighterhtml"
+import {setting} from "../components/settings.js";
 
 export function bleh_settings() {
     page.name = auth.name;
@@ -236,18 +237,11 @@ export function render_setting_page(page_id) {
                     <div id="colour_purple" class="palette options colours"></div>
                     <div id="colour_pink" class="palette options colours"></div>
                 </div>
-                <div class="setting" data-type="toggle" id="container-hue_from_album" onclick="_update_item('hue_from_album')">
-                    <button class="btn reset" onclick="_reset_item('hue_from_album')">${tl(trans.reset)}</button>
-                    <div class="heading">
-                        <h5>${tl(trans.hue_from_album.name)}</h5>
-                        <p>${tl(trans.hue_from_album.body)}</p>
-                    </div>
-                    <div class="toggle-wrap">
-                        <button class="toggle" id="toggle-hue_from_album" aria-checked="true">
-                            <div class="dot"></div>
-                        </button>
-                    </div>
-                </div>
+                ${setting({
+                    id: 'hue_from_album',
+                    title: tl(trans.hue_from_album.name),
+                    body: tl(trans.hue_from_album.body)
+                })}
                 <div class="setting" data-type="toggle" id="container-colourful_tracks" onclick="_update_item('colourful_tracks')">
                     <button class="btn reset" onclick="_reset_item('colourful_tracks')">${tl(trans.reset)}</button>
                     <div class="heading">
