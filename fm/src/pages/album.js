@@ -73,7 +73,7 @@ export function bleh_albums() {
                     ${(avatar) ? html.node`
                     <img src="${avatar.getAttribute('content').replace('/ar0/', '/avatar170s/')}">
                     <a class="bleh--avatar-clickable-link"></a>
-                    ` : '<img class="missing-album">'}
+                    ` : html.node`<img class="missing-album">`}
                 </div>
                 ` : ''}
                 <div class="info-side">

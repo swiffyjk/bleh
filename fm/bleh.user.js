@@ -19162,7 +19162,7 @@
                     ${avatar3 ? html2.node`
                     <img src="${avatar3.getAttribute("content").replace("/ar0/", "/avatar170s/")}">
                     <a class="bleh--avatar-clickable-link"></a>
-                    ` : '<img class="missing-album">'}
+                    ` : html2.node`<img class="missing-album">`}
                 </div>
                 ` : ""}
                 <div class="info-side">
@@ -19359,41 +19359,39 @@
       let title = artist_header.querySelector(".header-new-title");
       let on_tour = artist_header.querySelector(".header-new-on-tour");
       let position = artist_header.querySelector(".header-new-chart-position-number");
-      let redesigned_artist_header = document.createElement("section");
-      redesigned_artist_header.classList.add("redesigned-header", "redesigned-artist-header", "no-background");
-      redesigned_artist_header.innerHTML = `
-            <div class="avatar-side">
-                ${avatar3 ? `
-                <img src="${avatar3.getAttribute("content").replace("/ar0/", "/avatar300s/")}">
-                <a class="bleh--avatar-clickable-link"></a>
-                ` : '<img class="missing-artist">'}
-            </div>
-            <div class="info-side">
-                ${page.multi ? `
-                <div class="sub-text">
-                    ${tl(trans.artists)}
-                    <div class="info-tip">
-                        <div class="bleh-icon bleh-info-icon"></div>
+      let multi_info_box;
+      let redesigned_artist_header = html2.node`
+            <section class="redesigned-header redesigned-artist-header no-background">
+                <div class="avatar-side">
+                    ${avatar3 ? html2.node`
+                    <img src="${avatar3.getAttribute("content").replace("/ar0/", "/avatar300s/")}">
+                    <a class="bleh--avatar-clickable-link"></a>
+                    ` : html2.node`<img class="missing-artist">`}
+                </div>
+                <div class="info-side">
+                    ${page.multi ? html2.node`
+                    <div class="sub-text">
+                        ${tl(trans.artists)}
+                        <div class="info-tip" ref=${(el) => multi_info_box = el}>
+                            <div class="bleh-icon bleh-info-icon"></div>
+                        </div>
+                    </div>
+                    ` : html2.node`
+                    <div class="sub-text">${tl(trans.artist)}</div>
+                    `}
+                    <div class="title-container" data-multi="${page.multi}">
+                        <h1>${title}</h1>
+                        ${position ? position : ""}
+                        ${on_tour ? on_tour : ""}
                     </div>
                 </div>
-                ` : `
-                <div class="sub-text">${tl(trans.artist)}</div>
-                `}
-                <div class="title-container" data-multi="${page.multi}">
-                    <h1>${title}</h1>
-                    ${position ? position.outerHTML : ""}
-                    ${on_tour ? on_tour.outerHTML : ""}
-                </div>
-                ${featured_items && !katsune ? featured_items.outerHTML : ""}
-            </div>
+            </section>
         `;
-      let multi_info_box = redesigned_artist_header.querySelector(".info-tip");
       if (multi_info_box) {
         tippy(multi_info_box, {
           content: tl(trans.artists_tooltip)
         });
       }
-      position = redesigned_artist_header.querySelector(".header-new-chart-position-number");
       if (position) {
         tippy(position, {
           content: trans_legacy.en.charts.view
@@ -20653,26 +20651,26 @@
       let album_avatar;
       if (source_album)
         album_avatar = source_album.querySelector(".source-album-art img");
-      let redesigned_track_header = document.createElement("section");
-      redesigned_track_header.classList.add("redesigned-header", "redesigned-track-header", "no-background");
-      redesigned_track_header.innerHTML = `
-            <div class="avatar-side">
-                ${album_avatar ? `
-                <img src="${album_avatar.getAttribute("src").replace("300x300", "avatar300s")}">
-                <a class="bleh--avatar-clickable-link"></a>
-                ` : artist_avatar ? `
-                <img src="${artist_avatar.getAttribute("content").replace("/ar0/", "/avatar170s/")}">
-                <a class="bleh--avatar-clickable-link"></a>
-                ` : '<img class="missing-track">'}
-            </div>
-            <div class="info-side">
-                <div class="sub-text">${tl(trans.track)}</div>
-                <div class="title-container">
-                    <h1>${title}</h1>
-                    ${position ? position.outerHTML : ""}
+      let redesigned_track_header = html2.node`
+            <section class="redesigned-header redesigned-track-header no-background">
+                <div class="avatar-side">
+                    ${album_avatar ? html2.node`
+                    <img src="${album_avatar.getAttribute("src").replace("300x300", "avatar300s")}">
+                    <a class="bleh--avatar-clickable-link"></a>
+                    ` : artist_avatar ? html2.node`
+                    <img src="${artist_avatar.getAttribute("content").replace("/ar0/", "/avatar170s/")}">
+                    <a class="bleh--avatar-clickable-link"></a>
+                    ` : html2.node`<img class="missing-track">`}
                 </div>
-                <h2>${artist}</h2>
-            </div>
+                <div class="info-side">
+                    <div class="sub-text">${tl(trans.track)}</div>
+                    <div class="title-container">
+                        <h1>${title}</h1>
+                        ${position ? position : ""}
+                    </div>
+                    <h2>${artist}</h2>
+                </div>
+            </section>
         `;
       let bg;
       if (album_avatar && !album_avatar.getAttribute("src").endsWith("c6f59c1e5e7240a4c0d427abd71f3dbb.jpg"))

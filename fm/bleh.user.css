@@ -10485,7 +10485,7 @@ text[style^="color: rgb(255, 172, 172)"] {
             .menu-header {
                 color: hsl(var(--c3));
                 font-weight: var(--font-weight-medium);
-                padding: 0 var(--button-sides);
+                padding: 3px var(--button-sides) 4px;
                 cursor: default;
             }
 

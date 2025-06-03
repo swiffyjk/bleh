@@ -74,28 +74,28 @@ export function bleh_tracks() {
         if (source_album)
             album_avatar = source_album.querySelector('.source-album-art img');
 
-        let redesigned_track_header = document.createElement('section');
-        redesigned_track_header.classList.add('redesigned-header', 'redesigned-track-header', 'no-background');
-        redesigned_track_header.innerHTML = (`
-            <div class="avatar-side">
-                ${(album_avatar) ? (`
-                <img src="${album_avatar.getAttribute('src').replace('300x300', 'avatar300s')}">
-                <a class="bleh--avatar-clickable-link"></a>
-                `)
-                : (artist_avatar) ? (`
-                <img src="${artist_avatar.getAttribute('content').replace('/ar0/', '/avatar170s/')}">
-                <a class="bleh--avatar-clickable-link"></a>
-                `) : '<img class="missing-track">'}
-            </div>
-            <div class="info-side">
-                <div class="sub-text">${tl(trans.track)}</div>
-                <div class="title-container">
-                    <h1>${title}</h1>
-                    ${(position) ? position.outerHTML : ''}
+        let redesigned_track_header = html.node`
+            <section class="redesigned-header redesigned-track-header no-background">
+                <div class="avatar-side">
+                    ${(album_avatar) ? html.node`
+                    <img src="${album_avatar.getAttribute('src').replace('300x300', 'avatar300s')}">
+                    <a class="bleh--avatar-clickable-link"></a>
+                    `
+                    : (artist_avatar) ? html.node`
+                    <img src="${artist_avatar.getAttribute('content').replace('/ar0/', '/avatar170s/')}">
+                    <a class="bleh--avatar-clickable-link"></a>
+                    ` : html.node`<img class="missing-track">`}
                 </div>
-                <h2>${artist}</h2>
-            </div>
-        `);
+                <div class="info-side">
+                    <div class="sub-text">${tl(trans.track)}</div>
+                    <div class="title-container">
+                        <h1>${title}</h1>
+                        ${(position) ? position : ''}
+                    </div>
+                    <h2>${artist}</h2>
+                </div>
+            </section>
+        `;
 
         let bg;
 
