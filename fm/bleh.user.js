@@ -3816,6 +3816,9 @@
     settings.profile_shortcut = page.name;
     localStorage.setItem("bleh", JSON.stringify(settings));
   }
+  function save_profile_shortcut(input, submit, avatar3) {
+    let value = input.value;
+  }
   unsafeWindow._save_profile_shortcut = function() {
     let profile_name = document.getElementById("text-profile_shortcut").value;
     let profile_img = document.getElementById("avatar-profile_shortcut");
@@ -9517,6 +9520,45 @@
                     </div>
                 </div>
             `;
+      } else if (type === "text") {
+        let option;
+        let max = settings_store[id].max || 0;
+        if (max === 0)
+          return setting_fail(id, { message: "A text type requires a max defined in the settings store" });
+        let reset_btn;
+        let avatar3;
+        let input;
+        let submit;
+        let container = html2.node`
+                <div class="setting" data-type="text" ref=${(el) => option = el}>
+                    <button class="btn reset" ref=${(el) => reset_btn = el} onclick=${() => reset(id)}>${tl(trans.reset)}</button>
+                    <div class="heading">
+                        <h5>${title} (v2)</h5>
+                        ${body ? html2.node`<p>${body}</p>` : ""}
+                    </div>
+                    ${settings_store[id].avatar ? html2.node`
+                    <div class="avatar-container">
+                        <div class="avatar-inner" ref=${(el) => avatar3 = el}>
+                            <img src=${localStorage.getItem(`bleh_${id}_avi`) || ""} alt=${value} />
+                        </div>
+                    </div>
+                    ` : ""}
+                    <div class="input-container content-form">
+                        <input type="text" maxlength=${max} value=${value} style="--max: ${max}px" ref=${(el) => input = el} placeholder=${settings_store[id].placeholder} />
+                        <button class="btn chibi icon primary submit" ref=${(el) => submit = el} onclick=${() => update_text(id, input, submit, option, reset_btn, avatar3)}>${tl(trans.save)}</button>
+                    </div>
+                </div>
+            `;
+        input.addEventListener("keydown", (event3) => {
+          if (event3.keyCode === 13) {
+            event3.preventDefault();
+            submit.click();
+          }
+        });
+        tippy(submit, {
+          content: tl(trans.save)
+        });
+        return container;
       }
     } catch (e) {
       console.error(e);
@@ -9544,6 +9586,24 @@
     marker.textContent = value;
     option.setAttribute("data-modified", value != settings_store[id].default);
     save_setting(id, value);
+  }
+  function update_text(id, input, submit, option, reset_btn, avatar3) {
+    let value = input.value;
+    if (settings_store[id].wait) {
+      reset_btn.disabled = true;
+      input.disabled = true;
+      submit.disabled = true;
+    }
+    if (id === "profile_shortcut") {
+      save_profile_shortcut(input, submit, reset_btn, avatar3);
+      return;
+    }
+    option.setAttribute("data-modified", value != settings_store[id].default);
+    save_setting(id, value);
+    notify({
+      id: "saved_setting",
+      title: "Saved setting"
+    });
   }
   function save_setting(id, value) {
     settings[id] = value;
@@ -9780,6 +9840,7 @@
                 </div>
                 ` : ""}
                 <div class="sep"></div>
+                ${setting("font")}
                 <div class="setting" data-type="text" id="container-font">
                     <div class="heading">
                         <h5>${tl(trans.font.name)}</h5>
@@ -22053,12 +22114,21 @@
     },
     profile_shortcut: {
       default: "",
-      type: "text"
+      type: "text",
+      avatar: true,
+      wait: true,
+      title: tl(trans.profile_shortcut.name),
+      body: tl(trans.profile_shortcut.body),
+      placeholder: tl(trans.enter_username)
     },
     font: {
       css: "custom_font",
       default: "",
-      type: "text"
+      type: "text",
+      max: 120,
+      title: tl(trans.font.name),
+      body: tl(trans.font.body),
+      placeholder: tl(trans.enter_font_names)
     },
     font_weight: {
       css: "custom_font_weight",

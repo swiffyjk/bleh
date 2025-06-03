@@ -8,6 +8,7 @@ import {html} from "lighterhtml";
 import {settings, settings_store} from "../build/config.js";
 import {tl, trans} from "../build/trans.js";
 import {notify} from "./notify.js";
+import {save_profile_shortcut} from "./profile_shortcut.js";
 
 export function setting(id) {
     try {
@@ -69,6 +70,52 @@ export function setting(id) {
                     </div>
                 </div>
             `;
+        } else if (type === 'text') {
+            let option;
+
+            let max = settings_store[id].max || 0;
+
+            if (max === 0)
+                return setting_fail(id, {message: 'A text type requires a max defined in the settings store'});
+
+            let reset_btn;
+            let avatar;
+            let input;
+            let submit;
+
+            let container = html.node`
+                <div class="setting" data-type="text" ref=${el => option = el}>
+                    <button class="btn reset" ref=${el => reset_btn = el} onclick=${() => reset(id)}>${tl(trans.reset)}</button>
+                    <div class="heading">
+                        <h5>${title} (v2)</h5>
+                        ${(body) ? html.node`<p>${body}</p>` : ''}
+                    </div>
+                    ${(settings_store[id].avatar) ? html.node`
+                    <div class="avatar-container">
+                        <div class="avatar-inner" ref=${el => avatar = el}>
+                            <img src=${localStorage.getItem(`bleh_${id}_avi`) || ''} alt=${value} />
+                        </div>
+                    </div>
+                    ` : ''}
+                    <div class="input-container content-form">
+                        <input type="text" maxlength=${max} value=${value} style="--max: ${max}px" ref=${el => input = el} placeholder=${settings_store[id].placeholder} />
+                        <button class="btn chibi icon primary submit" ref=${el => submit = el} onclick=${() => update_text(id, input, submit, option, reset_btn, avatar)}>${tl(trans.save)}</button>
+                    </div>
+                </div>
+            `;
+
+            input.addEventListener('keydown', (event) => {
+                if (event.keyCode === 13) {
+                    event.preventDefault();
+                    submit.click();
+                }
+            });
+
+            tippy(submit, {
+                content: tl(trans.save)
+            });
+
+            return container;
         }
     } catch(e) {
         console.error(e);
@@ -104,6 +151,30 @@ function update_range(id, option, track, value, marker) {
     option.setAttribute('data-modified', value != settings_store[id].default);
 
     save_setting(id, value);
+}
+
+function update_text(id, input, submit, option, reset_btn, avatar) {
+    let value = input.value;
+
+    // wait on response to allow inputs
+    if (settings_store[id].wait) {
+        reset_btn.disabled = true;
+        input.disabled = true;
+        submit.disabled = true;
+    }
+
+    if (id === 'profile_shortcut') {
+        save_profile_shortcut(input, submit, reset_btn, avatar);
+        return;
+    }
+
+    option.setAttribute('data-modified', value != settings_store[id].default);
+
+    save_setting(id, value);
+    notify({
+        id: 'saved_setting',
+        title: 'Saved setting'
+    })
 }
 
 export function save_setting(id, value) {

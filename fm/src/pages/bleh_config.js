@@ -261,6 +261,7 @@ export function render_setting_page(page_id) {
                 </div>
                 ` : ''}
                 <div class="sep"></div>
+                ${setting('font')}
                 <div class="setting" data-type="text" id="container-font">
                     <div class="heading">
                         <h5>${tl(trans.font.name)}</h5>

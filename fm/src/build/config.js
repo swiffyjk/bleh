@@ -719,12 +719,21 @@ export let settings_store = {
     },
     profile_shortcut: {
         default: '',
-        type: 'text'
+        type: 'text',
+        avatar: true,
+        wait: true,
+        title: tl(trans.profile_shortcut.name),
+        body: tl(trans.profile_shortcut.body),
+        placeholder: tl(trans.enter_username)
     },
     font: {
         css: 'custom_font',
         default: '',
-        type: 'text'
+        type: 'text',
+        max: 120,
+        title: tl(trans.font.name),
+        body: tl(trans.font.body),
+        placeholder: tl(trans.enter_font_names)
     },
     font_weight: {
         css: 'custom_font_weight',

@@ -15408,6 +15408,7 @@ input[type="range"]::-moz-range-progress {
         height: 28px;
         margin-right: -5px;
         --show-icon: none;
+        color: color-mix(in hsl, hsl(var(--c2)), hsl(var(--c3)) 50%);
     }
 
     .range {
@@ -15505,7 +15506,8 @@ input[type="range"]::-moz-range-progress {
         margin: unset;
 
         input {
-            width: 230px;
+            width: calc(var(--max) * 3.2);
+            max-width: 380px;
 
             &[type="color"] {
                 width: 100px;
@@ -15513,10 +15515,6 @@ input[type="range"]::-moz-range-progress {
                 padding: unset;
                 border: unset;
             }
-        }
-
-        #text-font {
-            width: 400px;
         }
     }
 }

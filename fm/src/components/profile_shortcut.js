@@ -119,6 +119,10 @@ function confirm_set_profile_as_shortcut() {
     localStorage.setItem('bleh', JSON.stringify(settings));
 }
 
+export function save_profile_shortcut(input, submit, avatar) {
+    let value = input.value;
+}
+
 unsafeWindow._save_profile_shortcut = function() {
     let profile_name = document.getElementById('text-profile_shortcut').value;
     let profile_img = document.getElementById('avatar-profile_shortcut');
