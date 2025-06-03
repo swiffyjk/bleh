@@ -1,8 +1,8 @@
-import { patch_avatar } from "../avatar";
-import { auth, page, root } from "../build/page";
-import { desanitise } from "../build/tools";
-import { trans, tl } from "../build/trans";
-import { ff } from "../sku";
+import {patch_avatar} from "../avatar";
+import {auth, page, root} from "../build/page";
+import {desanitise} from "../build/tools";
+import {tl, trans} from "../build/trans";
+import {ff} from "../sku";
 
 export function bleh_wiki() {
     // make a new panel
@@ -35,7 +35,7 @@ export function bleh_wiki() {
     }
 
     if (original_version_history) {
-        let side_history = document.createElement('section');
+        let side_history = document.createElement('a');
         side_history.classList.add('btn', 'side-action');
         side_history.setAttribute('href', original_version_history.getAttribute('href'));
         side_history.setAttribute('data-type', 'history');

@@ -318,7 +318,7 @@ export function append_nav() {
             </a>
             <a class="btn mobile-control" aria-checked="${page.type == 'inbox'}" data-menu-item="notifications" href="${root}inbox/notifications">
                 ${tl(trans.inbox.name)}
-                ${(inbox_count || notif_count) ? `<div class="notification-count-badge"></div>` : ''}
+                ${(inbox_count || notif_count) ? html.node`<div class="notification-count-badge"></div>` : ''}
             </a>
             <a class="btn mobile-control" aria-checked="${page.type == 'settings' || page.type == 'bleh_settings'}" data-menu-item="settings" href="${root}bleh">
                 ${tl(trans.settings)}
