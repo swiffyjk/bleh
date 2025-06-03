@@ -247,69 +247,13 @@ export function render_setting_page(page_id) {
                 ${setting( 'colourful_tracks')}
                 ${(ff('card_saturation')) ? html.node`
                 ${setting('sat_bg')}
-                <div class="setting hide-if-light-theme" data-type="range" id="container-sat_bg">
-                    <button class="btn reset" onclick="_reset_item('sat_bg')">${tl(trans.reset)}</button>
-                    <div class="heading">
-                        <h5>${tl(trans.card_background_saturation.name)}</h5>
-                        <p>${tl(trans.card_background_saturation.body)}</p>
-                    </div>
-                    <div class="range">
-                        <div class="track" id="slider-track-sat_bg"><div class="fill"></div><div class="nub"></div></div>
-                        <input type="range" min="0" max="3" value="0" step="0.1" id="slider-sat_bg" oninput="_update_item('sat_bg', this.value)">
-                        <p id="value-sat_bg">0</p>
-                    </div>
-                </div>
                 ` : ''}
                 <div class="sep"></div>
                 ${setting('font')}
-                <div class="setting" data-type="range" id="container-font_weight">
-                    <button class="btn reset" onclick="_reset_item('font_weight')">${tl(trans.reset)}</button>
-                    <div class="heading">
-                        <h5>${tl(trans.font_weight.name)}</h5>
-                        <p>${tl(trans.font_weight.body)}</p>
-                    </div>
-                    <div class="range">
-                        <div class="track" id="slider-track-font_weight"><div class="fill"></div><div class="nub"></div></div>
-                        <input type="range" min="0" max="900" value="0" step="10" id="slider-font_weight" oninput="_update_item('font_weight', this.value)">
-                        <p id="value-font_weight">0</p>
-                    </div>
-                </div>
-                <div class="setting" data-type="range" id="container-font_weight_medium">
-                    <button class="btn reset" onclick="_reset_item('font_weight_medium')">${tl(trans.reset)}</button>
-                    <div class="heading">
-                        <h5>${tl(trans.font_weight_medium.name)}</h5>
-                        <p>${tl(trans.font_weight_medium.body)}</p>
-                    </div>
-                    <div class="range">
-                        <div class="track" id="slider-track-font_weight_medium"><div class="fill"></div><div class="nub"></div></div>
-                        <input type="range" min="0" max="900" value="0" step="10" id="slider-font_weight_medium" oninput="_update_item('font_weight_medium', this.value)">
-                        <p id="value-font_weight_medium">0</p>
-                    </div>
-                </div>
-                <div class="setting" data-type="range" id="container-font_weight_bold">
-                    <button class="btn reset" onclick="_reset_item('font_weight_bold')">${tl(trans.reset)}</button>
-                    <div class="heading">
-                        <h5>${tl(trans.font_weight_bold.name)}</h5>
-                        <p>${tl(trans.font_weight_bold.body)}</p>
-                    </div>
-                    <div class="range">
-                        <div class="track" id="slider-track-font_weight_bold"><div class="fill"></div><div class="nub"></div></div>
-                        <input type="range" min="0" max="900" value="0" step="10" id="slider-font_weight_bold" oninput="_update_item('font_weight_bold', this.value)">
-                        <p id="value-font_weight_bold">0</p>
-                    </div>
-                </div>
-                <div class="setting" data-type="toggle" id="container-font_emoji" onclick="_update_item('font_emoji')">
-                    <button class="btn reset" onclick="_reset_item('font_emoji')">${tl(trans.reset)}</button>
-                    <div class="heading">
-                        <h5>${tl(trans.font_emoji.name)}</h5>
-                        <p>${tl(trans.font_emoji.body)}</p>
-                    </div>
-                    <div class="toggle-wrap">
-                        <button class="toggle" id="toggle-font_emoji" aria-checked="false">
-                            <div class="dot"></div>
-                        </button>
-                    </div>
-                </div>
+                ${setting('font_weight')}
+                ${setting('font_weight_medium')}
+                ${setting('font_weight_bold')}
+                ${setting('font_emoji')}
             </div>
             `;
     } else if (page_id == 'customise') {
@@ -701,44 +645,8 @@ export function render_setting_page(page_id) {
                     </div>
                 </div>
                 ${setting('profile_shortcut')}
-                <div class="setting" data-type="text" id="container-profile_shortcut">
-                    <div class="heading content-form">
-                        <h5>${tl(trans.profile_shortcut.name)}</h5>
-                        <p>${tl(trans.profile_shortcut.body)}</p>
-                    </div>
-                    <div class="avatar-container">
-                        <div class="avatar-inner" id="avatar-profile_shortcut">
-                            <img id="avatar_src-profile_shortcut" src="${localStorage.getItem('bleh_profile_shortcut_avi') || ''}">
-                        </div>
-                    </div>
-                    <div class="input-container content-form">
-                        <input type="text" maxlength="40" id="text-profile_shortcut" value="${settings.profile_shortcut}" placeholder="${tl(trans.enter_username)}">
-                        <button class="btn chibi icon primary submit" onclick="_save_profile_shortcut()">${tl(trans.save)}</button>
-                    </div>
-                </div>
-                <div class="setting" data-type="range" id="container-avatar_radius">
-                    <button class="btn reset" onclick="_reset_item('avatar_radius')">${tl(trans.reset)}</button>
-                    <div class="heading">
-                        <h5>${tl(trans.avatar_radius)}</h5>
-                    </div>
-                    <div class="range">
-                        <div class="track" id="slider-track-avatar_radius"><div class="fill"></div><div class="nub"></div></div>
-                        <input type="range" min="0" max="50" value="0" step="1" id="slider-avatar_radius" oninput="_update_item('avatar_radius', this.value)">
-                        <p id="value-avatar_radius">0</p>
-                    </div>
-                </div>
-                <div class="setting" data-type="toggle" id="container-bio_markdown" onclick="_update_item('bio_markdown')">
-                    <button class="btn reset" onclick="_reset_item('bio_markdown')">${tl(trans.reset)}</button>
-                    <div class="heading">
-                        <h5>${tl(trans.markdown_profiles.name)}</h5>
-                        <p>${tl(trans.markdown_profiles.body)}</p>
-                    </div>
-                    <div class="toggle-wrap">
-                        <button class="toggle" id="toggle-bio_markdown" aria-checked="false">
-                            <div class="dot"></div>
-                        </button>
-                    </div>
-                </div>
+                ${setting('avatar_radius')}
+                ${setting('bio_markdown')}
             </div>
             <div class="bleh--panel">
                 <h4>${tl(trans.notes)}</h4>
@@ -945,18 +853,7 @@ export function render_setting_page(page_id) {
                         </div>
                     </div>
                 </div>
-                <div class="setting" data-type="toggle" id="container-shout_markdown" onclick="_update_item('shout_markdown')">
-                    <button class="btn reset" onclick="_reset_item('shout_markdown')">${tl(trans.reset)}</button>
-                    <div class="heading">
-                        <h5>${tl(trans.markdown_shouts.name)}</h5>
-                        <p>${tl(trans.markdown_shouts.body)}</p>
-                    </div>
-                    <div class="toggle-wrap">
-                        <button class="toggle" id="toggle-shout_markdown" aria-checked="false">
-                            <div class="dot"></div>
-                        </button>
-                    </div>
-                </div>
+                ${setting('shout_markdown')}
                 <div class="sep"></div>
                 <div class="setting" data-type="toggle" id="container-accessible_name_colours" onclick="_update_item('accessible_name_colours')">
                     <button class="btn reset" onclick="_reset_item('accessible_name_colours')">${tl(trans.reset)}</button>

@@ -688,10 +688,26 @@ export let settings_store = {
         type: 'radio'
     },
     shout_markdown: {
-        default: true
+        default: true,
+        require_reload: 'partial',
+        title: tl(trans.markdown_shouts.name),
+        body: tl(trans.markdown_shouts.body)
     },
     bio_markdown: {
-        default: true
+        default: true,
+        require_reload: 'partial',
+        title: tl(trans.markdown_profiles.name),
+        body: tl(trans.markdown_profiles.body)
+    },
+    avatar_radius: {
+        default: 50,
+        min: 0,
+        max: 50,
+        step: 1,
+        type: 'range',
+        css: 'avatar-radius',
+        suffix: '%',
+        title: tl(trans.avatar_radius)
     },
     hue_from_album: {
         default: true,
@@ -739,29 +755,37 @@ export let settings_store = {
     font_weight: {
         css: 'custom_font_weight',
         default: 480,
-        min: 0,
-        max: 0,
-        step: 0,
-        type: 'range'
+        min: 100,
+        max: 500,
+        step: 10,
+        type: 'range',
+        title: tl(trans.font_weight.name),
+        body: tl(trans.font_weight.body)
     },
     font_weight_medium: {
         css: 'custom_font_weight_medium',
         default: 650,
-        min: 0,
-        max: 0,
-        step: 0,
-        type: 'range'
+        min: 500,
+        max: 700,
+        step: 10,
+        type: 'range',
+        title: tl(trans.font_weight_medium.name),
+        body: tl(trans.font_weight_medium.body)
     },
     font_weight_bold: {
         css: 'custom_font_weight_bold',
         default: 730,
-        min: 0,
-        max: 0,
-        step: 0,
-        type: 'range'
+        min: 700,
+        max: 900,
+        step: 10,
+        type: 'range',
+        title: tl(trans.font_weight_bold.name),
+        body: tl(trans.font_weight_bold.body)
     },
     font_emoji: {
-        default: true
+        default: true,
+        title: tl(trans.font_emoji.name),
+        body: tl(trans.font_emoji.body)
     },
     show_bulk_edit_album: {
         default: false

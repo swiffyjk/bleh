@@ -27,7 +27,7 @@ export function setting(id) {
             return html.node`
                 <div class="setting" data-type="toggle" onclick=${() => update_toggle(id, toggle)}>
                     <div class="heading">
-                        <h5>${title} (v2)</h5>
+                        <h5>${title} <span class="new-badge">v2</span></h5>
                         ${(body) ? html.node`<p>${body}</p>` : ''}
                     </div>
                     <div class="toggle-wrap">
@@ -57,16 +57,16 @@ export function setting(id) {
                 <div class="setting" data-type="range" ref=${el => option = el} data-modified=${value != settings_store[id].default}>
                     <button class="btn reset" onclick=${() => reset(id)}>${tl(trans.reset)}</button>
                     <div class="heading">
-                        <h5>${title} (v2)</h5>
+                        <h5>${title} <span class="new-badge">v2</span></h5>
                         ${(body) ? html.node`<p>${body}</p>` : ''}
                     </div>
                     <div class="range">
-                        <div class="track" style="--percent: ${(value / working_max) * 100}%" ref=${el => track = el}>
+                        <div class="track" style="--percent: ${((value - settings_store[id].min) / working_max) * 100}%" ref=${el => track = el}>
                             <div class="fill" />
                             <div class="nub" />
                         </div>
                         <input type="range" min=${min} max=${max} step=${step} value=${value} ref=${el => input = el} oninput=${() => update_range(id, option, track, input.value, marker)} />
-                        <p class="value-marker" ref=${el => marker = el}>${value}</p>
+                        <p class="value-marker" ref=${el => marker = el}>${value}${settings_store[id].suffix || ''}</p>
                     </div>
                 </div>
             `;
@@ -87,7 +87,7 @@ export function setting(id) {
                 <div class="setting" data-type="text" ref=${el => option = el} data-modified=${value != settings_store[id].default}>
                     <button class="btn reset" ref=${el => reset_btn = el} onclick=${() => reset(id)}>${tl(trans.reset)}</button>
                     <div class="heading">
-                        <h5>${title} (v2)</h5>
+                        <h5>${title} <span class="new-badge">v2</span></h5>
                         ${(body) ? html.node`<p>${body}</p>` : ''}
                     </div>
                     ${(settings_store[id].avatar) ? html.node`
@@ -142,11 +142,10 @@ function update_toggle(id, toggle) {
     save_setting(id, value);
 }
 function update_range(id, option, track, value, marker) {
-    let min = 0;
     let max = settings_store[id].max - settings_store[id].min;
 
-    track.style.setProperty('--percent', `${(value / max) * 100}%`);
-    marker.textContent = value;
+    track.style.setProperty('--percent', `${((value - settings_store[id].min) / max) * 100}%`);
+    marker.textContent = `${value}${settings_store[id].suffix || ''}`;
 
     option.setAttribute('data-modified', value != settings_store[id].default);
 
