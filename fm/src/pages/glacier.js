@@ -2,7 +2,7 @@ import {html} from "lighterhtml";
 import {settings} from "../build/config";
 import {log} from "../build/log";
 import {auth, page, root} from "../build/page";
-import {sanitise} from "../build/tools";
+import {sanitise, sanitise_text} from "../build/tools";
 import {tl, trans, trans_legacy} from "../build/trans";
 import {prep_chart_colours} from "../chart";
 import {correct_artist, correct_item_by_artist} from "../components/lotus";
@@ -1089,7 +1089,7 @@ function bleh_glacier_library_focused() {
                     ${tl(trans[type])}
                 </div>
                 <div class="glacier-library-metadata-item-value glacier-library-metadata-focus" data-type="${type}">
-                    <a href="${link}">${(type == 'artist') ? correct_artist(header_title) : correct_item_by_artist(header_title, artist)}</a>${(duration) ? ` <span class="glacier-library-track-duration">${duration.textContent}</span>` : ''}${(type != 'artist') ? trans_legacy.en.glacier.by_artist.replace('{a}', `<a href="${root}user/${page.name}/library/music/+noredirect/${sanitise(artist)}${current_suffix}">${correct_artist(artist)}</a>`) : ''}
+                    <a href="${link}">${(type == 'artist') ? correct_artist(header_title) : correct_item_by_artist(header_title, artist)}</a>${(duration) ? ` <span class="glacier-library-track-duration">${duration.textContent}</span>` : ''}${(type != 'artist') ? html`${{html: trans_legacy.en.glacier.by_artist.replace('{a}', `<a href="${root}user/${page.name}/library/music/+noredirect/${sanitise(artist)}${current_suffix}">${sanitise_text(correct_artist(artist))}</a>`)}}` : ''}
                 </div>
             </div>
         </div>
