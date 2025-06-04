@@ -20,8 +20,8 @@ export function setting(id, text = true) {
             return setting_fail(id, {message: 'No settings store entry present'});
 
         let type = settings_store[id].type || 'toggle';
-        let title = settings_store[id].title || id;
-        let body = settings_store[id].body;
+        let title = tl(settings_store[id].title) || id;
+        let body = tl(settings_store[id].body);
 
         if (type === 'toggle') {
             let toggle;
@@ -106,7 +106,7 @@ export function setting(id, text = true) {
                     </div>
                     ` : ''}
                     <div class="input-container content-form">
-                        <input type="text" maxlength=${max} value=${value} style="--max: ${max}px" ref=${el => input = el} placeholder=${settings_store[id].placeholder} />
+                        <input type="text" maxlength=${max} value=${value} style="--max: ${max}px" ref=${el => input = el} placeholder=${tl(settings_store[id].placeholder)} />
                         <button class="btn chibi icon primary submit" ref=${el => submit = el} onclick=${() => update_text(id, input, submit, option, input.value, reset_btn, avatar)}>${tl(trans.save)}</button>
                     </div>
                 </div>

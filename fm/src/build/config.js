@@ -1,10 +1,10 @@
 //
 // bleh, an extension for the music site Last.fm
-// Copyright (c) 2025 katelyn and contributors
+// Copyright (c 2025 katelyn and contributors
 // Licensed under GPLv3
 //
 
-import {tl, trans} from "./trans.js";
+import {trans} from "./trans.js";
 
 export let settings = {};
 export let settings_template = {
@@ -605,8 +605,8 @@ export let settings_store = {
         min: 0,
         max: 1.5,
         step: 0.1,
-        title: tl(trans.card_background_saturation.name),
-        body: tl(trans.card_background_saturation.body)
+        title: trans.card_background_saturation.name,
+        body: trans.card_background_saturation.body
     },
     lit: {
         default: 1,
@@ -658,8 +658,8 @@ export let settings_store = {
     },
     colourful_tracks: {
         default: true,
-        title: tl(trans.colourful_tracks.name),
-        body: tl(trans.colourful_tracks.body)
+        title: trans.colourful_tracks.name,
+        body: trans.colourful_tracks.body
     },
     feature_flags: {
         default: {},
@@ -690,14 +690,14 @@ export let settings_store = {
     shout_markdown: {
         default: true,
         require_reload: 'partial',
-        title: tl(trans.markdown_shouts.name),
-        body: tl(trans.markdown_shouts.body)
+        title: trans.markdown_shouts.name,
+        body: trans.markdown_shouts.body
     },
     bio_markdown: {
         default: true,
         require_reload: 'partial',
-        title: tl(trans.markdown_profiles.name),
-        body: tl(trans.markdown_profiles.body)
+        title: trans.markdown_profiles.name,
+        body: trans.markdown_profiles.body
     },
     avatar_radius: {
         default: 50,
@@ -707,12 +707,12 @@ export let settings_store = {
         type: 'range',
         css: 'avatar-radius',
         suffix: '%',
-        title: tl(trans.avatar_radius)
+        title: trans.avatar_radius
     },
     hue_from_album: {
         default: true,
-        title: tl(trans.hue_from_album.name),
-        body: tl(trans.hue_from_album.body)
+        title: trans.hue_from_album.name,
+        body: trans.hue_from_album.body
     },
     seasonal: {
         default: true
@@ -739,18 +739,18 @@ export let settings_store = {
         avatar: true,
         wait: true,
         max: 40,
-        title: tl(trans.profile_shortcut.name),
-        body: tl(trans.profile_shortcut.body),
-        placeholder: tl(trans.enter_username)
+        title: trans.profile_shortcut.name,
+        body: trans.profile_shortcut.body,
+        placeholder: trans.enter_username
     },
     font: {
         css: 'custom_font',
         default: '',
         type: 'text',
         max: 120,
-        title: tl(trans.font.name),
-        body: tl(trans.font.body),
-        placeholder: tl(trans.enter_font_names)
+        title: trans.font.name,
+        body: trans.font.body,
+        placeholder: trans.enter_font_names
     },
     font_weight: {
         css: 'custom_font_weight',
@@ -759,8 +759,8 @@ export let settings_store = {
         max: 500,
         step: 10,
         type: 'range',
-        title: tl(trans.font_weight.name),
-        body: tl(trans.font_weight.body)
+        title: trans.font_weight.name,
+        body: trans.font_weight.body
     },
     font_weight_medium: {
         css: 'custom_font_weight_medium',
@@ -769,8 +769,8 @@ export let settings_store = {
         max: 700,
         step: 10,
         type: 'range',
-        title: tl(trans.font_weight_medium.name),
-        body: tl(trans.font_weight_medium.body)
+        title: trans.font_weight_medium.name,
+        body: trans.font_weight_medium.body
     },
     font_weight_bold: {
         css: 'custom_font_weight_bold',
@@ -779,13 +779,13 @@ export let settings_store = {
         max: 900,
         step: 10,
         type: 'range',
-        title: tl(trans.font_weight_bold.name),
-        body: tl(trans.font_weight_bold.body)
+        title: trans.font_weight_bold.name,
+        body: trans.font_weight_bold.body
     },
     font_emoji: {
         default: true,
-        title: tl(trans.font_emoji.name),
-        body: tl(trans.font_emoji.body)
+        title: trans.font_emoji.name,
+        body: trans.font_emoji.body
     },
     show_bulk_edit_album: {
         default: false
