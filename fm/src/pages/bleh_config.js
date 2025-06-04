@@ -243,17 +243,17 @@ export function render_setting_page(page_id) {
                     <div id="colour_purple" class="palette options colours"></div>
                     <div id="colour_pink" class="palette options colours"></div>
                 </div>
-                ${setting('hue_from_album')}
-                ${setting( 'colourful_tracks')}
+                ${setting({id: 'hue_from_album'})}
+                ${setting( {id: 'colourful_tracks'})}
                 ${(ff('card_saturation')) ? html.node`
-                ${setting('sat_bg')}
+                ${setting({id: 'sat_bg'})}
                 ` : ''}
                 <div class="sep"></div>
-                ${setting('font')}
-                ${setting('font_weight')}
-                ${setting('font_weight_medium')}
-                ${setting('font_weight_bold')}
-                ${setting('font_emoji')}
+                ${setting({id: 'font'})}
+                ${setting({id: 'font_weight'})}
+                ${setting({id: 'font_weight_medium'})}
+                ${setting({id: 'font_weight_bold'})}
+                ${setting({id: 'font_emoji'})}
             </div>
             `;
     } else if (page_id == 'customise') {
@@ -644,9 +644,9 @@ export function render_setting_page(page_id) {
                         <button class="see-more update-check sponsor-related" onclick="_sponsor_check()">${tl(trans.update_check)}</button>
                     </div>
                 </div>
-                ${setting('profile_shortcut')}
-                ${setting('avatar_radius')}
-                ${setting('bio_markdown')}
+                ${setting({id: 'profile_shortcut'})}
+                ${setting({id: 'avatar_radius'})}
+                ${setting({id: 'bio_markdown'})}
             </div>
             <div class="bleh--panel">
                 <h4>${tl(trans.notes)}</h4>
@@ -853,10 +853,10 @@ export function render_setting_page(page_id) {
                         </div>
                     </div>
                 </div>
-                ${setting('shout_markdown')}
+                ${setting({id: 'shout_markdown'})}
                 <div class="sep"></div>
-                ${setting('accessible_name_colours')}
-                ${setting('underline_links')}
+                ${setting({id: 'accessible_name_colours'})}
+                ${setting({id: 'underline_links'})}
             </div>
             <div class="bleh--panel">
                 <h4>${tl(trans.language)}</h4>
@@ -1147,18 +1147,7 @@ export function render_setting_page(page_id) {
                         </button>
                     </div>
                 </div>
-                <div class="setting hide-if-no-bulk-edit" data-type="toggle" id="container-show_bulk_edit_album" onclick="_update_item('show_bulk_edit_album')">
-                    <button class="btn reset" onclick="_reset_item('show_bulk_edit_album')">${tl(trans.reset)}</button>
-                    <div class="heading">
-                        <h5>${tl(trans.show_bulk_edit_album.name)}</h5>
-                        <p>${tl(trans.show_bulk_edit_album.body)}</p>
-                    </div>
-                    <div class="toggle-wrap">
-                        <button class="toggle" id="toggle-show_bulk_edit_album" aria-checked="false">
-                            <div class="dot"></div>
-                        </button>
-                    </div>
-                </div>
+                ${setting({id: 'show_bulk_edit_album'})}
                 <div class="setting" data-type="toggle" id="container-glacier_library_graphs" onclick="_update_item('glacier_library_graphs')">
                     <button class="btn reset" onclick="_reset_item('glacier_library_graphs')">${tl(trans.reset)}</button>
                     <div class="heading">
@@ -1515,7 +1504,7 @@ function bleh_sku_page() {
         render(feature_flag_element, html`
             <div class="heading">
                 <h5>${version.feature_flags[flag].name}</h5>
-                ${(version.feature_flags[flag].notice) ? `<p>${version.feature_flags[flag].notice}</p>` : ''}
+                ${(version.feature_flags[flag].notice) ? html.node`<p>${{html: version.feature_flags[flag].notice}}</p>` : ''}
                 <div class="info-row">
                     <div class="new-badge flag-${version.feature_flags[flag].default}">${version.feature_flags[flag].default}</div><p class="date">${version.feature_flags[flag].date}</p><p>${flag}</p>
                 </div>

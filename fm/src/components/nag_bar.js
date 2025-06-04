@@ -27,8 +27,9 @@ export function nag_bar() {
                 notify({
                     id: 'corrections',
                     title: trans_legacy.en.nag_bar.corrections.title,
-                    body: active_nag.querySelector('strong').innerHTML,
-                    icon: 'icon-16-refresh'
+                    body: active_nag.querySelector('strong'),
+                    icon: 'icon-16-refresh',
+                    long: true
                 });
             }
         } else {

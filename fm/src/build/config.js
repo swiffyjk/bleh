@@ -792,7 +792,12 @@ export let settings_store = {
         body: trans.font_emoji.body
     },
     show_bulk_edit_album: {
-        default: false
+        default: false,
+        title: trans.show_bulk_edit_album.name,
+        body: trans.show_bulk_edit_album.body,
+        extensions: [
+            trans.bulk_edit_extension
+        ]
     },
     grid_glow: {
         default: true

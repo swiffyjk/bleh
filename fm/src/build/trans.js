@@ -2431,6 +2431,12 @@ export const trans = {
     },
     profile_does_not_have_enough_scrobbles: {
         en: 'Profile does not have enough scrobbles'
+    },
+    requires_extension_value: {
+        en: 'Requires extension ‘{v}’'
+    },
+    bulk_edit_extension: {
+        en: 'Last.fm Bulk Edit'
     }
 }
 

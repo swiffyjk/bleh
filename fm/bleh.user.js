@@ -1547,7 +1547,8 @@
     classname,
     actions = [],
     persist = false,
-    type = "generic"
+    type = "generic",
+    long = false
   }) {
     log(`creating ${title}`, "notification", "info", {
       id,
@@ -1556,7 +1557,8 @@
       icon,
       classname,
       persist,
-      type
+      type,
+      long
     });
     if (type === "error")
       icon = "icon-16-x";
@@ -1565,12 +1567,18 @@
     if (!icon)
       icon = "icon-16-info";
     let bar;
+    actions.push({
+      type: "close",
+      action: () => notify_rm(notif),
+      text: tl(trans.close)
+    });
     let notif = html2.node`
         <div
             class=${[
       "bleh-notification",
       icon ? "with-icon" : "",
-      classname ? classname : ""
+      classname ? classname : "",
+      long ? "long" : ""
     ].join(" ")}
             data-type=${type}
             style=${[
@@ -1587,10 +1595,15 @@
             <div class="notification-progress" ref=${(el) => bar = el}></div>
             ` : ""}
             <div class="notification-actions">
-                ${actions.length > 0 ? actions.map((action) => html2.node`
-                <button class="notification-action" data-type=${action.type} onclick=${action.action}>${action.text}</button>
-                `) : ""}
-                <button class="notification-action" data-type="close" onclick=${() => notify_rm(notif)}>${tl(trans.close)}</button>
+                ${actions.length > 0 ? actions.map((action) => () => {
+      let button = html2.node`
+                        <button class="notification-action" data-type=${action.type} onclick=${action.action}>${action.text}</button>
+                    `;
+      tippy(button, {
+        content: action.text
+      });
+      return button;
+    }) : ""}
             </div>
         </div>
     `;
@@ -1602,7 +1615,7 @@
     }, 1);
     setTimeout(function() {
       notify_rm(notif);
-    }, 3e3);
+    }, long ? 7e3 : 3e3);
     return notif;
   }
   unsafeWindow._notify_rm = function(notif) {
@@ -3724,7 +3737,11 @@
   }
 
   // src/components/settings.js
-  function setting(id, text2 = true) {
+  function setting({
+    id = "",
+    text: text2 = true,
+    focus = false
+  }) {
     try {
       let value = settings[id];
       if (!settings_store[id])
@@ -3740,6 +3757,21 @@
                     <div class="heading">
                         <h5>${title} <span class="new-badge">v2</span></h5>
                         ${body ? html2.node`<p>${body}</p>` : ""}
+                    </div>
+                    ` : ""}
+                    ${settings_store[id].extensions ? html2.node`
+                    <div class="extensions">
+                        ${settings_store[id].extensions.map((extension) => () => {
+          let container = html2.node`
+                                <div class="extension">
+                                    <div class="bleh-icon" />
+                                </div>
+                            `;
+          tippy(container, {
+            content: tl(trans.requires_extension_value).replace("{v}", tl(extension))
+          });
+          return container;
+        })}
                     </div>
                     ` : ""}
                     <div class="toggle-wrap">
@@ -3767,6 +3799,21 @@
                     <div class="heading">
                         <h5>${title} <span class="new-badge">v2</span></h5>
                         ${body ? html2.node`<p>${body}</p>` : ""}
+                    </div>
+                    ` : ""}
+                    ${settings_store[id].extensions ? html2.node`
+                    <div class="extensions">
+                        ${settings_store[id].extensions.map((extension) => () => {
+          let container = html2.node`
+                                <div class="extension">
+                                    <div class="bleh-icon" />
+                                </div>
+                            `;
+          tippy(container, {
+            content: tl(trans.requires_extension_value).replace("{v}", tl(extension))
+          });
+          return container;
+        })}
                     </div>
                     ` : ""}
                     <div class="range">
@@ -3797,6 +3844,21 @@
                         ${body ? html2.node`<p>${body}</p>` : ""}
                     </div>
                     ` : ""}
+                    ${settings_store[id].extensions ? html2.node`
+                    <div class="extensions">
+                        ${settings_store[id].extensions.map((extension) => () => {
+          let container2 = html2.node`
+                                <div class="extension">
+                                    <div class="bleh-icon" />
+                                </div>
+                            `;
+          tippy(container2, {
+            content: tl(trans.requires_extension_value).replace("{v}", tl(extension))
+          });
+          return container2;
+        })}
+                    </div>
+                    ` : ""}
                     ${settings_store[id].avatar ? html2.node`
                     <div class="avatar-container">
                         <div class="avatar-inner" ref=${(el) => avatar3 = el}>
@@ -3819,6 +3881,8 @@
         tippy(submit, {
           content: tl(trans.save)
         });
+        if (focus)
+          input.focus();
         return container;
       }
     } catch (e) {
@@ -3899,7 +3963,7 @@
       id: "profile_shortcut",
       title: tl(trans.profile_shortcut.name),
       body: html2.node`
-        ${setting("profile_shortcut", false)}
+        ${setting({ id: "profile_shortcut", text: false, focus: true })}
         `
     });
     modal.querySelector("#text-profile_shortcut").focus();
@@ -3908,7 +3972,9 @@
     other_listener(id);
   };
   function other_listener(id) {
-    let modal = dialog({
+    let input;
+    let submit;
+    dialog({
       id: "other_listener",
       title: tl(trans.view_others_library),
       body: html2.node`
@@ -3919,21 +3985,30 @@
                 </div>
             </div>
             <div class="input-container content-form">
-                <input type="text" maxlength="40" id="text-profile" placeholder="${tl(trans.enter_username)}">
-                <button class="btn chibi icon primary submit" onclick="_send_other_listener('${id}')">${tl(trans.done)}</button>
+                <input type="text" maxlength="40" id="text-profile" ref=${(el) => input = el} placeholder="${tl(trans.enter_username)}">
+                <button class="btn chibi icon primary submit" ref=${(el) => submit = el} onclick=${() => {
+        let name = input.value;
+        let link = id;
+        dialog_rm2({
+          id: "other_listener"
+        });
+        window.location.href = `${root}user/${name}/library/music/${link}`;
+      }}>${tl(trans.done)}</button>
             </div>
         </div>
         `
     });
-    modal.querySelector("#text-profile").focus();
-  }
-  unsafeWindow._send_other_listener = function(link) {
-    let name = dialogs["other_listener"].instance.querySelector("#text-profile").value;
-    dialog_rm2({
-      id: "other_listener"
+    input.addEventListener("keydown", (event3) => {
+      if (event3.keyCode === 13) {
+        event3.preventDefault();
+        submit.click();
+      }
     });
-    window.location.href = `${root}user/${name}/library/music/${link}`;
-  };
+    tippy(submit, {
+      content: tl(trans.save)
+    });
+    input.focus();
+  }
   unsafeWindow._set_profile_as_shortcut = function(button) {
     page.state.profile_shortcut_button = button;
     dialog({
@@ -5163,7 +5238,7 @@
 
   // src/components/track.js
   function patch_titles(search = page.structure.main) {
-    if (page.subpage === "tags_overview")
+    if (page.subpage === "tags_overview" || page.subpage == "tags_tag")
       return;
     if (!search) return;
     let tracklists = search.querySelectorAll(".chartlist:not(.chartlist__placeholder)");
@@ -9137,7 +9212,7 @@
     }
     load_chart_colours();
   }
-  unsafeWindow.toggle_theme = function() {
+  function toggle_theme() {
     if (page.subpage.startsWith("listening-report"))
       return;
     let current_theme = settings.theme;
@@ -9169,7 +9244,7 @@
       bleh_glacier_date_graph_generate();
       bleh_glacier_insights();
     }
-  };
+  }
   unsafeWindow.change_theme_from_settings = function(theme) {
     settings.theme = theme;
     if (theme == "light" || theme == "ink")
@@ -9891,17 +9966,17 @@
                     <div id="colour_purple" class="palette options colours"></div>
                     <div id="colour_pink" class="palette options colours"></div>
                 </div>
-                ${setting("hue_from_album")}
-                ${setting("colourful_tracks")}
+                ${setting({ id: "hue_from_album" })}
+                ${setting({ id: "colourful_tracks" })}
                 ${ff("card_saturation") ? html2.node`
-                ${setting("sat_bg")}
+                ${setting({ id: "sat_bg" })}
                 ` : ""}
                 <div class="sep"></div>
-                ${setting("font")}
-                ${setting("font_weight")}
-                ${setting("font_weight_medium")}
-                ${setting("font_weight_bold")}
-                ${setting("font_emoji")}
+                ${setting({ id: "font" })}
+                ${setting({ id: "font_weight" })}
+                ${setting({ id: "font_weight_medium" })}
+                ${setting({ id: "font_weight_bold" })}
+                ${setting({ id: "font_emoji" })}
             </div>
             `;
     } else if (page_id == "customise") {
@@ -10283,9 +10358,9 @@
                         <button class="see-more update-check sponsor-related" onclick="_sponsor_check()">${tl(trans.update_check)}</button>
                     </div>
                 </div>
-                ${setting("profile_shortcut")}
-                ${setting("avatar_radius")}
-                ${setting("bio_markdown")}
+                ${setting({ id: "profile_shortcut" })}
+                ${setting({ id: "avatar_radius" })}
+                ${setting({ id: "bio_markdown" })}
             </div>
             <div class="bleh--panel">
                 <h4>${tl(trans.notes)}</h4>
@@ -10490,10 +10565,10 @@
                         </div>
                     </div>
                 </div>
-                ${setting("shout_markdown")}
+                ${setting({ id: "shout_markdown" })}
                 <div class="sep"></div>
-                ${setting("accessible_name_colours")}
-                ${setting("underline_links")}
+                ${setting({ id: "accessible_name_colours" })}
+                ${setting({ id: "underline_links" })}
             </div>
             <div class="bleh--panel">
                 <h4>${tl(trans.language)}</h4>
@@ -10765,18 +10840,7 @@
                         </button>
                     </div>
                 </div>
-                <div class="setting hide-if-no-bulk-edit" data-type="toggle" id="container-show_bulk_edit_album" onclick="_update_item('show_bulk_edit_album')">
-                    <button class="btn reset" onclick="_reset_item('show_bulk_edit_album')">${tl(trans.reset)}</button>
-                    <div class="heading">
-                        <h5>${tl(trans.show_bulk_edit_album.name)}</h5>
-                        <p>${tl(trans.show_bulk_edit_album.body)}</p>
-                    </div>
-                    <div class="toggle-wrap">
-                        <button class="toggle" id="toggle-show_bulk_edit_album" aria-checked="false">
-                            <div class="dot"></div>
-                        </button>
-                    </div>
-                </div>
+                ${setting({ id: "show_bulk_edit_album" })}
                 <div class="setting" data-type="toggle" id="container-glacier_library_graphs" onclick="_update_item('glacier_library_graphs')">
                     <button class="btn reset" onclick="_reset_item('glacier_library_graphs')">${tl(trans.reset)}</button>
                     <div class="heading">
@@ -11102,7 +11166,7 @@
       render(feature_flag_element, html2`
             <div class="heading">
                 <h5>${version.feature_flags[flag].name}</h5>
-                ${version.feature_flags[flag].notice ? `<p>${version.feature_flags[flag].notice}</p>` : ""}
+                ${version.feature_flags[flag].notice ? html2.node`<p>${{ html: version.feature_flags[flag].notice }}</p>` : ""}
                 <div class="info-row">
                     <div class="new-badge flag-${version.feature_flags[flag].default}">${version.feature_flags[flag].default}</div><p class="date">${version.feature_flags[flag].date}</p><p>${flag}</p>
                 </div>
@@ -12740,8 +12804,9 @@
           notify({
             id: "corrections",
             title: trans_legacy.en.nag_bar.corrections.title,
-            body: active_nag.querySelector("strong").innerHTML,
-            icon: "icon-16-refresh"
+            body: active_nag.querySelector("strong"),
+            icon: "icon-16-refresh",
+            long: true
           });
         }
       } else {
@@ -13036,7 +13101,7 @@
                 ${trans_legacy.en.auth_menu.obsessions}
             </a>
             ` : ""}
-            <button class="dropdown-menu-clickable-item" data-menu-item="themes" onclick="toggle_theme()">
+            <button class="dropdown-menu-clickable-item" data-menu-item="themes" onclick=${() => toggle_theme()}>
                 <span class="auth-dropdown-item-row">
                     <span class="auth-dropdown-item-left">${tl(trans.themes.name)}</span>
                     <span class="auth-dropdown-item-right" id="theme-value">${tl(trans.themes[settings.theme])}</span>
@@ -13045,7 +13110,7 @@
             <button class="dropdown-menu-clickable-item" data-menu-item="language">
                 <span class="auth-dropdown-item-row">
                     <span class="auth-dropdown-item-left">${tl(trans.language)}</span>
-                    <span class="auth-dropdown-item-right" id="theme-value">${selected_language}</span>
+                    <span class="auth-dropdown-item-right">${selected_language}</span>
                 </span>
             </button>
             <button class="dropdown-menu-clickable-item" data-menu-item="news" ref=${(el) => page.state.navigation_menu_news = el} onclick=${() => news()}>
@@ -14359,8 +14424,8 @@
 
             </div>
             <div class="middle">
-                <h2>${trans_legacy.en.charts.charts_for.replace("{date}", moment(/* @__PURE__ */ new Date()).format("MMMM Do YYYY"))}</h2>
-                ${out_now != null ? out_now.outerHTML : ""}
+                <div class="sub-text">${moment(/* @__PURE__ */ new Date()).format("MMMM Do YYYY")}</div>
+                <h2>${tl(trans.charts)}</h2>
             </div>
             <div class="right">
                 <div class="view-buttons">
@@ -14400,13 +14465,14 @@
       }
     });
     chart_rows.forEach((row, index) => {
-      let chart_row = document.createElement("div");
-      chart_row.classList.add("charts-new-row");
-      chart_row.setAttribute("data-index", index);
-      let header2 = row.querySelector("h2");
-      chart_row.appendChild(header2);
-      let list = document.createElement("ol");
-      list.classList.add("music-bookmarks-artists", "charts-list");
+      let chart_row = html2.node`
+            <div class="charts-new-row" data-index=${index}>
+                ${row.querySelector("h2")}
+            </div>
+        `;
+      let list = html2.node`
+            <ol class="music-bookmarks-artists charts-list" />
+        `;
       if (settings.simulate_scroll) {
         list.addEventListener("wheel", (e) => {
           e.preventDefault();
@@ -14440,11 +14506,11 @@
                         <div class="music-bookmarks-artists-item charts-list-item-inner">
                             <div class="charts-list-rank">${rank.textContent.trim()}</div>
                             <h3 class="music-bookmarks-artists-item-name">
-                                ${name.outerHTML}
+                                ${name}
                             </h3>
                             <div class="media-item">
                                 <span class="music-bookmarks-albums-item-image cover-art">
-                                    ${image.outerHTML}
+                                    ${image}
                                 </span>
                                 <div class="charts-list-rank-overlay-wrap">
                                     <div class="charts-list-rank-overlay">${rank.textContent}</div>
@@ -14463,14 +14529,14 @@
                         <div class="music-bookmarks-albums-item charts-list-item-inner">
                             <div class="charts-list-rank">${rank.textContent.trim()}</div>
                             <h3 class="music-bookmarks-albums-item-name">
-                                ${name.outerHTML}
+                                ${name}
                             </h3>
                             <p class="music-bookmarks-albums-item-artist">
-                                ${artist.outerHTML}
+                                ${artist}
                             </p>
                             <div class="media-item">
                                 <span class="music-bookmarks-albums-item-image cover-art">
-                                    ${image.outerHTML}
+                                    ${image}
                                 </span>
                                 <div class="charts-list-rank-overlay-wrap">
                                     <div class="charts-list-rank-overlay">${rank.textContent}</div>
@@ -18750,6 +18816,12 @@
     },
     profile_does_not_have_enough_scrobbles: {
       en: "Profile does not have enough scrobbles"
+    },
+    requires_extension_value: {
+      en: "Requires extension \u2018{v}\u2019"
+    },
+    bulk_edit_extension: {
+      en: "Last.fm Bulk Edit"
     }
   };
   var trans_legacy = {
@@ -22597,7 +22669,12 @@
       body: trans.font_emoji.body
     },
     show_bulk_edit_album: {
-      default: false
+      default: false,
+      title: trans.show_bulk_edit_album.name,
+      body: trans.show_bulk_edit_album.body,
+      extensions: [
+        trans.bulk_edit_extension
+      ]
     },
     grid_glow: {
       default: true

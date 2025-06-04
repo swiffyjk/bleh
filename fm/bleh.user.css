@@ -1158,8 +1158,8 @@ last.fm changes as of 2024-05-20 */
     transition-duration: 0.3s;
 
     &.scrolled {
-        background: hsl(var(--b5), 85%);
-        backdrop-filter: blur(20px) saturate(120%);
+        background: hsl(var(--b4), 90%);
+        backdrop-filter: blur(20px) saturate(120%) contrast(120%);
         box-shadow: var(--card-shadow);
 
         &:before {
@@ -3259,7 +3259,7 @@ button.navlist-more {
     &.secondary-nav-item-link.active,
     &.secondary-nav-item-link--active {
         --col: hsl(var(--l2-c-theme-switch)) !important;
-        --mask-colour: color-mix(in hsl, hsl(var(--l2-c-theme-switch)), hsl(var(--l4-c)) 30%) !important;
+        --mask-colour: color-mix(in hsl, hsl(var(--l2-c-theme-switch)), hsl(var(--l3-c)) 50%) !important;
 
         &:after {
             opacity: 1;
@@ -10184,7 +10184,7 @@ a.gallery-image-preferred-off {
 text:not([text-anchor]) {
     font-family: var(--font) !important;
 }
-text:not(.music-decades-chart-container text, .js-top-tags-over-time-target text, .js-mainstream-chart-container text, .summary-chart-container text, [text-anchor=]) {
+text:not(.music-decades-chart-container text, .js-top-tags-over-time-target text, .js-mainstream-chart-container text, .summary-chart-container text, [text-anchor]) {
     font-size: var(--font-size) !important;
     line-height: var(--line-height) !important;
     font-weight: var(--font-weight) !important;
@@ -15409,6 +15409,19 @@ input[type="range"]::-moz-range-progress {
         color: color-mix(in hsl, hsl(var(--c2)), hsl(var(--c3)) 50%);
     }
 
+    .extensions {
+        display: flex;
+        gap: var(--card-gap);
+
+        .extension {
+            display: flex;
+            align-items: center;
+            height: 28px;
+            color: color-mix(in hsl, hsl(var(--c2)), hsl(var(--c3)) 50%);
+            --icon: var(--icon-16-extension);
+        }
+    }
+
     .range {
         display: flex;
         align-items: center;
@@ -16945,6 +16958,12 @@ button.bleh--gallery-bookmark-image-btn {
 
             border-radius: var(--button-radius);
         }
+
+        &.long {
+            .notification-progress {
+                transition: left 7.2s linear;
+            }
+        }
     }
 }
 [data-type="close"] {
@@ -17860,12 +17879,6 @@ h4 {
 
     &.spacing {
         gap: 6px;
-    }
-
-    &.subtle {
-        background-color: hsl(var(--b5));
-        box-shadow: inset 0 0 0 1px var(--card-border-base);
-        color: hsl(var(--l3-c));
     }
 }
 
@@ -21107,12 +21120,10 @@ h4 {
     .charts-header {
         order: -1;
         margin: unset !important;
-    }
-    .out-now-btn {
-        position: relative;
-        order: -1;
-        width: fit-content;
-        --mask: var(--icon-16-arrow-right);
+
+        .sub-text {
+            justify-content: center;
+        }
     }
 
     .charts-new-row {
@@ -21680,9 +21691,9 @@ h4 {
         }
     }
 
-    padding: 12px 12px 16px;
+    padding: calc(var(--button-sides) - 4px) 0 calc(var(--button-sides) + 2px);
     border-bottom: 1px solid var(--card-border-base);
-    margin-bottom: 4px;
+    margin: 2px var(--button-sides) 6px;
 
     & + .track-preview {
         display: none;

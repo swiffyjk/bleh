@@ -52,7 +52,8 @@ export function notify({
     classname,
     actions = [],
     persist = false,
-    type = 'generic'
+    type = 'generic',
+    long = false
 }) {
     log(`creating ${title}`, 'notification', 'info', {
         id: id,
@@ -61,7 +62,8 @@ export function notify({
         icon: icon,
         classname: classname,
         persist: persist,
-        type: type
+        type: type,
+        long: long
     });
 
     if (type === 'error')
@@ -74,12 +76,19 @@ export function notify({
 
     let bar;
 
+    actions.push({
+        type: 'close',
+        action: () => notify_rm(notif),
+        text: tl(trans.close)
+    });
+
     let notif = html.node`
         <div
             class=${[
                 'bleh-notification',
                 icon ? 'with-icon' : '',
-                classname ? classname : ''
+                classname ? classname : '',
+                long ? 'long' : ''
                 ].join(' ')}
             data-type=${type}
             style=${[
@@ -96,10 +105,15 @@ export function notify({
             <div class="notification-progress" ref=${el => bar = el}></div>
             ` : ''}
             <div class="notification-actions">
-                ${(actions.length > 0) ? actions.map(action => html.node`
-                <button class="notification-action" data-type=${action.type} onclick=${action.action}>${action.text}</button>
-                `) : ''}
-                <button class="notification-action" data-type="close" onclick=${() => notify_rm(notif)}>${tl(trans.close)}</button>
+                ${(actions.length > 0) ? actions.map(action => () => {
+                    let button = html.node`
+                        <button class="notification-action" data-type=${action.type} onclick=${action.action}>${action.text}</button>
+                    `;
+                    tippy(button, {
+                        content: action.text
+                    });
+                    return button;
+                }) : ''}
             </div>
         </div>
     `;
@@ -114,7 +128,7 @@ export function notify({
 
     setTimeout(function() {
         notify_rm(notif);
-    }, 3000);
+    }, (long) ? 7000 : 3000);
 
     return notif;
 }

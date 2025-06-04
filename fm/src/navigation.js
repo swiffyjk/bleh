@@ -14,6 +14,7 @@ import {show_theme_change_in_menu} from "./pages/bleh_config";
 import {ff} from "./sku";
 import {html} from "lighterhtml";
 import {news} from "./news.js";
+import {toggle_theme} from "./config.js";
 
 export function patch_masthead(element) {
     let masthead_logo = element.querySelector('.masthead-logo');
@@ -215,7 +216,7 @@ export function append_nav() {
                 ${trans_legacy.en.auth_menu.obsessions}
             </a>
             ` : ''}
-            <button class="dropdown-menu-clickable-item" data-menu-item="themes" onclick="toggle_theme()">
+            <button class="dropdown-menu-clickable-item" data-menu-item="themes" onclick=${() => toggle_theme()}>
                 <span class="auth-dropdown-item-row">
                     <span class="auth-dropdown-item-left">${tl(trans.themes.name)}</span>
                     <span class="auth-dropdown-item-right" id="theme-value">${tl(trans.themes[settings.theme])}</span>
@@ -224,7 +225,7 @@ export function append_nav() {
             <button class="dropdown-menu-clickable-item" data-menu-item="language">
                 <span class="auth-dropdown-item-row">
                     <span class="auth-dropdown-item-left">${tl(trans.language)}</span>
-                    <span class="auth-dropdown-item-right" id="theme-value">${selected_language}</span>
+                    <span class="auth-dropdown-item-right">${selected_language}</span>
                 </span>
             </button>
             <button class="dropdown-menu-clickable-item" data-menu-item="news" ref=${el => page.state.navigation_menu_news = el} onclick=${() => news()}>

@@ -34,8 +34,8 @@ export function bleh_charts() {
 
             </div>
             <div class="middle">
-                <h2>${trans_legacy.en.charts.charts_for.replace('{date}', moment(new Date()).format('MMMM Do YYYY'))}</h2>
-                ${(out_now != null) ? out_now.outerHTML : ''}
+                <div class="sub-text">${moment(new Date()).format('MMMM Do YYYY')}</div>
+                <h2>${tl(trans.charts)}</h2>
             </div>
             <div class="right">
                 <div class="view-buttons">
@@ -79,15 +79,15 @@ export function bleh_charts() {
     });
 
     chart_rows.forEach((row, index) => {
-        let chart_row = document.createElement('div');
-        chart_row.classList.add('charts-new-row');
-        chart_row.setAttribute('data-index', index);
+        let chart_row = html.node`
+            <div class="charts-new-row" data-index=${index}>
+                ${row.querySelector('h2')}
+            </div>
+        `;
 
-        let header = row.querySelector('h2');
-        chart_row.appendChild(header);
-
-        let list = document.createElement('ol');
-        list.classList.add('music-bookmarks-artists', 'charts-list');
+        let list = html.node`
+            <ol class="music-bookmarks-artists charts-list" />
+        `;
 
         if (settings.simulate_scroll) {
             list.addEventListener('wheel', (e) => {
@@ -129,11 +129,11 @@ export function bleh_charts() {
                         <div class="music-bookmarks-artists-item charts-list-item-inner">
                             <div class="charts-list-rank">${rank.textContent.trim()}</div>
                             <h3 class="music-bookmarks-artists-item-name">
-                                ${name.outerHTML}
+                                ${name}
                             </h3>
                             <div class="media-item">
                                 <span class="music-bookmarks-albums-item-image cover-art">
-                                    ${image.outerHTML}
+                                    ${image}
                                 </span>
                                 <div class="charts-list-rank-overlay-wrap">
                                     <div class="charts-list-rank-overlay">${rank.textContent}</div>
@@ -153,14 +153,14 @@ export function bleh_charts() {
                         <div class="music-bookmarks-albums-item charts-list-item-inner">
                             <div class="charts-list-rank">${rank.textContent.trim()}</div>
                             <h3 class="music-bookmarks-albums-item-name">
-                                ${name.outerHTML}
+                                ${name}
                             </h3>
                             <p class="music-bookmarks-albums-item-artist">
-                                ${artist.outerHTML}
+                                ${artist}
                             </p>
                             <div class="media-item">
                                 <span class="music-bookmarks-albums-item-image cover-art">
-                                    ${image.outerHTML}
+                                    ${image}
                                 </span>
                                 <div class="charts-list-rank-overlay-wrap">
                                     <div class="charts-list-rank-overlay">${rank.textContent}</div>

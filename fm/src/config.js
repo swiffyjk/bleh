@@ -91,7 +91,7 @@ export function load_settings(skip = false) {
 }
 
 // theme
-unsafeWindow.toggle_theme = function() {
+export function toggle_theme() {
     if (page.subpage.startsWith('listening-report'))
         return;
 

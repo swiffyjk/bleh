@@ -6,7 +6,7 @@
 
 import {html} from "lighterhtml";
 import {settings} from "../build/config";
-import {auth, dialogs, page, root} from "../build/page";
+import {auth, page, root} from "../build/page";
 import {tl, trans} from "../build/trans";
 import {dialog, dialog_rm} from "./dialog";
 import {notify} from "./notify";
@@ -20,7 +20,7 @@ export function open_profile_shortcut_window() {
         id: 'profile_shortcut',
         title: tl(trans.profile_shortcut.name),
         body: html.node`
-        ${setting('profile_shortcut', false)}
+        ${setting({id: 'profile_shortcut', text: false, focus: true})}
         `
     });
 
@@ -31,7 +31,10 @@ unsafeWindow._other_listener = function(id) {
     other_listener(id);
 }
 export function other_listener(id) {
-    let modal = dialog({
+    let input;
+    let submit;
+
+    dialog({
         id: 'other_listener',
         title: tl(trans.view_others_library),
         body: html.node`
@@ -42,22 +45,34 @@ export function other_listener(id) {
                 </div>
             </div>
             <div class="input-container content-form">
-                <input type="text" maxlength="40" id="text-profile" placeholder="${tl(trans.enter_username)}">
-                <button class="btn chibi icon primary submit" onclick="_send_other_listener('${id}')">${tl(trans.done)}</button>
+                <input type="text" maxlength="40" id="text-profile" ref=${el => input = el} placeholder="${tl(trans.enter_username)}">
+                <button class="btn chibi icon primary submit" ref=${el => submit = el} onclick=${() => {
+                    let name = input.value;
+                    let link = id;
+
+                    dialog_rm({
+                        id: 'other_listener'
+                    });
+                    window.location.href = `${root}user/${name}/library/music/${link}`;
+                }
+                }>${tl(trans.done)}</button>
             </div>
         </div>
         `
     });
 
-    modal.querySelector('#text-profile').focus();
-}
-unsafeWindow._send_other_listener = function(link) {
-    let name = dialogs['other_listener'].instance.querySelector('#text-profile').value;
-
-    dialog_rm({
-        id: 'other_listener'
+    input.addEventListener('keydown', (event) => {
+        if (event.keyCode === 13) {
+            event.preventDefault();
+            submit.click();
+        }
     });
-    window.location.href = `${root}user/${name}/library/music/${link}`;
+
+    tippy(submit, {
+        content: tl(trans.save)
+    });
+
+    input.focus();
 }
 
 

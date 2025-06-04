@@ -12,7 +12,11 @@ import {save_profile_shortcut} from "./profile_shortcut.js";
 import {page} from "../build/page.js";
 import {request_reload} from "../config.js";
 
-export function setting(id, text = true) {
+export function setting({
+    id = '',
+    text = true,
+    focus = false
+}) {
     try {
         let value = settings[id];
 
@@ -32,6 +36,21 @@ export function setting(id, text = true) {
                     <div class="heading">
                         <h5>${title} <span class="new-badge">v2</span></h5>
                         ${(body) ? html.node`<p>${body}</p>` : ''}
+                    </div>
+                    ` : ''}
+                    ${(settings_store[id].extensions) ? html.node`
+                    <div class="extensions">
+                        ${settings_store[id].extensions.map(extension => () => {
+                            let container = html.node`
+                                <div class="extension">
+                                    <div class="bleh-icon" />
+                                </div>
+                            `;
+                            tippy(container, {
+                                content: tl(trans.requires_extension_value).replace('{v}', tl(extension))
+                            });
+                            return container;
+                        })}
                     </div>
                     ` : ''}
                     <div class="toggle-wrap">
@@ -66,6 +85,21 @@ export function setting(id, text = true) {
                         ${(body) ? html.node`<p>${body}</p>` : ''}
                     </div>
                     ` : ''}
+                    ${(settings_store[id].extensions) ? html.node`
+                    <div class="extensions">
+                        ${settings_store[id].extensions.map(extension => () => {
+                            let container = html.node`
+                                <div class="extension">
+                                    <div class="bleh-icon" />
+                                </div>
+                            `;
+                            tippy(container, {
+                                content: tl(trans.requires_extension_value).replace('{v}', tl(extension))
+                            });
+                            return container;
+                        })}
+                    </div>
+                    ` : ''}
                     <div class="range">
                         <div class="track" style="--percent: ${((value - settings_store[id].min) / working_max) * 100}%" ref=${el => track = el}>
                             <div class="fill" />
@@ -98,6 +132,21 @@ export function setting(id, text = true) {
                         ${(body) ? html.node`<p>${body}</p>` : ''}
                     </div>
                     ` : ''}
+                    ${(settings_store[id].extensions) ? html.node`
+                    <div class="extensions">
+                        ${settings_store[id].extensions.map(extension => () => {
+                            let container = html.node`
+                                <div class="extension">
+                                    <div class="bleh-icon" />
+                                </div>
+                            `;
+                            tippy(container, {
+                                content: tl(trans.requires_extension_value).replace('{v}', tl(extension))
+                            });
+                            return container;
+                        })}
+                    </div>
+                    ` : ''}
                     ${(settings_store[id].avatar) ? html.node`
                     <div class="avatar-container">
                         <div class="avatar-inner" ref=${el => avatar = el}>
@@ -122,6 +171,9 @@ export function setting(id, text = true) {
             tippy(submit, {
                 content: tl(trans.save)
             });
+
+            if (focus)
+                input.focus();
 
             return container;
         }
