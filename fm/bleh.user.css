@@ -349,7 +349,7 @@ a,
     --opposite-text: var(--b6);
 
     --avatar-generic-background: linear-gradient(180deg, hsla(var(--h3), 20%) 0%, hsl(var(--b6)) 100%);
-    --avatar-generic-background: hsl(var(--b6));
+    --avatar-generic-background: hsl(var(--b4));
 
     .preview[data-bleh--theme="oled"], .redesigned-header[data-bleh--theme="oled"], .redesigned-header[data-bleh--theme="oled"] a,
     [data-bleh--theme="oled"] &:not(.preview) {
@@ -373,8 +373,6 @@ a,
         --h4: var(--l4-c);
         --f4: var(--hue), calc(clamp(min(0), var(--sat), max(1.5)) * 32%), calc(clamp(min(0.8), var(--lit), max(1.5)) * 15%);
         --g4: var(--hue), calc(clamp(min(0), var(--sat), max(1.5)) * 60%), calc(clamp(min(0.5), var(--lit), max(1.5)) * 10%);
-
-        --avatar-generic-background: hsl(var(--b6));
     }
     .preview[data-bleh--theme="light"],
     [data-bleh--theme="light"] &:not(
@@ -3256,6 +3254,9 @@ button.navlist-more {
     [data-bleh--gallery-tab="saved"] .secondary-nav-item--gallery-bookmarks &,
     &.secondary-nav-item-link.active,
     &.secondary-nav-item-link--active {
+        --col: hsl(var(--l3-c)) !important;
+        --mask-colour: color-mix(in hsl, hsl(var(--l3-c)), hsl(var(--l4-c)) 30%) !important;
+
         &:after {
             opacity: 1;
             transform: scaleY(1);
@@ -5891,6 +5892,7 @@ a.chartlist-love-button:after {
 .chartlist-count-bar {
     line-height: 22px; /* 22 */
     background: linear-gradient(90deg, hsl(var(--b3)), hsl(var(--c3), 40%));
+    color: hsl(var(--b7)) !important;
     box-shadow: var(--interact-shadow);
     width: 180px;
     display: flex;
@@ -8826,6 +8828,10 @@ very, very, very dated - who looks up a song on ebay? */
 
     .btn-secondary.js-close {
         order: -1;
+    }
+
+    &.form-submit--align-right {
+        justify-content: space-between;
     }
 }
 
@@ -22373,6 +22379,7 @@ h4 {
     margin-bottom: unset !important;
 }
 
+.js-disclose-close.btn-cancel,
 .shout-more-replies-after, .shout-more-replies-before,
 .pagination-next a, .pagination-previous a,
 .more-link-fullwidth a,
@@ -22414,9 +22421,10 @@ h4 {
     transition-duration: var(--trans);
     transition-timing-function: var(--trans-function);
 
+    &.delete-account,
     &.shout-more-replies-after, &.shout-more-replies-before,
     &:is(.pagination-previous a),
-    &.js-close,
+    &.js-close, &.btn-cancel,
     &.cancel,
     &.sponsor,
     &.update-check,
@@ -22441,13 +22449,20 @@ h4 {
     &.sponsor {
         --mask: var(--icon-16-heart);
     }
-    &.js-close,
+    &.js-close, &.btn-cancel,
     &:is(.pagination-previous a),
     &.cancel {
         --mask: var(--icon-16-arrow-left);
     }
     &.shout-more-replies-before {
         --mask: var(--icon-16-arrow-up);
+    }
+
+    &.delete-account {
+        --hue-over: var(--hue-neg);
+        --sat-over: 1;
+        --lit-over: 1;
+        --mask: var(--icon-16-trash);
     }
 
     &.more-items {

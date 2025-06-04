@@ -201,9 +201,9 @@ export function bleh_albums() {
 
 function album_missing_a_tracklist() {
     // tracklist
-    let tracklist = document.getElementById('tracklist');
+    let tracklist = page.structure.main.querySelector('#tracklist');
     if (!tracklist) {
-        let top_overview = document.querySelector('.top-overview-panel');
+        let top_overview = page.structure.main.querySelector('.top-overview-panel');
         if (!top_overview) return;
 
         tracklist = html.node`
@@ -221,7 +221,7 @@ function album_missing_a_tracklist() {
         let album_as_track_url = window.location.href.replace(album_url, `${url_split[(url_split.length - 2)]}/_/${url_split[(url_split.length - 1)]}`);*/
 
         let url = document.querySelector('.header-metadata-display a');
-        if (url == undefined) {
+        if (!url) {
             let url_split = window.location.href.split('/');
             let album_url = `${url_split[(url_split.length - 2)]}/${url_split[(url_split.length - 1)]}`;
             let album_as_track_url = window.location.href.replace(album_url, `${url_split[(url_split.length - 2)]}/_/${url_split[(url_split.length - 1)]}`);
@@ -230,7 +230,7 @@ function album_missing_a_tracklist() {
                 <h3 class="text-18">${tl(trans.tracklist)}</h3>
                 <div class="loading-data-container">
                     <p class="loading-data-text failed">${tl(trans.failed_to_find_tracks)}</p>
-                    <a class="btn" href="${album_as_track_url}">${tl(trans.open_album_as_track)}</a>
+                    <a class="see-more" href="${album_as_track_url}">${tl(trans.open_album_as_track)}</a>
                 </div>
             `);
             return;
@@ -245,11 +245,11 @@ function album_missing_a_tracklist() {
 
                 return response.text();
             })
-            .then(function(html) {
-                let doc = new DOMParser().parseFromString(html, 'text/html');
+            .then(function(dom) {
+                let doc = new DOMParser().parseFromString(dom, 'text/html');
 
                 //deliver_notif(`using url ${`/user/${auth.name}/library/music/${album_url}`}`);
-                console.error('DOC', doc);
+                console.log('DOC', doc);
 
                 let inner_tracklist = doc.querySelector('#top-tracks-section [v-else=""] .chartlist');
                 if (inner_tracklist == null) {
@@ -272,7 +272,7 @@ function album_missing_a_tracklist() {
                 render(tracklist, html`
                     <h3 class="text-18">${tl(trans.tracklist)}</h3>
                     <div class="alert alert-info">${tl(trans.sourced_from_own_plays)}</div>
-                    ${html.node([inner_tracklist.outerHTML])}
+                    ${inner_tracklist}
                 `);
             })
     }

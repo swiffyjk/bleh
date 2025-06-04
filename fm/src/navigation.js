@@ -46,12 +46,12 @@ export function append_nav() {
         
     if (!page.structure.loader) {
         const loader = html.node`
-            <div class="loader"
+            <div class="loader">
                 <div class="loader-bar">
-                    <div class="loader-bar-fill"></div>
+                    <div class="loader-bar-fill" />
                 </div>
-                <div class="bleh-icon"></div>
-            <div>
+                <div class="bleh-icon" />
+            </div>
         `;
         document.body.appendChild(loader);
         page.structure.loader = loader;

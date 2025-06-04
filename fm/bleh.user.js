@@ -12898,12 +12898,12 @@
     }
     if (!page.structure.loader) {
       const loader = html2.node`
-            <div class="loader"
+            <div class="loader">
                 <div class="loader-bar">
-                    <div class="loader-bar-fill"></div>
+                    <div class="loader-bar-fill" />
                 </div>
-                <div class="bleh-icon"></div>
-            <div>
+                <div class="bleh-icon" />
+            </div>
         `;
       document.body.appendChild(loader);
       page.structure.loader = loader;
@@ -13722,9 +13722,9 @@
     update_page();
   }
   function album_missing_a_tracklist() {
-    let tracklist = document.getElementById("tracklist");
+    let tracklist = page.structure.main.querySelector("#tracklist");
     if (!tracklist) {
-      let top_overview = document.querySelector(".top-overview-panel");
+      let top_overview = page.structure.main.querySelector(".top-overview-panel");
       if (!top_overview) return;
       tracklist = html2.node`
             <section>
@@ -13736,7 +13736,7 @@
         `;
       top_overview.after(tracklist);
       let url = document.querySelector(".header-metadata-display a");
-      if (url == void 0) {
+      if (!url) {
         let url_split = window.location.href.split("/");
         let album_url = `${url_split[url_split.length - 2]}/${url_split[url_split.length - 1]}`;
         let album_as_track_url = window.location.href.replace(album_url, `${url_split[url_split.length - 2]}/_/${url_split[url_split.length - 1]}`);
@@ -13744,7 +13744,7 @@
                 <h3 class="text-18">${tl(trans.tracklist)}</h3>
                 <div class="loading-data-container">
                     <p class="loading-data-text failed">${tl(trans.failed_to_find_tracks)}</p>
-                    <a class="btn" href="${album_as_track_url}">${tl(trans.open_album_as_track)}</a>
+                    <a class="see-more" href="${album_as_track_url}">${tl(trans.open_album_as_track)}</a>
                 </div>
             `);
         return;
@@ -13753,15 +13753,15 @@
       fetch(url).then(function(response) {
         console.error("returned", response, response.text);
         return response.text();
-      }).then(function(html3) {
-        let doc = new DOMParser().parseFromString(html3, "text/html");
-        console.error("DOC", doc);
+      }).then(function(dom) {
+        let doc = new DOMParser().parseFromString(dom, "text/html");
+        console.log("DOC", doc);
         let inner_tracklist = doc.querySelector('#top-tracks-section [v-else=""] .chartlist');
         if (inner_tracklist == null) {
           let url_split = window.location.href.split("/");
           let album_url = `${url_split[url_split.length - 2]}/${url_split[url_split.length - 1]}`;
           let album_as_track_url = window.location.href.replace(album_url, `${url_split[url_split.length - 2]}/_/${url_split[url_split.length - 1]}`);
-          render(tracklist, html3`
+          render(tracklist, html2`
                         <h3 class="text-18">${tl(trans.tracklist)}</h3>
                         <div class="loading-data-container">
                             <p class="loading-data-text failed">${tl(trans.failed_to_find_tracks)}</p>
@@ -13771,10 +13771,10 @@
           return;
         }
         inner_tracklist.classList.remove("chartlist--with-image");
-        render(tracklist, html3`
+        render(tracklist, html2`
                     <h3 class="text-18">${tl(trans.tracklist)}</h3>
                     <div class="alert alert-info">${tl(trans.sourced_from_own_plays)}</div>
-                    ${html3.node([inner_tracklist.outerHTML])}
+                    ${inner_tracklist}
                 `);
       });
     }
