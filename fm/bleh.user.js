@@ -3838,7 +3838,7 @@
   function update_toggle(id, toggle) {
     let value = settings[id];
     toggle.setAttribute("aria-checked", !value);
-    save_setting(id, value);
+    save_setting(id, !value);
   }
   function update_range(id, option, track, input, value, marker, silent = false) {
     let max = settings_store[id].max - settings_store[id].min;

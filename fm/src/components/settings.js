@@ -147,7 +147,7 @@ function update_toggle(id, toggle) {
 
     toggle.setAttribute('aria-checked', !value);
 
-    save_setting(id, value);
+    save_setting(id, !value);
 }
 
 function update_range(id, option, track, input, value, marker, silent = false) {
