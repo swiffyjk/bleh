@@ -309,7 +309,7 @@ export const trans = {
         // copy this from last.fm 1:1 (including the space at the end if there)
         en: '• scrobbling since ',
         de: '• scrobbelt seit ',
-        pt: '• scrobblando desde '
+        pt: '• em scrobble desde '
     },
     edit: {
         en: 'Edit',

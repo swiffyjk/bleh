@@ -3731,7 +3731,7 @@
         return setting_fail(id, { message: "No settings store entry present" });
       let type = settings_store[id].type || "toggle";
       let title = tl(settings_store[id].title) || id;
-      let body = tl(settings_store[id].body);
+      let body = settings_store[id].body ? tl(settings_store[id].body) : null;
       if (type === "toggle") {
         let toggle;
         return html2.node`
@@ -9602,7 +9602,7 @@
     log("started interval", "season", "info");
     if (page.header.season_tooltip == null)
       return;
-    page.header.season_tooltip.setContent(`
+    page.header.season_tooltip.setContent(html2.node`
         <span class="season-colour-name">${tl(trans.seasonal.listing[stored_season.id])}</span>
         <span class="season-exclusive">${trans_legacy.en.auth_menu.seasonal_live}</span>
     `);
@@ -9618,7 +9618,7 @@
     log("ended interval", "season", "info");
     if (page.header.season_tooltip == null)
       return;
-    page.header.season_tooltip.setContent(`
+    page.header.season_tooltip.setContent(html2.node`
         <span class="season-colour-name">${tl(trans.seasonal.listing[stored_season.id])}</span>
         <span class="season-exclusive">${trans_legacy.en.auth_menu.seasonal_notice}</span>
     `);
@@ -9636,7 +9636,7 @@
         next = stored_season.next_start.replace("y0", stored_season.year + 1).replace("{offset}", stored_season.offset);
       let time_until = new Date(next) - /* @__PURE__ */ new Date();
       page.header.season.textContent = countdown_to(time_until);
-      page.header.season_tooltip.setContent(`
+      page.header.season_tooltip.setContent(html2.node`
             <span class="season-colour-name">${tl(trans.seasonal.listing[stored_season.id])}</span>
             <span class="season-exclusive">${trans_legacy.en.auth_menu.seasonal_live}</span>
         `);
@@ -9667,7 +9667,7 @@
     let prev_container = document.getElementById("snowflakes");
     if (prev_container != null)
       return;
-    document.documentElement.appendChild(html.node`
+    document.documentElement.appendChild(html2.node`
         <div class="snow-container" id="snowflakes">
             <span class="snow snowflake"></span>
         </div>`);
@@ -10492,30 +10492,8 @@
                 </div>
                 ${setting("shout_markdown")}
                 <div class="sep"></div>
-                <div class="setting" data-type="toggle" id="container-accessible_name_colours" onclick="_update_item('accessible_name_colours')">
-                    <button class="btn reset" onclick="_reset_item('accessible_name_colours')">${tl(trans.reset)}</button>
-                    <div class="heading">
-                        <h5>${tl(trans.accessible_name_colours.name)}</h5>
-                        <p>${tl(trans.accessible_name_colours.body)}</p>
-                    </div>
-                    <div class="toggle-wrap">
-                        <button class="toggle" id="toggle-accessible_name_colours" aria-checked="false">
-                            <div class="dot"></div>
-                        </button>
-                    </div>
-                </div>
-                <div class="setting" data-type="toggle" id="container-underline_links" onclick="_update_item('underline_links')">
-                    <button class="btn reset" onclick="_reset_item('underline_links')">${tl(trans.reset)}</button>
-                    <div class="heading">
-                        <h5>${tl(trans.underline_links.name)}</h5>
-                        <p>${tl(trans.underline_links.body)}</p>
-                    </div>
-                    <div class="toggle-wrap">
-                        <button class="toggle" id="toggle-underline_links" aria-checked="false">
-                            <div class="dot"></div>
-                        </button>
-                    </div>
-                </div>
+                ${setting("accessible_name_colours")}
+                ${setting("underline_links")}
             </div>
             <div class="bleh--panel">
                 <h4>${tl(trans.language)}</h4>
@@ -16652,7 +16630,7 @@
       // copy this from last.fm 1:1 (including the space at the end if there)
       en: "\u2022 scrobbling since ",
       de: "\u2022 scrobbelt seit ",
-      pt: "\u2022 scrobblando desde "
+      pt: "\u2022 em scrobble desde "
     },
     edit: {
       en: "Edit",
@@ -22457,13 +22435,17 @@
       default: true
     },
     accessible_name_colours: {
-      default: false
+      default: false,
+      title: trans.accessible_name_colours.name,
+      body: trans.accessible_name_colours.body
     },
     reduced_motion: {
       default: false
     },
     underline_links: {
-      default: false
+      default: false,
+      title: trans.underline_links.name,
+      body: trans.underline_links.body
     },
     format_guest_features: {
       default: true

@@ -15976,7 +15976,7 @@ input[type="range"]::-moz-range-progress {
     display: flex;
     justify-content: center;
     align-items: center;
-    width: 44px !important;
+    width: 40px !important;
     height: 24px;
     position: relative;
     --col: hsl(var(--c3));
@@ -15985,9 +15985,9 @@ input[type="range"]::-moz-range-progress {
 
     .dot {
         position: absolute;
-        width: 12px;
-        height: 12px;
-        left: 6px;
+        width: 10px;
+        height: 10px;
+        left: 8px;
         border-radius: var(--item-big-radius);
         background: transparent;
         border: 2px solid var(--col);
@@ -16014,7 +16014,7 @@ input[type="range"]::-moz-range-progress {
 
         .dot {
             background: var(--col);
-            left: calc(44px - 7px - 12px);
+            left: calc(40px - 8px - 10px);
             color: hsl(var(--h3));
             --mask: var(--icon-16-check);
         }
@@ -17689,7 +17689,7 @@ button.bleh--gallery-bookmark-image-btn {
 
     &.has-dialog {
         pointer-events: auto;
-        background: hsl(var(--b6), 0.85);
+        background: hsl(var(--b6), 0.6);
         backdrop-filter: blur(2px);
         -webkit-backdrop-filter: blur(2px);
 
@@ -22375,6 +22375,8 @@ h4 {
     }
 }
 .big-modal-alert {
+    max-width: 500px;
+
     &:before {
         display: none;
     }

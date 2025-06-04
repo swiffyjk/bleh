@@ -855,30 +855,8 @@ export function render_setting_page(page_id) {
                 </div>
                 ${setting('shout_markdown')}
                 <div class="sep"></div>
-                <div class="setting" data-type="toggle" id="container-accessible_name_colours" onclick="_update_item('accessible_name_colours')">
-                    <button class="btn reset" onclick="_reset_item('accessible_name_colours')">${tl(trans.reset)}</button>
-                    <div class="heading">
-                        <h5>${tl(trans.accessible_name_colours.name)}</h5>
-                        <p>${tl(trans.accessible_name_colours.body)}</p>
-                    </div>
-                    <div class="toggle-wrap">
-                        <button class="toggle" id="toggle-accessible_name_colours" aria-checked="false">
-                            <div class="dot"></div>
-                        </button>
-                    </div>
-                </div>
-                <div class="setting" data-type="toggle" id="container-underline_links" onclick="_update_item('underline_links')">
-                    <button class="btn reset" onclick="_reset_item('underline_links')">${tl(trans.reset)}</button>
-                    <div class="heading">
-                        <h5>${tl(trans.underline_links.name)}</h5>
-                        <p>${tl(trans.underline_links.body)}</p>
-                    </div>
-                    <div class="toggle-wrap">
-                        <button class="toggle" id="toggle-underline_links" aria-checked="false">
-                            <div class="dot"></div>
-                        </button>
-                    </div>
-                </div>
+                ${setting('accessible_name_colours')}
+                ${setting('underline_links')}
             </div>
             <div class="bleh--panel">
                 <h4>${tl(trans.language)}</h4>

@@ -630,13 +630,17 @@ export let settings_store = {
         default: true
     },
     accessible_name_colours: {
-        default: false
+        default: false,
+        title: trans.accessible_name_colours.name,
+        body: trans.accessible_name_colours.body
     },
     reduced_motion: {
         default: false
     },
     underline_links: {
-        default: false
+        default: false,
+        title: trans.underline_links.name,
+        body: trans.underline_links.body
     },
     format_guest_features: {
         default: true

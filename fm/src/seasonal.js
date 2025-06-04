@@ -11,6 +11,7 @@ import {seasonal_events, seasonal_timer, stored_season} from "./build/seasonal";
 import {tl, trans, trans_legacy} from "./build/trans";
 import {load_chart_colours} from "./chart";
 import {notify} from "./components/notify";
+import {html} from "lighterhtml";
 
 export function set_season() {
     if (!settings.seasonal)
@@ -167,7 +168,7 @@ export function seasonal_timer_start(bypass = false) {
     if (page.header.season_tooltip == null)
         return;
 
-    page.header.season_tooltip.setContent(`
+    page.header.season_tooltip.setContent(html.node`
         <span class="season-colour-name">${tl(trans.seasonal.listing[stored_season.id])}</span>
         <span class="season-exclusive">${trans_legacy.en.auth_menu.seasonal_live}</span>
     `);
@@ -188,7 +189,7 @@ export function seasonal_timer_end() {
     if (page.header.season_tooltip == null)
         return;
 
-    page.header.season_tooltip.setContent(`
+    page.header.season_tooltip.setContent(html.node`
         <span class="season-colour-name">${tl(trans.seasonal.listing[stored_season.id])}</span>
         <span class="season-exclusive">${trans_legacy.en.auth_menu.seasonal_notice}</span>
     `);
@@ -213,7 +214,7 @@ function update_season_nav() {
 
         page.header.season.textContent = countdown_to(time_until);
 
-        page.header.season_tooltip.setContent(`
+        page.header.season_tooltip.setContent(html.node`
             <span class="season-colour-name">${tl(trans.seasonal.listing[stored_season.id])}</span>
             <span class="season-exclusive">${trans_legacy.en.auth_menu.seasonal_live}</span>
         `);

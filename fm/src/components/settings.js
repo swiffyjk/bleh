@@ -21,7 +21,7 @@ export function setting(id, text = true) {
 
         let type = settings_store[id].type || 'toggle';
         let title = tl(settings_store[id].title) || id;
-        let body = tl(settings_store[id].body);
+        let body = settings_store[id].body ? tl(settings_store[id].body) : null;
 
         if (type === 'toggle') {
             let toggle;
