@@ -90,7 +90,7 @@ export const trans = {
         },
         'user-status-mod': {
             name: {
-                en: 'Mod'
+                en: 'Mod',
                 pt: 'Moderador'
             },
             reason: {
@@ -214,7 +214,7 @@ export const trans = {
     refresh_tracks: {
         en: 'Refresh tracks',
         de: 'Titel aktualisieren',
-        pt 'Atualizar faixas'
+        pt: 'Atualizar faixas'
     },
     set_obsession: {
         en: 'Obsess',
@@ -250,7 +250,7 @@ export const trans = {
     },
     nothing_in_common: {
         en: 'Nothing in common (๑-﹏-๑)',
-        pt: ''Nada em comum (๑-﹏-๑)'
+        pt: 'Nada em comum (๑-﹏-๑)'
     },
     others_featured: {
         en: 'Others featured',
@@ -1020,7 +1020,7 @@ export const trans = {
         // you share {percentage%} (in taste) with: {list of artists}
         en: 'You share {c} with',
         de: 'Du teilst {c} mit',
-        pt: 'Você compartilha {c} com'
+        pt: 'Você compartilha {c} com',
         one: {
             en: '{artist}'
         },
@@ -1105,7 +1105,7 @@ export const trans = {
     labs_by_last: {
         en: 'Labs by Last.fm',
         de: 'Labs von Last.fm',
-        pt: 'Labs do Last.fm'
+        pt: 'Labs do Last.fm',
         tagline: {
             en: 'Interactive tools and infographics',
             de: 'Interaktiven Tools und Infografiken',
@@ -1466,7 +1466,7 @@ export const trans = {
         // base on native last.fm ui
         en: 'listens',
         de: 'scrobbels',
-        pt: 'scrobbles'
+        pt: 'scrobbles',
         count: {
             en: '{c} listens',
             de: '{c} scrobbels',
@@ -2070,7 +2070,7 @@ export const trans = {
         }
     },
     email: {
-        en: 'Email'
+        en: 'Email',
         pt: 'E-mail'
     },
     password: {
