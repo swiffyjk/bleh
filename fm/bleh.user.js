@@ -9525,8 +9525,15 @@
             snowflakes_count = snowflakes_count * 0.45;
           begin_snowflakes(snowflakes_enabled, snowflakes_count);
         }
-        if (last_season_seen != "" && last_season_seen != season.id)
-          deliver_notif(trans_legacy.en.settings.customise.seasonal.announce.replace("{s}", trans_legacy.en.settings.customise.seasonal.listing[stored_season.id]));
+        if (last_season_seen != "" && last_season_seen != season.id) {
+          notify({
+            id: "new_season",
+            title: tl(trans.new_season),
+            body: tl(trans.value_for_time).replace("{v}", tl(trans.seasonal.listing[season.id])).replace("{time}", moment(season.end.replace("y0", stored_season.year).replace("{offset}", stored_season.offset)).to(stored_season.now, true)),
+            icon: "icon-16-season",
+            persist: true
+          });
+        }
         localStorage.setItem("bleh_last_season_seen", season.id);
         load_chart_colours();
         return;
@@ -9577,7 +9584,7 @@
     if (page.header.season_tooltip == null)
       return;
     page.header.season_tooltip.setContent(`
-        <span class="season-colour-name">${trans_legacy.en.settings.customise.seasonal.listing[stored_season.id]}</span>
+        <span class="season-colour-name">${tl(trans.seasonal.listing[stored_season.id])}</span>
         <span class="season-exclusive">${trans_legacy.en.auth_menu.seasonal_live}</span>
     `);
     page.header.season.classList.add("live");
@@ -9593,7 +9600,7 @@
     if (page.header.season_tooltip == null)
       return;
     page.header.season_tooltip.setContent(`
-        <span class="season-colour-name">${trans_legacy.en.settings.customise.seasonal.listing[stored_season.id]}</span>
+        <span class="season-colour-name">${tl(trans.seasonal.listing[stored_season.id])}</span>
         <span class="season-exclusive">${trans_legacy.en.auth_menu.seasonal_notice}</span>
     `);
     page.header.season.classList.remove("live");
@@ -9611,7 +9618,7 @@
       let time_until = new Date(next) - /* @__PURE__ */ new Date();
       page.header.season.textContent = countdown_to(time_until);
       page.header.season_tooltip.setContent(`
-            <span class="season-colour-name">${trans_legacy.en.settings.customise.seasonal.listing[stored_season.id]}</span>
+            <span class="season-colour-name">${tl(trans.seasonal.listing[stored_season.id])}</span>
             <span class="season-exclusive">${trans_legacy.en.auth_menu.seasonal_live}</span>
         `);
     }
@@ -9703,7 +9710,7 @@
                 </a>
             </li>
             <li class="navlist-item secondary-nav-item">
-                <a class="secondary-nav-item-link bleh--nav" data-bleh-page="seasonal" data-season="${stored_season.id}" onclick="_change_settings_page('seasonal')">
+                <a class="secondary-nav-item-link bleh--nav" data-bleh-page="seasonal" onclick="_change_settings_page('seasonal')">
                     ${tl(trans.seasonal.name)}
                 </a>
             </li>
@@ -16747,6 +16754,12 @@
           de: "Silvester"
         }
       }
+    },
+    new_season: {
+      en: "New Season!"
+    },
+    value_for_time: {
+      en: "{v} for {time}"
     },
     seasonal_timeline: {
       en: "Seasonal timeline",

@@ -431,6 +431,12 @@ export const trans = {
             }
         }
     },
+    new_season: {
+        en: 'New Season!'
+    },
+    value_for_time: {
+        en: '{v} for {time}'
+    },
     seasonal_timeline: {
         en: 'Seasonal timeline',
         de: 'Saisonale Zeitleiste'

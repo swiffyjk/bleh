@@ -14505,28 +14505,6 @@ h2.playlisting-create-option-title {
         }
         &[data-bleh-page="seasonal"] {
             --mask: var(--icon-16-season);
-
-            &[data-season="easter"] {
-                --mask: var(--icon-16-egg);
-            }
-            &[data-season="pride"] {
-                --mask: var(--icon-16-pride);
-            }
-            &[data-season="halloween"] {
-                --mask: var(--icon-16-pumpkin);
-            }
-            &[data-season="pre_fall"] {
-                --mask: var(--icon-16-fall);
-            }
-            &[data-season="fall"] {
-                --mask: var(--icon-16-fall);
-            }
-            &[data-season="christmas"] {
-                --mask: var(--icon-16-snow);
-            }
-            &[data-season="new_years"] {
-                --mask: var(--icon-16-new-years);
-            }
         }
 
         li:has(&:is([data-bleh-page="sku"], [data-bleh-page="home"]):not(.secondary-nav-item-link--active)) {
