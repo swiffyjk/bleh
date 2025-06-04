@@ -16,6 +16,8 @@ import {custom_select} from './select';
 import {patch_titles} from './track';
 
 export function compare() {
+    // TODO: get current user scrobbles from auth menu
+    // only problem is you would have to rmeove the "scrobbles" text
     if (page.state.scrobbles === 0) {
         notify({
             id: 'compare_not_possible',

@@ -2397,6 +2397,10 @@ span.header-new-gallery-inner a,
                 margin: unset;
             }
         }
+        .listening-report-navlist > div > .content-top-lower {
+            margin-left: calc(var(--card-padding) + var(--button-sides));
+            margin-right: calc(var(--card-padding) + var(--button-sides));
+        }
 
         & > .redesigned-content-top:not(.listening-report-navlist) {
             margin-top: calc(-1 * var(--card-gap)) !important;
@@ -7001,7 +7005,12 @@ button,
         --padding: 0;
         width: unset;
         font: inherit !important;
+        font-weight: 500 !important;
         color: inherit !important;
+        transform: unset !important;
+    }
+    .listening-report-secondary-top-item & {
+        width: 100%;
     }
 
 
@@ -10172,10 +10181,10 @@ a.gallery-image-preferred-off {
 .highcharts-root, .highcharts-background {
     fill: transparent !important;
 }
-text {
+text:not([text-anchor]) {
     font-family: var(--font) !important;
 }
-text:not(.music-decades-chart-container text, .js-top-tags-over-time-target text, .js-mainstream-chart-container text, .summary-chart-container text) {
+text:not(.music-decades-chart-container text, .js-top-tags-over-time-target text, .js-mainstream-chart-container text, .summary-chart-container text, [text-anchor=]) {
     font-size: var(--font-size) !important;
     line-height: var(--line-height) !important;
     font-weight: var(--font-weight) !important;
@@ -10925,6 +10934,8 @@ text[style^="color: rgb(255, 172, 172)"] {
     --bg-atv: transparent;
     --shadow: none;
     --padding: 0;
+    --radius: 0;
+    height: 400px !important;
     font: inherit !important;
     color: inherit !important;
     transform: unset !important;

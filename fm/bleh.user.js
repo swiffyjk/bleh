@@ -5724,29 +5724,6 @@
     let base_header = document.body.querySelector(".header-info-secondary");
     if (!base_header) return;
     let katsune = ff("katsune");
-    let header_meta = base_header.querySelector(".header-metadata");
-    header_meta.classList.add("profile-header-metadata-legacy");
-    let scrobbles = 0;
-    let average = 0;
-    let artists = 0;
-    let loved = 0;
-    if (!katsune) {
-      let metadata = header_meta.querySelectorAll(".header-metadata-display");
-      metadata.forEach((item, index) => {
-        if (index == 0) {
-          let para = item.querySelector("p");
-          scrobbles = clean_number(para.textContent.trim());
-          average = para.getAttribute("title");
-        } else if (index == 1) {
-          artists = clean_number(item.textContent.trim());
-        } else if (index == 2) {
-          loved = clean_number(item.textContent.trim());
-        }
-      });
-    }
-    page.state.scrobbles = scrobbles;
-    page.state.artists = artists;
-    page.state.loved = loved;
     let taste = "";
     let taste_percentage = "";
     let taste_artists = [];
@@ -5754,8 +5731,8 @@
     if (!is_own_profile && page.name != sponsor_list.sponsor_account) {
       let taste_meter = base_header.querySelector(".tasteometer");
       taste = taste_meter.classList[1].replace("tasteometer-compat-", "");
-      let artists2 = taste_meter.querySelectorAll("a");
-      artists2.forEach((artist) => {
+      let artists = taste_meter.querySelectorAll("a");
+      artists.forEach((artist) => {
         taste_artists.push(correct_artist(artist.getAttribute("title")));
       });
       profile_avi = document.body.querySelector(".header-avatar img");
@@ -7613,8 +7590,6 @@
                 `;
         }
       }
-      let listen_container = document.createElement("section");
-      listen_container.classList.add("listen-panel", "listen-profile-panel");
       let scrobbles = 0;
       let average = 0;
       let artists = 0;
@@ -7623,49 +7598,66 @@
       metadata.forEach((item, index) => {
         if (index == 0) {
           let para = item.querySelector("p");
-          scrobbles = clean_number(para.textContent.trim()).toLocaleString(lang);
+          scrobbles = clean_number(para.textContent.trim());
           average = para.getAttribute("title");
         } else if (index == 1) {
-          artists = clean_number(item.textContent.trim()).toLocaleString(lang);
+          artists = clean_number(item.textContent.trim());
         } else if (index == 2) {
-          loved = clean_number(item.textContent.trim()).toLocaleString(lang);
+          loved = clean_number(item.textContent.trim());
         }
       });
-      listen_container.innerHTML = `
-            <div class="listener-row">
-                <div class="scrobble-side">
-                    <h3>${tl(trans.scrobbles)}</h3>
-                    <p><a href="${root}user/${page.name}/library">${scrobbles}</a></p>
+      page.state.scrobbles = scrobbles;
+      page.state.artists = artists;
+      page.state.loved = loved;
+      let scrobble_text;
+      let listen_container = html2.node`
+            <section class="listen-panel listen-profile-panel">
+                <div class="listener-row">
+                    <div class="scrobble-side">
+                        <h3>${tl(trans.scrobbles)}</h3>
+                        <p ref=${(el) => scrobble_text = el}><a href="${root}user/${page.name}/library">${scrobbles.toLocaleString(lang)}</a></p>
+                    </div>
+                    <div class="artist-side">
+                        <h3>${tl(trans.artists)}</h3>
+                        <p><a href="${root}user/${page.name}/library/artists">${artists.toLocaleString(lang)}</a></p>
+                    </div>
+                    <div class="loved-side">
+                        <h3>${tl(trans.loved)}</h3>
+                        <p><a href="${root}user/${page.name}/loved">${loved.toLocaleString(lang)}</a></p>
+                    </div>
                 </div>
-                <div class="artist-side">
-                    <h3>${tl(trans.artists)}</h3>
-                    <p><a href="${root}user/${page.name}/library/artists">${artists}</a></p>
-                </div>
-                <div class="loved-side">
-                    <h3>${tl(trans.loved)}</h3>
-                    <p><a href="${root}user/${page.name}/loved">${loved}</a></p>
-                </div>
-            </div>
-            <a class="scrobble-canvas-container mini" href="${root}user/${page.name}/library/artists?date_preset=LAST_90_DAYS&page=1">
-                <div class="loading-data-container">
-                    <div class="loading-data-text">${tl(trans.loading_count_days).replace("{c}", "90")}</div>
-                </div>
-            </a>
-            <div class="more-link">
-                <a href="${root}user/${page.name}/library/artists?date_preset=LAST_90_DAYS&page=1">
-                    ${tl(trans.explore_in_library)}
+                ${scrobbles > 0 ? html2.node`
+                <a class="scrobble-canvas-container mini" href="${root}user/${page.name}/library/artists?date_preset=LAST_90_DAYS&page=1">
+                    <div class="loading-data-container">
+                        <div class="loading-data-text">${tl(trans.loading_count_days).replace("{c}", "90")}</div>
+                    </div>
                 </a>
-            </div>
+                <div class="more-link">
+                    <a href="${root}user/${page.name}/library/artists?date_preset=LAST_90_DAYS&page=1">
+                        ${tl(trans.explore_in_library)}
+                    </a>
+                </div>
+                ` : html2.node`
+                <div class="scrobble-canvas-container mini">
+                    <div class="loading-data-container">
+                        <div class="loading-data-text failed">${tl(trans.profile_does_not_have_enough_scrobbles)}</div>
+                    </div>
+                </div>
+                `}
+            </section>
         `;
-      tippy(listen_container.querySelector(".scrobble-side p"), {
-        content: average
-      });
+      if (scrobbles > 0) {
+        tippy(scrobble_text, {
+          content: average
+        });
+      }
       if (page.name != sponsor_list.sponsor_account) {
         if (!page.mobile)
           page.structure.side.insertBefore(listen_container, page.structure.side.firstChild);
         else
           page.structure.main.insertBefore(listen_container, page.structure.main.firstChild);
-        bleh_profile_chart();
+        if (scrobbles > 0)
+          bleh_profile_chart();
       }
       if (ff("redesigned_profile_header"))
         redesign_profile_header(is_own_profile, is_following);

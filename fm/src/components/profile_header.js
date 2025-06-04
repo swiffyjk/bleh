@@ -8,7 +8,7 @@ import {settings} from "../build/config";
 import {log} from "../build/log";
 import {auth, page, root} from "../build/page";
 import {sponsor_list} from "../build/sponsor";
-import {clean_number, sanitise} from "../build/tools";
+import {sanitise} from "../build/tools";
 import {lang, tl, trans} from "../build/trans";
 import {ff} from "../sku";
 import {compare} from './compare';
@@ -34,35 +34,6 @@ export function redesign_profile_header(is_own_profile, is_following) {
     if (!base_header) return;
 
     let katsune = ff('katsune');
-
-    let header_meta = base_header.querySelector('.header-metadata');
-    header_meta.classList.add('profile-header-metadata-legacy');
-
-    // acquire info
-    let scrobbles = 0;
-    let average = 0;
-    let artists = 0;
-    let loved = 0;
-
-    if (!katsune) {
-        let metadata = header_meta.querySelectorAll('.header-metadata-display');
-        metadata.forEach((item, index) => {
-            if (index == 0) {
-                let para = item.querySelector('p');
-
-                scrobbles = clean_number(para.textContent.trim());
-                average = para.getAttribute('title');
-            } else if (index == 1) {
-                artists = clean_number(item.textContent.trim());
-            } else if (index == 2) {
-                loved = clean_number(item.textContent.trim());
-            }
-        });
-    }
-
-    page.state.scrobbles = scrobbles;
-    page.state.artists = artists;
-    page.state.loved = loved;
 
 
     // taste
