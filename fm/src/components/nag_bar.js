@@ -1,7 +1,13 @@
-import { settings } from "../build/config";
-import { page } from "../build/page";
-import { lang, trans_legacy, trans, tl } from "../build/trans";
-import { notify } from "./notify";
+//
+// bleh, an extension for the music site Last.fm
+// Copyright (c) 2025 katelyn and contributors
+// Licensed under GPLv3
+//
+
+import {settings} from "../build/config";
+import {page} from "../build/page";
+import {trans_legacy} from "../build/trans";
+import {notify} from "./notify";
 
 export function nag_bar() {
     /*if (!page.structure.nag_bar) {

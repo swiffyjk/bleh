@@ -1,18 +1,22 @@
-import { log } from "../build/log";
-import { page } from "../build/page";
-import { desanitise } from "../build/tools";
-import { trans, tl } from "../build/trans";
-import { patch_header_title } from "../components/lotus";
-import { checkup_page_structure } from "../components/structure";
-import { register_background, update_page } from "../page";
-import { ff } from "../sku";
-import { bleh_wiki, bleh_wiki_editor, bleh_wiki_history } from "./wiki";
+//
+// bleh, an extension for the music site Last.fm
+// Copyright (c) 2025 katelyn and contributors
+// Licensed under GPLv3
+//
+
+import {log} from "../build/log";
+import {page} from "../build/page";
+import {desanitise} from "../build/tools";
+import {tl, trans} from "../build/trans";
+import {patch_header_title} from "../components/lotus";
+import {checkup_page_structure} from "../components/structure";
+import {register_background, update_page} from "../page";
+import {ff} from "../sku";
+import {bleh_wiki, bleh_wiki_editor, bleh_wiki_history} from "./wiki";
 
 export function bleh_tags() {
     let tag_header = document.body.querySelector('.header--tag');
-
-    if (tag_header == undefined)
-        return;
+    if (!tag_header) return;
 
     if (tag_header.hasAttribute('data-bwaa'))
         return;
@@ -89,13 +93,26 @@ export function bleh_tags() {
 
         let bookmark_form = page.structure.side.querySelector(':scope > div');
         let view_all_panel = document.createElement('section');
-        view_all_panel.classList.add('view-all-panel');
+        view_all_panel.classList.add('side-actions');
 
         let button = bookmark_form.querySelector('button');
-        button.classList = 'toggle-button header-new-bookmark-button btn view-item interact-item icon';
+        button.classList = 'btn side-action';
+        button.setAttribute('data-type', 'bookmark');
 
         view_all_panel.appendChild(bookmark_form);
         page.structure.side.appendChild(view_all_panel);
+
+        // new tag playlist
+        let new_playlist = page.structure.side.querySelector('form');
+
+        let header = new_playlist.querySelector('h3');
+        new_playlist.removeChild(header);
+
+        let playlist_button = new_playlist.querySelector('button');
+        playlist_button.classList = 'btn side-action';
+        playlist_button.setAttribute('data-type', 'playlist');
+
+        view_all_panel.appendChild(new_playlist);
     } else {
         if (page.subpage == 'wiki_overview')
             bleh_wiki();

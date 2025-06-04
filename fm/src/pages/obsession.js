@@ -1,13 +1,20 @@
-import { patch_avatar } from "../avatar";
-import { settings } from '../build/config';
-import { log } from '../build/log';
-import { artist_corrections } from '../build/music';
-import { page, root } from '../build/page';
-import { clamp_sat, rgb_to_hsl, sanitise, sanitise_text } from '../build/tools';
-import { tl, trans } from '../build/trans';
-import { correct_item_by_artist, name_includes } from '../components/lotus';
-import { checkup_page_structure } from '../components/structure';
-import { register_background, update_page } from '../page';
+//
+// bleh, an extension for the music site Last.fm
+// Copyright (c) 2025 katelyn and contributors
+// Licensed under GPLv3
+//
+
+import {patch_avatar} from "../avatar";
+import {settings} from '../build/config';
+import {log} from '../build/log';
+import {artist_corrections} from '../build/music';
+import {page, root} from '../build/page';
+import {clamp_sat, rgb_to_hsl, sanitise, sanitise_text} from '../build/tools';
+import {tl, trans} from '../build/trans';
+import {correct_item_by_artist, name_includes} from '../components/lotus';
+import {checkup_page_structure} from '../components/structure';
+import {register_background, update_page} from '../page';
+import {html, render} from "lighterhtml";
 
 export function bleh_obsession() {
     let obsession_container = document.querySelector('.obsession-container');
@@ -78,14 +85,13 @@ export function bleh_obsession() {
 
         page.corrected = formatted_title[4];
 
-        // parse tags into text
-        let song_tags_text = '';
-        for (let song_tag in song_tags) {
-            song_tags_text = `${song_tags_text}<div class="feat" data-bleh--tag-type="${song_tags[song_tag].type}" data-bleh--tag-group="${song_tags[song_tag].group}">${song_tags[song_tag].text}</div>`;
-        }
-
         // combine
-        track_title.innerHTML = `<div class="title">${sanitise_text(song_title).trim()}</div>${song_tags_text}`;
+        render(track_title, html.node`
+            <div class="title">${sanitise_text(song_title).trim()}</div>
+            ${song_tags.map((tag) => html.node`
+                <div class="feat" data-bleh--tag-type="${tag.type}" data-bleh--tag-group="${tag.group}">${tag.text}</div>
+            `)}
+        `);
 
         let song_guests = formatted_title[3];
         page.sister_others = formatted_title[3];

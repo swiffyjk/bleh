@@ -1,6 +1,7 @@
 {
   "dependencies": {
-    "esbuild": "^0.25.2"
+    "esbuild": "^0.25.2",
+    "lighterhtml": "^4.2.0"
   },
   "type": "module"
 }

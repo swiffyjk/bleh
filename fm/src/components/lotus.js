@@ -1,12 +1,19 @@
-import { settings } from "../build/config";
-import { log } from "../build/log";
-import { album_track_corrections, artist_corrections, includes } from "../build/music";
-import { page, root } from "../build/page";
-import { return_artist_from_generic, sanitise, sanitise_text } from "../build/tools";
-import { lang, trans_legacy, trans, tl } from "../build/trans";
-import { prepare_corrections_page } from "../pages/bleh_config";
-import { dialog } from "./dialog";
-import { notify } from "./notify";
+//
+// bleh, an extension for the music site Last.fm
+// Copyright (c) 2025 katelyn and contributors
+// Licensed under GPLv3
+//
+
+import {settings} from "../build/config";
+import {log} from "../build/log";
+import {album_track_corrections, artist_corrections, includes} from "../build/music";
+import {page, root} from "../build/page";
+import {return_artist_from_generic, sanitise, sanitise_text} from "../build/tools";
+import {trans_legacy} from "../build/trans";
+import {prepare_corrections_page} from "../pages/bleh_config";
+import {dialog} from "./dialog";
+import {notify} from "./notify";
+import {html, render} from "lighterhtml";
 
 export function lotus(force = false) {
     if (!settings.corrections)
@@ -111,12 +118,12 @@ unsafeWindow._open_correction_modal = function() {
     dialog({
         id: 'corrections',
         title: trans_legacy.en.settings.corrections.name,
-        body: (`
+        body: html.node`
             <h4>${trans_legacy.en.settings.corrections.listing.artists}</h4>
             <div class="corrections artist" id="corrections-artist"></div>
             <h4>${trans_legacy.en.settings.corrections.listing.albums_tracks}</h4>
             <div class="corrections album_tracks" id="corrections-albums_tracks"></div>
-        `),
+        `,
         has_close: true,
         type: 'corrections',
         allow_scroll: true
@@ -471,14 +478,13 @@ export function patch_header_title() {
 
             page.corrected = formatted_title[4];
 
-            // parse tags into text
-            let song_tags_text = '';
-            for (let song_tag in song_tags) {
-                song_tags_text = `${song_tags_text}<div class="feat" data-bleh--tag-type="${song_tags[song_tag].type}" data-bleh--tag-group="${song_tags[song_tag].group}">${song_tags[song_tag].text}</div>`;
-            }
-
             // combine
-            track_title.innerHTML = `<div class="title">${sanitise_text(song_title).trim()}</div>${song_tags_text}`;
+            render(track_title, html.node`
+                <div class="title">${song_title.trim()}</div>
+                ${song_tags.map((tag) => html.node`
+                    <div class="feat" data-bleh--tag-type="${tag.type}" data-bleh--tag-group="${tag.group}">${tag.text}</div>
+                `)}
+            `);
 
             let song_artist_element = document.body.querySelector('span[itemprop="byArtist"]');
             let song_guests = formatted_title[3];

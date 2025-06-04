@@ -1,8 +1,16 @@
-import { settings } from "../build/config";
-import { auth, dialogs, page, root } from "../build/page";
-import { trans, tl } from "../build/trans";
-import { dialog, dialog_rm } from "./dialog";
-import { notify } from "./notify";
+//
+// bleh, an extension for the music site Last.fm
+// Copyright (c) 2025 katelyn and contributors
+// Licensed under GPLv3
+//
+
+import {html} from "lighterhtml";
+import {settings} from "../build/config";
+import {auth, dialogs, page, root} from "../build/page";
+import {tl, trans} from "../build/trans";
+import {dialog, dialog_rm} from "./dialog";
+import {notify} from "./notify";
+import {save_setting, setting} from "./settings.js";
 
 unsafeWindow._open_profile_shortcut_window = function() {
     open_profile_shortcut_window();
@@ -11,19 +19,9 @@ export function open_profile_shortcut_window() {
     let modal = dialog({
         id: 'profile_shortcut',
         title: tl(trans.profile_shortcut.name),
-        body: (`
-        <div class="setting" data-type="text" id="container-profile_shortcut">
-            <div class="avatar-container">
-                <div class="avatar-inner" id="avatar-profile_shortcut">
-                    <img id="avatar_src-profile_shortcut" src="${localStorage.getItem('bleh_profile_shortcut_avi') || ''}">
-                </div>
-            </div>
-            <div class="input-container content-form">
-                <input type="text" maxlength="40" id="text-profile_shortcut" value="${settings.profile_shortcut}" placeholder="${tl(trans.enter_username)}">
-                <button class="btn chibi icon primary submit" onclick="_save_profile_shortcut()">${tl(trans.save)}</button>
-            </div>
-        </div>
-        `)
+        body: html.node`
+        ${setting('profile_shortcut', false)}
+        `
     });
 
     modal.querySelector('#text-profile_shortcut').focus();
@@ -36,7 +34,7 @@ export function other_listener(id) {
     let modal = dialog({
         id: 'other_listener',
         title: tl(trans.view_others_library),
-        body: (`
+        body: html.node`
         <div class="setting" data-type="text">
             <div class="avatar-container">
                 <div class="avatar-inner avatar--bleh-missing">
@@ -48,7 +46,7 @@ export function other_listener(id) {
                 <button class="btn chibi icon primary submit" onclick="_send_other_listener('${id}')">${tl(trans.done)}</button>
             </div>
         </div>
-        `)
+        `
     });
 
     modal.querySelector('#text-profile').focus();
@@ -69,20 +67,20 @@ unsafeWindow._set_profile_as_shortcut = function(button) {
     dialog({
         id: 'profile_shortcut',
         title: tl(trans.profile_shortcut.name),
-        body: (`
-        <div class="big-modal-alert alert-danger">
-            ${tl(trans.profile_shortcut.notice).replace('{u}', `<a class="mention" href="${root}user/${settings.profile_shortcut}" target="_blank">@${settings.profile_shortcut}</a>`)}
-        </div>
-        <div class="modal-footer">
-            <button class="see-more cancel" onclick="_dialog_rm({id:'profile_shortcut'})">
-                ${tl(trans.back)}
-            </button>
-            <div class="fill"></div>
-            <button class="btn primary save" onclick="_confirm_set_profile_as_shortcut()">
-                ${tl(trans.replace)}
-            </button>
-        </div>
-        `)
+        body: html.node`
+            <div class="big-modal-alert alert-danger">
+                ${{html: tl(trans.profile_shortcut.notice).replace('{u}', `<a class="mention" href="${root}user/${settings.profile_shortcut}" target="_blank">@${settings.profile_shortcut}</a>`)}}
+            </div>
+            <div class="modal-footer">
+                <button class="see-more cancel" onclick=${() => dialog_rm({id:'profile_shortcut'})}>
+                    ${tl(trans.back)}
+                </button>
+                <div class="fill"></div>
+                <button class="btn primary save" onclick=${() => confirm_set_profile_as_shortcut()}>
+                    ${tl(trans.replace)}
+                </button>
+            </div>
+        `
     });
 }
 
@@ -110,6 +108,66 @@ function confirm_set_profile_as_shortcut() {
     // save to settings
     settings.profile_shortcut = page.name;
     localStorage.setItem('bleh', JSON.stringify(settings));
+}
+
+export function save_profile_shortcut(input, value, submit, reset_btn, avatar) {
+    if (value == '' || value == auth.name) {
+        localStorage.removeItem('bleh_profile_shortcut_avi');
+        avatar.querySelector('img').setAttribute('src', '');
+        avatar.querySelector('img').setAttribute('alt', '');
+
+        reset_btn.disabled = false;
+        input.disabled = false;
+        submit.disabled = false;
+        save_setting('profile_shortcut', '');
+        return;
+    }
+
+    avatar.classList.add('requesting');
+
+    fetch(`${root}user/${value}/tags`)
+    .then(function(response) {
+        console.log('returned', response, response.text);
+
+        return response.text();
+    })
+    .then(function(dom) {
+        let doc = new DOMParser().parseFromString(dom, 'text/html');
+        console.log('DOC', doc);
+
+        reset_btn.disabled = false;
+        input.disabled = false;
+        submit.disabled = false;
+        avatar.classList.remove('requesting');
+
+        try {
+            let avatar_src = doc.querySelector('.header-avatar-inner-wrap img').getAttribute('src');
+
+            localStorage.setItem('bleh_profile_shortcut_avi', avatar_src);
+            avatar.querySelector('img').setAttribute('src', avatar_src);
+            avatar.querySelector('img').setAttribute('alt', value);
+
+            notify({
+                id: 'profile_shortcut_saved',
+                title: tl(trans.profile_shortcut.name),
+                body: tl(trans.profile_shortcut.linked).replace('{u}', value),
+                icon: 'icon-16-profile-shortcut'
+            });
+
+            // save to settings
+            save_setting('profile_shortcut', value);
+        } catch(e) {
+            notify({
+                id: 'profile_shortcut_error',
+                title: tl(trans.profile_shortcut.name),
+                body: tl(trans.failed_to_find_profile),
+                type: 'error'
+            });
+            localStorage.removeItem('bleh_profile_shortcut_avi');
+            avatar.querySelector('img').setAttribute('src', '');
+            avatar.querySelector('img').setAttribute('alt', '');
+        }
+    });
 }
 
 unsafeWindow._save_profile_shortcut = function() {

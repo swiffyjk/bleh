@@ -1,15 +1,22 @@
-import { inbuilt_settings, settings, settings_base, settings_template } from "./build/config";
-import { log } from "./build/log";
-import { page, reload_pending } from "./build/page";
-import { stored_season } from "./build/seasonal";
-import { lang, trans_legacy } from "./build/trans";
-import { load_chart_colours } from "./chart";
-import { dialog, dialog_legacy, kill_window } from "./components/dialog";
-import { bleh_music_page_charts } from "./components/music";
-import { notify } from "./components/notify";
-import { load_skus, show_theme_change_in_menu, show_theme_change_in_settings } from "./pages/bleh_config";
-import { bleh_glacier_date_graph_generate, bleh_glacier_insights } from "./pages/glacier";
-import { bleh_profile_chart_render } from './pages/profile';
+//
+// bleh, an extension for the music site Last.fm
+// Copyright (c) 2025 katelyn and contributors
+// Licensed under GPLv3
+//
+
+import {html} from "lighterhtml";
+import {inbuilt_settings, settings, settings_base, settings_template} from "./build/config";
+import {log} from "./build/log";
+import {page, reload_pending} from "./build/page";
+import {stored_season} from "./build/seasonal";
+import {tl, trans, trans_legacy} from "./build/trans";
+import {load_chart_colours} from "./chart";
+import {dialog_legacy, kill_window} from "./components/dialog";
+import {bleh_music_page_charts} from "./components/music";
+import {notify} from "./components/notify";
+import {load_skus, show_theme_change_in_menu, show_theme_change_in_settings} from "./pages/bleh_config";
+import {bleh_glacier_date_graph_generate, bleh_glacier_insights} from "./pages/glacier";
+import {bleh_profile_chart_render} from './pages/profile';
 
 // create blank settings
 export function create_settings_template() {
@@ -283,7 +290,8 @@ function update_item(item, value, modify=true, search = document) {
 
 
             if (item == 'dev') {
-                dialog_legacy('prompt_dev',trans_legacy.en.settings.performance.dev.name,`
+                dialog_legacy('prompt_dev',trans_legacy.en.settings.performance.dev.name,
+                    html.node`
                     <p class="alert alert-info">${trans_legacy.en.settings.performance.dev.modals.prompt.alert}</p>
                     <br>
                     ${trans_legacy.en.settings.performance.dev.modals.prompt.stylus}
@@ -374,18 +382,24 @@ function update_item(item, value, modify=true, search = document) {
     }
 }
 
-function request_reload() {
+export function request_reload() {
     if (page.type == 'bleh_setup')
         return;
 
     log('requesting reload', 'settings');
     reload_pending.state = true;
     notify({
-        title: trans_legacy.en.settings.reload.name,
-        body: trans_legacy.en.settings.reload.body,
-        icon: 'icon-16-refresh',
+        title: tl(trans.refresh_pending.name),
+        body: tl(trans.refresh_pending.body),
+        icon: 'icon-16-settings',
         persist: true,
-        action: '_invoke_reload()'
+        actions: [
+            {
+                action: () => invoke_reload(),
+                text: tl(trans.refresh),
+                type: 'refresh'
+            }
+        ]
     });
 }
 unsafeWindow._invoke_reload = function() {
@@ -502,7 +516,7 @@ unsafeWindow._chosen_firefox = function() {
 
 function continue_dev() {
     kill_window('prompt_dev');
-    dialog_legacy('continue_dev',trans_legacy.en.settings.performance.dev.name,`
+    dialog_legacy('continue_dev',trans_legacy.en.settings.performance.dev.name,html.node`
         ${trans_legacy.en.settings.performance.dev.modals.continue.next_step}
         <div class="modal-footer">
             <div class="fill"></div>

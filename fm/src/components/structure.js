@@ -1,7 +1,15 @@
-import { log } from "../build/log";
-import { page } from "../build/page";
-import { load_chart_colours } from "../chart";
-import { ff } from "../sku";
+//
+// bleh, an extension for the music site Last.fm
+// Copyright (c) 2025 katelyn and contributors
+// Licensed under GPLv3
+//
+
+import {log} from "../build/log";
+import {page} from "../build/page";
+import {load_chart_colours} from "../chart";
+import {ff} from "../sku";
+import {html, render} from "lighterhtml";
+import {tl, trans} from "../build/trans.js";
 
 export function basic_page_structure() {
     page.structure.container = document.body.querySelector('.page-content');
@@ -103,7 +111,11 @@ export function checkup_page_structure(is_subpage = false, header = null) {
             if (content_top) {
                 content_top.classList.add('redesigned-content-top');
                 page.structure.content_top = content_top;
-                navlist.after(content_top);
+
+                if (navlist)
+                    navlist.after(content_top);
+                else
+                    page.structure.container.insertBefore(content_top, page.structure.container.firstElementChild);
 
                 // should be covered by bleh
                 if (content_top.querySelector('.content-top-back-link'))
@@ -116,16 +128,15 @@ export function checkup_page_structure(is_subpage = false, header = null) {
                     subpage_title = page.structure.main.querySelector(':scope > section:first-child .section-controls > .subpage-title');
 
                 if (subpage_title) {
-                    content_top = document.createElement('div');
-                    content_top.classList.add('content-top', 'redesigned-content-top');
-
-                    content_top.innerHTML = (`
-                        <div class="content-top-inner-wrap">
-                            <div class="container content-top-lower">
-                                <h1 class="content-top-header">${subpage_title.textContent.trim()}</h1>
+                    content_top = html.node`
+                        <div class="content-top redesigned-content-top">
+                            <div class="content-top-inner-wrap">
+                                <div class="container content-top-lower">
+                                    <h1 class="content-top-header">${subpage_title.textContent.trim()}</h1>
+                                </div>
                             </div>
                         </div>
-                    `);
+                    `
 
                     page.structure.content_top = content_top;
                     navlist.after(content_top);
@@ -152,27 +163,45 @@ export function checkup_page_structure(is_subpage = false, header = null) {
                 if (!btn_add) btn_add = page.structure.main.querySelector(':scope > section:first-child .btn-add');
 
                 if (btn_add) {
-                    btn_add.classList = 'btn view-all-button back add-button';
+                    let side_actions = document.createElement('section');
+                    side_actions.classList.add('side-actions');
 
-                    let add_panel = document.createElement('section');
-                    add_panel.classList.add('view-all-panel');
+                    if (!page.mobile)
+                        page.structure.side.appendChild(side_actions);
+                    else
+                        page.structure.main.appendChild(side_actions);
 
-                    add_panel.appendChild(btn_add);
-                    page.structure.side.insertBefore(add_panel, page.structure.side.firstElementChild);
+                    btn_add.classList = 'btn side-action';
+                    btn_add.setAttribute('data-type', 'add');
+
+                    side_actions.appendChild(btn_add);
                 }
 
 
                 // is there a playlink?
-                let playlink = page.structure.main.querySelector(':scope > .section-controls > .section-playlink');
+                let radio = page.structure.main.querySelector(':scope > .section-controls > .section-playlink');
 
-                if (playlink) {
-                    playlink.classList.add('btn', 'view-all-button', 'back', 'play-button');
+                if (radio) {
+                    let side_actions = document.createElement('section');
+                    side_actions.classList.add('side-actions');
 
-                    let playlink_panel = document.createElement('section');
-                    playlink_panel.classList.add('view-all-panel');
+                    if (!page.mobile)
+                        page.structure.side.appendChild(side_actions);
+                    else
+                        page.structure.main.appendChild(side_actions);
 
-                    playlink_panel.appendChild(playlink);
-                    page.structure.side.insertBefore(playlink_panel, page.structure.side.firstElementChild);
+                    radio.classList = 'btn stationlink js-playlink-station radio-button';
+
+                    let type = radio.getAttribute('data-analytics-label');
+
+                    render(radio, html`
+                        <h3 class="sub-text">${tl(trans.radio)}</h3>
+                        <h4>${tl(trans[type])}</h4>
+                    `);
+
+                    radio.removeAttribute('title');
+
+                    side_actions.appendChild(radio);
                 }
             }
         } else {

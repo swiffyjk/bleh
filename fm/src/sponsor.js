@@ -1,10 +1,17 @@
-import { log } from "./build/log";
-import { auth, page, root } from "./build/page";
-import { sponsor_list } from "./build/sponsor";
-import { lang, tl, trans, trans_legacy } from "./build/trans";
-import { dialog } from "./components/dialog";
-import { deliver_notif } from "./components/notify";
-import { ff } from "./sku";
+//
+// bleh, an extension for the music site Last.fm
+// Copyright (c) 2025 katelyn and contributors
+// Licensed under GPLv3
+//
+
+import {html} from "lighterhtml";
+import {log} from "./build/log";
+import {auth, page, root} from "./build/page";
+import {sponsor_list} from "./build/sponsor";
+import {tl, trans, trans_legacy} from "./build/trans";
+import {dialog} from "./components/dialog";
+import {deliver_notif} from "./components/notify";
+import {ff} from "./sku";
 
 export function sponsors(force = false) {
     if (!ff('sponsor'))
@@ -92,14 +99,17 @@ function sponsor(replace=false) {
     dialog({
         id: 'sponsor',
         title: tl(trans.support_future_development),
-        body: (`
+        body: html.node`
             <div class="modal-vertical-inner support-inner">
                 <div class="avatar">
                     <img src="${auth.avatar.replace('/avatar42s/', '/avatar170s/')}" alt="${tl(trans.your_avatar)}">
                     <span class="avatar-status-dot user-status--bleh-sponsor"></span>
                 </div>
                 <h1>${tl(trans.support_future_development)}</h1>
-                <p>${tl(trans.why_sponsor).replace('katelyn', `<a class="mention" href="${root}user/katesia">@katesia</a>`)}</p>
+                <p>${
+                    html.node([
+                        tl(trans.why_sponsor).replace('katelyn', `<a class="mention" href="${root}user/katesia">@katesia</a>`)
+                    ])}</p>
             </div>
             <div class="modal-footer">
                 <div class="fill"></div>
@@ -108,7 +118,7 @@ function sponsor(replace=false) {
                 </a>
                 <div class="fill"></div>
             </div>
-        `),
+        `,
         type: 'sponsor',
         replace_if_possible: replace
     });
@@ -122,7 +132,7 @@ function sponsor_manage() {
         dialog({
             id: 'sponsor_manage',
             title: tl(trans.sponsor),
-            body: (`
+            body: html.node`
                 <div class="modal-vertical-inner support-inner">
                     <div class="avatar">
                         <img src="${auth.avatar.replace('/avatar42s/', '/avatar170s/')}" alt="${tl(trans.your_avatar)}">
@@ -131,14 +141,14 @@ function sponsor_manage() {
                     <h1>${tl(trans.you_are_a_sponsor)}</h1>
                     <p>${tl(trans.sponsor_no_badge)}</p>
                 </div>
-            `),
+            `,
             type: 'sponsor'
         });
     } else {
         dialog({
             id: 'sponsor_manage',
             title: tl(trans.sponsor),
-            body: (`
+            body: html.node`
                 <div class="modal-vertical-inner support-inner">
                     <div class="avatar">
                         <img src="${auth.avatar.replace('/avatar42s/', '/avatar170s/')}" alt="${tl(trans.your_avatar)}">
@@ -154,7 +164,7 @@ function sponsor_manage() {
                     </a>
                     <div class="fill"></div>
                 </div>
-            `),
+            `,
             type: 'sponsor'
         });
     }

@@ -1,18 +1,27 @@
-import { log } from '../build/log';
-import { auth, page, root } from '../build/page';
-import { clean_number, sanitise } from '../build/tools';
-import { tl, trans } from '../build/trans';
-import { dialog } from './dialog';
-import { music_grids } from './music_grid';
-import { notify } from './notify';
-import { custom_select } from './select';
-import { patch_titles } from './track';
+//
+// bleh, an extension for the music site Last.fm
+// Copyright (c) 2025 katelyn and contributors
+// Licensed under GPLv3
+//
+
+import {html, render} from 'lighterhtml';
+import {log} from '../build/log';
+import {auth, page, root} from '../build/page';
+import {clean_number, sanitise} from '../build/tools';
+import {tl, trans} from '../build/trans';
+import {dialog} from './dialog';
+import {music_grids} from './music_grid';
+import {notify} from './notify';
+import {custom_select} from './select';
+import {patch_titles} from './track';
 
 export function compare() {
+    let compare_button;
+
     page.state.compare_modal = dialog({
         id: 'compare',
         title: tl(trans.compare),
-        body: (`
+        body: html.node`
             <div class="compare-header">
                 <div class="compare-users">
                     <div class="compare-user">
@@ -54,7 +63,7 @@ export function compare() {
                             <option value="LAST_365_DAYS">${tl(trans.last_count_days).replace('{c}', '365')}</option>
                         </select>
                     </div>
-                    <button class="btn chibi icon primary compare" onclick="_begin_comparing()">${tl(trans.compare)}</button>
+                    <button class="btn chibi icon primary compare" ref=${el => compare_button = el} onclick=${() => begin_comparing()}>${tl(trans.compare)}</button>
                 </div>
             </div>
             <div class="compare-body" data-filled="false">
@@ -62,11 +71,11 @@ export function compare() {
                     <div class="loading-data-text info">${tl(trans.choose_a_timeframe_above)}</div>
                 </div>
             </div>
-        `),
+        `,
         type: 'compare'
     });
 
-    tippy(page.state.compare_modal.querySelector('.chibi.compare'), {
+    tippy(compare_button, {
         content: tl(trans.compare)
     });
 
@@ -79,7 +88,7 @@ unsafeWindow._compare = function() {
     compare();
 }
 
-unsafeWindow._begin_comparing = function() {
+function begin_comparing() {
     page.state.compare_modal.querySelector('.bleh-modal-body .compare-body').setAttribute('data-filled', 'false');
     let buttons = page.state.compare_modal.querySelectorAll('.compare-selection > button');
     buttons.forEach((button) => {
@@ -95,11 +104,11 @@ unsafeWindow._begin_comparing = function() {
         other: [],
         shared: []
     };
-    get_grid(auth.name, type, range, 1, pages, page.name, pages);
+    get_grid(auth.name, type, range, 1, pages, page.name);
 }
 
 function get_grid(user, type, range, current_page, pages, next_user=null) {
-    page.state.compare_modal.querySelector('.bleh-modal-body .compare-body').innerHTML = (`
+    render(page.state.compare_modal.querySelector('.bleh-modal-body .compare-body'), html`
         <div class="loading-data-container">
             <div class="loading-data-text">${tl(trans.gathering_plays_for_user_pages).replace('{u}', user).replace('{current_page}', current_page).replace('{pages}', pages)}</div>
         </div>
@@ -120,7 +129,7 @@ function get_grid(user, type, range, current_page, pages, next_user=null) {
         try {
             let tracks = doc.querySelectorAll('.chartlist-row');
             tracks.forEach((track) => {
-                item = {};
+                let item = {};
 
                 item.avatar = track.querySelector('.chartlist-image img');
                 if (item.avatar)
@@ -191,7 +200,7 @@ function continue_comparing(type, range) {
     page.state.compare_modal.querySelector('.bleh-modal-body .compare-body').innerHTML = '';
 
     if (page.state.compare.shared.length == 0) {
-        page.state.compare_modal.querySelector('.bleh-modal-body .compare-body').innerHTML = (`
+        render(page.state.compare_modal.querySelector('.bleh-modal-body .compare-body'), html`
             <div class="loading-data-container">
                 <div class="loading-data-text failed">${tl(trans.nothing_in_common)}</div>
             </div>
@@ -208,53 +217,50 @@ function continue_comparing(type, range) {
         grid.classList.add('grid-items', 'grid-items--numbered', 'compare-grid');
 
         page.state.compare.shared.forEach((data) => {
-            let item = document.createElement('li');
-            item.classList.add('grid-items-item', 'compare-item');
-
             let template;
             if (type == 'artists')
                 template = sanitise(data.name);
             else
                 template = `${sanitise(data.sister)}/${sanitise(data.name)}`;
 
-            item.innerHTML = (`
-                <div class="grid-items-cover-image js-link-block link-block">
-                    <div class="grid-items-cover-image-image ${(data.avatar.endsWith('/c6f59c1e5e7240a4c0d427abd71f3dbb.jpg') || data.avatar.endsWith('/2a96cbd8b46e442fc41c2b86b821562f.jpg')) ? 'grid-items-cover-default' : ''}">
-                        <img src="${data.avatar.replace('/avatar70s/', '/avatar300s/').replace('/64s/', '/avatar300s/')}" alt="${data.name}" loading="lazy">
+            grid.appendChild(html.node`
+                <li class="compare-item grid-items-item">
+                    <div class="grid-items-cover-image js-link-block link-block">
+                        <div class="grid-items-cover-image-image ${(data.avatar.endsWith('/c6f59c1e5e7240a4c0d427abd71f3dbb.jpg') || data.avatar.endsWith('/2a96cbd8b46e442fc41c2b86b821562f.jpg')) ? 'grid-items-cover-default' : ''}">
+                            <img src="${data.avatar.replace('/avatar70s/', '/avatar300s/').replace('/64s/', '/avatar300s/')}" alt="${data.name}" loading="lazy">
+                        </div>
+                        <div class="grid-items-item-details">
+                            <p class="grid-items-item-main-text">
+                                <a class="link-block-target" href="${root}music/${template}" title="${data.name}">
+                                    ${data.name}
+                                </a>
+                            </p>
+                            ${(type == 'albums') ? (`
+                            <p class="grid-items-item-aux-text">
+                                <a class="grid-items-item-aux-block" href="${root}music/${data.sister}">
+                                    ${data.sister}
+                                </a>
+                            </p>
+                            `) : ''}
+                            <p class="grid-items-item-aux-text">
+                                <a class="grid-item-plays with-avatar" href="${root}user/${auth.name}/library/music/${template}?date_preset=${range}" target="_blank">
+                                    <span class="avatar">
+                                        <img src="${auth.avatar}" alt="${tl(trans.your_avatar)}">
+                                    </span>
+                                    ${data.plays.you}
+                                </a>
+                                <a class="grid-item-plays with-avatar" href="${root}user/${page.name}/library/music/${template}?date_preset=${range}" target="_blank">
+                                    <span class="avatar">
+                                        <img src="${page.avatar}" alt="${tl(trans.avatar_for_user).replace('{u}', page.name)}">
+                                    </span>
+                                    ${data.plays.other}
+                                </a>
+                            </p>
+                        </div>
+                        <a class="js-link-block-cover-link link-block-cover-link" href="${root}music/${template}" tabindex="-1" aria-hidden="true"></a>
                     </div>
-                    <div class="grid-items-item-details">
-                        <p class="grid-items-item-main-text">
-                            <a class="link-block-target" href="${root}music/${template}" title="${data.name}">
-                                ${data.name}
-                            </a>
-                        </p>
-                        ${(type == 'albums') ? (`
-                        <p class="grid-items-item-aux-text">
-                            <a class="grid-items-item-aux-block" href="${root}music/${data.sister}">
-                                ${data.sister}
-                            </a>
-                        </p>
-                        `) : ''}
-                        <p class="grid-items-item-aux-text">
-                            <a class="grid-item-plays with-avatar" href="${root}user/${auth.name}/library/music/${template}?date_preset=${range}" target="_blank">
-                                <span class="avatar">
-                                    <img src="${auth.avatar}" alt="${tl(trans.your_avatar)}">
-                                </span>
-                                ${data.plays.you}
-                            </a>
-                            <a class="grid-item-plays with-avatar" href="${root}user/${page.name}/library/music/${template}?date_preset=${range}" target="_blank">
-                                <span class="avatar">
-                                    <img src="${page.avatar}" alt="${tl(trans.avatar_for_user).replace('{u}', page.name)}">
-                                </span>
-                                ${data.plays.other}
-                            </a>
-                        </p>
-                    </div>
-                    <a class="js-link-block-cover-link link-block-cover-link" href="${root}music/${template}" tabindex="-1" aria-hidden="true"></a>
-                </div>
+                </li>
             `);
-
-            grid.appendChild(item);
         });
 
         page.state.compare_modal.querySelector('.bleh-modal-body .compare-body').appendChild(grid);
@@ -276,51 +282,48 @@ function continue_comparing(type, range) {
         });
 
         page.state.compare.shared.forEach((data, index) => {
-            let item = document.createElement('tr');
-            item.classList.add('chartlist-row', 'chartlist-row--with-artist', 'compare-item');
-
             let template = `${sanitise(data.sister)}/_/${sanitise(data.name)}`;
 
-            item.innerHTML = (`
-                <td class="chartlist-index">${index + 1}</td>
-                <td class="chartlist-image">
-                    <a class="cover-art" href="${root}music/${template}">
-                        <img src="${data.avatar}" alt="${data.name}" loading="lazy">
-                    </a>
-                </td>
-                <td class="chartlist-name">
-                    <a href="${root}music/${template}" title="${data.name}">
-                        ${data.name}
-                    </a>
-                </td>
-                <td class="chartlist-artist">
-                    <a href="${root}music/${data.sister}" title="${data.sister}">
-                        ${data.sister}
-                    </a>
-                </td>
-                <td class="chartlist-bar with-multiple">
-                    <span class="chartlist-count-bar">
-                        <a class="chartlist-count-bar-link" href="${root}user/${auth.name}/library/music/${template}?date_preset=${range}" target="_blank">
-                            <span class="chartlist-count-bar-slug" data-max-stat-value="${max}" data-stat-value="${data.plays.you}" style="width: ${(data.plays.you / max) * 100}%;"></span>
-                            <span class="chartlist-count-bar-value">${data.plays.you}</span>
+            body.appendChild(html.node`
+                <tr class="chartlist-row chartlist-row--with-artist compare-item">
+                    <td class="chartlist-index">${index + 1}</td>
+                    <td class="chartlist-image">
+                        <a class="cover-art" href="${root}music/${template}">
+                            <img src="${data.avatar}" alt="${data.name}" loading="lazy">
                         </a>
-                        <span class="avatar">
-                            <img src="${auth.avatar}" alt="${tl(trans.your_avatar)}">
-                        </span>
-                    </span>
-                    <span class="chartlist-count-bar">
-                        <a class="chartlist-count-bar-link" href="${root}user/${page.name}/library/music/${template}?date_preset=${range}" target="_blank">
-                            <span class="chartlist-count-bar-slug" data-max-stat-value="${max}" data-stat-value="${data.plays.other}" style="width: ${(data.plays.other / max) * 100}%;"></span>
-                            <span class="chartlist-count-bar-value">${data.plays.other}</span>
+                    </td>
+                    <td class="chartlist-name">
+                        <a href="${root}music/${template}" title="${data.name}">
+                            ${data.name}
                         </a>
-                        <span class="avatar">
-                            <img src="${page.avatar}" alt="${tl(trans.avatar_for_user).replace('{u}', page.name)}">
+                    </td>
+                    <td class="chartlist-artist">
+                        <a href="${root}music/${data.sister}" title="${data.sister}">
+                            ${data.sister}
+                        </a>
+                    </td>
+                    <td class="chartlist-bar with-multiple">
+                        <span class="chartlist-count-bar">
+                            <a class="chartlist-count-bar-link" href="${root}user/${auth.name}/library/music/${template}?date_preset=${range}" target="_blank">
+                                <span class="chartlist-count-bar-slug" data-max-stat-value="${max}" data-stat-value="${data.plays.you}" style="width: ${(data.plays.you / max) * 100}%;"></span>
+                                <span class="chartlist-count-bar-value">${data.plays.you}</span>
+                            </a>
+                            <span class="avatar">
+                                <img src="${auth.avatar}" alt="${tl(trans.your_avatar)}">
+                            </span>
                         </span>
-                    </span>
-                </td>
+                        <span class="chartlist-count-bar">
+                            <a class="chartlist-count-bar-link" href="${root}user/${page.name}/library/music/${template}?date_preset=${range}" target="_blank">
+                                <span class="chartlist-count-bar-slug" data-max-stat-value="${max}" data-stat-value="${data.plays.other}" style="width: ${(data.plays.other / max) * 100}%;"></span>
+                                <span class="chartlist-count-bar-value">${data.plays.other}</span>
+                            </a>
+                            <span class="avatar">
+                                <img src="${page.avatar}" alt="${tl(trans.avatar_for_user).replace('{u}', page.name)}">
+                            </span>
+                        </span>
+                    </td>
+                </tr>
             `);
-
-            body.appendChild(item);
         });
 
         page.state.compare_modal.querySelector('.bleh-modal-body .compare-body').appendChild(table);

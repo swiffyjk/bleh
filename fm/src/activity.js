@@ -1,10 +1,15 @@
-import { settings } from "./build/config";
-import { log } from "./build/log";
-import { auth, page, recent_activity_list, root } from "./build/page";
-import { sanitise } from "./build/tools";
-import { tl, trans } from './build/trans';
-import { correct_artist, correct_item_by_artist } from "./components/lotus";
-import { notify } from './components/notify';
+//
+// bleh, an extension for the music site Last.fm
+// Copyright (c) 2025 katelyn and contributors
+// Licensed under GPLv3
+//
+
+import {settings} from "./build/config";
+import {log} from "./build/log";
+import {auth, page, recent_activity_list, root} from "./build/page";
+import {sanitise} from "./build/tools";
+import {tl, trans} from './build/trans';
+import {correct_artist, correct_item_by_artist} from "./components/lotus";
 
 export function subscribe_to_events() {
     if (!settings.activities)
@@ -200,11 +205,3 @@ export function register_activity(type, involved, context, date=new Date()) {
     localStorage.setItem('bwaa_recent_activity', JSON.stringify(recent_activity_list));
 }
 
-unsafeWindow._clear_activity_history = function() {
-    localStorage.removeItem('bwaa_recent_activity');
-    notify({
-        id: 'cleared_history',
-        title: tl(trans.cleared_activity_history),
-        type: 'success'
-    });
-}

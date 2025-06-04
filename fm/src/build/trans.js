@@ -1,10 +1,16 @@
-import { handle_error_500 } from "../page";
-import { log } from "./log";
-import { auth, auth_link, setRoot } from "./page";
-import { clamp_sat, rgb_to_hsl } from "./tools";
+//
+// bleh, an extension for the music site Last.fm
+// Copyright (c) 2025 katelyn and contributors
+// Licensed under GPLv3
+//
+
+import {handle_error_500} from "../page";
+import {log} from "./log";
+import {auth, auth_link, setRoot} from "./page";
+import {clamp_sat, rgb_to_hsl} from "./tools";
 
 // loads your selected language in last.fm
-export let lang;
+export let lang = 'en';
 // hello my name is stel :3
 export let lang_info = {
     en: {
@@ -521,6 +527,12 @@ export const trans = {
             }
         }
     },
+    new_season: {
+        en: 'New Season!'
+    },
+    value_for_time: {
+        en: '{v} for {time}'
+    },
     seasonal_timeline: {
         en: 'Seasonal timeline',
         de: 'Saisonale Zeitleiste',
@@ -650,6 +662,9 @@ export const trans = {
     reset_notice: {
         en: 'Your settings will be permanently reset, are you sure?',
         pt: 'Sua configuração vai ser permanentemente restaurada ao padrão, você tem certeza?'
+    },
+    reset_item_to_default: {
+        en: 'Reset item to default'
     },
     make_a_backup: {
         en: 'Make a backup',
@@ -797,7 +812,7 @@ export const trans = {
             pt: 'Atualizar pendências'
         },
         body: {
-            en: 'A setting you changed requires a page refresh to take effect.',
+            en: 'A setting you changed requires a page refresh',
             de: 'Eine von dir geänderte Einstellung erfordert eine Seitenaktualisierung, damit sie wirksam wird',
             pt: 'Uma configuração que você mudou exige uma atualização de página para fazer efeito'
         }
@@ -1198,6 +1213,19 @@ export const trans = {
         en: 'Expand',
         de: 'Erweitern',
         pt: 'Expandir'
+    },
+    expand_to_full_resolution: {
+        en: 'Expand to full resolution'
+    },
+    share: {
+        en: 'Share',
+        de: 'Teilen',
+    },
+    copy: {
+        en: 'Copy'
+    },
+    copied_to_clipboard: {
+        en: 'Copied to clipboard'
     },
     activity: {
         en: 'Activity',
@@ -2256,12 +2284,8 @@ export const trans = {
         pt: 'Desativar partículas'
     },
     going: {
-        en: '{c} going',
-        pt: '{c} indo'
-    },
-    maybe: {
-        en: '{c} interested',
-        pt: '{c} interessado'
+        en: 'Going',
+        pt: 'Indo'
     },
     branch: {
         name: {
@@ -2379,6 +2403,31 @@ export const trans = {
     change_avatar: {
         en: 'Change avatar',
         pt: 'Mudar foto de perfil'
+    },
+    edit_profile_note: {
+        en: 'Edit profile note'
+    },
+    update_to_version: {
+        en: 'Update to {v}'
+    },
+    all: {
+        en: 'All'
+    },
+    saved: {
+        en: 'Saved'
+    },
+    no_images_saved: {
+        en: 'No photos saved'
+    },
+    interested: {
+        en: 'Interested',
+        pt: 'Interessado'
+    },
+    total: {
+        en: 'Total'
+    },
+    value_failed_to_load: {
+        en: '{v} failed to load'
     }
 }
 
@@ -5444,13 +5493,10 @@ export function tl(key) {
 export function lookup_lang() {
     const troot = document.querySelector('.masthead-logo a');
 
-    console.log(troot)
     if (!troot) {
         handle_error_500();
         return;
     }
-
-    console.log(troot.getAttribute("href"));
 
     setRoot(troot.getAttribute('href'));
 

@@ -1,26 +1,33 @@
-import { load_activities } from "../activity"
-import { patch_avatar } from "../avatar"
-import { settings } from "../build/config"
-import { log } from "../build/log"
-import { auth, page, recent_activity_list, root } from "../build/page"
-import { cute, sponsor_list } from "../build/sponsor"
-import { clean_number, sanitise, sanitise_text } from "../build/tools"
-import { lang, trans, tl } from "../build/trans"
-import { prep_chart_colours } from '../chart'
-import { load_badges } from "../components/badge"
-import { dialog } from "../components/dialog"
-import { correct_artist, correct_item_by_artist, name_includes } from "../components/lotus"
-import { markdown } from "../components/markdown"
-import { notify } from "../components/notify"
-import { create_profile_top_item, redesign_profile_header } from "../components/profile_header"
-import { custom_select, update_inbuilt_select } from "../components/select"
-import { checkup_page_structure } from "../components/structure"
-import { refresh_all, update_inbuilt_item } from "../config"
-import { register_background, update_page } from "../page"
-import { ff } from "../sku"
-import { bleh_user_library } from "./glacier"
-import { use_pronouns } from "./lastfm_settings"
-import { bleh_obsession } from "./obsession"
+//
+// bleh, an extension for the music site Last.fm
+// Copyright (c) 2025 katelyn and contributors
+// Licensed under GPLv3
+//
+
+import {load_activities} from "../activity"
+import {patch_avatar} from "../avatar"
+import {settings} from "../build/config"
+import {log} from "../build/log"
+import {auth, page, recent_activity_list, root} from "../build/page"
+import {cute, sponsor_list} from "../build/sponsor"
+import {clean_number, sanitise, sanitise_text} from "../build/tools"
+import {lang, tl, trans} from "../build/trans"
+import {prep_chart_colours} from '../chart'
+import {load_badges} from "../components/badge"
+import {dialog} from "../components/dialog"
+import {correct_artist, correct_item_by_artist, name_includes} from "../components/lotus"
+import {markdown} from "../components/markdown"
+import {notify} from "../components/notify"
+import {redesign_profile_header} from "../components/profile_header"
+import {custom_select, update_inbuilt_select} from "../components/select"
+import {checkup_page_structure} from "../components/structure"
+import {refresh_all, update_inbuilt_item} from "../config"
+import {register_background, update_page} from "../page"
+import {ff} from "../sku"
+import {bleh_user_library} from "./glacier"
+import {use_pronouns} from "./lastfm_settings"
+import {bleh_obsession} from "./obsession"
+import {html, render} from "lighterhtml";
 
 export function bleh_profiles() {
     // the obsessions page is a user subpage but works very differently
@@ -232,14 +239,13 @@ export function bleh_profiles() {
                             tooltip_sister = sister;
                         }
 
-                        // parse tags into text
-                        let song_tags_text = '';
-                        for (let song_tag in song_tags) {
-                            song_tags_text = `${song_tags_text}<div class="feat" data-bleh--tag-type="${song_tags[song_tag].type}" data-bleh--tag-group="${song_tags[song_tag].group}">${sanitise_text(song_tags[song_tag].text)}</div>`;
-                        }
-
                         // combine
-                        name = `<div class="title">${sanitise_text(song_title).trim()}</div>${song_tags_text}`;
+                        name = html.node`
+                            <div class="title">${sanitise_text(song_title).trim()}</div>
+                            ${song_tags.map((tag) => html.node`
+                                <div class="feat" data-bleh--tag-type="${tag.type}" data-bleh--tag-group="${tag.group}">${tag.text}</div>
+                            `)}
+                        `;
                     } else if ((involved.type == 'album' || involved.type == 'track') && settings.corrections) {
                         name = correct_item_by_artist(name, sister);
                         tooltip_name = name;
@@ -251,12 +257,12 @@ export function bleh_profiles() {
                     }
 
                     if (involved_text != '')
-                        involved_text = `${involved_text}, <a class="involved--${involved.type}" href="${involved_link}">${name}</a>`;
+                        involved_text = html.node`${involved_text}, <a class="involved--${involved.type}" href="${involved_link}">${name}</a>`;
                     else
-                        involved_text = `${involved_text}<a class="involved--${involved.type}" href="${involved_link}">${name}</a>`;
+                        involved_text = html.node`${involved_text}<a class="involved--${involved.type}" href="${involved_link}">${name}</a>`;
                 });
 
-                activity_item.innerHTML = (`
+                render(activity_item, html`
                     <div class="type">${tl(trans.activity.listing[activity.type])}<div class="date">${moment(activity.date).fromNow(true)}</div></div>
                     <div class="name">${involved_text}</div>
                 `);
@@ -390,50 +396,52 @@ export function bleh_profiles() {
         } else if (page.subpage == 'events') {
             let selected_tab = page.structure.content_top.querySelector('.secondary-nav-item-link--active');
 
-            let value_panel = document.createElement('section');
-            value_panel.classList.add('value-panel');
-            value_panel.innerHTML = (`
-                <h2 class="text-18">${(selected_tab) ? selected_tab.firstChild.textContent : tl(trans.events)}</h2>
-            `);
+            let value_panel = html.node`
+                <section class="value-panel">
+                    <h2 class="text-18">${(selected_tab) ? selected_tab.firstChild.textContent : tl(trans.events)}</h2>
+                </section>
+            `;
 
             let values = page.structure.main.querySelectorAll('.metadata-display');
 
-            let value_header = document.createElement('div');
-            value_header.classList.add('event-value-top-header', 'view-buttons');
+            let value_header = html.node`
+                <div class="glacier-library-metadata"></div>
+            `;
 
             values.forEach((value, index) => {
-                let type = 'going';
+                let text = tl(trans.going);
                 if (index == 1)
-                    type = 'maybe';
+                    text = tl(trans.interested);
 
-                create_profile_top_item(value_header, {
-                    name: page.name,
-                    text: value.textContent,
-                    type: type,
-                    tooltip:  tl(trans[type]).replace('{c}', value.textContent)
-                });
+                value_header.appendChild(html.node`
+                    <div class="glacier-library-metadata-item">
+                        <div class="sub-text">${text}</div>
+                        <div class="glacier-library-metadata-item-value">${value.textContent}</div>
+                    </div>
+                `);
             });
 
             value_panel.appendChild(value_header);
 
 
             let total_value = page.structure.side.querySelector('.metadata-display');
-            if (total_value != null) {
+            if (total_value) {
                 let total_text = document.createElement('h2');
                 total_text.classList.add('text-18');
                 total_text.textContent = tl(trans.all_time);
 
                 value_panel.appendChild(total_text);
 
-                let total_header = document.createElement('div');
-                total_header.classList.add('event-value-top-header', 'view-buttons');
+                let total_header = html.node`
+                    <div class="glacier-library-metadata"></div>
+                `;
 
-                create_profile_top_item(total_header, {
-                    name: page.name,
-                    text: total_value.textContent,
-                    type: 'total',
-                    tooltip:  tl(trans.count_total).replace('{c}', total_value.textContent)
-                });
+                total_header.appendChild(html.node`
+                    <div class="glacier-library-metadata-item">
+                        <div class="sub-text">${tl(trans.total)}</div>
+                        <div class="glacier-library-metadata-item-value">${total_value.textContent}</div>
+                    </div>
+                `);
 
                 value_panel.appendChild(total_header);
             }
@@ -464,11 +472,11 @@ export function bleh_profiles() {
                 dialog({
                     id: 'listening_report_v2',
                     title: 'oh no :c',
-                    body: (`
+                    body: html.node`
                         <div class="alert alert-error">This listening report is too old</div>
                         <br>
                         <p>Legacy listening reports are not properly viewable yet in bleh for now. Sorry for the inconvenience.</p>
-                    `)
+                    `
                 });
                 return;
             }
@@ -680,11 +688,10 @@ export function bleh_profiles() {
             tippy(badge, {
                 theme: 'badge',
                 placement: 'bottom',
-                content: (`
+                content: html.node`
                     <div class="badge-name">${badge.textContent}</div>
                     <div class="badge-reason">${tl(trans.badges[badge.classList[1]].reason)}</div>
-                `),
-                allowHTML: true
+                `
             });
         });
     }
@@ -705,11 +712,10 @@ export function bleh_profiles() {
                 tippy(badge, {
                     theme: 'badge',
                     placement: 'bottom',
-                    content: (`
+                    content: html.node`
                         <div class="badge-name">${this_badge.name}</div>
                         <div class="badge-reason">${tl(trans.badges[this_badge.reason].reason)}</div>
-                    `),
-                    allowHTML: true
+                    `,
                 });
             }
 
@@ -821,7 +827,7 @@ export function bleh_profiles() {
 
         tippy(about_more, {
             theme: 'window',
-            content: (`
+            content: html.node`
                 <div class="dialog-settings">
                     <div class="setting" data-type="toggle" id="container-bio_markdown" onclick="_update_item('bio_markdown')">
                         <button class="btn reset" onclick="_reset_item('bio_markdown')">${tl(trans.reset)}</button>
@@ -836,8 +842,7 @@ export function bleh_profiles() {
                         </div>
                     </div>
                 </div>
-            `),
-            allowHTML: true,
+            `,
             placement: 'bottom',
             interactive: true,
             interactiveBorder: 10,
@@ -1117,18 +1122,17 @@ function bleh_featured_profile_track(object, about_me) {
             song_tags = formatted_title[1];
         }
 
-        // parse tags into text
-        let song_tags_text = '';
-        for (let song_tag in song_tags) {
-            song_tags_text = `${song_tags_text}<div class="feat" data-bleh--tag-type="${song_tags[song_tag].type}" data-bleh--tag-group="${song_tags[song_tag].group}">${sanitise_text(song_tags[song_tag].text)}</div>`;
-        }
-
         // combine
-        name_elem.innerHTML = `<div class="title">${sanitise_text(song_title).trim()}</div>${song_tags_text}`;
+        render(name_elem, html.node`
+            <div class="title">${sanitise_text(song_title).trim()}</div>
+            ${song_tags.map((tag) => html.node`
+                <div class="feat" data-bleh--tag-type="${tag.type}" data-bleh--tag-group="${tag.group}">${tag.text}</div>
+            `)}
+        `);
 
         let song_artist_element = document.createElement('div');
         song_artist_element.classList.add('featured-item-artist');
-        song_artist_element.innerHTML = `<a href="${root}music/${sanitise(formatted_title[2])}">${sanitise_text(formatted_title[2])}</a>`;
+        song_artist_element.innerHTML = `<a href="${root}music/${sanitise(formatted_title[2])}">${formatted_title[2]}</a>`;
 
         // append guests
         let song_guests = formatted_title[3];
@@ -1181,9 +1185,7 @@ function bleh_featured_profile_track(object, about_me) {
 
 function profile_recents() {
     let panel = page.structure.main.querySelector('#recent-tracks-section');
-
-    if (!panel)
-        return;
+    if (!panel) return;
 
     let more_link = panel.nextElementSibling;
     panel.appendChild(more_link);
@@ -1194,7 +1196,7 @@ function profile_recents() {
 
 
     let view_buttons = document.createElement('div');
-    view_buttons.classList.add('view-buttons');
+    view_buttons.classList.add('view-buttons', 'blend');
 
     let header = document.createElement('div');
     header.classList.add('top-container');
@@ -1361,7 +1363,7 @@ function profile_artists() {
 
 
     let view_buttons = document.createElement('div');
-    view_buttons.classList.add('view-buttons');
+    view_buttons.classList.add('view-buttons', 'blend');
 
     let header = document.createElement('div');
     header.classList.add('top-container');
@@ -1483,7 +1485,7 @@ function profile_albums() {
 
 
     let view_buttons = document.createElement('div');
-    view_buttons.classList.add('view-buttons');
+    view_buttons.classList.add('view-buttons', 'blend');
 
     let header = document.createElement('div');
     header.classList.add('top-container');
@@ -1606,7 +1608,7 @@ function profile_tracks() {
 
 
     let view_buttons = document.createElement('div');
-    view_buttons.classList.add('view-buttons');
+    view_buttons.classList.add('view-buttons', 'blend');
 
     let header = document.createElement('div');
     header.classList.add('top-container');
@@ -1726,16 +1728,15 @@ function profile_tracks() {
 }
 
 function bio_parse(text, cache = false) {
-    let result = markdown(text.textContent, {
-        allow_headers: true
-    });
-
     let temp = document.createElement('div');
-    temp.innerHTML = result;
+
+    render(temp, markdown(text.textContent, {
+        allow_headers: true
+    }))
 
     use_banner(temp, cache);
 
-    return result;
+    return temp.innerHTML;
 }
 
 function use_banner(temp, cache) {

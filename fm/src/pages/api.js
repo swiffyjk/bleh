@@ -1,8 +1,15 @@
-import { log } from '../build/log';
-import { auth, page, root } from '../build/page';
-import { tl, trans } from '../build/trans';
-import { checkup_page_structure } from '../components/structure';
-import { register_background, update_page } from '../page';
+//
+// bleh, an extension for the music site Last.fm
+// Copyright (c) 2025 katelyn and contributors
+// Licensed under GPLv3
+//
+
+import {log} from '../build/log';
+import {auth, page, root} from '../build/page';
+import {tl, trans} from '../build/trans';
+import {checkup_page_structure} from '../components/structure';
+import {register_background, update_page} from '../page';
+import {html, render} from "lighterhtml";
 
 export function bleh_api() {
     page.structure.container = document.body.querySelector('.page-content');
@@ -36,7 +43,7 @@ export function bleh_api() {
         let token = old.querySelector('form [name="csrfmiddlewaretoken"]').value;
         let cancel = old.querySelector('.form-submit a').getAttribute('href');
 
-        page.structure.main.innerHTML = (`
+        render(page.structure.main, html`
             <section class="api-connector">
                 <div class="avatar">
                     <img src="${auth.avatar.replace('/avatar42s/', '/avatar170s/')}" alt="${tl(trans.your_avatar)}">
@@ -44,7 +51,11 @@ export function bleh_api() {
                 <div class="info">
                     <h1>${page.name}</h1>
                     <div class="sub-text no-margin">${tl(trans.app_would_like_to_connect)}</div>
-                    <div class="subtle">${tl(trans.logged_in_as).replace('{user}', `<a class="mention" href="${root}user/${auth.name}">@${auth.name}</a>`)}</div>
+                    <div class="subtle">
+                        ${html.node([
+                            tl(trans.logged_in_as).replace('{user}', `<a class="mention" href="${root}user/${auth.name}">@${auth.name}</a>`)
+                        ])}
+                    </div>
                 </div>
                 <div class="sep"></div>
                 <div class="description">${description}</div>

@@ -1,9 +1,16 @@
-import { log } from "./build/log";
-import { auth, root } from "./build/page";
-import { sponsor_list } from "./build/sponsor";
-import { tl, trans } from "./build/trans";
-import { load_badges } from "./components/badge";
-import { dialog } from "./components/dialog";
+//
+// bleh, an extension for the music site Last.fm
+// Copyright (c) 2025 katelyn and contributors
+// Licensed under GPLv3
+//
+
+import {html} from "lighterhtml";
+import {log} from "./build/log";
+import {auth, root} from "./build/page";
+import {sponsor_list} from "./build/sponsor";
+import {tl, trans} from "./build/trans";
+import {load_badges} from "./components/badge";
+import {dialog} from "./components/dialog";
 
 export function patch_avatar(avatar, name, type = '', parent=null, side='right') {
     if (avatar.hasAttribute('data-bleh-avatar'))
@@ -51,10 +58,10 @@ export function patch_avatar(avatar, name, type = '', parent=null, side='right')
             parent.classList.add('parent-can-hoverbox');
         tippy((parent) ? parent : avatar, {
             theme: 'user',
-            content: (`
+            content: (html.node`
                 <div class="image-info">
                     <div class="inner-image">
-                        ${avatar_img.outerHTML}
+                        ${html.node([avatar_img.outerHTML])}
                     </div>
                     <div class="info">
                         <h5 class="title">${name}</h5>
@@ -67,7 +74,6 @@ export function patch_avatar(avatar, name, type = '', parent=null, side='right')
                     <a class="btn view-item user-button leave-shout-btn" href="${root}user/${name}/shoutbox">${tl(trans.shouts)}</a>
                 </div>
             `),
-            allowHTML: true,
             placement: side,
             interactive: true,
             delay: [200, 0]
@@ -83,10 +89,10 @@ export function patch_avatar(avatar, name, type = '', parent=null, side='right')
                 parent.classList.add('parent-can-hoverbox');
             tippy((parent) ? parent : avatar, {
                 theme: 'user',
-                content: (`
+                content: (html.node`
                     <div class="image-info">
                         <div class="inner-image">
-                            ${avatar_img.outerHTML}
+                            ${html.node([avatar_img.outerHTML])}
                         </div>
                         <div class="info">
                             <h5 class="title">${name}</h5>
@@ -98,7 +104,6 @@ export function patch_avatar(avatar, name, type = '', parent=null, side='right')
                         <a class="btn view-item user-button leave-shout-btn" href="${root}user/${name}/shoutbox">${tl(trans.shouts)}</a>
                     </div>
                 `),
-                allowHTML: true,
                 placement: side,
                 interactive: true,
                 delay: [200, 0]
@@ -112,10 +117,10 @@ export function patch_avatar(avatar, name, type = '', parent=null, side='right')
                 parent.classList.add('parent-can-hoverbox');
             tippy((parent) ? parent : avatar, {
                 theme: 'user',
-                content: (`
+                content: (html.node`
                     <div class="image-info">
                         <div class="inner-image">
-                            ${avatar_img.outerHTML}
+                            ${html.node([avatar_img.outerHTML])}
                         </div>
                         <div class="info">
                             <h5 class="title">${name}</h5>
@@ -128,7 +133,6 @@ export function patch_avatar(avatar, name, type = '', parent=null, side='right')
                         <a class="btn view-item user-button leave-shout-btn" href="${root}user/${name}/shoutbox">${tl(trans.shouts)}</a>
                     </div>
                 `),
-                allowHTML: true,
                 placement: side,
                 interactive: true,
                 delay: [200, 0]
@@ -161,7 +165,7 @@ unsafeWindow._expand_avatar = function(src) {
 export function expand_avatar(src) {
     dialog({
         id: 'avatar',
-        body: (`
+        body: html.node`
             <div class="full-avatar-wrapper">
                 <div class="full-avatar">
                     <img src="${src}">
@@ -174,7 +178,7 @@ export function expand_avatar(src) {
                     <div class="fill"></div>
                 </div>
             </div>
-        `),
+        `,
         type: 'avatar',
         has_overlays: false
     });
