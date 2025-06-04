@@ -9,7 +9,7 @@ import {inbuilt_settings, settings, settings_base, settings_template} from "./bu
 import {log} from "./build/log";
 import {page, reload_pending} from "./build/page";
 import {stored_season} from "./build/seasonal";
-import {trans_legacy} from "./build/trans";
+import {tl, trans, trans_legacy} from "./build/trans";
 import {load_chart_colours} from "./chart";
 import {dialog_legacy, kill_window} from "./components/dialog";
 import {bleh_music_page_charts} from "./components/music";
@@ -382,18 +382,24 @@ function update_item(item, value, modify=true, search = document) {
     }
 }
 
-function request_reload() {
+export function request_reload() {
     if (page.type == 'bleh_setup')
         return;
 
     log('requesting reload', 'settings');
     reload_pending.state = true;
     notify({
-        title: trans_legacy.en.settings.reload.name,
-        body: trans_legacy.en.settings.reload.body,
-        icon: 'icon-16-refresh',
+        title: tl(trans.refresh_pending.name),
+        body: tl(trans.refresh_pending.body),
+        icon: 'icon-16-settings',
         persist: true,
-        action: '_invoke_reload()'
+        actions: [
+            {
+                action: () => invoke_reload(),
+                text: tl(trans.refresh),
+                type: 'refresh'
+            }
+        ]
     });
 }
 unsafeWindow._invoke_reload = function() {

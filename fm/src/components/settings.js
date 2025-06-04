@@ -9,8 +9,10 @@ import {settings, settings_store} from "../build/config.js";
 import {tl, trans} from "../build/trans.js";
 import {notify} from "./notify.js";
 import {save_profile_shortcut} from "./profile_shortcut.js";
+import {page} from "../build/page.js";
+import {request_reload} from "../config.js";
 
-export function setting(id) {
+export function setting(id, text = true) {
     try {
         let value = settings[id];
 
@@ -26,10 +28,12 @@ export function setting(id) {
 
             return html.node`
                 <div class="setting" data-type="toggle" onclick=${() => update_toggle(id, toggle)}>
+                    ${(text) ? html.node`
                     <div class="heading">
                         <h5>${title} <span class="new-badge">v2</span></h5>
                         ${(body) ? html.node`<p>${body}</p>` : ''}
                     </div>
+                    ` : ''}
                     <div class="toggle-wrap">
                         <button class="toggle" ref=${el => toggle = el} aria-checked=${value}>
                             <div class="dot"></div>
@@ -55,17 +59,19 @@ export function setting(id) {
 
             return html.node`
                 <div class="setting" data-type="range" ref=${el => option = el} data-modified=${value != settings_store[id].default}>
-                    <button class="btn reset" onclick=${() => reset(id)}>${tl(trans.reset)}</button>
+                    <button class="btn reset" onclick=${() => reset_range(id, option, track, input, marker)}>${tl(trans.reset)}</button>
+                    ${(text) ? html.node`
                     <div class="heading">
                         <h5>${title} <span class="new-badge">v2</span></h5>
                         ${(body) ? html.node`<p>${body}</p>` : ''}
                     </div>
+                    ` : ''}
                     <div class="range">
                         <div class="track" style="--percent: ${((value - settings_store[id].min) / working_max) * 100}%" ref=${el => track = el}>
                             <div class="fill" />
                             <div class="nub" />
                         </div>
-                        <input type="range" min=${min} max=${max} step=${step} value=${value} ref=${el => input = el} oninput=${() => update_range(id, option, track, input.value, marker)} />
+                        <input type="range" min=${min} max=${max} step=${step} value=${value} ref=${el => input = el} oninput=${() => update_range(id, option, track, input, input.value, marker)} />
                         <p class="value-marker" ref=${el => marker = el}>${value}${settings_store[id].suffix || ''}</p>
                     </div>
                 </div>
@@ -85,11 +91,13 @@ export function setting(id) {
 
             let container = html.node`
                 <div class="setting" data-type="text" ref=${el => option = el} data-modified=${value != settings_store[id].default}>
-                    <button class="btn reset" ref=${el => reset_btn = el} onclick=${() => reset(id)}>${tl(trans.reset)}</button>
+                    <button class="btn reset" ref=${el => reset_btn = el} onclick=${() => reset_text(id, input, submit, option, reset_btn, avatar)}>${tl(trans.reset)}</button>
+                    ${(text) ? html.node`
                     <div class="heading">
                         <h5>${title} <span class="new-badge">v2</span></h5>
                         ${(body) ? html.node`<p>${body}</p>` : ''}
                     </div>
+                    ` : ''}
                     ${(settings_store[id].avatar) ? html.node`
                     <div class="avatar-container">
                         <div class="avatar-inner" ref=${el => avatar = el}>
@@ -99,7 +107,7 @@ export function setting(id) {
                     ` : ''}
                     <div class="input-container content-form">
                         <input type="text" maxlength=${max} value=${value} style="--max: ${max}px" ref=${el => input = el} placeholder=${settings_store[id].placeholder} />
-                        <button class="btn chibi icon primary submit" ref=${el => submit = el} onclick=${() => update_text(id, input, submit, option, reset_btn, avatar)}>${tl(trans.save)}</button>
+                        <button class="btn chibi icon primary submit" ref=${el => submit = el} onclick=${() => update_text(id, input, submit, option, input.value, reset_btn, avatar)}>${tl(trans.save)}</button>
                     </div>
                 </div>
             `;
@@ -141,9 +149,11 @@ function update_toggle(id, toggle) {
 
     save_setting(id, value);
 }
-function update_range(id, option, track, value, marker) {
+
+function update_range(id, option, track, input, value, marker, silent = false) {
     let max = settings_store[id].max - settings_store[id].min;
 
+    input.value = value;
     track.style.setProperty('--percent', `${((value - settings_store[id].min) / max) * 100}%`);
     marker.textContent = `${value}${settings_store[id].suffix || ''}`;
 
@@ -151,10 +161,17 @@ function update_range(id, option, track, value, marker) {
 
     save_setting(id, value);
 }
+function reset_range(id, option, track, range, marker) {
+    update_range(id, option, track, range, settings_store[id].default, marker, true);
+    notify({
+        id: 'reset_setting',
+        title: tl(trans.settings),
+        body: tl(trans.reset_item_to_default),
+        icon: 'icon-16-settings'
+    });
+}
 
-function update_text(id, input, submit, option, reset_btn, avatar) {
-    let value = input.value;
-
+function update_text(id, input, submit, option, value, reset_btn, avatar, silent = false) {
     // wait on response to allow inputs
     if (settings_store[id].wait) {
         reset_btn.disabled = true;
@@ -162,17 +179,23 @@ function update_text(id, input, submit, option, reset_btn, avatar) {
         submit.disabled = true;
     }
 
+    input.value = value;
     option.setAttribute('data-modified', value != settings_store[id].default);
 
     if (id === 'profile_shortcut') {
-        save_profile_shortcut(input, submit, reset_btn, avatar);
+        save_profile_shortcut(input, value, submit, reset_btn, avatar);
         return;
     }
 
     save_setting(id, value);
+}
+function reset_text(id, input, submit, option, reset_btn, avatar) {
+    update_text(id, input, submit, option, settings_store[id].default, reset_btn, avatar, true);
     notify({
-        id: 'saved_setting',
-        title: 'Saved setting'
+        id: 'reset_setting',
+        title: tl(trans.settings),
+        body: tl(trans.reset_item_to_default),
+        icon: 'icon-16-settings'
     });
 }
 
@@ -180,15 +203,11 @@ export function save_setting(id, value) {
     settings[id] = value;
     document.documentElement.setAttribute(`data-bleh--${id}`, value);
 
+    if ((settings_store[id].require_reload == true || (settings_store[id].require_reload == 'partial' && page.type != 'bleh_settings')))
+        request_reload();
+
     if (settings_store[id].css)
         document.body.style.setProperty(`--${settings_store[id].css}`, `${value}${settings_store[id].suffix || ''}`);
 
     localStorage.setItem('bleh', JSON.stringify(settings));
-}
-
-function reset(id) {
-    notify({
-        id: 'reset_setting',
-        title: `Reset ${id} to default`
-    });
 }

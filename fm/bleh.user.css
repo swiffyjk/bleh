@@ -3254,8 +3254,8 @@ button.navlist-more {
     [data-bleh--gallery-tab="saved"] .secondary-nav-item--gallery-bookmarks &,
     &.secondary-nav-item-link.active,
     &.secondary-nav-item-link--active {
-        --col: hsl(var(--l3-c)) !important;
-        --mask-colour: color-mix(in hsl, hsl(var(--l3-c)), hsl(var(--l4-c)) 30%) !important;
+        --col: hsl(var(--l2-c-theme-switch)) !important;
+        --mask-colour: color-mix(in hsl, hsl(var(--l2-c-theme-switch)), hsl(var(--l4-c)) 30%) !important;
 
         &:after {
             opacity: 1;
@@ -4992,6 +4992,7 @@ better than the default selector '#app a' i suppose */
         margin-top: unset;
     }
 }
+.section-controls + .buffer-standard,
 #tracklist,
 .artist-overview-top-tracks {
     .chartlist {
@@ -16938,6 +16939,9 @@ button.bleh--gallery-bookmark-image-btn {
 [data-type="close"] {
     --mask: var(--icon-16-x);
 }
+[data-type="refresh"] {
+    --mask: var(--icon-16-refresh);
+}
 .masthead-popup {
     top: calc(52px + var(--card-gap));
     right: var(--card-gap);
@@ -19276,7 +19280,7 @@ h4 {
         }
 
         .avatar-side {
-            background: hsl(var(--b5));
+            background: var(--avatar-generic-background);
             margin-top: -20px;
             box-shadow: var(--card-shadow);
         }

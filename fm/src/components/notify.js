@@ -40,7 +40,6 @@ export function deliver_notif(content, persist=false, has_icon=false, append_cla
  * @param {string|null} body - Main content
  * @param {string|null} icon - Accompanying icon name e.g., icon-16-x
  * @param {string|null} classname - Unique classname for styling
- * @param action - Deprecated
  * @param {boolean} persist - Automatically dismiss or wait on action?
  * @param {'generic'|'error'|'success'} type - Generic type preset
  * @returns Notification element
@@ -51,7 +50,7 @@ export function notify({
     body,
     icon,
     classname,
-    action,
+    actions = [],
     persist = false,
     type = 'generic'
 }) {
@@ -97,6 +96,9 @@ export function notify({
             <div class="notification-progress" ref=${el => bar = el}></div>
             ` : ''}
             <div class="notification-actions">
+                ${(actions.length > 0) ? actions.map(action => html.node`
+                <button class="notification-action" data-type=${action.type} onclick=${action.action}>${action.text}</button>
+                `) : ''}
                 <button class="notification-action" data-type="close" onclick=${() => notify_rm(notif)}>${tl(trans.close)}</button>
             </div>
         </div>

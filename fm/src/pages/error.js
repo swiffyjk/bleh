@@ -36,7 +36,7 @@ export function bleh_error() {
                         <div class="subtle">${error_content.textContent}</div>
                     </div>
                     <div class="error-content">
-                        ${reason.outerHTML}
+                        ${reason}
                     </div>
                     <div class="subtle">${window.location.pathname}</div>
                     <div class="error-footer">

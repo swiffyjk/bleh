@@ -539,6 +539,9 @@ export const trans = {
     reset_notice: {
         en: 'Your settings will be permanently reset, are you sure?'
     },
+    reset_item_to_default: {
+        en: 'Reset item to default'
+    },
     make_a_backup: {
         en: 'Make a backup'
     },
@@ -657,7 +660,7 @@ export const trans = {
             de: 'Aktualisierung anstehend'
         },
         body: {
-            en: 'A setting you changed requires a page refresh to take effect.',
+            en: 'A setting you changed requires a page refresh',
             de: 'Eine von dir geänderte Einstellung erfordert eine Seitenaktualisierung, damit sie wirksam wird'
         }
     },

@@ -1545,7 +1545,7 @@
     body,
     icon,
     classname,
-    action,
+    actions = [],
     persist = false,
     type = "generic"
   }) {
@@ -1587,6 +1587,9 @@
             <div class="notification-progress" ref=${(el) => bar = el}></div>
             ` : ""}
             <div class="notification-actions">
+                ${actions.length > 0 ? actions.map((action) => html2.node`
+                <button class="notification-action" data-type=${action.type} onclick=${action.action}>${action.text}</button>
+                `) : ""}
                 <button class="notification-action" data-type="close" onclick=${() => notify_rm(notif)}>${tl(trans.close)}</button>
             </div>
         </div>
@@ -3721,7 +3724,7 @@
   }
 
   // src/components/settings.js
-  function setting(id) {
+  function setting(id, text2 = true) {
     try {
       let value = settings[id];
       if (!settings_store[id])
@@ -3733,10 +3736,12 @@
         let toggle;
         return html2.node`
                 <div class="setting" data-type="toggle" onclick=${() => update_toggle(id, toggle)}>
+                    ${text2 ? html2.node`
                     <div class="heading">
                         <h5>${title} <span class="new-badge">v2</span></h5>
                         ${body ? html2.node`<p>${body}</p>` : ""}
                     </div>
+                    ` : ""}
                     <div class="toggle-wrap">
                         <button class="toggle" ref=${(el) => toggle = el} aria-checked=${value}>
                             <div class="dot"></div>
@@ -3757,17 +3762,19 @@
         let working_max = settings_store[id].max - settings_store[id].min;
         return html2.node`
                 <div class="setting" data-type="range" ref=${(el) => option = el} data-modified=${value != settings_store[id].default}>
-                    <button class="btn reset" onclick=${() => reset(id)}>${tl(trans.reset)}</button>
+                    <button class="btn reset" onclick=${() => reset_range(id, option, track, input, marker)}>${tl(trans.reset)}</button>
+                    ${text2 ? html2.node`
                     <div class="heading">
                         <h5>${title} <span class="new-badge">v2</span></h5>
                         ${body ? html2.node`<p>${body}</p>` : ""}
                     </div>
+                    ` : ""}
                     <div class="range">
                         <div class="track" style="--percent: ${(value - settings_store[id].min) / working_max * 100}%" ref=${(el) => track = el}>
                             <div class="fill" />
                             <div class="nub" />
                         </div>
-                        <input type="range" min=${min} max=${max} step=${step} value=${value} ref=${(el) => input = el} oninput=${() => update_range(id, option, track, input.value, marker)} />
+                        <input type="range" min=${min} max=${max} step=${step} value=${value} ref=${(el) => input = el} oninput=${() => update_range(id, option, track, input, input.value, marker)} />
                         <p class="value-marker" ref=${(el) => marker = el}>${value}${settings_store[id].suffix || ""}</p>
                     </div>
                 </div>
@@ -3783,11 +3790,13 @@
         let submit;
         let container = html2.node`
                 <div class="setting" data-type="text" ref=${(el) => option = el} data-modified=${value != settings_store[id].default}>
-                    <button class="btn reset" ref=${(el) => reset_btn = el} onclick=${() => reset(id)}>${tl(trans.reset)}</button>
+                    <button class="btn reset" ref=${(el) => reset_btn = el} onclick=${() => reset_text(id, input, submit, option, reset_btn, avatar3)}>${tl(trans.reset)}</button>
+                    ${text2 ? html2.node`
                     <div class="heading">
                         <h5>${title} <span class="new-badge">v2</span></h5>
                         ${body ? html2.node`<p>${body}</p>` : ""}
                     </div>
+                    ` : ""}
                     ${settings_store[id].avatar ? html2.node`
                     <div class="avatar-container">
                         <div class="avatar-inner" ref=${(el) => avatar3 = el}>
@@ -3797,7 +3806,7 @@
                     ` : ""}
                     <div class="input-container content-form">
                         <input type="text" maxlength=${max} value=${value} style="--max: ${max}px" ref=${(el) => input = el} placeholder=${settings_store[id].placeholder} />
-                        <button class="btn chibi icon primary submit" ref=${(el) => submit = el} onclick=${() => update_text(id, input, submit, option, reset_btn, avatar3)}>${tl(trans.save)}</button>
+                        <button class="btn chibi icon primary submit" ref=${(el) => submit = el} onclick=${() => update_text(id, input, submit, option, input.value, reset_btn, avatar3)}>${tl(trans.save)}</button>
                     </div>
                 </div>
             `;
@@ -3831,43 +3840,54 @@
     toggle.setAttribute("aria-checked", !value);
     save_setting(id, value);
   }
-  function update_range(id, option, track, value, marker) {
+  function update_range(id, option, track, input, value, marker, silent = false) {
     let max = settings_store[id].max - settings_store[id].min;
+    input.value = value;
     track.style.setProperty("--percent", `${(value - settings_store[id].min) / max * 100}%`);
     marker.textContent = `${value}${settings_store[id].suffix || ""}`;
     option.setAttribute("data-modified", value != settings_store[id].default);
     save_setting(id, value);
   }
-  function update_text(id, input, submit, option, reset_btn, avatar3) {
-    let value = input.value;
+  function reset_range(id, option, track, range, marker) {
+    update_range(id, option, track, range, settings_store[id].default, marker, true);
+    notify({
+      id: "reset_setting",
+      title: tl(trans.settings),
+      body: tl(trans.reset_item_to_default),
+      icon: "icon-16-settings"
+    });
+  }
+  function update_text(id, input, submit, option, value, reset_btn, avatar3, silent = false) {
     if (settings_store[id].wait) {
       reset_btn.disabled = true;
       input.disabled = true;
       submit.disabled = true;
     }
+    input.value = value;
     option.setAttribute("data-modified", value != settings_store[id].default);
     if (id === "profile_shortcut") {
-      save_profile_shortcut(input, submit, reset_btn, avatar3);
+      save_profile_shortcut(input, value, submit, reset_btn, avatar3);
       return;
     }
     save_setting(id, value);
+  }
+  function reset_text(id, input, submit, option, reset_btn, avatar3) {
+    update_text(id, input, submit, option, settings_store[id].default, reset_btn, avatar3, true);
     notify({
-      id: "saved_setting",
-      title: "Saved setting"
+      id: "reset_setting",
+      title: tl(trans.settings),
+      body: tl(trans.reset_item_to_default),
+      icon: "icon-16-settings"
     });
   }
   function save_setting(id, value) {
     settings[id] = value;
     document.documentElement.setAttribute(`data-bleh--${id}`, value);
+    if (settings_store[id].require_reload == true || settings_store[id].require_reload == "partial" && page.type != "bleh_settings")
+      request_reload();
     if (settings_store[id].css)
       document.body.style.setProperty(`--${settings_store[id].css}`, `${value}${settings_store[id].suffix || ""}`);
     localStorage.setItem("bleh", JSON.stringify(settings));
-  }
-  function reset(id) {
-    notify({
-      id: "reset_setting",
-      title: `Reset ${id} to default`
-    });
   }
 
   // src/components/profile_shortcut.js
@@ -3879,17 +3899,7 @@
       id: "profile_shortcut",
       title: tl(trans.profile_shortcut.name),
       body: html2.node`
-        <div class="setting" data-type="text" id="container-profile_shortcut">
-            <div class="avatar-container">
-                <div class="avatar-inner" id="avatar-profile_shortcut">
-                    <img id="avatar_src-profile_shortcut" src="${localStorage.getItem("bleh_profile_shortcut_avi") || ""}">
-                </div>
-            </div>
-            <div class="input-container content-form">
-                <input type="text" maxlength="40" id="text-profile_shortcut" value="${settings.profile_shortcut}" placeholder="${tl(trans.enter_username)}">
-                <button class="btn chibi icon primary submit" onclick="_save_profile_shortcut()">${tl(trans.save)}</button>
-            </div>
-        </div>
+        ${setting("profile_shortcut", false)}
         `
     });
     modal.querySelector("#text-profile_shortcut").focus();
@@ -3965,8 +3975,7 @@
     settings.profile_shortcut = page.name;
     localStorage.setItem("bleh", JSON.stringify(settings));
   }
-  function save_profile_shortcut(input, submit, reset_btn, avatar3) {
-    let value = input.value;
+  function save_profile_shortcut(input, value, submit, reset_btn, avatar3) {
     if (value == "" || value == auth.name) {
       localStorage.removeItem("bleh_profile_shortcut_avi");
       avatar3.querySelector("img").setAttribute("src", "");
@@ -9348,11 +9357,17 @@
     log("requesting reload", "settings");
     reload_pending.state = true;
     notify({
-      title: trans_legacy.en.settings.reload.name,
-      body: trans_legacy.en.settings.reload.body,
-      icon: "icon-16-refresh",
+      title: tl(trans.refresh_pending.name),
+      body: tl(trans.refresh_pending.body),
+      icon: "icon-16-settings",
       persist: true,
-      action: "_invoke_reload()"
+      actions: [
+        {
+          action: () => invoke_reload(),
+          text: tl(trans.refresh),
+          type: "refresh"
+        }
+      ]
     });
   }
   unsafeWindow._invoke_reload = function() {
@@ -14327,7 +14342,7 @@
                         <div class="subtle">${error_content.textContent}</div>
                     </div>
                     <div class="error-content">
-                        ${reason.outerHTML}
+                        ${reason}
                     </div>
                     <div class="subtle">${window.location.pathname}</div>
                     <div class="error-footer">
@@ -16863,6 +16878,9 @@
     reset_notice: {
       en: "Your settings will be permanently reset, are you sure?"
     },
+    reset_item_to_default: {
+      en: "Reset item to default"
+    },
     make_a_backup: {
       en: "Make a backup"
     },
@@ -16981,7 +16999,7 @@
         de: "Aktualisierung anstehend"
       },
       body: {
-        en: "A setting you changed requires a page refresh to take effect.",
+        en: "A setting you changed requires a page refresh",
         de: "Eine von dir ge\xE4nderte Einstellung erfordert eine Seitenaktualisierung, damit sie wirksam wird"
       }
     },
