@@ -60,6 +60,10 @@ export function redesign_profile_header(is_own_profile, is_following) {
         });
     }
 
+    page.state.scrobbles = scrobbles;
+    page.state.artists = artists;
+    page.state.loved = loved;
+
 
     // taste
     let taste = '';

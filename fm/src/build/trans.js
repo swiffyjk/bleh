@@ -1983,6 +1983,9 @@ export const trans = {
     },
     value_failed_to_load: {
         en: '{v} failed to load'
+    },
+    profile_does_not_have_enough_scrobbles: {
+        en: 'Profile does not have enough scrobbles'
     }
 }
 

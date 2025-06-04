@@ -5425,6 +5425,15 @@
 
   // src/components/compare.js
   function compare() {
+    if (page.state.scrobbles === 0) {
+      notify({
+        id: "compare_not_possible",
+        title: tl(trans.compare),
+        body: tl(trans.profile_does_not_have_enough_scrobbles),
+        icon: "icon-16-arrows"
+      });
+      return;
+    }
     let compare_button;
     page.state.compare_modal = dialog({
       id: "compare",
@@ -5735,6 +5744,9 @@
         }
       });
     }
+    page.state.scrobbles = scrobbles;
+    page.state.artists = artists;
+    page.state.loved = loved;
     let taste = "";
     let taste_percentage = "";
     let taste_artists = [];
@@ -18322,6 +18334,9 @@
     },
     value_failed_to_load: {
       en: "{v} failed to load"
+    },
+    profile_does_not_have_enough_scrobbles: {
+      en: "Profile does not have enough scrobbles"
     }
   };
   var trans_legacy = {

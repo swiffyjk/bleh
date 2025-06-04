@@ -16,6 +16,16 @@ import {custom_select} from './select';
 import {patch_titles} from './track';
 
 export function compare() {
+    if (page.state.scrobbles === 0) {
+        notify({
+            id: 'compare_not_possible',
+            title: tl(trans.compare),
+            body: tl(trans.profile_does_not_have_enough_scrobbles),
+            icon: 'icon-16-arrows'
+        });
+        return;
+    }
+
     let compare_button;
 
     page.state.compare_modal = dialog({
