@@ -3774,6 +3774,7 @@
         })}
                     </div>
                     ` : ""}
+                    ${setting_incompatible_block(settings_store[id].incompatible)}
                     <div class="toggle-wrap">
                         <button class="toggle" ref=${(el) => toggle = el} aria-checked=${value}>
                             <div class="dot"></div>
@@ -3816,6 +3817,7 @@
         })}
                     </div>
                     ` : ""}
+                    ${setting_incompatible_block(settings_store[id].incompatible)}
                     <div class="range">
                         <div class="track" style="--percent: ${(value - settings_store[id].min) / working_max * 100}%" ref=${(el) => track = el}>
                             <div class="fill" />
@@ -3859,6 +3861,7 @@
         })}
                     </div>
                     ` : ""}
+                    ${setting_incompatible_block(settings_store[id].incompatible)}
                     ${settings_store[id].avatar ? html2.node`
                     <div class="avatar-container">
                         <div class="avatar-inner" ref=${(el) => avatar3 = el}>
@@ -3890,6 +3893,26 @@
       return setting_fail(id, e);
     }
     return setting_fail(id);
+  }
+  function setting_incompatible_block(entries) {
+    if (!entries)
+      return "";
+    return "";
+    return html2.node`
+        <div class="incompatible">
+            ${entries.map((incompatible) => () => {
+      let container = html2.node`
+                    <div class="extension">
+                        <div class="bleh-icon" />
+                    </div>
+                `;
+      tippy(container, {
+        content: tl(trans.incompatible_with_value).replace("{v}", tl(settings_store[incompatible.setting].title))
+      });
+      return container;
+    })}
+        </div>
+    `;
   }
   function setting_fail(id, e = null) {
     return html2.node`
@@ -16763,6 +16786,9 @@
       de: "Aussehen",
       pt: "Apar\xEAncia"
     },
+    theme: {
+      en: "Theme"
+    },
     themes: {
       name: {
         en: "Themes",
@@ -18817,6 +18843,9 @@
     },
     requires_extension_value: {
       en: "Requires extension \u2018{v}\u2019"
+    },
+    incompatible_with_value: {
+      en: "Incompatible with {v}"
     },
     bulk_edit_extension: {
       en: "Last.fm Bulk Edit"
@@ -22456,7 +22485,8 @@
   var settings_store = {
     theme: {
       default: "dark",
-      type: "radio"
+      type: "radio",
+      title: trans.theme
     },
     high_contrast: {
       default: false
@@ -22478,10 +22508,11 @@
       default: 1,
       type: "range",
       min: 0,
-      max: 1.5,
+      max: 3,
       step: 0.1,
       title: trans.card_background_saturation.name,
-      body: trans.card_background_saturation.body
+      body: trans.card_background_saturation.body,
+      incompatible: [{ setting: "theme", value: "light" }]
     },
     lit: {
       default: 1,

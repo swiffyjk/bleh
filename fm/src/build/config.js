@@ -581,7 +581,8 @@ export let inbuilt_settings = {
 export let settings_store = {
     theme: {
         default: 'dark',
-        type: 'radio'
+        type: 'radio',
+        title: trans.theme
     },
     high_contrast: {
         default: false
@@ -603,10 +604,11 @@ export let settings_store = {
         default: 1,
         type: 'range',
         min: 0,
-        max: 1.5,
+        max: 3,
         step: 0.1,
         title: trans.card_background_saturation.name,
-        body: trans.card_background_saturation.body
+        body: trans.card_background_saturation.body,
+        incompatible: [{setting: 'theme', value: 'light'}]
     },
     lit: {
         default: 1,

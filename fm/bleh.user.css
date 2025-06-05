@@ -15283,6 +15283,8 @@ input[type="range"]::-moz-range-progress {
     gap: var(--card-gap);
     user-select: none;
 
+    /*animation: grid_item var(--trans) var(--trans-function);*/
+
     .btn.reset {
         width: 14px !important;
         height: 14px !important;
@@ -20780,11 +20782,9 @@ h4 {
     }
 
     padding: var(--card-gap);
-    background: linear-gradient(180deg, hsla(var(--h4), 30%), transparent);
+    background: hsl(var(--h3), 30%);
     color: hsl(var(--c2));
     border-radius: var(--item-big-radius);
-    border-bottom-left-radius: 0;
-    border-bottom-right-radius: 0;
 
     .current-season-info {
         display: flex;
@@ -22091,7 +22091,7 @@ h4 {
 }
 .catalogue-tags .tags-view-all {
     --font-size: 0;
-    --mask: var(--icon-16-dots);
+    --mask: var(--icon-16-tag);
 }
 
 .col-sm-8:has(.catalogue-tags) {

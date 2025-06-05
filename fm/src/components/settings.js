@@ -53,6 +53,7 @@ export function setting({
                         })}
                     </div>
                     ` : ''}
+                    ${setting_incompatible_block(settings_store[id].incompatible)}
                     <div class="toggle-wrap">
                         <button class="toggle" ref=${el => toggle = el} aria-checked=${value}>
                             <div class="dot"></div>
@@ -100,6 +101,7 @@ export function setting({
                         })}
                     </div>
                     ` : ''}
+                    ${setting_incompatible_block(settings_store[id].incompatible)}
                     <div class="range">
                         <div class="track" style="--percent: ${((value - settings_store[id].min) / working_max) * 100}%" ref=${el => track = el}>
                             <div class="fill" />
@@ -147,6 +149,7 @@ export function setting({
                         })}
                     </div>
                     ` : ''}
+                    ${setting_incompatible_block(settings_store[id].incompatible)}
                     ${(settings_store[id].avatar) ? html.node`
                     <div class="avatar-container">
                         <div class="avatar-inner" ref=${el => avatar = el}>
@@ -183,6 +186,30 @@ export function setting({
     }
 
     return setting_fail(id);
+}
+
+function setting_incompatible_block(entries) {
+    if (!entries)
+        return '';
+
+    // wip
+    return '';
+
+    return html.node`
+        <div class="incompatible">
+            ${entries.map(incompatible => () => {
+                let container = html.node`
+                    <div class="extension">
+                        <div class="bleh-icon" />
+                    </div>
+                `;
+                tippy(container, {
+                    content: tl(trans.incompatible_with_value).replace('{v}', tl(settings_store[incompatible.setting].title))
+                });
+                return container;
+            })}
+        </div>
+    `;
 }
 
 function setting_fail(id, e = null) {

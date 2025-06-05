@@ -378,6 +378,9 @@ export const trans = {
         de: 'Aussehen',
         pt: 'Aparência'
     },
+    theme: {
+        en: 'Theme'
+    },
     themes: {
         name: {
             en: 'Themes',
@@ -2434,6 +2437,9 @@ export const trans = {
     },
     requires_extension_value: {
         en: 'Requires extension ‘{v}’'
+    },
+    incompatible_with_value: {
+        en: 'Incompatible with {v}'
     },
     bulk_edit_extension: {
         en: 'Last.fm Bulk Edit'
