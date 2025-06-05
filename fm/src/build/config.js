@@ -810,5 +810,17 @@ export let settings_store = {
     default_avatar_action: {
         default: 'expand',
         type: 'radio'
+    },
+    collage_title: {
+        default: true
+    },
+    collage_grid_text: {
+        default: true
+    },
+    collage_grid_plays: {
+        default: true
+    },
+    collage_branding: {
+        default: true
     }
 }

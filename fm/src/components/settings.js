@@ -24,7 +24,7 @@ export function setting({
             return setting_fail(id, {message: 'No settings store entry present'});
 
         let type = settings_store[id].type || 'toggle';
-        let title = tl(settings_store[id].title) || id;
+        let title = settings_store[id].title ? tl(settings_store[id].title) : id;
         let body = settings_store[id].body ? tl(settings_store[id].body) : null;
 
         if (type === 'toggle') {

@@ -3109,7 +3109,7 @@
 
   // src/components/share.js
   function share(url) {
-    let input;
+    let input2;
     dialog({
       id: "share",
       title: tl(trans.share),
@@ -3120,12 +3120,12 @@
                     readonly
                     value=${url}
                     class="share-input"
-                    ref=${(el) => input = el}
+                    ref=${(el) => input2 = el}
                 />
                 <button 
                     class="btn primary icon copy"
                     onclick=${() => {
-        input.select();
+        input2.select();
         document.execCommand("copy");
         notify({
           title: tl(trans.copied_to_clipboard),
@@ -3749,7 +3749,7 @@
       if (!settings_store[id])
         return setting_fail(id, { message: "No settings store entry present" });
       let type = settings_store[id].type || "toggle";
-      let title = tl(settings_store[id].title) || id;
+      let title = settings_store[id].title ? tl(settings_store[id].title) : id;
       let body = settings_store[id].body ? tl(settings_store[id].body) : null;
       if (type === "toggle") {
         let toggle;
@@ -3792,12 +3792,12 @@
         if (min >= max || step === 0)
           return setting_fail(id, { message: "A range type requires a min, max, and step defined in the settings store" });
         let track;
-        let input;
+        let input2;
         let marker;
         let working_max = settings_store[id].max - settings_store[id].min;
         return html2.node`
                 <div class="setting" data-type="range" ref=${(el) => option = el} data-modified=${value != settings_store[id].default}>
-                    <button class="btn reset" onclick=${() => reset_range(id, option, track, input, marker)}>${tl(trans.reset)}</button>
+                    <button class="btn reset" onclick=${() => reset_range(id, option, track, input2, marker)}>${tl(trans.reset)}</button>
                     ${text2 ? html2.node`
                     <div class="heading">
                         <h5>${title} <span class="new-badge">v2</span></h5>
@@ -3825,7 +3825,7 @@
                             <div class="fill" />
                             <div class="nub" />
                         </div>
-                        <input type="range" min=${min} max=${max} step=${step} value=${value} ref=${(el) => input = el} oninput=${() => update_range(id, option, track, input, input.value, marker)} />
+                        <input type="range" min=${min} max=${max} step=${step} value=${value} ref=${(el) => input2 = el} oninput=${() => update_range(id, option, track, input2, input2.value, marker)} />
                         <p class="value-marker" ref=${(el) => marker = el}>${value}${settings_store[id].suffix || ""}</p>
                     </div>
                 </div>
@@ -3837,11 +3837,11 @@
           return setting_fail(id, { message: "A text type requires a max defined in the settings store" });
         let reset_btn;
         let avatar3;
-        let input;
+        let input2;
         let submit;
         let container = html2.node`
                 <div class="setting" data-type="text" ref=${(el) => option = el} data-modified=${value != settings_store[id].default}>
-                    <button class="btn reset" ref=${(el) => reset_btn = el} onclick=${() => reset_text(id, input, submit, option, reset_btn, avatar3)}>${tl(trans.reset)}</button>
+                    <button class="btn reset" ref=${(el) => reset_btn = el} onclick=${() => reset_text(id, input2, submit, option, reset_btn, avatar3)}>${tl(trans.reset)}</button>
                     ${text2 ? html2.node`
                     <div class="heading">
                         <h5>${title} <span class="new-badge">v2</span></h5>
@@ -3872,12 +3872,12 @@
                     </div>
                     ` : ""}
                     <div class="input-container content-form">
-                        <input type="text" maxlength=${max} value=${value} style="--max: ${max}px" ref=${(el) => input = el} placeholder=${tl(settings_store[id].placeholder)} />
-                        <button class="btn chibi icon primary submit" ref=${(el) => submit = el} onclick=${() => update_text(id, input, submit, option, input.value, reset_btn, avatar3)}>${tl(trans.save)}</button>
+                        <input type="text" maxlength=${max} value=${value} style="--max: ${max}px" ref=${(el) => input2 = el} placeholder=${tl(settings_store[id].placeholder)} />
+                        <button class="btn chibi icon primary submit" ref=${(el) => submit = el} onclick=${() => update_text(id, input2, submit, option, input2.value, reset_btn, avatar3)}>${tl(trans.save)}</button>
                     </div>
                 </div>
             `;
-        input.addEventListener("keydown", (event3) => {
+        input2.addEventListener("keydown", (event3) => {
           if (event3.keyCode === 13) {
             event3.preventDefault();
             submit.click();
@@ -3887,7 +3887,7 @@
           content: tl(trans.save)
         });
         if (focus)
-          input.focus();
+          input2.focus();
         return container;
       }
     } catch (e) {
@@ -3931,9 +3931,9 @@
     toggle.setAttribute("aria-checked", !value);
     save_setting(id, !value);
   }
-  function update_range(id, option, track, input, value, marker, silent = false) {
+  function update_range(id, option, track, input2, value, marker, silent = false) {
     let max = settings_store[id].max - settings_store[id].min;
-    input.value = value;
+    input2.value = value;
     track.style.setProperty("--percent", `${(value - settings_store[id].min) / max * 100}%`);
     marker.textContent = `${value}${settings_store[id].suffix || ""}`;
     option.setAttribute("data-modified", value != settings_store[id].default);
@@ -3948,22 +3948,22 @@
       icon: "icon-16-settings"
     });
   }
-  function update_text(id, input, submit, option, value, reset_btn, avatar3, silent = false) {
+  function update_text(id, input2, submit, option, value, reset_btn, avatar3, silent = false) {
     if (settings_store[id].wait) {
       reset_btn.disabled = true;
-      input.disabled = true;
+      input2.disabled = true;
       submit.disabled = true;
     }
-    input.value = value;
+    input2.value = value;
     option.setAttribute("data-modified", value != settings_store[id].default);
     if (id === "profile_shortcut") {
-      save_profile_shortcut(input, value, submit, reset_btn, avatar3);
+      save_profile_shortcut(input2, value, submit, reset_btn, avatar3);
       return;
     }
     save_setting(id, value);
   }
-  function reset_text(id, input, submit, option, reset_btn, avatar3) {
-    update_text(id, input, submit, option, settings_store[id].default, reset_btn, avatar3, true);
+  function reset_text(id, input2, submit, option, reset_btn, avatar3) {
+    update_text(id, input2, submit, option, settings_store[id].default, reset_btn, avatar3, true);
     notify({
       id: "reset_setting",
       title: tl(trans.settings),
@@ -3999,7 +3999,7 @@
     other_listener(id);
   };
   function other_listener(id) {
-    let input;
+    let input2;
     let submit;
     dialog({
       id: "other_listener",
@@ -4012,9 +4012,9 @@
                 </div>
             </div>
             <div class="input-container content-form">
-                <input type="text" maxlength="40" id="text-profile" ref=${(el) => input = el} placeholder="${tl(trans.enter_username)}">
+                <input type="text" maxlength="40" id="text-profile" ref=${(el) => input2 = el} placeholder="${tl(trans.enter_username)}">
                 <button class="btn chibi icon primary submit" ref=${(el) => submit = el} onclick=${() => {
-        let name = input.value;
+        let name = input2.value;
         let link = id;
         dialog_rm2({
           id: "other_listener"
@@ -4025,7 +4025,7 @@
         </div>
         `
     });
-    input.addEventListener("keydown", (event3) => {
+    input2.addEventListener("keydown", (event3) => {
       if (event3.keyCode === 13) {
         event3.preventDefault();
         submit.click();
@@ -4034,7 +4034,7 @@
     tippy(submit, {
       content: tl(trans.save)
     });
-    input.focus();
+    input2.focus();
   }
   function set_profile_as_shortcut() {
     dialog({
@@ -4073,13 +4073,13 @@
     settings.profile_shortcut = page.name;
     localStorage.setItem("bleh", JSON.stringify(settings));
   }
-  function save_profile_shortcut(input, value, submit, reset_btn, avatar3) {
+  function save_profile_shortcut(input2, value, submit, reset_btn, avatar3) {
     if (value == "" || value == auth.name) {
       localStorage.removeItem("bleh_profile_shortcut_avi");
       avatar3.querySelector("img").setAttribute("src", "");
       avatar3.querySelector("img").setAttribute("alt", "");
       reset_btn.disabled = false;
-      input.disabled = false;
+      input2.disabled = false;
       submit.disabled = false;
       save_setting("profile_shortcut", "");
       return;
@@ -4092,7 +4092,7 @@
       let doc = new DOMParser().parseFromString(dom, "text/html");
       console.log("DOC", doc);
       reset_btn.disabled = false;
-      input.disabled = false;
+      input2.disabled = false;
       submit.disabled = false;
       avatar3.classList.remove("requesting");
       try {
@@ -5196,7 +5196,7 @@
   function update_inbuilt_select(id, value) {
     document.documentElement.setAttribute(`data-bleh--inbuilt-${id}`, value);
   }
-  function select(values, callback, initial = "") {
+  function select(values, initial = "") {
     let select2;
     let button;
     if (values.length === 0) {
@@ -5223,7 +5223,6 @@
       trigger: "click"
     });
     set_select(button, menu, values, initial, select2);
-    callback = select2;
     return container;
   }
   function set_select(button, menu, values, selected, select2) {
@@ -5861,21 +5860,95 @@
     }
   }
 
-  // src/components/charts.js
-  function chart_window() {
+  // src/components/input.js
+  function input({
+    type = "text",
+    value,
+    placeholder,
+    min,
+    max,
+    maxlength
+  }) {
+    let input_box;
+    let error_tooltip;
+    let container = html2.node`
+        <div class="content-form input-container colourful" data-has-error="false">
+            <input type=${type} value=${value} placeholder=${placeholder} min=${min} max=${max} maxlength=${maxlength} ref=${(el) => input_box = el} />
+        </div>
+    `;
+    error_tooltip = tippy(input_box, {
+      theme: "error",
+      placement: "top",
+      trigger: "manual"
+    });
+    error_tooltip.disable();
+    input_box.addEventListener("input", () => {
+      container.setAttribute("data-has-error", "false");
+      error_tooltip.disable();
+      if (type == "number") {
+        if (input_box.value == "") {
+          error_input(tl(trans.only_numbers_are_allowed), container, error_tooltip);
+        } else if (parseInt(input_box.value) > max || parseInt(input_box.value) < min) {
+          error_input(tl(trans.keep_within_the_range), container, error_tooltip);
+        }
+      }
+    });
+    return container;
+  }
+  function error_input(reason, input2, tooltip) {
+    log(reason, "input", "log");
+    input2.setAttribute("data-has-error", "true");
+    tooltip.setContent(reason);
+    tooltip.enable();
+    tooltip.show();
+  }
+
+  // src/components/collage.js
+  function collage() {
+    let width;
+    let height;
     let timeframe;
     let type;
     let settings_btn;
+    let submit;
+    let body;
+    let value = 5;
+    let min = 2;
+    let max = 10;
     dialog({
-      id: "chart_creator",
-      title: tl(trans.charts),
+      id: "collage",
+      title: tl(trans.collage),
       body: html2.node`
             <div class="compare-header">
+                <div class="compare-users">
+                    <div class="compare-user">
+                        <div class="avatar">
+                            <img src="${page.avatar}" alt="${tl(trans.avatar_for_user).replace("{u}", page.name)}">
+                        </div>
+                        <strong>${page.name}</strong>
+                    </div>
+                </div>
                 <div class="compare-selection">
-                    <input type="number" value="5" />
-                    x
-                    <input type="number" value="5" />
-                    ${select([
+                    ${width = input({
+        type: "number",
+        value,
+        placeholder: value,
+        min,
+        max
+      })}
+                    <div class="bleh-icon" style="--icon: var(--icon-16-x)" />
+                    ${height = input({
+        type: "number",
+        value,
+        placeholder: value,
+        min,
+        max
+      })}
+                    ${type = select([
+        {
+          value: "artists",
+          text: tl(trans.artists)
+        },
         {
           value: "albums",
           text: tl(trans.albums)
@@ -5884,8 +5957,8 @@
           value: "tracks",
           text: tl(trans.tracks)
         }
-      ], type)}
-                    ${select([
+      ], "albums")}
+                    ${timeframe = select([
         {
           value: "LAST_7_DAYS",
           text: tl(trans.last_count_days).replace("{c}", "7")
@@ -5906,17 +5979,31 @@
           value: "LAST_365_DAYS",
           text: tl(trans.last_count_days).replace("{c}", "365")
         }
-      ], timeframe)}
+      ], "LAST_90_DAYS")}
                     <button class="btn chibi icon" data-type="settings" ref=${(el) => settings_btn = el}>${tl(trans.settings)}</button>
+                    <button class="btn primary icon" data-type="collage" ref=${(el) => submit = el} onclick=${() => make_collage()}>${tl(trans.generate)}</button>
+                </div>
+            </div>
+            <div class="compare-body" data-filled="false">
+                <div class="loading-data-container">
+                    <div class="loading-data-text info">${tl(trans.choose_a_timeframe_above)}</div>
                 </div>
             </div>
         `
+    });
+    let width_input = width.querySelector("input");
+    let height_input = height.querySelector("input");
+    tippy(settings_btn, {
+      content: tl(trans.settings)
     });
     tippy(settings_btn, {
       theme: "window",
       content: html2.node`
             <div class="dialog-settings">
-                ${setting({ id: "" })}
+                ${setting({ id: "collage_title" })}
+                ${setting({ id: "collage_grid_text" })}
+                ${setting({ id: "collage_grid_plays" })}
+                ${setting({ id: "collage_branding" })}
             </div>
         `,
       placement: "bottom",
@@ -5924,6 +6011,17 @@
       interactiveBorder: 10,
       trigger: "click"
     });
+    function make_collage() {
+      if (width_input.value == "" || height_input.value == "" || width_input.value < min || width_input.value > max || height_input.value < min || height_input.value > max) {
+        notify({
+          id: "collage_failed",
+          title: tl(trans.name_failed).replace("{name}", tl(trans.collage)),
+          body: tl(trans.your_settings_are_invalid),
+          type: "error"
+        });
+        return;
+      }
+    }
   }
 
   // src/components/profile_header.js
@@ -6034,7 +6132,7 @@
           create_profile_top_item(profile_header, {
             name: page.name,
             type: "collage",
-            link: () => chart_window(),
+            link: () => collage(),
             action: "button",
             text: tl(trans.collage),
             new_release: true
@@ -6088,7 +6186,7 @@
         create_profile_top_item(profile_header, {
           name: page.name,
           type: "collage",
-          link: () => chart_window(),
+          link: () => collage(),
           action: "button",
           text: tl(trans.collage),
           new_release: true
@@ -9314,8 +9412,10 @@
   }
   function load_settings(skip = false) {
     if (!skip) {
-      for (var member in settings) delete settings[member];
-      Object.assign(settings, JSON.parse(localStorage.getItem("bleh")) || create_settings_template());
+      for (let setting2 in settings_store) {
+        if (!settings[setting2])
+          settings[setting2] = settings_store[setting2].default;
+      }
     }
     log(`branch ${settings.branch}`, "load");
     if (!settings.theme_type) {
@@ -18972,8 +19072,23 @@
     collage: {
       en: "Collage"
     },
+    name_failed: {
+      en: "{name} failed"
+    },
     select_component: {
       en: "Select component"
+    },
+    only_numbers_are_allowed: {
+      en: "Only numbers are allowed here"
+    },
+    keep_within_the_range: {
+      en: "Keep within the range"
+    },
+    generate: {
+      en: "Generate"
+    },
+    your_settings_are_invalid: {
+      en: "Your settings are invalid"
     }
   };
   var trans_legacy = {
@@ -22839,6 +22954,18 @@
     default_avatar_action: {
       default: "expand",
       type: "radio"
+    },
+    collage_title: {
+      default: true
+    },
+    collage_grid_text: {
+      default: true
+    },
+    collage_grid_plays: {
+      default: true
+    },
+    collage_branding: {
+      default: true
     }
   };
 

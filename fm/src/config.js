@@ -5,7 +5,7 @@
 //
 
 import {html} from "lighterhtml";
-import {inbuilt_settings, settings, settings_base, settings_template} from "./build/config";
+import {inbuilt_settings, settings, settings_base, settings_store, settings_template} from "./build/config";
 import {log} from "./build/log";
 import {page, reload_pending} from "./build/page";
 import {stored_season} from "./build/seasonal";
@@ -27,8 +27,11 @@ export function create_settings_template() {
 // load settings
 export function load_settings(skip = false) {
     if (!skip) {
-        for (var member in settings) delete settings[member];
-        Object.assign(settings, JSON.parse(localStorage.getItem('bleh')) || create_settings_template());
+        for (let setting in settings_store) {
+            // assign default if missing
+            if (!settings[setting])
+                settings[setting] = settings_store[setting].default;
+        }
     }
 
     log(`branch ${settings.branch}`, 'load');

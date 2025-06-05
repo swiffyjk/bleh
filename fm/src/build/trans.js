@@ -2447,8 +2447,23 @@ export const trans = {
     collage: {
         en: 'Collage'
     },
+    name_failed: {
+        en: '{name} failed'
+    },
     select_component: {
         en: 'Select component'
+    },
+    only_numbers_are_allowed: {
+        en: 'Only numbers are allowed here'
+    },
+    keep_within_the_range: {
+        en: 'Keep within the range'
+    },
+    generate: {
+        en: 'Generate'
+    },
+    your_settings_are_invalid: {
+        en: 'Your settings are invalid'
     }
 }
 

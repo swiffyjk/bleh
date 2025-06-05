@@ -14,7 +14,7 @@ export function update_inbuilt_select(id, value) {
     document.documentElement.setAttribute(`data-bleh--inbuilt-${id}`, value);
 }
 
-export function select(values, callback, initial = '') {
+export function select(values, initial = '') {
     let select;
     let button;
 
@@ -47,7 +47,6 @@ export function select(values, callback, initial = '') {
 
     set_select(button, menu, values, initial, select);
 
-    callback = select;
     return container;
 }
 

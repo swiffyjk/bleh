@@ -16,7 +16,7 @@ import {correct_artist} from "./lotus";
 import {register_menu} from "./menu";
 import {open_profile_shortcut_window, set_profile_as_shortcut} from './profile_shortcut';
 import {html} from "lighterhtml";
-import {chart_window} from "./charts.js";
+import {collage} from "./collage.js";
 
 unsafeWindow._toggle_profile_header = function(button) {
     let current = settings.profile_header_expand;
@@ -158,7 +158,7 @@ export function redesign_profile_header(is_own_profile, is_following) {
                 create_profile_top_item(profile_header, {
                     name: page.name,
                     type: 'collage',
-                    link: () => chart_window(),
+                    link: () => collage(),
                     action: 'button',
                     text: tl(trans.collage),
                     new_release: true
@@ -217,7 +217,7 @@ export function redesign_profile_header(is_own_profile, is_following) {
             create_profile_top_item(profile_header, {
                 name: page.name,
                 type: 'collage',
-                link: () => chart_window(),
+                link: () => collage(),
                 action: 'button',
                 text: tl(trans.collage),
                 new_release: true
