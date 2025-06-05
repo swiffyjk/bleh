@@ -6123,8 +6123,19 @@
                 </li>
             `);
       });
-      body.setAttribute("data-filled", "true");
-      render(body, html2`
+      create_collage_dom(grid).then((collage_dom) => {
+        body.setAttribute("data-filled", "true");
+        render(body, html2`
+                ${collage_dom}
+            `);
+        type.querySelector("button").disabled = false;
+        timeframe.querySelector("button").disabled = false;
+        settings_btn.disabled = false;
+        submit.disabled = false;
+      });
+    }
+    async function create_collage_dom(grid) {
+      let collage_dom = html2.node`
             <div class="collage">
                 ${settings.collage_title ? html2.node`
                 <div class="header">
@@ -6141,13 +6152,25 @@
                 </div>
                 ` : ""}
                 ${grid}
+                ${settings.collage_branding ? html2.node`
+                <div class="branding">
+                    ${{ html: tl(trans.made_with_name).replace("{name}", `<strong class="brand">${version.brand}</strong>`) }}
+                </div>
+                ` : ""}
             </div>
-        `);
-      type.querySelector("button").disabled = false;
-      timeframe.querySelector("button").disabled = false;
-      settings_btn.disabled = false;
-      submit.disabled = false;
+        `;
       music_grids(grid);
+      let images = collage_dom.querySelectorAll("img");
+      let promises = [];
+      images.forEach((image) => {
+        promises.push(new Promise((resolve) => {
+          image.onload = () => {
+            resolve();
+          };
+        }));
+      });
+      await Promise.all(promises);
+      return collage_dom;
     }
   }
 
@@ -19216,6 +19239,12 @@
     },
     your_settings_are_invalid: {
       en: "Your settings are invalid"
+    },
+    timeframe_top_type: {
+      en: "{timeframe} top {type}"
+    },
+    made_with_name: {
+      en: "Made with {name}"
     }
   };
   var trans_legacy = {

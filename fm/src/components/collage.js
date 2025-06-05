@@ -10,6 +10,7 @@ import {clean_number, sanitise} from "../build/tools.js";
 import {log} from "../build/log.js";
 import {music_grids} from "./music_grid.js";
 import {settings} from "../build/config.js";
+import {version} from "../main.js";
 
 export function collage() {
     let width;
@@ -262,8 +263,21 @@ export function collage() {
             `);
         });
 
-        body.setAttribute('data-filled', 'true');
-        render(body, html`
+        create_collage_dom(grid).then(collage_dom => {
+            body.setAttribute('data-filled', 'true');
+            render(body, html`
+                ${collage_dom}
+            `);
+
+            type.querySelector('button').disabled = false;
+            timeframe.querySelector('button').disabled = false;
+            settings_btn.disabled = false;
+            submit.disabled = false;
+        });
+    }
+
+    async function create_collage_dom(grid) {
+        let collage_dom = html.node`
             <div class="collage">
                 ${settings.collage_title ? html.node`
                 <div class="header">
@@ -280,14 +294,30 @@ export function collage() {
                 </div>
                 ` : ''}
                 ${grid}
+                ${settings.collage_branding ? html.node`
+                <div class="branding">
+                    ${{html: tl(trans.made_with_name).replace('{name}', `<strong class="brand">${version.brand}</strong>`)}}
+                </div>
+                ` : ''}
             </div>
-        `);
-
-        type.querySelector('button').disabled = false;
-        timeframe.querySelector('button').disabled = false;
-        settings_btn.disabled = false;
-        submit.disabled = false;
+        `;
 
         music_grids(grid);
+
+        // we need to wait for all images to load
+        let images = collage_dom.querySelectorAll('img');
+        let promises = [];
+
+        images.forEach((image) => {
+            promises.push(new Promise(resolve => {
+                image.onload = () => {
+                    resolve();
+                }
+            }));
+        });
+
+        await Promise.all(promises);
+
+        return collage_dom;
     }
 }

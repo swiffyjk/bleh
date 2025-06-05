@@ -2464,6 +2464,12 @@ export const trans = {
     },
     your_settings_are_invalid: {
         en: 'Your settings are invalid'
+    },
+    timeframe_top_type: {
+        en: '{timeframe} top {type}'
+    },
+    made_with_name: {
+        en: 'Made with {name}'
     }
 }
 
