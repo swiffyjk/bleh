@@ -8,7 +8,7 @@ import {settings} from "../build/config";
 import {log} from "../build/log";
 import {album_track_corrections, artist_corrections, includes} from "../build/music";
 import {page, root} from "../build/page";
-import {return_artist_from_generic, sanitise, sanitise_text} from "../build/tools";
+import {return_artist_from_generic, sanitise} from "../build/tools";
 import {trans_legacy} from "../build/trans";
 import {prepare_corrections_page} from "../pages/bleh_config";
 import {dialog} from "./dialog";
@@ -134,10 +134,10 @@ unsafeWindow._open_correction_modal = function() {
 
 
 /**
-     * correct capitalisation of a generic album/track name & artist combo
-     * @param {string} parent individual css selector for each item wrapper
-     * @returns if not found
-     */
+ * correct capitalisation of a generic album/track name & artist combo
+ * @param {string} parent individual css selector for each item wrapper
+ * @returns if not found
+ */
 export function correct_generic_combo(parent) {
     let albums = document.body.querySelectorAll(`.${parent}`);
 
@@ -198,7 +198,6 @@ export function correct_generic_combo_no_artist(parent) {
 }
 
 
-// correction handler
 /**
  * correct item based on artist
  * @param {string} item either a track/album title
@@ -489,17 +488,15 @@ export function patch_header_title() {
             let song_artist_element = document.body.querySelector('span[itemprop="byArtist"]');
             let song_guests = formatted_title[3];
             page.sister_others = formatted_title[3];
+            song_artist_element.innerHTML = song_artist_element.innerHTML.trim();
             for (let guest in song_guests) {
                 // &
                 song_artist_element.innerHTML = `${song_artist_element.innerHTML},`;
 
-                let guest_element = document.createElement('a');
-                guest_element.classList.add('header-new-crumb');
-                guest_element.setAttribute('href', `${root}music/${sanitise(song_guests[guest])}`);
-                guest_element.setAttribute('title', sanitise_text(song_guests[guest]));
-                guest_element.textContent = song_guests[guest];
-
-                song_artist_element.appendChild(guest_element);
+                // no whitespace to make sure it looks correct
+                song_artist_element.appendChild(html.node`
+                    <a class="header-new-crumb" href="${root}music/${sanitise(song_guests[guest])}" title=${song_guests[guest]}>${song_guests[guest]}</a>
+                `);
             }
         }
         } catch(e) {}

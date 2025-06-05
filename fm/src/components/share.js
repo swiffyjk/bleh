@@ -30,7 +30,7 @@ export function share(url) {
                         document.execCommand('copy');
                         notify({
                             title: tl(trans.copied_to_clipboard),
-                            type: 'success'
+                            icon: 'icon-16-copy'
                         });
                     }}
                 >${tl(trans.copy)}</button>

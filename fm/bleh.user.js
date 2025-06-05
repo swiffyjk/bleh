@@ -3297,7 +3297,7 @@
         document.execCommand("copy");
         notify({
           title: tl(trans.copied_to_clipboard),
-          type: "success"
+          icon: "icon-16-copy"
         });
       }}
                 >${tl(trans.copy)}</button>
@@ -12631,14 +12631,12 @@
           let song_artist_element = document.body.querySelector('span[itemprop="byArtist"]');
           let song_guests = formatted_title[3];
           page.sister_others = formatted_title[3];
+          song_artist_element.innerHTML = song_artist_element.innerHTML.trim();
           for (let guest in song_guests) {
             song_artist_element.innerHTML = `${song_artist_element.innerHTML},`;
-            let guest_element = document.createElement("a");
-            guest_element.classList.add("header-new-crumb");
-            guest_element.setAttribute("href", `${root}music/${sanitise(song_guests[guest])}`);
-            guest_element.setAttribute("title", sanitise_text(song_guests[guest]));
-            guest_element.textContent = song_guests[guest];
-            song_artist_element.appendChild(guest_element);
+            song_artist_element.appendChild(html2.node`
+                    <a class="header-new-crumb" href="${root}music/${sanitise(song_guests[guest])}" title=${song_guests[guest]}>${song_guests[guest]}</a>
+                `);
           }
         }
       } catch (e) {
