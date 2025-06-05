@@ -3291,7 +3291,7 @@
                     ref=${(el) => input = el}
                 />
                 <button 
-                    class="btn icon copy"
+                    class="btn primary icon copy"
                     onclick=${() => {
         input.select();
         document.execCommand("copy");
