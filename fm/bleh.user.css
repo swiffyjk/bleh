@@ -4520,9 +4520,16 @@ better than the default selector '#app a' i suppose */
         ". . . . .";
     }
 
-    @media (max-width: 600px) {
-        grid-template-columns: repeat(auto-fill, minmax(150px, 1fr)) !important;
-        grid-template-areas: unset !important;
+    &:not(.collage-grid) {
+        @media (max-width: 600px) {
+            grid-template-columns: repeat(auto-fill, minmax(150px, 1fr)) !important;
+            grid-template-areas: unset !important;
+        }
+    }
+
+    &.collage-grid {
+        grid-template-columns: repeat(var(--width), 1fr);
+        grid-template-rows: repeat(var(--height), 1fr);
     }
 }
 .grid-items .grid-items-item {

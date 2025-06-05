@@ -8,7 +8,7 @@ import {html, render} from 'lighterhtml';
 import {log} from '../build/log';
 import {auth, page, root} from '../build/page';
 import {clean_number, sanitise} from '../build/tools';
-import {tl, trans} from '../build/trans';
+import {lang, tl, trans} from '../build/trans';
 import {dialog} from './dialog';
 import {music_grids} from './music_grid';
 import {notify} from './notify';
@@ -128,8 +128,8 @@ function get_grid(user, type, range, current_page, pages, next_user=null) {
 
         return response.text();
     })
-    .then(function(html) {
-        let doc = new DOMParser().parseFromString(html, 'text/html');
+    .then(function(dom) {
+        let doc = new DOMParser().parseFromString(dom, 'text/html');
         console.log('DOC', doc);
 
         let next_button = doc.querySelector('.pagination-next');
@@ -213,7 +213,7 @@ function continue_comparing(type, range) {
                 <div class="loading-data-text failed">${tl(trans.nothing_in_common)}</div>
             </div>
         `);
-    page.state.compare_modal.querySelector('.bleh-modal-body .compare-body').setAttribute('data-filled', 'false');
+        page.state.compare_modal.querySelector('.bleh-modal-body .compare-body').setAttribute('data-filled', 'false');
 
         return;
     }
@@ -243,25 +243,25 @@ function continue_comparing(type, range) {
                                     ${data.name}
                                 </a>
                             </p>
-                            ${(type == 'albums') ? (`
+                            ${(type == 'albums') ? html.node`
                             <p class="grid-items-item-aux-text">
                                 <a class="grid-items-item-aux-block" href="${root}music/${data.sister}">
                                     ${data.sister}
                                 </a>
                             </p>
-                            `) : ''}
+                            ` : ''}
                             <p class="grid-items-item-aux-text">
                                 <a class="grid-item-plays with-avatar" href="${root}user/${auth.name}/library/music/${template}?date_preset=${range}" target="_blank">
                                     <span class="avatar">
                                         <img src="${auth.avatar}" alt="${tl(trans.your_avatar)}">
                                     </span>
-                                    ${data.plays.you}
+                                    ${data.plays.you.toLocaleString(lang)}
                                 </a>
                                 <a class="grid-item-plays with-avatar" href="${root}user/${page.name}/library/music/${template}?date_preset=${range}" target="_blank">
                                     <span class="avatar">
                                         <img src="${page.avatar}" alt="${tl(trans.avatar_for_user).replace('{u}', page.name)}">
                                     </span>
-                                    ${data.plays.other}
+                                    ${data.plays.other.toLocaleString(lang)}
                                 </a>
                             </p>
                         </div>
