@@ -96,10 +96,6 @@ export function compare() {
     custom_select(page.state.compare_modal.querySelector('#range'), page.state.compare_modal.querySelector('#range_select'));
 }
 
-unsafeWindow._compare = function() {
-    compare();
-}
-
 function begin_comparing() {
     page.state.compare_modal.querySelector('.bleh-modal-body .compare-body').setAttribute('data-filled', 'false');
     let buttons = page.state.compare_modal.querySelectorAll('.compare-selection > button');

@@ -169,6 +169,11 @@
             "default": true,
             "name": "Profile comparison",
             "date": "2025-05-19"
+        },
+        "charts": {
+            "default": false,
+            "name": "Profile chart creation",
+            "date": "2025-06-05"
         }
     }
 }

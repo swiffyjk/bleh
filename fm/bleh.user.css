@@ -94,7 +94,11 @@ body {
 
     --hue-pos: 140;
     --hue-neg: -2;
-    --hue-fav: 15;
+
+    --hue-fav: 30;
+    --sat-fav: 1.5;
+    --lit-fav: 1;
+
     --hue-pro: 174;
 
     --hue-brand-yt: -2;
@@ -259,7 +263,6 @@ body:after,
 .chartlist-row--now-scrobbling,
 a,
 .user-dashboard-layout, .user-dashboard-layout .secondary-nav-item-link, .secondary-nav-item--listening-report .secondary-nav-item-link--active, .listening-report-brick-head, .listening-report-top-item-heading,
-.image-list-item-preferred-icon:before,
 #current-subscription,
 .header:before,
 .events-list-item-date-icon, .calendar-icon,
@@ -7156,6 +7159,10 @@ button,
         --lit-over: 1;
     }
 }
+.button-group {
+    display: flex;
+    gap: var(--button-list-gap);
+}
 
 
 @keyframes spinner {
@@ -7383,7 +7390,7 @@ button,
 .btn-post-shout:before,
 .auth-link:before, .language-nav:before, .language-nav > span:before,
 .gallery-placeholder:before,
-.image-list-item-bookmarked:after, .image-list-item-preferred:after,
+.image-list-item-bookmarked:after, .image-list-item-preferred:after, .obsessions-item:after,
 .data-loading:after, .lazy-shoutbox.async-content-loading:after, .loading:not(.library-fetch, .library-date-picker):after,
 .user-list-inner-wrap .label:before, .label.auth-badge:before,
 .nag-bar-message:before,
@@ -7633,6 +7640,7 @@ span.header-new-gallery-inner a:before,
     display: none;
 }
 
+[data-type="share"],
 .share-button-profile {
     --mask: var(--icon-16-share);
 }
@@ -9428,8 +9436,8 @@ input:is([name^="track_name"], [name^="artist_name"], [name^="album_name"], [nam
 }
 .gallery-image-preferred-on/*, .gallery-image-preferred-off*/ {
     --hue-over: var(--hue-fav);
-    --sat-over: 1;
-    --lit-over: 1;
+    --sat-over: var(--sat-fav);
+    --lit-over: var(--lit-fav);
 }
 
 .gallery-image-vote-buttons {
@@ -9504,8 +9512,8 @@ input:is([name^="track_name"], [name^="artist_name"], [name^="album_name"], [nam
 .gallery-image-preferred-states {
     --mask: var(--icon-16-star);
     --hue-over: var(--hue-fav);
-    --sat-over: 1;
-    --lit-over: 1;
+    --sat-over: var(--sat-fav);
+    --lit-over: var(--lit-fav);
 }
 
 /* no pro :c */
@@ -11229,8 +11237,8 @@ text[style^="color: rgb(0, 0, 0)"] {
     &.image-list-item-preferred {
         --mask: var(--icon-16-star);
         --hue-over: var(--hue-fav);
-        --sat-over: 1;
-        --lit-over: 1;
+        --sat-over: var(--sat-fav);
+        --lit-over: var(--lit-fav);
     }
 
     &:before {
@@ -11679,6 +11687,10 @@ text[style^="color: rgb(0, 0, 0)"] {
 
     &:before {
         color: currentColor;
+    }
+
+    &.no-margin {
+        margin: unset;
     }
 }
 
@@ -12230,12 +12242,47 @@ table.table tr:nth-child(2n) td {
 
 /*     OBSESSIONS     */
 .obsessions-item {
-    .new-badge {
+    position: relative;
+    --show-icon: none;
+    --left: none;
+    --top: calc(var(--offset) + (var(--size) - var(--icon-size)) / 2);
+    --right: calc(var(--offset) + (var(--size) - var(--icon-size)) / 2);
+    --margin-top: none;
+
+    --size: 28px;
+    --offset: 8px;
+    --icon-size: 16px;
+
+    &.first {
+        --show-icon: flex;
+    }
+    &.first {
+        --mask: var(--icon-16-star);
+    }
+
+    &:before {
+        content: '';
         position: absolute;
-        top: 10px;
-        right: 10px;
-        z-index: 20;
-        cursor: pointer;
+        top: var(--offset);
+        right: var(--offset);
+        z-index: 13;
+        border-radius: 50px;
+
+        display: var(--show-icon);
+        width: var(--size);
+        height: var(--size);
+        background-color: hsl(var(--f4));
+    }
+    &:after {
+        z-index: 14;
+
+        box-shadow: unset;
+        padding: unset;
+        position: absolute;
+        background: currentColor !important;
+        transition: unset !important;
+
+        color: hsl(var(--l2-c-theme-switch));
     }
 
     .link-block-cover-link {
@@ -18484,6 +18531,8 @@ h4 {
             }
             .gallery-image-preferred-button :is(button, a) {
                 --hue-over: var(--hue-fav);
+                --sat-over: var(--sat-fav);
+                --lit-over: var(--lit-fav);
             }
             [value="up"] {
                 --col: hsl(var(--c2));

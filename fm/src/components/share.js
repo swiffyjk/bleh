@@ -47,6 +47,7 @@ export function share(url) {
                     class="share-link share-link-facebook"
                 >Facebook</a>
             </div>
-        `
+        `,
+        replace_if_possible: true
     });
 }

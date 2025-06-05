@@ -9,13 +9,14 @@ import {log} from "../build/log";
 import {auth, page, root} from "../build/page";
 import {sponsor_list} from "../build/sponsor";
 import {sanitise} from "../build/tools";
-import {lang, tl, trans} from "../build/trans";
+import {tl, trans} from "../build/trans";
 import {ff} from "../sku";
 import {compare} from './compare';
 import {correct_artist} from "./lotus";
 import {register_menu} from "./menu";
-import {open_profile_shortcut_window} from './profile_shortcut';
+import {open_profile_shortcut_window, set_profile_as_shortcut} from './profile_shortcut';
 import {html} from "lighterhtml";
+import {chart_window} from "./charts.js";
 
 unsafeWindow._toggle_profile_header = function(button) {
     let current = settings.profile_header_expand;
@@ -123,8 +124,7 @@ export function redesign_profile_header(is_own_profile, is_following) {
                 create_profile_top_item(profile_header, {
                     name: page.name,
                     type: 'message',
-                    link: msg_button.getAttribute('href'),
-                    katsune: katsune
+                    link: msg_button.getAttribute('href')
                 });
             } else {
                 create_profile_top_item(profile_header, {
@@ -132,15 +132,13 @@ export function redesign_profile_header(is_own_profile, is_following) {
                     type: 'sponsor',
                     link: '_sponsor()',
                     full: true,
-                    action: 'button',
-                    katsune: katsune
+                    action: 'button'
                 });
                 create_profile_top_item(profile_header, {
                     name: page.name,
                     type: 'message_sponsor',
                     link: msg_button.getAttribute('href'),
-                    full: true,
-                    katsune: katsune
+                    full: true
                 });
             }
         }
@@ -151,19 +149,36 @@ export function redesign_profile_header(is_own_profile, is_following) {
                 create_profile_top_item(profile_header, {
                     name: page.name,
                     type: 'compare',
-                    link: '_compare()',
-                    action: 'button',
-                    katsune: katsune
+                    link: () => compare(),
+                    action: 'button'
                 });
             }
 
-            create_profile_top_item(profile_header, {
-                name: page.name,
-                type: 'shortcut',
-                link: `_set_profile_as_shortcut(this, '${page.name}')`,
-                action: 'button',
-                katsune: katsune
-            });
+            if (ff('charts')) {
+                create_profile_top_item(profile_header, {
+                    name: page.name,
+                    type: 'collage',
+                    link: () => chart_window(),
+                    action: 'button',
+                    text: tl(trans.collage),
+                    new_release: true
+                });
+            }
+
+            if (settings.profile_shortcut != page.name) {
+                page.state.profile_shortcut_button = create_profile_top_item(profile_header, {
+                    name: page.name,
+                    type: 'shortcut',
+                    link: () => set_profile_as_shortcut(),
+                    action: 'button'
+                });
+            } else {
+                create_profile_top_item(profile_header, {
+                    name: page.name,
+                    type: 'shortcut',
+                    action: 'button'
+                });
+            }
         }
 
 
@@ -171,8 +186,7 @@ export function redesign_profile_header(is_own_profile, is_following) {
             create_profile_top_item(profile_header, {
                 name: page.name,
                 type: 'support',
-                link: 'https://support.last.fm',
-                katsune: katsune
+                link: 'https://support.last.fm'
             });
         }
     } else {
@@ -180,14 +194,12 @@ export function redesign_profile_header(is_own_profile, is_following) {
         create_profile_top_item(profile_header, {
             name: page.name,
             type: 'edit',
-            link: `${root}settings`,
-            katsune: katsune
+            link: `${root}settings`
         });
         create_profile_top_item(profile_header, {
             name: page.name,
             type: 'labs',
             link: `${root}labs`,
-            katsune: katsune,
             tooltip: (`
                 <strong>${tl(trans.labs_by_last)}</strong>
                 <p>${tl(trans.labs_by_last.tagline)}</p>
@@ -198,9 +210,19 @@ export function redesign_profile_header(is_own_profile, is_following) {
         create_profile_top_item(profile_header, {
             name: page.name,
             type: 'obsession',
-            link: `${root}user/${page.name}/obsessions/set`,
-            katsune: katsune
+            link: `${root}user/${page.name}/obsessions/set`
         });
+
+        if (ff('charts')) {
+            create_profile_top_item(profile_header, {
+                name: page.name,
+                type: 'collage',
+                link: () => chart_window(),
+                action: 'button',
+                text: tl(trans.collage),
+                new_release: true
+            });
+        }
     }
 
     let listen_container = page.structure.row.querySelector('.listen-panel');
@@ -288,76 +310,48 @@ export function redesign_profile_header(is_own_profile, is_following) {
         page.structure.main.insertBefore(profile_header, page.structure.main.firstElementChild);
 }
 
-export function create_profile_top_item(parent, {name, link, text='', type, taste='', artists=[], avi='', percent='', action='', tooltip='', allow_html=false, tooltip_theme='', full=false, primary=false, katsune=false, mini=false}) {
+export function create_profile_top_item(parent, {name, link, text='', type, new_release = false, action='', tooltip='', allow_html=false, tooltip_theme=''}) {
     log(`creating top item of ${name}, ${link}, ${text}`, 'profile');
 
-    let listen_item = document.createElement((action != 'button') ? 'a' : 'button');
-    listen_item.classList.add('btn', 'side-action');
-    listen_item.setAttribute('data-type', type);
-
-    if (mini)
-        listen_item.classList.add('mini');
-
-    if (action != 'button' && type != 'going' && type != 'maybe' && type != 'total') {
-        listen_item.setAttribute('href', link);
-        //listen_item.setAttribute('target', '_blank');
-    } else if (type != 'going' && type != 'maybe' && type != 'total') {
-        listen_item.setAttribute('onclick', link);
+    let side_action;
+    if (action === 'button') {
+        side_action = html.node`
+            <button
+                class="btn side-action"
+                data-type=${type}
+                onclick=${link}
+            >
+                ${tl(trans[type])}
+                ${(new_release) ? html.node`<div class="new-badge">${tl(trans.new)}</div>` : ''}
+            </button>
+        `;
+    } else {
+        side_action = html.node`
+            <a
+                class="btn side-action"
+                data-type=${type}
+                href=${link}
+            >
+                ${tl(trans[type])}
+                ${(new_release) ? html.node`<div class="new-badge">${tl(trans.new)}</div>` : ''}
+            </a>
+        `;
     }
-
-    if (primary)
-        listen_item.classList.add('primary');
-
-    if (type != 'taste') {
-        text = text.toLocaleString(lang);
-        listen_item.innerHTML = text;
-    }
-
-    if (katsune) {
-        full = true;
-    }
-
-    if (full) {
-        listen_item.classList.add('profile-top-item-full');
-        listen_item.textContent = tl(trans[type]);
-    }
-
-    if (type == 'compare') {
-        listen_item.innerHTML = `${tl(trans.compare)}<div class="new-badge">${tl(trans.new)}</div>`;
-    }
-
-    parent.appendChild(listen_item);
 
     if (type == 'shortcut') {
-        listen_item.textContent = tl(trans.shortcut);
-
         if (name == settings.profile_shortcut) {
-            listen_item.setAttribute('data-is-shortcut', 'true');
-            listen_item.removeAttribute('onclick');
+            side_action.setAttribute('data-is-shortcut', 'true');
         } else {
-            listen_item.setAttribute('data-is-shortcut', 'false');
+            side_action.setAttribute('data-is-shortcut', 'false');
         }
 
-        listen_item.addEventListener('contextmenu', (e) => {
+        side_action.addEventListener('contextmenu', (e) => {
             e.preventDefault();
 
             open_profile_shortcut_window();
         });
-
-        return;
     }
 
-    if (katsune && !mini)
-        return;
-
-    if (tooltip == '')
-        tippy(listen_item, {
-            content: tl(trans[type])
-        });
-    else
-        tippy(listen_item, {
-            content: tooltip,
-            allowHTML: allow_html,
-            theme: tooltip_theme
-        });
+    parent.appendChild(side_action);
+    return side_action;
 }

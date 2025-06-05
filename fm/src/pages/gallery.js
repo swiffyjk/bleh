@@ -155,7 +155,7 @@ export function bleh_gallery() {
 
     // share button
     let share_button = html.node`
-        <button class="image-share-button" onclick=${() => share_gallery_image()}>
+        <button class="image-share-button" onclick=${() => share(window.location.href)}>
             ${tl(trans.share)}
         </button>
     `;
@@ -250,10 +250,6 @@ export function bleh_gallery() {
 function expand_gallery_image() {
     let image_src = page.structure.container.querySelector('.active-slide .js-gallery-image').getAttribute('src').replace('770x0', 'ar0');
     expand_avatar(image_src);
-}
-function share_gallery_image() {
-    let image_src = page.structure.container.querySelector('.active-slide .js-gallery-image').getAttribute('src').replace('770x0', 'ar0');
-    share(image_src);
 }
 
 export function create_divider() {

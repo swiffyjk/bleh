@@ -2443,6 +2443,12 @@ export const trans = {
     },
     bulk_edit_extension: {
         en: 'Last.fm Bulk Edit'
+    },
+    collage: {
+        en: 'Collage'
+    },
+    select_component: {
+        en: 'Select component'
     }
 }
 

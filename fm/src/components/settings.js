@@ -214,9 +214,11 @@ function setting_incompatible_block(entries) {
 
 function setting_fail(id, e = null) {
     return html.node`
-        <div class="alert alert-error">
-            ${tl(trans.value_failed_to_load).replace('{v}', id)}
-            ${(e) ? html`<br>${e.message}` : ''}
+        <div class="setting">
+            <div class="alert alert-error no-margin">
+                ${tl(trans.value_failed_to_load).replace('{v}', id)}
+                ${(e) ? html`<br>${e.message}` : ''}
+            </div>
         </div>
     `;
 }

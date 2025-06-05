@@ -76,9 +76,7 @@ export function other_listener(id) {
 }
 
 
-unsafeWindow._set_profile_as_shortcut = function(button) {
-    page.state.profile_shortcut_button = button;
-
+export function set_profile_as_shortcut() {
     dialog({
         id: 'profile_shortcut',
         title: tl(trans.profile_shortcut.name),
@@ -99,9 +97,6 @@ unsafeWindow._set_profile_as_shortcut = function(button) {
     });
 }
 
-unsafeWindow._confirm_set_profile_as_shortcut = function() {
-    confirm_set_profile_as_shortcut();
-}
 function confirm_set_profile_as_shortcut() {
     dialog_rm({
         id: 'profile_shortcut'

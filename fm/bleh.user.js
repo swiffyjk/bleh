@@ -1857,7 +1857,7 @@
       modal.appendChild(html2.node`
             <div class="bleh-modal-title" id="modal_title">
                 <h1>${title}</h1>
-                ${subtitle != null ? html2.node`<p class="bleh-modal-subtitle">${subtitle}</p>` : ""}
+                ${subtitle ? html2.node`<p class="bleh-modal-subtitle">${subtitle}</p>` : ""}
             </div>
         `);
     }
@@ -3107,6 +3107,50 @@
       view_buttons.insertBefore(bulk_edit, edit_form);
   }
 
+  // src/components/share.js
+  function share(url) {
+    let input;
+    dialog({
+      id: "share",
+      title: tl(trans.share),
+      body: html2.node`
+            <div class="share-top content-form">
+                <input
+                    type="text"
+                    readonly
+                    value=${url}
+                    class="share-input"
+                    ref=${(el) => input = el}
+                />
+                <button 
+                    class="btn primary icon copy"
+                    onclick=${() => {
+        input.select();
+        document.execCommand("copy");
+        notify({
+          title: tl(trans.copied_to_clipboard),
+          icon: "icon-16-copy"
+        });
+      }}
+                >${tl(trans.copy)}</button>
+            </div>
+            <div class="share-links">
+                <a 
+                    href=${`https://twitter.com/intent/tweet?url=${encodeURIComponent(url)}`}
+                    target="_blank"
+                    class="share-link share-link-twitter"
+                >Twitter</a>
+                <a 
+                    href=${`https://www.facebook.com/sharer/sharer.php?u=${encodeURIComponent(url)}`}
+                    target="_blank"
+                    class="share-link share-link-facebook"
+                >Facebook</a>
+            </div>
+        `,
+      replace_if_possible: true
+    });
+  }
+
   // src/avatar.js
   function patch_avatar(avatar3, name, type = "", parent = null, side = "right") {
     if (avatar3.hasAttribute("data-bleh-avatar"))
@@ -3245,9 +3289,14 @@
                 </div>
                 <div class="modal-footer">
                     <div class="fill"></div>
-                    <a class="btn primary open" href="${src}" target="_blank">
-                        ${tl(trans.open_new_tab)}
-                    </a>
+                    <div class="button-group">
+                        <button class="btn icon" data-type="share" onclick=${() => share(src)}>
+                            ${tl(trans.share)}
+                        </button>
+                        <a class="btn primary open" href="${src}" target="_blank">
+                            ${tl(trans.open_new_tab)}
+                        </a>
+                    </div>
                     <div class="fill"></div>
                 </div>
             </div>
@@ -3272,49 +3321,6 @@
         })
       });
       menu.show();
-    });
-  }
-
-  // src/components/share.js
-  function share(url) {
-    let input;
-    dialog({
-      id: "share",
-      title: tl(trans.share),
-      body: html2.node`
-            <div class="share-top content-form">
-                <input
-                    type="text"
-                    readonly
-                    value=${url}
-                    class="share-input"
-                    ref=${(el) => input = el}
-                />
-                <button 
-                    class="btn primary icon copy"
-                    onclick=${() => {
-        input.select();
-        document.execCommand("copy");
-        notify({
-          title: tl(trans.copied_to_clipboard),
-          icon: "icon-16-copy"
-        });
-      }}
-                >${tl(trans.copy)}</button>
-            </div>
-            <div class="share-links">
-                <a 
-                    href=${`https://twitter.com/intent/tweet?url=${encodeURIComponent(url)}`}
-                    target="_blank"
-                    class="share-link share-link-twitter"
-                >Twitter</a>
-                <a 
-                    href=${`https://www.facebook.com/sharer/sharer.php?u=${encodeURIComponent(url)}`}
-                    target="_blank"
-                    class="share-link share-link-facebook"
-                >Facebook</a>
-            </div>
-        `
     });
   }
 
@@ -3419,7 +3425,7 @@
     });
     buttons_extra.appendChild(open_button);
     let share_button = html2.node`
-        <button class="image-share-button" onclick=${() => share_gallery_image()}>
+        <button class="image-share-button" onclick=${() => share(window.location.href)}>
             ${tl(trans.share)}
         </button>
     `;
@@ -3469,10 +3475,6 @@
   function expand_gallery_image() {
     let image_src = page.structure.container.querySelector(".active-slide .js-gallery-image").getAttribute("src").replace("770x0", "ar0");
     expand_avatar(image_src);
-  }
-  function share_gallery_image() {
-    let image_src = page.structure.container.querySelector(".active-slide .js-gallery-image").getAttribute("src").replace("770x0", "ar0");
-    share(image_src);
   }
   function create_divider() {
     let divider = document.createElement("div");
@@ -3916,9 +3918,11 @@
   }
   function setting_fail(id, e = null) {
     return html2.node`
-        <div class="alert alert-error">
-            ${tl(trans.value_failed_to_load).replace("{v}", id)}
-            ${e ? html2`<br>${e.message}` : ""}
+        <div class="setting">
+            <div class="alert alert-error no-margin">
+                ${tl(trans.value_failed_to_load).replace("{v}", id)}
+                ${e ? html2`<br>${e.message}` : ""}
+            </div>
         </div>
     `;
   }
@@ -4032,8 +4036,7 @@
     });
     input.focus();
   }
-  unsafeWindow._set_profile_as_shortcut = function(button) {
-    page.state.profile_shortcut_button = button;
+  function set_profile_as_shortcut() {
     dialog({
       id: "profile_shortcut",
       title: tl(trans.profile_shortcut.name),
@@ -4052,10 +4055,7 @@
             </div>
         `
     });
-  };
-  unsafeWindow._confirm_set_profile_as_shortcut = function() {
-    confirm_set_profile_as_shortcut();
-  };
+  }
   function confirm_set_profile_as_shortcut() {
     dialog_rm2({
       id: "profile_shortcut"
@@ -5196,11 +5196,65 @@
   function update_inbuilt_select(id, value) {
     document.documentElement.setAttribute(`data-bleh--inbuilt-${id}`, value);
   }
-  function custom_select(select, element_to_append) {
-    console.info(select);
-    let id = select.getAttribute("id");
-    let value = select.value;
-    let value_objects = select.querySelectorAll("option");
+  function select(values, callback, initial = "") {
+    let select2;
+    let button;
+    if (values.length === 0) {
+      return select_fail({ message: "Values cannot be empty" });
+    }
+    if (initial == "")
+      initial = values[0].value;
+    let container = html2.node`
+        <div class="select-wrap custom-selector">
+            <select ref=${(el) => select2 = el}>
+                ${values.map((value) => html2.node`
+                    <option value=${value.value} selected=${value.value == initial}>${value.text}</option>
+                `)}
+            </select>
+            <button class="select-button" type="button" ref=${(el) => button = el} />
+        </div>
+    `;
+    let menu = tippy(button, {
+      theme: "select-menu",
+      content: html2.node``,
+      placement: "bottom",
+      interactive: true,
+      interactiveBorder: 10,
+      trigger: "click"
+    });
+    set_select(button, menu, values, initial, select2);
+    callback = select2;
+    return container;
+  }
+  function set_select(button, menu, values, selected, select2) {
+    values.some((value) => {
+      if (value.value == selected) {
+        button.textContent = value.text;
+        return false;
+      }
+    });
+    select2.value = selected;
+    menu.setContent(html2.node`
+        ${values.map((value) => html2.node`
+            <button class="btn dropdown-menu-clickable-item select-item" aria-checked=${selected == value.value} onclick=${() => set_select(button, menu, values, value.value, select2)}>
+                ${value.text}
+            </button>
+        `)}
+    `);
+  }
+  function select_fail(e = null) {
+    return html2.node`
+        <div class="alert alert-error">
+            ${tl(trans.value_failed_to_load).replace("{v}", tl(trans.select_component))}
+            ${e ? html2`<br>${e.message}` : ""}
+        </div>
+    `;
+  }
+  function custom_select(select2, element_to_append) {
+    console.info(select2);
+    let id = select2.getAttribute("id");
+    let value = select2.value;
+    let value_objects = select2.querySelectorAll("option");
     let menu_list = document.createElement("div");
     value_objects.forEach((object) => {
       let object_value = object.getAttribute("value");
@@ -5228,15 +5282,15 @@
       interactiveBorder: 10,
       trigger: "click",
       onShow(instance) {
-        update_custom_select(instance.popper, select.value);
+        update_custom_select(instance.popper, select2.value);
       }
     });
     element_to_append.appendChild(button);
   }
   unsafeWindow._set_custom_select_value = function(select_id, value) {
-    let select = document.getElementById(select_id);
-    select.value = value;
-    console.info(select, `#select-${select_id}`);
+    let select2 = document.getElementById(select_id);
+    select2.value = value;
+    console.info(select2, `#select-${select_id}`);
     update_custom_select(document.getElementById(`select-${select_id}`)._tippy.popper, value, select_id);
     document.documentElement.setAttribute(`data-bleh--inbuilt-${select_id}`, value);
   };
@@ -5596,9 +5650,6 @@
     custom_select(page.state.compare_modal.querySelector("#type"), page.state.compare_modal.querySelector("#type_select"));
     custom_select(page.state.compare_modal.querySelector("#range"), page.state.compare_modal.querySelector("#range_select"));
   }
-  unsafeWindow._compare = function() {
-    compare();
-  };
   function begin_comparing() {
     page.state.compare_modal.querySelector(".bleh-modal-body .compare-body").setAttribute("data-filled", "false");
     let buttons = page.state.compare_modal.querySelectorAll(".compare-selection > button");
@@ -5810,6 +5861,71 @@
     }
   }
 
+  // src/components/charts.js
+  function chart_window() {
+    let timeframe;
+    let type;
+    let settings_btn;
+    dialog({
+      id: "chart_creator",
+      title: tl(trans.charts),
+      body: html2.node`
+            <div class="compare-header">
+                <div class="compare-selection">
+                    <input type="number" value="5" />
+                    x
+                    <input type="number" value="5" />
+                    ${select([
+        {
+          value: "albums",
+          text: tl(trans.albums)
+        },
+        {
+          value: "tracks",
+          text: tl(trans.tracks)
+        }
+      ], type)}
+                    ${select([
+        {
+          value: "LAST_7_DAYS",
+          text: tl(trans.last_count_days).replace("{c}", "7")
+        },
+        {
+          value: "LAST_30_DAYS",
+          text: tl(trans.last_count_days).replace("{c}", "30")
+        },
+        {
+          value: "LAST_90_DAYS",
+          text: tl(trans.last_count_days).replace("{c}", "90")
+        },
+        {
+          value: "LAST_180_DAYS",
+          text: tl(trans.last_count_days).replace("{c}", "180")
+        },
+        {
+          value: "LAST_365_DAYS",
+          text: tl(trans.last_count_days).replace("{c}", "365")
+        }
+      ], timeframe)}
+                    <button class="btn chibi icon" data-type="settings" ref=${(el) => settings_btn = el}>${tl(trans.settings)}</button>
+                </div>
+            </div>
+        `
+    });
+    tippy(settings_btn, {
+      theme: "window",
+      content: html2.node`
+            <div class="dialog-settings">
+                ${setting({ id: "" })}
+            </div>
+        `,
+      placement: "bottom",
+      interactive: true,
+      interactiveBorder: 10,
+      trigger: "click"
+    });
+  }
+
   // src/components/profile_header.js
   unsafeWindow._toggle_profile_header = function(button) {
     let current = settings.profile_header_expand;
@@ -5887,8 +6003,7 @@
           create_profile_top_item(profile_header, {
             name: page.name,
             type: "message",
-            link: msg_button.getAttribute("href"),
-            katsune
+            link: msg_button.getAttribute("href")
           });
         } else {
           create_profile_top_item(profile_header, {
@@ -5896,15 +6011,13 @@
             type: "sponsor",
             link: "_sponsor()",
             full: true,
-            action: "button",
-            katsune
+            action: "button"
           });
           create_profile_top_item(profile_header, {
             name: page.name,
             type: "message_sponsor",
             link: msg_button.getAttribute("href"),
-            full: true,
-            katsune
+            full: true
           });
         }
       }
@@ -5913,39 +6026,52 @@
           create_profile_top_item(profile_header, {
             name: page.name,
             type: "compare",
-            link: "_compare()",
-            action: "button",
-            katsune
+            link: () => compare(),
+            action: "button"
           });
         }
-        create_profile_top_item(profile_header, {
-          name: page.name,
-          type: "shortcut",
-          link: `_set_profile_as_shortcut(this, '${page.name}')`,
-          action: "button",
-          katsune
-        });
+        if (ff("charts")) {
+          create_profile_top_item(profile_header, {
+            name: page.name,
+            type: "collage",
+            link: () => chart_window(),
+            action: "button",
+            text: tl(trans.collage),
+            new_release: true
+          });
+        }
+        if (settings.profile_shortcut != page.name) {
+          page.state.profile_shortcut_button = create_profile_top_item(profile_header, {
+            name: page.name,
+            type: "shortcut",
+            link: () => set_profile_as_shortcut(),
+            action: "button"
+          });
+        } else {
+          create_profile_top_item(profile_header, {
+            name: page.name,
+            type: "shortcut",
+            action: "button"
+          });
+        }
       }
       if (page.structure.container.querySelector(".user-status-staff")) {
         create_profile_top_item(profile_header, {
           name: page.name,
           type: "support",
-          link: "https://support.last.fm",
-          katsune
+          link: "https://support.last.fm"
         });
       }
     } else {
       create_profile_top_item(profile_header, {
         name: page.name,
         type: "edit",
-        link: `${root}settings`,
-        katsune
+        link: `${root}settings`
       });
       create_profile_top_item(profile_header, {
         name: page.name,
         type: "labs",
         link: `${root}labs`,
-        katsune,
         tooltip: `
                 <strong>${tl(trans.labs_by_last)}</strong>
                 <p>${tl(trans.labs_by_last.tagline)}</p>
@@ -5956,9 +6082,18 @@
       create_profile_top_item(profile_header, {
         name: page.name,
         type: "obsession",
-        link: `${root}user/${page.name}/obsessions/set`,
-        katsune
+        link: `${root}user/${page.name}/obsessions/set`
       });
+      if (ff("charts")) {
+        create_profile_top_item(profile_header, {
+          name: page.name,
+          type: "collage",
+          link: () => chart_window(),
+          action: "button",
+          text: tl(trans.collage),
+          new_release: true
+        });
+      }
     }
     let listen_container = page.structure.row.querySelector(".listen-panel");
     if (!is_own_profile && page.name != sponsor_list.sponsor_account && katsune) {
@@ -6037,61 +6172,45 @@
     else
       page.structure.main.insertBefore(profile_header, page.structure.main.firstElementChild);
   }
-  function create_profile_top_item(parent, { name, link, text: text2 = "", type, taste = "", artists = [], avi = "", percent = "", action = "", tooltip = "", allow_html = false, tooltip_theme = "", full = false, primary = false, katsune = false, mini = false }) {
+  function create_profile_top_item(parent, { name, link, text: text2 = "", type, new_release = false, action = "", tooltip = "", allow_html = false, tooltip_theme = "" }) {
     log(`creating top item of ${name}, ${link}, ${text2}`, "profile");
-    let listen_item = document.createElement(action != "button" ? "a" : "button");
-    listen_item.classList.add("btn", "side-action");
-    listen_item.setAttribute("data-type", type);
-    if (mini)
-      listen_item.classList.add("mini");
-    if (action != "button" && type != "going" && type != "maybe" && type != "total") {
-      listen_item.setAttribute("href", link);
-    } else if (type != "going" && type != "maybe" && type != "total") {
-      listen_item.setAttribute("onclick", link);
+    let side_action;
+    if (action === "button") {
+      side_action = html2.node`
+            <button
+                class="btn side-action"
+                data-type=${type}
+                onclick=${link}
+            >
+                ${tl(trans[type])}
+                ${new_release ? html2.node`<div class="new-badge">${tl(trans.new)}</div>` : ""}
+            </button>
+        `;
+    } else {
+      side_action = html2.node`
+            <a
+                class="btn side-action"
+                data-type=${type}
+                href=${link}
+            >
+                ${tl(trans[type])}
+                ${new_release ? html2.node`<div class="new-badge">${tl(trans.new)}</div>` : ""}
+            </a>
+        `;
     }
-    if (primary)
-      listen_item.classList.add("primary");
-    if (type != "taste") {
-      text2 = text2.toLocaleString(lang);
-      listen_item.innerHTML = text2;
-    }
-    if (katsune) {
-      full = true;
-    }
-    if (full) {
-      listen_item.classList.add("profile-top-item-full");
-      listen_item.textContent = tl(trans[type]);
-    }
-    if (type == "compare") {
-      listen_item.innerHTML = `${tl(trans.compare)}<div class="new-badge">${tl(trans.new)}</div>`;
-    }
-    parent.appendChild(listen_item);
     if (type == "shortcut") {
-      listen_item.textContent = tl(trans.shortcut);
       if (name == settings.profile_shortcut) {
-        listen_item.setAttribute("data-is-shortcut", "true");
-        listen_item.removeAttribute("onclick");
+        side_action.setAttribute("data-is-shortcut", "true");
       } else {
-        listen_item.setAttribute("data-is-shortcut", "false");
+        side_action.setAttribute("data-is-shortcut", "false");
       }
-      listen_item.addEventListener("contextmenu", (e) => {
+      side_action.addEventListener("contextmenu", (e) => {
         e.preventDefault();
         open_profile_shortcut_window();
       });
-      return;
     }
-    if (katsune && !mini)
-      return;
-    if (tooltip == "")
-      tippy(listen_item, {
-        content: tl(trans[type])
-      });
-    else
-      tippy(listen_item, {
-        content: tooltip,
-        allowHTML: allow_html,
-        theme: tooltip_theme
-      });
+    parent.appendChild(side_action);
+    return side_action;
   }
 
   // src/components/structure.js
@@ -6667,9 +6786,9 @@
       }
     }
     let selects = document.body.querySelectorAll("select");
-    selects.forEach((select) => {
-      select.setAttribute("onchange", `_update_inbuilt_select('${select.getAttribute("id")}', this.value)`);
-      update_inbuilt_select(select.getAttribute("id"), select.value);
+    selects.forEach((select2) => {
+      select2.setAttribute("onchange", `_update_inbuilt_select('${select2.getAttribute("id")}', this.value)`);
+      update_inbuilt_select(select2.getAttribute("id"), select2.value);
     });
   }
   function patch_settings_profile_panel(token, update_picture) {
@@ -7101,9 +7220,9 @@
       update_inbuilt_item(setting2, original_privacy_settings[setting2], false);
     }
     let selects = document.body.querySelectorAll("select");
-    selects.forEach((select) => {
-      select.setAttribute("onchange", `_update_inbuilt_select('${select.getAttribute("id")}', this.value)`);
-      update_inbuilt_select(select.getAttribute("id"), select.value);
+    selects.forEach((select2) => {
+      select2.setAttribute("onchange", `_update_inbuilt_select('${select2.getAttribute("id")}', this.value)`);
+      update_inbuilt_select(select2.getAttribute("id"), select2.value);
     });
   }
   function bleh_accounts() {
@@ -7908,9 +8027,9 @@
                         </div>
                         <a class="link-block-cover-link" href="${link}" tabindex="-1" aria-hidden="true"></a>
                     </div>
-                    ${obsession_is_first ? `<div class="new-badge first-obsession">#1</div>` : ""}
                 `;
           if (obsession_is_first) {
+            grid_item.classList.add("first");
             tippy(grid_item, {
               content: tl(trans.obsession_first)
             });
@@ -8478,9 +8597,9 @@
             `;
         custom_select(form2.querySelector("#id_chart_length_recent_tracks"), form2.querySelector("#id_chart_length_recent_tracks_select"));
         let selects = form2.querySelectorAll("select");
-        selects.forEach((select) => {
-          select.setAttribute("onchange", `_update_inbuilt_select('${select.getAttribute("id")}', this.value)`);
-          update_inbuilt_select(select.getAttribute("id"), select.value);
+        selects.forEach((select2) => {
+          select2.setAttribute("onchange", `_update_inbuilt_select('${select2.getAttribute("id")}', this.value)`);
+          update_inbuilt_select(select2.getAttribute("id"), select2.value);
         });
         for (let setting2 in original_chart_settings) {
           update_inbuilt_item(setting2, original_chart_settings[setting2], false, form2);
@@ -8580,9 +8699,9 @@
         custom_select(form2.querySelector("#id_artists_image_grid_length"), form2.querySelector("#id_artists_image_grid_length_select"));
         custom_select(form2.querySelector("#id_artists_chartlist_length"), form2.querySelector("#id_artists_chartlist_length_select"));
         let selects = form2.querySelectorAll("select");
-        selects.forEach((select) => {
-          select.setAttribute("onchange", `_update_inbuilt_select('${select.getAttribute("id")}', this.value)`);
-          update_inbuilt_select(select.getAttribute("id"), select.value);
+        selects.forEach((select2) => {
+          select2.setAttribute("onchange", `_update_inbuilt_select('${select2.getAttribute("id")}', this.value)`);
+          update_inbuilt_select(select2.getAttribute("id"), select2.value);
         });
       }
     });
@@ -8678,9 +8797,9 @@
         custom_select(form2.querySelector("#id_albums_image_grid_length"), form2.querySelector("#id_albums_image_grid_length_select"));
         custom_select(form2.querySelector("#id_albums_chartlist_length"), form2.querySelector("#id_albums_chartlist_length_select"));
         let selects = form2.querySelectorAll("select");
-        selects.forEach((select) => {
-          select.setAttribute("onchange", `_update_inbuilt_select('${select.getAttribute("id")}', this.value)`);
-          update_inbuilt_select(select.getAttribute("id"), select.value);
+        selects.forEach((select2) => {
+          select2.setAttribute("onchange", `_update_inbuilt_select('${select2.getAttribute("id")}', this.value)`);
+          update_inbuilt_select(select2.getAttribute("id"), select2.value);
         });
       }
     });
@@ -8787,9 +8906,9 @@
         custom_select(form2.querySelector("#id_chart_range_top_tracks"), form2.querySelector("#id_chart_range_top_tracks_select"));
         custom_select(form2.querySelector("#id_chart_length_top_tracks"), form2.querySelector("#id_chart_length_top_tracks_select"));
         let selects = form2.querySelectorAll("select");
-        selects.forEach((select) => {
-          select.setAttribute("onchange", `_update_inbuilt_select('${select.getAttribute("id")}', this.value)`);
-          update_inbuilt_select(select.getAttribute("id"), select.value);
+        selects.forEach((select2) => {
+          select2.setAttribute("onchange", `_update_inbuilt_select('${select2.getAttribute("id")}', this.value)`);
+          update_inbuilt_select(select2.getAttribute("id"), select2.value);
         });
         refresh_all(instance.popper);
       }
@@ -13223,7 +13342,7 @@
             </a>
             <a class="btn mobile-control" aria-checked="${page.type == "inbox"}" data-menu-item="notifications" href="${root}inbox/notifications">
                 ${tl(trans.inbox.name)}
-                ${inbox_count || notif_count ? html2.node`<div class="notification-count-badge"></div>` : ""}
+                ${inbox_count > 0 || notif_count > 0 ? html2.node`<div class="notification-count-badge"></div>` : ""}
             </a>
             <a class="btn mobile-control" aria-checked="${page.type == "settings" || page.type == "bleh_settings"}" data-menu-item="settings" href="${root}bleh">
                 ${tl(trans.settings)}
@@ -18849,6 +18968,12 @@
     },
     bulk_edit_extension: {
       en: "Last.fm Bulk Edit"
+    },
+    collage: {
+      en: "Collage"
+    },
+    select_component: {
+      en: "Select component"
     }
   };
   var trans_legacy = {
@@ -22954,6 +23079,11 @@
         default: true,
         name: "Profile comparison",
         date: "2025-05-19"
+      },
+      charts: {
+        default: false,
+        name: "Profile chart creation",
+        date: "2025-06-05"
       }
     }
   };

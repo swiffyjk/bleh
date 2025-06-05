@@ -590,10 +590,10 @@ export function bleh_profiles() {
                         </div>
                         <a class="link-block-cover-link" href="${link}" tabindex="-1" aria-hidden="true"></a>
                     </div>
-                    ${(obsession_is_first) ? `<div class="new-badge first-obsession">#1</div>` : ''}
                 `);
 
                 if (obsession_is_first) {
+                    grid_item.classList.add('first');
                     tippy(grid_item, {
                         content: tl(trans.obsession_first)
                     });

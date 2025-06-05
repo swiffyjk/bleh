@@ -11,6 +11,7 @@ import {sponsor_list} from "./build/sponsor";
 import {tl, trans} from "./build/trans";
 import {load_badges} from "./components/badge";
 import {dialog} from "./components/dialog";
+import {share} from "./components/share.js";
 
 export function patch_avatar(avatar, name, type = '', parent=null, side='right') {
     if (avatar.hasAttribute('data-bleh-avatar'))
@@ -172,9 +173,14 @@ export function expand_avatar(src) {
                 </div>
                 <div class="modal-footer">
                     <div class="fill"></div>
-                    <a class="btn primary open" href="${src}" target="_blank">
-                        ${tl(trans.open_new_tab)}
-                    </a>
+                    <div class="button-group">
+                        <button class="btn icon" data-type="share" onclick=${() => share(src)}>
+                            ${tl(trans.share)}
+                        </button>
+                        <a class="btn primary open" href="${src}" target="_blank">
+                            ${tl(trans.open_new_tab)}
+                        </a>
+                    </div>
                     <div class="fill"></div>
                 </div>
             </div>

@@ -17,6 +17,24 @@ export function load_dialogs() {
 
     page.structure.dialogs = dialogs;
 }
+
+/**
+ * Present a fullscreen dialog to the user
+ * @param {string} id - Exclusive id for future reference
+ * @param {string} title - Dialog title
+ * @param {string} subtitle - Dialog subtitle (placed below main title)
+ * @param {HTMLElement} body - Inner contents of dialog, use html.node`` to create
+ * @param {boolean} dismiss - Allows the user to dismiss with the close button or by clicking out
+ * @param {string} type - Applies a data-modal-type=${type} tag to the dialog instance
+ * @param has_overlays
+ * @param {boolean} replace - Replaces a specific dialog id
+ * @param {boolean} replace_if_possible - Automatically replaces the dialog prior if it exists
+ * @param {string} replace_id - Dialog id to replace (requires replace=true)
+ * @param {boolean} allow_scroll - Automatically style this dialog to scroll if necessary
+ * @param {boolean} colourful - Allow custom colouring (links only)
+ * @param {boolean} colourful_bg - Allow custom colouring (background only)
+ * @returns {HTMLElement} - Dialog instance
+ */
 export function dialog({
     id = '',
     title = null,
@@ -78,7 +96,7 @@ export function dialog({
         modal.appendChild(html.node`
             <div class="bleh-modal-title" id="modal_title">
                 <h1>${title}</h1>
-                ${(subtitle != null) ? html.node`<p class="bleh-modal-subtitle">${subtitle}</p>` : ''}
+                ${(subtitle) ? html.node`<p class="bleh-modal-subtitle">${subtitle}</p>` : ''}
             </div>
         `);
     }
