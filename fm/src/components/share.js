@@ -51,3 +51,17 @@ export function share(url) {
         replace_if_possible: true
     });
 }
+
+export function download(url, filename='unknown') {
+    let link = html.node`
+        <a href=${url} download=${filename} />
+    `;
+
+    link.click();
+    notify({
+        id: 'downloaded',
+        title: tl(trans.downloaded),
+        body: filename,
+        icon: 'icon-16-download'
+    });
+}

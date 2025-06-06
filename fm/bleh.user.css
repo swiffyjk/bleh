@@ -23236,6 +23236,9 @@ h4 {
         padding: var(--card-gap);
         overflow: hidden;
 
+        position: fixed;
+        left: 5000px;
+
         display: flex;
         flex-direction: column;
         gap: var(--card-gap);

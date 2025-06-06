@@ -11,6 +11,7 @@ import {log} from "../build/log.js";
 import {music_grids} from "./music_grid.js";
 import {settings} from "../build/config.js";
 import {version} from "../main.js";
+import {download} from "./share.js";
 
 export function collage() {
     let width;
@@ -312,7 +313,7 @@ export function collage() {
             </div>
         `;
         render(body, html`
-            <div class="loading-data-container" style="margin-bottom: 50px">
+            <div class="loading-data-container">
                 <div class="loading-data-text">${tl(trans.waiting_for_images)}</div>
             </div>
             ${collage_dom}
@@ -348,12 +349,12 @@ export function collage() {
                 <div class="collage-finished">
                     <strong>${tl(trans.your_collage_is_ready)}</strong>
                     <div class="button-group">
-                        <a class="btn primary icon" data-type="download" href=${canvas.toDataURL('image/png')} download=${tl(trans.chart_template_filename)
+                        <button class="btn primary icon" data-type="download" onclick=${() => download(canvas.toDataURL('image/png'), tl(trans.chart_template_filename)
                                 .replace('{timeframe}', timeframe.querySelector('button').textContent)
                                 .replace('{user}', page.name)
                                 .replace('{type}', tl(trans[type_select.value]))
                                 .replace('{size}', `${width_input.value}x${height_input.value}`)
-                                .replace('{brand}', version.brand)}>${tl(trans.download)}</a>
+                                .replace('{brand}', version.brand))}>${tl(trans.download)}</button>
                     </div>
                 </div>
                 ${canvas}

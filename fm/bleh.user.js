@@ -3151,6 +3151,18 @@
       replace_if_possible: true
     });
   }
+  function download(url, filename = "unknown") {
+    let link = html2.node`
+        <a href=${url} download=${filename} />
+    `;
+    link.click();
+    notify({
+      id: "downloaded",
+      title: tl(trans.downloaded),
+      body: filename,
+      icon: "icon-16-download"
+    });
+  }
 
   // src/avatar.js
   function patch_avatar(avatar3, name, type = "", parent = null, side = "right") {
@@ -6213,7 +6225,7 @@
             </div>
         `;
       render(body, html2`
-            <div class="loading-data-container" style="margin-bottom: 50px">
+            <div class="loading-data-container">
                 <div class="loading-data-text">${tl(trans.waiting_for_images)}</div>
             </div>
             ${collage_dom}
@@ -6244,7 +6256,7 @@
                 <div class="collage-finished">
                     <strong>${tl(trans.your_collage_is_ready)}</strong>
                     <div class="button-group">
-                        <a class="btn primary icon" data-type="download" href=${canvas.toDataURL("image/png")} download=${tl(trans.chart_template_filename).replace("{timeframe}", timeframe.querySelector("button").textContent).replace("{user}", page.name).replace("{type}", tl(trans[type_select.value])).replace("{size}", `${width_input.value}x${height_input.value}`).replace("{brand}", version.brand)}>${tl(trans.download)}</a>
+                        <button class="btn primary icon" data-type="download" onclick=${() => download(canvas.toDataURL("image/png"), tl(trans.chart_template_filename).replace("{timeframe}", timeframe.querySelector("button").textContent).replace("{user}", page.name).replace("{type}", tl(trans[type_select.value])).replace("{size}", `${width_input.value}x${height_input.value}`).replace("{brand}", version.brand))}>${tl(trans.download)}</button>
                     </div>
                 </div>
                 ${canvas}
@@ -19357,6 +19369,9 @@
     download: {
       en: "Download",
       pt: "Baixar"
+    },
+    downloaded: {
+      en: "Downloaded"
     },
     chart_template_filename: {
       en: "{user} Collage ({timeframe}, Top {type}, {size}) - {brand}",
