@@ -11,6 +11,7 @@ import {notify} from "./notify.js";
 import {save_profile_shortcut} from "./profile_shortcut.js";
 import {page} from "../build/page.js";
 import {request_reload} from "../config.js";
+import {log} from "../build/log.js";
 
 export function setting({
     id = '',
@@ -19,6 +20,7 @@ export function setting({
 }) {
     try {
         let value = settings[id];
+        log(`creating ${id} with value ${value}`, 'settings', 'log', {settings: settings, settings_id: settings[id]});
 
         if (!settings_store[id])
             return setting_fail(id, {message: 'No settings store entry present'});
@@ -291,4 +293,5 @@ export function save_setting(id, value) {
         document.body.style.setProperty(`--${settings_store[id].css}`, `${value}${settings_store[id].suffix || ''}`);
 
     localStorage.setItem('bleh', JSON.stringify(settings));
+    log(`saved ${id} as ${value}`, 'settings', 'log', {settings: settings, settings_id: settings[id]});
 }

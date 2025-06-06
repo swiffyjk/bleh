@@ -4528,14 +4528,26 @@ better than the default selector '#app a' i suppose */
     }
 
     &.collage-grid {
-        grid-template-columns: repeat(var(--width), 1fr);
-        grid-template-rows: repeat(var(--height), 1fr);
+        --grid-width: 1470px;
+        --grid-item-size: calc(
+            (var(--grid-width) - (var(--item-list-gap) * (var(--highest) - 1)))
+            / var(--highest)
+        );
+
+        grid-template-columns: repeat(var(--width), var(--grid-item-size));
+        grid-template-rows: repeat(var(--height), var(--grid-item-size));
+        grid-template-areas: unset;
 
         .grid-items-item-details {
-            background: hsl(var(--h4), 50%);
+            background: rgb(0, 0, 0, 50%);
             border-radius: var(--item-med-radius);
             border-top-left-radius: 0;
             border-top-right-radius: 0;
+
+            .grid-items-item-aux-text {
+                color: #fff;
+                opacity: 0.8;
+            }
         }
     }
 }
@@ -23179,12 +23191,13 @@ h4 {
     transition: height 0.5s var(--trans-function);
 
     &[data-filled="true"] {
-        height: 600px;
+        height: 700px;
     }
 
     canvas {
         width: 750px !important;
-        height: 797px !important;
+        height: 773px !important;
+        border-radius: var(--item-med-radius);
     }
 
     .collage-finished {
@@ -23204,7 +23217,7 @@ h4 {
 
     .collage {
         width: 1500px;
-        height: 1594px;
+        height: 1547px;
         background: #000;
         padding: var(--card-gap);
         overflow: hidden;
@@ -23213,20 +23226,49 @@ h4 {
         flex-direction: column;
         gap: var(--card-gap);
 
+        --font-weight: 500;
+        --font-size: 16px;
+        --line-height: 20px;
+
         * {
-            --font-weight: 500;
-            --font-size: 16px;
-            --line-height: 20px;
             text-shadow: unset !important;
         }
 
         .grid-items {
             .grid-item-plays:before {
+                --top: 4px;
                 --mask: unset;
                 --icon-16-placeholder: unset;
                 background: url('data:image/svg+xml;base64,PHN2ZyAgeG1sbnM9Imh0dHA6Ly93d3cudzMub3JnLzIwMDAvc3ZnIiAgd2lkdGg9IjI0IiAgaGVpZ2h0PSIyNCIgIHZpZXdCb3g9IjAgMCAyNCAyNCIgIGZpbGw9IiNmZmZmZmYiICBjbGFzcz0iaWNvbiBpY29uLXRhYmxlciBpY29ucy10YWJsZXItZmlsbGVkIGljb24tdGFibGVyLXBsYXllci1wbGF5Ij48cGF0aCBzdHJva2U9Im5vbmUiIGQ9Ik0wIDBoMjR2MjRIMHoiIGZpbGw9Im5vbmUiLz48cGF0aCBkPSJNNiA0djE2YTEgMSAwIDAgMCAxLjUyNCAuODUybDEzIC04YTEgMSAwIDAgMCAwIC0xLjcwNGwtMTMgLThhMSAxIDAgMCAwIC0xLjUyNCAuODUyeiIgLz48L3N2Zz4=') !important;
                 background-size: 100% !important;
                 opacity: 0.8 !important;
+            }
+
+            &[data-scale-down="2"] {
+                * {
+                    --font-size: 12px;
+                    --line-height: 16px;
+                }
+
+                .grid-items-item-details {
+                    padding: 4px;
+                }
+                .grid-item-plays:before {
+                    --top: 1px;
+                }
+            }
+            &[data-scale-down="1"] {
+                * {
+                    --font-size: 14px;
+                    --line-height: 18px;
+                }
+
+                .grid-items-item-details {
+                    padding: 8px;
+                }
+                .grid-item-plays:before {
+                    --top: 2px;
+                }
             }
         }
 
@@ -23251,7 +23293,7 @@ h4 {
                 font-family: var(--font-brand);
                 font-size: 26px !important;
                 line-height: 20px;
-                margin-top: -6px;
+                margin-top: -8px;
                 margin-right: var(--item-list-gap);
             }
 

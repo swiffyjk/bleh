@@ -29,7 +29,7 @@ export function load_settings(skip = false) {
     if (!skip) {
         for (let setting in settings_store) {
             // assign default if missing
-            if (!settings[setting])
+            if (settings[setting] == null)
                 settings[setting] = settings_store[setting].default;
         }
     }

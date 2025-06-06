@@ -2505,12 +2505,28 @@ export const trans = {
         pt: 'Baixar'
     },
     chart_template_filename: {
-        en: 'Collage of {timeframe} Top {type} generated with {brand}',
-        pt: 'Colagem dos {timeframe} Top {type} gerado com {brand},'
+        en: '{user} Collage ({timeframe}, Top {type}, {size}) - {brand}'
     },
     waiting_for_images: {
         en: 'Waiting for images',
         pt: 'Aguardando imagens'
+    },
+    waiting_for_images: {
+        en: 'Waiting for images'
+    },
+    collage_title: {
+        name: {
+            en: 'Collage title'
+        },
+        body: {
+            en: 'Include a subtle header showing your username and settings you used'
+        }
+    },
+    collage_grid_text: {
+        en: 'Show names on grid items'
+    },
+    collage_grid_plays: {
+        en: 'Show plays on grid items'
     }
 }
 

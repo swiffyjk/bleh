@@ -17,6 +17,7 @@ import {register_menu} from "./menu";
 import {open_profile_shortcut_window, set_profile_as_shortcut} from './profile_shortcut';
 import {html} from "lighterhtml";
 import {collage} from "./collage.js";
+import {sponsor} from "../sponsor.js";
 
 unsafeWindow._toggle_profile_header = function(button) {
     let current = settings.profile_header_expand;
@@ -107,11 +108,6 @@ export function redesign_profile_header(is_own_profile, is_following) {
             follow_placeholder.setAttribute('disabled', 'true');
             follow_placeholder.setAttribute('data-ignored', 'true');
 
-            if (!katsune)
-                tippy(follow_placeholder, {
-                    content: tl(trans.blocked)
-                });
-
             profile_header.appendChild(follow_placeholder);
         }
     }
@@ -130,8 +126,7 @@ export function redesign_profile_header(is_own_profile, is_following) {
                 create_profile_top_item(profile_header, {
                     name: page.name,
                     type: 'sponsor',
-                    link: '_sponsor()',
-                    full: true,
+                    link: () => sponsor(),
                     action: 'button'
                 });
                 create_profile_top_item(profile_header, {

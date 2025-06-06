@@ -3747,6 +3747,7 @@
   }) {
     try {
       let value = settings[id];
+      log(`creating ${id} with value ${value}`, "settings", "log", { settings, settings_id: settings[id] });
       if (!settings_store[id])
         return setting_fail(id, { message: "No settings store entry present" });
       let type = settings_store[id].type || "toggle";
@@ -3980,6 +3981,7 @@
     if (settings_store[id].css)
       document.body.style.setProperty(`--${settings_store[id].css}`, `${value}${settings_store[id].suffix || ""}`);
     localStorage.setItem("bleh", JSON.stringify(settings));
+    log(`saved ${id} as ${value}`, "settings", "log", { settings, settings_id: settings[id] });
   }
 
   // src/components/profile_shortcut.js
@@ -5030,7 +5032,7 @@
   }
 
   // src/components/music_grid.js
-  function music_grids(search = page.structure.main) {
+  function music_grids(search = page.structure.main, use_colour = true) {
     if (!search) return;
     let insights = {
       artist: {
@@ -5080,7 +5082,7 @@
       }
       let image_wrap = grid.querySelector(".grid-items-cover-image-image");
       let image = image_wrap.querySelector("img");
-      if (image && !image_wrap.classList.contains("grid-items-cover-default")) {
+      if (image && !image_wrap.classList.contains("grid-items-cover-default") && use_colour) {
         let grid_colour = document.createElement("div");
         grid_colour.classList.add("grid-item-colour-bg");
         image_wrap.appendChild(grid_colour);
@@ -5156,6 +5158,7 @@
         }
       }
       let name = grid.querySelector(".grid-items-item-main-text a");
+      if (!name) return;
       if (!is_album) {
         name.textContent = correct_artist(name.textContent.trim());
         insights.artist.labels.push(name.textContent);
@@ -5914,7 +5917,7 @@
     let submit;
     let body;
     let value = 5;
-    let min = 2;
+    let min = 1;
     let max = 10;
     dialog({
       id: "collage",
@@ -6004,9 +6007,9 @@
       content: html2.node`
             <div class="dialog-settings">
                 ${setting({ id: "collage_title" })}
+                <div class="sep" />
                 ${setting({ id: "collage_grid_text" })}
                 ${setting({ id: "collage_grid_plays" })}
-                ${setting({ id: "collage_branding" })}
             </div>
         `,
       placement: "bottom",
@@ -6079,9 +6082,18 @@
     async function continue_collage() {
       log("gathered initial values", "collage", "info", page.state.collage);
       let grid = html2.node`
-            <ol class="grid-items grid-items--numbered collage-grid" style="--width: ${width_input.value}; --height: ${height_input.value}" />
+            <ol class="grid-items grid-items--numbered collage-grid" style="--width: ${width_input.value}; --height: ${height_input.value}" data-width=${width_input.value} data-height=${height_input.value} />
         `;
+      if (width_input.value >= 8 || height_input.value >= 8) {
+        grid.setAttribute("data-scale-down", "2");
+      } else if (width_input.value >= 7 || height_input.value >= 7) {
+        grid.setAttribute("data-scale-down", "1");
+      }
       let total = width_input.value * height_input.value - 1;
+      let highest = width_input.value;
+      if (height_input.value > width_input.value)
+        highest = height_input.value;
+      grid.style.setProperty("--highest", highest);
       page.state.collage.some((data2, index) => {
         if (index > total)
           return false;
@@ -6092,34 +6104,43 @@
           template = `${sanitise(data2.sister)}/${sanitise(data2.name)}`;
         grid.appendChild(html2.node`
                 <li class="compare-item grid-items-item">
-                    <div class="grid-items-cover-image js-link-block link-block">
+                    <div class="grid-items-cover-image">
                         <div class="grid-items-cover-image-image ${data2.avatar.endsWith("/c6f59c1e5e7240a4c0d427abd71f3dbb.jpg") || data2.avatar.endsWith("/2a96cbd8b46e442fc41c2b86b821562f.jpg") ? "grid-items-cover-default" : ""}">
                             <img src="${data2.avatar.replace("/avatar70s/", "/avatar300s/").replace("/64s/", "/avatar300s/")}" alt="${data2.name}" loading="lazy">
                         </div>
+                        ${settings.collage_grid_text || settings.collage_grid_plays ? html2.node`
                         <div class="grid-items-item-details">
+                            ${settings.collage_grid_text ? html2.node`
                             <p class="grid-items-item-main-text">
                                 <a class="link-block-target" href="${root}music/${template}" title="${data2.name}">
                                     ${data2.name}
                                 </a>
                             </p>
+                            ` : ""}
                             ${type_select.value != "artists" ? html2.node`
                             <p class="grid-items-item-aux-text">
+                                ${settings.collage_grid_text ? html2.node`
                                 <a class="grid-items-item-aux-block" href="${root}music/${data2.sister}">
                                     ${data2.sister}
                                 </a>
+                                ` : ""}
+                                ${settings.collage_grid_plays ? html2.node`
                                 <a class="grid-item-plays" href="${root}user/${page.name}/library/music/${template}?date_preset=${timeframe_select.value}" target="_blank">
                                     ${data2.plays.toLocaleString(lang)}
                                 </a>
+                                ` : ""}
                             </p>
                             ` : html2.node`
+                            ${settings.collage_grid_plays ? html2.node`
                             <p class="grid-items-item-aux-text">
                                 <a class="grid-item-plays" href="${root}user/${page.name}/library/music/${template}?date_preset=${timeframe_select.value}" target="_blank">
                                     ${data2.plays.toLocaleString(lang)}${tl(trans.plays_lower)}
                                 </a>
                             </p>
+                            ` : ""}
                             `}
                         </div>
-                        <a class="js-link-block-cover-link link-block-cover-link" href="${root}music/${template}" tabindex="-1" aria-hidden="true"></a>
+                        ` : ""}
                     </div>
                 </li>
             `);
@@ -6129,12 +6150,11 @@
                 ${settings.collage_title ? html2.node`
                 <div class="header">
                     <div class="type" data-type=${type_select.value}>
-                        ${settings.collage_branding ? html2.node`
                         <strong class="brand">${version.brand}</strong>
-                        ` : ""}
                         <div class="bleh-icon" />
                         <strong>${timeframe.querySelector("button").textContent}</strong>
                         <strong>${tl(trans.top_type).replace("{type}", tl(trans[type_select.value]))}</strong>
+                        <strong>${width_input.value}x${height_input.value}</strong>
                     </div>
                     <div class="user">
                         <div class="avatar">
@@ -6153,20 +6173,24 @@
             </div>
             ${collage_dom}
         `);
-      music_grids(grid);
+      music_grids(grid, false);
+      let cv_width = 1500;
+      let cv_height = 1547;
+      let cv_scale = 1;
       let initial_canvas = html2.node`
-            <canvas width="1500" height="1594" />
+            <canvas width=${cv_width * cv_scale} height=${cv_height * cv_scale} />
         `;
       html2canvas(collage_dom, {
         useCORS: true,
         letterRendering: true,
         canvas: initial_canvas,
+        scale: cv_scale,
         onclone: (doc) => {
           doc.querySelectorAll("*").forEach((el) => {
             if (el.classList == "brand")
               el.style.setProperty("font-family", "Darumadrop One");
             else
-              el.style.setProperty("font-family", "Ubuntu Sans");
+              el.style.setProperty("font-family", "Ubuntu Sans, Spline Sans, Inter, Roboto, Noto Sans, Noto Sans JP, Noto Sans KR, Noto Sans TC, Lucida Grande, Verdana, Tahoma, -apple-system, BlinkMacSystemFont, sans-serif");
           });
         }
       }).then((canvas) => {
@@ -6175,7 +6199,7 @@
                 <div class="collage-finished">
                     <strong>${tl(trans.your_collage_is_ready)}</strong>
                     <div class="button-group">
-                        <a class="btn primary icon" data-type="download" href=${canvas.toDataURL("image/png")} download=${tl(trans.chart_template_filename).replace("{timeframe}", timeframe.querySelector("button").textContent).replace("{type}", type_select.value).replace("{brand}", version.brand)}>${tl(trans.download)}</a>
+                        <a class="btn primary icon" data-type="download" href=${canvas.toDataURL("image/png")} download=${tl(trans.chart_template_filename).replace("{timeframe}", timeframe.querySelector("button").textContent).replace("{user}", page.name).replace("{type}", tl(trans[type_select.value])).replace("{size}", `${width_input.value}x${height_input.value}`).replace("{brand}", version.brand)}>${tl(trans.download)}</a>
                     </div>
                 </div>
                 ${canvas}
@@ -6186,6 +6210,152 @@
         submit.disabled = false;
       });
     }
+  }
+
+  // src/sponsor.js
+  function sponsors(force = false) {
+    if (!ff("sponsor"))
+      return;
+    let sponsor_data = localStorage.getItem("kat_sponsors");
+    let sponsor_expire = new Date(localStorage.getItem("kat_sponsors_expire"));
+    let current_time = /* @__PURE__ */ new Date();
+    if (!sponsor_data) {
+      log("not cached, fetching", "sponsor");
+      sponsor_request(true);
+    } else {
+      for (var member in sponsor_list) delete sponsor_list[member];
+      Object.assign(sponsor_list, JSON.parse(sponsor_data));
+      if (sponsor_list)
+        auth.sponsor = sponsor_list.sponsors.includes(auth.name);
+      if (sponsor_expire < current_time && !force) {
+        sponsor_request();
+      } else if (force) {
+        sponsor_request(true);
+      }
+    }
+  }
+  function sponsor_request(notify2 = false) {
+    let button = document.body.querySelector('[onclick="_sponsor_check()"]');
+    if (button)
+      button.setAttribute("disabled", "");
+    let xhr = new XMLHttpRequest();
+    let url = `https://katelyynn.github.io/bleh/fm/badges/badges.json?${Math.random()}`;
+    xhr.open("GET", url, true);
+    xhr.onload = function() {
+      log(`list responded with ${xhr.status}`, "sponsor");
+      if (xhr.status != 200) {
+        log("request has been cancelled, will request again in 1h", "sponsor");
+        api_expire.setHours(api_expire.getHours() + 1);
+      }
+      let api_expire = /* @__PURE__ */ new Date();
+      if (xhr.status == 200) {
+        for (var member in sponsor_list) delete sponsor_list[member];
+        Object.assign(sponsor_list, JSON.parse(this.response));
+        if (sponsor_list)
+          auth.sponsor = sponsor_list.sponsors.includes(auth.name);
+        if (notify2)
+          deliver_notif(trans_legacy.en.settings.home.sponsor.download, false, true, "sponsor");
+        localStorage.setItem("kat_sponsors", this.response);
+        api_expire.setHours(api_expire.getHours() + 4);
+        log(`list cached until ${api_expire}`, "sponsor");
+      }
+      localStorage.setItem("kat_sponsors_expire", api_expire);
+      if (button != null)
+        button.removeAttribute("disabled");
+    };
+    xhr.send();
+  }
+  unsafeWindow._sponsor_check = function() {
+    sponsors(true);
+  };
+  unsafeWindow._sponsor = function(replace = false) {
+    sponsor(replace);
+  };
+  function sponsor(replace = false) {
+    dialog({
+      id: "sponsor",
+      title: tl(trans.support_future_development),
+      body: html2.node`
+            <div class="modal-vertical-inner support-inner">
+                <div class="avatar">
+                    <img src="${auth.avatar.replace("/avatar42s/", "/avatar170s/")}" alt="${tl(trans.your_avatar)}">
+                    <span class="avatar-status-dot user-status--bleh-sponsor"></span>
+                </div>
+                <h1>${tl(trans.support_future_development)}</h1>
+                <p>${html2.node([
+        tl(trans.why_sponsor).replace("katelyn", `<a class="mention" href="${root}user/katesia">@katesia</a>`)
+      ])}</p>
+            </div>
+            <div class="modal-footer">
+                <div class="fill"></div>
+                <a class="btn primary sponsor" href="${sponsor_list.sponsor_link}" target="_blank">
+                    ${tl(trans.sponsor)}
+                </a>
+                <div class="fill"></div>
+            </div>
+        `,
+      type: "sponsor",
+      replace_if_possible: replace
+    });
+  }
+  unsafeWindow._sponsor_manage = function() {
+    sponsor_manage();
+  };
+  function sponsor_manage() {
+    if (sponsor_list.sponsors_one_time && sponsor_list.sponsors_one_time.includes(auth.name)) {
+      dialog({
+        id: "sponsor_manage",
+        title: tl(trans.sponsor),
+        body: html2.node`
+                <div class="modal-vertical-inner support-inner">
+                    <div class="avatar">
+                        <img src="${auth.avatar.replace("/avatar42s/", "/avatar170s/")}" alt="${tl(trans.your_avatar)}">
+                        <span class="avatar-status-dot user-status--bleh-sponsor"></span>
+                    </div>
+                    <h1>${tl(trans.you_are_a_sponsor)}</h1>
+                    <p>${tl(trans.sponsor_no_badge)}</p>
+                </div>
+            `,
+        type: "sponsor"
+      });
+    } else {
+      dialog({
+        id: "sponsor_manage",
+        title: tl(trans.sponsor),
+        body: html2.node`
+                <div class="modal-vertical-inner support-inner">
+                    <div class="avatar">
+                        <img src="${auth.avatar.replace("/avatar42s/", "/avatar170s/")}" alt="${tl(trans.your_avatar)}">
+                        <span class="avatar-status-dot user-status--bleh-sponsor"></span>
+                    </div>
+                    <h1>${tl(trans.you_are_a_sponsor)}</h1>
+                    <p>${tl(trans.sponsor_get_badge)}</p>
+                </div>
+                <div class="modal-footer">
+                    <div class="fill"></div>
+                    <a class="btn primary sponsor" href="${root}user/${sponsor_list.sponsor_account}" target="_blank">
+                        ${tl(trans.manage_sponsor)}
+                    </a>
+                    <div class="fill"></div>
+                </div>
+            `,
+        type: "sponsor"
+      });
+    }
+  }
+  function bleh_sponsor_page() {
+    document.body.style.removeProperty("--hue-album");
+    document.body.style.removeProperty("--sat-album");
+    document.body.style.removeProperty("--lit-album");
+    let adaptive_skin_container = document.querySelector(".adaptive-skin-container:not([data-bleh])");
+    if (adaptive_skin_container == null)
+      return;
+    adaptive_skin_container.setAttribute("data-bleh", "true");
+    adaptive_skin_container.innerHTML = "";
+    log("internal bleh sponsor", "page");
+    page.type = "bleh_sponsor";
+    page.subpage = "";
+    sponsor();
   }
 
   // src/components/profile_header.js
@@ -6251,10 +6421,6 @@
         follow_placeholder.textContent = tl(trans.blocked);
         follow_placeholder.setAttribute("disabled", "true");
         follow_placeholder.setAttribute("data-ignored", "true");
-        if (!katsune)
-          tippy(follow_placeholder, {
-            content: tl(trans.blocked)
-          });
         profile_header.appendChild(follow_placeholder);
       }
     }
@@ -6271,8 +6437,7 @@
           create_profile_top_item(profile_header, {
             name: page.name,
             type: "sponsor",
-            link: "_sponsor()",
-            full: true,
+            link: () => sponsor(),
             action: "button"
           });
           create_profile_top_item(profile_header, {
@@ -9577,7 +9742,7 @@
   function load_settings(skip = false) {
     if (!skip) {
       for (let setting2 in settings_store) {
-        if (!settings[setting2])
+        if (settings[setting2] == null)
           settings[setting2] = settings_store[setting2].default;
       }
     }
@@ -15821,152 +15986,6 @@
     document.getElementById(`bleh--shout-${shout_id}`).setAttribute("data-bleh--shout-expanded", "true");
   };
 
-  // src/sponsor.js
-  function sponsors(force = false) {
-    if (!ff("sponsor"))
-      return;
-    let sponsor_data = localStorage.getItem("kat_sponsors");
-    let sponsor_expire = new Date(localStorage.getItem("kat_sponsors_expire"));
-    let current_time = /* @__PURE__ */ new Date();
-    if (!sponsor_data) {
-      log("not cached, fetching", "sponsor");
-      sponsor_request(true);
-    } else {
-      for (var member in sponsor_list) delete sponsor_list[member];
-      Object.assign(sponsor_list, JSON.parse(sponsor_data));
-      if (sponsor_list)
-        auth.sponsor = sponsor_list.sponsors.includes(auth.name);
-      if (sponsor_expire < current_time && !force) {
-        sponsor_request();
-      } else if (force) {
-        sponsor_request(true);
-      }
-    }
-  }
-  function sponsor_request(notify2 = false) {
-    let button = document.body.querySelector('[onclick="_sponsor_check()"]');
-    if (button)
-      button.setAttribute("disabled", "");
-    let xhr = new XMLHttpRequest();
-    let url = `https://katelyynn.github.io/bleh/fm/badges/badges.json?${Math.random()}`;
-    xhr.open("GET", url, true);
-    xhr.onload = function() {
-      log(`list responded with ${xhr.status}`, "sponsor");
-      if (xhr.status != 200) {
-        log("request has been cancelled, will request again in 1h", "sponsor");
-        api_expire.setHours(api_expire.getHours() + 1);
-      }
-      let api_expire = /* @__PURE__ */ new Date();
-      if (xhr.status == 200) {
-        for (var member in sponsor_list) delete sponsor_list[member];
-        Object.assign(sponsor_list, JSON.parse(this.response));
-        if (sponsor_list)
-          auth.sponsor = sponsor_list.sponsors.includes(auth.name);
-        if (notify2)
-          deliver_notif(trans_legacy.en.settings.home.sponsor.download, false, true, "sponsor");
-        localStorage.setItem("kat_sponsors", this.response);
-        api_expire.setHours(api_expire.getHours() + 4);
-        log(`list cached until ${api_expire}`, "sponsor");
-      }
-      localStorage.setItem("kat_sponsors_expire", api_expire);
-      if (button != null)
-        button.removeAttribute("disabled");
-    };
-    xhr.send();
-  }
-  unsafeWindow._sponsor_check = function() {
-    sponsors(true);
-  };
-  unsafeWindow._sponsor = function(replace = false) {
-    sponsor(replace);
-  };
-  function sponsor(replace = false) {
-    dialog({
-      id: "sponsor",
-      title: tl(trans.support_future_development),
-      body: html2.node`
-            <div class="modal-vertical-inner support-inner">
-                <div class="avatar">
-                    <img src="${auth.avatar.replace("/avatar42s/", "/avatar170s/")}" alt="${tl(trans.your_avatar)}">
-                    <span class="avatar-status-dot user-status--bleh-sponsor"></span>
-                </div>
-                <h1>${tl(trans.support_future_development)}</h1>
-                <p>${html2.node([
-        tl(trans.why_sponsor).replace("katelyn", `<a class="mention" href="${root}user/katesia">@katesia</a>`)
-      ])}</p>
-            </div>
-            <div class="modal-footer">
-                <div class="fill"></div>
-                <a class="btn primary sponsor" href="${sponsor_list.sponsor_link}" target="_blank">
-                    ${tl(trans.sponsor)}
-                </a>
-                <div class="fill"></div>
-            </div>
-        `,
-      type: "sponsor",
-      replace_if_possible: replace
-    });
-  }
-  unsafeWindow._sponsor_manage = function() {
-    sponsor_manage();
-  };
-  function sponsor_manage() {
-    if (sponsor_list.sponsors_one_time && sponsor_list.sponsors_one_time.includes(auth.name)) {
-      dialog({
-        id: "sponsor_manage",
-        title: tl(trans.sponsor),
-        body: html2.node`
-                <div class="modal-vertical-inner support-inner">
-                    <div class="avatar">
-                        <img src="${auth.avatar.replace("/avatar42s/", "/avatar170s/")}" alt="${tl(trans.your_avatar)}">
-                        <span class="avatar-status-dot user-status--bleh-sponsor"></span>
-                    </div>
-                    <h1>${tl(trans.you_are_a_sponsor)}</h1>
-                    <p>${tl(trans.sponsor_no_badge)}</p>
-                </div>
-            `,
-        type: "sponsor"
-      });
-    } else {
-      dialog({
-        id: "sponsor_manage",
-        title: tl(trans.sponsor),
-        body: html2.node`
-                <div class="modal-vertical-inner support-inner">
-                    <div class="avatar">
-                        <img src="${auth.avatar.replace("/avatar42s/", "/avatar170s/")}" alt="${tl(trans.your_avatar)}">
-                        <span class="avatar-status-dot user-status--bleh-sponsor"></span>
-                    </div>
-                    <h1>${tl(trans.you_are_a_sponsor)}</h1>
-                    <p>${tl(trans.sponsor_get_badge)}</p>
-                </div>
-                <div class="modal-footer">
-                    <div class="fill"></div>
-                    <a class="btn primary sponsor" href="${root}user/${sponsor_list.sponsor_account}" target="_blank">
-                        ${tl(trans.manage_sponsor)}
-                    </a>
-                    <div class="fill"></div>
-                </div>
-            `,
-        type: "sponsor"
-      });
-    }
-  }
-  function bleh_sponsor_page() {
-    document.body.style.removeProperty("--hue-album");
-    document.body.style.removeProperty("--sat-album");
-    document.body.style.removeProperty("--lit-album");
-    let adaptive_skin_container = document.querySelector(".adaptive-skin-container:not([data-bleh])");
-    if (adaptive_skin_container == null)
-      return;
-    adaptive_skin_container.setAttribute("data-bleh", "true");
-    adaptive_skin_container.innerHTML = "";
-    log("internal bleh sponsor", "page");
-    page.type = "bleh_sponsor";
-    page.subpage = "";
-    sponsor();
-  }
-
   // src/style.js
   function append_style() {
     document.documentElement.classList.add("bleh-supports-loading");
@@ -19267,10 +19286,24 @@
       en: "Download"
     },
     chart_template_filename: {
-      en: "Collage of {timeframe} Top {type} generated with {brand}"
+      en: "{user} Collage ({timeframe}, Top {type}, {size}) - {brand}"
     },
     waiting_for_images: {
       en: "Waiting for images"
+    },
+    collage_title: {
+      name: {
+        en: "Collage title"
+      },
+      body: {
+        en: "Include a subtle header showing your username and settings you used"
+      }
+    },
+    collage_grid_text: {
+      en: "Show names on grid items"
+    },
+    collage_grid_plays: {
+      en: "Show plays on grid items"
     }
   };
   var trans_legacy = {
@@ -23138,16 +23171,17 @@
       type: "radio"
     },
     collage_title: {
-      default: true
+      default: true,
+      title: trans.collage_title.name,
+      body: trans.collage_title.body
     },
     collage_grid_text: {
-      default: true
+      default: true,
+      title: trans.collage_grid_text
     },
     collage_grid_plays: {
-      default: true
-    },
-    collage_branding: {
-      default: true
+      default: true,
+      title: trans.collage_grid_plays
     }
   };
 
