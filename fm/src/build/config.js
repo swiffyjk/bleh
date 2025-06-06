@@ -812,15 +812,16 @@ export let settings_store = {
         type: 'radio'
     },
     collage_title: {
-        default: true
+        default: true,
+        title: trans.collage_title.name,
+        body: trans.collage_title.body
     },
     collage_grid_text: {
-        default: true
+        default: true,
+        title: trans.collage_grid_text
     },
     collage_grid_plays: {
-        default: true
-    },
-    collage_branding: {
-        default: true
+        default: true,
+        title: trans.collage_grid_plays
     }
 }

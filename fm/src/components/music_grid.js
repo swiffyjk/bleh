@@ -13,7 +13,7 @@ import {parse_scrobbles_as_rank} from "./colourful_counts";
 import {correct_artist, correct_item_by_artist, name_includes} from "./lotus";
 import {html, render} from "lighterhtml";
 
-export function music_grids(search=page.structure.main) {
+export function music_grids(search=page.structure.main, use_colour = true) {
     if (!search) return;
 
     let insights = {
@@ -70,7 +70,7 @@ export function music_grids(search=page.structure.main) {
 
         let image_wrap = grid.querySelector('.grid-items-cover-image-image');
         let image = image_wrap.querySelector('img');
-        if (image && !image_wrap.classList.contains('grid-items-cover-default')) {
+        if (image && !image_wrap.classList.contains('grid-items-cover-default') && use_colour) {
             let grid_colour = document.createElement('div');
             grid_colour.classList.add('grid-item-colour-bg');
             image_wrap.appendChild(grid_colour);

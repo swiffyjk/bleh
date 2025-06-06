@@ -5030,7 +5030,7 @@
   }
 
   // src/components/music_grid.js
-  function music_grids(search = page.structure.main) {
+  function music_grids(search = page.structure.main, use_colour = true) {
     if (!search) return;
     let insights = {
       artist: {
@@ -5080,7 +5080,7 @@
       }
       let image_wrap = grid.querySelector(".grid-items-cover-image-image");
       let image = image_wrap.querySelector("img");
-      if (image && !image_wrap.classList.contains("grid-items-cover-default")) {
+      if (image && !image_wrap.classList.contains("grid-items-cover-default") && use_colour) {
         let grid_colour = document.createElement("div");
         grid_colour.classList.add("grid-item-colour-bg");
         image_wrap.appendChild(grid_colour);
@@ -5914,7 +5914,7 @@
     let submit;
     let body;
     let value = 5;
-    let min = 2;
+    let min = 1;
     let max = 10;
     dialog({
       id: "collage",
@@ -6004,9 +6004,9 @@
       content: html2.node`
             <div class="dialog-settings">
                 ${setting({ id: "collage_title" })}
+                <div class="sep" />
                 ${setting({ id: "collage_grid_text" })}
                 ${setting({ id: "collage_grid_plays" })}
-                ${setting({ id: "collage_branding" })}
             </div>
         `,
       placement: "bottom",
@@ -6079,9 +6079,18 @@
     async function continue_collage() {
       log("gathered initial values", "collage", "info", page.state.collage);
       let grid = html2.node`
-            <ol class="grid-items grid-items--numbered collage-grid" style="--width: ${width_input.value}; --height: ${height_input.value}" />
+            <ol class="grid-items grid-items--numbered collage-grid" style="--width: ${width_input.value}; --height: ${height_input.value}" data-width=${width_input.value} data-height=${height_input.value} />
         `;
+      if (width_input.value >= 8 || height_input.value >= 8) {
+        grid.setAttribute("data-scale-down", "2");
+      } else if (width_input.value >= 7 || height_input.value >= 7) {
+        grid.setAttribute("data-scale-down", "1");
+      }
       let total = width_input.value * height_input.value - 1;
+      let highest = width_input.value;
+      if (height_input.value > width_input.value)
+        highest = height_input.value;
+      grid.style.setProperty("--highest", highest);
       page.state.collage.some((data2, index) => {
         if (index > total)
           return false;
@@ -6092,34 +6101,43 @@
           template = `${sanitise(data2.sister)}/${sanitise(data2.name)}`;
         grid.appendChild(html2.node`
                 <li class="compare-item grid-items-item">
-                    <div class="grid-items-cover-image js-link-block link-block">
+                    <div class="grid-items-cover-image">
                         <div class="grid-items-cover-image-image ${data2.avatar.endsWith("/c6f59c1e5e7240a4c0d427abd71f3dbb.jpg") || data2.avatar.endsWith("/2a96cbd8b46e442fc41c2b86b821562f.jpg") ? "grid-items-cover-default" : ""}">
                             <img src="${data2.avatar.replace("/avatar70s/", "/avatar300s/").replace("/64s/", "/avatar300s/")}" alt="${data2.name}" loading="lazy">
                         </div>
+                        ${settings.collage_grid_text || settings.collage_grid_plays ? html2.node`
                         <div class="grid-items-item-details">
+                            ${settings.collage_grid_text ? html2.node`
                             <p class="grid-items-item-main-text">
                                 <a class="link-block-target" href="${root}music/${template}" title="${data2.name}">
                                     ${data2.name}
                                 </a>
                             </p>
+                            ` : ""}
                             ${type_select.value != "artists" ? html2.node`
                             <p class="grid-items-item-aux-text">
+                                ${settings.collage_grid_text ? html2.node`
                                 <a class="grid-items-item-aux-block" href="${root}music/${data2.sister}">
                                     ${data2.sister}
                                 </a>
+                                ` : ""}
+                                ${settings.collage_grid_plays ? html2.node`
                                 <a class="grid-item-plays" href="${root}user/${page.name}/library/music/${template}?date_preset=${timeframe_select.value}" target="_blank">
                                     ${data2.plays.toLocaleString(lang)}
                                 </a>
+                                ` : ""}
                             </p>
                             ` : html2.node`
+                            ${settings.collage_grid_plays ? html2.node`
                             <p class="grid-items-item-aux-text">
                                 <a class="grid-item-plays" href="${root}user/${page.name}/library/music/${template}?date_preset=${timeframe_select.value}" target="_blank">
                                     ${data2.plays.toLocaleString(lang)}${tl(trans.plays_lower)}
                                 </a>
                             </p>
+                            ` : ""}
                             `}
                         </div>
-                        <a class="js-link-block-cover-link link-block-cover-link" href="${root}music/${template}" tabindex="-1" aria-hidden="true"></a>
+                        ` : ""}
                     </div>
                 </li>
             `);
@@ -6129,12 +6147,11 @@
                 ${settings.collage_title ? html2.node`
                 <div class="header">
                     <div class="type" data-type=${type_select.value}>
-                        ${settings.collage_branding ? html2.node`
                         <strong class="brand">${version.brand}</strong>
-                        ` : ""}
                         <div class="bleh-icon" />
                         <strong>${timeframe.querySelector("button").textContent}</strong>
                         <strong>${tl(trans.top_type).replace("{type}", tl(trans[type_select.value]))}</strong>
+                        <strong>${width_input.value}x${height_input.value}</strong>
                     </div>
                     <div class="user">
                         <div class="avatar">
@@ -6153,20 +6170,24 @@
             </div>
             ${collage_dom}
         `);
-      music_grids(grid);
+      music_grids(grid, false);
+      let cv_width = 1500;
+      let cv_height = 1547;
+      let cv_scale = 1;
       let initial_canvas = html2.node`
-            <canvas width="1500" height="1594" />
+            <canvas width=${cv_width * cv_scale} height=${cv_height * cv_scale} />
         `;
       html2canvas(collage_dom, {
         useCORS: true,
         letterRendering: true,
         canvas: initial_canvas,
+        scale: cv_scale,
         onclone: (doc) => {
           doc.querySelectorAll("*").forEach((el) => {
             if (el.classList == "brand")
               el.style.setProperty("font-family", "Darumadrop One");
             else
-              el.style.setProperty("font-family", "Ubuntu Sans");
+              el.style.setProperty("font-family", "Ubuntu Sans, Spline Sans, Inter, Roboto, Noto Sans, Noto Sans JP, Noto Sans KR, Noto Sans TC, Lucida Grande, Verdana, Tahoma, -apple-system, BlinkMacSystemFont, sans-serif");
           });
         }
       }).then((canvas) => {
@@ -6175,7 +6196,7 @@
                 <div class="collage-finished">
                     <strong>${tl(trans.your_collage_is_ready)}</strong>
                     <div class="button-group">
-                        <a class="btn primary icon" data-type="download" href=${canvas.toDataURL("image/png")} download=${tl(trans.chart_template_filename).replace("{timeframe}", timeframe.querySelector("button").textContent).replace("{type}", type_select.value).replace("{brand}", version.brand)}>${tl(trans.download)}</a>
+                        <a class="btn primary icon" data-type="download" href=${canvas.toDataURL("image/png")} download=${tl(trans.chart_template_filename).replace("{timeframe}", timeframe.querySelector("button").textContent).replace("{user}", page.name).replace("{type}", tl(trans[type_select.value])).replace("{size}", `${width_input.value}x${height_input.value}`).replace("{brand}", version.brand)}>${tl(trans.download)}</a>
                     </div>
                 </div>
                 ${canvas}
@@ -19267,10 +19288,24 @@
       en: "Download"
     },
     chart_template_filename: {
-      en: "Collage of {timeframe} Top {type} generated with {brand}"
+      en: "{user} Collage ({timeframe}, Top {type}, {size}) - {brand}"
     },
     waiting_for_images: {
       en: "Waiting for images"
+    },
+    collage_title: {
+      name: {
+        en: "Collage title"
+      },
+      body: {
+        en: "Include a subtle header showing your username and settings you used"
+      }
+    },
+    collage_grid_text: {
+      en: "Show names on grid items"
+    },
+    collage_grid_plays: {
+      en: "Show plays on grid items"
     }
   };
   var trans_legacy = {
@@ -23138,16 +23173,17 @@
       type: "radio"
     },
     collage_title: {
-      default: true
+      default: true,
+      title: trans.collage_title.name,
+      body: trans.collage_title.body
     },
     collage_grid_text: {
-      default: true
+      default: true,
+      title: trans.collage_grid_text
     },
     collage_grid_plays: {
-      default: true
-    },
-    collage_branding: {
-      default: true
+      default: true,
+      title: trans.collage_grid_plays
     }
   };
 

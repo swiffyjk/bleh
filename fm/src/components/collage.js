@@ -24,7 +24,7 @@ export function collage() {
     let body;
 
     let value = 5;
-    let min = 2;
+    let min = 1;
     let max = 10;
 
     dialog({
@@ -118,9 +118,9 @@ export function collage() {
         content: html.node`
             <div class="dialog-settings">
                 ${setting({id: 'collage_title'})}
+                <div class="sep" />
                 ${setting({id: 'collage_grid_text'})}
                 ${setting({id: 'collage_grid_plays'})}
-                ${setting({id: 'collage_branding'})}
             </div>
         `,
         placement: 'bottom',
@@ -213,10 +213,21 @@ export function collage() {
         log('gathered initial values', 'collage', 'info', page.state.collage);
 
         let grid = html.node`
-            <ol class="grid-items grid-items--numbered collage-grid" style="--width: ${width_input.value}; --height: ${height_input.value}" />
+            <ol class="grid-items grid-items--numbered collage-grid" style="--width: ${width_input.value}; --height: ${height_input.value}" data-width=${width_input.value} data-height=${height_input.value} />
         `;
 
+        if (width_input.value >= 8 || height_input.value >= 8) {
+            grid.setAttribute('data-scale-down', '2');
+        } else if (width_input.value >= 7 || height_input.value >= 7) {
+            grid.setAttribute('data-scale-down', '1');
+        }
+
         let total = width_input.value * height_input.value - 1;
+        let highest = width_input.value;
+        if (height_input.value > width_input.value)
+            highest = height_input.value;
+
+        grid.style.setProperty('--highest', highest);
 
         page.state.collage.some((data, index) => {
             if (index > total)
@@ -230,34 +241,43 @@ export function collage() {
 
             grid.appendChild(html.node`
                 <li class="compare-item grid-items-item">
-                    <div class="grid-items-cover-image js-link-block link-block">
+                    <div class="grid-items-cover-image">
                         <div class="grid-items-cover-image-image ${(data.avatar.endsWith('/c6f59c1e5e7240a4c0d427abd71f3dbb.jpg') || data.avatar.endsWith('/2a96cbd8b46e442fc41c2b86b821562f.jpg')) ? 'grid-items-cover-default' : ''}">
                             <img src="${data.avatar.replace('/avatar70s/', '/avatar300s/').replace('/64s/', '/avatar300s/')}" alt="${data.name}" loading="lazy">
                         </div>
+                        ${settings.collage_grid_text || settings.collage_grid_plays ? html.node`
                         <div class="grid-items-item-details">
+                            ${settings.collage_grid_text ? html.node`
                             <p class="grid-items-item-main-text">
                                 <a class="link-block-target" href="${root}music/${template}" title="${data.name}">
                                     ${data.name}
                                 </a>
                             </p>
+                            ` : ''}
                             ${(type_select.value != 'artists') ? html.node`
                             <p class="grid-items-item-aux-text">
+                                ${settings.collage_grid_text ? html.node`
                                 <a class="grid-items-item-aux-block" href="${root}music/${data.sister}">
                                     ${data.sister}
                                 </a>
+                                ` : ''}
+                                ${settings.collage_grid_plays ? html.node`
                                 <a class="grid-item-plays" href="${root}user/${page.name}/library/music/${template}?date_preset=${timeframe_select.value}" target="_blank">
                                     ${data.plays.toLocaleString(lang)}
                                 </a>
+                                ` : ''}
                             </p>
                             ` : html.node`
+                            ${settings.collage_grid_plays ? html.node`
                             <p class="grid-items-item-aux-text">
                                 <a class="grid-item-plays" href="${root}user/${page.name}/library/music/${template}?date_preset=${timeframe_select.value}" target="_blank">
                                     ${data.plays.toLocaleString(lang)}${tl(trans.plays_lower)}
                                 </a>
                             </p>
+                            ` : ''}
                             `}
                         </div>
-                        <a class="js-link-block-cover-link link-block-cover-link" href="${root}music/${template}" tabindex="-1" aria-hidden="true"></a>
+                        ` : ''}
                     </div>
                 </li>
             `);
@@ -268,12 +288,11 @@ export function collage() {
                 ${settings.collage_title ? html.node`
                 <div class="header">
                     <div class="type" data-type=${type_select.value}>
-                        ${settings.collage_branding ? html.node`
                         <strong class="brand">${version.brand}</strong>
-                        ` : ''}
                         <div class="bleh-icon" />
                         <strong>${timeframe.querySelector('button').textContent}</strong>
                         <strong>${tl(trans.top_type).replace('{type}', tl(trans[type_select.value]))}</strong>
+                        <strong>${width_input.value}x${height_input.value}</strong>
                     </div>
                     <div class="user">
                         <div class="avatar">
@@ -293,22 +312,27 @@ export function collage() {
             ${collage_dom}
         `);
 
-        music_grids(grid);
+        music_grids(grid, false);
+
+        let cv_width = 1500;
+        let cv_height = 1547;
+        let cv_scale = 1;
 
         let initial_canvas = html.node`
-            <canvas width="1500" height="1594" />
+            <canvas width=${cv_width * cv_scale} height=${cv_height * cv_scale} />
         `;
 
         html2canvas(collage_dom, {
             useCORS: true,
             letterRendering: true,
             canvas: initial_canvas,
+            scale: cv_scale,
             onclone: (doc) => {
                 doc.querySelectorAll('*').forEach((el) => {
                     if (el.classList == 'brand')
                         el.style.setProperty('font-family', 'Darumadrop One');
                     else
-                        el.style.setProperty('font-family', 'Ubuntu Sans');
+                        el.style.setProperty('font-family', 'Ubuntu Sans, Spline Sans, Inter, Roboto, Noto Sans, Noto Sans JP, Noto Sans KR, Noto Sans TC, Lucida Grande, Verdana, Tahoma, -apple-system, BlinkMacSystemFont, sans-serif');
                 });
             }
         }).then((canvas => {
@@ -320,7 +344,9 @@ export function collage() {
                     <div class="button-group">
                         <a class="btn primary icon" data-type="download" href=${canvas.toDataURL('image/png')} download=${tl(trans.chart_template_filename)
                                 .replace('{timeframe}', timeframe.querySelector('button').textContent)
-                                .replace('{type}', type_select.value)
+                                .replace('{user}', page.name)
+                                .replace('{type}', tl(trans[type_select.value]))
+                                .replace('{size}', `${width_input.value}x${height_input.value}`)
                                 .replace('{brand}', version.brand)}>${tl(trans.download)}</a>
                     </div>
                 </div>
