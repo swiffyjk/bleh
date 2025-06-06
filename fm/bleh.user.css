@@ -23174,6 +23174,11 @@ h4 {
     &[data-filled="true"] {
         height: 600px;
     }
+
+    canvas {
+        width: 400px;
+        height: 400px;
+    }
 }
 .compare {
     --mask: var(--icon-16-arrows);

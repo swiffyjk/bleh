@@ -265,8 +265,38 @@ export function collage() {
 
         create_collage_dom(grid).then(collage_dom => {
             body.setAttribute('data-filled', 'true');
+
+            let canvas = html.node`
+                <canvas width="1000" height="1000" />
+            `;
+
+            let sv = `
+                <svg xmlns="http://www.w3.org/2000/svg" width="1000" height="1000">
+                    <foreignObject width="100%" height="100%">
+                        <div xmlns="http://www.w3.org/1999/xhtml">
+                            ${collage_dom.outerHTML}
+                        </div>
+                    </foreignObject>
+                </svg>
+            `;
+
+            let url = `data:image/svg+xml;charset=utf-8,${sv.trim().replace(/[\n\r\t]/gm, '').replace(/#/g, '%23')}`;
+
+            let image = new Image();
+            image.addEventListener('load', () => {
+                canvas.getContext('2d').drawImage(image, 0, 0);
+            });
+            image.src = url;
+
             render(body, html`
-                ${collage_dom}
+                ${canvas}
+                ${image}
+                <div class="button-group">
+                    <a class="btn primary icon" data-type="download" href=${url} download=${tl(trans.chart_template_filename)
+                            .replace('{timeframe}', timeframe.querySelector('button').textContent)
+                            .replace('{type}', type_select.value)
+                            .replace('{brand}', version.brand)}>${tl(trans.download)}</a>
+                </div>
             `);
 
             type.querySelector('button').disabled = false;
@@ -277,6 +307,12 @@ export function collage() {
     }
 
     async function create_collage_dom(grid) {
+        render(body, html`
+            <div class="loading-data-container">
+                <div class="loading-data-text">${tl(trans.waiting_for_images)}</div>
+            </div>
+        `);
+
         let collage_dom = html.node`
             <div class="collage">
                 ${settings.collage_title ? html.node`

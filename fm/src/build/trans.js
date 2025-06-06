@@ -2470,6 +2470,15 @@ export const trans = {
     },
     made_with_name: {
         en: 'Made with {name}'
+    },
+    download: {
+        en: 'Download'
+    },
+    chart_template_filename: {
+        en: 'Collage of {timeframe} top {type} generated with {brand}'
+    },
+    waiting_for_images: {
+        en: 'Waiting for images'
     }
 }
 
