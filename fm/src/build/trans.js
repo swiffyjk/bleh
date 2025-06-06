@@ -2505,7 +2505,8 @@ export const trans = {
         pt: 'Baixar'
     },
     chart_template_filename: {
-        en: '{user} Collage ({timeframe}, Top {type}, {size}) - {brand}'
+        en: '{user} Collage ({timeframe}, Top {type}, {size}) - {brand}',
+        pt: '{user} Colagem ({timeframe}, Top {type}, {size}) - {brand}'
     },
     waiting_for_images: {
         en: 'Waiting for images',
