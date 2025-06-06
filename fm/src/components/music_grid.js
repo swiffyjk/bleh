@@ -175,6 +175,7 @@ export function music_grids(search=page.structure.main, use_colour = true) {
         }
 
         let name = grid.querySelector('.grid-items-item-main-text a');
+        if (!name) return;
 
         if (!is_album) {
             name.textContent = correct_artist(name.textContent.trim());

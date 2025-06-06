@@ -3747,6 +3747,7 @@
   }) {
     try {
       let value = settings[id];
+      log(`creating ${id} with value ${value}`, "settings", "log", { settings, settings_id: settings[id] });
       if (!settings_store[id])
         return setting_fail(id, { message: "No settings store entry present" });
       let type = settings_store[id].type || "toggle";
@@ -3980,6 +3981,7 @@
     if (settings_store[id].css)
       document.body.style.setProperty(`--${settings_store[id].css}`, `${value}${settings_store[id].suffix || ""}`);
     localStorage.setItem("bleh", JSON.stringify(settings));
+    log(`saved ${id} as ${value}`, "settings", "log", { settings, settings_id: settings[id] });
   }
 
   // src/components/profile_shortcut.js
@@ -5156,6 +5158,7 @@
         }
       }
       let name = grid.querySelector(".grid-items-item-main-text a");
+      if (!name) return;
       if (!is_album) {
         name.textContent = correct_artist(name.textContent.trim());
         insights.artist.labels.push(name.textContent);
@@ -9598,7 +9601,7 @@
   function load_settings(skip = false) {
     if (!skip) {
       for (let setting2 in settings_store) {
-        if (!settings[setting2])
+        if (settings[setting2] == null)
           settings[setting2] = settings_store[setting2].default;
       }
     }
