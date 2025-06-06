@@ -95,7 +95,7 @@ unsafeWindow._sponsor_check = function() {
 unsafeWindow._sponsor = function(replace=false) {
     sponsor(replace);
 }
-function sponsor(replace=false) {
+export function sponsor(replace=false) {
     dialog({
         id: 'sponsor',
         title: tl(trans.support_future_development),
@@ -127,7 +127,7 @@ function sponsor(replace=false) {
 unsafeWindow._sponsor_manage = function() {
     sponsor_manage();
 }
-function sponsor_manage() {
+export function sponsor_manage() {
     if (sponsor_list.sponsors_one_time && sponsor_list.sponsors_one_time.includes(auth.name)) {
         dialog({
             id: 'sponsor_manage',
