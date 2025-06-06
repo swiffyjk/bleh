@@ -301,9 +301,10 @@ export const trans = {
         pt: 'pronomes'
     },
     account_created: {
+        // dont translate to "scrobbling since", instead just "created"
         en: 'created',
         de: 'erstellt',
-        pt: 'em scrobble desde'
+        pt: 'criada'
     },
     account_scrobbling_since_replace: {
         // copy this from last.fm 1:1 (including the space at the end if there)
@@ -469,7 +470,6 @@ export const trans = {
         de: 'Top-Abzeichen',
         pt: 'Emblema superior'
     },
-    //souns betta englush
     layout: {
         en: 'Layout'
     },
@@ -536,7 +536,7 @@ export const trans = {
     },
     value_for_time: {
         en: '{v} for {time}',
-        pt: '{v} para {tempo}'
+        pt: '{v} para {time}'
     },
     seasonal_timeline: {
         en: 'Seasonal timeline',
@@ -1222,7 +1222,7 @@ export const trans = {
     },
     expand_to_full_resolution: {
         en: 'Expand to full resolution',
-        pt: 'Expandir para resolução total '
+        pt: 'Expandir para resolução total'
     },
     share: {
         en: 'Share',
@@ -1521,12 +1521,12 @@ export const trans = {
     video_removed: {
         en: 'Video removed by Last.fm',
         de: 'Video von Last.fm entfernt',
-        pt: 'Vídeo removido pela last.fm'
+        pt: 'Vídeo removido pela Last.fm'
     },
     blocked_page: {
         en: 'This page has been limited by Last.fm',
         de: 'Diese Seite wurde von Last.fm eingeschränkt',
-        pt: 'Esta página foi limitada pela last.fm'
+        pt: 'Esta página foi limitada pela Last.fm'
     },
     cancel: {
         en: 'Cancel',
@@ -2494,7 +2494,7 @@ export const trans = {
         pt: 'Suas configurações são inválidas'
     },
     top_type: {
-        en: 'Top {type}',
+        en: 'Top {type}'
     },
     made_with_name: {
         en: 'Made with {name}',
@@ -2510,9 +2510,6 @@ export const trans = {
     waiting_for_images: {
         en: 'Waiting for images',
         pt: 'Aguardando imagens'
-    },
-    waiting_for_images: {
-        en: 'Waiting for images'
     },
     collage_title: {
         name: {

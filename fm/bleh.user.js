@@ -16842,7 +16842,7 @@
     pt: {
       name: "Portugu\xEAs",
       by: ["ArthRMH"],
-      last_updated: "2025-06-03"
+      last_updated: "2025-06-06"
     }
   };
   var trans = {
@@ -16895,7 +16895,7 @@
         reason: {
           en: "Official member of Last.fm",
           de: "Ofizielles Mitglied von Last FM",
-          pt: "Membro oficial do Last.fm"
+          pt: "Membro oficial da Last.fm"
         }
       },
       "user-status-mod": {
@@ -16999,7 +16999,7 @@
     },
     shouts: {
       en: "Shouts",
-      pt: "Caixa de mensagens"
+      pt: "Mensagens"
     },
     about: {
       en: "About",
@@ -17079,7 +17079,7 @@
     try_again: {
       en: "Try again",
       de: "Erneut versuchen",
-      pt: "Tente novamente"
+      pt: "Tentar novamente"
     },
     back: {
       en: "Back",
@@ -17111,6 +17111,7 @@
       pt: "pronomes"
     },
     account_created: {
+      // dont translate to "scrobbling since", instead just "created"
       en: "created",
       de: "erstellt",
       pt: "criada"
@@ -17189,7 +17190,8 @@
       pt: "Apar\xEAncia"
     },
     theme: {
-      en: "Theme"
+      en: "Theme",
+      pt: "Tema"
     },
     themes: {
       name: {
@@ -17210,7 +17212,7 @@
       dark: {
         en: "Ash",
         de: "Asche",
-        pt: "Cinzas"
+        pt: "Cinza"
       },
       darker: {
         en: "Dark",
@@ -17220,7 +17222,7 @@
       oled: {
         en: "Void",
         de: "Leere",
-        pt: "Escurid\xE3o"
+        pt: "Vazio"
       }
     },
     colours: {
@@ -17242,12 +17244,12 @@
       name: {
         en: "Colour active track based on album art",
         de: "Farbe des aktiven Titels basierend auf dem Albumcover",
-        pt: "Colore a faixa atual baseada na capa do \xE1lbum"
+        pt: "Colore a faixa atual com base na capa"
       },
       body: {
         en: "Highlights the primary colour from the album art for the individual track",
         de: "Hebt die Farbe des Albumcovers f\xFCr den einzelnen Titel hervor",
-        pt: "Real\xE7a a cor prim\xE1ria da capa de \xE1lbum para a faixa individual"
+        pt: "Real\xE7a a cor prim\xE1ria da capa para a faixa atual"
       }
     },
     configure: {
@@ -17278,10 +17280,8 @@
       de: "Top-Abzeichen",
       pt: "Emblema superior"
     },
-    //souns betta englush
     layout: {
-      en: "Layout",
-      pt: "Disposi\xE7\xE3o"
+      en: "Layout"
     },
     music: {
       en: "Music",
@@ -17341,21 +17341,23 @@
       }
     },
     new_season: {
-      en: "New Season!"
+      en: "New Season!",
+      pt: "Nova Esta\xE7\xE3o!"
     },
     value_for_time: {
-      en: "{v} for {time}"
+      en: "{v} for {time}",
+      pt: "{v} para {time}"
     },
     seasonal_timeline: {
       en: "Seasonal timeline",
       de: "Saisonale Zeitleiste",
-      pt: "Linha do tempo sazonal"
+      pt: "Linha de tempo sazonal"
     },
     //i removed the 'current' cus it soyunds better without lol, add back if u disagree or sum :3 and add 'aktuellen' infront of Zeitzone in german
     seasonal_offset: {
       en: "Seasonal events are ran in your timezone, which we calculated as {offset}",
       de: "Saisonale Events werden in deiner Zeitzone ausgef\xFChrt, die wir als {offset} berechnet haben",
-      pt: "Eventos sazonais s\xE3o realizados no seu fuso hor\xE1rio, que calculamos como {offset}"
+      pt: "Eventos sazonais s\xE3o realizados em seu fuso hor\xE1rio, que calculamos como {offset}"
     },
     started: {
       en: "Started",
@@ -17393,7 +17395,7 @@
     releases: {
       en: "Releases",
       de: "Ver\xF6ffentlichungen",
-      pt: "Lan\xE7a"
+      pt: "Lan\xE7amentos"
     },
     bookmarks: {
       en: "Bookmarks",
@@ -17423,7 +17425,7 @@
     good_evening_user: {
       en: "Good evening, {user}",
       de: "Guten Abend, {user}",
-      pt: "Boa tardezinha, {user}"
+      pt: "Boa noite, {user}"
     },
     good_night_user: {
       en: "Goodnight, {user}",
@@ -17476,7 +17478,8 @@
       pt: "Sua configura\xE7\xE3o vai ser permanentemente restaurada ao padr\xE3o, voc\xEA tem certeza?"
     },
     reset_item_to_default: {
-      en: "Reset item to default"
+      en: "Reset item to default",
+      pt: "Restaurar itens para o padr\xE3o"
     },
     make_a_backup: {
       en: "Make a backup",
@@ -17490,7 +17493,7 @@
     news_from_user: {
       en: "News from {user}",
       de: "Neuigkeiten von {user}",
-      pt: "Not\xEDcias do {user}"
+      pt: "Not\xEDcias da {user}"
     },
     default: {
       en: "Default",
@@ -17626,13 +17629,13 @@
       body: {
         en: "A setting you changed requires a page refresh",
         de: "Eine von dir ge\xE4nderte Einstellung erfordert eine Seitenaktualisierung, damit sie wirksam wird",
-        pt: "Uma configura\xE7\xE3o que voc\xEA mudou exige uma atualiza\xE7\xE3o de p\xE1gina para fazer efeito"
+        pt: "Uma configura\xE7\xE3o que voc\xEA mudou exige uma atualiza\xE7\xE3o de p\xE1gina"
       }
     },
     new: {
       en: "New",
       de: "Neu",
-      pt: "Novo"
+      pt: "Nova"
     },
     beta: {
       en: "Beta"
@@ -17769,21 +17772,21 @@
       // make lowercase if thats how the language works
       en: "artist",
       de: "K\xFCnstler",
-      pt: "Artista"
+      pt: "artista"
     },
     album_lower: {
       // used inside a sentence not on its own,
       // make lowercase if thats how the language works
       en: "album",
       de: "Album",
-      pt: "\xC1lbum"
+      pt: "\xE1lbum"
     },
     track_lower: {
       // used inside a sentence not on its own,
       // make lowercase if thats how the language works
       en: "track",
       de: "Titel",
-      pt: "Faixa"
+      pt: "faixa"
     },
     lotus_cta: {
       // {t} is replaced by one of the 3 above
@@ -17797,7 +17800,7 @@
       false: {
         en: "Is this {t} capitalised correctly?",
         de: "Ist {t} richtig gro\xDFgeschrieben?",
-        pt: "Esse(a) {t} est\xE1 capitalizado corretamente?"
+        pt: "Esse(a) {t} est\xE1 capitalizado(a) corretamente?"
       }
     },
     suggest_correction: {
@@ -17861,7 +17864,7 @@
     sponsor_data: {
       en: "Sponsor and badge data version {v}",
       de: "Sponsoren- und Abzeichen Version {v}",
-      pt: "Vers\xE3o de data de apoiador e emblemas"
+      pt: "Vers\xE3o da data de apoiador e emblemas"
     },
     sponsor: {
       en: "Become a sponsor",
@@ -17877,13 +17880,13 @@
     news_sponsor_cta: {
       en: "Want to support future development of bleh?",
       de: "M\xF6chten du die zuk\xFCnftige Entwicklung von bleh unterst\xFCtzen?",
-      pt: "Quer apoiar o futuro desenvolvimento do bleh?"
+      pt: "Quer apoiar o desenvolvimento futuro do bleh?"
     },
     support_future_development: {
       // in the context of sponsoring
       en: "Support future development",
       de: "Unterst\xFCtze die zuk\xFCnftige Entwicklung",
-      pt: "Apoie o futuro desenvolvimento"
+      pt: "Apoie o desenvolvimento futuro"
     },
     why_sponsor: {
       en: "Receive an accompanying badge on your profile and a big thank you from katelyn for supporting <3",
@@ -17916,7 +17919,7 @@
     labs_by_last: {
       en: "Labs by Last.fm",
       de: "Labs von Last.fm",
-      pt: "Labs do Last.fm",
+      pt: "Labs da Last.fm",
       tagline: {
         en: "Interactive tools and infographics",
         de: "Interaktiven Tools und Infografiken",
@@ -18026,17 +18029,21 @@
       pt: "Expandir"
     },
     expand_to_full_resolution: {
-      en: "Expand to full resolution"
+      en: "Expand to full resolution",
+      pt: "Expandir para resolu\xE7\xE3o total"
     },
     share: {
       en: "Share",
-      de: "Teilen"
+      de: "Teilen",
+      pt: "Compartilhar"
     },
     copy: {
-      en: "Copy"
+      en: "Copy",
+      pt: "Copiar"
     },
     copied_to_clipboard: {
-      en: "Copied to clipboard"
+      en: "Copied to clipboard",
+      pt: "Copiado para a \xE1rea de transfer\xEAncia"
     },
     activity: {
       en: "Activity",
@@ -18046,83 +18053,83 @@
         shout: {
           en: "Shout",
           de: "Shout hinterlassen",
-          pt: "Recado"
+          pt: "Enviou mensagem"
         },
         image_upload: {
           en: "Uploaded image",
           de: "Bild hochgeladen",
-          pt: "Enviar imagem"
+          pt: "Enviou imagem"
         },
         image_star: {
           en: "Starred image",
           de: "Bild favorisiert",
-          pt: "Imagem favoritada"
+          pt: "Favoritou imagem"
         },
         obsess: {
           en: "Obsessed",
-          pt: "Obcecar"
+          pt: "Obcecou"
         },
         unobsess: {
           en: "Removed obsession",
           de: "Nicht mehr obsessed",
-          pt: "Remover obsess\xE3o"
+          pt: "Desobcecou"
         },
         love: {
           en: "Loved",
           de: "Du liebst",
-          pt: "Curtido"
+          pt: "Favoritou"
         },
         unlove: {
           en: "Removed love",
           de: "Du liebst nicht mehr",
-          pt: "Remover curtida"
+          pt: "Desfavoritou"
         },
         install_bwaa: {
           en: "Installed bwaa",
           de: "bwaa installiert",
-          pt: "Instalou bwaa"
+          pt: "Instalou o bwaa"
         },
         update_bwaa: {
           en: "Updated bwaa",
           de: "bwaa aktualisiert",
-          pt: "Atualizou bwaa"
+          pt: "Atualizou o bwaa"
         },
         install_bleh: {
           en: "Installed bleh",
           de: "bleh installiert",
-          pt: "Instalou bleh"
+          pt: "Instalou o bleh"
         },
         update_bleh: {
           en: "Updated bleh",
           de: "bleh aktualisiert",
-          pt: "Atualizou bleh"
+          pt: "Atualizou o bleh"
         },
         bookmark: {
           en: "Bookmarked",
           de: "Lesezeichen hinzugef\xFCgt",
-          pt: "Marcado"
+          pt: "Adicionou marca\xE7\xE3o"
         },
         unbookmark: {
           en: "Removed bookmark",
           de: "Lesezeichen entfernt",
-          pt: "Remover marca\xE7\xE3o"
+          pt: "Removeu marca\xE7\xE3o"
         },
         wiki: {
           en: "Edited",
           de: "Editiert",
-          pt: "Editado"
+          pt: "Editou"
         }
       },
       types: {
         shout: {
           en: "Comments and replies from you across the site",
           de: "Kommentare und Antworten von dir auf der gesamten Site",
-          pt: "Coment\xE1rios e respostas seus ao redor do site"
+          pt: "Seus coment\xE1rios e respostas ao redor do site"
         },
         image: {
           en: "Uploading images and starring for your layout",
           de: "Bilder hochladen und Sterne f\xFCr Ihr Layout vergeben",
-          pt: "Enviar imagens e favoritando do seu "
+          pt: "Imagens enviadas e favoritos do seu layout"
         },
         obsess: {
           en: "Tracks you have on loop",
@@ -18154,7 +18161,7 @@
     what_are_activities: {
       en: "Keep track of your most recent activity locally on your profile",
       de: "Verfolge deine letzten Aktivit\xE4ten lokal auf dein Profil",
-      pt: "Acompanhe sua atividade mais recente localmente em seu perfil"
+      pt: "Acompanhe suas atividades mais recentes localmente em seu perfil"
     },
     activity_tracking: {
       name: {
@@ -18197,7 +18204,7 @@
       // as in the view mode
       en: "List",
       de: "Liste",
-      pt: "Lista"
+      pt: "Linha"
     },
     line: {
       // as in the type of chart (a line graph)
@@ -18215,7 +18222,7 @@
       // as in the type of chart (a bar chart)
       en: "Bar",
       de: "Balken",
-      pt: "Barra"
+      pt: "Coluna"
     },
     horizontal: {
       en: "Horizontal"
@@ -18238,14 +18245,14 @@
       // as in loving tracks as a concept
       en: "Love",
       de: "Liebst",
-      pt: "Amar"
+      pt: "Favoritas"
     },
     loved: {
       // as in loved tracks, this can be seen
       // in the native last.fm ui
       en: "Loved",
       de: "Lieblingslieder",
-      pt: "Curtidas"
+      pt: "Favoritadas"
     },
     velocity: {
       // as in the last.fm labs 'Velocity' tool
@@ -18322,12 +18329,12 @@
     video_removed: {
       en: "Video removed by Last.fm",
       de: "Video von Last.fm entfernt",
-      pt: "V\xEDdeo removido pelo last.fm"
+      pt: "V\xEDdeo removido pela Last.fm"
     },
     blocked_page: {
       en: "This page has been limited by Last.fm",
       de: "Diese Seite wurde von Last.fm eingeschr\xE4nkt",
-      pt: "Esta p\xE1gina foi limitada pelo last.fm"
+      pt: "Esta p\xE1gina foi limitada pela Last.fm"
     },
     cancel: {
       en: "Cancel",
@@ -18410,7 +18417,7 @@
       body: {
         en: "Analyses album and track titles into their guests, versions, remixes, etc.",
         de: "Analysiert Album- und Tracktitel hinsichtlich ihrer Versionen, Remixe usw.",
-        pt: "Analisa t\xEDtulos de \xE1lbuns e faixas em seus convidados, vers\xF5es, remixes, etc."
+        pt: "Analisa t\xEDtulos de \xE1lbuns e faixas e os separa em seus convidados, vers\xF5es, remixes etc."
       }
     },
     show_guest_features: {
@@ -18428,7 +18435,7 @@
     track_column_view: {
       en: "Use column view for tracklist information",
       de: "Verwende die Spaltenansicht f\xFCr Titellisteninformationen",
-      pt: "Use a visualiza\xE7\xE3o em colunas para as informa\xE7\xF5es da lista de faixas"
+      pt: "Use a visualiza\xE7\xE3o em colunas para as informa\xE7\xF5es das faixas"
     },
     show_remaster_tags: {
       en: "Show remaster tags",
@@ -18444,18 +18451,18 @@
       body: {
         en: "View your listening history in realtime",
         de: "Sehe deinen H\xF6rverlauf in Echtzeit an",
-        pt: "Ver seu hist\xF3rico de scrobbles em tempo real"
+        pt: "Veja seu hist\xF3rico de scrobbles em tempo real"
       }
     },
     amount_to_display: {
       en: "Amount to display",
       de: "Anzuzeigender Betrag",
-      pt: "Quantidade a exibir"
+      pt: "Quantidade a ser exibida"
     },
     recent_artwork: {
       en: "Accompany tracks with artwork",
       de: "Titel mit Albumcover anzeigen",
-      pt: "Mostrar as faixas junto com a capa"
+      pt: "Mostrar as faixas juntamente a capa"
     },
     default_timeframe: {
       en: "Default timeframe",
@@ -18465,11 +18472,11 @@
     chart_style: {
       en: "Chart style",
       de: "Diagrammstil",
-      pt: "Estilo do gr\xE1fico"
+      pt: "Estilo da tabela"
     },
     chart_size: {
       en: "Chart size",
-      pt: "Tamanho do gr\xE1fico"
+      pt: "Tamanho da tabela"
     },
     country: {
       en: "Country",
@@ -18533,7 +18540,7 @@
     blocked_user_old_shouts: {
       en: "You cannot delete pre-existing shouts on your profile",
       de: "Du kannst bereits vorhandene Shouts auf deinem Profil nicht l\xF6schen",
-      pt: "Voc\xEA n\xE3o pode deletar mensagens j\xE1 existentes no seu perfil"
+      pt: "Voc\xEA n\xE3o pode deletar mensagens j\xE1 existentes em seu perfil"
     },
     blocked_user_view_profile: {
       en: "They can still view your profile",
@@ -18555,7 +18562,7 @@
     },
     obsess: {
       en: "Obsess",
-      pt: "Obcecar"
+      pt: "Definir como obsess\xE3o"
     },
     obsession: {
       en: "Obsession",
@@ -18640,7 +18647,7 @@
       body: {
         en: "View their scrobbles alongside yours at all times",
         de: "Sehe ihre Scrobbels jederzeit neben deine an",
-        pt: "Veja os scrobbles deles junto aos seus o tempo todo"
+        pt: "Veja os scrobbles dele(a) junto aos seus o tempo todo"
       },
       linked: {
         en: "Linked with {u}",
@@ -18741,7 +18748,7 @@
     enter_font_names: {
       en: "Enter installed font name(s), separated by commas",
       de: "Geben die installierte Schriftart durch Kommas getrennt ein",
-      pt: "Digite os nomes das fontes instaladas, separados por v\xEDrgulas"
+      pt: "Nomes das fontes instaladas, separados por v\xEDrgulas"
     },
     change_now: {
       en: "Change now",
@@ -18767,7 +18774,7 @@
       body: {
         en: 'By default, Last.fm will "auto-correct" some of your scrobbles to (mostly) faulty redirections. By disabling this it does not fully fix the system but keeps artist names in your library intact.',
         de: "Standardm\xE4\xDFig korrigiert Last.fm einige deiner Scrobbel-Dateien automatisch und f\xFChrt (meist) fehlerhafte Weiterleitungen aus. Durch die Deaktivierung dieser Funktion wird das System zwar nicht vollst\xE4ndig repariert, die K\xFCnstlernamen in Ihrer Bibliothek bleiben jedoch erhalten.",
-        pt: 'Por padr\xE3o, o Last.fm ir\xE1 "corrigir automaticamente" alguns dos seus scrobbles para redirecionamentos (na maioria) defeituosos. Desativar essa op\xE7\xE3o n\xE3o corrige completamente o sistema, mas mant\xE9m os nomes dos artistas na sua biblioteca intactos.'
+        pt: 'Por padr\xE3o, a Last.fm ir\xE1 "corrigir automaticamente" alguns dos seus scrobbles para redirecionamentos (na maioria) defeituosos. Desativar essa op\xE7\xE3o n\xE3o corrige completamente o sistema, mas mant\xE9m os nomes dos artistas na sua biblioteca intactos.'
       }
     },
     redirect_messages: {
@@ -18779,7 +18786,7 @@
       body: {
         en: "These notifications can let you undo redirections Last.fm forced upon you, but can also be annoying",
         de: "Mit diesen Benachrichtigungen kannst du die von Last.fm aufgezwungenen Weiterleitungen r\xFCckg\xE4ngig machen, sie k\xF6nnen aber auch l\xE4stig sein.",
-        pt: "Essas notifica\xE7\xF5es podem permitir que voc\xEA desfa\xE7a redirecionamentos que o Last.fm imp\xF4s a voc\xEA, mas tamb\xE9m podem ser irritantes"
+        pt: "Essas notifica\xE7\xF5es podem permitir que voc\xEA desfa\xE7a redirecionamentos que a Last.fm imp\xF4s a voc\xEA, mas tamb\xE9m podem ser irritantes"
       }
     },
     colourful_counts: {
@@ -18803,7 +18810,7 @@
       body: {
         en: "Choose between a tiny delay for a wide range of graph options or legacy Last.fm graphs",
         de: "W\xE4hle zwischen einer kleinen Verz\xF6gerung f\xFCr eine breite Palette von Diagrammoptionen oder \xE4lteren Last.fm-Diagrammen",
-        pt: "Escolha entre um pequeno atraso para ter mais op\xE7\xF5es de gr\xE1ficos ou usar os gr\xE1ficos cl\xE1ssicos do Last.fm"
+        pt: "Escolha entre um pequeno atraso para ter mais op\xE7\xF5es de gr\xE1ficos ou usar os gr\xE1ficos cl\xE1ssicos da Last.fm"
       }
     },
     show_bulk_edit_album: {
@@ -18862,7 +18869,7 @@
     skip_to: {
       en: "Skip to",
       de: "\xFCberspringen zu",
-      pt: "Pular para"
+      pt: "Ir at\xE9"
     },
     information: {
       en: "Information",
@@ -18912,7 +18919,7 @@
       body: {
         en: "Last.fm can optionally send promotional emails from time to time",
         de: "Last.fm kann optional von Zeit zu Zeit Werbe-emails senden",
-        pt: "O Last.fm pode, opcionalmente, enviar e-mails promocionais de tempos em tempos."
+        pt: "A Last.fm pode, opcionalmente, enviar e-mails promocionais de tempos em tempos."
       }
     },
     email_language: {
@@ -18944,7 +18951,7 @@
       body: {
         en: "Deletion will take 14 days to complete, after this time your account will either be deleted, anonymised, or put beyond use and cannot be recovered. Once deleted, your username will no longer be available.",
         de: "Die L\xF6schung dauert 14 Tage. Nach Ablauf dieser Frist wird dein Konto entweder gel\xF6scht, anonymisiert, oder unbrauchbar gemacht und kann nicht wiederhergestellt werden. Nach der L\xF6schung ist dein Nutzername nicht mehr verf\xFCgbar.",
-        pt: "A exclus\xE3o levar\xE1 14 dias para ser conclu\xEDda. Ap\xF3s esse per\xEDodo, sua conta ser\xE1 exclu\xEDda, anonimizada ou desativada, e n\xE3o poder\xE1 ser recuperada. Depois de exclu\xEDda, seu nome de usu\xE1rio n\xE3o estar\xE1 mais dispon\xEDvel."
+        pt: "A exclus\xE3o levar\xE1 14 dias para ser conclu\xEDda. Ap\xF3s esse per\xEDodo, sua conta ser\xE1 exclu\xEDda, anonimizada ou desativada, e n\xE3o poder\xE1 ser recuperada. Depois de exclu\xEDdo, seu nome de usu\xE1rio n\xE3o estar\xE1 mais dispon\xEDvel."
       }
     },
     delete_account_permanently: {
@@ -19015,7 +19022,7 @@
       },
       preview: {
         en: "hello! **hello!** *hello!*\n[here's a link](https://katelyn.moe) HAII @stellasaur",
-        pt: "opa! **opa!** *opa!*\n[aqui'est\xE1 um link](https://katelyn.moe) OIEE @stellasaur"
+        pt: "opa! **opa!** *opa!*\n[aqui est\xE1 um link](https://katelyn.moe) OIEE @stellasaur"
       }
     },
     gathering_your_plays: {
@@ -19041,7 +19048,7 @@
       },
       body: {
         en: "Translations are powered by community contributions from wonderful people like you",
-        pt: "As tradu\xE7\xF5es s\xE3o feitas gra\xE7as \xE0s contribui\xE7\xF5es da comunidade, de pessoas incr\xEDveis como voc\xEA"
+        pt: "As tradu\xE7\xF5es s\xE3o feitas gra\xE7as \xE0s contribui\xE7\xF5es da comunidade de pessoas incr\xEDveis como voc\xEA"
       }
     },
     welcome_to_bleh: {
@@ -19084,7 +19091,7 @@
     },
     all_particles: {
       en: "Show full particles",
-      pt: "Mostrar part\xEDculas completas"
+      pt: "Mostrar todas as part\xEDculas"
     },
     less_particles: {
       en: "Show less particles",
@@ -19125,7 +19132,7 @@
     recent_listening: {
       name: {
         en: "Hide your recent listening history",
-        pt: "Esconde seu hist\xF3rico de scrobbles recente"
+        pt: "Ocultar seu hist\xF3rico de scrobbles recente"
       },
       body: {
         en: "Keeps your activity more private",
@@ -19216,19 +19223,24 @@
       pt: "Mudar foto de perfil"
     },
     edit_profile_note: {
-      en: "Edit profile note"
+      en: "Edit profile note",
+      pt: "Editar recado de perfil"
     },
     update_to_version: {
-      en: "Update to {v}"
+      en: "Update to {v}",
+      pt: "Atualizar para {v}"
     },
     all: {
-      en: "All"
+      en: "All",
+      pt: "Todos"
     },
     saved: {
-      en: "Saved"
+      en: "Saved",
+      pt: "Salvo"
     },
     no_images_saved: {
-      en: "No photos saved"
+      en: "No photos saved",
+      pt: "Nenhuma foto salva"
     },
     interested: {
       en: "Interested",
@@ -19238,58 +19250,74 @@
       en: "Total"
     },
     value_failed_to_load: {
-      en: "{v} failed to load"
+      en: "{v} failed to load",
+      pt: "{v} falhou ao carregar"
     },
     profile_does_not_have_enough_scrobbles: {
-      en: "Profile does not have enough scrobbles"
+      en: "Profile does not have enough scrobbles",
+      pt: "O perfil n\xE3o tem scrobbles o suficiente"
     },
     requires_extension_value: {
-      en: "Requires extension \u2018{v}\u2019"
+      en: "Requires extension \u2018{v}\u2019",
+      pt: "Requer extens\xE3o \u2018{v}\u2019"
     },
     incompatible_with_value: {
-      en: "Incompatible with {v}"
+      en: "Incompatible with {v}",
+      pt: "Incompat\xEDvel com {v}"
     },
     bulk_edit_extension: {
-      en: "Last.fm Bulk Edit"
+      en: "Last.fm Bulk Edit",
+      pt: "Edi\xE7\xE3o em Massa do Last.fm"
     },
     collage: {
-      en: "Collage"
+      en: "Collage",
+      pt: "Colagem"
     },
     your_collage_is_ready: {
-      en: "Your collage is ready!"
+      en: "Your collage is ready!",
+      pt: "Sua colagem est\xE1 pronta!"
     },
     name_failed: {
-      en: "{name} failed"
+      en: "{name} failed",
+      pt: "{name} falhou"
     },
     select_component: {
-      en: "Select component"
+      en: "Select component",
+      pt: "Selecionar componente"
     },
     only_numbers_are_allowed: {
-      en: "Only numbers are allowed here"
+      en: "Only numbers are allowed here",
+      pt: "Apenas n\xFAmeros s\xE3o permitidos aqui"
     },
     keep_within_the_range: {
-      en: "Keep within the range"
+      en: "Keep within the range",
+      pt: "Manter dentro do intervalo"
     },
     generate: {
-      en: "Generate"
+      en: "Generate",
+      pt: "Gerar"
     },
     your_settings_are_invalid: {
-      en: "Your settings are invalid"
+      en: "Your settings are invalid",
+      pt: "Suas configura\xE7\xF5es s\xE3o inv\xE1lidas"
     },
     top_type: {
       en: "Top {type}"
     },
     made_with_name: {
-      en: "Made with {name}"
+      en: "Made with {name}",
+      pt: "Feito com {name}"
     },
     download: {
-      en: "Download"
+      en: "Download",
+      pt: "Baixar"
     },
     chart_template_filename: {
       en: "{user} Collage ({timeframe}, Top {type}, {size}) - {brand}"
     },
     waiting_for_images: {
-      en: "Waiting for images"
+      en: "Waiting for images",
+      pt: "Aguardando imagens"
     },
     collage_title: {
       name: {
@@ -22323,22 +22351,22 @@
   });
   moment.updateLocale("pt", {
     relativeTime: {
-      future: "em %s",
-      past: "faz %s",
-      s: "alguns Segundos",
-      ss: "%d Segundos",
-      m: "um Minuto",
-      mm: "%d Minutos",
-      h: "uma Hora",
-      hh: "%d Horas",
-      d: "um Dia",
-      dd: "%d Dias",
-      w: "uma Semana",
-      ww: "%d Semanas",
-      M: "um M\xEAs",
-      MM: "%d Meses",
-      y: "um Ano",
-      yy: "%d Anos"
+      future: "Em %s",
+      past: "Fazem %s",
+      s: "Alguns Segundos",
+      ss: "%d segundos",
+      m: "Um minuto",
+      mm: "%d minutos",
+      h: "Uma hora",
+      hh: "%d horas",
+      d: "Um dia",
+      dd: "%d dias",
+      w: "Uma semana",
+      ww: "%d semanas",
+      M: "Um m\xEAs",
+      MM: "%d meses",
+      y: "Um ano",
+      yy: "%d anos"
     }
   });
   function tl(key) {
