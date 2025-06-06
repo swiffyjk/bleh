@@ -2447,6 +2447,9 @@ export const trans = {
     collage: {
         en: 'Collage'
     },
+    your_collage_is_ready: {
+        en: 'Your collage is ready!'
+    },
     name_failed: {
         en: '{name} failed'
     },
@@ -2465,8 +2468,8 @@ export const trans = {
     your_settings_are_invalid: {
         en: 'Your settings are invalid'
     },
-    timeframe_top_type: {
-        en: '{timeframe} top {type}'
+    top_type: {
+        en: 'Top {type}'
     },
     made_with_name: {
         en: 'Made with {name}'
@@ -2475,7 +2478,7 @@ export const trans = {
         en: 'Download'
     },
     chart_template_filename: {
-        en: 'Collage of {timeframe} top {type} generated with {brand}'
+        en: 'Collage of {timeframe} Top {type} generated with {brand}'
     },
     waiting_for_images: {
         en: 'Waiting for images'

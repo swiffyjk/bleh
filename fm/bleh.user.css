@@ -4533,6 +4533,9 @@ better than the default selector '#app a' i suppose */
 
         .grid-items-item-details {
             background: hsl(var(--h4), 50%);
+            border-radius: var(--item-med-radius);
+            border-top-left-radius: 0;
+            border-top-right-radius: 0;
         }
     }
 }
@@ -23184,6 +23187,21 @@ h4 {
         height: 797px !important;
     }
 
+    .collage-finished {
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        gap: var(--card-gap);
+        margin-bottom: var(--card-gap);
+
+        strong {
+            font-size: 16px;
+            line-height: 20px;
+            color: hsl(var(--c1));
+            cursor: default;
+        }
+    }
+
     .collage {
         width: 1500px;
         height: 1594px;
@@ -23203,18 +23221,15 @@ h4 {
         }
 
         .grid-items {
-            flex: 1;
-            height: 100%;
-
-            .bleh-icon:before,
-            .grid-items-plays:before {
-                mask-image: unset !important;
-                -webkit-mask-image: unset !important;
-                background: var(--icon, var(--mask)) !important;
+            .grid-item-plays:before {
+                --mask: unset;
+                --icon-16-placeholder: unset;
+                background: url('data:image/svg+xml;base64,PHN2ZyAgeG1sbnM9Imh0dHA6Ly93d3cudzMub3JnLzIwMDAvc3ZnIiAgd2lkdGg9IjI0IiAgaGVpZ2h0PSIyNCIgIHZpZXdCb3g9IjAgMCAyNCAyNCIgIGZpbGw9IiNmZmZmZmYiICBjbGFzcz0iaWNvbiBpY29uLXRhYmxlciBpY29ucy10YWJsZXItZmlsbGVkIGljb24tdGFibGVyLXBsYXllci1wbGF5Ij48cGF0aCBzdHJva2U9Im5vbmUiIGQ9Ik0wIDBoMjR2MjRIMHoiIGZpbGw9Im5vbmUiLz48cGF0aCBkPSJNNiA0djE2YTEgMSAwIDAgMCAxLjUyNCAuODUybDEzIC04YTEgMSAwIDAgMCAwIC0xLjcwNGwtMTMgLThhMSAxIDAgMCAwIC0xLjUyNCAuODUyeiIgLz48L3N2Zz4=') !important;
+                background-size: 100% !important;
+                opacity: 0.8 !important;
             }
         }
 
-        .branding,
         .header {
             display: flex;
             color: #fff;
@@ -23223,15 +23238,21 @@ h4 {
 
             &.header {
                 justify-content: space-between;
-            }
-            &.branding {
-                gap: 10px;
 
-                strong {
-                    font-family: var(--font-brand);
-                    font-size: 20px;
-                    margin-top: -3px;
+                .bleh-icon {
+                    mask-image: none !important;
+                    -webkit-mask-image: none !important;
+                    background: url('data:image/svg+xml;base64,PHN2ZyAgeG1sbnM9Imh0dHA6Ly93d3cudzMub3JnLzIwMDAvc3ZnIiAgd2lkdGg9IjI0IiAgaGVpZ2h0PSIyNCIgIHZpZXdCb3g9IjAgMCAyNCAyNCIgIGZpbGw9IiNmZmZmZmYiICBjbGFzcz0iaWNvbiBpY29uLXRhYmxlciBpY29ucy10YWJsZXItZmlsbGVkIGljb24tdGFibGVyLWxheW91dC0yIj48cGF0aCBzdHJva2U9Im5vbmUiIGQ9Ik0wIDBoMjR2MjRIMHoiIGZpbGw9Im5vbmUiLz48cGF0aCBkPSJNOCAzYTMgMyAwIDAgMSAzIDN2MWEzIDMgMCAwIDEgLTMgM2gtMmEzIDMgMCAwIDEgLTMgLTN2LTFhMyAzIDAgMCAxIDMgLTN6IiAvPjxwYXRoIGQ9Ik04IDEyYTMgMyAwIDAgMSAzIDN2M2EzIDMgMCAwIDEgLTMgM2gtMmEzIDMgMCAwIDEgLTMgLTN2LTNhMyAzIDAgMCAxIDMgLTN6IiAvPjxwYXRoIGQ9Ik0xOCAzYTMgMyAwIDAgMSAzIDN2M2EzIDMgMCAwIDEgLTMgM2gtMmEzIDMgMCAwIDEgLTMgLTN2LTNhMyAzIDAgMCAxIDMgLTN6IiAvPjxwYXRoIGQ9Ik0xOCAxNGEzIDMgMCAwIDEgMyAzdjFhMyAzIDAgMCAxIC0zIDNoLTJhMyAzIDAgMCAxIC0zIC0zdi0xYTMgMyAwIDAgMSAzIC0zeiIgLz48L3N2Zz4=') !important;
+                    background-size: 100% !important;
+                    --icon-size: 24px;
                 }
+            }
+            .brand {
+                font-family: var(--font-brand);
+                font-size: 26px !important;
+                line-height: 20px;
+                margin-top: -6px;
+                margin-right: var(--item-list-gap);
             }
 
             .type {
@@ -23248,9 +23269,12 @@ h4 {
 
             .user {
                 display: flex;
+                flex-direction: row-reverse;
                 align-items: center;
                 gap: var(--item-list-gap);
                 cursor: default;
+                font-size: 16px;
+                line-height: 20px;
 
                 .avatar {
                     width: 32px;
@@ -23265,6 +23289,9 @@ h4 {
 }
 .compare {
     --mask: var(--icon-16-arrows);
+}
+[data-type="download"] {
+    --mask: var(--icon-16-download);
 }
 
 @keyframes gradient {

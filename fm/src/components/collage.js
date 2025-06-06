@@ -268,8 +268,12 @@ export function collage() {
                 ${settings.collage_title ? html.node`
                 <div class="header">
                     <div class="type" data-type=${type_select.value}>
+                        ${settings.collage_branding ? html.node`
+                        <strong class="brand">${version.brand}</strong>
+                        ` : ''}
                         <div class="bleh-icon" />
-                        <strong>${tl(trans.timeframe_top_type).replace('{timeframe}', timeframe.querySelector('button').textContent).replace('{type}', tl(trans[type_select.value]))}</strong>
+                        <strong>${timeframe.querySelector('button').textContent}</strong>
+                        <strong>${tl(trans.top_type).replace('{type}', tl(trans[type_select.value]))}</strong>
                     </div>
                     <div class="user">
                         <div class="avatar">
@@ -280,15 +284,10 @@ export function collage() {
                 </div>
                 ` : ''}
                 ${grid}
-                ${settings.collage_branding ? html.node`
-                <div class="branding">
-                    ${{html: tl(trans.made_with_name).replace('{name}', `<strong class="brand">${version.brand}</strong>`)}}
-                </div>
-                ` : ''}
             </div>
         `;
         render(body, html`
-            <div class="loading-data-container">
+            <div class="loading-data-container" style="margin-bottom: 50px">
                 <div class="loading-data-text">${tl(trans.waiting_for_images)}</div>
             </div>
             ${collage_dom}
@@ -316,13 +315,16 @@ export function collage() {
             body.setAttribute('data-filled', 'true');
 
             render(body, html`
-                ${canvas}
-                <div class="button-group">
-                    <a class="btn primary icon" data-type="download" href=${canvas.toDataURL('image/png')} download=${tl(trans.chart_template_filename)
-                    .replace('{timeframe}', timeframe.querySelector('button').textContent)
-                    .replace('{type}', type_select.value)
-                    .replace('{brand}', version.brand)}>${tl(trans.download)}</a>
+                <div class="collage-finished">
+                    <strong>${tl(trans.your_collage_is_ready)}</strong>
+                    <div class="button-group">
+                        <a class="btn primary icon" data-type="download" href=${canvas.toDataURL('image/png')} download=${tl(trans.chart_template_filename)
+                                .replace('{timeframe}', timeframe.querySelector('button').textContent)
+                                .replace('{type}', type_select.value)
+                                .replace('{brand}', version.brand)}>${tl(trans.download)}</a>
+                    </div>
                 </div>
+                ${canvas}
             `);
 
             type.querySelector('button').disabled = false;
