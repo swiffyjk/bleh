@@ -41,33 +41,35 @@ export function collage() {
                     </div>
                 </div>
                 <div class="compare-selection">
-                    ${width = input({
-                        type: 'number',
-                        value: value,
-                        placeholder: value,
-                        min: min,
-                        max: max
-                    })}
-                    <div class="bleh-icon" style="--icon: var(--icon-16-x)" />
-                    ${height = input({
-                        type: 'number',
-                        value: value,
-                        placeholder: value,
-                        min: min,
-                        max: max
-                    })}
+                    <div class="input-group">
+                        ${width = input({
+                            type: 'number',
+                            value: value,
+                            placeholder: value,
+                            min: min,
+                            max: max
+                        })}
+                        <div class="bleh-icon" style="--icon: var(--icon-16-x)" />
+                        ${height = input({
+                            type: 'number',
+                            value: value,
+                            placeholder: value,
+                            min: min,
+                            max: max
+                        })}
+                    </div>
                     ${type = select([
                         {
                             value: 'artists',
-                            text: tl(trans.artists),
+                            text: html`<div class="bleh-icon" style="--icon: var(--icon-16-artist)" />${tl(trans.artists)}`,
                         },
                         {
                             value: 'albums',
-                            text: tl(trans.albums),
+                            text: html`<div class="bleh-icon" style="--icon: var(--icon-16-album)" />${tl(trans.albums)}`,
                         },
                         {
                             value: 'tracks',
-                            text: tl(trans.tracks),
+                            text: html`<div class="bleh-icon" style="--icon: var(--icon-16-track)" />${tl(trans.tracks)}`,
                         }
                     ], 'albums')}
                     ${timeframe = select([
@@ -90,6 +92,10 @@ export function collage() {
                         {
                             value: 'LAST_365_DAYS',
                             text: tl(trans.last_count_days).replace('{c}', '365'),
+                        },
+                        {
+                            value: 'ALL',
+                            text: tl(trans.all_time),
                         }
                     ], 'LAST_90_DAYS')}
                     <button class="btn chibi icon" data-type="settings" ref=${el => settings_btn = el}>${tl(trans.settings)}</button>
@@ -288,8 +294,8 @@ export function collage() {
                 ${settings.collage_title ? html.node`
                 <div class="header">
                     <div class="type" data-type=${type_select.value}>
-                        <strong class="brand">${version.brand}</strong>
                         <div class="bleh-icon" />
+                        <strong class="brand">${version.brand}</strong>
                         <strong>${timeframe.querySelector('button').textContent}</strong>
                         <strong>${tl(trans.top_type).replace('{type}', tl(trans[type_select.value]))}</strong>
                         <strong>${width_input.value}x${height_input.value}</strong>

@@ -5232,7 +5232,7 @@
   function set_select(button, menu, values, selected, select2) {
     values.some((value) => {
       if (value.value == selected) {
-        button.textContent = value.text;
+        render(button, html2`${value.text}`);
         return false;
       }
     });
@@ -5933,33 +5933,35 @@
                     </div>
                 </div>
                 <div class="compare-selection">
-                    ${width = input({
+                    <div class="input-group">
+                        ${width = input({
         type: "number",
         value,
         placeholder: value,
         min,
         max
       })}
-                    <div class="bleh-icon" style="--icon: var(--icon-16-x)" />
-                    ${height = input({
+                        <div class="bleh-icon" style="--icon: var(--icon-16-x)" />
+                        ${height = input({
         type: "number",
         value,
         placeholder: value,
         min,
         max
       })}
+                    </div>
                     ${type = select([
         {
           value: "artists",
-          text: tl(trans.artists)
+          text: html2`<div class="bleh-icon" style="--icon: var(--icon-16-artist)" />${tl(trans.artists)}`
         },
         {
           value: "albums",
-          text: tl(trans.albums)
+          text: html2`<div class="bleh-icon" style="--icon: var(--icon-16-album)" />${tl(trans.albums)}`
         },
         {
           value: "tracks",
-          text: tl(trans.tracks)
+          text: html2`<div class="bleh-icon" style="--icon: var(--icon-16-track)" />${tl(trans.tracks)}`
         }
       ], "albums")}
                     ${timeframe = select([
@@ -5982,6 +5984,10 @@
         {
           value: "LAST_365_DAYS",
           text: tl(trans.last_count_days).replace("{c}", "365")
+        },
+        {
+          value: "ALL",
+          text: tl(trans.all_time)
         }
       ], "LAST_90_DAYS")}
                     <button class="btn chibi icon" data-type="settings" ref=${(el) => settings_btn = el}>${tl(trans.settings)}</button>
@@ -6150,8 +6156,8 @@
                 ${settings.collage_title ? html2.node`
                 <div class="header">
                     <div class="type" data-type=${type_select.value}>
-                        <strong class="brand">${version.brand}</strong>
                         <div class="bleh-icon" />
+                        <strong class="brand">${version.brand}</strong>
                         <strong>${timeframe.querySelector("button").textContent}</strong>
                         <strong>${tl(trans.top_type).replace("{type}", tl(trans[type_select.value]))}</strong>
                         <strong>${width_input.value}x${height_input.value}</strong>
@@ -18317,11 +18323,6 @@
       de: "Ignoriert",
       pt: "Ignorados"
     },
-    all_time: {
-      en: "All time",
-      de: "Aller Zeiten",
-      pt: "Todo o per\xEDodo"
-    },
     count_total: {
       en: "{c} total",
       de: "{c} insgesamt"
@@ -19176,7 +19177,13 @@
     },
     last_count_days: {
       en: "Last {c} days",
+      de: "Letzte {c} Tage",
       pt: "\xDAltimos {c} dias"
+    },
+    all_time: {
+      en: "All time",
+      de: "Aller Zeiten",
+      pt: "Todo o per\xEDodo"
     },
     choose_a_timeframe_above: {
       en: "Choose a timeframe above",
@@ -19313,7 +19320,8 @@
       pt: "Baixar"
     },
     chart_template_filename: {
-      en: "{user} Collage ({timeframe}, Top {type}, {size}) - {brand}"
+      en: "{user} Collage ({timeframe}, Top {type}, {size}) - {brand}",
+      pt: "{user} Colagem ({timeframe}, Top {type}, {size}) - {brand}"
     },
     waiting_for_images: {
       en: "Waiting for images",

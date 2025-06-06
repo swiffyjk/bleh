@@ -4,7 +4,7 @@
 // Licensed under GPLv3
 //
 
-import {html} from "lighterhtml";
+import {html, render} from "lighterhtml";
 import {tl, trans} from "../build/trans.js";
 
 unsafeWindow._update_inbuilt_select = function(id, value) {
@@ -53,7 +53,7 @@ export function select(values, initial = '') {
 function set_select(button, menu, values, selected, select) {
     values.some((value) => {
         if (value.value == selected) {
-            button.textContent = value.text;
+            render(button, html`${value.text}`);
             return false;
         }
     });

@@ -1509,11 +1509,6 @@ export const trans = {
         de: 'Ignoriert',
         pt: 'Ignorados'
     },
-    all_time: {
-        en: 'All time',
-        de: 'Aller Zeiten',
-        pt: 'Todo o período'
-    },
     count_total: {
         en: '{c} total',
         de: '{c} insgesamt'
@@ -2368,7 +2363,13 @@ export const trans = {
     },
     last_count_days: {
         en: 'Last {c} days',
+        de: 'Letzte {c} Tage',
         pt: 'Últimos {c} dias'
+    },
+    all_time: {
+        en: 'All time',
+        de: 'Aller Zeiten',
+        pt: 'Todo o período'
     },
     choose_a_timeframe_above: {
         en: 'Choose a timeframe above',
