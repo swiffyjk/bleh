@@ -5715,8 +5715,28 @@
     tippy(submit, {
       content: tl(trans.compare)
     });
-    function begin_comparing() {
+    function begin_comparing(bypass = false) {
       body.setAttribute("data-filled", "false");
+      if (parseInt(pages_select.value) > 3 && !bypass) {
+        let warn = notify({
+          id: "collage_warning",
+          title: tl(trans.are_you_sure),
+          body: tl(trans.this_will_require_loading_count_pages).replace("{c}", parseInt(pages_select.value) * 2),
+          type: "warning",
+          actions: [
+            {
+              type: "check",
+              action: () => {
+                notify_rm(warn);
+                begin_comparing(true);
+              },
+              text: tl(trans.continue)
+            }
+          ],
+          persist: true
+        });
+        return;
+      }
       pages.querySelector("button").disabled = true;
       type.querySelector("button").disabled = true;
       timeframe.querySelector("button").disabled = true;
