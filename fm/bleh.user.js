@@ -1549,7 +1549,8 @@
     actions = [],
     persist = false,
     type = "generic",
-    long = false
+    long = false,
+    colourful = false
   }) {
     log(`creating ${title}`, "notification", "info", {
       id,
@@ -1559,12 +1560,19 @@
       classname,
       persist,
       type,
-      long
+      long,
+      colourful: false
     });
-    if (type === "error")
+    if (type === "error") {
       icon = "icon-16-x";
-    else if (type === "success")
+      colourful = true;
+    } else if (type === "warning") {
+      icon = "icon-16-warning";
+      colourful = true;
+    } else if (type === "success") {
       icon = "icon-16-check";
+      colourful = true;
+    }
     if (!icon)
       icon = "icon-16-info";
     let bar;
@@ -1579,7 +1587,8 @@
       "bleh-notification",
       icon ? "with-icon" : "",
       classname ? classname : "",
-      long ? "long" : ""
+      long ? "long" : "",
+      colourful ? "colourful" : ""
     ].join(" ")}
             data-type=${type}
             style=${[
@@ -5969,7 +5978,7 @@
     let body;
     let value = 5;
     let min = 1;
-    let max = 10;
+    let max = 20;
     dialog({
       id: "collage",
       title: tl(trans.collage),
@@ -6074,7 +6083,7 @@
       interactiveBorder: 10,
       trigger: "click"
     });
-    function make_collage() {
+    function make_collage(bypass = false) {
       if (width_input.value == "" || height_input.value == "" || parseInt(width_input.value) < min || parseInt(width_input.value) > max || parseInt(height_input.value) < min || parseInt(height_input.value) > max) {
         notify({
           id: "collage_failed",
@@ -6084,12 +6093,32 @@
         });
         return;
       }
+      let per_page = 50;
+      let pages = Math.ceil(width_input.value * height_input.value / per_page);
+      if (pages > 4 && !bypass) {
+        let warn = notify({
+          id: "collage_warning",
+          title: tl(trans.are_you_sure),
+          body: tl(trans.this_will_require_loading_count_pages).replace("{c}", pages),
+          type: "warning",
+          actions: [
+            {
+              type: "check",
+              action: () => {
+                notify_rm(warn);
+                make_collage(true);
+              },
+              text: tl(trans.continue)
+            }
+          ],
+          persist: true
+        });
+        return;
+      }
       type.querySelector("button").disabled = true;
       timeframe.querySelector("button").disabled = true;
       settings_btn.disabled = true;
       submit.disabled = true;
-      let per_page = 50;
-      let pages = Math.ceil(width_input.value * height_input.value / per_page);
       page.state.collage = [];
       body.setAttribute("data-filled", "false");
       get_grid(1, pages);
@@ -19372,6 +19401,12 @@
     },
     downloaded: {
       en: "Downloaded"
+    },
+    are_you_sure: {
+      en: "Are you sure?"
+    },
+    this_will_require_loading_count_pages: {
+      en: "This will require loading {c} pages"
     },
     chart_template_filename: {
       en: "{user} Collage ({timeframe}, Top {type}, {size}) - {brand}",

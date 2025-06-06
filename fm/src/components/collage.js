@@ -5,7 +5,7 @@ import {select} from "./select.js";
 import {setting} from "./settings.js";
 import {input} from "./input.js";
 import {page, root} from "../build/page.js";
-import {notify} from "./notify.js";
+import {notify, notify_rm} from "./notify.js";
 import {clean_number, sanitise} from "../build/tools.js";
 import {log} from "../build/log.js";
 import {music_grids} from "./music_grid.js";
@@ -26,7 +26,7 @@ export function collage() {
 
     let value = 5;
     let min = 1;
-    let max = 10;
+    let max = 20;
 
     dialog({
         id: 'collage',
@@ -136,7 +136,7 @@ export function collage() {
         trigger: 'click',
     });
 
-    function make_collage() {
+    function make_collage(bypass = false) {
         if (
             width_input.value == '' || height_input.value == '' ||
             parseInt(width_input.value) < min || parseInt(width_input.value) > max ||
@@ -151,13 +151,34 @@ export function collage() {
             return;
         }
 
+        let per_page = 50; // decided by last.fm
+        let pages = Math.ceil((width_input.value * height_input.value) / per_page);
+
+        if (pages > 4 && !bypass) {
+            let warn = notify({
+                id: 'collage_warning',
+                title: tl(trans.are_you_sure),
+                body: tl(trans.this_will_require_loading_count_pages).replace('{c}', pages),
+                type: 'warning',
+                actions: [
+                    {
+                        type: 'check',
+                        action: () => {
+                            notify_rm(warn);
+                            make_collage(true);
+                        },
+                        text: tl(trans.continue)
+                    }
+                ],
+                persist: true
+            });
+            return;
+        }
+
         type.querySelector('button').disabled = true;
         timeframe.querySelector('button').disabled = true;
         settings_btn.disabled = true;
         submit.disabled = true;
-
-        let per_page = 50; // decided by last.fm
-        let pages = Math.ceil((width_input.value * height_input.value) / per_page);
 
         page.state.collage = [];
         body.setAttribute('data-filled', 'false');

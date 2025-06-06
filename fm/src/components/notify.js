@@ -53,7 +53,8 @@ export function notify({
     actions = [],
     persist = false,
     type = 'generic',
-    long = false
+    long = false,
+    colourful = false
 }) {
     log(`creating ${title}`, 'notification', 'info', {
         id: id,
@@ -63,13 +64,20 @@ export function notify({
         classname: classname,
         persist: persist,
         type: type,
-        long: long
+        long: long,
+        colourful: false
     });
 
-    if (type === 'error')
+    if (type === 'error') {
         icon = 'icon-16-x';
-    else if (type === 'success')
+        colourful = true;
+    } else if (type === 'warning') {
+        icon = 'icon-16-warning';
+        colourful = true;
+    } else if (type === 'success') {
         icon = 'icon-16-check';
+        colourful = true;
+    }
 
     if (!icon)
         icon = 'icon-16-info';
@@ -88,7 +96,8 @@ export function notify({
                 'bleh-notification',
                 icon ? 'with-icon' : '',
                 classname ? classname : '',
-                long ? 'long' : ''
+                long ? 'long' : '',
+                colourful ? 'colourful' : ''
                 ].join(' ')}
             data-type=${type}
             style=${[
@@ -135,7 +144,7 @@ export function notify({
 unsafeWindow._notify_rm = function(notif) {
     notify_rm(notif);
 }
-function notify_rm(notif) {
+export function notify_rm(notif) {
     notif.classList.add('fade-out');
     setTimeout(function() {
         page.structure.notifications.removeChild(notif);

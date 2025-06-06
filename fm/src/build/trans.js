@@ -2508,6 +2508,12 @@ export const trans = {
     downloaded: {
         en: 'Downloaded'
     },
+    are_you_sure: {
+        en: 'Are you sure?'
+    },
+    this_will_require_loading_count_pages: {
+        en: 'This will require loading {c} pages'
+    },
     chart_template_filename: {
         en: '{user} Collage ({timeframe}, Top {type}, {size}) - {brand}',
         pt: '{user} Colagem ({timeframe}, Top {type}, {size}) - {brand}'

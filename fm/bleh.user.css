@@ -17065,6 +17065,22 @@ button.bleh--gallery-bookmark-image-btn {
             --lit-over: 1;
         }
 
+        &[data-type="warning"] {
+            --hue-over: 20;
+            --sat-over: 1;
+            --lit-over: 1;
+        }
+
+        &[data-type="success"] {
+            --hue-over: var(--hue-pos);
+            --sat-over: 1;
+            --lit-over: 1;
+        }
+
+        &.colourful {
+            --mask-colour: color-mix(in hsl, hsl(var(--l3-c)), hsl(var(--l4-c)) 30%);
+        }
+
         .notification-progress {
             position: absolute;
             left: var(--button-sides);
@@ -17086,6 +17102,9 @@ button.bleh--gallery-bookmark-image-btn {
             }
         }
     }
+}
+[data-type="check"] {
+    --mask: var(--icon-16-check);
 }
 [data-type="close"] {
     --mask: var(--icon-16-x);
