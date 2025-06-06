@@ -5063,6 +5063,7 @@ better than the default selector '#app a' i suppose */
         transition: none !important;
     }
 
+    &.compare-item,
     .chartlist--with-loved > tbody > & {
         padding-right: 42px !important;
     }

@@ -5589,8 +5589,12 @@
       });
       return;
     }
-    let compare_button;
-    page.state.compare_modal = dialog({
+    let pages;
+    let timeframe;
+    let type;
+    let submit;
+    let body;
+    dialog({
       id: "compare",
       title: tl(trans.compare),
       body: html2.node`
@@ -5611,34 +5615,72 @@
                     </div>
                 </div>
                 <div class="compare-selection">
-                    <div class="select-wrap custom-selector" id="pages_select">
-                        <select id="pages">
-                            <option value="1">50</option>
-                            <option value="2">100</option>
-                            <option value="3" selected>150</option>
-                            <option value="4">200</option>
-                        </select>
-                    </div>
-                    <div class="select-wrap custom-selector" id="type_select">
-                        <select id="type">
-                            <option value="artists">${tl(trans.artists)}</option>
-                            <option value="albums">${tl(trans.albums)}</option>
-                            <option value="tracks">${tl(trans.tracks)}</option>
-                        </select>
-                    </div>
-                    <div class="select-wrap custom-selector" id="range_select">
-                        <select id="range">
-                            <option value="LAST_7_DAYS">${tl(trans.last_count_days).replace("{c}", "7")}</option>
-                            <option value="LAST_30_DAYS">${tl(trans.last_count_days).replace("{c}", "30")}</option>
-                            <option value="LAST_90_DAYS" selected>${tl(trans.last_count_days).replace("{c}", "90")}</option>
-                            <option value="LAST_180_DAYS">${tl(trans.last_count_days).replace("{c}", "180")}</option>
-                            <option value="LAST_365_DAYS">${tl(trans.last_count_days).replace("{c}", "365")}</option>
-                        </select>
-                    </div>
-                    <button class="btn chibi icon primary compare" ref=${(el) => compare_button = el} onclick=${() => begin_comparing()}>${tl(trans.compare)}</button>
+                    ${pages = select([
+        {
+          value: "1",
+          text: 50
+        },
+        {
+          value: "2",
+          text: 100
+        },
+        {
+          value: "3",
+          text: 150
+        },
+        {
+          value: "4",
+          text: 200
+        },
+        {
+          value: "5",
+          text: 250
+        },
+        {
+          value: "6",
+          text: 300
+        }
+      ], "3")}
+                    ${type = select([
+        {
+          value: "artists",
+          text: html2`<div class="bleh-icon" style="--icon: var(--icon-16-artist)" />${tl(trans.artists)}`
+        },
+        {
+          value: "albums",
+          text: html2`<div class="bleh-icon" style="--icon: var(--icon-16-album)" />${tl(trans.albums)}`
+        },
+        {
+          value: "tracks",
+          text: html2`<div class="bleh-icon" style="--icon: var(--icon-16-track)" />${tl(trans.tracks)}`
+        }
+      ], "albums")}
+                    ${timeframe = select([
+        {
+          value: "LAST_7_DAYS",
+          text: tl(trans.last_count_days).replace("{c}", "7")
+        },
+        {
+          value: "LAST_30_DAYS",
+          text: tl(trans.last_count_days).replace("{c}", "30")
+        },
+        {
+          value: "LAST_90_DAYS",
+          text: tl(trans.last_count_days).replace("{c}", "90")
+        },
+        {
+          value: "LAST_180_DAYS",
+          text: tl(trans.last_count_days).replace("{c}", "180")
+        },
+        {
+          value: "LAST_365_DAYS",
+          text: tl(trans.last_count_days).replace("{c}", "365")
+        }
+      ], "LAST_90_DAYS")}
+                    <button class="btn chibi icon primary compare" ref=${(el) => submit = el} onclick=${() => begin_comparing()}>${tl(trans.compare)}</button>
                 </div>
             </div>
-            <div class="compare-body" data-filled="false">
+            <div class="compare-body" data-filled="false" ref=${(el) => body = el}>
                 <div class="loading-data-container">
                     <div class="loading-data-text info">${tl(trans.choose_a_timeframe_above)}</div>
                 </div>
@@ -5646,221 +5688,218 @@
         `,
       type: "compare"
     });
-    tippy(compare_button, {
+    let pages_select = pages.querySelector("select");
+    let timeframe_select = timeframe.querySelector("select");
+    let type_select = type.querySelector("select");
+    tippy(submit, {
       content: tl(trans.compare)
     });
-    custom_select(page.state.compare_modal.querySelector("#pages"), page.state.compare_modal.querySelector("#pages_select"));
-    custom_select(page.state.compare_modal.querySelector("#type"), page.state.compare_modal.querySelector("#type_select"));
-    custom_select(page.state.compare_modal.querySelector("#range"), page.state.compare_modal.querySelector("#range_select"));
-  }
-  function begin_comparing() {
-    page.state.compare_modal.querySelector(".bleh-modal-body .compare-body").setAttribute("data-filled", "false");
-    let buttons = page.state.compare_modal.querySelectorAll(".compare-selection > button");
-    buttons.forEach((button) => {
-      button.setAttribute("disabled", "true");
-    });
-    let pages = page.state.compare_modal.querySelector("#pages").value;
-    let type = page.state.compare_modal.querySelector("#type").value;
-    let range = page.state.compare_modal.querySelector("#range").value;
-    page.state.compare = {
-      you: [],
-      other: [],
-      shared: []
-    };
-    get_grid(auth.name, type, range, 1, pages, page.name);
-  }
-  function get_grid(user, type, range, current_page, pages, next_user = null) {
-    render(page.state.compare_modal.querySelector(".bleh-modal-body .compare-body"), html2`
-        <div class="loading-data-container">
-            <div class="loading-data-text">${tl(trans.gathering_plays_for_user_pages).replace("{u}", user).replace("{current_page}", current_page).replace("{pages}", pages)}</div>
-        </div>
-    `);
-    fetch(`${root}user/${user}/library/${type}?format=list&date_preset=${range}&page=${current_page}&ajax=1`).then(function(response) {
-      console.log("returned", response, response.text);
-      return response.text();
-    }).then(function(dom) {
-      let doc = new DOMParser().parseFromString(dom, "text/html");
-      console.log("DOC", doc);
-      let next_button = doc.querySelector(".pagination-next");
-      try {
-        let tracks = doc.querySelectorAll(".chartlist-row");
-        tracks.forEach((track) => {
-          let item = {};
-          item.avatar = track.querySelector(".chartlist-image img");
-          if (item.avatar)
-            item.avatar = item.avatar.getAttribute("src");
-          item.name = track.querySelector(".chartlist-name a").textContent.trim();
-          if (type != "artists")
-            item.sister = track.querySelector(".chartlist-artist a").textContent.trim();
-          item.plays = clean_number(track.querySelector(".chartlist-count-bar-slug").getAttribute("data-stat-value"));
-          if (next_user)
-            page.state.compare.you.push(item);
-          else
-            page.state.compare.other.push(item);
-        });
-      } catch (e) {
-        notify({
-          id: "compare",
-          title: tl(trans.failed),
-          body: tl(trans.there_was_a_network_error),
-          type: "error"
-        });
-        console.error(e);
-      }
-      if (next_button && current_page < pages) {
-        get_grid(user, type, range, current_page + 1, pages, next_user);
-      } else if (next_user) {
-        get_grid(next_user, type, range, 1, pages);
-      } else {
-        let buttons = page.state.compare_modal.querySelectorAll(".compare-selection > button");
-        buttons.forEach((button) => {
-          button.removeAttribute("disabled");
-        });
-        continue_comparing(type, range);
-      }
-    });
-  }
-  function continue_comparing(type, range) {
-    log("gathered initial values", "compare", "info", page.state.compare);
-    page.state.compare.you.forEach((your_item) => {
-      let other_item;
-      if (type == "albums")
-        other_item = page.state.compare.other.find((other) => your_item.name === other.name && your_item.sister === other.sister);
-      else
-        other_item = page.state.compare.other.find((other) => your_item.name === other.name);
-      if (other_item) {
-        page.state.compare.shared.push({
-          avatar: your_item.avatar,
-          name: your_item.name,
-          sister: your_item.sister ? your_item.sister : "",
-          plays: {
-            you: your_item.plays,
-            other: other_item.plays,
-            shared: your_item.plays + other_item.plays
-          }
-        });
-      }
-    });
-    page.state.compare.shared.sort((a, b) => b.plays.shared - a.plays.shared);
-    log("gathered shared values", "compare", "info", page.state.compare);
-    page.state.compare_modal.querySelector(".bleh-modal-body .compare-body").innerHTML = "";
-    if (page.state.compare.shared.length == 0) {
-      render(page.state.compare_modal.querySelector(".bleh-modal-body .compare-body"), html2`
+    function begin_comparing() {
+      body.setAttribute("data-filled", "false");
+      pages.querySelector("button").disabled = true;
+      type.querySelector("button").disabled = true;
+      timeframe.querySelector("button").disabled = true;
+      submit.disabled = true;
+      page.state.compare = {
+        you: [],
+        other: [],
+        shared: []
+      };
+      get_grid(auth.name, 1, parseInt(pages_select.value), page.name);
+    }
+    function get_grid(user, current_page, page_count, next_user = null) {
+      render(body, html2`
             <div class="loading-data-container">
-                <div class="loading-data-text failed">${tl(trans.nothing_in_common)}</div>
+                <div class="loading-data-text">${tl(trans.gathering_plays_for_user_pages).replace("{u}", user).replace("{current_page}", current_page).replace("{pages}", page_count)}</div>
             </div>
         `);
-      page.state.compare_modal.querySelector(".bleh-modal-body .compare-body").setAttribute("data-filled", "false");
-      return;
+      fetch(`${root}user/${user}/library/${type_select.value}?format=list&date_preset=${timeframe_select.value}&page=${current_page}&ajax=1`).then(function(response) {
+        console.log("returned", response, response.text);
+        return response.text();
+      }).then(function(dom) {
+        let doc = new DOMParser().parseFromString(dom, "text/html");
+        console.log("DOC", doc);
+        let next_button = doc.querySelector(".pagination-next");
+        try {
+          let tracks = doc.querySelectorAll(".chartlist-row");
+          tracks.forEach((track) => {
+            let item = {};
+            item.avatar = track.querySelector(".chartlist-image img");
+            if (item.avatar)
+              item.avatar = item.avatar.getAttribute("src");
+            item.name = track.querySelector(".chartlist-name a").textContent.trim();
+            if (type_select.value != "artists")
+              item.sister = track.querySelector(".chartlist-artist a").textContent.trim();
+            item.plays = clean_number(track.querySelector(".chartlist-count-bar-slug").getAttribute("data-stat-value"));
+            if (next_user)
+              page.state.compare.you.push(item);
+            else
+              page.state.compare.other.push(item);
+          });
+        } catch (e) {
+          notify({
+            id: "compare",
+            title: tl(trans.failed),
+            body: tl(trans.there_was_a_network_error),
+            type: "error"
+          });
+          console.error(e);
+        }
+        if (next_button && current_page < page_count) {
+          get_grid(user, current_page + 1, page_count, next_user);
+        } else if (next_user) {
+          get_grid(next_user, 1, page_count);
+        } else {
+          pages.querySelector("button").disabled = false;
+          type.querySelector("button").disabled = false;
+          timeframe.querySelector("button").disabled = false;
+          submit.disabled = false;
+          continue_comparing();
+        }
+      });
     }
-    page.state.compare_modal.querySelector(".bleh-modal-body .compare-body").setAttribute("data-filled", "true");
-    if (type != "tracks") {
-      let grid = document.createElement("ol");
-      grid.classList.add("grid-items", "grid-items--numbered", "compare-grid");
-      page.state.compare.shared.forEach((data2) => {
-        let template;
-        if (type == "artists")
-          template = sanitise(data2.name);
+    function continue_comparing() {
+      log("gathered initial values", "compare", "info", page.state.compare);
+      page.state.compare.you.forEach((your_item) => {
+        let other_item;
+        if (type_select.value == "albums")
+          other_item = page.state.compare.other.find((other) => your_item.name === other.name && your_item.sister === other.sister);
         else
-          template = `${sanitise(data2.sister)}/${sanitise(data2.name)}`;
-        grid.appendChild(html2.node`
-                <li class="compare-item grid-items-item">
-                    <div class="grid-items-cover-image js-link-block link-block">
-                        <div class="grid-items-cover-image-image ${data2.avatar.endsWith("/c6f59c1e5e7240a4c0d427abd71f3dbb.jpg") || data2.avatar.endsWith("/2a96cbd8b46e442fc41c2b86b821562f.jpg") ? "grid-items-cover-default" : ""}">
-                            <img src="${data2.avatar.replace("/avatar70s/", "/avatar300s/").replace("/64s/", "/avatar300s/")}" alt="${data2.name}" loading="lazy">
-                        </div>
-                        <div class="grid-items-item-details">
-                            <p class="grid-items-item-main-text">
-                                <a class="link-block-target" href="${root}music/${template}" title="${data2.name}">
-                                    ${data2.name}
-                                </a>
-                            </p>
-                            ${type == "albums" ? html2.node`
-                            <p class="grid-items-item-aux-text">
-                                <a class="grid-items-item-aux-block" href="${root}music/${data2.sister}">
-                                    ${data2.sister}
-                                </a>
-                            </p>
-                            ` : ""}
-                            <p class="grid-items-item-aux-text">
-                                <a class="grid-item-plays with-avatar" href="${root}user/${auth.name}/library/music/${template}?date_preset=${range}" target="_blank">
-                                    <span class="avatar">
-                                        <img src="${auth.avatar}" alt="${tl(trans.your_avatar)}">
-                                    </span>
-                                    ${data2.plays.you.toLocaleString(lang)}
-                                </a>
-                                <a class="grid-item-plays with-avatar" href="${root}user/${page.name}/library/music/${template}?date_preset=${range}" target="_blank">
-                                    <span class="avatar">
-                                        <img src="${page.avatar}" alt="${tl(trans.avatar_for_user).replace("{u}", page.name)}">
-                                    </span>
-                                    ${data2.plays.other.toLocaleString(lang)}
-                                </a>
-                            </p>
-                        </div>
-                        <a class="js-link-block-cover-link link-block-cover-link" href="${root}music/${template}" tabindex="-1" aria-hidden="true"></a>
-                    </div>
-                </li>
+          other_item = page.state.compare.other.find((other) => your_item.name === other.name);
+        if (other_item) {
+          page.state.compare.shared.push({
+            avatar: your_item.avatar,
+            name: your_item.name,
+            sister: your_item.sister ? your_item.sister : "",
+            plays: {
+              you: your_item.plays,
+              other: other_item.plays,
+              shared: your_item.plays + other_item.plays
+            }
+          });
+        }
+      });
+      page.state.compare.shared.sort((a, b) => b.plays.shared - a.plays.shared);
+      log("gathered shared values", "compare", "info", page.state.compare);
+      body.innerHTML = "";
+      if (page.state.compare.shared.length == 0) {
+        render(body, html2`
+                <div class="loading-data-container">
+                    <div class="loading-data-text failed">${tl(trans.nothing_in_common)}</div>
+                </div>
             `);
-      });
-      page.state.compare_modal.querySelector(".bleh-modal-body .compare-body").appendChild(grid);
-      music_grids(grid);
-    } else {
-      let table = document.createElement("table");
-      table.classList.add("chartlist", "chartlist--with-index", "chartlist--with-index--length-2", "chartlist--with-image", "chartlist--with-artist", "chartlist--with-bar", "compare-chartlist");
-      let body = document.createElement("tbody");
-      table.appendChild(body);
-      let max = 0;
-      page.state.compare.shared.forEach((item) => {
-        if (item.plays.you > max)
-          max = item.plays.you;
-        if (item.plays.other > max)
-          max = item.plays.other;
-      });
-      page.state.compare.shared.forEach((data2, index) => {
-        let template = `${sanitise(data2.sister)}/_/${sanitise(data2.name)}`;
-        body.appendChild(html2.node`
-                <tr class="chartlist-row chartlist-row--with-artist compare-item">
-                    <td class="chartlist-index">${index + 1}</td>
-                    <td class="chartlist-image">
-                        <a class="cover-art" href="${root}music/${template}">
-                            <img src="${data2.avatar}" alt="${data2.name}" loading="lazy">
-                        </a>
-                    </td>
-                    <td class="chartlist-name">
-                        <a href="${root}music/${template}" title="${data2.name}">
-                            ${data2.name}
-                        </a>
-                    </td>
-                    <td class="chartlist-artist">
-                        <a href="${root}music/${data2.sister}" title="${data2.sister}">
-                            ${data2.sister}
-                        </a>
-                    </td>
-                    <td class="chartlist-bar with-multiple">
-                        <span class="chartlist-count-bar">
-                            <a class="chartlist-count-bar-link" href="${root}user/${auth.name}/library/music/${template}?date_preset=${range}" target="_blank">
-                                <span class="chartlist-count-bar-slug" data-max-stat-value="${max}" data-stat-value="${data2.plays.you}" style="width: ${data2.plays.you / max * 100}%;"></span>
-                                <span class="chartlist-count-bar-value">${data2.plays.you}</span>
+        body.setAttribute("data-filled", "false");
+        return;
+      }
+      body.setAttribute("data-filled", "true");
+      if (type_select.value != "tracks") {
+        let grid = document.createElement("ol");
+        grid.classList.add("grid-items", "grid-items--numbered", "compare-grid");
+        page.state.compare.shared.forEach((data2) => {
+          let template;
+          if (type_select.value == "artists")
+            template = sanitise(data2.name);
+          else
+            template = `${sanitise(data2.sister)}/${sanitise(data2.name)}`;
+          grid.appendChild(html2.node`
+                    <li class="compare-item grid-items-item">
+                        <div class="grid-items-cover-image js-link-block link-block">
+                            <div class="grid-items-cover-image-image ${data2.avatar.endsWith("/c6f59c1e5e7240a4c0d427abd71f3dbb.jpg") || data2.avatar.endsWith("/2a96cbd8b46e442fc41c2b86b821562f.jpg") ? "grid-items-cover-default" : ""}">
+                                <img src="${data2.avatar.replace("/avatar70s/", "/avatar300s/").replace("/64s/", "/avatar300s/")}" alt="${data2.name}" loading="lazy">
+                            </div>
+                            <div class="grid-items-item-details">
+                                <p class="grid-items-item-main-text">
+                                    <a class="link-block-target" href="${root}music/${template}" title="${data2.name}">
+                                        ${data2.name}
+                                    </a>
+                                </p>
+                                ${type_select.value == "albums" ? html2.node`
+                                <p class="grid-items-item-aux-text">
+                                    <a class="grid-items-item-aux-block" href="${root}music/${data2.sister}">
+                                        ${data2.sister}
+                                    </a>
+                                </p>
+                                ` : ""}
+                                <p class="grid-items-item-aux-text">
+                                    <a class="grid-item-plays with-avatar" href="${root}user/${auth.name}/library/music/${template}?date_preset=${timeframe_select.value}" target="_blank">
+                                        <span class="avatar">
+                                            <img src="${auth.avatar}" alt="${tl(trans.your_avatar)}">
+                                        </span>
+                                        ${data2.plays.you.toLocaleString(lang)}
+                                    </a>
+                                    <a class="grid-item-plays with-avatar" href="${root}user/${page.name}/library/music/${template}?date_preset=${timeframe_select.value}" target="_blank">
+                                        <span class="avatar">
+                                            <img src="${page.avatar}" alt="${tl(trans.avatar_for_user).replace("{u}", page.name)}">
+                                        </span>
+                                        ${data2.plays.other.toLocaleString(lang)}
+                                    </a>
+                                </p>
+                            </div>
+                            <a class="js-link-block-cover-link link-block-cover-link" href="${root}music/${template}" tabindex="-1" aria-hidden="true"></a>
+                        </div>
+                    </li>
+                `);
+        });
+        render(body, grid);
+        music_grids(grid);
+      } else {
+        let table = document.createElement("table");
+        table.classList.add("chartlist", "chartlist--with-index", "chartlist--with-index--length-2", "chartlist--with-image", "chartlist--with-artist", "chartlist--with-bar", "compare-chartlist");
+        let tbody = document.createElement("tbody");
+        table.appendChild(tbody);
+        let max = 0;
+        page.state.compare.shared.forEach((item) => {
+          if (item.plays.you > max)
+            max = item.plays.you;
+          if (item.plays.other > max)
+            max = item.plays.other;
+        });
+        page.state.compare.shared.forEach((data2, index) => {
+          let template = `${sanitise(data2.sister)}/_/${sanitise(data2.name)}`;
+          tbody.appendChild(html2.node`
+                    <tr class="chartlist-row chartlist-row--with-artist compare-item">
+                        <td class="chartlist-index">${index + 1}</td>
+                        <td class="chartlist-image">
+                            <a class="cover-art" href="${root}music/${template}">
+                                <img src="${data2.avatar}" alt="${data2.name}" loading="lazy">
                             </a>
-                            <span class="avatar">
-                                <img src="${auth.avatar}" alt="${tl(trans.your_avatar)}">
-                            </span>
-                        </span>
-                        <span class="chartlist-count-bar">
-                            <a class="chartlist-count-bar-link" href="${root}user/${page.name}/library/music/${template}?date_preset=${range}" target="_blank">
-                                <span class="chartlist-count-bar-slug" data-max-stat-value="${max}" data-stat-value="${data2.plays.other}" style="width: ${data2.plays.other / max * 100}%;"></span>
-                                <span class="chartlist-count-bar-value">${data2.plays.other}</span>
+                        </td>
+                        <td class="chartlist-name">
+                            <a href="${root}music/${template}" title="${data2.name}">
+                                ${data2.name}
                             </a>
-                            <span class="avatar">
-                                <img src="${page.avatar}" alt="${tl(trans.avatar_for_user).replace("{u}", page.name)}">
+                        </td>
+                        <td class="chartlist-artist">
+                            <a href="${root}music/${data2.sister}" title="${data2.sister}">
+                                ${data2.sister}
+                            </a>
+                        </td>
+                        <td class="chartlist-bar with-multiple">
+                            <span class="chartlist-count-bar">
+                                <a class="chartlist-count-bar-link" href="${root}user/${auth.name}/library/music/${template}?date_preset=${timeframe_select.value}" target="_blank">
+                                    <span class="chartlist-count-bar-slug" data-max-stat-value="${max}" data-stat-value="${data2.plays.you}" style="width: ${data2.plays.you / max * 100}%;"></span>
+                                    <span class="chartlist-count-bar-value">${data2.plays.you}</span>
+                                </a>
+                                <span class="avatar">
+                                    <img src="${auth.avatar}" alt="${tl(trans.your_avatar)}">
+                                </span>
                             </span>
-                        </span>
-                    </td>
-                </tr>
-            `);
-      });
-      page.state.compare_modal.querySelector(".bleh-modal-body .compare-body").appendChild(table);
-      patch_titles(page.state.compare_modal);
+                            <span class="chartlist-count-bar">
+                                <a class="chartlist-count-bar-link" href="${root}user/${page.name}/library/music/${template}?date_preset=${timeframe_select.value}" target="_blank">
+                                    <span class="chartlist-count-bar-slug" data-max-stat-value="${max}" data-stat-value="${data2.plays.other}" style="width: ${data2.plays.other / max * 100}%;"></span>
+                                    <span class="chartlist-count-bar-value">${data2.plays.other}</span>
+                                </a>
+                                <span class="avatar">
+                                    <img src="${page.avatar}" alt="${tl(trans.avatar_for_user).replace("{u}", page.name)}">
+                                </span>
+                            </span>
+                        </td>
+                    </tr>
+                `);
+        });
+        body.appendChild(table);
+        patch_titles(body);
+      }
     }
   }
 
@@ -6041,9 +6080,9 @@
       let pages = Math.ceil(width_input.value * height_input.value / per_page);
       page.state.collage = [];
       body.setAttribute("data-filled", "false");
-      get_grid2(1, pages);
+      get_grid(1, pages);
     }
-    function get_grid2(current_page, pages) {
+    function get_grid(current_page, pages) {
       render(body, html2`
             <div class="loading-data-container">
                 <div class="loading-data-text">${tl(trans.gathering_plays_for_user_pages).replace("{u}", page.name).replace("{current_page}", current_page).replace("{pages}", pages)}</div>
@@ -6079,7 +6118,7 @@
           console.error(e);
         }
         if (next_button && current_page < pages) {
-          get_grid2(current_page + 1, pages);
+          get_grid(current_page + 1, pages);
         } else {
           continue_collage();
         }
