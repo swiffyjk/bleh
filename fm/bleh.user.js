@@ -19282,7 +19282,7 @@
     },
     all_time: {
       en: "All time",
-      de: "Aller Zeiten",
+      de: "Insgesamt",
       pt: "Todo o per\xEDodo"
     },
     choose_a_timeframe_above: {

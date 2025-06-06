@@ -2368,7 +2368,7 @@ export const trans = {
     },
     all_time: {
         en: 'All time',
-        de: 'Aller Zeiten',
+        de: 'Insgesamt',
         pt: 'Todo o período'
     },
     choose_a_timeframe_above: {
