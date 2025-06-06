@@ -16,6 +16,7 @@
 // @require      https://cdnjs.cloudflare.com/ajax/libs/color-thief/2.3.0/color-thief.umd.js
 // @require      https://cdn.jsdelivr.net/npm/chart.js@4.4.3/dist/chart.umd.min.js
 // @require      https://cdn.jsdelivr.net/npm/chartjs-adapter-moment@^1
+// @require      https://html2canvas.hertzen.com/dist/html2canvas.min.js
 // ==/UserScript==
 (() => {
   // node_modules/@ungap/weakmap/esm/index.js
@@ -6123,45 +6124,6 @@
                 </li>
             `);
       });
-      create_collage_dom(grid).then((collage_dom) => {
-        body.setAttribute("data-filled", "true");
-        let canvas = html2.node`
-                <canvas width="1000" height="1000" />
-            `;
-        let sv = `
-                <svg xmlns="http://www.w3.org/2000/svg" width="1000" height="1000">
-                    <foreignObject width="100%" height="100%">
-                        <div xmlns="http://www.w3.org/1999/xhtml">
-                            ${collage_dom.outerHTML}
-                        </div>
-                    </foreignObject>
-                </svg>
-            `;
-        let url = `data:image/svg+xml;charset=utf-8,${sv.trim().replace(/[\n\r\t]/gm, "").replace(/#/g, "%23")}`;
-        let image = new Image();
-        image.addEventListener("load", () => {
-          canvas.getContext("2d").drawImage(image, 0, 0);
-        });
-        image.src = url;
-        render(body, html2`
-                ${canvas}
-                ${image}
-                <div class="button-group">
-                    <a class="btn primary icon" data-type="download" href=${url} download=${tl(trans.chart_template_filename).replace("{timeframe}", timeframe.querySelector("button").textContent).replace("{type}", type_select.value).replace("{brand}", version.brand)}>${tl(trans.download)}</a>
-                </div>
-            `);
-        type.querySelector("button").disabled = false;
-        timeframe.querySelector("button").disabled = false;
-        settings_btn.disabled = false;
-        submit.disabled = false;
-      });
-    }
-    async function create_collage_dom(grid) {
-      render(body, html2`
-            <div class="loading-data-container">
-                <div class="loading-data-text">${tl(trans.waiting_for_images)}</div>
-            </div>
-        `);
       let collage_dom = html2.node`
             <div class="collage">
                 ${settings.collage_title ? html2.node`
@@ -6186,18 +6148,31 @@
                 ` : ""}
             </div>
         `;
+      render(body, html2`
+            <div class="loading-data-container">
+                <div class="loading-data-text">${tl(trans.waiting_for_images)}</div>
+            </div>
+            ${collage_dom}
+        `);
       music_grids(grid);
-      let images = collage_dom.querySelectorAll("img");
-      let promises = [];
-      images.forEach((image) => {
-        promises.push(new Promise((resolve) => {
-          image.onload = () => {
-            resolve();
-          };
-        }));
+      html2canvas(collage_dom, {
+        allowTaint: true,
+        useCORS: true,
+        width: 1500,
+        height: 1594
+      }).then((canvas) => {
+        body.setAttribute("data-filled", "true");
+        render(body, html2`
+                ${canvas}
+                <div class="button-group">
+                    <a class="btn primary icon" data-type="download" href=${canvas.toDataURL("image/png")} download=${tl(trans.chart_template_filename).replace("{timeframe}", timeframe.querySelector("button").textContent).replace("{type}", type_select.value).replace("{brand}", version.brand)}>${tl(trans.download)}</a>
+                </div>
+            `);
+        type.querySelector("button").disabled = false;
+        timeframe.querySelector("button").disabled = false;
+        settings_btn.disabled = false;
+        submit.disabled = false;
       });
-      await Promise.all(promises);
-      return collage_dom;
     }
   }
 

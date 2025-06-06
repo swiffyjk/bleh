@@ -23179,6 +23179,71 @@ h4 {
         width: 400px;
         height: 400px;
     }
+
+    .collage {
+        width: 1500px;
+        height: 1594px;
+        background: #000;
+        padding: var(--card-gap);
+        overflow: hidden;
+
+        display: flex;
+        flex-direction: column;
+        gap: var(--card-gap);
+
+        .grid-items {
+            flex: 1;
+            height: 100%;
+        }
+
+        .branding,
+        .header {
+            display: flex;
+            color: #fff;
+            height: fit-content;
+            cursor: pointer;
+
+            &.header {
+                justify-content: space-between;
+            }
+            &.branding {
+                gap: 10px;
+
+                strong {
+                    font-family: var(--font-brand);
+                    font-size: 20px;
+                    margin-top: -3px;
+                }
+            }
+
+            .type {
+                display: flex;
+                align-items: center;
+                gap: var(--item-list-gap);
+                cursor: default;
+
+                strong {
+                    font-size: 16px;
+                    line-height: 20px;
+                }
+            }
+
+            .user {
+                display: flex;
+                align-items: center;
+                gap: var(--item-list-gap);
+                cursor: default;
+
+                .avatar {
+                    width: 32px;
+                    height: 32px;
+                    background: var(--avatar-generic-background);
+                    border-radius: var(--avatar-radius);
+                    --mask-size: 18px;
+                }
+            }
+        }
+    }
 }
 .compare {
     --mask: var(--icon-16-arrows);
