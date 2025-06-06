@@ -288,10 +288,14 @@ export function collage() {
                                 <a class="grid-items-item-aux-block" href="${root}music/${data.sister}">
                                     ${data.sister}
                                 </a>
-                                ` : ''}
                                 ${settings.collage_grid_plays ? html.node`
                                 <a class="grid-item-plays" href="${root}user/${page.name}/library/music/${template}?date_preset=${timeframe_select.value}" target="_blank">
                                     ${data.plays.toLocaleString(lang)}
+                                </a>
+                                ` : ''}
+                                ` : settings.collage_grid_plays ? html.node`
+                                <a class="grid-item-plays" href="${root}user/${page.name}/library/music/${template}?date_preset=${timeframe_select.value}" target="_blank">
+                                    ${data.plays.toLocaleString(lang)}${tl(trans.plays_lower)}
                                 </a>
                                 ` : ''}
                             </p>

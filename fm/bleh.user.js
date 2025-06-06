@@ -6229,10 +6229,14 @@
                                 <a class="grid-items-item-aux-block" href="${root}music/${data2.sister}">
                                     ${data2.sister}
                                 </a>
-                                ` : ""}
                                 ${settings.collage_grid_plays ? html2.node`
                                 <a class="grid-item-plays" href="${root}user/${page.name}/library/music/${template}?date_preset=${timeframe_select.value}" target="_blank">
                                     ${data2.plays.toLocaleString(lang)}
+                                </a>
+                                ` : ""}
+                                ` : settings.collage_grid_plays ? html2.node`
+                                <a class="grid-item-plays" href="${root}user/${page.name}/library/music/${template}?date_preset=${timeframe_select.value}" target="_blank">
+                                    ${data2.plays.toLocaleString(lang)}${tl(trans.plays_lower)}
                                 </a>
                                 ` : ""}
                             </p>
