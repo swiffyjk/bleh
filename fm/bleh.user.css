@@ -4530,6 +4530,10 @@ better than the default selector '#app a' i suppose */
     &.collage-grid {
         grid-template-columns: repeat(var(--width), 1fr);
         grid-template-rows: repeat(var(--height), 1fr);
+
+        .grid-items-item-details {
+            background: hsl(var(--h4), 50%);
+        }
     }
 }
 .grid-items .grid-items-item {
@@ -23176,8 +23180,8 @@ h4 {
     }
 
     canvas {
-        width: 400px;
-        height: 400px;
+        width: 750px !important;
+        height: 797px !important;
     }
 
     .collage {
@@ -23191,9 +23195,23 @@ h4 {
         flex-direction: column;
         gap: var(--card-gap);
 
+        * {
+            --font-weight: 500;
+            --font-size: 16px;
+            --line-height: 20px;
+            text-shadow: unset !important;
+        }
+
         .grid-items {
             flex: 1;
             height: 100%;
+
+            .bleh-icon:before,
+            .grid-items-plays:before {
+                mask-image: unset !important;
+                -webkit-mask-image: unset !important;
+                background: var(--icon, var(--mask)) !important;
+            }
         }
 
         .branding,

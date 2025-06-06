@@ -6076,7 +6076,7 @@
         }
       });
     }
-    function continue_collage() {
+    async function continue_collage() {
       log("gathered initial values", "collage", "info", page.state.collage);
       let grid = html2.node`
             <ol class="grid-items grid-items--numbered collage-grid" style="--width: ${width_input.value}; --height: ${height_input.value}" />
@@ -6155,11 +6155,21 @@
             ${collage_dom}
         `);
       music_grids(grid);
+      let initial_canvas = html2.node`
+            <canvas width="1500" height="1594" />
+        `;
       html2canvas(collage_dom, {
-        allowTaint: true,
         useCORS: true,
-        width: 1500,
-        height: 1594
+        letterRendering: true,
+        canvas: initial_canvas,
+        onclone: (doc) => {
+          doc.querySelectorAll("*").forEach((el) => {
+            if (el.classList == "brand")
+              el.style.setProperty("font-family", "Darumadrop One");
+            else
+              el.style.setProperty("font-family", "Ubuntu Sans");
+          });
+        }
       }).then((canvas) => {
         body.setAttribute("data-filled", "true");
         render(body, html2`

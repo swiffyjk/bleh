@@ -209,7 +209,7 @@ export function collage() {
             });
     }
 
-    function continue_collage() {
+    async function continue_collage() {
         log('gathered initial values', 'collage', 'info', page.state.collage);
 
         let grid = html.node`
@@ -296,11 +296,22 @@ export function collage() {
 
         music_grids(grid);
 
+        let initial_canvas = html.node`
+            <canvas width="1500" height="1594" />
+        `;
+
         html2canvas(collage_dom, {
-            allowTaint: true,
             useCORS: true,
-            width: 1500,
-            height: 1594
+            letterRendering: true,
+            canvas: initial_canvas,
+            onclone: (doc) => {
+                doc.querySelectorAll('*').forEach((el) => {
+                    if (el.classList == 'brand')
+                        el.style.setProperty('font-family', 'Darumadrop One');
+                    else
+                        el.style.setProperty('font-family', 'Ubuntu Sans');
+                });
+            }
         }).then((canvas => {
             body.setAttribute('data-filled', 'true');
 
