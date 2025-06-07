@@ -28,6 +28,9 @@ export function collage() {
     let min = 1;
     let max = 20;
 
+    let current_year = new Date().getFullYear();
+    let previous_year = current_year - 1;
+
     dialog({
         id: 'collage',
         title: tl(trans.collage),
@@ -75,30 +78,38 @@ export function collage() {
                     ], 'albums')}
                     ${timeframe = select([
                         {
-                            value: 'LAST_7_DAYS',
+                            value: 'date_preset=LAST_7_DAYS',
                             text: tl(trans.last_count_days).replace('{c}', '7'),
                         },
                         {
-                            value: 'LAST_30_DAYS',
+                            value: 'date_preset=LAST_30_DAYS',
                             text: tl(trans.last_count_days).replace('{c}', '30'),
                         },
                         {
-                            value: 'LAST_90_DAYS',
+                            value: 'date_preset=LAST_90_DAYS',
                             text: tl(trans.last_count_days).replace('{c}', '90'),
                         },
                         {
-                            value: 'LAST_180_DAYS',
+                            value: 'date_preset=LAST_180_DAYS',
                             text: tl(trans.last_count_days).replace('{c}', '180'),
                         },
                         {
-                            value: 'LAST_365_DAYS',
+                            value: 'date_preset=LAST_365_DAYS',
                             text: tl(trans.last_count_days).replace('{c}', '365'),
                         },
                         {
-                            value: 'ALL',
+                            value: 'date_preset=ALL',
                             text: tl(trans.all_time),
+                        },
+                        {
+                            value: `from=${current_year}-01-01&rangetype=year`,
+                            text: current_year
+                        },
+                        {
+                            value: `from=${previous_year}-01-01&rangetype=year`,
+                            text: previous_year
                         }
-                    ], 'LAST_90_DAYS')}
+                    ], 'date_preset=LAST_90_DAYS')}
                     <button class="btn chibi icon" data-type="settings" ref=${el => settings_btn = el}>${tl(trans.settings)}</button>
                     <button class="btn primary icon" data-type="collage" ref=${el => submit = el} onclick=${() => make_collage()}>${tl(trans.generate)}</button>
                 </div>
@@ -192,7 +203,7 @@ export function collage() {
             </div>
         `);
 
-        fetch(`${root}user/${page.name}/library/${type_select.value}?format=list&date_preset=${timeframe_select.value}&page=${current_page}&ajax=1`)
+        fetch(`${root}user/${page.name}/library/${type_select.value}?format=list&${timeframe_select.value}&page=${current_page}&ajax=1`)
             .then(function(response) {
                 console.log('returned', response, response.text);
 

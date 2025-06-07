@@ -8,6 +8,7 @@ import {html} from "lighterhtml";
 import {notify} from "./notify";
 import {dialog} from "./dialog.js";
 import {tl, trans} from "../build/trans.js";
+import {log} from "../build/log.js";
 
 export function share(url) {
     let input;
@@ -52,10 +53,15 @@ export function share(url) {
     });
 }
 
-export function download(url, filename='unknown') {
+export function download(url, filename=null) {
+    log(`downloading ${filename}`, 'download');
+
     let link = html.node`
-        <a href=${url} download=${filename} />
+        <a href=${url} download />
     `;
+
+    if (filename)
+        link.setAttribute('download', filename);
 
     link.click();
     notify({

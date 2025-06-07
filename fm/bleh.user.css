@@ -10562,8 +10562,7 @@ text[style^="color: rgb(255, 172, 172)"] {
 
         font-size: var(--font-size);
 
-        [data-bleh--theme_type="light"] &,
-        [data-bleh--theme="oled"] & {
+        [data-bleh--theme_type="light"] & {
             background: hsl(var(--b5), 95%) !important;
         }
 

@@ -3117,62 +3117,6 @@
       view_buttons.insertBefore(bulk_edit, edit_form);
   }
 
-  // src/components/share.js
-  function share(url) {
-    let input2;
-    dialog({
-      id: "share",
-      title: tl(trans.share),
-      body: html2.node`
-            <div class="share-top content-form">
-                <input
-                    type="text"
-                    readonly
-                    value=${url}
-                    class="share-input"
-                    ref=${(el) => input2 = el}
-                />
-                <button 
-                    class="btn primary icon copy"
-                    onclick=${() => {
-        input2.select();
-        document.execCommand("copy");
-        notify({
-          title: tl(trans.copied_to_clipboard),
-          icon: "icon-16-copy"
-        });
-      }}
-                >${tl(trans.copy)}</button>
-            </div>
-            <div class="share-links">
-                <a 
-                    href=${`https://twitter.com/intent/tweet?url=${encodeURIComponent(url)}`}
-                    target="_blank"
-                    class="share-link share-link-twitter"
-                >Twitter</a>
-                <a 
-                    href=${`https://www.facebook.com/sharer/sharer.php?u=${encodeURIComponent(url)}`}
-                    target="_blank"
-                    class="share-link share-link-facebook"
-                >Facebook</a>
-            </div>
-        `,
-      replace_if_possible: true
-    });
-  }
-  function download(url, filename = "unknown") {
-    let link = html2.node`
-        <a href=${url} download=${filename} />
-    `;
-    link.click();
-    notify({
-      id: "downloaded",
-      title: tl(trans.downloaded),
-      body: filename,
-      icon: "icon-16-download"
-    });
-  }
-
   // src/avatar.js
   function patch_avatar(avatar3, name, type = "", parent = null, side = "right") {
     if (avatar3.hasAttribute("data-bleh-avatar"))
@@ -3312,9 +3256,6 @@
                 <div class="modal-footer">
                     <div class="fill"></div>
                     <div class="button-group">
-                        <button class="btn icon" data-type="share" onclick=${() => share(src)}>
-                            ${tl(trans.share)}
-                        </button>
                         <a class="btn primary open" href="${src}" target="_blank">
                             ${tl(trans.open_new_tab)}
                         </a>
@@ -3343,6 +3284,65 @@
         })
       });
       menu.show();
+    });
+  }
+
+  // src/components/share.js
+  function share(url) {
+    let input2;
+    dialog({
+      id: "share",
+      title: tl(trans.share),
+      body: html2.node`
+            <div class="share-top content-form">
+                <input
+                    type="text"
+                    readonly
+                    value=${url}
+                    class="share-input"
+                    ref=${(el) => input2 = el}
+                />
+                <button 
+                    class="btn primary icon copy"
+                    onclick=${() => {
+        input2.select();
+        document.execCommand("copy");
+        notify({
+          title: tl(trans.copied_to_clipboard),
+          icon: "icon-16-copy"
+        });
+      }}
+                >${tl(trans.copy)}</button>
+            </div>
+            <div class="share-links">
+                <a 
+                    href=${`https://twitter.com/intent/tweet?url=${encodeURIComponent(url)}`}
+                    target="_blank"
+                    class="share-link share-link-twitter"
+                >Twitter</a>
+                <a 
+                    href=${`https://www.facebook.com/sharer/sharer.php?u=${encodeURIComponent(url)}`}
+                    target="_blank"
+                    class="share-link share-link-facebook"
+                >Facebook</a>
+            </div>
+        `,
+      replace_if_possible: true
+    });
+  }
+  function download(url, filename = null) {
+    log(`downloading ${filename}`, "download");
+    let link = html2.node`
+        <a href=${url} download />
+    `;
+    if (filename)
+      link.setAttribute("download", filename);
+    link.click();
+    notify({
+      id: "downloaded",
+      title: tl(trans.downloaded),
+      body: filename,
+      icon: "icon-16-download"
     });
   }
 
@@ -5999,6 +5999,8 @@
     let value = 5;
     let min = 1;
     let max = 20;
+    let current_year = (/* @__PURE__ */ new Date()).getFullYear();
+    let previous_year = current_year - 1;
     dialog({
       id: "collage",
       title: tl(trans.collage),
@@ -6046,30 +6048,38 @@
       ], "albums")}
                     ${timeframe = select([
         {
-          value: "LAST_7_DAYS",
+          value: "date_preset=LAST_7_DAYS",
           text: tl(trans.last_count_days).replace("{c}", "7")
         },
         {
-          value: "LAST_30_DAYS",
+          value: "date_preset=LAST_30_DAYS",
           text: tl(trans.last_count_days).replace("{c}", "30")
         },
         {
-          value: "LAST_90_DAYS",
+          value: "date_preset=LAST_90_DAYS",
           text: tl(trans.last_count_days).replace("{c}", "90")
         },
         {
-          value: "LAST_180_DAYS",
+          value: "date_preset=LAST_180_DAYS",
           text: tl(trans.last_count_days).replace("{c}", "180")
         },
         {
-          value: "LAST_365_DAYS",
+          value: "date_preset=LAST_365_DAYS",
           text: tl(trans.last_count_days).replace("{c}", "365")
         },
         {
-          value: "ALL",
+          value: "date_preset=ALL",
           text: tl(trans.all_time)
+        },
+        {
+          value: `from=${current_year}-01-01&rangetype=year`,
+          text: current_year
+        },
+        {
+          value: `from=${previous_year}-01-01&rangetype=year`,
+          text: previous_year
         }
-      ], "LAST_90_DAYS")}
+      ], "date_preset=LAST_90_DAYS")}
                     <button class="btn chibi icon" data-type="settings" ref=${(el) => settings_btn = el}>${tl(trans.settings)}</button>
                     <button class="btn primary icon" data-type="collage" ref=${(el) => submit = el} onclick=${() => make_collage()}>${tl(trans.generate)}</button>
                 </div>
@@ -6149,7 +6159,7 @@
                 <div class="loading-data-text">${tl(trans.gathering_plays_for_user_pages).replace("{u}", page.name).replace("{current_page}", current_page).replace("{pages}", pages)}</div>
             </div>
         `);
-      fetch(`${root}user/${page.name}/library/${type_select.value}?format=list&date_preset=${timeframe_select.value}&page=${current_page}&ajax=1`).then(function(response) {
+      fetch(`${root}user/${page.name}/library/${type_select.value}?format=list&${timeframe_select.value}&page=${current_page}&ajax=1`).then(function(response) {
         console.log("returned", response, response.text);
         return response.text();
       }).then(function(dom) {
