@@ -261,7 +261,7 @@ export function redesign_profile_header(is_own_profile, is_following) {
         if (taste_artists.length > 1) {
             let menu = tippy(taste_wrap, {
                 theme: 'context-menu',
-                content: (html.node`
+                content: html.node`
                     <h4 class="menu-header">${tl(trans.compare_plays)}</h4>
                     <a class="dropdown-menu-clickable-item" href="${root}user/${page.name}/library/music/${sanitise(taste_artists[0])}" data-menu-item="shared-artist">
                         <img class="view-item-avatar" src="${profile_avi}" alt="${page.name}">${taste_artists[0]}
@@ -287,12 +287,20 @@ export function redesign_profile_header(is_own_profile, is_following) {
                         <img class="view-item-avatar" src="${auth.avatar}" alt="${auth.name}">${taste_artists[2]}
                     </a>
                     ` : ''}
-                `),
+                    <div class="sep"></div>
+                    <button class="dropdown-menu-clickable-item" data-type="compare" onclick=${() => compare()}>${tl(trans.compare)}</button>
+                `,
                 placement: 'right-start',
                 trigger: 'manual',
                 interactive: true,
                 interactiveBorder: 10,
-                offset: [0, 0]
+                offset: [0, 0],
+
+                onShow(instance) {
+                    instance.popper.addEventListener('click', event => {
+                        instance.hide();
+                    });
+                }
             });
 
             register_menu(taste_wrap, menu);

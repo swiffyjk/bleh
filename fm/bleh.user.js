@@ -6746,12 +6746,19 @@
                         <img class="view-item-avatar" src="${auth.avatar}" alt="${auth.name}">${taste_artists[2]}
                     </a>
                     ` : ""}
+                    <div class="sep"></div>
+                    <button class="dropdown-menu-clickable-item" data-type="compare" onclick=${() => compare()}>${tl(trans.compare)}</button>
                 `,
           placement: "right-start",
           trigger: "manual",
           interactive: true,
           interactiveBorder: 10,
-          offset: [0, 0]
+          offset: [0, 0],
+          onShow(instance) {
+            instance.popper.addEventListener("click", (event3) => {
+              instance.hide();
+            });
+          }
         });
         register_menu(taste_wrap, menu);
       }

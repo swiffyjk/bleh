@@ -7955,6 +7955,113 @@ section:has(.dropdown-menu-clickable-button.section-control) {
 }
 
 
+/*     DROPDOWN ICONS     */
+.dropdown-menu-clickable-item {
+    --mask: url('data:image/svg+xml;base64,PHN2Zz48L3N2Zz4=');
+}
+.more-item--edit-old {
+    --mask: var(--icon-16-edit);
+}
+.more-item--track {
+    --mask: var(--icon-16-track);
+}
+.more-item--album {
+    --mask: var(--icon-16-album);
+}
+.more-item--artist, .more-item--artist-link {
+    --mask: var(--icon-16-artist);
+}
+.more-item--delete, [data-analytics-action="delete"] {
+    --mask: var(--icon-16-trash);
+}
+.more-item--report {
+    --mask: var(--icon-16-report);
+}
+.more-item--obsession {
+    --mask: var(--icon-16-obsession);
+}
+.more-item--bookmark {
+    --mask: var(--icon-16-bookmark-saved);
+}
+.more-item--play {
+    --mask: var(--icon-16-track);
+}
+.chartlist-more-menu-love {
+    --mask: var(--icon-16-heart);
+    --col: hsl(var(--l3-c)) !important;
+    --mask-colour: color-mix(in hsl, hsl(var(--l3-c)), hsl(var(--l4-c)) 40%);
+
+    &[data-analytics-action="UnloveTrack"] {
+        --mask: var(--icon-16-heart-solid);
+    }
+}
+[data-menu-item="profile_mobile"] {
+    --mask: var(--icon-16-user);
+}
+[data-menu-item="profile-shortcut"],
+[data-menu-item="profile"] {
+    display: block !important; /* labs */
+    --mask: var(--icon-16-profile);
+    text-align: center;
+    --btn-top: calc(12px + var(--icon-size) + var(--icon-gap));
+    --btn-bottom: 12px;
+    --left: 50% !important;
+    --margin-left: -8px;
+    --top: 12px;
+    --margin-top: 0;
+    --btn-left: var(--button-sides) !important;
+
+    &[data-menu-item="profile-shortcut"] {
+        --mask: var(--icon-16-profile-shortcut);
+
+        &[data-profile-shortcut=""] {
+            display: none !important;
+        }
+    }
+}
+[data-theme="auth-menu"] {
+    /*overflow: hidden;*/
+
+    &:before {
+        content: '';
+        display: block !important;
+
+        border-top-left-radius: calc(var(--button-radius) + 4px);
+        border-top-right-radius: calc(var(--button-radius) + 4px);
+
+        background-image: var(--url) !important;
+        position: absolute;
+        inset: 0 !important;
+        width: unset !important;
+        height: calc(84px + var(--button-list-gap) + var(--button-list-gap)) !important;
+        background-size: cover !important;
+        background-position-y: 30% !important;
+        --mask: linear-gradient(0deg, transparent 0%, rgb(0, 0, 0) 100%);
+        mask-image: var(--mask);
+        -webkit-mask-image: var(--mask);
+        opacity: 0.3;
+    }
+
+    /*&:after {
+        content: '';
+        display: block !important;
+
+        background-image: var(--url) !important;
+        position: absolute;
+        inset: 0 !important;
+        top: calc(64px + var(--button-list-gap)) !important;
+        width: unset !important;
+        height: calc(64px + var(--button-list-gap) + var(--button-list-gap)) !important;
+        background-size: cover !important;
+        background-position-y: 30% !important;
+        --mask: linear-gradient(0deg, transparent, rgb(0, 0, 0), transparent);
+        mask-image: var(--mask);
+        -webkit-mask-image: var(--mask);
+        opacity: 0.22;
+    }*/
+}
+
+
 [data-type="follow"] {
     --mask: var(--icon-16-user-plus);
 
@@ -8249,113 +8356,6 @@ li:first-child .more-item--delete {
 very, very, very dated - who looks up a song on ebay? */
 .dropdown-menu-clickable li:has(.buylinks-dropdown-menu) {
     display: none !important;
-}
-
-
-/*     DROPDOWN ICONS     */
-.dropdown-menu-clickable-item {
-    --mask: url('data:image/svg+xml;base64,PHN2Zz48L3N2Zz4=');
-}
-.more-item--edit-old {
-    --mask: var(--icon-16-edit);
-}
-.more-item--track {
-    --mask: var(--icon-16-track);
-}
-.more-item--album {
-    --mask: var(--icon-16-album);
-}
-.more-item--artist, .more-item--artist-link {
-    --mask: var(--icon-16-artist);
-}
-.more-item--delete, [data-analytics-action="delete"] {
-    --mask: var(--icon-16-trash);
-}
-.more-item--report {
-    --mask: var(--icon-16-report);
-}
-.more-item--obsession {
-    --mask: var(--icon-16-obsession);
-}
-.more-item--bookmark {
-    --mask: var(--icon-16-bookmark-saved);
-}
-.more-item--play {
-    --mask: var(--icon-16-track);
-}
-.chartlist-more-menu-love {
-    --mask: var(--icon-16-heart);
-    --col: hsl(var(--l3-c)) !important;
-    --mask-colour: color-mix(in hsl, hsl(var(--l3-c)), hsl(var(--l4-c)) 40%);
-
-    &[data-analytics-action="UnloveTrack"] {
-        --mask: var(--icon-16-heart-solid);
-    }
-}
-[data-menu-item="profile_mobile"] {
-    --mask: var(--icon-16-user);
-}
-[data-menu-item="profile-shortcut"],
-[data-menu-item="profile"] {
-    display: block !important; /* labs */
-    --mask: var(--icon-16-profile);
-    text-align: center;
-    --btn-top: calc(12px + var(--icon-size) + var(--icon-gap));
-    --btn-bottom: 12px;
-    --left: 50%;
-    --margin-left: -8px;
-    --top: 12px;
-    --margin-top: 0;
-    --btn-left: var(--button-sides) !important;
-
-    &[data-menu-item="profile-shortcut"] {
-        --mask: var(--icon-16-profile-shortcut);
-
-        &[data-profile-shortcut=""] {
-            display: none !important;
-        }
-    }
-}
-[data-theme="auth-menu"] {
-    /*overflow: hidden;*/
-
-    &:before {
-        content: '';
-        display: block !important;
-
-        border-top-left-radius: calc(var(--button-radius) + 4px);
-        border-top-right-radius: calc(var(--button-radius) + 4px);
-
-        background-image: var(--url) !important;
-        position: absolute;
-        inset: 0 !important;
-        width: unset !important;
-        height: calc(84px + var(--button-list-gap) + var(--button-list-gap)) !important;
-        background-size: cover !important;
-        background-position-y: 30% !important;
-        --mask: linear-gradient(0deg, transparent 0%, rgb(0, 0, 0) 100%);
-        mask-image: var(--mask);
-        -webkit-mask-image: var(--mask);
-        opacity: 0.3;
-    }
-
-    /*&:after {
-        content: '';
-        display: block !important;
-
-        background-image: var(--url) !important;
-        position: absolute;
-        inset: 0 !important;
-        top: calc(64px + var(--button-list-gap)) !important;
-        width: unset !important;
-        height: calc(64px + var(--button-list-gap) + var(--button-list-gap)) !important;
-        background-size: cover !important;
-        background-position-y: 30% !important;
-        --mask: linear-gradient(0deg, transparent, rgb(0, 0, 0), transparent);
-        mask-image: var(--mask);
-        -webkit-mask-image: var(--mask);
-        opacity: 0.22;
-    }*/
 }
 
 
