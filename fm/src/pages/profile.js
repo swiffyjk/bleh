@@ -19,7 +19,7 @@ import {correct_artist, correct_item_by_artist, name_includes} from "../componen
 import {markdown} from "../components/markdown"
 import {notify} from "../components/notify"
 import {redesign_profile_header} from "../components/profile_header"
-import {custom_select, update_inbuilt_select} from "../components/select"
+import {custom_select, select, select_prepare, update_inbuilt_select} from "../components/select"
 import {checkup_page_structure} from "../components/structure"
 import {refresh_all, update_inbuilt_item} from "../config"
 import {register_background, update_page} from "../page"
@@ -1238,13 +1238,13 @@ function profile_recents() {
 
     let original_chart_settings = {};
 
-    let new_button = document.createElement('button');
-    new_button.classList.add('panel-settings-button', 'btn', 'view-item', 'interact-item');
-    new_button.textContent = tl(trans.settings);
+    let settings_btn = html.node`
+        <button class="panel-settings-button btn view-item interact-item">${tl(trans.settings)}</button>
+    `;
 
     form.classList = '';
 
-    tooltip = tippy(new_button, {
+    tooltip = tippy(settings_btn, {
         theme: 'window',
         content: form.outerHTML,
         allowHTML: true,
@@ -1353,7 +1353,7 @@ function profile_recents() {
         }
     });
 
-    view_buttons.appendChild(new_button);
+    view_buttons.appendChild(settings_btn);
 
     original_chart_settings = {
         recent_artwork: form.querySelector('#id_show_recent_tracks_artwork').checked,
@@ -1366,9 +1366,7 @@ function profile_recents() {
 
 function profile_artists() {
     let panel = page.structure.main.querySelector('#top-artists');
-
-    if (panel == null)
-        return;
+    if (!panel)  return;
 
     panel.classList.remove('section-with-settings');
 
@@ -1395,96 +1393,65 @@ function profile_artists() {
     header.appendChild(view_buttons);
     panel.insertBefore(header, panel.firstElementChild);
 
-    if (form == null)
-        return;
+    if (!form) return;
 
     if (page.token == '')
         page.token = form.querySelector('[name="csrfmiddlewaretoken"]').getAttribute('value');
 
+    let timeframe = form.querySelector('[name="chart_range_top_artists"]');
+    let style = form.querySelector('[name="chart_style_top_artists"]');
+    let grid_length = form.querySelector('[name="artists_image_grid_length"]');
+    let chartlist_length = form.querySelector('[name="artists_chartlist_length"]');
+
     let original_chart_settings = {};
 
-    let new_button = document.createElement('button');
-    new_button.classList.add('panel-settings-button', 'btn', 'view-item', 'interact-item');
-    new_button.textContent = tl(trans.settings);
+    let settings_btn = html.node`
+        <button class="panel-settings-button btn view-item interact-item">${tl(trans.settings)}</button>
+    `;
+    view_buttons.appendChild(settings_btn);
 
     form.classList = '';
+    render(form, html`
+        <input type="hidden" name="csrfmiddlewaretoken" value="${page.token}">
+        <div class="setting" data-type="select">
+            <div class="heading">
+                <h5>${tl(trans.default_timeframe)}</h5>
+            </div>
+            ${select(select_prepare(timeframe), timeframe.value, 'chart_range_top_artists')}
+        </div>
+        <div class="setting" data-type="select">
+            <div class="heading">
+                <h5>${tl(trans.chart_style)}</h5>
+            </div>
+            ${select(select_prepare(style), style.value, 'chart_style_top_artists')}
+        </div>
+        <div class="setting hide-if-artist-list" data-type="select">
+            <div class="heading">
+                <h5>${tl(trans.chart_size)}</h5>
+            </div>
+            ${select(select_prepare(grid_length), grid_length.value, 'artists_image_grid_length')}
+        </div>
+        <div class="setting hide-if-artist-grid" data-type="select">
+            <div class="heading">
+                <h5>${tl(trans.chart_size)}</h5>
+            </div>
+            ${select(select_prepare(chartlist_length), chartlist_length.value, 'artists_chartlist_length')}
+        </div>
+        <div class="settings-footer">
+            <button type="submit" class="btn-primary save">
+                ${tl(trans.save)}
+            </button>
+        </div>
+    `);
 
-    tooltip = tippy(new_button, {
+    tooltip = tippy(settings_btn, {
         theme: 'window',
-        content: form.outerHTML,
-        allowHTML: true,
+        content: form,
         placement: 'bottom',
         interactive: true,
         interactiveBorder: 10,
-        trigger: 'click',
-
-        onShow(instance) {
-            let form = instance.popper.querySelector('form');
-
-            form.innerHTML = (`
-                <input type="hidden" name="csrfmiddlewaretoken" value="${page.token}">
-                <div class="setting" data-type="select">
-                    <div class="heading">
-                        <h5>${tl(trans.default_timeframe)}</h5>
-                    </div>
-                    <div class="select-wrap custom-selector" id="id_chart_range_top_artists_select">
-                        ${original_chart_settings.timeframe}
-                    </div>
-                </div>
-                <div class="setting" data-type="select">
-                    <div class="heading">
-                        <h5>${tl(trans.chart_style)}</h5>
-                    </div>
-                    <div class="select-wrap custom-selector" id="id_chart_style_top_artists_select">
-                        ${original_chart_settings.style}
-                    </div>
-                </div>
-                <div class="setting hide-if-artist-list" data-type="select">
-                    <div class="heading">
-                        <h5>${tl(trans.chart_size)}</h5>
-                    </div>
-                    <div class="select-wrap custom-selector" id="id_artists_image_grid_length_select">
-                        ${original_chart_settings.length}
-                    </div>
-                </div>
-                <div class="setting hide-if-artist-grid" data-type="select">
-                    <div class="heading">
-                        <h5>${tl(trans.chart_size)}</h5>
-                    </div>
-                    <div class="select-wrap custom-selector" id="id_artists_chartlist_length_select">
-                        ${original_chart_settings.length_list}
-                    </div>
-                </div>
-                <div class="settings-footer">
-                    <button type="submit" class="btn-primary save">
-                        ${tl(trans.save)}
-                    </button>
-                </div>
-            `);
-
-            custom_select(form.querySelector('#id_chart_range_top_artists'), form.querySelector('#id_chart_range_top_artists_select'));
-            custom_select(form.querySelector('#id_chart_style_top_artists'), form.querySelector('#id_chart_style_top_artists_select'));
-            custom_select(form.querySelector('#id_artists_image_grid_length'), form.querySelector('#id_artists_image_grid_length_select'));
-            custom_select(form.querySelector('#id_artists_chartlist_length'), form.querySelector('#id_artists_chartlist_length_select'));
-
-            let selects = form.querySelectorAll('select');
-            selects.forEach((select) => {
-                select.setAttribute('onchange', `_update_inbuilt_select('${select.getAttribute('id')}', this.value)`);
-                update_inbuilt_select(select.getAttribute('id'), select.value);
-            });
-        }
+        trigger: 'click'
     });
-
-    view_buttons.appendChild(new_button);
-
-    original_chart_settings = {
-        timeframe: form.querySelector('#id_chart_range_top_artists').outerHTML,
-        style: form.querySelector('#id_chart_style_top_artists').outerHTML,
-        length: form.querySelector('#id_artists_image_grid_length').outerHTML,
-        length_list: form.querySelector('#id_artists_chartlist_length').outerHTML
-    }
-
-    form.innerHTML = '';
 }
 
 function profile_albums() {
@@ -1525,13 +1492,13 @@ function profile_albums() {
 
     let original_chart_settings = {};
 
-    let new_button = document.createElement('button');
-    new_button.classList.add('panel-settings-button', 'btn', 'view-item', 'interact-item');
-    new_button.textContent = tl(trans.settings);
+    let settings_btn = html.node`
+        <button class="panel-settings-button btn view-item interact-item">${tl(trans.settings)}</button>
+    `;
 
     form.classList = '';
 
-    tooltip = tippy(new_button, {
+    tooltip = tippy(settings_btn, {
         theme: 'window',
         content: form.outerHTML,
         allowHTML: true,
@@ -1597,7 +1564,7 @@ function profile_albums() {
         }
     });
 
-    view_buttons.appendChild(new_button);
+    view_buttons.appendChild(settings_btn);
 
     original_chart_settings = {
         timeframe: form.querySelector('#id_chart_range_top_albums').outerHTML,
@@ -1648,13 +1615,13 @@ function profile_tracks() {
 
     let original_chart_settings = {};
 
-    let new_button = document.createElement('button');
-    new_button.classList.add('panel-settings-button', 'btn', 'view-item', 'interact-item');
-    new_button.textContent = tl(trans.settings);
+    let settings_btn = html.node`
+        <button class="panel-settings-button btn view-item interact-item">${tl(trans.settings)}</button>
+    `;
 
     form.classList = '';
 
-    tooltip = tippy(new_button, {
+    tooltip = tippy(settings_btn, {
         theme: 'window',
         content: form.outerHTML,
         allowHTML: true,
@@ -1732,7 +1699,7 @@ function profile_tracks() {
         }
     });
 
-    view_buttons.appendChild(new_button);
+    view_buttons.appendChild(settings_btn);
 
     original_chart_settings = {
         timeframe: form.querySelector('#id_chart_range_top_tracks').outerHTML,

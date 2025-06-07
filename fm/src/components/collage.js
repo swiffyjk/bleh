@@ -13,7 +13,7 @@ import {settings} from "../build/config.js";
 import {version} from "../main.js";
 import {download} from "./share.js";
 
-export function collage() {
+export function collage(default_type = 'albums', default_timeframe = 'date_preset=LAST_90_DAYS') {
     let width;
     let height;
 
@@ -75,7 +75,7 @@ export function collage() {
                             value: 'tracks',
                             text: html`<div class="bleh-icon" style="--icon: var(--icon-16-track)" />${tl(trans.tracks)}`,
                         }
-                    ], 'albums')}
+                    ], default_type)}
                     ${timeframe = select([
                         {
                             value: 'date_preset=LAST_7_DAYS',
@@ -109,7 +109,7 @@ export function collage() {
                             value: `from=${previous_year}-01-01&rangetype=year`,
                             text: previous_year
                         }
-                    ], 'date_preset=LAST_90_DAYS')}
+                    ], default_timeframe)}
                     <button class="btn chibi icon" data-type="settings" ref=${el => settings_btn = el}>${tl(trans.settings)}</button>
                     <button class="btn primary icon" data-type="collage" ref=${el => submit = el} onclick=${() => make_collage()}>${tl(trans.generate)}</button>
                 </div>

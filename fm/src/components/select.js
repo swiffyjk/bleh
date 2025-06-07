@@ -14,7 +14,7 @@ export function update_inbuilt_select(id, value) {
     document.documentElement.setAttribute(`data-bleh--inbuilt-${id}`, value);
 }
 
-export function select(values, initial = '') {
+export function select(values, initial = '', name = '') {
     let select;
     let button;
 
@@ -27,7 +27,7 @@ export function select(values, initial = '') {
 
     let container = html.node`
         <div class="select-wrap custom-selector">
-            <select ref=${el => select = el}>
+            <select ref=${el => select = el} name=${name}>
                 ${values.map((value) => html.node`
                     <option value=${value.value} selected=${value.value == initial}>${value.text}</option>
                 `)}
@@ -45,12 +45,12 @@ export function select(values, initial = '') {
         trigger: 'click',
     });
 
-    set_select(button, menu, values, initial, select);
+    set_select(button, menu, values, initial, select, name);
 
     return container;
 }
 
-function set_select(button, menu, values, selected, select) {
+function set_select(button, menu, values, selected, select, name) {
     values.some((value) => {
         if (value.value == selected) {
             render(button, html`${value.text}`);
@@ -60,13 +60,29 @@ function set_select(button, menu, values, selected, select) {
 
     select.value = selected;
 
+    if (name != '')
+        document.documentElement.setAttribute(`data-bleh--inbuilt-id_${name}`, selected);
+
     menu.setContent(html.node`
         ${values.map((value) => html.node`
-            <button class="btn dropdown-menu-clickable-item select-item" aria-checked=${selected == value.value} onclick=${() => set_select(button, menu, values, value.value, select)}>
+            <button class="btn dropdown-menu-clickable-item select-item" aria-checked=${selected == value.value} onclick=${() => set_select(button, menu, values, value.value, select, name)}>
                 ${value.text}
             </button>
         `)}
     `);
+}
+
+export function select_prepare(element) {
+    let values = [];
+
+    element.querySelectorAll('option').forEach((option) => {
+        values.push({
+            value: option.value,
+            text: option.textContent
+        });
+    });
+
+    return values;
 }
 
 function select_fail(e = null) {
