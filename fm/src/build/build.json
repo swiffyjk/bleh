@@ -171,9 +171,14 @@
             "date": "2025-05-19"
         },
         "charts": {
-            "default": false,
+            "default": true,
             "name": "Profile chart creation",
             "date": "2025-06-05"
+        },
+        "refreshed_auth_menu": {
+            "default": true,
+            "name": "Refreshed auth menu",
+            "date": "2025-06-07"
         }
     }
 }

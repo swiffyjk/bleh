@@ -13748,109 +13748,237 @@
     });
     let site_auth = document.body.querySelector(".site-auth");
     let token = new_auth.querySelector('[name="csrfmiddlewaretoken"]').getAttribute("value");
-    let auth_menu = tippy(auth_link2, {
-      theme: "auth-menu",
-      content: html2.node`
-            <a class="dropdown-menu-clickable-item" data-menu-item="profile" href="${root}user/${auth.name}">
-                ${auth.name}
-            </a>
-            <a class="dropdown-menu-clickable-item" data-menu-item="profile-shortcut" href="${root}user/${settings.profile_shortcut}" data-profile-shortcut="${settings.profile_shortcut}">
-                ${settings.profile_shortcut}
-            </a>
-            <div class="sep"></div>
-            <a class="dropdown-menu-clickable-item" data-menu-item="library" href="${root}user/${auth.name}/library">
-                ${tl(trans.library)}
-            </a>
-            <a class="dropdown-menu-clickable-item" data-menu-item="shouts" href="${root}user/${auth.name}/shoutbox">
-                ${tl(trans.shouts)}
-            </a>
-            ${settings.auth_menu_obsessions ? html2.node`
-            <a class="dropdown-menu-clickable-item" data-menu-item="obsessions" href="${root}user/${auth.name}/obsessions">
-                ${trans_legacy.en.auth_menu.obsessions}
-            </a>
-            ` : ""}
-            <button class="dropdown-menu-clickable-item" data-menu-item="themes" onclick=${() => toggle_theme()}>
-                <span class="auth-dropdown-item-row">
-                    <span class="auth-dropdown-item-left">${tl(trans.themes.name)}</span>
-                    <span class="auth-dropdown-item-right" id="theme-value">${tl(trans.themes[settings.theme])}</span>
-                </span>
-            </button>
-            <button class="dropdown-menu-clickable-item" data-menu-item="language">
-                <span class="auth-dropdown-item-row">
-                    <span class="auth-dropdown-item-left">${tl(trans.language)}</span>
-                    <span class="auth-dropdown-item-right">${selected_language}</span>
-                </span>
-            </button>
-            <button class="dropdown-menu-clickable-item" data-menu-item="news" ref=${(el) => page.state.navigation_menu_news = el} onclick=${() => news()}>
-                ${tl(trans.news)}
-            </button>
-            <a class="dropdown-menu-clickable-item" data-menu-item="bleh" href="${root}bleh">
-                ${tl(trans.settings)}
-            </a>
-            <div class="sep"></div>
-            <a class="dropdown-menu-clickable-item" data-menu-item="bookmarks" href="${root}music/+bookmarks">
-                ${tl(trans.bookmarks)}
-            </a>
-            <a class="dropdown-menu-clickable-item" data-menu-item="settings" href="${root}settings">
-                ${tl(trans.settings)}
-            </a>
-            <form>
-                <input type="hidden" name="csrfmiddlewaretoken" value="${token}">
-                <a class="dropdown-menu-clickable-item" data-menu-item="logout" href="${root}logout">
-                    ${tl(trans.logout)}
-                </a>
-            </form>
-        `,
-      placement: "top",
-      interactive: true,
-      interactiveBorder: 10,
-      trigger: "click",
-      onShow(instance) {
-        instance.popper.style.setProperty("--url", `url(${auth.avatar.replace("avatar42s", "avatar170s")})`);
-        let shortcut_item = instance.popper.querySelector('[data-menu-item="profile-shortcut"]');
-        if (shortcut_item.getAttribute("data-profile-shortcut") != settings.profile_shortcut) {
-          shortcut_item.setAttribute("data-profile-shortcut", settings.profile_shortcut);
-          shortcut_item.setAttribute("href", `${root}user/${settings.profile_shortcut}`);
-          shortcut_item.textContent = settings.profile_shortcut;
+    if (ff("refreshed_auth_menu")) {
+      let auth_menu = tippy(auth_link2, {
+        theme: "auth-menu-v2",
+        placement: "top",
+        interactive: true,
+        interactiveBorder: 10,
+        trigger: "click",
+        onShow(instance) {
+          instance.popper.addEventListener("click", (event3) => {
+            instance.hide();
+          });
+          badges = load_badges(auth.name);
+          instance.setContent(html2.node`
+                    <div class="auth-menu-v2">
+                        <div class="side primary">
+                            <div class="auth-menu-header">
+                                <div class="avatar">
+                                    <img src="${auth.avatar.replace("avatar42s", "avatar170s")}" alt="${auth.name}" />
+                                </div>
+                                <div class="name">${auth.name}</div>
+                                ${badges || auth.pro ? html2.node`
+                                    <div class="badges">
+                                        ${badges ? badges.map((badge) => () => {
+            let el = html2.node`
+                                                <span class="label user-status--bleh-${badge.type} user-status--bleh-user-${auth.name} no-hover">
+                                                    ${badge.name}
+                                                </span>
+                                            `;
+            tippy(el, {
+              theme: "badge",
+              placement: "bottom",
+              content: html2.node`
+                                                    <div class="badge-name">${badge.name}</div>
+                                                    <div class="badge-reason">${tl(trans.badges[badge.reason].reason)}</div>
+                                                `
+            });
+            return el;
+          }) : ""}
+                                        ${auth.pro ? () => {
+            let el = html2.node`
+                                                <span class="label user-status-subscriber no-hover">
+                                                    ${tl(trans.badges["user-status-subscriber"].name)}
+                                                </span>
+                                            `;
+            tippy(el, {
+              theme: "badge",
+              placement: "bottom",
+              content: html2.node`
+                                                    <div class="badge-name">${tl(trans.badges["user-status-subscriber"].name)}</div>
+                                                    <div class="badge-reason">${tl(trans.badges["user-status-subscriber"].reason)}</div>
+                                                `
+            });
+            return el;
+          } : ""}
+                                    </div>
+                                ` : ""}
+                                <a class="link-block-cover-link" href="${root}user/${auth.name}" />
+                            </div>
+                            <div class="floating button-group">
+                                ${() => {
+            let button;
+            let form = html2.node`
+                                        <form>
+                                            <input type="hidden" name="csrfmiddlewaretoken" value="${token}">
+                                            <a class="dropdown-menu-clickable-item chibi" ref=${(el) => button = el} data-menu-item="logout" href="${root}logout">
+                                                ${tl(trans.logout)}
+                                            </a>
+                                        </form>
+                                    `;
+            tippy(button, {
+              content: tl(trans.logout)
+            });
+            return form;
+          }}
+                                ${settings.profile_shortcut != "" ? () => {
+            let button = html2.node`
+                                        <a class="dropdown-menu-clickable-item chibi" data-type="shortcut" data-is-shortcut="true" href="${root}user/${settings.profile_shortcut}">${settings.profile_shortcut}</a>
+                                    `;
+            tippy(button, {
+              content: settings.profile_shortcut
+            });
+            return button;
+          } : ""}
+                            </div>
+                        </div>
+                        <div class="vertical-sep" />
+                        <div class="side">
+                            <a class="dropdown-menu-clickable-item" data-type="home" href="${root}music">
+                                ${tl(trans.home)}
+                            </a>
+                            <a class="dropdown-menu-clickable-item" data-menu-item="library" href="${root}user/${auth.name}/library">
+                                ${tl(trans.library)}
+                            </a>
+                            <a class="dropdown-menu-clickable-item" data-menu-item="shouts" href="${root}user/${auth.name}/shoutbox">
+                                ${tl(trans.shouts)}
+                            </a>
+                            <div class="button-combo">
+                                <button class="dropdown-menu-clickable-item" data-menu-item="themes" onclick=${() => toggle_theme()}>
+                                    ${tl(trans.themes.name)}
+                                </button>
+                                <div class="button-combo-sep" />
+                                <button class="dropdown-menu-clickable-item chibi" data-type="continue">
+                                    ${tl(trans.more)}
+                                </button>
+                            </div>
+                            <div class="button-combo">
+                                <button class="dropdown-menu-clickable-item" data-menu-item="language" onclick=${() => toggle_theme()}>
+                                    ${tl(trans.language)}
+                                </button>
+                                <div class="button-combo-sep" />
+                                <button class="dropdown-menu-clickable-item chibi" data-type="continue">
+                                    ${tl(trans.more)}
+                                </button>
+                            </div>
+                            <button class="dropdown-menu-clickable-item" data-menu-item="news" onclick=${() => news()}>
+                                ${tl(trans.news)}
+                            </button>
+                            <div class="button-combo">
+                                <a class="dropdown-menu-clickable-item" data-menu-item="bleh" href="${root}bleh">
+                                    ${tl(trans.settings)}
+                                </a>
+                                <div class="button-combo-sep" />
+                                <button class="dropdown-menu-clickable-item chibi" data-type="settings">
+                                    ${tl(trans.settings)}
+                                </button>
+                            </div>
+                        </div>
+                    </div>
+                `);
         }
-        instance.popper.querySelector("#theme-value").textContent = tl(trans.themes[settings.theme]);
-        tippy(instance.popper.querySelector('[data-menu-item="language"]:not([aria-expanded])'), {
-          theme: "language-menu",
-          content: language_menu,
-          placement: "left",
-          hideOnClick: false,
-          interactive: true,
-          interactiveBorder: 10
-        });
-        let theme_menu_item = tippy(instance.popper.querySelector('[data-menu-item="themes"]:not([aria-expanded])'), {
-          theme: "menu",
-          content: html2.node`
-                    <button class="dropdown-menu-clickable-item theme-item-in-menu" data-bleh-theme="light" onclick="change_theme_from_menu('light')">
-                        ${tl(trans.themes.light)}
-                    </button>
-                    <button class="dropdown-menu-clickable-item theme-item-in-menu" data-bleh-theme="ink" onclick="change_theme_from_menu('ink')">
-                        ${tl(trans.themes.ink)}
-                    </button>
-                    <button class="dropdown-menu-clickable-item theme-item-in-menu" data-bleh-theme="dark" onclick="change_theme_from_menu('dark')">
-                        ${tl(trans.themes.dark)}
-                    </button>
-                    <button class="dropdown-menu-clickable-item theme-item-in-menu" data-bleh-theme="darker" onclick="change_theme_from_menu('darker')">
-                        ${tl(trans.themes.darker)}
-                    </button>
-                    <button class="dropdown-menu-clickable-item theme-item-in-menu" data-bleh-theme="oled" onclick="change_theme_from_menu('oled')">
-                        ${tl(trans.themes.oled)}
-                    </button>
-                `,
-          placement: "left",
-          hideOnClick: false,
-          interactive: true,
-          interactiveBorder: 10,
-          onShow(instance_2) {
-            show_theme_change_in_menu("", instance_2.popper);
+      });
+    } else {
+      let auth_menu = tippy(auth_link2, {
+        theme: "auth-menu",
+        content: html2.node`
+                <a class="dropdown-menu-clickable-item" data-menu-item="profile" href="${root}user/${auth.name}">
+                    ${auth.name}
+                </a>
+                <a class="dropdown-menu-clickable-item" data-menu-item="profile-shortcut" href="${root}user/${settings.profile_shortcut}" data-profile-shortcut="${settings.profile_shortcut}">
+                    ${settings.profile_shortcut}
+                </a>
+                <div class="sep"></div>
+                
+                ${settings.auth_menu_obsessions ? html2.node`
+                <a class="dropdown-menu-clickable-item" data-menu-item="obsessions" href="${root}user/${auth.name}/obsessions">
+                    ${trans_legacy.en.auth_menu.obsessions}
+                </a>
+                ` : ""}
+                <button class="dropdown-menu-clickable-item" data-menu-item="themes" onclick=${() => toggle_theme()}>
+                    <span class="auth-dropdown-item-row">
+                        <span class="auth-dropdown-item-left">${tl(trans.themes.name)}</span>
+                        <span class="auth-dropdown-item-right" id="theme-value">${tl(trans.themes[settings.theme])}</span>
+                    </span>
+                </button>
+                <button class="dropdown-menu-clickable-item" data-menu-item="language">
+                    <span class="auth-dropdown-item-row">
+                        <span class="auth-dropdown-item-left">${tl(trans.language)}</span>
+                        <span class="auth-dropdown-item-right">${selected_language}</span>
+                    </span>
+                </button>
+                <button class="dropdown-menu-clickable-item" data-menu-item="news" ref=${(el) => page.state.navigation_menu_news = el} onclick=${() => news()}>
+                    ${tl(trans.news)}
+                </button>
+                <a class="dropdown-menu-clickable-item" data-menu-item="bleh" href="${root}bleh">
+                    ${tl(trans.settings)}
+                </a>
+                <div class="sep"></div>
+                <a class="dropdown-menu-clickable-item" data-menu-item="bookmarks" href="${root}music/+bookmarks">
+                    ${tl(trans.bookmarks)}
+                </a>
+                <a class="dropdown-menu-clickable-item" data-menu-item="settings" href="${root}settings">
+                    ${tl(trans.settings)}
+                </a>
+                <form>
+                    <input type="hidden" name="csrfmiddlewaretoken" value="${token}">
+                    <a class="dropdown-menu-clickable-item" data-menu-item="logout" href="${root}logout">
+                        ${tl(trans.logout)}
+                    </a>
+                </form>
+            `,
+        placement: "top",
+        interactive: true,
+        interactiveBorder: 10,
+        trigger: "click",
+        onShow(instance) {
+          instance.popper.style.setProperty("--url", `url(${auth.avatar.replace("avatar42s", "avatar170s")})`);
+          let shortcut_item = instance.popper.querySelector('[data-menu-item="profile-shortcut"]');
+          if (shortcut_item.getAttribute("data-profile-shortcut") != settings.profile_shortcut) {
+            shortcut_item.setAttribute("data-profile-shortcut", settings.profile_shortcut);
+            shortcut_item.setAttribute("href", `${root}user/${settings.profile_shortcut}`);
+            shortcut_item.textContent = settings.profile_shortcut;
           }
-        });
-      }
-    });
+          instance.popper.querySelector("#theme-value").textContent = tl(trans.themes[settings.theme]);
+          tippy(instance.popper.querySelector('[data-menu-item="language"]:not([aria-expanded])'), {
+            theme: "language-menu",
+            content: language_menu,
+            placement: "left",
+            hideOnClick: false,
+            interactive: true,
+            interactiveBorder: 10
+          });
+          let theme_menu_item = tippy(instance.popper.querySelector('[data-menu-item="themes"]:not([aria-expanded])'), {
+            theme: "menu",
+            content: html2.node`
+                        <button class="dropdown-menu-clickable-item theme-item-in-menu" data-bleh-theme="light" onclick="change_theme_from_menu('light')">
+                            ${tl(trans.themes.light)}
+                        </button>
+                        <button class="dropdown-menu-clickable-item theme-item-in-menu" data-bleh-theme="ink" onclick="change_theme_from_menu('ink')">
+                            ${tl(trans.themes.ink)}
+                        </button>
+                        <button class="dropdown-menu-clickable-item theme-item-in-menu" data-bleh-theme="dark" onclick="change_theme_from_menu('dark')">
+                            ${tl(trans.themes.dark)}
+                        </button>
+                        <button class="dropdown-menu-clickable-item theme-item-in-menu" data-bleh-theme="darker" onclick="change_theme_from_menu('darker')">
+                            ${tl(trans.themes.darker)}
+                        </button>
+                        <button class="dropdown-menu-clickable-item theme-item-in-menu" data-bleh-theme="oled" onclick="change_theme_from_menu('oled')">
+                            ${tl(trans.themes.oled)}
+                        </button>
+                    `,
+            placement: "left",
+            hideOnClick: false,
+            interactive: true,
+            interactiveBorder: 10,
+            onShow(instance_2) {
+              show_theme_change_in_menu("", instance_2.popper);
+            }
+          });
+        }
+      });
+    }
     let container = new_auth.parentElement;
     container.parentElement.removeChild(container);
     auth_link2.removeAttribute("aria-controls");
@@ -23565,9 +23693,14 @@
         date: "2025-05-19"
       },
       charts: {
-        default: false,
+        default: true,
         name: "Profile chart creation",
         date: "2025-06-05"
+      },
+      refreshed_auth_menu: {
+        default: true,
+        name: "Refreshed auth menu",
+        date: "2025-06-07"
       }
     }
   };
