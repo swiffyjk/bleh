@@ -13766,6 +13766,9 @@
                                 <div class="avatar">
                                     <img src="${auth.avatar.replace("avatar42s", "avatar170s")}" alt="${auth.name}" />
                                 </div>
+                                ${!auth.avatar.endsWith("818148bf682d429dc215c1705eb27b98.png") ? html2.node`
+                                <div class="bg" style="background-image: url(${auth.avatar.replace("avatar42s", "avatar170s")})" />
+                                ` : ""}
                                 <div class="name">${auth.name}</div>
                                 ${badges || auth.pro ? html2.node`
                                     <div class="badges">
@@ -19270,6 +19273,10 @@
       en: "Make sure you trust this application",
       de: "Stelle sicher, dass du dieser Anwendung vertraust",
       pt: "Certifique-se de que voc\xEA confia neste aplicativo"
+    },
+    has_been_connected: {
+      // app name is above
+      en: "has been connected"
     },
     you_can_now_close_this_tab: {
       en: "You can now close this tab",

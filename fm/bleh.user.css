@@ -8056,6 +8056,7 @@ section:has(.dropdown-menu-clickable-button.section-control) {
     background: hsl(var(--b6), 95%) !important;
     border-radius: var(--card-radius) !important;
     box-shadow: var(--override-full-shadow, var(--card-border), var(--overlay-shadow)) !important;
+    overflow: hidden;
 
     text-align: left;
 
@@ -8127,6 +8128,7 @@ section:has(.dropdown-menu-clickable-button.section-control) {
             display: flex;
             flex-direction: column;
             gap: var(--item-list-gap);
+            overflow: unset;
 
             .auth-menu-header {
                 display: flex;
@@ -8140,6 +8142,7 @@ section:has(.dropdown-menu-clickable-button.section-control) {
                 .link-block-cover-link {
                     position: absolute;
                     inset: 0;
+                    z-index: 2;
                 }
 
                 .badges {
@@ -8169,6 +8172,27 @@ section:has(.dropdown-menu-clickable-button.section-control) {
                     transition-property: transform;
                     transition-duration: var(--trans);
                     transition-timing-function: var(--trans-function);
+
+                    z-index: 2;
+                }
+
+                .bg {
+                    z-index: 0;
+                    position: absolute;
+                    inset: calc(-1 * var(--item-list-gap));
+                    width: 190px;
+                    height: 244px;
+                    pointer-events: none;
+                    opacity: 0.1;
+
+                    background-size: cover;
+
+                    &:after {
+                        content: '';
+                        position: absolute;
+                        inset: 0;
+                        background: linear-gradient(90deg, transparent 70%, hsl(var(--b6)));
+                    }
                 }
 
                 &:has(> .link-block-cover-link:hover) {
@@ -8181,6 +8205,8 @@ section:has(.dropdown-menu-clickable-button.section-control) {
                     font-size: 16px;
                     line-height: 20px;
                     font-weight: var(--font-weight-medium);
+
+                    z-index: 2;
                 }
             }
 
