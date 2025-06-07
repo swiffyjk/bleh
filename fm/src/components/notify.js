@@ -111,7 +111,7 @@ export function notify({
                 ` : ''}
             </div>
             ${(!persist) ? html.node`
-            <div class="notification-progress" ref=${el => bar = el}></div>
+            <div class="notification-progress"><div class="fill" ref=${el => bar = el} /></div>
             ` : ''}
             <div class="notification-actions">
                 ${(actions.length > 0) ? actions.map(action => () => {
@@ -131,13 +131,22 @@ export function notify({
     if (persist)
         return notif;
 
-    setTimeout(function() {
-        bar.style.setProperty('left', '100%');
-    }, 1);
+    let ms = (long) ? 6000 : 2000;
+    let counter = 100;
+    let step = ms / 100;
 
-    setTimeout(function() {
-        notify_rm(notif);
-    }, (long) ? 7000 : 3000);
+    let timer = setInterval(() => {
+        if (notif.matches(':hover'))
+            return;
+
+        counter--;
+        bar.style.setProperty('width', `${counter}%`);
+
+        if (counter <= 0) {
+            clearInterval(timer);
+            notify_rm(notif);
+        }
+    }, step);
 
     return notif;
 }

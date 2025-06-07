@@ -14,6 +14,16 @@ import {version} from "../main.js";
 import {download} from "./share.js";
 
 export function collage(default_type = 'albums', default_timeframe = 'date_preset=LAST_90_DAYS') {
+    if (page.state.scrobbles === 0) {
+        notify({
+            id: 'collage_not_possible',
+            title: tl(trans.collage),
+            body: tl(trans.profile_does_not_have_enough_scrobbles),
+            icon: 'icon-16-collage'
+        });
+        return;
+    }
+
     let width;
     let height;
 

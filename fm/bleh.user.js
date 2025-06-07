@@ -1602,7 +1602,7 @@
                 ` : ""}
             </div>
             ${!persist ? html2.node`
-            <div class="notification-progress" ref=${(el) => bar = el}></div>
+            <div class="notification-progress"><div class="fill" ref=${(el) => bar = el} /></div>
             ` : ""}
             <div class="notification-actions">
                 ${actions.length > 0 ? actions.map((action) => () => {
@@ -1620,12 +1620,19 @@
     page.structure.notifications.appendChild(notif);
     if (persist)
       return notif;
-    setTimeout(function() {
-      bar.style.setProperty("left", "100%");
-    }, 1);
-    setTimeout(function() {
-      notify_rm(notif);
-    }, long ? 7e3 : 3e3);
+    let ms = long ? 6e3 : 2e3;
+    let counter = 100;
+    let step = ms / 100;
+    let timer = setInterval(() => {
+      if (notif.matches(":hover"))
+        return;
+      counter--;
+      bar.style.setProperty("width", `${counter}%`);
+      if (counter <= 0) {
+        clearInterval(timer);
+        notify_rm(notif);
+      }
+    }, step);
     return notif;
   }
   unsafeWindow._notify_rm = function(notif) {
@@ -6001,6 +6008,15 @@
 
   // src/components/collage.js
   function collage(default_type = "albums", default_timeframe = "date_preset=LAST_90_DAYS") {
+    if (page.state.scrobbles === 0) {
+      notify({
+        id: "collage_not_possible",
+        title: tl(trans.collage),
+        body: tl(trans.profile_does_not_have_enough_scrobbles),
+        icon: "icon-16-collage"
+      });
+      return;
+    }
     let width;
     let height;
     let timeframe;

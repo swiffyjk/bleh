@@ -17057,16 +17057,16 @@ button.bleh--gallery-bookmark-image-btn {
         .notification-title {
             color: hsl(var(--c1));
             font-weight: var(--font-weight-medium);
+            cursor: default;
+        }
+        .notification-body {
+            cursor: default;
         }
 
         &.fade-out {
             opacity: 0;
             animation: notif_out var(--trans) var(--trans-function);
         }
-
-        /*.margin-below {
-            margin-bottom: 4px;
-        }*/
 
         &[data-type="error"] {
             --hue-over: var(--hue-neg);
@@ -17097,17 +17097,17 @@ button.bleh--gallery-bookmark-image-btn {
             bottom: 0;
             pointer-events: none;
 
-            background-color: hsl(var(--l3-c), 60%);
-            height: 3px;
+            display: flex;
+            justify-content: end;
 
-            transition: left 3.2s linear;
+            .fill {
+                width: 100%;
+                background-color: hsl(var(--l3-c), 60%);
+                height: 3px;
 
-            border-radius: var(--button-radius);
-        }
+                border-radius: var(--button-radius);
 
-        &.long {
-            .notification-progress {
-                transition: left 7.2s linear;
+                transition: width 0.1s linear;
             }
         }
     }
