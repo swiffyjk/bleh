@@ -9180,32 +9180,40 @@
     if (!panel) return;
     panel.classList.remove("section-with-settings");
     let form = panel.querySelector("#artist-chart-settings");
-    let link = panel.querySelector('[aria-controls="artist-chart-settings"]');
-    let tooltip;
-    let view_buttons = document.createElement("div");
-    view_buttons.classList.add("view-buttons", "blend");
-    let header = document.createElement("div");
-    header.classList.add("top-container");
-    let header_text2 = panel.querySelector("h2");
-    header.appendChild(header_text2);
+    let list = panel.querySelector("#artists_range");
+    let collage_btn;
     let select_btn = panel.querySelector(".dropdown-menu-clickable-button");
-    select_btn.classList.add("btn", "view-item", "interact-item");
-    select_btn.classList.remove("section-control");
-    view_buttons.appendChild(select_btn);
-    header.appendChild(view_buttons);
-    panel.insertBefore(header, panel.firstElementChild);
+    let settings_btn;
+    panel.insertBefore(html2.node`
+        <div class="top-container">
+            ${panel.querySelector("h2")}
+            <div class="view-buttons blend">
+                <button class="btn chibi icon" data-type="collage" ref=${(el) => collage_btn = el} onclick=${() => {
+      let btn = list.querySelector(".dropdown-menu-clickable-item--selected");
+      let link = new URL("https://www.last.fm" + btn.getAttribute("href"));
+      let selected = link.searchParams.get("artists_date_preset");
+      collage("artists", `date_preset=${selected}`);
+    }}>${tl(trans.collage)}</button>
+                ${() => {
+      select_btn.classList.add("btn", "view-item", "interact-item");
+      select_btn.classList.remove("section-control");
+      return select_btn;
+    }}
+                ${form ? html2.node`
+                <button class="panel-settings-button btn view-item interact-item" ref=${(el) => settings_btn = el}>${tl(trans.settings)}</button>
+                ` : ""}
+            </div>
+        </div>
+    `, panel.firstElementChild);
+    tippy(collage_btn, {
+      content: tl(trans.collage)
+    });
     if (!form) return;
-    if (page.token == "")
-      page.token = form.querySelector('[name="csrfmiddlewaretoken"]').getAttribute("value");
+    if (page.token == "") page.token = form.querySelector('[name="csrfmiddlewaretoken"]').getAttribute("value");
     let timeframe = form.querySelector('[name="chart_range_top_artists"]');
     let style = form.querySelector('[name="chart_style_top_artists"]');
     let grid_length = form.querySelector('[name="artists_image_grid_length"]');
     let chartlist_length = form.querySelector('[name="artists_chartlist_length"]');
-    let original_chart_settings = {};
-    let settings_btn = html2.node`
-        <button class="panel-settings-button btn view-item interact-item">${tl(trans.settings)}</button>
-    `;
-    view_buttons.appendChild(settings_btn);
     form.classList = "";
     render(form, html2`
         <input type="hidden" name="csrfmiddlewaretoken" value="${page.token}">
@@ -9239,7 +9247,7 @@
             </button>
         </div>
     `);
-    tooltip = tippy(settings_btn, {
+    tippy(settings_btn, {
       theme: "window",
       content: form,
       placement: "bottom",
@@ -9253,206 +9261,154 @@
     if (!panel) return;
     panel.classList.remove("section-with-settings");
     let form = panel.querySelector("#albums-chart-settings");
-    let link = panel.querySelector('[aria-controls="albums-chart-settings"]');
-    let tooltip;
-    let view_buttons = document.createElement("div");
-    view_buttons.classList.add("view-buttons", "blend");
-    let header = document.createElement("div");
-    header.classList.add("top-container");
-    let header_text2 = panel.querySelector("h2");
-    header.appendChild(header_text2);
+    let list = panel.querySelector("#albums_range");
+    let collage_btn;
     let select_btn = panel.querySelector(".dropdown-menu-clickable-button");
-    select_btn.classList.add("btn", "view-item", "interact-item");
-    select_btn.classList.remove("section-control");
-    view_buttons.appendChild(select_btn);
-    header.appendChild(view_buttons);
-    panel.insertBefore(header, panel.firstElementChild);
-    if (form == null)
-      return;
-    if (page.token == "")
-      page.token = form.querySelector('[name="csrfmiddlewaretoken"]').getAttribute("value");
-    let original_chart_settings = {};
-    let settings_btn = html2.node`
-        <button class="panel-settings-button btn view-item interact-item">${tl(trans.settings)}</button>
-    `;
+    let settings_btn;
+    panel.insertBefore(html2.node`
+        <div class="top-container">
+            ${panel.querySelector("h2")}
+            <div class="view-buttons blend">
+                <button class="btn chibi icon" data-type="collage" ref=${(el) => collage_btn = el} onclick=${() => {
+      let btn = list.querySelector(".dropdown-menu-clickable-item--selected");
+      let link = new URL("https://www.last.fm" + btn.getAttribute("href"));
+      let selected = link.searchParams.get("albums_date_preset");
+      collage("albums", `date_preset=${selected}`);
+    }}>${tl(trans.collage)}</button>
+                ${() => {
+      select_btn.classList.add("btn", "view-item", "interact-item");
+      select_btn.classList.remove("section-control");
+      return select_btn;
+    }}
+                ${form ? html2.node`
+                <button class="panel-settings-button btn view-item interact-item" ref=${(el) => settings_btn = el}>${tl(trans.settings)}</button>
+                ` : ""}
+            </div>
+        </div>
+    `, panel.firstElementChild);
+    tippy(collage_btn, {
+      content: tl(trans.collage)
+    });
+    if (!form) return;
+    if (page.token == "") page.token = form.querySelector('[name="csrfmiddlewaretoken"]').getAttribute("value");
+    let timeframe = form.querySelector('[name="chart_range_top_albums"]');
+    let style = form.querySelector('[name="chart_style_top_albums"]');
+    let grid_length = form.querySelector('[name="albums_image_grid_length"]');
+    let chartlist_length = form.querySelector('[name="albums_chartlist_length"]');
     form.classList = "";
-    tooltip = tippy(settings_btn, {
+    render(form, html2`
+        <input type="hidden" name="csrfmiddlewaretoken" value="${page.token}">
+        <div class="setting" data-type="select">
+            <div class="heading">
+                <h5>${tl(trans.default_timeframe)}</h5>
+            </div>
+            ${select(select_prepare(timeframe), timeframe.value, "chart_range_top_albums")}
+        </div>
+        <div class="setting" data-type="select">
+            <div class="heading">
+                <h5>${tl(trans.chart_style)}</h5>
+            </div>
+            ${select(select_prepare(style), style.value, "chart_style_top_albums")}
+        </div>
+        <div class="setting hide-if-album-list" data-type="select">
+            <div class="heading">
+                <h5>${tl(trans.chart_size)}</h5>
+            </div>
+            ${select(select_prepare(grid_length), grid_length.value, "albums_image_grid_length")}
+        </div>
+        <div class="setting hide-if-album-grid" data-type="select">
+            <div class="heading">
+                <h5>${tl(trans.chart_size)}</h5>
+            </div>
+            ${select(select_prepare(chartlist_length), chartlist_length.value, "albums_chartlist_length")}
+        </div>
+        <div class="settings-footer">
+            <button type="submit" class="btn-primary save">
+                ${tl(trans.save)}
+            </button>
+        </div>
+    `);
+    tippy(settings_btn, {
       theme: "window",
-      content: form.outerHTML,
-      allowHTML: true,
+      content: form,
       placement: "bottom",
       interactive: true,
       interactiveBorder: 10,
-      trigger: "click",
-      onShow(instance) {
-        let form2 = instance.popper.querySelector("form");
-        form2.innerHTML = `
-                <input type="hidden" name="csrfmiddlewaretoken" value="${page.token}">
-                <div class="setting" data-type="select">
-                    <div class="heading">
-                        <h5>${tl(trans.default_timeframe)}</h5>
-                    </div>
-                    <div class="select-wrap custom-selector" id="id_chart_range_top_albums_select">
-                        ${original_chart_settings.timeframe}
-                    </div>
-                </div>
-                <div class="setting" data-type="select">
-                    <div class="heading">
-                        <h5>${tl(trans.chart_style)}</h5>
-                    </div>
-                    <div class="select-wrap custom-selector" id="id_chart_style_top_albums_select">
-                        ${original_chart_settings.style}
-                    </div>
-                </div>
-                <div class="setting hide-if-album-list" data-type="select">
-                    <div class="heading">
-                        <h5>${tl(trans.chart_size)}</h5>
-                    </div>
-                    <div class="select-wrap custom-selector" id="id_albums_image_grid_length_select">
-                        ${original_chart_settings.length}
-                    </div>
-                </div>
-                <div class="setting hide-if-album-grid" data-type="select">
-                    <div class="heading">
-                        <h5>${tl(trans.chart_size)}</h5>
-                    </div>
-                    <div class="select-wrap custom-selector" id="id_albums_chartlist_length_select">
-                        ${original_chart_settings.length_list}
-                    </div>
-                </div>
-                <div class="settings-footer">
-                    <button type="submit" class="btn-primary save">
-                        ${tl(trans.save)}
-                    </button>
-                </div>
-            `;
-        custom_select(form2.querySelector("#id_chart_range_top_albums"), form2.querySelector("#id_chart_range_top_albums_select"));
-        custom_select(form2.querySelector("#id_chart_style_top_albums"), form2.querySelector("#id_chart_style_top_albums_select"));
-        custom_select(form2.querySelector("#id_albums_image_grid_length"), form2.querySelector("#id_albums_image_grid_length_select"));
-        custom_select(form2.querySelector("#id_albums_chartlist_length"), form2.querySelector("#id_albums_chartlist_length_select"));
-        let selects = form2.querySelectorAll("select");
-        selects.forEach((select2) => {
-          select2.setAttribute("onchange", `_update_inbuilt_select('${select2.getAttribute("id")}', this.value)`);
-          update_inbuilt_select(select2.getAttribute("id"), select2.value);
-        });
-      }
+      trigger: "click"
     });
-    view_buttons.appendChild(settings_btn);
-    original_chart_settings = {
-      timeframe: form.querySelector("#id_chart_range_top_albums").outerHTML,
-      style: form.querySelector("#id_chart_style_top_albums").outerHTML,
-      length: form.querySelector("#id_albums_image_grid_length").outerHTML,
-      length_list: form.querySelector("#id_albums_chartlist_length").outerHTML
-    };
-    form.innerHTML = "";
   }
   function profile_tracks() {
     let panel = page.structure.main.querySelector("#top-tracks");
-    if (!panel)
-      return;
+    if (!panel) return;
     panel.classList.remove("section-with-settings");
     let form = panel.querySelector("#track-chart-settings");
-    let link = panel.querySelector('[aria-controls="track-chart-settings"]');
-    let tooltip;
-    let view_buttons = document.createElement("div");
-    view_buttons.classList.add("view-buttons", "blend");
-    let header = document.createElement("div");
-    header.classList.add("top-container");
-    let header_text2 = panel.querySelector("h2");
-    header.appendChild(header_text2);
+    let list = panel.querySelector("#tracks_range");
+    let collage_btn;
     let select_btn = panel.querySelector(".dropdown-menu-clickable-button");
-    select_btn.classList.add("btn", "view-item", "interact-item");
-    select_btn.classList.remove("section-control");
-    view_buttons.appendChild(select_btn);
-    header.appendChild(view_buttons);
-    panel.insertBefore(header, panel.firstElementChild);
-    if (form == null)
-      return;
-    if (page.token == "")
-      page.token = form.querySelector('[name="csrfmiddlewaretoken"]').getAttribute("value");
-    let original_chart_settings = {};
-    let settings_btn = html2.node`
-        <button class="panel-settings-button btn view-item interact-item">${tl(trans.settings)}</button>
-    `;
+    let settings_btn;
+    panel.insertBefore(html2.node`
+        <div class="top-container">
+            ${panel.querySelector("h2")}
+            <div class="view-buttons blend">
+                <button class="btn chibi icon" data-type="collage" ref=${(el) => collage_btn = el} onclick=${() => {
+      let btn = list.querySelector(".dropdown-menu-clickable-item--selected");
+      let link = new URL("https://www.last.fm" + btn.getAttribute("href"));
+      let selected = link.searchParams.get("tracks_date_preset");
+      collage("tracks", `date_preset=${selected}`);
+    }}>${tl(trans.collage)}</button>
+                ${() => {
+      select_btn.classList.add("btn", "view-item", "interact-item");
+      select_btn.classList.remove("section-control");
+      return select_btn;
+    }}
+                ${form ? html2.node`
+                <button class="panel-settings-button btn view-item interact-item" ref=${(el) => settings_btn = el}>${tl(trans.settings)}</button>
+                ` : ""}
+            </div>
+        </div>
+    `, panel.firstElementChild);
+    tippy(collage_btn, {
+      content: tl(trans.collage)
+    });
+    if (!form) return;
+    if (page.token == "") page.token = form.querySelector('[name="csrfmiddlewaretoken"]').getAttribute("value");
+    let timeframe = form.querySelector('[name="chart_range_top_tracks"]');
+    let chartlist_length = form.querySelector('[name="chart_length_top_tracks"]');
     form.classList = "";
-    tooltip = tippy(settings_btn, {
+    render(form, html2`
+        <input type="hidden" name="csrfmiddlewaretoken" value="${page.token}">
+        <div class="setting" data-type="select">
+            <div class="heading">
+                <h5>${tl(trans.default_timeframe)}</h5>
+            </div>
+            ${select(select_prepare(timeframe), timeframe.value, "chart_range_top_tracks")}
+        </div>
+        <div class="setting hide-if-track-grid" data-type="select">
+            <div class="heading">
+                <h5>${tl(trans.chart_size)}</h5>
+            </div>
+            ${select(select_prepare(chartlist_length), chartlist_length.value, "chart_length_top_tracks")}
+        </div>
+        <div class="sep" />
+        ${setting({ id: "format_guest_features" })}
+        ${setting({ id: "show_guest_features" })}
+        <div class="more-link">
+            <a href="${root}bleh?tab=music">${tl(trans.settings)}</a>
+        </div>
+        <div class="settings-footer">
+            <button type="submit" class="btn-primary save">
+                ${tl(trans.save)}
+            </button>
+        </div>
+    `);
+    tippy(settings_btn, {
       theme: "window",
-      content: form.outerHTML,
-      allowHTML: true,
+      content: form,
       placement: "bottom",
       interactive: true,
       interactiveBorder: 10,
-      trigger: "click",
-      onShow(instance) {
-        let form2 = instance.popper.querySelector("form");
-        form2.innerHTML = `
-                <input type="hidden" name="csrfmiddlewaretoken" value="${page.token}">
-                <div class="setting" data-type="select">
-                    <div class="heading">
-                        <h5>${tl(trans.default_timeframe)}</h5>
-                    </div>
-                    <div class="select-wrap custom-selector" id="id_chart_range_top_tracks_select">
-                        ${original_chart_settings.timeframe}
-                    </div>
-                </div>
-                <div class="setting" data-type="select">
-                    <div class="heading">
-                        <h5>${tl(trans.amount_to_display)}</h5>
-                    </div>
-                    <div class="select-wrap custom-selector" id="id_chart_length_top_tracks_select">
-                        ${original_chart_settings.count}
-                    </div>
-                </div>
-                <div class="sep"></div>
-                <div class="setting" data-type="toggle" id="container-format_guest_features" onclick="_update_item('format_guest_features')">
-                    <button class="btn reset" onclick="_reset_item('format_guest_features')">${tl(trans.reset)}</button>
-                    <div class="heading">
-                        <h5>${tl(trans.format_guest_features.name)}</h5>
-                        <p>${tl(trans.format_guest_features.body)}</p>
-                    </div>
-                    <div class="toggle-wrap">
-                        <button class="toggle" id="toggle-format_guest_features" aria-checked="true" type="button">
-                            <div class="dot"></div>
-                        </button>
-                    </div>
-                </div>
-                <div class="setting hide-if-format-guest-disabled" data-type="toggle" id="container-show_guest_features" onclick="_update_item('show_guest_features')">
-                    <button class="btn reset" onclick="_reset_item('show_guest_features')">${tl(trans.reset)}</button>
-                    <div class="heading">
-                        <h5>${tl(trans.show_guest_features.name)}</h5>
-                        <p>${tl(trans.show_guest_features.body)}</p>
-                    </div>
-                    <div class="toggle-wrap">
-                        <button class="toggle" id="toggle-show_guest_features" aria-checked="true" type="button">
-                            <div class="dot"></div>
-                        </button>
-                    </div>
-                </div>
-                <div class="settings-footer">
-                    <button type="submit" class="btn-primary save">
-                        ${tl(trans.save)}
-                    </button>
-                    <a class="btn icon settings not-a-view-button" href="${root}bleh">
-                        ${tl(trans.settings)}
-                    </a>
-                </div>
-            `;
-        custom_select(form2.querySelector("#id_chart_range_top_tracks"), form2.querySelector("#id_chart_range_top_tracks_select"));
-        custom_select(form2.querySelector("#id_chart_length_top_tracks"), form2.querySelector("#id_chart_length_top_tracks_select"));
-        let selects = form2.querySelectorAll("select");
-        selects.forEach((select2) => {
-          select2.setAttribute("onchange", `_update_inbuilt_select('${select2.getAttribute("id")}', this.value)`);
-          update_inbuilt_select(select2.getAttribute("id"), select2.value);
-        });
-        refresh_all(instance.popper);
-      }
+      trigger: "click"
     });
-    view_buttons.appendChild(settings_btn);
-    original_chart_settings = {
-      timeframe: form.querySelector("#id_chart_range_top_tracks").outerHTML,
-      count: form.querySelector("#id_chart_length_top_tracks").outerHTML
-    };
-    form.innerHTML = "";
   }
   function bio_parse(text2, cache2 = false) {
     let temp = document.createElement("div");

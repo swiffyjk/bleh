@@ -10733,6 +10733,10 @@ text[style^="color: rgb(255, 172, 172)"] {
                 border-top: 1px solid var(--card-border-base);
             }
 
+            .more-link {
+                margin: unset !important;
+            }
+
             .hide-if-artist-list {
                 display: var(--hide-if-artist-list, flex);
             }
