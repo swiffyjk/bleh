@@ -2174,6 +2174,10 @@ export const trans = {
         de: 'Stelle sicher, dass du dieser Anwendung vertraust',
         pt: 'Certifique-se de que você confia neste aplicativo'
     },
+    has_been_connected: {
+        // app name is above
+        en: 'has been connected'
+    },
     you_can_now_close_this_tab: {
         en: 'You can now close this tab',
         de: 'Du kannst diesen Tab jetzt schließen',
