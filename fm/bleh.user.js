@@ -1166,12 +1166,12 @@
     let hex = rgb_to_hex(r, g, b);
     return hex_to_hsl(hex);
   }
+  function rgb_to_hex(r, g, b) {
+    return "#" + comp_to_hex(r) + comp_to_hex(g) + comp_to_hex(b);
+  }
   function comp_to_hex(comp) {
     let hex = comp.toString(16);
     return hex.length == 1 ? "0" + hex : hex;
-  }
-  function rgb_to_hex(r, g, b) {
-    return "#" + comp_to_hex(r) + comp_to_hex(g) + comp_to_hex(b);
   }
   function clamp_sat(sat) {
     if (sat > 1.5)
@@ -1189,8 +1189,8 @@
   function sanitise_text(text2) {
     return text2.replace(/&/g, "&amp;").replace(/</g, "&lt;").replace(/>/g, "&gt;").replace(/"/g, "&quot;").replace(/'/g, "&#039;");
   }
-  function desanitise(text2) {
-    return decodeURI(text2.replaceAll("+", " ").replaceAll("%2F", "/"));
+  function desanitise(text2, method = "+") {
+    return decodeURI(text2.replaceAll(method, " ").replaceAll("%2F", "/"));
   }
   function return_artist_from_track(url, is_album) {
     let split = url.split("/");
@@ -1204,9 +1204,9 @@
     let split = url.split("/");
     let length = split.length - 1;
     if (split[length - 1] != "_")
-      return decodeURI(desanitise(split[length - 1]));
+      return desanitise(split[length - 1]);
     else
-      return decodeURI(desanitise(split[length - 2]));
+      return desanitise(split[length - 2]);
   }
 
   // src/build/music.js

@@ -5,6 +5,11 @@
 //
 
 // https://stackoverflow.com/questions/46432335/hex-to-hsl-convert-javascript
+/**
+ * Converts hex to {h, s, l}
+ * @param {string} hex
+ * @returns {{h: number, s: number, l: number}}
+ */
 export function hex_to_hsl(hex) {
     let result = new RegExp(/^#?([a-f\d]{2})([a-f\d]{2})([a-f\d]{2})$/i).exec(hex);
 
@@ -50,22 +55,39 @@ export function hex_to_hsl(hex) {
     };
 }
 
+/**
+ * Converts (r, g, b) to {h, s, l}
+ * @param {number} r
+ * @param {number} g
+ * @param {number} b
+ * @returns {{h: number, s: number, l: number}}
+ */
 export function rgb_to_hsl(r, g, b) {
     let hex = rgb_to_hex(r, g, b);
     return hex_to_hsl(hex);
 }
 
-// https://stackoverflow.com/questions/5623838/rgb-to-hex-and-hex-to-rgb#5624139
-export function comp_to_hex(comp) {
-    let hex = comp.toString(16);
-    return (hex.length == 1) ? '0' + hex : hex;
-}
+/**
+ * Converts (r, g, b) to hex
+ * @param {number} r
+ * @param {number} g
+ * @param {number} b
+ * @returns {string}
+ */
 export function rgb_to_hex(r, g, b) {
     return '#' + comp_to_hex(r) + comp_to_hex(g) + comp_to_hex(b);
 }
+// https://stackoverflow.com/questions/5623838/rgb-to-hex-and-hex-to-rgb#5624139
+function comp_to_hex(comp) {
+    let hex = comp.toString(16);
+    return (hex.length == 1) ? '0' + hex : hex;
+}
 
-// saturation should not exceed 2, definitely not
-// reaching 3 or even 4 in some cases
+/**
+ * Clamps maximum saturation to 1.5
+ * @param {number} sat
+ * @returns {number}
+ */
 export function clamp_sat(sat) {
     if (sat > 1.5)
         return 1.5;
@@ -73,6 +95,11 @@ export function clamp_sat(sat) {
     return sat;
 }
 
+/**
+ * Removes commas and dots from a string and returns the number
+ * @param {string} string
+ * @returns {number}
+ */
 export function clean_number(string) {
     return parseInt(string
     .replaceAll(',','')
@@ -80,11 +107,24 @@ export function clean_number(string) {
     );
 }
 
+/**
+ * Sanitise text for use in URLs
+ * @param {string} text - Text to sanitise
+ * @param {string} method - String to replace spaces with, defaults to '+'
+ * @returns {string}
+ * @see desanitise
+ */
 export function sanitise(text, method='+') {
     return encodeURI(text
     .replaceAll(' ', method)
     .replaceAll('/', '%2F'));
 }
+
+/**
+ * Aggressive text sanitisation to prevent XSS
+ * @param {string} text - Text to sanitise
+ * @returns {string}
+ */
 export function sanitise_text(text) {
     return text
     .replace(/&/g, '&amp;')
@@ -93,31 +133,51 @@ export function sanitise_text(text) {
     .replace(/"/g, '&quot;')
     .replace(/'/g, '&#039;');
 }
-export function desanitise(text) {
+
+/**
+ * Desanitise text from URLs
+ * @param {string} text - Sanitised text
+ * @param {string} method - String spaces were replaced with, defaults to '+'
+ * @returns {string}
+ * @see sanitise
+ */
+export function desanitise(text, method='+') {
     return decodeURI(text
-    .replaceAll('+', ' ')
+    .replaceAll(method, ' ')
     .replaceAll('%2F', '/'));
 }
 
 
+/**
+ * Return the artist from an album or track URL
+ * @param {string} url - Link to an album or track
+ * @param {boolean} is_album - Is this an album?
+ * @returns {string}
+ * @see return_artist_from_generic
+ */
 export function return_artist_from_track(url, is_album) {
     let split = url.split('/');
     let length = (split.length - 1);
 
-    // lets treat unicode properly
     if (is_album)
         return desanitise(split[length - 1]);
     else
         return desanitise(split[length - 2]);
 }
 
+/**
+ * Returns the artist from a URL of an unknown type (album or track)
+ * @param {string} url - Link to an album or track
+ * @returns {string}
+ * @see return_artist_from_track
+ */
 export function return_artist_from_generic(url) {
     let split = url.split('/');
     let length = (split.length - 1);
 
-    // lets treat unicode properly
+    // artist/_/name in the url means its a track
     if (split[length - 1] != '_')
-        return decodeURI(desanitise(split[length - 1]));
+        return desanitise(split[length - 1]);
     else
-        return decodeURI(desanitise(split[length - 2]));
+        return desanitise(split[length - 2]);
 }
