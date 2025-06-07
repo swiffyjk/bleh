@@ -2387,6 +2387,9 @@ export const trans = {
         en: 'Support',
         pt: 'Suporte'
     },
+    no_plays_in_range: {
+        en: 'No plays in range'
+    },
     accessible_name_colours: {
         name: {
             en: 'Prefer accessible name colours',

@@ -251,6 +251,22 @@ export function collage(default_type = 'albums', default_timeframe = 'date_prese
     async function continue_collage() {
         log('gathered initial values', 'collage', 'info', page.state.collage);
 
+        if (page.state.collage.length == 0) {
+            render(body, html`
+                <div class="loading-data-container">
+                    <div class="loading-data-text failed">${tl(trans.no_plays_in_range)}</div>
+                </div>
+            `);
+            body.setAttribute('data-filled', 'false');
+
+            type.querySelector('button').disabled = false;
+            timeframe.querySelector('button').disabled = false;
+            settings_btn.disabled = false;
+            submit.disabled = false;
+
+            return;
+        }
+
         let grid = html.node`
             <ol class="grid-items grid-items--numbered collage-grid" style="--width: ${width_input.value}; --height: ${height_input.value}" data-width=${width_input.value} data-height=${height_input.value} />
         `;
