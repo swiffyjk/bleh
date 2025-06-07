@@ -4544,6 +4544,10 @@ better than the default selector '#app a' i suppose */
             border-top-left-radius: 0;
             border-top-right-radius: 0;
 
+            .grid-items-item-main-text {
+                color: #fff;
+            }
+
             .grid-items-item-aux-text {
                 color: #fff;
                 opacity: 0.8;
@@ -10503,7 +10507,7 @@ text[style^="color: rgb(255, 172, 172)"] {
     -webkit-backdrop-filter: blur(20px) saturate(220%);
     border-radius: var(--item-big-radius);
     box-shadow: inset 0 0 0 1px var(--card-border-base), var(--overlay-shadow);
-    padding: 6px 10px;
+    padding: 5px 12px;
     font-size: calc(var(--font-size) - 1px);
     font-weight: var(--font-weight);
     line-height: var(--line-height);
@@ -23262,7 +23266,7 @@ h4 {
         flex-direction: column;
         gap: var(--card-gap);
 
-        --font-weight: 500;
+        --font-weight: 470;
         --font-size: 16px;
         --line-height: 20px;
 
@@ -23336,7 +23340,7 @@ h4 {
             .type {
                 display: flex;
                 align-items: center;
-                gap: var(--item-list-gap);
+                gap: var(--card-gap);
                 cursor: default;
 
                 strong {

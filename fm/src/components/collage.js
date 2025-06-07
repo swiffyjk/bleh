@@ -364,7 +364,7 @@ export function collage() {
                     if (el.classList == 'brand')
                         el.style.setProperty('font-family', 'Darumadrop One');
                     else
-                        el.style.setProperty('font-family', 'Ubuntu Sans, Spline Sans, Inter, Roboto, Noto Sans, Noto Sans JP, Noto Sans KR, Noto Sans TC, Lucida Grande, Verdana, Tahoma, -apple-system, BlinkMacSystemFont, sans-serif');
+                        el.style.setProperty('font-family', 'Ubuntu Sans, Spline Sans, Inter, Roboto, Noto Sans, Noto Sans JP, Noto Sans KR, Noto Sans TC, Noto Color Emoji, Lucida Grande, Verdana, Tahoma, -apple-system, BlinkMacSystemFont, sans-serif');
                 });
             }
         }).then((canvas => {
@@ -380,6 +380,7 @@ export function collage() {
                                 .replace('{type}', tl(trans[type_select.value]))
                                 .replace('{size}', `${width_input.value}x${height_input.value}`)
                                 .replace('{brand}', version.brand))}>${tl(trans.download)}</button>
+                        <button class="btn open" data-type="open" onclick=${() => open(canvas.toDataURL('image/png'))}>${tl(trans.open)}</button>
                     </div>
                 </div>
                 ${canvas}
