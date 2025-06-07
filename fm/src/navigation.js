@@ -12,9 +12,10 @@ import {load_badges} from "./components/badge";
 import {version} from "./main";
 import {show_theme_change_in_menu} from "./pages/bleh_config";
 import {ff} from "./sku";
-import {html} from "lighterhtml";
+import {html, render} from "lighterhtml";
 import {news} from "./news.js";
 import {toggle_theme} from "./config.js";
+import {open_profile_shortcut_window} from "./components/profile_shortcut.js";
 
 export function patch_masthead(element) {
     let masthead_logo = element.querySelector('.masthead-logo');
@@ -204,11 +205,10 @@ export function append_nav() {
             trigger: 'click',
 
             onShow(instance) {
-                instance.popper.addEventListener("click", (event3) => {
-                    instance.hide();
-                });
-
                 badges = load_badges(auth.name);
+
+                let page_2;
+                let side;
 
                 instance.setContent(html.node`
                     <div class="auth-menu-v2">
@@ -288,50 +288,116 @@ export function append_nav() {
                                     });
                                     
                                     return button;
-                                } : ''}
+                                } : () => {
+                                    let button = html.node`
+                                        <button class="dropdown-menu-clickable-item chibi" data-type="shortcut" data-is-shortcut="false" onclick=${() => open_profile_shortcut_window()}>${tl(trans.profile_shortcut.name)}</button>
+                                    `;
+                
+                                    tippy(button, {
+                                        content: tl(trans.profile_shortcut.name)
+                                    });
+                
+                                    return button;
+                                }}
                             </div>
                         </div>
                         <div class="vertical-sep" />
-                        <div class="side">
-                            <a class="dropdown-menu-clickable-item" data-type="home" href="${root}music">
-                                ${tl(trans.home)}
-                            </a>
-                            <a class="dropdown-menu-clickable-item" data-menu-item="library" href="${root}user/${auth.name}/library">
-                                ${tl(trans.library)}
-                            </a>
-                            <a class="dropdown-menu-clickable-item" data-menu-item="shouts" href="${root}user/${auth.name}/shoutbox">
-                                ${tl(trans.shouts)}
-                            </a>
-                            <div class="button-combo">
-                                <button class="dropdown-menu-clickable-item" data-menu-item="themes" onclick=${() => toggle_theme()}>
-                                    ${tl(trans.themes.name)}
-                                </button>
-                                <div class="button-combo-sep" />
-                                <button class="dropdown-menu-clickable-item chibi" data-type="continue">
-                                    ${tl(trans.more)}
-                                </button>
-                            </div>
-                            <div class="button-combo">
-                                <button class="dropdown-menu-clickable-item" data-menu-item="language" onclick=${() => toggle_theme()}>
-                                    ${tl(trans.language)}
-                                </button>
-                                <div class="button-combo-sep" />
-                                <button class="dropdown-menu-clickable-item chibi" data-type="continue">
-                                    ${tl(trans.more)}
-                                </button>
-                            </div>
-                            <button class="dropdown-menu-clickable-item" data-menu-item="news" onclick=${() => news()}>
-                                ${tl(trans.news)}
-                            </button>
-                            <div class="button-combo">
-                                <a class="dropdown-menu-clickable-item" data-menu-item="bleh" href="${root}bleh">
-                                    ${tl(trans.settings)}
+                        <div class="side" ref=${el => side = el} data-page="1">
+                            <div class="side-page" data-page="1">
+                                <a class="dropdown-menu-clickable-item" data-type="home" href="${root}music">
+                                    ${tl(trans.home)}
                                 </a>
-                                <div class="button-combo-sep" />
-                                <button class="dropdown-menu-clickable-item chibi" data-type="settings">
-                                    ${tl(trans.settings)}
+                                <a class="dropdown-menu-clickable-item" data-menu-item="library" href="${root}user/${auth.name}/library">
+                                    ${tl(trans.library)}
+                                </a>
+                                <a class="dropdown-menu-clickable-item" data-menu-item="shouts" href="${root}user/${auth.name}/shoutbox">
+                                    ${tl(trans.shouts)}
+                                </a>
+                                <div class="button-combo">
+                                    <button class="dropdown-menu-clickable-item" data-menu-item="themes" onclick=${() => toggle_theme()}>
+                                        ${tl(trans.themes.name)}
+                                    </button>
+                                    <div class="button-combo-sep" />
+                                    <button class="dropdown-menu-clickable-item chibi" data-type="continue" onclick=${() => {
+                                        render(page_2, html`
+                                            <button class="dropdown-menu-clickable-item" data-type="back" onclick=${() => {
+                                                side.setAttribute('data-page', '1');
+                                            }}>
+                                                ${tl(trans.back)}
+                                            </button>
+                                            <button class="dropdown-menu-clickable-item theme-item-in-menu"
+                                                    data-bleh-theme="light" onclick="change_theme_from_menu('light')">
+                                                ${tl(trans.themes.light)}
+                                            </button>
+                                            <button class="dropdown-menu-clickable-item theme-item-in-menu"
+                                                    data-bleh-theme="ink" onclick="change_theme_from_menu('ink')">
+                                                ${tl(trans.themes.ink)}
+                                            </button>
+                                            <button class="dropdown-menu-clickable-item theme-item-in-menu"
+                                                    data-bleh-theme="dark" onclick="change_theme_from_menu('dark')">
+                                                ${tl(trans.themes.dark)}
+                                            </button>
+                                            <button class="dropdown-menu-clickable-item theme-item-in-menu"
+                                                    data-bleh-theme="darker" onclick="change_theme_from_menu('darker')">
+                                                ${tl(trans.themes.darker)}
+                                            </button>
+                                            <button class="dropdown-menu-clickable-item theme-item-in-menu"
+                                                    data-bleh-theme="oled" onclick="change_theme_from_menu('oled')">
+                                                ${tl(trans.themes.oled)}
+                                            </button>
+                                        `);
+                                        show_theme_change_in_menu('', page_2);
+                                        side.setAttribute('data-page', '2');
+                                    }}>
+                                        ${tl(trans.more)}
+                                    </button>
+                                </div>
+                                <div class="button-combo">
+                                    <button class="dropdown-menu-clickable-item" data-menu-item="language" onclick=${() => {
+                                        render(page_2, html`
+                                            <button class="dropdown-menu-clickable-item" data-type="back" onclick=${() => {
+                                                side.setAttribute('data-page', '1');
+                                            }}>
+                                                ${tl(trans.back)}
+                                            </button>
+                                            ${language_menu}
+                                        `);
+                                        side.setAttribute('data-page', '2');
+                                    }}>
+                                        ${tl(trans.language)}
+                                    </button>
+                                    <div class="button-combo-sep" />
+                                    <button class="dropdown-menu-clickable-item chibi" data-type="continue" onclick=${() => {
+                                        render(page_2, html`
+                                            <button class="dropdown-menu-clickable-item" data-type="back" onclick=${() => {
+                                                side.setAttribute('data-page', '1');
+                                            }}>
+                                                ${tl(trans.back)}
+                                            </button>
+                                            ${language_menu}
+                                        `);
+                                        side.setAttribute('data-page', '2');
+                                    }}>
+                                        ${tl(trans.more)}
+                                    </button>
+                                </div>
+                                <button class="dropdown-menu-clickable-item" data-menu-item="news" onclick=${() => {
+                                    news();
+                                    instance.hide();
+                                }}>
+                                    ${tl(trans.news)}
                                 </button>
+                                <div class="button-combo">
+                                    <a class="dropdown-menu-clickable-item" data-menu-item="bleh" href="${root}bleh">
+                                        ${tl(trans.settings)}
+                                    </a>
+                                    <div class="button-combo-sep" />
+                                    <a class="dropdown-menu-clickable-item chibi" data-type="settings" href="${root}settings">
+                                        ${tl(trans.settings)}
+                                    </a>
+                                </div>
                             </div>
+                            <div class="side-page" data-page="2" ref=${el => page_2 = el} />
                         </div>
                     </div>
                 `);
@@ -348,7 +414,6 @@ export function append_nav() {
                     ${settings.profile_shortcut}
                 </a>
                 <div class="sep"></div>
-                
                 ${(settings.auth_menu_obsessions) ? html.node`
                 <a class="dropdown-menu-clickable-item" data-menu-item="obsessions" href="${root}user/${auth.name}/obsessions">
                     ${trans_legacy.en.auth_menu.obsessions}
