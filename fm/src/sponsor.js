@@ -1,10 +1,17 @@
-import { log } from "./build/log";
-import { auth, page, root } from "./build/page";
-import { sponsor_list } from "./build/sponsor";
-import { lang, tl, trans, trans_legacy } from "./build/trans";
-import { dialog } from "./components/dialog";
-import { deliver_notif } from "./components/notify";
-import { ff } from "./sku";
+//
+// bleh, an extension for the music site Last.fm
+// Copyright (c) 2025 katelyn and contributors
+// Licensed under GPLv3
+//
+
+import {html} from "lighterhtml";
+import {log} from "./build/log";
+import {auth, page, root} from "./build/page";
+import {sponsor_list} from "./build/sponsor";
+import {tl, trans, trans_legacy} from "./build/trans";
+import {dialog} from "./components/dialog";
+import {deliver_notif} from "./components/notify";
+import {ff} from "./sku";
 
 export function sponsors(force = false) {
     if (!ff('sponsor'))
@@ -47,26 +54,29 @@ function sponsor_request(notify = false) {
     xhr.onload = function() {
         log(`list responded with ${xhr.status}`, 'sponsor');
 
+        // set expire date
+        let api_expire = new Date();
+
         if (xhr.status != 200) {
             log('request has been cancelled, will request again in 1h', 'sponsor');
             api_expire.setHours(api_expire.getHours() + 1);
         }
 
-        // set expire date
-        let api_expire = new Date();
-
         if (xhr.status == 200) {
-            for (var member in sponsor_list) delete sponsor_list[member];
-            Object.assign(sponsor_list, JSON.parse(this.response));
+            if (sponsor_list && parseFloat(JSON.parse(this.response).latest) > parseFloat(sponsor_list.latest)) {
+                for (const member in sponsor_list) delete sponsor_list[member];
+                Object.assign(sponsor_list, JSON.parse(this.response));
 
-            if (sponsor_list)
-                auth.sponsor = sponsor_list.sponsors.includes(auth.name);
+                if (sponsor_list)
+                    auth.sponsor = sponsor_list.sponsors.includes(auth.name);
 
-            if (notify)
-                deliver_notif(trans_legacy.en.settings.home.sponsor.download, false, true, 'sponsor');
+                if (notify)
+                    deliver_notif(trans_legacy.en.settings.home.sponsor.download, false, true, 'sponsor');
 
-            // save to cache for next page load
-            localStorage.setItem('kat_sponsors', this.response);
+                // save to cache for next page load
+                localStorage.setItem('kat_sponsors', this.response);
+            }
+
             api_expire.setHours(api_expire.getHours() + 4);
             log(`list cached until ${api_expire}`, 'sponsor');
         }
@@ -88,18 +98,21 @@ unsafeWindow._sponsor_check = function() {
 unsafeWindow._sponsor = function(replace=false) {
     sponsor(replace);
 }
-function sponsor(replace=false) {
+export function sponsor(replace=false) {
     dialog({
         id: 'sponsor',
         title: tl(trans.support_future_development),
-        body: (`
+        body: html.node`
             <div class="modal-vertical-inner support-inner">
                 <div class="avatar">
                     <img src="${auth.avatar.replace('/avatar42s/', '/avatar170s/')}" alt="${tl(trans.your_avatar)}">
                     <span class="avatar-status-dot user-status--bleh-sponsor"></span>
                 </div>
                 <h1>${tl(trans.support_future_development)}</h1>
-                <p>${tl(trans.why_sponsor).replace('katelyn', `<a class="mention" href="${root}user/katesia">@katesia</a>`)}</p>
+                <p>${
+                    html.node([
+                        tl(trans.why_sponsor).replace('katelyn', (sponsor_list) ? `<a class="mention" href="${root}user/${sponsor_list.special[0]}">@${sponsor_list.special[0]}</a>` : 'katelyn')
+                    ])}</p>
             </div>
             <div class="modal-footer">
                 <div class="fill"></div>
@@ -108,7 +121,7 @@ function sponsor(replace=false) {
                 </a>
                 <div class="fill"></div>
             </div>
-        `),
+        `,
         type: 'sponsor',
         replace_if_possible: replace
     });
@@ -117,12 +130,12 @@ function sponsor(replace=false) {
 unsafeWindow._sponsor_manage = function() {
     sponsor_manage();
 }
-function sponsor_manage() {
+export function sponsor_manage() {
     if (sponsor_list.sponsors_one_time && sponsor_list.sponsors_one_time.includes(auth.name)) {
         dialog({
             id: 'sponsor_manage',
             title: tl(trans.sponsor),
-            body: (`
+            body: html.node`
                 <div class="modal-vertical-inner support-inner">
                     <div class="avatar">
                         <img src="${auth.avatar.replace('/avatar42s/', '/avatar170s/')}" alt="${tl(trans.your_avatar)}">
@@ -131,14 +144,14 @@ function sponsor_manage() {
                     <h1>${tl(trans.you_are_a_sponsor)}</h1>
                     <p>${tl(trans.sponsor_no_badge)}</p>
                 </div>
-            `),
+            `,
             type: 'sponsor'
         });
     } else {
         dialog({
             id: 'sponsor_manage',
             title: tl(trans.sponsor),
-            body: (`
+            body: html.node`
                 <div class="modal-vertical-inner support-inner">
                     <div class="avatar">
                         <img src="${auth.avatar.replace('/avatar42s/', '/avatar170s/')}" alt="${tl(trans.your_avatar)}">
@@ -154,7 +167,7 @@ function sponsor_manage() {
                     </a>
                     <div class="fill"></div>
                 </div>
-            `),
+            `,
             type: 'sponsor'
         });
     }

@@ -1,12 +1,19 @@
-import { settings } from "../build/config";
-import { page } from "../build/page";
-import { clamp_sat, clean_number, rgb_to_hsl, sanitise_text } from "../build/tools";
-import { lang, trans, tl } from "../build/trans";
-import { bleh_glacier_insights } from "../pages/glacier";
-import { parse_scrobbles_as_rank } from "./colourful_counts";
-import { correct_artist, correct_item_by_artist, name_includes } from "./lotus";
+//
+// bleh, an extension for the music site Last.fm
+// Copyright (c) 2025 katelyn and contributors
+// Licensed under GPLv3
+//
 
-export function music_grids(search=page.structure.main) {
+import {settings} from "../build/config";
+import {page} from "../build/page";
+import {clamp_sat, clean_number, rgb_to_hsl} from "../build/tools";
+import {lang, tl, trans} from "../build/trans";
+import {bleh_glacier_insights} from "../pages/glacier";
+import {parse_scrobbles_as_rank} from "./colourful_counts";
+import {correct_artist, correct_item_by_artist, name_includes} from "./lotus";
+import {html, render} from "lighterhtml";
+
+export function music_grids(search=page.structure.main, use_colour = true) {
     if (!search) return;
 
     let insights = {
@@ -63,7 +70,7 @@ export function music_grids(search=page.structure.main) {
 
         let image_wrap = grid.querySelector('.grid-items-cover-image-image');
         let image = image_wrap.querySelector('img');
-        if (image && !image_wrap.classList.contains('grid-items-cover-default')) {
+        if (image && !image_wrap.classList.contains('grid-items-cover-default') && use_colour) {
             let grid_colour = document.createElement('div');
             grid_colour.classList.add('grid-item-colour-bg');
             image_wrap.appendChild(grid_colour);
@@ -87,6 +94,8 @@ export function music_grids(search=page.structure.main) {
 
             // TODO: add a timeout to check if the image has had its
             // colour taken and if not do it manually after a set amount of time
+        } else {
+            grid.classList.add('generic-cover');
         }
 
         let plays_elem;
@@ -166,6 +175,7 @@ export function music_grids(search=page.structure.main) {
         }
 
         let name = grid.querySelector('.grid-items-item-main-text a');
+        if (!name) return;
 
         if (!is_album) {
             name.textContent = correct_artist(name.textContent.trim());
@@ -190,14 +200,13 @@ export function music_grids(search=page.structure.main) {
                     artist.textContent = formatted_title[2];
                 }
 
-                // parse tags into text
-                let song_tags_text = '';
-                for (let song_tag in song_tags) {
-                    song_tags_text = `${song_tags_text}<span class="feat" data-bleh--tag-type="${song_tags[song_tag].type}" data-bleh--tag-group="${song_tags[song_tag].group}">${sanitise_text(song_tags[song_tag].text)}</span>`;
-                }
-
                 // combine
-                name_elem.innerHTML = `<span class="title">${sanitise_text(song_title).trim()}</span>${song_tags_text}`;
+                render(name_elem, html.node`
+                    <div class="title">${song_title.trim()}</div>
+                    ${song_tags.map((tag) => html.node`
+                        <div class="feat" data-bleh--tag-type="${tag.type}" data-bleh--tag-group="${tag.group}">${tag.text}</div>
+                    `)}
+                `);
             } else {
                 artist.textContent = correct_artist(artist.textContent.trim());
 

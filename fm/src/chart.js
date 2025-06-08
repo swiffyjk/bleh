@@ -1,5 +1,33 @@
-import { page, root } from "./build/page";
-import { bleh_glacier_library_open_index } from "./pages/glacier";
+//
+// bleh, an extension for the music site Last.fm
+// Copyright (c) 2025 katelyn and contributors
+// Licensed under GPLv3
+//
+
+import {page} from "./build/page";
+import {
+    bleh_glacier_date_graph_generate,
+    bleh_glacier_insights,
+    bleh_glacier_library_open_index
+} from "./pages/glacier";
+import {bleh_music_page_charts} from "./components/music.js";
+import {bleh_profile_chart_render} from "./pages/profile.js";
+
+export function chart_reflow() {
+    load_chart_colours();
+
+    // trigger re-flow of chart
+    if ((page.type == 'artist' || page.type == 'album' || page.type == 'track') && page.subpage == 'overview')
+        bleh_music_page_charts();
+
+    if (page.type == 'user' && page.subpage == 'overview')
+        bleh_profile_chart_render();
+
+    if (page.type == 'user' && page.subpage.startsWith('library')) {
+        bleh_glacier_date_graph_generate();
+        bleh_glacier_insights();
+    }
+}
 
 export function prep_chart_colours() {
     if (page.state.chart_colours.link_col == 'hsl()')

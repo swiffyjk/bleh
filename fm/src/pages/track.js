@@ -1,16 +1,24 @@
-import { settings } from "../build/config";
-import { log } from "../build/log";
-import { auth, page, root } from "../build/page";
-import { trans, tl } from "../build/trans";
-import { bleh_about_artist } from "../components/about_artist";
-import { patch_header_title } from "../components/lotus";
-import { register_menu } from "../components/menu";
-import { bleh_music_page_charts, show_your_scrobbles } from "../components/music";
-import { checkup_page_structure } from "../components/structure";
-import { register_background, update_page } from "../page";
-import { ff } from "../sku";
-import { bleh_tags_mini } from "./tag";
-import { bleh_wiki, bleh_wiki_editor, bleh_wiki_history } from "./wiki";
+//
+// bleh, an extension for the music site Last.fm
+// Copyright (c) 2025 katelyn and contributors
+// Licensed under GPLv3
+//
+
+import {settings} from "../build/config";
+import {log} from "../build/log";
+import {auth, page, root} from "../build/page";
+import {tl, trans} from "../build/trans";
+import {bleh_about_artist} from "../components/about_artist";
+import {patch_header_title} from "../components/lotus";
+import {register_menu} from "../components/menu";
+import {bleh_music_page_charts, show_your_scrobbles} from "../components/music";
+import {checkup_page_structure} from "../components/structure";
+import {register_background, update_page} from "../page";
+import {ff} from "../sku";
+import {bleh_tags_mini} from "./tag";
+import {bleh_wiki, bleh_wiki_editor, bleh_wiki_history} from "./wiki";
+import {html} from "lighterhtml";
+import {expand_avatar} from "../avatar.js";
 
 export function bleh_tracks() {
     let track_header = document.body.querySelector('.header-new--track');
@@ -72,28 +80,28 @@ export function bleh_tracks() {
         if (source_album)
             album_avatar = source_album.querySelector('.source-album-art img');
 
-        let redesigned_track_header = document.createElement('section');
-        redesigned_track_header.classList.add('redesigned-header', 'redesigned-track-header', 'no-background');
-        redesigned_track_header.innerHTML = (`
-            <div class="avatar-side">
-                ${(album_avatar) ? (`
-                <img src="${album_avatar.getAttribute('src').replace('300x300', 'avatar300s')}">
-                <a class="bleh--avatar-clickable-link"></a>
-                `)
-                : (artist_avatar) ? (`
-                <img src="${artist_avatar.getAttribute('content').replace('/ar0/', '/avatar170s/')}">
-                <a class="bleh--avatar-clickable-link"></a>
-                `) : '<img class="missing-track">'}
-            </div>
-            <div class="info-side">
-                <div class="sub-text">${tl(trans.track)}</div>
-                <div class="title-container">
-                    <h1>${title.innerHTML}</h1>
-                    ${(position) ? position.outerHTML : ''}
+        let redesigned_track_header = html.node`
+            <section class="redesigned-header redesigned-track-header no-background">
+                <div class="avatar-side">
+                    ${(album_avatar) ? html.node`
+                    <img src="${album_avatar.getAttribute('src').replace('300x300', 'avatar300s')}">
+                    <a class="bleh--avatar-clickable-link"></a>
+                    `
+                    : (artist_avatar) ? html.node`
+                    <img src="${artist_avatar.getAttribute('content').replace('/ar0/', '/avatar170s/')}">
+                    <a class="bleh--avatar-clickable-link"></a>
+                    ` : html.node`<img class="missing-track">`}
                 </div>
-                <h2>${artist.innerHTML}</h2>
-            </div>
-        `);
+                <div class="info-side">
+                    <div class="sub-text">${tl(trans.track)}</div>
+                    <div class="title-container">
+                        <h1>${title}</h1>
+                        ${(position) ? position : ''}
+                    </div>
+                    <h2>${artist}</h2>
+                </div>
+            </section>
+        `;
 
         let bg;
 
@@ -124,23 +132,22 @@ export function bleh_tracks() {
 
         let menu = tippy(avatar_side, {
             theme: 'context-menu',
-            content: (`
-                ${(album_avatar || artist_avatar) ? (`
-                <button class="dropdown-menu-clickable-item" onclick="${expand_link}" data-menu-item="expand">
+            content: html.node`
+                ${(album_avatar || artist_avatar) ? html.node`
+                <button class="dropdown-menu-clickable-item" onclick=${() => expand_avatar(avatar.getAttribute('content'))} data-menu-item="expand">
                     ${tl(trans.expand)}
                 </button>
-                `) : ''}
-                ${(album_avatar) ? (`
+                ` : ''}
+                ${(album_avatar) ? html.node`
                 <a class="dropdown-menu-clickable-item" href="${source_album.querySelector('.link-block-cover-link').getAttribute('href')}" data-menu-item="album">
                     ${tl(trans.album)}
                 </a>
-                `) : ''}
+                ` : ''}
                 <div class="sep"></div>
                 <a class="dropdown-menu-clickable-item" href="${root}bleh?tab=customise" data-menu-item="settings">
                     ${tl(trans.settings)}
                 </a>
-            `),
-            allowHTML: true,
+            `,
             placement: 'right-start',
             trigger: 'manual',
             interactive: true,

@@ -1,9 +1,17 @@
-import { expand_avatar } from "../avatar";
-import { log } from "../build/log";
-import { page, root } from "../build/page";
-import { lang, trans_legacy, trans, tl } from "../build/trans";
-import { register_menu } from "../components/menu";
-import { ff } from "../sku";
+//
+// bleh, an extension for the music site Last.fm
+// Copyright (c) 2025 katelyn and contributors
+// Licensed under GPLv3
+//
+
+import {expand_avatar} from "../avatar";
+import {log} from "../build/log";
+import {page, root} from "../build/page";
+import {tl, trans, trans_legacy} from "../build/trans";
+import {register_menu} from "../components/menu";
+import {ff} from "../sku";
+import {html, render} from "lighterhtml";
+import {share} from "../components/share.js";
 
 export function bleh_gallery() {
     if (page.subpage != 'image')
@@ -12,9 +20,7 @@ export function bleh_gallery() {
     log('focusing on image', 'gallery');
 
     let image_sidebar = page.structure.side.querySelector('.js-gallery-image-details > div');
-
-    if (image_sidebar == null)
-        return;
+    if (!image_sidebar) return;
 
     if (image_sidebar.hasAttribute('data-bleh-gallery'))
         return;
@@ -30,7 +36,7 @@ export function bleh_gallery() {
     let gallery_section;
     try {
         gallery_section = page.structure.main.querySelector('.gallery-section');
-        if (gallery_section != null) {
+        if (gallery_section) {
             page.structure.nav.after(gallery_section);
 
             // move image details to main column
@@ -136,21 +142,30 @@ export function bleh_gallery() {
     image_details.appendChild(button_container);
 
     // open in a new tab button
-    let open_button = document.createElement('button');
-    open_button.classList.add('image-open-button');
+    let open_button = html.node`
+        <button class="image-open-button" onclick=${() => expand_gallery_image()}>
+            ${tl(trans.expand)}
+        </button>
+    `;
     tippy(open_button, {
-        content: trans_legacy.en.gallery.open.tooltip
+        content: tl(trans.expand_to_full_resolution)
     });
-    open_button.textContent = tl(trans.expand);
-
-    open_button.setAttribute('onclick', `_expand_gallery_image()`);
 
     buttons_extra.appendChild(open_button);
-    open_button.after(create_divider());
+
+    // share button
+    let share_button = html.node`
+        <button class="image-share-button" onclick=${() => share(window.location.href)}>
+            ${tl(trans.share)}
+        </button>
+    `;
+
+    buttons_extra.appendChild(share_button);
+    share_button.after(create_divider());
 
     // delete
     let delete_button = image_details.querySelector('.gallery-image-delete');
-    if (delete_button != null)
+    if (delete_button)
         buttons_extra.appendChild(delete_button);
 
     // report
@@ -178,31 +193,33 @@ export function bleh_gallery() {
 
     // view all artwork
     let view_all_container = page.structure.main.querySelector('.more-link-fullwidth-right-flush-top');
-    if (view_all_container != null) {
+    if (view_all_container) {
+        let side_actions = document.createElement('section');
+        side_actions.classList.add('side-actions');
+
+        if (!page.mobile)
+            page.structure.side.appendChild(side_actions);
+        else
+            page.structure.main.appendChild(side_actions);
+
         let view_all = view_all_container.querySelector('a');
-        view_all.classList.add('btn', 'view-all-button', 'back');
+        view_all.classList.add('btn', 'side-action');
+        view_all.setAttribute('data-type', 'gallery');
 
-        let view_all_panel = document.createElement('section');
-        view_all_panel.classList.add('view-all-panel');
-
-        view_all_panel.appendChild(view_all);
-        page.structure.side.insertBefore(view_all_panel, page.structure.side.firstElementChild);
+        side_actions.appendChild(view_all);
 
         page.structure.main.removeChild(view_all_container);
 
 
         // saved button
         if (page.type == 'artist' || ff('display_album_bookmark')) {
-            let all_saved_panel = document.createElement('section');
-            all_saved_panel.classList.add('view-all-panel');
+            let view_saved = document.createElement('a');
+            view_saved.classList.add('btn', 'side-action');
+            view_saved.setAttribute('href', `${view_all.getAttribute('href')}?tab=saved`);
+            view_saved.setAttribute('data-type', 'gallery-saved');
+            view_saved.textContent = trans_legacy.en.gallery.bookmarks.link;
 
-            all_saved_panel.innerHTML = (`
-                <a class="btn view-all-button back all-saved-button" href="${view_all.getAttribute('href')}?tab=saved">
-                    ${trans_legacy.en.gallery.bookmarks.link}
-                </a>
-            `);
-
-            view_all_panel.after(all_saved_panel);
+            side_actions.appendChild(view_saved);
         }
     }
 
@@ -230,9 +247,6 @@ export function bleh_gallery() {
     });*/
 }
 
-unsafeWindow._expand_gallery_image = function() {
-    expand_gallery_image();
-}
 function expand_gallery_image() {
     let image_src = page.structure.container.querySelector('.active-slide .js-gallery-image').getAttribute('src').replace('770x0', 'ar0');
     expand_avatar(image_src);
@@ -300,9 +314,7 @@ export function bleh_gallery_upload_check() {
 
     // update image preview
     let image_preview = page.structure.main.querySelector('.form-image-preview');
-
-    if (image_preview == null)
-        return;
+    if (!image_preview) return;
 
     let image_preview_container = page.structure.container.querySelector('.image-preview-hook');
     image_preview_container.setAttribute('src', image_preview.getAttribute('src'));
@@ -311,7 +323,7 @@ export function bleh_gallery_upload_check() {
 
 export function bleh_gallery_list() {
     let upload_btn = page.structure.main.querySelector('.btn-add');
-    if (upload_btn != null) {
+    if (upload_btn) {
         upload_btn.classList = 'btn view-all-button back upload-button';
 
         let upload_panel = document.createElement('section');
@@ -320,74 +332,52 @@ export function bleh_gallery_list() {
         upload_panel.appendChild(upload_btn);
         page.structure.side.insertBefore(upload_panel, page.structure.side.firstElementChild)
     }
-}
 
-export function patch_gallery_page() {
-    let header = document.body.querySelector('header');
-
-    if (header == undefined)
-        return;
-
-    if (header.classList.contains('header-new--album'))
-        return;
-
-    let image_list = document.body.querySelector('.image-list');
-
-    if (image_list != undefined) {
-        // we are on the gallery main page
-        patch_gallery_image_listing(image_list);
-    }
+    if (page.type == 'artist')
+        patch_gallery_image_listing();
 }
 
 // gallery main page
-function patch_gallery_image_listing(image_list) {
-    if (image_list.hasAttribute('data-kate-processed'))
-        return;
-
-    image_list.setAttribute('data-kate-processed', 'true');
-
+function patch_gallery_image_listing() {
     let bookmarked_images = JSON.parse(localStorage.getItem('bleh_bookmarked_images')) || {};
 
     if (page.requested.tab != 'saved' || page.requested.page != null)
-        page.structure.container.setAttribute('data-bleh--gallery-tab', 'overview');
+        page.structure.container.setAttribute('data-bleh--gallery-tab', 'all');
     else
-    page.structure.container.setAttribute('data-bleh--gallery-tab', 'bookmarks');
+        page.structure.container.setAttribute('data-bleh--gallery-tab', 'saved');
 
 
     // create nav
-    let bookmark_nav = document.createElement('div');
-    bookmark_nav.classList.add('bleh--nav-wrap', 'bleh--nav-wrap--bookmarks');
-    bookmark_nav.innerHTML = (`
-        <nav class="navlist secondary-nav">
-            <ul class="navlist-items">
-                <li class="navlist-item secondary-nav-item secondary-nav-item--gallery-overview">
-                    <a class="secondary-nav-item-link" onclick="_set_gallery_page('overview')">
-                        ${trans_legacy.en.gallery.tabs.overview}
-                    </a>
-                </li>
-                <li class="navlist-item secondary-nav-item secondary-nav-item--gallery-bookmarks">
-                    <a class="secondary-nav-item-link" onclick="_set_gallery_page('bookmarks')">
-                        ${trans_legacy.en.gallery.tabs.bookmarks}
-                    </a>
-                </li>
-            </ul>
-        </nav>
+    page.structure.content_top.after(html.node`
+        <div class="bleh--nav-wrap bleh--nav-wrap--bookmarks">
+            <nav class="navlist secondary-nav">
+                <ul class="navlist-items">
+                    <li class="navlist-item secondary-nav-item secondary-nav-item--gallery-overview">
+                        <a class="secondary-nav-item-link" onclick=${() => gallery_tab('all')}>
+                            ${tl(trans.all)}
+                        </a>
+                    </li>
+                    <li class="navlist-item secondary-nav-item secondary-nav-item--gallery-bookmarks">
+                        <a class="secondary-nav-item-link" onclick=${() => gallery_tab('saved')}>
+                            ${tl(trans.saved)}
+                        </a>
+                    </li>
+                </ul>
+            </nav>
+        </div>
     `);
-
-    page.structure.content_top.after(bookmark_nav);
 
 
     // content
-    let bookmarks_content = document.createElement('div');
-    bookmarks_content.classList.add('col-main', 'bleh--bookmarks', 'not-a-panel');
-    bookmarks_content.innerHTML = (`
-        <section class="bookmarks-panel">
-            <ul class="image-list" id="bleh--bookmarked-images" data-kate-processed="true"></ul>
-        </section>
-    `);
-
+    let bookmarks_panel;
     page.structure.main.classList.add('bleh--gallery');
-    page.structure.main.after(bookmarks_content);
+    page.structure.main.after(html.node`
+        <div class="col-main bleh--bookmarks not-a-panel">
+            <section class="bookmarks-panel" ref=${el => bookmarks_panel = el}>
+                <ul class="image-list" data-kate-processed="true"></ul>
+            </section>
+        </div>
+    `);
 
 
     let sort_button = page.structure.main.querySelector('.dropdown-menu-clickable-button');
@@ -405,30 +395,25 @@ function patch_gallery_image_listing(image_list) {
     // append images
     if (bookmarked_images.hasOwnProperty(page.name)) {
         bookmarked_images[page.name].forEach((image) => {
-            console.info(image);
             let image_element = document.createElement('li');
             image_element.classList.add('image-list-item-wrapper');
             image_element.setAttribute('data-image-id', image);
-            // link has to open in new tab as sometimes last.fm breaks the rendering
-            // of the gallery image, no clue..
             image_element.innerHTML = (`
                 <a class="image-list-item" href="${root}music/+noredirect/${page.name}/+images/${image}">
-                    <img src="https://lastfm.freetls.fastly.net/i/u/avatar170s/${image}" loading="lazy">
+                    <img src="https://lastfm.freetls.fastly.net/i/u/avatar170s/${image}" alt=${image} loading="lazy">
                 </a>
             `);
 
-            document.getElementById('bleh--bookmarked-images').appendChild(image_element);
-
+            page.structure.container.querySelector('.bookmarks-panel .image-list').appendChild(image_element);
 
             if (ff('remove_bookmark')) {
                 let menu = tippy(image_element, {
                     theme: 'context-menu',
-                    content: (`
-                        <button class="dropdown-menu-clickable-item" onclick="_update_image_bookmark(this, '${image}', false)" data-menu-item="remove-bookmark" data-bleh--image-is-bookmarked="true">
+                    content: html.node`
+                        <button class="dropdown-menu-clickable-item" onclick=${() => update_image_bookmark(image_element, image, false)} data-menu-item="remove-bookmark" data-bleh--image-is-bookmarked="true">
                             ${trans_legacy.en.gallery.bookmarks.button.unbookmark_this_image.name}
                         </button>
-                    `),
-                    allowHTML: true,
+                    `,
                     placement: 'right-start',
                     trigger: 'manual',
                     interactive: true,
@@ -459,18 +444,15 @@ function patch_gallery_image_listing(image_list) {
             }
         });
     } else {
-        document.getElementById('bleh--bookmarked-images').outerHTML = (`
-            <div class="no-data-message bleh--no-image-bookmarks">
-                <p>${trans_legacy.en.gallery.bookmarks.no_data}</p>
+        render(bookmarks_panel, html`
+            <div class="loading-data-container">
+                <div class="loading-data-text failed">${tl(trans.no_images_saved)}</div>
             </div>
         `);
     }
 }
 
-unsafeWindow._set_gallery_page = function(id) {
-    set_gallery_page(id);
-}
-function set_gallery_page(id) {
+function gallery_tab(id) {
     page.structure.container.setAttribute('data-bleh--gallery-tab', id);
 
     // remove ?tab=saved

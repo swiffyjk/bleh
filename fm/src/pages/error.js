@@ -1,5 +1,12 @@
-import { auth, page, root } from "../build/page";
-import { lang, trans_legacy, trans, tl } from "../build/trans";
+//
+// bleh, an extension for the music site Last.fm
+// Copyright (c) 2025 katelyn and contributors
+// Licensed under GPLv3
+//
+
+import {auth, page, root} from "../build/page";
+import {tl, trans} from "../build/trans";
+import {html, render} from "lighterhtml";
 
 export function bleh_error() {
     page.state.error = false;
@@ -20,7 +27,7 @@ export function bleh_error() {
     let reason = page_content.querySelector('p');
 
     page_content.classList.add('has-error');
-    page_content.innerHTML = (`
+    render(page_content, html`
         <div class="row">
             <div class="col-main">
                 <section class="error">
@@ -29,7 +36,7 @@ export function bleh_error() {
                         <div class="subtle">${error_content.textContent}</div>
                     </div>
                     <div class="error-content">
-                        ${reason.outerHTML}
+                        ${reason}
                     </div>
                     <div class="subtle">${window.location.pathname}</div>
                     <div class="error-footer">

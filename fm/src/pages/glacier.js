@@ -1,12 +1,19 @@
-import { settings } from "../build/config";
-import { log } from "../build/log";
-import { auth, page, root } from "../build/page";
-import { sanitise } from "../build/tools";
-import { lang, trans_legacy, trans, tl } from "../build/trans";
-import { prep_chart_colours } from "../chart";
-import { correct_artist, correct_item_by_artist } from "../components/lotus";
-import { refresh_all } from "../config";
-import { ff } from "../sku";
+//
+// bleh, an extension for the music site Last.fm
+// Copyright (c) 2025 katelyn and contributors
+// Licensed under GPLv3
+//
+
+import {html} from "lighterhtml";
+import {settings} from "../build/config";
+import {log} from "../build/log";
+import {auth, page, root} from "../build/page";
+import {sanitise, sanitise_text} from "../build/tools";
+import {tl, trans, trans_legacy} from "../build/trans";
+import {prep_chart_colours} from "../chart";
+import {correct_artist, correct_item_by_artist} from "../components/lotus";
+import {refresh_all} from "../config";
+import {ff} from "../sku";
 
 export function bleh_user_library() {
     // date sidebar into its own panel
@@ -343,13 +350,13 @@ function bleh_glacier_library_top(static_page = false) {
 
             if (page.subpage == 'library_overview') {
                 if (index == 1)
-                    text = trans_legacy.en.glacier.meta.average;
+                    text = tl(trans.average);
             } else if (page.subpage == 'library_artists') {
                 text = tl(trans.artists);
             } else if (page.subpage == 'library_albums') {
-                text = trans_legacy.en.glacier.meta.albums;
+                text = tl(trans.albums);
             } else if (page.subpage == 'library_tracks') {
-                text = trans_legacy.en.glacier.meta.tracks;
+                text = tl(trans.tracks);
             }
         } else {
             // search results
@@ -361,14 +368,12 @@ function bleh_glacier_library_top(static_page = false) {
             value = value.substring(start, end);
         }
 
-        let glacier_meta_item = document.createElement('div');
-        glacier_meta_item.classList.add('glacier-library-metadata-item');
-        glacier_meta_item.innerHTML = (`
-            <div class="sub-text">${text}</div>
-            <div class="glacier-library-metadata-item-value">${value}</div>
+        glacier_meta.appendChild(html.node`
+            <div class="glacier-library-metadata-item">
+                <div class="sub-text">${text}</div>
+                <div class="glacier-library-metadata-item-value">${value}</div>
+            </div>
         `);
-
-        glacier_meta.appendChild(glacier_meta_item);
     });
 
     if (first_run)
@@ -412,10 +417,10 @@ function bleh_glacier_library_top(static_page = false) {
 
         if (top_wrap.getAttribute('data-current-format') == 'grid') {
             format_button.setAttribute('data-glacier-view', 'grid');
-            format_button.textContent = trans_legacy.en.glacier.view.grid;
+            format_button.textContent = tl(trans.grid);
         } else {
             format_button.setAttribute('data-glacier-view', 'list');
-            format_button.textContent = trans_legacy.en.glacier.view.list;
+            format_button.textContent = tl(trans.list);
         }
 
         view_buttons.appendChild(format_button);
@@ -437,9 +442,9 @@ function bleh_glacier_library_top(static_page = false) {
 
     tippy(configure_button, {
         theme: 'window',
-        content: (`
+        content: html.node`
             <div class="dialog-settings">
-                ${(page.subpage == 'library_artists') ? (`
+                ${(page.subpage == 'library_artists') ? html.node`
                 <div class="setting" data-type="toggle" id="container-colourful_counts" onclick="_update_item('colourful_counts')">
                     <div class="heading">
                         <h5>${tl(trans.colourful_counts.name)}</h5>
@@ -451,7 +456,7 @@ function bleh_glacier_library_top(static_page = false) {
                         </button>
                     </div>
                 </div>
-                `) : (`
+                ` : html.node`
                 <div class="setting" data-type="toggle" id="container-format_guest_features" onclick="_update_item('format_guest_features')">
                     <button class="btn reset" onclick="_reset_item('format_guest_features')">${tl(trans.reset)}</button>
                     <div class="heading">
@@ -476,9 +481,9 @@ function bleh_glacier_library_top(static_page = false) {
                         </button>
                     </div>
                 </div>
-                `)}
+                `}
                 <div class="sep"></div>
-                ${((page.subpage == 'library_artists' || page.subpage == 'library_albums') && auth.pro) ? (`
+                ${((page.subpage == 'library_artists' || page.subpage == 'library_albums') && auth.pro) ? html.node`
                 <div class="setting" data-type="toggle" id="container-grid_glow" onclick="_update_item('grid_glow')">
                     <button class="btn reset" onclick="_reset_item('grid_glow')">${tl(trans.reset)}</button>
                     <div class="heading">
@@ -491,7 +496,7 @@ function bleh_glacier_library_top(static_page = false) {
                         </button>
                     </div>
                 </div>
-                `) : ''}
+                ` : ''}
                 <div class="setting" data-type="toggle" id="container-glacier_library_graphs" onclick="_update_item('glacier_library_graphs')">
                     <button class="btn reset" onclick="_reset_item('glacier_library_graphs')">${tl(trans.reset)}</button>
                     <div class="heading">
@@ -505,8 +510,7 @@ function bleh_glacier_library_top(static_page = false) {
                     </div>
                 </div>
             </div>
-        `),
-        allowHTML: true,
+        `,
         placement: 'bottom',
         interactive: true,
         interactiveBorder: 10,
@@ -535,10 +539,10 @@ unsafeWindow._update_glacier_view = function() {
 
     if (format.getAttribute('href') && format.getAttribute('href').endsWith('reset')) {
         page.structure.glacier.format.setAttribute('data-glacier-view', 'list');
-        page.structure.glacier.format.textContent = trans_legacy.en.glacier.view.list;
+        page.structure.glacier.format.textContent = tl(trans.list);
     } else {
         page.structure.glacier.format.setAttribute('data-glacier-view', 'grid');
-        page.structure.glacier.format.textContent = trans_legacy.en.glacier.view.grid;
+        page.structure.glacier.format.textContent = tl(trans.grid);
     }
 }
 
@@ -1081,21 +1085,21 @@ function bleh_glacier_library_focused() {
 
     let current_suffix = window.location.search;
 
-    let metadata = document.createElement('div');
-    metadata.classList.add('glacier-library-metadata');
-    metadata.innerHTML = (`
-        <div class="glacier-library-metadata-avatar">
-            ${image.outerHTML}
-        </div>
-        <div class="glacier-library-metadata-item">
-            <div class="sub-text">
-                ${trans_legacy.en[type].name}
+    let metadata = html.node`
+        <div class="glacier-library-metadata">
+            <div class="glacier-library-metadata-avatar">
+                ${image}
             </div>
-            <div class="glacier-library-metadata-item-value glacier-library-metadata-focus" data-type="${type}">
-                <a href="${link}">${(type == 'artist') ? correct_artist(header_title) : correct_item_by_artist(header_title, artist)}</a>${(duration) ? ` <span class="glacier-library-track-duration">${duration.textContent}</span>` : ''}${(type != 'artist') ? trans_legacy.en.glacier.by_artist.replace('{a}', `<a href="${root}user/${page.name}/library/music/+noredirect/${sanitise(artist)}${current_suffix}">${correct_artist(artist)}</a>`) : ''}
+            <div class="glacier-library-metadata-item">
+                <div class="sub-text">
+                    ${tl(trans[type])}
+                </div>
+                <div class="glacier-library-metadata-item-value glacier-library-metadata-focus" data-type="${type}">
+                    <a href="${link}">${(type == 'artist') ? correct_artist(header_title) : correct_item_by_artist(header_title, artist)}</a>${(duration) ? html.node`<span class="glacier-library-track-duration">${duration.textContent}</span>` : ''}${(type != 'artist') ? html`${{html: trans_legacy.en.glacier.by_artist.replace('{a}', `<a href="${root}user/${page.name}/library/music/+noredirect/${sanitise(artist)}${current_suffix}">${sanitise_text(correct_artist(artist))}</a>`)}}` : ''}
+                </div>
             </div>
         </div>
-    `);
+    `;
 
     upper_wrap.appendChild(metadata);
     header.appendChild(upper_wrap);
@@ -1208,7 +1212,7 @@ function bleh_glacier_library_focused() {
 
     tippy(configure_button, {
         theme: 'window',
-        content: (`
+        content: html.node`
             <div class="dialog-settings">
                 <div class="setting" data-type="toggle" id="container-format_guest_features" onclick="_update_item('format_guest_features')">
                     <button class="btn reset" onclick="_reset_item('format_guest_features')">${tl(trans.reset)}</button>
@@ -1248,8 +1252,7 @@ function bleh_glacier_library_focused() {
                     </div>
                 </div>
             </div>
-        `),
-        allowHTML: true,
+        `,
         placement: 'bottom',
         interactive: true,
         interactiveBorder: 10,

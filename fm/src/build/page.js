@@ -1,3 +1,10 @@
+//
+// bleh, an extension for the music site Last.fm
+// Copyright (c) 2025 katelyn and contributors
+// Licensed under GPLv3
+//
+
+import {html} from "lighterhtml";
 // require page reload
 export let reload_pending = {
     state: false
@@ -15,7 +22,14 @@ tippy.setDefaultProps({
     duration: [120, 220]
 });
 
-// use the top-right link to determine the current user
+/**
+ * Current profile auth details
+ * @param {string|null} name - Profile name if authorised
+ * @param {boolean} pro - Last.fm Pro status
+ * @param {boolean} sponsor - Sponsor of the project
+ * @param {string|null} avatar - Profile avatar if present
+ * @param {{hue: number, sat: number, lit: number}} sets - Set of colours based on avatar
+ */
 export let auth = {
     name: null,
     pro: false,
@@ -31,11 +45,18 @@ export let auth_link = {
     state: ''
 }
 
-// stores the current root of the page, most applicable in other languages:
-// en: /
-// jp: /jp/
-// etc.
-export let root = '';
+/**
+ * Start of page URL based on language, examples:
+ * en: / and jp: /jp/
+ *
+ *
+ * Build a language-aware URL like
+ *
+ *
+ * {root}user = /user or /jp/user
+ * @type {string}
+ */
+export let root = '/';
 export function setRoot(data) {
     root = data;
 }
@@ -49,6 +70,26 @@ export let last_page_type = {
 export let last_page_subpage = {
     state: undefined
 };
+
+/**
+ * Represents the current page state, structure, and any elements
+ *
+ * @property {string} type - Page type (e.g., user, album, settings)
+ * @property {string} subpage - Page type subsection (e.g., overview, library_artists, shoutbox_overview)
+ * @property {string} name - Artist/album/track/profile name
+ * @property {string} sister - Related artist for album or track
+ * @property {Array} sister_others - Featured guests on a track
+ * @property {string} avatar - URL for associated avatar
+ * @property {boolean} multi - Whether this artist page is a shared profile
+ * @property {boolean} corrected - Whether this page has been corrected via lotus
+ * @property {string} token - Profile token for submitting forms
+ * @property {Object} structure - Elements that make up the page structure
+ * @property {boolean} structure.glacier.refresh - Whether this glacier library page is pending refresh
+ * @property {Object|null} structure.logs - Logging host
+ * @property {Object} requested - Any arguments requested in the page URL via ?this=syntax
+ * @property {Object} state - Dynamic variables
+ * @property {boolean} state.settings_reload - Whether the page is pending a reload due to user settings
+ */
 export let page = {
     initial: '',
     type: '',
@@ -132,23 +173,17 @@ export let has_prompted_for_update = {
     state: false
 };
 
-export let theme_preview = (`
+export let theme_preview = () => html.node`
     <div class="preview-inner">
         <div class="preview-card">
             <div class="preview-header">Aa</div>
             <div class="preview-text"></div>
             <div class="preview-text row-2"></div>
             <div class="preview-buttons">
-                <div class="preview-button preview-button-primary">
-
-                </div>
-                <div class="preview-button">
-
-                </div>
-                <div class="preview-button preview-track">
-
-                </div>
+                <div class="preview-button preview-button-primary"></div>
+                <div class="preview-button"></div>
+                <div class="preview-button preview-track"></div>
             </div>
         </div>
     </div>
-`);
+`;

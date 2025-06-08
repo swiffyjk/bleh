@@ -1,6 +1,12 @@
-import { log } from "../build/log";
-import { sponsor_list } from "../build/sponsor";
-import { lang, trans_legacy, trans, tl } from "../build/trans";
+//
+// bleh, an extension for the music site Last.fm
+// Copyright (c) 2025 katelyn and contributors
+// Licensed under GPLv3
+//
+
+import {log} from "../build/log";
+import {sponsor_list} from "../build/sponsor";
+import {tl, trans} from "../build/trans";
 
 export function load_badges(user, solo = false) {
     if (sponsor_list == null)
@@ -25,18 +31,28 @@ export function load_badges(user, solo = false) {
 
     // now we run thru to add missing metadata
     badges.forEach((badge) => {
-        if (!badge.name)
-            badge.name = tl(trans.badges[badge.type].name);
+        if (!badge.name) {
+            if (trans.badges[badge.type]) {
+                badge.name = tl(trans.badges[badge.type].name);
+            } else {
+                badge.name = tl(trans.unavailable);
+                badge.reason = tl(trans.requires_higher_bleh_version);
+            }
+        }
+
+        // if there's a translation available, use it instead of defaulting
+        if (trans.badges[badge.type] && trans.badges[badge.type].reason)
+            badge.reason = tl(trans.badges[badge.type].reason);
 
         if (badge.reason)
             return;
 
-        if (badge.type == 'sponsor' || badge.type == 'contributor' || badge.type == 'translation')
+        if (badge.type == 'sponsor' || badge.type == 'contributor')
             badge.reason = badge.type;
         else if (badge.type == 'cute' || badge.type == 'queen')
-            badge.reason = 'cute';
+            badge.reason = tl(trans.badges.cute.reason);
         else
-            badge.reason = 'reserved';
+            badge.reason = tl(trans.badges.reserved.reason);
     });
 
     log('final badge list', 'sponsor', 'info', badges);

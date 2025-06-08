@@ -1,18 +1,20 @@
-import { register_activity } from "../activity";
-import { settings } from "../build/config";
-import { log } from "../build/log";
-import { auth, page, root, theme_preview } from "../build/page";
-import { stored_season } from "../build/seasonal";
-import { lang, trans_legacy, trans, tl } from "../build/trans";
-import { request_changelog } from "../changelog";
-import { dialog, dialog_rm } from "../components/dialog";
-import { notify } from "../components/notify";
-import { checkup_page_structure } from '../components/structure';
-import { refresh_all } from "../config";
-import { version } from "../main";
-import { register_background, update_page } from '../page';
-import { ff } from "../sku";
-import { display_colour_presets, show_theme_change_in_settings } from "./bleh_config";
+//
+// bleh, an extension for the music site Last.fm
+// Copyright (c) 2025 katelyn and contributors
+// Licensed under GPLv3
+//
+
+import {register_activity} from "../activity";
+import {log} from "../build/log";
+import {auth, page, root, theme_preview} from "../build/page";
+import {tl, trans, trans_legacy} from "../build/trans";
+import {request_changelog} from "../news.js";
+import {notify} from "../components/notify";
+import {checkup_page_structure} from '../components/structure';
+import {refresh_all} from "../config";
+import {version} from "../main";
+import {register_background, update_page} from '../page';
+import {display_colour_presets, show_theme_change_in_settings} from "./bleh_config";
 
 export function bleh_setup() {
     page.structure.container = document.body.querySelector('.page-content');
@@ -106,7 +108,7 @@ unsafeWindow._setup_themes = function() {
                     <button class="btn theme-item" data-bleh-theme="light" data-bleh--theme_type="light" onclick="change_theme_from_settings('light')">
                         <div class="preview-container">
                         <div class="preview" data-bleh--theme="light" data-bleh--theme_type="light">
-                            ${theme_preview}
+                            ${theme_preview()}
                         </div>
                         </div>
                         <div class="text">
@@ -116,7 +118,7 @@ unsafeWindow._setup_themes = function() {
                     <button class="btn theme-item" data-bleh-theme="ink" data-bleh--theme_type="light" onclick="change_theme_from_settings('ink')">
                         <div class="preview-container">
                         <div class="preview" data-bleh--theme="ink" data-bleh--theme_type="light">
-                            ${theme_preview}
+                            ${theme_preview()}
                         </div>
                         </div>
                         <div class="text">
@@ -130,7 +132,7 @@ unsafeWindow._setup_themes = function() {
                     <button class="btn theme-item" data-bleh-theme="dark" onclick="change_theme_from_settings('dark')">
                         <div class="preview-container">
                         <div class="preview" data-bleh--theme="dark">
-                            ${theme_preview}
+                            ${theme_preview()}
                         </div>
                         </div>
                         <div class="text">
@@ -140,7 +142,7 @@ unsafeWindow._setup_themes = function() {
                     <button class="btn theme-item" data-bleh-theme="darker" onclick="change_theme_from_settings('darker')">
                         <div class="preview-container">
                         <div class="preview" data-bleh--theme="darker">
-                            ${theme_preview}
+                            ${theme_preview()}
                         </div>
                         </div>
                         <div class="text">
@@ -150,7 +152,7 @@ unsafeWindow._setup_themes = function() {
                     <button class="btn theme-item" data-bleh-theme="oled" onclick="change_theme_from_settings('oled')">
                         <div class="preview-container">
                         <div class="preview" data-bleh--theme="oled">
-                            ${theme_preview}
+                            ${theme_preview()}
                         </div>
                         </div>
                         <div class="text">

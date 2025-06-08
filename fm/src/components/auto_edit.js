@@ -1,23 +1,28 @@
-import { log } from "../build/log";
-import { page, root } from "../build/page";
-import { trans, tl } from "../build/trans";
+//
+// bleh, an extension for the music site Last.fm
+// Copyright (c) 2025 katelyn and contributors
+// Licensed under GPLv3
+//
+
+import {log} from "../build/log";
+import {page, root} from "../build/page";
+import {tl, trans} from "../build/trans";
+import {html, render} from "lighterhtml";
 
 export function bleh_auto_edits() {
     let corrections_panel = document.body.querySelector('#subscription-corrections');
     page.structure.main.appendChild(corrections_panel);
 
-
     // we want the other navigation
     let nav = page.structure.container.querySelector('nav[data-more-string] .navlist-items');
-    let back_nav = document.createElement('li');
-    back_nav.classList.add('navlist-item', 'secondary-nav-item', 'secondary-nav-item--back');
-    back_nav.innerHTML = (`
-        <a class="secondary-nav-item-link" href="${root}settings/subscription">
-            ${tl(trans.back)}
-        </a>
-    `);
 
-    nav.insertBefore(back_nav, nav.firstElementChild);
+    nav.insertBefore(html.node`
+        <li class="navlist-item secondary-nav-item secondary-nav-item--back">
+            <a class="secondary-nav-item-link" href="${root}settings/subscription">
+                ${tl(trans.back)}
+            </a>
+        <li>
+    `, nav.firstElementChild);
 }
 
 export function auto_edit_modal() {
@@ -41,7 +46,7 @@ export function auto_edit_modal() {
         checkbox.classList = 'setting';
         checkbox.setAttribute('data-type', 'toggle');
         checkbox.setAttribute('onclick', `_update_inbuilt_item('${id}')`);
-        checkbox.innerHTML = (`
+        render(checkbox, html`
             <div class="heading">
                 <h5>${text}</h5>
             </div>
@@ -51,6 +56,6 @@ export function auto_edit_modal() {
                     <div class="dot"></div>
                 </span>
             </div>
-        `);
+        `)
     });
 }

@@ -1,3 +1,11 @@
+//
+// bleh, an extension for the music site Last.fm
+// Copyright (c 2025 katelyn and contributors
+// Licensed under GPLv3
+//
+
+import {trans} from "./trans.js";
+
 export let settings = {};
 export let settings_template = {
     theme: 'dark',
@@ -573,7 +581,8 @@ export let inbuilt_settings = {
 export let settings_store = {
     theme: {
         default: 'dark',
-        type: 'radio'
+        type: 'radio',
+        title: trans.theme
     },
     high_contrast: {
         default: false
@@ -591,8 +600,15 @@ export let settings_store = {
         type: 'range'
     },
     sat_bg: {
+        css: 'sat-bg',
         default: 1,
-        type: 'range'
+        type: 'range',
+        min: 0,
+        max: 3,
+        step: 0.1,
+        title: trans.card_background_saturation.name,
+        body: trans.card_background_saturation.body,
+        incompatible: [{setting: 'theme', value: 'light'}]
     },
     lit: {
         default: 1,
@@ -606,23 +622,38 @@ export let settings_store = {
         default: true
     },
     dev: {
-        default: false
+        default: false,
+        title: trans.theme_loading.name,
+        body: trans.theme_loading.body
+    },
+    branch: {
+        default: 'uwu',
+        title: trans.branch.name,
+        body: trans.branch.body,
+        type: 'text',
+        max: 20,
+        placeholder: trans.enter_branch_name,
+        warn_if_empty: true
     },
     api_key: {
         default: '',
-        type: 'string'
+        type: 'text'
     },
     profile_header_expand: {
         default: true
     },
     accessible_name_colours: {
-        default: false
+        default: false,
+        title: trans.accessible_name_colours.name,
+        body: trans.accessible_name_colours.body
     },
     reduced_motion: {
         default: false
     },
     underline_links: {
-        default: false
+        default: false,
+        title: trans.underline_links.name,
+        body: trans.underline_links.body
     },
     format_guest_features: {
         default: true
@@ -643,7 +674,9 @@ export let settings_store = {
         default: true
     },
     colourful_tracks: {
-        default: true
+        default: true,
+        title: trans.colourful_tracks.name,
+        body: trans.colourful_tracks.body
     },
     feature_flags: {
         default: {},
@@ -672,13 +705,31 @@ export let settings_store = {
         type: 'radio'
     },
     shout_markdown: {
-        default: true
+        default: true,
+        require_reload: 'partial',
+        title: trans.markdown_shouts.name,
+        body: trans.markdown_shouts.body
     },
     bio_markdown: {
-        default: true
+        default: true,
+        require_reload: 'partial',
+        title: trans.markdown_profiles.name,
+        body: trans.markdown_profiles.body
+    },
+    avatar_radius: {
+        default: 50,
+        min: 0,
+        max: 50,
+        step: 1,
+        type: 'range',
+        css: 'avatar-radius',
+        suffix: '%',
+        title: trans.avatar_radius
     },
     hue_from_album: {
-        default: true
+        default: true,
+        title: trans.hue_from_album.name,
+        body: trans.hue_from_album.body
     },
     seasonal: {
         default: true
@@ -701,42 +752,66 @@ export let settings_store = {
     },
     profile_shortcut: {
         default: '',
-        type: 'string'
+        type: 'text',
+        avatar: true,
+        wait: true,
+        max: 40,
+        title: trans.profile_shortcut.name,
+        body: trans.profile_shortcut.body,
+        placeholder: trans.enter_username,
+        warn_if_matches_auth: true
     },
     font: {
         css: 'custom_font',
         default: '',
-        type: 'string'
+        type: 'text',
+        max: 120,
+        title: trans.font.name,
+        body: trans.font.body,
+        placeholder: trans.enter_font_names
     },
     font_weight: {
         css: 'custom_font_weight',
         default: 480,
-        min: 0,
-        max: 0,
-        step: 0,
-        type: 'range'
+        min: 100,
+        max: 500,
+        step: 10,
+        type: 'range',
+        title: trans.font_weight.name,
+        body: trans.font_weight.body
     },
     font_weight_medium: {
         css: 'custom_font_weight_medium',
         default: 650,
-        min: 0,
-        max: 0,
-        step: 0,
-        type: 'range'
+        min: 500,
+        max: 700,
+        step: 10,
+        type: 'range',
+        title: trans.font_weight_medium.name,
+        body: trans.font_weight_medium.body
     },
     font_weight_bold: {
         css: 'custom_font_weight_bold',
         default: 730,
-        min: 0,
-        max: 0,
-        step: 0,
-        type: 'range'
+        min: 700,
+        max: 900,
+        step: 10,
+        type: 'range',
+        title: trans.font_weight_bold.name,
+        body: trans.font_weight_bold.body
     },
     font_emoji: {
-        default: true
+        default: true,
+        title: trans.font_emoji.name,
+        body: trans.font_emoji.body
     },
     show_bulk_edit_album: {
-        default: false
+        default: false,
+        title: trans.show_bulk_edit_album.name,
+        body: trans.show_bulk_edit_album.body,
+        extensions: [
+            trans.bulk_edit_extension
+        ]
     },
     grid_glow: {
         default: true
@@ -747,5 +822,28 @@ export let settings_store = {
     default_avatar_action: {
         default: 'expand',
         type: 'radio'
+    },
+    collage_title: {
+        default: true,
+        title: trans.collage_title.name,
+        body: trans.collage_title.body
+    },
+    collage_grid_text: {
+        default: true,
+        title: trans.collage_grid_text
+    },
+    collage_grid_plays: {
+        default: true,
+        title: trans.collage_grid_plays
+    },
+    collage_grid_gap: {
+        default: true,
+        title: trans.collage_grid_gap
+    },
+    hu_tao: {
+        default: '',
+        type: 'text',
+        max: 40,
+        placeholder: trans.enter_password
     }
 }

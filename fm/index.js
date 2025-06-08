@@ -1,3 +1,9 @@
+//
+// bleh, an extension for the music site Last.fm
+// Copyright (c) 2025 katelyn and contributors
+// Licensed under GPLv3
+//
+
 import esbuild from "esbuild"
 import build from "./src/build/build.json" with {type: "json"};
 
@@ -19,6 +25,7 @@ const banner = `// ==UserScript==
 // @require      https://cdnjs.cloudflare.com/ajax/libs/color-thief/2.3.0/color-thief.umd.js
 // @require      https://cdn.jsdelivr.net/npm/chart.js@4.4.3/dist/chart.umd.min.js
 // @require      https://cdn.jsdelivr.net/npm/chartjs-adapter-moment@^1
+// @require      https://html2canvas.hertzen.com/dist/html2canvas.min.js
 // ==/UserScript==`;
 
 

@@ -1,22 +1,24 @@
-import { log } from "./build/log";
-import { root } from "./build/page";
-import { lang, tl, trans, trans_legacy } from "./build/trans";
-import { dialog } from "./components/dialog";
-import { deliver_notif } from "./components/notify";
-import { ff } from "./sku";
+//
+// bleh, an extension for the music site Last.fm
+// Copyright (c) 2025 katelyn and contributors
+// Licensed under GPLv3
+//
 
-unsafeWindow._query_changelog = function() {
-    if (!ff('changelogs')) {
-        deliver_notif('not just yet..');
-        return;
-    }
+import {html} from "lighterhtml";
+import {log} from "./build/log";
+import {page, root} from "./build/page";
+import {tl, trans, trans_legacy} from "./build/trans";
+import {dialog} from "./components/dialog";
+import {deliver_notif} from "./components/notify";
+import {sponsor_list} from "./build/sponsor.js";
 
+export function news() {
     let changelog = localStorage.getItem('bleh_changelog');
     let changelog_expire = new Date(localStorage.getItem('bleh_changelog_expire'));
 
     let current_time = new Date();
 
-    if (changelog == null) {
+    if (!changelog) {
         log('not cached, fetching', 'changelog');
         request_changelog();
     } else {
@@ -28,8 +30,8 @@ unsafeWindow._query_changelog = function() {
 }
 
 export function request_changelog(open_after = true) {
-    let button = document.body.querySelector('[data-bleh-page="changelog"]');
-    if (button != null)
+    let button = page.state.navigation_menu_news;
+    if (button)
         button.setAttribute('disabled', '');
 
     let xhr = new XMLHttpRequest();
@@ -75,14 +77,14 @@ export function request_changelog(open_after = true) {
 function open_changelog(changelog) {
     let window = dialog({
         id: 'changelog',
-        title: tl(trans.news_from_user).replace('{user}', `<a class="mention" href="${root}user/katesia">@katesia</a>`),
-        body: (`
+        title: tl(trans.news_from_user).replace('{user}', (sponsor_list) ? sponsor_list.special[0] : 'katelyn'),
+        body: html.node`
             <div class="cta first sponsor colourful margin-bottom">
                 <strong>${tl(trans.news_sponsor_cta)}</strong>
                 <a class="see-more" onclick="_sponsor(true)">${tl(trans.sponsor)}</a>
             </div>
             <div class="changelog-list"></div>
-        `),
+        `,
         type: 'changelog',
         allow_scroll: true
     });
@@ -96,28 +98,24 @@ function open_changelog(changelog) {
 
         if (index > 10)
             continue;
-
-        let version_item = document.createElement('div');
-        version_item.classList.add('changelog-version-item');
-        version_item.setAttribute('data-changelog-type', changelog[version].type);
-        version_item.setAttribute('data-changelog-latest', (index == 0) ? 'true' : 'false');
-        version_item.setAttribute('data-changelog-version', version);
-        version_item.innerHTML = (`
+       let version_item = html.node`
+            <div class="changelog-version-item" data-changelog-type="${changelog[version].type}" data-changelog-latest="${index == 0 ? 'true' : 'false'}" data-changelog-version="${version}">
             <div class="version-item-header">
                 <div class="sub-text">
-                    <div class="breadcrumb">
-                        <div class="breadcrumb-origin">
-                            ${version}
-                        </div>
-                        <div class="breadcrumb-name">
-                            ${trans_legacy.en.changelog.type[changelog[version].type]}
-                        </div>
+                <div class="breadcrumb">
+                    <div class="breadcrumb-origin">
+                    ${version}
+                    </div>
+                    <div class="breadcrumb-name">
+                    ${trans_legacy.en.changelog.type[changelog[version].type]}
                     </div>
                 </div>
+                </div>
                 <h3>${changelog[version].name}</h3>
-                ${(version == '2025.0113') ? `<h4 class="header-over">${changelog[version].name}</h4>` : ''}
+                ${(version == '2025.0113') ? html.node`<h4 class="header-over">${changelog[version].name}</h4>` : ''}
             </div>
-        `);
+            </div>
+        `;
 
         if (changelog[version].type == 'major')
             version_item.setAttribute('id', 'latest_major_release');

@@ -1,11 +1,18 @@
-import { auth, page, root } from "../build/page";
-import { trans_legacy, trans, tl } from "../build/trans";
-import { bleh_auto_edits } from "../components/auto_edit";
-import { dialog } from "../components/dialog";
-import { custom_select, update_inbuilt_select } from "../components/select";
-import { update_inbuilt_item } from "../config";
-import { ff } from "../sku";
-import { markdown } from "../components/markdown";
+//
+// bleh, an extension for the music site Last.fm
+// Copyright (c) 2025 katelyn and contributors
+// Licensed under GPLv3
+//
+
+import {auth, page, root} from "../build/page";
+import {tl, trans, trans_legacy} from "../build/trans";
+import {bleh_auto_edits} from "../components/auto_edit";
+import {dialog} from "../components/dialog";
+import {custom_select, update_inbuilt_select} from "../components/select";
+import {update_inbuilt_item} from "../config";
+import {ff} from "../sku";
+import {markdown} from "../components/markdown";
+import {html, render} from "lighterhtml";
 
 // patch last.fm settings
 export function bleh_native_settings() {
@@ -51,6 +58,8 @@ export function bleh_native_settings() {
         bleh_accounts();
     } else if (page.subpage == 'change-username_overview') {
         bleh_name_change();
+    } else if (page.subpage == 'applications_overview') {
+        bleh_applications();
     }
 
     if (ff('katsune')) return;
@@ -438,17 +447,16 @@ function patch_settings_profile_panel(token, update_picture) {
 
     let form_display_name = document.getElementById('id_full_name').value;
     let form_website = document.getElementById('id_homepage').value;
-    let form_country = document.getElementById('id_country').outerHTML;
+    let form_country = document.getElementById('id_country');
     let form_about_me = document.getElementById('id_about_me').textContent;
 
-    document.getElementById('update-profile').outerHTML = '';
 
-    update_picture.innerHTML = (`
-        <h4>${tl(trans.profile)}</h4>
+    render(update_picture, html`
+       <h4>${tl(trans.profile)}</h4>
         <div class="banner-preview"></div>
         <div class="profile-container">
             <div class="avatar-side">
-                <div class="avatar image-upload-preview" onclick="_open_avatar_changer('${token}')">
+                <div class="avatar image-upload-preview" onclick=${() => avatar(token)}>
                     <img src="${avatar_url}" alt="${tl(trans.your_avatar)}" loading="lazy">
                     <div class="avatar-overlay"></div>
                 </div>
@@ -474,7 +482,7 @@ function patch_settings_profile_panel(token, update_picture) {
                                     ${tl(trans.subtitle)}
                                 </div>
                                 <div class="input">
-                                    <input type="text" name="full_name" value="${form_display_name}" maxlength="36" id="id_full_name" oninput="_update_display_name(this.value)" data-form-type="other">
+                                    <input type="text" name="full_name" value=${form_display_name} maxlength="36" id="id_full_name" oninput="_update_display_name(this.value)" data-form-type="other">
                                     <div class="tip">${tl(trans.pronoun_tip)}</div>
                                 </div>
                             </div>
@@ -491,7 +499,7 @@ function patch_settings_profile_panel(token, update_picture) {
                                     ${tl(trans.about)}
                                 </div>
                                 <div class="input about-me" id="about_me">
-                                    <textarea name="about_me" placeholder="${tl(trans.anything_you_can_imagine)}" cols="40" rows="10" class="textarea--s" maxlength="500" id="id_about_me" oninput="_update_about_me_preview(this.value)" data-form-type="other">${form_about_me}</textarea>
+                                    <textarea name="about_me" placeholder=${tl(trans.anything_you_can_imagine)} cols="40" rows="10" class="textarea--s" maxlength="500" id="id_about_me" oninput="_update_about_me_preview(this.value)" data-form-type="other">${form_about_me}</textarea>
                                     <div class="tip markdown-enabled">${tl(trans.supports_markdown)}</div>
                                 </div>
                             </div>
@@ -521,8 +529,10 @@ function patch_settings_profile_panel(token, update_picture) {
                     </form>
                 </div>
             </div>
-        </div>
+        </div> 
     `);
+
+    page.structure.main.removeChild(page.structure.main.querySelector('#update-profile'));
 
     tippy(update_picture.querySelector('.markdown-enabled'), {
         content: tl(trans.markdown_tip),
@@ -569,14 +579,11 @@ export function use_pronouns(value) {
 }
 
 
-unsafeWindow._open_avatar_changer = function(token) {
-    open_avatar_changer(token);
-}
-function open_avatar_changer(token) {
+function avatar(token) {
     page.state.avatar_changer = dialog({
         id: 'edit_avatar',
         title: tl(trans.change_avatar),
-        body: (`
+        body: html.node`
             <div class="forms">
                 <form action="${root}settings" name="avatar-form" method="post" enctype="multipart/form-data">
                     <input type="hidden" name="csrfmiddlewaretoken" value="${token}">
@@ -585,7 +592,7 @@ function open_avatar_changer(token) {
                             <img class="preview">
                             <span class="btn-secondary btn primary btn-file" data-kate-processed="true">
                                 ${tl(trans.upload)}
-                                <input type="file" onchange="_update_avatar_preview(event)" name="avatar" data-require="components/file-input" data-file-input-copy="${tl(trans.upload)}" data-no-file-copy="No file chosen" accept="image/*" required="" id="id_avatar" data-kate-processed="true">
+                                <input type="file" onchange=${() => update_avatar(event)} name="avatar" data-require="components/file-input" data-file-input-copy="${tl(trans.upload)}" data-no-file-copy="No file chosen" accept="image/*" required="" id="id_avatar" data-kate-processed="true">
                             </span>
                         </div>
                     </div>
@@ -602,11 +609,11 @@ function open_avatar_changer(token) {
                 </form>
             </div>
             <div class="modal-footer">
-                <button class="see-more cancel" onclick="_dialog_rm({id:'edit_avatar'})">${tl(trans.cancel)}</button>
+                <button class="see-more cancel" onclick=${() => dialog_rm({id:'edit_avatar'})}>${tl(trans.cancel)}</button>
                 <div class="fill"></div>
-                <button class="btn primary save" onclick="_save_avatar()" disabled>${tl(trans.save)}</button>
+                <button class="btn primary save" onclick=${() => save_avatar()} disabled>${tl(trans.save)}</button>
             </div>
-        `)
+        `
     });
 
     page.state.avatar_changer.querySelector('[name="avatar-form"]').onsubmit = finish_saving_avatar;
@@ -616,7 +623,7 @@ function open_avatar_changer(token) {
     console.info(page.structure.dialogs);
 }
 
-unsafeWindow._update_avatar_preview = function(event) {
+function update_avatar(event) {
     let reader = new FileReader();
     reader.onload = function() {
         page.state.avatar_changer_image.src = reader.result;
@@ -626,12 +633,12 @@ unsafeWindow._update_avatar_preview = function(event) {
     reader.readAsDataURL(event.target.files[0]);
 }
 
-unsafeWindow._save_avatar = function() {
+function save_avatar() {
     page.state.avatar_changer.querySelector('#avatar_saver').click();
 }
 function finish_saving_avatar() {
     page.state.avatar_changer.setAttribute('data-loading', 'true');
-    page.state.avatar_changer.querySelectorAll('button').forEach((button) => {
+    page.state.avatar_changer.querySelectorAll('.bleh-modal-body button').forEach((button) => {
         button.setAttribute('disabled', 'true');
         button.removeAttribute('onclick');
     });
@@ -642,12 +649,11 @@ unsafeWindow._update_about_me_preview = function(value) {
     update_about_me_preview(value);
 }
 function update_about_me_preview(value) {
-    let result = markdown(value, {
-        allow_headers: true
-    });
     let about_me = page.structure.main.querySelector('#about_me_preview');
 
-    about_me.innerHTML = result;
+    render(about_me, markdown(value, {
+        allow_headers: true
+    }))
 
     let banner = about_me.querySelector('img[alt="banner"]');
     let banner_img = page.structure.main.querySelector('.banner-preview');
@@ -691,7 +697,7 @@ function bleh_communication_panel(token) {
         let form = item.querySelector('form');
         let button = form.querySelector('button');
 
-        button.classList.add('icon', 'delete-user-button', 'danger-subtle');
+        button.classList.add('icon', 'chibi', 'danger-subtle');
 
         entry.innerHTML = (`
             <span class="text">
@@ -1103,4 +1109,33 @@ function bleh_name_change() {
     let token = page.structure.main.querySelector('[name="csrfmiddlewaretoken"]').getAttribute('value');
 
     return;
+}
+
+function bleh_applications() {
+    let session_types = page.structure.main.querySelectorAll('.api-sessions');
+
+    let suggested;
+    let connected;
+
+    if (session_types.length > 1) {
+        suggested = session_types[0];
+        connected = session_types[1];
+    } else {
+        connected = session_types[0];
+    }
+
+    render(page.structure.main, html`
+        <section class="applications">
+            <div class="section-intro">
+                <h3>Applications</h3>
+                <p>Connect your account to third-party services for a better scrobbling experience. Make sure you trust the services below.</p>
+            </div>
+            ${(suggested) ? html`
+            <h2>Suggested</h2>
+            ${suggested}
+            ` : ''}
+            <h2>Connected</h2>
+            ${connected}
+        </section>
+    `);
 }

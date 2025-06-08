@@ -1,7 +1,13 @@
-import { settings } from "../build/config";
-import { page } from "../build/page";
-import { lang, trans_legacy, trans, tl } from "../build/trans";
-import { notify } from "./notify";
+//
+// bleh, an extension for the music site Last.fm
+// Copyright (c) 2025 katelyn and contributors
+// Licensed under GPLv3
+//
+
+import {settings} from "../build/config";
+import {page} from "../build/page";
+import {trans_legacy} from "../build/trans";
+import {notify} from "./notify";
 
 export function nag_bar() {
     /*if (!page.structure.nag_bar) {
@@ -21,8 +27,9 @@ export function nag_bar() {
                 notify({
                     id: 'corrections',
                     title: trans_legacy.en.nag_bar.corrections.title,
-                    body: active_nag.querySelector('strong').innerHTML,
-                    icon: 'icon-16-refresh'
+                    body: active_nag.querySelector('strong'),
+                    icon: 'icon-16-refresh',
+                    long: true
                 });
             }
         } else {

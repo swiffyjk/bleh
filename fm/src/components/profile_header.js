@@ -1,14 +1,23 @@
-import { settings } from "../build/config";
-import { log } from "../build/log";
-import { auth, page, root } from "../build/page";
-import { sponsor_list } from "../build/sponsor";
-import { clean_number, sanitise } from "../build/tools";
-import { lang, trans, tl } from "../build/trans";
-import { ff } from "../sku";
-import { compare } from './compare';
-import { correct_artist } from "./lotus";
-import { register_menu } from "./menu";
-import { open_profile_shortcut_window } from './profile_shortcut';
+//
+// bleh, an extension for the music site Last.fm
+// Copyright (c) 2025 katelyn and contributors
+// Licensed under GPLv3
+//
+
+import {settings} from "../build/config";
+import {log} from "../build/log";
+import {auth, page, root} from "../build/page";
+import {sponsor_list} from "../build/sponsor";
+import {sanitise} from "../build/tools";
+import {tl, trans} from "../build/trans";
+import {ff} from "../sku";
+import {compare} from './compare';
+import {correct_artist} from "./lotus";
+import {register_menu} from "./menu";
+import {open_profile_shortcut_window, set_profile_as_shortcut} from './profile_shortcut';
+import {html} from "lighterhtml";
+import {collage} from "./collage.js";
+import {sponsor} from "../sponsor.js";
 
 unsafeWindow._toggle_profile_header = function(button) {
     let current = settings.profile_header_expand;
@@ -27,31 +36,6 @@ export function redesign_profile_header(is_own_profile, is_following) {
     if (!base_header) return;
 
     let katsune = ff('katsune');
-
-    let header_meta = base_header.querySelector('.header-metadata');
-    header_meta.classList.add('profile-header-metadata-legacy');
-
-    // acquire info
-    let scrobbles = 0;
-    let average = 0;
-    let artists = 0;
-    let loved = 0;
-
-    if (!katsune) {
-        let metadata = header_meta.querySelectorAll('.header-metadata-display');
-        metadata.forEach((item, index) => {
-            if (index == 0) {
-                let para = item.querySelector('p');
-
-                scrobbles = clean_number(para.textContent.trim());
-                average = para.getAttribute('title');
-            } else if (index == 1) {
-                artists = clean_number(item.textContent.trim());
-            } else if (index == 2) {
-                loved = clean_number(item.textContent.trim());
-            }
-        });
-    }
 
 
     // taste
@@ -124,11 +108,6 @@ export function redesign_profile_header(is_own_profile, is_following) {
             follow_placeholder.setAttribute('disabled', 'true');
             follow_placeholder.setAttribute('data-ignored', 'true');
 
-            if (!katsune)
-                tippy(follow_placeholder, {
-                    content: tl(trans.blocked)
-                });
-
             profile_header.appendChild(follow_placeholder);
         }
     }
@@ -141,24 +120,20 @@ export function redesign_profile_header(is_own_profile, is_following) {
                 create_profile_top_item(profile_header, {
                     name: page.name,
                     type: 'message',
-                    link: msg_button.getAttribute('href'),
-                    katsune: katsune
+                    link: msg_button.getAttribute('href')
                 });
             } else {
                 create_profile_top_item(profile_header, {
                     name: page.name,
                     type: 'sponsor',
-                    link: '_sponsor()',
-                    full: true,
-                    action: 'button',
-                    katsune: katsune
+                    link: () => sponsor(),
+                    action: 'button'
                 });
                 create_profile_top_item(profile_header, {
                     name: page.name,
                     type: 'message_sponsor',
                     link: msg_button.getAttribute('href'),
-                    full: true,
-                    katsune: katsune
+                    full: true
                 });
             }
         }
@@ -169,19 +144,36 @@ export function redesign_profile_header(is_own_profile, is_following) {
                 create_profile_top_item(profile_header, {
                     name: page.name,
                     type: 'compare',
-                    link: '_compare()',
-                    action: 'button',
-                    katsune: katsune
+                    link: () => compare(),
+                    action: 'button'
                 });
             }
 
-            create_profile_top_item(profile_header, {
-                name: page.name,
-                type: 'shortcut',
-                link: `_set_profile_as_shortcut(this, '${page.name}')`,
-                action: 'button',
-                katsune: katsune
-            });
+            if (ff('charts')) {
+                create_profile_top_item(profile_header, {
+                    name: page.name,
+                    type: 'collage',
+                    link: () => collage(),
+                    action: 'button',
+                    text: tl(trans.collage),
+                    new_release: true
+                });
+            }
+
+            if (settings.profile_shortcut != page.name) {
+                page.state.profile_shortcut_button = create_profile_top_item(profile_header, {
+                    name: page.name,
+                    type: 'shortcut',
+                    link: () => set_profile_as_shortcut(),
+                    action: 'button'
+                });
+            } else {
+                create_profile_top_item(profile_header, {
+                    name: page.name,
+                    type: 'shortcut',
+                    action: 'button'
+                });
+            }
         }
 
 
@@ -189,8 +181,7 @@ export function redesign_profile_header(is_own_profile, is_following) {
             create_profile_top_item(profile_header, {
                 name: page.name,
                 type: 'support',
-                link: 'https://support.last.fm',
-                katsune: katsune
+                link: 'https://support.last.fm'
             });
         }
     } else {
@@ -198,14 +189,12 @@ export function redesign_profile_header(is_own_profile, is_following) {
         create_profile_top_item(profile_header, {
             name: page.name,
             type: 'edit',
-            link: `${root}settings`,
-            katsune: katsune
+            link: `${root}settings`
         });
         create_profile_top_item(profile_header, {
             name: page.name,
             type: 'labs',
             link: `${root}labs`,
-            katsune: katsune,
             tooltip: (`
                 <strong>${tl(trans.labs_by_last)}</strong>
                 <p>${tl(trans.labs_by_last.tagline)}</p>
@@ -216,44 +205,55 @@ export function redesign_profile_header(is_own_profile, is_following) {
         create_profile_top_item(profile_header, {
             name: page.name,
             type: 'obsession',
-            link: `${root}user/${page.name}/obsessions/set`,
-            katsune: katsune
+            link: `${root}user/${page.name}/obsessions/set`
         });
+
+        if (ff('charts')) {
+            create_profile_top_item(profile_header, {
+                name: page.name,
+                type: 'collage',
+                link: () => collage(),
+                action: 'button',
+                text: tl(trans.collage),
+                new_release: true
+            });
+        }
     }
 
     let listen_container = page.structure.row.querySelector('.listen-panel');
 
     if (!is_own_profile && page.name != sponsor_list.sponsor_account && katsune) {
-        let taste_wrap = document.createElement('div');
-        taste_wrap.classList.add('btn', 'listen-item', 'icon');
-
-        taste_wrap.innerHTML = (`
-            <div class="span">
-                <img class="view-item-avatar" src="${auth.avatar}">
-                <img class="view-item-avatar" src="${profile_avi}">
-                <div class="info">
-                    <h3>${tl(trans.you_share_count_with).replace('{c}', `<span class="colourful" data-taste="${taste}">${taste_percentage}</span>`)}</h3>
-                    <p>
-                        ${(taste_artists.length == 1) ? tl(trans.you_share_count_with.one).replace('{artist}', taste_artists[0]) : ''}
-                        ${(taste_artists.length == 2) ? tl(trans.you_share_count_with.two).replace('{artist1}', taste_artists[0]).replace('{artist2}', taste_artists[1]) : ''}
-                        ${(taste_artists.length == 3) ? tl(trans.you_share_count_with.three).replace('{artist1}', taste_artists[0]).replace('{artist2}', taste_artists[1]).replace('{artist3}', taste_artists[2]) : ''}
-                    </p>
+        let taste_wrap = html.node`
+            <div class="btn listen-item icon">
+                <div class="span">
+                    <img class="view-item-avatar" src="${auth.avatar}">
+                    <img class="view-item-avatar" src="${profile_avi}">
+                    <div class="info">
+                        <h3>${
+                            html.node([
+                                tl(trans.you_share_count_with).replace('{c}', `<span class="colourful" data-taste="${taste}">${taste_percentage}</span>`)
+                            ])}</h3>
+                        <p>
+                            ${(taste_artists.length == 1) ? tl(trans.you_share_count_with.one).replace('{artist}', taste_artists[0]) : ''}
+                            ${(taste_artists.length == 2) ? tl(trans.you_share_count_with.two).replace('{artist1}', taste_artists[0]).replace('{artist2}', taste_artists[1]) : ''}
+                            ${(taste_artists.length == 3) ? tl(trans.you_share_count_with.three).replace('{artist1}', taste_artists[0]).replace('{artist2}', taste_artists[1]).replace('{artist3}', taste_artists[2]) : ''}
+                        </p>
+                    </div>
+                </div>
+                <div class="taste-bar colourful" data-taste="${taste}">
+                    <div class="taste-bar-fill" style="width: ${taste_percentage}"></div>
                 </div>
             </div>
-            <div class="taste-bar colourful" data-taste="${taste}">
-                <div class="taste-bar-fill" style="width: ${taste_percentage}"></div>
-            </div>
-        `);
+        `
 
         tippy(taste_wrap, {
             theme: 'stack',
-            content: (`
-            <span>
-                ${tl(trans.taste_similarity)}
-            </span>
-            <div class="hint">${tl(trans.right_click_for_more_options)}</div>
-            `),
-            allowHTML: true
+            content: html.node`
+                <span>
+                    ${tl(trans.taste_similarity)}
+                </span>
+                <div class="hint">${tl(trans.right_click_for_more_options)}</div>
+            `,
         });
 
         listen_container.appendChild(taste_wrap);
@@ -261,7 +261,7 @@ export function redesign_profile_header(is_own_profile, is_following) {
         if (taste_artists.length > 1) {
             let menu = tippy(taste_wrap, {
                 theme: 'context-menu',
-                content: (`
+                content: html.node`
                     <h4 class="menu-header">${tl(trans.compare_plays)}</h4>
                     <a class="dropdown-menu-clickable-item" href="${root}user/${page.name}/library/music/${sanitise(taste_artists[0])}" data-menu-item="shared-artist">
                         <img class="view-item-avatar" src="${profile_avi}" alt="${page.name}">${taste_artists[0]}
@@ -269,7 +269,7 @@ export function redesign_profile_header(is_own_profile, is_following) {
                     <a class="dropdown-menu-clickable-item" href="${root}user/${auth.name}/library/music/${sanitise(taste_artists[0])}" data-menu-item="shared-artist">
                         <img class="view-item-avatar" src="${auth.avatar}" alt="${auth.name}">${taste_artists[0]}
                     </a>
-                    ${(taste_artists.length >= 2) ? (`
+                    ${(taste_artists.length >= 2) ? html.node`
                     <div class="sep"></div>
                     <a class="dropdown-menu-clickable-item" href="${root}user/${page.name}/library/music/${sanitise(taste_artists[1])}" data-menu-item="shared-artist">
                         <img class="view-item-avatar" src="${profile_avi}" alt="${page.name}">${taste_artists[1]}
@@ -277,8 +277,8 @@ export function redesign_profile_header(is_own_profile, is_following) {
                     <a class="dropdown-menu-clickable-item" href="${root}user/${auth.name}/library/music/${sanitise(taste_artists[1])}" data-menu-item="shared-artist">
                         <img class="view-item-avatar" src="${auth.avatar}" alt="${auth.name}">${taste_artists[1]}
                     </a>
-                    `) : ''}
-                    ${(taste_artists.length >= 3) ? (`
+                    ` : ''}
+                    ${(taste_artists.length >= 3) ? html.node`
                     <div class="sep"></div>
                     <a class="dropdown-menu-clickable-item" href="${root}user/${page.name}/library/music/${sanitise(taste_artists[2])}" data-menu-item="shared-artist">
                         <img class="view-item-avatar" src="${profile_avi}" alt="${page.name}">${taste_artists[2]}
@@ -286,14 +286,21 @@ export function redesign_profile_header(is_own_profile, is_following) {
                     <a class="dropdown-menu-clickable-item" href="${root}user/${auth.name}/library/music/${sanitise(taste_artists[2])}" data-menu-item="shared-artist">
                         <img class="view-item-avatar" src="${auth.avatar}" alt="${auth.name}">${taste_artists[2]}
                     </a>
-                    `) : ''}
-                `),
-                allowHTML: true,
+                    ` : ''}
+                    <div class="sep"></div>
+                    <button class="dropdown-menu-clickable-item" data-type="compare" onclick=${() => compare()}>${tl(trans.compare)}</button>
+                `,
                 placement: 'right-start',
                 trigger: 'manual',
                 interactive: true,
                 interactiveBorder: 10,
-                offset: [0, 0]
+                offset: [0, 0],
+
+                onShow(instance) {
+                    instance.popper.addEventListener('click', event => {
+                        instance.hide();
+                    });
+                }
             });
 
             register_menu(taste_wrap, menu);
@@ -306,76 +313,48 @@ export function redesign_profile_header(is_own_profile, is_following) {
         page.structure.main.insertBefore(profile_header, page.structure.main.firstElementChild);
 }
 
-export function create_profile_top_item(parent, {name, link, text='', type, taste='', artists=[], avi='', percent='', action='', tooltip='', allow_html=false, tooltip_theme='', full=false, primary=false, katsune=false, mini=false}) {
+export function create_profile_top_item(parent, {name, link, text='', type, new_release = false, action='', tooltip='', allow_html=false, tooltip_theme=''}) {
     log(`creating top item of ${name}, ${link}, ${text}`, 'profile');
 
-    let listen_item = document.createElement((action != 'button') ? 'a' : 'button');
-    listen_item.classList.add('btn', 'side-action');
-    listen_item.setAttribute('data-type', type);
-
-    if (mini)
-        listen_item.classList.add('mini');
-
-    if (action != 'button' && type != 'going' && type != 'maybe' && type != 'total') {
-        listen_item.setAttribute('href', link);
-        //listen_item.setAttribute('target', '_blank');
-    } else if (type != 'going' && type != 'maybe' && type != 'total') {
-        listen_item.setAttribute('onclick', link);
+    let side_action;
+    if (action === 'button') {
+        side_action = html.node`
+            <button
+                class="btn side-action"
+                data-type=${type}
+                onclick=${link}
+            >
+                ${tl(trans[type])}
+                ${(new_release) ? html.node`<div class="new-badge">${tl(trans.new)}</div>` : ''}
+            </button>
+        `;
+    } else {
+        side_action = html.node`
+            <a
+                class="btn side-action"
+                data-type=${type}
+                href=${link}
+            >
+                ${tl(trans[type])}
+                ${(new_release) ? html.node`<div class="new-badge">${tl(trans.new)}</div>` : ''}
+            </a>
+        `;
     }
-
-    if (primary)
-        listen_item.classList.add('primary');
-
-    if (type != 'taste') {
-        text = text.toLocaleString(lang);
-        listen_item.innerHTML = text;
-    }
-
-    if (katsune) {
-        full = true;
-    }
-
-    if (full) {
-        listen_item.classList.add('profile-top-item-full');
-        listen_item.textContent = tl(trans[type]);
-    }
-
-    if (type == 'compare') {
-        listen_item.innerHTML = `${tl(trans.compare)}<div class="new-badge">${tl(trans.new)}</div>`;
-    }
-
-    parent.appendChild(listen_item);
 
     if (type == 'shortcut') {
-        listen_item.textContent = tl(trans.shortcut);
-
         if (name == settings.profile_shortcut) {
-            listen_item.setAttribute('data-is-shortcut', 'true');
-            listen_item.removeAttribute('onclick');
+            side_action.setAttribute('data-is-shortcut', 'true');
         } else {
-            listen_item.setAttribute('data-is-shortcut', 'false');
+            side_action.setAttribute('data-is-shortcut', 'false');
         }
 
-        listen_item.addEventListener('contextmenu', (e) => {
+        side_action.addEventListener('contextmenu', (e) => {
             e.preventDefault();
 
             open_profile_shortcut_window();
         });
-
-        return;
     }
 
-    if (katsune && !mini)
-        return;
-
-    if (tooltip == '')
-        tippy(listen_item, {
-            content: tl(trans[type])
-        });
-    else
-        tippy(listen_item, {
-            content: tooltip,
-            allowHTML: allow_html,
-            theme: tooltip_theme
-        });
+    parent.appendChild(side_action);
+    return side_action;
 }

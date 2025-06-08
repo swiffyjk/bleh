@@ -1,8 +1,97 @@
+//
+// bleh, an extension for the music site Last.fm
+// Copyright (c) 2025 katelyn and contributors
+// Licensed under GPLv3
+//
+
+import {html, render} from "lighterhtml";
+import {tl, trans} from "../build/trans.js";
+
 unsafeWindow._update_inbuilt_select = function(id, value) {
     update_inbuilt_select(id, value);
 }
 export function update_inbuilt_select(id, value) {
     document.documentElement.setAttribute(`data-bleh--inbuilt-${id}`, value);
+}
+
+export function select(values, initial = '', name = '') {
+    let select;
+    let button;
+
+    if (values.length === 0) {
+        return select_fail({message: 'Values cannot be empty'});
+    }
+
+    if (initial == '')
+        initial = values[0].value;
+
+    let container = html.node`
+        <div class="select-wrap custom-selector">
+            <select ref=${el => select = el} name=${name}>
+                ${values.map((value) => html.node`
+                    <option value=${value.value} selected=${value.value == initial}>${value.text}</option>
+                `)}
+            </select>
+            <button class="select-button" type="button" ref=${el => button = el} />
+        </div>
+    `;
+
+    let menu = tippy(button, {
+        theme: 'select-menu',
+        content: html.node``,
+        placement: 'bottom',
+        interactive: true,
+        interactiveBorder: 10,
+        trigger: 'click',
+    });
+
+    set_select(button, menu, values, initial, select, name);
+
+    return container;
+}
+
+function set_select(button, menu, values, selected, select, name) {
+    values.some((value) => {
+        if (value.value == selected) {
+            render(button, html`${value.text}`);
+            return false;
+        }
+    });
+
+    select.value = selected;
+
+    if (name != '')
+        document.documentElement.setAttribute(`data-bleh--inbuilt-id_${name}`, selected);
+
+    menu.setContent(html.node`
+        ${values.map((value) => html.node`
+            <button class="btn dropdown-menu-clickable-item select-item" aria-checked=${selected == value.value} onclick=${() => set_select(button, menu, values, value.value, select, name)}>
+                ${value.text}
+            </button>
+        `)}
+    `);
+}
+
+export function select_prepare(element) {
+    let values = [];
+
+    element.querySelectorAll('option').forEach((option) => {
+        values.push({
+            value: option.value,
+            text: option.textContent
+        });
+    });
+
+    return values;
+}
+
+function select_fail(e = null) {
+    return html.node`
+        <div class="alert alert-error">
+            ${tl(trans.value_failed_to_load).replace('{v}', tl(trans.select_component))}
+            ${(e) ? html`<br>${e.message}` : ''}
+        </div>
+    `;
 }
 
 export function custom_select(select, element_to_append) {
@@ -34,10 +123,9 @@ export function custom_select(select, element_to_append) {
 
     let theme_menu_item = tippy(button, {
         theme: 'select-menu',
-        content: (`
-            ${menu_list.innerHTML}
-        `),
-        allowHTML: true,
+        content: html.node([
+            menu_list.innerHTML
+        ]),
         placement: 'bottom',
         interactive: true,
         interactiveBorder: 10,

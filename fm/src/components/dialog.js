@@ -1,6 +1,13 @@
-import { log } from "../build/log";
-import { dialogs, page } from "../build/page";
-import { lang, trans_legacy, trans, tl } from "../build/trans";
+//
+// bleh, an extension for the music site Last.fm
+// Copyright (c) 2025 katelyn and contributors
+// Licensed under GPLv3
+//
+
+import {html, render} from "lighterhtml";
+import {log} from "../build/log";
+import {dialogs, page} from "../build/page";
+import {trans_legacy} from "../build/trans";
 
 export function load_dialogs() {
     let dialogs = document.createElement('div');
@@ -10,11 +17,29 @@ export function load_dialogs() {
 
     page.structure.dialogs = dialogs;
 }
+
+/**
+ * Present a fullscreen dialog to the user
+ * @param {string} id - Exclusive id for future reference
+ * @param {string} title - Dialog title
+ * @param {string} subtitle - Dialog subtitle (placed below main title)
+ * @param {HTMLElement} body - Inner contents of dialog, use html.node`` to create
+ * @param {boolean} dismiss - Allows the user to dismiss with the close button or by clicking out
+ * @param {string} type - Applies a data-modal-type=${type} tag to the dialog instance
+ * @param has_overlays
+ * @param {boolean} replace - Replaces a specific dialog id
+ * @param {boolean} replace_if_possible - Automatically replaces the dialog prior if it exists
+ * @param {string} replace_id - Dialog id to replace (requires replace=true)
+ * @param {boolean} allow_scroll - Automatically style this dialog to scroll if necessary
+ * @param {boolean} colourful - Allow custom colouring (links only)
+ * @param {boolean} colourful_bg - Allow custom colouring (background only)
+ * @returns {HTMLElement} - Dialog instance
+ */
 export function dialog({
     id = '',
     title = null,
     subtitle = null,
-    body = document.createElement('div').innerHTML,
+    body = html.node``,
     dismiss = true,
     type = '',
     has_overlays = true,
@@ -40,8 +65,6 @@ export function dialog({
         colourful_bg: colourful_bg
     });
 
-    let modal;
-
     if (replace && replace_if_possible)
         replace_if_possible = false;
 
@@ -54,41 +77,28 @@ export function dialog({
         }
     }
 
-    if (!replace || replace && !dialogs.hasOwnProperty(replace_id)) {
-        modal = document.createElement('div');
-        modal.classList.add('bleh-modal');
-        modal.setAttribute('role', 'dialog');
-
-        if (colourful)
-            modal.classList.add('colourful');
-        if (colourful_bg)
-            modal.classList.add('colourful-bg');
-    } else {
-        log(`window set to replace ${replace_id}`, 'window');
-
-        modal = dialogs[replace_id].instance;
-        delete dialogs[replace_id];
-
-        modal.innerHTML = '';
-    }
-
-    modal.setAttribute('data-modal-id', id);
-    modal.setAttribute('data-modal-has-overlays', has_overlays);
-
-    if (type != '')
-        modal.setAttribute('data-modal-type', type);
+    let modal = html.node`
+        <div
+        class=${[
+            'bleh-modal',
+            colourful ? 'colorful' : '',
+            colourful_bg ? 'colourful-bg' : ''
+        ].join(' ')}
+        role="dialog"
+        data-modal-id=${id}
+        data-modal-has-overlays=${has_overlays}
+        data-modal-type=${type}
+        />
+    `;
 
     if (title != null) {
-        let modal_title = document.createElement('div');
-        modal_title.classList.add('bleh-modal-title');
-        modal_title.setAttribute('id', 'modal_title');
-        modal_title.innerHTML = (`
-            <h1>${title}</h1>
-            ${(subtitle != null) ? `<p class="bleh-modal-subtitle">${subtitle}</p>` : ''}
-        `);
-
         modal.setAttribute('aria-labelledby', 'modal_title');
-        modal.appendChild(modal_title);
+        modal.appendChild(html.node`
+            <div class="bleh-modal-title" id="modal_title">
+                <h1>${title}</h1>
+                ${(subtitle) ? html.node`<p class="bleh-modal-subtitle">${subtitle}</p>` : ''}
+            </div>
+        `);
     }
 
     if (dismiss) {
@@ -107,13 +117,21 @@ export function dialog({
     let modal_body = document.createElement('div');
     modal_body.classList.add('bleh-modal-body');
     modal_body.setAttribute('data-allow-scroll', allow_scroll);
-    modal_body.innerHTML = body;
+
+    modal_body.appendChild(body);
 
     modal.appendChild(modal_body);
 
     dialogs[id] = {
         instance: modal
     };
+
+    if (replace || (!replace && dialogs.hasOwnProperty(replace_id))) {
+        log(`window set to replace ${replace_id}`, 'window');
+
+        dialog_rm({id: replace_id});
+        delete dialogs[replace_id];
+    }
 
     page.structure.dialogs.appendChild(modal);
     page.structure.dialogs.classList.add('has-dialog');
@@ -132,7 +150,7 @@ unsafeWindow._dialog_rm = function({
     });
 }
 export function dialog_rm({
-    id = null,
+    id,
     all = false,
     modal_bg = false
 }) {
@@ -155,11 +173,9 @@ export function dialog_rm({
         return;
     }
 
-    if (id == null)
-        return;
+    if (!id) return;
 
-    if (page.structure.dialogs == null)
-        return;
+    if (!page.structure.dialogs)  return;
 
     if (dialogs.hasOwnProperty(id)) {
         let dialog = dialogs[id];
@@ -216,22 +232,17 @@ export function dialog_legacy(id, title, inner_content, dismiss = false, classna
     content.setAttribute('data-kate-processed','true');
 
     if (dismiss) {
-        let actions = document.createElement('div');
-        actions.classList.add('modal-actions');
-        actions.setAttribute('id',`bleh--window-${id}--actions`);
-        actions.setAttribute('data-kate-processed','true');
-
         background.setAttribute('onclick', `_kill_window('${id}')`);
 
-        actions.innerHTML = (`
-            <div class="modal-buttons">
-                <button class="modal-action-button modal-dismiss" onclick="_kill_window('${id}')">
-                    ${trans_legacy.en.settings.close}
-                </button>
+        content.insertBefore(html.node`
+            <div class="modal-actions" id="bleh--window-${id}--actions" data-kate-processed="true">
+                <div class="modal-buttons">
+                    <button class="modal-action-button modal-dismiss" onclick="_kill_window('${id}')">
+                        ${trans_legacy.en.settings.close}
+                    </button>
+                </div>
             </div>
-        `);
-
-        content.insertBefore(actions, content.firstElementChild);
+        `, content.firstElementChild);
     }
 
     // share content
@@ -258,7 +269,7 @@ export function dialog_legacy(id, title, inner_content, dismiss = false, classna
     // inner content
     let inner_content_em = document.createElement('div');
     inner_content_em.classList.add('modal-inner-content');
-    inner_content_em.innerHTML = inner_content;
+    render(inner_content_em, inner_content);
     inner_content_em.setAttribute('data-kate-processed','true');
 
     if (allow_scroll)

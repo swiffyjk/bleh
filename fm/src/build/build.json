@@ -1,7 +1,7 @@
 {
     "brand": "bleh",
-    "build": "2025.0522",
-    "sku": "wickes",
+    "build": "2025.0608",
+    "sku": "homura",
     "bio": "bleh!!! ^-^",
     "author": "kate",
     "url": "https://github.com/katelyynn/bleh/raw/uwu/fm/bleh.user.js",
@@ -169,6 +169,16 @@
             "default": true,
             "name": "Profile comparison",
             "date": "2025-05-19"
+        },
+        "charts": {
+            "default": true,
+            "name": "Profile chart creation",
+            "date": "2025-06-05"
+        },
+        "refreshed_auth_menu": {
+            "default": true,
+            "name": "Refreshed auth menu",
+            "date": "2025-06-07"
         }
     }
 }

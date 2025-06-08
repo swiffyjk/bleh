@@ -1,14 +1,59 @@
-import { patch_avatar } from "./avatar";
-import { settings } from "./build/config";
-import { log } from "./build/log";
-import { auth, page, root, shout_parse_queue } from "./build/page";
-import { lang, trans_legacy } from "./build/trans";
-import { deliver_notif, notify } from "./components/notify";
-import { trans, tl } from "./build/trans";
+//
+// bleh, an extension for the music site Last.fm
+// Copyright (c) 2025 katelyn and contributors
+// Licensed under GPLv3
+//
+
+import {patch_avatar} from "./avatar";
+import {settings} from "./build/config";
+import {log} from "./build/log";
+import {auth, page, root, shout_parse_queue} from "./build/page";
+import {tl, trans, trans_legacy} from "./build/trans";
+import {deliver_notif, notify} from "./components/notify";
+import {html} from "lighterhtml";
+import {setting} from "./components/settings.js";
 
 export function patch_shouts() {
-    if (page.structure.main == null)
-        return;
+    if (!page.structure.main) return;
+
+    let shout_controls = page.structure.main.querySelector('.shoutbox-controls-wrapper:not([data-shouts])');
+    if (shout_controls) {
+        shout_controls.setAttribute('data-shouts', 'true');
+        let panel = shout_controls.parentElement;
+
+        let select_btn = panel.querySelector('.dropdown-menu-clickable-button');
+        let settings_btn;
+
+        panel.insertBefore(html.node`
+            <div class="top-container">
+                ${panel.querySelector('h2')}
+                <div class="view-buttons blend">
+                    ${() => {
+                        select_btn.classList.add('btn', 'view-item', 'interact-item');
+                        select_btn.classList.remove('section-control');
+                        return shout_controls;
+                    }}
+                    <button class="panel-settings-button btn view-item interact-item" ref=${el => settings_btn = el}>${tl(trans.settings)}</button>
+                </div>
+            </div>
+        `, panel.firstElementChild);
+
+        tippy(settings_btn, {
+            theme: 'window',
+            content: html.node`
+                <div class="dialog-settings">
+                    ${setting({id: 'shout_markdown'})}
+                    <div class="sep"></div>
+                    ${setting({id: 'accessible_name_colours'})}
+                    ${setting({id: 'underline_links'})}
+                </div>
+            `,
+            placement: 'bottom',
+            interactive: true,
+            interactiveBorder: 10,
+            trigger: 'click'
+        });
+    }
 
     let shouts = page.structure.main.querySelectorAll('.shout:not([data-kate-processed])');
 

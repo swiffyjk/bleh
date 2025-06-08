@@ -1,26 +1,34 @@
-import { load_activities } from "../activity"
-import { patch_avatar } from "../avatar"
-import { settings } from "../build/config"
-import { log } from "../build/log"
-import { auth, page, recent_activity_list, root } from "../build/page"
-import { cute, sponsor_list } from "../build/sponsor"
-import { clean_number, sanitise, sanitise_text } from "../build/tools"
-import { lang, trans, tl } from "../build/trans"
-import { prep_chart_colours } from '../chart'
-import { load_badges } from "../components/badge"
-import { dialog } from "../components/dialog"
-import { correct_artist, correct_item_by_artist, name_includes } from "../components/lotus"
-import { markdown } from "../components/markdown"
-import { notify } from "../components/notify"
-import { create_profile_top_item, redesign_profile_header } from "../components/profile_header"
-import { custom_select, update_inbuilt_select } from "../components/select"
-import { checkup_page_structure } from "../components/structure"
-import { refresh_all, update_inbuilt_item } from "../config"
-import { register_background, update_page } from "../page"
-import { ff } from "../sku"
-import { bleh_user_library } from "./glacier"
-import { use_pronouns } from "./lastfm_settings"
-import { bleh_obsession } from "./obsession"
+//
+// bleh, an extension for the music site Last.fm
+// Copyright (c) 2025 katelyn and contributors
+// Licensed under GPLv3
+//
+
+import {render_activity_list} from "../activity"
+import {settings} from "../build/config"
+import {log} from "../build/log"
+import {auth, page, root} from "../build/page"
+import {sponsor_list} from "../build/sponsor"
+import {clean_number, sanitise, sanitise_text} from "../build/tools"
+import {lang, tl, trans} from "../build/trans"
+import {prep_chart_colours} from '../chart'
+import {load_badges} from "../components/badge"
+import {dialog} from "../components/dialog"
+import {correct_artist, correct_item_by_artist, name_includes} from "../components/lotus"
+import {markdown} from "../components/markdown"
+import {notify} from "../components/notify"
+import {redesign_profile_header} from "../components/profile_header"
+import {custom_select, select, select_prepare, update_inbuilt_select} from "../components/select"
+import {checkup_page_structure} from "../components/structure"
+import {refresh_all, update_inbuilt_item} from "../config"
+import {register_background, update_page} from "../page"
+import {ff} from "../sku"
+import {bleh_user_library} from "./glacier"
+import {use_pronouns} from "./lastfm_settings"
+import {bleh_obsession} from "./obsession"
+import {html, render} from "lighterhtml";
+import {collage} from "../components/collage.js";
+import {setting} from "../components/settings.js";
 
 export function bleh_profiles() {
     // the obsessions page is a user subpage but works very differently
@@ -62,7 +70,7 @@ export function bleh_profiles() {
         }
 
         // me :3
-        if (cute.includes(page.name)) {
+        if (sponsor_list && sponsor_list.special.includes(page.name)) {
             title_wrap.querySelector('.header-title a').classList.add('bleh--name-is-cute');
         }
 
@@ -164,118 +172,15 @@ export function bleh_profiles() {
 
 
         if (is_own_profile && settings.activities) {
-            let recent_activity_section = document.createElement('section');
-            recent_activity_section.classList.add('recent-activity-section');
-            recent_activity_section.innerHTML = (`
-                <h2>${tl(trans.activity)}</h2>
-            `);
-
-            load_activities();
-
-            // we want to show in date order from latest to oldest down
-            // but .reverse() is destructive, so we copy first
-            let recent_activity_list_r = recent_activity_list;
-            recent_activity_list_r.reverse();
-
-            recent_activity_list_r.forEach((activity) => {
-                // type: string,
-                // involved: [{name: string, type: user | artist | album | track}, sister?: string],
-                // context: string,
-                // date: string
-
-                let activity_item = document.createElement('a');
-                activity_item.classList.add('activity-item', `activity--${activity.type}`);
-                activity_item.setAttribute('href', activity.context);
-
-                let involved_text = '';
-
-                let tooltip_name;
-                let tooltip_sister;
-
-                activity.involved.forEach((involved) => {
-                    let involved_link;
-
-                    if (involved.type == 'user')
-                        involved_link = `${root}user/${involved.name}`;
-                    else if (involved.type == 'artist')
-                        involved_link = `${root}music/${sanitise(involved.name)}`;
-                    else if (involved.type == 'album')
-                        involved_link = `${root}music/${sanitise(involved.sister)}/${sanitise(involved.name)}`;
-                    else if (involved.type == 'track')
-                        involved_link = `${root}music/${sanitise(involved.sister)}/_/${sanitise(involved.name)}`;
-                    else if (involved.type == 'tag')
-                        involved_link = `${root}tag/${sanitise(involved.name)}`;
-                    else if (involved.type == 'bwaa')
-                        involved_link = `${root}bwaa`;
-                    else if (involved.type == 'bleh')
-                        involved_link = `${root}bleh`;
-
-                    let name = involved.name;
-                    let sister = involved.sister;
-
-                    // tooltip
-                    if (involved.type != 'artist' && involved.type != 'user' && involved.type != 'tag' && involved.type != 'bwaa' && involved.type != 'bleh') {
-                        tooltip_name = name;
-                        tooltip_sister = sister;
-                    }
-
-                    if (involved.type == 'track' && settings.format_guest_features) {
-                        let formatted_title = name_includes(name, sister);
-
-                        let song_title;
-                        let song_tags;
-                        if (formatted_title) {
-                            song_title = formatted_title[0];
-                            song_tags = formatted_title[1];
-                            sister = formatted_title[2];
-                            tooltip_name = song_title;
-                            tooltip_sister = sister;
-                        }
-
-                        // parse tags into text
-                        let song_tags_text = '';
-                        for (let song_tag in song_tags) {
-                            song_tags_text = `${song_tags_text}<div class="feat" data-bleh--tag-type="${song_tags[song_tag].type}" data-bleh--tag-group="${song_tags[song_tag].group}">${sanitise_text(song_tags[song_tag].text)}</div>`;
-                        }
-
-                        // combine
-                        name = `<div class="title">${sanitise_text(song_title).trim()}</div>${song_tags_text}`;
-                    } else if ((involved.type == 'album' || involved.type == 'track') && settings.corrections) {
-                        name = correct_item_by_artist(name, sister);
-                        tooltip_name = name;
-                        sister = correct_artist(sister);
-                        tooltip_sister = sister;
-                    }  else if (involved.type == 'artist' && settings.corrections) {
-                        name = correct_artist(name);
-                        tooltip_name = name;
-                    }
-
-                    if (involved_text != '')
-                        involved_text = `${involved_text}, <a class="involved--${involved.type}" href="${involved_link}">${name}</a>`;
-                    else
-                        involved_text = `${involved_text}<a class="involved--${involved.type}" href="${involved_link}">${name}</a>`;
-                });
-
-                activity_item.innerHTML = (`
-                    <div class="type">${tl(trans.activity.listing[activity.type])}<div class="date">${moment(activity.date).fromNow(true)}</div></div>
-                    <div class="name">${involved_text}</div>
-                `);
-
-                recent_activity_section.appendChild(activity_item);
-
-                if (tooltip_name)
-                    tippy(activity_item.querySelector('.name a'), {
-                        content: `${tooltip_sister} - ${tooltip_name}`
-                    });
-            });
-
-            let edit = document.createElement('div');
-            edit.classList.add('more-link');
-
-            edit.innerHTML = (`
-                <a href="${root}bleh?tab=profiles&setting=activities">${tl(trans.activity_settings)}</a>
-            `);
-            recent_activity_section.appendChild(edit);
+            let recent_activity_section = html.node`
+                <section class="recent-activity-section">
+                    <h2>${tl(trans.activity)}</h2>
+                    ${render_activity_list()}
+                    <div class="more-link">
+                        <a href="${root}bleh?tab=profiles&setting=activities">${tl(trans.activity_settings)}</a>
+                    </div>
+                </section>
+            `;
 
             page.structure.side.appendChild(recent_activity_section);
         }
@@ -313,9 +218,6 @@ export function bleh_profiles() {
             }
         }
 
-        let listen_container = document.createElement('section');
-        listen_container.classList.add('listen-panel', 'listen-profile-panel');
-
         // acquire info
         let scrobbles = 0;
         let average = 0;
@@ -327,52 +229,70 @@ export function bleh_profiles() {
             if (index == 0) {
                 let para = item.querySelector('p');
 
-                scrobbles = clean_number(para.textContent.trim()).toLocaleString(lang);
+                scrobbles = clean_number(para.textContent.trim());
                 average = para.getAttribute('title');
             } else if (index == 1) {
-                artists = clean_number(item.textContent.trim()).toLocaleString(lang);
+                artists = clean_number(item.textContent.trim());
             } else if (index == 2) {
-                loved = clean_number(item.textContent.trim()).toLocaleString(lang);
+                loved = clean_number(item.textContent.trim());
             }
         });
 
-        listen_container.innerHTML = (`
-            <div class="listener-row">
-                <div class="scrobble-side">
-                    <h3>${tl(trans.scrobbles)}</h3>
-                    <p><a href="${root}user/${page.name}/library">${scrobbles}</a></p>
-                </div>
-                <div class="artist-side">
-                    <h3>${tl(trans.artists)}</h3>
-                    <p><a href="${root}user/${page.name}/library/artists">${artists}</a></p>
-                </div>
-                <div class="loved-side">
-                    <h3>${tl(trans.loved)}</h3>
-                    <p><a href="${root}user/${page.name}/loved">${loved}</a></p>
-                </div>
-            </div>
-            <a class="scrobble-canvas-container mini" href="${root}user/${page.name}/library/artists?date_preset=LAST_90_DAYS&page=1">
-                <div class="loading-data-container">
-                    <div class="loading-data-text">${tl(trans.loading_count_days).replace('{c}', '90')}</div>
-                </div>
-            </a>
-            <div class="more-link">
-                <a href="${root}user/${page.name}/library/artists?date_preset=LAST_90_DAYS&page=1">
-                    ${tl(trans.explore_in_library)}
-                </a>
-            </div>
-        `);
+        page.state.scrobbles = scrobbles;
+        page.state.artists = artists;
+        page.state.loved = loved;
 
-        tippy(listen_container.querySelector('.scrobble-side p'), {
-            content: average
-        });
+        let scrobble_text;
+        let listen_container = html.node`
+            <section class="listen-panel listen-profile-panel">
+                <div class="listener-row">
+                    <div class="scrobble-side">
+                        <h3>${tl(trans.scrobbles)}</h3>
+                        <p ref=${el => scrobble_text = el}><a href="${root}user/${page.name}/library">${scrobbles.toLocaleString(lang)}</a></p>
+                    </div>
+                    <div class="artist-side">
+                        <h3>${tl(trans.artists)}</h3>
+                        <p><a href="${root}user/${page.name}/library/artists">${artists.toLocaleString(lang)}</a></p>
+                    </div>
+                    <div class="loved-side">
+                        <h3>${tl(trans.loved)}</h3>
+                        <p><a href="${root}user/${page.name}/loved">${loved.toLocaleString(lang)}</a></p>
+                    </div>
+                </div>
+                ${(scrobbles > 0) ? html.node`
+                <a class="scrobble-canvas-container mini" href="${root}user/${page.name}/library/artists?date_preset=LAST_90_DAYS&page=1">
+                    <div class="loading-data-container">
+                        <div class="loading-data-text">${tl(trans.loading_count_days).replace('{c}', '90')}</div>
+                    </div>
+                </a>
+                <div class="more-link">
+                    <a href="${root}user/${page.name}/library/artists?date_preset=LAST_90_DAYS&page=1">
+                        ${tl(trans.explore_in_library)}
+                    </a>
+                </div>
+                ` : html.node`
+                <div class="scrobble-canvas-container mini">
+                    <div class="loading-data-container">
+                        <div class="loading-data-text failed">${tl(trans.profile_does_not_have_enough_scrobbles)}</div>
+                    </div>
+                </div>
+                `}
+            </section>
+        `;
+
+        if (scrobbles > 0) {
+            tippy(scrobble_text, {
+                content: average
+            });
+        }
 
         if (page.name != sponsor_list.sponsor_account) {
             if (!page.mobile)
                 page.structure.side.insertBefore(listen_container, page.structure.side.firstChild);
             else
                 page.structure.main.insertBefore(listen_container, page.structure.main.firstChild);
-            bleh_profile_chart();
+            if (scrobbles > 0)
+                bleh_profile_chart();
         }
 
         if (ff('redesigned_profile_header'))
@@ -390,50 +310,52 @@ export function bleh_profiles() {
         } else if (page.subpage == 'events') {
             let selected_tab = page.structure.content_top.querySelector('.secondary-nav-item-link--active');
 
-            let value_panel = document.createElement('section');
-            value_panel.classList.add('value-panel');
-            value_panel.innerHTML = (`
-                <h2 class="text-18">${(selected_tab) ? selected_tab.firstChild.textContent : tl(trans.events)}</h2>
-            `);
+            let value_panel = html.node`
+                <section class="value-panel">
+                    <h2 class="text-18">${(selected_tab) ? selected_tab.firstChild.textContent : tl(trans.events)}</h2>
+                </section>
+            `;
 
             let values = page.structure.main.querySelectorAll('.metadata-display');
 
-            let value_header = document.createElement('div');
-            value_header.classList.add('event-value-top-header', 'view-buttons');
+            let value_header = html.node`
+                <div class="glacier-library-metadata"></div>
+            `;
 
             values.forEach((value, index) => {
-                let type = 'going';
+                let text = tl(trans.going);
                 if (index == 1)
-                    type = 'maybe';
+                    text = tl(trans.interested);
 
-                create_profile_top_item(value_header, {
-                    name: page.name,
-                    text: value.textContent,
-                    type: type,
-                    tooltip:  tl(trans[type]).replace('{c}', value.textContent)
-                });
+                value_header.appendChild(html.node`
+                    <div class="glacier-library-metadata-item">
+                        <div class="sub-text">${text}</div>
+                        <div class="glacier-library-metadata-item-value">${value.textContent}</div>
+                    </div>
+                `);
             });
 
             value_panel.appendChild(value_header);
 
 
             let total_value = page.structure.side.querySelector('.metadata-display');
-            if (total_value != null) {
+            if (total_value) {
                 let total_text = document.createElement('h2');
                 total_text.classList.add('text-18');
                 total_text.textContent = tl(trans.all_time);
 
                 value_panel.appendChild(total_text);
 
-                let total_header = document.createElement('div');
-                total_header.classList.add('event-value-top-header', 'view-buttons');
+                let total_header = html.node`
+                    <div class="glacier-library-metadata"></div>
+                `;
 
-                create_profile_top_item(total_header, {
-                    name: page.name,
-                    text: total_value.textContent,
-                    type: 'total',
-                    tooltip:  tl(trans.count_total).replace('{c}', total_value.textContent)
-                });
+                total_header.appendChild(html.node`
+                    <div class="glacier-library-metadata-item">
+                        <div class="sub-text">${tl(trans.total)}</div>
+                        <div class="glacier-library-metadata-item-value">${total_value.textContent}</div>
+                    </div>
+                `);
 
                 value_panel.appendChild(total_header);
             }
@@ -464,11 +386,11 @@ export function bleh_profiles() {
                 dialog({
                     id: 'listening_report_v2',
                     title: 'oh no :c',
-                    body: (`
+                    body: html.node`
                         <div class="alert alert-error">This listening report is too old</div>
                         <br>
                         <p>Legacy listening reports are not properly viewable yet in bleh for now. Sorry for the inconvenience.</p>
-                    `)
+                    `
                 });
                 return;
             }
@@ -567,10 +489,10 @@ export function bleh_profiles() {
                         </div>
                         <a class="link-block-cover-link" href="${link}" tabindex="-1" aria-hidden="true"></a>
                     </div>
-                    ${(obsession_is_first) ? `<div class="new-badge first-obsession">#1</div>` : ''}
                 `);
 
                 if (obsession_is_first) {
+                    grid_item.classList.add('first');
                     tippy(grid_item, {
                         content: tl(trans.obsession_first)
                     });
@@ -680,11 +602,10 @@ export function bleh_profiles() {
             tippy(badge, {
                 theme: 'badge',
                 placement: 'bottom',
-                content: (`
+                content: html.node`
                     <div class="badge-name">${badge.textContent}</div>
                     <div class="badge-reason">${tl(trans.badges[badge.classList[1]].reason)}</div>
-                `),
-                allowHTML: true
+                `
             });
         });
     }
@@ -705,11 +626,10 @@ export function bleh_profiles() {
                 tippy(badge, {
                     theme: 'badge',
                     placement: 'bottom',
-                    content: (`
+                    content: html.node`
                         <div class="badge-name">${this_badge.name}</div>
-                        <div class="badge-reason">${tl(trans.badges[this_badge.reason].reason)}</div>
-                    `),
-                    allowHTML: true
+                        <div class="badge-reason">${this_badge.reason}</div>
+                    `,
                 });
             }
 
@@ -728,21 +648,18 @@ export function bleh_profiles() {
 
     if (page.subpage != 'overview') return;
 
-    if (page.name == 'katesia') {
-        let sponsor_cta = document.createElement('div');
-        sponsor_cta.classList.add('cta', 'first', 'sponsor', 'colourful');
-
-        if (auth.sponsor) {
-            sponsor_cta.innerHTML = (`
-                <strong>${tl(trans.you_are_a_sponsor)}</strong>
-                <a class="see-more" onclick="_sponsor_manage()">${tl(trans.manage_sponsor)}</a>
-            `);
-        } else {
-            sponsor_cta.innerHTML = (`
-                <strong>${tl(trans.news_sponsor_cta)}</strong>
-                <a class="see-more" onclick="_sponsor()">${tl(trans.sponsor)}</a>
-            `);
-        }
+    if (sponsor_list && page.name == sponsor_list.special[0]) {
+        let sponsor_cta = html.node`
+            <div class="cta first sponsor colourful">
+                ${auth.sponsor ? html`
+                    <strong>${tl(trans.you_are_a_sponsor)}</strong>
+                    <a class="see-more" onclick="_sponsor_manage()">${tl(trans.manage_sponsor)}</a>
+                ` : html`
+                    <strong>${tl(trans.news_sponsor_cta)}</strong>
+                    <a class="see-more" onclick="_sponsor()">${tl(trans.sponsor)}</a>
+                `}
+            </div>
+        `;
 
         if (!page.mobile)
             page.structure.side.insertBefore(sponsor_cta, page.structure.side.firstElementChild);
@@ -821,7 +738,7 @@ export function bleh_profiles() {
 
         tippy(about_more, {
             theme: 'window',
-            content: (`
+            content: html.node`
                 <div class="dialog-settings">
                     <div class="setting" data-type="toggle" id="container-bio_markdown" onclick="_update_item('bio_markdown')">
                         <button class="btn reset" onclick="_reset_item('bio_markdown')">${tl(trans.reset)}</button>
@@ -836,8 +753,7 @@ export function bleh_profiles() {
                         </div>
                     </div>
                 </div>
-            `),
-            allowHTML: true,
+            `,
             placement: 'bottom',
             interactive: true,
             interactiveBorder: 10,
@@ -1029,24 +945,6 @@ function patch_profile_following() {
     page.structure.main.insertBefore(view_buttons, page.structure.main.firstElementChild);
 
     refresh_all();
-
-
-    // users
-    let users = page.structure.main.querySelectorAll('.user-list-inner-wrap');
-    users.forEach((user) => {
-        let avatar = user.querySelector('.user-list-avatar');
-        let name = user.querySelector('.user-list-link').textContent;
-
-        let badge = patch_avatar(avatar, name, 'follow');
-
-        if (badge.type == 'avatar-status-dot--staff')
-            user.classList.add('staff-user');
-
-        let artists = user.querySelectorAll('.user-list-shared-artists a');
-        artists.forEach((artist) => {
-            artist.textContent = correct_artist(artist.textContent);
-        });
-    });
 }
 
 
@@ -1077,7 +975,8 @@ function refresh_tracks(button) {
 
         if (!tracklist_panel) {
             notify({
-                title: 'Recent tracks failed to load',
+                title: tl(trans.recent_tracks),
+                body: tl(trans.value_failed_to_load).replace('{v}', tl(trans.library)),
                 icon: 'icon-16-refresh',
                 type: 'error'
             });
@@ -1085,12 +984,13 @@ function refresh_tracks(button) {
         }
 
         notify({
-            title: 'Recent tracks refreshed',
+            title: tl(trans.recent_tracks),
+            body: tl(trans.refreshed),
             icon: 'icon-16-refresh'
         });
         panel.classList.add('has-refreshed');
 
-        page.structure.main.querySelector('#recent-tracks-section .chartlist').outerHTML = tracklist_panel.outerHTML;
+        panel.querySelector('.chartlist').outerHTML = tracklist_panel.outerHTML;
     });
 }
 
@@ -1117,18 +1017,17 @@ function bleh_featured_profile_track(object, about_me) {
             song_tags = formatted_title[1];
         }
 
-        // parse tags into text
-        let song_tags_text = '';
-        for (let song_tag in song_tags) {
-            song_tags_text = `${song_tags_text}<div class="feat" data-bleh--tag-type="${song_tags[song_tag].type}" data-bleh--tag-group="${song_tags[song_tag].group}">${sanitise_text(song_tags[song_tag].text)}</div>`;
-        }
-
         // combine
-        name_elem.innerHTML = `<div class="title">${sanitise_text(song_title).trim()}</div>${song_tags_text}`;
+        render(name_elem, html.node`
+            <div class="title">${sanitise_text(song_title).trim()}</div>
+            ${song_tags.map((tag) => html.node`
+                <div class="feat" data-bleh--tag-type="${tag.type}" data-bleh--tag-group="${tag.group}">${tag.text}</div>
+            `)}
+        `);
 
         let song_artist_element = document.createElement('div');
         song_artist_element.classList.add('featured-item-artist');
-        song_artist_element.innerHTML = `<a href="${root}music/${sanitise(formatted_title[2])}">${sanitise_text(formatted_title[2])}</a>`;
+        song_artist_element.innerHTML = `<a href="${root}music/${sanitise(formatted_title[2])}">${formatted_title[2]}</a>`;
 
         // append guests
         let song_guests = formatted_title[3];
@@ -1181,9 +1080,7 @@ function bleh_featured_profile_track(object, about_me) {
 
 function profile_recents() {
     let panel = page.structure.main.querySelector('#recent-tracks-section');
-
-    if (!panel)
-        return;
+    if (!panel) return;
 
     let more_link = panel.nextElementSibling;
     panel.appendChild(more_link);
@@ -1194,7 +1091,7 @@ function profile_recents() {
 
 
     let view_buttons = document.createElement('div');
-    view_buttons.classList.add('view-buttons');
+    view_buttons.classList.add('view-buttons', 'blend');
 
     let header = document.createElement('div');
     header.classList.add('top-container');
@@ -1221,13 +1118,13 @@ function profile_recents() {
 
     let original_chart_settings = {};
 
-    let new_button = document.createElement('button');
-    new_button.classList.add('panel-settings-button', 'btn', 'view-item', 'interact-item');
-    new_button.textContent = tl(trans.settings);
+    let settings_btn = html.node`
+        <button class="panel-settings-button btn view-item interact-item">${tl(trans.settings)}</button>
+    `;
 
     form.classList = '';
 
-    tooltip = tippy(new_button, {
+    tooltip = tippy(settings_btn, {
         theme: 'window',
         content: form.outerHTML,
         allowHTML: true,
@@ -1336,7 +1233,7 @@ function profile_recents() {
         }
     });
 
-    view_buttons.appendChild(new_button);
+    view_buttons.appendChild(settings_btn);
 
     original_chart_settings = {
         recent_artwork: form.querySelector('#id_show_recent_tracks_artwork').checked,
@@ -1349,393 +1246,288 @@ function profile_recents() {
 
 function profile_artists() {
     let panel = page.structure.main.querySelector('#top-artists');
-
-    if (panel == null)
-        return;
+    if (!panel) return;
 
     panel.classList.remove('section-with-settings');
 
     let form = panel.querySelector('#artist-chart-settings');
-    let link = panel.querySelector('[aria-controls="artist-chart-settings"]');
-    let tooltip;
+    let list = panel.querySelector('#artists_range');
 
-
-    let view_buttons = document.createElement('div');
-    view_buttons.classList.add('view-buttons');
-
-    let header = document.createElement('div');
-    header.classList.add('top-container');
-
-    let header_text = panel.querySelector('h2');
-    header.appendChild(header_text);
-
-    // select
+    let collage_btn;
     let select_btn = panel.querySelector('.dropdown-menu-clickable-button');
-    select_btn.classList.add('btn', 'view-item', 'interact-item');
-    select_btn.classList.remove('section-control')
-    view_buttons.appendChild(select_btn);
+    let settings_btn;
 
-    header.appendChild(view_buttons);
-    panel.insertBefore(header, panel.firstElementChild);
+    panel.insertBefore(html.node`
+        <div class="top-container">
+            ${panel.querySelector('h2')}
+            <div class="view-buttons blend">
+                <button class="btn chibi icon" data-type="collage" ref=${el => collage_btn = el} onclick=${() => {
+                    let btn = list.querySelector('.dropdown-menu-clickable-item--selected');
+                    let link = new URL('https://www.last.fm' + btn.getAttribute('href'));
+                    let selected = link.searchParams.get('artists_date_preset');
+            
+                    collage('artists', `date_preset=${selected}`);
+                }}>${tl(trans.collage)}</button>
+                ${() => {
+                    select_btn.classList.add('btn', 'view-item', 'interact-item');
+                    select_btn.classList.remove('section-control');
+                    return select_btn;
+                }}
+                ${form ? html.node`
+                <button class="panel-settings-button btn view-item interact-item" ref=${el => settings_btn = el}>${tl(trans.settings)}</button>
+                ` : ''}
+            </div>
+        </div>
+    `, panel.firstElementChild);
 
-    if (form == null)
-        return;
+    tippy(collage_btn, {
+        content: tl(trans.collage)
+    });
 
-    if (page.token == '')
-        page.token = form.querySelector('[name="csrfmiddlewaretoken"]').getAttribute('value');
+    // own profile only
 
-    let original_chart_settings = {};
+    if (!form) return;
+    if (page.token == '') page.token = form.querySelector('[name="csrfmiddlewaretoken"]').getAttribute('value');
 
-    let new_button = document.createElement('button');
-    new_button.classList.add('panel-settings-button', 'btn', 'view-item', 'interact-item');
-    new_button.textContent = tl(trans.settings);
+    let timeframe = form.querySelector('[name="chart_range_top_artists"]');
+    let style = form.querySelector('[name="chart_style_top_artists"]');
+    let grid_length = form.querySelector('[name="artists_image_grid_length"]');
+    let chartlist_length = form.querySelector('[name="artists_chartlist_length"]');
 
     form.classList = '';
+    render(form, html`
+        <input type="hidden" name="csrfmiddlewaretoken" value="${page.token}">
+        <div class="setting" data-type="select">
+            <div class="heading">
+                <h5>${tl(trans.default_timeframe)}</h5>
+            </div>
+            ${select(select_prepare(timeframe), timeframe.value, 'chart_range_top_artists')}
+        </div>
+        <div class="setting" data-type="select">
+            <div class="heading">
+                <h5>${tl(trans.chart_style)}</h5>
+            </div>
+            ${select(select_prepare(style), style.value, 'chart_style_top_artists')}
+        </div>
+        <div class="setting hide-if-artist-list" data-type="select">
+            <div class="heading">
+                <h5>${tl(trans.chart_size)}</h5>
+            </div>
+            ${select(select_prepare(grid_length), grid_length.value, 'artists_image_grid_length')}
+        </div>
+        <div class="setting hide-if-artist-grid" data-type="select">
+            <div class="heading">
+                <h5>${tl(trans.chart_size)}</h5>
+            </div>
+            ${select(select_prepare(chartlist_length), chartlist_length.value, 'artists_chartlist_length')}
+        </div>
+        <div class="settings-footer">
+            <button type="submit" class="btn-primary save">
+                ${tl(trans.save)}
+            </button>
+        </div>
+    `);
 
-    tooltip = tippy(new_button, {
+    tippy(settings_btn, {
         theme: 'window',
-        content: form.outerHTML,
-        allowHTML: true,
+        content: form,
         placement: 'bottom',
         interactive: true,
         interactiveBorder: 10,
-        trigger: 'click',
-
-        onShow(instance) {
-            let form = instance.popper.querySelector('form');
-
-            form.innerHTML = (`
-                <input type="hidden" name="csrfmiddlewaretoken" value="${page.token}">
-                <div class="setting" data-type="select">
-                    <div class="heading">
-                        <h5>${tl(trans.default_timeframe)}</h5>
-                    </div>
-                    <div class="select-wrap custom-selector" id="id_chart_range_top_artists_select">
-                        ${original_chart_settings.timeframe}
-                    </div>
-                </div>
-                <div class="setting" data-type="select">
-                    <div class="heading">
-                        <h5>${tl(trans.chart_style)}</h5>
-                    </div>
-                    <div class="select-wrap custom-selector" id="id_chart_style_top_artists_select">
-                        ${original_chart_settings.style}
-                    </div>
-                </div>
-                <div class="setting hide-if-artist-list" data-type="select">
-                    <div class="heading">
-                        <h5>${tl(trans.chart_size)}</h5>
-                    </div>
-                    <div class="select-wrap custom-selector" id="id_artists_image_grid_length_select">
-                        ${original_chart_settings.length}
-                    </div>
-                </div>
-                <div class="setting hide-if-artist-grid" data-type="select">
-                    <div class="heading">
-                        <h5>${tl(trans.chart_size)}</h5>
-                    </div>
-                    <div class="select-wrap custom-selector" id="id_artists_chartlist_length_select">
-                        ${original_chart_settings.length_list}
-                    </div>
-                </div>
-                <div class="settings-footer">
-                    <button type="submit" class="btn-primary save">
-                        ${tl(trans.save)}
-                    </button>
-                </div>
-            `);
-
-            custom_select(form.querySelector('#id_chart_range_top_artists'), form.querySelector('#id_chart_range_top_artists_select'));
-            custom_select(form.querySelector('#id_chart_style_top_artists'), form.querySelector('#id_chart_style_top_artists_select'));
-            custom_select(form.querySelector('#id_artists_image_grid_length'), form.querySelector('#id_artists_image_grid_length_select'));
-            custom_select(form.querySelector('#id_artists_chartlist_length'), form.querySelector('#id_artists_chartlist_length_select'));
-
-            let selects = form.querySelectorAll('select');
-            selects.forEach((select) => {
-                select.setAttribute('onchange', `_update_inbuilt_select('${select.getAttribute('id')}', this.value)`);
-                update_inbuilt_select(select.getAttribute('id'), select.value);
-            });
-        }
+        trigger: 'click'
     });
-
-    view_buttons.appendChild(new_button);
-
-    original_chart_settings = {
-        timeframe: form.querySelector('#id_chart_range_top_artists').outerHTML,
-        style: form.querySelector('#id_chart_style_top_artists').outerHTML,
-        length: form.querySelector('#id_artists_image_grid_length').outerHTML,
-        length_list: form.querySelector('#id_artists_chartlist_length').outerHTML
-    }
-
-    form.innerHTML = '';
 }
 
 function profile_albums() {
     let panel = page.structure.main.querySelector('#top-albums');
-
     if (!panel) return;
 
     panel.classList.remove('section-with-settings');
 
     let form = panel.querySelector('#albums-chart-settings');
-    let link = panel.querySelector('[aria-controls="albums-chart-settings"]');
-    let tooltip;
+    let list = panel.querySelector('#albums_range');
 
-
-    let view_buttons = document.createElement('div');
-    view_buttons.classList.add('view-buttons');
-
-    let header = document.createElement('div');
-    header.classList.add('top-container');
-
-    let header_text = panel.querySelector('h2');
-    header.appendChild(header_text);
-
-    // select
+    let collage_btn;
     let select_btn = panel.querySelector('.dropdown-menu-clickable-button');
-    select_btn.classList.add('btn', 'view-item', 'interact-item');
-    select_btn.classList.remove('section-control')
-    view_buttons.appendChild(select_btn);
+    let settings_btn;
 
-    header.appendChild(view_buttons);
-    panel.insertBefore(header, panel.firstElementChild);
+    panel.insertBefore(html.node`
+        <div class="top-container">
+            ${panel.querySelector('h2')}
+            <div class="view-buttons blend">
+                <button class="btn chibi icon" data-type="collage" ref=${el => collage_btn = el} onclick=${() => {
+                    let btn = list.querySelector('.dropdown-menu-clickable-item--selected');
+                    let link = new URL('https://www.last.fm' + btn.getAttribute('href'));
+                    let selected = link.searchParams.get('albums_date_preset');
+            
+                    collage('albums', `date_preset=${selected}`);
+                }}>${tl(trans.collage)}</button>
+                ${() => {
+                    select_btn.classList.add('btn', 'view-item', 'interact-item');
+                    select_btn.classList.remove('section-control');
+                    return select_btn;
+                }}
+                ${form ? html.node`
+                <button class="panel-settings-button btn view-item interact-item" ref=${el => settings_btn = el}>${tl(trans.settings)}</button>
+                ` : ''}
+            </div>
+        </div>
+    `, panel.firstElementChild);
 
-    if (form == null)
-        return;
+    tippy(collage_btn, {
+        content: tl(trans.collage)
+    });
 
-    if (page.token == '')
-        page.token = form.querySelector('[name="csrfmiddlewaretoken"]').getAttribute('value');
+    // own profile only
 
-    let original_chart_settings = {};
+    if (!form) return;
+    if (page.token == '') page.token = form.querySelector('[name="csrfmiddlewaretoken"]').getAttribute('value');
 
-    let new_button = document.createElement('button');
-    new_button.classList.add('panel-settings-button', 'btn', 'view-item', 'interact-item');
-    new_button.textContent = tl(trans.settings);
+    let timeframe = form.querySelector('[name="chart_range_top_albums"]');
+    let style = form.querySelector('[name="chart_style_top_albums"]');
+    let grid_length = form.querySelector('[name="albums_image_grid_length"]');
+    let chartlist_length = form.querySelector('[name="albums_chartlist_length"]');
 
     form.classList = '';
+    render(form, html`
+        <input type="hidden" name="csrfmiddlewaretoken" value="${page.token}">
+        <div class="setting" data-type="select">
+            <div class="heading">
+                <h5>${tl(trans.default_timeframe)}</h5>
+            </div>
+            ${select(select_prepare(timeframe), timeframe.value, 'chart_range_top_albums')}
+        </div>
+        <div class="setting" data-type="select">
+            <div class="heading">
+                <h5>${tl(trans.chart_style)}</h5>
+            </div>
+            ${select(select_prepare(style), style.value, 'chart_style_top_albums')}
+        </div>
+        <div class="setting hide-if-album-list" data-type="select">
+            <div class="heading">
+                <h5>${tl(trans.chart_size)}</h5>
+            </div>
+            ${select(select_prepare(grid_length), grid_length.value, 'albums_image_grid_length')}
+        </div>
+        <div class="setting hide-if-album-grid" data-type="select">
+            <div class="heading">
+                <h5>${tl(trans.chart_size)}</h5>
+            </div>
+            ${select(select_prepare(chartlist_length), chartlist_length.value, 'albums_chartlist_length')}
+        </div>
+        <div class="settings-footer">
+            <button type="submit" class="btn-primary save">
+                ${tl(trans.save)}
+            </button>
+        </div>
+    `);
 
-    tooltip = tippy(new_button, {
+    tippy(settings_btn, {
         theme: 'window',
-        content: form.outerHTML,
-        allowHTML: true,
+        content: form,
         placement: 'bottom',
         interactive: true,
         interactiveBorder: 10,
-        trigger: 'click',
-
-        onShow(instance) {
-            let form = instance.popper.querySelector('form');
-
-            form.innerHTML = (`
-                <input type="hidden" name="csrfmiddlewaretoken" value="${page.token}">
-                <div class="setting" data-type="select">
-                    <div class="heading">
-                        <h5>${tl(trans.default_timeframe)}</h5>
-                    </div>
-                    <div class="select-wrap custom-selector" id="id_chart_range_top_albums_select">
-                        ${original_chart_settings.timeframe}
-                    </div>
-                </div>
-                <div class="setting" data-type="select">
-                    <div class="heading">
-                        <h5>${tl(trans.chart_style)}</h5>
-                    </div>
-                    <div class="select-wrap custom-selector" id="id_chart_style_top_albums_select">
-                        ${original_chart_settings.style}
-                    </div>
-                </div>
-                <div class="setting hide-if-album-list" data-type="select">
-                    <div class="heading">
-                        <h5>${tl(trans.chart_size)}</h5>
-                    </div>
-                    <div class="select-wrap custom-selector" id="id_albums_image_grid_length_select">
-                        ${original_chart_settings.length}
-                    </div>
-                </div>
-                <div class="setting hide-if-album-grid" data-type="select">
-                    <div class="heading">
-                        <h5>${tl(trans.chart_size)}</h5>
-                    </div>
-                    <div class="select-wrap custom-selector" id="id_albums_chartlist_length_select">
-                        ${original_chart_settings.length_list}
-                    </div>
-                </div>
-                <div class="settings-footer">
-                    <button type="submit" class="btn-primary save">
-                        ${tl(trans.save)}
-                    </button>
-                </div>
-            `);
-
-            custom_select(form.querySelector('#id_chart_range_top_albums'), form.querySelector('#id_chart_range_top_albums_select'));
-            custom_select(form.querySelector('#id_chart_style_top_albums'), form.querySelector('#id_chart_style_top_albums_select'));
-            custom_select(form.querySelector('#id_albums_image_grid_length'), form.querySelector('#id_albums_image_grid_length_select'));
-            custom_select(form.querySelector('#id_albums_chartlist_length'), form.querySelector('#id_albums_chartlist_length_select'));
-
-            let selects = form.querySelectorAll('select');
-            selects.forEach((select) => {
-                select.setAttribute('onchange', `_update_inbuilt_select('${select.getAttribute('id')}', this.value)`);
-                update_inbuilt_select(select.getAttribute('id'), select.value);
-            });
-        }
+        trigger: 'click'
     });
-
-    view_buttons.appendChild(new_button);
-
-    original_chart_settings = {
-        timeframe: form.querySelector('#id_chart_range_top_albums').outerHTML,
-        style: form.querySelector('#id_chart_style_top_albums').outerHTML,
-        length: form.querySelector('#id_albums_image_grid_length').outerHTML,
-        length_list: form.querySelector('#id_albums_chartlist_length').outerHTML
-    }
-
-    form.innerHTML = '';
 }
 
 function profile_tracks() {
     let panel = page.structure.main.querySelector('#top-tracks');
-
-    if (!panel)
-        return;
+    if (!panel) return;
 
     panel.classList.remove('section-with-settings');
 
     let form = panel.querySelector('#track-chart-settings');
-    let link = panel.querySelector('[aria-controls="track-chart-settings"]');
-    let tooltip;
+    let list = panel.querySelector('#tracks_range');
 
-
-    let view_buttons = document.createElement('div');
-    view_buttons.classList.add('view-buttons');
-
-    let header = document.createElement('div');
-    header.classList.add('top-container');
-
-    let header_text = panel.querySelector('h2');
-    header.appendChild(header_text);
-
-    // select
+    let collage_btn;
     let select_btn = panel.querySelector('.dropdown-menu-clickable-button');
-    select_btn.classList.add('btn', 'view-item', 'interact-item');
-    select_btn.classList.remove('section-control')
-    view_buttons.appendChild(select_btn);
+    let settings_btn;
 
-    header.appendChild(view_buttons);
-    panel.insertBefore(header, panel.firstElementChild);
+    panel.insertBefore(html.node`
+        <div class="top-container">
+            ${panel.querySelector('h2')}
+            <div class="view-buttons blend">
+                <button class="btn chibi icon" data-type="collage" ref=${el => collage_btn = el} onclick=${() => {
+                    let btn = list.querySelector('.dropdown-menu-clickable-item--selected');
+                    let link = new URL('https://www.last.fm' + btn.getAttribute('href'));
+                    let selected = link.searchParams.get('tracks_date_preset');
+            
+                    collage('tracks', `date_preset=${selected}`);
+                }}>${tl(trans.collage)}</button>
+                ${() => {
+                    select_btn.classList.add('btn', 'view-item', 'interact-item');
+                    select_btn.classList.remove('section-control');
+                    return select_btn;
+                }}
+                ${form ? html.node`
+                <button class="panel-settings-button btn view-item interact-item" ref=${el => settings_btn = el}>${tl(trans.settings)}</button>
+                ` : ''}
+            </div>
+        </div>
+    `, panel.firstElementChild);
 
-    if (form == null)
-        return;
+    tippy(collage_btn, {
+        content: tl(trans.collage)
+    });
 
-    if (page.token == '')
-        page.token = form.querySelector('[name="csrfmiddlewaretoken"]').getAttribute('value');
+    // own profile only
 
-    let original_chart_settings = {};
+    if (!form) return;
+    if (page.token == '') page.token = form.querySelector('[name="csrfmiddlewaretoken"]').getAttribute('value');
 
-    let new_button = document.createElement('button');
-    new_button.classList.add('panel-settings-button', 'btn', 'view-item', 'interact-item');
-    new_button.textContent = tl(trans.settings);
+    let timeframe = form.querySelector('[name="chart_range_top_tracks"]');
+    let chartlist_length = form.querySelector('[name="chart_length_top_tracks"]');
 
     form.classList = '';
+    render(form, html`
+        <input type="hidden" name="csrfmiddlewaretoken" value="${page.token}">
+        <div class="setting" data-type="select">
+            <div class="heading">
+                <h5>${tl(trans.default_timeframe)}</h5>
+            </div>
+            ${select(select_prepare(timeframe), timeframe.value, 'chart_range_top_tracks')}
+        </div>
+        <div class="setting hide-if-track-grid" data-type="select">
+            <div class="heading">
+                <h5>${tl(trans.chart_size)}</h5>
+            </div>
+            ${select(select_prepare(chartlist_length), chartlist_length.value, 'chart_length_top_tracks')}
+        </div>
+        <div class="sep" />
+        ${setting({id: 'format_guest_features'})}
+        ${setting({id: 'show_guest_features'})}
+        <div class="more-link">
+            <a href="${root}bleh?tab=music">${tl(trans.settings)}</a>
+        </div>
+        <div class="settings-footer">
+            <button type="submit" class="btn-primary save">
+                ${tl(trans.save)}
+            </button>
+        </div>
+    `);
 
-    tooltip = tippy(new_button, {
+    tippy(settings_btn, {
         theme: 'window',
-        content: form.outerHTML,
-        allowHTML: true,
+        content: form,
         placement: 'bottom',
         interactive: true,
         interactiveBorder: 10,
-        trigger: 'click',
-
-        onShow(instance) {
-            let form = instance.popper.querySelector('form');
-
-            form.innerHTML = (`
-                <input type="hidden" name="csrfmiddlewaretoken" value="${page.token}">
-                <div class="setting" data-type="select">
-                    <div class="heading">
-                        <h5>${tl(trans.default_timeframe)}</h5>
-                    </div>
-                    <div class="select-wrap custom-selector" id="id_chart_range_top_tracks_select">
-                        ${original_chart_settings.timeframe}
-                    </div>
-                </div>
-                <div class="setting" data-type="select">
-                    <div class="heading">
-                        <h5>${tl(trans.amount_to_display)}</h5>
-                    </div>
-                    <div class="select-wrap custom-selector" id="id_chart_length_top_tracks_select">
-                        ${original_chart_settings.count}
-                    </div>
-                </div>
-                <div class="sep"></div>
-                <div class="setting" data-type="toggle" id="container-format_guest_features" onclick="_update_item('format_guest_features')">
-                    <button class="btn reset" onclick="_reset_item('format_guest_features')">${tl(trans.reset)}</button>
-                    <div class="heading">
-                        <h5>${tl(trans.format_guest_features.name)}</h5>
-                        <p>${tl(trans.format_guest_features.body)}</p>
-                    </div>
-                    <div class="toggle-wrap">
-                        <button class="toggle" id="toggle-format_guest_features" aria-checked="true" type="button">
-                            <div class="dot"></div>
-                        </button>
-                    </div>
-                </div>
-                <div class="setting hide-if-format-guest-disabled" data-type="toggle" id="container-show_guest_features" onclick="_update_item('show_guest_features')">
-                    <button class="btn reset" onclick="_reset_item('show_guest_features')">${tl(trans.reset)}</button>
-                    <div class="heading">
-                        <h5>${tl(trans.show_guest_features.name)}</h5>
-                        <p>${tl(trans.show_guest_features.body)}</p>
-                    </div>
-                    <div class="toggle-wrap">
-                        <button class="toggle" id="toggle-show_guest_features" aria-checked="true" type="button">
-                            <div class="dot"></div>
-                        </button>
-                    </div>
-                </div>
-                <div class="settings-footer">
-                    <button type="submit" class="btn-primary save">
-                        ${tl(trans.save)}
-                    </button>
-                    <a class="btn icon settings not-a-view-button" href="${root}bleh">
-                        ${tl(trans.settings)}
-                    </a>
-                </div>
-            `);
-
-            custom_select(form.querySelector('#id_chart_range_top_tracks'), form.querySelector('#id_chart_range_top_tracks_select'));
-            custom_select(form.querySelector('#id_chart_length_top_tracks'), form.querySelector('#id_chart_length_top_tracks_select'));
-
-            let selects = form.querySelectorAll('select');
-            selects.forEach((select) => {
-                select.setAttribute('onchange', `_update_inbuilt_select('${select.getAttribute('id')}', this.value)`);
-                update_inbuilt_select(select.getAttribute('id'), select.value);
-            });
-
-            refresh_all(instance.popper);
-        }
+        trigger: 'click'
     });
-
-    view_buttons.appendChild(new_button);
-
-    original_chart_settings = {
-        timeframe: form.querySelector('#id_chart_range_top_tracks').outerHTML,
-        count: form.querySelector('#id_chart_length_top_tracks').outerHTML
-    }
-
-    form.innerHTML = '';
 }
 
 function bio_parse(text, cache = false) {
-    let result = markdown(text.textContent, {
-        allow_headers: true
-    });
-
     let temp = document.createElement('div');
-    temp.innerHTML = result;
+
+    render(temp, markdown(text.textContent, {
+        allow_headers: true
+    }))
 
     use_banner(temp, cache);
 
-    return result;
+    return temp.innerHTML;
 }
 
 function use_banner(temp, cache) {
