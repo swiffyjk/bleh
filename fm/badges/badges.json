@@ -1,5 +1,5 @@
 {
-    "latest": "2025.0519",
+    "latest": "2025.0608",
     "sponsors": [
         "katesia", "kateshapedbox", "stellasaur",
         "astrablooms", "ItsProyal", "vwvwvwvwvwvwv", "Orofil",
@@ -26,6 +26,9 @@
             {
                 "type": "cute",
                 "name": "cute"
+            },
+            {
+                "type": "plaster"
             }
         ],
         "kateshapedbox": [
@@ -53,7 +56,7 @@
             },
             {
                 "type": "translation",
-                "name": "translated bleh into Polski"
+                "reason": "Polski"
             },
             {
                 "type": "contributor"
@@ -92,7 +95,7 @@
             },
             {
                 "type": "translation",
-                "name": "translated bleh into Deutsch"
+                "reason": "Deutsch"
             },
             {
                 "type": "sponsor"
@@ -100,6 +103,9 @@
             {
                 "type": "cute",
                 "name": "cute"
+            },
+            {
+                "type": "bubble-tea"
             }
         ],
         "astrablooms": [
@@ -173,6 +179,10 @@
         },
         "uix-uix": {
             "type": "sponsor"
+        },
+        "ArthRMH": {
+            "type": "translation",
+            "reason": "Português"
         }
     }
 }

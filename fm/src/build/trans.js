@@ -129,7 +129,7 @@ export const trans = {
             }
         },
         translation: {
-            reason: {
+            name: {
                 en: 'Translations',
                 de: 'Übersetzungen',
                 pt: 'Traduções'
@@ -167,11 +167,6 @@ export const trans = {
                 pt: 'Reservado'
             }
         },
-        requires_higher_bleh_version: {
-            reason: {
-                en: 'Requires higher bleh version'
-            }
-        },
         plaster: {
             name: {
                 en: 'band-aid'
@@ -179,7 +174,18 @@ export const trans = {
             reason: {
                 en: 'the sillyness caught up to me'
             }
+        },
+        'bubble-tea': {
+            name: {
+                en: 'escoffier :3'
+            },
+            reason: {
+                en: 'katelyn’s wife ~'
+            }
         }
+    },
+    requires_higher_bleh_version: {
+        en: 'Requires higher bleh version'
     },
     home: {
         en: 'Home',

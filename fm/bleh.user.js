@@ -1809,19 +1809,19 @@
           badge.name = tl(trans.badges[badge.type].name);
         } else {
           badge.name = tl(trans.unavailable);
-          badge.reason = "requires_higher_bleh_version";
+          badge.reason = tl(trans.requires_higher_bleh_version);
         }
       }
       if (trans.badges[badge.type] && trans.badges[badge.type].reason)
         badge.reason = tl(trans.badges[badge.type].reason);
       if (badge.reason)
         return;
-      if (badge.type == "sponsor" || badge.type == "contributor" || badge.type == "translation")
+      if (badge.type == "sponsor" || badge.type == "contributor")
         badge.reason = badge.type;
       else if (badge.type == "cute" || badge.type == "queen")
-        badge.reason = "cute";
+        badge.reason = tl(trans.badges.cute.reason);
       else
-        badge.reason = "reserved";
+        badge.reason = tl(trans.badges.reserved.reason);
     });
     log("final badge list", "sponsor", "info", badges);
     return badges;
@@ -17146,7 +17146,7 @@
         }
       },
       translation: {
-        reason: {
+        name: {
           en: "Translations",
           de: "\xDCbersetzungen",
           pt: "Tradu\xE7\xF5es"
@@ -17184,11 +17184,6 @@
           pt: "Reservado"
         }
       },
-      requires_higher_bleh_version: {
-        reason: {
-          en: "Requires higher bleh version"
-        }
-      },
       plaster: {
         name: {
           en: "band-aid"
@@ -17196,7 +17191,18 @@
         reason: {
           en: "the sillyness caught up to me"
         }
+      },
+      "bubble-tea": {
+        name: {
+          en: "escoffier :3"
+        },
+        reason: {
+          en: "katelyn\u2019s wife ~"
+        }
       }
+    },
+    requires_higher_bleh_version: {
+      en: "Requires higher bleh version"
     },
     home: {
       en: "Home",

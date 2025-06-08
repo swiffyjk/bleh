@@ -36,7 +36,7 @@ export function load_badges(user, solo = false) {
                 badge.name = tl(trans.badges[badge.type].name);
             } else {
                 badge.name = tl(trans.unavailable);
-                badge.reason = 'requires_higher_bleh_version';
+                badge.reason = tl(trans.requires_higher_bleh_version);
             }
         }
 
@@ -47,12 +47,12 @@ export function load_badges(user, solo = false) {
         if (badge.reason)
             return;
 
-        if (badge.type == 'sponsor' || badge.type == 'contributor' || badge.type == 'translation')
+        if (badge.type == 'sponsor' || badge.type == 'contributor')
             badge.reason = badge.type;
         else if (badge.type == 'cute' || badge.type == 'queen')
-            badge.reason = 'cute';
+            badge.reason = tl(trans.badges.cute.reason);
         else
-            badge.reason = 'reserved';
+            badge.reason = tl(trans.badges.reserved.reason);
     });
 
     log('final badge list', 'sponsor', 'info', badges);
