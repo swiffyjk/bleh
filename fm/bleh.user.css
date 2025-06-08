@@ -539,7 +539,7 @@ body {
 
     color-scheme: light !important;
 
-    --avatar-generic-background: hsl(var(--b4));
+    --avatar-generic-background: hsl(var(--b4), 30%);
 }
 
 .preview[data-bleh--theme="oled"],
@@ -6732,10 +6732,6 @@ span.shout-user-avatar:before,
 .avatar-status-dot:after {
     color: hsl(var(--l3-c));
     --override-bg: currentColor !important;
-}
-[data-bleh--theme_type="light"] .user-status--bleh-user-bIeak:after {
-    color: hsl(var(--c1)) !important;
-    --lit-over: 1;
 }
 
 .user-status--bleh-avatar-status-dot--subscriber,
