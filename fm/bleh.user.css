@@ -1,7 +1,7 @@
 /* ==UserStyle==
 @name           bleh (dev)
 @namespace      github.com/katelyynn/bleh
-@version        2025.0522
+@version        2025.0608
 @license        GPL-3.0
 @author         kate
 @updateURL      https://github.com/katelyynn/bleh/raw/uwu/fm/bleh.user.css
@@ -17,7 +17,7 @@
 @import url('https://fonts.googleapis.com/css2?family=Ubuntu+Sans:ital,wght@0,100..800;1,100..800&display=swap');
 
 body {
-    --version-build: '2025.0522';
+    --version-build: '2025.0608';
 
     --hue:  var(--hue-over,
             var(--hue-album,
@@ -6666,6 +6666,7 @@ leading to a gap from their own css */
 
 .shout-more-replies-after, .shout-more-replies-before {
     --col: hsl(var(--c3)) !important;
+    --mask-colour: currentColor !important;
 }
 .shout-list-item .shout-list-item {
     margin-left: var(--shout-inset);
@@ -17705,7 +17706,7 @@ button.bleh--gallery-bookmark-image-btn {
     }
 
     &:not(.blend) {
-        :is(.btn, a, button):not(.not-a-view-button, .toggle, .reset, .select-button, .btn-primary, [type]) {
+        :is(.btn, a, button):not(.not-a-view-button, .toggle, .reset, .select-button, .btn-primary, .js-close) {
             --bg: var(--cards-overlay-image-subtlest, none), hsl(var(--h3));
             --bg-hov: var(--cards-overlay-image-subtlest, none), hsla(var(--h3), 80%);
             --bg-atv: var(--cards-overlay-image-subtlest, none), hsla(var(--h3), 60%);
@@ -21096,7 +21097,7 @@ h4 {
     @media (max-width: 600px) {
         flex-direction: column;
         gap: var(--card-gap);
-        justify-contenet: unset;
+        justify-content: unset;
     }
 
     .glacier-library-buttons {
@@ -21158,7 +21159,7 @@ h4 {
             font-weight: var(--font-weight-medium);
             cursor: default;
 
-            &.glacier-library-metadata-focus&:not([data-type="artist"]) {
+            &.glacier-library-metadata-focus:not([data-type="artist"]) {
                 font-size: var(--font-size);
                 line-height: 19px;
                 max-width: 400px;
@@ -21169,6 +21170,10 @@ h4 {
                 a:last-child:not(:hover) {
                     color: inherit;
                 }
+            }
+
+            .glacier-library-track-duration {
+                margin-left: 4px;
             }
 
             a:first-child {
