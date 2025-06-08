@@ -4098,7 +4098,7 @@ button.navlist-more {
 
     &:before {
         background-color: currentColor !important;
-        --left: var(--icon-half) !important;
+        --left: calc((32px - var(--icon-size)) / 2) !important;
     }
 
     [data-toggle-button-current-state="followed"] & {
@@ -12144,6 +12144,10 @@ text[style^="color: rgb(0, 0, 0)"] {
     --mask-size: var(--cover-size-32);
 }
 
+.col-main-is-primary > .col-main > .pagination {
+    margin-top: var(--card-gap);
+}
+
 .user-list-inner-wrap {
     padding-left: calc(32px + var(--card-gap));
     padding-right: unset;
@@ -12164,7 +12168,6 @@ text[style^="color: rgb(0, 0, 0)"] {
 .user-list-item {
     width: 100%;
     padding: 0 var(--item-list-gap);
-    border-radius: var(--item-big-radius);
 
     &.listener-list-item {
         padding-left: calc(var(--item-list-gap) + 18px + var(--item-list-gap));
@@ -12187,12 +12190,22 @@ text[style^="color: rgb(0, 0, 0)"] {
 .user-list {
     display: flex;
     flex-direction: column;
-    gap: var(--item-list-gap);
     margin: unset !important;
+
+    &:before, &:after {
+        display: none;
+    }
+
+    [data-bleh--list_view="0"] & {
+        .user-list-item {
+            border-bottom: 1px solid var(--card-border-base);
+        }
+    }
 
     [data-bleh--list_view="1"] & {
         display: grid;
         grid-template-columns: repeat(auto-fill, minmax(400px, 1fr));
+        gap: var(--item-list-gap);
 
         @media (max-width: 600px) {
             grid-template-columns: repeat(auto-fill, minmax(260px, 1fr));
@@ -12200,6 +12213,7 @@ text[style^="color: rgb(0, 0, 0)"] {
 
         .user-list-item {
             padding: var(--item-list-gap);
+            border-radius: var(--item-big-radius);
 
             &.listeners-section-item-wrap:first-child, &.top-listeners-item-wrap:first-child {
                 background: hsla(var(--h4), 20%);
@@ -12325,7 +12339,7 @@ text[style^="color: rgb(0, 0, 0)"] {
     color: hsl(var(--c3)) !important;
 
     .user-list-item:has(&) {
-        background: linear-gradient(90deg, hsla(var(--h4), 20%) 0%, transparent 100%);
+        background: linear-gradient(90deg, hsla(var(--h4), 20%) 0%, transparent 28%);
     }
 }
 

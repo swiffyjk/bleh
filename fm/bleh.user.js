@@ -8952,13 +8952,15 @@
     `;
     page.structure.main.insertBefore(view_buttons, page.structure.main.firstElementChild);
     refresh_all();
-    let users = page.structure.main.querySelectorAll(".user-list-inner-wrap");
+    let users = page.structure.main.querySelectorAll(".user-list-item");
     users.forEach((user) => {
       let avatar3 = user.querySelector(".user-list-avatar");
       let name = user.querySelector(".user-list-link").textContent;
       let badge = patch_avatar(avatar3, name, "follow");
-      if (badge.type == "avatar-status-dot--staff")
-        user.classList.add("staff-user");
+      if (badge.type) {
+        user.querySelector(".user-list-link").classList.add("colourful", `user-status--bleh-${badge.type}`, `user-status--bleh-user-${name}`);
+        user.classList.add("colourful", `user-status--bleh-${badge.type}`, `user-status--bleh-user-${name}`);
+      }
       let artists = user.querySelectorAll(".user-list-shared-artists a");
       artists.forEach((artist) => {
         artist.textContent = correct_artist(artist.textContent);
