@@ -10654,7 +10654,7 @@
                                 <div class="mockup-panel main"></div>
                             </div>
                         </div>
-                        <div class="profile-mockup-background" style="background-image: url(https://lastfm.freetls.fastly.net/i/u/avatar170s/383d6c03304e720075d0050e8a6a4644);"></div>
+                        <div class="profile-mockup-background" style="background-image: url(https://lastfm.freetls.fastly.net/i/u/avatar300s/383d6c03304e720075d0050e8a6a4644);"></div>
                     </div>
                 </div>
                 <div class="setting" data-type="options">
@@ -10695,8 +10695,8 @@
                                 <div class="mockup-panel main"></div>
                             </div>
                         </div>
-                        <div class="profile-mockup-background from-avatar" style="background-image: url(${auth.avatar});"></div>
-                        <div class="profile-mockup-background from-track" style="background-image: url(https://lastfm.freetls.fastly.net/i/u/avatar170s/df927f4f88034b7f9a651636b965c9d7);"></div>
+                        <div class="profile-mockup-background from-avatar" style="background-image: url(${auth.avatar.replace("/avatar42s/", "/avatar300s/")});"></div>
+                        <div class="profile-mockup-background from-track" style="background-image: url(https://lastfm.freetls.fastly.net/i/u/avatar300s/df927f4f88034b7f9a651636b965c9d7);"></div>
                     </div>
                 </div>
                 <div class="setting" data-type="toggle" id="container-profile_avi_background" onclick="_update_item('profile_avi_background')">
@@ -11471,7 +11471,7 @@
                 <div class="inner-preview pad">
                     <div class="personal-stats-preview-bar-container">
                         <div class="personal-stats-preview-bar" style="${preview_bar}"></div>
-                        <div class="personal-stats-preview-text">${html2.node([preview_bar_text])}</div>
+                        <div class="personal-stats-preview-text">${{ html: preview_bar_text }}</div>
                     </div>
                     <div class="sep"></div>
                     <div class="tracks">
