@@ -1,7 +1,7 @@
 // ==UserScript==
 // @name         bleh
 // @namespace    http://last.fm/
-// @version      2025.0522
+// @version      2025.0608
 // @description  bleh!!! ^-^
 // @author       kate
 // @match        https://www.last.fm/*
@@ -1776,7 +1776,7 @@
 
   // src/build/sponsor.js
   var sponsor_list = {
-    latest: "",
+    latest: 0,
     sponsors: [],
     sponsors_one_time: [],
     sponsor_count_remove: 0,
@@ -6435,7 +6435,7 @@
         api_expire.setHours(api_expire.getHours() + 1);
       }
       if (xhr.status == 200) {
-        if (sponsor_list && parseFloat(JSON.parse(this.response).latest) > parseFloat(sponsor_list.latest)) {
+        if (sponsor_list && sponsor_list.latest != 0 && parseFloat(JSON.parse(this.response).latest) >= parseFloat(sponsor_list.latest)) {
           for (const member in sponsor_list) delete sponsor_list[member];
           Object.assign(sponsor_list, JSON.parse(this.response));
           if (sponsor_list)

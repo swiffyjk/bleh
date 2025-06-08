@@ -63,7 +63,7 @@ function sponsor_request(notify = false) {
         }
 
         if (xhr.status == 200) {
-            if (sponsor_list && parseFloat(JSON.parse(this.response).latest) > parseFloat(sponsor_list.latest)) {
+            if (sponsor_list && sponsor_list.latest != 0.0 && parseFloat(JSON.parse(this.response).latest) >= parseFloat(sponsor_list.latest)) {
                 for (const member in sponsor_list) delete sponsor_list[member];
                 Object.assign(sponsor_list, JSON.parse(this.response));
 

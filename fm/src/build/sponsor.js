@@ -5,7 +5,7 @@
 //
 
 export let sponsor_list = {
-    latest: "",
+    latest: 0.0,
     sponsors: [],
     sponsors_one_time: [],
     sponsor_count_remove: 0,
