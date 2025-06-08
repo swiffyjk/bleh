@@ -30,6 +30,8 @@ export function bleh_settings() {
     page.type = 'bleh_settings';
     page.subpage = '';
 
+    page.state.settings_page = '';
+
     update_page();
 
     // remove error stuff cus we control this page
@@ -48,52 +50,52 @@ export function bleh_settings() {
     render(nav, html`
         <ul class="navlist-items">
             <li class="navlist-item secondary-nav-item">
-                <a class="secondary-nav-item-link bleh--nav" data-bleh-page="home" onclick="_change_settings_page('home')">
+                <a class="secondary-nav-item-link bleh--nav" data-bleh-page="home" onclick=${() => change_settings_page('home')}>
                     ${tl(trans.home)}
                 </a>
             </li>
             <li class="navlist-item secondary-nav-item">
-                <a class="secondary-nav-item-link bleh--nav" data-bleh-page="themes" onclick="_change_settings_page('themes')">
+                <a class="secondary-nav-item-link bleh--nav" data-bleh-page="themes" onclick=${() => change_settings_page('themes')}>
                     ${tl(trans.appearance)}
                 </a>
             </li>
             <li class="navlist-item secondary-nav-item">
-                <a class="secondary-nav-item-link bleh--nav" data-bleh-page="music" onclick="_change_settings_page('music')">
+                <a class="secondary-nav-item-link bleh--nav" data-bleh-page="music" onclick=${() => change_settings_page('music')}>
                     ${tl(trans.music)}
                 </a>
             </li>
             <li class="navlist-item secondary-nav-item">
-                <a class="secondary-nav-item-link bleh--nav" data-bleh-page="customise" onclick="_change_settings_page('customise')">
+                <a class="secondary-nav-item-link bleh--nav" data-bleh-page="customise" onclick=${() => change_settings_page('customise')}>
                     ${tl(trans.layout)}
                 </a>
             </li>
             <li class="navlist-item secondary-nav-item">
-                <a class="secondary-nav-item-link bleh--nav" data-bleh-page="profiles" onclick="_change_settings_page('profiles')">
+                <a class="secondary-nav-item-link bleh--nav" data-bleh-page="profiles" onclick=${() => change_settings_page('profiles')}>
                     ${tl(trans.profiles)}
                 </a>
             </li>
             <li class="navlist-item secondary-nav-item">
-                <a class="secondary-nav-item-link bleh--nav" data-bleh-page="seasonal" onclick="_change_settings_page('seasonal')">
+                <a class="secondary-nav-item-link bleh--nav" data-bleh-page="seasonal" onclick=${() => change_settings_page('seasonal')}>
                     ${tl(trans.seasonal.name)}
                 </a>
             </li>
             <li class="navlist-item secondary-nav-item">
-                <a class="secondary-nav-item-link bleh--nav" data-bleh-page="text" onclick="_change_settings_page('text')">
+                <a class="secondary-nav-item-link bleh--nav" data-bleh-page="text" onclick=${() => change_settings_page('text')}>
                     ${tl(trans.text)}
                 </a>
             </li>
             <li class="navlist-item secondary-nav-item">
-                <a class="secondary-nav-item-link bleh--nav" data-bleh-page="accessibility" onclick="_change_settings_page('accessibility')">
+                <a class="secondary-nav-item-link bleh--nav" data-bleh-page="accessibility" onclick=${() => change_settings_page('accessibility')}>
                     ${tl(trans.accessibility)}
                 </a>
             </li>
             <li class="navlist-item secondary-nav-item">
-                <a class="secondary-nav-item-link bleh--nav" data-bleh-page="performance" onclick="_change_settings_page('performance')">
+                <a class="secondary-nav-item-link bleh--nav" data-bleh-page="performance" onclick=${() => change_settings_page('performance')}>
                     ${tl(trans.troubleshooting)}
                 </a>
             </li>
             <li class="navlist-item secondary-nav-item">
-                <a class="secondary-nav-item-link bleh--nav" data-bleh-page="sku" onclick="_change_settings_page('sku')">
+                <a class="secondary-nav-item-link bleh--nav" data-bleh-page="sku" onclick=${() => change_settings_page('sku')}>
                     shhh...
                 </a>
             </li>
@@ -143,8 +145,26 @@ export function bleh_settings() {
     }
 }
 
+function page_loading() {
+    render(page.structure.main, html`
+        <div class="bleh--panel">
+            <div class="loading-data-container">
+                <div class="loading-data-text">${tl(trans.loading)}</div>
+            </div>
+        </div>
+    `);
+}
+
 export function render_setting_page(page_id) {
     if (page_id == 'themes') {
+        if (auth.sets.hue == 255 && auth.sets.sat == 1 && auth.sets.lit == 1) {
+            setTimeout(() => {
+                render_setting_page('themes');
+            }, 10);
+            page_loading();
+            return;
+        }
+
         register_skip_to([
             {
                 id: 'hue_from_album',
@@ -156,7 +176,7 @@ export function render_setting_page(page_id) {
             }
         ]);
 
-        return html`
+        render(page.structure.main, html`
             <div class="bleh--panel">
                 <h4>${tl(trans.themes.name)}</h4>
                 <div class="setting-items full">
@@ -255,7 +275,11 @@ export function render_setting_page(page_id) {
                 ${setting({id: 'font_weight_bold'})}
                 ${setting({id: 'font_emoji'})}
             </div>
-            `;
+            `);
+
+        show_theme_change_in_settings();
+        display_colour_presets();
+        refresh_all();
     } else if (page_id == 'customise') {
         register_skip_to([
             {
@@ -272,7 +296,7 @@ export function render_setting_page(page_id) {
             }
         ]);
 
-        return html`
+        render(page.structure.main, html`
             <div class="bleh--panel check-artist-hover">
                 <h4 class="top-header">${tl(trans.layout)}</h4>
                 <h4>${trans_legacy.en.settings.layout.header}</h4>
@@ -403,11 +427,11 @@ export function render_setting_page(page_id) {
                     </div>
                 </div>
             </div>
-            `;
+            `);
     } else if (page_id == 'seasonal') {
         register_skip_to([]);
 
-        return html`
+        render(page.structure.main, html`
             <div class="bleh--panel">
                 <div class="seasonal-inner">
                     <div class="sub-text">${tl(trans.seasonal_timeline)}</div>
@@ -499,11 +523,11 @@ export function render_setting_page(page_id) {
                     </div>
                 </div>
             </div>
-        `;
+        `);
     } else if (page_id == 'performance') {
         register_skip_to([]);
 
-        return html`
+        render(page.structure.main, html`
             <div class="bleh--panel">
                 <div class="alert alert-danger">${tl(trans.beware_notice)}</div>
                 ${setting({id: 'branch'})}
@@ -548,7 +572,7 @@ export function render_setting_page(page_id) {
                 <h4>Manage flags</h4>
                 <button class="continue" onclick="_change_settings_page('sku')">Open sku page</button>
             </div>
-            `;
+            `);
     } else if (page_id == 'profiles') {
         register_skip_to([
             {
@@ -562,7 +586,7 @@ export function render_setting_page(page_id) {
             }
         ]);
 
-        return html`
+        render(page.structure.main, html`
             <div class="bleh--panel sponsor-badge-panel" data-sponsoring="${auth.sponsor}">
                 <div class="profile-container">
                     <div class="avatar-side small">
@@ -773,11 +797,11 @@ export function render_setting_page(page_id) {
                     </div>
                 </div>
             </div>
-            `;
+            `);
     } else if (page_id == 'accessibility') {
         register_skip_to([]);
 
-        return html`
+        render(page.structure.main, html`
             <div class="bleh--panel">
                 <h4 class="top-header">${tl(trans.accessibility)}</h4>
                 <div class="setting" data-type="toggle" id="container-reduced_motion" onclick="_update_item('reduced_motion')">
@@ -805,11 +829,11 @@ export function render_setting_page(page_id) {
                     </div>
                 </div>
             </div>
-            `;
+            `);
     } else if (page_id == 'text') {
         register_skip_to([]);
 
-        return html`
+        render(page.structure.main, html`
             <div class="bleh--panel">
                 <h4 class="top-header">${trans_legacy.en.settings.text.name}</h4>
                 <div class="inner-preview pad flex">
@@ -851,11 +875,11 @@ export function render_setting_page(page_id) {
                     </div>
                 </div>
             </div>
-            `;
+            `);
     } else if (page_id == 'sku') {
         register_skip_to([]);
 
-        return html`
+        render(page.structure.main, html`
             <div class="bleh--panel shh">
                 <div class="sub-text">${version.build}.${version.sku}</div>
                 ☆⌒(>w<)
@@ -865,7 +889,7 @@ export function render_setting_page(page_id) {
                 <div class="alert alert-danger">Be careful! Only manage these if you know what you are doing.</div>
                 <div class="feature-flags" id="feature-flags"></div>
             </div>
-            `;
+            `);
     } else if (page_id == 'music') {
         register_skip_to([
             {
@@ -937,7 +961,7 @@ export function render_setting_page(page_id) {
         preview_bar = `${preview_bar});`;
         //console.info('preview bar', preview_bar, global_sat, h3_sat, global_lit, h3_lit);
 
-        return html`
+        render(page.structure.main, html`
             <div class="bleh--panel lotus">
                 <h4>${html.node([
                     tl(trans.brand_version_number)
@@ -1299,7 +1323,7 @@ export function render_setting_page(page_id) {
                     </div>
                 </div>
             </div>
-            `;
+            `);
     }
 }
 
@@ -1381,13 +1405,9 @@ function change_settings_page(page_id, setting = null) {
     else
         seasonal_timer_end();
 
-    render(page.structure.main, render_setting_page(page_id));
+    render_setting_page(page_id);
     
-    if (page_id == 'themes') {
-        show_theme_change_in_settings();
-        display_colour_presets();
-        refresh_all();
-    } else if (page_id == 'customise' || page_id == 'performance' || page_id == 'accessibility' || page_id == 'text' || page_id == 'seasonal' || page_id == 'music' || page_id == 'activities') {
+    if (page_id == 'customise' || page_id == 'performance' || page_id == 'accessibility' || page_id == 'text' || page_id == 'seasonal' || page_id == 'music' || page_id == 'activities') {
         refresh_all();
     } else if (page_id == 'profiles') {
         init_profile_notes();
