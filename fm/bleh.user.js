@@ -16622,9 +16622,11 @@
                 <div class="sep"></div>
                 <div class="description">${tl(trans.you_can_now_close_this_tab)}</div>
                 <div class="connector-footer">
+                    <div class="btn-fill" />
                     <a class="see-more" href="${root}settings/applications">
                         ${tl(trans.manage_applications)}
                     </a>
+                    <div class="btn-fill" />
                 </div>
             </section>
         `;
