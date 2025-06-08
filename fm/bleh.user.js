@@ -6150,6 +6150,7 @@
                 <div class="sep" />
                 ${setting({ id: "collage_grid_text" })}
                 ${setting({ id: "collage_grid_plays" })}
+                ${setting({ id: "collage_grid_gap" })}
             </div>
         `,
       placement: "bottom",
@@ -6257,6 +6258,10 @@
       let grid = html2.node`
             <ol class="grid-items grid-items--numbered collage-grid" style="--width: ${width_input.value}; --height: ${height_input.value}" data-width=${width_input.value} data-height=${height_input.value} />
         `;
+      if (!settings.collage_grid_gap) {
+        grid.style.setProperty("--item-list-gap", "0px");
+        grid.style.setProperty("--item-med-radius", "0");
+      }
       if (width_input.value >= 8 || height_input.value >= 8) {
         grid.setAttribute("data-scale-down", "2");
       } else if (width_input.value >= 7 || height_input.value >= 7) {
@@ -19683,6 +19688,12 @@
     },
     collage_grid_plays: {
       en: "Show plays on grid items"
+    },
+    collage_grid_gap: {
+      en: "Leave a gap between grid items"
+    },
+    organising_plays: {
+      en: "Organising plays"
     }
   };
   var trans_legacy = {
@@ -23561,6 +23572,10 @@
     collage_grid_plays: {
       default: true,
       title: trans.collage_grid_plays
+    },
+    collage_grid_gap: {
+      default: true,
+      title: trans.collage_grid_gap
     }
   };
 

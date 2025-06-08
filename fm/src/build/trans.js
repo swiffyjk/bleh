@@ -2561,6 +2561,12 @@ export const trans = {
     },
     collage_grid_plays: {
         en: 'Show plays on grid items'
+    },
+    collage_grid_gap: {
+        en: 'Leave a gap between grid items'
+    },
+    organising_plays: {
+        en: 'Organising plays'
     }
 }
 

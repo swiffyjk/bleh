@@ -823,5 +823,9 @@ export let settings_store = {
     collage_grid_plays: {
         default: true,
         title: trans.collage_grid_plays
+    },
+    collage_grid_gap: {
+        default: true,
+        title: trans.collage_grid_gap
     }
 }

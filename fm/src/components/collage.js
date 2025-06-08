@@ -149,6 +149,7 @@ export function collage(default_type = 'albums', default_timeframe = 'date_prese
                 <div class="sep" />
                 ${setting({id: 'collage_grid_text'})}
                 ${setting({id: 'collage_grid_plays'})}
+                ${setting({id: 'collage_grid_gap'})}
             </div>
         `,
         placement: 'bottom',
@@ -280,6 +281,11 @@ export function collage(default_type = 'albums', default_timeframe = 'date_prese
         let grid = html.node`
             <ol class="grid-items grid-items--numbered collage-grid" style="--width: ${width_input.value}; --height: ${height_input.value}" data-width=${width_input.value} data-height=${height_input.value} />
         `;
+
+        if (!settings.collage_grid_gap) {
+            grid.style.setProperty('--item-list-gap', '0px');
+            grid.style.setProperty('--item-med-radius', '0');
+        }
 
         if (width_input.value >= 8 || height_input.value >= 8) {
             grid.setAttribute('data-scale-down', '2');
