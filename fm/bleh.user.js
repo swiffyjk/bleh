@@ -3989,9 +3989,20 @@
     }
     input2.value = value;
     option.setAttribute("data-modified", value != settings_store[id].default);
-    if (id === "profile_shortcut") {
+    if (id == "profile_shortcut") {
       save_profile_shortcut(input2, value, submit, reset_btn, avatar3);
       return;
+    } else if (id == "hu_tao") {
+      if (value == "develop") {
+        dialog_rm2({ id: "hu_tao" });
+        change_settings_page("sku");
+        notify({
+          id: "unlocked",
+          title: tl(trans.development),
+          body: tl(trans.unlocked),
+          type: "success"
+        });
+      }
     }
     save_setting(id, value);
   }
@@ -10318,11 +10329,6 @@
     render(nav, html2`
         <ul class="navlist-items">
             <li class="navlist-item secondary-nav-item">
-                <a class="secondary-nav-item-link bleh--nav" data-bleh-page="home" onclick=${() => change_settings_page("home")}>
-                    ${tl(trans.home)}
-                </a>
-            </li>
-            <li class="navlist-item secondary-nav-item">
                 <a class="secondary-nav-item-link bleh--nav" data-bleh-page="themes" onclick=${() => change_settings_page("themes")}>
                     ${tl(trans.appearance)}
                 </a>
@@ -10363,8 +10369,8 @@
                 </a>
             </li>
             <li class="navlist-item secondary-nav-item">
-                <a class="secondary-nav-item-link bleh--nav" data-bleh-page="sku" onclick=${() => change_settings_page("sku")}>
-                    shhh...
+                <a class="secondary-nav-item-link bleh--nav" data-password=${settings.hu_tao} data-bleh-page="sku" onclick=${() => change_settings_page("sku")}>
+                    ${tl(trans.flags)}
                 </a>
             </li>
         </ul>
@@ -10823,10 +10829,22 @@
         persist: true
       })}>Deliver persistent notification</button>
                 <div class="sep"></div>
-                <h4>Manage flags</h4>
-                <button class="continue" onclick="_change_settings_page('sku')">Open sku page</button>
+                <h4>${tl(trans.development)}</h4>
+                <button class="see-more" onclick=${() => {
+        if (settings.hu_tao == "develop") {
+          change_settings_page("sku");
+        } else {
+          dialog({
+            id: "hu_tao",
+            title: tl(trans.development),
+            body: html2.node`
+                                ${setting({ id: "hu_tao", text: false, focus: true })}
+                            `
+          });
+        }
+      }}>${tl(trans.manage_feature_flags)}</button>
             </div>
-            `);
+        `);
     } else if (page_id == "profiles") {
       register_skip_to([
         {
@@ -11125,13 +11143,14 @@
     } else if (page_id == "sku") {
       register_skip_to([]);
       render(page.structure.main, html2`
-            <div class="bleh--panel shh">
-                <div class="sub-text">${version.build}.${version.sku}</div>
-                ☆⌒(>w<)
-            </div>
             <div class="bleh--panel">
-                <h4>Manage active flags</h4>
-                <div class="alert alert-danger">Be careful! Only manage these if you know what you are doing.</div>
+                <div class="panel-intro">
+                    <div class="sub-text">${version.build}.${version.sku}</div>
+                    <h1>☆⌒(>w<)</h1>
+                </div>
+                <div class="sep" />
+                <h4>${tl(trans.manage_feature_flags)}</h4>
+                <div class="alert alert-danger">${tl(trans.beware_notice)}</div>
                 <div class="feature-flags" id="feature-flags"></div>
             </div>
             `);
@@ -11612,11 +11631,22 @@
         }
       });
     }
-    if (page_id == "home" || page_id == "seasonal")
+    if (page_id == "seasonal")
       seasonal_timer_start();
     else
       seasonal_timer_end();
-    render_setting_page(page_id);
+    try {
+      render_setting_page(page_id);
+    } catch (e) {
+      render(page.structure.main, html2`
+            <div class="bleh--panel">
+                <div class="loading-data-container">
+                    <div class="loading-data-text failed">${tl(trans.value_failed_to_load).replace("{v}", tl(trans.settings))}</div>
+                    <pre class="error-info">${e ? html2.node`<span class="error-type">${e.name}</span>: ${e.message}` : ""}</pre>
+                </div>
+            </div>
+        `);
+    }
     if (page_id == "customise" || page_id == "performance" || page_id == "accessibility" || page_id == "text" || page_id == "seasonal" || page_id == "music" || page_id == "activities") {
       refresh_all();
     } else if (page_id == "profiles") {
@@ -11634,7 +11664,7 @@
         content: trans_legacy.en.settings.music.show_bulk_edit_album.require
       });
     }
-    if ((page_id == "seasonal" || page_id == "home") && settings.seasonal && stored_season.id != "none" && stored_season.start && stored_season.end) {
+    if (page_id == "seasonal" && settings.seasonal && stored_season.id != "none" && stored_season.start && stored_season.end) {
       tippy(document.getElementById("current_season"), {
         content: new Date(stored_season.end.replace("y0", stored_season.year).replace("{offset}", stored_season.offset)).toLocaleString(lang)
       });
@@ -19391,6 +19421,26 @@
       en: "Beware! Only change these settings if you know what you're doing",
       pt: "Cuidado! Apenas mude estas configura\xE7\xF5es se voc\xEA sabe o que voc\xEA est\xE1 fazendo"
     },
+    flags: {
+      // shorthand for below
+      en: "Flags"
+    },
+    manage_feature_flags: {
+      // feature flags control features (like an option)
+      en: "Manage feature flags"
+    },
+    development: {
+      en: "Development"
+    },
+    this_section_requires_password: {
+      en: "This section requires a password to view"
+    },
+    enter_password: {
+      en: "Enter password"
+    },
+    unlocked: {
+      en: "Unlocked"
+    },
     privacy: {
       en: "Privacy",
       de: "Datenschutz",
@@ -23533,6 +23583,12 @@
     collage_grid_gap: {
       default: true,
       title: trans.collage_grid_gap
+    },
+    hu_tao: {
+      default: "",
+      type: "text",
+      max: 40,
+      placeholder: trans.enter_password
     }
   };
 

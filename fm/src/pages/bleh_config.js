@@ -50,11 +50,6 @@ export function bleh_settings() {
     render(nav, html`
         <ul class="navlist-items">
             <li class="navlist-item secondary-nav-item">
-                <a class="secondary-nav-item-link bleh--nav" data-bleh-page="home" onclick=${() => change_settings_page('home')}>
-                    ${tl(trans.home)}
-                </a>
-            </li>
-            <li class="navlist-item secondary-nav-item">
                 <a class="secondary-nav-item-link bleh--nav" data-bleh-page="themes" onclick=${() => change_settings_page('themes')}>
                     ${tl(trans.appearance)}
                 </a>
@@ -95,8 +90,8 @@ export function bleh_settings() {
                 </a>
             </li>
             <li class="navlist-item secondary-nav-item">
-                <a class="secondary-nav-item-link bleh--nav" data-bleh-page="sku" onclick=${() => change_settings_page('sku')}>
-                    shhh...
+                <a class="secondary-nav-item-link bleh--nav" data-password=${settings.hu_tao} data-bleh-page="sku" onclick=${() => change_settings_page('sku')}>
+                    ${tl(trans.flags)}
                 </a>
             </li>
         </ul>
@@ -569,10 +564,22 @@ export function render_setting_page(page_id) {
                 persist: true
                 })}>Deliver persistent notification</button>
                 <div class="sep"></div>
-                <h4>Manage flags</h4>
-                <button class="continue" onclick="_change_settings_page('sku')">Open sku page</button>
+                <h4>${tl(trans.development)}</h4>
+                <button class="see-more" onclick=${() => {
+                    if (settings.hu_tao == 'develop') {
+                        change_settings_page('sku');
+                    } else {
+                        dialog({
+                            id: 'hu_tao',
+                            title: tl(trans.development),
+                            body: html.node`
+                                ${setting({id: 'hu_tao', text: false, focus: true})}
+                            `
+                        });
+                    }
+                }}>${tl(trans.manage_feature_flags)}</button>
             </div>
-            `);
+        `);
     } else if (page_id == 'profiles') {
         register_skip_to([
             {
@@ -880,13 +887,14 @@ export function render_setting_page(page_id) {
         register_skip_to([]);
 
         render(page.structure.main, html`
-            <div class="bleh--panel shh">
-                <div class="sub-text">${version.build}.${version.sku}</div>
-                ☆⌒(>w<)
-            </div>
             <div class="bleh--panel">
-                <h4>Manage active flags</h4>
-                <div class="alert alert-danger">Be careful! Only manage these if you know what you are doing.</div>
+                <div class="panel-intro">
+                    <div class="sub-text">${version.build}.${version.sku}</div>
+                    <h1>☆⌒(>w<)</h1>
+                </div>
+                <div class="sep" />
+                <h4>${tl(trans.manage_feature_flags)}</h4>
+                <div class="alert alert-danger">${tl(trans.beware_notice)}</div>
                 <div class="feature-flags" id="feature-flags"></div>
             </div>
             `);
@@ -1370,7 +1378,7 @@ unsafeWindow._change_settings_page = function(page, setting = null) {
     change_settings_page(page, setting);
 }
 
-function change_settings_page(page_id, setting = null) {
+export function change_settings_page(page_id, setting = null) {
     if (page_id == page.state.settings_page)
         return;
 
@@ -1400,12 +1408,23 @@ function change_settings_page(page_id, setting = null) {
         });
     }
 
-    if (page_id == 'home' || page_id == 'seasonal')
+    if (page_id == 'seasonal')
         seasonal_timer_start();
     else
         seasonal_timer_end();
 
-    render_setting_page(page_id);
+    try {
+        render_setting_page(page_id);
+    } catch(e) {
+        render(page.structure.main, html`
+            <div class="bleh--panel">
+                <div class="loading-data-container">
+                    <div class="loading-data-text failed">${tl(trans.value_failed_to_load).replace('{v}', tl(trans.settings))}</div>
+                    <pre class="error-info">${(e) ? html.node`<span class="error-type">${e.name}</span>: ${e.message}` : ''}</pre>
+                </div>
+            </div>
+        `);
+    }
     
     if (page_id == 'customise' || page_id == 'performance' || page_id == 'accessibility' || page_id == 'text' || page_id == 'seasonal' || page_id == 'music' || page_id == 'activities') {
         refresh_all();
@@ -1427,7 +1446,7 @@ function change_settings_page(page_id, setting = null) {
         });
     }
 
-    if ((page_id == 'seasonal' || page_id == 'home') && settings.seasonal && stored_season.id != 'none' && stored_season.start && stored_season.end) {
+    if ((page_id == 'seasonal') && settings.seasonal && stored_season.id != 'none' && stored_season.start && stored_season.end) {
         tippy(document.getElementById('current_season'), {
             content: new Date(stored_season.end.replace('y0', stored_season.year).replace('{offset}', stored_season.offset)).toLocaleString(lang)
         });

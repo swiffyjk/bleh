@@ -839,5 +839,11 @@ export let settings_store = {
     collage_grid_gap: {
         default: true,
         title: trans.collage_grid_gap
+    },
+    hu_tao: {
+        default: '',
+        type: 'text',
+        max: 40,
+        placeholder: trans.enter_password
     }
 }

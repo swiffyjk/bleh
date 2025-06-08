@@ -13434,10 +13434,6 @@ table.table tr:nth-child(2n) td {
     }
 }
 
-.col-main:has(.api-sessions) h2 + p {
-    display: none;
-}
-
 
 .api-session-app-name {
     font-size: var(--font-size);
@@ -14963,8 +14959,11 @@ h2.playlisting-create-option-title {
         &[data-bleh-page="seasonal"] {
             --mask: var(--icon-16-season);
         }
+        &[data-bleh-page="sku"] {
+            --mask: var(--icon-plaster);
+        }
 
-        li:has(&:is([data-bleh-page="sku"], [data-bleh-page="home"]):not(.secondary-nav-item-link--active)) {
+        &[data-bleh-page="sku"]:not(.secondary-nav-item-link--active, [data-password="develop"]) {
             display: none;
         }
     }
@@ -18521,7 +18520,7 @@ h4 {
     &.lotus-name {
         color: hsl(var(--l3-c));
         position: relative;
-        padding-left: calc(16px + 4px);
+        padding-left: calc(var(--icon-size) + var(--icon-gap));
 
         --left: 0;
         --mask: var(--icon-16-lotus);

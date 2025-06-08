@@ -2340,6 +2340,26 @@ export const trans = {
         en: 'Beware! Only change these settings if you know what you\'re doing',
         pt: 'Cuidado! Apenas mude estas configurações se você sabe o que você está fazendo'
     },
+    flags: {
+        // shorthand for below
+        en: 'Flags'
+    },
+    manage_feature_flags: {
+        // feature flags control features (like an option)
+        en: 'Manage feature flags'
+    },
+    development: {
+        en: 'Development'
+    },
+    this_section_requires_password: {
+        en: 'This section requires a password to view',
+    },
+    enter_password: {
+        en: 'Enter password'
+    },
+    unlocked: {
+        en: 'Unlocked'
+    },
     privacy: {
         en: 'Privacy',
         de: 'Datenschutz',
