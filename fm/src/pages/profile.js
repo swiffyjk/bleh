@@ -4,10 +4,10 @@
 // Licensed under GPLv3
 //
 
-import {load_activities} from "../activity"
+import {render_activity_list} from "../activity"
 import {settings} from "../build/config"
 import {log} from "../build/log"
-import {auth, page, recent_activity_list, root} from "../build/page"
+import {auth, page, root} from "../build/page"
 import {sponsor_list} from "../build/sponsor"
 import {clean_number, sanitise, sanitise_text} from "../build/tools"
 import {lang, tl, trans} from "../build/trans"
@@ -172,117 +172,15 @@ export function bleh_profiles() {
 
 
         if (is_own_profile && settings.activities) {
-            let recent_activity_section = document.createElement('section');
-            recent_activity_section.classList.add('recent-activity-section');
-            recent_activity_section.innerHTML = (`
-                <h2>${tl(trans.activity)}</h2>
-            `);
-
-            load_activities();
-
-            // we want to show in date order from latest to oldest down
-            // but .reverse() is destructive, so we copy first
-            let recent_activity_list_r = recent_activity_list;
-            recent_activity_list_r.reverse();
-
-            recent_activity_list_r.forEach((activity) => {
-                // type: string,
-                // involved: [{name: string, type: user | artist | album | track}, sister?: string],
-                // context: string,
-                // date: string
-
-                let activity_item = document.createElement('a');
-                activity_item.classList.add('activity-item', `activity--${activity.type}`);
-                activity_item.setAttribute('href', activity.context);
-
-                let involved_text = '';
-
-                let tooltip_name;
-                let tooltip_sister;
-
-                activity.involved.forEach((involved) => {
-                    let involved_link;
-
-                    if (involved.type == 'user')
-                        involved_link = `${root}user/${involved.name}`;
-                    else if (involved.type == 'artist')
-                        involved_link = `${root}music/${sanitise(involved.name)}`;
-                    else if (involved.type == 'album')
-                        involved_link = `${root}music/${sanitise(involved.sister)}/${sanitise(involved.name)}`;
-                    else if (involved.type == 'track')
-                        involved_link = `${root}music/${sanitise(involved.sister)}/_/${sanitise(involved.name)}`;
-                    else if (involved.type == 'tag')
-                        involved_link = `${root}tag/${sanitise(involved.name)}`;
-                    else if (involved.type == 'bwaa')
-                        involved_link = `${root}bwaa`;
-                    else if (involved.type == 'bleh')
-                        involved_link = `${root}bleh`;
-
-                    let name = involved.name;
-                    let sister = involved.sister;
-
-                    // tooltip
-                    if (involved.type != 'artist' && involved.type != 'user' && involved.type != 'tag' && involved.type != 'bwaa' && involved.type != 'bleh') {
-                        tooltip_name = name;
-                        tooltip_sister = sister;
-                    }
-
-                    if (involved.type == 'track' && settings.format_guest_features) {
-                        let formatted_title = name_includes(name, sister);
-
-                        let song_title;
-                        let song_tags;
-                        if (formatted_title) {
-                            song_title = formatted_title[0];
-                            song_tags = formatted_title[1];
-                            sister = formatted_title[2];
-                            tooltip_name = song_title;
-                            tooltip_sister = sister;
-                        }
-
-                        // combine
-                        name = html.node`
-                            <div class="title">${sanitise_text(song_title).trim()}</div>
-                            ${song_tags.map((tag) => html.node`
-                                <div class="feat" data-bleh--tag-type="${tag.type}" data-bleh--tag-group="${tag.group}">${tag.text}</div>
-                            `)}
-                        `;
-                    } else if ((involved.type == 'album' || involved.type == 'track') && settings.corrections) {
-                        name = correct_item_by_artist(name, sister);
-                        tooltip_name = name;
-                        sister = correct_artist(sister);
-                        tooltip_sister = sister;
-                    }  else if (involved.type == 'artist' && settings.corrections) {
-                        name = correct_artist(name);
-                        tooltip_name = name;
-                    }
-
-                    if (involved_text != '')
-                        involved_text = html.node`${involved_text}, <a class="involved--${involved.type}" href="${involved_link}">${name}</a>`;
-                    else
-                        involved_text = html.node`${involved_text}<a class="involved--${involved.type}" href="${involved_link}">${name}</a>`;
-                });
-
-                render(activity_item, html`
-                    <div class="type">${tl(trans.activity.listing[activity.type])}<div class="date">${moment(activity.date).fromNow(true)}</div></div>
-                    <div class="name">${involved_text}</div>
-                `);
-
-                recent_activity_section.appendChild(activity_item);
-
-                if (tooltip_name)
-                    tippy(activity_item.querySelector('.name a'), {
-                        content: `${tooltip_sister} - ${tooltip_name}`
-                    });
-            });
-
-            let edit = document.createElement('div');
-            edit.classList.add('more-link');
-
-            edit.innerHTML = (`
-                <a href="${root}bleh?tab=profiles&setting=activities">${tl(trans.activity_settings)}</a>
-            `);
-            recent_activity_section.appendChild(edit);
+            let recent_activity_section = html.node`
+                <section class="recent-activity-section">
+                    <h2>${tl(trans.activity)}</h2>
+                    ${render_activity_list()}
+                    <div class="more-link">
+                        <a href="${root}bleh?tab=profiles&setting=activities">${tl(trans.activity_settings)}</a>
+                    </div>
+                </section>
+            `;
 
             page.structure.side.appendChild(recent_activity_section);
         }
@@ -751,20 +649,17 @@ export function bleh_profiles() {
     if (page.subpage != 'overview') return;
 
     if (sponsor_list && page.name == sponsor_list.special[0]) {
-        let sponsor_cta = document.createElement('div');
-        sponsor_cta.classList.add('cta', 'first', 'sponsor', 'colourful');
-
-        if (auth.sponsor) {
-            sponsor_cta.innerHTML = (`
-                <strong>${tl(trans.you_are_a_sponsor)}</strong>
-                <a class="see-more" onclick="_sponsor_manage()">${tl(trans.manage_sponsor)}</a>
-            `);
-        } else {
-            sponsor_cta.innerHTML = (`
-                <strong>${tl(trans.news_sponsor_cta)}</strong>
-                <a class="see-more" onclick="_sponsor()">${tl(trans.sponsor)}</a>
-            `);
-        }
+        let sponsor_cta = html.node`
+            <div class="cta first sponsor colourful">
+                ${auth.sponsor ? html`
+                    <strong>${tl(trans.you_are_a_sponsor)}</strong>
+                    <a class="see-more" onclick="_sponsor_manage()">${tl(trans.manage_sponsor)}</a>
+                ` : html`
+                    <strong>${tl(trans.news_sponsor_cta)}</strong>
+                    <a class="see-more" onclick="_sponsor()">${tl(trans.sponsor)}</a>
+                `}
+            </div>
+        `;
 
         if (!page.mobile)
             page.structure.side.insertBefore(sponsor_cta, page.structure.side.firstElementChild);

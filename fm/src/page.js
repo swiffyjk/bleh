@@ -26,6 +26,7 @@ import {auto_edit_modal} from "./components/auto_edit";
 import {dialog, load_dialogs} from "./components/dialog";
 import {
     correct_artist,
+    correct_generic_artist,
     correct_generic_combo,
     correct_generic_combo_no_artist,
     correct_item_by_artist,
@@ -281,6 +282,11 @@ function main_flow() {
         correct_generic_combo('similar-albums-item');
         correct_generic_combo('track-similar-tracks-item');
         correct_generic_combo('similar-items-sidebar-item');
+
+        if (page.type == 'bookmarks' || page.type == 'releases') {
+            correct_generic_artist('music-bookmarks-artists-item');
+            correct_generic_combo('music-bookmarks-albums-item');
+        }
     }
 
     if (page.type == 'overview' && page.subpage == 'music') {
@@ -369,6 +375,8 @@ function assign_page_subpage() {
 }
 
 function load_page() {
+    //hideAll({duration: 0});
+
     set_season();
     seasonal_timer_end();
 

@@ -134,32 +134,50 @@ unsafeWindow._open_correction_modal = function() {
 
 
 /**
+ * correct capitalisation of a generic artist name combo
+ * @param {string} parent individual css selector for each item wrapper
+ * @returns if not found
+ */
+export function correct_generic_artist(parent) {
+    let albums = document.body.querySelectorAll(`.${parent}`);
+    if (albums.length == 0) return;
+
+    if (!settings.corrections) return;
+
+    albums.forEach((album) => {
+        if (!album.hasAttribute('data-kate-processed')) {
+            album.setAttribute('data-kate-processed', 'true');
+
+            let artist_name = album.querySelector(`.${parent.replace('-details', '')}-name a`);
+            if (!artist_name)  return;
+
+            let corrected_artist_name = correct_artist(artist_name.textContent);
+
+            artist_name.textContent = corrected_artist_name;
+        }
+    });
+}
+/**
  * correct capitalisation of a generic album/track name & artist combo
  * @param {string} parent individual css selector for each item wrapper
  * @returns if not found
  */
 export function correct_generic_combo(parent) {
     let albums = document.body.querySelectorAll(`.${parent}`);
+    if (albums.length == 0) return;
 
-    if (albums == undefined)
-        return;
-
-    if (!settings.corrections)
-        return;
+    if (!settings.corrections) return;
 
     albums.forEach((album) => {
         if (!album.hasAttribute('data-kate-processed')) {
             album.setAttribute('data-kate-processed','true');
 
             let album_name = album.querySelector(`.${parent.replace('-details','')}-name a`);
-
-            if (album_name == null)
-                return;
+            if (!album_name) return;
 
             let artist_name = album.querySelector(`.${parent.replace('-details','')}-artist a`);
 
-            if (artist_name == undefined)
-                return;
+            if (!artist_name) return;
 
             let corrected_album_name = correct_item_by_artist(album_name.textContent, artist_name.textContent);
             let corrected_artist_name = correct_artist(artist_name.textContent);
@@ -176,18 +194,16 @@ export function correct_generic_combo(parent) {
  */
 export function correct_generic_combo_no_artist(parent) {
     let albums = document.body.querySelectorAll(`.${parent}`);
+    if (albums.length == 0) return;
 
-    if (albums == null)
-        return;
+    if (!settings.corrections) return;
 
     albums.forEach((album) => {
         if (!album.hasAttribute('data-kate-processed')) {
             album.setAttribute('data-kate-processed','true');
 
             let album_name = album.querySelector(`.${parent.replace('-details','')}-name a`);
-
-            if (album_name == null)
-                return;
+            if (!album_name) return;
 
             let artist_name = return_artist_from_generic(album_name.getAttribute('href'));
 

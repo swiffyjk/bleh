@@ -3584,6 +3584,12 @@ button.navlist-more {
 .secondary-nav-item--releases a {
     --mask: var(--icon-16-compass);
 }
+.secondary-nav-item--out-now a {
+    --mask: var(--icon-16-compass);
+}
+.secondary-nav-item--coming-soon a {
+    --mask: var(--icon-16-calendar);
+}
 .secondary-nav-item--bookmarks a {
     --mask: var(--icon-16-bookmark);
 }
@@ -14214,7 +14220,8 @@ hr {
     [data-page-subpage="auth"],
     [data-page-type="bleh_setup"],
     .has-error,
-    [data-page-subpage="applications_overview"]
+    [data-page-subpage="applications_overview"],
+    [data-page-type="releases"]
     ),
 .namespace--music_bookmarks_overview {
     .col-main {
@@ -17312,8 +17319,17 @@ button.bleh--gallery-bookmark-image-btn {
     align-items: end;
     inset: 0;
     pointer-events: none;
-    padding: calc(52px + var(--card-gap)) var(--card-gap);
+    padding: calc(var(--auth-space, 0px) + 52px + var(--card-gap)) var(--card-gap);
     z-index: 99999999999;
+
+    transition-property: padding;
+    transition-duration: 0.25s;
+    transition-timing-function: var(--trans-function);
+
+    &[data-auth-open="true"] {
+        --auth-space: 244px;
+        transition-duration: 0s;
+    }
 
     .bleh-notification {
         animation: notif var(--trans) var(--trans-function);
@@ -22414,6 +22430,14 @@ h4 {
             & + .artist-top-albums-item-aux-text {
                 margin-top: unset;
             }
+
+            &:before {
+                display: none;
+            }
+        }
+
+        .resource-list--release-list-item-context {
+            margin-top: 8px !important;
         }
 
         .music-bookmarks-albums-item-artist,
@@ -23823,6 +23847,21 @@ h4 {
 .value-panel {
     .glacier-library-metadata + h2 {
         margin-top: var(--card-gap) !important;
+    }
+}
+
+
+.subheader-controls {
+    h2 {
+        margin-bottom: unset !important;
+    }
+
+    & + .resource-list--release-list {
+        margin-top: var(--card-gap);
+    }
+
+    #releases-page {
+        left: 0 !important;
     }
 }
 }

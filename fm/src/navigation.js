@@ -205,6 +205,7 @@ export function append_nav() {
             trigger: 'click',
 
             onShow(instance) {
+                page.structure.notifications.setAttribute('data-auth-open', 'true');
                 badges = load_badges(auth.name);
 
                 let page_2;
@@ -404,6 +405,10 @@ export function append_nav() {
                         </div>
                     </div>
                 `);
+            },
+
+            onHide(instance) {
+                page.structure.notifications.setAttribute('data-auth-open', 'false');
             }
         });
     } else {

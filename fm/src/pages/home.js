@@ -4,17 +4,15 @@
 // Licensed under GPLv3
 //
 
-import {load_activities} from "../activity"
+import {render_activity_list} from "../activity"
 import {settings} from "../build/config";
 import {log} from "../build/log";
-import {auth, page, recent_activity_list, root} from "../build/page";
+import {auth, page, root} from "../build/page";
 import {tl, trans, trans_legacy} from "../build/trans";
 import {checkup_page_structure} from "../components/structure";
 import {register_background, update_page} from "../page";
 import {bleh_charts} from "./chart";
 import {bleh_native_settings} from './lastfm_settings';
-import {sanitise} from "../build/tools"
-import {correct_artist, correct_item_by_artist, name_includes} from '../components/lotus';
 import {html, render} from "lighterhtml";
 
 export function bleh_home() {
@@ -159,22 +157,25 @@ export function bleh_home() {
 
     if (page.subpage == 'music') {
         // top panel
-        let beret = document.createElement('section');
-        beret.classList.add('beret-music', 'bleh--panel');
-
-        beret.innerHTML = (`
-            <div class="panel-side panel-side-main">
-                <h4>${tl(trans.recent_tracks)}</h4>
-                <div class="recent-listening-container">
-                    <div class="loading-data-container">
-                        <p class="loading-data-text">${tl(trans.finding_your_tracks)}</p>
+        let beret = html.node`
+            <section class="beret-music bleh--panel">
+                <div class="panel-side panel-side-main">
+                    <h4>${tl(trans.recent_tracks)}</h4>
+                    <div class="recent-listening-container">
+                        <div class="loading-data-container">
+                            <p class="loading-data-text">${tl(trans.finding_your_tracks)}</p>
+                        </div>
                     </div>
                 </div>
-            </div>
-            <div class="panel-side panel-side-alt">
-                <h4>${tl(trans.activity)}</h4>
-            </div>
-        `);
+                <div class="panel-side panel-side-alt">
+                    <h4>${tl(trans.activity)}</h4>
+                    ${render_activity_list()}
+                    <div class="more-link">
+                        <a href="${root}bleh?tab=profiles&setting=activities">${tl(trans.activity_settings)}</a>
+                    </div>
+                </div>
+            </section>
+        `;
 
         let track_list = beret.querySelector('.recent-listening-container');
 
@@ -194,106 +195,6 @@ export function bleh_home() {
                 track_list.outerHTML = tracklist_panel.outerHTML;
         });
 
-        let activity_list = beret.querySelector('.panel-side-alt');
-
-        load_activities();
-
-        // we want to show in date order from latest to oldest down
-        // but .reverse() is destructive, so we copy first
-        let recent_activity_list_r = recent_activity_list;
-        recent_activity_list_r.reverse();
-
-        recent_activity_list_r.forEach((activity) => {
-            // type: string,
-            // involved: [{name: string, type: user | artist | album | track}, sister?: string],
-            // context: string,
-            // date: string
-
-            let activity_item = document.createElement('a');
-            activity_item.classList.add('activity-item', `activity--${activity.type}`);
-            activity_item.setAttribute('href', activity.context);
-
-            let involved_text = '';
-
-            let tooltip_name;
-            let tooltip_sister;
-
-            activity.involved.forEach((involved) => {
-                let involved_link;
-
-                if (involved.type == 'user')
-                    involved_link = `${root}user/${involved.name}`;
-                else if (involved.type == 'artist')
-                    involved_link = `${root}music/${sanitise(involved.name)}`;
-                else if (involved.type == 'album')
-                    involved_link = `${root}music/${sanitise(involved.sister)}/${sanitise(involved.name)}`;
-                else if (involved.type == 'track')
-                    involved_link = `${root}music/${sanitise(involved.sister)}/_/${sanitise(involved.name)}`;
-                else if (involved.type == 'tag')
-                    involved_link = `${root}tag/${sanitise(involved.name)}`;
-                else if (involved.type == 'bwaa')
-                    involved_link = `${root}bwaa`;
-                else if (involved.type == 'bleh')
-                    involved_link = `${root}bleh`;
-
-                let name = involved.name;
-                let sister = involved.sister;
-
-                // tooltip
-                if (involved.type != 'artist' && involved.type != 'user' && involved.type != 'tag' && involved.type != 'bwaa' && involved.type != 'bleh') {
-                    tooltip_name = name;
-                    tooltip_sister = sister;
-                }
-
-                if (involved.type == 'track' && settings.format_guest_features) {
-                    let formatted_title = name_includes(name, sister);
-
-                    let song_title;
-                    let song_tags;
-                    if (formatted_title) {
-                        song_title = formatted_title[0];
-                        song_tags = formatted_title[1];
-                        sister = formatted_title[2];
-                        tooltip_name = song_title;
-                        tooltip_sister = sister;
-                    }
-
-                    // combine
-                    name = html.node`
-                        <div class="title">${song_title.trim()}</div>
-                        ${song_tags.map((tag) => html.node`
-                            <div class="feat" data-bleh--tag-type="${tag.type}" data-bleh--tag-group="${tag.group}">${tag.text}</div>
-                        `)}
-                    `;
-                } else if ((involved.type == 'album' || involved.type == 'track') && settings.corrections) {
-                    name = correct_item_by_artist(name, sister);
-                    tooltip_name = name;
-                    sister = correct_artist(sister);
-                    tooltip_sister = sister;
-                }  else if (involved.type == 'artist' && settings.corrections) {
-                    name = correct_artist(name);
-                    tooltip_name = name;
-                }
-
-                if (involved_text != '')
-                    involved_text = html.node`${involved_text}, <a class="involved--${involved.type}" href="${involved_link}">${name}</a>`;
-                else
-                    involved_text = html.node`${involved_text}<a class="involved--${involved.type}" href="${involved_link}">${name}</a>`;
-            });
-
-            render(activity_item, html`
-                <div class="type">${tl(trans.activity.listing[activity.type])}<div class="date">${moment(activity.date).fromNow(true)}</div></div>
-                <div class="name">${involved_text}</div>
-            `);
-
-            activity_list.appendChild(activity_item);
-
-            if (tooltip_name)
-                tippy(activity_item.querySelector('.title a'), {
-                    content: `${tooltip_sister} - ${tooltip_name}`
-                });
-        });
-
         page.structure.main.appendChild(beret);
 
 
@@ -301,6 +202,17 @@ export function bleh_home() {
         music_sections.forEach((music_section) => {
             page.structure.main.appendChild(music_section);
         });
+    } else if (page.type == 'releases') {
+        let content = page.structure.main.querySelectorAll(':scope > *');
+        let panel = html.node`
+            <section class="releases-panel" />
+        `;
+
+        content.forEach((element) => {
+            panel.appendChild(element);
+        });
+
+        render(page.structure.main, panel);
     }
 }
 
