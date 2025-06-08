@@ -3729,10 +3729,10 @@
       if (type === "toggle") {
         let toggle;
         return html2.node`
-                <div class="setting" data-type="toggle" onclick=${() => update_toggle(id, toggle)}>
+                <div class="setting v2" data-type="toggle" onclick=${() => update_toggle(id, toggle)}>
                     ${text2 ? html2.node`
                     <div class="heading">
-                        <h5>${title} <span class="new-badge">v2</span></h5>
+                        <h5>${title}</h5>
                         ${body ? html2.node`<p>${body}</p>` : ""}
                     </div>
                     ` : ""}
@@ -3771,11 +3771,11 @@
         let marker;
         let working_max = settings_store[id].max - settings_store[id].min;
         return html2.node`
-                <div class="setting" data-type="range" ref=${(el) => option = el} data-modified=${value != settings_store[id].default}>
+                <div class="setting v2" data-type="range" ref=${(el) => option = el} data-modified=${value != settings_store[id].default}>
                     <button class="btn reset" onclick=${() => reset_range(id, option, track, input2, marker)}>${tl(trans.reset)}</button>
                     ${text2 ? html2.node`
                     <div class="heading">
-                        <h5>${title} <span class="new-badge">v2</span></h5>
+                        <h5>${title}</h5>
                         ${body ? html2.node`<p>${body}</p>` : ""}
                     </div>
                     ` : ""}
@@ -3818,11 +3818,11 @@
         let input_container;
         let error_tooltip;
         let container = html2.node`
-                <div class="setting" data-type="text" ref=${(el) => option = el} data-modified=${value != settings_store[id].default}>
+                <div class="setting v2" data-type="text" ref=${(el) => option = el} data-modified=${value != settings_store[id].default}>
                     <button class="btn reset" ref=${(el) => reset_btn = el} onclick=${() => reset_text(id, input2, submit, option, reset_btn, avatar3)}>${tl(trans.reset)}</button>
                     ${text2 ? html2.node`
                     <div class="heading">
-                        <h5>${title} <span class="new-badge">v2</span></h5>
+                        <h5>${title}</h5>
                         ${body ? html2.node`<p>${body}</p>` : ""}
                     </div>
                     ` : ""}
