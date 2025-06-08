@@ -166,6 +166,19 @@ export const trans = {
                 de: 'Exklusiv',
                 pt: 'Reservado'
             }
+        },
+        requires_higher_bleh_version: {
+            reason: {
+                en: 'Requires higher bleh version'
+            }
+        },
+        plaster: {
+            name: {
+                en: 'band-aid'
+            },
+            reason: {
+                en: 'the sillyness caught up to me'
+            }
         }
     },
     home: {
@@ -218,6 +231,9 @@ export const trans = {
         en: 'Refresh tracks',
         de: 'Titel aktualisieren',
         pt: 'Atualizar faixas'
+    },
+    unavailable: {
+        en: 'Unavailable'
     },
     set_obsession: {
         en: 'Obsess',

@@ -1776,7 +1776,15 @@
 
   // src/build/sponsor.js
   var cute = ["katesia", "stellasaur", "kateshapedbox"];
-  var sponsor_list = {};
+  var sponsor_list = {
+    latest: "",
+    sponsors: [],
+    sponsors_one_time: [],
+    sponsor_count_remove: 0,
+    sponsor_account: "",
+    sponsor_link: "",
+    badges: {}
+  };
 
   // src/components/badge.js
   function load_badges(user, solo = false) {
@@ -1796,8 +1804,16 @@
         badges = sponsor_list.badges[user];
     }
     badges.forEach((badge) => {
-      if (!badge.name)
-        badge.name = tl(trans.badges[badge.type].name);
+      if (!badge.name) {
+        if (trans.badges[badge.type]) {
+          badge.name = tl(trans.badges[badge.type].name);
+        } else {
+          badge.name = tl(trans.unavailable);
+          badge.reason = "requires_higher_bleh_version";
+        }
+      }
+      if (trans.badges[badge.type] && trans.badges[badge.type].reason)
+        badge.reason = tl(trans.badges[badge.type].reason);
       if (badge.reason)
         return;
       if (badge.type == "sponsor" || badge.type == "contributor" || badge.type == "translation")
@@ -6405,19 +6421,21 @@
     xhr.open("GET", url, true);
     xhr.onload = function() {
       log(`list responded with ${xhr.status}`, "sponsor");
+      let api_expire = /* @__PURE__ */ new Date();
       if (xhr.status != 200) {
         log("request has been cancelled, will request again in 1h", "sponsor");
         api_expire.setHours(api_expire.getHours() + 1);
       }
-      let api_expire = /* @__PURE__ */ new Date();
       if (xhr.status == 200) {
-        for (var member in sponsor_list) delete sponsor_list[member];
-        Object.assign(sponsor_list, JSON.parse(this.response));
-        if (sponsor_list)
-          auth.sponsor = sponsor_list.sponsors.includes(auth.name);
-        if (notify2)
-          deliver_notif(trans_legacy.en.settings.home.sponsor.download, false, true, "sponsor");
-        localStorage.setItem("kat_sponsors", this.response);
+        if (sponsor_list && parseFloat(JSON.parse(this.response).latest) > parseFloat(sponsor_list.latest)) {
+          for (const member in sponsor_list) delete sponsor_list[member];
+          Object.assign(sponsor_list, JSON.parse(this.response));
+          if (sponsor_list)
+            auth.sponsor = sponsor_list.sponsors.includes(auth.name);
+          if (notify2)
+            deliver_notif(trans_legacy.en.settings.home.sponsor.download, false, true, "sponsor");
+          localStorage.setItem("kat_sponsors", this.response);
+        }
         api_expire.setHours(api_expire.getHours() + 4);
         log(`list cached until ${api_expire}`, "sponsor");
       }
@@ -8724,7 +8742,7 @@
             placement: "bottom",
             content: html2.node`
                         <div class="badge-name">${this_badge.name}</div>
-                        <div class="badge-reason">${tl(trans.badges[this_badge.reason].reason)}</div>
+                        <div class="badge-reason">${this_badge.reason}</div>
                     `
           });
         }
@@ -13785,7 +13803,7 @@
               placement: "bottom",
               content: html2.node`
                                                     <div class="badge-name">${badge.name}</div>
-                                                    <div class="badge-reason">${tl(trans.badges[badge.reason].reason)}</div>
+                                                    <div class="badge-reason">${badge.reason}</div>
                                                 `
             });
             return el;
@@ -17272,6 +17290,19 @@
           de: "Exklusiv",
           pt: "Reservado"
         }
+      },
+      requires_higher_bleh_version: {
+        reason: {
+          en: "Requires higher bleh version"
+        }
+      },
+      plaster: {
+        name: {
+          en: "band-aid"
+        },
+        reason: {
+          en: "the sillyness caught up to me"
+        }
       }
     },
     home: {
@@ -17324,6 +17355,9 @@
       en: "Refresh tracks",
       de: "Titel aktualisieren",
       pt: "Atualizar faixas"
+    },
+    unavailable: {
+      en: "Unavailable"
     },
     set_obsession: {
       en: "Obsess",
