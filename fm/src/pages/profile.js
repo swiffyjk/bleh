@@ -1099,7 +1099,8 @@ function refresh_tracks(button) {
 
         if (!tracklist_panel) {
             notify({
-                title: 'Recent tracks failed to load',
+                title: tl(trans.recent_tracks),
+                body: tl(trans.value_failed_to_load).replace('{v}', tl(trans.library)),
                 icon: 'icon-16-refresh',
                 type: 'error'
             });
@@ -1107,7 +1108,8 @@ function refresh_tracks(button) {
         }
 
         notify({
-            title: 'Recent tracks refreshed',
+            title: tl(trans.recent_tracks),
+            body: tl(trans.refreshed),
             icon: 'icon-16-refresh'
         });
         panel.classList.add('has-refreshed');

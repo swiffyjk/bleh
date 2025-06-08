@@ -211,6 +211,9 @@ export const trans = {
         de: 'Aktualisieren',
         pt: 'Atualizar'
     },
+    refreshed: {
+        en: 'Refreshed'
+    },
     refresh_tracks: {
         en: 'Refresh tracks',
         de: 'Titel aktualisieren',

@@ -8994,14 +8994,16 @@
       button.removeAttribute("disabled");
       if (!tracklist_panel) {
         notify({
-          title: "Recent tracks failed to load",
+          title: tl(trans.recent_tracks),
+          body: tl(trans.value_failed_to_load).replace("{v}", tl(trans.library)),
           icon: "icon-16-refresh",
           type: "error"
         });
         return;
       }
       notify({
-        title: "Recent tracks refreshed",
+        title: tl(trans.recent_tracks),
+        body: tl(trans.refreshed),
         icon: "icon-16-refresh"
       });
       panel.classList.add("has-refreshed");
@@ -17314,6 +17316,9 @@
       en: "Refresh",
       de: "Aktualisieren",
       pt: "Atualizar"
+    },
+    refreshed: {
+      en: "Refreshed"
     },
     refresh_tracks: {
       en: "Refresh tracks",
