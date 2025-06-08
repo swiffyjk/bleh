@@ -3891,26 +3891,26 @@ button.navlist-more {
     color: hsl(var(--l3-c)) !important;
     --mask-colour: currentColor !important;
 }
-.label.user-status-subscriber {
+.user-status-subscriber {
     --mask: var(--icon-pro);
     --hue-over: var(--hue-pro);
     --sat-over: 1;
     --lit-over: 1;
     order: 10;
 }
-.label.user-status-staff {
+.user-status-staff {
     --mask: var(--icon-staff);
     --hue-over: 360;
     --sat-over: 1.325;
     --lit-over: 0.825;
 }
-.label.user-status-mod {
+.user-status-mod {
     --mask: var(--icon-mod);
     --hue-over: 10;
     --sat-over: 1;
     --lit-over: 1;
 }
-.label.user-status-alum {
+.user-status-alum {
     --mask: var(--icon-alum);
     --hue-over: 20;
     --sat-over: 1;
@@ -9228,6 +9228,7 @@ very, very, very dated - who looks up a song on ebay? */
     font-size: var(--font-size);
     line-height: var(--line-height);
     font-weight: var(--font-weight-medium);
+    text-transform: unset !important;
 }
 .content-form .form-horizontal .control-label,
 .modal-body .content-form .form-horizontal .control-label
@@ -9476,7 +9477,7 @@ input:is([name^="track_name"], [name^="artist_name"], [name^="album_name"], [nam
         }
     }
 }
-.date-range-picker-content,
+.date-range-picker-content, .date-picker-content,
 .dropdown-menu-clickable, .auth-dropdown-menu, .navlist-hidden-list, .modal-body, .library-search-results, .events-filter-location-dropdown {
     margin: unset !important;
     background: hsl(var(--b6), 95%) !important;
@@ -12728,7 +12729,7 @@ table.table tr:nth-child(2n) td {
     color: hsl(var(--c2));
     box-shadow: var(--card-shadow) !important;
 
-    &:has(.subscription-button-row) {
+    &:has(> .subscription-button-row) {
         --hue-over: var(--hue-pro);
         --sat-over: 1;
         --lit-over: 1;
@@ -13159,7 +13160,8 @@ table.table tr:nth-child(2n) td {
                 border-radius: var(--avatar-radius);
                 box-shadow: var(--interact-shadow);
                 aspect-ratio: 1 / 1;
-                z-index: -1;
+                z-index: 0;
+                --mask-size: var(--cover-size-100);
 
                 .avatar-status-dot {
                     width: 24px;
@@ -17694,7 +17696,7 @@ button.bleh--gallery-bookmark-image-btn {
     }
 
     &:not(.blend) {
-        :is(.btn, a, button):not(.not-a-view-button, .toggle, .reset, .select-button, .btn-primary) {
+        :is(.btn, a, button):not(.not-a-view-button, .toggle, .reset, .select-button, .btn-primary, [type]) {
             --bg: var(--cards-overlay-image-subtlest, none), hsl(var(--h3));
             --bg-hov: var(--cards-overlay-image-subtlest, none), hsla(var(--h3), 80%);
             --bg-atv: var(--cards-overlay-image-subtlest, none), hsla(var(--h3), 60%);
