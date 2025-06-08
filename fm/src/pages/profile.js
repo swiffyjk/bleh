@@ -5,7 +5,6 @@
 //
 
 import {load_activities} from "../activity"
-import {patch_avatar} from "../avatar"
 import {settings} from "../build/config"
 import {log} from "../build/log"
 import {auth, page, recent_activity_list, root} from "../build/page"
@@ -1051,26 +1050,6 @@ function patch_profile_following() {
     page.structure.main.insertBefore(view_buttons, page.structure.main.firstElementChild);
 
     refresh_all();
-
-
-    // users
-    let users = page.structure.main.querySelectorAll('.user-list-item');
-    users.forEach((user) => {
-        let avatar = user.querySelector('.user-list-avatar');
-        let name = user.querySelector('.user-list-link').textContent;
-
-        let badge = patch_avatar(avatar, name, 'follow');
-
-        if (badge.type) {
-            user.querySelector('.user-list-link').classList.add('colourful', `user-status--bleh-${badge.type}`, `user-status--bleh-user-${name}`);
-            user.classList.add('colourful', `user-status--bleh-${badge.type}`, `user-status--bleh-user-${name}`);
-        }
-
-        let artists = user.querySelectorAll('.user-list-shared-artists a');
-        artists.forEach((artist) => {
-            artist.textContent = correct_artist(artist.textContent);
-        });
-    });
 }
 
 

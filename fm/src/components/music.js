@@ -1139,7 +1139,12 @@ export function bleh_top_listeners() {
             </div>
         `);
 
-        patch_avatar(new_listener.querySelector('.user-list-avatar'), name, 'listener');
+        let badge = patch_avatar(new_listener.querySelector('.user-list-avatar'), name, 'listener');
+
+        if (badge.type) {
+            new_listener.querySelector('.user-list-link').classList.add(`user-status--bleh-${badge.type}`, `user-status--bleh-user-${name}`);
+            new_listener.classList.add('colourful', `user-status--bleh-${badge.type}`, `user-status--bleh-user-${name}`);
+        }
 
         if (track_wrap) {
             let track_link = new_listener.querySelector('.user-list-about-me a');

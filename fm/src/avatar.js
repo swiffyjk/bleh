@@ -14,11 +14,11 @@ import {dialog} from "./components/dialog";
 
 export function patch_avatar(avatar, name, type = '', parent=null, side='right') {
     if (avatar.hasAttribute('data-bleh-avatar'))
-        return;
+        return {};
     avatar.setAttribute('data-bleh-avatar', 'true');
 
     let avatar_img = avatar.querySelector('img');
-    if (!avatar_img) return;
+    if (!avatar_img) return {};
 
     // last.fm bug: it uses 64s instead of avatar70s for
     // event attendees - this causes it to center in the middle of the image
@@ -115,16 +115,19 @@ export function patch_avatar(avatar, name, type = '', parent=null, side='right')
                 avatar.classList.add('avatar-can-hoverbox');
             else
                 parent.classList.add('parent-can-hoverbox');
+
+            let type = pre_existing_badge.classList[1].replace('avatar-status-dot--', 'user-status-');
+
             tippy((parent) ? parent : avatar, {
                 theme: 'user',
-                content: (html.node`
+                content: html.node`
                     <div class="image-info">
                         <div class="inner-image">
-                            ${html.node([avatar_img.outerHTML])}
+                            ${avatar_img}
                         </div>
                         <div class="info">
                             <h5 class="title">${name}</h5>
-                            <p class="badge ${pre_existing_badge.classList[1]}">${avatar.getAttribute('title')}</p>
+                            <p class="badge ${type}">${tl(trans.badges[type].name)}</p>
                         </div>
                         <a href="${root}user/${name}" class="link-over"></a>
                     </div>
@@ -132,7 +135,7 @@ export function patch_avatar(avatar, name, type = '', parent=null, side='right')
                         <a class="btn view-item user-button view-library-btn" href="${root}user/${name}/library">${tl(trans.library)}</a>
                         <a class="btn view-item user-button leave-shout-btn" href="${root}user/${name}/shoutbox">${tl(trans.shouts)}</a>
                     </div>
-                `),
+                `,
                 placement: side,
                 interactive: true,
                 delay: [200, 0]

@@ -3072,10 +3072,10 @@
   // src/avatar.js
   function patch_avatar(avatar3, name, type = "", parent = null, side = "right") {
     if (avatar3.hasAttribute("data-bleh-avatar"))
-      return;
+      return {};
     avatar3.setAttribute("data-bleh-avatar", "true");
     let avatar_img = avatar3.querySelector("img");
-    if (!avatar_img) return;
+    if (!avatar_img) return {};
     avatar_img.setAttribute("src", avatar_img.getAttribute("src").replace("/64s/", "/avatar70s/"));
     let badges = load_badges(name, true);
     if (badges) {
@@ -3156,16 +3156,17 @@
           avatar3.classList.add("avatar-can-hoverbox");
         else
           parent.classList.add("parent-can-hoverbox");
+        let type2 = pre_existing_badge.classList[1].replace("avatar-status-dot--", "user-status-");
         tippy(parent ? parent : avatar3, {
           theme: "user",
           content: html2.node`
                     <div class="image-info">
                         <div class="inner-image">
-                            ${html2.node([avatar_img.outerHTML])}
+                            ${avatar_img}
                         </div>
                         <div class="info">
                             <h5 class="title">${name}</h5>
-                            <p class="badge ${pre_existing_badge.classList[1]}">${avatar3.getAttribute("title")}</p>
+                            <p class="badge ${type2}">${tl(trans.badges[type2].name)}</p>
                         </div>
                         <a href="${root}user/${name}" class="link-over"></a>
                     </div>
@@ -5026,7 +5027,11 @@
                 ` : ""}
             </div>
         `;
-      patch_avatar(new_listener.querySelector(".user-list-avatar"), name, "listener");
+      let badge = patch_avatar(new_listener.querySelector(".user-list-avatar"), name, "listener");
+      if (badge.type) {
+        new_listener.querySelector(".user-list-link").classList.add(`user-status--bleh-${badge.type}`, `user-status--bleh-user-${name}`);
+        new_listener.classList.add("colourful", `user-status--bleh-${badge.type}`, `user-status--bleh-user-${name}`);
+      }
       if (track_wrap) {
         let track_link = new_listener.querySelector(".user-list-about-me a");
         let artist = return_artist_from_track(track_link.getAttribute("href"), false);
@@ -8952,20 +8957,6 @@
     `;
     page.structure.main.insertBefore(view_buttons, page.structure.main.firstElementChild);
     refresh_all();
-    let users = page.structure.main.querySelectorAll(".user-list-item");
-    users.forEach((user) => {
-      let avatar3 = user.querySelector(".user-list-avatar");
-      let name = user.querySelector(".user-list-link").textContent;
-      let badge = patch_avatar(avatar3, name, "follow");
-      if (badge.type) {
-        user.querySelector(".user-list-link").classList.add("colourful", `user-status--bleh-${badge.type}`, `user-status--bleh-user-${name}`);
-        user.classList.add("colourful", `user-status--bleh-${badge.type}`, `user-status--bleh-user-${name}`);
-      }
-      let artists = user.querySelectorAll(".user-list-shared-artists a");
-      artists.forEach((artist) => {
-        artist.textContent = correct_artist(artist.textContent);
-      });
-    });
   }
   unsafeWindow._refresh_tracks = function(button) {
     refresh_tracks(button);
@@ -16550,12 +16541,26 @@
 
   // src/pages/users.js
   function bleh_users() {
-    let users = page.structure.main.querySelectorAll(".user-list-about-me");
+    let users = page.structure.main.querySelectorAll(".user-list-item");
     users.forEach((user) => {
-      render(user, markdown(user.textContent, {
-        allow_headers: true,
-        line_breaks: false
-      }));
+      let avatar3 = user.querySelector(".user-list-avatar");
+      let name = user.querySelector(".user-list-link").textContent;
+      let badge = patch_avatar(avatar3, name, "follow");
+      if (badge.type) {
+        user.querySelector(".user-list-link").classList.add(`user-status--bleh-${badge.type}`, `user-status--bleh-user-${name}`);
+        user.classList.add("colourful", `user-status--bleh-${badge.type}`, `user-status--bleh-user-${name}`);
+      }
+      let artists = user.querySelectorAll(".user-list-shared-artists a");
+      artists.forEach((artist) => {
+        artist.textContent = correct_artist(artist.textContent);
+      });
+      let md = user.querySelector(".user-list-about-me");
+      if (md) {
+        render(md, markdown(md.textContent, {
+          allow_headers: true,
+          line_breaks: false
+        }));
+      }
     });
   }
 
