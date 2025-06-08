@@ -8307,6 +8307,15 @@ section:has(.dropdown-menu-clickable-button.section-control) {
 }
 
 
+[data-type="profile"] {
+    --mask: var(--icon-16-user);
+}
+[data-type="library"] {
+    --mask: var(--icon-16-library);
+}
+[data-type="shouts"] {
+    --mask: var(--icon-16-shoutbox);
+}
 [data-type="back"] {
     --mask: var(--icon-16-arrow-left);
 }

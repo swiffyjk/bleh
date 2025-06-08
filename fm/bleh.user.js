@@ -3078,6 +3078,37 @@
     if (!avatar_img) return {};
     avatar_img.setAttribute("src", avatar_img.getAttribute("src").replace("/64s/", "/avatar70s/"));
     let badges = load_badges(name, true);
+    let buttons = html2.node`
+        <div class="user-buttons view-buttons">
+            ${() => {
+      let btn = html2.node`
+                    <a class="btn view-item chibi" data-type="profile" href="${root}user/${name}">${tl(trans.profile)}</a>
+                `;
+      tippy(btn, {
+        content: tl(trans.profile)
+      });
+      return btn;
+    }}
+            ${() => {
+      let btn = html2.node`
+                    <a class="btn view-item chibi" data-type="library" href="${root}user/${name}/library">${tl(trans.library)}</a>
+                `;
+      tippy(btn, {
+        content: btn.textContent
+      });
+      return btn;
+    }}
+                    ${() => {
+      let btn = html2.node`
+                    <a class="btn view-item chibi" data-type="shouts" href="${root}user/${name}/shoutbox">${tl(trans.shouts)}</a>
+                `;
+      tippy(btn, {
+        content: btn.textContent
+      });
+      return btn;
+    }}
+        </div>
+    `;
     if (badges) {
       let pre_existing_badge = avatar3.querySelector(".avatar-status-dot");
       if (pre_existing_badge)
@@ -3112,10 +3143,7 @@
                     </div>
                     <a href="${root}user/${name}" class="link-over"></a>
                 </div>
-                <div class="user-buttons view-buttons">
-                    <a class="btn view-item user-button view-library-btn" href="${root}user/${name}/library">${tl(trans.library)}</a>
-                    <a class="btn view-item user-button leave-shout-btn" href="${root}user/${name}/shoutbox">${tl(trans.shouts)}</a>
-                </div>
+                ${buttons}
             `,
         placement: side,
         interactive: true,
@@ -3141,10 +3169,7 @@
                         </div>
                         <a href="${root}user/${name}" class="link-over"></a>
                     </div>
-                    <div class="user-buttons view-buttons">
-                        <a class="btn view-item user-button view-library-btn" href="${root}user/${name}/library">${tl(trans.library)}</a>
-                        <a class="btn view-item user-button leave-shout-btn" href="${root}user/${name}/shoutbox">${tl(trans.shouts)}</a>
-                    </div>
+                    ${buttons}
                 `,
           placement: side,
           interactive: true,
@@ -3162,7 +3187,7 @@
           content: html2.node`
                     <div class="image-info">
                         <div class="inner-image">
-                            ${avatar_img}
+                            ${html2.node([avatar_img.outerHTML])}
                         </div>
                         <div class="info">
                             <h5 class="title">${name}</h5>
@@ -3170,10 +3195,7 @@
                         </div>
                         <a href="${root}user/${name}" class="link-over"></a>
                     </div>
-                    <div class="user-buttons view-buttons">
-                        <a class="btn view-item user-button view-library-btn" href="${root}user/${name}/library">${tl(trans.library)}</a>
-                        <a class="btn view-item user-button leave-shout-btn" href="${root}user/${name}/shoutbox">${tl(trans.shouts)}</a>
-                    </div>
+                    ${buttons}
                 `,
           placement: side,
           interactive: true,

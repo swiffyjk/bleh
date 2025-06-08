@@ -27,6 +27,44 @@ export function patch_avatar(avatar, name, type = '', parent=null, side='right')
 
     let badges = load_badges(name, true);
 
+    let buttons = html.node`
+        <div class="user-buttons view-buttons">
+            ${() => {
+                let btn = html.node`
+                    <a class="btn view-item chibi" data-type="profile" href="${root}user/${name}">${tl(trans.profile)}</a>
+                `;
+                
+                tippy(btn, {
+                    content: tl(trans.profile)
+                });
+                
+                return btn;
+            }}
+            ${() => {
+                let btn = html.node`
+                    <a class="btn view-item chibi" data-type="library" href="${root}user/${name}/library">${tl(trans.library)}</a>
+                `;
+        
+                tippy(btn, {
+                    content: btn.textContent
+                });
+        
+                return btn;
+            }}
+                    ${() => {
+                let btn = html.node`
+                    <a class="btn view-item chibi" data-type="shouts" href="${root}user/${name}/shoutbox">${tl(trans.shouts)}</a>
+                `;
+        
+                tippy(btn, {
+                    content: btn.textContent
+                });
+        
+                return btn;
+            }}
+        </div>
+    `;
+
     if (badges) {
         // remove pre-existing badge
         let pre_existing_badge = avatar.querySelector('.avatar-status-dot');
@@ -69,10 +107,7 @@ export function patch_avatar(avatar, name, type = '', parent=null, side='right')
                     </div>
                     <a href="${root}user/${name}" class="link-over"></a>
                 </div>
-                <div class="user-buttons view-buttons">
-                    <a class="btn view-item user-button view-library-btn" href="${root}user/${name}/library">${tl(trans.library)}</a>
-                    <a class="btn view-item user-button leave-shout-btn" href="${root}user/${name}/shoutbox">${tl(trans.shouts)}</a>
-                </div>
+                ${buttons}
             `),
             placement: side,
             interactive: true,
@@ -89,7 +124,7 @@ export function patch_avatar(avatar, name, type = '', parent=null, side='right')
                 parent.classList.add('parent-can-hoverbox');
             tippy((parent) ? parent : avatar, {
                 theme: 'user',
-                content: (html.node`
+                content: html.node`
                     <div class="image-info">
                         <div class="inner-image">
                             ${html.node([avatar_img.outerHTML])}
@@ -99,11 +134,8 @@ export function patch_avatar(avatar, name, type = '', parent=null, side='right')
                         </div>
                         <a href="${root}user/${name}" class="link-over"></a>
                     </div>
-                    <div class="user-buttons view-buttons">
-                        <a class="btn view-item user-button view-library-btn" href="${root}user/${name}/library">${tl(trans.library)}</a>
-                        <a class="btn view-item user-button leave-shout-btn" href="${root}user/${name}/shoutbox">${tl(trans.shouts)}</a>
-                    </div>
-                `),
+                    ${buttons}
+                `,
                 placement: side,
                 interactive: true,
                 delay: [200, 0]
@@ -123,7 +155,7 @@ export function patch_avatar(avatar, name, type = '', parent=null, side='right')
                 content: html.node`
                     <div class="image-info">
                         <div class="inner-image">
-                            ${avatar_img}
+                            ${html.node([avatar_img.outerHTML])}
                         </div>
                         <div class="info">
                             <h5 class="title">${name}</h5>
@@ -131,10 +163,7 @@ export function patch_avatar(avatar, name, type = '', parent=null, side='right')
                         </div>
                         <a href="${root}user/${name}" class="link-over"></a>
                     </div>
-                    <div class="user-buttons view-buttons">
-                        <a class="btn view-item user-button view-library-btn" href="${root}user/${name}/library">${tl(trans.library)}</a>
-                        <a class="btn view-item user-button leave-shout-btn" href="${root}user/${name}/shoutbox">${tl(trans.shouts)}</a>
-                    </div>
+                    ${buttons}
                 `,
                 placement: side,
                 interactive: true,
