@@ -5,4 +5,12 @@
 //
 
 export let cute = ['katesia', 'stellasaur', 'kateshapedbox'];
-export let sponsor_list = {};
+export let sponsor_list = {
+    latest: "",
+    sponsors: [],
+    sponsors_one_time: [],
+    sponsor_count_remove: 0,
+    sponsor_account: "",
+    sponsor_link: "",
+    badges: {}
+};

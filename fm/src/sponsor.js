@@ -54,26 +54,29 @@ function sponsor_request(notify = false) {
     xhr.onload = function() {
         log(`list responded with ${xhr.status}`, 'sponsor');
 
+        // set expire date
+        let api_expire = new Date();
+
         if (xhr.status != 200) {
             log('request has been cancelled, will request again in 1h', 'sponsor');
             api_expire.setHours(api_expire.getHours() + 1);
         }
 
-        // set expire date
-        let api_expire = new Date();
-
         if (xhr.status == 200) {
-            for (var member in sponsor_list) delete sponsor_list[member];
-            Object.assign(sponsor_list, JSON.parse(this.response));
+            if (sponsor_list && parseFloat(JSON.parse(this.response).latest) > parseFloat(sponsor_list.latest)) {
+                for (const member in sponsor_list) delete sponsor_list[member];
+                Object.assign(sponsor_list, JSON.parse(this.response));
 
-            if (sponsor_list)
-                auth.sponsor = sponsor_list.sponsors.includes(auth.name);
+                if (sponsor_list)
+                    auth.sponsor = sponsor_list.sponsors.includes(auth.name);
 
-            if (notify)
-                deliver_notif(trans_legacy.en.settings.home.sponsor.download, false, true, 'sponsor');
+                if (notify)
+                    deliver_notif(trans_legacy.en.settings.home.sponsor.download, false, true, 'sponsor');
 
-            // save to cache for next page load
-            localStorage.setItem('kat_sponsors', this.response);
+                // save to cache for next page load
+                localStorage.setItem('kat_sponsors', this.response);
+            }
+
             api_expire.setHours(api_expire.getHours() + 4);
             log(`list cached until ${api_expire}`, 'sponsor');
         }
