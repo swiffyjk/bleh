@@ -235,7 +235,7 @@ export function append_nav() {
                                                 placement: 'bottom',
                                                 content: html.node`
                                                     <div class="badge-name">${badge.name}</div>
-                                                    <div class="badge-reason">${tl(trans.badges[badge.reason].reason)}</div>
+                                                    <div class="badge-reason">${badge.reason}</div>
                                                 `
                                             });
                                             

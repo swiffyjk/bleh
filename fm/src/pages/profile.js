@@ -731,7 +731,7 @@ export function bleh_profiles() {
                     placement: 'bottom',
                     content: html.node`
                         <div class="badge-name">${this_badge.name}</div>
-                        <div class="badge-reason">${tl(trans.badges[this_badge.reason].reason)}</div>
+                        <div class="badge-reason">${this_badge.reason}</div>
                     `,
                 });
             }

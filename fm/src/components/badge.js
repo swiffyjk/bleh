@@ -40,6 +40,10 @@ export function load_badges(user, solo = false) {
             }
         }
 
+        // if there's a translation available, use it instead of defaulting
+        if (trans.badges[badge.type] && trans.badges[badge.type].reason)
+            badge.reason = tl(trans.badges[badge.type].reason);
+
         if (badge.reason)
             return;
 
