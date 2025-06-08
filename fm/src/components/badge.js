@@ -31,8 +31,14 @@ export function load_badges(user, solo = false) {
 
     // now we run thru to add missing metadata
     badges.forEach((badge) => {
-        if (!badge.name)
-            badge.name = tl(trans.badges[badge.type].name);
+        if (!badge.name) {
+            if (trans.badges[badge.type]) {
+                badge.name = tl(trans.badges[badge.type].name);
+            } else {
+                badge.name = tl(trans.unavailable);
+                badge.reason = 'requires_higher_bleh_version';
+            }
+        }
 
         if (badge.reason)
             return;
