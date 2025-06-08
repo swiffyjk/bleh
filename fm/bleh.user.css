@@ -6091,7 +6091,8 @@ p + .chartlist {
 }
 
 .shoutbox-sort-toggle {
-    top: 0 !important;
+    position: relative;
+    inset: unset !important;
 }
 
 

@@ -4,7 +4,6 @@
 // Licensed under GPLv3
 //
 
-export let cute = ['katesia', 'stellasaur', 'kateshapedbox'];
 export let sponsor_list = {
     latest: "",
     sponsors: [],
@@ -12,5 +11,6 @@ export let sponsor_list = {
     sponsor_count_remove: 0,
     sponsor_account: "",
     sponsor_link: "",
+    special: [],
     badges: {}
 };

@@ -10,6 +10,7 @@ import {page, root} from "./build/page";
 import {tl, trans, trans_legacy} from "./build/trans";
 import {dialog} from "./components/dialog";
 import {deliver_notif} from "./components/notify";
+import {sponsor_list} from "./build/sponsor.js";
 
 export function news() {
     let changelog = localStorage.getItem('bleh_changelog');
@@ -76,7 +77,7 @@ export function request_changelog(open_after = true) {
 function open_changelog(changelog) {
     let window = dialog({
         id: 'changelog',
-        title: tl(trans.news_from_user).replace('{user}', 'katesia'),
+        title: tl(trans.news_from_user).replace('{user}', (sponsor_list) ? sponsor_list.special[0] : 'katelyn'),
         body: html.node`
             <div class="cta first sponsor colourful margin-bottom">
                 <strong>${tl(trans.news_sponsor_cta)}</strong>

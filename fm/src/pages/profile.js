@@ -8,7 +8,7 @@ import {load_activities} from "../activity"
 import {settings} from "../build/config"
 import {log} from "../build/log"
 import {auth, page, recent_activity_list, root} from "../build/page"
-import {cute, sponsor_list} from "../build/sponsor"
+import {sponsor_list} from "../build/sponsor"
 import {clean_number, sanitise, sanitise_text} from "../build/tools"
 import {lang, tl, trans} from "../build/trans"
 import {prep_chart_colours} from '../chart'
@@ -70,7 +70,7 @@ export function bleh_profiles() {
         }
 
         // me :3
-        if (cute.includes(page.name)) {
+        if (sponsor_list && sponsor_list.special.includes(page.name)) {
             title_wrap.querySelector('.header-title a').classList.add('bleh--name-is-cute');
         }
 
@@ -750,7 +750,7 @@ export function bleh_profiles() {
 
     if (page.subpage != 'overview') return;
 
-    if (page.name == 'katesia') {
+    if (sponsor_list && page.name == sponsor_list.special[0]) {
         let sponsor_cta = document.createElement('div');
         sponsor_cta.classList.add('cta', 'first', 'sponsor', 'colourful');
 
