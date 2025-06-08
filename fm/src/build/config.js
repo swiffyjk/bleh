@@ -656,10 +656,14 @@ export let settings_store = {
         body: trans.underline_links.body
     },
     format_guest_features: {
-        default: true
+        default: true,
+        title: trans.format_guest_features.name,
+        body: trans.format_guest_features.body
     },
     show_guest_features: {
-        default: false
+        default: false,
+        title: trans.show_guest_features.name,
+        body: trans.show_guest_features.body
     },
     stacked_chartlist_info: {
         default: true
