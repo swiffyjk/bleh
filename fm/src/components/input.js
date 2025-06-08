@@ -8,7 +8,8 @@ export function input({
     placeholder,
     min,
     max,
-    maxlength
+    maxlength,
+    warn_if_empty = false
 }) {
     let input_box;
     let error_tooltip;

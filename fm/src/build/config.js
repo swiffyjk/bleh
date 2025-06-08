@@ -622,7 +622,18 @@ export let settings_store = {
         default: true
     },
     dev: {
-        default: false
+        default: false,
+        title: trans.theme_loading.name,
+        body: trans.theme_loading.body
+    },
+    branch: {
+        default: 'uwu',
+        title: trans.branch.name,
+        body: trans.branch.body,
+        type: 'text',
+        max: 20,
+        placeholder: trans.enter_branch_name,
+        warn_if_empty: true
     },
     api_key: {
         default: '',
@@ -747,7 +758,8 @@ export let settings_store = {
         max: 40,
         title: trans.profile_shortcut.name,
         body: trans.profile_shortcut.body,
-        placeholder: trans.enter_username
+        placeholder: trans.enter_username,
+        warn_if_matches_auth: true
     },
     font: {
         css: 'custom_font',

@@ -9160,6 +9160,12 @@ very, very, very dated - who looks up a song on ebay? */
         transition-timing-function: var(--trans-function);
     }
 
+    &.in-settings {
+        &:before {
+            right: calc(32px + var(--button-list-gap));
+        }
+    }
+
     &[data-has-error="true"] {
         --hue-over: var(--hue-neg);
 
@@ -17529,8 +17535,7 @@ button.bleh--gallery-bookmark-image-btn {
         margin-top: 4px;
 
         .new-badge {
-            width: 40px;
-            justify-content: center;
+            width: 30px;
             --hue-over: var(--hue-neg);
             --sat-over: 1;
             --lit-over: 1;

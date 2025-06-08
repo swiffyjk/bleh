@@ -1968,77 +1968,6 @@
       }
     }
   }
-  function dialog_legacy(id, title, inner_content, dismiss = false, classname = "", allow_scroll = false) {
-    log(`created ${id} - '${title}'`, "window", "info", { content: [inner_content], dismiss, classname });
-    let background = document.createElement("div");
-    background.classList.add("popup_background");
-    background.setAttribute("id", `bleh--window-${id}--background`);
-    background.style = "opacity: 0.8; visibility: visible; background-color: rgb(0, 0, 0); position: fixed; inset: 0px;";
-    background.setAttribute("data-kate-processed", "true");
-    let wrapper = document.createElement("div");
-    wrapper.classList.add("popup_wrapper", "popup_wrapper_visible");
-    wrapper.setAttribute("id", `bleh--window-${id}--wrapper`);
-    wrapper.style = "opacity: 1; visibility: visible; position: fixed; overflow: auto; width: 100%; height: 100%; top: 0px; left: 0px; text-align: center;";
-    wrapper.setAttribute("data-kate-processed", "true");
-    let dialog2 = document.createElement("div");
-    dialog2.classList.add("modal-dialog");
-    dialog2.setAttribute("id", `bleh--window-${id}--dialog`);
-    dialog2.style = "opacity: 1; visibility: visible; pointer-events: auto; display: inline-block; outline: none; text-align: left; position: relative; vertical-align: middle;";
-    dialog2.setAttribute("data-kate-processed", "true");
-    if (classname != "")
-      dialog2.classList.add(`modal-dialog--${classname}`);
-    let content = document.createElement("div");
-    content.classList.add("modal-content");
-    content.setAttribute("id", `bleh--window-${id}--content`);
-    content.setAttribute("data-kate-processed", "true");
-    if (dismiss) {
-      background.setAttribute("onclick", `_kill_window('${id}')`);
-      content.insertBefore(html2.node`
-            <div class="modal-actions" id="bleh--window-${id}--actions" data-kate-processed="true">
-                <div class="modal-buttons">
-                    <button class="modal-action-button modal-dismiss" onclick="_kill_window('${id}')">
-                        ${trans_legacy.en.settings.close}
-                    </button>
-                </div>
-            </div>
-        `, content.firstElementChild);
-    }
-    let share2 = document.createElement("div");
-    share2.classList.add("modal-share-content");
-    share2.setAttribute("id", `bleh--window-${id}--share`);
-    share2.setAttribute("data-kate-processed", "true");
-    let body = document.createElement("div");
-    body.classList.add("modal-body");
-    body.setAttribute("id", `bleh--window-${id}--body`);
-    body.setAttribute("data-kate-processed", "true");
-    if (classname != "")
-      body.classList.add(`modal--${classname}`);
-    let header = document.createElement("h2");
-    header.classList.add("modal-title");
-    header.innerHTML = title;
-    header.setAttribute("data-kate-processed", "true");
-    let inner_content_em = document.createElement("div");
-    inner_content_em.classList.add("modal-inner-content");
-    render(inner_content_em, inner_content);
-    inner_content_em.setAttribute("data-kate-processed", "true");
-    if (allow_scroll)
-      inner_content_em.classList.add("allow-scroll");
-    let align = document.createElement("div");
-    align.classList.add("popup_align");
-    align.setAttribute("id", `bleh--window-${id}--align`);
-    align.style = "display: inline-block; vertical-align: middle; height: 100%;";
-    align.setAttribute("data-kate-processed", "true");
-    body.appendChild(header);
-    body.appendChild(inner_content_em);
-    share2.appendChild(body);
-    content.appendChild(share2);
-    dialog2.appendChild(content);
-    wrapper.appendChild(dialog2);
-    wrapper.appendChild(align);
-    document.body.appendChild(background);
-    document.body.appendChild(wrapper);
-    return wrapper;
-  }
   function kill_window(id, replacing = false) {
     try {
       if (replacing) {
@@ -2350,13 +2279,13 @@
         text2 = text2.textContent;
         if (page.subpage == "library_overview") {
           if (index == 1)
-            text2 = trans_legacy.en.glacier.meta.average;
+            text2 = tl(trans.average);
         } else if (page.subpage == "library_artists") {
           text2 = tl(trans.artists);
         } else if (page.subpage == "library_albums") {
-          text2 = trans_legacy.en.glacier.meta.albums;
+          text2 = tl(trans.albums);
         } else if (page.subpage == "library_tracks") {
-          text2 = trans_legacy.en.glacier.meta.tracks;
+          text2 = tl(trans.tracks);
         }
       } else {
         text2 = tl(trans.results_for);
@@ -2402,10 +2331,10 @@
       add_divider = true;
       if (top_wrap.getAttribute("data-current-format") == "grid") {
         format_button.setAttribute("data-glacier-view", "grid");
-        format_button.textContent = trans_legacy.en.glacier.view.grid;
+        format_button.textContent = tl(trans.grid);
       } else {
         format_button.setAttribute("data-glacier-view", "list");
-        format_button.textContent = trans_legacy.en.glacier.view.list;
+        format_button.textContent = tl(trans.list);
       }
       view_buttons.appendChild(format_button);
     }
@@ -2511,10 +2440,10 @@
     format.click();
     if (format.getAttribute("href") && format.getAttribute("href").endsWith("reset")) {
       page.structure.glacier.format.setAttribute("data-glacier-view", "list");
-      page.structure.glacier.format.textContent = trans_legacy.en.glacier.view.list;
+      page.structure.glacier.format.textContent = tl(trans.list);
     } else {
       page.structure.glacier.format.setAttribute("data-glacier-view", "grid");
-      page.structure.glacier.format.textContent = trans_legacy.en.glacier.view.grid;
+      page.structure.glacier.format.textContent = tl(trans.grid);
     }
   };
   function bleh_glacier_date_graph(static_page = false, own_table = null) {
@@ -3878,6 +3807,7 @@
             `;
       } else if (type === "text") {
         let option;
+        let min = settings_store[id].min || 0;
         let max = settings_store[id].max || 0;
         if (max === 0)
           return setting_fail(id, { message: "A text type requires a max defined in the settings store" });
@@ -3885,6 +3815,8 @@
         let avatar3;
         let input2;
         let submit;
+        let input_container;
+        let error_tooltip;
         let container = html2.node`
                 <div class="setting" data-type="text" ref=${(el) => option = el} data-modified=${value != settings_store[id].default}>
                     <button class="btn reset" ref=${(el) => reset_btn = el} onclick=${() => reset_text(id, input2, submit, option, reset_btn, avatar3)}>${tl(trans.reset)}</button>
@@ -3917,14 +3849,14 @@
                         </div>
                     </div>
                     ` : ""}
-                    <div class="input-container content-form">
+                    <div class="input-container content-form in-settings" data-has-error="false" ref=${(el) => input_container = el}>
                         <input type="text" maxlength=${max} value=${value} style="--max: ${max}px" ref=${(el) => input2 = el} placeholder=${tl(settings_store[id].placeholder)} />
                         <button class="btn chibi icon primary submit" ref=${(el) => submit = el} onclick=${() => update_text(id, input2, submit, option, input2.value, reset_btn, avatar3)}>${tl(trans.save)}</button>
                     </div>
                 </div>
             `;
         input2.addEventListener("keydown", (event3) => {
-          if (event3.keyCode === 13) {
+          if (event3.keyCode === 13 && input_container.getAttribute("data-has-error") == "false") {
             event3.preventDefault();
             submit.click();
           }
@@ -3934,6 +3866,30 @@
         });
         if (focus)
           input2.focus();
+        error_tooltip = tippy(input2, {
+          theme: "error",
+          placement: "top",
+          trigger: "manual"
+        });
+        error_tooltip.disable();
+        input2.addEventListener("input", () => {
+          input_container.setAttribute("data-has-error", "false");
+          error_tooltip.disable();
+          submit.disabled = false;
+          if (type == "number") {
+            if (input2.value == "") {
+              error_input(tl(trans.only_numbers_are_allowed), input_container, error_tooltip, submit);
+            } else if (parseInt(input2.value) > max || parseInt(input2.value) < min) {
+              error_input(tl(trans.keep_within_the_range), input_container, error_tooltip, submit);
+            }
+          } else if (type == "text") {
+            if (settings_store[id].warn_if_empty && input2.value == "") {
+              error_input(tl(trans.this_field_is_required), input_container, error_tooltip, submit);
+            } else if (settings_store[id].warn_if_matches_auth && input2.value == auth.name) {
+              error_input(tl(trans.please_dont_clone_yourself), input_container, error_tooltip, submit);
+            }
+          }
+        });
         return container;
       }
     } catch (e) {
@@ -3941,6 +3897,14 @@
       return setting_fail(id, e);
     }
     return setting_fail(id);
+  }
+  function error_input(reason, input2, tooltip, submit) {
+    log(reason, "input", "log");
+    input2.setAttribute("data-has-error", "true");
+    tooltip.setContent(reason);
+    tooltip.enable();
+    tooltip.show();
+    submit.disabled = true;
   }
   function setting_incompatible_block(entries) {
     if (!entries)
@@ -5986,7 +5950,8 @@
     placeholder,
     min,
     max,
-    maxlength
+    maxlength,
+    warn_if_empty = false
   }) {
     let input_box;
     let error_tooltip;
@@ -6006,15 +5971,15 @@
       error_tooltip.disable();
       if (type == "number") {
         if (input_box.value == "") {
-          error_input(tl(trans.only_numbers_are_allowed), container, error_tooltip);
+          error_input2(tl(trans.only_numbers_are_allowed), container, error_tooltip);
         } else if (parseInt(input_box.value) > max || parseInt(input_box.value) < min) {
-          error_input(tl(trans.keep_within_the_range), container, error_tooltip);
+          error_input2(tl(trans.keep_within_the_range), container, error_tooltip);
         }
       }
     });
     return container;
   }
-  function error_input(reason, input2, tooltip) {
+  function error_input2(reason, input2, tooltip) {
     log(reason, "input", "log");
     input2.setAttribute("data-has-error", "true");
     tooltip.setContent(reason);
@@ -10048,31 +10013,6 @@
           settings[item] = settings_base[item].values[0];
           console.log(`toggle-${item}`);
           search.querySelector(`#toggle-${item}`).setAttribute("aria-checked", true);
-          if (item == "dev") {
-            dialog_legacy(
-              "prompt_dev",
-              trans_legacy.en.settings.performance.dev.name,
-              html2.node`
-                    <p class="alert alert-info">${trans_legacy.en.settings.performance.dev.modals.prompt.alert}</p>
-                    <br>
-                    ${trans_legacy.en.settings.performance.dev.modals.prompt.stylus}
-                    <br>
-                    <div class="browser-choices">
-                        <button class="btn browser" onclick="_chosen_chrome()">
-                            <img class="browser-icon" src="https://katelyn.moe/img/chrome.png">
-                            <p>${trans_legacy.en.settings.performance.dev.modals.prompt.browsers.chrome.name}</p>
-                            <p class="caption">${trans_legacy.en.settings.performance.dev.modals.prompt.browsers.chrome.bio}</p>
-                        </button>
-                        <button class="btn browser" onclick="_chosen_firefox()">
-                            <img class="browser-icon" src="https://katelyn.moe/img/firefox.png">
-                            <p>${trans_legacy.en.settings.performance.dev.modals.prompt.browsers.firefox.name}</p>
-                            <p class="caption">${trans_legacy.en.settings.performance.dev.modals.prompt.browsers.firefox.bio}</p>
-                        </button>
-                    </div>
-                `,
-              true
-            );
-          }
           document.body.style.setProperty(`--${item}`, settings_base[item].values[0]);
           document.documentElement.setAttribute(`data-bleh--${item}`, `${settings_base[item].values[0]}`);
         } else {
@@ -10222,41 +10162,6 @@
       }
     }
   }
-  unsafeWindow._chosen_chrome = function() {
-    open("https://chromewebstore.google.com/detail/stylus/clngdbkpkpeebahjckkjfobafhncgmne");
-    continue_dev();
-  };
-  unsafeWindow._chosen_firefox = function() {
-    open("https://addons.mozilla.org/en-US/firefox/addon/styl-us/");
-    continue_dev();
-  };
-  function continue_dev() {
-    kill_window("prompt_dev");
-    dialog_legacy("continue_dev", trans_legacy.en.settings.performance.dev.name, html2.node`
-        ${trans_legacy.en.settings.performance.dev.modals.continue.next_step}
-        <div class="modal-footer">
-            <div class="fill"></div>
-            <button class="btn primary continue" onclick="_finish_dev()">
-                ${trans_legacy.en.settings.continue}
-            </button>
-            <div class="fill"></div>
-        </div>
-    `);
-  }
-  unsafeWindow._finish_dev = function() {
-    open("https://github.com/katelyynn/bleh/raw/uwu/fm/bleh.user.css");
-    kill_window("continue_dev");
-    dialog_legacy("finish_dev", trans_legacy.en.settings.performance.dev.name, `
-        <p class="alert alert-success">${trans_legacy.en.settings.performance.dev.modals.finish.alert}</p>
-        <div class="modal-footer">
-            <div class="fill"></div>
-            <button class="btn primary done" onclick="_kill_window('finish_dev')">
-                ${trans_legacy.en.settings.done}
-            </button>
-            <div class="fill"></div>
-        </div>
-    `);
-  };
 
   // src/seasonal.js
   function set_season() {
@@ -10921,28 +10826,8 @@
       return html2`
             <div class="bleh--panel">
                 <div class="alert alert-danger">${tl(trans.beware_notice)}</div>
-                <div class="setting" data-type="text" id="container-branch">
-                    <div class="heading">
-                        <h5>${tl(trans.branch.name)}</h5>
-                        <p>${tl(trans.branch.body)}</p>
-                    </div>
-                    <div class="input-container content-form">
-                        <input type="text" maxlength="120" id="text-branch" value="${settings.branch}" placeholder="${tl(trans.enter_branch_name)}">
-                        <button class="bbtn chibi icon primary submit" onclick="_save_branch()">${tl(trans.save)}</button>
-                    </div>
-                </div>
-                <div class="setting" data-type="toggle" id="container-dev" onclick="_update_item('dev')">
-                    <button class="btn reset" onclick="_reset_item('dev')">${tl(trans.reset)}</button>
-                    <div class="heading">
-                        <h5>${trans_legacy.en.settings.performance.dev.name}</h5>
-                        <p>${trans_legacy.en.settings.performance.dev.bio}</p>
-                    </div>
-                    <div class="toggle-wrap">
-                        <button class="toggle" id="toggle-dev" aria-checked="false">
-                            <div class="dot"></div>
-                        </button>
-                    </div>
-                </div>
+                ${setting({ id: "branch" })}
+                ${setting({ id: "dev" })}
                 <div class="setting" data-type="toggle">
                     <div class="heading">
                         <h5>Refresh theme</h5>
@@ -11744,6 +11629,9 @@
     change_settings_page(page2, setting2);
   };
   function change_settings_page(page_id, setting2 = null) {
+    if (page_id == page.state.settings_page)
+      return;
+    page.state.settings_page = page_id;
     page.structure.main.innerHTML = "";
     if (ff("bleh_settings_tabs")) {
       let btns = document.querySelectorAll(".bleh--nav");
@@ -12463,7 +12351,7 @@
             placement: "bottom",
             content: html2.node`
                         <div class="badge-name">${this_badge.name}</div>
-                        <div class="badge-reason">${tl(trans.badges[this_badge.reason].reason)}</div>
+                        <div class="badge-reason">${this_badge.reason}</div>
                     `
           });
         }
@@ -19389,6 +19277,7 @@
       }
     },
     welcome_to_bleh: {
+      // <br> is a line break
       en: "Welcome to bleh, thank you for installing!<br>You can continue through this quick setup to get you started or skip right to your profile and figure it all out yourself <3",
       pt: "Bem-vindo ao bleh, obrigado por instalar!<br>Voc\xEA pode seguir este r\xE1pido guia de configura\xE7\xE3o para come\xE7ar, ou pular direto para seu perfil e descobrir tudo por conta pr\xF3pria <3"
     },
@@ -19453,8 +19342,8 @@
       }
     },
     enter_branch_name: {
-      en: "Type branch name (default is uwu)",
-      pt: "Digite o nome da branch (padr\xE3o \xE9 uwu)"
+      // dont translate
+      en: "uwu"
     },
     beware_notice: {
       en: "Beware! Only change these settings if you know what you're doing",
@@ -19560,6 +19449,14 @@
         pt: "For\xE7a bot\xF5es, links e outros interativos a terem um sublinhado"
       }
     },
+    theme_loading: {
+      name: {
+        en: "Disable loading of styles"
+      },
+      body: {
+        en: "Allows you to load the stylesheet yourself during development"
+      }
+    },
     upload: {
       en: "Upload",
       pt: "Enviar"
@@ -19638,6 +19535,12 @@
     keep_within_the_range: {
       en: "Keep within the range",
       pt: "Manter dentro do intervalo"
+    },
+    this_field_is_required: {
+      en: "This field is required"
+    },
+    please_dont_clone_yourself: {
+      en: "Please don't clone yourself"
     },
     generate: {
       en: "Generate",
@@ -23371,7 +23274,18 @@
       default: true
     },
     dev: {
-      default: false
+      default: false,
+      title: trans.theme_loading.name,
+      body: trans.theme_loading.body
+    },
+    branch: {
+      default: "uwu",
+      title: trans.branch.name,
+      body: trans.branch.body,
+      type: "text",
+      max: 20,
+      placeholder: trans.enter_branch_name,
+      warn_if_empty: true
     },
     api_key: {
       default: "",
@@ -23496,7 +23410,8 @@
       max: 40,
       title: trans.profile_shortcut.name,
       body: trans.profile_shortcut.body,
-      placeholder: trans.enter_username
+      placeholder: trans.enter_username,
+      warn_if_matches_auth: true
     },
     font: {
       css: "custom_font",

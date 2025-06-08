@@ -9,7 +9,7 @@ import {settings, settings_store} from "../build/config.js";
 import {tl, trans} from "../build/trans.js";
 import {notify} from "./notify.js";
 import {save_profile_shortcut} from "./profile_shortcut.js";
-import {page} from "../build/page.js";
+import {auth, page} from "../build/page.js";
 import {request_reload} from "../config.js";
 import {log} from "../build/log.js";
 
@@ -117,6 +117,7 @@ export function setting({
         } else if (type === 'text') {
             let option;
 
+            let min = settings_store[id].min || 0;
             let max = settings_store[id].max || 0;
 
             if (max === 0)
@@ -126,6 +127,9 @@ export function setting({
             let avatar;
             let input;
             let submit;
+
+            let input_container;
+            let error_tooltip;
 
             let container = html.node`
                 <div class="setting" data-type="text" ref=${el => option = el} data-modified=${value != settings_store[id].default}>
@@ -159,7 +163,7 @@ export function setting({
                         </div>
                     </div>
                     ` : ''}
-                    <div class="input-container content-form">
+                    <div class="input-container content-form in-settings" data-has-error="false" ref=${el => input_container = el}>
                         <input type="text" maxlength=${max} value=${value} style="--max: ${max}px" ref=${el => input = el} placeholder=${tl(settings_store[id].placeholder)} />
                         <button class="btn chibi icon primary submit" ref=${el => submit = el} onclick=${() => update_text(id, input, submit, option, input.value, reset_btn, avatar)}>${tl(trans.save)}</button>
                     </div>
@@ -167,7 +171,7 @@ export function setting({
             `;
 
             input.addEventListener('keydown', (event) => {
-                if (event.keyCode === 13) {
+                if (event.keyCode === 13 && input_container.getAttribute('data-has-error') == 'false') {
                     event.preventDefault();
                     submit.click();
                 }
@@ -180,6 +184,34 @@ export function setting({
             if (focus)
                 input.focus();
 
+            error_tooltip = tippy(input, {
+                theme: 'error',
+                placement: 'top',
+                trigger: 'manual'
+            });
+            error_tooltip.disable();
+
+            input.addEventListener('input', () => {
+                input_container.setAttribute('data-has-error', 'false');
+                error_tooltip.disable();
+                submit.disabled = false;
+
+                if (type == 'number') {
+                    // is a number?
+                    if (input.value == '') {
+                        error_input(tl(trans.only_numbers_are_allowed), input_container, error_tooltip, submit);
+                    } else if (parseInt(input.value) > max || parseInt(input.value) < min) {
+                        error_input(tl(trans.keep_within_the_range), input_container, error_tooltip, submit);
+                    }
+                } else if (type == 'text') {
+                    if (settings_store[id].warn_if_empty && input.value == '') {
+                        error_input(tl(trans.this_field_is_required), input_container, error_tooltip, submit);
+                    } else if (settings_store[id].warn_if_matches_auth && input.value == auth.name) {
+                        error_input(tl(trans.please_dont_clone_yourself), input_container, error_tooltip, submit);
+                    }
+                }
+            });
+
             return container;
         }
     } catch(e) {
@@ -188,6 +220,15 @@ export function setting({
     }
 
     return setting_fail(id);
+}
+
+function error_input(reason, input, tooltip, submit) {
+    log(reason, 'input', 'log');
+    input.setAttribute('data-has-error', 'true');
+    tooltip.setContent(reason);
+    tooltip.enable();
+    tooltip.show();
+    submit.disabled = true;
 }
 
 function setting_incompatible_block(entries) {

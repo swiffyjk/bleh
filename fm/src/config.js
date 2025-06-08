@@ -4,14 +4,12 @@
 // Licensed under GPLv3
 //
 
-import {html} from "lighterhtml";
 import {inbuilt_settings, settings, settings_base, settings_store, settings_template} from "./build/config";
 import {log} from "./build/log";
 import {page, reload_pending} from "./build/page";
 import {stored_season} from "./build/seasonal";
-import {tl, trans, trans_legacy} from "./build/trans";
+import {tl, trans} from "./build/trans";
 import {load_chart_colours} from "./chart";
-import {dialog_legacy, kill_window} from "./components/dialog";
 import {bleh_music_page_charts} from "./components/music";
 import {notify} from "./components/notify";
 import {load_skus, show_theme_change_in_menu, show_theme_change_in_settings} from "./pages/bleh_config";
@@ -291,29 +289,6 @@ function update_item(item, value, modify=true, search = document) {
             console.log(`toggle-${item}`);
             search.querySelector(`#toggle-${item}`).setAttribute('aria-checked',true);
 
-
-            if (item == 'dev') {
-                dialog_legacy('prompt_dev',trans_legacy.en.settings.performance.dev.name,
-                    html.node`
-                    <p class="alert alert-info">${trans_legacy.en.settings.performance.dev.modals.prompt.alert}</p>
-                    <br>
-                    ${trans_legacy.en.settings.performance.dev.modals.prompt.stylus}
-                    <br>
-                    <div class="browser-choices">
-                        <button class="btn browser" onclick="_chosen_chrome()">
-                            <img class="browser-icon" src="https://katelyn.moe/img/chrome.png">
-                            <p>${trans_legacy.en.settings.performance.dev.modals.prompt.browsers.chrome.name}</p>
-                            <p class="caption">${trans_legacy.en.settings.performance.dev.modals.prompt.browsers.chrome.bio}</p>
-                        </button>
-                        <button class="btn browser" onclick="_chosen_firefox()">
-                            <img class="browser-icon" src="https://katelyn.moe/img/firefox.png">
-                            <p>${trans_legacy.en.settings.performance.dev.modals.prompt.browsers.firefox.name}</p>
-                            <p class="caption">${trans_legacy.en.settings.performance.dev.modals.prompt.browsers.firefox.bio}</p>
-                        </button>
-                    </div>
-                `, true);
-            }
-
             // save setting into body
             document.body.style.setProperty(`--${item}`,settings_base[item].values[0]);
             document.documentElement.setAttribute(`data-bleh--${item}`, `${settings_base[item].values[0]}`);
@@ -504,44 +479,4 @@ export function update_inbuilt_item(item, value, modify=true, element=document.b
             }
         }
     }
-}
-
-
-unsafeWindow._chosen_chrome = function() {
-    open('https://chromewebstore.google.com/detail/stylus/clngdbkpkpeebahjckkjfobafhncgmne');
-    continue_dev();
-}
-unsafeWindow._chosen_firefox = function() {
-    open('https://addons.mozilla.org/en-US/firefox/addon/styl-us/');
-    continue_dev();
-}
-
-
-function continue_dev() {
-    kill_window('prompt_dev');
-    dialog_legacy('continue_dev',trans_legacy.en.settings.performance.dev.name,html.node`
-        ${trans_legacy.en.settings.performance.dev.modals.continue.next_step}
-        <div class="modal-footer">
-            <div class="fill"></div>
-            <button class="btn primary continue" onclick="_finish_dev()">
-                ${trans_legacy.en.settings.continue}
-            </button>
-            <div class="fill"></div>
-        </div>
-    `);
-}
-
-unsafeWindow._finish_dev = function() {
-    open('https://github.com/katelyynn/bleh/raw/uwu/fm/bleh.user.css');
-    kill_window('continue_dev');
-    dialog_legacy('finish_dev',trans_legacy.en.settings.performance.dev.name,`
-        <p class="alert alert-success">${trans_legacy.en.settings.performance.dev.modals.finish.alert}</p>
-        <div class="modal-footer">
-            <div class="fill"></div>
-            <button class="btn primary done" onclick="_kill_window('finish_dev')">
-                ${trans_legacy.en.settings.done}
-            </button>
-            <div class="fill"></div>
-        </div>
-    `);
 }

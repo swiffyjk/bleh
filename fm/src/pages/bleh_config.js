@@ -506,28 +506,8 @@ export function render_setting_page(page_id) {
         return html`
             <div class="bleh--panel">
                 <div class="alert alert-danger">${tl(trans.beware_notice)}</div>
-                <div class="setting" data-type="text" id="container-branch">
-                    <div class="heading">
-                        <h5>${tl(trans.branch.name)}</h5>
-                        <p>${tl(trans.branch.body)}</p>
-                    </div>
-                    <div class="input-container content-form">
-                        <input type="text" maxlength="120" id="text-branch" value="${settings.branch}" placeholder="${tl(trans.enter_branch_name)}">
-                        <button class="bbtn chibi icon primary submit" onclick="_save_branch()">${tl(trans.save)}</button>
-                    </div>
-                </div>
-                <div class="setting" data-type="toggle" id="container-dev" onclick="_update_item('dev')">
-                    <button class="btn reset" onclick="_reset_item('dev')">${tl(trans.reset)}</button>
-                    <div class="heading">
-                        <h5>${trans_legacy.en.settings.performance.dev.name}</h5>
-                        <p>${trans_legacy.en.settings.performance.dev.bio}</p>
-                    </div>
-                    <div class="toggle-wrap">
-                        <button class="toggle" id="toggle-dev" aria-checked="false">
-                            <div class="dot"></div>
-                        </button>
-                    </div>
-                </div>
+                ${setting({id: 'branch'})}
+                ${setting({id: 'dev'})}
                 <div class="setting" data-type="toggle">
                     <div class="heading">
                         <h5>Refresh theme</h5>
@@ -1367,6 +1347,11 @@ unsafeWindow._change_settings_page = function(page, setting = null) {
 }
 
 function change_settings_page(page_id, setting = null) {
+    if (page_id == page.state.settings_page)
+        return;
+
+    page.state.settings_page = page_id;
+
     page.structure.main.innerHTML = '';
 
     if (ff('bleh_settings_tabs')) {
@@ -2154,7 +2139,7 @@ function init_profile_page() {
                     placement: 'bottom',
                     content: html.node`
                         <div class="badge-name">${this_badge.name}</div>
-                        <div class="badge-reason">${tl(trans.badges[this_badge.reason].reason)}</div>
+                        <div class="badge-reason">${this_badge.reason}</div>
                     `
                 });
             }

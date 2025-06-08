@@ -2262,6 +2262,7 @@ export const trans = {
         }
     },
     welcome_to_bleh: {
+        // <br> is a line break
         en: 'Welcome to bleh, thank you for installing!<br>You can continue through this quick setup to get you started or skip right to your profile and figure it all out yourself <3',
         pt: 'Bem-vindo ao bleh, obrigado por instalar!<br>Você pode seguir este rápido guia de configuração para começar, ou pular direto para seu perfil e descobrir tudo por conta própria <3'
     },
@@ -2326,8 +2327,8 @@ export const trans = {
         }
     },
     enter_branch_name: {
-        en: 'Type branch name (default is uwu)',
-        pt: 'Digite o nome da branch (padrão é uwu)'
+        // dont translate
+        en: 'uwu'
     },
     beware_notice: {
         en: 'Beware! Only change these settings if you know what you\'re doing',
@@ -2433,6 +2434,14 @@ export const trans = {
             pt: 'Força botões, links e outros interativos a terem um sublinhado'
         }
     },
+    theme_loading: {
+        name: {
+            en: 'Disable loading of styles'
+        },
+        body: {
+            en: 'Allows you to load the stylesheet yourself during development'
+        }
+    },
     upload: {
         en: 'Upload',
         pt: 'Enviar'
@@ -2511,6 +2520,12 @@ export const trans = {
     keep_within_the_range: {
         en: 'Keep within the range',
         pt: 'Manter dentro do intervalo'
+    },
+    this_field_is_required: {
+        en: 'This field is required'
+    },
+    please_dont_clone_yourself: {
+        en: 'Please don\'t clone yourself'
     },
     generate: {
         en: 'Generate',

@@ -350,13 +350,13 @@ function bleh_glacier_library_top(static_page = false) {
 
             if (page.subpage == 'library_overview') {
                 if (index == 1)
-                    text = trans_legacy.en.glacier.meta.average;
+                    text = tl(trans.average);
             } else if (page.subpage == 'library_artists') {
                 text = tl(trans.artists);
             } else if (page.subpage == 'library_albums') {
-                text = trans_legacy.en.glacier.meta.albums;
+                text = tl(trans.albums);
             } else if (page.subpage == 'library_tracks') {
-                text = trans_legacy.en.glacier.meta.tracks;
+                text = tl(trans.tracks);
             }
         } else {
             // search results
@@ -417,10 +417,10 @@ function bleh_glacier_library_top(static_page = false) {
 
         if (top_wrap.getAttribute('data-current-format') == 'grid') {
             format_button.setAttribute('data-glacier-view', 'grid');
-            format_button.textContent = trans_legacy.en.glacier.view.grid;
+            format_button.textContent = tl(trans.grid);
         } else {
             format_button.setAttribute('data-glacier-view', 'list');
-            format_button.textContent = trans_legacy.en.glacier.view.list;
+            format_button.textContent = tl(trans.list);
         }
 
         view_buttons.appendChild(format_button);
@@ -539,10 +539,10 @@ unsafeWindow._update_glacier_view = function() {
 
     if (format.getAttribute('href') && format.getAttribute('href').endsWith('reset')) {
         page.structure.glacier.format.setAttribute('data-glacier-view', 'list');
-        page.structure.glacier.format.textContent = trans_legacy.en.glacier.view.list;
+        page.structure.glacier.format.textContent = tl(trans.list);
     } else {
         page.structure.glacier.format.setAttribute('data-glacier-view', 'grid');
-        page.structure.glacier.format.textContent = trans_legacy.en.glacier.view.grid;
+        page.structure.glacier.format.textContent = tl(trans.grid);
     }
 }
 
