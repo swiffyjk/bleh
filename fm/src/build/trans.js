@@ -2608,6 +2608,24 @@ export const trans = {
     },
     organising_plays: {
         en: 'Organising plays'
+    },
+    update_not_looking_right: {
+        en: 'Update in the tab that opens'
+    },
+    update_now: {
+        en: 'Update now'
+    },
+    ignore_for_now: {
+        en: 'Ignore for now'
+    },
+    update_styles: {
+        en: 'Update styles'
+    },
+    you_have_theme_loading_disabled: {
+        en: 'You disabled theme loading, so you need to update both separately'
+    },
+    downloading_styles: {
+        en: 'Downloading styles'
     }
 }
 

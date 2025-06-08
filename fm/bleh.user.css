@@ -8326,6 +8326,15 @@ section:has(.dropdown-menu-clickable-button.section-control) {
 [data-type="back"] {
     --mask: var(--icon-16-arrow-left);
 }
+[data-type="update"] {
+    --mask: var(--icon-16-download);
+}
+[data-type="ignore"] {
+    --mask: var(--icon-16-block);
+}
+[data-type="finish"] {
+    --mask: var(--icon-16-refresh);
+}
 [data-type="follow"] {
     --mask: var(--icon-16-user-plus);
 
@@ -9435,6 +9444,10 @@ input:is([name^="track_name"], [name^="artist_name"], [name^="album_name"], [nam
             display: block;
             margin-left: auto;
             margin-right: auto;
+        }
+
+        & > .sep {
+            margin: var(--card-gap) 0;
         }
     }
 
@@ -16986,9 +16999,6 @@ trying to list every song ever made by someone identifying as a female, which is
         display: none;
     }
 }
-[data-modal-type="update"] {
-    width: calc(450px + (5px * 2)) !important;
-}
 .bleh--update-checker-container {
     display: flex;
     margin-top: var(--card-gap);
@@ -23726,7 +23736,10 @@ h4 {
 }
 
 
+[data-modal-id="bleh_update"],
 [data-modal-id="edit_avatar"] {
+    text-align: center;
+
     .forms {
         display: flex;
         gap: var(--card-gap);
@@ -23809,6 +23822,32 @@ h4 {
             --margin-left: -12px;
             --margin-top: calc(-12px - 7px);
         }
+    }
+
+    .proceed, .deny {
+        button {
+            --mask-size: 24px;
+            --btn-left: var(--button-sides) !important;
+            width: 130px;
+            height: 130px;
+
+            display: flex;
+            justify-content: center;
+            align-items: end;
+
+            --left: 50%;
+            --margin-left: -12px;
+            --margin-top: calc(-12px - 7px);
+        }
+    }
+}
+[data-modal-type="update"] {
+    .forms {
+        justify-content: center;
+    }
+
+    .subtle {
+        max-width: 240px;
     }
 }
 

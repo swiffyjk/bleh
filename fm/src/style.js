@@ -7,11 +7,12 @@
 import {html} from "lighterhtml";
 import {settings} from "./build/config";
 import {log} from "./build/log";
-import {tl, trans, trans_legacy} from "./build/trans";
+import {tl, trans} from "./build/trans";
 import {chart_reflow} from "./chart";
 import {dialog, dialog_rm} from "./components/dialog";
 import {create_settings_template, invoke_reload} from "./config";
 import {theme_version, version} from "./main";
+import {save_setting} from "./components/settings.js";
 
 export function append_style() {
     document.documentElement.classList.add('bleh-supports-loading');
@@ -113,31 +114,28 @@ export function prompt_for_update() {
         id: 'bleh_update',
         title: tl(trans.update_to_version).replace('{v}', theme_version.state),
         body: html.node`
-            <div class="bleh--update-checker-container">
+            <div class="forms">
                 <div class="form">
-                    <div class="form-group">
-                        <button class="big-btn ignore" onclick="_ignore_update()"></button>
-                        ${trans_legacy.en.settings.home.update.ignore}
-                        <div class="small-alert red">${version.build}</div>
+                    <div class="form-group proceed">
+                        <button class="btn primary icon" data-type="update" onclick=${() => start_update()}>${tl(trans.update_now)}</button>
                     </div>
                 </div>
                 <div class="form">
-                    <div class="form-group">
-                        <button class="big-btn primary update" onclick="_start_update()"></button>
-                        ${trans_legacy.en.settings.home.update.update_now}
-                        <div class="small-alert green">${theme_version.state}</div>
+                    <div class="form-group deny">
+                        <button class="btn icon" data-type="ignore" onclick=${() => ignore_update()}>${tl(trans.ignore_for_now)}</button>
                     </div>
                 </div>
             </div>
+            <div class="sep" />
+            <p class="subtle">${tl(trans.update_not_looking_right)}</p>
         `,
         dismiss: false,
         type: 'update',
-        replace_id: 'bleh_update',
-        replace: true
+        replace_if_possible: true
     });
 }
 
-unsafeWindow._ignore_update = function() {
+function ignore_update() {
     dialog_rm({
         id: 'bleh_update'
     });
@@ -145,79 +143,78 @@ unsafeWindow._ignore_update = function() {
     // set expire date
     let api_expire = new Date();
     api_expire.setHours(api_expire.getHours() + 1);
-    localStorage.setItem('bleh_cached_style_timeout',api_expire);
+    localStorage.setItem('bleh_cached_style_timeout', api_expire);
     log(`cached until ${api_expire}`, 'style');
 }
 
-unsafeWindow._start_update = function() {
+function start_update() {
     open(`https://github.com/katelyynn/bleh/raw/${settings.branch}/fm/bleh.user.js`);
 
-    dialog_rm({
-        id: 'bleh_update'
-    });
-
     if (!settings.dev) {
-        _final_update();
+        final_update();
     } else {
         dialog({
             id: 'bleh_update',
             title: tl(trans.update_to_version).replace('{v}', theme_version.state),
             body: html.node`
-                <div class="bleh--update-checker-container">
+                <div class="forms">
                     <div class="form">
-                        <div class="form-group">
-                            <button class="big-btn primary update" onclick="_start_css_update()"></button>
-                            ${trans_legacy.en.settings.home.update.css}
-                            <div class="small-alert green">${theme_version.state}</div>
+                        <div class="form-group proceed">
+                            <button class="btn primary icon" data-type="update" onclick=${() => start_css_update()}>${tl(trans.update_styles)}</button>
                         </div>
                     </div>
                 </div>
+                <div class="sep" />
+                <p class="subtle">${tl(trans.you_have_theme_loading_disabled)}</p>
             `,
             dismiss: false,
-            type: 'update'
+            type: 'update',
+            replace_if_possible: true
         });
     }
 }
 
-unsafeWindow._start_css_update = function() {
+function start_css_update() {
+    if (settings.branch == '')
+        save_setting('branch', 'uwu');
+
     open(`https://github.com/katelyynn/bleh/raw/${settings.branch}/fm/bleh.user.css`);
 
-    dialog_rm({
-        id: 'bleh_update'
-    });
-    _final_update();
+    final_update();
 }
 
-unsafeWindow._final_update = function() {
+function final_update() {
     dialog({
         id: 'bleh_update',
         title: tl(trans.update_to_version).replace('{v}', theme_version.state),
         body: html.node`
-            <div class="bleh--update-checker-container">
+            <div class="forms">
                 <div class="form">
-                    <div class="form-group">
-                        <button class="big-btn primary finish" onclick="_finish_update()"></button>
-                        ${trans_legacy.en.settings.finish}
+                    <div class="form-group proceed">
+                        <button class="btn primary icon" data-type="finish" onclick=${() => finish_update()}>${tl(trans.finish)}</button>
                     </div>
                 </div>
             </div>
         `,
         dismiss: false,
-        type: 'update'
+        type: 'update',
+        replace_if_possible: true
     });
 }
 
-unsafeWindow._finish_update = function() {
-    dialog_rm({
-        id: 'bleh_update'
-    });
-
+function finish_update() {
     if (!settings.dev) {
         dialog({
             id: 'bleh_wait',
-            title: trans_legacy.en.settings.home.update.name,
+            title: tl(trans.update_to_version).replace('{v}', theme_version.state),
+            body: html.node`
+                <div class="loading-data-container">
+                    <div class="loading-data-text">${tl(trans.downloading_styles)}</div>
+                </div>
+            `,
             type: 'wait',
-            dismiss: false
+            dismiss: false,
+            replace_if_possible: true
         });
         fetch_new_style(false, true);
     } else {
@@ -253,8 +250,10 @@ function fetch_new_style(delete_old_style = false, reload_on_finish = false) {
         localStorage.setItem('bleh_cached_style_timeout',api_expire);
         log(`cached until ${api_expire}`, 'style');
 
-        if (reload_on_finish)
+        if (reload_on_finish) {
             invoke_reload();
+            return;
+        }
 
         setTimeout(function() {
             document.body.classList.add('bleh');
