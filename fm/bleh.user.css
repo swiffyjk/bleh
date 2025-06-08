@@ -8202,6 +8202,7 @@ section:has(.dropdown-menu-clickable-button.section-control) {
                 }
 
                 .name {
+                    color: hsl(var(--c1));
                     font-size: 16px;
                     line-height: 20px;
                     font-weight: var(--font-weight-medium);

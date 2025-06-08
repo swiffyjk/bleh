@@ -9007,7 +9007,7 @@
         icon: "icon-16-refresh"
       });
       panel.classList.add("has-refreshed");
-      page.structure.main.querySelector("#recent-tracks-section .chartlist").outerHTML = tracklist_panel.outerHTML;
+      panel.querySelector(".chartlist").outerHTML = tracklist_panel.outerHTML;
     });
   }
   function bleh_featured_profile_track(object, about_me) {

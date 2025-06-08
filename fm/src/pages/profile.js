@@ -1114,7 +1114,7 @@ function refresh_tracks(button) {
         });
         panel.classList.add('has-refreshed');
 
-        page.structure.main.querySelector('#recent-tracks-section .chartlist').outerHTML = tracklist_panel.outerHTML;
+        panel.querySelector('.chartlist').outerHTML = tracklist_panel.outerHTML;
     });
 }
 
