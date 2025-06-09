@@ -11,7 +11,7 @@ import {patch_avatar} from "../avatar.js";
 import {correct_artist} from "../components/lotus.js";
 
 export function bleh_users() {
-    let users = page.structure.main.querySelectorAll('.user-list-item');
+    let users = page.structure.main.querySelectorAll('.user-list-item:not(.user-list-item-mobile-ad)');
     users.forEach((user) => {
         let avatar = user.querySelector('.user-list-avatar');
         let name = user.querySelector('.user-list-link').textContent;

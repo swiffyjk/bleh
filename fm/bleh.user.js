@@ -14921,9 +14921,9 @@
     page.structure.setup.setAttribute("data-animating", "true");
     setTimeout(function() {
       page.structure.setup.setAttribute("data-animating", "false");
-      page.structure.setup_content.innerHTML = `
-            <p>${tl(trans.welcome_to_bleh)}</p>
-        `;
+      render(page.structure.setup_content, html`
+            <p>${{ html: tl(trans.welcome_to_bleh) }}</p>
+        `);
       page.structure.setup_footer.innerHTML = `
             <a class="see-more cancel" href="${root}user/${auth.name}">
                 ${tl(trans.skip)}
@@ -14941,7 +14941,7 @@
     page.structure.setup.setAttribute("data-animating", "true");
     setTimeout(function() {
       page.structure.setup.setAttribute("data-animating", "false");
-      page.structure.setup_content.innerHTML = `
+      render(page.structure.setup_content, html`
             <p>${tl(trans.choose_a_theme)}</p>
             <div class="setting-items full">
                 <div class="side-left full even-more">
@@ -15001,7 +15001,7 @@
                     </button>
                 </div>
             </div>
-        `;
+        `);
       page.structure.setup_footer.innerHTML = `
             <button class="see-more cancel" onclick="_setup_accessibility()">
                 ${tl(trans.back)}
@@ -15020,7 +15020,7 @@
     page.structure.setup.setAttribute("data-animating", "true");
     setTimeout(function() {
       page.structure.setup.setAttribute("data-animating", "false");
-      page.structure.setup_content.innerHTML = `
+      render(page.structure.setup_content, html`
             <p>${tl(trans.accessibility_explain)}</p>
             <div class="settings">
                 <div class="setting" data-type="toggle" id="container-reduced_motion" onclick="_update_item('reduced_motion')">
@@ -15060,7 +15060,7 @@
                     </div>
                 </div>
             </div>
-        `;
+        `);
       page.structure.setup_footer.innerHTML = `
             <button class="see-more cancel" onclick="_setup()">
                 ${tl(trans.back)}
@@ -15078,7 +15078,7 @@
     page.structure.setup.setAttribute("data-animating", "true");
     setTimeout(function() {
       page.structure.setup.setAttribute("data-animating", "false");
-      page.structure.setup_content.innerHTML = `
+      render(page.structure.setup_content, html`
             <p>${tl(trans.colours_explain)}</p>
             <div class="view-buttons colour-buttons view-buttons-middle" id="colour_custom"></div>
             <div class="swatch-group">
@@ -15092,7 +15092,7 @@
                 <div id="colour_purple" class="palette options colours"></div>
                 <div id="colour_pink" class="palette options colours"></div>
             </div>
-        `;
+        `);
       page.structure.setup_footer.innerHTML = `
             <button class="see-more cancel" onclick="_setup_themes()">
                 ${tl(trans.back)}
@@ -15111,7 +15111,7 @@
     page.structure.setup.setAttribute("data-animating", "true");
     setTimeout(function() {
       page.structure.setup.setAttribute("data-animating", "false");
-      page.structure.setup_content.innerHTML = `
+      render(page.structure.setup_content, html`
             <p>${tl(trans.music_explain)}</p>
             <div class="settings">
                 <div class="inner-preview pad flex">
@@ -15163,7 +15163,7 @@
                     </div>
                 </div>
             </div>
-        `;
+        `);
       page.structure.setup_footer.innerHTML = `
             <button class="see-more cancel" onclick="_setup_colours()">
                 ${tl(trans.back)}
@@ -15182,9 +15182,9 @@
     page.structure.setup.setAttribute("data-animating", "true");
     setTimeout(function() {
       page.structure.setup.setAttribute("data-animating", "false");
-      page.structure.setup_content.innerHTML = `
-            <p>${tl(trans.setup_end).replace("{a}", `<a href="${root}bleh">`).replace("{/a}", "</a>")}</p>
-        `;
+      render(page.structure.setup_content, html`
+            <p>${{ html: tl(trans.setup_end).replace("{a}", `<a href="${root}bleh">`).replace("{/a}", "</a>") }}</p>
+        `);
       page.structure.setup_footer.innerHTML = `
             <button class="see-more cancel" onclick="_setup_music()">
                 ${tl(trans.back)}
@@ -16595,7 +16595,7 @@
 
   // src/pages/users.js
   function bleh_users() {
-    let users = page.structure.main.querySelectorAll(".user-list-item");
+    let users = page.structure.main.querySelectorAll(".user-list-item:not(.user-list-item-mobile-ad)");
     users.forEach((user) => {
       let avatar3 = user.querySelector(".user-list-avatar");
       let name = user.querySelector(".user-list-link").textContent;

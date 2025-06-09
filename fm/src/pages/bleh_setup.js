@@ -15,6 +15,7 @@ import {refresh_all} from "../config";
 import {version} from "../main";
 import {register_background, update_page} from '../page';
 import {display_colour_presets, show_theme_change_in_settings} from "./bleh_config";
+import {html, render} from "lighterhtml";
 
 export function bleh_setup() {
     page.structure.container = document.body.querySelector('.page-content');
@@ -78,8 +79,8 @@ function bleh_setup_start() {
     page.structure.setup.setAttribute('data-animating', 'true');
     setTimeout(function() {
         page.structure.setup.setAttribute('data-animating', 'false');
-        page.structure.setup_content.innerHTML = (`
-            <p>${tl(trans.welcome_to_bleh)}</p>
+        render(page.structure.setup_content, html`
+            <p>${{html: tl(trans.welcome_to_bleh)}}</p>
         `);
         page.structure.setup_footer.innerHTML = (`
             <a class="see-more cancel" href="${root}user/${auth.name}">
@@ -101,7 +102,7 @@ unsafeWindow._setup_themes = function() {
 
     setTimeout(function() {
         page.structure.setup.setAttribute('data-animating', 'false');
-        page.structure.setup_content.innerHTML = (`
+        render(page.structure.setup_content, html`
             <p>${tl(trans.choose_a_theme)}</p>
             <div class="setting-items full">
                 <div class="side-left full even-more">
@@ -182,7 +183,7 @@ unsafeWindow._setup_accessibility = function() {
     page.structure.setup.setAttribute('data-animating', 'true');
     setTimeout(function() {
         page.structure.setup.setAttribute('data-animating', 'false');
-        page.structure.setup_content.innerHTML = (`
+        render(page.structure.setup_content, html`
             <p>${tl(trans.accessibility_explain)}</p>
             <div class="settings">
                 <div class="setting" data-type="toggle" id="container-reduced_motion" onclick="_update_item('reduced_motion')">
@@ -242,7 +243,7 @@ unsafeWindow._setup_colours = function() {
     page.structure.setup.setAttribute('data-animating', 'true');
     setTimeout(function() {
         page.structure.setup.setAttribute('data-animating', 'false');
-        page.structure.setup_content.innerHTML = (`
+        render(page.structure.setup_content, html`
             <p>${tl(trans.colours_explain)}</p>
             <div class="view-buttons colour-buttons view-buttons-middle" id="colour_custom"></div>
             <div class="swatch-group">
@@ -277,7 +278,7 @@ unsafeWindow._setup_music = function() {
     page.structure.setup.setAttribute('data-animating', 'true');
     setTimeout(function() {
         page.structure.setup.setAttribute('data-animating', 'false');
-        page.structure.setup_content.innerHTML = (`
+        render(page.structure.setup_content, html`
             <p>${tl(trans.music_explain)}</p>
             <div class="settings">
                 <div class="inner-preview pad flex">
@@ -350,8 +351,8 @@ unsafeWindow._setup_end = function() {
     page.structure.setup.setAttribute('data-animating', 'true');
     setTimeout(function() {
         page.structure.setup.setAttribute('data-animating', 'false');
-        page.structure.setup_content.innerHTML = (`
-            <p>${tl(trans.setup_end).replace('{a}', `<a href="${root}bleh">`).replace('{/a}', '</a>')}</p>
+        render(page.structure.setup_content, html`
+            <p>${{html: tl(trans.setup_end).replace('{a}', `<a href="${root}bleh">`).replace('{/a}', '</a>')}}</p>
         `);
         page.structure.setup_footer.innerHTML = (`
             <button class="see-more cancel" onclick="_setup_music()">
