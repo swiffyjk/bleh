@@ -111,7 +111,7 @@ export function sponsor(replace=false) {
                 <h1>${tl(trans.support_future_development)}</h1>
                 <p>${
                     html.node([
-                        tl(trans.why_sponsor).replace('katelyn', (sponsor_list) ? `<a class="mention" href="${root}user/${sponsor_list.special[0]}">@${sponsor_list.special[0]}</a>` : 'katelyn')
+                        tl(trans.why_sponsor).replace('katelyn', (sponsor_list && sponsor_list.special) ? `<a class="mention" href="${root}user/${sponsor_list.special[0]}">@${sponsor_list.special[0]}</a>` : 'katelyn')
                     ])}</p>
             </div>
             <div class="modal-footer">

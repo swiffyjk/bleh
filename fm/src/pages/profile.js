@@ -70,7 +70,7 @@ export function bleh_profiles() {
         }
 
         // me :3
-        if (sponsor_list && sponsor_list.special.includes(page.name)) {
+        if (sponsor_list && sponsor_list.special && sponsor_list.special.includes(page.name)) {
             title_wrap.querySelector('.header-title a').classList.add('bleh--name-is-cute');
         }
 
@@ -648,7 +648,7 @@ export function bleh_profiles() {
 
     if (page.subpage != 'overview') return;
 
-    if (sponsor_list && page.name == sponsor_list.special[0]) {
+    if (sponsor_list && sponsor_list.special && page.name == sponsor_list.special[0]) {
         let sponsor_cta = html.node`
             <div class="cta first sponsor colourful">
                 ${auth.sponsor ? html`

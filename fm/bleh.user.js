@@ -6471,7 +6471,7 @@
                 </div>
                 <h1>${tl(trans.support_future_development)}</h1>
                 <p>${html2.node([
-        tl(trans.why_sponsor).replace("katelyn", sponsor_list ? `<a class="mention" href="${root}user/${sponsor_list.special[0]}">@${sponsor_list.special[0]}</a>` : "katelyn")
+        tl(trans.why_sponsor).replace("katelyn", sponsor_list && sponsor_list.special ? `<a class="mention" href="${root}user/${sponsor_list.special[0]}">@${sponsor_list.special[0]}</a>` : "katelyn")
       ])}</p>
             </div>
             <div class="modal-footer">
@@ -8241,7 +8241,7 @@
         avatar3 = profile_header.querySelector(".header-avatar-add");
         new_account = true;
       }
-      if (sponsor_list && sponsor_list.special.includes(page.name)) {
+      if (sponsor_list && sponsor_list.special && sponsor_list.special.includes(page.name)) {
         title_wrap.querySelector(".header-title a").classList.add("bleh--name-is-cute");
       }
       let redesigned_profile_header = document.createElement("section");
@@ -8691,7 +8691,7 @@
     });
     profile_name_obj.appendChild(label_container);
     if (page.subpage != "overview") return;
-    if (sponsor_list && page.name == sponsor_list.special[0]) {
+    if (sponsor_list && sponsor_list.special && page.name == sponsor_list.special[0]) {
       let sponsor_cta = html2.node`
             <div class="cta first sponsor colourful">
                 ${auth.sponsor ? html2`
@@ -13519,7 +13519,7 @@
   function open_changelog(changelog) {
     let window2 = dialog({
       id: "changelog",
-      title: tl(trans.news_from_user).replace("{user}", sponsor_list ? sponsor_list.special[0] : "katelyn"),
+      title: tl(trans.news_from_user).replace("{user}", sponsor_list && sponsor_list.special ? sponsor_list.special[0] : "katelyn"),
       body: html2.node`
             <div class="cta first sponsor colourful margin-bottom">
                 <strong>${tl(trans.news_sponsor_cta)}</strong>
@@ -23681,7 +23681,7 @@
   // src/build/build.json
   var build_default = {
     brand: "bleh",
-    build: "2025.0608",
+    build: "2025.0608.1",
     sku: "homura",
     bio: "bleh!!! ^-^",
     author: "kate",
