@@ -1,7 +1,7 @@
 // ==UserScript==
 // @name         bleh
 // @namespace    http://last.fm/
-// @version      2025.0608.1
+// @version      2025.0608.2
 // @description  bleh!!! ^-^
 // @author       kate
 // @match        https://www.last.fm/*
@@ -23683,7 +23683,7 @@
   // src/build/build.json
   var build_default = {
     brand: "bleh",
-    build: "2025.0608.1",
+    build: "2025.0608.2",
     sku: "homura",
     bio: "bleh!!! ^-^",
     author: "kate",
