@@ -5,6 +5,7 @@
 //
 
 import {settings} from "./build/config";
+import {html} from "lighterhtml";
 
 export function rain() {
     // clear old
@@ -18,7 +19,7 @@ export function rain() {
             <div class="rain" id="rain"></div>
             <div class="rain rain-back" id="rain-back"></div>
         </div>
-        `);
+    `);
 
     let increment = 0;
     let drops = '';
@@ -45,7 +46,6 @@ export function rain() {
 }
 
 export function start_rain() {
-
     if (settings.rain)
         rain();
 }

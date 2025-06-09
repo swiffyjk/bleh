@@ -1,7 +1,7 @@
 // ==UserScript==
 // @name         bleh
 // @namespace    http://last.fm/
-// @version      2025.0608
+// @version      2025.0608.1
 // @description  bleh!!! ^-^
 // @author       kate
 // @match        https://www.last.fm/*
@@ -152,20 +152,20 @@
     var FRAGMENT = "fragment";
     var TEMPLATE = "template";
     var HAS_CONTENT = "content" in create2(TEMPLATE);
-    var createHTML = HAS_CONTENT ? function(html3) {
+    var createHTML = HAS_CONTENT ? function(html2) {
       var template = create2(TEMPLATE);
-      template.innerHTML = html3;
+      template.innerHTML = html2;
       return template.content;
-    } : function(html3) {
+    } : function(html2) {
       var content = create2(FRAGMENT);
       var template = create2(TEMPLATE);
       var childNodes = null;
-      if (/^[^\S]*?<(col(?:group)?|t(?:head|body|foot|r|d|h))/i.test(html3)) {
+      if (/^[^\S]*?<(col(?:group)?|t(?:head|body|foot|r|d|h))/i.test(html2)) {
         var selector = RegExp.$1;
-        template.innerHTML = "<table>" + html3 + "</table>";
+        template.innerHTML = "<table>" + html2 + "</table>";
         childNodes = template.querySelectorAll(selector);
       } else {
-        template.innerHTML = html3;
+        template.innerHTML = html2;
         childNodes = template.childNodes;
       }
       append(content, childNodes);
@@ -295,9 +295,9 @@
 
   // node_modules/domtagger/esm/walker.js
   var normalizeAttributes = UID_IE ? function(attributes, parts) {
-    var html3 = parts.join(" ");
+    var html2 = parts.join(" ");
     return parts.slice.call(attributes, 0).sort(function(left, right) {
-      return html3.indexOf(left.name) <= html3.indexOf(right.name) ? -1 : 1;
+      return html2.indexOf(left.name) <= html2.indexOf(right.name) ? -1 : 1;
     });
   } : function(attributes, parts) {
     return parts.slice.call(attributes, 0);
@@ -989,7 +989,7 @@
     this.values = args;
   }
   var Hole = LighterHole;
-  var { render, html: html2, svg } = createRender(Tagger);
+  var { render, html, svg } = createRender(Tagger);
   function tta() {
     let out = [], i = 0, { length } = arguments;
     while (i < length)
@@ -1108,7 +1108,7 @@
   var has_prompted_for_update = {
     state: false
   };
-  var theme_preview = () => html2.node`
+  var theme_preview = () => html.node`
     <div class="preview-inner">
         <div class="preview-card">
             <div class="preview-header">Aa</div>
@@ -1525,7 +1525,7 @@
   // src/components/notify.js
   function load_notifications() {
     if (!page.structure.notifications) {
-      let notification_host = html2.node`
+      let notification_host = html.node`
             <div class="bleh-notifications" />
         `;
       page.structure.notifications = notification_host;
@@ -1581,7 +1581,7 @@
       action: () => notify_rm(notif),
       text: tl(trans.close)
     });
-    let notif = html2.node`
+    let notif = html.node`
         <div
             class=${[
       "bleh-notification",
@@ -1597,16 +1597,16 @@
         >
             <div class="notification-information">
                  <div class="notification-title">${title}</div>
-                ${body ? html2.node`
+                ${body ? html.node`
                 <div class="notification-body">${body}</div>
                 ` : ""}
             </div>
-            ${!persist ? html2.node`
+            ${!persist ? html.node`
             <div class="notification-progress"><div class="fill" ref=${(el) => bar = el} /></div>
             ` : ""}
             <div class="notification-actions">
                 ${actions.length > 0 ? actions.map((action) => () => {
-      let button = html2.node`
+      let button = html.node`
                         <button class="notification-action" data-type=${action.type} onclick=${action.action}>${action.text}</button>
                     `;
       tippy(button, {
@@ -1838,7 +1838,7 @@
     id = "",
     title = null,
     subtitle = null,
-    body = html2.node``,
+    body = html.node``,
     dismiss = true,
     type = "",
     has_overlays = true,
@@ -1872,7 +1872,7 @@
         break;
       }
     }
-    let modal = html2.node`
+    let modal = html.node`
         <div
         class=${[
       "bleh-modal",
@@ -1887,10 +1887,10 @@
     `;
     if (title != null) {
       modal.setAttribute("aria-labelledby", "modal_title");
-      modal.appendChild(html2.node`
+      modal.appendChild(html.node`
             <div class="bleh-modal-title" id="modal_title">
                 <h1>${title}</h1>
-                ${subtitle ? html2.node`<p class="bleh-modal-subtitle">${subtitle}</p>` : ""}
+                ${subtitle ? html.node`<p class="bleh-modal-subtitle">${subtitle}</p>` : ""}
             </div>
         `);
     }
@@ -2016,7 +2016,7 @@
       smartIndentationFix: true
     });
     let parsed_body = converter.makeHtml(text2.replace(/([@])([a-zA-Z0-9_]+)/g, `[$1$2](${root}user/$2)`).replace(/\[artist\]([a-zA-Z0-9]+)\[\/artist\]/g, `[$1](${root}music/$1)`).replace(/\[album artist=([a-zA-Z0-9]+)\]([a-zA-Z0-9\s]+)\[\/album\]/g, `[$2](${root}music/$1/$2)`).replace(/\[track artist=([a-zA-Z0-9]+)\]([a-zA-Z0-9\s]+)\[\/track\]/g, `[$2](${root}music/$1/_/$2)`).replace(/https:\/\/open\.spotify\.com\/user\/([A-Za-z0-9]+)\?si=([A-Za-z0-9]+)/g, "[Spotify](https://open.spotify.com/user/$1)").replace(/&/g, "&amp;").replace(/</g, "&lt;").replace(/>/g, "&gt;").replace(/"/g, "&quot;").replace(/'/g, "&#039;"));
-    return html2.node([
+    return html.node([
       parsed_body
     ]);
   }
@@ -2294,7 +2294,7 @@
         let end = value.indexOf("\u201D");
         value = value.substring(start, end);
       }
-      glacier_meta.appendChild(html2.node`
+      glacier_meta.appendChild(html.node`
             <div class="glacier-library-metadata-item">
                 <div class="sub-text">${text2}</div>
                 <div class="glacier-library-metadata-item-value">${value}</div>
@@ -2351,9 +2351,9 @@
     });
     tippy(configure_button, {
       theme: "window",
-      content: html2.node`
+      content: html.node`
             <div class="dialog-settings">
-                ${page.subpage == "library_artists" ? html2.node`
+                ${page.subpage == "library_artists" ? html.node`
                 <div class="setting" data-type="toggle" id="container-colourful_counts" onclick="_update_item('colourful_counts')">
                     <div class="heading">
                         <h5>${tl(trans.colourful_counts.name)}</h5>
@@ -2365,7 +2365,7 @@
                         </button>
                     </div>
                 </div>
-                ` : html2.node`
+                ` : html.node`
                 <div class="setting" data-type="toggle" id="container-format_guest_features" onclick="_update_item('format_guest_features')">
                     <button class="btn reset" onclick="_reset_item('format_guest_features')">${tl(trans.reset)}</button>
                     <div class="heading">
@@ -2392,7 +2392,7 @@
                 </div>
                 `}
                 <div class="sep"></div>
-                ${(page.subpage == "library_artists" || page.subpage == "library_albums") && auth.pro ? html2.node`
+                ${(page.subpage == "library_artists" || page.subpage == "library_albums") && auth.pro ? html.node`
                 <div class="setting" data-type="toggle" id="container-grid_glow" onclick="_update_item('grid_glow')">
                     <button class="btn reset" onclick="_reset_item('grid_glow')">${tl(trans.reset)}</button>
                     <div class="heading">
@@ -2692,8 +2692,8 @@
       if (response.status != 200)
         throw new Error();
       return response.text();
-    }).then(function(html3) {
-      let doc = new DOMParser().parseFromString(html3, "text/html");
+    }).then(function(html2) {
+      let doc = new DOMParser().parseFromString(html2, "text/html");
       console.log("glacier library DOC", doc, doc.querySelector(".table"));
       log("received response", "glacier library");
       log("refresh is now marked true", "glacier library");
@@ -2880,7 +2880,7 @@
     let upper_wrap = document.createElement("div");
     upper_wrap.classList.add("glacier-library-top-upper");
     let current_suffix = window.location.search;
-    let metadata = html2.node`
+    let metadata = html.node`
         <div class="glacier-library-metadata">
             <div class="glacier-library-metadata-avatar">
                 ${image}
@@ -2890,7 +2890,7 @@
                     ${tl(trans[type])}
                 </div>
                 <div class="glacier-library-metadata-item-value glacier-library-metadata-focus" data-type="${type}">
-                    <a href="${link}">${type == "artist" ? correct_artist(header_title) : correct_item_by_artist(header_title, artist)}</a>${duration ? html2.node`<span class="glacier-library-track-duration">${duration.textContent}</span>` : ""}${type != "artist" ? html2`${{ html: trans_legacy.en.glacier.by_artist.replace("{a}", `<a href="${root}user/${page.name}/library/music/+noredirect/${sanitise(artist)}${current_suffix}">${sanitise_text(correct_artist(artist))}</a>`) }}` : ""}
+                    <a href="${link}">${type == "artist" ? correct_artist(header_title) : correct_item_by_artist(header_title, artist)}</a>${duration ? html.node`<span class="glacier-library-track-duration">${duration.textContent}</span>` : ""}${type != "artist" ? html`${{ html: trans_legacy.en.glacier.by_artist.replace("{a}", `<a href="${root}user/${page.name}/library/music/+noredirect/${sanitise(artist)}${current_suffix}">${sanitise_text(correct_artist(artist))}</a>`) }}` : ""}
                 </div>
             </div>
         </div>
@@ -2977,7 +2977,7 @@
     });
     tippy(configure_button, {
       theme: "window",
-      content: html2.node`
+      content: html.node`
             <div class="dialog-settings">
                 <div class="setting" data-type="toggle" id="container-format_guest_features" onclick="_update_item('format_guest_features')">
                     <button class="btn reset" onclick="_reset_item('format_guest_features')">${tl(trans.reset)}</button>
@@ -3078,10 +3078,10 @@
     if (!avatar_img) return {};
     avatar_img.setAttribute("src", avatar_img.getAttribute("src").replace("/64s/", "/avatar70s/"));
     let badges = load_badges(name, true);
-    let buttons = html2.node`
+    let buttons = html.node`
         <div class="user-buttons view-buttons">
             ${() => {
-      let btn = html2.node`
+      let btn = html.node`
                     <a class="btn view-item chibi" data-type="profile" href="${root}user/${name}">${tl(trans.profile)}</a>
                 `;
       tippy(btn, {
@@ -3090,7 +3090,7 @@
       return btn;
     }}
             ${() => {
-      let btn = html2.node`
+      let btn = html.node`
                     <a class="btn view-item chibi" data-type="library" href="${root}user/${name}/library">${tl(trans.library)}</a>
                 `;
       tippy(btn, {
@@ -3099,7 +3099,7 @@
       return btn;
     }}
                     ${() => {
-      let btn = html2.node`
+      let btn = html.node`
                     <a class="btn view-item chibi" data-type="shouts" href="${root}user/${name}/shoutbox">${tl(trans.shouts)}</a>
                 `;
       tippy(btn, {
@@ -3132,10 +3132,10 @@
         parent.classList.add("parent-can-hoverbox");
       tippy(parent ? parent : avatar3, {
         theme: "user",
-        content: html2.node`
+        content: html.node`
                 <div class="image-info">
                     <div class="inner-image">
-                        ${html2.node([avatar_img.outerHTML])}
+                        ${html.node([avatar_img.outerHTML])}
                     </div>
                     <div class="info">
                         <h5 class="title">${name}</h5>
@@ -3159,10 +3159,10 @@
           parent.classList.add("parent-can-hoverbox");
         tippy(parent ? parent : avatar3, {
           theme: "user",
-          content: html2.node`
+          content: html.node`
                     <div class="image-info">
                         <div class="inner-image">
-                            ${html2.node([avatar_img.outerHTML])}
+                            ${html.node([avatar_img.outerHTML])}
                         </div>
                         <div class="info">
                             <h5 class="title">${name}</h5>
@@ -3184,10 +3184,10 @@
         let type2 = pre_existing_badge.classList[1].replace("avatar-status-dot--", "user-status-");
         tippy(parent ? parent : avatar3, {
           theme: "user",
-          content: html2.node`
+          content: html.node`
                     <div class="image-info">
                         <div class="inner-image">
-                            ${html2.node([avatar_img.outerHTML])}
+                            ${html.node([avatar_img.outerHTML])}
                         </div>
                         <div class="info">
                             <h5 class="title">${name}</h5>
@@ -3223,7 +3223,7 @@
   function expand_avatar(src) {
     dialog({
       id: "avatar",
-      body: html2.node`
+      body: html.node`
             <div class="full-avatar-wrapper">
                 <div class="full-avatar">
                     <img src="${src}">
@@ -3268,7 +3268,7 @@
     dialog({
       id: "share",
       title: tl(trans.share),
-      body: html2.node`
+      body: html.node`
             <div class="share-top content-form">
                 <input
                     type="text"
@@ -3307,7 +3307,7 @@
   }
   function download(url, filename = null) {
     log(`downloading ${filename}`, "download");
-    let link = html2.node`
+    let link = html.node`
         <a href=${url} download />
     `;
     if (filename)
@@ -3412,7 +3412,7 @@
     buttons_extra.classList.add("gallery-image-buttons", "gallery-image-buttons-extra");
     button_container.appendChild(buttons_extra);
     image_details.appendChild(button_container);
-    let open_button = html2.node`
+    let open_button = html.node`
         <button class="image-open-button" onclick=${() => expand_gallery_image()}>
             ${tl(trans.expand)}
         </button>
@@ -3421,7 +3421,7 @@
       content: tl(trans.expand_to_full_resolution)
     });
     buttons_extra.appendChild(open_button);
-    let share_button = html2.node`
+    let share_button = html.node`
         <button class="image-share-button" onclick=${() => share(window.location.href)}>
             ${tl(trans.share)}
         </button>
@@ -3532,7 +3532,7 @@
       page.structure.container.setAttribute("data-bleh--gallery-tab", "all");
     else
       page.structure.container.setAttribute("data-bleh--gallery-tab", "saved");
-    page.structure.content_top.after(html2.node`
+    page.structure.content_top.after(html.node`
         <div class="bleh--nav-wrap bleh--nav-wrap--bookmarks">
             <nav class="navlist secondary-nav">
                 <ul class="navlist-items">
@@ -3552,7 +3552,7 @@
     `);
     let bookmarks_panel;
     page.structure.main.classList.add("bleh--gallery");
-    page.structure.main.after(html2.node`
+    page.structure.main.after(html.node`
         <div class="col-main bleh--bookmarks not-a-panel">
             <section class="bookmarks-panel" ref=${(el) => bookmarks_panel = el}>
                 <ul class="image-list" data-kate-processed="true"></ul>
@@ -3580,7 +3580,7 @@
         if (ff("remove_bookmark")) {
           let menu = tippy(image_element, {
             theme: "context-menu",
-            content: html2.node`
+            content: html.node`
                         <button class="dropdown-menu-clickable-item" onclick=${() => update_image_bookmark(image_element, image, false)} data-menu-item="remove-bookmark" data-bleh--image-is-bookmarked="true">
                             ${trans_legacy.en.gallery.bookmarks.button.unbookmark_this_image.name}
                         </button>
@@ -3609,7 +3609,7 @@
         }
       });
     } else {
-      render(bookmarks_panel, html2`
+      render(bookmarks_panel, html`
             <div class="loading-data-container">
                 <div class="loading-data-text failed">${tl(trans.no_images_saved)}</div>
             </div>
@@ -3751,18 +3751,18 @@
       let body = settings_store[id].body ? tl(settings_store[id].body) : null;
       if (type === "toggle") {
         let toggle;
-        return html2.node`
+        return html.node`
                 <div class="setting v2" data-type="toggle" onclick=${() => update_toggle(id, toggle)}>
-                    ${text2 ? html2.node`
+                    ${text2 ? html.node`
                     <div class="heading">
                         <h5>${title}</h5>
-                        ${body ? html2.node`<p>${body}</p>` : ""}
+                        ${body ? html.node`<p>${body}</p>` : ""}
                     </div>
                     ` : ""}
-                    ${settings_store[id].extensions ? html2.node`
+                    ${settings_store[id].extensions ? html.node`
                     <div class="extensions">
                         ${settings_store[id].extensions.map((extension) => () => {
-          let container = html2.node`
+          let container = html.node`
                                 <div class="extension">
                                     <div class="bleh-icon" />
                                 </div>
@@ -3793,19 +3793,19 @@
         let input2;
         let marker;
         let working_max = settings_store[id].max - settings_store[id].min;
-        return html2.node`
+        return html.node`
                 <div class="setting v2" data-type="range" ref=${(el) => option = el} data-modified=${value != settings_store[id].default}>
                     <button class="btn reset" onclick=${() => reset_range(id, option, track, input2, marker)}>${tl(trans.reset)}</button>
-                    ${text2 ? html2.node`
+                    ${text2 ? html.node`
                     <div class="heading">
                         <h5>${title}</h5>
-                        ${body ? html2.node`<p>${body}</p>` : ""}
+                        ${body ? html.node`<p>${body}</p>` : ""}
                     </div>
                     ` : ""}
-                    ${settings_store[id].extensions ? html2.node`
+                    ${settings_store[id].extensions ? html.node`
                     <div class="extensions">
                         ${settings_store[id].extensions.map((extension) => () => {
-          let container = html2.node`
+          let container = html.node`
                                 <div class="extension">
                                     <div class="bleh-icon" />
                                 </div>
@@ -3840,19 +3840,19 @@
         let submit;
         let input_container;
         let error_tooltip;
-        let container = html2.node`
+        let container = html.node`
                 <div class="setting v2" data-type="text" ref=${(el) => option = el} data-modified=${value != settings_store[id].default}>
                     <button class="btn reset" ref=${(el) => reset_btn = el} onclick=${() => reset_text(id, input2, submit, option, reset_btn, avatar3)}>${tl(trans.reset)}</button>
-                    ${text2 ? html2.node`
+                    ${text2 ? html.node`
                     <div class="heading">
                         <h5>${title}</h5>
-                        ${body ? html2.node`<p>${body}</p>` : ""}
+                        ${body ? html.node`<p>${body}</p>` : ""}
                     </div>
                     ` : ""}
-                    ${settings_store[id].extensions ? html2.node`
+                    ${settings_store[id].extensions ? html.node`
                     <div class="extensions">
                         ${settings_store[id].extensions.map((extension) => () => {
-          let container2 = html2.node`
+          let container2 = html.node`
                                 <div class="extension">
                                     <div class="bleh-icon" />
                                 </div>
@@ -3865,7 +3865,7 @@
                     </div>
                     ` : ""}
                     ${setting_incompatible_block(settings_store[id].incompatible)}
-                    ${settings_store[id].avatar ? html2.node`
+                    ${settings_store[id].avatar ? html.node`
                     <div class="avatar-container">
                         <div class="avatar-inner" ref=${(el) => avatar3 = el}>
                             <img src=${localStorage.getItem(`bleh_${id}_avi`) || ""} alt=${value} />
@@ -3933,10 +3933,10 @@
     if (!entries)
       return "";
     return "";
-    return html2.node`
+    return html.node`
         <div class="incompatible">
             ${entries.map((incompatible) => () => {
-      let container = html2.node`
+      let container = html.node`
                     <div class="extension">
                         <div class="bleh-icon" />
                     </div>
@@ -3950,11 +3950,11 @@
     `;
   }
   function setting_fail(id, e = null) {
-    return html2.node`
+    return html.node`
         <div class="setting">
             <div class="alert alert-error no-margin">
                 ${tl(trans.value_failed_to_load).replace("{v}", id)}
-                ${e ? html2`<br>${e.message}` : ""}
+                ${e ? html`<br>${e.message}` : ""}
             </div>
         </div>
     `;
@@ -4034,7 +4034,7 @@
     let modal = dialog({
       id: "profile_shortcut",
       title: tl(trans.profile_shortcut.name),
-      body: html2.node`
+      body: html.node`
         ${setting({ id: "profile_shortcut", text: false, focus: true })}
         `
     });
@@ -4049,7 +4049,7 @@
     dialog({
       id: "other_listener",
       title: tl(trans.view_others_library),
-      body: html2.node`
+      body: html.node`
         <div class="setting" data-type="text">
             <div class="avatar-container">
                 <div class="avatar-inner avatar--bleh-missing">
@@ -4085,7 +4085,7 @@
     dialog({
       id: "profile_shortcut",
       title: tl(trans.profile_shortcut.name),
-      body: html2.node`
+      body: html.node`
             <div class="big-modal-alert alert-danger">
                 ${{ html: tl(trans.profile_shortcut.notice).replace("{u}", `<a class="mention" href="${root}user/${settings.profile_shortcut}" target="_blank">@${settings.profile_shortcut}</a>`) }}
             </div>
@@ -4179,8 +4179,8 @@
     fetch(`${root}user/${profile_name}/tags`).then(function(response) {
       console.log("returned", response, response.text);
       return response.text();
-    }).then(function(html3) {
-      let doc = new DOMParser().parseFromString(html3, "text/html");
+    }).then(function(html2) {
+      let doc = new DOMParser().parseFromString(html2, "text/html");
       console.log("DOC", doc);
       profile_img.classList.remove("requesting");
       try {
@@ -4220,7 +4220,7 @@
       let tabs = document.createElement("nav");
       tabs.classList.add("navlist", "secondary-nav", "navlist--more", "redesigned-navigation");
       if (page.type == "artist") {
-        tabs.appendChild(html2.node`
+        tabs.appendChild(html.node`
                 <ul class="navlist-items">
                     <li class="navlist-item secondary-nav-item secondary-nav-item--overview">
                         <a class="secondary-nav-item-link secondary-nav-item-link--active" href="${window.location.href}">
@@ -4237,7 +4237,7 @@
                             ${tl(trans.albums)}
                         </a>
                     </li>
-                    ${!page_is_blocked ? html2.node`
+                    ${!page_is_blocked ? html.node`
                     <li class="navlist-item secondary-nav-item secondary-nav-item--images">
                         <a class="secondary-nav-item-link" href="${window.location.href}/+images">
                             ${tl(trans.photos)}
@@ -4277,14 +4277,14 @@
                 </ul>
             `);
       } else if (page.type == "album") {
-        tabs.appendChild(html2.node`
+        tabs.appendChild(html.node`
                 <ul class="navlist-items">
                     <li class="navlist-item secondary-nav-item secondary-nav-item--overview">
                         <a class="secondary-nav-item-link secondary-nav-item-link--active" href="${window.location.href}">
                             ${tl(trans.overview)}
                         </a>
                     </li>
-                    ${!page_is_blocked ? html2.node`
+                    ${!page_is_blocked ? html.node`
                     <li class="navlist-item secondary-nav-item secondary-nav-item--wiki">
                         <a class="secondary-nav-item-link" href="${window.location.href}/+wiki">
                             ${tl(trans.wiki)}
@@ -4309,7 +4309,7 @@
                 </ul>
             `);
       } else if (page.type == "track") {
-        tabs.appendChild(html2.node`
+        tabs.appendChild(html.node`
                 <ul class="navlist-items">
                     <li class="navlist-item secondary-nav-item secondary-nav-item--overview">
                         <a class="secondary-nav-item-link secondary-nav-item-link--active" href="${window.location.href}">
@@ -4321,7 +4321,7 @@
                             ${tl(trans.albums)}
                         </a>
                     </li>
-                    ${!page_is_blocked ? html2.node`
+                    ${!page_is_blocked ? html.node`
                     <li class="navlist-item secondary-nav-item secondary-nav-item--wiki">
                         <a class="secondary-nav-item-link" href="${window.location.href}/+wiki">
                             ${tl(trans.wiki)}
@@ -4404,7 +4404,7 @@
         if (first_metadata_item != null)
           listens = clean_number(first_metadata_item.textContent.trim());
         listen_item.setAttribute("data-listens", listens);
-        render(listen_item, html2`
+        render(listen_item, html`
                 <img class="view-item-avatar" src="${shortcut_listens.avi}" alt="${shortcut_listens.name}">
                 <div class="info">
                     <h3>${shortcut_listens.name}</h3>
@@ -4605,14 +4605,14 @@
         }
         link_container.appendChild(item);
       });
-      link_container.appendChild(html2.node`
+      link_container.appendChild(html.node`
             <li>
                 <a class="play-this-track-playlink music-link play-this-track-playlink--genius" href="https://genius.com/search?q=${sanitise(page.sister)}+${sanitise(page.name)}" target="_blank">
                     Genius
                 </a>
             </li>
         `);
-      link_container.appendChild(html2.node`
+      link_container.appendChild(html.node`
             <li>
             <a class="play-this-track-playlink music-link play-this-track-playlink--tidal" href="https://listen.tidal.com/search?q=${sanitise(page.sister, " ")} ${sanitise(page.name, " ")}" target="_blank">
                 Tidal
@@ -4626,7 +4626,7 @@
       header.textContent = tl(trans.find_on);
       link_group.appendChild(header);
       if (page.type == "album") {
-        render(link_container, html2`
+        render(link_container, html`
                 <a class="play-this-track-playlink music-link play-this-track-playlink--spotify" href="https://open.spotify.com/search/${sanitise(page.sister, " ")} ${sanitise(page.name, " ")}" target="_blank">
                     Spotify
                 </a>
@@ -4650,7 +4650,7 @@
                 </a>
             `);
       } else {
-        render(link_container, html2`
+        render(link_container, html`
                 <a class="play-this-track-playlink music-link play-this-track-playlink--spotify" href="https://open.spotify.com/search/${sanitise(page.name, " ")}" target="_blank">
                     Spotify
                 </a>
@@ -4703,7 +4703,7 @@
     }
     if (!settings.corrections)
       return;
-    page.structure.side.appendChild(html2.node`
+    page.structure.side.appendChild(html.node`
         <section class="lotus cta">
              <strong>${tl(trans.lotus_cta[page.corrected]).replace("{t}", tl(trans[`${page.type}_lower`]))}</strong>
             <a class="see-more" href="https://github.com/katelyynn/lotus/issues/new/choose" target="_blank">${tl(trans.suggest_correction)}</a>
@@ -4718,7 +4718,7 @@
     listen_item.setAttribute("data-listens", listens);
     listen_item.setAttribute("id", `listen-item--${name}`);
     if (listens > -1) {
-      render(listen_item, html2`
+      render(listen_item, html`
             <img class="view-item-avatar" src="${avi}" alt="${name}">
             <div class="info">
                 <h3>${name}</h3>
@@ -4727,7 +4727,7 @@
         `);
       let menu = tippy(listen_item, {
         theme: "context-menu",
-        content: html2.node`
+        content: html.node`
                 <a class="dropdown-menu-clickable-item" href="${root}user/${name}" data-menu-item="view_profile">
                     ${tl(trans.profile)}
                 </a>
@@ -4745,7 +4745,7 @@
       });
       register_menu(listen_item, menu);
     } else if (listens > -2) {
-      render(listen_item, html2`
+      render(listen_item, html`
             <img class="view-item-avatar" src="${avi}" alt="${name}">
             <div class="info">
                 <h3>${name}</h3>
@@ -4754,7 +4754,7 @@
         `);
       let menu = tippy(listen_item, {
         theme: "context-menu",
-        content: html2.node`
+        content: html.node`
                 <a class="dropdown-menu-clickable-item" href="${root}user/${name}" data-menu-item="view_profile">
                     ${tl(trans.profile)}
                 </a>
@@ -4783,10 +4783,10 @@
         content: tl(trans.view_others_library)
       });
     } else {
-      render(listen_item, html2`
-            ${avi[0] ? html2.node`<img class="view-item-avatar" src="${avi[0].getAttribute("src")}" alt="">` : ""}
-            ${avi[1] ? html2.node`<img class="view-item-avatar" src="${avi[1].getAttribute("src")}" alt="">` : ""}
-            ${avi[2] ? html2.node`<img class="view-item-avatar" src="${avi[2].getAttribute("src")}" alt="">` : ""}
+      render(listen_item, html`
+            ${avi[0] ? html.node`<img class="view-item-avatar" src="${avi[0].getAttribute("src")}" alt="">` : ""}
+            ${avi[1] ? html.node`<img class="view-item-avatar" src="${avi[1].getAttribute("src")}" alt="">` : ""}
+            ${avi[2] ? html.node`<img class="view-item-avatar" src="${avi[2].getAttribute("src")}" alt="">` : ""}
             <div class="info">
                 <h3>${tl(trans.following)}</h3>
                 <p>${tl(trans.others_count).replace("{c}", count)}</p>
@@ -4843,7 +4843,7 @@
         page.structure.main.insertBefore(panel, page.structure.main.firstElementChild);
     }
     panel.classList.add("listen-panel");
-    let row = html2.node`
+    let row = html.node`
         <div class="listener-row">
             <div class="listener-side">
                 <h3>${listeners.text}</h3>
@@ -4853,7 +4853,7 @@
                 <h3>${scrobbles.text}</h3>
                 <p>${scrobbles.abbr}</p>
             </div>
-            ${metascore.text ? html2.node`
+            ${metascore.text ? html.node`
             <div class="metascore-side">
                 <h3>${metascore.text}</h3>
                 <p><a href="${metascore.link}" target="_blank">${metascore.abbr}</a></p>
@@ -4926,7 +4926,7 @@
       return;
     if (video_col)
       page.structure.side.removeChild(video_col);
-    page.structure.side.insertBefore(html2.node`
+    page.structure.side.insertBefore(html.node`
         <section class="video-placeholder">
             <div class="bleh-icon" style="--icon: var(--icon-16-video-broken)"></div>
             ${tl(trans.video_removed)}
@@ -5223,9 +5223,9 @@
             song_tags = formatted_title[1];
             artist.textContent = formatted_title[2];
           }
-          render(name_elem, html2.node`
+          render(name_elem, html.node`
                     <div class="title">${song_title.trim()}</div>
-                    ${song_tags.map((tag) => html2.node`
+                    ${song_tags.map((tag) => html.node`
                         <div class="feat" data-bleh--tag-type="${tag.type}" data-bleh--tag-group="${tag.group}">${tag.text}</div>
                     `)}
                 `);
@@ -5254,10 +5254,10 @@
     }
     if (initial == "")
       initial = values[0].value;
-    let container = html2.node`
+    let container = html.node`
         <div class="select-wrap custom-selector">
             <select ref=${(el) => select2 = el} name=${name}>
-                ${values.map((value) => html2.node`
+                ${values.map((value) => html.node`
                     <option value=${value.value} selected=${value.value == initial}>${value.text}</option>
                 `)}
             </select>
@@ -5266,7 +5266,7 @@
     `;
     let menu = tippy(button, {
       theme: "select-menu",
-      content: html2.node``,
+      content: html.node``,
       placement: "bottom",
       interactive: true,
       interactiveBorder: 10,
@@ -5278,15 +5278,15 @@
   function set_select(button, menu, values, selected, select2, name) {
     values.some((value) => {
       if (value.value == selected) {
-        render(button, html2`${value.text}`);
+        render(button, html`${value.text}`);
         return false;
       }
     });
     select2.value = selected;
     if (name != "")
       document.documentElement.setAttribute(`data-bleh--inbuilt-id_${name}`, selected);
-    menu.setContent(html2.node`
-        ${values.map((value) => html2.node`
+    menu.setContent(html.node`
+        ${values.map((value) => html.node`
             <button class="btn dropdown-menu-clickable-item select-item" aria-checked=${selected == value.value} onclick=${() => set_select(button, menu, values, value.value, select2, name)}>
                 ${value.text}
             </button>
@@ -5304,10 +5304,10 @@
     return values;
   }
   function select_fail(e = null) {
-    return html2.node`
+    return html.node`
         <div class="alert alert-error">
             ${tl(trans.value_failed_to_load).replace("{v}", tl(trans.select_component))}
-            ${e ? html2`<br>${e.message}` : ""}
+            ${e ? html`<br>${e.message}` : ""}
         </div>
     `;
   }
@@ -5335,7 +5335,7 @@
     button.textContent = menu_list.querySelector(`[data-value="${value}"]`).textContent;
     let theme_menu_item = tippy(button, {
       theme: "select-menu",
-      content: html2.node([
+      content: html.node([
         menu_list.innerHTML
       ]),
       placement: "bottom",
@@ -5515,9 +5515,9 @@
             song_tags = formatted_title[1];
           }
           track_title.setAttribute("title", correct_item_by_artist(track_title.getAttribute("title"), track_artist));
-          render(track_title, html2`
+          render(track_title, html`
                     <div class="title">${song_title.trim()}</div>
-                    ${song_tags.map((tag) => html2.node`
+                    ${song_tags.map((tag) => html.node`
                         <div class="feat" data-bleh--tag-type="${tag.type}" data-bleh--tag-group="${tag.group}">${tag.text}</div>
                     `)}
                 `);
@@ -5529,33 +5529,33 @@
           }
           if (song_artist_element.textContent.replaceAll("+", " ").trim() === track_artist || song_artist_element.textContent.trim() === "") {
             log("artist either matches or is blank, replacing", "tracks", "log");
-            render(song_artist_element, html2`<a href="${root}music/${sanitise(formatted_title[2])}" title="${formatted_title[2]}">${formatted_title[2]}</a>`);
+            render(song_artist_element, html`<a href="${root}music/${sanitise(formatted_title[2])}" title="${formatted_title[2]}">${formatted_title[2]}</a>`);
             let song_guests = formatted_title[3];
             for (let guest in song_guests) {
-              song_artist_element.appendChild(html2.node`
+              song_artist_element.appendChild(html.node`
                             ,<a href="${root}music/${sanitise(song_guests[guest])}" title="${song_guests[guest]}">${song_guests[guest]}</a>
                         `);
             }
           }
           let image = track.querySelector(".chartlist-image img");
           if (track_legacy_menu) {
-            let track_preview = html2.node`
+            let track_preview = html.node`
                         <div class="track-preview">
                             <div class="image">
                                 <div class="inner-image">
-                                    ${image ? html2.node`<img src=${image.getAttribute("src")} alt=${song_title}>` : html2.node`<img class="missing-track" alt="">`}
+                                    ${image ? html.node`<img src=${image.getAttribute("src")} alt=${song_title}>` : html.node`<img class="missing-track" alt="">`}
                                 </div>
                             </div>
                             <div class="info">
                                 <h5 class="title">${song_title}</h5>
                                 <p class="artist">${song_artist_element.firstElementChild.textContent}</p>
                                 <div class="tags">
-                                    ${song_tags.map((tag) => html2.node`
+                                    ${song_tags.map((tag) => html.node`
                                         <div class="feat" data-bleh--tag-type="${tag.type}" data-bleh--tag-group="${tag.group}">${tag.text}</div>
                                     `)}
                                 </div>
-                                ${is_album ? "" : html2.node`<p class="album">${image ? correct_item_by_artist(image.getAttribute("alt"), track_artist) : album ? album.textContent : page.name}</p>`}
-                                ${track_timestamp && track_timestamp_contents ? html2.node`<p class="timestamp">${track_timestamp_contents}</p>` : ""}
+                                ${is_album ? "" : html.node`<p class="album">${image ? correct_item_by_artist(image.getAttribute("alt"), track_artist) : album ? album.textContent : page.name}</p>`}
+                                ${track_timestamp && track_timestamp_contents ? html.node`<p class="timestamp">${track_timestamp_contents}</p>` : ""}
                             </div>
                         </div>
                     `;
@@ -5608,7 +5608,7 @@
             let image = link.querySelector("img");
             if (!settings.album_text) {
               let alt = correct_item_by_artist(image.getAttribute("alt"), track_artist);
-              track.appendChild(html2.node`
+              track.appendChild(html.node`
                             <td class="chartlist-album custom-album-text">
                                 <a href="${link.getAttribute("href")}">${alt}</a>
                             </td>
@@ -5655,7 +5655,7 @@
     dialog({
       id: "compare",
       title: tl(trans.compare),
-      body: html2.node`
+      body: html.node`
             <div class="compare-header">
                 <div class="compare-users">
                     <div class="compare-user">
@@ -5702,15 +5702,15 @@
                     ${type = select([
         {
           value: "artists",
-          text: html2`<div class="bleh-icon" style="--icon: var(--icon-16-artist)" />${tl(trans.artists)}`
+          text: html`<div class="bleh-icon" style="--icon: var(--icon-16-artist)" />${tl(trans.artists)}`
         },
         {
           value: "albums",
-          text: html2`<div class="bleh-icon" style="--icon: var(--icon-16-album)" />${tl(trans.albums)}`
+          text: html`<div class="bleh-icon" style="--icon: var(--icon-16-album)" />${tl(trans.albums)}`
         },
         {
           value: "tracks",
-          text: html2`<div class="bleh-icon" style="--icon: var(--icon-16-track)" />${tl(trans.tracks)}`
+          text: html`<div class="bleh-icon" style="--icon: var(--icon-16-track)" />${tl(trans.tracks)}`
         }
       ], "albums")}
                     ${timeframe = select([
@@ -5786,7 +5786,7 @@
       get_grid(auth.name, 1, parseInt(pages_select.value), page.name);
     }
     function get_grid(user, current_page, page_count, next_user = null) {
-      render(body, html2`
+      render(body, html`
             <div class="loading-data-container">
                 <div class="loading-data-text">${tl(trans.gathering_plays_for_user_pages).replace("{u}", user).replace("{current_page}", current_page).replace("{pages}", page_count)}</div>
             </div>
@@ -5861,7 +5861,7 @@
       log("gathered shared values", "compare", "info", page.state.compare);
       body.innerHTML = "";
       if (page.state.compare.shared.length == 0) {
-        render(body, html2`
+        render(body, html`
                 <div class="loading-data-container">
                     <div class="loading-data-text failed">${tl(trans.nothing_in_common)}</div>
                 </div>
@@ -5879,7 +5879,7 @@
             template = sanitise(data2.name);
           else
             template = `${sanitise(data2.sister)}/${sanitise(data2.name)}`;
-          grid.appendChild(html2.node`
+          grid.appendChild(html.node`
                     <li class="compare-item grid-items-item">
                         <div class="grid-items-cover-image js-link-block link-block">
                             <div class="grid-items-cover-image-image ${data2.avatar.endsWith("/c6f59c1e5e7240a4c0d427abd71f3dbb.jpg") || data2.avatar.endsWith("/2a96cbd8b46e442fc41c2b86b821562f.jpg") ? "grid-items-cover-default" : ""}">
@@ -5891,7 +5891,7 @@
                                         ${data2.name}
                                     </a>
                                 </p>
-                                ${type_select.value == "albums" ? html2.node`
+                                ${type_select.value == "albums" ? html.node`
                                 <p class="grid-items-item-aux-text">
                                     <a class="grid-items-item-aux-block" href="${root}music/${data2.sister}">
                                         ${data2.sister}
@@ -5934,7 +5934,7 @@
         });
         page.state.compare.shared.forEach((data2, index) => {
           let template = `${sanitise(data2.sister)}/_/${sanitise(data2.name)}`;
-          tbody.appendChild(html2.node`
+          tbody.appendChild(html.node`
                     <tr class="chartlist-row chartlist-row--with-artist compare-item">
                         <td class="chartlist-index">${index + 1}</td>
                         <td class="chartlist-image">
@@ -5993,7 +5993,7 @@
   }) {
     let input_box;
     let error_tooltip;
-    let container = html2.node`
+    let container = html.node`
         <div class="content-form input-container colourful" data-has-error="false">
             <input type=${type} value=${value} placeholder=${placeholder} min=${min} max=${max} maxlength=${maxlength} ref=${(el) => input_box = el} />
         </div>
@@ -6051,7 +6051,7 @@
     dialog({
       id: "collage",
       title: tl(trans.collage),
-      body: html2.node`
+      body: html.node`
             <div class="compare-header">
                 <div class="compare-users">
                     <div class="compare-user">
@@ -6082,15 +6082,15 @@
                     ${type = select([
         {
           value: "artists",
-          text: html2`<div class="bleh-icon" style="--icon: var(--icon-16-artist)" />${tl(trans.artists)}`
+          text: html`<div class="bleh-icon" style="--icon: var(--icon-16-artist)" />${tl(trans.artists)}`
         },
         {
           value: "albums",
-          text: html2`<div class="bleh-icon" style="--icon: var(--icon-16-album)" />${tl(trans.albums)}`
+          text: html`<div class="bleh-icon" style="--icon: var(--icon-16-album)" />${tl(trans.albums)}`
         },
         {
           value: "tracks",
-          text: html2`<div class="bleh-icon" style="--icon: var(--icon-16-track)" />${tl(trans.tracks)}`
+          text: html`<div class="bleh-icon" style="--icon: var(--icon-16-track)" />${tl(trans.tracks)}`
         }
       ], default_type)}
                     ${timeframe = select([
@@ -6147,7 +6147,7 @@
     });
     tippy(settings_btn, {
       theme: "window",
-      content: html2.node`
+      content: html.node`
             <div class="dialog-settings">
                 ${setting({ id: "collage_title" })}
                 <div class="sep" />
@@ -6202,7 +6202,7 @@
       get_grid(1, pages);
     }
     function get_grid(current_page, pages) {
-      render(body, html2`
+      render(body, html`
             <div class="loading-data-container">
                 <div class="loading-data-text">${tl(trans.gathering_plays_for_user_pages).replace("{u}", page.name).replace("{current_page}", current_page).replace("{pages}", pages)}</div>
             </div>
@@ -6246,7 +6246,7 @@
     async function continue_collage() {
       log("gathered initial values", "collage", "info", page.state.collage);
       if (page.state.collage.length == 0) {
-        render(body, html2`
+        render(body, html`
                 <div class="loading-data-container">
                     <div class="loading-data-text failed">${tl(trans.no_plays_in_range)}</div>
                 </div>
@@ -6258,7 +6258,7 @@
         submit.disabled = false;
         return;
       }
-      let grid = html2.node`
+      let grid = html.node`
             <ol class="grid-items grid-items--numbered collage-grid" style="--width: ${width_input.value}; --height: ${height_input.value}" data-width=${width_input.value} data-height=${height_input.value} />
         `;
       if (!settings.collage_grid_gap) {
@@ -6283,40 +6283,40 @@
           template = sanitise(data2.name);
         else
           template = `${sanitise(data2.sister)}/${sanitise(data2.name)}`;
-        grid.appendChild(html2.node`
+        grid.appendChild(html.node`
                 <li class="compare-item grid-items-item">
                     <div class="grid-items-cover-image">
                         <div class="grid-items-cover-image-image ${data2.avatar.endsWith("/c6f59c1e5e7240a4c0d427abd71f3dbb.jpg") || data2.avatar.endsWith("/2a96cbd8b46e442fc41c2b86b821562f.jpg") ? "grid-items-cover-default" : ""}">
                             <img src="${data2.avatar.replace("/avatar70s/", "/avatar300s/").replace("/64s/", "/avatar300s/")}" alt="${data2.name}" loading="lazy">
                         </div>
-                        ${settings.collage_grid_text || settings.collage_grid_plays ? html2.node`
+                        ${settings.collage_grid_text || settings.collage_grid_plays ? html.node`
                         <div class="grid-items-item-details">
-                            ${settings.collage_grid_text ? html2.node`
+                            ${settings.collage_grid_text ? html.node`
                             <p class="grid-items-item-main-text">
                                 <a class="link-block-target" href="${root}music/${template}" title="${data2.name}">
                                     ${data2.name}
                                 </a>
                             </p>
                             ` : ""}
-                            ${type_select.value != "artists" ? html2.node`
+                            ${type_select.value != "artists" ? html.node`
                             <p class="grid-items-item-aux-text">
-                                ${settings.collage_grid_text ? html2.node`
+                                ${settings.collage_grid_text ? html.node`
                                 <a class="grid-items-item-aux-block" href="${root}music/${data2.sister}">
                                     ${data2.sister}
                                 </a>
-                                ${settings.collage_grid_plays ? html2.node`
+                                ${settings.collage_grid_plays ? html.node`
                                 <a class="grid-item-plays" href="${root}user/${page.name}/library/music/${template}?date_preset=${timeframe_select.value}" target="_blank">
                                     ${data2.plays.toLocaleString(lang)}
                                 </a>
                                 ` : ""}
-                                ` : settings.collage_grid_plays ? html2.node`
+                                ` : settings.collage_grid_plays ? html.node`
                                 <a class="grid-item-plays" href="${root}user/${page.name}/library/music/${template}?date_preset=${timeframe_select.value}" target="_blank">
                                     ${data2.plays.toLocaleString(lang)}${tl(trans.plays_lower)}
                                 </a>
                                 ` : ""}
                             </p>
-                            ` : html2.node`
-                            ${settings.collage_grid_plays ? html2.node`
+                            ` : html.node`
+                            ${settings.collage_grid_plays ? html.node`
                             <p class="grid-items-item-aux-text">
                                 <a class="grid-item-plays" href="${root}user/${page.name}/library/music/${template}?date_preset=${timeframe_select.value}" target="_blank">
                                     ${data2.plays.toLocaleString(lang)}${tl(trans.plays_lower)}
@@ -6330,9 +6330,9 @@
                 </li>
             `);
       });
-      let collage_dom = html2.node`
+      let collage_dom = html.node`
             <div class="collage">
-                ${settings.collage_title ? html2.node`
+                ${settings.collage_title ? html.node`
                 <div class="header">
                     <div class="type" data-type=${type_select.value}>
                         <div class="bleh-icon" />
@@ -6352,7 +6352,7 @@
                 ${grid}
             </div>
         `;
-      render(body, html2`
+      render(body, html`
             <div class="loading-data-container">
                 <div class="loading-data-text">${tl(trans.waiting_for_images)}</div>
             </div>
@@ -6362,7 +6362,7 @@
       let cv_width = 1500;
       let cv_height = 1547;
       let cv_scale = 1;
-      let initial_canvas = html2.node`
+      let initial_canvas = html.node`
             <canvas width=${cv_width * cv_scale} height=${cv_height * cv_scale} />
         `;
       html2canvas(collage_dom, {
@@ -6380,7 +6380,7 @@
         }
       }).then((canvas) => {
         body.setAttribute("data-filled", "true");
-        render(body, html2`
+        render(body, html`
                 <div class="collage-finished">
                     <strong>${tl(trans.your_collage_is_ready)}</strong>
                     <div class="button-group">
@@ -6463,14 +6463,14 @@
     dialog({
       id: "sponsor",
       title: tl(trans.support_future_development),
-      body: html2.node`
+      body: html.node`
             <div class="modal-vertical-inner support-inner">
                 <div class="avatar">
                     <img src="${auth.avatar.replace("/avatar42s/", "/avatar170s/")}" alt="${tl(trans.your_avatar)}">
                     <span class="avatar-status-dot user-status--bleh-sponsor"></span>
                 </div>
                 <h1>${tl(trans.support_future_development)}</h1>
-                <p>${html2.node([
+                <p>${html.node([
         tl(trans.why_sponsor).replace("katelyn", sponsor_list && sponsor_list.special ? `<a class="mention" href="${root}user/${sponsor_list.special[0]}">@${sponsor_list.special[0]}</a>` : "katelyn")
       ])}</p>
             </div>
@@ -6494,7 +6494,7 @@
       dialog({
         id: "sponsor_manage",
         title: tl(trans.sponsor),
-        body: html2.node`
+        body: html.node`
                 <div class="modal-vertical-inner support-inner">
                     <div class="avatar">
                         <img src="${auth.avatar.replace("/avatar42s/", "/avatar170s/")}" alt="${tl(trans.your_avatar)}">
@@ -6510,7 +6510,7 @@
       dialog({
         id: "sponsor_manage",
         title: tl(trans.sponsor),
-        body: html2.node`
+        body: html.node`
                 <div class="modal-vertical-inner support-inner">
                     <div class="avatar">
                         <img src="${auth.avatar.replace("/avatar42s/", "/avatar170s/")}" alt="${tl(trans.your_avatar)}">
@@ -6712,13 +6712,13 @@
     }
     let listen_container = page.structure.row.querySelector(".listen-panel");
     if (!is_own_profile && page.name != sponsor_list.sponsor_account && katsune) {
-      let taste_wrap = html2.node`
+      let taste_wrap = html.node`
             <div class="btn listen-item icon">
                 <div class="span">
                     <img class="view-item-avatar" src="${auth.avatar}">
                     <img class="view-item-avatar" src="${profile_avi}">
                     <div class="info">
-                        <h3>${html2.node([
+                        <h3>${html.node([
         tl(trans.you_share_count_with).replace("{c}", `<span class="colourful" data-taste="${taste}">${taste_percentage}</span>`)
       ])}</h3>
                         <p>
@@ -6735,7 +6735,7 @@
         `;
       tippy(taste_wrap, {
         theme: "stack",
-        content: html2.node`
+        content: html.node`
                 <span>
                     ${tl(trans.taste_similarity)}
                 </span>
@@ -6746,7 +6746,7 @@
       if (taste_artists.length > 1) {
         let menu = tippy(taste_wrap, {
           theme: "context-menu",
-          content: html2.node`
+          content: html.node`
                     <h4 class="menu-header">${tl(trans.compare_plays)}</h4>
                     <a class="dropdown-menu-clickable-item" href="${root}user/${page.name}/library/music/${sanitise(taste_artists[0])}" data-menu-item="shared-artist">
                         <img class="view-item-avatar" src="${profile_avi}" alt="${page.name}">${taste_artists[0]}
@@ -6754,7 +6754,7 @@
                     <a class="dropdown-menu-clickable-item" href="${root}user/${auth.name}/library/music/${sanitise(taste_artists[0])}" data-menu-item="shared-artist">
                         <img class="view-item-avatar" src="${auth.avatar}" alt="${auth.name}">${taste_artists[0]}
                     </a>
-                    ${taste_artists.length >= 2 ? html2.node`
+                    ${taste_artists.length >= 2 ? html.node`
                     <div class="sep"></div>
                     <a class="dropdown-menu-clickable-item" href="${root}user/${page.name}/library/music/${sanitise(taste_artists[1])}" data-menu-item="shared-artist">
                         <img class="view-item-avatar" src="${profile_avi}" alt="${page.name}">${taste_artists[1]}
@@ -6763,7 +6763,7 @@
                         <img class="view-item-avatar" src="${auth.avatar}" alt="${auth.name}">${taste_artists[1]}
                     </a>
                     ` : ""}
-                    ${taste_artists.length >= 3 ? html2.node`
+                    ${taste_artists.length >= 3 ? html.node`
                     <div class="sep"></div>
                     <a class="dropdown-menu-clickable-item" href="${root}user/${page.name}/library/music/${sanitise(taste_artists[2])}" data-menu-item="shared-artist">
                         <img class="view-item-avatar" src="${profile_avi}" alt="${page.name}">${taste_artists[2]}
@@ -6798,25 +6798,25 @@
     log(`creating top item of ${name}, ${link}, ${text2}`, "profile");
     let side_action;
     if (action === "button") {
-      side_action = html2.node`
+      side_action = html.node`
             <button
                 class="btn side-action"
                 data-type=${type}
                 onclick=${link}
             >
                 ${tl(trans[type])}
-                ${new_release ? html2.node`<div class="new-badge">${tl(trans.new)}</div>` : ""}
+                ${new_release ? html.node`<div class="new-badge">${tl(trans.new)}</div>` : ""}
             </button>
         `;
     } else {
-      side_action = html2.node`
+      side_action = html.node`
             <a
                 class="btn side-action"
                 data-type=${type}
                 href=${link}
             >
                 ${tl(trans[type])}
-                ${new_release ? html2.node`<div class="new-badge">${tl(trans.new)}</div>` : ""}
+                ${new_release ? html.node`<div class="new-badge">${tl(trans.new)}</div>` : ""}
             </a>
         `;
     }
@@ -6912,7 +6912,7 @@
           if (!subpage_title)
             subpage_title = page.structure.main.querySelector(":scope > section:first-child .section-controls > .subpage-title");
           if (subpage_title) {
-            content_top = html2.node`
+            content_top = html.node`
                         <div class="content-top redesigned-content-top">
                             <div class="content-top-inner-wrap">
                                 <div class="container content-top-lower">
@@ -6959,7 +6959,7 @@
               page.structure.main.appendChild(side_actions);
             radio.classList = "btn stationlink js-playlink-station radio-button";
             let type = radio.getAttribute("data-analytics-label");
-            render(radio, html2`
+            render(radio, html`
                         <h3 class="sub-text">${tl(trans.radio)}</h3>
                         <h4>${tl(trans[type])}</h4>
                     `);
@@ -6979,7 +6979,7 @@
     let corrections_panel = document.body.querySelector("#subscription-corrections");
     page.structure.main.appendChild(corrections_panel);
     let nav = page.structure.container.querySelector("nav[data-more-string] .navlist-items");
-    nav.insertBefore(html2.node`
+    nav.insertBefore(html.node`
         <li class="navlist-item secondary-nav-item secondary-nav-item--back">
             <a class="secondary-nav-item-link" href="${root}settings/subscription">
                 ${tl(trans.back)}
@@ -7001,7 +7001,7 @@
       checkbox.classList = "setting";
       checkbox.setAttribute("data-type", "toggle");
       checkbox.setAttribute("onclick", `_update_inbuilt_item('${id}')`);
-      render(checkbox, html2`
+      render(checkbox, html`
             <div class="heading">
                 <h5>${text2}</h5>
             </div>
@@ -7423,7 +7423,7 @@
     let form_website = document.getElementById("id_homepage").value;
     let form_country = document.getElementById("id_country");
     let form_about_me = document.getElementById("id_about_me").textContent;
-    render(update_picture, html2`
+    render(update_picture, html`
        <h4>${tl(trans.profile)}</h4>
         <div class="banner-preview"></div>
         <div class="profile-container">
@@ -7530,7 +7530,7 @@
     page.state.avatar_changer = dialog({
       id: "edit_avatar",
       title: tl(trans.change_avatar),
-      body: html2.node`
+      body: html.node`
             <div class="forms">
                 <form action="${root}settings" name="avatar-form" method="post" enctype="multipart/form-data">
                     <input type="hidden" name="csrfmiddlewaretoken" value="${token}">
@@ -8012,13 +8012,13 @@
     } else {
       connected = session_types[0];
     }
-    render(page.structure.main, html2`
+    render(page.structure.main, html`
         <section class="applications">
             <div class="section-intro">
                 <h3>Applications</h3>
                 <p>Connect your account to third-party services for a better scrobbling experience. Make sure you trust the services below.</p>
             </div>
-            ${suggested ? html2`
+            ${suggested ? html`
             <h2>Suggested</h2>
             ${suggested}
             ` : ""}
@@ -8080,9 +8080,9 @@
       let song_title = formatted_title[0];
       let song_tags = formatted_title[1];
       page.corrected = formatted_title[4];
-      render(track_title, html2.node`
+      render(track_title, html.node`
             <div class="title">${sanitise_text(song_title).trim()}</div>
-            ${song_tags.map((tag) => html2.node`
+            ${song_tags.map((tag) => html.node`
                 <div class="feat" data-bleh--tag-type="${tag.type}" data-bleh--tag-group="${tag.group}">${tag.text}</div>
             `)}
         `);
@@ -8317,7 +8317,7 @@
       profile_albums();
       profile_tracks();
       if (is_own_profile && settings.activities) {
-        let recent_activity_section = html2.node`
+        let recent_activity_section = html.node`
                 <section class="recent-activity-section">
                     <h2>${tl(trans.activity)}</h2>
                     ${render_activity_list()}
@@ -8374,7 +8374,7 @@
       page.state.artists = artists;
       page.state.loved = loved;
       let scrobble_text;
-      let listen_container = html2.node`
+      let listen_container = html.node`
             <section class="listen-panel listen-profile-panel">
                 <div class="listener-row">
                     <div class="scrobble-side">
@@ -8390,7 +8390,7 @@
                         <p><a href="${root}user/${page.name}/loved">${loved.toLocaleString(lang)}</a></p>
                     </div>
                 </div>
-                ${scrobbles > 0 ? html2.node`
+                ${scrobbles > 0 ? html.node`
                 <a class="scrobble-canvas-container mini" href="${root}user/${page.name}/library/artists?date_preset=LAST_90_DAYS&page=1">
                     <div class="loading-data-container">
                         <div class="loading-data-text">${tl(trans.loading_count_days).replace("{c}", "90")}</div>
@@ -8401,7 +8401,7 @@
                         ${tl(trans.explore_in_library)}
                     </a>
                 </div>
-                ` : html2.node`
+                ` : html.node`
                 <div class="scrobble-canvas-container mini">
                     <div class="loading-data-container">
                         <div class="loading-data-text failed">${tl(trans.profile_does_not_have_enough_scrobbles)}</div>
@@ -8434,20 +8434,20 @@
         bleh_user_library();
       } else if (page.subpage == "events") {
         let selected_tab = page.structure.content_top.querySelector(".secondary-nav-item-link--active");
-        let value_panel = html2.node`
+        let value_panel = html.node`
                 <section class="value-panel">
                     <h2 class="text-18">${selected_tab ? selected_tab.firstChild.textContent : tl(trans.events)}</h2>
                 </section>
             `;
         let values = page.structure.main.querySelectorAll(".metadata-display");
-        let value_header = html2.node`
+        let value_header = html.node`
                 <div class="glacier-library-metadata"></div>
             `;
         values.forEach((value, index) => {
           let text2 = tl(trans.going);
           if (index == 1)
             text2 = tl(trans.interested);
-          value_header.appendChild(html2.node`
+          value_header.appendChild(html.node`
                     <div class="glacier-library-metadata-item">
                         <div class="sub-text">${text2}</div>
                         <div class="glacier-library-metadata-item-value">${value.textContent}</div>
@@ -8461,10 +8461,10 @@
           total_text.classList.add("text-18");
           total_text.textContent = tl(trans.all_time);
           value_panel.appendChild(total_text);
-          let total_header = html2.node`
+          let total_header = html.node`
                     <div class="glacier-library-metadata"></div>
                 `;
-          total_header.appendChild(html2.node`
+          total_header.appendChild(html.node`
                     <div class="glacier-library-metadata-item">
                         <div class="sub-text">${tl(trans.total)}</div>
                         <div class="glacier-library-metadata-item-value">${total_value.textContent}</div>
@@ -8491,7 +8491,7 @@
           dialog({
             id: "listening_report_v2",
             title: "oh no :c",
-            body: html2.node`
+            body: html.node`
                         <div class="alert alert-error">This listening report is too old</div>
                         <br>
                         <p>Legacy listening reports are not properly viewable yet in bleh for now. Sorry for the inconvenience.</p>
@@ -8654,7 +8654,7 @@
         tippy(badge, {
           theme: "badge",
           placement: "bottom",
-          content: html2.node`
+          content: html.node`
                     <div class="badge-name">${badge.textContent}</div>
                     <div class="badge-reason">${tl(trans.badges[badge.classList[1]].reason)}</div>
                 `
@@ -8673,7 +8673,7 @@
           tippy(badge, {
             theme: "badge",
             placement: "bottom",
-            content: html2.node`
+            content: html.node`
                         <div class="badge-name">${this_badge.name}</div>
                         <div class="badge-reason">${this_badge.reason}</div>
                     `
@@ -8692,12 +8692,12 @@
     profile_name_obj.appendChild(label_container);
     if (page.subpage != "overview") return;
     if (sponsor_list && sponsor_list.special && page.name == sponsor_list.special[0]) {
-      let sponsor_cta = html2.node`
+      let sponsor_cta = html.node`
             <div class="cta first sponsor colourful">
-                ${auth.sponsor ? html2`
+                ${auth.sponsor ? html`
                     <strong>${tl(trans.you_are_a_sponsor)}</strong>
                     <a class="see-more" onclick="_sponsor_manage()">${tl(trans.manage_sponsor)}</a>
-                ` : html2`
+                ` : html`
                     <strong>${tl(trans.news_sponsor_cta)}</strong>
                     <a class="see-more" onclick="_sponsor()">${tl(trans.sponsor)}</a>
                 `}
@@ -8755,7 +8755,7 @@
       });
       tippy(about_more, {
         theme: "window",
-        content: html2.node`
+        content: html.node`
                 <div class="dialog-settings">
                     <div class="setting" data-type="toggle" id="container-bio_markdown" onclick="_update_item('bio_markdown')">
                         <button class="btn reset" onclick="_reset_item('bio_markdown')">${tl(trans.reset)}</button>
@@ -8924,8 +8924,8 @@
     fetch(`${root}user/${page.name}/partial/recenttracks?ajax=1`).then(function(response) {
       console.log("returned", response, response.text);
       return response.text();
-    }).then(function(html3) {
-      let doc = new DOMParser().parseFromString(html3, "text/html");
+    }).then(function(html2) {
+      let doc = new DOMParser().parseFromString(html2, "text/html");
       console.log("DOC", doc);
       let tracklist_panel = doc.querySelector(".chartlist");
       button.removeAttribute("disabled");
@@ -8964,9 +8964,9 @@
         song_title = formatted_title[0];
         song_tags = formatted_title[1];
       }
-      render(name_elem, html2.node`
+      render(name_elem, html.node`
             <div class="title">${sanitise_text(song_title).trim()}</div>
-            ${song_tags.map((tag) => html2.node`
+            ${song_tags.map((tag) => html.node`
                 <div class="feat" data-bleh--tag-type="${tag.type}" data-bleh--tag-group="${tag.group}">${tag.text}</div>
             `)}
         `);
@@ -9036,7 +9036,7 @@
     if (page.token == "")
       page.token = form.querySelector('[name="csrfmiddlewaretoken"]').getAttribute("value");
     let original_chart_settings = {};
-    let settings_btn = html2.node`
+    let settings_btn = html.node`
         <button class="panel-settings-button btn view-item interact-item">${tl(trans.settings)}</button>
     `;
     form.classList = "";
@@ -9159,7 +9159,7 @@
     let collage_btn;
     let select_btn = panel.querySelector(".dropdown-menu-clickable-button");
     let settings_btn;
-    panel.insertBefore(html2.node`
+    panel.insertBefore(html.node`
         <div class="top-container">
             ${panel.querySelector("h2")}
             <div class="view-buttons blend">
@@ -9174,7 +9174,7 @@
       select_btn.classList.remove("section-control");
       return select_btn;
     }}
-                ${form ? html2.node`
+                ${form ? html.node`
                 <button class="panel-settings-button btn view-item interact-item" ref=${(el) => settings_btn = el}>${tl(trans.settings)}</button>
                 ` : ""}
             </div>
@@ -9190,7 +9190,7 @@
     let grid_length = form.querySelector('[name="artists_image_grid_length"]');
     let chartlist_length = form.querySelector('[name="artists_chartlist_length"]');
     form.classList = "";
-    render(form, html2`
+    render(form, html`
         <input type="hidden" name="csrfmiddlewaretoken" value="${page.token}">
         <div class="setting" data-type="select">
             <div class="heading">
@@ -9240,7 +9240,7 @@
     let collage_btn;
     let select_btn = panel.querySelector(".dropdown-menu-clickable-button");
     let settings_btn;
-    panel.insertBefore(html2.node`
+    panel.insertBefore(html.node`
         <div class="top-container">
             ${panel.querySelector("h2")}
             <div class="view-buttons blend">
@@ -9255,7 +9255,7 @@
       select_btn.classList.remove("section-control");
       return select_btn;
     }}
-                ${form ? html2.node`
+                ${form ? html.node`
                 <button class="panel-settings-button btn view-item interact-item" ref=${(el) => settings_btn = el}>${tl(trans.settings)}</button>
                 ` : ""}
             </div>
@@ -9271,7 +9271,7 @@
     let grid_length = form.querySelector('[name="albums_image_grid_length"]');
     let chartlist_length = form.querySelector('[name="albums_chartlist_length"]');
     form.classList = "";
-    render(form, html2`
+    render(form, html`
         <input type="hidden" name="csrfmiddlewaretoken" value="${page.token}">
         <div class="setting" data-type="select">
             <div class="heading">
@@ -9321,7 +9321,7 @@
     let collage_btn;
     let select_btn = panel.querySelector(".dropdown-menu-clickable-button");
     let settings_btn;
-    panel.insertBefore(html2.node`
+    panel.insertBefore(html.node`
         <div class="top-container">
             ${panel.querySelector("h2")}
             <div class="view-buttons blend">
@@ -9336,7 +9336,7 @@
       select_btn.classList.remove("section-control");
       return select_btn;
     }}
-                ${form ? html2.node`
+                ${form ? html.node`
                 <button class="panel-settings-button btn view-item interact-item" ref=${(el) => settings_btn = el}>${tl(trans.settings)}</button>
                 ` : ""}
             </div>
@@ -9350,7 +9350,7 @@
     let timeframe = form.querySelector('[name="chart_range_top_tracks"]');
     let chartlist_length = form.querySelector('[name="chart_length_top_tracks"]');
     form.classList = "";
-    render(form, html2`
+    render(form, html`
         <input type="hidden" name="csrfmiddlewaretoken" value="${page.token}">
         <div class="setting" data-type="select">
             <div class="heading">
@@ -9423,8 +9423,8 @@
     fetch(`${root}user/${page.name}`).then(function(response) {
       console.log("returned", response, response.text);
       return response.text();
-    }).then(function(html3) {
-      let doc = new DOMParser().parseFromString(html3, "text/html");
+    }).then(function(html2) {
+      let doc = new DOMParser().parseFromString(html2, "text/html");
       console.log("DOC", doc);
       let about_me_sidebar = doc.querySelector(".about-me-sidebar");
       if (about_me_sidebar) {
@@ -9459,8 +9459,8 @@
         if (response.status != 200)
           throw new Error();
         return response.text();
-      }).then(function(html3) {
-        let doc = new DOMParser().parseFromString(html3, "text/html");
+      }).then(function(html2) {
+        let doc = new DOMParser().parseFromString(html2, "text/html");
         console.log("glacier library DOC", doc, doc.querySelector(".table"));
         log("received response", "glacier library");
         table = doc.querySelector(".table");
@@ -10226,7 +10226,7 @@
     log("started interval", "season", "info");
     if (page.header.season_tooltip == null)
       return;
-    page.header.season_tooltip.setContent(html2.node`
+    page.header.season_tooltip.setContent(html.node`
         <span class="season-colour-name">${tl(trans.seasonal.listing[stored_season.id])}</span>
         <span class="season-exclusive">${trans_legacy.en.auth_menu.seasonal_live}</span>
     `);
@@ -10242,7 +10242,7 @@
     log("ended interval", "season", "info");
     if (page.header.season_tooltip == null)
       return;
-    page.header.season_tooltip.setContent(html2.node`
+    page.header.season_tooltip.setContent(html.node`
         <span class="season-colour-name">${tl(trans.seasonal.listing[stored_season.id])}</span>
         <span class="season-exclusive">${trans_legacy.en.auth_menu.seasonal_notice}</span>
     `);
@@ -10260,7 +10260,7 @@
         next = stored_season.next_start.replace("y0", stored_season.year + 1).replace("{offset}", stored_season.offset);
       let time_until = new Date(next) - /* @__PURE__ */ new Date();
       page.header.season.textContent = countdown_to(time_until);
-      page.header.season_tooltip.setContent(html2.node`
+      page.header.season_tooltip.setContent(html.node`
             <span class="season-colour-name">${tl(trans.seasonal.listing[stored_season.id])}</span>
             <span class="season-exclusive">${trans_legacy.en.auth_menu.seasonal_live}</span>
         `);
@@ -10291,7 +10291,7 @@
     let prev_container = document.getElementById("snowflakes");
     if (prev_container != null)
       return;
-    document.documentElement.appendChild(html2.node`
+    document.documentElement.appendChild(html.node`
         <div class="snow-container" id="snowflakes">
             <span class="snow snowflake"></span>
         </div>`);
@@ -10326,7 +10326,7 @@
     page.requested.setting = params.get("setting");
     let nav = document.createElement("nav");
     nav.classList.add("navlist", "secondary-nav", "navlist--more", "redesigned-navigation", "bleh-settings-navigation");
-    render(nav, html2`
+    render(nav, html`
         <ul class="navlist-items">
             <li class="navlist-item secondary-nav-item">
                 <a class="secondary-nav-item-link bleh--nav" data-bleh-page="themes" onclick=${() => change_settings_page("themes")}>
@@ -10375,12 +10375,12 @@
             </li>
         </ul>
     `);
-    render(page.structure.side, html2`
+    render(page.structure.side, html`
         <div class="cta first priority sponsor colourful">
-            ${auth.sponsor ? html2.node`
+            ${auth.sponsor ? html.node`
             <strong>${tl(trans.you_are_a_sponsor)}</strong>
             <a class="see-more" onclick="_sponsor_manage()">${tl(trans.manage_sponsor)}</a>
-            ` : html2.node`
+            ` : html.node`
             <strong>${tl(trans.news_sponsor_cta)}</strong>
             <a class="see-more" onclick="_sponsor()">${tl(trans.sponsor)}</a>
             `}
@@ -10397,7 +10397,7 @@
             </button>
         </section>
         <div class="bleh--panel">
-            ${ff("skip_to_setting") ? html2.node`
+            ${ff("skip_to_setting") ? html.node`
             <h4>${tl(trans.skip_to)}</h4>
             <div class="skip-to-list"></div>
             ` : ""}
@@ -10413,7 +10413,7 @@
     }
   }
   function page_loading() {
-    render(page.structure.main, html2`
+    render(page.structure.main, html`
         <div class="bleh--panel">
             <div class="loading-data-container">
                 <div class="loading-data-text">${tl(trans.loading)}</div>
@@ -10440,7 +10440,7 @@
           name: tl(trans.colourful_tracks.name)
         }
       ]);
-      render(page.structure.main, html2`
+      render(page.structure.main, html`
             <div class="bleh--panel">
                 <h4>${tl(trans.themes.name)}</h4>
                 <div class="setting-items full">
@@ -10501,7 +10501,7 @@
                         </button>
                     </div>
                 </div>
-                ${ff("high_contrast") ? html2.node`
+                ${ff("high_contrast") ? html.node`
                 <div class="setting" data-type="toggle" id="container-high_contrast" onclick="_update_item('high_contrast')">
                     <button class="btn reset" onclick="_reset_item('high_contrast')">${tl(trans.reset)}</button>
                     <div class="heading">
@@ -10529,7 +10529,7 @@
                 </div>
                 ${setting({ id: "hue_from_album" })}
                 ${setting({ id: "colourful_tracks" })}
-                ${ff("card_saturation") ? html2.node`
+                ${ff("card_saturation") ? html.node`
                 ${setting({ id: "sat_bg" })}
                 ` : ""}
                 <div class="sep"></div>
@@ -10558,7 +10558,7 @@
           name: trans_legacy.en.settings.customise.show_your_progress.name
         }
       ]);
-      render(page.structure.main, html2`
+      render(page.structure.main, html`
             <div class="bleh--panel check-artist-hover">
                 <h4 class="top-header">${tl(trans.layout)}</h4>
                 <h4>${trans_legacy.en.settings.layout.header}</h4>
@@ -10692,7 +10692,7 @@
             `);
     } else if (page_id == "seasonal") {
       register_skip_to([]);
-      render(page.structure.main, html2`
+      render(page.structure.main, html`
             <div class="bleh--panel">
                 <div class="seasonal-inner">
                     <div class="sub-text">${tl(trans.seasonal_timeline)}</div>
@@ -10704,7 +10704,7 @@
                         </div>
                         <div class="glacier-library-top season-top">
                             <div class="glacier-library-metadata">
-                                ${stored_season.id != "none" && stored_season.start && stored_season.end ? html2.node`
+                                ${stored_season.id != "none" && stored_season.start && stored_season.end ? html.node`
                                 <div class="glacier-library-metadata-item">
                                     <div class="sub-text">${tl(trans.started)}</div>
                                     <div class="glacier-library-metadata-item-value" id="current_season_start">${moment(stored_season.start.replace("y0", stored_season.year).replace("{offset}", stored_season.offset)).from(stored_season.now)}</div>
@@ -10713,7 +10713,7 @@
                                     <div class="sub-text">${tl(trans.ends_in)}</div>
                                     <div class="glacier-library-metadata-item-value" id="current_season">${moment(stored_season.end.replace("y0", stored_season.year).replace("{offset}", stored_season.offset)).to(stored_season.now, true)}</div>
                                 </div>
-                                ` : settings.seasonal ? html2.node`
+                                ` : settings.seasonal ? html.node`
                                 <div class="glacier-library-metadata-item">
                                     <div class="sub-text">${tl(trans.next_in)}</div>
                                     <div class="glacier-library-metadata-item-value" id="next_season_start">${moment(stored_season.next_start.replace("y0", stored_season.next_is_new_year ? stored_season.year + 1 : stored_season.year).replace("{offset}", stored_season.offset)).to(stored_season.now, true)}</div>
@@ -10723,7 +10723,7 @@
                         </div>
                     </div>
                 </div>
-                ${settings.seasonal ? html2.node`
+                ${settings.seasonal ? html.node`
                 <div class="alert alert-info">
                     ${{ html: tl(trans.seasonal_offset).replace("{offset}", `<strong>${stored_season.offset}</strong>`) }}
                 </div>
@@ -10787,7 +10787,7 @@
         `);
     } else if (page_id == "performance") {
       register_skip_to([]);
-      render(page.structure.main, html2`
+      render(page.structure.main, html`
             <div class="bleh--panel">
                 <div class="alert alert-danger">${tl(trans.beware_notice)}</div>
                 ${setting({ id: "branch" })}
@@ -10837,7 +10837,7 @@
           dialog({
             id: "hu_tao",
             title: tl(trans.development),
-            body: html2.node`
+            body: html.node`
                                 ${setting({ id: "hu_tao", text: false, focus: true })}
                             `
           });
@@ -10857,7 +10857,7 @@
           name: tl(trans.activity_tracking.name)
         }
       ]);
-      render(page.structure.main, html2`
+      render(page.structure.main, html`
             <div class="bleh--panel sponsor-badge-panel" data-sponsoring="${auth.sponsor}">
                 <div class="profile-container">
                     <div class="avatar-side small">
@@ -10871,7 +10871,7 @@
                             <div class="header standalone title-container">
                                 <h1>${auth.name}</h1>
                                 <div class="badges">
-                                    ${auth.pro ? html2.node`
+                                    ${auth.pro ? html.node`
                                     <span class="label user-status-subscriber">${tl(trans.badges["user-status-subscriber"].name)}</span>
                                     ` : ""}
                                 </div>
@@ -10879,7 +10879,7 @@
                         </div>
                     </div>
                 </div>
-                ${ff("api") ? html2.node`
+                ${ff("api") ? html.node`
                 <h4>${trans_legacy.en.settings.profiles.api.name}</h4>
                 <div class="alert alert-info">${trans_legacy.en.settings.profiles.api.bio}</div>
                 <div class="setting" data-type="text" id="container-api_key">
@@ -10906,7 +10906,7 @@
                 <div class="sep"></div>
                 <div class="setting" data-type="toggle">
                     <div class="heading">
-                        <h5>${html2.node([
+                        <h5>${html.node([
         tl(trans.sponsor_data).replace("{v}", `<span class="version-link sponsor-related">${sponsor_list.latest}</span>`)
       ])}</h5>
                     </div>
@@ -11066,7 +11066,7 @@
             `);
     } else if (page_id == "accessibility") {
       register_skip_to([]);
-      render(page.structure.main, html2`
+      render(page.structure.main, html`
             <div class="bleh--panel">
                 <h4 class="top-header">${tl(trans.accessibility)}</h4>
                 <div class="setting" data-type="toggle" id="container-reduced_motion" onclick="_update_item('reduced_motion')">
@@ -11097,7 +11097,7 @@
             `);
     } else if (page_id == "text") {
       register_skip_to([]);
-      render(page.structure.main, html2`
+      render(page.structure.main, html`
             <div class="bleh--panel">
                 <h4 class="top-header">${trans_legacy.en.settings.text.name}</h4>
                 <div class="inner-preview pad flex">
@@ -11142,7 +11142,7 @@
             `);
     } else if (page_id == "sku") {
       register_skip_to([]);
-      render(page.structure.main, html2`
+      render(page.structure.main, html`
             <div class="bleh--panel">
                 <div class="panel-intro">
                     <div class="sub-text">${version.build}.${version.sku}</div>
@@ -11209,9 +11209,9 @@
         }
       }
       preview_bar = `${preview_bar});`;
-      render(page.structure.main, html2`
+      render(page.structure.main, html`
             <div class="bleh--panel lotus">
-                <h4>${html2.node([
+                <h4>${html.node([
         tl(trans.brand_version_number).replace("{brand}", `<a class="lotus lotus-name" href="https://github.com/katelyynn/lotus" target="_blank">lotus</a>`).replace("{number}", `<span class="version-link lotus">${artist_corrections.version >= album_track_corrections.version ? artist_corrections.version : album_track_corrections.version}</span>`)
       ])}</h4>
                 <p>${tl(trans.what_is_lotus)}</p>
@@ -11638,11 +11638,11 @@
     try {
       render_setting_page(page_id);
     } catch (e) {
-      render(page.structure.main, html2`
+      render(page.structure.main, html`
             <div class="bleh--panel">
                 <div class="loading-data-container">
                     <div class="loading-data-text failed">${tl(trans.value_failed_to_load).replace("{v}", tl(trans.settings))}</div>
-                    <pre class="error-info">${e ? html2.node`<span class="error-type">${e.name}</span>: ${e.message}` : ""}</pre>
+                    <pre class="error-info">${e ? html.node`<span class="error-type">${e.name}</span>: ${e.message}` : ""}</pre>
                 </div>
             </div>
         `);
@@ -11730,10 +11730,10 @@
       feature_flag_element.classList.add("setting");
       feature_flag_element.setAttribute("data-type", "toggle");
       feature_flag_element.setAttribute("onclick", `_update_flag_toggle('${flag}', this)`);
-      render(feature_flag_element, html2`
+      render(feature_flag_element, html`
             <div class="heading">
                 <h5>${version.feature_flags[flag].name}</h5>
-                ${version.feature_flags[flag].notice ? html2.node`<p>${{ html: version.feature_flags[flag].notice }}</p>` : ""}
+                ${version.feature_flags[flag].notice ? html.node`<p>${{ html: version.feature_flags[flag].notice }}</p>` : ""}
                 <div class="info-row">
                     <div class="new-badge flag-${version.feature_flags[flag].default}">${version.feature_flags[flag].default}</div><p class="date">${version.feature_flags[flag].date}</p><p>${flag}</p>
                 </div>
@@ -12173,12 +12173,12 @@
           swatch.classList.add("select-button");
           tippy(swatch, {
             theme: "window",
-            content: html2.node`
+            content: html.node`
                         <div class="dialog-settings">
                             <div class="alert alert-info seasonal-hsl-alert">
                                 ${tl(trans.seasonal_warning)}
                             </div>
-                            ${ff("colour_based_on_hex") ? html2.node`
+                            ${ff("colour_based_on_hex") ? html.node`
                             <div class="setting" data-type="text">
                                 <div class="heading">
                                     <h5>${tl(trans.convert_from_hex)}</h5>
@@ -12256,7 +12256,7 @@
           swatch.style.setProperty("--lit-over", colour.displays.lit);
           tippy(swatch, {
             theme: "key_value",
-            content: html2.node`
+            content: html.node`
                         <span class="key">hue<span class="value">${colour.sets.hue}</span></span>
                         <span class="key">sat<span class="value">${colour.sets.sat}</span></span>
                         <span class="key">lit<span class="value">${colour.sets.lit}</span></span>
@@ -12314,7 +12314,7 @@
         tippy(badge, {
           theme: "badge",
           placement: "bottom",
-          content: html2.node`
+          content: html.node`
                     <div class="badge-name">${badge.textContent}</div>
                     <div class="badge-reason">${tl(trans.badges[badge.classList[1]].reason)}</div>
                 `
@@ -12333,7 +12333,7 @@
           tippy(badge, {
             theme: "badge",
             placement: "bottom",
-            content: html2.node`
+            content: html.node`
                         <div class="badge-name">${this_badge.name}</div>
                         <div class="badge-reason">${this_badge.reason}</div>
                     `
@@ -12352,7 +12352,7 @@
         tippy(badge, {
           theme: "badge",
           placement: "bottom",
-          content: html2.node`
+          content: html.node`
                     <div class="badge-name">${tl(trans.badges.missing.name)}</div>
                     <div class="badge-reason">${tl(trans.badges.missing.reason)}</div>
                 `,
@@ -12369,7 +12369,7 @@
     profile_notes_table.classList = "generic-table-list user-vertical-list take-space profile-notes";
     profile_notes_table.innerHTML = "";
     for (let user in profile_notes) {
-      profile_notes_table.appendChild(html2.node`
+      profile_notes_table.appendChild(html.node`
             <div class="generic-table-list-entry user-vertical-list-item" id="profile-note-row--${user}">
                 <div class="name">
                     <a class="mention" href="${root}user/${user}">@${user}</a>
@@ -12400,7 +12400,7 @@
     let modal = dialog({
       id: "edit_profile_note",
       title: tl(trans.edit_profile_note),
-      body: html2.node`
+      body: html.node`
             <textarea class="modal-text" id="bleh--profile-note" placeholder=${tl(trans.anything_you_can_imagine)}>${profile_notes[user]}</textarea>
             <div class="modal-footer">
                 <button class="see-more cancel" onclick=${() => dialog_rm2({ id: "edit_profile_note" })}>
@@ -12427,7 +12427,7 @@
     for (let artist in artist_corrections) {
       if (artist == "version")
         continue;
-      corrections_table_artist.appendChild(html2.node`
+      corrections_table_artist.appendChild(html.node`
         <div class="correction-row">
                 <div class="primary-name pre-transition">
                     <h5>${artist}</h5>
@@ -12442,13 +12442,13 @@
     for (let artist in album_track_corrections) {
       if (artist == "version")
         continue;
-      corrections_table_albums_tracks.appendChild(html2.node`
+      corrections_table_albums_tracks.appendChild(html.node`
             <div class="artist-row">
                 <h5>${artist}</h5>
             </div>
         `);
       for (let media in album_track_corrections[artist]) {
-        corrections_table_albums_tracks.appendChild(html2.node`
+        corrections_table_albums_tracks.appendChild(html.node`
                 <div class="correction-row">
                     <div class="primary-name pre-transition">
                         <h5>${media}</h5>
@@ -12468,22 +12468,22 @@
       let users = "";
       for (let user in lang_info[language].by)
         users = `${users}<a class="mention" href="${root}user/${lang_info[language].by[user]}" target="_blank">@${lang_info[language].by[user]}</a> `;
-      let lang_row = html2.node`
+      let lang_row = html.node`
             <div class="language-row${lang == language ? " active" : ""}">
                 <div class="flag-container">
                     <img src="https://katelyynn.github.io/bleh/fm/flags/${language}.svg" alt="flag for ${language}">
                 </div>
                 <div class="name">
                     <h5>${lang_info[language].name}</h5>
-                    <p>${html2.node([
+                    <p>${html.node([
         trans_legacy.en.settings.language.by.replace("{users}", users)
       ])}</p>
                 </div>
-                ${lang_info[language].new ? html2.node`
+                ${lang_info[language].new ? html.node`
                 <div class="badges">
                     <div class="new-badge">${tl(trans.new)}</div>
                 </div>
-                ` : html2.node`<div class="badges"></div>`}
+                ` : html.node`<div class="badges"></div>`}
                 <div class="date">
                     <p>${lang_info[language].last_updated != "latest" ? moment(lang_info[language].last_updated).fromNow() : lang_info[language].last_updated}</p>
                 </div>
@@ -12501,7 +12501,7 @@
     dialog({
       id: "import_settings",
       title: tl(trans.import_settings),
-      body: html2.node`
+      body: html.node`
             <p class="big-modal-alert alert-danger">${tl(trans.import_notice)}</p>
             <br>
             <textarea class="modal-text" id="import_area"></textarea>
@@ -12530,7 +12530,7 @@
       dialog({
         id: "import_failed",
         title: trans_legacy.en.settings.actions.import.modals.failed.name,
-        body: html2.node`
+        body: html.node`
                 <p class="big-modal-alert alert-error">${trans_legacy.en.settings.actions.import.modals.failed.alert}</p>
                 <div class="modal-footer">
                     <div class="fill"></div>
@@ -12546,7 +12546,7 @@
     dialog({
       id: "export_settings",
       title: tl(trans.export_settings),
-      body: html2.node`
+      body: html.node`
             <textarea class="modal-text">${JSON.stringify(settings)}</textarea>
             <div class="modal-footer">
                 <div class="fill"></div>
@@ -12564,7 +12564,7 @@
     dialog({
       id: "reset_settings",
       title: tl(trans.reset_settings),
-      body: html2.node`
+      body: html.node`
             <div class="big-modal-alert alert-error">
                 <strong>${tl(trans.reset_notice)}</strong>
                 <a class="see-more" onclick="_export_settings()">${tl(trans.make_a_backup)}</a>
@@ -12856,24 +12856,24 @@
           song_tags = formatted_title[1];
           sister = formatted_title[2];
         }
-        name = html2.node`
+        name = html.node`
                 <div class="title">${song_title.trim()}</div>
-                ${song_tags.map((tag) => html2.node`
+                ${song_tags.map((tag) => html.node`
                     <div class="feat" data-bleh--tag-type="${tag.type}" data-bleh--tag-group="${tag.group}">${tag.text}</div>
                 `)}
             `;
       } else if ((involved.type == "album" || involved.type == "track") && settings.corrections) {
-        name = html2.node`${correct_item_by_artist(name, sister)}`;
+        name = html.node`${correct_item_by_artist(name, sister)}`;
         sister = correct_artist(sister);
       } else if (involved.type == "artist" && settings.corrections) {
         sister = correct_artist(sister);
       }
       if (involved_text != "")
-        involved_text = html2.node`${involved_text}, <a class="involved--${involved.type}">${name}</a>`;
+        involved_text = html.node`${involved_text}, <a class="involved--${involved.type}">${name}</a>`;
       else
-        involved_text = html2.node`${involved_text}<a class="involved--${involved.type}">${name}</a>`;
+        involved_text = html.node`${involved_text}<a class="involved--${involved.type}">${name}</a>`;
     });
-    render(activity_item, html2`
+    render(activity_item, html`
         <div class="type">
             ${tl(trans.activity.listing[activity.type])}
             <div class="date">
@@ -12963,7 +12963,7 @@
     dialog({
       id: "corrections",
       title: trans_legacy.en.settings.corrections.name,
-      body: html2.node`
+      body: html.node`
             <h4>${trans_legacy.en.settings.corrections.listing.artists}</h4>
             <div class="corrections artist" id="corrections-artist"></div>
             <h4>${trans_legacy.en.settings.corrections.listing.albums_tracks}</h4>
@@ -13198,9 +13198,9 @@
           let song_title = formatted_title[0];
           let song_tags = formatted_title[1];
           page.corrected = formatted_title[4];
-          render(track_title, html2.node`
+          render(track_title, html.node`
                 <div class="title">${song_title.trim()}</div>
-                ${song_tags.map((tag) => html2.node`
+                ${song_tags.map((tag) => html.node`
                     <div class="feat" data-bleh--tag-type="${tag.type}" data-bleh--tag-group="${tag.group}">${tag.text}</div>
                 `)}
             `);
@@ -13210,7 +13210,7 @@
           song_artist_element.innerHTML = song_artist_element.innerHTML.trim();
           for (let guest in song_guests) {
             song_artist_element.innerHTML = `${song_artist_element.innerHTML},`;
-            song_artist_element.appendChild(html2.node`
+            song_artist_element.appendChild(html.node`
                     <a class="header-new-crumb" href="${root}music/${sanitise(song_guests[guest])}" title=${song_guests[guest]}>${song_guests[guest]}</a>
                 `);
           }
@@ -13232,7 +13232,7 @@
   // src/activity.js
   function render_activity_list() {
     load_activities();
-    let activity_list = html2.node`
+    let activity_list = html.node`
         <div class="activity-list" />
     `;
     let recent_activity_list_r = recent_activity_list;
@@ -13277,9 +13277,9 @@
             tooltip_name = song_title;
             tooltip_sister = sister;
           }
-          name = html2.node`
+          name = html.node`
                     <div class="title">${sanitise_text(song_title).trim()}</div>
-                    ${song_tags.map((tag) => html2.node`
+                    ${song_tags.map((tag) => html.node`
                         <div class="feat" data-bleh--tag-type="${tag.type}" data-bleh--tag-group="${tag.group}">${tag.text}</div>
                     `)}
                 `;
@@ -13292,11 +13292,11 @@
           name = correct_artist(name);
         }
         if (involved_text != "")
-          involved_text = html2.node`${involved_text}, <a class="involved--${involved.type}" href="${involved_link}">${name}</a>`;
+          involved_text = html.node`${involved_text}, <a class="involved--${involved.type}" href="${involved_link}">${name}</a>`;
         else
-          involved_text = html2.node`${involved_text}<a class="involved--${involved.type}" href="${involved_link}">${name}</a>`;
+          involved_text = html.node`${involved_text}<a class="involved--${involved.type}" href="${involved_link}">${name}</a>`;
       });
-      render(activity_item, html2`
+      render(activity_item, html`
             <div class="type">${tl(trans.activity.listing[activity.type])}<div class="date">${moment(activity.date).fromNow(true)}</div></div>
             <div class="name">${involved_text}</div>
         `);
@@ -13520,7 +13520,7 @@
     let window2 = dialog({
       id: "changelog",
       title: tl(trans.news_from_user).replace("{user}", sponsor_list && sponsor_list.special ? sponsor_list.special[0] : "katelyn"),
-      body: html2.node`
+      body: html.node`
             <div class="cta first sponsor colourful margin-bottom">
                 <strong>${tl(trans.news_sponsor_cta)}</strong>
                 <a class="see-more" onclick="_sponsor(true)">${tl(trans.sponsor)}</a>
@@ -13537,7 +13537,7 @@
         continue;
       if (index > 10)
         continue;
-      let version_item = html2.node`
+      let version_item = html.node`
             <div class="changelog-version-item" data-changelog-type="${changelog[version2].type}" data-changelog-latest="${index == 0 ? "true" : "false"}" data-changelog-version="${version2}">
             <div class="version-item-header">
                 <div class="sub-text">
@@ -13551,7 +13551,7 @@
                 </div>
                 </div>
                 <h3>${changelog[version2].name}</h3>
-                ${version2 == "2025.0113" ? html2.node`<h4 class="header-over">${changelog[version2].name}</h4>` : ""}
+                ${version2 == "2025.0113" ? html.node`<h4 class="header-over">${changelog[version2].name}</h4>` : ""}
             </div>
             </div>
         `;
@@ -13592,13 +13592,13 @@
     if (!masthead_logo) return;
     if (!masthead_logo.hasAttribute("data-kate-processed")) {
       masthead_logo.setAttribute("data-kate-processed", "true");
-      masthead_logo.appendChild(html2.node`
+      masthead_logo.appendChild(html.node`
             <a class="home-link" href="${root}music">
                 <div class="bleh-logo">${version.brand}</div>
             </a>`);
-      masthead_logo.appendChild(html2.node`
+      masthead_logo.appendChild(html.node`
             <a class="bleh--version" href="${root}bleh">
-                ${version.build}.${version.sku}${settings.branch != "uwu" ? `.${settings.branch}` : ""}${settings.dev ? html2.node`<div class="new-badge subtle">✦</div>` : ""}
+                ${version.build}.${version.sku}${settings.branch != "uwu" ? `.${settings.branch}` : ""}${settings.dev ? html.node`<div class="new-badge subtle">✦</div>` : ""}
             </a>
         `);
     }
@@ -13611,7 +13611,7 @@
       page.structure.indicator = page_indicator2;
     }
     if (!page.structure.loader) {
-      const loader = html2.node`
+      const loader = html.node`
             <div class="loader">
                 <div class="loader-bar">
                     <div class="loader-bar-fill" />
@@ -13655,7 +13655,7 @@
     else inbox_count = inbox_count.textContent;
     let links = masthead.querySelector(".masthead-nav .navlist-items");
     links.innerHTML = "";
-    let notif_container = html2.node`
+    let notif_container = html.node`
     <li class="masthead-nav-item">
         <a class="masthead-nav-control" href="${root}inbox/notifications" data-label="notifications" data-count=${notif_count}>
             <span class="sr-only">${tl(trans.notifications.name)}</span>
@@ -13672,7 +13672,7 @@
       });
     }
     links.appendChild(notif_container);
-    let inbox_container = html2.node`
+    let inbox_container = html.node`
         <li class="masthead-nav-item">
             <a class="masthead-nav-control" href="${root}inbox" data-label="inbox" data-count=${inbox_count}>
                 <span class="sr-only">${tl(trans.inbox.name)}</span>
@@ -13690,7 +13690,7 @@
       });
     }
     links.appendChild(inbox_container);
-    let bleh_container = html2.node`
+    let bleh_container = html.node`
         <li class="masthead-nav-item">
             <a class="masthead-nav-control" href="${root}bleh${stored_season.id != "none" ? "?tab=seasonal" : ""}" data-label="bleh" data-season="${stored_season.id}" data-season-active="${stored_season.id != "none" ? "true" : "false"}">
                 ${stored_season.id == "none" ? tl(trans.bleh_settings) : moment(stored_season.end.replace("y0", stored_season.year).replace("{offset}", stored_season.offset)).to(stored_season.now, true)}
@@ -13704,7 +13704,7 @@
     } else {
       page.header.season_tooltip = tippy(bleh_container, {
         theme: "seasonal-swatch",
-        content: html2.node`
+        content: html.node`
                 <span class="season-colour-name">${tl(trans.seasonal.listing[stored_season.id])}</span>
                 <span class="season-exclusive">${trans_legacy.en.auth_menu.seasonal_notice}</span>
             `
@@ -13714,7 +13714,7 @@
     page.header.season = bleh_container.querySelector("a");
     let selected_language = document.querySelector(".footer-language--active strong")?.textContent;
     let language_options = document.querySelectorAll(".footer-language-form");
-    let language_menu = html2.node`
+    let language_menu = html.node`
         <div class="language-menu">
             <button class="dropdown-menu-clickable-item lang-item active" data-lang="${lang}" style="--flag-url: url('https://katelyynn.github.io/bleh/fm/flags/${lang}.svg')">
                 ${selected_language}
@@ -13744,21 +13744,21 @@
           badges = load_badges(auth.name);
           let page_2;
           let side;
-          instance.setContent(html2.node`
+          instance.setContent(html.node`
                     <div class="auth-menu-v2">
                         <div class="side primary">
                             <div class="auth-menu-header">
                                 <div class="avatar">
                                     <img src="${auth.avatar.replace("avatar42s", "avatar170s")}" alt="${auth.name}" />
                                 </div>
-                                ${!auth.avatar.endsWith("818148bf682d429dc215c1705eb27b98.png") ? html2.node`
+                                ${!auth.avatar.endsWith("818148bf682d429dc215c1705eb27b98.png") ? html.node`
                                 <div class="bg" style="background-image: url(${auth.avatar.replace("avatar42s", "avatar170s")})" />
                                 ` : ""}
                                 <div class="name">${auth.name}</div>
-                                ${badges || auth.pro ? html2.node`
+                                ${badges || auth.pro ? html.node`
                                     <div class="badges">
                                         ${badges ? badges.map((badge) => () => {
-            let el = html2.node`
+            let el = html.node`
                                                 <span class="label user-status--bleh-${badge.type} user-status--bleh-user-${auth.name} no-hover">
                                                     ${badge.name}
                                                 </span>
@@ -13766,7 +13766,7 @@
             tippy(el, {
               theme: "badge",
               placement: "bottom",
-              content: html2.node`
+              content: html.node`
                                                     <div class="badge-name">${badge.name}</div>
                                                     <div class="badge-reason">${badge.reason}</div>
                                                 `
@@ -13774,7 +13774,7 @@
             return el;
           }) : ""}
                                         ${auth.pro ? () => {
-            let el = html2.node`
+            let el = html.node`
                                                 <span class="label user-status-subscriber no-hover">
                                                     ${tl(trans.badges["user-status-subscriber"].name)}
                                                 </span>
@@ -13782,7 +13782,7 @@
             tippy(el, {
               theme: "badge",
               placement: "bottom",
-              content: html2.node`
+              content: html.node`
                                                     <div class="badge-name">${tl(trans.badges["user-status-subscriber"].name)}</div>
                                                     <div class="badge-reason">${tl(trans.badges["user-status-subscriber"].reason)}</div>
                                                 `
@@ -13796,7 +13796,7 @@
                             <div class="floating button-group">
                                 ${() => {
             let button;
-            let form = html2.node`
+            let form = html.node`
                                         <form>
                                             <input type="hidden" name="csrfmiddlewaretoken" value="${token}">
                                             <a class="dropdown-menu-clickable-item chibi" ref=${(el) => button = el} data-menu-item="logout" href="${root}logout">
@@ -13810,7 +13810,7 @@
             return form;
           }}
                                 ${settings.profile_shortcut != "" ? () => {
-            let button = html2.node`
+            let button = html.node`
                                         <a class="dropdown-menu-clickable-item chibi" data-type="shortcut" data-is-shortcut="true" href="${root}user/${settings.profile_shortcut}">${settings.profile_shortcut}</a>
                                     `;
             tippy(button, {
@@ -13818,7 +13818,7 @@
             });
             return button;
           } : () => {
-            let button = html2.node`
+            let button = html.node`
                                         <button class="dropdown-menu-clickable-item chibi" data-type="shortcut" data-is-shortcut="false" onclick=${() => open_profile_shortcut_window()}>${tl(trans.profile_shortcut.name)}</button>
                                     `;
             tippy(button, {
@@ -13846,7 +13846,7 @@
                                     </button>
                                     <div class="button-combo-sep" />
                                     <button class="dropdown-menu-clickable-item chibi" data-type="continue" onclick=${() => {
-            render(page_2, html2`
+            render(page_2, html`
                                             <button class="dropdown-menu-clickable-item" data-type="back" onclick=${() => {
               side.setAttribute("data-page", "1");
             }}>
@@ -13881,7 +13881,7 @@
                                 </div>
                                 <div class="button-combo">
                                     <button class="dropdown-menu-clickable-item" data-menu-item="language" onclick=${() => {
-            render(page_2, html2`
+            render(page_2, html`
                                             <button class="dropdown-menu-clickable-item" data-type="back" onclick=${() => {
               side.setAttribute("data-page", "1");
             }}>
@@ -13895,7 +13895,7 @@
                                     </button>
                                     <div class="button-combo-sep" />
                                     <button class="dropdown-menu-clickable-item chibi" data-type="continue" onclick=${() => {
-            render(page_2, html2`
+            render(page_2, html`
                                             <button class="dropdown-menu-clickable-item" data-type="back" onclick=${() => {
               side.setAttribute("data-page", "1");
             }}>
@@ -13936,7 +13936,7 @@
     } else {
       let auth_menu = tippy(auth_link2, {
         theme: "auth-menu",
-        content: html2.node`
+        content: html.node`
                 <a class="dropdown-menu-clickable-item" data-menu-item="profile" href="${root}user/${auth.name}">
                     ${auth.name}
                 </a>
@@ -13944,7 +13944,7 @@
                     ${settings.profile_shortcut}
                 </a>
                 <div class="sep"></div>
-                ${settings.auth_menu_obsessions ? html2.node`
+                ${settings.auth_menu_obsessions ? html.node`
                 <a class="dropdown-menu-clickable-item" data-menu-item="obsessions" href="${root}user/${auth.name}/obsessions">
                     ${trans_legacy.en.auth_menu.obsessions}
                 </a>
@@ -14004,7 +14004,7 @@
           });
           let theme_menu_item = tippy(instance.popper.querySelector('[data-menu-item="themes"]:not([aria-expanded])'), {
             theme: "menu",
-            content: html2.node`
+            content: html.node`
                         <button class="dropdown-menu-clickable-item theme-item-in-menu" data-bleh-theme="light" onclick="change_theme_from_menu('light')">
                             ${tl(trans.themes.light)}
                         </button>
@@ -14038,7 +14038,7 @@
     auth_link2.removeAttribute("data-disclose-hover");
     auth_link2.removeAttribute("data-disclose-hover--allow-enter-open");
     auth_link2.removeAttribute("href");
-    masthead.appendChild(html2.node`
+    masthead.appendChild(html.node`
         <div class="mobile-controls">
             <a class="btn mobile-control" aria-checked="${page.type == "overview" || page.type == "recommended" || page.type == "releases" || page.type == "bookmarks" || page.type == "charts"}" data-menu-item="home" href="${root}music">
                 ${tl(trans.home)}
@@ -14051,7 +14051,7 @@
             </a>
             <a class="btn mobile-control" aria-checked="${page.type == "inbox"}" data-menu-item="notifications" href="${root}inbox/notifications">
                 ${tl(trans.inbox.name)}
-                ${inbox_count > 0 || notif_count > 0 ? html2.node`<div class="notification-count-badge"></div>` : ""}
+                ${inbox_count > 0 || notif_count > 0 ? html.node`<div class="notification-count-badge"></div>` : ""}
             </a>
             <a class="btn mobile-control" aria-checked="${page.type == "settings" || page.type == "bleh_settings"}" data-menu-item="settings" href="${root}bleh">
                 ${tl(trans.settings)}
@@ -14073,26 +14073,26 @@
       wiki.classList.remove("visible-lg");
     let about_artist_container = legacy_container.parentElement;
     about_artist_container.classList.add("about-artist-container");
-    render(about_artist_container, html2`
+    render(about_artist_container, html`
         <div class="about-artist-panel">
             <div class="avatar-side">
-                ${avatar3 != null ? html2.node`<img src="${avatar3.getAttribute("src")}"><a onclick=${() => expand_avatar(avatar3.getAttribute("src").replace("/300x300/", "/ar0/"))} class="bleh--avatar-clickable-link"></a>` : html2.node`<img class="missing-artist">`}
+                ${avatar3 != null ? html.node`<img src="${avatar3.getAttribute("src")}"><a onclick=${() => expand_avatar(avatar3.getAttribute("src").replace("/300x300/", "/ar0/"))} class="bleh--avatar-clickable-link"></a>` : html.node`<img class="missing-artist">`}
             </div>
             <div class="info-side">
                 <div class="sub-text">${tl(trans.about)}</div>
                 <h1><a href="${root}music/${sanitise(page.sister)}">${page.sister}</a></h1>
-                ${listeners != null ? html2.node([listeners.outerHTML]) : ""}
-                ${tags != null ? html2.node([tags.outerHTML]) : ""}
-                ${wiki != null ? html2.node([wiki.outerHTML]) : ""}
+                ${listeners != null ? html.node([listeners.outerHTML]) : ""}
+                ${tags != null ? html.node([tags.outerHTML]) : ""}
+                ${wiki != null ? html.node([wiki.outerHTML]) : ""}
             </div>
         </div>
-        ${page.sister_others.length > 0 ? html2.node`<div class="sep"></div><div class="sub-text">${tl(trans.others_featured)}</div>` : ""}
+        ${page.sister_others.length > 0 ? html.node`<div class="sep"></div><div class="sub-text">${tl(trans.others_featured)}</div>` : ""}
     `);
     if (page.sister_others.length > 0) {
-      about_artist_container.appendChild(html2.node`
+      about_artist_container.appendChild(html.node`
             <div class="about-guest-features-panel">
                 ${page.sister_others.map((guest) => {
-        return html2.node`
+        return html.node`
                         <a class="about-guest-feature" href="${root}music/${sanitise(guest)}">
                             ${guest}
                         </a>
@@ -14527,14 +14527,14 @@
       let title = album_header.querySelector(".header-new-title");
       let artist = album_header.querySelector('[itemprop="byArtist"]');
       let position = album_header.querySelector(".header-new-chart-position-number");
-      let redesigned_album_header = html2.node`
+      let redesigned_album_header = html.node`
             <section class="redesigned-header redesigned-album-header no-background">
-                ${is_subpage || ff("show_album_cover_always") ? html2.node`
+                ${is_subpage || ff("show_album_cover_always") ? html.node`
                 <div class="avatar-side">
-                    ${avatar3 ? html2.node`
+                    ${avatar3 ? html.node`
                     <img src="${avatar3.getAttribute("content").replace("/ar0/", "/avatar170s/")}">
                     <a class="bleh--avatar-clickable-link"></a>
-                    ` : html2.node`<img class="missing-album">`}
+                    ` : html.node`<img class="missing-album">`}
                 </div>
                 ` : ""}
                 <div class="info-side">
@@ -14561,8 +14561,8 @@
           avatar_link.href = `${root}music/${sanitise(page.sister)}/${sanitise(page.name)}/+images`;
         let menu = tippy(avatar_side, {
           theme: "context-menu",
-          content: html2.node`
-                    ${avatar3 ? html2.node`
+          content: html.node`
+                    ${avatar3 ? html.node`
                     <button class="dropdown-menu-clickable-item" onclick=${() => expand_avatar(avatar3.getAttribute("content"))} data-menu-item="expand">
                         ${tl(trans.expand)}
                     </button>
@@ -14637,7 +14637,7 @@
     if (!tracklist) {
       let top_overview = page.structure.main.querySelector(".top-overview-panel");
       if (!top_overview) return;
-      tracklist = html2.node`
+      tracklist = html.node`
             <section>
                 <h3 class="text-18">${tl(trans.tracklist)}</h3>
                 <div class="loading-data-container">
@@ -14651,7 +14651,7 @@
         let url_split = window.location.href.split("/");
         let album_url = `${url_split[url_split.length - 2]}/${url_split[url_split.length - 1]}`;
         let album_as_track_url = window.location.href.replace(album_url, `${url_split[url_split.length - 2]}/_/${url_split[url_split.length - 1]}`);
-        render(tracklist, html2`
+        render(tracklist, html`
                 <h3 class="text-18">${tl(trans.tracklist)}</h3>
                 <div class="loading-data-container">
                     <p class="loading-data-text failed">${tl(trans.failed_to_find_tracks)}</p>
@@ -14672,7 +14672,7 @@
           let url_split = window.location.href.split("/");
           let album_url = `${url_split[url_split.length - 2]}/${url_split[url_split.length - 1]}`;
           let album_as_track_url = window.location.href.replace(album_url, `${url_split[url_split.length - 2]}/_/${url_split[url_split.length - 1]}`);
-          render(tracklist, html2`
+          render(tracklist, html`
                         <h3 class="text-18">${tl(trans.tracklist)}</h3>
                         <div class="loading-data-container">
                             <p class="loading-data-text failed">${tl(trans.failed_to_find_tracks)}</p>
@@ -14682,7 +14682,7 @@
           return;
         }
         inner_tracklist.classList.remove("chartlist--with-image");
-        render(tracklist, html2`
+        render(tracklist, html`
                     <h3 class="text-18">${tl(trans.tracklist)}</h3>
                     <div class="alert alert-info">${tl(trans.sourced_from_own_plays)}</div>
                     ${inner_tracklist}
@@ -14732,23 +14732,23 @@
       let on_tour = artist_header.querySelector(".header-new-on-tour");
       let position = artist_header.querySelector(".header-new-chart-position-number");
       let multi_info_box;
-      let redesigned_artist_header = html2.node`
+      let redesigned_artist_header = html.node`
             <section class="redesigned-header redesigned-artist-header no-background">
                 <div class="avatar-side">
-                    ${avatar3 ? html2.node`
+                    ${avatar3 ? html.node`
                     <img src="${avatar3.getAttribute("content").replace("/ar0/", "/avatar300s/")}">
                     <a class="bleh--avatar-clickable-link"></a>
-                    ` : html2.node`<img class="missing-artist">`}
+                    ` : html.node`<img class="missing-artist">`}
                 </div>
                 <div class="info-side">
-                    ${page.multi ? html2.node`
+                    ${page.multi ? html.node`
                     <div class="sub-text">
                         ${tl(trans.artists)}
                         <div class="info-tip" ref=${(el) => multi_info_box = el}>
                             <div class="bleh-icon bleh-info-icon"></div>
                         </div>
                     </div>
-                    ` : html2.node`
+                    ` : html.node`
                     <div class="sub-text">${tl(trans.artist)}</div>
                     `}
                     <div class="title-container" data-multi="${page.multi}">
@@ -14785,8 +14785,8 @@
           avatar_link.href = `${root}music/${sanitise(page.name)}/+images`;
         let menu = tippy(avatar_side, {
           theme: "context-menu",
-          content: html2.node`
-                    ${avatar3 != null ? html2.node`
+          content: html.node`
+                    ${avatar3 != null ? html.node`
                     <button class="dropdown-menu-clickable-item" onclick=${() => expand_avatar(avatar3.getAttribute("content"))} data-menu-item="expand">
                         ${tl(trans.expand)}
                     </button>
@@ -14817,7 +14817,7 @@
         if (view_button) {
           let view_menu = tippy(view_button, {
             theme: "context-menu",
-            content: html2.node`
+            content: html.node`
                         <a class="dropdown-menu-clickable-item" href="${root}bleh?tab=customise" data-menu-item="settings">
                             ${tl(trans.settings)}
                         </a>
@@ -15229,7 +15229,7 @@
     let back_link = page_content.querySelector("a");
     let reason = page_content.querySelector("p");
     page_content.classList.add("has-error");
-    render(page_content, html2`
+    render(page_content, html`
         <div class="row">
             <div class="col-main">
                 <section class="error">
@@ -15267,7 +15267,7 @@
     let out_now = page.structure.side.querySelector(".more-link-fullwidth-right a");
     if (out_now)
       out_now.classList.add("btn", "out-now-btn");
-    let header = html2.node`
+    let header = html.node`
         <div class="charts-header top-header">
             <div class="left">
 
@@ -15289,7 +15289,7 @@
     let settings_btn = header.querySelector(".panel-settings-button");
     tippy(settings_btn, {
       theme: "window",
-      content: html2.node`
+      content: html.node`
             <div class="dialog-settings">
                 <div class="setting" data-type="toggle" id="container-simulate_scroll" onclick="_update_item('simulate_scroll')">
                     <button class="btn reset" onclick="_reset_item('simulate_scroll')">${tl(trans.reset)}</button>
@@ -15314,12 +15314,12 @@
       }
     });
     chart_rows.forEach((row, index) => {
-      let chart_row = html2.node`
+      let chart_row = html.node`
             <div class="charts-new-row" data-index=${index}>
                 ${row.querySelector("h2")}
             </div>
         `;
-      let list = html2.node`
+      let list = html.node`
             <ol class="music-bookmarks-artists charts-list" />
         `;
       if (settings.simulate_scroll) {
@@ -15350,7 +15350,7 @@
         image.setAttribute("src", image.getAttribute("src").replace("/avatar70s/", "/avatar300s/"));
         if (index == 1) {
           name.textContent = correct_artist(name.textContent);
-          list_item = html2.node`
+          list_item = html.node`
                     <li class="music-bookmarks-artists-item-wrap charts-list-item">
                         <div class="music-bookmarks-artists-item charts-list-item-inner">
                             <div class="charts-list-rank">${rank.textContent.trim()}</div>
@@ -15373,7 +15373,7 @@
           let artist = item.querySelector(".globalchart-track-artist-name a");
           artist.textContent = correct_artist(artist.textContent);
           name.textContent = correct_item_by_artist(name.textContent, artist.textContent);
-          list_item = html2.node`
+          list_item = html.node`
                     <li class="music-bookmarks-albums-item-wrap charts-list-item">
                         <div class="music-bookmarks-albums-item charts-list-item-inner">
                             <div class="charts-list-rank">${rank.textContent.trim()}</div>
@@ -15503,11 +15503,11 @@
     let menu_button = nav.querySelector(".secondary-nav-item--more a");
     tippy(menu_button, {
       theme: "menu",
-      content: html2.node`
+      content: html.node`
             <button class="dropdown-menu-clickable-item update" onclick="_force_refresh_theme()">
                 ${trans_legacy.en.settings.home.update.update_now}
             </button>
-            ${settings.dev ? html2.node`
+            ${settings.dev ? html.node`
             <a class="dropdown-menu-clickable-item update" href="https://github.com/katelyynn/bleh/raw/uwu/fm/bleh.user.css">
                 ${trans_legacy.en.settings.home.update.css}
             </a>
@@ -15530,7 +15530,7 @@
       }
     });
     if (page.subpage == "music") {
-      let beret = html2.node`
+      let beret = html.node`
             <section class="beret-music bleh--panel">
                 <div class="panel-side panel-side-main">
                     <h4>${tl(trans.recent_tracks)}</h4>
@@ -15553,8 +15553,8 @@
       fetch(`${root}user/${auth.name}/partial/recenttracks?ajax=1`).then(function(response) {
         console.log("returned", response, response.text);
         return response.text();
-      }).then(function(html3) {
-        let doc = new DOMParser().parseFromString(html3, "text/html");
+      }).then(function(html2) {
+        let doc = new DOMParser().parseFromString(html2, "text/html");
         console.log("DOC", doc);
         let tracklist_panel = doc.querySelector(".chartlist");
         if (tracklist_panel)
@@ -15567,7 +15567,7 @@
       });
     } else if (page.type == "releases") {
       let content = page.structure.main.querySelectorAll(":scope > *");
-      let panel = html2.node`
+      let panel = html.node`
             <section class="releases-panel" />
         `;
       content.forEach((element) => {
@@ -15965,16 +15965,16 @@
       let album_avatar;
       if (source_album)
         album_avatar = source_album.querySelector(".source-album-art img");
-      let redesigned_track_header = html2.node`
+      let redesigned_track_header = html.node`
             <section class="redesigned-header redesigned-track-header no-background">
                 <div class="avatar-side">
-                    ${album_avatar ? html2.node`
+                    ${album_avatar ? html.node`
                     <img src="${album_avatar.getAttribute("src").replace("300x300", "avatar300s")}">
                     <a class="bleh--avatar-clickable-link"></a>
-                    ` : artist_avatar ? html2.node`
+                    ` : artist_avatar ? html.node`
                     <img src="${artist_avatar.getAttribute("content").replace("/ar0/", "/avatar170s/")}">
                     <a class="bleh--avatar-clickable-link"></a>
-                    ` : html2.node`<img class="missing-track">`}
+                    ` : html.node`<img class="missing-track">`}
                 </div>
                 <div class="info-side">
                     <div class="sub-text">${tl(trans.track)}</div>
@@ -16008,13 +16008,13 @@
         avatar_link.href = source_album.querySelector(".link-block-cover-link").getAttribute("href");
       let menu = tippy(avatar_side, {
         theme: "context-menu",
-        content: html2.node`
-                ${album_avatar || artist_avatar ? html2.node`
+        content: html.node`
+                ${album_avatar || artist_avatar ? html.node`
                 <button class="dropdown-menu-clickable-item" onclick=${() => expand_avatar(avatar.getAttribute("content"))} data-menu-item="expand">
                     ${tl(trans.expand)}
                 </button>
                 ` : ""}
-                ${album_avatar ? html2.node`
+                ${album_avatar ? html.node`
                 <a class="dropdown-menu-clickable-item" href="${source_album.querySelector(".link-block-cover-link").getAttribute("href")}" data-menu-item="album">
                     ${tl(trans.album)}
                 </a>
@@ -16072,7 +16072,7 @@
             <div class="rain" id="rain"></div>
             <div class="rain rain-back" id="rain-back"></div>
         </div>
-        `);
+    `);
     let increment = 0;
     let drops = "";
     let subtle_drops = "";
@@ -16104,7 +16104,7 @@
       let panel = shout_controls.parentElement;
       let select_btn = panel.querySelector(".dropdown-menu-clickable-button");
       let settings_btn;
-      panel.insertBefore(html2.node`
+      panel.insertBefore(html.node`
             <div class="top-container">
                 ${panel.querySelector("h2")}
                 <div class="view-buttons blend">
@@ -16119,7 +16119,7 @@
         `, panel.firstElementChild);
       tippy(settings_btn, {
         theme: "window",
-        content: html2.node`
+        content: html.node`
                 <div class="dialog-settings">
                     ${setting({ id: "shout_markdown" })}
                     <div class="sep"></div>
@@ -16308,7 +16308,7 @@
     dialog({
       id: "bleh_update",
       title: tl(trans.update_to_version).replace("{v}", theme_version.state),
-      body: html2.node`
+      body: html.node`
             <div class="forms">
                 <div class="form">
                     <div class="form-group proceed">
@@ -16346,7 +16346,7 @@
       dialog({
         id: "bleh_update",
         title: tl(trans.update_to_version).replace("{v}", theme_version.state),
-        body: html2.node`
+        body: html.node`
                 <div class="forms">
                     <div class="form">
                         <div class="form-group proceed">
@@ -16373,7 +16373,7 @@
     dialog({
       id: "bleh_update",
       title: tl(trans.update_to_version).replace("{v}", theme_version.state),
-      body: html2.node`
+      body: html.node`
             <div class="forms">
                 <div class="form">
                     <div class="form-group proceed">
@@ -16392,7 +16392,7 @@
       dialog({
         id: "bleh_wait",
         title: tl(trans.update_to_version).replace("{v}", theme_version.state),
-        body: html2.node`
+        body: html.node`
                 <div class="loading-data-container">
                     <div class="loading-data-text">${tl(trans.downloading_styles)}</div>
                 </div>
@@ -16483,7 +16483,7 @@
         text2 = page.name;
       else if (type == "event")
         text2 = tl(trans.artists);
-      render(radio, html2`
+      render(radio, html`
             <h3 class="sub-text">${tl(trans.radio)}</h3>
             <h4>${text2}</h4>
         `);
@@ -16537,7 +16537,7 @@
       let description = old.querySelector(".api-app-description").textContent.trim();
       let token = old.querySelector('form [name="csrfmiddlewaretoken"]').value;
       let cancel = old.querySelector(".form-submit a").getAttribute("href");
-      render(page.structure.main, html2`
+      render(page.structure.main, html`
             <section class="api-connector">
                 <div class="avatar">
                     <img src="${auth.avatar.replace("/avatar42s/", "/avatar170s/")}" alt="${tl(trans.your_avatar)}">
@@ -16546,7 +16546,7 @@
                     <h1>${page.name}</h1>
                     <div class="sub-text no-margin">${tl(trans.app_would_like_to_connect)}</div>
                     <div class="subtle">
-                        ${html2.node([
+                        ${html.node([
         tl(trans.logged_in_as).replace("{user}", `<a class="mention" href="${root}user/${auth.name}">@${auth.name}</a>`)
       ])}
                     </div>
@@ -16700,12 +16700,12 @@
     dialog({
       id: "error",
       title: "An error has occurred",
-      body: html2.node`
+      body: html.node`
             <div class="modal-vertical-inner error-inner">
                 <div class="bleh-icon" style="--icon: var(--icon-error)"></div>
                 <h1>oops.. something broke</h1>
                 <p>An error prevented ${version.brand} from finishing loading, it's recommended to leave the page and refresh.</p>
-                <pre class="error-info">${e ? html2.node`<span class="error-type">${e.name}</span>: ${e.message}` : ""}<br>on: ${page.type}/${page.subpage}<br>    ${window.location.pathname}<br>    ${version.build}</pre>
+                <pre class="error-info">${e ? html.node`<span class="error-type">${e.name}</span>: ${e.message}` : ""}<br>on: ${page.type}/${page.subpage}<br>    ${window.location.pathname}<br>    ${version.build}</pre>
                 <p>It would be helpful if you could report this bug on Github, including the error message above and a screenshot of your browser console (the error is highlighted).</p>
             </div>
             <div class="modal-footer">
@@ -17011,7 +17011,7 @@
     }
   }
   function page_indicator() {
-    render(page.structure.indicator, html2`
+    render(page.structure.indicator, html`
         <div class="bleh">
             <strong>ver</strong>
             <span>${version.brand}</span>
@@ -23616,7 +23616,7 @@
   // src/build/log.js
   function log(text2, system, type = "info", append = {}) {
     if (!page.structure.logs) {
-      let logs = html2.node`<div class="logs">
+      let logs = html.node`<div class="logs">
             <div class="setting" data-type="toggle" id="container-log_show_all" onclick="_update_item('log_show_all')">
                 <div class="toggle-wrap">
                     <button id="toggle-log_show_all">
@@ -23668,7 +23668,7 @@
     if (settings && settings.feature_flags) {
       if (settings.feature_flags.developer == true) {
         page.structure.logs.appendChild(
-          html2.node`
+          html.node`
             <div class="log" data-type=${type}>
                 <span class="system" style="color: ${system_colour}">${system}</span>
                 <span class="text">${text2}</span>
