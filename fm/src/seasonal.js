@@ -111,7 +111,11 @@ export function set_season() {
     });
 
     let lowest = 400;
-    let next_season = {};
+    let next_season = {
+        start: ''
+    };
+    // TODO: investigate how next_season.start could be null
+    // in the meantime, i added it above as an empty string incase
     if (stored_season.id == 'none') {
         seasonal_events.forEach((season) => {
             if (season.days_until < lowest) {

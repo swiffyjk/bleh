@@ -10183,7 +10183,9 @@
       }
     });
     let lowest = 400;
-    let next_season = {};
+    let next_season = {
+      start: ""
+    };
     if (stored_season.id == "none") {
       seasonal_events.forEach((season) => {
         if (season.days_until < lowest) {
