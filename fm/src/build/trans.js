@@ -2626,6 +2626,12 @@ export const trans = {
     },
     downloading_styles: {
         en: 'Downloading styles'
+    },
+    style_warning: {
+        en: 'You have style loading off! If you did this by accident, you can undo this'
+    },
+    re_enable_style_loading: {
+        en: 'Re-enable style loading'
     }
 }
 

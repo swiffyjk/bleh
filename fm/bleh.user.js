@@ -13624,6 +13624,19 @@
       document.body.appendChild(loader);
       page.structure.loader = loader;
     }
+    if (!page.structure.style_warning) {
+      const style_warning = html.node`
+            <div class="style-warning" style="position: fixed; top: 0; left: 0; right: 0; padding: 20px; background: #fff; z-index: 1000000000; display: flex; align-items: center; gap: 30px">
+                <strong>${tl(trans.style_warning)}</strong>
+                <button class="btn-primary" onclick=${() => {
+        save_setting("dev", false);
+        window.location.reload();
+      }}>${tl(trans.re_enable_style_loading)}</button>
+            </div>
+        `;
+      document.body.appendChild(style_warning);
+      page.structure.style_warning = style_warning;
+    }
     let masthead = document.body.querySelector(".masthead");
     let new_auth = masthead.querySelector(".auth-dropdown-menu");
     let auth_link2 = masthead.querySelector(".masthead-nav-wrap > .site-auth .auth-link");
@@ -19708,6 +19721,12 @@
     },
     downloading_styles: {
       en: "Downloading styles"
+    },
+    style_warning: {
+      en: "You have style loading off! If you did this by accident, you can undo this"
+    },
+    re_enable_style_loading: {
+      en: "Re-enable style loading"
     }
   };
   var trans_legacy = {
