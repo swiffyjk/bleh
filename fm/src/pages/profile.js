@@ -767,6 +767,7 @@ export function bleh_profiles() {
         buttons.appendChild(about_more);
 
         let about_me_header = about_me_sidebar.querySelector('h2');
+        about_me_header.textContent = tl(trans.about);
         about_me_header.appendChild(buttons);
 
         if (is_own_profile) {

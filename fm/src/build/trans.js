@@ -896,9 +896,10 @@ export const trans = {
         }
     },
     about_me_preview: {
-        en: 'About Me (preview)',
-        de: 'Über mich (Vorschau)',
-        pt: 'Sobre mim (preview)'
+        // About
+        en: 'About (preview)',
+        de: 'Über (Vorschau)',
+        pt: 'Sobre (preview)'
     },
     markdown_tip: {
         // use <br><br> to add a space between the first sentence and the next
