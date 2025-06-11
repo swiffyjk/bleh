@@ -17292,6 +17292,9 @@
                         .user-status-subscriber {
                             order: -1;
                         }
+                        .user-follow {
+                            order: -2;
+                        }
                     }
                 }
             }
@@ -20252,6 +20255,9 @@
 
                     .user-status-subscriber {
                         order: -1;
+                    }
+                    .user-follow {
+                        order: -2;
                     }
                 }
 
