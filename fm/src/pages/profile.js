@@ -1588,15 +1588,17 @@ function request_banner() {
 function save_banner_to_cache(img) {
     let banners = JSON.parse(localStorage.getItem('bleh_profile_banners')) || {};
 
-    banners[page.name] = img;
-
     let banners_o = Object.keys(banners);
     if (banners_o.length > 150) {
-        let values = banners_o.splice(150, banners_o.length);
+        // remove first item of object
+        let keys = Reflect.ownKeys(banners);
+        delete banners[keys[0]];
 
-        values.forEach((value) => {
-            delete banners[value];
-        });
+        // then move this to the bottom
+        delete banners[page.name];
+        banners[page.name] = img;
+    } else {
+        banners[page.name] = img;
     }
 
     localStorage.setItem('bleh_profile_banners', JSON.stringify(banners));
