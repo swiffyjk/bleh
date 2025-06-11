@@ -7423,6 +7423,9 @@
     let form_website = document.getElementById("id_homepage").value;
     let form_country = document.getElementById("id_country");
     let form_about_me = document.getElementById("id_about_me").textContent;
+    let chars;
+    let about;
+    let preview;
     render(update_picture, html`
        <h4>${tl(trans.profile)}</h4>
         <div class="banner-preview"></div>
@@ -7471,10 +7474,10 @@
                                     ${tl(trans.about)}
                                 </div>
                                 <div class="input about-me" id="about_me">
-                                    <textarea name="about_me" placeholder=${tl(trans.anything_you_can_imagine)} cols="40" rows="10" class="textarea--s" maxlength="500" id="id_about_me" oninput="_update_about_me_preview(this.value)" data-form-type="other">${form_about_me}</textarea>
+                                    <textarea name="about_me" placeholder=${tl(trans.anything_you_can_imagine)} cols="40" rows="10" class="textarea--s" maxlength="500" id="id_about_me" oninput=${() => update_about()} ref=${(el) => about = el} data-form-type="other">${form_about_me}</textarea>
                                     <div class="dual-tip">
                                         <div class="tip markdown-enabled">${tl(trans.supports_markdown)}</div>
-                                        <div class="tip characters">
+                                        <div class="tip characters" ref=${(el) => chars = el}>
                                             ${tl(trans.value_characters_max).replace("{v}", "500")}
                                         </div>
                                     </div>
@@ -7484,7 +7487,7 @@
                                 <div class="title">
                                     ${tl(trans.about_me_preview)}
                                 </div>
-                                <span class="bleh--about-me-preview" id="about_me_preview"></span>
+                                <span class="bleh--about-me-preview" ref=${(el) => preview = el}></span>
                             </div>
                             <div class="info-row" style="display: none">
                                 <div class="title">
@@ -7514,8 +7517,21 @@
       allowHTML: true
     });
     custom_select(update_picture.querySelector("#id_country"), update_picture.querySelector("#country_select"));
-    let about_me_box = document.getElementById("id_about_me");
-    update_about_me_preview(about_me_box.value);
+    update_about();
+    function update_about() {
+      let value = about.value;
+      chars.textContent = tl(trans.value_characters_max).replace("{v}", `${value.length}/500`);
+      chars.setAttribute("data-exceeded", value.length >= 500);
+      render(preview, markdown(value, {
+        allow_headers: true
+      }));
+      let banner = preview.querySelector('img[alt="banner"]');
+      let banner_img = page.structure.main.querySelector(".banner-preview");
+      if (!banner)
+        banner_img.removeAttribute("style");
+      else
+        banner_img.style.setProperty("background-image", `url(${banner.getAttribute("src")})`);
+    }
     update_display_name(form_display_name);
   }
   unsafeWindow._update_display_name = function(value) {
@@ -7591,21 +7607,6 @@
       button.setAttribute("disabled", "true");
       button.removeAttribute("onclick");
     });
-  }
-  unsafeWindow._update_about_me_preview = function(value) {
-    update_about_me_preview(value);
-  };
-  function update_about_me_preview(value) {
-    let about_me = page.structure.main.querySelector("#about_me_preview");
-    render(about_me, markdown(value, {
-      allow_headers: true
-    }));
-    let banner = about_me.querySelector('img[alt="banner"]');
-    let banner_img = page.structure.main.querySelector(".banner-preview");
-    if (!banner)
-      banner_img.removeAttribute("style");
-    else
-      banner_img.style.setProperty("background-image", `url(${banner.getAttribute("src")})`);
   }
   function patch_settings_privacy_tab() {
     let privacy_panel = document.getElementById("privacy");

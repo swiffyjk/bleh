@@ -300,7 +300,8 @@
     .colourful,
     .redesigned-header[data-bleh--theme="dark"],
     .events-list-item-attendees,
-    .side-action
+    .side-action,
+    .tip[data-exceeded="true"]
     {
         --hue:  var(--hue-over,
                 var(--hue-album,
@@ -17167,6 +17168,13 @@
                                 font-size: 13px;
                                 width: fit-content;
                                 cursor: default;
+
+                                &[data-exceeded="true"] {
+                                    color: hsl(var(--l3-c));
+                                    --hue-over: var(--hue-neg);
+                                    --sat-over: 1;
+                                    --lit-over: 1;
+                                }
                             }
 
                             &.about-me {
