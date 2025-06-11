@@ -500,7 +500,12 @@ function patch_settings_profile_panel(token, update_picture) {
                                 </div>
                                 <div class="input about-me" id="about_me">
                                     <textarea name="about_me" placeholder=${tl(trans.anything_you_can_imagine)} cols="40" rows="10" class="textarea--s" maxlength="500" id="id_about_me" oninput="_update_about_me_preview(this.value)" data-form-type="other">${form_about_me}</textarea>
-                                    <div class="tip markdown-enabled">${tl(trans.supports_markdown)}</div>
+                                    <div class="dual-tip">
+                                        <div class="tip markdown-enabled">${tl(trans.supports_markdown)}</div>
+                                        <div class="tip characters">
+                                            ${tl(trans.value_characters_max).replace('{v}', '500')}
+                                        </div>
+                                    </div>
                                 </div>
                             </div>
                             <div class="info-row">

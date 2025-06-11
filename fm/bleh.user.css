@@ -17157,6 +17157,11 @@
                             flex: 1;
                             width: 358px;
 
+                            .dual-tip {
+                                display: flex;
+                                justify-content: space-between;
+                            }
+
                             .tip {
                                 color: hsl(var(--c3));
                                 font-size: 13px;

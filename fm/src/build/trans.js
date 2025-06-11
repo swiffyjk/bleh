@@ -1850,6 +1850,9 @@ export const trans = {
         de: 'Unterstützt Markdown',
         pt: 'Suporta o Markdown'
     },
+    value_characters_max: {
+        en: '{v} characters max'
+    },
     profile_shortcut: {
         name: {
             en: 'Profile shortcut',
