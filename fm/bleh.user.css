@@ -21869,7 +21869,6 @@
         display: flex;
         justify-content: center;
         padding-top: var(--card-gap);
-        border-top: 1px solid var(--card-border-base);
 
         .form-group {
             margin: unset !important;
