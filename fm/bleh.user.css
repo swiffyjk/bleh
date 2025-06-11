@@ -9538,7 +9538,7 @@
 
                 .full-avatar {
                     height: 100%;
-                    background: var(--avatar-generic-background);
+                    background: hsl(var(--b5));
                     border-radius: var(--card-radius);
                     box-shadow: var(--menu-shadow);
                     overflow: hidden;
