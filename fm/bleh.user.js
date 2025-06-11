@@ -6578,8 +6578,18 @@
       if (taste_percentage == "99%")
         taste_percentage = "100%";
     }
-    let profile_header = document.createElement("section");
-    profile_header.classList.add("side-actions");
+    let side_sep = html.node`<div class="sep"></div>`;
+    let about_me = page.structure.container.querySelector(".about-me-sidebar");
+    let profile_header;
+    if (about_me) {
+      profile_header = html.node`
+            <div class="side-actions" />
+        `;
+    } else {
+      profile_header = html.node`
+            <section class="side-actions" />
+        `;
+    }
     if (!is_own_profile && page.name != sponsor_list.sponsor_account) {
       let follow_wrap = document.body.querySelector(".header-avatar .class > div");
       if (follow_wrap != null) {
@@ -6789,10 +6799,15 @@
         register_menu(taste_wrap, menu);
       }
     }
-    if (!page.mobile)
-      page.structure.side.insertBefore(profile_header, page.structure.side.firstElementChild);
-    else
-      page.structure.main.insertBefore(profile_header, page.structure.main.firstElementChild);
+    if (about_me) {
+      about_me.appendChild(side_sep);
+      about_me.appendChild(profile_header);
+    } else {
+      if (!page.mobile)
+        page.structure.side.insertBefore(profile_header, page.structure.side.firstElementChild);
+      else
+        page.structure.main.insertBefore(profile_header, page.structure.main.firstElementChild);
+    }
   }
   function create_profile_top_item(parent, { name, link, text: text2 = "", type, new_release = false, action = "", tooltip = "", allow_html = false, tooltip_theme = "" }) {
     log(`creating top item of ${name}, ${link}, ${text2}`, "profile");
@@ -8788,20 +8803,16 @@
       buttons.appendChild(about_more);
       let about_me_header = about_me_sidebar.querySelector("h2");
       about_me_header.appendChild(buttons);
-      let edit = document.createElement("div");
-      edit.classList.add("more-link");
       if (is_own_profile) {
-        edit.innerHTML = `
-                <a href="${root}settings#id_about_me">${tl(trans.edit)}</a>
-            `;
-        about_me_sidebar.appendChild(edit);
+        buttons.appendChild(html.node`
+                <a class="see-more" href="${root}settings#id_about_me">${tl(trans.edit)}</a>
+            `);
         return;
       }
       if (!profile_has_note) {
-        edit.innerHTML = `
-                <a class="inline-add-icon" onclick="_add_profile_note('${page.name}',${profile_has_note})">${tl(trans.add_note)}</a>
-            `;
-        about_me_sidebar.appendChild(edit);
+        buttons.appendChild(html.node`
+                <a class="see-more add" onclick=${() => add_profile_note(page.name, profile_has_note)}>${tl(trans.add_note)}</a>
+            `);
       } else {
         create_profile_note_panel(page.name, true);
       }
@@ -23891,6 +23902,16 @@
         default: true,
         name: "Refreshed auth menu",
         date: "2025-06-07"
+      },
+      menu_like_side_actions: {
+        default: false,
+        name: "Menu-like side actions",
+        date: "2025-06-11"
+      },
+      menu_like_side_actions_v2: {
+        default: false,
+        name: "Menu-like side actions v2",
+        date: "2025-06-11"
       }
     }
   };

@@ -769,24 +769,18 @@ export function bleh_profiles() {
         let about_me_header = about_me_sidebar.querySelector('h2');
         about_me_header.appendChild(buttons);
 
-
-        let edit = document.createElement('div');
-        edit.classList.add('more-link');
-
         if (is_own_profile) {
-            edit.innerHTML = (`
-                <a href="${root}settings#id_about_me">${tl(trans.edit)}</a>
+            buttons.appendChild(html.node`
+                <a class="see-more" href="${root}settings#id_about_me">${tl(trans.edit)}</a>
             `);
-            about_me_sidebar.appendChild(edit);
 
             return;
         }
 
         if (!profile_has_note) {
-            edit.innerHTML = (`
-                <a class="inline-add-icon" onclick="_add_profile_note('${page.name}',${profile_has_note})">${tl(trans.add_note)}</a>
+            buttons.appendChild(html.node`
+                <a class="see-more add" onclick=${() => add_profile_note(page.name, profile_has_note)}>${tl(trans.add_note)}</a>
             `);
-            about_me_sidebar.appendChild(edit);
         } else {
             create_profile_note_panel(page.name, true);
         }

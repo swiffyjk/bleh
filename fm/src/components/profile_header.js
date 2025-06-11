@@ -67,8 +67,20 @@ export function redesign_profile_header(is_own_profile, is_following) {
 
 
     // create new
-    let profile_header = document.createElement('section');
-    profile_header.classList.add('side-actions');
+    let side_sep = html.node`<div class="sep"></div>`;
+
+    let about_me = page.structure.container.querySelector('.about-me-sidebar');
+
+    let profile_header;
+    if (about_me) {
+        profile_header = html.node`
+            <div class="side-actions" />
+        `;
+    } else {
+        profile_header = html.node`
+            <section class="side-actions" />
+        `;
+    }
 
     if (!is_own_profile && page.name != sponsor_list.sponsor_account) {
         // follow
@@ -307,10 +319,15 @@ export function redesign_profile_header(is_own_profile, is_following) {
         }
     }
 
-    if (!page.mobile)
-        page.structure.side.insertBefore(profile_header, page.structure.side.firstElementChild);
-    else
-        page.structure.main.insertBefore(profile_header, page.structure.main.firstElementChild);
+    if (about_me) {
+        about_me.appendChild(side_sep);
+        about_me.appendChild(profile_header);
+    } else {
+        if (!page.mobile)
+            page.structure.side.insertBefore(profile_header, page.structure.side.firstElementChild);
+        else
+            page.structure.main.insertBefore(profile_header, page.structure.main.firstElementChild);
+    }
 }
 
 export function create_profile_top_item(parent, {name, link, text='', type, new_release = false, action='', tooltip='', allow_html=false, tooltip_theme=''}) {
