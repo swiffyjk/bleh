@@ -29,6 +29,7 @@ import {bleh_obsession} from "./obsession"
 import {html, render} from "lighterhtml";
 import {collage} from "../components/collage.js";
 import {setting} from "../components/settings.js";
+import {save_banner_to_cache} from "../components/banner.js";
 
 export function bleh_profiles() {
     // the obsessions page is a user subpage but works very differently
@@ -1578,25 +1579,6 @@ function request_banner() {
             save_banner_to_cache('none');
         }
     });
-}
-
-function save_banner_to_cache(img) {
-    let banners = JSON.parse(localStorage.getItem('bleh_profile_banners')) || {};
-
-    let banners_o = Object.keys(banners);
-    if (banners_o.length > 150) {
-        // remove first item of object
-        let keys = Reflect.ownKeys(banners);
-        delete banners[keys[0]];
-
-        // then move this to the bottom
-        delete banners[page.name];
-        banners[page.name] = img;
-    } else {
-        banners[page.name] = img;
-    }
-
-    localStorage.setItem('bleh_profile_banners', JSON.stringify(banners));
 }
 
 

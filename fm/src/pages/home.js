@@ -14,6 +14,7 @@ import {register_background, update_page} from "../page";
 import {bleh_charts} from "./chart";
 import {bleh_native_settings} from './lastfm_settings';
 import {html, render} from "lighterhtml";
+import {load_banner} from "../components/banner.js";
 
 export function bleh_home() {
     page.structure.container = document.body.querySelector('.page-content');
@@ -31,11 +32,14 @@ export function bleh_home() {
     log('status is', 'page', 'info', page);
     update_page();
 
-    register_background(auth.avatar.replace('/avatar42s/', '/ar0/'));
+    let banner = load_banner(auth.name);
+    if (banner)
+        register_background(banner);
+    else if (!auth.avatar.endsWith('818148bf682d429dc215c1705eb27b98.png'))
+        register_background(auth.avatar.replace('/avatar42s/', '/ar0/'));
+    else
+        register_background(null);
 
-
-    let banner = document.createElement('div');
-    banner.classList.add('top-banner', 'home-banner', 'colourful');
 
     let hour = new Date().getHours();
     let time;
@@ -49,73 +53,74 @@ export function bleh_home() {
         time = 'evening';
     log(`hour ${hour} time ${time}`, 'time');
 
-    banner.innerHTML = (`
-        <div class="avatar">
-            <img src="${auth.avatar.replace('/avatar42s/', '/avatar170s/')}" alt="${tl(trans.your_avatar)}">
-            ${(auth.sponsor) ? (`
-            <span class="avatar-status-dot user-status--bleh-sponsor"></span>
-            `) : ''}
+    let welcome = html.node`
+        <div class="top-banner home-banner">
+            <div class="avatar">
+                <img src="${auth.avatar.replace('/avatar42s/', '/avatar170s/')}" alt="${tl(trans.your_avatar)}">
+                ${(auth.sponsor) ? html.node`
+                <span class="avatar-status-dot user-status--bleh-sponsor"></span>
+                ` : ''}
+            </div>
+            <h1>${{html: tl(trans[`good_${time}_user`]).replace('{user}', `<a class="mention" href="${root}user/${auth.name}">@${auth.name}</a>`)}}</h1>
         </div>
-        <h1>${tl(trans[`good_${time}_user`]).replace('{user}', `<a class="mention" href="${root}user/${auth.name}">@${auth.name}</a>`)}</h1>
-    `);
+    `;
+    page.structure.container.insertBefore(welcome, page.structure.container.firstElementChild);
 
-    page.structure.container.insertBefore(banner, page.structure.container.firstElementChild);
-
-    let nav = document.createElement('nav');
-    nav.classList.add('navlist', 'secondary-nav', 'navlist--more', 'redesigned-navigation');
-    nav.innerHTML = (`
-        <ul class="navlist-items">
-            <li class="navlist-item secondary-nav-item secondary-nav-item--home">
-                <a href="${root}music" class="secondary-nav-item-link ${(page.subpage == 'music') ? 'secondary-nav-item-link--active' : ''}">
-                    ${tl(trans.home)}<div class="new-badge">${tl(trans.beta)}</div>
-                </a>
-            </li>
-            <li class="navlist-item secondary-nav-item secondary-nav-item--recommendations">
-                <a href="${root}music/+recommended" class="secondary-nav-item-link ${(page.type == 'recommended') ? 'secondary-nav-item-link--active' : ''}">
-                    ${tl(trans.recommendations)}<div class="new-badge">${tl(trans.beta)}</div>
-                </a>
-            </li>
-            <li class="navlist-item secondary-nav-item secondary-nav-item--releases">
-                <a href="${root}music/+releases/out-now" class="secondary-nav-item-link ${(page.type == 'releases') ? 'secondary-nav-item-link--active' : ''}">
-                    ${tl(trans.releases)}
-                </a>
-            </li>
-            <li class="navlist-item secondary-nav-item secondary-nav-item--events dont-rearrange">
-                <a href="${root}events" class="secondary-nav-item-link ${(page.type == 'events') ? 'secondary-nav-item-link--active' : ''}">
-                    ${tl(trans.events)}<div class="new-badge">${tl(trans.beta)}</div>
-                </a>
-            </li>
-            <li class="navlist-item secondary-nav-item secondary-nav-item--bookmarks">
-                <a href="${root}music/+bookmarks" class="secondary-nav-item-link ${(page.type == 'bookmarks') ? 'secondary-nav-item-link--active' : ''}">
-                    ${tl(trans.bookmarks)}
-                </a>
-            </li>
-            <li class="navlist-item secondary-nav-item secondary-nav-item--charts">
-                <a href="${root}charts" class="secondary-nav-item-link ${(page.type == 'charts') ? 'secondary-nav-item-link--active' : ''}">
-                    ${tl(trans.charts)}
-                </a>
-            </li>
-            <li class="fill"></li>
-            <li class="navlist-item secondary-nav-item secondary-nav-item--settings">
-                <a href="${root}settings" class="secondary-nav-item-link ${(page.type == 'settings') ? 'secondary-nav-item-link--active' : ''}">
-                    ${tl(trans.settings)}
-                </a>
-            </li>
-            <li class="navlist-item secondary-nav-item secondary-nav-item--bleh">
-                <a href="${root}bleh" class="secondary-nav-item-link ${(page.type == 'error') ? 'secondary-nav-item-link--active' : ''}">
-                    ${tl(trans.settings)}
-                </a>
-            </li>
-            <li class="navlist-item secondary-nav-item secondary-nav-item--more">
-                <a class="secondary-nav-item-link no-text">
-                    ${tl(trans.more)}
-                </a>
-            </li>
-        </ul>
-    `);
+    let nav = html.node`
+        <nav class="navlist secondary-nav navlist--more redesigned-navigation">
+            <ul class="navlist-items">
+                <li class="navlist-item secondary-nav-item secondary-nav-item--home">
+                    <a href="${root}music" class="secondary-nav-item-link ${(page.subpage == 'music') ? 'secondary-nav-item-link--active' : ''}">
+                        ${tl(trans.home)}<div class="new-badge">${tl(trans.beta)}</div>
+                    </a>
+                </li>
+                <li class="navlist-item secondary-nav-item secondary-nav-item--recommendations">
+                    <a href="${root}music/+recommended" class="secondary-nav-item-link ${(page.type == 'recommended') ? 'secondary-nav-item-link--active' : ''}">
+                        ${tl(trans.recommendations)}<div class="new-badge">${tl(trans.beta)}</div>
+                    </a>
+                </li>
+                <li class="navlist-item secondary-nav-item secondary-nav-item--releases">
+                    <a href="${root}music/+releases/out-now" class="secondary-nav-item-link ${(page.type == 'releases') ? 'secondary-nav-item-link--active' : ''}">
+                        ${tl(trans.releases)}
+                    </a>
+                </li>
+                <li class="navlist-item secondary-nav-item secondary-nav-item--events dont-rearrange">
+                    <a href="${root}events" class="secondary-nav-item-link ${(page.type == 'events') ? 'secondary-nav-item-link--active' : ''}">
+                        ${tl(trans.events)}<div class="new-badge">${tl(trans.beta)}</div>
+                    </a>
+                </li>
+                <li class="navlist-item secondary-nav-item secondary-nav-item--bookmarks">
+                    <a href="${root}music/+bookmarks" class="secondary-nav-item-link ${(page.type == 'bookmarks') ? 'secondary-nav-item-link--active' : ''}">
+                        ${tl(trans.bookmarks)}
+                    </a>
+                </li>
+                <li class="navlist-item secondary-nav-item secondary-nav-item--charts">
+                    <a href="${root}charts" class="secondary-nav-item-link ${(page.type == 'charts') ? 'secondary-nav-item-link--active' : ''}">
+                        ${tl(trans.charts)}
+                    </a>
+                </li>
+                <li class="fill"></li>
+                <li class="navlist-item secondary-nav-item secondary-nav-item--settings">
+                    <a href="${root}settings" class="secondary-nav-item-link ${(page.type == 'settings') ? 'secondary-nav-item-link--active' : ''}">
+                        ${tl(trans.settings)}
+                    </a>
+                </li>
+                <li class="navlist-item secondary-nav-item secondary-nav-item--bleh">
+                    <a href="${root}bleh" class="secondary-nav-item-link ${(page.type == 'error') ? 'secondary-nav-item-link--active' : ''}">
+                        ${tl(trans.settings)}
+                    </a>
+                </li>
+                <li class="navlist-item secondary-nav-item secondary-nav-item--more">
+                    <a class="secondary-nav-item-link no-text">
+                        ${tl(trans.more)}
+                    </a>
+                </li>
+            </ul>
+        </nav>
+    `;
 
     page.structure.nav = nav;
-    banner.after(nav);
+    welcome.after(nav);
 
     if (page.type == 'charts')
         bleh_charts();

@@ -365,12 +365,12 @@
       var direct = attribute2.value === UID;
       var sparse;
       if (direct || 1 < (sparse = attribute2.value.split(UIDC)).length) {
-        var name = attribute2.name;
-        if (cache2.indexOf(name) < 0) {
-          cache2.push(name);
+        var name2 = attribute2.name;
+        if (cache2.indexOf(name2) < 0) {
+          cache2.push(name2);
           var realName = parts.shift().replace(
             direct ? /^(?:|[\S\s]*?\s)(\S+?)\s*=\s*('|")?$/ : new RegExp(
-              "^(?:|[\\S\\s]*?\\s)(" + name + `)\\s*=\\s*('|")[\\S\\s]*`,
+              "^(?:|[\\S\\s]*?\\s)(" + name2 + `)\\s*=\\s*('|")[\\S\\s]*`,
               "i"
             ),
             "$1"
@@ -418,12 +418,12 @@
       path
     };
   }
-  function Attr(node, path, name, sparse) {
+  function Attr(node, path, name2, sparse) {
     return {
       type: "attr",
       node,
       path,
-      name,
+      name: name2,
       sparse
     };
   }
@@ -618,17 +618,17 @@
   // node_modules/uhandlers/esm/index.js
   var aria = (node) => (values) => {
     for (const key in values) {
-      const name = key === "role" ? key : `aria-${key}`;
+      const name2 = key === "role" ? key : `aria-${key}`;
       const value = values[key];
       if (value == null)
-        node.removeAttribute(name);
+        node.removeAttribute(name2);
       else
-        node.setAttribute(name, value);
+        node.setAttribute(name2, value);
     }
   };
-  var attribute = (node, name) => {
+  var attribute = (node, name2) => {
     let oldValue, orphan = true;
-    const attributeNode = document.createAttributeNS(null, name);
+    const attributeNode = document.createAttributeNS(null, name2);
     return (newValue) => {
       if (oldValue !== newValue) {
         oldValue = newValue;
@@ -664,9 +664,9 @@
         dataset[key] = value;
     }
   };
-  var event2 = (node, name) => {
-    let oldValue, type = name.slice(2);
-    if (!(name in node) && name.toLowerCase() in node)
+  var event2 = (node, name2) => {
+    let oldValue, type = name2.slice(2);
+    if (!(name2 in node) && name2.toLowerCase() in node)
       type = type.toLowerCase();
     return (newValue) => {
       const info = isArray(newValue) ? newValue : [newValue, false];
@@ -689,17 +689,17 @@
   };
 
   // node_modules/lighterhtml/esm/tagger.js
-  var hyperProperty = (node, name) => {
+  var hyperProperty = (node, name2) => {
     let oldValue;
     return (newValue) => {
       if (oldValue !== newValue) {
         oldValue = newValue;
-        if (node[name] !== newValue) {
+        if (node[name2] !== newValue) {
           if (newValue == null) {
-            node[name] = "";
-            node.removeAttribute(name);
+            node[name2] = "";
+            node.removeAttribute(name2);
           } else
-            node[name] = newValue;
+            node[name2] = newValue;
         }
       }
     };
@@ -718,15 +718,15 @@
     //  * style, the only regular attribute that also accepts an object as value
     //    so that you can style=${{width: 120}}. In this case, the behavior has been
     //    fully inspired by Preact library and its simplicity.
-    attribute(node, name, original) {
+    attribute(node, name2, original) {
       const isSVG = this.type === "svg";
-      switch (name) {
+      switch (name2) {
         case "class":
           if (isSVG)
-            return attribute(node, name, isSVG);
-          name = "className";
+            return attribute(node, name2, isSVG);
+          name2 = "className";
         case "props":
-          return setter(node, name);
+          return setter(node, name2);
         case "aria":
           return aria(node);
         case "style":
@@ -736,15 +736,15 @@
         case ".dataset":
           return data(node);
         default:
-          if (name.slice(0, 1) === ".")
-            return setter(node, name.slice(1));
-          if (name.slice(0, 1) === "?")
-            return boolean(node, name.slice(1));
-          if (name.slice(0, 2) === "on")
-            return event2(node, name);
-          if (name in node && !(isSVG || readOnly.test(name)))
-            return hyperProperty(node, name);
-          return attribute(node, name, isSVG);
+          if (name2.slice(0, 1) === ".")
+            return setter(node, name2.slice(1));
+          if (name2.slice(0, 1) === "?")
+            return boolean(node, name2.slice(1));
+          if (name2.slice(0, 2) === "on")
+            return event2(node, name2);
+          if (name2 in node && !(isSVG || readOnly.test(name2)))
+            return hyperProperty(node, name2);
+          return attribute(node, name2, isSVG);
       }
     },
     // in a hyper(node)`<div>${content}</div>` case
@@ -3070,19 +3070,19 @@
   }
 
   // src/avatar.js
-  function patch_avatar(avatar3, name, type = "", parent = null, side = "right") {
+  function patch_avatar(avatar3, name2, type = "", parent = null, side = "right") {
     if (avatar3.hasAttribute("data-bleh-avatar"))
       return {};
     avatar3.setAttribute("data-bleh-avatar", "true");
     let avatar_img = avatar3.querySelector("img");
     if (!avatar_img) return {};
     avatar_img.setAttribute("src", avatar_img.getAttribute("src").replace("/64s/", "/avatar70s/"));
-    let badges = load_badges(name, true);
+    let badges = load_badges(name2, true);
     let buttons = html.node`
         <div class="user-buttons view-buttons">
             ${() => {
       let btn = html.node`
-                    <a class="btn view-item chibi" data-type="profile" href="${root}user/${name}">${tl(trans.profile)}</a>
+                    <a class="btn view-item chibi" data-type="profile" href="${root}user/${name2}">${tl(trans.profile)}</a>
                 `;
       tippy(btn, {
         content: tl(trans.profile)
@@ -3091,7 +3091,7 @@
     }}
             ${() => {
       let btn = html.node`
-                    <a class="btn view-item chibi" data-type="library" href="${root}user/${name}/library">${tl(trans.library)}</a>
+                    <a class="btn view-item chibi" data-type="library" href="${root}user/${name2}/library">${tl(trans.library)}</a>
                 `;
       tippy(btn, {
         content: btn.textContent
@@ -3100,7 +3100,7 @@
     }}
                     ${() => {
       let btn = html.node`
-                    <a class="btn view-item chibi" data-type="shouts" href="${root}user/${name}/shoutbox">${tl(trans.shouts)}</a>
+                    <a class="btn view-item chibi" data-type="shouts" href="${root}user/${name2}/shoutbox">${tl(trans.shouts)}</a>
                 `;
       tippy(btn, {
         content: btn.textContent
@@ -3114,17 +3114,17 @@
       if (pre_existing_badge)
         avatar3.removeChild(pre_existing_badge);
       avatar3.setAttribute("title", "");
-      let this_badge = sponsor_list.badges[name];
-      if (!Array.isArray(sponsor_list.badges[name])) {
-        log(`@${name} 1 badge:`, "shout", "info", sponsor_list.badges[name]);
+      let this_badge = sponsor_list.badges[name2];
+      if (!Array.isArray(sponsor_list.badges[name2])) {
+        log(`@${name2} 1 badge:`, "shout", "info", sponsor_list.badges[name2]);
       } else {
-        log(`@${name} multiple badges:`, "shout", "info", sponsor_list.badges[name]);
-        let badges_length = Object.keys(sponsor_list.badges[name]).length - 1;
-        this_badge = sponsor_list.badges[name][badges_length];
-        log(`@${name} using badge ${badges_length} as primary`, "shout", "info", this_badge);
+        log(`@${name2} multiple badges:`, "shout", "info", sponsor_list.badges[name2]);
+        let badges_length = Object.keys(sponsor_list.badges[name2]).length - 1;
+        this_badge = sponsor_list.badges[name2][badges_length];
+        log(`@${name2} using badge ${badges_length} as primary`, "shout", "info", this_badge);
       }
       let badge = document.createElement("span");
-      badge.classList.add("avatar-status-dot", `user-status--bleh-${this_badge.type}`, `user-status--bleh-user-${name}`);
+      badge.classList.add("avatar-status-dot", `user-status--bleh-${this_badge.type}`, `user-status--bleh-user-${name2}`);
       avatar3.appendChild(badge);
       if (!parent)
         avatar3.classList.add("avatar-can-hoverbox");
@@ -3138,10 +3138,10 @@
                         ${html.node([avatar_img.outerHTML])}
                     </div>
                     <div class="info">
-                        <h5 class="title">${name}</h5>
-                        <p class="badge user-status--bleh-${this_badge.type} user-status--bleh-user-${name}" data-badge-type="${this_badge.type}" data-badge-user="${name}">${this_badge.name}</p>
+                        <h5 class="title">${name2}</h5>
+                        <p class="badge user-status--bleh-${this_badge.type} user-status--bleh-user-${name2}" data-badge-type="${this_badge.type}" data-badge-user="${name2}">${this_badge.name}</p>
                     </div>
-                    <a href="${root}user/${name}" class="link-over"></a>
+                    <a href="${root}user/${name2}" class="link-over"></a>
                 </div>
                 ${buttons}
             `,
@@ -3165,9 +3165,9 @@
                             ${html.node([avatar_img.outerHTML])}
                         </div>
                         <div class="info">
-                            <h5 class="title">${name}</h5>
+                            <h5 class="title">${name2}</h5>
                         </div>
-                        <a href="${root}user/${name}" class="link-over"></a>
+                        <a href="${root}user/${name2}" class="link-over"></a>
                     </div>
                     ${buttons}
                 `,
@@ -3190,10 +3190,10 @@
                             ${html.node([avatar_img.outerHTML])}
                         </div>
                         <div class="info">
-                            <h5 class="title">${name}</h5>
+                            <h5 class="title">${name2}</h5>
                             <p class="badge ${type2}">${tl(trans.badges[type2].name)}</p>
                         </div>
-                        <a href="${root}user/${name}" class="link-over"></a>
+                        <a href="${root}user/${name2}" class="link-over"></a>
                     </div>
                     ${buttons}
                 `,
@@ -4059,12 +4059,12 @@
             <div class="input-container content-form">
                 <input type="text" maxlength="40" id="text-profile" ref=${(el) => input2 = el} placeholder="${tl(trans.enter_username)}">
                 <button class="btn chibi icon primary submit" ref=${(el) => submit = el} onclick=${() => {
-        let name = input2.value;
+        let name2 = input2.value;
         let link = id;
         dialog_rm2({
           id: "other_listener"
         });
-        window.location.href = `${root}user/${name}/library/music/${link}`;
+        window.location.href = `${root}user/${name2}/library/music/${link}`;
       }}>${tl(trans.done)}</button>
             </div>
         </div>
@@ -4710,25 +4710,25 @@
         </section>
     `);
   }
-  function create_listen_item(parent, { name, listens, link, avi, count = 0, button = false, katsune = false }, header_type) {
-    log(`creating listen item of ${name}, ${count}, ${listens}`, "artist", "info", { avi, link });
+  function create_listen_item(parent, { name: name2, listens, link, avi, count = 0, button = false, katsune = false }, header_type) {
+    log(`creating listen item of ${name2}, ${count}, ${listens}`, "artist", "info", { avi, link });
     let listen_item = document.createElement(!button ? "a" : "button");
     listen_item.classList.add("btn", "listen-item");
-    listen_item.setAttribute("href", `${root}user/${name}/library/music/${link}`);
+    listen_item.setAttribute("href", `${root}user/${name2}/library/music/${link}`);
     listen_item.setAttribute("data-listens", listens);
-    listen_item.setAttribute("id", `listen-item--${name}`);
+    listen_item.setAttribute("id", `listen-item--${name2}`);
     if (listens > -1) {
       render(listen_item, html`
-            <img class="view-item-avatar" src="${avi}" alt="${name}">
+            <img class="view-item-avatar" src="${avi}" alt="${name2}">
             <div class="info">
-                <h3>${name}</h3>
+                <h3>${name2}</h3>
                 <p>${tl(trans.listens.count).replace("{c}", listens.toLocaleString(lang))}</p>
             </div>
         `);
       let menu = tippy(listen_item, {
         theme: "context-menu",
         content: html.node`
-                <a class="dropdown-menu-clickable-item" href="${root}user/${name}" data-menu-item="view_profile">
+                <a class="dropdown-menu-clickable-item" href="${root}user/${name2}" data-menu-item="view_profile">
                     ${tl(trans.profile)}
                 </a>
             `,
@@ -4746,16 +4746,16 @@
       register_menu(listen_item, menu);
     } else if (listens > -2) {
       render(listen_item, html`
-            <img class="view-item-avatar" src="${avi}" alt="${name}">
+            <img class="view-item-avatar" src="${avi}" alt="${name2}">
             <div class="info">
-                <h3>${name}</h3>
+                <h3>${name2}</h3>
                 <p>${tl(trans.listens)}</p>
             </div>
         `);
       let menu = tippy(listen_item, {
         theme: "context-menu",
         content: html.node`
-                <a class="dropdown-menu-clickable-item" href="${root}user/${name}" data-menu-item="view_profile">
+                <a class="dropdown-menu-clickable-item" href="${root}user/${name2}" data-menu-item="view_profile">
                     ${tl(trans.profile)}
                 </a>
                 <div class="sep"></div>
@@ -5033,7 +5033,7 @@
         position += (parseInt(page.requested.page) - 1) * 30;
       }
       let name_wrap = listener.querySelector(".top-listeners-item-name a");
-      let name = name_wrap.textContent;
+      let name2 = name_wrap.textContent;
       let track_wrap = listener.querySelector(".top-listeners-track");
       let avatar3 = listener.querySelector(".top-listeners-item-image");
       let follow = listener.querySelector(".class");
@@ -5044,7 +5044,7 @@
                 </span>
                 <h4 class="user-list-name">
                     <a class="user-list-link link-block-target" href="${name_wrap.getAttribute("href")}">
-                        ${name}
+                        ${name2}
                     </a>
                 </h4>
                 <span class="avatar user-list-avatar">
@@ -5060,10 +5060,10 @@
                 ` : ""}
             </div>
         `;
-      let badge = patch_avatar(new_listener.querySelector(".user-list-avatar"), name, "listener");
+      let badge = patch_avatar(new_listener.querySelector(".user-list-avatar"), name2, "listener");
       if (badge.type) {
-        new_listener.querySelector(".user-list-link").classList.add(`user-status--bleh-${badge.type}`, `user-status--bleh-user-${name}`);
-        new_listener.classList.add("colourful", `user-status--bleh-${badge.type}`, `user-status--bleh-user-${name}`);
+        new_listener.querySelector(".user-list-link").classList.add(`user-status--bleh-${badge.type}`, `user-status--bleh-user-${name2}`);
+        new_listener.classList.add("colourful", `user-status--bleh-${badge.type}`, `user-status--bleh-user-${name2}`);
       }
       if (track_wrap) {
         let track_link = new_listener.querySelector(".user-list-about-me a");
@@ -5203,16 +5203,16 @@
           }
         }
       }
-      let name = grid.querySelector(".grid-items-item-main-text a");
-      if (!name) return;
+      let name2 = grid.querySelector(".grid-items-item-main-text a");
+      if (!name2) return;
       if (!is_album) {
-        name.textContent = correct_artist(name.textContent.trim());
-        insights.artist.labels.push(name.textContent);
+        name2.textContent = correct_artist(name2.textContent.trim());
+        insights.artist.labels.push(name2.textContent);
       } else {
         let artist = grid.querySelector(".grid-items-item-aux-block");
         if (!artist) return;
         if (settings.format_guest_features) {
-          let name_elem = name;
+          let name_elem = name2;
           let artist_elem = artist;
           let song_title = name_elem.getAttribute("title");
           let formatted_title = name_includes(song_title, artist_elem.textContent.trim());
@@ -5231,7 +5231,7 @@
                 `);
         } else {
           artist.textContent = correct_artist(artist.textContent.trim());
-          name.textContent = correct_item_by_artist(name.textContent.trim(), artist.textContent.trim());
+          name2.textContent = correct_item_by_artist(name2.textContent.trim(), artist.textContent.trim());
         }
       }
     });
@@ -5246,7 +5246,7 @@
   function update_inbuilt_select(id, value) {
     document.documentElement.setAttribute(`data-bleh--inbuilt-${id}`, value);
   }
-  function select(values, initial = "", name = "") {
+  function select(values, initial = "", name2 = "") {
     let select2;
     let button;
     if (values.length === 0) {
@@ -5256,7 +5256,7 @@
       initial = values[0].value;
     let container = html.node`
         <div class="select-wrap custom-selector">
-            <select ref=${(el) => select2 = el} name=${name}>
+            <select ref=${(el) => select2 = el} name=${name2}>
                 ${values.map((value) => html.node`
                     <option value=${value.value} selected=${value.value == initial}>${value.text}</option>
                 `)}
@@ -5272,10 +5272,10 @@
       interactiveBorder: 10,
       trigger: "click"
     });
-    set_select(button, menu, values, initial, select2, name);
+    set_select(button, menu, values, initial, select2, name2);
     return container;
   }
-  function set_select(button, menu, values, selected, select2, name) {
+  function set_select(button, menu, values, selected, select2, name2) {
     values.some((value) => {
       if (value.value == selected) {
         render(button, html`${value.text}`);
@@ -5283,11 +5283,11 @@
       }
     });
     select2.value = selected;
-    if (name != "")
-      document.documentElement.setAttribute(`data-bleh--inbuilt-id_${name}`, selected);
+    if (name2 != "")
+      document.documentElement.setAttribute(`data-bleh--inbuilt-id_${name2}`, selected);
     menu.setContent(html.node`
         ${values.map((value) => html.node`
-            <button class="btn dropdown-menu-clickable-item select-item" aria-checked=${selected == value.value} onclick=${() => set_select(button, menu, values, value.value, select2, name)}>
+            <button class="btn dropdown-menu-clickable-item select-item" aria-checked=${selected == value.value} onclick=${() => set_select(button, menu, values, value.value, select2, name2)}>
                 ${value.text}
             </button>
         `)}
@@ -6809,8 +6809,8 @@
         page.structure.main.insertBefore(profile_header, page.structure.main.firstElementChild);
     }
   }
-  function create_profile_top_item(parent, { name, link, text: text2 = "", type, new_release = false, action = "", tooltip = "", allow_html = false, tooltip_theme = "" }) {
-    log(`creating top item of ${name}, ${link}, ${text2}`, "profile");
+  function create_profile_top_item(parent, { name: name2, link, text: text2 = "", type, new_release = false, action = "", tooltip = "", allow_html = false, tooltip_theme = "" }) {
+    log(`creating top item of ${name2}, ${link}, ${text2}`, "profile");
     let side_action;
     if (action === "button") {
       side_action = html.node`
@@ -6836,7 +6836,7 @@
         `;
     }
     if (type == "shortcut") {
-      if (name == settings.profile_shortcut) {
+      if (name2 == settings.profile_shortcut) {
         side_action.setAttribute("data-is-shortcut", "true");
       } else {
         side_action.setAttribute("data-is-shortcut", "false");
@@ -7641,13 +7641,13 @@
     list.forEach((item, index) => {
       let entry = document.createElement("div");
       entry.classList.add("generic-table-list-entry", "user-vertical-list-item");
-      let name = item.querySelector("td").textContent.trim();
+      let name2 = item.querySelector("td").textContent.trim();
       let form2 = item.querySelector("form");
       let button = form2.querySelector("button");
       button.classList.add("icon", "chibi", "danger-subtle");
       entry.innerHTML = `
             <span class="text">
-                <a class="mention" href="${root}user/${name}" target="_blank">@${name}</a>
+                <a class="mention" href="${root}user/${name2}" target="_blank">@${name2}</a>
             </span>
             <span class="actions">
                 ${form2.outerHTML}
@@ -8223,8 +8223,8 @@
       related.appendChild(header);
       let users = shared_users.querySelectorAll(".avatar");
       users.forEach((user) => {
-        let name = user.querySelector("img").getAttribute("alt");
-        patch_avatar(user, name);
+        let name2 = user.querySelector("img").getAttribute("alt");
+        patch_avatar(user, name2);
       });
       related.appendChild(shared_users);
     }
@@ -8232,6 +8232,65 @@
     let pages = obsession_container.querySelector(".obsession-pagination");
     if (pages)
       page.structure.container.appendChild(pages);
+  }
+
+  // src/components/banner.js
+  function load_banner(name2 = page.name) {
+    let banners = JSON.parse(localStorage.getItem("bleh_profile_banners")) || {};
+    if (banners[name2]) {
+      if (banners[name2] == "none")
+        return;
+      return banners[name2];
+    } else {
+      request_banner(name2);
+    }
+  }
+  function bio_parse(text2, cache2 = false) {
+    let temp = document.createElement("div");
+    render(temp, markdown(text2.textContent, {
+      allow_headers: true
+    }));
+    let banner = temp.querySelector('img[alt="banner"]');
+    if (banner) {
+      save_banner_to_cache(banner.getAttribute("src"), name);
+      return banner.getAttribute("src");
+    } else {
+      save_banner_to_cache("none");
+      return "none";
+    }
+  }
+  function request_banner(name2 = page.name) {
+    fetch(`${root}user/${name2}`).then(function(response) {
+      console.log("returned", response, response.text);
+      return response.text();
+    }).then(function(html2) {
+      let doc = new DOMParser().parseFromString(html2, "text/html");
+      console.log("DOC", doc);
+      let about_me_sidebar = doc.querySelector(".about-me-sidebar");
+      if (about_me_sidebar) {
+        let about_me_text = about_me_sidebar.querySelector("p");
+        return bio_parse(about_me_text, true);
+      } else {
+        save_banner_to_cache("none");
+        return "none";
+      }
+    });
+  }
+  function save_banner_to_cache(img, name2 = page.name) {
+    let banners = JSON.parse(localStorage.getItem("bleh_profile_banners")) || {};
+    let banners_o = Object.keys(banners);
+    if (banners_o.length > 150) {
+      let keys2 = Reflect.ownKeys(banners);
+      if (banners[keys2[0]] != auth.name)
+        delete banners[keys2[0]];
+      else
+        delete banners[keys2[1]];
+      delete banners[page.name];
+      banners[page.name] = img;
+    } else {
+      banners[page.name] = img;
+    }
+    localStorage.setItem("bleh_profile_banners", JSON.stringify(banners));
   }
 
   // src/pages/profile.js
@@ -8762,7 +8821,7 @@
       about_me_sidebar.setAttribute("data-kate-processed", "true");
       if (settings.bio_markdown) {
         let about_me_text = about_me_sidebar.querySelector("p");
-        let result = bio_parse(about_me_text, true);
+        let result = bio_parse2(about_me_text, true);
         about_me_text.innerHTML = result;
       }
       let buttons = document.createElement("div");
@@ -9004,9 +9063,9 @@
     } else if (settings.corrections) {
       let name_elem = details.querySelector(".featured-item-name");
       let artist_elem = details.querySelector(".featured-item-artist");
-      let name = correct_item_by_artist(name_elem.textContent.trim(), artist_elem.textContent.trim());
+      let name2 = correct_item_by_artist(name_elem.textContent.trim(), artist_elem.textContent.trim());
       let artist = correct_artist(artist_elem.textContent.trim());
-      name_elem.textContent = name;
+      name_elem.textContent = name2;
       artist_elem.textContent = artist;
     }
     if (form) {
@@ -9403,7 +9462,7 @@
       trigger: "click"
     });
   }
-  function bio_parse(text2, cache2 = false) {
+  function bio_parse2(text2, cache2 = false) {
     let temp = document.createElement("div");
     render(temp, markdown(text2.textContent, {
       allow_headers: true
@@ -9434,10 +9493,10 @@
         return;
       register_background(banners[page.name], "bio");
     } else {
-      request_banner();
+      request_banner2();
     }
   }
-  function request_banner() {
+  function request_banner2() {
     fetch(`${root}user/${page.name}`).then(function(response) {
       console.log("returned", response, response.text);
       return response.text();
@@ -9447,24 +9506,11 @@
       let about_me_sidebar = doc.querySelector(".about-me-sidebar");
       if (about_me_sidebar) {
         let about_me_text = about_me_sidebar.querySelector("p");
-        let result = bio_parse(about_me_text, true);
+        let result = bio_parse2(about_me_text, true);
       } else {
         save_banner_to_cache("none");
       }
     });
-  }
-  function save_banner_to_cache(img) {
-    let banners = JSON.parse(localStorage.getItem("bleh_profile_banners")) || {};
-    let banners_o = Object.keys(banners);
-    if (banners_o.length > 150) {
-      let keys2 = Reflect.ownKeys(banners);
-      delete banners[keys2[0]];
-      delete banners[page.name];
-      banners[page.name] = img;
-    } else {
-      banners[page.name] = img;
-    }
-    localStorage.setItem("bleh_profile_banners", JSON.stringify(banners));
   }
   function bleh_profile_chart() {
     let panel = page.structure.row.querySelector(".listen-panel");
@@ -12866,10 +12912,10 @@
     activity_item.classList.add("activity-item", `activity--${activity.type}`);
     let involved_text = "";
     activity.involved.forEach((involved) => {
-      let name = involved.name;
+      let name2 = involved.name;
       let sister = involved.sister;
       if (involved.type == "track" && settings.format_guest_features) {
-        let formatted_title = name_includes(name, sister);
+        let formatted_title = name_includes(name2, sister);
         let song_title;
         let song_tags = {};
         if (formatted_title) {
@@ -12877,22 +12923,22 @@
           song_tags = formatted_title[1];
           sister = formatted_title[2];
         }
-        name = html.node`
+        name2 = html.node`
                 <div class="title">${song_title.trim()}</div>
                 ${song_tags.map((tag) => html.node`
                     <div class="feat" data-bleh--tag-type="${tag.type}" data-bleh--tag-group="${tag.group}">${tag.text}</div>
                 `)}
             `;
       } else if ((involved.type == "album" || involved.type == "track") && settings.corrections) {
-        name = html.node`${correct_item_by_artist(name, sister)}`;
+        name2 = html.node`${correct_item_by_artist(name2, sister)}`;
         sister = correct_artist(sister);
       } else if (involved.type == "artist" && settings.corrections) {
         sister = correct_artist(sister);
       }
       if (involved_text != "")
-        involved_text = html.node`${involved_text}, <a class="involved--${involved.type}">${name}</a>`;
+        involved_text = html.node`${involved_text}, <a class="involved--${involved.type}">${name2}</a>`;
       else
-        involved_text = html.node`${involved_text}<a class="involved--${involved.type}">${name}</a>`;
+        involved_text = html.node`${involved_text}<a class="involved--${involved.type}">${name2}</a>`;
     });
     render(activity_item, html`
         <div class="type">
@@ -13281,14 +13327,14 @@
           involved_link = `${root}bwaa`;
         else if (involved.type == "bleh")
           involved_link = `${root}bleh`;
-        let name = involved.name;
+        let name2 = involved.name;
         let sister = involved.sister;
         if (involved.type != "artist" && involved.type != "user" && involved.type != "tag" && involved.type != "bwaa" && involved.type != "bleh") {
-          tooltip_name = name;
+          tooltip_name = name2;
           tooltip_sister = sister;
         }
         if (involved.type == "track" && settings.format_guest_features) {
-          let formatted_title = name_includes(name, sister);
+          let formatted_title = name_includes(name2, sister);
           let song_title;
           let song_tags;
           if (formatted_title) {
@@ -13298,24 +13344,24 @@
             tooltip_name = song_title;
             tooltip_sister = sister;
           }
-          name = html.node`
+          name2 = html.node`
                     <div class="title">${sanitise_text(song_title).trim()}</div>
                     ${song_tags.map((tag) => html.node`
                         <div class="feat" data-bleh--tag-type="${tag.type}" data-bleh--tag-group="${tag.group}">${tag.text}</div>
                     `)}
                 `;
         } else if ((involved.type == "album" || involved.type == "track") && settings.corrections) {
-          name = correct_item_by_artist(name, sister);
-          tooltip_name = name;
+          name2 = correct_item_by_artist(name2, sister);
+          tooltip_name = name2;
           sister = correct_artist(sister);
           tooltip_sister = sister;
         } else if (involved.type == "artist" && settings.corrections) {
-          name = correct_artist(name);
+          name2 = correct_artist(name2);
         }
         if (involved_text != "")
-          involved_text = html.node`${involved_text}, <a class="involved--${involved.type}" href="${involved_link}">${name}</a>`;
+          involved_text = html.node`${involved_text}, <a class="involved--${involved.type}" href="${involved_link}">${name2}</a>`;
         else
-          involved_text = html.node`${involved_text}<a class="involved--${involved.type}" href="${involved_link}">${name}</a>`;
+          involved_text = html.node`${involved_text}<a class="involved--${involved.type}" href="${involved_link}">${name2}</a>`;
       });
       render(activity_item, html`
             <div class="type">${tl(trans.activity.listing[activity.type])}<div class="date">${moment(activity.date).fromNow(true)}</div></div>
@@ -13778,6 +13824,7 @@
           badges = load_badges(auth.name);
           let page_2;
           let side;
+          let banner = load_banner(auth.name);
           instance.setContent(html.node`
                     <div class="auth-menu-v2">
                         <div class="side primary">
@@ -13785,7 +13832,9 @@
                                 <div class="avatar">
                                     <img src="${auth.avatar.replace("avatar42s", "avatar170s")}" alt="${auth.name}" />
                                 </div>
-                                ${!auth.avatar.endsWith("818148bf682d429dc215c1705eb27b98.png") ? html.node`
+                                ${banner != "" ? html.node`
+                                <div class="bg" style="background-image: url(${banner})" />
+                                ` : !auth.avatar.endsWith("818148bf682d429dc215c1705eb27b98.png") ? html.node`
                                 <div class="bg" style="background-image: url(${auth.avatar.replace("avatar42s", "avatar170s")})" />
                                 ` : ""}
                                 <div class="name">${auth.name}</div>
@@ -14238,12 +14287,12 @@
     entries.forEach((entry) => {
       let author = entry.querySelector(".wiki-history-author");
       let avatar3 = author.querySelector(".wiki-history-author-avatar");
-      let name = author.querySelector(".link-block-target");
-      if (name && avatar3) {
-        let badge = patch_avatar(avatar3, name.textContent, "wiki");
+      let name2 = author.querySelector(".link-block-target");
+      if (name2 && avatar3) {
+        let badge = patch_avatar(avatar3, name2.textContent, "wiki");
         avatar3.setAttribute("data-avatar-themed", "true");
-        avatar3.classList.add(`user-status--bleh-${badge.type}`, `user-status--bleh-user-${name.textContent}`);
-        name.classList.add(`user-status--bleh-${badge.type}`, `user-status--bleh-user-${name.textContent}`);
+        avatar3.classList.add(`user-status--bleh-${badge.type}`, `user-status--bleh-user-${name2.textContent}`);
+        name2.classList.add(`user-status--bleh-${badge.type}`, `user-status--bleh-user-${name2.textContent}`);
       }
     });
   }
@@ -14395,7 +14444,7 @@
     links.forEach((link) => {
       let href = link.getAttribute("href");
       let type;
-      let name = link.textContent.trim();
+      let name2 = link.textContent.trim();
       let sister;
       if (!href.startsWith(root)) {
         tippy(link, {
@@ -14414,17 +14463,17 @@
           type = "artist";
         } else if (split.length == 2) {
           type = "album";
-          name = desanitise(split[1]);
+          name2 = desanitise(split[1]);
           sister = desanitise(split[0]);
         } else if (split.length == 3) {
           type = "track";
-          name = desanitise(split[2]);
+          name2 = desanitise(split[2]);
           sister = desanitise(split[0]);
         }
       }
       if (sister != void 0)
         tippy(link, {
-          content: `${sister} - ${name}`
+          content: `${sister} - ${name2}`
         });
       link.setAttribute("data-link-type", type);
     });
@@ -15379,17 +15428,17 @@
         let list_item;
         let image = item.querySelector(".globalchart-image img");
         let rank = item.querySelector(".globalchart-rank");
-        let name = item.querySelector(".globalchart-name a");
-        let link = name.getAttribute("href");
+        let name2 = item.querySelector(".globalchart-name a");
+        let link = name2.getAttribute("href");
         image.setAttribute("src", image.getAttribute("src").replace("/avatar70s/", "/avatar300s/"));
         if (index == 1) {
-          name.textContent = correct_artist(name.textContent);
+          name2.textContent = correct_artist(name2.textContent);
           list_item = html.node`
                     <li class="music-bookmarks-artists-item-wrap charts-list-item">
                         <div class="music-bookmarks-artists-item charts-list-item-inner">
                             <div class="charts-list-rank">${rank.textContent.trim()}</div>
                             <h3 class="music-bookmarks-artists-item-name">
-                                ${name}
+                                ${name2}
                             </h3>
                             <div class="media-item">
                                 <span class="music-bookmarks-albums-item-image cover-art">
@@ -15406,13 +15455,13 @@
         } else {
           let artist = item.querySelector(".globalchart-track-artist-name a");
           artist.textContent = correct_artist(artist.textContent);
-          name.textContent = correct_item_by_artist(name.textContent, artist.textContent);
+          name2.textContent = correct_item_by_artist(name2.textContent, artist.textContent);
           list_item = html.node`
                     <li class="music-bookmarks-albums-item-wrap charts-list-item">
                         <div class="music-bookmarks-albums-item charts-list-item-inner">
                             <div class="charts-list-rank">${rank.textContent.trim()}</div>
                             <h3 class="music-bookmarks-albums-item-name">
-                                ${name}
+                                ${name2}
                             </h3>
                             <p class="music-bookmarks-albums-item-artist">
                                 ${artist}
@@ -15452,9 +15501,13 @@
     checkup_page_structure(false, content_top);
     log("status is", "page", "info", page);
     update_page();
-    register_background(auth.avatar.replace("/avatar42s/", "/ar0/"));
-    let banner = document.createElement("div");
-    banner.classList.add("top-banner", "home-banner", "colourful");
+    let banner = load_banner(auth.name);
+    if (banner)
+      register_background(banner);
+    else if (!auth.avatar.endsWith("818148bf682d429dc215c1705eb27b98.png"))
+      register_background(auth.avatar.replace("/avatar42s/", "/ar0/"));
+    else
+      register_background(null);
     let hour = (/* @__PURE__ */ new Date()).getHours();
     let time;
     if (hour >= 22 || hour <= 6)
@@ -15466,70 +15519,72 @@
     else
       time = "evening";
     log(`hour ${hour} time ${time}`, "time");
-    banner.innerHTML = `
-        <div class="avatar">
-            <img src="${auth.avatar.replace("/avatar42s/", "/avatar170s/")}" alt="${tl(trans.your_avatar)}">
-            ${auth.sponsor ? `
-            <span class="avatar-status-dot user-status--bleh-sponsor"></span>
-            ` : ""}
+    let welcome = html.node`
+        <div class="top-banner home-banner">
+            <div class="avatar">
+                <img src="${auth.avatar.replace("/avatar42s/", "/avatar170s/")}" alt="${tl(trans.your_avatar)}">
+                ${auth.sponsor ? html.node`
+                <span class="avatar-status-dot user-status--bleh-sponsor"></span>
+                ` : ""}
+            </div>
+            <h1>${{ html: tl(trans[`good_${time}_user`]).replace("{user}", `<a class="mention" href="${root}user/${auth.name}">@${auth.name}</a>`) }}</h1>
         </div>
-        <h1>${tl(trans[`good_${time}_user`]).replace("{user}", `<a class="mention" href="${root}user/${auth.name}">@${auth.name}</a>`)}</h1>
     `;
-    page.structure.container.insertBefore(banner, page.structure.container.firstElementChild);
-    let nav = document.createElement("nav");
-    nav.classList.add("navlist", "secondary-nav", "navlist--more", "redesigned-navigation");
-    nav.innerHTML = `
-        <ul class="navlist-items">
-            <li class="navlist-item secondary-nav-item secondary-nav-item--home">
-                <a href="${root}music" class="secondary-nav-item-link ${page.subpage == "music" ? "secondary-nav-item-link--active" : ""}">
-                    ${tl(trans.home)}<div class="new-badge">${tl(trans.beta)}</div>
-                </a>
-            </li>
-            <li class="navlist-item secondary-nav-item secondary-nav-item--recommendations">
-                <a href="${root}music/+recommended" class="secondary-nav-item-link ${page.type == "recommended" ? "secondary-nav-item-link--active" : ""}">
-                    ${tl(trans.recommendations)}<div class="new-badge">${tl(trans.beta)}</div>
-                </a>
-            </li>
-            <li class="navlist-item secondary-nav-item secondary-nav-item--releases">
-                <a href="${root}music/+releases/out-now" class="secondary-nav-item-link ${page.type == "releases" ? "secondary-nav-item-link--active" : ""}">
-                    ${tl(trans.releases)}
-                </a>
-            </li>
-            <li class="navlist-item secondary-nav-item secondary-nav-item--events dont-rearrange">
-                <a href="${root}events" class="secondary-nav-item-link ${page.type == "events" ? "secondary-nav-item-link--active" : ""}">
-                    ${tl(trans.events)}<div class="new-badge">${tl(trans.beta)}</div>
-                </a>
-            </li>
-            <li class="navlist-item secondary-nav-item secondary-nav-item--bookmarks">
-                <a href="${root}music/+bookmarks" class="secondary-nav-item-link ${page.type == "bookmarks" ? "secondary-nav-item-link--active" : ""}">
-                    ${tl(trans.bookmarks)}
-                </a>
-            </li>
-            <li class="navlist-item secondary-nav-item secondary-nav-item--charts">
-                <a href="${root}charts" class="secondary-nav-item-link ${page.type == "charts" ? "secondary-nav-item-link--active" : ""}">
-                    ${tl(trans.charts)}
-                </a>
-            </li>
-            <li class="fill"></li>
-            <li class="navlist-item secondary-nav-item secondary-nav-item--settings">
-                <a href="${root}settings" class="secondary-nav-item-link ${page.type == "settings" ? "secondary-nav-item-link--active" : ""}">
-                    ${tl(trans.settings)}
-                </a>
-            </li>
-            <li class="navlist-item secondary-nav-item secondary-nav-item--bleh">
-                <a href="${root}bleh" class="secondary-nav-item-link ${page.type == "error" ? "secondary-nav-item-link--active" : ""}">
-                    ${tl(trans.settings)}
-                </a>
-            </li>
-            <li class="navlist-item secondary-nav-item secondary-nav-item--more">
-                <a class="secondary-nav-item-link no-text">
-                    ${tl(trans.more)}
-                </a>
-            </li>
-        </ul>
+    page.structure.container.insertBefore(welcome, page.structure.container.firstElementChild);
+    let nav = html.node`
+        <nav class="navlist secondary-nav navlist--more redesigned-navigation">
+            <ul class="navlist-items">
+                <li class="navlist-item secondary-nav-item secondary-nav-item--home">
+                    <a href="${root}music" class="secondary-nav-item-link ${page.subpage == "music" ? "secondary-nav-item-link--active" : ""}">
+                        ${tl(trans.home)}<div class="new-badge">${tl(trans.beta)}</div>
+                    </a>
+                </li>
+                <li class="navlist-item secondary-nav-item secondary-nav-item--recommendations">
+                    <a href="${root}music/+recommended" class="secondary-nav-item-link ${page.type == "recommended" ? "secondary-nav-item-link--active" : ""}">
+                        ${tl(trans.recommendations)}<div class="new-badge">${tl(trans.beta)}</div>
+                    </a>
+                </li>
+                <li class="navlist-item secondary-nav-item secondary-nav-item--releases">
+                    <a href="${root}music/+releases/out-now" class="secondary-nav-item-link ${page.type == "releases" ? "secondary-nav-item-link--active" : ""}">
+                        ${tl(trans.releases)}
+                    </a>
+                </li>
+                <li class="navlist-item secondary-nav-item secondary-nav-item--events dont-rearrange">
+                    <a href="${root}events" class="secondary-nav-item-link ${page.type == "events" ? "secondary-nav-item-link--active" : ""}">
+                        ${tl(trans.events)}<div class="new-badge">${tl(trans.beta)}</div>
+                    </a>
+                </li>
+                <li class="navlist-item secondary-nav-item secondary-nav-item--bookmarks">
+                    <a href="${root}music/+bookmarks" class="secondary-nav-item-link ${page.type == "bookmarks" ? "secondary-nav-item-link--active" : ""}">
+                        ${tl(trans.bookmarks)}
+                    </a>
+                </li>
+                <li class="navlist-item secondary-nav-item secondary-nav-item--charts">
+                    <a href="${root}charts" class="secondary-nav-item-link ${page.type == "charts" ? "secondary-nav-item-link--active" : ""}">
+                        ${tl(trans.charts)}
+                    </a>
+                </li>
+                <li class="fill"></li>
+                <li class="navlist-item secondary-nav-item secondary-nav-item--settings">
+                    <a href="${root}settings" class="secondary-nav-item-link ${page.type == "settings" ? "secondary-nav-item-link--active" : ""}">
+                        ${tl(trans.settings)}
+                    </a>
+                </li>
+                <li class="navlist-item secondary-nav-item secondary-nav-item--bleh">
+                    <a href="${root}bleh" class="secondary-nav-item-link ${page.type == "error" ? "secondary-nav-item-link--active" : ""}">
+                        ${tl(trans.settings)}
+                    </a>
+                </li>
+                <li class="navlist-item secondary-nav-item secondary-nav-item--more">
+                    <a class="secondary-nav-item-link no-text">
+                        ${tl(trans.more)}
+                    </a>
+                </li>
+            </ul>
+        </nav>
     `;
     page.structure.nav = nav;
-    banner.after(nav);
+    welcome.after(nav);
     if (page.type == "charts")
       bleh_charts();
     if (page.type == "settings")
@@ -15725,8 +15780,8 @@
       let users = page.structure.main.querySelectorAll(".attendee-summary-user-inner-wrap");
       users.forEach((user) => {
         let avatar3 = user.querySelector(".attendee-summary-user-avatar");
-        let name = user.querySelector(".attendee-summary-user-link").textContent;
-        patch_avatar(avatar3, name, "event");
+        let name2 = user.querySelector(".attendee-summary-user-link").textContent;
+        patch_avatar(avatar3, name2, "event");
       });
       let cancelled = page.structure.main.querySelector(".event-status--cancelled");
       if (cancelled) {
@@ -15757,8 +15812,8 @@
         let users = page.structure.main.querySelectorAll(".user-list-inner-wrap");
         users.forEach((user) => {
           let avatar3 = user.querySelector(".user-list-avatar");
-          let name = user.querySelector(".user-list-link").textContent;
-          let badge = patch_avatar(avatar3, name, "follow");
+          let name2 = user.querySelector(".user-list-link").textContent;
+          let badge = patch_avatar(avatar3, name2, "follow");
           if (badge.type == "avatar-status-dot--staff")
             user.classList.add("staff-user");
         });
@@ -15870,11 +15925,11 @@
         let link = notification.getAttribute("href");
         if (link.endsWith("/obsessions/set") || link.endsWith("/listening-report/month")) return;
         let avatar3 = notification.querySelector(".avatar");
-        let name = notification.querySelector(".inbox-notifications__item-description strong");
-        if (!name) return;
+        let name2 = notification.querySelector(".inbox-notifications__item-description strong");
+        if (!name2) return;
         let name_text = sanitise(return_name_from_avatar(avatar3.querySelector("img")));
         let badge = patch_avatar(avatar3, name_text);
-        name.classList.add("notification-user-name", `user-status--bleh-${badge.type}`, `user-status--bleh-user-${name_text}`);
+        name2.classList.add("notification-user-name", `user-status--bleh-${badge.type}`, `user-status--bleh-user-${name_text}`);
         if (notification.classList.contains("inbox-notifications__item--highlight"))
           notification.classList.add("notification-user-name", `user-status--bleh-${badge.type}`, `user-status--bleh-user-${name_text}`);
       });
@@ -16632,11 +16687,11 @@
     let users = page.structure.main.querySelectorAll(".user-list-item:not(.user-list-item-mobile-ad)");
     users.forEach((user) => {
       let avatar3 = user.querySelector(".user-list-avatar");
-      let name = user.querySelector(".user-list-link").textContent;
-      let badge = patch_avatar(avatar3, name, "follow");
+      let name2 = user.querySelector(".user-list-link").textContent;
+      let badge = patch_avatar(avatar3, name2, "follow");
       if (badge.type) {
-        user.querySelector(".user-list-link").classList.add(`user-status--bleh-${badge.type}`, `user-status--bleh-user-${name}`);
-        user.classList.add("colourful", `user-status--bleh-${badge.type}`, `user-status--bleh-user-${name}`);
+        user.querySelector(".user-list-link").classList.add(`user-status--bleh-${badge.type}`, `user-status--bleh-user-${name2}`);
+        user.classList.add("colourful", `user-status--bleh-${badge.type}`, `user-status--bleh-user-${name2}`);
       }
       let artists = user.querySelectorAll(".user-list-shared-artists a");
       artists.forEach((artist) => {
@@ -16932,13 +16987,13 @@
         else if (page.type == "album" || page.type == "track")
           template = tl(trans.page_templates.name_sister_type);
       }
-      let name = page.name;
+      let name2 = page.name;
       let sister = page.sister;
       if (page.type == "album" || page.type == "track") {
-        name = correct_item_by_artist(name, sister);
+        name2 = correct_item_by_artist(name2, sister);
         sister = correct_artist(sister);
       } else if (page.type == "artist") {
-        name = correct_artist(name);
+        name2 = correct_artist(name2);
       }
       let title;
       if (page.subpage != "overview" && page.subpage != "event_overview" && page.subpage != "home" && (page.type == "user" || page.type == "artist" || page.type == "album" || page.type == "track" || page.type == "events" || page.type == "tag"))
@@ -17017,7 +17072,7 @@
       }
       if (page.state.error)
         title = tl(trans.error);
-      template = template.replace("{page}", title).replace("{name}", name).replace("{sister}", sister).replace("{brand}", version.brand).replace("{build}", version.build).replace("{sku}", version.sku);
+      template = template.replace("{page}", title).replace("{name}", name2).replace("{sister}", sister).replace("{brand}", version.brand).replace("{build}", version.build).replace("{sku}", version.sku);
       document.title = template;
     }
     if (page.structure.indicator)

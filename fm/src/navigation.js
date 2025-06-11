@@ -17,6 +17,7 @@ import {news} from "./news.js";
 import {toggle_theme} from "./config.js";
 import {open_profile_shortcut_window} from "./components/profile_shortcut.js";
 import {save_setting} from "./components/settings.js";
+import {load_banner} from "./components/banner.js";
 
 export function patch_masthead(element) {
     let masthead_logo = element.querySelector('.masthead-logo');
@@ -226,6 +227,8 @@ export function append_nav() {
                 let page_2;
                 let side;
 
+                let banner = load_banner(auth.name);
+
                 instance.setContent(html.node`
                     <div class="auth-menu-v2">
                         <div class="side primary">
@@ -233,7 +236,9 @@ export function append_nav() {
                                 <div class="avatar">
                                     <img src="${auth.avatar.replace('avatar42s', 'avatar170s')}" alt="${auth.name}" />
                                 </div>
-                                ${!auth.avatar.endsWith('818148bf682d429dc215c1705eb27b98.png') ? html.node`
+                                ${(banner != '') ? html.node`
+                                <div class="bg" style="background-image: url(${banner})" />
+                                ` : (!auth.avatar.endsWith('818148bf682d429dc215c1705eb27b98.png')) ? html.node`
                                 <div class="bg" style="background-image: url(${auth.avatar.replace('avatar42s', 'avatar170s')})" />
                                 ` : ''}
                                 <div class="name">${auth.name}</div>
