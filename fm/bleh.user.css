@@ -6061,7 +6061,7 @@
 
     .footnotes, .content-form .form-row-help-text {
         color: hsl(var(--c3));
-        font-size: var(--font-size);
+        font-size: 13px;
         line-height: var(--line-height);
         cursor: default;
     }
