@@ -7881,8 +7881,13 @@
             margin: unset;
         }
 
-        [data-ff--menu_like_side_actions="true"] & {
+        [data-ff--menu_like_side_actions="true"][data-ff--menu_like_side_actions_gap="false"] &,
+        [data-ff--menu_like_side_actions_v3="true"] & {
             gap: var(--button-list-gap);
+        }
+
+        [data-ff--menu_like_side_actions="true"][data-ff--menu_like_side_actions_gap="true"] & {
+            gap: calc(var(--button-list-gap) + 1px + var(--button-list-gap));
         }
 
         [data-ff--menu_like_side_actions_v2="true"] & {
@@ -8009,7 +8014,27 @@
                 min-height: 32px !important;
 
                 &:before {
-                    display: none;
+                    display: none !important;
+                }
+
+                [data-ff--menu_like_side_actions_gap="true"] & {
+                    &:before {
+                        display: flex !important;
+                        width: unset !important;
+                        height: 1px !important;
+                        left: 0 !important;
+                        right: 0 !important;
+                        top: unset !important;
+                        bottom: calc(-1 * (var(--button-list-gap) + 1px)) !important;
+                        margin: unset !important;
+                        background: var(--card-border-base) !important;
+                    }
+                }
+
+                &:last-child {
+                    &:before {
+                        display: none !important;
+                    }
                 }
 
                 &:after {
@@ -8040,6 +8065,31 @@
                 }
             }
 
+            [data-ff--menu_like_side_actions_v3="true"] & {
+                --bg: var(--cards-overlay-image-subtlest, none), hsl(var(--b3));
+                --bg-hov: var(--cards-overlay-image-subtlest, none), color-mix(in hsl, hsl(var(--b5)), hsl(var(--b3)) 80%);
+                --bg-atv: var(--cards-overlay-image-subtlest, none), color-mix(in hsl, hsl(var(--b5)), hsl(var(--b3)) 60%);
+                --col: hsl(var(--c2));
+                --mask-colour: color-mix(in hsl, hsl(var(--c2)), hsl(var(--c3)) 50%);
+                --shadow: var(--interact-shadow);
+                --col: hsl(var(--c2)) !important;
+                --radius: var(--button-radius);
+                --padding: 7px var(--button-sides) 7px calc(var(--button-sides) + var(--icon-size) + var(--icon-gap)) !important;
+                margin: 0 !important;
+                min-height: 32px !important;
+
+                &:before {
+                    display: none;
+                }
+
+                &:after {
+                    --mask-size: var(--icon-size);
+                    --margin-top: calc(-1 * (var(--mask-size, var(--icon-size)) / 2));
+                    --left: var(--button-sides);
+                    background: var(--mask-colour) !important;
+                }
+            }
+
             &.attendance-btn--turn-off,
             [data-toggle-button-current-state="loved"] > form > &,
             [data-toggle-button-current-state="bookmarked"] > form > &,
@@ -8065,10 +8115,32 @@
                 }
 
                 [data-ff--menu_like_side_actions="true"] & {
+                    --bg: hsla(var(--h4), 6%) !important;
                     --bg-hov: hsla(var(--h4), 12%) !important;
                     --bg-atv: hsla(var(--h4), 22%) !important;
                     --col: hsl(var(--l3-c)) !important;
                     --mask-colour: color-mix(in hsl, hsl(var(--l3-c)), hsl(var(--l4-c)) 40%);
+
+                    &:before {
+                        background: var(--card-border-base) !important;
+                    }
+
+                    &:after {
+                        background: var(--mask-colour) !important;
+                    }
+                }
+
+                [data-ff--menu_like_side_actions_v3="true"] & {
+                    --bg: var(--cards-overlay-image-subtlest, none), hsl(var(--h3)) !important;
+                    --bg-hov: var(--cards-overlay-image-subtlest, none), color-mix(in hsl, hsl(var(--h4)), hsl(var(--h3)) 80%) !important;
+                    --bg-atv: var(--cards-overlay-image-subtlest, none), color-mix(in hsl, hsl(var(--h4)), hsl(var(--h3)) 60%) !important;
+                    --col: hsl(var(--b7)) !important;
+
+                    &:not(.chibi) {
+                        --mask-colour: hsl(var(--b7), 70%) !important;
+                    }
+
+                    --shadow: 0 3px 12px hsl(var(--h4), 32%), var(--interactable-outer);
 
                     &:after {
                         background: var(--mask-colour) !important;

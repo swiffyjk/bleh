@@ -23969,6 +23969,16 @@
         default: false,
         name: "Menu-like side actions v2",
         date: "2025-06-11"
+      },
+      menu_like_side_actions_v3: {
+        default: false,
+        name: "Menu-like side actions v3",
+        date: "2025-06-12"
+      },
+      menu_like_side_actions_gap: {
+        default: false,
+        name: "Menu-like side actions separator",
+        date: "2025-06-12"
       }
     }
   };
