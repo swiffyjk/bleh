@@ -8528,19 +8528,20 @@
         profile_sub_text = page.structure.container.querySelector(".redesigned-profile-header .header-title-secondary");
       else
         profile_sub_text = document.body.querySelector(".header-title-secondary");
-      if (!profile_sub_text) return;
-      let display_name = profile_sub_text.querySelector(".header-title-display-name");
-      let scrobble_since = profile_sub_text.querySelector(".header-scrobble-since");
-      scrobble_since.textContent = scrobble_since.textContent.replace(tl(trans.account_scrobbling_since_replace), "");
-      let pronouns = use_pronouns(display_name.textContent);
-      let display_name_pre = document.createElement("span");
-      display_name_pre.classList.add("header-title-secondary--pre");
-      display_name_pre.textContent = pronouns ? tl(trans.account_pronouns) : tl(trans.aka);
-      profile_sub_text.insertBefore(display_name_pre, display_name);
-      let scrobble_since_pre = document.createElement("span");
-      scrobble_since_pre.classList.add("header-title-secondary--pre");
-      scrobble_since_pre.textContent = tl(trans.account_created);
-      profile_sub_text.insertBefore(scrobble_since_pre, scrobble_since);
+      if (profile_sub_text) {
+        let display_name = profile_sub_text.querySelector(".header-title-display-name");
+        let scrobble_since = profile_sub_text.querySelector(".header-scrobble-since");
+        scrobble_since.textContent = scrobble_since.textContent.replace(tl(trans.account_scrobbling_since_replace), "");
+        let pronouns = use_pronouns(display_name.textContent);
+        let display_name_pre = document.createElement("span");
+        display_name_pre.classList.add("header-title-secondary--pre");
+        display_name_pre.textContent = pronouns ? tl(trans.account_pronouns) : tl(trans.aka);
+        profile_sub_text.insertBefore(display_name_pre, display_name);
+        let scrobble_since_pre = document.createElement("span");
+        scrobble_since_pre.classList.add("header-title-secondary--pre");
+        scrobble_since_pre.textContent = tl(trans.account_created);
+        profile_sub_text.insertBefore(scrobble_since_pre, scrobble_since);
+      }
       let about_me_sidebar = page.structure.row.querySelector(".about-me-sidebar");
       if (!about_me_sidebar) {
         if (settings.bio_markdown)
@@ -8609,19 +8610,19 @@
         buttons.appendChild(html.node`
                 <a class="see-more" href="${root}settings#id_about_me">${tl(trans.edit)}</a>
             `);
-        return;
-      }
-      let profile_notes = JSON.parse(localStorage.getItem("bleh_profile_notes")) || {};
-      let profile_note = profile_notes[page.name];
-      let profile_has_note = false;
-      if (profile_note)
-        profile_has_note = true;
-      if (!profile_has_note) {
-        buttons.appendChild(html.node`
+      } else {
+        let profile_notes = JSON.parse(localStorage.getItem("bleh_profile_notes")) || {};
+        let profile_note = profile_notes[page.name];
+        let profile_has_note = false;
+        if (profile_note)
+          profile_has_note = true;
+        if (!profile_has_note) {
+          buttons.appendChild(html.node`
                 <a class="see-more add" onclick=${() => add_profile_note(page.name, profile_has_note)}>${tl(trans.add_note)}</a>
             `);
-      } else {
-        create_profile_note_panel(page.name, true);
+        } else {
+          create_profile_note_panel(page.name, true);
+        }
       }
     } else {
       load_banner_from_cache();
