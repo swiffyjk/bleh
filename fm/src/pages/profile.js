@@ -300,8 +300,158 @@ export function bleh_profiles() {
                 bleh_profile_chart();
         }
 
+        if (sponsor_list && sponsor_list.special && page.name == sponsor_list.special[0]) {
+        let sponsor_cta = html.node`
+            <div class="cta first sponsor colourful">
+                ${auth.sponsor ? html`
+                    <strong>${tl(trans.you_are_a_sponsor)}</strong>
+                    <a class="see-more" onclick="_sponsor_manage()">${tl(trans.manage_sponsor)}</a>
+                ` : html`
+                    <strong>${tl(trans.news_sponsor_cta)}</strong>
+                    <a class="see-more" onclick="_sponsor()">${tl(trans.sponsor)}</a>
+                `}
+            </div>
+        `;
+
+        if (!page.mobile)
+            page.structure.side.insertBefore(sponsor_cta, page.structure.side.firstElementChild);
+        else
+            page.structure.main.insertBefore(sponsor_cta, page.structure.main.firstElementChild);
+        }
+
+        // secondary text
+        let profile_sub_text;
+        if (ff('refreshed_nav'))
+            profile_sub_text = page.structure.container.querySelector('.redesigned-profile-header .header-title-secondary');
+        else
+            profile_sub_text = document.body.querySelector('.header-title-secondary');
+
+        if (!profile_sub_text) return;
+
+        let display_name = profile_sub_text.querySelector('.header-title-display-name');
+        let scrobble_since = profile_sub_text.querySelector('.header-scrobble-since');
+        scrobble_since.textContent = scrobble_since.textContent.replace(tl(trans.account_scrobbling_since_replace),'');
+
+        /*tippy(display_name, {
+            content: display_name.textContent
+        });*/
+
+        // pronouns?
+        let pronouns = use_pronouns(display_name.textContent);
+
+        let display_name_pre = document.createElement('span');
+        display_name_pre.classList.add('header-title-secondary--pre');
+        display_name_pre.textContent = pronouns ? tl(trans.account_pronouns) : tl(trans.aka);
+        profile_sub_text.insertBefore(display_name_pre, display_name);
+
+        let scrobble_since_pre = document.createElement('span');
+        scrobble_since_pre.classList.add('header-title-secondary--pre');
+        scrobble_since_pre.textContent = tl(trans.account_created);
+        profile_sub_text.insertBefore(scrobble_since_pre, scrobble_since);
+
+        let about_me_sidebar = page.structure.row.querySelector('.about-me-sidebar');
+
+        if (!about_me_sidebar) {
+            if (settings.bio_markdown)
+                save_banner_to_cache('none');
+
+            about_me_sidebar = html.node`
+                <section class="about-me-sidebar">
+                    <h2>${tl(trans.about)}</h2>
+                    <p class="subtle">${tl(trans.no_about).replace('{u}', page.name)}</p>
+                </section>
+            `;
+            page.structure.side.insertBefore(about_me_sidebar, page.structure.side.firstElementChild);
+        } else {
+            if (settings.bio_markdown) {
+                // parse body
+                let about_me_text = about_me_sidebar.querySelector('p');
+                let result = bio_parse(about_me_text, true);
+                about_me_text.innerHTML = result;
+            }
+        }
+
+        if (page.mobile)
+            page.structure.main.insertBefore(about_me_sidebar, page.structure.main.firstElementChild);
+
+        // featured track
+        let featured_track_panel = profile_header.querySelector('.header-featured-track');
+        if (featured_track_panel)
+            bleh_featured_profile_track(featured_track_panel, about_me_sidebar);
+
+        // add buttons
+        let buttons = document.createElement('div');
+        buttons.classList.add('user-about-buttons');
+
+        let about_more = document.createElement('button');
+        about_more.classList.add('btn', 'icon');
+        about_more.setAttribute('data-action-type', 'configure');
+        about_more.textContent = tl(trans.settings);
+
+        tippy(about_more, {
+            content: tl(trans.settings)
+        });
+
+        tippy(about_more, {
+            theme: 'window',
+            content: html.node`
+                <div class="dialog-settings">
+                    <div class="setting" data-type="toggle" id="container-bio_markdown" onclick="_update_item('bio_markdown')">
+                        <button class="btn reset" onclick="_reset_item('bio_markdown')">${tl(trans.reset)}</button>
+                        <div class="heading">
+                            <h5>${tl(trans.markdown_profiles.name)}</h5>
+                            <p>${tl(trans.markdown_profiles.body)}</p>
+                        </div>
+                        <div class="toggle-wrap">
+                            <button class="toggle" id="toggle-bio_markdown" aria-checked="false">
+                                <div class="dot"></div>
+                            </button>
+                        </div>
+                    </div>
+                </div>
+            `,
+            placement: 'bottom',
+            interactive: true,
+            interactiveBorder: 10,
+            trigger: 'click',
+
+            onShow(instance) {
+                refresh_all(instance.popper);
+            }
+        });
+
+        buttons.appendChild(about_more);
+
+        let about_me_header = about_me_sidebar.querySelector('h2');
+        about_me_header.textContent = tl(trans.about);
+        about_me_header.appendChild(buttons);
+
         if (ff('redesigned_profile_header'))
             redesign_profile_header(is_own_profile, is_following);
+
+        if (is_own_profile) {
+            buttons.appendChild(html.node`
+                <a class="see-more" href="${root}settings#id_about_me">${tl(trans.edit)}</a>
+            `);
+
+            return;
+        }
+
+        // profile note
+        let profile_notes = JSON.parse(localStorage.getItem('bleh_profile_notes')) || {};
+        let profile_note = profile_notes[page.name];
+
+        let profile_has_note = false;
+        if (profile_note)
+            profile_has_note = true;
+
+        if (!profile_has_note) {
+            buttons.appendChild(html.node`
+                <a class="see-more add" onclick=${() => add_profile_note(page.name, profile_has_note)}>${tl(trans.add_note)}</a>
+            `);
+        } else {
+            create_profile_note_panel(page.name, true);
+        }
     } else {
         load_banner_from_cache();
 
@@ -606,14 +756,6 @@ export function bleh_profiles() {
 
     patch_profile_following();
 
-    // profile note
-    let profile_notes = JSON.parse(localStorage.getItem('bleh_profile_notes')) || {};
-    let profile_note = profile_notes[page.name];
-
-    let profile_has_note = false;
-    if (profile_note)
-        profile_has_note = true;
-
     // badges
     log(`querying badges for ${page.name}`, 'profile');
 
@@ -675,147 +817,6 @@ export function bleh_profiles() {
         label_container.appendChild(badge);
     });
     profile_name_obj.appendChild(label_container);
-
-    if (page.subpage != 'overview') return;
-
-    if (sponsor_list && sponsor_list.special && page.name == sponsor_list.special[0]) {
-        let sponsor_cta = html.node`
-            <div class="cta first sponsor colourful">
-                ${auth.sponsor ? html`
-                    <strong>${tl(trans.you_are_a_sponsor)}</strong>
-                    <a class="see-more" onclick="_sponsor_manage()">${tl(trans.manage_sponsor)}</a>
-                ` : html`
-                    <strong>${tl(trans.news_sponsor_cta)}</strong>
-                    <a class="see-more" onclick="_sponsor()">${tl(trans.sponsor)}</a>
-                `}
-            </div>
-        `;
-
-        if (!page.mobile)
-            page.structure.side.insertBefore(sponsor_cta, page.structure.side.firstElementChild);
-        else
-            page.structure.main.insertBefore(sponsor_cta, page.structure.main.firstElementChild);
-    }
-
-    // secondary text
-    let profile_sub_text;
-    if (ff('refreshed_nav'))
-        profile_sub_text = page.structure.container.querySelector('.redesigned-profile-header .header-title-secondary');
-    else
-        profile_sub_text = document.body.querySelector('.header-title-secondary');
-
-    if (!profile_sub_text) return;
-
-    let display_name = profile_sub_text.querySelector('.header-title-display-name');
-    let scrobble_since = profile_sub_text.querySelector('.header-scrobble-since');
-    scrobble_since.textContent = scrobble_since.textContent.replace(tl(trans.account_scrobbling_since_replace),'');
-
-    /*tippy(display_name, {
-        content: display_name.textContent
-    });*/
-
-    // pronouns?
-    let pronouns = use_pronouns(display_name.textContent);
-
-    let display_name_pre = document.createElement('span');
-    display_name_pre.classList.add('header-title-secondary--pre');
-    display_name_pre.textContent = pronouns ? tl(trans.account_pronouns) : tl(trans.aka);
-    profile_sub_text.insertBefore(display_name_pre, display_name);
-
-    let scrobble_since_pre = document.createElement('span');
-    scrobble_since_pre.classList.add('header-title-secondary--pre');
-    scrobble_since_pre.textContent = tl(trans.account_created);
-    profile_sub_text.insertBefore(scrobble_since_pre, scrobble_since);
-
-    let about_me_sidebar = page.structure.row.querySelector('.about-me-sidebar');
-
-    if (!about_me_sidebar) {
-        if (settings.bio_markdown)
-            save_banner_to_cache('none');
-
-        return;
-    } else if (page.mobile) {
-        page.structure.main.insertBefore(about_me_sidebar, page.structure.main.firstElementChild);
-    }
-
-    // featured track
-    let featured_track_panel = profile_header.querySelector('.header-featured-track');
-    if (featured_track_panel)
-        bleh_featured_profile_track(featured_track_panel, about_me_sidebar);
-
-    if (!about_me_sidebar.hasAttribute('data-kate-processed')) {
-        about_me_sidebar.setAttribute('data-kate-processed','true');
-
-        if (settings.bio_markdown) {
-            // parse body
-            let about_me_text = about_me_sidebar.querySelector('p');
-            let result = bio_parse(about_me_text, true);
-            about_me_text.innerHTML = result;
-        }
-
-        // add buttons
-        let buttons = document.createElement('div');
-        buttons.classList.add('user-about-buttons');
-
-        let about_more = document.createElement('button');
-        about_more.classList.add('btn', 'icon');
-        about_more.setAttribute('data-action-type', 'configure');
-        about_more.textContent = tl(trans.settings);
-
-        tippy(about_more, {
-            content: tl(trans.settings)
-        });
-
-        tippy(about_more, {
-            theme: 'window',
-            content: html.node`
-                <div class="dialog-settings">
-                    <div class="setting" data-type="toggle" id="container-bio_markdown" onclick="_update_item('bio_markdown')">
-                        <button class="btn reset" onclick="_reset_item('bio_markdown')">${tl(trans.reset)}</button>
-                        <div class="heading">
-                            <h5>${tl(trans.markdown_profiles.name)}</h5>
-                            <p>${tl(trans.markdown_profiles.body)}</p>
-                        </div>
-                        <div class="toggle-wrap">
-                            <button class="toggle" id="toggle-bio_markdown" aria-checked="false">
-                                <div class="dot"></div>
-                            </button>
-                        </div>
-                    </div>
-                </div>
-            `,
-            placement: 'bottom',
-            interactive: true,
-            interactiveBorder: 10,
-            trigger: 'click',
-
-            onShow(instance) {
-                refresh_all(instance.popper);
-            }
-        });
-
-        buttons.appendChild(about_more);
-
-        let about_me_header = about_me_sidebar.querySelector('h2');
-        about_me_header.textContent = tl(trans.about);
-        about_me_header.appendChild(buttons);
-
-        if (is_own_profile) {
-            buttons.appendChild(html.node`
-                <a class="see-more" href="${root}settings#id_about_me">${tl(trans.edit)}</a>
-            `);
-
-            return;
-        }
-
-        if (!profile_has_note) {
-            buttons.appendChild(html.node`
-                <a class="see-more add" onclick=${() => add_profile_note(page.name, profile_has_note)}>${tl(trans.add_note)}</a>
-            `);
-        } else {
-            create_profile_note_panel(page.name, true);
-        }
-    }
 }
 
 unsafeWindow._add_profile_note = function(username, has_note) {

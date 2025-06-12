@@ -215,6 +215,9 @@ export const trans = {
         de: 'Über',
         pt: 'Sobre'
     },
+    no_about: {
+        en: '{u} is keeping quiet'
+    },
     edit_wiki: {
         en: 'Edit wiki',
         de: 'Wiki editieren',
