@@ -433,7 +433,7 @@ export function bleh_profiles() {
             let wrap = document.createElement('div');
             wrap.classList.add('view-buttons-wrapper');
             let button_header = document.createElement('div');
-            button_header.classList.add('view-buttons', 'obsession-buttons');
+            button_header.classList.add('view-buttons', 'obsession-buttons', 'blend');
 
             buttons.forEach((button) => {
                 if (button.classList.contains('btn-sm')) {
@@ -555,12 +555,15 @@ export function bleh_profiles() {
                 wrap.classList.add('view-buttons-wrapper');
                 wrap.innerHTML = `<div class="info"><div class="alert alert-info">Playlists are a work in progress</div></div>`;
 
-                let button_header = document.createElement('div');
-                button_header.classList.add('view-buttons', 'playlist-home-buttons');
+                let button_header = html.node`
+                    <div class="view-buttons playlist-home-buttons blend" />
+                `;
 
                 buttons.forEach((button) => {
-                    if (button.getAttribute('data-analytics-action') == 'create')
+                    if (button.getAttribute('data-analytics-action') == 'create') {
+                        button.classList.add('primary');
                         button.innerHTML = `${tl(trans.new)} <div class="new-badge">${tl(trans.beta)}</div>`; //button.textContent = tl(trans.new);
+                    }
 
                     button.classList.add('btn', 'view-item', 'interact-item', 'playlist-home-top-item');
 
