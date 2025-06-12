@@ -1,15 +1,17 @@
 {
-    "latest": "2025.0610",
+    "latest": "2025.0612",
     "sponsors": [
         "hyacines", "kateshapedbox", "stellasaur",
         "astrablooms", "ItsProyal", "vwvwvwvwvwvwv", "Orofil",
         "EliteHimself", "iwas15with100k", "keepsweet", "yourfriendoss",
-        "softmancy", "carbon1k", "uix-uix", "scidal"
+        "softmancy", "carbon1k", "uix-uix", "scidal",
+        "Carbonzer"
     ],
     "sponsors_one_time": [
         "kateshapedbox",
         "vwvwvwvwvwvwv", "EliteHimself", "yourfriendoss",
-        "carbon1k", "uix-uix", "scidal"
+        "carbon1k", "uix-uix", "scidal",
+        "Carbonzer"
     ],
     "sponsor_count_remove": 3,
     "sponsor_account": "kateshapedbox",
@@ -187,6 +189,9 @@
         "ArthRMH": {
             "type": "translation",
             "reason": "Português"
+        },
+        "Carbonzer": {
+            "type": "sponsor"
         }
     }
 }
