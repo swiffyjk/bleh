@@ -159,6 +159,10 @@ export function bleh_profiles() {
     if (is_own_profile)
         profile_header.setAttribute('data-is-own-profile', 'true');
 
+    let loved_tab = page.structure.nav.querySelector('.secondary-nav-item--loved a');
+    if (loved_tab)
+        loved_tab.textContent = tl(trans.loved);
+
     if (!is_subpage) {
         let is_following = profile_header.querySelector('.label.user-follow');
 
@@ -412,6 +416,17 @@ export function bleh_profiles() {
                 `);
             }
 
+            let count_text = page.structure.content_top.querySelector('h1').textContent.trim();
+            let chr = count_text.indexOf('(');
+
+            let count = 0;
+            if (chr != -1)
+                count = count_text.substring(chr).replace('(', '').replace(')', '');
+
+            page.structure.nav.querySelector('.secondary-nav-item--obsessions a').appendChild(html.node`
+                <div class="new-badge count-badge">${count}</div>
+            `);
+
             let new_panel = document.createElement('section');
             new_panel.classList.add('obsessions-panel');
 
@@ -568,6 +583,17 @@ export function bleh_profiles() {
                 page.structure.container.removeChild(no_data.parentElement);
                 new_panel.appendChild(no_data);
             }
+        } else if (page.subpage == 'loved') {
+            let count_text = page.structure.content_top.querySelector('h1').textContent.trim();
+            let chr = count_text.indexOf('(');
+
+            let count = 0;
+            if (chr != -1)
+                count = count_text.substring(chr).replace('(', '').replace(')', '');
+
+            page.structure.nav.querySelector('.secondary-nav-item--loved a').appendChild(html.node`
+                <div class="new-badge count-badge">${count}</div>
+            `);
         }
     }
 
@@ -918,10 +944,9 @@ function patch_profile_following() {
         if (chr != -1)
             count = count_text.substring(chr).replace('(', '').replace(')', '');
 
-        let count_badge = document.createElement('div');
-        count_badge.classList.add('new-badge', 'count-badge');
-        count_badge.textContent = count;
-        highlighted_tab.appendChild(count_badge);
+        highlighted_tab.appendChild(html.node`
+            <div class="new-badge count-badge">${count}</div>
+        `);
     }
 
 
