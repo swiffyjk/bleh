@@ -140,6 +140,7 @@ export function checkup_page_structure(is_subpage = false, header = null) {
 
                     page.structure.content_top = content_top;
                     navlist.after(content_top);
+                    content_top.style.setProperty('display', 'none');
 
                     try {
                         page.structure.main.removeChild(subpage_title);
@@ -173,6 +174,7 @@ export function checkup_page_structure(is_subpage = false, header = null) {
 
                     btn_add.classList = 'btn side-action';
                     btn_add.setAttribute('data-type', 'add');
+                    btn_add.textContent = tl(trans.add);
 
                     side_actions.appendChild(btn_add);
                 }
@@ -203,6 +205,12 @@ export function checkup_page_structure(is_subpage = false, header = null) {
 
                     side_actions.appendChild(radio);
                 }
+            }
+
+
+            let similar_artists = page.structure.side.querySelector('.similar-items-sidebar');
+            if (similar_artists) {
+                similar_artists.parentElement.classList.add('similar-artists-panel');
             }
         } else {
             let content_top = document.body.querySelector('.content-top');

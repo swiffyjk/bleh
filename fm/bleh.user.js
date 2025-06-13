@@ -6938,6 +6938,7 @@
                     `;
             page.structure.content_top = content_top;
             navlist.after(content_top);
+            content_top.style.setProperty("display", "none");
             try {
               page.structure.main.removeChild(subpage_title);
             } catch (e) {
@@ -6962,6 +6963,7 @@
               page.structure.main.appendChild(side_actions);
             btn_add.classList = "btn side-action";
             btn_add.setAttribute("data-type", "add");
+            btn_add.textContent = tl(trans.add);
             side_actions.appendChild(btn_add);
           }
           let radio = page.structure.main.querySelector(":scope > .section-controls > .section-playlink");
@@ -6981,6 +6983,10 @@
             radio.removeAttribute("title");
             side_actions.appendChild(radio);
           }
+        }
+        let similar_artists = page.structure.side.querySelector(".similar-items-sidebar");
+        if (similar_artists) {
+          similar_artists.parentElement.classList.add("similar-artists-panel");
         }
       } else {
         let content_top = document.body.querySelector(".content-top");
@@ -12242,26 +12248,6 @@
           swatch.classList.add("view-item", "colour-btn");
         if (type == "custom")
           swatch.textContent = tl(trans[colour.type]);
-        if (colour.type == "default" && stored_season.id != "none") {
-          swatch.textContent = tl(trans.seasonal.name);
-          if (exclusives.hasOwnProperty(stored_season.id)) {
-            swatch.setAttribute("onclick", "");
-            swatch.classList.add("select-button");
-            tippy(swatch, {
-              theme: "menu",
-              content: "",
-              allowHTML: true,
-              placement: "bottom",
-              interactive: true,
-              interactiveBorder: 10,
-              trigger: "click",
-              onShow(instance) {
-                let content = instance.popper.querySelector(".tippy-content");
-                display_seasonal_exclusives(content, colours, exclusives);
-              }
-            });
-          }
-        }
         if (colour.type == "customise") {
           swatch.classList.add("select-button");
           tippy(swatch, {
@@ -12357,29 +12343,49 @@
             delay: [250, 0]
           });
         }
+        if (colour.type == "default" && stored_season.id != "none") {
+          swatch.textContent = tl(trans.seasonal.name);
+          if (exclusives.hasOwnProperty(stored_season.id)) {
+            swatch.setAttribute("onclick", "");
+            swatch.classList.add("select-button");
+            exclusives[stored_season.id] = [
+              {
+                type: "default",
+                name: tl(trans.default),
+                sets: {
+                  hue: 255,
+                  sat: 1,
+                  lit: 1
+                },
+                displays: {
+                  hue: "var(--hue-seasonal, 255)",
+                  sat: "var(--sat-seasonal, 1)",
+                  lit: "var(--lit-seasonal, 1)"
+                }
+              },
+              ...exclusives[stored_season.id]
+            ];
+            tippy(swatch, {
+              theme: "menu",
+              content: "",
+              allowHTML: true,
+              placement: "bottom",
+              interactive: true,
+              interactiveBorder: 10,
+              trigger: "click",
+              onShow(instance) {
+                let content = instance.popper.querySelector(".tippy-content");
+                display_seasonal_exclusives(content, colours, exclusives);
+              }
+            });
+          }
+        }
         swatch_group.appendChild(swatch);
       });
     }
   }
   function display_seasonal_exclusives(instance, colours, exclusives) {
     instance.innerHTML = "";
-    exclusives[stored_season.id] = [
-      {
-        type: "default",
-        name: tl(trans.default),
-        sets: {
-          hue: 255,
-          sat: 1,
-          lit: 1
-        },
-        displays: {
-          hue: "var(--hue-seasonal, 255)",
-          sat: "var(--sat-seasonal, 1)",
-          lit: "var(--lit-seasonal, 1)"
-        }
-      },
-      ...exclusives[stored_season.id]
-    ];
     exclusives[stored_season.id].forEach((colour) => {
       colour.sets = { accent_type: colour.type, ...colour.sets };
       colour.displays = colour.sets;
@@ -14265,6 +14271,15 @@
     let wiki = wiki_panel.querySelector(".wiki");
     if (!wiki) return;
     patch_wiki_contents(wiki);
+    let factbox = wiki_panel.querySelector(".factbox");
+    if (factbox) {
+      let facts = html.node`
+            <section class="facts">
+                ${factbox}
+            </section>
+        `;
+      side_actions.after(facts);
+    }
   }
   function bleh_wiki_history() {
     let breadcrumb_root = page.structure.container.querySelector(".subpage-breadcrumb");

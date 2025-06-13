@@ -1963,31 +1963,6 @@ export function display_colour_presets() {
             if (type == 'custom')
                 swatch.textContent = tl(trans[colour.type]);
 
-            if (colour.type == 'default' && stored_season.id != 'none') {
-                swatch.textContent = tl(trans.seasonal.name);
-
-                if (exclusives.hasOwnProperty(stored_season.id)) {
-                    swatch.setAttribute('onclick', '');
-                    swatch.classList.add('select-button');
-
-                    tippy(swatch, {
-                        theme: 'menu',
-                        content: '',
-                        allowHTML: true,
-                        placement: 'bottom',
-                        interactive: true,
-                        interactiveBorder: 10,
-                        trigger: 'click',
-
-                        onShow(instance) {
-                            let content = instance.popper.querySelector('.tippy-content');
-
-                            display_seasonal_exclusives(content, colours, exclusives);
-                        }
-                    });
-                }
-            }
-
             if (colour.type == 'customise') {
                 swatch.classList.add('select-button');
 
@@ -2090,6 +2065,49 @@ export function display_colour_presets() {
                 });
             }
 
+            if (colour.type == 'default' && stored_season.id != 'none') {
+                swatch.textContent = tl(trans.seasonal.name);
+
+                if (exclusives.hasOwnProperty(stored_season.id)) {
+                    swatch.setAttribute('onclick', '');
+                    swatch.classList.add('select-button');
+
+                    exclusives[stored_season.id] = [
+                        {
+                            type: 'default',
+                            name: tl(trans.default),
+                            sets: {
+                                hue: 255,
+                                sat: 1,
+                                lit: 1
+                            },
+                            displays: {
+                                hue: 'var(--hue-seasonal, 255)',
+                                sat: 'var(--sat-seasonal, 1)',
+                                lit: 'var(--lit-seasonal, 1)'
+                            }
+                        },
+                        ...exclusives[stored_season.id]
+                    ];
+
+                    tippy(swatch, {
+                        theme: 'menu',
+                        content: '',
+                        allowHTML: true,
+                        placement: 'bottom',
+                        interactive: true,
+                        interactiveBorder: 10,
+                        trigger: 'click',
+
+                        onShow(instance) {
+                            let content = instance.popper.querySelector('.tippy-content');
+
+                            display_seasonal_exclusives(content, colours, exclusives);
+                        }
+                    });
+                }
+            }
+
             swatch_group.appendChild(swatch);
         });
     }
@@ -2097,24 +2115,6 @@ export function display_colour_presets() {
 
 function display_seasonal_exclusives(instance, colours, exclusives) {
     instance.innerHTML = '';
-
-    exclusives[stored_season.id] = [
-        {
-            type: 'default',
-            name: tl(trans.default),
-            sets: {
-                hue: 255,
-                sat: 1,
-                lit: 1
-            },
-            displays: {
-                hue: 'var(--hue-seasonal, 255)',
-                sat: 'var(--sat-seasonal, 1)',
-                lit: 'var(--lit-seasonal, 1)'
-            }
-        },
-        ...exclusives[stored_season.id]
-    ];
 
     exclusives[stored_season.id].forEach((colour) => {
         colour.sets = {accent_type: colour.type, ...colour.sets};

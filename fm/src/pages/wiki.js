@@ -9,6 +9,7 @@ import {auth, page, root} from "../build/page";
 import {desanitise} from "../build/tools";
 import {tl, trans} from "../build/trans";
 import {ff} from "../sku";
+import {html} from "lighterhtml";
 
 export function bleh_wiki() {
     // make a new panel
@@ -76,6 +77,17 @@ export function bleh_wiki() {
     if (!wiki) return;
 
     patch_wiki_contents(wiki);
+
+    let factbox = wiki_panel.querySelector('.factbox');
+    if (factbox) {
+        let facts = html.node`
+            <section class="facts">
+                ${factbox}
+            </section>
+        `;
+
+        side_actions.after(facts);
+    }
 }
 
 export function bleh_wiki_history() {
