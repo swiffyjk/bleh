@@ -1781,7 +1781,7 @@
 
     /*     FOOTER     */
     .footer {
-        background: hsl(var(--b5));
+        background: hsl(var(--b6));
         color: hsl(var(--c3));
         padding: 0 0 120px 0;
 
@@ -2672,6 +2672,13 @@
             linear-gradient(hsl(var(--b5)), hsl(var(--g4))) padding-box;
             border: unset !important;
             padding: var(--card-padding) !important;
+        }
+
+        [data-ff--beret="true"] & {
+            background: hsl(var(--f4), 40%) !important;
+            border: unset !important;
+            padding: var(--card-padding) !important;
+            box-shadow: unset !important;
         }
 
         display: flex;
@@ -4732,6 +4739,7 @@
 
 
     /*     ARTIST / ALBUM GRID ON PROFILES / TAGS     */
+    .section-with-control > .buffer-standard,
     .grid-items-section > .buffer-standard, .grid-items, .chartlist {
         margin-top: 0 !important;
 
@@ -6777,6 +6785,17 @@
             font: inherit;
             color: inherit;
         }
+
+        [data-ff--beret="true"] & {
+            background: hsl(var(--b6));
+            border-radius: var(--item-big-radius);
+            padding: 30px;
+            margin: unset !important;
+
+            .shoutbox & {
+                margin-top: var(--card-gap) !important;
+            }
+        }
     }
     .loading-data-container {
         padding: 30px 0;
@@ -6816,6 +6835,12 @@
                     animation: none;
                 }
             }
+        }
+
+        [data-ff--beret="true"] .row & {
+            background: hsl(var(--b6));
+            border-radius: var(--item-big-radius);
+            padding: 30px;
         }
     }
 
@@ -8113,6 +8138,7 @@
             li,
             form {
                 display: flex;
+                gap: inherit;
 
                 button {
                     flex: 1;
@@ -11108,10 +11134,13 @@
         }
 
         .scrobble-canvas-container {
-            margin-top: var(--card-gap);
-
             &:before {
                 opacity: 0;
+            }
+
+            .loading-data-container {
+                width: 100%;
+                height: 100%;
             }
         }
 
