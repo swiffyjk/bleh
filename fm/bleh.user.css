@@ -2605,7 +2605,7 @@
                 background: hsl(var(--b5)) !important;
             }
 
-            & > .navlist[aria-label], & > .bleh-settings-navigation {
+            & > .redesigned-navigation ~ .navlist[aria-label], & > .bleh-settings-navigation {
                 background: hsl(var(--b5));
                 margin: unset !important;
                 padding-top: var(--card-gap);
@@ -2626,7 +2626,7 @@
                 }
             }
 
-            & > .redesigned-navigation:not([aria-label], .bleh-settings-navigation) {
+            & > .redesigned-navigation:not(.redesigned-navigation ~ [aria-label], .bleh-settings-navigation) {
                 margin: unset !important;
                 width: 100% !important;
 
@@ -20759,6 +20759,11 @@
 
     .about-artist-container {
         overflow: hidden;
+
+        [data-ff--beret="true"] & {
+            --card-specific-background: hsl(var(--b6));
+            margin-bottom: var(--card-gap);
+        }
 
         .sep {
             margin: var(--card-gap) 0;
