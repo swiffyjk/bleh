@@ -120,6 +120,10 @@ export function checkup_page_structure(is_subpage = false, header = null) {
                 // should be covered by bleh
                 if (content_top.querySelector('.content-top-back-link'))
                     content_top.style.setProperty('display', 'none');
+
+                let content_top_nav = content_top.querySelector('.navlist');
+                if (!content_top_nav && ff('beret'))
+                    content_top.style.setProperty('display', 'none');
             } else {
                 let subpage_title = page.structure.main.querySelector(':scope > .subpage-title');
                 if (!subpage_title)

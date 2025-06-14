@@ -6920,6 +6920,9 @@
             page.structure.container.insertBefore(content_top, page.structure.container.firstElementChild);
           if (content_top.querySelector(".content-top-back-link"))
             content_top.style.setProperty("display", "none");
+          let content_top_nav = content_top.querySelector(".navlist");
+          if (!content_top_nav && ff("beret"))
+            content_top.style.setProperty("display", "none");
         } else {
           let subpage_title = page.structure.main.querySelector(":scope > .subpage-title");
           if (!subpage_title)
@@ -13402,7 +13405,11 @@
       activity_list.appendChild(activity_item);
       if (tooltip_name)
         tippy(activity_item.querySelector(".name a"), {
-          content: `${tooltip_sister} - ${tooltip_name}`
+          theme: "name-sister-combo",
+          content: html.node`
+                    <span class="name">${tooltip_name}</span>
+                    <span class="sister">${tooltip_sister}</span>
+                `
         });
     });
     return activity_list;
@@ -16748,6 +16755,36 @@
     });
   }
 
+  // src/footer.js
+  function bleh_footer() {
+    let footer = document.body.querySelector("footer");
+    let extras = html.node`
+        <div class="footer-extras">
+            ${footer.querySelector(".footer-top")}
+            ${footer.querySelector(".footer-bottom")}
+        </div>
+    `;
+    let kate = "katelyn";
+    if (sponsor_list && sponsor_list.special)
+      kate = sponsor_list.special[0];
+    render(footer, html`
+        <div class="footer-credit">
+            ${{ html: tl(trans.made_with_love).replace("{u}", `<a href="${root}user/${kate}">${kate}</a>`).replace("{h}", `<span class="bleh-icon heart sponsor-related">${tl(trans.love_lower)}</span>`) }}
+        </div>
+        <div class="footer-web">
+            <a href="https://github.com/katelyynn/bleh" target="_blank">${tl(trans.view_source)}</a>
+            <a href="https://github.com/katelyynn/bleh/issues/new/choose" target="_blank">${tl(trans.report_issue)}</a>
+            <a class="more" onclick=${() => extras.toggleAttribute("aria-expanded")}><span class="bleh-icon" /></a>
+        </div>
+        ${extras}
+    `);
+    let heart = footer.querySelector(".heart");
+    heart.addEventListener("click", () => sponsor());
+    tippy(heart, {
+      content: tl(trans.sponsor)
+    });
+  }
+
   // src/page.js
   function bleh() {
     let head_observer = new MutationObserver((mutations) => {
@@ -16963,6 +17000,7 @@
   function load_page() {
     set_season();
     seasonal_timer_end();
+    bleh_footer();
     let masthead = document.body.querySelector(".masthead");
     window.addEventListener("scroll", (e) => {
       let scroll = window.scrollY;
@@ -19849,6 +19887,21 @@
     },
     re_enable_style_loading: {
       en: "Re-enable style loading"
+    },
+    made_with_love: {
+      // lowercase in design
+      en: "made with {h} by {u} and contributors"
+    },
+    love_lower: {
+      // replaces the {h} in the above sentence
+      // lowercase in design
+      en: "love"
+    },
+    view_source: {
+      en: "View source"
+    },
+    report_issue: {
+      en: "Report issue"
     }
   };
   var trans_legacy = {

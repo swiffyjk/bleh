@@ -2639,6 +2639,21 @@ export const trans = {
     },
     re_enable_style_loading: {
         en: 'Re-enable style loading'
+    },
+    made_with_love: {
+        // lowercase in design
+        en: 'made with {h} by {u} and contributors'
+    },
+    love_lower: {
+        // replaces the {h} in the above sentence
+        // lowercase in design
+        en: 'love'
+    },
+    view_source: {
+        en: 'View source'
+    },
+    report_issue: {
+        en: 'Report issue'
     }
 }
 

@@ -64,6 +64,7 @@ import {bleh_radio} from "./components/radio";
 import {bleh_api} from './pages/api';
 import {bleh_users} from './pages/users';
 import {html, render} from "lighterhtml";
+import {bleh_footer} from "./footer.js";
 
 export function bleh() {
     let head_observer = new MutationObserver((mutations) => {
@@ -379,6 +380,8 @@ function load_page() {
 
     set_season();
     seasonal_timer_end();
+
+    bleh_footer();
 
     let masthead = document.body.querySelector('.masthead');
     window.addEventListener('scroll', (e) => {

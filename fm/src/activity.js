@@ -110,7 +110,11 @@ export function render_activity_list() {
 
         if (tooltip_name)
             tippy(activity_item.querySelector('.name a'), {
-                content: `${tooltip_sister} - ${tooltip_name}`
+                theme: 'name-sister-combo',
+                content: html.node`
+                    <span class="name">${tooltip_name}</span>
+                    <span class="sister">${tooltip_sister}</span>
+                `
             });
     });
 
