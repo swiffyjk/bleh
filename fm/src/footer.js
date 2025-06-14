@@ -34,6 +34,7 @@ export function bleh_footer() {
     heart.addEventListener('click', () => sponsor());
 
     tippy(heart, {
-        content: tl(trans.sponsor)
+        content: tl(trans.sponsor),
+        delay: [1000, 0]
     });
 }

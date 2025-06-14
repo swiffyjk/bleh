@@ -16781,7 +16781,8 @@
     let heart = footer.querySelector(".heart");
     heart.addEventListener("click", () => sponsor());
     tippy(heart, {
-      content: tl(trans.sponsor)
+      content: tl(trans.sponsor),
+      delay: [1e3, 0]
     });
   }
 

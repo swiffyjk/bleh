@@ -2605,7 +2605,28 @@
                 background: hsl(var(--b5)) !important;
             }
 
-            & > .redesigned-navigation:not([aria-label]) {
+            & > .navlist[aria-label], & > .bleh-settings-navigation {
+                background: hsl(var(--b5));
+                margin: unset !important;
+                padding-top: var(--card-gap);
+
+                width: 100%;
+
+                display: flex;
+                justify-content: center;
+
+                .navlist-items {
+                    width: calc(var(--cards-width) - (var(--button-sides) * 2));
+                    max-width: calc(var(--cards-width) - (var(--button-sides) * 2));
+                }
+
+                &:after {
+                    left: calc((100vw - (var(--cards-width) - (var(--card-padding) * 2))) / 2);
+                    right: calc((100vw - (var(--cards-width) - (var(--card-padding) * 2))) / 2);
+                }
+            }
+
+            & > .redesigned-navigation:not([aria-label], .bleh-settings-navigation) {
                 margin: unset !important;
                 width: 100% !important;
 
@@ -8945,9 +8966,9 @@
         .date-range-picker-preset--selected > &,
         &.dropdown-menu-clickable-item--selected,
         &.active {
-            --bg: hsla(var(--h4), 6%) !important;
-            --bg-hov: hsla(var(--h4), 12%) !important;
-            --bg-atv: hsla(var(--h4), 22%) !important;
+            --bg: hsla(var(--h4), 10%) !important;
+            --bg-hov: hsla(var(--h4), 16%) !important;
+            --bg-atv: hsla(var(--h4), 26%) !important;
             --col: hsl(var(--l3-c)) !important;
             --mask-colour: color-mix(in hsl, hsl(var(--l3-c)), hsl(var(--l4-c)) 40%);
         }
@@ -21754,7 +21775,7 @@
         }
 
         padding: var(--card-gap);
-        background: hsl(var(--h3), 30%);
+        background: hsl(var(--f4), 40%);
         color: hsl(var(--c2));
         border-radius: var(--item-big-radius);
 
@@ -23331,6 +23352,10 @@
 
         [data-bleh--theme_type="light"] & {
             --card-specific-background: hsl(var(--h4), 15%);
+        }
+
+        [data-ff--beret="true"] & {
+            --card-specific-background: hsl(var(--f4), 40%) !important;
         }
 
         &.first,
