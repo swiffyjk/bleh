@@ -198,7 +198,9 @@
                 "type": "sponsor"
             },
             {
-                "type": "memory_leak"
+                "type": "memory_leak",
+                "name": "memory leak",
+                "reason": "sponsor"
             }
         ]
     }
