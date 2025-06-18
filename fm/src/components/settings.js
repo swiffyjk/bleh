@@ -340,6 +340,16 @@ export function save_setting(id, value) {
     settings[id] = value;
     document.documentElement.setAttribute(`data-bleh--${id}`, value);
 
+    if (id == 'theme') {
+        if (value == 'light' || value == 'ink') {
+            settings.theme_type = 'light';
+        } else {
+            settings.theme_type = 'dark';
+        }
+
+        document.documentElement.setAttribute(`data-bleh--theme_type`, settings.theme_type);
+    }
+
     if ((settings_store[id].require_reload == true || (settings_store[id].require_reload == 'partial' && page.type != 'bleh_settings')))
         request_reload();
 

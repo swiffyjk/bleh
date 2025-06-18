@@ -2654,6 +2654,18 @@ export const trans = {
     },
     report_issue: {
         en: 'Report issue'
+    },
+    opens_your_value_settings: {
+        en: 'Opens your {v} settings'
+    },
+    opens_the_value: {
+        en: 'Opens the {v}'
+    },
+    theme_picker: {
+        en: 'Theme picker'
+    },
+    changes_your_theme: {
+        en: 'Changes your theme'
     }
 }
 

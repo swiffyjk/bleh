@@ -1,16 +1,20 @@
-import {page} from "../build/page.js";
+import {page, root} from "../build/page.js";
 import {dialog, dialog_rm} from "./dialog.js";
 import {html, render} from "lighterhtml";
 import {input} from "./input.js";
 import {tl, trans} from "../build/trans.js";
 import {notify} from "./notify.js";
+import {save_setting} from "./settings.js";
 
 export function register_rabbit() {
     page.state.cmd = false;
     let input_box;
     let selected = 0;
     let feed = 0;
+    let matches = [];
     let rabbit_hole;
+
+    let tip;
 
     document.addEventListener('keydown', (e) => {
         if (e.ctrlKey || e.metaKey)
@@ -26,8 +30,14 @@ export function register_rabbit() {
             // ctrl + k
             rabbit();
         } else if (page.structure.dialogs.hasChildNodes() && page.structure.dialogs.querySelector(':scope > [data-modal-type="rabbit"]')) {
-            if (e.key == 'Escape')
-                dialog_rm({id: 'rabbit'});
+            if (e.key == 'Escape') {
+                if (input_box.querySelector('input').value == '') {
+                    dialog_rm({id: 'rabbit'});
+                } else {
+                    input_box.querySelector('input').value = '';
+                    rabbit_search();
+                }
+            }
 
             if (e.key == 'Tab') {
                 e.preventDefault();
@@ -36,7 +46,7 @@ export function register_rabbit() {
 
             if (e.key == 'ArrowDown') {
                 e.preventDefault();
-                if (selected < (feed.length - 1))
+                if (selected < (matches.length - 1))
                     selected++;
                 else
                     selected = 0;
@@ -47,7 +57,7 @@ export function register_rabbit() {
                 if (selected > 0)
                     selected--;
                 else
-                    selected = (feed.length - 1);
+                    selected = (matches.length - 1);
 
                 rabbit_select();
             } else if (e.key == 'Enter') {
@@ -72,10 +82,13 @@ export function register_rabbit() {
                         placeholder: tl(trans.anything_you_can_imagine),
                         focus: true
                     });
+                    
+                    input_box.classList.add('rabbit-search');
     
                     return input_box;
                 }}
                 <div class="rabbit-hole" ref=${el => rabbit_hole = el} />
+                <div class="tip" ref=${el => tip = el} />
             `,
             type: 'rabbit',
             replace_if_possible: true
@@ -95,7 +108,7 @@ export function register_rabbit() {
         input_box.querySelector('input').focus();
     }
 
-    function rabbit_search() {
+    function rabbit_search(pre_selected = '', pre_matches = null) {
         selected = 0;
         feed = [
             {
@@ -125,28 +138,64 @@ export function register_rabbit() {
                 body: 'Blue',
                 keywords: ['sky', 'water', 'colour', 'color'],
                 action: () => notify({id: 'rabbit', title: 'rabbit!'})
+            },
+            {
+                type: 'theme',
+                text: tl(trans.themes.name),
+                body: tl(trans.opens_the_value).replace('{v}', tl(trans.theme_picker)),
+                keywords: ['themes', 'light', 'dark', 'ash', 'darker', 'oled', 'amoled', 'midnight', 'void', 'abyss', 'dark reader'],
+                action: () => bleh_theme_picker()
+            },
+            {
+                type: 'settings',
+                text: tl(trans.settings),
+                body: tl(trans.opens_your_value_settings).replace('{v}', tl(trans.profile)),
+                keywords: ['profile', 'user', 'pfp', 'avi', 'avatar', 'config', 'configuration', 'configure', 'picture', 'photo'],
+                action: () => window.location.href = `${root}settings`
+            },
+            {
+                type: 'bleh_settings',
+                text: tl(trans.settings),
+                body: tl(trans.opens_the_value).replace('{v}', tl(trans.bleh_settings)),
+                keywords: ['bleh', 'extension', 'config', 'configuration', 'configure'],
+                action: () => window.location.href = `${root}bleh`
             }
         ];
 
-        let value = input_box.querySelector('input').value.trim().toLowerCase();
-        let matches = [];
+        let value = pre_selected;
+        if (value == '')
+            value = input_box.querySelector('input').value.trim().toLowerCase();
 
-        feed.forEach(item => {
-            let extended = `${item.text} ${item.body} ${item.keywords.join(' ')}`.toLowerCase();
+        if (!pre_matches) {
+            matches = [];
 
-            if (extended.includes(value))
-                matches.push(item);
-        });
+            feed.forEach(item => {
+                let extended = `${item.text} ${item.body} ${item.keywords.join(' ')}`.toLowerCase();
+
+                if (extended.includes(value))
+                    matches.push(item);
+            });
+        } else {
+            matches = pre_matches;
+        }
 
         render(rabbit_hole, html`
-            ${matches.map(item => html.node`
-            <button class="dropdown-menu-clickable-item rabbit-hole-item" data-type=${item.type} onclick=${item.action}>
-                <div class="info">
-                    <div class="text">${item.text}</div>
-                    <div class="body">${item.body}</div>
-                </div>
-            </button>
-            `)}
+            ${matches.map((item, index) => () => {
+                let button = html.node`
+                    <button class="dropdown-menu-clickable-item rabbit-hole-item" data-type=${item.type} onclick=${item.action}>
+                        <div class="info">
+                            <div class="text">${item.text}</div>
+                        </div>
+                    </button>
+                `;
+                
+                button.addEventListener('mouseover', () => {
+                    selected = index;
+                    rabbit_select();
+                });
+                
+                return button;
+            })}
         `);
 
         rabbit_select();
@@ -160,12 +209,14 @@ export function register_rabbit() {
         let buttons = rabbit_hole.querySelectorAll('button');
         buttons.forEach((button, index) => {
             if (index == selected) {
-                button.setAttribute('aria-checked', 'true');
+                button.setAttribute('aria-selected', 'true');
 
                 if (click)
                     button.click();
+
+                tip.textContent = matches[index].body;
             } else {
-                button.setAttribute('aria-checked', 'false');
+                button.setAttribute('aria-selected', 'false');
             }
         });
 
@@ -174,5 +225,46 @@ export function register_rabbit() {
 
     function rabbit_enter() {
         rabbit_select(true);
+    }
+
+    function bleh_theme_picker() {
+        // custom control
+        rabbit_search('internal:theme_picker', [
+            {
+                type: 'theme_light',
+                text: tl(trans.themes.light),
+                body: tl(trans.changes_your_theme),
+                keywords: [],
+                action: () => save_setting('theme', 'light')
+            },
+            {
+                type: 'theme_ink',
+                text: tl(trans.themes.ink),
+                body: tl(trans.changes_your_theme),
+                keywords: [],
+                action: () => save_setting('theme', 'ink')
+            },
+            {
+                type: 'theme_ash',
+                text: tl(trans.themes.dark),
+                body: tl(trans.changes_your_theme),
+                keywords: [],
+                action: () => save_setting('theme', 'dark')
+            },
+            {
+                type: 'theme_dark',
+                text: tl(trans.themes.darker),
+                body: tl(trans.changes_your_theme),
+                keywords: [],
+                action: () => save_setting('theme', 'darker')
+            },
+            {
+                type: 'theme_void',
+                text: tl(trans.themes.oled),
+                body: tl(trans.changes_your_theme),
+                keywords: [],
+                action: () => save_setting('theme', 'oled')
+            }
+        ]);
     }
 }
