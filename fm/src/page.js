@@ -65,6 +65,7 @@ import {bleh_api} from './pages/api';
 import {bleh_users} from './pages/users';
 import {html, render} from "lighterhtml";
 import {bleh_footer} from "./footer.js";
+import {register_rabbit} from "./components/rabbit.js";
 
 export function bleh() {
     let head_observer = new MutationObserver((mutations) => {
@@ -109,6 +110,7 @@ function bleh_main() {
 
     // messaging
     load_dialogs();
+    register_rabbit();
 
     try {
         lookup_lang();
