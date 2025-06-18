@@ -28,6 +28,13 @@ export function register_rabbit() {
 
     let fake;
 
+    const allowed_pages = [
+        'user',
+        'artist',
+        'album',
+        'track'
+    ];
+
     document.addEventListener('keydown', (e) => {
         if (e.ctrlKey || e.metaKey)
             page.state.cmd = true;
@@ -75,6 +82,13 @@ export function register_rabbit() {
                 else
                     selected = 0;
 
+                if (matches[selected].disabled) {
+                    if ((selected + 1) < (matches.length - 1))
+                        selected++;
+                    else
+                        selected = 0;
+                }
+
                 rabbit_select();
             } else if (e.key == 'ArrowUp') {
                 e.preventDefault();
@@ -82,6 +96,13 @@ export function register_rabbit() {
                     selected--;
                 else
                     selected = (matches.length - 1);
+
+                if (matches[selected].disabled) {
+                    if ((selected - 1) > 0)
+                        selected--;
+                    else
+                        selected = 0;
+                }
 
                 rabbit_select();
             } else if (e.key == 'Enter') {
@@ -186,7 +207,8 @@ export function register_rabbit() {
                     body: tl(trans.use_current_page_as_context),
                     keywords: ['ctx', 'context'],
                     action: () => use_page_as_ctx(),
-                    keybind: ['⌘', '⇧', 'K']
+                    keybind: ['⌘', '⇧', 'K'],
+                    disabled: (!allowed_pages.includes(page.type))
                 },
                 {
                     type: 'profile',
@@ -281,7 +303,7 @@ export function register_rabbit() {
             render(rabbit_hole, html`
                 ${matches.length > 0 ? matches.map((item, index) => () => {
                     let button = html.node`
-                        <button class="dropdown-menu-clickable-item rabbit-hole-item" data-type=${item.type} onclick=${item.action}>
+                        <button class="dropdown-menu-clickable-item rabbit-hole-item" data-type=${item.type} onclick=${item.action} disabled=${item.disabled}>
                             <div class="info">
                                 <div class="text">${item.text}</div>
                             </div>
@@ -293,10 +315,12 @@ export function register_rabbit() {
                         </button>
                     `;
                     
-                    button.addEventListener('mouseover', () => {
-                        selected = index;
-                        rabbit_select(false, true);
-                    });
+                    if (!item.disabled) {
+                        button.addEventListener('mouseover', () => {
+                            selected = index;
+                            rabbit_select(false, true);
+                        });
+                    }
                     
                     return button;
                 }) : html.node`
@@ -429,13 +453,6 @@ export function register_rabbit() {
     }
 
     function use_page_as_ctx() {
-        const allowed_pages = [
-            'user',
-            'artist',
-            'album',
-            'track'
-        ];
-
         if (!allowed_pages.includes(page.type))
             return;
 
@@ -561,7 +578,7 @@ export function register_rabbit() {
                     type: 'collage',
                     text: tl(trans.collage),
                     body: tl(trans.create_a_collage),
-                    keywords: ['similar', 'taste', 'music', 'shared'],
+                    keywords: ['taste', 'music', 'chart', '5x5', 'topster'],
                     action: () => collage()
                 }
             ]);

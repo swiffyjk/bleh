@@ -9156,10 +9156,12 @@
     }
 
 
+    [data-type="notifications"],
     [data-label="notifications"],
     [data-analytics-label="notifications"] {
         --mask: var(--icon-16-notifications);
     }
+    [data-type="inbox"],
     [data-label="inbox"],
     [data-analytics-label="inbox"] {
         --mask: var(--icon-16-mail);
@@ -24603,7 +24605,13 @@
 
             transition: none !important;
 
+            --bg-hov: var(--bg) !important;
+            --bg-atv: var(--bg) !important;
+
             &[aria-selected="true"] {
+                --bg-hov: var(--bg) !important;
+                --bg-atv: var(--bg) !important;
+
                 kbd {
                     color: inherit;
                     opacity: 0.7;

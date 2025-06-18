@@ -16818,6 +16818,12 @@
     let searching;
     let selected_search;
     let fake;
+    const allowed_pages = [
+      "user",
+      "artist",
+      "album",
+      "track"
+    ];
     document.addEventListener("keydown", (e) => {
       if (e.ctrlKey || e.metaKey)
         page.state.cmd = true;
@@ -16852,6 +16858,12 @@
             selected++;
           else
             selected = 0;
+          if (matches[selected].disabled) {
+            if (selected + 1 < matches.length - 1)
+              selected++;
+            else
+              selected = 0;
+          }
           rabbit_select();
         } else if (e.key == "ArrowUp") {
           e.preventDefault();
@@ -16859,6 +16871,12 @@
             selected--;
           else
             selected = matches.length - 1;
+          if (matches[selected].disabled) {
+            if (selected - 1 > 0)
+              selected--;
+            else
+              selected = 0;
+          }
           rabbit_select();
         } else if (e.key == "Enter") {
           rabbit_enter();
@@ -16944,7 +16962,8 @@
             body: tl(trans.use_current_page_as_context),
             keywords: ["ctx", "context"],
             action: () => use_page_as_ctx(),
-            keybind: ["\u2318", "\u21E7", "K"]
+            keybind: ["\u2318", "\u21E7", "K"],
+            disabled: !allowed_pages.includes(page.type)
           },
           {
             type: "profile",
@@ -17032,7 +17051,7 @@
         render(rabbit_hole, html`
                 ${matches.length > 0 ? matches.map((item, index) => () => {
           let button = html.node`
-                        <button class="dropdown-menu-clickable-item rabbit-hole-item" data-type=${item.type} onclick=${item.action}>
+                        <button class="dropdown-menu-clickable-item rabbit-hole-item" data-type=${item.type} onclick=${item.action} disabled=${item.disabled}>
                             <div class="info">
                                 <div class="text">${item.text}</div>
                             </div>
@@ -17043,10 +17062,12 @@
                             ` : ""}
                         </button>
                     `;
-          button.addEventListener("mouseover", () => {
-            selected = index;
-            rabbit_select(false, true);
-          });
+          if (!item.disabled) {
+            button.addEventListener("mouseover", () => {
+              selected = index;
+              rabbit_select(false, true);
+            });
+          }
           return button;
         }) : html.node`
                     <div class="loading-data-container">
@@ -17160,12 +17181,6 @@
       ]);
     }
     function use_page_as_ctx() {
-      const allowed_pages = [
-        "user",
-        "artist",
-        "album",
-        "track"
-      ];
       if (!allowed_pages.includes(page.type))
         return;
       depth = 1;
@@ -17285,7 +17300,7 @@
             type: "collage",
             text: tl(trans.collage),
             body: tl(trans.create_a_collage),
-            keywords: ["similar", "taste", "music", "shared"],
+            keywords: ["taste", "music", "chart", "5x5", "topster"],
             action: () => collage()
           }
         ]);
