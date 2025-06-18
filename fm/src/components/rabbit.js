@@ -211,8 +211,10 @@ export function register_rabbit() {
             if (index == selected) {
                 button.setAttribute('aria-selected', 'true');
 
-                if (click)
+                if (click) {
+                    input_box.querySelector('input').value = matches[index].text;
                     button.click();
+                }
 
                 tip.textContent = matches[index].body;
             } else {

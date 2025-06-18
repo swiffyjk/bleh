@@ -8741,6 +8741,10 @@
         }*/
     }
 
+    .rabbit-hole-item {
+        --mask: var(--icon-16-command);
+    }
+
 
     [data-type="profile"] {
         --mask: var(--icon-16-user);
@@ -8882,13 +8886,6 @@
         }
     }
 
-    .rabbit-hole-item {
-        --mask: var(--icon-16-command);
-    }
-
-    [data-type="settings"] {
-        --mask: var(--icon-16-settings);
-    }
     [data-type="bleh_settings"] {
         --mask: var(--icon-16-bleh);
     }
@@ -9197,6 +9194,7 @@
     }
 
 
+    [data-type="theme"],
     [data-menu-item="themes"] {
         --mask: var(--icon-16-themes);
     }
@@ -11712,18 +11710,23 @@
         top: -40px !important;
     }
 
+    [data-type="theme_light"],
     [data-bleh-theme="light"] {
         --mask: var(--icon-16-sun);
     }
+    [data-type="theme_ink"],
     [data-bleh-theme="ink"] {
         --mask: var(--icon-16-pen);
     }
+    [data-type="theme_ash"],
     [data-bleh-theme="dark"] {
         --mask: var(--icon-16-moon);
     }
+    [data-type="theme_dark"],
     [data-bleh-theme="darker"] {
         --mask: var(--icon-16-moon-star);
     }
+    [data-type="theme_void"],
     [data-bleh-theme="oled"] {
         --mask: var(--icon-16-moon-fill);
     }
