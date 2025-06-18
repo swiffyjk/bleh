@@ -2702,6 +2702,9 @@ export const trans = {
     },
     choose_a_search_type: {
         en: 'Choose a search type'
+    },
+    finish_search: {
+        en: 'Finish your search'
     }
 }
 

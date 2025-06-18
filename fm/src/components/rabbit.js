@@ -589,15 +589,72 @@ export function register_rabbit() {
             `);
         }
 
-        if (
-            (searching.primary.type == 'artist' && searching.secondary.type != '') ||
-            searching.primary.type == 'user' || searching.primary.type == 'tag'
-        ) {
-            search_finish();
-            return;
-        }
-
-        if (searching.primary.type == 'artist') {
+        if (searching.primary.type == 'artist' && searching.secondary.type != '') {
+            rabbit_search('internal:search', [
+                {
+                    type: 'search',
+                    text: tl(trans.search),
+                    body: tl(trans.finish_search),
+                    keywords: ['finish'],
+                    action: () => search_finish()
+                },
+                {
+                    type: 'artist',
+                    text: tl(trans.artist),
+                    body: tl(trans.search_for_value).replace('{v}', tl(trans.artist)),
+                    keywords: ['profile'],
+                    action: () => append_search('artist')
+                },
+                {
+                    type: 'album',
+                    text: tl(trans.album),
+                    body: tl(trans.search_for_value).replace('{v}', tl(trans.album)),
+                    keywords: ['record'],
+                    action: () => append_search('album')
+                },
+                {
+                    type: 'track',
+                    text: tl(trans.track),
+                    body: tl(trans.search_for_value).replace('{v}', tl(trans.track)),
+                    keywords: ['song'],
+                    action: () => append_search('track')
+                }
+            ]);
+        } else if (searching.primary.type == 'user') {
+            rabbit_search('internal:search', [
+                {
+                    type: 'search',
+                    text: tl(trans.search),
+                    body: tl(trans.finish_search),
+                    keywords: ['finish'],
+                    action: () => search_finish()
+                },
+                {
+                    type: 'user',
+                    text: tl(trans.profile),
+                    body: tl(trans.search_for_value).replace('{v}', tl(trans.profile)),
+                    keywords: [],
+                    action: () => append_search('user')
+                }
+            ]);
+        } else if (searching.primary.type == 'tag') {
+            rabbit_search('internal:search', [
+                {
+                    type: 'search',
+                    text: tl(trans.search),
+                    body: tl(trans.finish_search),
+                    keywords: ['finish'],
+                    action: () => search_finish()
+                },
+                {
+                    type: 'tag',
+                    text: tl(trans.tag),
+                    body: tl(trans.search_for_value).replace('{v}', tl(trans.tag)),
+                    keywords: ['genre'],
+                    action: () => append_search('tag')
+                }
+            ]);
+        } else if (searching.primary.type == 'artist') {
             rabbit_search('internal:search', [
                 {
                     type: 'album',
@@ -614,7 +671,7 @@ export function register_rabbit() {
                     action: () => append_search('track')
                 }
             ]);
-        } else if (searching.primary.type == 'album' || searching.primary.type == 'track') {
+        } else if (searching.secondary.type == 'album' || searching.secondary.type == 'track') {
             rabbit_search('internal:search', [
                 {
                     type: 'artist',

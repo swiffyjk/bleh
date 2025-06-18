@@ -22736,6 +22736,7 @@
             line-height: var(--line-height);
 
             .title {
+                color: hsl(var(--c2));
                 font-weight: var(--font-weight-medium);
                 margin: unset;
             }
@@ -24559,6 +24560,12 @@
 
             p {
                 margin-right: 10px;
+
+                overflow: hidden;
+                text-overflow: ellipsis;
+                -webkit-box-orient: vertical;
+                display: -webkit-box;
+                -webkit-line-clamp: 1;
             }
         }
 
