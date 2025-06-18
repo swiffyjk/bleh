@@ -189,6 +189,37 @@ export function register_rabbit() {
                     keybind: ['⌘', '⇧', 'K']
                 },
                 {
+                    type: 'profile',
+                    text: tl(trans.profile),
+                    body: tl(trans.opens_your_value).replace('{v}', tl(trans.profile)),
+                    keywords: ['profile', 'user', 'me'],
+                    action: () => window.location.href = `${root}user/${auth.name}`,
+                    keybind: ['⌘', 'P']
+                },
+                {
+                    type: 'profile_shortcut',
+                    text: settings.profile_shortcut,
+                    body: tl(trans.opens_your_value).replace('{v}', tl(trans.profile_shortcut.name)),
+                    keywords: ['profile', 'user', 'shortcut', 'friends'],
+                    action: () => window.location.href = `${root}user/${settings.profile_shortcut}`,
+                    hide: (settings.profile_shortcut == ''),
+                    keybind: ['⌘', 'S']
+                },
+                {
+                    type: 'notifications',
+                    text: tl(trans.notifications.name),
+                    body: tl(trans.opens_your_value).replace('{v}', tl(trans.notifications.name)),
+                    keywords: ['bell', 'updates'],
+                    action: () => window.location.href = `${root}inbox/notifications`
+                },
+                {
+                    type: 'inbox',
+                    text: tl(trans.inbox.name),
+                    body: tl(trans.opens_your_value).replace('{v}', tl(trans.inbox.name)),
+                    keywords: ['messages', 'direct', 'dms'],
+                    action: () => window.location.href = `${root}inbox`
+                },
+                {
                     type: 'theme',
                     text: tl(trans.themes.name),
                     body: tl(trans.opens_the_value).replace('{v}', tl(trans.theme_picker)),
@@ -196,19 +227,10 @@ export function register_rabbit() {
                     action: () => bleh_theme_picker()
                 },
                 {
-                    type: 'profile_shortcut',
-                    text: settings.profile_shortcut,
-                    body: tl(trans.opens_your_profile_shortcut),
-                    keywords: ['profile', 'user', 'shortcut', 'friends'],
-                    action: () => window.location.href = `${root}user/${settings.profile_shortcut}`,
-                    hide: (settings.profile_shortcut == ''),
-                    keybind: ['⌘', 'S']
-                },
-                {
                     type: 'news',
                     text: tl(trans.news),
                     body: tl(trans.opens_the_value).replace('{v}', tl(trans.news)),
-                    keywords: ['bleh', 'extension', 'config', 'configuration', 'configure'],
+                    keywords: ['bleh', 'extension', 'changelog', 'feed'],
                     action: () => news()
                 },
                 {

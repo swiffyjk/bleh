@@ -16947,6 +16947,37 @@
             keybind: ["\u2318", "\u21E7", "K"]
           },
           {
+            type: "profile",
+            text: tl(trans.profile),
+            body: tl(trans.opens_your_value).replace("{v}", tl(trans.profile)),
+            keywords: ["profile", "user", "me"],
+            action: () => window.location.href = `${root}user/${auth.name}`,
+            keybind: ["\u2318", "P"]
+          },
+          {
+            type: "profile_shortcut",
+            text: settings.profile_shortcut,
+            body: tl(trans.opens_your_value).replace("{v}", tl(trans.profile_shortcut.name)),
+            keywords: ["profile", "user", "shortcut", "friends"],
+            action: () => window.location.href = `${root}user/${settings.profile_shortcut}`,
+            hide: settings.profile_shortcut == "",
+            keybind: ["\u2318", "S"]
+          },
+          {
+            type: "notifications",
+            text: tl(trans.notifications.name),
+            body: tl(trans.opens_your_value).replace("{v}", tl(trans.notifications.name)),
+            keywords: ["bell", "updates"],
+            action: () => window.location.href = `${root}inbox/notifications`
+          },
+          {
+            type: "inbox",
+            text: tl(trans.inbox.name),
+            body: tl(trans.opens_your_value).replace("{v}", tl(trans.inbox.name)),
+            keywords: ["messages", "direct", "dms"],
+            action: () => window.location.href = `${root}inbox`
+          },
+          {
             type: "theme",
             text: tl(trans.themes.name),
             body: tl(trans.opens_the_value).replace("{v}", tl(trans.theme_picker)),
@@ -16954,19 +16985,10 @@
             action: () => bleh_theme_picker()
           },
           {
-            type: "profile_shortcut",
-            text: settings.profile_shortcut,
-            body: tl(trans.opens_your_profile_shortcut),
-            keywords: ["profile", "user", "shortcut", "friends"],
-            action: () => window.location.href = `${root}user/${settings.profile_shortcut}`,
-            hide: settings.profile_shortcut == "",
-            keybind: ["\u2318", "S"]
-          },
-          {
             type: "news",
             text: tl(trans.news),
             body: tl(trans.opens_the_value).replace("{v}", tl(trans.news)),
-            keywords: ["bleh", "extension", "config", "configuration", "configure"],
+            keywords: ["bleh", "extension", "changelog", "feed"],
             action: () => news()
           },
           {
@@ -20573,10 +20595,13 @@
       en: "Report issue"
     },
     opens_your_value_settings: {
-      en: "Opens your {v} settings"
+      en: "Open your {v} settings"
+    },
+    opens_your_value: {
+      en: "Open your {v}"
     },
     opens_the_value: {
-      en: "Opens the {v}"
+      en: "Open the {v}"
     },
     theme_picker: {
       en: "Theme picker"
@@ -20591,7 +20616,7 @@
       en: "Use current page as context"
     },
     opens_the_value_for_type: {
-      en: "Opens the {v} for {t}"
+      en: "Open the {v} for {t}"
     },
     switch_placeholder: {
       en: "Quick switch to a page or action"
@@ -20607,9 +20632,6 @@
     },
     create_a_collage: {
       en: "Create a collage of your choosing"
-    },
-    opens_your_profile_shortcut: {
-      en: "Opens your profile shortcut"
     },
     search_for_music_or_user: {
       en: "Search for music or a user"

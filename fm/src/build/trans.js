@@ -2656,10 +2656,13 @@ export const trans = {
         en: 'Report issue'
     },
     opens_your_value_settings: {
-        en: 'Opens your {v} settings'
+        en: 'Open your {v} settings'
+    },
+    opens_your_value: {
+        en: 'Open your {v}'
     },
     opens_the_value: {
-        en: 'Opens the {v}'
+        en: 'Open the {v}'
     },
     theme_picker: {
         en: 'Theme picker'
@@ -2674,7 +2677,7 @@ export const trans = {
         en: 'Use current page as context'
     },
     opens_the_value_for_type: {
-        en: 'Opens the {v} for {t}'
+        en: 'Open the {v} for {t}'
     },
     switch_placeholder: {
         en: 'Quick switch to a page or action'
@@ -2690,9 +2693,6 @@ export const trans = {
     },
     create_a_collage: {
         en: 'Create a collage of your choosing'
-    },
-    opens_your_profile_shortcut: {
-        en: 'Opens your profile shortcut'
     },
     search_for_music_or_user: {
         en: 'Search for music or a user'
