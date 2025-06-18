@@ -2666,6 +2666,33 @@ export const trans = {
     },
     changes_your_theme: {
         en: 'Changes your theme'
+    },
+    on_this_page: {
+        en: 'On this page'
+    },
+    use_current_page_as_context: {
+        en: 'Use current page as context'
+    },
+    opens_the_value_for_type: {
+        en: 'Opens the {v} for {t}'
+    },
+    switch_placeholder: {
+        en: 'Quick switch to a page or action'
+    },
+    compares_your_taste: {
+        en: 'Compare your taste with {v}'
+    },
+    select_an_option: {
+        en: 'Select an option'
+    },
+    nothing_matches_your_search: {
+        en: 'Nothing matches your search'
+    },
+    create_a_collage: {
+        en: 'Create a collage of your choosing'
+    },
+    opens_your_profile_shortcut: {
+        en: 'Opens your profile shortcut'
     }
 }
 

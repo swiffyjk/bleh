@@ -48,7 +48,8 @@ export function dialog({
     replace_id = '',
     allow_scroll = false,
     colourful = false,
-    colourful_bg = false
+    colourful_bg = false,
+    handle_escape_manually = false
 }) {
     log(`creating ${id}`, 'window', 'info', {
         id: id,
@@ -62,7 +63,8 @@ export function dialog({
         replace_id: replace_id,
         allow_scroll: allow_scroll,
         colourful: colourful,
-        colourful_bg: colourful_bg
+        colourful_bg: colourful_bg,
+        handle_escape_manually: handle_escape_manually
     });
 
     if (replace && replace_if_possible)
@@ -112,6 +114,14 @@ export function dialog({
         page.structure.dialogs.setAttribute('onclick', '_dialog_rm({all: true, modal_bg: true})');
     } else {
         page.structure.dialogs.removeAttribute('onclick');
+    }
+
+    if (dismiss && !handle_escape_manually) {
+        document.addEventListener('keydown', (e) => {
+            if (e.key == 'Escape') {
+                dialog_rm({id: id});
+            }
+        });
     }
 
     let modal_body = document.createElement('div');
