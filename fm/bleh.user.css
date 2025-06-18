@@ -9516,6 +9516,7 @@
 
 
     /*     INPUT     */
+    .modern-input,
     .modal-body textarea, .bleh-modal-body textarea,
     .content-form .form-control, .content-form input[type="date"], .content-form input[type="email"], .content-form input[type="number"], .content-form input[type="password"], .content-form input[type="text"], .content-form input[type="url"], .content-form select, .content-form textarea
     {

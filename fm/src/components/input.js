@@ -9,14 +9,15 @@ export function input({
     min,
     max,
     maxlength,
-    warn_if_empty = false
+    warn_if_empty = false,
+    focus = false
 }) {
     let input_box;
     let error_tooltip;
 
     let container = html.node`
         <div class="content-form input-container colourful" data-has-error="false">
-            <input type=${type} value=${value} placeholder=${placeholder} min=${min} max=${max} maxlength=${maxlength} ref=${el => input_box = el} />
+            <input class="modern-input" autofocus=${focus} type=${type} value=${value} placeholder=${placeholder} min=${min} max=${max} maxlength=${maxlength} ref=${el => input_box = el} />
         </div>
     `;
 

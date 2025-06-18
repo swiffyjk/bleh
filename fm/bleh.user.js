@@ -5989,13 +5989,14 @@
     min,
     max,
     maxlength,
-    warn_if_empty = false
+    warn_if_empty = false,
+    focus = false
   }) {
     let input_box;
     let error_tooltip;
     let container = html.node`
         <div class="content-form input-container colourful" data-has-error="false">
-            <input type=${type} value=${value} placeholder=${placeholder} min=${min} max=${max} maxlength=${maxlength} ref=${(el) => input_box = el} />
+            <input class="modern-input" autofocus=${focus} type=${type} value=${value} placeholder=${placeholder} min=${min} max=${max} maxlength=${maxlength} ref=${(el) => input_box = el} />
         </div>
     `;
     error_tooltip = tippy(input_box, {
@@ -16790,33 +16791,38 @@
   function register_rabbit() {
     page.state.cmd = false;
     document.addEventListener("keydown", (e) => {
-      if (e.ctrlKey || e.metaKey) {
+      if (e.ctrlKey || e.metaKey)
         page.state.cmd = true;
-      }
-      notify({
-        id: "key",
-        title: e.key
-      });
       if (page.state.cmd && e.key == "," && !page.structure.dialogs.hasChildNodes()) {
         rabbit();
+      } else if (e.key == "Escape" && page.structure.dialogs.hasChildNodes() && page.structure.dialogs.querySelector(':scope > [data-modal-type="rabbit"]')) {
+        dialog_rm2({ id: "rabbit" });
       }
     });
     document.addEventListener("keyup", (e) => {
-      if (e.ctrlKey || e.metaKey) {
+      if (e.ctrlKey || e.metaKey)
         page.state.cmd = false;
-      }
     });
   }
   function rabbit() {
+    let input_box;
     page.state.rabbit_modal = dialog({
       id: "rabbit",
       title: "rabbit",
       body: html.node`
-        rabbit quick switcher
+        ${() => {
+        input_box = input({
+          maxlength: 100,
+          placeholder: tl(trans.anything_you_can_imagine),
+          focus: true
+        });
+        return input_box;
+      }}
         `,
       type: "rabbit",
       replace_if_possible: true
     });
+    input_box.querySelector("input").focus();
   }
 
   // src/page.js
