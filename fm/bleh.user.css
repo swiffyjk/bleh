@@ -24443,4 +24443,16 @@
             transform: translateY(0);
         }
     }
+
+
+    [data-modal-type="rabbit"] {
+        .modal-close-button,
+        .bleh-modal-title {
+            display: none;
+        }
+
+        .modern-input {
+            width: 400px;
+        }
+    }
 }
