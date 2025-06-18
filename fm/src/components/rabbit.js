@@ -9,6 +9,7 @@ import {compare} from "./compare.js";
 import {collage} from "./collage.js";
 import {settings} from "../build/config.js";
 import {open_profile_shortcut_window} from "./profile_shortcut.js";
+import {news} from "../news.js";
 
 export function register_rabbit() {
     page.state.cmd = false;
@@ -21,6 +22,11 @@ export function register_rabbit() {
     let tip;
 
     let depth = 0;
+
+    let searching;
+    let selected_search;
+
+    let fake;
 
     document.addEventListener('keydown', (e) => {
         if (e.ctrlKey || e.metaKey)
@@ -92,6 +98,18 @@ export function register_rabbit() {
                 open_profile_shortcut_window();
             }
         }
+
+        if (page.state.cmd && (e.key == 'b' || e.key == 'B')) {
+            e.preventDefault();
+
+            window.location.href = `${root}bleh`;
+        }
+
+        if (page.state.cmd && (e.key == 'd' || e.key == 'D')) {
+            e.preventDefault();
+
+            search();
+        }
     });
 
     document.addEventListener('keyup', (e) => {
@@ -126,6 +144,11 @@ export function register_rabbit() {
             handle_escape_manually: true
         });
 
+        fake = html.node`
+            <div class="fake-input" style="display: none;" />
+        `;
+        input_box.appendChild(fake);
+
         rabbit_search();
         rabbit_select();
 
@@ -141,9 +164,22 @@ export function register_rabbit() {
     }
 
     function rabbit_search(pre_selected = '', pre_matches = null) {
+        if (depth < 2) {
+            input_box.querySelector('input').style.removeProperty('display');
+            fake.style.display = 'none';
+        }
+
         selected = 0;
         if (!pre_matches && depth == 0) {
             feed = [
+                {
+                    type: 'search',
+                    text: tl(trans.search),
+                    body: tl(trans.search_for_music_or_user),
+                    keywords: ['user', 'music', 'tag', 'discover', 'explore'],
+                    action: () => search(),
+                    keybind: ['⌘', 'D']
+                },
                 {
                     type: 'on_this_page',
                     text: tl(trans.on_this_page),
@@ -169,6 +205,13 @@ export function register_rabbit() {
                     keybind: ['⌘', 'S']
                 },
                 {
+                    type: 'news',
+                    text: tl(trans.news),
+                    body: tl(trans.opens_the_value).replace('{v}', tl(trans.news)),
+                    keywords: ['bleh', 'extension', 'config', 'configuration', 'configure'],
+                    action: () => news()
+                },
+                {
                     type: 'settings',
                     text: tl(trans.settings),
                     body: tl(trans.opens_your_value_settings).replace('{v}', tl(trans.profile)),
@@ -180,70 +223,87 @@ export function register_rabbit() {
                     text: tl(trans.settings),
                     body: tl(trans.opens_the_value).replace('{v}', tl(trans.bleh_settings)),
                     keywords: ['bleh', 'extension', 'config', 'configuration', 'configure'],
-                    action: () => window.location.href = `${root}bleh`
+                    action: () => window.location.href = `${root}bleh`,
+                    keybind: ['⌘', 'B']
                 }
             ];
         } else if (pre_matches) {
             feed = pre_matches;
         }
 
-        let value = '';
-        if (value == '')
-            value = input_box.querySelector('input').value.trim().toLowerCase();
+        if (depth < 3) {
+            let value = '';
+            if (value == '')
+                value = input_box.querySelector('input').value.trim().toLowerCase();
 
-        matches = [];
+            matches = [];
 
-        feed.forEach(item => {
-            let extended = `${item.text} ${item.body} ${item.keywords.join(' ')}`.toLowerCase();
+            feed.forEach(item => {
+                let extended = `${item.text} ${item.body} ${item.keywords.join(' ')} ${item.keybind ? item.keybind.join(' ').replace('⌘', 'Ctrl').replace('⇧', 'Shift') : ''}`.toLowerCase();
 
-            let words = value.split(' ');
-            let match = false;
-            words.forEach(word => {
-                if (extended.includes(word)) {
-                    match = true;
-                }
+                let words = value.split(' ');
+                let match = false;
+                words.forEach(word => {
+                    if (extended.includes(word)) {
+                        match = true;
+                    }
+                });
+
+                if (item.hide)
+                    match = false;
+
+                if (match)
+                    matches.push(item);
             });
 
-            if (item.hide)
-                match = false;
+            render(rabbit_hole, html`
+                ${matches.length > 0 ? matches.map((item, index) => () => {
+                    let button = html.node`
+                        <button class="dropdown-menu-clickable-item rabbit-hole-item" data-type=${item.type} onclick=${item.action}>
+                            <div class="info">
+                                <div class="text">${item.text}</div>
+                            </div>
+                            ${item.keybind ? html.node`
+                            <div class="keybind">
+                                ${item.keybind.map(key => html.node`<kbd>${key}</kbd>`)}
+                            </div>
+                            ` : ''}
+                        </button>
+                    `;
+                    
+                    button.addEventListener('mouseover', () => {
+                        selected = index;
+                        rabbit_select(false, true);
+                    });
+                    
+                    return button;
+                }) : html.node`
+                    <div class="loading-data-container">
+                        <div class="loading-data-text failed">${tl(trans.nothing_matches_your_search)}</div>
+                    </div>
+                `}
+            `);
 
-            if (match)
-                matches.push(item);
-        });
-
-        render(rabbit_hole, html`
-            ${matches.length > 0 ? matches.map((item, index) => () => {
-                let button = html.node`
-                    <button class="dropdown-menu-clickable-item rabbit-hole-item" data-type=${item.type} onclick=${item.action}>
-                        <div class="info">
-                            <div class="text">${item.text}</div>
-                        </div>
-                        ${item.keybind ? html.node`
-                        <div class="keybind">
-                            ${item.keybind.map(key => html.node`<kbd>${key}</kbd>`)}
-                        </div>
-                        ` : ''}
-                    </button>
-                `;
-                
-                button.addEventListener('mouseover', () => {
-                    selected = index;
-                    rabbit_select(false, true);
-                });
-                
-                return button;
-            }) : html.node`
-                <div class="loading-data-container">
-                    <div class="loading-data-text failed">${tl(trans.nothing_matches_your_search)}</div>
-                </div>
-            `}
-        `);
-
-        rabbit_select();
+            rabbit_select();
+        } else {
+            matches = feed;
+        }
     }
 
     function rabbit_select(click = false, with_mouse = false) {
-        tip.textContent = tl(trans.select_an_option);
+        rabbit_tip(tl(trans.select_an_option));
+
+        if (depth == 3 && click) {
+            searching[selected_search].name = input_box.querySelector('input').value;
+            input_box.querySelector('input').value = '';
+            depth = 2;
+
+            search_fill();
+
+            return;
+        } else if (depth == 3) {
+            return;
+        }
 
         let buttons = rabbit_hole.querySelectorAll('button');
         buttons.forEach((button, index) => {
@@ -262,7 +322,7 @@ export function register_rabbit() {
                     button.click();
                 }
 
-                tip.textContent = matches[index].body;
+                rabbit_tip(matches[index].body);
             } else {
                 button.setAttribute('aria-selected', 'false');
             }
@@ -271,8 +331,37 @@ export function register_rabbit() {
         input_box.querySelector('input').focus();
     }
 
+    function rabbit_tip(text) {
+        render(tip, html`
+        <div class="left">
+            ${(depth == 0) ? html.node`
+            <kbd>Esc</kbd> ${tl(trans.close)}
+            ` : html.node`
+            <kbd>Esc</kbd> ${tl(trans.back)}
+            `}
+        </div>
+        <div class="right">
+            ${text}
+        </div>
+        `);
+    }
+
     function rabbit_enter() {
         rabbit_select(true);
+    }
+
+    function append_search(id) {
+        if (id == 'artist' || id == 'user' || id == 'tag')
+            selected_search = 'primary';
+        else
+            selected_search = 'secondary';
+
+        depth = 3;
+        searching[selected_search].type = id;
+        input_box.querySelector('input').value = '';
+
+        input_box.querySelector('input').style.removeProperty('display');
+        fake.style.display = 'none';
     }
 
     function bleh_theme_picker() {
@@ -454,6 +543,139 @@ export function register_rabbit() {
                     action: () => collage()
                 }
             ]);
+        }
+    }
+
+    function search() {
+        // custom control
+        depth = 2;
+        if (!page.structure.dialogs.hasChildNodes())
+            rabbit();
+
+        searching = {
+            primary: {
+                name: '',
+                type: ''
+            },
+            secondary: {
+                name: '',
+                type: ''
+            }
+        };
+
+        search_fill();
+    }
+
+    function search_fill() {
+        depth = 2;
+        input_box.querySelector('input').style.display = 'none';
+        fake.style.removeProperty('display');
+
+        if (searching.primary.type && searching.secondary.type) {
+            render(fake, html`
+                <label>${searching.primary.type}:</label>
+                <p>${searching.primary.name}</p>
+                <label>${searching.secondary.type}:</label>
+                <p>${searching.secondary.name}</p>
+            `);
+        } else if (searching.primary.type) {
+            render(fake, html`
+                <label>${searching.primary.type}:</label>
+                <p>${searching.primary.name}</p>
+            `);
+        } else {
+            render(fake, html`
+                <p>${tl(trans.choose_a_search_type)}</p>
+            `);
+        }
+
+        if (
+            (searching.primary.type == 'artist' && searching.secondary.type != '') ||
+            searching.primary.type == 'user' || searching.primary.type == 'tag'
+        ) {
+            search_finish();
+            return;
+        }
+
+        if (searching.primary.type == 'artist') {
+            rabbit_search('internal:search', [
+                {
+                    type: 'album',
+                    text: tl(trans.album),
+                    body: tl(trans.search_for_value).replace('{v}', tl(trans.album)),
+                    keywords: ['record'],
+                    action: () => append_search('album')
+                },
+                {
+                    type: 'track',
+                    text: tl(trans.track),
+                    body: tl(trans.search_for_value).replace('{v}', tl(trans.track)),
+                    keywords: ['song'],
+                    action: () => append_search('track')
+                }
+            ]);
+        } else if (searching.primary.type == 'album' || searching.primary.type == 'track') {
+            rabbit_search('internal:search', [
+                {
+                    type: 'artist',
+                    text: tl(trans.artist),
+                    body: tl(trans.search_for_value).replace('{v}', tl(trans.artist)),
+                    keywords: ['profile'],
+                    action: () => append_search('artist')
+                }
+            ]);
+        } else {
+            rabbit_search('internal:search', [
+                {
+                    type: 'artist',
+                    text: tl(trans.artist),
+                    body: tl(trans.search_for_value).replace('{v}', tl(trans.artist)),
+                    keywords: ['profile'],
+                    action: () => append_search('artist')
+                },
+                {
+                    type: 'album',
+                    text: tl(trans.album),
+                    body: tl(trans.search_for_value).replace('{v}', tl(trans.album)),
+                    keywords: ['record'],
+                    action: () => append_search('album')
+                },
+                {
+                    type: 'track',
+                    text: tl(trans.track),
+                    body: tl(trans.search_for_value).replace('{v}', tl(trans.track)),
+                    keywords: ['song'],
+                    action: () => append_search('track')
+                },
+                {
+                    type: 'user',
+                    text: tl(trans.profile),
+                    body: tl(trans.search_for_value).replace('{v}', tl(trans.profile)),
+                    keywords: [],
+                    action: () => append_search('user')
+                },
+                {
+                    type: 'tag',
+                    text: tl(trans.tag),
+                    body: tl(trans.search_for_value).replace('{v}', tl(trans.tag)),
+                    keywords: ['genre'],
+                    action: () => append_search('tag')
+                }
+            ]);
+        }
+    }
+
+    function search_finish() {
+        if (searching.primary.type == 'artist') {
+            if (searching.secondary.type == 'album') {
+                window.location.href = `${root}music/${sanitise(searching.primary.name)}/${sanitise(searching.secondary.name)}`;
+            } else {
+                window.location.href = `${root}music/${sanitise(searching.primary.name)}/_/${sanitise(searching.secondary.name)}`;
+            }
+        } else if (searching.primary.type == 'user') {
+            window.location.href = `${root}user/${sanitise(searching.primary.name)}`;
+        } else if (searching.primary.type == 'tag') {
+            window.location.href = `${root}tag/${sanitise(searching.primary.name)}`;
         }
     }
 }

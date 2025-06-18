@@ -8929,6 +8929,27 @@
     [data-type="tags"] {
         --mask: var(--icon-16-tag);
     }
+    [data-type="news"] {
+        --mask: var(--icon-16-changelog);
+    }
+    [data-type="artist"] {
+        --mask: var(--icon-16-artist);
+    }
+    [data-type="album"] {
+        --mask: var(--icon-16-album);
+    }
+    [data-type="track"] {
+        --mask: var(--icon-16-track);
+    }
+    [data-type="user"] {
+        --mask: var(--icon-16-user);
+    }
+    [data-type="tag"] {
+        --mask: var(--icon-16-tag);
+    }
+    [data-type="search"] {
+        --mask: var(--icon-16-search);
+    }
 
 
     .listening-report-promos {
@@ -9567,7 +9588,7 @@
 
 
     /*     INPUT     */
-    .modern-input,
+    .modern-input, .fake-input,
     .modal-body textarea, .bleh-modal-body textarea,
     .content-form .form-control, .content-form input[type="date"], .content-form input[type="email"], .content-form input[type="number"], .content-form input[type="password"], .content-form input[type="text"], .content-form input[type="url"], .content-form select, .content-form textarea
     {
@@ -24518,11 +24539,27 @@
             }
         }
 
+        .fake-input,
         .modern-input {
             width: 400px;
-            height: unset;
+            height: 48px;
             --padding: var(--card-gap) var(--button-sides) var(--card-gap) calc(var(--button-sides) + var(--icon-size) + var(--icon-gap));
             --radius: var(--card-radius);
+        }
+
+        .fake-input {
+            display: flex;
+            align-items: center;
+
+            label {
+                background: hsl(var(--b3));
+                padding: 0 6px;
+                border-radius: var(--item-med-radius);
+            }
+
+            p {
+                margin-right: 10px;
+            }
         }
 
         .rabbit-hole {
@@ -24562,10 +24599,41 @@
         }
 
         .tip {
-            text-align: center;
             margin-top: var(--card-gap);
             font-size: var(--font-size-sm);
             color: hsl(var(--c3));
+
+            display: flex;
+            justify-content: space-between;
+            padding: 0 var(--button-sides);
+
+            .left {
+                display: flex;
+                gap: 8px;
+
+                kbd {
+                    position: relative;
+                    font-family: inherit !important;
+                    font-size: inherit;
+                    line-height: inherit;
+                    padding: unset;
+                    background: unset;
+                    padding-right: 9px;
+                    border-radius: unset;
+
+                    &:after {
+                        content: '';
+                        position: absolute;
+                        width: 1px;
+                        height: 10px;
+                        display: block;
+                        background: var(--card-border-base);
+                        top: 50%;
+                        margin-top: -5px;
+                        right: 0;
+                    }
+                }
+            }
         }
     }
 }

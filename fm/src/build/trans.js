@@ -2693,6 +2693,15 @@ export const trans = {
     },
     opens_your_profile_shortcut: {
         en: 'Opens your profile shortcut'
+    },
+    search_for_music_or_user: {
+        en: 'Search for music or a user'
+    },
+    search_for_value: {
+        en: 'Search for {v}'
+    },
+    choose_a_search_type: {
+        en: 'Choose a search type'
     }
 }
 
