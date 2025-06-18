@@ -16797,7 +16797,8 @@
     document.addEventListener("keydown", (e) => {
       if (e.ctrlKey || e.metaKey)
         page.state.cmd = true;
-      if (page.state.cmd && e.key == "," && !page.structure.dialogs.hasChildNodes()) {
+      if (page.state.cmd && (e.key == "k" || e.key == "K" || e.key == ",") && !page.structure.dialogs.hasChildNodes()) {
+        e.preventDefault();
         rabbit();
       } else if (page.structure.dialogs.hasChildNodes() && page.structure.dialogs.querySelector(':scope > [data-modal-type="rabbit"]')) {
         if (e.key == "Escape")
@@ -16820,8 +16821,8 @@
           else
             selected = feed.length - 1;
           rabbit_select();
-        } else if (e.key != "ArrowLeft" && e.key != "ArrowRight") {
-          rabbit_search();
+        } else if (e.key == "Enter") {
+          rabbit_enter();
         }
       }
     });
@@ -16849,6 +16850,9 @@
       });
       rabbit_search();
       rabbit_select();
+      input_box.querySelector("input").addEventListener("input", (e) => {
+        rabbit_search();
+      });
       input_box.querySelector("input").focus();
     }
     function rabbit_tab() {
@@ -16856,31 +16860,70 @@
     }
     function rabbit_search() {
       selected = 0;
-      feed = [0, 1, 2, 3, 4, 5, 6, 7];
+      feed = [
+        {
+          type: "rabbit",
+          text: "Rabbit",
+          body: "something something",
+          keywords: ["bunny"],
+          action: () => notify({ id: "rabbit", title: "rabbit!" })
+        },
+        {
+          type: "tree",
+          text: "Tree",
+          body: "ermm",
+          keywords: ["plant", "nature"],
+          action: () => notify({ id: "rabbit", title: "rabbit!" })
+        },
+        {
+          type: "red",
+          text: "Red",
+          body: "Red",
+          keywords: ["blood", "colour", "color"],
+          action: () => notify({ id: "rabbit", title: "rabbit!" })
+        },
+        {
+          type: "blue",
+          text: "Blue",
+          body: "Blue",
+          keywords: ["sky", "water", "colour", "color"],
+          action: () => notify({ id: "rabbit", title: "rabbit!" })
+        }
+      ];
+      let value = input_box.querySelector("input").value.trim().toLowerCase();
+      let matches = [];
+      feed.forEach((item) => {
+        let extended = `${item.text} ${item.body} ${item.keywords.join(" ")}`.toLowerCase();
+        if (extended.includes(value))
+          matches.push(item);
+      });
       render(rabbit_hole, html`
-            <button class="dropdown-menu-clickable-item rabbit-hole-item">0</button>
-            <button class="dropdown-menu-clickable-item rabbit-hole-item">1</button>
-            <button class="dropdown-menu-clickable-item rabbit-hole-item">2</button>
-            <button class="dropdown-menu-clickable-item rabbit-hole-item">3</button>
-            <button class="dropdown-menu-clickable-item rabbit-hole-item">4</button>
-            <button class="dropdown-menu-clickable-item rabbit-hole-item">5</button>
-            <button class="dropdown-menu-clickable-item rabbit-hole-item">6</button>
-            <button class="dropdown-menu-clickable-item rabbit-hole-item">7</button>
+            ${matches.map((item) => html.node`
+            <button class="dropdown-menu-clickable-item rabbit-hole-item" data-type=${item.type} onclick=${item.action}>
+                <div class="info">
+                    <div class="text">${item.text}</div>
+                    <div class="body">${item.body}</div>
+                </div>
+            </button>
+            `)}
         `);
       rabbit_select();
     }
-    function rabbit_select() {
-      notify({
-        id: "rabbit",
-        title: selected
-      });
+    function rabbit_select(click = false) {
       let buttons = rabbit_hole.querySelectorAll("button");
       buttons.forEach((button, index) => {
-        if (index == selected)
+        if (index == selected) {
           button.setAttribute("aria-checked", "true");
-        else
+          if (click)
+            button.click();
+        } else {
           button.setAttribute("aria-checked", "false");
+        }
       });
+      input_box.querySelector("input").focus();
+    }
+    function rabbit_enter() {
+      rabbit_select(true);
     }
   }
 
