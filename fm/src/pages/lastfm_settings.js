@@ -5,7 +5,7 @@
 //
 
 import {auth, page, root} from "../build/page";
-import {tl, trans, trans_legacy} from "../build/trans";
+import {tl, trans} from "../build/trans";
 import {bleh_auto_edits} from "../components/auto_edit";
 import {dialog} from "../components/dialog";
 import {custom_select, update_inbuilt_select} from "../components/select";
@@ -682,6 +682,8 @@ function patch_settings_privacy_tab() {
 }
 
 function bleh_communication_panel(token) {
+    let profile_notes = JSON.parse(localStorage.getItem('bleh_profile_notes')) || {};
+
     let panel = page.structure.main.querySelector('#ignorelist');
     panel.classList.add('bleh--panel');
 
@@ -689,30 +691,34 @@ function bleh_communication_panel(token) {
 
 
     let new_list = document.createElement('div');
-    new_list.classList.add('generic-table-list', 'user-vertical-list');
+    new_list.classList.add('generic-table-list', 'user-vertical-list', 'take-space');
 
     let exceeded = false;
     let exceed_amount = 10;
     let amount = 0;
 
     list.forEach((item, index) => {
-        let entry = document.createElement('div');
-        entry.classList.add('generic-table-list-entry', 'user-vertical-list-item');
-
         let name = item.querySelector('td').textContent.trim();
         let form = item.querySelector('form');
         let button = form.querySelector('button');
 
         button.classList.add('icon', 'chibi', 'danger-subtle');
 
-        entry.innerHTML = (`
-            <span class="text">
-                <a class="mention" href="${root}user/${name}" target="_blank">@${name}</a>
-            </span>
-            <span class="actions">
-                ${form.outerHTML}
-            </span>
-        `);
+        let entry = html.node`
+            <div class="generic-table-list-entry user-vertical-list-item">
+                <div class="name">
+                    <a class="mention" href="${root}user/${name}" target="_blank">@${name}</a>
+                </div>
+                <div class="text preview">
+                    ${profile_notes.hasOwnProperty(name) ? html.node`
+                        <p id="profile-note-row-preview--${name}">${{html: profile_notes[name]}}</p>
+                    ` : ''}
+                </div>
+                <div class="actions">
+                    ${form}
+                </div>
+            </div>
+        `;
 
         if (index > exceed_amount && !exceeded)
             exceeded = true;
@@ -730,10 +736,14 @@ function bleh_communication_panel(token) {
         new_list.classList.add('list-is-exceeded');
         new_list.setAttribute('data-expanded', 'false');
 
-        let expand = document.createElement('button');
-        expand.classList.add('expand-button', 'icon');
-        expand.textContent = trans_legacy.en.settings.inbuilt.ignore.view.replace('{c}', remainder);
-        expand.setAttribute('onclick', '_expand_list(this)');
+        let expand = html.node`
+            <button class="see-more expand-down" onclick=${() => {
+                expand.style.display = 'none';
+                new_list.setAttribute('data-expanded', 'true');
+            }}>
+                ${tl(trans.view_count_more).replace('{c}', remainder.toString())}
+            </button>
+        `;
 
         new_list.appendChild(expand);
     }
@@ -745,51 +755,45 @@ function bleh_communication_panel(token) {
     if (page.token == '')
         page.token = form.querySelector('[name="csrfmiddlewaretoken"]').getAttribute('value');
 
-    panel.innerHTML = (`
+    render(panel, html`
         <h4>${tl(trans.block_list)}</h4>
         <div class="user-top-panel">
             <div class="user-top-avatar user-top-avatar-side-left"><div class="bleh-icon"></div></div>
             <img class="user-top-avatar user-top-avatar-main" src="${auth.avatar.replace('avatar42s', 'avatar300s')}" alt="${auth.name}">
             <div class="user-top-avatar user-top-avatar-side-right"><div class="bleh-icon"></div></div>
         </div>
-        <div class="sides">
-            <div class="left main">
-                <div class="setting" data-type="text">
-                    <div class="heading">
-                        <h5>${tl(trans.profile)}</h5>
-                        <form action="${root}settings/privacy#ignorelist" name="ignorelist" method="post">
-                            <input type="hidden" name="csrfmiddlewaretoken" value="${page.token}">
-                            <div class="input-container">
-                                <input type="text" maxlength="80" id="id_user" name="user" placeholder="${tl(trans.enter_username)}">
-                                <input type="hidden" name="listaction" value="add">
-                                <input type="hidden" name="submit" value="ignorelist">
-                                <button class="bleh--btn primary icon block" type="submit">${tl(trans.block)}</button>
-                            </div>
-                        </form>
+        <div class="setting" data-type="text">
+            <div class="heading">
+                <h5>${tl(trans.profile)}</h5>
+                <form action="${root}settings/privacy#ignorelist" name="ignorelist" method="post">
+                    <input type="hidden" name="csrfmiddlewaretoken" value="${page.token}">
+                    <div class="input-container">
+                        <input type="text" maxlength="80" id="id_user" name="user" placeholder="${tl(trans.enter_username)}">
+                        <input type="hidden" name="listaction" value="add">
+                        <input type="hidden" name="submit" value="ignorelist">
+                        <button class="bleh--btn primary icon block" type="submit">${tl(trans.block)}</button>
                     </div>
-                </div>
-                <div class="alert alert-info">
-                    ${tl(trans.blocked_count).replace('{c}', amount)}
-                </div>
-            </div>
-            <div class="right">
-                <h5>${tl(trans.when_blocked)}</h5>
-                <div class="to-consider">
-                    <ul class="to-consider-good">
-                        <li>${tl(trans.blocked_user_public)}</li>
-                        <li>${tl(trans.blocked_user_message)}</li>
-                        <li>${tl(trans.blocked_user_new_shouts)}</li>
-                    </ul>
-                    <ul class="to-consider-bad">
-                        <li>${tl(trans.blocked_user_old_shouts)}</li>
-                        <li>${tl(trans.blocked_user_view_profile)}</li>
-                    </ul>
-                </div>
+                </form>
             </div>
         </div>
+        <div class="alert alert-info">
+            ${tl(trans.blocked_count).replace('{c}', amount)}
+        </div>
+        ${new_list}
+        <div class="sep" />
+        <h5>${tl(trans.when_blocked)}</h5>
+        <div class="to-consider">
+            <ul class="to-consider-good">
+                <li>${tl(trans.blocked_user_public)}</li>
+                <li>${tl(trans.blocked_user_message)}</li>
+                <li>${tl(trans.blocked_user_new_shouts)}</li>
+            </ul>
+            <ul class="to-consider-bad">
+                <li>${tl(trans.blocked_user_old_shouts)}</li>
+                <li>${tl(trans.blocked_user_view_profile)}</li>
+            </ul>
+        </div>
     `);
-
-    panel.querySelector('.left').appendChild(new_list);
 }
 
 function patch_settings_privacy_panel(token, privacy_panel) {

@@ -830,11 +830,11 @@ export function register_rabbit() {
             `);
         }
 
-        if (searching.primary.type == 'artist' && searching.secondary.type != '') {
+        if (searching.primary.type == 'artist') {
             rabbit_search('internal:search', [
                 {
-                    type: 'search',
-                    text: tl(trans.search),
+                    type: 'finish',
+                    text: tl(trans.finish),
                     body: tl(trans.finish_search),
                     keywords: ['finish'],
                     action: () => search_finish()
@@ -881,8 +881,8 @@ export function register_rabbit() {
         } else if (searching.primary.type == 'tag') {
             rabbit_search('internal:search', [
                 {
-                    type: 'search',
-                    text: tl(trans.search),
+                    type: 'finish',
+                    text: tl(trans.finish),
                     body: tl(trans.finish_search),
                     keywords: ['finish'],
                     action: () => search_finish()
@@ -893,23 +893,6 @@ export function register_rabbit() {
                     body: tl(trans.search_for_value).replace('{v}', tl(trans.tag)),
                     keywords: ['genre'],
                     action: () => append_search('tag')
-                }
-            ]);
-        } else if (searching.primary.type == 'artist') {
-            rabbit_search('internal:search', [
-                {
-                    type: 'album',
-                    text: tl(trans.album),
-                    body: tl(trans.search_for_value).replace('{v}', tl(trans.album)),
-                    keywords: ['record'],
-                    action: () => append_search('album')
-                },
-                {
-                    type: 'track',
-                    text: tl(trans.track),
-                    body: tl(trans.search_for_value).replace('{v}', tl(trans.track)),
-                    keywords: ['song'],
-                    action: () => append_search('track')
                 }
             ]);
         } else if (searching.secondary.type == 'album' || searching.secondary.type == 'track') {
@@ -967,8 +950,10 @@ export function register_rabbit() {
         if (searching.primary.type == 'artist') {
             if (searching.secondary.type == 'album') {
                 window.location.href = `${root}music/${sanitise(searching.primary.name)}/${sanitise(searching.secondary.name)}`;
-            } else {
+            } else if (searching.secondary.type == 'track') {
                 window.location.href = `${root}music/${sanitise(searching.primary.name)}/_/${sanitise(searching.secondary.name)}`;
+            } else {
+                window.location.href = `${root}music/${sanitise(searching.primary.name)}`;
             }
         } else if (searching.primary.type == 'user') {
             window.location.href = `${root}user/${sanitise(searching.primary.name)}`;

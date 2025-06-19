@@ -2225,7 +2225,7 @@ function init_profile_notes() {
                     <a class="mention" href="${root}user/${user}">@${user}</a>
                 </div>
                 <div class="text preview">
-                    <p id="profile-note-row-preview--${user}">${profile_notes[user]}</p>
+                    <p id="profile-note-row-preview--${user}">${{html: profile_notes[user]}}</p>
                 </div>
                 <div class="actions">
                     <button class="icon chibi edit" onclick=${() => edit_profile_note(user)}>

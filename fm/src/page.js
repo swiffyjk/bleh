@@ -367,6 +367,8 @@ function assign_page_subpage() {
         log(`subpage of ${page.subpage}`, 'page');
 
         load_settings();
+        page.state.cmd = false;
+        page.state.shift = false;
 
         if (page.state.settings_reload) {
             page.state.settings_reload = false;

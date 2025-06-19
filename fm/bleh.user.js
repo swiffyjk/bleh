@@ -7657,28 +7657,34 @@
     patch_settings_privacy_panel(token, privacy_panel);
   }
   function bleh_communication_panel(token) {
+    let profile_notes = JSON.parse(localStorage.getItem("bleh_profile_notes")) || {};
     let panel = page.structure.main.querySelector("#ignorelist");
     panel.classList.add("bleh--panel");
     let list = panel.querySelectorAll(".ignore-list tr");
     let new_list = document.createElement("div");
-    new_list.classList.add("generic-table-list", "user-vertical-list");
+    new_list.classList.add("generic-table-list", "user-vertical-list", "take-space");
     let exceeded = false;
     let exceed_amount = 10;
     let amount = 0;
     list.forEach((item, index) => {
-      let entry = document.createElement("div");
-      entry.classList.add("generic-table-list-entry", "user-vertical-list-item");
       let name2 = item.querySelector("td").textContent.trim();
       let form2 = item.querySelector("form");
       let button = form2.querySelector("button");
       button.classList.add("icon", "chibi", "danger-subtle");
-      entry.innerHTML = `
-            <span class="text">
-                <a class="mention" href="${root}user/${name2}" target="_blank">@${name2}</a>
-            </span>
-            <span class="actions">
-                ${form2.outerHTML}
-            </span>
+      let entry = html.node`
+            <div class="generic-table-list-entry user-vertical-list-item">
+                <div class="name">
+                    <a class="mention" href="${root}user/${name2}" target="_blank">@${name2}</a>
+                </div>
+                <div class="text preview">
+                    ${profile_notes.hasOwnProperty(name2) ? html.node`
+                        <p id="profile-note-row-preview--${name2}">${{ html: profile_notes[name2] }}</p>
+                    ` : ""}
+                </div>
+                <div class="actions">
+                    ${form2}
+                </div>
+            </div>
         `;
       if (index > exceed_amount && !exceeded)
         exceeded = true;
@@ -7691,59 +7697,58 @@
       let remainder = amount - exceed_amount;
       new_list.classList.add("list-is-exceeded");
       new_list.setAttribute("data-expanded", "false");
-      let expand = document.createElement("button");
-      expand.classList.add("expand-button", "icon");
-      expand.textContent = trans_legacy.en.settings.inbuilt.ignore.view.replace("{c}", remainder);
-      expand.setAttribute("onclick", "_expand_list(this)");
+      let expand = html.node`
+            <button class="see-more expand-down" onclick=${() => {
+        expand.style.display = "none";
+        new_list.setAttribute("data-expanded", "true");
+      }}>
+                ${tl(trans.view_count_more).replace("{c}", remainder.toString())}
+            </button>
+        `;
       new_list.appendChild(expand);
     }
     let form = page.structure.main.querySelector('[name="ignorelist"]');
     if (page.token == "")
       page.token = form.querySelector('[name="csrfmiddlewaretoken"]').getAttribute("value");
-    panel.innerHTML = `
+    render(panel, html`
         <h4>${tl(trans.block_list)}</h4>
         <div class="user-top-panel">
             <div class="user-top-avatar user-top-avatar-side-left"><div class="bleh-icon"></div></div>
             <img class="user-top-avatar user-top-avatar-main" src="${auth.avatar.replace("avatar42s", "avatar300s")}" alt="${auth.name}">
             <div class="user-top-avatar user-top-avatar-side-right"><div class="bleh-icon"></div></div>
         </div>
-        <div class="sides">
-            <div class="left main">
-                <div class="setting" data-type="text">
-                    <div class="heading">
-                        <h5>${tl(trans.profile)}</h5>
-                        <form action="${root}settings/privacy#ignorelist" name="ignorelist" method="post">
-                            <input type="hidden" name="csrfmiddlewaretoken" value="${page.token}">
-                            <div class="input-container">
-                                <input type="text" maxlength="80" id="id_user" name="user" placeholder="${tl(trans.enter_username)}">
-                                <input type="hidden" name="listaction" value="add">
-                                <input type="hidden" name="submit" value="ignorelist">
-                                <button class="bleh--btn primary icon block" type="submit">${tl(trans.block)}</button>
-                            </div>
-                        </form>
+        <div class="setting" data-type="text">
+            <div class="heading">
+                <h5>${tl(trans.profile)}</h5>
+                <form action="${root}settings/privacy#ignorelist" name="ignorelist" method="post">
+                    <input type="hidden" name="csrfmiddlewaretoken" value="${page.token}">
+                    <div class="input-container">
+                        <input type="text" maxlength="80" id="id_user" name="user" placeholder="${tl(trans.enter_username)}">
+                        <input type="hidden" name="listaction" value="add">
+                        <input type="hidden" name="submit" value="ignorelist">
+                        <button class="bleh--btn primary icon block" type="submit">${tl(trans.block)}</button>
                     </div>
-                </div>
-                <div class="alert alert-info">
-                    ${tl(trans.blocked_count).replace("{c}", amount)}
-                </div>
-            </div>
-            <div class="right">
-                <h5>${tl(trans.when_blocked)}</h5>
-                <div class="to-consider">
-                    <ul class="to-consider-good">
-                        <li>${tl(trans.blocked_user_public)}</li>
-                        <li>${tl(trans.blocked_user_message)}</li>
-                        <li>${tl(trans.blocked_user_new_shouts)}</li>
-                    </ul>
-                    <ul class="to-consider-bad">
-                        <li>${tl(trans.blocked_user_old_shouts)}</li>
-                        <li>${tl(trans.blocked_user_view_profile)}</li>
-                    </ul>
-                </div>
+                </form>
             </div>
         </div>
-    `;
-    panel.querySelector(".left").appendChild(new_list);
+        <div class="alert alert-info">
+            ${tl(trans.blocked_count).replace("{c}", amount)}
+        </div>
+        ${new_list}
+        <div class="sep" />
+        <h5>${tl(trans.when_blocked)}</h5>
+        <div class="to-consider">
+            <ul class="to-consider-good">
+                <li>${tl(trans.blocked_user_public)}</li>
+                <li>${tl(trans.blocked_user_message)}</li>
+                <li>${tl(trans.blocked_user_new_shouts)}</li>
+            </ul>
+            <ul class="to-consider-bad">
+                <li>${tl(trans.blocked_user_old_shouts)}</li>
+                <li>${tl(trans.blocked_user_view_profile)}</li>
+            </ul>
+        </div>
+    `);
   }
   function patch_settings_privacy_panel(token, privacy_panel) {
     privacy_panel.classList.add("bleh--panel");
@@ -8339,6 +8344,7 @@
       log("unable to find elements", "page structure");
     }
     checkup_page_structure(is_subpage, profile_header);
+    page.supports_shoutbox = page.structure.nav.querySelector(".secondary-nav-item--shoutbox");
     let new_account = false;
     if (ff("refreshed_nav")) {
       let avatar3 = profile_header.querySelector(".avatar");
@@ -8351,25 +8357,27 @@
       if (sponsor_list && sponsor_list.special && sponsor_list.special.includes(page.name)) {
         title_wrap.querySelector(".header-title a").classList.add("bleh--name-is-cute");
       }
-      let redesigned_profile_header = document.createElement("section");
-      redesigned_profile_header.classList.add("redesigned-header", "redesigned-profile-header", "no-background");
-      redesigned_profile_header.innerHTML = `
+      let expander;
+      let is_staff = title_wrap.querySelector(".user-status-staff") != null;
+      let redesigned_profile_header = html.node`
+            <section class="redesigned-header redesigned-profile-header no-background ${is_staff ? "staff-profile" : ""}">
             <div class="avatar-side">
-                ${avatar3.innerHTML}
+                ${avatar3}
             </div>
             <div class="info-side">
                 <div class="sub-text">${tl(trans.profile)}</div>
-                ${title_wrap != null ? `<div class="title-container">${title_wrap.innerHTML}</div>` : ""}
-                ${sub_wrap != null ? sub_wrap.outerHTML : ""}
+                ${title_wrap ? html.node`<div class="title-container">${title_wrap}</div>` : ""}
+                ${sub_wrap ? sub_wrap : ""}
             </div>
             <div class="expand-side">
-                <button class="header-expand-button icon" onclick="_toggle_profile_header(this)" aria-expanded="${settings.profile_header_expand}">${tl(trans.expand)}</button>
+                <button class="header-expand-button icon" ref=${(el) => expander = el} onclick=${() => {
+        let current = settings.profile_header_expand;
+        expander.setAttribute("aria-expanded", !current);
+        save_setting("profile_header_expand", !current);
+      }} aria-expanded="${settings.profile_header_expand}">${tl(trans.expand)}</button>
             </div>
+        </section>
         `;
-      let is_staff = title_wrap.querySelector(".user-status-staff") != null;
-      if (is_staff) {
-        redesigned_profile_header.classList.add("staff-profile");
-      }
       if (page.name == auth.name && !settings.profile_header_own) {
         register_background(null, "hidden");
       } else if (page.name != auth.name && !settings.profile_header_others) {
@@ -8394,7 +8402,7 @@
       if (ff("refreshed_nav"))
         header_avatar = page.structure.container.querySelector(".redesigned-profile-header .avatar-side");
       else
-        header_avatar = document.querySelector(".header-avatar .avatar");
+        header_avatar = document.body.querySelector(".header-avatar .avatar");
       if (!new_account) {
         let src = header_avatar.querySelector("img").getAttribute("src");
         page.avatar = src;
@@ -8932,11 +8940,8 @@
     });
     profile_name_obj.appendChild(label_container);
   }
-  unsafeWindow._add_profile_note = function(username2, has_note) {
-    add_profile_note(username2, has_note);
-  };
   function add_profile_note(username2, has_note) {
-    document.getElementById("bleh--add-note").style.setProperty("display", "none");
+    page.structure.side.querySelector(".user-about-buttons .see-more.add").style.setProperty("display", "none");
     create_profile_note_panel(username2, has_note);
   }
   function create_profile_note_panel(username2, has_note) {
@@ -12495,7 +12500,7 @@
                     <a class="mention" href="${root}user/${user}">@${user}</a>
                 </div>
                 <div class="text preview">
-                    <p id="profile-note-row-preview--${user}">${profile_notes[user]}</p>
+                    <p id="profile-note-row-preview--${user}">${{ html: profile_notes[user] }}</p>
                 </div>
                 <div class="actions">
                     <button class="icon chibi edit" onclick=${() => edit_profile_note(user)}>
@@ -17545,11 +17550,11 @@
                 <i>${tl(trans.choose_a_search_type)}</i>
             `);
       }
-      if (searching.primary.type == "artist" && searching.secondary.type != "") {
+      if (searching.primary.type == "artist") {
         rabbit_search("internal:search", [
           {
-            type: "search",
-            text: tl(trans.search),
+            type: "finish",
+            text: tl(trans.finish),
             body: tl(trans.finish_search),
             keywords: ["finish"],
             action: () => search_finish()
@@ -17596,8 +17601,8 @@
       } else if (searching.primary.type == "tag") {
         rabbit_search("internal:search", [
           {
-            type: "search",
-            text: tl(trans.search),
+            type: "finish",
+            text: tl(trans.finish),
             body: tl(trans.finish_search),
             keywords: ["finish"],
             action: () => search_finish()
@@ -17608,23 +17613,6 @@
             body: tl(trans.search_for_value).replace("{v}", tl(trans.tag)),
             keywords: ["genre"],
             action: () => append_search("tag")
-          }
-        ]);
-      } else if (searching.primary.type == "artist") {
-        rabbit_search("internal:search", [
-          {
-            type: "album",
-            text: tl(trans.album),
-            body: tl(trans.search_for_value).replace("{v}", tl(trans.album)),
-            keywords: ["record"],
-            action: () => append_search("album")
-          },
-          {
-            type: "track",
-            text: tl(trans.track),
-            body: tl(trans.search_for_value).replace("{v}", tl(trans.track)),
-            keywords: ["song"],
-            action: () => append_search("track")
           }
         ]);
       } else if (searching.secondary.type == "album" || searching.secondary.type == "track") {
@@ -17681,8 +17669,10 @@
       if (searching.primary.type == "artist") {
         if (searching.secondary.type == "album") {
           window.location.href = `${root}music/${sanitise(searching.primary.name)}/${sanitise(searching.secondary.name)}`;
-        } else {
+        } else if (searching.secondary.type == "track") {
           window.location.href = `${root}music/${sanitise(searching.primary.name)}/_/${sanitise(searching.secondary.name)}`;
+        } else {
+          window.location.href = `${root}music/${sanitise(searching.primary.name)}`;
         }
       } else if (searching.primary.type == "user") {
         window.location.href = `${root}user/${sanitise(searching.primary.name)}`;
@@ -17898,6 +17888,8 @@
       last_page_subpage.state = page.subpage;
       log(`subpage of ${page.subpage}`, "page");
       load_settings();
+      page.state.cmd = false;
+      page.state.shift = false;
       if (page.state.settings_reload) {
         page.state.settings_reload = false;
       }
@@ -20864,6 +20856,9 @@
     },
     finish_search: {
       en: "Finish your search"
+    },
+    view_count_more: {
+      en: "View {c} more"
     }
   };
   var trans_legacy = {

@@ -11138,18 +11138,32 @@
 
 
     .listen-panel {
+        [data-ff--beret="true"] & {
+            background: hsl(var(--b4), 20%) !important;
+            margin-bottom: var(--card-padding);
+
+            [data-bleh--theme_type="light"] & {
+                background: hsl(var(--b4), 12%) !important;
+            }
+        }
+
         h3.text-18 {
             display: none;
         }
 
         .listener-row {
             display: flex;
-            gap: var(--card-padding);
+            gap: 30px;
 
             &:not(:last-child) {
                 padding-bottom: var(--card-padding);
                 border-bottom: 1px solid var(--card-border-base);
                 margin-bottom: var(--card-padding);
+            }
+
+            [data-ff--beret="true"] & {
+                padding: unset !important;
+                border: unset !important;
             }
 
             .scrobble-side {
@@ -11172,7 +11186,7 @@
 
                 position: relative;
                 --left: 0;
-                padding-left: calc(18px + 10px);
+                padding-left: calc(var(--icon-size) + 10px);
 
                 &:before {
                     color: hsl(var(--c3));
@@ -11207,9 +11221,9 @@
                 }
                 p {
                     color: hsl(var(--c2));
-                    font-weight: var(--font-weight-bold);
-                    font-size: 20px;
+                    font-size: 16px;
                     line-height: 20px;
+                    font-weight: var(--font-weight-medium);
                     cursor: default;
 
                     display: flex;
@@ -22565,6 +22579,10 @@
         max-width: 400px;
         margin-bottom: -5px;
 
+        .see-more {
+            margin: var(--card-gap) auto 0 !important;
+        }
+
         &.take-space {
             width: 100%;
             max-width: unset;
@@ -23554,6 +23572,7 @@
         transition-duration: var(--trans);
         transition-timing-function: var(--trans-function);
 
+        &.expand-down,
         &.add,
         &.delete-account,
         &.shout-more-replies-after, &.shout-more-replies-before,
@@ -23570,6 +23589,7 @@
             padding-left: calc(12px + 4px) !important;
             --mask: var(--icon-16-plus);
         }
+        &.expand-down,
         &.shout-more-replies-after,
         &.more-items {
             --mask: var(--icon-16-arrow-down);

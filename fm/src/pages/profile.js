@@ -57,7 +57,7 @@ export function bleh_profiles() {
 
     checkup_page_structure(is_subpage, profile_header);
 
-    page.supports_shoutbox = $n('.secondary-nav-item--shoutbox');
+    page.supports_shoutbox = page.structure.nav.querySelector('.secondary-nav-item--shoutbox');
 
     let new_account = false;
 
@@ -820,11 +820,8 @@ export function bleh_profiles() {
     profile_name_obj.appendChild(label_container);
 }
 
-unsafeWindow._add_profile_note = function(username, has_note) {
-    add_profile_note(username, has_note);
-}
 function add_profile_note(username, has_note) {
-    document.getElementById('bleh--add-note').style.setProperty('display','none');
+    page.structure.side.querySelector('.user-about-buttons .see-more.add').style.setProperty('display','none');
 
     create_profile_note_panel(username, has_note);
 }

@@ -2708,6 +2708,9 @@ export const trans = {
     },
     finish_search: {
         en: 'Finish your search'
+    },
+    view_count_more: {
+        en: 'View {c} more'
     }
 }
 
