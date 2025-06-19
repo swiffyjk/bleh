@@ -7,7 +7,7 @@
 import {html, render} from "lighterhtml";
 import {log} from "../build/log";
 import {dialogs, page} from "../build/page";
-import {trans_legacy} from "../build/trans";
+import {tl, trans, trans_legacy} from "../build/trans";
 
 export function load_dialogs() {
     let dialogs = document.createElement('div');
@@ -104,9 +104,15 @@ export function dialog({
     }
 
     if (dismiss) {
-        let modal_close = document.createElement('button');
-        modal_close.classList.add('modal-close-button');
-        modal_close.setAttribute('onclick', `_dialog_rm({id: "${id}"})`);
+        let modal_close = html.node`
+            <button class="modal-close-button" tabindex="-1" onclick=${() => dialog_rm({id: id})}>
+                ${tl(trans.close)}
+            </button>
+        `;
+
+        tippy(modal_close, {
+            content: tl(trans.close)
+        });
 
         modal.appendChild(modal_close);
 
@@ -124,13 +130,11 @@ export function dialog({
         });
     }
 
-    let modal_body = document.createElement('div');
-    modal_body.classList.add('bleh-modal-body');
-    modal_body.setAttribute('data-allow-scroll', allow_scroll);
-
-    modal_body.appendChild(body);
-
-    modal.appendChild(modal_body);
+    modal.appendChild(html.node`
+        <div class="bleh-modal-body" data-allow-scroll=${allow_scroll}>
+            ${body}
+        </div>
+    `);
 
     dialogs[id] = {
         instance: modal

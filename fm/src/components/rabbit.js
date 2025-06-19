@@ -530,7 +530,8 @@ export function register_rabbit() {
                     text: tl(trans.shouts),
                     body: tl(trans.opens_the_value_for_type).replace('{v}', tl(trans.shouts)).replace('{t}', page.name),
                     keywords: ['shout', 'shoutbox', 'shouts', 'comments'],
-                    action: () => window.location.href = url_start + '/shoutbox'
+                    action: () => window.location.href = url_start + '/shoutbox',
+                    hide: !page.supports_shoutbox
                 },
                 {
                     type: 'loved',

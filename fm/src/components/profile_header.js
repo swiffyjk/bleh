@@ -19,18 +19,6 @@ import {html} from "lighterhtml";
 import {collage} from "./collage.js";
 import {sponsor} from "../sponsor.js";
 
-unsafeWindow._toggle_profile_header = function(button) {
-    let current = settings.profile_header_expand;
-
-    settings.profile_header_expand = !current;
-    button.setAttribute('aria-expanded', !current);
-
-    document.documentElement.setAttribute('data-bleh--profile_header_expand', !current);
-
-    // save to settings
-    localStorage.setItem('bleh', JSON.stringify(settings));
-}
-
 export function redesign_profile_header(is_own_profile, is_following) {
     let base_header = document.body.querySelector('.header-info-secondary');
     if (!base_header) return;

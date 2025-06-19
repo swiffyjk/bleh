@@ -7,7 +7,7 @@
 import {render_activity_list} from "../activity"
 import {settings} from "../build/config"
 import {log} from "../build/log"
-import {auth, page, root} from "../build/page"
+import {$, $$c, $c, $n, auth, page, root} from "../build/page"
 import {sponsor_list} from "../build/sponsor"
 import {clean_number, sanitise, sanitise_text} from "../build/tools"
 import {lang, tl, trans} from "../build/trans"
@@ -28,7 +28,7 @@ import {use_pronouns} from "./lastfm_settings"
 import {bleh_obsession} from "./obsession"
 import {html, render} from "lighterhtml";
 import {collage} from "../components/collage.js";
-import {setting} from "../components/settings.js";
+import {save_setting, setting} from "../components/settings.js";
 import {save_banner_to_cache} from "../components/banner.js";
 
 export function bleh_profiles() {
@@ -48,7 +48,7 @@ export function bleh_profiles() {
 
     page.structure.container = document.body.querySelector('.page-content:not(.profile-cards-container, .report-box-container .page-content)');
     try {
-        page.structure.row = page.structure.container.querySelector('.row:not(._buffer)');
+        page.structure.row = $c('.row:not(._buffer)');
         page.structure.main = page.structure.row.querySelector('.col-main');
         page.structure.side = page.structure.row.querySelector('.col-sidebar');
     } catch(e) {
@@ -56,6 +56,8 @@ export function bleh_profiles() {
     }
 
     checkup_page_structure(is_subpage, profile_header);
+
+    page.supports_shoutbox = $n('.secondary-nav-item--shoutbox');
 
     let new_account = false;
 
@@ -76,27 +78,28 @@ export function bleh_profiles() {
         }
 
 
-        let redesigned_profile_header = document.createElement('section');
-        redesigned_profile_header.classList.add('redesigned-header', 'redesigned-profile-header', 'no-background');
-        redesigned_profile_header.innerHTML = (`
-            <div class="avatar-side">
-                ${avatar.innerHTML}
-            </div>
-            <div class="info-side">
-                <div class="sub-text">${tl(trans.profile)}</div>
-                ${(title_wrap != null) ? `<div class="title-container">${title_wrap.innerHTML}</div>` : ''}
-                ${(sub_wrap != null) ? sub_wrap.outerHTML : ''}
-            </div>
-            <div class="expand-side">
-                <button class="header-expand-button icon" onclick="_toggle_profile_header(this)" aria-expanded="${settings.profile_header_expand}">${tl(trans.expand)}</button>
-            </div>
-        `);
-
-        // staff
+        let expander;
         let is_staff = (title_wrap.querySelector('.user-status-staff') != null);
-        if (is_staff) {
-            redesigned_profile_header.classList.add('staff-profile');
-        }
+
+        let redesigned_profile_header = html.node`
+            <section class="redesigned-header redesigned-profile-header no-background ${is_staff ? 'staff-profile' : ''}">
+                <div class="avatar-side">
+                    ${avatar}
+                </div>
+                <div class="info-side">
+                    <div class="sub-text">${tl(trans.profile)}</div>
+                    ${title_wrap ? html.node`<div class="title-container">${title_wrap}</div>` : ''}
+                    ${sub_wrap ? sub_wrap : ''}
+                </div>
+                <div class="expand-side">
+                    <button class="header-expand-button icon" ref=${el => expander = el} onclick=${() => {
+                        let current = settings.profile_header_expand;
+                        expander.setAttribute('aria-expanded', !current);
+                        save_setting('profile_header_expand', !current);
+                    }} aria-expanded="${settings.profile_header_expand}">${tl(trans.expand)}</button>
+                </div>
+            </section>
+        `;
 
         if (page.name == auth.name && !settings.profile_header_own) {
             register_background(null, 'hidden');
@@ -109,7 +112,7 @@ export function bleh_profiles() {
                 else
                     register_background(null, 'none');
             } else {
-                let background = document.body.querySelector('.header-background--has-image');
+                let background = $('.header-background--has-image');
                 if (background)
                     register_background(background.style.getPropertyValue('background-image').replace('url("', '').replace('")', ''), 'artist');
                 else
@@ -124,9 +127,9 @@ export function bleh_profiles() {
         // make avatar clickable
         let header_avatar;
         if (ff('refreshed_nav'))
-            header_avatar = page.structure.container.querySelector('.redesigned-profile-header .avatar-side');
+            header_avatar = $c('.redesigned-profile-header .avatar-side');
         else
-            header_avatar = document.querySelector('.header-avatar .avatar');
+            header_avatar = $('.header-avatar .avatar');
 
         if (!new_account) {
             let src = header_avatar.querySelector('img').getAttribute('src');
@@ -142,7 +145,7 @@ export function bleh_profiles() {
     let current_year = new Date().getFullYear();
 
     if (current_year < 2025 && ff('glacier_library')) {
-        let tab = page.structure.nav.querySelector('.secondary-nav-item--library a');
+        let tab = $n('.secondary-nav-item--library a');
 
         let beta = document.createElement('span');
         beta.classList.add('new-badge', 'beta-badge');
@@ -151,7 +154,7 @@ export function bleh_profiles() {
         tab.appendChild(beta);
     }
 
-    let library_tab = page.structure.nav.querySelector('.secondary-nav-item--library a');
+    let library_tab = $n('.secondary-nav-item--library a');
     library_tab.textContent = tl(trans.library);
 
 
@@ -159,7 +162,7 @@ export function bleh_profiles() {
     if (is_own_profile)
         profile_header.setAttribute('data-is-own-profile', 'true');
 
-    let loved_tab = page.structure.nav.querySelector('.secondary-nav-item--loved a');
+    let loved_tab = $n('.secondary-nav-item--loved a');
     if (loved_tab)
         loved_tab.textContent = tl(trans.loved);
 
@@ -322,7 +325,7 @@ export function bleh_profiles() {
         // secondary text
         let profile_sub_text;
         if (ff('refreshed_nav'))
-            profile_sub_text = page.structure.container.querySelector('.redesigned-profile-header .header-title-secondary');
+            profile_sub_text = $c('.redesigned-profile-header .header-title-secondary');
         else
             profile_sub_text = document.body.querySelector('.header-title-secondary');
 
@@ -530,7 +533,7 @@ export function bleh_profiles() {
                 if (report_box_container != null)
                     page.structure.content_top.after(report_box_container);
             } else {
-                let dashboard = page.structure.container.querySelector('.user-dashboard');
+                let dashboard = $c('.user-dashboard');
 
                 if (!dashboard)
                     return;
@@ -548,13 +551,13 @@ export function bleh_profiles() {
                 return;
             }
         } else if (page.subpage == 'obsessions_overview') {
-            let section_controls = page.structure.container.querySelector('.section-controls');
+            let section_controls = $c('.section-controls');
             let buttons;
             if (section_controls != null) {
                 section_controls.classList.add('legacy-section-controls');
                 buttons = section_controls.querySelectorAll(':is(button, a)');
 
-                let header = page.structure.container.querySelector('.content-top-header');
+                let header = $c('.content-top-header');
                 page.structure.content_top.innerHTML = (`
                     <div class="content-top-inner-wrap">
                         <div class="container content-top-lower">
@@ -571,7 +574,7 @@ export function bleh_profiles() {
             if (chr != -1)
                 count = count_text.substring(chr).replace('(', '').replace(')', '');
 
-            page.structure.nav.querySelector('.secondary-nav-item--obsessions a').appendChild(html.node`
+            $n('.secondary-nav-item--obsessions a').appendChild(html.node`
                 <div class="new-badge count-badge">${count}</div>
             `);
 
@@ -611,7 +614,7 @@ export function bleh_profiles() {
             let grid = document.createElement('ol');
             grid.classList.add('grid-items', 'grid-items--numbered', 'obsessions-grid');
 
-            let items = page.structure.container.querySelectorAll('.obsession-history-item');
+            let items = $$c('.obsession-history-item');
             items.forEach((item) => {
                 let bg = item.querySelector('.obsession-history-item-background').style.getPropertyValue('background-image').trim();
                 let cover_substr = bg.indexOf('url');
@@ -668,22 +671,22 @@ export function bleh_profiles() {
             new_panel.appendChild(grid);
 
 
-            let no_data = page.structure.container.querySelector('.no-data-message--obsession-history');
+            let no_data = $c('.no-data-message--obsession-history');
             if (no_data)
                 wrap.after(no_data);
 
 
-            let pagination = page.structure.container.querySelector('.pagination');
+            let pagination = $c('.pagination');
             if (pagination)
                 new_panel.appendChild(pagination);
         } else if (page.subpage == 'playlists_playlists') {
-            let section_controls = page.structure.container.querySelector('.section-controls-full-width');
+            let section_controls = $c('.section-controls-full-width');
             let buttons;
             if (section_controls) {
                 section_controls.classList.add('legacy-section-controls');
                 buttons = section_controls.querySelectorAll(':is(button, a)');
 
-                let header = page.structure.container.querySelector('.content-top-header');
+                let header = $c('.content-top-header');
                 page.structure.content_top.innerHTML = (`
                     <div class="content-top-inner-wrap">
                         <div class="container content-top-lower">
@@ -725,12 +728,12 @@ export function bleh_profiles() {
             //
 
 
-            let playlists = page.structure.container.querySelector('.playlisting-playlists');
+            let playlists = $c('.playlisting-playlists');
             if (playlists) {
                 page.structure.container.removeChild(playlists.parentElement);
                 new_panel.appendChild(playlists);
             } else {
-                let no_data = page.structure.container.querySelector('.no-data-message--playlists');
+                let no_data = $c('.no-data-message--playlists');
                 page.structure.container.removeChild(no_data.parentElement);
                 new_panel.appendChild(no_data);
             }
@@ -742,7 +745,7 @@ export function bleh_profiles() {
             if (chr != -1)
                 count = count_text.substring(chr).replace('(', '').replace(')', '');
 
-            page.structure.nav.querySelector('.secondary-nav-item--loved a').appendChild(html.node`
+            $n('.secondary-nav-item--loved a').appendChild(html.node`
                 <div class="new-badge count-badge">${count}</div>
             `);
         }
@@ -758,7 +761,7 @@ export function bleh_profiles() {
     log(`querying badges for ${page.name}`, 'profile');
 
     let profile_name_obj;
-    profile_name_obj = page.structure.container.querySelector('.redesigned-profile-header .title-container');
+    profile_name_obj = $c('.redesigned-profile-header .title-container');
 
 
     if (ff('badges')) {
@@ -885,7 +888,7 @@ function save_profile_note(username) {
 
 // patch following
 function patch_profile_following() {
-    let navlist = page.structure.nav.querySelector('.navlist-items');
+    let navlist = $n('.navlist-items');
     let following_tab = navlist.querySelector('.secondary-nav-item--following');
 
     let link = following_tab.querySelector('a');
