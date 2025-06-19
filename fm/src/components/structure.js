@@ -5,7 +5,7 @@
 //
 
 import {log} from "../build/log";
-import {$$c, $$m, $$n, $$r, $$s, $c, $m, $n, $r, $s, page} from "../build/page";
+import {page} from "../build/page";
 import {load_chart_colours} from "../chart";
 import {ff} from "../sku";
 import {html, render} from "lighterhtml";
@@ -95,17 +95,6 @@ export function checkup_page_structure(is_subpage = false, header = null) {
     }
 
     log('finished', 'page structure');
-
-    $c = document.querySelector.bind(page.structure.container);
-    $$c = document.querySelectorAll.bind(page.structure.container);
-    $r = document.querySelector.bind(page.structure.row);
-    $$r = document.querySelectorAll.bind(page.structure.row);
-    $m = document.querySelector.bind(page.structure.main);
-    $$m = document.querySelectorAll.bind(page.structure.main);
-    $s = document.querySelector.bind(page.structure.side);
-    $$s = document.querySelectorAll.bind(page.structure.side);
-    $n = document.querySelector.bind(page.structure.nav);
-    $$n = document.querySelectorAll.bind(page.structure.nav);
 
     if (ff('refreshed_music_nav') && header) {
         let navlist = header.querySelector('.navlist');

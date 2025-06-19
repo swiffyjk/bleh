@@ -22,20 +22,6 @@ tippy.setDefaultProps({
     duration: [120, 220]
 });
 
-export const $ = document.querySelector.bind(document);
-export const $$ = document.querySelectorAll.bind(document);
-
-export let $c;
-export let $$c;
-export let $r;
-export let $$r;
-export let $m;
-export let $$m;
-export let $s;
-export let $$s;
-export let $n;
-export let $$n;
-
 /**
  * Current profile auth details
  * @param {string|null} name - Profile name if authorised
@@ -97,7 +83,6 @@ export let last_page_subpage = {
  * @property {boolean} multi - Whether this artist page is a shared profile
  * @property {boolean} corrected - Whether this page has been corrected via lotus
  * @property {string} token - Profile token for submitting forms
- * @property {boolean} supports_shoutbox - Profile page has shoutbox enabled
  * @property {Object} structure - Elements that make up the page structure
  * @property {boolean} structure.glacier.refresh - Whether this glacier library page is pending refresh
  * @property {Object|null} structure.logs - Logging host
@@ -116,7 +101,6 @@ export let page = {
     multi: false,
     corrected: false,
     token: '',
-    supports_shoutbox: false,
     structure: {
         wrapper: null,
         container: null,
