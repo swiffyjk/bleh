@@ -66,6 +66,7 @@ import {bleh_users} from './pages/users';
 import {html, render} from "lighterhtml";
 import {bleh_footer} from "./footer.js";
 import {register_rabbit} from "./components/rabbit.js";
+import {dialog_extender} from "./components/dialog_extender.js";
 
 export function bleh() {
     let head_observer = new MutationObserver((mutations) => {
@@ -310,6 +311,8 @@ function main_flow() {
     }
 
     subscribe_to_events();
+
+    dialog_extender();
     auto_edit_modal();
 }
 

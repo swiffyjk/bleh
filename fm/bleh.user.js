@@ -3759,9 +3759,9 @@
       let title = settings_store[id].title ? tl(settings_store[id].title) : id;
       let body = settings_store[id].body ? tl(settings_store[id].body) : null;
       if (type === "toggle") {
-        let toggle;
+        let toggle2;
         return html.node`
-                <div class="setting v2" data-type="toggle" onclick=${() => update_toggle(id, toggle)}>
+                <div class="setting v2" data-type="toggle" onclick=${() => update_toggle(id, toggle2)}>
                     ${text2 ? html.node`
                     <div class="heading">
                         <h5>${title}</h5>
@@ -3785,7 +3785,7 @@
                     ` : ""}
                     ${setting_incompatible_block(settings_store[id].incompatible)}
                     <div class="toggle-wrap">
-                        <button class="toggle" ref=${(el) => toggle = el} aria-checked=${value}>
+                        <button class="toggle" ref=${(el) => toggle2 = el} aria-checked=${value}>
                             <div class="dot"></div>
                         </button>
                     </div>
@@ -3968,9 +3968,9 @@
         </div>
     `;
   }
-  function update_toggle(id, toggle) {
+  function update_toggle(id, toggle2) {
     let value = settings[id];
-    toggle.setAttribute("aria-checked", !value);
+    toggle2.setAttribute("aria-checked", !value);
     save_setting(id, !value);
   }
   function update_range(id, option, track, input2, value, marker, silent = false) {
@@ -10099,16 +10099,16 @@
           settings[item] = value;
           document.body.style.setProperty(`--${item}`, value);
           document.documentElement.setAttribute(`data-bleh--${item}`, value);
-          let toggle = document.getElementById(`toggle-${item}-${value}`);
-          if (toggle)
-            toggle.setAttribute("aria-checked", true);
+          let toggle2 = document.getElementById(`toggle-${item}-${value}`);
+          if (toggle2)
+            toggle2.setAttribute("aria-checked", true);
           let other_toggles = search.querySelectorAll(`[data-toggle="${item}"]`);
-          other_toggles.forEach((toggle2) => {
-            let other_value = toggle2.getAttribute("data-toggle-value");
+          other_toggles.forEach((toggle3) => {
+            let other_value = toggle3.getAttribute("data-toggle-value");
             if (other_value == value)
               return;
             else
-              toggle2.setAttribute("aria-checked", false);
+              toggle3.setAttribute("aria-checked", false);
           });
           if ((item == "chart_view" || item == "chart_bar_axis") && page.type == "user" && page.subpage.startsWith("library"))
             bleh_glacier_date_graph_generate();
@@ -17682,6 +17682,83 @@
     }
   }
 
+  // src/components/toggle.js
+  function toggle({
+    value = false,
+    type = "toggle",
+    name: name2 = "",
+    title = "",
+    body = ""
+  }) {
+    let checkbox;
+    let state;
+    return html.node`
+        <div class="setting" data-type="${type}" onclick=${() => {
+      let current = checkbox.checked;
+      checkbox.checked = !current;
+      state.setAttribute("aria-checked", !current);
+    }}>
+            <div class="heading">
+                <h5>${title}</h5>
+                ${body != "" ? html.node`<p>${body}</p>` : ""}
+            </div>
+            ${type == "toggle" ? html.node`
+            <div class="toggle-wrap">
+                <input type="checkbox" ref=${(el) => checkbox = el} name=${name2} checked=${value} />
+                <button class="toggle" ref=${(el) => state = el} aria-checked=${value}>
+                    <div class="dot" />
+                </button>
+            </div>
+            ` : html.node`
+            <div class="check">
+                <input type="checkbox" ref=${(el) => checkbox = el} name=${name2} checked=${value} />
+                <div class="box" ref=${(el) => state = el} aria-checked=${value}>
+                    <div class="bleh-icon" />
+                </div>
+            </div>
+            `}
+        </div>
+    `;
+  }
+
+  // src/components/dialog_extender.js
+  function dialog_extender() {
+    let wrappers = document.body.querySelectorAll(":scope > .popup_wrapper");
+    wrappers.forEach((wrapper) => {
+      let modal_dialog = wrapper.querySelector(".modal-dialog:not([data-dialog-extender])");
+      if (!modal_dialog) return;
+      modal_dialog.setAttribute("data-dialog-extender", "true");
+      let body = modal_dialog.querySelector(".modal-body");
+      let title = body.querySelector(".modal-title");
+      let contents = body.querySelector(":scope > div");
+      let form = contents.querySelector("form");
+      if (!form) return;
+      page.token = form.querySelector('[name="csrfmiddlewaretoken"]');
+      if (form.getAttribute("action").endsWith("+bookmarks/modal/added")) {
+        title.textContent = tl(trans.saved_to_bookmarks);
+        render(contents, html`
+                <div class="big-modal-alert">
+                    ${{ html: tl(trans.bookmark_save_msg).replace("{link}", `<a class="see-more" href="${root}music/+bookmarks">${tl(trans.go_there_now_lower)}</a>`) }}
+                </div>
+                <form method="post" action="${root}music/+bookmarks/modal/added">
+                    <input type="hidden" name="csrfmiddlewaretoken" value="${page.token}">
+                    <div class="modal-footer">
+                        ${toggle({
+          value: true,
+          type: "checkbox",
+          name: "always_show",
+          title: tl(trans.always_remind_me)
+        })}
+                        <button class="btn primary done" type="submit">
+                            ${tl(trans.done)}
+                        </button>
+                    </div>
+                </form>
+            `);
+      }
+    });
+  }
+
   // src/page.js
   function bleh() {
     let head_observer = new MutationObserver((mutations) => {
@@ -17844,6 +17921,7 @@
       });
     }
     subscribe_to_events();
+    dialog_extender();
     auto_edit_modal();
   }
   function assign_page() {
@@ -20859,6 +20937,19 @@
     },
     view_count_more: {
       en: "View {c} more"
+    },
+    saved_to_bookmarks: {
+      en: "Saved to bookmarks"
+    },
+    bookmark_save_msg: {
+      en: "Find your bookmarks in your Home or {link}"
+    },
+    go_there_now_lower: {
+      // in sentence above
+      en: "go there now"
+    },
+    always_remind_me: {
+      en: "Always remind me"
     }
   };
   var trans_legacy = {

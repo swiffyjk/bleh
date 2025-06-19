@@ -2711,6 +2711,19 @@ export const trans = {
     },
     view_count_more: {
         en: 'View {c} more'
+    },
+    saved_to_bookmarks: {
+        en: 'Saved to bookmarks'
+    },
+    bookmark_save_msg: {
+        en: 'Find your bookmarks in your Home or {link}'
+    },
+    go_there_now_lower: {
+        // in sentence above
+        en: 'go there now'
+    },
+    always_remind_me: {
+        en: 'Always remind me'
     }
 }
 
