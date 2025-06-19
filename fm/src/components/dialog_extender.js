@@ -2,6 +2,7 @@ import {page, root} from "../build/page.js";
 import {tl, trans} from "../build/trans.js";
 import {html, render} from "lighterhtml";
 import {toggle} from "./toggle.js";
+import {log} from "../build/log.js";
 
 export function dialog_extender() {
     let wrappers = document.body.querySelectorAll(':scope > .popup_wrapper');
@@ -21,18 +22,42 @@ export function dialog_extender() {
         let form = contents.querySelector('form');
         if (!form) return;
 
-        page.token = form.querySelector('[name="csrfmiddlewaretoken"]');
+        let dismiss = modal_dialog.querySelector('.modal-dismiss');
+
+        page.token = form.querySelector('[name="csrfmiddlewaretoken"]').getAttribute('value');
 
         if (form.getAttribute('action').endsWith('+bookmarks/modal/added')) {
             // bookmark added modal
 
             title.textContent = tl(trans.saved_to_bookmarks);
 
+            let new_form;
             render(contents, html`
                 <div class="big-modal-alert">
                     ${{html: tl(trans.bookmark_save_msg).replace('{link}', `<a class="see-more" href="${root}music/+bookmarks">${tl(trans.go_there_now_lower)}</a>`)}}
                 </div>
-                <form method="post" action="${root}music/+bookmarks/modal/added">
+                <form method="post" ref=${el => new_form = el} onsubmit=${async (e) => {
+                    e.preventDefault();
+                    
+                    let url = `${root}music/+bookmarks/modal/added`;
+                    let form_data = new FormData(new_form);
+                    
+                    console.info(form_data);
+
+                    try {
+                        await fetch(url, {
+                            method: 'POST',
+                            body: form_data
+                        }).then(res => {
+                            let data = res.json();
+                            
+                            log('received response', 'form', 'info', {data: data});
+                            dismiss.click();
+                        });
+                    } catch(e) {
+                        console.error(e);
+                    }
+                }}>
                     <input type="hidden" name="csrfmiddlewaretoken" value="${page.token}">
                     <div class="modal-footer">
                         ${toggle({
