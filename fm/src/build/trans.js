@@ -970,6 +970,9 @@ export const trans = {
         de: 'Zuhörer*innen',
         pt: 'Ouvintes'
     },
+    listeners_you_know: {
+        en: 'Listeners You Know'
+    },
     count_listeners: {
         en: '{c} listeners',
         pt: '{c} ouvintes'

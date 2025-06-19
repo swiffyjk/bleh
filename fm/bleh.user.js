@@ -16822,7 +16822,8 @@
       "user",
       "artist",
       "album",
-      "track"
+      "track",
+      "tag"
     ];
     document.addEventListener("keydown", (e) => {
       if (e.ctrlKey || e.metaKey)
@@ -17304,6 +17305,207 @@
             action: () => collage()
           }
         ]);
+      } else if (page.type == "artist") {
+        rabbit_search("internal:ctx", [
+          {
+            type: "overview",
+            text: tl(trans.overview),
+            body: tl(trans.opens_the_value_for_type).replace("{v}", tl(trans.overview)).replace("{t}", page.name),
+            keywords: ["home"],
+            action: () => window.location.href = url_start
+          },
+          {
+            type: "tracks",
+            text: tl(trans.tracks),
+            body: tl(trans.opens_the_value_for_type).replace("{v}", tl(trans.tracks)).replace("{t}", page.name),
+            keywords: ["music", "top"],
+            action: () => window.location.href = url_start + "/+tracks"
+          },
+          {
+            type: "albums",
+            text: tl(trans.albums),
+            body: tl(trans.opens_the_value_for_type).replace("{v}", tl(trans.albums)).replace("{t}", page.name),
+            keywords: ["music", "top"],
+            action: () => window.location.href = url_start + "/+albums"
+          },
+          {
+            type: "photos",
+            text: tl(trans.photos),
+            body: tl(trans.opens_the_value_for_type).replace("{v}", tl(trans.photos)).replace("{t}", page.name),
+            keywords: ["gallery", "artwork", "image", "picture", "avatar"],
+            action: () => window.location.href = url_start + "/+images"
+          },
+          {
+            type: "similar",
+            text: tl(trans.similar_artists),
+            body: tl(trans.opens_the_value_for_type).replace("{v}", tl(trans.similar_artists)).replace("{t}", page.name),
+            keywords: ["music"],
+            action: () => window.location.href = url_start + "/+similar"
+          },
+          {
+            type: "wiki",
+            text: tl(trans.biography),
+            body: tl(trans.opens_the_value_for_type).replace("{v}", tl(trans.biography)).replace("{t}", page.name),
+            keywords: ["wiki", "about", "text"],
+            action: () => window.location.href = url_start + "/+wiki"
+          },
+          {
+            type: "listeners",
+            text: tl(trans.listeners),
+            body: tl(trans.opens_the_value_for_type).replace("{v}", tl(trans.listeners)).replace("{t}", page.name),
+            keywords: ["top"],
+            action: () => window.location.href = url_start + "/+listeners"
+          },
+          {
+            type: "listeners_you_know",
+            text: tl(trans.listeners_you_know),
+            body: tl(trans.opens_the_value_for_type).replace("{v}", tl(trans.listeners_you_know)).replace("{t}", page.name),
+            keywords: ["friends"],
+            action: () => window.location.href = url_start + "/+listeners/you-know"
+          },
+          {
+            type: "shouts",
+            text: tl(trans.shouts),
+            body: tl(trans.opens_the_value_for_type).replace("{v}", tl(trans.shouts)).replace("{t}", page.name),
+            keywords: ["shout", "shoutbox", "shouts", "comments"],
+            action: () => window.location.href = url_start + "/shoutbox"
+          },
+          {
+            type: "events",
+            text: tl(trans.events),
+            body: tl(trans.opens_the_value_for_type).replace("{v}", tl(trans.events)).replace("{t}", page.name),
+            keywords: ["events", "festivals", "tour", "live"],
+            action: () => window.location.href = url_start + "/events"
+          },
+          {
+            type: "tags",
+            text: tl(trans.tags),
+            body: tl(trans.opens_the_value_for_type).replace("{v}", tl(trans.tags)).replace("{t}", page.name),
+            keywords: ["tags", "tagged", "related", "groups", "grouped"],
+            action: () => window.location.href = url_start + "/tags"
+          }
+        ]);
+      } else if (page.type == "album") {
+        rabbit_search("internal:ctx", [
+          {
+            type: "overview",
+            text: tl(trans.overview),
+            body: tl(trans.opens_the_value_for_type).replace("{v}", tl(trans.overview)).replace("{t}", page.name),
+            keywords: ["home"],
+            action: () => window.location.href = url_start
+          },
+          {
+            type: "wiki",
+            text: tl(trans.wiki),
+            body: tl(trans.opens_the_value_for_type).replace("{v}", tl(trans.wiki)).replace("{t}", page.name),
+            keywords: ["wiki", "about", "text"],
+            action: () => window.location.href = url_start + "/+wiki"
+          },
+          {
+            type: "photos",
+            text: tl(trans.artwork),
+            body: tl(trans.opens_the_value_for_type).replace("{v}", tl(trans.artwork)).replace("{t}", page.name),
+            keywords: ["gallery", "artwork", "image", "picture", "avatar"],
+            action: () => window.location.href = url_start + "/+images"
+          },
+          {
+            type: "shouts",
+            text: tl(trans.shouts),
+            body: tl(trans.opens_the_value_for_type).replace("{v}", tl(trans.shouts)).replace("{t}", page.name),
+            keywords: ["shout", "shoutbox", "shouts", "comments"],
+            action: () => window.location.href = url_start + "/shoutbox"
+          },
+          {
+            type: "tags",
+            text: tl(trans.tags),
+            body: tl(trans.opens_the_value_for_type).replace("{v}", tl(trans.tags)).replace("{t}", page.name),
+            keywords: ["tags", "tagged", "related", "groups", "grouped"],
+            action: () => window.location.href = url_start + "/tags"
+          }
+        ]);
+      } else if (page.type == "track") {
+        rabbit_search("internal:ctx", [
+          {
+            type: "overview",
+            text: tl(trans.overview),
+            body: tl(trans.opens_the_value_for_type).replace("{v}", tl(trans.overview)).replace("{t}", page.name),
+            keywords: ["home"],
+            action: () => window.location.href = url_start
+          },
+          {
+            type: "albums",
+            text: tl(trans.albums),
+            body: tl(trans.opens_the_value_for_type).replace("{v}", tl(trans.albums)).replace("{t}", page.name),
+            keywords: ["music", "top"],
+            action: () => window.location.href = url_start + "/+albums"
+          },
+          {
+            type: "wiki",
+            text: tl(trans.wiki),
+            body: tl(trans.opens_the_value_for_type).replace("{v}", tl(trans.wiki)).replace("{t}", page.name),
+            keywords: ["wiki", "about", "text"],
+            action: () => window.location.href = url_start + "/+wiki"
+          },
+          {
+            type: "shouts",
+            text: tl(trans.shouts),
+            body: tl(trans.opens_the_value_for_type).replace("{v}", tl(trans.shouts)).replace("{t}", page.name),
+            keywords: ["shout", "shoutbox", "shouts", "comments"],
+            action: () => window.location.href = url_start + "/shoutbox"
+          },
+          {
+            type: "tags",
+            text: tl(trans.tags),
+            body: tl(trans.opens_the_value_for_type).replace("{v}", tl(trans.tags)).replace("{t}", page.name),
+            keywords: ["tags", "tagged", "related", "groups", "grouped"],
+            action: () => window.location.href = url_start + "/tags"
+          }
+        ]);
+      } else if (page.type == "tag") {
+        rabbit_search("internal:ctx", [
+          {
+            type: "overview",
+            text: tl(trans.overview),
+            body: tl(trans.opens_the_value_for_type).replace("{v}", tl(trans.overview)).replace("{t}", page.name),
+            keywords: ["home"],
+            action: () => window.location.href = url_start
+          },
+          {
+            type: "artists",
+            text: tl(trans.artists),
+            body: tl(trans.opens_the_value_for_type).replace("{v}", tl(trans.artists)).replace("{t}", page.name),
+            keywords: ["music", "top"],
+            action: () => window.location.href = url_start + "/artists"
+          },
+          {
+            type: "albums",
+            text: tl(trans.albums),
+            body: tl(trans.opens_the_value_for_type).replace("{v}", tl(trans.albums)).replace("{t}", page.name),
+            keywords: ["music", "top"],
+            action: () => window.location.href = url_start + "/albums"
+          },
+          {
+            type: "tracks",
+            text: tl(trans.tracks),
+            body: tl(trans.opens_the_value_for_type).replace("{v}", tl(trans.tracks)).replace("{t}", page.name),
+            keywords: ["music", "top"],
+            action: () => window.location.href = url_start + "/tracks"
+          },
+          {
+            type: "wiki",
+            text: tl(trans.wiki),
+            body: tl(trans.opens_the_value_for_type).replace("{v}", tl(trans.wiki)).replace("{t}", page.name),
+            keywords: ["wiki", "about", "text"],
+            action: () => window.location.href = url_start + "/wiki"
+          },
+          {
+            type: "shouts",
+            text: tl(trans.shouts),
+            body: tl(trans.opens_the_value_for_type).replace("{v}", tl(trans.shouts)).replace("{t}", page.name),
+            keywords: ["shout", "shoutbox", "shouts", "comments"],
+            action: () => window.location.href = url_start + "/shoutbox"
+          }
+        ]);
       }
     }
     function search() {
@@ -17340,7 +17542,7 @@
             `);
       } else {
         render(fake, html`
-                <p>${tl(trans.choose_a_search_type)}</p>
+                <i>${tl(trans.choose_a_search_type)}</i>
             `);
       }
       if (searching.primary.type == "artist" && searching.secondary.type != "") {
@@ -18923,6 +19125,9 @@
       en: "Listeners",
       de: "Zuh\xF6rer*innen",
       pt: "Ouvintes"
+    },
+    listeners_you_know: {
+      en: "Listeners You Know"
     },
     count_listeners: {
       en: "{c} listeners",
