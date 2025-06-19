@@ -22,7 +22,6 @@ import {
 } from "./build/page";
 import {stored_season} from "./build/seasonal";
 import {lang, lookup_lang, tl, trans} from "./build/trans";
-import {auto_edit_modal} from "./components/auto_edit";
 import {dialog, load_dialogs} from "./components/dialog";
 import {
     correct_artist,
@@ -313,7 +312,6 @@ function main_flow() {
     subscribe_to_events();
 
     dialog_extender();
-    auto_edit_modal();
 }
 
 function assign_page() {

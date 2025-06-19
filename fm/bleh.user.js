@@ -7029,33 +7029,6 @@
         <li>
     `, nav.firstElementChild);
   }
-  function auto_edit_modal() {
-    let modal = document.querySelector(".automatic-edit-modal-body-v2");
-    if (!modal) return;
-    if (modal.hasAttribute("data-bwaa-edit"))
-      return;
-    modal.setAttribute("data-bwaa-edit", "true");
-    log("auto edit v2", "modal");
-    let checkboxes = modal.querySelectorAll(".checkbox");
-    checkboxes.forEach((checkbox) => {
-      let id = checkbox.querySelector("input").getAttribute("name");
-      let text2 = checkbox.textContent.trim();
-      checkbox.classList = "setting";
-      checkbox.setAttribute("data-type", "toggle");
-      checkbox.setAttribute("onclick", `_update_inbuilt_item('${id}')`);
-      render(checkbox, html`
-            <div class="heading">
-                <h5>${text2}</h5>
-            </div>
-            <div class="toggle-wrap">
-                <input class="companion-checkbox" type="checkbox" name="${id}" id="inbuilt-companion-checkbox-${id}">
-                <span class="btn toggle" id="toggle-${id}" aria-checked="false">
-                    <div class="dot"></div>
-                </span>
-            </div>
-        `);
-    });
-  }
 
   // src/pages/lastfm_settings.js
   function bleh_native_settings() {
@@ -17774,6 +17747,23 @@
                     </div>
                 </form>
             `);
+      } else if (body.classList.contains("automatic-edit-modal-body-v2")) {
+        modal_dialog.classList.add("automatic-edit-modal");
+        let checkboxes = body.querySelectorAll(".checkbox");
+        checkboxes.forEach((checkbox) => {
+          let input_el = checkbox.querySelector("input");
+          let value = input_el.checked;
+          let name2 = input_el.getAttribute("name");
+          let text2 = checkbox.textContent.trim();
+          render(checkbox.parentElement, html`
+                    ${toggle({
+            value,
+            type: "checkbox",
+            name: name2,
+            title: text2
+          })}
+                `);
+        });
       }
     });
   }
@@ -17941,7 +17931,6 @@
     }
     subscribe_to_events();
     dialog_extender();
-    auto_edit_modal();
   }
   function assign_page() {
     document.documentElement.classList.add("bleh-supports-loading");

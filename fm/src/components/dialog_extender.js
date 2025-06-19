@@ -72,6 +72,26 @@ export function dialog_extender() {
                     </div>
                 </form>
             `);
+        } else if (body.classList.contains('automatic-edit-modal-body-v2')) {
+            modal_dialog.classList.add('automatic-edit-modal');
+
+            let checkboxes = body.querySelectorAll('.checkbox');
+
+            checkboxes.forEach((checkbox) => {
+                let input_el = checkbox.querySelector('input');
+                let value = input_el.checked;
+                let name = input_el.getAttribute('name');
+                let text = checkbox.textContent.trim();
+
+                render(checkbox.parentElement, html`
+                    ${toggle({
+                        value: value,
+                        type: 'checkbox',
+                        name: name,
+                        title: text
+                    })}
+                `);
+            });
         }
     });
 }
