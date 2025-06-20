@@ -27,6 +27,9 @@ export function register_rabbit() {
 
     let fake;
 
+    // whether going back is allowed
+    let back;
+
     const allowed_pages = [
         'user',
         'artist',
@@ -49,13 +52,14 @@ export function register_rabbit() {
                 // ctrl + shift + k
                 rabbit();
                 use_page_as_ctx();
+                back = false;
             } else {
                 // ctrl + k
                 rabbit();
             }
         } else if (page.structure.dialogs.hasChildNodes() && page.structure.dialogs.querySelector(':scope > [data-modal-type="rabbit"]')) {
             if (e.key == 'Escape') {
-                if (depth == 0 && input_box.querySelector('input').value == '') {
+                if ((depth == 0 && input_box.querySelector('input').value == '') || !back) {
                     dialog_rm({id: 'rabbit'});
                 } else {
                     input_box.querySelector('input').value = '';
@@ -104,26 +108,30 @@ export function register_rabbit() {
             }
         }
 
-        if (e.getModifierState('Control') && (e.key == 's' || e.key == 'S')) {
-            e.preventDefault();
+        if (!page.structure.dialogs.hasChildNodes()) {
+            if (e.getModifierState('Control') && (e.key == 's' || e.key == 'S')) {
+                e.preventDefault();
 
-            if (settings.profile_shortcut != '') {
-                window.location.href = `${root}user/${settings.profile_shortcut}`;
-            } else {
-                open_profile_shortcut_window();
+                if (settings.profile_shortcut != '') {
+                    window.location.href = `${root}user/${settings.profile_shortcut}`;
+                } else {
+                    open_profile_shortcut_window();
+                }
             }
-        }
 
-        if (e.getModifierState('Control') && (e.key == 'b' || e.key == 'B')) {
-            e.preventDefault();
+            if (e.getModifierState('Control') && (e.key == 'b' || e.key == 'B')) {
+                e.preventDefault();
 
-            window.location.href = `${root}bleh`;
-        }
+                window.location.href = `${root}bleh`;
+            }
 
-        if (e.getModifierState('Control') && (e.key == 'd' || e.key == 'D')) {
-            e.preventDefault();
+            if (e.getModifierState('Control') && (e.key == 'd' || e.key == 'D')) {
+                e.preventDefault();
 
-            search();
+                rabbit();
+                search();
+                back = false;
+            }
         }
     });
 
@@ -150,6 +158,8 @@ export function register_rabbit() {
             replace_if_possible: true,
             handle_escape_manually: true
         });
+
+        back = true;
 
         fake = html.node`
             <div class="fake-input" style="display: none;" />

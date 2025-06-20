@@ -199,6 +199,11 @@
             "default": false,
             "name": "Menu-like side actions separator",
             "date": "2025-06-12"
+        },
+        "sweet": {
+            "default": true,
+            "name": "Readable count bars",
+            "date": "2025-06-20"
         }
     }
 }

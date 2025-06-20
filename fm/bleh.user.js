@@ -16815,6 +16815,7 @@
     let searching;
     let selected_search;
     let fake;
+    let back;
     const allowed_pages = [
       "user",
       "artist",
@@ -16829,12 +16830,13 @@
         if (e.getModifierState("Shift")) {
           rabbit();
           use_page_as_ctx();
+          back = false;
         } else {
           rabbit();
         }
       } else if (page.structure.dialogs.hasChildNodes() && page.structure.dialogs.querySelector(':scope > [data-modal-type="rabbit"]')) {
         if (e.key == "Escape") {
-          if (depth == 0 && input_box.querySelector("input").value == "") {
+          if (depth == 0 && input_box.querySelector("input").value == "" || !back) {
             dialog_rm2({ id: "rabbit" });
           } else {
             input_box.querySelector("input").value = "";
@@ -16876,21 +16878,25 @@
           rabbit_enter();
         }
       }
-      if (e.getModifierState("Control") && (e.key == "s" || e.key == "S")) {
-        e.preventDefault();
-        if (settings.profile_shortcut != "") {
-          window.location.href = `${root}user/${settings.profile_shortcut}`;
-        } else {
-          open_profile_shortcut_window();
+      if (!page.structure.dialogs.hasChildNodes()) {
+        if (e.getModifierState("Control") && (e.key == "s" || e.key == "S")) {
+          e.preventDefault();
+          if (settings.profile_shortcut != "") {
+            window.location.href = `${root}user/${settings.profile_shortcut}`;
+          } else {
+            open_profile_shortcut_window();
+          }
         }
-      }
-      if (e.getModifierState("Control") && (e.key == "b" || e.key == "B")) {
-        e.preventDefault();
-        window.location.href = `${root}bleh`;
-      }
-      if (e.getModifierState("Control") && (e.key == "d" || e.key == "D")) {
-        e.preventDefault();
-        search();
+        if (e.getModifierState("Control") && (e.key == "b" || e.key == "B")) {
+          e.preventDefault();
+          window.location.href = `${root}bleh`;
+        }
+        if (e.getModifierState("Control") && (e.key == "d" || e.key == "D")) {
+          e.preventDefault();
+          rabbit();
+          search();
+          back = false;
+        }
       }
     });
     function rabbit() {
@@ -16914,6 +16920,7 @@
         replace_if_possible: true,
         handle_escape_manually: true
       });
+      back = true;
       fake = html.node`
             <div class="fake-input" style="display: none;" />
         `;
@@ -25158,6 +25165,11 @@
         default: false,
         name: "Menu-like side actions separator",
         date: "2025-06-12"
+      },
+      sweet: {
+        default: true,
+        name: "Readable count bars",
+        date: "2025-06-20"
       }
     }
   };

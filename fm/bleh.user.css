@@ -3191,10 +3191,17 @@
             width: 100% !important; /* 220 */
             border: unset !important;
             box-shadow: unset !important;
+            line-height: var(--line-height) !important;
+            border-radius: unset !important;
+            transition: none !important;
         }
 
         [data-ff--katsune="true"] & {
             top: 15px;
+
+            [data-ff--beret="true"] & {
+                top: 0;
+            }
         }
 
         @media (max-width: 600px) {
@@ -4356,25 +4363,6 @@
     .metadata-list {
         display: flex !important;
         gap: var(--button-list-gap);
-    }
-
-
-    /* ranks */
-    .chartlist-count-bar[data-bleh--scrobble-milestone] {
-        &[data-bleh--scrobble-milestone="15"],
-        &[data-bleh--scrobble-milestone="14"] {
-            .chartlist-count-bar-value {
-                --hue: 35;
-                --sat: 1;
-                --lit: 1;
-                color: hsl(var(--l3-c));
-                text-shadow: 0 0 8px hsl(var(--l4-c));
-            }
-
-            .chartlist-count-bar-slug {
-                background: hsl(var(--l3)) !important;
-            }
-        }
     }
 
 
@@ -5690,6 +5678,8 @@
         --bg: hsla(var(--h4), 10%) !important;
         --bg-hov: hsla(var(--h4), 17%) !important;
         z-index: 20;
+
+        --chartlist-bar-bg: var(--b3);
     }
     .chartlist-row--now-scrobbling:before {
         content: '';
@@ -5722,6 +5712,8 @@
     .chartlist-row--highlight {
         --bg: hsla(var(--h4), 10%) !important;
         --bg-hov: hsla(var(--h4), 17%) !important;
+
+        --chartlist-bar-bg: var(--b3);
 
         [data-ff--chartlist_highlight_shadow="true"] & {
             border-radius: 0;
@@ -6229,6 +6221,21 @@
             --lit-seasonal: 0.75;
         }
 
+        &[data-bleh--scrobble-milestone="15"],
+        &[data-bleh--scrobble-milestone="14"] {
+            .chartlist-count-bar-value {
+                --hue: 35;
+                --sat: 1;
+                --lit: 1;
+                color: hsl(var(--l3-c));
+                text-shadow: 0 0 8px hsl(var(--l4-c));
+            }
+
+            .chartlist-count-bar-slug {
+                background: hsl(var(--l3)) !important;
+            }
+        }
+
         .chartlist-count-bar-slug {
             background: hsl(var(--h3)) !important;
             box-shadow: 0px 0px 20px hsla(var(--h4), 50%);
@@ -6238,6 +6245,21 @@
             transition-property: background;
             transition-duration: var(--trans);
             transition-timing-function: var(--trans-function);
+        }
+
+        .chartlist-count-bar-value {
+            color: hsl(var(--b7));
+            font-weight: inherit;
+            padding: 0 10px !important;
+            margin: 0 -10px;
+
+            .stat-name {
+                display: none !important;
+            }
+
+            [data-bleh--invert_interactable_colour="true"] & {
+                color: hsl(var(--ov-c1)) !important;
+            }
         }
 
         &:hover {
@@ -6252,6 +6274,21 @@
 
         &:active {
             transform: scale(0.98);
+        }
+
+        [data-ff--sweet="true"] & {
+            background: hsl(var(--chartlist-bar-bg, var(--b4), 50%)) !important;
+            text-decoration: none !important;
+
+            .chartlist-count-bar-slug {
+                background: hsl(var(--h4), 30%) !important;
+                box-shadow: unset !important;
+            }
+
+            .chartlist-count-bar-value {
+                color: hsl(var(--l3-c-theme-switch)) !important;
+                text-shadow: unset !important;
+            }
         }
     }
     .chartlist-bar.with-multiple {
@@ -6297,20 +6334,6 @@
     .chartlist-count-bar,
     .chartlist-count-bar-slug {
         border-radius: var(--item-small-radius); /* 50 */
-    }
-    .chartlist-count-bar-value {
-        color: hsl(var(--b7));
-        font-weight: inherit;
-        padding: 0 10px !important;
-        margin: 0 -10px;
-
-        .stat-name {
-            display: none !important;
-        }
-
-        [data-bleh--invert_interactable_colour="true"] & {
-            color: hsl(var(--ov-c1)) !important;
-        }
     }
 
 
@@ -9633,7 +9656,10 @@
                 --bg: hsl(var(--b5));
                 --bg-hov: hsl(var(--b4), 20%);
                 --bg-atv: hsl(var(--b4), 20%);
-                box-shadow: inset 0 0 0 1px var(--card-border-base) !important;
+
+                &:not(.search-field) {
+                    box-shadow: inset 0 0 0 1px var(--card-border-base) !important;
+                }
             }
 
             &[disabled],
