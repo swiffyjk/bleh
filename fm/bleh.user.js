@@ -17748,6 +17748,7 @@
                 </form>
             `);
       } else if (body.classList.contains("automatic-edit-modal-body-v2")) {
+        title.textContent = tl(trans.edit_scrobble);
         modal_dialog.classList.add("automatic-edit-modal");
         let checkboxes = body.querySelectorAll(".checkbox");
         checkboxes.forEach((checkbox) => {
@@ -17764,6 +17765,17 @@
           })}
                 `);
         });
+        let submit = body.querySelector(".form-group--submit");
+        submit.classList = "modal-footer";
+        render(submit, html`
+                <button class="see-more cancel" type="button">
+                    ${tl(trans.cancel)}
+                </button>
+                <div class="fill" />
+                <button class="btn primary icon" data-type="item-edit" type="submit">
+                    ${tl(trans.edit)}
+                </button>
+            `);
       }
     });
   }
@@ -20958,6 +20970,9 @@
     },
     always_remind_me: {
       en: "Always remind me"
+    },
+    edit_scrobble: {
+      en: "Edit scrobble"
     }
   };
   var trans_legacy = {

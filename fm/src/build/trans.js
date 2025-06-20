@@ -2724,6 +2724,9 @@ export const trans = {
     },
     always_remind_me: {
         en: 'Always remind me'
+    },
+    edit_scrobble: {
+        en: 'Edit scrobble'
     }
 }
 
