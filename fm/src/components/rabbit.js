@@ -12,7 +12,6 @@ import {open_profile_shortcut_window} from "./profile_shortcut.js";
 import {news} from "../news.js";
 
 export function register_rabbit() {
-    page.state.cmd = false;
     let input_box;
     let selected = 0;
     let feed = 0;
@@ -37,22 +36,16 @@ export function register_rabbit() {
     ];
 
     document.addEventListener('keydown', (e) => {
-        if (e.ctrlKey || e.metaKey)
-            page.state.cmd = true;
-
-        if (e.shiftKey)
-            page.state.shift = true;
-
         /*notify({
             id: 'key',
             title: e.key
         });*/
-        if (page.state.cmd && (e.key == 'k' || e.key == 'K' || e.key == ',') && !page.structure.dialogs.hasChildNodes()) {
+        if (e.getModifierState('Control') && (e.key == 'k' || e.key == 'K' || e.key == ',') && !page.structure.dialogs.hasChildNodes()) {
             e.preventDefault();
 
             depth = 0;
 
-            if (page.state.shift) {
+            if (e.getModifierState('Shift')) {
                 // ctrl + shift + k
                 rabbit();
                 use_page_as_ctx();
@@ -111,7 +104,7 @@ export function register_rabbit() {
             }
         }
 
-        if (page.state.cmd && (e.key == 's' || e.key == 'S')) {
+        if (e.getModifierState('Control') && (e.key == 's' || e.key == 'S')) {
             e.preventDefault();
 
             if (settings.profile_shortcut != '') {
@@ -121,25 +114,17 @@ export function register_rabbit() {
             }
         }
 
-        if (page.state.cmd && (e.key == 'b' || e.key == 'B')) {
+        if (e.getModifierState('Control') && (e.key == 'b' || e.key == 'B')) {
             e.preventDefault();
 
             window.location.href = `${root}bleh`;
         }
 
-        if (page.state.cmd && (e.key == 'd' || e.key == 'D')) {
+        if (e.getModifierState('Control') && (e.key == 'd' || e.key == 'D')) {
             e.preventDefault();
 
             search();
         }
-    });
-
-    document.addEventListener('keyup', (e) => {
-        if (e.ctrlKey || e.metaKey)
-            page.state.cmd = false;
-
-        if (e.shiftKey)
-            page.state.shift = false;
     });
 
     function rabbit() {

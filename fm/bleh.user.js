@@ -16805,7 +16805,6 @@
 
   // src/components/rabbit.js
   function register_rabbit() {
-    page.state.cmd = false;
     let input_box;
     let selected = 0;
     let feed = 0;
@@ -16824,14 +16823,10 @@
       "tag"
     ];
     document.addEventListener("keydown", (e) => {
-      if (e.ctrlKey || e.metaKey)
-        page.state.cmd = true;
-      if (e.shiftKey)
-        page.state.shift = true;
-      if (page.state.cmd && (e.key == "k" || e.key == "K" || e.key == ",") && !page.structure.dialogs.hasChildNodes()) {
+      if (e.getModifierState("Control") && (e.key == "k" || e.key == "K" || e.key == ",") && !page.structure.dialogs.hasChildNodes()) {
         e.preventDefault();
         depth = 0;
-        if (page.state.shift) {
+        if (e.getModifierState("Shift")) {
           rabbit();
           use_page_as_ctx();
         } else {
@@ -16881,7 +16876,7 @@
           rabbit_enter();
         }
       }
-      if (page.state.cmd && (e.key == "s" || e.key == "S")) {
+      if (e.getModifierState("Control") && (e.key == "s" || e.key == "S")) {
         e.preventDefault();
         if (settings.profile_shortcut != "") {
           window.location.href = `${root}user/${settings.profile_shortcut}`;
@@ -16889,20 +16884,14 @@
           open_profile_shortcut_window();
         }
       }
-      if (page.state.cmd && (e.key == "b" || e.key == "B")) {
+      if (e.getModifierState("Control") && (e.key == "b" || e.key == "B")) {
         e.preventDefault();
         window.location.href = `${root}bleh`;
       }
-      if (page.state.cmd && (e.key == "d" || e.key == "D")) {
+      if (e.getModifierState("Control") && (e.key == "d" || e.key == "D")) {
         e.preventDefault();
         search();
       }
-    });
-    document.addEventListener("keyup", (e) => {
-      if (e.ctrlKey || e.metaKey)
-        page.state.cmd = false;
-      if (e.shiftKey)
-        page.state.shift = false;
     });
     function rabbit() {
       page.state.rabbit_modal = dialog({
@@ -18006,8 +17995,6 @@
       last_page_subpage.state = page.subpage;
       log(`subpage of ${page.subpage}`, "page");
       load_settings();
-      page.state.cmd = false;
-      page.state.shift = false;
       if (page.state.settings_reload) {
         page.state.settings_reload = false;
       }
