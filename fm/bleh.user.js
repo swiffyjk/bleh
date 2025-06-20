@@ -6743,8 +6743,8 @@
       let taste_wrap = html.node`
             <div class="btn listen-item icon">
                 <div class="span">
-                    <img class="view-item-avatar" src="${auth.avatar}">
-                    <img class="view-item-avatar" src="${profile_avi}">
+                    <img class="view-item-avatar" src=${auth.avatar} alt=${auth.name}>
+                    <img class="view-item-avatar" src=${page.avatar} alt=${page.name}>
                     <div class="info">
                         <h3>${html.node([
         tl(trans.you_share_count_with).replace("{c}", `<span class="colourful" data-taste="${taste}">${taste_percentage}</span>`)
