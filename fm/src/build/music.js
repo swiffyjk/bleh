@@ -11,98 +11,98 @@ export let ranks = {
     15: {
         start: 60_000,
         hue: 240,
-        sat: 1.2,
-        lit: 0.2
+        sat: 1.15,
+        lit: 1.1
     },
     14: {
         start: 44_000,
         hue: 260,
-        sat: 1.3,
-        lit: 0.4
+        sat: 1.2,
+        lit: 1.15
     },
     13: {
         start: 32_000,
         hue: 280,
-        sat: 1.4,
-        lit: 0.5
+        sat: 1.25,
+        lit: 1.17
     },
     12: {
         start: 26_000,
         hue: 300,
-        sat: 1.3,
-        lit: 0.6
+        sat: 1.2,
+        lit: 1.2
     },
     11: {
         start: 17_000,
         hue: 320,
-        sat: 1.2,
-        lit: 0.65
+        sat: 1.15,
+        lit: 1.22
     },
     10: {
         start: 12_000,
         hue: 0,
-        sat: 1.4,
-        lit: 0.6
+        sat: 1.25,
+        lit: 1.2
     },
     9: {
         start: 8_000,
         hue: 15,
-        sat: 1.4,
-        lit: 0.65
+        sat: 1.25,
+        lit: 1.22
     },
     8: {
         start: 5_300,
         hue: 30,
-        sat: 1.3,
-        lit: 0.7
+        sat: 1.2,
+        lit: 1.23
     },
     7: {
         start: 4_000,
         hue: 45,
-        sat: 1.2,
-        lit: 0.75
+        sat: 1.15,
+        lit: 1.25
     },
     6: {
         start: 2_250,
         hue: 60,
         sat: 1.1,
-        lit: 0.8
+        lit: 1.25
     },
     5: {
         start: 1_500,
         hue: 80,
-        sat: 1.0,
-        lit: 0.75
+        sat: 1.05,
+        lit: 1.23
     },
     4: {
         start: 1_000,
         hue: 100,
-        sat: 0.9,
-        lit: 0.7
+        sat: 1.0,
+        lit: 1.2
     },
     3: {
         start: 500,
         hue: 120,
-        sat: 0.8,
-        lit: 0.65
+        sat: 0.95,
+        lit: 1.17
     },
     2: {
         start: 300,
         hue: 150,
-        sat: 0.9,
-        lit: 0.6
+        sat: 1.0,
+        lit: 1.15
     },
     1: {
         start: 100,
         hue: 180,
-        sat: 1.0,
-        lit: 0.55
+        sat: 1.05,
+        lit: 1.13
     },
     0: {
         start: 0,
         hue: 200,
         sat: 1.1,
-        lit: 0.7
+        lit: 1.17
     }
 };
 

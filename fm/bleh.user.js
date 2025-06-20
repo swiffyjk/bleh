@@ -1228,98 +1228,98 @@
     15: {
       start: 6e4,
       hue: 240,
-      sat: 1.2,
-      lit: 0.2
+      sat: 1.15,
+      lit: 1.1
     },
     14: {
       start: 44e3,
       hue: 260,
-      sat: 1.3,
-      lit: 0.4
+      sat: 1.2,
+      lit: 1.15
     },
     13: {
       start: 32e3,
       hue: 280,
-      sat: 1.4,
-      lit: 0.5
+      sat: 1.25,
+      lit: 1.17
     },
     12: {
       start: 26e3,
       hue: 300,
-      sat: 1.3,
-      lit: 0.6
+      sat: 1.2,
+      lit: 1.2
     },
     11: {
       start: 17e3,
       hue: 320,
-      sat: 1.2,
-      lit: 0.65
+      sat: 1.15,
+      lit: 1.22
     },
     10: {
       start: 12e3,
       hue: 0,
-      sat: 1.4,
-      lit: 0.6
+      sat: 1.25,
+      lit: 1.2
     },
     9: {
       start: 8e3,
       hue: 15,
-      sat: 1.4,
-      lit: 0.65
+      sat: 1.25,
+      lit: 1.22
     },
     8: {
       start: 5300,
       hue: 30,
-      sat: 1.3,
-      lit: 0.7
+      sat: 1.2,
+      lit: 1.23
     },
     7: {
       start: 4e3,
       hue: 45,
-      sat: 1.2,
-      lit: 0.75
+      sat: 1.15,
+      lit: 1.25
     },
     6: {
       start: 2250,
       hue: 60,
       sat: 1.1,
-      lit: 0.8
+      lit: 1.25
     },
     5: {
       start: 1500,
       hue: 80,
-      sat: 1,
-      lit: 0.75
+      sat: 1.05,
+      lit: 1.23
     },
     4: {
       start: 1e3,
       hue: 100,
-      sat: 0.9,
-      lit: 0.7
+      sat: 1,
+      lit: 1.2
     },
     3: {
       start: 500,
       hue: 120,
-      sat: 0.8,
-      lit: 0.65
+      sat: 0.95,
+      lit: 1.17
     },
     2: {
       start: 300,
       hue: 150,
-      sat: 0.9,
-      lit: 0.6
+      sat: 1,
+      lit: 1.15
     },
     1: {
       start: 100,
       hue: 180,
-      sat: 1,
-      lit: 0.55
+      sat: 1.05,
+      lit: 1.13
     },
     0: {
       start: 0,
       hue: 200,
       sat: 1.1,
-      lit: 0.7
+      lit: 1.17
     }
   };
   var includes = {
