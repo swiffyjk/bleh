@@ -175,9 +175,38 @@ export function return_artist_from_generic(url) {
     let split = url.split('/');
     let length = (split.length - 1);
 
-    // artist/_/name in the url means its a track
+    // artist/_/name in the url means it is a track
     if (split[length - 1] != '_')
         return desanitise(split[length - 1]);
     else
         return desanitise(split[length - 2]);
+}
+
+/**
+ * Interpolates a hue value to transition smoothly around the hsl 360 scale
+ * @param current
+ * @param next
+ * @param proximity
+ * @returns {number}
+ */
+export function interpolate_hue(current, next, proximity) {
+    // normalise
+    current = ((current % 360) + 360) % 360;
+    next = ((next % 360) + 360) % 360;
+
+    let diff = next - current;
+
+    // choose the shortest path
+    if (diff > 180) {
+        // go counter-clockwise instead
+        diff -= 360;
+    } else if (diff < -180) {
+        // go clockwise instead
+        diff += 360;
+    }
+
+    let interpolated = current + (diff * proximity);
+
+    // normalise once more
+    return ((interpolated % 360) + 360) % 360;
 }

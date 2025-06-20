@@ -1208,106 +1208,118 @@
     else
       return desanitise(split[length - 2]);
   }
+  function interpolate_hue(current, next, proximity) {
+    current = (current % 360 + 360) % 360;
+    next = (next % 360 + 360) % 360;
+    let diff = next - current;
+    if (diff > 180) {
+      diff -= 360;
+    } else if (diff < -180) {
+      diff += 360;
+    }
+    let interpolated = current + diff * proximity;
+    return (interpolated % 360 + 360) % 360;
+  }
 
   // src/build/music.js
   var artist_corrections = {};
   var album_track_corrections = {};
   var ranks = {
     15: {
-      start: 62e3,
-      hue: -135,
-      sat: 1.5,
-      lit: 0.35
+      start: 6e4,
+      hue: 240,
+      sat: 1.2,
+      lit: 0.2
     },
     14: {
-      start: 5e4,
-      hue: -105,
-      sat: 1,
-      lit: 0.85
+      start: 44e3,
+      hue: 260,
+      sat: 1.3,
+      lit: 0.4
     },
     13: {
-      start: 38e3,
-      hue: -85,
-      sat: 1.2,
-      lit: 0.95
+      start: 32e3,
+      hue: 280,
+      sat: 1.4,
+      lit: 0.5
     },
     12: {
-      start: 24e3,
-      hue: -55,
-      sat: 0.875,
-      lit: 0.85
+      start: 26e3,
+      hue: 300,
+      sat: 1.3,
+      lit: 0.6
     },
     11: {
-      start: 16e3,
-      hue: -25,
-      sat: 1.5,
-      lit: 0.875
+      start: 17e3,
+      hue: 320,
+      sat: 1.2,
+      lit: 0.65
     },
     10: {
-      start: 12500,
-      hue: -7,
-      sat: 1.5,
-      lit: 0.875
+      start: 12e3,
+      hue: 0,
+      sat: 1.4,
+      lit: 0.6
     },
     9: {
-      start: 6e3,
-      hue: 4,
-      sat: 1.425,
-      lit: 0.9
+      start: 8e3,
+      hue: 15,
+      sat: 1.4,
+      lit: 0.65
     },
     8: {
-      start: 4300,
-      hue: 25,
-      sat: 1.425,
-      lit: 0.925
+      start: 5300,
+      hue: 30,
+      sat: 1.3,
+      lit: 0.7
     },
     7: {
-      start: 3200,
-      hue: 60,
-      sat: 1.375,
-      lit: 0.95
+      start: 4e3,
+      hue: 45,
+      sat: 1.2,
+      lit: 0.75
     },
     6: {
       start: 2250,
-      hue: 80,
-      sat: 1.35,
-      lit: 0.925
+      hue: 60,
+      sat: 1.1,
+      lit: 0.8
     },
     5: {
       start: 1500,
-      hue: 103,
-      sat: 1.35,
-      lit: 0.925
+      hue: 80,
+      sat: 1,
+      lit: 0.75
     },
     4: {
       start: 1e3,
-      hue: 130,
-      sat: 1.35,
-      lit: 0.925
+      hue: 100,
+      sat: 0.9,
+      lit: 0.7
     },
     3: {
       start: 500,
-      hue: 148,
-      sat: 1.35,
-      lit: 0.925
+      hue: 120,
+      sat: 0.8,
+      lit: 0.65
     },
     2: {
       start: 300,
-      hue: 160,
-      sat: 1.5,
-      lit: 0.925
+      hue: 150,
+      sat: 0.9,
+      lit: 0.6
     },
     1: {
       start: 100,
       hue: 180,
-      sat: 1.5,
-      lit: 0.875
+      sat: 1,
+      lit: 0.55
     },
     0: {
       start: 0,
       hue: 200,
-      sat: 1.5,
-      lit: 0.925
+      sat: 1.1,
+      lit: 0.7
     }
   };
   var includes = {
@@ -2062,36 +2074,29 @@
   }
   function parse_scrobbles_as_rank(scrobbles) {
     let scrobble_milestone = 0;
-    let scrobble_proximity = 1;
+    let scrobble_proximity = 0;
     let max_rank = 15;
     for (let rank = max_rank; rank >= 0; rank--) {
-      if (scrobbles > ranks[rank].start) {
-        let this_rank = parseInt(rank);
-        scrobble_milestone = this_rank;
-        let next_rank = this_rank + 1;
-        let prev_rank = this_rank - 1;
-        if (this_rank != max_rank && this_rank != 0)
-          scrobble_proximity = (scrobbles - ranks[prev_rank].start) / ranks[next_rank].start;
+      if (scrobbles >= ranks[rank].start) {
+        scrobble_milestone = rank;
         break;
       }
     }
     let milestone_hue = ranks[scrobble_milestone].hue;
     let milestone_sat = ranks[scrobble_milestone].sat;
     let milestone_lit = ranks[scrobble_milestone].lit;
-    if (scrobble_milestone != max_rank) {
+    if (scrobble_milestone < max_rank) {
+      let current_start = ranks[scrobble_milestone].start;
+      let next_start = ranks[scrobble_milestone + 1].start;
+      scrobble_proximity = (scrobbles - current_start) / (next_start - current_start);
+    }
+    if (scrobble_milestone < max_rank) {
       let next_milestone_hue = ranks[scrobble_milestone + 1].hue;
       let next_milestone_sat = ranks[scrobble_milestone + 1].sat;
       let next_milestone_lit = ranks[scrobble_milestone + 1].lit;
-      if (milestone_hue > next_milestone_hue)
-        milestone_hue += (next_milestone_hue - milestone_hue) * scrobble_proximity;
-      if (milestone_sat < next_milestone_sat)
-        milestone_sat += (milestone_sat - next_milestone_sat) * scrobble_proximity;
-      else
-        milestone_sat += (next_milestone_sat - milestone_sat) * scrobble_proximity;
-      if (milestone_lit < next_milestone_lit)
-        milestone_lit += (milestone_lit - next_milestone_lit) * scrobble_proximity;
-      else
-        milestone_lit += (next_milestone_lit - milestone_lit) * scrobble_proximity;
+      milestone_hue = interpolate_hue(milestone_hue, next_milestone_hue, scrobble_proximity);
+      milestone_sat += (next_milestone_sat - milestone_sat) * scrobble_proximity;
+      milestone_lit += (next_milestone_lit - milestone_lit) * scrobble_proximity;
     }
     log(`milestone for ${scrobbles} is ${scrobble_milestone} within ${scrobble_proximity} proximity`, "colourful counts", "info", { hue: milestone_hue, sat: milestone_sat, lit: milestone_lit });
     return {
@@ -11179,18 +11184,6 @@
                         </button>
                     </div>
                 </div>
-                <div class="setting" data-type="toggle" id="container-toggle_icon" onclick="_update_item('toggle_icon')">
-                    <button class="btn reset" onclick="_reset_item('toggle_icon')">${tl(trans.reset)}</button>
-                    <div class="heading">
-                        <h5>${trans_legacy.en.settings.accessibility.toggle_icon.name}</h5>
-                        <p>${trans_legacy.en.settings.accessibility.toggle_icon.bio}</p>
-                    </div>
-                    <div class="toggle-wrap">
-                        <button class="toggle" id="toggle-toggle_icon" aria-checked="false">
-                            <div class="dot"></div>
-                        </button>
-                    </div>
-                </div>
             </div>
             `);
     } else if (page_id == "text") {
@@ -11253,6 +11246,22 @@
             </div>
             `);
     } else if (page_id == "music") {
+      let chartlist_bar = function(value, max) {
+        let count_bar = html.node`
+                <div class="chartlist-count-bar">
+                    <a class="chartlist-count-bar-link">
+                        <span class="chartlist-count-bar-slug" data-max-stat-value="${max}" data-stat-value="${value}" style="width: ${max / max * 100}%" />
+                        <span class="chartlist-count-bar-value">${value.toLocaleString(lang)}</span>
+                    </a>
+                </div>
+            `;
+        let parsed_scrobble_as_rank = parse_scrobbles_as_rank(value);
+        count_bar.setAttribute("data-bleh--scrobble-milestone", parsed_scrobble_as_rank.milestone);
+        count_bar.style.setProperty("--hue-over", parsed_scrobble_as_rank.hue);
+        count_bar.style.setProperty("--sat-over", parsed_scrobble_as_rank.sat);
+        count_bar.style.setProperty("--lit-over", parsed_scrobble_as_rank.lit);
+        return count_bar;
+      };
       register_skip_to([
         {
           id: "corrections",
@@ -11288,25 +11297,7 @@
           name: tl(trans.gendered_tags.name)
         }
       ]);
-      console.info(artist_corrections, album_track_corrections);
-      let preview_bar = "background: linear-gradient(90deg";
-      let preview_bar_text = "";
-      let global_sat = getComputedStyle(document.body).getPropertyValue("--sat");
-      let global_lit = getComputedStyle(document.body).getPropertyValue("--lit");
-      let h3_sat = getComputedStyle(document.body).getPropertyValue("--h3-sat");
-      let h3_lit = getComputedStyle(document.body).getPropertyValue("--h3-lit");
-      let maximum = 16e3;
-      let max_rank = 11;
-      for (let rank = 0; rank <= max_rank; rank++) {
-        let this_rank = ranks[parseInt(rank)];
-        let percent = this_rank.start / maximum * 100;
-        preview_bar = `${preview_bar}, hsl(${this_rank.hue}, ${h3_sat.replace(global_sat, this_rank.sat)}, ${h3_lit.replace(global_lit, this_rank.lit)}) ${percent}%`;
-        if ((this_rank.start > 500 || this_rank.start == 0) && this_rank.start != 1500) {
-          let text2 = `${this_rank.start}`;
-          preview_bar_text = `${preview_bar_text}<div class="preview-bar-text-entry" style="left: ${percent}%">${text2.replaceAll("_", ",")}</div>`;
-        }
-      }
-      preview_bar = `${preview_bar});`;
+      let bars;
       render(page.structure.main, html`
             <div class="bleh--panel lotus">
                 <h4>${html.node([
@@ -11509,52 +11500,13 @@
                     </div>
                 </div>
                 <div class="inner-preview pad">
-                    <div class="personal-stats-preview-bar-container">
-                        <div class="personal-stats-preview-bar" style="${preview_bar}"></div>
-                        <div class="personal-stats-preview-text">${{ html: preview_bar_text }}</div>
-                    </div>
-                    <div class="sep"></div>
-                    <div class="tracks">
-                        <div class="track">
-                            <div class="cover"></div>
-                            <div class="title"></div>
-                            <div class="bar">
-                                <div class="fill not-colourful-example" style="width: 100%"></div>
-                                <div class="fill colourful colourful-example" style="width: 100%; --hue: -16.888749999999998; --sat: 1.5; --lit: 0.875"></div>
-                            </div>
-                        </div>
-                        <div class="track">
-                            <div class="cover"></div>
-                            <div class="title"></div>
-                            <div class="bar">
-                                <div class="fill not-colourful-example" style="width: 85%"></div>
-                                <div class="fill colourful colourful-example" style="width: 85%; --hue: 0.21863999999999972; --sat: 1.399218; --lit: 0.891406"></div>
-                            </div>
-                        </div>
-                        <div class="track">
-                            <div class="cover"></div>
-                            <div class="title"></div>
-                            <div class="bar">
-                                <div class="fill not-colourful-example" style="width: 60%"></div>
-                                <div class="fill colourful colourful-example" style="width: 60%; --hue: 18.77; --sat: 1.425; --lit: 0.9175833333333334"></div>
-                            </div>
-                        </div>
-                        <div class="track">
-                            <div class="cover"></div>
-                            <div class="title"></div>
-                            <div class="bar">
-                                <div class="fill not-colourful-example" style="width: 30%"></div>
-                                <div class="fill colourful colourful-example" style="width: 30%; --hue: 50.769767441860466; --sat: 1.361813953488372; --lit: 0.943406976744186"></div>
-                            </div>
-                        </div>
-                        <div class="track">
-                            <div class="cover"></div>
-                            <div class="title"></div>
-                            <div class="bar">
-                                <div class="fill not-colourful-example" style="width: 5%"></div>
-                                <div class="fill colourful colourful-example" style="width: 5%; --hue: 92.42; --sat: 1.35; --lit: 0.925"></div>
-                            </div>
-                        </div>
+                    <div class="bars" ref=${(el) => bars = el}>
+                        ${() => {
+        let max = 3e4;
+        for (let value = 1e3; value <= max; value += 1e3) {
+          bars.appendChild(chartlist_bar(value, max));
+        }
+      }}
                     </div>
                 </div>
                 <div class="setting" data-type="toggle" id="container-colourful_counts" onclick="_update_item('colourful_counts')">
@@ -25147,7 +25099,7 @@
         date: "2025-06-07"
       },
       menu_like_side_actions: {
-        default: false,
+        default: true,
         name: "Menu-like side actions",
         date: "2025-06-11"
       },

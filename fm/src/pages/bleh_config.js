@@ -6,7 +6,7 @@
 
 import {test_api_key} from "../api";
 import {settings, settings_base} from "../build/config";
-import {album_track_corrections, artist_corrections, ranks} from "../build/music";
+import {album_track_corrections, artist_corrections} from "../build/music";
 import {auth, page, root, theme_preview} from "../build/page";
 import {stored_season} from "../build/seasonal";
 import {sponsor_list} from "../build/sponsor";
@@ -24,6 +24,7 @@ import {seasonal_timer_end, seasonal_timer_start} from "../seasonal";
 import {ff} from "../sku";
 import {html, render} from "lighterhtml"
 import {setting} from "../components/settings.js";
+import {parse_scrobbles_as_rank} from "../components/colourful_counts.js";
 
 export function bleh_settings() {
     page.name = auth.name;
@@ -823,18 +824,6 @@ export function render_setting_page(page_id) {
                         </button>
                     </div>
                 </div>
-                <div class="setting" data-type="toggle" id="container-toggle_icon" onclick="_update_item('toggle_icon')">
-                    <button class="btn reset" onclick="_reset_item('toggle_icon')">${tl(trans.reset)}</button>
-                    <div class="heading">
-                        <h5>${trans_legacy.en.settings.accessibility.toggle_icon.name}</h5>
-                        <p>${trans_legacy.en.settings.accessibility.toggle_icon.bio}</p>
-                    </div>
-                    <div class="toggle-wrap">
-                        <button class="toggle" id="toggle-toggle_icon" aria-checked="false">
-                            <div class="dot"></div>
-                        </button>
-                    </div>
-                </div>
             </div>
             `);
     } else if (page_id == 'text') {
@@ -935,39 +924,27 @@ export function render_setting_page(page_id) {
             }
         ]);
 
-        console.info(artist_corrections, album_track_corrections);
+        function chartlist_bar(value, max) {
+            let count_bar = html.node`
+                <div class="chartlist-count-bar">
+                    <a class="chartlist-count-bar-link">
+                        <span class="chartlist-count-bar-slug" data-max-stat-value="${max}" data-stat-value="${value}" style="width: ${(max / max) * 100}%" />
+                        <span class="chartlist-count-bar-value">${value.toLocaleString(lang)}</span>
+                    </a>
+                </div>
+            `;
 
-        let preview_bar = 'background: linear-gradient(90deg';
-        let preview_bar_text = '';
+            let parsed_scrobble_as_rank = parse_scrobbles_as_rank(value);
 
-        // global sat/lit is used to substitute the values computed in h3 sat/lit
-        // as they return eg. calc(0.85 * 50%), so we use global_sat to get 0.85
-        // which can then be used in a .replace(global_sat, 'whatever we want')
-        let global_sat = getComputedStyle(document.body).getPropertyValue('--sat');
-        let global_lit = getComputedStyle(document.body).getPropertyValue('--lit');
-        let h3_sat = getComputedStyle(document.body).getPropertyValue('--h3-sat');
-        let h3_lit = getComputedStyle(document.body).getPropertyValue('--h3-lit');
+            count_bar.setAttribute('data-bleh--scrobble-milestone', parsed_scrobble_as_rank.milestone);
+            count_bar.style.setProperty('--hue-over', parsed_scrobble_as_rank.hue);
+            count_bar.style.setProperty('--sat-over', parsed_scrobble_as_rank.sat);
+            count_bar.style.setProperty('--lit-over', parsed_scrobble_as_rank.lit);
 
-        let maximum = 16_000;
-        let max_rank = 11;
-
-        //console.info(maximum, max_rank);
-        for (let rank = 0; rank <= max_rank; rank++) {
-            let this_rank = ranks[parseInt(rank)];
-            //console.info(this_rank);
-
-            let percent = ((this_rank.start / maximum) * 100);
-            preview_bar = `${preview_bar}, hsl(${this_rank.hue}, ${h3_sat.replace(global_sat, this_rank.sat)}, ${h3_lit.replace(global_lit, this_rank.lit)}) ${percent}%`;
-
-            if ((this_rank.start > 500 || this_rank.start == 0) && this_rank.start != 1500) {
-                let text = `${this_rank.start}`;
-
-                preview_bar_text = `${preview_bar_text}<div class="preview-bar-text-entry" style="left: ${percent}%">${text.replaceAll('_', ',')}</div>`;
-            }
+            return count_bar;
         }
 
-        preview_bar = `${preview_bar});`;
-        //console.info('preview bar', preview_bar, global_sat, h3_sat, global_lit, h3_lit);
+        let bars;
 
         render(page.structure.main, html`
             <div class="bleh--panel lotus">
@@ -1173,52 +1150,14 @@ export function render_setting_page(page_id) {
                     </div>
                 </div>
                 <div class="inner-preview pad">
-                    <div class="personal-stats-preview-bar-container">
-                        <div class="personal-stats-preview-bar" style="${preview_bar}"></div>
-                        <div class="personal-stats-preview-text">${{html: preview_bar_text}}</div>
-                    </div>
-                    <div class="sep"></div>
-                    <div class="tracks">
-                        <div class="track">
-                            <div class="cover"></div>
-                            <div class="title"></div>
-                            <div class="bar">
-                                <div class="fill not-colourful-example" style="width: 100%"></div>
-                                <div class="fill colourful colourful-example" style="width: 100%; --hue: -16.888749999999998; --sat: 1.5; --lit: 0.875"></div>
-                            </div>
-                        </div>
-                        <div class="track">
-                            <div class="cover"></div>
-                            <div class="title"></div>
-                            <div class="bar">
-                                <div class="fill not-colourful-example" style="width: 85%"></div>
-                                <div class="fill colourful colourful-example" style="width: 85%; --hue: 0.21863999999999972; --sat: 1.399218; --lit: 0.891406"></div>
-                            </div>
-                        </div>
-                        <div class="track">
-                            <div class="cover"></div>
-                            <div class="title"></div>
-                            <div class="bar">
-                                <div class="fill not-colourful-example" style="width: 60%"></div>
-                                <div class="fill colourful colourful-example" style="width: 60%; --hue: 18.77; --sat: 1.425; --lit: 0.9175833333333334"></div>
-                            </div>
-                        </div>
-                        <div class="track">
-                            <div class="cover"></div>
-                            <div class="title"></div>
-                            <div class="bar">
-                                <div class="fill not-colourful-example" style="width: 30%"></div>
-                                <div class="fill colourful colourful-example" style="width: 30%; --hue: 50.769767441860466; --sat: 1.361813953488372; --lit: 0.943406976744186"></div>
-                            </div>
-                        </div>
-                        <div class="track">
-                            <div class="cover"></div>
-                            <div class="title"></div>
-                            <div class="bar">
-                                <div class="fill not-colourful-example" style="width: 5%"></div>
-                                <div class="fill colourful colourful-example" style="width: 5%; --hue: 92.42; --sat: 1.35; --lit: 0.925"></div>
-                            </div>
-                        </div>
+                    <div class="bars" ref=${el => bars = el}>
+                        ${() => {
+                            let max = 30_000;
+                            
+                            for (let value = 1_000; value <= max; value += 1_000) {
+                                bars.appendChild(chartlist_bar(value, max));
+                            }
+                        }}
                     </div>
                 </div>
                 <div class="setting" data-type="toggle" id="container-colourful_counts" onclick="_update_item('colourful_counts')">
