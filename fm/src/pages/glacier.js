@@ -14,6 +14,7 @@ import {prep_chart_colours} from "../chart";
 import {correct_artist, correct_item_by_artist} from "../components/lotus";
 import {refresh_all} from "../config";
 import {ff} from "../sku";
+import {compare} from "../components/compare.js";
 
 export function bleh_user_library() {
     // date sidebar into its own panel
@@ -60,14 +61,13 @@ export function bleh_user_library() {
         `);
         tabs.appendChild(velocity_tab);
     } else {
-        let compare_tab = document.createElement('li');
-        compare_tab.classList.add('navlist-item', 'secondary-nav-item', 'secondary-nav-item--compare');
-        compare_tab.innerHTML = (`
-            <a class="secondary-nav-item-link" onclick="_compare()">
-                ${tl(trans.compare)}
-            </a>
+        tabs.appendChild(html.node`
+            <li class="navlist-item secondary-nav-item secondary-nav-item--compare">
+                <a class="secondary-nav-item-link" onclick=${() => compare()}>
+                    ${tl(trans.compare)}
+                </a>
+            </li>
         `);
-        tabs.appendChild(compare_tab);
     }
 
 
