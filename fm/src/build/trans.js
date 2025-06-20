@@ -1201,11 +1201,6 @@ export const trans = {
         de: 'Verlinkt auf {link}',
         pt: 'Links para {link}'
     },
-    view_latest_version: {
-        en: 'View latest version',
-        de: 'Neueste Version anzeigen',
-        pt: 'Ver a última versão'
-    },
     explore_in_library: {
         en: 'Explore in library',
         de: 'In der Bibliothek anzeigen',
@@ -2727,6 +2722,15 @@ export const trans = {
     },
     edit_scrobble: {
         en: 'Edit scrobble'
+    },
+    timeline: {
+        en: 'Timeline'
+    },
+    view_latest: {
+        en: 'View latest'
+    },
+    custom: {
+        en: 'Custom'
     }
 }
 

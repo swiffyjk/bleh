@@ -37,7 +37,7 @@ export function bleh_wiki() {
         side_edit.classList.add('btn', 'side-action');
         side_edit.setAttribute('href', original_edit_button.getAttribute('href'));
         side_edit.setAttribute('data-type', 'edit');
-        side_edit.textContent = original_edit_button.textContent;
+        side_edit.textContent = tl(trans.edit);
         side_actions.appendChild(side_edit);
     }
 
@@ -46,7 +46,7 @@ export function bleh_wiki() {
         side_history.classList.add('btn', 'side-action');
         side_history.setAttribute('href', original_version_history.getAttribute('href'));
         side_history.setAttribute('data-type', 'history');
-        side_history.textContent = original_version_history.textContent;
+        side_history.textContent = tl(trans.timeline);
         side_actions.appendChild(side_history);
     }
 
@@ -146,7 +146,7 @@ export function bleh_wiki_history() {
     side_actions.classList.add('side-actions');
     side_actions.innerHTML = (`
         <a class="btn side-action" data-type="latest-wiki" href="${sub_text.querySelector('a').getAttribute('href')}">
-            ${tl(trans.view_latest_version)}
+            ${tl(trans.view_latest)}
         </a>
     `);
 

@@ -215,6 +215,7 @@ export function checkup_page_structure(is_subpage = false, header = null) {
             let similar_artists = page.structure.side.querySelector('.similar-items-sidebar');
             if (similar_artists) {
                 similar_artists.parentElement.classList.add('similar-artists-panel');
+                page.structure.side.removeChild(similar_artists.parentElement);
             }
         } else {
             let content_top = document.body.querySelector('.content-top');

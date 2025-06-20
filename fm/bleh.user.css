@@ -1787,7 +1787,7 @@
 
     /*     FOOTER     */
     .footer {
-        background: hsl(var(--b6));
+        background: hsl(var(--b5));
         color: hsl(var(--c3));
         padding: 0 0 120px 0;
 
@@ -1800,7 +1800,6 @@
             font-weight: var(--font-weight-medium);
             cursor: default;
             padding-top: 120px;
-            border-top: 1px solid var(--card-border-base);
             width: calc(var(--cards-width) - (var(--card-padding) * 2));
 
             text-align: center;
@@ -2365,6 +2364,10 @@
     }
     .track-overview-video-column {
         position: relative;
+
+        [data-ff--beret="true"] & {
+            margin-bottom: var(--card-padding);
+        }
 
         &.visible-xs {
             display: none !important;
@@ -4425,6 +4428,10 @@
     }
 
     .facts {
+        [data-ff--beret="true"] & {
+            margin-top: calc(-1 * var(--card-padding)) !important;
+        }
+
         .factbox {
             width: unset;
             margin: unset;
@@ -7774,8 +7781,6 @@
     /*     NAV     */
     .secondary-nav-item-link:before,
     .navlist-more:before,
-    /*     FOOTER     */
-    .footer-timezone:before,
     /*     PLAYLINKS & MEDIA LINKS     */
     .resource-external-link:before, .play-this-track-playlink:before, .replace-playlink:before,
     .section-playlink:before, .inline-section-control:before,
@@ -20959,7 +20964,7 @@
 
         [data-ff--beret="true"] & {
             --card-specific-background: hsl(var(--b6));
-            margin-bottom: var(--card-gap);
+            margin: var(--card-padding) 0 !important;
         }
 
         .sep {

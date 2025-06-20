@@ -20,6 +20,7 @@ import {bleh_tags_mini} from "./tag";
 import {bleh_wiki, bleh_wiki_editor, bleh_wiki_history} from "./wiki";
 import {html} from "lighterhtml";
 import {expand_avatar} from "../avatar.js";
+import {other_listener} from "../components/profile_shortcut.js";
 
 export function bleh_artists() {
     let artist_header = document.body.querySelector('.header-new--artist');
@@ -238,8 +239,30 @@ export function bleh_artists() {
             bleh_wiki_editor();
         else if (page.subpage == 'listeners_overview')
             bleh_top_listeners();
+        else if (page.subpage == 'listeners_you-know')
+            bleh_listeners();
     }
 
     log('status is', 'page', 'info', page);
     update_page();
+}
+
+function bleh_listeners() {
+    // i could just render away the ad here but courtesy
+    page.structure.side.appendChild(html.node`
+        <section class="side-actions">
+            <a class="btn side-action" data-type="profile" href="${root}user/${auth.name}/library/music/${sanitise(page.name)}">
+                ${auth.name}
+            </a>
+            ${settings.profile_shortcut != '' ? html.node`
+            <a class="btn side-action" data-type="profile_shortcut" href="${root}user/${settings.profile_shortcut}/library/music/${sanitise(page.name)}">
+                ${settings.profile_shortcut}
+            </a>
+            ` : ''}
+            <div class="sep" />
+            <button class="btn side-action" data-type="add" onclick=${() => other_listener(sanitise(page.name))}>
+                ${tl(trans.custom)}
+            </button>
+        </section>
+    `);
 }

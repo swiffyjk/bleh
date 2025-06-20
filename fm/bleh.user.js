@@ -7007,6 +7007,7 @@
         let similar_artists = page.structure.side.querySelector(".similar-items-sidebar");
         if (similar_artists) {
           similar_artists.parentElement.classList.add("similar-artists-panel");
+          page.structure.side.removeChild(similar_artists.parentElement);
         }
       } else {
         let content_top = document.body.querySelector(".content-top");
@@ -14243,7 +14244,7 @@
       side_edit.classList.add("btn", "side-action");
       side_edit.setAttribute("href", original_edit_button.getAttribute("href"));
       side_edit.setAttribute("data-type", "edit");
-      side_edit.textContent = original_edit_button.textContent;
+      side_edit.textContent = tl(trans.edit);
       side_actions.appendChild(side_edit);
     }
     if (original_version_history) {
@@ -14251,7 +14252,7 @@
       side_history.classList.add("btn", "side-action");
       side_history.setAttribute("href", original_version_history.getAttribute("href"));
       side_history.setAttribute("data-type", "history");
-      side_history.textContent = original_version_history.textContent;
+      side_history.textContent = tl(trans.timeline);
       side_actions.appendChild(side_history);
     }
     let wiki_author = wiki_panel.querySelector(".wiki-author");
@@ -14320,7 +14321,7 @@
     side_actions.classList.add("side-actions");
     side_actions.innerHTML = `
         <a class="btn side-action" data-type="latest-wiki" href="${sub_text.querySelector("a").getAttribute("href")}">
-            ${tl(trans.view_latest_version)}
+            ${tl(trans.view_latest)}
         </a>
     `;
     if (!page.mobile)
@@ -14994,9 +14995,29 @@
         bleh_wiki_editor();
       else if (page.subpage == "listeners_overview")
         bleh_top_listeners();
+      else if (page.subpage == "listeners_you-know")
+        bleh_listeners();
     }
     log("status is", "page", "info", page);
     update_page();
+  }
+  function bleh_listeners() {
+    page.structure.side.appendChild(html.node`
+        <section class="side-actions">
+            <a class="btn side-action" data-type="profile" href="${root}user/${auth.name}/library/music/${sanitise(page.name)}">
+                ${auth.name}
+            </a>
+            ${settings.profile_shortcut != "" ? html.node`
+            <a class="btn side-action" data-type="profile_shortcut" href="${root}user/${settings.profile_shortcut}/library/music/${sanitise(page.name)}">
+                ${settings.profile_shortcut}
+            </a>
+            ` : ""}
+            <div class="sep" />
+            <button class="btn side-action" data-type="add" onclick=${() => other_listener(sanitise(page.name))}>
+                ${tl(trans.custom)}
+            </button>
+        </section>
+    `);
   }
 
   // src/pages/bleh_setup.js
@@ -19446,11 +19467,6 @@
       de: "Verlinkt auf {link}",
       pt: "Links para {link}"
     },
-    view_latest_version: {
-      en: "View latest version",
-      de: "Neueste Version anzeigen",
-      pt: "Ver a \xFAltima vers\xE3o"
-    },
     explore_in_library: {
       en: "Explore in library",
       de: "In der Bibliothek anzeigen",
@@ -20972,6 +20988,15 @@
     },
     edit_scrobble: {
       en: "Edit scrobble"
+    },
+    timeline: {
+      en: "Timeline"
+    },
+    view_latest: {
+      en: "View latest"
+    },
+    custom: {
+      en: "Custom"
     }
   };
   var trans_legacy = {
