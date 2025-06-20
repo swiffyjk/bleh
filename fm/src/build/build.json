@@ -181,7 +181,7 @@
             "date": "2025-06-07"
         },
         "menu_like_side_actions": {
-            "default": false,
+            "default": true,
             "name": "Menu-like side actions",
             "date": "2025-06-11"
         },
