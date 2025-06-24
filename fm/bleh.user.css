@@ -23492,6 +23492,15 @@
         @media (max-width: 600px) {
             flex-wrap: wrap;
         }
+
+        .listen-item-other {
+            --bg: transparent;
+            --bg-hov: hsla(var(--b4), 60%);
+            --bg-atv: hsla(var(--b4), 80%);
+            --shadow: none;
+            --col: hsl(var(--c3));
+            --mask-colour: currentColor;
+        }
     }
     .side-actions,
     .medium-interactions,
