@@ -133,7 +133,10 @@ export function bleh_settings() {
     `);
 
 
-    page.structure.container.insertBefore(nav, page.structure.row);
+    if (!ff('short'))
+        page.structure.container.insertBefore(nav, page.structure.row);
+    else
+        page.structure.row.insertBefore(nav, page.structure.content);
 
     if (!page.requested.tab)
         change_settings_page('themes');

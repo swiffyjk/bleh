@@ -3046,6 +3046,8 @@
     date_panel.setAttribute("data-glacier-graphs", settings.glacier_library_graphs);
     date_items.forEach((item, index) => {
       date_panel.appendChild(item);
+      if (item.classList.contains("row"))
+        item.classList = "date-selector";
       if (index == 0)
         page.structure.glacier.selector = item;
     });
@@ -5286,6 +5288,7 @@
       new_panel.innerHTML = col_main.innerHTML;
       page.structure.main.insertBefore(new_panel, page.structure.main.firstElementChild);
       col_main.style.setProperty("display", "none");
+      page.structure.row.appendChild(col_main);
       console.info(col_main, new_panel);
       col_main = new_panel;
     }
@@ -5572,6 +5575,9 @@
                 <a class="play-this-track-playlink music-link play-this-track-playlink--tidal" href="https://listen.tidal.com/search?q=${sanitise(page.sister, " ")} ${sanitise(page.name, " ")}" target="_blank">
                     Tidal
                 </a>
+                <a class="play-this-track-playlink music-link play-this-track-playlink--discogs" href="https://www.discogs.com/search?q=${sanitise(page.sister)}+${sanitise(page.name)}&type=all" target="_blank">
+                    Discogs
+                </a>
                 <a class="play-this-track-playlink music-link play-this-track-playlink--aoty" href="https://www.albumoftheyear.org/search/?q=${sanitise(page.sister)}+${sanitise(page.name)}" target="_blank">
                     AOTY
                 </a>
@@ -5595,6 +5601,9 @@
                 </a>
                 <a class="play-this-track-playlink music-link play-this-track-playlink--tidal" href="https://listen.tidal.com/search?q=${sanitise(page.name, " ")}" target="_blank">
                     Tidal
+                </a>
+                <a class="play-this-track-playlink music-link play-this-track-playlink--discogs" href="https://www.discogs.com/search?q=${sanitise(page.name)}&type=artist" target="_blank">
+                    Discogs
                 </a>
                 <a class="play-this-track-playlink music-link play-this-track-playlink--aoty" href="https://www.albumoftheyear.org/search/?q=${sanitise(page.name)}" target="_blank">
                     AOTY
@@ -5808,9 +5817,14 @@
       if (album_artwork)
         page.structure.side.insertBefore(album_artwork, page.structure.side.firstElementChild);
     }
+    let masonry = page.structure.row.querySelector(":scope > .col-sidebar.masonry-right");
+    if (masonry) {
+      page.structure.row.appendChild(masonry);
+    }
     if (page.type == "album" || page.type == "artist") {
       let upper = document.body.querySelector(".col-main");
       upper.classList.add("upper-overview-to-hide");
+      page.structure.row.appendChild(upper);
       let new_upper = document.createElement("section");
       new_upper.classList.add("top-overview-panel");
       new_upper.setAttribute("data-page-type", page.type);
@@ -6931,6 +6945,15 @@
         page.structure.row.appendChild(page.structure.side);
       }
     }
+    if (ff("short")) {
+      page.structure.content = html.node`
+            <div class="content">
+                ${page.structure.main}
+                ${page.structure.side}
+            </div>
+        `;
+      page.structure.row.appendChild(page.structure.content);
+    }
     log("finished", "page structure");
     if (ff("refreshed_music_nav") && header) {
       let navlist = header.querySelector(".navlist");
@@ -6944,10 +6967,14 @@
         if (content_top) {
           content_top.classList.add("redesigned-content-top");
           page.structure.content_top = content_top;
-          if (navlist)
-            navlist.after(content_top);
-          else
-            page.structure.container.insertBefore(content_top, page.structure.container.firstElementChild);
+          if (ff("short")) {
+            page.structure.row.insertBefore(content_top, page.structure.content);
+          } else {
+            if (navlist)
+              navlist.after(content_top);
+            else
+              page.structure.container.insertBefore(content_top, page.structure.container.firstElementChild);
+          }
           if (content_top.querySelector(".content-top-back-link"))
             content_top.style.setProperty("display", "none");
           let content_top_nav = content_top.querySelector(".navlist");
@@ -10515,7 +10542,10 @@
             <p>${version.brand} ${version.build}.${version.sku}</p>
         </div>
     `);
-    page.structure.container.insertBefore(nav, page.structure.row);
+    if (!ff("short"))
+      page.structure.container.insertBefore(nav, page.structure.row);
+    else
+      page.structure.row.insertBefore(nav, page.structure.content);
     if (!page.requested.tab)
       change_settings_page("themes");
     else
@@ -25099,7 +25129,7 @@
         notice: "This is very, very experimental ~w~"
       },
       beret: {
-        default: false,
+        default: true,
         name: "beret redesign",
         date: "2025-04-03",
         notice: "Removes individual card styles and instead styles the entire container, much like old bleh"
@@ -25148,6 +25178,11 @@
         default: true,
         name: "Readable count bars",
         date: "2025-06-20"
+      },
+      short: {
+        default: true,
+        name: "Extends beret redesign to turn all content into a single card",
+        date: "2025-06-24"
       }
     }
   };

@@ -155,7 +155,7 @@
             "notice": "This is very, very experimental ~w~"
         },
         "beret": {
-            "default": false,
+            "default": true,
             "name": "beret redesign",
             "date": "2025-04-03",
             "notice": "Removes individual card styles and instead styles the entire container, much like old bleh"
@@ -204,6 +204,11 @@
             "default": true,
             "name": "Readable count bars",
             "date": "2025-06-20"
+        },
+        "short": {
+            "default": true,
+            "name": "Extends beret redesign to turn all content into a single card",
+            "date": "2025-06-24"
         }
     }
 }

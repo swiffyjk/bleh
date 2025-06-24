@@ -34,6 +34,9 @@ export function bleh_user_library() {
             date_panel.appendChild(item);*/
         date_panel.appendChild(item);
 
+        if (item.classList.contains('row'))
+            item.classList = 'date-selector';
+
         if (index == 0)
             page.structure.glacier.selector = item;
     });

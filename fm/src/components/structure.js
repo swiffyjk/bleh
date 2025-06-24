@@ -94,6 +94,16 @@ export function checkup_page_structure(is_subpage = false, header = null) {
         }
     }
 
+    if (ff('short')) {
+        page.structure.content = html.node`
+            <div class="content">
+                ${page.structure.main}
+                ${page.structure.side}
+            </div>
+        `;
+        page.structure.row.appendChild(page.structure.content);
+    }
+
     log('finished', 'page structure');
 
     if (ff('refreshed_music_nav') && header) {
@@ -112,10 +122,14 @@ export function checkup_page_structure(is_subpage = false, header = null) {
                 content_top.classList.add('redesigned-content-top');
                 page.structure.content_top = content_top;
 
-                if (navlist)
-                    navlist.after(content_top);
-                else
-                    page.structure.container.insertBefore(content_top, page.structure.container.firstElementChild);
+                if (ff('short')) {
+                    page.structure.row.insertBefore(content_top, page.structure.content);
+                } else {
+                    if (navlist)
+                        navlist.after(content_top);
+                    else
+                        page.structure.container.insertBefore(content_top, page.structure.container.firstElementChild);
+                }
 
                 // should be covered by bleh
                 if (content_top.querySelector('.content-top-back-link'))

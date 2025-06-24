@@ -176,6 +176,8 @@ export function show_your_scrobbles() {
         page.structure.main.insertBefore(new_panel, page.structure.main.firstElementChild);
 
         col_main.style.setProperty('display', 'none');
+        // make last-child
+        page.structure.row.appendChild(col_main);
 
         console.info(col_main, new_panel);
 
@@ -602,6 +604,9 @@ export function show_your_scrobbles() {
                 <a class="play-this-track-playlink music-link play-this-track-playlink--tidal" href="https://listen.tidal.com/search?q=${sanitise(page.sister, ' ')} ${sanitise(page.name, ' ')}" target="_blank">
                     Tidal
                 </a>
+                <a class="play-this-track-playlink music-link play-this-track-playlink--discogs" href="https://www.discogs.com/search?q=${sanitise(page.sister)}+${sanitise(page.name)}&type=all" target="_blank">
+                    Discogs
+                </a>
                 <a class="play-this-track-playlink music-link play-this-track-playlink--aoty" href="https://www.albumoftheyear.org/search/?q=${sanitise(page.sister)}+${sanitise(page.name)}" target="_blank">
                     AOTY
                 </a>
@@ -625,6 +630,9 @@ export function show_your_scrobbles() {
                 </a>
                 <a class="play-this-track-playlink music-link play-this-track-playlink--tidal" href="https://listen.tidal.com/search?q=${sanitise(page.name, ' ')}" target="_blank">
                     Tidal
+                </a>
+                <a class="play-this-track-playlink music-link play-this-track-playlink--discogs" href="https://www.discogs.com/search?q=${sanitise(page.name)}&type=artist" target="_blank">
+                    Discogs
                 </a>
                 <a class="play-this-track-playlink music-link play-this-track-playlink--aoty" href="https://www.albumoftheyear.org/search/?q=${sanitise(page.name)}" target="_blank">
                     AOTY
@@ -894,9 +902,17 @@ function show_numbers_on_side(header_type) {
             page.structure.side.insertBefore(album_artwork, page.structure.side.firstElementChild);
     }
 
+    let masonry = page.structure.row.querySelector(':scope > .col-sidebar.masonry-right');
+    if (masonry) {
+        // make last-child
+        page.structure.row.appendChild(masonry);
+    }
+
     if (page.type == 'album' || page.type == 'artist') {
         let upper = document.body.querySelector('.col-main');
         upper.classList.add('upper-overview-to-hide');
+        // make last-child
+        page.structure.row.appendChild(upper);
 
         let new_upper = document.createElement('section');
         new_upper.classList.add('top-overview-panel');
