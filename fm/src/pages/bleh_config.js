@@ -126,6 +126,10 @@ export function bleh_settings() {
             <div class="skip-to-list"></div>
             ` : ''}
         </div>
+        <div class="bleh--panel">
+            <h4>${tl(trans.about)}</h4>
+            <p>${version.brand} ${version.build}.${version.sku}</p>
+        </div>
     `);
 
 

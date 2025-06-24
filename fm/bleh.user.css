@@ -7481,11 +7481,13 @@
 
 
         &.btn--loading,
-        &[disabled] {
+        &[disabled]:not([disabled="false"]) {
             opacity: 0.65 !important;
             --col: hsl(var(--c3)) !important;
             --mask-colour: hsl(var(--c3)) !important;
             transform: unset !important;
+            --bg-hov: var(--bg) !important;
+            --bg-atv: var(--bg) !important;
         }
 
         &.btn-primary.js-close {
@@ -7831,7 +7833,7 @@
     .masthead-search-submit:before,
     .masthead-hamburger-toggle:before,
     /*     ALERT/INFO     */
-    .alert:not(.big-modal-alert):before, .event-status:before, .async-content-error-message:before,
+    .alert:not(.big-modal-alert, .form-disclaimer > .alert):before, .event-status:before, .async-content-error-message:before,
     /*     USER NAME LABELS     */
     :is(.title-container .label, .badges .label, .header-new-on-tour):before,
     /*     CUSTOM AVATAR ICONS WITHOUT PRO     */
@@ -12642,7 +12644,7 @@
     /*     ALERT     */
     .async-content-error-message,
     .event-status,
-    .alert:not(.big-modal-alert) {
+    .alert:not(.big-modal-alert, .form-disclaimer > .alert) {
         font-size: var(--font-size);
         line-height: var(--line-height);
         margin-top: var(--card-gap);
@@ -16484,6 +16486,8 @@
                 align-items: center;
                 flex-shrink: 0;
                 order: -1;
+                min-height: 28px;
+                max-height: 32px;
 
                 margin-right: calc(-1 * (var(--card-gap) - 10px));
 
@@ -23582,6 +23586,7 @@
     }
 
 
+    .form-disclaimer > .alert,
     .big-modal-alert,
     .cta {
         background: var(--card-specific-background) !important;
@@ -23593,6 +23598,8 @@
         order: 10;
         cursor: default;
 
+        font-size: var(--font-size);
+        line-height: var(--line-height);
         font-weight: var(--font-weight-medium);
 
         &.cta {
@@ -23653,6 +23660,7 @@
             color: hsl(var(--l3-c));
         }
     }
+    .form-disclaimer > .alert,
     .big-modal-alert {
         max-width: 500px;
 

@@ -5,13 +5,16 @@ export function toggle({
     type = 'toggle',
     name = '',
     title = '',
-    body = ''
+    body = '',
+    disabled = false
 }) {
     let checkbox;
     let state;
 
     return html.node`
         <div class="setting" data-type="${type}" onclick=${() => {
+            if (disabled) return;
+            
             let current = checkbox.checked;
     
             checkbox.checked = !current;
@@ -30,8 +33,8 @@ export function toggle({
             </div>
             ` : html.node`
             <div class="check">
-                <input type="checkbox" ref=${el => checkbox = el} name=${name} checked=${value} />
-                <div class="box" ref=${el => state = el} aria-checked=${value}>
+                <input type="checkbox" ref=${el => checkbox = el} name=${name} checked=${value} disabled=${disabled} />
+                <div class="box" ref=${el => state = el} aria-checked=${value} disabled=${disabled}>
                     <div class="bleh-icon" />
                 </div>
             </div>

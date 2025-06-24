@@ -8,7 +8,7 @@ import {auth, page, root} from "../build/page";
 import {tl, trans} from "../build/trans";
 import {bleh_auto_edits} from "../components/auto_edit";
 import {dialog} from "../components/dialog";
-import {custom_select, update_inbuilt_select} from "../components/select";
+import {custom_select, select, select_prepare, update_inbuilt_select} from "../components/select";
 import {update_inbuilt_item} from "../config";
 import {ff} from "../sku";
 import {markdown} from "../components/markdown";
@@ -81,7 +81,6 @@ export function bleh_native_settings() {
 
 function patch_settings_profile_tab() {
     let update_picture = document.getElementById('update-picture');
-
     if (!update_picture) return;
 
     // if we can continue, we are on profile tab
@@ -494,9 +493,7 @@ function patch_settings_profile_panel(token, update_picture) {
                                 <div class="title">
                                     ${tl(trans.country)}
                                 </div>
-                                <div class="input custom-selector" id="country_select">
-                                    ${form_country}
-                                </div>
+                                ${select(select_prepare(form_country), form_country.value, 'country')}
                             </div>
                             <div class="info-row">
                                 <div class="title">
@@ -547,8 +544,6 @@ function patch_settings_profile_panel(token, update_picture) {
         content: tl(trans.markdown_tip),
         allowHTML: true
     });
-
-    custom_select(update_picture.querySelector('#id_country'), update_picture.querySelector('#country_select'));
 
 
     // about me

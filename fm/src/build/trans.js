@@ -2723,6 +2723,9 @@ export const trans = {
     edit_scrobble: {
         en: 'Edit scrobble'
     },
+    edit_scrobbles_in_bulk: {
+        en: 'Edit scrobbles in bulk'
+    },
     timeline: {
         en: 'Timeline'
     },

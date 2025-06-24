@@ -2301,7 +2301,15 @@
       placement: "bottom",
       interactive: true,
       interactiveBorder: 10,
-      trigger: "click"
+      trigger: "click",
+      onShow(instance) {
+        setTimeout(() => {
+          instance.popper.querySelector('[aria-checked="true"]').scrollIntoView({
+            behavior: "instant",
+            block: "center"
+          });
+        }, 1);
+      }
     });
     set_select(button, menu, values, initial, select2, name2);
     return container;
@@ -7485,9 +7493,7 @@
                                 <div class="title">
                                     ${tl(trans.country)}
                                 </div>
-                                <div class="input custom-selector" id="country_select">
-                                    ${form_country}
-                                </div>
+                                ${select(select_prepare(form_country), form_country.value, "country")}
                             </div>
                             <div class="info-row">
                                 <div class="title">
@@ -7536,7 +7542,6 @@
       content: tl(trans.markdown_tip),
       allowHTML: true
     });
-    custom_select(update_picture.querySelector("#id_country"), update_picture.querySelector("#country_select"));
     update_about();
     function update_about() {
       let value = about.value;
@@ -10504,6 +10509,10 @@
             <h4>${tl(trans.skip_to)}</h4>
             <div class="skip-to-list"></div>
             ` : ""}
+        </div>
+        <div class="bleh--panel">
+            <h4>${tl(trans.about)}</h4>
+            <p>${version.brand} ${version.build}.${version.sku}</p>
         </div>
     `);
     page.structure.container.insertBefore(nav, page.structure.row);
@@ -17629,12 +17638,14 @@
     type = "toggle",
     name: name2 = "",
     title = "",
-    body = ""
+    body = "",
+    disabled = false
   }) {
     let checkbox;
     let state;
     return html.node`
         <div class="setting" data-type="${type}" onclick=${() => {
+      if (disabled) return;
       let current = checkbox.checked;
       checkbox.checked = !current;
       state.setAttribute("aria-checked", !current);
@@ -17652,8 +17663,8 @@
             </div>
             ` : html.node`
             <div class="check">
-                <input type="checkbox" ref=${(el) => checkbox = el} name=${name2} checked=${value} />
-                <div class="box" ref=${(el) => state = el} aria-checked=${value}>
+                <input type="checkbox" ref=${(el) => checkbox = el} name=${name2} checked=${value} disabled=${disabled} />
+                <div class="box" ref=${(el) => state = el} aria-checked=${value} disabled=${disabled}>
                     <div class="bleh-icon" />
                 </div>
             </div>
@@ -17664,7 +17675,7 @@
 
   // src/components/dialog_extender.js
   function dialog_extender() {
-    let wrappers = document.body.querySelectorAll(":scope > .popup_wrapper");
+    let wrappers = document.body.querySelectorAll(':scope > :is(.popup_wrapper, div[data-processed="true"] > .popup_wrapper)');
     wrappers.forEach((wrapper) => {
       let modal_dialog = wrapper.querySelector(".modal-dialog:not([data-dialog-extender])");
       if (!modal_dialog) return;
@@ -17716,7 +17727,14 @@
                 </form>
             `);
       } else if (body.classList.contains("automatic-edit-modal-body-v2")) {
-        title.textContent = tl(trans.edit_scrobble);
+        return;
+        let bulk_edit_active = false;
+        let edit_all = body.querySelector('[name="edit_all"]');
+        if (edit_all.disabled) bulk_edit_active = true;
+        if (!bulk_edit_active)
+          title.textContent = tl(trans.edit_scrobble);
+        else
+          title.textContent = tl(trans.edit_scrobbles_in_bulk);
         modal_dialog.classList.add("automatic-edit-modal");
         let checkboxes = body.querySelectorAll(".checkbox");
         checkboxes.forEach((checkbox) => {
@@ -17724,19 +17742,21 @@
           let value = input_el.checked;
           let name2 = input_el.getAttribute("name");
           let text2 = checkbox.textContent.trim();
+          let disabled = input_el.disabled;
           render(checkbox.parentElement, html`
                     ${toggle({
             value,
             type: "checkbox",
             name: name2,
-            title: text2
+            title: text2,
+            disabled
           })}
                 `);
         });
         let submit = body.querySelector(".form-group--submit");
         submit.classList = "modal-footer";
         render(submit, html`
-                <button class="see-more cancel" type="button">
+                <button class="see-more cancel" type="button" onclick=${() => dismiss.click()}>
                     ${tl(trans.cancel)}
                 </button>
                 <div class="fill" />
@@ -17744,6 +17764,7 @@
                     ${tl(trans.edit)}
                 </button>
             `);
+      } else if (body.querySelector(".lastfm-bulk-edit-list")) {
       }
     });
   }
@@ -20934,6 +20955,9 @@
     },
     edit_scrobble: {
       en: "Edit scrobble"
+    },
+    edit_scrobbles_in_bulk: {
+      en: "Edit scrobbles in bulk"
     },
     timeline: {
       en: "Timeline"

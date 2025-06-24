@@ -43,6 +43,15 @@ export function select(values, initial = '', name = '') {
         interactive: true,
         interactiveBorder: 10,
         trigger: 'click',
+
+        onShow(instance) {
+            setTimeout(() => {
+                instance.popper.querySelector('[aria-checked="true"]').scrollIntoView({
+                    behavior: 'instant',
+                    block: 'center'
+                });
+            }, 1);
+        }
     });
 
     set_select(button, menu, values, initial, select, name);

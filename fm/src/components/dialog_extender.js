@@ -5,7 +5,8 @@ import {toggle} from "./toggle.js";
 import {log} from "../build/log.js";
 
 export function dialog_extender() {
-    let wrappers = document.body.querySelectorAll(':scope > .popup_wrapper');
+    // data-processed=true is signature of bulk edit
+    let wrappers = document.body.querySelectorAll(':scope > :is(.popup_wrapper, div[data-processed="true"] > .popup_wrapper)');
 
     wrappers.forEach(wrapper => {
         let modal_dialog = wrapper.querySelector('.modal-dialog:not([data-dialog-extender])');
@@ -74,8 +75,18 @@ export function dialog_extender() {
             `);
         } else if (body.classList.contains('automatic-edit-modal-body-v2')) {
             // automatic edit v2
+            return;
 
-            title.textContent = tl(trans.edit_scrobble);
+            // we use this to detect the bulk edit extension
+            let bulk_edit_active = false;
+
+            let edit_all = body.querySelector('[name="edit_all"]');
+            if (edit_all.disabled) bulk_edit_active = true;
+
+            if (!bulk_edit_active)
+                title.textContent = tl(trans.edit_scrobble);
+            else
+                title.textContent = tl(trans.edit_scrobbles_in_bulk);
 
             modal_dialog.classList.add('automatic-edit-modal');
 
@@ -86,13 +97,15 @@ export function dialog_extender() {
                 let value = input_el.checked;
                 let name = input_el.getAttribute('name');
                 let text = checkbox.textContent.trim();
+                let disabled = input_el.disabled;
 
                 render(checkbox.parentElement, html`
                     ${toggle({
                         value: value,
                         type: 'checkbox',
                         name: name,
-                        title: text
+                        title: text,
+                        disabled: disabled
                     })}
                 `);
             });
@@ -101,7 +114,7 @@ export function dialog_extender() {
             submit.classList = 'modal-footer';
 
             render(submit, html`
-                <button class="see-more cancel" type="button">
+                <button class="see-more cancel" type="button" onclick=${() => dismiss.click()}>
                     ${tl(trans.cancel)}
                 </button>
                 <div class="fill" />
@@ -109,6 +122,11 @@ export function dialog_extender() {
                     ${tl(trans.edit)}
                 </button>
             `);
+        } else if (body.querySelector('.lastfm-bulk-edit-list')) {
+            // bulk edit
+            // select albums to edit
+
+
         }
     });
 }
