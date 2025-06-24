@@ -319,10 +319,10 @@ export function patch_wiki() {
         let wiki_col = page.structure.main.querySelector('.wiki-column');
         let wiki_empty = false;
 
-        if (!wiki_col)
+        if (!wiki_col) {
             wiki_col = page.structure.main.querySelector('.wiki-section');
-
-        if (!wiki_col) return;
+            return;
+        }
 
         let wiki_block = wiki_col.querySelector('.wiki-block.visible-lg .wiki-block-inner-2');
 
@@ -337,22 +337,18 @@ export function patch_wiki() {
             read_more.textContent = tl(trans.read_more).toLowerCase();
         }
 
-        let wiki_header = document.createElement('div');
-        wiki_header.classList.add('sub-text');
-        wiki_header.innerHTML = (`
-            <p>${tl(trans.about)}</p>
-            <span class="right-links">
-                <p><a class="wiki-edit-small" href="${document.location.href}/+wiki/edit">${tl(trans.edit_wiki).toLowerCase()}</a></p>
-                ${(!wiki_empty) ? `<p>${read_more.outerHTML}</p>` : ''}
-            </span>
-        `);
+        wiki_col.insertBefore(html.node`
+            <div class="sub-text">
+                <p>${tl(trans.about)}</p>
+                <span class="right-links">
+                    <p><a class="wiki-edit-small" href="${document.location.href}/+wiki/edit">${tl(trans.edit_wiki).toLowerCase()}</a></p>
+                    ${(!wiki_empty && read_more) ? html.node`<p>${read_more}</p>` : ''}
+                </span>
+            </div>
+        `, wiki_col.firstElementChild);
 
-        wiki_col.insertBefore(wiki_header, wiki_col.firstElementChild);
-
-
-        if (!wiki_empty) {
+        if (!wiki_empty)
             patch_wiki_contents(wiki_block);
-        }
     }
 }
 
@@ -372,8 +368,7 @@ function patch_wiki_contents(wiki_block) {
             return;
         }
 
-        if (href.endsWith('/+wiki'))
-            return;
+        if (href.endsWith('/+wiki')) return;
 
         href = href.replace(root, '').replace('music/', '');
 
@@ -398,7 +393,11 @@ function patch_wiki_contents(wiki_block) {
 
         if (sister != undefined)
             tippy(link, {
-                content: `${sister} - ${name}`
+                theme: 'name-sister-combo',
+                content: html.node`
+                    <span class="name">${name}</span>
+                    <span class="sister">${sister}</span>
+                `
             });
 
         link.setAttribute('data-link-type', type);
