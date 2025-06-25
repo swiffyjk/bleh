@@ -450,6 +450,19 @@ function load_page() {
         if ((page.type == 'user' || page.type == 'tag' || page.type == 'events') && (page.subpage == 'overview' || page.subpage == 'event_overview'))
             bleh_radio();
 
+        if (page.subpage == 'images_overview') {
+            let sort_button = page.structure.main.querySelector('.dropdown-menu-clickable-button');
+            let sort_menu = page.structure.main.querySelector('.dropdown-menu-clickable');
+
+            let sort_wrap = document.createElement('div');
+            sort_wrap.classList.add('dropdown-top-wrap');
+
+            sort_wrap.appendChild(sort_button);
+            sort_wrap.appendChild(sort_menu);
+
+            page.structure.main.insertBefore(sort_wrap, page.structure.main.firstElementChild);
+        }
+
         if (page.subpage == 'image') {
             let images = page.structure.row.querySelectorAll('.gallery-image');
             images.forEach(image => {
