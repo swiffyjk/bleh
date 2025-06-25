@@ -4328,7 +4328,10 @@
     try {
       gallery_section = page.structure.main.querySelector(".gallery-section");
       if (gallery_section) {
-        page.structure.nav.after(gallery_section);
+        if (ff("short"))
+          page.structure.row.insertBefore(gallery_section, page.structure.content);
+        else
+          page.structure.nav.after(gallery_section);
         image_details = document.createElement("section");
         image_details.classList.add("image-details");
       } else {
@@ -4520,7 +4523,7 @@
       page.structure.container.setAttribute("data-bleh--gallery-tab", "all");
     else
       page.structure.container.setAttribute("data-bleh--gallery-tab", "saved");
-    page.structure.content_top.after(html.node`
+    let nav = html.node`
         <div class="bleh--nav-wrap bleh--nav-wrap--bookmarks">
             <nav class="navlist secondary-nav">
                 <ul class="navlist-items">
@@ -4537,7 +4540,11 @@
                 </ul>
             </nav>
         </div>
-    `);
+    `;
+    if (ff("short"))
+      page.structure.row.insertBefore(nav, page.structure.content);
+    else
+      page.structure.content_top.after(nav);
     let bookmarks_panel;
     page.structure.main.classList.add("bleh--gallery");
     page.structure.main.after(html.node`
@@ -6926,6 +6933,7 @@
     }
     if (page.structure.row.classList.contains("buffer-4"))
       page.structure.row.classList = "row col-main-is-primary";
+    page.structure.row.setAttribute("data-assigned", "true");
     if (!page.structure.main || !document.body.contains(page.structure.main)) {
       log("page missing main, creating", "page structure");
       page.structure.main = document.createElement("div");
@@ -6967,19 +6975,22 @@
         if (content_top) {
           content_top.classList.add("redesigned-content-top");
           page.structure.content_top = content_top;
+          if (content_top.querySelector(".content-top-back-link"))
+            content_top.style.setProperty("display", "none");
+          let content_top_nav = content_top.querySelector(".navlist");
+          if (!content_top_nav && ff("beret"))
+            content_top.style.setProperty("display", "none");
           if (ff("short")) {
-            page.structure.row.insertBefore(content_top, page.structure.content);
+            if (!content_top.style.hasOwnProperty("display"))
+              page.structure.row.insertBefore(content_top, page.structure.content);
+            else
+              page.structure.row.appendChild(content_top);
           } else {
             if (navlist)
               navlist.after(content_top);
             else
               page.structure.container.insertBefore(content_top, page.structure.container.firstElementChild);
           }
-          if (content_top.querySelector(".content-top-back-link"))
-            content_top.style.setProperty("display", "none");
-          let content_top_nav = content_top.querySelector(".navlist");
-          if (!content_top_nav && ff("beret"))
-            content_top.style.setProperty("display", "none");
         } else {
           let subpage_title = page.structure.main.querySelector(":scope > .subpage-title");
           if (!subpage_title)
@@ -6997,8 +7008,11 @@
                         </div>
                     `;
             page.structure.content_top = content_top;
-            navlist.after(content_top);
             content_top.style.setProperty("display", "none");
+            if (ff("short"))
+              page.structure.row.appendChild(content_top);
+            else
+              navlist.after(content_top);
             try {
               page.structure.main.removeChild(subpage_title);
             } catch (e) {
@@ -7007,10 +7021,14 @@
           navlist = page.structure.main.querySelector(".navlist");
           if (navlist) {
             navlist.classList.add("redesigned-navigation");
-            if (page.structure.content_top)
-              page.structure.content_top.after(navlist);
-            else
-              page.structure.container.insertBefore(navlist, page.structure.row);
+            if (ff("short")) {
+              page.structure.row.insertBefore(navlist, page.structure.content);
+            } else {
+              if (page.structure.content_top)
+                page.structure.content_top.after(navlist);
+              else
+                page.structure.container.insertBefore(navlist, page.structure.row);
+            }
           }
           let btn_add = page.structure.main.querySelector(":scope > .btn-add");
           if (!btn_add) btn_add = page.structure.main.querySelector(":scope > section:first-child .btn-add");

@@ -37,7 +37,10 @@ export function bleh_gallery() {
     try {
         gallery_section = page.structure.main.querySelector('.gallery-section');
         if (gallery_section) {
-            page.structure.nav.after(gallery_section);
+            if (ff('short'))
+                page.structure.row.insertBefore(gallery_section, page.structure.content);
+            else
+                page.structure.nav.after(gallery_section);
 
             // move image details to main column
             image_details = document.createElement('section');
@@ -348,7 +351,7 @@ function patch_gallery_image_listing() {
 
 
     // create nav
-    page.structure.content_top.after(html.node`
+    let nav = html.node`
         <div class="bleh--nav-wrap bleh--nav-wrap--bookmarks">
             <nav class="navlist secondary-nav">
                 <ul class="navlist-items">
@@ -365,7 +368,12 @@ function patch_gallery_image_listing() {
                 </ul>
             </nav>
         </div>
-    `);
+    `;
+
+    if (ff('short'))
+        page.structure.row.insertBefore(nav, page.structure.content);
+    else
+        page.structure.content_top.after(nav);
 
 
     // content

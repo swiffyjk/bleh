@@ -65,6 +65,8 @@ export function checkup_page_structure(is_subpage = false, header = null) {
     if (page.structure.row.classList.contains('buffer-4'))
         page.structure.row.classList = 'row col-main-is-primary';
 
+    page.structure.row.setAttribute('data-assigned', 'true');
+
     if (!page.structure.main || !document.body.contains(page.structure.main)) {
         log('page missing main, creating', 'page structure');
         page.structure.main = document.createElement('div');
@@ -122,15 +124,6 @@ export function checkup_page_structure(is_subpage = false, header = null) {
                 content_top.classList.add('redesigned-content-top');
                 page.structure.content_top = content_top;
 
-                if (ff('short')) {
-                    page.structure.row.insertBefore(content_top, page.structure.content);
-                } else {
-                    if (navlist)
-                        navlist.after(content_top);
-                    else
-                        page.structure.container.insertBefore(content_top, page.structure.container.firstElementChild);
-                }
-
                 // should be covered by bleh
                 if (content_top.querySelector('.content-top-back-link'))
                     content_top.style.setProperty('display', 'none');
@@ -138,6 +131,18 @@ export function checkup_page_structure(is_subpage = false, header = null) {
                 let content_top_nav = content_top.querySelector('.navlist');
                 if (!content_top_nav && ff('beret'))
                     content_top.style.setProperty('display', 'none');
+
+                if (ff('short')) {
+                    if (!content_top.style.hasOwnProperty('display'))
+                        page.structure.row.insertBefore(content_top, page.structure.content);
+                    else
+                        page.structure.row.appendChild(content_top);
+                } else {
+                    if (navlist)
+                        navlist.after(content_top);
+                    else
+                        page.structure.container.insertBefore(content_top, page.structure.container.firstElementChild);
+                }
             } else {
                 let subpage_title = page.structure.main.querySelector(':scope > .subpage-title');
                 if (!subpage_title)
@@ -157,8 +162,12 @@ export function checkup_page_structure(is_subpage = false, header = null) {
                     `
 
                     page.structure.content_top = content_top;
-                    navlist.after(content_top);
                     content_top.style.setProperty('display', 'none');
+
+                    if (ff('short'))
+                        page.structure.row.appendChild(content_top);
+                    else
+                        navlist.after(content_top);
 
                     try {
                         page.structure.main.removeChild(subpage_title);
@@ -171,10 +180,14 @@ export function checkup_page_structure(is_subpage = false, header = null) {
                 if (navlist) {
                     navlist.classList.add('redesigned-navigation');
 
-                    if (page.structure.content_top)
-                        page.structure.content_top.after(navlist);
-                    else
-                        page.structure.container.insertBefore(navlist, page.structure.row);
+                    if (ff('short')) {
+                        page.structure.row.insertBefore(navlist, page.structure.content);
+                    } else {
+                        if (page.structure.content_top)
+                            page.structure.content_top.after(navlist);
+                        else
+                            page.structure.container.insertBefore(navlist, page.structure.row);
+                    }
                 }
 
                 // is there a btn-add?

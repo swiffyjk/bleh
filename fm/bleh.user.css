@@ -222,6 +222,8 @@
             --b8: var(--hue), calc(var(--sat) * 2% * var(--sat-bg, 1)), 11%;
             --b7: 0, 0%, 0%;
 
+            --card-border-base: hsl(var(--b3), 0.5);
+
             &[data-ff--beret="true"][data-ff--short="false"], [data-ff--beret="true"][data-ff--short="false"] & {
                 --b3: var(--hue), calc(var(--sat) * 5% * var(--sat-bg, 1)), 10%;
                 --b4: var(--hue), calc(var(--sat) * 4% * var(--sat-bg, 1)), 6%;
@@ -2057,7 +2059,7 @@
         display: flex;
         gap: var(--card-gap);
     }
-    .container > .row:not(.row--equal-height-cols) {
+    .container:not(.has-error) > .row[data-assigned]:not(.row--equal-height-cols) {
         display: grid;
         grid-template-columns: auto auto;
         grid-template-areas:
@@ -2079,11 +2081,12 @@
                 border-radius: var(--card-radius) !important;
                 padding: var(--card-gap) 0;
 
-                .content {
+                & > .content {
                     display: flex;
                     justify-content: center;
                     width: 100%;
 
+                    .content-top[style] + &,
                     &:first-child {
                         margin-top: calc(-1 * var(--card-gap));
                     }
@@ -3239,12 +3242,20 @@
                 margin-right: unset !important;
             }
         }
+
+        [data-ff--short="true"] & {
+            margin-top: unset !important;
+        }
     }
 
 
     /*     LIBRARY SEARCH     */
     .content-top-lower {
         position: relative;
+
+        [data-ff--short="true"] & {
+            margin-top: unset !important;
+        }
     }
     .library-search {
         margin-top: unset !important;
@@ -4507,7 +4518,7 @@
         }
     }
 
-    .factbox-heading + p,
+    .factbox-heading + *,
     .catalogue-metadata-description {
         font-size: 16px;
         line-height: 20px;
@@ -4794,6 +4805,8 @@
 
         margin-left: var(--card-padding);
         cursor: default;
+
+        display: none;
     }
 
 
@@ -19567,7 +19580,7 @@
                 margin-right: var(--card-gap);
             }
 
-            [data-ff--beret="true"] & {
+            [data-ff--beret="true"][data-ff--short="false"] & {
                 margin: unset;
                 box-shadow: unset !important;
                 border-radius: unset;
@@ -19586,6 +19599,13 @@
                     border-bottom: 1px solid var(--card-border-base);
                     width: calc(var(--cards-width) - (var(--card-padding) * 2));
                 }
+            }
+
+            [data-ff--short="true"] & {
+                margin: calc(-1 * var(--card-gap)) var(--card-padding) 0;
+                box-shadow: unset !important;
+                border-radius: unset;
+                border-bottom: 1px solid var(--card-border-base);
             }
 
             .gallery-image-container {
