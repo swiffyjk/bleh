@@ -82,7 +82,7 @@ export function dialog_extender() {
             let bulk_edit_active = false;
 
             let edit_all = body.querySelector('[name="edit_all"]');
-            if (edit_all.disabled) bulk_edit_active = true;
+            if (edit_all && edit_all.disabled) bulk_edit_active = true;
 
             if (!bulk_edit_active)
                 title.textContent = tl(trans.edit_scrobble);

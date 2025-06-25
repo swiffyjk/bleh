@@ -4850,6 +4850,10 @@
         }
     }
 
+    h1 {
+        font-weight: var(--font-weight-bold);
+    }
+
     /* '.page a' is required for api docs :(
     better than the default selector '#app a' i suppose */
     .page a,
