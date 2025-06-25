@@ -849,5 +849,59 @@ export let settings_store = {
         type: 'text',
         max: 40,
         placeholder: trans.enter_password
+    },
+    activities: {
+        default: true,
+        title: trans.activity_tracking.name,
+        body: trans.activity_tracking.body
+    },
+    activity_shout: {
+        default: true,
+        title: trans.shouts,
+        body: trans.activity.types.shout,
+        type: 'checkbox',
+        icon: 'icon-16-shoutbox'
+    },
+    activity_image: {
+        default: true,
+        title: trans.photos,
+        body: trans.activity.types.image,
+        type: 'checkbox',
+        icon: 'icon-16-gallery-vertical'
+    },
+    activity_obsess: {
+        default: true,
+        title: trans.obsessions,
+        body: trans.activity.types.obsess,
+        type: 'checkbox',
+        icon: 'icon-16-obsession'
+    },
+    activity_love: {
+        default: true,
+        title: trans.loved,
+        body: trans.activity.types.love,
+        type: 'checkbox',
+        icon: 'icon-16-heart'
+    },
+    activity_bookmark: {
+        default: true,
+        title: trans.bookmarks,
+        body: trans.activity.types.bookmark,
+        type: 'checkbox',
+        icon: 'icon-16-bookmark'
+    },
+    activity_wiki: {
+        default: true,
+        title: trans.wiki,
+        body: trans.activity.types.wiki,
+        type: 'checkbox',
+        icon: 'icon-16-bio'
+    },
+    activity_install: {
+        default: true,
+        title: trans.installation,
+        body: trans.activity.types.install,
+        type: 'checkbox',
+        icon: 'icon-16-download'
     }
 }

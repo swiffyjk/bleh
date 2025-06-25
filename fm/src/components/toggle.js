@@ -6,7 +6,9 @@ export function toggle({
     name = '',
     title = '',
     body = '',
-    disabled = false
+    small = '',
+    disabled = false,
+    data = ''
 }) {
     let checkbox;
     let state;
@@ -22,18 +24,19 @@ export function toggle({
         }}>
             <div class="heading">
                 <h5>${title}</h5>
-                ${(body != '') ? html.node`<p>${body}</p>` : ''}
+                ${body != '' ? html.node`<p>${body}</p>` : ''}
+                ${small != '' ? html.node`<small>${small}</small>` : ''}
             </div>
             ${type == 'toggle' ? html.node`
             <div class="toggle-wrap">
-                <input type="checkbox" ref=${el => checkbox = el} name=${name} checked=${value} />
+                <input type="checkbox" ref=${el => checkbox = el} name=${name} value=${data} checked=${value} />
                 <button class="toggle" ref=${el => state = el} aria-checked=${value}>
                     <div class="dot" />
                 </button>
             </div>
             ` : html.node`
             <div class="check">
-                <input type="checkbox" ref=${el => checkbox = el} name=${name} checked=${value} disabled=${disabled} />
+                <input type="checkbox" ref=${el => checkbox = el} name=${name} value=${data} checked=${value} disabled=${disabled} />
                 <div class="box" ref=${el => state = el} aria-checked=${value} disabled=${disabled}>
                     <div class="bleh-icon" />
                 </div>

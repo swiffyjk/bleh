@@ -209,6 +209,11 @@
             "default": true,
             "name": "Extends beret redesign to turn all content into a single card",
             "date": "2025-06-24"
+        },
+        "auto_theme": {
+            "default": false,
+            "name": "Support inheriting theme from system",
+            "date": "2025-06-25"
         }
     }
 }

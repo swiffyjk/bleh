@@ -3,10 +3,11 @@ import {tl, trans} from "../build/trans.js";
 import {html, render} from "lighterhtml";
 import {toggle} from "./toggle.js";
 import {log} from "../build/log.js";
+import {correct_artist, correct_item_by_artist} from "./lotus.js";
 
 export function dialog_extender() {
     // data-processed=true is signature of bulk edit
-    let wrappers = document.body.querySelectorAll(':scope > :is(.popup_wrapper, div[data-processed="true"] > .popup_wrapper)');
+    let wrappers = document.body.querySelectorAll(':scope > .popup_wrapper, :scope > div > .popup_wrapper');
 
     wrappers.forEach(wrapper => {
         let modal_dialog = wrapper.querySelector('.modal-dialog:not([data-dialog-extender])');
@@ -25,9 +26,10 @@ export function dialog_extender() {
 
         let dismiss = modal_dialog.querySelector('.modal-dismiss');
 
-        page.token = form.querySelector('[name="csrfmiddlewaretoken"]').getAttribute('value');
+        let token = form.querySelector('[name="csrfmiddlewaretoken"]');
+        if (token) page.token = token.getAttribute('value');
 
-        if (form.getAttribute('action').endsWith('+bookmarks/modal/added')) {
+        if (form.action && form.action.endsWith('+bookmarks/modal/added')) {
             // bookmark added modal
 
             title.textContent = tl(trans.saved_to_bookmarks);
@@ -75,7 +77,6 @@ export function dialog_extender() {
             `);
         } else if (body.classList.contains('automatic-edit-modal-body-v2')) {
             // automatic edit v2
-            return;
 
             // we use this to detect the bulk edit extension
             let bulk_edit_active = false;
@@ -126,7 +127,41 @@ export function dialog_extender() {
             // bulk edit
             // select albums to edit
 
+            let list = body.querySelector('.lastfm-bulk-edit-list');
 
+            let checkboxes = list.querySelectorAll('.checkbox');
+
+            checkboxes.forEach((checkbox) => {
+                let input_el = checkbox.querySelector('input');
+                let value = input_el.checked;
+                let name = input_el.getAttribute('name');
+                let disabled = input_el.disabled;
+                let data = input_el.getAttribute('value');
+
+                let item_artist = correct_artist(checkbox.querySelector('div').title);
+                let item_name = correct_item_by_artist(checkbox.querySelector('strong').title, item_artist);
+                let item_scrobbles = checkbox.querySelector('small').textContent.trim();
+
+                render(checkbox.parentElement, html`
+                    ${toggle({
+                        value: value,
+                        type: 'checkbox',
+                        name: name,
+                        title: item_name + tl(trans.by_artist).replace('{a}', item_artist),
+                        body: item_scrobbles,
+                        disabled: disabled,
+                        data: data
+                    })}
+                `);
+            });
+
+            let footer = body.querySelector('.form-group--submit');
+            footer.classList = 'modal-footer';
+            render(footer, html`
+                <button class="see-more cancel" type="reset">${tl(trans.cancel)}</button>
+                <div class="fill" />
+                <button class="btn primary continue" type="submit">${tl(trans.continue)}</button>
+            `);
         }
     });
 }

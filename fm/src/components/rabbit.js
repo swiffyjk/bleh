@@ -10,6 +10,7 @@ import {collage} from "./collage.js";
 import {settings} from "../build/config.js";
 import {open_profile_shortcut_window} from "./profile_shortcut.js";
 import {news} from "../news.js";
+import {ff} from "../sku.js";
 
 export function register_rabbit() {
     let input_box;
@@ -410,6 +411,14 @@ export function register_rabbit() {
         // custom control
         depth = 1;
         rabbit_search('internal:theme_picker', [
+            {
+                type: 'theme_auto',
+                text: tl(trans.auto),
+                body: tl(trans.changes_your_theme),
+                keywords: ['system'],
+                action: () => save_setting('theme', 'light'),
+                hide: !ff('auto_theme')
+            },
             {
                 type: 'theme_light',
                 text: tl(trans.themes.light),

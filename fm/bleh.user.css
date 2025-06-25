@@ -19243,6 +19243,8 @@
     .lastfm-bulk-edit-loading {
         background: unset;
         height: fit-content;
+        margin-top: var(--card-gap) !important;
+        padding: var(--card-padding) 0;
 
         .lastfm-bulk-edit-progress {
             font-weight: var(--font-weight-medium);
@@ -19280,17 +19282,8 @@
     .lastfm-bulk-edit-list {
         display: flex;
         flex-direction: column;
-        padding-left: 5px;
-
-        .lastfm-bulk-edit-text-info {
-            color: hsl(var(--l3-c));
-        }
-        strong + .lastfm-bulk-edit-ellipsis {
-            color: hsla(var(--c2), 80%);
-        }
-        small {
-            color: hsl(var(--c3));
-        }
+        gap: 10px;
+        margin-top: var(--card-gap);
     }
 
 
@@ -19310,7 +19303,7 @@
 
 
 
-    .has-error {
+    .container.has-error {
         display: flex;
         justify-content: center;
         align-items: center;
@@ -20253,6 +20246,7 @@
             margin-bottom: 4px;
             cursor: default;
 
+            .abbr + &,
             .control-label.hidden + &,
             .form-group + & {
                 margin: var(--item-list-gap) 0 4px;

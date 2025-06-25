@@ -184,6 +184,18 @@ export function render_setting_page(page_id) {
                 <h4>${tl(trans.themes.name)}</h4>
                 <div class="setting-items full">
                     <div class="side-left full even-more">
+                        ${ff('auto_theme') ? html.node`
+                        <button class="btn theme-item" data-bleh-theme="auto" onclick="change_theme_from_settings('auto')">
+                            <div class="preview-container">
+                            <div class="preview">
+                                ${theme_preview()}
+                            </div>
+                            </div>
+                            <div class="text">
+                                <h5>${tl(trans.auto)} <div class="new-badge">${tl(trans.new)}</div></h5>
+                            </div>
+                        </button>
+                        ` : ''}
                         <button class="btn theme-item" data-bleh-theme="light" data-bleh--theme_type="light" onclick="change_theme_from_settings('light')">
                             <div class="preview-container">
                             <div class="preview" data-bleh--theme="light" data-bleh--theme_type="light">
@@ -683,18 +695,7 @@ export function render_setting_page(page_id) {
 
                     </div>
                 </div>
-                <div class="setting" data-type="toggle" id="container-activities" onclick="_update_item('activities')">
-                    <button class="btn reset" onclick="_reset_item('activities')">${tl(trans.reset)}</button>
-                    <div class="heading">
-                        <h5>${tl(trans.activity_tracking.name)}</h5>
-                        <p>${tl(trans.activity_tracking.body)}</p>
-                    </div>
-                    <div class="toggle-wrap">
-                        <button class="toggle" id="toggle-activities" aria-checked="true">
-                            <div class="dot"></div>
-                        </button>
-                    </div>
-                </div>
+                ${setting({id: 'activities'})}
                 <div class="setting" data-type="toggle">
                     <div class="heading">
                         <h5>${tl(trans.clear_history)}</h5>
@@ -713,104 +714,13 @@ export function render_setting_page(page_id) {
                     </div>
                 </div>
                 <div class="sep"></div>
-                <div class="setting" data-type="toggle" id="container-activity_shout" onclick="_update_item('activity_shout')">
-                    <div class="icon">
-                        <div class="bleh-icon" style="--icon: var(--icon-16-shoutbox)"></div>
-                    </div>
-                    <div class="heading">
-                        <h5>${tl(trans.shouts)}</h5>
-                        <p>${tl(trans.activity.types.shout)}</p>
-                    </div>
-                    <div class="toggle-wrap">
-                        <button class="toggle" id="toggle-activity_shout" aria-checked="true">
-                            <div class="dot"></div>
-                        </button>
-                    </div>
-                </div>
-                <div class="setting" data-type="toggle" id="container-activity_image" onclick="_update_item('activity_image')">
-                    <div class="icon">
-                        <div class="bleh-icon" style="--icon: var(--icon-16-gallery-vertical)"></div>
-                    </div>
-                    <div class="heading">
-                        <h5>${tl(trans.photos)}</h5>
-                        <p>${tl(trans.activity.types.image)}</p>
-                    </div>
-                    <div class="toggle-wrap">
-                        <button class="toggle" id="toggle-activity_image" aria-checked="true">
-                            <div class="dot"></div>
-                        </button>
-                    </div>
-                </div>
-                <div class="setting" data-type="toggle" id="container-activity_obsess" onclick="_update_item('activity_obsess')">
-                    <div class="icon">
-                        <div class="bleh-icon" style="--icon: var(--icon-16-obsession)"></div>
-                    </div>
-                    <div class="heading">
-                        <h5>${tl(trans.obsessions)}</h5>
-                        <p>${tl(trans.activity.types.obsess)}</p>
-                    </div>
-                    <div class="toggle-wrap">
-                        <button class="toggle" id="toggle-activity_obsess" aria-checked="true">
-                            <div class="dot"></div>
-                        </button>
-                    </div>
-                </div>
-                <div class="setting" data-type="toggle" id="container-activity_love" onclick="_update_item('activity_love')">
-                    <div class="icon">
-                        <div class="bleh-icon" style="--icon: var(--icon-16-heart)"></div>
-                    </div>
-                    <div class="heading">
-                        <h5>${tl(trans.love)}</h5>
-                        <p>${tl(trans.activity.types.love)}</p>
-                    </div>
-                    <div class="toggle-wrap">
-                        <button class="toggle" id="toggle-activity_love" aria-checked="true">
-                            <div class="dot"></div>
-                        </button>
-                    </div>
-                </div>
-                <div class="setting" data-type="toggle" id="container-activity_bookmark" onclick="_update_item('activity_bookmark')">
-                    <div class="icon">
-                        <div class="bleh-icon" style="--icon: var(--icon-16-bookmark)"></div>
-                    </div>
-                    <div class="heading">
-                        <h5>${tl(trans.bookmarks)}</h5>
-                        <p>${tl(trans.activity.types.bookmark)}</p>
-                    </div>
-                    <div class="toggle-wrap">
-                        <button class="toggle" id="toggle-activity_bookmark" aria-checked="true">
-                            <div class="dot"></div>
-                        </button>
-                    </div>
-                </div>
-                <div class="setting" data-type="toggle" id="container-activity_wiki" onclick="_update_item('activity_wiki')">
-                    <div class="icon">
-                        <div class="bleh-icon" style="--icon: var(--icon-16-bio)"></div>
-                    </div>
-                    <div class="heading">
-                        <h5>${tl(trans.wiki)}</h5>
-                        <p>${tl(trans.activity.types.wiki)}</p>
-                    </div>
-                    <div class="toggle-wrap">
-                        <button class="toggle" id="toggle-activity_wiki" aria-checked="true">
-                            <div class="dot"></div>
-                        </button>
-                    </div>
-                </div>
-                <div class="setting" data-type="toggle" id="container-activity_install" onclick="_update_item('activity_install')">
-                    <div class="icon">
-                        <div class="bleh-icon" style="--icon: var(--icon-16-download)"></div>
-                    </div>
-                    <div class="heading">
-                        <h5>${tl(trans.installation)}</h5>
-                        <p>${tl(trans.activity.types.install)}</p>
-                    </div>
-                    <div class="toggle-wrap">
-                        <button class="toggle" id="toggle-activity_install" aria-checked="true">
-                            <div class="dot"></div>
-                        </button>
-                    </div>
-                </div>
+                ${setting({id: 'activity_shout'})}
+                ${setting({id: 'activity_image'})}
+                ${setting({id: 'activity_obsess'})}
+                ${setting({id: 'activity_love'})}
+                ${setting({id: 'activity_bookmark'})}
+                ${setting({id: 'activity_wiki'})}
+                ${setting({id: 'activity_install'})}
             </div>
             `);
     } else if (page_id == 'accessibility') {

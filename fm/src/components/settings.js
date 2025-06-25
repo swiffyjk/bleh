@@ -30,6 +30,7 @@ export function setting({
         let type = settings_store[id].type || 'toggle';
         let title = settings_store[id].title ? tl(settings_store[id].title) : id;
         let body = settings_store[id].body ? tl(settings_store[id].body) : null;
+        let icon = settings_store[id].icon;
 
         if (type === 'toggle') {
             let toggle;
@@ -215,6 +216,45 @@ export function setting({
             });
 
             return container;
+        } else if (type == 'checkbox') {
+            let toggle;
+
+            return html.node`
+                <div class="setting v2" data-type="checkbox" onclick=${() => update_toggle(id, toggle)}>
+                    ${icon ? html.node`
+                    <div class="icon">
+                        <div class="bleh-icon" style="--icon: var(--${icon})" />
+                    </div>
+                    ` : ''}
+                    ${(text) ? html.node`
+                    <div class="heading">
+                        <h5>${title}</h5>
+                        ${(body) ? html.node`<p>${body}</p>` : ''}
+                    </div>
+                    ` : ''}
+                    ${(settings_store[id].extensions) ? html.node`
+                    <div class="extensions">
+                        ${settings_store[id].extensions.map(extension => () => {
+                            let container = html.node`
+                                <div class="extension">
+                                    <div class="bleh-icon" />
+                                </div>
+                            `;
+                            tippy(container, {
+                                content: tl(trans.requires_extension_value).replace('{v}', tl(extension))
+                            });
+                            return container;
+                        })}
+                    </div>
+                    ` : ''}
+                    ${setting_incompatible_block(settings_store[id].incompatible)}
+                    <div class="check">
+                        <div class="box" ref=${el => toggle = el} aria-checked=${value}>
+                            <div class="bleh-icon" />
+                        </div>
+                    </div>
+                </div>
+            `;
         }
     } catch(e) {
         console.error(e);

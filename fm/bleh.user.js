@@ -4064,6 +4064,8 @@
     if (!bulk_edit) return;
     let view_buttons = page.structure.main.querySelector(".glacier-library-buttons");
     if (!view_buttons) return;
+    let pre_existing_bulk = view_buttons.querySelector(".bulk-edit-button");
+    if (pre_existing_bulk) return;
     let edit_form = view_buttons.querySelector(":scope > .library-header-edit-form");
     let delete_button = view_buttons.querySelector(":scope > .delete-icon");
     if (!delete_button) return;
@@ -4680,6 +4682,7 @@
       let type = settings_store[id].type || "toggle";
       let title = settings_store[id].title ? tl(settings_store[id].title) : id;
       let body = settings_store[id].body ? tl(settings_store[id].body) : null;
+      let icon = settings_store[id].icon;
       if (type === "toggle") {
         let toggle2;
         return html.node`
@@ -4845,6 +4848,44 @@
           }
         });
         return container;
+      } else if (type == "checkbox") {
+        let toggle2;
+        return html.node`
+                <div class="setting v2" data-type="checkbox" onclick=${() => update_toggle(id, toggle2)}>
+                    ${icon ? html.node`
+                    <div class="icon">
+                        <div class="bleh-icon" style="--icon: var(--${icon})" />
+                    </div>
+                    ` : ""}
+                    ${text2 ? html.node`
+                    <div class="heading">
+                        <h5>${title}</h5>
+                        ${body ? html.node`<p>${body}</p>` : ""}
+                    </div>
+                    ` : ""}
+                    ${settings_store[id].extensions ? html.node`
+                    <div class="extensions">
+                        ${settings_store[id].extensions.map((extension) => () => {
+          let container = html.node`
+                                <div class="extension">
+                                    <div class="bleh-icon" />
+                                </div>
+                            `;
+          tippy(container, {
+            content: tl(trans.requires_extension_value).replace("{v}", tl(extension))
+          });
+          return container;
+        })}
+                    </div>
+                    ` : ""}
+                    ${setting_incompatible_block(settings_store[id].incompatible)}
+                    <div class="check">
+                        <div class="box" ref=${(el) => toggle2 = el} aria-checked=${value}>
+                            <div class="bleh-icon" />
+                        </div>
+                    </div>
+                </div>
+            `;
       }
     } catch (e) {
       console.error(e);
@@ -10613,6 +10654,18 @@
                 <h4>${tl(trans.themes.name)}</h4>
                 <div class="setting-items full">
                     <div class="side-left full even-more">
+                        ${ff("auto_theme") ? html.node`
+                        <button class="btn theme-item" data-bleh-theme="auto" onclick="change_theme_from_settings('auto')">
+                            <div class="preview-container">
+                            <div class="preview">
+                                ${theme_preview()}
+                            </div>
+                            </div>
+                            <div class="text">
+                                <h5>${tl(trans.auto)} <div class="new-badge">${tl(trans.new)}</div></h5>
+                            </div>
+                        </button>
+                        ` : ""}
                         <button class="btn theme-item" data-bleh-theme="light" data-bleh--theme_type="light" onclick="change_theme_from_settings('light')">
                             <div class="preview-container">
                             <div class="preview" data-bleh--theme="light" data-bleh--theme_type="light">
@@ -11102,18 +11155,7 @@
 
                     </div>
                 </div>
-                <div class="setting" data-type="toggle" id="container-activities" onclick="_update_item('activities')">
-                    <button class="btn reset" onclick="_reset_item('activities')">${tl(trans.reset)}</button>
-                    <div class="heading">
-                        <h5>${tl(trans.activity_tracking.name)}</h5>
-                        <p>${tl(trans.activity_tracking.body)}</p>
-                    </div>
-                    <div class="toggle-wrap">
-                        <button class="toggle" id="toggle-activities" aria-checked="true">
-                            <div class="dot"></div>
-                        </button>
-                    </div>
-                </div>
+                ${setting({ id: "activities" })}
                 <div class="setting" data-type="toggle">
                     <div class="heading">
                         <h5>${tl(trans.clear_history)}</h5>
@@ -11132,104 +11174,13 @@
                     </div>
                 </div>
                 <div class="sep"></div>
-                <div class="setting" data-type="toggle" id="container-activity_shout" onclick="_update_item('activity_shout')">
-                    <div class="icon">
-                        <div class="bleh-icon" style="--icon: var(--icon-16-shoutbox)"></div>
-                    </div>
-                    <div class="heading">
-                        <h5>${tl(trans.shouts)}</h5>
-                        <p>${tl(trans.activity.types.shout)}</p>
-                    </div>
-                    <div class="toggle-wrap">
-                        <button class="toggle" id="toggle-activity_shout" aria-checked="true">
-                            <div class="dot"></div>
-                        </button>
-                    </div>
-                </div>
-                <div class="setting" data-type="toggle" id="container-activity_image" onclick="_update_item('activity_image')">
-                    <div class="icon">
-                        <div class="bleh-icon" style="--icon: var(--icon-16-gallery-vertical)"></div>
-                    </div>
-                    <div class="heading">
-                        <h5>${tl(trans.photos)}</h5>
-                        <p>${tl(trans.activity.types.image)}</p>
-                    </div>
-                    <div class="toggle-wrap">
-                        <button class="toggle" id="toggle-activity_image" aria-checked="true">
-                            <div class="dot"></div>
-                        </button>
-                    </div>
-                </div>
-                <div class="setting" data-type="toggle" id="container-activity_obsess" onclick="_update_item('activity_obsess')">
-                    <div class="icon">
-                        <div class="bleh-icon" style="--icon: var(--icon-16-obsession)"></div>
-                    </div>
-                    <div class="heading">
-                        <h5>${tl(trans.obsessions)}</h5>
-                        <p>${tl(trans.activity.types.obsess)}</p>
-                    </div>
-                    <div class="toggle-wrap">
-                        <button class="toggle" id="toggle-activity_obsess" aria-checked="true">
-                            <div class="dot"></div>
-                        </button>
-                    </div>
-                </div>
-                <div class="setting" data-type="toggle" id="container-activity_love" onclick="_update_item('activity_love')">
-                    <div class="icon">
-                        <div class="bleh-icon" style="--icon: var(--icon-16-heart)"></div>
-                    </div>
-                    <div class="heading">
-                        <h5>${tl(trans.love)}</h5>
-                        <p>${tl(trans.activity.types.love)}</p>
-                    </div>
-                    <div class="toggle-wrap">
-                        <button class="toggle" id="toggle-activity_love" aria-checked="true">
-                            <div class="dot"></div>
-                        </button>
-                    </div>
-                </div>
-                <div class="setting" data-type="toggle" id="container-activity_bookmark" onclick="_update_item('activity_bookmark')">
-                    <div class="icon">
-                        <div class="bleh-icon" style="--icon: var(--icon-16-bookmark)"></div>
-                    </div>
-                    <div class="heading">
-                        <h5>${tl(trans.bookmarks)}</h5>
-                        <p>${tl(trans.activity.types.bookmark)}</p>
-                    </div>
-                    <div class="toggle-wrap">
-                        <button class="toggle" id="toggle-activity_bookmark" aria-checked="true">
-                            <div class="dot"></div>
-                        </button>
-                    </div>
-                </div>
-                <div class="setting" data-type="toggle" id="container-activity_wiki" onclick="_update_item('activity_wiki')">
-                    <div class="icon">
-                        <div class="bleh-icon" style="--icon: var(--icon-16-bio)"></div>
-                    </div>
-                    <div class="heading">
-                        <h5>${tl(trans.wiki)}</h5>
-                        <p>${tl(trans.activity.types.wiki)}</p>
-                    </div>
-                    <div class="toggle-wrap">
-                        <button class="toggle" id="toggle-activity_wiki" aria-checked="true">
-                            <div class="dot"></div>
-                        </button>
-                    </div>
-                </div>
-                <div class="setting" data-type="toggle" id="container-activity_install" onclick="_update_item('activity_install')">
-                    <div class="icon">
-                        <div class="bleh-icon" style="--icon: var(--icon-16-download)"></div>
-                    </div>
-                    <div class="heading">
-                        <h5>${tl(trans.installation)}</h5>
-                        <p>${tl(trans.activity.types.install)}</p>
-                    </div>
-                    <div class="toggle-wrap">
-                        <button class="toggle" id="toggle-activity_install" aria-checked="true">
-                            <div class="dot"></div>
-                        </button>
-                    </div>
-                </div>
+                ${setting({ id: "activity_shout" })}
+                ${setting({ id: "activity_image" })}
+                ${setting({ id: "activity_obsess" })}
+                ${setting({ id: "activity_love" })}
+                ${setting({ id: "activity_bookmark" })}
+                ${setting({ id: "activity_wiki" })}
+                ${setting({ id: "activity_install" })}
             </div>
             `);
     } else if (page_id == "accessibility") {
@@ -17159,6 +17110,14 @@
       depth = 1;
       rabbit_search("internal:theme_picker", [
         {
+          type: "theme_auto",
+          text: tl(trans.auto),
+          body: tl(trans.changes_your_theme),
+          keywords: ["system"],
+          action: () => save_setting("theme", "light"),
+          hide: !ff("auto_theme")
+        },
+        {
           type: "theme_light",
           text: tl(trans.themes.light),
           body: tl(trans.changes_your_theme),
@@ -17698,7 +17657,9 @@
     name: name2 = "",
     title = "",
     body = "",
-    disabled = false
+    small = "",
+    disabled = false,
+    data: data2 = ""
   }) {
     let checkbox;
     let state;
@@ -17712,17 +17673,18 @@
             <div class="heading">
                 <h5>${title}</h5>
                 ${body != "" ? html.node`<p>${body}</p>` : ""}
+                ${small != "" ? html.node`<small>${small}</small>` : ""}
             </div>
             ${type == "toggle" ? html.node`
             <div class="toggle-wrap">
-                <input type="checkbox" ref=${(el) => checkbox = el} name=${name2} checked=${value} />
+                <input type="checkbox" ref=${(el) => checkbox = el} name=${name2} value=${data2} checked=${value} />
                 <button class="toggle" ref=${(el) => state = el} aria-checked=${value}>
                     <div class="dot" />
                 </button>
             </div>
             ` : html.node`
             <div class="check">
-                <input type="checkbox" ref=${(el) => checkbox = el} name=${name2} checked=${value} disabled=${disabled} />
+                <input type="checkbox" ref=${(el) => checkbox = el} name=${name2} value=${data2} checked=${value} disabled=${disabled} />
                 <div class="box" ref=${(el) => state = el} aria-checked=${value} disabled=${disabled}>
                     <div class="bleh-icon" />
                 </div>
@@ -17734,7 +17696,7 @@
 
   // src/components/dialog_extender.js
   function dialog_extender() {
-    let wrappers = document.body.querySelectorAll(':scope > :is(.popup_wrapper, div[data-processed="true"] > .popup_wrapper)');
+    let wrappers = document.body.querySelectorAll(":scope > .popup_wrapper, :scope > div > .popup_wrapper");
     wrappers.forEach((wrapper) => {
       let modal_dialog = wrapper.querySelector(".modal-dialog:not([data-dialog-extender])");
       if (!modal_dialog) return;
@@ -17745,8 +17707,9 @@
       let form = contents.querySelector("form");
       if (!form) return;
       let dismiss = modal_dialog.querySelector(".modal-dismiss");
-      page.token = form.querySelector('[name="csrfmiddlewaretoken"]').getAttribute("value");
-      if (form.getAttribute("action").endsWith("+bookmarks/modal/added")) {
+      let token = form.querySelector('[name="csrfmiddlewaretoken"]');
+      if (token) page.token = token.getAttribute("value");
+      if (form.action && form.action.endsWith("+bookmarks/modal/added")) {
         title.textContent = tl(trans.saved_to_bookmarks);
         let new_form;
         render(contents, html`
@@ -17786,7 +17749,6 @@
                 </form>
             `);
       } else if (body.classList.contains("automatic-edit-modal-body-v2")) {
-        return;
         let bulk_edit_active = false;
         let edit_all = body.querySelector('[name="edit_all"]');
         if (edit_all.disabled) bulk_edit_active = true;
@@ -17824,6 +17786,36 @@
                 </button>
             `);
       } else if (body.querySelector(".lastfm-bulk-edit-list")) {
+        let list = body.querySelector(".lastfm-bulk-edit-list");
+        let checkboxes = list.querySelectorAll(".checkbox");
+        checkboxes.forEach((checkbox) => {
+          let input_el = checkbox.querySelector("input");
+          let value = input_el.checked;
+          let name2 = input_el.getAttribute("name");
+          let disabled = input_el.disabled;
+          let data2 = input_el.getAttribute("value");
+          let item_artist = correct_artist(checkbox.querySelector("div").title);
+          let item_name = correct_item_by_artist(checkbox.querySelector("strong").title, item_artist);
+          let item_scrobbles = checkbox.querySelector("small").textContent.trim();
+          render(checkbox.parentElement, html`
+                    ${toggle({
+            value,
+            type: "checkbox",
+            name: name2,
+            title: item_name + tl(trans.by_artist).replace("{a}", item_artist),
+            body: item_scrobbles,
+            disabled,
+            data: data2
+          })}
+                `);
+        });
+        let footer = body.querySelector(".form-group--submit");
+        footer.classList = "modal-footer";
+        render(footer, html`
+                <button class="see-more cancel" type="reset">${tl(trans.cancel)}</button>
+                <div class="fill" />
+                <button class="btn primary continue" type="submit">${tl(trans.continue)}</button>
+            `);
       }
     });
   }
@@ -21055,6 +21047,9 @@
     },
     report: {
       en: "Report"
+    },
+    auto: {
+      en: "Auto"
     }
   };
   var trans_legacy = {
@@ -24959,6 +24954,60 @@
       type: "text",
       max: 40,
       placeholder: trans.enter_password
+    },
+    activities: {
+      default: true,
+      title: trans.activity_tracking.name,
+      body: trans.activity_tracking.body
+    },
+    activity_shout: {
+      default: true,
+      title: trans.shouts,
+      body: trans.activity.types.shout,
+      type: "checkbox",
+      icon: "icon-16-shoutbox"
+    },
+    activity_image: {
+      default: true,
+      title: trans.photos,
+      body: trans.activity.types.image,
+      type: "checkbox",
+      icon: "icon-16-gallery-vertical"
+    },
+    activity_obsess: {
+      default: true,
+      title: trans.obsessions,
+      body: trans.activity.types.obsess,
+      type: "checkbox",
+      icon: "icon-16-obsession"
+    },
+    activity_love: {
+      default: true,
+      title: trans.loved,
+      body: trans.activity.types.love,
+      type: "checkbox",
+      icon: "icon-16-heart"
+    },
+    activity_bookmark: {
+      default: true,
+      title: trans.bookmarks,
+      body: trans.activity.types.bookmark,
+      type: "checkbox",
+      icon: "icon-16-bookmark"
+    },
+    activity_wiki: {
+      default: true,
+      title: trans.wiki,
+      body: trans.activity.types.wiki,
+      type: "checkbox",
+      icon: "icon-16-bio"
+    },
+    activity_install: {
+      default: true,
+      title: trans.installation,
+      body: trans.activity.types.install,
+      type: "checkbox",
+      icon: "icon-16-download"
     }
   };
 
@@ -25239,6 +25288,11 @@
         default: true,
         name: "Extends beret redesign to turn all content into a single card",
         date: "2025-06-24"
+      },
+      auto_theme: {
+        default: false,
+        name: "Support inheriting theme from system",
+        date: "2025-06-25"
       }
     }
   };

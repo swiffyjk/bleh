@@ -2743,6 +2743,9 @@ export const trans = {
     },
     report: {
         en: 'Report'
+    },
+    auto: {
+        en: 'Auto'
     }
 }
 

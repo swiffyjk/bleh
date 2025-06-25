@@ -1317,6 +1317,9 @@ export function bleh_glacier_library_bulk_edit() {
     let view_buttons = page.structure.main.querySelector('.glacier-library-buttons');
     if (!view_buttons) return;
 
+    let pre_existing_bulk = view_buttons.querySelector('.bulk-edit-button');
+    if (pre_existing_bulk) return;
+
     let edit_form = view_buttons.querySelector(':scope > .library-header-edit-form');
     let delete_button = view_buttons.querySelector(':scope > .delete-icon');
     if (!delete_button) return;
