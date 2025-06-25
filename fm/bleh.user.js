@@ -4325,15 +4325,18 @@
     }
     let image_details;
     let gallery_section;
+    let first = false;
     try {
       gallery_section = page.structure.main.querySelector(".gallery-section");
       if (gallery_section) {
+        first = true;
         if (ff("short"))
           page.structure.row.insertBefore(gallery_section, page.structure.content);
         else
           page.structure.nav.after(gallery_section);
-        image_details = document.createElement("section");
-        image_details.classList.add("image-details");
+        image_details = html.node`
+                <section class="image-details" />
+            `;
       } else {
         image_details = page.structure.main.querySelector(".image-details");
         image_details.innerHTML = "";
@@ -4373,8 +4376,9 @@
     image_details.insertBefore(image_title_container, image_sidebar);
     breadcrumbs.style.setProperty("display", "none");
     page.structure.main.insertBefore(image_details, page.structure.main.firstElementChild);
+    if (first) image_details.after(html.node`<div class="sep" />`);
     let description = image_details.querySelector(".gallery-image-description");
-    if (description == null) {
+    if (!description) {
       description = document.createElement("p");
       description.classList.add("gallery-image-description", "gallery-image-description-empty");
       description.textContent = trans_legacy.en.gallery.empty.description;
@@ -4427,13 +4431,13 @@
     tippy(report_text, {
       content: report_text.textContent
     });
-    report_text.textContent = trans_legacy.en.gallery.report.name;
+    report_text.textContent = tl(trans.report);
     buttons_extra.appendChild(report_button);
     let star_buttons = image_details.querySelectorAll(".gallery-image-preferred-button :is(button, a)");
     star_buttons.forEach((star_button) => {
       star_button.removeAttribute("title");
       let text2 = star_button.querySelector(".gallery-image-preferred-states");
-      text2.textContent = trans_legacy.en.gallery.prefer.name;
+      text2.textContent = tl(trans.star);
     });
     let view_all_container = page.structure.main.querySelector(".more-link-fullwidth-right-flush-top");
     if (view_all_container) {
@@ -18088,6 +18092,17 @@
         patch_wiki();
       if ((page.type == "user" || page.type == "tag" || page.type == "events") && (page.subpage == "overview" || page.subpage == "event_overview"))
         bleh_radio();
+      if (page.subpage == "image") {
+        let images = page.structure.row.querySelectorAll(".gallery-image");
+        images.forEach((image) => {
+          let star = image.querySelector(".gallery-image-preferred-container");
+          if (!star) return;
+          render(star, html`
+                    <div class="bleh-icon" />
+                    ${tl(trans.starred)}
+                `);
+        });
+      }
     }
     append_nav();
     page_title();
@@ -21017,6 +21032,15 @@
     },
     custom: {
       en: "Custom"
+    },
+    star: {
+      en: "Star"
+    },
+    starred: {
+      en: "Starred"
+    },
+    report: {
+      en: "Report"
     }
   };
   var trans_legacy = {

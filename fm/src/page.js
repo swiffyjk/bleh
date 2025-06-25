@@ -449,6 +449,19 @@ function load_page() {
 
         if ((page.type == 'user' || page.type == 'tag' || page.type == 'events') && (page.subpage == 'overview' || page.subpage == 'event_overview'))
             bleh_radio();
+
+        if (page.subpage == 'image') {
+            let images = page.structure.row.querySelectorAll('.gallery-image');
+            images.forEach(image => {
+                let star = image.querySelector('.gallery-image-preferred-container');
+                if (!star) return;
+
+                render(star, html`
+                    <div class="bleh-icon" />
+                    ${tl(trans.starred)}
+                `);
+            });
+        }
     }
 
     append_nav();

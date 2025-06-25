@@ -2734,6 +2734,15 @@ export const trans = {
     },
     custom: {
         en: 'Custom'
+    },
+    star: {
+        en: 'Star'
+    },
+    starred: {
+        en: 'Starred'
+    },
+    report: {
+        en: 'Report'
     }
 }
 
