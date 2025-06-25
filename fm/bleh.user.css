@@ -8419,7 +8419,11 @@
                 --radius: var(--button-radius);
                 --padding: 9px var(--button-sides) 9px calc(var(--button-sides) + var(--icon-size) + var(--icon-gap)) !important;
                 margin: 0 !important;
-                min-height: 32px !important;
+                min-height: 36px !important;
+
+                &.side-action {
+                    height: 36px !important;
+                }
 
                 [data-ff--beret="true"] & {
                     margin: 0 calc(-1 * var(--button-sides)) !important;
