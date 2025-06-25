@@ -2668,6 +2668,10 @@
                 .col-main, .col-sidebar {
                     margin: unset !important;
                 }
+
+                [data-ff--short="true"] & {
+                    box-shadow: var(--card-shadow);
+                }
             }
 
             .redesigned-content-top {
