@@ -261,6 +261,8 @@
             --b6: 0, 0%, 70%;
             --b8: 0, 0%, 100%;
             --b7: 0, 0%, 0%;
+
+            --card-border-base: rgb(0 0 0 / 10%);
         }
         .preview[data-bleh--theme="light"], .redesigned-header[data-bleh--theme="light"],
         [data-bleh--theme="light"] &:not(.preview) {
