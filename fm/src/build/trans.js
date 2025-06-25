@@ -2746,6 +2746,9 @@ export const trans = {
     },
     auto: {
         en: 'Auto'
+    },
+    glass: {
+        en: 'Glass'
     }
 }
 

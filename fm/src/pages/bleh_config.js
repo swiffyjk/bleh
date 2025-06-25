@@ -23,7 +23,7 @@ import {update_page} from "../page";
 import {seasonal_timer_end, seasonal_timer_start} from "../seasonal";
 import {ff} from "../sku";
 import {html, render} from "lighterhtml"
-import {setting} from "../components/settings.js";
+import {save_setting, setting} from "../components/settings.js";
 import {parse_scrobbles_as_rank} from "../components/colourful_counts.js";
 
 export function bleh_settings() {
@@ -182,6 +182,7 @@ export function render_setting_page(page_id) {
         render(page.structure.main, html`
             <div class="bleh--panel">
                 <h4>${tl(trans.themes.name)}</h4>
+                ${ff('theme_bubbles') ? theme_bubbles : html.node`
                 <div class="setting-items full">
                     <div class="side-left full even-more">
                         ${ff('auto_theme') ? html.node`
@@ -252,6 +253,7 @@ export function render_setting_page(page_id) {
                         </button>
                     </div>
                 </div>
+                `}
                 ${(ff('high_contrast')) ? html.node`
                 <div class="setting" data-type="toggle" id="container-high_contrast" onclick="_update_item('high_contrast')">
                     <button class="btn reset" onclick="_reset_item('high_contrast')">${tl(trans.reset)}</button>
@@ -2662,4 +2664,88 @@ function activity_preview_new(parent, activity) {
 
     if (parent.childElementCount > 3)
         parent.removeChild(parent.lastElementChild);
+}
+
+function theme_bubbles() {
+    let bubbles = html.node`
+    <div class="theme-bubbles" />
+    `;
+
+    render_theme_bubbles();
+
+    return bubbles;
+
+    function update_theme_bubble(theme) {
+        save_setting('theme', theme);
+        render_theme_bubbles();
+    }
+
+    function render_theme_bubbles() {
+        let themes = [
+            {
+                id: 'auto',
+                name: tl(trans.auto),
+                hide: !ff('auto_theme'),
+                new_release: true
+            },
+            {
+                id: 'glass',
+                type: 'light',
+                name: tl(trans.glass),
+                hide: !ff('glass'),
+                new_release: true
+            },
+            {
+                id: 'light',
+                type: 'light',
+                name: tl(trans.themes.light)
+            },
+            {
+                id: 'ink',
+                type: 'light',
+                name: tl(trans.themes.ink)
+            },
+            {
+                id: 'dark',
+                formal: 'ash',
+                type: 'dark',
+                name: tl(trans.themes.dark)
+            },
+            {
+                id: 'darker',
+                formal: 'dark',
+                type: 'darker',
+                name: tl(trans.themes.darker)
+            },
+            {
+                id: 'oled',
+                formal: 'void',
+                type: 'oled',
+                name: tl(trans.themes.oled)
+            }
+        ];
+
+        render(bubbles, html``);
+        render(bubbles, html`
+            ${themes.map(theme => {
+                if (theme.hide) return html.node``;
+                
+                if (!theme.formal) theme.formal = theme.id;
+                
+                return html.node`
+                    <button class="theme-bubble" aria-selected=${settings.theme == theme.id} onclick=${() => update_theme_bubble(theme.id)}>
+                        <div class="bubble">
+                            <div class="inner preview" data-bleh--theme=${theme.id} data-bleh--theme_type=${theme.type}>
+                                <div class="bleh-icon" data-type="theme_${theme.formal}" />
+                            </div>
+                        </div>
+                        <strong>
+                            ${theme.name}
+                            ${theme.new_release ? html.node`<div class="new-badge">${tl(trans.new)}</div>` : ''}
+                        </strong>
+                    </button>
+                `;
+            })}
+        `);
+    }
 }

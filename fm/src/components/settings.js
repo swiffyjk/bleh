@@ -381,7 +381,7 @@ export function save_setting(id, value) {
     document.documentElement.setAttribute(`data-bleh--${id}`, value);
 
     if (id == 'theme') {
-        if (value == 'light' || value == 'ink') {
+        if (value == 'light' || value == 'ink' || value == 'glass') {
             settings.theme_type = 'light';
         } else {
             settings.theme_type = 'dark';

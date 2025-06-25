@@ -214,6 +214,16 @@
             "default": false,
             "name": "Support inheriting theme from system",
             "date": "2025-06-25"
+        },
+        "theme_bubbles": {
+            "default": true,
+            "name": "Simplify theme preview symmetry",
+            "date": "2025-06-25"
+        },
+        "glass": {
+            "default": false,
+            "name": "Support experimental glass theme",
+            "date": "2025-06-25"
         }
     }
 }
