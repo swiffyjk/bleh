@@ -5891,7 +5891,7 @@
     if (!ff("music_page_charts"))
       return;
     log("beginning replacement", "music charts");
-    let panel = document.body.querySelector(".listen-panel");
+    let panel = page.structure.container.querySelector(".listen-panel");
     let trend = panel.querySelector(".listener-trend");
     if (!trend) return;
     let previous_chart = panel.querySelector(".scrobble-canvas-container");
@@ -7069,6 +7069,17 @@
         if (content_top) content_top.classList.add("legacy-content-top");
       }
     }
+  }
+  function checkup_nav() {
+    if (!ff("short")) return;
+    if (page.structure.nav) page.structure.nav.setAttribute("data-assigned", "true");
+    let navlists = page.structure.container.querySelectorAll(":scope > .navlist");
+    console.info(page.structure.container.innerHTML);
+    navlists.forEach((nav, index) => {
+      console.info(index);
+      if (index < 1) return;
+      page.structure.row.insertBefore(nav, page.structure.content);
+    });
   }
 
   // src/components/auto_edit.js
@@ -15658,6 +15669,7 @@
     `;
     page.structure.nav = nav;
     welcome.after(nav);
+    checkup_nav();
     if (page.type == "charts")
       bleh_charts();
     if (page.type == "settings")

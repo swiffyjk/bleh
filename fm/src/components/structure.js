@@ -251,3 +251,18 @@ export function checkup_page_structure(is_subpage = false, header = null) {
         }
     }
 }
+
+export function checkup_nav() {
+    if (!ff('short')) return;
+
+    if (page.structure.nav) page.structure.nav.setAttribute('data-assigned', 'true');
+
+    let navlists = page.structure.container.querySelectorAll(':scope > .navlist');
+    console.info(page.structure.container.innerHTML);
+    navlists.forEach((nav, index) => {
+        console.info(index);
+        if (index < 1) return;
+
+        page.structure.row.insertBefore(nav, page.structure.content);
+    });
+}

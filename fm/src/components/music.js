@@ -1001,7 +1001,7 @@ export function bleh_music_page_charts() {
 
     log('beginning replacement', 'music charts');
 
-    let panel = document.body.querySelector('.listen-panel'); // page.structure.side fails without pro
+    let panel = page.structure.container.querySelector('.listen-panel'); // page.structure.side fails without pro
     let trend = panel.querySelector('.listener-trend');
 
     if (!trend) return;

@@ -9,7 +9,7 @@ import {settings} from "../build/config";
 import {log} from "../build/log";
 import {auth, page, root} from "../build/page";
 import {tl, trans, trans_legacy} from "../build/trans";
-import {checkup_page_structure} from "../components/structure";
+import {checkup_nav, checkup_page_structure} from "../components/structure";
 import {register_background, update_page} from "../page";
 import {bleh_charts} from "./chart";
 import {bleh_native_settings} from './lastfm_settings';
@@ -121,6 +121,7 @@ export function bleh_home() {
 
     page.structure.nav = nav;
     welcome.after(nav);
+    checkup_nav();
 
     if (page.type == 'charts')
         bleh_charts();

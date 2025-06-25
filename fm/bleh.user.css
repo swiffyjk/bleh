@@ -2083,6 +2083,10 @@
                 padding: var(--card-padding) 0;
                 gap: var(--card-gap) !important;
 
+                & > .navlist:first-child {
+                    margin-top: -5px !important;
+                }
+
                 & > .content {
                     display: flex;
                     justify-content: center;
@@ -11323,6 +11327,10 @@
             [data-bleh--theme_type="light"] & {
                 background: hsl(var(--b4), 12%) !important;
             }
+        }
+
+        [data-ff--short="true"] &:not(.listen-profile-panel) {
+            order: -1;
         }
 
         h3.text-18 {
@@ -20579,13 +20587,13 @@
             .avatar-side {
                 position: absolute;
                 top: 0;
-                left: 0;
-                right: 0;
+                left: 5px;
+                right: 5px;
                 width: unset !important;
                 height: 250px;
                 box-shadow: unset;
                 transform: unset !important;
-                border-radius: unset !important;
+                border-radius: var(--item-med-radius) !important;
 
                 --mask: linear-gradient(0deg, transparent 0%, rgb(0, 0, 0) 100%);
                 mask-image: var(--mask);
@@ -21200,6 +21208,10 @@
         [data-ff--beret="true"][data-ff--sweet="false"] & {
             --card-specific-background: hsl(var(--b6));
             margin: var(--card-padding) 0 !important;
+        }
+
+        [data-ff--sweet="true"] & {
+            border-radius: 0 !important;
         }
 
         .sep {
@@ -23013,6 +23025,10 @@
 
         margin-top: -205px;
 
+        [data-ff--short="true"] & {
+            margin-top: -265px;
+        }
+
         .sponsor-message {
             color: hsl(var(--l3-c));
             text-shadow: 0 0 20px hsl(var(--l4-c));
@@ -23278,7 +23294,7 @@
         margin-left: unset;
         margin-right: unset;
         display: grid;
-        grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
+        grid-template-columns: repeat(auto-fill, minmax(180px, 1fr));
         gap: var(--card-padding) var(--card-gap);
 
         &.resource-list--release-list,
