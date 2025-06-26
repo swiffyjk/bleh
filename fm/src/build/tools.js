@@ -5,6 +5,8 @@
 //
 
 // https://stackoverflow.com/questions/46432335/hex-to-hsl-convert-javascript
+import {log} from "./log.js";
+
 /**
  * Converts hex to {h, s, l}
  * @param {string} hex
@@ -209,4 +211,29 @@ export function interpolate_hue(current, next, proximity) {
 
     // normalise once more
     return ((interpolated % 360) + 360) % 360;
+}
+
+/**
+ * Lazy loads an element by waiting until the user scrolls into view
+ * @param {HTMLElement} elem - Element
+ * @param {Function} func - Function when the element is scrolled into view
+ * @param {Object} options - Any options to pass
+ */
+export function lazy(elem, func, options = {}) {
+    const {
+        threshold = 0.1,
+        rootMargin = '50px'
+    } = options;
+
+    const observer = new IntersectionObserver(entries => {
+        entries.forEach(entry => {
+            if (entry.isIntersecting) {
+                log('now allowing load', 'lazy', 'info', {elem: elem, options: options});
+                func(elem);
+                observer.unobserve(elem);
+            }
+        });
+    }, { threshold, rootMargin });
+
+    observer.observe(elem);
 }

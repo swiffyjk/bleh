@@ -2752,6 +2752,9 @@ export const trans = {
     },
     high_contrast: {
         en: 'Prefer high contrast'
+    },
+    external: {
+        en: 'External'
     }
 }
 
@@ -5807,8 +5810,7 @@ export function tl(key) {
         return 'NO_TRANSLATION_FOUND';
     }
 
-    if (key[lang])
-        return key[lang];
+    if (key[lang]) return key[lang];
 
     log(`no translation found for ${JSON.stringify(key)}`, 'trans');
     return key.en;

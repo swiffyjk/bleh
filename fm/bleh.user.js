@@ -1220,6 +1220,22 @@
     let interpolated = current + diff * proximity;
     return (interpolated % 360 + 360) % 360;
   }
+  function lazy(elem, func, options = {}) {
+    const {
+      threshold = 0.1,
+      rootMargin = "50px"
+    } = options;
+    const observer = new IntersectionObserver((entries) => {
+      entries.forEach((entry) => {
+        if (entry.isIntersecting) {
+          log("now allowing load", "lazy", "info", { elem, options });
+          func(elem);
+          observer.unobserve(elem);
+        }
+      });
+    }, { threshold, rootMargin });
+    observer.observe(elem);
+  }
 
   // src/build/music.js
   var artist_corrections = {};
@@ -2043,7 +2059,11 @@
       const href = link.getAttribute("href");
       if (href && link.textContent != href && /^(https?|mailto|ftp|sftp|tel):/.test(href)) {
         tippy(link, {
-          content: href
+          theme: "name-sister-combo",
+          content: html.node`
+                    <span class="name">${href}</span>
+                    <span class="sister">${tl(trans.external)}</span>
+                `
         });
       }
     });
@@ -9661,7 +9681,8 @@
     if (table) {
       bleh_profile_chart_render(panel, table);
       return;
-    } else {
+    }
+    lazy(panel, () => {
       fetch(`${root}user/${page.name}/library/artists/chart?date_preset=LAST_90_DAYS&page=1&ajax=1`).then(function(response) {
         console.log("glacier library returned", response, response.text, response.status);
         if (response.status != 200)
@@ -9682,7 +9703,7 @@
           throw new Error();
         }
       });
-    }
+    }, { threshold: 0.3, rootMargin: "0px" });
   }
   function bleh_profile_chart_render(panel = page.structure.side.querySelector(".listen-profile-panel"), table = null) {
     if (!table)
@@ -21170,6 +21191,9 @@
     },
     high_contrast: {
       en: "Prefer high contrast"
+    },
+    external: {
+      en: "External"
     }
   };
   var trans_legacy = {
@@ -24212,8 +24236,7 @@
       log("your key is undefined", "trans");
       return "NO_TRANSLATION_FOUND";
     }
-    if (key[lang])
-      return key[lang];
+    if (key[lang]) return key[lang];
     log(`no translation found for ${JSON.stringify(key)}`, "trans");
     return key.en;
   }

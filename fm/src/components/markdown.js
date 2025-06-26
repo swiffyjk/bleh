@@ -6,6 +6,7 @@
 
 import {root} from "../build/page";
 import {html} from "lighterhtml";
+import {tl, trans} from "../build/trans.js";
 
 export function markdown(text, {
     allow_headers = false,
@@ -47,7 +48,11 @@ export function markdown(text, {
         const href = link.getAttribute('href');
         if (href && link.textContent != href && /^(https?|mailto|ftp|sftp|tel):/.test(href)) {
             tippy(link, {
-                content: href
+                theme: 'name-sister-combo',
+                content: html.node`
+                    <span class="name">${href}</span>
+                    <span class="sister">${tl(trans.external)}</span>
+                `
             });
         }
     });

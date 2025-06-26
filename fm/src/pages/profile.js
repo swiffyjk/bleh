@@ -9,7 +9,7 @@ import {settings} from "../build/config"
 import {log} from "../build/log"
 import {auth, page, root} from "../build/page"
 import {sponsor_list} from "../build/sponsor"
-import {clean_number, sanitise, sanitise_text} from "../build/tools"
+import {clean_number, lazy, sanitise, sanitise_text} from "../build/tools"
 import {lang, tl, trans} from "../build/trans"
 import {prep_chart_colours} from '../chart'
 import {load_badges} from "../components/badge"
@@ -1616,35 +1616,37 @@ function bleh_profile_chart() {
     if (table) {
         bleh_profile_chart_render(panel, table);
         return;
-    } else {
-        fetch(`${root}user/${page.name}/library/artists/chart?date_preset=LAST_90_DAYS&page=1&ajax=1`)
-        .then(function(response) {
-            console.log('glacier library returned', response, response.text, response.status);
-
-            if (response.status != 200)
-                throw new Error;
-
-            return response.text();
-        })
-        .then(function(html) {
-            let doc = new DOMParser().parseFromString(html, 'text/html');
-            console.log('glacier library DOC', doc, doc.querySelector('.table'));
-
-            log('received response', 'glacier library');
-
-            table = doc.querySelector('.table');
-
-            if (table) {
-                panel.appendChild(table);
-                bleh_profile_chart_render(panel, table);
-            } else {
-                log('table is null?', 'glacier library', 'error');
-                console.info('glacier library', doc.body.innerHTML);
-                console.info('glacier library', new DOMParser().parseFromString(doc.body.innerHTML, 'text/html'));
-                throw new Error;
-            }
-        });
     }
+
+    lazy(panel, () => {
+        fetch(`${root}user/${page.name}/library/artists/chart?date_preset=LAST_90_DAYS&page=1&ajax=1`)
+            .then(function (response) {
+                console.log('glacier library returned', response, response.text, response.status);
+
+                if (response.status != 200)
+                    throw new Error;
+
+                return response.text();
+            })
+            .then(function (html) {
+                let doc = new DOMParser().parseFromString(html, 'text/html');
+                console.log('glacier library DOC', doc, doc.querySelector('.table'));
+
+                log('received response', 'glacier library');
+
+                table = doc.querySelector('.table');
+
+                if (table) {
+                    panel.appendChild(table);
+                    bleh_profile_chart_render(panel, table);
+                } else {
+                    log('table is null?', 'glacier library', 'error');
+                    console.info('glacier library', doc.body.innerHTML);
+                    console.info('glacier library', new DOMParser().parseFromString(doc.body.innerHTML, 'text/html'));
+                    throw new Error;
+                }
+            });
+    }, { threshold: 0.3, rootMargin: '0px' });
 }
 
 export function bleh_profile_chart_render(panel=page.structure.side.querySelector('.listen-profile-panel'), table=null) {

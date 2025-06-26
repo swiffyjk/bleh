@@ -185,7 +185,7 @@
         --b5: var(--hue), calc(var(--sat) * 5% * var(--sat-bg, 1)), 18%;
 
         /* root */
-        --b6: var(--hue), calc(var(--sat) * 7% * var(--sat-bg, 1)), 10%;
+        --b6: var(--hue), calc(var(--sat) * 7% * var(--sat-bg, 1)), 13%;
         --b8: var(--hue), calc(var(--sat) * 4% * var(--sat-bg, 1)), 25%;
         --b7: 0, 0%, 0%;
 
@@ -202,17 +202,17 @@
         .theme-preview[data-bleh--theme="darker"],
         [data-bleh--theme="darker"] &:not(.theme-preview) {
             /* any additional highlights */
-            --b3: var(--hue), calc(var(--sat) * 5% * var(--sat-bg, 1)), 23%;
+            --b3: var(--hue), calc(var(--sat) * 5% * var(--sat-bg, 1)), 21%;
 
             /* card border */
-            --b4: var(--hue), calc(var(--sat) * 6% * var(--sat-bg, 1)), 18%;
+            --b4: var(--hue), calc(var(--sat) * 6% * var(--sat-bg, 1)), 16%;
 
             /* card */
-            --b5: var(--hue), calc(var(--sat) * 6% * var(--sat-bg, 1)), 12%;
+            --b5: var(--hue), calc(var(--sat) * 6% * var(--sat-bg, 1)), 11%;
 
             /* root */
-            --b6: var(--hue), calc(var(--sat) * 8% * var(--sat-bg, 1)), 7%;
-            --b8: var(--hue), calc(var(--sat) * 5% * var(--sat-bg, 1)), 19%;
+            --b6: var(--hue), calc(var(--sat) * 8% * var(--sat-bg, 1)), 6%;
+            --b8: var(--hue), calc(var(--sat) * 5% * var(--sat-bg, 1)), 17%;
             --b7: 0, 0%, 0%;
 
             &[data-ff--beret="true"][data-ff--short="false"], [data-ff--beret="true"][data-ff--short="false"] & {
@@ -225,10 +225,10 @@
         .theme-preview[data-bleh--theme="oled"],
         [data-bleh--theme="oled"] &:not(.theme-preview) {
             /* any additional highlights */
-            --b3: var(--hue), calc(var(--sat) * 5% * var(--sat-bg, 1)), 14%;
+            --b3: var(--hue), calc(var(--sat) * 5% * var(--sat-bg, 1)), 11%;
 
             /* card border */
-            --b4: var(--hue), calc(var(--sat) * 4% * var(--sat-bg, 1)), 9%;
+            --b4: var(--hue), calc(var(--sat) * 4% * var(--sat-bg, 1)), 10%;
 
             /* card */
             --b5: var(--hue), calc(var(--sat) * 2% * var(--sat-bg, 1)), 1%;
@@ -393,7 +393,7 @@
                 1))));
 
         --c1: var(--hue), calc(clamp(min(0), var(--sat), max(1)) * 40%), 100%;
-        --c2: var(--hue), calc(clamp(min(0), var(--sat), max(1)) * 30%), 85%;
+        --c2: var(--hue), calc(clamp(min(0), var(--sat), max(1)) * 30%), 87%;
         --c3: var(--hue), calc(clamp(min(0), var(--sat), max(1)) * 7%), 60%;
         --ov-c1: var(--c1);
 
@@ -431,7 +431,7 @@
         .theme-preview[data-bleh--theme="oled"],
         [data-bleh--theme="oled"] &:not(.theme-preview) {
             --c1: var(--hue), calc(clamp(min(0), var(--sat), max(1)) * 40%), 100%;
-            --c2: var(--hue), calc(clamp(min(0), var(--sat), max(1)) * 20%), 80%;
+            --c2: var(--hue), calc(clamp(min(0), var(--sat), max(1)) * 30%), 84%;
             --c3: var(--hue), calc(clamp(min(0), var(--sat), max(1)) * 10%), 50%;
 
             --l3: var(--hue), calc(var(--sat) * 50%), calc(var(--lit) * 75%);
@@ -2153,6 +2153,7 @@
             display: flex;
             justify-content: center;
             width: 100%;
+            background: hsl(var(--b5));
 
             [data-ff--short="true"] & {
                 flex-direction: column;
@@ -2752,7 +2753,6 @@
         [data-ff--beret="true"] &:not([style], .ignore-katsune, .has-error) {
             .row {
                 margin-top: unset;
-                background: hsl(var(--b5));
                 border-radius: unset;
                 box-shadow: unset;
                 gap: 0 !important;
@@ -5435,6 +5435,10 @@
 
 
     #recent-tracks-section {
+        padding-top: var(--card-padding) !important;
+        padding-bottom: var(--card-padding) !important;
+        margin: calc(-1 * var(--card-padding)) 0 !important;
+
         &.has-refreshed {
             animation-name: wash_panel;
             animation-duration: 2.2s;
@@ -5473,11 +5477,11 @@
     }
     @keyframes wash {
         from {
-            opacity: 0.15;
+            opacity: 0.25;
             transform: translateY(-100%);
         }
         to {
-            opacity: 0.15;
+            opacity: 0;
             transform: translateY(100%);
         }
     }
@@ -17714,15 +17718,10 @@
 
 
     .bleh--name-is-cute {
-        font-family: var(--font-brand);
-        font-size: 30px;
-        line-height: 30px;
-        margin-top: -8px;
-
-        text-shadow: 0 4px 0 color-mix(in hsl, hsl(var(--l3-c)), #000 30%);
+        text-shadow: 0 3px 0 color-mix(in hsl, hsl(var(--l3-c)), #000 30%);
 
         [data-bleh--theme_type="light"] & {
-            text-shadow: 0 4px 0 color-mix(in hsl, hsl(var(--l2-c)), #fff 43%);
+            text-shadow: 0 3px 0 color-mix(in hsl, hsl(var(--l2-c)), #fff 43%);
         }
     }
 
