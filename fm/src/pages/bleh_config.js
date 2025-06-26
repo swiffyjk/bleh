@@ -254,19 +254,7 @@ export function render_setting_page(page_id) {
                     </div>
                 </div>
                 `}
-                ${(ff('high_contrast')) ? html.node`
-                <div class="setting" data-type="toggle" id="container-high_contrast" onclick="_update_item('high_contrast')">
-                    <button class="btn reset" onclick="_reset_item('high_contrast')">${tl(trans.reset)}</button>
-                    <div class="heading">
-                        <h5>${trans_legacy.en.settings.customise.high_contrast.name}</h5>
-                    </div>
-                    <div class="toggle-wrap">
-                        <button class="toggle" id="toggle-high_contrast" aria-checked="true">
-                            <div class="dot"></div>
-                        </button>
-                    </div>
-                </div>
-                ` : ''}
+                ${(ff('high_contrast')) ? setting({id: 'high_contrast'}) : ''}
                 <h4>${tl(trans.colours)}</h4>
                 <div class="view-buttons colour-buttons view-buttons-middle" id="colour_custom"></div>
                 <div class="swatch-group">
@@ -2668,7 +2656,7 @@ function activity_preview_new(parent, activity) {
 
 function theme_bubbles() {
     let bubbles = html.node`
-    <div class="theme-bubbles" />
+        <div class="theme-bubbles" />
     `;
 
     render_theme_bubbles();
@@ -2725,17 +2713,17 @@ function theme_bubbles() {
             }
         ];
 
-        render(bubbles, html``);
+        render(bubbles, html``); // fixes weird lighterhtml crash
         render(bubbles, html`
             ${themes.map(theme => {
                 if (theme.hide) return html.node``;
                 
                 if (!theme.formal) theme.formal = theme.id;
                 
-                return html.node`
+                let bubble = html.node`
                     <button class="theme-bubble" aria-selected=${settings.theme == theme.id} onclick=${() => update_theme_bubble(theme.id)}>
                         <div class="bubble">
-                            <div class="inner preview" data-bleh--theme=${theme.id} data-bleh--theme_type=${theme.type}>
+                            <div class="inner theme-preview" data-bleh--theme=${theme.id} data-bleh--theme_type=${theme.type}>
                                 <div class="bleh-icon" data-type="theme_${theme.formal}" />
                             </div>
                         </div>
@@ -2745,6 +2733,18 @@ function theme_bubbles() {
                         </strong>
                     </button>
                 `;
+                
+                tippy(bubble, {
+                    theme: 'theme-preview',
+                    content: html.node`
+                        <div class="theme-preview" data-bleh--theme=${theme.id} data-bleh--theme_type=${theme.type}>
+                            ${theme_preview()}
+                        </div>
+                    `,
+                    delay: [500, 0]
+                });
+                
+                return bubble;
             })}
         `);
     }

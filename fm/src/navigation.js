@@ -14,7 +14,7 @@ import {show_theme_change_in_menu} from "./pages/bleh_config";
 import {ff} from "./sku";
 import {html, render} from "lighterhtml";
 import {news} from "./news.js";
-import {toggle_theme} from "./config.js";
+import {change_theme_from_menu, toggle_theme} from "./config.js";
 import {open_profile_shortcut_window} from "./components/profile_shortcut.js";
 import {save_setting} from "./components/settings.js";
 import {load_banner} from "./components/banner.js";
@@ -209,6 +209,51 @@ export function append_nav() {
     });
 
 
+    let themes = [
+        {
+            id: 'auto',
+            name: tl(trans.auto),
+            hide: !ff('auto_theme'),
+            new_release: true
+        },
+        {
+            id: 'glass',
+            type: 'light',
+            name: tl(trans.glass),
+            hide: !ff('glass'),
+            new_release: true
+        },
+        {
+            id: 'light',
+            type: 'light',
+            name: tl(trans.themes.light)
+        },
+        {
+            id: 'ink',
+            type: 'light',
+            name: tl(trans.themes.ink)
+        },
+        {
+            id: 'dark',
+            formal: 'ash',
+            type: 'dark',
+            name: tl(trans.themes.dark)
+        },
+        {
+            id: 'darker',
+            formal: 'dark',
+            type: 'darker',
+            name: tl(trans.themes.darker)
+        },
+        {
+            id: 'oled',
+            formal: 'void',
+            type: 'oled',
+            name: tl(trans.themes.oled)
+        }
+    ];
+
+
     // auth menu
     let site_auth = document.body.querySelector('.site-auth');
     let token = new_auth.querySelector('[name="csrfmiddlewaretoken"]').getAttribute('value');
@@ -349,26 +394,17 @@ export function append_nav() {
                                             }}>
                                                 ${tl(trans.back)}
                                             </button>
-                                            <button class="dropdown-menu-clickable-item theme-item-in-menu"
-                                                    data-bleh-theme="light" onclick="change_theme_from_menu('light')">
-                                                ${tl(trans.themes.light)}
-                                            </button>
-                                            <button class="dropdown-menu-clickable-item theme-item-in-menu"
-                                                    data-bleh-theme="ink" onclick="change_theme_from_menu('ink')">
-                                                ${tl(trans.themes.ink)}
-                                            </button>
-                                            <button class="dropdown-menu-clickable-item theme-item-in-menu"
-                                                    data-bleh-theme="dark" onclick="change_theme_from_menu('dark')">
-                                                ${tl(trans.themes.dark)}
-                                            </button>
-                                            <button class="dropdown-menu-clickable-item theme-item-in-menu"
-                                                    data-bleh-theme="darker" onclick="change_theme_from_menu('darker')">
-                                                ${tl(trans.themes.darker)}
-                                            </button>
-                                            <button class="dropdown-menu-clickable-item theme-item-in-menu"
-                                                    data-bleh-theme="oled" onclick="change_theme_from_menu('oled')">
-                                                ${tl(trans.themes.oled)}
-                                            </button>
+                                            ${themes.map(theme => {
+                                                if (theme.hide) return html.node``;
+
+                                                if (!theme.formal) theme.formal = theme.id;
+                                                
+                                                return html.node`
+                                                    <button class="dropdown-menu-clickable-item theme-item-in-menu" data-bleh-theme=${theme.id} data-type="theme_${theme.formal}" onclick="${() => change_theme_from_menu(theme.id)}">
+                                                        ${theme.name}
+                                                    </button> 
+                                                `;
+                                            })}
                                         `);
                                         show_theme_change_in_menu('', page_2);
                                         side.setAttribute('data-page', '2');

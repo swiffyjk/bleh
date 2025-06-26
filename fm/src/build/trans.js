@@ -2749,6 +2749,9 @@ export const trans = {
     },
     glass: {
         en: 'Glass'
+    },
+    high_contrast: {
+        en: 'Prefer high contrast'
     }
 }
 

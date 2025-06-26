@@ -15,6 +15,7 @@ import {notify} from "./components/notify";
 import {load_skus, show_theme_change_in_menu, show_theme_change_in_settings} from "./pages/bleh_config";
 import {bleh_glacier_date_graph_generate, bleh_glacier_insights} from "./pages/glacier";
 import {bleh_profile_chart_render} from './pages/profile';
+import {save_setting} from "./components/settings.js";
 
 // create blank settings
 export function create_settings_template() {
@@ -155,24 +156,13 @@ unsafeWindow.change_theme_from_settings = function(theme) {
     // save to settings
     localStorage.setItem('bleh', JSON.stringify(settings));
 }
-unsafeWindow.change_theme_from_menu = function(theme) {
-    if (page.subpage.startsWith('listening-report'))
-        return;
+export function change_theme_from_menu(theme) {
+    if (page.subpage.startsWith('listening-report')) return;
 
-    // save value
-    settings.theme = theme;
-    if (theme == 'light' || theme == 'ink')
-        settings.theme_type = 'light';
-    else
-        settings.theme_type = 'dark';
-    document.documentElement.setAttribute(`data-bleh--theme`, `${theme}`);
-    document.documentElement.setAttribute(`data-bleh--theme_type`, `${settings.theme_type}`);
+    save_setting('theme', theme);
 
     // show in settings
     show_theme_change_in_menu(theme);
-
-    // save to settings
-    localStorage.setItem('bleh', JSON.stringify(settings));
 
     load_chart_colours();
 
@@ -480,3 +470,4 @@ export function update_inbuilt_item(item, value, modify=true, element=document.b
         }
     }
 }
+

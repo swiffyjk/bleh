@@ -585,7 +585,9 @@ export let settings_store = {
         title: trans.theme
     },
     high_contrast: {
-        default: false
+        default: false,
+        type: 'checkbox',
+        title: trans.high_contrast
     },
     accent_type: {
         default: 'colour',

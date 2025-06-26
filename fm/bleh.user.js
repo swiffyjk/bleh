@@ -10066,18 +10066,10 @@
     show_theme_change_in_menu(theme);
     localStorage.setItem("bleh", JSON.stringify(settings));
   };
-  unsafeWindow.change_theme_from_menu = function(theme) {
-    if (page.subpage.startsWith("listening-report"))
-      return;
-    settings.theme = theme;
-    if (theme == "light" || theme == "ink")
-      settings.theme_type = "light";
-    else
-      settings.theme_type = "dark";
-    document.documentElement.setAttribute(`data-bleh--theme`, `${theme}`);
-    document.documentElement.setAttribute(`data-bleh--theme_type`, `${settings.theme_type}`);
+  function change_theme_from_menu(theme) {
+    if (page.subpage.startsWith("listening-report")) return;
+    save_setting("theme", theme);
     show_theme_change_in_menu(theme);
-    localStorage.setItem("bleh", JSON.stringify(settings));
     load_chart_colours();
     if ((page.type == "artist" || page.type == "album" || page.type == "track") && page.subpage == "overview")
       bleh_music_page_charts();
@@ -10087,7 +10079,7 @@
       bleh_glacier_date_graph_generate();
       bleh_glacier_insights();
     }
-  };
+  }
   function reset_all() {
     for (let item in settings_base)
       reset_item(item);
@@ -10724,19 +10716,7 @@
                     </div>
                 </div>
                 `}
-                ${ff("high_contrast") ? html.node`
-                <div class="setting" data-type="toggle" id="container-high_contrast" onclick="_update_item('high_contrast')">
-                    <button class="btn reset" onclick="_reset_item('high_contrast')">${tl(trans.reset)}</button>
-                    <div class="heading">
-                        <h5>${trans_legacy.en.settings.customise.high_contrast.name}</h5>
-                    </div>
-                    <div class="toggle-wrap">
-                        <button class="toggle" id="toggle-high_contrast" aria-checked="true">
-                            <div class="dot"></div>
-                        </button>
-                    </div>
-                </div>
-                ` : ""}
+                ${ff("high_contrast") ? setting({ id: "high_contrast" }) : ""}
                 <h4>${tl(trans.colours)}</h4>
                 <div class="view-buttons colour-buttons view-buttons-middle" id="colour_custom"></div>
                 <div class="swatch-group">
@@ -12956,7 +12936,7 @@
   }
   function theme_bubbles() {
     let bubbles = html.node`
-    <div class="theme-bubbles" />
+        <div class="theme-bubbles" />
     `;
     render_theme_bubbles();
     return bubbles;
@@ -13013,10 +12993,10 @@
             ${themes.map((theme) => {
         if (theme.hide) return html.node``;
         if (!theme.formal) theme.formal = theme.id;
-        return html.node`
+        let bubble = html.node`
                     <button class="theme-bubble" aria-selected=${settings.theme == theme.id} onclick=${() => update_theme_bubble(theme.id)}>
                         <div class="bubble">
-                            <div class="inner preview" data-bleh--theme=${theme.id} data-bleh--theme_type=${theme.type}>
+                            <div class="inner theme-preview" data-bleh--theme=${theme.id} data-bleh--theme_type=${theme.type}>
                                 <div class="bleh-icon" data-type="theme_${theme.formal}" />
                             </div>
                         </div>
@@ -13026,6 +13006,16 @@
                         </strong>
                     </button>
                 `;
+        tippy(bubble, {
+          theme: "theme-preview",
+          content: html.node`
+                        <div class="theme-preview" data-bleh--theme=${theme.id} data-bleh--theme_type=${theme.type}>
+                            ${theme_preview()}
+                        </div>
+                    `,
+          delay: [500, 0]
+        });
+        return bubble;
       })}
         `);
     }
@@ -13892,6 +13882,49 @@
       button.style.setProperty("--flag-url", `url('https://katelyynn.github.io/bleh/fm/flags/${button.getAttribute("name")}.svg')`);
       language_menu.appendChild(language_option);
     });
+    let themes = [
+      {
+        id: "auto",
+        name: tl(trans.auto),
+        hide: !ff("auto_theme"),
+        new_release: true
+      },
+      {
+        id: "glass",
+        type: "light",
+        name: tl(trans.glass),
+        hide: !ff("glass"),
+        new_release: true
+      },
+      {
+        id: "light",
+        type: "light",
+        name: tl(trans.themes.light)
+      },
+      {
+        id: "ink",
+        type: "light",
+        name: tl(trans.themes.ink)
+      },
+      {
+        id: "dark",
+        formal: "ash",
+        type: "dark",
+        name: tl(trans.themes.dark)
+      },
+      {
+        id: "darker",
+        formal: "dark",
+        type: "darker",
+        name: tl(trans.themes.darker)
+      },
+      {
+        id: "oled",
+        formal: "void",
+        type: "oled",
+        name: tl(trans.themes.oled)
+      }
+    ];
     let site_auth = document.body.querySelector(".site-auth");
     let token = new_auth.querySelector('[name="csrfmiddlewaretoken"]').getAttribute("value");
     if (ff("refreshed_auth_menu")) {
@@ -14017,26 +14050,15 @@
             }}>
                                                 ${tl(trans.back)}
                                             </button>
-                                            <button class="dropdown-menu-clickable-item theme-item-in-menu"
-                                                    data-bleh-theme="light" onclick="change_theme_from_menu('light')">
-                                                ${tl(trans.themes.light)}
-                                            </button>
-                                            <button class="dropdown-menu-clickable-item theme-item-in-menu"
-                                                    data-bleh-theme="ink" onclick="change_theme_from_menu('ink')">
-                                                ${tl(trans.themes.ink)}
-                                            </button>
-                                            <button class="dropdown-menu-clickable-item theme-item-in-menu"
-                                                    data-bleh-theme="dark" onclick="change_theme_from_menu('dark')">
-                                                ${tl(trans.themes.dark)}
-                                            </button>
-                                            <button class="dropdown-menu-clickable-item theme-item-in-menu"
-                                                    data-bleh-theme="darker" onclick="change_theme_from_menu('darker')">
-                                                ${tl(trans.themes.darker)}
-                                            </button>
-                                            <button class="dropdown-menu-clickable-item theme-item-in-menu"
-                                                    data-bleh-theme="oled" onclick="change_theme_from_menu('oled')">
-                                                ${tl(trans.themes.oled)}
-                                            </button>
+                                            ${themes.map((theme) => {
+              if (theme.hide) return html.node``;
+              if (!theme.formal) theme.formal = theme.id;
+              return html.node`
+                                                    <button class="dropdown-menu-clickable-item theme-item-in-menu" data-bleh-theme=${theme.id} data-type="theme_${theme.formal}" onclick="${() => change_theme_from_menu(theme.id)}">
+                                                        ${theme.name}
+                                                    </button> 
+                                                `;
+            })}
                                         `);
             show_theme_change_in_menu("", page_2);
             side.setAttribute("data-page", "2");
@@ -21131,6 +21153,9 @@
     },
     glass: {
       en: "Glass"
+    },
+    high_contrast: {
+      en: "Prefer high contrast"
     }
   };
   var trans_legacy = {
@@ -24771,7 +24796,9 @@
       title: trans.theme
     },
     high_contrast: {
-      default: false
+      default: false,
+      type: "checkbox",
+      title: trans.high_contrast
     },
     accent_type: {
       default: "colour",
