@@ -135,7 +135,7 @@
         }
 
         [data-bleh--theme="glass"] & {
-            --banner-height: 900px;
+            --banner-height: 1200px;
         }
         
         --glass-bg: rgb(255 255 255 / 30%);
@@ -1306,6 +1306,14 @@
             -webkit-backdrop-filter: blur(25px) saturate(220%) brightness(var(--blur-brightness));
             border-color: var(--card-border-base);
             box-shadow: var(--card-shadow);
+
+            [data-bleh--theme="glass"] & {
+                background: var(--glass-bg) !important;
+                border: var(--glass-border) !important;
+                box-shadow: var(--glass-shadow) !important;
+                backdrop-filter: var(--glass-filter) !important;
+                -webkit-backdrop-filter: var(--glass-filter) !important;
+            }
 
             background-repeat: repeat-x;
             background-position: unset !important;
@@ -4294,6 +4302,13 @@
             &:hover {
                 background-color: var(--bg-hov) !important;
                 transition-duration: 0s !important;
+            }
+
+            [data-bleh--theme="glass"] & {
+                border: var(--glass-border) !important;
+                box-shadow: var(--glass-shadow) !important;
+                backdrop-filter: var(--glass-filter) !important;
+                -webkit-backdrop-filter: var(--glass-filter) !important;
             }
         }
 
@@ -7651,6 +7666,13 @@
             &.select-button:after {
                 color: inherit;
                 opacity: 0.6;
+            }
+
+            [data-bleh--theme="glass"] & {
+                border: var(--glass-border) !important;
+                box-shadow: var(--glass-shadow) !important;
+                backdrop-filter: var(--glass-filter) !important;
+                -webkit-backdrop-filter: var(--glass-filter) !important;
             }
         }
 
@@ -15960,6 +15982,7 @@
         font-weight: var(--font-weight-medium);
     }
 
+    .time,
     pre,
     code, kbd, samp {
         color: hsl(var(--c3));
@@ -15969,6 +15992,14 @@
         line-height: var(--line-height);
         font-family: var(--font-code);
         border-radius: var(--item-small-radius);
+
+        [data-bleh--theme="glass"] & {
+            background: var(--glass-bg) !important;
+            border: var(--glass-border) !important;
+            box-shadow: var(--glass-shadow) !important;
+            backdrop-filter: var(--glass-filter) !important;
+            -webkit-backdrop-filter: var(--glass-filter) !important;
+        }
     }
 
     pre {
@@ -16368,6 +16399,14 @@
         border-radius: var(--item-med-radius);
         overflow: hidden;
 
+        [data-bleh--theme="glass"] & {
+            background: var(--glass-bg) !important;
+            border: var(--glass-border) !important;
+            box-shadow: var(--glass-shadow) !important;
+            backdrop-filter: var(--glass-filter) !important;
+            -webkit-backdrop-filter: var(--glass-filter) !important;
+        }
+
         &.gap-top {
             margin-top: var(--card-gap);
         }
@@ -16559,6 +16598,14 @@
             height: 8px;
             position: absolute;
 
+            [data-bleh--theme="glass"] & {
+                background: var(--glass-bg) !important;
+                border: var(--glass-border) !important;
+                box-shadow: var(--glass-shadow) !important;
+                backdrop-filter: var(--glass-filter) !important;
+                -webkit-backdrop-filter: var(--glass-filter) !important;
+            }
+
             pointer-events: none;
 
             .fill {
@@ -16566,6 +16613,13 @@
                 width: var(--percent);
                 background-color: hsl(var(--h3));
                 border-radius: var(--item-big-radius);
+
+                [data-bleh--theme="glass"] & {
+                    border: var(--glass-border) !important;
+                    box-shadow: var(--glass-shadow) !important;
+                    backdrop-filter: var(--glass-filter) !important;
+                    -webkit-backdrop-filter: var(--glass-filter) !important;
+                }
             }
 
             .nub {
@@ -16575,6 +16629,14 @@
                 border: 2px solid hsl(var(--b5));
                 border-radius: var(--item-big-radius);
                 margin: -5px -5px;
+
+                [data-bleh--theme="glass"] & {
+                    background: var(--glass-bg) !important;
+                    border: var(--glass-border) !important;
+                    box-shadow: var(--glass-shadow) !important;
+                    backdrop-filter: var(--glass-filter) !important;
+                    -webkit-backdrop-filter: var(--glass-filter) !important;
+                }
             }
 
             &[data-id="hue"] {
@@ -16808,6 +16870,13 @@
                         transition-property: transform, opacity;
                         transition-duration: 0.3s;
                         transition-timing-function: var(--trans-function);
+                    }
+
+                    [data-bleh--theme="glass"] & {
+                        border: var(--glass-border) !important;
+                        box-shadow: var(--glass-shadow) !important;
+                        backdrop-filter: var(--glass-filter) !important;
+                        -webkit-backdrop-filter: var(--glass-filter) !important;
                     }
 
                     &[aria-checked="true"] {
@@ -17431,6 +17500,13 @@
 
         --radius: 50px;
 
+        [data-bleh--theme="glass"] & {
+            border: var(--glass-border) !important;
+            box-shadow: var(--glass-shadow) !important;
+            backdrop-filter: var(--glass-filter) !important;
+            -webkit-backdrop-filter: var(--glass-filter) !important;
+        }
+
         .dot {
             position: absolute;
             width: 10px;
@@ -17594,6 +17670,14 @@
         border-radius: var(--item-small-radius);
         font-weight: var(--font-weight-medium);
         text-decoration: var(--force-underline, none) !important;
+
+        [data-bleh--theme="glass"] & {
+            background: hsl(var(--h4), 30%) !important;
+            border: var(--glass-border) !important;
+            box-shadow: var(--glass-shadow) !important;
+            backdrop-filter: var(--glass-filter) !important;
+            -webkit-backdrop-filter: var(--glass-filter) !important;
+        }
     }
     :is(.shout-body, .about-me-sidebar, .bleh--about-me-preview, .user-list-about-me) > p a[href^="https://open.spotify.com/user/"] {
         padding-left: calc(14px + 4px);
@@ -18345,6 +18429,14 @@
             border-radius: var(--button-radius);
             --mask-colour: color-mix(in hsl, hsl(var(--c2)), hsl(var(--c3)) 50%);
 
+            [data-bleh--theme="glass"] & {
+                background: var(--glass-bg) !important;
+                border: var(--glass-border) !important;
+                box-shadow: var(--glass-shadow) !important;
+                backdrop-filter: var(--glass-filter) !important;
+                -webkit-backdrop-filter: var(--glass-filter) !important;
+            }
+
             display: flex;
             gap: var(--card-gap);
 
@@ -18638,6 +18730,14 @@
         [data-bleh--theme_type="light"] & {
             background-color: hsl(var(--b5));
             box-shadow: inset 0 0 0 1px var(--card-border-base);
+        }
+
+        [data-bleh--theme="glass"] &:not(.blend) {
+            background: var(--glass-bg) !important;
+            border: var(--glass-border) !important;
+            box-shadow: var(--glass-shadow) !important;
+            backdrop-filter: var(--glass-filter) !important;
+            -webkit-backdrop-filter: var(--glass-filter) !important;
         }
 
         &.blend {
@@ -19549,15 +19649,6 @@
     }
 
 
-    .time {
-        padding: 0 6px;
-        background-color: hsl(var(--b6));
-        border-radius: var(--item-med-radius);
-        font-family: var(--font-code);
-        color: hsl(var(--c3));
-    }
-
-
     .modal--corrections {
         .modal-inner-content {
             display: flex;
@@ -20428,6 +20519,14 @@
 
             [data-bleh--theme_type="light"] & {
                 background-color: hsla(var(--h4), 15%);
+            }
+
+            [data-bleh--theme="glass"] & {
+                background: hsl(var(--f4), 40%) !important;
+                border: var(--glass-border) !important;
+                box-shadow: var(--glass-shadow) !important;
+                backdrop-filter: var(--glass-filter) !important;
+                -webkit-backdrop-filter: var(--glass-filter) !important;
             }
 
             .version-item-header {
@@ -21413,7 +21512,7 @@
             background-color: hsl(var(--b6));
             background-position: 0 40%;
 
-            transition-property: opacity, height;
+            transition-property: opacity;
             transition-duration: var(--trans);
             transition-timing-function: var(--trans-function);
 
@@ -23952,6 +24051,14 @@
             --card-specific-background: hsl(var(--f4), 40%) !important;
         }
 
+        [data-bleh--theme="glass"] & {
+            background: hsl(var(--f4), 40%) !important;
+            border: var(--glass-border) !important;
+            box-shadow: var(--glass-shadow) !important;
+            backdrop-filter: var(--glass-filter) !important;
+            -webkit-backdrop-filter: var(--glass-filter) !important;
+        }
+
         &.first,
         &.blocked-cta {
             order: -10;
@@ -25218,6 +25325,14 @@
                     display: flex;
                     justify-content: center;
                     align-items: center;
+
+                    &[data-bleh--theme="glass"] {
+                        background: var(--glass-bg) !important;
+                        border: var(--glass-border) !important;
+                        box-shadow: var(--glass-shadow) !important;
+                        backdrop-filter: var(--glass-filter) !important;
+                        -webkit-backdrop-filter: var(--glass-filter) !important;
+                    }
 
                     height: 100%;
 
