@@ -166,19 +166,19 @@ function patch_settings_charts_panel(token) {
                     ${original_chart_settings.recent.count}
                 </div>
             </div>
-            <div class="setting" data-type="toggle" id="container-recent_artwork">
+            <div class="setting" data-type="toggle" onclick="_update_inbuilt_item('recent_artwork')" id="container-recent_artwork">
                 <button class="btn reset" onclick="_reset_inbuilt_item('recent_artwork')">Reset to default</button>
                 <div class="heading">
                     <h5>${tl(trans.recent_artwork)}</h5>
                 </div>
                 <div class="toggle-wrap">
                     <input class="companion-checkbox" type="checkbox" name="show_recent_tracks_artwork" id="inbuilt-companion-checkbox-recent_artwork">
-                    <span class="btn toggle" id="toggle-recent_artwork" onclick="_update_inbuilt_item('recent_artwork')" aria-checked="false">
+                    <span class="btn toggle" id="toggle-recent_artwork" aria-checked="false">
                         <div class="dot"></div>
                     </span>
                 </div>
             </div>
-            <div class="setting" data-type="toggle" id="container-recent_realtime">
+            <div class="setting" data-type="toggle" onclick="_update_inbuilt_item('recent_realtime')" id="container-recent_realtime">
                 <button class="btn reset" onclick="_reset_inbuilt_item('recent_realtime')">Reset to default</button>
                 <div class="heading">
                     <h5>${tl(trans.recent_realtime.name)}</h5>
@@ -186,7 +186,7 @@ function patch_settings_charts_panel(token) {
                 </div>
                 <div class="toggle-wrap">
                     <input class="companion-checkbox" type="checkbox" name="auto_refresh_recent_tracks" id="inbuilt-companion-checkbox-recent_realtime">
-                    <span class="btn toggle" id="toggle-recent_realtime" onclick="_update_inbuilt_item('recent_realtime')" aria-checked="false">
+                    <span class="btn toggle" id="toggle-recent_realtime" aria-checked="false">
                         <div class="dot"></div>
                     </span>
                 </div>
@@ -839,7 +839,7 @@ function patch_settings_privacy_panel(token, privacy_panel) {
                     </div>
                 </div>
             </div>
-            <div class="setting" data-type="toggle" id="container-recent_listening">
+            <div class="setting" data-type="toggle" onclick="_update_inbuilt_item('recent_listening')" id="container-recent_listening">
                 <button class="btn reset" onclick="_reset_inbuilt_item('recent_listening')">Reset to default</button>
                 <div class="heading">
                     <h5>${tl(trans.recent_listening.name)}</h5>
@@ -847,7 +847,7 @@ function patch_settings_privacy_panel(token, privacy_panel) {
                 </div>
                 <div class="toggle-wrap">
                     <input class="companion-checkbox" type="checkbox" name="hide_realtime" id="inbuilt-companion-checkbox-recent_listening">
-                    <span class="btn toggle" id="toggle-recent_listening" onclick="_update_inbuilt_item('recent_listening')" aria-checked="false">
+                    <span class="btn toggle" id="toggle-recent_listening" aria-checked="false">
                         <div class="dot"></div>
                     </span>
                 </div>
@@ -914,7 +914,7 @@ function patch_settings_privacy_panel(token, privacy_panel) {
                     </div>
                 </div>
             </div>
-            <div class="setting" data-type="toggle" id="container-disable_shoutbox">
+            <div class="setting" data-type="toggle" onclick="_update_inbuilt_item('disable_shoutbox')" id="container-disable_shoutbox">
                 <button class="btn reset" onclick="_reset_inbuilt_item('disable_shoutbox')">Reset to default</button>
                 <div class="heading">
                     <h5>${tl(trans.close_shouts.name)}</h5>
@@ -922,7 +922,7 @@ function patch_settings_privacy_panel(token, privacy_panel) {
                 </div>
                 <div class="toggle-wrap">
                     <input class="companion-checkbox" type="checkbox" name="shoutbox_disabled" id="inbuilt-companion-checkbox-disable_shoutbox">
-                    <span class="btn toggle" id="toggle-disable_shoutbox" onclick="_update_inbuilt_item('disable_shoutbox')" aria-checked="false">
+                    <span class="btn toggle" id="toggle-disable_shoutbox" aria-checked="false">
                         <div class="dot"></div>
                     </span>
                 </div>

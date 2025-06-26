@@ -1004,7 +1004,7 @@
   var dialogs = {};
   tippy.setDefaultProps({
     arrow: false,
-    duration: [120, 220]
+    duration: [0, 220]
   });
   var auth = {
     name: null,
@@ -5593,6 +5593,8 @@
         let link = item.querySelector(".play-this-track-playlink:not(.visible-xs)");
         link.classList.add("music-link");
         let replace = item.querySelector(".replace-playlink");
+        if (link.classList.contains("play-this-track-playlink--itunes"))
+          link.textContent = "Apple";
         if (replace) {
           replace.classList.add("dropdown-menu-clickable-item");
           item.removeChild(replace);
@@ -5620,13 +5622,10 @@
                     Genius
                 </a>
             </li>
-        `);
-      link_container.appendChild(html.node`
             <li>
-            <a class="play-this-track-playlink music-link play-this-track-playlink--tidal" href="https://listen.tidal.com/search?q=${sanitise(page.sister, " ")} ${sanitise(page.name, " ")}" target="_blank">
-                Tidal
-            </a>
-
+                <a class="play-this-track-playlink music-link play-this-track-playlink--tidal" href="https://listen.tidal.com/search?q=${sanitise(page.sister, " ")} ${sanitise(page.name, " ")}" target="_blank">
+                    Tidal
+                </a>
             </li>
         `);
     } else {
@@ -5640,10 +5639,10 @@
                     Spotify
                 </a>
                 <a class="play-this-track-playlink music-link play-this-track-playlink--itunes" href="https://music.apple.com/gb/search?term=${sanitise(page.sister, " ")} ${sanitise(page.name, " ")}" target="_blank">
-                    Apple Music
+                    Apple
                 </a>
                 <a class="play-this-track-playlink music-link play-this-track-playlink--youtube-music" href="https://music.youtube.com/search?q=${sanitise(page.sister)}+${sanitise(page.name)}" target="_blank">
-                    YT Music
+                    YouTube
                 </a>
                 <a class="play-this-track-playlink music-link play-this-track-playlink--tidal" href="https://listen.tidal.com/search?q=${sanitise(page.sister, " ")} ${sanitise(page.name, " ")}" target="_blank">
                     Tidal
@@ -5667,10 +5666,10 @@
                     Spotify
                 </a>
                 <a class="play-this-track-playlink music-link play-this-track-playlink--itunes" href="https://music.apple.com/gb/search?term=${sanitise(page.name, " ")}" target="_blank">
-                    Apple Music
+                    Apple
                 </a>
                 <a class="play-this-track-playlink music-link play-this-track-playlink--youtube-music" href="https://music.youtube.com/search?q=${sanitise(page.name)}" target="_blank">
-                    YT Music
+                    YouTube
                 </a>
                 <a class="play-this-track-playlink music-link play-this-track-playlink--tidal" href="https://listen.tidal.com/search?q=${sanitise(page.name, " ")}" target="_blank">
                     Tidal
@@ -6492,7 +6491,7 @@
             if (el.classList == "brand")
               el.style.setProperty("font-family", "Darumadrop One");
             else
-              el.style.setProperty("font-family", "Ubuntu Sans, Spline Sans, Inter, Roboto, Noto Sans, Noto Sans JP, Noto Sans KR, Noto Sans TC, Noto Color Emoji, Lucida Grande, Verdana, Tahoma, -apple-system, BlinkMacSystemFont, sans-serif");
+              el.style.setProperty("font-family", "Fira Sans, Inter, Ubuntu Sans, Spline Sans, Roboto, Noto Sans, Noto Sans JP, Noto Sans KR, Noto Sans TC, Noto Color Emoji, Lucida Grande, Verdana, Tahoma, -apple-system, BlinkMacSystemFont, sans-serif");
           });
         }
       }).then((canvas) => {
@@ -7298,19 +7297,19 @@
                     ${original_chart_settings.recent.count}
                 </div>
             </div>
-            <div class="setting" data-type="toggle" id="container-recent_artwork">
+            <div class="setting" data-type="toggle" onclick="_update_inbuilt_item('recent_artwork')" id="container-recent_artwork">
                 <button class="btn reset" onclick="_reset_inbuilt_item('recent_artwork')">Reset to default</button>
                 <div class="heading">
                     <h5>${tl(trans.recent_artwork)}</h5>
                 </div>
                 <div class="toggle-wrap">
                     <input class="companion-checkbox" type="checkbox" name="show_recent_tracks_artwork" id="inbuilt-companion-checkbox-recent_artwork">
-                    <span class="btn toggle" id="toggle-recent_artwork" onclick="_update_inbuilt_item('recent_artwork')" aria-checked="false">
+                    <span class="btn toggle" id="toggle-recent_artwork" aria-checked="false">
                         <div class="dot"></div>
                     </span>
                 </div>
             </div>
-            <div class="setting" data-type="toggle" id="container-recent_realtime">
+            <div class="setting" data-type="toggle" onclick="_update_inbuilt_item('recent_realtime')" id="container-recent_realtime">
                 <button class="btn reset" onclick="_reset_inbuilt_item('recent_realtime')">Reset to default</button>
                 <div class="heading">
                     <h5>${tl(trans.recent_realtime.name)}</h5>
@@ -7318,7 +7317,7 @@
                 </div>
                 <div class="toggle-wrap">
                     <input class="companion-checkbox" type="checkbox" name="auto_refresh_recent_tracks" id="inbuilt-companion-checkbox-recent_realtime">
-                    <span class="btn toggle" id="toggle-recent_realtime" onclick="_update_inbuilt_item('recent_realtime')" aria-checked="false">
+                    <span class="btn toggle" id="toggle-recent_realtime" aria-checked="false">
                         <div class="dot"></div>
                     </span>
                 </div>
@@ -7900,7 +7899,7 @@
                     </div>
                 </div>
             </div>
-            <div class="setting" data-type="toggle" id="container-recent_listening">
+            <div class="setting" data-type="toggle" onclick="_update_inbuilt_item('recent_listening')" id="container-recent_listening">
                 <button class="btn reset" onclick="_reset_inbuilt_item('recent_listening')">Reset to default</button>
                 <div class="heading">
                     <h5>${tl(trans.recent_listening.name)}</h5>
@@ -7908,7 +7907,7 @@
                 </div>
                 <div class="toggle-wrap">
                     <input class="companion-checkbox" type="checkbox" name="hide_realtime" id="inbuilt-companion-checkbox-recent_listening">
-                    <span class="btn toggle" id="toggle-recent_listening" onclick="_update_inbuilt_item('recent_listening')" aria-checked="false">
+                    <span class="btn toggle" id="toggle-recent_listening" aria-checked="false">
                         <div class="dot"></div>
                     </span>
                 </div>
@@ -7975,7 +7974,7 @@
                     </div>
                 </div>
             </div>
-            <div class="setting" data-type="toggle" id="container-disable_shoutbox">
+            <div class="setting" data-type="toggle" onclick="_update_inbuilt_item('disable_shoutbox')" id="container-disable_shoutbox">
                 <button class="btn reset" onclick="_reset_inbuilt_item('disable_shoutbox')">Reset to default</button>
                 <div class="heading">
                     <h5>${tl(trans.close_shouts.name)}</h5>
@@ -7983,7 +7982,7 @@
                 </div>
                 <div class="toggle-wrap">
                     <input class="companion-checkbox" type="checkbox" name="shoutbox_disabled" id="inbuilt-companion-checkbox-disable_shoutbox">
-                    <span class="btn toggle" id="toggle-disable_shoutbox" onclick="_update_inbuilt_item('disable_shoutbox')" aria-checked="false">
+                    <span class="btn toggle" id="toggle-disable_shoutbox" aria-checked="false">
                         <div class="dot"></div>
                     </span>
                 </div>
@@ -14079,6 +14078,7 @@
                                     </button>
                                     <div class="button-combo-sep" />
                                     <button class="dropdown-menu-clickable-item chibi" data-type="continue" onclick=${() => {
+            render(page_2, html``);
             render(page_2, html`
                                             <button class="dropdown-menu-clickable-item" data-type="back" onclick=${() => {
               side.setAttribute("data-page", "1");
@@ -16880,7 +16880,7 @@
 
   // src/footer.js
   function bleh_footer() {
-    let footer = document.body.querySelector("footer");
+    let footer = document.body.querySelector("footer.footer");
     let extras = html.node`
         <div class="footer-extras">
             ${footer.querySelector(".footer-top")}
@@ -16892,7 +16892,7 @@
       kate = sponsor_list.special[0];
     render(footer, html`
         <div class="footer-credit">
-            ${{ html: tl(trans.made_with_love).replace("{u}", `<a href="${root}user/${kate}">${kate}</a>`).replace("{h}", `<span class="bleh-icon heart sponsor-related">${tl(trans.love_lower)}</span>`) }}
+            ${{ html: tl(trans.made_with_love).replace("{u}", `<a href="${root}user/${kate}">${kate}</a>`).replace("{c}", '<a href="https://github.com/katelyynn/bleh/graphs/contributors" target="_blank">').replace("{/c}", "</a>").replace("{h}", `<span class="bleh-icon heart sponsor-related">${tl(trans.love_lower)}</span>`) }}
         </div>
         <div class="footer-web">
             <a href="https://github.com/katelyynn/bleh" target="_blank">${tl(trans.view_source)}</a>
@@ -21079,7 +21079,7 @@
     },
     made_with_love: {
       // lowercase in design
-      en: "made with {h} by {u} and contributors"
+      en: "made with {h} by {u} and {c}contributors{/c}"
     },
     love_lower: {
       // replaces the {h} in the above sentence
@@ -25026,7 +25026,7 @@
     },
     font_weight: {
       css: "custom_font_weight",
-      default: 400,
+      default: 440,
       min: 100,
       max: 500,
       step: 10,
@@ -25036,7 +25036,7 @@
     },
     font_weight_medium: {
       css: "custom_font_weight_medium",
-      default: 500,
+      default: 540,
       min: 400,
       max: 700,
       step: 10,
@@ -25046,7 +25046,7 @@
     },
     font_weight_bold: {
       css: "custom_font_weight_bold",
-      default: 600,
+      default: 660,
       min: 500,
       max: 900,
       step: 10,

@@ -542,6 +542,9 @@ export function show_your_scrobbles() {
             link.classList.add('music-link');
             let replace = item.querySelector('.replace-playlink');
 
+            if (link.classList.contains('play-this-track-playlink--itunes'))
+                link.textContent = 'Apple';
+
             if (replace) {
                 replace.classList.add('dropdown-menu-clickable-item');
                 item.removeChild(replace);
@@ -574,14 +577,10 @@ export function show_your_scrobbles() {
                     Genius
                 </a>
             </li>
-        `);
-        
-        link_container.appendChild(html.node`
             <li>
-            <a class="play-this-track-playlink music-link play-this-track-playlink--tidal" href="https://listen.tidal.com/search?q=${sanitise(page.sister, ' ')} ${sanitise(page.name, ' ')}" target="_blank">
-                Tidal
-            </a>
-
+                <a class="play-this-track-playlink music-link play-this-track-playlink--tidal" href="https://listen.tidal.com/search?q=${sanitise(page.sister, ' ')} ${sanitise(page.name, ' ')}" target="_blank">
+                    Tidal
+                </a>
             </li>
         `);
     } else {
@@ -596,10 +595,10 @@ export function show_your_scrobbles() {
                     Spotify
                 </a>
                 <a class="play-this-track-playlink music-link play-this-track-playlink--itunes" href="https://music.apple.com/gb/search?term=${sanitise(page.sister, ' ')} ${sanitise(page.name, ' ')}" target="_blank">
-                    Apple Music
+                    Apple
                 </a>
                 <a class="play-this-track-playlink music-link play-this-track-playlink--youtube-music" href="https://music.youtube.com/search?q=${sanitise(page.sister)}+${sanitise(page.name)}" target="_blank">
-                    YT Music
+                    YouTube
                 </a>
                 <a class="play-this-track-playlink music-link play-this-track-playlink--tidal" href="https://listen.tidal.com/search?q=${sanitise(page.sister, ' ')} ${sanitise(page.name, ' ')}" target="_blank">
                     Tidal
@@ -623,10 +622,10 @@ export function show_your_scrobbles() {
                     Spotify
                 </a>
                 <a class="play-this-track-playlink music-link play-this-track-playlink--itunes" href="https://music.apple.com/gb/search?term=${sanitise(page.name, ' ')}" target="_blank">
-                    Apple Music
+                    Apple
                 </a>
                 <a class="play-this-track-playlink music-link play-this-track-playlink--youtube-music" href="https://music.youtube.com/search?q=${sanitise(page.name)}" target="_blank">
-                    YT Music
+                    YouTube
                 </a>
                 <a class="play-this-track-playlink music-link play-this-track-playlink--tidal" href="https://listen.tidal.com/search?q=${sanitise(page.name, ' ')}" target="_blank">
                     Tidal

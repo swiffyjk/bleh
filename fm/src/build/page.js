@@ -19,7 +19,7 @@ export let notifications = {};
 
 tippy.setDefaultProps({
     arrow: false,
-    duration: [120, 220]
+    duration: [0, 220]
 });
 
 /**

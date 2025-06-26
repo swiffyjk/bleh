@@ -388,6 +388,7 @@ export function append_nav() {
                                     </button>
                                     <div class="button-combo-sep" />
                                     <button class="dropdown-menu-clickable-item chibi" data-type="continue" onclick=${() => {
+                                        render(page_2, html``); // fix crash
                                         render(page_2, html`
                                             <button class="dropdown-menu-clickable-item" data-type="back" onclick=${() => {
                                                 side.setAttribute('data-page', '1');

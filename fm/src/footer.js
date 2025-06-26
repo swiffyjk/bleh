@@ -5,7 +5,7 @@ import {root} from "./build/page.js";
 import {sponsor} from "./sponsor.js";
 
 export function bleh_footer() {
-    let footer = document.body.querySelector('footer');
+    let footer = document.body.querySelector('footer.footer');
 
     let extras = html.node`
         <div class="footer-extras">
@@ -20,7 +20,7 @@ export function bleh_footer() {
 
     render(footer, html`
         <div class="footer-credit">
-            ${{html: tl(trans.made_with_love).replace('{u}', `<a href="${root}user/${kate}">${kate}</a>`).replace('{h}', `<span class="bleh-icon heart sponsor-related">${tl(trans.love_lower)}</span>`)}}
+            ${{html: tl(trans.made_with_love).replace('{u}', `<a href="${root}user/${kate}">${kate}</a>`).replace('{c}', '<a href="https://github.com/katelyynn/bleh/graphs/contributors" target="_blank">').replace('{/c}', '</a>').replace('{h}', `<span class="bleh-icon heart sponsor-related">${tl(trans.love_lower)}</span>`)}}
         </div>
         <div class="footer-web">
             <a href="https://github.com/katelyynn/bleh" target="_blank">${tl(trans.view_source)}</a>
