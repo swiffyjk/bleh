@@ -61,6 +61,14 @@ export function load_settings(skip = false) {
         delete settings.seasonal_particles_reduced;
     }
 
+    // migrates old font settings
+    if (settings.font_weight == 480)
+        settings.font_weight = settings_store.font_weight.default;
+    if (settings.font_weight_medium == 650)
+        settings.font_weight_medium = settings_store.font_weight_medium.default;
+    if (settings.font_weight_bold == 730)
+        settings.font_weight_bold = settings_store.font_weight_bold.default;
+
     // save setting into body
     for (let setting in settings) {
         if (

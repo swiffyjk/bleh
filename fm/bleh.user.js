@@ -2036,10 +2036,18 @@
       ghCodeBlocks: false,
       smartIndentationFix: true
     });
-    let parsed_body = converter.makeHtml(text2.replace(/([@])([a-zA-Z0-9_]+)/g, `[$1$2](${root}user/$2)`).replace(/\[artist\]([a-zA-Z0-9]+)\[\/artist\]/g, `[$1](${root}music/$1)`).replace(/\[album artist=([a-zA-Z0-9]+)\]([a-zA-Z0-9\s]+)\[\/album\]/g, `[$2](${root}music/$1/$2)`).replace(/\[track artist=([a-zA-Z0-9]+)\]([a-zA-Z0-9\s]+)\[\/track\]/g, `[$2](${root}music/$1/_/$2)`).replace(/https:\/\/open\.spotify\.com\/user\/([A-Za-z0-9]+)\?si=([A-Za-z0-9]+)/g, "[Spotify](https://open.spotify.com/user/$1)").replace(/&/g, "&amp;").replace(/</g, "&lt;").replace(/>/g, "&gt;").replace(/"/g, "&quot;").replace(/'/g, "&#039;"));
-    return html.node([
-      parsed_body
-    ]);
+    let parsed_body = converter.makeHtml(text2.replace(/([@])([a-zA-Z0-9_]+)/g, `[$1$2](${root}user/$2)`).replace(/\[artist\]([^[\]]+)\[\/artist\]/g, `[$1](${root}music/$1)`).replace(/\[album artist=([^[\]]+)\]([^[\]]+)\[\/album\]/g, `[$2](${root}music/$1/$2)`).replace(/\[track artist=([^[\]]+)\]([^[\]]+)\[\/track\]/g, `[$2](${root}music/$1/_/$2)`).replace(/https:\/\/open\.spotify\.com\/user\/([A-Za-z0-9]+)\?si=([A-Za-z0-9]+)/g, "[Spotify](https://open.spotify.com/user/$1)").replace(/&/g, "&amp;").replace(/</g, "&lt;").replace(/>/g, "&gt;").replace(/"/g, "&quot;").replace(/'/g, "&#039;"));
+    let body = html.node([parsed_body]);
+    let links = body.querySelectorAll("a");
+    links.forEach((link) => {
+      const href = link.getAttribute("href");
+      if (href && link.textContent != href && /^(https?|mailto|ftp|sftp|tel):/.test(href)) {
+        tippy(link, {
+          content: href
+        });
+      }
+    });
+    return body;
   }
 
   // src/sku.js
@@ -8669,7 +8677,7 @@
         if (settings.bio_markdown) {
           let about_me_text = about_me_sidebar.querySelector("p");
           let result = bio_parse2(about_me_text, true);
-          about_me_text.innerHTML = result;
+          render(about_me_text, result);
         }
       }
       if (page.mobile)
@@ -9603,7 +9611,7 @@
       allow_headers: true
     }));
     use_banner(temp, cache2);
-    return temp.innerHTML;
+    return temp;
   }
   function use_banner(temp, cache2) {
     if (page.name == auth.name && !settings.profile_header_own || page.name != auth.name && !settings.profile_header_others)
@@ -10004,6 +10012,12 @@
     } else if (settings.seasonal_particles_reduced == false) {
       delete settings.seasonal_particles_reduced;
     }
+    if (settings.font_weight == 480)
+      settings.font_weight = settings_store.font_weight.default;
+    if (settings.font_weight_medium == 650)
+      settings.font_weight_medium = settings_store.font_weight_medium.default;
+    if (settings.font_weight_bold == 730)
+      settings.font_weight_bold = settings_store.font_weight_bold.default;
     for (let setting2 in settings) {
       if ((setting2 == "hue" || setting2 == "sat" || setting2 == "lit") && settings.hue == settings_base.hue.value && settings.sat == settings_base.sat.value && settings.lit == settings_base.lit.value) continue;
       try {
@@ -24989,7 +25003,7 @@
     },
     font_weight: {
       css: "custom_font_weight",
-      default: 480,
+      default: 400,
       min: 100,
       max: 500,
       step: 10,
@@ -24999,8 +25013,8 @@
     },
     font_weight_medium: {
       css: "custom_font_weight_medium",
-      default: 650,
-      min: 500,
+      default: 500,
+      min: 400,
       max: 700,
       step: 10,
       type: "range",
@@ -25009,8 +25023,8 @@
     },
     font_weight_bold: {
       css: "custom_font_weight_bold",
-      default: 730,
-      min: 700,
+      default: 600,
+      min: 500,
       max: 900,
       step: 10,
       type: "range",

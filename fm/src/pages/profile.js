@@ -370,7 +370,7 @@ export function bleh_profiles() {
                 // parse body
                 let about_me_text = about_me_sidebar.querySelector('p');
                 let result = bio_parse(about_me_text, true);
-                about_me_text.innerHTML = result;
+                render(about_me_text, result);
             }
         }
 
@@ -1550,7 +1550,7 @@ function bio_parse(text, cache = false) {
 
     use_banner(temp, cache);
 
-    return temp.innerHTML;
+    return temp;
 }
 
 function use_banner(temp, cache) {

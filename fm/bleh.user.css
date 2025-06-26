@@ -15,6 +15,7 @@
     @import url('https://fonts.googleapis.com/css2?family=Noto+Color+Emoji&display=swap');
     @import url('https://fonts.googleapis.com/css2?family=Darumadrop+One&display=swap');
     @import url('https://fonts.googleapis.com/css2?family=Ubuntu+Sans:ital,wght@0,100..800;1,100..800&display=swap');
+    @import url('https://fonts.googleapis.com/css2?family=Fira+Sans:ital,wght@0,100;0,200;0,300;0,400;0,500;0,600;0,700;0,800;0,900;1,100;1,200;1,300;1,400;1,500;1,600;1,700;1,800;1,900&display=swap');
 
     body {
         --version-build: '2025.0608.2';
@@ -110,7 +111,7 @@
         --hue-brand-ig: 300;
         --hue-brand-twt: 202;
 
-        --font: var(--custom_font, ''), Ubuntu Sans, Spline Sans, Inter, Roboto, Noto Sans, Noto Sans JP, Noto Sans KR, Noto Sans TC, var(--font_emoji_name, ''), Lucida Grande, Verdana, Tahoma, -apple-system, BlinkMacSystemFont, sans-serif;
+        --font: var(--custom_font, ''), Fira Sans, Inter, Ubuntu Sans, Spline Sans, Roboto, Noto Sans, Noto Sans JP, Noto Sans KR, Noto Sans TC, var(--font_emoji_name, ''), Lucida Grande, Verdana, Tahoma, -apple-system, BlinkMacSystemFont, sans-serif;
         --font-code: Spline Sans Mono, Iosevka, JetBrains Mono, Roboto Mono, monospace, var(--font);
         --font-brand: Darumadrop One, var(--font);
         --font-size: 14px;
@@ -151,11 +152,11 @@
             --font_emoji_name: Noto Color Emoji;
         }
 
-        [data-bleh--theme_type="light"] & {
+        /*[data-bleh--theme_type="light"] & {
             --font-weight: calc(var(--custom_font_weight, 480) + 120);
             --font-weight-medium: calc(var(--custom_font_weight_medium, 650) + 90);
             --font-weight-bold: calc(var(--custom_font_weight_bold, 730) + 90);
-        }
+        }*/
     }
 
     .music-more-tags-tag-inner-wrap, .music-featured-item-heading-link, .music-featured-item-body,
@@ -392,7 +393,7 @@
                 1))));
 
         --c1: var(--hue), calc(clamp(min(0), var(--sat), max(1)) * 40%), 100%;
-        --c2: var(--hue), calc(clamp(min(0), var(--sat), max(1)) * 40%), 90%;
+        --c2: var(--hue), calc(clamp(min(0), var(--sat), max(1)) * 30%), 85%;
         --c3: var(--hue), calc(clamp(min(0), var(--sat), max(1)) * 7%), 60%;
         --ov-c1: var(--c1);
 
@@ -430,7 +431,7 @@
         .theme-preview[data-bleh--theme="oled"],
         [data-bleh--theme="oled"] &:not(.theme-preview) {
             --c1: var(--hue), calc(clamp(min(0), var(--sat), max(1)) * 40%), 100%;
-            --c2: var(--hue), calc(clamp(min(0), var(--sat), max(1)) * 70%), 90%;
+            --c2: var(--hue), calc(clamp(min(0), var(--sat), max(1)) * 20%), 80%;
             --c3: var(--hue), calc(clamp(min(0), var(--sat), max(1)) * 10%), 50%;
 
             --l3: var(--hue), calc(var(--sat) * 50%), calc(var(--lit) * 75%);
@@ -492,7 +493,7 @@
             .theme-preview, .grid-items-item.grid-items-item-has-colour
             ){
             --c1: var(--hue), calc(var(--sat) * 6%), 0%;
-            --c2: var(--hue), calc(var(--sat) * 4%), 8%;
+            --c2: var(--hue), calc(var(--sat) * 4%), 6%;
             --c3: var(--hue), calc(var(--sat) * 2%), 30%;
             --ov-c1: var(--hue), calc(var(--sat) * 40%), 100%;
 
@@ -12740,10 +12741,6 @@
 
     .wiki-block-inner-2 {
         line-height: var(--line-height);
-
-        a:last-child {
-            display: none;
-        }
     }
     .wiki-block-cta {
         color: hsl(var(--c2), 80%);
