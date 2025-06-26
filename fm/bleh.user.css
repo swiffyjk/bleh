@@ -23138,11 +23138,7 @@
             text-align: center;
         }
 
-        margin-top: -205px;
-
-        [data-ff--short="true"] & {
-            margin-top: -265px;
-        }
+        margin-top: calc(-1 * (var(--banner-height) - 75px));
 
         .sponsor-message {
             color: hsl(var(--l3-c));
