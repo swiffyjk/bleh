@@ -2198,6 +2198,8 @@
       }
       let image_wrap = grid.querySelector(".grid-items-cover-image-image");
       let image = image_wrap.querySelector("img");
+      if (grid.classList.contains("grid-items-item--big"))
+        image.src = image.src.replace("/300x300/", "/500x500/");
       if (image && !image_wrap.classList.contains("grid-items-cover-default") && use_colour) {
         let grid_colour = document.createElement("div");
         grid_colour.classList.add("grid-item-colour-bg");
@@ -3617,7 +3619,7 @@
     let scrobble_canvas = document.createElement("canvas");
     scrobble_canvas.classList.add("scrobble-insights-canvas");
     Chart.defaults.color = page.state.chart_colours.text_col;
-    Chart.defaults.font.family = "Ubuntu Sans";
+    Chart.defaults.font.family = page.state.chart_colours.font;
     if (settings.chart_insights_view == "line") {
       let gradient = scrobble_canvas.getContext("2d").createLinearGradient(0, 0, 0, 160);
       try {
@@ -3778,7 +3780,7 @@
     let scrobble_canvas = document.createElement("canvas");
     scrobble_canvas.classList.add("scrobble-canvas");
     Chart.defaults.color = page.state.chart_colours.text_col;
-    Chart.defaults.font.family = "Ubuntu Sans";
+    Chart.defaults.font.family = page.state.chart_colours.font;
     if (settings.chart_view == "line") {
       let gradient = scrobble_canvas.getContext("2d").createLinearGradient(0, 0, 0, 160);
       try {
@@ -5937,14 +5939,14 @@
             <a class="link-block-cover-link" href=${playlink.href} target="_blank" />
         `);
       playlink.classList = "see-more";
-      replace.classList = "see-more edit";
+      replace.classList = "see-more add";
       video.after(html.node`
             <div class="video-actions sub-text">
-                ${playlink}
                 ${replace}
+                ${playlink}
             </div>
         `);
-      playlink.textContent = tl(trans.watch);
+      playlink.textContent = tl(trans.watch_video);
       playlink.removeAttribute("title");
       replace.textContent = tl(trans.replace);
     }
@@ -6009,7 +6011,7 @@
       gradient = page.state.chart_colours.link_bg_col;
     }
     Chart.defaults.color = page.state.chart_colours.text_col;
-    Chart.defaults.font.family = "Ubuntu Sans";
+    Chart.defaults.font.family = page.state.chart_colours.font;
     let scrobble_chart = new Chart(scrobble_canvas.getContext("2d"), {
       type: "line",
       data: {
@@ -6119,8 +6121,10 @@
   }) {
     let input_box;
     let error_tooltip;
+    let colour_block;
     let container = html.node`
-        <div class="content-form input-container colourful" data-has-error="false">
+        <div class="content-form input-container colourful" data-type=${type} data-has-error="false">
+            <span class="colour-block" ref=${(el) => colour_block = el} />
             <input class="modern-input" autofocus=${focus} type=${type} value=${value} placeholder=${placeholder} min=${min} max=${max} maxlength=${maxlength} ref=${(el) => input_box = el} />
         </div>
     `;
@@ -6130,25 +6134,40 @@
       trigger: "manual"
     });
     error_tooltip.disable();
+    update_input();
     input_box.addEventListener("input", () => {
-      container.setAttribute("data-has-error", "false");
-      error_tooltip.disable();
-      if (type == "number") {
-        if (input_box.value == "") {
-          error_input2(tl(trans.only_numbers_are_allowed), container, error_tooltip);
-        } else if (parseInt(input_box.value) > max || parseInt(input_box.value) < min) {
-          error_input2(tl(trans.keep_within_the_range), container, error_tooltip);
-        }
-      }
+      update_input();
     });
     return container;
-  }
-  function error_input2(reason, input2, tooltip) {
-    log(reason, "input", "log");
-    input2.setAttribute("data-has-error", "true");
-    tooltip.setContent(reason);
-    tooltip.enable();
-    tooltip.show();
+    function update_input() {
+      container.setAttribute("data-has-error", "false");
+      error_tooltip.disable();
+      if (type != "number") {
+        if (input_box.value == "" && warn_if_empty) {
+          error_input2(tl(trans.this_field_is_required));
+        } else if (input_box.value.length > maxlength) {
+          error_input2(tl(trans.keep_within_the_range));
+        }
+      }
+      if (type == "number") {
+        if (input_box.value == "") {
+          error_input2(tl(trans.only_numbers_are_allowed));
+        } else if (parseInt(input_box.value) > max || parseInt(input_box.value) < min) {
+          error_input2(tl(trans.keep_within_the_range));
+        }
+      } else if (type == "colour") {
+        if (!input_box.value.startsWith("#"))
+          input_box.value = `#${input_box.value}`;
+        colour_block.style.backgroundColor = input_box.value;
+      }
+    }
+    function error_input2(reason) {
+      log(reason, "input", "log");
+      container.setAttribute("data-has-error", "true");
+      error_tooltip.setContent(reason);
+      error_tooltip.enable();
+      error_tooltip.show();
+    }
   }
 
   // src/components/collage.js
@@ -6499,9 +6518,9 @@
         onclone: (doc) => {
           doc.querySelectorAll("*").forEach((el) => {
             if (el.classList == "brand")
-              el.style.setProperty("font-family", "Darumadrop One");
+              el.style.setProperty("font-family", getComputedStyle(document.body).getPropertyValue("--font-brand"));
             else
-              el.style.setProperty("font-family", "Overpass, Inter, Ubuntu Sans, Spline Sans, Roboto, Noto Sans, Noto Sans JP, Noto Sans KR, Noto Sans TC, Noto Color Emoji, Lucida Grande, Verdana, Tahoma, -apple-system, BlinkMacSystemFont, sans-serif");
+              el.style.setProperty("font-family", getComputedStyle(document.body).getPropertyValue("--font"));
           });
         }
       }).then((canvas) => {
@@ -8828,14 +8847,13 @@
       } else if (page.subpage.startsWith("listening-report")) {
         document.documentElement.setAttribute("data-bleh--theme", "oled");
         page.structure.content_top.classList.add("listening-report-navlist");
+        page.structure.row.classList.add("listening-report");
         let report_box_container = document.body.querySelector(".report-box-container--overview");
-        if (report_box_container != null) {
-          if (report_box_container != null)
-            page.structure.content_top.after(report_box_container);
+        if (report_box_container) {
+          page.structure.content_top.after(report_box_container);
         } else {
           let dashboard = page.structure.container.querySelector(".user-dashboard");
-          if (!dashboard)
-            return;
+          if (!dashboard) return;
           dialog({
             id: "listening_report_v2",
             title: "oh no :c",
@@ -9201,11 +9219,11 @@
     let details = object.querySelector(".featured-item-details");
     let form = document.body.querySelector(".header-info-primary form");
     let heading = details.querySelector(".featured-item-heading");
-    let heading_link = heading.outerHTML;
+    let link = heading.querySelector("a")?.getAttribute("href");
     details.removeChild(heading);
+    let name_elem = details.querySelector(".featured-item-name");
+    let artist_elem = details.querySelector(".featured-item-artist");
     if (settings.format_guest_features) {
-      let name_elem = details.querySelector(".featured-item-name");
-      let artist_elem = details.querySelector(".featured-item-artist");
       let song_title = name_elem.textContent;
       let formatted_title = name_includes(song_title, artist_elem.textContent);
       let song_tags = {};
@@ -9233,8 +9251,6 @@
       details.removeChild(artist_elem);
       details.appendChild(song_artist_element);
     } else if (settings.corrections) {
-      let name_elem = details.querySelector(".featured-item-name");
-      let artist_elem = details.querySelector(".featured-item-artist");
       let name2 = correct_item_by_artist(name_elem.textContent.trim(), artist_elem.textContent.trim());
       let artist = correct_artist(artist_elem.textContent.trim());
       name_elem.textContent = name2;
@@ -9243,16 +9259,37 @@
     if (form) {
       let button = form.querySelector("button");
       button.classList = "featured-item-manage";
+      button.setAttribute("data-type", "delete");
       button.textContent = tl(trans.remove);
     }
-    let panel = document.createElement("section");
-    panel.classList.add("featured-item-panel");
-    panel.innerHTML = `
-        <div class="sub-text">${heading_link}${form ? form.outerHTML : ""}</div>
-        <div class="track-template">
-            ${art.outerHTML}
-            ${details.outerHTML}
-        </div>
+    let img = art.querySelector(".cover-art");
+    let panel = html.node`
+        <section class="featured-item-panel">
+            <div class="sub-text">
+                ${form ? html.node`
+                <a class="has-icon" data-type="obsession" href=${link}>
+                    <div class="bleh-icon" style="--icon: var(--mask)" />
+                    ${tl(trans.obsession)}
+                </a>
+                ${form}
+                ` : html.node`
+                <div class="has-icon" data-type="track">
+                    <div class="bleh-icon" style="--icon: var(--mask)" />
+                    ${tl(trans.top_track)}
+                </div>
+                `}
+            </div>
+            <div class="source-album js-link-block link-block">
+                <div class="source-album-art">
+                    ${img}
+                </div>
+                <div class="source-album-details">
+                    <h4 class="source-album-name">${name_elem}</h4>
+                    ${artist_elem}
+                </div>
+                <a class="js-link-block-cover-link link-block-cover-link" href=${name_elem.getAttribute("href")} />
+            </div>
+        </section>
     `;
     if (about_me)
       about_me.after(panel);
@@ -9268,15 +9305,16 @@
     let link = panel.querySelector('[aria-controls="recent-tracks-settings"]');
     let tooltip;
     let view_buttons = document.createElement("div");
-    view_buttons.classList.add("view-buttons", "blend");
+    view_buttons.classList.add("view-buttons", "blend", "blend-v2");
     let header = document.createElement("div");
     header.classList.add("top-container");
     let header_text2 = panel.querySelector("h2");
     header.appendChild(header_text2);
-    let refresh_btn = document.createElement("button");
-    refresh_btn.classList.add("btn", "view-item", "interact-item", "refresh-tracklist-btn");
-    refresh_btn.textContent = tl(trans.refresh);
-    refresh_btn.setAttribute("onclick", "_refresh_tracks(this)");
+    let refresh_btn = html.node`
+        <button class="btn view-item interact-item left-icon" data-type="refresh" onclick=${() => refresh_tracks(refresh_btn)}>
+            ${tl(trans.refresh)}
+        </button>
+    `;
     view_buttons.appendChild(refresh_btn);
     header.appendChild(view_buttons);
     panel.insertBefore(header, panel.firstElementChild);
@@ -9286,7 +9324,9 @@
       page.token = form.querySelector('[name="csrfmiddlewaretoken"]').getAttribute("value");
     let original_chart_settings = {};
     let settings_btn = html.node`
-        <button class="panel-settings-button btn view-item interact-item">${tl(trans.settings)}</button>
+        <button class="panel-settings-button btn view-item interact-item left-icon" data-type="settings">
+            ${tl(trans.settings)}
+        </button>
     `;
     form.classList = "";
     tooltip = tippy(settings_btn, {
@@ -9411,27 +9451,28 @@
     panel.insertBefore(html.node`
         <div class="top-container">
             ${panel.querySelector("h2")}
-            <div class="view-buttons blend">
-                <button class="btn chibi icon" data-type="collage" ref=${(el) => collage_btn = el} onclick=${() => {
+            <div class="accompany view-buttons blend blend-v2">
+                ${() => {
+      select_btn.classList.add("btn", "view-item", "interact-item", "select-button", "link-select");
+      select_btn.classList.remove("section-control", "dropdown-menu-clickable-button");
+      return select_btn;
+    }}
+            </div>
+            <div class="view-buttons blend blend-v2">
+                <button class="btn view-item left-icon" data-type="collage" ref=${(el) => collage_btn = el} onclick=${() => {
       let btn = list.querySelector(".dropdown-menu-clickable-item--selected");
       let link = new URL("https://www.last.fm" + btn.getAttribute("href"));
       let selected = link.searchParams.get("artists_date_preset");
       collage("artists", `date_preset=${selected}`);
     }}>${tl(trans.collage)}</button>
-                ${() => {
-      select_btn.classList.add("btn", "view-item", "interact-item");
-      select_btn.classList.remove("section-control");
-      return select_btn;
-    }}
                 ${form ? html.node`
-                <button class="panel-settings-button btn view-item interact-item" ref=${(el) => settings_btn = el}>${tl(trans.settings)}</button>
+                <button class="panel-settings-button btn view-item interact-item left-icon" data-type="settings" ref=${(el) => settings_btn = el}>
+                    ${tl(trans.settings)}
+                </button>
                 ` : ""}
             </div>
         </div>
     `, panel.firstElementChild);
-    tippy(collage_btn, {
-      content: tl(trans.collage)
-    });
     if (!form) return;
     if (page.token == "") page.token = form.querySelector('[name="csrfmiddlewaretoken"]').getAttribute("value");
     let timeframe = form.querySelector('[name="chart_range_top_artists"]');
@@ -9492,27 +9533,28 @@
     panel.insertBefore(html.node`
         <div class="top-container">
             ${panel.querySelector("h2")}
-            <div class="view-buttons blend">
-                <button class="btn chibi icon" data-type="collage" ref=${(el) => collage_btn = el} onclick=${() => {
+            <div class="accompany view-buttons blend blend-v2">
+                ${() => {
+      select_btn.classList.add("btn", "view-item", "interact-item", "select-button", "link-select");
+      select_btn.classList.remove("section-control", "dropdown-menu-clickable-button");
+      return select_btn;
+    }}
+            </div>
+            <div class="view-buttons blend blend-v2">
+                <button class="btn view-item left-icon" data-type="collage" ref=${(el) => collage_btn = el} onclick=${() => {
       let btn = list.querySelector(".dropdown-menu-clickable-item--selected");
       let link = new URL("https://www.last.fm" + btn.getAttribute("href"));
       let selected = link.searchParams.get("albums_date_preset");
       collage("albums", `date_preset=${selected}`);
     }}>${tl(trans.collage)}</button>
-                ${() => {
-      select_btn.classList.add("btn", "view-item", "interact-item");
-      select_btn.classList.remove("section-control");
-      return select_btn;
-    }}
                 ${form ? html.node`
-                <button class="panel-settings-button btn view-item interact-item" ref=${(el) => settings_btn = el}>${tl(trans.settings)}</button>
+                <button class="panel-settings-button btn view-item interact-item left-icon" data-type="settings" ref=${(el) => settings_btn = el}>
+                    ${tl(trans.settings)}
+                </button>
                 ` : ""}
             </div>
         </div>
     `, panel.firstElementChild);
-    tippy(collage_btn, {
-      content: tl(trans.collage)
-    });
     if (!form) return;
     if (page.token == "") page.token = form.querySelector('[name="csrfmiddlewaretoken"]').getAttribute("value");
     let timeframe = form.querySelector('[name="chart_range_top_albums"]');
@@ -9573,27 +9615,28 @@
     panel.insertBefore(html.node`
         <div class="top-container">
             ${panel.querySelector("h2")}
-            <div class="view-buttons blend">
-                <button class="btn chibi icon" data-type="collage" ref=${(el) => collage_btn = el} onclick=${() => {
+            <div class="accompany view-buttons blend blend-v2">
+                ${() => {
+      select_btn.classList.add("btn", "view-item", "interact-item", "select-button", "link-select");
+      select_btn.classList.remove("section-control", "dropdown-menu-clickable-button");
+      return select_btn;
+    }}
+            </div>
+            <div class="view-buttons blend blend-v2">
+                <button class="btn view-item left-icon" data-type="collage" ref=${(el) => collage_btn = el} onclick=${() => {
       let btn = list.querySelector(".dropdown-menu-clickable-item--selected");
       let link = new URL("https://www.last.fm" + btn.getAttribute("href"));
       let selected = link.searchParams.get("tracks_date_preset");
       collage("tracks", `date_preset=${selected}`);
     }}>${tl(trans.collage)}</button>
-                ${() => {
-      select_btn.classList.add("btn", "view-item", "interact-item");
-      select_btn.classList.remove("section-control");
-      return select_btn;
-    }}
                 ${form ? html.node`
-                <button class="panel-settings-button btn view-item interact-item" ref=${(el) => settings_btn = el}>${tl(trans.settings)}</button>
+                <button class="panel-settings-button btn view-item interact-item left-icon" data-type="settings" ref=${(el) => settings_btn = el}>
+                    ${tl(trans.settings)}
+                </button>
                 ` : ""}
             </div>
         </div>
     `, panel.firstElementChild);
-    tippy(collage_btn, {
-      content: tl(trans.collage)
-    });
     if (!form) return;
     if (page.token == "") page.token = form.querySelector('[name="csrfmiddlewaretoken"]').getAttribute("value");
     let timeframe = form.querySelector('[name="chart_range_top_tracks"]');
@@ -9741,7 +9784,7 @@
       gradient = page.state.chart_colours.link_bg_col;
     }
     Chart.defaults.color = page.state.chart_colours.text_col;
-    Chart.defaults.font.family = "Ubuntu Sans";
+    Chart.defaults.font.family = page.state.chart_colours.font;
     let scrobble_chart = new Chart(scrobble_canvas.getContext("2d"), {
       type: "line",
       data: {
@@ -9799,7 +9842,8 @@
       text_primary_col,
       bg_col,
       root_bg_col,
-      hue
+      hue,
+      font: getComputedStyle(document.body).getPropertyValue("--font")
     };
     console.log("chart colours", page.state.chart_colours);
     page.state.chart_line_options = {
@@ -12243,6 +12287,7 @@
           swatch.textContent = tl(trans[colour.type]);
         if (colour.type == "customise") {
           swatch.classList.add("select-button");
+          let colour2;
           tippy(swatch, {
             theme: "window",
             content: html.node`
@@ -12256,8 +12301,21 @@
                                     <h5>${tl(trans.convert_from_hex)}</h5>
                                 </div>
                                 <div class="input-container content-form">
-                                    <input type="color" maxlength="7" id="text-hex" placeholder="#ffffff">
-                                    <button class="btn primary icon convert" onclick="_convert_hex()">${tl(trans.convert)}</button>
+                                    ${colour2 = input({
+              type: "colour",
+              value: "#999",
+              maxlength: 7,
+              warn_if_empty: true
+            })}
+                                    <button class="btn primary icon convert" onclick=${() => {
+              let value = colour2.querySelector("input").value;
+              let hsl = hex_to_hsl(value);
+              update_params({
+                hue: hsl.h,
+                sat: clamp_sat(hsl.s / 100 * 3),
+                lit: hsl.l / 100 + 0.35
+              });
+            }}>${tl(trans.convert)}</button>
                                 </div>
                             </div>
                             ` : ""}
@@ -14887,12 +14945,40 @@
   }
   function album_missing_a_tracklist() {
     let tracklist = page.structure.main.querySelector("#tracklist");
-    if (!tracklist) {
+    let settings_btn;
+    if (tracklist) {
+      let top = tracklist.querySelector(".section-controls");
+      top.classList = "top-container";
+      let header = top.querySelector("h3");
+      let select_btn = top.querySelector(".dropdown-menu-clickable-button");
+      select_btn.classList.add("btn", "view-item", "interact-item", "select-button", "link-select");
+      select_btn.classList.remove("dropdown-menu-clickable-button");
+      header.after(html.node`
+            <div class="accompany view-buttons blend blend-v2">
+                ${select_btn}
+            </div>
+            <div class="view-buttons blend blend-v2">
+                <button class="panel-settings-button btn view-item interact-item left-icon" data-type="settings" ref=${(el) => settings_btn = el}>
+                    ${tl(trans.settings)}
+                </button>
+            </div>
+        `);
+    } else {
       let top_overview = page.structure.main.querySelector(".top-overview-panel");
       if (!top_overview) return;
+      let top = html.node`
+            <div class="top-container">
+                <h3 class="text-18">${tl(trans.tracklist)}</h3>
+                <div class="view-buttons blend blend-v2">
+                    <button class="panel-settings-button btn view-item interact-item left-icon" data-type="settings" ref=${(el) => settings_btn = el}>
+                        ${tl(trans.settings)}
+                    </button>
+                </div>
+            </div>
+        `;
       tracklist = html.node`
             <section>
-                <h3 class="text-18">${tl(trans.tracklist)}</h3>
+                ${top}
                 <div class="loading-data-container">
                     <p class="loading-data-text">${tl(trans.gathering_your_plays)}</p>
                 </div>
@@ -14905,7 +14991,7 @@
         let album_url = `${url_split[url_split.length - 2]}/${url_split[url_split.length - 1]}`;
         let album_as_track_url = window.location.href.replace(album_url, `${url_split[url_split.length - 2]}/_/${url_split[url_split.length - 1]}`);
         render(tracklist, html`
-                <h3 class="text-18">${tl(trans.tracklist)}</h3>
+                ${top}
                 <div class="loading-data-container">
                     <p class="loading-data-text failed">${tl(trans.failed_to_find_tracks)}</p>
                     <a class="see-more" href="${album_as_track_url}">${tl(trans.open_album_as_track)}</a>
@@ -14926,22 +15012,35 @@
           let album_url = `${url_split[url_split.length - 2]}/${url_split[url_split.length - 1]}`;
           let album_as_track_url = window.location.href.replace(album_url, `${url_split[url_split.length - 2]}/_/${url_split[url_split.length - 1]}`);
           render(tracklist, html`
-                        <h3 class="text-18">${tl(trans.tracklist)}</h3>
+                        ${top}
                         <div class="loading-data-container">
                             <p class="loading-data-text failed">${tl(trans.failed_to_find_tracks)}</p>
-                            <a class="btn" href="${album_as_track_url}">${tl(trans.open_album_as_track)}</a>
+                            <a class="see-more" href=${album_as_track_url}>${tl(trans.open_album_as_track)}</a>
                         </div>
                     `);
           return;
         }
         inner_tracklist.classList.remove("chartlist--with-image");
         render(tracklist, html`
-                    <h3 class="text-18">${tl(trans.tracklist)}</h3>
+                    ${top}
                     <div class="alert alert-info">${tl(trans.sourced_from_own_plays)}</div>
                     ${inner_tracklist}
                 `);
       });
     }
+    tippy(settings_btn, {
+      theme: "window",
+      content: html.node`
+            <div class="dialog-settings">
+                ${setting({ id: "format_guest_features" })}
+                ${setting({ id: "show_guest_features" })}
+            </div>
+        `,
+      placement: "bottom",
+      interactive: true,
+      interactiveBorder: 10,
+      trigger: "click"
+    });
   }
 
   // src/pages/artist.js
@@ -16418,16 +16517,30 @@
       let panel = shout_controls.parentElement;
       let select_btn = panel.querySelector(".dropdown-menu-clickable-button");
       let settings_btn;
+      let header = panel.querySelector("h2");
+      header.parentElement.removeChild(header);
+      let link = window.location.href;
+      let shoutbox_link = "+shoutbox";
+      if (page.type == "user" || "event")
+        shoutbox_link = "shoutbox";
+      if (!page.subpage.startsWith("shoutbox"))
+        link += `/${shoutbox_link}`;
       panel.insertBefore(html.node`
             <div class="top-container">
-                ${panel.querySelector("h2")}
-                <div class="view-buttons blend">
+                <h2>
+                    <a class="text-colour-link" href=${link}>${tl(trans.shouts)}</a>
+                </h2>
+                <div class="accompany view-buttons blend blend-v2">
                     ${() => {
-        select_btn.classList.add("btn", "view-item", "interact-item");
-        select_btn.classList.remove("section-control");
+        select_btn.classList.add("btn", "view-item", "interact-item", "select-button", "link-select");
+        select_btn.classList.remove("section-control", "dropdown-menu-clickable-button");
         return shout_controls;
       }}
-                    <button class="panel-settings-button btn view-item interact-item" ref=${(el) => settings_btn = el}>${tl(trans.settings)}</button>
+                </div>
+                <div class="view-buttons blend blend-v2">
+                    <button class="panel-settings-button btn view-item interact-item left-icon" data-type="settings" ref=${(el) => settings_btn = el}>
+                        ${tl(trans.settings)}
+                    </button>
                 </div>
             </div>
         `, panel.firstElementChild);
@@ -19546,6 +19659,9 @@
       de: "Top Titel",
       pt: "Top Faixas"
     },
+    top_track: {
+      en: "Top Track"
+    },
     you_share_count_with: {
       // as in your musical taste between you and someone else
       // you share {percentage%} (in taste) with: {list of artists}
@@ -21263,6 +21379,9 @@
     },
     watch: {
       en: "Watch"
+    },
+    watch_video: {
+      en: "Watch video"
     },
     latest_album: {
       en: "Latest album"

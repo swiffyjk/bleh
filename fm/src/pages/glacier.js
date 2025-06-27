@@ -740,7 +740,7 @@ function bleh_glacier_insights_generate(type, item) {
     scrobble_canvas.classList.add('scrobble-insights-canvas');
 
     Chart.defaults.color = page.state.chart_colours.text_col;
-    Chart.defaults.font.family = 'Ubuntu Sans';
+    Chart.defaults.font.family = page.state.chart_colours.font;
     if (settings.chart_insights_view == 'line') {
         let gradient = scrobble_canvas.getContext('2d').createLinearGradient(0, 0, 0, 160);
         try {
@@ -921,7 +921,7 @@ export function bleh_glacier_date_graph_generate() {
     scrobble_canvas.classList.add('scrobble-canvas');
 
     Chart.defaults.color = page.state.chart_colours.text_col;
-    Chart.defaults.font.family = 'Ubuntu Sans';
+    Chart.defaults.font.family = page.state.chart_colours.font;
     if (settings.chart_view == 'line') {
         let gradient = scrobble_canvas.getContext('2d').createLinearGradient(0, 0, 0, 160);
         try {

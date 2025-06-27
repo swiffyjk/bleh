@@ -405,9 +405,9 @@ export function collage(default_type = 'albums', default_timeframe = 'date_prese
             onclone: (doc) => {
                 doc.querySelectorAll('*').forEach((el) => {
                     if (el.classList == 'brand')
-                        el.style.setProperty('font-family', 'Darumadrop One');
+                        el.style.setProperty('font-family', getComputedStyle(document.body).getPropertyValue('--font-brand'));
                     else
-                        el.style.setProperty('font-family', 'Overpass, Inter, Ubuntu Sans, Spline Sans, Roboto, Noto Sans, Noto Sans JP, Noto Sans KR, Noto Sans TC, Noto Color Emoji, Lucida Grande, Verdana, Tahoma, -apple-system, BlinkMacSystemFont, sans-serif');
+                        el.style.setProperty('font-family', getComputedStyle(document.body).getPropertyValue('--font'));
                 });
             }
         }).then((canvas => {

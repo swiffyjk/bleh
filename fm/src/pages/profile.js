@@ -527,16 +527,14 @@ export function bleh_profiles() {
             document.documentElement.setAttribute('data-bleh--theme', 'oled');
 
             page.structure.content_top.classList.add('listening-report-navlist');
+            page.structure.row.classList.add('listening-report');
 
             let report_box_container = document.body.querySelector('.report-box-container--overview');
-            if (report_box_container != null) {
-                if (report_box_container != null)
-                    page.structure.content_top.after(report_box_container);
+            if (report_box_container) {
+                page.structure.content_top.after(report_box_container);
             } else {
                 let dashboard = page.structure.container.querySelector('.user-dashboard');
-
-                if (!dashboard)
-                    return;
+                if (!dashboard) return;
 
                 // v2
                 dialog({
@@ -1023,13 +1021,13 @@ function bleh_featured_profile_track(object, about_me) {
     let form = document.body.querySelector('.header-info-primary form');
 
     let heading = details.querySelector('.featured-item-heading');
-    let heading_link = heading.outerHTML;
+    let link = heading.querySelector('a')?.getAttribute('href');
     details.removeChild(heading);
 
-    if (settings.format_guest_features) {
-        let name_elem = details.querySelector('.featured-item-name');
-        let artist_elem = details.querySelector('.featured-item-artist');
+    let name_elem = details.querySelector('.featured-item-name');
+    let artist_elem = details.querySelector('.featured-item-artist');
 
+    if (settings.format_guest_features) {
         let song_title = name_elem.textContent;
 
         let formatted_title = name_includes(song_title, artist_elem.textContent);
@@ -1068,9 +1066,6 @@ function bleh_featured_profile_track(object, about_me) {
         details.removeChild(artist_elem);
         details.appendChild(song_artist_element);
     } else if (settings.corrections) {
-        let name_elem = details.querySelector('.featured-item-name');
-        let artist_elem = details.querySelector('.featured-item-artist');
-
         let name = correct_item_by_artist(name_elem.textContent.trim(), artist_elem.textContent.trim());
         let artist = correct_artist(artist_elem.textContent.trim());
 
@@ -1081,18 +1076,40 @@ function bleh_featured_profile_track(object, about_me) {
     if (form) {
         let button = form.querySelector('button');
         button.classList = 'featured-item-manage';
+        button.setAttribute('data-type', 'delete');
         button.textContent = tl(trans.remove);
     }
 
-    let panel = document.createElement('section');
-    panel.classList.add('featured-item-panel');
-    panel.innerHTML = (`
-        <div class="sub-text">${heading_link}${(form) ? form.outerHTML : ''}</div>
-        <div class="track-template">
-            ${art.outerHTML}
-            ${details.outerHTML}
-        </div>
-    `);
+    let img = art.querySelector('.cover-art');
+
+    let panel = html.node`
+        <section class="featured-item-panel">
+            <div class="sub-text">
+                ${form ? html.node`
+                <a class="has-icon" data-type="obsession" href=${link}>
+                    <div class="bleh-icon" style="--icon: var(--mask)" />
+                    ${tl(trans.obsession)}
+                </a>
+                ${form}
+                ` : html.node`
+                <div class="has-icon" data-type="track">
+                    <div class="bleh-icon" style="--icon: var(--mask)" />
+                    ${tl(trans.top_track)}
+                </div>
+                `}
+            </div>
+            <div class="source-album js-link-block link-block">
+                <div class="source-album-art">
+                    ${img}
+                </div>
+                <div class="source-album-details">
+                    <h4 class="source-album-name">${name_elem}</h4>
+                    ${artist_elem}
+                </div>
+                <a class="js-link-block-cover-link link-block-cover-link" href=${name_elem.getAttribute('href')} />
+            </div>
+        </section>
+    `;
 
     if (about_me)
         about_me.after(panel);
@@ -1114,7 +1131,7 @@ function profile_recents() {
 
 
     let view_buttons = document.createElement('div');
-    view_buttons.classList.add('view-buttons', 'blend');
+    view_buttons.classList.add('view-buttons', 'blend', 'blend-v2');
 
     let header = document.createElement('div');
     header.classList.add('top-container');
@@ -1123,11 +1140,11 @@ function profile_recents() {
     header.appendChild(header_text);
 
     // refresh
-    let refresh_btn = document.createElement('button');
-    refresh_btn.classList.add('btn', 'view-item', 'interact-item', 'refresh-tracklist-btn');
-    refresh_btn.textContent = tl(trans.refresh);
-    refresh_btn.setAttribute('onclick', '_refresh_tracks(this)');
-
+    let refresh_btn = html.node`
+        <button class="btn view-item interact-item left-icon" data-type="refresh" onclick=${() => refresh_tracks(refresh_btn)}>
+            ${tl(trans.refresh)}
+        </button>
+    `;
     view_buttons.appendChild(refresh_btn);
 
     header.appendChild(view_buttons);
@@ -1142,7 +1159,9 @@ function profile_recents() {
     let original_chart_settings = {};
 
     let settings_btn = html.node`
-        <button class="panel-settings-button btn view-item interact-item">${tl(trans.settings)}</button>
+        <button class="panel-settings-button btn view-item interact-item left-icon" data-type="settings">
+            ${tl(trans.settings)}
+        </button>
     `;
 
     form.classList = '';
@@ -1283,29 +1302,29 @@ function profile_artists() {
     panel.insertBefore(html.node`
         <div class="top-container">
             ${panel.querySelector('h2')}
-            <div class="view-buttons blend">
-                <button class="btn chibi icon" data-type="collage" ref=${el => collage_btn = el} onclick=${() => {
+            <div class="accompany view-buttons blend blend-v2">
+                ${() => {
+                    select_btn.classList.add('btn', 'view-item', 'interact-item', 'select-button', 'link-select');
+                    select_btn.classList.remove('section-control', 'dropdown-menu-clickable-button');
+                    return select_btn;
+                }}
+            </div>
+            <div class="view-buttons blend blend-v2">
+                <button class="btn view-item left-icon" data-type="collage" ref=${el => collage_btn = el} onclick=${() => {
                     let btn = list.querySelector('.dropdown-menu-clickable-item--selected');
                     let link = new URL('https://www.last.fm' + btn.getAttribute('href'));
                     let selected = link.searchParams.get('artists_date_preset');
 
                     collage('artists', `date_preset=${selected}`);
                 }}>${tl(trans.collage)}</button>
-                ${() => {
-                    select_btn.classList.add('btn', 'view-item', 'interact-item');
-                    select_btn.classList.remove('section-control');
-                    return select_btn;
-                }}
                 ${form ? html.node`
-                <button class="panel-settings-button btn view-item interact-item" ref=${el => settings_btn = el}>${tl(trans.settings)}</button>
+                <button class="panel-settings-button btn view-item interact-item left-icon" data-type="settings" ref=${el => settings_btn = el}>
+                    ${tl(trans.settings)}
+                </button>
                 ` : ''}
             </div>
         </div>
     `, panel.firstElementChild);
-
-    tippy(collage_btn, {
-        content: tl(trans.collage)
-    });
 
     // own profile only
 
@@ -1377,29 +1396,29 @@ function profile_albums() {
     panel.insertBefore(html.node`
         <div class="top-container">
             ${panel.querySelector('h2')}
-            <div class="view-buttons blend">
-                <button class="btn chibi icon" data-type="collage" ref=${el => collage_btn = el} onclick=${() => {
+            <div class="accompany view-buttons blend blend-v2">
+                ${() => {
+                    select_btn.classList.add('btn', 'view-item', 'interact-item', 'select-button', 'link-select');
+                    select_btn.classList.remove('section-control', 'dropdown-menu-clickable-button');
+                    return select_btn;
+                }}
+            </div>
+            <div class="view-buttons blend blend-v2">
+                <button class="btn view-item left-icon" data-type="collage" ref=${el => collage_btn = el} onclick=${() => {
                     let btn = list.querySelector('.dropdown-menu-clickable-item--selected');
                     let link = new URL('https://www.last.fm' + btn.getAttribute('href'));
                     let selected = link.searchParams.get('albums_date_preset');
 
                     collage('albums', `date_preset=${selected}`);
                 }}>${tl(trans.collage)}</button>
-                ${() => {
-                    select_btn.classList.add('btn', 'view-item', 'interact-item');
-                    select_btn.classList.remove('section-control');
-                    return select_btn;
-                }}
                 ${form ? html.node`
-                <button class="panel-settings-button btn view-item interact-item" ref=${el => settings_btn = el}>${tl(trans.settings)}</button>
+                <button class="panel-settings-button btn view-item interact-item left-icon" data-type="settings" ref=${el => settings_btn = el}>
+                    ${tl(trans.settings)}
+                </button>
                 ` : ''}
             </div>
         </div>
     `, panel.firstElementChild);
-
-    tippy(collage_btn, {
-        content: tl(trans.collage)
-    });
 
     // own profile only
 
@@ -1471,29 +1490,29 @@ function profile_tracks() {
     panel.insertBefore(html.node`
         <div class="top-container">
             ${panel.querySelector('h2')}
-            <div class="view-buttons blend">
-                <button class="btn chibi icon" data-type="collage" ref=${el => collage_btn = el} onclick=${() => {
+            <div class="accompany view-buttons blend blend-v2">
+                ${() => {
+                    select_btn.classList.add('btn', 'view-item', 'interact-item', 'select-button', 'link-select');
+                    select_btn.classList.remove('section-control', 'dropdown-menu-clickable-button');
+                    return select_btn;
+                }}
+            </div>
+            <div class="view-buttons blend blend-v2">
+                <button class="btn view-item left-icon" data-type="collage" ref=${el => collage_btn = el} onclick=${() => {
                     let btn = list.querySelector('.dropdown-menu-clickable-item--selected');
                     let link = new URL('https://www.last.fm' + btn.getAttribute('href'));
                     let selected = link.searchParams.get('tracks_date_preset');
 
                     collage('tracks', `date_preset=${selected}`);
                 }}>${tl(trans.collage)}</button>
-                ${() => {
-                    select_btn.classList.add('btn', 'view-item', 'interact-item');
-                    select_btn.classList.remove('section-control');
-                    return select_btn;
-                }}
                 ${form ? html.node`
-                <button class="panel-settings-button btn view-item interact-item" ref=${el => settings_btn = el}>${tl(trans.settings)}</button>
+                <button class="panel-settings-button btn view-item interact-item left-icon" data-type="settings" ref=${el => settings_btn = el}>
+                    ${tl(trans.settings)}
+                </button>
                 ` : ''}
             </div>
         </div>
     `, panel.firstElementChild);
-
-    tippy(collage_btn, {
-        content: tl(trans.collage)
-    });
 
     // own profile only
 
@@ -1685,7 +1704,7 @@ export function bleh_profile_chart_render(panel=page.structure.side.querySelecto
     }
 
     Chart.defaults.color = page.state.chart_colours.text_col;
-    Chart.defaults.font.family = 'Ubuntu Sans';
+    Chart.defaults.font.family = page.state.chart_colours.font;
     let scrobble_chart = new Chart(scrobble_canvas.getContext('2d'), {
         type: 'line',
         data: {

@@ -25,6 +25,7 @@ import {ff} from "../sku";
 import {html, render} from "lighterhtml"
 import {save_setting, setting} from "../components/settings.js";
 import {parse_scrobbles_as_rank} from "../components/colourful_counts.js";
+import {input} from "../components/input.js";
 
 export function bleh_settings() {
     page.name = auth.name;
@@ -1812,6 +1813,8 @@ export function display_colour_presets() {
             if (colour.type == 'customise') {
                 swatch.classList.add('select-button');
 
+                let colour;
+
                 tippy(swatch, {
                     theme: 'window',
                     content: html.node`
@@ -1825,8 +1828,22 @@ export function display_colour_presets() {
                                     <h5>${tl(trans.convert_from_hex)}</h5>
                                 </div>
                                 <div class="input-container content-form">
-                                    <input type="color" maxlength="7" id="text-hex" placeholder="#ffffff">
-                                    <button class="btn primary icon convert" onclick="_convert_hex()">${tl(trans.convert)}</button>
+                                    ${colour = input({
+                                        type: 'colour',
+                                        value: '#999',
+                                        maxlength: 7,
+                                        warn_if_empty: true
+                                    })}
+                                    <button class="btn primary icon convert" onclick=${() => {
+                                        let value = colour.querySelector('input').value;
+                                        let hsl = hex_to_hsl(value);
+                
+                                        update_params({
+                                            hue: hsl.h,
+                                            sat: clamp_sat((hsl.s / 100) * 3),
+                                            lit: (hsl.l / 100) + 0.35
+                                        });
+                                    }}>${tl(trans.convert)}</button>
                                 </div>
                             </div>
                             ` : ''}

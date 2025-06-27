@@ -15,8 +15,11 @@ export function input({
     let input_box;
     let error_tooltip;
 
+    let colour_block;
+
     let container = html.node`
-        <div class="content-form input-container colourful" data-has-error="false">
+        <div class="content-form input-container colourful" data-type=${type} data-has-error="false">
+            <span class="colour-block" ref=${el => colour_block = el} />
             <input class="modern-input" autofocus=${focus} type=${type} value=${value} placeholder=${placeholder} min=${min} max=${max} maxlength=${maxlength} ref=${el => input_box = el} />
         </div>
     `;
@@ -28,27 +31,45 @@ export function input({
     });
     error_tooltip.disable();
 
+    update_input();
     input_box.addEventListener('input', () => {
+        update_input();
+    });
+
+    return container;
+
+    function update_input() {
         container.setAttribute('data-has-error', 'false');
         error_tooltip.disable();
+
+        if (type != 'number') {
+            if (input_box.value == '' && warn_if_empty) {
+                error_input(tl(trans.this_field_is_required));
+            } else if (input_box.value.length > maxlength) {
+                error_input(tl(trans.keep_within_the_range));
+            }
+        }
 
         if (type == 'number') {
             // is a number?
             if (input_box.value == '') {
-                error_input(tl(trans.only_numbers_are_allowed), container, error_tooltip);
+                error_input(tl(trans.only_numbers_are_allowed));
             } else if (parseInt(input_box.value) > max || parseInt(input_box.value) < min) {
-                error_input(tl(trans.keep_within_the_range), container, error_tooltip);
+                error_input(tl(trans.keep_within_the_range));
             }
+        } else if (type == 'colour') {
+            if (!input_box.value.startsWith('#'))
+                input_box.value = `#${input_box.value}`;
+
+            colour_block.style.backgroundColor = input_box.value;
         }
-    });
+    }
 
-    return container;
-}
-
-function error_input(reason, input, tooltip) {
-    log(reason, 'input', 'log');
-    input.setAttribute('data-has-error', 'true');
-    tooltip.setContent(reason);
-    tooltip.enable();
-    tooltip.show();
+    function error_input(reason) {
+        log(reason, 'input', 'log');
+        container.setAttribute('data-has-error', 'true');
+        error_tooltip.setContent(reason);
+        error_tooltip.enable();
+        error_tooltip.show();
+    }
 }

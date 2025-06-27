@@ -24,16 +24,33 @@ export function patch_shouts() {
         let select_btn = panel.querySelector('.dropdown-menu-clickable-button');
         let settings_btn;
 
+        let header = panel.querySelector('h2');
+        header.parentElement.removeChild(header);
+
+        let link = window.location.href;
+        let shoutbox_link = '+shoutbox';
+        if (page.type == 'user' || 'event')
+            shoutbox_link = 'shoutbox';
+
+        if (!page.subpage.startsWith('shoutbox'))
+            link += `/${shoutbox_link}`;
+
         panel.insertBefore(html.node`
             <div class="top-container">
-                ${panel.querySelector('h2')}
-                <div class="view-buttons blend">
+                <h2>
+                    <a class="text-colour-link" href=${link}>${tl(trans.shouts)}</a>
+                </h2>
+                <div class="accompany view-buttons blend blend-v2">
                     ${() => {
-                        select_btn.classList.add('btn', 'view-item', 'interact-item');
-                        select_btn.classList.remove('section-control');
+                        select_btn.classList.add('btn', 'view-item', 'interact-item', 'select-button', 'link-select');
+                        select_btn.classList.remove('section-control', 'dropdown-menu-clickable-button');
                         return shout_controls;
                     }}
-                    <button class="panel-settings-button btn view-item interact-item" ref=${el => settings_btn = el}>${tl(trans.settings)}</button>
+                </div>
+                <div class="view-buttons blend blend-v2">
+                    <button class="panel-settings-button btn view-item interact-item left-icon" data-type="settings" ref=${el => settings_btn = el}>
+                        ${tl(trans.settings)}
+                    </button>
                 </div>
             </div>
         `, panel.firstElementChild);

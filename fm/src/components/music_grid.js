@@ -70,6 +70,10 @@ export function music_grids(search=page.structure.main, use_colour = true) {
 
         let image_wrap = grid.querySelector('.grid-items-cover-image-image');
         let image = image_wrap.querySelector('img');
+
+        if (grid.classList.contains('grid-items-item--big'))
+            image.src = image.src.replace('/300x300/', '/500x500/');
+
         if (image && !image_wrap.classList.contains('grid-items-cover-default') && use_colour) {
             let grid_colour = document.createElement('div');
             grid_colour.classList.add('grid-item-colour-bg');

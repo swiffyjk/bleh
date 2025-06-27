@@ -55,7 +55,8 @@ export function load_chart_colours() {
         text_primary_col: text_primary_col,
         bg_col: bg_col,
         root_bg_col: root_bg_col,
-        hue: hue
+        hue: hue,
+        font: getComputedStyle(document.body).getPropertyValue('--font')
     }
 
     console.log('chart colours', page.state.chart_colours);

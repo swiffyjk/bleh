@@ -1053,6 +1053,9 @@ export const trans = {
         de: 'Top Titel',
         pt: 'Top Faixas'
     },
+    top_track: {
+        en: 'Top Track'
+    },
     you_share_count_with: {
         // as in your musical taste between you and someone else
         // you share {percentage%} (in taste) with: {list of artists}
@@ -2770,6 +2773,9 @@ export const trans = {
     },
     watch: {
         en: 'Watch'
+    },
+    watch_video: {
+        en: 'Watch video'
     },
     latest_album: {
         en: 'Latest album'

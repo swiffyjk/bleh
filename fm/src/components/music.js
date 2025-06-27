@@ -952,16 +952,16 @@ function show_numbers_on_side(header_type) {
         `);
 
         playlink.classList = 'see-more';
-        replace.classList = 'see-more edit';
+        replace.classList = 'see-more add';
 
         video.after(html.node`
             <div class="video-actions sub-text">
-                ${playlink}
                 ${replace}
+                ${playlink}
             </div>
         `);
 
-        playlink.textContent = tl(trans.watch);
+        playlink.textContent = tl(trans.watch_video);
         playlink.removeAttribute('title');
 
         replace.textContent = tl(trans.replace);
@@ -1053,7 +1053,7 @@ export function bleh_music_page_charts() {
     }
 
     Chart.defaults.color = page.state.chart_colours.text_col;
-    Chart.defaults.font.family = 'Ubuntu Sans';
+    Chart.defaults.font.family = page.state.chart_colours.font;
     let scrobble_chart = new Chart(scrobble_canvas.getContext('2d'), {
         type: 'line',
         data: {
