@@ -26,6 +26,10 @@ Script files can be found in `src`. `src/pages` are for the different pages foun
 
 To combine all the separate files into a Tampermonkey-compatible file, run the `node index.js` script and it will update the `bleh.user.js` file for use. If you want to work on this script, use `node index.js dev`, and then use the Violentmonkey extension to load it, and click "track external edits". It'll update automatically.
 
+## Licenses
+
+This project includes the 'Overpass' font as woff2 files which is licensed under the SIL Open Font License 1.1. See fonts/LICENSE for details.
+
 ---
 
 kate 2022-2025
