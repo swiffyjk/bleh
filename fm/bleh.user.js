@@ -2331,12 +2331,14 @@
       interactiveBorder: 10,
       trigger: "click",
       onShow(instance) {
-        setTimeout(() => {
-          instance.popper.querySelector('[aria-checked="true"]').scrollIntoView({
-            behavior: "instant",
-            block: "center"
-          });
-        }, 1);
+        if (values.length > 15) {
+          setTimeout(() => {
+            instance.popper.querySelector('[aria-checked="true"]').scrollIntoView({
+              behavior: "instant",
+              block: "center"
+            });
+          }, 1);
+        }
       }
     });
     set_select(button, menu, values, initial, select2, name2);
@@ -5930,9 +5932,7 @@
       view_buttons.appendChild(replace);
       container.appendChild(view_buttons);
       video.appendChild(container);
-      tippy(playlink, {
-        content: playlink.getAttribute("title")
-      });
+      playlink.textContent = tl(trans.watch);
       playlink.removeAttribute("title");
       tippy(replace, {
         content: replace.textContent
@@ -6491,7 +6491,7 @@
             if (el.classList == "brand")
               el.style.setProperty("font-family", "Darumadrop One");
             else
-              el.style.setProperty("font-family", "Fira Sans, Inter, Ubuntu Sans, Spline Sans, Roboto, Noto Sans, Noto Sans JP, Noto Sans KR, Noto Sans TC, Noto Color Emoji, Lucida Grande, Verdana, Tahoma, -apple-system, BlinkMacSystemFont, sans-serif");
+              el.style.setProperty("font-family", "Overpass, Inter, Ubuntu Sans, Spline Sans, Roboto, Noto Sans, Noto Sans JP, Noto Sans KR, Noto Sans TC, Noto Color Emoji, Lucida Grande, Verdana, Tahoma, -apple-system, BlinkMacSystemFont, sans-serif");
           });
         }
       }).then((canvas) => {
@@ -13446,7 +13446,7 @@
             tooltip_sister = sister;
           }
           name2 = html.node`
-                    <div class="title">${sanitise_text(song_title).trim()}</div>
+                    <div class="title">${song_title.trim()}</div>
                     ${song_tags.map((tag) => html.node`
                         <div class="feat" data-bleh--tag-type="${tag.type}" data-bleh--tag-group="${tag.group}">${tag.text}</div>
                     `)}
@@ -15075,14 +15075,48 @@
       bleh_music_page_charts();
       bleh_tags_mini();
       if (katsune && featured_items) {
-        let featured_panel = document.createElement("section");
-        featured_panel.classList.add("featured-items-panel");
-        featured_panel.innerHTML = featured_items.innerHTML;
-        let listen_panel = page.structure.side.querySelector(".listen-panel");
-        if (listen_panel)
-          listen_panel.after(featured_panel);
-        else
-          page.structure.side.insertBefore(featured_panel, page.structure.side.firstElementChild);
+        let featured_panel = html.node`
+                <section class="featured-items-panel">
+                    ${Array.from(featured_items.querySelectorAll("li")).map((item) => {
+          item.classList.remove("artist-header-featured-items-item-wrap--video-thumbnail");
+          let type = item.getAttribute("itemprop");
+          let text2 = tl(trans.latest_album);
+          if (type == "track")
+            text2 = tl(trans.popular_now);
+          let header = item.querySelector(".artist-header-featured-items-item-header");
+          header.parentElement.removeChild(header);
+          let name2 = correct_item_by_artist(item.querySelector(".artist-header-featured-items-item-name").textContent, page.sister);
+          let aux = item.querySelector(".artist-header-featured-items-item-aux-text")?.textContent.trim();
+          let link = item.querySelector(".link-block-cover-link")?.getAttribute("href");
+          let img = item.querySelector("img")?.src;
+          if (type == "track")
+            img = img.replace("0.jpg", "mqdefault.jpg");
+          return html.node`
+                            <div class="featured-item">
+                                <div class="sub-text normal" data-type=${type}>
+                                    <span class="bleh-icon" style="--icon: var(--mask)" />
+                                    ${text2}
+                                </div>
+                                <div class="source-album js-link-block link-block" data-type=${type}>
+                                    <div class="source-album-art">
+                                        <span class="cover-art">
+                                            <img src=${img} alt=${name2} />
+                                        </span>
+                                    </div>
+                                    <div class="source-album-details">
+                                        <h4 class="source-album-name">
+                                            <a href=${link}>${name2}</a>
+                                        </h4>
+                                        <p class="source-album-stats">${aux}</p>
+                                    </div>
+                                    <a class="js-link-block-cover-link link-block-cover-link" href=${link} tabindex="-1" aria-hidden="true" />
+                                </div>
+                            </div>
+                        `;
+        })}
+                </section>
+            `;
+        page.structure.main.querySelector(".top-overview-panel").after(featured_panel);
       }
     } else {
       let btn_add = page.structure.side.querySelector(".add-button");
@@ -21194,6 +21228,15 @@
     },
     external: {
       en: "External"
+    },
+    watch: {
+      en: "Watch"
+    },
+    latest_album: {
+      en: "Latest album"
+    },
+    popular_now: {
+      en: "Popular now"
     }
   };
   var trans_legacy = {
@@ -25036,7 +25079,7 @@
     },
     font_weight_medium: {
       css: "custom_font_weight_medium",
-      default: 540,
+      default: 570,
       min: 400,
       max: 700,
       step: 10,
@@ -25046,7 +25089,7 @@
     },
     font_weight_bold: {
       css: "custom_font_weight_bold",
-      default: 660,
+      default: 760,
       min: 500,
       max: 900,
       step: 10,

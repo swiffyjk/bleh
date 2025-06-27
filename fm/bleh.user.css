@@ -15,8 +15,52 @@
     @import url('https://fonts.googleapis.com/css2?family=Noto+Color+Emoji&display=swap');
     @import url('https://fonts.googleapis.com/css2?family=Darumadrop+One&display=swap');
     @import url('https://fonts.googleapis.com/css2?family=Ubuntu+Sans:ital,wght@0,100..800;1,100..800&display=swap');
-    @import url('https://fonts.googleapis.com/css2?family=Fira+Sans:ital,wght@0,100;0,200;0,300;0,400;0,500;0,600;0,700;0,800;0,900;1,100;1,200;1,300;1,400;1,500;1,600;1,700;1,800;1,900&display=swap');
-    @import url('https://fonts.googleapis.com/css2?family=Radio+Canada:ital,wght@0,300..700;1,300..700&display=swap');
+
+    /* we need to make the vertical alignment better in this font */
+    @font-face {
+        font-family: 'Overpass';
+        src: url('https://katelyynn.github.io/bleh/fonts/overpass-ext.woff2') format('woff2');
+        font-weight: 100 900;
+        font-style: normal;
+        unicode-range: U+0100-02BA, U+02BD-02C5, U+02C7-02CC, U+02CE-02D7, U+02DD-02FF, U+0304, U+0308, U+0329, U+1D00-1DBF, U+1E00-1E9F, U+1EF2-1EFF, U+2020, U+20A0-20AB, U+20AD-20C0, U+2113, U+2C60-2C7F, U+A720-A7FF;
+        ascent-override: 90%;
+        descent-override: 25%;
+        line-gap-override: 0%;
+        font-display: swap;
+    }
+    @font-face {
+        font-family: 'Overpass';
+        src: url('https://katelyynn.github.io/bleh/fonts/overpass.woff2') format('woff2');
+        font-weight: 100 900;
+        font-style: normal;
+        unicode-range: U+0000-00FF, U+0131, U+0152-0153, U+02BB-02BC, U+02C6, U+02DA, U+02DC, U+0304, U+0308, U+0329, U+2000-206F, U+20AC, U+2122, U+2191, U+2193, U+2212, U+2215, U+FEFF, U+FFFD;
+        ascent-override: 90%;
+        descent-override: 25%;
+        line-gap-override: 0%;
+        font-display: swap;
+    }
+    @font-face {
+        font-family: 'Overpass';
+        src: url('https://katelyynn.github.io/bleh/fonts/overpass-ext-italic.woff2') format('woff2');
+        font-weight: 100 900;
+        font-style: italic;
+        unicode-range: U+0100-02BA, U+02BD-02C5, U+02C7-02CC, U+02CE-02D7, U+02DD-02FF, U+0304, U+0308, U+0329, U+1D00-1DBF, U+1E00-1E9F, U+1EF2-1EFF, U+2020, U+20A0-20AB, U+20AD-20C0, U+2113, U+2C60-2C7F, U+A720-A7FF;
+        ascent-override: 90%;
+        descent-override: 25%;
+        line-gap-override: 0%;
+        font-display: swap;
+    }
+    @font-face {
+        font-family: 'Overpass';
+        src: url('https://katelyynn.github.io/bleh/fonts/overpass-italic.woff2') format('woff2');
+        font-weight: 100 900;
+        font-style: italic;
+        unicode-range: U+0000-00FF, U+0131, U+0152-0153, U+02BB-02BC, U+02C6, U+02DA, U+02DC, U+0304, U+0308, U+0329, U+2000-206F, U+20AC, U+2122, U+2191, U+2193, U+2212, U+2215, U+FEFF, U+FFFD;
+        ascent-override: 90%;
+        descent-override: 25%;
+        line-gap-override: 0%;
+        font-display: swap;
+    }
 
     body {
         --version-build: '2025.0608.2';
@@ -112,7 +156,7 @@
         --hue-brand-ig: 300;
         --hue-brand-twt: 202;
 
-        --font: var(--custom_font, ''), Radio Canada, Fira Sans, Inter, Ubuntu Sans, Spline Sans, Roboto, Noto Sans, Noto Sans JP, Noto Sans KR, Noto Sans TC, var(--font_emoji_name, ''), Lucida Grande, Verdana, Tahoma, -apple-system, BlinkMacSystemFont, sans-serif;
+        --font: var(--custom_font, ''), Overpass, Inter, Ubuntu Sans, Spline Sans, Roboto, Noto Sans, Noto Sans JP, Noto Sans KR, Noto Sans TC, var(--font_emoji_name, ''), Lucida Grande, Verdana, Tahoma, -apple-system, BlinkMacSystemFont, sans-serif;
         --font-code: Spline Sans Mono, Iosevka, JetBrains Mono, Roboto Mono, monospace, var(--font);
         --font-brand: Darumadrop One, var(--font);
         --font-size: 14px;
@@ -154,9 +198,9 @@
         }
 
         [data-bleh--theme_type="light"] & {
-            --font-weight: calc(var(--custom_font_weight, 480) + 70);
-            --font-weight-medium: calc(var(--custom_font_weight_medium, 650) + 90);
-            --font-weight-bold: calc(var(--custom_font_weight_bold, 730) + 90);
+            --font-weight: calc(var(--custom_font_weight, 480) + 90);
+            --font-weight-medium: calc(var(--custom_font_weight_medium, 650) + 110);
+            --font-weight-bold: calc(var(--custom_font_weight_bold, 730) + 110);
         }
     }
 
@@ -602,7 +646,8 @@
         --overlay-shadow: 0 4px 16px 3px hsla(var(--b7), 0.5);
         --menu-overlay-shadow: 0 -250px 10px 100px hsla(var(--b6), 70%);
         --avatar-shadow: 3px 6px 15px 10px hsla(var(--b7), 0.05);
-        --standout-shadow: 3px 6px 20px 7px hsla(var(--b7), 0.2);
+        --standout-shadow: 0 6px 20px 7px hsla(var(--b7), 0.2);
+        --subtle-shadow: 0 6px 10px 4px hsla(var(--b7), 0.2);
 
         --noise: url('https://katelyynn.github.io/bleh/fm/noise.png');
         --gloss-image: url('https://katelyynn.github.io/bleh/fm/gloss.svg');
@@ -653,6 +698,7 @@
         --overlay-shadow: 2px 2px 24px 0 hsla(var(--b7), 0.15), 3px 6px 48px 16px hsla(var(--b7), 0.03);
         --menu-shadow: 0 12px 36px 0 hsla(var(--b7), 0.15);
         --standout-shadow: 3px 6px 20px 7px hsla(var(--b7), 0.06);
+        --subtle-shadow: 0 6px 10px 5px hsla(var(--b7), 0.06);
 
         --interactable-outer: hsla(var(--b7), 0.1) 0 1px 2px 0;
         --interactable-active-outer: transparent 0 0 0;
@@ -2517,15 +2563,28 @@
             display: none !important;
         }
     }
-    .track-overview-new .video-preview, .video-preview-upload-cta.link-block, .album-artwork-upload-cta {
+    .track-overview-new div.video-preview, .video-preview-upload-cta.link-block, .album-artwork-upload-cta {
         --bg: hsl(var(--b5)) !important;
         --bg-hov: hsla(var(--b5), 80%) !important;
         --bg-atv: hsla(var(--b5), 60%) !important;
-        --shadow: var(--card-shadow) !important;
+        --shadow: var(--subtle-shadow) !important;
         margin-top: unset;
-        border-radius: var(--card-radius) !important;
+        border-radius: var(--item-med-radius) !important;
         overflow: hidden;
         box-shadow: var(--shadow) !important;
+
+        .video-preview-playlink {
+            height: unset;
+            padding: unset;
+            aspect-ratio: 16 / 9;
+        }
+
+        img {
+            aspect-ratio: 16 / 9;
+            object-fit: cover;
+            box-shadow: none;
+            position: static;
+        }
     }
 
     /* remove lastfm box shadow */
@@ -4106,30 +4165,12 @@
 
     /*     FEATURED ITEMS     */
     .featured-items-panel {
-        display: flex;
-        flex-direction: column;
+        display: grid;
+        grid-template-columns: repeat(auto-fill, minmax(400px, 1fr));
         gap: var(--card-gap);
 
-        .artist-header-featured-items-item-wrap {
-            padding: unset;
-            width: unset;
-
-            &:not(.artist-header-featured-items-item-wrap--video-thumbnail) {
-                .link-block-cover-link,
-                .media-item {
-                    width: 116px;
-                    height: 116px;
-                }
-
-                .artist-header-featured-items-item {
-                    min-height: 116px;
-                }
-            }
-
-            .artist-header-featured-items-item {
-                padding-left: calc(116px + var(--card-gap));
-                min-height: 64px;
-            }
+        .sub-text {
+            margin-bottom: 10px;
         }
     }
 
@@ -4858,7 +4899,7 @@
         font-size: 16px;
         line-height: 17px; /* matches button on the right */
         /*margin-bottom: 12px;*/
-        font-weight: var(--font-weight-bold);
+        font-weight: var(--font-weight-medium);
         letter-spacing: unset;
         text-transform: unset;
         /* undo hiding text */
@@ -8035,7 +8076,6 @@
     .data-loading:after, .lazy-shoutbox.async-content-loading:after, .loading:not(.library-fetch, .library-date-picker):after,
     .user-list-inner-wrap .label:before, .label.auth-badge:before,
     .nag-bar-message:before,
-    .source-album:before,
     /*     BLEH     */
     .arrow-divider:before,
     .view-item:not(.profile-top-item--taste):before,
@@ -8217,23 +8257,6 @@
     }
 
 
-    .wiki-history-action {
-        --left: 0;
-    }
-    .wiki-history-action--edit {
-        --mask: var(--icon-16-edit);
-    }
-    .wiki-history-action--revert {
-        --mask: var(--icon-16-revert);
-    }
-    .wiki-history-action--locked {
-        --mask: var(--icon-16-lock);
-    }
-    .wiki-history-action--unlocked {
-        --mask: var(--icon-16-unlock);
-    }
-
-
     .chartlist-love-button, .chartlist-more-button, .chartlist-play-button,
     .share-button-profile,
     .shout-more-actions,
@@ -8301,6 +8324,10 @@
         right: var(--card-padding);
         margin: unset;
         z-index: 10;
+
+        [data-ff--short="true"] & {
+            top: 0;
+        }
     }
 
     /* align dropdown next to settings button */
@@ -11362,11 +11389,6 @@
     }
 
     .source-album {
-        position: relative;
-        --left: none;
-        --right: 0;
-        --mask: var(--icon-16-arrow-right);
-
         display: flex;
         align-items: center;
         gap: var(--card-gap);
@@ -11387,10 +11409,16 @@
             margin: unset;
             flex-shrink: 0;
             width: 64px;
+            transform: scale(1);
 
             img {
+                object-fit: cover;
                 --mask-size: var(--cover-size-50);
             }
+
+            transition-property: transform, filter;
+            transition-duration: 0.2s;
+            transition-timing-function: cubic-bezier(0.4, 0, 0.2, 1);
         }
         .source-album-details {
             .source-album-name {
@@ -11400,12 +11428,20 @@
             .source-album-artist {
                 font-weight: var(--font-weight);
                 color: hsla(var(--c2), 80%);
+                margin-top: 2px;
             }
             .source-album-stats {
-                font-size: var(--font-size-sm);
-                line-height: var(--line-height-sm);
+                font-size: 13px;
                 font-weight: var(--font-weight);
                 margin: unset;
+                margin-top: 4px;
+            }
+        }
+
+        &:hover {
+            .source-album-art {
+                transform: scale(1.02);
+                filter: brightness(120%);
             }
         }
     }
@@ -12690,7 +12726,7 @@
     .artist-similar-artists-sidebar-item-image,
     .source-album-art .cover-art, .track-similar-tracks-item-image, .similar-items-sidebar-item-image {
         border-radius: var(--item-big-radius);
-        box-shadow: var(--standout-shadow);
+        box-shadow: var(--subtle-shadow);
         overflow: hidden;
         background: var(--avatar-generic-background);
     }
@@ -13940,8 +13976,23 @@
             width: 130px;
             margin: unset;
             color: hsl(var(--c3));
+            --mask-colour: hsl(var(--c3), 80%);
+            --left: 0;
 
             flex-shrink: 0;
+
+            &.wiki-history-action--edit {
+                --mask: var(--icon-16-edit);
+            }
+            &.wiki-history-action--revert {
+                --mask: var(--icon-16-revert);
+            }
+            &.wiki-history-action--locked {
+                --mask: var(--icon-16-lock);
+            }
+            &.wiki-history-action--unlocked {
+                --mask: var(--icon-16-unlock);
+            }
         }
         .wiki-history-summary {
             flex: 1;
@@ -14774,7 +14825,7 @@
 
         .events-list-item-date-icon, .calendar-icon {
             display: flex;
-            background: hsl(var(--b6)) !important;
+            background: hsl(var(--b4), 40%) !important;
             box-shadow: unset !important;
             color: hsl(var(--c2));
             width: 52px;
@@ -19005,12 +19056,12 @@
         }
 
         .video-item {
-            --font-size: 0;
-
             &.video-item--play {
+                --btn-left: calc(var(--button-sides) + var(--icon-size) + var(--icon-gap));
                 --mask: var(--icon-16-external);
             }
             &.video-item--edit {
+                --font-size: 0;
                 --mask: var(--icon-16-edit);
             }
         }
@@ -19090,15 +19141,19 @@
     .album-overview-cover-art,
     .video-preview {
         img {
-            transition-property: opacity;
+            transition-property: filter;
             transition-duration: var(--trans);
             transition-timing-function: var(--trans-function);
         }
 
         &:hover {
             img {
-                opacity: 0.4;
+                filter: brightness(0.4);
                 transition: none;
+
+                [data-bleh--theme_type="light"] & {
+                    filter: brightness(0.7);
+                }
             }
 
             .album-overview-cover-art-actions,
@@ -19127,10 +19182,16 @@
 
         .album-overview-cover-art-action-row,
         .view-buttons {
-            background-color: hsl(var(--b5)) !important;
+            background: hsla(var(--b5), 80%) !important;
+            backdrop-filter: blur(25px) saturate(220%) brightness(var(--blur-brightness));
+            -webkit-backdrop-filter: blur(25px) saturate(220%) brightness(var(--blur-brightness));
             box-shadow: var(--card-shadow);
             margin: unset !important;
             inset: unset;
+
+            [data-bleh--theme="oled"] &, [data-bleh--theme_type="light"] & {
+                box-shadow: inset 0 0 0 1px var(--card-border-base), var(--card-shadow);
+            }
         }
     }
 
@@ -20288,6 +20349,12 @@
         display: flex;
         justify-content: space-between;
         width: 100%;
+
+        &.normal {
+            flex-direction: row !important;
+            justify-content: unset !important;
+            gap: var(--icon-gap) !important;
+        }
 
         @media (max-width: 600px) {
             flex-direction: column;

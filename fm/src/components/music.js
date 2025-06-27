@@ -962,10 +962,9 @@ function show_numbers_on_side(header_type) {
         container.appendChild(view_buttons);
         video.appendChild(container);
 
-        tippy(playlink, {
-            content: playlink.getAttribute('title')
-        });
+        playlink.textContent = tl(trans.watch);
         playlink.removeAttribute('title');
+
         tippy(replace, {
             content: replace.textContent
         });

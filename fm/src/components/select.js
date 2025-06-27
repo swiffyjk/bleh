@@ -45,12 +45,14 @@ export function select(values, initial = '', name = '') {
         trigger: 'click',
 
         onShow(instance) {
-            setTimeout(() => {
-                instance.popper.querySelector('[aria-checked="true"]').scrollIntoView({
-                    behavior: 'instant',
-                    block: 'center'
-                });
-            }, 1);
+            if (values.length > 15) {
+                setTimeout(() => {
+                    instance.popper.querySelector('[aria-checked="true"]').scrollIntoView({
+                        behavior: 'instant',
+                        block: 'center'
+                    });
+                }, 1);
+            }
         }
     });
 

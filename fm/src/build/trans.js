@@ -2755,6 +2755,15 @@ export const trans = {
     },
     external: {
         en: 'External'
+    },
+    watch: {
+        en: 'Watch'
+    },
+    latest_album: {
+        en: 'Latest album'
+    },
+    popular_now: {
+        en: 'Popular now'
     }
 }
 

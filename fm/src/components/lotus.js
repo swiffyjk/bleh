@@ -218,7 +218,7 @@ export function correct_generic_combo_no_artist(parent) {
  * correct item based on artist
  * @param {string} item either a track/album title
  * @param {string} artist artist name (is converted to lowercase)
- * @returns corrected title if applicable or original title
+ * @returns {string} corrected title if applicable or original title
  */
 export function correct_item_by_artist(item, artist) {
     if (!settings.corrections)

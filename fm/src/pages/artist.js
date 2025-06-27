@@ -9,7 +9,7 @@ import {log} from "../build/log";
 import {auth, page, root} from "../build/page";
 import {sanitise} from "../build/tools";
 import {tl, trans, trans_legacy} from "../build/trans";
-import {artist_title} from "../components/lotus";
+import {artist_title, correct_item_by_artist} from "../components/lotus";
 import {register_menu} from "../components/menu";
 import {bleh_music_page_charts, bleh_top_listeners, show_your_scrobbles} from "../components/music";
 import {checkup_page_structure} from "../components/structure";
@@ -211,16 +211,60 @@ export function bleh_artists() {
 
 
         if (katsune && featured_items) {
-            let featured_panel = document.createElement('section');
-            featured_panel.classList.add('featured-items-panel');
+            let featured_panel = html.node`
+                <section class="featured-items-panel">
+                    ${Array.from(featured_items.querySelectorAll('li')).map(item => {
+                        item.classList.remove('artist-header-featured-items-item-wrap--video-thumbnail');
+                        let type = item.getAttribute('itemprop');
+                        
+                        let text = tl(trans.latest_album);
+                        if (type == 'track')
+                            text = tl(trans.popular_now);
+                        
+                        let header = item.querySelector('.artist-header-featured-items-item-header');
+                        header.parentElement.removeChild(header);
+                        
+                        let name = correct_item_by_artist(item.querySelector('.artist-header-featured-items-item-name').textContent, page.sister);
+                        let aux = item.querySelector('.artist-header-featured-items-item-aux-text')?.textContent.trim();
+                        let link = item.querySelector('.link-block-cover-link')?.getAttribute('href');
+                        let img = item.querySelector('img')?.src;
+                        
+                        if (type == 'track')
+                            img = img.replace('0.jpg', 'mqdefault.jpg');
+                        
+                        return html.node`
+                            <div class="featured-item">
+                                <div class="sub-text normal" data-type=${type}>
+                                    <span class="bleh-icon" style="--icon: var(--mask)" />
+                                    ${text}
+                                </div>
+                                <div class="source-album js-link-block link-block" data-type=${type}>
+                                    <div class="source-album-art">
+                                        <span class="cover-art">
+                                            <img src=${img} alt=${name} />
+                                        </span>
+                                    </div>
+                                    <div class="source-album-details">
+                                        <h4 class="source-album-name">
+                                            <a href=${link}>${name}</a>
+                                        </h4>
+                                        <p class="source-album-stats">${aux}</p>
+                                    </div>
+                                    <a class="js-link-block-cover-link link-block-cover-link" href=${link} tabindex="-1" aria-hidden="true" />
+                                </div>
+                            </div>
+                        `;
+                    })}
+                </section>
+            `;
 
-            featured_panel.innerHTML = featured_items.innerHTML;
-
-            let listen_panel = page.structure.side.querySelector('.listen-panel');
+            /*let listen_panel = page.structure.side.querySelector('.listen-panel');
             if (listen_panel)
                 listen_panel.after(featured_panel);
             else
-                page.structure.side.insertBefore(featured_panel, page.structure.side.firstElementChild);
+                page.structure.side.insertBefore(featured_panel, page.structure.side.firstElementChild);*/
+
+            page.structure.main.querySelector('.top-overview-panel').after(featured_panel);
         }
     } else {
         let btn_add = page.structure.side.querySelector('.add-button');
