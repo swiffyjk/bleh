@@ -6,7 +6,7 @@
 
 import {patch_avatar} from "../avatar";
 import {auth, page, root} from "../build/page";
-import {desanitise} from "../build/tools";
+import {copy, desanitise} from "../build/tools";
 import {tl, trans} from "../build/trans";
 import {ff} from "../sku";
 import {html} from "lighterhtml";
@@ -142,13 +142,13 @@ export function bleh_wiki_history() {
 
 
     // latest
-    let side_actions = document.createElement('section');
-    side_actions.classList.add('side-actions');
-    side_actions.innerHTML = (`
-        <a class="btn side-action" data-type="latest-wiki" href="${sub_text.querySelector('a').getAttribute('href')}">
-            ${tl(trans.view_latest)}
-        </a>
-    `);
+    let side_actions = html.node`
+        <section class="side-actions">
+            <a class="btn side-action" data-type="latest-wiki" href="${sub_text.querySelector('a').getAttribute('href')}">
+                ${tl(trans.view_latest)}
+            </a>
+        </section>
+    `;
 
     if (!page.mobile)
         page.structure.side.appendChild(side_actions);
@@ -260,13 +260,13 @@ export function bleh_wiki_editor() {
     page.structure.side.innerHTML = '';
 
     // latest
-    let side_actions = document.createElement('section');
-    side_actions.classList.add('side-actions');
-    side_actions.innerHTML = (`
-        <a class="btn side-action" data-type="latest-wiki" href="${sub_text.querySelector('a').getAttribute('href')}">
-            ${tl(trans.view_latest_version)}
-        </a>
-    `);
+    let side_actions = html.node`
+        <section class="side-actions">
+            <a class="btn side-action" data-type="latest-wiki" href="${sub_text.querySelector('a').getAttribute('href')}">
+                ${tl(trans.view_latest)}
+            </a>
+        </section>
+    `;
 
     if (!page.mobile)
         page.structure.side.appendChild(side_actions);
@@ -275,26 +275,36 @@ export function bleh_wiki_editor() {
 
 
     // presets
-    let wiki_presets_panel = document.createElement('section');
-    wiki_presets_panel.classList.add('wiki-presets-panel');
-
-    wiki_presets_panel.innerHTML = (`
-        <h3 class="text-18">${tl(trans.symbol_presets)}</h3>
-        <div class="presets">
-            <div class="preset">“</div>
-            <div class="preset">”</div>
-            <div class="preset">—</div>
-            <div class="preset">‘</div>
-            <div class="preset">’</div>
-            <div class="preset">-</div>
-        </div>
-        <ul class="wiki-standards generic-list">
-            <li>Tracks should be contained in “”, while albums and artists are left without.</li>
-            <li>A pair of ‘ ’ are usually used for quotations.</li>
-        </ul>
+    let presets = [`“`, `”`, `—`, `‘`, `’`, `-`];
+    let standards = [
+        tl(trans.wiki_standard_tracks),
+        tl(trans.wiki_standard_artists),
+        tl(trans.wiki_standard_quotations)
+    ];
+    page.structure.side.appendChild(html.node`
+        <section class="wiki-presets-panel">
+            <h3 class="text-18">${tl(trans.symbol_presets)}</h3>
+            <div class="presets">
+                ${presets.map((preset) => {
+                    let item = html.node`
+                        <div class="preset" onclick=${() => copy(preset)}>
+                            ${preset}
+                        </div>
+                    `;
+                    
+                    tippy(item, {
+                        content: tl(trans.click_to_copy),
+                        delay: [500, 0]
+                    });
+                    
+                    return item;
+                })}
+            </div>
+            <ul class="wiki-standards generic-list">
+                ${standards.map((standard) => html.node`<li>${standard}</li>`)}
+            </ul>
+        </section>
     `);
-
-    page.structure.side.appendChild(wiki_presets_panel);
 
     page.structure.side.appendChild(wiki_syntax);
 

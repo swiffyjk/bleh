@@ -6,6 +6,8 @@
 
 // https://stackoverflow.com/questions/46432335/hex-to-hsl-convert-javascript
 import {log} from "./log.js";
+import {notify} from "../components/notify.js";
+import {tl, trans} from "./trans.js";
 
 /**
  * Converts hex to {h, s, l}
@@ -236,4 +238,19 @@ export function lazy(elem, func, options = {}) {
     }, { threshold, rootMargin });
 
     observer.observe(elem);
+}
+
+/**
+ * Copies text to the clipboard
+ * @param {string} text
+ */
+export function copy(text) {
+    navigator.clipboard.writeText(text).then(() => {
+        log('copied', 'copy', 'info', {text: text});
+        notify({
+            id: 'copy',
+            title: tl(trans.copied_to_clipboard),
+            icon: 'icon-16-copy'
+        });
+    });
 }

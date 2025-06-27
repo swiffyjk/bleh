@@ -1264,6 +1264,18 @@ export const trans = {
         en: 'Copied to clipboard',
         pt: 'Copiado para a área de transferência'
     },
+    click_to_copy: {
+        en: 'Click to copy'
+    },
+    wiki_standard_tracks: {
+        en: 'Track titles should be wrapped in quotation marks “ ”'
+    },
+    wiki_standard_artists: {
+        en: 'Album and artist names are left without quotes'
+    },
+    wiki_standard_quotations: {
+        en: 'Use ‘ ’ for quotations from the artist or elsewhere'
+    },
     activity: {
         en: 'Activity',
         de: 'Aktivität',

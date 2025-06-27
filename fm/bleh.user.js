@@ -1042,6 +1042,7 @@
     multi: false,
     corrected: false,
     token: "",
+    mobile: false,
     structure: {
       wrapper: null,
       container: null,
@@ -1122,6 +1123,129 @@
         </div>
     </div>
 `;
+
+  // src/components/notify.js
+  function load_notifications() {
+    if (!page.structure.notifications) {
+      let notification_host = html.node`
+            <div class="bleh-notifications" />
+        `;
+      page.structure.notifications = notification_host;
+      document.body.appendChild(notification_host);
+    }
+  }
+  function deliver_notif(content, persist = false, has_icon = false, append_class = null, action = "") {
+    return notify({
+      id: "legacy_notification",
+      title: content,
+      icon: "icon-16-info",
+      classname: append_class
+    });
+  }
+  function notify({
+    id,
+    title,
+    body,
+    icon,
+    classname,
+    actions = [],
+    persist = false,
+    type = "generic",
+    long = false,
+    colourful = false
+  }) {
+    log(`creating ${title}`, "notification", "info", {
+      id,
+      title,
+      body,
+      icon,
+      classname,
+      persist,
+      type,
+      long,
+      colourful: false
+    });
+    if (type === "error") {
+      icon = "icon-16-x";
+      colourful = true;
+    } else if (type === "warning") {
+      icon = "icon-16-warning";
+      colourful = true;
+    } else if (type === "success") {
+      icon = "icon-16-check";
+      colourful = true;
+    }
+    if (!icon)
+      icon = "icon-16-info";
+    let bar;
+    actions.push({
+      type: "close",
+      action: () => notify_rm(notif),
+      text: tl(trans.close)
+    });
+    let notif = html.node`
+        <div
+            class=${[
+      "bleh-notification",
+      icon ? "with-icon" : "",
+      classname ? classname : "",
+      long ? "long" : "",
+      colourful ? "colourful" : ""
+    ].join(" ")}
+            data-type=${type}
+            style=${[
+      icon ? `--mask: var(--${icon})` : ""
+    ].join(";")}
+        >
+            <div class="notification-information">
+                 <div class="notification-title">${title}</div>
+                ${body ? html.node`
+                <div class="notification-body">${body}</div>
+                ` : ""}
+            </div>
+            ${!persist ? html.node`
+            <div class="notification-progress"><div class="fill" ref=${(el) => bar = el} /></div>
+            ` : ""}
+            <div class="notification-actions">
+                ${actions.length > 0 ? actions.map((action) => () => {
+      let button = html.node`
+                        <button class="notification-action" data-type=${action.type} onclick=${action.action}>${action.text}</button>
+                    `;
+      tippy(button, {
+        content: action.text
+      });
+      return button;
+    }) : ""}
+            </div>
+        </div>
+    `;
+    page.structure.notifications.appendChild(notif);
+    if (persist)
+      return notif;
+    let ms = long ? 6e3 : 2e3;
+    let counter = 100;
+    let step = ms / 100;
+    let timer = setInterval(() => {
+      if (notif.matches(":hover"))
+        return;
+      counter--;
+      bar.style.setProperty("width", `${counter}%`);
+      if (counter <= 0) {
+        clearInterval(timer);
+        notify_rm(notif);
+      }
+    }, step);
+    return notif;
+  }
+  unsafeWindow._notify_rm = function(notif) {
+    notify_rm(notif);
+  };
+  function notify_rm(notif) {
+    notif.classList.add("fade-out");
+    setTimeout(function() {
+      page.structure.notifications.removeChild(notif);
+    }, 400);
+  }
 
   // src/build/tools.js
   function hex_to_hsl(hex) {
@@ -1235,6 +1359,16 @@
       });
     }, { threshold, rootMargin });
     observer.observe(elem);
+  }
+  function copy(text2) {
+    navigator.clipboard.writeText(text2).then(() => {
+      log("copied", "copy", "info", { text: text2 });
+      notify({
+        id: "copy",
+        title: tl(trans.copied_to_clipboard),
+        icon: "icon-16-copy"
+      });
+    });
   }
 
   // src/build/music.js
@@ -1549,129 +1683,6 @@
       "(60th"
     ]
   };
-
-  // src/components/notify.js
-  function load_notifications() {
-    if (!page.structure.notifications) {
-      let notification_host = html.node`
-            <div class="bleh-notifications" />
-        `;
-      page.structure.notifications = notification_host;
-      document.body.appendChild(notification_host);
-    }
-  }
-  function deliver_notif(content, persist = false, has_icon = false, append_class = null, action = "") {
-    return notify({
-      id: "legacy_notification",
-      title: content,
-      icon: "icon-16-info",
-      classname: append_class
-    });
-  }
-  function notify({
-    id,
-    title,
-    body,
-    icon,
-    classname,
-    actions = [],
-    persist = false,
-    type = "generic",
-    long = false,
-    colourful = false
-  }) {
-    log(`creating ${title}`, "notification", "info", {
-      id,
-      title,
-      body,
-      icon,
-      classname,
-      persist,
-      type,
-      long,
-      colourful: false
-    });
-    if (type === "error") {
-      icon = "icon-16-x";
-      colourful = true;
-    } else if (type === "warning") {
-      icon = "icon-16-warning";
-      colourful = true;
-    } else if (type === "success") {
-      icon = "icon-16-check";
-      colourful = true;
-    }
-    if (!icon)
-      icon = "icon-16-info";
-    let bar;
-    actions.push({
-      type: "close",
-      action: () => notify_rm(notif),
-      text: tl(trans.close)
-    });
-    let notif = html.node`
-        <div
-            class=${[
-      "bleh-notification",
-      icon ? "with-icon" : "",
-      classname ? classname : "",
-      long ? "long" : "",
-      colourful ? "colourful" : ""
-    ].join(" ")}
-            data-type=${type}
-            style=${[
-      icon ? `--mask: var(--${icon})` : ""
-    ].join(";")}
-        >
-            <div class="notification-information">
-                 <div class="notification-title">${title}</div>
-                ${body ? html.node`
-                <div class="notification-body">${body}</div>
-                ` : ""}
-            </div>
-            ${!persist ? html.node`
-            <div class="notification-progress"><div class="fill" ref=${(el) => bar = el} /></div>
-            ` : ""}
-            <div class="notification-actions">
-                ${actions.length > 0 ? actions.map((action) => () => {
-      let button = html.node`
-                        <button class="notification-action" data-type=${action.type} onclick=${action.action}>${action.text}</button>
-                    `;
-      tippy(button, {
-        content: action.text
-      });
-      return button;
-    }) : ""}
-            </div>
-        </div>
-    `;
-    page.structure.notifications.appendChild(notif);
-    if (persist)
-      return notif;
-    let ms = long ? 6e3 : 2e3;
-    let counter = 100;
-    let step = ms / 100;
-    let timer = setInterval(() => {
-      if (notif.matches(":hover"))
-        return;
-      counter--;
-      bar.style.setProperty("width", `${counter}%`);
-      if (counter <= 0) {
-        clearInterval(timer);
-        notify_rm(notif);
-      }
-    }, step);
-    return notif;
-  }
-  unsafeWindow._notify_rm = function(notif) {
-    notify_rm(notif);
-  };
-  function notify_rm(notif) {
-    notif.classList.add("fade-out");
-    setTimeout(function() {
-      page.structure.notifications.removeChild(notif);
-    }, 400);
-  }
 
   // src/api.js
   function test_api_key() {
@@ -5920,23 +5931,22 @@
       }
       video_col.classList.remove("col-sidebar");
       page.structure.side.insertBefore(video_col, page.structure.side.firstElementChild);
-      let container = document.createElement("div");
-      container.classList.add("video-overlay-container");
-      let view_buttons = document.createElement("div");
-      view_buttons.classList.add("view-buttons");
       let playlink = video.querySelector(".video-preview-playlink a");
       let replace = video_col.querySelector(".video-preview-replace a");
-      playlink.classList = "btn view-item video-item video-item--play";
-      replace.classList = "btn view-item video-item video-item--edit";
-      view_buttons.appendChild(playlink);
-      view_buttons.appendChild(replace);
-      container.appendChild(view_buttons);
-      video.appendChild(container);
+      video.appendChild(html.node`
+            <a class="link-block-cover-link" href=${playlink.href} target="_blank" />
+        `);
+      playlink.classList = "see-more";
+      replace.classList = "see-more edit";
+      video.after(html.node`
+            <div class="video-actions sub-text">
+                ${playlink}
+                ${replace}
+            </div>
+        `);
       playlink.textContent = tl(trans.watch);
       playlink.removeAttribute("title");
-      tippy(replace, {
-        content: replace.textContent
-      });
+      replace.textContent = tl(trans.replace);
     }
   }
   function video_unavailable(video_col = null) {
@@ -14420,12 +14430,12 @@
     buffer_container.style.setProperty("display", "none");
     if (pagination)
       wiki_panel.appendChild(pagination);
-    let side_actions = document.createElement("section");
-    side_actions.classList.add("side-actions");
-    side_actions.innerHTML = `
-        <a class="btn side-action" data-type="latest-wiki" href="${sub_text.querySelector("a").getAttribute("href")}">
-            ${tl(trans.view_latest)}
-        </a>
+    let side_actions = html.node`
+        <section class="side-actions">
+            <a class="btn side-action" data-type="latest-wiki" href="${sub_text.querySelector("a").getAttribute("href")}">
+                ${tl(trans.view_latest)}
+            </a>
+        </section>
     `;
     if (!page.mobile)
       page.structure.side.appendChild(side_actions);
@@ -14517,35 +14527,45 @@
         </div>
     `;
     page.structure.side.innerHTML = "";
-    let side_actions = document.createElement("section");
-    side_actions.classList.add("side-actions");
-    side_actions.innerHTML = `
-        <a class="btn side-action" data-type="latest-wiki" href="${sub_text.querySelector("a").getAttribute("href")}">
-            ${tl(trans.view_latest_version)}
-        </a>
+    let side_actions = html.node`
+        <section class="side-actions">
+            <a class="btn side-action" data-type="latest-wiki" href="${sub_text.querySelector("a").getAttribute("href")}">
+                ${tl(trans.view_latest)}
+            </a>
+        </section>
     `;
     if (!page.mobile)
       page.structure.side.appendChild(side_actions);
     else
       page.structure.main.appendChild(side_actions);
-    let wiki_presets_panel = document.createElement("section");
-    wiki_presets_panel.classList.add("wiki-presets-panel");
-    wiki_presets_panel.innerHTML = `
-        <h3 class="text-18">${tl(trans.symbol_presets)}</h3>
-        <div class="presets">
-            <div class="preset">\u201C</div>
-            <div class="preset">\u201D</div>
-            <div class="preset">\u2014</div>
-            <div class="preset">\u2018</div>
-            <div class="preset">\u2019</div>
-            <div class="preset">-</div>
-        </div>
-        <ul class="wiki-standards generic-list">
-            <li>Tracks should be contained in \u201C\u201D, while albums and artists are left without.</li>
-            <li>A pair of \u2018 \u2019 are usually used for quotations.</li>
-        </ul>
-    `;
-    page.structure.side.appendChild(wiki_presets_panel);
+    let presets = [`\u201C`, `\u201D`, `\u2014`, `\u2018`, `\u2019`, `-`];
+    let standards = [
+      tl(trans.wiki_standard_tracks),
+      tl(trans.wiki_standard_artists),
+      tl(trans.wiki_standard_quotations)
+    ];
+    page.structure.side.appendChild(html.node`
+        <section class="wiki-presets-panel">
+            <h3 class="text-18">${tl(trans.symbol_presets)}</h3>
+            <div class="presets">
+                ${presets.map((preset) => {
+      let item = html.node`
+                        <div class="preset" onclick=${() => copy(preset)}>
+                            ${preset}
+                        </div>
+                    `;
+      tippy(item, {
+        content: tl(trans.click_to_copy),
+        delay: [500, 0]
+      });
+      return item;
+    })}
+            </div>
+            <ul class="wiki-standards generic-list">
+                ${standards.map((standard) => html.node`<li>${standard}</li>`)}
+            </ul>
+        </section>
+    `);
     page.structure.side.appendChild(wiki_syntax);
     let rules = page.structure.main.querySelector(".wiki-style-rules");
     rules.removeAttribute("id");
@@ -19736,6 +19756,18 @@
     copied_to_clipboard: {
       en: "Copied to clipboard",
       pt: "Copiado para a \xE1rea de transfer\xEAncia"
+    },
+    click_to_copy: {
+      en: "Click to copy"
+    },
+    wiki_standard_tracks: {
+      en: "Track titles should be wrapped in quotation marks \u201C \u201D"
+    },
+    wiki_standard_artists: {
+      en: "Album and artist names are left without quotes"
+    },
+    wiki_standard_quotations: {
+      en: "Use \u2018 \u2019 for quotations from the artist or elsewhere"
     },
     activity: {
       en: "Activity",

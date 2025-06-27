@@ -944,30 +944,27 @@ function show_numbers_on_side(header_type) {
         video_col.classList.remove('col-sidebar');
         page.structure.side.insertBefore(video_col, page.structure.side.firstElementChild);
 
-        let container = document.createElement('div');
-        container.classList.add('video-overlay-container');
-
-        let view_buttons = document.createElement('div');
-        view_buttons.classList.add('view-buttons');
-
         let playlink = video.querySelector('.video-preview-playlink a');
         let replace = video_col.querySelector('.video-preview-replace a');
 
-        playlink.classList = 'btn view-item video-item video-item--play';
-        replace.classList = 'btn view-item video-item video-item--edit';
+        video.appendChild(html.node`
+            <a class="link-block-cover-link" href=${playlink.href} target="_blank" />
+        `);
 
-        view_buttons.appendChild(playlink);
-        view_buttons.appendChild(replace);
+        playlink.classList = 'see-more';
+        replace.classList = 'see-more edit';
 
-        container.appendChild(view_buttons);
-        video.appendChild(container);
+        video.after(html.node`
+            <div class="video-actions sub-text">
+                ${playlink}
+                ${replace}
+            </div>
+        `);
 
         playlink.textContent = tl(trans.watch);
         playlink.removeAttribute('title');
 
-        tippy(replace, {
-            content: replace.textContent
-        });
+        replace.textContent = tl(trans.replace);
     }
 }
 

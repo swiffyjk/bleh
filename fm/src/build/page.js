@@ -83,6 +83,7 @@ export let last_page_subpage = {
  * @property {boolean} multi - Whether this artist page is a shared profile
  * @property {boolean} corrected - Whether this page has been corrected via lotus
  * @property {string} token - Profile token for submitting forms
+ * @property {boolean} mobile - Page is in a mobile state **on load**
  * @property {Object} structure - Elements that make up the page structure
  * @property {boolean} structure.glacier.refresh - Whether this glacier library page is pending refresh
  * @property {Object|null} structure.logs - Logging host
@@ -101,6 +102,7 @@ export let page = {
     multi: false,
     corrected: false,
     token: '',
+    mobile: false,
     structure: {
         wrapper: null,
         container: null,
