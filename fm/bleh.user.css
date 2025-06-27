@@ -202,6 +202,10 @@
             --font-weight-medium: calc(var(--custom_font_weight_medium, 650) + 110);
             --font-weight-bold: calc(var(--custom_font_weight_bold, 730) + 110);
         }
+
+        [data-bleh--reduced_motion="true"] & {
+            --motion: none;
+        }
     }
 
     .music-more-tags-tag-inner-wrap, .music-featured-item-heading-link, .music-featured-item-body,
@@ -5565,6 +5569,8 @@
         display: flex;
         flex-direction: column;
         gap: 2px;
+
+        animation: var(--motion, chartlist 0.4s var(--trans-function)) !important;
     }
     .obsession-candidate,
     .chartlist-row {
@@ -5584,8 +5590,6 @@
         margin: 0 -12px !important; /* calc(- 12 px - var(--chartlist-inner-gap) / 2) */
         display: flex !important;
         align-items: center;
-        
-        animation: var(--motion, chartlist 0.4s var(--trans-function)) !important;
 
         &[aria-expanded="true"],
         &:hover {
