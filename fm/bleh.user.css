@@ -5539,6 +5539,11 @@
         &:hover {
             background-color: var(--bg-hov);
             transition: none !important;
+
+            .chartlist-image {
+                transform: scale(1.05);
+                filter: brightness(120%);
+            }
         }
 
         &.compare-item,
@@ -5731,9 +5736,9 @@
         margin-left: unset !important;
         overflow: unset !important;
 
-        transition-property: transform;
-        transition-duration: var(--trans);
-        transition-timing-function: var(--trans-function);
+        transition-property: transform, filter;
+        transition-duration: 0.2s;
+        transition-timing-function: cubic-bezier(0.4, 0, 0.2, 1);
 
         &:before {
             content: '';
@@ -11346,7 +11351,6 @@
             margin: unset;
             flex-shrink: 0;
             width: 64px;
-            transform: scale(1);
 
             img {
                 object-fit: cover;
