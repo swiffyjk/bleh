@@ -4174,69 +4174,6 @@
         }
     }
 
-    .artist-header-featured-items-item-wrap--video-thumbnail .artist-header-featured-items-item .media-item, .artist-header-featured-items-item-wrap--video-thumbnail .artist-header-featured-items-item .media-item + .link-block-cover-link {
-        height: 64px;
-        width: 116px;
-    }
-    .artist-header-featured-items-item .media-item, .artist-header-featured-items-item .media-item + .link-block-cover-link {
-        width: 64px;
-        height: 64px;
-    }
-
-
-    .artist-header-featured-items-item-video,
-    .artist-header-featured-items-item-image {
-        background: var(--avatar-generic-background);
-        border-radius: var(--item-big-radius);
-        box-shadow: var(--card-shadow);
-        overflow: hidden;
-    }
-
-
-    /* hide youtube video playlink, but still clickable */
-    .artist-header-featured-items-item-video .image-overlay-playlink-link {
-        opacity: 0;
-    }
-    /* completely hide album playlink */
-    .artist-header-featured-items-item-playlink {
-        display: none;
-    }
-
-
-    .artist-header-featured-items-item-name {
-        font-size: var(--font-size);
-        line-height: var(--line-height);
-        font-weight: var(--font-weight-medium);
-        color: hsl(var(--c2));
-    }
-    .artist-header-featured-items-item-aux-text {
-        font-size: calc(var(--font-size) - 1px);
-        line-height: var(--line-height);
-        color: hsla(var(--c2), 80%);
-        cursor: default;
-    }
-    .artist-header-featured-items-item-header {
-        text-transform: initial;
-        color: hsl(var(--c3));
-        opacity: unset;
-
-        font-size: 12px;
-        line-height: 16px;
-        cursor: default;
-    }
-
-
-    .header-new-gallery--link .header-new-gallery-inner {
-        font-size: var(--font-size);
-        line-height: var(--line-height);
-        font-weight: var(--font-weight-medium);
-        background: unset;
-        position: relative !important;
-    }
-    .header-new-gallery--link .header-new-gallery-inner:before {
-        --mask: var(--icon-16-arrow-right);
-    }
-
 
     /*     PROFILE NAME     */
     .header-title-secondary {
