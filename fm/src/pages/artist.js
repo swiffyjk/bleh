@@ -233,7 +233,7 @@ export function bleh_artists() {
                             img = img.replace('0.jpg', 'mqdefault.jpg');
                         
                         return html.node`
-                            <div class="featured-item">
+                            <div class="featured-artist-item">
                                 <div class="sub-text normal" data-type=${type}>
                                     <span class="bleh-icon" style="--icon: var(--mask)" />
                                     ${text}
