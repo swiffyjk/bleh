@@ -15558,6 +15558,10 @@
         [data-ff--short="true"] & {
             & > .row.col-main-is-primary > .content {
                 padding: 0 var(--card-padding);
+
+                .pagination {
+                    margin-top: var(--card-gap);
+                }
             }
         }
     }

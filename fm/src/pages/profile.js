@@ -79,26 +79,24 @@ export function bleh_profiles() {
 
 
         let expander;
-        let is_staff = (title_wrap.querySelector('.user-status-staff') != null);
-
         let redesigned_profile_header = html.node`
-            <section class="redesigned-header redesigned-profile-header no-background ${is_staff ? 'staff-profile' : ''}">
-            <div class="avatar-side">
-                ${avatar}
-            </div>
-            <div class="info-side">
-                <div class="sub-text">${tl(trans.profile)}</div>
-                ${title_wrap ? html.node`<div class="title-container">${title_wrap}</div>` : ''}
-                ${sub_wrap ? sub_wrap : ''}
-            </div>
-            <div class="expand-side">
-                <button class="header-expand-button icon" ref=${el => expander = el} onclick=${() => {
-                    let current = settings.profile_header_expand;
-                    expander.setAttribute('aria-expanded', !current);
-                    save_setting('profile_header_expand', !current);
-                }} aria-expanded="${settings.profile_header_expand}">${tl(trans.expand)}</button>
-            </div>
-        </section>
+            <section class="redesigned-header redesigned-profile-header no-background">
+                <div class="avatar-side">
+                    ${avatar}
+                </div>
+                <div class="info-side">
+                    <div class="sub-text">${tl(trans.profile)}</div>
+                    ${title_wrap ? html.node`<div class="title-container">${title_wrap}</div>` : ''}
+                    ${sub_wrap ? sub_wrap : ''}
+                </div>
+                <div class="expand-side">
+                    <button class="header-expand-button icon" ref=${el => expander = el} onclick=${() => {
+                        let current = settings.profile_header_expand;
+                        expander.setAttribute('aria-expanded', !current);
+                        save_setting('profile_header_expand', !current);
+                    }} aria-expanded=${settings.profile_header_expand}>${tl(trans.expand)}</button>
+                </div>
+            </section>
         `;
 
         if (page.name == auth.name && !settings.profile_header_own) {
@@ -114,7 +112,7 @@ export function bleh_profiles() {
             } else {
                 let background = document.body.querySelector('.header-background--has-image');
                 if (background)
-                    register_background(background.style.getPropertyValue('background-image').replace('url("', '').replace('")', ''), 'artist');
+                    register_background(background.style.backgroundImage.replace('url("', '').replace('")', ''), 'artist');
                 else
                     register_background(null, 'none');
             }
@@ -167,7 +165,7 @@ export function bleh_profiles() {
         loved_tab.textContent = tl(trans.loved);
 
     if (!is_subpage) {
-        let is_following = profile_header.querySelector('.label.user-follow');
+        let is_following = page.structure.container.querySelector('.label.user-follow');
 
 
         //

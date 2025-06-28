@@ -6692,13 +6692,6 @@
   }
 
   // src/components/profile_header.js
-  unsafeWindow._toggle_profile_header = function(button) {
-    let current = settings.profile_header_expand;
-    settings.profile_header_expand = !current;
-    button.setAttribute("aria-expanded", !current);
-    document.documentElement.setAttribute("data-bleh--profile_header_expand", !current);
-    localStorage.setItem("bleh", JSON.stringify(settings));
-  };
   function redesign_profile_header(is_own_profile, is_following) {
     let base_header = document.body.querySelector(".header-info-secondary");
     if (!base_header) return;
@@ -6706,7 +6699,6 @@
     let taste = "";
     let taste_percentage = "";
     let taste_artists = [];
-    let profile_avi = "";
     if (!is_own_profile && page.name != sponsor_list.sponsor_account) {
       let taste_meter = base_header.querySelector(".tasteometer");
       taste = taste_meter.classList[1].replace("tasteometer-compat-", "");
@@ -6714,11 +6706,11 @@
       artists.forEach((artist) => {
         taste_artists.push(correct_artist(artist.getAttribute("title")));
       });
-      profile_avi = document.body.querySelector(".header-avatar img");
-      if (profile_avi != null)
-        profile_avi = profile_avi.getAttribute("src");
+      page.avatar = document.body.querySelector(".header-avatar img");
+      if (page.avatar != null)
+        page.avatar = page.avatar.getAttribute("src");
       else
-        profile_avi = "";
+        page.avatar = "";
       taste_percentage = taste_meter.querySelector(".tasteometer-viz").getAttribute("title");
       if (taste_percentage == "99%")
         taste_percentage = "100%";
@@ -6737,13 +6729,13 @@
     }
     if (!is_own_profile && page.name != sponsor_list.sponsor_account) {
       let follow_wrap = document.body.querySelector(".header-avatar .class > div");
-      if (follow_wrap != null) {
+      if (follow_wrap) {
         let follow_btn = follow_wrap.querySelector("button");
         follow_btn.classList.add("btn", "side-action");
         follow_btn.classList.remove("toggle-button", "header-follower-btn");
         follow_btn.setAttribute("data-type", "follow");
         profile_header.appendChild(follow_wrap);
-        if (follow_wrap.getAttribute("data-toggle-button-current-state") == "followed")
+        if (is_following)
           follow_btn.setAttribute("data-followed", "true");
         let mutual_text = document.createElement("i");
         mutual_text.textContent = tl(trans.following_mutuals);
@@ -6904,7 +6896,7 @@
           content: html.node`
                     <h4 class="menu-header">${tl(trans.compare_plays)}</h4>
                     <a class="dropdown-menu-clickable-item" href="${root}user/${page.name}/library/music/${sanitise(taste_artists[0])}" data-menu-item="shared-artist">
-                        <img class="view-item-avatar" src="${profile_avi}" alt="${page.name}">${taste_artists[0]}
+                        <img class="view-item-avatar" src="${page.avatar}" alt="${page.name}">${taste_artists[0]}
                     </a>
                     <a class="dropdown-menu-clickable-item" href="${root}user/${auth.name}/library/music/${sanitise(taste_artists[0])}" data-menu-item="shared-artist">
                         <img class="view-item-avatar" src="${auth.avatar}" alt="${auth.name}">${taste_artists[0]}
@@ -6912,7 +6904,7 @@
                     ${taste_artists.length >= 2 ? html.node`
                     <div class="sep"></div>
                     <a class="dropdown-menu-clickable-item" href="${root}user/${page.name}/library/music/${sanitise(taste_artists[1])}" data-menu-item="shared-artist">
-                        <img class="view-item-avatar" src="${profile_avi}" alt="${page.name}">${taste_artists[1]}
+                        <img class="view-item-avatar" src="${page.avatar}" alt="${page.name}">${taste_artists[1]}
                     </a>
                     <a class="dropdown-menu-clickable-item" href="${root}user/${auth.name}/library/music/${sanitise(taste_artists[1])}" data-menu-item="shared-artist">
                         <img class="view-item-avatar" src="${auth.avatar}" alt="${auth.name}">${taste_artists[1]}
@@ -6921,7 +6913,7 @@
                     ${taste_artists.length >= 3 ? html.node`
                     <div class="sep"></div>
                     <a class="dropdown-menu-clickable-item" href="${root}user/${page.name}/library/music/${sanitise(taste_artists[2])}" data-menu-item="shared-artist">
-                        <img class="view-item-avatar" src="${profile_avi}" alt="${page.name}">${taste_artists[2]}
+                        <img class="view-item-avatar" src="${page.avatar}" alt="${page.name}">${taste_artists[2]}
                     </a>
                     <a class="dropdown-menu-clickable-item" href="${root}user/${auth.name}/library/music/${sanitise(taste_artists[2])}" data-menu-item="shared-artist">
                         <img class="view-item-avatar" src="${auth.avatar}" alt="${auth.name}">${taste_artists[2]}
@@ -8491,25 +8483,24 @@
         title_wrap.querySelector(".header-title a").classList.add("bleh--name-is-cute");
       }
       let expander;
-      let is_staff = title_wrap.querySelector(".user-status-staff") != null;
       let redesigned_profile_header = html.node`
-            <section class="redesigned-header redesigned-profile-header no-background ${is_staff ? "staff-profile" : ""}">
-            <div class="avatar-side">
-                ${avatar3}
-            </div>
-            <div class="info-side">
-                <div class="sub-text">${tl(trans.profile)}</div>
-                ${title_wrap ? html.node`<div class="title-container">${title_wrap}</div>` : ""}
-                ${sub_wrap ? sub_wrap : ""}
-            </div>
-            <div class="expand-side">
-                <button class="header-expand-button icon" ref=${(el) => expander = el} onclick=${() => {
+            <section class="redesigned-header redesigned-profile-header no-background">
+                <div class="avatar-side">
+                    ${avatar3}
+                </div>
+                <div class="info-side">
+                    <div class="sub-text">${tl(trans.profile)}</div>
+                    ${title_wrap ? html.node`<div class="title-container">${title_wrap}</div>` : ""}
+                    ${sub_wrap ? sub_wrap : ""}
+                </div>
+                <div class="expand-side">
+                    <button class="header-expand-button icon" ref=${(el) => expander = el} onclick=${() => {
         let current = settings.profile_header_expand;
         expander.setAttribute("aria-expanded", !current);
         save_setting("profile_header_expand", !current);
-      }} aria-expanded="${settings.profile_header_expand}">${tl(trans.expand)}</button>
-            </div>
-        </section>
+      }} aria-expanded=${settings.profile_header_expand}>${tl(trans.expand)}</button>
+                </div>
+            </section>
         `;
       if (page.name == auth.name && !settings.profile_header_own) {
         register_background(null, "hidden");
@@ -8524,7 +8515,7 @@
         } else {
           let background = document.body.querySelector(".header-background--has-image");
           if (background)
-            register_background(background.style.getPropertyValue("background-image").replace('url("', "").replace('")', ""), "artist");
+            register_background(background.style.backgroundImage.replace('url("', "").replace('")', ""), "artist");
           else
             register_background(null, "none");
         }
@@ -8562,7 +8553,7 @@
     if (loved_tab)
       loved_tab.textContent = tl(trans.loved);
     if (!is_subpage) {
-      let is_following = profile_header.querySelector(".label.user-follow");
+      let is_following = page.structure.container.querySelector(".label.user-follow");
       profile_recents();
       profile_artists();
       profile_albums();
