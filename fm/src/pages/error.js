@@ -30,7 +30,7 @@ export function bleh_error() {
     render(page_content, html`
         <div class="row">
             <div class="col-main">
-                <section class="error">
+                <section class="error-panel">
                     <div class="info">
                         <h1>${tl(trans.erm)}</h1>
                         <div class="subtle">${error_content.textContent}</div>

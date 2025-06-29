@@ -21,6 +21,7 @@ import {bleh_wiki, bleh_wiki_editor, bleh_wiki_history} from "./wiki";
 import {html} from "lighterhtml";
 import {expand_avatar} from "../avatar.js";
 import {other_listener} from "../components/profile_shortcut.js";
+import {setting} from "../components/settings.js";
 
 export function bleh_artists() {
     let artist_header = document.body.querySelector('.header-new--artist');
@@ -210,6 +211,73 @@ export function bleh_artists() {
         bleh_tags_mini();
 
 
+        let top_tracks = page.structure.main.querySelector('#top-tracks');
+        if (top_tracks) {
+            let settings_btn;
+
+            let top = top_tracks.querySelector('.section-controls');
+            top.classList = 'top-container';
+
+            let header = top.querySelector('h3');
+
+            let select_btn = top.querySelector('.dropdown-menu-clickable-button');
+
+            select_btn.classList.add('btn', 'view-item', 'interact-item', 'select-button', 'link-select');
+            select_btn.classList.remove('dropdown-menu-clickable-button');
+
+            let play = top.querySelector('.section-playlink');
+
+            play.classList.add('btn', 'view-item', 'interact-item', 'radio');
+            play.classList.remove('section-playlink', 'hover-section-control');
+            play.setAttribute('data-type', 'play');
+
+            header.after(html.node`
+                <div class="accompany view-buttons blend blend-v2">
+                    ${select_btn}
+                </div>
+                <div class="view-buttons blend blend-v2">
+                    ${play}
+                    <button class="panel-settings-button btn view-item interact-item left-icon" data-type="settings" ref=${el => settings_btn = el}>
+                        ${tl(trans.settings)}
+                    </button>
+                </div>
+            `);
+
+            tippy(settings_btn, {
+                theme: 'window',
+                content: html.node`
+                    <div class="dialog-settings">
+                        ${setting({id: 'format_guest_features'})}
+                        ${setting({id: 'show_guest_features'})}
+                    </div>
+                `,
+                placement: 'bottom',
+                interactive: true,
+                interactiveBorder: 10,
+                trigger: 'click'
+            });
+        }
+
+        let top_albums = page.structure.main.querySelector('#top-albums');
+        if (top_albums) {
+            let top = top_albums.querySelector('.section-controls');
+            top.classList = 'top-container';
+
+            let header = top.querySelector('h3');
+
+            let select_btn = top.querySelector('.dropdown-menu-clickable-button');
+
+            select_btn.classList.add('btn', 'view-item', 'interact-item', 'select-button', 'link-select');
+            select_btn.classList.remove('dropdown-menu-clickable-button');
+
+            header.after(html.node`
+                <div class="accompany view-buttons blend blend-v2">
+                    ${select_btn}
+                </div>
+            `);
+        }
+
+
         if (katsune && featured_items) {
             let featured_panel = html.node`
                 <section class="featured-items-panel">
@@ -285,10 +353,78 @@ export function bleh_artists() {
             bleh_top_listeners();
         else if (page.subpage == 'listeners_you-know')
             bleh_listeners();
+        else if (page.subpage == 'tracks')
+            bleh_artist_tracks();
+        else if (page.subpage == 'albums')
+            bleh_artist_albums();
     }
 
     log('status is', 'page', 'info', page);
     update_page();
+}
+
+function bleh_artist_tracks() {
+    let top_tracks = page.structure.main.querySelector('section');
+    if (top_tracks) {
+        let settings_btn;
+
+        let top = top_tracks.querySelector('.section-controls');
+        top.classList = 'top-container';
+
+        let header = top.querySelector('h2');
+        header.classList.remove('subpage-title');
+
+        let select_btn = top.querySelector('.dropdown-menu-clickable-button');
+
+        select_btn.classList.add('btn', 'view-item', 'interact-item', 'select-button', 'link-select');
+        select_btn.classList.remove('dropdown-menu-clickable-button');
+
+        header.after(html.node`
+                <div class="accompany view-buttons blend blend-v2">
+                    ${select_btn}
+                </div>
+                <div class="view-buttons blend blend-v2">
+                    <button class="panel-settings-button btn view-item interact-item left-icon" data-type="settings" ref=${el => settings_btn = el}>
+                        ${tl(trans.settings)}
+                    </button>
+                </div>
+            `);
+
+        tippy(settings_btn, {
+            theme: 'window',
+            content: html.node`
+                    <div class="dialog-settings">
+                        ${setting({id: 'format_guest_features'})}
+                        ${setting({id: 'show_guest_features'})}
+                    </div>
+                `,
+            placement: 'bottom',
+            interactive: true,
+            interactiveBorder: 10,
+            trigger: 'click'
+        });
+    }
+}
+
+function bleh_artist_albums() {
+    let top_albums = page.structure.main.querySelector('#artist-albums-section');
+    if (top_albums) {
+        let top = top_albums.querySelector('.section-controls');
+        top.classList = 'top-container';
+
+        let header = top.querySelector('h3');
+
+        let select_btn = top.querySelector('.dropdown-menu-clickable-button');
+
+        select_btn.classList.add('btn', 'view-item', 'interact-item', 'select-button', 'link-select');
+        select_btn.classList.remove('dropdown-menu-clickable-button');
+
+        header.after(html.node`
+            <div class="accompany view-buttons blend blend-v2">
+                ${select_btn}
+            </div>
+        `);
+    }
 }
 
 function bleh_listeners() {
