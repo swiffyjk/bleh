@@ -121,16 +121,7 @@ export function toggle_theme() {
     show_theme_change_in_menu(current_theme);
 
     // save value
-    settings.theme = current_theme;
-    if (current_theme == 'light' || current_theme == 'ink')
-        settings.theme_type = 'light';
-    else
-        settings.theme_type = 'dark';
-    document.documentElement.setAttribute(`data-bleh--theme`, `${current_theme}`);
-    document.documentElement.setAttribute(`data-bleh--theme_type`, `${settings.theme_type}`);
-
-    // save to settings
-    localStorage.setItem('bleh', JSON.stringify(settings));
+    save_setting('theme', current_theme);
 
     load_chart_colours();
 

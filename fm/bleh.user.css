@@ -82,13 +82,13 @@
                 1))));
 
         [data-season="easter"],
-        [data-bleh--season="easter"] & {
+        [data-bleh--season="easter"] > & {
             --hue-seasonal: 143;
             --sat-seasonal: 1;
             --lit-seasonal: 1.15;
         }
         [data-season="halloween"],
-        [data-bleh--season="halloween"] & {
+        [data-bleh--season="halloween"] > & {
             --hue-seasonal: 14;
             --sat-seasonal: 1.6;
             --lit-seasonal: 1;
@@ -96,13 +96,13 @@
             --icon-16-profile: url('data:image/svg+xml;base64,PHN2ZyAgeG1sbnM9Imh0dHA6Ly93d3cudzMub3JnLzIwMDAvc3ZnIiAgd2lkdGg9IjI0IiAgaGVpZ2h0PSIyNCIgIHZpZXdCb3g9IjAgMCAyNCAyNCIgIGZpbGw9Im5vbmUiICBzdHJva2U9ImN1cnJlbnRDb2xvciIgIHN0cm9rZS13aWR0aD0iMiIgIHN0cm9rZS1saW5lY2FwPSJyb3VuZCIgIHN0cm9rZS1saW5lam9pbj0icm91bmQiICBjbGFzcz0iaWNvbiBpY29uLXRhYmxlciBpY29ucy10YWJsZXItb3V0bGluZSBpY29uLXRhYmxlci1za3VsbCI+PHBhdGggc3Ryb2tlPSJub25lIiBkPSJNMCAwaDI0djI0SDB6IiBmaWxsPSJub25lIi8+PHBhdGggZD0iTTEyIDRjNC40MTggMCA4IDMuMzU4IDggNy41YzAgMS45MDEgLS43NTUgMy42MzcgLTIgNC45NmwwIDIuNTRhMSAxIDAgMCAxIC0xIDFoLTEwYTEgMSAwIDAgMSAtMSAtMXYtMi41NGMtMS4yNDUgLTEuMzIyIC0yIC0zLjA1OCAtMiAtNC45NmMwIC00LjE0MiAzLjU4MiAtNy41IDggLTcuNXoiIC8+PHBhdGggZD0iTTEwIDE3djMiIC8+PHBhdGggZD0iTTE0IDE3djMiIC8+PHBhdGggZD0iTTkgMTFtLTEgMGExIDEgMCAxIDAgMiAwYTEgMSAwIDEgMCAtMiAwIiAvPjxwYXRoIGQ9Ik0xNSAxMW0tMSAwYTEgMSAwIDEgMCAyIDBhMSAxIDAgMSAwIC0yIDAiIC8+PC9zdmc+');
         }
         [data-season="pre_fall"],
-        [data-bleh--season="pre_fall"] & {
+        [data-bleh--season="pre_fall"] > & {
             --hue-seasonal: 244;
             --sat-seasonal: 0.9;
             --lit-seasonal: 1.1;
         }
         [data-season="fall"],
-        [data-bleh--season="fall"] & {
+        [data-bleh--season="fall"] > & {
             --hue-seasonal: 224;
             --sat-seasonal: 0.85;
             --lit-seasonal: 1.1;
@@ -113,7 +113,7 @@
             --icon-16-profile: var(--icon-16-snowgirl);
         }
         [data-season="christmas"],
-        [data-bleh--season="christmas"] & {
+        [data-bleh--season="christmas"] > & {
             --hue-seasonal: 204;
             --sat-seasonal: 0.85;
             --lit-seasonal: 1.17;
@@ -125,7 +125,7 @@
             --icon-16-artist: url('data:image/svg+xml;base64,PHN2ZyAgeG1sbnM9Imh0dHA6Ly93d3cudzMub3JnLzIwMDAvc3ZnIiAgd2lkdGg9IjI0IiAgaGVpZ2h0PSIyNCIgIHZpZXdCb3g9IjAgMCAyNCAyNCIgIGZpbGw9Im5vbmUiICBzdHJva2U9ImN1cnJlbnRDb2xvciIgIHN0cm9rZS13aWR0aD0iMiIgIHN0cm9rZS1saW5lY2FwPSJyb3VuZCIgIHN0cm9rZS1saW5lam9pbj0icm91bmQiICBjbGFzcz0iaWNvbiBpY29uLXRhYmxlciBpY29ucy10YWJsZXItb3V0bGluZSBpY29uLXRhYmxlci1ub3J0aC1zdGFyIj48cGF0aCBzdHJva2U9Im5vbmUiIGQ9Ik0wIDBoMjR2MjRIMHoiIGZpbGw9Im5vbmUiLz48cGF0aCBkPSJNMyAxMmgxOCIgLz48cGF0aCBkPSJNMTIgMjF2LTE4IiAvPjxwYXRoIGQ9Ik03LjUgNy41bDkgOSIgLz48cGF0aCBkPSJNNy41IDE2LjVsOSAtOSIgLz48L3N2Zz4=');
         }
         [data-season="new_years"],
-        [data-bleh--season="new_years"] & {
+        [data-bleh--season="new_years"] > & {
             --hue-seasonal: 238;
             --sat-seasonal: 0.925;
             --lit-seasonal: 1.1;
@@ -176,11 +176,11 @@
 
         --banner-height: 280px;
 
-        [data-ff--short="true"] & {
+        [data-ff--short="true"] > & {
             --banner-height: 340px;
         }
 
-        [data-bleh--theme="glass"] & {
+        [data-bleh--theme="glass"] > & {
             --banner-height: 1200px;
         }
         
@@ -189,21 +189,21 @@
         --glass-shadow: inset 2px 2px 1px 0 rgb(255 255 255 / 10%), inset -1px -1px 1px 1px rgb(255 255 255 / 10%);
         --glass-filter: blur(25px) saturate(220%);
 
-        [data-ff--astra="true"] & {
+        [data-ff--astra="true"] > & {
             --font: var(--custom_font, ''), Work Sans, Ubuntu Sans, Spline Sans, Inter, Roboto, Noto Sans, Noto Sans JP, Noto Sans KR, Noto Sans TC, var(--font_emoji_name, ''), Lucida Grande, Verdana, Tahoma, -apple-system, BlinkMacSystemFont, sans-serif;
         }
 
-        [data-bleh--font_emoji="true"] & {
+        [data-bleh--font_emoji="true"] > & {
             --font_emoji_name: Noto Color Emoji;
         }
 
-        [data-bleh--theme_type="light"] & {
+        [data-bleh--theme_type="light"] > & {
             --font-weight: calc(var(--custom_font_weight, 480) + 90);
             --font-weight-medium: calc(var(--custom_font_weight_medium, 650) + 110);
             --font-weight-bold: calc(var(--custom_font_weight_bold, 730) + 110);
         }
 
-        [data-bleh--reduced_motion="true"] & {
+        [data-bleh--reduced_motion="true"] > & {
             --motion: none;
         }
     }
@@ -690,37 +690,50 @@
         --blur-brightness: 0.8;
 
         --modal-bg: hsl(var(--b6), 0.6);
-    }
 
-    .theme-preview[data-bleh--theme_type="light"],
-    [data-bleh--theme_type="light"] body {
-        --card-shadow: hsla(var(--b7), 0.05) 0 2px 4px 0;
-        --card-shadow: 0 1.5px 4px 0 hsla(var(--b7), 0.05);
+        --view-buttons: hsl(var(--b6), 40%);
+        --view-buttons-shadow: none;
 
-        --card-border: inset 0 0 0 1px hsla(var(--b4), 0.7) !important;
-        --menu-shadow: 2px 2px 24px 0 hsla(var(--b7), 0.15), 3px 6px 48px 16px hsla(var(--b7), 0.03);
-        --overlay-shadow: 2px 2px 24px 0 hsla(var(--b7), 0.15), 3px 6px 48px 16px hsla(var(--b7), 0.03);
-        --menu-shadow: 0 12px 36px 0 hsla(var(--b7), 0.15);
-        --standout-shadow: 3px 6px 20px 7px hsla(var(--b7), 0.06);
-        --subtle-shadow: 0 5px 12px 4px hsla(var(--b7), 0.08);
+        --menu-bg: var(--b6);
 
-        --interactable-outer: hsla(var(--b7), 0.1) 0 1px 2px 0;
-        --interactable-active-outer: transparent 0 0 0;
+        &[data-bleh--theme_type="light"], [data-bleh--theme_type="light"] > & {
+            --view-buttons: hsl(var(--b5));
+            --view-buttons-shadow: inset 0 0 0 1px var(--card-border-base);
 
-        color-scheme: light !important;
+            --card-shadow: hsla(var(--b7), 0.05) 0 2px 4px 0;
+            --card-shadow: 0 1.5px 4px 0 hsla(var(--b7), 0.05);
 
-        --avatar-generic-background: hsl(var(--b4), 30%);
+            --card-border: inset 0 0 0 1px hsla(var(--b4), 0.7) !important;
+            --menu-shadow: 2px 2px 24px 0 hsla(var(--b7), 0.15), 3px 6px 48px 16px hsla(var(--b7), 0.03);
+            --overlay-shadow: 2px 2px 24px 0 hsla(var(--b7), 0.15), 3px 6px 48px 16px hsla(var(--b7), 0.03);
+            --menu-shadow: 0 12px 36px 0 hsla(var(--b7), 0.15);
+            --standout-shadow: 3px 6px 20px 7px hsla(var(--b7), 0.06);
+            --subtle-shadow: 0 5px 12px 4px hsla(var(--b7), 0.08);
 
-        --blur-brightness: 1.2;
-    }
+            --interactable-outer: hsla(var(--b7), 0.1) 0 1px 2px 0;
+            --interactable-active-outer: transparent 0 0 0;
 
-    .theme-preview[data-bleh--theme="oled"],
-    [data-bleh--theme="oled"] body {
-        --card-border: inset 0 0 0 1px hsla(var(--b4), 0.8);
+            color-scheme: light !important;
 
-        --blur-brightness: 0.5;
+            --avatar-generic-background: hsl(var(--b4), 30%);
 
-        --modal-bg: hsl(var(--b3), 0.35);
+            --blur-brightness: 1.2;
+
+            --menu-bg: var(--b5);
+        }
+
+        &[data-bleh--theme="oled"], [data-bleh--theme="oled"] > & {
+            --view-buttons: hsl(var(--b5));
+            --view-buttons-shadow: inset 0 0 0 1px var(--card-border-base);
+
+            --card-border: inset 0 0 0 1px hsla(var(--b4), 0.8);
+
+            --blur-brightness: 0.5;
+
+            --modal-bg: hsl(var(--b3), 0.35);
+
+            --menu-bg: var(--b5);
+        }
     }
 
     /* icons (from lucide.dev <3) */
@@ -1359,14 +1372,6 @@
             border-color: var(--card-border-base);
             box-shadow: var(--card-shadow);
 
-            [data-bleh--theme="glass"] & {
-                background: var(--glass-bg) !important;
-                border: var(--glass-border) !important;
-                box-shadow: var(--glass-shadow) !important;
-                backdrop-filter: var(--glass-filter) !important;
-                -webkit-backdrop-filter: var(--glass-filter) !important;
-            }
-
             background-repeat: repeat-x;
             background-position: unset !important;
 
@@ -1484,7 +1489,7 @@
         gap: var(--button-list-gap);
         width: fit-content !important;
 
-        a {
+        & > a {
             position: static;
 
             &:first-child {
@@ -1539,7 +1544,7 @@
             }
         }
 
-        a:not(.bleh--version) {
+        & > a:not(.bleh--version) {
             width: unset;
             height: unset;
 
@@ -2199,13 +2204,13 @@
         gap: 0 var(--card-gap);
         width: var(--cards-width);
 
-        [data-ff--beret="true"] & {
+        [data-beret="true"] > & {
             display: flex;
             justify-content: center;
             width: 100%;
             background: hsl(var(--b5));
 
-            [data-ff--short="true"] & {
+            [data-short="true"] > & {
                 flex-direction: column;
                 justify-content: unset;
                 width: var(--cards-width);
@@ -2213,14 +2218,6 @@
                 border-radius: var(--card-radius) !important;
                 padding: var(--card-padding) 0;
                 gap: var(--card-gap) !important;
-
-                [data-bleh--theme="glass"] & {
-                    background: var(--glass-bg) !important;
-                    border: var(--glass-border) !important;
-                    box-shadow: var(--glass-shadow) !important;
-                    backdrop-filter: var(--glass-filter) !important;
-                    -webkit-backdrop-filter: var(--glass-filter) !important;
-                }
 
                 &.listening-report {
                     margin-bottom: 60px;
@@ -2286,7 +2283,7 @@
             }
         }
 
-        &.col-sidebar:not(.track-overview-video-column) {
+        &.col-sidebar {
             display: flex;
             flex-direction: column;
             gap: var(--card-gap);
@@ -4333,13 +4330,6 @@
             &:hover {
                 background-color: var(--bg-hov) !important;
                 transition-duration: 0s !important;
-            }
-
-            [data-bleh--theme="glass"] & {
-                border: var(--glass-border) !important;
-                box-shadow: var(--glass-shadow) !important;
-                backdrop-filter: var(--glass-filter) !important;
-                -webkit-backdrop-filter: var(--glass-filter) !important;
             }
         }
 
@@ -7737,13 +7727,6 @@
                 color: inherit;
                 opacity: 0.6;
             }
-
-            [data-bleh--theme="glass"] & {
-                border: var(--glass-border) !important;
-                box-shadow: var(--glass-shadow) !important;
-                backdrop-filter: var(--glass-filter) !important;
-                -webkit-backdrop-filter: var(--glass-filter) !important;
-            }
         }
 
 
@@ -8794,7 +8777,7 @@
     }
     [data-theme="auth-menu-v2"] {
         padding: var(--item-list-gap) !important;
-        background: hsl(var(--b6), 80%) !important;
+        background: hsl(var(--menu-bg), 80%) !important;
         border-radius: var(--card-radius) !important;
         box-shadow: var(--override-full-shadow, var(--card-border), var(--overlay-shadow)) !important;
         overflow: hidden;
@@ -8804,18 +8787,6 @@
         text-align: left;
 
         font-size: var(--font-size);
-
-        [data-bleh--theme_type="light"] & {
-            background: hsl(var(--b5), 95%) !important;
-        }
-
-        [data-bleh--theme="glass"] & {
-            background: var(--glass-bg) !important;
-            border: var(--glass-border) !important;
-            box-shadow: var(--glass-shadow) !important;
-            backdrop-filter: var(--glass-filter) !important;
-            -webkit-backdrop-filter: var(--glass-filter) !important;
-        }
 
         [data-bleh--seasonal_overlays="true"][data-bleh--season="fall"] &,
         [data-bleh--seasonal_overlays="true"][data-bleh--season="christmas"] & {
@@ -10130,14 +10101,6 @@
                 }
             }
 
-            [data-bleh--theme="glass"] & {
-                background: var(--glass-bg) !important;
-                border: var(--glass-border) !important;
-                box-shadow: var(--glass-shadow) !important;
-                backdrop-filter: var(--glass-filter) !important;
-                -webkit-backdrop-filter: var(--glass-filter) !important;
-            }
-
             &[disabled],
             &[readonly] {
                 --bg-hov: var(--bg) !important;
@@ -10379,14 +10342,6 @@
         padding: var(--card-padding);
         position: relative;
 
-        [data-bleh--theme="glass"] & {
-            background: var(--glass-bg) !important;
-            border: var(--glass-border) !important;
-            box-shadow: var(--glass-shadow) !important;
-            backdrop-filter: var(--glass-filter) !important;
-            -webkit-backdrop-filter: var(--glass-filter) !important;
-        }
-
         display: flex;
         flex-direction: column;
         gap: var(--card-gap);
@@ -10532,7 +10487,7 @@
     .date-range-picker-content, .date-picker-content,
     .dropdown-menu-clickable, .auth-dropdown-menu, .navlist-hidden-list, .modal-body, .library-search-results, .events-filter-location-dropdown {
         margin: unset !important;
-        background: hsl(var(--b6), 95%) !important;
+        background: hsl(var(--menu-bg), 95%) !important;
         border-radius: calc(var(--button-radius) + 4px) !important;
         box-shadow: var(--override-full-shadow, var(--card-border), var(--overlay-shadow)) !important;
         color: hsl(var(--c2));
@@ -10544,11 +10499,6 @@
         ) {
             backdrop-filter: blur(20px) saturate(160%);
             -webkit-backdrop-filter: blur(20px) saturate(160%);
-        }
-
-        [data-bleh--theme_type="light"] &,
-        [data-bleh--theme="oled"] & {
-            background: hsl(var(--b5), 95%) !important;
         }
 
         [data-bleh--seasonal_overlays="true"][data-bleh--season="fall"] &,
@@ -11936,67 +11886,6 @@
 
         max-width: 400px !important;
 
-        &[data-placement^='top'] > .tippy-arrow {
-            bottom: 0;
-
-            &::before {
-                bottom: -7px;
-                left: 0;
-                border-width: 8px 8px 0;
-                border-top-color: initial;
-                transform-origin: center top;
-            }
-        }
-
-        &[data-placement^='bottom'] > .tippy-arrow {
-            top: 0;
-
-            &::before {
-                top: -7px;
-                left: 0;
-                border-width: 0 8px 8px;
-                border-bottom-color: initial;
-                transform-origin: center bottom;
-            }
-        }
-
-        &[data-placement^='left'] > .tippy-arrow {
-            right: 0;
-
-            &::before {
-                border-width: 8px 0 8px 8px;
-                border-left-color: initial;
-                right: -7px;
-                transform-origin: center left;
-            }
-        }
-
-        &[data-placement^='right'] > .tippy-arrow {
-            left: 0;
-
-            &::before {
-                left: -7px;
-                border-width: 8px 8px 8px 0;
-                border-right-color: initial;
-                transform-origin: center right;
-            }
-        }
-
-
-        & > .tippy-arrow {
-            width: 16px;
-            height: var(--card-gap);
-            color: hsla(var(--b8), 80%);
-
-            &::before {
-                content: '';
-                position: absolute;
-                border-color: transparent;
-                border-style: solid;
-                display: none;
-            }
-        }
-
         .tooltip-sub {
             font-size: 12px;
             color: hsl(var(--c3));
@@ -12046,14 +11935,6 @@
 
             [data-bleh--theme_type="light"] & {
                 background: hsl(var(--b5), 95%) !important;
-            }
-
-            [data-bleh--theme="glass"] & {
-                background: var(--glass-bg) !important;
-                border: var(--glass-border) !important;
-                box-shadow: var(--glass-shadow) !important;
-                backdrop-filter: var(--glass-filter) !important;
-                -webkit-backdrop-filter: var(--glass-filter) !important;
             }
 
             [data-bleh--seasonal_overlays="true"][data-bleh--season="fall"] &,
@@ -12173,19 +12054,6 @@
             text-align: left;
 
             font-size: var(--font-size);
-
-            [data-bleh--theme_type="light"] &,
-            [data-bleh--theme="oled"] & {
-                background: hsl(var(--b5), 95%) !important;
-            }
-
-            [data-bleh--theme="glass"] & {
-                background: var(--glass-bg) !important;
-                border: var(--glass-border) !important;
-                box-shadow: var(--glass-shadow) !important;
-                backdrop-filter: var(--glass-filter) !important;
-                -webkit-backdrop-filter: var(--glass-filter) !important;
-            }
 
             [data-bleh--seasonal_overlays="true"][data-bleh--season="fall"] &,
             [data-bleh--seasonal_overlays="true"][data-bleh--season="christmas"] & {
@@ -16353,14 +16221,6 @@
         line-height: var(--line-height);
         font-family: var(--font-code);
         border-radius: var(--item-small-radius);
-
-        [data-bleh--theme="glass"] & {
-            background: var(--glass-bg) !important;
-            border: var(--glass-border) !important;
-            box-shadow: var(--glass-shadow) !important;
-            backdrop-filter: var(--glass-filter) !important;
-            -webkit-backdrop-filter: var(--glass-filter) !important;
-        }
     }
 
     pre {
@@ -16760,14 +16620,6 @@
         border-radius: var(--item-med-radius);
         overflow: hidden;
 
-        [data-bleh--theme="glass"] & {
-            background: var(--glass-bg) !important;
-            border: var(--glass-border) !important;
-            box-shadow: var(--glass-shadow) !important;
-            backdrop-filter: var(--glass-filter) !important;
-            -webkit-backdrop-filter: var(--glass-filter) !important;
-        }
-
         &.gap-top {
             margin-top: var(--card-gap);
         }
@@ -16959,14 +16811,6 @@
             height: 8px;
             position: absolute;
 
-            [data-bleh--theme="glass"] & {
-                background: var(--glass-bg) !important;
-                border: var(--glass-border) !important;
-                box-shadow: var(--glass-shadow) !important;
-                backdrop-filter: var(--glass-filter) !important;
-                -webkit-backdrop-filter: var(--glass-filter) !important;
-            }
-
             pointer-events: none;
 
             .fill {
@@ -16974,13 +16818,6 @@
                 width: var(--percent);
                 background-color: hsl(var(--h3));
                 border-radius: var(--item-big-radius);
-
-                [data-bleh--theme="glass"] & {
-                    border: var(--glass-border) !important;
-                    box-shadow: var(--glass-shadow) !important;
-                    backdrop-filter: var(--glass-filter) !important;
-                    -webkit-backdrop-filter: var(--glass-filter) !important;
-                }
             }
 
             .nub {
@@ -16990,14 +16827,6 @@
                 border: 2px solid hsl(var(--b5));
                 border-radius: var(--item-big-radius);
                 margin: -5px -5px;
-
-                [data-bleh--theme="glass"] & {
-                    background: var(--glass-bg) !important;
-                    border: var(--glass-border) !important;
-                    box-shadow: var(--glass-shadow) !important;
-                    backdrop-filter: var(--glass-filter) !important;
-                    -webkit-backdrop-filter: var(--glass-filter) !important;
-                }
             }
 
             &[data-id="hue"] {
@@ -17231,13 +17060,6 @@
                         transition-property: transform, opacity;
                         transition-duration: 0.3s;
                         transition-timing-function: var(--trans-function);
-                    }
-
-                    [data-bleh--theme="glass"] & {
-                        border: var(--glass-border) !important;
-                        box-shadow: var(--glass-shadow) !important;
-                        backdrop-filter: var(--glass-filter) !important;
-                        -webkit-backdrop-filter: var(--glass-filter) !important;
                     }
 
                     &[aria-checked="true"] {
@@ -17508,19 +17330,6 @@
             }
             &[data-toggle-value="listens"] {
                 --mask: var(--icon-16-listener);
-            }
-
-            &[data-toggle-value="light"] {
-                --mask: var(--icon-16-sun);
-            }
-            &[data-toggle-value="dark"] {
-                --mask: var(--icon-16-moon);
-            }
-            &[data-toggle-value="darker"] {
-                --mask: var(--icon-16-moon-star);
-            }
-            &[data-toggle-value="oled"] {
-                --mask: var(--icon-16-moon-fill);
             }
 
             transform: unset !important;
@@ -17861,13 +17670,6 @@
 
         --radius: 50px;
 
-        [data-bleh--theme="glass"] & {
-            border: var(--glass-border) !important;
-            box-shadow: var(--glass-shadow) !important;
-            backdrop-filter: var(--glass-filter) !important;
-            -webkit-backdrop-filter: var(--glass-filter) !important;
-        }
-
         .dot {
             position: absolute;
             width: 10px;
@@ -18043,14 +17845,6 @@
 
         &:active {
             background-color: hsl(var(--h4), 45%);
-        }
-
-        [data-bleh--theme="glass"] & {
-            background: hsl(var(--h4), 30%) !important;
-            border: var(--glass-border) !important;
-            box-shadow: var(--glass-shadow) !important;
-            backdrop-filter: var(--glass-filter) !important;
-            -webkit-backdrop-filter: var(--glass-filter) !important;
         }
     }
     :is(.shout-body, .about-me-sidebar, .bleh--about-me-preview, .user-list-about-me) > p a[href^="https://open.spotify.com/user/"] {
@@ -18798,14 +18592,6 @@
             border-radius: var(--button-radius);
             --mask-colour: color-mix(in hsl, hsl(var(--c2)), hsl(var(--c3)) 50%);
 
-            [data-bleh--theme="glass"] & {
-                background: var(--glass-bg) !important;
-                border: var(--glass-border) !important;
-                box-shadow: var(--glass-shadow) !important;
-                backdrop-filter: var(--glass-filter) !important;
-                -webkit-backdrop-filter: var(--glass-filter) !important;
-            }
-
             display: flex;
             gap: var(--card-gap);
 
@@ -19060,7 +18846,7 @@
             }
 
             .date {
-                width: 67px;
+                width: 90px;
                 color: hsla(var(--c3), 80%);
             }
 
@@ -19097,22 +18883,9 @@
         align-items: center;
         gap: var(--button-list-gap);
         padding: 4px;
-        background-color: hsl(var(--b6), 40%);
+        background-color: var(--view-buttons);
+        box-shadow: var(--view-buttons-shadow);
         border-radius: calc(var(--button-radius) + 4px);
-
-        [data-bleh--theme="oled"] &,
-        [data-bleh--theme_type="light"] & {
-            background-color: hsl(var(--b5));
-            box-shadow: inset 0 0 0 1px var(--card-border-base);
-        }
-
-        [data-bleh--theme="glass"] &:not(.blend) {
-            background: var(--glass-bg) !important;
-            border: var(--glass-border) !important;
-            box-shadow: var(--glass-shadow) !important;
-            backdrop-filter: var(--glass-filter) !important;
-            -webkit-backdrop-filter: var(--glass-filter) !important;
-        }
 
         &.blend {
             background: transparent;
@@ -19131,17 +18904,6 @@
         &.colour-buttons {
             width: fit-content;
             margin: 0 auto;
-        }
-
-        &.profile-top-header {
-            [data-bleh--seasonal_overlays="true"][data-bleh--season="fall"] &,
-            [data-bleh--seasonal_overlays="true"][data-bleh--season="christmas"] & {
-                background-image: var(--overlay-ice-subtlest), linear-gradient(180deg, rgba(190,233,250,0.04) 0%, rgba(0,0,0,0) 100%) !important;
-                background-repeat: repeat-x !important;
-                background-position: unset !important;
-            }
-
-            box-shadow: var(--card-shadow) !important;
         }
 
         & > form {
@@ -19365,37 +19127,6 @@
             .video-overlay-container {
                 opacity: 1;
                 transition: none;
-            }
-        }
-    }
-    .album-overview-cover-art-actions,
-    .video-overlay-container {
-        position: absolute;
-        inset: 0;
-
-        display: flex;
-        justify-content: center;
-        align-items: center;
-
-        opacity: 0;
-
-        background: unset;
-
-        transition-property: opacity;
-        transition-duration: var(--trans);
-        transition-timing-function: var(--trans-function);
-
-        .album-overview-cover-art-action-row,
-        .view-buttons {
-            background: hsla(var(--b5), 80%) !important;
-            backdrop-filter: blur(25px) saturate(220%) brightness(var(--blur-brightness));
-            -webkit-backdrop-filter: blur(25px) saturate(220%) brightness(var(--blur-brightness));
-            box-shadow: var(--card-shadow);
-            margin: unset !important;
-            inset: unset;
-
-            [data-bleh--theme="oled"] &, [data-bleh--theme_type="light"] & {
-                box-shadow: inset 0 0 0 1px var(--card-border-base), var(--card-shadow);
             }
         }
     }
@@ -19676,12 +19407,6 @@
             .bleh-modal {
                 animation: var(--display-under-reduced-motion, modal 0.35s var(--trans-function));
             }
-
-            [data-bleh--theme="glass"] & {
-                background: transparent;
-                backdrop-filter: unset;
-                -webkit-backdrop-filter: unset;
-            }
         }
 
         .bleh-modal {
@@ -19936,11 +19661,6 @@
             border-radius: var(--card-radius);
             box-shadow: var(--card-shadow);
             text-align: center;
-
-            [data-bleh--theme_type="light"] &,
-            [data-bleh--theme="oled"] & {
-                box-shadow: var(--card-shadow);
-            }
 
             h3 {
                 margin: unset;
@@ -20416,7 +20136,7 @@
                     .vote-number {
                         background-color: hsla(var(--h4), 40%);
                         box-shadow: 0 0 20px hsla(var(--h4), 60%);
-                        color: hsl(var(--l2-c));
+                        color: hsl(var(--l2-c-theme-switch));
                         font-size: var(--font-size-sm);
                         font-weight: var(--font-weight-medium);
                         padding: 0 6px;
@@ -20425,10 +20145,6 @@
 
                         --sat-over: 1;
                         --lit-over: 1;
-
-                        [data-bleh--theme_type="light"] & {
-                            color: hsl(var(--l4-c));
-                        }
 
                         &[data-side="pos"] {
                             --hue-over: var(--hue-pos);
@@ -20718,12 +20434,6 @@
                     }
                 }
 
-                [data-bleh--theme_type="light"] & {
-                    --bg: var(--cards-overlay-image-subtlest, none), hsl(var(--b5));
-                    --bg-hov: var(--cards-overlay-image-subtlest, none), hsla(var(--b5), 80%);
-                    --bg-atv: var(--cards-overlay-image-subtlest, none), hsla(var(--b5), 60%);
-                }
-
                 &.upload-button {
                     --mask: var(--icon-16-upload);
                 }
@@ -20924,14 +20634,6 @@
 
             [data-bleh--theme_type="light"] & {
                 background-color: hsla(var(--h4), 15%);
-            }
-
-            [data-bleh--theme="glass"] & {
-                background: hsl(var(--f4), 40%) !important;
-                border: var(--glass-border) !important;
-                box-shadow: var(--glass-shadow) !important;
-                backdrop-filter: var(--glass-filter) !important;
-                -webkit-backdrop-filter: var(--glass-filter) !important;
             }
 
             .version-item-header {
@@ -21680,7 +21382,7 @@
                 }
 
                 [data-bleh--theme_type="light"] & {
-                    text-shadow: 0 0 15px hsl(var(--b5));
+                    text-shadow: 0 0 20px hsl(var(--b5));
                 }
             }
 
@@ -21717,7 +21419,7 @@
                     }
 
                     [data-bleh--theme_type="light"] & {
-                        text-shadow: 0 0 15px hsl(var(--b5));
+                        text-shadow: 0 0 20px hsl(var(--b5));
                     }
                 }
 
@@ -21785,7 +21487,7 @@
                 }
 
                 [data-bleh--theme_type="light"] & {
-                    text-shadow: 0 0 15px hsl(var(--b5));
+                    text-shadow: 0 0 20px hsl(var(--b5));
                 }
             }
 
@@ -24480,14 +24182,6 @@
             --card-specific-background: hsl(var(--f4), 40%) !important;
         }
 
-        [data-bleh--theme="glass"] & {
-            background: hsl(var(--f4), 40%) !important;
-            border: var(--glass-border) !important;
-            box-shadow: var(--glass-shadow) !important;
-            backdrop-filter: var(--glass-filter) !important;
-            -webkit-backdrop-filter: var(--glass-filter) !important;
-        }
-
         &.first,
         &.blocked-cta {
             order: -10;
@@ -25630,14 +25324,6 @@
                     display: flex;
                     justify-content: center;
                     align-items: center;
-
-                    &[data-bleh--theme="glass"] {
-                        background: var(--glass-bg) !important;
-                        border: var(--glass-border) !important;
-                        box-shadow: var(--glass-shadow) !important;
-                        backdrop-filter: var(--glass-filter) !important;
-                        -webkit-backdrop-filter: var(--glass-filter) !important;
-                    }
 
                     height: 100%;
 

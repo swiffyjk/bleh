@@ -5983,8 +5983,7 @@
     let values = [];
     let has_seen_more_than_0 = false;
     days.forEach((day, index) => {
-      if (!day)
-        null;
+      if (!day) return;
       let label = moment(day.querySelector("time").getAttribute("datetime"));
       let value = day.querySelector(".js-value");
       console.log("day", index, label, day, day.innerHTML);
@@ -10115,14 +10114,7 @@
     else if (current_theme == "ink")
       current_theme = "dark";
     show_theme_change_in_menu(current_theme);
-    settings.theme = current_theme;
-    if (current_theme == "light" || current_theme == "ink")
-      settings.theme_type = "light";
-    else
-      settings.theme_type = "dark";
-    document.documentElement.setAttribute(`data-bleh--theme`, `${current_theme}`);
-    document.documentElement.setAttribute(`data-bleh--theme_type`, `${settings.theme_type}`);
-    localStorage.setItem("bleh", JSON.stringify(settings));
+    save_setting("theme", current_theme);
     load_chart_colours();
     if ((page.type == "artist" || page.type == "album" || page.type == "track") && page.subpage == "overview")
       bleh_music_page_charts();
@@ -18669,6 +18661,8 @@
   function update_page() {
     page.structure.container.setAttribute("data-page-type", page.type);
     page.structure.container.setAttribute("data-page-subpage", page.subpage);
+    page.structure.container.setAttribute("data-beret", ff("beret"));
+    page.structure.container.setAttribute("data-short", ff("short"));
   }
   function register_background(url, origin = null) {
     let flag = ff("katsune");

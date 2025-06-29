@@ -1014,8 +1014,7 @@ export function bleh_music_page_charts() {
 
     let has_seen_more_than_0 = false;
     days.forEach((day, index) => {
-        if (!day)
-            null;
+        if (!day) return;
 
         //let label = day.querySelector('time').textContent.trim();
         let label = moment(day.querySelector('time').getAttribute('datetime'));
