@@ -1667,8 +1667,8 @@ function bleh_profile_chart() {
 }
 
 export function bleh_profile_chart_render(panel=page.structure.side.querySelector('.listen-profile-panel'), table=null) {
-    if (!table)
-        table = panel.querySelector('table');
+    if (!table) table = panel.querySelector('table');
+    if (!table) return;
 
     let entries = table.querySelectorAll('tbody tr');
 
