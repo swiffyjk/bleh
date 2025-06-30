@@ -9036,7 +9036,7 @@
     .blend-v2 {
         gap: var(--card-gap) !important;
 
-        & > .btn, & > div:not([data-tippy-root]) .btn {
+        .blend-v2-btn {
             height: fit-content !important;
 
             &:not(:hover, :focus-visible, [aria-expanded="true"]) {
@@ -9063,20 +9063,20 @@
         }
     }
 
-    .blend-v2 > .btn, .blend-v2 > div:not([data-tippy-root]) .btn,
+    .blend-v2-btn,
     .js-disclose-close.btn-cancel,
     .shout-more-replies-after, .shout-more-replies-before,
-    .pagination-next a, .pagination-previous a,
-    .more-link-fullwidth a,
-    .music-more-link a,
+    .pagination-next > a, .pagination-previous > a,
+    .more-link-fullwidth > a,
+    .music-more-link > a,
     .modal-body .btn-cancel.js-close,
     .masthead-popup-text .btn-primary,
     .obsession-delete-button,
     .featured-item-manage,
     .more-items,
-    .more-link-with-action a,
-    .more-link-fullwidth-right a, .more-link-fullwidth-right-flush-top a,
-    .more-link a,
+    .more-link-with-action > a,
+    .more-link-fullwidth-right > a, .more-link-fullwidth-right-flush-top > a,
+    .more-link > a,
     #events-section > p > a,
     .see-more {
         display: inline-flex;

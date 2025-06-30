@@ -1139,7 +1139,7 @@ function profile_recents() {
 
     // refresh
     let refresh_btn = html.node`
-        <button class="btn view-item interact-item left-icon" data-type="refresh" onclick=${() => refresh_tracks(refresh_btn)}>
+        <button class="btn view-item interact-item left-icon blend-v2-btn" data-type="refresh" onclick=${() => refresh_tracks(refresh_btn)}>
             ${tl(trans.refresh)}
         </button>
     `;
@@ -1157,7 +1157,7 @@ function profile_recents() {
     let original_chart_settings = {};
 
     let settings_btn = html.node`
-        <button class="panel-settings-button btn view-item interact-item left-icon" data-type="settings">
+        <button class="panel-settings-button btn view-item interact-item left-icon blend-v2-btn" data-type="settings">
             ${tl(trans.settings)}
         </button>
     `;
@@ -1302,13 +1302,13 @@ function profile_artists() {
             ${panel.querySelector('h2')}
             <div class="accompany view-buttons blend blend-v2">
                 ${() => {
-                    select_btn.classList.add('btn', 'view-item', 'interact-item', 'select-button', 'link-select');
+                    select_btn.classList.add('btn', 'view-item', 'interact-item', 'select-button', 'link-select', 'blend-v2-btn');
                     select_btn.classList.remove('section-control', 'dropdown-menu-clickable-button');
                     return select_btn;
                 }}
             </div>
             <div class="view-buttons blend blend-v2">
-                <button class="btn view-item left-icon" data-type="collage" ref=${el => collage_btn = el} onclick=${() => {
+                <button class="btn view-item left-icon blend-v2-btn" data-type="collage" ref=${el => collage_btn = el} onclick=${() => {
                     let btn = list.querySelector('.dropdown-menu-clickable-item--selected');
                     let link = new URL('https://www.last.fm' + btn.getAttribute('href'));
                     let selected = link.searchParams.get('artists_date_preset');
@@ -1316,7 +1316,7 @@ function profile_artists() {
                     collage('artists', `date_preset=${selected}`);
                 }}>${tl(trans.collage)}</button>
                 ${form ? html.node`
-                <button class="panel-settings-button btn view-item interact-item left-icon" data-type="settings" ref=${el => settings_btn = el}>
+                <button class="panel-settings-button btn view-item interact-item left-icon blend-v2-btn" data-type="settings" ref=${el => settings_btn = el}>
                     ${tl(trans.settings)}
                 </button>
                 ` : ''}
@@ -1396,13 +1396,13 @@ function profile_albums() {
             ${panel.querySelector('h2')}
             <div class="accompany view-buttons blend blend-v2">
                 ${() => {
-                    select_btn.classList.add('btn', 'view-item', 'interact-item', 'select-button', 'link-select');
+                    select_btn.classList.add('btn', 'view-item', 'interact-item', 'select-button', 'link-select', 'blend-v2-btn');
                     select_btn.classList.remove('section-control', 'dropdown-menu-clickable-button');
                     return select_btn;
                 }}
             </div>
             <div class="view-buttons blend blend-v2">
-                <button class="btn view-item left-icon" data-type="collage" ref=${el => collage_btn = el} onclick=${() => {
+                <button class="btn view-item left-icon blend-v2-btn" data-type="collage" ref=${el => collage_btn = el} onclick=${() => {
                     let btn = list.querySelector('.dropdown-menu-clickable-item--selected');
                     let link = new URL('https://www.last.fm' + btn.getAttribute('href'));
                     let selected = link.searchParams.get('albums_date_preset');
@@ -1410,7 +1410,7 @@ function profile_albums() {
                     collage('albums', `date_preset=${selected}`);
                 }}>${tl(trans.collage)}</button>
                 ${form ? html.node`
-                <button class="panel-settings-button btn view-item interact-item left-icon" data-type="settings" ref=${el => settings_btn = el}>
+                <button class="panel-settings-button btn view-item interact-item left-icon blend-v2-btn" data-type="settings" ref=${el => settings_btn = el}>
                     ${tl(trans.settings)}
                 </button>
                 ` : ''}
@@ -1490,13 +1490,13 @@ function profile_tracks() {
             ${panel.querySelector('h2')}
             <div class="accompany view-buttons blend blend-v2">
                 ${() => {
-                    select_btn.classList.add('btn', 'view-item', 'interact-item', 'select-button', 'link-select');
+                    select_btn.classList.add('btn', 'view-item', 'interact-item', 'select-button', 'link-select', 'blend-v2-btn');
                     select_btn.classList.remove('section-control', 'dropdown-menu-clickable-button');
                     return select_btn;
                 }}
             </div>
             <div class="view-buttons blend blend-v2">
-                <button class="btn view-item left-icon" data-type="collage" ref=${el => collage_btn = el} onclick=${() => {
+                <button class="btn view-item left-icon blend-v2-btn" data-type="collage" ref=${el => collage_btn = el} onclick=${() => {
                     let btn = list.querySelector('.dropdown-menu-clickable-item--selected');
                     let link = new URL('https://www.last.fm' + btn.getAttribute('href'));
                     let selected = link.searchParams.get('tracks_date_preset');
@@ -1504,7 +1504,7 @@ function profile_tracks() {
                     collage('tracks', `date_preset=${selected}`);
                 }}>${tl(trans.collage)}</button>
                 ${form ? html.node`
-                <button class="panel-settings-button btn view-item interact-item left-icon" data-type="settings" ref=${el => settings_btn = el}>
+                <button class="panel-settings-button btn view-item interact-item left-icon blend-v2-btn" data-type="settings" ref=${el => settings_btn = el}>
                     ${tl(trans.settings)}
                 </button>
                 ` : ''}

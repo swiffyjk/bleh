@@ -9301,7 +9301,7 @@
     let header_text2 = panel.querySelector("h2");
     header.appendChild(header_text2);
     let refresh_btn = html.node`
-        <button class="btn view-item interact-item left-icon" data-type="refresh" onclick=${() => refresh_tracks(refresh_btn)}>
+        <button class="btn view-item interact-item left-icon blend-v2-btn" data-type="refresh" onclick=${() => refresh_tracks(refresh_btn)}>
             ${tl(trans.refresh)}
         </button>
     `;
@@ -9314,7 +9314,7 @@
       page.token = form.querySelector('[name="csrfmiddlewaretoken"]').getAttribute("value");
     let original_chart_settings = {};
     let settings_btn = html.node`
-        <button class="panel-settings-button btn view-item interact-item left-icon" data-type="settings">
+        <button class="panel-settings-button btn view-item interact-item left-icon blend-v2-btn" data-type="settings">
             ${tl(trans.settings)}
         </button>
     `;
@@ -9443,20 +9443,20 @@
             ${panel.querySelector("h2")}
             <div class="accompany view-buttons blend blend-v2">
                 ${() => {
-      select_btn.classList.add("btn", "view-item", "interact-item", "select-button", "link-select");
+      select_btn.classList.add("btn", "view-item", "interact-item", "select-button", "link-select", "blend-v2-btn");
       select_btn.classList.remove("section-control", "dropdown-menu-clickable-button");
       return select_btn;
     }}
             </div>
             <div class="view-buttons blend blend-v2">
-                <button class="btn view-item left-icon" data-type="collage" ref=${(el) => collage_btn = el} onclick=${() => {
+                <button class="btn view-item left-icon blend-v2-btn" data-type="collage" ref=${(el) => collage_btn = el} onclick=${() => {
       let btn = list.querySelector(".dropdown-menu-clickable-item--selected");
       let link = new URL("https://www.last.fm" + btn.getAttribute("href"));
       let selected = link.searchParams.get("artists_date_preset");
       collage("artists", `date_preset=${selected}`);
     }}>${tl(trans.collage)}</button>
                 ${form ? html.node`
-                <button class="panel-settings-button btn view-item interact-item left-icon" data-type="settings" ref=${(el) => settings_btn = el}>
+                <button class="panel-settings-button btn view-item interact-item left-icon blend-v2-btn" data-type="settings" ref=${(el) => settings_btn = el}>
                     ${tl(trans.settings)}
                 </button>
                 ` : ""}
@@ -9525,20 +9525,20 @@
             ${panel.querySelector("h2")}
             <div class="accompany view-buttons blend blend-v2">
                 ${() => {
-      select_btn.classList.add("btn", "view-item", "interact-item", "select-button", "link-select");
+      select_btn.classList.add("btn", "view-item", "interact-item", "select-button", "link-select", "blend-v2-btn");
       select_btn.classList.remove("section-control", "dropdown-menu-clickable-button");
       return select_btn;
     }}
             </div>
             <div class="view-buttons blend blend-v2">
-                <button class="btn view-item left-icon" data-type="collage" ref=${(el) => collage_btn = el} onclick=${() => {
+                <button class="btn view-item left-icon blend-v2-btn" data-type="collage" ref=${(el) => collage_btn = el} onclick=${() => {
       let btn = list.querySelector(".dropdown-menu-clickable-item--selected");
       let link = new URL("https://www.last.fm" + btn.getAttribute("href"));
       let selected = link.searchParams.get("albums_date_preset");
       collage("albums", `date_preset=${selected}`);
     }}>${tl(trans.collage)}</button>
                 ${form ? html.node`
-                <button class="panel-settings-button btn view-item interact-item left-icon" data-type="settings" ref=${(el) => settings_btn = el}>
+                <button class="panel-settings-button btn view-item interact-item left-icon blend-v2-btn" data-type="settings" ref=${(el) => settings_btn = el}>
                     ${tl(trans.settings)}
                 </button>
                 ` : ""}
@@ -9607,20 +9607,20 @@
             ${panel.querySelector("h2")}
             <div class="accompany view-buttons blend blend-v2">
                 ${() => {
-      select_btn.classList.add("btn", "view-item", "interact-item", "select-button", "link-select");
+      select_btn.classList.add("btn", "view-item", "interact-item", "select-button", "link-select", "blend-v2-btn");
       select_btn.classList.remove("section-control", "dropdown-menu-clickable-button");
       return select_btn;
     }}
             </div>
             <div class="view-buttons blend blend-v2">
-                <button class="btn view-item left-icon" data-type="collage" ref=${(el) => collage_btn = el} onclick=${() => {
+                <button class="btn view-item left-icon blend-v2-btn" data-type="collage" ref=${(el) => collage_btn = el} onclick=${() => {
       let btn = list.querySelector(".dropdown-menu-clickable-item--selected");
       let link = new URL("https://www.last.fm" + btn.getAttribute("href"));
       let selected = link.searchParams.get("tracks_date_preset");
       collage("tracks", `date_preset=${selected}`);
     }}>${tl(trans.collage)}</button>
                 ${form ? html.node`
-                <button class="panel-settings-button btn view-item interact-item left-icon" data-type="settings" ref=${(el) => settings_btn = el}>
+                <button class="panel-settings-button btn view-item interact-item left-icon blend-v2-btn" data-type="settings" ref=${(el) => settings_btn = el}>
                     ${tl(trans.settings)}
                 </button>
                 ` : ""}
@@ -14934,14 +14934,14 @@
       top.classList = "top-container";
       let header = top.querySelector("h3");
       let select_btn = top.querySelector(".dropdown-menu-clickable-button");
-      select_btn.classList.add("btn", "view-item", "interact-item", "select-button", "link-select");
+      select_btn.classList.add("btn", "view-item", "interact-item", "select-button", "link-select", "blend-v2-btn");
       select_btn.classList.remove("dropdown-menu-clickable-button");
       header.after(html.node`
             <div class="accompany view-buttons blend blend-v2">
                 ${select_btn}
             </div>
             <div class="view-buttons blend blend-v2">
-                <button class="panel-settings-button btn view-item interact-item left-icon" data-type="settings" ref=${(el) => settings_btn = el}>
+                <button class="panel-settings-button btn view-item interact-item left-icon blend-v2-btn" data-type="settings" ref=${(el) => settings_btn = el}>
                     ${tl(trans.settings)}
                 </button>
             </div>
@@ -14953,7 +14953,7 @@
             <div class="top-container">
                 <h3 class="text-18">${tl(trans.tracklist)}</h3>
                 <div class="view-buttons blend blend-v2">
-                    <button class="panel-settings-button btn view-item interact-item left-icon" data-type="settings" ref=${(el) => settings_btn = el}>
+                    <button class="panel-settings-button btn view-item interact-item left-icon blend-v2-btn" data-type="settings" ref=${(el) => settings_btn = el}>
                         ${tl(trans.settings)}
                     </button>
                 </div>
@@ -15195,7 +15195,7 @@
                 </div>
                 <div class="view-buttons blend blend-v2">
                     ${play}
-                    <button class="panel-settings-button btn view-item interact-item left-icon" data-type="settings" ref=${(el) => settings_btn = el}>
+                    <button class="panel-settings-button btn view-item interact-item left-icon blend-v2-btn" data-type="settings" ref=${(el) => settings_btn = el}>
                         ${tl(trans.settings)}
                     </button>
                 </div>
@@ -15220,7 +15220,7 @@
         top.classList = "top-container";
         let header = top.querySelector("h3");
         let select_btn = top.querySelector(".dropdown-menu-clickable-button");
-        select_btn.classList.add("btn", "view-item", "interact-item", "select-button", "link-select");
+        select_btn.classList.add("btn", "view-item", "interact-item", "select-button", "link-select", "blend-v2-btn");
         select_btn.classList.remove("dropdown-menu-clickable-button");
         header.after(html.node`
                 <div class="accompany view-buttons blend blend-v2">
@@ -15307,14 +15307,14 @@
       let header = top.querySelector("h2");
       header.classList.remove("subpage-title");
       let select_btn = top.querySelector(".dropdown-menu-clickable-button");
-      select_btn.classList.add("btn", "view-item", "interact-item", "select-button", "link-select");
+      select_btn.classList.add("btn", "view-item", "interact-item", "select-button", "link-select", "blend-v2-btn");
       select_btn.classList.remove("dropdown-menu-clickable-button");
       header.after(html.node`
                 <div class="accompany view-buttons blend blend-v2">
                     ${select_btn}
                 </div>
                 <div class="view-buttons blend blend-v2">
-                    <button class="panel-settings-button btn view-item interact-item left-icon" data-type="settings" ref=${(el) => settings_btn = el}>
+                    <button class="panel-settings-button btn view-item interact-item left-icon blend-v2-btn" data-type="settings" ref=${(el) => settings_btn = el}>
                         ${tl(trans.settings)}
                     </button>
                 </div>
@@ -15322,11 +15322,11 @@
       tippy(settings_btn, {
         theme: "window",
         content: html.node`
-                    <div class="dialog-settings">
-                        ${setting({ id: "format_guest_features" })}
-                        ${setting({ id: "show_guest_features" })}
-                    </div>
-                `,
+                <div class="dialog-settings">
+                    ${setting({ id: "format_guest_features" })}
+                    ${setting({ id: "show_guest_features" })}
+                </div>
+            `,
         placement: "bottom",
         interactive: true,
         interactiveBorder: 10,
@@ -15341,10 +15341,10 @@
       top.classList = "top-container";
       let header = top.querySelector("h3");
       let select_btn = top.querySelector(".dropdown-menu-clickable-button");
-      select_btn.classList.add("btn", "view-item", "interact-item", "select-button", "link-select");
+      select_btn.classList.add("btn", "view-item", "interact-item", "select-button", "link-select", "blend-v2-btn");
       select_btn.classList.remove("dropdown-menu-clickable-button");
       header.after(html.node`
-            <div class="accompany view-buttons blend blend-v2">
+            <div class="accompany view-buttons blend blend-v2 blend-v2-btn">
                 ${select_btn}
             </div>
         `);
