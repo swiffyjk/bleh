@@ -14,6 +14,8 @@ import {bleh_music_page_charts} from "./components/music.js";
 import {bleh_profile_chart_render} from "./pages/profile.js";
 
 export function chart_reflow() {
+    return;
+
     load_chart_colours();
 
     // trigger re-flow of chart

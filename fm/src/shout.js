@@ -42,13 +42,13 @@ export function patch_shouts() {
                 </h2>
                 <div class="accompany view-buttons blend blend-v2">
                     ${() => {
-                        select_btn.classList.add('btn', 'view-item', 'interact-item', 'select-button', 'link-select');
+                        select_btn.classList.add('select-button', 'link-select', 'blend-v2-btn');
                         select_btn.classList.remove('section-control', 'dropdown-menu-clickable-button');
                         return shout_controls;
                     }}
                 </div>
                 <div class="view-buttons blend blend-v2">
-                    <button class="panel-settings-button btn view-item interact-item left-icon" data-type="settings" ref=${el => settings_btn = el}>
+                    <button class="left-icon blend-v2-btn" data-type="settings" ref=${el => settings_btn = el}>
                         ${tl(trans.settings)}
                     </button>
                 </div>

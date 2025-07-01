@@ -1398,21 +1398,13 @@ unsafeWindow._update_flag_toggle = function(flag, container) {
 }
 function update_flag_toggle(flag, container) {
     let button = container.querySelector('.toggle');
-    if (!button)
-        return;
+    if (!button) return;
 
-    let current_state = version.feature_flags[flag].default;
-    if (settings.feature_flags[flag] != undefined) current_state = settings.feature_flags[flag];
+    let current_state = ff(flag);
 
-    if (current_state == true) {
-        button.setAttribute('aria-checked', 'false');
-        settings.feature_flags[flag] = false;
-        document.documentElement.setAttribute(`data-ff--${flag}`, false);
-    } else {
-        button.setAttribute('aria-checked', 'true');
-        settings.feature_flags[flag] = true;
-        document.documentElement.setAttribute(`data-ff--${flag}`, true);
-    }
+    button.setAttribute('aria-checked', !current_state);
+    settings.feature_flags[flag] = !current_state;
+    document.documentElement.setAttribute(`data-ff--${flag}`, `${!current_state}`);
 
     // save to settings
     localStorage.setItem('bleh', JSON.stringify(settings));

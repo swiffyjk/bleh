@@ -123,11 +123,7 @@ export function bleh_profiles() {
 
 
         // make avatar clickable
-        let header_avatar;
-        if (ff('refreshed_nav'))
-            header_avatar = page.structure.container.querySelector('.redesigned-profile-header .avatar-side');
-        else
-            header_avatar = document.body.querySelector('.header-avatar .avatar');
+        let header_avatar = redesigned_profile_header.querySelector('.avatar-side');
 
         if (!new_account) {
             let src = header_avatar.querySelector('img').getAttribute('src');
@@ -140,18 +136,7 @@ export function bleh_profiles() {
         }
     }
 
-    let current_year = new Date().getFullYear();
-
-    if (current_year < 2025 && ff('glacier_library')) {
-        let tab = page.structure.nav.querySelector('.secondary-nav-item--library a');
-
-        let beta = document.createElement('span');
-        beta.classList.add('new-badge', 'beta-badge');
-        beta.textContent = tl(trans.new);
-
-        tab.appendChild(beta);
-    }
-
+    // translations in other languages
     let library_tab = page.structure.nav.querySelector('.secondary-nav-item--library a');
     library_tab.textContent = tl(trans.library);
 
@@ -473,7 +458,7 @@ export function bleh_profiles() {
             let values = page.structure.main.querySelectorAll('.metadata-display');
 
             let value_header = html.node`
-                <div class="glacier-library-metadata"></div>
+                <div class="glacier-library-metadata" />
             `;
 
             values.forEach((value, index) => {
@@ -1025,6 +1010,9 @@ function bleh_featured_profile_track(object, about_me) {
     let name_elem = details.querySelector('.featured-item-name');
     let artist_elem = details.querySelector('.featured-item-artist');
 
+    name_elem.classList = '';
+    artist_elem.classList = 'source-album-artist';
+
     if (settings.format_guest_features) {
         let song_title = name_elem.textContent;
 
@@ -1139,7 +1127,7 @@ function profile_recents() {
 
     // refresh
     let refresh_btn = html.node`
-        <button class="btn view-item interact-item left-icon blend-v2-btn" data-type="refresh" onclick=${() => refresh_tracks(refresh_btn)}>
+        <button class="left-icon blend-v2-btn" data-type="refresh" onclick=${() => refresh_tracks(refresh_btn)}>
             ${tl(trans.refresh)}
         </button>
     `;
@@ -1157,7 +1145,7 @@ function profile_recents() {
     let original_chart_settings = {};
 
     let settings_btn = html.node`
-        <button class="panel-settings-button btn view-item interact-item left-icon blend-v2-btn" data-type="settings">
+        <button class="left-icon blend-v2-btn" data-type="settings">
             ${tl(trans.settings)}
         </button>
     `;
@@ -1302,13 +1290,13 @@ function profile_artists() {
             ${panel.querySelector('h2')}
             <div class="accompany view-buttons blend blend-v2">
                 ${() => {
-                    select_btn.classList.add('btn', 'view-item', 'interact-item', 'select-button', 'link-select', 'blend-v2-btn');
+                    select_btn.classList.add('select-button', 'link-select', 'blend-v2-btn');
                     select_btn.classList.remove('section-control', 'dropdown-menu-clickable-button');
                     return select_btn;
                 }}
             </div>
             <div class="view-buttons blend blend-v2">
-                <button class="btn view-item left-icon blend-v2-btn" data-type="collage" ref=${el => collage_btn = el} onclick=${() => {
+                <button class="left-icon blend-v2-btn" data-type="collage" ref=${el => collage_btn = el} onclick=${() => {
                     let btn = list.querySelector('.dropdown-menu-clickable-item--selected');
                     let link = new URL('https://www.last.fm' + btn.getAttribute('href'));
                     let selected = link.searchParams.get('artists_date_preset');
@@ -1316,7 +1304,7 @@ function profile_artists() {
                     collage('artists', `date_preset=${selected}`);
                 }}>${tl(trans.collage)}</button>
                 ${form ? html.node`
-                <button class="panel-settings-button btn view-item interact-item left-icon blend-v2-btn" data-type="settings" ref=${el => settings_btn = el}>
+                <button class="left-icon blend-v2-btn" data-type="settings" ref=${el => settings_btn = el}>
                     ${tl(trans.settings)}
                 </button>
                 ` : ''}
@@ -1396,13 +1384,13 @@ function profile_albums() {
             ${panel.querySelector('h2')}
             <div class="accompany view-buttons blend blend-v2">
                 ${() => {
-                    select_btn.classList.add('btn', 'view-item', 'interact-item', 'select-button', 'link-select', 'blend-v2-btn');
+                    select_btn.classList.add('select-button', 'link-select', 'blend-v2-btn');
                     select_btn.classList.remove('section-control', 'dropdown-menu-clickable-button');
                     return select_btn;
                 }}
             </div>
             <div class="view-buttons blend blend-v2">
-                <button class="btn view-item left-icon blend-v2-btn" data-type="collage" ref=${el => collage_btn = el} onclick=${() => {
+                <button class="left-icon blend-v2-btn" data-type="collage" ref=${el => collage_btn = el} onclick=${() => {
                     let btn = list.querySelector('.dropdown-menu-clickable-item--selected');
                     let link = new URL('https://www.last.fm' + btn.getAttribute('href'));
                     let selected = link.searchParams.get('albums_date_preset');
@@ -1410,7 +1398,7 @@ function profile_albums() {
                     collage('albums', `date_preset=${selected}`);
                 }}>${tl(trans.collage)}</button>
                 ${form ? html.node`
-                <button class="panel-settings-button btn view-item interact-item left-icon blend-v2-btn" data-type="settings" ref=${el => settings_btn = el}>
+                <button class="left-icon blend-v2-btn" data-type="settings" ref=${el => settings_btn = el}>
                     ${tl(trans.settings)}
                 </button>
                 ` : ''}
@@ -1490,13 +1478,13 @@ function profile_tracks() {
             ${panel.querySelector('h2')}
             <div class="accompany view-buttons blend blend-v2">
                 ${() => {
-                    select_btn.classList.add('btn', 'view-item', 'interact-item', 'select-button', 'link-select', 'blend-v2-btn');
+                    select_btn.classList.add('select-button', 'link-select', 'blend-v2-btn');
                     select_btn.classList.remove('section-control', 'dropdown-menu-clickable-button');
                     return select_btn;
                 }}
             </div>
             <div class="view-buttons blend blend-v2">
-                <button class="btn view-item left-icon blend-v2-btn" data-type="collage" ref=${el => collage_btn = el} onclick=${() => {
+                <button class="left-icon blend-v2-btn" data-type="collage" ref=${el => collage_btn = el} onclick=${() => {
                     let btn = list.querySelector('.dropdown-menu-clickable-item--selected');
                     let link = new URL('https://www.last.fm' + btn.getAttribute('href'));
                     let selected = link.searchParams.get('tracks_date_preset');
@@ -1504,7 +1492,7 @@ function profile_tracks() {
                     collage('tracks', `date_preset=${selected}`);
                 }}>${tl(trans.collage)}</button>
                 ${form ? html.node`
-                <button class="panel-settings-button btn view-item interact-item left-icon blend-v2-btn" data-type="settings" ref=${el => settings_btn = el}>
+                <button class="left-icon blend-v2-btn" data-type="settings" ref=${el => settings_btn = el}>
                     ${tl(trans.settings)}
                 </button>
                 ` : ''}

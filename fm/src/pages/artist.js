@@ -222,12 +222,12 @@ export function bleh_artists() {
 
             let select_btn = top.querySelector('.dropdown-menu-clickable-button');
 
-            select_btn.classList.add('btn', 'view-item', 'interact-item', 'select-button', 'link-select');
+            select_btn.classList.add('select-button', 'link-select', 'blend-v2-btn');
             select_btn.classList.remove('dropdown-menu-clickable-button');
 
             let play = top.querySelector('.section-playlink');
 
-            play.classList.add('btn', 'view-item', 'interact-item', 'radio');
+            play.classList.add('blend-v2-btn', 'radio');
             play.classList.remove('section-playlink', 'hover-section-control');
             play.setAttribute('data-type', 'play');
 
@@ -237,7 +237,7 @@ export function bleh_artists() {
                 </div>
                 <div class="view-buttons blend blend-v2">
                     ${play}
-                    <button class="panel-settings-button btn view-item interact-item left-icon blend-v2-btn" data-type="settings" ref=${el => settings_btn = el}>
+                    <button class="left-icon blend-v2-btn" data-type="settings" ref=${el => settings_btn = el}>
                         ${tl(trans.settings)}
                     </button>
                 </div>
@@ -267,7 +267,7 @@ export function bleh_artists() {
 
             let select_btn = top.querySelector('.dropdown-menu-clickable-button');
 
-            select_btn.classList.add('btn', 'view-item', 'interact-item', 'select-button', 'link-select', 'blend-v2-btn');
+            select_btn.classList.add('select-button', 'link-select', 'blend-v2-btn');
             select_btn.classList.remove('dropdown-menu-clickable-button');
 
             header.after(html.node`
@@ -376,7 +376,7 @@ function bleh_artist_tracks() {
 
         let select_btn = top.querySelector('.dropdown-menu-clickable-button');
 
-        select_btn.classList.add('btn', 'view-item', 'interact-item', 'select-button', 'link-select', 'blend-v2-btn');
+        select_btn.classList.add('select-button', 'link-select', 'blend-v2-btn');
         select_btn.classList.remove('dropdown-menu-clickable-button');
 
         header.after(html.node`
@@ -384,7 +384,7 @@ function bleh_artist_tracks() {
                     ${select_btn}
                 </div>
                 <div class="view-buttons blend blend-v2">
-                    <button class="panel-settings-button btn view-item interact-item left-icon blend-v2-btn" data-type="settings" ref=${el => settings_btn = el}>
+                    <button class="left-icon blend-v2-btn" data-type="settings" ref=${el => settings_btn = el}>
                         ${tl(trans.settings)}
                     </button>
                 </div>
@@ -416,11 +416,11 @@ function bleh_artist_albums() {
 
         let select_btn = top.querySelector('.dropdown-menu-clickable-button');
 
-        select_btn.classList.add('btn', 'view-item', 'interact-item', 'select-button', 'link-select', 'blend-v2-btn');
+        select_btn.classList.add('select-button', 'link-select', 'blend-v2-btn');
         select_btn.classList.remove('dropdown-menu-clickable-button');
 
         header.after(html.node`
-            <div class="accompany view-buttons blend blend-v2 blend-v2-btn">
+            <div class="accompany view-buttons blend blend-v2">
                 ${select_btn}
             </div>
         `);

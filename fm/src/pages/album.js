@@ -214,7 +214,7 @@ function album_missing_a_tracklist() {
 
         let select_btn = top.querySelector('.dropdown-menu-clickable-button');
 
-        select_btn.classList.add('btn', 'view-item', 'interact-item', 'select-button', 'link-select', 'blend-v2-btn');
+        select_btn.classList.add('select-button', 'link-select', 'blend-v2-btn');
         select_btn.classList.remove('dropdown-menu-clickable-button');
 
         header.after(html.node`
@@ -222,7 +222,7 @@ function album_missing_a_tracklist() {
                 ${select_btn}
             </div>
             <div class="view-buttons blend blend-v2">
-                <button class="panel-settings-button btn view-item interact-item left-icon blend-v2-btn" data-type="settings" ref=${el => settings_btn = el}>
+                <button class="left-icon blend-v2-btn" data-type="settings" ref=${el => settings_btn = el}>
                     ${tl(trans.settings)}
                 </button>
             </div>
@@ -235,7 +235,7 @@ function album_missing_a_tracklist() {
             <div class="top-container">
                 <h3 class="text-18">${tl(trans.tracklist)}</h3>
                 <div class="view-buttons blend blend-v2">
-                    <button class="panel-settings-button btn view-item interact-item left-icon blend-v2-btn" data-type="settings" ref=${el => settings_btn = el}>
+                    <button class="left-icon blend-v2-btn" data-type="settings" ref=${el => settings_btn = el}>
                         ${tl(trans.settings)}
                     </button>
                 </div>

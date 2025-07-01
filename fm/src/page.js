@@ -640,7 +640,7 @@ function page_indicator() {
             <span>${lang}</span>
         </div>
         <div class="page">
-            <strong>page</strong>
+            <strong onclick=${() => console.info(page)}>page</strong>
             <span>${page.type}</span>
             <span>${page.subpage}</span>
         </div>

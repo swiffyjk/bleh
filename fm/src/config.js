@@ -9,12 +9,10 @@ import {log} from "./build/log";
 import {page, reload_pending} from "./build/page";
 import {stored_season} from "./build/seasonal";
 import {tl, trans} from "./build/trans";
-import {load_chart_colours} from "./chart";
-import {bleh_music_page_charts} from "./components/music";
+import {chart_reflow, load_chart_colours} from "./chart";
 import {notify} from "./components/notify";
 import {load_skus, show_theme_change_in_menu, show_theme_change_in_settings} from "./pages/bleh_config";
-import {bleh_glacier_date_graph_generate, bleh_glacier_insights} from "./pages/glacier";
-import {bleh_profile_chart_render} from './pages/profile';
+import {bleh_glacier_date_graph_generate} from "./pages/glacier";
 import {save_setting} from "./components/settings.js";
 
 // create blank settings
@@ -123,19 +121,7 @@ export function toggle_theme() {
     // save value
     save_setting('theme', current_theme);
 
-    load_chart_colours();
-
-    // trigger re-flow of chart
-    if ((page.type == 'artist' || page.type == 'album' || page.type == 'track') && page.subpage == 'overview')
-        bleh_music_page_charts();
-
-    if (page.type == 'user' && page.subpage == 'overview')
-        bleh_profile_chart_render();
-
-    if (page.type == 'user' && page.subpage.startsWith('library')) {
-        bleh_glacier_date_graph_generate();
-        bleh_glacier_insights();
-    }
+    chart_reflow();
 }
 
 unsafeWindow.change_theme_from_settings = function(theme) {
@@ -163,19 +149,7 @@ export function change_theme_from_menu(theme) {
     // show in settings
     show_theme_change_in_menu(theme);
 
-    load_chart_colours();
-
-    // trigger re-flow of chart
-    if ((page.type == 'artist' || page.type == 'album' || page.type == 'track') && page.subpage == 'overview')
-        bleh_music_page_charts();
-
-    if (page.type == 'user' && page.subpage == 'overview')
-        bleh_profile_chart_render();
-
-    if (page.type == 'user' && page.subpage.startsWith('library')) {
-        bleh_glacier_date_graph_generate();
-        bleh_glacier_insights();
-    }
+    chart_reflow();
 }
 
 

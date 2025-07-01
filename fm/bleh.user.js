@@ -8521,11 +8521,7 @@
       }
       page.structure.container.insertBefore(redesigned_profile_header, page.structure.container.firstElementChild);
       profile_header.classList.add("legacy-header");
-      let header_avatar;
-      if (ff("refreshed_nav"))
-        header_avatar = page.structure.container.querySelector(".redesigned-profile-header .avatar-side");
-      else
-        header_avatar = document.body.querySelector(".header-avatar .avatar");
+      let header_avatar = redesigned_profile_header.querySelector(".avatar-side");
       if (!new_account) {
         let src = header_avatar.querySelector("img").getAttribute("src");
         page.avatar = src;
@@ -8534,14 +8530,6 @@
         avatar_link.setAttribute("onclick", `_expand_avatar('${src.replace("avatar170s", "ar0")}')`);
         header_avatar.appendChild(avatar_link);
       }
-    }
-    let current_year = (/* @__PURE__ */ new Date()).getFullYear();
-    if (current_year < 2025 && ff("glacier_library")) {
-      let tab = page.structure.nav.querySelector(".secondary-nav-item--library a");
-      let beta = document.createElement("span");
-      beta.classList.add("new-badge", "beta-badge");
-      beta.textContent = tl(trans.new);
-      tab.appendChild(beta);
     }
     let library_tab = page.structure.nav.querySelector(".secondary-nav-item--library a");
     library_tab.textContent = tl(trans.library);
@@ -8798,7 +8786,7 @@
             `;
         let values = page.structure.main.querySelectorAll(".metadata-display");
         let value_header = html.node`
-                <div class="glacier-library-metadata"></div>
+                <div class="glacier-library-metadata" />
             `;
         values.forEach((value, index) => {
           let text2 = tl(trans.going);
@@ -9213,6 +9201,8 @@
     details.removeChild(heading);
     let name_elem = details.querySelector(".featured-item-name");
     let artist_elem = details.querySelector(".featured-item-artist");
+    name_elem.classList = "";
+    artist_elem.classList = "source-album-artist";
     if (settings.format_guest_features) {
       let song_title = name_elem.textContent;
       let formatted_title = name_includes(song_title, artist_elem.textContent);
@@ -9301,7 +9291,7 @@
     let header_text2 = panel.querySelector("h2");
     header.appendChild(header_text2);
     let refresh_btn = html.node`
-        <button class="btn view-item interact-item left-icon blend-v2-btn" data-type="refresh" onclick=${() => refresh_tracks(refresh_btn)}>
+        <button class="left-icon blend-v2-btn" data-type="refresh" onclick=${() => refresh_tracks(refresh_btn)}>
             ${tl(trans.refresh)}
         </button>
     `;
@@ -9314,7 +9304,7 @@
       page.token = form.querySelector('[name="csrfmiddlewaretoken"]').getAttribute("value");
     let original_chart_settings = {};
     let settings_btn = html.node`
-        <button class="panel-settings-button btn view-item interact-item left-icon blend-v2-btn" data-type="settings">
+        <button class="left-icon blend-v2-btn" data-type="settings">
             ${tl(trans.settings)}
         </button>
     `;
@@ -9443,20 +9433,20 @@
             ${panel.querySelector("h2")}
             <div class="accompany view-buttons blend blend-v2">
                 ${() => {
-      select_btn.classList.add("btn", "view-item", "interact-item", "select-button", "link-select", "blend-v2-btn");
+      select_btn.classList.add("select-button", "link-select", "blend-v2-btn");
       select_btn.classList.remove("section-control", "dropdown-menu-clickable-button");
       return select_btn;
     }}
             </div>
             <div class="view-buttons blend blend-v2">
-                <button class="btn view-item left-icon blend-v2-btn" data-type="collage" ref=${(el) => collage_btn = el} onclick=${() => {
+                <button class="left-icon blend-v2-btn" data-type="collage" ref=${(el) => collage_btn = el} onclick=${() => {
       let btn = list.querySelector(".dropdown-menu-clickable-item--selected");
       let link = new URL("https://www.last.fm" + btn.getAttribute("href"));
       let selected = link.searchParams.get("artists_date_preset");
       collage("artists", `date_preset=${selected}`);
     }}>${tl(trans.collage)}</button>
                 ${form ? html.node`
-                <button class="panel-settings-button btn view-item interact-item left-icon blend-v2-btn" data-type="settings" ref=${(el) => settings_btn = el}>
+                <button class="left-icon blend-v2-btn" data-type="settings" ref=${(el) => settings_btn = el}>
                     ${tl(trans.settings)}
                 </button>
                 ` : ""}
@@ -9525,20 +9515,20 @@
             ${panel.querySelector("h2")}
             <div class="accompany view-buttons blend blend-v2">
                 ${() => {
-      select_btn.classList.add("btn", "view-item", "interact-item", "select-button", "link-select", "blend-v2-btn");
+      select_btn.classList.add("select-button", "link-select", "blend-v2-btn");
       select_btn.classList.remove("section-control", "dropdown-menu-clickable-button");
       return select_btn;
     }}
             </div>
             <div class="view-buttons blend blend-v2">
-                <button class="btn view-item left-icon blend-v2-btn" data-type="collage" ref=${(el) => collage_btn = el} onclick=${() => {
+                <button class="left-icon blend-v2-btn" data-type="collage" ref=${(el) => collage_btn = el} onclick=${() => {
       let btn = list.querySelector(".dropdown-menu-clickable-item--selected");
       let link = new URL("https://www.last.fm" + btn.getAttribute("href"));
       let selected = link.searchParams.get("albums_date_preset");
       collage("albums", `date_preset=${selected}`);
     }}>${tl(trans.collage)}</button>
                 ${form ? html.node`
-                <button class="panel-settings-button btn view-item interact-item left-icon blend-v2-btn" data-type="settings" ref=${(el) => settings_btn = el}>
+                <button class="left-icon blend-v2-btn" data-type="settings" ref=${(el) => settings_btn = el}>
                     ${tl(trans.settings)}
                 </button>
                 ` : ""}
@@ -9607,20 +9597,20 @@
             ${panel.querySelector("h2")}
             <div class="accompany view-buttons blend blend-v2">
                 ${() => {
-      select_btn.classList.add("btn", "view-item", "interact-item", "select-button", "link-select", "blend-v2-btn");
+      select_btn.classList.add("select-button", "link-select", "blend-v2-btn");
       select_btn.classList.remove("section-control", "dropdown-menu-clickable-button");
       return select_btn;
     }}
             </div>
             <div class="view-buttons blend blend-v2">
-                <button class="btn view-item left-icon blend-v2-btn" data-type="collage" ref=${(el) => collage_btn = el} onclick=${() => {
+                <button class="left-icon blend-v2-btn" data-type="collage" ref=${(el) => collage_btn = el} onclick=${() => {
       let btn = list.querySelector(".dropdown-menu-clickable-item--selected");
       let link = new URL("https://www.last.fm" + btn.getAttribute("href"));
       let selected = link.searchParams.get("tracks_date_preset");
       collage("tracks", `date_preset=${selected}`);
     }}>${tl(trans.collage)}</button>
                 ${form ? html.node`
-                <button class="panel-settings-button btn view-item interact-item left-icon blend-v2-btn" data-type="settings" ref=${(el) => settings_btn = el}>
+                <button class="left-icon blend-v2-btn" data-type="settings" ref=${(el) => settings_btn = el}>
                     ${tl(trans.settings)}
                 </button>
                 ` : ""}
@@ -9797,6 +9787,7 @@
 
   // src/chart.js
   function chart_reflow() {
+    return;
     load_chart_colours();
     if ((page.type == "artist" || page.type == "album" || page.type == "track") && page.subpage == "overview")
       bleh_music_page_charts();
@@ -10115,15 +10106,7 @@
       current_theme = "dark";
     show_theme_change_in_menu(current_theme);
     save_setting("theme", current_theme);
-    load_chart_colours();
-    if ((page.type == "artist" || page.type == "album" || page.type == "track") && page.subpage == "overview")
-      bleh_music_page_charts();
-    if (page.type == "user" && page.subpage == "overview")
-      bleh_profile_chart_render();
-    if (page.type == "user" && page.subpage.startsWith("library")) {
-      bleh_glacier_date_graph_generate();
-      bleh_glacier_insights();
-    }
+    chart_reflow();
   }
   unsafeWindow.change_theme_from_settings = function(theme) {
     settings.theme = theme;
@@ -10141,15 +10124,7 @@
     if (page.subpage.startsWith("listening-report")) return;
     save_setting("theme", theme);
     show_theme_change_in_menu(theme);
-    load_chart_colours();
-    if ((page.type == "artist" || page.type == "album" || page.type == "track") && page.subpage == "overview")
-      bleh_music_page_charts();
-    if (page.type == "user" && page.subpage == "overview")
-      bleh_profile_chart_render();
-    if (page.type == "user" && page.subpage.startsWith("library")) {
-      bleh_glacier_date_graph_generate();
-      bleh_glacier_insights();
-    }
+    chart_reflow();
   }
   function reset_all() {
     for (let item in settings_base)
@@ -11872,19 +11847,11 @@
   };
   function update_flag_toggle(flag, container) {
     let button = container.querySelector(".toggle");
-    if (!button)
-      return;
-    let current_state = version.feature_flags[flag].default;
-    if (settings.feature_flags[flag] != void 0) current_state = settings.feature_flags[flag];
-    if (current_state == true) {
-      button.setAttribute("aria-checked", "false");
-      settings.feature_flags[flag] = false;
-      document.documentElement.setAttribute(`data-ff--${flag}`, false);
-    } else {
-      button.setAttribute("aria-checked", "true");
-      settings.feature_flags[flag] = true;
-      document.documentElement.setAttribute(`data-ff--${flag}`, true);
-    }
+    if (!button) return;
+    let current_state = ff(flag);
+    button.setAttribute("aria-checked", !current_state);
+    settings.feature_flags[flag] = !current_state;
+    document.documentElement.setAttribute(`data-ff--${flag}`, `${!current_state}`);
     localStorage.setItem("bleh", JSON.stringify(settings));
   }
   function display_colour_presets() {
@@ -14934,14 +14901,14 @@
       top.classList = "top-container";
       let header = top.querySelector("h3");
       let select_btn = top.querySelector(".dropdown-menu-clickable-button");
-      select_btn.classList.add("btn", "view-item", "interact-item", "select-button", "link-select", "blend-v2-btn");
+      select_btn.classList.add("select-button", "link-select", "blend-v2-btn");
       select_btn.classList.remove("dropdown-menu-clickable-button");
       header.after(html.node`
             <div class="accompany view-buttons blend blend-v2">
                 ${select_btn}
             </div>
             <div class="view-buttons blend blend-v2">
-                <button class="panel-settings-button btn view-item interact-item left-icon blend-v2-btn" data-type="settings" ref=${(el) => settings_btn = el}>
+                <button class="left-icon blend-v2-btn" data-type="settings" ref=${(el) => settings_btn = el}>
                     ${tl(trans.settings)}
                 </button>
             </div>
@@ -14953,7 +14920,7 @@
             <div class="top-container">
                 <h3 class="text-18">${tl(trans.tracklist)}</h3>
                 <div class="view-buttons blend blend-v2">
-                    <button class="panel-settings-button btn view-item interact-item left-icon blend-v2-btn" data-type="settings" ref=${(el) => settings_btn = el}>
+                    <button class="left-icon blend-v2-btn" data-type="settings" ref=${(el) => settings_btn = el}>
                         ${tl(trans.settings)}
                     </button>
                 </div>
@@ -15183,10 +15150,10 @@
         top.classList = "top-container";
         let header = top.querySelector("h3");
         let select_btn = top.querySelector(".dropdown-menu-clickable-button");
-        select_btn.classList.add("btn", "view-item", "interact-item", "select-button", "link-select");
+        select_btn.classList.add("select-button", "link-select", "blend-v2-btn");
         select_btn.classList.remove("dropdown-menu-clickable-button");
         let play = top.querySelector(".section-playlink");
-        play.classList.add("btn", "view-item", "interact-item", "radio");
+        play.classList.add("blend-v2-btn", "radio");
         play.classList.remove("section-playlink", "hover-section-control");
         play.setAttribute("data-type", "play");
         header.after(html.node`
@@ -15195,7 +15162,7 @@
                 </div>
                 <div class="view-buttons blend blend-v2">
                     ${play}
-                    <button class="panel-settings-button btn view-item interact-item left-icon blend-v2-btn" data-type="settings" ref=${(el) => settings_btn = el}>
+                    <button class="left-icon blend-v2-btn" data-type="settings" ref=${(el) => settings_btn = el}>
                         ${tl(trans.settings)}
                     </button>
                 </div>
@@ -15220,7 +15187,7 @@
         top.classList = "top-container";
         let header = top.querySelector("h3");
         let select_btn = top.querySelector(".dropdown-menu-clickable-button");
-        select_btn.classList.add("btn", "view-item", "interact-item", "select-button", "link-select", "blend-v2-btn");
+        select_btn.classList.add("select-button", "link-select", "blend-v2-btn");
         select_btn.classList.remove("dropdown-menu-clickable-button");
         header.after(html.node`
                 <div class="accompany view-buttons blend blend-v2">
@@ -15307,14 +15274,14 @@
       let header = top.querySelector("h2");
       header.classList.remove("subpage-title");
       let select_btn = top.querySelector(".dropdown-menu-clickable-button");
-      select_btn.classList.add("btn", "view-item", "interact-item", "select-button", "link-select", "blend-v2-btn");
+      select_btn.classList.add("select-button", "link-select", "blend-v2-btn");
       select_btn.classList.remove("dropdown-menu-clickable-button");
       header.after(html.node`
                 <div class="accompany view-buttons blend blend-v2">
                     ${select_btn}
                 </div>
                 <div class="view-buttons blend blend-v2">
-                    <button class="panel-settings-button btn view-item interact-item left-icon blend-v2-btn" data-type="settings" ref=${(el) => settings_btn = el}>
+                    <button class="left-icon blend-v2-btn" data-type="settings" ref=${(el) => settings_btn = el}>
                         ${tl(trans.settings)}
                     </button>
                 </div>
@@ -15341,10 +15308,10 @@
       top.classList = "top-container";
       let header = top.querySelector("h3");
       let select_btn = top.querySelector(".dropdown-menu-clickable-button");
-      select_btn.classList.add("btn", "view-item", "interact-item", "select-button", "link-select", "blend-v2-btn");
+      select_btn.classList.add("select-button", "link-select", "blend-v2-btn");
       select_btn.classList.remove("dropdown-menu-clickable-button");
       header.after(html.node`
-            <div class="accompany view-buttons blend blend-v2 blend-v2-btn">
+            <div class="accompany view-buttons blend blend-v2">
                 ${select_btn}
             </div>
         `);
@@ -16623,13 +16590,13 @@
                 </h2>
                 <div class="accompany view-buttons blend blend-v2">
                     ${() => {
-        select_btn.classList.add("btn", "view-item", "interact-item", "select-button", "link-select");
+        select_btn.classList.add("select-button", "link-select", "blend-v2-btn");
         select_btn.classList.remove("section-control", "dropdown-menu-clickable-button");
         return shout_controls;
       }}
                 </div>
                 <div class="view-buttons blend blend-v2">
-                    <button class="panel-settings-button btn view-item interact-item left-icon" data-type="settings" ref=${(el) => settings_btn = el}>
+                    <button class="left-icon blend-v2-btn" data-type="settings" ref=${(el) => settings_btn = el}>
                         ${tl(trans.settings)}
                     </button>
                 </div>
@@ -18641,7 +18608,7 @@
             <span>${lang}</span>
         </div>
         <div class="page">
-            <strong>page</strong>
+            <strong onclick=${() => console.info(page)}>page</strong>
             <span>${page.type}</span>
             <span>${page.subpage}</span>
         </div>
