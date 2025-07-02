@@ -41,12 +41,6 @@ export function redesign_profile_header(is_own_profile, is_following) {
             taste_artists.push(correct_artist(artist.getAttribute('title')));
         });
 
-        page.avatar = document.body.querySelector('.header-avatar img');
-        if (page.avatar != null)
-            page.avatar = page.avatar.getAttribute('src');
-        else
-            page.avatar = '';
-
         taste_percentage = taste_meter.querySelector('.tasteometer-viz').getAttribute('title');
         if (taste_percentage == '99%')
             taste_percentage = '100%';

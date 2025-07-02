@@ -479,24 +479,15 @@ export function bleh_profiles() {
 
             let total_value = page.structure.side.querySelector('.metadata-display');
             if (total_value) {
-                let total_text = document.createElement('h2');
-                total_text.classList.add('text-18');
-                total_text.textContent = tl(trans.all_time);
-
-                value_panel.appendChild(total_text);
-
-                let total_header = html.node`
-                    <div class="glacier-library-metadata"></div>
-                `;
-
-                total_header.appendChild(html.node`
-                    <div class="glacier-library-metadata-item">
-                        <div class="sub-text">${tl(trans.total)}</div>
-                        <div class="glacier-library-metadata-item-value">${total_value.textContent}</div>
+                value_panel.appendChild(html.node`
+                    <h2 class="text-18">${tl(trans.all_time)}</h2>
+                    <div class="glacier-library-metadata">
+                        <div class="glacier-library-metadata-item">
+                            <div class="sub-text">${tl(trans.total)}</div>
+                            <div class="glacier-library-metadata-item-value">${total_value.textContent}</div>
+                        </div>
                     </div>
                 `);
-
-                value_panel.appendChild(total_header);
             }
 
             let legacy_metadata = page.structure.main.querySelector('.metadata-list');

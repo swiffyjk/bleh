@@ -224,6 +224,11 @@
             "default": false,
             "name": "Support experimental glass theme",
             "date": "2025-06-25"
+        },
+        "update_center": {
+            "default": false,
+            "name": "Update center",
+            "date": "2025-07-02"
         }
     }
 }

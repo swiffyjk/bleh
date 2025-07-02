@@ -1299,8 +1299,8 @@
   }
   function clamp_sat(sat) {
     if (sat > 1.5)
-      return 1.5;
-    return sat;
+      return 1.5.toString();
+    return sat.toFixed(2);
   }
   function clean_number(string) {
     return parseInt(
@@ -2356,24 +2356,25 @@
     });
     set_select(button, menu, values, initial, select2, name2);
     return container;
-  }
-  function set_select(button, menu, values, selected, select2, name2) {
-    values.some((value) => {
-      if (value.value == selected) {
-        render(button, html`${value.text}`);
-        return false;
-      }
-    });
-    select2.value = selected;
-    if (name2 != "")
-      document.documentElement.setAttribute(`data-bleh--inbuilt-id_${name2}`, selected);
-    menu.setContent(html.node`
-        ${values.map((value) => html.node`
-            <button class="btn dropdown-menu-clickable-item select-item" aria-checked=${selected == value.value} onclick=${() => set_select(button, menu, values, value.value, select2, name2)}>
+    function set_select(button2, menu2, values2, selected, select3, name3) {
+      values2.some((value) => {
+        if (value.value == selected) {
+          render(button2, html`${value.text}`);
+          return false;
+        }
+      });
+      select3.value = selected;
+      container.value = select3.value;
+      if (name3 != "")
+        document.documentElement.setAttribute(`data-bleh--inbuilt-id_${name3}`, selected);
+      menu2.setContent(html.node`
+        ${values2.map((value) => html.node`
+            <button class="btn dropdown-menu-clickable-item select-item" aria-checked=${selected == value.value} onclick=${() => set_select(button2, menu2, values2, value.value, select3, name3)}>
                 ${value.text}
             </button>
         `)}
     `);
+    }
   }
   function select_prepare(element) {
     let values = [];
@@ -2846,19 +2847,16 @@
         `,
       type: "compare"
     });
-    let pages_select = pages.querySelector("select");
-    let timeframe_select = timeframe.querySelector("select");
-    let type_select = type.querySelector("select");
     tippy(submit, {
       content: tl(trans.compare)
     });
     function begin_comparing(bypass = false) {
       body.setAttribute("data-filled", "false");
-      if (parseInt(pages_select.value) > 3 && !bypass) {
+      if (parseInt(pages.value) > 3 && !bypass) {
         let warn = notify({
           id: "collage_warning",
           title: tl(trans.are_you_sure),
-          body: tl(trans.this_will_require_loading_count_pages).replace("{c}", parseInt(pages_select.value) * 2),
+          body: tl(trans.this_will_require_loading_count_pages).replace("{c}", parseInt(pages.value) * 2),
           type: "warning",
           actions: [
             {
@@ -2883,7 +2881,7 @@
         other: [],
         shared: []
       };
-      get_grid(auth.name, 1, parseInt(pages_select.value), page.name);
+      get_grid(auth.name, 1, parseInt(pages.value), page.name);
     }
     function get_grid(user, current_page, page_count, next_user = null) {
       render(body, html`
@@ -2891,7 +2889,7 @@
                 <div class="loading-data-text">${tl(trans.gathering_plays_for_user_pages).replace("{u}", user).replace("{current_page}", current_page).replace("{pages}", page_count)}</div>
             </div>
         `);
-      fetch(`${root}user/${user}/library/${type_select.value}?format=list&date_preset=${timeframe_select.value}&page=${current_page}&ajax=1`).then(function(response) {
+      fetch(`${root}user/${user}/library/${type.value}?format=list&date_preset=${timeframe.value}&page=${current_page}&ajax=1`).then(function(response) {
         console.log("returned", response, response.text);
         return response.text();
       }).then(function(dom) {
@@ -2906,7 +2904,7 @@
             if (item.avatar)
               item.avatar = item.avatar.getAttribute("src");
             item.name = track.querySelector(".chartlist-name a").textContent.trim();
-            if (type_select.value != "artists")
+            if (type.value != "artists")
               item.sister = track.querySelector(".chartlist-artist a").textContent.trim();
             item.plays = clean_number(track.querySelector(".chartlist-count-bar-slug").getAttribute("data-stat-value"));
             if (next_user)
@@ -2940,7 +2938,7 @@
       log("gathered initial values", "compare", "info", page.state.compare);
       page.state.compare.you.forEach((your_item) => {
         let other_item;
-        if (type_select.value == "albums")
+        if (type.value == "albums")
           other_item = page.state.compare.other.find((other) => your_item.name === other.name && your_item.sister === other.sister);
         else
           other_item = page.state.compare.other.find((other) => your_item.name === other.name);
@@ -2970,12 +2968,12 @@
         return;
       }
       body.setAttribute("data-filled", "true");
-      if (type_select.value != "tracks") {
+      if (type.value != "tracks") {
         let grid = document.createElement("ol");
         grid.classList.add("grid-items", "grid-items--numbered", "compare-grid");
         page.state.compare.shared.forEach((data2) => {
           let template;
-          if (type_select.value == "artists")
+          if (type.value == "artists")
             template = sanitise(data2.name);
           else
             template = `${sanitise(data2.sister)}/${sanitise(data2.name)}`;
@@ -2991,7 +2989,7 @@
                                         ${data2.name}
                                     </a>
                                 </p>
-                                ${type_select.value == "albums" ? html.node`
+                                ${type.value == "albums" ? html.node`
                                 <p class="grid-items-item-aux-text">
                                     <a class="grid-items-item-aux-block" href="${root}music/${data2.sister}">
                                         ${data2.sister}
@@ -2999,13 +2997,13 @@
                                 </p>
                                 ` : ""}
                                 <p class="grid-items-item-aux-text">
-                                    <a class="grid-item-plays with-avatar" href="${root}user/${auth.name}/library/music/${template}?date_preset=${timeframe_select.value}" target="_blank">
+                                    <a class="grid-item-plays with-avatar" href="${root}user/${auth.name}/library/music/${template}?date_preset=${timeframe.value}" target="_blank">
                                         <span class="avatar">
                                             <img src="${auth.avatar}" alt="${tl(trans.your_avatar)}">
                                         </span>
                                         ${data2.plays.you.toLocaleString(lang)}
                                     </a>
-                                    <a class="grid-item-plays with-avatar" href="${root}user/${page.name}/library/music/${template}?date_preset=${timeframe_select.value}" target="_blank">
+                                    <a class="grid-item-plays with-avatar" href="${root}user/${page.name}/library/music/${template}?date_preset=${timeframe.value}" target="_blank">
                                         <span class="avatar">
                                             <img src="${page.avatar}" alt="${tl(trans.avatar_for_user).replace("{u}", page.name)}">
                                         </span>
@@ -3054,7 +3052,7 @@
                         </td>
                         <td class="chartlist-bar with-multiple">
                             <span class="chartlist-count-bar">
-                                <a class="chartlist-count-bar-link" href="${root}user/${auth.name}/library/music/${template}?date_preset=${timeframe_select.value}" target="_blank">
+                                <a class="chartlist-count-bar-link" href="${root}user/${auth.name}/library/music/${template}?date_preset=${timeframe.value}" target="_blank">
                                     <span class="chartlist-count-bar-slug" data-max-stat-value="${max}" data-stat-value="${data2.plays.you}" style="width: ${data2.plays.you / max * 100}%;"></span>
                                     <span class="chartlist-count-bar-value">${data2.plays.you}</span>
                                 </a>
@@ -3063,7 +3061,7 @@
                                 </span>
                             </span>
                             <span class="chartlist-count-bar">
-                                <a class="chartlist-count-bar-link" href="${root}user/${page.name}/library/music/${template}?date_preset=${timeframe_select.value}" target="_blank">
+                                <a class="chartlist-count-bar-link" href="${root}user/${page.name}/library/music/${template}?date_preset=${timeframe.value}" target="_blank">
                                     <span class="chartlist-count-bar-slug" data-max-stat-value="${max}" data-stat-value="${data2.plays.other}" style="width: ${data2.plays.other / max * 100}%;"></span>
                                     <span class="chartlist-count-bar-value">${data2.plays.other}</span>
                                 </a>
@@ -4097,7 +4095,20 @@
     lower_wrap.appendChild(lower_metadata);
     header.appendChild(lower_wrap);
     page.structure.main.insertBefore(header, page.structure.main.firstElementChild);
-    let overview_header = page.structure.main.querySelector(":scope > .library-overview-header");
+    let overview_headers = page.structure.main.querySelectorAll(".library-overview-header");
+    overview_headers.forEach((top) => {
+      top.classList = "top-container";
+      let header2 = top.querySelector("h2");
+      let select_btn = top.querySelector(".dropdown-menu-clickable-button");
+      select_btn.classList.add("select-button", "link-select", "blend-v2-btn");
+      select_btn.classList.remove("dropdown-menu-list-button");
+      header2.after(html.node`
+            <div class="accompany view-buttons blend blend-v2">
+                ${select_btn}
+            </div>
+        `);
+    });
+    let overview_header = page.structure.main.querySelector(":scope > .top-container");
     if (!overview_header) return;
     overview_header.nextElementSibling.insertBefore(overview_header, overview_header.nextElementSibling.firstElementChild);
   }
@@ -6705,11 +6716,6 @@
       artists.forEach((artist) => {
         taste_artists.push(correct_artist(artist.getAttribute("title")));
       });
-      page.avatar = document.body.querySelector(".header-avatar img");
-      if (page.avatar != null)
-        page.avatar = page.avatar.getAttribute("src");
-      else
-        page.avatar = "";
       taste_percentage = taste_meter.querySelector(".tasteometer-viz").getAttribute("title");
       if (taste_percentage == "99%")
         taste_percentage = "100%";
@@ -8221,6 +8227,8 @@
     checkup_page_structure(false, content_top);
     log("status is", "page", "info", page);
     update_page();
+    page.structure.container.setAttribute("data-beret", "false");
+    page.structure.container.setAttribute("data-short", "false");
     let background = obsession_container.querySelector(".obsession-background-inner");
     background = background.style.getPropertyValue("background-image").replace('url("', "").replace('")', "");
     if (!background.endsWith("/4128a6eb29f94943c9d206c08e625904.jpg")) {
@@ -8283,27 +8291,21 @@
         track_title.textContent = corrected_title;
       }
     }
-    let redesigned_track_header = document.createElement("section");
-    redesigned_track_header.classList.add("redesigned-header", "redesigned-track-header", "no-background", "obsession-track-header");
-    redesigned_track_header.innerHTML = `
-        <!--<div class="avatar-side">
-            <img src="${background.replace("/ar0/", "/avatar170s/")}">
-            <a class="bleh--avatar-clickable-link"></a>
-        </div>-->
-        <div class="info-side">
-            <div class="sub-text">${tl(trans.obsession)}</div>
-            <div class="title-container">
-                <h1><a href="${link}">${track_title.innerHTML}</a></h1>
+    track_title.classList.remove("obsession-meta-track");
+    let track_header = html.node`
+        <section class="redesigned-header redesigned-track-header no-background obsession-track-header">
+            <div class="info-side">
+                <div class="sub-text">${tl(trans.obsession)}</div>
+                <div class="title-container">
+                    <h1><a href="${link}">${track_title}</a></h1>
+                </div>
+                <h2>${html.node([track_artist.innerHTML])}</h2>
             </div>
-            <h2>${track_artist.innerHTML}</h2>
-        </div>
+        </section>
     `;
-    page.structure.container.insertBefore(redesigned_track_header, page.structure.container.firstElementChild);
+    page.structure.container.insertBefore(track_header, page.structure.container.firstElementChild);
     let video = obsession_container.querySelector(".obsession-video-container");
-    if (video)
-      redesigned_track_header.after(video);
-    let quote = document.createElement("section");
-    quote.classList.add("obsession-quote");
+    if (video) track_header.after(video);
     let obsession_reason = obsession_container.querySelector(".obsession-reason");
     if (obsession_reason) {
       let obsession_reason_text = obsession_reason.textContent;
@@ -8313,31 +8315,33 @@
     let obsession_avatar = document.querySelector(".obsession-details-intro-avatar-wrap .avatar");
     page.name = obsession_author;
     let date = obsession_container.querySelector(".obsession-details-date-short");
-    quote.innerHTML = `
-        ${obsession_reason ? `
-        <div class="quote">
-            ${obsession_reason.textContent}
-        </div>
-        ` : `
-        <div class="quote no-quote">
-            ${tl(trans.no_quote)}
-        </div>
-        `}
-        <div class="sub-text">
-            <div class="obsession-author">
-                ${obsession_avatar.outerHTML}
-                <strong class="name">${obsession_author}</strong>
-                <a class="link-block-cover-link" href="${root}user/${obsession_author}"></a>
+    let quote = html.node`
+        <section class="obsession-quote sour">
+            ${obsession_reason ? html.node`
+            <div class="quote">
+                ${obsession_reason.textContent}
             </div>
-            ${scrobbles ? `
-            <div class="obsession-listens">
-                ${scrobbles.innerHTML}
+            ` : html.node`
+            <div class="quote no-quote">
+                ${tl(trans.no_quote)}
             </div>
-            ` : ""}
-            <div class="obsession-date">
-                ${date.textContent}
+            `}
+            <div class="sub-text">
+                <div class="obsession-author">
+                    ${obsession_avatar}
+                    <strong class="name">${obsession_author}</strong>
+                    <a class="link-block-cover-link" href="${root}user/${obsession_author}"></a>
+                </div>
+                ${scrobbles ? html.node`
+                <div class="obsession-listens">
+                    ${html.node([scrobbles.innerHTML])}
+                </div>
+                ` : ""}
+                <div class="obsession-date">
+                    ${date.textContent}
+                </div>
             </div>
-        </div>
+        </section>
     `;
     let manage = obsession_container.querySelector("form");
     if (manage) {
@@ -8351,8 +8355,9 @@
       author.classList.add("colourful");
       author.classList.add(`user-status--bleh-${badge.type}`, `user-status--bleh-user-${obsession_author}`);
     }
-    let related = document.createElement("section");
-    related.classList.add("obsession-related");
+    let related = html.node`
+        <section class="obsession-related sour" />
+    `;
     let other_tracks = document.body.querySelector(".other-obsessions");
     if (other_tracks) {
       let header = document.createElement("h2");
@@ -8802,20 +8807,15 @@
         value_panel.appendChild(value_header);
         let total_value = page.structure.side.querySelector(".metadata-display");
         if (total_value) {
-          let total_text = document.createElement("h2");
-          total_text.classList.add("text-18");
-          total_text.textContent = tl(trans.all_time);
-          value_panel.appendChild(total_text);
-          let total_header = html.node`
-                    <div class="glacier-library-metadata"></div>
-                `;
-          total_header.appendChild(html.node`
-                    <div class="glacier-library-metadata-item">
-                        <div class="sub-text">${tl(trans.total)}</div>
-                        <div class="glacier-library-metadata-item-value">${total_value.textContent}</div>
+          value_panel.appendChild(html.node`
+                    <h2 class="text-18">${tl(trans.all_time)}</h2>
+                    <div class="glacier-library-metadata">
+                        <div class="glacier-library-metadata-item">
+                            <div class="sub-text">${tl(trans.total)}</div>
+                            <div class="glacier-library-metadata-item-value">${total_value.textContent}</div>
+                        </div>
                     </div>
                 `);
-          value_panel.appendChild(total_header);
         }
         let legacy_metadata = page.structure.main.querySelector(".metadata-list");
         if (legacy_metadata)
@@ -9787,7 +9787,6 @@
 
   // src/chart.js
   function chart_reflow() {
-    return;
     load_chart_colours();
     if ((page.type == "artist" || page.type == "album" || page.type == "track") && page.subpage == "overview")
       bleh_music_page_charts();
@@ -10441,31 +10440,21 @@
   }
   function calculate_offset(now) {
     let offset = now.getTimezoneOffset();
-    if (offset == 0)
-      return "+0000";
-    if (offset < 0) {
-      offset = Math.abs(offset);
-      offset /= 60;
-      if (offset < 10)
-        offset = `0${offset}`;
-      offset = `+${offset}`;
-    } else {
-      offset = -Math.abs(offset);
-      offset /= 60;
-      if (offset > -10)
-        offset = offset.toString().replace("-", "-0");
-    }
-    return `${offset}00`;
+    if (offset == 0) return "+0000";
+    const sign = offset < 0 ? "+" : "-";
+    offset = Math.abs(offset);
+    const hours = Math.floor(offset / 60);
+    const minutes = offset % 60;
+    const formatted_hours = hours < 10 ? `0${hours}` : hours.toString();
+    const formatted_minutes = minutes < 10 ? `0${minutes}` : minutes.toString();
+    return sign + formatted_hours + formatted_minutes;
   }
   function seasonal_timer_start(bypass = false) {
-    if (stored_season.new_years_eve && !bypass)
-      return;
-    if (seasonal_timer.state != null)
-      return;
+    if (stored_season.new_years_eve && !bypass) return;
+    if (seasonal_timer.state) return;
     seasonal_timer.state = setInterval(set_season, 1e3);
     log("started interval", "season", "info");
-    if (page.header.season_tooltip == null)
-      return;
+    if (!page.header.season_tooltip) return;
     page.header.season_tooltip.setContent(html.node`
         <span class="season-colour-name">${tl(trans.seasonal.listing[stored_season.id])}</span>
         <span class="season-exclusive">${trans_legacy.en.auth_menu.seasonal_live}</span>
@@ -10473,15 +10462,12 @@
     page.header.season.classList.add("live");
   }
   function seasonal_timer_end() {
-    if (stored_season.new_years_eve)
-      return;
-    if (seasonal_timer.state == null)
-      return;
+    if (stored_season.new_years_eve) return;
+    if (!seasonal_timer.state) return;
     clearInterval(seasonal_timer.state);
     seasonal_timer.state = null;
     log("ended interval", "season", "info");
-    if (page.header.season_tooltip == null)
-      return;
+    if (!page.header.season_tooltip) return;
     page.header.season_tooltip.setContent(html.node`
         <span class="season-colour-name">${tl(trans.seasonal.listing[stored_season.id])}</span>
         <span class="season-exclusive">${trans_legacy.en.auth_menu.seasonal_notice}</span>
@@ -10489,8 +10475,7 @@
     page.header.season.classList.remove("live");
   }
   function update_season_nav() {
-    if (page.header.season == null)
-      return;
+    if (!page.header.season) return;
     page.header.season.setAttribute("data-season", stored_season.id);
     if (!stored_season.new_years_eve) {
       page.header.season.textContent = moment(stored_season.end.replace("y0", stored_season.year).replace("{offset}", stored_season.offset)).to(stored_season.now, true);
@@ -10564,57 +10549,64 @@
     let params = new URLSearchParams(document.location.search);
     page.requested.tab = params.get("tab");
     page.requested.setting = params.get("setting");
-    let nav = document.createElement("nav");
-    nav.classList.add("navlist", "secondary-nav", "navlist--more", "redesigned-navigation", "bleh-settings-navigation");
-    render(nav, html`
-        <ul class="navlist-items">
-            <li class="navlist-item secondary-nav-item">
-                <a class="secondary-nav-item-link bleh--nav" data-bleh-page="themes" onclick=${() => change_settings_page("themes")}>
-                    ${tl(trans.appearance)}
-                </a>
-            </li>
-            <li class="navlist-item secondary-nav-item">
-                <a class="secondary-nav-item-link bleh--nav" data-bleh-page="music" onclick=${() => change_settings_page("music")}>
-                    ${tl(trans.music)}
-                </a>
-            </li>
-            <li class="navlist-item secondary-nav-item">
-                <a class="secondary-nav-item-link bleh--nav" data-bleh-page="customise" onclick=${() => change_settings_page("customise")}>
-                    ${tl(trans.layout)}
-                </a>
-            </li>
-            <li class="navlist-item secondary-nav-item">
-                <a class="secondary-nav-item-link bleh--nav" data-bleh-page="profiles" onclick=${() => change_settings_page("profiles")}>
-                    ${tl(trans.profiles)}
-                </a>
-            </li>
-            <li class="navlist-item secondary-nav-item">
-                <a class="secondary-nav-item-link bleh--nav" data-bleh-page="seasonal" onclick=${() => change_settings_page("seasonal")}>
-                    ${tl(trans.seasonal.name)}
-                </a>
-            </li>
-            <li class="navlist-item secondary-nav-item">
-                <a class="secondary-nav-item-link bleh--nav" data-bleh-page="text" onclick=${() => change_settings_page("text")}>
-                    ${tl(trans.text)}
-                </a>
-            </li>
-            <li class="navlist-item secondary-nav-item">
-                <a class="secondary-nav-item-link bleh--nav" data-bleh-page="accessibility" onclick=${() => change_settings_page("accessibility")}>
-                    ${tl(trans.accessibility)}
-                </a>
-            </li>
-            <li class="navlist-item secondary-nav-item">
-                <a class="secondary-nav-item-link bleh--nav" data-bleh-page="performance" onclick=${() => change_settings_page("performance")}>
-                    ${tl(trans.troubleshooting)}
-                </a>
-            </li>
-            <li class="navlist-item secondary-nav-item">
-                <a class="secondary-nav-item-link bleh--nav" data-password=${settings.hu_tao} data-bleh-page="sku" onclick=${() => change_settings_page("sku")}>
-                    ${tl(trans.flags)}
-                </a>
-            </li>
-        </ul>
-    `);
+    let nav = html.node`
+        <nav class="navlist secondary-nav navlist--more redesigned-navigation bleh-settings-navigation">
+            <ul class="navlist-items">
+                <li class="navlist-item secondary-nav-item">
+                    <a class="secondary-nav-item-link bleh--nav" data-bleh-page="themes" onclick=${() => change_settings_page("themes")}>
+                        ${tl(trans.appearance)}
+                    </a>
+                </li>
+                <li class="navlist-item secondary-nav-item">
+                    <a class="secondary-nav-item-link bleh--nav" data-bleh-page="music" onclick=${() => change_settings_page("music")}>
+                        ${tl(trans.music)}
+                    </a>
+                </li>
+                <li class="navlist-item secondary-nav-item">
+                    <a class="secondary-nav-item-link bleh--nav" data-bleh-page="customise" onclick=${() => change_settings_page("customise")}>
+                        ${tl(trans.layout)}
+                    </a>
+                </li>
+                <li class="navlist-item secondary-nav-item">
+                    <a class="secondary-nav-item-link bleh--nav" data-bleh-page="profiles" onclick=${() => change_settings_page("profiles")}>
+                        ${tl(trans.profiles)}
+                    </a>
+                </li>
+                <li class="navlist-item secondary-nav-item">
+                    <a class="secondary-nav-item-link bleh--nav" data-bleh-page="seasonal" onclick=${() => change_settings_page("seasonal")}>
+                        ${tl(trans.seasonal.name)}
+                    </a>
+                </li>
+                <li class="navlist-item secondary-nav-item">
+                    <a class="secondary-nav-item-link bleh--nav" data-bleh-page="text" onclick=${() => change_settings_page("text")}>
+                        ${tl(trans.text)}
+                    </a>
+                </li>
+                <li class="navlist-item secondary-nav-item">
+                    <a class="secondary-nav-item-link bleh--nav" data-bleh-page="accessibility" onclick=${() => change_settings_page("accessibility")}>
+                        ${tl(trans.accessibility)}
+                    </a>
+                </li>
+                <li class="navlist-item secondary-nav-item">
+                    <a class="secondary-nav-item-link bleh--nav" data-bleh-page="performance" onclick=${() => change_settings_page("performance")}>
+                        ${tl(trans.troubleshooting)}
+                    </a>
+                </li>
+                <li class="navlist-item secondary-nav-item">
+                    <a class="secondary-nav-item-link bleh--nav" data-password=${settings.hu_tao} data-bleh-page="sku" onclick=${() => change_settings_page("sku")}>
+                        ${tl(trans.flags)}
+                    </a>
+                </li>
+                ${ff("update_center") ? html.node`
+                <li class="navlist-item secondary-nav-item">
+                    <a class="secondary-nav-item-link bleh--nav" data-bleh-page="update" onclick=${() => change_settings_page("update")}>
+                        ${tl(trans.updates)}
+                    </a>
+                </li>
+                ` : ""}
+            </ul>
+        </nav>
+    `;
     render(page.structure.side, html`
         <div class="cta first priority sponsor colourful">
             ${auth.sponsor ? html.node`
@@ -11343,7 +11335,7 @@
       ]);
       let bars;
       render(page.structure.main, html`
-            <div class="bleh--panel lotus">
+            <div class="bleh--panel">
                 <h4>${html.node([
         tl(trans.brand_version_number).replace("{brand}", `<a class="lotus lotus-name" href="https://github.com/katelyynn/lotus" target="_blank">lotus</a>`).replace("{number}", `<span class="version-link lotus">${artist_corrections.version >= album_track_corrections.version ? artist_corrections.version : album_track_corrections.version}</span>`)
       ])}</h4>
@@ -11362,9 +11354,9 @@
                 </div>
                 <div class="screen-row actions-only">
                     <div class="actions">
-                        <button class="see-more update-check" onclick="_lotus_check()">${tl(trans.update_check)}</button>
+                        <button class="see-more update-check lotus" onclick="_lotus_check()">${tl(trans.update_check)}</button>
                         <div class="fill"></div>
-                        <button class="see-more expand" onclick="_open_correction_modal()">${tl(trans.view_all)}</button>
+                        <button class="see-more lotus" onclick="_open_correction_modal()">${tl(trans.view_all)}</button>
                     </div>
                 </div>
                 <div class="setting" data-type="toggle" id="container-corrections" onclick="_update_item('corrections')">
@@ -11664,6 +11656,24 @@
                 </div>
             </div>
             `);
+    } else if (page_id == "update") {
+      render(page.structure.main, html`
+            <section class="bleh--panel">
+                <div class="update-center-header">
+                    <div class="update-center-icon">
+                        <div class="bleh-icon" data-type="update" />
+                        <div class="check-circle colourful">
+                            <div class="bleh-icon" data-type="check" />
+                        </div>
+                    </div>
+                    <div class="update-center-details">
+                        <h2>You're up to date</h2>
+                        <p class="last-checked">Last checked 6 hours ago</p>
+                    </div>
+                    <button class="btn primary icon" data-type="update">Check for updates</button>
+                </div>
+            </section>
+        `);
     }
   }
   function register_skip_to(list = null) {
@@ -12253,7 +12263,7 @@
                                 <div class="input-container content-form">
                                     ${colour2 = input({
               type: "colour",
-              value: "#999",
+              value: "#999999",
               maxlength: 7,
               warn_if_empty: true
             })}
@@ -12389,7 +12399,7 @@
     instance.innerHTML = "";
     exclusives[stored_season.id].forEach((colour) => {
       colour.sets = { accent_type: colour.type, ...colour.sets };
-      colour.displays = colour.sets;
+      if (!colour.displays) colour.displays = colour.sets;
       let item = document.createElement("button");
       item.classList.add("dropdown-menu-clickable-item", "swatch");
       item.setAttribute("data-swatch-type", colour.type);
@@ -12643,19 +12653,7 @@
     }
   };
   function export_settings() {
-    dialog({
-      id: "export_settings",
-      title: tl(trans.export_settings),
-      body: html.node`
-            <textarea class="modal-text">${JSON.stringify(settings)}</textarea>
-            <div class="modal-footer">
-                <div class="fill"></div>
-                <button class="btn primary done" onclick="_dialog_rm({id: 'export_settings'})">
-                    ${tl(trans.done)}
-                </button>
-            </div>
-        `
-    });
+    share(JSON.stringify(settings));
   }
   unsafeWindow._export_settings = function() {
     export_settings();
@@ -14622,9 +14620,15 @@
       let name2 = link.textContent.trim();
       let sister;
       if (!href.startsWith(root)) {
-        tippy(link, {
-          content: link.getAttribute("href")
-        });
+        if (href && link.textContent != href && /^(https?|mailto|ftp|sftp|tel):/.test(href)) {
+          tippy(link, {
+            theme: "name-sister-combo",
+            content: html.node`
+                    <span class="name">${href}</span>
+                    <span class="sister">${tl(trans.external)}</span>
+                `
+          });
+        }
         return;
       }
       if (href.endsWith("/+wiki")) return;
@@ -14801,7 +14805,7 @@
                 <div class="info-side">
                     <div class="sub-text">${tl(trans.album)}</div>
                     <div class="title-container">
-                        <h1>${title}</h1>
+                        ${title}
                         ${position ? position : ""}
                     </div>
                     <h2>${artist}</h2>
@@ -15054,7 +15058,7 @@
                     <div class="sub-text">${tl(trans.artist)}</div>
                     `}
                     <div class="title-container" data-multi="${page.multi}">
-                        <h1>${title}</h1>
+                        ${title}
                         ${position ? position : ""}
                         ${on_tour ? on_tour : ""}
                     </div>
@@ -16450,7 +16454,7 @@
                 <div class="info-side">
                     <div class="sub-text">${tl(trans.track)}</div>
                     <div class="title-container">
-                        <h1>${title}</h1>
+                        ${title}
                         ${position ? position : ""}
                     </div>
                     <h2>${artist}</h2>
@@ -21448,6 +21452,9 @@
     },
     popular_now: {
       en: "Popular now"
+    },
+    updates: {
+      en: "Updates"
     }
   };
   var trans_legacy = {
@@ -24508,13 +24515,13 @@
         let avatar3 = auth_link.state.querySelector("img");
         avatar3.setAttribute("crossorigin", "anonymous");
         try {
-          avatar3.addEventListener("load", function() {
+          avatar3.addEventListener("load", () => {
             let thief = new ColorThief();
             let colour = thief.getColor(avatar3);
             let hsl = rgb_to_hsl(colour[0], colour[1], colour[2]);
             auth.sets.hue = hsl.h;
             auth.sets.sat = clamp_sat(hsl.s / 100 * 3);
-            auth.sets.lit = 1;
+            auth.sets.lit = hsl.l / 100 + 0.35;
           });
         } catch (e) {
         }
@@ -25702,6 +25709,11 @@
         default: false,
         name: "Support experimental glass theme",
         date: "2025-06-25"
+      },
+      update_center: {
+        default: false,
+        name: "Update center",
+        date: "2025-07-02"
       }
     }
   };

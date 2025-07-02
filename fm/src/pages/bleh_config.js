@@ -26,6 +26,7 @@ import {html, render} from "lighterhtml"
 import {save_setting, setting} from "../components/settings.js";
 import {parse_scrobbles_as_rank} from "../components/colourful_counts.js";
 import {input} from "../components/input.js";
+import {share} from "../components/share.js";
 
 export function bleh_settings() {
     page.name = auth.name;
@@ -46,58 +47,64 @@ export function bleh_settings() {
 
 
     // go wild
-    let nav = document.createElement('nav');
-    nav.classList.add('navlist', 'secondary-nav', 'navlist--more', 'redesigned-navigation', 'bleh-settings-navigation');
-
-    render(nav, html`
-        <ul class="navlist-items">
-            <li class="navlist-item secondary-nav-item">
-                <a class="secondary-nav-item-link bleh--nav" data-bleh-page="themes" onclick=${() => change_settings_page('themes')}>
-                    ${tl(trans.appearance)}
-                </a>
-            </li>
-            <li class="navlist-item secondary-nav-item">
-                <a class="secondary-nav-item-link bleh--nav" data-bleh-page="music" onclick=${() => change_settings_page('music')}>
-                    ${tl(trans.music)}
-                </a>
-            </li>
-            <li class="navlist-item secondary-nav-item">
-                <a class="secondary-nav-item-link bleh--nav" data-bleh-page="customise" onclick=${() => change_settings_page('customise')}>
-                    ${tl(trans.layout)}
-                </a>
-            </li>
-            <li class="navlist-item secondary-nav-item">
-                <a class="secondary-nav-item-link bleh--nav" data-bleh-page="profiles" onclick=${() => change_settings_page('profiles')}>
-                    ${tl(trans.profiles)}
-                </a>
-            </li>
-            <li class="navlist-item secondary-nav-item">
-                <a class="secondary-nav-item-link bleh--nav" data-bleh-page="seasonal" onclick=${() => change_settings_page('seasonal')}>
-                    ${tl(trans.seasonal.name)}
-                </a>
-            </li>
-            <li class="navlist-item secondary-nav-item">
-                <a class="secondary-nav-item-link bleh--nav" data-bleh-page="text" onclick=${() => change_settings_page('text')}>
-                    ${tl(trans.text)}
-                </a>
-            </li>
-            <li class="navlist-item secondary-nav-item">
-                <a class="secondary-nav-item-link bleh--nav" data-bleh-page="accessibility" onclick=${() => change_settings_page('accessibility')}>
-                    ${tl(trans.accessibility)}
-                </a>
-            </li>
-            <li class="navlist-item secondary-nav-item">
-                <a class="secondary-nav-item-link bleh--nav" data-bleh-page="performance" onclick=${() => change_settings_page('performance')}>
-                    ${tl(trans.troubleshooting)}
-                </a>
-            </li>
-            <li class="navlist-item secondary-nav-item">
-                <a class="secondary-nav-item-link bleh--nav" data-password=${settings.hu_tao} data-bleh-page="sku" onclick=${() => change_settings_page('sku')}>
-                    ${tl(trans.flags)}
-                </a>
-            </li>
-        </ul>
-    `)
+    let nav = html.node`
+        <nav class="navlist secondary-nav navlist--more redesigned-navigation bleh-settings-navigation">
+            <ul class="navlist-items">
+                <li class="navlist-item secondary-nav-item">
+                    <a class="secondary-nav-item-link bleh--nav" data-bleh-page="themes" onclick=${() => change_settings_page('themes')}>
+                        ${tl(trans.appearance)}
+                    </a>
+                </li>
+                <li class="navlist-item secondary-nav-item">
+                    <a class="secondary-nav-item-link bleh--nav" data-bleh-page="music" onclick=${() => change_settings_page('music')}>
+                        ${tl(trans.music)}
+                    </a>
+                </li>
+                <li class="navlist-item secondary-nav-item">
+                    <a class="secondary-nav-item-link bleh--nav" data-bleh-page="customise" onclick=${() => change_settings_page('customise')}>
+                        ${tl(trans.layout)}
+                    </a>
+                </li>
+                <li class="navlist-item secondary-nav-item">
+                    <a class="secondary-nav-item-link bleh--nav" data-bleh-page="profiles" onclick=${() => change_settings_page('profiles')}>
+                        ${tl(trans.profiles)}
+                    </a>
+                </li>
+                <li class="navlist-item secondary-nav-item">
+                    <a class="secondary-nav-item-link bleh--nav" data-bleh-page="seasonal" onclick=${() => change_settings_page('seasonal')}>
+                        ${tl(trans.seasonal.name)}
+                    </a>
+                </li>
+                <li class="navlist-item secondary-nav-item">
+                    <a class="secondary-nav-item-link bleh--nav" data-bleh-page="text" onclick=${() => change_settings_page('text')}>
+                        ${tl(trans.text)}
+                    </a>
+                </li>
+                <li class="navlist-item secondary-nav-item">
+                    <a class="secondary-nav-item-link bleh--nav" data-bleh-page="accessibility" onclick=${() => change_settings_page('accessibility')}>
+                        ${tl(trans.accessibility)}
+                    </a>
+                </li>
+                <li class="navlist-item secondary-nav-item">
+                    <a class="secondary-nav-item-link bleh--nav" data-bleh-page="performance" onclick=${() => change_settings_page('performance')}>
+                        ${tl(trans.troubleshooting)}
+                    </a>
+                </li>
+                <li class="navlist-item secondary-nav-item">
+                    <a class="secondary-nav-item-link bleh--nav" data-password=${settings.hu_tao} data-bleh-page="sku" onclick=${() => change_settings_page('sku')}>
+                        ${tl(trans.flags)}
+                    </a>
+                </li>
+                ${ff('update_center') ? html.node`
+                <li class="navlist-item secondary-nav-item">
+                    <a class="secondary-nav-item-link bleh--nav" data-bleh-page="update" onclick=${() => change_settings_page('update')}>
+                        ${tl(trans.updates)}
+                    </a>
+                </li>
+                ` : ''}
+            </ul>
+        </nav>
+    `;
 
 
     render(page.structure.side, html`
@@ -855,7 +862,7 @@ export function render_setting_page(page_id) {
         let bars;
 
         render(page.structure.main, html`
-            <div class="bleh--panel lotus">
+            <div class="bleh--panel">
                 <h4>${html.node([
                     tl(trans.brand_version_number)
                     .replace('{brand}', `<a class="lotus lotus-name" href="https://github.com/katelyynn/lotus" target="_blank">lotus</a>`)
@@ -876,9 +883,9 @@ export function render_setting_page(page_id) {
                 </div>
                 <div class="screen-row actions-only">
                     <div class="actions">
-                        <button class="see-more update-check" onclick="_lotus_check()">${tl(trans.update_check)}</button>
+                        <button class="see-more update-check lotus" onclick="_lotus_check()">${tl(trans.update_check)}</button>
                         <div class="fill"></div>
-                        <button class="see-more expand" onclick="_open_correction_modal()">${tl(trans.view_all)}</button>
+                        <button class="see-more lotus" onclick="_open_correction_modal()">${tl(trans.view_all)}</button>
                     </div>
                 </div>
                 <div class="setting" data-type="toggle" id="container-corrections" onclick="_update_item('corrections')">
@@ -1179,6 +1186,24 @@ export function render_setting_page(page_id) {
                 </div>
             </div>
             `);
+    } else if (page_id == 'update') {
+        render(page.structure.main, html`
+            <section class="bleh--panel">
+                <div class="update-center-header">
+                    <div class="update-center-icon">
+                        <div class="bleh-icon" data-type="update" />
+                        <div class="check-circle colourful">
+                            <div class="bleh-icon" data-type="check" />
+                        </div>
+                    </div>
+                    <div class="update-center-details">
+                        <h2>You're up to date</h2>
+                        <p class="last-checked">Last checked 6 hours ago</p>
+                    </div>
+                    <button class="btn primary icon" data-type="update">Check for updates</button>
+                </div>
+            </section>
+        `);
     }
 }
 
@@ -1822,7 +1847,7 @@ export function display_colour_presets() {
                                 <div class="input-container content-form">
                                     ${colour = input({
                                         type: 'colour',
-                                        value: '#999',
+                                        value: '#999999',
                                         maxlength: 7,
                                         warn_if_empty: true
                                     })}
@@ -1973,7 +1998,8 @@ function display_seasonal_exclusives(instance, colours, exclusives) {
 
     exclusives[stored_season.id].forEach((colour) => {
         colour.sets = {accent_type: colour.type, ...colour.sets};
-        colour.displays = colour.sets;
+
+        if (!colour.displays) colour.displays = colour.sets;
 
         let item = document.createElement('button');
         item.classList.add('dropdown-menu-clickable-item', 'swatch');
@@ -2291,19 +2317,7 @@ unsafeWindow._confirm_import = function() {
 
 // export settings
 function export_settings() {
-    dialog({
-        id: 'export_settings',
-        title: tl(trans.export_settings),
-        body: html.node`
-            <textarea class="modal-text">${JSON.stringify(settings)}</textarea>
-            <div class="modal-footer">
-                <div class="fill"></div>
-                <button class="btn primary done" onclick="_dialog_rm({id: 'export_settings'})">
-                    ${tl(trans.done)}
-                </button>
-            </div>
-        `
-    });
+    share(JSON.stringify(settings));
 }
 unsafeWindow._export_settings = function() {
     export_settings();

@@ -2782,6 +2782,9 @@ export const trans = {
     },
     popular_now: {
         en: 'Popular now'
+    },
+    updates: {
+        en: 'Updates'
     }
 }
 
@@ -5862,7 +5865,7 @@ export function lookup_lang() {
             avatar.setAttribute('crossorigin', 'anonymous');
 
             try {
-                avatar.addEventListener('load', function() {
+                avatar.addEventListener('load', () => {
                     let thief = new ColorThief();
                     let colour = thief.getColor(avatar);
 
@@ -5870,7 +5873,7 @@ export function lookup_lang() {
 
                     auth.sets.hue = hsl.h;
                     auth.sets.sat = clamp_sat((hsl.s / 100) * 3);
-                    auth.sets.lit = 1;
+                    auth.sets.lit = (hsl.l / 100) + 0.35;
                 });
             } catch(e) {}
         }

@@ -95,7 +95,7 @@ export function bleh_tracks() {
                 <div class="info-side">
                     <div class="sub-text">${tl(trans.track)}</div>
                     <div class="title-container">
-                        <h1>${title}</h1>
+                        ${title}
                         ${(position) ? position : ''}
                     </div>
                     <h2>${artist}</h2>

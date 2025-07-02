@@ -371,9 +371,15 @@ function patch_wiki_contents(wiki_block) {
         let sister;
 
         if (!href.startsWith(root)) {
-            tippy(link, {
-                content: link.getAttribute('href')
-            });
+            if (href && link.textContent != href && /^(https?|mailto|ftp|sftp|tel):/.test(href)) {
+                tippy(link, {
+                    theme: 'name-sister-combo',
+                    content: html.node`
+                    <span class="name">${href}</span>
+                    <span class="sister">${tl(trans.external)}</span>
+                `
+                });
+            }
 
             return;
         }

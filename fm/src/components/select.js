@@ -59,28 +59,29 @@ export function select(values, initial = '', name = '') {
     set_select(button, menu, values, initial, select, name);
 
     return container;
-}
 
-function set_select(button, menu, values, selected, select, name) {
-    values.some((value) => {
-        if (value.value == selected) {
-            render(button, html`${value.text}`);
-            return false;
-        }
-    });
+    function set_select(button, menu, values, selected, select, name) {
+        values.some((value) => {
+            if (value.value == selected) {
+                render(button, html`${value.text}`);
+                return false;
+            }
+        });
 
-    select.value = selected;
+        select.value = selected;
+        container.value = select.value;
 
-    if (name != '')
-        document.documentElement.setAttribute(`data-bleh--inbuilt-id_${name}`, selected);
+        if (name != '')
+            document.documentElement.setAttribute(`data-bleh--inbuilt-id_${name}`, selected);
 
-    menu.setContent(html.node`
+        menu.setContent(html.node`
         ${values.map((value) => html.node`
             <button class="btn dropdown-menu-clickable-item select-item" aria-checked=${selected == value.value} onclick=${() => set_select(button, menu, values, value.value, select, name)}>
                 ${value.text}
             </button>
         `)}
     `);
+    }
 }
 
 export function select_prepare(element) {

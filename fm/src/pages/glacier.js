@@ -1299,8 +1299,27 @@ function bleh_glacier_library_focused() {
     page.structure.main.insertBefore(header, page.structure.main.firstElementChild);
 
 
+    let overview_headers = page.structure.main.querySelectorAll('.library-overview-header');
+    overview_headers.forEach((top) => {
+        top.classList = 'top-container';
+
+        let header = top.querySelector('h2');
+
+        let select_btn = top.querySelector('.dropdown-menu-clickable-button');
+
+        select_btn.classList.add('select-button', 'link-select', 'blend-v2-btn');
+        select_btn.classList.remove('dropdown-menu-list-button');
+
+        header.after(html.node`
+            <div class="accompany view-buttons blend blend-v2">
+                ${select_btn}
+            </div>
+        `);
+    });
+
+
     // move random overview header into their section below
-    let overview_header = page.structure.main.querySelector(':scope > .library-overview-header');
+    let overview_header = page.structure.main.querySelector(':scope > .top-container');
     if (!overview_header) return;
 
     overview_header.nextElementSibling.insertBefore(overview_header, overview_header.nextElementSibling.firstElementChild);
