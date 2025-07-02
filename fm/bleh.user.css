@@ -4842,6 +4842,8 @@
         transition-timing-function: var(--trans-function);
 
         animation: var(--motion, grid 0.4s var(--trans-function)) !important;
+        animation-delay: var(--delay, 0s) !important;
+        animation-fill-mode: backwards !important;
 
         --font-weight: var(--custom_font_weight, 480);
         --font-weight-medium: var(--custom_font_weight_medium, 650);
@@ -5228,59 +5230,6 @@
     }
 
 
-    #recent-tracks-section {
-        padding-top: var(--card-padding) !important;
-        padding-bottom: var(--card-padding) !important;
-        margin: calc(-1 * var(--card-padding)) 0 !important;
-
-        &.has-refreshed {
-            animation-name: wash_panel;
-            animation-duration: 2.2s;
-
-            &:after {
-                animation-name: wash;
-                animation-duration: 2.2s;
-                animation-timing-function: cubic-bezier(0.77, 0.22, 0.18, 1);
-            }
-        }
-
-        &:after {
-            content: '';
-            position: absolute;
-            inset: -2px;
-            border-radius: var(--card-radius);
-            opacity: 0;
-
-            background-image: linear-gradient(180deg, rgba(0,0,0,0) 0%, hsl(var(--l3-c)) 50%, rgba(0,0,0,0) 100%);
-            pointer-events: none;
-
-            display: var(--display-under-reduced-motion, flex);
-            clear: unset;
-            z-index: 100;
-
-            transition-property: opacity;
-            transition-duration: var(--trans);
-            transition-timing-function: var(--trans-function);
-        }
-    }
-
-    @keyframes wash_panel {
-        from, to {
-            overflow: hidden;
-        }
-    }
-    @keyframes wash {
-        from {
-            opacity: 0.25;
-            transform: translateY(-100%);
-        }
-        to {
-            opacity: 0;
-            transform: translateY(100%);
-        }
-    }
-
-
 
 
     /*     CHARTLIST     */
@@ -5315,8 +5264,6 @@
         display: flex;
         flex-direction: column;
         gap: 2px;
-
-        animation: var(--motion, chartlist 0.4s var(--trans-function)) !important;
     }
     .obsession-candidate,
     .chartlist-row {
@@ -5336,6 +5283,10 @@
         margin: 0 -12px !important; /* calc(- 12 px - var(--chartlist-inner-gap) / 2) */
         display: flex !important;
         align-items: center;
+
+        animation: var(--motion, chartlist 0.4s var(--trans-function)) !important;
+        animation-delay: var(--delay, 0s) !important;
+        animation-fill-mode: backwards !important;
 
         &[aria-expanded="true"],
         &:hover {
@@ -6509,7 +6460,9 @@
     }
 
     .shout {
-        animation: fade_popup_reduced var(--trans) var(--trans-function);
+        animation: var(--motion, chartlist 0.4s var(--trans-function)) !important;
+        animation-delay: var(--delay, 0s) !important;
+        animation-fill-mode: backwards !important;
 
         .shout-user-avatar-link {
             display: none;
@@ -17607,15 +17560,6 @@
     [data-bleh--colourful_counts="false"] {
         .colourful-example {
             display: none !important;
-        }
-    }
-
-
-    .bleh--name-is-cute {
-        text-shadow: 0 3px 0 color-mix(in hsl, hsl(var(--l3-c)), #000 30%);
-
-        [data-bleh--theme_type="light"] & {
-            text-shadow: 0 3px 0 color-mix(in hsl, hsl(var(--l2-c)), #fff 43%);
         }
     }
 

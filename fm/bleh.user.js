@@ -1220,6 +1220,9 @@
         </div>
     `;
     page.structure.notifications.appendChild(notif);
+    notif.remove = () => {
+      notify_rm(notif);
+    };
     if (persist)
       return notif;
     let ms = long ? 6e3 : 2e3;
@@ -1235,6 +1238,9 @@
         notify_rm(notif);
       }
     }, step);
+    notif.set = (value) => {
+      counter = value;
+    };
     return notif;
   }
   unsafeWindow._notify_rm = function(notif) {
@@ -2186,9 +2192,10 @@
       }
     };
     let grids = search.querySelectorAll(".grid-items-item:not([data-bleh-music-grids])");
-    grids.forEach((grid) => {
+    grids.forEach((grid, index) => {
       let is_loading = grid.querySelector(".grid-items-empty-inner") != null;
       if (is_loading) return;
+      grid.style.setProperty("--delay", index * 0.04 + "s");
       grid.setAttribute("data-bleh-music-grids", "true");
       let is_album;
       if (page.type == "search") {
@@ -2524,7 +2531,7 @@
       log("new!", "tracks", "info", { tracklist });
       let wide = tracklist.classList.contains("chartlist--wide-artist-column");
       let tracks = tracklist.querySelectorAll(":is(.chartlist-row:not(.chartlist__placeholder-row), .chartlist-row--interlist-ad)");
-      tracks.forEach((track) => {
+      tracks.forEach((track, index) => {
         console.log("track", track);
         if (track.getAttribute("data-track-type"))
           return;
@@ -2532,6 +2539,7 @@
           track.parentElement.removeChild(track);
           return;
         }
+        track.style.setProperty("--delay", index * 0.04 + "s");
         let bla = document.createElement("div");
         bla.classList.add("kate-placeholder");
         track.appendChild(bla);
@@ -16623,9 +16631,10 @@
       });
     }
     let shouts = page.structure.main.querySelectorAll(".shout:not([data-kate-processed])");
-    shouts.forEach((shout) => {
+    shouts.forEach((shout, index) => {
       try {
         shout.setAttribute("data-kate-processed", "true");
+        shout.style.setProperty("--delay", index * 0.04 + "s");
         let shout_name = shout.querySelector(".shout-user a");
         if (!shout_name) return;
         let shout_name_text = shout_name.textContent;

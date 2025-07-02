@@ -53,9 +53,11 @@ export function music_grids(search=page.structure.main, use_colour = true) {
     };
 
     let grids = search.querySelectorAll('.grid-items-item:not([data-bleh-music-grids])');
-    grids.forEach((grid) => {
+    grids.forEach((grid, index) => {
         let is_loading = (grid.querySelector('.grid-items-empty-inner') != null);
         if (is_loading) return;
+
+        grid.style.setProperty('--delay', index * 0.04 + 's');
 
         grid.setAttribute('data-bleh-music-grids', 'true');
 

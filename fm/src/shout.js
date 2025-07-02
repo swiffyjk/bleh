@@ -74,9 +74,10 @@ export function patch_shouts() {
 
     let shouts = page.structure.main.querySelectorAll('.shout:not([data-kate-processed])');
 
-    shouts.forEach((shout) => {
+    shouts.forEach((shout, index) => {
         try {
             shout.setAttribute('data-kate-processed', 'true');
+            shout.style.setProperty('--delay', index * 0.04 + 's');
 
             let shout_name = shout.querySelector('.shout-user a');
             if (!shout_name) return;

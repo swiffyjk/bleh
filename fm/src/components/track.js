@@ -73,7 +73,7 @@ export function patch_titles(search=page.structure.main) {
 
         let tracks = tracklist.querySelectorAll(':is(.chartlist-row:not(.chartlist__placeholder-row), .chartlist-row--interlist-ad)');
 
-        tracks.forEach((track) => {
+        tracks.forEach((track, index) => {
             console.log('track', track);
             if (track.getAttribute('data-track-type'))
                 return;
@@ -83,6 +83,8 @@ export function patch_titles(search=page.structure.main) {
                 track.parentElement.removeChild(track);
                 return;
             }
+
+            track.style.setProperty('--delay', index * 0.04 + 's');
 
             let bla = document.createElement('div');
             bla.classList.add('kate-placeholder');
