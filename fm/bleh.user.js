@@ -1152,7 +1152,8 @@
     persist = false,
     type = "generic",
     long = false,
-    colourful = false
+    colourful = false,
+    progress = false
   }) {
     log(`creating ${title}`, "notification", "info", {
       id,
@@ -1163,7 +1164,8 @@
       persist,
       type,
       long,
-      colourful: false
+      colourful,
+      progress
     });
     if (type === "error") {
       icon = "icon-16-x";
@@ -1183,6 +1185,8 @@
       action: () => notify_rm(notif),
       text: tl(trans.close)
     });
+    if (progress && persist) persist = false;
+    let information;
     let notif = html.node`
         <div
             class=${[
@@ -1197,7 +1201,7 @@
       icon ? `--mask: var(--${icon})` : ""
     ].join(";")}
         >
-            <div class="notification-information">
+            <div class="notification-information" ref=${(el) => information = el}>
                  <div class="notification-title">${title}</div>
                 ${body ? html.node`
                 <div class="notification-body">${body}</div>
@@ -1223,7 +1227,18 @@
     notif.remove = () => {
       notify_rm(notif);
     };
-    if (persist)
+    notif.set = (value) => {
+      bar.style.setProperty("width", `${value}%`);
+    };
+    notif.set_body = (body2) => {
+      render(information, html`
+            <div class="notification-title">${title}</div>
+            ${body2 ? html.node`
+            <div class="notification-body">${body2}</div>
+            ` : ""}
+        `);
+    };
+    if (persist || progress)
       return notif;
     let ms = long ? 6e3 : 2e3;
     let counter = 100;
@@ -1238,9 +1253,6 @@
         notify_rm(notif);
       }
     }, step);
-    notif.set = (value) => {
-      counter = value;
-    };
     return notif;
   }
   unsafeWindow._notify_rm = function(notif) {
@@ -11077,6 +11089,30 @@
         body: "haaaiaiii test bodyyy.......",
         persist: true
       })}>Deliver persistent notification</button>
+                <button class="continue" onclick=${() => {
+        let notification = notify({
+          id: "async",
+          title: "progress",
+          body: "downloading...",
+          progress: true
+        });
+        const url = `https://lastfm.freetls.fastly.net/i/u/ar0/6644c67eaa3669676252d3190f9b019f.jpg?a=${Math.random()}`;
+        const xhr = new XMLHttpRequest();
+        xhr.open("GET", url, true);
+        xhr.responseType = "blob";
+        xhr.onprogress = (e) => {
+          let percent = Math.round(e.loaded / e.total * 100);
+          console.info(percent);
+          notification.set_body(`downloading... ${percent}%`);
+          notification.set(percent);
+        };
+        xhr.onload = (e) => {
+          console.info(xhr.response);
+          notification.set_body("download complete");
+          notification.set(100);
+        };
+        xhr.send();
+      }}>Deliver async progress notification</button>
                 <div class="sep"></div>
                 <h4>${tl(trans.development)}</h4>
                 <button class="see-more" onclick=${() => {

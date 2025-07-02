@@ -581,6 +581,35 @@ export function render_setting_page(page_id) {
                 body: 'haaaiaiii test bodyyy.......',
                 persist: true
                 })}>Deliver persistent notification</button>
+                <button class="continue" onclick=${() => {
+                    let notification = notify({
+                        id: 'async',
+                        title: 'progress',
+                        body: 'downloading...',
+                        progress: true
+                    });
+                    
+                    const url = `https://lastfm.freetls.fastly.net/i/u/ar0/6644c67eaa3669676252d3190f9b019f.jpg?a=${Math.random()}`;
+                    const xhr = new XMLHttpRequest();
+                    xhr.open('GET', url, true);
+                    xhr.responseType = 'blob';
+                    
+                    xhr.onprogress = (e) => {
+                        let percent = Math.round((e.loaded / e.total) * 100);
+                        
+                        console.info(percent);
+                        notification.set_body(`downloading... ${percent}%`);
+                        notification.set(percent);
+                    }
+                    
+                    xhr.onload = (e) => {
+                        console.info(xhr.response);
+                        notification.set_body('download complete');
+                        notification.set(100);
+                    }
+                    
+                    xhr.send();
+                }}>Deliver async progress notification</button>
                 <div class="sep"></div>
                 <h4>${tl(trans.development)}</h4>
                 <button class="see-more" onclick=${() => {

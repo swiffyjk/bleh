@@ -16193,8 +16193,8 @@
         height: fit-content;
 
         .swatch {
-            width: 64px !important;
-            height: 50px !important;
+            width: 52px !important;
+            height: 52px !important;
 
             @media (max-width: 600px) {
                 width: 100% !important;
@@ -16203,13 +16203,14 @@
     }
     .palette .swatch {
         --bg: hsl(var(--h3));
-        --bg-hov: hsla(var(--h3), 90%);
-        --bg-atv: hsla(var(--h3), 80%);
+        --bg-hov: color-mix(in hsl, hsl(var(--h3)), hsl(var(--h4)) 20%);
+        --bg-atv: color-mix(in hsl, hsl(var(--h3)), hsl(var(--h4)) 40%);
         --col: hsl(var(--b7));
         --mask-colour: var(--col);
         --shadow: var(--interact-shadow);
         --sat-album: 1;
         --lit-album: 1;
+        --radius: 10px;
         width: unset !important;
         height: unset !important;
 
@@ -17373,8 +17374,8 @@
 
         &[aria-checked="true"] {
             --bg: var(--cards-overlay-image-subtlest, none), hsl(var(--h3)) !important;
-            --bg-hov: var(--cards-overlay-image-subtlest, none), hsla(var(--h3), 80%) !important;
-            --bg-atv: var(--cards-overlay-image-subtlest, none), hsla(var(--h3), 60%) !important;
+            --bg-hov: var(--cards-overlay-image-subtlest, none), color-mix(in hsl, hsl(var(--h4)), hsl(var(--h3)) 80%) !important;
+            --bg-atv: var(--cards-overlay-image-subtlest, none), color-mix(in hsl, hsl(var(--h4)), hsl(var(--h3)) 60%) !important;
             --col: hsl(var(--b7)) !important;
             --shadow: 0 3px 12px hsl(var(--h4), 25%), var(--interactable-outer);
             --shadow-hov: var(--interactable-outer), var(--interactable-active-outer);

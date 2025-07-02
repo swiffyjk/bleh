@@ -6,7 +6,7 @@
 
 import {log} from "../build/log";
 import {page} from "../build/page";
-import {html} from "lighterhtml";
+import {html, render} from "lighterhtml";
 import {tl, trans} from "../build/trans.js";
 
 export function load_notifications() {
@@ -54,7 +54,8 @@ export function notify({
     persist = false,
     type = 'generic',
     long = false,
-    colourful = false
+    colourful = false,
+    progress = false
 }) {
     log(`creating ${title}`, 'notification', 'info', {
         id: id,
@@ -65,7 +66,8 @@ export function notify({
         persist: persist,
         type: type,
         long: long,
-        colourful: false
+        colourful: colourful,
+        progress: progress
     });
 
     if (type === 'error') {
@@ -90,6 +92,10 @@ export function notify({
         text: tl(trans.close)
     });
 
+    if (progress && persist) persist = false;
+
+    let information;
+
     let notif = html.node`
         <div
             class=${[
@@ -104,7 +110,7 @@ export function notify({
                 icon ? `--mask: var(--${icon})` : '',
                 ].join(';')}
         >
-            <div class="notification-information">
+            <div class="notification-information" ref=${el => information = el}>
                  <div class="notification-title">${title}</div>
                 ${(body) ? html.node`
                 <div class="notification-body">${body}</div>
@@ -132,7 +138,20 @@ export function notify({
         notify_rm(notif);
     }
 
-    if (persist)
+    notif.set = (value) => {
+        bar.style.setProperty('width', `${value}%`);
+    }
+
+    notif.set_body = (body) => {
+        render(information, html`
+            <div class="notification-title">${title}</div>
+            ${(body) ? html.node`
+            <div class="notification-body">${body}</div>
+            ` : ''}
+        `);
+    }
+
+    if (persist || progress)
         return notif;
 
     let ms = (long) ? 6000 : 2000;
@@ -151,10 +170,6 @@ export function notify({
             notify_rm(notif);
         }
     }, step);
-
-    notif.set = (value) => {
-        counter = value;
-    }
 
     return notif;
 }
