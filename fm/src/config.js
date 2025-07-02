@@ -17,8 +17,7 @@ import {save_setting} from "./components/settings.js";
 
 // create blank settings
 export function create_settings_template() {
-    localStorage.setItem('bleh', JSON.stringify(settings_template));
-    return settings_template;
+    return {dev: false};
 }
 
 // load settings

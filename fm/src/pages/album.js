@@ -7,7 +7,7 @@
 import {settings} from "../build/config";
 import {log} from "../build/log";
 import {auth, page, root} from "../build/page";
-import {clamp_sat, hex_to_hsl, sanitise} from "../build/tools";
+import {clamp_lit, clamp_sat, hex_to_hsl, sanitise} from "../build/tools";
 import {tl, trans} from "../build/trans";
 import {load_chart_colours} from "../chart";
 import {bleh_about_artist} from "../components/about_artist";
@@ -150,11 +150,15 @@ export function bleh_albums() {
         try {
             let bg = header_inner.getAttribute('style').replace('background: #', '');
             let hsl = hex_to_hsl(bg);
-            document.body.style.setProperty('--hue-album', hsl.h);
-            document.body.style.setProperty('--sat-album', clamp_sat((hsl.s / 100) * 3));
-            document.body.style.setProperty('--lit-album', (hsl.l / 100) + 0.35);
 
-            log(`sourced hsl of (${hsl.h}, ${hsl.s}, ${hsl.l}) - using final value of (${hsl.h}, ${clamp_sat((hsl.s / 100) * 3)}, ${(hsl.l / 100) + 0.35})`, 'hue from album');
+            let sat = clamp_sat((hsl.s / 100) * 3);
+            let lit = clamp_lit(sat, (hsl.l / 100) + 0.35);
+
+            document.body.style.setProperty('--hue-album', hsl.h);
+            document.body.style.setProperty('--sat-album', sat);
+            document.body.style.setProperty('--lit-album', lit);
+
+            log(`sourced hsl of (${hsl.h}, ${hsl.s}, ${hsl.l}) - using final value of (${hsl.h}, ${sat}, ${lit})`, 'hue from album');
 
             load_chart_colours();
         } catch(e) {

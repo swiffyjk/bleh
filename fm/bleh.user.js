@@ -1320,6 +1320,10 @@
       return 1.5.toString();
     return sat.toFixed(2);
   }
+  function clamp_lit(sat, lit) {
+    if (sat >= 1.3 && lit < 0.8)
+      return 0.8;
+  }
   function clean_number(string) {
     return parseInt(
       string.replaceAll(",", "").replaceAll(".", "")
@@ -1386,6 +1390,34 @@
         title: tl(trans.copied_to_clipboard),
         icon: "icon-16-copy"
       });
+    });
+  }
+  function download_with_progress(url, func) {
+    return new Promise((resolve, reject) => {
+      let xhr = new XMLHttpRequest();
+      xhr.open("GET", url, true);
+      xhr.responseType = "blob";
+      xhr.onprogress = (event3) => {
+        if (event3.lengthComputable) {
+          const percent = Math.round(event3.loaded / event3.total * 100);
+          func(percent);
+          log(`downloading ${percent}%`, "download", "info", { url });
+        }
+      };
+      xhr.onload = () => {
+        if (xhr.status === 200) {
+          resolve(xhr.response);
+          log(`downloaded ${url}`, "download");
+        } else {
+          reject(new Error(`download failed: ${xhr.status}`));
+          log(`download failed: ${xhr.status}`, "download", "error", { url });
+        }
+      };
+      xhr.onerror = () => {
+        reject(new Error("network error"));
+        log("network error", "download", "error", { url });
+      };
+      xhr.send();
     });
   }
 
@@ -5639,7 +5671,11 @@
         let link = item.querySelector(".play-this-track-playlink:not(.visible-xs)");
         link.classList.add("music-link");
         let replace = item.querySelector(".replace-playlink");
-        if (link.classList.contains("play-this-track-playlink--itunes"))
+        if (link.classList.contains("play-this-track-playlink--youtube"))
+          link.textContent = "YouTube";
+        else if (link.classList.contains("play-this-track-playlink--spotify"))
+          link.textContent = "Spotify";
+        else if (link.classList.contains("play-this-track-playlink--itunes"))
           link.textContent = "Apple";
         if (replace) {
           replace.classList.add("dropdown-menu-clickable-item");
@@ -10056,8 +10092,7 @@
 
   // src/config.js
   function create_settings_template() {
-    localStorage.setItem("bleh", JSON.stringify(settings_template));
-    return settings_template;
+    return { dev: false };
   }
   function load_settings(skip = false) {
     if (!skip) {
@@ -11096,22 +11131,15 @@
           body: "downloading...",
           progress: true
         });
-        const url = `https://lastfm.freetls.fastly.net/i/u/ar0/6644c67eaa3669676252d3190f9b019f.jpg?a=${Math.random()}`;
-        const xhr = new XMLHttpRequest();
-        xhr.open("GET", url, true);
-        xhr.responseType = "blob";
-        xhr.onprogress = (e) => {
-          let percent = Math.round(e.loaded / e.total * 100);
-          console.info(percent);
+        download_with_progress(`https://lastfm.freetls.fastly.net/i/u/ar0/6644c67eaa3669676252d3190f9b019f.jpg?a=${Math.random()}`, (percent) => {
           notification.set_body(`downloading... ${percent}%`);
           notification.set(percent);
-        };
-        xhr.onload = (e) => {
-          console.info(xhr.response);
+        }).then(async (blob) => {
+          const text2 = await blob.text();
           notification.set_body("download complete");
           notification.set(100);
-        };
-        xhr.send();
+          console.info(text2);
+        });
       }}>Deliver async progress notification</button>
                 <div class="sep"></div>
                 <h4>${tl(trans.development)}</h4>
@@ -14903,10 +14931,12 @@
       try {
         let bg = header_inner.getAttribute("style").replace("background: #", "");
         let hsl = hex_to_hsl(bg);
+        let sat = clamp_sat(hsl.s / 100 * 3);
+        let lit = clamp_lit(sat, hsl.l / 100 + 0.35);
         document.body.style.setProperty("--hue-album", hsl.h);
-        document.body.style.setProperty("--sat-album", clamp_sat(hsl.s / 100 * 3));
-        document.body.style.setProperty("--lit-album", hsl.l / 100 + 0.35);
-        log(`sourced hsl of (${hsl.h}, ${hsl.s}, ${hsl.l}) - using final value of (${hsl.h}, ${clamp_sat(hsl.s / 100 * 3)}, ${hsl.l / 100 + 0.35})`, "hue from album");
+        document.body.style.setProperty("--sat-album", sat);
+        document.body.style.setProperty("--lit-album", lit);
+        log(`sourced hsl of (${hsl.h}, ${hsl.s}, ${hsl.l}) - using final value of (${hsl.h}, ${sat}, ${lit})`, "hue from album");
         load_chart_colours();
       } catch (e) {
         log("no cover present", "hue from album");
@@ -16785,11 +16815,7 @@
     if (url_split[url_length] == "playback" || url_split[url_length - 1] == "labs")
       return;
     document.documentElement.setAttribute("data-bleh--theme", settings.theme);
-    if (settings.dev) {
-      log("dev mode is on, will fetch for version only", "style");
-      check_style_info();
-      return;
-    }
+    if (settings.dev) return;
     if (cached_style == "") {
       log("never cached, fetching", "style");
       fetch_new_style();
@@ -16799,45 +16825,62 @@
     }
   }
   function load_cached_style(cached_style) {
-    let style_cache = document.createElement("style");
-    style_cache.setAttribute("id", "bleh--cached-style");
-    style_cache.textContent = cached_style;
+    let style_cache = html.node`
+        <style id="bleh--cached-style">${cached_style}</style>
+    `;
     document.documentElement.appendChild(style_cache);
-    log("loaded cache", "style");
-    setTimeout(function() {
+    style_cache.onload = () => {
+      log("loaded cache", "style");
       document.body.classList.add("bleh");
-      theme_version.state = getComputedStyle(document.body).getPropertyValue("--version-build").replaceAll("'", "").replaceAll('"', "");
-      log(`theme version reporting as ${theme_version.state}`, "style");
       chart_reflow();
       log("checking timeout", "style");
       check_if_style_cache_is_valid();
-    }, 200);
+    };
+    style_cache.onerror = () => {
+      log("error loading cache", "style", "error");
+      fetch_new_style();
+    };
   }
   function check_if_style_cache_is_valid() {
     let cached_style_timeout = new Date(localStorage.getItem("bleh_cached_style_timeout"));
     let current_time = /* @__PURE__ */ new Date();
     if (cached_style_timeout < current_time) {
-      if (theme_version.state != version.build && theme_version.state != "") {
-        log(`version mismatch! running ${version.build}, downloaded theme ${theme_version.state}`, "update");
-        prompt_for_update();
-        return;
-      }
       log("fetching new, expired timeout", "style");
       fetch_new_style();
     } else {
       log(`timeout valid until ${cached_style_timeout}`, "style");
     }
   }
-  function check_style_info() {
-    let cached_style_timeout = new Date(localStorage.getItem("bleh_cached_style_timeout"));
-    let current_time = /* @__PURE__ */ new Date();
-    if (cached_style_timeout < current_time) {
-      fetch_style_info();
-    }
+  function fetch_new_style(delete_old_style = false, reload_on_finish = false) {
+    let xhr = new XMLHttpRequest();
+    let url = `https://katelyynn.github.io/bleh/fm/bleh.css?${Math.random()}`;
+    log(`making request ${url}`, "style");
+    xhr.open("GET", url, true);
+    xhr.onload = function() {
+      log(`style responded ${xhr.status}`, "style");
+      let style = html.node`
+            <style>${this.response}</style>
+        `;
+      document.documentElement.appendChild(style);
+      style.onload = () => {
+        log("loaded", "style");
+        document.body.classList.add("bleh");
+        chart_reflow();
+      };
+      style.onerror = () => {
+        log("error loading", "style", "error");
+      };
+      if (delete_old_style)
+        document.documentElement.removeChild(document.getElementById("bleh--cached-style"));
+      localStorage.setItem("bleh_cached_style", this.response);
+      let api_expire = /* @__PURE__ */ new Date();
+      api_expire.setHours(api_expire.getHours() + 1);
+      localStorage.setItem("bleh_cached_style_timeout", api_expire);
+      log(`cached until ${api_expire}`, "style");
+      if (reload_on_finish) invoke_reload();
+    };
+    xhr.send();
   }
-  unsafeWindow._prompt_for_update = function() {
-    prompt_for_update();
-  };
   function prompt_for_update() {
     dialog({
       id: "bleh_update",
@@ -16855,8 +16898,6 @@
                     </div>
                 </div>
             </div>
-            <div class="sep" />
-            <p class="subtle">${tl(trans.update_not_looking_right)}</p>
         `,
       dismiss: false,
       type: "update",
@@ -16939,66 +16980,6 @@
     } else {
       invoke_reload();
     }
-  }
-  function fetch_new_style(delete_old_style = false, reload_on_finish = false) {
-    let xhr = new XMLHttpRequest();
-    let url = `https://katelyynn.github.io/bleh/fm/bleh.css?${Math.random()}`;
-    log(`making request ${url}`, "style");
-    xhr.open("GET", url, true);
-    xhr.onload = function() {
-      log(`style responded ${xhr.status}`, "style");
-      let style = document.createElement("style");
-      style.textContent = this.response;
-      document.documentElement.appendChild(style);
-      if (delete_old_style)
-        document.documentElement.removeChild(document.getElementById("bleh--cached-style"));
-      localStorage.setItem("bleh_cached_style", this.response);
-      let api_expire = /* @__PURE__ */ new Date();
-      api_expire.setHours(api_expire.getHours() + 1);
-      localStorage.setItem("bleh_cached_style_timeout", api_expire);
-      log(`cached until ${api_expire}`, "style");
-      if (reload_on_finish) {
-        invoke_reload();
-        return;
-      }
-      setTimeout(function() {
-        document.body.classList.add("bleh");
-        theme_version.state = getComputedStyle(document.body).getPropertyValue("--version-build").replaceAll("'", "").replaceAll('"', "");
-        chart_reflow();
-        if (theme_version.state != version.build && theme_version.state != "") {
-          log(`version mismatch! running ${version.build}, downloaded theme ${theme_version.state}`, "update");
-          prompt_for_update();
-          return;
-        }
-      }, 200);
-    };
-    xhr.send();
-  }
-  function fetch_style_info(delete_old_style = false, reload_on_finish = false) {
-    let xhr = new XMLHttpRequest();
-    let url = "https://katelyynn.github.io/bleh/fm/bleh.css";
-    xhr.open("GET", url, true);
-    xhr.onload = function() {
-      log(`style responded ${xhr.status}`, "style");
-      let style = document.createElement("style");
-      style.textContent = this.response;
-      document.documentElement.appendChild(style);
-      localStorage.setItem("bleh_cached_style", this.response);
-      let api_expire = /* @__PURE__ */ new Date();
-      api_expire.setHours(api_expire.getHours() + 1);
-      localStorage.setItem("bleh_cached_style_timeout", api_expire);
-      log(`cached until ${api_expire}`, "style");
-      setTimeout(function() {
-        theme_version.state = getComputedStyle(document.body).getPropertyValue("--version-build").replaceAll("'", "").replaceAll('"', "");
-        document.documentElement.removeChild(style);
-        if (theme_version.state != version.build && theme_version.state != "") {
-          log(`version mismatch! running ${version.build}, downloaded theme ${theme_version.state}`, "update");
-          prompt_for_update();
-          return;
-        }
-      }, 200);
-    };
-    xhr.send();
   }
   unsafeWindow._force_refresh_theme = function() {
     localStorage.removeItem("bleh_cached_style");

@@ -99,6 +99,11 @@ export function clamp_sat(sat) {
     return sat.toFixed(2);
 }
 
+export function clamp_lit(sat, lit) {
+    if (sat >= 1.3 && lit < 0.8)
+        return 0.8;
+}
+
 /**
  * Removes commas and dots from a string and returns the number
  * @param {string} string
@@ -252,5 +257,37 @@ export function copy(text) {
             title: tl(trans.copied_to_clipboard),
             icon: 'icon-16-copy'
         });
+    });
+}
+
+export function download_with_progress(url, func) {
+    return new Promise((resolve, reject) => {
+        let xhr = new XMLHttpRequest();
+        xhr.open('GET', url, true);
+        xhr.responseType = 'blob';
+
+        xhr.onprogress = (event) => {
+            if (event.lengthComputable) {
+                const percent = Math.round((event.loaded / event.total) * 100);
+                func(percent);
+                log(`downloading ${percent}%`, 'download', 'info', {url: url});
+            }
+        }
+
+        xhr.onload = () => {
+            if (xhr.status === 200) {
+                resolve(xhr.response);
+                log(`downloaded ${url}`, 'download');
+            } else {
+                reject(new Error(`download failed: ${xhr.status}`));
+                log(`download failed: ${xhr.status}`, 'download', 'error', {url: url});
+            }
+        }
+
+        xhr.onerror = () => {
+            reject(new Error('network error'));
+            log('network error', 'download', 'error', {url: url});
+        };
+        xhr.send();
     });
 }

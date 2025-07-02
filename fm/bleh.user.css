@@ -16210,7 +16210,6 @@
         --shadow: var(--interact-shadow);
         --sat-album: 1;
         --lit-album: 1;
-        --radius: 10px;
         width: unset !important;
         height: unset !important;
 
@@ -23446,6 +23445,10 @@
             &:not(.resource-external-link--homepage) {
                 --sat-user: 1;
                 --lit-user: 1;
+            }
+
+            &.play-this-track-playlink--disabled {
+                opacity: 0.65 !important;
             }
 
             &:hover, &:focus-visible {

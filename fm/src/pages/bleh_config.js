@@ -10,7 +10,7 @@ import {album_track_corrections, artist_corrections} from "../build/music";
 import {auth, page, root, theme_preview} from "../build/page";
 import {stored_season} from "../build/seasonal";
 import {sponsor_list} from "../build/sponsor";
-import {clamp_sat, hex_to_hsl} from '../build/tools';
+import {clamp_sat, download_with_progress, hex_to_hsl} from '../build/tools';
 import {lang, lang_info, tl, trans, trans_legacy} from "../build/trans";
 import {load_badges} from '../components/badge';
 import {dialog, dialog_rm} from "../components/dialog";
@@ -589,26 +589,17 @@ export function render_setting_page(page_id) {
                         progress: true
                     });
                     
-                    const url = `https://lastfm.freetls.fastly.net/i/u/ar0/6644c67eaa3669676252d3190f9b019f.jpg?a=${Math.random()}`;
-                    const xhr = new XMLHttpRequest();
-                    xhr.open('GET', url, true);
-                    xhr.responseType = 'blob';
-                    
-                    xhr.onprogress = (e) => {
-                        let percent = Math.round((e.loaded / e.total) * 100);
-                        
-                        console.info(percent);
+                    download_with_progress(`https://lastfm.freetls.fastly.net/i/u/ar0/6644c67eaa3669676252d3190f9b019f.jpg?a=${Math.random()}`, (percent) => {
                         notification.set_body(`downloading... ${percent}%`);
                         notification.set(percent);
-                    }
-                    
-                    xhr.onload = (e) => {
-                        console.info(xhr.response);
+                    }).then(async (blob) => {
+                        const text = await blob.text();
+
                         notification.set_body('download complete');
                         notification.set(100);
-                    }
-                    
-                    xhr.send();
+                        
+                        console.info(text);
+                    });
                 }}>Deliver async progress notification</button>
                 <div class="sep"></div>
                 <h4>${tl(trans.development)}</h4>

@@ -542,7 +542,11 @@ export function show_your_scrobbles() {
             link.classList.add('music-link');
             let replace = item.querySelector('.replace-playlink');
 
-            if (link.classList.contains('play-this-track-playlink--itunes'))
+            if (link.classList.contains('play-this-track-playlink--youtube'))
+                link.textContent = 'YouTube';
+            else if (link.classList.contains('play-this-track-playlink--spotify'))
+                link.textContent = 'Spotify';
+            else if (link.classList.contains('play-this-track-playlink--itunes'))
                 link.textContent = 'Apple';
 
             if (replace) {
