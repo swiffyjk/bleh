@@ -128,6 +128,10 @@ export function notify({
     `;
     page.structure.notifications.appendChild(notif);
 
+    notif.remove = () => {
+        notify_rm(notif);
+    }
+
     if (persist)
         return notif;
 
@@ -147,6 +151,10 @@ export function notify({
             notify_rm(notif);
         }
     }, step);
+
+    notif.set = (value) => {
+        counter = value;
+    }
 
     return notif;
 }
