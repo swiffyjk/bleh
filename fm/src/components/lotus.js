@@ -379,7 +379,8 @@ export function name_includes(original_title, original_artist) {
             .replace(/- /g, '')
             .replace(/,;/g, ';')
             .replace(/tyler;the/gi, 'Tyler, The')
-            .replace(/ of bts/gi, ';BTS');
+            .replace(/ of bts/gi, ';BTS')
+            .replace(/marina;the diamonds/gi, 'Marina and The Diamonds');
         const guests = normalized
             .split(/;+/)
             .map(s => s.trim())

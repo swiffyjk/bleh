@@ -218,8 +218,10 @@ function album_missing_a_tracklist() {
 
         let select_btn = top.querySelector('.dropdown-menu-clickable-button');
 
-        select_btn.classList.add('select-button', 'link-select', 'blend-v2-btn');
-        select_btn.classList.remove('dropdown-menu-clickable-button');
+        if (select_btn) {
+            select_btn.classList.add('select-button', 'link-select', 'blend-v2-btn');
+            select_btn.classList.remove('dropdown-menu-clickable-button');
+        }
 
         header.after(html.node`
             <div class="accompany view-buttons blend blend-v2">

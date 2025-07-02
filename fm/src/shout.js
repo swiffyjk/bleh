@@ -10,7 +10,7 @@ import {log} from "./build/log";
 import {auth, page, root, shout_parse_queue} from "./build/page";
 import {tl, trans, trans_legacy} from "./build/trans";
 import {deliver_notif, notify} from "./components/notify";
-import {html} from "lighterhtml";
+import {html, render} from "lighterhtml";
 import {setting} from "./components/settings.js";
 
 export function patch_shouts() {
@@ -99,10 +99,7 @@ export function patch_shouts() {
 
             if (settings.shout_markdown) {
                 let shout_body = shout.querySelector('.shout-body p');
-
-                shout_parse_queue.push({
-                    element: shout_body
-                });
+                shout_parse_queue.push({element: shout_body});
             }
 
 
@@ -124,6 +121,9 @@ export function patch_shouts() {
             console.error('bleh - a shout failed to patch', e);
         }
     });
+
+    if (settings.shout_markdown && shout_parse_queue.length > 0)
+        parse_shout_queue();
 
     // enter a shout field
     let shout_forms = document.querySelectorAll('.shout-form:not([data-kate-processed])');
@@ -180,24 +180,11 @@ function shout_send(send_button) {
 }
 
 export function parse_shout_queue() {
-    let response = parse_shout(0);
+    if (shout_parse_queue.length === 0) return;
 
-    if (response == 0) return;
+    const shout = shout_parse_queue.shift();
 
-    setTimeout(function() {
-        parse_shout(0);
-    }, 100);
-}
-
-function parse_shout(index) {
-    if (shout_parse_queue.length <= 0)
-        return 0;
-
-    let shout = shout_parse_queue[index];
-
-    console.log(index, shout_parse_queue, shout);
-
-    let converter = new showdown.Converter({
+    const converter = new showdown.Converter({
         emoji: true,
         excludeTrailingPunctuationFromURLs: true,
         headerLevelStart: 5,
@@ -211,22 +198,25 @@ function parse_shout(index) {
         ghCodeBlocks: false,
         smartIndentationFix: true
     });
-    let parsed_body = converter.makeHtml(shout.element.textContent
-    .replace(/([@])([a-zA-Z0-9_]+)/g, `[$1$2](${root}user/$2)`)
-    .replace(/\[artist\]([a-zA-Z0-9]+)\[\/artist\]/g, `[$1](${root}music/$1)`)
-    .replace(/\[album artist=([a-zA-Z0-9]+)\]([a-zA-Z0-9\s]+)\[\/album\]/g, `[$2](${root}music/$1/$2)`)
-    .replace(/\[track artist=([a-zA-Z0-9]+)\]([a-zA-Z0-9\s]+)\[\/track\]/g, `[$2](${root}music/$1/_/$2)`)
-    .replace(/https:\/\/open\.spotify\.com\/user\/([A-Za-z0-9]+)\?si=([A-Za-z0-9]+)/g, '[@$1](https://open.spotify.com/user/$1)')
-    .replace(/&/g, '&amp;')
-    .replace(/</g, '&lt;')
-    .replace(/>/g, '&gt;')
-    .replace(/"/g, '&quot;')
-    .replace(/'/g, '&#039;'));
-    shout.element.innerHTML = parsed_body;
-    log(`parsed index ${index}`, 'shout', 'log');
 
-    shout_parse_queue.splice(index, 1);
-    return 1;
+    const raw = shout.element.textContent
+        .replace(/([@])([a-zA-Z0-9_]+)/g, `[$1$2](${root}user/$2)`)
+        .replace(/\[artist\]([a-zA-Z0-9]+)\[\/artist\]/g, `[$1](${root}music/$1)`)
+        .replace(/\[album artist=([a-zA-Z0-9]+)\]([a-zA-Z0-9\s]+)\[\/album\]/g, `[$2](${root}music/$1/$2)`)
+        .replace(/\[track artist=([a-zA-Z0-9]+)\]([a-zA-Z0-9\s]+)\[\/track\]/g, `[$2](${root}music/$1/_/$2)`)
+        .replace(/https:\/\/open\.spotify\.com\/user\/([A-Za-z0-9]+)\?si=([A-Za-z0-9]+)/g, '[@$1](https://open.spotify.com/user/$1)')
+        .replace(/&/g, '&amp;')
+        .replace(/</g, '&lt;')
+        .replace(/>/g, '&gt;')
+        .replace(/"/g, '&quot;')
+        .replace(/'/g, '&#039;');
+
+    render(shout.element, html.node([converter.makeHtml(raw)]));
+
+    log('parsed one shout', 'shout', 'log');
+
+    if (shout_parse_queue.length > 0)
+        setTimeout(parse_shout_queue, 100);
 }
 
 unsafeWindow._show_hidden_shout = function(shout_id) {

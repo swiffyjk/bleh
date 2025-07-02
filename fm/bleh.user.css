@@ -2731,7 +2731,7 @@
         }
 
         [data-ff--beret="true"] &:not([style], .ignore-katsune, .has-error) {
-            .row {
+            .row:not(.row--equal-height-cols) {
                 margin-top: unset;
                 border-radius: unset;
                 box-shadow: var(--card-shadow);
@@ -5459,6 +5459,10 @@
         }
     }
     .chartlist-album {
+        /* bulk edit fix */
+        width: 40% !important;
+        margin-bottom: unset !important;
+
         /* fix weird hover effect */
         &:before {
             display: none !important;
@@ -7698,10 +7702,10 @@
     .top-container + section + .section {
         margin: unset !important;
     }
-    .row--equal-height-cols:has(.coloured-cta) {
+    .row--equal-height-cols {
         gap: var(--button-list-gap);
 
-        .col-sm-4 {
+        & > .col-sm-4 {
             width: unset;
             padding: unset !important;
         }
@@ -24134,12 +24138,12 @@
         }
     }
     .has-error {
-        .row {
+        & > .row {
             background: hsl(var(--b6)) !important;
         }
 
         .col-main {
-            .error {
+            & > .error {
                 margin-top: 60px !important;
                 margin-bottom: 150px !important;
             }

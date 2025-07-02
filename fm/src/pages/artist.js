@@ -221,15 +221,17 @@ export function bleh_artists() {
             let header = top.querySelector('h3');
 
             let select_btn = top.querySelector('.dropdown-menu-clickable-button');
-
-            select_btn.classList.add('select-button', 'link-select', 'blend-v2-btn');
-            select_btn.classList.remove('dropdown-menu-clickable-button');
+            if (select_btn) {
+                select_btn.classList.add('select-button', 'link-select', 'blend-v2-btn');
+                select_btn.classList.remove('dropdown-menu-clickable-button');
+            }
 
             let play = top.querySelector('.section-playlink');
-
-            play.classList.add('blend-v2-btn', 'radio');
-            play.classList.remove('section-playlink', 'hover-section-control');
-            play.setAttribute('data-type', 'play');
+            if (play) {
+                play.classList.add('blend-v2-btn', 'radio');
+                play.classList.remove('section-playlink', 'hover-section-control');
+                play.setAttribute('data-type', 'play');
+            }
 
             header.after(html.node`
                 <div class="accompany view-buttons blend blend-v2">
@@ -267,14 +269,17 @@ export function bleh_artists() {
 
             let select_btn = top.querySelector('.dropdown-menu-clickable-button');
 
-            select_btn.classList.add('select-button', 'link-select', 'blend-v2-btn');
-            select_btn.classList.remove('dropdown-menu-clickable-button');
+            if (select_btn) {
+                select_btn.classList.add('select-button', 'link-select', 'blend-v2-btn');
+                select_btn.classList.remove('dropdown-menu-clickable-button');
 
-            header.after(html.node`
-                <div class="accompany view-buttons blend blend-v2">
-                    ${select_btn}
-                </div>
-            `);
+                // TODO: if we ever add settings for this album view, move out of here
+                header.after(html.node`
+                    <div class="accompany view-buttons blend blend-v2">
+                        ${select_btn}
+                    </div>
+                `);
+            }
         }
 
 
@@ -376,8 +381,10 @@ function bleh_artist_tracks() {
 
         let select_btn = top.querySelector('.dropdown-menu-clickable-button');
 
-        select_btn.classList.add('select-button', 'link-select', 'blend-v2-btn');
-        select_btn.classList.remove('dropdown-menu-clickable-button');
+        if (select_btn) {
+            select_btn.classList.add('select-button', 'link-select', 'blend-v2-btn');
+            select_btn.classList.remove('dropdown-menu-clickable-button');
+        }
 
         header.after(html.node`
                 <div class="accompany view-buttons blend blend-v2">
@@ -416,8 +423,10 @@ function bleh_artist_albums() {
 
         let select_btn = top.querySelector('.dropdown-menu-clickable-button');
 
-        select_btn.classList.add('select-button', 'link-select', 'blend-v2-btn');
-        select_btn.classList.remove('dropdown-menu-clickable-button');
+        if (select_btn) {
+            select_btn.classList.add('select-button', 'link-select', 'blend-v2-btn');
+            select_btn.classList.remove('dropdown-menu-clickable-button');
+        }
 
         header.after(html.node`
             <div class="accompany view-buttons blend blend-v2">

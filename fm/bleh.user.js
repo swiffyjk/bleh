@@ -13671,7 +13671,7 @@
     let song_guests = [];
     extras.forEach((extra) => {
       if (extra.group !== "guests") return;
-      const normalized = extra.text.replace(/feat\.?|ft\.?|featuring|with|w\//gi, "").replace(/ & /g, ";").replace(/, /g, ";").replace(/ and /gi, ";").replace(/- /g, "").replace(/,;/g, ";").replace(/tyler;the/gi, "Tyler, The").replace(/ of bts/gi, ";BTS");
+      const normalized = extra.text.replace(/feat\.?|ft\.?|featuring|with|w\//gi, "").replace(/ & /g, ";").replace(/, /g, ";").replace(/ and /gi, ";").replace(/- /g, "").replace(/,;/g, ";").replace(/tyler;the/gi, "Tyler, The").replace(/ of bts/gi, ";BTS").replace(/marina;the diamonds/gi, "Marina and The Diamonds");
       const guests = normalized.split(/;+/).map((s) => s.trim()).filter(Boolean).map(correct_artist);
       song_guests.push(...guests);
     });
@@ -15300,8 +15300,10 @@
       top.classList = "top-container";
       let header = top.querySelector("h3");
       let select_btn = top.querySelector(".dropdown-menu-clickable-button");
-      select_btn.classList.add("select-button", "link-select", "blend-v2-btn");
-      select_btn.classList.remove("dropdown-menu-clickable-button");
+      if (select_btn) {
+        select_btn.classList.add("select-button", "link-select", "blend-v2-btn");
+        select_btn.classList.remove("dropdown-menu-clickable-button");
+      }
       header.after(html.node`
             <div class="accompany view-buttons blend blend-v2">
                 ${select_btn}
@@ -15549,12 +15551,16 @@
         top.classList = "top-container";
         let header = top.querySelector("h3");
         let select_btn = top.querySelector(".dropdown-menu-clickable-button");
-        select_btn.classList.add("select-button", "link-select", "blend-v2-btn");
-        select_btn.classList.remove("dropdown-menu-clickable-button");
+        if (select_btn) {
+          select_btn.classList.add("select-button", "link-select", "blend-v2-btn");
+          select_btn.classList.remove("dropdown-menu-clickable-button");
+        }
         let play = top.querySelector(".section-playlink");
-        play.classList.add("blend-v2-btn", "radio");
-        play.classList.remove("section-playlink", "hover-section-control");
-        play.setAttribute("data-type", "play");
+        if (play) {
+          play.classList.add("blend-v2-btn", "radio");
+          play.classList.remove("section-playlink", "hover-section-control");
+          play.setAttribute("data-type", "play");
+        }
         header.after(html.node`
                 <div class="accompany view-buttons blend blend-v2">
                     ${select_btn}
@@ -15586,13 +15592,15 @@
         top.classList = "top-container";
         let header = top.querySelector("h3");
         let select_btn = top.querySelector(".dropdown-menu-clickable-button");
-        select_btn.classList.add("select-button", "link-select", "blend-v2-btn");
-        select_btn.classList.remove("dropdown-menu-clickable-button");
-        header.after(html.node`
-                <div class="accompany view-buttons blend blend-v2">
-                    ${select_btn}
-                </div>
-            `);
+        if (select_btn) {
+          select_btn.classList.add("select-button", "link-select", "blend-v2-btn");
+          select_btn.classList.remove("dropdown-menu-clickable-button");
+          header.after(html.node`
+                    <div class="accompany view-buttons blend blend-v2">
+                        ${select_btn}
+                    </div>
+                `);
+        }
       }
       if (katsune && featured_items) {
         let featured_panel = html.node`
@@ -15673,8 +15681,10 @@
       let header = top.querySelector("h2");
       header.classList.remove("subpage-title");
       let select_btn = top.querySelector(".dropdown-menu-clickable-button");
-      select_btn.classList.add("select-button", "link-select", "blend-v2-btn");
-      select_btn.classList.remove("dropdown-menu-clickable-button");
+      if (select_btn) {
+        select_btn.classList.add("select-button", "link-select", "blend-v2-btn");
+        select_btn.classList.remove("dropdown-menu-clickable-button");
+      }
       header.after(html.node`
                 <div class="accompany view-buttons blend blend-v2">
                     ${select_btn}
@@ -15707,8 +15717,10 @@
       top.classList = "top-container";
       let header = top.querySelector("h3");
       let select_btn = top.querySelector(".dropdown-menu-clickable-button");
-      select_btn.classList.add("select-button", "link-select", "blend-v2-btn");
-      select_btn.classList.remove("dropdown-menu-clickable-button");
+      if (select_btn) {
+        select_btn.classList.add("select-button", "link-select", "blend-v2-btn");
+        select_btn.classList.remove("dropdown-menu-clickable-button");
+      }
       header.after(html.node`
             <div class="accompany view-buttons blend blend-v2">
                 ${select_btn}
@@ -17028,9 +17040,7 @@
         }
         if (settings.shout_markdown) {
           let shout_body = shout.querySelector(".shout-body p");
-          shout_parse_queue.push({
-            element: shout_body
-          });
+          shout_parse_queue.push({ element: shout_body });
         }
         let shout_timestamp = shout.querySelector(".shout-timestamp time");
         if (shout_timestamp) {
@@ -17046,6 +17056,8 @@
         console.error("bleh - a shout failed to patch", e);
       }
     });
+    if (settings.shout_markdown && shout_parse_queue.length > 0)
+      parse_shout_queue();
     let shout_forms = document.querySelectorAll(".shout-form:not([data-kate-processed])");
     shout_forms.forEach((shout_form) => {
       shout_form.setAttribute("data-kate-processed", "true");
@@ -17081,18 +17093,9 @@
     });
   }
   function parse_shout_queue() {
-    let response = parse_shout(0);
-    if (response == 0) return;
-    setTimeout(function() {
-      parse_shout(0);
-    }, 100);
-  }
-  function parse_shout(index) {
-    if (shout_parse_queue.length <= 0)
-      return 0;
-    let shout = shout_parse_queue[index];
-    console.log(index, shout_parse_queue, shout);
-    let converter = new showdown.Converter({
+    if (shout_parse_queue.length === 0) return;
+    const shout = shout_parse_queue.shift();
+    const converter = new showdown.Converter({
       emoji: true,
       excludeTrailingPunctuationFromURLs: true,
       headerLevelStart: 5,
@@ -17106,11 +17109,11 @@
       ghCodeBlocks: false,
       smartIndentationFix: true
     });
-    let parsed_body = converter.makeHtml(shout.element.textContent.replace(/([@])([a-zA-Z0-9_]+)/g, `[$1$2](${root}user/$2)`).replace(/\[artist\]([a-zA-Z0-9]+)\[\/artist\]/g, `[$1](${root}music/$1)`).replace(/\[album artist=([a-zA-Z0-9]+)\]([a-zA-Z0-9\s]+)\[\/album\]/g, `[$2](${root}music/$1/$2)`).replace(/\[track artist=([a-zA-Z0-9]+)\]([a-zA-Z0-9\s]+)\[\/track\]/g, `[$2](${root}music/$1/_/$2)`).replace(/https:\/\/open\.spotify\.com\/user\/([A-Za-z0-9]+)\?si=([A-Za-z0-9]+)/g, "[@$1](https://open.spotify.com/user/$1)").replace(/&/g, "&amp;").replace(/</g, "&lt;").replace(/>/g, "&gt;").replace(/"/g, "&quot;").replace(/'/g, "&#039;"));
-    shout.element.innerHTML = parsed_body;
-    log(`parsed index ${index}`, "shout", "log");
-    shout_parse_queue.splice(index, 1);
-    return 1;
+    const raw = shout.element.textContent.replace(/([@])([a-zA-Z0-9_]+)/g, `[$1$2](${root}user/$2)`).replace(/\[artist\]([a-zA-Z0-9]+)\[\/artist\]/g, `[$1](${root}music/$1)`).replace(/\[album artist=([a-zA-Z0-9]+)\]([a-zA-Z0-9\s]+)\[\/album\]/g, `[$2](${root}music/$1/$2)`).replace(/\[track artist=([a-zA-Z0-9]+)\]([a-zA-Z0-9\s]+)\[\/track\]/g, `[$2](${root}music/$1/_/$2)`).replace(/https:\/\/open\.spotify\.com\/user\/([A-Za-z0-9]+)\?si=([A-Za-z0-9]+)/g, "[@$1](https://open.spotify.com/user/$1)").replace(/&/g, "&amp;").replace(/</g, "&lt;").replace(/>/g, "&gt;").replace(/"/g, "&quot;").replace(/'/g, "&#039;");
+    render(shout.element, html.node([converter.makeHtml(raw)]));
+    log("parsed one shout", "shout", "log");
+    if (shout_parse_queue.length > 0)
+      setTimeout(parse_shout_queue, 100);
   }
   unsafeWindow._show_hidden_shout = function(shout_id) {
     document.getElementById(`bleh--shout-${shout_id}`).setAttribute("data-bleh--shout-expanded", "true");
