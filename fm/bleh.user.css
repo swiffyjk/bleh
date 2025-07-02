@@ -11495,11 +11495,9 @@
 
                     display: flex;
                     gap: 6px;
+                    width: fit-content;
 
-                    margin: 0 -6px;
-                    padding: 0 6px;
-                    border-radius: var(--item-big-radius);
-                    transition-property: background-color;
+                    transition-property: color;
                     transition-duration: var(--trans);
                     transition-timing-function: var(--trans-function);
 
