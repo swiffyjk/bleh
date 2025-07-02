@@ -17087,7 +17087,7 @@
     button.textContent = tl(trans.send);
     if (page.mobile) return;
     tippy(button, {
-      content: tl(trans.send_quickly_with).replace("{kbd}", "<kbd>ctrl+\u21B5</kbd>"),
+      content: tl(trans.send_quickly_with).replace("{kbd}", '<span class="keybind"><kbd>\u2318</kbd><kbd>\u21B5</kbd></span>'),
       delay: [500, 0],
       allowHTML: true
     });
@@ -17113,7 +17113,7 @@
     render(shout.element, html.node([converter.makeHtml(raw)]));
     log("parsed one shout", "shout", "log");
     if (shout_parse_queue.length > 0)
-      setTimeout(parse_shout_queue, 100);
+      setTimeout(parse_shout_queue, 50);
   }
   unsafeWindow._show_hidden_shout = function(shout_id) {
     document.getElementById(`bleh--shout-${shout_id}`).setAttribute("data-bleh--shout-expanded", "true");

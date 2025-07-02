@@ -24859,18 +24859,6 @@
                 flex: 1;
             }
 
-            .keybind {
-                display: flex;
-                gap: 4px;
-
-                kbd {
-                    margin: unset !important;
-                    font-family: var(--font) !important;
-                    background: unset;
-                    padding: unset;
-                }
-            }
-
             transition: none !important;
 
             --bg-hov: var(--bg) !important;
@@ -25068,5 +25056,18 @@
 
         display: flex;
         gap: var(--icon-gap);
+    }
+
+
+    .keybind {
+        display: inline-flex;
+        gap: 4px;
+
+        & > kbd {
+            margin: unset !important;
+            font-family: var(--font) !important;
+            background: unset;
+            padding: unset;
+        }
     }
 }

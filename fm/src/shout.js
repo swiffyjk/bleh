@@ -167,13 +167,12 @@ function shout_send(send_button) {
     if (!button) return;
 
     button.classList.add('btn-send-shout-generic');
-    //button.innerHTML = 'Send with Copilot<span class="new-badge">PREMIUM</span>';
     button.textContent = tl(trans.send);
 
     if (page.mobile) return;
 
     tippy(button, {
-        content: tl(trans.send_quickly_with).replace('{kbd}', '<kbd>ctrl+↵</kbd>'),
+        content: tl(trans.send_quickly_with).replace('{kbd}', '<span class="keybind"><kbd>⌘</kbd><kbd>↵</kbd></span>'),
         delay: [500, 0],
         allowHTML: true
     });
@@ -216,7 +215,7 @@ export function parse_shout_queue() {
     log('parsed one shout', 'shout', 'log');
 
     if (shout_parse_queue.length > 0)
-        setTimeout(parse_shout_queue, 100);
+        setTimeout(parse_shout_queue, 50);
 }
 
 unsafeWindow._show_hidden_shout = function(shout_id) {
