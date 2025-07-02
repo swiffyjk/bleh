@@ -226,7 +226,7 @@
             "date": "2025-06-25"
         },
         "update_center": {
-            "default": false,
+            "default": true,
             "name": "Update center",
             "date": "2025-07-02"
         }

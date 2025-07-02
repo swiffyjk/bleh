@@ -8,7 +8,7 @@ import {render_activity_list} from "../activity"
 import {settings} from "../build/config";
 import {log} from "../build/log";
 import {auth, page, root} from "../build/page";
-import {tl, trans, trans_legacy} from "../build/trans";
+import {tl, trans} from "../build/trans";
 import {checkup_nav, checkup_page_structure} from "../components/structure";
 import {register_background, update_page} from "../page";
 import {bleh_charts} from "./chart";
@@ -133,19 +133,11 @@ export function bleh_home() {
     tippy(menu_button, {
         theme: "menu",
         content: html.node`
-            <button class="dropdown-menu-clickable-item update" onclick="_force_refresh_theme()">
-                ${trans_legacy.en.settings.home.update.update_now}
-            </button>
-            ${(settings.dev ? html.node`
-            <a class="dropdown-menu-clickable-item update" href="https://github.com/katelyynn/bleh/raw/uwu/fm/bleh.user.css">
-                ${trans_legacy.en.settings.home.update.css}
-            </a>
-            ` : '')}
             <button class="dropdown-menu-clickable-item sponsor" onclick="_sponsor()">
                 ${tl(trans.sponsor)}
             </button>
             <a class="dropdown-menu-clickable-item issues" href="https://github.com/katelyynn/bleh/issues" target="_blank">
-                ${trans_legacy.en.settings.home.issues.name}
+                ${tl(trans.report_issue)}
             </a>
         `,
         placement: "bottom",

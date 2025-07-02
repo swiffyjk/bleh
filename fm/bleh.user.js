@@ -10645,7 +10645,7 @@
       log(`timeout valid until ${cached_style_timeout}`, "style");
     }
   }
-  function fetch_new_style(delete_old_style = false, reload_on_finish = false) {
+  function fetch_new_style(delete_old_style = false, reload_on_finish = false, allow_incompatible = false) {
     let xhr = new XMLHttpRequest();
     let url = `https://katelyynn.github.io/bleh/fm/bleh.css?${Math.random()}`;
     log(`making request ${url}`, "style");
@@ -10657,21 +10657,27 @@
         `;
       document.documentElement.appendChild(style);
       style.onload = () => {
+        let theme_version2 = getComputedStyle(document.body).getPropertyValue("--version-build").replaceAll("'", "").replaceAll('"', "");
+        if (!allow_incompatible && theme_version2 != version.build) {
+          log("denied loading, incompatible version", "style", "info", { theme: theme_version2, script: version.build });
+          document.documentElement.removeChild(style);
+          return;
+        }
+        if (delete_old_style)
+          document.documentElement.removeChild(document.getElementById("bleh--cached-style"));
         log("loaded", "style");
         document.body.classList.add("bleh");
         chart_reflow();
+        if (reload_on_finish) invoke_reload();
       };
       style.onerror = () => {
         log("error loading", "style", "error");
       };
-      if (delete_old_style)
-        document.documentElement.removeChild(document.getElementById("bleh--cached-style"));
       localStorage.setItem("bleh_cached_style", this.response);
       let api_expire = /* @__PURE__ */ new Date();
       api_expire.setHours(api_expire.getHours() + 1);
       localStorage.setItem("bleh_cached_style_timeout", api_expire);
       log(`cached until ${api_expire}`, "style");
-      if (reload_on_finish) invoke_reload();
     };
     xhr.send();
   }
@@ -10693,10 +10699,14 @@
   }
   function update_check(force = false, btn = null, func = null) {
     if (!force) {
-      const last_checked = localStorage.getItem("bleh_update_checked") || null;
+      const last_checked = localStorage.getItem("bleh_update_last_checked") || null;
+      const next_check = localStorage.getItem("bleh_update_next_check") || null;
       const current_time = /* @__PURE__ */ new Date();
-      if (last_checked && new Date(last_checked) > current_time)
+      if (last_checked && next_check && new Date(next_check) > current_time) {
+        log("update check skipped", "update", "info", { next_in: next_check, current_time });
+        if (func) func();
         return;
+      }
     }
     if (btn) btn.setAttribute("disabled", "");
     let url = `https://katelyynn.github.io/bleh/fm/src/build/build.json?${Date.now()}`;
@@ -10706,12 +10716,18 @@
       if (btn) btn.removeAttribute("disabled");
       try {
         let data2 = JSON.parse(text2);
-        console.info(data2);
-        data2.build = "2025.0702";
+        console.log(data2);
         let update_required = update_comparison(version.build, data2.build);
         localStorage.setItem("bleh_update_required", update_required.toString());
         localStorage.setItem("bleh_update_to", data2.build);
         localStorage.setItem("bleh_update_checked", (/* @__PURE__ */ new Date()).toString());
+        let next = /* @__PURE__ */ new Date();
+        if (settings.get_updates_fast)
+          next.setHours(next.getHours() + 2);
+        else
+          next.setDate(next.getDate() + 1);
+        localStorage.setItem("bleh_update_next_check", next.toString());
+        log("update check finished", "update", "info", { next_in: next, current_time: /* @__PURE__ */ new Date() });
         if (func) func();
       } catch (e) {
         log("error parsing", "update", "error", { error: e });
@@ -10721,7 +10737,7 @@
   function prompt_for_update() {
     dialog({
       id: "bleh_update",
-      title: tl(trans.update_to_version).replace("{v}", theme_version.state),
+      title: tl(trans.update_to_version).replace("{v}", localStorage.getItem("bleh_update_to") || "unknown"),
       body: html.node`
             <div class="forms">
                 <div class="form">
@@ -10745,46 +10761,12 @@
     dialog_rm2({
       id: "bleh_update"
     });
-    let api_expire = /* @__PURE__ */ new Date();
-    api_expire.setHours(api_expire.getHours() + 1);
-    localStorage.setItem("bleh_cached_style_timeout", api_expire);
-    log(`cached until ${api_expire}`, "style");
   }
   function start_update() {
     open(`https://github.com/katelyynn/bleh/raw/uwu/fm/bleh.user.js`);
-    if (!settings.dev) {
-      final_update();
-    } else {
-      dialog({
-        id: "bleh_update",
-        title: tl(trans.update_to_version).replace("{v}", theme_version.state),
-        body: html.node`
-                <div class="forms">
-                    <div class="form">
-                        <div class="form-group proceed">
-                            <button class="btn primary icon" data-type="update" onclick=${() => start_css_update()}>${tl(trans.update_styles)}</button>
-                        </div>
-                    </div>
-                </div>
-                <div class="sep" />
-                <p class="subtle">${tl(trans.you_have_theme_loading_disabled)}</p>
-            `,
-        dismiss: false,
-        type: "update",
-        replace_if_possible: true
-      });
-    }
-  }
-  function start_css_update() {
-    if (settings.branch == "")
-      save_setting("branch", "uwu");
-    open(`https://github.com/katelyynn/bleh/raw/${settings.branch}/fm/bleh.user.css`);
-    final_update();
-  }
-  function final_update() {
     dialog({
       id: "bleh_update",
-      title: tl(trans.update_to_version).replace("{v}", theme_version.state),
+      title: tl(trans.update_to_version).replace("{v}", localStorage.getItem("bleh_update_to") || "unknown"),
       body: html.node`
             <div class="forms">
                 <div class="form">
@@ -10800,23 +10782,19 @@
     });
   }
   function finish_update() {
-    if (!settings.dev) {
-      dialog({
-        id: "bleh_wait",
-        title: tl(trans.update_to_version).replace("{v}", theme_version.state),
-        body: html.node`
-                <div class="loading-data-container">
-                    <div class="loading-data-text">${tl(trans.downloading_styles)}</div>
-                </div>
-            `,
-        type: "wait",
-        dismiss: false,
-        replace_if_possible: true
-      });
-      fetch_new_style(false, true);
-    } else {
-      invoke_reload();
-    }
+    dialog({
+      id: "bleh_wait",
+      title: tl(trans.update_to_version).replace("{v}", localStorage.getItem("bleh_update_to") || "unknown"),
+      body: html.node`
+            <div class="loading-data-container">
+                <div class="loading-data-text">${tl(trans.downloading_styles)}</div>
+            </div>
+        `,
+      type: "wait",
+      dismiss: false,
+      replace_if_possible: true
+    });
+    fetch_new_style(false, true, true);
   }
   unsafeWindow._force_refresh_theme = function() {
     localStorage.removeItem("bleh_cached_style");
@@ -11975,7 +11953,9 @@
                 <div class="update-center-header">
                     ${paused === "true" ? html.node`
                     <div class="update-center-icon">
-                        <div class="bleh-icon" data-type="update" />
+                        <div class="update-container">
+                            <div class="bleh-icon" data-type="update" />
+                        </div>
                         <div class="check-circle paused colourful">
                             <div class="bleh-icon" data-type="paused" />
                         </div>
@@ -11987,7 +11967,9 @@
                     <button class="btn primary icon" data-type="update" ref=${(el) => update_btn = el} disabled>${tl(trans.check_for_updates)}</button>
                     ` : update_required === "false" ? html.node`
                     <div class="update-center-icon">
-                        <div class="bleh-icon" data-type="update" />
+                        <div class="update-container">
+                            <div class="bleh-icon" data-type="update" />
+                        </div>
                         ${last_checked ? html.node`
                         <div class="check-circle colourful">
                             <div class="bleh-icon" data-type="check" />
@@ -12004,11 +11986,19 @@
                         `}
                     </div>
                     <button class="btn primary icon" data-type="update" ref=${(el) => update_btn = el} onclick=${() => update_check(true, update_btn, () => {
+        notify({
+          id: "update",
+          title: tl(trans.updates),
+          body: tl(trans.checked_for_updates),
+          icon: "icon-16-update"
+        });
         render_setting_page("update");
       })}>${tl(trans.check_for_updates)}</button>
                     ` : html.node`
                     <div class="update-center-icon">
-                        <div class="bleh-icon" data-type="update" />
+                        <div class="update-container">
+                            <div class="bleh-icon" data-type="update" />
+                        </div>
                     </div>
                     <div class="update-center-details">
                         <h2>${tl(trans.update_available_to_install)}</h2>
@@ -14154,20 +14144,44 @@
   };
 
   // src/navigation.js
-  function patch_masthead(element) {
-    let masthead_logo = element.querySelector(".masthead-logo");
+  function patch_masthead() {
+    let masthead_logo = document.body.querySelector(".masthead-logo");
     if (!masthead_logo) return;
     if (!masthead_logo.hasAttribute("data-kate-processed")) {
       masthead_logo.setAttribute("data-kate-processed", "true");
-      masthead_logo.appendChild(html.node`
-            <a class="home-link" href="${root}music">
-                <div class="bleh-logo">${version.brand}</div>
-            </a>`);
+      update_masthead(masthead_logo);
+    }
+  }
+  function update_masthead(masthead_logo = document.body.querySelector(".masthead-logo")) {
+    const update_required = localStorage.getItem("bleh_update_required") || "false";
+    render(masthead_logo, html``);
+    render(masthead_logo, html`
+        <a href="/">Last.fm</a>
+        <a class="home-link" href="${root}music">
+            <div class="bleh-logo">${version.brand}</div>
+        </a>
+    `);
+    if (update_required === "false") {
       masthead_logo.appendChild(html.node`
             <a class="bleh--version" href="${root}bleh">
-                ${version.build}.${version.sku}${settings.branch != "uwu" ? `.${settings.branch}` : ""}${settings.dev ? html.node`<div class="new-badge subtle">✦</div>` : ""}
+                ${version.build}.${version.sku}
+                ${settings.dev ? html.node`<div class="new-badge subtle">✦</div>` : ""}
             </a>
         `);
+    } else {
+      let link = html.node`
+            <a class="bleh--version" onclick=${() => prompt_for_update()}>
+                <div class="update-container">
+                    <div class="bleh-icon" style="--icon: var(--icon-16-update)" />
+                </div>
+                ${version.build}.${version.sku}
+                ${settings.dev ? html.node`<div class="new-badge subtle">✦</div>` : ""}
+            </a>
+        `;
+      tippy(link, {
+        content: tl(trans.update_available_to_install)
+      });
+      masthead_logo.appendChild(link);
     }
   }
   function append_nav() {
@@ -14208,24 +14222,19 @@
     if (!auth_link2) return;
     if (auth_link2.hasAttribute("data-bleh")) return;
     auth_link2.setAttribute("data-bleh", "true");
-    let text2 = document.createElement("p");
-    text2.textContent = auth.name;
-    auth_link2.appendChild(text2);
-    if (masthead.querySelector(".masthead-pro-wrap"))
-      auth.pro = true;
-    else
-      auth.pro = false;
+    auth_link2.appendChild(html.node`
+        <p>${auth.name}</p>
+    `);
+    auth.pro = !!masthead.querySelector(".masthead-pro-wrap");
     let badges = load_badges(auth.name, true);
     if (badges) {
-      let badge = document.createElement("span");
-      badge.classList.add("label", `user-status--bleh-${badges[0].type}`, `user-status--bleh-user-${auth.name}`, "auth-badge");
-      badge.textContent = badges[0].name;
-      auth_link2.appendChild(badge);
+      auth_link2.appendChild(html.node`
+            <span class="label user-status--bleh-${badges[0].type} user-status--bleh-user-${auth.name} auth-badge">${badges[0].name}</span>
+        `);
     } else if (auth.pro) {
-      let pro_badge = document.createElement("p");
-      pro_badge.classList.add("label", "user-status-subscriber", "auth-badge");
-      pro_badge.textContent = "Pro";
-      auth_link2.appendChild(pro_badge);
+      auth_link2.appendChild(html.node`
+            <span class="label user-status-subscriber auth-badge">${tl(trans.badges["user-status-subscriber"].name)}</span>
+        `);
     }
     let notif_count = new_auth.querySelector('[data-analytics-label="notifications"] + .auth-avatar-notification-count-badge');
     if (!notif_count) notif_count = "0";
@@ -14234,7 +14243,7 @@
     if (!inbox_count) inbox_count = "0";
     else inbox_count = inbox_count.textContent;
     let links = masthead.querySelector(".masthead-nav .navlist-items");
-    links.innerHTML = "";
+    render(links, html``);
     let notif_container = html.node`
     <li class="masthead-nav-item">
         <a class="masthead-nav-control" href="${root}inbox/notifications" data-label="notifications" data-count=${notif_count}>
@@ -16359,19 +16368,11 @@
     tippy(menu_button, {
       theme: "menu",
       content: html.node`
-            <button class="dropdown-menu-clickable-item update" onclick="_force_refresh_theme()">
-                ${trans_legacy.en.settings.home.update.update_now}
-            </button>
-            ${settings.dev ? html.node`
-            <a class="dropdown-menu-clickable-item update" href="https://github.com/katelyynn/bleh/raw/uwu/fm/bleh.user.css">
-                ${trans_legacy.en.settings.home.update.css}
-            </a>
-            ` : ""}
             <button class="dropdown-menu-clickable-item sponsor" onclick="_sponsor()">
                 ${tl(trans.sponsor)}
             </button>
             <a class="dropdown-menu-clickable-item issues" href="https://github.com/katelyynn/bleh/issues" target="_blank">
-                ${trans_legacy.en.settings.home.issues.name}
+                ${tl(trans.report_issue)}
             </a>
         `,
       placement: "bottom",
@@ -18369,7 +18370,8 @@
     try {
       lookup_lang();
       theme_version.state = getComputedStyle(document.body).getPropertyValue("--version-build").replaceAll("'", "").replaceAll('"', "");
-      patch_masthead(document.body);
+      update_check(false, null, update_masthead);
+      patch_masthead();
       load_notifications();
       set_season();
       start_rain();
@@ -21653,6 +21655,9 @@
     },
     you_are_installing_version: {
       en: "You are installing version {v}"
+    },
+    checked_for_updates: {
+      en: "Checked for updates"
     }
   };
   var trans_legacy = {
@@ -25915,7 +25920,7 @@
         date: "2025-06-25"
       },
       update_center: {
-        default: false,
+        default: true,
         name: "Update center",
         date: "2025-07-02"
       }

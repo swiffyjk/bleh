@@ -1227,7 +1227,9 @@ export function render_setting_page(page_id) {
                 <div class="update-center-header">
                     ${paused === 'true' ? html.node`
                     <div class="update-center-icon">
-                        <div class="bleh-icon" data-type="update" />
+                        <div class="update-container">
+                            <div class="bleh-icon" data-type="update" />
+                        </div>
                         <div class="check-circle paused colourful">
                             <div class="bleh-icon" data-type="paused" />
                         </div>
@@ -1239,7 +1241,9 @@ export function render_setting_page(page_id) {
                     <button class="btn primary icon" data-type="update" ref=${el => update_btn = el} disabled>${tl(trans.check_for_updates)}</button>
                     ` : update_required === 'false' ? html.node`
                     <div class="update-center-icon">
-                        <div class="bleh-icon" data-type="update" />
+                        <div class="update-container">
+                            <div class="bleh-icon" data-type="update" />
+                        </div>
                         ${last_checked ? html.node`
                         <div class="check-circle colourful">
                             <div class="bleh-icon" data-type="check" />
@@ -1256,11 +1260,19 @@ export function render_setting_page(page_id) {
                         `}
                     </div>
                     <button class="btn primary icon" data-type="update" ref=${el => update_btn = el} onclick=${() => update_check(true, update_btn, () => {
+                        notify({
+                            id: 'update',
+                            title: tl(trans.updates),
+                            body: tl(trans.checked_for_updates),
+                            icon: 'icon-16-update'
+                        });
                         render_setting_page('update');
                     })}>${tl(trans.check_for_updates)}</button>
                     ` : html.node`
                     <div class="update-center-icon">
-                        <div class="bleh-icon" data-type="update" />
+                        <div class="update-container">
+                            <div class="bleh-icon" data-type="update" />
+                        </div>
                     </div>
                     <div class="update-center-details">
                         <h2>${tl(trans.update_available_to_install)}</h2>

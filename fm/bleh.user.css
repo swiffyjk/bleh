@@ -1256,7 +1256,7 @@
         transition-duration: 0.3s;
 
         &.scrolled {
-            background: hsla(var(--b6), 80%);
+            background: hsla(var(--b5), 80%);
             backdrop-filter: blur(25px) saturate(220%) brightness(var(--blur-brightness));
             -webkit-backdrop-filter: blur(25px) saturate(220%) brightness(var(--blur-brightness));
             border-color: var(--card-border-base);
@@ -1447,6 +1447,29 @@
             width: fit-content;
             height: fit-content;
             color: hsl(var(--c3));
+            gap: var(--icon-gap);
+
+            & > .new-badge {
+                margin: unset !important;
+                cursor: pointer;
+            }
+
+            & > .update-container {
+                animation: staggered_spinner 3s cubic-bezier(0.34, 1.56, 0.64, 1) infinite;
+
+                & > .bleh-icon {
+                    background: conic-gradient(from 270deg, hsl(var(--c1)), hsl(var(--c3)));
+                }
+            }
+        }
+    }
+
+    @keyframes staggered_spinner {
+        from {
+            transform: rotateZ(0);
+        }
+        to {
+            transform: rotateZ(360deg);
         }
     }
 
@@ -24983,10 +25006,14 @@
         .update-center-icon {
             position: relative;
 
-            & > .bleh-icon {
-                background: conic-gradient(from 270deg, hsl(var(--l2-c)), hsl(var(--l4-c)));
-                --icon-size: 52px;
-                --icon: var(--mask);
+            & > .update-container {
+                animation: staggered_spinner 3s cubic-bezier(0.34, 1.56, 0.64, 1) infinite;
+
+                & > .bleh-icon {
+                    background: conic-gradient(from 270deg, hsl(var(--l2-c)), hsl(var(--l4-c)));
+                    --icon-size: 52px;
+                    --icon: var(--mask);
+                }
             }
 
             .check-circle {

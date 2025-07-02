@@ -18,24 +18,53 @@ import {change_theme_from_menu, toggle_theme} from "./config.js";
 import {open_profile_shortcut_window} from "./components/profile_shortcut.js";
 import {save_setting} from "./components/settings.js";
 import {load_banner} from "./components/banner.js";
+import {prompt_for_update} from "./style.js";
 
-export function patch_masthead(element) {
-    let masthead_logo = element.querySelector('.masthead-logo');
+export function patch_masthead() {
+    let masthead_logo = document.body.querySelector('.masthead-logo');
     if (!masthead_logo) return;
 
     if (!masthead_logo.hasAttribute('data-kate-processed')) {
         masthead_logo.setAttribute('data-kate-processed','true');
 
-        masthead_logo.appendChild(html.node`
-            <a class="home-link" href="${root}music">
-                <div class="bleh-logo">${version.brand}</div>
-            </a>`);
+        update_masthead(masthead_logo);
+    }
+}
 
+export function update_masthead(masthead_logo = document.body.querySelector('.masthead-logo')) {
+    const update_required = localStorage.getItem('bleh_update_required') || 'false';
+
+    render(masthead_logo, html``);
+    render(masthead_logo, html`
+        <a href="/">Last.fm</a>
+        <a class="home-link" href="${root}music">
+            <div class="bleh-logo">${version.brand}</div>
+        </a>
+    `);
+
+    if (update_required === 'false') {
         masthead_logo.appendChild(html.node`
             <a class="bleh--version" href="${root}bleh">
-                ${version.build}.${version.sku}${(settings.branch != 'uwu') ? `.${settings.branch}` : ''}${(settings.dev) ? html.node`<div class="new-badge subtle">✦</div>` : ''}
+                ${version.build}.${version.sku}
+                ${(settings.dev) ? html.node`<div class="new-badge subtle">✦</div>` : ''}
             </a>
         `);
+    } else {
+        let link = html.node`
+            <a class="bleh--version" onclick=${() => prompt_for_update()}>
+                <div class="update-container">
+                    <div class="bleh-icon" style="--icon: var(--icon-16-update)" />
+                </div>
+                ${version.build}.${version.sku}
+                ${(settings.dev) ? html.node`<div class="new-badge subtle">✦</div>` : ''}
+            </a>
+        `;
+
+        tippy(link, {
+            content: tl(trans.update_available_to_install)
+        });
+
+        masthead_logo.appendChild(link);
     }
 }
 
@@ -47,7 +76,7 @@ export function append_nav() {
 
         page.structure.indicator = page_indicator;
     }
-        
+
     if (!page.structure.loader) {
         const loader = html.node`
             <div class="loader">
@@ -78,34 +107,29 @@ export function append_nav() {
     // 2025-04-14
     let masthead = document.body.querySelector('.masthead');
     let new_auth = masthead.querySelector('.auth-dropdown-menu');
-    let auth_link = masthead.querySelector('.masthead-nav-wrap > .site-auth .auth-link');
 
+    let auth_link = masthead.querySelector('.masthead-nav-wrap > .site-auth .auth-link');
     if (!auth_link) return;
 
     if (auth_link.hasAttribute('data-bleh')) return;
     auth_link.setAttribute('data-bleh', 'true');
 
-    let text = document.createElement('p');
-    text.textContent = auth.name;
-    auth_link.appendChild(text);
+    auth_link.appendChild(html.node`
+        <p>${auth.name}</p>
+    `);
 
-    if (masthead.querySelector('.masthead-pro-wrap'))
-        auth.pro = true;
-    else
-        auth.pro = false;
+    auth.pro = !!masthead.querySelector('.masthead-pro-wrap');
 
     let badges = load_badges(auth.name, true);
 
     if (badges) {
-        let badge = document.createElement('span');
-        badge.classList.add('label', `user-status--bleh-${badges[0].type}`, `user-status--bleh-user-${auth.name}`, 'auth-badge');
-        badge.textContent = badges[0].name;
-        auth_link.appendChild(badge);
+        auth_link.appendChild(html.node`
+            <span class="label user-status--bleh-${badges[0].type} user-status--bleh-user-${auth.name} auth-badge">${badges[0].name}</span>
+        `);
     } else if (auth.pro) {
-        let pro_badge = document.createElement('p');
-        pro_badge.classList.add('label', 'user-status-subscriber', 'auth-badge');
-        pro_badge.textContent = 'Pro';
-        auth_link.appendChild(pro_badge);
+        auth_link.appendChild(html.node`
+            <span class="label user-status-subscriber auth-badge">${tl(trans.badges['user-status-subscriber'].name)}</span>
+        `);
     }
 
 
@@ -116,7 +140,7 @@ export function append_nav() {
 
 
     let links = masthead.querySelector('.masthead-nav .navlist-items');
-    links.innerHTML = '';
+    render(links, html``);
 
     let notif_container = html.node`
     <li class="masthead-nav-item">

@@ -37,7 +37,7 @@ import {load_notifications, notify} from "./components/notify";
 import {patch_titles} from "./components/track";
 import {load_settings} from "./config";
 import {theme_version, version} from "./main";
-import {append_nav, patch_masthead} from "./navigation";
+import {append_nav, patch_masthead, update_masthead} from "./navigation";
 import {bleh_albums} from "./pages/album";
 import {bleh_artists} from "./pages/artist";
 import {bleh_settings} from "./pages/bleh_config";
@@ -58,7 +58,7 @@ import {seasonal_timer_end, set_season} from "./seasonal";
 import {parse_shout_queue, patch_shouts} from "./shout";
 import {ff} from "./sku";
 import {bleh_sponsor_page, sponsors} from "./sponsor";
-import {append_style, prompt_for_update} from "./style";
+import {append_style, prompt_for_update, update_check} from "./style";
 import {bleh_radio} from "./components/radio";
 import {bleh_api} from './pages/api';
 import {bleh_users} from './pages/users';
@@ -117,7 +117,8 @@ function bleh_main() {
 
         theme_version.state = getComputedStyle(document.body).getPropertyValue('--version-build').replaceAll("'", '').replaceAll('"', ''); // remove quotations
 
-        patch_masthead(document.body);
+        update_check(false, null, update_masthead);
+        patch_masthead();
 
         load_notifications();
 

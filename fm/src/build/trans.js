@@ -2835,6 +2835,9 @@ export const trans = {
     },
     you_are_installing_version: {
         en: 'You are installing version {v}'
+    },
+    checked_for_updates: {
+        en: 'Checked for updates'
     }
 }
 
