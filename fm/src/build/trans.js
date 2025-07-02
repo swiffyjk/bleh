@@ -2785,6 +2785,56 @@ export const trans = {
     },
     updates: {
         en: 'Updates'
+    },
+    you_are_up_to_date: {
+        en: 'You\'re up to date'
+    },
+    update_available_to_install: {
+        en: 'Update available to install'
+    },
+    install_now: {
+        en: 'Install now'
+    },
+    check_for_updates: {
+        en: 'Check for updates'
+    },
+    last_checked_date: {
+        en: 'Last checked {d}'
+    },
+    never_checked: {
+        en: 'Never checked'
+    },
+    get_updates_fast: {
+        name: {
+            en: 'Get the latest updates as soon as they\'re available'
+        },
+        body: {
+            en: 'Be among the first to get the latest fixes and improvements as they roll out'
+        }
+    },
+    pause_updates: {
+        en: 'Pause updates'
+    },
+    pause_updates_for: {
+        en: 'Pause for 1 day'
+    },
+    resume_updates: {
+        en: 'Resume updates'
+    },
+    updates_paused: {
+        en: 'Updates paused'
+    },
+    paused_until_date: {
+        en: 'Updates continue {d}'
+    },
+    missing_updates: {
+        en: 'Missing updates'
+    },
+    you_are_running_version: {
+        en: 'You are running version {v}'
+    },
+    you_are_installing_version: {
+        en: 'You are installing version {v}'
     }
 }
 

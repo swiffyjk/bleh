@@ -905,5 +905,11 @@ export let settings_store = {
         body: trans.activity.types.install,
         type: 'checkbox',
         icon: 'icon-16-download'
+    },
+    get_updates_fast: {
+        default: false,
+        title: trans.get_updates_fast.name,
+        body: trans.get_updates_fast.body,
+        icon: 'icon-16-broadcast'
     }
 }

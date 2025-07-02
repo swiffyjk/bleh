@@ -11,8 +11,9 @@ import {tl, trans} from "./build/trans";
 import {chart_reflow} from "./chart";
 import {dialog, dialog_rm} from "./components/dialog";
 import {create_settings_template, invoke_reload} from "./config";
-import {theme_version} from "./main";
+import {theme_version, version} from "./main";
 import {save_setting} from "./components/settings.js";
+import {download_with_progress} from "./build/tools.js";
 
 export function append_style() {
     document.documentElement.classList.add('bleh-supports-loading');
@@ -128,6 +129,76 @@ function fetch_new_style(delete_old_style = false, reload_on_finish = false) {
     xhr.send();
 }
 
+function parse_version(v) {
+    const parts = v.split('.').map(Number);
+
+    // ensure [major, minor, patch]
+    while (parts.length < 3) parts.push(0);
+    return parts.slice(0, 3);
+}
+
+function compare_versions(a, b) {
+    const [a_maj, a_min, a_patch] = parse_version(a);
+    const [b_maj, b_min, b_patch] = parse_version(b);
+
+    if (a_maj !== b_maj) return a_maj > b_maj ? 1 : -1;
+    if (a_min !== b_min) return a_min > b_min ? 1 : -1;
+    if (a_patch !== b_patch) return a_patch > b_patch ? 1 : -1;
+
+    return 0;
+}
+
+export function update_comparison(current, latest) {
+    return compare_versions(latest, current) === 1;
+}
+
+export function update_check(force = false, btn = null, func = null) {
+    if (!force) {
+        const last_checked = localStorage.getItem('bleh_update_checked') || null;
+        const current_time = new Date();
+
+        if (last_checked && new Date(last_checked) > current_time)
+            return;
+    }
+
+    if (btn) btn.setAttribute('disabled', '');
+
+    let url = `https://katelyynn.github.io/bleh/fm/src/build/build.json?${Date.now()}`;
+
+    /*let notification = notify({
+        id: 'updater',
+        title: 'Updater',
+        body: 'Downloading update information',
+        progress: true,
+        icon: 'icon-16-update'
+    });*/
+
+    download_with_progress(url, (percent) => {
+        //notification.set_body(`Downloading update information ${percent}%`);
+        //notification.set(percent);
+    }).then(async (blob) => {
+        const text = await blob.text();
+
+        if (btn) btn.removeAttribute('disabled');
+
+        try {
+            let data = JSON.parse(text);
+            console.info(data);
+
+            data.build = '2025.0702';
+
+            let update_required = update_comparison(version.build, data.build);
+            localStorage.setItem('bleh_update_required', update_required.toString());
+            localStorage.setItem('bleh_update_to', data.build);
+            localStorage.setItem('bleh_update_checked', new Date().toString());
+
+            if (func) func();
+        } catch (e) {
+            log('error parsing', 'update', 'error', {error: e});
+        }
+    });
+}
+
 export function prompt_for_update() {
     // prompt the user
     dialog({
@@ -165,8 +236,8 @@ function ignore_update() {
     log(`cached until ${api_expire}`, 'style');
 }
 
-function start_update() {
-    open(`https://github.com/katelyynn/bleh/raw/${settings.branch}/fm/bleh.user.js`);
+export function start_update() {
+    open(`https://github.com/katelyynn/bleh/raw/uwu/fm/bleh.user.js`);
 
     if (!settings.dev) {
         final_update();

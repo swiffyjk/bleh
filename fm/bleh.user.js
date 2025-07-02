@@ -4793,6 +4793,11 @@
         let toggle2;
         return html.node`
                 <div class="setting v2" data-type="toggle" onclick=${() => update_toggle(id, toggle2)}>
+                    ${icon ? html.node`
+                    <div class="icon">
+                        <div class="bleh-icon" style="--icon: var(--${icon})" />
+                    </div>
+                    ` : ""}
                     ${text2 ? html.node`
                     <div class="heading">
                         <h5>${title}</h5>
@@ -10592,6 +10597,233 @@
     return Math.floor(Math.random() * (b - a + 1)) + a;
   }
 
+  // src/style.js
+  function append_style() {
+    document.documentElement.classList.add("bleh-supports-loading");
+    for (var member in settings) delete settings[member];
+    Object.assign(settings, JSON.parse(localStorage.getItem("bleh")) || create_settings_template());
+    let cached_style = localStorage.getItem("bleh_cached_style") || "";
+    let url = window.location.href;
+    let url_split = url.split("/");
+    let url_length = url_split.length - 1;
+    if (url_split[url_length] == "playback" || url_split[url_length - 1] == "labs")
+      return;
+    document.documentElement.setAttribute("data-bleh--theme", settings.theme);
+    if (settings.dev) return;
+    if (cached_style == "") {
+      log("never cached, fetching", "style");
+      fetch_new_style();
+    } else {
+      log("requesting cache", "style");
+      load_cached_style(cached_style);
+    }
+  }
+  function load_cached_style(cached_style) {
+    let style_cache = html.node`
+        <style id="bleh--cached-style">${cached_style}</style>
+    `;
+    document.documentElement.appendChild(style_cache);
+    style_cache.onload = () => {
+      log("loaded cache", "style");
+      document.body.classList.add("bleh");
+      chart_reflow();
+      log("checking timeout", "style");
+      check_if_style_cache_is_valid();
+    };
+    style_cache.onerror = () => {
+      log("error loading cache", "style", "error");
+      fetch_new_style();
+    };
+  }
+  function check_if_style_cache_is_valid() {
+    let cached_style_timeout = new Date(localStorage.getItem("bleh_cached_style_timeout"));
+    let current_time = /* @__PURE__ */ new Date();
+    if (cached_style_timeout < current_time) {
+      log("fetching new, expired timeout", "style");
+      fetch_new_style();
+    } else {
+      log(`timeout valid until ${cached_style_timeout}`, "style");
+    }
+  }
+  function fetch_new_style(delete_old_style = false, reload_on_finish = false) {
+    let xhr = new XMLHttpRequest();
+    let url = `https://katelyynn.github.io/bleh/fm/bleh.css?${Math.random()}`;
+    log(`making request ${url}`, "style");
+    xhr.open("GET", url, true);
+    xhr.onload = function() {
+      log(`style responded ${xhr.status}`, "style");
+      let style = html.node`
+            <style>${this.response}</style>
+        `;
+      document.documentElement.appendChild(style);
+      style.onload = () => {
+        log("loaded", "style");
+        document.body.classList.add("bleh");
+        chart_reflow();
+      };
+      style.onerror = () => {
+        log("error loading", "style", "error");
+      };
+      if (delete_old_style)
+        document.documentElement.removeChild(document.getElementById("bleh--cached-style"));
+      localStorage.setItem("bleh_cached_style", this.response);
+      let api_expire = /* @__PURE__ */ new Date();
+      api_expire.setHours(api_expire.getHours() + 1);
+      localStorage.setItem("bleh_cached_style_timeout", api_expire);
+      log(`cached until ${api_expire}`, "style");
+      if (reload_on_finish) invoke_reload();
+    };
+    xhr.send();
+  }
+  function parse_version(v) {
+    const parts = v.split(".").map(Number);
+    while (parts.length < 3) parts.push(0);
+    return parts.slice(0, 3);
+  }
+  function compare_versions(a, b) {
+    const [a_maj, a_min, a_patch] = parse_version(a);
+    const [b_maj, b_min, b_patch] = parse_version(b);
+    if (a_maj !== b_maj) return a_maj > b_maj ? 1 : -1;
+    if (a_min !== b_min) return a_min > b_min ? 1 : -1;
+    if (a_patch !== b_patch) return a_patch > b_patch ? 1 : -1;
+    return 0;
+  }
+  function update_comparison(current, latest) {
+    return compare_versions(latest, current) === 1;
+  }
+  function update_check(force = false, btn = null, func = null) {
+    if (!force) {
+      const last_checked = localStorage.getItem("bleh_update_checked") || null;
+      const current_time = /* @__PURE__ */ new Date();
+      if (last_checked && new Date(last_checked) > current_time)
+        return;
+    }
+    if (btn) btn.setAttribute("disabled", "");
+    let url = `https://katelyynn.github.io/bleh/fm/src/build/build.json?${Date.now()}`;
+    download_with_progress(url, (percent) => {
+    }).then(async (blob) => {
+      const text2 = await blob.text();
+      if (btn) btn.removeAttribute("disabled");
+      try {
+        let data2 = JSON.parse(text2);
+        console.info(data2);
+        data2.build = "2025.0702";
+        let update_required = update_comparison(version.build, data2.build);
+        localStorage.setItem("bleh_update_required", update_required.toString());
+        localStorage.setItem("bleh_update_to", data2.build);
+        localStorage.setItem("bleh_update_checked", (/* @__PURE__ */ new Date()).toString());
+        if (func) func();
+      } catch (e) {
+        log("error parsing", "update", "error", { error: e });
+      }
+    });
+  }
+  function prompt_for_update() {
+    dialog({
+      id: "bleh_update",
+      title: tl(trans.update_to_version).replace("{v}", theme_version.state),
+      body: html.node`
+            <div class="forms">
+                <div class="form">
+                    <div class="form-group proceed">
+                        <button class="btn primary icon" data-type="update" onclick=${() => start_update()}>${tl(trans.update_now)}</button>
+                    </div>
+                </div>
+                <div class="form">
+                    <div class="form-group deny">
+                        <button class="btn icon" data-type="ignore" onclick=${() => ignore_update()}>${tl(trans.ignore_for_now)}</button>
+                    </div>
+                </div>
+            </div>
+        `,
+      dismiss: false,
+      type: "update",
+      replace_if_possible: true
+    });
+  }
+  function ignore_update() {
+    dialog_rm2({
+      id: "bleh_update"
+    });
+    let api_expire = /* @__PURE__ */ new Date();
+    api_expire.setHours(api_expire.getHours() + 1);
+    localStorage.setItem("bleh_cached_style_timeout", api_expire);
+    log(`cached until ${api_expire}`, "style");
+  }
+  function start_update() {
+    open(`https://github.com/katelyynn/bleh/raw/uwu/fm/bleh.user.js`);
+    if (!settings.dev) {
+      final_update();
+    } else {
+      dialog({
+        id: "bleh_update",
+        title: tl(trans.update_to_version).replace("{v}", theme_version.state),
+        body: html.node`
+                <div class="forms">
+                    <div class="form">
+                        <div class="form-group proceed">
+                            <button class="btn primary icon" data-type="update" onclick=${() => start_css_update()}>${tl(trans.update_styles)}</button>
+                        </div>
+                    </div>
+                </div>
+                <div class="sep" />
+                <p class="subtle">${tl(trans.you_have_theme_loading_disabled)}</p>
+            `,
+        dismiss: false,
+        type: "update",
+        replace_if_possible: true
+      });
+    }
+  }
+  function start_css_update() {
+    if (settings.branch == "")
+      save_setting("branch", "uwu");
+    open(`https://github.com/katelyynn/bleh/raw/${settings.branch}/fm/bleh.user.css`);
+    final_update();
+  }
+  function final_update() {
+    dialog({
+      id: "bleh_update",
+      title: tl(trans.update_to_version).replace("{v}", theme_version.state),
+      body: html.node`
+            <div class="forms">
+                <div class="form">
+                    <div class="form-group proceed">
+                        <button class="btn primary icon" data-type="finish" onclick=${() => finish_update()}>${tl(trans.finish)}</button>
+                    </div>
+                </div>
+            </div>
+        `,
+      dismiss: false,
+      type: "update",
+      replace_if_possible: true
+    });
+  }
+  function finish_update() {
+    if (!settings.dev) {
+      dialog({
+        id: "bleh_wait",
+        title: tl(trans.update_to_version).replace("{v}", theme_version.state),
+        body: html.node`
+                <div class="loading-data-container">
+                    <div class="loading-data-text">${tl(trans.downloading_styles)}</div>
+                </div>
+            `,
+        type: "wait",
+        dismiss: false,
+        replace_if_possible: true
+      });
+      fetch_new_style(false, true);
+    } else {
+      invoke_reload();
+    }
+  }
+  unsafeWindow._force_refresh_theme = function() {
+    localStorage.removeItem("bleh_cached_style");
+    localStorage.removeItem("bleh_cached_style_timeout");
+    window.setTimeout(invoke_reload, 400);
+  };
+
   // src/pages/bleh_config.js
   function bleh_settings() {
     page.name = auth.name;
@@ -10604,6 +10836,7 @@
     let params = new URLSearchParams(document.location.search);
     page.requested.tab = params.get("tab");
     page.requested.setting = params.get("setting");
+    const update_required = localStorage.getItem("bleh_update_required") || "false";
     let nav = html.node`
         <nav class="navlist secondary-nav navlist--more redesigned-navigation bleh-settings-navigation">
             <ul class="navlist-items">
@@ -10642,6 +10875,13 @@
                         ${tl(trans.accessibility)}
                     </a>
                 </li>
+                ${ff("update_center") ? html.node`
+                <li class="navlist-item secondary-nav-item">
+                    <a class="secondary-nav-item-link bleh--nav" data-bleh-page="update" data-type="update" onclick=${() => change_settings_page("update")}>
+                        ${tl(trans.updates)}${update_required === "true" ? html.node`<div class="new-badge">${tl(trans.new)}</div>` : ""}
+                    </a>
+                </li>
+                ` : ""}
                 <li class="navlist-item secondary-nav-item">
                     <a class="secondary-nav-item-link bleh--nav" data-bleh-page="performance" onclick=${() => change_settings_page("performance")}>
                         ${tl(trans.troubleshooting)}
@@ -10652,13 +10892,6 @@
                         ${tl(trans.flags)}
                     </a>
                 </li>
-                ${ff("update_center") ? html.node`
-                <li class="navlist-item secondary-nav-item">
-                    <a class="secondary-nav-item-link bleh--nav" data-bleh-page="update" onclick=${() => change_settings_page("update")}>
-                        ${tl(trans.updates)}
-                    </a>
-                </li>
-                ` : ""}
             </ul>
         </nav>
     `;
@@ -11729,20 +11962,93 @@
             </div>
             `);
     } else if (page_id == "update") {
+      register_skip_to([]);
+      let update_btn;
+      let pause_btn;
+      const update_required = localStorage.getItem("bleh_update_required") || "false";
+      const last_checked = localStorage.getItem("bleh_update_checked") || null;
+      const version_to_install = localStorage.getItem("bleh_update_to") || null;
+      let paused = localStorage.getItem("bleh_update_paused") || "false";
+      let paused_until = localStorage.getItem("bleh_update_paused_until") || null;
       render(page.structure.main, html`
             <section class="bleh--panel">
                 <div class="update-center-header">
+                    ${paused === "true" ? html.node`
                     <div class="update-center-icon">
                         <div class="bleh-icon" data-type="update" />
-                        <div class="check-circle colourful">
-                            <div class="bleh-icon" data-type="check" />
+                        <div class="check-circle paused colourful">
+                            <div class="bleh-icon" data-type="paused" />
                         </div>
                     </div>
                     <div class="update-center-details">
-                        <h2>You're up to date</h2>
-                        <p class="last-checked">Last checked 6 hours ago</p>
+                        <h2>${tl(trans.updates_paused)}</h2>
+                        <p class="last-checked">${tl(trans.paused_until_date).replace("{d}", moment(paused_until).fromNow())}</p>
                     </div>
-                    <button class="btn primary icon" data-type="update">Check for updates</button>
+                    <button class="btn primary icon" data-type="update" ref=${(el) => update_btn = el} disabled>${tl(trans.check_for_updates)}</button>
+                    ` : update_required === "false" ? html.node`
+                    <div class="update-center-icon">
+                        <div class="bleh-icon" data-type="update" />
+                        ${last_checked ? html.node`
+                        <div class="check-circle colourful">
+                            <div class="bleh-icon" data-type="check" />
+                        </div>
+                        ` : ""}
+                    </div>
+                    <div class="update-center-details">
+                        ${last_checked ? html.node`
+                        <h2>${tl(trans.you_are_up_to_date)}</h2>
+                        <p class="last-checked">${tl(trans.last_checked_date).replace("{d}", moment(last_checked).fromNow())}</p>
+                        ` : html.node`
+                        <h2>${tl(trans.missing_updates)}</h2>
+                        <p class="last-checked">${tl(trans.never_checked)}</p>
+                        `}
+                    </div>
+                    <button class="btn primary icon" data-type="update" ref=${(el) => update_btn = el} onclick=${() => update_check(true, update_btn, () => {
+        render_setting_page("update");
+      })}>${tl(trans.check_for_updates)}</button>
+                    ` : html.node`
+                    <div class="update-center-icon">
+                        <div class="bleh-icon" data-type="update" />
+                    </div>
+                    <div class="update-center-details">
+                        <h2>${tl(trans.update_available_to_install)}</h2>
+                        ${last_checked ? html.node`
+                        <p class="last-checked">${tl(trans.last_checked_date).replace("{d}", moment(last_checked).fromNow())}</p>
+                        ` : html.node`
+                        <p class="last-checked">${tl(trans.never_checked)}</p>
+                        `}
+                    </div>
+                    <button class="btn primary icon" data-type="update" ref=${(el) => update_btn = el} onclick=${() => start_update()}>${tl(trans.install_now)}</button>
+                    `}
+                </div>
+                ${last_checked && paused === "false" && update_required === "true" ? html.node`
+                <div class="alert alert-info">${tl(trans.you_are_installing_version).replace("{v}", version_to_install)}</div>
+                ` : html.node`
+                <div class="alert alert-info">${tl(trans.you_are_running_version).replace("{v}", version.build)}</div>
+                `}
+                <div class="sep" />
+                ${setting({ id: "get_updates_fast" })}
+                <div class="setting v2" data-type="action">
+                    <div class="icon">
+                        <div class="bleh-icon" style="--icon: var(--icon-16-paused);" />
+                    </div>
+                    <div class="heading">
+                        <h5>${tl(trans.pause_updates)}</h5>
+                    </div>
+                    <div class="toggle-wrap">
+                        <button class="btn" ref=${(el) => pause_btn = el} onclick=${() => {
+        localStorage.setItem("bleh_update_paused", paused === "true" ? "false" : "true");
+        if (paused === "false") {
+          let paused_until2 = /* @__PURE__ */ new Date();
+          paused_until2.setDate(paused_until2.getDate() + 1);
+          localStorage.setItem("bleh_update_paused_until", paused_until2.toString());
+          localStorage.removeItem("bleh_update_required");
+          localStorage.removeItem("bleh_update_checked");
+          request_reload();
+        }
+        render_setting_page("update");
+      }}>${paused === "true" ? tl(trans.resume_updates) : tl(trans.pause_updates_for)}</button>
+                    </div>
                 </div>
             </section>
         `);
@@ -16803,190 +17109,6 @@
     document.getElementById(`bleh--shout-${shout_id}`).setAttribute("data-bleh--shout-expanded", "true");
   };
 
-  // src/style.js
-  function append_style() {
-    document.documentElement.classList.add("bleh-supports-loading");
-    for (var member in settings) delete settings[member];
-    Object.assign(settings, JSON.parse(localStorage.getItem("bleh")) || create_settings_template());
-    let cached_style = localStorage.getItem("bleh_cached_style") || "";
-    let url = window.location.href;
-    let url_split = url.split("/");
-    let url_length = url_split.length - 1;
-    if (url_split[url_length] == "playback" || url_split[url_length - 1] == "labs")
-      return;
-    document.documentElement.setAttribute("data-bleh--theme", settings.theme);
-    if (settings.dev) return;
-    if (cached_style == "") {
-      log("never cached, fetching", "style");
-      fetch_new_style();
-    } else {
-      log("requesting cache", "style");
-      load_cached_style(cached_style);
-    }
-  }
-  function load_cached_style(cached_style) {
-    let style_cache = html.node`
-        <style id="bleh--cached-style">${cached_style}</style>
-    `;
-    document.documentElement.appendChild(style_cache);
-    style_cache.onload = () => {
-      log("loaded cache", "style");
-      document.body.classList.add("bleh");
-      chart_reflow();
-      log("checking timeout", "style");
-      check_if_style_cache_is_valid();
-    };
-    style_cache.onerror = () => {
-      log("error loading cache", "style", "error");
-      fetch_new_style();
-    };
-  }
-  function check_if_style_cache_is_valid() {
-    let cached_style_timeout = new Date(localStorage.getItem("bleh_cached_style_timeout"));
-    let current_time = /* @__PURE__ */ new Date();
-    if (cached_style_timeout < current_time) {
-      log("fetching new, expired timeout", "style");
-      fetch_new_style();
-    } else {
-      log(`timeout valid until ${cached_style_timeout}`, "style");
-    }
-  }
-  function fetch_new_style(delete_old_style = false, reload_on_finish = false) {
-    let xhr = new XMLHttpRequest();
-    let url = `https://katelyynn.github.io/bleh/fm/bleh.css?${Math.random()}`;
-    log(`making request ${url}`, "style");
-    xhr.open("GET", url, true);
-    xhr.onload = function() {
-      log(`style responded ${xhr.status}`, "style");
-      let style = html.node`
-            <style>${this.response}</style>
-        `;
-      document.documentElement.appendChild(style);
-      style.onload = () => {
-        log("loaded", "style");
-        document.body.classList.add("bleh");
-        chart_reflow();
-      };
-      style.onerror = () => {
-        log("error loading", "style", "error");
-      };
-      if (delete_old_style)
-        document.documentElement.removeChild(document.getElementById("bleh--cached-style"));
-      localStorage.setItem("bleh_cached_style", this.response);
-      let api_expire = /* @__PURE__ */ new Date();
-      api_expire.setHours(api_expire.getHours() + 1);
-      localStorage.setItem("bleh_cached_style_timeout", api_expire);
-      log(`cached until ${api_expire}`, "style");
-      if (reload_on_finish) invoke_reload();
-    };
-    xhr.send();
-  }
-  function prompt_for_update() {
-    dialog({
-      id: "bleh_update",
-      title: tl(trans.update_to_version).replace("{v}", theme_version.state),
-      body: html.node`
-            <div class="forms">
-                <div class="form">
-                    <div class="form-group proceed">
-                        <button class="btn primary icon" data-type="update" onclick=${() => start_update()}>${tl(trans.update_now)}</button>
-                    </div>
-                </div>
-                <div class="form">
-                    <div class="form-group deny">
-                        <button class="btn icon" data-type="ignore" onclick=${() => ignore_update()}>${tl(trans.ignore_for_now)}</button>
-                    </div>
-                </div>
-            </div>
-        `,
-      dismiss: false,
-      type: "update",
-      replace_if_possible: true
-    });
-  }
-  function ignore_update() {
-    dialog_rm2({
-      id: "bleh_update"
-    });
-    let api_expire = /* @__PURE__ */ new Date();
-    api_expire.setHours(api_expire.getHours() + 1);
-    localStorage.setItem("bleh_cached_style_timeout", api_expire);
-    log(`cached until ${api_expire}`, "style");
-  }
-  function start_update() {
-    open(`https://github.com/katelyynn/bleh/raw/${settings.branch}/fm/bleh.user.js`);
-    if (!settings.dev) {
-      final_update();
-    } else {
-      dialog({
-        id: "bleh_update",
-        title: tl(trans.update_to_version).replace("{v}", theme_version.state),
-        body: html.node`
-                <div class="forms">
-                    <div class="form">
-                        <div class="form-group proceed">
-                            <button class="btn primary icon" data-type="update" onclick=${() => start_css_update()}>${tl(trans.update_styles)}</button>
-                        </div>
-                    </div>
-                </div>
-                <div class="sep" />
-                <p class="subtle">${tl(trans.you_have_theme_loading_disabled)}</p>
-            `,
-        dismiss: false,
-        type: "update",
-        replace_if_possible: true
-      });
-    }
-  }
-  function start_css_update() {
-    if (settings.branch == "")
-      save_setting("branch", "uwu");
-    open(`https://github.com/katelyynn/bleh/raw/${settings.branch}/fm/bleh.user.css`);
-    final_update();
-  }
-  function final_update() {
-    dialog({
-      id: "bleh_update",
-      title: tl(trans.update_to_version).replace("{v}", theme_version.state),
-      body: html.node`
-            <div class="forms">
-                <div class="form">
-                    <div class="form-group proceed">
-                        <button class="btn primary icon" data-type="finish" onclick=${() => finish_update()}>${tl(trans.finish)}</button>
-                    </div>
-                </div>
-            </div>
-        `,
-      dismiss: false,
-      type: "update",
-      replace_if_possible: true
-    });
-  }
-  function finish_update() {
-    if (!settings.dev) {
-      dialog({
-        id: "bleh_wait",
-        title: tl(trans.update_to_version).replace("{v}", theme_version.state),
-        body: html.node`
-                <div class="loading-data-container">
-                    <div class="loading-data-text">${tl(trans.downloading_styles)}</div>
-                </div>
-            `,
-        type: "wait",
-        dismiss: false,
-        replace_if_possible: true
-      });
-      fetch_new_style(false, true);
-    } else {
-      invoke_reload();
-    }
-  }
-  unsafeWindow._force_refresh_theme = function() {
-    localStorage.removeItem("bleh_cached_style");
-    localStorage.removeItem("bleh_cached_style_timeout");
-    window.setTimeout(invoke_reload, 400);
-  };
-
   // src/components/radio.js
   function bleh_radio() {
     let radios = page.structure.side.querySelectorAll(".stationlink");
@@ -21481,6 +21603,56 @@
     },
     updates: {
       en: "Updates"
+    },
+    you_are_up_to_date: {
+      en: "You're up to date"
+    },
+    update_available_to_install: {
+      en: "Update available to install"
+    },
+    install_now: {
+      en: "Install now"
+    },
+    check_for_updates: {
+      en: "Check for updates"
+    },
+    last_checked_date: {
+      en: "Last checked {d}"
+    },
+    never_checked: {
+      en: "Never checked"
+    },
+    get_updates_fast: {
+      name: {
+        en: "Get the latest updates as soon as they're available"
+      },
+      body: {
+        en: "Be among the first to get the latest fixes and improvements as they roll out"
+      }
+    },
+    pause_updates: {
+      en: "Pause updates"
+    },
+    pause_updates_for: {
+      en: "Pause for 1 day"
+    },
+    resume_updates: {
+      en: "Resume updates"
+    },
+    updates_paused: {
+      en: "Updates paused"
+    },
+    paused_until_date: {
+      en: "Updates continue {d}"
+    },
+    missing_updates: {
+      en: "Missing updates"
+    },
+    you_are_running_version: {
+      en: "You are running version {v}"
+    },
+    you_are_installing_version: {
+      en: "You are installing version {v}"
     }
   };
   var trans_legacy = {
@@ -25440,6 +25612,12 @@
       body: trans.activity.types.install,
       type: "checkbox",
       icon: "icon-16-download"
+    },
+    get_updates_fast: {
+      default: false,
+      title: trans.get_updates_fast.name,
+      body: trans.get_updates_fast.body,
+      icon: "icon-16-broadcast"
     }
   };
 

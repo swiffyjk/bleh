@@ -37,6 +37,11 @@ export function setting({
 
             return html.node`
                 <div class="setting v2" data-type="toggle" onclick=${() => update_toggle(id, toggle)}>
+                    ${icon ? html.node`
+                    <div class="icon">
+                        <div class="bleh-icon" style="--icon: var(--${icon})" />
+                    </div>
+                    ` : ''}
                     ${(text) ? html.node`
                     <div class="heading">
                         <h5>${title}</h5>

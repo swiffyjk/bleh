@@ -17,7 +17,7 @@ import {dialog, dialog_rm} from "../components/dialog";
 import {correct_artist, correct_item_by_artist, name_includes} from '../components/lotus';
 import {markdown} from '../components/markdown';
 import {notify} from "../components/notify";
-import {create_settings_template, load_settings, refresh_all, update_params} from "../config";
+import {create_settings_template, load_settings, refresh_all, request_reload, update_params} from "../config";
 import {version} from "../main";
 import {update_page} from "../page";
 import {seasonal_timer_end, seasonal_timer_start} from "../seasonal";
@@ -27,6 +27,7 @@ import {save_setting, setting} from "../components/settings.js";
 import {parse_scrobbles_as_rank} from "../components/colourful_counts.js";
 import {input} from "../components/input.js";
 import {share} from "../components/share.js";
+import {start_update, update_check} from "../style.js";
 
 export function bleh_settings() {
     page.name = auth.name;
@@ -44,6 +45,8 @@ export function bleh_settings() {
     let params = new URLSearchParams(document.location.search);
     page.requested.tab = params.get('tab');
     page.requested.setting = params.get('setting');
+
+    const update_required = localStorage.getItem('bleh_update_required') || 'false';
 
 
     // go wild
@@ -85,6 +88,13 @@ export function bleh_settings() {
                         ${tl(trans.accessibility)}
                     </a>
                 </li>
+                ${ff('update_center') ? html.node`
+                <li class="navlist-item secondary-nav-item">
+                    <a class="secondary-nav-item-link bleh--nav" data-bleh-page="update" data-type="update" onclick=${() => change_settings_page('update')}>
+                        ${tl(trans.updates)}${update_required === 'true' ? html.node`<div class="new-badge">${tl(trans.new)}</div>` : ''}
+                    </a>
+                </li>
+                ` : ''}
                 <li class="navlist-item secondary-nav-item">
                     <a class="secondary-nav-item-link bleh--nav" data-bleh-page="performance" onclick=${() => change_settings_page('performance')}>
                         ${tl(trans.troubleshooting)}
@@ -95,13 +105,6 @@ export function bleh_settings() {
                         ${tl(trans.flags)}
                     </a>
                 </li>
-                ${ff('update_center') ? html.node`
-                <li class="navlist-item secondary-nav-item">
-                    <a class="secondary-nav-item-link bleh--nav" data-bleh-page="update" onclick=${() => change_settings_page('update')}>
-                        ${tl(trans.updates)}
-                    </a>
-                </li>
-                ` : ''}
             </ul>
         </nav>
     `;
@@ -1207,20 +1210,100 @@ export function render_setting_page(page_id) {
             </div>
             `);
     } else if (page_id == 'update') {
+        register_skip_to([]);
+
+        let update_btn;
+        let pause_btn;
+
+        const update_required = localStorage.getItem('bleh_update_required') || 'false';
+        const last_checked = localStorage.getItem('bleh_update_checked') || null;
+        const version_to_install = localStorage.getItem('bleh_update_to') || null;
+
+        let paused = localStorage.getItem('bleh_update_paused') || 'false';
+        let paused_until = localStorage.getItem('bleh_update_paused_until') || null;
+
         render(page.structure.main, html`
             <section class="bleh--panel">
                 <div class="update-center-header">
+                    ${paused === 'true' ? html.node`
                     <div class="update-center-icon">
                         <div class="bleh-icon" data-type="update" />
-                        <div class="check-circle colourful">
-                            <div class="bleh-icon" data-type="check" />
+                        <div class="check-circle paused colourful">
+                            <div class="bleh-icon" data-type="paused" />
                         </div>
                     </div>
                     <div class="update-center-details">
-                        <h2>You're up to date</h2>
-                        <p class="last-checked">Last checked 6 hours ago</p>
+                        <h2>${tl(trans.updates_paused)}</h2>
+                        <p class="last-checked">${tl(trans.paused_until_date).replace('{d}', moment(paused_until).fromNow())}</p>
                     </div>
-                    <button class="btn primary icon" data-type="update">Check for updates</button>
+                    <button class="btn primary icon" data-type="update" ref=${el => update_btn = el} disabled>${tl(trans.check_for_updates)}</button>
+                    ` : update_required === 'false' ? html.node`
+                    <div class="update-center-icon">
+                        <div class="bleh-icon" data-type="update" />
+                        ${last_checked ? html.node`
+                        <div class="check-circle colourful">
+                            <div class="bleh-icon" data-type="check" />
+                        </div>
+                        ` : ''}
+                    </div>
+                    <div class="update-center-details">
+                        ${last_checked ? html.node`
+                        <h2>${tl(trans.you_are_up_to_date)}</h2>
+                        <p class="last-checked">${tl(trans.last_checked_date).replace('{d}', moment(last_checked).fromNow())}</p>
+                        ` : html.node`
+                        <h2>${tl(trans.missing_updates)}</h2>
+                        <p class="last-checked">${tl(trans.never_checked)}</p>
+                        `}
+                    </div>
+                    <button class="btn primary icon" data-type="update" ref=${el => update_btn = el} onclick=${() => update_check(true, update_btn, () => {
+                        render_setting_page('update');
+                    })}>${tl(trans.check_for_updates)}</button>
+                    ` : html.node`
+                    <div class="update-center-icon">
+                        <div class="bleh-icon" data-type="update" />
+                    </div>
+                    <div class="update-center-details">
+                        <h2>${tl(trans.update_available_to_install)}</h2>
+                        ${last_checked ? html.node`
+                        <p class="last-checked">${tl(trans.last_checked_date).replace('{d}', moment(last_checked).fromNow())}</p>
+                        ` : html.node`
+                        <p class="last-checked">${tl(trans.never_checked)}</p>
+                        `}
+                    </div>
+                    <button class="btn primary icon" data-type="update" ref=${el => update_btn = el} onclick=${() => start_update()}>${tl(trans.install_now)}</button>
+                    `}
+                </div>
+                ${last_checked && paused === 'false' && update_required === 'true' ? html.node`
+                <div class="alert alert-info">${tl(trans.you_are_installing_version).replace('{v}', version_to_install)}</div>
+                ` : html.node`
+                <div class="alert alert-info">${tl(trans.you_are_running_version).replace('{v}', version.build)}</div>
+                `}
+                <div class="sep" />
+                ${setting({id: 'get_updates_fast'})}
+                <div class="setting v2" data-type="action">
+                    <div class="icon">
+                        <div class="bleh-icon" style="--icon: var(--icon-16-paused);" />
+                    </div>
+                    <div class="heading">
+                        <h5>${tl(trans.pause_updates)}</h5>
+                    </div>
+                    <div class="toggle-wrap">
+                        <button class="btn" ref=${el => pause_btn = el} onclick=${() => {
+                            localStorage.setItem('bleh_update_paused', paused === 'true' ? 'false' : 'true');
+                            
+                            if (paused === 'false') {
+                                let paused_until = new Date();
+                                paused_until.setDate(paused_until.getDate() + 1);
+                                
+                                localStorage.setItem('bleh_update_paused_until', paused_until.toString());
+                                localStorage.removeItem('bleh_update_required');
+                                localStorage.removeItem('bleh_update_checked');
+                                
+                                request_reload();
+                            }
+                            render_setting_page('update');
+                        }}>${paused === 'true' ? tl(trans.resume_updates) : tl(trans.pause_updates_for)}</button>
+                    </div>
                 </div>
             </section>
         `);
