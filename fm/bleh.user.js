@@ -13440,6 +13440,16 @@
   }
 
   // src/components/lotus.js
+  var flat_patterns = [];
+  Object.entries(includes).forEach(([group, pats]) => {
+    pats.forEach((pat) => {
+      flat_patterns.push({
+        group,
+        pat: pat.toLowerCase()
+      });
+    });
+  });
+  flat_patterns.sort((a, b) => b.pat.length - a.pat.length);
   function lotus(force = false) {
     if (!settings.corrections)
       return;
@@ -13616,71 +13626,67 @@
     }
   }
   function name_includes(original_title, original_artist) {
-    console.log(original_title, original_artist);
-    let formatted_title = original_title;
     let original_title_corrected = false;
-    if (album_track_corrections.hasOwnProperty(original_artist.toLowerCase()) && settings.corrections) {
-      if (album_track_corrections[original_artist.toLowerCase()].hasOwnProperty(formatted_title)) {
-        formatted_title = album_track_corrections[original_artist.toLowerCase()][formatted_title];
+    let formatted_title = original_title;
+    const artist_key = original_artist.toLowerCase();
+    if (album_track_corrections.hasOwnProperty(artist_key) && settings.corrections) {
+      const corr_map = album_track_corrections[artist_key];
+      if (corr_map.hasOwnProperty(formatted_title)) {
+        formatted_title = corr_map[formatted_title];
         log(`corrected ${original_title} by ${original_artist} as ${formatted_title}`, "lotus");
         original_title_corrected = true;
       }
     }
-    formatted_title = formatted_title.replaceAll(" & feat. ", ";").replaceAll(" & with ", ";");
-    let lowercase_title = formatted_title.toLowerCase();
-    console.log("lowercase", lowercase_title);
-    let extras = [];
-    console.log(formatted_title, lowercase_title);
-    for (let group in includes) {
-      for (let possible_match in includes[group]) {
-        if (lowercase_title.includes(includes[group][possible_match])) {
-          let chr = lowercase_title.indexOf(`${includes[group][possible_match]}`);
-          if (chr < 1)
-            continue;
-          console.log(group, group == "remasters", lowercase_title.includes(" remaster"));
-          if (group == "remasters" && !lowercase_title.includes(" remaster") && !lowercase_title.includes("(remaster")) {
-            continue;
-          } else {
-            extras.push({
-              type: includes[group][possible_match],
-              group,
-              chr
-            });
-          }
-        }
+    const lower_title = formatted_title.toLowerCase();
+    const matches = flat_patterns.map(({ group, pat }) => ({
+      group,
+      pat,
+      idx: lower_title.indexOf(pat)
+    })).filter((m) => {
+      if (m.idx < 1) return false;
+      if (m.group === "remasters" && !lower_title.includes(" remaster") && !lower_title.includes("(remaster")) {
+        return false;
       }
+      return true;
+    }).sort((a, b) => a.idx - b.idx);
+    if (matches.length === 0) {
+      return [
+        formatted_title,
+        [],
+        original_artist,
+        [],
+        original_title_corrected
+      ];
     }
-    extras.sort((a, b) => a.chr - b.chr);
-    for (let extra in extras) {
-      formatted_title = formatted_title.slice(0, extras[extra].chr - 1);
-      break;
-    }
+    const cleaned_title = formatted_title.slice(0, matches[0].idx).trim().replace(/[\(\[\{]+$/, "").trim();
+    const extras = matches.map((match, i) => {
+      const start = match.idx;
+      const end = i + 1 < matches.length ? matches[i + 1].idx : formatted_title.length;
+      const tag_text = formatted_title.slice(start, end).replace(/^[\(\[\{\-\s]+/, "").replace(/[\(\)\[\]\{\}\-\s]+$/, "").trim();
+      return {
+        group: match.group,
+        text: tag_text
+      };
+    });
     let song_guests = [];
-    console.log(extras);
-    for (let extra in extras) {
-      console.log(extras[extra]);
-      if (parseInt(extra) + 1 < extras.length) {
-        let chr = extras[extra].chr;
-        let next_chr = extras[parseInt(extra) + 1].chr;
-        extras[extra].text = original_title.slice(chr, next_chr - 1).replaceAll("(", "").replaceAll(")", "").replaceAll("[", "").replaceAll("]", "").replaceAll("- ", "");
-      } else {
-        let chr = extras[extra].chr;
-        extras[extra].text = original_title.slice(chr).replaceAll("(", "").replaceAll(")", "").replaceAll("[", "").replaceAll("]", "").replaceAll("- ", "");
-      }
-      let field_group = extras[extra].group;
-      let field_text = extras[extra].text.replace(" feat. ", "").replace("feat. ", "").replace("featuring ", "").replace("Feat. ", "").replace("ft. ", "").replace("FEAT. ", "").replace("Ft. ", "").replace("WITH", "with").replace("w/ ", "").replace("with ", "").replace("With ", "").replaceAll(" & ", ";").replaceAll(", ", ";").replaceAll(" and ", ";").replaceAll(" with ", ";").replaceAll("- ", "").replaceAll(",; ", ";").replaceAll("Tyler;the", "Tyler, the").replaceAll("Tyler;The", "Tyler, The").replaceAll(" of BTS", ";BTS");
-      console.log("pre-split", field_text);
-      if (field_group == "guests") {
-        song_guests = field_text.split(";");
-        for (let guest in song_guests)
-          song_guests[guest] = correct_artist(song_guests[guest]);
-      }
+    extras.forEach((extra) => {
+      if (extra.group !== "guests") return;
+      const normalized = extra.text.replace(/feat\.?|ft\.?|featuring|with|w\//gi, "").replace(/ & /g, ";").replace(/, /g, ";").replace(/ and /gi, ";").replace(/- /g, "").replace(/,;/g, ";").replace(/tyler;the/gi, "Tyler, The").replace(/ of bts/gi, ";BTS");
+      const guests = normalized.split(/;+/).map((s) => s.trim()).filter(Boolean).map(correct_artist);
+      song_guests.push(...guests);
+    });
+    if (artist_corrections.hasOwnProperty(original_artist) && settings.corrections) {
+      original_artist = correct_artist(
+        artist_corrections[original_artist]
+      );
     }
-    if (artist_corrections.hasOwnProperty(original_artist) && settings.corrections)
-      original_artist = correct_artist(artist_corrections[original_artist]);
-    if (extras.length > 0)
-      log(`parsed ${original_title} as ${formatted_title} by ${original_artist} with`, "guest features", "info", { extras, song_guests });
-    return [formatted_title, extras, original_artist, song_guests, original_title_corrected];
+    return [
+      cleaned_title,
+      extras,
+      original_artist,
+      song_guests,
+      original_title_corrected
+    ];
   }
   function artist_title() {
     let title = document.body.querySelector(".header-new-title");

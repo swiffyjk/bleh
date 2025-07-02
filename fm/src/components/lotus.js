@@ -15,6 +15,20 @@ import {dialog} from "./dialog";
 import {notify} from "./notify";
 import {html, render} from "lighterhtml";
 
+const flat_patterns = [];
+
+Object.entries(includes).forEach(([group, pats]) => {
+    pats.forEach(pat => {
+        flat_patterns.push({
+            group,
+            pat: pat.toLowerCase()
+        });
+    });
+});
+
+// prefer longest patterns first
+flat_patterns.sort((a, b) => b.pat.length - a.pat.length);
+
 export function lotus(force = false) {
     if (!settings.corrections)
         return;
@@ -274,122 +288,123 @@ export function correct_artist(artist, broadcast = false) {
 
 // feat.
 export function name_includes(original_title, original_artist) {
-    console.log(original_title, original_artist);
-    let formatted_title = original_title;
-
+    // track if we applied an album/track correction
     let original_title_corrected = false;
-
-    if (album_track_corrections.hasOwnProperty(original_artist.toLowerCase()) && settings.corrections) {
-        if (album_track_corrections[original_artist.toLowerCase()].hasOwnProperty(formatted_title)) {
-            formatted_title = album_track_corrections[original_artist.toLowerCase()][formatted_title];
+    // start with the raw title, then apply any album_track_corrections
+    let formatted_title = original_title;
+    const artist_key = original_artist.toLowerCase();
+    if (
+        album_track_corrections.hasOwnProperty(artist_key) &&
+        settings.corrections
+    ) {
+        const corr_map = album_track_corrections[artist_key];
+        if (corr_map.hasOwnProperty(formatted_title)) {
+            formatted_title = corr_map[formatted_title];
             log(`corrected ${original_title} by ${original_artist} as ${formatted_title}`, 'lotus');
-
             original_title_corrected = true;
         }
     }
 
-    // remove double feature detection in titles breakign things
-    // eg. (with A$AP Rocky & feat. Takeoff)
-    formatted_title = formatted_title
-    .replaceAll(' & feat. ', ';')
-    .replaceAll(' & with ', ';');
-
-    let lowercase_title = formatted_title.toLowerCase();
-    console.log('lowercase', lowercase_title);
-    let extras = [];
-
-    console.log(formatted_title, lowercase_title);
-
-
-    // includes is now sorted into groups, first we run thru groups
-    for (let group in includes) {
-        // now we run thru individual includes in said-group
-        for (let possible_match in includes[group]) {
-            // does the title include this text match?
-            if (lowercase_title.includes(includes[group][possible_match])) {
-                // mark character in string
-                let chr = lowercase_title.indexOf(`${includes[group][possible_match]}`);
-
-                // featuring ty dolla $ign
-                // skips if this is the first character
-                if (chr < 1)
-                    continue;
-
-                // differentiate 2017 remaster to 20th deluxe
-                console.log(group, group == 'remasters', lowercase_title.includes(' remaster'));
-                if (group == 'remasters' && !lowercase_title.includes(' remaster') && !lowercase_title.includes('(remaster')) {
-                    continue;
-                } else {
-                    // everything else
-                    extras.push({
-                        type: includes[group][possible_match],
-                        group: group,
-                        chr: chr
-                    });
-                }
+    const lower_title = formatted_title.toLowerCase();
+    // find all tag‐matches (idx ≥ 1), with special remaster logic
+    // due to Nirvana nonsense such as 20th Anniversary Remaster etc.
+    const matches = flat_patterns
+        .map(({group, pat}) => ({
+            group,
+            pat,
+            idx: lower_title.indexOf(pat)
+        }))
+        .filter(m => {
+            if (m.idx < 1) return false;
+            if (
+                m.group === 'remasters' &&
+                !lower_title.includes(' remaster') &&
+                !lower_title.includes('(remaster')
+            ) {
+                return false;
             }
-        }
+            return true;
+        })
+        .sort((a, b) => a.idx - b.idx);
+
+    // no tags found → return original title and flags
+    if (matches.length === 0) {
+        return [
+            formatted_title,
+            [],
+            original_artist,
+            [],
+            original_title_corrected
+        ];
     }
 
-    // sort by occurance in string
-    extras.sort((a, b) => a.chr - b.chr);
+    // everything before the first tag
+    const cleaned_title = formatted_title
+        .slice(0, matches[0].idx)
+        .trim()
+        .replace(/[\(\[\{]+$/, '')
+        .trim();
 
-    // remove tags from original title
-    for (let extra in extras) {
-        formatted_title = formatted_title.slice(0, (extras[extra].chr - 1));
-        break;
-    }
+    // extract each tag block
+    const extras = matches.map((match, i) => {
+        const start = match.idx;
+        const end = i + 1 < matches.length
+            ? matches[i + 1].idx
+            : formatted_title.length;
+        const tag_text = formatted_title
+            .slice(start, end)
+            // strip only leading brackets () [] {} or hyphens and whitespace
+            .replace(/^[\(\[\{\-\s]+/, '')
+            // strip any trailing brackets () [] {}, hyphens or whitespace
+            .replace(/[\(\)\[\]\{\}\-\s]+$/, '')
+            .trim();
+        return {
+            group: match.group,
+            text: tag_text
+        };
+    });
 
-    // find song guests
+    // collect all guest artists
+    // artists with commas in their title can mistakenly be separated
+    // into multiple artists, so we fix them manually
+    // see Tyler, The Creator
     let song_guests = [];
+    extras.forEach(extra => {
+        if (extra.group !== 'guests') return;
+        const normalized = extra.text
+            .replace(/feat\.?|ft\.?|featuring|with|w\//gi, '')
+            .replace(/ & /g, ';')
+            .replace(/, /g, ';')
+            .replace(/ and /gi, ';')
+            .replace(/- /g, '')
+            .replace(/,;/g, ';')
+            .replace(/tyler;the/gi, 'Tyler, The')
+            .replace(/ of bts/gi, ';BTS');
+        const guests = normalized
+            .split(/;+/)
+            .map(s => s.trim())
+            .filter(Boolean)
+            .map(correct_artist);
+        song_guests.push(...guests);
+    });
 
-    console.log(extras);
-    for (let extra in extras) {
-        console.log(extras[extra]);
-        if ((parseInt(extra) + 1) < extras.length) {
-            let chr = extras[extra].chr;
-            let next_chr = extras[parseInt(extra) + 1].chr;
-
-            extras[extra].text = original_title.slice(chr, (next_chr - 1)).replaceAll('(','').replaceAll(')','').replaceAll('[','').replaceAll(']','').replaceAll('- ','');
-        } else {
-            let chr = extras[extra].chr;
-            extras[extra].text = original_title.slice(chr).replaceAll('(','').replaceAll(')','').replaceAll('[','').replaceAll(']','').replaceAll('- ','');
-        }
-
-
-        let field_group = extras[extra].group;
-        // remove beginning tag
-        let field_text = extras[extra].text
-        .replace(' feat. ', '').replace('feat. ', '')
-        .replace('featuring ', '').replace('Feat. ', '')
-        .replace('ft. ', '').replace('FEAT. ', '').replace('Ft. ', '')
-        .replace('WITH', 'with').replace('w/ ', '').replace('with ', '').replace('With ', '')
-        .replaceAll(' & ', ';').replaceAll(', ', ';').replaceAll(' and ', ';')
-        .replaceAll(' with ', ';')
-        .replaceAll('- ', '')
-        .replaceAll(',; ', ';')
-        .replaceAll('Tyler;the', 'Tyler, the').replaceAll('Tyler;The', 'Tyler, The')
-        .replaceAll(' of BTS', ';BTS');
-
-        console.log('pre-split', field_text);
-
-        if (field_group == 'guests') {
-            song_guests = field_text.split(';');
-
-            for (let guest in song_guests)
-                song_guests[guest] = correct_artist(song_guests[guest]);
-        }
+    // apply any artist corrections
+    if (
+        artist_corrections.hasOwnProperty(original_artist) &&
+        settings.corrections
+    ) {
+        original_artist = correct_artist(
+            artist_corrections[original_artist]
+        );
     }
 
-
-    // song artist
-    if (artist_corrections.hasOwnProperty(original_artist) && settings.corrections)
-        original_artist = correct_artist(artist_corrections[original_artist]);
-
-
-    if (extras.length > 0)
-        log(`parsed ${original_title} as ${formatted_title} by ${original_artist} with`, 'guest features', 'info', {extras: extras, song_guests: song_guests});
-    return [formatted_title, extras, original_artist, song_guests, original_title_corrected];
+    return [
+        cleaned_title,
+        extras,
+        original_artist,
+        song_guests,
+        original_title_corrected
+    ];
 }
 
 
