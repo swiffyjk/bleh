@@ -1,11 +1,11 @@
 {
-    "latest": "2025.0616",
+    "latest": "2025.0703",
     "sponsors": [
         "hyacines", "kateshapedbox", "stellasaur",
         "astrablooms", "ItsProyal", "vwvwvwvwvwvwv", "Orofil",
         "EliteHimself", "iwas15with100k", "keepsweet", "yourfriendoss",
         "softmancy", "carbon1k", "uix-uix", "scidal",
-        "Carbonzer", "hexitcode"
+        "Carbonzer", "iwasanangelonce"
     ],
     "sponsors_one_time": [
         "kateshapedbox",
@@ -193,13 +193,13 @@
         "Carbonzer": {
             "type": "sponsor"
         },
-        "hexitcode": [
+        "iwasanangelonce": [
             {
                 "type": "sponsor"
             },
             {
-                "type": "memory_leak",
-                "name": "memory leak",
+                "type": "syrup",
+                "name": "syrup & static",
                 "reason": "sponsor"
             }
         ]
