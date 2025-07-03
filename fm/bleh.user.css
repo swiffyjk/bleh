@@ -2177,6 +2177,8 @@
                     }
                 }
 
+                & > .redesigned-content-top,
+                & > .bleh--nav-wrap,
                 & > .navlist:first-child {
                     margin-top: -5px !important;
                 }
@@ -3174,10 +3176,6 @@
 
 
 
-    .header--user .secondary-nav {
-        position: relative;
-        top: calc((var(--profile-header-avatar-size) - 50px) + var(--card-gap) + 15px - 19px);
-    }
     .content-top .secondary-nav,
     .bleh--nav-wrap .navlist,
     .secondary-nav, .user-dashboard-controls .secondary-nav {
@@ -3185,10 +3183,6 @@
         padding-bottom: 1px;
         margin: 0 calc(var(--card-padding) - var(--button-sides)) !important;
         width: calc(var(--cards-width) - ((var(--card-padding) - var(--button-sides)) * 2));
-
-        .content-top + &, .katsune-button-row + .bleh-background + & {
-            margin-top: var(--card-gap) !important;
-        }
 
         position: relative;
 
@@ -3220,11 +3214,6 @@
             height: 1px;
             background: var(--card-border-base);
         }
-    }
-
-
-    .bleh--nav-wrap {
-        margin-top: var(--card-gap);
     }
 
 
@@ -18170,10 +18159,6 @@
     .bleh--nav-wrap {
         display: flex;
         justify-content: center;
-
-        .content-top + & {
-            margin-top: var(--card-gap);
-        }
 
         margin-top: unset;
         width: 100%;
