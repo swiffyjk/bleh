@@ -129,10 +129,6 @@ export function bleh_events() {
 
         side_actions.appendChild(form);
 
-        let sep = document.createElement('div');
-        sep.classList.add('sep');
-        side_actions.appendChild(sep);
-
 
         let main_panel = page.structure.main.querySelector('.event-summary-with-poster');
         if (!main_panel)
@@ -144,6 +140,10 @@ export function bleh_events() {
         // edit button
         let edit_button = main_panel.querySelector('.event-metadata + .event-metadata a');
         if (edit_button) {
+            let sep = document.createElement('div');
+            sep.classList.add('sep');
+            side_actions.appendChild(sep);
+
             edit_button.classList.add('btn', 'side-action');
             edit_button.setAttribute('data-type', 'edit');
             side_actions.appendChild(edit_button);

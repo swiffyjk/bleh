@@ -29,6 +29,10 @@ export function bleh_api() {
 
     register_background(auth.avatar.replace('/avatar42s/', '/ar0/'));
 
+    page.structure.container.removeAttribute('data-beret');
+    page.structure.container.removeAttribute('data-short');
+    page.structure.content.classList.add('cards-view');
+
 
     let success = page.structure.container.querySelector('.alert-success');
 
@@ -44,7 +48,7 @@ export function bleh_api() {
         let cancel = old.querySelector('.form-submit a').getAttribute('href');
 
         render(page.structure.main, html`
-            <section class="api-connector">
+            <section class="api-connector sour">
                 <div class="avatar">
                     <img src="${auth.avatar.replace('/avatar42s/', '/avatar170s/')}" alt="${tl(trans.your_avatar)}">
                 </div>
@@ -77,8 +81,8 @@ export function bleh_api() {
     } else {
         page.name = success.querySelector('strong').textContent;
 
-        page.structure.main.innerHTML = (`
-            <section class="api-connector">
+        render(page.structure.main, html`
+            <section class="api-connector sour">
                 <div class="avatar">
                     <img src="${auth.avatar.replace('/avatar42s/', '/avatar170s/')}" alt="${tl(trans.your_avatar)}">
                 </div>
@@ -89,11 +93,11 @@ export function bleh_api() {
                 <div class="sep"></div>
                 <div class="description">${tl(trans.you_can_now_close_this_tab)}</div>
                 <div class="connector-footer">
-                    <div class="btn-fill" />
+                    <div class="btn-fill"/>
                     <a class="see-more" href="${root}settings/applications">
                         ${tl(trans.manage_applications)}
                     </a>
-                    <div class="btn-fill" />
+                    <div class="btn-fill"/>
                 </div>
             </section>
         `);

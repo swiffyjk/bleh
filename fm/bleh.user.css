@@ -281,7 +281,7 @@
             --b3: 0, 0%, 90%;
 
             /* card border */
-            --b4: 0, 0%, 87%;
+            --b4: 0, 0%, 86%;
 
             /* card */
             --b5: 0, 0%, 100%;
@@ -593,8 +593,8 @@
         --menu-bg: var(--b6);
 
         &[data-bleh--theme_type="light"], [data-bleh--theme_type="light"] > & {
-            --view-buttons: hsl(var(--b5));
-            --view-buttons-shadow: inset 0 0 0 1px var(--card-border-base);
+            --view-buttons: hsl(var(--b4), 16%);
+            --view-buttons-shadow: none;
 
             --card-shadow: hsla(var(--b7), 0.05) 0 2px 4px 0;
             --card-shadow: 0 1.5px 4px 0 hsla(var(--b7), 0.05);
@@ -619,8 +619,8 @@
         }
 
         &[data-bleh--theme="oled"], [data-bleh--theme="oled"] > & {
-            --view-buttons: hsl(var(--b5));
-            --view-buttons-shadow: inset 0 0 0 1px var(--card-border-base);
+            --view-buttons: hsl(var(--b4), 30%);
+            --view-buttons-shadow: none;
 
             --card-border: inset 0 0 0 1px hsla(var(--b4), 0.8);
 
@@ -2732,7 +2732,7 @@
             }
         }
 
-        [data-ff--beret="true"] &:not([style], .ignore-katsune, .has-error) {
+        &[data-beret="true"]:not([style], .ignore-katsune, .has-error) {
             .row:not(.row--equal-height-cols) {
                 margin-top: unset;
                 border-radius: unset;
@@ -3672,26 +3672,24 @@
     }
 
 
-    .secondary-nav-item--neighbours,
-    .secondary-nav-item--following,
-    .secondary-nav-item--followers {
+    .secondary-nav-item--following {
         order: 4;
 
         & > a {
-            --mask: var(--icon-16-users);
+            --mask: var(--icon-16-user);
         }
     }
-    .bleh--friends-nav .secondary-nav-item--followers {
-        & > a {
-            --mask: var(--icon-16-followers);
-        }
-    }
-    .bleh--friends-nav .secondary-nav-item--following {
+    .bleh--navlist-items > .secondary-nav-item--following {
         & > a {
             --mask: var(--icon-16-following);
         }
     }
-    .bleh--friends-nav .secondary-nav-item--neighbours {
+    .bleh--navlist-items > .secondary-nav-item--followers {
+        & > a {
+            --mask: var(--icon-16-followers);
+        }
+    }
+    .bleh--navlist-items > .secondary-nav-item--neighbours {
         order: 5;
 
         & > a {
@@ -7429,7 +7427,6 @@
             #manage_data .btn-primary,
             .primary,
             .btn-subscribe,
-            .view-item[aria-checked="true"],
             .share-link
         ):not([data-has-file]) {
             --bg: var(--cards-overlay-image-subtlest, none), hsl(var(--h3)) !important;
@@ -8870,7 +8867,7 @@
     .delete-account,
     .shout-more-replies-after, .shout-more-replies-before,
     .pagination-previous > a,
-    .modal-body .btn-cancel.js-close, .btn-cancel,
+    .modal-body .btn-cancel.js-close, .btn-cancel.js-disclose-close,
     .see-more.cancel,
     .see-more.sponsor,
     .update-check,
@@ -9720,6 +9717,7 @@
     }
 
     .library-controls-datepicker .date-range-picker-form {
+        margin-top: var(--card-gap);
         padding-top: var(--card-gap);
         border-top: 1px solid hsl(var(--b4));
     }
@@ -18629,12 +18627,12 @@
 
         &:not(.blend) {
             :is(.btn, a, button):not(.not-a-view-button, .toggle, .reset, .select-button, .btn-primary, .js-close, .blend-v2-btn) {
-                --bg: var(--cards-overlay-image-subtlest, none), hsl(var(--h3));
-                --bg-hov: var(--cards-overlay-image-subtlest, none), hsla(var(--h3), 80%);
-                --bg-atv: var(--cards-overlay-image-subtlest, none), hsla(var(--h3), 60%);
-                --col: hsl(var(--b7));
-                --mask-colour: hsl(var(--b7), 70%);
-                --shadow: 0 3px 12px hsl(var(--h4), 25%), var(--interactable-outer);
+                --bg: var(--cards-overlay-image-subtlest, none), hsl(var(--b3));
+                --bg-hov: var(--cards-overlay-image-subtlest, none), color-mix(in hsl, hsl(var(--b5)), hsl(var(--b3)) 80%);
+                --bg-atv: var(--cards-overlay-image-subtlest, none), color-mix(in hsl, hsl(var(--b5)), hsl(var(--b3)) 60%);
+                --col: hsl(var(--c2));
+                --mask-colour: color-mix(in hsl, hsl(var(--c2)), hsl(var(--c3)) 50%);
+                --shadow: var(--interact-shadow);
                 position: relative;
             }
 
@@ -18643,8 +18641,8 @@
             .footer-language .mimic-link,
             .btn:not(.not-a-view-button, .toggle, [aria-checked="true"], .love-button--loved, [data-toggle-button-current-state="loved"] > form > .btn, [data-toggle-button-current-state="bookmarked"] > form > .btn, .btn-primary.profile-header-set-obsession, [data-analytics-action="UnfollowUser"], [data-is-shortcut="true"], .attendance-btn--turn-off) {
                 --bg: transparent;
-                --bg-hov: hsl(var(--b4), 60%);
-                --bg-atv: hsl(var(--b4), 80%);
+                --bg-hov: hsl(var(--b3), 60%);
+                --bg-atv: hsl(var(--b3), 80%);
                 --shadow: none;
                 --col: hsl(var(--c2));
                 --mask-colour: color-mix(in hsl, hsl(var(--c2)), hsl(var(--c3)) 50%);
@@ -20828,8 +20826,8 @@
                     height: 32px !important;
 
                     --bg: transparent;
-                    --bg-hov: hsl(var(--b4), 60%);
-                    --bg-atv: hsl(var(--b4), 80%);
+                    --bg-hov: hsl(var(--b5), 60%);
+                    --bg-atv: hsl(var(--b5), 80%);
                     --shadow: none;
 
                     --mask: var(--icon-16-arrow-up);
@@ -24097,6 +24095,11 @@
 
     .submit {
         --mask: var(--icon-16-arrow-f-up);
+    }
+
+
+    .content.cards-view {
+        margin-top: -120px;
     }
 
 

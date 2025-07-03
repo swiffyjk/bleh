@@ -16107,7 +16107,7 @@
     render(page_content, html`
         <div class="row">
             <div class="col-main">
-                <section class="error-panel">
+                <section class="error-panel sour">
                     <div class="info">
                         <h1>${tl(trans.erm)}</h1>
                         <div class="subtle">${error_content.textContent}</div>
@@ -16538,14 +16538,14 @@
         button.classList.add("btn", "side-action");
       });
       side_actions.appendChild(form);
-      let sep = document.createElement("div");
-      sep.classList.add("sep");
-      side_actions.appendChild(sep);
       let main_panel = page.structure.main.querySelector(".event-summary-with-poster");
       if (!main_panel)
         main_panel = page.structure.main.querySelector(".event-details");
       let edit_button = main_panel.querySelector(".event-metadata + .event-metadata a");
       if (edit_button) {
+        let sep = document.createElement("div");
+        sep.classList.add("sep");
+        side_actions.appendChild(sep);
         edit_button.classList.add("btn", "side-action");
         edit_button.setAttribute("data-type", "edit");
         side_actions.appendChild(edit_button);
@@ -17176,6 +17176,9 @@
     log("status is", "page", "info", page);
     update_page();
     register_background(auth.avatar.replace("/avatar42s/", "/ar0/"));
+    page.structure.container.removeAttribute("data-beret");
+    page.structure.container.removeAttribute("data-short");
+    page.structure.content.classList.add("cards-view");
     let success = page.structure.container.querySelector(".alert-success");
     if (!success) {
       let old = page.structure.main.querySelector("section");
@@ -17185,7 +17188,7 @@
       let token = old.querySelector('form [name="csrfmiddlewaretoken"]').value;
       let cancel = old.querySelector(".form-submit a").getAttribute("href");
       render(page.structure.main, html`
-            <section class="api-connector">
+            <section class="api-connector sour">
                 <div class="avatar">
                     <img src="${auth.avatar.replace("/avatar42s/", "/avatar170s/")}" alt="${tl(trans.your_avatar)}">
                 </div>
@@ -17217,8 +17220,8 @@
         `);
     } else {
       page.name = success.querySelector("strong").textContent;
-      page.structure.main.innerHTML = `
-            <section class="api-connector">
+      render(page.structure.main, html`
+            <section class="api-connector sour">
                 <div class="avatar">
                     <img src="${auth.avatar.replace("/avatar42s/", "/avatar170s/")}" alt="${tl(trans.your_avatar)}">
                 </div>
@@ -17229,14 +17232,14 @@
                 <div class="sep"></div>
                 <div class="description">${tl(trans.you_can_now_close_this_tab)}</div>
                 <div class="connector-footer">
-                    <div class="btn-fill" />
+                    <div class="btn-fill"/>
                     <a class="see-more" href="${root}settings/applications">
                         ${tl(trans.manage_applications)}
                     </a>
-                    <div class="btn-fill" />
+                    <div class="btn-fill"/>
                 </div>
             </section>
-        `;
+        `);
     }
   }
 
