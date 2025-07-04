@@ -11,7 +11,6 @@ import {
     auth,
     auth_link,
     bleh_url,
-    has_prompted_for_update,
     last_page_subpage,
     last_page_type,
     page,
@@ -58,7 +57,7 @@ import {seasonal_timer_end, set_season} from "./seasonal";
 import {parse_shout_queue, patch_shouts} from "./shout";
 import {ff} from "./sku";
 import {bleh_sponsor_page, sponsors} from "./sponsor";
-import {append_style, prompt_for_update, update_check} from "./style";
+import {append_style, update_check} from "./style";
 import {bleh_radio} from "./components/radio";
 import {bleh_api} from './pages/api';
 import {bleh_users} from './pages/users';
@@ -154,15 +153,6 @@ function bleh_main() {
             lookup_lang();
             patch_masthead(document.body);
 
-            theme_version.state = getComputedStyle(document.body).getPropertyValue('--version-build').replaceAll("'", '').replaceAll('"', ''); // remove quotations
-            if (theme_version.state != version.build && theme_version.state != '' && !has_prompted_for_update.state) {
-                // script is either out of date, or more in date (not gonna happen)
-                log(`version mismatch! running ${version.build}, downloaded theme ${theme_version.state}`, 'update');
-
-                prompt_for_update();
-                has_prompted_for_update.state = true;
-            }
-
             main_flow();
         });
 
@@ -218,6 +208,8 @@ export function handle_error_500() {
 
 function main_flow() {
     assign_page();
+
+    if (page.state.error) return;
 
     if (page.type == 'artist' || page.type == 'album') {
         bleh_gallery();

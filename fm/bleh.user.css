@@ -1,7 +1,7 @@
 /* ==UserStyle==
 @name           bleh (dev)
 @namespace      github.com/katelyynn/bleh
-@version        2025.0608
+@version        2025.0703
 @license        GPL-3.0
 @author         kate
 @updateURL      https://github.com/katelyynn/bleh/raw/uwu/fm/bleh.user.css
@@ -63,7 +63,7 @@
     }
 
     body {
-        --version-build: '2025.0608.2';
+        --version-build: '2025.0703';
 
         --hue:  var(--hue-over,
                 var(--hue-album,
@@ -7427,7 +7427,8 @@
             #manage_data .btn-primary,
             .primary,
             .btn-subscribe,
-            .share-link
+            .share-link,
+            .view-item[aria-checked="true"]
         ):not([data-has-file]) {
             --bg: var(--cards-overlay-image-subtlest, none), hsl(var(--h3)) !important;
             --bg-hov: var(--cards-overlay-image-subtlest, none), color-mix(in hsl, hsl(var(--h4)), hsl(var(--h3)) 80%) !important;
@@ -13955,7 +13956,7 @@
         .obsession-video-container {
             margin: -300px auto 0;
             border-radius: var(--item-big-radius);
-            box-shadow: var(--card-shadow);
+            box-shadow: var(--subtle-shadow);
             overflow: hidden;
         }
 
@@ -14028,75 +14029,6 @@
     }
     .obsession-container {
         display: none !important;
-        height: 100vh;
-        margin-top: calc(-55px - var(--card-gap));
-        display: flex;
-        gap: var(--card-gap);
-        justify-content: center;
-        align-items: center;
-        padding: calc(55px + var(--card-gap)) calc((100% - var(--cards-width)) / 2) !important;
-        animation: var(--reduced-motion, zoom_in 0.3s ease);
-
-        .obsession-details-intro-avatar-wrap {
-            .avatar {
-                border-radius: var(--avatar-radius);
-                box-shadow: var(--menu-shadow);
-            }
-        }
-
-        .obsession-background-inner {
-            display: none;
-        }
-        .obsession-video-container,
-        .obsession-hero-artwork .cover-art {
-            background-color: rgba(0, 0, 0, 0.55);
-            border-radius: var(--item-big-radius);
-            box-shadow: var(--menu-shadow);
-            overflow: hidden;
-            --mask-size: var(--cover-size-300);
-        }
-
-        .obsession-extra {
-
-            position: relative;
-            margin-top: calc(var(--card-gap) * 2);
-
-            .obsession-reason {
-                font-size: 20px;
-                z-index: 5;
-                position: relative;
-            }
-        }
-    }
-    @keyframes zoom_in {
-        from {
-            transform: translateY(-20px);
-            opacity: 0;
-        }
-        to {
-            transform: translateY(0);
-            opacity: 1;
-        }
-    }
-    .obsession-container .container {
-        padding: unset !important;
-        margin: unset !important;
-        width: calc((var(--cards-width) / 2) - (var(--card-gap) * 2)) !important;
-        min-width: unset;
-        max-width: unset;
-    }
-
-    .obsession-details .obsession-details-intro {
-        font-weight: var(--font-weight-medium);
-    }
-    .obsession-details .obsession-first {
-        width: 27px;
-        height: 27px;
-        line-height: 27px;
-    }
-
-    .obsession-share {
-        display: none;
     }
 
 
@@ -14106,33 +14038,6 @@
         @media (max-width: 600px) {
             width: calc(var(--cards-width) - (var(--card-padding) * 2));
         }
-    }
-
-
-    .obsession-meta-track {
-        color: #fff;
-        font-weight: var(--font-weight-medium);
-    }
-    .obsession-meta-artist-by {
-        display: none;
-    }
-    .obsession-meta-artist {
-        color: rgba(255,255,255, 0.7);
-        font-size: 20px;
-    }
-
-    .obsession-meta-scrobbles {
-        opacity: unset;
-        color: rgba(255,255,255, 0.5);
-        margin-top: var(--card-gap);
-    }
-    .obsession-meta._buffer {
-        margin-top: calc(var(--card-gap) * 2) !important;
-        margin-bottom: var(--card-gap);
-    }
-
-    .obsession-details-wrap {
-        justify-content: left;
     }
 
 
@@ -18627,12 +18532,12 @@
 
         &:not(.blend) {
             :is(.btn, a, button):not(.not-a-view-button, .toggle, .reset, .select-button, .btn-primary, .js-close, .blend-v2-btn) {
-                --bg: var(--cards-overlay-image-subtlest, none), hsl(var(--b3));
-                --bg-hov: var(--cards-overlay-image-subtlest, none), color-mix(in hsl, hsl(var(--b5)), hsl(var(--b3)) 80%);
-                --bg-atv: var(--cards-overlay-image-subtlest, none), color-mix(in hsl, hsl(var(--b5)), hsl(var(--b3)) 60%);
-                --col: hsl(var(--c2));
-                --mask-colour: color-mix(in hsl, hsl(var(--c2)), hsl(var(--c3)) 50%);
-                --shadow: var(--interact-shadow);
+                --bg: var(--cards-overlay-image-subtlest, none), hsl(var(--h3));
+                --bg-hov: var(--cards-overlay-image-subtlest, none), hsla(var(--h3), 80%);
+                --bg-atv: var(--cards-overlay-image-subtlest, none), hsla(var(--h3), 60%);
+                --col: hsl(var(--b7));
+                --mask-colour: hsl(var(--b7), 70%);
+                --shadow: 0 3px 12px hsl(var(--h4), 25%), var(--interactable-outer);
                 position: relative;
             }
 
@@ -18727,6 +18632,10 @@
                 width: 1px;
                 height: 16px;
                 background: var(--card-border-base);
+
+                & + .listen-divider {
+                    display: none;
+                }
             }
 
             &.user-buttons {
@@ -20638,7 +20547,7 @@
         }
 
         [data-ff--katsune="true"] &:not(.about-artist-panel) {
-            text-shadow: 0 0 24px hsl(var(--b6), 60%);
+            text-shadow: 0 0 24px hsl(var(--b6), 30%);
             margin: -20px -40px !important;
             padding: var(--card-gap) calc(var(--card-gap) + var(--card-padding)) !important;
 
@@ -21013,10 +20922,6 @@
 
                 & > a {
                     color: inherit;
-                }
-
-                [data-bleh--theme_type="light"] & {
-                    text-shadow: 0 0 20px hsl(var(--b5));
                 }
             }
 
@@ -24964,8 +24869,8 @@
 
             &[aria-selected="true"] {
                 .bubble {
-                    border: 1px solid hsl(var(--l3-c));
-                    outline: 1px solid hsl(var(--l3-c));
+                    border: 1px solid transparent;
+                    outline: 2px solid hsl(var(--l3-c));
                 }
             }
         }

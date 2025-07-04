@@ -606,8 +606,8 @@ export let settings_store = {
         default: 1,
         type: 'range',
         min: 0,
-        max: 3,
-        step: 0.1,
+        max: 5,
+        step: 0.2,
         title: trans.card_background_saturation.name,
         body: trans.card_background_saturation.body,
         incompatible: [{setting: 'theme', value: 'light'}]

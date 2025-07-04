@@ -1146,7 +1146,6 @@ function bleh_glacier_library_focused() {
 
             if (!button) return;
 
-            console.info('libraryyy', wrapper, button);
             button.classList.add('btn', 'view-item', 'glacier-library-button');
 
             let tooltips = wrapper.querySelectorAll('.user-library-controls-tooltip');
@@ -1270,11 +1269,12 @@ function bleh_glacier_library_focused() {
 
     upper_wrap.appendChild(view_buttons);
 
-    let lower_wrap = document.createElement('div');
-    lower_wrap.classList.add('glacier-library-top-lower');
-
-    let lower_metadata = document.createElement('div');
-    lower_metadata.classList.add('glacier-library-metadata');
+    let lower_metadata;
+    let lower_wrap = html.node`
+        <div class="glacier-library-top-lower">
+            <div class="glacier-library-metadata" ref=${el => lower_metadata = el} />
+        </div>
+    `;
 
     let legacy_meta_wrap = page.structure.main.querySelector('.metadata-list');
     if (legacy_meta_wrap) {
@@ -1290,11 +1290,9 @@ function bleh_glacier_library_focused() {
 
             lower_metadata.appendChild(glacier_meta_item);
         });
+
+        header.appendChild(lower_wrap);
     }
-
-    lower_wrap.appendChild(lower_metadata);
-
-    header.appendChild(lower_wrap);
 
     page.structure.main.insertBefore(header, page.structure.main.firstElementChild);
 

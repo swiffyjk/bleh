@@ -182,11 +182,14 @@ export function patch_titles(search=page.structure.main) {
             let track_timestamp_contents;
             if (track_timestamp && !is_active) {
                 track_timestamp_contents = track_timestamp.getAttribute('title');
-                track_timestamp.setAttribute('title', '');
 
-                tippy(track_timestamp, {
-                    content: track_timestamp_contents
-                });
+                if (track_timestamp_contents) {
+                    track_timestamp.setAttribute('title', '');
+
+                    tippy(track_timestamp, {
+                        content: track_timestamp_contents
+                    });
+                }
             }
 
             let album = track.querySelector('.chartlist-album a');

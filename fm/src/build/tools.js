@@ -102,6 +102,8 @@ export function clamp_sat(sat) {
 export function clamp_lit(sat, lit) {
     if (sat >= 1.3 && lit < 0.8)
         return 0.8;
+
+    return lit;
 }
 
 /**

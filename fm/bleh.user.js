@@ -1106,9 +1106,6 @@
   var bleh_url = "https://www.last.fm{root}bleh";
   var setup_url = "https://www.last.fm{root}bleh/setup";
   var sponsor_url = "https://www.last.fm{root}bleh/sponsor";
-  var has_prompted_for_update = {
-    state: false
-  };
   var theme_preview = () => html.node`
     <div class="preview-inner">
         <div class="preview-card">
@@ -1323,6 +1320,7 @@
   function clamp_lit(sat, lit) {
     if (sat >= 1.3 && lit < 0.8)
       return 0.8;
+    return lit;
   }
   function clean_number(string) {
     return parseInt(
@@ -2650,10 +2648,12 @@
         let track_timestamp_contents;
         if (track_timestamp && !is_active) {
           track_timestamp_contents = track_timestamp.getAttribute("title");
-          track_timestamp.setAttribute("title", "");
-          tippy(track_timestamp, {
-            content: track_timestamp_contents
-          });
+          if (track_timestamp_contents) {
+            track_timestamp.setAttribute("title", "");
+            tippy(track_timestamp, {
+              content: track_timestamp_contents
+            });
+          }
         }
         let album = track.querySelector(".chartlist-album a");
         if (!is_album && album)
@@ -4025,7 +4025,6 @@
         if (!button)
           button = wrapper.querySelector("span");
         if (!button) return;
-        console.info("libraryyy", wrapper, button);
         button.classList.add("btn", "view-item", "glacier-library-button");
         let tooltips = wrapper.querySelectorAll(".user-library-controls-tooltip");
         tooltips.forEach((tooltip) => {
@@ -4127,10 +4126,12 @@
     });
     view_buttons.appendChild(configure_button);
     upper_wrap.appendChild(view_buttons);
-    let lower_wrap = document.createElement("div");
-    lower_wrap.classList.add("glacier-library-top-lower");
-    let lower_metadata = document.createElement("div");
-    lower_metadata.classList.add("glacier-library-metadata");
+    let lower_metadata;
+    let lower_wrap = html.node`
+        <div class="glacier-library-top-lower">
+            <div class="glacier-library-metadata" ref=${(el) => lower_metadata = el} />
+        </div>
+    `;
     let legacy_meta_wrap = page.structure.main.querySelector(".metadata-list");
     if (legacy_meta_wrap) {
       let metadatas = legacy_meta_wrap.querySelectorAll(".metadata-item:not(.library-header-ctas__wrapper)");
@@ -4143,9 +4144,8 @@
             `;
         lower_metadata.appendChild(glacier_meta_item);
       });
+      header.appendChild(lower_wrap);
     }
-    lower_wrap.appendChild(lower_metadata);
-    header.appendChild(lower_wrap);
     page.structure.main.insertBefore(header, page.structure.main.firstElementChild);
     let overview_headers = page.structure.main.querySelectorAll(".library-overview-header");
     overview_headers.forEach((top) => {
@@ -10699,7 +10699,7 @@
   }
   function update_check(force = false, btn = null, func = null) {
     if (!force) {
-      const last_checked = localStorage.getItem("bleh_update_last_checked") || null;
+      const last_checked = localStorage.getItem("bleh_update_checked") || null;
       const next_check = localStorage.getItem("bleh_update_next_check") || null;
       const current_time = /* @__PURE__ */ new Date();
       if (last_checked && next_check && new Date(next_check) > current_time) {
@@ -10725,7 +10725,7 @@
         if (settings.get_updates_fast)
           next.setHours(next.getHours() + 2);
         else
-          next.setDate(next.getDate() + 1);
+          next.setDate(next.getDate() + 4);
         localStorage.setItem("bleh_update_next_check", next.toString());
         log("update check finished", "update", "info", { next_in: next, current_time: /* @__PURE__ */ new Date() });
         if (func) func();
@@ -16571,10 +16571,11 @@
       let cancelled = page.structure.main.querySelector(".event-status--cancelled");
       if (cancelled) {
         page.structure.main.removeChild(cancelled);
-        let alert = document.createElement("section");
-        alert.classList.add("cta", "first", "colourful", "error");
-        alert.innerHTML = `<strong>${tl(trans.event_cancelled)}</strong>`;
-        page.structure.main.insertBefore(alert, page.structure.main.firstElementChild);
+        page.structure.main.insertBefore(html.node`
+                <section class="cta first colourful error">
+                    <strong>${tl(trans.event_cancelled)}</strong>
+                </section>
+            `, page.structure.main.firstElementChild);
       }
     } else {
       if (page.subpage == "event_attendance_going" || page.subpage == "event_attendance_interested") {
@@ -16643,14 +16644,13 @@
     bleh_events_manage();
     let back = document.body.querySelector(".content-top-back-link a");
     let nav = page.structure.nav.querySelector("ul");
-    let back_nav = document.createElement("li");
-    back_nav.classList.add("navlist-item", "secondary-nav-item", "secondary-nav-item--back");
-    back_nav.innerHTML = `
-        <a class="secondary-nav-item-link" href="${back.getAttribute("href")}">
-            ${trans_legacy.en.settings.back}
-        </a>
-    `;
-    nav.insertBefore(back_nav, nav.firstElementChild);
+    nav.insertBefore(html.node`
+        <li class="navlist-item secondary-nav-item secondary-nav-item--back">
+            <a class="secondary-nav-item-link" href="${back.getAttribute("href")}">
+                ${tl(trans.back)}
+            </a>
+        </li>
+    `, nav.firstElementChild);
   }
   function bleh_events_home() {
     page.subpage = "home";
@@ -18406,12 +18406,6 @@
         log("loop", "mutation", "log", { mutations });
         lookup_lang();
         patch_masthead(document.body);
-        theme_version.state = getComputedStyle(document.body).getPropertyValue("--version-build").replaceAll("'", "").replaceAll('"', "");
-        if (theme_version.state != version.build && theme_version.state != "" && !has_prompted_for_update.state) {
-          log(`version mismatch! running ${version.build}, downloaded theme ${theme_version.state}`, "update");
-          prompt_for_update();
-          has_prompted_for_update.state = true;
-        }
         main_flow();
       });
       observer.observe(document.body, {
@@ -18459,6 +18453,7 @@
   }
   function main_flow() {
     assign_page();
+    if (page.state.error) return;
     if (page.type == "artist" || page.type == "album") {
       bleh_gallery();
       bleh_gallery_upload_check();
@@ -25330,8 +25325,8 @@
       default: 1,
       type: "range",
       min: 0,
-      max: 3,
-      step: 0.1,
+      max: 5,
+      step: 0.2,
       title: trans.card_background_saturation.name,
       body: trans.card_background_saturation.body,
       incompatible: [{ setting: "theme", value: "light" }]
@@ -25706,8 +25701,8 @@
   // src/build/build.json
   var build_default = {
     brand: "bleh",
-    build: "2025.0608.2",
-    sku: "homura",
+    build: "2025.0703",
+    sku: "sweet",
     bio: "bleh!!! ^-^",
     author: "kate",
     url: "https://github.com/katelyynn/bleh/raw/uwu/fm/bleh.user.js",

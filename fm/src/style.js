@@ -161,7 +161,7 @@ export function update_comparison(current, latest) {
 
 export function update_check(force = false, btn = null, func = null) {
     if (!force) {
-        const last_checked = localStorage.getItem('bleh_update_last_checked') || null;
+        const last_checked = localStorage.getItem('bleh_update_checked') || null;
         const next_check = localStorage.getItem('bleh_update_next_check') || null;
         const current_time = new Date();
 
@@ -207,7 +207,7 @@ export function update_check(force = false, btn = null, func = null) {
             if (settings.get_updates_fast)
                 next.setHours(next.getHours() + 2);
             else
-                next.setDate(next.getDate() + 1);
+                next.setDate(next.getDate() + 4);
 
             localStorage.setItem('bleh_update_next_check', next.toString());
             log('update check finished', 'update', 'info', {next_in: next, current_time: new Date()});
