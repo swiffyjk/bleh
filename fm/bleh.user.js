@@ -2511,6 +2511,8 @@
     element.addEventListener("contextmenu", (e) => {
       e.preventDefault();
       menu.setProps({
+        placement: "right-start",
+        offset: [0, 0],
         getReferenceClientRect: () => ({
           width: 0,
           height: 0,
@@ -2727,6 +2729,32 @@
           }
         }
         if (track_legacy_menu) {
+          let menu;
+          let more_button = html.node`
+                    <button class="track-more-button icon chibi" data-type="more" onclick=${() => {
+            console.info(menu);
+            menu.setProps({
+              placement: "bottom",
+              offset: [],
+              getReferenceClientRect: null
+            });
+            if (menu.state.isShown) {
+              menu.hide();
+            } else {
+              menu.show();
+            }
+          }}>
+                        ${tl(trans.more)}
+                    </button>
+                `;
+          tippy(more_button, {
+            content: tl(trans.more)
+          });
+          track.appendChild(html.node`
+                    <td class="more-button-wrapper">
+                        ${more_button}
+                    </td>
+                `);
           setTimeout(() => {
             console.info(track_legacy_menu.innerHTML);
             let edit_button = track_legacy_menu.querySelector('[data-analytics-action="EditScrobbleOpen"]');
@@ -2736,7 +2764,7 @@
             forms.forEach((form) => {
               form.style.margin = "0";
             });
-            let menu = tippy(track, {
+            menu = tippy(more_button, {
               theme: "context-menu",
               content: html.node`
                             ${track.preview}
@@ -2762,8 +2790,18 @@
               }}
                                 ` : ""}
                             </div>
-                            ` : ""}
                             <div class="sep" />
+                            ` : ""}
+                            ${() => {
+                let container = track.querySelector(".chartlist-play");
+                let button = container.querySelector(".chartlist-play-button");
+                if (!button) return;
+                button.classList = "dropdown-menu-clickable-item";
+                button.textContent = tl(trans.play);
+                button.setAttribute("data-type", "play");
+                track.removeChild(container);
+                return button;
+              }}
                             <div class="button-combo">
                                 ${() => {
                 return html.node`
@@ -2852,10 +2890,18 @@
               interactive: true,
               interactiveBorder: 10,
               offset: [0, 0],
+              hideOnClick: false,
               onShow(instance) {
+                track.setAttribute("data-has-menu", true);
                 instance.popper.addEventListener("click", (event3) => {
                   instance.hide();
                 });
+              },
+              onClickOutside(instance) {
+                instance.hide();
+              },
+              onHide(instance) {
+                track.setAttribute("data-has-menu", false);
               }
             });
             register_menu(track, menu);
@@ -19232,6 +19278,9 @@
       en: "Your scrobbles",
       de: "Deine Scrobbels",
       pt: "Seus scrobbles"
+    },
+    play: {
+      en: "Play"
     },
     plays: {
       en: "Plays",

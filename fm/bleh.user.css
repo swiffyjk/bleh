@@ -5301,14 +5301,25 @@
         animation-delay: var(--delay, 0s) !important;
         animation-fill-mode: backwards !important;
 
-        &[aria-expanded="true"],
+        &:not([data-has-menu="true"]):has(~ .chartlist-row[data-has-menu="true"]),
+        &[data-has-menu="true"] ~ .chartlist-row {
+            pointer-events: none !important;
+        }
+
+        &[data-has-menu="true"],
         &:hover {
             background-color: var(--bg-hov);
             transition: none !important;
 
-            .chartlist-image {
+            & > .chartlist-image {
                 transform: scale(1.05);
                 filter: brightness(120%);
+            }
+        }
+
+        &:not([data-has-menu="true"], :hover) {
+            & > .more-button-wrapper {
+                opacity: 0;
             }
         }
 
@@ -5317,32 +5328,12 @@
             padding-right: 42px !important;
         }
 
-        .kate-placeholder {
+        & > .kate-placeholder {
             display: none;
         }
 
-        .chartlist-more, .chartlist-play {
-            z-index: 30;
-        }
-        &.show-focus-controls,
-        .chartlist-more-menu {
-            z-index: 40;
-        }
-
-        &.show-focus-controls {
-            .chartlist-more {
-                opacity: 1 !important;
-            }
-        }
-
-        .chartlist-more {
+        & > .chartlist-more {
             display: none !important;
-        }
-
-        &:hover {
-            .chartlist-play {
-                display: var(--override, block) !important;
-            }
         }
 
         position: relative;
@@ -5361,11 +5352,6 @@
         @media (max-width: 600px) {
             td {
                 display: inline-block;
-            }
-
-            .chartlist-play {
-                display: none !important;
-                --override: none;
             }
 
             .chartlist-timestamp {
@@ -5484,8 +5470,7 @@
     .chartlist-loved,
     .chartlist-more,
     .chartlist-timestamp,
-    .chartlist-artist, .chartlist-name,
-    .chartlist-play
+    .chartlist-artist, .chartlist-name
     {
         margin-left: calc(var(--chartlist-inner-gap) / 2) !important;
         margin-right: calc(var(--chartlist-inner-gap) / 2) !important;
@@ -5658,9 +5643,6 @@
         opacity: 0;
     }
 
-    /*.chartlist-more, .chartlist-play {
-        z-index: 5;
-    }*/
     .chartlist-timestamp {
         z-index: 4;
         line-height: var(--line-height);
@@ -6191,23 +6173,9 @@
     /*     PLAY     */
     .chartlist-duration,
     .chartlist-timestamp,
-    .chartlist-more,
-    .chartlist-play {
+    .chartlist-more {
         order: 1;
     }
-    .chartlist-play-button {
-        --left: calc((32px - var(--icon-size)) / 2);
-        --mask: var(--icon-16-play);
-
-        &:before {
-            background-color: currentColor !important;
-        }
-    }
-
-    .chartlist-row:not(:hover) .chartlist-play {
-        opacity: 0;
-    }
-
 
     /*     COUNT BAR - brought over from bleh */
     .chartlist-bar {
@@ -7262,7 +7230,6 @@
     .dropdown-menu-item-dark,
     .btn-secondary,
     /* go to tag page for a user tag */ .col-main > p > [href^="/tag/"],
-    .chartlist-play-button,
     .footer-language :is(strong, button),
     .source-album, .big-tags-item,
     .wiki-history-entry,
@@ -7881,7 +7848,6 @@
     /*     CHARTLIST     */
     .chartlist-love-button:before,
     .chartlist-type:before,
-    .chartlist-play-button:before, .chartlist-more-button:before,
     /*     HOME     */
     .home-welcome-close:before,
     /*     GALLERY     */
@@ -7991,7 +7957,7 @@
     }
 
 
-    .chartlist-love-button, .chartlist-more-button, .chartlist-play-button,
+    .chartlist-love-button, .chartlist-more-button,
     .share-button-profile,
     .shout-more-actions,
     .header-new-more-button,
@@ -8006,14 +7972,15 @@
         visibility: hidden;
     }
 
-    .obsession-candidate-inner .btn-sm,
-    .chartlist-more-button, .chartlist-play-button {
+    .track-more-button,
+    .obsession-candidate-inner .btn-sm {
         --bg: transparent !important;
         --bg-hov: hsla(var(--b4), 60%) !important;
         --bg-atv: hsla(var(--b4), 80%) !important;
         --shadow: none !important;
         --shadow-hov: none !important;
 
+        .chartlist-row--now-scrobbling > &,
         .chartlist-row--now-scrobbling > td & {
             --bg-hov: hsla(var(--h4), 20%) !important;
             --bg-atv: hsla(var(--h4), 40%) !important;
@@ -9011,6 +8978,9 @@
     }
     [data-type="bulk-edit"] {
         --mask: var(--icon-16-edit-bulk);
+    }
+    [data-type="more"] {
+        --mask: var(--icon-16-dots);
     }
     [data-type="history"] {
         --mask: var(--icon-16-bio-history);

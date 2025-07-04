@@ -290,6 +290,9 @@ export const trans = {
         de: 'Deine Scrobbels',
         pt: 'Seus scrobbles'
     },
+    play: {
+        en: 'Play'
+    },
     plays: {
         en: 'Plays',
         pt: 'Reproduções'

@@ -9,6 +9,8 @@ export function register_menu(element, menu) {
         e.preventDefault();
 
         menu.setProps({
+            placement: 'right-start',
+            offset: [0, 0],
             getReferenceClientRect: () => ({
                 width: 0,
                 height: 0,

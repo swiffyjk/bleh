@@ -280,6 +280,37 @@ export function patch_titles(search=page.structure.main) {
             }
 
             if (track_legacy_menu) {
+                let menu;
+
+                let more_button = html.node`
+                    <button class="track-more-button icon chibi" data-type="more" onclick=${() => {
+                        console.info(menu);
+                        menu.setProps({
+                            placement: 'bottom',
+                            offset: [],
+                            getReferenceClientRect: null,
+                        });
+    
+                        if (menu.state.isShown) {
+                            menu.hide();
+                        } else {
+                            menu.show();
+                        }
+                    }}>
+                        ${tl(trans.more)}
+                    </button>
+                `;
+
+                tippy(more_button, {
+                    content: tl(trans.more)
+                });
+
+                track.appendChild(html.node`
+                    <td class="more-button-wrapper">
+                        ${more_button}
+                    </td>
+                `);
+
                 setTimeout(() => {
                     console.info(track_legacy_menu.innerHTML);
 
@@ -293,7 +324,7 @@ export function patch_titles(search=page.structure.main) {
                         form.style.margin = '0';
                     });
 
-                    let menu = tippy(track, {
+                    menu = tippy(more_button, {
                         theme: 'context-menu',
                         content: html.node`
                             ${track.preview}
@@ -322,8 +353,22 @@ export function patch_titles(search=page.structure.main) {
                                     }}
                                 ` : ''}
                             </div>
-                            ` : ''}
                             <div class="sep" />
+                            ` : ''}
+                            ${() => {
+                                let container = track.querySelector('.chartlist-play');
+                                
+                                let button = container.querySelector('.chartlist-play-button');
+                                if (!button) return;
+                                
+                                button.classList = 'dropdown-menu-clickable-item';
+                                button.textContent = tl(trans.play);
+                                button.setAttribute('data-type', 'play');
+                                
+                                track.removeChild(container);
+            
+                                return button;
+                            }}
                             <div class="button-combo">
                                 ${() => {
                                     return html.node`
@@ -422,8 +467,11 @@ export function patch_titles(search=page.structure.main) {
                         interactive: true,
                         interactiveBorder: 10,
                         offset: [0, 0],
+                        hideOnClick: false,
 
                         onShow(instance) {
+                            track.setAttribute('data-has-menu', true);
+
                             instance.popper.addEventListener('click', event => {
                                 instance.hide();
                             });
@@ -434,6 +482,14 @@ export function patch_titles(search=page.structure.main) {
                             menu_items.forEach((item) => {
                                 content.appendChild(item);
                             });*/
+                        },
+
+                        onClickOutside(instance) {
+                            instance.hide();
+                        },
+
+                        onHide(instance) {
+                            track.setAttribute('data-has-menu', false);
                         }
                     });
 
