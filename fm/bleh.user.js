@@ -2625,7 +2625,7 @@
         }
         let is_album = track.hasAttribute("data-album-row");
         if (is_album) track.classList.add("bleh--is-album");
-        let track_artist = return_artist_from_track(track_title.getAttribute("href"), is_album);
+        let track_artist = correct_artist(return_artist_from_track(track_title.getAttribute("href"), is_album));
         if (!wide) track.classList.add("chartlist-row--with-artist");
         let bar = track.querySelector(".chartlist-count-bar-slug");
         if (bar) {
@@ -2756,7 +2756,6 @@
                     </td>
                 `);
           setTimeout(() => {
-            console.info(track_legacy_menu.innerHTML);
             let edit_button = track_legacy_menu.querySelector('[data-analytics-action="EditScrobbleOpen"]');
             let bulk_edit_button = track_legacy_menu.querySelector('[data-analytics-action="BulkEditScrobblesOpen"]');
             let album_name = sanitise(image ? correct_item_by_artist(image.getAttribute("alt"), track_artist) : album ? album.textContent : "");
@@ -15773,7 +15772,7 @@
             text2 = tl(trans.popular_now);
           let header = item.querySelector(".artist-header-featured-items-item-header");
           header.parentElement.removeChild(header);
-          let name2 = correct_item_by_artist(item.querySelector(".artist-header-featured-items-item-name").textContent, page.sister);
+          let name2 = correct_item_by_artist(item.querySelector(".artist-header-featured-items-item-name").textContent.trim(), page.name);
           let aux = item.querySelector(".artist-header-featured-items-item-aux-text")?.textContent.trim();
           let link = item.querySelector(".link-block-cover-link")?.getAttribute("href");
           let img = item.querySelector("img")?.src;
@@ -18639,11 +18638,13 @@
     if (settings.corrections) {
       correct_generic_combo_no_artist("artist-header-featured-items-item");
       correct_generic_combo_no_artist("artist-top-albums-item");
-      correct_generic_combo("source-album-details");
       correct_generic_combo("resource-list--release-list-item");
       correct_generic_combo("similar-albums-item");
       correct_generic_combo("track-similar-tracks-item");
       correct_generic_combo("similar-items-sidebar-item");
+      if (page.type == "album") {
+        correct_generic_combo("source-album-details");
+      }
       if (page.type == "bookmarks" || page.type == "releases") {
         correct_generic_artist("music-bookmarks-artists-item");
         correct_generic_combo("music-bookmarks-albums-item");

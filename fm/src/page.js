@@ -273,11 +273,14 @@ function main_flow() {
     if (settings.corrections) {
         correct_generic_combo_no_artist('artist-header-featured-items-item');
         correct_generic_combo_no_artist('artist-top-albums-item');
-        correct_generic_combo('source-album-details');
         correct_generic_combo('resource-list--release-list-item');
         correct_generic_combo('similar-albums-item');
         correct_generic_combo('track-similar-tracks-item');
         correct_generic_combo('similar-items-sidebar-item');
+
+        if (page.type == 'album') {
+            correct_generic_combo('source-album-details');
+        }
 
         if (page.type == 'bookmarks' || page.type == 'releases') {
             correct_generic_artist('music-bookmarks-artists-item');

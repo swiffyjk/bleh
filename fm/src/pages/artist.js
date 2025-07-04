@@ -297,7 +297,7 @@ export function bleh_artists() {
                         let header = item.querySelector('.artist-header-featured-items-item-header');
                         header.parentElement.removeChild(header);
                         
-                        let name = correct_item_by_artist(item.querySelector('.artist-header-featured-items-item-name').textContent, page.sister);
+                        let name = correct_item_by_artist(item.querySelector('.artist-header-featured-items-item-name').textContent.trim(), page.name);
                         let aux = item.querySelector('.artist-header-featured-items-item-aux-text')?.textContent.trim();
                         let link = item.querySelector('.link-block-cover-link')?.getAttribute('href');
                         let img = item.querySelector('img')?.src;

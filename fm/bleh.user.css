@@ -244,17 +244,17 @@
         .theme-preview[data-bleh--theme="darker"],
         [data-bleh--theme="darker"] &:not(.theme-preview) {
             /* any additional highlights */
-            --b3: var(--hue), calc(var(--sat) * 5% * var(--sat-bg, 1)), 21%;
+            --b3: var(--hue), calc(var(--sat) * 5% * var(--sat-bg, 1)), 19%;
 
             /* card border */
-            --b4: var(--hue), calc(var(--sat) * 6% * var(--sat-bg, 1)), 16%;
+            --b4: var(--hue), calc(var(--sat) * 6% * var(--sat-bg, 1)), 14%;
 
             /* card */
-            --b5: var(--hue), calc(var(--sat) * 6% * var(--sat-bg, 1)), 11%;
+            --b5: var(--hue), calc(var(--sat) * 6% * var(--sat-bg, 1)), 9%;
 
             /* root */
-            --b6: var(--hue), calc(var(--sat) * 8% * var(--sat-bg, 1)), 6%;
-            --b8: var(--hue), calc(var(--sat) * 5% * var(--sat-bg, 1)), 17%;
+            --b6: var(--hue), calc(var(--sat) * 8% * var(--sat-bg, 1)), 4%;
+            --b8: var(--hue), calc(var(--sat) * 5% * var(--sat-bg, 1)), 15%;
             --b7: 0, 0%, 0%;
         }
         .theme-preview[data-bleh--theme="oled"],
@@ -5467,7 +5467,7 @@
     .chartlist-bar,
     .chartlist-loved,
     .chartlist-more,
-    .chartlist-timestamp,
+    .chartlist-timestamp, .chartlist-duration,
     .chartlist-artist, .chartlist-name
     {
         margin-left: calc(var(--chartlist-inner-gap) / 2) !important;
@@ -5979,6 +5979,9 @@
         font-size: calc(var(--font-size) - 1px);
         color: hsl(var(--c3));
         height: fit-content;
+
+        width: unset !important;
+        overflow: unset !important;
     }
 
     .chartlist-index {
@@ -23554,23 +23557,6 @@
         align-items: center;
         min-width: 32px !important;
 
-        p {
-            position: relative;
-            transition-property: left;
-            transition-duration: var(--trans);
-            transition-timing-function: var(--trans-function);
-
-            &:before {
-                animation: spinner 1.2s linear infinite;
-                --left: 0;
-                --mask: var(--icon-16-spinner);
-                --mask-size: 12px;
-                --margin-top: -6px;
-                --show-icon: none;
-                background-color: hsl(var(--c3)) !important;
-            }
-        }
-
         &:not([data-listens="-3"]) {
             --bg: transparent;
             --bg-hov: transparent;
@@ -23580,22 +23566,37 @@
         }
 
         .info {
-            h3 {
+            & > h3 {
                 font-size: var(--font-size);
                 line-height: var(--line-height);
                 color: hsl(var(--c3));
                 font-weight: var(--font-weight-medium);
                 margin-bottom: 2px;
             }
-            p {
+            & > p {
                 font-size: 16px;
                 line-height: 20px;
                 font-weight: var(--font-weight-medium);
+
+                position: relative;
+                transition-property: left;
+                transition-duration: var(--trans);
+                transition-timing-function: var(--trans-function);
+
+                &:before {
+                    animation: spinner 1.2s linear infinite;
+                    --left: 0;
+                    --mask: var(--icon-16-spinner);
+                    --mask-size: 12px;
+                    --margin-top: -6px;
+                    --show-icon: none;
+                    background-color: hsl(var(--c3)) !important;
+                }
             }
         }
 
         &[data-listens="-1"] {
-            p {
+            & > .info > p {
                 padding-left: calc(12px + 4px);
 
                 &:before {
@@ -23606,7 +23607,7 @@
         }
 
         &[data-listens="-4"] {
-            p {
+            & > .info > p {
                 padding-left: calc(12px + 4px);
 
                 &:before {
@@ -23633,7 +23634,7 @@
             }
         }
 
-        &[data-bleh--scrobble-milestone] p {
+        &[data-bleh--scrobble-milestone] > .info > p {
             --col: hsl(var(--l2-c-theme-switch));
             text-shadow: 0 0 10px hsla(var(--h4), 40%);
         }
@@ -23644,7 +23645,7 @@
             background-color: hsl(var(--c3)) !important;
         }
 
-        .view-item-avatar {
+        & > .view-item-avatar {
             width: 32px;
             height: 32px;
             margin-right: 10px;
@@ -23652,8 +23653,18 @@
 
             --mask-size: 18px;
 
+            transition-property: transform;
+            transition-duration: 0.2s;
+            transition-timing-function: cubic-bezier(0.4, 0, 0.2, 1);
+
             & + .view-item-avatar {
                 margin-left: -20px;
+            }
+        }
+
+        &:hover, &[aria-expanded="true"] {
+            & > .view-item-avatar {
+                transform: scale(1.05);
             }
         }
     }

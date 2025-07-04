@@ -149,7 +149,7 @@ export function patch_titles(search=page.structure.main) {
             let is_album = track.hasAttribute('data-album-row');
             if (is_album) track.classList.add('bleh--is-album');
 
-            let track_artist = return_artist_from_track(track_title.getAttribute('href'), is_album);
+            let track_artist = correct_artist(return_artist_from_track(track_title.getAttribute('href'), is_album));
             // when focused on a track in a library, an artist field is redundant
             if (!wide) track.classList.add('chartlist-row--with-artist');
 
@@ -312,8 +312,6 @@ export function patch_titles(search=page.structure.main) {
                 `);
 
                 setTimeout(() => {
-                    console.info(track_legacy_menu.innerHTML);
-
                     let edit_button = track_legacy_menu.querySelector('[data-analytics-action="EditScrobbleOpen"]');
                     let bulk_edit_button = track_legacy_menu.querySelector('[data-analytics-action="BulkEditScrobblesOpen"]');
 
