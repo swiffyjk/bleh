@@ -17134,51 +17134,7 @@
     let shout_controls = page.structure.main.querySelector(".shoutbox-controls-wrapper:not([data-shouts])");
     if (shout_controls) {
       shout_controls.setAttribute("data-shouts", "true");
-      let panel = shout_controls.parentElement;
-      let select_btn = panel.querySelector(".dropdown-menu-clickable-button");
-      let settings_btn;
-      let header = panel.querySelector("h2");
-      header.parentElement.removeChild(header);
-      let link = window.location.href;
-      let shoutbox_link = "+shoutbox";
-      if (page.type == "user" || "event")
-        shoutbox_link = "shoutbox";
-      if (!page.subpage.startsWith("shoutbox"))
-        link += `/${shoutbox_link}`;
-      panel.insertBefore(html.node`
-            <div class="top-container">
-                <h2>
-                    <a class="text-colour-link" href=${link}>${tl(trans.shouts)}</a>
-                </h2>
-                <div class="accompany view-buttons blend blend-v2">
-                    ${() => {
-        select_btn.classList.add("select-button", "link-select", "blend-v2-btn");
-        select_btn.classList.remove("section-control", "dropdown-menu-clickable-button");
-        return shout_controls;
-      }}
-                </div>
-                <div class="view-buttons blend blend-v2">
-                    <button class="left-icon blend-v2-btn" data-type="settings" ref=${(el) => settings_btn = el}>
-                        ${tl(trans.settings)}
-                    </button>
-                </div>
-            </div>
-        `, panel.firstElementChild);
-      tippy(settings_btn, {
-        theme: "window",
-        content: html.node`
-                <div class="dialog-settings">
-                    ${setting({ id: "shout_markdown" })}
-                    <div class="sep"></div>
-                    ${setting({ id: "accessible_name_colours" })}
-                    ${setting({ id: "underline_links" })}
-                </div>
-            `,
-        placement: "bottom",
-        interactive: true,
-        interactiveBorder: 10,
-        trigger: "click"
-      });
+      shout_header(shout_controls);
     }
     let shouts = page.structure.main.querySelectorAll(".shout:not([data-kate-processed])");
     shouts.forEach((shout, index) => {
@@ -17249,6 +17205,53 @@
       content: tl(trans.send_quickly_with).replace("{kbd}", '<span class="keybind"><kbd>\u2318</kbd><kbd>\u21B5</kbd></span>'),
       delay: [500, 0],
       allowHTML: true
+    });
+  }
+  function shout_header(shout_controls) {
+    let panel = shout_controls.parentElement;
+    let select_btn = panel.querySelector(".dropdown-menu-clickable-button");
+    let settings_btn;
+    let header = panel.querySelector("h2");
+    if (header) header.parentElement.removeChild(header);
+    let link = window.location.href;
+    let shoutbox_link = "+shoutbox";
+    if (page.type == "user" || "event")
+      shoutbox_link = "shoutbox";
+    if (!page.subpage.startsWith("shoutbox"))
+      link += `/${shoutbox_link}`;
+    panel.insertBefore(html.node`
+        <div class="top-container">
+            <h2>
+                <a class="text-colour-link" href=${link}>${tl(trans.shouts)}</a>
+            </h2>
+            <div class="accompany view-buttons blend blend-v2">
+                ${() => {
+      select_btn.classList.add("select-button", "link-select", "blend-v2-btn");
+      select_btn.classList.remove("section-control", "dropdown-menu-clickable-button");
+      return shout_controls;
+    }}
+            </div>
+            <div class="view-buttons blend blend-v2">
+                <button class="left-icon blend-v2-btn" data-type="settings" ref=${(el) => settings_btn = el}>
+                    ${tl(trans.settings)}
+                </button>
+            </div>
+        </div>
+    `, panel.firstElementChild);
+    tippy(settings_btn, {
+      theme: "window",
+      content: html.node`
+            <div class="dialog-settings">
+                ${setting({ id: "shout_markdown" })}
+                <div class="sep"></div>
+                ${setting({ id: "accessible_name_colours" })}
+                ${setting({ id: "underline_links" })}
+            </div>
+        `,
+      placement: "bottom",
+      interactive: true,
+      interactiveBorder: 10,
+      trigger: "click"
     });
   }
   function parse_shout_queue() {
@@ -18790,6 +18793,9 @@
                     ${tl(trans.starred)}
                 `);
         });
+      }
+      if (page.subpage.startsWith("shoutbox") && (page.type == "artist" || page.type == "album" || page.type == "track")) {
+        shout_header(page.structure.main.querySelector(".section-controls"));
       }
     }
     append_nav();

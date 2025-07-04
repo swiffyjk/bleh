@@ -54,7 +54,7 @@ import {bleh_tracks} from "./pages/track";
 import {patch_wiki} from "./pages/wiki";
 import {start_rain} from "./rain";
 import {seasonal_timer_end, set_season} from "./seasonal";
-import {parse_shout_queue, patch_shouts} from "./shout";
+import {parse_shout_queue, patch_shouts, shout_header} from "./shout";
 import {ff} from "./sku";
 import {bleh_sponsor_page, sponsors} from "./sponsor";
 import {append_style, update_check} from "./style";
@@ -470,6 +470,10 @@ function load_page() {
                     ${tl(trans.starred)}
                 `);
             });
+        }
+
+        if (page.subpage.startsWith('shoutbox') && (page.type == 'artist' || page.type == 'album' || page.type == 'track')) {
+            shout_header(page.structure.main.querySelector('.section-controls'));
         }
     }
 
