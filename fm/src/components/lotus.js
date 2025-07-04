@@ -380,7 +380,8 @@ export function name_includes(original_title, original_artist) {
             .replace(/,;/g, ';')
             .replace(/tyler;the/gi, 'Tyler, The')
             .replace(/ of bts/gi, ';BTS')
-            .replace(/marina;the diamonds/gi, 'Marina and The Diamonds');
+            .replace(/marina;the diamonds/gi, 'Marina and The Diamonds')
+            .replace(/selena gomez;the scene/gi, 'Selena Gomez & the Scene');
         const guests = normalized
             .split(/;+/)
             .map(s => s.trim())
@@ -429,6 +430,7 @@ export function artist_title() {
         .replaceAll(' & ', ';').replaceAll(', ', ';')
         .replace('Tyler;the', 'Tyler, The').replace('Tyler;The', 'Tyler, The')
         .replace('Marina;the Diamonds', 'Marina and The Diamonds')
+        .replace(/selena gomez;the scene/gi, 'Selena Gomez & the Scene')
         .replaceAll(';;', ';');
 
         page.multi = true;

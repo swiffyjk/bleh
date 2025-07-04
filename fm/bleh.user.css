@@ -5166,7 +5166,7 @@
             }
 
             &[data-bleh--scrobble-milestone] {
-                color: hsl(var(--l2-c));
+                color: color-mix(in hsl, hsl(var(--l3-c)), hsl(var(--l4-c)) 30%);
             }
 
             &.with-avatar {
@@ -23645,6 +23645,7 @@
             background-color: hsl(var(--c3)) !important;
         }
 
+        & > .span > .view-item-avatar,
         & > .view-item-avatar {
             width: 32px;
             height: 32px;
@@ -23663,6 +23664,7 @@
         }
 
         &:hover, &[aria-expanded="true"] {
+            & > .span > .view-item-avatar,
             & > .view-item-avatar {
                 transform: scale(1.05);
             }

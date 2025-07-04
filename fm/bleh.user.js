@@ -3062,7 +3062,6 @@
       content: tl(trans.compare)
     });
     function begin_comparing(bypass = false) {
-      body.setAttribute("data-filled", "false");
       if (parseInt(pages.value) > 3 && !bypass) {
         let warn = notify({
           id: "collage_warning",
@@ -3092,6 +3091,7 @@
         other: [],
         shared: []
       };
+      body.setAttribute("data-filled", "false");
       get_grid(auth.name, 1, parseInt(pages.value), page.name);
     }
     function get_grid(user, current_page, page_count, next_user = null) {
@@ -13830,7 +13830,7 @@
     let song_guests = [];
     extras.forEach((extra) => {
       if (extra.group !== "guests") return;
-      const normalized = extra.text.replace(/feat\.?|ft\.?|featuring|with|w\//gi, "").replace(/ & /g, ";").replace(/, /g, ";").replace(/ and /gi, ";").replace(/- /g, "").replace(/,;/g, ";").replace(/tyler;the/gi, "Tyler, The").replace(/ of bts/gi, ";BTS").replace(/marina;the diamonds/gi, "Marina and The Diamonds");
+      const normalized = extra.text.replace(/feat\.?|ft\.?|featuring|with|w\//gi, "").replace(/ & /g, ";").replace(/, /g, ";").replace(/ and /gi, ";").replace(/- /g, "").replace(/,;/g, ";").replace(/tyler;the/gi, "Tyler, The").replace(/ of bts/gi, ";BTS").replace(/marina;the diamonds/gi, "Marina and The Diamonds").replace(/selena gomez;the scene/gi, "Selena Gomez & the Scene");
       const guests = normalized.split(/;+/).map((s) => s.trim()).filter(Boolean).map(correct_artist);
       song_guests.push(...guests);
     });
@@ -13859,7 +13859,7 @@
         return;
       title.textContent = correct_artist(title_text, true);
     } else {
-      title_text = title_text.replaceAll(" & ", ";").replaceAll(", ", ";").replace("Tyler;the", "Tyler, The").replace("Tyler;The", "Tyler, The").replace("Marina;the Diamonds", "Marina and The Diamonds").replaceAll(";;", ";");
+      title_text = title_text.replaceAll(" & ", ";").replaceAll(", ", ";").replace("Tyler;the", "Tyler, The").replace("Tyler;The", "Tyler, The").replace("Marina;the Diamonds", "Marina and The Diamonds").replace(/selena gomez;the scene/gi, "Selena Gomez & the Scene").replaceAll(";;", ";");
       page.multi = true;
       title.innerHTML = "";
       let split = title_text.split(";");
