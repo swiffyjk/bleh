@@ -135,8 +135,6 @@ export function compare() {
     });
 
     function begin_comparing(bypass = false) {
-        body.setAttribute('data-filled', 'false');
-
         if (parseInt(pages.value) > 3 && !bypass) {
             let warn = notify({
                 id: 'collage_warning',
@@ -168,6 +166,7 @@ export function compare() {
             other: [],
             shared: []
         };
+        body.setAttribute('data-filled', 'false');
         get_grid(auth.name, 1, parseInt(pages.value), page.name);
     }
 
