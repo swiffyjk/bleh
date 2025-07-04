@@ -2242,7 +2242,7 @@
         gap: var(--card-padding);
 
         & > .sep {
-            width: calc(100% - (var(--card-padding) * 2));
+            width: calc(100% - (var(--card-padding) * 2)) !important;
             margin: 0 var(--card-padding);
         }
 
