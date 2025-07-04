@@ -1246,7 +1246,7 @@ export function render_setting_page(page_id) {
                         </div>
                         ${last_checked ? html.node`
                         <div class="check-circle colourful">
-                            <div class="bleh-icon" data-type="check" />
+                            <div class="bleh-icon" data-type="check-thick" />
                         </div>
                         ` : ''}
                     </div>

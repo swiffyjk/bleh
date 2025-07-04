@@ -13,6 +13,7 @@ import {bleh_glacier_insights} from "../pages/glacier";
 import {patch_artist_ranks_in_list_view} from "./colourful_counts";
 import {correct_artist, correct_item_by_artist, name_includes} from "./lotus";
 import {register_menu} from "./menu";
+import {tl, trans} from "../build/trans.js";
 
 export function patch_titles(search=page.structure.main) {
     if (page.subpage === 'tags_overview' || page.subpage == 'tags_tag')
@@ -146,13 +147,11 @@ export function patch_titles(search=page.structure.main) {
             }
 
             let is_album = track.hasAttribute('data-album-row');
-            if (is_album)
-                track.classList.add('bleh--is-album');
+            if (is_album) track.classList.add('bleh--is-album');
 
             let track_artist = return_artist_from_track(track_title.getAttribute('href'), is_album);
             // when focused on a track in a library, an artist field is redundant
-            if (!wide)
-                track.classList.add('chartlist-row--with-artist');
+            if (!wide) track.classList.add('chartlist-row--with-artist');
 
             let bar = track.querySelector('.chartlist-count-bar-slug');
             if (bar) {
@@ -195,6 +194,8 @@ export function patch_titles(search=page.structure.main) {
             let album = track.querySelector('.chartlist-album a');
             if (!is_album && album)
                 album.textContent = correct_item_by_artist(album.textContent, track_artist);
+
+            let image = track.querySelector('.chartlist-image img');
 
             if (settings.format_guest_features) {
                 let formatted_title = name_includes(track_title.getAttribute('title'), track_artist);
@@ -239,10 +240,8 @@ export function patch_titles(search=page.structure.main) {
                     }
                 }
 
-                let image = track.querySelector('.chartlist-image img');
-
                 if (track_legacy_menu) {
-                    let track_preview = html.node`
+                    track.preview = html.node`
                         <div class="track-preview">
                             <div class="image">
                                 <div class="inner-image">
@@ -261,9 +260,7 @@ export function patch_titles(search=page.structure.main) {
                                 ${(track_timestamp && track_timestamp_contents) ? html.node`<p class="timestamp">${track_timestamp_contents}</p>` : ''}
                             </div>
                         </div>
-                    `
-
-                    track_legacy_menu.insertBefore(track_preview, track_legacy_menu.firstElementChild);
+                    `;
                 }
             } else if (settings.corrections) {
                 let song_artist_element = track.querySelector('.chartlist-artist a');
@@ -283,31 +280,165 @@ export function patch_titles(search=page.structure.main) {
             }
 
             if (track_legacy_menu) {
-                let menu = tippy(track, {
-                    theme: 'context-menu',
-                    content: track_legacy_menu.innerHTML,
-                    allowHTML: true,
-                    placement: 'right-start',
-                    trigger: 'manual',
-                    interactive: true,
-                    interactiveBorder: 10,
-                    offset: [0, 0],
+                setTimeout(() => {
+                    console.info(track_legacy_menu.innerHTML);
 
-                    onShow(instance) {
-                        instance.popper.addEventListener('click', event => {
-                            instance.hide();
-                        });
+                    let edit_button = track_legacy_menu.querySelector('[data-analytics-action="EditScrobbleOpen"]');
+                    let bulk_edit_button = track_legacy_menu.querySelector('[data-analytics-action="BulkEditScrobblesOpen"]');
 
-                        /*let menu_items = track_legacy_menu.querySelectorAll('li > *');
-                        let content = instance.popper.querySelector('.tippy-content');
+                    let album_name = sanitise((image) ? correct_item_by_artist(image.getAttribute('alt'), track_artist) : (album) ? album.textContent : '');
 
-                        menu_items.forEach((item) => {
-                            content.appendChild(item);
-                        });*/
-                    }
-                });
+                    let forms = track_legacy_menu.querySelectorAll('form');
+                    forms.forEach((form) => {
+                        form.style.margin = '0';
+                    });
 
-                register_menu(track, menu);
+                    let menu = tippy(track, {
+                        theme: 'context-menu',
+                        content: html.node`
+                            ${track.preview}
+                            ${edit_button ? html.node`
+                            <div class="button-combo">
+                                ${() => {
+                                    edit_button.classList = 'dropdown-menu-clickable-item';
+                                    edit_button.textContent = tl(trans.edit);
+                                    edit_button.setAttribute('data-type', 'edit');
+        
+                                    return edit_button.parentElement;
+                                }}
+                                ${bulk_edit_button ? html.node`
+                                    <div class="button-combo-sep" />
+                                    ${() => {
+                                        let button = track_legacy_menu.querySelector('[data-analytics-action="BulkEditScrobblesOpen"]');
+                                        button.classList = 'dropdown-menu-clickable-item chibi';
+                                        button.textContent = tl(trans.bulk_edit);
+                                        button.setAttribute('data-type', 'bulk-edit');
+            
+                                        tippy(button, {
+                                            content: tl(trans.bulk_edit)
+                                        });
+            
+                                        return button;
+                                    }}
+                                ` : ''}
+                            </div>
+                            ` : ''}
+                            <div class="sep" />
+                            <div class="button-combo">
+                                ${() => {
+                                    return html.node`
+                                        <a class="dropdown-menu-clickable-item" data-type="track" href="${root}music/${sanitise(track_artist)}/_/${sanitise(track_title.getAttribute('title'))}">
+                                            ${tl(trans.track)}
+                                        </a>
+                                    `;
+                                }}
+                                <div class="button-combo-sep"/>
+                                ${() => {
+                                    let button = html.node`
+                                        <a class="dropdown-menu-clickable-item chibi" data-type="continue" href="${root}user/${page.name}/library/music/${sanitise(track_artist)}/_/${sanitise(track_title.getAttribute('title'))}">
+                                            ${tl(trans.explore_in_library)}
+                                        </a>
+                                    `;
+                                    
+                                    tippy(button, {
+                                        content: tl(trans.explore_in_library)
+                                    });
+                                    
+                                    return button;
+                                }}
+                            </div>
+                            <div class="button-combo">
+                                ${() => {
+                                    return html.node`
+                                        <a class="dropdown-menu-clickable-item" data-type="album" href="${root}music/${sanitise(track_artist)}/${album_name}">
+                                            ${tl(trans.album)}
+                                        </a>
+                                    `;
+                                }}
+                                <div class="button-combo-sep"/>
+                                ${() => {
+                                    let button = html.node`
+                                        <a class="dropdown-menu-clickable-item chibi" data-type="continue" href="${root}user/${page.name}/library/music/${sanitise(track_artist)}/${album_name}">
+                                            ${tl(trans.explore_in_library)}
+                                        </a>
+                                    `;
+    
+                                    tippy(button, {
+                                        content: tl(trans.explore_in_library)
+                                    });
+    
+                                    return button;
+                                }}
+                            </div>
+                            <div class="button-combo">
+                                ${() => {
+                                    return html.node`
+                                        <a class="dropdown-menu-clickable-item" data-type="artist" href="${root}music/${sanitise(track_artist)}">
+                                            ${tl(trans.artist)}
+                                        </a>
+                                    `;
+                                }}
+                                <div class="button-combo-sep"/>
+                                ${() => {
+                                    let button = html.node`
+                                        <a class="dropdown-menu-clickable-item chibi" data-type="continue" href="${root}user/${page.name}/library/music/${sanitise(track_artist)}">
+                                            ${tl(trans.explore_in_library)}
+                                        </a>
+                                    `;
+    
+                                    tippy(button, {
+                                        content: tl(trans.explore_in_library)
+                                    });
+    
+                                    return button;
+                                }}
+                            </div>
+                            ${() => {
+                                let button = track_legacy_menu.querySelector('.more-item--obsession');
+                                if (!button) return;
+    
+                                button.classList = 'dropdown-menu-clickable-item';
+                                button.textContent = tl(trans.obsess);
+                                button.setAttribute('data-type', 'obsession');
+    
+                                return button.parentElement;
+                            }}
+                            ${() => {
+                                let button = track_legacy_menu.querySelector('.more-item--delete');
+                                if (!button) return;
+                                
+                                button.classList = 'dropdown-menu-clickable-item more-item--delete';
+                                button.textContent = tl(trans.delete);
+                                button.setAttribute('data-type', 'delete');
+    
+                                return html.node`
+                                    <div class="sep" />
+                                    ${button.parentElement}
+                                `;
+                            }}
+                        `,
+                        placement: 'right-start',
+                        trigger: 'manual',
+                        interactive: true,
+                        interactiveBorder: 10,
+                        offset: [0, 0],
+
+                        onShow(instance) {
+                            instance.popper.addEventListener('click', event => {
+                                instance.hide();
+                            });
+
+                            /*let menu_items = track_legacy_menu.querySelectorAll('li > *');
+                            let content = instance.popper.querySelector('.tippy-content');
+
+                            menu_items.forEach((item) => {
+                                content.appendChild(item);
+                            });*/
+                        }
+                    });
+
+                    register_menu(track, menu);
+                }, 100);
             }
 
             if (is_album) {

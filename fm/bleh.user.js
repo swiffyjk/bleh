@@ -1,7 +1,7 @@
 // ==UserScript==
 // @name         bleh
 // @namespace    http://last.fm/
-// @version      2025.0608.2
+// @version      2025.0703
 // @description  bleh!!! ^-^
 // @author       kate
 // @match        https://www.last.fm/*
@@ -2622,11 +2622,9 @@
           return;
         }
         let is_album = track.hasAttribute("data-album-row");
-        if (is_album)
-          track.classList.add("bleh--is-album");
+        if (is_album) track.classList.add("bleh--is-album");
         let track_artist = return_artist_from_track(track_title.getAttribute("href"), is_album);
-        if (!wide)
-          track.classList.add("chartlist-row--with-artist");
+        if (!wide) track.classList.add("chartlist-row--with-artist");
         let bar = track.querySelector(".chartlist-count-bar-slug");
         if (bar) {
           let value = parseInt(bar.getAttribute("data-stat-value"));
@@ -2658,6 +2656,7 @@
         let album = track.querySelector(".chartlist-album a");
         if (!is_album && album)
           album.textContent = correct_item_by_artist(album.textContent, track_artist);
+        let image = track.querySelector(".chartlist-image img");
         if (settings.format_guest_features) {
           let formatted_title = name_includes(track_title.getAttribute("title"), track_artist);
           console.log("formatted", formatted_title);
@@ -2690,9 +2689,8 @@
                         `);
             }
           }
-          let image = track.querySelector(".chartlist-image img");
           if (track_legacy_menu) {
-            let track_preview = html.node`
+            track.preview = html.node`
                         <div class="track-preview">
                             <div class="image">
                                 <div class="inner-image">
@@ -2712,7 +2710,6 @@
                             </div>
                         </div>
                     `;
-            track_legacy_menu.insertBefore(track_preview, track_legacy_menu.firstElementChild);
           }
         } else if (settings.corrections) {
           let song_artist_element = track.querySelector(".chartlist-artist a");
@@ -2730,22 +2727,139 @@
           }
         }
         if (track_legacy_menu) {
-          let menu = tippy(track, {
-            theme: "context-menu",
-            content: track_legacy_menu.innerHTML,
-            allowHTML: true,
-            placement: "right-start",
-            trigger: "manual",
-            interactive: true,
-            interactiveBorder: 10,
-            offset: [0, 0],
-            onShow(instance) {
-              instance.popper.addEventListener("click", (event3) => {
-                instance.hide();
-              });
-            }
-          });
-          register_menu(track, menu);
+          setTimeout(() => {
+            console.info(track_legacy_menu.innerHTML);
+            let edit_button = track_legacy_menu.querySelector('[data-analytics-action="EditScrobbleOpen"]');
+            let bulk_edit_button = track_legacy_menu.querySelector('[data-analytics-action="BulkEditScrobblesOpen"]');
+            let album_name = sanitise(image ? correct_item_by_artist(image.getAttribute("alt"), track_artist) : album ? album.textContent : "");
+            let forms = track_legacy_menu.querySelectorAll("form");
+            forms.forEach((form) => {
+              form.style.margin = "0";
+            });
+            let menu = tippy(track, {
+              theme: "context-menu",
+              content: html.node`
+                            ${track.preview}
+                            ${edit_button ? html.node`
+                            <div class="button-combo">
+                                ${() => {
+                edit_button.classList = "dropdown-menu-clickable-item";
+                edit_button.textContent = tl(trans.edit);
+                edit_button.setAttribute("data-type", "edit");
+                return edit_button.parentElement;
+              }}
+                                ${bulk_edit_button ? html.node`
+                                    <div class="button-combo-sep" />
+                                    ${() => {
+                let button = track_legacy_menu.querySelector('[data-analytics-action="BulkEditScrobblesOpen"]');
+                button.classList = "dropdown-menu-clickable-item chibi";
+                button.textContent = tl(trans.bulk_edit);
+                button.setAttribute("data-type", "bulk-edit");
+                tippy(button, {
+                  content: tl(trans.bulk_edit)
+                });
+                return button;
+              }}
+                                ` : ""}
+                            </div>
+                            ` : ""}
+                            <div class="sep" />
+                            <div class="button-combo">
+                                ${() => {
+                return html.node`
+                                        <a class="dropdown-menu-clickable-item" data-type="track" href="${root}music/${sanitise(track_artist)}/_/${sanitise(track_title.getAttribute("title"))}">
+                                            ${tl(trans.track)}
+                                        </a>
+                                    `;
+              }}
+                                <div class="button-combo-sep"/>
+                                ${() => {
+                let button = html.node`
+                                        <a class="dropdown-menu-clickable-item chibi" data-type="continue" href="${root}user/${page.name}/library/music/${sanitise(track_artist)}/_/${sanitise(track_title.getAttribute("title"))}">
+                                            ${tl(trans.explore_in_library)}
+                                        </a>
+                                    `;
+                tippy(button, {
+                  content: tl(trans.explore_in_library)
+                });
+                return button;
+              }}
+                            </div>
+                            <div class="button-combo">
+                                ${() => {
+                return html.node`
+                                        <a class="dropdown-menu-clickable-item" data-type="album" href="${root}music/${sanitise(track_artist)}/${album_name}">
+                                            ${tl(trans.album)}
+                                        </a>
+                                    `;
+              }}
+                                <div class="button-combo-sep"/>
+                                ${() => {
+                let button = html.node`
+                                        <a class="dropdown-menu-clickable-item chibi" data-type="continue" href="${root}user/${page.name}/library/music/${sanitise(track_artist)}/${album_name}">
+                                            ${tl(trans.explore_in_library)}
+                                        </a>
+                                    `;
+                tippy(button, {
+                  content: tl(trans.explore_in_library)
+                });
+                return button;
+              }}
+                            </div>
+                            <div class="button-combo">
+                                ${() => {
+                return html.node`
+                                        <a class="dropdown-menu-clickable-item" data-type="artist" href="${root}music/${sanitise(track_artist)}">
+                                            ${tl(trans.artist)}
+                                        </a>
+                                    `;
+              }}
+                                <div class="button-combo-sep"/>
+                                ${() => {
+                let button = html.node`
+                                        <a class="dropdown-menu-clickable-item chibi" data-type="continue" href="${root}user/${page.name}/library/music/${sanitise(track_artist)}">
+                                            ${tl(trans.explore_in_library)}
+                                        </a>
+                                    `;
+                tippy(button, {
+                  content: tl(trans.explore_in_library)
+                });
+                return button;
+              }}
+                            </div>
+                            ${() => {
+                let button = track_legacy_menu.querySelector(".more-item--obsession");
+                if (!button) return;
+                button.classList = "dropdown-menu-clickable-item";
+                button.textContent = tl(trans.obsess);
+                button.setAttribute("data-type", "obsession");
+                return button.parentElement;
+              }}
+                            ${() => {
+                let button = track_legacy_menu.querySelector(".more-item--delete");
+                if (!button) return;
+                button.classList = "dropdown-menu-clickable-item more-item--delete";
+                button.textContent = tl(trans.delete);
+                button.setAttribute("data-type", "delete");
+                return html.node`
+                                    <div class="sep" />
+                                    ${button.parentElement}
+                                `;
+              }}
+                        `,
+              placement: "right-start",
+              trigger: "manual",
+              interactive: true,
+              interactiveBorder: 10,
+              offset: [0, 0],
+              onShow(instance) {
+                instance.popper.addEventListener("click", (event3) => {
+                  instance.hide();
+                });
+              }
+            });
+            register_menu(track, menu);
+          }, 100);
         }
         if (is_album) {
           log(`pushed insight album label of ${track_title.getAttribute("title")}`, "glacier library", "log");
@@ -2758,9 +2872,9 @@
           let image_wrap = track.querySelector(".chartlist-image");
           if (image_wrap) {
             let link = image_wrap.querySelector(".cover-art");
-            let image = link.querySelector("img");
+            let image2 = link.querySelector("img");
             if (!settings.album_text) {
-              let alt = correct_item_by_artist(image.getAttribute("alt"), track_artist);
+              let alt = correct_item_by_artist(image2.getAttribute("alt"), track_artist);
               track.appendChild(html.node`
                             <td class="chartlist-album custom-album-text">
                                 <a href="${link.getAttribute("href")}">${alt}</a>
@@ -2769,11 +2883,11 @@
             }
             if (!settings.colourful_tracks)
               return;
-            image.setAttribute("crossorigin", "anonymous");
+            image2.setAttribute("crossorigin", "anonymous");
             try {
-              image.addEventListener("load", function() {
+              image2.addEventListener("load", function() {
                 let thief = new ColorThief();
-                let colour = thief.getColor(image);
+                let colour = thief.getColor(image2);
                 let hsl = rgb_to_hsl(colour[0], colour[1], colour[2]);
                 track.style.setProperty("--hue-over", hsl.h);
                 track.style.setProperty("--sat-over", clamp_sat(hsl.s / 100 * 3));
@@ -11972,7 +12086,7 @@
                         </div>
                         ${last_checked ? html.node`
                         <div class="check-circle colourful">
-                            <div class="bleh-icon" data-type="check" />
+                            <div class="bleh-icon" data-type="check-thick" />
                         </div>
                         ` : ""}
                     </div>
