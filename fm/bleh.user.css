@@ -5328,10 +5328,8 @@
             padding-right: 42px !important;
         }
 
-        & > .kate-placeholder {
-            display: none;
-        }
-
+        & > .kate-placeholder,
+        & > .chartlist-play,
         & > .chartlist-more {
             display: none !important;
         }
