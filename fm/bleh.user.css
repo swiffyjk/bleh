@@ -5796,6 +5796,7 @@
         text-decoration: var(--force-underline, none) !important;
     }
 
+    .source-album-name,
     .activity-item .name a,
     .grid-items-item-main-text,
     .featured-item-name,
@@ -11280,9 +11281,16 @@
             transition-timing-function: cubic-bezier(0.4, 0, 0.2, 1);
         }
         .source-album-details {
+            flex: 1;
+
             .source-album-name {
                 margin: unset;
                 -webkit-line-clamp: 1;
+
+                & > a {
+                    display: flex;
+                    gap: 6px;
+                }
             }
             .source-album-artist {
                 font-weight: var(--font-weight);

@@ -327,6 +327,16 @@ export function name_includes(original_title, original_artist) {
         })
         .sort((a, b) => a.idx - b.idx);
 
+    // apply any artist corrections
+    if (
+        artist_corrections.hasOwnProperty(original_artist) &&
+        settings.corrections
+    ) {
+        original_artist = correct_artist(
+            artist_corrections[original_artist]
+        );
+    }
+
     // no tags found → return original title and flags
     if (matches.length === 0) {
         return [
@@ -389,16 +399,6 @@ export function name_includes(original_title, original_artist) {
             .map(correct_artist);
         song_guests.push(...guests);
     });
-
-    // apply any artist corrections
-    if (
-        artist_corrections.hasOwnProperty(original_artist) &&
-        settings.corrections
-    ) {
-        original_artist = correct_artist(
-            artist_corrections[original_artist]
-        );
-    }
 
     return [
         cleaned_title,

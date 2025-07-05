@@ -2625,7 +2625,7 @@
         }
         let is_album = track.hasAttribute("data-album-row");
         if (is_album) track.classList.add("bleh--is-album");
-        let track_artist = correct_artist(return_artist_from_track(track_title.getAttribute("href"), is_album));
+        let track_artist = return_artist_from_track(track_title.getAttribute("href"), is_album);
         if (!wide) track.classList.add("chartlist-row--with-artist");
         let bar = track.querySelector(".chartlist-count-bar-slug");
         if (bar) {
@@ -2682,13 +2682,14 @@
             song_artist_element.classList.add("chartlist-artist");
             track.appendChild(song_artist_element);
           }
+          console.log("artist matches", song_artist_element.textContent.replaceAll("+", " ").trim() === track_artist, "artist is blank", song_artist_element.textContent.trim() === "", song_artist_element.textContent.trim(), formatted_title[2]);
           if (song_artist_element.textContent.replaceAll("+", " ").trim() === track_artist || song_artist_element.textContent.trim() === "") {
             log("artist either matches or is blank, replacing", "tracks", "log");
-            render(song_artist_element, html`<a href="${root}music/${sanitise(formatted_title[2])}" title="${formatted_title[2]}">${formatted_title[2]}</a>`);
+            render(song_artist_element, html`<a href="${root}music/${sanitise(formatted_title[2])}">${formatted_title[2]}</a>`);
             let song_guests = formatted_title[3];
             for (let guest in song_guests) {
               song_artist_element.appendChild(html.node`
-                            ,<a href="${root}music/${sanitise(song_guests[guest])}" title="${song_guests[guest]}">${song_guests[guest]}</a>
+                            ,<a href="${root}music/${sanitise(song_guests[guest])}">${song_guests[guest]}</a>
                         `);
             }
           }
@@ -13848,6 +13849,11 @@
       }
       return true;
     }).sort((a, b) => a.idx - b.idx);
+    if (artist_corrections.hasOwnProperty(original_artist) && settings.corrections) {
+      original_artist = correct_artist(
+        artist_corrections[original_artist]
+      );
+    }
     if (matches.length === 0) {
       return [
         formatted_title,
@@ -13874,11 +13880,6 @@
       const guests = normalized.split(/;+/).map((s) => s.trim()).filter(Boolean).map(correct_artist);
       song_guests.push(...guests);
     });
-    if (artist_corrections.hasOwnProperty(original_artist) && settings.corrections) {
-      original_artist = correct_artist(
-        artist_corrections[original_artist]
-      );
-    }
     return [
       cleaned_title,
       extras,

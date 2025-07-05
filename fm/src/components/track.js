@@ -149,7 +149,7 @@ export function patch_titles(search=page.structure.main) {
             let is_album = track.hasAttribute('data-album-row');
             if (is_album) track.classList.add('bleh--is-album');
 
-            let track_artist = correct_artist(return_artist_from_track(track_title.getAttribute('href'), is_album));
+            let track_artist = return_artist_from_track(track_title.getAttribute('href'), is_album);
             // when focused on a track in a library, an artist field is redundant
             if (!wide) track.classList.add('chartlist-row--with-artist');
 
@@ -227,16 +227,17 @@ export function patch_titles(search=page.structure.main) {
                 }
 
                 // if artist matches OR artist is blank
+                console.log('artist matches', song_artist_element.textContent.replaceAll('+', ' ').trim() === track_artist, 'artist is blank', song_artist_element.textContent.trim() === '', song_artist_element.textContent.trim(), formatted_title[2]);
                 if (song_artist_element.textContent.replaceAll('+', ' ').trim() === track_artist || song_artist_element.textContent.trim() === '') {
                     log('artist either matches or is blank, replacing', 'tracks', 'log');
                     // replaces with corrected artist if applicable
-                    render(song_artist_element, html`<a href="${root}music/${sanitise(formatted_title[2])}" title="${formatted_title[2]}">${formatted_title[2]}</a>`);
+                    render(song_artist_element, html`<a href="${root}music/${sanitise(formatted_title[2])}">${formatted_title[2]}</a>`);
 
                     // append guests
                     let song_guests = formatted_title[3];
                     for (let guest in song_guests) {
                         song_artist_element.appendChild(html.node`
-                            ,<a href="${root}music/${sanitise(song_guests[guest])}" title="${song_guests[guest]}">${song_guests[guest]}</a>
+                            ,<a href="${root}music/${sanitise(song_guests[guest])}">${song_guests[guest]}</a>
                         `);
                     }
                 }
