@@ -5979,7 +5979,8 @@
         font-size: calc(var(--font-size) - 1px);
         color: hsl(var(--c3));
         height: fit-content;
-
+    }
+    .chartlist-duration {
         width: unset !important;
         overflow: unset !important;
     }
@@ -19803,6 +19804,7 @@
 
         & > a:not(:hover) {
             color: hsl(var(--c3));
+            --mask-colour: hsl(var(--c3), 80%);
         }
 
         @media (max-width: 600px) {
