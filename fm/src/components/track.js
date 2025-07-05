@@ -7,7 +7,7 @@
 import {html, render} from "lighterhtml";
 import {settings} from "../build/config";
 import {log} from "../build/log";
-import {page, root} from "../build/page";
+import {auth, page, root} from "../build/page";
 import {clamp_sat, return_artist_from_track, rgb_to_hsl, sanitise} from "../build/tools";
 import {bleh_glacier_insights} from "../pages/glacier";
 import {patch_artist_ranks_in_list_view} from "./colourful_counts";
@@ -173,6 +173,7 @@ export function patch_titles(search=page.structure.main) {
             }
 
             let is_active = track.classList.contains('chartlist-row--now-scrobbling');
+            const has_bar = track.querySelector(':scope > .chartlist-bar');
 
             // menu
             let track_legacy_menu = track.querySelector('.chartlist-more-menu');
@@ -282,6 +283,17 @@ export function patch_titles(search=page.structure.main) {
             if (track_legacy_menu) {
                 let menu;
 
+                // due to the library refreshing and destroying the html references
+                // we need to remove the previous more button
+                let previous = track.querySelector(':scope > .more-button-wrapper');
+                if (previous) previous.style.display = 'none';
+
+                // then we need to decide for ourselves whether u can delete or obsess
+                // since we cant rely on the elements existing anymore
+                const is_own_profile = page.type == 'user' && page.name == auth.name;
+                const can_edit = !is_active && !has_bar;
+                const can_delete = !is_active && !has_bar;
+
                 let more_button = html.node`
                     <button class="track-more-button icon chibi" data-type="more" onclick=${() => {
                         console.info(menu);
@@ -315,6 +327,18 @@ export function patch_titles(search=page.structure.main) {
                     let edit_button = track_legacy_menu.querySelector('[data-analytics-action="EditScrobbleOpen"]');
                     let bulk_edit_button = track_legacy_menu.querySelector('[data-analytics-action="BulkEditScrobblesOpen"]');
 
+                    if (edit_button) {
+                        let form = edit_button.parentElement;
+
+                        page.token = form.querySelector('[name="csrfmiddlewaretoken"]').value;
+                        track.setAttribute('data-action', form.getAttribute('action'));
+                        track.setAttribute('data-artist-name', form.querySelector('[name="artist_name"]').value);
+                        track.setAttribute('data-track-name', form.querySelector('[name="track_name"]').value);
+                        track.setAttribute('data-album-name', form.querySelector('[name="album_name"]').value);
+                        track.setAttribute('data-album-artist-name', form.querySelector('[name="album_artist_name"]').value);
+                        track.setAttribute('data-timestamp', form.querySelector('[name="timestamp"]').value);
+                    }
+
                     let album_name = sanitise((image) ? correct_item_by_artist(image.getAttribute('alt'), track_artist) : (album) ? album.textContent : '');
 
                     let forms = track_legacy_menu.querySelectorAll('form');
@@ -326,14 +350,22 @@ export function patch_titles(search=page.structure.main) {
                         theme: 'context-menu',
                         content: html.node`
                             ${track.preview}
-                            ${edit_button ? html.node`
+                            ${can_edit ? html.node`
                             <div class="button-combo">
                                 ${() => {
-                                    edit_button.classList = 'dropdown-menu-clickable-item';
-                                    edit_button.textContent = tl(trans.edit);
-                                    edit_button.setAttribute('data-type', 'edit');
-        
-                                    return edit_button.parentElement;
+                                    return html.node`
+                                        <form method="POST" action=${track.getAttribute('data-action')} data-edit-scrobble="">
+                                            <input type="hidden" name="csrfmiddlewaretoken" value=${page.token}>
+                                            <input type="hidden" name="artist_name" value=${track.getAttribute('data-artist-name')}>
+                                            <input type="hidden" name="track_name" value=${track.getAttribute('data-track-name')}>
+                                            <input type="hidden" name="album_name" value=${track.getAttribute('data-album-name')}>
+                                            <input type="hidden" name="album_artist_name" value=${track.getAttribute('data-album-artist-name')}>
+                                            <input type="hidden" name="timestamp" value=${track.getAttribute('data-timestamp')}>
+                                            <button class="dropdown-menu-clickable-item" data-type="edit">
+                                                ${tl(trans.edit)}
+                                            </button>
+                                        </form>
+                                    `;
                                 }}
                                 ${bulk_edit_button ? html.node`
                                     <div class="button-combo-sep" />
@@ -355,6 +387,7 @@ export function patch_titles(search=page.structure.main) {
                             ` : ''}
                             ${() => {
                                 let container = track.querySelector('.chartlist-play');
+                                if (!container) return;
                                 
                                 let button = container.querySelector('.chartlist-play-button');
                                 if (!button) return;
@@ -437,26 +470,39 @@ export function patch_titles(search=page.structure.main) {
                                 }}
                             </div>
                             ${() => {
-                                let button = track_legacy_menu.querySelector('.more-item--obsession');
-                                if (!button) return;
-    
-                                button.classList = 'dropdown-menu-clickable-item';
-                                button.textContent = tl(trans.obsess);
-                                button.setAttribute('data-type', 'obsession');
-    
-                                return button.parentElement;
+                                if (!is_own_profile) return;
+                                
+                                return html.node`
+                                    <form method="POST" action="${root}user/${auth.name}/obsessions" data-submit-to-modal="">
+                                        <input type="hidden" name="csrfmiddlewaretoken" value=${page.token}>
+                                        <input type="hidden" name="name" value=${track.getAttribute('data-track-name')}>
+                                        <input type="hidden" name="artist_name" value=${track.getAttribute('data-artist-name')}>
+                                        <button class="dropdown-menu-clickable-item" data-type="obsession">
+                                            ${tl(trans.obsess)}
+                                        </button>
+                                    </form>
+                                `;
                             }}
                             ${() => {
-                                let button = track_legacy_menu.querySelector('.more-item--delete');
-                                if (!button) return;
+                                if (!is_own_profile || !can_delete) return;
                                 
-                                button.classList = 'dropdown-menu-clickable-item more-item--delete';
-                                button.textContent = tl(trans.delete);
-                                button.setAttribute('data-type', 'delete');
-    
+                                let button = html.node`
+                                    <button class="dropdown-menu-clickable-item more-item--delete" data-type="delete" data-ajax-form-sets-state="deleted" onclick=${() => {
+                                        track.setAttribute('data-ajax-form-state', 'deleted');
+                                    }}>
+                                        ${tl(trans.delete)}
+                                    </button>
+                                `;
+                                
                                 return html.node`
                                     <div class="sep" />
-                                    ${button.parentElement}
+                                    <form method="POST" data-ajax-form="" action="${root}user/${auth.name}/library/delete">
+                                        <input type="hidden" name="csrfmiddlewaretoken" value=${page.token}>
+                                        <input type="hidden" name="artist_name" value=${track.getAttribute('data-artist-name')}>
+                                        <input type="hidden" name="track_name" value=${track.getAttribute('data-track-name')}>
+                                        <input type="hidden" name="timestamp" value=${track.getAttribute('data-timestamp')}>
+                                        ${button}
+                                    </form>
                                 `;
                             }}
                         `,
@@ -509,10 +555,10 @@ export function patch_titles(search=page.structure.main) {
                 if (image_wrap) {
                     let link = image_wrap.querySelector('.cover-art');
                     let image = link.querySelector('img');
-                    
+
                     if (!settings.album_text) {
                         let alt = correct_item_by_artist(image.getAttribute('alt'), track_artist);
-                        
+
                         track.appendChild(html.node`
                             <td class="chartlist-album custom-album-text">
                                 <a href="${link.getAttribute('href')}">${alt}</a>

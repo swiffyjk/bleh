@@ -5336,6 +5336,10 @@
 
         position: relative;
 
+        &[data-ajax-form-state="deleted"] {
+            pointer-events: none !important;
+        }
+
         /*&:after {
             content: '';
             position: absolute;
