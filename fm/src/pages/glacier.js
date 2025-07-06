@@ -1305,6 +1305,8 @@ function bleh_glacier_library_focused() {
 
         let select_btn = top.querySelector('.dropdown-menu-clickable-button');
 
+        if (!select_btn) return;
+
         select_btn.classList.add('select-button', 'link-select', 'blend-v2-btn');
         select_btn.classList.remove('dropdown-menu-list-button');
 
