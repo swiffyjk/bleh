@@ -71,18 +71,17 @@ export function notify({
     });
 
     if (type === 'error') {
-        icon = 'icon-16-x';
+        if (!icon) icon = 'icon-16-x';
         colourful = true;
     } else if (type === 'warning') {
-        icon = 'icon-16-warning';
+        if (!icon) icon = 'icon-16-warning';
         colourful = true;
     } else if (type === 'success') {
-        icon = 'icon-16-check';
+        if (!icon) icon = 'icon-16-check';
         colourful = true;
     }
 
-    if (!icon)
-        icon = 'icon-16-info';
+    if (!icon) icon = 'icon-16-info';
 
     let bar;
 

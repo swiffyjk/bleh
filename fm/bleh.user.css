@@ -3028,13 +3028,14 @@
             }
         }
 
-        .actions {
+        & > .actions {
             display: flex;
+            justify-content: space-between;
+            align-items: center;
             gap: var(--button-list-gap);
-            justify-content: right;
             margin-top: var(--card-gap);
             transition-property: margin-top, opacity;
-            transition-duration: var(--trans);
+            transition-duration: 0.3s;
             transition-timing-function: var(--trans-function);
         }
     }
@@ -8973,6 +8974,9 @@
                 }
             }
         }
+    }
+    [data-type="save"] {
+        --mask: var(--icon-16-check);
     }
     [data-type="home"] {
         --mask: var(--icon-16-home);

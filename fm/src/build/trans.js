@@ -1848,6 +1848,9 @@ export const trans = {
         de: 'Löschen',
         pt: 'Deletar'
     },
+    deleted: {
+        en: 'Deleted'
+    },
     search: {
         en: 'Search',
         de: 'Suchen',

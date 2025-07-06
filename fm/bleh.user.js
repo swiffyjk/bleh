@@ -1165,17 +1165,16 @@
       progress
     });
     if (type === "error") {
-      icon = "icon-16-x";
+      if (!icon) icon = "icon-16-x";
       colourful = true;
     } else if (type === "warning") {
-      icon = "icon-16-warning";
+      if (!icon) icon = "icon-16-warning";
       colourful = true;
     } else if (type === "success") {
-      icon = "icon-16-check";
+      if (!icon) icon = "icon-16-check";
       colourful = true;
     }
-    if (!icon)
-      icon = "icon-16-info";
+    if (!icon) icon = "icon-16-info";
     let bar;
     actions.push({
       type: "close",
@@ -2923,20 +2922,29 @@
                   let form_data = new FormData(form);
                   console.info(form_data);
                   try {
+                    track.setAttribute("data-ajax-form-state", "deleted");
                     await fetch(url, {
                       method: "POST",
                       body: form_data
                     }).then((res) => {
                       if (!res.ok) {
                         log("failed to delete", "form", "error", { res });
+                        track.removeAttribute("data-ajax-form-state");
                         return;
                       }
                       let data2 = res.json();
                       log("received response", "form", "info", { data: data2 });
-                      track.setAttribute("data-ajax-form-state", "deleted");
+                      notify({
+                        id: "delete",
+                        title: tl(trans.deleted),
+                        body: track_title.getAttribute("title"),
+                        icon: "icon-16-trash",
+                        type: "error"
+                      });
                     });
                   } catch (e2) {
                     console.error(e2);
+                    track.removeAttribute("data-ajax-form-state");
                   }
                 }}>
                                         <input type="hidden" name="csrfmiddlewaretoken" value=${page.token}>
@@ -9000,16 +9008,38 @@
       let featured_track_panel = profile_header.querySelector(".header-featured-track");
       if (featured_track_panel)
         bleh_featured_profile_track(featured_track_panel, about_me_sidebar);
-      let buttons = document.createElement("div");
-      buttons.classList.add("user-about-buttons");
-      let about_more = document.createElement("button");
-      about_more.classList.add("btn", "icon");
-      about_more.setAttribute("data-action-type", "configure");
-      about_more.textContent = tl(trans.settings);
-      tippy(about_more, {
-        content: tl(trans.settings)
-      });
-      tippy(about_more, {
+      let about_me_header = about_me_sidebar.querySelector("h2");
+      about_me_header.textContent = tl(trans.about);
+      let profile_note;
+      if (!is_own_profile) {
+        let notes = JSON.parse(localStorage.getItem("bleh_profile_notes")) || {};
+        profile_note = notes[page.name];
+      }
+      let settings_btn;
+      let add_note;
+      about_me_sidebar.insertBefore(html.node`
+            <div class="top-container">
+                ${about_me_header}
+                <div class="view-buttons blend blend-v2">
+                    ${is_own_profile ? html.node`
+                    <a class="left-icon" data-type="edit" href="${root}settings#id_about_me">
+                        ${tl(trans.edit)}
+                    </a>
+                    ` : !profile_note ? html.node`
+                    <button class="left-icon" data-type="add" ref=${(el) => add_note = el} onclick=${() => {
+        add_note.display = "none";
+        create_profile_note_panel(page.name, profile_note);
+      }}>
+                        ${tl(trans.add_note)}
+                    </button>
+                    ` : ""}
+                    <button class="left-icon blend-v2-btn" data-type="settings" ref=${(el) => settings_btn = el}></button>
+                        ${tl(trans.settings)}
+                    </button>
+                </div>
+            </div>
+        `, about_me_sidebar.firstChild);
+      tippy(settings_btn, {
         theme: "window",
         content: html.node`
                 <div class="dialog-settings">
@@ -9035,30 +9065,10 @@
           refresh_all(instance.popper);
         }
       });
-      buttons.appendChild(about_more);
-      let about_me_header = about_me_sidebar.querySelector("h2");
-      about_me_header.textContent = tl(trans.about);
-      about_me_header.appendChild(buttons);
       if (ff("redesigned_profile_header"))
         redesign_profile_header(is_own_profile, is_following);
-      if (is_own_profile) {
-        buttons.appendChild(html.node`
-                <a class="see-more" href="${root}settings#id_about_me">${tl(trans.edit)}</a>
-            `);
-      } else {
-        let profile_notes = JSON.parse(localStorage.getItem("bleh_profile_notes")) || {};
-        let profile_note = profile_notes[page.name];
-        let profile_has_note = false;
-        if (profile_note)
-          profile_has_note = true;
-        if (!profile_has_note) {
-          buttons.appendChild(html.node`
-                <a class="see-more add" onclick=${() => add_profile_note(page.name, profile_has_note)}>${tl(trans.add_note)}</a>
-            `);
-        } else {
-          create_profile_note_panel(page.name, true);
-        }
-      }
+      if (!is_own_profile && profile_note)
+        create_profile_note_panel(page.name, profile_note);
     } else {
       load_banner_from_cache();
       let btn_add = page.structure.side.querySelector(".add-button");
@@ -9334,52 +9344,30 @@
     });
     profile_name_obj.appendChild(label_container);
   }
-  function add_profile_note(username2, has_note) {
-    page.structure.side.querySelector(".user-about-buttons .see-more.add").style.setProperty("display", "none");
-    create_profile_note_panel(username2, has_note);
-  }
   function create_profile_note_panel(username2, has_note) {
-    let note_panel = document.createElement("section");
-    note_panel.classList.add("bleh--panel", "bleh--profile-note-panel");
-    if (has_note) {
-      note_panel.innerHTML = `
-        <h2>${tl(trans.notes)}</h2>
-        <div class="content-form">
-            <textarea id="bleh--profile-note" placeholder="${tl(trans.anything_you_can_imagine)}">${JSON.parse(localStorage.getItem("bleh_profile_notes"))[username2]}</textarea>
-        </div>
-        <div class="actions">
-            <button class="btn" onclick="_clear_profile_note('${username2}')">${tl(trans.clear)}</button>
-            <button class="btn primary" onclick="_save_profile_note('${username2}')">${tl(trans.save)}</button>
-        </div>
-        `;
-    } else {
-      note_panel.innerHTML = `
-        <h2>${tl(trans.notes)}</h2>
-        <div class="content-form">
-            <textarea id="bleh--profile-note" placeholder="${tl(trans.anything_you_can_imagine)}"></textarea>
-        </div>
-        <div class="actions">
-            <button class="btn" onclick="_clear_profile_note('${username2}')">${tl(trans.clear)}</button>
-            <button class="btn primary" onclick="_save_profile_note('${username2}')">${tl(trans.save)}</button>
-        </div>
-        `;
-    }
     let about_me_sidebar = page.structure.row.querySelector(".about-me-sidebar");
-    about_me_sidebar.after(note_panel);
-  }
-  unsafeWindow._clear_profile_note = function(username2) {
-    let profile_notes = JSON.parse(localStorage.getItem("bleh_profile_notes")) || {};
-    delete profile_notes[username2];
-    document.getElementById("bleh--profile-note").value = "";
-    localStorage.setItem("bleh_profile_notes", JSON.stringify(profile_notes));
-  };
-  unsafeWindow._save_profile_note = function(username2) {
-    save_profile_note(username2);
-  };
-  function save_profile_note(username2) {
-    let profile_notes = JSON.parse(localStorage.getItem("bleh_profile_notes")) || {};
-    profile_notes[username2] = document.getElementById("bleh--profile-note").value.replace(/&/g, "&amp;").replace(/</g, "&lt;").replace(/>/g, "&gt;").replace(/"/g, "&quot;").replace(/'/g, "&#039;");
-    localStorage.setItem("bleh_profile_notes", JSON.stringify(profile_notes));
+    let note;
+    about_me_sidebar.after(html.node`
+        <section class="bleh--panel bleh--profile-note-panel">
+            <h2>${tl(trans.notes)}</h2>
+            <div class="content-form">
+                <textarea id="bleh--profile-note" placeholder=${tl(trans.anything_you_can_imagine)} ref=${(el) => note = el}>${has_note ?? has_note}</textarea>
+            </div>
+            <div class="actions">
+                <button class="see-more cancel" onclick=${() => {
+      let notes = JSON.parse(localStorage.getItem("bleh_profile_notes")) || {};
+      delete notes[page.name];
+      note.value = "";
+      localStorage.setItem("bleh_profile_notes", JSON.stringify(notes));
+    }}>${tl(trans.clear)}</button>
+                <button class="btn primary icon" data-type="save" onclick=${() => {
+      let notes = JSON.parse(localStorage.getItem("bleh_profile_notes")) || {};
+      notes[page.name] = note.value.replace(/&/g, "&amp;").replace(/</g, "&lt;").replace(/>/g, "&gt;").replace(/"/g, "&quot;").replace(/'/g, "&#039;");
+      localStorage.setItem("bleh_profile_notes", JSON.stringify(notes));
+    }}>${tl(trans.save)}</button>
+            </div>
+        </section>
+    `);
   }
   function patch_profile_following() {
     let navlist = page.structure.nav.querySelector(".navlist-items");
@@ -20905,6 +20893,9 @@
       en: "Delete",
       de: "L\xF6schen",
       pt: "Deletar"
+    },
+    deleted: {
+      en: "Deleted"
     },
     search: {
       en: "Search",

@@ -14,6 +14,7 @@ import {patch_artist_ranks_in_list_view} from "./colourful_counts";
 import {correct_artist, correct_item_by_artist, name_includes} from "./lotus";
 import {register_menu} from "./menu";
 import {tl, trans} from "../build/trans.js";
+import {notify} from "./notify.js";
 
 export function patch_titles(search=page.structure.main) {
     if (page.subpage === 'tags_overview' || page.subpage == 'tags_tag')
@@ -509,22 +510,33 @@ export function patch_titles(search=page.structure.main) {
                                         console.info(form_data);
     
                                         try {
+                                            track.setAttribute('data-ajax-form-state', 'deleted');
+                                            
                                             await fetch(url, {
                                                 method: 'POST',
                                                 body: form_data
                                             }).then(res => {
                                                 if (!res.ok) {
                                                     log('failed to delete', 'form', 'error', {res: res});
+                                                    track.removeAttribute('data-ajax-form-state');
                                                     return;
                                                 }
                                                 
                                                 let data = res.json();
     
                                                 log('received response', 'form', 'info', {data: data});
-                                                track.setAttribute('data-ajax-form-state', 'deleted');
+                                                
+                                                notify({
+                                                    id: 'delete',
+                                                    title: tl(trans.deleted),
+                                                    body: track_title.getAttribute('title'),
+                                                    icon: 'icon-16-trash',
+                                                    type: 'error'
+                                                })
                                             });
                                         } catch (e) {
                                             console.error(e);
+                                            track.removeAttribute('data-ajax-form-state');
                                         }
                                     }}>
                                         <input type="hidden" name="csrfmiddlewaretoken" value=${page.token}>
