@@ -2588,6 +2588,10 @@
         track.appendChild(bla);
         let track_title = track.querySelector(".chartlist-name a:not(.offset-section-anchor)");
         if (!track_title) return;
+        if (track_title.hasAttribute("title")) {
+          track_title.setAttribute("data-name", track_title.getAttribute("title"));
+          track_title.removeAttribute("title");
+        }
         let is_user = track.querySelector(".chartlist-image .avatar");
         let is_artist = false;
         if (is_user) {
@@ -2610,7 +2614,7 @@
           if (settings.colourful_counts)
             patch_artist_ranks_in_list_view(track);
           if (settings.corrections)
-            track_title.textContent = correct_artist(track_title.getAttribute("title"));
+            track_title.textContent = correct_artist(track_title.getAttribute("data-name"));
           insights.artist.display = true;
           let bar2 = track.querySelector(".chartlist-count-bar-slug");
           let value = parseInt(bar2.getAttribute("data-stat-value"));
@@ -2660,15 +2664,15 @@
           album.textContent = correct_item_by_artist(album.textContent, track_artist);
         let image = track.querySelector(".chartlist-image img");
         if (settings.format_guest_features) {
-          let formatted_title = name_includes(track_title.getAttribute("title"), track_artist);
+          let formatted_title = name_includes(track_title.getAttribute("data-name"), track_artist);
           console.log("formatted", formatted_title);
-          let song_title = track_title.getAttribute("title");
+          let song_title = track_title.getAttribute("data-name");
           let song_tags = {};
           if (formatted_title) {
             song_title = formatted_title[0];
             song_tags = formatted_title[1];
           }
-          track_title.setAttribute("title", correct_item_by_artist(track_title.getAttribute("title"), track_artist));
+          track_title.setAttribute("data-name", correct_item_by_artist(track_title.getAttribute("data-name"), track_artist));
           render(track_title, html`
                     <div class="title">${song_title.trim()}</div>
                     ${song_tags.map((tag) => html.node`
@@ -2719,14 +2723,14 @@
           if (song_artist_element) {
             let corrected_title = correct_item_by_artist(track_title.textContent, song_artist_element.textContent);
             track_title.textContent = corrected_title;
-            track_title.setAttribute("title", corrected_title);
+            track_title.setAttribute("data-name", corrected_title);
             let corrected_artist = correct_artist(song_artist_element.textContent);
             song_artist_element.textContent = corrected_artist;
             song_artist_element.setAttribute("title", corrected_artist);
           } else {
             let corrected_title = correct_item_by_artist(track_title.textContent, track_artist);
             track_title.textContent = corrected_title;
-            track_title.setAttribute("title", corrected_title);
+            track_title.setAttribute("data-name", corrected_title);
           }
         }
         if (track_legacy_menu) {
@@ -2734,8 +2738,8 @@
           let previous = track.querySelector(":scope > .more-button-wrapper");
           if (previous) previous.style.display = "none";
           const is_own_profile = page.type == "user" && page.name == auth.name;
-          const can_edit = !is_active && !has_bar;
-          const can_delete = !is_active && !has_bar;
+          const can_edit = !is_active && (!is_album ? !has_bar : true) && auth.pro;
+          const can_delete = !is_active && !has_bar && !is_album;
           let more_button = html.node`
                     <button class="track-more-button icon chibi" data-type="more" onclick=${() => {
             console.info(menu);
@@ -2769,11 +2773,20 @@
               let form = edit_button.parentElement;
               page.token = form.querySelector('[name="csrfmiddlewaretoken"]').value;
               track.setAttribute("data-action", form.getAttribute("action"));
-              track.setAttribute("data-artist-name", correct_artist(form.querySelector('[name="artist_name"]').value));
-              track.setAttribute("data-track-name", correct_item_by_artist(form.querySelector('[name="track_name"]').value, form.querySelector('[name="artist_name"]').value));
-              track.setAttribute("data-album-name", correct_item_by_artist(form.querySelector('[name="album_name"]').value, form.querySelector('[name="artist_name"]').value));
-              track.setAttribute("data-album-artist-name", correct_artist(form.querySelector('[name="album_artist_name"]').value));
-              track.setAttribute("data-timestamp", form.querySelector('[name="timestamp"]').value);
+              if (!is_album) {
+                track.setAttribute("data-artist-name", correct_artist(form.querySelector('[name="artist_name"]').value));
+                track.setAttribute("data-track-name", correct_item_by_artist(form.querySelector('[name="track_name"]').value, form.querySelector('[name="artist_name"]').value));
+                track.setAttribute("data-album-name", correct_item_by_artist(form.querySelector('[name="album_name"]').value, form.querySelector('[name="artist_name"]').value));
+                track.setAttribute("data-album-artist-name", correct_artist(form.querySelector('[name="album_artist_name"]').value));
+                track.setAttribute("data-timestamp", form.querySelector('[name="timestamp"]').value);
+              } else {
+                track.setAttribute("data-album-name", correct_item_by_artist(form.querySelector('[name="album_name"]').value, form.querySelector('[name="album_artist_name"]').value));
+                track.setAttribute("data-album-artist-name", correct_artist(form.querySelector('[name="album_artist_name"]').value));
+                track.setAttribute("data-album-name-original", correct_item_by_artist(form.querySelector('[name="album_name_original"]').value, form.querySelector('[name="album_artist_name_original"]').value));
+                track.setAttribute("data-album-artist-name-original", correct_artist(form.querySelector('[name="album_artist_name_original"]').value));
+                track.setAttribute("data-album-image", form.querySelector('[name="album_image"]').value);
+                track.setAttribute("data-count", form.querySelector('[name="count"]').value);
+              }
             } else if (delete_button) {
               let form = delete_button.parentElement;
               page.token = form.querySelector('[name="csrfmiddlewaretoken"]').value;
@@ -2789,6 +2802,22 @@
                             ${can_edit ? html.node`
                             <div class="button-combo">
                                 ${() => {
+                if (is_album) {
+                  return html.node`
+                                            <form style="margin: 0" method="POST" action=${track.getAttribute("data-action")} data-edit-scrobble="">
+                                                <input type="hidden" name="csrfmiddlewaretoken" value=${page.token}>
+                                                <input type="hidden" name="album_name" value=${track.getAttribute("data-album-name")}>
+                                                <input type="hidden" name="album_artist_name" value=${track.getAttribute("data-album-artist-name")}>
+                                                <input type="hidden" name="album_image" value=${track.getAttribute("data-album-image")}>
+                                                <input type="hidden" name="album_name_original" value=${track.getAttribute("data-album-name-original")}>
+                                                <input type="hidden" name="album_artist_name_original" value=${track.getAttribute("data-album-artist-name-original")}>
+                                                <input type="hidden" name="count" value=${track.getAttribute("data-count")}>
+                                                <button class="dropdown-menu-clickable-item" data-type="edit">
+                                                    ${tl(trans.edit)}
+                                                </button>
+                                            </form>
+                                        `;
+                }
                 return html.node`
                                         <form style="margin: 0" method="POST" action=${track.getAttribute("data-action")} data-edit-scrobble="">
                                             <input type="hidden" name="csrfmiddlewaretoken" value=${page.token}>
@@ -2830,10 +2859,11 @@
                 track.removeChild(container);
                 return button;
               }}
+                            ${!is_album ? html.node`
                             <div class="button-combo">
                                 ${() => {
                 return html.node`
-                                        <a class="dropdown-menu-clickable-item" data-type="track" href="${root}music/${sanitise(track_artist)}/_/${sanitise(track_title.getAttribute("title"))}">
+                                        <a class="dropdown-menu-clickable-item" data-type="track" href="${root}music/${sanitise(track_artist)}/_/${sanitise(track_title.getAttribute("data-name"))}">
                                             ${tl(trans.track)}
                                         </a>
                                     `;
@@ -2841,7 +2871,7 @@
                                 <div class="button-combo-sep"/>
                                 ${() => {
                 let button = html.node`
-                                        <a class="dropdown-menu-clickable-item chibi" data-type="continue" href="${root}user/${page.name}/library/music/${sanitise(track_artist)}/_/${sanitise(track_title.getAttribute("title"))}">
+                                        <a class="dropdown-menu-clickable-item chibi" data-type="continue" href="${root}user/${page.name}/library/music/${sanitise(track_artist)}/_/${sanitise(track_title.getAttribute("data-name"))}">
                                             ${tl(trans.explore_in_library)}
                                         </a>
                                     `;
@@ -2851,8 +2881,16 @@
                 return button;
               }}
                             </div>
+                            ` : ""}
                             <div class="button-combo">
                                 ${() => {
+                if (is_album) {
+                  return html.node`
+                                            <a class="dropdown-menu-clickable-item" data-type="album" href="${root}music/${sanitise(track_artist)}/${sanitise(track_title.getAttribute("data-name"))}">
+                                                ${tl(trans.album)}
+                                            </a>
+                                        `;
+                }
                 return html.node`
                                         <a class="dropdown-menu-clickable-item" data-type="album" href="${root}music/${sanitise(track_artist)}/${album_name}">
                                             ${tl(trans.album)}
@@ -2866,6 +2904,8 @@
                                             ${tl(trans.explore_in_library)}
                                         </a>
                                     `;
+                if (is_album)
+                  button.href = `${root}user/${page.name}/library/music/${sanitise(track_artist)}/${sanitise(track_title.getAttribute("data-name"))}`;
                 tippy(button, {
                   content: tl(trans.explore_in_library)
                 });
@@ -2894,7 +2934,7 @@
               }}
                             </div>
                             ${() => {
-                if (!is_own_profile) return;
+                if (!is_own_profile || is_album) return;
                 return html.node`
                                     <form style="margin: 0" method="POST" action="${root}user/${auth.name}/obsessions" data-submit-to-modal="">
                                         <input type="hidden" name="csrfmiddlewaretoken" value=${page.token}>
@@ -2937,7 +2977,7 @@
                       notify({
                         id: "delete",
                         title: tl(trans.deleted),
-                        body: track_title.getAttribute("title"),
+                        body: track_title.getAttribute("data-name"),
                         icon: "icon-16-trash",
                         type: "error"
                       });
@@ -2979,11 +3019,11 @@
           }, 100);
         }
         if (is_album) {
-          log(`pushed insight album label of ${track_title.getAttribute("title")}`, "glacier library", "log");
-          insights.album.labels.push(track_title.getAttribute("title"));
+          log(`pushed insight album label of ${track_title.getAttribute("data-name")}`, "glacier library", "log");
+          insights.album.labels.push(track_title.getAttribute("data-name"));
         } else {
-          log(`pushed insight track label of ${track_title.getAttribute("title")}`, "glacier library", "log");
-          insights.track.labels.push(track_title.getAttribute("title"));
+          log(`pushed insight track label of ${track_title.getAttribute("data-name")}`, "glacier library", "log");
+          insights.track.labels.push(track_title.getAttribute("data-name"));
         }
         if (!is_album && is_active) {
           let image_wrap = track.querySelector(".chartlist-image");
@@ -18402,7 +18442,7 @@
   }) {
     let checkbox;
     let state;
-    return html.node`
+    let elem = html.node`
         <div class="setting" data-type="${type}" onclick=${() => {
       if (disabled) return;
       let current = checkbox.checked;
@@ -18431,6 +18471,17 @@
             `}
         </div>
     `;
+    elem.check = () => {
+      if (disabled) return;
+      checkbox.checked = true;
+      state.setAttribute("aria-checked", true);
+    };
+    elem.uncheck = () => {
+      if (disabled) return;
+      checkbox.checked = false;
+      state.setAttribute("aria-checked", false);
+    };
+    return elem;
   }
 
   // src/components/dialog_extender.js
@@ -18525,6 +18576,33 @@
                 </button>
             `);
       } else if (body.querySelector(".lastfm-bulk-edit-list")) {
+        let checks;
+        let controls = body.querySelector(".lastfm-bulk-edit-form-group-controls");
+        if (controls) {
+          let parent = controls.parentElement;
+          parent.parentElement.removeChild(parent);
+          let disclaimer = body.querySelector(".form-disclaimer");
+          disclaimer.after(html.node`
+                    <div class="button-group">
+                        <button class="flex-button" onclick=${() => {
+            checks.forEach((check) => {
+              check.check();
+            });
+          }} type="button">
+                            <div class="bleh-icon" data-type="select-all" style="--icon: var(--mask)" />
+                            ${tl(trans.select_all)}
+                        </button>
+                        <button class="flex-button" onclick=${() => {
+            checks.forEach((check) => {
+              check.uncheck();
+            });
+          }} type="button">
+                            <div class="bleh-icon" data-type="deselect-all" style="--icon: var(--mask)" />
+                            ${tl(trans.deselect_all)}
+                        </button>
+                    </div>
+                `);
+        }
         let list = body.querySelector(".lastfm-bulk-edit-list");
         let checkboxes = list.querySelectorAll(".checkbox");
         checkboxes.forEach((checkbox) => {
@@ -18548,6 +18626,7 @@
           })}
                 `);
         });
+        checks = list.querySelectorAll(".setting");
         let footer = body.querySelector(".form-group--submit");
         footer.classList = "modal-footer";
         render(footer, html`
@@ -21890,6 +21969,12 @@
     },
     checked_for_updates: {
       en: "Checked for updates"
+    },
+    select_all: {
+      en: "Select all"
+    },
+    deselect_all: {
+      en: "De-select all"
     }
   };
   var trans_legacy = {

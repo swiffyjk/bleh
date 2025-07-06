@@ -96,6 +96,11 @@ export function patch_titles(search=page.structure.main) {
             let track_title = track.querySelector('.chartlist-name a:not(.offset-section-anchor)');
             if (!track_title) return;
 
+            if (track_title.hasAttribute('title')) {
+                track_title.setAttribute('data-name', track_title.getAttribute('title'));
+                track_title.removeAttribute('title');
+            }
+
             // for albums and tracks 'avatar' is replaced with 'cover-art'
             // we can use this to detect if the item is either a user or an artist
             let is_user = track.querySelector('.chartlist-image .avatar');
@@ -130,7 +135,7 @@ export function patch_titles(search=page.structure.main) {
                     patch_artist_ranks_in_list_view(track);
 
                 if (settings.corrections)
-                    track_title.textContent = correct_artist(track_title.getAttribute('title'));
+                    track_title.textContent = correct_artist(track_title.getAttribute('data-name'));
 
                 insights.artist.display = true;
                 let bar = track.querySelector('.chartlist-count-bar-slug');
@@ -200,9 +205,9 @@ export function patch_titles(search=page.structure.main) {
             let image = track.querySelector('.chartlist-image img');
 
             if (settings.format_guest_features) {
-                let formatted_title = name_includes(track_title.getAttribute('title'), track_artist);
+                let formatted_title = name_includes(track_title.getAttribute('data-name'), track_artist);
                 console.log('formatted', formatted_title);
-                let song_title = track_title.getAttribute('title');
+                let song_title = track_title.getAttribute('data-name');
                 let song_tags = {};
 
                 if (formatted_title) {
@@ -210,7 +215,7 @@ export function patch_titles(search=page.structure.main) {
                     song_tags = formatted_title[1];
                 }
 
-                track_title.setAttribute('title', correct_item_by_artist(track_title.getAttribute('title'), track_artist));
+                track_title.setAttribute('data-name', correct_item_by_artist(track_title.getAttribute('data-name'), track_artist));
 
                 // parse tags into text
                 render(track_title, html`
@@ -270,7 +275,7 @@ export function patch_titles(search=page.structure.main) {
                 if (song_artist_element) {
                     let corrected_title = correct_item_by_artist(track_title.textContent, song_artist_element.textContent);
                     track_title.textContent = corrected_title;
-                    track_title.setAttribute('title', corrected_title);
+                    track_title.setAttribute('data-name', corrected_title);
 
                     let corrected_artist = correct_artist(song_artist_element.textContent);
                     song_artist_element.textContent = corrected_artist;
@@ -278,7 +283,7 @@ export function patch_titles(search=page.structure.main) {
                 } else {
                     let corrected_title = correct_item_by_artist(track_title.textContent, track_artist);
                     track_title.textContent = corrected_title;
-                    track_title.setAttribute('title', corrected_title);
+                    track_title.setAttribute('data-name', corrected_title);
                 }
             }
 
@@ -293,8 +298,8 @@ export function patch_titles(search=page.structure.main) {
                 // then we need to decide for ourselves whether u can delete or obsess
                 // since we cant rely on the elements existing anymore
                 const is_own_profile = page.type == 'user' && page.name == auth.name;
-                const can_edit = !is_active && !has_bar;
-                const can_delete = !is_active && !has_bar;
+                const can_edit = !is_active && (!is_album ? !has_bar : true) && auth.pro;
+                const can_delete = !is_active && !has_bar && !is_album;
 
                 let more_button = html.node`
                     <button class="track-more-button icon chibi" data-type="more" onclick=${() => {
@@ -335,11 +340,21 @@ export function patch_titles(search=page.structure.main) {
 
                         page.token = form.querySelector('[name="csrfmiddlewaretoken"]').value;
                         track.setAttribute('data-action', form.getAttribute('action'));
-                        track.setAttribute('data-artist-name', correct_artist(form.querySelector('[name="artist_name"]').value));
-                        track.setAttribute('data-track-name', correct_item_by_artist(form.querySelector('[name="track_name"]').value, form.querySelector('[name="artist_name"]').value));
-                        track.setAttribute('data-album-name', correct_item_by_artist(form.querySelector('[name="album_name"]').value, form.querySelector('[name="artist_name"]').value));
-                        track.setAttribute('data-album-artist-name', correct_artist(form.querySelector('[name="album_artist_name"]').value));
-                        track.setAttribute('data-timestamp', form.querySelector('[name="timestamp"]').value);
+
+                        if (!is_album) {
+                            track.setAttribute('data-artist-name', correct_artist(form.querySelector('[name="artist_name"]').value));
+                            track.setAttribute('data-track-name', correct_item_by_artist(form.querySelector('[name="track_name"]').value, form.querySelector('[name="artist_name"]').value));
+                            track.setAttribute('data-album-name', correct_item_by_artist(form.querySelector('[name="album_name"]').value, form.querySelector('[name="artist_name"]').value));
+                            track.setAttribute('data-album-artist-name', correct_artist(form.querySelector('[name="album_artist_name"]').value));
+                            track.setAttribute('data-timestamp', form.querySelector('[name="timestamp"]').value);
+                        } else {
+                            track.setAttribute('data-album-name', correct_item_by_artist(form.querySelector('[name="album_name"]').value, form.querySelector('[name="album_artist_name"]').value));
+                            track.setAttribute('data-album-artist-name', correct_artist(form.querySelector('[name="album_artist_name"]').value));
+                            track.setAttribute('data-album-name-original', correct_item_by_artist(form.querySelector('[name="album_name_original"]').value, form.querySelector('[name="album_artist_name_original"]').value));
+                            track.setAttribute('data-album-artist-name-original', correct_artist(form.querySelector('[name="album_artist_name_original"]').value));
+                            track.setAttribute('data-album-image', form.querySelector('[name="album_image"]').value);
+                            track.setAttribute('data-count', form.querySelector('[name="count"]').value);
+                        }
                     } else if (delete_button) {
                         let form = delete_button.parentElement;
 
@@ -358,6 +373,23 @@ export function patch_titles(search=page.structure.main) {
                             ${can_edit ? html.node`
                             <div class="button-combo">
                                 ${() => {
+                                    if (is_album) {
+                                        return html.node`
+                                            <form style="margin: 0" method="POST" action=${track.getAttribute('data-action')} data-edit-scrobble="">
+                                                <input type="hidden" name="csrfmiddlewaretoken" value=${page.token}>
+                                                <input type="hidden" name="album_name" value=${track.getAttribute('data-album-name')}>
+                                                <input type="hidden" name="album_artist_name" value=${track.getAttribute('data-album-artist-name')}>
+                                                <input type="hidden" name="album_image" value=${track.getAttribute('data-album-image')}>
+                                                <input type="hidden" name="album_name_original" value=${track.getAttribute('data-album-name-original')}>
+                                                <input type="hidden" name="album_artist_name_original" value=${track.getAttribute('data-album-artist-name-original')}>
+                                                <input type="hidden" name="count" value=${track.getAttribute('data-count')}>
+                                                <button class="dropdown-menu-clickable-item" data-type="edit">
+                                                    ${tl(trans.edit)}
+                                                </button>
+                                            </form>
+                                        `;
+                                    }
+                                    
                                     return html.node`
                                         <form style="margin: 0" method="POST" action=${track.getAttribute('data-action')} data-edit-scrobble="">
                                             <input type="hidden" name="csrfmiddlewaretoken" value=${page.token}>
@@ -405,10 +437,11 @@ export function patch_titles(search=page.structure.main) {
             
                                 return button;
                             }}
+                            ${!is_album ? html.node`
                             <div class="button-combo">
                                 ${() => {
                                     return html.node`
-                                        <a class="dropdown-menu-clickable-item" data-type="track" href="${root}music/${sanitise(track_artist)}/_/${sanitise(track_title.getAttribute('title'))}">
+                                        <a class="dropdown-menu-clickable-item" data-type="track" href="${root}music/${sanitise(track_artist)}/_/${sanitise(track_title.getAttribute('data-name'))}">
                                             ${tl(trans.track)}
                                         </a>
                                     `;
@@ -416,7 +449,7 @@ export function patch_titles(search=page.structure.main) {
                                 <div class="button-combo-sep"/>
                                 ${() => {
                                     let button = html.node`
-                                        <a class="dropdown-menu-clickable-item chibi" data-type="continue" href="${root}user/${page.name}/library/music/${sanitise(track_artist)}/_/${sanitise(track_title.getAttribute('title'))}">
+                                        <a class="dropdown-menu-clickable-item chibi" data-type="continue" href="${root}user/${page.name}/library/music/${sanitise(track_artist)}/_/${sanitise(track_title.getAttribute('data-name'))}">
                                             ${tl(trans.explore_in_library)}
                                         </a>
                                     `;
@@ -428,8 +461,17 @@ export function patch_titles(search=page.structure.main) {
                                     return button;
                                 }}
                             </div>
+                            ` : ''}
                             <div class="button-combo">
                                 ${() => {
+                                    if (is_album) {
+                                        return html.node`
+                                            <a class="dropdown-menu-clickable-item" data-type="album" href="${root}music/${sanitise(track_artist)}/${sanitise(track_title.getAttribute('data-name'))}">
+                                                ${tl(trans.album)}
+                                            </a>
+                                        `;
+                                    }
+                                    
                                     return html.node`
                                         <a class="dropdown-menu-clickable-item" data-type="album" href="${root}music/${sanitise(track_artist)}/${album_name}">
                                             ${tl(trans.album)}
@@ -443,6 +485,9 @@ export function patch_titles(search=page.structure.main) {
                                             ${tl(trans.explore_in_library)}
                                         </a>
                                     `;
+                                    
+                                    if (is_album)
+                                        button.href = `${root}user/${page.name}/library/music/${sanitise(track_artist)}/${sanitise(track_title.getAttribute('data-name'))}`;
     
                                     tippy(button, {
                                         content: tl(trans.explore_in_library)
@@ -475,7 +520,7 @@ export function patch_titles(search=page.structure.main) {
                                 }}
                             </div>
                             ${() => {
-                                if (!is_own_profile) return;
+                                if (!is_own_profile || is_album) return;
                                 
                                 return html.node`
                                     <form style="margin: 0" method="POST" action="${root}user/${auth.name}/obsessions" data-submit-to-modal="">
@@ -529,7 +574,7 @@ export function patch_titles(search=page.structure.main) {
                                                 notify({
                                                     id: 'delete',
                                                     title: tl(trans.deleted),
-                                                    body: track_title.getAttribute('title'),
+                                                    body: track_title.getAttribute('data-name'),
                                                     icon: 'icon-16-trash',
                                                     type: 'error'
                                                 })
@@ -584,11 +629,11 @@ export function patch_titles(search=page.structure.main) {
             }
 
             if (is_album) {
-                log(`pushed insight album label of ${track_title.getAttribute('title')}`, 'glacier library', 'log');
-                insights.album.labels.push(track_title.getAttribute('title'));
+                log(`pushed insight album label of ${track_title.getAttribute('data-name')}`, 'glacier library', 'log');
+                insights.album.labels.push(track_title.getAttribute('data-name'));
             } else {
-                log(`pushed insight track label of ${track_title.getAttribute('title')}`, 'glacier library', 'log');
-                insights.track.labels.push(track_title.getAttribute('title'));
+                log(`pushed insight track label of ${track_title.getAttribute('data-name')}`, 'glacier library', 'log');
+                insights.track.labels.push(track_title.getAttribute('data-name'));
             }
 
 

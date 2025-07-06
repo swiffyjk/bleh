@@ -2844,6 +2844,12 @@ export const trans = {
     },
     checked_for_updates: {
         en: 'Checked for updates'
+    },
+    select_all: {
+        en: 'Select all'
+    },
+    deselect_all: {
+        en: 'De-select all'
     }
 }
 

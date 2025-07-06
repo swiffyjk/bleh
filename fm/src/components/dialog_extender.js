@@ -127,6 +127,37 @@ export function dialog_extender() {
             // bulk edit
             // select albums to edit
 
+            let checks;
+
+            let controls = body.querySelector('.lastfm-bulk-edit-form-group-controls');
+            if (controls) {
+                let parent = controls.parentElement
+                parent.parentElement.removeChild(parent);
+
+                let disclaimer = body.querySelector('.form-disclaimer');
+
+                disclaimer.after(html.node`
+                    <div class="button-group">
+                        <button class="flex-button" onclick=${() => {
+                            checks.forEach((check) => {
+                                check.check();
+                            });
+                        }} type="button">
+                            <div class="bleh-icon" data-type="select-all" style="--icon: var(--mask)" />
+                            ${tl(trans.select_all)}
+                        </button>
+                        <button class="flex-button" onclick=${() => {
+                            checks.forEach((check) => {
+                                check.uncheck();
+                            });
+                        }} type="button">
+                            <div class="bleh-icon" data-type="deselect-all" style="--icon: var(--mask)" />
+                            ${tl(trans.deselect_all)}
+                        </button>
+                    </div>
+                `);
+            }
+
             let list = body.querySelector('.lastfm-bulk-edit-list');
 
             let checkboxes = list.querySelectorAll('.checkbox');
@@ -154,6 +185,8 @@ export function dialog_extender() {
                     })}
                 `);
             });
+
+            checks = list.querySelectorAll('.setting');
 
             let footer = body.querySelector('.form-group--submit');
             footer.classList = 'modal-footer';

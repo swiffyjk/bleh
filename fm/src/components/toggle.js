@@ -13,7 +13,7 @@ export function toggle({
     let checkbox;
     let state;
 
-    return html.node`
+    let elem = html.node`
         <div class="setting" data-type="${type}" onclick=${() => {
             if (disabled) return;
             
@@ -44,4 +44,20 @@ export function toggle({
             `}
         </div>
     `;
+
+    elem.check = () => {
+        if (disabled) return;
+
+        checkbox.checked = true;
+        state.setAttribute('aria-checked', true);
+    }
+
+    elem.uncheck = () => {
+        if (disabled) return;
+
+        checkbox.checked = false;
+        state.setAttribute('aria-checked', false);
+    }
+
+    return elem;
 }
