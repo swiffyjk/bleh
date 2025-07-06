@@ -382,11 +382,11 @@ export function bleh_profiles() {
                 ${about_me_header}
                 <div class="view-buttons blend blend-v2">
                     ${is_own_profile ? html.node`
-                    <a class="left-icon" data-type="edit" href="${root}settings#id_about_me">
+                    <a class="left-icon blend-v2-btn" data-type="edit" href="${root}settings#id_about_me">
                         ${tl(trans.edit)}
                     </a>
                     ` : !profile_note ? html.node`
-                    <button class="left-icon" data-type="add" ref=${el => add_note = el} onclick=${() => {
+                    <button class="left-icon blend-v2-btn" data-type="add" ref=${el => add_note = el} onclick=${() => {
                         add_note.display = 'none';
             
                         create_profile_note_panel(page.name, profile_note);
@@ -394,7 +394,7 @@ export function bleh_profiles() {
                         ${tl(trans.add_note)}
                     </button>
                     ` : ''}
-                    <button class="left-icon blend-v2-btn" data-type="settings" ref=${el => settings_btn = el}></button>
+                    <button class="left-icon blend-v2-btn" data-type="settings" ref=${el => settings_btn = el}>
                         ${tl(trans.settings)}
                     </button>
                 </div>

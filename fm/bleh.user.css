@@ -3018,12 +3018,12 @@
             position: relative;
         }
 
-        &:not(:focus-within) .actions {
+        &:not(:focus-within) > .actions {
             margin-top: -32px;
             opacity: 0;
             pointer-events: none;
 
-            .btn {
+            & > .btn {
                 --shadow: none !important;
             }
         }
@@ -7252,7 +7252,8 @@
     .tag a, .tags-add-cta, .tags-add, .tags-view-all,
     .masthead-popup-close,
     .share-link,
-    .check .box
+    .check .box,
+    .blend-v2-btn
     {
         --bg: var(--cards-overlay-image-subtlest, none), hsl(var(--b3));
         --bg-hov: var(--cards-overlay-image-subtlest, none), color-mix(in hsl, hsl(var(--b5)), hsl(var(--b3)) 80%);

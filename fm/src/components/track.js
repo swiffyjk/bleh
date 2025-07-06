@@ -335,17 +335,17 @@ export function patch_titles(search=page.structure.main) {
 
                         page.token = form.querySelector('[name="csrfmiddlewaretoken"]').value;
                         track.setAttribute('data-action', form.getAttribute('action'));
-                        track.setAttribute('data-artist-name', form.querySelector('[name="artist_name"]').value);
-                        track.setAttribute('data-track-name', form.querySelector('[name="track_name"]').value);
-                        track.setAttribute('data-album-name', form.querySelector('[name="album_name"]').value);
-                        track.setAttribute('data-album-artist-name', form.querySelector('[name="album_artist_name"]').value);
+                        track.setAttribute('data-artist-name', correct_artist(form.querySelector('[name="artist_name"]').value));
+                        track.setAttribute('data-track-name', correct_item_by_artist(form.querySelector('[name="track_name"]').value, form.querySelector('[name="artist_name"]').value));
+                        track.setAttribute('data-album-name', correct_item_by_artist(form.querySelector('[name="album_name"]').value, form.querySelector('[name="artist_name"]').value));
+                        track.setAttribute('data-album-artist-name', correct_artist(form.querySelector('[name="album_artist_name"]').value));
                         track.setAttribute('data-timestamp', form.querySelector('[name="timestamp"]').value);
                     } else if (delete_button) {
                         let form = delete_button.parentElement;
 
                         page.token = form.querySelector('[name="csrfmiddlewaretoken"]').value;
-                        track.setAttribute('data-artist-name', form.querySelector('[name="artist_name"]').value);
-                        track.setAttribute('data-track-name', form.querySelector('[name="track_name"]').value);
+                        track.setAttribute('data-artist-name', correct_artist(form.querySelector('[name="artist_name"]').value));
+                        track.setAttribute('data-track-name', correct_item_by_artist(form.querySelector('[name="track_name"]').value, form.querySelector('[name="artist_name"]').value));
                         track.setAttribute('data-timestamp', form.querySelector('[name="timestamp"]').value);
                     }
 

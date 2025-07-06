@@ -2769,16 +2769,16 @@
               let form = edit_button.parentElement;
               page.token = form.querySelector('[name="csrfmiddlewaretoken"]').value;
               track.setAttribute("data-action", form.getAttribute("action"));
-              track.setAttribute("data-artist-name", form.querySelector('[name="artist_name"]').value);
-              track.setAttribute("data-track-name", form.querySelector('[name="track_name"]').value);
-              track.setAttribute("data-album-name", form.querySelector('[name="album_name"]').value);
-              track.setAttribute("data-album-artist-name", form.querySelector('[name="album_artist_name"]').value);
+              track.setAttribute("data-artist-name", correct_artist(form.querySelector('[name="artist_name"]').value));
+              track.setAttribute("data-track-name", correct_item_by_artist(form.querySelector('[name="track_name"]').value, form.querySelector('[name="artist_name"]').value));
+              track.setAttribute("data-album-name", correct_item_by_artist(form.querySelector('[name="album_name"]').value, form.querySelector('[name="artist_name"]').value));
+              track.setAttribute("data-album-artist-name", correct_artist(form.querySelector('[name="album_artist_name"]').value));
               track.setAttribute("data-timestamp", form.querySelector('[name="timestamp"]').value);
             } else if (delete_button) {
               let form = delete_button.parentElement;
               page.token = form.querySelector('[name="csrfmiddlewaretoken"]').value;
-              track.setAttribute("data-artist-name", form.querySelector('[name="artist_name"]').value);
-              track.setAttribute("data-track-name", form.querySelector('[name="track_name"]').value);
+              track.setAttribute("data-artist-name", correct_artist(form.querySelector('[name="artist_name"]').value));
+              track.setAttribute("data-track-name", correct_item_by_artist(form.querySelector('[name="track_name"]').value, form.querySelector('[name="artist_name"]').value));
               track.setAttribute("data-timestamp", form.querySelector('[name="timestamp"]').value);
             }
             let album_name = sanitise(image ? correct_item_by_artist(image.getAttribute("alt"), track_artist) : album ? album.textContent : "");
@@ -9022,18 +9022,18 @@
                 ${about_me_header}
                 <div class="view-buttons blend blend-v2">
                     ${is_own_profile ? html.node`
-                    <a class="left-icon" data-type="edit" href="${root}settings#id_about_me">
+                    <a class="left-icon blend-v2-btn" data-type="edit" href="${root}settings#id_about_me">
                         ${tl(trans.edit)}
                     </a>
                     ` : !profile_note ? html.node`
-                    <button class="left-icon" data-type="add" ref=${(el) => add_note = el} onclick=${() => {
+                    <button class="left-icon blend-v2-btn" data-type="add" ref=${(el) => add_note = el} onclick=${() => {
         add_note.display = "none";
         create_profile_note_panel(page.name, profile_note);
       }}>
                         ${tl(trans.add_note)}
                     </button>
                     ` : ""}
-                    <button class="left-icon blend-v2-btn" data-type="settings" ref=${(el) => settings_btn = el}></button>
+                    <button class="left-icon blend-v2-btn" data-type="settings" ref=${(el) => settings_btn = el}>
                         ${tl(trans.settings)}
                     </button>
                 </div>
