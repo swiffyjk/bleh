@@ -2765,6 +2765,7 @@
           setTimeout(() => {
             let edit_button = track_legacy_menu.querySelector('[data-analytics-action="EditScrobbleOpen"]');
             let bulk_edit_button = track_legacy_menu.querySelector('[data-analytics-action="BulkEditScrobblesOpen"]');
+            let delete_button = track_legacy_menu.querySelector(".more-item--delete");
             if (edit_button) {
               let form = edit_button.parentElement;
               page.token = form.querySelector('[name="csrfmiddlewaretoken"]').value;
@@ -2774,12 +2775,14 @@
               track.setAttribute("data-album-name", form.querySelector('[name="album_name"]').value);
               track.setAttribute("data-album-artist-name", form.querySelector('[name="album_artist_name"]').value);
               track.setAttribute("data-timestamp", form.querySelector('[name="timestamp"]').value);
+            } else if (delete_button) {
+              let form = delete_button.parentElement;
+              page.token = form.querySelector('[name="csrfmiddlewaretoken"]').value;
+              track.setAttribute("data-artist-name", form.querySelector('[name="artist_name"]').value);
+              track.setAttribute("data-track-name", form.querySelector('[name="track_name"]').value);
+              track.setAttribute("data-timestamp", form.querySelector('[name="timestamp"]').value);
             }
             let album_name = sanitise(image ? correct_item_by_artist(image.getAttribute("alt"), track_artist) : album ? album.textContent : "");
-            let forms = track_legacy_menu.querySelectorAll("form");
-            forms.forEach((form) => {
-              form.style.margin = "0";
-            });
             menu = tippy(more_button, {
               theme: "context-menu",
               content: html.node`
@@ -2788,7 +2791,7 @@
                             <div class="button-combo">
                                 ${() => {
                 return html.node`
-                                        <form method="POST" action=${track.getAttribute("data-action")} data-edit-scrobble="">
+                                        <form style="margin: 0" method="POST" action=${track.getAttribute("data-action")} data-edit-scrobble="">
                                             <input type="hidden" name="csrfmiddlewaretoken" value=${page.token}>
                                             <input type="hidden" name="artist_name" value=${track.getAttribute("data-artist-name")}>
                                             <input type="hidden" name="track_name" value=${track.getAttribute("data-track-name")}>
@@ -2894,7 +2897,7 @@
                             ${() => {
                 if (!is_own_profile) return;
                 return html.node`
-                                    <form method="POST" action="${root}user/${auth.name}/obsessions" data-submit-to-modal="">
+                                    <form style="margin: 0" method="POST" action="${root}user/${auth.name}/obsessions" data-submit-to-modal="">
                                         <input type="hidden" name="csrfmiddlewaretoken" value=${page.token}>
                                         <input type="hidden" name="name" value=${track.getAttribute("data-track-name")}>
                                         <input type="hidden" name="artist_name" value=${track.getAttribute("data-artist-name")}>
@@ -2907,15 +2910,35 @@
                             ${() => {
                 if (!is_own_profile || !can_delete) return;
                 let button = html.node`
-                                    <button class="dropdown-menu-clickable-item more-item--delete" data-type="delete" data-ajax-form-sets-state="deleted" onclick=${() => {
-                  track.setAttribute("data-ajax-form-state", "deleted");
-                }}>
+                                    <button class="dropdown-menu-clickable-item more-item--delete" data-type="delete">
                                         ${tl(trans.delete)}
                                     </button>
                                 `;
+                let form;
                 return html.node`
                                     <div class="sep" />
-                                    <form method="POST" data-ajax-form="" action="${root}user/${auth.name}/library/delete">
+                                    <form ref=${(el) => form = el} style="margin: 0" method="POST" action="${root}user/${auth.name}/library/delete" onsubmit=${async (e) => {
+                  e.preventDefault();
+                  let url = `${root}user/${auth.name}/library/delete`;
+                  let form_data = new FormData(form);
+                  console.info(form_data);
+                  try {
+                    await fetch(url, {
+                      method: "POST",
+                      body: form_data
+                    }).then((res) => {
+                      if (!res.ok) {
+                        log("failed to delete", "form", "error", { res });
+                        return;
+                      }
+                      let data2 = res.json();
+                      log("received response", "form", "info", { data: data2 });
+                      track.setAttribute("data-ajax-form-state", "deleted");
+                    });
+                  } catch (e2) {
+                    console.error(e2);
+                  }
+                }}>
                                         <input type="hidden" name="csrfmiddlewaretoken" value=${page.token}>
                                         <input type="hidden" name="artist_name" value=${track.getAttribute("data-artist-name")}>
                                         <input type="hidden" name="track_name" value=${track.getAttribute("data-track-name")}>
