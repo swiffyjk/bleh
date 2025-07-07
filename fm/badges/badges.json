@@ -1,7 +1,7 @@
 {
-    "latest": "2025.0703",
+    "latest": "2025.0707",
     "sponsors": [
-        "hyacines", "kateshapedbox", "stellasaur",
+        "hyacines", "kateshapedbox", "evangelicgirl",
         "astrablooms", "ItsProyal", "vwvwvwvwvwvwv", "Orofil",
         "EliteHimself", "iwas15with100k", "keepsweet", "yourfriendoss",
         "softmancy", "carbon1k", "uix-uix", "scidal",
@@ -16,7 +16,7 @@
     "sponsor_count_remove": 3,
     "sponsor_account": "kateshapedbox",
     "sponsor_link": "https://github.com/sponsors/katelyynn",
-    "special": ["hyacines", "stellasaur"],
+    "special": ["hyacines", "evangelicgirl"],
     "badges": {
         "hyacines": [
             {
@@ -92,7 +92,7 @@
             "type": "colon-three",
             "name": ":3²"
         },
-        "stellasaur": [
+        "evangelicgirl": [
             {
                 "type": "contributor"
             },
