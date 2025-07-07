@@ -5468,7 +5468,7 @@
     dialog_rm2({
       id: "profile_shortcut"
     });
-    let avatar_src = document.body.querySelector(".header-avatar-inner-wrap img").getAttribute("src");
+    let avatar_src = page.structure.container.querySelector(":scope > .redesigned-profile-header .avatar img")?.getAttribute("src");
     localStorage.setItem("bleh_profile_shortcut_avi", avatar_src);
     notify({
       id: "profile_shortcut_saved",
