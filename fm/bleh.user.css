@@ -14,7 +14,6 @@
     @import url('https://fonts.googleapis.com/css2?family=Noto+Sans+TC:wght@100..900&display=swap');
     @import url('https://fonts.googleapis.com/css2?family=Noto+Color+Emoji&display=swap');
     @import url('https://fonts.googleapis.com/css2?family=Darumadrop+One&display=swap');
-    @import url('https://fonts.googleapis.com/css2?family=Ubuntu+Sans:ital,wght@0,100..800;1,100..800&display=swap');
 
     /* we need to make the vertical alignment better in this font */
     @font-face {
@@ -9810,6 +9809,7 @@
 
             &:focus-visible:not([readonly]) {
                 --focus-outline: none !important;
+                box-shadow: inset 0 0 0 1px var(--card-border-base), var(--shadow, var(--interact-shadow)) !important;
             }
 
             [data-bleh--theme="oled"] &,

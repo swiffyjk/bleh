@@ -315,7 +315,7 @@ export function bleh_profiles() {
         if (profile_sub_text) {
             let display_name = profile_sub_text.querySelector('.header-title-display-name');
             let scrobble_since = profile_sub_text.querySelector('.header-scrobble-since');
-            scrobble_since.textContent = scrobble_since.textContent.replace(tl(trans.account_scrobbling_since_replace), '');
+            scrobble_since.textContent = scrobble_since.textContent.slice(2).replace(tl(trans.account_scrobbling_since_replace), '');
 
             /*tippy(display_name, {
                 content: display_name.textContent

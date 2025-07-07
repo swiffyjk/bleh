@@ -226,7 +226,8 @@ export const trans = {
     read_more: {
         en: 'Read more',
         de: 'Mehr anzeigen',
-        pt: 'Ler mais'
+        pt: 'Ler mais',
+        ja: 'もっと読む'
     },
     refresh: {
         en: 'Refresh',
@@ -310,7 +311,8 @@ export const trans = {
     settings: {
         en: 'Settings',
         de: 'Einstellungen',
-        pt: 'Configurações'
+        pt: 'Configurações',
+        ja: '設定'
     },
     on_ignore_list: {
         en: 'Ignored',
@@ -339,9 +341,10 @@ export const trans = {
     },
     account_scrobbling_since_replace: {
         // copy this from last.fm 1:1 (including the space at the end if there)
-        en: '• scrobbling since ',
-        de: '• scrobbelt seit ',
-        pt: '• em scrobble desde '
+        en: 'scrobbling since ',
+        de: 'scrobbelt seit ',
+        pt: 'em scrobble desde ',
+        ja: 'よりscrobble'
     },
     edit: {
         en: 'Edit',
@@ -362,7 +365,8 @@ export const trans = {
     scrobbles: {
         en: 'Scrobbles',
         de: 'Scrobbels',
-        pt: 'Scrobbles'
+        pt: 'Scrobbles',
+        ja: 'Scrobble'
     },
     count_scrobbles: {
         en: '{c} scrobbles',
@@ -378,7 +382,8 @@ export const trans = {
     artists: {
         en: 'Artists',
         de: 'Künstler',
-        pt: 'Artistas'
+        pt: 'Artistas',
+        ja: 'アーティスト'
     },
     artists_tooltip: {
         en: 'Multiple artists are grouped into this profile',
@@ -393,7 +398,8 @@ export const trans = {
     albums: {
         en: 'Albums',
         de: 'Alben',
-        pt: 'Álbuns'
+        pt: 'Álbuns',
+        ja: 'アルバム'
     },
     track: {
         en: 'Track',
@@ -403,7 +409,8 @@ export const trans = {
     tracks: {
         en: 'Tracks',
         de: 'Titel',
-        pt: 'Faixas'
+        pt: 'Faixas',
+        ja: 'トラック'
     },
     appearance: {
         en: 'Appearance',
@@ -485,7 +492,8 @@ export const trans = {
     },
     events: {
         en: 'Events',
-        pt: 'Eventos'
+        pt: 'Eventos',
+        ja: 'イベント'
     },
     lineup: {
         en: 'Line-up',
@@ -507,7 +515,8 @@ export const trans = {
     music: {
         en: 'Music',
         de: 'Musik',
-        pt: 'Música'
+        pt: 'Música',
+        ja: '音楽'
     },
     profile: {
         en: 'Profile',
@@ -622,11 +631,13 @@ export const trans = {
     bookmarks: {
         en: 'Bookmarks',
         de: 'Lesezeichen',
-        pt: 'Marcadores'
+        pt: 'Marcadores',
+        ja: 'ブックマーク'
     },
     charts: {
         en: 'Charts',
-        pt: 'Paradas'
+        pt: 'Paradas',
+        ja: 'チャート'
     },
     welcome_back_user: {
         en: 'Welcome back {user}!',
@@ -942,13 +953,14 @@ export const trans = {
     overview: {
         en: 'Overview',
         de: 'Übersicht',
-        pt: 'Visão Geral'
-
+        pt: 'Visão Geral',
+        ja: 'ダイジェスト'
     },
     photos: {
         en: 'Photos',
         de: 'Fotos',
-        pt: 'Fotos'
+        pt: 'Fotos',
+        ja: '写真'
     },
     artwork: {
         en: 'Artwork',
@@ -963,7 +975,8 @@ export const trans = {
     biography: {
         en: 'Biography',
         de: 'Biographie',
-        pt: 'Biografia'
+        pt: 'Biografia',
+        ja: 'バイオグラフィー'
     },
     wiki: {
         en: 'Wiki'
@@ -980,12 +993,12 @@ export const trans = {
         en: '{c} listeners',
         pt: '{c} ouvintes'
     },
-    // tag sounds better in english
     tag: {
         en: 'Tag'
     },
     tags: {
-        en: 'Tags'
+        en: 'Tags',
+        ja: 'タグ'
     },
     reports: {
         // last.fm listening reports
@@ -1039,22 +1052,26 @@ export const trans = {
     recent_tracks: {
         en: 'Recent Tracks',
         de: 'Kürzlich gespielte Titel',
-        pt: 'Faixas Recentes'
+        pt: 'Faixas Recentes',
+        ja: '最近のトラック'
     },
     top_artists: {
         en: 'Top Artists',
         de: 'Top Künstler',
-        pt: 'Top Artistas'
+        pt: 'Top Artistas',
+        ja: 'トップアーティスト'
     },
     top_albums: {
         en: 'Top Albums',
         de: 'Top Alben',
-        pt: 'Top Álbuns'
+        pt: 'Top Álbuns',
+        ja: '人気アルバム'
     },
     top_tracks: {
         en: 'Top Tracks',
         de: 'Top Titel',
-        pt: 'Top Faixas'
+        pt: 'Top Faixas',
+        ja: '人気トラック'
     },
     top_track: {
         en: 'Top Track'
@@ -1069,10 +1086,12 @@ export const trans = {
             en: '{artist}'
         },
         two: {
-            en: '{artist1}, {artist2}'
+            en: '{artist1}, {artist2}',
+            ja: '{artist1}、{artist2}'
         },
         three: {
-            en: '{artist1}, {artist2}, {artist3}'
+            en: '{artist1}, {artist2}, {artist3}',
+            ja: '{artist1}、{artist2}、{artist3}'
         }
     },
     taste_similarity: {
@@ -1080,10 +1099,11 @@ export const trans = {
         pt: 'Similaridade de gostos'
     },
     plays_lower: {
-        // 20 plays in artist/album grid
+        // eg. 20 plays in artist/album grid
         // copy from last.fm
         en: ' plays',
-        pt: ' reproduções'
+        pt: ' reproduções',
+        ja: '曲を再生'
     },
     message: {
         // as in a direct message
@@ -1499,7 +1519,8 @@ export const trans = {
     logout: {
         en: 'Logout',
         de: 'Ausloggen',
-        pt: 'Sair'
+        pt: 'Sair',
+        ja: 'ログアウト'
     },
     tracklist: {
         // please copy from native last.fm ui
@@ -1699,12 +1720,14 @@ export const trans = {
     default_timeframe: {
         en: 'Default timeframe',
         de: 'Standardzeitrahmen',
-        pt: 'Período padrão'
+        pt: 'Período padrão',
+        ja: 'デフォルト期間'
     },
     chart_style: {
         en: 'Chart style',
         de: 'Diagrammstil',
-        pt: 'Estilo da tabela'
+        pt: 'Estilo da tabela',
+        ja: 'チャートスタイル'
     },
     chart_size: {
         en: 'Chart size',
@@ -2440,12 +2463,14 @@ export const trans = {
     last_count_days: {
         en: 'Last {c} days',
         de: 'Letzte {c} Tage',
-        pt: 'Últimos {c} dias'
+        pt: 'Últimos {c} dias',
+        ja: '過去 {c} 日間'
     },
     all_time: {
         en: 'All time',
         de: 'Insgesamt',
-        pt: 'Todo o período'
+        pt: 'Todo o período',
+        ja: 'すべての期間'
     },
     choose_a_timeframe_above: {
         en: 'Choose a timeframe above',

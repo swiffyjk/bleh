@@ -9015,7 +9015,7 @@
       if (profile_sub_text) {
         let display_name = profile_sub_text.querySelector(".header-title-display-name");
         let scrobble_since = profile_sub_text.querySelector(".header-scrobble-since");
-        scrobble_since.textContent = scrobble_since.textContent.replace(tl(trans.account_scrobbling_since_replace), "");
+        scrobble_since.textContent = scrobble_since.textContent.slice(2).replace(tl(trans.account_scrobbling_since_replace), "");
         let pronouns = use_pronouns(display_name.textContent);
         let display_name_pre = document.createElement("span");
         display_name_pre.classList.add("header-title-secondary--pre");
@@ -19354,7 +19354,8 @@
     read_more: {
       en: "Read more",
       de: "Mehr anzeigen",
-      pt: "Ler mais"
+      pt: "Ler mais",
+      ja: "\u3082\u3063\u3068\u8AAD\u3080"
     },
     refresh: {
       en: "Refresh",
@@ -19438,7 +19439,8 @@
     settings: {
       en: "Settings",
       de: "Einstellungen",
-      pt: "Configura\xE7\xF5es"
+      pt: "Configura\xE7\xF5es",
+      ja: "\u8A2D\u5B9A"
     },
     on_ignore_list: {
       en: "Ignored",
@@ -19467,9 +19469,10 @@
     },
     account_scrobbling_since_replace: {
       // copy this from last.fm 1:1 (including the space at the end if there)
-      en: "\u2022 scrobbling since ",
-      de: "\u2022 scrobbelt seit ",
-      pt: "\u2022 em scrobble desde "
+      en: "scrobbling since ",
+      de: "scrobbelt seit ",
+      pt: "em scrobble desde ",
+      ja: "\u3088\u308Ascrobble"
     },
     edit: {
       en: "Edit",
@@ -19490,7 +19493,8 @@
     scrobbles: {
       en: "Scrobbles",
       de: "Scrobbels",
-      pt: "Scrobbles"
+      pt: "Scrobbles",
+      ja: "Scrobble"
     },
     count_scrobbles: {
       en: "{c} scrobbles",
@@ -19506,7 +19510,8 @@
     artists: {
       en: "Artists",
       de: "K\xFCnstler",
-      pt: "Artistas"
+      pt: "Artistas",
+      ja: "\u30A2\u30FC\u30C6\u30A3\u30B9\u30C8"
     },
     artists_tooltip: {
       en: "Multiple artists are grouped into this profile",
@@ -19521,7 +19526,8 @@
     albums: {
       en: "Albums",
       de: "Alben",
-      pt: "\xC1lbuns"
+      pt: "\xC1lbuns",
+      ja: "\u30A2\u30EB\u30D0\u30E0"
     },
     track: {
       en: "Track",
@@ -19531,7 +19537,8 @@
     tracks: {
       en: "Tracks",
       de: "Titel",
-      pt: "Faixas"
+      pt: "Faixas",
+      ja: "\u30C8\u30E9\u30C3\u30AF"
     },
     appearance: {
       en: "Appearance",
@@ -19613,7 +19620,8 @@
     },
     events: {
       en: "Events",
-      pt: "Eventos"
+      pt: "Eventos",
+      ja: "\u30A4\u30D9\u30F3\u30C8"
     },
     lineup: {
       en: "Line-up",
@@ -19635,7 +19643,8 @@
     music: {
       en: "Music",
       de: "Musik",
-      pt: "M\xFAsica"
+      pt: "M\xFAsica",
+      ja: "\u97F3\u697D"
     },
     profile: {
       en: "Profile",
@@ -19749,11 +19758,13 @@
     bookmarks: {
       en: "Bookmarks",
       de: "Lesezeichen",
-      pt: "Marcadores"
+      pt: "Marcadores",
+      ja: "\u30D6\u30C3\u30AF\u30DE\u30FC\u30AF"
     },
     charts: {
       en: "Charts",
-      pt: "Paradas"
+      pt: "Paradas",
+      ja: "\u30C1\u30E3\u30FC\u30C8"
     },
     welcome_back_user: {
       en: "Welcome back {user}!",
@@ -20069,12 +20080,14 @@
     overview: {
       en: "Overview",
       de: "\xDCbersicht",
-      pt: "Vis\xE3o Geral"
+      pt: "Vis\xE3o Geral",
+      ja: "\u30C0\u30A4\u30B8\u30A7\u30B9\u30C8"
     },
     photos: {
       en: "Photos",
       de: "Fotos",
-      pt: "Fotos"
+      pt: "Fotos",
+      ja: "\u5199\u771F"
     },
     artwork: {
       en: "Artwork",
@@ -20089,7 +20102,8 @@
     biography: {
       en: "Biography",
       de: "Biographie",
-      pt: "Biografia"
+      pt: "Biografia",
+      ja: "\u30D0\u30A4\u30AA\u30B0\u30E9\u30D5\u30A3\u30FC"
     },
     wiki: {
       en: "Wiki"
@@ -20106,12 +20120,12 @@
       en: "{c} listeners",
       pt: "{c} ouvintes"
     },
-    // tag sounds better in english
     tag: {
       en: "Tag"
     },
     tags: {
-      en: "Tags"
+      en: "Tags",
+      ja: "\u30BF\u30B0"
     },
     reports: {
       // last.fm listening reports
@@ -20165,22 +20179,26 @@
     recent_tracks: {
       en: "Recent Tracks",
       de: "K\xFCrzlich gespielte Titel",
-      pt: "Faixas Recentes"
+      pt: "Faixas Recentes",
+      ja: "\u6700\u8FD1\u306E\u30C8\u30E9\u30C3\u30AF"
     },
     top_artists: {
       en: "Top Artists",
       de: "Top K\xFCnstler",
-      pt: "Top Artistas"
+      pt: "Top Artistas",
+      ja: "\u30C8\u30C3\u30D7\u30A2\u30FC\u30C6\u30A3\u30B9\u30C8"
     },
     top_albums: {
       en: "Top Albums",
       de: "Top Alben",
-      pt: "Top \xC1lbuns"
+      pt: "Top \xC1lbuns",
+      ja: "\u4EBA\u6C17\u30A2\u30EB\u30D0\u30E0"
     },
     top_tracks: {
       en: "Top Tracks",
       de: "Top Titel",
-      pt: "Top Faixas"
+      pt: "Top Faixas",
+      ja: "\u4EBA\u6C17\u30C8\u30E9\u30C3\u30AF"
     },
     top_track: {
       en: "Top Track"
@@ -20195,10 +20213,12 @@
         en: "{artist}"
       },
       two: {
-        en: "{artist1}, {artist2}"
+        en: "{artist1}, {artist2}",
+        ja: "{artist1}\u3001{artist2}"
       },
       three: {
-        en: "{artist1}, {artist2}, {artist3}"
+        en: "{artist1}, {artist2}, {artist3}",
+        ja: "{artist1}\u3001{artist2}\u3001{artist3}"
       }
     },
     taste_similarity: {
@@ -20206,10 +20226,11 @@
       pt: "Similaridade de gostos"
     },
     plays_lower: {
-      // 20 plays in artist/album grid
+      // eg. 20 plays in artist/album grid
       // copy from last.fm
       en: " plays",
-      pt: " reprodu\xE7\xF5es"
+      pt: " reprodu\xE7\xF5es",
+      ja: "\u66F2\u3092\u518D\u751F"
     },
     message: {
       // as in a direct message
@@ -20625,7 +20646,8 @@
     logout: {
       en: "Logout",
       de: "Ausloggen",
-      pt: "Sair"
+      pt: "Sair",
+      ja: "\u30ED\u30B0\u30A2\u30A6\u30C8"
     },
     tracklist: {
       // please copy from native last.fm ui
@@ -20825,12 +20847,14 @@
     default_timeframe: {
       en: "Default timeframe",
       de: "Standardzeitrahmen",
-      pt: "Per\xEDodo padr\xE3o"
+      pt: "Per\xEDodo padr\xE3o",
+      ja: "\u30C7\u30D5\u30A9\u30EB\u30C8\u671F\u9593"
     },
     chart_style: {
       en: "Chart style",
       de: "Diagrammstil",
-      pt: "Estilo da tabela"
+      pt: "Estilo da tabela",
+      ja: "\u30C1\u30E3\u30FC\u30C8\u30B9\u30BF\u30A4\u30EB"
     },
     chart_size: {
       en: "Chart size",
@@ -21566,12 +21590,14 @@
     last_count_days: {
       en: "Last {c} days",
       de: "Letzte {c} Tage",
-      pt: "\xDAltimos {c} dias"
+      pt: "\xDAltimos {c} dias",
+      ja: "\u904E\u53BB {c} \u65E5\u9593"
     },
     all_time: {
       en: "All time",
       de: "Insgesamt",
-      pt: "Todo o per\xEDodo"
+      pt: "Todo o per\xEDodo",
+      ja: "\u3059\u3079\u3066\u306E\u671F\u9593"
     },
     choose_a_timeframe_above: {
       en: "Choose a timeframe above",
