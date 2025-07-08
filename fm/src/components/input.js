@@ -12,10 +12,10 @@ class bleh_input extends HTMLElement {
     }
 
     constructor() {
-        super(); // must call super() before using `this`
-        this._props = {}; // storage for all prop values
-        this.attachShadow({mode: 'open'}); // create shadow root
-        this._render(); // initial render of template
+        super();
+        this._props = {};
+        this.attachShadow({mode: 'open'});
+        this._render();
     }
 
     attributeChangedCallback(name, old_val, new_val) {

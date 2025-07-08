@@ -1144,7 +1144,6 @@ function profile_recents() {
                             }
                         })}
                         <div class="input-group">
-                            <bleh-input />
                             ${date = input({
                                 type: 'date',
                                 value: '2025-07-08',
