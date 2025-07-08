@@ -2,132 +2,6 @@ import {html, render} from "lighterhtml";
 import {tl, trans} from "../build/trans.js";
 import {log} from "../build/log.js";
 
-class bleh_input extends HTMLElement {
-    static get observedAttributes() {
-        // attributes to observe and reflect into this._props
-        return [
-            'type', 'value', 'placeholder', 'min', 'max',
-            'maxlength', 'warn-if-empty', 'disabled', 'focus'
-        ];
-    }
-
-    constructor() {
-        super();
-        this._props = {};
-        this.attachShadow({mode: 'open'});
-        this._render();
-    }
-
-    attributeChangedCallback(name, old_val, new_val) {
-        const key = this._to_snake(name);
-
-        const bools = ['warn_if_empty', 'disabled', 'focus'];
-        if (bools.includes(key))
-            this._props[key] = new_val !== null;
-        else
-            this._props[key] = new_val;
-
-        this._render();
-    }
-
-    connectedCallback() {
-        this._init_tooltip();
-        if (this._props.focus) this._input.focus();
-    }
-
-    _init_tooltip() {
-        this._error_tooltip = tippy(this._input, {
-            theme:     'error',
-            placement: 'top',
-            trigger:   'manual'
-        });
-        this._error_tooltip.disable();
-    }
-
-    _render() {
-        render(this.shadowRoot, html`
-            <div class="content-form input-container colourful" data-type=${this._props.type} data-has-error="false">
-                ${this._props.type == 'colour' ? html.node`<span class="colour-block" ref=${el => this._colour_block = el} />` : ''}
-                <input
-                    class="modern-input ${this._props.hasError ? 'error' : ''}"
-                    type=${this._props.type || 'text'}
-                    value=${this._props.value || ''}
-                    placeholder=${this._props.placeholder || ''}
-                    min=${this._props.min || null}
-                    max=${this._props.max || null}
-                    maxlength=${this._props.maxlength || null}
-                    ?disabled=${this._props.disabled || false}
-                    ref=${el => (this._input = el)}
-                />
-            </div>
-        `,);
-
-        if (!this._bound) {
-            this._input.addEventListener('input', () => this._update());
-            this._bound = true;
-        }
-    }
-
-    _update() {
-        this._props.hasError = false;
-        this._error_tooltip.disable();
-
-        const value = this._input.value;
-        const type  = this._props.type;
-
-        if (type !== 'number') {
-            if (!value && this._props.warn_if_empty) {
-                this._error(tl(trans.this_field_is_required));
-            } else if (value.length > (this._props.maxlength || Infinity)) {
-                this._error(tl(trans.keep_within_the_range));
-            }
-        } else {
-            const num = parseInt(value, 10);
-            if (!value || isNaN(num)) {
-                this._error(tl(trans.only_numbers_are_allowed));
-            } else if (num > this._props.max || num < this._props.min) {
-                this._error(tl(trans.keep_within_the_range));
-            }
-        }
-
-        if (type === 'colour') {
-            if (!value.startsWith('#')) this._input.value = `#${value}`;
-            this._colour_block.style.backgroundColor = this._input.value;
-        }
-    }
-
-    _error(reason) {
-        log(reason, 'input', 'log');
-        this._props.hasError = true;
-        this._error_tooltip.setContent(reason);
-        this._error_tooltip.enable();
-        this._error_tooltip.show();
-    }
-
-    get value() {
-        return this._input.value;
-    }
-    set value(v) {
-        this._input.value = v;
-        this._update();
-    }
-
-    get disabled() {
-        return this._props.disabled;
-    }
-    set disabled(v) {
-        if (v) this.setAttribute('disabled', '');
-        else   this.removeAttribute('disabled');
-    }
-
-    _to_snake(str) {
-        return str.replace(/-/g, '_');
-    }
-}
-
-// register the element so you can use <custom-input> in your HTML
-customElements.define('bleh-input', bleh_input);
-
 export function input({
     type = 'text',
     value,
@@ -139,6 +13,258 @@ export function input({
     focus = false,
     disabled = false
 }) {
+    if (type == 'date') {
+        let now = new Date();
+        if (value != null) now = new Date(value);
+
+        const min_date = min != null
+            ? new Date(min)
+            : new Date(now.getTime() - 14 * 24 * 60 * 60 * 1000);
+        min_date.setHours(0, 0, 0, 0);
+
+        const max_date = max != null
+            ? new Date(max)
+            : new Date(now);
+        max_date.setHours(23, 59, 59, 999);
+
+        const state = {
+            year:  now.getFullYear(),
+            month: now.getMonth() + 1,
+            day:   now.getDate(),
+            hours: now.getHours(),
+            mins:  now.getMinutes(),
+            secs:  now.getSeconds()
+        };
+
+        let date_display;
+        let time_input;
+        let popup_inner = html.node`<div class="calendar" />`;
+
+        const locale = undefined;
+        const months = Array.from({length: 12}, (_, i) =>
+            new Intl.DateTimeFormat(locale, {month: 'short'})
+                .format(new Date(2000, i, 1))
+            );
+        const raw_weekdays = Array.from({length: 7}, (_, i) =>
+            new Intl.DateTimeFormat(locale, {weekday: 'short'})
+                .format(new Date(1970, 0, 4 + i))
+            );
+        const weekdays = raw_weekdays
+            .slice(1)
+            .concat(raw_weekdays[0]);
+
+        const container = html.node`
+            <div class="input-group">
+                <div class="content-form input-container" data-type="date">
+                    <div class="date-input modern-input" ref=${el => date_display = el} disabled=${disabled}>${format_date(state)}</div>
+                </div>
+                <div class="content-form input-container" data-type="time">
+                    <input class="modern-input" type="time" ref=${el => time_input = el} disabled=${disabled} value="${pad2(state.hours)}:${pad2(state.mins)}:${pad2(state.secs)}">
+                </div>
+            </div>
+        `;
+
+        function can_prev() {
+            const py = state.month === 1 ? state.year - 1 : state.year;
+            const pm = state.month === 1 ? 12 : state.month - 1;
+            return (
+                py > min_date.getFullYear() ||
+                (py === min_date.getFullYear() &&
+                pm >= min_date.getMonth() + 1)
+            );
+        }
+
+        function can_next() {
+            const ny = state.month === 12 ? state.year + 1 : state.year;
+            const nm = state.month === 12 ? 1 : state.month + 1;
+            return (
+                ny < max_date.getFullYear() ||
+                (ny === max_date.getFullYear() &&
+                nm <= max_date.getMonth() + 1)
+            );
+        }
+
+        let tooltip = tippy(date_display, {
+            theme: 'window',
+            content: '',
+            placement: 'bottom',
+            interactive: true,
+            interactiveBorder: 10,
+            trigger: 'click',
+
+            onShow() {
+                render_popup();
+            }
+        });
+
+        function render_popup() {
+            tooltip.setContent(html.node`
+                <div class="calendar">
+                    <div class="calendar-header">
+                        <button class="month-year">
+                            ${months[state.month - 1]} ${state.year}
+                        </button>
+                        <div class="fill" />
+                        <button class="chibi icon" data-type="up" onclick=${() => {
+                            if (!can_prev()) return;
+
+                            state.month--;
+
+                            if (state.month < 1) {
+                                state.month = 12;
+                                state.year--;
+                            }
+
+                            render_popup();
+                            update_display();
+                            emit();
+                        }}>
+                            ${tl(trans.back)}
+                        </button>
+                        <button class="chibi icon" data-type="up" onclick=${() => {
+                            if (!can_next()) return;
+
+                            state.month++;
+
+                            if (state.month > 12) {
+                                state.month = 1;
+                                state.year++;
+                            }
+
+                            render_popup();
+                            update_display();
+                            emit();
+                        }}>
+                            ${tl(trans.next)}
+                        </button>
+                    </div>
+                    <div class="date-header">
+                        ${weekdays.map(day => html.node`<div class="date">${day}</div>`)}
+                    </div>
+                    <div class="days">
+                        ${days(state.year, state.month).map(cell =>
+                            cell.type == 'empty'
+                                ? html.node`<button class="day empty" disabled />`
+                                : html.node`
+                                    <button class="day" aria-selected=${cell.day == state.day ? 'true' : 'false'} disabled=${cell.date < min_date || cell.date > max_date} onclick=${() => {
+                                        state.day = cell.day;
+                                        update_display();
+                                        emit();
+                                        render_popup();
+                                    }}>${cell.day}</button>
+                                `
+                        )}
+                    </div>
+                </div>
+            `);
+        }
+
+        function days(year, month) {
+            const raw_first = new Date(
+                year,
+                month - 1,
+                1
+            ).getDay();
+            const offset = (raw_first + 6) % 7; // monday comes first
+            const days_in_month = new Date(
+                year,
+                month,
+                0
+            ).getDate();
+
+            const cells = [];
+            for (let i = 0; i < offset; i++) cells.push({type: 'empty'});
+            for (let day = 1; day <= days_in_month; day++) {
+                cells.push({
+                    type: 'day',
+                    day,
+                    date: new Date(
+                        year,
+                        month - 1,
+                        day
+                    )
+                });
+            }
+
+            const rem = (7 - (cells.length % 7)) % 7;
+            for (let i = 0; i < rem; i++) cells.push({type: 'empty'});
+
+            return cells;
+        }
+
+        function update_display() {
+            date_display.textContent = format_date(state);
+        }
+
+        function emit() {
+            const date_object = new Date(
+                state.year,
+                state.month - 1,
+                state.day,
+                state.hours,
+                state.mins,
+                state.secs
+            );
+            container.dispatchEvent(new CustomEvent('change'), {detail: date_object});
+        }
+
+        function pad2(num) {
+            return String(num).padStart(2, '0');
+        }
+
+        function format_date({year, month, day}) {
+            const date_object = new Date(
+                year,
+                month - 1,
+                day
+            );
+            return date_object.toLocaleDateString(undefined, {
+                year: 'numeric',
+                month: 'short',
+                day: 'numeric'
+            });
+        }
+
+        container.value = (val = null) => {
+            if (val === null) {
+                return new Date(
+                    state.year,
+                    state.month - 1,
+                    state.day,
+                    state.hours,
+                    state.mins
+                );
+            }
+
+            const date_object = new Date(val);
+            state.year = date_object.getFullYear();
+            state.month = date_object.getMonth() + 1;
+            state.day = date_object.getDate();
+            state.hours = date_object.getHours();
+            state.mins = date_object.getMinutes();
+
+            render_popup();
+            update_display();
+
+            time_input.value = `${pad2(state.hours)}:${pad2(state.mins)}:${pad2(state.secs)}`;
+            return date_object;
+        };
+
+        container.disabled = (val = null) => {
+            if (val === null) return time_input.disabled;
+
+            if (!val)
+                date_display.removeAttribute('disabled');
+            else
+                date_display.setAttribute('disabled', 'true');
+
+            time_input.disabled = val;
+            return val;
+        };
+
+        return container;
+    }
+
     let input_box;
     let error_tooltip;
 

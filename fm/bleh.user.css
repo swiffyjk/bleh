@@ -182,7 +182,7 @@
         [data-bleh--theme="glass"] > & {
             --banner-height: 1200px;
         }
-        
+
         --glass-bg: rgb(255 255 255 / 30%);
         --glass-border: var(--glass-border);
         --glass-shadow: inset 2px 2px 1px 0 rgb(255 255 255 / 10%), inset -1px -1px 1px 1px rgb(255 255 255 / 10%);
@@ -24998,6 +24998,49 @@
             font-family: var(--font) !important;
             background: unset;
             padding: unset;
+        }
+    }
+
+
+    .calendar {
+        display: flex;
+        flex-direction: column;
+        gap: 10px;
+
+        .calendar-header {
+            display: flex;
+
+            & > .fill {
+                flex: 1;
+            }
+        }
+
+        .date-header {
+            display: flex;
+        }
+
+        .days {
+            display: grid;
+            grid-template-columns: repeat(7, 1fr);
+            grid-template-rows: repeat(6, 1fr);
+
+            & > .day {
+                width: 38px;
+                height: 38px;
+
+                --bg: transparent;
+                --bg-hov: hsla(var(--b4), 60%);
+                --bg-atv: hsla(var(--b4), 80%);
+                --shadow: none;
+
+                &[aria-selected="true"] {
+                    --bg: hsla(var(--h4), 6%);
+                    --bg-hov: hsla(var(--h4), 12%);
+                    --bg-atv: hsla(var(--h4), 22%);
+                    --col: hsl(var(--l3-c));
+                    --mask-colour: color-mix(in hsl, hsl(var(--l3-c)), hsl(var(--l4-c)) 40%);
+                }
+            }
         }
     }
 }

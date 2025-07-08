@@ -1102,7 +1102,6 @@ function profile_recents() {
                 let album_artist;
                 let use_current;
                 let date;
-                let time;
 
                 let submit_dialog = dialog({
                     id: 'submit_scrobble',
@@ -1140,18 +1139,11 @@ function profile_recents() {
                             title: tl(trans.use_current_time),
                             func: (state) => {
                                 date.disabled(state);
-                                time.disabled(state);
                             }
                         })}
                         <div class="input-group">
                             ${date = input({
                                 type: 'date',
-                                value: '2025-07-08',
-                                disabled: true
-                            })}
-                            ${time = input({
-                                type: 'time',
-                                value: '21:30:07',
                                 disabled: true
                             })}
                         </div>
