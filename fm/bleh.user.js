@@ -1106,6 +1106,7 @@
   var bleh_url = "https://www.last.fm{root}bleh";
   var setup_url = "https://www.last.fm{root}bleh/setup";
   var sponsor_url = "https://www.last.fm{root}bleh/sponsor";
+  var api_url = "https://www.last.fm{root}bleh/api";
   var theme_preview = () => html.node`
     <div class="preview-inner">
         <div class="preview-card">
@@ -7336,6 +7337,7 @@
     let params = new URLSearchParams(document.location.search);
     page.requested.tab = params.get("tab");
     page.requested.page = params.get("page");
+    page.requested.token = params.get("token");
     if (!page.structure.container || !document.body.contains(page.structure.container)) {
       log("page missing container, creating", "page structure");
       page.structure.container = document.createElement("div");
@@ -17452,6 +17454,7 @@
 
   // src/pages/api.js
   function bleh_api() {
+    if (page.subpage == "docs") return;
     page.structure.container = document.body.querySelector(".page-content");
     try {
       page.structure.row = page.structure.container.querySelector(".row");
@@ -17465,6 +17468,7 @@
     log("status is", "page", "info", page);
     update_page();
     register_background(auth.avatar.replace("/avatar42s/", "/ar0/"));
+    if (page.subpage == "create_account") return;
     page.structure.container.removeAttribute("data-beret");
     page.structure.container.removeAttribute("data-short");
     page.structure.content.classList.add("cards-view");
@@ -18901,6 +18905,8 @@
       bleh_setup();
     } else if (window.location.href.startsWith(sponsor_url.replace("{root}", root))) {
       bleh_sponsor_page();
+    } else if (window.location.href.startsWith(api_url.replace("{root}", root))) {
+      bleh_api_handler();
     } else if (window.location.href.startsWith(bleh_url.replace("{root}", root))) {
       bleh_home();
       bleh_settings();

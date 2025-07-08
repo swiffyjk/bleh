@@ -12,6 +12,8 @@ import {register_background, update_page} from '../page';
 import {html, render} from "lighterhtml";
 
 export function bleh_api() {
+    if (page.subpage == 'docs') return;
+
     page.structure.container = document.body.querySelector('.page-content');
     try {
         page.structure.row = page.structure.container.querySelector('.row');
@@ -28,6 +30,10 @@ export function bleh_api() {
     update_page();
 
     register_background(auth.avatar.replace('/avatar42s/', '/ar0/'));
+
+
+    if (page.subpage == 'create_account') return;
+
 
     page.structure.container.removeAttribute('data-beret');
     page.structure.container.removeAttribute('data-short');

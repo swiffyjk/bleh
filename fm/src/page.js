@@ -8,6 +8,7 @@ import {load_activities, subscribe_to_events} from "./activity";
 import {settings} from "./build/config";
 import {log} from "./build/log";
 import {
+    api_url,
     auth,
     auth_link,
     bleh_url,
@@ -398,6 +399,8 @@ function load_page() {
         bleh_setup();
     } else if (window.location.href.startsWith(sponsor_url.replace('{root}', root))) {
         bleh_sponsor_page();
+    } else if (window.location.href.startsWith(api_url.replace('{root}', root))) {
+        bleh_api_handler();
     } else if (window.location.href.startsWith(bleh_url.replace('{root}', root))) {
         bleh_home();
         bleh_settings();

@@ -1852,7 +1852,7 @@
 
     /*     FOOTER     */
     .footer {
-        background: radial-gradient(at center top, hsla(var(--h4), 10%) 0%, hsl(var(--b6)) 45%);
+        background: radial-gradient(at center bottom, hsla(var(--h4), 7%) 0%, hsl(var(--b6)) 45%);
         color: hsl(var(--c3));
         padding: 0 0 120px 0;
 

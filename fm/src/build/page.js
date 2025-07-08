@@ -167,9 +167,12 @@ export let page = {
 
 export let shout_parse_queue = [];
 
-export let bleh_url = 'https://www.last.fm{root}bleh';
-export let setup_url = 'https://www.last.fm{root}bleh/setup';
-export let sponsor_url = 'https://www.last.fm{root}bleh/sponsor';
+export const bleh_url = 'https://www.last.fm{root}bleh';
+export const setup_url = 'https://www.last.fm{root}bleh/setup';
+export const sponsor_url = 'https://www.last.fm{root}bleh/sponsor';
+export const api_url = 'https://www.last.fm{root}bleh/api';
+
+export const api_key = '';
 
 export let has_prompted_for_update = {
     state: false
