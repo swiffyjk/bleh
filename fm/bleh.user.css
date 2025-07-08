@@ -16572,6 +16572,13 @@
             max-height: 32px;
         }
 
+        & > .alert {
+            display: flex;
+            align-items: center;
+            min-height: 28px;
+            max-height: 32px;
+        }
+
         &[data-type="toggle"] {
             cursor: pointer;
 
@@ -24040,6 +24047,7 @@
 
 
     .has-error,
+    [data-page-type="bleh_auth"],
     [data-page-type="bleh_setup"],
     [data-page-subpage="auth"] {
         .col-main {

@@ -7,7 +7,7 @@
 import {render_activity_list} from "../activity"
 import {settings} from "../build/config"
 import {log} from "../build/log"
-import {auth, page, root} from "../build/page"
+import {auth, page, random_list, root} from "../build/page"
 import {sponsor_list} from "../build/sponsor"
 import {clean_number, lazy, sanitise, sanitise_text} from "../build/tools"
 import {lang, tl, trans} from "../build/trans"
@@ -31,6 +31,7 @@ import {collage} from "../components/collage.js";
 import {save_setting, setting} from "../components/settings.js";
 import {save_banner_to_cache} from "../components/banner.js";
 import {input} from "../components/input.js";
+import {toggle} from '../components/toggle.js'
 
 export function bleh_profiles() {
     // the obsessions page is a user subpage but works very differently
@@ -389,7 +390,7 @@ export function bleh_profiles() {
                     ` : !profile_note ? html.node`
                     <button class="left-icon blend-v2-btn" data-type="add" ref=${el => add_note = el} onclick=${() => {
                         add_note.display = 'none';
-            
+
                         create_profile_note_panel(page.name, profile_note);
                     }}>
                         ${tl(trans.add_note)}
@@ -807,20 +808,20 @@ function create_profile_note_panel(username, has_note) {
                 <button class="see-more cancel" onclick=${() => {
                     let notes = JSON.parse(localStorage.getItem('bleh_profile_notes')) || {};
                     delete notes[page.name];
-                    
+
                     note.value = '';
                     localStorage.setItem('bleh_profile_notes', JSON.stringify(notes));
                 }}>${tl(trans.clear)}</button>
                 <button class="btn primary icon" data-type="save" onclick=${() => {
                     let notes = JSON.parse(localStorage.getItem('bleh_profile_notes')) || {};
-                    
+
                     notes[page.name] = note.value
                         .replace(/&/g, '&amp;')
                         .replace(/</g, '&lt;')
                         .replace(/>/g, '&gt;')
                         .replace(/"/g, '&quot;')
                         .replace(/'/g, '&#039;');
-                    
+
                     localStorage.setItem('bleh_profile_notes', JSON.stringify(notes));
                 }}>${tl(trans.save)}</button>
             </div>
@@ -1090,21 +1091,19 @@ function profile_recents() {
     let header_text = panel.querySelector('h2');
     header.appendChild(header_text);
 
-    if (ff('submit_scrobble')) {
-        let random = {
-            track: 'THE GREATEST',
-            album: 'HIT ME HARD AND SOFT',
-            artist: 'Billie Eilish',
-            album_artist: 'Billie Eilish'
-        }
-
-        let track;
-        let album;
-        let artist;
-        let album_artist;
-
+    if (ff('submit_scrobble') && page.name == auth.name) {
         let submit_btn = html.node`
             <button class="left-icon blend-v2-btn" data-type="add" onclick=${() => {
+                let random = random_list[Math.floor(Math.random() * random_list.length)];
+
+                let track;
+                let album;
+                let artist;
+                let album_artist;
+                let use_current;
+                let date;
+                let time;
+
                 let submit_dialog = dialog({
                     id: 'submit_scrobble',
                     title: tl(trans.new_scrobble),
@@ -1134,14 +1133,76 @@ function profile_recents() {
                             placeholder: random.album_artist,
                             warn_if_empty: true
                         })}
+                        <p class="generic-label">${tl(trans.time)}</p>
+                        ${use_current = toggle({
+                            value: true,
+                            type: 'checkbox',
+                            title: tl(trans.use_current_time),
+                            func: (state) => {
+                                date.disabled(state);
+                                time.disabled(state);
+                            }
+                        })}
+                        <div class="input-group">
+                            <bleh-input />
+                            ${date = input({
+                                type: 'date',
+                                value: '2025-07-08',
+                                disabled: true
+                            })}
+                            ${time = input({
+                                type: 'time',
+                                value: '21:30:07',
+                                disabled: true
+                            })}
+                        </div>
                     </div>
                     <div class="modal-footer">
                         <button class="see-more cancel" onclick=${() => dialog_rm({id: 'submit_scrobble'})}>
                             ${tl(trans.cancel)}
                         </button>
                         <div class="fill" />
-                        <button class="btn primary icon" data-type="add" onclick=${() => {
-                            
+                        <button class="btn primary icon" data-type="add" onclick=${async () => {
+                            if (track.value() === null || artist.value() === null) {
+                                notify({
+                                    id: 'submit_scrobble',
+                                    title: tl(trans.new_scrobble),
+                                    body: tl(trans.missing_fields),
+                                    type: 'error'
+                                });
+                                return;
+                            }
+
+                            if (album.value() !== null && album_artist.value() === null) album_artist.value(artist.value());
+
+                            let params = {
+                                sk: localStorage.getItem('bleh_auth'),
+                                artist: artist.value(),
+                                track: track.value(),
+                                t
+                            };
+
+                            const res = await fetch(
+                                'https://jufufu.katelyn.moe/api/lastfm',
+                                {
+                                    method: 'POST',
+                                    headers: { 'content-type': 'application/json' },
+                                    body: JSON.stringify({
+                                        method: 'track.scrobble',
+                                        params: {
+                                            sk: sessionKey,
+                                            artist: 'Radiohead',
+                                            track: 'Karma Police',
+                                            album: 'OK Computer',
+                                            albumArtist: 'Radiohead',
+                                            timestamp: Math.floor(Date.now() / 1000)
+                                        }
+                                    })
+                                }
+                            );
+
+                            const result = await res.json();
+                            console.log(result);
                         }}>
                             ${tl(trans.new)}
                         </button>

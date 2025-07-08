@@ -2235,6 +2235,20 @@ export const trans = {
         de: 'Verbinden',
         pt: 'Conectar'
     },
+    connected: {
+        en: 'Connected!'
+    },
+    reconnect: {
+        en: 'Connect again'
+    },
+    api: {
+        name: {
+            en: 'Unlock additional API features'
+        },
+        body: {
+            en: 'Link your account to allow API access such as scrobbling'
+        }
+    },
     app_would_like_to_connect: {
         // app name is above
         en: 'would like to use your account',
@@ -2880,6 +2894,15 @@ export const trans = {
     },
     deselect_all: {
         en: 'De-select all'
+    },
+    use_current_time: {
+        en: 'Use current time'
+    },
+    time: {
+        en: 'Time'
+    },
+    missing_fields: {
+        en: 'Missing required fields'
     }
 }
 

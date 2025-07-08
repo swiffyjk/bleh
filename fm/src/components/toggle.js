@@ -8,7 +8,8 @@ export function toggle({
     body = '',
     small = '',
     disabled = false,
-    data = ''
+    data = '',
+    func = null
 }) {
     let checkbox;
     let state;
@@ -16,9 +17,11 @@ export function toggle({
     let elem = html.node`
         <div class="setting" data-type="${type}" onclick=${() => {
             if (disabled) return;
-            
+
             let current = checkbox.checked;
-    
+
+            if (func) func(!current);
+
             checkbox.checked = !current;
             state.setAttribute('aria-checked', !current);
         }}>
@@ -48,12 +51,16 @@ export function toggle({
     elem.check = () => {
         if (disabled) return;
 
+        if (func) func(true);
+
         checkbox.checked = true;
         state.setAttribute('aria-checked', true);
     }
 
     elem.uncheck = () => {
         if (disabled) return;
+
+        if (func) func(false);
 
         checkbox.checked = false;
         state.setAttribute('aria-checked', false);

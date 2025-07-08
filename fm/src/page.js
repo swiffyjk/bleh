@@ -66,6 +66,7 @@ import {html, render} from "lighterhtml";
 import {bleh_footer} from "./footer.js";
 import {register_rabbit} from "./components/rabbit.js";
 import {dialog_extender} from "./components/dialog_extender.js";
+import {bleh_auth} from "./pages/auth.js";
 
 export function bleh() {
     let head_observer = new MutationObserver((mutations) => {
@@ -400,7 +401,7 @@ function load_page() {
     } else if (window.location.href.startsWith(sponsor_url.replace('{root}', root))) {
         bleh_sponsor_page();
     } else if (window.location.href.startsWith(api_url.replace('{root}', root))) {
-        bleh_api_handler();
+        bleh_auth();
     } else if (window.location.href.startsWith(bleh_url.replace('{root}', root))) {
         bleh_home();
         bleh_settings();

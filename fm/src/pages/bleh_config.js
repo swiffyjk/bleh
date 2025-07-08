@@ -7,7 +7,7 @@
 import {test_api_key} from "../api";
 import {settings, settings_base} from "../build/config";
 import {album_track_corrections, artist_corrections} from "../build/music";
-import {auth, page, root, theme_preview} from "../build/page";
+import {api_key, auth, page, root, theme_preview} from "../build/page";
 import {stored_season} from "../build/seasonal";
 import {sponsor_list} from "../build/sponsor";
 import {clamp_sat, download_with_progress, hex_to_hsl} from '../build/tools';
@@ -634,6 +634,9 @@ export function render_setting_page(page_id) {
             }
         ]);
 
+        const auth_key = localStorage.getItem('bleh_auth');
+        const auth_valid = localStorage.getItem('bleh_auth_valid');
+
         render(page.structure.main, html`
             <div class="bleh--panel sponsor-badge-panel" data-sponsoring="${auth.sponsor}">
                 <div class="profile-container">
@@ -696,6 +699,32 @@ export function render_setting_page(page_id) {
                         <button class="see-more update-check sponsor-related" onclick="_sponsor_check()">${tl(trans.update_check)}</button>
                     </div>
                 </div>
+                ${auth_key && auth_valid === 'true' ? html.node`
+                <div class="setting" data-type="action">
+                    <div class="heading">
+                        <h5>${tl(trans.api.name)}</h5>
+                        <p>${tl(trans.api.body)}</p>
+                    </div>
+                    <div class="alert alert-info">${tl(trans.connected)}</div>
+                    <div class="toggle-wrap">
+                        <a class="btn icon connect" href="${root}api/auth?api_key=${api_key}&cb=${root}bleh/api">
+                            ${tl(trans.reconnect)}
+                        </a>
+                    </div>
+                </div>
+                ` : html.node`
+                <div class="setting" data-type="action">
+                    <div class="heading">
+                        <h5>${tl(trans.api.name)}</h5>
+                        <p>${tl(trans.api.body)}</p>
+                    </div>
+                    <div class="toggle-wrap">
+                        <a class="btn primary icon connect" href="${root}api/auth?api_key=${api_key}&cb=${root}bleh/api">
+                            ${tl(trans.connect)}
+                        </a>
+                    </div>
+                </div>
+                `}
                 ${setting({id: 'profile_shortcut'})}
                 ${setting({id: 'avatar_radius'})}
                 ${setting({id: 'bio_markdown'})}

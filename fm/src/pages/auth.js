@@ -1,9 +1,11 @@
-import {auth, page} from "../build/page.js";
+import {auth, page, root} from "../build/page.js";
 import {register_background, update_page} from "../page.js";
 import {log} from "../build/log.js";
 import {checkup_page_structure} from "../components/structure.js";
+import {html, render} from "lighterhtml";
+import {tl, trans} from "../build/trans.js";
 
-export function bleh_auth() {
+export async function bleh_auth() {
     page.structure.container = document.body.querySelector('.page-content');
     try {
         page.structure.row = page.structure.container.querySelector('.row');
@@ -27,4 +29,82 @@ export function bleh_auth() {
     // remove error stuff cus we control this page
     page.structure.row.removeChild(page.structure.row.firstElementChild);
     page.structure.row.removeChild(page.structure.row.firstElementChild);
+
+    page.structure.container.removeAttribute('data-beret');
+    page.structure.container.removeAttribute('data-short');
+    page.structure.content.classList.add('cards-view');
+
+
+    if (!page.requested.token) {
+        render(page.structure.main, html`
+            <section class="api-connector sour">
+                <div class="loading-data-container">
+                    <div class="loading-data-text error">${tl(trans.no_token_provided)}</div>
+                </div>
+            </section>
+        `);
+        return;
+    }
+
+    render(page.structure.main, html`
+        <section class="api-connector sour">
+            <div class="loading-data-container">
+                <div class="loading-data-text">${tl(trans.loading)}</div>
+            </div>
+        </section>
+    `);
+
+    const res = await fetch(
+        'https://jufufu.katelyn.moe/api/lastfm',
+        {
+            method: 'POST',
+            headers: {'content-type': 'application/json'},
+            body: JSON.stringify({
+                method: 'auth.getSession',
+                params: {token: page.requested.token},
+            })
+        }
+    )
+
+    const json = await res.json();
+    if (json.error) {
+        log('error', 'auth', 'error', json);
+
+        render(page.structure.main, html`
+            <section class="api-connector sour">
+                <div class="loading-data-container">
+                    <div class="loading-data-text error">${json.error.message}</div>
+                </div>
+            </section>
+        `);
+
+        return;
+    }
+
+    const {name, key} = json.session;
+    log(`authorised as ${name}`, 'auth', 'info', json.session);
+
+    localStorage.setItem('bleh_auth', key);
+    localStorage.setItem('bleh_auth_valid', 'true');
+
+    render(page.structure.main, html`
+        <section class="api-connector sour">
+            <div class="avatar">
+                <img src="${auth.avatar.replace('/avatar42s/', '/avatar170s/')}" alt="${tl(trans.your_avatar)}">
+            </div>
+            <div class="info">
+                <h1>bleh</h1>
+                <div class="sub-text no-margin">${tl(trans.has_been_connected)}</div>
+            </div>
+            <div class="sep"></div>
+            <div class="description">${tl(trans.you_can_now_close_this_tab)}</div>
+            <div class="connector-footer">
+                <div class="btn-fill"/>
+                <a class="btn primary continue" href="${root}bleh">
+                    ${tl(trans.continue)}
+                </a>
+                <div class="btn-fill"/>
+            </div>
+        </section>
+    `);
 }

@@ -1107,6 +1107,7 @@
   var setup_url = "https://www.last.fm{root}bleh/setup";
   var sponsor_url = "https://www.last.fm{root}bleh/sponsor";
   var api_url = "https://www.last.fm{root}bleh/api";
+  var api_key = "85c118b69b1437844fe75fcd2bf27261";
   var theme_preview = () => html.node`
     <div class="preview-inner">
         <div class="preview-card">
@@ -1121,6 +1122,1172 @@
         </div>
     </div>
 `;
+  var random_list = [
+    {
+      track: "DIFFERENT DAY",
+      album: "MUSIC - SORRY 4 DA WAIT",
+      artist: "Playboi Carti",
+      album_artist: "Playboi Carti"
+    },
+    {
+      track: "LUNCH",
+      album: "HIT ME HARD AND SOFT",
+      artist: "Billie Eilish",
+      album_artist: "Billie Eilish"
+    },
+    {
+      track: "If I Die 2Nite",
+      album: "Me Against The World",
+      artist: "2Pac",
+      album_artist: "2Pac"
+    },
+    {
+      track: "Like Him (feat. Lola Young)",
+      album: "CHROMAKOPIA",
+      artist: "Tyler, The Creator",
+      album_artist: "Tyler, The Creator"
+    },
+    {
+      track: "HYAENA",
+      album: "UTOPIA",
+      artist: "Travis Scott",
+      album_artist: "Travis Scott"
+    },
+    {
+      track: "Abandon Me",
+      album: "Blush",
+      artist: "Kevin Abstract",
+      album_artist: "Kevin Abstract"
+    },
+    {
+      track: "Evangelic Girl is a Gun",
+      album: "Evangelic Girl is a Gun",
+      artist: "yeule",
+      album_artist: "yeule"
+    },
+    {
+      track: "Apple",
+      album: "BRAT",
+      artist: "Charli xcx",
+      album_artist: "Charli xcx"
+    },
+    {
+      track: "OLYMPIAN",
+      album: "MUSIC",
+      artist: "Playboi Carti",
+      album_artist: "Playboi Carti"
+    },
+    {
+      track: "SOUTH ATLANTA BABY",
+      album: "MUSIC",
+      artist: "Playboi Carti",
+      album_artist: "Playboi Carti"
+    },
+    {
+      track: "BLUE",
+      album: "HIT ME HARD AND SOFT",
+      artist: "Billie Eilish",
+      album_artist: "Billie Eilish"
+    },
+    {
+      track: "THE GREATEST",
+      album: "HIT ME HARD AND SOFT",
+      artist: "Billie Eilish",
+      album_artist: "Billie Eilish"
+    },
+    {
+      track: "SKELETONS",
+      album: "ASTROWORLD",
+      artist: "Travis Scott",
+      album_artist: "Travis Scott"
+    },
+    {
+      track: "BUTTERFLY EFFECT",
+      album: "ASTROWORLD",
+      artist: "Travis Scott",
+      album_artist: "Travis Scott"
+    },
+    {
+      track: "Barbarian",
+      album: "The Party Never Ends 2.0",
+      artist: "Juice WRLD",
+      album_artist: "Juice WRLD"
+    },
+    {
+      track: "Wouldn't Leave",
+      album: "ye",
+      artist: "Kanye West",
+      album_artist: "Kanye West"
+    },
+    {
+      track: "Bloodhail",
+      album: "Deathconsciousness",
+      artist: "Have A Nice Life",
+      album_artist: "Have A Nice Life"
+    },
+    {
+      track: "BOOGIE",
+      album: "SATURATION III",
+      artist: "BROCKHAMPTON",
+      album_artist: "BROCKHAMPTON"
+    },
+    {
+      track: "sdp interlude",
+      album: "Birds In The Trap Sing McKnight",
+      artist: "Travis Scott",
+      album_artist: "Travis Scott"
+    },
+    {
+      track: "Be Quiet and Drive (Far Away)",
+      album: "Around the Fur",
+      artist: "Deftones",
+      album_artist: "Deftones"
+    },
+    {
+      track: "Better Times",
+      album: "Teen Dream",
+      artist: "Beach House",
+      album_artist: "Beach House"
+    },
+    {
+      track: "love hurts",
+      album: "agony",
+      artist: "Ilykimchi",
+      album_artist: "Ilykimchi"
+    },
+    {
+      track: "M3 N MIN3",
+      album: "M3 N MIN3",
+      artist: "femtanyl",
+      album_artist: "femtanyl"
+    },
+    {
+      track: "y.w.d.t.",
+      album: "burger world peace & the endless mediocrity",
+      artist: "ilysm",
+      album_artist: "ilysm"
+    },
+    {
+      track: "Illegal",
+      album: "Fancy That",
+      artist: "PinkPantheress",
+      album_artist: "PinkPantheress"
+    },
+    {
+      track: "Ace Trumpets",
+      album: "Ace Trumpets",
+      artist: "Clipse",
+      album_artist: "Clipse"
+    },
+    {
+      track: "Timeless (feat Playboi Carti)",
+      album: "Hurry Up Tomorrow",
+      artist: "The Weeknd",
+      album_artist: "The Weeknd"
+    },
+    {
+      track: "tv off (feat. lefty gunplay)",
+      album: "GNX",
+      artist: "Kendrick Lamar",
+      album_artist: "Kendrick Lamar"
+    },
+    {
+      track: "jeans",
+      album: "jeans",
+      artist: "2hollis",
+      album_artist: "2hollis"
+    },
+    {
+      track: "either on or off the drugs",
+      album: "I LAY DOWN MY LIFE FOR YOU",
+      artist: "JPEGMAFIA",
+      album_artist: "JPEGMAFIA"
+    },
+    {
+      track: "drive ME crazy!",
+      album: "Let\u2019s Start Here.",
+      artist: "Lil Yachty",
+      album_artist: "Lil Yachty"
+    },
+    {
+      track: "Drugs You Should Try It",
+      album: "DAYS BEFORE RODEO",
+      artist: "Travis Scott",
+      album_artist: "Travis Scott"
+    },
+    {
+      track: "Fighting My Demons",
+      album: "A Great Chaos",
+      artist: "Ken Carson",
+      album_artist: "Ken Carson"
+    },
+    {
+      track: "Don\u2019t Smile",
+      album: "Short n' Sweet (Deluxe)",
+      artist: "Sabrina Carpenter",
+      album_artist: "Sabrina Carpenter"
+    },
+    {
+      track: "Espresso",
+      album: "Short n' Sweet (Deluxe)",
+      artist: "Sabrina Carpenter",
+      album_artist: "Sabrina Carpenter"
+    },
+    {
+      track: "only shallow",
+      album: "loveless",
+      artist: "my bloody valentine",
+      album_artist: "my bloody valentine"
+    },
+    {
+      track: "STILL IN THE PAINT (with LAZER DIM 700 & Bktherula)",
+      album: "KING OF THE MISCHIEVOUS SOUTH",
+      artist: "Denzel Curry",
+      album_artist: "Denzel Curry"
+    },
+    {
+      track: "90210 (feat. Kacy Hill)",
+      album: "Rodeo",
+      artist: "Travis Scott",
+      album_artist: "Travis Scott"
+    },
+    {
+      track: "4X4",
+      album: "4X4",
+      artist: "Travis Scott",
+      album_artist: "Travis Scott"
+    },
+    {
+      track: "Luv (sic)",
+      album: "Luv(sic) Hexalogy",
+      artist: "Nujabes",
+      album_artist: "Nujabes"
+    },
+    {
+      track: "buy me presents",
+      album: "fruitcake",
+      artist: "Sabrina Carpenter",
+      album_artist: "Sabrina Carpenter"
+    },
+    {
+      track: "Come into the Water",
+      album: "Be the Cowboy",
+      artist: "Mitski",
+      album_artist: "Mitski"
+    },
+    {
+      track: "positions",
+      album: "Positions",
+      artist: "Ariana Grande",
+      album_artist: "Ariana Grande"
+    },
+    {
+      track: "Lie To Girls",
+      album: "Short n' Sweet (Deluxe)",
+      artist: "Sabrina Carpenter",
+      album_artist: "Sabrina Carpenter"
+    },
+    {
+      track: "Loneliness",
+      album: "Dehumanizing Loneliness",
+      artist: "Decalius",
+      album_artist: "Decalius"
+    },
+    {
+      track: "Till The Angels Come (feat. Freddie Gibbs & Prodigy)",
+      album: "No Idols",
+      artist: "Domo Genesis",
+      album_artist: "Domo Genesis"
+    },
+    {
+      track: "A Quick One Before the Eternal Worm Devours Connecticut",
+      album: "Deathconsciousness",
+      artist: "Have A Nice Life",
+      album_artist: "Have A Nice Life"
+    },
+    {
+      track: "Earthmover",
+      album: "Deathconsciousness",
+      artist: "Have A Nice Life",
+      album_artist: "Have A Nice Life"
+    },
+    {
+      track: "Psychoboost feat danny brown",
+      album: "Revengeseekerz",
+      artist: "Jane Remover",
+      album_artist: "Jane Remover"
+    },
+    {
+      track: "MOMENTUM (feat. Ilykimchi)",
+      album: "F*CK U SKRILLEX YOU THINK UR ANDY WARHOL BUT UR NOT!! <3",
+      artist: "Skrillex",
+      album_artist: "Skrillex"
+    },
+    {
+      track: "Gnarly",
+      album: "Gnarly",
+      artist: "KATSEYE",
+      album_artist: "KATSEYE"
+    },
+    {
+      track: "Knees",
+      album: "By the Time I Get to Phoenix",
+      artist: "Injury Reserve",
+      album_artist: "Injury Reserve"
+    },
+    {
+      track: "Fear, Sex",
+      album: "Imaginal Disk",
+      artist: "Magdalena Bay",
+      album_artist: "Magdalena Bay"
+    },
+    {
+      track: "Wildflower",
+      album: "Depression Cherry",
+      artist: "Beach House",
+      album_artist: "Beach House"
+    },
+    {
+      track: "JRJRJR",
+      album: "Revengeseekerz",
+      artist: "Jane Remover",
+      album_artist: "Jane Remover"
+    },
+    {
+      track: "ha",
+      album: "burger world peace & the endless mediocrity",
+      artist: "ilysm",
+      album_artist: "ilysm"
+    },
+    {
+      track: "Red Light",
+      album: "Blush",
+      artist: "Kevin Abstract",
+      album_artist: "Kevin Abstract"
+    },
+    {
+      track: "Alive",
+      album: "Alive",
+      artist: "Ari Abdul",
+      album_artist: "Ari Abdul"
+    },
+    {
+      track: "WHILE YOU WERE SLEEPING VIP",
+      album: "F*CK U SKRILLEX YOU THINK UR ANDY WARHOL BUT UR NOT!! <3",
+      artist: "Skrillex",
+      album_artist: "Skrillex"
+    },
+    {
+      track: "BURN",
+      album: "BURN",
+      artist: "Starr Adara",
+      album_artist: "Starr Adara"
+    },
+    {
+      track: "100 Bad (feat. Charli XCX) (Charli XCX Remix)",
+      album: "Tommy Genesis",
+      artist: "Tommy Genesis",
+      album_artist: "Tommy Genesis"
+    },
+    {
+      track: "DISCO (FT. TOMMY GENESIS)",
+      album: "AFTERCARE",
+      artist: "Nessa Barrett",
+      album_artist: "Nessa Barrett"
+    },
+    {
+      track: "SOMEBODY LOVES ME",
+      album: "$ome $exy $ongs 4 U",
+      artist: "PARTYNEXTDOOR",
+      album_artist: "PARTYNEXTDOOR"
+    },
+    {
+      track: "phobie d\u2019impulsion",
+      album: "a bit of a mad one",
+      artist: "glaive",
+      album_artist: "glaive"
+    },
+    {
+      track: "GODSTAINED",
+      album: "GODSTAINED",
+      artist: "Quadeca",
+      album_artist: "Quadeca"
+    },
+    {
+      track: "\u3086\u304D\u3053\u3055\u3093",
+      album: "\u3042\u3089\u305F\u3081\u307E\u3057\u3066\u3001\u306F\u3058\u3081\u307E\u3057\u3066\u3001\u30DF\u30C9\u30EA\u3067\u3059\u3002",
+      artist: "\u30DF\u30C9\u30EA",
+      album_artist: "\u30DF\u30C9\u30EA"
+    },
+    {
+      track: "Dsco",
+      album: "Velocity: Design: Comfort.",
+      artist: "Sweet Trip",
+      album_artist: "Sweet Trip"
+    },
+    {
+      track: "Everything is romantic",
+      album: "BRAT",
+      artist: "Charli xcx",
+      album_artist: "Charli xcx"
+    },
+    {
+      track: "White Ceiling",
+      album: "To See the Next Part of the Dream",
+      artist: "Parannoul",
+      album_artist: "Parannoul"
+    },
+    {
+      track: "SEX",
+      album: "ROADRUNNER: NEW LIGHT, NEW MACHINE PLUS PACK",
+      artist: "BROCKHAMPTON",
+      album_artist: "BROCKHAMPTON"
+    },
+    {
+      track: "all-american bitch",
+      album: "GUTS",
+      artist: "Olivia Rodrigo",
+      album_artist: "Olivia Rodrigo"
+    },
+    {
+      track: "The Ballad of Matt & Mica",
+      album: "Imaginal Disk",
+      artist: "Magdalena Bay",
+      album_artist: "Magdalena Bay"
+    },
+    {
+      track: "Real Man",
+      album: "This Is How Tomorrow Moves",
+      artist: "beabadoobee",
+      album_artist: "beabadoobee"
+    },
+    {
+      track: "cyber meat",
+      album: "softscars",
+      artist: "yeule",
+      album_artist: "yeule"
+    },
+    {
+      track: "From The Start",
+      album: "Bewitched",
+      artist: "Laufey",
+      album_artist: "Laufey"
+    },
+    {
+      track: "SUGAR (Remix) [feat. Dua Lipa]",
+      album: "SUGAR (Remix) [feat. Dua Lipa]",
+      artist: "BROCKHAMPTON",
+      album_artist: "BROCKHAMPTON"
+    },
+    {
+      track: "PROM/KING",
+      album: "CARE FOR ME",
+      artist: "Saba",
+      album_artist: "Saba"
+    },
+    {
+      track: "BUSY/SIRENS",
+      album: "CARE FOR ME",
+      artist: "Saba",
+      album_artist: "Saba"
+    },
+    {
+      track: "Peppers (feat. Tommy Genesis)",
+      album: "Did you know that there's a tunnel under Ocean Blvd",
+      artist: "Lana Del Rey",
+      album_artist: "Lana Del Rey"
+    },
+    {
+      track: "Make You Mine",
+      album: "Make You Mine",
+      artist: "Madison Beer",
+      album_artist: "Madison Beer"
+    },
+    {
+      track: "Duvet",
+      album: "Twilight",
+      artist: "b\xF4a",
+      album_artist: "b\xF4a"
+    },
+    {
+      track: "Brand New City",
+      album: "Lush",
+      artist: "Mitski",
+      album_artist: "Mitski"
+    },
+    {
+      track: "Two Girls Kissing",
+      album: "They Spent Their Wild Youthful Days In The Glittering World Of The Salons",
+      artist: "Swirlies",
+      album_artist: "Swirlies"
+    },
+    {
+      track: "Geyser",
+      album: "Be the Cowboy",
+      artist: "Mitski",
+      album_artist: "Mitski"
+    },
+    {
+      track: "My Love Mine All Mine",
+      album: "The Land Is Inhospitable and So Are We",
+      artist: "Mitski",
+      album_artist: "Mitski"
+    },
+    {
+      track: "PHANTASM",
+      album: "AND THEY MINE FOR OUR BODIES",
+      artist: "Gao the Arsonist",
+      album_artist: "Gao the Arsonist"
+    },
+    {
+      track: "DO AS I SAY",
+      album: "AND THEY MINE FOR OUR BODIES",
+      artist: "Gao the Arsonist",
+      album_artist: "Gao the Arsonist"
+    },
+    {
+      track: "the prom",
+      album: "i care so much that i dont care at all",
+      artist: "glaive",
+      album_artist: "glaive"
+    },
+    {
+      track: "On Sight",
+      album: "Yeezus",
+      artist: "Kanye West",
+      album_artist: "Kanye West"
+    },
+    {
+      track: "If I Let Him In",
+      album: "...Is Doomed",
+      artist: "Black Wing",
+      album_artist: "Black Wing"
+    },
+    {
+      track: "x w x",
+      album: "softscars",
+      artist: "yeule",
+      album_artist: "yeule"
+    },
+    {
+      track: "Natural Habitat (feat. Ken Carson)",
+      album: "Natural Habitat",
+      artist: "070 Shake",
+      album_artist: "070 Shake"
+    },
+    {
+      track: "cbd",
+      album: "hypochondriac",
+      artist: "brakence",
+      album_artist: "brakence"
+    },
+    {
+      track: "(March 19th 1983) It Was Probably Green",
+      album: "Songs About Leaving",
+      artist: "Carissa's Wierd",
+      album_artist: "Carissa's Wierd"
+    },
+    {
+      track: "clairbourne practice",
+      album: "clairbourne practice",
+      artist: "julie",
+      album_artist: "julie"
+    },
+    {
+      track: "feminine adornments",
+      album: "my anti-aircraft friend",
+      artist: "julie",
+      album_artist: "julie"
+    },
+    {
+      track: "Image",
+      album: "Imaginal Disk",
+      artist: "Magdalena Bay",
+      album_artist: "Magdalena Bay"
+    },
+    {
+      track: "Spectral Bride",
+      album: "Giles Corey",
+      artist: "Giles Corey",
+      album_artist: "Giles Corey"
+    },
+    {
+      track: "if u love me now then shoot to kill",
+      album: "ovine hall",
+      artist: "ovine hall",
+      album_artist: "ovine hall"
+    },
+    {
+      track: "Blackest Bile",
+      album: "Giles Corey",
+      artist: "Giles Corey",
+      album_artist: "Giles Corey"
+    },
+    {
+      track: "very little effort",
+      album: "my anti-aircraft friend",
+      artist: "julie",
+      album_artist: "julie"
+    },
+    {
+      track: "skipping tiles",
+      album: "pushing daisies",
+      artist: "julie",
+      album_artist: "julie"
+    },
+    {
+      track: "through your window",
+      album: "pg.4 a picture of three hedges/through your window",
+      artist: "julie",
+      album_artist: "julie"
+    },
+    {
+      track: "COLE PIMP (with Ty Dolla $ign & Juicy J)",
+      album: "KING OF THE MISCHIEVOUS SOUTH",
+      artist: "Denzel Curry",
+      album_artist: "Denzel Curry"
+    },
+    {
+      track: "I THINK",
+      album: "IGOR",
+      artist: "Tyler, The Creator",
+      album_artist: "Tyler, The Creator"
+    },
+    {
+      track: "Only",
+      album: "Lahai",
+      artist: "Sampha",
+      album_artist: "Sampha"
+    },
+    {
+      track: "Together",
+      album: "Fake It Flowers",
+      artist: "beabadoobee",
+      album_artist: "beabadoobee"
+    },
+    {
+      track: "Old money bitch",
+      album: "Wallsocket",
+      artist: "underscores",
+      album_artist: "underscores"
+    },
+    {
+      track: "Pandora",
+      album: "Pandora",
+      artist: "Wisp",
+      album_artist: "Wisp"
+    },
+    {
+      track: "Novacane",
+      album: "Novacane",
+      artist: "Frank Ocean",
+      album_artist: "Frank Ocean"
+    },
+    {
+      track: "Bulls on Parade - triple j Like A Version",
+      album: "Bulls on Parade (triple j Like A Version)",
+      artist: "Denzel Curry",
+      album_artist: "Denzel Curry"
+    },
+    {
+      track: "runway talk",
+      album: "DOG",
+      artist: "Kahlil Blu",
+      album_artist: "Kahlil Blu"
+    },
+    {
+      track: "01'beigecamry",
+      album: "Farley",
+      artist: "Sideshow",
+      album_artist: "Sideshow"
+    },
+    {
+      track: "Puff Daddy",
+      album: "Puff Daddy",
+      artist: "JPEGMAFIA",
+      album_artist: "JPEGMAFIA"
+    },
+    {
+      track: "wonder 2",
+      album: "m b v",
+      artist: "my bloody valentine",
+      album_artist: "my bloody valentine"
+    },
+    {
+      track: "Second hand embarrassment",
+      album: "fishmonger",
+      artist: "underscores",
+      album_artist: "underscores"
+    },
+    {
+      track: "Let It Happen",
+      album: "Currents",
+      artist: "Tame Impala",
+      album_artist: "Tame Impala"
+    },
+    {
+      track: "TERRIBLE EXCELLENCE (feat. Yung Lean)",
+      album: "Cold Visions",
+      artist: "Bladee",
+      album_artist: "Bladee"
+    },
+    {
+      track: "Christmas In Harlem",
+      album: "Christmas In Harlem",
+      artist: "Kanye West",
+      album_artist: "Kanye West"
+    },
+    {
+      track: "E. Coli (feat. Earl Sweatshirt)",
+      album: "Bread",
+      artist: "The Alchemist",
+      album_artist: "The Alchemist"
+    },
+    {
+      track: "How To Build A Relationship",
+      album: "Hi This Is Flume (Mixtape)",
+      artist: "Flume",
+      album_artist: "Flume"
+    },
+    {
+      track: "Never Catch Me",
+      album: "You're Dead!",
+      artist: "Flying Lotus",
+      album_artist: "Flying Lotus"
+    },
+    {
+      track: "Take A Bite",
+      album: "This Is How Tomorrow Moves",
+      artist: "beabadoobee",
+      album_artist: "beabadoobee"
+    },
+    {
+      track: "Slow Dance",
+      album: "Charm",
+      artist: "Clairo",
+      album_artist: "Clairo"
+    },
+    {
+      track: "BALD!",
+      album: "EP!",
+      artist: "JPEGMAFIA",
+      album_artist: "JPEGMAFIA"
+    },
+    {
+      track: "Seigfried",
+      album: "Blonde",
+      artist: "Frank Ocean",
+      album_artist: "Frank Ocean"
+    },
+    {
+      track: "Girls Just Want to Have Fun",
+      album: "Crest",
+      artist: "Bladee",
+      album_artist: "Bladee"
+    },
+    {
+      track: "Wesley's Theory",
+      album: "To Pimp A Butterfly",
+      artist: "Kendrick Lamar",
+      album_artist: "Kendrick Lamar"
+    },
+    {
+      track: "Talk",
+      album: "Beatopia",
+      artist: "beabadoobee",
+      album_artist: "beabadoobee"
+    },
+    {
+      track: "I Used to Love Him (feat. Mary J. Blige)",
+      album: "The Miseducation of Lauryn Hill",
+      artist: "Ms. Lauryn Hill",
+      album_artist: "Ms. Lauryn Hill"
+    },
+    {
+      track: "vpn",
+      album: "volcanic bird enemy and the voiced concern",
+      artist: "Lil Ugly Mane",
+      album_artist: "Lil Ugly Mane"
+    },
+    {
+      track: "only tomorrow",
+      album: "m b v",
+      artist: "my bloody valentine",
+      album_artist: "my bloody valentine"
+    },
+    {
+      track: "WHAT A DAY",
+      album: "CALL ME IF YOU GET LOST: The Estate Sale",
+      artist: "Tyler, The Creator",
+      album_artist: "Tyler, The Creator"
+    },
+    {
+      track: "untitled 08 | 09.06.2014.",
+      album: "untitled unmastered.",
+      artist: "Kendrick Lamar",
+      album_artist: "Kendrick Lamar"
+    },
+    {
+      track: "Beautiful World",
+      album: "To See the Next Part of the Dream",
+      artist: "Parannoul",
+      album_artist: "Parannoul"
+    },
+    {
+      track: "Excuse",
+      album: "To See the Next Part of the Dream",
+      artist: "Parannoul",
+      album_artist: "Parannoul"
+    },
+    {
+      track: "Chanel",
+      album: "Chanel",
+      artist: "Frank Ocean",
+      album_artist: "Frank Ocean"
+    },
+    {
+      track: "Punk Weight",
+      album: "The Money Store",
+      artist: "Death Grips",
+      album_artist: "Death Grips"
+    },
+    {
+      track: "Maybe Somewhere",
+      album: "Sky Hundred",
+      artist: "Parannoul",
+      album_artist: "Parannoul"
+    },
+    {
+      track: "i will follow you into the dark - Spotify Singles",
+      album: "Spotify Singles",
+      artist: "glaive",
+      album_artist: "glaive"
+    },
+    {
+      track: "DUSTCUTTER",
+      album: "SCRAPYARD",
+      artist: "Quadeca",
+      album_artist: "Quadeca"
+    },
+    {
+      track: "HIGHJACK",
+      album: "HIGHJACK",
+      artist: "A$AP Rocky",
+      album_artist: "A$AP Rocky"
+    },
+    {
+      track: "You Got Me",
+      album: "Things Fall Apart",
+      artist: "The Roots",
+      album_artist: "The Roots"
+    },
+    {
+      track: "Gotta Touch 'Em - (Pt. 2)",
+      album: "Mystic Stylez",
+      artist: "Three 6 Mafia",
+      album_artist: "Three 6 Mafia"
+    },
+    {
+      track: "J'OUVERT",
+      album: "iridescence",
+      artist: "BROCKHAMPTON",
+      album_artist: "BROCKHAMPTON"
+    },
+    {
+      track: "Upper Echelon (feat. T.I. & 2 Chainz)",
+      album: "Upper Echelon (feat. T.I. & 2 Chainz)",
+      artist: "Travis Scott",
+      album_artist: "Travis Scott"
+    },
+    {
+      track: "Outta Control",
+      album: "Outta Control",
+      artist: "Fat Joe",
+      album_artist: "Fat Joe"
+    },
+    {
+      track: "TEXAS BLUE",
+      album: "SCRAPYARD",
+      artist: "Quadeca",
+      album_artist: "Quadeca"
+    },
+    {
+      track: "Luv (sic.) pt3 (feat. Shing02)",
+      album: "Luv(sic) Hexalogy",
+      artist: "Nujabes",
+      album_artist: "Nujabes"
+    },
+    {
+      track: "Luv (sic) pt5 (feat. Shing02)",
+      album: "Luv(sic) Hexalogy",
+      artist: "Nujabes",
+      album_artist: "Nujabes"
+    },
+    {
+      track: "Me And My Bitch",
+      album: "No Idols",
+      artist: "Domo Genesis",
+      album_artist: "Domo Genesis"
+    },
+    {
+      track: "Lean Beef Patty",
+      album: "SCARING THE HOES",
+      artist: "JPEGMAFIA",
+      album_artist: "JPEGMAFIA"
+    },
+    {
+      track: "Blue Suede",
+      album: "Hell Can Wait",
+      artist: "Vince Staples",
+      album_artist: "Vince Staples"
+    },
+    {
+      track: "u",
+      album: "To Pimp A Butterfly",
+      artist: "Kendrick Lamar",
+      album_artist: "Kendrick Lamar"
+    },
+    {
+      track: "Sandman",
+      album: "LIVE.LOVE.A$AP",
+      artist: "A$AP Rocky",
+      album_artist: "A$AP Rocky"
+    },
+    {
+      track: "Love Is Everywhere",
+      album: "Imaginal Disk",
+      artist: "Magdalena Bay",
+      album_artist: "Magdalena Bay"
+    },
+    {
+      track: "Give You the World",
+      album: "Gemini Rights",
+      artist: "Steve Lacy",
+      album_artist: "Steve Lacy"
+    },
+    {
+      track: "Stoned",
+      album: "Balloonerism",
+      artist: "Mac Miller",
+      album_artist: "Mac Miller"
+    },
+    {
+      track: "Blow Out",
+      album: "Pablo Honey",
+      artist: "Radiohead",
+      album_artist: "Radiohead"
+    },
+    {
+      track: "Motion Picture Soundtrack",
+      album: "Kid A",
+      artist: "Radiohead",
+      album_artist: "Radiohead"
+    },
+    {
+      track: "March Madness",
+      album: "56 Nights",
+      artist: "Future",
+      album_artist: "Future"
+    },
+    {
+      track: "FORCE OF HABIT",
+      album: "BOY ANONYMOUS",
+      artist: "Paris Texas",
+      album_artist: "Paris Texas"
+    },
+    {
+      track: "the BLACK seminole.",
+      album: "Let\u2019s Start Here.",
+      artist: "Lil Yachty",
+      album_artist: "Lil Yachty"
+    },
+    {
+      track: "No More Parties In LA",
+      album: "The Life Of Pablo",
+      artist: "Kanye West",
+      album_artist: "Kanye West"
+    },
+    {
+      track: "Devil In A New Dress",
+      album: "My Beautiful Dark Twisted Fantasy",
+      artist: "Kanye West",
+      album_artist: "Kanye West"
+    },
+    {
+      track: "Life Of The Party (with Andr\xE9 3000)",
+      album: "Donda (Deluxe)",
+      artist: "Kanye West",
+      album_artist: "Kanye West"
+    },
+    {
+      track: "Location",
+      album: "Playboi Carti",
+      artist: "Playboi Carti",
+      album_artist: "Playboi Carti"
+    },
+    {
+      track: "Long Time - Intro",
+      album: "Die Lit",
+      artist: "Playboi Carti",
+      album_artist: "Playboi Carti"
+    },
+    {
+      track: "Doves In The Wind (feat. Kendrick Lamar)",
+      album: "Ctrl",
+      artist: "SZA",
+      album_artist: "SZA"
+    },
+    {
+      track: "Low Life (feat. The Weeknd)",
+      album: "EVOL",
+      artist: "Future",
+      album_artist: "Future"
+    },
+    {
+      track: "Samurai",
+      album: "Samurai",
+      artist: "Lupe Fiasco",
+      album_artist: "Lupe Fiasco"
+    },
+    {
+      track: "Cake",
+      album: "Samurai",
+      artist: "Lupe Fiasco",
+      album_artist: "Lupe Fiasco"
+    },
+    {
+      track: "745",
+      album: "Big Fish Theory",
+      artist: "Vince Staples",
+      album_artist: "Vince Staples"
+    },
+    {
+      track: "Stories In Pyjamas",
+      album: "Stories In Pyjamas",
+      artist: "Kofi Stone",
+      album_artist: "Kofi Stone"
+    },
+    {
+      track: "Prophecy",
+      album: "No Idols",
+      artist: "Domo Genesis",
+      album_artist: "Domo Genesis"
+    },
+    {
+      track: "the ride-",
+      album: "Let\u2019s Start Here.",
+      artist: "Lil Yachty",
+      album_artist: "Lil Yachty"
+    },
+    {
+      track: "Same Old",
+      album: "Nobody Cares Till Everybody Does",
+      artist: "Kofi Stone",
+      album_artist: "Kofi Stone"
+    },
+    {
+      track: "BURN",
+      album: "VULTURES 1",
+      artist: "\xA5$",
+      album_artist: "\xA5$"
+    },
+    {
+      track: "BLACK METAL TERRORIST | 13 M T",
+      album: "TA13OO",
+      artist: "Denzel Curry",
+      album_artist: "Denzel Curry"
+    },
+    {
+      track: "Bruuuh (with Denzel Curry) - Remix",
+      album: "Bruuuh (with Denzel Curry) [Remix]",
+      artist: "JID",
+      album_artist: "JID"
+    },
+    {
+      track: "Addiction",
+      album: "Late Registration",
+      artist: "Kanye West",
+      album_artist: "Kanye West"
+    },
+    {
+      track: "Fell In Luv (feat. Bryson Tiller)",
+      album: "Die Lit",
+      artist: "Playboi Carti",
+      album_artist: "Playboi Carti"
+    },
+    {
+      track: "Runaway",
+      album: "My Beautiful Dark Twisted Fantasy",
+      artist: "Kanye West",
+      album_artist: "Kanye West"
+    },
+    {
+      track: "Stateside",
+      album: "Fancy That",
+      artist: "PinkPantheress",
+      album_artist: "PinkPantheress"
+    },
+    {
+      track: "Raindrops (Insane) [with Travis Scott]",
+      album: "HEROES & VILLAINS",
+      artist: "Metro Boomin",
+      album_artist: "Metro Boomin"
+    },
+    {
+      track: "Niagara Falls (Foot or 2) [with Travis Scott & 21 Savage]",
+      album: "HEROES & VILLAINS",
+      artist: "Metro Boomin",
+      album_artist: "Metro Boomin"
+    },
+    {
+      track: "\u30AA\u30EC\u30F3\u30B8",
+      album: "\u30AA\u30EC\u30F3\u30B8",
+      artist: "\u9022\u5742\u5927\u6CB3\u30FB\u6ADB\u679D\u5B9F\u4E43\u68A8\u30FB\u5DDD\u5D8B\u4E9C\u7F8E(\u91D8\u5BAE\u7406\u6075\u3001\u5800\u6C5F\u7531\u8863\u3001\u559C\u591A\u6751\u82F1\u68A8)",
+      album_artist: "\u9022\u5742\u5927\u6CB3\u30FB\u6ADB\u679D\u5B9F\u4E43\u68A8\u30FB\u5DDD\u5D8B\u4E9C\u7F8E\uFF08CV\uFF1A\u91D8\u5BAE\u7406\u6075\u30FB\u5800\u6C5F\u7531\u8863\u30FB\u559C\u591A\u6751\u82F1\u68A8\uFF09"
+    },
+    {
+      track: "Just Wanna Rock",
+      album: "Pink Tape",
+      artist: "Lil Uzi Vert",
+      album_artist: "Lil Uzi Vert"
+    },
+    {
+      track: "OVERLY",
+      album: "MUSIC",
+      artist: "Playboi Carti",
+      album_artist: "Playboi Carti"
+    },
+    {
+      track: "Add Up My Love",
+      album: "Charm",
+      artist: "Clairo",
+      album_artist: "Clairo"
+    },
+    {
+      track: "60.000 ISK",
+      album: "May It Never Falter",
+      artist: "glaive",
+      album_artist: "glaive"
+    },
+    {
+      track: "7 rings",
+      album: "thank u, next",
+      artist: "Ariana Grande",
+      album_artist: "Ariana Grande"
+    },
+    {
+      track: "yes, and?",
+      album: "eternal sunshine",
+      artist: "Ariana Grande",
+      album_artist: "Ariana Grande"
+    },
+    {
+      track: "34+35",
+      album: "Positions",
+      artist: "Ariana Grande",
+      album_artist: "Ariana Grande"
+    }
+  ];
 
   // src/components/notify.js
   function load_notifications() {
@@ -6453,6 +7620,119 @@
   }
 
   // src/components/input.js
+  var bleh_input = class extends HTMLElement {
+    static get observedAttributes() {
+      return [
+        "type",
+        "value",
+        "placeholder",
+        "min",
+        "max",
+        "maxlength",
+        "warn-if-empty",
+        "disabled",
+        "focus"
+      ];
+    }
+    constructor() {
+      super();
+      this._props = {};
+      this.attachShadow({ mode: "open" });
+      this._render();
+    }
+    attributeChangedCallback(name2, old_val, new_val) {
+      const key = this._to_snake(name2);
+      const bools = ["warn_if_empty", "disabled", "focus"];
+      if (bools.includes(key))
+        this._props[key] = new_val !== null;
+      else
+        this._props[key] = new_val;
+      this._render();
+    }
+    connectedCallback() {
+      this._init_tooltip();
+      if (this._props.focus) this._input.focus();
+    }
+    _init_tooltip() {
+      this._error_tooltip = tippy(this._input, {
+        theme: "error",
+        placement: "top",
+        trigger: "manual"
+      });
+      this._error_tooltip.disable();
+    }
+    _render() {
+      render(this.shadowRoot, html`
+            <div class="content-form input-container colourful" data-type=${this._props.type} data-has-error="false">
+                ${this._props.type == "colour" ? html.node`<span class="colour-block" ref=${(el) => this._colour_block = el} />` : ""}
+                <input
+                    class="modern-input ${this._props.hasError ? "error" : ""}"
+                    type=${this._props.type || "text"}
+                    value=${this._props.value || ""}
+                    placeholder=${this._props.placeholder || ""}
+                    min=${this._props.min || null}
+                    max=${this._props.max || null}
+                    maxlength=${this._props.maxlength || null}
+                    ?disabled=${this._props.disabled || false}
+                    ref=${(el) => this._input = el}
+                />
+            </div>
+        `);
+      if (!this._bound) {
+        this._input.addEventListener("input", () => this._update());
+        this._bound = true;
+      }
+    }
+    _update() {
+      this._props.hasError = false;
+      this._error_tooltip.disable();
+      const value = this._input.value;
+      const type = this._props.type;
+      if (type !== "number") {
+        if (!value && this._props.warn_if_empty) {
+          this._error(tl(trans.this_field_is_required));
+        } else if (value.length > (this._props.maxlength || Infinity)) {
+          this._error(tl(trans.keep_within_the_range));
+        }
+      } else {
+        const num = parseInt(value, 10);
+        if (!value || isNaN(num)) {
+          this._error(tl(trans.only_numbers_are_allowed));
+        } else if (num > this._props.max || num < this._props.min) {
+          this._error(tl(trans.keep_within_the_range));
+        }
+      }
+      if (type === "colour") {
+        if (!value.startsWith("#")) this._input.value = `#${value}`;
+        this._colour_block.style.backgroundColor = this._input.value;
+      }
+    }
+    _error(reason) {
+      log(reason, "input", "log");
+      this._props.hasError = true;
+      this._error_tooltip.setContent(reason);
+      this._error_tooltip.enable();
+      this._error_tooltip.show();
+    }
+    get value() {
+      return this._input.value;
+    }
+    set value(v) {
+      this._input.value = v;
+      this._update();
+    }
+    get disabled() {
+      return this._props.disabled;
+    }
+    set disabled(v) {
+      if (v) this.setAttribute("disabled", "");
+      else this.removeAttribute("disabled");
+    }
+    _to_snake(str) {
+      return str.replace(/-/g, "_");
+    }
+  };
+  customElements.define("bleh-input", bleh_input);
   function input({
     type = "text",
     value,
@@ -6461,7 +7741,8 @@
     max,
     maxlength,
     warn_if_empty = false,
-    focus = false
+    focus = false,
+    disabled = false
   }) {
     let input_box;
     let error_tooltip;
@@ -6469,7 +7750,7 @@
     let container = html.node`
         <div class="content-form input-container colourful" data-type=${type} data-has-error="false">
             ${type == "colour" ? html.node`<span class="colour-block" ref=${(el) => colour_block = el} />` : ""}
-            <input class="modern-input" autofocus=${focus} type=${type} value=${value} placeholder=${placeholder} min=${min} max=${max} maxlength=${maxlength} ref=${(el) => input_box = el} />
+            <input class="modern-input" disabled=${disabled} autofocus=${focus} type=${type} value=${value} placeholder=${placeholder} min=${min} max=${max} maxlength=${maxlength} ref=${(el) => input_box = el} />
         </div>
     `;
     error_tooltip = tippy(input_box, {
@@ -6482,6 +7763,19 @@
     input_box.addEventListener("input", () => {
       update_input();
     });
+    container.value = (val = null) => {
+      if (val === null) return input_box.value;
+      input_box.value = val;
+      return val;
+    };
+    container.disabled = (state = null) => {
+      if (state === null) return input_box.getAttribute("disabled") || false;
+      if (state === true)
+        input_box.setAttribute("disabled", "true");
+      else
+        input_box.removeAttribute("disabled");
+      return state;
+    };
     return container;
     function update_input(skip_most = false) {
       container.setAttribute("data-has-error", "false");
@@ -8789,6 +10083,65 @@
     localStorage.setItem("bleh_profile_banners", JSON.stringify(banners));
   }
 
+  // src/components/toggle.js
+  function toggle({
+    value = false,
+    type = "toggle",
+    name: name2 = "",
+    title = "",
+    body = "",
+    small = "",
+    disabled = false,
+    data: data2 = "",
+    func = null
+  }) {
+    let checkbox;
+    let state;
+    let elem = html.node`
+        <div class="setting" data-type="${type}" onclick=${() => {
+      if (disabled) return;
+      let current = checkbox.checked;
+      if (func) func(!current);
+      checkbox.checked = !current;
+      state.setAttribute("aria-checked", !current);
+    }}>
+            <div class="heading">
+                <h5>${title}</h5>
+                ${body != "" ? html.node`<p>${body}</p>` : ""}
+                ${small != "" ? html.node`<small>${small}</small>` : ""}
+            </div>
+            ${type == "toggle" ? html.node`
+            <div class="toggle-wrap">
+                <input type="checkbox" ref=${(el) => checkbox = el} name=${name2} value=${data2} checked=${value} />
+                <button class="toggle" ref=${(el) => state = el} aria-checked=${value}>
+                    <div class="dot" />
+                </button>
+            </div>
+            ` : html.node`
+            <div class="check">
+                <input type="checkbox" ref=${(el) => checkbox = el} name=${name2} value=${data2} checked=${value} disabled=${disabled} />
+                <div class="box" ref=${(el) => state = el} aria-checked=${value} disabled=${disabled}>
+                    <div class="bleh-icon" />
+                </div>
+            </div>
+            `}
+        </div>
+    `;
+    elem.check = () => {
+      if (disabled) return;
+      if (func) func(true);
+      checkbox.checked = true;
+      state.setAttribute("aria-checked", true);
+    };
+    elem.uncheck = () => {
+      if (disabled) return;
+      if (func) func(false);
+      checkbox.checked = false;
+      state.setAttribute("aria-checked", false);
+    };
+    return elem;
+  }
+
   // src/pages/profile.js
   function bleh_profiles() {
     if (page.subpage == "obsessions_obsession") {
@@ -9605,19 +10958,17 @@
     header.classList.add("top-container");
     let header_text2 = panel.querySelector("h2");
     header.appendChild(header_text2);
-    if (ff("submit_scrobble")) {
-      let random = {
-        track: "THE GREATEST",
-        album: "HIT ME HARD AND SOFT",
-        artist: "Billie Eilish",
-        album_artist: "Billie Eilish"
-      };
-      let track;
-      let album;
-      let artist;
-      let album_artist;
+    if (ff("submit_scrobble") && page.name == auth.name) {
       let submit_btn = html.node`
             <button class="left-icon blend-v2-btn" data-type="add" onclick=${() => {
+        let random = random_list[Math.floor(Math.random() * random_list.length)];
+        let track;
+        let album;
+        let artist;
+        let album_artist;
+        let use_current;
+        let date;
+        let time;
         let submit_dialog = dialog({
           id: "submit_scrobble",
           title: tl(trans.new_scrobble),
@@ -9647,13 +10998,72 @@
             placeholder: random.album_artist,
             warn_if_empty: true
           })}
+                        <p class="generic-label">${tl(trans.time)}</p>
+                        ${use_current = toggle({
+            value: true,
+            type: "checkbox",
+            title: tl(trans.use_current_time),
+            func: (state) => {
+              date.disabled(state);
+              time.disabled(state);
+            }
+          })}
+                        <div class="input-group">
+                            <bleh-input />
+                            ${date = input({
+            type: "date",
+            value: "2025-07-08",
+            disabled: true
+          })}
+                            ${time = input({
+            type: "time",
+            value: "21:30:07",
+            disabled: true
+          })}
+                        </div>
                     </div>
                     <div class="modal-footer">
                         <button class="see-more cancel" onclick=${() => dialog_rm2({ id: "submit_scrobble" })}>
                             ${tl(trans.cancel)}
                         </button>
                         <div class="fill" />
-                        <button class="btn primary icon" data-type="add" onclick=${() => {
+                        <button class="btn primary icon" data-type="add" onclick=${async () => {
+            if (track.value() === null || artist.value() === null) {
+              notify({
+                id: "submit_scrobble",
+                title: tl(trans.new_scrobble),
+                body: tl(trans.missing_fields),
+                type: "error"
+              });
+              return;
+            }
+            if (album.value() !== null && album_artist.value() === null) album_artist.value(artist.value());
+            let params = {
+              sk: localStorage.getItem("bleh_auth"),
+              artist: artist.value(),
+              track: track.value(),
+              t
+            };
+            const res = await fetch(
+              "https://jufufu.katelyn.moe/api/lastfm",
+              {
+                method: "POST",
+                headers: { "content-type": "application/json" },
+                body: JSON.stringify({
+                  method: "track.scrobble",
+                  params: {
+                    sk: sessionKey,
+                    artist: "Radiohead",
+                    track: "Karma Police",
+                    album: "OK Computer",
+                    albumArtist: "Radiohead",
+                    timestamp: Math.floor(Date.now() / 1e3)
+                  }
+                })
+              }
+            );
+            const result = await res.json();
+            console.log(result);
           }}>
                             ${tl(trans.new)}
                         </button>
@@ -11693,6 +13103,8 @@
           name: tl(trans.activity_tracking.name)
         }
       ]);
+      const auth_key = localStorage.getItem("bleh_auth");
+      const auth_valid = localStorage.getItem("bleh_auth_valid");
       render(page.structure.main, html`
             <div class="bleh--panel sponsor-badge-panel" data-sponsoring="${auth.sponsor}">
                 <div class="profile-container">
@@ -11750,6 +13162,32 @@
                         <button class="see-more update-check sponsor-related" onclick="_sponsor_check()">${tl(trans.update_check)}</button>
                     </div>
                 </div>
+                ${auth_key && auth_valid === "true" ? html.node`
+                <div class="setting" data-type="action">
+                    <div class="heading">
+                        <h5>${tl(trans.api.name)}</h5>
+                        <p>${tl(trans.api.body)}</p>
+                    </div>
+                    <div class="alert alert-info">${tl(trans.connected)}</div>
+                    <div class="toggle-wrap">
+                        <a class="btn icon connect" href="${root}api/auth?api_key=${api_key}&cb=${root}bleh/api">
+                            ${tl(trans.reconnect)}
+                        </a>
+                    </div>
+                </div>
+                ` : html.node`
+                <div class="setting" data-type="action">
+                    <div class="heading">
+                        <h5>${tl(trans.api.name)}</h5>
+                        <p>${tl(trans.api.body)}</p>
+                    </div>
+                    <div class="toggle-wrap">
+                        <a class="btn primary icon connect" href="${root}api/auth?api_key=${api_key}&cb=${root}bleh/api">
+                            ${tl(trans.connect)}
+                        </a>
+                    </div>
+                </div>
+                `}
                 ${setting({ id: "profile_shortcut" })}
                 ${setting({ id: "avatar_radius" })}
                 ${setting({ id: "bio_markdown" })}
@@ -18468,61 +19906,6 @@
     }
   }
 
-  // src/components/toggle.js
-  function toggle({
-    value = false,
-    type = "toggle",
-    name: name2 = "",
-    title = "",
-    body = "",
-    small = "",
-    disabled = false,
-    data: data2 = ""
-  }) {
-    let checkbox;
-    let state;
-    let elem = html.node`
-        <div class="setting" data-type="${type}" onclick=${() => {
-      if (disabled) return;
-      let current = checkbox.checked;
-      checkbox.checked = !current;
-      state.setAttribute("aria-checked", !current);
-    }}>
-            <div class="heading">
-                <h5>${title}</h5>
-                ${body != "" ? html.node`<p>${body}</p>` : ""}
-                ${small != "" ? html.node`<small>${small}</small>` : ""}
-            </div>
-            ${type == "toggle" ? html.node`
-            <div class="toggle-wrap">
-                <input type="checkbox" ref=${(el) => checkbox = el} name=${name2} value=${data2} checked=${value} />
-                <button class="toggle" ref=${(el) => state = el} aria-checked=${value}>
-                    <div class="dot" />
-                </button>
-            </div>
-            ` : html.node`
-            <div class="check">
-                <input type="checkbox" ref=${(el) => checkbox = el} name=${name2} value=${data2} checked=${value} disabled=${disabled} />
-                <div class="box" ref=${(el) => state = el} aria-checked=${value} disabled=${disabled}>
-                    <div class="bleh-icon" />
-                </div>
-            </div>
-            `}
-        </div>
-    `;
-    elem.check = () => {
-      if (disabled) return;
-      checkbox.checked = true;
-      state.setAttribute("aria-checked", true);
-    };
-    elem.uncheck = () => {
-      if (disabled) return;
-      checkbox.checked = false;
-      state.setAttribute("aria-checked", false);
-    };
-    return elem;
-  }
-
   // src/components/dialog_extender.js
   function dialog_extender() {
     let wrappers = document.body.querySelectorAll(":scope > .popup_wrapper, :scope > div > .popup_wrapper");
@@ -18675,6 +20058,93 @@
             `);
       }
     });
+  }
+
+  // src/pages/auth.js
+  async function bleh_auth() {
+    page.structure.container = document.body.querySelector(".page-content");
+    try {
+      page.structure.row = page.structure.container.querySelector(".row");
+      page.structure.main = page.structure.row.querySelector(".col-main");
+      page.structure.side = page.structure.row.querySelector(".col-sidebar");
+    } catch (e) {
+      log("unable to find elements", "page structure");
+    }
+    checkup_page_structure();
+    register_background(auth.avatar.replace("/avatar42s/", "/ar0/"));
+    page.type = "bleh_auth";
+    page.subpage = "";
+    log("status is", "page", "info", page);
+    update_page();
+    page.structure.row.removeChild(page.structure.row.firstElementChild);
+    page.structure.row.removeChild(page.structure.row.firstElementChild);
+    page.structure.container.removeAttribute("data-beret");
+    page.structure.container.removeAttribute("data-short");
+    page.structure.content.classList.add("cards-view");
+    if (!page.requested.token) {
+      render(page.structure.main, html`
+            <section class="api-connector sour">
+                <div class="loading-data-container">
+                    <div class="loading-data-text error">${tl(trans.no_token_provided)}</div>
+                </div>
+            </section>
+        `);
+      return;
+    }
+    render(page.structure.main, html`
+        <section class="api-connector sour">
+            <div class="loading-data-container">
+                <div class="loading-data-text">${tl(trans.loading)}</div>
+            </div>
+        </section>
+    `);
+    const res = await fetch(
+      "https://jufufu.katelyn.moe/api/lastfm",
+      {
+        method: "POST",
+        headers: { "content-type": "application/json" },
+        body: JSON.stringify({
+          method: "auth.getSession",
+          params: { token: page.requested.token }
+        })
+      }
+    );
+    const json = await res.json();
+    if (json.error) {
+      log("error", "auth", "error", json);
+      render(page.structure.main, html`
+            <section class="api-connector sour">
+                <div class="loading-data-container">
+                    <div class="loading-data-text error">${json.error.message}</div>
+                </div>
+            </section>
+        `);
+      return;
+    }
+    const { name: name2, key } = json.session;
+    log(`authorised as ${name2}`, "auth", "info", json.session);
+    localStorage.setItem("bleh_auth", key);
+    localStorage.setItem("bleh_auth_valid", "true");
+    render(page.structure.main, html`
+        <section class="api-connector sour">
+            <div class="avatar">
+                <img src="${auth.avatar.replace("/avatar42s/", "/avatar170s/")}" alt="${tl(trans.your_avatar)}">
+            </div>
+            <div class="info">
+                <h1>bleh</h1>
+                <div class="sub-text no-margin">${tl(trans.has_been_connected)}</div>
+            </div>
+            <div class="sep"></div>
+            <div class="description">${tl(trans.you_can_now_close_this_tab)}</div>
+            <div class="connector-footer">
+                <div class="btn-fill"/>
+                <a class="btn primary continue" href="${root}bleh">
+                    ${tl(trans.continue)}
+                </a>
+                <div class="btn-fill"/>
+            </div>
+        </section>
+    `);
   }
 
   // src/page.js
@@ -18906,7 +20376,7 @@
     } else if (window.location.href.startsWith(sponsor_url.replace("{root}", root))) {
       bleh_sponsor_page();
     } else if (window.location.href.startsWith(api_url.replace("{root}", root))) {
-      bleh_api_handler();
+      bleh_auth();
     } else if (window.location.href.startsWith(bleh_url.replace("{root}", root))) {
       bleh_home();
       bleh_settings();
@@ -21402,6 +22872,20 @@
       de: "Verbinden",
       pt: "Conectar"
     },
+    connected: {
+      en: "Connected!"
+    },
+    reconnect: {
+      en: "Connect again"
+    },
+    api: {
+      name: {
+        en: "Unlock additional API features"
+      },
+      body: {
+        en: "Link your account to allow API access such as scrobbling"
+      }
+    },
     app_would_like_to_connect: {
       // app name is above
       en: "would like to use your account",
@@ -22047,6 +23531,15 @@
     },
     deselect_all: {
       en: "De-select all"
+    },
+    use_current_time: {
+      en: "Use current time"
+    },
+    time: {
+      en: "Time"
+    },
+    missing_fields: {
+      en: "Missing required fields"
     }
   };
   var trans_legacy = {
@@ -26310,6 +27803,11 @@
       submit_scrobble: {
         default: false,
         name: "Submit new scrobble from profile",
+        date: "2025-07-08"
+      },
+      jufufu: {
+        default: false,
+        name: "Connect via the Last.fm API",
         date: "2025-07-08"
       }
     }
