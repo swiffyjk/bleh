@@ -373,7 +373,9 @@ export const trans = {
         de: '{c} scrobbels',
         pt: '{c} scrobbles'
     },
-    // TODO(stel): are all these correct (singular/plural)?
+    new_scrobble: {
+        en: 'New scrobble'
+    },
     artist: {
         en: 'Artist',
         de: 'Künstler',
@@ -400,6 +402,9 @@ export const trans = {
         de: 'Alben',
         pt: 'Álbuns',
         ja: 'アルバム'
+    },
+    album_artist: {
+        en: 'Album Artist'
     },
     track: {
         en: 'Track',

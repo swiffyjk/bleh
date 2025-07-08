@@ -229,6 +229,11 @@
             "default": true,
             "name": "Update center",
             "date": "2025-07-02"
+        },
+        "submit_scrobble": {
+            "default": false,
+            "name": "Submit new scrobble from profile",
+            "date": "2025-07-08"
         }
     }
 }

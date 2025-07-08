@@ -9922,6 +9922,10 @@
                 pointer-events: none;
             }
         }
+
+        & > .modern-input {
+            width: 100%;
+        }
     }
 
 
@@ -20149,6 +20153,20 @@
 
     [data-type="item-edit"] {
         --mask: var(--icon-16-edit);
+    }
+
+    .new-scrobble-form {
+        width: 530px;
+    }
+    .generic-label {
+        color: hsl(var(--c3));
+        font-weight: var(--font-weight-medium) !important;
+        margin-bottom: 4px;
+        cursor: default;
+
+        .input-container + & {
+            margin: var(--item-list-gap) 0 4px;
+        }
     }
 
 

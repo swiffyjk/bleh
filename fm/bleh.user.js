@@ -6467,7 +6467,7 @@
     let colour_block;
     let container = html.node`
         <div class="content-form input-container colourful" data-type=${type} data-has-error="false">
-            <span class="colour-block" ref=${(el) => colour_block = el} />
+            ${type == "colour" ? html.node`<span class="colour-block" ref=${(el) => colour_block = el} />` : ""}
             <input class="modern-input" autofocus=${focus} type=${type} value=${value} placeholder=${placeholder} min=${min} max=${max} maxlength=${maxlength} ref=${(el) => input_box = el} />
         </div>
     `;
@@ -6477,22 +6477,22 @@
       trigger: "manual"
     });
     error_tooltip.disable();
-    update_input();
+    update_input(true);
     input_box.addEventListener("input", () => {
       update_input();
     });
     return container;
-    function update_input() {
+    function update_input(skip_most = false) {
       container.setAttribute("data-has-error", "false");
       error_tooltip.disable();
-      if (type != "number") {
+      if (type != "number" && !skip_most) {
         if (input_box.value == "" && warn_if_empty) {
           error_input2(tl(trans.this_field_is_required));
         } else if (input_box.value.length > maxlength) {
           error_input2(tl(trans.keep_within_the_range));
         }
       }
-      if (type == "number") {
+      if (type == "number" && !skip_most) {
         if (input_box.value == "") {
           error_input2(tl(trans.only_numbers_are_allowed));
         } else if (parseInt(input_box.value) > max || parseInt(input_box.value) < min) {
@@ -9603,6 +9603,67 @@
     header.classList.add("top-container");
     let header_text2 = panel.querySelector("h2");
     header.appendChild(header_text2);
+    if (ff("submit_scrobble")) {
+      let random = {
+        track: "THE GREATEST",
+        album: "HIT ME HARD AND SOFT",
+        artist: "Billie Eilish",
+        album_artist: "Billie Eilish"
+      };
+      let track;
+      let album;
+      let artist;
+      let album_artist;
+      let submit_btn = html.node`
+            <button class="left-icon blend-v2-btn" data-type="add" onclick=${() => {
+        let submit_dialog = dialog({
+          id: "submit_scrobble",
+          title: tl(trans.new_scrobble),
+          body: html.node`
+                    <div class="new-scrobble-form">
+                        <p class="generic-label">${tl(trans.track)}</p>
+                        ${track = input({
+            type: "text",
+            placeholder: random.track,
+            warn_if_empty: true
+          })}
+                        <p class="generic-label">${tl(trans.album)}</p>
+                        ${album = input({
+            type: "text",
+            placeholder: random.album,
+            warn_if_empty: true
+          })}
+                        <p class="generic-label">${tl(trans.artist)}</p>
+                        ${artist = input({
+            type: "text",
+            placeholder: random.artist,
+            warn_if_empty: true
+          })}
+                        <p class="generic-label">${tl(trans.album_artist)}</p>
+                        ${album_artist = input({
+            type: "text",
+            placeholder: random.album_artist,
+            warn_if_empty: true
+          })}
+                    </div>
+                    <div class="modal-footer">
+                        <button class="see-more cancel" onclick=${() => dialog_rm2({ id: "submit_scrobble" })}>
+                            ${tl(trans.cancel)}
+                        </button>
+                        <div class="fill" />
+                        <button class="btn primary icon" data-type="add" onclick=${() => {
+          }}>
+                            ${tl(trans.new)}
+                        </button>
+                    </div>
+                    `
+        });
+      }}>
+                ${tl(trans.new)}
+            </button>
+        `;
+      view_buttons.appendChild(submit_btn);
+    }
     let refresh_btn = html.node`
         <button class="left-icon blend-v2-btn" data-type="refresh" onclick=${() => refresh_tracks(refresh_btn)}>
             ${tl(trans.refresh)}
@@ -19474,7 +19535,9 @@
       de: "{c} scrobbels",
       pt: "{c} scrobbles"
     },
-    // TODO(stel): are all these correct (singular/plural)?
+    new_scrobble: {
+      en: "New scrobble"
+    },
     artist: {
       en: "Artist",
       de: "K\xFCnstler",
@@ -19501,6 +19564,9 @@
       de: "Alben",
       pt: "\xC1lbuns",
       ja: "\u30A2\u30EB\u30D0\u30E0"
+    },
+    album_artist: {
+      en: "Album Artist"
     },
     track: {
       en: "Track",
@@ -26234,6 +26300,11 @@
         default: true,
         name: "Update center",
         date: "2025-07-02"
+      },
+      submit_scrobble: {
+        default: false,
+        name: "Submit new scrobble from profile",
+        date: "2025-07-08"
       }
     }
   };

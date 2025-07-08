@@ -13,7 +13,7 @@ import {clean_number, lazy, sanitise, sanitise_text} from "../build/tools"
 import {lang, tl, trans} from "../build/trans"
 import {prep_chart_colours} from '../chart'
 import {load_badges} from "../components/badge"
-import {dialog} from "../components/dialog"
+import {dialog, dialog_rm} from "../components/dialog"
 import {correct_artist, correct_item_by_artist, name_includes} from "../components/lotus"
 import {markdown} from "../components/markdown"
 import {notify} from "../components/notify"
@@ -30,6 +30,7 @@ import {html, render} from "lighterhtml";
 import {collage} from "../components/collage.js";
 import {save_setting, setting} from "../components/settings.js";
 import {save_banner_to_cache} from "../components/banner.js";
+import {input} from "../components/input.js";
 
 export function bleh_profiles() {
     // the obsessions page is a user subpage but works very differently
@@ -1088,6 +1089,71 @@ function profile_recents() {
 
     let header_text = panel.querySelector('h2');
     header.appendChild(header_text);
+
+    if (ff('submit_scrobble')) {
+        let random = {
+            track: 'THE GREATEST',
+            album: 'HIT ME HARD AND SOFT',
+            artist: 'Billie Eilish',
+            album_artist: 'Billie Eilish'
+        }
+
+        let track;
+        let album;
+        let artist;
+        let album_artist;
+
+        let submit_btn = html.node`
+            <button class="left-icon blend-v2-btn" data-type="add" onclick=${() => {
+                let submit_dialog = dialog({
+                    id: 'submit_scrobble',
+                    title: tl(trans.new_scrobble),
+                    body: html.node`
+                    <div class="new-scrobble-form">
+                        <p class="generic-label">${tl(trans.track)}</p>
+                        ${track = input({
+                            type: 'text',
+                            placeholder: random.track,
+                            warn_if_empty: true
+                        })}
+                        <p class="generic-label">${tl(trans.album)}</p>
+                        ${album = input({
+                            type: 'text',
+                            placeholder: random.album,
+                            warn_if_empty: true
+                        })}
+                        <p class="generic-label">${tl(trans.artist)}</p>
+                        ${artist = input({
+                            type: 'text',
+                            placeholder: random.artist,
+                            warn_if_empty: true
+                        })}
+                        <p class="generic-label">${tl(trans.album_artist)}</p>
+                        ${album_artist = input({
+                            type: 'text',
+                            placeholder: random.album_artist,
+                            warn_if_empty: true
+                        })}
+                    </div>
+                    <div class="modal-footer">
+                        <button class="see-more cancel" onclick=${() => dialog_rm({id: 'submit_scrobble'})}>
+                            ${tl(trans.cancel)}
+                        </button>
+                        <div class="fill" />
+                        <button class="btn primary icon" data-type="add" onclick=${() => {
+                            
+                        }}>
+                            ${tl(trans.new)}
+                        </button>
+                    </div>
+                    `
+                });
+            }}>
+                ${tl(trans.new)}
+            </button>
+        `;
+        view_buttons.appendChild(submit_btn);
+    }
 
     // refresh
     let refresh_btn = html.node`

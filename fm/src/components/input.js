@@ -19,7 +19,7 @@ export function input({
 
     let container = html.node`
         <div class="content-form input-container colourful" data-type=${type} data-has-error="false">
-            <span class="colour-block" ref=${el => colour_block = el} />
+            ${type == 'colour' ? html.node`<span class="colour-block" ref=${el => colour_block = el} />` : ''}
             <input class="modern-input" autofocus=${focus} type=${type} value=${value} placeholder=${placeholder} min=${min} max=${max} maxlength=${maxlength} ref=${el => input_box = el} />
         </div>
     `;
@@ -31,18 +31,18 @@ export function input({
     });
     error_tooltip.disable();
 
-    update_input();
+    update_input(true);
     input_box.addEventListener('input', () => {
         update_input();
     });
 
     return container;
 
-    function update_input() {
+    function update_input(skip_most = false) {
         container.setAttribute('data-has-error', 'false');
         error_tooltip.disable();
 
-        if (type != 'number') {
+        if (type != 'number' && !skip_most) {
             if (input_box.value == '' && warn_if_empty) {
                 error_input(tl(trans.this_field_is_required));
             } else if (input_box.value.length > maxlength) {
@@ -50,7 +50,7 @@ export function input({
             }
         }
 
-        if (type == 'number') {
+        if (type == 'number' && !skip_most) {
             // is a number?
             if (input_box.value == '') {
                 error_input(tl(trans.only_numbers_are_allowed));
