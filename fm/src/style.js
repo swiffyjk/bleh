@@ -204,10 +204,7 @@ export function update_check(force = false, btn = null, func = null) {
 
             let next = new Date();
 
-            if (settings.get_updates_fast)
-                next.setHours(next.getHours() + 2);
-            else
-                next.setDate(next.getDate() + 4);
+            next.setHours(next.getHours() + 2);
 
             localStorage.setItem('bleh_update_next_check', next.toString());
             log('update check finished', 'update', 'info', {next_in: next, current_time: new Date()});

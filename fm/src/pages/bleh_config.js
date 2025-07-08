@@ -17,7 +17,7 @@ import {dialog, dialog_rm} from "../components/dialog";
 import {correct_artist, correct_item_by_artist, name_includes} from '../components/lotus';
 import {markdown} from '../components/markdown';
 import {notify} from "../components/notify";
-import {create_settings_template, load_settings, refresh_all, request_reload, update_params} from "../config";
+import {create_settings_template, load_settings, refresh_all, update_params} from "../config";
 import {version} from "../main";
 import {update_page} from "../page";
 import {seasonal_timer_end, seasonal_timer_start} from "../seasonal";
@@ -1290,33 +1290,6 @@ export function render_setting_page(page_id) {
                 ` : html.node`
                 <div class="alert alert-info">${tl(trans.you_are_running_version).replace('{v}', version.build)}</div>
                 `}
-                <div class="sep" />
-                ${setting({id: 'get_updates_fast'})}
-                <div class="setting v2" data-type="action">
-                    <div class="icon">
-                        <div class="bleh-icon" style="--icon: var(--icon-16-paused);" />
-                    </div>
-                    <div class="heading">
-                        <h5>${tl(trans.pause_updates)}</h5>
-                    </div>
-                    <div class="toggle-wrap">
-                        <button class="btn" ref=${el => pause_btn = el} onclick=${() => {
-                            localStorage.setItem('bleh_update_paused', paused === 'true' ? 'false' : 'true');
-                            
-                            if (paused === 'false') {
-                                let paused_until = new Date();
-                                paused_until.setDate(paused_until.getDate() + 1);
-                                
-                                localStorage.setItem('bleh_update_paused_until', paused_until.toString());
-                                localStorage.removeItem('bleh_update_required');
-                                localStorage.removeItem('bleh_update_checked');
-                                
-                                request_reload();
-                            }
-                            render_setting_page('update');
-                        }}>${paused === 'true' ? tl(trans.resume_updates) : tl(trans.pause_updates_for)}</button>
-                    </div>
-                </div>
             </section>
         `);
     }

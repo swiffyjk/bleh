@@ -10974,10 +10974,7 @@
         localStorage.setItem("bleh_update_to", data2.build);
         localStorage.setItem("bleh_update_checked", (/* @__PURE__ */ new Date()).toString());
         let next = /* @__PURE__ */ new Date();
-        if (settings.get_updates_fast)
-          next.setHours(next.getHours() + 2);
-        else
-          next.setDate(next.getDate() + 4);
+        next.setHours(next.getHours() + 2);
         localStorage.setItem("bleh_update_next_check", next.toString());
         log("update check finished", "update", "info", { next_in: next, current_time: /* @__PURE__ */ new Date() });
         if (func) func();
@@ -12268,30 +12265,6 @@
                 ` : html.node`
                 <div class="alert alert-info">${tl(trans.you_are_running_version).replace("{v}", version.build)}</div>
                 `}
-                <div class="sep" />
-                ${setting({ id: "get_updates_fast" })}
-                <div class="setting v2" data-type="action">
-                    <div class="icon">
-                        <div class="bleh-icon" style="--icon: var(--icon-16-paused);" />
-                    </div>
-                    <div class="heading">
-                        <h5>${tl(trans.pause_updates)}</h5>
-                    </div>
-                    <div class="toggle-wrap">
-                        <button class="btn" ref=${(el) => pause_btn = el} onclick=${() => {
-        localStorage.setItem("bleh_update_paused", paused === "true" ? "false" : "true");
-        if (paused === "false") {
-          let paused_until2 = /* @__PURE__ */ new Date();
-          paused_until2.setDate(paused_until2.getDate() + 1);
-          localStorage.setItem("bleh_update_paused_until", paused_until2.toString());
-          localStorage.removeItem("bleh_update_required");
-          localStorage.removeItem("bleh_update_checked");
-          request_reload();
-        }
-        render_setting_page("update");
-      }}>${paused === "true" ? tl(trans.resume_updates) : tl(trans.pause_updates_for)}</button>
-                    </div>
-                </div>
             </section>
         `);
     }
@@ -25961,12 +25934,6 @@
       body: trans.activity.types.install,
       type: "checkbox",
       icon: "icon-16-download"
-    },
-    get_updates_fast: {
-      default: false,
-      title: trans.get_updates_fast.name,
-      body: trans.get_updates_fast.body,
-      icon: "icon-16-broadcast"
     }
   };
 
