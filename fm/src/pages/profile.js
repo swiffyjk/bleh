@@ -917,9 +917,6 @@ function patch_profile_following() {
 }
 
 
-unsafeWindow._refresh_tracks = function(button) {
-    refresh_tracks(button);
-}
 function refresh_tracks(button, {
     quiet = false
 }) {
@@ -1124,7 +1121,7 @@ function profile_recents() {
 
     // refresh
     refresh_btn = html.node`
-        <button class="left-icon blend-v2-btn" data-type="refresh" onclick=${() => refresh_tracks(refresh_btn)}>
+        <button class="left-icon blend-v2-btn" data-type="refresh" onclick=${() => refresh_tracks(refresh_btn, {})}>
             ${tl(trans.refresh)}
         </button>
     `;

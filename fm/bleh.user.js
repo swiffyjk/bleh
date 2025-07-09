@@ -11109,9 +11109,6 @@
     page.structure.main.insertBefore(view_buttons, page.structure.main.firstElementChild);
     refresh_all();
   }
-  unsafeWindow._refresh_tracks = function(button) {
-    refresh_tracks(button);
-  };
   function refresh_tracks(button, {
     quiet = false
   }) {
@@ -11270,7 +11267,7 @@
       }
     }
     refresh_btn = html.node`
-        <button class="left-icon blend-v2-btn" data-type="refresh" onclick=${() => refresh_tracks(refresh_btn)}>
+        <button class="left-icon blend-v2-btn" data-type="refresh" onclick=${() => refresh_tracks(refresh_btn, {})}>
             ${tl(trans.refresh)}
         </button>
     `;
