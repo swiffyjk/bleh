@@ -67,6 +67,7 @@ import {bleh_footer} from "./footer.js";
 import {register_rabbit} from "./components/rabbit.js";
 import {dialog_extender} from "./components/dialog_extender.js";
 import {bleh_auth} from "./pages/auth.js";
+import {bleh_labs} from "./pages/labs.js";
 
 export function bleh() {
     let head_observer = new MutationObserver((mutations) => {
@@ -436,6 +437,8 @@ function load_page() {
             bleh_home();
         else if (page.type == 'api')
             bleh_api();
+        else if (page.type == 'labs')
+            bleh_labs();
 
         if (page.type == 'user' || page.type == 'events') {
             bleh_users();

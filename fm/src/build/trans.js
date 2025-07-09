@@ -2599,6 +2599,9 @@ export const trans = {
         en: 'Collage',
         pt: 'Colagem'
     },
+    collage_redirect: {
+        en: 'Redirected to bleh\'s built-in Collage feature'
+    },
     your_collage_is_ready: {
         en: 'Your collage is ready!',
         pt: 'Sua colagem está pronta!'

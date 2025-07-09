@@ -151,6 +151,10 @@ export function bleh_profiles() {
         loved_tab.textContent = tl(trans.loved);
 
     if (!is_subpage) {
+        if (page.requested.collage == '') collage({
+            redirect: true
+        });
+
         let is_following = page.structure.container.querySelector('.label.user-follow');
 
 
@@ -1294,7 +1298,10 @@ function profile_artists() {
                     let link = new URL('https://www.last.fm' + btn.getAttribute('href'));
                     let selected = link.searchParams.get('artists_date_preset');
 
-                    collage('artists', `date_preset=${selected}`);
+                    collage({
+                        default_type: 'artists',
+                        date_preset: `date_preset=${selected}`
+                    });
                 }}>${tl(trans.collage)}</button>
                 ${form ? html.node`
                 <button class="left-icon blend-v2-btn" data-type="settings" ref=${el => settings_btn = el}>
@@ -1388,7 +1395,10 @@ function profile_albums() {
                     let link = new URL('https://www.last.fm' + btn.getAttribute('href'));
                     let selected = link.searchParams.get('albums_date_preset');
 
-                    collage('albums', `date_preset=${selected}`);
+                    collage({
+                        default_type: 'albums',
+                        date_preset: `date_preset=${selected}`
+                    });
                 }}>${tl(trans.collage)}</button>
                 ${form ? html.node`
                 <button class="left-icon blend-v2-btn" data-type="settings" ref=${el => settings_btn = el}>
@@ -1482,7 +1492,10 @@ function profile_tracks() {
                     let link = new URL('https://www.last.fm' + btn.getAttribute('href'));
                     let selected = link.searchParams.get('tracks_date_preset');
 
-                    collage('tracks', `date_preset=${selected}`);
+                    collage({
+                        default_type: 'tracks',
+                        date_preset: `date_preset=${selected}`
+                    });
                 }}>${tl(trans.collage)}</button>
                 ${form ? html.node`
                 <button class="left-icon blend-v2-btn" data-type="settings" ref=${el => settings_btn = el}>

@@ -34,9 +34,11 @@ export function checkup_page_structure(is_subpage = false, header = null) {
     }
 
     let params = new URLSearchParams(document.location.search);
+    page.requested.params = params;
     page.requested.tab = params.get('tab');
     page.requested.page = params.get('page');
     page.requested.token = params.get('token');
+    page.requested.collage = params.get('collage');
 
     if (!page.structure.container || !document.body.contains(page.structure.container)) {
         log('page missing container, creating', 'page structure');

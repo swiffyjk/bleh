@@ -24370,6 +24370,10 @@
         margin-bottom: var(--card-gap);
         border-bottom: 1px solid var(--card-border-base);
 
+        .alert + & {
+            margin-top: var(--card-gap);
+        }
+
         .compare-users {
             display: flex;
             align-items: center;

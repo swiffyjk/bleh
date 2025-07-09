@@ -13,7 +13,11 @@ import {settings} from "../build/config.js";
 import {version} from "../main.js";
 import {download} from "./share.js";
 
-export function collage(default_type = 'albums', default_timeframe = 'date_preset=LAST_90_DAYS') {
+export function collage({
+    default_type = 'artists',
+    default_timeframe = 'date_preset=LAST_90_DAYS',
+    redirect = false
+}={}) {
     if (page.state.scrobbles === 0) {
         notify({
             id: 'collage_not_possible',
@@ -45,6 +49,11 @@ export function collage(default_type = 'albums', default_timeframe = 'date_prese
         id: 'collage',
         title: tl(trans.collage),
         body: html.node`
+            ${redirect ? html.node`
+            <div class="alert alert-info">
+                ${tl(trans.collage_redirect)}
+            </div>
+            ` : ''}
             <div class="compare-header">
                 <div class="compare-users">
                     <div class="compare-user">

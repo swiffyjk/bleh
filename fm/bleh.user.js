@@ -8155,7 +8155,11 @@
   }
 
   // src/components/collage.js
-  function collage(default_type = "albums", default_timeframe = "date_preset=LAST_90_DAYS") {
+  function collage({
+    default_type = "artists",
+    default_timeframe = "date_preset=LAST_90_DAYS",
+    redirect = false
+  } = {}) {
     if (page.state.scrobbles === 0) {
       notify({
         id: "collage_not_possible",
@@ -8181,6 +8185,11 @@
       id: "collage",
       title: tl(trans.collage),
       body: html.node`
+            ${redirect ? html.node`
+            <div class="alert alert-info">
+                ${tl(trans.collage_redirect)}
+            </div>
+            ` : ""}
             <div class="compare-header">
                 <div class="compare-users">
                     <div class="compare-user">
@@ -8975,9 +8984,11 @@
       load_chart_colours();
     }
     let params = new URLSearchParams(document.location.search);
+    page.requested.params = params;
     page.requested.tab = params.get("tab");
     page.requested.page = params.get("page");
     page.requested.token = params.get("token");
+    page.requested.collage = params.get("collage");
     if (!page.structure.container || !document.body.contains(page.structure.container)) {
       log("page missing container, creating", "page structure");
       page.structure.container = document.createElement("div");
@@ -10520,6 +10531,9 @@
     if (loved_tab)
       loved_tab.textContent = tl(trans.loved);
     if (!is_subpage) {
+      if (page.requested.collage == "") collage({
+        redirect: true
+      });
       let is_following = page.structure.container.querySelector(".label.user-follow");
       profile_recents();
       profile_artists();
@@ -11423,7 +11437,10 @@
       let btn = list.querySelector(".dropdown-menu-clickable-item--selected");
       let link = new URL("https://www.last.fm" + btn.getAttribute("href"));
       let selected = link.searchParams.get("artists_date_preset");
-      collage("artists", `date_preset=${selected}`);
+      collage({
+        default_type: "artists",
+        date_preset: `date_preset=${selected}`
+      });
     }}>${tl(trans.collage)}</button>
                 ${form ? html.node`
                 <button class="left-icon blend-v2-btn" data-type="settings" ref=${(el) => settings_btn = el}>
@@ -11505,7 +11522,10 @@
       let btn = list.querySelector(".dropdown-menu-clickable-item--selected");
       let link = new URL("https://www.last.fm" + btn.getAttribute("href"));
       let selected = link.searchParams.get("albums_date_preset");
-      collage("albums", `date_preset=${selected}`);
+      collage({
+        default_type: "albums",
+        date_preset: `date_preset=${selected}`
+      });
     }}>${tl(trans.collage)}</button>
                 ${form ? html.node`
                 <button class="left-icon blend-v2-btn" data-type="settings" ref=${(el) => settings_btn = el}>
@@ -11587,7 +11607,10 @@
       let btn = list.querySelector(".dropdown-menu-clickable-item--selected");
       let link = new URL("https://www.last.fm" + btn.getAttribute("href"));
       let selected = link.searchParams.get("tracks_date_preset");
-      collage("tracks", `date_preset=${selected}`);
+      collage({
+        default_type: "tracks",
+        date_preset: `date_preset=${selected}`
+      });
     }}>${tl(trans.collage)}</button>
                 ${form ? html.node`
                 <button class="left-icon blend-v2-btn" data-type="settings" ref=${(el) => settings_btn = el}>
@@ -20299,6 +20322,20 @@
     `);
   }
 
+  // src/pages/labs.js
+  function bleh_labs() {
+    if (page.subpage != "overview") return;
+    let quilt = document.body.querySelector('[data-analytics-action="LaunchAlbumQuilt"]');
+    if (quilt) {
+      page.avatar = auth.avatar;
+      page.name = auth.name;
+      quilt.removeAttribute("href");
+      quilt.onclick = () => {
+        window.location.href = `${root}user/${auth.name}?collage`;
+      };
+    }
+  }
+
   // src/page.js
   function bleh() {
     let head_observer = new MutationObserver((mutations) => {
@@ -20561,6 +20598,8 @@
         bleh_home();
       else if (page.type == "api")
         bleh_api();
+      else if (page.type == "labs")
+        bleh_labs();
       if (page.type == "user" || page.type == "events") {
         bleh_users();
       }
@@ -23387,6 +23426,9 @@
     collage: {
       en: "Collage",
       pt: "Colagem"
+    },
+    collage_redirect: {
+      en: "Redirected to bleh's built-in Collage feature"
     },
     your_collage_is_ready: {
       en: "Your collage is ready!",
