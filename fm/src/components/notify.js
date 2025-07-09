@@ -153,7 +153,7 @@ export function notify({
     if (persist || progress)
         return notif;
 
-    let ms = (long) ? 6000 : 2000;
+    let ms = (long) ? 7000 : 3000;
     let counter = 100;
     let step = ms / 100;
 

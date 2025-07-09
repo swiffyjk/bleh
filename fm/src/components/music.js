@@ -19,6 +19,7 @@ import {parse_scrobbles_as_rank} from "./colourful_counts";
 import {correct_item_by_artist} from "./lotus";
 import {register_menu} from "./menu";
 import {other_listener} from "./profile_shortcut";
+import {submit_scrobble} from "./scrobble.js";
 
 unsafeWindow._other_listener = function(id) {
     other_listener(id);
@@ -389,6 +390,33 @@ export function show_your_scrobbles() {
         obsession_btn.textContent = tl(trans.obsession);
 
         interact_container.appendChild(obsession_form);
+    }
+    
+    
+    if (ff('submit_scrobble')) {
+        const can_api = localStorage.getItem('bleh_auth') && localStorage.getItem('bleh_auth_valid') === 'true';
+
+        const source_album = page.structure.main.querySelector('.source-album-name');
+
+        const scrobble_btn = html.node`
+            <button class="btn side-action" data-type="add" onclick=${() => submit_scrobble({
+                pre_track: page.name,
+                pre_artist: page.sister,
+                pre_album: source_album ? source_album.textContent : null,
+                pre_album_artist: page.sister,
+                can_api
+            })}>
+                ${tl(trans.scrobble)}
+            </button>
+        `;
+
+        if (!can_api) {
+            tippy(scrobble_btn, {
+                content: tl(trans.requires_api_in_settings)
+            });
+        }
+
+        interact_container.appendChild(scrobble_btn);
     }
 
 

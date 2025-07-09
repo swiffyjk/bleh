@@ -7,13 +7,13 @@
 import {render_activity_list} from "../activity"
 import {settings} from "../build/config"
 import {log} from "../build/log"
-import {auth, page, random_list, root} from "../build/page"
+import {auth, page, root} from "../build/page"
 import {sponsor_list} from "../build/sponsor"
 import {clean_number, lazy, sanitise, sanitise_text} from "../build/tools"
 import {lang, tl, trans} from "../build/trans"
 import {prep_chart_colours} from '../chart'
 import {load_badges} from "../components/badge"
-import {dialog, dialog_rm} from "../components/dialog"
+import {dialog} from "../components/dialog"
 import {correct_artist, correct_item_by_artist, name_includes} from "../components/lotus"
 import {markdown} from "../components/markdown"
 import {notify} from "../components/notify"
@@ -30,8 +30,7 @@ import {html, render} from "lighterhtml";
 import {collage} from "../components/collage.js";
 import {save_setting, setting} from "../components/settings.js";
 import {save_banner_to_cache} from "../components/banner.js";
-import {input} from "../components/input.js";
-import {toggle} from '../components/toggle.js'
+import {submit_scrobble} from '../components/scrobble.js'
 
 export function bleh_profiles() {
     // the obsessions page is a user subpage but works very differently
@@ -1099,149 +1098,28 @@ function profile_recents() {
 
     let refresh_btn;
     if (ff('submit_scrobble') && page.name == auth.name) {
+        const can_api = localStorage.getItem('bleh_auth') && localStorage.getItem('bleh_auth_valid') === 'true';
+
         let submit_btn = html.node`
-            <button class="left-icon blend-v2-btn" data-type="add" onclick=${() => {
-                let random = random_list[Math.floor(Math.random() * random_list.length)];
-
-                let track;
-                let album;
-                let artist;
-                let album_artist;
-                let use_current;
-                let date;
-
-                let create_scrobble;
-
-                let submit_dialog = dialog({
-                    id: 'submit_scrobble',
-                    title: tl(trans.new_scrobble),
-                    body: html.node`
-                    <div class="new-scrobble-form">
-                        <p class="generic-label">${tl(trans.track)}</p>
-                        ${track = input({
-                            type: 'text',
-                            placeholder: random.track,
-                            warn_if_empty: true
-                        })}
-                        <p class="generic-label">${tl(trans.album)}</p>
-                        ${album = input({
-                            type: 'text',
-                            placeholder: random.album,
-                            warn_if_empty: true
-                        })}
-                        <p class="generic-label">${tl(trans.artist)}</p>
-                        ${artist = input({
-                            type: 'text',
-                            placeholder: random.artist,
-                            warn_if_empty: true
-                        })}
-                        <p class="generic-label">${tl(trans.album_artist)}</p>
-                        ${album_artist = input({
-                            type: 'text',
-                            placeholder: random.album_artist,
-                            warn_if_empty: true
-                        })}
-                        <p class="generic-label">${tl(trans.time)}</p>
-                        <div class="toggle-and-time">
-                            ${use_current = toggle({
-                                value: true,
-                                type: 'checkbox',
-                                title: tl(trans.use_current_time),
-                                func: (state) => {
-                                    date.disabled(state);
-                                }
-                            })}
-                            ${date = input({
-                                type: 'date',
-                                disabled: true
-                            })}
-                        </div>
-                    </div>
-                    <div class="modal-footer">
-                        <button class="see-more cancel" onclick=${() => dialog_rm({id: 'submit_scrobble'})}>
-                            ${tl(trans.cancel)}
-                        </button>
-                        <div class="fill" />
-                        <button class="btn primary icon" data-type="add" ref=${el => create_scrobble = el} onclick=${async () => {
-                            if (track.value() == '' || artist.value() == '') {
-                                notify({
-                                    id: 'submit_scrobble',
-                                    title: tl(trans.new_scrobble),
-                                    body: tl(trans.missing_fields),
-                                    type: 'error'
-                                });
-                                return;
-                            }
-
-                            track.disabled(true);
-                            album.disabled(true);
-                            artist.disabled(true);
-                            album_artist.disabled(true);
-                            use_current.disabled(true);
-                            date.disabled(true);
-                            create_scrobble.disabled = true;
-
-                            if (album.value() != '' && album_artist.value() == '') album_artist.value(artist.value());
-
-                            let params = {
-                                sk: localStorage.getItem('bleh_auth'),
-                                artist: artist.value(),
-                                track: track.value(),
-                                timestamp: Math.floor(date.value() / 1000)
-                            };
-
-                            if (album.value() != '') params.album = album.value();
-                            if (album_artist.value() != '') params.albumArtist = album_artist.value();
-
-                            const res = await fetch(
-                                'https://jufufu.katelyn.moe/api/lastfm',
-                                {
-                                    method: 'POST',
-                                    headers: { 'content-type': 'application/json' },
-                                    body: JSON.stringify({
-                                        method: 'track.scrobble',
-                                        params
-                                    })
-                                }
-                            );
-
-                            const json = await res.json();
-                            log('received response', 'submit scrobble', 'info', {result: json});
-
-                            if (json.error) {
-                                log('error', 'submit scrobble', 'error');
-                                notify({
-                                    id: 'submit_scrobble',
-                                    title: tl(trans.new_scrobble),
-                                    body: json.error.message,
-                                    type: 'error',
-                                    persist: true
-                                });
-                                return;
-                            }
-
-                            notify({
-                                id: 'submit_scrobble',
-                                title: tl(trans.new_scrobble),
-                                body: params.track,
-                                type: 'success'
-                            });
-                            dialog_rm({id: 'submit_scrobble'});
-
-                            setTimeout(() => {
-                                refresh_tracks(refresh_btn, {quiet: true});
-                            }, 200);
-                        }}>
-                            ${tl(trans.new)}
-                        </button>
-                    </div>
-                    `
-                });
-            }}>
+            <button class="left-icon blend-v2-btn" data-type="add" onclick=${() => submit_scrobble({
+                refresh_btn,
+                can_api,
+                func: () => {
+                    setTimeout(() => {
+                        refresh_tracks(refresh_btn, {quiet: true});
+                    }, 200);
+                }
+            })}>
                 ${tl(trans.new)}
             </button>
         `;
         view_buttons.appendChild(submit_btn);
+
+        if (!can_api) {
+            tippy(submit_btn, {
+                content: tl(trans.requires_api_in_settings)
+            });
+        }
     }
 
     // refresh
@@ -1255,8 +1133,7 @@ function profile_recents() {
     header.appendChild(view_buttons);
     panel.insertBefore(header, panel.firstElementChild);
 
-    if (form == null)
-        return;
+    if (!form) return;
 
     if (page.token == '')
         page.token = form.querySelector('[name="csrfmiddlewaretoken"]').getAttribute('value');

@@ -2404,7 +2404,7 @@
     };
     if (persist || progress)
       return notif;
-    let ms = long ? 6e3 : 2e3;
+    let ms = long ? 7e3 : 3e3;
     let counter = 100;
     let step = ms / 100;
     let timer = setInterval(() => {
@@ -3942,10 +3942,12 @@
               page.token = form.querySelector('[name="csrfmiddlewaretoken"]').value;
               track.setAttribute("data-action", form.getAttribute("action"));
               if (!is_album) {
+                let album_name2 = form.querySelector('[name="album_name"]');
+                let album_artist_name = form.querySelector('[name="album_artist_name"]');
                 track.setAttribute("data-artist-name", correct_artist(form.querySelector('[name="artist_name"]').value));
                 track.setAttribute("data-track-name", correct_item_by_artist(form.querySelector('[name="track_name"]').value, form.querySelector('[name="artist_name"]').value));
-                track.setAttribute("data-album-name", correct_item_by_artist(form.querySelector('[name="album_name"]').value, form.querySelector('[name="artist_name"]').value));
-                track.setAttribute("data-album-artist-name", correct_artist(form.querySelector('[name="album_artist_name"]').value));
+                if (album_name2) track.setAttribute("data-album-name", correct_item_by_artist(album_name2.value, form.querySelector('[name="artist_name"]').value));
+                if (album_artist_name) track.setAttribute("data-album-artist-name", correct_artist(album_artist_name.value));
                 track.setAttribute("data-timestamp", form.querySelector('[name="timestamp"]').value);
               } else {
                 track.setAttribute("data-album-name", correct_item_by_artist(form.querySelector('[name="album_name"]').value, form.querySelector('[name="album_artist_name"]').value));
@@ -4050,15 +4052,9 @@
               }}
                             </div>
                             ` : ""}
+                            ${album_name ? html.node`
                             <div class="button-combo">
                                 ${() => {
-                if (is_album) {
-                  return html.node`
-                                            <a class="dropdown-menu-clickable-item" data-type="album" href="${root}music/${sanitise(track_artist)}/${sanitise(track_title.getAttribute("data-name"))}">
-                                                ${tl(trans.album)}
-                                            </a>
-                                        `;
-                }
                 return html.node`
                                         <a class="dropdown-menu-clickable-item" data-type="album" href="${root}music/${sanitise(track_artist)}/${album_name}">
                                             ${tl(trans.album)}
@@ -4072,14 +4068,35 @@
                                             ${tl(trans.explore_in_library)}
                                         </a>
                                     `;
-                if (is_album)
-                  button.href = `${root}user/${page.name}/library/music/${sanitise(track_artist)}/${sanitise(track_title.getAttribute("data-name"))}`;
                 tippy(button, {
                   content: tl(trans.explore_in_library)
                 });
                 return button;
               }}
                             </div>
+                            ` : is_album ? html.node`
+                            <div class="button-combo">
+                                ${() => {
+                return html.node`
+                                        <a class="dropdown-menu-clickable-item" data-type="album" href="${root}music/${sanitise(track_artist)}/${sanitise(track_title.getAttribute("data-name"))}">
+                                            ${tl(trans.album)}
+                                        </a>
+                                    `;
+              }}
+                                <div class="button-combo-sep"/>
+                                ${() => {
+                let button = html.node`
+                                        <a class="dropdown-menu-clickable-item chibi" data-type="continue" href="${root}user/${page.name}/library/music/${sanitise(track_artist)}/${sanitise(track_title.getAttribute("data-name"))}">
+                                            ${tl(trans.explore_in_library)}
+                                        </a>
+                                    `;
+                tippy(button, {
+                  content: tl(trans.explore_in_library)
+                });
+                return button;
+              }}
+                            </div>
+                            ` : ""}
                             <div class="button-combo">
                                 ${() => {
                 return html.node`
@@ -6739,6 +6756,498 @@
     });
   };
 
+  // src/components/input.js
+  function input({
+    type = "text",
+    value,
+    placeholder,
+    min,
+    max,
+    maxlength,
+    warn_if_empty = false,
+    focus = false,
+    disabled = false
+  }) {
+    if (type == "date") {
+      let can_prev = function() {
+        const py = view.month === 1 ? view.year - 1 : view.year;
+        const pm = view.month === 1 ? 12 : view.month - 1;
+        return py > min_date.getFullYear() || py === min_date.getFullYear() && pm >= min_date.getMonth() + 1;
+      }, can_next = function() {
+        const ny = view.month === 12 ? view.year + 1 : view.year;
+        const nm = view.month === 12 ? 1 : view.month + 1;
+        return ny < max_date.getFullYear() || ny === max_date.getFullYear() && nm <= max_date.getMonth() + 1;
+      }, render_popup = function() {
+        tooltip.setContent(html.node`
+                <div class="calendar">
+                    <div class="calendar-header">
+                        <button class="month-year">
+                            ${months[view.month - 1]} ${view.year}
+                        </button>
+                        <div class="fill" />
+                        <button class="chibi icon" data-type="up" disabled=${!can_prev()} onclick=${() => {
+          if (!can_prev()) return;
+          view.month--;
+          if (view.month < 1) {
+            view.month = 12;
+            view.year--;
+          }
+          render_popup();
+        }}>
+                            ${tl(trans.back)}
+                        </button>
+                        <button class="chibi icon" data-type="down" disabled=${!can_next()} onclick=${() => {
+          if (!can_next()) return;
+          view.month++;
+          if (view.month > 12) {
+            view.month = 1;
+            view.year++;
+          }
+          render_popup();
+        }}>
+                            ${tl(trans.next)}
+                        </button>
+                    </div>
+                    <div class="date-header">
+                        ${weekdays.map((day) => html.node`<div class="date">${day}</div>`)}
+                    </div>
+                    <div class="days">
+                        ${days(view.year, view.month).map(
+          (cell) => cell.type == "empty" ? html.node`<button class="day empty" disabled />` : html.node`
+                                    <button class="day" aria-selected=${cell.day == state.day && cell.date > min_date && cell.date < max_date ? "true" : "false"} disabled=${cell.date < min_date || cell.date > max_date} onclick=${() => {
+            state.day = cell.day;
+            state.year = view.year;
+            state.month = view.month;
+            update_display();
+            emit();
+            render_popup();
+          }}>${cell.day}</button>
+                                `
+        )}
+                    </div>
+                </div>
+            `);
+      }, days = function(year, month) {
+        const raw_first = new Date(
+          year,
+          month - 1,
+          1
+        ).getDay();
+        const offset = (raw_first + 6) % 7;
+        const days_in_month = new Date(
+          year,
+          month,
+          0
+        ).getDate();
+        const cells = [];
+        for (let i = 0; i < offset; i++) cells.push({ type: "empty" });
+        for (let day = 1; day <= days_in_month; day++) {
+          cells.push({
+            type: "day",
+            day,
+            date: new Date(
+              year,
+              month - 1,
+              day
+            )
+          });
+        }
+        const rem = (7 - cells.length % 7) % 7;
+        for (let i = 0; i < rem; i++) cells.push({ type: "empty" });
+        return cells;
+      }, update_display = function() {
+        date_display.textContent = format_date(state);
+      }, emit = function() {
+        const date_object = new Date(
+          state.year,
+          state.month - 1,
+          state.day,
+          state.hours,
+          state.mins,
+          state.secs
+        );
+        container2.dispatchEvent(new CustomEvent("change"), { detail: date_object });
+      }, pad2 = function(num) {
+        return String(num).padStart(2, "0");
+      }, format_date = function({ year, month, day }) {
+        const date_object = new Date(
+          year,
+          month - 1,
+          day
+        );
+        return date_object.toLocaleDateString(void 0, {
+          year: "numeric",
+          month: "short",
+          day: "numeric"
+        });
+      };
+      let now = /* @__PURE__ */ new Date();
+      if (value != null) now = new Date(value);
+      const min_date = min != null ? new Date(min) : new Date(now.getTime() - 14 * 24 * 60 * 60 * 1e3);
+      min_date.setHours(0, 0, 0, 0);
+      const max_date = max != null ? new Date(max) : new Date(now);
+      max_date.setHours(23, 59, 59, 999);
+      const state = {
+        year: now.getFullYear(),
+        month: now.getMonth() + 1,
+        day: now.getDate(),
+        hours: now.getHours(),
+        mins: now.getMinutes(),
+        secs: now.getSeconds()
+      };
+      let view = {
+        year: state.year,
+        month: state.month
+      };
+      let date_display;
+      let time_input;
+      let popup_inner = html.node`<div class="calendar" />`;
+      const locale = void 0;
+      const months = Array.from(
+        { length: 12 },
+        (_, i) => new Intl.DateTimeFormat(locale, { month: "short" }).format(new Date(2e3, i, 1))
+      );
+      const raw_weekdays = Array.from(
+        { length: 7 },
+        (_, i) => new Intl.DateTimeFormat(locale, { weekday: "short" }).format(new Date(1970, 0, 4 + i))
+      );
+      const weekdays = raw_weekdays.slice(1).concat(raw_weekdays[0]);
+      const container2 = html.node`
+            <div class="input-group">
+                <div class="content-form input-container" data-type="date">
+                    <div class="date-input modern-input" ref=${(el) => date_display = el} disabled=${disabled}>${format_date(state)}</div>
+                </div>
+                <div class="content-form input-container" data-type="time">
+                    <input class="modern-input" type="time" step="1" ref=${(el) => time_input = el} disabled=${disabled} value="${pad2(state.hours)}:${pad2(state.mins)}:${pad2(state.secs)}">
+                </div>
+            </div>
+        `;
+      time_input.addEventListener("input", () => {
+        const parts = time_input.value.split(":").map((n) => parseInt(n, 10));
+        state.hours = parts[0] || 0;
+        state.mins = parts[1] || 0;
+        state.secs = parts[2] || 0;
+        emit();
+      });
+      let tooltip = tippy(date_display, {
+        theme: "window",
+        content: "",
+        placement: "bottom",
+        interactive: true,
+        interactiveBorder: 10,
+        trigger: "click",
+        onShow() {
+          render_popup();
+        }
+      });
+      container2.value = (val = null) => {
+        if (val === null) {
+          return new Date(
+            state.year,
+            state.month - 1,
+            state.day,
+            state.hours,
+            state.mins,
+            state.secs
+          );
+        }
+        const date_object = new Date(val);
+        state.year = date_object.getFullYear();
+        state.month = date_object.getMonth() + 1;
+        state.day = date_object.getDate();
+        state.hours = date_object.getHours();
+        state.mins = date_object.getMinutes();
+        state.secs = date_object.getSeconds();
+        view.year = state.year;
+        view.month = state.month;
+        render_popup();
+        update_display();
+        time_input.value = `${pad2(state.hours)}:${pad2(state.mins)}:${pad2(state.secs)}`;
+        return date_object;
+      };
+      container2.disabled = (val = null) => {
+        if (val === null) return time_input.disabled;
+        if (!val)
+          date_display.removeAttribute("disabled");
+        else
+          date_display.setAttribute("disabled", "true");
+        time_input.disabled = val;
+        return val;
+      };
+      return container2;
+    }
+    let input_box;
+    let error_tooltip;
+    let colour_block;
+    let container = html.node`
+        <div class="content-form input-container colourful" data-type=${type} data-has-error="false">
+            ${type == "colour" ? html.node`<span class="colour-block" ref=${(el) => colour_block = el} />` : ""}
+            <input class="modern-input" disabled=${disabled} autofocus=${focus} type=${type} value=${value} placeholder=${placeholder} min=${min} max=${max} maxlength=${maxlength} ref=${(el) => input_box = el} />
+        </div>
+    `;
+    error_tooltip = tippy(input_box, {
+      theme: "error",
+      placement: "top",
+      trigger: "manual"
+    });
+    error_tooltip.disable();
+    update_input(true);
+    input_box.addEventListener("input", () => {
+      update_input();
+    });
+    container.value = (val = null) => {
+      if (val === null) return input_box.value;
+      input_box.value = val;
+      return val;
+    };
+    container.disabled = (state = null) => {
+      if (state === null) return input_box.getAttribute("disabled") || false;
+      if (state === true)
+        input_box.setAttribute("disabled", "true");
+      else
+        input_box.removeAttribute("disabled");
+      return state;
+    };
+    return container;
+    function update_input(skip_most = false) {
+      container.setAttribute("data-has-error", "false");
+      error_tooltip.disable();
+      if (type != "number" && !skip_most) {
+        if (input_box.value == "" && warn_if_empty) {
+          error_input2(tl(trans.this_field_is_required));
+        } else if (input_box.value.length > maxlength) {
+          error_input2(tl(trans.keep_within_the_range));
+        }
+      }
+      if (type == "number" && !skip_most) {
+        if (input_box.value == "") {
+          error_input2(tl(trans.only_numbers_are_allowed));
+        } else if (parseInt(input_box.value) > max || parseInt(input_box.value) < min) {
+          error_input2(tl(trans.keep_within_the_range));
+        }
+      } else if (type == "colour") {
+        if (!input_box.value.startsWith("#"))
+          input_box.value = `#${input_box.value}`;
+        colour_block.style.backgroundColor = input_box.value;
+      }
+    }
+    function error_input2(reason) {
+      log(reason, "input", "log");
+      container.setAttribute("data-has-error", "true");
+      error_tooltip.setContent(reason);
+      error_tooltip.enable();
+      error_tooltip.show();
+    }
+  }
+
+  // src/components/toggle.js
+  function toggle({
+    value = false,
+    type = "toggle",
+    name: name2 = "",
+    title = "",
+    body = "",
+    small = "",
+    disabled = false,
+    data: data2 = "",
+    func = null
+  }) {
+    let checkbox;
+    let state;
+    let elem = html.node`
+        <div class="setting" data-type="${type}" onclick=${() => {
+      if (disabled) return;
+      let current = checkbox.checked;
+      if (func) func(!current);
+      checkbox.checked = !current;
+      state.setAttribute("aria-checked", !current);
+    }}>
+            <div class="heading">
+                <h5>${title}</h5>
+                ${body != "" ? html.node`<p>${body}</p>` : ""}
+                ${small != "" ? html.node`<small>${small}</small>` : ""}
+            </div>
+            ${type == "toggle" ? html.node`
+            <div class="toggle-wrap">
+                <input type="checkbox" ref=${(el) => checkbox = el} name=${name2} value=${data2} checked=${value} />
+                <button class="toggle" ref=${(el) => state = el} aria-checked=${value}>
+                    <div class="dot" />
+                </button>
+            </div>
+            ` : html.node`
+            <div class="check">
+                <input type="checkbox" ref=${(el) => checkbox = el} name=${name2} value=${data2} checked=${value} disabled=${disabled} />
+                <div class="box" ref=${(el) => state = el} aria-checked=${value} disabled=${disabled}>
+                    <div class="bleh-icon" />
+                </div>
+            </div>
+            `}
+        </div>
+    `;
+    elem.check = () => {
+      if (disabled) return;
+      if (func) func(true);
+      checkbox.checked = true;
+      state.setAttribute("aria-checked", true);
+    };
+    elem.uncheck = () => {
+      if (disabled) return;
+      if (func) func(false);
+      checkbox.checked = false;
+      state.setAttribute("aria-checked", false);
+    };
+    elem.disabled = (state2 = null) => {
+      if (state2 === null) return checkbox.getAttribute("disabled") || false;
+      if (state2 === true)
+        checkbox.setAttribute("disabled", "true");
+      else
+        checkbox.removeAttribute("disabled");
+      return state2;
+    };
+    return elem;
+  }
+
+  // src/components/scrobble.js
+  function submit_scrobble({
+    pre_track = "",
+    pre_album = "",
+    pre_artist = "",
+    pre_album_artist = "",
+    func,
+    can_api
+  }) {
+    if (!can_api) can_api = localStorage.getItem("bleh_auth") && localStorage.getItem("bleh_auth_valid") === "true";
+    if (!can_api) {
+      window.location.href = `${root}bleh?tab=profiles`;
+      return;
+    }
+    const random = random_list[Math.floor(Math.random() * random_list.length)];
+    let track;
+    let album;
+    let artist;
+    let album_artist;
+    let use_current;
+    let date;
+    let create_scrobble;
+    dialog({
+      id: "submit_scrobble",
+      title: tl(trans.new_scrobble),
+      body: html.node`
+            <div class="new-scrobble-form">
+                <p class="generic-label">${tl(trans.track)}</p>
+                ${track = input({
+        type: "text",
+        value: pre_track,
+        placeholder: tl(trans.example).replace("{v}", random.track),
+        warn_if_empty: true
+      })}
+                <p class="generic-label">${tl(trans.album)}</p>
+                ${album = input({
+        type: "text",
+        value: pre_album,
+        placeholder: tl(trans.example).replace("{v}", random.album)
+      })}
+                <p class="generic-label">${tl(trans.artist)}</p>
+                ${artist = input({
+        type: "text",
+        value: pre_artist,
+        placeholder: tl(trans.example).replace("{v}", random.artist),
+        warn_if_empty: true
+      })}
+                <p class="generic-label">${tl(trans.album_artist)}</p>
+                ${album_artist = input({
+        type: "text",
+        value: pre_album_artist,
+        placeholder: tl(trans.example).replace("{v}", random.album_artist)
+      })}
+                <p class="generic-label">${tl(trans.time)}</p>
+                <div class="toggle-and-time">
+                    ${use_current = toggle({
+        value: true,
+        type: "checkbox",
+        title: tl(trans.use_current_time),
+        func: (state) => {
+          date.disabled(state);
+        }
+      })}
+                    ${date = input({
+        type: "date",
+        disabled: true
+      })}
+                </div>
+            </div>
+            <div class="modal-footer">
+                <button class="see-more cancel" onclick=${() => dialog_rm2({ id: "submit_scrobble" })}>
+                    ${tl(trans.cancel)}
+                </button>
+                <div class="fill" />
+                <button class="btn primary icon" data-type="add" ref=${(el) => create_scrobble = el} onclick=${async () => {
+        if (track.value() == "" || artist.value() == "") {
+          notify({
+            id: "submit_scrobble",
+            title: tl(trans.new_scrobble),
+            body: tl(trans.missing_fields),
+            type: "error"
+          });
+          return;
+        }
+        track.disabled(true);
+        album.disabled(true);
+        artist.disabled(true);
+        album_artist.disabled(true);
+        use_current.disabled(true);
+        date.disabled(true);
+        create_scrobble.disabled = true;
+        if (album.value() != "" && album_artist.value() == "") album_artist.value(artist.value());
+        let params = {
+          sk: localStorage.getItem("bleh_auth"),
+          artist: artist.value(),
+          track: track.value(),
+          timestamp: Math.floor(date.value() / 1e3)
+        };
+        if (album.value() != "") params.album = album.value();
+        if (album_artist.value() != "") params.albumArtist = album_artist.value();
+        const res = await fetch(
+          "https://jufufu.katelyn.moe/api/lastfm",
+          {
+            method: "POST",
+            headers: { "content-type": "application/json" },
+            body: JSON.stringify({
+              method: "track.scrobble",
+              params
+            })
+          }
+        );
+        const json = await res.json();
+        log("received response", "submit scrobble", "info", { result: json });
+        if (json.error) {
+          log("error", "submit scrobble", "error");
+          notify({
+            id: "submit_scrobble",
+            title: tl(trans.new_scrobble),
+            body: json.message,
+            type: "error",
+            persist: true
+          });
+          dialog_rm2({ id: "submit_scrobble" });
+          return;
+        }
+        notify({
+          id: "submit_scrobble",
+          title: tl(trans.new_scrobble),
+          body: params.track,
+          type: "success"
+        });
+        dialog_rm2({ id: "submit_scrobble" });
+        if (func) func();
+      }}>
+                    ${tl(trans.new)}
+                </button>
+            </div>
+        `
+    });
+  }
+
   // src/components/music.js
   unsafeWindow._other_listener = function(id) {
     other_listener(id);
@@ -7022,6 +7531,27 @@
       obsession_btn.setAttribute("data-type", "obsession");
       obsession_btn.textContent = tl(trans.obsession);
       interact_container.appendChild(obsession_form);
+    }
+    if (ff("submit_scrobble")) {
+      const can_api = localStorage.getItem("bleh_auth") && localStorage.getItem("bleh_auth_valid") === "true";
+      const source_album = page.structure.main.querySelector(".source-album-name");
+      const scrobble_btn = html.node`
+            <button class="btn side-action" data-type="add" onclick=${() => submit_scrobble({
+        pre_track: page.name,
+        pre_artist: page.sister,
+        pre_album: source_album ? source_album.textContent : null,
+        pre_album_artist: page.sister,
+        can_api
+      })}>
+                ${tl(trans.scrobble)}
+            </button>
+        `;
+      if (!can_api) {
+        tippy(scrobble_btn, {
+          content: tl(trans.requires_api_in_settings)
+        });
+      }
+      interact_container.appendChild(scrobble_btn);
     }
     let lotus_btn = null;
     if (settings.corrections) {
@@ -7617,290 +8147,6 @@
     });
     view_buttons.after(new_container);
     panel.removeChild(legacy_top_listeners_container);
-  }
-
-  // src/components/input.js
-  function input({
-    type = "text",
-    value,
-    placeholder,
-    min,
-    max,
-    maxlength,
-    warn_if_empty = false,
-    focus = false,
-    disabled = false
-  }) {
-    if (type == "date") {
-      let can_prev = function() {
-        const py = view.month === 1 ? view.year - 1 : view.year;
-        const pm = view.month === 1 ? 12 : view.month - 1;
-        return py > min_date.getFullYear() || py === min_date.getFullYear() && pm >= min_date.getMonth() + 1;
-      }, can_next = function() {
-        const ny = view.month === 12 ? view.year + 1 : view.year;
-        const nm = view.month === 12 ? 1 : view.month + 1;
-        return ny < max_date.getFullYear() || ny === max_date.getFullYear() && nm <= max_date.getMonth() + 1;
-      }, render_popup = function() {
-        tooltip.setContent(html.node`
-                <div class="calendar">
-                    <div class="calendar-header">
-                        <button class="month-year">
-                            ${months[view.month - 1]} ${view.year}
-                        </button>
-                        <div class="fill" />
-                        <button class="chibi icon" data-type="up" disabled=${!can_prev()} onclick=${() => {
-          if (!can_prev()) return;
-          view.month--;
-          if (view.month < 1) {
-            view.month = 12;
-            view.year--;
-          }
-          render_popup();
-        }}>
-                            ${tl(trans.back)}
-                        </button>
-                        <button class="chibi icon" data-type="down" disabled=${!can_next()} onclick=${() => {
-          if (!can_next()) return;
-          view.month++;
-          if (view.month > 12) {
-            view.month = 1;
-            view.year++;
-          }
-          render_popup();
-        }}>
-                            ${tl(trans.next)}
-                        </button>
-                    </div>
-                    <div class="date-header">
-                        ${weekdays.map((day) => html.node`<div class="date">${day}</div>`)}
-                    </div>
-                    <div class="days">
-                        ${days(view.year, view.month).map(
-          (cell) => cell.type == "empty" ? html.node`<button class="day empty" disabled />` : html.node`
-                                    <button class="day" aria-selected=${cell.day == state.day && cell.date > min_date && cell.date < max_date ? "true" : "false"} disabled=${cell.date < min_date || cell.date > max_date} onclick=${() => {
-            state.day = cell.day;
-            state.year = view.year;
-            state.month = view.month;
-            update_display();
-            emit();
-            render_popup();
-          }}>${cell.day}</button>
-                                `
-        )}
-                    </div>
-                </div>
-            `);
-      }, days = function(year, month) {
-        const raw_first = new Date(
-          year,
-          month - 1,
-          1
-        ).getDay();
-        const offset = (raw_first + 6) % 7;
-        const days_in_month = new Date(
-          year,
-          month,
-          0
-        ).getDate();
-        const cells = [];
-        for (let i = 0; i < offset; i++) cells.push({ type: "empty" });
-        for (let day = 1; day <= days_in_month; day++) {
-          cells.push({
-            type: "day",
-            day,
-            date: new Date(
-              year,
-              month - 1,
-              day
-            )
-          });
-        }
-        const rem = (7 - cells.length % 7) % 7;
-        for (let i = 0; i < rem; i++) cells.push({ type: "empty" });
-        return cells;
-      }, update_display = function() {
-        date_display.textContent = format_date(state);
-      }, emit = function() {
-        const date_object = new Date(
-          state.year,
-          state.month - 1,
-          state.day,
-          state.hours,
-          state.mins,
-          state.secs
-        );
-        container2.dispatchEvent(new CustomEvent("change"), { detail: date_object });
-      }, pad2 = function(num) {
-        return String(num).padStart(2, "0");
-      }, format_date = function({ year, month, day }) {
-        const date_object = new Date(
-          year,
-          month - 1,
-          day
-        );
-        return date_object.toLocaleDateString(void 0, {
-          year: "numeric",
-          month: "short",
-          day: "numeric"
-        });
-      };
-      let now = /* @__PURE__ */ new Date();
-      if (value != null) now = new Date(value);
-      const min_date = min != null ? new Date(min) : new Date(now.getTime() - 14 * 24 * 60 * 60 * 1e3);
-      min_date.setHours(0, 0, 0, 0);
-      const max_date = max != null ? new Date(max) : new Date(now);
-      max_date.setHours(23, 59, 59, 999);
-      const state = {
-        year: now.getFullYear(),
-        month: now.getMonth() + 1,
-        day: now.getDate(),
-        hours: now.getHours(),
-        mins: now.getMinutes(),
-        secs: now.getSeconds()
-      };
-      let view = {
-        year: state.year,
-        month: state.month
-      };
-      let date_display;
-      let time_input;
-      let popup_inner = html.node`<div class="calendar" />`;
-      const locale = void 0;
-      const months = Array.from(
-        { length: 12 },
-        (_, i) => new Intl.DateTimeFormat(locale, { month: "short" }).format(new Date(2e3, i, 1))
-      );
-      const raw_weekdays = Array.from(
-        { length: 7 },
-        (_, i) => new Intl.DateTimeFormat(locale, { weekday: "short" }).format(new Date(1970, 0, 4 + i))
-      );
-      const weekdays = raw_weekdays.slice(1).concat(raw_weekdays[0]);
-      const container2 = html.node`
-            <div class="input-group">
-                <div class="content-form input-container" data-type="date">
-                    <div class="date-input modern-input" ref=${(el) => date_display = el} disabled=${disabled}>${format_date(state)}</div>
-                </div>
-                <div class="content-form input-container" data-type="time">
-                    <input class="modern-input" type="time" step="1" ref=${(el) => time_input = el} disabled=${disabled} value="${pad2(state.hours)}:${pad2(state.mins)}:${pad2(state.secs)}">
-                </div>
-            </div>
-        `;
-      time_input.addEventListener("input", () => {
-        const parts = time_input.value.split(":").map((n) => parseInt(n, 10));
-        state.hours = parts[0] || 0;
-        state.mins = parts[1] || 0;
-        state.secs = parts[2] || 0;
-        emit();
-      });
-      let tooltip = tippy(date_display, {
-        theme: "window",
-        content: "",
-        placement: "bottom",
-        interactive: true,
-        interactiveBorder: 10,
-        trigger: "click",
-        onShow() {
-          render_popup();
-        }
-      });
-      container2.value = (val = null) => {
-        if (val === null) {
-          return new Date(
-            state.year,
-            state.month - 1,
-            state.day,
-            state.hours,
-            state.mins,
-            state.secs
-          );
-        }
-        const date_object = new Date(val);
-        state.year = date_object.getFullYear();
-        state.month = date_object.getMonth() + 1;
-        state.day = date_object.getDate();
-        state.hours = date_object.getHours();
-        state.mins = date_object.getMinutes();
-        state.secs = date_object.getSeconds();
-        view.year = state.year;
-        view.month = state.month;
-        render_popup();
-        update_display();
-        time_input.value = `${pad2(state.hours)}:${pad2(state.mins)}:${pad2(state.secs)}`;
-        return date_object;
-      };
-      container2.disabled = (val = null) => {
-        if (val === null) return time_input.disabled;
-        if (!val)
-          date_display.removeAttribute("disabled");
-        else
-          date_display.setAttribute("disabled", "true");
-        time_input.disabled = val;
-        return val;
-      };
-      return container2;
-    }
-    let input_box;
-    let error_tooltip;
-    let colour_block;
-    let container = html.node`
-        <div class="content-form input-container colourful" data-type=${type} data-has-error="false">
-            ${type == "colour" ? html.node`<span class="colour-block" ref=${(el) => colour_block = el} />` : ""}
-            <input class="modern-input" disabled=${disabled} autofocus=${focus} type=${type} value=${value} placeholder=${placeholder} min=${min} max=${max} maxlength=${maxlength} ref=${(el) => input_box = el} />
-        </div>
-    `;
-    error_tooltip = tippy(input_box, {
-      theme: "error",
-      placement: "top",
-      trigger: "manual"
-    });
-    error_tooltip.disable();
-    update_input(true);
-    input_box.addEventListener("input", () => {
-      update_input();
-    });
-    container.value = (val = null) => {
-      if (val === null) return input_box.value;
-      input_box.value = val;
-      return val;
-    };
-    container.disabled = (state = null) => {
-      if (state === null) return input_box.getAttribute("disabled") || false;
-      if (state === true)
-        input_box.setAttribute("disabled", "true");
-      else
-        input_box.removeAttribute("disabled");
-      return state;
-    };
-    return container;
-    function update_input(skip_most = false) {
-      container.setAttribute("data-has-error", "false");
-      error_tooltip.disable();
-      if (type != "number" && !skip_most) {
-        if (input_box.value == "" && warn_if_empty) {
-          error_input2(tl(trans.this_field_is_required));
-        } else if (input_box.value.length > maxlength) {
-          error_input2(tl(trans.keep_within_the_range));
-        }
-      }
-      if (type == "number" && !skip_most) {
-        if (input_box.value == "") {
-          error_input2(tl(trans.only_numbers_are_allowed));
-        } else if (parseInt(input_box.value) > max || parseInt(input_box.value) < min) {
-          error_input2(tl(trans.keep_within_the_range));
-        }
-      } else if (type == "colour") {
-        if (!input_box.value.startsWith("#"))
-          input_box.value = `#${input_box.value}`;
-        colour_block.style.backgroundColor = input_box.value;
-      }
-    }
-    function error_input2(reason) {
-      log(reason, "input", "log");
-      container.setAttribute("data-has-error", "true");
-      error_tooltip.setContent(reason);
-      error_tooltip.enable();
-      error_tooltip.show();
-    }
   }
 
   // src/components/collage.js
@@ -10178,73 +10424,6 @@
     localStorage.setItem("bleh_profile_banners", JSON.stringify(banners));
   }
 
-  // src/components/toggle.js
-  function toggle({
-    value = false,
-    type = "toggle",
-    name: name2 = "",
-    title = "",
-    body = "",
-    small = "",
-    disabled = false,
-    data: data2 = "",
-    func = null
-  }) {
-    let checkbox;
-    let state;
-    let elem = html.node`
-        <div class="setting" data-type="${type}" onclick=${() => {
-      if (disabled) return;
-      let current = checkbox.checked;
-      if (func) func(!current);
-      checkbox.checked = !current;
-      state.setAttribute("aria-checked", !current);
-    }}>
-            <div class="heading">
-                <h5>${title}</h5>
-                ${body != "" ? html.node`<p>${body}</p>` : ""}
-                ${small != "" ? html.node`<small>${small}</small>` : ""}
-            </div>
-            ${type == "toggle" ? html.node`
-            <div class="toggle-wrap">
-                <input type="checkbox" ref=${(el) => checkbox = el} name=${name2} value=${data2} checked=${value} />
-                <button class="toggle" ref=${(el) => state = el} aria-checked=${value}>
-                    <div class="dot" />
-                </button>
-            </div>
-            ` : html.node`
-            <div class="check">
-                <input type="checkbox" ref=${(el) => checkbox = el} name=${name2} value=${data2} checked=${value} disabled=${disabled} />
-                <div class="box" ref=${(el) => state = el} aria-checked=${value} disabled=${disabled}>
-                    <div class="bleh-icon" />
-                </div>
-            </div>
-            `}
-        </div>
-    `;
-    elem.check = () => {
-      if (disabled) return;
-      if (func) func(true);
-      checkbox.checked = true;
-      state.setAttribute("aria-checked", true);
-    };
-    elem.uncheck = () => {
-      if (disabled) return;
-      if (func) func(false);
-      checkbox.checked = false;
-      state.setAttribute("aria-checked", false);
-    };
-    elem.disabled = (state2 = null) => {
-      if (state2 === null) return checkbox.getAttribute("disabled") || false;
-      if (state2 === true)
-        checkbox.setAttribute("disabled", "true");
-      else
-        checkbox.removeAttribute("disabled");
-      return state2;
-    };
-    return elem;
-  }
-
   // src/pages/profile.js
   function bleh_profiles() {
     if (page.subpage == "obsessions_obsession") {
@@ -11069,137 +11248,26 @@
     header.appendChild(header_text2);
     let refresh_btn;
     if (ff("submit_scrobble") && page.name == auth.name) {
+      const can_api = localStorage.getItem("bleh_auth") && localStorage.getItem("bleh_auth_valid") === "true";
       let submit_btn = html.node`
-            <button class="left-icon blend-v2-btn" data-type="add" onclick=${() => {
-        let random = random_list[Math.floor(Math.random() * random_list.length)];
-        let track;
-        let album;
-        let artist;
-        let album_artist;
-        let use_current;
-        let date;
-        let create_scrobble;
-        let submit_dialog = dialog({
-          id: "submit_scrobble",
-          title: tl(trans.new_scrobble),
-          body: html.node`
-                    <div class="new-scrobble-form">
-                        <p class="generic-label">${tl(trans.track)}</p>
-                        ${track = input({
-            type: "text",
-            placeholder: random.track,
-            warn_if_empty: true
-          })}
-                        <p class="generic-label">${tl(trans.album)}</p>
-                        ${album = input({
-            type: "text",
-            placeholder: random.album,
-            warn_if_empty: true
-          })}
-                        <p class="generic-label">${tl(trans.artist)}</p>
-                        ${artist = input({
-            type: "text",
-            placeholder: random.artist,
-            warn_if_empty: true
-          })}
-                        <p class="generic-label">${tl(trans.album_artist)}</p>
-                        ${album_artist = input({
-            type: "text",
-            placeholder: random.album_artist,
-            warn_if_empty: true
-          })}
-                        <p class="generic-label">${tl(trans.time)}</p>
-                        <div class="toggle-and-time">
-                            ${use_current = toggle({
-            value: true,
-            type: "checkbox",
-            title: tl(trans.use_current_time),
-            func: (state) => {
-              date.disabled(state);
-            }
-          })}
-                            ${date = input({
-            type: "date",
-            disabled: true
-          })}
-                        </div>
-                    </div>
-                    <div class="modal-footer">
-                        <button class="see-more cancel" onclick=${() => dialog_rm2({ id: "submit_scrobble" })}>
-                            ${tl(trans.cancel)}
-                        </button>
-                        <div class="fill" />
-                        <button class="btn primary icon" data-type="add" ref=${(el) => create_scrobble = el} onclick=${async () => {
-            if (track.value() == "" || artist.value() == "") {
-              notify({
-                id: "submit_scrobble",
-                title: tl(trans.new_scrobble),
-                body: tl(trans.missing_fields),
-                type: "error"
-              });
-              return;
-            }
-            track.disabled(true);
-            album.disabled(true);
-            artist.disabled(true);
-            album_artist.disabled(true);
-            use_current.disabled(true);
-            date.disabled(true);
-            create_scrobble.disabled = true;
-            if (album.value() != "" && album_artist.value() == "") album_artist.value(artist.value());
-            let params = {
-              sk: localStorage.getItem("bleh_auth"),
-              artist: artist.value(),
-              track: track.value(),
-              timestamp: Math.floor(date.value() / 1e3)
-            };
-            if (album.value() != "") params.album = album.value();
-            if (album_artist.value() != "") params.albumArtist = album_artist.value();
-            const res = await fetch(
-              "https://jufufu.katelyn.moe/api/lastfm",
-              {
-                method: "POST",
-                headers: { "content-type": "application/json" },
-                body: JSON.stringify({
-                  method: "track.scrobble",
-                  params
-                })
-              }
-            );
-            const json = await res.json();
-            log("received response", "submit scrobble", "info", { result: json });
-            if (json.error) {
-              log("error", "submit scrobble", "error");
-              notify({
-                id: "submit_scrobble",
-                title: tl(trans.new_scrobble),
-                body: json.error.message,
-                type: "error",
-                persist: true
-              });
-              return;
-            }
-            notify({
-              id: "submit_scrobble",
-              title: tl(trans.new_scrobble),
-              body: params.track,
-              type: "success"
-            });
-            dialog_rm2({ id: "submit_scrobble" });
-            setTimeout(() => {
-              refresh_tracks(refresh_btn, { quiet: true });
-            }, 200);
-          }}>
-                            ${tl(trans.new)}
-                        </button>
-                    </div>
-                    `
-        });
-      }}>
+            <button class="left-icon blend-v2-btn" data-type="add" onclick=${() => submit_scrobble({
+        refresh_btn,
+        can_api,
+        func: () => {
+          setTimeout(() => {
+            refresh_tracks(refresh_btn, { quiet: true });
+          }, 200);
+        }
+      })}>
                 ${tl(trans.new)}
             </button>
         `;
       view_buttons.appendChild(submit_btn);
+      if (!can_api) {
+        tippy(submit_btn, {
+          content: tl(trans.requires_api_in_settings)
+        });
+      }
     }
     refresh_btn = html.node`
         <button class="left-icon blend-v2-btn" data-type="refresh" onclick=${() => refresh_tracks(refresh_btn)}>
@@ -11209,8 +11277,7 @@
     view_buttons.appendChild(refresh_btn);
     header.appendChild(view_buttons);
     panel.insertBefore(header, panel.firstElementChild);
-    if (form == null)
-      return;
+    if (!form) return;
     if (page.token == "")
       page.token = form.querySelector('[name="csrfmiddlewaretoken"]').getAttribute("value");
     let original_chart_settings = {};
@@ -17618,6 +17685,9 @@
     page.state.trans = 0;
     page.structure.row.removeChild(page.structure.row.firstElementChild);
     page.structure.row.removeChild(page.structure.row.firstElementChild);
+    page.structure.container.removeAttribute("data-beret");
+    page.structure.container.removeAttribute("data-short");
+    page.structure.content.classList.add("cards-view");
     let masthead = document.body.querySelector(".masthead");
     masthead.classList.add("in-setup");
     page.structure.main.innerHTML = `
@@ -17669,64 +17739,7 @@
       page.structure.setup.setAttribute("data-animating", "false");
       render(page.structure.setup_content, html`
             <p>${tl(trans.choose_a_theme)}</p>
-            <div class="setting-items full">
-                <div class="side-left full even-more">
-                    <button class="btn theme-item" data-bleh-theme="light" data-bleh--theme_type="light" onclick="change_theme_from_settings('light')">
-                        <div class="preview-container">
-                        <div class="preview" data-bleh--theme="light" data-bleh--theme_type="light">
-                            ${theme_preview()}
-                        </div>
-                        </div>
-                        <div class="text">
-                            <h5>${tl(trans.themes.light)}</h5>
-                        </div>
-                    </button>
-                    <button class="btn theme-item" data-bleh-theme="ink" data-bleh--theme_type="light" onclick="change_theme_from_settings('ink')">
-                        <div class="preview-container">
-                        <div class="preview" data-bleh--theme="ink" data-bleh--theme_type="light">
-                            ${theme_preview()}
-                        </div>
-                        </div>
-                        <div class="text">
-                            <h5>${tl(trans.themes.ink)}</h5>
-                        </div>
-                    </button>
-                </div>
-            </div>
-            <div class="setting-items full">
-                <div class="side-left full even-more">
-                    <button class="btn theme-item" data-bleh-theme="dark" onclick="change_theme_from_settings('dark')">
-                        <div class="preview-container">
-                        <div class="preview" data-bleh--theme="dark">
-                            ${theme_preview()}
-                        </div>
-                        </div>
-                        <div class="text">
-                            <h5>${tl(trans.themes.dark)}</h5>
-                        </div>
-                    </button>
-                    <button class="btn theme-item" data-bleh-theme="darker" onclick="change_theme_from_settings('darker')">
-                        <div class="preview-container">
-                        <div class="preview" data-bleh--theme="darker">
-                            ${theme_preview()}
-                        </div>
-                        </div>
-                        <div class="text">
-                            <h5>${tl(trans.themes.darker)}</h5>
-                        </div>
-                    </button>
-                    <button class="btn theme-item" data-bleh-theme="oled" onclick="change_theme_from_settings('oled')">
-                        <div class="preview-container">
-                        <div class="preview" data-bleh--theme="oled">
-                            ${theme_preview()}
-                        </div>
-                        </div>
-                        <div class="text">
-                            <h5>${tl(trans.themes.oled)}</h5>
-                        </div>
-                    </button>
-                </div>
-            </div>
+            ${theme_bubbles}
         `);
       page.structure.setup_footer.innerHTML = `
             <button class="see-more cancel" onclick="_setup_accessibility()">
@@ -19030,7 +19043,13 @@
     checkup_page_structure(false, content_top);
     log("status is", "page", "info", page);
     update_page();
-    register_background(auth.avatar.replace("/avatar42s/", "/ar0/"));
+    let banner = load_banner(auth.name);
+    if (banner)
+      register_background(banner);
+    else if (!auth.avatar.endsWith("818148bf682d429dc215c1705eb27b98.png"))
+      register_background(auth.avatar.replace("/avatar42s/", "/ar0/"));
+    else
+      register_background(null);
     if (page.subpage == "create_account") return;
     page.structure.container.removeAttribute("data-beret");
     page.structure.container.removeAttribute("data-short");
@@ -20196,7 +20215,13 @@
       log("unable to find elements", "page structure");
     }
     checkup_page_structure();
-    register_background(auth.avatar.replace("/avatar42s/", "/ar0/"));
+    let banner = load_banner(auth.name);
+    if (banner)
+      register_background(banner);
+    else if (!auth.avatar.endsWith("818148bf682d429dc215c1705eb27b98.png"))
+      register_background(auth.avatar.replace("/avatar42s/", "/ar0/"));
+    else
+      register_background(null);
     page.type = "bleh_auth";
     page.subpage = "";
     log("status is", "page", "info", page);
@@ -20240,7 +20265,7 @@
       render(page.structure.main, html`
             <section class="api-connector sour">
                 <div class="loading-data-container">
-                    <div class="loading-data-text error">${json.error.message}</div>
+                    <div class="loading-data-text error">${json.message}</div>
                 </div>
             </section>
         `);
@@ -21125,10 +21150,12 @@
       de: "Profil editieren",
       pt: "Editar perfil"
     },
+    scrobble: {
+      en: "Scrobble"
+    },
     scrobbles: {
       en: "Scrobbles",
       de: "Scrobbels",
-      pt: "Scrobbles",
       ja: "Scrobble"
     },
     count_scrobbles: {
@@ -23665,6 +23692,16 @@
     },
     missing_fields: {
       en: "Missing required fields"
+    },
+    requires_api_in_settings: {
+      en: "Requires API access in Settings"
+    },
+    no_token_provided: {
+      en: "No token provided"
+    },
+    example: {
+      en: "e.g. {v}",
+      de: "z.B. {v}"
     }
   };
   var trans_legacy = {

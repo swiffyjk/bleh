@@ -4,6 +4,7 @@ import {log} from "../build/log.js";
 import {checkup_page_structure} from "../components/structure.js";
 import {html, render} from "lighterhtml";
 import {tl, trans} from "../build/trans.js";
+import {load_banner} from '../components/banner.js';
 
 export async function bleh_auth() {
     page.structure.container = document.body.querySelector('.page-content');
@@ -17,7 +18,13 @@ export async function bleh_auth() {
 
     checkup_page_structure();
 
-    register_background(auth.avatar.replace('/avatar42s/', '/ar0/'));
+    let banner = load_banner(auth.name);
+    if (banner)
+        register_background(banner);
+    else if (!auth.avatar.endsWith('818148bf682d429dc215c1705eb27b98.png'))
+        register_background(auth.avatar.replace('/avatar42s/', '/ar0/'));
+    else
+        register_background(null);
 
     page.type = 'bleh_auth';
     page.subpage = '';
@@ -73,7 +80,7 @@ export async function bleh_auth() {
         render(page.structure.main, html`
             <section class="api-connector sour">
                 <div class="loading-data-container">
-                    <div class="loading-data-text error">${json.error.message}</div>
+                    <div class="loading-data-text error">${json.message}</div>
                 </div>
             </section>
         `);

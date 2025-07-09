@@ -591,7 +591,7 @@ export function render_setting_page(page_id) {
                         body: 'downloading...',
                         progress: true
                     });
-                    
+
                     download_with_progress(`https://lastfm.freetls.fastly.net/i/u/ar0/6644c67eaa3669676252d3190f9b019f.jpg?a=${Math.random()}`, (percent) => {
                         notification.set_body(`downloading... ${percent}%`);
                         notification.set(percent);
@@ -600,7 +600,7 @@ export function render_setting_page(page_id) {
 
                         notification.set_body('download complete');
                         notification.set(100);
-                        
+
                         console.info(text);
                     });
                 }}>Deliver async progress notification</button>
@@ -669,17 +669,17 @@ export function render_setting_page(page_id) {
                             <input type="password" maxlength="120" id="text-api_key" value="${settings.api_key}" placeholder="${trans_legacy.en.settings.profiles.api.placeholder}">
                             <button class="btn primary save" onclick=${() => {
                                 let key = document.getElementById('text-api_key').value;
-                            
+
                                 // save to settings
                                 settings.api_key = key;
                                 localStorage.setItem('bleh', JSON.stringify(settings));
-                            
+
                                 notify({
                                     title: trans_legacy.en.settings.profiles.api.name,
                                     body: trans_legacy.en.settings.profiles.api.saved,
                                     icon: 'icon-16-api'
                                 });
-                            
+
                                 test_api_key();
                             }}>${tl(trans.save)}</button>
                             <a class="btn-add" href="${root}api/account/create" target="_blank">${trans_legacy.en.settings.create}</a>
@@ -1120,7 +1120,7 @@ export function render_setting_page(page_id) {
                     <div class="bars" ref=${el => bars = el}>
                         ${() => {
                             let max = 30_000;
-                            
+
                             for (let value = 1_000; value <= max; value += 1_000) {
                                 bars.appendChild(chartlist_bar(value, max));
                             }
@@ -1414,7 +1414,7 @@ export function change_settings_page(page_id, setting = null) {
             </div>
         `);
     }
-    
+
     if (page_id == 'customise' || page_id == 'performance' || page_id == 'accessibility' || page_id == 'text' || page_id == 'seasonal' || page_id == 'music' || page_id == 'activities') {
         refresh_all();
     } else if (page_id == 'profiles') {
@@ -1971,7 +1971,7 @@ export function display_colour_presets() {
                                     <button class="btn primary icon convert" onclick=${() => {
                                         let value = colour.querySelector('input').value;
                                         let hsl = hex_to_hsl(value);
-                
+
                                         update_params({
                                             hue: hsl.h,
                                             sat: clamp_sat((hsl.s / 100) * 3),
@@ -2794,7 +2794,7 @@ function activity_preview_new(parent, activity) {
         parent.removeChild(parent.lastElementChild);
 }
 
-function theme_bubbles() {
+export function theme_bubbles() {
     let bubbles = html.node`
         <div class="theme-bubbles" />
     `;
@@ -2857,9 +2857,9 @@ function theme_bubbles() {
         render(bubbles, html`
             ${themes.map(theme => {
                 if (theme.hide) return html.node``;
-                
+
                 if (!theme.formal) theme.formal = theme.id;
-                
+
                 let bubble = html.node`
                     <button class="theme-bubble" aria-selected=${settings.theme == theme.id} onclick=${() => update_theme_bubble(theme.id)}>
                         <div class="bubble">
@@ -2873,7 +2873,7 @@ function theme_bubbles() {
                         </strong>
                     </button>
                 `;
-                
+
                 tippy(bubble, {
                     theme: 'theme-preview',
                     content: html.node`
@@ -2883,7 +2883,7 @@ function theme_bubbles() {
                     `,
                     delay: [500, 0]
                 });
-                
+
                 return bubble;
             })}
         `);

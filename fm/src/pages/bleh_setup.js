@@ -6,7 +6,7 @@
 
 import {register_activity} from "../activity";
 import {log} from "../build/log";
-import {auth, page, root, theme_preview} from "../build/page";
+import {auth, page, root} from "../build/page";
 import {tl, trans, trans_legacy} from "../build/trans";
 import {request_changelog} from "../news.js";
 import {notify} from "../components/notify";
@@ -14,7 +14,7 @@ import {checkup_page_structure} from '../components/structure';
 import {refresh_all} from "../config";
 import {version} from "../main";
 import {register_background, update_page} from '../page';
-import {display_colour_presets, show_theme_change_in_settings} from "./bleh_config";
+import {display_colour_presets, show_theme_change_in_settings, theme_bubbles} from "./bleh_config";
 import {html, render} from "lighterhtml";
 
 export function bleh_setup() {
@@ -45,6 +45,10 @@ export function bleh_setup() {
     // remove error stuff cus we control this page
     page.structure.row.removeChild(page.structure.row.firstElementChild);
     page.structure.row.removeChild(page.structure.row.firstElementChild);
+
+    page.structure.container.removeAttribute('data-beret');
+    page.structure.container.removeAttribute('data-short');
+    page.structure.content.classList.add('cards-view');
 
     let masthead = document.body.querySelector('.masthead');
     masthead.classList.add('in-setup');
@@ -104,64 +108,7 @@ unsafeWindow._setup_themes = function() {
         page.structure.setup.setAttribute('data-animating', 'false');
         render(page.structure.setup_content, html`
             <p>${tl(trans.choose_a_theme)}</p>
-            <div class="setting-items full">
-                <div class="side-left full even-more">
-                    <button class="btn theme-item" data-bleh-theme="light" data-bleh--theme_type="light" onclick="change_theme_from_settings('light')">
-                        <div class="preview-container">
-                        <div class="preview" data-bleh--theme="light" data-bleh--theme_type="light">
-                            ${theme_preview()}
-                        </div>
-                        </div>
-                        <div class="text">
-                            <h5>${tl(trans.themes.light)}</h5>
-                        </div>
-                    </button>
-                    <button class="btn theme-item" data-bleh-theme="ink" data-bleh--theme_type="light" onclick="change_theme_from_settings('ink')">
-                        <div class="preview-container">
-                        <div class="preview" data-bleh--theme="ink" data-bleh--theme_type="light">
-                            ${theme_preview()}
-                        </div>
-                        </div>
-                        <div class="text">
-                            <h5>${tl(trans.themes.ink)}</h5>
-                        </div>
-                    </button>
-                </div>
-            </div>
-            <div class="setting-items full">
-                <div class="side-left full even-more">
-                    <button class="btn theme-item" data-bleh-theme="dark" onclick="change_theme_from_settings('dark')">
-                        <div class="preview-container">
-                        <div class="preview" data-bleh--theme="dark">
-                            ${theme_preview()}
-                        </div>
-                        </div>
-                        <div class="text">
-                            <h5>${tl(trans.themes.dark)}</h5>
-                        </div>
-                    </button>
-                    <button class="btn theme-item" data-bleh-theme="darker" onclick="change_theme_from_settings('darker')">
-                        <div class="preview-container">
-                        <div class="preview" data-bleh--theme="darker">
-                            ${theme_preview()}
-                        </div>
-                        </div>
-                        <div class="text">
-                            <h5>${tl(trans.themes.darker)}</h5>
-                        </div>
-                    </button>
-                    <button class="btn theme-item" data-bleh-theme="oled" onclick="change_theme_from_settings('oled')">
-                        <div class="preview-container">
-                        <div class="preview" data-bleh--theme="oled">
-                            ${theme_preview()}
-                        </div>
-                        </div>
-                        <div class="text">
-                            <h5>${tl(trans.themes.oled)}</h5>
-                        </div>
-                    </button>
-                </div>
-            </div>
+            ${theme_bubbles}
         `);
         page.structure.setup_footer.innerHTML = (`
             <button class="see-more cancel" onclick="_setup_accessibility()">

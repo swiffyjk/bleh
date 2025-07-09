@@ -362,10 +362,12 @@ export const trans = {
         de: 'Profil editieren',
         pt: 'Editar perfil'
     },
+    scrobble: {
+        en: 'Scrobble'
+    },
     scrobbles: {
         en: 'Scrobbles',
         de: 'Scrobbels',
-        pt: 'Scrobbles',
         ja: 'Scrobble'
     },
     count_scrobbles: {
@@ -2903,6 +2905,16 @@ export const trans = {
     },
     missing_fields: {
         en: 'Missing required fields'
+    },
+    requires_api_in_settings: {
+        en: 'Requires API access in Settings'
+    },
+    no_token_provided: {
+        en: 'No token provided'
+    },
+    example: {
+        en: 'e.g. {v}',
+        de: 'z.B. {v}'
     }
 }
 

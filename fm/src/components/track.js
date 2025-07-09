@@ -342,10 +342,13 @@ export function patch_titles(search=page.structure.main) {
                         track.setAttribute('data-action', form.getAttribute('action'));
 
                         if (!is_album) {
+                            let album_name = form.querySelector('[name="album_name"]');
+                            let album_artist_name = form.querySelector('[name="album_artist_name"]');
+
                             track.setAttribute('data-artist-name', correct_artist(form.querySelector('[name="artist_name"]').value));
                             track.setAttribute('data-track-name', correct_item_by_artist(form.querySelector('[name="track_name"]').value, form.querySelector('[name="artist_name"]').value));
-                            track.setAttribute('data-album-name', correct_item_by_artist(form.querySelector('[name="album_name"]').value, form.querySelector('[name="artist_name"]').value));
-                            track.setAttribute('data-album-artist-name', correct_artist(form.querySelector('[name="album_artist_name"]').value));
+                            if (album_name) track.setAttribute('data-album-name', correct_item_by_artist(album_name.value, form.querySelector('[name="artist_name"]').value));
+                            if (album_artist_name) track.setAttribute('data-album-artist-name', correct_artist(album_artist_name.value));
                             track.setAttribute('data-timestamp', form.querySelector('[name="timestamp"]').value);
                         } else {
                             track.setAttribute('data-album-name', correct_item_by_artist(form.querySelector('[name="album_name"]').value, form.querySelector('[name="album_artist_name"]').value));
@@ -462,16 +465,9 @@ export function patch_titles(search=page.structure.main) {
                                 }}
                             </div>
                             ` : ''}
+                            ${album_name ? html.node`
                             <div class="button-combo">
                                 ${() => {
-                                    if (is_album) {
-                                        return html.node`
-                                            <a class="dropdown-menu-clickable-item" data-type="album" href="${root}music/${sanitise(track_artist)}/${sanitise(track_title.getAttribute('data-name'))}">
-                                                ${tl(trans.album)}
-                                            </a>
-                                        `;
-                                    }
-                                    
                                     return html.node`
                                         <a class="dropdown-menu-clickable-item" data-type="album" href="${root}music/${sanitise(track_artist)}/${album_name}">
                                             ${tl(trans.album)}
@@ -485,9 +481,6 @@ export function patch_titles(search=page.structure.main) {
                                             ${tl(trans.explore_in_library)}
                                         </a>
                                     `;
-                                    
-                                    if (is_album)
-                                        button.href = `${root}user/${page.name}/library/music/${sanitise(track_artist)}/${sanitise(track_title.getAttribute('data-name'))}`;
     
                                     tippy(button, {
                                         content: tl(trans.explore_in_library)
@@ -496,6 +489,31 @@ export function patch_titles(search=page.structure.main) {
                                     return button;
                                 }}
                             </div>
+                            ` : is_album ? html.node`
+                            <div class="button-combo">
+                                ${() => {
+                                    return html.node`
+                                        <a class="dropdown-menu-clickable-item" data-type="album" href="${root}music/${sanitise(track_artist)}/${sanitise(track_title.getAttribute('data-name'))}">
+                                            ${tl(trans.album)}
+                                        </a>
+                                    `;
+                                }}
+                                <div class="button-combo-sep"/>
+                                ${() => {
+                                    let button = html.node`
+                                        <a class="dropdown-menu-clickable-item chibi" data-type="continue" href="${root}user/${page.name}/library/music/${sanitise(track_artist)}/${sanitise(track_title.getAttribute('data-name'))}">
+                                            ${tl(trans.explore_in_library)}
+                                        </a>
+                                    `;
+    
+                                    tippy(button, {
+                                        content: tl(trans.explore_in_library)
+                                    });
+    
+                                    return button;
+                                }}
+                            </div>
+                            ` : ''}
                             <div class="button-combo">
                                 ${() => {
                                     return html.node`
