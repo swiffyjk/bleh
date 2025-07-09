@@ -921,7 +921,9 @@ function patch_profile_following() {
 unsafeWindow._refresh_tracks = function(button) {
     refresh_tracks(button);
 }
-function refresh_tracks(button) {
+function refresh_tracks(button, {
+    quiet = false
+}) {
     let panel = page.structure.main.querySelector('#recent-tracks-section');
     panel.classList.remove('has-refreshed');
     button.setAttribute('disabled', '');
@@ -944,20 +946,24 @@ function refresh_tracks(button) {
         button.removeAttribute('disabled');
 
         if (!tracklist_panel) {
-            notify({
-                title: tl(trans.recent_tracks),
-                body: tl(trans.value_failed_to_load).replace('{v}', tl(trans.library)),
-                icon: 'icon-16-refresh',
-                type: 'error'
-            });
+            if (!quiet) {
+                notify({
+                    title: tl(trans.recent_tracks),
+                    body: tl(trans.value_failed_to_load).replace('{v}', tl(trans.library)),
+                    icon: 'icon-16-refresh',
+                    type: 'error'
+                });
+            }
             return;
         }
 
-        notify({
-            title: tl(trans.recent_tracks),
-            body: tl(trans.refreshed),
-            icon: 'icon-16-refresh'
-        });
+        if (!quiet) {
+            notify({
+                title: tl(trans.recent_tracks),
+                body: tl(trans.refreshed),
+                icon: 'icon-16-refresh'
+            });
+        }
         panel.classList.add('has-refreshed');
 
         panel.querySelector('.chartlist').outerHTML = tracklist_panel.outerHTML;
@@ -1091,6 +1097,7 @@ function profile_recents() {
     let header_text = panel.querySelector('h2');
     header.appendChild(header_text);
 
+    let refresh_btn;
     if (ff('submit_scrobble') && page.name == auth.name) {
         let submit_btn = html.node`
             <button class="left-icon blend-v2-btn" data-type="add" onclick=${() => {
@@ -1102,6 +1109,8 @@ function profile_recents() {
                 let album_artist;
                 let use_current;
                 let date;
+
+                let create_scrobble;
 
                 let submit_dialog = dialog({
                     id: 'submit_scrobble',
@@ -1133,15 +1142,15 @@ function profile_recents() {
                             warn_if_empty: true
                         })}
                         <p class="generic-label">${tl(trans.time)}</p>
-                        ${use_current = toggle({
-                            value: true,
-                            type: 'checkbox',
-                            title: tl(trans.use_current_time),
-                            func: (state) => {
-                                date.disabled(state);
-                            }
-                        })}
-                        <div class="input-group">
+                        <div class="toggle-and-time">
+                            ${use_current = toggle({
+                                value: true,
+                                type: 'checkbox',
+                                title: tl(trans.use_current_time),
+                                func: (state) => {
+                                    date.disabled(state);
+                                }
+                            })}
                             ${date = input({
                                 type: 'date',
                                 disabled: true
@@ -1153,8 +1162,8 @@ function profile_recents() {
                             ${tl(trans.cancel)}
                         </button>
                         <div class="fill" />
-                        <button class="btn primary icon" data-type="add" onclick=${async () => {
-                            if (track.value() === null || artist.value() === null) {
+                        <button class="btn primary icon" data-type="add" ref=${el => create_scrobble = el} onclick=${async () => {
+                            if (track.value() == '' || artist.value() == '') {
                                 notify({
                                     id: 'submit_scrobble',
                                     title: tl(trans.new_scrobble),
@@ -1164,14 +1173,25 @@ function profile_recents() {
                                 return;
                             }
 
-                            if (album.value() !== null && album_artist.value() === null) album_artist.value(artist.value());
+                            track.disabled(true);
+                            album.disabled(true);
+                            artist.disabled(true);
+                            album_artist.disabled(true);
+                            use_current.disabled(true);
+                            date.disabled(true);
+                            create_scrobble.disabled = true;
+
+                            if (album.value() != '' && album_artist.value() == '') album_artist.value(artist.value());
 
                             let params = {
                                 sk: localStorage.getItem('bleh_auth'),
                                 artist: artist.value(),
                                 track: track.value(),
-                                t
+                                timestamp: Math.floor(date.value() / 1000)
                             };
+
+                            if (album.value() != '') params.album = album.value();
+                            if (album_artist.value() != '') params.albumArtist = album_artist.value();
 
                             const res = await fetch(
                                 'https://jufufu.katelyn.moe/api/lastfm',
@@ -1180,20 +1200,37 @@ function profile_recents() {
                                     headers: { 'content-type': 'application/json' },
                                     body: JSON.stringify({
                                         method: 'track.scrobble',
-                                        params: {
-                                            sk: sessionKey,
-                                            artist: 'Radiohead',
-                                            track: 'Karma Police',
-                                            album: 'OK Computer',
-                                            albumArtist: 'Radiohead',
-                                            timestamp: Math.floor(Date.now() / 1000)
-                                        }
+                                        params
                                     })
                                 }
                             );
 
-                            const result = await res.json();
-                            console.log(result);
+                            const json = await res.json();
+                            log('received response', 'submit scrobble', 'info', {result: json});
+
+                            if (json.error) {
+                                log('error', 'submit scrobble', 'error');
+                                notify({
+                                    id: 'submit_scrobble',
+                                    title: tl(trans.new_scrobble),
+                                    body: json.error.message,
+                                    type: 'error',
+                                    persist: true
+                                });
+                                return;
+                            }
+
+                            notify({
+                                id: 'submit_scrobble',
+                                title: tl(trans.new_scrobble),
+                                body: params.track,
+                                type: 'success'
+                            });
+                            dialog_rm({id: 'submit_scrobble'});
+
+                            setTimeout(() => {
+                                refresh_tracks(refresh_btn, {quiet: true});
+                            }, 200);
                         }}>
                             ${tl(trans.new)}
                         </button>
@@ -1208,7 +1245,7 @@ function profile_recents() {
     }
 
     // refresh
-    let refresh_btn = html.node`
+    refresh_btn = html.node`
         <button class="left-icon blend-v2-btn" data-type="refresh" onclick=${() => refresh_tracks(refresh_btn)}>
             ${tl(trans.refresh)}
         </button>

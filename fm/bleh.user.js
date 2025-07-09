@@ -7633,44 +7633,40 @@
   }) {
     if (type == "date") {
       let can_prev = function() {
-        const py = state.month === 1 ? state.year - 1 : state.year;
-        const pm = state.month === 1 ? 12 : state.month - 1;
+        const py = view.month === 1 ? view.year - 1 : view.year;
+        const pm = view.month === 1 ? 12 : view.month - 1;
         return py > min_date.getFullYear() || py === min_date.getFullYear() && pm >= min_date.getMonth() + 1;
       }, can_next = function() {
-        const ny = state.month === 12 ? state.year + 1 : state.year;
-        const nm = state.month === 12 ? 1 : state.month + 1;
+        const ny = view.month === 12 ? view.year + 1 : view.year;
+        const nm = view.month === 12 ? 1 : view.month + 1;
         return ny < max_date.getFullYear() || ny === max_date.getFullYear() && nm <= max_date.getMonth() + 1;
       }, render_popup = function() {
         tooltip.setContent(html.node`
                 <div class="calendar">
                     <div class="calendar-header">
                         <button class="month-year">
-                            ${months[state.month - 1]} ${state.year}
+                            ${months[view.month - 1]} ${view.year}
                         </button>
                         <div class="fill" />
-                        <button class="chibi icon" data-type="up" onclick=${() => {
+                        <button class="chibi icon" data-type="up" disabled=${!can_prev()} onclick=${() => {
           if (!can_prev()) return;
-          state.month--;
-          if (state.month < 1) {
-            state.month = 12;
-            state.year--;
+          view.month--;
+          if (view.month < 1) {
+            view.month = 12;
+            view.year--;
           }
           render_popup();
-          update_display();
-          emit();
         }}>
                             ${tl(trans.back)}
                         </button>
-                        <button class="chibi icon" data-type="up" onclick=${() => {
+                        <button class="chibi icon" data-type="down" disabled=${!can_next()} onclick=${() => {
           if (!can_next()) return;
-          state.month++;
-          if (state.month > 12) {
-            state.month = 1;
-            state.year++;
+          view.month++;
+          if (view.month > 12) {
+            view.month = 1;
+            view.year++;
           }
           render_popup();
-          update_display();
-          emit();
         }}>
                             ${tl(trans.next)}
                         </button>
@@ -7679,10 +7675,12 @@
                         ${weekdays.map((day) => html.node`<div class="date">${day}</div>`)}
                     </div>
                     <div class="days">
-                        ${days(state.year, state.month).map(
+                        ${days(view.year, view.month).map(
           (cell) => cell.type == "empty" ? html.node`<button class="day empty" disabled />` : html.node`
-                                    <button class="day" aria-selected=${cell.day == state.day ? "true" : "false"} disabled=${cell.date < min_date || cell.date > max_date} onclick=${() => {
+                                    <button class="day" aria-selected=${cell.day == state.day && cell.date > min_date && cell.date < max_date ? "true" : "false"} disabled=${cell.date < min_date || cell.date > max_date} onclick=${() => {
             state.day = cell.day;
+            state.year = view.year;
+            state.month = view.month;
             update_display();
             emit();
             render_popup();
@@ -7760,6 +7758,10 @@
         mins: now.getMinutes(),
         secs: now.getSeconds()
       };
+      let view = {
+        year: state.year,
+        month: state.month
+      };
       let date_display;
       let time_input;
       let popup_inner = html.node`<div class="calendar" />`;
@@ -7779,10 +7781,17 @@
                     <div class="date-input modern-input" ref=${(el) => date_display = el} disabled=${disabled}>${format_date(state)}</div>
                 </div>
                 <div class="content-form input-container" data-type="time">
-                    <input class="modern-input" type="time" ref=${(el) => time_input = el} disabled=${disabled} value="${pad2(state.hours)}:${pad2(state.mins)}:${pad2(state.secs)}">
+                    <input class="modern-input" type="time" step="1" ref=${(el) => time_input = el} disabled=${disabled} value="${pad2(state.hours)}:${pad2(state.mins)}:${pad2(state.secs)}">
                 </div>
             </div>
         `;
+      time_input.addEventListener("input", () => {
+        const parts = time_input.value.split(":").map((n) => parseInt(n, 10));
+        state.hours = parts[0] || 0;
+        state.mins = parts[1] || 0;
+        state.secs = parts[2] || 0;
+        emit();
+      });
       let tooltip = tippy(date_display, {
         theme: "window",
         content: "",
@@ -7801,7 +7810,8 @@
             state.month - 1,
             state.day,
             state.hours,
-            state.mins
+            state.mins,
+            state.secs
           );
         }
         const date_object = new Date(val);
@@ -7810,6 +7820,9 @@
         state.day = date_object.getDate();
         state.hours = date_object.getHours();
         state.mins = date_object.getMinutes();
+        state.secs = date_object.getSeconds();
+        view.year = state.year;
+        view.month = state.month;
         render_popup();
         update_display();
         time_input.value = `${pad2(state.hours)}:${pad2(state.mins)}:${pad2(state.secs)}`;
@@ -10221,6 +10234,14 @@
       checkbox.checked = false;
       state.setAttribute("aria-checked", false);
     };
+    elem.disabled = (state2 = null) => {
+      if (state2 === null) return checkbox.getAttribute("disabled") || false;
+      if (state2 === true)
+        checkbox.setAttribute("disabled", "true");
+      else
+        checkbox.removeAttribute("disabled");
+      return state2;
+    };
     return elem;
   }
 
@@ -10912,7 +10933,9 @@
   unsafeWindow._refresh_tracks = function(button) {
     refresh_tracks(button);
   };
-  function refresh_tracks(button) {
+  function refresh_tracks(button, {
+    quiet = false
+  }) {
     let panel = page.structure.main.querySelector("#recent-tracks-section");
     panel.classList.remove("has-refreshed");
     button.setAttribute("disabled", "");
@@ -10925,19 +10948,23 @@
       let tracklist_panel = doc.querySelector(".chartlist");
       button.removeAttribute("disabled");
       if (!tracklist_panel) {
-        notify({
-          title: tl(trans.recent_tracks),
-          body: tl(trans.value_failed_to_load).replace("{v}", tl(trans.library)),
-          icon: "icon-16-refresh",
-          type: "error"
-        });
+        if (!quiet) {
+          notify({
+            title: tl(trans.recent_tracks),
+            body: tl(trans.value_failed_to_load).replace("{v}", tl(trans.library)),
+            icon: "icon-16-refresh",
+            type: "error"
+          });
+        }
         return;
       }
-      notify({
-        title: tl(trans.recent_tracks),
-        body: tl(trans.refreshed),
-        icon: "icon-16-refresh"
-      });
+      if (!quiet) {
+        notify({
+          title: tl(trans.recent_tracks),
+          body: tl(trans.refreshed),
+          icon: "icon-16-refresh"
+        });
+      }
       panel.classList.add("has-refreshed");
       panel.querySelector(".chartlist").outerHTML = tracklist_panel.outerHTML;
     });
@@ -11040,6 +11067,7 @@
     header.classList.add("top-container");
     let header_text2 = panel.querySelector("h2");
     header.appendChild(header_text2);
+    let refresh_btn;
     if (ff("submit_scrobble") && page.name == auth.name) {
       let submit_btn = html.node`
             <button class="left-icon blend-v2-btn" data-type="add" onclick=${() => {
@@ -11050,6 +11078,7 @@
         let album_artist;
         let use_current;
         let date;
+        let create_scrobble;
         let submit_dialog = dialog({
           id: "submit_scrobble",
           title: tl(trans.new_scrobble),
@@ -11080,7 +11109,8 @@
             warn_if_empty: true
           })}
                         <p class="generic-label">${tl(trans.time)}</p>
-                        ${use_current = toggle({
+                        <div class="toggle-and-time">
+                            ${use_current = toggle({
             value: true,
             type: "checkbox",
             title: tl(trans.use_current_time),
@@ -11088,7 +11118,6 @@
               date.disabled(state);
             }
           })}
-                        <div class="input-group">
                             ${date = input({
             type: "date",
             disabled: true
@@ -11100,8 +11129,8 @@
                             ${tl(trans.cancel)}
                         </button>
                         <div class="fill" />
-                        <button class="btn primary icon" data-type="add" onclick=${async () => {
-            if (track.value() === null || artist.value() === null) {
+                        <button class="btn primary icon" data-type="add" ref=${(el) => create_scrobble = el} onclick=${async () => {
+            if (track.value() == "" || artist.value() == "") {
               notify({
                 id: "submit_scrobble",
                 title: tl(trans.new_scrobble),
@@ -11110,13 +11139,22 @@
               });
               return;
             }
-            if (album.value() !== null && album_artist.value() === null) album_artist.value(artist.value());
+            track.disabled(true);
+            album.disabled(true);
+            artist.disabled(true);
+            album_artist.disabled(true);
+            use_current.disabled(true);
+            date.disabled(true);
+            create_scrobble.disabled = true;
+            if (album.value() != "" && album_artist.value() == "") album_artist.value(artist.value());
             let params = {
               sk: localStorage.getItem("bleh_auth"),
               artist: artist.value(),
               track: track.value(),
-              t
+              timestamp: Math.floor(date.value() / 1e3)
             };
+            if (album.value() != "") params.album = album.value();
+            if (album_artist.value() != "") params.albumArtist = album_artist.value();
             const res = await fetch(
               "https://jufufu.katelyn.moe/api/lastfm",
               {
@@ -11124,19 +11162,33 @@
                 headers: { "content-type": "application/json" },
                 body: JSON.stringify({
                   method: "track.scrobble",
-                  params: {
-                    sk: sessionKey,
-                    artist: "Radiohead",
-                    track: "Karma Police",
-                    album: "OK Computer",
-                    albumArtist: "Radiohead",
-                    timestamp: Math.floor(Date.now() / 1e3)
-                  }
+                  params
                 })
               }
             );
-            const result = await res.json();
-            console.log(result);
+            const json = await res.json();
+            log("received response", "submit scrobble", "info", { result: json });
+            if (json.error) {
+              log("error", "submit scrobble", "error");
+              notify({
+                id: "submit_scrobble",
+                title: tl(trans.new_scrobble),
+                body: json.error.message,
+                type: "error",
+                persist: true
+              });
+              return;
+            }
+            notify({
+              id: "submit_scrobble",
+              title: tl(trans.new_scrobble),
+              body: params.track,
+              type: "success"
+            });
+            dialog_rm2({ id: "submit_scrobble" });
+            setTimeout(() => {
+              refresh_tracks(refresh_btn, { quiet: true });
+            }, 200);
           }}>
                             ${tl(trans.new)}
                         </button>
@@ -11149,7 +11201,7 @@
         `;
       view_buttons.appendChild(submit_btn);
     }
-    let refresh_btn = html.node`
+    refresh_btn = html.node`
         <button class="left-icon blend-v2-btn" data-type="refresh" onclick=${() => refresh_tracks(refresh_btn)}>
             ${tl(trans.refresh)}
         </button>

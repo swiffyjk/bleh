@@ -66,5 +66,16 @@ export function toggle({
         state.setAttribute('aria-checked', false);
     }
 
+    elem.disabled = (state = null) => {
+        if (state === null) return checkbox.getAttribute('disabled') || false;
+
+        if (state === true)
+            checkbox.setAttribute('disabled', 'true');
+        else
+            checkbox.removeAttribute('disabled');
+
+        return state;
+    }
+
     return elem;
 }

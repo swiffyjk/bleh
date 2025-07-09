@@ -7711,6 +7711,7 @@
 
 
     /*     ICON MASK     */
+    .input-container:after,
     .blend-v2-btn:before,
     .rabbit-search:after,
     .js-shout-reply-cancel:before,
@@ -9886,6 +9887,17 @@
             transition-timing-function: var(--trans-function);
         }
 
+        &:after {
+            --show-icon: none;
+            pointer-events: none;
+        }
+
+        --mask-colour: color-mix(in hsl, hsl(var(--c2)), hsl(var(--c3)) 50%);
+
+        &:has(> .modern-input[disabled]) {
+            --mask-colour: hsl(var(--c3));
+        }
+
         &.in-settings {
             &:before {
                 right: calc(32px + var(--button-list-gap));
@@ -9902,7 +9914,6 @@
         }
 
         &[data-type="colour"] {
-            position: relative;
             --size: 14px;
 
             & > .modern-input {
@@ -9920,6 +9931,33 @@
                 border-radius: var(--item-small-radius);
                 box-shadow: var(--interact-shadow);
                 pointer-events: none;
+            }
+        }
+
+        &[data-type="date"] {
+            --mask: var(--icon-16-calendar);
+            --icon-size: 14px;
+
+            & > .modern-input {
+                cursor: pointer;
+                padding-left: calc(var(--button-sides) + var(--icon-size) + var(--icon-gap)) !important;
+            }
+
+            &:after {
+                --show-icon: block;
+            }
+        }
+
+        &[data-type="time"] {
+            --mask: var(--icon-16-clock);
+            --icon-size: 14px;
+
+            & > .modern-input {
+                padding-left: calc(var(--button-sides) + var(--icon-size) + var(--icon-gap)) !important;
+            }
+
+            &:after {
+                --show-icon: block;
             }
         }
 
@@ -14980,7 +15018,8 @@
         [data-page-type="bleh_setup"],
         .has-error,
         [data-page-subpage="applications_overview"],
-        [data-page-type="releases"]
+        [data-page-type="releases"],
+        [data-page-type="bleh_auth"]
         ),
     .namespace--music_bookmarks_overview {
         .col-main {
@@ -16480,6 +16519,15 @@
         resize: none;
     }
 
+
+    .toggle-and-time {
+        display: flex;
+
+        & > .setting {
+            min-height: 32px;
+            flex: 1;
+        }
+    }
 
     .setting {
         position: relative;
@@ -25013,10 +25061,24 @@
             & > .fill {
                 flex: 1;
             }
+
+            & > button {
+                --bg: transparent;
+                --bg-hov: hsla(var(--b4), 60%);
+                --bg-atv: hsla(var(--b4), 80%);
+                --shadow: none;
+            }
         }
 
         .date-header {
-            display: flex;
+            display: grid;
+            grid-template-columns: repeat(7, 1fr);
+
+            & > .date {
+                text-align: center;
+                cursor: default;
+                color: hsl(var(--c3));
+            }
         }
 
         .days {
@@ -25042,5 +25104,12 @@
                 }
             }
         }
+    }
+
+    [data-type="up"] {
+        --mask: var(--icon-16-arrow-up);
+    }
+    [data-type="down"] {
+        --mask: var(--icon-16-arrow-down);
     }
 }

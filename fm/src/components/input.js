@@ -35,6 +35,10 @@ export function input({
             mins:  now.getMinutes(),
             secs:  now.getSeconds()
         };
+        let view = {
+            year:  state.year,
+            month: state.month
+        };
 
         let date_display;
         let time_input;
@@ -59,14 +63,23 @@ export function input({
                     <div class="date-input modern-input" ref=${el => date_display = el} disabled=${disabled}>${format_date(state)}</div>
                 </div>
                 <div class="content-form input-container" data-type="time">
-                    <input class="modern-input" type="time" ref=${el => time_input = el} disabled=${disabled} value="${pad2(state.hours)}:${pad2(state.mins)}:${pad2(state.secs)}">
+                    <input class="modern-input" type="time" step="1" ref=${el => time_input = el} disabled=${disabled} value="${pad2(state.hours)}:${pad2(state.mins)}:${pad2(state.secs)}">
                 </div>
             </div>
         `;
 
+        time_input.addEventListener('input', () => {
+            const parts = time_input.value.split(':')
+                .map(n => parseInt(n, 10));
+            state.hours = parts[0] || 0;
+            state.mins  = parts[1] || 0;
+            state.secs  = parts[2] || 0;
+            emit();
+        });
+
         function can_prev() {
-            const py = state.month === 1 ? state.year - 1 : state.year;
-            const pm = state.month === 1 ? 12 : state.month - 1;
+            const py = view.month === 1 ? view.year - 1 : view.year;
+            const pm = view.month === 1 ? 12 : view.month - 1;
             return (
                 py > min_date.getFullYear() ||
                 (py === min_date.getFullYear() &&
@@ -75,8 +88,8 @@ export function input({
         }
 
         function can_next() {
-            const ny = state.month === 12 ? state.year + 1 : state.year;
-            const nm = state.month === 12 ? 1 : state.month + 1;
+            const ny = view.month === 12 ? view.year + 1 : view.year;
+            const nm = view.month === 12 ? 1 : view.month + 1;
             return (
                 ny < max_date.getFullYear() ||
                 (ny === max_date.getFullYear() &&
@@ -102,38 +115,34 @@ export function input({
                 <div class="calendar">
                     <div class="calendar-header">
                         <button class="month-year">
-                            ${months[state.month - 1]} ${state.year}
+                            ${months[view.month - 1]} ${view.year}
                         </button>
                         <div class="fill" />
-                        <button class="chibi icon" data-type="up" onclick=${() => {
+                        <button class="chibi icon" data-type="up" disabled=${!can_prev()} onclick=${() => {
                             if (!can_prev()) return;
 
-                            state.month--;
+                            view.month--;
 
-                            if (state.month < 1) {
-                                state.month = 12;
-                                state.year--;
+                            if (view.month < 1) {
+                                view.month = 12;
+                                view.year--;
                             }
 
                             render_popup();
-                            update_display();
-                            emit();
                         }}>
                             ${tl(trans.back)}
                         </button>
-                        <button class="chibi icon" data-type="up" onclick=${() => {
+                        <button class="chibi icon" data-type="down" disabled=${!can_next()} onclick=${() => {
                             if (!can_next()) return;
 
-                            state.month++;
+                            view.month++;
 
-                            if (state.month > 12) {
-                                state.month = 1;
-                                state.year++;
+                            if (view.month > 12) {
+                                view.month = 1;
+                                view.year++;
                             }
 
                             render_popup();
-                            update_display();
-                            emit();
                         }}>
                             ${tl(trans.next)}
                         </button>
@@ -142,12 +151,14 @@ export function input({
                         ${weekdays.map(day => html.node`<div class="date">${day}</div>`)}
                     </div>
                     <div class="days">
-                        ${days(state.year, state.month).map(cell =>
+                        ${days(view.year, view.month).map(cell =>
                             cell.type == 'empty'
                                 ? html.node`<button class="day empty" disabled />`
                                 : html.node`
-                                    <button class="day" aria-selected=${cell.day == state.day ? 'true' : 'false'} disabled=${cell.date < min_date || cell.date > max_date} onclick=${() => {
+                                    <button class="day" aria-selected=${cell.day == state.day && cell.date > min_date && cell.date < max_date ? 'true' : 'false'} disabled=${cell.date < min_date || cell.date > max_date} onclick=${() => {
                                         state.day = cell.day;
+                                        state.year = view.year;
+                                        state.month = view.month;
                                         update_display();
                                         emit();
                                         render_popup();
@@ -232,7 +243,8 @@ export function input({
                     state.month - 1,
                     state.day,
                     state.hours,
-                    state.mins
+                    state.mins,
+                    state.secs
                 );
             }
 
@@ -242,6 +254,10 @@ export function input({
             state.day = date_object.getDate();
             state.hours = date_object.getHours();
             state.mins = date_object.getMinutes();
+            state.secs = date_object.getSeconds();
+
+            view.year = state.year;
+            view.month = state.month;
 
             render_popup();
             update_display();
