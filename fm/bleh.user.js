@@ -3415,7 +3415,7 @@
       let image_wrap = grid.querySelector(".grid-items-cover-image-image");
       let image = image_wrap.querySelector("img");
       if (grid.classList.contains("grid-items-item--big"))
-        image.src = image.src.replace("/300x300/", "/500x500/");
+        image.src = image.src.replace("/avatar300s/", "/500x500/");
       if (image && !image_wrap.classList.contains("grid-items-cover-default") && use_colour) {
         let grid_colour = document.createElement("div");
         grid_colour.classList.add("grid-item-colour-bg");
@@ -7540,14 +7540,33 @@
     if (ff("submit_scrobble")) {
       const can_api = localStorage.getItem("bleh_auth") && localStorage.getItem("bleh_auth_valid") === "true";
       const source_album = page.structure.main.querySelector(".source-album-name");
-      const scrobble_btn = html.node`
-            <button class="btn side-action" data-type="add" onclick=${() => submit_scrobble({
-        pre_track: page.name,
-        pre_artist: page.sister,
-        pre_album: source_album ? source_album.textContent : null,
-        pre_album_artist: page.sister,
+      const source_album_artist = page.structure.main.querySelector(".source-album-artist");
+      let props = {
         can_api
-      })}>
+      };
+      if (page.type == "track")
+        props = {
+          ...props,
+          pre_track: page.name,
+          pre_artist: page.sister,
+          pre_album: source_album ? source_album.textContent : null,
+          pre_album_artist: source_album_artist ? source_album_artist.textContent : page.sister
+        };
+      else if (page.type == "album")
+        props = {
+          ...props,
+          pre_album: page.name,
+          pre_artist: page.sister,
+          pre_album_artist: page.sister
+        };
+      else if (page.type == "artist")
+        props = {
+          ...props,
+          pre_artist: page.name,
+          pre_album_artist: page.name
+        };
+      const scrobble_btn = html.node`
+            <button class="btn side-action" data-type="add" onclick=${() => submit_scrobble(props)}>
                 ${tl(trans.scrobble)}
             </button>
         `;

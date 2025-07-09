@@ -11534,8 +11534,9 @@
                     transition-duration: var(--trans);
                     transition-timing-function: var(--trans-function);
 
+                    &:hover > a,
                     &[aria-describedby] {
-                        color: hsl(var(--l2-c-theme-switch));
+                        color: hsl(var(--l3-c));
                         transition: none;
                     }
 

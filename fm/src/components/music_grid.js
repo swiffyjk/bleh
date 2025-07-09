@@ -74,7 +74,7 @@ export function music_grids(search=page.structure.main, use_colour = true) {
         let image = image_wrap.querySelector('img');
 
         if (grid.classList.contains('grid-items-item--big'))
-            image.src = image.src.replace('/300x300/', '/500x500/');
+            image.src = image.src.replace('/avatar300s/', '/500x500/');
 
         if (image && !image_wrap.classList.contains('grid-items-cover-default') && use_colour) {
             let grid_colour = document.createElement('div');
