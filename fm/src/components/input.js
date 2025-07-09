@@ -1,4 +1,4 @@
-import {html, render} from "lighterhtml";
+import {html} from "lighterhtml";
 import {tl, trans} from "../build/trans.js";
 import {log} from "../build/log.js";
 
@@ -27,6 +27,7 @@ export function input({
             : new Date(now);
         max_date.setHours(23, 59, 59, 999);
 
+        let last_action;
         const state = {
             year:  now.getFullYear(),
             month: now.getMonth() + 1,
@@ -106,6 +107,7 @@ export function input({
             trigger: 'click',
 
             onShow() {
+                last_action = '';
                 render_popup();
             }
         });
@@ -128,6 +130,7 @@ export function input({
                                 view.year--;
                             }
 
+                            last_action = 'prev';
                             render_popup();
                         }}>
                             ${tl(trans.back)}
@@ -142,6 +145,7 @@ export function input({
                                 view.year++;
                             }
 
+                            last_action = 'next';
                             render_popup();
                         }}>
                             ${tl(trans.next)}
@@ -150,7 +154,7 @@ export function input({
                     <div class="date-header">
                         ${weekdays.map(day => html.node`<div class="date">${day}</div>`)}
                     </div>
-                    <div class="days">
+                    <div class="days" data-last-action=${last_action}>
                         ${days(view.year, view.month).map(cell =>
                             cell.type == 'empty'
                                 ? html.node`<button class="day empty" disabled />`
@@ -161,6 +165,7 @@ export function input({
                                         state.month = view.month;
                                         update_display();
                                         emit();
+                                        last_action = '';
                                         render_popup();
                                     }}>${cell.day}</button>
                                 `

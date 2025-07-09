@@ -6792,6 +6792,7 @@
             view.month = 12;
             view.year--;
           }
+          last_action = "prev";
           render_popup();
         }}>
                             ${tl(trans.back)}
@@ -6803,6 +6804,7 @@
             view.month = 1;
             view.year++;
           }
+          last_action = "next";
           render_popup();
         }}>
                             ${tl(trans.next)}
@@ -6811,7 +6813,7 @@
                     <div class="date-header">
                         ${weekdays.map((day) => html.node`<div class="date">${day}</div>`)}
                     </div>
-                    <div class="days">
+                    <div class="days" data-last-action=${last_action}>
                         ${days(view.year, view.month).map(
           (cell) => cell.type == "empty" ? html.node`<button class="day empty" disabled />` : html.node`
                                     <button class="day" aria-selected=${cell.day == state.day && cell.date > min_date && cell.date < max_date ? "true" : "false"} disabled=${cell.date < min_date || cell.date > max_date} onclick=${() => {
@@ -6820,6 +6822,7 @@
             state.month = view.month;
             update_display();
             emit();
+            last_action = "";
             render_popup();
           }}>${cell.day}</button>
                                 `
@@ -6887,6 +6890,7 @@
       min_date.setHours(0, 0, 0, 0);
       const max_date = max != null ? new Date(max) : new Date(now);
       max_date.setHours(23, 59, 59, 999);
+      let last_action;
       const state = {
         year: now.getFullYear(),
         month: now.getMonth() + 1,
@@ -6937,6 +6941,7 @@
         interactiveBorder: 10,
         trigger: "click",
         onShow() {
+          last_action = "";
           render_popup();
         }
       });
