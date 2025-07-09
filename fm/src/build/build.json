@@ -231,12 +231,12 @@
             "date": "2025-07-02"
         },
         "submit_scrobble": {
-            "default": false,
+            "default": true,
             "name": "Submit new scrobble from profile",
             "date": "2025-07-08"
         },
         "jufufu": {
-            "default": false,
+            "default": true,
             "name": "Connect via the Last.fm API",
             "date": "2025-07-08"
         }
