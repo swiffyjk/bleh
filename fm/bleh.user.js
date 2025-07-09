@@ -8502,9 +8502,9 @@
         onclone: (doc) => {
           doc.querySelectorAll("*").forEach((el) => {
             if (el.classList == "brand")
-              el.style.setProperty("font-family", getComputedStyle(document.body).getPropertyValue("--font-brand"));
+              el.style.setProperty("font-family", "Darumadrop One");
             else
-              el.style.setProperty("font-family", getComputedStyle(document.body).getPropertyValue("--font"));
+              el.style.setProperty("font-family", "Overpass, Inter, Ubuntu Sans, Spline Sans, Roboto, Noto Sans, Noto Sans JP, Noto Sans KR, Noto Sans TC, Lucida Grande, Verdana, Tahoma, -apple-system, BlinkMacSystemFont, sans-serif");
           });
         }
       }).then((canvas) => {
