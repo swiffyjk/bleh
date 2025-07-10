@@ -15,6 +15,7 @@ import {correct_artist, correct_item_by_artist} from "../components/lotus";
 import {refresh_all} from "../config";
 import {ff} from "../sku";
 import {compare} from "../components/compare.js";
+import {input} from "../components/input.js";
 
 export function bleh_user_library() {
     // date sidebar into its own panel
@@ -177,76 +178,102 @@ export function bleh_user_library() {
 }
 
 function bleh_glacier_library_date() {
-    let picker_content = page.structure.glacier.date_panel.querySelector('.date-range-picker-content:not([data-glacier-library-date])');
+    let button = page.structure.glacier.date_panel.querySelector('.date-range-picker-button.disclose-trigger:not([data-glacier-library-date])');
+    if (!button) return;
 
-    if (picker_content == null)
-        return;
+    button.setAttribute('data-glacier-library-date', 'true');
+    console.info('button', button);
+
+    let date_picker = page.structure.glacier.date_panel.querySelector('.library-controls-datepicker');
+    let old_date_btn = date_picker.querySelector('.date-range-picker-button:not(.disclose-trigger)');
+    if (old_date_btn) old_date_btn.remove();
+
+    let date_btn = html.node`
+        <button class="date-range-picker-button">${button.querySelector('.date-range-picker-button-inner').textContent}</button>
+    `;
+    date_picker.appendChild(date_btn);
+
+    let picker_content = page.structure.glacier.date_panel.querySelector('.date-range-picker-content:not([data-glacier-library-date])');
+    if (!picker_content) return;
+
     picker_content.setAttribute('data-glacier-library-date', 'true');
 
-    let picker_presets = picker_content.querySelector('.date-range-picker-presets-wrap');
-    let picker_col_2 = picker_content.querySelector('.date-range-picker-presets--col-2');
-
-    /*let all_time_preset = picker_col_2.querySelector('.date-range-picker-preset:last-child');
-    picker_presets.after(all_time_preset);*/
+    let picker_presets = picker_content.querySelectorAll('.date-range-picker-presets-wrap > .date-range-picker-presets');
 
     // this year
-    let new_wrap = document.createElement('div');
-    new_wrap.classList.add('date-range-picker-presets-wrap');
-
-    let new_presets = document.createElement('ul');
-    new_presets.classList.add('date-range-picker-presets');
-
     let params = new URLSearchParams(document.location.search);
     page.requested.from = params.get('from');
     page.requested.to = params.get('to');
     page.requested.rangetype = params.get('rangetype');
 
-    let current_year = new Date().getFullYear();
-    let previous_year = current_year - 1;
-    if (current_year >= 2025) {
-        new_presets.classList.add('date-range-picker-presets-2');
+    const current_year = new Date().getFullYear();
+    const previous_year = current_year - 1;
 
-        let last_year = document.createElement('div');
-        last_year.classList.add('date-range-picker-preset', 'date-range-picker-preset-custom', 'date-range-picker-preset-last-year');
-        last_year.innerHTML = (`
+    let selected;
+
+    if (page.requested.from == `${current_year}-01-01` && (page.requested.to == `${current_year}-12-31` || page.requested.rangetype == 'year'))
+        selected = 'this_year';
+    else if (page.requested.from == `${previous_year}-01-01` && (page.requested.to == `${previous_year}-12-31` || page.requested.rangetype == 'year'))
+        selected = 'last_year';
+
+    picker_presets[0].appendChild(html.node`
+        <li class="date-range-picker-preset ${selected == 'last_year' ? 'date-range-picker-preset--selected' : ''}">
             <a href="${window.location.href.replace(window.location.search, '')}?from=${previous_year}-01-01&rangetype=year">
                 ${previous_year}
             </a>
-        `);
-        new_presets.appendChild(last_year);
+        </li>
+    `);
 
-        let this_year = document.createElement('div');
-        this_year.classList.add('date-range-picker-preset', 'date-range-picker-preset-custom', 'date-range-picker-preset-this-year');
-        this_year.innerHTML = (`
+    picker_presets[1].appendChild(html.node`
+        <li class="date-range-picker-preset ${selected == 'this_year' ? 'date-range-picker-preset--selected' : ''}">
             <a href="${window.location.href.replace(window.location.search, '')}?from=${current_year}-01-01&rangetype=year">
                 ${current_year}
             </a>
-        `);
-        new_presets.appendChild(this_year);
+        </li>
+    `);
 
-        if (page.requested.from == `${current_year}-01-01` && (page.requested.to == `${current_year}-12-31` || page.requested.rangetype == 'year'))
-            this_year.classList.add('date-range-picker-preset--selected');
-        else if (page.requested.from == `${previous_year}-01-01` && (page.requested.to == `${previous_year}-12-31` || page.requested.rangetype == 'year'))
-            last_year.classList.add('date-range-picker-preset--selected');
-    } else {
-        new_presets.classList.add('date-range-picker-presets-wide');
 
-        let this_year = document.createElement('div');
-        this_year.classList.add('date-range-picker-preset', 'date-range-picker-preset-custom', 'date-range-picker-preset-this-year');
-        this_year.innerHTML = (`
-            <a href="${window.location.href.replace(window.location.search, '')}?from=${current_year}-01-01&rangetype=year">
-                ${current_year}<span class="new-badge">${tl(trans.new)}</span>
-            </a>
-        `);
-        new_presets.appendChild(this_year);
+    picker_content.classList = 'date-range-picker-content-inner';
+    tippy(date_btn, {
+        theme: 'window',
+        content: picker_content,
+        placement: 'bottom',
+        interactive: true,
+        interactiveBorder: 10,
+        trigger: 'click'
+    });
 
-        if (page.requested.from == `${current_year}-01-01` && (page.requested.to == `${current_year}-12-31` || page.requested.rangetype == 'year'))
-            this_year.classList.add('date-range-picker-preset--selected');
-    }
 
-    //picker_col_2.appendChild(this_year);
-    new_wrap.appendChild(new_presets);
-    picker_presets.after(new_wrap);
+    let form = picker_content.querySelector(':scope > .date-range-picker-form');
+
+    let from_group = form.querySelector('.form-group--from');
+    let from_input = from_group.querySelector('input');
+
+    let to_group = form.querySelector('.form-group--to');
+    let to_input = to_group.querySelector('input');
+
+    form.insertBefore(html.node`
+        <div class="input-group library-date-group">
+            ${input({
+                type: 'date',
+                value: from_input.value,
+                name: from_input.name,
+                min: '2000-01-01',
+                show_time: false
+            })}
+            <div class="bleh-icon" style="--icon: var(--icon-16-arrow-right)" />
+            ${input({
+                type: 'date',
+                value: to_input.value,
+                name: to_input.name,
+                min: '2000-01-01',
+                show_time: false
+            })}
+        </div>
+    `, form.firstChild);
+
+    from_group.remove();
+    to_group.remove();
 }
 
 // can update at any time!!
@@ -271,7 +298,7 @@ function bleh_glacier_library_table() {
         return;
 
     console.log('glacier library', table);
-    log('refresh is now marked false (table log)', 'glacier library');
+    log('refresh is now marked false (table log)', 'glacier library', 'log');
     page.structure.glacier.refresh = false;
 
     let current_view = page.structure.glacier.date_panel.querySelector('.date-range-picker-button-inner');
@@ -701,7 +728,7 @@ export function bleh_glacier_insights(insights = null) {
         }
 
         for (let item in insights) {
-            log(`checking insights status of item ${item} - display of ${insights[item].display}`, 'glacier library', 'info', {checking: insights[item], global: page.state.glacier.insights[item]});
+            log(`checking insights status of item ${item} - display of ${insights[item].display}`, 'glacier library', 'log', {checking: insights[item], global: page.state.glacier.insights[item]});
             if (insights[item].display && JSON.stringify(insights[item]) != JSON.stringify(page.state.glacier.insights[item])) {
                 log(`confirmed insights status of item ${item} - is different`, 'glacier library');
                 page.state.glacier.insights[item] = insights[item];

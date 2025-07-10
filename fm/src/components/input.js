@@ -11,7 +11,9 @@ export function input({
     maxlength,
     warn_if_empty = false,
     focus = false,
-    disabled = false
+    disabled,
+    show_time = true,
+    name
 }) {
     if (type == 'date') {
         let now = new Date();
@@ -24,7 +26,7 @@ export function input({
 
         const max_date = max != null
             ? new Date(max)
-            : new Date(now);
+            : new Date();
         max_date.setHours(23, 59, 59, 999);
 
         let last_action;
@@ -41,6 +43,7 @@ export function input({
             month: state.month
         };
 
+        let legacy_date;
         let date_display;
         let time_input;
         let popup_inner = html.node`<div class="calendar" />`;
@@ -61,22 +64,27 @@ export function input({
         const container = html.node`
             <div class="input-group">
                 <div class="content-form input-container" data-type="date">
+                    <input class="legacy-input" type="date" ref=${el => legacy_date = el} name=${name} value="${state.year}-${pad2(state.month)}-${pad2(state.day)}">
                     <div class="date-input modern-input" ref=${el => date_display = el} disabled=${disabled}>${format_date(state)}</div>
                 </div>
+                ${show_time ? html.node`
                 <div class="content-form input-container" data-type="time">
                     <input class="modern-input" type="time" step="1" ref=${el => time_input = el} disabled=${disabled} value="${pad2(state.hours)}:${pad2(state.mins)}:${pad2(state.secs)}">
                 </div>
+                ` : ''}
             </div>
         `;
 
-        time_input.addEventListener('input', () => {
-            const parts = time_input.value.split(':')
-                .map(n => parseInt(n, 10));
-            state.hours = parts[0] || 0;
-            state.mins  = parts[1] || 0;
-            state.secs  = parts[2] || 0;
-            emit();
-        });
+        if (time_input) {
+            time_input.addEventListener('input', () => {
+                const parts = time_input.value.split(':')
+                    .map(n => parseInt(n, 10));
+                state.hours = parts[0] || 0;
+                state.mins = parts[1] || 0;
+                state.secs = parts[2] || 0;
+                emit();
+            });
+        }
 
         function can_prev() {
             const py = view.month === 1 ? view.year - 1 : view.year;
@@ -116,11 +124,11 @@ export function input({
             tooltip.setContent(html.node`
                 <div class="calendar">
                     <div class="calendar-header">
-                        <button class="month-year">
+                        <button class="month-year" type="button">
                             ${months[view.month - 1]} ${view.year}
                         </button>
                         <div class="fill" />
-                        <button class="chibi icon" data-type="up" disabled=${!can_prev()} onclick=${() => {
+                        <button class="chibi icon" data-type="up" disabled=${!can_prev()} type="button" onclick=${() => {
                             if (!can_prev()) return;
 
                             view.month--;
@@ -135,7 +143,7 @@ export function input({
                         }}>
                             ${tl(trans.back)}
                         </button>
-                        <button class="chibi icon" data-type="down" disabled=${!can_next()} onclick=${() => {
+                        <button class="chibi icon" data-type="down" disabled=${!can_next()} type="button" onclick=${() => {
                             if (!can_next()) return;
 
                             view.month++;
@@ -157,9 +165,9 @@ export function input({
                     <div class="days" data-last-action=${last_action}>
                         ${days(view.year, view.month).map(cell =>
                             cell.type == 'empty'
-                                ? html.node`<button class="day empty" disabled />`
+                                ? html.node`<button class="day empty" type="button" disabled />`
                                 : html.node`
-                                    <button class="day" aria-selected=${cell.day == state.day && cell.date > min_date && cell.date < max_date ? 'true' : 'false'} disabled=${cell.date < min_date || cell.date > max_date} onclick=${() => {
+                                    <button class="day" type="button" aria-selected=${cell.day == state.day && cell.date > min_date && cell.date < max_date && cell.month == view.month ? 'true' : 'false'} disabled=${cell.date < min_date || cell.date > max_date} onclick=${() => {
                                         state.day = cell.day;
                                         state.year = view.year;
                                         state.month = view.month;
@@ -194,6 +202,7 @@ export function input({
                 cells.push({
                     type: 'day',
                     day,
+                    month: state.month,
                     date: new Date(
                         year,
                         month - 1,
@@ -204,6 +213,7 @@ export function input({
 
             const rem = (7 - (cells.length % 7)) % 7;
             for (let i = 0; i < rem; i++) cells.push({type: 'empty'});
+            console.info('cells', cells, state.month, view.month);
 
             return cells;
         }
@@ -221,6 +231,7 @@ export function input({
                 state.mins,
                 state.secs
             );
+            legacy_date.value = `${state.year}-${pad2(state.month)}-${pad2(state.day)}`;
             container.dispatchEvent(new CustomEvent('change'), {detail: date_object});
         }
 
@@ -267,7 +278,7 @@ export function input({
             render_popup();
             update_display();
 
-            time_input.value = `${pad2(state.hours)}:${pad2(state.mins)}:${pad2(state.secs)}`;
+            if (time_input) time_input.value = `${pad2(state.hours)}:${pad2(state.mins)}:${pad2(state.secs)}`;
             return date_object;
         };
 
@@ -279,7 +290,7 @@ export function input({
             else
                 date_display.setAttribute('disabled', 'true');
 
-            time_input.disabled = val;
+            if (time_input) time_input.disabled = val;
             return val;
         };
 
