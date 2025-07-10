@@ -39,6 +39,7 @@ export function input({
             secs:  now.getSeconds()
         };
         let view = {
+            level: 'day',
             year:  state.year,
             month: state.month
         };
@@ -60,6 +61,34 @@ export function input({
         const weekdays = raw_weekdays
             .slice(1)
             .concat(raw_weekdays[0]);
+
+        function months_between(a, b) {
+            return (
+                (b.getFullYear() - a.getFullYear()) * 12 +
+                (b.getMonth() - a.getMonth())
+            );
+        }
+
+        function can_nav_month_view() {
+            return months_between(min_date, max_date) >= 1;
+        }
+
+        function can_nav_year_view() {
+            return max_date.getFullYear() - min_date.getFullYear() >= 1;
+        }
+
+        function on_month_year_click() {
+            if (view.level === 'day' && can_nav_month_view()) {
+                view.level = 'month';
+            } else if (view.level === 'month' && can_nav_year_view()) {
+                view.level = 'year';
+            } else if (view.level === 'year') {
+                view.level = 'month';
+            } else {
+                return;
+            }
+            render_popup();
+        }
 
         const container = html.node`
             <div class="input-group">
@@ -109,7 +138,7 @@ export function input({
         let tooltip = tippy(date_display, {
             theme: 'window',
             content: '',
-            placement: 'bottom',
+            placement: 'top',
             interactive: true,
             interactiveBorder: 10,
             trigger: 'click',
@@ -121,66 +150,177 @@ export function input({
         });
 
         function render_popup() {
-            tooltip.setContent(html.node`
-                <div class="calendar">
-                    <div class="calendar-header">
-                        <button class="month-year" type="button">
-                            ${months[view.month - 1]} ${view.year}
-                        </button>
-                        <div class="fill" />
-                        <button class="chibi icon" data-type="up" disabled=${!can_prev()} type="button" onclick=${() => {
-                            if (!can_prev()) return;
+            let inner;
+            if (view.level === 'year') {
+                inner = render_year_view();
+            } else if (view.level === 'month') {
+                inner = render_month_view();
+            } else {
+                inner = render_day_view();
+            }
+            tooltip.setContent(html.node`<div class="calendar">${inner}</div>`);
+        }
 
-                            view.month--;
+        function render_day_view() {
+            return html.node`
+                <div class="calendar-header">
+                    <button class="month-year" type="button" onclick=${on_month_year_click} disabled=${!can_nav_month_view()}>
+                        ${months[view.month - 1]} ${view.year}
+                    </button>
+                    <div class="fill" />
+                    <button class="chibi icon" data-type="up" disabled=${!can_prev()} type="button" onclick=${() => {
+                        if (!can_prev()) return;
 
-                            if (view.month < 1) {
-                                view.month = 12;
-                                view.year--;
-                            }
+                        view.month--;
 
-                            last_action = 'prev';
-                            render_popup();
-                        }}>
-                            ${tl(trans.back)}
-                        </button>
-                        <button class="chibi icon" data-type="down" disabled=${!can_next()} type="button" onclick=${() => {
-                            if (!can_next()) return;
+                        if (view.month < 1) {
+                            view.month = 12;
+                            view.year--;
+                        }
 
-                            view.month++;
+                        last_action = 'prev';
+                        render_popup();
+                    }}>
+                        ${tl(trans.back)}
+                    </button>
+                    <button class="chibi icon" data-type="down" disabled=${!can_next()} type="button" onclick=${() => {
+                        if (!can_next()) return;
 
-                            if (view.month > 12) {
-                                view.month = 1;
-                                view.year++;
-                            }
+                        view.month++;
 
-                            last_action = 'next';
-                            render_popup();
-                        }}>
-                            ${tl(trans.next)}
-                        </button>
-                    </div>
-                    <div class="date-header">
-                        ${weekdays.map(day => html.node`<div class="date">${day}</div>`)}
-                    </div>
-                    <div class="days" data-last-action=${last_action}>
-                        ${days(view.year, view.month).map(cell =>
-                            cell.type == 'empty'
-                                ? html.node`<button class="day empty" type="button" disabled />`
-                                : html.node`
-                                    <button class="day" type="button" aria-selected=${cell.day == state.day && cell.date > min_date && cell.date < max_date && cell.month == view.month ? 'true' : 'false'} disabled=${cell.date < min_date || cell.date > max_date} onclick=${() => {
-                                        state.day = cell.day;
-                                        state.year = view.year;
-                                        state.month = view.month;
-                                        update_display();
-                                        emit();
-                                        last_action = '';
-                                        render_popup();
-                                    }}>${cell.day}</button>
-                                `
-                        )}
-                    </div>
+                        if (view.month > 12) {
+                            view.month = 1;
+                            view.year++;
+                        }
+
+                        last_action = 'next';
+                        render_popup();
+                    }}>
+                        ${tl(trans.next)}
+                    </button>
                 </div>
-            `);
+                <div class="date-header">
+                    ${weekdays.map(day => html.node`<div class="date">${day}</div>`)}
+                </div>
+                <div class="days" data-last-action=${last_action}>
+                    ${days(view.year, view.month).map(cell =>
+                        cell.type == 'empty'
+                            ? html.node`<button class="day empty" type="button" disabled />`
+                            : html.node`
+                                <button class="day" type="button" aria-selected=${cell.day == state.day && cell.date > min_date && cell.date < max_date && cell.month == view.month ? 'true' : 'false'} disabled=${cell.date < min_date || cell.date > max_date} onclick=${() => {
+                                    state.day = cell.day;
+                                    state.year = view.year;
+                                    state.month = view.month;
+                                    update_display();
+                                    emit();
+                                    last_action = '';
+                                    render_popup();
+                                }}>${cell.day}</button>
+                            `
+                    )}
+                </div>
+            `;
+        }
+
+        function render_month_view() {
+            const min_year = min_date.getFullYear();
+            const max_year = max_date.getFullYear();
+
+            return html.node`
+                <div class="calendar-header">
+                    <button class="month-year" type="button" onclick=${on_month_year_click} disabled=${!can_nav_year_view()}>
+                        ${view.year}
+                    </button>
+                    <div class="fill" />
+                    <button class="chibi icon" data-type="up" type="button" disabled=${view.year <= min_year} onclick=${() => {
+                        if (view.year < min_year) return;
+                        
+                        view.year--;
+
+                        last_action = 'prev';
+                        render_popup();
+                    }}>
+                        ${tl(trans.back)}
+                    </button>
+                    <button class="chibi icon" data-type="down" type="button" disabled=${view.year >= max_year} onclick=${() => {
+                        if (view.year > max_year) return;
+                        
+                        view.year++;
+
+                        last_action = 'next';
+                        render_popup();
+                    }}>
+                        ${tl(trans.next)}
+                    </button>
+                </div>
+                <div class="months" data-last-action=${last_action}>
+                    ${months.map((label, i) => {
+                        const month_start = new Date(view.year, i, 1);
+                        const month_end = new Date(
+                            view.year,
+                            i + 1,
+                            0,
+                            23, 59, 59, 999
+                        );
+                        return html.node`
+                            <button class="month" aria-selected=${view.year === state.year && i + 1 === state.month} disabled=${month_end < min_date || month_start > max_date} onclick=${() => {
+                                view.month = i + 1;
+                                view.level = 'day';
+
+                                last_action = '';
+                                update_display();
+                                emit();
+                                render_popup();
+                            }}>
+                                ${label}
+                            </button>
+                        `
+                    })}
+                </div>
+            `;
+        }
+
+        function render_year_view() {
+            const min_year = min_date.getFullYear();
+            const max_year = max_date.getFullYear();
+            const decade_start = Math.floor(view.year / 10) * 10;
+            return html.node`
+                <div class="calendar-header">
+                    <button class="month-year" onclick=${on_month_year_click}>
+                        ${decade_start} – ${decade_start + 9}
+                    </button>
+                    <div class="fill" />
+                    <button class="chibi icon" data-type="up" disabled=${decade_start - 10 < min_year} onclick=${() => {
+                        if (decade_start - 10 < min_year) return;
+                        
+                        view.year -= 10;
+                        render_popup();
+                    }}>
+                        ${tl(trans.back)}
+                    </button>
+                    <button class="chibi icon" data-type="down" disabled=${decade_start + 10 > max_year} onclick=${() => {
+                        if (decade_start + 10 > max_year) return;
+                        
+                        view.year += 10;
+                        render_popup();
+                    }}>
+                        ${tl(trans.next)}
+                    </button>
+                </div>
+                <div class="years">
+                    ${Array.from({ length: 10 }, (_, i) => decade_start + i).map(yr => {
+                        return html.node`
+                            <button class="year" aria-selected=${yr === state.year} disabled=${yr < min_date.getFullYear() || yr > max_date.getFullYear()} onclick=${() => {
+                                view.year = yr;
+                                view.level = 'month';
+                                render_popup();
+                            }}>
+                                ${yr}
+                            </button>
+                        `;
+                    })}
+                </div>
+            `;
         }
 
         function days(year, month) {
