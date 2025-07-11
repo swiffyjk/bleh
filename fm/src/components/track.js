@@ -584,10 +584,8 @@ export function patch_titles(search=page.structure.main) {
                                                     track.removeAttribute('data-ajax-form-state');
                                                     return;
                                                 }
-                                                
-                                                let data = res.json();
     
-                                                log('received response', 'form', 'info', {data: data});
+                                                log('received response', 'form', 'info', {res: res});
                                                 
                                                 notify({
                                                     id: 'delete',

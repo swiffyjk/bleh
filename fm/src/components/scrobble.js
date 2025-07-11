@@ -6,6 +6,7 @@ import {input} from './input';
 import {notify} from "./notify.js";
 import {log} from "../build/log.js";
 import {toggle} from "./toggle.js";
+import {pad2} from "../build/tools.js";
 
 export function submit_scrobble({
     pre_track = '',
@@ -32,6 +33,9 @@ export function submit_scrobble({
     let date;
 
     let create_scrobble;
+
+    let max_date = new Date();
+    max_date.setDate(max_date.getDate() + 1);
 
     dialog({
         id: 'submit_scrobble',
@@ -76,6 +80,7 @@ export function submit_scrobble({
                     })}
                     ${date = input({
                         type: 'date',
+                        max: `${max_date.getFullYear()}-${pad2(max_date.getMonth() + 1)}-${pad2(max_date.getDate())}`,
                         disabled: true
                     })}
                 </div>

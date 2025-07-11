@@ -2585,6 +2585,9 @@
       xhr.send();
     });
   }
+  function pad2(num) {
+    return String(num).padStart(2, "0");
+  }
 
   // src/build/music.js
   var artist_corrections = {};
@@ -4157,8 +4160,7 @@
                         track.removeAttribute("data-ajax-form-state");
                         return;
                       }
-                      let data2 = res.json();
-                      log("received response", "form", "info", { data: data2 });
+                      log("received response", "form", "info", { res });
                       notify({
                         id: "delete",
                         title: tl(trans.deleted),
@@ -4824,8 +4826,6 @@
         );
         legacy_date.value = `${state.year}-${pad2(state.month)}-${pad2(state.day)}`;
         container2.dispatchEvent(new CustomEvent("change"), { detail: date_object });
-      }, pad2 = function(num) {
-        return String(num).padStart(2, "0");
       }, format_date = function({ year, month, day }) {
         const date_object = new Date(
           year,
@@ -4840,6 +4840,7 @@
       };
       let now = /* @__PURE__ */ new Date();
       if (value != null) now = new Date(value);
+      console.info(min, max, new Date(max));
       const min_date = min != null ? new Date(min) : new Date(now.getTime() - 14 * 24 * 60 * 60 * 1e3);
       min_date.setHours(0, 0, 0, 0);
       const max_date = max != null ? new Date(max) : /* @__PURE__ */ new Date();
@@ -7286,6 +7287,8 @@
     let use_current;
     let date;
     let create_scrobble;
+    let max_date = /* @__PURE__ */ new Date();
+    max_date.setDate(max_date.getDate() + 1);
     dialog({
       id: "submit_scrobble",
       title: tl(trans.new_scrobble),
@@ -7329,6 +7332,7 @@
       })}
                     ${date = input({
         type: "date",
+        max: `${max_date.getFullYear()}-${pad2(max_date.getMonth() + 1)}-${pad2(max_date.getDate())}`,
         disabled: true
       })}
                 </div>

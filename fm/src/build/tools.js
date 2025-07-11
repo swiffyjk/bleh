@@ -293,3 +293,7 @@ export function download_with_progress(url, func) {
         xhr.send();
     });
 }
+
+export function pad2(num) {
+    return String(num).padStart(2, '0');
+}

@@ -1,6 +1,7 @@
 import {html} from "lighterhtml";
 import {tl, trans} from "../build/trans.js";
 import {log} from "../build/log.js";
+import {pad2} from "../build/tools.js";
 
 export function input({
     type = 'text',
@@ -18,6 +19,8 @@ export function input({
     if (type == 'date') {
         let now = new Date();
         if (value != null) now = new Date(value);
+
+        console.info(min, max, new Date(max));
 
         const min_date = min != null
             ? new Date(min)
@@ -374,10 +377,6 @@ export function input({
             );
             legacy_date.value = `${state.year}-${pad2(state.month)}-${pad2(state.day)}`;
             container.dispatchEvent(new CustomEvent('change'), {detail: date_object});
-        }
-
-        function pad2(num) {
-            return String(num).padStart(2, '0');
         }
 
         function format_date({year, month, day}) {
