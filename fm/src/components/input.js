@@ -78,6 +78,7 @@ export function input({
         }
 
         function on_month_year_click() {
+            last_action = '';
             if (view.level === 'day' && can_nav_month_view()) {
                 view.level = 'month';
             } else if (view.level === 'month' && can_nav_year_view()) {
