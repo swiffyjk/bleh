@@ -8781,6 +8781,10 @@
         &.accompany {
             flex: 1;
             margin-left: var(--card-gap) !important;
+
+            & > .notice {
+                cursor: default;
+            }
         }
     }
 

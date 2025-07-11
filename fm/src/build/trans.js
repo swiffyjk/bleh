@@ -210,6 +210,9 @@ export const trans = {
         en: 'Shouts',
         pt: 'Mensagens'
     },
+    single_shout: {
+        en: 'viewing a single shout'
+    },
     about: {
         en: 'About',
         de: 'Über',

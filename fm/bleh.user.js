@@ -19113,36 +19113,57 @@
     });
   }
   function shout_header(shout_controls) {
-    let panel = shout_controls.parentElement;
-    let select_btn = panel.querySelector(".dropdown-menu-clickable-button");
+    let panel;
     let settings_btn;
-    let header = panel.querySelector("h2");
-    if (header) header.parentElement.removeChild(header);
-    let link = window.location.href;
-    let shoutbox_link = "+shoutbox";
-    if (page.type == "user" || "event")
-      shoutbox_link = "shoutbox";
-    if (!page.subpage.startsWith("shoutbox"))
-      link += `/${shoutbox_link}`;
-    panel.insertBefore(html.node`
-        <div class="top-container">
-            <h2>
-                <a class="text-colour-link" href=${link}>${tl(trans.shouts)}</a>
-            </h2>
-            <div class="accompany view-buttons blend blend-v2">
-                ${() => {
-      select_btn.classList.add("select-button", "link-select", "blend-v2-btn");
-      select_btn.classList.remove("section-control", "dropdown-menu-clickable-button");
-      return shout_controls;
-    }}
+    if (page.subpage == "shoutbox_shout") {
+      panel = page.structure.main.querySelector(":scope > section");
+      let link = window.location.href;
+      panel.insertBefore(html.node`
+            <div class="top-container">
+                <h2>
+                    <a class="text-colour-link" href=${link}>${tl(trans.shouts)}</a>
+                </h2>
+                <div class="accompany view-buttons blend blend-v2">
+                    <p class="notice">${tl(trans.single_shout)}</p>
+                </div>
+                <div class="view-buttons blend blend-v2">
+                    <button class="left-icon blend-v2-btn" data-type="settings" ref=${(el) => settings_btn = el}>
+                        ${tl(trans.settings)}
+                    </button>
+                </div>
             </div>
-            <div class="view-buttons blend blend-v2">
-                <button class="left-icon blend-v2-btn" data-type="settings" ref=${(el) => settings_btn = el}>
-                    ${tl(trans.settings)}
-                </button>
+        `, panel.firstElementChild);
+    } else {
+      panel = shout_controls.parentElement;
+      let select_btn = panel.querySelector(".dropdown-menu-clickable-button");
+      let header = panel.querySelector("h2");
+      if (header) header.parentElement.removeChild(header);
+      let link = window.location.href;
+      let shoutbox_link = "+shoutbox";
+      if (page.type == "user" || "event")
+        shoutbox_link = "shoutbox";
+      if (!page.subpage.startsWith("shoutbox"))
+        link += `/${shoutbox_link}`;
+      panel.insertBefore(html.node`
+            <div class="top-container">
+                <h2>
+                    <a class="text-colour-link" href=${link}>${tl(trans.shouts)}</a>
+                </h2>
+                <div class="accompany view-buttons blend blend-v2">
+                    ${() => {
+        select_btn.classList.add("select-button", "link-select", "blend-v2-btn");
+        select_btn.classList.remove("section-control", "dropdown-menu-clickable-button");
+        return shout_controls;
+      }}
+                </div>
+                <div class="view-buttons blend blend-v2">
+                    <button class="left-icon blend-v2-btn" data-type="settings" ref=${(el) => settings_btn = el}>
+                        ${tl(trans.settings)}
+                    </button>
+                </div>
             </div>
-        </div>
-    `, panel.firstElementChild);
+        `, panel.firstElementChild);
+    }
     tippy(settings_btn, {
       theme: "window",
       content: html.node`
@@ -21213,6 +21234,9 @@
     shouts: {
       en: "Shouts",
       pt: "Mensagens"
+    },
+    single_shout: {
+      en: "viewing a single shout"
     },
     about: {
       en: "About",
