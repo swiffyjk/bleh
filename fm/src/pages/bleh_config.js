@@ -1267,7 +1267,7 @@ export function render_setting_page(page_id) {
                         <h2>${tl(trans.updates_paused)}</h2>
                         <p class="last-checked">${tl(trans.paused_until_date).replace('{d}', moment(paused_until).fromNow())}</p>
                     </div>
-                    <button class="btn primary icon" data-type="update" ref=${el => update_btn = el} disabled>${tl(trans.check_for_updates)}</button>
+                    <button class="btn primary icon" data-type="update" ref=${el => update_btn = el} disabled>${tl(trans.check)}</button>
                     ` : update_required === 'false' ? html.node`
                     <div class="update-center-icon">
                         <div class="update-container">
@@ -1296,7 +1296,7 @@ export function render_setting_page(page_id) {
                             icon: 'icon-16-update'
                         });
                         render_setting_page('update');
-                    })}>${tl(trans.check_for_updates)}</button>
+                    })}>${tl(trans.check)}</button>
                     ` : html.node`
                     <div class="update-center-icon">
                         <div class="update-container">

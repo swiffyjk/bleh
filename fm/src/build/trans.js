@@ -2856,6 +2856,9 @@ export const trans = {
     check_for_updates: {
         en: 'Check for updates'
     },
+    check: {
+        en: 'Check'
+    },
     last_checked_date: {
         en: 'Last checked {d}'
     },

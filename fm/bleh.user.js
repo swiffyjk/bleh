@@ -14108,7 +14108,7 @@
                         <h2>${tl(trans.updates_paused)}</h2>
                         <p class="last-checked">${tl(trans.paused_until_date).replace("{d}", moment(paused_until).fromNow())}</p>
                     </div>
-                    <button class="btn primary icon" data-type="update" ref=${(el) => update_btn = el} disabled>${tl(trans.check_for_updates)}</button>
+                    <button class="btn primary icon" data-type="update" ref=${(el) => update_btn = el} disabled>${tl(trans.check)}</button>
                     ` : update_required === "false" ? html.node`
                     <div class="update-center-icon">
                         <div class="update-container">
@@ -14137,7 +14137,7 @@
           icon: "icon-16-update"
         });
         render_setting_page("update");
-      })}>${tl(trans.check_for_updates)}</button>
+      })}>${tl(trans.check)}</button>
                     ` : html.node`
                     <div class="update-center-icon">
                         <div class="update-container">
@@ -18819,10 +18819,12 @@
     let search_form = page.structure.main.querySelector(".search-form");
     let search = search_form.querySelector("#site-search");
     let value = search.getAttribute("value");
-    let site_search = document.body.querySelector("#masthead-search-field");
-    site_search.setAttribute("value", value);
-    site_search.focus();
-    page.structure.main.removeChild(search_form);
+    if (!page.mobile) {
+      let site_search = document.body.querySelector("#masthead-search-field");
+      site_search.setAttribute("value", value);
+      site_search.focus();
+      page.structure.main.removeChild(search_form);
+    }
     page.name = value != "" ? value : "empty..";
     checkup_page_structure(false, content_top);
     log("status is", "page", "info", page);
@@ -23881,6 +23883,9 @@
     },
     check_for_updates: {
       en: "Check for updates"
+    },
+    check: {
+      en: "Check"
     },
     last_checked_date: {
       en: "Last checked {d}"
