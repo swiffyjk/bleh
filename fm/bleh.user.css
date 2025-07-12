@@ -4811,11 +4811,7 @@
         }
 
         &.collage-grid {
-            --grid-width: 1470px;
-            --grid-item-size: calc(
-                (var(--grid-width) - (var(--item-list-gap) * (var(--highest) - 1)))
-                / var(--highest)
-            );
+            --grid-item-size: 380px;
 
             grid-template-columns: repeat(var(--width), var(--grid-item-size));
             grid-template-rows: repeat(var(--height), var(--grid-item-size));
@@ -4823,6 +4819,11 @@
 
             .grid-items-item {
                 animation: none !important;
+
+                & > .grid-items-cover-image > .grid-items-cover-image-image > img {
+                    mask-image: none !important;
+                    -webkit-mask-image: none !important;
+                }
             }
 
             .grid-items-item-details {
@@ -24468,8 +24469,8 @@
         }
 
         canvas {
-            width: 750px !important;
-            height: 773px !important;
+            max-width: 100% !important;
+            max-height: 750px !important;
             border-radius: var(--item-med-radius);
         }
 
@@ -24510,7 +24511,7 @@
                 text-shadow: unset !important;
             }
 
-            .grid-items {
+            & > .grid-items {
                 .grid-item-plays:before {
                     --top: 4px;
                     --mask: unset;
@@ -24551,7 +24552,7 @@
             .header {
                 display: flex;
                 color: #fff;
-                height: fit-content;
+                height: 32px;
                 cursor: pointer;
 
                 &.header {

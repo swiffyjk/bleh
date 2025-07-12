@@ -8578,16 +8578,8 @@
         grid.style.setProperty("--item-list-gap", "0px");
         grid.style.setProperty("--item-med-radius", "0");
       }
-      if (width_input.value >= 8 || height_input.value >= 8) {
-        grid.setAttribute("data-scale-down", "2");
-      } else if (width_input.value >= 7 || height_input.value >= 7) {
-        grid.setAttribute("data-scale-down", "1");
-      }
       let total = width_input.value * height_input.value - 1;
-      let highest = width_input.value;
-      if (height_input.value > width_input.value)
-        highest = height_input.value;
-      grid.style.setProperty("--highest", highest);
+      grid.style.setProperty("--highest", Math.max(+width_input.value, +height_input.value).toString());
       page.state.collage.some((data2, index) => {
         if (index > total)
           return false;
@@ -8672,11 +8664,21 @@
             ${collage_dom}
         `);
       music_grids(grid, false);
-      let cv_width = 1500;
-      let cv_height = 1547;
-      let cv_scale = 1;
+      const grid_item_size = 380;
+      const grid_item_gap = settings.collage_grid_gap ? 10 : 0;
+      const padding = settings.collage_grid_gap ? 15 : 0;
+      const title_height = settings.collage_title ? 32 + 15 : 0;
+      const width2 = padding * 2 + grid_item_size * width_input.value + grid_item_gap * (width_input.value - 1);
+      const height2 = padding * 2 + title_height + grid_item_size * height_input.value + grid_item_gap * (height_input.value - 1);
+      const cv_scale = 1;
+      collage_dom.style.width = `${width2}px`;
+      collage_dom.style.height = `${height2}px`;
+      collage_dom.style.padding = `${padding}px`;
+      collage_dom.style.gap = `${padding}px`;
+      collage_dom.style["--item-list-gap"] = `${grid_item_gap}px`;
+      collage_dom.style["--grid-item-size"] = `${grid_item_size}px`;
       let initial_canvas = html.node`
-            <canvas width=${cv_width * cv_scale} height=${cv_height * cv_scale} />
+            <canvas width=${width2 * cv_scale} height=${height2 * cv_scale} />
         `;
       html2canvas(collage_dom, {
         useCORS: true,
