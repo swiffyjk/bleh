@@ -9987,6 +9987,10 @@
 
             & > .modern-input {
                 padding-left: calc(var(--button-sides) + var(--icon-size) + var(--icon-gap)) !important;
+
+                &::-webkit-calendar-picker-indicator {
+                    display: none;
+                }
             }
 
             &:after {
