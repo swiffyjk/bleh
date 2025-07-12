@@ -2749,6 +2749,7 @@
                 display: flex;
                 justify-content: center;
                 background: hsl(var(--b5)) !important;
+                order: -1;
             }
 
             & > .redesigned-navigation ~ .navlist[aria-label], & > .bleh-settings-navigation {
@@ -3686,11 +3687,15 @@
         }
     }
     .bleh--navlist-items > .secondary-nav-item--followers {
+        order: 4;
+
         & > a {
             --mask: var(--icon-16-followers);
         }
     }
     .bleh--navlist-items > .secondary-nav-item--neighbours {
+        order: 4;
+
         order: 5;
 
         & > a {
@@ -17361,7 +17366,7 @@
         display: flex;
         justify-content: center;
         align-items: center;
-        width: 40px !important;
+        width: 38px !important;
         height: 24px;
         position: relative;
         --col: hsl(var(--c3));
@@ -17399,7 +17404,7 @@
 
             .dot {
                 background: var(--col);
-                left: calc(40px - 8px - 10px);
+                left: calc(40px - 8px - 12px);
                 color: hsl(var(--h2));
                 --mask-colour: currentColor;
                 --mask: var(--icon-16-check);
@@ -23270,6 +23275,7 @@
         }
     }
 
+    .music-recommended-artists, .music-recommended-albums,
     .catalogue-overview-similar-artists,
     .similar-albums,
     .playlisting-playlists,
@@ -23291,6 +23297,7 @@
             gap: var(--card-padding) var(--item-list-gap);
         }
 
+        .music-recommended-artists-artist, .music-recommended-albums-item-wrap,
         .catalogue-overview-similar-artists-item-wrap,
         .similar-albums-item-wrap,
         .playlisting-playlists-item-wrap,
@@ -23317,6 +23324,8 @@
                 --mask-size: var(--cover-size-200);
                 overflow: hidden;
                 transform: translateY(0);
+                inset: unset !important;
+                height: unset !important;
 
                 &:after {
                     content: '' !important;
@@ -23337,6 +23346,7 @@
                 transition-timing-function: cubic-bezier(0.4, 0, 0.2, 1);
             }
 
+            &.link-block--hover,
             .link-block--hover {
                 .cover-art--placeholder, .avatar--placeholder,
                 .playlist-image,
@@ -23351,6 +23361,7 @@
                 display: none;
             }
 
+            .music-recommended-artists-artist-name, .music-recommended-albums-item-name,
             .catalogue-overview-similar-artists-item-name,
             .similar-albums-item-name,
             .playlisting-playlists-item-name,
@@ -23372,6 +23383,7 @@
                     text-decoration: none !important;
                 }
             }
+            .music-recommended-albums-album-artist,
             .similar-albums-item-artist,
             .artist-top-albums-item-artist,
             .music-bookmarks-albums-item-artist,
@@ -23380,6 +23392,11 @@
                 margin-top: 2px;
                 margin-bottom: unset;
             }
+            .music-recommended-albums-album-info {
+                margin: unset;
+            }
+            .music-recommended-albums-album-info > p,
+            .music-recommended-artists-artist-stats, .factbox-summary,
             .catalogue-overview-similar-artists-item-aux-text,
             .similar-albums-item-aux-text,
             .playlisting-playlists-item-description, .playlisting-playlists-item-aux-text,
@@ -23420,6 +23437,13 @@
                 line-clamp: 1;
                 -webkit-line-clamp: 1;
                 -webkit-box-orient: vertical;
+            }
+
+            .link-block-cover-link {
+                width: 100%;
+                height: unset;
+                left: unset;
+                aspect-ratio: 1 / 1;
             }
         }
     }
