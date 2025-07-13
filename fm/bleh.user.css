@@ -16631,9 +16631,11 @@
             }
         }
 
-        &:not([data-type="checkbox"]) {
-            flex-direction: column;
-            gap: var(--item-list-gap);
+        @media (max-width: 600px) {
+            &:not([data-type="checkbox"]) {
+                flex-direction: column;
+                gap: var(--item-list-gap);
+            }
         }
 
         .heading {
