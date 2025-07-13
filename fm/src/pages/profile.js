@@ -9,7 +9,7 @@ import {settings} from "../build/config"
 import {log} from "../build/log"
 import {auth, page, root} from "../build/page"
 import {sponsor_list} from "../build/sponsor"
-import {clean_number, lazy, sanitise, sanitise_text} from "../build/tools"
+import {clean_number, lazy, sanitise} from "../build/tools"
 import {lang, tl, trans} from "../build/trans"
 import {prep_chart_colours} from '../chart'
 import {load_badges} from "../components/badge"
@@ -287,27 +287,28 @@ export function bleh_profiles() {
                 page.structure.side.insertBefore(listen_container, page.structure.side.firstChild);
             else
                 page.structure.main.insertBefore(listen_container, page.structure.main.firstChild);
+
             if (scrobbles > 0)
                 bleh_profile_chart();
         }
 
         if (sponsor_list && sponsor_list.special && page.name == sponsor_list.special[0]) {
-        let sponsor_cta = html.node`
-            <div class="cta first sponsor colourful">
-                ${auth.sponsor ? html`
-                    <strong>${tl(trans.you_are_a_sponsor)}</strong>
-                    <a class="see-more" onclick="_sponsor_manage()">${tl(trans.manage_sponsor)}</a>
-                ` : html`
-                    <strong>${tl(trans.news_sponsor_cta)}</strong>
-                    <a class="see-more" onclick="_sponsor()">${tl(trans.sponsor)}</a>
-                `}
-            </div>
-        `;
+            let sponsor_cta = html.node`
+                <div class="cta first sponsor colourful">
+                    ${auth.sponsor ? html`
+                        <strong>${tl(trans.you_are_a_sponsor)}</strong>
+                        <a class="see-more" onclick="_sponsor_manage()">${tl(trans.manage_sponsor)}</a>
+                    ` : html`
+                        <strong>${tl(trans.news_sponsor_cta)}</strong>
+                        <a class="see-more" onclick="_sponsor()">${tl(trans.sponsor)}</a>
+                    `}
+                </div>
+            `;
 
-        if (!page.mobile)
-            page.structure.side.insertBefore(sponsor_cta, page.structure.side.firstElementChild);
-        else
-            page.structure.main.insertBefore(sponsor_cta, page.structure.main.firstElementChild);
+            if (!page.mobile)
+                page.structure.side.insertBefore(sponsor_cta, page.structure.side.firstElementChild);
+            else
+                page.structure.main.insertBefore(sponsor_cta, page.structure.main.firstElementChild);
         }
 
         // secondary text
@@ -410,18 +411,7 @@ export function bleh_profiles() {
             theme: 'window',
             content: html.node`
                 <div class="dialog-settings">
-                    <div class="setting" data-type="toggle" id="container-bio_markdown" onclick="_update_item('bio_markdown')">
-                        <button class="btn reset" onclick="_reset_item('bio_markdown')">${tl(trans.reset)}</button>
-                        <div class="heading">
-                            <h5>${tl(trans.markdown_profiles.name)}</h5>
-                            <p>${tl(trans.markdown_profiles.body)}</p>
-                        </div>
-                        <div class="toggle-wrap">
-                            <button class="toggle" id="toggle-bio_markdown" aria-checked="false">
-                                <div class="dot"></div>
-                            </button>
-                        </div>
-                    </div>
+                    ${setting({id: 'bio_markdown'})}
                 </div>
             `,
             placement: 'bottom',
@@ -444,8 +434,7 @@ export function bleh_profiles() {
 
 
         let btn_add = page.structure.side.querySelector('.add-button');
-        if (btn_add != null)
-            btn_add.setAttribute('data-page-subpage', page.subpage);
+        if (btn_add) btn_add.setAttribute('data-page-subpage', page.subpage);
 
         if (page.subpage.startsWith('library')) {
             bleh_user_library();
@@ -998,7 +987,7 @@ function bleh_featured_profile_track(object, about_me) {
 
         // combine
         render(name_elem, html.node`
-            <div class="title">${sanitise_text(song_title).trim()}</div>
+            <div class="title">${song_title.trim()}</div>
             ${song_tags.map((tag) => html.node`
                 <div class="feat" data-bleh--tag-type="${tag.type}" data-bleh--tag-group="${tag.group}">${tag.text}</div>
             `)}

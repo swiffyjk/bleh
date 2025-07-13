@@ -9,7 +9,7 @@ import {settings} from '../build/config';
 import {log} from '../build/log';
 import {artist_corrections} from '../build/music';
 import {page, root} from '../build/page';
-import {clamp_sat, rgb_to_hsl, sanitise, sanitise_text} from '../build/tools';
+import {clamp_sat, rgb_to_hsl, sanitise} from '../build/tools';
 import {tl, trans} from '../build/trans';
 import {correct_item_by_artist, name_includes} from '../components/lotus';
 import {checkup_page_structure} from '../components/structure';
@@ -90,7 +90,7 @@ export function bleh_obsession() {
 
         // combine
         render(track_title, html.node`
-            <div class="title">${sanitise_text(song_title).trim()}</div>
+            <div class="title">${song_title.trim()}</div>
             ${song_tags.map((tag) => html.node`
                 <div class="feat" data-bleh--tag-type="${tag.type}" data-bleh--tag-group="${tag.group}">${tag.text}</div>
             `)}

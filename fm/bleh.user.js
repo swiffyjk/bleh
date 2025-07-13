@@ -10429,7 +10429,7 @@
       let song_tags = formatted_title[1];
       page.corrected = formatted_title[4];
       render(track_title, html.node`
-            <div class="title">${sanitise_text(song_title).trim()}</div>
+            <div class="title">${song_title.trim()}</div>
             ${song_tags.map((tag) => html.node`
                 <div class="feat" data-bleh--tag-type="${tag.type}" data-bleh--tag-group="${tag.group}">${tag.text}</div>
             `)}
@@ -10825,16 +10825,16 @@
       }
       if (sponsor_list && sponsor_list.special && page.name == sponsor_list.special[0]) {
         let sponsor_cta = html.node`
-            <div class="cta first sponsor colourful">
-                ${auth.sponsor ? html`
-                    <strong>${tl(trans.you_are_a_sponsor)}</strong>
-                    <a class="see-more" onclick="_sponsor_manage()">${tl(trans.manage_sponsor)}</a>
-                ` : html`
-                    <strong>${tl(trans.news_sponsor_cta)}</strong>
-                    <a class="see-more" onclick="_sponsor()">${tl(trans.sponsor)}</a>
-                `}
-            </div>
-        `;
+                <div class="cta first sponsor colourful">
+                    ${auth.sponsor ? html`
+                        <strong>${tl(trans.you_are_a_sponsor)}</strong>
+                        <a class="see-more" onclick="_sponsor_manage()">${tl(trans.manage_sponsor)}</a>
+                    ` : html`
+                        <strong>${tl(trans.news_sponsor_cta)}</strong>
+                        <a class="see-more" onclick="_sponsor()">${tl(trans.sponsor)}</a>
+                    `}
+                </div>
+            `;
         if (!page.mobile)
           page.structure.side.insertBefore(sponsor_cta, page.structure.side.firstElementChild);
         else
@@ -10917,18 +10917,7 @@
         theme: "window",
         content: html.node`
                 <div class="dialog-settings">
-                    <div class="setting" data-type="toggle" id="container-bio_markdown" onclick="_update_item('bio_markdown')">
-                        <button class="btn reset" onclick="_reset_item('bio_markdown')">${tl(trans.reset)}</button>
-                        <div class="heading">
-                            <h5>${tl(trans.markdown_profiles.name)}</h5>
-                            <p>${tl(trans.markdown_profiles.body)}</p>
-                        </div>
-                        <div class="toggle-wrap">
-                            <button class="toggle" id="toggle-bio_markdown" aria-checked="false">
-                                <div class="dot"></div>
-                            </button>
-                        </div>
-                    </div>
+                    ${setting({ id: "bio_markdown" })}
                 </div>
             `,
         placement: "bottom",
@@ -10946,8 +10935,7 @@
     } else {
       load_banner_from_cache();
       let btn_add = page.structure.side.querySelector(".add-button");
-      if (btn_add != null)
-        btn_add.setAttribute("data-page-subpage", page.subpage);
+      if (btn_add) btn_add.setAttribute("data-page-subpage", page.subpage);
       if (page.subpage.startsWith("library")) {
         bleh_user_library();
       } else if (page.subpage == "events") {
@@ -11361,7 +11349,7 @@
         song_tags = formatted_title[1];
       }
       render(name_elem, html.node`
-            <div class="title">${sanitise_text(song_title).trim()}</div>
+            <div class="title">${song_title.trim()}</div>
             ${song_tags.map((tag) => html.node`
                 <div class="feat" data-bleh--tag-type="${tag.type}" data-bleh--tag-group="${tag.group}">${tag.text}</div>
             `)}

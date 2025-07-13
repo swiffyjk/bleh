@@ -402,7 +402,7 @@
         --h3-sat: calc(clamp(min(0), var(--sat), max(1.5)) * 60%);
         --h3-lit: calc(clamp(min(0.5), var(--lit), max(1.5)) * 70%);
         --h4: var(--l4-c);
-        --f4: var(--hue), calc(clamp(min(0), var(--sat), max(1.5)) * 26%), calc(clamp(min(0.8), var(--lit), max(1.5)) * 26%);
+        --f4: var(--hue), calc(clamp(min(0), var(--sat), max(1.5)) * 35%), calc(clamp(min(0.8), var(--lit), max(1.5)) * 32%);
         --g4: var(--hue), calc(clamp(min(0), var(--sat), max(1.5)) * 60%), calc(clamp(min(0.5), var(--lit), max(1.5)) * 15%);
 
         /* l2-c in dark modes, l4-c in light modes */
@@ -2843,7 +2843,7 @@
         }
 
         [data-ff--beret="true"] & {
-            background: hsl(var(--f4), 40%) !important;
+            background: hsl(var(--f4), 15%) !important;
             border: unset !important;
             padding: var(--card-padding) !important;
             box-shadow: unset !important;
@@ -4918,6 +4918,7 @@
         "b b . ."
         "b b . .";
         gap: var(--item-list-gap);
+        height: 426px;
     }
     .grid-items.grid-items--big-first .grid-items-item--big {
         grid-area: b;
@@ -23585,9 +23586,9 @@
         max-width: 180px;
 
         &.user-created-tag {
-            --bg: hsl(var(--h3), 10%);
-            --bg-hov: hsl(var(--h3), 20%);
-            --bg-atv: hsl(var(--h3), 30%);
+            --bg: hsl(var(--h3), 5%);
+            --bg-hov: hsl(var(--h3), 10%);
+            --bg-atv: hsl(var(--h3), 15%);
             color: hsl(var(--l2-c-theme-switch)) !important;
             /*box-shadow: 0 0 0 2px hsl(var(--h4), 30%) inset, var(--interact-shadow) !important;*/
         }
@@ -23854,7 +23855,7 @@
     .cta {
         background: var(--card-specific-background) !important;
         border-radius: var(--card-radius);
-        --card-specific-background: hsl(var(--h4), 8%);
+        --card-specific-background: hsl(var(--f4), 15%);
         padding: 15px var(--card-padding) !important;
         box-shadow: unset !important;
         color: hsl(var(--c2)) !important;
@@ -23879,14 +23880,6 @@
         a {
             font-weight: var(--font-weight-medium);
             color: hsl(var(--l3-c)) !important;
-        }
-
-        [data-bleh--theme_type="light"] & {
-            --card-specific-background: hsl(var(--h4), 15%);
-        }
-
-        [data-ff--beret="true"] & {
-            --card-specific-background: hsl(var(--f4), 40%) !important;
         }
 
         &.first,
