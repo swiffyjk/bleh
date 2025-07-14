@@ -172,9 +172,9 @@ export function setting({
                         </div>
                     </div>
                     ` : ''}
-                    <div class="input-container content-form in-settings" data-has-error="false" ref=${el => input_container = el}>
+                    <div class="input-container content-form in-settings can-submit" data-has-error="false" ref=${el => input_container = el}>
                         <input type="text" maxlength=${max} value=${value} style="--max: ${max}px" ref=${el => input = el} placeholder=${tl(settings_store[id].placeholder)} />
-                        <button class="btn chibi icon primary submit" ref=${el => submit = el} onclick=${() => update_text(id, input, submit, option, input.value, reset_btn, avatar)}>${tl(trans.save)}</button>
+                        <button class="btn chibi icon submit" ref=${el => submit = el} onclick=${() => update_text(id, input, submit, option, input.value, reset_btn, avatar)}>${tl(trans.save)}</button>
                     </div>
                 </div>
             `;

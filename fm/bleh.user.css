@@ -10023,6 +10023,22 @@
         & > .modern-input {
             width: 100%;
         }
+
+        &.can-submit {
+            & > input {
+                padding-right: calc(var(--button-sides) + var(--button-height)) !important;
+            }
+
+            & > .chibi {
+                margin-left: calc(-1 * (var(--button-list-gap) + var(--button-height))) !important;
+                --bg: transparent;
+                --bg-hov: hsl(var(--h3), 5%);
+                --bg-atv: hsl(var(--h3), 10%);
+                --shadow: none;
+                --col: hsl(var(--l3-c));
+                --mask-colour: currentColor;
+            }
+        }
     }
 
     .library-date-group {
