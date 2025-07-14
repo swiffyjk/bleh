@@ -539,6 +539,9 @@ export const trans = {
         de: 'Profil',
         pt: 'Perfil'
     },
+    current_season: {
+        en: 'Current season'
+    },
     seasonal: {
         name: {
             // translate to 'Seasons' if it reads better
@@ -606,6 +609,9 @@ export const trans = {
         en: 'Seasonal events are ran in your timezone, which we calculated as {offset}',
         de: 'Saisonale Events werden in deiner Zeitzone ausgeführt, die wir als {offset} berechnet haben',
         pt: 'Eventos sazonais são realizados em seu fuso horário, que calculamos como {offset}'
+    },
+    calculated_offset: {
+        en: 'Calculated offset based on timezone'
     },
     started: {
         en: 'Started',

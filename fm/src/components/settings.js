@@ -92,10 +92,9 @@ export function setting({
 
             return html.node`
                 <div class="setting v2" data-type="range" ref=${el => option = el} data-modified=${value != settings_store[id].default}>
-                    <button class="btn reset" onclick=${() => reset_range(id, option, track, input, marker)}>${tl(trans.reset)}</button>
                     ${(text) ? html.node`
                     <div class="heading">
-                        <h5>${title}</h5>
+                        <h5>${title}<button class="reset see-more" onclick=${() => reset_range(id, option, track, input, marker)}>${tl(trans.reset)}</button></h5>
                         ${(body) ? html.node`<p>${body}</p>` : ''}
                     </div>
                     ` : ''}
@@ -144,10 +143,9 @@ export function setting({
 
             let container = html.node`
                 <div class="setting v2" data-type="text" ref=${el => option = el} data-modified=${value != settings_store[id].default}>
-                    <button class="btn reset" ref=${el => reset_btn = el} onclick=${() => reset_text(id, input, submit, option, reset_btn, avatar)}>${tl(trans.reset)}</button>
                     ${(text) ? html.node`
                     <div class="heading">
-                        <h5>${title}</h5>
+                        <h5>${title}<button class="reset see-more" ref=${el => reset_btn = el} onclick=${() => reset_text(id, input, submit, option, reset_btn, avatar)}>${tl(trans.reset)}</button></h5>
                         ${(body) ? html.node`<p>${body}</p>` : ''}
                     </div>
                     ` : ''}

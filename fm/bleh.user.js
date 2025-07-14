@@ -6741,10 +6741,9 @@
         let working_max = settings_store[id].max - settings_store[id].min;
         return html.node`
                 <div class="setting v2" data-type="range" ref=${(el) => option = el} data-modified=${value != settings_store[id].default}>
-                    <button class="btn reset" onclick=${() => reset_range(id, option, track, input2, marker)}>${tl(trans.reset)}</button>
                     ${text2 ? html.node`
                     <div class="heading">
-                        <h5>${title}</h5>
+                        <h5>${title}<button class="reset see-more" onclick=${() => reset_range(id, option, track, input2, marker)}>${tl(trans.reset)}</button></h5>
                         ${body ? html.node`<p>${body}</p>` : ""}
                     </div>
                     ` : ""}
@@ -6788,10 +6787,9 @@
         let error_tooltip;
         let container = html.node`
                 <div class="setting v2" data-type="text" ref=${(el) => option = el} data-modified=${value != settings_store[id].default}>
-                    <button class="btn reset" ref=${(el) => reset_btn = el} onclick=${() => reset_text(id, input2, submit, option, reset_btn, avatar3)}>${tl(trans.reset)}</button>
                     ${text2 ? html.node`
                     <div class="heading">
-                        <h5>${title}</h5>
+                        <h5>${title}<button class="reset see-more" ref=${(el) => reset_btn = el} onclick=${() => reset_text(id, input2, submit, option, reset_btn, avatar3)}>${tl(trans.reset)}</button></h5>
                         ${body ? html.node`<p>${body}</p>` : ""}
                     </div>
                     ` : ""}
@@ -13313,37 +13311,55 @@
                 <div class="seasonal-inner">
                     <div class="sub-text">${tl(trans.seasonal_timeline)}</div>
                     <h4>${moment(stored_season.now).format("MMMM Do YYYY")}</h4>
-                    <div class="current-season-box" data-season="${stored_season.id}">
-                        <div class="current-season-info">
-                            <div class="bleh-icon bleh-seasonal-icon" data-season="${stored_season.id}"></div>
-                            <h4>${tl(trans.seasonal.listing[stored_season.id])}</h4>
+                </div>
+                <div class="setting-group">
+                    <div class="setting" data-type="info">
+                        <div class="heading">
+                            <h5>${tl(trans.current_season)}</h5>
                         </div>
-                        <div class="glacier-library-top season-top">
-                            <div class="glacier-library-metadata">
-                                ${stored_season.id != "none" && stored_season.start && stored_season.end ? html.node`
-                                <div class="glacier-library-metadata-item">
-                                    <div class="sub-text">${tl(trans.started)}</div>
-                                    <div class="glacier-library-metadata-item-value" id="current_season_start">${moment(stored_season.start.replace("y0", stored_season.year).replace("{offset}", stored_season.offset)).from(stored_season.now)}</div>
-                                </div>
-                                <div class="glacier-library-metadata-item">
-                                    <div class="sub-text">${tl(trans.ends_in)}</div>
-                                    <div class="glacier-library-metadata-item-value" id="current_season">${moment(stored_season.end.replace("y0", stored_season.year).replace("{offset}", stored_season.offset)).to(stored_season.now, true)}</div>
-                                </div>
-                                ` : settings.seasonal ? html.node`
-                                <div class="glacier-library-metadata-item">
-                                    <div class="sub-text">${tl(trans.next_in)}</div>
-                                    <div class="glacier-library-metadata-item-value" id="next_season_start">${moment(stored_season.next_start.replace("y0", stored_season.next_is_new_year ? stored_season.year + 1 : stored_season.year).replace("{offset}", stored_season.offset)).to(stored_season.now, true)}</div>
-                                </div>
-                                ` : ""}
-                            </div>
+                        <div class="info" data-season=${stored_season.id}>
+                            <div class="bleh-icon bleh-seasonal-icon"></div>
+                            <p>${tl(trans.seasonal.listing[stored_season.id])}</p>
                         </div>
                     </div>
+                    ${stored_season.id != "none" && stored_season.start && stored_season.end ? html.node`
+                    <div class="setting" data-type="info">
+                        <div class="heading">
+                            <h5>${tl(trans.started)}</h5>
+                        </div>
+                        <div class="info">
+                            <p id="current_season_start">${moment(stored_season.start.replace("y0", stored_season.year).replace("{offset}", stored_season.offset)).from(stored_season.now)}</p>
+                        </div>
+                    </div>
+                    <div class="setting" data-type="info">
+                        <div class="heading">
+                            <h5>${tl(trans.ends_in)}</h5>
+                        </div>
+                        <div class="info">
+                            <p id="current_season">${moment(stored_season.end.replace("y0", stored_season.year).replace("{offset}", stored_season.offset)).to(stored_season.now, true)}</p>
+                        </div>
+                    </div>
+                    ` : settings.seasonal ? html.node`
+                    <div class="setting" data-type="info">
+                        <div class="heading">
+                            <h5>${tl(trans.next_in)}</h5>
+                        </div>
+                        <div class="info">
+                            <p id="next_season_start">${moment(stored_season.next_start.replace("y0", stored_season.next_is_new_year ? stored_season.year + 1 : stored_season.year).replace("{offset}", stored_season.offset)).to(stored_season.now, true)}</p>
+                        </div>
+                    </div>
+                    ` : ""}
+                    ${settings.seasonal ? html.node`
+                    <div class="setting" data-type="info">
+                        <div class="heading">
+                            <h5>${tl(trans.calculated_offset)}</h5>
+                        </div>
+                        <div class="info">
+                            <p>${stored_season.offset}</p>
+                        </div>
+                    </div>
+                    ` : ""}
                 </div>
-                ${settings.seasonal ? html.node`
-                <div class="alert alert-info">
-                    ${{ html: tl(trans.seasonal_offset).replace("{offset}", `<strong>${stored_season.offset}</strong>`) }}
-                </div>
-                ` : ""}
                 <h4>${tl(trans.settings)}</h4>
                 <div class="setting-group">
                     ${setting({ id: "seasonal" })}
@@ -14636,19 +14652,20 @@
                             <div class="alert alert-info seasonal-hsl-alert">
                                 ${tl(trans.seasonal_warning)}
                             </div>
-                            ${ff("colour_based_on_hex") ? html.node`
-                            <div class="setting" data-type="text">
-                                <div class="heading">
-                                    <h5>${tl(trans.convert_from_hex)}</h5>
-                                </div>
-                                <div class="input-container content-form">
-                                    ${colour2 = input({
+                            <div class="setting-group blend">
+                                ${ff("colour_based_on_hex") ? html.node`
+                                <div class="setting" data-type="text">
+                                    <div class="heading">
+                                        <h5>${tl(trans.convert_from_hex)}</h5>
+                                    </div>
+                                    <div class="input-container content-form">
+                                        ${colour2 = input({
               type: "colour",
               value: "#999999",
               maxlength: 7,
               warn_if_empty: true
             })}
-                                    <button class="btn primary icon convert" onclick=${() => {
+                                        <button class="btn primary icon convert" onclick=${() => {
               let value = colour2.querySelector("input").value;
               let hsl = hex_to_hsl(value);
               update_params({
@@ -14657,54 +14674,55 @@
                 lit: hsl.l / 100 + 0.35
               });
             }}>${tl(trans.convert)}</button>
-                                </div>
-                            </div>
-                            ` : ""}
-                            <div class="setting dim-using-hue-gradient dim-during-seasonal" data-type="range" id="container-hue">
-                                <button class="btn reset" onclick="_reset_item('hue')">${tl(trans.reset)}</button>
-                                <div class="heading">
-                                    <h5>${tl(trans.hue)}</h5>
-                                </div>
-                                <div class="range">
-                                    <div class="track" id="slider-track-hue" data-id="hue"><div class="fill"></div><div class="nub"></div></div>
-                                    <input type="range" min="0" max="360" value="${settings.hue}" id="slider-hue" oninput="_update_item('hue', this.value)">
-                                    <p id="value-hue">${settings.hue}${settings_base.hue.unit}</p>
-                                    <div class="hint">
-                                        <p style="left: 0">0</p>
-                                        <p style="left: calc((255 / 360) * 100%)">255</p>
-                                        <p style="left: 100%">360</p>
                                     </div>
                                 </div>
-                            </div>
-                            <div class="setting dim-using-hue-gradient dim-during-seasonal" data-type="range" id="container-sat">
-                                <button class="btn reset" onclick="_reset_item('sat')">${tl(trans.reset)}</button>
-                                <div class="heading">
-                                    <h5>${tl(trans.sat)}</h5>
-                                </div>
-                                <div class="range">
-                                    <div class="track" id="slider-track-sat"><div class="fill"></div><div class="nub"></div></div>
-                                    <input type="range" min="0" max="1.5" value="${settings.sat}" step="0.025" id="slider-sat" oninput="_update_item('sat', this.value)">
-                                    <p id="value-sat">${settings.sat}${settings_base.sat.unit}</p>
-                                    <div class="hint">
-                                        <p style="left: 0">0</p>
-                                        <p style="left: calc((1 / 1.5) * 100%)">1</p>
-                                        <p style="left: 100%">1.5</p>
+                                ` : ""}
+                                <div class="setting dim-using-hue-gradient dim-during-seasonal" data-type="range" id="container-hue">
+                                    <button class="btn reset" onclick="_reset_item('hue')">${tl(trans.reset)}</button>
+                                    <div class="heading">
+                                        <h5>${tl(trans.hue)}</h5>
+                                    </div>
+                                    <div class="range">
+                                        <div class="track" id="slider-track-hue" data-id="hue"><div class="fill"></div><div class="nub"></div></div>
+                                        <input type="range" min="0" max="360" value="${settings.hue}" id="slider-hue" oninput="_update_item('hue', this.value)">
+                                        <p id="value-hue">${settings.hue}${settings_base.hue.unit}</p>
+                                        <div class="hint">
+                                            <p style="left: 0">0</p>
+                                            <p style="left: calc((255 / 360) * 100%)">255</p>
+                                            <p style="left: 100%">360</p>
+                                        </div>
                                     </div>
                                 </div>
-                            </div>
-                            <div class="setting dim-using-hue-gradient dim-during-seasonal" data-type="range" id="container-lit">
-                                <button class="btn reset" onclick="_reset_item('lit')">${tl(trans.reset)}</button>
-                                <div class="heading">
-                                    <h5>${tl(trans.lit)}</h5>
+                                <div class="setting dim-using-hue-gradient dim-during-seasonal" data-type="range" id="container-sat">
+                                    <button class="btn reset" onclick="_reset_item('sat')">${tl(trans.reset)}</button>
+                                    <div class="heading">
+                                        <h5>${tl(trans.sat)}</h5>
+                                    </div>
+                                    <div class="range">
+                                        <div class="track" id="slider-track-sat"><div class="fill"></div><div class="nub"></div></div>
+                                        <input type="range" min="0" max="1.5" value="${settings.sat}" step="0.025" id="slider-sat" oninput="_update_item('sat', this.value)">
+                                        <p id="value-sat">${settings.sat}${settings_base.sat.unit}</p>
+                                        <div class="hint">
+                                            <p style="left: 0">0</p>
+                                            <p style="left: calc((1 / 1.5) * 100%)">1</p>
+                                            <p style="left: 100%">1.5</p>
+                                        </div>
+                                    </div>
                                 </div>
-                                <div class="range">
-                                    <div class="track" id="slider-track-lit"><div class="fill"></div><div class="nub"></div></div>
-                                    <input type="range" min="0" max="1.5" value="${settings.lit}" step="0.025" id="slider-lit" oninput="_update_item('lit', this.value)">
-                                    <p id="value-lit">${settings.lit}${settings_base.lit.unit}</p>
-                                    <div class="hint">
-                                        <p style="left: 0">0</p>
-                                        <p style="left: calc((1 / 1.5) * 100%)">1</p>
-                                        <p style="left: 100%">1.5</p>
+                                <div class="setting dim-using-hue-gradient dim-during-seasonal" data-type="range" id="container-lit">
+                                    <button class="btn reset" onclick="_reset_item('lit')">${tl(trans.reset)}</button>
+                                    <div class="heading">
+                                        <h5>${tl(trans.lit)}</h5>
+                                    </div>
+                                    <div class="range">
+                                        <div class="track" id="slider-track-lit"><div class="fill"></div><div class="nub"></div></div>
+                                        <input type="range" min="0" max="1.5" value="${settings.lit}" step="0.025" id="slider-lit" oninput="_update_item('lit', this.value)">
+                                        <p id="value-lit">${settings.lit}${settings_base.lit.unit}</p>
+                                        <div class="hint">
+                                            <p style="left: 0">0</p>
+                                            <p style="left: calc((1 / 1.5) * 100%)">1</p>
+                                            <p style="left: 100%">1.5</p>
+                                        </div>
                                     </div>
                                 </div>
                             </div>
@@ -21464,6 +21482,9 @@
       de: "Profil",
       pt: "Perfil"
     },
+    current_season: {
+      en: "Current season"
+    },
     seasonal: {
       name: {
         // translate to 'Seasons' if it reads better
@@ -21531,6 +21552,9 @@
       en: "Seasonal events are ran in your timezone, which we calculated as {offset}",
       de: "Saisonale Events werden in deiner Zeitzone ausgef\xFChrt, die wir als {offset} berechnet haben",
       pt: "Eventos sazonais s\xE3o realizados em seu fuso hor\xE1rio, que calculamos como {offset}"
+    },
+    calculated_offset: {
+      en: "Calculated offset based on timezone"
     },
     started: {
       en: "Started",
