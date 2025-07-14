@@ -846,7 +846,41 @@ export function render_setting_page(page_id) {
                 <div class="sep" />
                 <h4>${tl(trans.manage_feature_flags)}</h4>
                 <div class="alert alert-danger">${tl(trans.beware_notice)}</div>
-                <div class="feature-flags" id="feature-flags"></div>
+                <div class="setting-group">
+                    ${Object.entries(version.feature_flags).reverse().map(([flag, details]) => {
+                        let value = ff(flag);
+                        
+                        let checkbox;
+                        let state;
+
+                        return html.node`
+                            <div class="setting" data-type="toggle" onclick=${() => {
+                                let current = checkbox.checked;
+    
+                                checkbox.checked = !current;
+                                state.setAttribute('aria-checked', !current);
+    
+                                settings.feature_flags[flag] = !current;
+                                document.documentElement.setAttribute(`data-ff--${flag}`, (!current).toString());
+                                localStorage.setItem('bleh', JSON.stringify(settings));
+                            }}>
+                                <div class="heading">
+                                    <h5>${details.name}</h5>
+                                    ${details.notice ? html.node`<p>${{html: details.notice}}</p>` : ''}
+                                    <div class="info-row">
+                                        <div class="new-badge flag-${details.default}">${details.default}</div><p class="date">${details.date}</p><p>${flag}</p>
+                                    </div>
+                                </div>
+                                <div class="toggle-wrap">
+                                    <input type="checkbox" ref=${el => checkbox = el} value=${value} checked=${value} />
+                                    <button class="toggle" aria-checked=${value} ref=${el => state = el}>
+                                        <div class="dot" />
+                                    </button>
+                                </div>
+                            </div>
+                        `;
+                    })}
+                </div>
             </div>
             `);
     } else if (page_id == 'music') {
@@ -1325,8 +1359,6 @@ export function change_settings_page(page_id, setting = null) {
         init_profile_page();
         activity_preview();
         refresh_all();
-    } else if (page_id == 'sku') {
-        bleh_sku_page();
     }
 
     if (page_id == 'text')
