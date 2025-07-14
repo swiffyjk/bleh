@@ -668,16 +668,27 @@ export let settings_store = {
         body: trans.show_guest_features.body
     },
     stacked_chartlist_info: {
-        default: true
+        default: true,
+        title: trans.track_column_view
+    },
+    glacier_library_graphs: {
+        default: true,
+        title: trans.glacier_graphs.name,
+        body: trans.glacier_graphs.body
     },
     show_remaster_tags: {
-        default: true
+        default: true,
+        title: trans.show_remaster_tags,
+        beta: true
     },
     corrections: {
-        default: true
+        default: true,
+        title: trans.correct_titles_with_lotus
     },
     colourful_counts: {
-        default: true
+        default: true,
+        title: trans.colourful_counts.name,
+        body: trans.colourful_counts.body
     },
     colourful_tracks: {
         default: true,
@@ -692,7 +703,9 @@ export let settings_store = {
         default: true
     },
     travis: {
-        default: false
+        default: false,
+        title: trans.redirect_messages.name,
+        body: trans.redirect_messages.body
     },
     list_view: {
         default: 1,
@@ -738,7 +751,8 @@ export let settings_store = {
         body: trans.hue_from_album.body
     },
     seasonal: {
-        default: true
+        default: true,
+        title: trans.enable_seasons
     },
     seasonal_particles: {
         default: 'all',

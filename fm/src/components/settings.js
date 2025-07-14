@@ -32,6 +32,9 @@ export function setting({
         let body = settings_store[id].body ? tl(settings_store[id].body) : null;
         let icon = settings_store[id].icon;
 
+        if (settings_store[id].beta)
+            title = html.node`${title}<span class="new-badge beta">${tl(trans.beta)}</span>`;
+
         if (type === 'toggle') {
             let toggle;
 

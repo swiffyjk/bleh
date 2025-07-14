@@ -8,7 +8,7 @@ import {patch_avatar} from "./avatar";
 import {settings} from "./build/config";
 import {log} from "./build/log";
 import {auth, page, root, shout_parse_queue} from "./build/page";
-import {tl, trans, trans_legacy} from "./build/trans";
+import {tl, trans} from "./build/trans";
 import {deliver_notif, notify} from "./components/notify";
 import {html, render} from "lighterhtml";
 import {setting} from "./components/settings.js";
@@ -101,9 +101,9 @@ export function patch_shouts() {
                 send_button.querySelector('.btn-post-shout').click();
                 notify({
                     id: 'shout',
-                    title: trans_legacy.en.shout.name,
-                    body: trans_legacy.en.shout.sent,
-                    icon: 'icon-16-send'
+                    title: tl(trans.shouts),
+                    body: tl(trans.sent),
+                    icon: 'icon-16-shoutbox'
                 });
             }
         });
@@ -193,10 +193,11 @@ export function shout_header(shout_controls) {
         theme: 'window',
         content: html.node`
             <div class="dialog-settings">
-                ${setting({id: 'shout_markdown'})}
-                <div class="sep"></div>
-                ${setting({id: 'accessible_name_colours'})}
-                ${setting({id: 'underline_links'})}
+                <div class="setting-group blend">
+                    ${setting({id: 'shout_markdown'})}
+                    ${setting({id: 'accessible_name_colours'})}
+                    ${setting({id: 'underline_links'})}
+                </div>
             </div>
         `,
         placement: 'bottom',
@@ -246,6 +247,22 @@ export function parse_shout_queue() {
         setTimeout(parse_shout_queue, 50);
 }
 
-unsafeWindow._show_hidden_shout = function(shout_id) {
-    document.getElementById(`bleh--shout-${shout_id}`).setAttribute('data-bleh--shout-expanded','true');
+export function shout_messages() {
+    let alerts = page.structure.main.querySelectorAll('.shout-messages > .alert');
+    alerts.forEach((alert) => {
+        if (alert.classList.contains('alert-danger')) {
+            // assume its the generic rate limit
+            notify({
+                id: 'shout',
+                title: tl(trans.shouts),
+                body: tl(trans.failed_to_send),
+                type: 'error',
+                icon: 'icon-16-shoutbox'
+            });
+        } else {
+            return;
+        }
+
+        alert.remove();
+    });
 }

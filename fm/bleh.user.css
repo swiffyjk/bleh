@@ -197,9 +197,9 @@
         }
 
         [data-bleh--theme_type="light"] > & {
-            --font-weight: calc(var(--custom_font_weight, 480) + 90);
-            --font-weight-medium: calc(var(--custom_font_weight_medium, 650) + 110);
-            --font-weight-bold: calc(var(--custom_font_weight_bold, 730) + 110);
+            --font-weight: calc(var(--custom_font_weight, 480) + 60);
+            --font-weight-medium: calc(var(--custom_font_weight_medium, 650) + 60);
+            --font-weight-bold: calc(var(--custom_font_weight_bold, 730) + 60);
         }
 
         [data-bleh--reduced_motion="true"] > & {
@@ -236,6 +236,7 @@
         --b6: var(--hue), calc(var(--sat) * 7% * var(--sat-bg, 1)), 13%;
         --b8: var(--hue), calc(var(--sat) * 4% * var(--sat-bg, 1)), 25%;
         --b7: 0, 0%, 0%;
+        --b9: var(--b5);
 
         --card-border: inset 0 0 0 1px hsla(var(--b4), 0.6);
         --card-border-base: hsl(var(--b3), 0.7);
@@ -289,6 +290,7 @@
             --b6: 0, 0%, 93%;
             --b8: 0, 0%, 100%;
             --b7: 0, 0%, 0%;
+            --b9: 0, 0%, 100%;
 
             --card-border-base: hsl(var(--c3), 0.2) !important;
         }
@@ -307,6 +309,7 @@
             --b6: var(--hue), calc(var(--sat) * 9% * var(--sat-bg, 1)), 69%;
             --b8: var(--hue), calc(var(--sat) * 12% * var(--sat-bg, 1)), 86%;
             --b7: var(--c1);
+            --b9: 0, 0%, 84%;
 
             --card-border-base: hsl(var(--hue), calc(var(--sat) * 9% * var(--sat-bg, 1)), 64%) !important;
         }
@@ -8520,7 +8523,8 @@
         padding: var(--item-list-gap) !important;
         background: hsl(var(--menu-bg), 80%) !important;
         border-radius: var(--card-radius) !important;
-        box-shadow: var(--override-full-shadow, var(--card-border), var(--overlay-shadow)) !important;
+        box-shadow: var(--override-full-shadow, var(--overlay-shadow)) !important;
+        border: 1px solid var(--card-border-base) !important;
         overflow: hidden;
         animation: menu_in 0.25s var(--trans-function);
         transform-origin: top;
@@ -10144,7 +10148,8 @@
     .bleh-modal {
         background: hsl(var(--b5));
         border-radius: var(--item-big-radius);
-        box-shadow: var(--override-full-shadow, var(--card-border), var(--menu-shadow));
+        box-shadow: var(--override-full-shadow, var(--menu-shadow));
+        border: 1px solid var(--card-border-base);
         color: hsl(var(--c2));
         padding: var(--card-padding);
         position: relative;
@@ -10311,7 +10316,8 @@
         margin: unset !important;
         background: hsl(var(--menu-bg), 95%) !important;
         border-radius: calc(var(--button-radius) + 4px) !important;
-        box-shadow: var(--override-full-shadow, var(--card-border), var(--overlay-shadow)) !important;
+        box-shadow: var(--override-full-shadow, var(--overlay-shadow)) !important;
+        border: 1px solid var(--card-border-base) !important;
         color: hsl(var(--c2));
 
         &:not(.date-range-picker-content) {
@@ -10336,7 +10342,7 @@
         &.date-range-picker-content,
         &.modal-body {
             background: hsl(var(--b5)) !important;
-            box-shadow: var(--override-full-shadow, var(--card-border), var(--menu-shadow)) !important;
+            box-shadow: var(--override-full-shadow, var(--menu-shadow)) !important;
             border-radius: var(--item-big-radius) !important;
         }
     }
@@ -11730,7 +11736,8 @@
             padding: 4px !important;
             background: hsl(var(--b6), 80%) !important;
             border-radius: calc(var(--button-radius) + 4px) !important;
-            box-shadow: var(--override-full-shadow, var(--card-border), var(--overlay-shadow)) !important;
+            box-shadow: var(--override-full-shadow, var(--overlay-shadow)) !important;
+            border: 1px solid var(--card-border-base) !important;
             color: hsl(var(--c2));
             animation: menu_in 0.25s var(--trans-function);
             transform-origin: top;
@@ -11855,7 +11862,8 @@
             padding: var(--card-gap) !important;
             background: hsl(var(--b5), 95%) !important;
             border-radius: var(--item-big-radius) !important;
-            box-shadow: var(--override-full-shadow, var(--card-border), var(--overlay-shadow)) !important;
+            box-shadow: var(--override-full-shadow, var(--overlay-shadow)) !important;
+            border: 1px solid var(--card-border-base) !important;
             color: hsl(var(--c2));
             animation: menu_in 0.25s var(--trans-function);
             transform-origin: top;
@@ -16586,6 +16594,26 @@
         }
     }
 
+    .setting-group {
+        display: flex;
+        flex-direction: column;
+        gap: 12px;
+
+        &:not(.blend) {
+            padding: 15px;
+            background: hsl(var(--b6), 10%);
+            border-radius: var(--item-med-radius);
+            border: 1px solid var(--card-border-base);
+        }
+
+        & > .setting {
+            & + .setting {
+                padding-top: 12px;
+                border-top: 1px solid var(--card-border-base);
+            }
+        }
+    }
+
     .setting {
         position: relative;
 
@@ -16675,14 +16703,14 @@
             display: flex;
             align-items: center;
             gap: 4px;
-            min-height: 28px;
+            min-height: 22px;
             max-height: 32px;
         }
 
         & > .alert {
             display: flex;
             align-items: center;
-            min-height: 28px;
+            min-height: 22px;
             max-height: 32px;
         }
 
@@ -16744,7 +16772,7 @@
                 align-items: center;
                 flex-shrink: 0;
                 order: -1;
-                min-height: 28px;
+                min-height: 22px;
                 max-height: 32px;
 
                 margin-right: calc(-1 * (var(--card-gap) - 10px));
@@ -16801,7 +16829,7 @@
         & > .icon {
             display: flex;
             align-items: center;
-            min-height: 28px;
+            min-height: 22px;
             height: 100%;
             max-height: 32px;
             margin-right: -5px;
@@ -17376,21 +17404,20 @@
         display: flex;
         justify-content: center;
         align-items: center;
-        width: 38px !important;
-        height: 24px;
+        width: 34px !important;
+        height: 20px;
         position: relative;
-        --col: hsl(var(--c3));
+        --col: hsl(var(--b9));
 
         --radius: 50px;
 
         .dot {
             position: absolute;
-            width: 10px;
-            height: 10px;
-            left: 8px;
+            width: 14px;
+            height: 14px;
+            left: 3px;
             border-radius: var(--item-big-radius);
-            background: transparent;
-            border: 2px solid var(--col);
+            background: var(--col);
 
             transition-property: left, background;
             transition-duration: var(--trans);
@@ -17399,7 +17426,7 @@
             --mask-size: 12px;
             --margin-top: -6px;
             --left: -3px;
-            color: hsl(var(--b6));
+            color: hsl(var(--c1));
             --mask: var(--icon-16-x);
             --show-icon: var(--show-toggle-icon, none);
         }
@@ -17408,13 +17435,12 @@
             --bg: var(--cards-overlay-image-subtlest, none), hsl(var(--h3)) !important;
             --bg-hov: var(--cards-overlay-image-subtlest, none), color-mix(in hsl, hsl(var(--h4)), hsl(var(--h3)) 80%) !important;
             --bg-atv: var(--cards-overlay-image-subtlest, none), color-mix(in hsl, hsl(var(--h4)), hsl(var(--h3)) 60%) !important;
-            --col: hsl(var(--b7)) !important;
             --shadow: 0 3px 12px hsl(var(--h4), 25%), var(--interactable-outer);
             --shadow-hov: var(--interactable-outer), var(--interactable-active-outer);
 
             .dot {
                 background: var(--col);
-                left: calc(40px - 8px - 12px);
+                left: calc(34px - 8px - 9px);
                 color: hsl(var(--h2));
                 --mask-colour: currentColor;
                 --mask: var(--icon-16-check);
@@ -18281,8 +18307,9 @@
             overflow: hidden;
 
             background: hsl(var(--b5));
-            box-shadow: var(--card-border), var(--card-shadow);
+            box-shadow: var(--card-shadow);
             padding: 12px var(--button-sides);
+            border: 1px solid var(--card-border-base);
             border-radius: var(--button-radius);
             --mask-colour: color-mix(in hsl, hsl(var(--c2)), hsl(var(--c3)) 50%);
 

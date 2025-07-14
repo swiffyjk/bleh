@@ -6688,6 +6688,8 @@
       let title = settings_store[id].title ? tl(settings_store[id].title) : id;
       let body = settings_store[id].body ? tl(settings_store[id].body) : null;
       let icon = settings_store[id].icon;
+      if (settings_store[id].beta)
+        title = html.node`${title}<span class="new-badge beta">${tl(trans.beta)}</span>`;
       if (type === "toggle") {
         let toggle2;
         return html.node`
@@ -13138,17 +13140,20 @@
                     <div id="colour_purple" class="palette options colours"></div>
                     <div id="colour_pink" class="palette options colours"></div>
                 </div>
-                ${setting({ id: "hue_from_album" })}
-                ${setting({ id: "colourful_tracks" })}
-                ${ff("card_saturation") ? html.node`
-                ${setting({ id: "sat_bg" })}
-                ` : ""}
-                <div class="sep"></div>
-                ${setting({ id: "font" })}
-                ${setting({ id: "font_weight" })}
-                ${setting({ id: "font_weight_medium" })}
-                ${setting({ id: "font_weight_bold" })}
-                ${setting({ id: "font_emoji" })}
+                <div class="setting-group">
+                    ${setting({ id: "hue_from_album" })}
+                    ${setting({ id: "colourful_tracks" })}
+                    ${ff("card_saturation") ? html.node`
+                        ${setting({ id: "sat_bg" })}
+                    ` : ""}
+                </div>
+                <div class="setting-group">
+                    ${setting({ id: "font" })}
+                    ${setting({ id: "font_weight" })}
+                    ${setting({ id: "font_weight_medium" })}
+                    ${setting({ id: "font_weight_bold" })}
+                    ${setting({ id: "font_emoji" })}
+                </div>
             </div>
             `);
       show_theme_change_in_settings();
@@ -13340,58 +13345,50 @@
                 </div>
                 ` : ""}
                 <h4>${tl(trans.settings)}</h4>
-                <div class="setting" data-type="toggle" id="container-seasonal" onclick="_update_item('seasonal')">
-                    <button class="btn reset" onclick="_reset_item('seasonal')">${tl(trans.reset)}</button>
-                    <div class="heading">
-                        <h5>${trans_legacy.en.settings.customise.seasonal.option.name}</h5>
-                    </div>
-                    <div class="toggle-wrap">
-                        <button class="toggle" id="toggle-seasonal" aria-checked="true">
-                            <div class="dot"></div>
-                        </button>
-                    </div>
+                <div class="setting-group">
+                    ${setting({ id: "seasonal" })}
                 </div>
-                <div class="sep"></div>
-                <div class="setting" data-type="options">
-                    <div class="heading">
-                        <h5>${tl(trans.seasonal_particles.name)}</h5>
-                        <p>${tl(trans.seasonal_particles.body)}</p>
-                    </div>
-                    <div class="primary-selections">
-                        <div class="btn primary-selection no-icon" id="toggle-seasonal_particles-all" data-toggle="seasonal_particles" data-toggle-value="all" onclick="_update_item('seasonal_particles', 'all')">
-                            <h5>${tl(trans.all_particles)}</h5>
+                <div class="setting-group">
+                    <div class="setting" data-type="options">
+                        <div class="heading">
+                            <h5>${tl(trans.seasonal_particles.name)}</h5>
+                            <p>${tl(trans.seasonal_particles.body)}</p>
                         </div>
-                        <div class="btn primary-selection no-icon" id="toggle-seasonal_particles-less" data-toggle="seasonal_particles" data-toggle-value="less" onclick="_update_item('seasonal_particles', 'less')">
-                            <h5>${tl(trans.less_particles)}</h5>
-                        </div>
-                        <div class="btn primary-selection no-icon" id="toggle-seasonal_particles-none" data-toggle="seasonal_particles" data-toggle-value="none" onclick="_update_item('seasonal_particles', 'none')">
-                            <h5>${tl(trans.no_particles)}</h5>
+                        <div class="primary-selections">
+                            <div class="btn primary-selection no-icon" id="toggle-seasonal_particles-all" data-toggle="seasonal_particles" data-toggle-value="all" onclick="_update_item('seasonal_particles', 'all')">
+                                <h5>${tl(trans.all_particles)}</h5>
+                            </div>
+                            <div class="btn primary-selection no-icon" id="toggle-seasonal_particles-less" data-toggle="seasonal_particles" data-toggle-value="less" onclick="_update_item('seasonal_particles', 'less')">
+                                <h5>${tl(trans.less_particles)}</h5>
+                            </div>
+                            <div class="btn primary-selection no-icon" id="toggle-seasonal_particles-none" data-toggle="seasonal_particles" data-toggle-value="none" onclick="_update_item('seasonal_particles', 'none')">
+                                <h5>${tl(trans.no_particles)}</h5>
+                            </div>
                         </div>
                     </div>
-                </div>
-                <div class="setting hide-if-seasonal-disabled" data-type="toggle" id="container-seasonal_particles_fps" onclick="_update_item('seasonal_particles_fps')">
-                    <button class="btn reset" onclick="_reset_item('seasonal_particles_fps')">${tl(trans.reset)}</button>
-                    <div class="heading">
-                        <h5>${trans_legacy.en.settings.customise.seasonal.fps_particles.name}</h5>
-                        <p>${trans_legacy.en.settings.customise.seasonal.fps_particles.bio}</p>
+                    <div class="setting hide-if-seasonal-disabled" data-type="toggle" id="container-seasonal_particles_fps" onclick="_update_item('seasonal_particles_fps')">
+                        <button class="btn reset" onclick="_reset_item('seasonal_particles_fps')">${tl(trans.reset)}</button>
+                        <div class="heading">
+                            <h5>${trans_legacy.en.settings.customise.seasonal.fps_particles.name}</h5>
+                            <p>${trans_legacy.en.settings.customise.seasonal.fps_particles.bio}</p>
+                        </div>
+                        <div class="toggle-wrap">
+                            <button class="toggle" id="toggle-seasonal_particles_fps" aria-checked="true">
+                                <div class="dot"></div>
+                            </button>
+                        </div>
                     </div>
-                    <div class="toggle-wrap">
-                        <button class="toggle" id="toggle-seasonal_particles_fps" aria-checked="true">
-                            <div class="dot"></div>
-                        </button>
-                    </div>
-                </div>
-                <div class="sep"></div>
-                <div class="setting hide-if-seasonal-disabled" data-type="toggle" id="container-seasonal_overlays" onclick="_update_item('seasonal_overlays')">
-                    <button class="btn reset" onclick="_reset_item('seasonal_overlays')">${tl(trans.reset)}</button>
-                    <div class="heading">
-                        <h5>${trans_legacy.en.settings.customise.seasonal.overlays.name}</h5>
-                        <p>${trans_legacy.en.settings.customise.seasonal.overlays.bio}</p>
-                    </div>
-                    <div class="toggle-wrap">
-                        <button class="toggle" id="toggle-seasonal_overlays" aria-checked="true">
-                            <div class="dot"></div>
-                        </button>
+                    <div class="setting hide-if-seasonal-disabled" data-type="toggle" id="container-seasonal_overlays" onclick="_update_item('seasonal_overlays')">
+                        <button class="btn reset" onclick="_reset_item('seasonal_overlays')">${tl(trans.reset)}</button>
+                        <div class="heading">
+                            <h5>${trans_legacy.en.settings.customise.seasonal.overlays.name}</h5>
+                            <p>${trans_legacy.en.settings.customise.seasonal.overlays.bio}</p>
+                        </div>
+                        <div class="toggle-wrap">
+                            <button class="toggle" id="toggle-seasonal_overlays" aria-checked="true">
+                                <div class="dot"></div>
+                            </button>
+                        </div>
                     </div>
                 </div>
             </div>
@@ -13774,25 +13771,17 @@
                         <button class="see-more lotus" onclick="_open_correction_modal()">${tl(trans.view_all)}</button>
                     </div>
                 </div>
-                <div class="setting" data-type="toggle" id="container-corrections" onclick="_update_item('corrections')">
-                    <button class="btn reset" onclick="_reset_item('corrections')">${tl(trans.reset)}</button>
-                    <div class="heading">
-                        <h5>${tl(trans.correct_titles_with_lotus)}</h5>
-                    </div>
-                    <div class="toggle-wrap">
-                        <button class="toggle lotus" id="toggle-corrections" aria-checked="true">
-                            <div class="dot"></div>
-                        </button>
-                    </div>
-                </div>
-                <div class="setting" data-type="toggle">
-                    <div class="heading">
-                        <h5>${tl(trans.help_contribute)}</h5>
-                    </div>
-                    <div class="toggle-wrap">
-                        <a class="see-more" href="https://github.com/katelyynn/lotus/issues/new/choose" target="_blank">
-                            ${tl(trans.suggest_correction)}
-                        </a>
+                <div class="setting-group">
+                    ${setting({ id: "corrections" })}
+                    <div class="setting" data-type="action">
+                        <div class="heading">
+                            <h5>${tl(trans.help_contribute)}</h5>
+                        </div>
+                        <div class="toggle-wrap">
+                            <a class="see-more" href="https://github.com/katelyynn/lotus/issues/new/choose" target="_blank">
+                                ${tl(trans.suggest_correction)}
+                            </a>
+                        </div>
                     </div>
                 </div>
             </div>
@@ -13823,59 +13812,10 @@
                         </div>
                     </section>
                 </div>
-                <div class="setting" data-type="toggle" id="container-format_guest_features" onclick="_update_item('format_guest_features')">
-                    <button class="btn reset" onclick="_reset_item('format_guest_features')">${tl(trans.reset)}</button>
-                    <div class="heading">
-                        <h5>${tl(trans.format_guest_features.name)}</h5>
-                        <p>${tl(trans.format_guest_features.body)}</p>
-                    </div>
-                    <div class="toggle-wrap">
-                        <button class="toggle" id="toggle-format_guest_features" aria-checked="true">
-                            <div class="dot"></div>
-                        </button>
-                    </div>
-                </div>
-                <div class="setting hide-if-format-guest-disabled" id="container-show_guest_features" onclick="_update_item('show_guest_features')">
-                    <button class="btn reset" onclick="_reset_item('show_guest_features')">${tl(trans.reset)}</button>
-                    <div class="heading">
-                        <h5>${tl(trans.show_guest_features.name)}</h5>
-                        <p>${tl(trans.show_guest_features.body)}</p>
-                    </div>
-                    <div class="toggle-wrap">
-                        <button class="toggle" id="toggle-show_guest_features" aria-checked="true">
-                            <div class="dot"></div>
-                        </button>
-                    </div>
-                </div>
-                <div class="inner-preview pad flex">
-                    <section class="redesigned-header mockup redesigned-album-header no-top-margin">
-                        <div class="avatar-side">
-                            <img src="https://lastfm.freetls.fastly.net/i/u/avatar170s/def68d94aae8e52ef2d1c0c9d3e16ff4.jpg">
-                        </div>
-                        <div class="info-side">
-                            <div class="sub-text">${tl(trans.album)}</div>
-                            <div class="title-container">
-                                <h1>
-                                    <div class="title">my anti-aircraft friend</div>
-                                    <div class="feat" data-bleh--tag-type="(remaster" data-bleh--tag-group="remasters">Remastered</div>
-                                </h1>
-                            </div>
-                            <h2>
-                                <a class="header-new-crumb">julie</a>
-                            </h2>
-                        </div>
-                    </section>
-                </div>
-                <div class="setting hide-if-format-guest-disabled" data-type="toggle" id="container-show_remaster_tags" onclick="_update_item('show_remaster_tags')">
-                    <button class="btn reset" onclick="_reset_item('show_remaster_tags')">${tl(trans.reset)}</button>
-                    <div class="heading">
-                        <h5>${tl(trans.show_remaster_tags)} <div class="new-badge">${tl(trans.beta)}</div></h5>
-                    </div>
-                    <div class="toggle-wrap">
-                        <button class="toggle" id="toggle-show_remaster_tags" aria-checked="true">
-                            <div class="dot"></div>
-                        </button>
-                    </div>
+                <div class="setting-group">
+                    ${setting({ id: "format_guest_features" })}
+                    ${setting({ id: "show_guest_features" })}
+                    ${setting({ id: "show_remaster_tags" })}
                 </div>
             </div>
             <div class="bleh--panel">
@@ -13926,29 +13866,10 @@
                         </div>
                     </div>
                 </div>
-                <div class="setting" data-type="toggle" id="container-stacked_chartlist_info" onclick="_update_item('stacked_chartlist_info')">
-                    <button class="btn reset" onclick="_reset_item('stacked_chartlist_info')">${tl(trans.reset)}</button>
-                    <div class="heading">
-                        <h5>${tl(trans.track_column_view)}</h5>
-                    </div>
-                    <div class="toggle-wrap">
-                        <button class="toggle" id="toggle-stacked_chartlist_info" aria-checked="true">
-                            <div class="dot"></div>
-                        </button>
-                    </div>
-                </div>
-                ${setting({ id: "show_bulk_edit_album" })}
-                <div class="setting" data-type="toggle" id="container-glacier_library_graphs" onclick="_update_item('glacier_library_graphs')">
-                    <button class="btn reset" onclick="_reset_item('glacier_library_graphs')">${tl(trans.reset)}</button>
-                    <div class="heading">
-                        <h5>${tl(trans.glacier_graphs.name)}</h5>
-                        <p>${tl(trans.glacier_graphs.body)}</p>
-                    </div>
-                    <div class="toggle-wrap">
-                        <button class="toggle" id="toggle-glacier_library_graphs" aria-checked="true" type="button">
-                            <div class="dot"></div>
-                        </button>
-                    </div>
+                <div class="setting-group">
+                    ${setting({ id: "stacked_chartlist_info" })}
+                    ${setting({ id: "show_bulk_edit_album" })}
+                    ${setting({ id: "glacier_library_graphs" })}
                 </div>
                 <div class="inner-preview pad">
                     <div class="bars" ref=${(el) => bars = el}>
@@ -13960,40 +13881,24 @@
       }}
                     </div>
                 </div>
-                <div class="setting" data-type="toggle" id="container-colourful_counts" onclick="_update_item('colourful_counts')">
-                    <div class="heading">
-                        <h5>${tl(trans.colourful_counts.name)}</h5>
-                        <p>${tl(trans.colourful_counts.body)}</p>
-                    </div>
-                    <div class="toggle-wrap">
-                        <button class="toggle" id="toggle-colourful_counts" aria-checked="true">
-                            <div class="dot"></div>
-                        </button>
-                    </div>
+                <div class="setting-group">
+                    ${setting({ id: "colourful_counts" })}
                 </div>
             </div>
             <div class="bleh--panel">
                 <h4>${tl(trans.redirections)}</h4>
-                <div class="setting" data-type="toggle" id="container-travis" onclick="_update_item('travis')">
-                    <div class="heading">
-                        <h5>${tl(trans.redirect_messages.name)}</h5>
-                        <p>${tl(trans.redirect_messages.body)}</p>
-                    </div>
-                    <div class="toggle-wrap">
-                        <button class="toggle" id="toggle-travis" aria-checked="true">
-                            <div class="dot"></div>
-                        </button>
-                    </div>
-                </div>
-                <div class="setting" data-type="toggle">
-                    <div class="heading">
-                        <h5>${tl(trans.legacy_redirects.name)}</h5>
-                        <p>${tl(trans.legacy_redirects.body)}</p>
-                    </div>
-                    <div class="toggle-wrap">
-                        <a class="see-more" href="${root}settings/website" target="_blank">
-                            ${tl(trans.change_now)}
-                        </a>
+                <div class="setting-group">
+                    ${setting({ id: "travis" })}
+                    <div class="setting" data-type="toggle">
+                        <div class="heading">
+                            <h5>${tl(trans.legacy_redirects.name)}</h5>
+                            <p>${tl(trans.legacy_redirects.body)}</p>
+                        </div>
+                        <div class="toggle-wrap">
+                            <a class="see-more" href="${root}settings/website" target="_blank">
+                                ${tl(trans.change_now)}
+                            </a>
+                        </div>
                     </div>
                 </div>
             </div>
@@ -19083,9 +18988,9 @@
           send_button.querySelector(".btn-post-shout").click();
           notify({
             id: "shout",
-            title: trans_legacy.en.shout.name,
-            body: trans_legacy.en.shout.sent,
-            icon: "icon-16-send"
+            title: tl(trans.shouts),
+            body: tl(trans.sent),
+            icon: "icon-16-shoutbox"
           });
         }
       });
@@ -19160,10 +19065,11 @@
       theme: "window",
       content: html.node`
             <div class="dialog-settings">
-                ${setting({ id: "shout_markdown" })}
-                <div class="sep"></div>
-                ${setting({ id: "accessible_name_colours" })}
-                ${setting({ id: "underline_links" })}
+                <div class="setting-group blend">
+                    ${setting({ id: "shout_markdown" })}
+                    ${setting({ id: "accessible_name_colours" })}
+                    ${setting({ id: "underline_links" })}
+                </div>
             </div>
         `,
       placement: "bottom",
@@ -19195,9 +19101,6 @@
     if (shout_parse_queue.length > 0)
       setTimeout(parse_shout_queue, 50);
   }
-  unsafeWindow._show_hidden_shout = function(shout_id) {
-    document.getElementById(`bleh--shout-${shout_id}`).setAttribute("data-bleh--shout-expanded", "true");
-  };
 
   // src/components/radio.js
   function bleh_radio() {
@@ -20343,6 +20246,10 @@
           })}
                 `);
         });
+        let original_fields = body.querySelectorAll(".edit-scrobble-label--originally");
+        original_fields.forEach((field) => {
+          field.textContent = field.textContent.trim().replace(/"([^"]*)"/g, "\u2018$1\u2019");
+        });
         let submit = body.querySelector(".form-group--submit");
         submit.classList = "modal-footer";
         render(submit, html`
@@ -20350,6 +20257,7 @@
                     ${tl(trans.cancel)}
                 </button>
                 <div class="fill" />
+                ${submit.querySelector("input")}
                 <button class="btn primary icon" data-type="item-edit" type="submit">
                     ${tl(trans.edit)}
                 </button>
@@ -21227,6 +21135,12 @@
       en: "Shouts",
       pt: "Mensagens"
     },
+    failed_to_send: {
+      en: "Failed to send"
+    },
+    sent: {
+      en: "Sent"
+    },
     single_shout: {
       en: "viewing a single shout"
     },
@@ -21610,7 +21524,9 @@
       de: "Saisonale Zeitleiste",
       pt: "Linha de tempo sazonal"
     },
-    //i removed the 'current' cus it soyunds better without lol, add back if u disagree or sum :3 and add 'aktuellen' infront of Zeitzone in german
+    enable_seasons: {
+      en: "Automatically adapt to seasonal events"
+    },
     seasonal_offset: {
       en: "Seasonal events are ran in your timezone, which we calculated as {offset}",
       de: "Saisonale Events werden in deiner Zeitzone ausgef\xFChrt, die wir als {offset} berechnet haben",
@@ -23102,9 +23018,9 @@
     },
     show_bulk_edit_album: {
       name: {
-        en: 'Show "Bulk Edit" powered album name in tracklists',
-        de: "Albumnamen mit \u201EMassenbearbeitung\u201C in Titellisten anzeigen",
-        pt: 'Exibir o nome do \xE1lbum ajustado pelo "Bulk Edit" nas listas de faixas.'
+        en: "Show \u2018Bulk Edit\u2019 powered album name in tracklists",
+        de: "Albumnamen mit \u201AMassenbearbeitung\u2018 in Titellisten anzeigen",
+        pt: "Exibir o nome do \xE1lbum ajustado pelo \u2018Bulk Edit\u2019 nas listas de faixas."
       },
       body: {
         en: "With this extension the album name is displayed on all tracks by default, whereas with bleh the album name is only displayed on active tracks",
@@ -27662,16 +27578,27 @@
       body: trans.show_guest_features.body
     },
     stacked_chartlist_info: {
-      default: true
+      default: true,
+      title: trans.track_column_view
+    },
+    glacier_library_graphs: {
+      default: true,
+      title: trans.glacier_graphs.name,
+      body: trans.glacier_graphs.body
     },
     show_remaster_tags: {
-      default: true
+      default: true,
+      title: trans.show_remaster_tags,
+      beta: true
     },
     corrections: {
-      default: true
+      default: true,
+      title: trans.correct_titles_with_lotus
     },
     colourful_counts: {
-      default: true
+      default: true,
+      title: trans.colourful_counts.name,
+      body: trans.colourful_counts.body
     },
     colourful_tracks: {
       default: true,
@@ -27686,7 +27613,9 @@
       default: true
     },
     travis: {
-      default: false
+      default: false,
+      title: trans.redirect_messages.name,
+      body: trans.redirect_messages.body
     },
     list_view: {
       default: 1,
@@ -27732,7 +27661,8 @@
       body: trans.hue_from_album.body
     },
     seasonal: {
-      default: true
+      default: true,
+      title: trans.enable_seasons
     },
     seasonal_particles: {
       default: "all",

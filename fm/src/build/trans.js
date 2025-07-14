@@ -210,6 +210,12 @@ export const trans = {
         en: 'Shouts',
         pt: 'Mensagens'
     },
+    failed_to_send: {
+        en: 'Failed to send'
+    },
+    sent: {
+        en: 'Sent'
+    },
     single_shout: {
         en: 'viewing a single shout'
     },
@@ -592,9 +598,10 @@ export const trans = {
         en: 'Seasonal timeline',
         de: 'Saisonale Zeitleiste',
         pt: 'Linha de tempo sazonal'
-
     },
-    //i removed the 'current' cus it soyunds better without lol, add back if u disagree or sum :3 and add 'aktuellen' infront of Zeitzone in german
+    enable_seasons: {
+        en: 'Automatically adapt to seasonal events'
+    },
     seasonal_offset: {
         en: 'Seasonal events are ran in your timezone, which we calculated as {offset}',
         de: 'Saisonale Events werden in deiner Zeitzone ausgeführt, die wir als {offset} berechnet haben',
@@ -2086,9 +2093,9 @@ export const trans = {
     },
     show_bulk_edit_album: {
         name: {
-            en: 'Show "Bulk Edit" powered album name in tracklists',
-            de: 'Albumnamen mit „Massenbearbeitung“ in Titellisten anzeigen',
-            pt: 'Exibir o nome do álbum ajustado pelo "Bulk Edit" nas listas de faixas.'
+            en: 'Show ‘Bulk Edit’ powered album name in tracklists',
+            de: 'Albumnamen mit ‚Massenbearbeitung‘ in Titellisten anzeigen',
+            pt: 'Exibir o nome do álbum ajustado pelo ‘Bulk Edit’ nas listas de faixas.'
         },
         body: {
             en: 'With this extension the album name is displayed on all tracks by default, whereas with bleh the album name is only displayed on active tracks',

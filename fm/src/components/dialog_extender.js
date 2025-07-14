@@ -111,6 +111,11 @@ export function dialog_extender() {
                 `);
             });
 
+            let original_fields = body.querySelectorAll('.edit-scrobble-label--originally');
+            original_fields.forEach((field) => {
+                field.textContent = field.textContent.trim().replace(/"([^"]*)"/g, '‘$1’');
+            });
+
             let submit = body.querySelector('.form-group--submit');
             submit.classList = 'modal-footer';
 
@@ -119,6 +124,7 @@ export function dialog_extender() {
                     ${tl(trans.cancel)}
                 </button>
                 <div class="fill" />
+                ${submit.querySelector('input')}
                 <button class="btn primary icon" data-type="item-edit" type="submit">
                     ${tl(trans.edit)}
                 </button>
