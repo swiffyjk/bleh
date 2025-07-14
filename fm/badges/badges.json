@@ -1,11 +1,11 @@
 {
-    "latest": "2025.0707",
+    "latest": “2025.0715”,
     "sponsors": [
         "hyacines", "kateshapedbox", "evangelicgirl",
         "astrablooms", "ItsProyal", "vwvwvwvwvwvwv", "Orofil",
         "EliteHimself", "iwas15with100k", "keepsweet", "yourfriendoss",
         "softmancy", "carbon1k", "uix-uix", "scidal",
-        "Carbonzer", "iwasanangelonce"
+        "Carbonzer", "marrowchant"
     ],
     "sponsors_one_time": [
         "kateshapedbox",
@@ -193,7 +193,7 @@
         "Carbonzer": {
             "type": "sponsor"
         },
-        "iwasanangelonce": [
+        "marrowchant": [
             {
                 "type": "sponsor"
             },
