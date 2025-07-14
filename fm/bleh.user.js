@@ -13690,7 +13690,37 @@
                 <div class="sep" />
                 <h4>${tl(trans.manage_feature_flags)}</h4>
                 <div class="alert alert-danger">${tl(trans.beware_notice)}</div>
-                <div class="feature-flags" id="feature-flags"></div>
+                <div class="setting-group">
+                    ${Object.entries(version.feature_flags).reverse().map(([flag, details]) => {
+        let value = ff(flag);
+        let checkbox;
+        let state;
+        return html.node`
+                            <div class="setting" data-type="toggle" onclick=${() => {
+          let current = checkbox.checked;
+          checkbox.checked = !current;
+          state.setAttribute("aria-checked", !current);
+          settings.feature_flags[flag] = !current;
+          document.documentElement.setAttribute(`data-ff--${flag}`, (!current).toString());
+          localStorage.setItem("bleh", JSON.stringify(settings));
+        }}>
+                                <div class="heading">
+                                    <h5>${details.name}</h5>
+                                    ${details.notice ? html.node`<p>${{ html: details.notice }}</p>` : ""}
+                                    <div class="info-row">
+                                        <div class="new-badge flag-${details.default}">${details.default}</div><p class="date">${details.date}</p><p>${flag}</p>
+                                    </div>
+                                </div>
+                                <div class="toggle-wrap">
+                                    <input type="checkbox" ref=${(el) => checkbox = el} value=${value} checked=${value} />
+                                    <button class="toggle" aria-checked=${value} ref=${(el) => state = el}>
+                                        <div class="dot" />
+                                    </button>
+                                </div>
+                            </div>
+                        `;
+      })}
+                </div>
             </div>
             `);
     } else if (page_id == "music") {
@@ -14139,8 +14169,6 @@
       init_profile_page();
       activity_preview();
       refresh_all();
-    } else if (page_id == "sku") {
-      bleh_sku_page();
     }
     if (page_id == "text")
       prepare_language_page();
@@ -14202,34 +14230,6 @@
       let current_state = version.feature_flags[flag].default;
       if (settings.feature_flags[flag] != null)
         current_state = settings.feature_flags[flag];
-      document.documentElement.setAttribute(`data-ff--${flag}`, current_state);
-    }
-  }
-  function bleh_sku_page() {
-    let flags_container = document.getElementById("feature-flags");
-    for (let flag in version.feature_flags) {
-      let current_state = version.feature_flags[flag].default;
-      if (settings.feature_flags[flag] != void 0)
-        current_state = settings.feature_flags[flag];
-      let feature_flag_element = document.createElement("div");
-      feature_flag_element.classList.add("setting");
-      feature_flag_element.setAttribute("data-type", "toggle");
-      feature_flag_element.setAttribute("onclick", `_update_flag_toggle('${flag}', this)`);
-      render(feature_flag_element, html`
-            <div class="heading">
-                <h5>${version.feature_flags[flag].name}</h5>
-                ${version.feature_flags[flag].notice ? html.node`<p>${{ html: version.feature_flags[flag].notice }}</p>` : ""}
-                <div class="info-row">
-                    <div class="new-badge flag-${version.feature_flags[flag].default}">${version.feature_flags[flag].default}</div><p class="date">${version.feature_flags[flag].date}</p><p>${flag}</p>
-                </div>
-            </div>
-            <div class="toggle-wrap">
-                <button id="feature-flag-toggle-${flag}" class="toggle" aria-checked="${current_state}">
-                    <div class="dot"></div>
-                </button>
-            </div>
-        `);
-      flags_container.appendChild(feature_flag_element);
       document.documentElement.setAttribute(`data-ff--${flag}`, current_state);
     }
   }
