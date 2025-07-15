@@ -46,8 +46,9 @@ export function register_rabbit() {
         });*/
 
         const cmd = (e.getModifierState('Control') || e.getModifierState('Meta'));
+        const key = e.key.toLowerCase();
 
-        if (cmd && ['k', 'K', ','].includes(e.key) && !page.structure.dialogs.hasChildNodes()) {
+        if (cmd && ['k', ','].includes(key) && !page.structure.dialogs.hasChildNodes()) {
             e.preventDefault();
 
             depth = 0;
@@ -113,7 +114,7 @@ export function register_rabbit() {
         }
 
         if (!page.structure.dialogs.hasChildNodes()) {
-            if (cmd && (e.key == 's' || e.key == 'S')) {
+            if (cmd && ['s'].includes(key)) {
                 e.preventDefault();
 
                 if (settings.profile_shortcut != '') {
@@ -123,13 +124,13 @@ export function register_rabbit() {
                 }
             }
 
-            if (cmd && (e.key == 'b' || e.key == 'B')) {
+            if (cmd && ['b'].includes(key)) {
                 e.preventDefault();
 
                 window.location.href = `${root}bleh`;
             }
 
-            if (cmd && (e.key == 'd' || e.key == 'D')) {
+            if (cmd && ['d'].includes(key)) {
                 e.preventDefault();
 
                 rabbit();

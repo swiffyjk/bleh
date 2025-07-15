@@ -19188,7 +19188,8 @@
     ];
     document.addEventListener("keydown", (e) => {
       const cmd = e.getModifierState("Control") || e.getModifierState("Meta");
-      if (cmd && ["k", "K", ","].includes(e.key) && !page.structure.dialogs.hasChildNodes()) {
+      const key = e.key.toLowerCase();
+      if (cmd && ["k", ","].includes(key) && !page.structure.dialogs.hasChildNodes()) {
         e.preventDefault();
         depth = 0;
         if (e.getModifierState("Shift")) {
@@ -19243,7 +19244,7 @@
         }
       }
       if (!page.structure.dialogs.hasChildNodes()) {
-        if (cmd && (e.key == "s" || e.key == "S")) {
+        if (cmd && ["s"].includes(key)) {
           e.preventDefault();
           if (settings.profile_shortcut != "") {
             window.location.href = `${root}user/${settings.profile_shortcut}`;
@@ -19251,11 +19252,11 @@
             open_profile_shortcut_window();
           }
         }
-        if (cmd && (e.key == "b" || e.key == "B")) {
+        if (cmd && ["b"].includes(key)) {
           e.preventDefault();
           window.location.href = `${root}bleh`;
         }
-        if (cmd && (e.key == "d" || e.key == "D")) {
+        if (cmd && ["d"].includes(key)) {
           e.preventDefault();
           rabbit();
           search();
