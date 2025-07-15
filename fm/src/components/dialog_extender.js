@@ -106,7 +106,8 @@ export function dialog_extender() {
                         type: 'checkbox',
                         name: name,
                         title: text,
-                        disabled: disabled
+                        disabled: disabled,
+                        data: 'on'
                     })}
                 `);
             });

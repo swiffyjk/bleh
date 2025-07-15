@@ -691,7 +691,8 @@ export let settings_store = {
     },
     corrections: {
         default: true,
-        title: trans.correct_titles_with_lotus
+        title: trans.correct_titles_with_lotus.name,
+        body: trans.correct_titles_with_lotus.body,
     },
     colourful_counts: {
         default: true,

@@ -1874,6 +1874,17 @@ export const trans = {
         de: 'Nach Updates suchen',
         pt: 'Buscar atualizações'
     },
+    music_corrections: {
+        en: 'Music corrections'
+    },
+    brand_version: {
+        // used for the lotus header where:
+        // brand = "lotus"
+        // making: 'lotus version'
+        en: '{brand} version',
+        de: '{brand} Version',
+        pt: '{brand} versão'
+    },
     brand_version_number: {
         // used for the lotus header where:
         // brand = "lotus"
@@ -1883,15 +1894,15 @@ export const trans = {
         de: '{brand} Version {number}',
         pt: '{brand} versão {number}'
     },
-    what_is_lotus: {
-        en: 'A capitalisation correction system for artists, albums, and tracks - all powered by community contributions.',
-        de: 'Ein System zur Korrektur der Groß- und Kleinschreibung von Künstlern, Alben und Titeln - alles unterstützt durch Beiträge der Community.',
-        pt: 'Um sistema de correção de capitalização para artistas, álbuns e faixas - tudo alimentado por contribuições da comunidade.'
-    },
     correct_titles_with_lotus: {
-        en: 'Correct titles with lotus',
-        de: 'Titel korrigieren mit Lotus',
-        pt: 'Corrigir títulos com lotus'
+        name: {
+            en: 'Correct titles with lotus',
+            de: 'Titel korrigieren mit Lotus',
+            pt: 'Corrigir títulos com lotus'
+        },
+        body: {
+            en: 'Re-capitalise artists, albums, and tracks based on community contributions'
+        }
     },
     view_all: {
         en: 'View all',

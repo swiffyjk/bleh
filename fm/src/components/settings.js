@@ -39,9 +39,8 @@ export function setting({
             disabled_reason = tl(trans.item_is_unavailable_on_platform).replace('{i}', title).replace('{p}', tl(trans.platforms[page.platform]));
         }
 
-        if (disabled && disabled_reason) {
+        if (disabled && disabled_reason)
             return setting_fail(id, {message: disabled_reason, unavailable: true});
-        }
 
         if (settings_store[id].beta)
             title = html.node`${title}<span class="new-badge beta">${tl(trans.beta)}</span>`;

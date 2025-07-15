@@ -997,12 +997,7 @@ export function render_setting_page(page_id) {
 
         render(page.structure.main, html`
             <div class="bleh--panel">
-                <h4>${html.node([
-                    tl(trans.brand_version_number)
-                    .replace('{brand}', `<a class="lotus lotus-name" href="https://github.com/katelyynn/lotus" target="_blank">lotus</a>`)
-                    .replace('{number}', `<span class="version-link lotus">${(artist_corrections.version >= album_track_corrections.version) ? artist_corrections.version : album_track_corrections.version}</span>`)
-                ])}</h4>
-                <p>${tl(trans.what_is_lotus)}</p>
+                <h4>${tl(trans.music_corrections)}</h4>
                 <div class="inner-preview pad">
                     <div class="lotus-preview">
                         <div class="before">
@@ -1015,15 +1010,19 @@ export function render_setting_page(page_id) {
                         </div>
                     </div>
                 </div>
-                <div class="screen-row actions-only">
-                    <div class="actions">
-                        <button class="see-more update-check lotus" onclick="_lotus_check()">${tl(trans.update_check)}</button>
-                        <div class="fill"></div>
-                        <button class="see-more lotus" onclick="_open_correction_modal()">${tl(trans.view_all)}</button>
-                    </div>
-                </div>
                 <div class="setting-group">
                     ${setting({id: 'corrections'})}
+                    <div class="setting" data-type="info">
+                        <div class="heading">
+                            <h5>${tl(trans.current_version)}</h5>
+                        </div>
+                        <div class="info">
+                            <button class="see-more update-check" onclick="_lotus_check()">
+                                ${tl(trans.update_check)}
+                            </button>
+                            <p>${(artist_corrections.version >= album_track_corrections.version) ? artist_corrections.version : album_track_corrections.version}</p>
+                        </div>
+                    </div>
                     <div class="setting" data-type="action">
                         <div class="heading">
                             <h5>${tl(trans.help_contribute)}</h5>
@@ -1032,6 +1031,9 @@ export function render_setting_page(page_id) {
                             <a class="see-more" href="https://github.com/katelyynn/lotus/issues/new/choose" target="_blank">
                                 ${tl(trans.suggest_correction)}
                             </a>
+                            <button class="see-more" onclick="_open_correction_modal()">
+                                ${tl(trans.view_all)}
+                            </button>
                         </div>
                     </div>
                 </div>

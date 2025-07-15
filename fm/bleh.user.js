@@ -6636,9 +6636,8 @@
         disabled = true;
         disabled_reason = tl(trans.item_is_unavailable_on_platform).replace("{i}", title).replace("{p}", tl(trans.platforms[page.platform]));
       }
-      if (disabled && disabled_reason) {
+      if (disabled && disabled_reason)
         return setting_fail(id, { message: disabled_reason, unavailable: true });
-      }
       if (settings_store[id].beta)
         title = html.node`${title}<span class="new-badge beta">${tl(trans.beta)}</span>`;
       if (type === "toggle") {
@@ -13759,10 +13758,7 @@
       let bars;
       render(page.structure.main, html`
             <div class="bleh--panel">
-                <h4>${html.node([
-        tl(trans.brand_version_number).replace("{brand}", `<a class="lotus lotus-name" href="https://github.com/katelyynn/lotus" target="_blank">lotus</a>`).replace("{number}", `<span class="version-link lotus">${artist_corrections.version >= album_track_corrections.version ? artist_corrections.version : album_track_corrections.version}</span>`)
-      ])}</h4>
-                <p>${tl(trans.what_is_lotus)}</p>
+                <h4>${tl(trans.music_corrections)}</h4>
                 <div class="inner-preview pad">
                     <div class="lotus-preview">
                         <div class="before">
@@ -13775,15 +13771,19 @@
                         </div>
                     </div>
                 </div>
-                <div class="screen-row actions-only">
-                    <div class="actions">
-                        <button class="see-more update-check lotus" onclick="_lotus_check()">${tl(trans.update_check)}</button>
-                        <div class="fill"></div>
-                        <button class="see-more lotus" onclick="_open_correction_modal()">${tl(trans.view_all)}</button>
-                    </div>
-                </div>
                 <div class="setting-group">
                     ${setting({ id: "corrections" })}
+                    <div class="setting" data-type="info">
+                        <div class="heading">
+                            <h5>${tl(trans.current_version)}</h5>
+                        </div>
+                        <div class="info">
+                            <button class="see-more update-check" onclick="_lotus_check()">
+                                ${tl(trans.update_check)}
+                            </button>
+                            <p>${artist_corrections.version >= album_track_corrections.version ? artist_corrections.version : album_track_corrections.version}</p>
+                        </div>
+                    </div>
                     <div class="setting" data-type="action">
                         <div class="heading">
                             <h5>${tl(trans.help_contribute)}</h5>
@@ -13792,6 +13792,9 @@
                             <a class="see-more" href="https://github.com/katelyynn/lotus/issues/new/choose" target="_blank">
                                 ${tl(trans.suggest_correction)}
                             </a>
+                            <button class="see-more" onclick="_open_correction_modal()">
+                                ${tl(trans.view_all)}
+                            </button>
                         </div>
                     </div>
                 </div>
@@ -20139,7 +20142,8 @@
             type: "checkbox",
             name: name2,
             title: text2,
-            disabled
+            disabled,
+            data: "on"
           })}
                 `);
         });
@@ -22714,6 +22718,17 @@
       de: "Nach Updates suchen",
       pt: "Buscar atualiza\xE7\xF5es"
     },
+    music_corrections: {
+      en: "Music corrections"
+    },
+    brand_version: {
+      // used for the lotus header where:
+      // brand = "lotus"
+      // making: 'lotus version'
+      en: "{brand} version",
+      de: "{brand} Version",
+      pt: "{brand} vers\xE3o"
+    },
     brand_version_number: {
       // used for the lotus header where:
       // brand = "lotus"
@@ -22723,15 +22738,15 @@
       de: "{brand} Version {number}",
       pt: "{brand} vers\xE3o {number}"
     },
-    what_is_lotus: {
-      en: "A capitalisation correction system for artists, albums, and tracks - all powered by community contributions.",
-      de: "Ein System zur Korrektur der Gro\xDF- und Kleinschreibung von K\xFCnstlern, Alben und Titeln - alles unterst\xFCtzt durch Beitr\xE4ge der Community.",
-      pt: "Um sistema de corre\xE7\xE3o de capitaliza\xE7\xE3o para artistas, \xE1lbuns e faixas - tudo alimentado por contribui\xE7\xF5es da comunidade."
-    },
     correct_titles_with_lotus: {
-      en: "Correct titles with lotus",
-      de: "Titel korrigieren mit Lotus",
-      pt: "Corrigir t\xEDtulos com lotus"
+      name: {
+        en: "Correct titles with lotus",
+        de: "Titel korrigieren mit Lotus",
+        pt: "Corrigir t\xEDtulos com lotus"
+      },
+      body: {
+        en: "Re-capitalise artists, albums, and tracks based on community contributions"
+      }
     },
     view_all: {
       en: "View all",
@@ -27570,7 +27585,8 @@
     },
     corrections: {
       default: true,
-      title: trans.correct_titles_with_lotus
+      title: trans.correct_titles_with_lotus.name,
+      body: trans.correct_titles_with_lotus.body
     },
     colourful_counts: {
       default: true,
