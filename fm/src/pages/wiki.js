@@ -362,7 +362,7 @@ export function patch_wiki() {
     }
 }
 
-function patch_wiki_contents(wiki_block) {
+export function patch_wiki_contents(wiki_block) {
     let links = wiki_block.querySelectorAll('a');
     links.forEach((link) => {
         let href = link.getAttribute('href');
@@ -387,6 +387,8 @@ function patch_wiki_contents(wiki_block) {
         if (href.endsWith('/+wiki')) return;
 
         href = href.replace(root, '').replace('music/', '');
+
+        if (href.startsWith('user/')) return;
 
         if (href.startsWith('tag/')) {
             type = 'tag';

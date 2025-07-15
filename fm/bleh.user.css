@@ -17705,7 +17705,7 @@
             text-decoration: none;
         }
     }
-    :is(.shout-body, .about-me-sidebar, .bleh--about-me-preview, .user-list-about-me) > p a {
+    :is(.shout-body, .about-me-sidebar, .bleh--about-me-preview, .user-list-about-me) > p a:not([data-link-type]) {
         position: relative;
         --show-icon: none;
         --top: 50%;

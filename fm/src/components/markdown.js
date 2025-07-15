@@ -6,7 +6,7 @@
 
 import {root} from "../build/page";
 import {html} from "lighterhtml";
-import {tl, trans} from "../build/trans.js";
+import {patch_wiki_contents} from "../pages/wiki.js";
 
 export function markdown(text, {
     allow_headers = false,
@@ -31,9 +31,23 @@ export function markdown(text, {
     });
     let parsed_body = converter.makeHtml(text
     .replace(/([@])([a-zA-Z0-9_]+)/g, `[$1$2](${root}user/$2)`)
-    .replace(/\[artist\]([^[\]]+)\[\/artist\]/g, `[$1](${root}music/$1)`)
-    .replace(/\[album artist=([^[\]]+)\]([^[\]]+)\[\/album\]/g, `[$2](${root}music/$1/$2)`)
-    .replace(/\[track artist=([^[\]]+)\]([^[\]]+)\[\/track\]/g, `[$2](${root}music/$1/_/$2)`)
+    .replace(
+        /\[artist\]([^[\]]+)\[\/artist\]/g,
+        (match, artist) =>
+            `[${artist}](${root}music/${encodeURIComponent(artist)})`
+    )
+    .replace(
+        /\[album artist=([^[\]]+)\]([^[\]]+)\[\/album\]/g,
+        (match, artist, album) =>
+            `[${album}](${root}music/` +
+            `${encodeURIComponent(artist)}/${encodeURIComponent(album)})`
+    )
+    .replace(
+        /\[track artist=([^[\]]+)\]([^[\]]+)\[\/track\]/g,
+        (match, artist, track) =>
+            `[${track}](${root}music/` +
+            `${encodeURIComponent(artist)}/_/${encodeURIComponent(track)})`
+    )
     .replace(/https:\/\/open\.spotify\.com\/user\/([A-Za-z0-9]+)\?si=([A-Za-z0-9]+)/g, '[Spotify](https://open.spotify.com/user/$1)')
     .replace(/&/g, '&amp;')
     .replace(/</g, '&lt;')
@@ -43,19 +57,7 @@ export function markdown(text, {
 
     let body = html.node([parsed_body]);
 
-    let links = body.querySelectorAll('a');
-    links.forEach(link => {
-        const href = link.getAttribute('href');
-        if (href && link.textContent != href && /^(https?|mailto|ftp|sftp|tel):/.test(href)) {
-            tippy(link, {
-                theme: 'name-sister-combo',
-                content: html.node`
-                    <span class="name">${href}</span>
-                    <span class="sister">${tl(trans.external)}</span>
-                `
-            });
-        }
-    });
+    patch_wiki_contents(body);
 
     return body;
 }

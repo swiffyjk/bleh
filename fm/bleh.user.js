@@ -3201,6 +3201,513 @@
     kill_window(id);
   };
 
+  // src/avatar.js
+  function patch_avatar(avatar3, name2, type = "", parent = null, side = "right") {
+    if (avatar3.hasAttribute("data-bleh-avatar"))
+      return {};
+    avatar3.setAttribute("data-bleh-avatar", "true");
+    let avatar_img = avatar3.querySelector("img");
+    if (!avatar_img) return {};
+    avatar_img.setAttribute("src", avatar_img.getAttribute("src").replace("/64s/", "/avatar70s/"));
+    let badges = load_badges(name2, true);
+    let buttons = html.node`
+        <div class="user-buttons view-buttons">
+            ${() => {
+      let btn = html.node`
+                    <a class="btn view-item chibi" data-type="profile" href="${root}user/${name2}">${tl(trans.profile)}</a>
+                `;
+      tippy(btn, {
+        content: tl(trans.profile)
+      });
+      return btn;
+    }}
+            ${() => {
+      let btn = html.node`
+                    <a class="btn view-item chibi" data-type="library" href="${root}user/${name2}/library">${tl(trans.library)}</a>
+                `;
+      tippy(btn, {
+        content: btn.textContent
+      });
+      return btn;
+    }}
+                    ${() => {
+      let btn = html.node`
+                    <a class="btn view-item chibi" data-type="shouts" href="${root}user/${name2}/shoutbox">${tl(trans.shouts)}</a>
+                `;
+      tippy(btn, {
+        content: btn.textContent
+      });
+      return btn;
+    }}
+        </div>
+    `;
+    if (badges) {
+      let pre_existing_badge = avatar3.querySelector(".avatar-status-dot");
+      if (pre_existing_badge)
+        avatar3.removeChild(pre_existing_badge);
+      avatar3.setAttribute("title", "");
+      let this_badge = sponsor_list.badges[name2];
+      if (!Array.isArray(sponsor_list.badges[name2])) {
+        log(`@${name2} 1 badge:`, "shout", "info", sponsor_list.badges[name2]);
+      } else {
+        log(`@${name2} multiple badges:`, "shout", "info", sponsor_list.badges[name2]);
+        let badges_length = Object.keys(sponsor_list.badges[name2]).length - 1;
+        this_badge = sponsor_list.badges[name2][badges_length];
+        log(`@${name2} using badge ${badges_length} as primary`, "shout", "info", this_badge);
+      }
+      let badge = document.createElement("span");
+      badge.classList.add("avatar-status-dot", `user-status--bleh-${this_badge.type}`, `user-status--bleh-user-${name2}`);
+      avatar3.appendChild(badge);
+      if (!parent)
+        avatar3.classList.add("avatar-can-hoverbox");
+      else
+        parent.classList.add("parent-can-hoverbox");
+      tippy(parent ? parent : avatar3, {
+        theme: "user",
+        content: html.node`
+                <div class="image-info">
+                    <div class="inner-image">
+                        ${html.node([avatar_img.outerHTML])}
+                    </div>
+                    <div class="info">
+                        <h5 class="title">${name2}</h5>
+                        <p class="badge user-status--bleh-${this_badge.type} user-status--bleh-user-${name2}" data-badge-type="${this_badge.type}" data-badge-user="${name2}">${this_badge.name}</p>
+                    </div>
+                    <a href="${root}user/${name2}" class="link-over"></a>
+                </div>
+                ${buttons}
+            `,
+        placement: side,
+        interactive: true,
+        delay: [200, 0]
+      });
+      return this_badge;
+    } else {
+      let pre_existing_badge = avatar3.querySelector(".avatar-status-dot");
+      if (!pre_existing_badge) {
+        if (!parent)
+          avatar3.classList.add("avatar-can-hoverbox");
+        else
+          parent.classList.add("parent-can-hoverbox");
+        tippy(parent ? parent : avatar3, {
+          theme: "user",
+          content: html.node`
+                    <div class="image-info">
+                        <div class="inner-image">
+                            ${html.node([avatar_img.outerHTML])}
+                        </div>
+                        <div class="info">
+                            <h5 class="title">${name2}</h5>
+                        </div>
+                        <a href="${root}user/${name2}" class="link-over"></a>
+                    </div>
+                    ${buttons}
+                `,
+          placement: side,
+          interactive: true,
+          delay: [200, 0]
+        });
+        return {};
+      } else {
+        if (!parent)
+          avatar3.classList.add("avatar-can-hoverbox");
+        else
+          parent.classList.add("parent-can-hoverbox");
+        let type2 = pre_existing_badge.classList[1].replace("avatar-status-dot--", "user-status-");
+        tippy(parent ? parent : avatar3, {
+          theme: "user",
+          content: html.node`
+                    <div class="image-info">
+                        <div class="inner-image">
+                            ${html.node([avatar_img.outerHTML])}
+                        </div>
+                        <div class="info">
+                            <h5 class="title">${name2}</h5>
+                            <p class="badge ${type2}">${tl(trans.badges[type2].name)}</p>
+                        </div>
+                        <a href="${root}user/${name2}" class="link-over"></a>
+                    </div>
+                    ${buttons}
+                `,
+          placement: side,
+          interactive: true,
+          delay: [200, 0]
+        });
+        avatar3.setAttribute("title", "");
+        return {
+          type: pre_existing_badge.classList[1]
+        };
+      }
+    }
+  }
+  function return_name_from_avatar(avatar3) {
+    if (!avatar3)
+      return;
+    if (!avatar3.hasAttribute("alt"))
+      return;
+    if (avatar3.getAttribute("alt") == tl(trans.your_avatar))
+      return auth;
+    return avatar3.getAttribute("alt").replace(tl(trans.avatar_for_user), "");
+  }
+  unsafeWindow._expand_avatar = function(src) {
+    expand_avatar(src);
+  };
+  function expand_avatar(src) {
+    dialog({
+      id: "avatar",
+      body: html.node`
+            <div class="full-avatar-wrapper">
+                <div class="full-avatar">
+                    <img src="${src}">
+                </div>
+                <div class="modal-footer">
+                    <div class="fill"></div>
+                    <div class="button-group">
+                        <a class="btn primary open" href="${src}" target="_blank">
+                            ${tl(trans.open_new_tab)}
+                        </a>
+                    </div>
+                    <div class="fill"></div>
+                </div>
+            </div>
+        `,
+      type: "avatar",
+      has_overlays: false
+    });
+  }
+
+  // src/sku.js
+  function ff(flag) {
+    log(`parsing ${flag}`, "flag", "log", {
+      setting: settings.feature_flags[flag],
+      sku: version.feature_flags[flag]
+    });
+    if (settings.feature_flags[flag] != null)
+      return settings.feature_flags[flag];
+    if (version.feature_flags[flag] != null)
+      return version.feature_flags[flag].default;
+  }
+
+  // src/pages/wiki.js
+  function bleh_wiki() {
+    let wiki_panel = document.createElement("section");
+    wiki_panel.classList.add("wiki-panel");
+    wiki_panel.innerHTML = page.structure.main.innerHTML;
+    page.structure.main.innerHTML = "";
+    page.structure.main.appendChild(wiki_panel);
+    page.structure.main.classList.add("not-a-panel");
+    let original_edit_button = page.structure.main.querySelector(".qa-wiki-edit");
+    let original_version_history = page.structure.main.querySelector(".wiki-history-link--desktop a");
+    let side_actions = document.createElement("section");
+    side_actions.classList.add("side-actions");
+    if (!page.mobile)
+      page.structure.side.appendChild(side_actions);
+    else
+      page.structure.main.appendChild(side_actions);
+    if (original_edit_button) {
+      let side_edit = document.createElement("a");
+      side_edit.classList.add("btn", "side-action");
+      side_edit.setAttribute("href", original_edit_button.getAttribute("href"));
+      side_edit.setAttribute("data-type", "edit");
+      side_edit.textContent = tl(trans.edit);
+      side_actions.appendChild(side_edit);
+    }
+    if (original_version_history) {
+      let side_history = document.createElement("a");
+      side_history.classList.add("btn", "side-action");
+      side_history.setAttribute("href", original_version_history.getAttribute("href"));
+      side_history.setAttribute("data-type", "history");
+      side_history.textContent = tl(trans.timeline);
+      side_actions.appendChild(side_history);
+    }
+    let wiki_author = wiki_panel.querySelector(".wiki-author");
+    if (wiki_author) {
+      let h2 = wiki_panel.querySelector("h2.text-18");
+      let sub_text = document.createElement("div");
+      sub_text.classList.add("sub-text", "space-below", "header-style");
+      sub_text.innerHTML = `
+            <div class="breadcrumb-origin prominent">
+                ${h2 ? h2.innerHTML : page.structure.container.querySelector(".content-top-header").textContent}
+            </div>
+            <div class="wiki-author-side">
+                ${wiki_author.innerHTML}
+            </div>
+        `;
+      wiki_panel.insertBefore(sub_text, wiki_panel.firstElementChild);
+      if (h2)
+        wiki_panel.removeChild(h2);
+    }
+    let wiki = wiki_panel.querySelector(".wiki");
+    if (!wiki) return;
+    patch_wiki_contents(wiki);
+    let factbox = wiki_panel.querySelector(".factbox");
+    if (factbox) {
+      let facts = html.node`
+            <section class="facts">
+                ${factbox}
+            </section>
+        `;
+      side_actions.after(facts);
+    }
+  }
+  function bleh_wiki_history() {
+    let breadcrumb_root = page.structure.container.querySelector(".subpage-breadcrumb");
+    let breadcrumb_name = page.structure.container.querySelector(".subpage-title");
+    if (!breadcrumb_root) {
+      breadcrumb_root = page.structure.container.querySelector(".content-top-back-link");
+      breadcrumb_name = page.structure.container.querySelector(".content-top-header");
+    }
+    let sub_text = document.createElement("div");
+    sub_text.classList.add("sub-text", "space-below", "header-style");
+    sub_text.innerHTML = `
+        <div class="breadcrumb">
+            ${breadcrumb_root.querySelector("a").outerHTML}
+            <div class="breadcrumb-name prominent">
+                ${breadcrumb_name.textContent}
+            </div>
+        </div>
+    `;
+    breadcrumb_root.style.setProperty("display", "none");
+    breadcrumb_name.style.setProperty("display", "none");
+    let buffer_container = page.structure.container.querySelector(".row ~ .buffer-4");
+    if (!buffer_container)
+      buffer_container = page.structure.container.querySelector(".wiki-history");
+    let wiki_history_table = buffer_container.querySelector(".wiki-history-table");
+    let pagination = buffer_container.querySelector(".pagination");
+    let wiki_panel = document.createElement("section");
+    wiki_panel.classList.add("wiki-history-panel");
+    wiki_panel.appendChild(sub_text);
+    wiki_panel.appendChild(wiki_history_table);
+    page.structure.main.appendChild(wiki_panel);
+    buffer_container.style.setProperty("display", "none");
+    if (pagination)
+      wiki_panel.appendChild(pagination);
+    let side_actions = html.node`
+        <section class="side-actions">
+            <a class="btn side-action" data-type="latest-wiki" href="${sub_text.querySelector("a").getAttribute("href")}">
+                ${tl(trans.view_latest)}
+            </a>
+        </section>
+    `;
+    if (!page.mobile)
+      page.structure.side.appendChild(side_actions);
+    else
+      page.structure.main.appendChild(side_actions);
+    let entries = page.structure.main.querySelectorAll(".wiki-history-entry");
+    entries.forEach((entry) => {
+      let author = entry.querySelector(".wiki-history-author");
+      let avatar3 = author.querySelector(".wiki-history-author-avatar");
+      let name2 = author.querySelector(".link-block-target");
+      if (name2 && avatar3) {
+        let badge = patch_avatar(avatar3, name2.textContent, "wiki");
+        avatar3.setAttribute("data-avatar-themed", "true");
+        avatar3.classList.add(`user-status--bleh-${badge.type}`, `user-status--bleh-user-${name2.textContent}`);
+        name2.classList.add(`user-status--bleh-${badge.type}`, `user-status--bleh-user-${name2.textContent}`);
+      }
+    });
+  }
+  function bleh_wiki_editor() {
+    let wiki_edit_panel = document.createElement("section");
+    wiki_edit_panel.classList.add("wiki-edit-panel");
+    wiki_edit_panel.innerHTML = page.structure.main.innerHTML;
+    page.structure.main.innerHTML = "";
+    page.structure.main.appendChild(wiki_edit_panel);
+    page.structure.main.classList.add("not-a-panel");
+    let breadcrumb_root = page.structure.container.querySelector(".subpage-breadcrumb");
+    let breadcrumb_name = page.structure.container.querySelector(".subpage-title");
+    if (!breadcrumb_name) {
+      breadcrumb_name = page.structure.content_top.querySelector(".content-top-header");
+      if (breadcrumb_name)
+        page.structure.content_top.style.setProperty("display", "none");
+    }
+    if (!breadcrumb_root) {
+      breadcrumb_root = page.structure.container.querySelector(".content-top-back-link");
+      breadcrumb_name = page.structure.container.querySelector(".content-top-header");
+    }
+    let sub_text = document.createElement("div");
+    sub_text.classList.add("sub-text", "space-below", "header-style");
+    sub_text.innerHTML = `
+        <div class="breadcrumb">
+            ${breadcrumb_root.querySelector("a").outerHTML}
+            <div class="breadcrumb-name prominent">
+                ${breadcrumb_name.textContent}
+            </div>
+        </div>
+    `;
+    breadcrumb_root.style.setProperty("display", "none");
+    breadcrumb_name.style.setProperty("display", "none");
+    wiki_edit_panel.insertBefore(sub_text, wiki_edit_panel.firstElementChild);
+    let wiki_syntax = document.createElement("section");
+    wiki_syntax.classList.add("bleh--blank-panel", "wiki-syntax-panel");
+    wiki_syntax.innerHTML = `
+        <h3 class="text-18">${tl(trans.fancy_syntax)}</h3>
+        <div class="syntax-listing">
+            <div class="syntax-listing-item">
+                <div class="code-side">[artist]julie[/artist]</div>
+                <div class="detail-side">${tl(trans.links_to).replace("{link}", `<a href="${root}music/julie" data-link-type="artist" target="_blank">julie</a>`)}</div>
+            </div>
+            <div class="syntax-listing-item">
+                <div class="code-side">[album artist=julie]pushing daisies[/album]</div>
+                <div class="detail-side">${tl(trans.links_to).replace("{link}", `<a href="${root}music/julie/pushing+daisies" data-link-type="album" target="_blank">pushing daisies</a>`)}</div>
+            </div>
+            <div class="syntax-listing-item">
+                <div class="code-side">[track artist=julie]very little effort[/track]</div>
+                <div class="detail-side">${tl(trans.links_to).replace("{link}", `<a href="${root}music/julie/_/very+little+effort" data-link-type="track" target="_blank">very little effort</a>`)}</div>
+            </div>
+        </div>
+        <div class="sep"></div>
+        <div class="syntax-listing">
+            <div class="syntax-listing-item">
+                <div class="code-side">[url]https://katelyn.moe/bleh[/url]</div>
+                <div class="detail-side">${tl(trans.links_to).replace("{link}", `<a href="https://katelyn.moe/bleh" target="_blank">https://katelyn.moe/bleh</a>`)}</div>
+            </div>
+            <div class="syntax-listing-item">
+                <div class="code-side">[url=https://katelyn.moe/bleh]blehhh[/url]</div>
+                <div class="detail-side">${tl(trans.links_to).replace("{link}", `<a href="https://katelyn.moe/bleh" target="_blank">blehhh</a>`)}</div>
+            </div>
+        </div>
+        <div class="sep"></div>
+        <div class="syntax-listing">
+            <div class="syntax-listing-item">
+                <div class="code-side">[tag]grunge[/tag]</div>
+                <div class="detail-side">${tl(trans.links_to).replace("{link}", `<a href="${root}tag/grunge" data-link-type="tag" target="_blank">grunge</a>`)}</div>
+            </div>
+            <div class="syntax-listing-item">
+                <div class="code-side">[user]${auth.name}[/user]</div>
+                <div class="detail-side">${tl(trans.links_to).replace("{link}", `<a class="mention" href="${root}user/${auth.name}" target="_blank">@${auth.name}</a>`)}</div>
+            </div>
+        </div>
+    `;
+    page.structure.side.innerHTML = "";
+    let side_actions = html.node`
+        <section class="side-actions">
+            <a class="btn side-action" data-type="latest-wiki" href="${sub_text.querySelector("a").getAttribute("href")}">
+                ${tl(trans.view_latest)}
+            </a>
+        </section>
+    `;
+    if (!page.mobile)
+      page.structure.side.appendChild(side_actions);
+    else
+      page.structure.main.appendChild(side_actions);
+    let presets = [`\u201C`, `\u201D`, `\u2014`, `\u2018`, `\u2019`, `-`];
+    let standards = [
+      tl(trans.wiki_standard_tracks),
+      tl(trans.wiki_standard_artists),
+      tl(trans.wiki_standard_quotations)
+    ];
+    page.structure.side.appendChild(html.node`
+        <section class="wiki-presets-panel">
+            <h3 class="text-18">${tl(trans.symbol_presets)}</h3>
+            <div class="presets">
+                ${presets.map((preset) => {
+      let item = html.node`
+                        <div class="preset" onclick=${() => copy(preset)}>
+                            ${preset}
+                        </div>
+                    `;
+      tippy(item, {
+        content: tl(trans.click_to_copy),
+        delay: [500, 0]
+      });
+      return item;
+    })}
+            </div>
+            <ul class="wiki-standards generic-list">
+                ${standards.map((standard) => html.node`<li>${standard}</li>`)}
+            </ul>
+        </section>
+    `);
+    page.structure.side.appendChild(wiki_syntax);
+    let rules = page.structure.main.querySelector(".wiki-style-rules");
+    rules.removeAttribute("id");
+    let rules_panel = document.createElement("section");
+    rules_panel.classList.add("rules-panel");
+    rules_panel.setAttribute("id", "stylerules");
+    rules_panel.innerHTML = rules.innerHTML;
+    page.structure.side.appendChild(rules_panel);
+  }
+  function patch_wiki() {
+    if (ff("show_wiki_label")) {
+      let wiki_col = page.structure.main.querySelector(".wiki-column");
+      let wiki_empty = false;
+      if (!wiki_col) {
+        wiki_col = page.structure.main.querySelector(".wiki-section");
+        return;
+      }
+      let wiki_block = wiki_col.querySelector(".wiki-block.visible-lg .wiki-block-inner-2");
+      if (!wiki_block) {
+        wiki_block = wiki_col.querySelector(".wiki-block-cta");
+        wiki_empty = true;
+      }
+      let read_more = wiki_block.querySelector("a:last-child");
+      if (read_more) {
+        read_more.classList.add("read-more");
+        read_more.textContent = tl(trans.read_more).toLowerCase();
+      }
+      wiki_col.insertBefore(html.node`
+            <div class="sub-text">
+                <p>${tl(trans.about)}</p>
+                <span class="right-links">
+                    <p><a class="wiki-edit-small" href="${document.location.href}/+wiki/edit">${tl(trans.edit_wiki).toLowerCase()}</a></p>
+                    ${!wiki_empty && read_more ? html.node`<p>${read_more}</p>` : ""}
+                </span>
+            </div>
+        `, wiki_col.firstElementChild);
+      if (!wiki_empty)
+        patch_wiki_contents(wiki_block);
+    }
+  }
+  function patch_wiki_contents(wiki_block) {
+    let links = wiki_block.querySelectorAll("a");
+    links.forEach((link) => {
+      let href = link.getAttribute("href");
+      let type;
+      let name2 = link.textContent.trim();
+      let sister;
+      if (!href.startsWith(root)) {
+        if (href && link.textContent != href && /^(https?|mailto|ftp|sftp|tel):/.test(href)) {
+          tippy(link, {
+            theme: "name-sister-combo",
+            content: html.node`
+                    <span class="name">${href}</span>
+                    <span class="sister">${tl(trans.external)}</span>
+                `
+          });
+        }
+        return;
+      }
+      if (href.endsWith("/+wiki")) return;
+      href = href.replace(root, "").replace("music/", "");
+      if (href.startsWith("user/")) return;
+      if (href.startsWith("tag/")) {
+        type = "tag";
+      } else {
+        let split = href.split("/");
+        if (split.length == 1) {
+          type = "artist";
+        } else if (split.length == 2) {
+          type = "album";
+          name2 = desanitise(split[1]);
+          sister = desanitise(split[0]);
+        } else if (split.length == 3) {
+          type = "track";
+          name2 = desanitise(split[2]);
+          sister = desanitise(split[0]);
+        }
+      }
+      if (sister != void 0)
+        tippy(link, {
+          theme: "name-sister-combo",
+          content: html.node`
+                    <span class="name">${name2}</span>
+                    <span class="sister">${sister}</span>
+                `
+        });
+      link.setAttribute("data-link-type", type);
+    });
+  }
+
   // src/components/markdown.js
   function markdown(text2, {
     allow_headers = false,
@@ -3223,34 +3730,19 @@
       ghCodeBlocks: false,
       smartIndentationFix: true
     });
-    let parsed_body = converter.makeHtml(text2.replace(/([@])([a-zA-Z0-9_]+)/g, `[$1$2](${root}user/$2)`).replace(/\[artist\]([^[\]]+)\[\/artist\]/g, `[$1](${root}music/$1)`).replace(/\[album artist=([^[\]]+)\]([^[\]]+)\[\/album\]/g, `[$2](${root}music/$1/$2)`).replace(/\[track artist=([^[\]]+)\]([^[\]]+)\[\/track\]/g, `[$2](${root}music/$1/_/$2)`).replace(/https:\/\/open\.spotify\.com\/user\/([A-Za-z0-9]+)\?si=([A-Za-z0-9]+)/g, "[Spotify](https://open.spotify.com/user/$1)").replace(/&/g, "&amp;").replace(/</g, "&lt;").replace(/>/g, "&gt;").replace(/"/g, "&quot;").replace(/'/g, "&#039;"));
+    let parsed_body = converter.makeHtml(text2.replace(/([@])([a-zA-Z0-9_]+)/g, `[$1$2](${root}user/$2)`).replace(
+      /\[artist\]([^[\]]+)\[\/artist\]/g,
+      (match, artist) => `[${artist}](${root}music/${encodeURIComponent(artist)})`
+    ).replace(
+      /\[album artist=([^[\]]+)\]([^[\]]+)\[\/album\]/g,
+      (match, artist, album) => `[${album}](${root}music/${encodeURIComponent(artist)}/${encodeURIComponent(album)})`
+    ).replace(
+      /\[track artist=([^[\]]+)\]([^[\]]+)\[\/track\]/g,
+      (match, artist, track) => `[${track}](${root}music/${encodeURIComponent(artist)}/_/${encodeURIComponent(track)})`
+    ).replace(/https:\/\/open\.spotify\.com\/user\/([A-Za-z0-9]+)\?si=([A-Za-z0-9]+)/g, "[Spotify](https://open.spotify.com/user/$1)").replace(/&/g, "&amp;").replace(/</g, "&lt;").replace(/>/g, "&gt;").replace(/"/g, "&quot;").replace(/'/g, "&#039;"));
     let body = html.node([parsed_body]);
-    let links = body.querySelectorAll("a");
-    links.forEach((link) => {
-      const href = link.getAttribute("href");
-      if (href && link.textContent != href && /^(https?|mailto|ftp|sftp|tel):/.test(href)) {
-        tippy(link, {
-          theme: "name-sister-combo",
-          content: html.node`
-                    <span class="name">${href}</span>
-                    <span class="sister">${tl(trans.external)}</span>
-                `
-        });
-      }
-    });
+    patch_wiki_contents(body);
     return body;
-  }
-
-  // src/sku.js
-  function ff(flag) {
-    log(`parsing ${flag}`, "flag", "log", {
-      setting: settings.feature_flags[flag],
-      sku: version.feature_flags[flag]
-    });
-    if (settings.feature_flags[flag] != null)
-      return settings.feature_flags[flag];
-    if (version.feature_flags[flag] != null)
-      return version.feature_flags[flag].default;
   }
 
   // src/components/colourful_counts.js
@@ -6022,181 +6514,6 @@
       view_buttons.insertBefore(bulk_edit, delete_button);
     else
       view_buttons.insertBefore(bulk_edit, edit_form);
-  }
-
-  // src/avatar.js
-  function patch_avatar(avatar3, name2, type = "", parent = null, side = "right") {
-    if (avatar3.hasAttribute("data-bleh-avatar"))
-      return {};
-    avatar3.setAttribute("data-bleh-avatar", "true");
-    let avatar_img = avatar3.querySelector("img");
-    if (!avatar_img) return {};
-    avatar_img.setAttribute("src", avatar_img.getAttribute("src").replace("/64s/", "/avatar70s/"));
-    let badges = load_badges(name2, true);
-    let buttons = html.node`
-        <div class="user-buttons view-buttons">
-            ${() => {
-      let btn = html.node`
-                    <a class="btn view-item chibi" data-type="profile" href="${root}user/${name2}">${tl(trans.profile)}</a>
-                `;
-      tippy(btn, {
-        content: tl(trans.profile)
-      });
-      return btn;
-    }}
-            ${() => {
-      let btn = html.node`
-                    <a class="btn view-item chibi" data-type="library" href="${root}user/${name2}/library">${tl(trans.library)}</a>
-                `;
-      tippy(btn, {
-        content: btn.textContent
-      });
-      return btn;
-    }}
-                    ${() => {
-      let btn = html.node`
-                    <a class="btn view-item chibi" data-type="shouts" href="${root}user/${name2}/shoutbox">${tl(trans.shouts)}</a>
-                `;
-      tippy(btn, {
-        content: btn.textContent
-      });
-      return btn;
-    }}
-        </div>
-    `;
-    if (badges) {
-      let pre_existing_badge = avatar3.querySelector(".avatar-status-dot");
-      if (pre_existing_badge)
-        avatar3.removeChild(pre_existing_badge);
-      avatar3.setAttribute("title", "");
-      let this_badge = sponsor_list.badges[name2];
-      if (!Array.isArray(sponsor_list.badges[name2])) {
-        log(`@${name2} 1 badge:`, "shout", "info", sponsor_list.badges[name2]);
-      } else {
-        log(`@${name2} multiple badges:`, "shout", "info", sponsor_list.badges[name2]);
-        let badges_length = Object.keys(sponsor_list.badges[name2]).length - 1;
-        this_badge = sponsor_list.badges[name2][badges_length];
-        log(`@${name2} using badge ${badges_length} as primary`, "shout", "info", this_badge);
-      }
-      let badge = document.createElement("span");
-      badge.classList.add("avatar-status-dot", `user-status--bleh-${this_badge.type}`, `user-status--bleh-user-${name2}`);
-      avatar3.appendChild(badge);
-      if (!parent)
-        avatar3.classList.add("avatar-can-hoverbox");
-      else
-        parent.classList.add("parent-can-hoverbox");
-      tippy(parent ? parent : avatar3, {
-        theme: "user",
-        content: html.node`
-                <div class="image-info">
-                    <div class="inner-image">
-                        ${html.node([avatar_img.outerHTML])}
-                    </div>
-                    <div class="info">
-                        <h5 class="title">${name2}</h5>
-                        <p class="badge user-status--bleh-${this_badge.type} user-status--bleh-user-${name2}" data-badge-type="${this_badge.type}" data-badge-user="${name2}">${this_badge.name}</p>
-                    </div>
-                    <a href="${root}user/${name2}" class="link-over"></a>
-                </div>
-                ${buttons}
-            `,
-        placement: side,
-        interactive: true,
-        delay: [200, 0]
-      });
-      return this_badge;
-    } else {
-      let pre_existing_badge = avatar3.querySelector(".avatar-status-dot");
-      if (!pre_existing_badge) {
-        if (!parent)
-          avatar3.classList.add("avatar-can-hoverbox");
-        else
-          parent.classList.add("parent-can-hoverbox");
-        tippy(parent ? parent : avatar3, {
-          theme: "user",
-          content: html.node`
-                    <div class="image-info">
-                        <div class="inner-image">
-                            ${html.node([avatar_img.outerHTML])}
-                        </div>
-                        <div class="info">
-                            <h5 class="title">${name2}</h5>
-                        </div>
-                        <a href="${root}user/${name2}" class="link-over"></a>
-                    </div>
-                    ${buttons}
-                `,
-          placement: side,
-          interactive: true,
-          delay: [200, 0]
-        });
-        return {};
-      } else {
-        if (!parent)
-          avatar3.classList.add("avatar-can-hoverbox");
-        else
-          parent.classList.add("parent-can-hoverbox");
-        let type2 = pre_existing_badge.classList[1].replace("avatar-status-dot--", "user-status-");
-        tippy(parent ? parent : avatar3, {
-          theme: "user",
-          content: html.node`
-                    <div class="image-info">
-                        <div class="inner-image">
-                            ${html.node([avatar_img.outerHTML])}
-                        </div>
-                        <div class="info">
-                            <h5 class="title">${name2}</h5>
-                            <p class="badge ${type2}">${tl(trans.badges[type2].name)}</p>
-                        </div>
-                        <a href="${root}user/${name2}" class="link-over"></a>
-                    </div>
-                    ${buttons}
-                `,
-          placement: side,
-          interactive: true,
-          delay: [200, 0]
-        });
-        avatar3.setAttribute("title", "");
-        return {
-          type: pre_existing_badge.classList[1]
-        };
-      }
-    }
-  }
-  function return_name_from_avatar(avatar3) {
-    if (!avatar3)
-      return;
-    if (!avatar3.hasAttribute("alt"))
-      return;
-    if (avatar3.getAttribute("alt") == tl(trans.your_avatar))
-      return auth;
-    return avatar3.getAttribute("alt").replace(tl(trans.avatar_for_user), "");
-  }
-  unsafeWindow._expand_avatar = function(src) {
-    expand_avatar(src);
-  };
-  function expand_avatar(src) {
-    dialog({
-      id: "avatar",
-      body: html.node`
-            <div class="full-avatar-wrapper">
-                <div class="full-avatar">
-                    <img src="${src}">
-                </div>
-                <div class="modal-footer">
-                    <div class="fill"></div>
-                    <div class="button-group">
-                        <a class="btn primary open" href="${src}" target="_blank">
-                            ${tl(trans.open_new_tab)}
-                        </a>
-                    </div>
-                    <div class="fill"></div>
-                </div>
-            </div>
-        `,
-      type: "avatar",
-      has_overlays: false
-    });
   }
 
   // src/components/share.js
@@ -16668,325 +16985,6 @@
     page.structure.side.appendChild(about_artist_container);
   }
 
-  // src/pages/wiki.js
-  function bleh_wiki() {
-    let wiki_panel = document.createElement("section");
-    wiki_panel.classList.add("wiki-panel");
-    wiki_panel.innerHTML = page.structure.main.innerHTML;
-    page.structure.main.innerHTML = "";
-    page.structure.main.appendChild(wiki_panel);
-    page.structure.main.classList.add("not-a-panel");
-    let original_edit_button = page.structure.main.querySelector(".qa-wiki-edit");
-    let original_version_history = page.structure.main.querySelector(".wiki-history-link--desktop a");
-    let side_actions = document.createElement("section");
-    side_actions.classList.add("side-actions");
-    if (!page.mobile)
-      page.structure.side.appendChild(side_actions);
-    else
-      page.structure.main.appendChild(side_actions);
-    if (original_edit_button) {
-      let side_edit = document.createElement("a");
-      side_edit.classList.add("btn", "side-action");
-      side_edit.setAttribute("href", original_edit_button.getAttribute("href"));
-      side_edit.setAttribute("data-type", "edit");
-      side_edit.textContent = tl(trans.edit);
-      side_actions.appendChild(side_edit);
-    }
-    if (original_version_history) {
-      let side_history = document.createElement("a");
-      side_history.classList.add("btn", "side-action");
-      side_history.setAttribute("href", original_version_history.getAttribute("href"));
-      side_history.setAttribute("data-type", "history");
-      side_history.textContent = tl(trans.timeline);
-      side_actions.appendChild(side_history);
-    }
-    let wiki_author = wiki_panel.querySelector(".wiki-author");
-    if (wiki_author) {
-      let h2 = wiki_panel.querySelector("h2.text-18");
-      let sub_text = document.createElement("div");
-      sub_text.classList.add("sub-text", "space-below", "header-style");
-      sub_text.innerHTML = `
-            <div class="breadcrumb-origin prominent">
-                ${h2 ? h2.innerHTML : page.structure.container.querySelector(".content-top-header").textContent}
-            </div>
-            <div class="wiki-author-side">
-                ${wiki_author.innerHTML}
-            </div>
-        `;
-      wiki_panel.insertBefore(sub_text, wiki_panel.firstElementChild);
-      if (h2)
-        wiki_panel.removeChild(h2);
-    }
-    let wiki = wiki_panel.querySelector(".wiki");
-    if (!wiki) return;
-    patch_wiki_contents(wiki);
-    let factbox = wiki_panel.querySelector(".factbox");
-    if (factbox) {
-      let facts = html.node`
-            <section class="facts">
-                ${factbox}
-            </section>
-        `;
-      side_actions.after(facts);
-    }
-  }
-  function bleh_wiki_history() {
-    let breadcrumb_root = page.structure.container.querySelector(".subpage-breadcrumb");
-    let breadcrumb_name = page.structure.container.querySelector(".subpage-title");
-    if (!breadcrumb_root) {
-      breadcrumb_root = page.structure.container.querySelector(".content-top-back-link");
-      breadcrumb_name = page.structure.container.querySelector(".content-top-header");
-    }
-    let sub_text = document.createElement("div");
-    sub_text.classList.add("sub-text", "space-below", "header-style");
-    sub_text.innerHTML = `
-        <div class="breadcrumb">
-            ${breadcrumb_root.querySelector("a").outerHTML}
-            <div class="breadcrumb-name prominent">
-                ${breadcrumb_name.textContent}
-            </div>
-        </div>
-    `;
-    breadcrumb_root.style.setProperty("display", "none");
-    breadcrumb_name.style.setProperty("display", "none");
-    let buffer_container = page.structure.container.querySelector(".row ~ .buffer-4");
-    if (!buffer_container)
-      buffer_container = page.structure.container.querySelector(".wiki-history");
-    let wiki_history_table = buffer_container.querySelector(".wiki-history-table");
-    let pagination = buffer_container.querySelector(".pagination");
-    let wiki_panel = document.createElement("section");
-    wiki_panel.classList.add("wiki-history-panel");
-    wiki_panel.appendChild(sub_text);
-    wiki_panel.appendChild(wiki_history_table);
-    page.structure.main.appendChild(wiki_panel);
-    buffer_container.style.setProperty("display", "none");
-    if (pagination)
-      wiki_panel.appendChild(pagination);
-    let side_actions = html.node`
-        <section class="side-actions">
-            <a class="btn side-action" data-type="latest-wiki" href="${sub_text.querySelector("a").getAttribute("href")}">
-                ${tl(trans.view_latest)}
-            </a>
-        </section>
-    `;
-    if (!page.mobile)
-      page.structure.side.appendChild(side_actions);
-    else
-      page.structure.main.appendChild(side_actions);
-    let entries = page.structure.main.querySelectorAll(".wiki-history-entry");
-    entries.forEach((entry) => {
-      let author = entry.querySelector(".wiki-history-author");
-      let avatar3 = author.querySelector(".wiki-history-author-avatar");
-      let name2 = author.querySelector(".link-block-target");
-      if (name2 && avatar3) {
-        let badge = patch_avatar(avatar3, name2.textContent, "wiki");
-        avatar3.setAttribute("data-avatar-themed", "true");
-        avatar3.classList.add(`user-status--bleh-${badge.type}`, `user-status--bleh-user-${name2.textContent}`);
-        name2.classList.add(`user-status--bleh-${badge.type}`, `user-status--bleh-user-${name2.textContent}`);
-      }
-    });
-  }
-  function bleh_wiki_editor() {
-    let wiki_edit_panel = document.createElement("section");
-    wiki_edit_panel.classList.add("wiki-edit-panel");
-    wiki_edit_panel.innerHTML = page.structure.main.innerHTML;
-    page.structure.main.innerHTML = "";
-    page.structure.main.appendChild(wiki_edit_panel);
-    page.structure.main.classList.add("not-a-panel");
-    let breadcrumb_root = page.structure.container.querySelector(".subpage-breadcrumb");
-    let breadcrumb_name = page.structure.container.querySelector(".subpage-title");
-    if (!breadcrumb_name) {
-      breadcrumb_name = page.structure.content_top.querySelector(".content-top-header");
-      if (breadcrumb_name)
-        page.structure.content_top.style.setProperty("display", "none");
-    }
-    if (!breadcrumb_root) {
-      breadcrumb_root = page.structure.container.querySelector(".content-top-back-link");
-      breadcrumb_name = page.structure.container.querySelector(".content-top-header");
-    }
-    let sub_text = document.createElement("div");
-    sub_text.classList.add("sub-text", "space-below", "header-style");
-    sub_text.innerHTML = `
-        <div class="breadcrumb">
-            ${breadcrumb_root.querySelector("a").outerHTML}
-            <div class="breadcrumb-name prominent">
-                ${breadcrumb_name.textContent}
-            </div>
-        </div>
-    `;
-    breadcrumb_root.style.setProperty("display", "none");
-    breadcrumb_name.style.setProperty("display", "none");
-    wiki_edit_panel.insertBefore(sub_text, wiki_edit_panel.firstElementChild);
-    let wiki_syntax = document.createElement("section");
-    wiki_syntax.classList.add("bleh--blank-panel", "wiki-syntax-panel");
-    wiki_syntax.innerHTML = `
-        <h3 class="text-18">${tl(trans.fancy_syntax)}</h3>
-        <div class="syntax-listing">
-            <div class="syntax-listing-item">
-                <div class="code-side">[artist]julie[/artist]</div>
-                <div class="detail-side">${tl(trans.links_to).replace("{link}", `<a href="${root}music/julie" data-link-type="artist" target="_blank">julie</a>`)}</div>
-            </div>
-            <div class="syntax-listing-item">
-                <div class="code-side">[album artist=julie]pushing daisies[/album]</div>
-                <div class="detail-side">${tl(trans.links_to).replace("{link}", `<a href="${root}music/julie/pushing+daisies" data-link-type="album" target="_blank">pushing daisies</a>`)}</div>
-            </div>
-            <div class="syntax-listing-item">
-                <div class="code-side">[track artist=julie]very little effort[/track]</div>
-                <div class="detail-side">${tl(trans.links_to).replace("{link}", `<a href="${root}music/julie/_/very+little+effort" data-link-type="track" target="_blank">very little effort</a>`)}</div>
-            </div>
-        </div>
-        <div class="sep"></div>
-        <div class="syntax-listing">
-            <div class="syntax-listing-item">
-                <div class="code-side">[url]https://katelyn.moe/bleh[/url]</div>
-                <div class="detail-side">${tl(trans.links_to).replace("{link}", `<a href="https://katelyn.moe/bleh" target="_blank">https://katelyn.moe/bleh</a>`)}</div>
-            </div>
-            <div class="syntax-listing-item">
-                <div class="code-side">[url=https://katelyn.moe/bleh]blehhh[/url]</div>
-                <div class="detail-side">${tl(trans.links_to).replace("{link}", `<a href="https://katelyn.moe/bleh" target="_blank">blehhh</a>`)}</div>
-            </div>
-        </div>
-        <div class="sep"></div>
-        <div class="syntax-listing">
-            <div class="syntax-listing-item">
-                <div class="code-side">[tag]grunge[/tag]</div>
-                <div class="detail-side">${tl(trans.links_to).replace("{link}", `<a href="${root}tag/grunge" data-link-type="tag" target="_blank">grunge</a>`)}</div>
-            </div>
-            <div class="syntax-listing-item">
-                <div class="code-side">[user]${auth.name}[/user]</div>
-                <div class="detail-side">${tl(trans.links_to).replace("{link}", `<a class="mention" href="${root}user/${auth.name}" target="_blank">@${auth.name}</a>`)}</div>
-            </div>
-        </div>
-    `;
-    page.structure.side.innerHTML = "";
-    let side_actions = html.node`
-        <section class="side-actions">
-            <a class="btn side-action" data-type="latest-wiki" href="${sub_text.querySelector("a").getAttribute("href")}">
-                ${tl(trans.view_latest)}
-            </a>
-        </section>
-    `;
-    if (!page.mobile)
-      page.structure.side.appendChild(side_actions);
-    else
-      page.structure.main.appendChild(side_actions);
-    let presets = [`\u201C`, `\u201D`, `\u2014`, `\u2018`, `\u2019`, `-`];
-    let standards = [
-      tl(trans.wiki_standard_tracks),
-      tl(trans.wiki_standard_artists),
-      tl(trans.wiki_standard_quotations)
-    ];
-    page.structure.side.appendChild(html.node`
-        <section class="wiki-presets-panel">
-            <h3 class="text-18">${tl(trans.symbol_presets)}</h3>
-            <div class="presets">
-                ${presets.map((preset) => {
-      let item = html.node`
-                        <div class="preset" onclick=${() => copy(preset)}>
-                            ${preset}
-                        </div>
-                    `;
-      tippy(item, {
-        content: tl(trans.click_to_copy),
-        delay: [500, 0]
-      });
-      return item;
-    })}
-            </div>
-            <ul class="wiki-standards generic-list">
-                ${standards.map((standard) => html.node`<li>${standard}</li>`)}
-            </ul>
-        </section>
-    `);
-    page.structure.side.appendChild(wiki_syntax);
-    let rules = page.structure.main.querySelector(".wiki-style-rules");
-    rules.removeAttribute("id");
-    let rules_panel = document.createElement("section");
-    rules_panel.classList.add("rules-panel");
-    rules_panel.setAttribute("id", "stylerules");
-    rules_panel.innerHTML = rules.innerHTML;
-    page.structure.side.appendChild(rules_panel);
-  }
-  function patch_wiki() {
-    if (ff("show_wiki_label")) {
-      let wiki_col = page.structure.main.querySelector(".wiki-column");
-      let wiki_empty = false;
-      if (!wiki_col) {
-        wiki_col = page.structure.main.querySelector(".wiki-section");
-        return;
-      }
-      let wiki_block = wiki_col.querySelector(".wiki-block.visible-lg .wiki-block-inner-2");
-      if (!wiki_block) {
-        wiki_block = wiki_col.querySelector(".wiki-block-cta");
-        wiki_empty = true;
-      }
-      let read_more = wiki_block.querySelector("a:last-child");
-      if (read_more) {
-        read_more.classList.add("read-more");
-        read_more.textContent = tl(trans.read_more).toLowerCase();
-      }
-      wiki_col.insertBefore(html.node`
-            <div class="sub-text">
-                <p>${tl(trans.about)}</p>
-                <span class="right-links">
-                    <p><a class="wiki-edit-small" href="${document.location.href}/+wiki/edit">${tl(trans.edit_wiki).toLowerCase()}</a></p>
-                    ${!wiki_empty && read_more ? html.node`<p>${read_more}</p>` : ""}
-                </span>
-            </div>
-        `, wiki_col.firstElementChild);
-      if (!wiki_empty)
-        patch_wiki_contents(wiki_block);
-    }
-  }
-  function patch_wiki_contents(wiki_block) {
-    let links = wiki_block.querySelectorAll("a");
-    links.forEach((link) => {
-      let href = link.getAttribute("href");
-      let type;
-      let name2 = link.textContent.trim();
-      let sister;
-      if (!href.startsWith(root)) {
-        if (href && link.textContent != href && /^(https?|mailto|ftp|sftp|tel):/.test(href)) {
-          tippy(link, {
-            theme: "name-sister-combo",
-            content: html.node`
-                    <span class="name">${href}</span>
-                    <span class="sister">${tl(trans.external)}</span>
-                `
-          });
-        }
-        return;
-      }
-      if (href.endsWith("/+wiki")) return;
-      href = href.replace(root, "").replace("music/", "");
-      if (href.startsWith("tag/")) {
-        type = "tag";
-      } else {
-        let split = href.split("/");
-        if (split.length == 1) {
-          type = "artist";
-        } else if (split.length == 2) {
-          type = "album";
-          name2 = desanitise(split[1]);
-          sister = desanitise(split[0]);
-        } else if (split.length == 3) {
-          type = "track";
-          name2 = desanitise(split[2]);
-          sister = desanitise(split[0]);
-        }
-      }
-      if (sister != void 0)
-        tippy(link, {
-          theme: "name-sister-combo",
-          content: html.node`
-                    <span class="name">${name2}</span>
-                    <span class="sister">${sister}</span>
-                `
-        });
-      link.setAttribute("data-link-type", type);
-    });
-  }
-
   // src/pages/tag.js
   function bleh_tags() {
     let tag_header = document.body.querySelector(".header--tag");
@@ -18930,6 +18928,7 @@
     });
   }
   function shout_header(shout_controls) {
+    if (!shout_controls) return;
     let panel;
     let settings_btn;
     if (page.subpage == "shoutbox_shout") {

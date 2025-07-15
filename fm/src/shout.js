@@ -129,6 +129,8 @@ function shout_send(send_button) {
 }
 
 export function shout_header(shout_controls) {
+    if (!shout_controls) return;
+
     let panel;
     let settings_btn;
 
