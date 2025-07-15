@@ -784,7 +784,7 @@ export function bleh_profiles() {
 
         if (!profile_has_note) {
             edit.innerHTML = (`
-                <a class="inline-add-icon" onclick="_add_profile_note('${page.name}',${profile_has_note})">${tl(trans.add_note)}</a>
+                <a class="inline-add-icon" id="bleh--add-note" onclick="_add_profile_note('${page.name}',${profile_has_note})">${tl(trans.add_note)}</a>
             `);
             about_me_sidebar.appendChild(edit);
         } else {
