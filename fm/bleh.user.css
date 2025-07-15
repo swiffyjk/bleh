@@ -1,7 +1,7 @@
 /* ==UserStyle==
 @name           bleh (dev)
 @namespace      github.com/katelyynn/bleh
-@version        2025.0703
+@version        2025.0715
 @license        GPL-3.0
 @author         kate
 @updateURL      https://github.com/katelyynn/bleh/raw/uwu/fm/bleh.user.css
@@ -62,7 +62,7 @@
     }
 
     body {
-        --version-build: '2025.0703';
+        --version-build: '2025.0715';
 
         --font: var(--custom_font, ''), Overpass, Inter, Ubuntu Sans, Spline Sans, Roboto, Noto Sans, Noto Sans JP, Noto Sans KR, Noto Sans TC, Lucida Grande, Verdana, Tahoma, -apple-system, BlinkMacSystemFont, sans-serif, Apple Color Emoji, var(--font_emoji_name, '');
         --font-code: Spline Sans Mono, Iosevka, JetBrains Mono, Roboto Mono, monospace, var(--font);
@@ -20552,10 +20552,10 @@
 
     .markdown-body {
         li {
-            &:before {
-                content: '•';
+            list-style-type: disc;
+
+            &::marker {
                 color: hsl(var(--c3));
-                margin-right: var(--item-list-gap);
             }
 
             p {
@@ -20563,23 +20563,14 @@
             }
 
             ul {
-                margin-top: unset;
-                margin-left: 18px;
+                margin-top: 2px;
+                margin-left: 12px;
                 color: hsl(var(--c2), 80%);
-
-                li:first-child {
-                    &:before {
-                        display: none;
-                    }
-
-                    & + li {
-                        margin-top: var(--item-list-gap);
-                    }
-                }
+                font-size: 13px;
             }
 
             & + li {
-                margin-top: 4px;
+                margin-top: 6px;
             }
 
             p {
@@ -20588,12 +20579,18 @@
         }
 
         &.version-item-body {
-            li {
-                &:before {
-                    content: '+';
-                }
+            & > ul > li {
+                font-weight: var(--font-weight-medium);
 
-                u {
+                & > ul {
+                    font-weight: var(--font-weight);
+                }
+            }
+
+            li {
+                list-style-type: '+ ';
+
+                & > u {
                     text-decoration: none;
                     color: hsl(var(--l3-c));
                     text-shadow: 0 0 20px hsla(var(--h4), 40%);
@@ -20606,6 +20603,10 @@
                     code {
                         font-weight: var(--font-weight);
                     }
+                }
+
+                &:has(> u):not(:last-child) {
+                    margin-bottom: 10px;
                 }
             }
 

@@ -1,7 +1,7 @@
 // ==UserScript==
 // @name         bleh
 // @namespace    http://last.fm/
-// @version      2025.0703
+// @version      2025.0715
 // @description  bleh!!! ^-^
 // @author       kate
 // @match        https://www.last.fm/*
@@ -27808,8 +27808,8 @@
   // src/build/build.json
   var build_default = {
     brand: "bleh",
-    build: "2025.0703",
-    sku: "sweet",
+    build: "2025.0715",
+    sku: "fleur",
     bio: "bleh!!! ^-^",
     author: "kate",
     url: "https://github.com/katelyynn/bleh/raw/uwu/fm/bleh.user.js",

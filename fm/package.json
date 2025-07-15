@@ -1,7 +1,9 @@
 {
   "dependencies": {
+    "cssnano": "^7.1.0",
     "esbuild": "^0.25.2",
-    "lighterhtml": "^4.2.0"
+    "lighterhtml": "^4.2.0",
+    "postcss": "^8.5.6"
   },
   "type": "module"
 }
