@@ -396,6 +396,7 @@ function load_page() {
     });
 
     detect_mobile();
+    page.platform = detect_platform();
 
     if (window.location.href.startsWith(setup_url.replace('{root}', root))) {
         bleh_setup();
@@ -630,6 +631,25 @@ function detect_mobile() {
         document.head.appendChild(manifest);
     } else {
         page.mobile = false;
+    }
+}
+
+function detect_platform() {
+    const platform =
+        navigator.userAgentData?.platform || navigator.platform || '';
+    const ua = navigator.userAgent || '';
+    if (/^Win/i.test(platform)) {
+        return 'win32';
+    } else if (/^Mac/i.test(platform)) {
+        return 'darwin';
+    } else if (/iP(hone|ad|od)/i.test(ua)) {
+        return 'ios';
+    } else if (/Android/i.test(ua)) {
+        return 'android';
+    } else if (/^Linux/i.test(platform) || /Linux/i.test(ua)) {
+        return 'linux';
+    } else {
+        return 'other';
     }
 }
 

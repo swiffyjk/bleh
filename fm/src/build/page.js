@@ -84,6 +84,7 @@ export let last_page_subpage = {
  * @property {boolean} corrected - Whether this page has been corrected via lotus
  * @property {string} token - Profile token for submitting forms
  * @property {boolean} mobile - Page is in a mobile state **on load**
+ * @property {string} platform - Operating system - can be win32, darwin, ios, android, linux, or other
  * @property {Object} structure - Elements that make up the page structure
  * @property {boolean} structure.glacier.refresh - Whether this glacier library page is pending refresh
  * @property {Object|null} structure.logs - Logging host
@@ -103,6 +104,7 @@ export let page = {
     corrected: false,
     token: '',
     mobile: false,
+    platform: 'other',
     structure: {
         wrapper: null,
         container: null,

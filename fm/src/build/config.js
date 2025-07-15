@@ -832,7 +832,8 @@ export let settings_store = {
     font_emoji: {
         default: true,
         title: trans.font_emoji.name,
-        body: trans.font_emoji.body
+        body: trans.font_emoji.body,
+        platforms: ['win32', 'linux', 'android', 'other']
     },
     show_bulk_edit_album: {
         default: false,

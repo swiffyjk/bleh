@@ -32,6 +32,17 @@ export function setting({
         let body = settings_store[id].body ? tl(settings_store[id].body) : null;
         let icon = settings_store[id].icon;
 
+        let disabled = false;
+        let disabled_reason = '';
+        if (settings_store[id].platforms && !settings_store[id].platforms.includes(page.platform)) {
+            disabled = true;
+            disabled_reason = tl(trans.item_is_unavailable_on_platform).replace('{i}', title).replace('{p}', tl(trans.platforms[page.platform]));
+        }
+
+        if (disabled && disabled_reason) {
+            return setting_fail(id, {message: disabled_reason, unavailable: true});
+        }
+
         if (settings_store[id].beta)
             title = html.node`${title}<span class="new-badge beta">${tl(trans.beta)}</span>`;
 
@@ -39,7 +50,7 @@ export function setting({
             let toggle;
 
             return html.node`
-                <div class="setting v2" data-type="toggle" onclick=${() => update_toggle(id, toggle)}>
+                <div class="setting v2" data-type="toggle" disabled=${disabled} onclick=${() => update_toggle(id, toggle)}>
                     ${icon ? html.node`
                     <div class="icon">
                         <div class="bleh-icon" style="--icon: var(--${icon})" />
@@ -91,7 +102,7 @@ export function setting({
             let working_max = settings_store[id].max - settings_store[id].min;
 
             return html.node`
-                <div class="setting v2" data-type="range" ref=${el => option = el} data-modified=${value != settings_store[id].default}>
+                <div class="setting v2" data-type="range" disabled=${disabled} ref=${el => option = el} data-modified=${value != settings_store[id].default}>
                     ${(text) ? html.node`
                     <div class="heading">
                         <h5>${title}<button class="reset see-more" onclick=${() => reset_range(id, option, track, input, marker)}>${tl(trans.reset)}</button></h5>
@@ -142,7 +153,7 @@ export function setting({
             let error_tooltip;
 
             let container = html.node`
-                <div class="setting v2" data-type="text" ref=${el => option = el} data-modified=${value != settings_store[id].default}>
+                <div class="setting v2" data-type="text" disabled=${disabled} ref=${el => option = el} data-modified=${value != settings_store[id].default}>
                     ${(text) ? html.node`
                     <div class="heading">
                         <h5>${title}<button class="reset see-more" ref=${el => reset_btn = el} onclick=${() => reset_text(id, input, submit, option, reset_btn, avatar)}>${tl(trans.reset)}</button></h5>
@@ -226,7 +237,7 @@ export function setting({
             let toggle;
 
             return html.node`
-                <div class="setting v2 ${settings_store[id].horizontal ? 'horizontal' : ''}" data-type="checkbox" onclick=${() => update_toggle(id, toggle)}>
+                <div class="setting v2 ${settings_store[id].horizontal ? 'horizontal' : ''}" data-type="checkbox" disabled=${disabled} onclick=${() => update_toggle(id, toggle)}>
                     ${icon ? html.node`
                     <div class="icon">
                         <div class="bleh-icon" style="--icon: var(--${icon})" />
@@ -304,6 +315,16 @@ function setting_incompatible_block(entries) {
 }
 
 function setting_fail(id, e = null) {
+    if (e.unavailable) {
+        return html.node`
+            <div class="setting">
+                <div class="alert alert-info no-margin">
+                    ${e.message}
+                </div>
+            </div>
+        `;
+    }
+
     return html.node`
         <div class="setting">
             <div class="alert alert-error no-margin">

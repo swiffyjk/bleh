@@ -1043,6 +1043,7 @@
     corrected: false,
     token: "",
     mobile: false,
+    platform: "other",
     structure: {
       wrapper: null,
       container: null,
@@ -6629,12 +6630,21 @@
       let title = settings_store[id].title ? tl(settings_store[id].title) : id;
       let body = settings_store[id].body ? tl(settings_store[id].body) : null;
       let icon = settings_store[id].icon;
+      let disabled = false;
+      let disabled_reason = "";
+      if (settings_store[id].platforms && !settings_store[id].platforms.includes(page.platform)) {
+        disabled = true;
+        disabled_reason = tl(trans.item_is_unavailable_on_platform).replace("{i}", title).replace("{p}", tl(trans.platforms[page.platform]));
+      }
+      if (disabled && disabled_reason) {
+        return setting_fail(id, { message: disabled_reason, unavailable: true });
+      }
       if (settings_store[id].beta)
         title = html.node`${title}<span class="new-badge beta">${tl(trans.beta)}</span>`;
       if (type === "toggle") {
         let toggle2;
         return html.node`
-                <div class="setting v2" data-type="toggle" onclick=${() => update_toggle(id, toggle2)}>
+                <div class="setting v2" data-type="toggle" disabled=${disabled} onclick=${() => update_toggle(id, toggle2)}>
                     ${icon ? html.node`
                     <div class="icon">
                         <div class="bleh-icon" style="--icon: var(--${icon})" />
@@ -6681,7 +6691,7 @@
         let marker;
         let working_max = settings_store[id].max - settings_store[id].min;
         return html.node`
-                <div class="setting v2" data-type="range" ref=${(el) => option = el} data-modified=${value != settings_store[id].default}>
+                <div class="setting v2" data-type="range" disabled=${disabled} ref=${(el) => option = el} data-modified=${value != settings_store[id].default}>
                     ${text2 ? html.node`
                     <div class="heading">
                         <h5>${title}<button class="reset see-more" onclick=${() => reset_range(id, option, track, input2, marker)}>${tl(trans.reset)}</button></h5>
@@ -6727,7 +6737,7 @@
         let input_container;
         let error_tooltip;
         let container = html.node`
-                <div class="setting v2" data-type="text" ref=${(el) => option = el} data-modified=${value != settings_store[id].default}>
+                <div class="setting v2" data-type="text" disabled=${disabled} ref=${(el) => option = el} data-modified=${value != settings_store[id].default}>
                     ${text2 ? html.node`
                     <div class="heading">
                         <h5>${title}<button class="reset see-more" ref=${(el) => reset_btn = el} onclick=${() => reset_text(id, input2, submit, option, reset_btn, avatar3)}>${tl(trans.reset)}</button></h5>
@@ -6802,7 +6812,7 @@
       } else if (type == "checkbox") {
         let toggle2;
         return html.node`
-                <div class="setting v2 ${settings_store[id].horizontal ? "horizontal" : ""}" data-type="checkbox" onclick=${() => update_toggle(id, toggle2)}>
+                <div class="setting v2 ${settings_store[id].horizontal ? "horizontal" : ""}" data-type="checkbox" disabled=${disabled} onclick=${() => update_toggle(id, toggle2)}>
                     ${icon ? html.node`
                     <div class="icon">
                         <div class="bleh-icon" style="--icon: var(--${icon})" />
@@ -6873,6 +6883,15 @@
     `;
   }
   function setting_fail(id, e = null) {
+    if (e.unavailable) {
+      return html.node`
+            <div class="setting">
+                <div class="alert alert-info no-margin">
+                    ${e.message}
+                </div>
+            </div>
+        `;
+    }
     return html.node`
         <div class="setting">
             <div class="alert alert-error no-margin">
@@ -20534,6 +20553,7 @@
         masthead.classList.remove("scrolled");
     });
     detect_mobile();
+    page.platform = detect_platform();
     if (window.location.href.startsWith(setup_url.replace("{root}", root))) {
       bleh_setup();
     } else if (window.location.href.startsWith(sponsor_url.replace("{root}", root))) {
@@ -20727,6 +20747,23 @@
       document.head.appendChild(manifest);
     } else {
       page.mobile = false;
+    }
+  }
+  function detect_platform() {
+    const platform = navigator.userAgentData?.platform || navigator.platform || "";
+    const ua = navigator.userAgent || "";
+    if (/^Win/i.test(platform)) {
+      return "win32";
+    } else if (/^Mac/i.test(platform)) {
+      return "darwin";
+    } else if (/iP(hone|ad|od)/i.test(ua)) {
+      return "ios";
+    } else if (/Android/i.test(ua)) {
+      return "android";
+    } else if (/^Linux/i.test(platform) || /Linux/i.test(ua)) {
+      return "linux";
+    } else {
+      return "other";
     }
   }
   function page_indicator() {
@@ -22841,7 +22878,7 @@
         pt: "Compatibilidade de emojis"
       },
       body: {
-        en: "Required to render emoji properly before Windows 11 \u{1F3F3}\uFE0F\u200D\u26A7\uFE0F",
+        en: "Required to render emoji properly before Windows 11. \u{1F3F3}\uFE0F\u200D\u26A7\uFE0F",
         de: "Erforderlich, um Emojis vor Windows 11 richtig darzustellen \u{1F3F3}\uFE0F\u200D\u26A7\uFE0F",
         pt: "Necess\xE1rio para renderizar emojis corretamente antes do Windows 11 \u{1F3F3}\uFE0F\u200D\u26A7\uFE0F"
       }
@@ -23765,6 +23802,29 @@
     example: {
       en: "e.g. {v}",
       de: "z.B. {v}"
+    },
+    item_is_unavailable_on_platform: {
+      en: "\u2018{i}\u2019 is unavailable on {p}"
+    },
+    platforms: {
+      win32: {
+        en: "Windows"
+      },
+      darwin: {
+        en: "macOS"
+      },
+      ios: {
+        en: "iOS"
+      },
+      android: {
+        en: "Android"
+      },
+      linux: {
+        en: "Linux"
+      },
+      other: {
+        en: "Unknown"
+      }
     }
   };
   var trans_legacy = {
@@ -27651,7 +27711,8 @@
     font_emoji: {
       default: true,
       title: trans.font_emoji.name,
-      body: trans.font_emoji.body
+      body: trans.font_emoji.body,
+      platforms: ["win32", "linux", "android", "other"]
     },
     show_bulk_edit_album: {
       default: false,

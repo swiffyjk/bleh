@@ -200,8 +200,8 @@
 
         [data-bleh--theme_type="light"] > & {
             --font-weight: calc(var(--custom_font_weight, 480) + 60);
-            --font-weight-medium: calc(var(--custom_font_weight_medium, 650) + 60);
-            --font-weight-bold: calc(var(--custom_font_weight_bold, 730) + 60);
+            --font-weight-medium: calc(var(--custom_font_weight_medium, 650) + 90);
+            --font-weight-bold: calc(var(--custom_font_weight_bold, 730) + 90);
         }
 
         [data-bleh--reduced_motion="true"] > & {
@@ -306,7 +306,7 @@
             --card-border-base: hsl(var(--c3), 0.2) !important;
 
             --normal-shadow: inset 0 0 0 1px hsla(var(--b2), 0.4), inset 0 -2px 4px hsla(var(--b4), 0.3);
-            --input-shadow: inset 0 -1px 0 0 var(--card-border-base), inset 0 1px 2px 1px hsl(var(--b7), 0.1);
+            --input-shadow: inset 0 -1px 0 0 var(--card-border-base), inset 0 1px 3px hsl(var(--b7), 0.1);
         }
         .theme-preview[data-bleh--theme="ink"],
         [data-bleh--theme="ink"] &:not(.theme-preview) {
@@ -478,11 +478,11 @@
             --l3-c-lit: calc(clamp(min(0.5), var(--lit), max(1.1)) * 40%);
             --l4-c: var(--hue), calc(clamp(min(0), var(--sat), max(1.5)) * 60%), calc(clamp(min(0.7), var(--lit), max(1.1)) * 22%);
 
-            --h3: var(--hue), calc(clamp(min(0), var(--sat), max(1.5)) * 50%), calc(clamp(min(0.85), var(--lit), max(1.1)) * 80%);
+            --h3: var(--hue), calc(clamp(min(0), var(--sat), max(1.5)) * 50%), calc(clamp(min(0.85), var(--lit), max(1.1)) * 85%);
             --h3-s: var(--hue), 50%, 70%;
             --h3-sat: calc(clamp(min(0), var(--sat), max(1.5)) * 50%);
-            --h3-lit: calc(clamp(min(0.5), var(--lit), max(1.1)) * 80%);
-            --h4: var(--hue), calc(clamp(min(0), var(--sat), max(1.5)) * 60%), calc(clamp(min(0.7), var(--lit), max(1.1)) * 65%);
+            --h3-lit: calc(clamp(min(0.5), var(--lit), max(1.1)) * 85%);
+            --h4: var(--hue), calc(clamp(min(0), var(--sat), max(1.5)) * 60%), calc(clamp(min(0.7), var(--lit), max(1.1)) * 70%);
             --f4: var(--hue), calc(clamp(min(0), var(--sat), max(1.5)) * 35%), calc(clamp(min(0.8), var(--lit), max(1.5)) * 83%);
             --g4: var(--hue), calc(clamp(min(0), var(--sat), max(1.5)) * 70%), 92%;
 
@@ -632,7 +632,7 @@
 
             --avatar-generic-background: hsl(var(--b4), 30%);
 
-            --blur-brightness: 1.2;
+            --blur-brightness: 1;
 
             --menu-bg: var(--b5);
         }
@@ -643,7 +643,7 @@
 
             --card-border: inset 0 0 0 1px hsla(var(--b4), 0.8);
 
-            --blur-brightness: 0.5;
+            --blur-brightness: 0.7;
 
             --modal-bg: hsl(var(--b3), 0.35);
 
@@ -10176,13 +10176,16 @@
 
     /*     WINDOW     */
     .bleh-modal {
-        background: hsl(var(--b5));
+        background: hsl(var(--b5), 90%);
         border-radius: var(--item-big-radius);
         box-shadow: var(--override-full-shadow, var(--menu-shadow));
         border: 1px solid var(--card-border-base);
         color: hsl(var(--c2));
         padding: var(--card-padding);
         position: relative;
+
+        backdrop-filter: blur(25px) saturate(240%) brightness(var(--blur-brightness));
+        -webkit-backdrop-filter: blur(25px) saturate(240%) brightness(var(--blur-brightness));
 
         display: flex;
         flex-direction: column;
@@ -16686,11 +16689,24 @@
 
         & > * {
             opacity: var(--opacity, unset);
+            pointer-events: var(--events, auto);
+            cursor: var(--cursor, unset);
+        }
+
+        &[aria-disabled="true"] {
+            --opacity: 0.4;
+            --events: none;
+            --cursor: default;
+            cursor: default !important;
         }
 
         &:not(.standalone) {
             padding: 12px;
             margin: -12px;
+        }
+
+        .setting-group.blend > & {
+            border-radius: var(--item-big-radius);
         }
 
         transition-property: background;
@@ -16699,7 +16715,7 @@
 
         &:is(
         [data-type="toggle"]
-        ):hover {
+        ):not([aria-disabled="true"]):hover {
             background: hsl(var(--b4), 25%);
             transition: none;
         }

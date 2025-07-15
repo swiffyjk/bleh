@@ -2038,7 +2038,7 @@ export const trans = {
             pt: 'Compatibilidade de emojis'
         },
         body: {
-            en: 'Required to render emoji properly before Windows 11 🏳️‍⚧️',
+            en: 'Required to render emoji properly before Windows 11. 🏳️‍⚧️',
             de: 'Erforderlich, um Emojis vor Windows 11 richtig darzustellen 🏳️‍⚧️',
             pt: 'Necessário para renderizar emojis corretamente antes do Windows 11 🏳️‍⚧️'
         }
@@ -2962,6 +2962,29 @@ export const trans = {
     example: {
         en: 'e.g. {v}',
         de: 'z.B. {v}'
+    },
+    item_is_unavailable_on_platform: {
+        en: '‘{i}’ is unavailable on {p}'
+    },
+    platforms: {
+        win32: {
+            en: 'Windows'
+        },
+        darwin: {
+            en: 'macOS'
+        },
+        ios: {
+            en: 'iOS'
+        },
+        android: {
+            en: 'Android'
+        },
+        linux: {
+            en: 'Linux'
+        },
+        other: {
+            en: 'Unknown'
+        }
     }
 }
 
