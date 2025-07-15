@@ -5,6 +5,10 @@
 //
 
 // https://stackoverflow.com/questions/46432335/hex-to-hsl-convert-javascript
+import {log} from "./log.js";
+import {notify} from "../components/notify.js";
+import {tl, trans} from "./trans.js";
+
 /**
  * Converts hex to {h, s, l}
  * @param {string} hex
@@ -86,13 +90,20 @@ function comp_to_hex(comp) {
 /**
  * Clamps maximum saturation to 1.5
  * @param {number} sat
- * @returns {number}
+ * @returns {string}
  */
 export function clamp_sat(sat) {
     if (sat > 1.5)
-        return 1.5;
+        return 1.5.toString();
 
-    return sat;
+    return sat.toFixed(2);
+}
+
+export function clamp_lit(sat, lit) {
+    if (sat >= 1.3 && lit < 0.8)
+        return 0.8;
+
+    return lit;
 }
 
 /**
@@ -175,9 +186,114 @@ export function return_artist_from_generic(url) {
     let split = url.split('/');
     let length = (split.length - 1);
 
-    // artist/_/name in the url means its a track
+    // artist/_/name in the url means it is a track
     if (split[length - 1] != '_')
         return desanitise(split[length - 1]);
     else
         return desanitise(split[length - 2]);
+}
+
+/**
+ * Interpolates a hue value to transition smoothly around the hsl 360 scale
+ * @param current
+ * @param next
+ * @param proximity
+ * @returns {number}
+ */
+export function interpolate_hue(current, next, proximity) {
+    // normalise
+    current = ((current % 360) + 360) % 360;
+    next = ((next % 360) + 360) % 360;
+
+    let diff = next - current;
+
+    // choose the shortest path
+    if (diff > 180) {
+        // go counter-clockwise instead
+        diff -= 360;
+    } else if (diff < -180) {
+        // go clockwise instead
+        diff += 360;
+    }
+
+    let interpolated = current + (diff * proximity);
+
+    // normalise once more
+    return ((interpolated % 360) + 360) % 360;
+}
+
+/**
+ * Lazy loads an element by waiting until the user scrolls into view
+ * @param {HTMLElement} elem - Element
+ * @param {Function} func - Function when the element is scrolled into view
+ * @param {Object} options - Any options to pass
+ */
+export function lazy(elem, func, options = {}) {
+    const {
+        threshold = 0.1,
+        rootMargin = '50px'
+    } = options;
+
+    const observer = new IntersectionObserver(entries => {
+        entries.forEach(entry => {
+            if (entry.isIntersecting) {
+                log('now allowing load', 'lazy', 'info', {elem: elem, options: options});
+                func(elem);
+                observer.unobserve(elem);
+            }
+        });
+    }, { threshold, rootMargin });
+
+    observer.observe(elem);
+}
+
+/**
+ * Copies text to the clipboard
+ * @param {string} text
+ */
+export function copy(text) {
+    navigator.clipboard.writeText(text).then(() => {
+        log('copied', 'copy', 'info', {text: text});
+        notify({
+            id: 'copy',
+            title: tl(trans.copied_to_clipboard),
+            icon: 'icon-16-copy'
+        });
+    });
+}
+
+export function download_with_progress(url, func) {
+    return new Promise((resolve, reject) => {
+        let xhr = new XMLHttpRequest();
+        xhr.open('GET', url, true);
+        xhr.responseType = 'blob';
+
+        xhr.onprogress = (event) => {
+            if (event.lengthComputable) {
+                const percent = Math.round((event.loaded / event.total) * 100);
+                func(percent);
+                log(`downloading ${percent}%`, 'download', 'info', {url: url});
+            }
+        }
+
+        xhr.onload = () => {
+            if (xhr.status === 200) {
+                resolve(xhr.response);
+                log(`downloaded ${url}`, 'download');
+            } else {
+                reject(new Error(`download failed: ${xhr.status}`));
+                log(`download failed: ${xhr.status}`, 'download', 'error', {url: url});
+            }
+        }
+
+        xhr.onerror = () => {
+            reject(new Error('network error'));
+            log('network error', 'download', 'error', {url: url});
+        };
+        xhr.send();
+    });
+}
+
+export function pad2(num) {
+    return String(num).padStart(2, '0');
 }

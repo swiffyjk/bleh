@@ -34,8 +34,11 @@ export function checkup_page_structure(is_subpage = false, header = null) {
     }
 
     let params = new URLSearchParams(document.location.search);
+    page.requested.params = params;
     page.requested.tab = params.get('tab');
     page.requested.page = params.get('page');
+    page.requested.token = params.get('token');
+    page.requested.collage = params.get('collage');
 
     if (!page.structure.container || !document.body.contains(page.structure.container)) {
         log('page missing container, creating', 'page structure');
@@ -64,6 +67,8 @@ export function checkup_page_structure(is_subpage = false, header = null) {
     }
     if (page.structure.row.classList.contains('buffer-4'))
         page.structure.row.classList = 'row col-main-is-primary';
+
+    page.structure.row.setAttribute('data-assigned', 'true');
 
     if (!page.structure.main || !document.body.contains(page.structure.main)) {
         log('page missing main, creating', 'page structure');
@@ -94,6 +99,16 @@ export function checkup_page_structure(is_subpage = false, header = null) {
         }
     }
 
+    if (ff('short')) {
+        page.structure.content = html.node`
+            <div class="content">
+                ${page.structure.main}
+                ${page.structure.side}
+            </div>
+        `;
+        page.structure.row.appendChild(page.structure.content);
+    }
+
     log('finished', 'page structure');
 
     if (ff('refreshed_music_nav') && header) {
@@ -112,14 +127,25 @@ export function checkup_page_structure(is_subpage = false, header = null) {
                 content_top.classList.add('redesigned-content-top');
                 page.structure.content_top = content_top;
 
-                if (navlist)
-                    navlist.after(content_top);
-                else
-                    page.structure.container.insertBefore(content_top, page.structure.container.firstElementChild);
-
                 // should be covered by bleh
                 if (content_top.querySelector('.content-top-back-link'))
                     content_top.style.setProperty('display', 'none');
+
+                let content_top_nav = content_top.querySelector('.navlist');
+                if (!content_top_nav && ff('beret'))
+                    content_top.style.setProperty('display', 'none');
+
+                if (ff('short')) {
+                    if (!content_top.style.hasOwnProperty('display'))
+                        page.structure.row.insertBefore(content_top, page.structure.content);
+                    else
+                        page.structure.row.appendChild(content_top);
+                } else {
+                    if (navlist)
+                        navlist.after(content_top);
+                    else
+                        page.structure.container.insertBefore(content_top, page.structure.container.firstElementChild);
+                }
             } else {
                 let subpage_title = page.structure.main.querySelector(':scope > .subpage-title');
                 if (!subpage_title)
@@ -139,7 +165,12 @@ export function checkup_page_structure(is_subpage = false, header = null) {
                     `
 
                     page.structure.content_top = content_top;
-                    navlist.after(content_top);
+                    content_top.style.setProperty('display', 'none');
+
+                    if (ff('short'))
+                        page.structure.row.appendChild(content_top);
+                    else
+                        navlist.after(content_top);
 
                     try {
                         page.structure.main.removeChild(subpage_title);
@@ -152,10 +183,14 @@ export function checkup_page_structure(is_subpage = false, header = null) {
                 if (navlist) {
                     navlist.classList.add('redesigned-navigation');
 
-                    if (page.structure.content_top)
-                        page.structure.content_top.after(navlist);
-                    else
-                        page.structure.container.insertBefore(navlist, page.structure.row);
+                    if (ff('short')) {
+                        page.structure.row.insertBefore(navlist, page.structure.content);
+                    } else {
+                        if (page.structure.content_top)
+                            page.structure.content_top.after(navlist);
+                        else
+                            page.structure.container.insertBefore(navlist, page.structure.row);
+                    }
                 }
 
                 // is there a btn-add?
@@ -173,6 +208,7 @@ export function checkup_page_structure(is_subpage = false, header = null) {
 
                     btn_add.classList = 'btn side-action';
                     btn_add.setAttribute('data-type', 'add');
+                    btn_add.textContent = tl(trans.add);
 
                     side_actions.appendChild(btn_add);
                 }
@@ -204,10 +240,32 @@ export function checkup_page_structure(is_subpage = false, header = null) {
                     side_actions.appendChild(radio);
                 }
             }
+
+
+            let similar_artists = page.structure.side.querySelector('.similar-items-sidebar');
+            if (similar_artists) {
+                similar_artists.parentElement.classList.add('similar-artists-panel');
+                page.structure.side.removeChild(similar_artists.parentElement);
+            }
         } else {
             let content_top = document.body.querySelector('.content-top');
 
             if (content_top) content_top.classList.add('legacy-content-top');
         }
     }
+}
+
+export function checkup_nav() {
+    if (!ff('short')) return;
+
+    if (page.structure.nav) page.structure.nav.setAttribute('data-assigned', 'true');
+
+    let navlists = page.structure.container.querySelectorAll(':scope > .navlist');
+    console.info(page.structure.container.innerHTML);
+    navlists.forEach((nav, index) => {
+        console.info(index);
+        if (index < 1) return;
+
+        page.structure.row.insertBefore(nav, page.structure.content);
+    });
 }

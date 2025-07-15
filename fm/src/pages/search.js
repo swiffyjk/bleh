@@ -29,10 +29,12 @@ export function bleh_search() {
     let search = search_form.querySelector('#site-search');
     let value = search.getAttribute('value');
 
-    let site_search = document.body.querySelector('#masthead-search-field');
-    site_search.setAttribute('value', value);
-    site_search.focus();
-    page.structure.main.removeChild(search_form);
+    if (!page.mobile) {
+        let site_search = document.body.querySelector('#masthead-search-field');
+        site_search.setAttribute('value', value);
+        site_search.focus();
+        page.structure.main.removeChild(search_form);
+    }
 
     page.name = (value != '') ? value : 'empty..';
 

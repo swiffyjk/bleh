@@ -5,10 +5,10 @@
 //
 
 import {auth, page, root} from "../build/page";
-import {tl, trans, trans_legacy} from "../build/trans";
+import {tl, trans} from "../build/trans";
 import {bleh_auto_edits} from "../components/auto_edit";
 import {dialog} from "../components/dialog";
-import {custom_select, update_inbuilt_select} from "../components/select";
+import {custom_select, select, select_prepare, update_inbuilt_select} from "../components/select";
 import {update_inbuilt_item} from "../config";
 import {ff} from "../sku";
 import {markdown} from "../components/markdown";
@@ -16,6 +16,11 @@ import {html, render} from "lighterhtml";
 
 // patch last.fm settings
 export function bleh_native_settings() {
+    let no_data = page.structure.container.querySelector(':scope > .no-data-message');
+    if (no_data) {
+        page.structure.main.appendChild(no_data);
+    }
+
     if (page.subpage == 'overview') {
         patch_settings_profile_tab();
     } else if (page.subpage == 'privacy') {
@@ -81,7 +86,6 @@ export function bleh_native_settings() {
 
 function patch_settings_profile_tab() {
     let update_picture = document.getElementById('update-picture');
-
     if (!update_picture) return;
 
     // if we can continue, we are on profile tab
@@ -167,19 +171,19 @@ function patch_settings_charts_panel(token) {
                     ${original_chart_settings.recent.count}
                 </div>
             </div>
-            <div class="setting" data-type="toggle" id="container-recent_artwork">
+            <div class="setting" data-type="toggle" onclick="_update_inbuilt_item('recent_artwork')" id="container-recent_artwork">
                 <button class="btn reset" onclick="_reset_inbuilt_item('recent_artwork')">Reset to default</button>
                 <div class="heading">
                     <h5>${tl(trans.recent_artwork)}</h5>
                 </div>
                 <div class="toggle-wrap">
                     <input class="companion-checkbox" type="checkbox" name="show_recent_tracks_artwork" id="inbuilt-companion-checkbox-recent_artwork">
-                    <span class="btn toggle" id="toggle-recent_artwork" onclick="_update_inbuilt_item('recent_artwork')" aria-checked="false">
+                    <span class="btn toggle" id="toggle-recent_artwork" aria-checked="false">
                         <div class="dot"></div>
                     </span>
                 </div>
             </div>
-            <div class="setting" data-type="toggle" id="container-recent_realtime">
+            <div class="setting" data-type="toggle" onclick="_update_inbuilt_item('recent_realtime')" id="container-recent_realtime">
                 <button class="btn reset" onclick="_reset_inbuilt_item('recent_realtime')">Reset to default</button>
                 <div class="heading">
                     <h5>${tl(trans.recent_realtime.name)}</h5>
@@ -187,7 +191,7 @@ function patch_settings_charts_panel(token) {
                 </div>
                 <div class="toggle-wrap">
                     <input class="companion-checkbox" type="checkbox" name="auto_refresh_recent_tracks" id="inbuilt-companion-checkbox-recent_realtime">
-                    <span class="btn toggle" id="toggle-recent_realtime" onclick="_update_inbuilt_item('recent_realtime')" aria-checked="false">
+                    <span class="btn toggle" id="toggle-recent_realtime" aria-checked="false">
                         <div class="dot"></div>
                     </span>
                 </div>
@@ -451,6 +455,10 @@ function patch_settings_profile_panel(token, update_picture) {
     let form_about_me = document.getElementById('id_about_me').textContent;
 
 
+    let chars;
+    let about;
+    let preview;
+
     render(update_picture, html`
        <h4>${tl(trans.profile)}</h4>
         <div class="banner-preview"></div>
@@ -490,24 +498,27 @@ function patch_settings_profile_panel(token, update_picture) {
                                 <div class="title">
                                     ${tl(trans.country)}
                                 </div>
-                                <div class="input custom-selector" id="country_select">
-                                    ${form_country}
-                                </div>
+                                ${select(select_prepare(form_country), form_country.value, 'country')}
                             </div>
                             <div class="info-row">
                                 <div class="title">
                                     ${tl(trans.about)}
                                 </div>
                                 <div class="input about-me" id="about_me">
-                                    <textarea name="about_me" placeholder=${tl(trans.anything_you_can_imagine)} cols="40" rows="10" class="textarea--s" maxlength="500" id="id_about_me" oninput="_update_about_me_preview(this.value)" data-form-type="other">${form_about_me}</textarea>
-                                    <div class="tip markdown-enabled">${tl(trans.supports_markdown)}</div>
+                                    <textarea name="about_me" placeholder=${tl(trans.anything_you_can_imagine)} cols="40" rows="10" class="textarea--s" maxlength="500" id="id_about_me" oninput=${() => update_about()} ref=${el => about = el} data-form-type="other">${form_about_me}</textarea>
+                                    <div class="dual-tip">
+                                        <div class="tip markdown-enabled">${tl(trans.supports_markdown)}</div>
+                                        <div class="tip characters" ref=${el => chars = el}>
+                                            ${tl(trans.value_characters_max).replace('{v}', '500')}
+                                        </div>
+                                    </div>
                                 </div>
                             </div>
                             <div class="info-row">
                                 <div class="title">
                                     ${tl(trans.about_me_preview)}
                                 </div>
-                                <span class="bleh--about-me-preview" id="about_me_preview"></span>
+                                <span class="bleh--about-me-preview" ref=${el => preview = el}></span>
                             </div>
                             <div class="info-row" style="display: none">
                                 <div class="title">
@@ -539,12 +550,26 @@ function patch_settings_profile_panel(token, update_picture) {
         allowHTML: true
     });
 
-    custom_select(update_picture.querySelector('#id_country'), update_picture.querySelector('#country_select'));
-
 
     // about me
-    let about_me_box = document.getElementById('id_about_me');
-    update_about_me_preview(about_me_box.value);
+    update_about();
+
+    function update_about() {
+        let value = about.value;
+        chars.textContent = tl(trans.value_characters_max).replace('{v}', `${value.length}/500`);
+        chars.setAttribute('data-exceeded', value.length >= 500);
+
+        render(preview, markdown(value, {
+            allow_headers: true
+        }));
+
+        let banner = preview.querySelector('img[alt="banner"]');
+        let banner_img = page.structure.main.querySelector('.banner-preview');
+        if (!banner)
+            banner_img.removeAttribute('style');
+        else
+            banner_img.style.setProperty('background-image', `url(${banner.getAttribute('src')})`);
+    }
 
     // subtitle
     update_display_name(form_display_name);
@@ -645,25 +670,6 @@ function finish_saving_avatar() {
 }
 
 
-unsafeWindow._update_about_me_preview = function(value) {
-    update_about_me_preview(value);
-}
-function update_about_me_preview(value) {
-    let about_me = page.structure.main.querySelector('#about_me_preview');
-
-    render(about_me, markdown(value, {
-        allow_headers: true
-    }))
-
-    let banner = about_me.querySelector('img[alt="banner"]');
-    let banner_img = page.structure.main.querySelector('.banner-preview');
-    if (!banner)
-        banner_img.removeAttribute('style');
-    else
-        banner_img.style.setProperty('background-image', `url(${banner.getAttribute('src')})`);
-}
-
-
 // privacy
 function patch_settings_privacy_tab() {
     let privacy_panel = document.getElementById('privacy');
@@ -676,6 +682,8 @@ function patch_settings_privacy_tab() {
 }
 
 function bleh_communication_panel(token) {
+    let profile_notes = JSON.parse(localStorage.getItem('bleh_profile_notes')) || {};
+
     let panel = page.structure.main.querySelector('#ignorelist');
     panel.classList.add('bleh--panel');
 
@@ -683,30 +691,34 @@ function bleh_communication_panel(token) {
 
 
     let new_list = document.createElement('div');
-    new_list.classList.add('generic-table-list', 'user-vertical-list');
+    new_list.classList.add('generic-table-list', 'user-vertical-list', 'take-space');
 
     let exceeded = false;
     let exceed_amount = 10;
     let amount = 0;
 
     list.forEach((item, index) => {
-        let entry = document.createElement('div');
-        entry.classList.add('generic-table-list-entry', 'user-vertical-list-item');
-
         let name = item.querySelector('td').textContent.trim();
         let form = item.querySelector('form');
         let button = form.querySelector('button');
 
         button.classList.add('icon', 'chibi', 'danger-subtle');
 
-        entry.innerHTML = (`
-            <span class="text">
-                <a class="mention" href="${root}user/${name}" target="_blank">@${name}</a>
-            </span>
-            <span class="actions">
-                ${form.outerHTML}
-            </span>
-        `);
+        let entry = html.node`
+            <div class="generic-table-list-entry user-vertical-list-item">
+                <div class="name">
+                    <a class="mention" href="${root}user/${name}" target="_blank">@${name}</a>
+                </div>
+                <div class="text preview">
+                    ${profile_notes.hasOwnProperty(name) ? html.node`
+                        <p id="profile-note-row-preview--${name}">${{html: profile_notes[name]}}</p>
+                    ` : ''}
+                </div>
+                <div class="actions">
+                    ${form}
+                </div>
+            </div>
+        `;
 
         if (index > exceed_amount && !exceeded)
             exceeded = true;
@@ -724,10 +736,14 @@ function bleh_communication_panel(token) {
         new_list.classList.add('list-is-exceeded');
         new_list.setAttribute('data-expanded', 'false');
 
-        let expand = document.createElement('button');
-        expand.classList.add('expand-button', 'icon');
-        expand.textContent = trans_legacy.en.settings.inbuilt.ignore.view.replace('{c}', remainder);
-        expand.setAttribute('onclick', '_expand_list(this)');
+        let expand = html.node`
+            <button class="see-more expand-down" onclick=${() => {
+                expand.style.display = 'none';
+                new_list.setAttribute('data-expanded', 'true');
+            }}>
+                ${tl(trans.view_count_more).replace('{c}', remainder.toString())}
+            </button>
+        `;
 
         new_list.appendChild(expand);
     }
@@ -739,51 +755,45 @@ function bleh_communication_panel(token) {
     if (page.token == '')
         page.token = form.querySelector('[name="csrfmiddlewaretoken"]').getAttribute('value');
 
-    panel.innerHTML = (`
+    render(panel, html`
         <h4>${tl(trans.block_list)}</h4>
         <div class="user-top-panel">
             <div class="user-top-avatar user-top-avatar-side-left"><div class="bleh-icon"></div></div>
             <img class="user-top-avatar user-top-avatar-main" src="${auth.avatar.replace('avatar42s', 'avatar300s')}" alt="${auth.name}">
             <div class="user-top-avatar user-top-avatar-side-right"><div class="bleh-icon"></div></div>
         </div>
-        <div class="sides">
-            <div class="left main">
-                <div class="setting" data-type="text">
-                    <div class="heading">
-                        <h5>${tl(trans.profile)}</h5>
-                        <form action="${root}settings/privacy#ignorelist" name="ignorelist" method="post">
-                            <input type="hidden" name="csrfmiddlewaretoken" value="${page.token}">
-                            <div class="input-container">
-                                <input type="text" maxlength="80" id="id_user" name="user" placeholder="${tl(trans.enter_username)}">
-                                <input type="hidden" name="listaction" value="add">
-                                <input type="hidden" name="submit" value="ignorelist">
-                                <button class="bleh--btn primary icon block" type="submit">${tl(trans.block)}</button>
-                            </div>
-                        </form>
+        <div class="setting" data-type="text">
+            <div class="heading">
+                <h5>${tl(trans.profile)}</h5>
+                <form action="${root}settings/privacy#ignorelist" name="ignorelist" method="post">
+                    <input type="hidden" name="csrfmiddlewaretoken" value="${page.token}">
+                    <div class="input-container">
+                        <input type="text" maxlength="80" id="id_user" name="user" placeholder="${tl(trans.enter_username)}">
+                        <input type="hidden" name="listaction" value="add">
+                        <input type="hidden" name="submit" value="ignorelist">
+                        <button class="bleh--btn primary icon block" type="submit">${tl(trans.block)}</button>
                     </div>
-                </div>
-                <div class="alert alert-info">
-                    ${tl(trans.blocked_count).replace('{c}', amount)}
-                </div>
-            </div>
-            <div class="right">
-                <h5>${tl(trans.when_blocked)}</h5>
-                <div class="to-consider">
-                    <ul class="to-consider-good">
-                        <li>${tl(trans.blocked_user_public)}</li>
-                        <li>${tl(trans.blocked_user_message)}</li>
-                        <li>${tl(trans.blocked_user_new_shouts)}</li>
-                    </ul>
-                    <ul class="to-consider-bad">
-                        <li>${tl(trans.blocked_user_old_shouts)}</li>
-                        <li>${tl(trans.blocked_user_view_profile)}</li>
-                    </ul>
-                </div>
+                </form>
             </div>
         </div>
+        <div class="alert alert-info">
+            ${tl(trans.blocked_count).replace('{c}', amount)}
+        </div>
+        ${new_list}
+        <div class="sep" />
+        <h5>${tl(trans.when_blocked)}</h5>
+        <div class="to-consider">
+            <ul class="to-consider-good">
+                <li>${tl(trans.blocked_user_public)}</li>
+                <li>${tl(trans.blocked_user_message)}</li>
+                <li>${tl(trans.blocked_user_new_shouts)}</li>
+            </ul>
+            <ul class="to-consider-bad">
+                <li>${tl(trans.blocked_user_old_shouts)}</li>
+                <li>${tl(trans.blocked_user_view_profile)}</li>
+            </ul>
+        </div>
     `);
-
-    panel.querySelector('.left').appendChild(new_list);
 }
 
 function patch_settings_privacy_panel(token, privacy_panel) {
@@ -834,7 +844,7 @@ function patch_settings_privacy_panel(token, privacy_panel) {
                     </div>
                 </div>
             </div>
-            <div class="setting" data-type="toggle" id="container-recent_listening">
+            <div class="setting" data-type="toggle" onclick="_update_inbuilt_item('recent_listening')" id="container-recent_listening">
                 <button class="btn reset" onclick="_reset_inbuilt_item('recent_listening')">Reset to default</button>
                 <div class="heading">
                     <h5>${tl(trans.recent_listening.name)}</h5>
@@ -842,7 +852,7 @@ function patch_settings_privacy_panel(token, privacy_panel) {
                 </div>
                 <div class="toggle-wrap">
                     <input class="companion-checkbox" type="checkbox" name="hide_realtime" id="inbuilt-companion-checkbox-recent_listening">
-                    <span class="btn toggle" id="toggle-recent_listening" onclick="_update_inbuilt_item('recent_listening')" aria-checked="false">
+                    <span class="btn toggle" id="toggle-recent_listening" aria-checked="false">
                         <div class="dot"></div>
                     </span>
                 </div>
@@ -909,7 +919,7 @@ function patch_settings_privacy_panel(token, privacy_panel) {
                     </div>
                 </div>
             </div>
-            <div class="setting" data-type="toggle" id="container-disable_shoutbox">
+            <div class="setting" data-type="toggle" onclick="_update_inbuilt_item('disable_shoutbox')" id="container-disable_shoutbox">
                 <button class="btn reset" onclick="_reset_inbuilt_item('disable_shoutbox')">Reset to default</button>
                 <div class="heading">
                     <h5>${tl(trans.close_shouts.name)}</h5>
@@ -917,7 +927,7 @@ function patch_settings_privacy_panel(token, privacy_panel) {
                 </div>
                 <div class="toggle-wrap">
                     <input class="companion-checkbox" type="checkbox" name="shoutbox_disabled" id="inbuilt-companion-checkbox-disable_shoutbox">
-                    <span class="btn toggle" id="toggle-disable_shoutbox" onclick="_update_inbuilt_item('disable_shoutbox')" aria-checked="false">
+                    <span class="btn toggle" id="toggle-disable_shoutbox" aria-checked="false">
                         <div class="dot"></div>
                     </span>
                 </div>
@@ -1106,7 +1116,7 @@ function bleh_accounts() {
     custom_select(communication_panel.querySelector('[name="language"]'), communication_panel.querySelector('[name="language"]').parentElement);
 }
 function bleh_name_change() {
-    let token = page.structure.main.querySelector('[name="csrfmiddlewaretoken"]').getAttribute('value');
+    let token = page.structure.row.querySelector('[name="csrfmiddlewaretoken"]').getAttribute('value');
 
     return;
 }

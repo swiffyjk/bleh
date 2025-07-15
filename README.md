@@ -28,6 +28,8 @@ Script files can be found in `src`. To combine all the separate files into a loa
 
 This project includes the 'Overpass' font as woff2 files which is licensed under the SIL Open Font License 1.1. See fonts/LICENSE for details.
 
+To convert the working file `bleh.user.css` into the `bleh.css` file used in production, run `node minify.js` and the file will be automatically updated.
+
 ---
 
 made with [♡](https://katelyn.moe/sponsor) by katelyn and contributors

@@ -15,6 +15,7 @@ import {checkup_page_structure} from "../components/structure";
 import {refresh_all} from "../config";
 import {register_background, update_page} from "../page";
 import {bleh_home} from './home';
+import {html} from "lighterhtml";
 
 export function bleh_events() {
     if (page.subpage == 'overview') {
@@ -129,10 +130,6 @@ export function bleh_events() {
 
         side_actions.appendChild(form);
 
-        let sep = document.createElement('div');
-        sep.classList.add('sep');
-        side_actions.appendChild(sep);
-
 
         let main_panel = page.structure.main.querySelector('.event-summary-with-poster');
         if (!main_panel)
@@ -144,6 +141,10 @@ export function bleh_events() {
         // edit button
         let edit_button = main_panel.querySelector('.event-metadata + .event-metadata a');
         if (edit_button) {
+            let sep = document.createElement('div');
+            sep.classList.add('sep');
+            side_actions.appendChild(sep);
+
             edit_button.classList.add('btn', 'side-action');
             edit_button.setAttribute('data-type', 'edit');
             side_actions.appendChild(edit_button);
@@ -186,11 +187,11 @@ export function bleh_events() {
         if (cancelled) {
             page.structure.main.removeChild(cancelled);
 
-            let alert = document.createElement('section');
-            alert.classList.add('cta', 'first', 'colourful', 'error');
-            alert.innerHTML = `<strong>${tl(trans.event_cancelled)}</strong>`;
-
-            page.structure.main.insertBefore(alert, page.structure.main.firstElementChild);
+            page.structure.main.insertBefore(html.node`
+                <section class="cta first colourful error">
+                    <strong>${tl(trans.event_cancelled)}</strong>
+                </section>
+            `, page.structure.main.firstElementChild);
         }
     } else {
         if (page.subpage == 'event_attendance_going' || page.subpage == 'event_attendance_interested') {
@@ -276,17 +277,15 @@ function bleh_events_edit() {
     bleh_events_manage();
 
     let back = document.body.querySelector('.content-top-back-link a');
-
     let nav = page.structure.nav.querySelector('ul');
-    let back_nav = document.createElement('li');
-    back_nav.classList.add('navlist-item', 'secondary-nav-item', 'secondary-nav-item--back');
-    back_nav.innerHTML = (`
-        <a class="secondary-nav-item-link" href="${back.getAttribute('href')}">
-            ${trans_legacy.en.settings.back}
-        </a>
-    `);
 
-    nav.insertBefore(back_nav, nav.firstElementChild);
+    nav.insertBefore(html.node`
+        <li class="navlist-item secondary-nav-item secondary-nav-item--back">
+            <a class="secondary-nav-item-link" href="${back.getAttribute('href')}">
+                ${tl(trans.back)}
+            </a>
+        </li>
+    `, nav.firstElementChild);
 }
 
 function bleh_events_home() {

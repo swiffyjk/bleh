@@ -19,6 +19,7 @@ import {parse_scrobbles_as_rank} from "./colourful_counts";
 import {correct_item_by_artist} from "./lotus";
 import {register_menu} from "./menu";
 import {other_listener} from "./profile_shortcut";
+import {submit_scrobble} from "./scrobble.js";
 
 unsafeWindow._other_listener = function(id) {
     other_listener(id);
@@ -176,6 +177,8 @@ export function show_your_scrobbles() {
         page.structure.main.insertBefore(new_panel, page.structure.main.firstElementChild);
 
         col_main.style.setProperty('display', 'none');
+        // make last-child
+        page.structure.row.appendChild(col_main);
 
         console.info(col_main, new_panel);
 
@@ -388,6 +391,54 @@ export function show_your_scrobbles() {
 
         interact_container.appendChild(obsession_form);
     }
+    
+    
+    if (ff('submit_scrobble')) {
+        const can_api = localStorage.getItem('bleh_auth') && localStorage.getItem('bleh_auth_valid') === 'true';
+
+        const source_album = page.structure.main.querySelector('.source-album-name');
+        const source_album_artist = page.structure.main.querySelector('.source-album-artist');
+
+        let props = {
+            can_api
+        };
+
+        if (page.type == 'track')
+            props = {
+                ...props,
+                pre_track: page.name,
+                pre_artist: page.sister,
+                pre_album: source_album ? source_album.textContent : null,
+                pre_album_artist: source_album_artist ? source_album_artist.textContent : page.sister
+            };
+        else if (page.type == 'album')
+            props = {
+                ...props,
+                pre_album: page.name,
+                pre_artist: page.sister,
+                pre_album_artist: page.sister
+            };
+        else if (page.type == 'artist')
+            props = {
+                ...props,
+                pre_artist: page.name,
+                pre_album_artist: page.name
+            };
+
+        const scrobble_btn = html.node`
+            <button class="btn side-action" data-type="add" onclick=${() => submit_scrobble(props)}>
+                ${tl(trans.scrobble)}
+            </button>
+        `;
+
+        if (!can_api) {
+            tippy(scrobble_btn, {
+                content: tl(trans.requires_api_in_settings)
+            });
+        }
+
+        interact_container.appendChild(scrobble_btn);
+    }
 
 
     // search similar!
@@ -540,6 +591,13 @@ export function show_your_scrobbles() {
             link.classList.add('music-link');
             let replace = item.querySelector('.replace-playlink');
 
+            if (link.classList.contains('play-this-track-playlink--youtube'))
+                link.textContent = 'YouTube';
+            else if (link.classList.contains('play-this-track-playlink--spotify'))
+                link.textContent = 'Spotify';
+            else if (link.classList.contains('play-this-track-playlink--itunes'))
+                link.textContent = 'Apple';
+
             if (replace) {
                 replace.classList.add('dropdown-menu-clickable-item');
                 item.removeChild(replace);
@@ -572,14 +630,10 @@ export function show_your_scrobbles() {
                     Genius
                 </a>
             </li>
-        `);
-        
-        link_container.appendChild(html.node`
             <li>
-            <a class="play-this-track-playlink music-link play-this-track-playlink--tidal" href="https://listen.tidal.com/search?q=${sanitise(page.sister, ' ')} ${sanitise(page.name, ' ')}" target="_blank">
-                Tidal
-            </a>
-
+                <a class="play-this-track-playlink music-link play-this-track-playlink--tidal" href="https://listen.tidal.com/search?q=${sanitise(page.sister, ' ')} ${sanitise(page.name, ' ')}" target="_blank">
+                    Tidal
+                </a>
             </li>
         `);
     } else {
@@ -594,13 +648,16 @@ export function show_your_scrobbles() {
                     Spotify
                 </a>
                 <a class="play-this-track-playlink music-link play-this-track-playlink--itunes" href="https://music.apple.com/gb/search?term=${sanitise(page.sister, ' ')} ${sanitise(page.name, ' ')}" target="_blank">
-                    Apple Music
+                    Apple
                 </a>
                 <a class="play-this-track-playlink music-link play-this-track-playlink--youtube-music" href="https://music.youtube.com/search?q=${sanitise(page.sister)}+${sanitise(page.name)}" target="_blank">
-                    YT Music
+                    YouTube
                 </a>
                 <a class="play-this-track-playlink music-link play-this-track-playlink--tidal" href="https://listen.tidal.com/search?q=${sanitise(page.sister, ' ')} ${sanitise(page.name, ' ')}" target="_blank">
                     Tidal
+                </a>
+                <a class="play-this-track-playlink music-link play-this-track-playlink--discogs" href="https://www.discogs.com/search?q=${sanitise(page.sister)}+${sanitise(page.name)}&type=all" target="_blank">
+                    Discogs
                 </a>
                 <a class="play-this-track-playlink music-link play-this-track-playlink--aoty" href="https://www.albumoftheyear.org/search/?q=${sanitise(page.sister)}+${sanitise(page.name)}" target="_blank">
                     AOTY
@@ -618,13 +675,16 @@ export function show_your_scrobbles() {
                     Spotify
                 </a>
                 <a class="play-this-track-playlink music-link play-this-track-playlink--itunes" href="https://music.apple.com/gb/search?term=${sanitise(page.name, ' ')}" target="_blank">
-                    Apple Music
+                    Apple
                 </a>
                 <a class="play-this-track-playlink music-link play-this-track-playlink--youtube-music" href="https://music.youtube.com/search?q=${sanitise(page.name)}" target="_blank">
-                    YT Music
+                    YouTube
                 </a>
                 <a class="play-this-track-playlink music-link play-this-track-playlink--tidal" href="https://listen.tidal.com/search?q=${sanitise(page.name, ' ')}" target="_blank">
                     Tidal
+                </a>
+                <a class="play-this-track-playlink music-link play-this-track-playlink--discogs" href="https://www.discogs.com/search?q=${sanitise(page.name)}&type=artist" target="_blank">
+                    Discogs
                 </a>
                 <a class="play-this-track-playlink music-link play-this-track-playlink--aoty" href="https://www.albumoftheyear.org/search/?q=${sanitise(page.name)}" target="_blank">
                     AOTY
@@ -894,9 +954,17 @@ function show_numbers_on_side(header_type) {
             page.structure.side.insertBefore(album_artwork, page.structure.side.firstElementChild);
     }
 
+    let masonry = page.structure.row.querySelector(':scope > .col-sidebar.masonry-right');
+    if (masonry) {
+        // make last-child
+        page.structure.row.appendChild(masonry);
+    }
+
     if (page.type == 'album' || page.type == 'artist') {
         let upper = document.body.querySelector('.col-main');
         upper.classList.add('upper-overview-to-hide');
+        // make last-child
+        page.structure.row.appendChild(upper);
 
         let new_upper = document.createElement('section');
         new_upper.classList.add('top-overview-panel');
@@ -929,31 +997,27 @@ function show_numbers_on_side(header_type) {
         video_col.classList.remove('col-sidebar');
         page.structure.side.insertBefore(video_col, page.structure.side.firstElementChild);
 
-        let container = document.createElement('div');
-        container.classList.add('video-overlay-container');
-
-        let view_buttons = document.createElement('div');
-        view_buttons.classList.add('view-buttons');
-
         let playlink = video.querySelector('.video-preview-playlink a');
         let replace = video_col.querySelector('.video-preview-replace a');
 
-        playlink.classList = 'btn view-item video-item video-item--play';
-        replace.classList = 'btn view-item video-item video-item--edit';
+        video.appendChild(html.node`
+            <a class="link-block-cover-link" href=${playlink.href} target="_blank" />
+        `);
 
-        view_buttons.appendChild(playlink);
-        view_buttons.appendChild(replace);
+        playlink.classList = 'see-more';
+        replace.classList = 'see-more add';
 
-        container.appendChild(view_buttons);
-        video.appendChild(container);
+        video.after(html.node`
+            <div class="video-actions sub-text">
+                ${replace}
+                ${playlink}
+            </div>
+        `);
 
-        tippy(playlink, {
-            content: playlink.getAttribute('title')
-        });
+        playlink.textContent = tl(trans.watch_video);
         playlink.removeAttribute('title');
-        tippy(replace, {
-            content: replace.textContent
-        });
+
+        replace.textContent = tl(trans.replace);
     }
 }
 
@@ -985,7 +1049,7 @@ export function bleh_music_page_charts() {
 
     log('beginning replacement', 'music charts');
 
-    let panel = document.body.querySelector('.listen-panel'); // page.structure.side fails without pro
+    let panel = page.structure.container.querySelector('.listen-panel'); // page.structure.side fails without pro
     let trend = panel.querySelector('.listener-trend');
 
     if (!trend) return;
@@ -1003,8 +1067,7 @@ export function bleh_music_page_charts() {
 
     let has_seen_more_than_0 = false;
     days.forEach((day, index) => {
-        if (!day)
-            null;
+        if (!day) return;
 
         //let label = day.querySelector('time').textContent.trim();
         let label = moment(day.querySelector('time').getAttribute('datetime'));
@@ -1042,7 +1105,7 @@ export function bleh_music_page_charts() {
     }
 
     Chart.defaults.color = page.state.chart_colours.text_col;
-    Chart.defaults.font.family = 'Ubuntu Sans';
+    Chart.defaults.font.family = page.state.chart_colours.font;
     let scrobble_chart = new Chart(scrobble_canvas.getContext('2d'), {
         type: 'line',
         data: {

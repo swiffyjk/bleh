@@ -19,18 +19,6 @@ import {html} from "lighterhtml";
 import {collage} from "./collage.js";
 import {sponsor} from "../sponsor.js";
 
-unsafeWindow._toggle_profile_header = function(button) {
-    let current = settings.profile_header_expand;
-
-    settings.profile_header_expand = !current;
-    button.setAttribute('aria-expanded', !current);
-
-    document.documentElement.setAttribute('data-bleh--profile_header_expand', !current);
-
-    // save to settings
-    localStorage.setItem('bleh', JSON.stringify(settings));
-}
-
 export function redesign_profile_header(is_own_profile, is_following) {
     let base_header = document.body.querySelector('.header-info-secondary');
     if (!base_header) return;
@@ -42,7 +30,6 @@ export function redesign_profile_header(is_own_profile, is_following) {
     let taste = '';
     let taste_percentage = '';
     let taste_artists = [];
-    let profile_avi = '';
 
     if (!is_own_profile && page.name != sponsor_list.sponsor_account) {
         let taste_meter = base_header.querySelector('.tasteometer');
@@ -54,12 +41,6 @@ export function redesign_profile_header(is_own_profile, is_following) {
             taste_artists.push(correct_artist(artist.getAttribute('title')));
         });
 
-        profile_avi = document.body.querySelector('.header-avatar img');
-        if (profile_avi != null)
-            profile_avi = profile_avi.getAttribute('src');
-        else
-            profile_avi = '';
-
         taste_percentage = taste_meter.querySelector('.tasteometer-viz').getAttribute('title');
         if (taste_percentage == '99%')
             taste_percentage = '100%';
@@ -67,21 +48,33 @@ export function redesign_profile_header(is_own_profile, is_following) {
 
 
     // create new
-    let profile_header = document.createElement('section');
-    profile_header.classList.add('side-actions');
+    let side_sep = html.node`<div class="sep"></div>`;
+
+    let about_me = page.structure.container.querySelector('.about-me-sidebar');
+
+    let profile_header;
+    if (about_me) {
+        profile_header = html.node`
+            <div class="side-actions" />
+        `;
+    } else {
+        profile_header = html.node`
+            <section class="side-actions" />
+        `;
+    }
 
     if (!is_own_profile && page.name != sponsor_list.sponsor_account) {
         // follow
         let follow_wrap = document.body.querySelector('.header-avatar .class > div');
 
-        if (follow_wrap != null) {
+        if (follow_wrap) {
             let follow_btn = follow_wrap.querySelector('button');
             follow_btn.classList.add('btn', 'side-action');
             follow_btn.classList.remove('toggle-button', 'header-follower-btn');
             follow_btn.setAttribute('data-type', 'follow');
             profile_header.appendChild(follow_wrap);
 
-            if (follow_wrap.getAttribute('data-toggle-button-current-state') == 'followed')
+            if (is_following)
                 follow_btn.setAttribute('data-followed', 'true');
 
             let mutual_text = document.createElement('i');
@@ -156,7 +149,7 @@ export function redesign_profile_header(is_own_profile, is_following) {
                     link: () => collage(),
                     action: 'button',
                     text: tl(trans.collage),
-                    new_release: true
+                    updated: true
                 });
             }
 
@@ -226,8 +219,8 @@ export function redesign_profile_header(is_own_profile, is_following) {
         let taste_wrap = html.node`
             <div class="btn listen-item icon">
                 <div class="span">
-                    <img class="view-item-avatar" src="${auth.avatar}">
-                    <img class="view-item-avatar" src="${profile_avi}">
+                    <img class="view-item-avatar" src=${auth.avatar} alt=${auth.name}>
+                    <img class="view-item-avatar" src=${page.avatar} alt=${page.name}>
                     <div class="info">
                         <h3>${
                             html.node([
@@ -264,7 +257,7 @@ export function redesign_profile_header(is_own_profile, is_following) {
                 content: html.node`
                     <h4 class="menu-header">${tl(trans.compare_plays)}</h4>
                     <a class="dropdown-menu-clickable-item" href="${root}user/${page.name}/library/music/${sanitise(taste_artists[0])}" data-menu-item="shared-artist">
-                        <img class="view-item-avatar" src="${profile_avi}" alt="${page.name}">${taste_artists[0]}
+                        <img class="view-item-avatar" src="${page.avatar}" alt="${page.name}">${taste_artists[0]}
                     </a>
                     <a class="dropdown-menu-clickable-item" href="${root}user/${auth.name}/library/music/${sanitise(taste_artists[0])}" data-menu-item="shared-artist">
                         <img class="view-item-avatar" src="${auth.avatar}" alt="${auth.name}">${taste_artists[0]}
@@ -272,7 +265,7 @@ export function redesign_profile_header(is_own_profile, is_following) {
                     ${(taste_artists.length >= 2) ? html.node`
                     <div class="sep"></div>
                     <a class="dropdown-menu-clickable-item" href="${root}user/${page.name}/library/music/${sanitise(taste_artists[1])}" data-menu-item="shared-artist">
-                        <img class="view-item-avatar" src="${profile_avi}" alt="${page.name}">${taste_artists[1]}
+                        <img class="view-item-avatar" src="${page.avatar}" alt="${page.name}">${taste_artists[1]}
                     </a>
                     <a class="dropdown-menu-clickable-item" href="${root}user/${auth.name}/library/music/${sanitise(taste_artists[1])}" data-menu-item="shared-artist">
                         <img class="view-item-avatar" src="${auth.avatar}" alt="${auth.name}">${taste_artists[1]}
@@ -281,7 +274,7 @@ export function redesign_profile_header(is_own_profile, is_following) {
                     ${(taste_artists.length >= 3) ? html.node`
                     <div class="sep"></div>
                     <a class="dropdown-menu-clickable-item" href="${root}user/${page.name}/library/music/${sanitise(taste_artists[2])}" data-menu-item="shared-artist">
-                        <img class="view-item-avatar" src="${profile_avi}" alt="${page.name}">${taste_artists[2]}
+                        <img class="view-item-avatar" src="${page.avatar}" alt="${page.name}">${taste_artists[2]}
                     </a>
                     <a class="dropdown-menu-clickable-item" href="${root}user/${auth.name}/library/music/${sanitise(taste_artists[2])}" data-menu-item="shared-artist">
                         <img class="view-item-avatar" src="${auth.avatar}" alt="${auth.name}">${taste_artists[2]}
@@ -307,13 +300,18 @@ export function redesign_profile_header(is_own_profile, is_following) {
         }
     }
 
-    if (!page.mobile)
-        page.structure.side.insertBefore(profile_header, page.structure.side.firstElementChild);
-    else
-        page.structure.main.insertBefore(profile_header, page.structure.main.firstElementChild);
+    if (about_me) {
+        about_me.appendChild(side_sep);
+        about_me.appendChild(profile_header);
+    } else {
+        if (!page.mobile)
+            page.structure.side.insertBefore(profile_header, page.structure.side.firstElementChild);
+        else
+            page.structure.main.insertBefore(profile_header, page.structure.main.firstElementChild);
+    }
 }
 
-export function create_profile_top_item(parent, {name, link, text='', type, new_release = false, action='', tooltip='', allow_html=false, tooltip_theme=''}) {
+export function create_profile_top_item(parent, {name, link, text='', type, new_release = false, updated = false, action='', tooltip='', allow_html=false, tooltip_theme=''}) {
     log(`creating top item of ${name}, ${link}, ${text}`, 'profile');
 
     let side_action;
@@ -326,6 +324,7 @@ export function create_profile_top_item(parent, {name, link, text='', type, new_
             >
                 ${tl(trans[type])}
                 ${(new_release) ? html.node`<div class="new-badge">${tl(trans.new)}</div>` : ''}
+                ${(updated) ? html.node`<div class="new-badge">${tl(trans.updated)}</div>` : ''}
             </button>
         `;
     } else {
@@ -337,6 +336,7 @@ export function create_profile_top_item(parent, {name, link, text='', type, new_
             >
                 ${tl(trans[type])}
                 ${(new_release) ? html.node`<div class="new-badge">${tl(trans.new)}</div>` : ''}
+                ${(updated) ? html.node`<div class="new-badge">${tl(trans.updated)}</div>` : ''}
             </a>
         `;
     }

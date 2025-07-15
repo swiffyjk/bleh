@@ -6,6 +6,7 @@
 
 import {root} from "../build/page";
 import {html} from "lighterhtml";
+import {patch_wiki_contents} from "../pages/wiki.js";
 
 export function markdown(text, {
     allow_headers = false,
@@ -30,9 +31,33 @@ export function markdown(text, {
     });
     let parsed_body = converter.makeHtml(text
     .replace(/([@])([a-zA-Z0-9_]+)/g, `[$1$2](${root}user/$2)`)
-    .replace(/\[artist\]([a-zA-Z0-9]+)\[\/artist\]/g, `[$1](${root}music/$1)`)
-    .replace(/\[album artist=([a-zA-Z0-9]+)\]([a-zA-Z0-9\s]+)\[\/album\]/g, `[$2](${root}music/$1/$2)`)
-    .replace(/\[track artist=([a-zA-Z0-9]+)\]([a-zA-Z0-9\s]+)\[\/track\]/g, `[$2](${root}music/$1/_/$2)`)
+    .replace(
+        /\[artist\]([^[\]]+)\[\/artist\]/g,
+        (match, artist) =>
+            `[${artist}](${root}music/${encodeURIComponent(artist)})`
+    )
+    .replace(
+        /\[album artist=([^[\]]+)\]([^[\]]+)\[\/album\]/g,
+        (match, artist, album) =>
+            `[${album}](${root}music/` +
+            `${encodeURIComponent(artist)}/${encodeURIComponent(album)})`
+    )
+    .replace(
+        /\[track artist=([^[\]]+)\]([^[\]]+)\[\/track\]/g,
+        (match, artist, track) =>
+            `[${track}](${root}music/` +
+            `${encodeURIComponent(artist)}/_/${encodeURIComponent(track)})`
+    )
+    .replace(
+        /\[url=([^[\]]+)\]([^[\]]+)\[\/url\]/g,
+        (match, url, text) =>
+            `[${text}](${encodeURI(url)})`
+    )
+    .replace(
+        /\[url\]([^[\]]+)\[\/url\]/g,
+        (match, url) =>
+            `[${url}](${encodeURI(url)})`
+    )
     .replace(/https:\/\/open\.spotify\.com\/user\/([A-Za-z0-9]+)\?si=([A-Za-z0-9]+)/g, '[Spotify](https://open.spotify.com/user/$1)')
     .replace(/&/g, '&amp;')
     .replace(/</g, '&lt;')
@@ -40,7 +65,9 @@ export function markdown(text, {
     .replace(/"/g, '&quot;')
     .replace(/'/g, '&#039;'));
 
-    return html.node([
-        parsed_body
-    ]);
+    let body = html.node([parsed_body]);
+
+    patch_wiki_contents(body);
+
+    return body;
 }

@@ -585,7 +585,9 @@ export let settings_store = {
         title: trans.theme
     },
     high_contrast: {
-        default: false
+        default: false,
+        type: 'checkbox',
+        title: trans.high_contrast
     },
     accent_type: {
         default: 'colour',
@@ -604,8 +606,8 @@ export let settings_store = {
         default: 1,
         type: 'range',
         min: 0,
-        max: 3,
-        step: 0.1,
+        max: 5,
+        step: 0.2,
         title: trans.card_background_saturation.name,
         body: trans.card_background_saturation.body,
         incompatible: [{setting: 'theme', value: 'light'}]
@@ -615,11 +617,19 @@ export let settings_store = {
         type: 'range'
     },
     gloss: {
+        css: 'gloss',
         default: 0,
-        type: 'range'
+        type: 'range',
+        min: 0,
+        max: 1,
+        step: 0.05,
+        title: trans.gloss.name,
+        body: trans.gloss.body
     },
     gendered_tags: {
-        default: true
+        default: true,
+        title: trans.gendered_tags.name,
+        body: trans.gendered_tags.body
     },
     dev: {
         default: false,
@@ -648,7 +658,9 @@ export let settings_store = {
         body: trans.accessible_name_colours.body
     },
     reduced_motion: {
-        default: false
+        default: false,
+        title: trans.reduced_motion.name,
+        body: trans.reduced_motion.body
     },
     underline_links: {
         default: false,
@@ -666,16 +678,28 @@ export let settings_store = {
         body: trans.show_guest_features.body
     },
     stacked_chartlist_info: {
-        default: true
+        default: true,
+        title: trans.track_column_view
+    },
+    glacier_library_graphs: {
+        default: true,
+        title: trans.glacier_graphs.name,
+        body: trans.glacier_graphs.body
     },
     show_remaster_tags: {
-        default: true
+        default: true,
+        title: trans.show_remaster_tags,
+        beta: true
     },
     corrections: {
-        default: true
+        default: true,
+        title: trans.correct_titles_with_lotus.name,
+        body: trans.correct_titles_with_lotus.body,
     },
     colourful_counts: {
-        default: true
+        default: true,
+        title: trans.colourful_counts.name,
+        body: trans.colourful_counts.body
     },
     colourful_tracks: {
         default: true,
@@ -690,7 +714,9 @@ export let settings_store = {
         default: true
     },
     travis: {
-        default: false
+        default: false,
+        title: trans.redirect_messages.name,
+        body: trans.redirect_messages.body
     },
     list_view: {
         default: 1,
@@ -736,7 +762,9 @@ export let settings_store = {
         body: trans.hue_from_album.body
     },
     seasonal: {
-        default: true
+        default: true,
+        title: trans.enable_seasons.name,
+        body: trans.enable_seasons.body
     },
     seasonal_particles: {
         default: 'all',
@@ -776,7 +804,7 @@ export let settings_store = {
     },
     font_weight: {
         css: 'custom_font_weight',
-        default: 480,
+        default: 440,
         min: 100,
         max: 500,
         step: 10,
@@ -786,8 +814,8 @@ export let settings_store = {
     },
     font_weight_medium: {
         css: 'custom_font_weight_medium',
-        default: 650,
-        min: 500,
+        default: 570,
+        min: 400,
         max: 700,
         step: 10,
         type: 'range',
@@ -796,8 +824,8 @@ export let settings_store = {
     },
     font_weight_bold: {
         css: 'custom_font_weight_bold',
-        default: 730,
-        min: 700,
+        default: 760,
+        min: 500,
         max: 900,
         step: 10,
         type: 'range',
@@ -807,7 +835,8 @@ export let settings_store = {
     font_emoji: {
         default: true,
         title: trans.font_emoji.name,
-        body: trans.font_emoji.body
+        body: trans.font_emoji.body,
+        platforms: ['win32', 'linux', 'android', 'other']
     },
     show_bulk_edit_album: {
         default: false,
@@ -818,7 +847,9 @@ export let settings_store = {
         ]
     },
     grid_glow: {
-        default: true
+        default: true,
+        title: trans.grid_glow.name,
+        body: trans.grid_glow.body
     },
     auth_menu_obsessions: {
         deault: false
@@ -842,12 +873,74 @@ export let settings_store = {
     },
     collage_grid_gap: {
         default: true,
-        title: trans.collage_grid_gap
+        title: trans.collage_grid_gap.name,
+        body: trans.collage_grid_gap.body
     },
     hu_tao: {
         default: '',
         type: 'text',
         max: 40,
         placeholder: trans.enter_password
+    },
+    activities: {
+        default: true,
+        title: trans.activity_tracking.name,
+        body: trans.activity_tracking.body
+    },
+    activity_shout: {
+        default: true,
+        title: trans.shouts,
+        body: trans.activity.types.shout,
+        type: 'checkbox',
+        icon: 'icon-16-shoutbox',
+        horizontal: true
+    },
+    activity_image: {
+        default: true,
+        title: trans.photos,
+        body: trans.activity.types.image,
+        type: 'checkbox',
+        icon: 'icon-16-gallery-vertical',
+        horizontal: true
+    },
+    activity_obsess: {
+        default: true,
+        title: trans.obsessions,
+        body: trans.activity.types.obsess,
+        type: 'checkbox',
+        icon: 'icon-16-obsession',
+        horizontal: true
+    },
+    activity_love: {
+        default: true,
+        title: trans.loved,
+        body: trans.activity.types.love,
+        type: 'checkbox',
+        icon: 'icon-16-heart',
+        horizontal: true
+    },
+    activity_bookmark: {
+        default: true,
+        title: trans.bookmarks,
+        body: trans.activity.types.bookmark,
+        type: 'checkbox',
+        icon: 'icon-16-bookmark',
+        horizontal: true
+    },
+    activity_wiki: {
+        default: true,
+        title: trans.wiki,
+        body: trans.activity.types.wiki,
+        type: 'checkbox',
+        icon: 'icon-16-bio',
+        horizontal: true
+    },
+    activity_install: {
+        default: true,
+        title: trans.installation,
+        body: trans.activity.types.install,
+        type: 'checkbox',
+        icon: 'icon-16-download',
+        horizontal: true
     }
 }

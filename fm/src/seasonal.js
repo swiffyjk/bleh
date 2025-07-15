@@ -137,40 +137,29 @@ export function set_season() {
 function calculate_offset(now) {
     let offset = now.getTimezoneOffset();
 
-    if (offset == 0)
-        return '+0000';
+    if (offset == 0) return '+0000';
 
-    if (offset < 0) {
-        offset = Math.abs(offset);
-        offset /= 60;
+    const sign = offset < 0 ? '+' : '-';
+    offset = Math.abs(offset);
 
-        if (offset < 10)
-            offset = `0${offset}`;
+    const hours = Math.floor(offset / 60);
+    const minutes = offset % 60;
 
-        offset = `+${offset}`;
-    } else {
-        offset = -Math.abs(offset);
-        offset /= 60;
+    const formatted_hours = hours < 10 ? `0${hours}` : hours.toString();
+    const formatted_minutes = minutes < 10 ? `0${minutes}` : minutes.toString();
 
-        if (offset > -10)
-            offset = offset.toString().replace('-', '-0');
-    }
-
-    return `${offset}00`;
+    return sign + formatted_hours + formatted_minutes;
 }
 
 export function seasonal_timer_start(bypass = false) {
-    if (stored_season.new_years_eve && !bypass)
-        return;
+    if (stored_season.new_years_eve && !bypass) return;
 
-    if (seasonal_timer.state != null)
-        return;
+    if (seasonal_timer.state) return;
 
     seasonal_timer.state = setInterval(set_season, 1000);
     log('started interval', 'season', 'info');
 
-    if (page.header.season_tooltip == null)
-        return;
+    if (!page.header.season_tooltip) return;
 
     page.header.season_tooltip.setContent(html.node`
         <span class="season-colour-name">${tl(trans.seasonal.listing[stored_season.id])}</span>
@@ -180,18 +169,15 @@ export function seasonal_timer_start(bypass = false) {
     page.header.season.classList.add('live');
 }
 export function seasonal_timer_end() {
-    if (stored_season.new_years_eve)
-        return;
+    if (stored_season.new_years_eve) return;
 
-    if (seasonal_timer.state == null)
-        return;
+    if (!seasonal_timer.state) return;
 
     clearInterval(seasonal_timer.state);
     seasonal_timer.state = null;
     log('ended interval', 'season', 'info');
 
-    if (page.header.season_tooltip == null)
-        return;
+    if (!page.header.season_tooltip) return;
 
     page.header.season_tooltip.setContent(html.node`
         <span class="season-colour-name">${tl(trans.seasonal.listing[stored_season.id])}</span>
@@ -202,8 +188,7 @@ export function seasonal_timer_end() {
 }
 
 function update_season_nav() {
-    if (page.header.season == null)
-        return;
+    if (!page.header.season) return;
 
     page.header.season.setAttribute('data-season', stored_season.id);
 

@@ -8,7 +8,7 @@ import {html} from "lighterhtml";
 import {log} from "./build/log";
 import {page, root} from "./build/page";
 import {tl, trans, trans_legacy} from "./build/trans";
-import {dialog} from "./components/dialog";
+import {dialog, dialog_rm} from "./components/dialog";
 import {deliver_notif} from "./components/notify";
 import {sponsor_list} from "./build/sponsor.js";
 
@@ -21,6 +21,8 @@ export function news() {
     if (!changelog) {
         log('not cached, fetching', 'changelog');
         request_changelog();
+
+        dialog_rm({id: 'rabbit'});
     } else {
         if (changelog_expire < current_time)
             request_changelog();

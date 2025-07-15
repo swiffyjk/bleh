@@ -54,16 +54,18 @@ export function bleh_charts() {
         theme: 'window',
         content: html.node`
             <div class="dialog-settings">
-                <div class="setting" data-type="toggle" id="container-simulate_scroll" onclick="_update_item('simulate_scroll')">
-                    <button class="btn reset" onclick="_reset_item('simulate_scroll')">${tl(trans.reset)}</button>
-                    <div class="heading">
-                        <h5>${trans_legacy.en.charts.scroll.name}</h5>
-                        <p>${trans_legacy.en.charts.scroll.bio}</p>
-                    </div>
-                    <div class="toggle-wrap">
-                        <button class="toggle" id="toggle-simulate_scroll" aria-checked="true">
-                            <div class="dot"></div>
-                        </button>
+                <div class="setting-group blend">
+                    <div class="setting" data-type="toggle" id="container-simulate_scroll" onclick="_update_item('simulate_scroll')">
+                        <button class="btn reset" onclick="_reset_item('simulate_scroll')">${tl(trans.reset)}</button>
+                        <div class="heading">
+                            <h5>${trans_legacy.en.charts.scroll.name}</h5>
+                            <p>${trans_legacy.en.charts.scroll.bio}</p>
+                        </div>
+                        <div class="toggle-wrap">
+                            <button class="toggle" id="toggle-simulate_scroll" aria-checked="true">
+                                <div class="dot"></div>
+                            </button>
+                        </div>
                     </div>
                 </div>
             </div>

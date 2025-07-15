@@ -11,13 +11,15 @@ import {tl, trans} from "./build/trans";
 import {chart_reflow} from "./chart";
 import {dialog, dialog_rm} from "./components/dialog";
 import {create_settings_template, invoke_reload} from "./config";
-import {theme_version, version} from "./main";
-import {save_setting} from "./components/settings.js";
+import {version} from "./main";
+import {download_with_progress} from "./build/tools.js";
 
 export function append_style() {
     document.documentElement.classList.add('bleh-supports-loading');
+
     for (var member in settings) delete settings[member];
     Object.assign(settings, JSON.parse(localStorage.getItem('bleh')) || create_settings_template());
+
     let cached_style = localStorage.getItem('bleh_cached_style') || '';
 
     let url = window.location.href;
@@ -30,14 +32,7 @@ export function append_style() {
 
     document.documentElement.setAttribute('data-bleh--theme', settings.theme);
 
-    // while the style is not to be applied in dev mode,
-    // we now fetch it to retrieve current version info
-    if (settings.dev) {
-        log('dev mode is on, will fetch for version only', 'style');
-        check_style_info();
-
-        return;
-    }
+    if (settings.dev) return;
 
     if (cached_style == '') {
         // style has never been cached
@@ -52,23 +47,26 @@ export function append_style() {
 }
 
 function load_cached_style(cached_style) {
-    let style_cache = document.createElement('style');
-    style_cache.setAttribute('id', 'bleh--cached-style');
-    style_cache.textContent = cached_style;
+    let style_cache = html.node`
+        <style id="bleh--cached-style">${cached_style}</style>
+    `;
     document.documentElement.appendChild(style_cache);
 
-    log('loaded cache', 'style');
-    setTimeout(function() {
+    style_cache.onload = () => {
+        log('loaded cache', 'style');
         document.body.classList.add('bleh');
-        theme_version.state = getComputedStyle(document.body).getPropertyValue('--version-build').replaceAll("'", '').replaceAll('"', ''); // remove quotations
-        log(`theme version reporting as ${theme_version.state}`, 'style');
 
         chart_reflow();
 
         // now, analyse if we should fetch a new one
         log('checking timeout', 'style');
         check_if_style_cache_is_valid();
-    }, 200);
+    }
+
+    style_cache.onerror = () => {
+        log('error loading cache', 'style', 'error');
+        fetch_new_style();
+    }
 }
 
 function check_if_style_cache_is_valid() {
@@ -77,17 +75,6 @@ function check_if_style_cache_is_valid() {
 
     // check if timeout has expired
     if (cached_style_timeout < current_time) {
-        // in versions 2024.1019 and onwards, the css stores version itself
-        // we can use this to compare if we should fetch a new one
-        // as we don't want to fetch a new css while the js is out of date
-        if (theme_version.state != version.build && theme_version.state != '') {
-            // script is either out of date, or more in date (not going to happen)
-            log(`version mismatch! running ${version.build}, downloaded theme ${theme_version.state}`, 'update');
-
-            prompt_for_update();
-            return;
-        }
-
         log('fetching new, expired timeout', 'style');
         fetch_new_style();
     } else {
@@ -95,24 +82,145 @@ function check_if_style_cache_is_valid() {
     }
 }
 
-function check_style_info() {
-    let cached_style_timeout = new Date(localStorage.getItem('bleh_cached_style_timeout'));
-    let current_time = new Date();
 
-    // check if timeout has expired
-    if (cached_style_timeout < current_time) {
-        fetch_style_info();
+function fetch_new_style(delete_old_style = false, reload_on_finish = false, allow_incompatible = false) {
+    let xhr = new XMLHttpRequest();
+    let url = `https://katelyynn.github.io/bleh/fm/bleh.css?${Math.random()}`;
+    log(`making request ${url}`, 'style');
+    xhr.open('GET', url, true);
+
+    xhr.onload = function () {
+        log(`style responded ${xhr.status}`, 'style');
+
+        // create style element
+        let style = html.node`
+            <style>${this.response}</style>
+        `;
+        document.documentElement.appendChild(style);
+
+        style.onload = () => {
+            let theme_version = getComputedStyle(document.body).getPropertyValue('--version-build').replaceAll("'", '').replaceAll('"', '');
+
+            if (!allow_incompatible && theme_version != version.build) {
+                log('denied loading, incompatible version', 'style', 'info', {theme: theme_version, script: version.build});
+                document.documentElement.removeChild(style);
+                return;
+            }
+
+            // remove the old style, if needed
+            if (delete_old_style)
+                document.documentElement.removeChild(document.getElementById('bleh--cached-style'));
+
+            log('loaded', 'style');
+            document.body.classList.add('bleh');
+
+            chart_reflow();
+
+            if (reload_on_finish) invoke_reload();
+        }
+
+        style.onerror = () => {
+            log('error loading', 'style', 'error');
+        }
+
+        // save to cache for next page load
+        localStorage.setItem('bleh_cached_style', this.response);
+
+        // set expire date
+        let api_expire = new Date();
+        api_expire.setHours(api_expire.getHours() + 1);
+        localStorage.setItem('bleh_cached_style_timeout', api_expire);
+        log(`cached until ${api_expire}`, 'style');
     }
+
+    xhr.send();
 }
 
-unsafeWindow._prompt_for_update = function() {
-    prompt_for_update();
+function parse_version(v) {
+    const parts = v.split('.').map(Number);
+
+    // ensure [major, minor, patch]
+    while (parts.length < 3) parts.push(0);
+    return parts.slice(0, 3);
 }
+
+function compare_versions(a, b) {
+    const [a_maj, a_min, a_patch] = parse_version(a);
+    const [b_maj, b_min, b_patch] = parse_version(b);
+
+    if (a_maj !== b_maj) return a_maj > b_maj ? 1 : -1;
+    if (a_min !== b_min) return a_min > b_min ? 1 : -1;
+    if (a_patch !== b_patch) return a_patch > b_patch ? 1 : -1;
+
+    return 0;
+}
+
+export function update_comparison(current, latest) {
+    return compare_versions(latest, current) === 1;
+}
+
+export function update_check(force = false, btn = null, func = null) {
+    if (!force) {
+        const last_checked = localStorage.getItem('bleh_update_checked') || null;
+        const next_check = localStorage.getItem('bleh_update_next_check') || null;
+        const current_time = new Date();
+
+        if (last_checked && next_check && new Date(next_check) > current_time) {
+            log('update check skipped', 'update', 'info', {next_in: next_check, current_time: current_time});
+            if (func) func();
+
+            return;
+        }
+    }
+
+    if (btn) btn.setAttribute('disabled', '');
+
+    let url = `https://katelyynn.github.io/bleh/fm/src/build/build.json?${Date.now()}`;
+
+    /*let notification = notify({
+        id: 'updater',
+        title: 'Updater',
+        body: 'Downloading update information',
+        progress: true,
+        icon: 'icon-16-update'
+    });*/
+
+    download_with_progress(url, (percent) => {
+        //notification.set_body(`Downloading update information ${percent}%`);
+        //notification.set(percent);
+    }).then(async (blob) => {
+        const text = await blob.text();
+
+        if (btn) btn.removeAttribute('disabled');
+
+        try {
+            let data = JSON.parse(text);
+            console.log(data);
+
+            let update_required = update_comparison(version.build, data.build);
+            localStorage.setItem('bleh_update_required', update_required.toString());
+            localStorage.setItem('bleh_update_to', data.build);
+            localStorage.setItem('bleh_update_checked', new Date().toString());
+
+            let next = new Date();
+
+            next.setHours(next.getHours() + 2);
+
+            localStorage.setItem('bleh_update_next_check', next.toString());
+            log('update check finished', 'update', 'info', {next_in: next, current_time: new Date()});
+
+            if (func) func();
+        } catch (e) {
+            log('error parsing', 'update', 'error', {error: e});
+        }
+    });
+}
+
 export function prompt_for_update() {
     // prompt the user
     dialog({
         id: 'bleh_update',
-        title: tl(trans.update_to_version).replace('{v}', theme_version.state),
+        title: tl(trans.update_to_version).replace('{v}', localStorage.getItem('bleh_update_to') || 'unknown'),
         body: html.node`
             <div class="forms">
                 <div class="form">
@@ -126,8 +234,6 @@ export function prompt_for_update() {
                     </div>
                 </div>
             </div>
-            <div class="sep" />
-            <p class="subtle">${tl(trans.update_not_looking_right)}</p>
         `,
         dismiss: false,
         type: 'update',
@@ -139,54 +245,14 @@ function ignore_update() {
     dialog_rm({
         id: 'bleh_update'
     });
-
-    // set expire date
-    let api_expire = new Date();
-    api_expire.setHours(api_expire.getHours() + 1);
-    localStorage.setItem('bleh_cached_style_timeout', api_expire);
-    log(`cached until ${api_expire}`, 'style');
 }
 
-function start_update() {
-    open(`https://github.com/katelyynn/bleh/raw/${settings.branch}/fm/bleh.user.js`);
+export function start_update() {
+    open(`https://github.com/katelyynn/bleh/raw/uwu/fm/bleh.user.js`);
 
-    if (!settings.dev) {
-        final_update();
-    } else {
-        dialog({
-            id: 'bleh_update',
-            title: tl(trans.update_to_version).replace('{v}', theme_version.state),
-            body: html.node`
-                <div class="forms">
-                    <div class="form">
-                        <div class="form-group proceed">
-                            <button class="btn primary icon" data-type="update" onclick=${() => start_css_update()}>${tl(trans.update_styles)}</button>
-                        </div>
-                    </div>
-                </div>
-                <div class="sep" />
-                <p class="subtle">${tl(trans.you_have_theme_loading_disabled)}</p>
-            `,
-            dismiss: false,
-            type: 'update',
-            replace_if_possible: true
-        });
-    }
-}
-
-function start_css_update() {
-    if (settings.branch == '')
-        save_setting('branch', 'uwu');
-
-    open(`https://github.com/katelyynn/bleh/raw/${settings.branch}/fm/bleh.user.css`);
-
-    final_update();
-}
-
-function final_update() {
     dialog({
         id: 'bleh_update',
-        title: tl(trans.update_to_version).replace('{v}', theme_version.state),
+        title: tl(trans.update_to_version).replace('{v}', localStorage.getItem('bleh_update_to') || 'unknown'),
         body: html.node`
             <div class="forms">
                 <div class="form">
@@ -203,122 +269,19 @@ function final_update() {
 }
 
 function finish_update() {
-    if (!settings.dev) {
-        dialog({
-            id: 'bleh_wait',
-            title: tl(trans.update_to_version).replace('{v}', theme_version.state),
-            body: html.node`
-                <div class="loading-data-container">
-                    <div class="loading-data-text">${tl(trans.downloading_styles)}</div>
-                </div>
-            `,
-            type: 'wait',
-            dismiss: false,
-            replace_if_possible: true
-        });
-        fetch_new_style(false, true);
-    } else {
-        // dev
-        invoke_reload();
-    }
-}
-
-function fetch_new_style(delete_old_style = false, reload_on_finish = false) {
-    let xhr = new XMLHttpRequest();
-    let url = `https://katelyynn.github.io/bleh/fm/bleh.css?${Math.random()}`;
-    log(`making request ${url}`, 'style');
-    xhr.open('GET',url,true);
-
-    xhr.onload = function() {
-        log(`style responded ${xhr.status}`, 'style');
-
-        // create style element
-        let style = document.createElement('style');
-        style.textContent = this.response;
-        document.documentElement.appendChild(style);
-
-        // remove the old style, if needed
-        if (delete_old_style)
-            document.documentElement.removeChild(document.getElementById('bleh--cached-style'));
-
-        // save to cache for next page load
-        localStorage.setItem('bleh_cached_style',this.response);
-
-        // set expire date
-        let api_expire = new Date();
-        api_expire.setHours(api_expire.getHours() + 1);
-        localStorage.setItem('bleh_cached_style_timeout',api_expire);
-        log(`cached until ${api_expire}`, 'style');
-
-        if (reload_on_finish) {
-            invoke_reload();
-            return;
-        }
-
-        setTimeout(function() {
-            document.body.classList.add('bleh');
-            theme_version.state = getComputedStyle(document.body).getPropertyValue('--version-build').replaceAll("'", '').replaceAll('"', ''); // remove quotations
-
-            chart_reflow();
-
-            // in versions 2024.1019 and onwards, the css stores version itself
-            // we can use this to compare if we should fetch a new one
-            // as we don't want to fetch a new css while the js is out of date
-            if (theme_version.state != version.build && theme_version.state != '') {
-                // script is either out of date, or more in date (not going to happen)
-                log(`version mismatch! running ${version.build}, downloaded theme ${theme_version.state}`, 'update');
-
-                prompt_for_update();
-                return;
-            }
-        }, 200);
-    }
-
-    xhr.send();
-}
-
-function fetch_style_info(delete_old_style = false, reload_on_finish = false) {
-    let xhr = new XMLHttpRequest();
-    let url = 'https://katelyynn.github.io/bleh/fm/bleh.css';
-    xhr.open('GET',url,true);
-
-    xhr.onload = function() {
-        log(`style responded ${xhr.status}`, 'style');
-
-        // create style element
-        let style = document.createElement('style');
-        style.textContent = this.response;
-        document.documentElement.appendChild(style);
-
-        // save to cache for next page load
-        localStorage.setItem('bleh_cached_style',this.response);
-
-        // set expire date
-        let api_expire = new Date();
-        api_expire.setHours(api_expire.getHours() + 1);
-        localStorage.setItem('bleh_cached_style_timeout',api_expire);
-        log(`cached until ${api_expire}`, 'style');
-
-        // we will temporarily apply the style just for theme info, then remove it
-        setTimeout(function() {
-            theme_version.state = getComputedStyle(document.body).getPropertyValue('--version-build').replaceAll("'", '').replaceAll('"', ''); // remove quotations
-
-            document.documentElement.removeChild(style);
-
-            // in versions 2024.1019 and onwards, the css stores version itself
-            // we can use this to compare if we should fetch a new one
-            // as we don't want to fetch a new css while the js is out of date
-            if (theme_version.state != version.build && theme_version.state != '') {
-                // script is either out of date, or more in date (not going to happen)
-                log(`version mismatch! running ${version.build}, downloaded theme ${theme_version.state}`, 'update');
-
-                prompt_for_update();
-                return;
-            }
-        }, 200);
-    }
-
-    xhr.send();
+    dialog({
+        id: 'bleh_wait',
+        title: tl(trans.update_to_version).replace('{v}', localStorage.getItem('bleh_update_to') || 'unknown'),
+        body: html.node`
+            <div class="loading-data-container">
+                <div class="loading-data-text">${tl(trans.downloading_styles)}</div>
+            </div>
+        `,
+        type: 'wait',
+        dismiss: false,
+        replace_if_possible: true
+    });
+    fetch_new_style(false, true, true);
 }
 
 

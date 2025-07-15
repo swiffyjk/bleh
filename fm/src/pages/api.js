@@ -7,11 +7,14 @@
 import {log} from '../build/log';
 import {auth, page, root} from '../build/page';
 import {tl, trans} from '../build/trans';
+import {load_banner} from '../components/banner';
 import {checkup_page_structure} from '../components/structure';
 import {register_background, update_page} from '../page';
 import {html, render} from "lighterhtml";
 
 export function bleh_api() {
+    if (page.subpage == 'docs') return;
+
     page.structure.container = document.body.querySelector('.page-content');
     try {
         page.structure.row = page.structure.container.querySelector('.row');
@@ -27,7 +30,21 @@ export function bleh_api() {
     log('status is', 'page', 'info', page);
     update_page();
 
-    register_background(auth.avatar.replace('/avatar42s/', '/ar0/'));
+    let banner = load_banner(auth.name);
+    if (banner)
+        register_background(banner);
+    else if (!auth.avatar.endsWith('818148bf682d429dc215c1705eb27b98.png'))
+        register_background(auth.avatar.replace('/avatar42s/', '/ar0/'));
+    else
+        register_background(null);
+
+
+    if (page.subpage == 'create_account') return;
+
+
+    page.structure.container.removeAttribute('data-beret');
+    page.structure.container.removeAttribute('data-short');
+    page.structure.content.classList.add('cards-view');
 
 
     let success = page.structure.container.querySelector('.alert-success');
@@ -44,7 +61,7 @@ export function bleh_api() {
         let cancel = old.querySelector('.form-submit a').getAttribute('href');
 
         render(page.structure.main, html`
-            <section class="api-connector">
+            <section class="api-connector sour">
                 <div class="avatar">
                     <img src="${auth.avatar.replace('/avatar42s/', '/avatar170s/')}" alt="${tl(trans.your_avatar)}">
                 </div>
@@ -77,8 +94,8 @@ export function bleh_api() {
     } else {
         page.name = success.querySelector('strong').textContent;
 
-        page.structure.main.innerHTML = (`
-            <section class="api-connector">
+        render(page.structure.main, html`
+            <section class="api-connector sour">
                 <div class="avatar">
                     <img src="${auth.avatar.replace('/avatar42s/', '/avatar170s/')}" alt="${tl(trans.your_avatar)}">
                 </div>
@@ -89,11 +106,11 @@ export function bleh_api() {
                 <div class="sep"></div>
                 <div class="description">${tl(trans.you_can_now_close_this_tab)}</div>
                 <div class="connector-footer">
-                    <div class="btn-fill" />
+                    <div class="btn-fill"/>
                     <a class="see-more" href="${root}settings/applications">
                         ${tl(trans.manage_applications)}
                     </a>
-                    <div class="btn-fill" />
+                    <div class="btn-fill"/>
                 </div>
             </section>
         `);

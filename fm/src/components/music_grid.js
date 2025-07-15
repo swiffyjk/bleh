@@ -53,9 +53,11 @@ export function music_grids(search=page.structure.main, use_colour = true) {
     };
 
     let grids = search.querySelectorAll('.grid-items-item:not([data-bleh-music-grids])');
-    grids.forEach((grid) => {
+    grids.forEach((grid, index) => {
         let is_loading = (grid.querySelector('.grid-items-empty-inner') != null);
         if (is_loading) return;
+
+        grid.style.setProperty('--delay', index * 0.04 + 's');
 
         grid.setAttribute('data-bleh-music-grids', 'true');
 
@@ -70,6 +72,10 @@ export function music_grids(search=page.structure.main, use_colour = true) {
 
         let image_wrap = grid.querySelector('.grid-items-cover-image-image');
         let image = image_wrap.querySelector('img');
+
+        if (grid.classList.contains('grid-items-item--big'))
+            image.src = image.src.replace('/avatar300s/', '/500x500/');
+
         if (image && !image_wrap.classList.contains('grid-items-cover-default') && use_colour) {
             let grid_colour = document.createElement('div');
             grid_colour.classList.add('grid-item-colour-bg');

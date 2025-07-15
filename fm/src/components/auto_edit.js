@@ -4,10 +4,9 @@
 // Licensed under GPLv3
 //
 
-import {log} from "../build/log";
 import {page, root} from "../build/page";
 import {tl, trans} from "../build/trans";
-import {html, render} from "lighterhtml";
+import {html} from "lighterhtml";
 
 export function bleh_auto_edits() {
     let corrections_panel = document.body.querySelector('#subscription-corrections');
@@ -23,39 +22,4 @@ export function bleh_auto_edits() {
             </a>
         <li>
     `, nav.firstElementChild);
-}
-
-export function auto_edit_modal() {
-    let modal = document.querySelector('.automatic-edit-modal-body-v2');
-
-    if (!modal) return;
-
-    if (modal.hasAttribute('data-bwaa-edit'))
-        return;
-    modal.setAttribute('data-bwaa-edit', 'true');
-
-    log('auto edit v2', 'modal');
-
-
-    let checkboxes = modal.querySelectorAll('.checkbox');
-
-    checkboxes.forEach((checkbox) => {
-        let id = checkbox.querySelector('input').getAttribute('name');
-        let text = checkbox.textContent.trim();
-
-        checkbox.classList = 'setting';
-        checkbox.setAttribute('data-type', 'toggle');
-        checkbox.setAttribute('onclick', `_update_inbuilt_item('${id}')`);
-        render(checkbox, html`
-            <div class="heading">
-                <h5>${text}</h5>
-            </div>
-            <div class="toggle-wrap">
-                <input class="companion-checkbox" type="checkbox" name="${id}" id="inbuilt-companion-checkbox-${id}">
-                <span class="btn toggle" id="toggle-${id}" aria-checked="false">
-                    <div class="dot"></div>
-                </span>
-            </div>
-        `)
-    });
 }

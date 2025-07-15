@@ -8,10 +8,10 @@ import {load_activities, subscribe_to_events} from "./activity";
 import {settings} from "./build/config";
 import {log} from "./build/log";
 import {
+    api_url,
     auth,
     auth_link,
     bleh_url,
-    has_prompted_for_update,
     last_page_subpage,
     last_page_type,
     page,
@@ -22,7 +22,6 @@ import {
 } from "./build/page";
 import {stored_season} from "./build/seasonal";
 import {lang, lookup_lang, tl, trans} from "./build/trans";
-import {auto_edit_modal} from "./components/auto_edit";
 import {dialog, load_dialogs} from "./components/dialog";
 import {
     correct_artist,
@@ -38,7 +37,7 @@ import {load_notifications, notify} from "./components/notify";
 import {patch_titles} from "./components/track";
 import {load_settings} from "./config";
 import {theme_version, version} from "./main";
-import {append_nav, patch_masthead} from "./navigation";
+import {append_nav, patch_masthead, update_masthead} from "./navigation";
 import {bleh_albums} from "./pages/album";
 import {bleh_artists} from "./pages/artist";
 import {bleh_settings} from "./pages/bleh_config";
@@ -56,14 +55,19 @@ import {bleh_tracks} from "./pages/track";
 import {patch_wiki} from "./pages/wiki";
 import {start_rain} from "./rain";
 import {seasonal_timer_end, set_season} from "./seasonal";
-import {parse_shout_queue, patch_shouts} from "./shout";
+import {parse_shout_queue, patch_shouts, shout_header} from "./shout";
 import {ff} from "./sku";
 import {bleh_sponsor_page, sponsors} from "./sponsor";
-import {append_style, prompt_for_update} from "./style";
+import {append_style, update_check} from "./style";
 import {bleh_radio} from "./components/radio";
 import {bleh_api} from './pages/api';
 import {bleh_users} from './pages/users';
 import {html, render} from "lighterhtml";
+import {bleh_footer} from "./footer.js";
+import {register_rabbit} from "./components/rabbit.js";
+import {dialog_extender} from "./components/dialog_extender.js";
+import {bleh_auth} from "./pages/auth.js";
+import {bleh_labs} from "./pages/labs.js";
 
 export function bleh() {
     let head_observer = new MutationObserver((mutations) => {
@@ -108,13 +112,15 @@ function bleh_main() {
 
     // messaging
     load_dialogs();
+    register_rabbit();
 
     try {
         lookup_lang();
 
         theme_version.state = getComputedStyle(document.body).getPropertyValue('--version-build').replaceAll("'", '').replaceAll('"', ''); // remove quotations
 
-        patch_masthead(document.body);
+        update_check(false, null, update_masthead);
+        patch_masthead();
 
         load_notifications();
 
@@ -149,15 +155,6 @@ function bleh_main() {
             log('loop', 'mutation', 'log', {mutations: mutations});
             lookup_lang();
             patch_masthead(document.body);
-
-            theme_version.state = getComputedStyle(document.body).getPropertyValue('--version-build').replaceAll("'", '').replaceAll('"', ''); // remove quotations
-            if (theme_version.state != version.build && theme_version.state != '' && !has_prompted_for_update.state) {
-                // script is either out of date, or more in date (not gonna happen)
-                log(`version mismatch! running ${version.build}, downloaded theme ${theme_version.state}`, 'update');
-
-                prompt_for_update();
-                has_prompted_for_update.state = true;
-            }
 
             main_flow();
         });
@@ -214,6 +211,8 @@ export function handle_error_500() {
 
 function main_flow() {
     assign_page();
+
+    if (page.state.error) return;
 
     if (page.type == 'artist' || page.type == 'album') {
         bleh_gallery();
@@ -277,11 +276,14 @@ function main_flow() {
     if (settings.corrections) {
         correct_generic_combo_no_artist('artist-header-featured-items-item');
         correct_generic_combo_no_artist('artist-top-albums-item');
-        correct_generic_combo('source-album-details');
         correct_generic_combo('resource-list--release-list-item');
         correct_generic_combo('similar-albums-item');
         correct_generic_combo('track-similar-tracks-item');
         correct_generic_combo('similar-items-sidebar-item');
+
+        if (page.type == 'track') {
+            correct_generic_combo('source-album-details');
+        }
 
         if (page.type == 'bookmarks' || page.type == 'releases') {
             correct_generic_artist('music-bookmarks-artists-item');
@@ -307,7 +309,8 @@ function main_flow() {
     }
 
     subscribe_to_events();
-    auto_edit_modal();
+
+    dialog_extender();
 }
 
 function assign_page() {
@@ -380,6 +383,8 @@ function load_page() {
     set_season();
     seasonal_timer_end();
 
+    bleh_footer();
+
     let masthead = document.body.querySelector('.masthead');
     window.addEventListener('scroll', (e) => {
         let scroll = window.scrollY;
@@ -391,11 +396,14 @@ function load_page() {
     });
 
     detect_mobile();
+    page.platform = detect_platform();
 
     if (window.location.href.startsWith(setup_url.replace('{root}', root))) {
         bleh_setup();
     } else if (window.location.href.startsWith(sponsor_url.replace('{root}', root))) {
         bleh_sponsor_page();
+    } else if (window.location.href.startsWith(api_url.replace('{root}', root))) {
+        bleh_auth();
     } else if (window.location.href.startsWith(bleh_url.replace('{root}', root))) {
         bleh_home();
         bleh_settings();
@@ -430,6 +438,8 @@ function load_page() {
             bleh_home();
         else if (page.type == 'api')
             bleh_api();
+        else if (page.type == 'labs')
+            bleh_labs();
 
         if (page.type == 'user' || page.type == 'events') {
             bleh_users();
@@ -443,6 +453,39 @@ function load_page() {
 
         if ((page.type == 'user' || page.type == 'tag' || page.type == 'events') && (page.subpage == 'overview' || page.subpage == 'event_overview'))
             bleh_radio();
+
+        if (page.subpage == 'images_overview') {
+            let sort_button = page.structure.main.querySelector('.dropdown-menu-clickable-button');
+            let sort_menu = page.structure.main.querySelector('.dropdown-menu-clickable');
+
+            let sort_wrap = document.createElement('div');
+            sort_wrap.classList.add('dropdown-top-wrap');
+
+            sort_wrap.appendChild(sort_button);
+            sort_wrap.appendChild(sort_menu);
+
+            page.structure.main.insertBefore(sort_wrap, page.structure.main.firstElementChild);
+        }
+
+        if (page.subpage == 'image') {
+            let images = page.structure.row.querySelectorAll('.gallery-image');
+            images.forEach(image => {
+                let star = image.querySelector('.gallery-image-preferred-container');
+                if (!star) return;
+
+                render(star, html`
+                    <div class="bleh-icon" />
+                    ${tl(trans.starred)}
+                `);
+            });
+        }
+
+        if (['artist', 'album', 'track', 'user', 'tag'].includes(page.type)) {
+            if (!['user', 'tag'].includes(page.type) && page.subpage.startsWith('shoutbox'))
+                shout_header(page.structure.main.querySelector('.section-controls'));
+            else if (page.subpage == 'overview')
+                shout_header(page.structure.main.querySelector('.shoutbox'));
+        }
     }
 
     append_nav();
@@ -594,6 +637,25 @@ function detect_mobile() {
     }
 }
 
+function detect_platform() {
+    const platform =
+        navigator.userAgentData?.platform || navigator.platform || '';
+    const ua = navigator.userAgent || '';
+    if (/^Win/i.test(platform)) {
+        return 'win32';
+    } else if (/^Mac/i.test(platform)) {
+        return 'darwin';
+    } else if (/iP(hone|ad|od)/i.test(ua)) {
+        return 'ios';
+    } else if (/Android/i.test(ua)) {
+        return 'android';
+    } else if (/^Linux/i.test(platform) || /Linux/i.test(ua)) {
+        return 'linux';
+    } else {
+        return 'other';
+    }
+}
+
 function page_indicator() {
     render(page.structure.indicator, html`
         <div class="bleh">
@@ -608,7 +670,7 @@ function page_indicator() {
             <span>${lang}</span>
         </div>
         <div class="page">
-            <strong>page</strong>
+            <strong onclick=${() => console.info(page)}>page</strong>
             <span>${page.type}</span>
             <span>${page.subpage}</span>
         </div>
@@ -630,6 +692,8 @@ function page_indicator() {
 export function update_page() {
     page.structure.container.setAttribute('data-page-type', page.type);
     page.structure.container.setAttribute('data-page-subpage', page.subpage);
+    page.structure.container.setAttribute('data-beret', ff('beret'));
+    page.structure.container.setAttribute('data-short', ff('short'));
 }
 
 export function register_background(url, origin = null) {

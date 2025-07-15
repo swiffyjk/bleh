@@ -14,26 +14,57 @@ import {show_theme_change_in_menu} from "./pages/bleh_config";
 import {ff} from "./sku";
 import {html, render} from "lighterhtml";
 import {news} from "./news.js";
-import {toggle_theme} from "./config.js";
+import {change_theme_from_menu, toggle_theme} from "./config.js";
 import {open_profile_shortcut_window} from "./components/profile_shortcut.js";
+import {save_setting} from "./components/settings.js";
+import {load_banner} from "./components/banner.js";
+import {prompt_for_update} from "./style.js";
 
-export function patch_masthead(element) {
-    let masthead_logo = element.querySelector('.masthead-logo');
+export function patch_masthead() {
+    let masthead_logo = document.body.querySelector('.masthead-logo');
     if (!masthead_logo) return;
 
     if (!masthead_logo.hasAttribute('data-kate-processed')) {
         masthead_logo.setAttribute('data-kate-processed','true');
 
-        masthead_logo.appendChild(html.node`
-            <a class="home-link" href="${root}music">
-                <div class="bleh-logo">${version.brand}</div>
-            </a>`);
+        update_masthead(masthead_logo);
+    }
+}
 
+export function update_masthead(masthead_logo = document.body.querySelector('.masthead-logo')) {
+    const update_required = localStorage.getItem('bleh_update_required') || 'false';
+
+    render(masthead_logo, html``);
+    render(masthead_logo, html`
+        <a href="/">Last.fm</a>
+        <a class="home-link" href="${root}music">
+            <div class="bleh-logo">${version.brand}</div>
+        </a>
+    `);
+
+    if (update_required === 'false') {
         masthead_logo.appendChild(html.node`
             <a class="bleh--version" href="${root}bleh">
-                ${version.build}.${version.sku}${(settings.branch != 'uwu') ? `.${settings.branch}` : ''}${(settings.dev) ? html.node`<div class="new-badge subtle">✦</div>` : ''}
+                ${version.build}.${version.sku}
+                ${(settings.dev) ? html.node`<div class="new-badge subtle">✦</div>` : ''}
             </a>
         `);
+    } else {
+        let link = html.node`
+            <a class="bleh--version" onclick=${() => prompt_for_update()}>
+                <div class="update-container">
+                    <div class="bleh-icon" style="--icon: var(--icon-16-update)" />
+                </div>
+                ${version.build}.${version.sku}
+                ${(settings.dev) ? html.node`<div class="new-badge subtle">✦</div>` : ''}
+            </a>
+        `;
+
+        tippy(link, {
+            content: tl(trans.update_available_to_install)
+        });
+
+        masthead_logo.appendChild(link);
     }
 }
 
@@ -45,7 +76,7 @@ export function append_nav() {
 
         page.structure.indicator = page_indicator;
     }
-        
+
     if (!page.structure.loader) {
         const loader = html.node`
             <div class="loader">
@@ -59,37 +90,46 @@ export function append_nav() {
         page.structure.loader = loader;
     }
 
+    if (!page.structure.style_warning) {
+        const style_warning = html.node`
+            <div class="style-warning" style="position: fixed; top: 0; left: 0; right: 0; padding: 20px; background: #fff; z-index: 1000000000; display: flex; align-items: center; gap: 30px">
+                <strong>${tl(trans.style_warning)}</strong>
+                <button class="btn-primary" onclick=${() => {
+                    save_setting('dev', false);
+                    window.location.reload();
+                }}>${tl(trans.re_enable_style_loading)}</button>
+            </div>
+        `;
+        document.body.appendChild(style_warning);
+        page.structure.style_warning = style_warning;
+    }
+
     // 2025-04-14
     let masthead = document.body.querySelector('.masthead');
     let new_auth = masthead.querySelector('.auth-dropdown-menu');
-    let auth_link = masthead.querySelector('.masthead-nav-wrap > .site-auth .auth-link');
 
+    let auth_link = masthead.querySelector('.masthead-nav-wrap > .site-auth .auth-link');
     if (!auth_link) return;
 
     if (auth_link.hasAttribute('data-bleh')) return;
     auth_link.setAttribute('data-bleh', 'true');
 
-    let text = document.createElement('p');
-    text.textContent = auth.name;
-    auth_link.appendChild(text);
+    auth_link.appendChild(html.node`
+        <p>${auth.name}</p>
+    `);
 
-    if (masthead.querySelector('.masthead-pro-wrap'))
-        auth.pro = true;
-    else
-        auth.pro = false;
+    auth.pro = !!masthead.querySelector('.masthead-pro-wrap');
 
     let badges = load_badges(auth.name, true);
 
     if (badges) {
-        let badge = document.createElement('span');
-        badge.classList.add('label', `user-status--bleh-${badges[0].type}`, `user-status--bleh-user-${auth.name}`, 'auth-badge');
-        badge.textContent = badges[0].name;
-        auth_link.appendChild(badge);
+        auth_link.appendChild(html.node`
+            <span class="label user-status--bleh-${badges[0].type} user-status--bleh-user-${auth.name} auth-badge">${badges[0].name}</span>
+        `);
     } else if (auth.pro) {
-        let pro_badge = document.createElement('p');
-        pro_badge.classList.add('label', 'user-status-subscriber', 'auth-badge');
-        pro_badge.textContent = 'Pro';
-        auth_link.appendChild(pro_badge);
+        auth_link.appendChild(html.node`
+            <span class="label user-status-subscriber auth-badge">${tl(trans.badges['user-status-subscriber'].name)}</span>
+        `);
     }
 
 
@@ -100,7 +140,7 @@ export function append_nav() {
 
 
     let links = masthead.querySelector('.masthead-nav .navlist-items');
-    links.innerHTML = '';
+    render(links, html``);
 
     let notif_container = html.node`
     <li class="masthead-nav-item">
@@ -193,6 +233,51 @@ export function append_nav() {
     });
 
 
+    let themes = [
+        {
+            id: 'auto',
+            name: tl(trans.auto),
+            hide: !ff('auto_theme'),
+            new_release: true
+        },
+        {
+            id: 'glass',
+            type: 'light',
+            name: tl(trans.glass),
+            hide: !ff('glass'),
+            new_release: true
+        },
+        {
+            id: 'light',
+            type: 'light',
+            name: tl(trans.themes.light)
+        },
+        {
+            id: 'ink',
+            type: 'light',
+            name: tl(trans.themes.ink)
+        },
+        {
+            id: 'dark',
+            formal: 'ash',
+            type: 'dark',
+            name: tl(trans.themes.dark)
+        },
+        {
+            id: 'darker',
+            formal: 'dark',
+            type: 'darker',
+            name: tl(trans.themes.darker)
+        },
+        {
+            id: 'oled',
+            formal: 'void',
+            type: 'oled',
+            name: tl(trans.themes.oled)
+        }
+    ];
+
+
     // auth menu
     let site_auth = document.body.querySelector('.site-auth');
     let token = new_auth.querySelector('[name="csrfmiddlewaretoken"]').getAttribute('value');
@@ -211,6 +296,8 @@ export function append_nav() {
                 let page_2;
                 let side;
 
+                let banner = load_banner(auth.name);
+
                 instance.setContent(html.node`
                     <div class="auth-menu-v2">
                         <div class="side primary">
@@ -218,7 +305,9 @@ export function append_nav() {
                                 <div class="avatar">
                                     <img src="${auth.avatar.replace('avatar42s', 'avatar170s')}" alt="${auth.name}" />
                                 </div>
-                                ${!auth.avatar.endsWith('818148bf682d429dc215c1705eb27b98.png') ? html.node`
+                                ${(banner != '') ? html.node`
+                                <div class="bg" style="background-image: url(${banner})" />
+                                ` : (!auth.avatar.endsWith('818148bf682d429dc215c1705eb27b98.png')) ? html.node`
                                 <div class="bg" style="background-image: url(${auth.avatar.replace('avatar42s', 'avatar170s')})" />
                                 ` : ''}
                                 <div class="name">${auth.name}</div>
@@ -323,32 +412,24 @@ export function append_nav() {
                                     </button>
                                     <div class="button-combo-sep" />
                                     <button class="dropdown-menu-clickable-item chibi" data-type="continue" onclick=${() => {
+                                        render(page_2, html``); // fix crash
                                         render(page_2, html`
                                             <button class="dropdown-menu-clickable-item" data-type="back" onclick=${() => {
                                                 side.setAttribute('data-page', '1');
                                             }}>
                                                 ${tl(trans.back)}
                                             </button>
-                                            <button class="dropdown-menu-clickable-item theme-item-in-menu"
-                                                    data-bleh-theme="light" onclick="change_theme_from_menu('light')">
-                                                ${tl(trans.themes.light)}
-                                            </button>
-                                            <button class="dropdown-menu-clickable-item theme-item-in-menu"
-                                                    data-bleh-theme="ink" onclick="change_theme_from_menu('ink')">
-                                                ${tl(trans.themes.ink)}
-                                            </button>
-                                            <button class="dropdown-menu-clickable-item theme-item-in-menu"
-                                                    data-bleh-theme="dark" onclick="change_theme_from_menu('dark')">
-                                                ${tl(trans.themes.dark)}
-                                            </button>
-                                            <button class="dropdown-menu-clickable-item theme-item-in-menu"
-                                                    data-bleh-theme="darker" onclick="change_theme_from_menu('darker')">
-                                                ${tl(trans.themes.darker)}
-                                            </button>
-                                            <button class="dropdown-menu-clickable-item theme-item-in-menu"
-                                                    data-bleh-theme="oled" onclick="change_theme_from_menu('oled')">
-                                                ${tl(trans.themes.oled)}
-                                            </button>
+                                            ${themes.map(theme => {
+                                                if (theme.hide) return html.node``;
+
+                                                if (!theme.formal) theme.formal = theme.id;
+                                                
+                                                return html.node`
+                                                    <button class="dropdown-menu-clickable-item theme-item-in-menu" data-bleh-theme=${theme.id} data-type="theme_${theme.formal}" onclick="${() => change_theme_from_menu(theme.id)}">
+                                                        ${theme.name}
+                                                    </button> 
+                                                `;
+                                            })}
                                         `);
                                         show_theme_change_in_menu('', page_2);
                                         side.setAttribute('data-page', '2');

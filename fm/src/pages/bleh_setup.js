@@ -6,7 +6,7 @@
 
 import {register_activity} from "../activity";
 import {log} from "../build/log";
-import {auth, page, root, theme_preview} from "../build/page";
+import {auth, page, root} from "../build/page";
 import {tl, trans, trans_legacy} from "../build/trans";
 import {request_changelog} from "../news.js";
 import {notify} from "../components/notify";
@@ -14,8 +14,9 @@ import {checkup_page_structure} from '../components/structure';
 import {refresh_all} from "../config";
 import {version} from "../main";
 import {register_background, update_page} from '../page';
-import {display_colour_presets, show_theme_change_in_settings} from "./bleh_config";
+import {display_colour_presets, show_theme_change_in_settings, theme_bubbles} from "./bleh_config";
 import {html, render} from "lighterhtml";
+import {setting} from "../components/settings.js";
 
 export function bleh_setup() {
     page.structure.container = document.body.querySelector('.page-content');
@@ -45,6 +46,10 @@ export function bleh_setup() {
     // remove error stuff cus we control this page
     page.structure.row.removeChild(page.structure.row.firstElementChild);
     page.structure.row.removeChild(page.structure.row.firstElementChild);
+
+    page.structure.container.removeAttribute('data-beret');
+    page.structure.container.removeAttribute('data-short');
+    page.structure.content.classList.add('cards-view');
 
     let masthead = document.body.querySelector('.masthead');
     masthead.classList.add('in-setup');
@@ -104,64 +109,7 @@ unsafeWindow._setup_themes = function() {
         page.structure.setup.setAttribute('data-animating', 'false');
         render(page.structure.setup_content, html`
             <p>${tl(trans.choose_a_theme)}</p>
-            <div class="setting-items full">
-                <div class="side-left full even-more">
-                    <button class="btn theme-item" data-bleh-theme="light" data-bleh--theme_type="light" onclick="change_theme_from_settings('light')">
-                        <div class="preview-container">
-                        <div class="preview" data-bleh--theme="light" data-bleh--theme_type="light">
-                            ${theme_preview()}
-                        </div>
-                        </div>
-                        <div class="text">
-                            <h5>${tl(trans.themes.light)}</h5>
-                        </div>
-                    </button>
-                    <button class="btn theme-item" data-bleh-theme="ink" data-bleh--theme_type="light" onclick="change_theme_from_settings('ink')">
-                        <div class="preview-container">
-                        <div class="preview" data-bleh--theme="ink" data-bleh--theme_type="light">
-                            ${theme_preview()}
-                        </div>
-                        </div>
-                        <div class="text">
-                            <h5>${tl(trans.themes.ink)}</h5>
-                        </div>
-                    </button>
-                </div>
-            </div>
-            <div class="setting-items full">
-                <div class="side-left full even-more">
-                    <button class="btn theme-item" data-bleh-theme="dark" onclick="change_theme_from_settings('dark')">
-                        <div class="preview-container">
-                        <div class="preview" data-bleh--theme="dark">
-                            ${theme_preview()}
-                        </div>
-                        </div>
-                        <div class="text">
-                            <h5>${tl(trans.themes.dark)}</h5>
-                        </div>
-                    </button>
-                    <button class="btn theme-item" data-bleh-theme="darker" onclick="change_theme_from_settings('darker')">
-                        <div class="preview-container">
-                        <div class="preview" data-bleh--theme="darker">
-                            ${theme_preview()}
-                        </div>
-                        </div>
-                        <div class="text">
-                            <h5>${tl(trans.themes.darker)}</h5>
-                        </div>
-                    </button>
-                    <button class="btn theme-item" data-bleh-theme="oled" onclick="change_theme_from_settings('oled')">
-                        <div class="preview-container">
-                        <div class="preview" data-bleh--theme="oled">
-                            ${theme_preview()}
-                        </div>
-                        </div>
-                        <div class="text">
-                            <h5>${tl(trans.themes.oled)}</h5>
-                        </div>
-                    </button>
-                </div>
-            </div>
+            ${theme_bubbles}
         `);
         page.structure.setup_footer.innerHTML = (`
             <button class="see-more cancel" onclick="_setup_accessibility()">
@@ -186,41 +134,9 @@ unsafeWindow._setup_accessibility = function() {
         render(page.structure.setup_content, html`
             <p>${tl(trans.accessibility_explain)}</p>
             <div class="settings">
-                <div class="setting" data-type="toggle" id="container-reduced_motion" onclick="_update_item('reduced_motion')">
-                    <button class="btn reset" onclick="_reset_item('reduced_motion')">${tl(trans.reset)}</button>
-                    <div class="heading">
-                        <h5>${trans_legacy.en.settings.accessibility.reduced_motion.name}</h5>
-                        <p>${trans_legacy.en.settings.accessibility.reduced_motion.bio}</p>
-                    </div>
-                    <div class="toggle-wrap">
-                        <button class="toggle" id="toggle-reduced_motion" aria-checked="false">
-                            <div class="dot"></div>
-                        </button>
-                    </div>
-                </div>
-                <div class="setting" data-type="toggle" id="container-underline_links" onclick="_update_item('underline_links')">
-                    <button class="btn reset" onclick="_reset_item('underline_links')">${tl(trans.reset)}</button>
-                    <div class="heading">
-                        <h5>${tl(trans.underline_links.name)}</h5>
-                        <p>${tl(trans.underline_links.body)}</p>
-                    </div>
-                    <div class="toggle-wrap">
-                        <button class="toggle" id="toggle-underline_links" aria-checked="false">
-                            <div class="dot"></div>
-                        </button>
-                    </div>
-                </div>
-                <div class="setting" data-type="toggle" id="container-toggle_icon" onclick="_update_item('toggle_icon')">
-                    <button class="btn reset" onclick="_reset_item('toggle_icon')">${tl(trans.reset)}</button>
-                    <div class="heading">
-                        <h5>${trans_legacy.en.settings.accessibility.toggle_icon.name}</h5>
-                        <p>${trans_legacy.en.settings.accessibility.toggle_icon.bio}</p>
-                    </div>
-                    <div class="toggle-wrap">
-                        <button class="toggle" id="toggle-toggle_icon" aria-checked="false">
-                            <div class="dot"></div>
-                        </button>
-                    </div>
+                <div class="setting-group">
+                    ${setting({id: 'reduced_motion'})}
+                    ${setting({id: 'underline_links'})}
                 </div>
             </div>
         `);
@@ -306,28 +222,10 @@ unsafeWindow._setup_music = function() {
                         </div>
                     </section>
                 </div>
-                <div class="setting" data-type="toggle" id="container-corrections" onclick="_update_item('corrections')">
-                    <button class="btn reset" onclick="_reset_item('corrections')">${tl(trans.reset)}</button>
-                    <div class="heading">
-                        <h5>${tl(trans.correct_titles_with_lotus)}</h5>
-                    </div>
-                    <div class="toggle-wrap">
-                        <button class="toggle" id="toggle-corrections" aria-checked="true">
-                            <div class="dot"></div>
-                        </button>
-                    </div>
-                </div>
-                <div class="setting" data-type="toggle" id="container-format_guest_features" onclick="_update_item('format_guest_features')">
-                    <button class="btn reset" onclick="_reset_item('format_guest_features')">${tl(trans.reset)}</button>
-                    <div class="heading">
-                        <h5>${tl(trans.format_guest_features.name)}</h5>
-                        <p>${tl(trans.format_guest_features.body)}</p>
-                    </div>
-                    <div class="toggle-wrap">
-                        <button class="toggle" id="toggle-format_guest_features" aria-checked="true">
-                            <div class="dot"></div>
-                        </button>
-                    </div>
+                <div class="setting-group">
+                    ${setting({id: 'corrections'})}
+                    ${setting({id: 'format_guest_features'})}
+                    ${setting({id: 'stacked_chartlist_info'})}
                 </div>
             </div>
         `);

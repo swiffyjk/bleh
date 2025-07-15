@@ -6,9 +6,10 @@
 
 import {patch_avatar} from "../avatar";
 import {auth, page, root} from "../build/page";
-import {desanitise} from "../build/tools";
+import {copy, desanitise} from "../build/tools";
 import {tl, trans} from "../build/trans";
 import {ff} from "../sku";
+import {html} from "lighterhtml";
 
 export function bleh_wiki() {
     // make a new panel
@@ -36,7 +37,7 @@ export function bleh_wiki() {
         side_edit.classList.add('btn', 'side-action');
         side_edit.setAttribute('href', original_edit_button.getAttribute('href'));
         side_edit.setAttribute('data-type', 'edit');
-        side_edit.textContent = original_edit_button.textContent;
+        side_edit.textContent = tl(trans.edit);
         side_actions.appendChild(side_edit);
     }
 
@@ -45,7 +46,7 @@ export function bleh_wiki() {
         side_history.classList.add('btn', 'side-action');
         side_history.setAttribute('href', original_version_history.getAttribute('href'));
         side_history.setAttribute('data-type', 'history');
-        side_history.textContent = original_version_history.textContent;
+        side_history.textContent = tl(trans.timeline);
         side_actions.appendChild(side_history);
     }
 
@@ -76,6 +77,17 @@ export function bleh_wiki() {
     if (!wiki) return;
 
     patch_wiki_contents(wiki);
+
+    let factbox = wiki_panel.querySelector('.factbox');
+    if (factbox) {
+        let facts = html.node`
+            <section class="facts">
+                ${factbox}
+            </section>
+        `;
+
+        side_actions.after(facts);
+    }
 }
 
 export function bleh_wiki_history() {
@@ -130,13 +142,13 @@ export function bleh_wiki_history() {
 
 
     // latest
-    let side_actions = document.createElement('section');
-    side_actions.classList.add('side-actions');
-    side_actions.innerHTML = (`
-        <a class="btn side-action" data-type="latest-wiki" href="${sub_text.querySelector('a').getAttribute('href')}">
-            ${tl(trans.view_latest_version)}
-        </a>
-    `);
+    let side_actions = html.node`
+        <section class="side-actions">
+            <a class="btn side-action" data-type="latest-wiki" href="${sub_text.querySelector('a').getAttribute('href')}">
+                ${tl(trans.view_latest)}
+            </a>
+        </section>
+    `;
 
     if (!page.mobile)
         page.structure.side.appendChild(side_actions);
@@ -248,13 +260,13 @@ export function bleh_wiki_editor() {
     page.structure.side.innerHTML = '';
 
     // latest
-    let side_actions = document.createElement('section');
-    side_actions.classList.add('side-actions');
-    side_actions.innerHTML = (`
-        <a class="btn side-action" data-type="latest-wiki" href="${sub_text.querySelector('a').getAttribute('href')}">
-            ${tl(trans.view_latest_version)}
-        </a>
-    `);
+    let side_actions = html.node`
+        <section class="side-actions">
+            <a class="btn side-action" data-type="latest-wiki" href="${sub_text.querySelector('a').getAttribute('href')}">
+                ${tl(trans.view_latest)}
+            </a>
+        </section>
+    `;
 
     if (!page.mobile)
         page.structure.side.appendChild(side_actions);
@@ -263,26 +275,36 @@ export function bleh_wiki_editor() {
 
 
     // presets
-    let wiki_presets_panel = document.createElement('section');
-    wiki_presets_panel.classList.add('wiki-presets-panel');
-
-    wiki_presets_panel.innerHTML = (`
-        <h3 class="text-18">${tl(trans.symbol_presets)}</h3>
-        <div class="presets">
-            <div class="preset">“</div>
-            <div class="preset">”</div>
-            <div class="preset">—</div>
-            <div class="preset">‘</div>
-            <div class="preset">’</div>
-            <div class="preset">-</div>
-        </div>
-        <ul class="wiki-standards generic-list">
-            <li>Tracks should be contained in “”, while albums and artists are left without.</li>
-            <li>A pair of ‘ ’ are usually used for quotations.</li>
-        </ul>
+    let presets = [`“`, `”`, `—`, `‘`, `’`, `-`];
+    let standards = [
+        tl(trans.wiki_standard_tracks),
+        tl(trans.wiki_standard_artists),
+        tl(trans.wiki_standard_quotations)
+    ];
+    page.structure.side.appendChild(html.node`
+        <section class="wiki-presets-panel">
+            <h3 class="text-18">${tl(trans.symbol_presets)}</h3>
+            <div class="presets">
+                ${presets.map((preset) => {
+                    let item = html.node`
+                        <div class="preset" onclick=${() => copy(preset)}>
+                            ${preset}
+                        </div>
+                    `;
+                    
+                    tippy(item, {
+                        content: tl(trans.click_to_copy),
+                        delay: [500, 0]
+                    });
+                    
+                    return item;
+                })}
+            </div>
+            <ul class="wiki-standards generic-list">
+                ${standards.map((standard) => html.node`<li>${standard}</li>`)}
+            </ul>
+        </section>
     `);
-
-    page.structure.side.appendChild(wiki_presets_panel);
 
     page.structure.side.appendChild(wiki_syntax);
 
@@ -307,10 +329,10 @@ export function patch_wiki() {
         let wiki_col = page.structure.main.querySelector('.wiki-column');
         let wiki_empty = false;
 
-        if (!wiki_col)
+        if (!wiki_col) {
             wiki_col = page.structure.main.querySelector('.wiki-section');
-
-        if (!wiki_col) return;
+            return;
+        }
 
         let wiki_block = wiki_col.querySelector('.wiki-block.visible-lg .wiki-block-inner-2');
 
@@ -325,26 +347,22 @@ export function patch_wiki() {
             read_more.textContent = tl(trans.read_more).toLowerCase();
         }
 
-        let wiki_header = document.createElement('div');
-        wiki_header.classList.add('sub-text');
-        wiki_header.innerHTML = (`
-            <p>${tl(trans.about)}</p>
-            <span class="right-links">
-                <p><a class="wiki-edit-small" href="${document.location.href}/+wiki/edit">${tl(trans.edit_wiki).toLowerCase()}</a></p>
-                ${(!wiki_empty) ? `<p>${read_more.outerHTML}</p>` : ''}
-            </span>
-        `);
+        wiki_col.insertBefore(html.node`
+            <div class="sub-text">
+                <p>${tl(trans.about)}</p>
+                <span class="right-links">
+                    <p><a class="wiki-edit-small" href="${document.location.href}/+wiki/edit">${tl(trans.edit_wiki).toLowerCase()}</a></p>
+                    ${(!wiki_empty && read_more) ? html.node`<p>${read_more}</p>` : ''}
+                </span>
+            </div>
+        `, wiki_col.firstElementChild);
 
-        wiki_col.insertBefore(wiki_header, wiki_col.firstElementChild);
-
-
-        if (!wiki_empty) {
+        if (!wiki_empty)
             patch_wiki_contents(wiki_block);
-        }
     }
 }
 
-function patch_wiki_contents(wiki_block) {
+export function patch_wiki_contents(wiki_block) {
     let links = wiki_block.querySelectorAll('a');
     links.forEach((link) => {
         let href = link.getAttribute('href');
@@ -353,17 +371,24 @@ function patch_wiki_contents(wiki_block) {
         let sister;
 
         if (!href.startsWith(root)) {
-            tippy(link, {
-                content: link.getAttribute('href')
-            });
+            if (href && link.textContent != href && /^(https?|mailto|ftp|sftp|tel):/.test(href)) {
+                tippy(link, {
+                    theme: 'name-sister-combo',
+                    content: html.node`
+                    <span class="name">${href}</span>
+                    <span class="sister">${tl(trans.external)}</span>
+                `
+                });
+            }
 
             return;
         }
 
-        if (href.endsWith('/+wiki'))
-            return;
+        if (href.endsWith('/+wiki')) return;
 
         href = href.replace(root, '').replace('music/', '');
+
+        if (href.startsWith('user/')) return;
 
         if (href.startsWith('tag/')) {
             type = 'tag';
@@ -386,7 +411,11 @@ function patch_wiki_contents(wiki_block) {
 
         if (sister != undefined)
             tippy(link, {
-                content: `${sister} - ${name}`
+                theme: 'name-sister-combo',
+                content: html.node`
+                    <span class="name">${name}</span>
+                    <span class="sister">${sister}</span>
+                `
             });
 
         link.setAttribute('data-link-type', type);

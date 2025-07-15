@@ -1,7 +1,7 @@
 // ==UserScript==
 // @name         bleh
 // @namespace    http://last.fm/
-// @version      2025.0608.2
+// @version      2025.0715
 // @description  bleh!!! ^-^
 // @author       kate
 // @match        https://www.last.fm/*
@@ -365,12 +365,12 @@
       var direct = attribute2.value === UID;
       var sparse;
       if (direct || 1 < (sparse = attribute2.value.split(UIDC)).length) {
-        var name = attribute2.name;
-        if (cache2.indexOf(name) < 0) {
-          cache2.push(name);
+        var name2 = attribute2.name;
+        if (cache2.indexOf(name2) < 0) {
+          cache2.push(name2);
           var realName = parts.shift().replace(
             direct ? /^(?:|[\S\s]*?\s)(\S+?)\s*=\s*('|")?$/ : new RegExp(
-              "^(?:|[\\S\\s]*?\\s)(" + name + `)\\s*=\\s*('|")[\\S\\s]*`,
+              "^(?:|[\\S\\s]*?\\s)(" + name2 + `)\\s*=\\s*('|")[\\S\\s]*`,
               "i"
             ),
             "$1"
@@ -418,12 +418,12 @@
       path
     };
   }
-  function Attr(node, path, name, sparse) {
+  function Attr(node, path, name2, sparse) {
     return {
       type: "attr",
       node,
       path,
-      name,
+      name: name2,
       sparse
     };
   }
@@ -618,17 +618,17 @@
   // node_modules/uhandlers/esm/index.js
   var aria = (node) => (values) => {
     for (const key in values) {
-      const name = key === "role" ? key : `aria-${key}`;
+      const name2 = key === "role" ? key : `aria-${key}`;
       const value = values[key];
       if (value == null)
-        node.removeAttribute(name);
+        node.removeAttribute(name2);
       else
-        node.setAttribute(name, value);
+        node.setAttribute(name2, value);
     }
   };
-  var attribute = (node, name) => {
+  var attribute = (node, name2) => {
     let oldValue, orphan = true;
-    const attributeNode = document.createAttributeNS(null, name);
+    const attributeNode = document.createAttributeNS(null, name2);
     return (newValue) => {
       if (oldValue !== newValue) {
         oldValue = newValue;
@@ -664,9 +664,9 @@
         dataset[key] = value;
     }
   };
-  var event2 = (node, name) => {
-    let oldValue, type = name.slice(2);
-    if (!(name in node) && name.toLowerCase() in node)
+  var event2 = (node, name2) => {
+    let oldValue, type = name2.slice(2);
+    if (!(name2 in node) && name2.toLowerCase() in node)
       type = type.toLowerCase();
     return (newValue) => {
       const info = isArray(newValue) ? newValue : [newValue, false];
@@ -689,17 +689,17 @@
   };
 
   // node_modules/lighterhtml/esm/tagger.js
-  var hyperProperty = (node, name) => {
+  var hyperProperty = (node, name2) => {
     let oldValue;
     return (newValue) => {
       if (oldValue !== newValue) {
         oldValue = newValue;
-        if (node[name] !== newValue) {
+        if (node[name2] !== newValue) {
           if (newValue == null) {
-            node[name] = "";
-            node.removeAttribute(name);
+            node[name2] = "";
+            node.removeAttribute(name2);
           } else
-            node[name] = newValue;
+            node[name2] = newValue;
         }
       }
     };
@@ -718,15 +718,15 @@
     //  * style, the only regular attribute that also accepts an object as value
     //    so that you can style=${{width: 120}}. In this case, the behavior has been
     //    fully inspired by Preact library and its simplicity.
-    attribute(node, name, original) {
+    attribute(node, name2, original) {
       const isSVG = this.type === "svg";
-      switch (name) {
+      switch (name2) {
         case "class":
           if (isSVG)
-            return attribute(node, name, isSVG);
-          name = "className";
+            return attribute(node, name2, isSVG);
+          name2 = "className";
         case "props":
-          return setter(node, name);
+          return setter(node, name2);
         case "aria":
           return aria(node);
         case "style":
@@ -736,15 +736,15 @@
         case ".dataset":
           return data(node);
         default:
-          if (name.slice(0, 1) === ".")
-            return setter(node, name.slice(1));
-          if (name.slice(0, 1) === "?")
-            return boolean(node, name.slice(1));
-          if (name.slice(0, 2) === "on")
-            return event2(node, name);
-          if (name in node && !(isSVG || readOnly.test(name)))
-            return hyperProperty(node, name);
-          return attribute(node, name, isSVG);
+          if (name2.slice(0, 1) === ".")
+            return setter(node, name2.slice(1));
+          if (name2.slice(0, 1) === "?")
+            return boolean(node, name2.slice(1));
+          if (name2.slice(0, 2) === "on")
+            return event2(node, name2);
+          if (name2 in node && !(isSVG || readOnly.test(name2)))
+            return hyperProperty(node, name2);
+          return attribute(node, name2, isSVG);
       }
     },
     // in a hyper(node)`<div>${content}</div>` case
@@ -1004,7 +1004,7 @@
   var dialogs = {};
   tippy.setDefaultProps({
     arrow: false,
-    duration: [120, 220]
+    duration: [0, 220]
   });
   var auth = {
     name: null,
@@ -1042,6 +1042,8 @@
     multi: false,
     corrected: false,
     token: "",
+    mobile: false,
+    platform: "other",
     structure: {
       wrapper: null,
       container: null,
@@ -1105,9 +1107,8 @@
   var bleh_url = "https://www.last.fm{root}bleh";
   var setup_url = "https://www.last.fm{root}bleh/setup";
   var sponsor_url = "https://www.last.fm{root}bleh/sponsor";
-  var has_prompted_for_update = {
-    state: false
-  };
+  var api_url = "https://www.last.fm{root}bleh/api";
+  var api_key = "85c118b69b1437844fe75fcd2bf27261";
   var theme_preview = () => html.node`
     <div class="preview-inner">
         <div class="preview-card">
@@ -1122,6 +1123,1312 @@
         </div>
     </div>
 `;
+  var random_list = [
+    {
+      track: "DIFFERENT DAY",
+      album: "MUSIC - SORRY 4 DA WAIT",
+      artist: "Playboi Carti",
+      album_artist: "Playboi Carti"
+    },
+    {
+      track: "LUNCH",
+      album: "HIT ME HARD AND SOFT",
+      artist: "Billie Eilish",
+      album_artist: "Billie Eilish"
+    },
+    {
+      track: "If I Die 2Nite",
+      album: "Me Against The World",
+      artist: "2Pac",
+      album_artist: "2Pac"
+    },
+    {
+      track: "Like Him (feat. Lola Young)",
+      album: "CHROMAKOPIA",
+      artist: "Tyler, The Creator",
+      album_artist: "Tyler, The Creator"
+    },
+    {
+      track: "HYAENA",
+      album: "UTOPIA",
+      artist: "Travis Scott",
+      album_artist: "Travis Scott"
+    },
+    {
+      track: "Abandon Me",
+      album: "Blush",
+      artist: "Kevin Abstract",
+      album_artist: "Kevin Abstract"
+    },
+    {
+      track: "Evangelic Girl is a Gun",
+      album: "Evangelic Girl is a Gun",
+      artist: "yeule",
+      album_artist: "yeule"
+    },
+    {
+      track: "Apple",
+      album: "BRAT",
+      artist: "Charli xcx",
+      album_artist: "Charli xcx"
+    },
+    {
+      track: "OLYMPIAN",
+      album: "MUSIC",
+      artist: "Playboi Carti",
+      album_artist: "Playboi Carti"
+    },
+    {
+      track: "SOUTH ATLANTA BABY",
+      album: "MUSIC",
+      artist: "Playboi Carti",
+      album_artist: "Playboi Carti"
+    },
+    {
+      track: "BLUE",
+      album: "HIT ME HARD AND SOFT",
+      artist: "Billie Eilish",
+      album_artist: "Billie Eilish"
+    },
+    {
+      track: "THE GREATEST",
+      album: "HIT ME HARD AND SOFT",
+      artist: "Billie Eilish",
+      album_artist: "Billie Eilish"
+    },
+    {
+      track: "SKELETONS",
+      album: "ASTROWORLD",
+      artist: "Travis Scott",
+      album_artist: "Travis Scott"
+    },
+    {
+      track: "BUTTERFLY EFFECT",
+      album: "ASTROWORLD",
+      artist: "Travis Scott",
+      album_artist: "Travis Scott"
+    },
+    {
+      track: "Barbarian",
+      album: "The Party Never Ends 2.0",
+      artist: "Juice WRLD",
+      album_artist: "Juice WRLD"
+    },
+    {
+      track: "Wouldn't Leave",
+      album: "ye",
+      artist: "Kanye West",
+      album_artist: "Kanye West"
+    },
+    {
+      track: "Bloodhail",
+      album: "Deathconsciousness",
+      artist: "Have A Nice Life",
+      album_artist: "Have A Nice Life"
+    },
+    {
+      track: "BOOGIE",
+      album: "SATURATION III",
+      artist: "BROCKHAMPTON",
+      album_artist: "BROCKHAMPTON"
+    },
+    {
+      track: "sdp interlude",
+      album: "Birds In The Trap Sing McKnight",
+      artist: "Travis Scott",
+      album_artist: "Travis Scott"
+    },
+    {
+      track: "Be Quiet and Drive (Far Away)",
+      album: "Around the Fur",
+      artist: "Deftones",
+      album_artist: "Deftones"
+    },
+    {
+      track: "Better Times",
+      album: "Teen Dream",
+      artist: "Beach House",
+      album_artist: "Beach House"
+    },
+    {
+      track: "love hurts",
+      album: "agony",
+      artist: "Ilykimchi",
+      album_artist: "Ilykimchi"
+    },
+    {
+      track: "M3 N MIN3",
+      album: "M3 N MIN3",
+      artist: "femtanyl",
+      album_artist: "femtanyl"
+    },
+    {
+      track: "y.w.d.t.",
+      album: "burger world peace & the endless mediocrity",
+      artist: "ilysm",
+      album_artist: "ilysm"
+    },
+    {
+      track: "Illegal",
+      album: "Fancy That",
+      artist: "PinkPantheress",
+      album_artist: "PinkPantheress"
+    },
+    {
+      track: "Ace Trumpets",
+      album: "Ace Trumpets",
+      artist: "Clipse",
+      album_artist: "Clipse"
+    },
+    {
+      track: "Timeless (feat Playboi Carti)",
+      album: "Hurry Up Tomorrow",
+      artist: "The Weeknd",
+      album_artist: "The Weeknd"
+    },
+    {
+      track: "tv off (feat. lefty gunplay)",
+      album: "GNX",
+      artist: "Kendrick Lamar",
+      album_artist: "Kendrick Lamar"
+    },
+    {
+      track: "jeans",
+      album: "jeans",
+      artist: "2hollis",
+      album_artist: "2hollis"
+    },
+    {
+      track: "either on or off the drugs",
+      album: "I LAY DOWN MY LIFE FOR YOU",
+      artist: "JPEGMAFIA",
+      album_artist: "JPEGMAFIA"
+    },
+    {
+      track: "drive ME crazy!",
+      album: "Let\u2019s Start Here.",
+      artist: "Lil Yachty",
+      album_artist: "Lil Yachty"
+    },
+    {
+      track: "Drugs You Should Try It",
+      album: "DAYS BEFORE RODEO",
+      artist: "Travis Scott",
+      album_artist: "Travis Scott"
+    },
+    {
+      track: "Fighting My Demons",
+      album: "A Great Chaos",
+      artist: "Ken Carson",
+      album_artist: "Ken Carson"
+    },
+    {
+      track: "Don\u2019t Smile",
+      album: "Short n' Sweet (Deluxe)",
+      artist: "Sabrina Carpenter",
+      album_artist: "Sabrina Carpenter"
+    },
+    {
+      track: "Espresso",
+      album: "Short n' Sweet (Deluxe)",
+      artist: "Sabrina Carpenter",
+      album_artist: "Sabrina Carpenter"
+    },
+    {
+      track: "only shallow",
+      album: "loveless",
+      artist: "my bloody valentine",
+      album_artist: "my bloody valentine"
+    },
+    {
+      track: "STILL IN THE PAINT (with LAZER DIM 700 & Bktherula)",
+      album: "KING OF THE MISCHIEVOUS SOUTH",
+      artist: "Denzel Curry",
+      album_artist: "Denzel Curry"
+    },
+    {
+      track: "90210 (feat. Kacy Hill)",
+      album: "Rodeo",
+      artist: "Travis Scott",
+      album_artist: "Travis Scott"
+    },
+    {
+      track: "4X4",
+      album: "4X4",
+      artist: "Travis Scott",
+      album_artist: "Travis Scott"
+    },
+    {
+      track: "Luv (sic)",
+      album: "Luv(sic) Hexalogy",
+      artist: "Nujabes",
+      album_artist: "Nujabes"
+    },
+    {
+      track: "buy me presents",
+      album: "fruitcake",
+      artist: "Sabrina Carpenter",
+      album_artist: "Sabrina Carpenter"
+    },
+    {
+      track: "Come into the Water",
+      album: "Be the Cowboy",
+      artist: "Mitski",
+      album_artist: "Mitski"
+    },
+    {
+      track: "positions",
+      album: "Positions",
+      artist: "Ariana Grande",
+      album_artist: "Ariana Grande"
+    },
+    {
+      track: "Lie To Girls",
+      album: "Short n' Sweet (Deluxe)",
+      artist: "Sabrina Carpenter",
+      album_artist: "Sabrina Carpenter"
+    },
+    {
+      track: "Loneliness",
+      album: "Dehumanizing Loneliness",
+      artist: "Decalius",
+      album_artist: "Decalius"
+    },
+    {
+      track: "Till The Angels Come (feat. Freddie Gibbs & Prodigy)",
+      album: "No Idols",
+      artist: "Domo Genesis",
+      album_artist: "Domo Genesis"
+    },
+    {
+      track: "A Quick One Before the Eternal Worm Devours Connecticut",
+      album: "Deathconsciousness",
+      artist: "Have A Nice Life",
+      album_artist: "Have A Nice Life"
+    },
+    {
+      track: "Earthmover",
+      album: "Deathconsciousness",
+      artist: "Have A Nice Life",
+      album_artist: "Have A Nice Life"
+    },
+    {
+      track: "Psychoboost feat danny brown",
+      album: "Revengeseekerz",
+      artist: "Jane Remover",
+      album_artist: "Jane Remover"
+    },
+    {
+      track: "MOMENTUM (feat. Ilykimchi)",
+      album: "F*CK U SKRILLEX YOU THINK UR ANDY WARHOL BUT UR NOT!! <3",
+      artist: "Skrillex",
+      album_artist: "Skrillex"
+    },
+    {
+      track: "Gnarly",
+      album: "Gnarly",
+      artist: "KATSEYE",
+      album_artist: "KATSEYE"
+    },
+    {
+      track: "Knees",
+      album: "By the Time I Get to Phoenix",
+      artist: "Injury Reserve",
+      album_artist: "Injury Reserve"
+    },
+    {
+      track: "Fear, Sex",
+      album: "Imaginal Disk",
+      artist: "Magdalena Bay",
+      album_artist: "Magdalena Bay"
+    },
+    {
+      track: "Wildflower",
+      album: "Depression Cherry",
+      artist: "Beach House",
+      album_artist: "Beach House"
+    },
+    {
+      track: "JRJRJR",
+      album: "Revengeseekerz",
+      artist: "Jane Remover",
+      album_artist: "Jane Remover"
+    },
+    {
+      track: "ha",
+      album: "burger world peace & the endless mediocrity",
+      artist: "ilysm",
+      album_artist: "ilysm"
+    },
+    {
+      track: "Red Light",
+      album: "Blush",
+      artist: "Kevin Abstract",
+      album_artist: "Kevin Abstract"
+    },
+    {
+      track: "Alive",
+      album: "Alive",
+      artist: "Ari Abdul",
+      album_artist: "Ari Abdul"
+    },
+    {
+      track: "WHILE YOU WERE SLEEPING VIP",
+      album: "F*CK U SKRILLEX YOU THINK UR ANDY WARHOL BUT UR NOT!! <3",
+      artist: "Skrillex",
+      album_artist: "Skrillex"
+    },
+    {
+      track: "BURN",
+      album: "BURN",
+      artist: "Starr Adara",
+      album_artist: "Starr Adara"
+    },
+    {
+      track: "100 Bad (feat. Charli XCX) (Charli XCX Remix)",
+      album: "Tommy Genesis",
+      artist: "Tommy Genesis",
+      album_artist: "Tommy Genesis"
+    },
+    {
+      track: "DISCO (FT. TOMMY GENESIS)",
+      album: "AFTERCARE",
+      artist: "Nessa Barrett",
+      album_artist: "Nessa Barrett"
+    },
+    {
+      track: "SOMEBODY LOVES ME",
+      album: "$ome $exy $ongs 4 U",
+      artist: "PARTYNEXTDOOR",
+      album_artist: "PARTYNEXTDOOR"
+    },
+    {
+      track: "phobie d\u2019impulsion",
+      album: "a bit of a mad one",
+      artist: "glaive",
+      album_artist: "glaive"
+    },
+    {
+      track: "GODSTAINED",
+      album: "GODSTAINED",
+      artist: "Quadeca",
+      album_artist: "Quadeca"
+    },
+    {
+      track: "\u3086\u304D\u3053\u3055\u3093",
+      album: "\u3042\u3089\u305F\u3081\u307E\u3057\u3066\u3001\u306F\u3058\u3081\u307E\u3057\u3066\u3001\u30DF\u30C9\u30EA\u3067\u3059\u3002",
+      artist: "\u30DF\u30C9\u30EA",
+      album_artist: "\u30DF\u30C9\u30EA"
+    },
+    {
+      track: "Dsco",
+      album: "Velocity: Design: Comfort.",
+      artist: "Sweet Trip",
+      album_artist: "Sweet Trip"
+    },
+    {
+      track: "Everything is romantic",
+      album: "BRAT",
+      artist: "Charli xcx",
+      album_artist: "Charli xcx"
+    },
+    {
+      track: "White Ceiling",
+      album: "To See the Next Part of the Dream",
+      artist: "Parannoul",
+      album_artist: "Parannoul"
+    },
+    {
+      track: "SEX",
+      album: "ROADRUNNER: NEW LIGHT, NEW MACHINE PLUS PACK",
+      artist: "BROCKHAMPTON",
+      album_artist: "BROCKHAMPTON"
+    },
+    {
+      track: "all-american bitch",
+      album: "GUTS",
+      artist: "Olivia Rodrigo",
+      album_artist: "Olivia Rodrigo"
+    },
+    {
+      track: "The Ballad of Matt & Mica",
+      album: "Imaginal Disk",
+      artist: "Magdalena Bay",
+      album_artist: "Magdalena Bay"
+    },
+    {
+      track: "Real Man",
+      album: "This Is How Tomorrow Moves",
+      artist: "beabadoobee",
+      album_artist: "beabadoobee"
+    },
+    {
+      track: "cyber meat",
+      album: "softscars",
+      artist: "yeule",
+      album_artist: "yeule"
+    },
+    {
+      track: "From The Start",
+      album: "Bewitched",
+      artist: "Laufey",
+      album_artist: "Laufey"
+    },
+    {
+      track: "SUGAR (Remix) [feat. Dua Lipa]",
+      album: "SUGAR (Remix) [feat. Dua Lipa]",
+      artist: "BROCKHAMPTON",
+      album_artist: "BROCKHAMPTON"
+    },
+    {
+      track: "PROM/KING",
+      album: "CARE FOR ME",
+      artist: "Saba",
+      album_artist: "Saba"
+    },
+    {
+      track: "BUSY/SIRENS",
+      album: "CARE FOR ME",
+      artist: "Saba",
+      album_artist: "Saba"
+    },
+    {
+      track: "Peppers (feat. Tommy Genesis)",
+      album: "Did you know that there's a tunnel under Ocean Blvd",
+      artist: "Lana Del Rey",
+      album_artist: "Lana Del Rey"
+    },
+    {
+      track: "Make You Mine",
+      album: "Make You Mine",
+      artist: "Madison Beer",
+      album_artist: "Madison Beer"
+    },
+    {
+      track: "Duvet",
+      album: "Twilight",
+      artist: "b\xF4a",
+      album_artist: "b\xF4a"
+    },
+    {
+      track: "Brand New City",
+      album: "Lush",
+      artist: "Mitski",
+      album_artist: "Mitski"
+    },
+    {
+      track: "Two Girls Kissing",
+      album: "They Spent Their Wild Youthful Days In The Glittering World Of The Salons",
+      artist: "Swirlies",
+      album_artist: "Swirlies"
+    },
+    {
+      track: "Geyser",
+      album: "Be the Cowboy",
+      artist: "Mitski",
+      album_artist: "Mitski"
+    },
+    {
+      track: "My Love Mine All Mine",
+      album: "The Land Is Inhospitable and So Are We",
+      artist: "Mitski",
+      album_artist: "Mitski"
+    },
+    {
+      track: "PHANTASM",
+      album: "AND THEY MINE FOR OUR BODIES",
+      artist: "Gao the Arsonist",
+      album_artist: "Gao the Arsonist"
+    },
+    {
+      track: "DO AS I SAY",
+      album: "AND THEY MINE FOR OUR BODIES",
+      artist: "Gao the Arsonist",
+      album_artist: "Gao the Arsonist"
+    },
+    {
+      track: "the prom",
+      album: "i care so much that i dont care at all",
+      artist: "glaive",
+      album_artist: "glaive"
+    },
+    {
+      track: "On Sight",
+      album: "Yeezus",
+      artist: "Kanye West",
+      album_artist: "Kanye West"
+    },
+    {
+      track: "If I Let Him In",
+      album: "...Is Doomed",
+      artist: "Black Wing",
+      album_artist: "Black Wing"
+    },
+    {
+      track: "x w x",
+      album: "softscars",
+      artist: "yeule",
+      album_artist: "yeule"
+    },
+    {
+      track: "Natural Habitat (feat. Ken Carson)",
+      album: "Natural Habitat",
+      artist: "070 Shake",
+      album_artist: "070 Shake"
+    },
+    {
+      track: "cbd",
+      album: "hypochondriac",
+      artist: "brakence",
+      album_artist: "brakence"
+    },
+    {
+      track: "(March 19th 1983) It Was Probably Green",
+      album: "Songs About Leaving",
+      artist: "Carissa's Wierd",
+      album_artist: "Carissa's Wierd"
+    },
+    {
+      track: "clairbourne practice",
+      album: "clairbourne practice",
+      artist: "julie",
+      album_artist: "julie"
+    },
+    {
+      track: "feminine adornments",
+      album: "my anti-aircraft friend",
+      artist: "julie",
+      album_artist: "julie"
+    },
+    {
+      track: "Image",
+      album: "Imaginal Disk",
+      artist: "Magdalena Bay",
+      album_artist: "Magdalena Bay"
+    },
+    {
+      track: "Spectral Bride",
+      album: "Giles Corey",
+      artist: "Giles Corey",
+      album_artist: "Giles Corey"
+    },
+    {
+      track: "if u love me now then shoot to kill",
+      album: "ovine hall",
+      artist: "ovine hall",
+      album_artist: "ovine hall"
+    },
+    {
+      track: "Blackest Bile",
+      album: "Giles Corey",
+      artist: "Giles Corey",
+      album_artist: "Giles Corey"
+    },
+    {
+      track: "very little effort",
+      album: "my anti-aircraft friend",
+      artist: "julie",
+      album_artist: "julie"
+    },
+    {
+      track: "skipping tiles",
+      album: "pushing daisies",
+      artist: "julie",
+      album_artist: "julie"
+    },
+    {
+      track: "through your window",
+      album: "pg.4 a picture of three hedges/through your window",
+      artist: "julie",
+      album_artist: "julie"
+    },
+    {
+      track: "COLE PIMP (with Ty Dolla $ign & Juicy J)",
+      album: "KING OF THE MISCHIEVOUS SOUTH",
+      artist: "Denzel Curry",
+      album_artist: "Denzel Curry"
+    },
+    {
+      track: "I THINK",
+      album: "IGOR",
+      artist: "Tyler, The Creator",
+      album_artist: "Tyler, The Creator"
+    },
+    {
+      track: "Only",
+      album: "Lahai",
+      artist: "Sampha",
+      album_artist: "Sampha"
+    },
+    {
+      track: "Together",
+      album: "Fake It Flowers",
+      artist: "beabadoobee",
+      album_artist: "beabadoobee"
+    },
+    {
+      track: "Old money bitch",
+      album: "Wallsocket",
+      artist: "underscores",
+      album_artist: "underscores"
+    },
+    {
+      track: "Pandora",
+      album: "Pandora",
+      artist: "Wisp",
+      album_artist: "Wisp"
+    },
+    {
+      track: "Novacane",
+      album: "Novacane",
+      artist: "Frank Ocean",
+      album_artist: "Frank Ocean"
+    },
+    {
+      track: "Bulls on Parade - triple j Like A Version",
+      album: "Bulls on Parade (triple j Like A Version)",
+      artist: "Denzel Curry",
+      album_artist: "Denzel Curry"
+    },
+    {
+      track: "runway talk",
+      album: "DOG",
+      artist: "Kahlil Blu",
+      album_artist: "Kahlil Blu"
+    },
+    {
+      track: "01'beigecamry",
+      album: "Farley",
+      artist: "Sideshow",
+      album_artist: "Sideshow"
+    },
+    {
+      track: "Puff Daddy",
+      album: "Puff Daddy",
+      artist: "JPEGMAFIA",
+      album_artist: "JPEGMAFIA"
+    },
+    {
+      track: "wonder 2",
+      album: "m b v",
+      artist: "my bloody valentine",
+      album_artist: "my bloody valentine"
+    },
+    {
+      track: "Second hand embarrassment",
+      album: "fishmonger",
+      artist: "underscores",
+      album_artist: "underscores"
+    },
+    {
+      track: "Let It Happen",
+      album: "Currents",
+      artist: "Tame Impala",
+      album_artist: "Tame Impala"
+    },
+    {
+      track: "TERRIBLE EXCELLENCE (feat. Yung Lean)",
+      album: "Cold Visions",
+      artist: "Bladee",
+      album_artist: "Bladee"
+    },
+    {
+      track: "Christmas In Harlem",
+      album: "Christmas In Harlem",
+      artist: "Kanye West",
+      album_artist: "Kanye West"
+    },
+    {
+      track: "E. Coli (feat. Earl Sweatshirt)",
+      album: "Bread",
+      artist: "The Alchemist",
+      album_artist: "The Alchemist"
+    },
+    {
+      track: "How To Build A Relationship",
+      album: "Hi This Is Flume (Mixtape)",
+      artist: "Flume",
+      album_artist: "Flume"
+    },
+    {
+      track: "Never Catch Me",
+      album: "You're Dead!",
+      artist: "Flying Lotus",
+      album_artist: "Flying Lotus"
+    },
+    {
+      track: "Take A Bite",
+      album: "This Is How Tomorrow Moves",
+      artist: "beabadoobee",
+      album_artist: "beabadoobee"
+    },
+    {
+      track: "Slow Dance",
+      album: "Charm",
+      artist: "Clairo",
+      album_artist: "Clairo"
+    },
+    {
+      track: "BALD!",
+      album: "EP!",
+      artist: "JPEGMAFIA",
+      album_artist: "JPEGMAFIA"
+    },
+    {
+      track: "Seigfried",
+      album: "Blonde",
+      artist: "Frank Ocean",
+      album_artist: "Frank Ocean"
+    },
+    {
+      track: "Girls Just Want to Have Fun",
+      album: "Crest",
+      artist: "Bladee",
+      album_artist: "Bladee"
+    },
+    {
+      track: "Wesley's Theory",
+      album: "To Pimp A Butterfly",
+      artist: "Kendrick Lamar",
+      album_artist: "Kendrick Lamar"
+    },
+    {
+      track: "Talk",
+      album: "Beatopia",
+      artist: "beabadoobee",
+      album_artist: "beabadoobee"
+    },
+    {
+      track: "I Used to Love Him (feat. Mary J. Blige)",
+      album: "The Miseducation of Lauryn Hill",
+      artist: "Ms. Lauryn Hill",
+      album_artist: "Ms. Lauryn Hill"
+    },
+    {
+      track: "vpn",
+      album: "volcanic bird enemy and the voiced concern",
+      artist: "Lil Ugly Mane",
+      album_artist: "Lil Ugly Mane"
+    },
+    {
+      track: "only tomorrow",
+      album: "m b v",
+      artist: "my bloody valentine",
+      album_artist: "my bloody valentine"
+    },
+    {
+      track: "WHAT A DAY",
+      album: "CALL ME IF YOU GET LOST: The Estate Sale",
+      artist: "Tyler, The Creator",
+      album_artist: "Tyler, The Creator"
+    },
+    {
+      track: "untitled 08 | 09.06.2014.",
+      album: "untitled unmastered.",
+      artist: "Kendrick Lamar",
+      album_artist: "Kendrick Lamar"
+    },
+    {
+      track: "Beautiful World",
+      album: "To See the Next Part of the Dream",
+      artist: "Parannoul",
+      album_artist: "Parannoul"
+    },
+    {
+      track: "Excuse",
+      album: "To See the Next Part of the Dream",
+      artist: "Parannoul",
+      album_artist: "Parannoul"
+    },
+    {
+      track: "Chanel",
+      album: "Chanel",
+      artist: "Frank Ocean",
+      album_artist: "Frank Ocean"
+    },
+    {
+      track: "Punk Weight",
+      album: "The Money Store",
+      artist: "Death Grips",
+      album_artist: "Death Grips"
+    },
+    {
+      track: "Maybe Somewhere",
+      album: "Sky Hundred",
+      artist: "Parannoul",
+      album_artist: "Parannoul"
+    },
+    {
+      track: "i will follow you into the dark - Spotify Singles",
+      album: "Spotify Singles",
+      artist: "glaive",
+      album_artist: "glaive"
+    },
+    {
+      track: "DUSTCUTTER",
+      album: "SCRAPYARD",
+      artist: "Quadeca",
+      album_artist: "Quadeca"
+    },
+    {
+      track: "HIGHJACK",
+      album: "HIGHJACK",
+      artist: "A$AP Rocky",
+      album_artist: "A$AP Rocky"
+    },
+    {
+      track: "You Got Me",
+      album: "Things Fall Apart",
+      artist: "The Roots",
+      album_artist: "The Roots"
+    },
+    {
+      track: "Gotta Touch 'Em - (Pt. 2)",
+      album: "Mystic Stylez",
+      artist: "Three 6 Mafia",
+      album_artist: "Three 6 Mafia"
+    },
+    {
+      track: "J'OUVERT",
+      album: "iridescence",
+      artist: "BROCKHAMPTON",
+      album_artist: "BROCKHAMPTON"
+    },
+    {
+      track: "Upper Echelon (feat. T.I. & 2 Chainz)",
+      album: "Upper Echelon (feat. T.I. & 2 Chainz)",
+      artist: "Travis Scott",
+      album_artist: "Travis Scott"
+    },
+    {
+      track: "Outta Control",
+      album: "Outta Control",
+      artist: "Fat Joe",
+      album_artist: "Fat Joe"
+    },
+    {
+      track: "TEXAS BLUE",
+      album: "SCRAPYARD",
+      artist: "Quadeca",
+      album_artist: "Quadeca"
+    },
+    {
+      track: "Luv (sic.) pt3 (feat. Shing02)",
+      album: "Luv(sic) Hexalogy",
+      artist: "Nujabes",
+      album_artist: "Nujabes"
+    },
+    {
+      track: "Luv (sic) pt5 (feat. Shing02)",
+      album: "Luv(sic) Hexalogy",
+      artist: "Nujabes",
+      album_artist: "Nujabes"
+    },
+    {
+      track: "Me And My Bitch",
+      album: "No Idols",
+      artist: "Domo Genesis",
+      album_artist: "Domo Genesis"
+    },
+    {
+      track: "Lean Beef Patty",
+      album: "SCARING THE HOES",
+      artist: "JPEGMAFIA",
+      album_artist: "JPEGMAFIA"
+    },
+    {
+      track: "Blue Suede",
+      album: "Hell Can Wait",
+      artist: "Vince Staples",
+      album_artist: "Vince Staples"
+    },
+    {
+      track: "u",
+      album: "To Pimp A Butterfly",
+      artist: "Kendrick Lamar",
+      album_artist: "Kendrick Lamar"
+    },
+    {
+      track: "Sandman",
+      album: "LIVE.LOVE.A$AP",
+      artist: "A$AP Rocky",
+      album_artist: "A$AP Rocky"
+    },
+    {
+      track: "Love Is Everywhere",
+      album: "Imaginal Disk",
+      artist: "Magdalena Bay",
+      album_artist: "Magdalena Bay"
+    },
+    {
+      track: "Give You the World",
+      album: "Gemini Rights",
+      artist: "Steve Lacy",
+      album_artist: "Steve Lacy"
+    },
+    {
+      track: "Stoned",
+      album: "Balloonerism",
+      artist: "Mac Miller",
+      album_artist: "Mac Miller"
+    },
+    {
+      track: "Blow Out",
+      album: "Pablo Honey",
+      artist: "Radiohead",
+      album_artist: "Radiohead"
+    },
+    {
+      track: "Motion Picture Soundtrack",
+      album: "Kid A",
+      artist: "Radiohead",
+      album_artist: "Radiohead"
+    },
+    {
+      track: "March Madness",
+      album: "56 Nights",
+      artist: "Future",
+      album_artist: "Future"
+    },
+    {
+      track: "FORCE OF HABIT",
+      album: "BOY ANONYMOUS",
+      artist: "Paris Texas",
+      album_artist: "Paris Texas"
+    },
+    {
+      track: "the BLACK seminole.",
+      album: "Let\u2019s Start Here.",
+      artist: "Lil Yachty",
+      album_artist: "Lil Yachty"
+    },
+    {
+      track: "No More Parties In LA",
+      album: "The Life Of Pablo",
+      artist: "Kanye West",
+      album_artist: "Kanye West"
+    },
+    {
+      track: "Devil In A New Dress",
+      album: "My Beautiful Dark Twisted Fantasy",
+      artist: "Kanye West",
+      album_artist: "Kanye West"
+    },
+    {
+      track: "Life Of The Party (with Andr\xE9 3000)",
+      album: "Donda (Deluxe)",
+      artist: "Kanye West",
+      album_artist: "Kanye West"
+    },
+    {
+      track: "Location",
+      album: "Playboi Carti",
+      artist: "Playboi Carti",
+      album_artist: "Playboi Carti"
+    },
+    {
+      track: "Long Time - Intro",
+      album: "Die Lit",
+      artist: "Playboi Carti",
+      album_artist: "Playboi Carti"
+    },
+    {
+      track: "Doves In The Wind (feat. Kendrick Lamar)",
+      album: "Ctrl",
+      artist: "SZA",
+      album_artist: "SZA"
+    },
+    {
+      track: "Low Life (feat. The Weeknd)",
+      album: "EVOL",
+      artist: "Future",
+      album_artist: "Future"
+    },
+    {
+      track: "Samurai",
+      album: "Samurai",
+      artist: "Lupe Fiasco",
+      album_artist: "Lupe Fiasco"
+    },
+    {
+      track: "Cake",
+      album: "Samurai",
+      artist: "Lupe Fiasco",
+      album_artist: "Lupe Fiasco"
+    },
+    {
+      track: "745",
+      album: "Big Fish Theory",
+      artist: "Vince Staples",
+      album_artist: "Vince Staples"
+    },
+    {
+      track: "Stories In Pyjamas",
+      album: "Stories In Pyjamas",
+      artist: "Kofi Stone",
+      album_artist: "Kofi Stone"
+    },
+    {
+      track: "Prophecy",
+      album: "No Idols",
+      artist: "Domo Genesis",
+      album_artist: "Domo Genesis"
+    },
+    {
+      track: "the ride-",
+      album: "Let\u2019s Start Here.",
+      artist: "Lil Yachty",
+      album_artist: "Lil Yachty"
+    },
+    {
+      track: "Same Old",
+      album: "Nobody Cares Till Everybody Does",
+      artist: "Kofi Stone",
+      album_artist: "Kofi Stone"
+    },
+    {
+      track: "BURN",
+      album: "VULTURES 1",
+      artist: "\xA5$",
+      album_artist: "\xA5$"
+    },
+    {
+      track: "BLACK METAL TERRORIST | 13 M T",
+      album: "TA13OO",
+      artist: "Denzel Curry",
+      album_artist: "Denzel Curry"
+    },
+    {
+      track: "Bruuuh (with Denzel Curry) - Remix",
+      album: "Bruuuh (with Denzel Curry) [Remix]",
+      artist: "JID",
+      album_artist: "JID"
+    },
+    {
+      track: "Addiction",
+      album: "Late Registration",
+      artist: "Kanye West",
+      album_artist: "Kanye West"
+    },
+    {
+      track: "Fell In Luv (feat. Bryson Tiller)",
+      album: "Die Lit",
+      artist: "Playboi Carti",
+      album_artist: "Playboi Carti"
+    },
+    {
+      track: "Runaway",
+      album: "My Beautiful Dark Twisted Fantasy",
+      artist: "Kanye West",
+      album_artist: "Kanye West"
+    },
+    {
+      track: "Stateside",
+      album: "Fancy That",
+      artist: "PinkPantheress",
+      album_artist: "PinkPantheress"
+    },
+    {
+      track: "Raindrops (Insane) [with Travis Scott]",
+      album: "HEROES & VILLAINS",
+      artist: "Metro Boomin",
+      album_artist: "Metro Boomin"
+    },
+    {
+      track: "Niagara Falls (Foot or 2) [with Travis Scott & 21 Savage]",
+      album: "HEROES & VILLAINS",
+      artist: "Metro Boomin",
+      album_artist: "Metro Boomin"
+    },
+    {
+      track: "\u30AA\u30EC\u30F3\u30B8",
+      album: "\u30AA\u30EC\u30F3\u30B8",
+      artist: "\u9022\u5742\u5927\u6CB3\u30FB\u6ADB\u679D\u5B9F\u4E43\u68A8\u30FB\u5DDD\u5D8B\u4E9C\u7F8E(\u91D8\u5BAE\u7406\u6075\u3001\u5800\u6C5F\u7531\u8863\u3001\u559C\u591A\u6751\u82F1\u68A8)",
+      album_artist: "\u9022\u5742\u5927\u6CB3\u30FB\u6ADB\u679D\u5B9F\u4E43\u68A8\u30FB\u5DDD\u5D8B\u4E9C\u7F8E\uFF08CV\uFF1A\u91D8\u5BAE\u7406\u6075\u30FB\u5800\u6C5F\u7531\u8863\u30FB\u559C\u591A\u6751\u82F1\u68A8\uFF09"
+    },
+    {
+      track: "Just Wanna Rock",
+      album: "Pink Tape",
+      artist: "Lil Uzi Vert",
+      album_artist: "Lil Uzi Vert"
+    },
+    {
+      track: "OVERLY",
+      album: "MUSIC",
+      artist: "Playboi Carti",
+      album_artist: "Playboi Carti"
+    },
+    {
+      track: "Add Up My Love",
+      album: "Charm",
+      artist: "Clairo",
+      album_artist: "Clairo"
+    },
+    {
+      track: "60.000 ISK",
+      album: "May It Never Falter",
+      artist: "glaive",
+      album_artist: "glaive"
+    },
+    {
+      track: "7 rings",
+      album: "thank u, next",
+      artist: "Ariana Grande",
+      album_artist: "Ariana Grande"
+    },
+    {
+      track: "yes, and?",
+      album: "eternal sunshine",
+      artist: "Ariana Grande",
+      album_artist: "Ariana Grande"
+    },
+    {
+      track: "34+35",
+      album: "Positions",
+      artist: "Ariana Grande",
+      album_artist: "Ariana Grande"
+    }
+  ];
+
+  // src/components/notify.js
+  function load_notifications() {
+    if (!page.structure.notifications) {
+      let notification_host = html.node`
+            <div class="bleh-notifications" />
+        `;
+      page.structure.notifications = notification_host;
+      document.body.appendChild(notification_host);
+    }
+  }
+  function deliver_notif(content, persist = false, has_icon = false, append_class = null, action = "") {
+    return notify({
+      id: "legacy_notification",
+      title: content,
+      icon: "icon-16-info",
+      classname: append_class
+    });
+  }
+  function notify({
+    id,
+    title,
+    body,
+    icon,
+    classname,
+    actions = [],
+    persist = false,
+    type = "generic",
+    long = false,
+    colourful = false,
+    progress = false
+  }) {
+    log(`creating ${title}`, "notification", "info", {
+      id,
+      title,
+      body,
+      icon,
+      classname,
+      persist,
+      type,
+      long,
+      colourful,
+      progress
+    });
+    if (type === "error") {
+      if (!icon) icon = "icon-16-x";
+      colourful = true;
+    } else if (type === "warning") {
+      if (!icon) icon = "icon-16-warning";
+      colourful = true;
+    } else if (type === "success") {
+      if (!icon) icon = "icon-16-check";
+      colourful = true;
+    }
+    if (!icon) icon = "icon-16-info";
+    let bar;
+    actions.push({
+      type: "close",
+      action: () => notify_rm(notif),
+      text: tl(trans.close)
+    });
+    if (progress && persist) persist = false;
+    let information;
+    let notif = html.node`
+        <div
+            class=${[
+      "bleh-notification",
+      icon ? "with-icon" : "",
+      classname ? classname : "",
+      long ? "long" : "",
+      colourful ? "colourful" : ""
+    ].join(" ")}
+            data-type=${type}
+            style=${[
+      icon ? `--mask: var(--${icon})` : ""
+    ].join(";")}
+        >
+            <div class="notification-information" ref=${(el) => information = el}>
+                 <div class="notification-title">${title}</div>
+                ${body ? html.node`
+                <div class="notification-body">${body}</div>
+                ` : ""}
+            </div>
+            ${!persist ? html.node`
+            <div class="notification-progress"><div class="fill" ref=${(el) => bar = el} /></div>
+            ` : ""}
+            <div class="notification-actions">
+                ${actions.length > 0 ? actions.map((action) => () => {
+      let button = html.node`
+                        <button class="notification-action" data-type=${action.type} onclick=${action.action}>${action.text}</button>
+                    `;
+      tippy(button, {
+        content: action.text
+      });
+      return button;
+    }) : ""}
+            </div>
+        </div>
+    `;
+    page.structure.notifications.appendChild(notif);
+    notif.remove = () => {
+      notify_rm(notif);
+    };
+    notif.set = (value) => {
+      bar.style.setProperty("width", `${value}%`);
+    };
+    notif.set_body = (body2) => {
+      render(information, html`
+            <div class="notification-title">${title}</div>
+            ${body2 ? html.node`
+            <div class="notification-body">${body2}</div>
+            ` : ""}
+        `);
+    };
+    if (persist || progress)
+      return notif;
+    let ms = long ? 7e3 : 3e3;
+    let counter = 100;
+    let step = ms / 100;
+    let timer = setInterval(() => {
+      if (notif.matches(":hover"))
+        return;
+      counter--;
+      bar.style.setProperty("width", `${counter}%`);
+      if (counter <= 0) {
+        clearInterval(timer);
+        notify_rm(notif);
+      }
+    }, step);
+    return notif;
+  }
+  unsafeWindow._notify_rm = function(notif) {
+    notify_rm(notif);
+  };
+  function notify_rm(notif) {
+    notif.classList.add("fade-out");
+    setTimeout(function() {
+      page.structure.notifications.removeChild(notif);
+    }, 400);
+  }
 
   // src/build/tools.js
   function hex_to_hsl(hex) {
@@ -1175,8 +2482,13 @@
   }
   function clamp_sat(sat) {
     if (sat > 1.5)
-      return 1.5;
-    return sat;
+      return 1.5.toString();
+    return sat.toFixed(2);
+  }
+  function clamp_lit(sat, lit) {
+    if (sat >= 1.3 && lit < 0.8)
+      return 0.8;
+    return lit;
   }
   function clean_number(string) {
     return parseInt(
@@ -1208,106 +2520,175 @@
     else
       return desanitise(split[length - 2]);
   }
+  function interpolate_hue(current, next, proximity) {
+    current = (current % 360 + 360) % 360;
+    next = (next % 360 + 360) % 360;
+    let diff = next - current;
+    if (diff > 180) {
+      diff -= 360;
+    } else if (diff < -180) {
+      diff += 360;
+    }
+    let interpolated = current + diff * proximity;
+    return (interpolated % 360 + 360) % 360;
+  }
+  function lazy(elem, func, options = {}) {
+    const {
+      threshold = 0.1,
+      rootMargin = "50px"
+    } = options;
+    const observer = new IntersectionObserver((entries) => {
+      entries.forEach((entry) => {
+        if (entry.isIntersecting) {
+          log("now allowing load", "lazy", "info", { elem, options });
+          func(elem);
+          observer.unobserve(elem);
+        }
+      });
+    }, { threshold, rootMargin });
+    observer.observe(elem);
+  }
+  function copy(text2) {
+    navigator.clipboard.writeText(text2).then(() => {
+      log("copied", "copy", "info", { text: text2 });
+      notify({
+        id: "copy",
+        title: tl(trans.copied_to_clipboard),
+        icon: "icon-16-copy"
+      });
+    });
+  }
+  function download_with_progress(url, func) {
+    return new Promise((resolve, reject) => {
+      let xhr = new XMLHttpRequest();
+      xhr.open("GET", url, true);
+      xhr.responseType = "blob";
+      xhr.onprogress = (event3) => {
+        if (event3.lengthComputable) {
+          const percent = Math.round(event3.loaded / event3.total * 100);
+          func(percent);
+          log(`downloading ${percent}%`, "download", "info", { url });
+        }
+      };
+      xhr.onload = () => {
+        if (xhr.status === 200) {
+          resolve(xhr.response);
+          log(`downloaded ${url}`, "download");
+        } else {
+          reject(new Error(`download failed: ${xhr.status}`));
+          log(`download failed: ${xhr.status}`, "download", "error", { url });
+        }
+      };
+      xhr.onerror = () => {
+        reject(new Error("network error"));
+        log("network error", "download", "error", { url });
+      };
+      xhr.send();
+    });
+  }
+  function pad2(num) {
+    return String(num).padStart(2, "0");
+  }
 
   // src/build/music.js
   var artist_corrections = {};
   var album_track_corrections = {};
   var ranks = {
     15: {
-      start: 62e3,
-      hue: -135,
-      sat: 1.5,
-      lit: 0.35
+      start: 6e4,
+      hue: 240,
+      sat: 1.15,
+      lit: 1.1
     },
     14: {
-      start: 5e4,
-      hue: -105,
-      sat: 1,
-      lit: 0.85
+      start: 44e3,
+      hue: 260,
+      sat: 1.2,
+      lit: 1.15
     },
     13: {
-      start: 38e3,
-      hue: -85,
-      sat: 1.2,
-      lit: 0.95
+      start: 32e3,
+      hue: 280,
+      sat: 1.25,
+      lit: 1.17
     },
     12: {
-      start: 24e3,
-      hue: -55,
-      sat: 0.875,
-      lit: 0.85
+      start: 26e3,
+      hue: 300,
+      sat: 1.2,
+      lit: 1.2
     },
     11: {
-      start: 16e3,
-      hue: -25,
-      sat: 1.5,
-      lit: 0.875
+      start: 17e3,
+      hue: 320,
+      sat: 1.15,
+      lit: 1.22
     },
     10: {
-      start: 12500,
-      hue: -7,
-      sat: 1.5,
-      lit: 0.875
+      start: 12e3,
+      hue: 0,
+      sat: 1.25,
+      lit: 1.2
     },
     9: {
-      start: 6e3,
-      hue: 4,
-      sat: 1.425,
-      lit: 0.9
+      start: 8e3,
+      hue: 15,
+      sat: 1.25,
+      lit: 1.22
     },
     8: {
-      start: 4300,
-      hue: 25,
-      sat: 1.425,
-      lit: 0.925
+      start: 5300,
+      hue: 30,
+      sat: 1.2,
+      lit: 1.23
     },
     7: {
-      start: 3200,
-      hue: 60,
-      sat: 1.375,
-      lit: 0.95
+      start: 4e3,
+      hue: 45,
+      sat: 1.15,
+      lit: 1.25
     },
     6: {
       start: 2250,
-      hue: 80,
-      sat: 1.35,
-      lit: 0.925
+      hue: 60,
+      sat: 1.1,
+      lit: 1.25
     },
     5: {
       start: 1500,
-      hue: 103,
-      sat: 1.35,
-      lit: 0.925
+      hue: 80,
+      sat: 1.05,
+      lit: 1.23
     },
     4: {
       start: 1e3,
-      hue: 130,
-      sat: 1.35,
-      lit: 0.925
+      hue: 100,
+      sat: 1,
+      lit: 1.2
     },
     3: {
       start: 500,
-      hue: 148,
-      sat: 1.35,
-      lit: 0.925
+      hue: 120,
+      sat: 0.95,
+      lit: 1.17
     },
     2: {
       start: 300,
-      hue: 160,
-      sat: 1.5,
-      lit: 0.925
+      hue: 150,
+      sat: 1,
+      lit: 1.15
     },
     1: {
       start: 100,
       hue: 180,
-      sat: 1.5,
-      lit: 0.875
+      sat: 1.05,
+      lit: 1.13
     },
     0: {
       start: 0,
       hue: 200,
-      sat: 1.5,
-      lit: 0.925
+      sat: 1.1,
+      lit: 1.17
     }
   };
   var includes = {
@@ -1522,187 +2903,6 @@
     ]
   };
 
-  // src/components/notify.js
-  function load_notifications() {
-    if (!page.structure.notifications) {
-      let notification_host = html.node`
-            <div class="bleh-notifications" />
-        `;
-      page.structure.notifications = notification_host;
-      document.body.appendChild(notification_host);
-    }
-  }
-  function deliver_notif(content, persist = false, has_icon = false, append_class = null, action = "") {
-    return notify({
-      id: "legacy_notification",
-      title: content,
-      icon: "icon-16-info",
-      classname: append_class
-    });
-  }
-  function notify({
-    id,
-    title,
-    body,
-    icon,
-    classname,
-    actions = [],
-    persist = false,
-    type = "generic",
-    long = false,
-    colourful = false
-  }) {
-    log(`creating ${title}`, "notification", "info", {
-      id,
-      title,
-      body,
-      icon,
-      classname,
-      persist,
-      type,
-      long,
-      colourful: false
-    });
-    if (type === "error") {
-      icon = "icon-16-x";
-      colourful = true;
-    } else if (type === "warning") {
-      icon = "icon-16-warning";
-      colourful = true;
-    } else if (type === "success") {
-      icon = "icon-16-check";
-      colourful = true;
-    }
-    if (!icon)
-      icon = "icon-16-info";
-    let bar;
-    actions.push({
-      type: "close",
-      action: () => notify_rm(notif),
-      text: tl(trans.close)
-    });
-    let notif = html.node`
-        <div
-            class=${[
-      "bleh-notification",
-      icon ? "with-icon" : "",
-      classname ? classname : "",
-      long ? "long" : "",
-      colourful ? "colourful" : ""
-    ].join(" ")}
-            data-type=${type}
-            style=${[
-      icon ? `--mask: var(--${icon})` : ""
-    ].join(";")}
-        >
-            <div class="notification-information">
-                 <div class="notification-title">${title}</div>
-                ${body ? html.node`
-                <div class="notification-body">${body}</div>
-                ` : ""}
-            </div>
-            ${!persist ? html.node`
-            <div class="notification-progress"><div class="fill" ref=${(el) => bar = el} /></div>
-            ` : ""}
-            <div class="notification-actions">
-                ${actions.length > 0 ? actions.map((action) => () => {
-      let button = html.node`
-                        <button class="notification-action" data-type=${action.type} onclick=${action.action}>${action.text}</button>
-                    `;
-      tippy(button, {
-        content: action.text
-      });
-      return button;
-    }) : ""}
-            </div>
-        </div>
-    `;
-    page.structure.notifications.appendChild(notif);
-    if (persist)
-      return notif;
-    let ms = long ? 6e3 : 2e3;
-    let counter = 100;
-    let step = ms / 100;
-    let timer = setInterval(() => {
-      if (notif.matches(":hover"))
-        return;
-      counter--;
-      bar.style.setProperty("width", `${counter}%`);
-      if (counter <= 0) {
-        clearInterval(timer);
-        notify_rm(notif);
-      }
-    }, step);
-    return notif;
-  }
-  unsafeWindow._notify_rm = function(notif) {
-    notify_rm(notif);
-  };
-  function notify_rm(notif) {
-    notif.classList.add("fade-out");
-    setTimeout(function() {
-      page.structure.notifications.removeChild(notif);
-    }, 400);
-  }
-
-  // src/api.js
-  function test_api_key() {
-    let xhr = api(`user.getTopTags&user=${auth.name}&limit=1`);
-    xhr.onload = function() {
-      let data2 = JSON.parse(this.response);
-      console.info(data2, this.response);
-      if (!data2.error) {
-        notify({
-          title: trans_legacy.en.settings.profiles.api.name,
-          body: trans_legacy.en.settings.profiles.api.confirmed,
-          icon: "icon-16-api"
-        });
-        return;
-      } else {
-        if (data2.error == 8 || data2.error == 11 || data2.error == 16) {
-          notify({
-            title: trans_legacy.en.settings.profiles.api.name,
-            body: trans_legacy.en.settings.profiles.api.inaccessible,
-            icon: "icon-16-api",
-            persist: true
-          });
-          return;
-        } else if (data2.error == 10 || data2.error == 26) {
-          notify({
-            title: trans_legacy.en.settings.profiles.api.name,
-            body: trans_legacy.en.settings.profiles.api.invalid,
-            icon: "icon-16-api",
-            persist: true
-          });
-          return;
-        } else if (data2.error == 29) {
-          notify({
-            title: trans_legacy.en.settings.profiles.api.name,
-            body: trans_legacy.en.settings.profiles.api.rate_limit,
-            icon: "icon-16-api",
-            persist: true
-          });
-          return;
-        } else {
-          notify({
-            title: trans_legacy.en.settings.profiles.api.name,
-            body: data2.error,
-            icon: "icon-16-api",
-            persist: true
-          });
-          return;
-        }
-      }
-    };
-    xhr.send();
-  }
-  function api(endpoint) {
-    let xhr = new XMLHttpRequest();
-    let url = `https://ws.audioscrobbler.com/2.0/?method=${endpoint}&api_key=${settings.api_key}&format=json`;
-    xhr.open("GET", url, true);
-    return xhr;
-  }
-
   // src/build/seasonal.js
   var seasonal_timer = {
     state: void 0
@@ -1788,8 +2988,7 @@
 
   // src/components/badge.js
   function load_badges(user, solo = false) {
-    if (sponsor_list == null)
-      return;
+    if (!sponsor_list || !sponsor_list.badges) return;
     if (!sponsor_list.badges.hasOwnProperty(user))
       return;
     let badges = [];
@@ -1836,8 +3035,8 @@
   }
   function dialog({
     id = "",
-    title = null,
-    subtitle = null,
+    title,
+    subtitle,
     body = html.node``,
     dismiss = true,
     type = "",
@@ -1847,7 +3046,8 @@
     replace_id = "",
     allow_scroll = false,
     colourful = false,
-    colourful_bg = false
+    colourful_bg = false,
+    handle_escape_manually = false
   }) {
     log(`creating ${id}`, "window", "info", {
       id,
@@ -1861,7 +3061,8 @@
       replace_id,
       allow_scroll,
       colourful,
-      colourful_bg
+      colourful_bg,
+      handle_escape_manually
     });
     if (replace && replace_if_possible)
       replace_if_possible = false;
@@ -1885,7 +3086,7 @@
         data-modal-type=${type}
         />
     `;
-    if (title != null) {
+    if (title) {
       modal.setAttribute("aria-labelledby", "modal_title");
       modal.appendChild(html.node`
             <div class="bleh-modal-title" id="modal_title">
@@ -1902,6 +3103,13 @@
       page.structure.dialogs.setAttribute("onclick", "_dialog_rm({all: true, modal_bg: true})");
     } else {
       page.structure.dialogs.removeAttribute("onclick");
+    }
+    if (dismiss && !handle_escape_manually) {
+      document.addEventListener("keydown", (e) => {
+        if (e.key == "Escape") {
+          dialog_rm2({ id });
+        }
+      });
     }
     let modal_body = document.createElement("div");
     modal_body.classList.add("bleh-modal-body");
@@ -1993,6 +3201,513 @@
     kill_window(id);
   };
 
+  // src/avatar.js
+  function patch_avatar(avatar3, name2, type = "", parent = null, side = "right") {
+    if (avatar3.hasAttribute("data-bleh-avatar"))
+      return {};
+    avatar3.setAttribute("data-bleh-avatar", "true");
+    let avatar_img = avatar3.querySelector("img");
+    if (!avatar_img) return {};
+    avatar_img.setAttribute("src", avatar_img.getAttribute("src").replace("/64s/", "/avatar70s/"));
+    let badges = load_badges(name2, true);
+    let buttons = html.node`
+        <div class="user-buttons view-buttons">
+            ${() => {
+      let btn = html.node`
+                    <a class="btn view-item chibi" data-type="profile" href="${root}user/${name2}">${tl(trans.profile)}</a>
+                `;
+      tippy(btn, {
+        content: tl(trans.profile)
+      });
+      return btn;
+    }}
+            ${() => {
+      let btn = html.node`
+                    <a class="btn view-item chibi" data-type="library" href="${root}user/${name2}/library">${tl(trans.library)}</a>
+                `;
+      tippy(btn, {
+        content: btn.textContent
+      });
+      return btn;
+    }}
+                    ${() => {
+      let btn = html.node`
+                    <a class="btn view-item chibi" data-type="shouts" href="${root}user/${name2}/shoutbox">${tl(trans.shouts)}</a>
+                `;
+      tippy(btn, {
+        content: btn.textContent
+      });
+      return btn;
+    }}
+        </div>
+    `;
+    if (badges) {
+      let pre_existing_badge = avatar3.querySelector(".avatar-status-dot");
+      if (pre_existing_badge)
+        avatar3.removeChild(pre_existing_badge);
+      avatar3.setAttribute("title", "");
+      let this_badge = sponsor_list.badges[name2];
+      if (!Array.isArray(sponsor_list.badges[name2])) {
+        log(`@${name2} 1 badge:`, "shout", "info", sponsor_list.badges[name2]);
+      } else {
+        log(`@${name2} multiple badges:`, "shout", "info", sponsor_list.badges[name2]);
+        let badges_length = Object.keys(sponsor_list.badges[name2]).length - 1;
+        this_badge = sponsor_list.badges[name2][badges_length];
+        log(`@${name2} using badge ${badges_length} as primary`, "shout", "info", this_badge);
+      }
+      let badge = document.createElement("span");
+      badge.classList.add("avatar-status-dot", `user-status--bleh-${this_badge.type}`, `user-status--bleh-user-${name2}`);
+      avatar3.appendChild(badge);
+      if (!parent)
+        avatar3.classList.add("avatar-can-hoverbox");
+      else
+        parent.classList.add("parent-can-hoverbox");
+      tippy(parent ? parent : avatar3, {
+        theme: "user",
+        content: html.node`
+                <div class="image-info">
+                    <div class="inner-image">
+                        ${html.node([avatar_img.outerHTML])}
+                    </div>
+                    <div class="info">
+                        <h5 class="title">${name2}</h5>
+                        <p class="badge user-status--bleh-${this_badge.type} user-status--bleh-user-${name2}" data-badge-type="${this_badge.type}" data-badge-user="${name2}">${this_badge.name}</p>
+                    </div>
+                    <a href="${root}user/${name2}" class="link-over"></a>
+                </div>
+                ${buttons}
+            `,
+        placement: side,
+        interactive: true,
+        delay: [200, 0]
+      });
+      return this_badge;
+    } else {
+      let pre_existing_badge = avatar3.querySelector(".avatar-status-dot");
+      if (!pre_existing_badge) {
+        if (!parent)
+          avatar3.classList.add("avatar-can-hoverbox");
+        else
+          parent.classList.add("parent-can-hoverbox");
+        tippy(parent ? parent : avatar3, {
+          theme: "user",
+          content: html.node`
+                    <div class="image-info">
+                        <div class="inner-image">
+                            ${html.node([avatar_img.outerHTML])}
+                        </div>
+                        <div class="info">
+                            <h5 class="title">${name2}</h5>
+                        </div>
+                        <a href="${root}user/${name2}" class="link-over"></a>
+                    </div>
+                    ${buttons}
+                `,
+          placement: side,
+          interactive: true,
+          delay: [200, 0]
+        });
+        return {};
+      } else {
+        if (!parent)
+          avatar3.classList.add("avatar-can-hoverbox");
+        else
+          parent.classList.add("parent-can-hoverbox");
+        let type2 = pre_existing_badge.classList[1].replace("avatar-status-dot--", "user-status-");
+        tippy(parent ? parent : avatar3, {
+          theme: "user",
+          content: html.node`
+                    <div class="image-info">
+                        <div class="inner-image">
+                            ${html.node([avatar_img.outerHTML])}
+                        </div>
+                        <div class="info">
+                            <h5 class="title">${name2}</h5>
+                            <p class="badge ${type2}">${tl(trans.badges[type2].name)}</p>
+                        </div>
+                        <a href="${root}user/${name2}" class="link-over"></a>
+                    </div>
+                    ${buttons}
+                `,
+          placement: side,
+          interactive: true,
+          delay: [200, 0]
+        });
+        avatar3.setAttribute("title", "");
+        return {
+          type: pre_existing_badge.classList[1]
+        };
+      }
+    }
+  }
+  function return_name_from_avatar(avatar3) {
+    if (!avatar3)
+      return;
+    if (!avatar3.hasAttribute("alt"))
+      return;
+    if (avatar3.getAttribute("alt") == tl(trans.your_avatar))
+      return auth;
+    return avatar3.getAttribute("alt").replace(tl(trans.avatar_for_user), "");
+  }
+  unsafeWindow._expand_avatar = function(src) {
+    expand_avatar(src);
+  };
+  function expand_avatar(src) {
+    dialog({
+      id: "avatar",
+      body: html.node`
+            <div class="full-avatar-wrapper">
+                <div class="full-avatar">
+                    <img src="${src}">
+                </div>
+                <div class="modal-footer">
+                    <div class="fill"></div>
+                    <div class="button-group">
+                        <a class="btn primary open" href="${src}" target="_blank">
+                            ${tl(trans.open_new_tab)}
+                        </a>
+                    </div>
+                    <div class="fill"></div>
+                </div>
+            </div>
+        `,
+      type: "avatar",
+      has_overlays: false
+    });
+  }
+
+  // src/sku.js
+  function ff(flag) {
+    log(`parsing ${flag}`, "flag", "log", {
+      setting: settings.feature_flags[flag],
+      sku: version.feature_flags[flag]
+    });
+    if (settings.feature_flags[flag] != null)
+      return settings.feature_flags[flag];
+    if (version.feature_flags[flag] != null)
+      return version.feature_flags[flag].default;
+  }
+
+  // src/pages/wiki.js
+  function bleh_wiki() {
+    let wiki_panel = document.createElement("section");
+    wiki_panel.classList.add("wiki-panel");
+    wiki_panel.innerHTML = page.structure.main.innerHTML;
+    page.structure.main.innerHTML = "";
+    page.structure.main.appendChild(wiki_panel);
+    page.structure.main.classList.add("not-a-panel");
+    let original_edit_button = page.structure.main.querySelector(".qa-wiki-edit");
+    let original_version_history = page.structure.main.querySelector(".wiki-history-link--desktop a");
+    let side_actions = document.createElement("section");
+    side_actions.classList.add("side-actions");
+    if (!page.mobile)
+      page.structure.side.appendChild(side_actions);
+    else
+      page.structure.main.appendChild(side_actions);
+    if (original_edit_button) {
+      let side_edit = document.createElement("a");
+      side_edit.classList.add("btn", "side-action");
+      side_edit.setAttribute("href", original_edit_button.getAttribute("href"));
+      side_edit.setAttribute("data-type", "edit");
+      side_edit.textContent = tl(trans.edit);
+      side_actions.appendChild(side_edit);
+    }
+    if (original_version_history) {
+      let side_history = document.createElement("a");
+      side_history.classList.add("btn", "side-action");
+      side_history.setAttribute("href", original_version_history.getAttribute("href"));
+      side_history.setAttribute("data-type", "history");
+      side_history.textContent = tl(trans.timeline);
+      side_actions.appendChild(side_history);
+    }
+    let wiki_author = wiki_panel.querySelector(".wiki-author");
+    if (wiki_author) {
+      let h2 = wiki_panel.querySelector("h2.text-18");
+      let sub_text = document.createElement("div");
+      sub_text.classList.add("sub-text", "space-below", "header-style");
+      sub_text.innerHTML = `
+            <div class="breadcrumb-origin prominent">
+                ${h2 ? h2.innerHTML : page.structure.container.querySelector(".content-top-header").textContent}
+            </div>
+            <div class="wiki-author-side">
+                ${wiki_author.innerHTML}
+            </div>
+        `;
+      wiki_panel.insertBefore(sub_text, wiki_panel.firstElementChild);
+      if (h2)
+        wiki_panel.removeChild(h2);
+    }
+    let wiki = wiki_panel.querySelector(".wiki");
+    if (!wiki) return;
+    patch_wiki_contents(wiki);
+    let factbox = wiki_panel.querySelector(".factbox");
+    if (factbox) {
+      let facts = html.node`
+            <section class="facts">
+                ${factbox}
+            </section>
+        `;
+      side_actions.after(facts);
+    }
+  }
+  function bleh_wiki_history() {
+    let breadcrumb_root = page.structure.container.querySelector(".subpage-breadcrumb");
+    let breadcrumb_name = page.structure.container.querySelector(".subpage-title");
+    if (!breadcrumb_root) {
+      breadcrumb_root = page.structure.container.querySelector(".content-top-back-link");
+      breadcrumb_name = page.structure.container.querySelector(".content-top-header");
+    }
+    let sub_text = document.createElement("div");
+    sub_text.classList.add("sub-text", "space-below", "header-style");
+    sub_text.innerHTML = `
+        <div class="breadcrumb">
+            ${breadcrumb_root.querySelector("a").outerHTML}
+            <div class="breadcrumb-name prominent">
+                ${breadcrumb_name.textContent}
+            </div>
+        </div>
+    `;
+    breadcrumb_root.style.setProperty("display", "none");
+    breadcrumb_name.style.setProperty("display", "none");
+    let buffer_container = page.structure.container.querySelector(".row ~ .buffer-4");
+    if (!buffer_container)
+      buffer_container = page.structure.container.querySelector(".wiki-history");
+    let wiki_history_table = buffer_container.querySelector(".wiki-history-table");
+    let pagination = buffer_container.querySelector(".pagination");
+    let wiki_panel = document.createElement("section");
+    wiki_panel.classList.add("wiki-history-panel");
+    wiki_panel.appendChild(sub_text);
+    wiki_panel.appendChild(wiki_history_table);
+    page.structure.main.appendChild(wiki_panel);
+    buffer_container.style.setProperty("display", "none");
+    if (pagination)
+      wiki_panel.appendChild(pagination);
+    let side_actions = html.node`
+        <section class="side-actions">
+            <a class="btn side-action" data-type="latest-wiki" href="${sub_text.querySelector("a").getAttribute("href")}">
+                ${tl(trans.view_latest)}
+            </a>
+        </section>
+    `;
+    if (!page.mobile)
+      page.structure.side.appendChild(side_actions);
+    else
+      page.structure.main.appendChild(side_actions);
+    let entries = page.structure.main.querySelectorAll(".wiki-history-entry");
+    entries.forEach((entry) => {
+      let author = entry.querySelector(".wiki-history-author");
+      let avatar3 = author.querySelector(".wiki-history-author-avatar");
+      let name2 = author.querySelector(".link-block-target");
+      if (name2 && avatar3) {
+        let badge = patch_avatar(avatar3, name2.textContent, "wiki");
+        avatar3.setAttribute("data-avatar-themed", "true");
+        avatar3.classList.add(`user-status--bleh-${badge.type}`, `user-status--bleh-user-${name2.textContent}`);
+        name2.classList.add(`user-status--bleh-${badge.type}`, `user-status--bleh-user-${name2.textContent}`);
+      }
+    });
+  }
+  function bleh_wiki_editor() {
+    let wiki_edit_panel = document.createElement("section");
+    wiki_edit_panel.classList.add("wiki-edit-panel");
+    wiki_edit_panel.innerHTML = page.structure.main.innerHTML;
+    page.structure.main.innerHTML = "";
+    page.structure.main.appendChild(wiki_edit_panel);
+    page.structure.main.classList.add("not-a-panel");
+    let breadcrumb_root = page.structure.container.querySelector(".subpage-breadcrumb");
+    let breadcrumb_name = page.structure.container.querySelector(".subpage-title");
+    if (!breadcrumb_name) {
+      breadcrumb_name = page.structure.content_top.querySelector(".content-top-header");
+      if (breadcrumb_name)
+        page.structure.content_top.style.setProperty("display", "none");
+    }
+    if (!breadcrumb_root) {
+      breadcrumb_root = page.structure.container.querySelector(".content-top-back-link");
+      breadcrumb_name = page.structure.container.querySelector(".content-top-header");
+    }
+    let sub_text = document.createElement("div");
+    sub_text.classList.add("sub-text", "space-below", "header-style");
+    sub_text.innerHTML = `
+        <div class="breadcrumb">
+            ${breadcrumb_root.querySelector("a").outerHTML}
+            <div class="breadcrumb-name prominent">
+                ${breadcrumb_name.textContent}
+            </div>
+        </div>
+    `;
+    breadcrumb_root.style.setProperty("display", "none");
+    breadcrumb_name.style.setProperty("display", "none");
+    wiki_edit_panel.insertBefore(sub_text, wiki_edit_panel.firstElementChild);
+    let wiki_syntax = document.createElement("section");
+    wiki_syntax.classList.add("bleh--blank-panel", "wiki-syntax-panel");
+    wiki_syntax.innerHTML = `
+        <h3 class="text-18">${tl(trans.fancy_syntax)}</h3>
+        <div class="syntax-listing">
+            <div class="syntax-listing-item">
+                <div class="code-side">[artist]julie[/artist]</div>
+                <div class="detail-side">${tl(trans.links_to).replace("{link}", `<a href="${root}music/julie" data-link-type="artist" target="_blank">julie</a>`)}</div>
+            </div>
+            <div class="syntax-listing-item">
+                <div class="code-side">[album artist=julie]pushing daisies[/album]</div>
+                <div class="detail-side">${tl(trans.links_to).replace("{link}", `<a href="${root}music/julie/pushing+daisies" data-link-type="album" target="_blank">pushing daisies</a>`)}</div>
+            </div>
+            <div class="syntax-listing-item">
+                <div class="code-side">[track artist=julie]very little effort[/track]</div>
+                <div class="detail-side">${tl(trans.links_to).replace("{link}", `<a href="${root}music/julie/_/very+little+effort" data-link-type="track" target="_blank">very little effort</a>`)}</div>
+            </div>
+        </div>
+        <div class="sep"></div>
+        <div class="syntax-listing">
+            <div class="syntax-listing-item">
+                <div class="code-side">[url]https://katelyn.moe/bleh[/url]</div>
+                <div class="detail-side">${tl(trans.links_to).replace("{link}", `<a href="https://katelyn.moe/bleh" target="_blank">https://katelyn.moe/bleh</a>`)}</div>
+            </div>
+            <div class="syntax-listing-item">
+                <div class="code-side">[url=https://katelyn.moe/bleh]blehhh[/url]</div>
+                <div class="detail-side">${tl(trans.links_to).replace("{link}", `<a href="https://katelyn.moe/bleh" target="_blank">blehhh</a>`)}</div>
+            </div>
+        </div>
+        <div class="sep"></div>
+        <div class="syntax-listing">
+            <div class="syntax-listing-item">
+                <div class="code-side">[tag]grunge[/tag]</div>
+                <div class="detail-side">${tl(trans.links_to).replace("{link}", `<a href="${root}tag/grunge" data-link-type="tag" target="_blank">grunge</a>`)}</div>
+            </div>
+            <div class="syntax-listing-item">
+                <div class="code-side">[user]${auth.name}[/user]</div>
+                <div class="detail-side">${tl(trans.links_to).replace("{link}", `<a class="mention" href="${root}user/${auth.name}" target="_blank">@${auth.name}</a>`)}</div>
+            </div>
+        </div>
+    `;
+    page.structure.side.innerHTML = "";
+    let side_actions = html.node`
+        <section class="side-actions">
+            <a class="btn side-action" data-type="latest-wiki" href="${sub_text.querySelector("a").getAttribute("href")}">
+                ${tl(trans.view_latest)}
+            </a>
+        </section>
+    `;
+    if (!page.mobile)
+      page.structure.side.appendChild(side_actions);
+    else
+      page.structure.main.appendChild(side_actions);
+    let presets = [`\u201C`, `\u201D`, `\u2014`, `\u2018`, `\u2019`, `-`];
+    let standards = [
+      tl(trans.wiki_standard_tracks),
+      tl(trans.wiki_standard_artists),
+      tl(trans.wiki_standard_quotations)
+    ];
+    page.structure.side.appendChild(html.node`
+        <section class="wiki-presets-panel">
+            <h3 class="text-18">${tl(trans.symbol_presets)}</h3>
+            <div class="presets">
+                ${presets.map((preset) => {
+      let item = html.node`
+                        <div class="preset" onclick=${() => copy(preset)}>
+                            ${preset}
+                        </div>
+                    `;
+      tippy(item, {
+        content: tl(trans.click_to_copy),
+        delay: [500, 0]
+      });
+      return item;
+    })}
+            </div>
+            <ul class="wiki-standards generic-list">
+                ${standards.map((standard) => html.node`<li>${standard}</li>`)}
+            </ul>
+        </section>
+    `);
+    page.structure.side.appendChild(wiki_syntax);
+    let rules = page.structure.main.querySelector(".wiki-style-rules");
+    rules.removeAttribute("id");
+    let rules_panel = document.createElement("section");
+    rules_panel.classList.add("rules-panel");
+    rules_panel.setAttribute("id", "stylerules");
+    rules_panel.innerHTML = rules.innerHTML;
+    page.structure.side.appendChild(rules_panel);
+  }
+  function patch_wiki() {
+    if (ff("show_wiki_label")) {
+      let wiki_col = page.structure.main.querySelector(".wiki-column");
+      let wiki_empty = false;
+      if (!wiki_col) {
+        wiki_col = page.structure.main.querySelector(".wiki-section");
+        return;
+      }
+      let wiki_block = wiki_col.querySelector(".wiki-block.visible-lg .wiki-block-inner-2");
+      if (!wiki_block) {
+        wiki_block = wiki_col.querySelector(".wiki-block-cta");
+        wiki_empty = true;
+      }
+      let read_more = wiki_block.querySelector("a:last-child");
+      if (read_more) {
+        read_more.classList.add("read-more");
+        read_more.textContent = tl(trans.read_more).toLowerCase();
+      }
+      wiki_col.insertBefore(html.node`
+            <div class="sub-text">
+                <p>${tl(trans.about)}</p>
+                <span class="right-links">
+                    <p><a class="wiki-edit-small" href="${document.location.href}/+wiki/edit">${tl(trans.edit_wiki).toLowerCase()}</a></p>
+                    ${!wiki_empty && read_more ? html.node`<p>${read_more}</p>` : ""}
+                </span>
+            </div>
+        `, wiki_col.firstElementChild);
+      if (!wiki_empty)
+        patch_wiki_contents(wiki_block);
+    }
+  }
+  function patch_wiki_contents(wiki_block) {
+    let links = wiki_block.querySelectorAll("a");
+    links.forEach((link) => {
+      let href = link.getAttribute("href");
+      let type;
+      let name2 = link.textContent.trim();
+      let sister;
+      if (!href.startsWith(root)) {
+        if (href && link.textContent != href && /^(https?|mailto|ftp|sftp|tel):/.test(href)) {
+          tippy(link, {
+            theme: "name-sister-combo",
+            content: html.node`
+                    <span class="name">${href}</span>
+                    <span class="sister">${tl(trans.external)}</span>
+                `
+          });
+        }
+        return;
+      }
+      if (href.endsWith("/+wiki")) return;
+      href = href.replace(root, "").replace("music/", "");
+      if (href.startsWith("user/")) return;
+      if (href.startsWith("tag/")) {
+        type = "tag";
+      } else {
+        let split = href.split("/");
+        if (split.length == 1) {
+          type = "artist";
+        } else if (split.length == 2) {
+          type = "album";
+          name2 = desanitise(split[1]);
+          sister = desanitise(split[0]);
+        } else if (split.length == 3) {
+          type = "track";
+          name2 = desanitise(split[2]);
+          sister = desanitise(split[0]);
+        }
+      }
+      if (sister != void 0)
+        tippy(link, {
+          theme: "name-sister-combo",
+          content: html.node`
+                    <span class="name">${name2}</span>
+                    <span class="sister">${sister}</span>
+                `
+        });
+      link.setAttribute("data-link-type", type);
+    });
+  }
+
   // src/components/markdown.js
   function markdown(text2, {
     allow_headers = false,
@@ -2015,22 +3730,2263 @@
       ghCodeBlocks: false,
       smartIndentationFix: true
     });
-    let parsed_body = converter.makeHtml(text2.replace(/([@])([a-zA-Z0-9_]+)/g, `[$1$2](${root}user/$2)`).replace(/\[artist\]([a-zA-Z0-9]+)\[\/artist\]/g, `[$1](${root}music/$1)`).replace(/\[album artist=([a-zA-Z0-9]+)\]([a-zA-Z0-9\s]+)\[\/album\]/g, `[$2](${root}music/$1/$2)`).replace(/\[track artist=([a-zA-Z0-9]+)\]([a-zA-Z0-9\s]+)\[\/track\]/g, `[$2](${root}music/$1/_/$2)`).replace(/https:\/\/open\.spotify\.com\/user\/([A-Za-z0-9]+)\?si=([A-Za-z0-9]+)/g, "[Spotify](https://open.spotify.com/user/$1)").replace(/&/g, "&amp;").replace(/</g, "&lt;").replace(/>/g, "&gt;").replace(/"/g, "&quot;").replace(/'/g, "&#039;"));
-    return html.node([
-      parsed_body
-    ]);
+    let parsed_body = converter.makeHtml(text2.replace(/([@])([a-zA-Z0-9_]+)/g, `[$1$2](${root}user/$2)`).replace(
+      /\[artist\]([^[\]]+)\[\/artist\]/g,
+      (match, artist) => `[${artist}](${root}music/${encodeURIComponent(artist)})`
+    ).replace(
+      /\[album artist=([^[\]]+)\]([^[\]]+)\[\/album\]/g,
+      (match, artist, album) => `[${album}](${root}music/${encodeURIComponent(artist)}/${encodeURIComponent(album)})`
+    ).replace(
+      /\[track artist=([^[\]]+)\]([^[\]]+)\[\/track\]/g,
+      (match, artist, track) => `[${track}](${root}music/${encodeURIComponent(artist)}/_/${encodeURIComponent(track)})`
+    ).replace(
+      /\[url=([^[\]]+)\]([^[\]]+)\[\/url\]/g,
+      (match, url, text3) => `[${text3}](${encodeURI(url)})`
+    ).replace(
+      /\[url\]([^[\]]+)\[\/url\]/g,
+      (match, url) => `[${url}](${encodeURI(url)})`
+    ).replace(/https:\/\/open\.spotify\.com\/user\/([A-Za-z0-9]+)\?si=([A-Za-z0-9]+)/g, "[Spotify](https://open.spotify.com/user/$1)").replace(/&/g, "&amp;").replace(/</g, "&lt;").replace(/>/g, "&gt;").replace(/"/g, "&quot;").replace(/'/g, "&#039;"));
+    let body = html.node([parsed_body]);
+    patch_wiki_contents(body);
+    return body;
   }
 
-  // src/sku.js
-  function ff(flag) {
-    log(`parsing ${flag}`, "flag", "log", {
-      setting: settings.feature_flags[flag],
-      sku: version.feature_flags[flag]
+  // src/components/colourful_counts.js
+  function patch_artist_ranks_in_list_view(track) {
+    let count_bar = track.querySelector(".chartlist-count-bar");
+    if (count_bar == void 0)
+      return;
+    let count_bar_link = count_bar.querySelector(".chartlist-count-bar-link");
+    if (count_bar_link.getAttribute("href").includes("?from=") || count_bar_link.getAttribute("href").includes("?date_preset=") && !count_bar_link.getAttribute("href").endsWith("?date_preset=ALL") && !count_bar_link.getAttribute("href").endsWith("?date_preset=null"))
+      return;
+    let count = clean_number(count_bar.querySelector(".chartlist-count-bar-value").textContent.trim().replace(" scrobbles", ""));
+    if (!count_bar.hasAttribute("data-kate-processed")) {
+      count_bar.setAttribute("data-kate-processed", "true");
+      let parsed_scrobble_as_rank = parse_scrobbles_as_rank(count);
+      count_bar.setAttribute("data-bleh--scrobble-milestone", parsed_scrobble_as_rank.milestone);
+      count_bar.style.setProperty("--hue-over", parsed_scrobble_as_rank.hue);
+      count_bar.style.setProperty("--sat-over", parsed_scrobble_as_rank.sat);
+      count_bar.style.setProperty("--lit-over", parsed_scrobble_as_rank.lit);
+    }
+  }
+  function parse_scrobbles_as_rank(scrobbles) {
+    let scrobble_milestone = 0;
+    let scrobble_proximity = 0;
+    let max_rank = 15;
+    for (let rank = max_rank; rank >= 0; rank--) {
+      if (scrobbles >= ranks[rank].start) {
+        scrobble_milestone = rank;
+        break;
+      }
+    }
+    let milestone_hue = ranks[scrobble_milestone].hue;
+    let milestone_sat = ranks[scrobble_milestone].sat;
+    let milestone_lit = ranks[scrobble_milestone].lit;
+    if (scrobble_milestone < max_rank) {
+      let current_start = ranks[scrobble_milestone].start;
+      let next_start = ranks[scrobble_milestone + 1].start;
+      scrobble_proximity = (scrobbles - current_start) / (next_start - current_start);
+    }
+    if (scrobble_milestone < max_rank) {
+      let next_milestone_hue = ranks[scrobble_milestone + 1].hue;
+      let next_milestone_sat = ranks[scrobble_milestone + 1].sat;
+      let next_milestone_lit = ranks[scrobble_milestone + 1].lit;
+      milestone_hue = interpolate_hue(milestone_hue, next_milestone_hue, scrobble_proximity);
+      milestone_sat += (next_milestone_sat - milestone_sat) * scrobble_proximity;
+      milestone_lit += (next_milestone_lit - milestone_lit) * scrobble_proximity;
+    }
+    log(`milestone for ${scrobbles} is ${scrobble_milestone} within ${scrobble_proximity} proximity`, "colourful counts", "info", { hue: milestone_hue, sat: milestone_sat, lit: milestone_lit });
+    return {
+      milestone: scrobble_milestone,
+      proximity: scrobble_proximity,
+      hue: milestone_hue,
+      sat: milestone_sat,
+      lit: milestone_lit
+    };
+  }
+
+  // src/components/music_grid.js
+  function music_grids(search = page.structure.main, use_colour = true) {
+    if (!search) return;
+    let insights = {
+      artist: {
+        display: false,
+        values: [],
+        labels: [],
+        highest: {
+          value: 0,
+          label: "",
+          link: "",
+          img: ""
+        }
+      },
+      album: {
+        display: false,
+        values: [],
+        labels: [],
+        highest: {
+          value: 0,
+          label: "",
+          link: "",
+          img: ""
+        }
+      },
+      track: {
+        display: false,
+        values: [],
+        labels: [],
+        highest: {
+          value: 0,
+          label: "",
+          link: "",
+          img: ""
+        }
+      }
+    };
+    let grids = search.querySelectorAll(".grid-items-item:not([data-bleh-music-grids])");
+    grids.forEach((grid, index) => {
+      let is_loading = grid.querySelector(".grid-items-empty-inner") != null;
+      if (is_loading) return;
+      grid.style.setProperty("--delay", index * 0.04 + "s");
+      grid.setAttribute("data-bleh-music-grids", "true");
+      let is_album;
+      if (page.type == "search") {
+        is_album = grid.querySelector(".stat-name") == null;
+      } else {
+        is_album = grid.querySelector(".grid-items-item-aux-block") != null;
+      }
+      let image_wrap = grid.querySelector(".grid-items-cover-image-image");
+      let image = image_wrap.querySelector("img");
+      if (grid.classList.contains("grid-items-item--big"))
+        image.src = image.src.replace("/avatar300s/", "/500x500/");
+      if (image && !image_wrap.classList.contains("grid-items-cover-default") && use_colour) {
+        let grid_colour = document.createElement("div");
+        grid_colour.classList.add("grid-item-colour-bg");
+        image_wrap.appendChild(grid_colour);
+        image.setAttribute("crossorigin", "anonymous");
+        try {
+          image.addEventListener("load", function() {
+            let thief = new ColorThief();
+            let colour = thief.getColor(image);
+            let hsl = rgb_to_hsl(colour[0], colour[1], colour[2]);
+            grid_colour.style.setProperty("background", `rgb(${colour})`);
+            grid.classList.add("grid-items-item-has-colour");
+            grid.style.setProperty("--hue-over", hsl.h);
+            grid.style.setProperty("--sat-over", clamp_sat(hsl.s / 100 * 3));
+            grid.style.setProperty("--lit-over", 1);
+          });
+        } catch (e) {
+        }
+      } else {
+        grid.classList.add("generic-cover");
+      }
+      let plays_elem;
+      if (page.type == "search") {
+        if (!is_album) {
+          let aux_text = grid.querySelector(".grid-items-item-aux-text");
+          let stat_name = aux_text.querySelector(".stat-name");
+          aux_text.removeChild(stat_name);
+          plays_elem = aux_text;
+        }
+      } else if (page.type == "tag") {
+        let aux_text = grid.querySelector(".grid-items-item-aux-text");
+        let stat_name = aux_text.querySelector(".stat-name");
+        if (!stat_name) return;
+        aux_text.removeChild(stat_name);
+        plays_elem = aux_text;
+        if (is_album) {
+          let artist = grid.querySelector(".grid-items-item-aux-block");
+          aux_text.removeChild(artist);
+          plays_elem = document.createElement("a");
+          plays_elem.textContent = aux_text.textContent;
+          aux_text.textContent = "";
+          aux_text.appendChild(artist);
+          aux_text.appendChild(plays_elem);
+        }
+      } else {
+        plays_elem = grid.querySelector(".grid-items-item-aux-text a:last-child");
+      }
+      if (plays_elem && !grid.classList.contains("obsessions-item") && !grid.classList.contains("compare-item")) {
+        let plays = clean_number(plays_elem.textContent.trim().replace(`${tl(trans.plays_lower)}`, ""));
+        plays_elem.classList.add("grid-item-plays");
+        if (is_album)
+          plays_elem.textContent = plays.toLocaleString(lang);
+        if (!is_album) {
+          insights.artist.display = true;
+          insights.artist.values.push(plays);
+          if (plays > insights.artist.highest.value)
+            insights.artist.highest.value = plays;
+        } else {
+          insights.album.display = true;
+          insights.album.values.push(plays);
+          if (plays > insights.album.highest.value)
+            insights.album.highest.value = plays;
+        }
+        if (page.type == "search" || page.type == "tag")
+          plays_elem.classList.add("grid-item-listeners");
+        if (!is_album && settings.colourful_counts && page.type == "user") {
+          if (!plays_elem.getAttribute("href").includes("?from=") && (!plays_elem.getAttribute("href").includes("?date_preset=") || plays_elem.getAttribute("href").endsWith("?date_preset=ALL") || plays_elem.getAttribute("href").endsWith("?date_preset=null"))) {
+            let parsed_scrobble_as_rank = parse_scrobbles_as_rank(plays);
+            plays_elem.setAttribute("data-bleh--scrobble-milestone", parsed_scrobble_as_rank.milestone);
+            plays_elem.style.setProperty("--hue-over", parsed_scrobble_as_rank.hue);
+            plays_elem.style.setProperty("--sat-over", parsed_scrobble_as_rank.sat);
+            plays_elem.style.setProperty("--lit-over", parsed_scrobble_as_rank.lit);
+          }
+        }
+      }
+      let name2 = grid.querySelector(".grid-items-item-main-text a");
+      if (!name2) return;
+      if (!is_album) {
+        name2.textContent = correct_artist(name2.textContent.trim());
+        insights.artist.labels.push(name2.textContent);
+      } else {
+        let artist = grid.querySelector(".grid-items-item-aux-block");
+        if (!artist) return;
+        if (settings.format_guest_features) {
+          let name_elem = name2;
+          let artist_elem = artist;
+          let song_title = name_elem.getAttribute("title");
+          let formatted_title = name_includes(song_title, artist_elem.textContent.trim());
+          let song_tags = {};
+          if (formatted_title) {
+            song_title = formatted_title[0];
+            insights.album.labels.push(song_title);
+            song_tags = formatted_title[1];
+            artist.textContent = formatted_title[2];
+          }
+          render(name_elem, html.node`
+                    <div class="title">${song_title.trim()}</div>
+                    ${song_tags.map((tag) => html.node`
+                        <div class="feat" data-bleh--tag-type="${tag.type}" data-bleh--tag-group="${tag.group}">${tag.text}</div>
+                    `)}
+                `);
+        } else {
+          artist.textContent = correct_artist(artist.textContent.trim());
+          name2.textContent = correct_item_by_artist(name2.textContent.trim(), artist.textContent.trim());
+        }
+      }
     });
-    if (settings.feature_flags[flag] != null)
-      return settings.feature_flags[flag];
-    if (version.feature_flags[flag] != null)
-      return version.feature_flags[flag].default;
+    if (page.subpage.startsWith("library"))
+      bleh_glacier_insights(insights);
+  }
+
+  // src/components/select.js
+  unsafeWindow._update_inbuilt_select = function(id, value) {
+    update_inbuilt_select(id, value);
+  };
+  function update_inbuilt_select(id, value) {
+    document.documentElement.setAttribute(`data-bleh--inbuilt-${id}`, value);
+  }
+  function select(values, initial = "", name2 = "") {
+    let select2;
+    let button;
+    if (values.length === 0) {
+      return select_fail({ message: "Values cannot be empty" });
+    }
+    if (initial == "")
+      initial = values[0].value;
+    let container = html.node`
+        <div class="select-wrap custom-selector">
+            <select ref=${(el) => select2 = el} name=${name2}>
+                ${values.map((value) => html.node`
+                    <option value=${value.value} selected=${value.value == initial}>${value.text}</option>
+                `)}
+            </select>
+            <button class="select-button" type="button" ref=${(el) => button = el} />
+        </div>
+    `;
+    let menu = tippy(button, {
+      theme: "select-menu",
+      content: html.node``,
+      placement: "bottom",
+      interactive: true,
+      interactiveBorder: 10,
+      trigger: "click",
+      onShow(instance) {
+        if (values.length > 15) {
+          setTimeout(() => {
+            instance.popper.querySelector('[aria-checked="true"]').scrollIntoView({
+              behavior: "instant",
+              block: "center"
+            });
+          }, 1);
+        }
+      }
+    });
+    set_select(button, menu, values, initial, select2, name2);
+    return container;
+    function set_select(button2, menu2, values2, selected, select3, name3) {
+      values2.some((value) => {
+        if (value.value == selected) {
+          render(button2, html`${value.text}`);
+          return false;
+        }
+      });
+      select3.value = selected;
+      container.value = select3.value;
+      if (name3 != "")
+        document.documentElement.setAttribute(`data-bleh--inbuilt-id_${name3}`, selected);
+      menu2.setContent(html.node`
+        ${values2.map((value) => html.node`
+            <button class="btn dropdown-menu-clickable-item select-item" aria-checked=${selected == value.value} onclick=${() => set_select(button2, menu2, values2, value.value, select3, name3)}>
+                ${value.text}
+            </button>
+        `)}
+    `);
+    }
+  }
+  function select_prepare(element) {
+    let values = [];
+    element.querySelectorAll("option").forEach((option) => {
+      values.push({
+        value: option.value,
+        text: option.textContent
+      });
+    });
+    return values;
+  }
+  function select_fail(e = null) {
+    return html.node`
+        <div class="alert alert-error">
+            ${tl(trans.value_failed_to_load).replace("{v}", tl(trans.select_component))}
+            ${e ? html`<br>${e.message}` : ""}
+        </div>
+    `;
+  }
+  function custom_select(select2, element_to_append) {
+    console.info(select2);
+    let id = select2.getAttribute("id");
+    let value = select2.value;
+    let value_objects = select2.querySelectorAll("option");
+    let menu_list = document.createElement("div");
+    value_objects.forEach((object) => {
+      let object_value = object.getAttribute("value");
+      let object_text = object.textContent;
+      let item = document.createElement("button");
+      item.classList.add("btn", "dropdown-menu-clickable-item", "select-item");
+      item.setAttribute("onclick", `_set_custom_select_value('${id}', '${object_value}')`);
+      item.setAttribute("data-value", object_value);
+      item.setAttribute("type", "button");
+      item.textContent = object_text;
+      menu_list.appendChild(item);
+    });
+    let button = document.createElement("button");
+    button.classList.add("select-button");
+    button.setAttribute("id", `select-${id}`);
+    button.setAttribute("type", "button");
+    button.textContent = menu_list.querySelector(`[data-value="${value}"]`).textContent;
+    let theme_menu_item = tippy(button, {
+      theme: "select-menu",
+      content: html.node([
+        menu_list.innerHTML
+      ]),
+      placement: "bottom",
+      interactive: true,
+      interactiveBorder: 10,
+      trigger: "click",
+      onShow(instance) {
+        update_custom_select(instance.popper, select2.value);
+      }
+    });
+    element_to_append.appendChild(button);
+  }
+  unsafeWindow._set_custom_select_value = function(select_id, value) {
+    let select2 = document.getElementById(select_id);
+    select2.value = value;
+    console.info(select2, `#select-${select_id}`);
+    update_custom_select(document.getElementById(`select-${select_id}`)._tippy.popper, value, select_id);
+    document.documentElement.setAttribute(`data-bleh--inbuilt-${select_id}`, value);
+  };
+  function update_custom_select(element = document.body, value = "", select_id = "") {
+    let btns = element.querySelectorAll(".dropdown-menu-clickable-item");
+    btns.forEach((btn) => {
+      if (btn.getAttribute("data-value") != value) {
+        btn.classList.remove("active");
+      } else {
+        btn.classList.add("active");
+        let sel_button = document.body.querySelector(`#select-${select_id}`);
+        console.log(sel_button);
+        if (!sel_button) return;
+        sel_button.textContent = btn.textContent;
+      }
+    });
+  }
+  unsafeWindow._update_inbuilt_selection = function(id, index) {
+    document.getElementById(id).selectedIndex = index;
+    update_inbuilt_select(id, document.getElementById(id).value);
+  };
+
+  // src/components/menu.js
+  function register_menu(element, menu) {
+    element.addEventListener("contextmenu", (e) => {
+      e.preventDefault();
+      menu.setProps({
+        placement: "right-start",
+        offset: [0, 0],
+        getReferenceClientRect: () => ({
+          width: 0,
+          height: 0,
+          top: e.clientY,
+          bottom: e.clientY,
+          left: e.clientX,
+          right: e.clientX
+        })
+      });
+      menu.show();
+    });
+  }
+
+  // src/components/track.js
+  function patch_titles(search = page.structure.main) {
+    if (page.subpage === "tags_overview" || page.subpage == "tags_tag")
+      return;
+    if (!search) return;
+    let tracklists = search.querySelectorAll(".chartlist:not(.chartlist__placeholder)");
+    let insights = {
+      artist: {
+        display: false,
+        values: [],
+        labels: [],
+        highest: {
+          value: 0,
+          label: "",
+          link: "",
+          img: ""
+        }
+      },
+      album: {
+        display: false,
+        values: [],
+        labels: [],
+        highest: {
+          value: 0,
+          label: "",
+          link: "",
+          img: ""
+        }
+      },
+      track: {
+        display: false,
+        values: [],
+        labels: [],
+        highest: {
+          value: 0,
+          label: "",
+          link: "",
+          img: ""
+        }
+      }
+    };
+    tracklists.forEach((tracklist) => {
+      if (!tracklist) return;
+      log("found, checking", "tracks", "log", { tracklist });
+      if (tracklist.querySelector("tbody > .chartlist-row:first-child > .kate-placeholder"))
+        return;
+      log("new!", "tracks", "info", { tracklist });
+      let wide = tracklist.classList.contains("chartlist--wide-artist-column");
+      let tracks = tracklist.querySelectorAll(":is(.chartlist-row:not(.chartlist__placeholder-row), .chartlist-row--interlist-ad)");
+      tracks.forEach((track, index) => {
+        console.log("track", track);
+        if (track.getAttribute("data-track-type"))
+          return;
+        if (track.classList[0] === "chartlist-row--interlist-ad") {
+          track.parentElement.removeChild(track);
+          return;
+        }
+        track.style.setProperty("--delay", index * 0.04 + "s");
+        let bla = document.createElement("div");
+        bla.classList.add("kate-placeholder");
+        track.appendChild(bla);
+        let track_title = track.querySelector(".chartlist-name a:not(.offset-section-anchor)");
+        if (!track_title) return;
+        if (track_title.hasAttribute("title")) {
+          track_title.setAttribute("data-name", track_title.getAttribute("title"));
+          track_title.removeAttribute("title");
+        }
+        let is_user = track.querySelector(".chartlist-image .avatar");
+        let is_artist = false;
+        if (is_user) {
+          let link = track_title.getAttribute("href");
+          if (link.startsWith(`${root}music/`)) {
+            is_user = false;
+            is_artist = true;
+          }
+        }
+        log(`is user: ${is_user}, is artist: ${is_artist}`, "tracks", "log");
+        if (is_user) {
+          track.setAttribute("data-track-type", "user");
+          if (settings.colourful_counts)
+            patch_artist_ranks_in_list_view(track);
+          log("finished user stuff, returning", "tracks", "log");
+          return;
+        }
+        if (is_artist) {
+          track.setAttribute("data-track-type", "artist");
+          if (settings.colourful_counts)
+            patch_artist_ranks_in_list_view(track);
+          if (settings.corrections)
+            track_title.textContent = correct_artist(track_title.getAttribute("data-name"));
+          insights.artist.display = true;
+          let bar2 = track.querySelector(".chartlist-count-bar-slug");
+          let value = parseInt(bar2.getAttribute("data-stat-value"));
+          insights.artist.values.push(value);
+          if (value > insights.artist.highest.value)
+            insights.artist.highest.value = value;
+          log(`pushed insight artist label of ${track_title.textContent}`, "glacier library", "log");
+          insights.artist.labels.push(track_title.textContent);
+          log("finished artist stuff, returning", "tracks", "log");
+          return;
+        }
+        let is_album = track.hasAttribute("data-album-row");
+        if (is_album) track.classList.add("bleh--is-album");
+        let track_artist = return_artist_from_track(track_title.getAttribute("href"), is_album);
+        if (!wide) track.classList.add("chartlist-row--with-artist");
+        let bar = track.querySelector(".chartlist-count-bar-slug");
+        if (bar) {
+          let value = parseInt(bar.getAttribute("data-stat-value"));
+          if (is_album) {
+            insights.album.display = true;
+            insights.album.values.push(value);
+            if (value > insights.album.highest.value)
+              insights.album.highest.value = value;
+          } else {
+            insights.track.display = true;
+            insights.track.values.push(value);
+            if (value > insights.track.highest.value)
+              insights.track.highest.value = value;
+          }
+        }
+        let is_active = track.classList.contains("chartlist-row--now-scrobbling");
+        const has_bar = track.querySelector(":scope > .chartlist-bar");
+        let track_legacy_menu = track.querySelector(".chartlist-more-menu");
+        let track_timestamp = track.querySelector(".chartlist-timestamp span");
+        let track_timestamp_contents;
+        if (track_timestamp && !is_active) {
+          track_timestamp_contents = track_timestamp.getAttribute("title");
+          if (track_timestamp_contents) {
+            track_timestamp.setAttribute("title", "");
+            tippy(track_timestamp, {
+              content: track_timestamp_contents
+            });
+          }
+        }
+        let album = track.querySelector(".chartlist-album a");
+        if (!is_album && album)
+          album.textContent = correct_item_by_artist(album.textContent, track_artist);
+        let image = track.querySelector(".chartlist-image img");
+        if (settings.format_guest_features) {
+          let formatted_title = name_includes(track_title.getAttribute("data-name"), track_artist);
+          console.log("formatted", formatted_title);
+          let song_title = track_title.getAttribute("data-name");
+          let song_tags = {};
+          if (formatted_title) {
+            song_title = formatted_title[0];
+            song_tags = formatted_title[1];
+          }
+          track_title.setAttribute("data-name", correct_item_by_artist(track_title.getAttribute("data-name"), track_artist));
+          render(track_title, html`
+                    <div class="title">${song_title.trim()}</div>
+                    ${song_tags.map((tag) => html.node`
+                        <div class="feat" data-bleh--tag-type="${tag.type}" data-bleh--tag-group="${tag.group}">${tag.text}</div>
+                    `)}
+                `);
+          let song_artist_element = track.querySelector(".chartlist-artist");
+          if (!song_artist_element && !is_user) {
+            song_artist_element = document.createElement("td");
+            song_artist_element.classList.add("chartlist-artist");
+            track.appendChild(song_artist_element);
+          }
+          console.log("artist matches", song_artist_element.textContent.replaceAll("+", " ").trim() === track_artist, "artist is blank", song_artist_element.textContent.trim() === "", song_artist_element.textContent.trim(), formatted_title[2]);
+          if (song_artist_element.textContent.replaceAll("+", " ").trim() === track_artist || song_artist_element.textContent.trim() === "") {
+            log("artist either matches or is blank, replacing", "tracks", "log");
+            render(song_artist_element, html`<a href="${root}music/${sanitise(formatted_title[2])}">${formatted_title[2]}</a>`);
+            let song_guests = formatted_title[3];
+            for (let guest in song_guests) {
+              song_artist_element.appendChild(html.node`
+                            ,<a href="${root}music/${sanitise(song_guests[guest])}">${song_guests[guest]}</a>
+                        `);
+            }
+          }
+          if (track_legacy_menu) {
+            track.preview = html.node`
+                        <div class="track-preview">
+                            <div class="image">
+                                <div class="inner-image">
+                                    ${image ? html.node`<img src=${image.getAttribute("src")} alt=${song_title}>` : html.node`<img class="missing-track" alt="">`}
+                                </div>
+                            </div>
+                            <div class="info">
+                                <h5 class="title">${song_title}</h5>
+                                <p class="artist">${song_artist_element.firstElementChild.textContent}</p>
+                                <div class="tags">
+                                    ${song_tags.map((tag) => html.node`
+                                        <div class="feat" data-bleh--tag-type="${tag.type}" data-bleh--tag-group="${tag.group}">${tag.text}</div>
+                                    `)}
+                                </div>
+                                ${is_album ? "" : html.node`<p class="album">${image ? correct_item_by_artist(image.getAttribute("alt"), track_artist) : album ? album.textContent : page.name}</p>`}
+                                ${track_timestamp && track_timestamp_contents ? html.node`<p class="timestamp">${track_timestamp_contents}</p>` : ""}
+                            </div>
+                        </div>
+                    `;
+          }
+        } else if (settings.corrections) {
+          let song_artist_element = track.querySelector(".chartlist-artist a");
+          if (song_artist_element) {
+            let corrected_title = correct_item_by_artist(track_title.textContent, song_artist_element.textContent);
+            track_title.textContent = corrected_title;
+            track_title.setAttribute("data-name", corrected_title);
+            let corrected_artist = correct_artist(song_artist_element.textContent);
+            song_artist_element.textContent = corrected_artist;
+            song_artist_element.setAttribute("title", corrected_artist);
+          } else {
+            let corrected_title = correct_item_by_artist(track_title.textContent, track_artist);
+            track_title.textContent = corrected_title;
+            track_title.setAttribute("data-name", corrected_title);
+          }
+        }
+        if (track_legacy_menu) {
+          let menu;
+          let previous = track.querySelector(":scope > .more-button-wrapper");
+          if (previous) previous.style.display = "none";
+          const is_own_profile = page.type == "user" && page.name == auth.name;
+          const can_edit = !is_active && (!is_album ? !has_bar : true) && auth.pro;
+          const can_delete = !is_active && !has_bar && !is_album;
+          let more_button = html.node`
+                    <button class="track-more-button icon chibi" data-type="more" onclick=${() => {
+            console.info(menu);
+            menu.setProps({
+              placement: "bottom",
+              offset: [],
+              getReferenceClientRect: null
+            });
+            if (menu.state.isShown) {
+              menu.hide();
+            } else {
+              menu.show();
+            }
+          }}>
+                        ${tl(trans.more)}
+                    </button>
+                `;
+          tippy(more_button, {
+            content: tl(trans.more)
+          });
+          track.appendChild(html.node`
+                    <td class="more-button-wrapper">
+                        ${more_button}
+                    </td>
+                `);
+          setTimeout(() => {
+            let edit_button = track_legacy_menu.querySelector('[data-analytics-action="EditScrobbleOpen"]');
+            let bulk_edit_button = track_legacy_menu.querySelector('[data-analytics-action="BulkEditScrobblesOpen"]');
+            let delete_button = track_legacy_menu.querySelector(".more-item--delete");
+            if (edit_button) {
+              let form = edit_button.parentElement;
+              page.token = form.querySelector('[name="csrfmiddlewaretoken"]').value;
+              track.setAttribute("data-action", form.getAttribute("action"));
+              if (!is_album) {
+                let album_name2 = form.querySelector('[name="album_name"]');
+                let album_artist_name = form.querySelector('[name="album_artist_name"]');
+                track.setAttribute("data-artist-name", correct_artist(form.querySelector('[name="artist_name"]').value));
+                track.setAttribute("data-track-name", correct_item_by_artist(form.querySelector('[name="track_name"]').value, form.querySelector('[name="artist_name"]').value));
+                if (album_name2) track.setAttribute("data-album-name", correct_item_by_artist(album_name2.value, form.querySelector('[name="artist_name"]').value));
+                if (album_artist_name) track.setAttribute("data-album-artist-name", correct_artist(album_artist_name.value));
+                track.setAttribute("data-timestamp", form.querySelector('[name="timestamp"]').value);
+              } else {
+                track.setAttribute("data-album-name", correct_item_by_artist(form.querySelector('[name="album_name"]').value, form.querySelector('[name="album_artist_name"]').value));
+                track.setAttribute("data-album-artist-name", correct_artist(form.querySelector('[name="album_artist_name"]').value));
+                track.setAttribute("data-album-name-original", correct_item_by_artist(form.querySelector('[name="album_name_original"]').value, form.querySelector('[name="album_artist_name_original"]').value));
+                track.setAttribute("data-album-artist-name-original", correct_artist(form.querySelector('[name="album_artist_name_original"]').value));
+                track.setAttribute("data-album-image", form.querySelector('[name="album_image"]').value);
+                track.setAttribute("data-count", form.querySelector('[name="count"]').value);
+              }
+            } else if (delete_button) {
+              let form = delete_button.parentElement;
+              page.token = form.querySelector('[name="csrfmiddlewaretoken"]').value;
+              track.setAttribute("data-artist-name", correct_artist(form.querySelector('[name="artist_name"]').value));
+              track.setAttribute("data-track-name", correct_item_by_artist(form.querySelector('[name="track_name"]').value, form.querySelector('[name="artist_name"]').value));
+              track.setAttribute("data-timestamp", form.querySelector('[name="timestamp"]').value);
+            }
+            let album_name = sanitise(image ? correct_item_by_artist(image.getAttribute("alt"), track_artist) : album ? album.textContent : "");
+            menu = tippy(more_button, {
+              theme: "context-menu",
+              content: html.node`
+                            ${track.preview}
+                            ${can_edit ? html.node`
+                            <div class="button-combo">
+                                ${() => {
+                if (is_album) {
+                  return html.node`
+                                            <form style="margin: 0" method="POST" action=${track.getAttribute("data-action")} data-edit-scrobble="">
+                                                <input type="hidden" name="csrfmiddlewaretoken" value=${page.token}>
+                                                <input type="hidden" name="album_name" value=${track.getAttribute("data-album-name")}>
+                                                <input type="hidden" name="album_artist_name" value=${track.getAttribute("data-album-artist-name")}>
+                                                <input type="hidden" name="album_image" value=${track.getAttribute("data-album-image")}>
+                                                <input type="hidden" name="album_name_original" value=${track.getAttribute("data-album-name-original")}>
+                                                <input type="hidden" name="album_artist_name_original" value=${track.getAttribute("data-album-artist-name-original")}>
+                                                <input type="hidden" name="count" value=${track.getAttribute("data-count")}>
+                                                <button class="dropdown-menu-clickable-item" data-type="edit">
+                                                    ${tl(trans.edit)}
+                                                </button>
+                                            </form>
+                                        `;
+                }
+                return html.node`
+                                        <form style="margin: 0" method="POST" action=${track.getAttribute("data-action")} data-edit-scrobble="">
+                                            <input type="hidden" name="csrfmiddlewaretoken" value=${page.token}>
+                                            <input type="hidden" name="artist_name" value=${track.getAttribute("data-artist-name")}>
+                                            <input type="hidden" name="track_name" value=${track.getAttribute("data-track-name")}>
+                                            <input type="hidden" name="album_name" value=${track.getAttribute("data-album-name")}>
+                                            <input type="hidden" name="album_artist_name" value=${track.getAttribute("data-album-artist-name")}>
+                                            <input type="hidden" name="timestamp" value=${track.getAttribute("data-timestamp")}>
+                                            <button class="dropdown-menu-clickable-item" data-type="edit">
+                                                ${tl(trans.edit)}
+                                            </button>
+                                        </form>
+                                    `;
+              }}
+                                ${bulk_edit_button ? html.node`
+                                    <div class="button-combo-sep" />
+                                    ${() => {
+                let button = track_legacy_menu.querySelector('[data-analytics-action="BulkEditScrobblesOpen"]');
+                button.classList = "dropdown-menu-clickable-item chibi";
+                button.textContent = tl(trans.bulk_edit);
+                button.setAttribute("data-type", "bulk-edit");
+                tippy(button, {
+                  content: tl(trans.bulk_edit)
+                });
+                return button;
+              }}
+                                ` : ""}
+                            </div>
+                            <div class="sep" />
+                            ` : ""}
+                            ${() => {
+                let container = track.querySelector(".chartlist-play");
+                if (!container) return;
+                let button = container.querySelector(".chartlist-play-button");
+                if (!button) return;
+                button.classList = "dropdown-menu-clickable-item";
+                button.textContent = tl(trans.play);
+                button.setAttribute("data-type", "play");
+                track.removeChild(container);
+                return button;
+              }}
+                            ${!is_album ? html.node`
+                            <div class="button-combo">
+                                ${() => {
+                return html.node`
+                                        <a class="dropdown-menu-clickable-item" data-type="track" href="${root}music/${sanitise(track_artist)}/_/${sanitise(track_title.getAttribute("data-name"))}">
+                                            ${tl(trans.track)}
+                                        </a>
+                                    `;
+              }}
+                                <div class="button-combo-sep"/>
+                                ${() => {
+                let button = html.node`
+                                        <a class="dropdown-menu-clickable-item chibi" data-type="continue" href="${root}user/${page.name}/library/music/${sanitise(track_artist)}/_/${sanitise(track_title.getAttribute("data-name"))}">
+                                            ${tl(trans.explore_in_library)}
+                                        </a>
+                                    `;
+                tippy(button, {
+                  content: tl(trans.explore_in_library)
+                });
+                return button;
+              }}
+                            </div>
+                            ` : ""}
+                            ${album_name ? html.node`
+                            <div class="button-combo">
+                                ${() => {
+                return html.node`
+                                        <a class="dropdown-menu-clickable-item" data-type="album" href="${root}music/${sanitise(track_artist)}/${album_name}">
+                                            ${tl(trans.album)}
+                                        </a>
+                                    `;
+              }}
+                                <div class="button-combo-sep"/>
+                                ${() => {
+                let button = html.node`
+                                        <a class="dropdown-menu-clickable-item chibi" data-type="continue" href="${root}user/${page.name}/library/music/${sanitise(track_artist)}/${album_name}">
+                                            ${tl(trans.explore_in_library)}
+                                        </a>
+                                    `;
+                tippy(button, {
+                  content: tl(trans.explore_in_library)
+                });
+                return button;
+              }}
+                            </div>
+                            ` : is_album ? html.node`
+                            <div class="button-combo">
+                                ${() => {
+                return html.node`
+                                        <a class="dropdown-menu-clickable-item" data-type="album" href="${root}music/${sanitise(track_artist)}/${sanitise(track_title.getAttribute("data-name"))}">
+                                            ${tl(trans.album)}
+                                        </a>
+                                    `;
+              }}
+                                <div class="button-combo-sep"/>
+                                ${() => {
+                let button = html.node`
+                                        <a class="dropdown-menu-clickable-item chibi" data-type="continue" href="${root}user/${page.name}/library/music/${sanitise(track_artist)}/${sanitise(track_title.getAttribute("data-name"))}">
+                                            ${tl(trans.explore_in_library)}
+                                        </a>
+                                    `;
+                tippy(button, {
+                  content: tl(trans.explore_in_library)
+                });
+                return button;
+              }}
+                            </div>
+                            ` : ""}
+                            <div class="button-combo">
+                                ${() => {
+                return html.node`
+                                        <a class="dropdown-menu-clickable-item" data-type="artist" href="${root}music/${sanitise(track_artist)}">
+                                            ${tl(trans.artist)}
+                                        </a>
+                                    `;
+              }}
+                                <div class="button-combo-sep"/>
+                                ${() => {
+                let button = html.node`
+                                        <a class="dropdown-menu-clickable-item chibi" data-type="continue" href="${root}user/${page.name}/library/music/${sanitise(track_artist)}">
+                                            ${tl(trans.explore_in_library)}
+                                        </a>
+                                    `;
+                tippy(button, {
+                  content: tl(trans.explore_in_library)
+                });
+                return button;
+              }}
+                            </div>
+                            ${() => {
+                if (!is_own_profile || is_album) return;
+                return html.node`
+                                    <form style="margin: 0" method="POST" action="${root}user/${auth.name}/obsessions" data-submit-to-modal="">
+                                        <input type="hidden" name="csrfmiddlewaretoken" value=${page.token}>
+                                        <input type="hidden" name="name" value=${track.getAttribute("data-track-name")}>
+                                        <input type="hidden" name="artist_name" value=${track.getAttribute("data-artist-name")}>
+                                        <button class="dropdown-menu-clickable-item" data-type="obsession">
+                                            ${tl(trans.obsess)}
+                                        </button>
+                                    </form>
+                                `;
+              }}
+                            ${() => {
+                if (!is_own_profile || !can_delete) return;
+                let button = html.node`
+                                    <button class="dropdown-menu-clickable-item more-item--delete" data-type="delete">
+                                        ${tl(trans.delete)}
+                                    </button>
+                                `;
+                let form;
+                return html.node`
+                                    <div class="sep" />
+                                    <form ref=${(el) => form = el} style="margin: 0" method="POST" action="${root}user/${auth.name}/library/delete" onsubmit=${async (e) => {
+                  e.preventDefault();
+                  let url = `${root}user/${auth.name}/library/delete`;
+                  let form_data = new FormData(form);
+                  console.info(form_data);
+                  try {
+                    track.setAttribute("data-ajax-form-state", "deleted");
+                    await fetch(url, {
+                      method: "POST",
+                      body: form_data
+                    }).then((res) => {
+                      if (!res.ok) {
+                        log("failed to delete", "form", "error", { res });
+                        track.removeAttribute("data-ajax-form-state");
+                        return;
+                      }
+                      log("received response", "form", "info", { res });
+                      notify({
+                        id: "delete",
+                        title: tl(trans.deleted),
+                        body: track_title.getAttribute("data-name"),
+                        icon: "icon-16-trash",
+                        type: "error"
+                      });
+                    });
+                  } catch (e2) {
+                    console.error(e2);
+                    track.removeAttribute("data-ajax-form-state");
+                  }
+                }}>
+                                        <input type="hidden" name="csrfmiddlewaretoken" value=${page.token}>
+                                        <input type="hidden" name="artist_name" value=${track.getAttribute("data-artist-name")}>
+                                        <input type="hidden" name="track_name" value=${track.getAttribute("data-track-name")}>
+                                        <input type="hidden" name="timestamp" value=${track.getAttribute("data-timestamp")}>
+                                        ${button}
+                                    </form>
+                                `;
+              }}
+                        `,
+              placement: "right-start",
+              trigger: "manual",
+              interactive: true,
+              interactiveBorder: 10,
+              offset: [0, 0],
+              hideOnClick: false,
+              onShow(instance) {
+                track.setAttribute("data-has-menu", true);
+                instance.popper.addEventListener("click", (event3) => {
+                  instance.hide();
+                });
+              },
+              onClickOutside(instance) {
+                instance.hide();
+              },
+              onHide(instance) {
+                track.setAttribute("data-has-menu", false);
+              }
+            });
+            register_menu(track, menu);
+          }, 100);
+        }
+        if (is_album) {
+          log(`pushed insight album label of ${track_title.getAttribute("data-name")}`, "glacier library", "log");
+          insights.album.labels.push(track_title.getAttribute("data-name"));
+        } else {
+          log(`pushed insight track label of ${track_title.getAttribute("data-name")}`, "glacier library", "log");
+          insights.track.labels.push(track_title.getAttribute("data-name"));
+        }
+        if (!is_album && is_active) {
+          let image_wrap = track.querySelector(".chartlist-image");
+          if (image_wrap) {
+            let link = image_wrap.querySelector(".cover-art");
+            let image2 = link.querySelector("img");
+            if (!settings.album_text) {
+              let alt = correct_item_by_artist(image2.getAttribute("alt"), track_artist);
+              track.appendChild(html.node`
+                            <td class="chartlist-album custom-album-text">
+                                <a href="${link.getAttribute("href")}">${alt}</a>
+                            </td>
+                        `);
+            }
+            if (!settings.colourful_tracks)
+              return;
+            image2.setAttribute("crossorigin", "anonymous");
+            try {
+              image2.addEventListener("load", function() {
+                let thief = new ColorThief();
+                let colour = thief.getColor(image2);
+                let hsl = rgb_to_hsl(colour[0], colour[1], colour[2]);
+                track.style.setProperty("--hue-over", hsl.h);
+                track.style.setProperty("--sat-over", clamp_sat(hsl.s / 100 * 3));
+                track.style.setProperty("--lit-over", 1);
+              });
+            } catch (e) {
+            }
+          }
+        }
+      });
+    });
+    if (page.subpage.startsWith("library"))
+      bleh_glacier_insights(insights);
+  }
+
+  // src/components/compare.js
+  function compare() {
+    if (page.state.scrobbles === 0) {
+      notify({
+        id: "compare_not_possible",
+        title: tl(trans.compare),
+        body: tl(trans.profile_does_not_have_enough_scrobbles),
+        icon: "icon-16-arrows"
+      });
+      return;
+    }
+    let pages;
+    let timeframe;
+    let type;
+    let submit;
+    let body;
+    dialog({
+      id: "compare",
+      title: tl(trans.compare),
+      body: html.node`
+            <div class="compare-header">
+                <div class="compare-users">
+                    <div class="compare-user">
+                        <div class="avatar">
+                            <img src="${auth.avatar.replace("/avatar42s/", "/avatar170s/")}" alt="${tl(trans.your_avatar)}">
+                        </div>
+                        <strong>${auth.name}</strong>
+                    </div>
+                    <div class="bleh-icon"></div>
+                    <div class="compare-user">
+                        <div class="avatar">
+                            <img src="${page.avatar}" alt="${tl(trans.avatar_for_user).replace("{u}", page.name)}">
+                        </div>
+                        <strong>${page.name}</strong>
+                    </div>
+                </div>
+                <div class="compare-selection">
+                    ${pages = select([
+        {
+          value: "1",
+          text: 50
+        },
+        {
+          value: "2",
+          text: 100
+        },
+        {
+          value: "3",
+          text: 150
+        },
+        {
+          value: "4",
+          text: 200
+        },
+        {
+          value: "5",
+          text: 250
+        },
+        {
+          value: "6",
+          text: 300
+        }
+      ], "3")}
+                    ${type = select([
+        {
+          value: "artists",
+          text: html`<div class="bleh-icon" style="--icon: var(--icon-16-artist)" />${tl(trans.artists)}`
+        },
+        {
+          value: "albums",
+          text: html`<div class="bleh-icon" style="--icon: var(--icon-16-album)" />${tl(trans.albums)}`
+        },
+        {
+          value: "tracks",
+          text: html`<div class="bleh-icon" style="--icon: var(--icon-16-track)" />${tl(trans.tracks)}`
+        }
+      ], "albums")}
+                    ${timeframe = select([
+        {
+          value: "LAST_7_DAYS",
+          text: tl(trans.last_count_days).replace("{c}", "7")
+        },
+        {
+          value: "LAST_30_DAYS",
+          text: tl(trans.last_count_days).replace("{c}", "30")
+        },
+        {
+          value: "LAST_90_DAYS",
+          text: tl(trans.last_count_days).replace("{c}", "90")
+        },
+        {
+          value: "LAST_180_DAYS",
+          text: tl(trans.last_count_days).replace("{c}", "180")
+        },
+        {
+          value: "LAST_365_DAYS",
+          text: tl(trans.last_count_days).replace("{c}", "365")
+        }
+      ], "LAST_90_DAYS")}
+                    <button class="btn chibi icon primary compare" ref=${(el) => submit = el} onclick=${() => begin_comparing()}>${tl(trans.compare)}</button>
+                </div>
+            </div>
+            <div class="compare-body" data-filled="false" ref=${(el) => body = el}>
+                <div class="loading-data-container">
+                    <div class="loading-data-text info">${tl(trans.choose_a_timeframe_above)}</div>
+                </div>
+            </div>
+        `,
+      type: "compare"
+    });
+    tippy(submit, {
+      content: tl(trans.compare)
+    });
+    function begin_comparing(bypass = false) {
+      if (parseInt(pages.value) > 3 && !bypass) {
+        let warn = notify({
+          id: "collage_warning",
+          title: tl(trans.are_you_sure),
+          body: tl(trans.this_will_require_loading_count_pages).replace("{c}", parseInt(pages.value) * 2),
+          type: "warning",
+          actions: [
+            {
+              type: "check",
+              action: () => {
+                notify_rm(warn);
+                begin_comparing(true);
+              },
+              text: tl(trans.continue)
+            }
+          ],
+          persist: true
+        });
+        return;
+      }
+      pages.querySelector("button").disabled = true;
+      type.querySelector("button").disabled = true;
+      timeframe.querySelector("button").disabled = true;
+      submit.disabled = true;
+      page.state.compare = {
+        you: [],
+        other: [],
+        shared: []
+      };
+      body.setAttribute("data-filled", "false");
+      get_grid(auth.name, 1, parseInt(pages.value), page.name);
+    }
+    function get_grid(user, current_page, page_count, next_user = null) {
+      render(body, html`
+            <div class="loading-data-container">
+                <div class="loading-data-text">${tl(trans.gathering_plays_for_user_pages).replace("{u}", user).replace("{current_page}", current_page).replace("{pages}", page_count)}</div>
+            </div>
+        `);
+      fetch(`${root}user/${user}/library/${type.value}?format=list&date_preset=${timeframe.value}&page=${current_page}&ajax=1`).then(function(response) {
+        console.log("returned", response, response.text);
+        return response.text();
+      }).then(function(dom) {
+        let doc = new DOMParser().parseFromString(dom, "text/html");
+        console.log("DOC", doc);
+        let next_button = doc.querySelector(".pagination-next");
+        try {
+          let tracks = doc.querySelectorAll(".chartlist-row");
+          tracks.forEach((track) => {
+            let item = {};
+            item.avatar = track.querySelector(".chartlist-image img");
+            if (item.avatar)
+              item.avatar = item.avatar.getAttribute("src");
+            item.name = track.querySelector(".chartlist-name a").textContent.trim();
+            if (type.value != "artists")
+              item.sister = track.querySelector(".chartlist-artist a").textContent.trim();
+            item.plays = clean_number(track.querySelector(".chartlist-count-bar-slug").getAttribute("data-stat-value"));
+            if (next_user)
+              page.state.compare.you.push(item);
+            else
+              page.state.compare.other.push(item);
+          });
+        } catch (e) {
+          notify({
+            id: "compare",
+            title: tl(trans.failed),
+            body: tl(trans.there_was_a_network_error),
+            type: "error"
+          });
+          console.error(e);
+        }
+        if (next_button && current_page < page_count) {
+          get_grid(user, current_page + 1, page_count, next_user);
+        } else if (next_user) {
+          get_grid(next_user, 1, page_count);
+        } else {
+          pages.querySelector("button").disabled = false;
+          type.querySelector("button").disabled = false;
+          timeframe.querySelector("button").disabled = false;
+          submit.disabled = false;
+          continue_comparing();
+        }
+      });
+    }
+    function continue_comparing() {
+      log("gathered initial values", "compare", "info", page.state.compare);
+      page.state.compare.you.forEach((your_item) => {
+        let other_item;
+        if (type.value == "albums")
+          other_item = page.state.compare.other.find((other) => your_item.name === other.name && your_item.sister === other.sister);
+        else
+          other_item = page.state.compare.other.find((other) => your_item.name === other.name);
+        if (other_item) {
+          page.state.compare.shared.push({
+            avatar: your_item.avatar,
+            name: your_item.name,
+            sister: your_item.sister ? your_item.sister : "",
+            plays: {
+              you: your_item.plays,
+              other: other_item.plays,
+              shared: your_item.plays + other_item.plays
+            }
+          });
+        }
+      });
+      page.state.compare.shared.sort((a, b) => b.plays.shared - a.plays.shared);
+      log("gathered shared values", "compare", "info", page.state.compare);
+      body.innerHTML = "";
+      if (page.state.compare.shared.length == 0) {
+        render(body, html`
+                <div class="loading-data-container">
+                    <div class="loading-data-text failed">${tl(trans.nothing_in_common)}</div>
+                </div>
+            `);
+        body.setAttribute("data-filled", "false");
+        return;
+      }
+      body.setAttribute("data-filled", "true");
+      if (type.value != "tracks") {
+        let grid = document.createElement("ol");
+        grid.classList.add("grid-items", "grid-items--numbered", "compare-grid");
+        page.state.compare.shared.forEach((data2) => {
+          let template;
+          if (type.value == "artists")
+            template = sanitise(data2.name);
+          else
+            template = `${sanitise(data2.sister)}/${sanitise(data2.name)}`;
+          grid.appendChild(html.node`
+                    <li class="compare-item grid-items-item">
+                        <div class="grid-items-cover-image js-link-block link-block">
+                            <div class="grid-items-cover-image-image ${data2.avatar.endsWith("/c6f59c1e5e7240a4c0d427abd71f3dbb.jpg") || data2.avatar.endsWith("/2a96cbd8b46e442fc41c2b86b821562f.jpg") ? "grid-items-cover-default" : ""}">
+                                <img src="${data2.avatar.replace("/avatar70s/", "/avatar300s/").replace("/64s/", "/avatar300s/")}" alt="${data2.name}" loading="lazy">
+                            </div>
+                            <div class="grid-items-item-details">
+                                <p class="grid-items-item-main-text">
+                                    <a class="link-block-target" href="${root}music/${template}" title="${data2.name}">
+                                        ${data2.name}
+                                    </a>
+                                </p>
+                                ${type.value == "albums" ? html.node`
+                                <p class="grid-items-item-aux-text">
+                                    <a class="grid-items-item-aux-block" href="${root}music/${data2.sister}">
+                                        ${data2.sister}
+                                    </a>
+                                </p>
+                                ` : ""}
+                                <p class="grid-items-item-aux-text">
+                                    <a class="grid-item-plays with-avatar" href="${root}user/${auth.name}/library/music/${template}?date_preset=${timeframe.value}" target="_blank">
+                                        <span class="avatar">
+                                            <img src="${auth.avatar}" alt="${tl(trans.your_avatar)}">
+                                        </span>
+                                        ${data2.plays.you.toLocaleString(lang)}
+                                    </a>
+                                    <a class="grid-item-plays with-avatar" href="${root}user/${page.name}/library/music/${template}?date_preset=${timeframe.value}" target="_blank">
+                                        <span class="avatar">
+                                            <img src="${page.avatar}" alt="${tl(trans.avatar_for_user).replace("{u}", page.name)}">
+                                        </span>
+                                        ${data2.plays.other.toLocaleString(lang)}
+                                    </a>
+                                </p>
+                            </div>
+                            <a class="js-link-block-cover-link link-block-cover-link" href="${root}music/${template}" tabindex="-1" aria-hidden="true"></a>
+                        </div>
+                    </li>
+                `);
+        });
+        render(body, grid);
+        music_grids(grid);
+      } else {
+        let table = document.createElement("table");
+        table.classList.add("chartlist", "chartlist--with-index", "chartlist--with-index--length-2", "chartlist--with-image", "chartlist--with-artist", "chartlist--with-bar", "compare-chartlist");
+        let tbody = document.createElement("tbody");
+        table.appendChild(tbody);
+        let max = 0;
+        page.state.compare.shared.forEach((item) => {
+          if (item.plays.you > max)
+            max = item.plays.you;
+          if (item.plays.other > max)
+            max = item.plays.other;
+        });
+        page.state.compare.shared.forEach((data2, index) => {
+          let template = `${sanitise(data2.sister)}/_/${sanitise(data2.name)}`;
+          tbody.appendChild(html.node`
+                    <tr class="chartlist-row chartlist-row--with-artist compare-item">
+                        <td class="chartlist-index">${index + 1}</td>
+                        <td class="chartlist-image">
+                            <a class="cover-art" href="${root}music/${template}">
+                                <img src="${data2.avatar}" alt="${data2.name}" loading="lazy">
+                            </a>
+                        </td>
+                        <td class="chartlist-name">
+                            <a href="${root}music/${template}" title="${data2.name}">
+                                ${data2.name}
+                            </a>
+                        </td>
+                        <td class="chartlist-artist">
+                            <a href="${root}music/${data2.sister}" title="${data2.sister}">
+                                ${data2.sister}
+                            </a>
+                        </td>
+                        <td class="chartlist-bar with-multiple">
+                            <span class="chartlist-count-bar">
+                                <a class="chartlist-count-bar-link" href="${root}user/${auth.name}/library/music/${template}?date_preset=${timeframe.value}" target="_blank">
+                                    <span class="chartlist-count-bar-slug" data-max-stat-value="${max}" data-stat-value="${data2.plays.you}" style="width: ${data2.plays.you / max * 100}%;"></span>
+                                    <span class="chartlist-count-bar-value">${data2.plays.you}</span>
+                                </a>
+                                <span class="avatar">
+                                    <img src="${auth.avatar}" alt="${tl(trans.your_avatar)}">
+                                </span>
+                            </span>
+                            <span class="chartlist-count-bar">
+                                <a class="chartlist-count-bar-link" href="${root}user/${page.name}/library/music/${template}?date_preset=${timeframe.value}" target="_blank">
+                                    <span class="chartlist-count-bar-slug" data-max-stat-value="${max}" data-stat-value="${data2.plays.other}" style="width: ${data2.plays.other / max * 100}%;"></span>
+                                    <span class="chartlist-count-bar-value">${data2.plays.other}</span>
+                                </a>
+                                <span class="avatar">
+                                    <img src="${page.avatar}" alt="${tl(trans.avatar_for_user).replace("{u}", page.name)}">
+                                </span>
+                            </span>
+                        </td>
+                    </tr>
+                `);
+        });
+        body.appendChild(table);
+        patch_titles(body);
+      }
+    }
+  }
+
+  // src/components/input.js
+  function input({
+    type = "text",
+    value,
+    placeholder,
+    min,
+    max,
+    maxlength,
+    warn_if_empty = false,
+    focus = false,
+    disabled,
+    show_time = true,
+    name: name2
+  }) {
+    if (type == "date") {
+      let months_between = function(a, b) {
+        return (b.getFullYear() - a.getFullYear()) * 12 + (b.getMonth() - a.getMonth());
+      }, can_nav_month_view = function() {
+        return months_between(min_date, max_date) >= 1;
+      }, can_nav_year_view = function() {
+        return max_date.getFullYear() - min_date.getFullYear() >= 1;
+      }, on_month_year_click = function() {
+        last_action = "";
+        if (view.level === "day" && can_nav_month_view()) {
+          view.level = "month";
+        } else if (view.level === "month" && can_nav_year_view()) {
+          view.level = "year";
+        } else if (view.level === "year") {
+          view.level = "month";
+        } else {
+          return;
+        }
+        render_popup();
+      }, can_prev = function() {
+        const py = view.month === 1 ? view.year - 1 : view.year;
+        const pm = view.month === 1 ? 12 : view.month - 1;
+        return py > min_date.getFullYear() || py === min_date.getFullYear() && pm >= min_date.getMonth() + 1;
+      }, can_next = function() {
+        const ny = view.month === 12 ? view.year + 1 : view.year;
+        const nm = view.month === 12 ? 1 : view.month + 1;
+        return ny < max_date.getFullYear() || ny === max_date.getFullYear() && nm <= max_date.getMonth() + 1;
+      }, render_popup = function() {
+        let inner;
+        if (view.level === "year") {
+          inner = render_year_view();
+        } else if (view.level === "month") {
+          inner = render_month_view();
+        } else {
+          inner = render_day_view();
+        }
+        tooltip.setContent(html.node`<div class="calendar">${inner}</div>`);
+      }, render_day_view = function() {
+        return html.node`
+                <div class="calendar-header">
+                    <button class="month-year" type="button" onclick=${on_month_year_click} disabled=${!can_nav_month_view()}>
+                        ${months[view.month - 1]} ${view.year}
+                    </button>
+                    <div class="fill" />
+                    <button class="chibi icon" data-type="up" disabled=${!can_prev()} type="button" onclick=${() => {
+          if (!can_prev()) return;
+          view.month--;
+          if (view.month < 1) {
+            view.month = 12;
+            view.year--;
+          }
+          last_action = "prev";
+          render_popup();
+        }}>
+                        ${tl(trans.back)}
+                    </button>
+                    <button class="chibi icon" data-type="down" disabled=${!can_next()} type="button" onclick=${() => {
+          if (!can_next()) return;
+          view.month++;
+          if (view.month > 12) {
+            view.month = 1;
+            view.year++;
+          }
+          last_action = "next";
+          render_popup();
+        }}>
+                        ${tl(trans.next)}
+                    </button>
+                </div>
+                <div class="date-header">
+                    ${weekdays.map((day) => html.node`<div class="date">${day}</div>`)}
+                </div>
+                <div class="days" data-last-action=${last_action}>
+                    ${days(view.year, view.month).map(
+          (cell) => cell.type == "empty" ? html.node`<button class="day empty" type="button" disabled />` : html.node`
+                                <button class="day" type="button" aria-selected=${cell.day == state.day && cell.date > min_date && cell.date < max_date && cell.month == view.month ? "true" : "false"} disabled=${cell.date < min_date || cell.date > max_date} onclick=${() => {
+            state.day = cell.day;
+            state.year = view.year;
+            state.month = view.month;
+            update_display();
+            emit();
+            last_action = "";
+            render_popup();
+          }}>${cell.day}</button>
+                            `
+        )}
+                </div>
+            `;
+      }, render_month_view = function() {
+        const min_year = min_date.getFullYear();
+        const max_year = max_date.getFullYear();
+        return html.node`
+                <div class="calendar-header">
+                    <button class="month-year" type="button" onclick=${on_month_year_click} disabled=${!can_nav_year_view()}>
+                        ${view.year}
+                    </button>
+                    <div class="fill" />
+                    <button class="chibi icon" data-type="up" type="button" disabled=${view.year <= min_year} onclick=${() => {
+          if (view.year < min_year) return;
+          view.year--;
+          last_action = "prev";
+          render_popup();
+        }}>
+                        ${tl(trans.back)}
+                    </button>
+                    <button class="chibi icon" data-type="down" type="button" disabled=${view.year >= max_year} onclick=${() => {
+          if (view.year > max_year) return;
+          view.year++;
+          last_action = "next";
+          render_popup();
+        }}>
+                        ${tl(trans.next)}
+                    </button>
+                </div>
+                <div class="months" data-last-action=${last_action}>
+                    ${months.map((label, i) => {
+          const month_start = new Date(view.year, i, 1);
+          const month_end = new Date(
+            view.year,
+            i + 1,
+            0,
+            23,
+            59,
+            59,
+            999
+          );
+          return html.node`
+                            <button class="month" aria-selected=${view.year === state.year && i + 1 === state.month} disabled=${month_end < min_date || month_start > max_date} onclick=${() => {
+            view.month = i + 1;
+            view.level = "day";
+            last_action = "";
+            update_display();
+            emit();
+            render_popup();
+          }}>
+                                ${label}
+                            </button>
+                        `;
+        })}
+                </div>
+            `;
+      }, render_year_view = function() {
+        const min_year = min_date.getFullYear();
+        const max_year = max_date.getFullYear();
+        const decade_start = Math.floor(view.year / 10) * 10;
+        return html.node`
+                <div class="calendar-header">
+                    <button class="month-year" onclick=${on_month_year_click}>
+                        ${decade_start} – ${decade_start + 9}
+                    </button>
+                    <div class="fill" />
+                    <button class="chibi icon" data-type="up" disabled=${decade_start - 10 < min_year} onclick=${() => {
+          if (decade_start - 10 < min_year) return;
+          view.year -= 10;
+          render_popup();
+        }}>
+                        ${tl(trans.back)}
+                    </button>
+                    <button class="chibi icon" data-type="down" disabled=${decade_start + 10 > max_year} onclick=${() => {
+          if (decade_start + 10 > max_year) return;
+          view.year += 10;
+          render_popup();
+        }}>
+                        ${tl(trans.next)}
+                    </button>
+                </div>
+                <div class="years">
+                    ${Array.from({ length: 10 }, (_, i) => decade_start + i).map((yr) => {
+          return html.node`
+                            <button class="year" aria-selected=${yr === state.year} disabled=${yr < min_date.getFullYear() || yr > max_date.getFullYear()} onclick=${() => {
+            view.year = yr;
+            view.level = "month";
+            render_popup();
+          }}>
+                                ${yr}
+                            </button>
+                        `;
+        })}
+                </div>
+            `;
+      }, days = function(year, month) {
+        const raw_first = new Date(
+          year,
+          month - 1,
+          1
+        ).getDay();
+        const offset = (raw_first + 6) % 7;
+        const days_in_month = new Date(
+          year,
+          month,
+          0
+        ).getDate();
+        const cells = [];
+        for (let i = 0; i < offset; i++) cells.push({ type: "empty" });
+        for (let day = 1; day <= days_in_month; day++) {
+          cells.push({
+            type: "day",
+            day,
+            month: state.month,
+            date: new Date(
+              year,
+              month - 1,
+              day
+            )
+          });
+        }
+        const rem = (7 - cells.length % 7) % 7;
+        for (let i = 0; i < rem; i++) cells.push({ type: "empty" });
+        console.info("cells", cells, state.month, view.month);
+        return cells;
+      }, update_display = function() {
+        date_display.textContent = format_date(state);
+      }, emit = function() {
+        const date_object = new Date(
+          state.year,
+          state.month - 1,
+          state.day,
+          state.hours,
+          state.mins,
+          state.secs
+        );
+        legacy_date.value = `${state.year}-${pad2(state.month)}-${pad2(state.day)}`;
+        container2.dispatchEvent(new CustomEvent("change"), { detail: date_object });
+      }, format_date = function({ year, month, day }) {
+        const date_object = new Date(
+          year,
+          month - 1,
+          day
+        );
+        return date_object.toLocaleDateString(void 0, {
+          year: "numeric",
+          month: "short",
+          day: "numeric"
+        });
+      };
+      let now = /* @__PURE__ */ new Date();
+      if (value != null) now = new Date(value);
+      console.info(min, max, new Date(max));
+      const min_date = min != null ? new Date(min) : new Date(now.getTime() - 14 * 24 * 60 * 60 * 1e3);
+      min_date.setHours(0, 0, 0, 0);
+      const max_date = max != null ? new Date(max) : /* @__PURE__ */ new Date();
+      max_date.setHours(23, 59, 59, 999);
+      let last_action;
+      const state = {
+        year: now.getFullYear(),
+        month: now.getMonth() + 1,
+        day: now.getDate(),
+        hours: now.getHours(),
+        mins: now.getMinutes(),
+        secs: now.getSeconds()
+      };
+      let view = {
+        level: "day",
+        year: state.year,
+        month: state.month
+      };
+      let legacy_date;
+      let date_display;
+      let time_input;
+      let popup_inner = html.node`<div class="calendar" />`;
+      const locale = void 0;
+      const months = Array.from(
+        { length: 12 },
+        (_, i) => new Intl.DateTimeFormat(locale, { month: "short" }).format(new Date(2e3, i, 1))
+      );
+      const raw_weekdays = Array.from(
+        { length: 7 },
+        (_, i) => new Intl.DateTimeFormat(locale, { weekday: "short" }).format(new Date(1970, 0, 4 + i))
+      );
+      const weekdays = raw_weekdays.slice(1).concat(raw_weekdays[0]);
+      const container2 = html.node`
+            <div class="input-group">
+                <div class="content-form input-container" data-type="date">
+                    <input class="legacy-input" type="date" ref=${(el) => legacy_date = el} name=${name2} value="${state.year}-${pad2(state.month)}-${pad2(state.day)}">
+                    <div class="date-input modern-input" ref=${(el) => date_display = el} disabled=${disabled}>${format_date(state)}</div>
+                </div>
+                ${show_time ? html.node`
+                <div class="content-form input-container" data-type="time">
+                    <input class="modern-input" type="time" step="1" ref=${(el) => time_input = el} disabled=${disabled} value="${pad2(state.hours)}:${pad2(state.mins)}:${pad2(state.secs)}">
+                </div>
+                ` : ""}
+            </div>
+        `;
+      if (time_input) {
+        time_input.addEventListener("input", () => {
+          const parts = time_input.value.split(":").map((n) => parseInt(n, 10));
+          state.hours = parts[0] || 0;
+          state.mins = parts[1] || 0;
+          state.secs = parts[2] || 0;
+          emit();
+        });
+      }
+      let tooltip = tippy(date_display, {
+        theme: "window",
+        content: "",
+        placement: "top",
+        interactive: true,
+        interactiveBorder: 10,
+        trigger: "click",
+        onShow() {
+          last_action = "";
+          render_popup();
+        }
+      });
+      container2.value = (val = null) => {
+        if (val === null) {
+          return new Date(
+            state.year,
+            state.month - 1,
+            state.day,
+            state.hours,
+            state.mins,
+            state.secs
+          );
+        }
+        const date_object = new Date(val);
+        state.year = date_object.getFullYear();
+        state.month = date_object.getMonth() + 1;
+        state.day = date_object.getDate();
+        state.hours = date_object.getHours();
+        state.mins = date_object.getMinutes();
+        state.secs = date_object.getSeconds();
+        view.year = state.year;
+        view.month = state.month;
+        render_popup();
+        update_display();
+        if (time_input) time_input.value = `${pad2(state.hours)}:${pad2(state.mins)}:${pad2(state.secs)}`;
+        return date_object;
+      };
+      container2.disabled = (val = null) => {
+        if (val === null) return time_input.disabled;
+        if (!val)
+          date_display.removeAttribute("disabled");
+        else
+          date_display.setAttribute("disabled", "true");
+        if (time_input) time_input.disabled = val;
+        return val;
+      };
+      return container2;
+    }
+    let input_box;
+    let error_tooltip;
+    let colour_block;
+    let container = html.node`
+        <div class="content-form input-container colourful" data-type=${type} data-has-error="false">
+            ${type == "colour" ? html.node`<span class="colour-block" ref=${(el) => colour_block = el} />` : ""}
+            <input class="modern-input" disabled=${disabled} autofocus=${focus} type=${type} value=${value} placeholder=${placeholder} min=${min} max=${max} maxlength=${maxlength} ref=${(el) => input_box = el} />
+        </div>
+    `;
+    error_tooltip = tippy(input_box, {
+      theme: "error",
+      placement: "top",
+      trigger: "manual"
+    });
+    error_tooltip.disable();
+    update_input(true);
+    input_box.addEventListener("input", () => {
+      update_input();
+    });
+    container.value = (val = null) => {
+      if (val === null) return input_box.value;
+      input_box.value = val;
+      return val;
+    };
+    container.disabled = (state = null) => {
+      if (state === null) return input_box.getAttribute("disabled") || false;
+      if (state === true)
+        input_box.setAttribute("disabled", "true");
+      else
+        input_box.removeAttribute("disabled");
+      return state;
+    };
+    return container;
+    function update_input(skip_most = false) {
+      container.setAttribute("data-has-error", "false");
+      error_tooltip.disable();
+      if (type != "number" && !skip_most) {
+        if (input_box.value == "" && warn_if_empty) {
+          error_input2(tl(trans.this_field_is_required));
+        } else if (input_box.value.length > maxlength) {
+          error_input2(tl(trans.keep_within_the_range));
+        }
+      }
+      if (type == "number" && !skip_most) {
+        if (input_box.value == "") {
+          error_input2(tl(trans.only_numbers_are_allowed));
+        } else if (parseInt(input_box.value) > max || parseInt(input_box.value) < min) {
+          error_input2(tl(trans.keep_within_the_range));
+        }
+      } else if (type == "colour") {
+        if (!input_box.value.startsWith("#"))
+          input_box.value = `#${input_box.value}`;
+        colour_block.style.backgroundColor = input_box.value;
+      }
+    }
+    function error_input2(reason) {
+      log(reason, "input", "log");
+      container.setAttribute("data-has-error", "true");
+      error_tooltip.setContent(reason);
+      error_tooltip.enable();
+      error_tooltip.show();
+    }
+  }
+
+  // src/components/profile_shortcut.js
+  unsafeWindow._open_profile_shortcut_window = function() {
+    open_profile_shortcut_window();
+  };
+  function open_profile_shortcut_window() {
+    let modal = dialog({
+      id: "profile_shortcut",
+      title: tl(trans.profile_shortcut.name),
+      body: html.node`
+        ${setting({ id: "profile_shortcut", text: false, focus: true })}
+        `
+    });
+    modal.querySelector("#text-profile_shortcut").focus();
+  }
+  unsafeWindow._other_listener = function(id) {
+    other_listener(id);
+  };
+  function other_listener(id) {
+    let input2;
+    let submit;
+    dialog({
+      id: "other_listener",
+      title: tl(trans.view_others_library),
+      body: html.node`
+        <div class="setting" data-type="text">
+            <div class="avatar-container">
+                <div class="avatar-inner avatar--bleh-missing">
+                    <img>
+                </div>
+            </div>
+            <div class="input-container content-form">
+                <input type="text" maxlength="40" id="text-profile" ref=${(el) => input2 = el} placeholder="${tl(trans.enter_username)}">
+                <button class="btn chibi icon primary submit" ref=${(el) => submit = el} onclick=${() => {
+        let name2 = input2.value;
+        let link = id;
+        dialog_rm2({
+          id: "other_listener"
+        });
+        window.location.href = `${root}user/${name2}/library/music/${link}`;
+      }}>${tl(trans.done)}</button>
+            </div>
+        </div>
+        `
+    });
+    input2.addEventListener("keydown", (event3) => {
+      if (event3.keyCode === 13) {
+        event3.preventDefault();
+        submit.click();
+      }
+    });
+    tippy(submit, {
+      content: tl(trans.save)
+    });
+    input2.focus();
+  }
+  function set_profile_as_shortcut() {
+    dialog({
+      id: "profile_shortcut",
+      title: tl(trans.profile_shortcut.name),
+      body: html.node`
+            <div class="big-modal-alert alert-danger">
+                ${{ html: tl(trans.profile_shortcut.notice).replace("{u}", `<a class="mention" href="${root}user/${settings.profile_shortcut}" target="_blank">@${settings.profile_shortcut}</a>`) }}
+            </div>
+            <div class="modal-footer">
+                <button class="see-more cancel" onclick=${() => dialog_rm2({ id: "profile_shortcut" })}>
+                    ${tl(trans.back)}
+                </button>
+                <div class="fill"></div>
+                <button class="btn primary save" onclick=${() => confirm_set_profile_as_shortcut()}>
+                    ${tl(trans.replace)}
+                </button>
+            </div>
+        `
+    });
+  }
+  function confirm_set_profile_as_shortcut() {
+    dialog_rm2({
+      id: "profile_shortcut"
+    });
+    let avatar_src = page.structure.container.querySelector(":scope > .redesigned-profile-header .avatar img")?.getAttribute("src");
+    localStorage.setItem("bleh_profile_shortcut_avi", avatar_src);
+    notify({
+      id: "profile_shortcut_saved",
+      title: tl(trans.profile_shortcut.name),
+      body: tl(trans.profile_shortcut.linked).replace("{u}", page.name),
+      icon: "icon-16-profile-shortcut"
+    });
+    page.state.profile_shortcut_button.setAttribute("data-is-shortcut", "true");
+    page.state.profile_shortcut_button.removeAttribute("onclick");
+    settings.profile_shortcut = page.name;
+    localStorage.setItem("bleh", JSON.stringify(settings));
+  }
+  function save_profile_shortcut(input2, value, submit, reset_btn, avatar3) {
+    if (value == "" || value == auth.name) {
+      localStorage.removeItem("bleh_profile_shortcut_avi");
+      avatar3.querySelector("img").setAttribute("src", "");
+      avatar3.querySelector("img").setAttribute("alt", "");
+      reset_btn.disabled = false;
+      input2.disabled = false;
+      submit.disabled = false;
+      save_setting("profile_shortcut", "");
+      return;
+    }
+    avatar3.classList.add("requesting");
+    fetch(`${root}user/${value}/tags`).then(function(response) {
+      console.log("returned", response, response.text);
+      return response.text();
+    }).then(function(dom) {
+      let doc = new DOMParser().parseFromString(dom, "text/html");
+      console.log("DOC", doc);
+      reset_btn.disabled = false;
+      input2.disabled = false;
+      submit.disabled = false;
+      avatar3.classList.remove("requesting");
+      try {
+        let avatar_src = doc.querySelector(".header-avatar-inner-wrap img").getAttribute("src");
+        localStorage.setItem("bleh_profile_shortcut_avi", avatar_src);
+        avatar3.querySelector("img").setAttribute("src", avatar_src);
+        avatar3.querySelector("img").setAttribute("alt", value);
+        notify({
+          id: "profile_shortcut_saved",
+          title: tl(trans.profile_shortcut.name),
+          body: tl(trans.profile_shortcut.linked).replace("{u}", value),
+          icon: "icon-16-profile-shortcut"
+        });
+        save_setting("profile_shortcut", value);
+      } catch (e) {
+        notify({
+          id: "profile_shortcut_error",
+          title: tl(trans.profile_shortcut.name),
+          body: tl(trans.failed_to_find_profile),
+          type: "error"
+        });
+        localStorage.removeItem("bleh_profile_shortcut_avi");
+        avatar3.querySelector("img").setAttribute("src", "");
+        avatar3.querySelector("img").setAttribute("alt", "");
+      }
+    });
+  }
+  unsafeWindow._save_profile_shortcut = function() {
+    let profile_name = document.getElementById("text-profile_shortcut").value;
+    let profile_img = document.getElementById("avatar-profile_shortcut");
+    if (profile_name == "" || profile_name == auth.name) {
+      localStorage.removeItem("bleh_profile_shortcut_avi");
+      document.getElementById("avatar_src-profile_shortcut").setAttribute("src", "");
+      settings.profile_shortcut = "";
+      localStorage.setItem("bleh", JSON.stringify(settings));
+      return;
+    }
+    profile_img.classList.add("requesting");
+    fetch(`${root}user/${profile_name}/tags`).then(function(response) {
+      console.log("returned", response, response.text);
+      return response.text();
+    }).then(function(html2) {
+      let doc = new DOMParser().parseFromString(html2, "text/html");
+      console.log("DOC", doc);
+      profile_img.classList.remove("requesting");
+      try {
+        let avatar_src = doc.querySelector(".header-avatar-inner-wrap img").getAttribute("src");
+        localStorage.setItem("bleh_profile_shortcut_avi", avatar_src);
+        document.getElementById("avatar_src-profile_shortcut").setAttribute("src", avatar_src);
+        notify({
+          id: "profile_shortcut_saved",
+          title: tl(trans.profile_shortcut.name),
+          body: tl(trans.profile_shortcut.linked).replace("{u}", profile_name),
+          icon: "icon-16-profile-shortcut"
+        });
+        settings.profile_shortcut = profile_name;
+        localStorage.setItem("bleh", JSON.stringify(settings));
+      } catch (e) {
+        notify({
+          id: "profile_shortcut_saved",
+          title: tl(trans.profile_shortcut.name),
+          body: tl(trans.failed_to_find_profile),
+          type: "error"
+        });
+        localStorage.removeItem("bleh_profile_shortcut_avi");
+        document.getElementById("avatar_src-profile_shortcut").setAttribute("src", "");
+      }
+    });
+  };
+
+  // src/components/settings.js
+  function setting({
+    id = "",
+    text: text2 = true,
+    focus = false
+  }) {
+    try {
+      let value = settings[id];
+      log(`creating ${id} with value ${value}`, "settings", "log", { settings, settings_id: settings[id] });
+      if (!settings_store[id])
+        return setting_fail(id, { message: "No settings store entry present" });
+      let type = settings_store[id].type || "toggle";
+      let title = settings_store[id].title ? tl(settings_store[id].title) : id;
+      let body = settings_store[id].body ? tl(settings_store[id].body) : null;
+      let icon = settings_store[id].icon;
+      let disabled = false;
+      let disabled_reason = "";
+      if (settings_store[id].platforms && !settings_store[id].platforms.includes(page.platform)) {
+        disabled = true;
+        disabled_reason = tl(trans.item_is_unavailable_on_platform).replace("{i}", title).replace("{p}", tl(trans.platforms[page.platform]));
+      }
+      if (disabled && disabled_reason)
+        return setting_fail(id, { message: disabled_reason, unavailable: true });
+      if (settings_store[id].beta)
+        title = html.node`${title}<span class="new-badge beta">${tl(trans.beta)}</span>`;
+      if (type === "toggle") {
+        let toggle2;
+        return html.node`
+                <div class="setting v2" data-type="toggle" disabled=${disabled} onclick=${() => update_toggle(id, toggle2)}>
+                    ${icon ? html.node`
+                    <div class="icon">
+                        <div class="bleh-icon" style="--icon: var(--${icon})" />
+                    </div>
+                    ` : ""}
+                    ${text2 ? html.node`
+                    <div class="heading">
+                        <h5>${title}</h5>
+                        ${body ? html.node`<p>${body}</p>` : ""}
+                    </div>
+                    ` : ""}
+                    ${settings_store[id].extensions ? html.node`
+                    <div class="extensions">
+                        ${settings_store[id].extensions.map((extension) => () => {
+          let container = html.node`
+                                <div class="extension">
+                                    <div class="bleh-icon" />
+                                </div>
+                            `;
+          tippy(container, {
+            content: tl(trans.requires_extension_value).replace("{v}", tl(extension))
+          });
+          return container;
+        })}
+                    </div>
+                    ` : ""}
+                    ${setting_incompatible_block(settings_store[id].incompatible)}
+                    <div class="toggle-wrap">
+                        <button class="toggle" ref=${(el) => toggle2 = el} aria-checked=${value}>
+                            <div class="dot"></div>
+                        </button>
+                    </div>
+                </div>
+            `;
+      } else if (type === "range") {
+        let option;
+        let min = settings_store[id].min || 0;
+        let max = settings_store[id].max || 0;
+        let step = settings_store[id].step || 0;
+        if (min >= max || step === 0)
+          return setting_fail(id, { message: "A range type requires a min, max, and step defined in the settings store" });
+        let track;
+        let input2;
+        let marker;
+        let working_max = settings_store[id].max - settings_store[id].min;
+        return html.node`
+                <div class="setting v2" data-type="range" disabled=${disabled} ref=${(el) => option = el} data-modified=${value != settings_store[id].default}>
+                    ${text2 ? html.node`
+                    <div class="heading">
+                        <h5>${title}<button class="reset see-more" onclick=${() => reset_range(id, option, track, input2, marker)}>${tl(trans.reset)}</button></h5>
+                        ${body ? html.node`<p>${body}</p>` : ""}
+                    </div>
+                    ` : ""}
+                    ${settings_store[id].extensions ? html.node`
+                    <div class="extensions">
+                        ${settings_store[id].extensions.map((extension) => () => {
+          let container = html.node`
+                                <div class="extension">
+                                    <div class="bleh-icon" />
+                                </div>
+                            `;
+          tippy(container, {
+            content: tl(trans.requires_extension_value).replace("{v}", tl(extension))
+          });
+          return container;
+        })}
+                    </div>
+                    ` : ""}
+                    ${setting_incompatible_block(settings_store[id].incompatible)}
+                    <div class="range">
+                        <div class="track" style="--percent: ${(value - settings_store[id].min) / working_max * 100}%" ref=${(el) => track = el}>
+                            <div class="fill" />
+                            <div class="nub" />
+                        </div>
+                        <input type="range" min=${min} max=${max} step=${step} value=${value} ref=${(el) => input2 = el} oninput=${() => update_range(id, option, track, input2, input2.value, marker)} />
+                        <p class="value-marker" ref=${(el) => marker = el}>${value}${settings_store[id].suffix || ""}</p>
+                    </div>
+                </div>
+            `;
+      } else if (type === "text") {
+        let option;
+        let min = settings_store[id].min || 0;
+        let max = settings_store[id].max || 0;
+        if (max === 0)
+          return setting_fail(id, { message: "A text type requires a max defined in the settings store" });
+        let reset_btn;
+        let avatar3;
+        let input2;
+        let submit;
+        let input_container;
+        let error_tooltip;
+        let container = html.node`
+                <div class="setting v2" data-type="text" disabled=${disabled} ref=${(el) => option = el} data-modified=${value != settings_store[id].default}>
+                    ${text2 ? html.node`
+                    <div class="heading">
+                        <h5>${title}<button class="reset see-more" ref=${(el) => reset_btn = el} onclick=${() => reset_text(id, input2, submit, option, reset_btn, avatar3)}>${tl(trans.reset)}</button></h5>
+                        ${body ? html.node`<p>${body}</p>` : ""}
+                    </div>
+                    ` : ""}
+                    ${settings_store[id].extensions ? html.node`
+                    <div class="extensions">
+                        ${settings_store[id].extensions.map((extension) => () => {
+          let container2 = html.node`
+                                <div class="extension">
+                                    <div class="bleh-icon" />
+                                </div>
+                            `;
+          tippy(container2, {
+            content: tl(trans.requires_extension_value).replace("{v}", tl(extension))
+          });
+          return container2;
+        })}
+                    </div>
+                    ` : ""}
+                    ${setting_incompatible_block(settings_store[id].incompatible)}
+                    ${settings_store[id].avatar ? html.node`
+                    <div class="avatar-container">
+                        <div class="avatar-inner" ref=${(el) => avatar3 = el}>
+                            <img src=${localStorage.getItem(`bleh_${id}_avi`) || ""} alt=${value} />
+                        </div>
+                    </div>
+                    ` : ""}
+                    <div class="input-container content-form in-settings can-submit" data-has-error="false" ref=${(el) => input_container = el}>
+                        <input type="text" maxlength=${max} value=${value} style="--max: ${max}px" ref=${(el) => input2 = el} placeholder=${tl(settings_store[id].placeholder)} />
+                        <button class="btn chibi icon submit" ref=${(el) => submit = el} onclick=${() => update_text(id, input2, submit, option, input2.value, reset_btn, avatar3)}>${tl(trans.save)}</button>
+                    </div>
+                </div>
+            `;
+        input2.addEventListener("keydown", (event3) => {
+          if (event3.keyCode === 13 && input_container.getAttribute("data-has-error") == "false") {
+            event3.preventDefault();
+            submit.click();
+          }
+        });
+        tippy(submit, {
+          content: tl(trans.save)
+        });
+        if (focus)
+          input2.focus();
+        error_tooltip = tippy(input2, {
+          theme: "error",
+          placement: "top",
+          trigger: "manual"
+        });
+        error_tooltip.disable();
+        input2.addEventListener("input", () => {
+          input_container.setAttribute("data-has-error", "false");
+          error_tooltip.disable();
+          submit.disabled = false;
+          if (type == "number") {
+            if (input2.value == "") {
+              error_input(tl(trans.only_numbers_are_allowed), input_container, error_tooltip, submit);
+            } else if (parseInt(input2.value) > max || parseInt(input2.value) < min) {
+              error_input(tl(trans.keep_within_the_range), input_container, error_tooltip, submit);
+            }
+          } else if (type == "text") {
+            if (settings_store[id].warn_if_empty && input2.value == "") {
+              error_input(tl(trans.this_field_is_required), input_container, error_tooltip, submit);
+            } else if (settings_store[id].warn_if_matches_auth && input2.value == auth.name) {
+              error_input(tl(trans.please_dont_clone_yourself), input_container, error_tooltip, submit);
+            }
+          }
+        });
+        return container;
+      } else if (type == "checkbox") {
+        let toggle2;
+        return html.node`
+                <div class="setting v2 ${settings_store[id].horizontal ? "horizontal" : ""}" data-type="checkbox" disabled=${disabled} onclick=${() => update_toggle(id, toggle2)}>
+                    ${icon ? html.node`
+                    <div class="icon">
+                        <div class="bleh-icon" style="--icon: var(--${icon})" />
+                    </div>
+                    ` : ""}
+                    ${text2 ? html.node`
+                    <div class="heading">
+                        <h5>${title}</h5>
+                        ${body ? html.node`<p>${body}</p>` : ""}
+                    </div>
+                    ` : ""}
+                    ${settings_store[id].extensions ? html.node`
+                    <div class="extensions">
+                        ${settings_store[id].extensions.map((extension) => () => {
+          let container = html.node`
+                                <div class="extension">
+                                    <div class="bleh-icon" />
+                                </div>
+                            `;
+          tippy(container, {
+            content: tl(trans.requires_extension_value).replace("{v}", tl(extension))
+          });
+          return container;
+        })}
+                    </div>
+                    ` : ""}
+                    ${setting_incompatible_block(settings_store[id].incompatible)}
+                    <div class="check">
+                        <div class="box" ref=${(el) => toggle2 = el} aria-checked=${value}>
+                            <div class="bleh-icon" />
+                        </div>
+                    </div>
+                </div>
+            `;
+      }
+    } catch (e) {
+      console.error(e);
+      return setting_fail(id, e);
+    }
+    return setting_fail(id);
+  }
+  function error_input(reason, input2, tooltip, submit) {
+    log(reason, "input", "log");
+    input2.setAttribute("data-has-error", "true");
+    tooltip.setContent(reason);
+    tooltip.enable();
+    tooltip.show();
+    submit.disabled = true;
+  }
+  function setting_incompatible_block(entries) {
+    if (!entries)
+      return "";
+    return "";
+    return html.node`
+        <div class="incompatible">
+            ${entries.map((incompatible) => () => {
+      let container = html.node`
+                    <div class="extension">
+                        <div class="bleh-icon" />
+                    </div>
+                `;
+      tippy(container, {
+        content: tl(trans.incompatible_with_value).replace("{v}", tl(settings_store[incompatible.setting].title))
+      });
+      return container;
+    })}
+        </div>
+    `;
+  }
+  function setting_fail(id, e = null) {
+    if (e.unavailable) {
+      return html.node`
+            <div class="setting">
+                <div class="alert alert-info no-margin">
+                    ${e.message}
+                </div>
+            </div>
+        `;
+    }
+    return html.node`
+        <div class="setting">
+            <div class="alert alert-error no-margin">
+                ${tl(trans.value_failed_to_load).replace("{v}", id)}
+                ${e ? html`<br>${e.message}` : ""}
+            </div>
+        </div>
+    `;
+  }
+  function update_toggle(id, toggle2) {
+    let value = settings[id];
+    toggle2.setAttribute("aria-checked", !value);
+    save_setting(id, !value);
+  }
+  function update_range(id, option, track, input2, value, marker, silent = false) {
+    let max = settings_store[id].max - settings_store[id].min;
+    input2.value = value;
+    track.style.setProperty("--percent", `${(value - settings_store[id].min) / max * 100}%`);
+    marker.textContent = `${value}${settings_store[id].suffix || ""}`;
+    option.setAttribute("data-modified", value != settings_store[id].default);
+    save_setting(id, value);
+  }
+  function reset_range(id, option, track, range, marker) {
+    update_range(id, option, track, range, settings_store[id].default, marker, true);
+    notify({
+      id: "reset_setting",
+      title: tl(trans.settings),
+      body: tl(trans.reset_item_to_default),
+      icon: "icon-16-settings"
+    });
+  }
+  function update_text(id, input2, submit, option, value, reset_btn, avatar3, silent = false) {
+    if (settings_store[id].wait) {
+      reset_btn.disabled = true;
+      input2.disabled = true;
+      submit.disabled = true;
+    }
+    input2.value = value;
+    option.setAttribute("data-modified", value != settings_store[id].default);
+    if (id == "profile_shortcut") {
+      save_profile_shortcut(input2, value, submit, reset_btn, avatar3);
+      return;
+    } else if (id == "hu_tao") {
+      if (value == "develop") {
+        dialog_rm2({ id: "hu_tao" });
+        change_settings_page("sku");
+        notify({
+          id: "unlocked",
+          title: tl(trans.development),
+          body: tl(trans.unlocked),
+          type: "success"
+        });
+      }
+    }
+    save_setting(id, value);
+  }
+  function reset_text(id, input2, submit, option, reset_btn, avatar3) {
+    update_text(id, input2, submit, option, settings_store[id].default, reset_btn, avatar3, true);
+    notify({
+      id: "reset_setting",
+      title: tl(trans.settings),
+      body: tl(trans.reset_item_to_default),
+      icon: "icon-16-settings"
+    });
+  }
+  function save_setting(id, value) {
+    settings[id] = value;
+    document.documentElement.setAttribute(`data-bleh--${id}`, value);
+    if (id == "theme") {
+      if (value == "light" || value == "ink" || value == "glass") {
+        settings.theme_type = "light";
+      } else {
+        settings.theme_type = "dark";
+      }
+      document.documentElement.setAttribute(`data-bleh--theme_type`, settings.theme_type);
+    }
+    if (settings_store[id].require_reload == true || settings_store[id].require_reload == "partial" && page.type != "bleh_settings")
+      request_reload();
+    if (settings_store[id].css)
+      document.body.style.setProperty(`--${settings_store[id].css}`, `${value}${settings_store[id].suffix || ""}`);
+    localStorage.setItem("bleh", JSON.stringify(settings));
+    log(`saved ${id} as ${value}`, "settings", "log", { settings, settings_id: settings[id] });
   }
 
   // src/pages/glacier.js
@@ -2041,6 +5997,8 @@
     date_panel.setAttribute("data-glacier-graphs", settings.glacier_library_graphs);
     date_items.forEach((item, index) => {
       date_panel.appendChild(item);
+      if (item.classList.contains("row"))
+        item.classList = "date-selector";
       if (index == 0)
         page.structure.glacier.selector = item;
     });
@@ -2062,14 +6020,13 @@
         `;
       tabs.appendChild(velocity_tab);
     } else {
-      let compare_tab = document.createElement("li");
-      compare_tab.classList.add("navlist-item", "secondary-nav-item", "secondary-nav-item--compare");
-      compare_tab.innerHTML = `
-            <a class="secondary-nav-item-link" onclick="_compare()">
-                ${tl(trans.compare)}
-            </a>
-        `;
-      tabs.appendChild(compare_tab);
+      tabs.appendChild(html.node`
+            <li class="navlist-item secondary-nav-item secondary-nav-item--compare">
+                <a class="secondary-nav-item-link" onclick=${() => compare()}>
+                    ${tl(trans.compare)}
+                </a>
+            </li>
+        `);
     }
     if (!ff("glacier_library"))
       return;
@@ -2151,59 +6108,81 @@
     }
   }
   function bleh_glacier_library_date() {
+    let button = page.structure.glacier.date_panel.querySelector(".date-range-picker-button.disclose-trigger:not([data-glacier-library-date])");
+    if (!button) return;
+    button.setAttribute("data-glacier-library-date", "true");
+    console.info("button", button);
+    let date_picker = page.structure.glacier.date_panel.querySelector(".library-controls-datepicker");
+    let old_date_btn = date_picker.querySelector(".date-range-picker-button:not(.disclose-trigger)");
+    if (old_date_btn) old_date_btn.remove();
+    let date_btn = html.node`
+        <button class="date-range-picker-button">${button.querySelector(".date-range-picker-button-inner").textContent}</button>
+    `;
+    date_picker.appendChild(date_btn);
     let picker_content = page.structure.glacier.date_panel.querySelector(".date-range-picker-content:not([data-glacier-library-date])");
-    if (picker_content == null)
-      return;
+    if (!picker_content) return;
     picker_content.setAttribute("data-glacier-library-date", "true");
-    let picker_presets = picker_content.querySelector(".date-range-picker-presets-wrap");
-    let picker_col_2 = picker_content.querySelector(".date-range-picker-presets--col-2");
-    let new_wrap = document.createElement("div");
-    new_wrap.classList.add("date-range-picker-presets-wrap");
-    let new_presets = document.createElement("ul");
-    new_presets.classList.add("date-range-picker-presets");
+    let picker_presets = picker_content.querySelectorAll(".date-range-picker-presets-wrap > .date-range-picker-presets");
     let params = new URLSearchParams(document.location.search);
     page.requested.from = params.get("from");
     page.requested.to = params.get("to");
     page.requested.rangetype = params.get("rangetype");
-    let current_year = (/* @__PURE__ */ new Date()).getFullYear();
-    let previous_year = current_year - 1;
-    if (current_year >= 2025) {
-      new_presets.classList.add("date-range-picker-presets-2");
-      let last_year = document.createElement("div");
-      last_year.classList.add("date-range-picker-preset", "date-range-picker-preset-custom", "date-range-picker-preset-last-year");
-      last_year.innerHTML = `
+    const current_year = (/* @__PURE__ */ new Date()).getFullYear();
+    const previous_year = current_year - 1;
+    let selected;
+    if (page.requested.from == `${current_year}-01-01` && (page.requested.to == `${current_year}-12-31` || page.requested.rangetype == "year"))
+      selected = "this_year";
+    else if (page.requested.from == `${previous_year}-01-01` && (page.requested.to == `${previous_year}-12-31` || page.requested.rangetype == "year"))
+      selected = "last_year";
+    picker_presets[0].appendChild(html.node`
+        <li class="date-range-picker-preset ${selected == "last_year" ? "date-range-picker-preset--selected" : ""}">
             <a href="${window.location.href.replace(window.location.search, "")}?from=${previous_year}-01-01&rangetype=year">
                 ${previous_year}
             </a>
-        `;
-      new_presets.appendChild(last_year);
-      let this_year = document.createElement("div");
-      this_year.classList.add("date-range-picker-preset", "date-range-picker-preset-custom", "date-range-picker-preset-this-year");
-      this_year.innerHTML = `
+        </li>
+    `);
+    picker_presets[1].appendChild(html.node`
+        <li class="date-range-picker-preset ${selected == "this_year" ? "date-range-picker-preset--selected" : ""}">
             <a href="${window.location.href.replace(window.location.search, "")}?from=${current_year}-01-01&rangetype=year">
                 ${current_year}
             </a>
-        `;
-      new_presets.appendChild(this_year);
-      if (page.requested.from == `${current_year}-01-01` && (page.requested.to == `${current_year}-12-31` || page.requested.rangetype == "year"))
-        this_year.classList.add("date-range-picker-preset--selected");
-      else if (page.requested.from == `${previous_year}-01-01` && (page.requested.to == `${previous_year}-12-31` || page.requested.rangetype == "year"))
-        last_year.classList.add("date-range-picker-preset--selected");
-    } else {
-      new_presets.classList.add("date-range-picker-presets-wide");
-      let this_year = document.createElement("div");
-      this_year.classList.add("date-range-picker-preset", "date-range-picker-preset-custom", "date-range-picker-preset-this-year");
-      this_year.innerHTML = `
-            <a href="${window.location.href.replace(window.location.search, "")}?from=${current_year}-01-01&rangetype=year">
-                ${current_year}<span class="new-badge">${tl(trans.new)}</span>
-            </a>
-        `;
-      new_presets.appendChild(this_year);
-      if (page.requested.from == `${current_year}-01-01` && (page.requested.to == `${current_year}-12-31` || page.requested.rangetype == "year"))
-        this_year.classList.add("date-range-picker-preset--selected");
-    }
-    new_wrap.appendChild(new_presets);
-    picker_presets.after(new_wrap);
+        </li>
+    `);
+    picker_content.classList = "date-range-picker-content-inner";
+    tippy(date_btn, {
+      theme: "window",
+      content: picker_content,
+      placement: "bottom",
+      interactive: true,
+      interactiveBorder: 10,
+      trigger: "click"
+    });
+    let form = picker_content.querySelector(":scope > .date-range-picker-form");
+    let from_group = form.querySelector(".form-group--from");
+    let from_input = from_group.querySelector("input");
+    let to_group = form.querySelector(".form-group--to");
+    let to_input = to_group.querySelector("input");
+    form.insertBefore(html.node`
+        <div class="input-group library-date-group">
+            ${input({
+      type: "date",
+      value: from_input.value,
+      name: from_input.name,
+      min: "2000-01-01",
+      show_time: false
+    })}
+            <div class="bleh-icon" style="--icon: var(--icon-16-arrow-right)" />
+            ${input({
+      type: "date",
+      value: to_input.value,
+      name: to_input.name,
+      min: "2000-01-01",
+      show_time: false
+    })}
+        </div>
+    `, form.firstChild);
+    from_group.remove();
+    to_group.remove();
   }
   function bleh_glacier_library() {
     bleh_glacier_library_table();
@@ -2217,7 +6196,7 @@
     if (table == null)
       return;
     console.log("glacier library", table);
-    log("refresh is now marked false (table log)", "glacier library");
+    log("refresh is now marked false (table log)", "glacier library", "log");
     page.structure.glacier.refresh = false;
     let current_view = page.structure.glacier.date_panel.querySelector(".date-range-picker-button-inner");
     if (current_view == null) {
@@ -2353,70 +6332,27 @@
       theme: "window",
       content: html.node`
             <div class="dialog-settings">
-                ${page.subpage == "library_artists" ? html.node`
-                <div class="setting" data-type="toggle" id="container-colourful_counts" onclick="_update_item('colourful_counts')">
-                    <div class="heading">
-                        <h5>${tl(trans.colourful_counts.name)}</h5>
-                        <p>${tl(trans.colourful_counts.body)}</p>
+                <div class="setting-group blend">
+                    ${page.subpage == "library_artists" ? html.node`
+                    <div class="setting" data-type="toggle" id="container-colourful_counts" onclick="_update_item('colourful_counts')">
+                        <div class="heading">
+                            <h5>${tl(trans.colourful_counts.name)}</h5>
+                            <p>${tl(trans.colourful_counts.body)}</p>
+                        </div>
+                        <div class="toggle-wrap">
+                            <button class="toggle" id="toggle-colourful_counts" aria-checked="true">
+                                <div class="dot"></div>
+                            </button>
+                        </div>
                     </div>
-                    <div class="toggle-wrap">
-                        <button class="toggle" id="toggle-colourful_counts" aria-checked="true">
-                            <div class="dot"></div>
-                        </button>
-                    </div>
-                </div>
-                ` : html.node`
-                <div class="setting" data-type="toggle" id="container-format_guest_features" onclick="_update_item('format_guest_features')">
-                    <button class="btn reset" onclick="_reset_item('format_guest_features')">${tl(trans.reset)}</button>
-                    <div class="heading">
-                        <h5>${tl(trans.format_guest_features.name)}</h5>
-                        <p>${tl(trans.format_guest_features.body)}</p>
-                    </div>
-                    <div class="toggle-wrap">
-                        <button class="toggle" id="toggle-format_guest_features" aria-checked="true">
-                            <div class="dot"></div>
-                        </button>
-                    </div>
-                </div>
-                <div class="setting hide-if-format-guest-disabled" data-type="toggle" id="container-show_guest_features" onclick="_update_item('show_guest_features')">
-                    <button class="btn reset" onclick="_reset_item('show_guest_features')">${tl(trans.reset)}</button>
-                    <div class="heading">
-                        <h5>${tl(trans.show_guest_features.name)}</h5>
-                        <p>${tl(trans.show_guest_features.body)}</p>
-                    </div>
-                    <div class="toggle-wrap">
-                        <button class="toggle" id="toggle-show_guest_features" aria-checked="true" type="button">
-                            <div class="dot"></div>
-                        </button>
-                    </div>
-                </div>
-                `}
-                <div class="sep"></div>
-                ${(page.subpage == "library_artists" || page.subpage == "library_albums") && auth.pro ? html.node`
-                <div class="setting" data-type="toggle" id="container-grid_glow" onclick="_update_item('grid_glow')">
-                    <button class="btn reset" onclick="_reset_item('grid_glow')">${tl(trans.reset)}</button>
-                    <div class="heading">
-                        <h5>${tl(trans.grid_glow.name)}</h5>
-                        <p>${tl(trans.grid_glow.body)}</p>
-                    </div>
-                    <div class="toggle-wrap">
-                        <button class="toggle" id="toggle-grid_glow" aria-checked="true" type="button">
-                            <div class="dot"></div>
-                        </button>
-                    </div>
-                </div>
-                ` : ""}
-                <div class="setting" data-type="toggle" id="container-glacier_library_graphs" onclick="_update_item('glacier_library_graphs')">
-                    <button class="btn reset" onclick="_reset_item('glacier_library_graphs')">${tl(trans.reset)}</button>
-                    <div class="heading">
-                        <h5>${tl(trans.glacier_graphs.name)}</h5>
-                        <p>${tl(trans.glacier_graphs.body)}</p>
-                    </div>
-                    <div class="toggle-wrap">
-                        <button class="toggle" id="toggle-glacier_library_graphs" aria-checked="true" type="button">
-                            <div class="dot"></div>
-                        </button>
-                    </div>
+                    ` : html.node`
+                    ${setting({ id: "format_guest_features" })}
+                    ${setting({ id: "show_guest_features" })}
+                    `}
+                    ${(page.subpage == "library_artists" || page.subpage == "library_albums") && auth.pro ? html.node`
+                    ${setting({ id: "grid_glow" })}
+                    ` : ""}
+                    ${setting({ id: "glacier_library_graphs" })}
                 </div>
             </div>
         `,
@@ -2538,7 +6474,7 @@
         page.state.glacier.insights.album.display = false;
       }
       for (let item in insights) {
-        log(`checking insights status of item ${item} - display of ${insights[item].display}`, "glacier library", "info", { checking: insights[item], global: page.state.glacier.insights[item] });
+        log(`checking insights status of item ${item} - display of ${insights[item].display}`, "glacier library", "log", { checking: insights[item], global: page.state.glacier.insights[item] });
         if (insights[item].display && JSON.stringify(insights[item]) != JSON.stringify(page.state.glacier.insights[item])) {
           log(`confirmed insights status of item ${item} - is different`, "glacier library");
           page.state.glacier.insights[item] = insights[item];
@@ -2570,7 +6506,7 @@
     let scrobble_canvas = document.createElement("canvas");
     scrobble_canvas.classList.add("scrobble-insights-canvas");
     Chart.defaults.color = page.state.chart_colours.text_col;
-    Chart.defaults.font.family = "Ubuntu Sans";
+    Chart.defaults.font.family = page.state.chart_colours.font;
     if (settings.chart_insights_view == "line") {
       let gradient = scrobble_canvas.getContext("2d").createLinearGradient(0, 0, 0, 160);
       try {
@@ -2731,7 +6667,7 @@
     let scrobble_canvas = document.createElement("canvas");
     scrobble_canvas.classList.add("scrobble-canvas");
     Chart.defaults.color = page.state.chart_colours.text_col;
-    Chart.defaults.font.family = "Ubuntu Sans";
+    Chart.defaults.font.family = page.state.chart_colours.font;
     if (settings.chart_view == "line") {
       let gradient = scrobble_canvas.getContext("2d").createLinearGradient(0, 0, 0, 160);
       try {
@@ -2926,7 +6862,6 @@
         if (!button)
           button = wrapper.querySelector("span");
         if (!button) return;
-        console.info("libraryyy", wrapper, button);
         button.classList.add("btn", "view-item", "glacier-library-button");
         let tooltips = wrapper.querySelectorAll(".user-library-controls-tooltip");
         tooltips.forEach((tooltip) => {
@@ -2979,42 +6914,10 @@
       theme: "window",
       content: html.node`
             <div class="dialog-settings">
-                <div class="setting" data-type="toggle" id="container-format_guest_features" onclick="_update_item('format_guest_features')">
-                    <button class="btn reset" onclick="_reset_item('format_guest_features')">${tl(trans.reset)}</button>
-                    <div class="heading">
-                        <h5>${tl(trans.format_guest_features.name)}</h5>
-                        <p>${tl(trans.format_guest_features.body)}</p>
-                    </div>
-                    <div class="toggle-wrap">
-                        <button class="toggle" id="toggle-format_guest_features" aria-checked="true">
-                            <div class="dot"></div>
-                        </button>
-                    </div>
-                </div>
-                <div class="setting hide-if-format-guest-disabled" data-type="toggle" id="container-show_guest_features" onclick="_update_item('show_guest_features')">
-                    <button class="btn reset" onclick="_reset_item('show_guest_features')">${tl(trans.reset)}</button>
-                    <div class="heading">
-                        <h5>${tl(trans.show_guest_features.name)}</h5>
-                        <p>${tl(trans.show_guest_features.body)}</p>
-                    </div>
-                    <div class="toggle-wrap">
-                        <button class="toggle" id="toggle-show_guest_features" aria-checked="true" type="button">
-                            <div class="dot"></div>
-                        </button>
-                    </div>
-                </div>
-                <div class="sep"></div>
-                <div class="setting" data-type="toggle" id="container-glacier_library_graphs" onclick="_update_item('glacier_library_graphs')">
-                    <button class="btn reset" onclick="_reset_item('glacier_library_graphs')">${tl(trans.reset)}</button>
-                    <div class="heading">
-                        <h5>${tl(trans.glacier_graphs.name)}</h5>
-                        <p>${tl(trans.glacier_graphs.body)}</p>
-                    </div>
-                    <div class="toggle-wrap">
-                        <button class="toggle" id="toggle-glacier_library_graphs" aria-checked="true" type="button">
-                            <div class="dot"></div>
-                        </button>
-                    </div>
+                <div class="setting-group blend">
+                    ${setting({ id: "format_guest_features" })}
+                    ${setting({ id: "show_guest_features" })}
+                    ${setting({ id: "glacier_library_graphs" })}
                 </div>
             </div>
         `,
@@ -3028,10 +6931,12 @@
     });
     view_buttons.appendChild(configure_button);
     upper_wrap.appendChild(view_buttons);
-    let lower_wrap = document.createElement("div");
-    lower_wrap.classList.add("glacier-library-top-lower");
-    let lower_metadata = document.createElement("div");
-    lower_metadata.classList.add("glacier-library-metadata");
+    let lower_metadata;
+    let lower_wrap = html.node`
+        <div class="glacier-library-top-lower">
+            <div class="glacier-library-metadata" ref=${(el) => lower_metadata = el} />
+        </div>
+    `;
     let legacy_meta_wrap = page.structure.main.querySelector(".metadata-list");
     if (legacy_meta_wrap) {
       let metadatas = legacy_meta_wrap.querySelectorAll(".metadata-item:not(.library-header-ctas__wrapper)");
@@ -3044,11 +6949,24 @@
             `;
         lower_metadata.appendChild(glacier_meta_item);
       });
+      header.appendChild(lower_wrap);
     }
-    lower_wrap.appendChild(lower_metadata);
-    header.appendChild(lower_wrap);
     page.structure.main.insertBefore(header, page.structure.main.firstElementChild);
-    let overview_header = page.structure.main.querySelector(":scope > .library-overview-header");
+    let overview_headers = page.structure.main.querySelectorAll(".library-overview-header");
+    overview_headers.forEach((top) => {
+      top.classList = "top-container";
+      let header2 = top.querySelector("h2");
+      let select_btn = top.querySelector(".dropdown-menu-clickable-button");
+      if (!select_btn) return;
+      select_btn.classList.add("select-button", "link-select", "blend-v2-btn");
+      select_btn.classList.remove("dropdown-menu-list-button");
+      header2.after(html.node`
+            <div class="accompany view-buttons blend blend-v2">
+                ${select_btn}
+            </div>
+        `);
+    });
+    let overview_header = page.structure.main.querySelector(":scope > .top-container");
     if (!overview_header) return;
     overview_header.nextElementSibling.insertBefore(overview_header, overview_header.nextElementSibling.firstElementChild);
   }
@@ -3058,6 +6976,8 @@
     if (!bulk_edit) return;
     let view_buttons = page.structure.main.querySelector(".glacier-library-buttons");
     if (!view_buttons) return;
+    let pre_existing_bulk = view_buttons.querySelector(".bulk-edit-button");
+    if (pre_existing_bulk) return;
     let edit_form = view_buttons.querySelector(":scope > .library-header-edit-form");
     let delete_button = view_buttons.querySelector(":scope > .delete-icon");
     if (!delete_button) return;
@@ -3067,199 +6987,6 @@
       view_buttons.insertBefore(bulk_edit, delete_button);
     else
       view_buttons.insertBefore(bulk_edit, edit_form);
-  }
-
-  // src/avatar.js
-  function patch_avatar(avatar3, name, type = "", parent = null, side = "right") {
-    if (avatar3.hasAttribute("data-bleh-avatar"))
-      return {};
-    avatar3.setAttribute("data-bleh-avatar", "true");
-    let avatar_img = avatar3.querySelector("img");
-    if (!avatar_img) return {};
-    avatar_img.setAttribute("src", avatar_img.getAttribute("src").replace("/64s/", "/avatar70s/"));
-    let badges = load_badges(name, true);
-    let buttons = html.node`
-        <div class="user-buttons view-buttons">
-            ${() => {
-      let btn = html.node`
-                    <a class="btn view-item chibi" data-type="profile" href="${root}user/${name}">${tl(trans.profile)}</a>
-                `;
-      tippy(btn, {
-        content: tl(trans.profile)
-      });
-      return btn;
-    }}
-            ${() => {
-      let btn = html.node`
-                    <a class="btn view-item chibi" data-type="library" href="${root}user/${name}/library">${tl(trans.library)}</a>
-                `;
-      tippy(btn, {
-        content: btn.textContent
-      });
-      return btn;
-    }}
-                    ${() => {
-      let btn = html.node`
-                    <a class="btn view-item chibi" data-type="shouts" href="${root}user/${name}/shoutbox">${tl(trans.shouts)}</a>
-                `;
-      tippy(btn, {
-        content: btn.textContent
-      });
-      return btn;
-    }}
-        </div>
-    `;
-    if (badges) {
-      let pre_existing_badge = avatar3.querySelector(".avatar-status-dot");
-      if (pre_existing_badge)
-        avatar3.removeChild(pre_existing_badge);
-      avatar3.setAttribute("title", "");
-      let this_badge = sponsor_list.badges[name];
-      if (!Array.isArray(sponsor_list.badges[name])) {
-        log(`@${name} 1 badge:`, "shout", "info", sponsor_list.badges[name]);
-      } else {
-        log(`@${name} multiple badges:`, "shout", "info", sponsor_list.badges[name]);
-        let badges_length = Object.keys(sponsor_list.badges[name]).length - 1;
-        this_badge = sponsor_list.badges[name][badges_length];
-        log(`@${name} using badge ${badges_length} as primary`, "shout", "info", this_badge);
-      }
-      let badge = document.createElement("span");
-      badge.classList.add("avatar-status-dot", `user-status--bleh-${this_badge.type}`, `user-status--bleh-user-${name}`);
-      avatar3.appendChild(badge);
-      if (!parent)
-        avatar3.classList.add("avatar-can-hoverbox");
-      else
-        parent.classList.add("parent-can-hoverbox");
-      tippy(parent ? parent : avatar3, {
-        theme: "user",
-        content: html.node`
-                <div class="image-info">
-                    <div class="inner-image">
-                        ${html.node([avatar_img.outerHTML])}
-                    </div>
-                    <div class="info">
-                        <h5 class="title">${name}</h5>
-                        <p class="badge user-status--bleh-${this_badge.type} user-status--bleh-user-${name}" data-badge-type="${this_badge.type}" data-badge-user="${name}">${this_badge.name}</p>
-                    </div>
-                    <a href="${root}user/${name}" class="link-over"></a>
-                </div>
-                ${buttons}
-            `,
-        placement: side,
-        interactive: true,
-        delay: [200, 0]
-      });
-      return this_badge;
-    } else {
-      let pre_existing_badge = avatar3.querySelector(".avatar-status-dot");
-      if (!pre_existing_badge) {
-        if (!parent)
-          avatar3.classList.add("avatar-can-hoverbox");
-        else
-          parent.classList.add("parent-can-hoverbox");
-        tippy(parent ? parent : avatar3, {
-          theme: "user",
-          content: html.node`
-                    <div class="image-info">
-                        <div class="inner-image">
-                            ${html.node([avatar_img.outerHTML])}
-                        </div>
-                        <div class="info">
-                            <h5 class="title">${name}</h5>
-                        </div>
-                        <a href="${root}user/${name}" class="link-over"></a>
-                    </div>
-                    ${buttons}
-                `,
-          placement: side,
-          interactive: true,
-          delay: [200, 0]
-        });
-        return {};
-      } else {
-        if (!parent)
-          avatar3.classList.add("avatar-can-hoverbox");
-        else
-          parent.classList.add("parent-can-hoverbox");
-        let type2 = pre_existing_badge.classList[1].replace("avatar-status-dot--", "user-status-");
-        tippy(parent ? parent : avatar3, {
-          theme: "user",
-          content: html.node`
-                    <div class="image-info">
-                        <div class="inner-image">
-                            ${html.node([avatar_img.outerHTML])}
-                        </div>
-                        <div class="info">
-                            <h5 class="title">${name}</h5>
-                            <p class="badge ${type2}">${tl(trans.badges[type2].name)}</p>
-                        </div>
-                        <a href="${root}user/${name}" class="link-over"></a>
-                    </div>
-                    ${buttons}
-                `,
-          placement: side,
-          interactive: true,
-          delay: [200, 0]
-        });
-        avatar3.setAttribute("title", "");
-        return {
-          type: pre_existing_badge.classList[1]
-        };
-      }
-    }
-  }
-  function return_name_from_avatar(avatar3) {
-    if (!avatar3)
-      return;
-    if (!avatar3.hasAttribute("alt"))
-      return;
-    if (avatar3.getAttribute("alt") == tl(trans.your_avatar))
-      return auth;
-    return avatar3.getAttribute("alt").replace(tl(trans.avatar_for_user), "");
-  }
-  unsafeWindow._expand_avatar = function(src) {
-    expand_avatar(src);
-  };
-  function expand_avatar(src) {
-    dialog({
-      id: "avatar",
-      body: html.node`
-            <div class="full-avatar-wrapper">
-                <div class="full-avatar">
-                    <img src="${src}">
-                </div>
-                <div class="modal-footer">
-                    <div class="fill"></div>
-                    <div class="button-group">
-                        <a class="btn primary open" href="${src}" target="_blank">
-                            ${tl(trans.open_new_tab)}
-                        </a>
-                    </div>
-                    <div class="fill"></div>
-                </div>
-            </div>
-        `,
-      type: "avatar",
-      has_overlays: false
-    });
-  }
-
-  // src/components/menu.js
-  function register_menu(element, menu) {
-    element.addEventListener("contextmenu", (e) => {
-      e.preventDefault();
-      menu.setProps({
-        getReferenceClientRect: () => ({
-          width: 0,
-          height: 0,
-          top: e.clientY,
-          bottom: e.clientY,
-          left: e.clientX,
-          right: e.clientX
-        })
-      });
-      menu.show();
-    });
   }
 
   // src/components/share.js
@@ -3337,12 +7064,18 @@
     }
     let image_details;
     let gallery_section;
+    let first = false;
     try {
       gallery_section = page.structure.main.querySelector(".gallery-section");
       if (gallery_section) {
-        page.structure.nav.after(gallery_section);
-        image_details = document.createElement("section");
-        image_details.classList.add("image-details");
+        first = true;
+        if (ff("short"))
+          page.structure.row.insertBefore(gallery_section, page.structure.content);
+        else
+          page.structure.nav.after(gallery_section);
+        image_details = html.node`
+                <section class="image-details" />
+            `;
       } else {
         image_details = page.structure.main.querySelector(".image-details");
         image_details.innerHTML = "";
@@ -3382,8 +7115,9 @@
     image_details.insertBefore(image_title_container, image_sidebar);
     breadcrumbs.style.setProperty("display", "none");
     page.structure.main.insertBefore(image_details, page.structure.main.firstElementChild);
+    if (first) image_details.after(html.node`<div class="sep" />`);
     let description = image_details.querySelector(".gallery-image-description");
-    if (description == null) {
+    if (!description) {
       description = document.createElement("p");
       description.classList.add("gallery-image-description", "gallery-image-description-empty");
       description.textContent = trans_legacy.en.gallery.empty.description;
@@ -3436,13 +7170,13 @@
     tippy(report_text, {
       content: report_text.textContent
     });
-    report_text.textContent = trans_legacy.en.gallery.report.name;
+    report_text.textContent = tl(trans.report);
     buttons_extra.appendChild(report_button);
     let star_buttons = image_details.querySelectorAll(".gallery-image-preferred-button :is(button, a)");
     star_buttons.forEach((star_button) => {
       star_button.removeAttribute("title");
       let text2 = star_button.querySelector(".gallery-image-preferred-states");
-      text2.textContent = trans_legacy.en.gallery.prefer.name;
+      text2.textContent = tl(trans.star);
     });
     let view_all_container = page.structure.main.querySelector(".more-link-fullwidth-right-flush-top");
     if (view_all_container) {
@@ -3532,7 +7266,7 @@
       page.structure.container.setAttribute("data-bleh--gallery-tab", "all");
     else
       page.structure.container.setAttribute("data-bleh--gallery-tab", "saved");
-    page.structure.content_top.after(html.node`
+    let nav = html.node`
         <div class="bleh--nav-wrap bleh--nav-wrap--bookmarks">
             <nav class="navlist secondary-nav">
                 <ul class="navlist-items">
@@ -3549,7 +7283,11 @@
                 </ul>
             </nav>
         </div>
-    `);
+    `;
+    if (ff("short"))
+      page.structure.row.insertBefore(nav, page.structure.content);
+    else
+      page.structure.content_top.after(nav);
     let bookmarks_panel;
     page.structure.main.classList.add("bleh--gallery");
     page.structure.main.after(html.node`
@@ -3559,13 +7297,6 @@
             </section>
         </div>
     `);
-    let sort_button = page.structure.main.querySelector(".dropdown-menu-clickable-button");
-    let sort_menu = page.structure.main.querySelector(".dropdown-menu-clickable");
-    let sort_wrap = document.createElement("div");
-    sort_wrap.classList.add("dropdown-top-wrap");
-    sort_wrap.appendChild(sort_button);
-    sort_wrap.appendChild(sort_menu);
-    page.structure.main.insertBefore(sort_wrap, page.structure.main.firstElementChild);
     if (bookmarked_images.hasOwnProperty(page.name)) {
       bookmarked_images[page.name].forEach((image) => {
         let image_element = document.createElement("li");
@@ -3674,539 +7405,216 @@
     localStorage.setItem("bleh_bookmarked_images", JSON.stringify(bookmarked_images));
   }
 
-  // src/components/colourful_counts.js
-  function patch_artist_ranks_in_list_view(track) {
-    let count_bar = track.querySelector(".chartlist-count-bar");
-    if (count_bar == void 0)
-      return;
-    let count_bar_link = count_bar.querySelector(".chartlist-count-bar-link");
-    if (count_bar_link.getAttribute("href").includes("?from=") || count_bar_link.getAttribute("href").includes("?date_preset=") && !count_bar_link.getAttribute("href").endsWith("?date_preset=ALL") && !count_bar_link.getAttribute("href").endsWith("?date_preset=null"))
-      return;
-    let count = clean_number(count_bar.querySelector(".chartlist-count-bar-value").textContent.trim().replace(" scrobbles", ""));
-    if (!count_bar.hasAttribute("data-kate-processed")) {
-      count_bar.setAttribute("data-kate-processed", "true");
-      let parsed_scrobble_as_rank = parse_scrobbles_as_rank(count);
-      count_bar.setAttribute("data-bleh--scrobble-milestone", parsed_scrobble_as_rank.milestone);
-      count_bar.style.setProperty("--hue-over", parsed_scrobble_as_rank.hue);
-      count_bar.style.setProperty("--sat-over", parsed_scrobble_as_rank.sat);
-      count_bar.style.setProperty("--lit-over", parsed_scrobble_as_rank.lit);
-    }
-  }
-  function parse_scrobbles_as_rank(scrobbles) {
-    let scrobble_milestone = 0;
-    let scrobble_proximity = 1;
-    let max_rank = 15;
-    for (let rank = max_rank; rank >= 0; rank--) {
-      if (scrobbles > ranks[rank].start) {
-        let this_rank = parseInt(rank);
-        scrobble_milestone = this_rank;
-        let next_rank = this_rank + 1;
-        let prev_rank = this_rank - 1;
-        if (this_rank != max_rank && this_rank != 0)
-          scrobble_proximity = (scrobbles - ranks[prev_rank].start) / ranks[next_rank].start;
-        break;
-      }
-    }
-    let milestone_hue = ranks[scrobble_milestone].hue;
-    let milestone_sat = ranks[scrobble_milestone].sat;
-    let milestone_lit = ranks[scrobble_milestone].lit;
-    if (scrobble_milestone != max_rank) {
-      let next_milestone_hue = ranks[scrobble_milestone + 1].hue;
-      let next_milestone_sat = ranks[scrobble_milestone + 1].sat;
-      let next_milestone_lit = ranks[scrobble_milestone + 1].lit;
-      if (milestone_hue > next_milestone_hue)
-        milestone_hue += (next_milestone_hue - milestone_hue) * scrobble_proximity;
-      if (milestone_sat < next_milestone_sat)
-        milestone_sat += (milestone_sat - next_milestone_sat) * scrobble_proximity;
-      else
-        milestone_sat += (next_milestone_sat - milestone_sat) * scrobble_proximity;
-      if (milestone_lit < next_milestone_lit)
-        milestone_lit += (milestone_lit - next_milestone_lit) * scrobble_proximity;
-      else
-        milestone_lit += (next_milestone_lit - milestone_lit) * scrobble_proximity;
-    }
-    log(`milestone for ${scrobbles} is ${scrobble_milestone} within ${scrobble_proximity} proximity`, "colourful counts", "info", { hue: milestone_hue, sat: milestone_sat, lit: milestone_lit });
-    return {
-      milestone: scrobble_milestone,
-      proximity: scrobble_proximity,
-      hue: milestone_hue,
-      sat: milestone_sat,
-      lit: milestone_lit
-    };
-  }
-
-  // src/components/settings.js
-  function setting({
-    id = "",
-    text: text2 = true,
-    focus = false
+  // src/components/toggle.js
+  function toggle({
+    value = false,
+    type = "toggle",
+    name: name2 = "",
+    title = "",
+    body = "",
+    small = "",
+    disabled = false,
+    data: data2 = "",
+    func = null
   }) {
-    try {
-      let value = settings[id];
-      log(`creating ${id} with value ${value}`, "settings", "log", { settings, settings_id: settings[id] });
-      if (!settings_store[id])
-        return setting_fail(id, { message: "No settings store entry present" });
-      let type = settings_store[id].type || "toggle";
-      let title = settings_store[id].title ? tl(settings_store[id].title) : id;
-      let body = settings_store[id].body ? tl(settings_store[id].body) : null;
-      if (type === "toggle") {
-        let toggle;
-        return html.node`
-                <div class="setting v2" data-type="toggle" onclick=${() => update_toggle(id, toggle)}>
-                    ${text2 ? html.node`
-                    <div class="heading">
-                        <h5>${title}</h5>
-                        ${body ? html.node`<p>${body}</p>` : ""}
-                    </div>
-                    ` : ""}
-                    ${settings_store[id].extensions ? html.node`
-                    <div class="extensions">
-                        ${settings_store[id].extensions.map((extension) => () => {
-          let container = html.node`
-                                <div class="extension">
-                                    <div class="bleh-icon" />
-                                </div>
-                            `;
-          tippy(container, {
-            content: tl(trans.requires_extension_value).replace("{v}", tl(extension))
-          });
-          return container;
-        })}
-                    </div>
-                    ` : ""}
-                    ${setting_incompatible_block(settings_store[id].incompatible)}
-                    <div class="toggle-wrap">
-                        <button class="toggle" ref=${(el) => toggle = el} aria-checked=${value}>
-                            <div class="dot"></div>
-                        </button>
-                    </div>
-                </div>
-            `;
-      } else if (type === "range") {
-        let option;
-        let min = settings_store[id].min || 0;
-        let max = settings_store[id].max || 0;
-        let step = settings_store[id].step || 0;
-        if (min >= max || step === 0)
-          return setting_fail(id, { message: "A range type requires a min, max, and step defined in the settings store" });
-        let track;
-        let input2;
-        let marker;
-        let working_max = settings_store[id].max - settings_store[id].min;
-        return html.node`
-                <div class="setting v2" data-type="range" ref=${(el) => option = el} data-modified=${value != settings_store[id].default}>
-                    <button class="btn reset" onclick=${() => reset_range(id, option, track, input2, marker)}>${tl(trans.reset)}</button>
-                    ${text2 ? html.node`
-                    <div class="heading">
-                        <h5>${title}</h5>
-                        ${body ? html.node`<p>${body}</p>` : ""}
-                    </div>
-                    ` : ""}
-                    ${settings_store[id].extensions ? html.node`
-                    <div class="extensions">
-                        ${settings_store[id].extensions.map((extension) => () => {
-          let container = html.node`
-                                <div class="extension">
-                                    <div class="bleh-icon" />
-                                </div>
-                            `;
-          tippy(container, {
-            content: tl(trans.requires_extension_value).replace("{v}", tl(extension))
-          });
-          return container;
-        })}
-                    </div>
-                    ` : ""}
-                    ${setting_incompatible_block(settings_store[id].incompatible)}
-                    <div class="range">
-                        <div class="track" style="--percent: ${(value - settings_store[id].min) / working_max * 100}%" ref=${(el) => track = el}>
-                            <div class="fill" />
-                            <div class="nub" />
-                        </div>
-                        <input type="range" min=${min} max=${max} step=${step} value=${value} ref=${(el) => input2 = el} oninput=${() => update_range(id, option, track, input2, input2.value, marker)} />
-                        <p class="value-marker" ref=${(el) => marker = el}>${value}${settings_store[id].suffix || ""}</p>
-                    </div>
-                </div>
-            `;
-      } else if (type === "text") {
-        let option;
-        let min = settings_store[id].min || 0;
-        let max = settings_store[id].max || 0;
-        if (max === 0)
-          return setting_fail(id, { message: "A text type requires a max defined in the settings store" });
-        let reset_btn;
-        let avatar3;
-        let input2;
-        let submit;
-        let input_container;
-        let error_tooltip;
-        let container = html.node`
-                <div class="setting v2" data-type="text" ref=${(el) => option = el} data-modified=${value != settings_store[id].default}>
-                    <button class="btn reset" ref=${(el) => reset_btn = el} onclick=${() => reset_text(id, input2, submit, option, reset_btn, avatar3)}>${tl(trans.reset)}</button>
-                    ${text2 ? html.node`
-                    <div class="heading">
-                        <h5>${title}</h5>
-                        ${body ? html.node`<p>${body}</p>` : ""}
-                    </div>
-                    ` : ""}
-                    ${settings_store[id].extensions ? html.node`
-                    <div class="extensions">
-                        ${settings_store[id].extensions.map((extension) => () => {
-          let container2 = html.node`
-                                <div class="extension">
-                                    <div class="bleh-icon" />
-                                </div>
-                            `;
-          tippy(container2, {
-            content: tl(trans.requires_extension_value).replace("{v}", tl(extension))
-          });
-          return container2;
-        })}
-                    </div>
-                    ` : ""}
-                    ${setting_incompatible_block(settings_store[id].incompatible)}
-                    ${settings_store[id].avatar ? html.node`
-                    <div class="avatar-container">
-                        <div class="avatar-inner" ref=${(el) => avatar3 = el}>
-                            <img src=${localStorage.getItem(`bleh_${id}_avi`) || ""} alt=${value} />
-                        </div>
-                    </div>
-                    ` : ""}
-                    <div class="input-container content-form in-settings" data-has-error="false" ref=${(el) => input_container = el}>
-                        <input type="text" maxlength=${max} value=${value} style="--max: ${max}px" ref=${(el) => input2 = el} placeholder=${tl(settings_store[id].placeholder)} />
-                        <button class="btn chibi icon primary submit" ref=${(el) => submit = el} onclick=${() => update_text(id, input2, submit, option, input2.value, reset_btn, avatar3)}>${tl(trans.save)}</button>
-                    </div>
-                </div>
-            `;
-        input2.addEventListener("keydown", (event3) => {
-          if (event3.keyCode === 13 && input_container.getAttribute("data-has-error") == "false") {
-            event3.preventDefault();
-            submit.click();
-          }
-        });
-        tippy(submit, {
-          content: tl(trans.save)
-        });
-        if (focus)
-          input2.focus();
-        error_tooltip = tippy(input2, {
-          theme: "error",
-          placement: "top",
-          trigger: "manual"
-        });
-        error_tooltip.disable();
-        input2.addEventListener("input", () => {
-          input_container.setAttribute("data-has-error", "false");
-          error_tooltip.disable();
-          submit.disabled = false;
-          if (type == "number") {
-            if (input2.value == "") {
-              error_input(tl(trans.only_numbers_are_allowed), input_container, error_tooltip, submit);
-            } else if (parseInt(input2.value) > max || parseInt(input2.value) < min) {
-              error_input(tl(trans.keep_within_the_range), input_container, error_tooltip, submit);
-            }
-          } else if (type == "text") {
-            if (settings_store[id].warn_if_empty && input2.value == "") {
-              error_input(tl(trans.this_field_is_required), input_container, error_tooltip, submit);
-            } else if (settings_store[id].warn_if_matches_auth && input2.value == auth.name) {
-              error_input(tl(trans.please_dont_clone_yourself), input_container, error_tooltip, submit);
-            }
-          }
-        });
-        return container;
-      }
-    } catch (e) {
-      console.error(e);
-      return setting_fail(id, e);
-    }
-    return setting_fail(id);
-  }
-  function error_input(reason, input2, tooltip, submit) {
-    log(reason, "input", "log");
-    input2.setAttribute("data-has-error", "true");
-    tooltip.setContent(reason);
-    tooltip.enable();
-    tooltip.show();
-    submit.disabled = true;
-  }
-  function setting_incompatible_block(entries) {
-    if (!entries)
-      return "";
-    return "";
-    return html.node`
-        <div class="incompatible">
-            ${entries.map((incompatible) => () => {
-      let container = html.node`
-                    <div class="extension">
-                        <div class="bleh-icon" />
-                    </div>
-                `;
-      tippy(container, {
-        content: tl(trans.incompatible_with_value).replace("{v}", tl(settings_store[incompatible.setting].title))
-      });
-      return container;
-    })}
-        </div>
-    `;
-  }
-  function setting_fail(id, e = null) {
-    return html.node`
-        <div class="setting">
-            <div class="alert alert-error no-margin">
-                ${tl(trans.value_failed_to_load).replace("{v}", id)}
-                ${e ? html`<br>${e.message}` : ""}
+    let checkbox;
+    let state;
+    let elem = html.node`
+        <div class="setting standalone" data-type=${type} onclick=${() => {
+      if (disabled) return;
+      let current = checkbox.checked;
+      if (func) func(!current);
+      checkbox.checked = !current;
+      state.setAttribute("aria-checked", !current);
+    }}>
+            <div class="heading">
+                <h5>${title}</h5>
+                ${body != "" ? html.node`<p>${body}</p>` : ""}
+                ${small != "" ? html.node`<small>${small}</small>` : ""}
             </div>
+            ${type == "toggle" ? html.node`
+            <div class="toggle-wrap">
+                <input type="checkbox" ref=${(el) => checkbox = el} name=${name2} value=${data2} checked=${value} />
+                <button class="toggle" ref=${(el) => state = el} aria-checked=${value}>
+                    <div class="dot" />
+                </button>
+            </div>
+            ` : html.node`
+            <div class="check">
+                <input type="checkbox" ref=${(el) => checkbox = el} name=${name2} value=${data2} checked=${value} disabled=${disabled} />
+                <div class="box" ref=${(el) => state = el} aria-checked=${value} disabled=${disabled}>
+                    <div class="bleh-icon" />
+                </div>
+            </div>
+            `}
         </div>
     `;
-  }
-  function update_toggle(id, toggle) {
-    let value = settings[id];
-    toggle.setAttribute("aria-checked", !value);
-    save_setting(id, !value);
-  }
-  function update_range(id, option, track, input2, value, marker, silent = false) {
-    let max = settings_store[id].max - settings_store[id].min;
-    input2.value = value;
-    track.style.setProperty("--percent", `${(value - settings_store[id].min) / max * 100}%`);
-    marker.textContent = `${value}${settings_store[id].suffix || ""}`;
-    option.setAttribute("data-modified", value != settings_store[id].default);
-    save_setting(id, value);
-  }
-  function reset_range(id, option, track, range, marker) {
-    update_range(id, option, track, range, settings_store[id].default, marker, true);
-    notify({
-      id: "reset_setting",
-      title: tl(trans.settings),
-      body: tl(trans.reset_item_to_default),
-      icon: "icon-16-settings"
-    });
-  }
-  function update_text(id, input2, submit, option, value, reset_btn, avatar3, silent = false) {
-    if (settings_store[id].wait) {
-      reset_btn.disabled = true;
-      input2.disabled = true;
-      submit.disabled = true;
-    }
-    input2.value = value;
-    option.setAttribute("data-modified", value != settings_store[id].default);
-    if (id == "profile_shortcut") {
-      save_profile_shortcut(input2, value, submit, reset_btn, avatar3);
-      return;
-    } else if (id == "hu_tao") {
-      if (value == "develop") {
-        dialog_rm2({ id: "hu_tao" });
-        change_settings_page("sku");
-        notify({
-          id: "unlocked",
-          title: tl(trans.development),
-          body: tl(trans.unlocked),
-          type: "success"
-        });
-      }
-    }
-    save_setting(id, value);
-  }
-  function reset_text(id, input2, submit, option, reset_btn, avatar3) {
-    update_text(id, input2, submit, option, settings_store[id].default, reset_btn, avatar3, true);
-    notify({
-      id: "reset_setting",
-      title: tl(trans.settings),
-      body: tl(trans.reset_item_to_default),
-      icon: "icon-16-settings"
-    });
-  }
-  function save_setting(id, value) {
-    settings[id] = value;
-    document.documentElement.setAttribute(`data-bleh--${id}`, value);
-    if (settings_store[id].require_reload == true || settings_store[id].require_reload == "partial" && page.type != "bleh_settings")
-      request_reload();
-    if (settings_store[id].css)
-      document.body.style.setProperty(`--${settings_store[id].css}`, `${value}${settings_store[id].suffix || ""}`);
-    localStorage.setItem("bleh", JSON.stringify(settings));
-    log(`saved ${id} as ${value}`, "settings", "log", { settings, settings_id: settings[id] });
+    elem.check = () => {
+      if (disabled) return;
+      if (func) func(true);
+      checkbox.checked = true;
+      state.setAttribute("aria-checked", true);
+    };
+    elem.uncheck = () => {
+      if (disabled) return;
+      if (func) func(false);
+      checkbox.checked = false;
+      state.setAttribute("aria-checked", false);
+    };
+    elem.disabled = (state2 = null) => {
+      if (state2 === null) return checkbox.getAttribute("disabled") || false;
+      if (state2 === true)
+        checkbox.setAttribute("disabled", "true");
+      else
+        checkbox.removeAttribute("disabled");
+      return state2;
+    };
+    return elem;
   }
 
-  // src/components/profile_shortcut.js
-  unsafeWindow._open_profile_shortcut_window = function() {
-    open_profile_shortcut_window();
-  };
-  function open_profile_shortcut_window() {
-    let modal = dialog({
-      id: "profile_shortcut",
-      title: tl(trans.profile_shortcut.name),
-      body: html.node`
-        ${setting({ id: "profile_shortcut", text: false, focus: true })}
-        `
-    });
-    modal.querySelector("#text-profile_shortcut").focus();
-  }
-  unsafeWindow._other_listener = function(id) {
-    other_listener(id);
-  };
-  function other_listener(id) {
-    let input2;
-    let submit;
+  // src/components/scrobble.js
+  function submit_scrobble({
+    pre_track = "",
+    pre_album = "",
+    pre_artist = "",
+    pre_album_artist = "",
+    func,
+    can_api
+  }) {
+    if (!can_api) can_api = localStorage.getItem("bleh_auth") && localStorage.getItem("bleh_auth_valid") === "true";
+    if (!can_api) {
+      window.location.href = `${root}bleh?tab=profiles`;
+      return;
+    }
+    const random = random_list[Math.floor(Math.random() * random_list.length)];
+    let track;
+    let album;
+    let artist;
+    let album_artist;
+    let use_current;
+    let date;
+    let create_scrobble;
+    let max_date = /* @__PURE__ */ new Date();
+    max_date.setDate(max_date.getDate() + 1);
     dialog({
-      id: "other_listener",
-      title: tl(trans.view_others_library),
+      id: "submit_scrobble",
+      title: tl(trans.new_scrobble),
       body: html.node`
-        <div class="setting" data-type="text">
-            <div class="avatar-container">
-                <div class="avatar-inner avatar--bleh-missing">
-                    <img>
+            <div class="new-scrobble-form">
+                <p class="generic-label">${tl(trans.track)}</p>
+                ${track = input({
+        type: "text",
+        value: pre_track,
+        placeholder: tl(trans.example).replace("{v}", random.track),
+        warn_if_empty: true
+      })}
+                <p class="generic-label">${tl(trans.album)}</p>
+                ${album = input({
+        type: "text",
+        value: pre_album,
+        placeholder: tl(trans.example).replace("{v}", random.album)
+      })}
+                <p class="generic-label">${tl(trans.artist)}</p>
+                ${artist = input({
+        type: "text",
+        value: pre_artist,
+        placeholder: tl(trans.example).replace("{v}", random.artist),
+        warn_if_empty: true
+      })}
+                <p class="generic-label">${tl(trans.album_artist)}</p>
+                ${album_artist = input({
+        type: "text",
+        value: pre_album_artist,
+        placeholder: tl(trans.example).replace("{v}", random.album_artist)
+      })}
+                <p class="generic-label">${tl(trans.time)}</p>
+                <div class="toggle-and-time">
+                    ${use_current = toggle({
+        value: true,
+        type: "checkbox",
+        title: tl(trans.use_current_time),
+        func: (state) => {
+          date.disabled(state);
+        }
+      })}
+                    ${date = input({
+        type: "date",
+        max: `${max_date.getFullYear()}-${pad2(max_date.getMonth() + 1)}-${pad2(max_date.getDate())}`,
+        disabled: true
+      })}
                 </div>
-            </div>
-            <div class="input-container content-form">
-                <input type="text" maxlength="40" id="text-profile" ref=${(el) => input2 = el} placeholder="${tl(trans.enter_username)}">
-                <button class="btn chibi icon primary submit" ref=${(el) => submit = el} onclick=${() => {
-        let name = input2.value;
-        let link = id;
-        dialog_rm2({
-          id: "other_listener"
-        });
-        window.location.href = `${root}user/${name}/library/music/${link}`;
-      }}>${tl(trans.done)}</button>
-            </div>
-        </div>
-        `
-    });
-    input2.addEventListener("keydown", (event3) => {
-      if (event3.keyCode === 13) {
-        event3.preventDefault();
-        submit.click();
-      }
-    });
-    tippy(submit, {
-      content: tl(trans.save)
-    });
-    input2.focus();
-  }
-  function set_profile_as_shortcut() {
-    dialog({
-      id: "profile_shortcut",
-      title: tl(trans.profile_shortcut.name),
-      body: html.node`
-            <div class="big-modal-alert alert-danger">
-                ${{ html: tl(trans.profile_shortcut.notice).replace("{u}", `<a class="mention" href="${root}user/${settings.profile_shortcut}" target="_blank">@${settings.profile_shortcut}</a>`) }}
             </div>
             <div class="modal-footer">
-                <button class="see-more cancel" onclick=${() => dialog_rm2({ id: "profile_shortcut" })}>
-                    ${tl(trans.back)}
+                <button class="see-more cancel" onclick=${() => dialog_rm2({ id: "submit_scrobble" })}>
+                    ${tl(trans.cancel)}
                 </button>
-                <div class="fill"></div>
-                <button class="btn primary save" onclick=${() => confirm_set_profile_as_shortcut()}>
-                    ${tl(trans.replace)}
+                <div class="fill" />
+                <button class="btn primary icon" data-type="add" ref=${(el) => create_scrobble = el} onclick=${async () => {
+        if (track.value() == "" || artist.value() == "") {
+          notify({
+            id: "submit_scrobble",
+            title: tl(trans.new_scrobble),
+            body: tl(trans.missing_fields),
+            type: "error"
+          });
+          return;
+        }
+        track.disabled(true);
+        album.disabled(true);
+        artist.disabled(true);
+        album_artist.disabled(true);
+        use_current.disabled(true);
+        date.disabled(true);
+        create_scrobble.disabled = true;
+        if (album.value() != "" && album_artist.value() == "") album_artist.value(artist.value());
+        let params = {
+          sk: localStorage.getItem("bleh_auth"),
+          artist: artist.value(),
+          track: track.value(),
+          timestamp: Math.floor(date.value() / 1e3)
+        };
+        if (album.value() != "") params.album = album.value();
+        if (album_artist.value() != "") params.albumArtist = album_artist.value();
+        const res = await fetch(
+          "https://jufufu.katelyn.moe/api/lastfm",
+          {
+            method: "POST",
+            headers: { "content-type": "application/json" },
+            body: JSON.stringify({
+              method: "track.scrobble",
+              params
+            })
+          }
+        );
+        const json = await res.json();
+        log("received response", "submit scrobble", "info", { result: json });
+        if (json.error) {
+          log("error", "submit scrobble", "error");
+          notify({
+            id: "submit_scrobble",
+            title: tl(trans.new_scrobble),
+            body: json.message,
+            type: "error",
+            persist: true
+          });
+          dialog_rm2({ id: "submit_scrobble" });
+          return;
+        }
+        notify({
+          id: "submit_scrobble",
+          title: tl(trans.new_scrobble),
+          body: params.track,
+          type: "success"
+        });
+        dialog_rm2({ id: "submit_scrobble" });
+        if (func) func();
+      }}>
+                    ${tl(trans.new)}
                 </button>
             </div>
         `
     });
   }
-  function confirm_set_profile_as_shortcut() {
-    dialog_rm2({
-      id: "profile_shortcut"
-    });
-    let avatar_src = document.body.querySelector(".header-avatar-inner-wrap img").getAttribute("src");
-    localStorage.setItem("bleh_profile_shortcut_avi", avatar_src);
-    notify({
-      id: "profile_shortcut_saved",
-      title: tl(trans.profile_shortcut.name),
-      body: tl(trans.profile_shortcut.linked).replace("{u}", page.name),
-      icon: "icon-16-profile-shortcut"
-    });
-    page.state.profile_shortcut_button.setAttribute("data-is-shortcut", "true");
-    page.state.profile_shortcut_button.removeAttribute("onclick");
-    settings.profile_shortcut = page.name;
-    localStorage.setItem("bleh", JSON.stringify(settings));
-  }
-  function save_profile_shortcut(input2, value, submit, reset_btn, avatar3) {
-    if (value == "" || value == auth.name) {
-      localStorage.removeItem("bleh_profile_shortcut_avi");
-      avatar3.querySelector("img").setAttribute("src", "");
-      avatar3.querySelector("img").setAttribute("alt", "");
-      reset_btn.disabled = false;
-      input2.disabled = false;
-      submit.disabled = false;
-      save_setting("profile_shortcut", "");
-      return;
-    }
-    avatar3.classList.add("requesting");
-    fetch(`${root}user/${value}/tags`).then(function(response) {
-      console.log("returned", response, response.text);
-      return response.text();
-    }).then(function(dom) {
-      let doc = new DOMParser().parseFromString(dom, "text/html");
-      console.log("DOC", doc);
-      reset_btn.disabled = false;
-      input2.disabled = false;
-      submit.disabled = false;
-      avatar3.classList.remove("requesting");
-      try {
-        let avatar_src = doc.querySelector(".header-avatar-inner-wrap img").getAttribute("src");
-        localStorage.setItem("bleh_profile_shortcut_avi", avatar_src);
-        avatar3.querySelector("img").setAttribute("src", avatar_src);
-        avatar3.querySelector("img").setAttribute("alt", value);
-        notify({
-          id: "profile_shortcut_saved",
-          title: tl(trans.profile_shortcut.name),
-          body: tl(trans.profile_shortcut.linked).replace("{u}", value),
-          icon: "icon-16-profile-shortcut"
-        });
-        save_setting("profile_shortcut", value);
-      } catch (e) {
-        notify({
-          id: "profile_shortcut_error",
-          title: tl(trans.profile_shortcut.name),
-          body: tl(trans.failed_to_find_profile),
-          type: "error"
-        });
-        localStorage.removeItem("bleh_profile_shortcut_avi");
-        avatar3.querySelector("img").setAttribute("src", "");
-        avatar3.querySelector("img").setAttribute("alt", "");
-      }
-    });
-  }
-  unsafeWindow._save_profile_shortcut = function() {
-    let profile_name = document.getElementById("text-profile_shortcut").value;
-    let profile_img = document.getElementById("avatar-profile_shortcut");
-    if (profile_name == "" || profile_name == auth.name) {
-      localStorage.removeItem("bleh_profile_shortcut_avi");
-      document.getElementById("avatar_src-profile_shortcut").setAttribute("src", "");
-      settings.profile_shortcut = "";
-      localStorage.setItem("bleh", JSON.stringify(settings));
-      return;
-    }
-    profile_img.classList.add("requesting");
-    fetch(`${root}user/${profile_name}/tags`).then(function(response) {
-      console.log("returned", response, response.text);
-      return response.text();
-    }).then(function(html2) {
-      let doc = new DOMParser().parseFromString(html2, "text/html");
-      console.log("DOC", doc);
-      profile_img.classList.remove("requesting");
-      try {
-        let avatar_src = doc.querySelector(".header-avatar-inner-wrap img").getAttribute("src");
-        localStorage.setItem("bleh_profile_shortcut_avi", avatar_src);
-        document.getElementById("avatar_src-profile_shortcut").setAttribute("src", avatar_src);
-        notify({
-          id: "profile_shortcut_saved",
-          title: tl(trans.profile_shortcut.name),
-          body: tl(trans.profile_shortcut.linked).replace("{u}", profile_name),
-          icon: "icon-16-profile-shortcut"
-        });
-        settings.profile_shortcut = profile_name;
-        localStorage.setItem("bleh", JSON.stringify(settings));
-      } catch (e) {
-        notify({
-          id: "profile_shortcut_saved",
-          title: tl(trans.profile_shortcut.name),
-          body: tl(trans.failed_to_find_profile),
-          type: "error"
-        });
-        localStorage.removeItem("bleh_profile_shortcut_avi");
-        document.getElementById("avatar_src-profile_shortcut").setAttribute("src", "");
-      }
-    });
-  };
 
   // src/components/music.js
   unsafeWindow._other_listener = function(id) {
@@ -4353,6 +7761,7 @@
       new_panel.innerHTML = col_main.innerHTML;
       page.structure.main.insertBefore(new_panel, page.structure.main.firstElementChild);
       col_main.style.setProperty("display", "none");
+      page.structure.row.appendChild(col_main);
       console.info(col_main, new_panel);
       col_main = new_panel;
     }
@@ -4491,6 +7900,46 @@
       obsession_btn.textContent = tl(trans.obsession);
       interact_container.appendChild(obsession_form);
     }
+    if (ff("submit_scrobble")) {
+      const can_api = localStorage.getItem("bleh_auth") && localStorage.getItem("bleh_auth_valid") === "true";
+      const source_album = page.structure.main.querySelector(".source-album-name");
+      const source_album_artist = page.structure.main.querySelector(".source-album-artist");
+      let props = {
+        can_api
+      };
+      if (page.type == "track")
+        props = {
+          ...props,
+          pre_track: page.name,
+          pre_artist: page.sister,
+          pre_album: source_album ? source_album.textContent : null,
+          pre_album_artist: source_album_artist ? source_album_artist.textContent : page.sister
+        };
+      else if (page.type == "album")
+        props = {
+          ...props,
+          pre_album: page.name,
+          pre_artist: page.sister,
+          pre_album_artist: page.sister
+        };
+      else if (page.type == "artist")
+        props = {
+          ...props,
+          pre_artist: page.name,
+          pre_album_artist: page.name
+        };
+      const scrobble_btn = html.node`
+            <button class="btn side-action" data-type="add" onclick=${() => submit_scrobble(props)}>
+                ${tl(trans.scrobble)}
+            </button>
+        `;
+      if (!can_api) {
+        tippy(scrobble_btn, {
+          content: tl(trans.requires_api_in_settings)
+        });
+      }
+      interact_container.appendChild(scrobble_btn);
+    }
     let lotus_btn = null;
     if (settings.corrections) {
       lotus_btn = document.createElement("a");
@@ -4584,6 +8033,12 @@
         let link = item.querySelector(".play-this-track-playlink:not(.visible-xs)");
         link.classList.add("music-link");
         let replace = item.querySelector(".replace-playlink");
+        if (link.classList.contains("play-this-track-playlink--youtube"))
+          link.textContent = "YouTube";
+        else if (link.classList.contains("play-this-track-playlink--spotify"))
+          link.textContent = "Spotify";
+        else if (link.classList.contains("play-this-track-playlink--itunes"))
+          link.textContent = "Apple";
         if (replace) {
           replace.classList.add("dropdown-menu-clickable-item");
           item.removeChild(replace);
@@ -4611,13 +8066,10 @@
                     Genius
                 </a>
             </li>
-        `);
-      link_container.appendChild(html.node`
             <li>
-            <a class="play-this-track-playlink music-link play-this-track-playlink--tidal" href="https://listen.tidal.com/search?q=${sanitise(page.sister, " ")} ${sanitise(page.name, " ")}" target="_blank">
-                Tidal
-            </a>
-
+                <a class="play-this-track-playlink music-link play-this-track-playlink--tidal" href="https://listen.tidal.com/search?q=${sanitise(page.sister, " ")} ${sanitise(page.name, " ")}" target="_blank">
+                    Tidal
+                </a>
             </li>
         `);
     } else {
@@ -4631,13 +8083,16 @@
                     Spotify
                 </a>
                 <a class="play-this-track-playlink music-link play-this-track-playlink--itunes" href="https://music.apple.com/gb/search?term=${sanitise(page.sister, " ")} ${sanitise(page.name, " ")}" target="_blank">
-                    Apple Music
+                    Apple
                 </a>
                 <a class="play-this-track-playlink music-link play-this-track-playlink--youtube-music" href="https://music.youtube.com/search?q=${sanitise(page.sister)}+${sanitise(page.name)}" target="_blank">
-                    YT Music
+                    YouTube
                 </a>
                 <a class="play-this-track-playlink music-link play-this-track-playlink--tidal" href="https://listen.tidal.com/search?q=${sanitise(page.sister, " ")} ${sanitise(page.name, " ")}" target="_blank">
                     Tidal
+                </a>
+                <a class="play-this-track-playlink music-link play-this-track-playlink--discogs" href="https://www.discogs.com/search?q=${sanitise(page.sister)}+${sanitise(page.name)}&type=all" target="_blank">
+                    Discogs
                 </a>
                 <a class="play-this-track-playlink music-link play-this-track-playlink--aoty" href="https://www.albumoftheyear.org/search/?q=${sanitise(page.sister)}+${sanitise(page.name)}" target="_blank">
                     AOTY
@@ -4655,13 +8110,16 @@
                     Spotify
                 </a>
                 <a class="play-this-track-playlink music-link play-this-track-playlink--itunes" href="https://music.apple.com/gb/search?term=${sanitise(page.name, " ")}" target="_blank">
-                    Apple Music
+                    Apple
                 </a>
                 <a class="play-this-track-playlink music-link play-this-track-playlink--youtube-music" href="https://music.youtube.com/search?q=${sanitise(page.name)}" target="_blank">
-                    YT Music
+                    YouTube
                 </a>
                 <a class="play-this-track-playlink music-link play-this-track-playlink--tidal" href="https://listen.tidal.com/search?q=${sanitise(page.name, " ")}" target="_blank">
                     Tidal
+                </a>
+                <a class="play-this-track-playlink music-link play-this-track-playlink--discogs" href="https://www.discogs.com/search?q=${sanitise(page.name)}&type=artist" target="_blank">
+                    Discogs
                 </a>
                 <a class="play-this-track-playlink music-link play-this-track-playlink--aoty" href="https://www.albumoftheyear.org/search/?q=${sanitise(page.name)}" target="_blank">
                     AOTY
@@ -4710,25 +8168,25 @@
         </section>
     `);
   }
-  function create_listen_item(parent, { name, listens, link, avi, count = 0, button = false, katsune = false }, header_type) {
-    log(`creating listen item of ${name}, ${count}, ${listens}`, "artist", "info", { avi, link });
+  function create_listen_item(parent, { name: name2, listens, link, avi, count = 0, button = false, katsune = false }, header_type) {
+    log(`creating listen item of ${name2}, ${count}, ${listens}`, "artist", "info", { avi, link });
     let listen_item = document.createElement(!button ? "a" : "button");
     listen_item.classList.add("btn", "listen-item");
-    listen_item.setAttribute("href", `${root}user/${name}/library/music/${link}`);
+    listen_item.setAttribute("href", `${root}user/${name2}/library/music/${link}`);
     listen_item.setAttribute("data-listens", listens);
-    listen_item.setAttribute("id", `listen-item--${name}`);
+    listen_item.setAttribute("id", `listen-item--${name2}`);
     if (listens > -1) {
       render(listen_item, html`
-            <img class="view-item-avatar" src="${avi}" alt="${name}">
+            <img class="view-item-avatar" src="${avi}" alt="${name2}">
             <div class="info">
-                <h3>${name}</h3>
+                <h3>${name2}</h3>
                 <p>${tl(trans.listens.count).replace("{c}", listens.toLocaleString(lang))}</p>
             </div>
         `);
       let menu = tippy(listen_item, {
         theme: "context-menu",
         content: html.node`
-                <a class="dropdown-menu-clickable-item" href="${root}user/${name}" data-menu-item="view_profile">
+                <a class="dropdown-menu-clickable-item" href="${root}user/${name2}" data-menu-item="view_profile">
                     ${tl(trans.profile)}
                 </a>
             `,
@@ -4746,16 +8204,16 @@
       register_menu(listen_item, menu);
     } else if (listens > -2) {
       render(listen_item, html`
-            <img class="view-item-avatar" src="${avi}" alt="${name}">
+            <img class="view-item-avatar" src="${avi}" alt="${name2}">
             <div class="info">
-                <h3>${name}</h3>
+                <h3>${name2}</h3>
                 <p>${tl(trans.listens)}</p>
             </div>
         `);
       let menu = tippy(listen_item, {
         theme: "context-menu",
         content: html.node`
-                <a class="dropdown-menu-clickable-item" href="${root}user/${name}" data-menu-item="view_profile">
+                <a class="dropdown-menu-clickable-item" href="${root}user/${name2}" data-menu-item="view_profile">
                     ${tl(trans.profile)}
                 </a>
                 <div class="sep"></div>
@@ -4875,9 +8333,14 @@
       if (album_artwork)
         page.structure.side.insertBefore(album_artwork, page.structure.side.firstElementChild);
     }
+    let masonry = page.structure.row.querySelector(":scope > .col-sidebar.masonry-right");
+    if (masonry) {
+      page.structure.row.appendChild(masonry);
+    }
     if (page.type == "album" || page.type == "artist") {
       let upper = document.body.querySelector(".col-main");
       upper.classList.add("upper-overview-to-hide");
+      page.structure.row.appendChild(upper);
       let new_upper = document.createElement("section");
       new_upper.classList.add("top-overview-panel");
       new_upper.setAttribute("data-page-type", page.type);
@@ -4899,25 +8362,22 @@
       }
       video_col.classList.remove("col-sidebar");
       page.structure.side.insertBefore(video_col, page.structure.side.firstElementChild);
-      let container = document.createElement("div");
-      container.classList.add("video-overlay-container");
-      let view_buttons = document.createElement("div");
-      view_buttons.classList.add("view-buttons");
       let playlink = video.querySelector(".video-preview-playlink a");
       let replace = video_col.querySelector(".video-preview-replace a");
-      playlink.classList = "btn view-item video-item video-item--play";
-      replace.classList = "btn view-item video-item video-item--edit";
-      view_buttons.appendChild(playlink);
-      view_buttons.appendChild(replace);
-      container.appendChild(view_buttons);
-      video.appendChild(container);
-      tippy(playlink, {
-        content: playlink.getAttribute("title")
-      });
+      video.appendChild(html.node`
+            <a class="link-block-cover-link" href=${playlink.href} target="_blank" />
+        `);
+      playlink.classList = "see-more";
+      replace.classList = "see-more add";
+      video.after(html.node`
+            <div class="video-actions sub-text">
+                ${replace}
+                ${playlink}
+            </div>
+        `);
+      playlink.textContent = tl(trans.watch_video);
       playlink.removeAttribute("title");
-      tippy(replace, {
-        content: replace.textContent
-      });
+      replace.textContent = tl(trans.replace);
     }
   }
   function video_unavailable(video_col = null) {
@@ -4940,7 +8400,7 @@
     if (!ff("music_page_charts"))
       return;
     log("beginning replacement", "music charts");
-    let panel = document.body.querySelector(".listen-panel");
+    let panel = page.structure.container.querySelector(".listen-panel");
     let trend = panel.querySelector(".listener-trend");
     if (!trend) return;
     let previous_chart = panel.querySelector(".scrobble-canvas-container");
@@ -4952,8 +8412,7 @@
     let values = [];
     let has_seen_more_than_0 = false;
     days.forEach((day, index) => {
-      if (!day)
-        null;
+      if (!day) return;
       let label = moment(day.querySelector("time").getAttribute("datetime"));
       let value = day.querySelector(".js-value");
       console.log("day", index, label, day, day.innerHTML);
@@ -4980,7 +8439,7 @@
       gradient = page.state.chart_colours.link_bg_col;
     }
     Chart.defaults.color = page.state.chart_colours.text_col;
-    Chart.defaults.font.family = "Ubuntu Sans";
+    Chart.defaults.font.family = page.state.chart_colours.font;
     let scrobble_chart = new Chart(scrobble_canvas.getContext("2d"), {
       type: "line",
       data: {
@@ -5033,7 +8492,7 @@
         position += (parseInt(page.requested.page) - 1) * 30;
       }
       let name_wrap = listener.querySelector(".top-listeners-item-name a");
-      let name = name_wrap.textContent;
+      let name2 = name_wrap.textContent;
       let track_wrap = listener.querySelector(".top-listeners-track");
       let avatar3 = listener.querySelector(".top-listeners-item-image");
       let follow = listener.querySelector(".class");
@@ -5044,7 +8503,7 @@
                 </span>
                 <h4 class="user-list-name">
                     <a class="user-list-link link-block-target" href="${name_wrap.getAttribute("href")}">
-                        ${name}
+                        ${name2}
                     </a>
                 </h4>
                 <span class="avatar user-list-avatar">
@@ -5060,10 +8519,10 @@
                 ` : ""}
             </div>
         `;
-      let badge = patch_avatar(new_listener.querySelector(".user-list-avatar"), name, "listener");
+      let badge = patch_avatar(new_listener.querySelector(".user-list-avatar"), name2, "listener");
       if (badge.type) {
-        new_listener.querySelector(".user-list-link").classList.add(`user-status--bleh-${badge.type}`, `user-status--bleh-user-${name}`);
-        new_listener.classList.add("colourful", `user-status--bleh-${badge.type}`, `user-status--bleh-user-${name}`);
+        new_listener.querySelector(".user-list-link").classList.add(`user-status--bleh-${badge.type}`, `user-status--bleh-user-${name2}`);
+        new_listener.classList.add("colourful", `user-status--bleh-${badge.type}`, `user-status--bleh-user-${name2}`);
       }
       if (track_wrap) {
         let track_link = new_listener.querySelector(".user-list-about-me a");
@@ -5077,956 +8536,12 @@
     panel.removeChild(legacy_top_listeners_container);
   }
 
-  // src/components/music_grid.js
-  function music_grids(search = page.structure.main, use_colour = true) {
-    if (!search) return;
-    let insights = {
-      artist: {
-        display: false,
-        values: [],
-        labels: [],
-        highest: {
-          value: 0,
-          label: "",
-          link: "",
-          img: ""
-        }
-      },
-      album: {
-        display: false,
-        values: [],
-        labels: [],
-        highest: {
-          value: 0,
-          label: "",
-          link: "",
-          img: ""
-        }
-      },
-      track: {
-        display: false,
-        values: [],
-        labels: [],
-        highest: {
-          value: 0,
-          label: "",
-          link: "",
-          img: ""
-        }
-      }
-    };
-    let grids = search.querySelectorAll(".grid-items-item:not([data-bleh-music-grids])");
-    grids.forEach((grid) => {
-      let is_loading = grid.querySelector(".grid-items-empty-inner") != null;
-      if (is_loading) return;
-      grid.setAttribute("data-bleh-music-grids", "true");
-      let is_album;
-      if (page.type == "search") {
-        is_album = grid.querySelector(".stat-name") == null;
-      } else {
-        is_album = grid.querySelector(".grid-items-item-aux-block") != null;
-      }
-      let image_wrap = grid.querySelector(".grid-items-cover-image-image");
-      let image = image_wrap.querySelector("img");
-      if (image && !image_wrap.classList.contains("grid-items-cover-default") && use_colour) {
-        let grid_colour = document.createElement("div");
-        grid_colour.classList.add("grid-item-colour-bg");
-        image_wrap.appendChild(grid_colour);
-        image.setAttribute("crossorigin", "anonymous");
-        try {
-          image.addEventListener("load", function() {
-            let thief = new ColorThief();
-            let colour = thief.getColor(image);
-            let hsl = rgb_to_hsl(colour[0], colour[1], colour[2]);
-            grid_colour.style.setProperty("background", `rgb(${colour})`);
-            grid.classList.add("grid-items-item-has-colour");
-            grid.style.setProperty("--hue-over", hsl.h);
-            grid.style.setProperty("--sat-over", clamp_sat(hsl.s / 100 * 3));
-            grid.style.setProperty("--lit-over", 1);
-          });
-        } catch (e) {
-        }
-      } else {
-        grid.classList.add("generic-cover");
-      }
-      let plays_elem;
-      if (page.type == "search") {
-        if (!is_album) {
-          let aux_text = grid.querySelector(".grid-items-item-aux-text");
-          let stat_name = aux_text.querySelector(".stat-name");
-          aux_text.removeChild(stat_name);
-          plays_elem = aux_text;
-        }
-      } else if (page.type == "tag") {
-        let aux_text = grid.querySelector(".grid-items-item-aux-text");
-        let stat_name = aux_text.querySelector(".stat-name");
-        if (!stat_name) return;
-        aux_text.removeChild(stat_name);
-        plays_elem = aux_text;
-        if (is_album) {
-          let artist = grid.querySelector(".grid-items-item-aux-block");
-          aux_text.removeChild(artist);
-          plays_elem = document.createElement("a");
-          plays_elem.textContent = aux_text.textContent;
-          aux_text.textContent = "";
-          aux_text.appendChild(artist);
-          aux_text.appendChild(plays_elem);
-        }
-      } else {
-        plays_elem = grid.querySelector(".grid-items-item-aux-text a:last-child");
-      }
-      if (plays_elem && !grid.classList.contains("obsessions-item") && !grid.classList.contains("compare-item")) {
-        let plays = clean_number(plays_elem.textContent.trim().replace(`${tl(trans.plays_lower)}`, ""));
-        plays_elem.classList.add("grid-item-plays");
-        if (is_album)
-          plays_elem.textContent = plays.toLocaleString(lang);
-        if (!is_album) {
-          insights.artist.display = true;
-          insights.artist.values.push(plays);
-          if (plays > insights.artist.highest.value)
-            insights.artist.highest.value = plays;
-        } else {
-          insights.album.display = true;
-          insights.album.values.push(plays);
-          if (plays > insights.album.highest.value)
-            insights.album.highest.value = plays;
-        }
-        if (page.type == "search" || page.type == "tag")
-          plays_elem.classList.add("grid-item-listeners");
-        if (!is_album && settings.colourful_counts && page.type == "user") {
-          if (!plays_elem.getAttribute("href").includes("?from=") && (!plays_elem.getAttribute("href").includes("?date_preset=") || plays_elem.getAttribute("href").endsWith("?date_preset=ALL") || plays_elem.getAttribute("href").endsWith("?date_preset=null"))) {
-            let parsed_scrobble_as_rank = parse_scrobbles_as_rank(plays);
-            plays_elem.setAttribute("data-bleh--scrobble-milestone", parsed_scrobble_as_rank.milestone);
-            plays_elem.style.setProperty("--hue-over", parsed_scrobble_as_rank.hue);
-            plays_elem.style.setProperty("--sat-over", parsed_scrobble_as_rank.sat);
-            plays_elem.style.setProperty("--lit-over", parsed_scrobble_as_rank.lit);
-          }
-        }
-      }
-      let name = grid.querySelector(".grid-items-item-main-text a");
-      if (!name) return;
-      if (!is_album) {
-        name.textContent = correct_artist(name.textContent.trim());
-        insights.artist.labels.push(name.textContent);
-      } else {
-        let artist = grid.querySelector(".grid-items-item-aux-block");
-        if (!artist) return;
-        if (settings.format_guest_features) {
-          let name_elem = name;
-          let artist_elem = artist;
-          let song_title = name_elem.getAttribute("title");
-          let formatted_title = name_includes(song_title, artist_elem.textContent.trim());
-          let song_tags = {};
-          if (formatted_title) {
-            song_title = formatted_title[0];
-            insights.album.labels.push(song_title);
-            song_tags = formatted_title[1];
-            artist.textContent = formatted_title[2];
-          }
-          render(name_elem, html.node`
-                    <div class="title">${song_title.trim()}</div>
-                    ${song_tags.map((tag) => html.node`
-                        <div class="feat" data-bleh--tag-type="${tag.type}" data-bleh--tag-group="${tag.group}">${tag.text}</div>
-                    `)}
-                `);
-        } else {
-          artist.textContent = correct_artist(artist.textContent.trim());
-          name.textContent = correct_item_by_artist(name.textContent.trim(), artist.textContent.trim());
-        }
-      }
-    });
-    if (page.subpage.startsWith("library"))
-      bleh_glacier_insights(insights);
-  }
-
-  // src/components/select.js
-  unsafeWindow._update_inbuilt_select = function(id, value) {
-    update_inbuilt_select(id, value);
-  };
-  function update_inbuilt_select(id, value) {
-    document.documentElement.setAttribute(`data-bleh--inbuilt-${id}`, value);
-  }
-  function select(values, initial = "", name = "") {
-    let select2;
-    let button;
-    if (values.length === 0) {
-      return select_fail({ message: "Values cannot be empty" });
-    }
-    if (initial == "")
-      initial = values[0].value;
-    let container = html.node`
-        <div class="select-wrap custom-selector">
-            <select ref=${(el) => select2 = el} name=${name}>
-                ${values.map((value) => html.node`
-                    <option value=${value.value} selected=${value.value == initial}>${value.text}</option>
-                `)}
-            </select>
-            <button class="select-button" type="button" ref=${(el) => button = el} />
-        </div>
-    `;
-    let menu = tippy(button, {
-      theme: "select-menu",
-      content: html.node``,
-      placement: "bottom",
-      interactive: true,
-      interactiveBorder: 10,
-      trigger: "click"
-    });
-    set_select(button, menu, values, initial, select2, name);
-    return container;
-  }
-  function set_select(button, menu, values, selected, select2, name) {
-    values.some((value) => {
-      if (value.value == selected) {
-        render(button, html`${value.text}`);
-        return false;
-      }
-    });
-    select2.value = selected;
-    if (name != "")
-      document.documentElement.setAttribute(`data-bleh--inbuilt-id_${name}`, selected);
-    menu.setContent(html.node`
-        ${values.map((value) => html.node`
-            <button class="btn dropdown-menu-clickable-item select-item" aria-checked=${selected == value.value} onclick=${() => set_select(button, menu, values, value.value, select2, name)}>
-                ${value.text}
-            </button>
-        `)}
-    `);
-  }
-  function select_prepare(element) {
-    let values = [];
-    element.querySelectorAll("option").forEach((option) => {
-      values.push({
-        value: option.value,
-        text: option.textContent
-      });
-    });
-    return values;
-  }
-  function select_fail(e = null) {
-    return html.node`
-        <div class="alert alert-error">
-            ${tl(trans.value_failed_to_load).replace("{v}", tl(trans.select_component))}
-            ${e ? html`<br>${e.message}` : ""}
-        </div>
-    `;
-  }
-  function custom_select(select2, element_to_append) {
-    console.info(select2);
-    let id = select2.getAttribute("id");
-    let value = select2.value;
-    let value_objects = select2.querySelectorAll("option");
-    let menu_list = document.createElement("div");
-    value_objects.forEach((object) => {
-      let object_value = object.getAttribute("value");
-      let object_text = object.textContent;
-      let item = document.createElement("button");
-      item.classList.add("btn", "dropdown-menu-clickable-item", "select-item");
-      item.setAttribute("onclick", `_set_custom_select_value('${id}', '${object_value}')`);
-      item.setAttribute("data-value", object_value);
-      item.setAttribute("type", "button");
-      item.textContent = object_text;
-      menu_list.appendChild(item);
-    });
-    let button = document.createElement("button");
-    button.classList.add("select-button");
-    button.setAttribute("id", `select-${id}`);
-    button.setAttribute("type", "button");
-    button.textContent = menu_list.querySelector(`[data-value="${value}"]`).textContent;
-    let theme_menu_item = tippy(button, {
-      theme: "select-menu",
-      content: html.node([
-        menu_list.innerHTML
-      ]),
-      placement: "bottom",
-      interactive: true,
-      interactiveBorder: 10,
-      trigger: "click",
-      onShow(instance) {
-        update_custom_select(instance.popper, select2.value);
-      }
-    });
-    element_to_append.appendChild(button);
-  }
-  unsafeWindow._set_custom_select_value = function(select_id, value) {
-    let select2 = document.getElementById(select_id);
-    select2.value = value;
-    console.info(select2, `#select-${select_id}`);
-    update_custom_select(document.getElementById(`select-${select_id}`)._tippy.popper, value, select_id);
-    document.documentElement.setAttribute(`data-bleh--inbuilt-${select_id}`, value);
-  };
-  function update_custom_select(element = document.body, value = "", select_id = "") {
-    let btns = element.querySelectorAll(".dropdown-menu-clickable-item");
-    btns.forEach((btn) => {
-      if (btn.getAttribute("data-value") != value) {
-        btn.classList.remove("active");
-      } else {
-        btn.classList.add("active");
-        let sel_button = document.body.querySelector(`#select-${select_id}`);
-        console.log(sel_button);
-        if (!sel_button) return;
-        sel_button.textContent = btn.textContent;
-      }
-    });
-  }
-  unsafeWindow._update_inbuilt_selection = function(id, index) {
-    document.getElementById(id).selectedIndex = index;
-    update_inbuilt_select(id, document.getElementById(id).value);
-  };
-
-  // src/components/track.js
-  function patch_titles(search = page.structure.main) {
-    if (page.subpage === "tags_overview" || page.subpage == "tags_tag")
-      return;
-    if (!search) return;
-    let tracklists = search.querySelectorAll(".chartlist:not(.chartlist__placeholder)");
-    let insights = {
-      artist: {
-        display: false,
-        values: [],
-        labels: [],
-        highest: {
-          value: 0,
-          label: "",
-          link: "",
-          img: ""
-        }
-      },
-      album: {
-        display: false,
-        values: [],
-        labels: [],
-        highest: {
-          value: 0,
-          label: "",
-          link: "",
-          img: ""
-        }
-      },
-      track: {
-        display: false,
-        values: [],
-        labels: [],
-        highest: {
-          value: 0,
-          label: "",
-          link: "",
-          img: ""
-        }
-      }
-    };
-    tracklists.forEach((tracklist) => {
-      if (!tracklist) return;
-      log("found, checking", "tracks", "log", { tracklist });
-      if (tracklist.querySelector("tbody > .chartlist-row:first-child > .kate-placeholder"))
-        return;
-      log("new!", "tracks", "info", { tracklist });
-      let wide = tracklist.classList.contains("chartlist--wide-artist-column");
-      let tracks = tracklist.querySelectorAll(":is(.chartlist-row:not(.chartlist__placeholder-row), .chartlist-row--interlist-ad)");
-      tracks.forEach((track) => {
-        console.log("track", track);
-        if (track.getAttribute("data-track-type"))
-          return;
-        if (track.classList[0] === "chartlist-row--interlist-ad") {
-          track.parentElement.removeChild(track);
-          return;
-        }
-        let bla = document.createElement("div");
-        bla.classList.add("kate-placeholder");
-        track.appendChild(bla);
-        let track_title = track.querySelector(".chartlist-name a:not(.offset-section-anchor)");
-        if (!track_title) return;
-        let is_user = track.querySelector(".chartlist-image .avatar");
-        let is_artist = false;
-        if (is_user) {
-          let link = track_title.getAttribute("href");
-          if (link.startsWith(`${root}music/`)) {
-            is_user = false;
-            is_artist = true;
-          }
-        }
-        log(`is user: ${is_user}, is artist: ${is_artist}`, "tracks", "log");
-        if (is_user) {
-          track.setAttribute("data-track-type", "user");
-          if (settings.colourful_counts)
-            patch_artist_ranks_in_list_view(track);
-          log("finished user stuff, returning", "tracks", "log");
-          return;
-        }
-        if (is_artist) {
-          track.setAttribute("data-track-type", "artist");
-          if (settings.colourful_counts)
-            patch_artist_ranks_in_list_view(track);
-          if (settings.corrections)
-            track_title.textContent = correct_artist(track_title.getAttribute("title"));
-          insights.artist.display = true;
-          let bar2 = track.querySelector(".chartlist-count-bar-slug");
-          let value = parseInt(bar2.getAttribute("data-stat-value"));
-          insights.artist.values.push(value);
-          if (value > insights.artist.highest.value)
-            insights.artist.highest.value = value;
-          log(`pushed insight artist label of ${track_title.textContent}`, "glacier library", "log");
-          insights.artist.labels.push(track_title.textContent);
-          log("finished artist stuff, returning", "tracks", "log");
-          return;
-        }
-        let is_album = track.hasAttribute("data-album-row");
-        if (is_album)
-          track.classList.add("bleh--is-album");
-        let track_artist = return_artist_from_track(track_title.getAttribute("href"), is_album);
-        if (!wide)
-          track.classList.add("chartlist-row--with-artist");
-        let bar = track.querySelector(".chartlist-count-bar-slug");
-        if (bar) {
-          let value = parseInt(bar.getAttribute("data-stat-value"));
-          if (is_album) {
-            insights.album.display = true;
-            insights.album.values.push(value);
-            if (value > insights.album.highest.value)
-              insights.album.highest.value = value;
-          } else {
-            insights.track.display = true;
-            insights.track.values.push(value);
-            if (value > insights.track.highest.value)
-              insights.track.highest.value = value;
-          }
-        }
-        let is_active = track.classList.contains("chartlist-row--now-scrobbling");
-        let track_legacy_menu = track.querySelector(".chartlist-more-menu");
-        let track_timestamp = track.querySelector(".chartlist-timestamp span");
-        let track_timestamp_contents;
-        if (track_timestamp && !is_active) {
-          track_timestamp_contents = track_timestamp.getAttribute("title");
-          track_timestamp.setAttribute("title", "");
-          tippy(track_timestamp, {
-            content: track_timestamp_contents
-          });
-        }
-        let album = track.querySelector(".chartlist-album a");
-        if (!is_album && album)
-          album.textContent = correct_item_by_artist(album.textContent, track_artist);
-        if (settings.format_guest_features) {
-          let formatted_title = name_includes(track_title.getAttribute("title"), track_artist);
-          console.log("formatted", formatted_title);
-          let song_title = track_title.getAttribute("title");
-          let song_tags = {};
-          if (formatted_title) {
-            song_title = formatted_title[0];
-            song_tags = formatted_title[1];
-          }
-          track_title.setAttribute("title", correct_item_by_artist(track_title.getAttribute("title"), track_artist));
-          render(track_title, html`
-                    <div class="title">${song_title.trim()}</div>
-                    ${song_tags.map((tag) => html.node`
-                        <div class="feat" data-bleh--tag-type="${tag.type}" data-bleh--tag-group="${tag.group}">${tag.text}</div>
-                    `)}
-                `);
-          let song_artist_element = track.querySelector(".chartlist-artist");
-          if (!song_artist_element && !is_user) {
-            song_artist_element = document.createElement("td");
-            song_artist_element.classList.add("chartlist-artist");
-            track.appendChild(song_artist_element);
-          }
-          if (song_artist_element.textContent.replaceAll("+", " ").trim() === track_artist || song_artist_element.textContent.trim() === "") {
-            log("artist either matches or is blank, replacing", "tracks", "log");
-            render(song_artist_element, html`<a href="${root}music/${sanitise(formatted_title[2])}" title="${formatted_title[2]}">${formatted_title[2]}</a>`);
-            let song_guests = formatted_title[3];
-            for (let guest in song_guests) {
-              song_artist_element.appendChild(html.node`
-                            ,<a href="${root}music/${sanitise(song_guests[guest])}" title="${song_guests[guest]}">${song_guests[guest]}</a>
-                        `);
-            }
-          }
-          let image = track.querySelector(".chartlist-image img");
-          if (track_legacy_menu) {
-            let track_preview = html.node`
-                        <div class="track-preview">
-                            <div class="image">
-                                <div class="inner-image">
-                                    ${image ? html.node`<img src=${image.getAttribute("src")} alt=${song_title}>` : html.node`<img class="missing-track" alt="">`}
-                                </div>
-                            </div>
-                            <div class="info">
-                                <h5 class="title">${song_title}</h5>
-                                <p class="artist">${song_artist_element.firstElementChild.textContent}</p>
-                                <div class="tags">
-                                    ${song_tags.map((tag) => html.node`
-                                        <div class="feat" data-bleh--tag-type="${tag.type}" data-bleh--tag-group="${tag.group}">${tag.text}</div>
-                                    `)}
-                                </div>
-                                ${is_album ? "" : html.node`<p class="album">${image ? correct_item_by_artist(image.getAttribute("alt"), track_artist) : album ? album.textContent : page.name}</p>`}
-                                ${track_timestamp && track_timestamp_contents ? html.node`<p class="timestamp">${track_timestamp_contents}</p>` : ""}
-                            </div>
-                        </div>
-                    `;
-            track_legacy_menu.insertBefore(track_preview, track_legacy_menu.firstElementChild);
-          }
-        } else if (settings.corrections) {
-          let song_artist_element = track.querySelector(".chartlist-artist a");
-          if (song_artist_element) {
-            let corrected_title = correct_item_by_artist(track_title.textContent, song_artist_element.textContent);
-            track_title.textContent = corrected_title;
-            track_title.setAttribute("title", corrected_title);
-            let corrected_artist = correct_artist(song_artist_element.textContent);
-            song_artist_element.textContent = corrected_artist;
-            song_artist_element.setAttribute("title", corrected_artist);
-          } else {
-            let corrected_title = correct_item_by_artist(track_title.textContent, track_artist);
-            track_title.textContent = corrected_title;
-            track_title.setAttribute("title", corrected_title);
-          }
-        }
-        if (track_legacy_menu) {
-          let menu = tippy(track, {
-            theme: "context-menu",
-            content: track_legacy_menu.innerHTML,
-            allowHTML: true,
-            placement: "right-start",
-            trigger: "manual",
-            interactive: true,
-            interactiveBorder: 10,
-            offset: [0, 0],
-            onShow(instance) {
-              instance.popper.addEventListener("click", (event3) => {
-                instance.hide();
-              });
-            }
-          });
-          register_menu(track, menu);
-        }
-        if (is_album) {
-          log(`pushed insight album label of ${track_title.getAttribute("title")}`, "glacier library", "log");
-          insights.album.labels.push(track_title.getAttribute("title"));
-        } else {
-          log(`pushed insight track label of ${track_title.getAttribute("title")}`, "glacier library", "log");
-          insights.track.labels.push(track_title.getAttribute("title"));
-        }
-        if (!is_album && is_active) {
-          let image_wrap = track.querySelector(".chartlist-image");
-          if (image_wrap) {
-            let link = image_wrap.querySelector(".cover-art");
-            let image = link.querySelector("img");
-            if (!settings.album_text) {
-              let alt = correct_item_by_artist(image.getAttribute("alt"), track_artist);
-              track.appendChild(html.node`
-                            <td class="chartlist-album custom-album-text">
-                                <a href="${link.getAttribute("href")}">${alt}</a>
-                            </td>
-                        `);
-            }
-            if (!settings.colourful_tracks)
-              return;
-            image.setAttribute("crossorigin", "anonymous");
-            try {
-              image.addEventListener("load", function() {
-                let thief = new ColorThief();
-                let colour = thief.getColor(image);
-                let hsl = rgb_to_hsl(colour[0], colour[1], colour[2]);
-                track.style.setProperty("--hue-over", hsl.h);
-                track.style.setProperty("--sat-over", clamp_sat(hsl.s / 100 * 3));
-                track.style.setProperty("--lit-over", 1);
-              });
-            } catch (e) {
-            }
-          }
-        }
-      });
-    });
-    if (page.subpage.startsWith("library"))
-      bleh_glacier_insights(insights);
-  }
-
-  // src/components/compare.js
-  function compare() {
-    if (page.state.scrobbles === 0) {
-      notify({
-        id: "compare_not_possible",
-        title: tl(trans.compare),
-        body: tl(trans.profile_does_not_have_enough_scrobbles),
-        icon: "icon-16-arrows"
-      });
-      return;
-    }
-    let pages;
-    let timeframe;
-    let type;
-    let submit;
-    let body;
-    dialog({
-      id: "compare",
-      title: tl(trans.compare),
-      body: html.node`
-            <div class="compare-header">
-                <div class="compare-users">
-                    <div class="compare-user">
-                        <div class="avatar">
-                            <img src="${auth.avatar.replace("/avatar42s/", "/avatar170s/")}" alt="${tl(trans.your_avatar)}">
-                        </div>
-                        <strong>${auth.name}</strong>
-                    </div>
-                    <div class="bleh-icon"></div>
-                    <div class="compare-user">
-                        <div class="avatar">
-                            <img src="${page.avatar}" alt="${tl(trans.avatar_for_user).replace("{u}", page.name)}">
-                        </div>
-                        <strong>${page.name}</strong>
-                    </div>
-                </div>
-                <div class="compare-selection">
-                    ${pages = select([
-        {
-          value: "1",
-          text: 50
-        },
-        {
-          value: "2",
-          text: 100
-        },
-        {
-          value: "3",
-          text: 150
-        },
-        {
-          value: "4",
-          text: 200
-        },
-        {
-          value: "5",
-          text: 250
-        },
-        {
-          value: "6",
-          text: 300
-        }
-      ], "3")}
-                    ${type = select([
-        {
-          value: "artists",
-          text: html`<div class="bleh-icon" style="--icon: var(--icon-16-artist)" />${tl(trans.artists)}`
-        },
-        {
-          value: "albums",
-          text: html`<div class="bleh-icon" style="--icon: var(--icon-16-album)" />${tl(trans.albums)}`
-        },
-        {
-          value: "tracks",
-          text: html`<div class="bleh-icon" style="--icon: var(--icon-16-track)" />${tl(trans.tracks)}`
-        }
-      ], "albums")}
-                    ${timeframe = select([
-        {
-          value: "LAST_7_DAYS",
-          text: tl(trans.last_count_days).replace("{c}", "7")
-        },
-        {
-          value: "LAST_30_DAYS",
-          text: tl(trans.last_count_days).replace("{c}", "30")
-        },
-        {
-          value: "LAST_90_DAYS",
-          text: tl(trans.last_count_days).replace("{c}", "90")
-        },
-        {
-          value: "LAST_180_DAYS",
-          text: tl(trans.last_count_days).replace("{c}", "180")
-        },
-        {
-          value: "LAST_365_DAYS",
-          text: tl(trans.last_count_days).replace("{c}", "365")
-        }
-      ], "LAST_90_DAYS")}
-                    <button class="btn chibi icon primary compare" ref=${(el) => submit = el} onclick=${() => begin_comparing()}>${tl(trans.compare)}</button>
-                </div>
-            </div>
-            <div class="compare-body" data-filled="false" ref=${(el) => body = el}>
-                <div class="loading-data-container">
-                    <div class="loading-data-text info">${tl(trans.choose_a_timeframe_above)}</div>
-                </div>
-            </div>
-        `,
-      type: "compare"
-    });
-    let pages_select = pages.querySelector("select");
-    let timeframe_select = timeframe.querySelector("select");
-    let type_select = type.querySelector("select");
-    tippy(submit, {
-      content: tl(trans.compare)
-    });
-    function begin_comparing(bypass = false) {
-      body.setAttribute("data-filled", "false");
-      if (parseInt(pages_select.value) > 3 && !bypass) {
-        let warn = notify({
-          id: "collage_warning",
-          title: tl(trans.are_you_sure),
-          body: tl(trans.this_will_require_loading_count_pages).replace("{c}", parseInt(pages_select.value) * 2),
-          type: "warning",
-          actions: [
-            {
-              type: "check",
-              action: () => {
-                notify_rm(warn);
-                begin_comparing(true);
-              },
-              text: tl(trans.continue)
-            }
-          ],
-          persist: true
-        });
-        return;
-      }
-      pages.querySelector("button").disabled = true;
-      type.querySelector("button").disabled = true;
-      timeframe.querySelector("button").disabled = true;
-      submit.disabled = true;
-      page.state.compare = {
-        you: [],
-        other: [],
-        shared: []
-      };
-      get_grid(auth.name, 1, parseInt(pages_select.value), page.name);
-    }
-    function get_grid(user, current_page, page_count, next_user = null) {
-      render(body, html`
-            <div class="loading-data-container">
-                <div class="loading-data-text">${tl(trans.gathering_plays_for_user_pages).replace("{u}", user).replace("{current_page}", current_page).replace("{pages}", page_count)}</div>
-            </div>
-        `);
-      fetch(`${root}user/${user}/library/${type_select.value}?format=list&date_preset=${timeframe_select.value}&page=${current_page}&ajax=1`).then(function(response) {
-        console.log("returned", response, response.text);
-        return response.text();
-      }).then(function(dom) {
-        let doc = new DOMParser().parseFromString(dom, "text/html");
-        console.log("DOC", doc);
-        let next_button = doc.querySelector(".pagination-next");
-        try {
-          let tracks = doc.querySelectorAll(".chartlist-row");
-          tracks.forEach((track) => {
-            let item = {};
-            item.avatar = track.querySelector(".chartlist-image img");
-            if (item.avatar)
-              item.avatar = item.avatar.getAttribute("src");
-            item.name = track.querySelector(".chartlist-name a").textContent.trim();
-            if (type_select.value != "artists")
-              item.sister = track.querySelector(".chartlist-artist a").textContent.trim();
-            item.plays = clean_number(track.querySelector(".chartlist-count-bar-slug").getAttribute("data-stat-value"));
-            if (next_user)
-              page.state.compare.you.push(item);
-            else
-              page.state.compare.other.push(item);
-          });
-        } catch (e) {
-          notify({
-            id: "compare",
-            title: tl(trans.failed),
-            body: tl(trans.there_was_a_network_error),
-            type: "error"
-          });
-          console.error(e);
-        }
-        if (next_button && current_page < page_count) {
-          get_grid(user, current_page + 1, page_count, next_user);
-        } else if (next_user) {
-          get_grid(next_user, 1, page_count);
-        } else {
-          pages.querySelector("button").disabled = false;
-          type.querySelector("button").disabled = false;
-          timeframe.querySelector("button").disabled = false;
-          submit.disabled = false;
-          continue_comparing();
-        }
-      });
-    }
-    function continue_comparing() {
-      log("gathered initial values", "compare", "info", page.state.compare);
-      page.state.compare.you.forEach((your_item) => {
-        let other_item;
-        if (type_select.value == "albums")
-          other_item = page.state.compare.other.find((other) => your_item.name === other.name && your_item.sister === other.sister);
-        else
-          other_item = page.state.compare.other.find((other) => your_item.name === other.name);
-        if (other_item) {
-          page.state.compare.shared.push({
-            avatar: your_item.avatar,
-            name: your_item.name,
-            sister: your_item.sister ? your_item.sister : "",
-            plays: {
-              you: your_item.plays,
-              other: other_item.plays,
-              shared: your_item.plays + other_item.plays
-            }
-          });
-        }
-      });
-      page.state.compare.shared.sort((a, b) => b.plays.shared - a.plays.shared);
-      log("gathered shared values", "compare", "info", page.state.compare);
-      body.innerHTML = "";
-      if (page.state.compare.shared.length == 0) {
-        render(body, html`
-                <div class="loading-data-container">
-                    <div class="loading-data-text failed">${tl(trans.nothing_in_common)}</div>
-                </div>
-            `);
-        body.setAttribute("data-filled", "false");
-        return;
-      }
-      body.setAttribute("data-filled", "true");
-      if (type_select.value != "tracks") {
-        let grid = document.createElement("ol");
-        grid.classList.add("grid-items", "grid-items--numbered", "compare-grid");
-        page.state.compare.shared.forEach((data2) => {
-          let template;
-          if (type_select.value == "artists")
-            template = sanitise(data2.name);
-          else
-            template = `${sanitise(data2.sister)}/${sanitise(data2.name)}`;
-          grid.appendChild(html.node`
-                    <li class="compare-item grid-items-item">
-                        <div class="grid-items-cover-image js-link-block link-block">
-                            <div class="grid-items-cover-image-image ${data2.avatar.endsWith("/c6f59c1e5e7240a4c0d427abd71f3dbb.jpg") || data2.avatar.endsWith("/2a96cbd8b46e442fc41c2b86b821562f.jpg") ? "grid-items-cover-default" : ""}">
-                                <img src="${data2.avatar.replace("/avatar70s/", "/avatar300s/").replace("/64s/", "/avatar300s/")}" alt="${data2.name}" loading="lazy">
-                            </div>
-                            <div class="grid-items-item-details">
-                                <p class="grid-items-item-main-text">
-                                    <a class="link-block-target" href="${root}music/${template}" title="${data2.name}">
-                                        ${data2.name}
-                                    </a>
-                                </p>
-                                ${type_select.value == "albums" ? html.node`
-                                <p class="grid-items-item-aux-text">
-                                    <a class="grid-items-item-aux-block" href="${root}music/${data2.sister}">
-                                        ${data2.sister}
-                                    </a>
-                                </p>
-                                ` : ""}
-                                <p class="grid-items-item-aux-text">
-                                    <a class="grid-item-plays with-avatar" href="${root}user/${auth.name}/library/music/${template}?date_preset=${timeframe_select.value}" target="_blank">
-                                        <span class="avatar">
-                                            <img src="${auth.avatar}" alt="${tl(trans.your_avatar)}">
-                                        </span>
-                                        ${data2.plays.you.toLocaleString(lang)}
-                                    </a>
-                                    <a class="grid-item-plays with-avatar" href="${root}user/${page.name}/library/music/${template}?date_preset=${timeframe_select.value}" target="_blank">
-                                        <span class="avatar">
-                                            <img src="${page.avatar}" alt="${tl(trans.avatar_for_user).replace("{u}", page.name)}">
-                                        </span>
-                                        ${data2.plays.other.toLocaleString(lang)}
-                                    </a>
-                                </p>
-                            </div>
-                            <a class="js-link-block-cover-link link-block-cover-link" href="${root}music/${template}" tabindex="-1" aria-hidden="true"></a>
-                        </div>
-                    </li>
-                `);
-        });
-        render(body, grid);
-        music_grids(grid);
-      } else {
-        let table = document.createElement("table");
-        table.classList.add("chartlist", "chartlist--with-index", "chartlist--with-index--length-2", "chartlist--with-image", "chartlist--with-artist", "chartlist--with-bar", "compare-chartlist");
-        let tbody = document.createElement("tbody");
-        table.appendChild(tbody);
-        let max = 0;
-        page.state.compare.shared.forEach((item) => {
-          if (item.plays.you > max)
-            max = item.plays.you;
-          if (item.plays.other > max)
-            max = item.plays.other;
-        });
-        page.state.compare.shared.forEach((data2, index) => {
-          let template = `${sanitise(data2.sister)}/_/${sanitise(data2.name)}`;
-          tbody.appendChild(html.node`
-                    <tr class="chartlist-row chartlist-row--with-artist compare-item">
-                        <td class="chartlist-index">${index + 1}</td>
-                        <td class="chartlist-image">
-                            <a class="cover-art" href="${root}music/${template}">
-                                <img src="${data2.avatar}" alt="${data2.name}" loading="lazy">
-                            </a>
-                        </td>
-                        <td class="chartlist-name">
-                            <a href="${root}music/${template}" title="${data2.name}">
-                                ${data2.name}
-                            </a>
-                        </td>
-                        <td class="chartlist-artist">
-                            <a href="${root}music/${data2.sister}" title="${data2.sister}">
-                                ${data2.sister}
-                            </a>
-                        </td>
-                        <td class="chartlist-bar with-multiple">
-                            <span class="chartlist-count-bar">
-                                <a class="chartlist-count-bar-link" href="${root}user/${auth.name}/library/music/${template}?date_preset=${timeframe_select.value}" target="_blank">
-                                    <span class="chartlist-count-bar-slug" data-max-stat-value="${max}" data-stat-value="${data2.plays.you}" style="width: ${data2.plays.you / max * 100}%;"></span>
-                                    <span class="chartlist-count-bar-value">${data2.plays.you}</span>
-                                </a>
-                                <span class="avatar">
-                                    <img src="${auth.avatar}" alt="${tl(trans.your_avatar)}">
-                                </span>
-                            </span>
-                            <span class="chartlist-count-bar">
-                                <a class="chartlist-count-bar-link" href="${root}user/${page.name}/library/music/${template}?date_preset=${timeframe_select.value}" target="_blank">
-                                    <span class="chartlist-count-bar-slug" data-max-stat-value="${max}" data-stat-value="${data2.plays.other}" style="width: ${data2.plays.other / max * 100}%;"></span>
-                                    <span class="chartlist-count-bar-value">${data2.plays.other}</span>
-                                </a>
-                                <span class="avatar">
-                                    <img src="${page.avatar}" alt="${tl(trans.avatar_for_user).replace("{u}", page.name)}">
-                                </span>
-                            </span>
-                        </td>
-                    </tr>
-                `);
-        });
-        body.appendChild(table);
-        patch_titles(body);
-      }
-    }
-  }
-
-  // src/components/input.js
-  function input({
-    type = "text",
-    value,
-    placeholder,
-    min,
-    max,
-    maxlength,
-    warn_if_empty = false
-  }) {
-    let input_box;
-    let error_tooltip;
-    let container = html.node`
-        <div class="content-form input-container colourful" data-has-error="false">
-            <input type=${type} value=${value} placeholder=${placeholder} min=${min} max=${max} maxlength=${maxlength} ref=${(el) => input_box = el} />
-        </div>
-    `;
-    error_tooltip = tippy(input_box, {
-      theme: "error",
-      placement: "top",
-      trigger: "manual"
-    });
-    error_tooltip.disable();
-    input_box.addEventListener("input", () => {
-      container.setAttribute("data-has-error", "false");
-      error_tooltip.disable();
-      if (type == "number") {
-        if (input_box.value == "") {
-          error_input2(tl(trans.only_numbers_are_allowed), container, error_tooltip);
-        } else if (parseInt(input_box.value) > max || parseInt(input_box.value) < min) {
-          error_input2(tl(trans.keep_within_the_range), container, error_tooltip);
-        }
-      }
-    });
-    return container;
-  }
-  function error_input2(reason, input2, tooltip) {
-    log(reason, "input", "log");
-    input2.setAttribute("data-has-error", "true");
-    tooltip.setContent(reason);
-    tooltip.enable();
-    tooltip.show();
-  }
-
   // src/components/collage.js
-  function collage(default_type = "albums", default_timeframe = "date_preset=LAST_90_DAYS") {
+  function collage({
+    default_type = "artists",
+    default_timeframe = "date_preset=LAST_90_DAYS",
+    redirect = false
+  } = {}) {
     if (page.state.scrobbles === 0) {
       notify({
         id: "collage_not_possible",
@@ -6052,6 +8567,11 @@
       id: "collage",
       title: tl(trans.collage),
       body: html.node`
+            ${redirect ? html.node`
+            <div class="alert alert-info">
+                ${tl(trans.collage_redirect)}
+            </div>
+            ` : ""}
             <div class="compare-header">
                 <div class="compare-users">
                     <div class="compare-user">
@@ -6149,11 +8669,12 @@
       theme: "window",
       content: html.node`
             <div class="dialog-settings">
-                ${setting({ id: "collage_title" })}
-                <div class="sep" />
-                ${setting({ id: "collage_grid_text" })}
-                ${setting({ id: "collage_grid_plays" })}
-                ${setting({ id: "collage_grid_gap" })}
+                <div class="setting-group blend">
+                    ${setting({ id: "collage_title" })}
+                    ${setting({ id: "collage_grid_gap" })}
+                    ${setting({ id: "collage_grid_text" })}
+                    ${setting({ id: "collage_grid_plays" })}
+                </div>
             </div>
         `,
       placement: "bottom",
@@ -6265,16 +8786,8 @@
         grid.style.setProperty("--item-list-gap", "0px");
         grid.style.setProperty("--item-med-radius", "0");
       }
-      if (width_input.value >= 8 || height_input.value >= 8) {
-        grid.setAttribute("data-scale-down", "2");
-      } else if (width_input.value >= 7 || height_input.value >= 7) {
-        grid.setAttribute("data-scale-down", "1");
-      }
       let total = width_input.value * height_input.value - 1;
-      let highest = width_input.value;
-      if (height_input.value > width_input.value)
-        highest = height_input.value;
-      grid.style.setProperty("--highest", highest);
+      grid.style.setProperty("--highest", Math.max(+width_input.value, +height_input.value).toString());
       page.state.collage.some((data2, index) => {
         if (index > total)
           return false;
@@ -6359,11 +8872,21 @@
             ${collage_dom}
         `);
       music_grids(grid, false);
-      let cv_width = 1500;
-      let cv_height = 1547;
-      let cv_scale = 1;
+      const grid_item_size = 380;
+      const grid_item_gap = settings.collage_grid_gap ? 10 : 0;
+      const padding = settings.collage_grid_gap ? 15 : 0;
+      const title_height = settings.collage_title ? 32 + 15 : 0;
+      const width2 = padding * 2 + grid_item_size * width_input.value + grid_item_gap * (width_input.value - 1);
+      const height2 = padding * 2 + title_height + grid_item_size * height_input.value + grid_item_gap * (height_input.value - 1);
+      const cv_scale = 1;
+      collage_dom.style.width = `${width2}px`;
+      collage_dom.style.height = `${height2}px`;
+      collage_dom.style.padding = `${padding}px`;
+      collage_dom.style.gap = `${padding}px`;
+      collage_dom.style["--item-list-gap"] = `${grid_item_gap}px`;
+      collage_dom.style["--grid-item-size"] = `${grid_item_size}px`;
       let initial_canvas = html.node`
-            <canvas width=${cv_width * cv_scale} height=${cv_height * cv_scale} />
+            <canvas width=${width2 * cv_scale} height=${height2 * cv_scale} />
         `;
       html2canvas(collage_dom, {
         useCORS: true,
@@ -6375,7 +8898,7 @@
             if (el.classList == "brand")
               el.style.setProperty("font-family", "Darumadrop One");
             else
-              el.style.setProperty("font-family", "Ubuntu Sans, Spline Sans, Inter, Roboto, Noto Sans, Noto Sans JP, Noto Sans KR, Noto Sans TC, Noto Color Emoji, Lucida Grande, Verdana, Tahoma, -apple-system, BlinkMacSystemFont, sans-serif");
+              el.style.setProperty("font-family", "Overpass, Inter, Ubuntu Sans, Spline Sans, Roboto, Noto Sans, Noto Sans JP, Noto Sans KR, Noto Sans TC, Lucida Grande, Verdana, Tahoma, -apple-system, BlinkMacSystemFont, sans-serif");
           });
         }
       }).then((canvas) => {
@@ -6547,13 +9070,6 @@
   }
 
   // src/components/profile_header.js
-  unsafeWindow._toggle_profile_header = function(button) {
-    let current = settings.profile_header_expand;
-    settings.profile_header_expand = !current;
-    button.setAttribute("aria-expanded", !current);
-    document.documentElement.setAttribute("data-bleh--profile_header_expand", !current);
-    localStorage.setItem("bleh", JSON.stringify(settings));
-  };
   function redesign_profile_header(is_own_profile, is_following) {
     let base_header = document.body.querySelector(".header-info-secondary");
     if (!base_header) return;
@@ -6561,7 +9077,6 @@
     let taste = "";
     let taste_percentage = "";
     let taste_artists = [];
-    let profile_avi = "";
     if (!is_own_profile && page.name != sponsor_list.sponsor_account) {
       let taste_meter = base_header.querySelector(".tasteometer");
       taste = taste_meter.classList[1].replace("tasteometer-compat-", "");
@@ -6569,26 +9084,31 @@
       artists.forEach((artist) => {
         taste_artists.push(correct_artist(artist.getAttribute("title")));
       });
-      profile_avi = document.body.querySelector(".header-avatar img");
-      if (profile_avi != null)
-        profile_avi = profile_avi.getAttribute("src");
-      else
-        profile_avi = "";
       taste_percentage = taste_meter.querySelector(".tasteometer-viz").getAttribute("title");
       if (taste_percentage == "99%")
         taste_percentage = "100%";
     }
-    let profile_header = document.createElement("section");
-    profile_header.classList.add("side-actions");
+    let side_sep = html.node`<div class="sep"></div>`;
+    let about_me = page.structure.container.querySelector(".about-me-sidebar");
+    let profile_header;
+    if (about_me) {
+      profile_header = html.node`
+            <div class="side-actions" />
+        `;
+    } else {
+      profile_header = html.node`
+            <section class="side-actions" />
+        `;
+    }
     if (!is_own_profile && page.name != sponsor_list.sponsor_account) {
       let follow_wrap = document.body.querySelector(".header-avatar .class > div");
-      if (follow_wrap != null) {
+      if (follow_wrap) {
         let follow_btn = follow_wrap.querySelector("button");
         follow_btn.classList.add("btn", "side-action");
         follow_btn.classList.remove("toggle-button", "header-follower-btn");
         follow_btn.setAttribute("data-type", "follow");
         profile_header.appendChild(follow_wrap);
-        if (follow_wrap.getAttribute("data-toggle-button-current-state") == "followed")
+        if (is_following)
           follow_btn.setAttribute("data-followed", "true");
         let mutual_text = document.createElement("i");
         mutual_text.textContent = tl(trans.following_mutuals);
@@ -6652,7 +9172,7 @@
             link: () => collage(),
             action: "button",
             text: tl(trans.collage),
-            new_release: true
+            updated: true
           });
         }
         if (settings.profile_shortcut != page.name) {
@@ -6715,8 +9235,8 @@
       let taste_wrap = html.node`
             <div class="btn listen-item icon">
                 <div class="span">
-                    <img class="view-item-avatar" src="${auth.avatar}">
-                    <img class="view-item-avatar" src="${profile_avi}">
+                    <img class="view-item-avatar" src=${auth.avatar} alt=${auth.name}>
+                    <img class="view-item-avatar" src=${page.avatar} alt=${page.name}>
                     <div class="info">
                         <h3>${html.node([
         tl(trans.you_share_count_with).replace("{c}", `<span class="colourful" data-taste="${taste}">${taste_percentage}</span>`)
@@ -6749,7 +9269,7 @@
           content: html.node`
                     <h4 class="menu-header">${tl(trans.compare_plays)}</h4>
                     <a class="dropdown-menu-clickable-item" href="${root}user/${page.name}/library/music/${sanitise(taste_artists[0])}" data-menu-item="shared-artist">
-                        <img class="view-item-avatar" src="${profile_avi}" alt="${page.name}">${taste_artists[0]}
+                        <img class="view-item-avatar" src="${page.avatar}" alt="${page.name}">${taste_artists[0]}
                     </a>
                     <a class="dropdown-menu-clickable-item" href="${root}user/${auth.name}/library/music/${sanitise(taste_artists[0])}" data-menu-item="shared-artist">
                         <img class="view-item-avatar" src="${auth.avatar}" alt="${auth.name}">${taste_artists[0]}
@@ -6757,7 +9277,7 @@
                     ${taste_artists.length >= 2 ? html.node`
                     <div class="sep"></div>
                     <a class="dropdown-menu-clickable-item" href="${root}user/${page.name}/library/music/${sanitise(taste_artists[1])}" data-menu-item="shared-artist">
-                        <img class="view-item-avatar" src="${profile_avi}" alt="${page.name}">${taste_artists[1]}
+                        <img class="view-item-avatar" src="${page.avatar}" alt="${page.name}">${taste_artists[1]}
                     </a>
                     <a class="dropdown-menu-clickable-item" href="${root}user/${auth.name}/library/music/${sanitise(taste_artists[1])}" data-menu-item="shared-artist">
                         <img class="view-item-avatar" src="${auth.avatar}" alt="${auth.name}">${taste_artists[1]}
@@ -6766,7 +9286,7 @@
                     ${taste_artists.length >= 3 ? html.node`
                     <div class="sep"></div>
                     <a class="dropdown-menu-clickable-item" href="${root}user/${page.name}/library/music/${sanitise(taste_artists[2])}" data-menu-item="shared-artist">
-                        <img class="view-item-avatar" src="${profile_avi}" alt="${page.name}">${taste_artists[2]}
+                        <img class="view-item-avatar" src="${page.avatar}" alt="${page.name}">${taste_artists[2]}
                     </a>
                     <a class="dropdown-menu-clickable-item" href="${root}user/${auth.name}/library/music/${sanitise(taste_artists[2])}" data-menu-item="shared-artist">
                         <img class="view-item-avatar" src="${auth.avatar}" alt="${auth.name}">${taste_artists[2]}
@@ -6789,13 +9309,18 @@
         register_menu(taste_wrap, menu);
       }
     }
-    if (!page.mobile)
-      page.structure.side.insertBefore(profile_header, page.structure.side.firstElementChild);
-    else
-      page.structure.main.insertBefore(profile_header, page.structure.main.firstElementChild);
+    if (about_me) {
+      about_me.appendChild(side_sep);
+      about_me.appendChild(profile_header);
+    } else {
+      if (!page.mobile)
+        page.structure.side.insertBefore(profile_header, page.structure.side.firstElementChild);
+      else
+        page.structure.main.insertBefore(profile_header, page.structure.main.firstElementChild);
+    }
   }
-  function create_profile_top_item(parent, { name, link, text: text2 = "", type, new_release = false, action = "", tooltip = "", allow_html = false, tooltip_theme = "" }) {
-    log(`creating top item of ${name}, ${link}, ${text2}`, "profile");
+  function create_profile_top_item(parent, { name: name2, link, text: text2 = "", type, new_release = false, updated = false, action = "", tooltip = "", allow_html = false, tooltip_theme = "" }) {
+    log(`creating top item of ${name2}, ${link}, ${text2}`, "profile");
     let side_action;
     if (action === "button") {
       side_action = html.node`
@@ -6806,6 +9331,7 @@
             >
                 ${tl(trans[type])}
                 ${new_release ? html.node`<div class="new-badge">${tl(trans.new)}</div>` : ""}
+                ${updated ? html.node`<div class="new-badge">${tl(trans.updated)}</div>` : ""}
             </button>
         `;
     } else {
@@ -6817,11 +9343,12 @@
             >
                 ${tl(trans[type])}
                 ${new_release ? html.node`<div class="new-badge">${tl(trans.new)}</div>` : ""}
+                ${updated ? html.node`<div class="new-badge">${tl(trans.updated)}</div>` : ""}
             </a>
         `;
     }
     if (type == "shortcut") {
-      if (name == settings.profile_shortcut) {
+      if (name2 == settings.profile_shortcut) {
         side_action.setAttribute("data-is-shortcut", "true");
       } else {
         side_action.setAttribute("data-is-shortcut", "false");
@@ -6844,8 +9371,11 @@
       load_chart_colours();
     }
     let params = new URLSearchParams(document.location.search);
+    page.requested.params = params;
     page.requested.tab = params.get("tab");
     page.requested.page = params.get("page");
+    page.requested.token = params.get("token");
+    page.requested.collage = params.get("collage");
     if (!page.structure.container || !document.body.contains(page.structure.container)) {
       log("page missing container, creating", "page structure");
       page.structure.container = document.createElement("div");
@@ -6867,6 +9397,7 @@
     }
     if (page.structure.row.classList.contains("buffer-4"))
       page.structure.row.classList = "row col-main-is-primary";
+    page.structure.row.setAttribute("data-assigned", "true");
     if (!page.structure.main || !document.body.contains(page.structure.main)) {
       log("page missing main, creating", "page structure");
       page.structure.main = document.createElement("div");
@@ -6886,6 +9417,15 @@
         page.structure.row.appendChild(page.structure.side);
       }
     }
+    if (ff("short")) {
+      page.structure.content = html.node`
+            <div class="content">
+                ${page.structure.main}
+                ${page.structure.side}
+            </div>
+        `;
+      page.structure.row.appendChild(page.structure.content);
+    }
     log("finished", "page structure");
     if (ff("refreshed_music_nav") && header) {
       let navlist = header.querySelector(".navlist");
@@ -6899,12 +9439,22 @@
         if (content_top) {
           content_top.classList.add("redesigned-content-top");
           page.structure.content_top = content_top;
-          if (navlist)
-            navlist.after(content_top);
-          else
-            page.structure.container.insertBefore(content_top, page.structure.container.firstElementChild);
           if (content_top.querySelector(".content-top-back-link"))
             content_top.style.setProperty("display", "none");
+          let content_top_nav = content_top.querySelector(".navlist");
+          if (!content_top_nav && ff("beret"))
+            content_top.style.setProperty("display", "none");
+          if (ff("short")) {
+            if (!content_top.style.hasOwnProperty("display"))
+              page.structure.row.insertBefore(content_top, page.structure.content);
+            else
+              page.structure.row.appendChild(content_top);
+          } else {
+            if (navlist)
+              navlist.after(content_top);
+            else
+              page.structure.container.insertBefore(content_top, page.structure.container.firstElementChild);
+          }
         } else {
           let subpage_title = page.structure.main.querySelector(":scope > .subpage-title");
           if (!subpage_title)
@@ -6922,7 +9472,11 @@
                         </div>
                     `;
             page.structure.content_top = content_top;
-            navlist.after(content_top);
+            content_top.style.setProperty("display", "none");
+            if (ff("short"))
+              page.structure.row.appendChild(content_top);
+            else
+              navlist.after(content_top);
             try {
               page.structure.main.removeChild(subpage_title);
             } catch (e) {
@@ -6931,10 +9485,14 @@
           navlist = page.structure.main.querySelector(".navlist");
           if (navlist) {
             navlist.classList.add("redesigned-navigation");
-            if (page.structure.content_top)
-              page.structure.content_top.after(navlist);
-            else
-              page.structure.container.insertBefore(navlist, page.structure.row);
+            if (ff("short")) {
+              page.structure.row.insertBefore(navlist, page.structure.content);
+            } else {
+              if (page.structure.content_top)
+                page.structure.content_top.after(navlist);
+              else
+                page.structure.container.insertBefore(navlist, page.structure.row);
+            }
           }
           let btn_add = page.structure.main.querySelector(":scope > .btn-add");
           if (!btn_add) btn_add = page.structure.main.querySelector(":scope > section:first-child .btn-add");
@@ -6947,6 +9505,7 @@
               page.structure.main.appendChild(side_actions);
             btn_add.classList = "btn side-action";
             btn_add.setAttribute("data-type", "add");
+            btn_add.textContent = tl(trans.add);
             side_actions.appendChild(btn_add);
           }
           let radio = page.structure.main.querySelector(":scope > .section-controls > .section-playlink");
@@ -6967,11 +9526,27 @@
             side_actions.appendChild(radio);
           }
         }
+        let similar_artists = page.structure.side.querySelector(".similar-items-sidebar");
+        if (similar_artists) {
+          similar_artists.parentElement.classList.add("similar-artists-panel");
+          page.structure.side.removeChild(similar_artists.parentElement);
+        }
       } else {
         let content_top = document.body.querySelector(".content-top");
         if (content_top) content_top.classList.add("legacy-content-top");
       }
     }
+  }
+  function checkup_nav() {
+    if (!ff("short")) return;
+    if (page.structure.nav) page.structure.nav.setAttribute("data-assigned", "true");
+    let navlists = page.structure.container.querySelectorAll(":scope > .navlist");
+    console.info(page.structure.container.innerHTML);
+    navlists.forEach((nav, index) => {
+      console.info(index);
+      if (index < 1) return;
+      page.structure.row.insertBefore(nav, page.structure.content);
+    });
   }
 
   // src/components/auto_edit.js
@@ -6987,36 +9562,13 @@
         <li>
     `, nav.firstElementChild);
   }
-  function auto_edit_modal() {
-    let modal = document.querySelector(".automatic-edit-modal-body-v2");
-    if (!modal) return;
-    if (modal.hasAttribute("data-bwaa-edit"))
-      return;
-    modal.setAttribute("data-bwaa-edit", "true");
-    log("auto edit v2", "modal");
-    let checkboxes = modal.querySelectorAll(".checkbox");
-    checkboxes.forEach((checkbox) => {
-      let id = checkbox.querySelector("input").getAttribute("name");
-      let text2 = checkbox.textContent.trim();
-      checkbox.classList = "setting";
-      checkbox.setAttribute("data-type", "toggle");
-      checkbox.setAttribute("onclick", `_update_inbuilt_item('${id}')`);
-      render(checkbox, html`
-            <div class="heading">
-                <h5>${text2}</h5>
-            </div>
-            <div class="toggle-wrap">
-                <input class="companion-checkbox" type="checkbox" name="${id}" id="inbuilt-companion-checkbox-${id}">
-                <span class="btn toggle" id="toggle-${id}" aria-checked="false">
-                    <div class="dot"></div>
-                </span>
-            </div>
-        `);
-    });
-  }
 
   // src/pages/lastfm_settings.js
   function bleh_native_settings() {
+    let no_data = page.structure.container.querySelector(":scope > .no-data-message");
+    if (no_data) {
+      page.structure.main.appendChild(no_data);
+    }
     if (page.subpage == "overview") {
       patch_settings_profile_tab();
     } else if (page.subpage == "privacy") {
@@ -7148,19 +9700,19 @@
                     ${original_chart_settings.recent.count}
                 </div>
             </div>
-            <div class="setting" data-type="toggle" id="container-recent_artwork">
+            <div class="setting" data-type="toggle" onclick="_update_inbuilt_item('recent_artwork')" id="container-recent_artwork">
                 <button class="btn reset" onclick="_reset_inbuilt_item('recent_artwork')">Reset to default</button>
                 <div class="heading">
                     <h5>${tl(trans.recent_artwork)}</h5>
                 </div>
                 <div class="toggle-wrap">
                     <input class="companion-checkbox" type="checkbox" name="show_recent_tracks_artwork" id="inbuilt-companion-checkbox-recent_artwork">
-                    <span class="btn toggle" id="toggle-recent_artwork" onclick="_update_inbuilt_item('recent_artwork')" aria-checked="false">
+                    <span class="btn toggle" id="toggle-recent_artwork" aria-checked="false">
                         <div class="dot"></div>
                     </span>
                 </div>
             </div>
-            <div class="setting" data-type="toggle" id="container-recent_realtime">
+            <div class="setting" data-type="toggle" onclick="_update_inbuilt_item('recent_realtime')" id="container-recent_realtime">
                 <button class="btn reset" onclick="_reset_inbuilt_item('recent_realtime')">Reset to default</button>
                 <div class="heading">
                     <h5>${tl(trans.recent_realtime.name)}</h5>
@@ -7168,7 +9720,7 @@
                 </div>
                 <div class="toggle-wrap">
                     <input class="companion-checkbox" type="checkbox" name="auto_refresh_recent_tracks" id="inbuilt-companion-checkbox-recent_realtime">
-                    <span class="btn toggle" id="toggle-recent_realtime" onclick="_update_inbuilt_item('recent_realtime')" aria-checked="false">
+                    <span class="btn toggle" id="toggle-recent_realtime" aria-checked="false">
                         <div class="dot"></div>
                     </span>
                 </div>
@@ -7423,6 +9975,9 @@
     let form_website = document.getElementById("id_homepage").value;
     let form_country = document.getElementById("id_country");
     let form_about_me = document.getElementById("id_about_me").textContent;
+    let chars;
+    let about;
+    let preview;
     render(update_picture, html`
        <h4>${tl(trans.profile)}</h4>
         <div class="banner-preview"></div>
@@ -7462,24 +10017,27 @@
                                 <div class="title">
                                     ${tl(trans.country)}
                                 </div>
-                                <div class="input custom-selector" id="country_select">
-                                    ${form_country}
-                                </div>
+                                ${select(select_prepare(form_country), form_country.value, "country")}
                             </div>
                             <div class="info-row">
                                 <div class="title">
                                     ${tl(trans.about)}
                                 </div>
                                 <div class="input about-me" id="about_me">
-                                    <textarea name="about_me" placeholder=${tl(trans.anything_you_can_imagine)} cols="40" rows="10" class="textarea--s" maxlength="500" id="id_about_me" oninput="_update_about_me_preview(this.value)" data-form-type="other">${form_about_me}</textarea>
-                                    <div class="tip markdown-enabled">${tl(trans.supports_markdown)}</div>
+                                    <textarea name="about_me" placeholder=${tl(trans.anything_you_can_imagine)} cols="40" rows="10" class="textarea--s" maxlength="500" id="id_about_me" oninput=${() => update_about()} ref=${(el) => about = el} data-form-type="other">${form_about_me}</textarea>
+                                    <div class="dual-tip">
+                                        <div class="tip markdown-enabled">${tl(trans.supports_markdown)}</div>
+                                        <div class="tip characters" ref=${(el) => chars = el}>
+                                            ${tl(trans.value_characters_max).replace("{v}", "500")}
+                                        </div>
+                                    </div>
                                 </div>
                             </div>
                             <div class="info-row">
                                 <div class="title">
                                     ${tl(trans.about_me_preview)}
                                 </div>
-                                <span class="bleh--about-me-preview" id="about_me_preview"></span>
+                                <span class="bleh--about-me-preview" ref=${(el) => preview = el}></span>
                             </div>
                             <div class="info-row" style="display: none">
                                 <div class="title">
@@ -7508,9 +10066,21 @@
       content: tl(trans.markdown_tip),
       allowHTML: true
     });
-    custom_select(update_picture.querySelector("#id_country"), update_picture.querySelector("#country_select"));
-    let about_me_box = document.getElementById("id_about_me");
-    update_about_me_preview(about_me_box.value);
+    update_about();
+    function update_about() {
+      let value = about.value;
+      chars.textContent = tl(trans.value_characters_max).replace("{v}", `${value.length}/500`);
+      chars.setAttribute("data-exceeded", value.length >= 500);
+      render(preview, markdown(value, {
+        allow_headers: true
+      }));
+      let banner = preview.querySelector('img[alt="banner"]');
+      let banner_img = page.structure.main.querySelector(".banner-preview");
+      if (!banner)
+        banner_img.removeAttribute("style");
+      else
+        banner_img.style.setProperty("background-image", `url(${banner.getAttribute("src")})`);
+    }
     update_display_name(form_display_name);
   }
   unsafeWindow._update_display_name = function(value) {
@@ -7587,21 +10157,6 @@
       button.removeAttribute("onclick");
     });
   }
-  unsafeWindow._update_about_me_preview = function(value) {
-    update_about_me_preview(value);
-  };
-  function update_about_me_preview(value) {
-    let about_me = page.structure.main.querySelector("#about_me_preview");
-    render(about_me, markdown(value, {
-      allow_headers: true
-    }));
-    let banner = about_me.querySelector('img[alt="banner"]');
-    let banner_img = page.structure.main.querySelector(".banner-preview");
-    if (!banner)
-      banner_img.removeAttribute("style");
-    else
-      banner_img.style.setProperty("background-image", `url(${banner.getAttribute("src")})`);
-  }
   function patch_settings_privacy_tab() {
     let privacy_panel = document.getElementById("privacy");
     let token = document.body.querySelector('[name="csrfmiddlewaretoken"]').getAttribute("value");
@@ -7609,28 +10164,34 @@
     patch_settings_privacy_panel(token, privacy_panel);
   }
   function bleh_communication_panel(token) {
+    let profile_notes = JSON.parse(localStorage.getItem("bleh_profile_notes")) || {};
     let panel = page.structure.main.querySelector("#ignorelist");
     panel.classList.add("bleh--panel");
     let list = panel.querySelectorAll(".ignore-list tr");
     let new_list = document.createElement("div");
-    new_list.classList.add("generic-table-list", "user-vertical-list");
+    new_list.classList.add("generic-table-list", "user-vertical-list", "take-space");
     let exceeded = false;
     let exceed_amount = 10;
     let amount = 0;
     list.forEach((item, index) => {
-      let entry = document.createElement("div");
-      entry.classList.add("generic-table-list-entry", "user-vertical-list-item");
-      let name = item.querySelector("td").textContent.trim();
+      let name2 = item.querySelector("td").textContent.trim();
       let form2 = item.querySelector("form");
       let button = form2.querySelector("button");
       button.classList.add("icon", "chibi", "danger-subtle");
-      entry.innerHTML = `
-            <span class="text">
-                <a class="mention" href="${root}user/${name}" target="_blank">@${name}</a>
-            </span>
-            <span class="actions">
-                ${form2.outerHTML}
-            </span>
+      let entry = html.node`
+            <div class="generic-table-list-entry user-vertical-list-item">
+                <div class="name">
+                    <a class="mention" href="${root}user/${name2}" target="_blank">@${name2}</a>
+                </div>
+                <div class="text preview">
+                    ${profile_notes.hasOwnProperty(name2) ? html.node`
+                        <p id="profile-note-row-preview--${name2}">${{ html: profile_notes[name2] }}</p>
+                    ` : ""}
+                </div>
+                <div class="actions">
+                    ${form2}
+                </div>
+            </div>
         `;
       if (index > exceed_amount && !exceeded)
         exceeded = true;
@@ -7643,59 +10204,58 @@
       let remainder = amount - exceed_amount;
       new_list.classList.add("list-is-exceeded");
       new_list.setAttribute("data-expanded", "false");
-      let expand = document.createElement("button");
-      expand.classList.add("expand-button", "icon");
-      expand.textContent = trans_legacy.en.settings.inbuilt.ignore.view.replace("{c}", remainder);
-      expand.setAttribute("onclick", "_expand_list(this)");
+      let expand = html.node`
+            <button class="see-more expand-down" onclick=${() => {
+        expand.style.display = "none";
+        new_list.setAttribute("data-expanded", "true");
+      }}>
+                ${tl(trans.view_count_more).replace("{c}", remainder.toString())}
+            </button>
+        `;
       new_list.appendChild(expand);
     }
     let form = page.structure.main.querySelector('[name="ignorelist"]');
     if (page.token == "")
       page.token = form.querySelector('[name="csrfmiddlewaretoken"]').getAttribute("value");
-    panel.innerHTML = `
+    render(panel, html`
         <h4>${tl(trans.block_list)}</h4>
         <div class="user-top-panel">
             <div class="user-top-avatar user-top-avatar-side-left"><div class="bleh-icon"></div></div>
             <img class="user-top-avatar user-top-avatar-main" src="${auth.avatar.replace("avatar42s", "avatar300s")}" alt="${auth.name}">
             <div class="user-top-avatar user-top-avatar-side-right"><div class="bleh-icon"></div></div>
         </div>
-        <div class="sides">
-            <div class="left main">
-                <div class="setting" data-type="text">
-                    <div class="heading">
-                        <h5>${tl(trans.profile)}</h5>
-                        <form action="${root}settings/privacy#ignorelist" name="ignorelist" method="post">
-                            <input type="hidden" name="csrfmiddlewaretoken" value="${page.token}">
-                            <div class="input-container">
-                                <input type="text" maxlength="80" id="id_user" name="user" placeholder="${tl(trans.enter_username)}">
-                                <input type="hidden" name="listaction" value="add">
-                                <input type="hidden" name="submit" value="ignorelist">
-                                <button class="bleh--btn primary icon block" type="submit">${tl(trans.block)}</button>
-                            </div>
-                        </form>
+        <div class="setting" data-type="text">
+            <div class="heading">
+                <h5>${tl(trans.profile)}</h5>
+                <form action="${root}settings/privacy#ignorelist" name="ignorelist" method="post">
+                    <input type="hidden" name="csrfmiddlewaretoken" value="${page.token}">
+                    <div class="input-container">
+                        <input type="text" maxlength="80" id="id_user" name="user" placeholder="${tl(trans.enter_username)}">
+                        <input type="hidden" name="listaction" value="add">
+                        <input type="hidden" name="submit" value="ignorelist">
+                        <button class="bleh--btn primary icon block" type="submit">${tl(trans.block)}</button>
                     </div>
-                </div>
-                <div class="alert alert-info">
-                    ${tl(trans.blocked_count).replace("{c}", amount)}
-                </div>
-            </div>
-            <div class="right">
-                <h5>${tl(trans.when_blocked)}</h5>
-                <div class="to-consider">
-                    <ul class="to-consider-good">
-                        <li>${tl(trans.blocked_user_public)}</li>
-                        <li>${tl(trans.blocked_user_message)}</li>
-                        <li>${tl(trans.blocked_user_new_shouts)}</li>
-                    </ul>
-                    <ul class="to-consider-bad">
-                        <li>${tl(trans.blocked_user_old_shouts)}</li>
-                        <li>${tl(trans.blocked_user_view_profile)}</li>
-                    </ul>
-                </div>
+                </form>
             </div>
         </div>
-    `;
-    panel.querySelector(".left").appendChild(new_list);
+        <div class="alert alert-info">
+            ${tl(trans.blocked_count).replace("{c}", amount)}
+        </div>
+        ${new_list}
+        <div class="sep" />
+        <h5>${tl(trans.when_blocked)}</h5>
+        <div class="to-consider">
+            <ul class="to-consider-good">
+                <li>${tl(trans.blocked_user_public)}</li>
+                <li>${tl(trans.blocked_user_message)}</li>
+                <li>${tl(trans.blocked_user_new_shouts)}</li>
+            </ul>
+            <ul class="to-consider-bad">
+                <li>${tl(trans.blocked_user_old_shouts)}</li>
+                <li>${tl(trans.blocked_user_view_profile)}</li>
+            </ul>
+        </div>
+    `);
   }
   function patch_settings_privacy_panel(token, privacy_panel) {
     privacy_panel.classList.add("bleh--panel");
@@ -7742,7 +10302,7 @@
                     </div>
                 </div>
             </div>
-            <div class="setting" data-type="toggle" id="container-recent_listening">
+            <div class="setting" data-type="toggle" onclick="_update_inbuilt_item('recent_listening')" id="container-recent_listening">
                 <button class="btn reset" onclick="_reset_inbuilt_item('recent_listening')">Reset to default</button>
                 <div class="heading">
                     <h5>${tl(trans.recent_listening.name)}</h5>
@@ -7750,7 +10310,7 @@
                 </div>
                 <div class="toggle-wrap">
                     <input class="companion-checkbox" type="checkbox" name="hide_realtime" id="inbuilt-companion-checkbox-recent_listening">
-                    <span class="btn toggle" id="toggle-recent_listening" onclick="_update_inbuilt_item('recent_listening')" aria-checked="false">
+                    <span class="btn toggle" id="toggle-recent_listening" aria-checked="false">
                         <div class="dot"></div>
                     </span>
                 </div>
@@ -7817,7 +10377,7 @@
                     </div>
                 </div>
             </div>
-            <div class="setting" data-type="toggle" id="container-disable_shoutbox">
+            <div class="setting" data-type="toggle" onclick="_update_inbuilt_item('disable_shoutbox')" id="container-disable_shoutbox">
                 <button class="btn reset" onclick="_reset_inbuilt_item('disable_shoutbox')">Reset to default</button>
                 <div class="heading">
                     <h5>${tl(trans.close_shouts.name)}</h5>
@@ -7825,7 +10385,7 @@
                 </div>
                 <div class="toggle-wrap">
                     <input class="companion-checkbox" type="checkbox" name="shoutbox_disabled" id="inbuilt-companion-checkbox-disable_shoutbox">
-                    <span class="btn toggle" id="toggle-disable_shoutbox" onclick="_update_inbuilt_item('disable_shoutbox')" aria-checked="false">
+                    <span class="btn toggle" id="toggle-disable_shoutbox" aria-checked="false">
                         <div class="dot"></div>
                     </span>
                 </div>
@@ -7999,7 +10559,7 @@
     custom_select(communication_panel.querySelector('[name="language"]'), communication_panel.querySelector('[name="language"]').parentElement);
   }
   function bleh_name_change() {
-    let token = page.structure.main.querySelector('[name="csrfmiddlewaretoken"]').getAttribute("value");
+    let token = page.structure.row.querySelector('[name="csrfmiddlewaretoken"]').getAttribute("value");
     return;
   }
   function bleh_applications() {
@@ -8044,6 +10604,8 @@
     checkup_page_structure(false, content_top);
     log("status is", "page", "info", page);
     update_page();
+    page.structure.container.setAttribute("data-beret", "false");
+    page.structure.container.setAttribute("data-short", "false");
     let background = obsession_container.querySelector(".obsession-background-inner");
     background = background.style.getPropertyValue("background-image").replace('url("', "").replace('")', "");
     if (!background.endsWith("/4128a6eb29f94943c9d206c08e625904.jpg")) {
@@ -8081,7 +10643,7 @@
       let song_tags = formatted_title[1];
       page.corrected = formatted_title[4];
       render(track_title, html.node`
-            <div class="title">${sanitise_text(song_title).trim()}</div>
+            <div class="title">${song_title.trim()}</div>
             ${song_tags.map((tag) => html.node`
                 <div class="feat" data-bleh--tag-type="${tag.type}" data-bleh--tag-group="${tag.group}">${tag.text}</div>
             `)}
@@ -8106,27 +10668,21 @@
         track_title.textContent = corrected_title;
       }
     }
-    let redesigned_track_header = document.createElement("section");
-    redesigned_track_header.classList.add("redesigned-header", "redesigned-track-header", "no-background", "obsession-track-header");
-    redesigned_track_header.innerHTML = `
-        <!--<div class="avatar-side">
-            <img src="${background.replace("/ar0/", "/avatar170s/")}">
-            <a class="bleh--avatar-clickable-link"></a>
-        </div>-->
-        <div class="info-side">
-            <div class="sub-text">${tl(trans.obsession)}</div>
-            <div class="title-container">
-                <h1><a href="${link}">${track_title.innerHTML}</a></h1>
+    track_title.classList.remove("obsession-meta-track");
+    let track_header = html.node`
+        <section class="redesigned-header redesigned-track-header no-background obsession-track-header">
+            <div class="info-side">
+                <div class="sub-text">${tl(trans.obsession)}</div>
+                <div class="title-container">
+                    <h1><a href="${link}">${track_title}</a></h1>
+                </div>
+                <h2>${html.node([track_artist.innerHTML])}</h2>
             </div>
-            <h2>${track_artist.innerHTML}</h2>
-        </div>
+        </section>
     `;
-    page.structure.container.insertBefore(redesigned_track_header, page.structure.container.firstElementChild);
+    page.structure.container.insertBefore(track_header, page.structure.container.firstElementChild);
     let video = obsession_container.querySelector(".obsession-video-container");
-    if (video)
-      redesigned_track_header.after(video);
-    let quote = document.createElement("section");
-    quote.classList.add("obsession-quote");
+    if (video) track_header.after(video);
     let obsession_reason = obsession_container.querySelector(".obsession-reason");
     if (obsession_reason) {
       let obsession_reason_text = obsession_reason.textContent;
@@ -8136,31 +10692,33 @@
     let obsession_avatar = document.querySelector(".obsession-details-intro-avatar-wrap .avatar");
     page.name = obsession_author;
     let date = obsession_container.querySelector(".obsession-details-date-short");
-    quote.innerHTML = `
-        ${obsession_reason ? `
-        <div class="quote">
-            ${obsession_reason.textContent}
-        </div>
-        ` : `
-        <div class="quote no-quote">
-            ${tl(trans.no_quote)}
-        </div>
-        `}
-        <div class="sub-text">
-            <div class="obsession-author">
-                ${obsession_avatar.outerHTML}
-                <strong class="name">${obsession_author}</strong>
-                <a class="link-block-cover-link" href="${root}user/${obsession_author}"></a>
+    let quote = html.node`
+        <section class="obsession-quote sour">
+            ${obsession_reason ? html.node`
+            <div class="quote">
+                ${obsession_reason.textContent}
             </div>
-            ${scrobbles ? `
-            <div class="obsession-listens">
-                ${scrobbles.innerHTML}
+            ` : html.node`
+            <div class="quote no-quote">
+                ${tl(trans.no_quote)}
             </div>
-            ` : ""}
-            <div class="obsession-date">
-                ${date.textContent}
+            `}
+            <div class="sub-text">
+                <div class="obsession-author">
+                    ${obsession_avatar}
+                    <strong class="name">${obsession_author}</strong>
+                    <a class="link-block-cover-link" href="${root}user/${obsession_author}"></a>
+                </div>
+                ${scrobbles ? html.node`
+                <div class="obsession-listens">
+                    ${html.node([scrobbles.innerHTML])}
+                </div>
+                ` : ""}
+                <div class="obsession-date">
+                    ${date.textContent}
+                </div>
             </div>
-        </div>
+        </section>
     `;
     let manage = obsession_container.querySelector("form");
     if (manage) {
@@ -8174,8 +10732,9 @@
       author.classList.add("colourful");
       author.classList.add(`user-status--bleh-${badge.type}`, `user-status--bleh-user-${obsession_author}`);
     }
-    let related = document.createElement("section");
-    related.classList.add("obsession-related");
+    let related = html.node`
+        <section class="obsession-related sour" />
+    `;
     let other_tracks = document.body.querySelector(".other-obsessions");
     if (other_tracks) {
       let header = document.createElement("h2");
@@ -8202,8 +10761,8 @@
       related.appendChild(header);
       let users = shared_users.querySelectorAll(".avatar");
       users.forEach((user) => {
-        let name = user.querySelector("img").getAttribute("alt");
-        patch_avatar(user, name);
+        let name2 = user.querySelector("img").getAttribute("alt");
+        patch_avatar(user, name2);
       });
       related.appendChild(shared_users);
     }
@@ -8211,6 +10770,65 @@
     let pages = obsession_container.querySelector(".obsession-pagination");
     if (pages)
       page.structure.container.appendChild(pages);
+  }
+
+  // src/components/banner.js
+  function load_banner(name2 = page.name) {
+    let banners = JSON.parse(localStorage.getItem("bleh_profile_banners")) || {};
+    if (banners[name2]) {
+      if (banners[name2] == "none")
+        return;
+      return banners[name2];
+    } else {
+      request_banner(name2);
+    }
+  }
+  function bio_parse(text2, cache2 = false) {
+    let temp = document.createElement("div");
+    render(temp, markdown(text2.textContent, {
+      allow_headers: true
+    }));
+    let banner = temp.querySelector('img[alt="banner"]');
+    if (banner) {
+      save_banner_to_cache(banner.getAttribute("src"), name);
+      return banner.getAttribute("src");
+    } else {
+      save_banner_to_cache("none");
+      return "none";
+    }
+  }
+  function request_banner(name2 = page.name) {
+    fetch(`${root}user/${name2}`).then(function(response) {
+      console.log("returned", response, response.text);
+      return response.text();
+    }).then(function(html2) {
+      let doc = new DOMParser().parseFromString(html2, "text/html");
+      console.log("DOC", doc);
+      let about_me_sidebar = doc.querySelector(".about-me-sidebar");
+      if (about_me_sidebar) {
+        let about_me_text = about_me_sidebar.querySelector("p");
+        return bio_parse(about_me_text, true);
+      } else {
+        save_banner_to_cache("none");
+        return "none";
+      }
+    });
+  }
+  function save_banner_to_cache(img, name2 = page.name) {
+    let banners = JSON.parse(localStorage.getItem("bleh_profile_banners")) || {};
+    let banners_o = Object.keys(banners);
+    if (banners_o.length > 150) {
+      let keys2 = Reflect.ownKeys(banners);
+      if (banners[keys2[0]] != auth.name)
+        delete banners[keys2[0]];
+      else
+        delete banners[keys2[1]];
+      delete banners[page.name];
+      banners[page.name] = img;
+    } else {
+      banners[page.name] = img;
+    }
+    localStorage.setItem("bleh_profile_banners", JSON.stringify(banners));
   }
 
   // src/pages/profile.js
@@ -8232,6 +10850,7 @@
       log("unable to find elements", "page structure");
     }
     checkup_page_structure(is_subpage, profile_header);
+    page.supports_shoutbox = page.structure.nav.querySelector(".secondary-nav-item--shoutbox");
     let new_account = false;
     if (ff("refreshed_nav")) {
       let avatar3 = profile_header.querySelector(".avatar");
@@ -8244,25 +10863,26 @@
       if (sponsor_list && sponsor_list.special && sponsor_list.special.includes(page.name)) {
         title_wrap.querySelector(".header-title a").classList.add("bleh--name-is-cute");
       }
-      let redesigned_profile_header = document.createElement("section");
-      redesigned_profile_header.classList.add("redesigned-header", "redesigned-profile-header", "no-background");
-      redesigned_profile_header.innerHTML = `
-            <div class="avatar-side">
-                ${avatar3.innerHTML}
-            </div>
-            <div class="info-side">
-                <div class="sub-text">${tl(trans.profile)}</div>
-                ${title_wrap != null ? `<div class="title-container">${title_wrap.innerHTML}</div>` : ""}
-                ${sub_wrap != null ? sub_wrap.outerHTML : ""}
-            </div>
-            <div class="expand-side">
-                <button class="header-expand-button icon" onclick="_toggle_profile_header(this)" aria-expanded="${settings.profile_header_expand}">${tl(trans.expand)}</button>
-            </div>
+      let expander;
+      let redesigned_profile_header = html.node`
+            <section class="redesigned-header redesigned-profile-header no-background">
+                <div class="avatar-side">
+                    ${avatar3}
+                </div>
+                <div class="info-side">
+                    <div class="sub-text">${tl(trans.profile)}</div>
+                    ${title_wrap ? html.node`<div class="title-container">${title_wrap}</div>` : ""}
+                    ${sub_wrap ? sub_wrap : ""}
+                </div>
+                <div class="expand-side">
+                    <button class="header-expand-button icon" ref=${(el) => expander = el} onclick=${() => {
+        let current = settings.profile_header_expand;
+        expander.setAttribute("aria-expanded", !current);
+        save_setting("profile_header_expand", !current);
+      }} aria-expanded=${settings.profile_header_expand}>${tl(trans.expand)}</button>
+                </div>
+            </section>
         `;
-      let is_staff = title_wrap.querySelector(".user-status-staff") != null;
-      if (is_staff) {
-        redesigned_profile_header.classList.add("staff-profile");
-      }
       if (page.name == auth.name && !settings.profile_header_own) {
         register_background(null, "hidden");
       } else if (page.name != auth.name && !settings.profile_header_others) {
@@ -8276,18 +10896,14 @@
         } else {
           let background = document.body.querySelector(".header-background--has-image");
           if (background)
-            register_background(background.style.getPropertyValue("background-image").replace('url("', "").replace('")', ""), "artist");
+            register_background(background.style.backgroundImage.replace('url("', "").replace('")', ""), "artist");
           else
             register_background(null, "none");
         }
       }
       page.structure.container.insertBefore(redesigned_profile_header, page.structure.container.firstElementChild);
       profile_header.classList.add("legacy-header");
-      let header_avatar;
-      if (ff("refreshed_nav"))
-        header_avatar = page.structure.container.querySelector(".redesigned-profile-header .avatar-side");
-      else
-        header_avatar = document.querySelector(".header-avatar .avatar");
+      let header_avatar = redesigned_profile_header.querySelector(".avatar-side");
       if (!new_account) {
         let src = header_avatar.querySelector("img").getAttribute("src");
         page.avatar = src;
@@ -8297,21 +10913,19 @@
         header_avatar.appendChild(avatar_link);
       }
     }
-    let current_year = (/* @__PURE__ */ new Date()).getFullYear();
-    if (current_year < 2025 && ff("glacier_library")) {
-      let tab = page.structure.nav.querySelector(".secondary-nav-item--library a");
-      let beta = document.createElement("span");
-      beta.classList.add("new-badge", "beta-badge");
-      beta.textContent = tl(trans.new);
-      tab.appendChild(beta);
-    }
     let library_tab = page.structure.nav.querySelector(".secondary-nav-item--library a");
     library_tab.textContent = tl(trans.library);
     let is_own_profile = page.name == auth.name;
     if (is_own_profile)
       profile_header.setAttribute("data-is-own-profile", "true");
+    let loved_tab = page.structure.nav.querySelector(".secondary-nav-item--loved a");
+    if (loved_tab)
+      loved_tab.textContent = tl(trans.loved);
     if (!is_subpage) {
-      let is_following = profile_header.querySelector(".label.user-follow");
+      if (page.requested.collage == "") collage({
+        redirect: true
+      });
+      let is_following = page.structure.container.querySelector(".label.user-follow");
       profile_recents();
       profile_artists();
       profile_albums();
@@ -8423,13 +11037,121 @@
         if (scrobbles > 0)
           bleh_profile_chart();
       }
+      if (sponsor_list && sponsor_list.special && page.name == sponsor_list.special[0]) {
+        let sponsor_cta = html.node`
+                <div class="cta first sponsor colourful">
+                    ${auth.sponsor ? html`
+                        <strong>${tl(trans.you_are_a_sponsor)}</strong>
+                        <a class="see-more" onclick="_sponsor_manage()">${tl(trans.manage_sponsor)}</a>
+                    ` : html`
+                        <strong>${tl(trans.news_sponsor_cta)}</strong>
+                        <a class="see-more" onclick="_sponsor()">${tl(trans.sponsor)}</a>
+                    `}
+                </div>
+            `;
+        if (!page.mobile)
+          page.structure.side.insertBefore(sponsor_cta, page.structure.side.firstElementChild);
+        else
+          page.structure.main.insertBefore(sponsor_cta, page.structure.main.firstElementChild);
+      }
+      let profile_sub_text;
+      if (ff("refreshed_nav"))
+        profile_sub_text = page.structure.container.querySelector(".redesigned-profile-header .header-title-secondary");
+      else
+        profile_sub_text = document.body.querySelector(".header-title-secondary");
+      if (profile_sub_text) {
+        let display_name = profile_sub_text.querySelector(".header-title-display-name");
+        let scrobble_since = profile_sub_text.querySelector(".header-scrobble-since");
+        scrobble_since.textContent = scrobble_since.textContent.slice(2).replace(tl(trans.account_scrobbling_since_replace), "");
+        let pronouns = use_pronouns(display_name.textContent);
+        let display_name_pre = document.createElement("span");
+        display_name_pre.classList.add("header-title-secondary--pre");
+        display_name_pre.textContent = pronouns ? tl(trans.account_pronouns) : tl(trans.aka);
+        profile_sub_text.insertBefore(display_name_pre, display_name);
+        let scrobble_since_pre = document.createElement("span");
+        scrobble_since_pre.classList.add("header-title-secondary--pre");
+        scrobble_since_pre.textContent = tl(trans.account_created);
+        profile_sub_text.insertBefore(scrobble_since_pre, scrobble_since);
+      }
+      let about_me_sidebar = page.structure.row.querySelector(".about-me-sidebar");
+      if (!about_me_sidebar) {
+        if (settings.bio_markdown)
+          save_banner_to_cache("none");
+        about_me_sidebar = html.node`
+                <section class="about-me-sidebar">
+                    <h2>${tl(trans.about)}</h2>
+                    <p class="subtle">${tl(trans.no_about).replace("{u}", page.name)}</p>
+                </section>
+            `;
+        page.structure.side.insertBefore(about_me_sidebar, page.structure.side.firstElementChild);
+      } else {
+        if (settings.bio_markdown) {
+          let about_me_text = about_me_sidebar.querySelector("p");
+          let result = bio_parse2(about_me_text, true);
+          render(about_me_text, result);
+        }
+      }
+      if (page.mobile)
+        page.structure.main.insertBefore(about_me_sidebar, page.structure.main.firstElementChild);
+      let featured_track_panel = profile_header.querySelector(".header-featured-track");
+      if (featured_track_panel)
+        bleh_featured_profile_track(featured_track_panel, about_me_sidebar);
+      let about_me_header = about_me_sidebar.querySelector("h2");
+      about_me_header.textContent = tl(trans.about);
+      let profile_note;
+      if (!is_own_profile) {
+        let notes = JSON.parse(localStorage.getItem("bleh_profile_notes")) || {};
+        profile_note = notes[page.name];
+      }
+      let settings_btn;
+      let add_note;
+      about_me_sidebar.insertBefore(html.node`
+            <div class="top-container">
+                ${about_me_header}
+                <div class="view-buttons blend blend-v2">
+                    ${is_own_profile ? html.node`
+                    <a class="left-icon blend-v2-btn" data-type="edit" href="${root}settings#id_about_me">
+                        ${tl(trans.edit)}
+                    </a>
+                    ` : !profile_note ? html.node`
+                    <button class="left-icon blend-v2-btn" data-type="add" ref=${(el) => add_note = el} onclick=${() => {
+        add_note.display = "none";
+        create_profile_note_panel(page.name, profile_note);
+      }}>
+                        ${tl(trans.add_note)}
+                    </button>
+                    ` : ""}
+                    <button class="left-icon blend-v2-btn" data-type="settings" ref=${(el) => settings_btn = el}>
+                        ${tl(trans.settings)}
+                    </button>
+                </div>
+            </div>
+        `, about_me_sidebar.firstChild);
+      tippy(settings_btn, {
+        theme: "window",
+        content: html.node`
+                <div class="dialog-settings">
+                    <div class="setting-group blend">
+                        ${setting({ id: "bio_markdown" })}
+                    </div>
+                </div>
+            `,
+        placement: "bottom",
+        interactive: true,
+        interactiveBorder: 10,
+        trigger: "click",
+        onShow(instance) {
+          refresh_all(instance.popper);
+        }
+      });
       if (ff("redesigned_profile_header"))
         redesign_profile_header(is_own_profile, is_following);
+      if (!is_own_profile && profile_note)
+        create_profile_note_panel(page.name, profile_note);
     } else {
       load_banner_from_cache();
       let btn_add = page.structure.side.querySelector(".add-button");
-      if (btn_add != null)
-        btn_add.setAttribute("data-page-subpage", page.subpage);
+      if (btn_add) btn_add.setAttribute("data-page-subpage", page.subpage);
       if (page.subpage.startsWith("library")) {
         bleh_user_library();
       } else if (page.subpage == "events") {
@@ -8441,7 +11163,7 @@
             `;
         let values = page.structure.main.querySelectorAll(".metadata-display");
         let value_header = html.node`
-                <div class="glacier-library-metadata"></div>
+                <div class="glacier-library-metadata" />
             `;
         values.forEach((value, index) => {
           let text2 = tl(trans.going);
@@ -8457,20 +11179,15 @@
         value_panel.appendChild(value_header);
         let total_value = page.structure.side.querySelector(".metadata-display");
         if (total_value) {
-          let total_text = document.createElement("h2");
-          total_text.classList.add("text-18");
-          total_text.textContent = tl(trans.all_time);
-          value_panel.appendChild(total_text);
-          let total_header = html.node`
-                    <div class="glacier-library-metadata"></div>
-                `;
-          total_header.appendChild(html.node`
-                    <div class="glacier-library-metadata-item">
-                        <div class="sub-text">${tl(trans.total)}</div>
-                        <div class="glacier-library-metadata-item-value">${total_value.textContent}</div>
+          value_panel.appendChild(html.node`
+                    <h2 class="text-18">${tl(trans.all_time)}</h2>
+                    <div class="glacier-library-metadata">
+                        <div class="glacier-library-metadata-item">
+                            <div class="sub-text">${tl(trans.total)}</div>
+                            <div class="glacier-library-metadata-item-value">${total_value.textContent}</div>
+                        </div>
                     </div>
                 `);
-          value_panel.appendChild(total_header);
         }
         let legacy_metadata = page.structure.main.querySelector(".metadata-list");
         if (legacy_metadata)
@@ -8480,14 +11197,13 @@
       } else if (page.subpage.startsWith("listening-report")) {
         document.documentElement.setAttribute("data-bleh--theme", "oled");
         page.structure.content_top.classList.add("listening-report-navlist");
+        page.structure.row.classList.add("listening-report");
         let report_box_container = document.body.querySelector(".report-box-container--overview");
-        if (report_box_container != null) {
-          if (report_box_container != null)
-            page.structure.content_top.after(report_box_container);
+        if (report_box_container) {
+          page.structure.content_top.after(report_box_container);
         } else {
           let dashboard = page.structure.container.querySelector(".user-dashboard");
-          if (!dashboard)
-            return;
+          if (!dashboard) return;
           dialog({
             id: "listening_report_v2",
             title: "oh no :c",
@@ -8514,12 +11230,20 @@
                     </div>
                 `;
         }
+        let count_text = page.structure.content_top.querySelector("h1").textContent.trim();
+        let chr = count_text.indexOf("(");
+        let count = 0;
+        if (chr != -1)
+          count = count_text.substring(chr).replace("(", "").replace(")", "");
+        page.structure.nav.querySelector(".secondary-nav-item--obsessions a").appendChild(html.node`
+                <div class="new-badge count-badge">${count}</div>
+            `);
         let new_panel = document.createElement("section");
         new_panel.classList.add("obsessions-panel");
         let wrap = document.createElement("div");
         wrap.classList.add("view-buttons-wrapper");
         let button_header = document.createElement("div");
-        button_header.classList.add("view-buttons", "obsession-buttons");
+        button_header.classList.add("view-buttons", "obsession-buttons", "blend");
         buttons.forEach((button) => {
           if (button.classList.contains("btn-sm")) {
             button.classList = [];
@@ -8612,11 +11336,14 @@
           let wrap = document.createElement("div");
           wrap.classList.add("view-buttons-wrapper");
           wrap.innerHTML = `<div class="info"><div class="alert alert-info">Playlists are a work in progress</div></div>`;
-          let button_header = document.createElement("div");
-          button_header.classList.add("view-buttons", "playlist-home-buttons");
+          let button_header = html.node`
+                    <div class="view-buttons playlist-home-buttons blend" />
+                `;
           buttons.forEach((button) => {
-            if (button.getAttribute("data-analytics-action") == "create")
+            if (button.getAttribute("data-analytics-action") == "create") {
+              button.classList.add("primary");
               button.innerHTML = `${tl(trans.new)} <div class="new-badge">${tl(trans.beta)}</div>`;
+            }
             button.classList.add("btn", "view-item", "interact-item", "playlist-home-top-item");
             button_header.appendChild(button);
           });
@@ -8632,16 +11359,20 @@
           page.structure.container.removeChild(no_data.parentElement);
           new_panel.appendChild(no_data);
         }
+      } else if (page.subpage == "loved") {
+        let count_text = page.structure.content_top.querySelector("h1").textContent.trim();
+        let chr = count_text.indexOf("(");
+        let count = 0;
+        if (chr != -1)
+          count = count_text.substring(chr).replace("(", "").replace(")", "");
+        page.structure.nav.querySelector(".secondary-nav-item--loved a").appendChild(html.node`
+                <div class="new-badge count-badge">${count}</div>
+            `);
       }
     }
     log("status is", "page", "info", page);
     update_page();
     patch_profile_following();
-    let profile_notes = JSON.parse(localStorage.getItem("bleh_profile_notes")) || {};
-    let profile_note = profile_notes[page.name];
-    let profile_has_note = false;
-    if (profile_note)
-      profile_has_note = true;
     log(`querying badges for ${page.name}`, "profile");
     let profile_name_obj;
     profile_name_obj = page.structure.container.querySelector(".redesigned-profile-header .title-container");
@@ -8690,166 +11421,31 @@
       label_container.appendChild(badge);
     });
     profile_name_obj.appendChild(label_container);
-    if (page.subpage != "overview") return;
-    if (sponsor_list && sponsor_list.special && page.name == sponsor_list.special[0]) {
-      let sponsor_cta = html.node`
-            <div class="cta first sponsor colourful">
-                ${auth.sponsor ? html`
-                    <strong>${tl(trans.you_are_a_sponsor)}</strong>
-                    <a class="see-more" onclick="_sponsor_manage()">${tl(trans.manage_sponsor)}</a>
-                ` : html`
-                    <strong>${tl(trans.news_sponsor_cta)}</strong>
-                    <a class="see-more" onclick="_sponsor()">${tl(trans.sponsor)}</a>
-                `}
-            </div>
-        `;
-      if (!page.mobile)
-        page.structure.side.insertBefore(sponsor_cta, page.structure.side.firstElementChild);
-      else
-        page.structure.main.insertBefore(sponsor_cta, page.structure.main.firstElementChild);
-    }
-    let profile_sub_text;
-    if (ff("refreshed_nav"))
-      profile_sub_text = page.structure.container.querySelector(".redesigned-profile-header .header-title-secondary");
-    else
-      profile_sub_text = document.body.querySelector(".header-title-secondary");
-    if (!profile_sub_text) return;
-    let display_name = profile_sub_text.querySelector(".header-title-display-name");
-    let scrobble_since = profile_sub_text.querySelector(".header-scrobble-since");
-    scrobble_since.textContent = scrobble_since.textContent.replace(tl(trans.account_scrobbling_since_replace), "");
-    let pronouns = use_pronouns(display_name.textContent);
-    let display_name_pre = document.createElement("span");
-    display_name_pre.classList.add("header-title-secondary--pre");
-    display_name_pre.textContent = pronouns ? tl(trans.account_pronouns) : tl(trans.aka);
-    profile_sub_text.insertBefore(display_name_pre, display_name);
-    let scrobble_since_pre = document.createElement("span");
-    scrobble_since_pre.classList.add("header-title-secondary--pre");
-    scrobble_since_pre.textContent = tl(trans.account_created);
-    profile_sub_text.insertBefore(scrobble_since_pre, scrobble_since);
-    let about_me_sidebar = page.structure.row.querySelector(".about-me-sidebar");
-    if (!about_me_sidebar) {
-      if (settings.bio_markdown)
-        save_banner_to_cache("none");
-      return;
-    } else if (page.mobile) {
-      page.structure.main.insertBefore(about_me_sidebar, page.structure.main.firstElementChild);
-    }
-    let featured_track_panel = profile_header.querySelector(".header-featured-track");
-    if (featured_track_panel)
-      bleh_featured_profile_track(featured_track_panel, about_me_sidebar);
-    if (!about_me_sidebar.hasAttribute("data-kate-processed")) {
-      about_me_sidebar.setAttribute("data-kate-processed", "true");
-      if (settings.bio_markdown) {
-        let about_me_text = about_me_sidebar.querySelector("p");
-        let result = bio_parse(about_me_text, true);
-        about_me_text.innerHTML = result;
-      }
-      let buttons = document.createElement("div");
-      buttons.classList.add("user-about-buttons");
-      let about_more = document.createElement("button");
-      about_more.classList.add("btn", "icon");
-      about_more.setAttribute("data-action-type", "configure");
-      about_more.textContent = tl(trans.settings);
-      tippy(about_more, {
-        content: tl(trans.settings)
-      });
-      tippy(about_more, {
-        theme: "window",
-        content: html.node`
-                <div class="dialog-settings">
-                    <div class="setting" data-type="toggle" id="container-bio_markdown" onclick="_update_item('bio_markdown')">
-                        <button class="btn reset" onclick="_reset_item('bio_markdown')">${tl(trans.reset)}</button>
-                        <div class="heading">
-                            <h5>${tl(trans.markdown_profiles.name)}</h5>
-                            <p>${tl(trans.markdown_profiles.body)}</p>
-                        </div>
-                        <div class="toggle-wrap">
-                            <button class="toggle" id="toggle-bio_markdown" aria-checked="false">
-                                <div class="dot"></div>
-                            </button>
-                        </div>
-                    </div>
-                </div>
-            `,
-        placement: "bottom",
-        interactive: true,
-        interactiveBorder: 10,
-        trigger: "click",
-        onShow(instance) {
-          refresh_all(instance.popper);
-        }
-      });
-      buttons.appendChild(about_more);
-      let about_me_header = about_me_sidebar.querySelector("h2");
-      about_me_header.appendChild(buttons);
-      let edit = document.createElement("div");
-      edit.classList.add("more-link");
-      if (is_own_profile) {
-        edit.innerHTML = `
-                <a href="${root}settings#id_about_me">${tl(trans.edit)}</a>
-            `;
-        about_me_sidebar.appendChild(edit);
-        return;
-      }
-      if (!profile_has_note) {
-        edit.innerHTML = `
-                <a class="inline-add-icon" onclick="_add_profile_note('${page.name}',${profile_has_note})">${tl(trans.add_note)}</a>
-            `;
-        about_me_sidebar.appendChild(edit);
-      } else {
-        create_profile_note_panel(page.name, true);
-      }
-    }
-  }
-  unsafeWindow._add_profile_note = function(username2, has_note) {
-    add_profile_note(username2, has_note);
-  };
-  function add_profile_note(username2, has_note) {
-    document.getElementById("bleh--add-note").style.setProperty("display", "none");
-    create_profile_note_panel(username2, has_note);
   }
   function create_profile_note_panel(username2, has_note) {
-    let note_panel = document.createElement("section");
-    note_panel.classList.add("bleh--panel", "bleh--profile-note-panel");
-    if (has_note) {
-      note_panel.innerHTML = `
-        <h2>${tl(trans.notes)}</h2>
-        <div class="content-form">
-            <textarea id="bleh--profile-note" placeholder="${tl(trans.anything_you_can_imagine)}">${JSON.parse(localStorage.getItem("bleh_profile_notes"))[username2]}</textarea>
-        </div>
-        <div class="actions">
-            <button class="btn" onclick="_clear_profile_note('${username2}')">${tl(trans.clear)}</button>
-            <button class="btn primary" onclick="_save_profile_note('${username2}')">${tl(trans.save)}</button>
-        </div>
-        `;
-    } else {
-      note_panel.innerHTML = `
-        <h2>${tl(trans.notes)}</h2>
-        <div class="content-form">
-            <textarea id="bleh--profile-note" placeholder="${tl(trans.anything_you_can_imagine)}"></textarea>
-        </div>
-        <div class="actions">
-            <button class="btn" onclick="_clear_profile_note('${username2}')">${tl(trans.clear)}</button>
-            <button class="btn primary" onclick="_save_profile_note('${username2}')">${tl(trans.save)}</button>
-        </div>
-        `;
-    }
     let about_me_sidebar = page.structure.row.querySelector(".about-me-sidebar");
-    about_me_sidebar.after(note_panel);
-  }
-  unsafeWindow._clear_profile_note = function(username2) {
-    let profile_notes = JSON.parse(localStorage.getItem("bleh_profile_notes")) || {};
-    delete profile_notes[username2];
-    document.getElementById("bleh--profile-note").value = "";
-    localStorage.setItem("bleh_profile_notes", JSON.stringify(profile_notes));
-  };
-  unsafeWindow._save_profile_note = function(username2) {
-    save_profile_note(username2);
-  };
-  function save_profile_note(username2) {
-    let profile_notes = JSON.parse(localStorage.getItem("bleh_profile_notes")) || {};
-    profile_notes[username2] = document.getElementById("bleh--profile-note").value.replace(/&/g, "&amp;").replace(/</g, "&lt;").replace(/>/g, "&gt;").replace(/"/g, "&quot;").replace(/'/g, "&#039;");
-    localStorage.setItem("bleh_profile_notes", JSON.stringify(profile_notes));
+    let note;
+    about_me_sidebar.after(html.node`
+        <section class="bleh--panel bleh--profile-note-panel">
+            <h2>${tl(trans.notes)}</h2>
+            <div class="content-form">
+                <textarea id="bleh--profile-note" placeholder=${tl(trans.anything_you_can_imagine)} ref=${(el) => note = el}>${has_note ?? has_note}</textarea>
+            </div>
+            <div class="actions">
+                <button class="see-more cancel" onclick=${() => {
+      let notes = JSON.parse(localStorage.getItem("bleh_profile_notes")) || {};
+      delete notes[page.name];
+      note.value = "";
+      localStorage.setItem("bleh_profile_notes", JSON.stringify(notes));
+    }}>${tl(trans.clear)}</button>
+                <button class="btn primary icon" data-type="save" onclick=${() => {
+      let notes = JSON.parse(localStorage.getItem("bleh_profile_notes")) || {};
+      notes[page.name] = note.value.replace(/&/g, "&amp;").replace(/</g, "&lt;").replace(/>/g, "&gt;").replace(/"/g, "&quot;").replace(/'/g, "&#039;");
+      localStorage.setItem("bleh_profile_notes", JSON.stringify(notes));
+    }}>${tl(trans.save)}</button>
+            </div>
+        </section>
+    `);
   }
   function patch_profile_following() {
     let navlist = page.structure.nav.querySelector(".navlist-items");
@@ -8894,10 +11490,9 @@
       let count = 0;
       if (chr != -1)
         count = count_text.substring(chr).replace("(", "").replace(")", "");
-      let count_badge = document.createElement("div");
-      count_badge.classList.add("new-badge", "count-badge");
-      count_badge.textContent = count;
-      highlighted_tab.appendChild(count_badge);
+      highlighted_tab.appendChild(html.node`
+            <div class="new-badge count-badge">${count}</div>
+        `);
     }
     let view_buttons = document.createElement("div");
     view_buttons.classList.add("view-buttons-wrapper");
@@ -8914,10 +11509,9 @@
     page.structure.main.insertBefore(view_buttons, page.structure.main.firstElementChild);
     refresh_all();
   }
-  unsafeWindow._refresh_tracks = function(button) {
-    refresh_tracks(button);
-  };
-  function refresh_tracks(button) {
+  function refresh_tracks(button, {
+    quiet = false
+  }) {
     let panel = page.structure.main.querySelector("#recent-tracks-section");
     panel.classList.remove("has-refreshed");
     button.setAttribute("disabled", "");
@@ -8930,19 +11524,23 @@
       let tracklist_panel = doc.querySelector(".chartlist");
       button.removeAttribute("disabled");
       if (!tracklist_panel) {
-        notify({
-          title: tl(trans.recent_tracks),
-          body: tl(trans.value_failed_to_load).replace("{v}", tl(trans.library)),
-          icon: "icon-16-refresh",
-          type: "error"
-        });
+        if (!quiet) {
+          notify({
+            title: tl(trans.recent_tracks),
+            body: tl(trans.value_failed_to_load).replace("{v}", tl(trans.library)),
+            icon: "icon-16-refresh",
+            type: "error"
+          });
+        }
         return;
       }
-      notify({
-        title: tl(trans.recent_tracks),
-        body: tl(trans.refreshed),
-        icon: "icon-16-refresh"
-      });
+      if (!quiet) {
+        notify({
+          title: tl(trans.recent_tracks),
+          body: tl(trans.refreshed),
+          icon: "icon-16-refresh"
+        });
+      }
       panel.classList.add("has-refreshed");
       panel.querySelector(".chartlist").outerHTML = tracklist_panel.outerHTML;
     });
@@ -8952,11 +11550,13 @@
     let details = object.querySelector(".featured-item-details");
     let form = document.body.querySelector(".header-info-primary form");
     let heading = details.querySelector(".featured-item-heading");
-    let heading_link = heading.outerHTML;
+    let link = heading.querySelector("a")?.getAttribute("href");
     details.removeChild(heading);
+    let name_elem = details.querySelector(".featured-item-name");
+    let artist_elem = details.querySelector(".featured-item-artist");
+    name_elem.classList = "";
+    artist_elem.classList = "source-album-artist";
     if (settings.format_guest_features) {
-      let name_elem = details.querySelector(".featured-item-name");
-      let artist_elem = details.querySelector(".featured-item-artist");
       let song_title = name_elem.textContent;
       let formatted_title = name_includes(song_title, artist_elem.textContent);
       let song_tags = {};
@@ -8965,7 +11565,7 @@
         song_tags = formatted_title[1];
       }
       render(name_elem, html.node`
-            <div class="title">${sanitise_text(song_title).trim()}</div>
+            <div class="title">${song_title.trim()}</div>
             ${song_tags.map((tag) => html.node`
                 <div class="feat" data-bleh--tag-type="${tag.type}" data-bleh--tag-group="${tag.group}">${tag.text}</div>
             `)}
@@ -8984,26 +11584,45 @@
       details.removeChild(artist_elem);
       details.appendChild(song_artist_element);
     } else if (settings.corrections) {
-      let name_elem = details.querySelector(".featured-item-name");
-      let artist_elem = details.querySelector(".featured-item-artist");
-      let name = correct_item_by_artist(name_elem.textContent.trim(), artist_elem.textContent.trim());
+      let name2 = correct_item_by_artist(name_elem.textContent.trim(), artist_elem.textContent.trim());
       let artist = correct_artist(artist_elem.textContent.trim());
-      name_elem.textContent = name;
+      name_elem.textContent = name2;
       artist_elem.textContent = artist;
     }
     if (form) {
       let button = form.querySelector("button");
       button.classList = "featured-item-manage";
+      button.setAttribute("data-type", "delete");
       button.textContent = tl(trans.remove);
     }
-    let panel = document.createElement("section");
-    panel.classList.add("featured-item-panel");
-    panel.innerHTML = `
-        <div class="sub-text">${heading_link}${form ? form.outerHTML : ""}</div>
-        <div class="track-template">
-            ${art.outerHTML}
-            ${details.outerHTML}
-        </div>
+    let img = art.querySelector(".cover-art");
+    let panel = html.node`
+        <section class="featured-item-panel">
+            <div class="sub-text">
+                ${form ? html.node`
+                <a class="has-icon" data-type="obsession" href=${link}>
+                    <div class="bleh-icon" style="--icon: var(--mask)" />
+                    ${tl(trans.obsession)}
+                </a>
+                ${form}
+                ` : html.node`
+                <div class="has-icon" data-type="track">
+                    <div class="bleh-icon" style="--icon: var(--mask)" />
+                    ${tl(trans.top_track)}
+                </div>
+                `}
+            </div>
+            <div class="source-album js-link-block link-block">
+                <div class="source-album-art">
+                    ${img}
+                </div>
+                <div class="source-album-details">
+                    <h4 class="source-album-name">${name_elem}</h4>
+                    ${artist_elem}
+                </div>
+                <a class="js-link-block-cover-link link-block-cover-link" href=${name_elem.getAttribute("href")} />
+            </div>
+        </section>
     `;
     if (about_me)
       about_me.after(panel);
@@ -9019,136 +11638,116 @@
     let link = panel.querySelector('[aria-controls="recent-tracks-settings"]');
     let tooltip;
     let view_buttons = document.createElement("div");
-    view_buttons.classList.add("view-buttons", "blend");
+    view_buttons.classList.add("view-buttons", "blend", "blend-v2");
     let header = document.createElement("div");
     header.classList.add("top-container");
     let header_text2 = panel.querySelector("h2");
     header.appendChild(header_text2);
-    let refresh_btn = document.createElement("button");
-    refresh_btn.classList.add("btn", "view-item", "interact-item", "refresh-tracklist-btn");
-    refresh_btn.textContent = tl(trans.refresh);
-    refresh_btn.setAttribute("onclick", "_refresh_tracks(this)");
+    let refresh_btn;
+    if (ff("submit_scrobble") && page.name == auth.name) {
+      const can_api = localStorage.getItem("bleh_auth") && localStorage.getItem("bleh_auth_valid") === "true";
+      let submit_btn = html.node`
+            <button class="left-icon blend-v2-btn" data-type="add" onclick=${() => submit_scrobble({
+        refresh_btn,
+        can_api,
+        func: () => {
+          setTimeout(() => {
+            refresh_tracks(refresh_btn, { quiet: true });
+          }, 200);
+        }
+      })}>
+                ${tl(trans.new)}
+            </button>
+        `;
+      view_buttons.appendChild(submit_btn);
+      if (!can_api) {
+        tippy(submit_btn, {
+          content: tl(trans.requires_api_in_settings)
+        });
+      }
+    }
+    refresh_btn = html.node`
+        <button class="left-icon blend-v2-btn" data-type="refresh" onclick=${() => refresh_tracks(refresh_btn, {})}>
+            ${tl(trans.refresh)}
+        </button>
+    `;
     view_buttons.appendChild(refresh_btn);
     header.appendChild(view_buttons);
     panel.insertBefore(header, panel.firstElementChild);
-    if (form == null)
-      return;
+    if (!form) return;
     if (page.token == "")
       page.token = form.querySelector('[name="csrfmiddlewaretoken"]').getAttribute("value");
     let original_chart_settings = {};
     let settings_btn = html.node`
-        <button class="panel-settings-button btn view-item interact-item">${tl(trans.settings)}</button>
+        <button class="left-icon blend-v2-btn" data-type="settings">
+            ${tl(trans.settings)}
+        </button>
     `;
+    let count = form.querySelector('[name="chart_length_recent_tracks"]');
+    original_chart_settings = {
+      recent_artwork: form.querySelector("#id_show_recent_tracks_artwork").checked,
+      recent_realtime: form.querySelector("#id_auto_refresh_recent_tracks").checked
+    };
     form.classList = "";
+    render(form, html`
+        <input type="hidden" name="csrfmiddlewaretoken" value="${page.token}">
+        <div class="setting-group blend">
+            <div class="setting" data-type="select">
+                <div class="heading">
+                    <h5>${tl(trans.amount_to_display)}</h5>
+                </div>
+                ${select(select_prepare(count), count.value, "chart_length_recent_tracks")}
+            </div>
+            <div class="setting" data-type="toggle" id="container-recent_artwork" onclick="_update_inbuilt_item('recent_artwork')">
+                <div class="heading">
+                    <h5>${tl(trans.recent_artwork)}</h5>
+                </div>
+                <div class="toggle-wrap">
+                    <input class="companion-checkbox" type="checkbox" name="show_recent_tracks_artwork" id="inbuilt-companion-checkbox-recent_artwork">
+                    <span class="btn toggle" id="toggle-recent_artwork" aria-checked="false">
+                        <div class="dot"></div>
+                    </span>
+                </div>
+            </div>
+            <div class="setting" data-type="toggle" id="container-recent_realtime" onclick="_update_inbuilt_item('recent_realtime')">
+                <div class="heading">
+                    <h5>${tl(trans.recent_realtime.name)}</h5>
+                    <p>${tl(trans.recent_realtime.body)}</p>
+                </div>
+                <div class="toggle-wrap">
+                    <input class="companion-checkbox" type="checkbox" name="auto_refresh_recent_tracks" id="inbuilt-companion-checkbox-recent_realtime">
+                    <span class="btn toggle" id="toggle-recent_realtime" aria-checked="false" type="button">
+                        <div class="dot"></div>
+                    </span>
+                </div>
+            </div>
+            ${setting({ id: "format_guest_features" })}
+            ${setting({ id: "stacked_chartlist_info" })}
+            ${setting({ id: "colourful_tracks" })}
+            <div class="settings-footer">
+                <button type="submit" class="btn-primary save">
+                    ${tl(trans.save)}
+                </button>
+                <a class="btn icon settings not-a-view-button" href="${root}bleh">
+                    ${tl(trans.settings)}
+                </a>
+            </div>
+        </div>
+    `);
+    for (let setting2 in original_chart_settings) {
+      update_inbuilt_item(setting2, original_chart_settings[setting2], false, form);
+    }
+    refresh_all(form);
     tooltip = tippy(settings_btn, {
       theme: "window",
-      content: form.outerHTML,
+      content: form,
       allowHTML: true,
       placement: "bottom",
       interactive: true,
       interactiveBorder: 10,
-      trigger: "click",
-      onShow(instance) {
-        let form2 = instance.popper.querySelector("form");
-        form2.innerHTML = `
-                <input type="hidden" name="csrfmiddlewaretoken" value="${page.token}">
-                <div class="setting" data-type="select">
-                    <div class="heading">
-                        <h5>${tl(trans.amount_to_display)}</h5>
-                    </div>
-                    <div class="select-wrap custom-selector" id="id_chart_length_recent_tracks_select">
-                        ${original_chart_settings.count}
-                    </div>
-                </div>
-                <div class="setting" data-type="toggle" id="container-recent_artwork" onclick="_update_inbuilt_item('recent_artwork')">
-                    <button class="btn reset" onclick="_reset_inbuilt_item('recent_artwork')">Reset to default</button>
-                    <div class="heading">
-                        <h5>${tl(trans.recent_artwork)}</h5>
-                    </div>
-                    <div class="toggle-wrap">
-                        <input class="companion-checkbox" type="checkbox" name="show_recent_tracks_artwork" id="inbuilt-companion-checkbox-recent_artwork">
-                        <span class="btn toggle" id="toggle-recent_artwork" aria-checked="false">
-                            <div class="dot"></div>
-                        </span>
-                    </div>
-                </div>
-                <div class="setting" data-type="toggle" id="container-recent_realtime" onclick="_update_inbuilt_item('recent_realtime')">
-                    <button class="btn reset" onclick="_reset_inbuilt_item('recent_realtime')">Reset to default</button>
-                    <div class="heading">
-                        <h5>${tl(trans.recent_realtime.name)}</h5>
-                        <p>${tl(trans.recent_realtime.body)}</p>
-                    </div>
-                    <div class="toggle-wrap">
-                        <input class="companion-checkbox" type="checkbox" name="auto_refresh_recent_tracks" id="inbuilt-companion-checkbox-recent_realtime">
-                        <span class="btn toggle" id="toggle-recent_realtime" aria-checked="false" type="button">
-                            <div class="dot"></div>
-                        </span>
-                    </div>
-                </div>
-                <div class="sep"></div>
-                <div class="setting" data-type="toggle" id="container-format_guest_features" onclick="_update_item('format_guest_features')">
-                    <button class="btn reset" onclick="_reset_item('format_guest_features')">${tl(trans.reset)}</button>
-                    <div class="heading">
-                        <h5>${tl(trans.format_guest_features.name)}</h5>
-                        <p>${tl(trans.format_guest_features.body)}</p>
-                    </div>
-                    <div class="toggle-wrap">
-                        <button class="toggle" id="toggle-format_guest_features" aria-checked="true" type="button">
-                            <div class="dot"></div>
-                        </button>
-                    </div>
-                </div>
-                <div class="setting" data-type="toggle" id="container-stacked_chartlist_info" onclick="_update_item('stacked_chartlist_info')">
-                    <button class="btn reset" onclick="_reset_item('stacked_chartlist_info')">${tl(trans.reset)}</button>
-                    <div class="heading">
-                        <h5>${tl(trans.track_column_view)}</h5>
-                    </div>
-                    <div class="toggle-wrap">
-                        <button class="toggle" id="toggle-stacked_chartlist_info" aria-checked="true" type="button">
-                            <div class="dot"></div>
-                        </button>
-                    </div>
-                </div>
-                <div class="setting" data-type="toggle" id="container-colourful_tracks" onclick="_update_item('colourful_tracks')">
-                    <button class="btn reset" onclick="_reset_item('colourful_tracks')">${tl(trans.reset)}</button>
-                    <div class="heading">
-                        <h5>${tl(trans.colourful_tracks.name)}</h5>
-                        <p>${tl(trans.colourful_tracks.body)}</p>
-                    </div>
-                    <div class="toggle-wrap">
-                        <button class="toggle" id="toggle-colourful_tracks" aria-checked="true">
-                            <div class="dot"></div>
-                        </button>
-                    </div>
-                </div>
-                <div class="settings-footer">
-                    <button type="submit" class="btn-primary save">
-                        ${tl(trans.save)}
-                    </button>
-                    <a class="btn icon settings not-a-view-button" href="${root}bleh">
-                        ${tl(trans.settings)}
-                    </a>
-                </div>
-            `;
-        custom_select(form2.querySelector("#id_chart_length_recent_tracks"), form2.querySelector("#id_chart_length_recent_tracks_select"));
-        let selects = form2.querySelectorAll("select");
-        selects.forEach((select2) => {
-          select2.setAttribute("onchange", `_update_inbuilt_select('${select2.getAttribute("id")}', this.value)`);
-          update_inbuilt_select(select2.getAttribute("id"), select2.value);
-        });
-        for (let setting2 in original_chart_settings) {
-          update_inbuilt_item(setting2, original_chart_settings[setting2], false, form2);
-        }
-        refresh_all(instance.popper);
-      }
+      trigger: "click"
     });
     view_buttons.appendChild(settings_btn);
-    original_chart_settings = {
-      recent_artwork: form.querySelector("#id_show_recent_tracks_artwork").checked,
-      count: form.querySelector("#id_chart_length_recent_tracks").outerHTML,
-      recent_realtime: form.querySelector("#id_auto_refresh_recent_tracks").checked
-    };
-    form.innerHTML = "";
   }
   function profile_artists() {
     let panel = page.structure.main.querySelector("#top-artists");
@@ -9162,27 +11761,31 @@
     panel.insertBefore(html.node`
         <div class="top-container">
             ${panel.querySelector("h2")}
-            <div class="view-buttons blend">
-                <button class="btn chibi icon" data-type="collage" ref=${(el) => collage_btn = el} onclick=${() => {
+            <div class="accompany view-buttons blend blend-v2">
+                ${() => {
+      select_btn.classList.add("select-button", "link-select", "blend-v2-btn");
+      select_btn.classList.remove("section-control", "dropdown-menu-clickable-button");
+      return select_btn;
+    }}
+            </div>
+            <div class="view-buttons blend blend-v2">
+                <button class="left-icon blend-v2-btn" data-type="collage" ref=${(el) => collage_btn = el} onclick=${() => {
       let btn = list.querySelector(".dropdown-menu-clickable-item--selected");
       let link = new URL("https://www.last.fm" + btn.getAttribute("href"));
       let selected = link.searchParams.get("artists_date_preset");
-      collage("artists", `date_preset=${selected}`);
+      collage({
+        default_type: "artists",
+        date_preset: `date_preset=${selected}`
+      });
     }}>${tl(trans.collage)}</button>
-                ${() => {
-      select_btn.classList.add("btn", "view-item", "interact-item");
-      select_btn.classList.remove("section-control");
-      return select_btn;
-    }}
                 ${form ? html.node`
-                <button class="panel-settings-button btn view-item interact-item" ref=${(el) => settings_btn = el}>${tl(trans.settings)}</button>
+                <button class="left-icon blend-v2-btn" data-type="settings" ref=${(el) => settings_btn = el}>
+                    ${tl(trans.settings)}
+                </button>
                 ` : ""}
             </div>
         </div>
     `, panel.firstElementChild);
-    tippy(collage_btn, {
-      content: tl(trans.collage)
-    });
     if (!form) return;
     if (page.token == "") page.token = form.querySelector('[name="csrfmiddlewaretoken"]').getAttribute("value");
     let timeframe = form.querySelector('[name="chart_range_top_artists"]');
@@ -9192,34 +11795,36 @@
     form.classList = "";
     render(form, html`
         <input type="hidden" name="csrfmiddlewaretoken" value="${page.token}">
-        <div class="setting" data-type="select">
-            <div class="heading">
-                <h5>${tl(trans.default_timeframe)}</h5>
+        <div class="setting-group blend">
+            <div class="setting" data-type="select">
+                <div class="heading">
+                    <h5>${tl(trans.default_timeframe)}</h5>
+                </div>
+                ${select(select_prepare(timeframe), timeframe.value, "chart_range_top_artists")}
             </div>
-            ${select(select_prepare(timeframe), timeframe.value, "chart_range_top_artists")}
-        </div>
-        <div class="setting" data-type="select">
-            <div class="heading">
-                <h5>${tl(trans.chart_style)}</h5>
+            <div class="setting" data-type="select">
+                <div class="heading">
+                    <h5>${tl(trans.chart_style)}</h5>
+                </div>
+                ${select(select_prepare(style), style.value, "chart_style_top_artists")}
             </div>
-            ${select(select_prepare(style), style.value, "chart_style_top_artists")}
-        </div>
-        <div class="setting hide-if-artist-list" data-type="select">
-            <div class="heading">
-                <h5>${tl(trans.chart_size)}</h5>
+            <div class="setting hide-if-artist-list" data-type="select">
+                <div class="heading">
+                    <h5>${tl(trans.chart_size)}</h5>
+                </div>
+                ${select(select_prepare(grid_length), grid_length.value, "artists_image_grid_length")}
             </div>
-            ${select(select_prepare(grid_length), grid_length.value, "artists_image_grid_length")}
-        </div>
-        <div class="setting hide-if-artist-grid" data-type="select">
-            <div class="heading">
-                <h5>${tl(trans.chart_size)}</h5>
+            <div class="setting hide-if-artist-grid" data-type="select">
+                <div class="heading">
+                    <h5>${tl(trans.chart_size)}</h5>
+                </div>
+                ${select(select_prepare(chartlist_length), chartlist_length.value, "artists_chartlist_length")}
             </div>
-            ${select(select_prepare(chartlist_length), chartlist_length.value, "artists_chartlist_length")}
-        </div>
-        <div class="settings-footer">
-            <button type="submit" class="btn-primary save">
-                ${tl(trans.save)}
-            </button>
+            <div class="settings-footer">
+                <button type="submit" class="btn-primary save">
+                    ${tl(trans.save)}
+                </button>
+            </div>
         </div>
     `);
     tippy(settings_btn, {
@@ -9243,27 +11848,31 @@
     panel.insertBefore(html.node`
         <div class="top-container">
             ${panel.querySelector("h2")}
-            <div class="view-buttons blend">
-                <button class="btn chibi icon" data-type="collage" ref=${(el) => collage_btn = el} onclick=${() => {
+            <div class="accompany view-buttons blend blend-v2">
+                ${() => {
+      select_btn.classList.add("select-button", "link-select", "blend-v2-btn");
+      select_btn.classList.remove("section-control", "dropdown-menu-clickable-button");
+      return select_btn;
+    }}
+            </div>
+            <div class="view-buttons blend blend-v2">
+                <button class="left-icon blend-v2-btn" data-type="collage" ref=${(el) => collage_btn = el} onclick=${() => {
       let btn = list.querySelector(".dropdown-menu-clickable-item--selected");
       let link = new URL("https://www.last.fm" + btn.getAttribute("href"));
       let selected = link.searchParams.get("albums_date_preset");
-      collage("albums", `date_preset=${selected}`);
+      collage({
+        default_type: "albums",
+        date_preset: `date_preset=${selected}`
+      });
     }}>${tl(trans.collage)}</button>
-                ${() => {
-      select_btn.classList.add("btn", "view-item", "interact-item");
-      select_btn.classList.remove("section-control");
-      return select_btn;
-    }}
                 ${form ? html.node`
-                <button class="panel-settings-button btn view-item interact-item" ref=${(el) => settings_btn = el}>${tl(trans.settings)}</button>
+                <button class="left-icon blend-v2-btn" data-type="settings" ref=${(el) => settings_btn = el}>
+                    ${tl(trans.settings)}
+                </button>
                 ` : ""}
             </div>
         </div>
     `, panel.firstElementChild);
-    tippy(collage_btn, {
-      content: tl(trans.collage)
-    });
     if (!form) return;
     if (page.token == "") page.token = form.querySelector('[name="csrfmiddlewaretoken"]').getAttribute("value");
     let timeframe = form.querySelector('[name="chart_range_top_albums"]');
@@ -9273,34 +11882,36 @@
     form.classList = "";
     render(form, html`
         <input type="hidden" name="csrfmiddlewaretoken" value="${page.token}">
-        <div class="setting" data-type="select">
-            <div class="heading">
-                <h5>${tl(trans.default_timeframe)}</h5>
+        <div class="setting-group blend">
+            <div class="setting" data-type="select">
+                <div class="heading">
+                    <h5>${tl(trans.default_timeframe)}</h5>
+                </div>
+                ${select(select_prepare(timeframe), timeframe.value, "chart_range_top_albums")}
             </div>
-            ${select(select_prepare(timeframe), timeframe.value, "chart_range_top_albums")}
-        </div>
-        <div class="setting" data-type="select">
-            <div class="heading">
-                <h5>${tl(trans.chart_style)}</h5>
+            <div class="setting" data-type="select">
+                <div class="heading">
+                    <h5>${tl(trans.chart_style)}</h5>
+                </div>
+                ${select(select_prepare(style), style.value, "chart_style_top_albums")}
             </div>
-            ${select(select_prepare(style), style.value, "chart_style_top_albums")}
-        </div>
-        <div class="setting hide-if-album-list" data-type="select">
-            <div class="heading">
-                <h5>${tl(trans.chart_size)}</h5>
+            <div class="setting hide-if-album-list" data-type="select">
+                <div class="heading">
+                    <h5>${tl(trans.chart_size)}</h5>
+                </div>
+                ${select(select_prepare(grid_length), grid_length.value, "albums_image_grid_length")}
             </div>
-            ${select(select_prepare(grid_length), grid_length.value, "albums_image_grid_length")}
-        </div>
-        <div class="setting hide-if-album-grid" data-type="select">
-            <div class="heading">
-                <h5>${tl(trans.chart_size)}</h5>
+            <div class="setting hide-if-album-grid" data-type="select">
+                <div class="heading">
+                    <h5>${tl(trans.chart_size)}</h5>
+                </div>
+                ${select(select_prepare(chartlist_length), chartlist_length.value, "albums_chartlist_length")}
             </div>
-            ${select(select_prepare(chartlist_length), chartlist_length.value, "albums_chartlist_length")}
-        </div>
-        <div class="settings-footer">
-            <button type="submit" class="btn-primary save">
-                ${tl(trans.save)}
-            </button>
+            <div class="settings-footer">
+                <button type="submit" class="btn-primary save">
+                    ${tl(trans.save)}
+                </button>
+            </div>
         </div>
     `);
     tippy(settings_btn, {
@@ -9324,27 +11935,31 @@
     panel.insertBefore(html.node`
         <div class="top-container">
             ${panel.querySelector("h2")}
-            <div class="view-buttons blend">
-                <button class="btn chibi icon" data-type="collage" ref=${(el) => collage_btn = el} onclick=${() => {
+            <div class="accompany view-buttons blend blend-v2">
+                ${() => {
+      select_btn.classList.add("select-button", "link-select", "blend-v2-btn");
+      select_btn.classList.remove("section-control", "dropdown-menu-clickable-button");
+      return select_btn;
+    }}
+            </div>
+            <div class="view-buttons blend blend-v2">
+                <button class="left-icon blend-v2-btn" data-type="collage" ref=${(el) => collage_btn = el} onclick=${() => {
       let btn = list.querySelector(".dropdown-menu-clickable-item--selected");
       let link = new URL("https://www.last.fm" + btn.getAttribute("href"));
       let selected = link.searchParams.get("tracks_date_preset");
-      collage("tracks", `date_preset=${selected}`);
+      collage({
+        default_type: "tracks",
+        date_preset: `date_preset=${selected}`
+      });
     }}>${tl(trans.collage)}</button>
-                ${() => {
-      select_btn.classList.add("btn", "view-item", "interact-item");
-      select_btn.classList.remove("section-control");
-      return select_btn;
-    }}
                 ${form ? html.node`
-                <button class="panel-settings-button btn view-item interact-item" ref=${(el) => settings_btn = el}>${tl(trans.settings)}</button>
+                <button class="left-icon blend-v2-btn" data-type="settings" ref=${(el) => settings_btn = el}>
+                    ${tl(trans.settings)}
+                </button>
                 ` : ""}
             </div>
         </div>
     `, panel.firstElementChild);
-    tippy(collage_btn, {
-      content: tl(trans.collage)
-    });
     if (!form) return;
     if (page.token == "") page.token = form.querySelector('[name="csrfmiddlewaretoken"]').getAttribute("value");
     let timeframe = form.querySelector('[name="chart_range_top_tracks"]');
@@ -9352,28 +11967,30 @@
     form.classList = "";
     render(form, html`
         <input type="hidden" name="csrfmiddlewaretoken" value="${page.token}">
-        <div class="setting" data-type="select">
-            <div class="heading">
-                <h5>${tl(trans.default_timeframe)}</h5>
+        <div class="setting-group blend">
+            <div class="setting" data-type="select">
+                <div class="heading">
+                    <h5>${tl(trans.default_timeframe)}</h5>
+                </div>
+                ${select(select_prepare(timeframe), timeframe.value, "chart_range_top_tracks")}
             </div>
-            ${select(select_prepare(timeframe), timeframe.value, "chart_range_top_tracks")}
-        </div>
-        <div class="setting hide-if-track-grid" data-type="select">
-            <div class="heading">
-                <h5>${tl(trans.chart_size)}</h5>
+            <div class="setting hide-if-track-grid" data-type="select">
+                <div class="heading">
+                    <h5>${tl(trans.chart_size)}</h5>
+                </div>
+                ${select(select_prepare(chartlist_length), chartlist_length.value, "chart_length_top_tracks")}
             </div>
-            ${select(select_prepare(chartlist_length), chartlist_length.value, "chart_length_top_tracks")}
-        </div>
-        <div class="sep" />
-        ${setting({ id: "format_guest_features" })}
-        ${setting({ id: "show_guest_features" })}
-        <div class="more-link">
-            <a href="${root}bleh?tab=music">${tl(trans.settings)}</a>
-        </div>
-        <div class="settings-footer">
-            <button type="submit" class="btn-primary save">
-                ${tl(trans.save)}
-            </button>
+            <div class="sep" />
+            ${setting({ id: "format_guest_features" })}
+            ${setting({ id: "show_guest_features" })}
+            <div class="more-link">
+                <a href="${root}bleh?tab=music">${tl(trans.settings)}</a>
+            </div>
+            <div class="settings-footer">
+                <button type="submit" class="btn-primary save">
+                    ${tl(trans.save)}
+                </button>
+            </div>
         </div>
     `);
     tippy(settings_btn, {
@@ -9385,13 +12002,13 @@
       trigger: "click"
     });
   }
-  function bio_parse(text2, cache2 = false) {
+  function bio_parse2(text2, cache2 = false) {
     let temp = document.createElement("div");
     render(temp, markdown(text2.textContent, {
       allow_headers: true
     }));
     use_banner(temp, cache2);
-    return temp.innerHTML;
+    return temp;
   }
   function use_banner(temp, cache2) {
     if (page.name == auth.name && !settings.profile_header_own || page.name != auth.name && !settings.profile_header_others)
@@ -9416,10 +12033,10 @@
         return;
       register_background(banners[page.name], "bio");
     } else {
-      request_banner();
+      request_banner2();
     }
   }
-  function request_banner() {
+  function request_banner2() {
     fetch(`${root}user/${page.name}`).then(function(response) {
       console.log("returned", response, response.text);
       return response.text();
@@ -9429,23 +12046,11 @@
       let about_me_sidebar = doc.querySelector(".about-me-sidebar");
       if (about_me_sidebar) {
         let about_me_text = about_me_sidebar.querySelector("p");
-        let result = bio_parse(about_me_text, true);
+        let result = bio_parse2(about_me_text, true);
       } else {
         save_banner_to_cache("none");
       }
     });
-  }
-  function save_banner_to_cache(img) {
-    let banners = JSON.parse(localStorage.getItem("bleh_profile_banners")) || {};
-    banners[page.name] = img;
-    let banners_o = Object.keys(banners);
-    if (banners_o.length > 150) {
-      let values = banners_o.splice(150, banners_o.length);
-      values.forEach((value) => {
-        delete banners[value];
-      });
-    }
-    localStorage.setItem("bleh_profile_banners", JSON.stringify(banners));
   }
   function bleh_profile_chart() {
     let panel = page.structure.row.querySelector(".listen-panel");
@@ -9453,7 +12058,8 @@
     if (table) {
       bleh_profile_chart_render(panel, table);
       return;
-    } else {
+    }
+    lazy(panel, () => {
       fetch(`${root}user/${page.name}/library/artists/chart?date_preset=LAST_90_DAYS&page=1&ajax=1`).then(function(response) {
         console.log("glacier library returned", response, response.text, response.status);
         if (response.status != 200)
@@ -9474,11 +12080,11 @@
           throw new Error();
         }
       });
-    }
+    }, { threshold: 0.3, rootMargin: "0px" });
   }
   function bleh_profile_chart_render(panel = page.structure.side.querySelector(".listen-profile-panel"), table = null) {
-    if (!table)
-      table = panel.querySelector("table");
+    if (!table) table = panel.querySelector("table");
+    if (!table) return;
     let entries = table.querySelectorAll("tbody tr");
     let labels = [];
     let links = [];
@@ -9503,7 +12109,7 @@
       gradient = page.state.chart_colours.link_bg_col;
     }
     Chart.defaults.color = page.state.chart_colours.text_col;
-    Chart.defaults.font.family = "Ubuntu Sans";
+    Chart.defaults.font.family = page.state.chart_colours.font;
     let scrobble_chart = new Chart(scrobble_canvas.getContext("2d"), {
       type: "line",
       data: {
@@ -9561,7 +12167,8 @@
       text_primary_col,
       bg_col,
       root_bg_col,
-      hue
+      hue,
+      font: getComputedStyle(document.body).getPropertyValue("--font")
     };
     console.log("chart colours", page.state.chart_colours);
     page.state.chart_line_options = {
@@ -9774,8 +12381,7 @@
 
   // src/config.js
   function create_settings_template() {
-    localStorage.setItem("bleh", JSON.stringify(settings_template));
-    return settings_template;
+    return { dev: false };
   }
   function load_settings(skip = false) {
     if (!skip) {
@@ -9804,6 +12410,12 @@
     } else if (settings.seasonal_particles_reduced == false) {
       delete settings.seasonal_particles_reduced;
     }
+    if (settings.font_weight == 480)
+      settings.font_weight = settings_store.font_weight.default;
+    if (settings.font_weight_medium == 650)
+      settings.font_weight_medium = settings_store.font_weight_medium.default;
+    if (settings.font_weight_bold == 730)
+      settings.font_weight_bold = settings_store.font_weight_bold.default;
     for (let setting2 in settings) {
       if ((setting2 == "hue" || setting2 == "sat" || setting2 == "lit") && settings.hue == settings_base.hue.value && settings.sat == settings_base.sat.value && settings.lit == settings_base.lit.value) continue;
       try {
@@ -9836,23 +12448,8 @@
     else if (current_theme == "ink")
       current_theme = "dark";
     show_theme_change_in_menu(current_theme);
-    settings.theme = current_theme;
-    if (current_theme == "light" || current_theme == "ink")
-      settings.theme_type = "light";
-    else
-      settings.theme_type = "dark";
-    document.documentElement.setAttribute(`data-bleh--theme`, `${current_theme}`);
-    document.documentElement.setAttribute(`data-bleh--theme_type`, `${settings.theme_type}`);
-    localStorage.setItem("bleh", JSON.stringify(settings));
-    load_chart_colours();
-    if ((page.type == "artist" || page.type == "album" || page.type == "track") && page.subpage == "overview")
-      bleh_music_page_charts();
-    if (page.type == "user" && page.subpage == "overview")
-      bleh_profile_chart_render();
-    if (page.type == "user" && page.subpage.startsWith("library")) {
-      bleh_glacier_date_graph_generate();
-      bleh_glacier_insights();
-    }
+    save_setting("theme", current_theme);
+    chart_reflow();
   }
   unsafeWindow.change_theme_from_settings = function(theme) {
     settings.theme = theme;
@@ -9866,28 +12463,12 @@
     show_theme_change_in_menu(theme);
     localStorage.setItem("bleh", JSON.stringify(settings));
   };
-  unsafeWindow.change_theme_from_menu = function(theme) {
-    if (page.subpage.startsWith("listening-report"))
-      return;
-    settings.theme = theme;
-    if (theme == "light" || theme == "ink")
-      settings.theme_type = "light";
-    else
-      settings.theme_type = "dark";
-    document.documentElement.setAttribute(`data-bleh--theme`, `${theme}`);
-    document.documentElement.setAttribute(`data-bleh--theme_type`, `${settings.theme_type}`);
+  function change_theme_from_menu(theme) {
+    if (page.subpage.startsWith("listening-report")) return;
+    save_setting("theme", theme);
     show_theme_change_in_menu(theme);
-    localStorage.setItem("bleh", JSON.stringify(settings));
-    load_chart_colours();
-    if ((page.type == "artist" || page.type == "album" || page.type == "track") && page.subpage == "overview")
-      bleh_music_page_charts();
-    if (page.type == "user" && page.subpage == "overview")
-      bleh_profile_chart_render();
-    if (page.type == "user" && page.subpage.startsWith("library")) {
-      bleh_glacier_date_graph_generate();
-      bleh_glacier_insights();
-    }
-  };
+    chart_reflow();
+  }
   function reset_all() {
     for (let item in settings_base)
       reset_item(item);
@@ -9976,16 +12557,16 @@
           settings[item] = value;
           document.body.style.setProperty(`--${item}`, value);
           document.documentElement.setAttribute(`data-bleh--${item}`, value);
-          let toggle = document.getElementById(`toggle-${item}-${value}`);
-          if (toggle)
-            toggle.setAttribute("aria-checked", true);
+          let toggle2 = document.getElementById(`toggle-${item}-${value}`);
+          if (toggle2)
+            toggle2.setAttribute("aria-checked", true);
           let other_toggles = search.querySelectorAll(`[data-toggle="${item}"]`);
-          other_toggles.forEach((toggle2) => {
-            let other_value = toggle2.getAttribute("data-toggle-value");
+          other_toggles.forEach((toggle3) => {
+            let other_value = toggle3.getAttribute("data-toggle-value");
             if (other_value == value)
               return;
             else
-              toggle2.setAttribute("aria-checked", false);
+              toggle3.setAttribute("aria-checked", false);
           });
           if ((item == "chart_view" || item == "chart_bar_axis") && page.type == "user" && page.subpage.startsWith("library"))
             bleh_glacier_date_graph_generate();
@@ -10203,31 +12784,21 @@
   }
   function calculate_offset(now) {
     let offset = now.getTimezoneOffset();
-    if (offset == 0)
-      return "+0000";
-    if (offset < 0) {
-      offset = Math.abs(offset);
-      offset /= 60;
-      if (offset < 10)
-        offset = `0${offset}`;
-      offset = `+${offset}`;
-    } else {
-      offset = -Math.abs(offset);
-      offset /= 60;
-      if (offset > -10)
-        offset = offset.toString().replace("-", "-0");
-    }
-    return `${offset}00`;
+    if (offset == 0) return "+0000";
+    const sign = offset < 0 ? "+" : "-";
+    offset = Math.abs(offset);
+    const hours = Math.floor(offset / 60);
+    const minutes = offset % 60;
+    const formatted_hours = hours < 10 ? `0${hours}` : hours.toString();
+    const formatted_minutes = minutes < 10 ? `0${minutes}` : minutes.toString();
+    return sign + formatted_hours + formatted_minutes;
   }
   function seasonal_timer_start(bypass = false) {
-    if (stored_season.new_years_eve && !bypass)
-      return;
-    if (seasonal_timer.state != null)
-      return;
+    if (stored_season.new_years_eve && !bypass) return;
+    if (seasonal_timer.state) return;
     seasonal_timer.state = setInterval(set_season, 1e3);
     log("started interval", "season", "info");
-    if (page.header.season_tooltip == null)
-      return;
+    if (!page.header.season_tooltip) return;
     page.header.season_tooltip.setContent(html.node`
         <span class="season-colour-name">${tl(trans.seasonal.listing[stored_season.id])}</span>
         <span class="season-exclusive">${trans_legacy.en.auth_menu.seasonal_live}</span>
@@ -10235,15 +12806,12 @@
     page.header.season.classList.add("live");
   }
   function seasonal_timer_end() {
-    if (stored_season.new_years_eve)
-      return;
-    if (seasonal_timer.state == null)
-      return;
+    if (stored_season.new_years_eve) return;
+    if (!seasonal_timer.state) return;
     clearInterval(seasonal_timer.state);
     seasonal_timer.state = null;
     log("ended interval", "season", "info");
-    if (page.header.season_tooltip == null)
-      return;
+    if (!page.header.season_tooltip) return;
     page.header.season_tooltip.setContent(html.node`
         <span class="season-colour-name">${tl(trans.seasonal.listing[stored_season.id])}</span>
         <span class="season-exclusive">${trans_legacy.en.auth_menu.seasonal_notice}</span>
@@ -10251,8 +12819,7 @@
     page.header.season.classList.remove("live");
   }
   function update_season_nav() {
-    if (page.header.season == null)
-      return;
+    if (!page.header.season) return;
     page.header.season.setAttribute("data-season", stored_season.id);
     if (!stored_season.new_years_eve) {
       page.header.season.textContent = moment(stored_season.end.replace("y0", stored_season.year).replace("{offset}", stored_season.offset)).to(stored_season.now, true);
@@ -10314,6 +12881,208 @@
     return Math.floor(Math.random() * (b - a + 1)) + a;
   }
 
+  // src/style.js
+  function append_style() {
+    document.documentElement.classList.add("bleh-supports-loading");
+    for (var member in settings) delete settings[member];
+    Object.assign(settings, JSON.parse(localStorage.getItem("bleh")) || create_settings_template());
+    let cached_style = localStorage.getItem("bleh_cached_style") || "";
+    let url = window.location.href;
+    let url_split = url.split("/");
+    let url_length = url_split.length - 1;
+    if (url_split[url_length] == "playback" || url_split[url_length - 1] == "labs")
+      return;
+    document.documentElement.setAttribute("data-bleh--theme", settings.theme);
+    if (settings.dev) return;
+    if (cached_style == "") {
+      log("never cached, fetching", "style");
+      fetch_new_style();
+    } else {
+      log("requesting cache", "style");
+      load_cached_style(cached_style);
+    }
+  }
+  function load_cached_style(cached_style) {
+    let style_cache = html.node`
+        <style id="bleh--cached-style">${cached_style}</style>
+    `;
+    document.documentElement.appendChild(style_cache);
+    style_cache.onload = () => {
+      log("loaded cache", "style");
+      document.body.classList.add("bleh");
+      chart_reflow();
+      log("checking timeout", "style");
+      check_if_style_cache_is_valid();
+    };
+    style_cache.onerror = () => {
+      log("error loading cache", "style", "error");
+      fetch_new_style();
+    };
+  }
+  function check_if_style_cache_is_valid() {
+    let cached_style_timeout = new Date(localStorage.getItem("bleh_cached_style_timeout"));
+    let current_time = /* @__PURE__ */ new Date();
+    if (cached_style_timeout < current_time) {
+      log("fetching new, expired timeout", "style");
+      fetch_new_style();
+    } else {
+      log(`timeout valid until ${cached_style_timeout}`, "style");
+    }
+  }
+  function fetch_new_style(delete_old_style = false, reload_on_finish = false, allow_incompatible = false) {
+    let xhr = new XMLHttpRequest();
+    let url = `https://katelyynn.github.io/bleh/fm/bleh.css?${Math.random()}`;
+    log(`making request ${url}`, "style");
+    xhr.open("GET", url, true);
+    xhr.onload = function() {
+      log(`style responded ${xhr.status}`, "style");
+      let style = html.node`
+            <style>${this.response}</style>
+        `;
+      document.documentElement.appendChild(style);
+      style.onload = () => {
+        let theme_version2 = getComputedStyle(document.body).getPropertyValue("--version-build").replaceAll("'", "").replaceAll('"', "");
+        if (!allow_incompatible && theme_version2 != version.build) {
+          log("denied loading, incompatible version", "style", "info", { theme: theme_version2, script: version.build });
+          document.documentElement.removeChild(style);
+          return;
+        }
+        if (delete_old_style)
+          document.documentElement.removeChild(document.getElementById("bleh--cached-style"));
+        log("loaded", "style");
+        document.body.classList.add("bleh");
+        chart_reflow();
+        if (reload_on_finish) invoke_reload();
+      };
+      style.onerror = () => {
+        log("error loading", "style", "error");
+      };
+      localStorage.setItem("bleh_cached_style", this.response);
+      let api_expire = /* @__PURE__ */ new Date();
+      api_expire.setHours(api_expire.getHours() + 1);
+      localStorage.setItem("bleh_cached_style_timeout", api_expire);
+      log(`cached until ${api_expire}`, "style");
+    };
+    xhr.send();
+  }
+  function parse_version(v) {
+    const parts = v.split(".").map(Number);
+    while (parts.length < 3) parts.push(0);
+    return parts.slice(0, 3);
+  }
+  function compare_versions(a, b) {
+    const [a_maj, a_min, a_patch] = parse_version(a);
+    const [b_maj, b_min, b_patch] = parse_version(b);
+    if (a_maj !== b_maj) return a_maj > b_maj ? 1 : -1;
+    if (a_min !== b_min) return a_min > b_min ? 1 : -1;
+    if (a_patch !== b_patch) return a_patch > b_patch ? 1 : -1;
+    return 0;
+  }
+  function update_comparison(current, latest) {
+    return compare_versions(latest, current) === 1;
+  }
+  function update_check(force = false, btn = null, func = null) {
+    if (!force) {
+      const last_checked = localStorage.getItem("bleh_update_checked") || null;
+      const next_check = localStorage.getItem("bleh_update_next_check") || null;
+      const current_time = /* @__PURE__ */ new Date();
+      if (last_checked && next_check && new Date(next_check) > current_time) {
+        log("update check skipped", "update", "info", { next_in: next_check, current_time });
+        if (func) func();
+        return;
+      }
+    }
+    if (btn) btn.setAttribute("disabled", "");
+    let url = `https://katelyynn.github.io/bleh/fm/src/build/build.json?${Date.now()}`;
+    download_with_progress(url, (percent) => {
+    }).then(async (blob) => {
+      const text2 = await blob.text();
+      if (btn) btn.removeAttribute("disabled");
+      try {
+        let data2 = JSON.parse(text2);
+        console.log(data2);
+        let update_required = update_comparison(version.build, data2.build);
+        localStorage.setItem("bleh_update_required", update_required.toString());
+        localStorage.setItem("bleh_update_to", data2.build);
+        localStorage.setItem("bleh_update_checked", (/* @__PURE__ */ new Date()).toString());
+        let next = /* @__PURE__ */ new Date();
+        next.setHours(next.getHours() + 2);
+        localStorage.setItem("bleh_update_next_check", next.toString());
+        log("update check finished", "update", "info", { next_in: next, current_time: /* @__PURE__ */ new Date() });
+        if (func) func();
+      } catch (e) {
+        log("error parsing", "update", "error", { error: e });
+      }
+    });
+  }
+  function prompt_for_update() {
+    dialog({
+      id: "bleh_update",
+      title: tl(trans.update_to_version).replace("{v}", localStorage.getItem("bleh_update_to") || "unknown"),
+      body: html.node`
+            <div class="forms">
+                <div class="form">
+                    <div class="form-group proceed">
+                        <button class="btn primary icon" data-type="update" onclick=${() => start_update()}>${tl(trans.update_now)}</button>
+                    </div>
+                </div>
+                <div class="form">
+                    <div class="form-group deny">
+                        <button class="btn icon" data-type="ignore" onclick=${() => ignore_update()}>${tl(trans.ignore_for_now)}</button>
+                    </div>
+                </div>
+            </div>
+        `,
+      dismiss: false,
+      type: "update",
+      replace_if_possible: true
+    });
+  }
+  function ignore_update() {
+    dialog_rm2({
+      id: "bleh_update"
+    });
+  }
+  function start_update() {
+    open(`https://github.com/katelyynn/bleh/raw/uwu/fm/bleh.user.js`);
+    dialog({
+      id: "bleh_update",
+      title: tl(trans.update_to_version).replace("{v}", localStorage.getItem("bleh_update_to") || "unknown"),
+      body: html.node`
+            <div class="forms">
+                <div class="form">
+                    <div class="form-group proceed">
+                        <button class="btn primary icon" data-type="finish" onclick=${() => finish_update()}>${tl(trans.finish)}</button>
+                    </div>
+                </div>
+            </div>
+        `,
+      dismiss: false,
+      type: "update",
+      replace_if_possible: true
+    });
+  }
+  function finish_update() {
+    dialog({
+      id: "bleh_wait",
+      title: tl(trans.update_to_version).replace("{v}", localStorage.getItem("bleh_update_to") || "unknown"),
+      body: html.node`
+            <div class="loading-data-container">
+                <div class="loading-data-text">${tl(trans.downloading_styles)}</div>
+            </div>
+        `,
+      type: "wait",
+      dismiss: false,
+      replace_if_possible: true
+    });
+    fetch_new_style(false, true, true);
+  }
+  unsafeWindow._force_refresh_theme = function() {
+    localStorage.removeItem("bleh_cached_style");
+    localStorage.removeItem("bleh_cached_style_timeout");
+    window.setTimeout(invoke_reload, 400);
+  };
+
   // src/pages/bleh_config.js
   function bleh_settings() {
     page.name = auth.name;
@@ -10326,57 +13095,65 @@
     let params = new URLSearchParams(document.location.search);
     page.requested.tab = params.get("tab");
     page.requested.setting = params.get("setting");
-    let nav = document.createElement("nav");
-    nav.classList.add("navlist", "secondary-nav", "navlist--more", "redesigned-navigation", "bleh-settings-navigation");
-    render(nav, html`
-        <ul class="navlist-items">
-            <li class="navlist-item secondary-nav-item">
-                <a class="secondary-nav-item-link bleh--nav" data-bleh-page="themes" onclick=${() => change_settings_page("themes")}>
-                    ${tl(trans.appearance)}
-                </a>
-            </li>
-            <li class="navlist-item secondary-nav-item">
-                <a class="secondary-nav-item-link bleh--nav" data-bleh-page="music" onclick=${() => change_settings_page("music")}>
-                    ${tl(trans.music)}
-                </a>
-            </li>
-            <li class="navlist-item secondary-nav-item">
-                <a class="secondary-nav-item-link bleh--nav" data-bleh-page="customise" onclick=${() => change_settings_page("customise")}>
-                    ${tl(trans.layout)}
-                </a>
-            </li>
-            <li class="navlist-item secondary-nav-item">
-                <a class="secondary-nav-item-link bleh--nav" data-bleh-page="profiles" onclick=${() => change_settings_page("profiles")}>
-                    ${tl(trans.profiles)}
-                </a>
-            </li>
-            <li class="navlist-item secondary-nav-item">
-                <a class="secondary-nav-item-link bleh--nav" data-bleh-page="seasonal" onclick=${() => change_settings_page("seasonal")}>
-                    ${tl(trans.seasonal.name)}
-                </a>
-            </li>
-            <li class="navlist-item secondary-nav-item">
-                <a class="secondary-nav-item-link bleh--nav" data-bleh-page="text" onclick=${() => change_settings_page("text")}>
-                    ${tl(trans.text)}
-                </a>
-            </li>
-            <li class="navlist-item secondary-nav-item">
-                <a class="secondary-nav-item-link bleh--nav" data-bleh-page="accessibility" onclick=${() => change_settings_page("accessibility")}>
-                    ${tl(trans.accessibility)}
-                </a>
-            </li>
-            <li class="navlist-item secondary-nav-item">
-                <a class="secondary-nav-item-link bleh--nav" data-bleh-page="performance" onclick=${() => change_settings_page("performance")}>
-                    ${tl(trans.troubleshooting)}
-                </a>
-            </li>
-            <li class="navlist-item secondary-nav-item">
-                <a class="secondary-nav-item-link bleh--nav" data-password=${settings.hu_tao} data-bleh-page="sku" onclick=${() => change_settings_page("sku")}>
-                    ${tl(trans.flags)}
-                </a>
-            </li>
-        </ul>
-    `);
+    const update_required = localStorage.getItem("bleh_update_required") || "false";
+    let nav = html.node`
+        <nav class="navlist secondary-nav navlist--more redesigned-navigation bleh-settings-navigation">
+            <ul class="navlist-items">
+                <li class="navlist-item secondary-nav-item">
+                    <a class="secondary-nav-item-link bleh--nav" data-bleh-page="themes" onclick=${() => change_settings_page("themes")}>
+                        ${tl(trans.appearance)}
+                    </a>
+                </li>
+                <li class="navlist-item secondary-nav-item">
+                    <a class="secondary-nav-item-link bleh--nav" data-bleh-page="music" onclick=${() => change_settings_page("music")}>
+                        ${tl(trans.music)}
+                    </a>
+                </li>
+                <li class="navlist-item secondary-nav-item">
+                    <a class="secondary-nav-item-link bleh--nav" data-bleh-page="customise" onclick=${() => change_settings_page("customise")}>
+                        ${tl(trans.layout)}
+                    </a>
+                </li>
+                <li class="navlist-item secondary-nav-item">
+                    <a class="secondary-nav-item-link bleh--nav" data-bleh-page="profiles" onclick=${() => change_settings_page("profiles")}>
+                        ${tl(trans.profiles)}
+                    </a>
+                </li>
+                <li class="navlist-item secondary-nav-item">
+                    <a class="secondary-nav-item-link bleh--nav" data-bleh-page="seasonal" onclick=${() => change_settings_page("seasonal")}>
+                        ${tl(trans.seasonal.name)}
+                    </a>
+                </li>
+                <li class="navlist-item secondary-nav-item">
+                    <a class="secondary-nav-item-link bleh--nav" data-bleh-page="text" onclick=${() => change_settings_page("text")}>
+                        ${tl(trans.text)}
+                    </a>
+                </li>
+                <li class="navlist-item secondary-nav-item">
+                    <a class="secondary-nav-item-link bleh--nav" data-bleh-page="accessibility" onclick=${() => change_settings_page("accessibility")}>
+                        ${tl(trans.accessibility)}
+                    </a>
+                </li>
+                ${ff("update_center") ? html.node`
+                <li class="navlist-item secondary-nav-item">
+                    <a class="secondary-nav-item-link bleh--nav" data-bleh-page="update" data-type="update" onclick=${() => change_settings_page("update")}>
+                        ${tl(trans.updates)}${update_required === "true" ? html.node`<div class="new-badge">${tl(trans.new)}</div>` : ""}
+                    </a>
+                </li>
+                ` : ""}
+                <li class="navlist-item secondary-nav-item">
+                    <a class="secondary-nav-item-link bleh--nav" data-bleh-page="performance" onclick=${() => change_settings_page("performance")}>
+                        ${tl(trans.troubleshooting)}
+                    </a>
+                </li>
+                <li class="navlist-item secondary-nav-item">
+                    <a class="secondary-nav-item-link bleh--nav" data-password=${settings.hu_tao} data-bleh-page="sku" onclick=${() => change_settings_page("sku")}>
+                        ${tl(trans.flags)}
+                    </a>
+                </li>
+            </ul>
+        </nav>
+    `;
     render(page.structure.side, html`
         <div class="cta first priority sponsor colourful">
             ${auth.sponsor ? html.node`
@@ -10404,8 +13181,15 @@
             <div class="skip-to-list"></div>
             ` : ""}
         </div>
+        <div class="bleh--panel">
+            <h4>${tl(trans.about)}</h4>
+            <p>${version.brand} ${version.build}.${version.sku}</p>
+        </div>
     `);
-    page.structure.container.insertBefore(nav, page.structure.row);
+    if (!ff("short"))
+      page.structure.container.insertBefore(nav, page.structure.row);
+    else
+      page.structure.row.insertBefore(nav, page.structure.content);
     if (!page.requested.tab)
       change_settings_page("themes");
     else
@@ -10445,8 +13229,21 @@
       render(page.structure.main, html`
             <div class="bleh--panel">
                 <h4>${tl(trans.themes.name)}</h4>
+                ${ff("theme_bubbles") ? theme_bubbles : html.node`
                 <div class="setting-items full">
                     <div class="side-left full even-more">
+                        ${ff("auto_theme") ? html.node`
+                        <button class="btn theme-item" data-bleh-theme="auto" onclick="change_theme_from_settings('auto')">
+                            <div class="preview-container">
+                            <div class="preview">
+                                ${theme_preview()}
+                            </div>
+                            </div>
+                            <div class="text">
+                                <h5>${tl(trans.auto)} <div class="new-badge">${tl(trans.new)}</div></h5>
+                            </div>
+                        </button>
+                        ` : ""}
                         <button class="btn theme-item" data-bleh-theme="light" data-bleh--theme_type="light" onclick="change_theme_from_settings('light')">
                             <div class="preview-container">
                             <div class="preview" data-bleh--theme="light" data-bleh--theme_type="light">
@@ -10503,19 +13300,8 @@
                         </button>
                     </div>
                 </div>
-                ${ff("high_contrast") ? html.node`
-                <div class="setting" data-type="toggle" id="container-high_contrast" onclick="_update_item('high_contrast')">
-                    <button class="btn reset" onclick="_reset_item('high_contrast')">${tl(trans.reset)}</button>
-                    <div class="heading">
-                        <h5>${trans_legacy.en.settings.customise.high_contrast.name}</h5>
-                    </div>
-                    <div class="toggle-wrap">
-                        <button class="toggle" id="toggle-high_contrast" aria-checked="true">
-                            <div class="dot"></div>
-                        </button>
-                    </div>
-                </div>
-                ` : ""}
+                `}
+                ${ff("high_contrast") ? setting({ id: "high_contrast" }) : ""}
                 <h4>${tl(trans.colours)}</h4>
                 <div class="view-buttons colour-buttons view-buttons-middle" id="colour_custom"></div>
                 <div class="swatch-group">
@@ -10529,17 +13315,20 @@
                     <div id="colour_purple" class="palette options colours"></div>
                     <div id="colour_pink" class="palette options colours"></div>
                 </div>
-                ${setting({ id: "hue_from_album" })}
-                ${setting({ id: "colourful_tracks" })}
-                ${ff("card_saturation") ? html.node`
-                ${setting({ id: "sat_bg" })}
-                ` : ""}
-                <div class="sep"></div>
-                ${setting({ id: "font" })}
-                ${setting({ id: "font_weight" })}
-                ${setting({ id: "font_weight_medium" })}
-                ${setting({ id: "font_weight_bold" })}
-                ${setting({ id: "font_emoji" })}
+                <div class="setting-group">
+                    ${setting({ id: "hue_from_album" })}
+                    ${setting({ id: "colourful_tracks" })}
+                    ${ff("card_saturation") ? html.node`
+                        ${setting({ id: "sat_bg" })}
+                    ` : ""}
+                </div>
+                <div class="setting-group">
+                    ${setting({ id: "font" })}
+                    ${setting({ id: "font_weight" })}
+                    ${setting({ id: "font_weight_medium" })}
+                    ${setting({ id: "font_weight_bold" })}
+                    ${setting({ id: "font_emoji" })}
+                </div>
             </div>
             `);
       show_theme_change_in_settings();
@@ -10699,90 +13488,98 @@
                 <div class="seasonal-inner">
                     <div class="sub-text">${tl(trans.seasonal_timeline)}</div>
                     <h4>${moment(stored_season.now).format("MMMM Do YYYY")}</h4>
-                    <div class="current-season-box" data-season="${stored_season.id}">
-                        <div class="current-season-info">
-                            <div class="bleh-icon bleh-seasonal-icon" data-season="${stored_season.id}"></div>
-                            <h4>${tl(trans.seasonal.listing[stored_season.id])}</h4>
+                </div>
+                <div class="setting-group">
+                    ${setting({ id: "seasonal" })}
+                    <div class="setting" data-type="info">
+                        <div class="heading">
+                            <h5>${tl(trans.current_season)}</h5>
                         </div>
-                        <div class="glacier-library-top season-top">
-                            <div class="glacier-library-metadata">
-                                ${stored_season.id != "none" && stored_season.start && stored_season.end ? html.node`
-                                <div class="glacier-library-metadata-item">
-                                    <div class="sub-text">${tl(trans.started)}</div>
-                                    <div class="glacier-library-metadata-item-value" id="current_season_start">${moment(stored_season.start.replace("y0", stored_season.year).replace("{offset}", stored_season.offset)).from(stored_season.now)}</div>
-                                </div>
-                                <div class="glacier-library-metadata-item">
-                                    <div class="sub-text">${tl(trans.ends_in)}</div>
-                                    <div class="glacier-library-metadata-item-value" id="current_season">${moment(stored_season.end.replace("y0", stored_season.year).replace("{offset}", stored_season.offset)).to(stored_season.now, true)}</div>
-                                </div>
-                                ` : settings.seasonal ? html.node`
-                                <div class="glacier-library-metadata-item">
-                                    <div class="sub-text">${tl(trans.next_in)}</div>
-                                    <div class="glacier-library-metadata-item-value" id="next_season_start">${moment(stored_season.next_start.replace("y0", stored_season.next_is_new_year ? stored_season.year + 1 : stored_season.year).replace("{offset}", stored_season.offset)).to(stored_season.now, true)}</div>
-                                </div>
-                                ` : ""}
+                        <div class="info" data-season=${stored_season.id}>
+                            <div class="bleh-icon bleh-seasonal-icon"></div>
+                            <p>${tl(trans.seasonal.listing[stored_season.id])}</p>
+                        </div>
+                    </div>
+                    ${stored_season.id != "none" && stored_season.start && stored_season.end ? html.node`
+                    <div class="setting" data-type="info">
+                        <div class="heading">
+                            <h5>${tl(trans.started)}</h5>
+                        </div>
+                        <div class="info">
+                            <p id="current_season_start">${moment(stored_season.start.replace("y0", stored_season.year).replace("{offset}", stored_season.offset)).from(stored_season.now)}</p>
+                        </div>
+                    </div>
+                    <div class="setting" data-type="info">
+                        <div class="heading">
+                            <h5>${tl(trans.ends_in)}</h5>
+                        </div>
+                        <div class="info">
+                            <p id="current_season">${moment(stored_season.end.replace("y0", stored_season.year).replace("{offset}", stored_season.offset)).to(stored_season.now, true)}</p>
+                        </div>
+                    </div>
+                    ` : settings.seasonal ? html.node`
+                    <div class="setting" data-type="info">
+                        <div class="heading">
+                            <h5>${tl(trans.next_in)}</h5>
+                        </div>
+                        <div class="info">
+                            <p id="next_season_start">${moment(stored_season.next_start.replace("y0", stored_season.next_is_new_year ? stored_season.year + 1 : stored_season.year).replace("{offset}", stored_season.offset)).to(stored_season.now, true)}</p>
+                        </div>
+                    </div>
+                    ` : ""}
+                    ${settings.seasonal ? html.node`
+                    <div class="setting" data-type="info">
+                        <div class="heading">
+                            <h5>${tl(trans.calculated_offset)}</h5>
+                        </div>
+                        <div class="info">
+                            <p>${stored_season.offset}</p>
+                        </div>
+                    </div>
+                    ` : ""}
+                </div>
+                <h4>${tl(trans.settings)}</h4>
+                <div class="setting-group">
+                    <div class="setting" data-type="options">
+                        <div class="heading">
+                            <h5>${tl(trans.seasonal_particles.name)}</h5>
+                            <p>${tl(trans.seasonal_particles.body)}</p>
+                        </div>
+                        <div class="primary-selections">
+                            <div class="btn primary-selection no-icon" id="toggle-seasonal_particles-all" data-toggle="seasonal_particles" data-toggle-value="all" onclick="_update_item('seasonal_particles', 'all')">
+                                <h5>${tl(trans.all_particles)}</h5>
+                            </div>
+                            <div class="btn primary-selection no-icon" id="toggle-seasonal_particles-less" data-toggle="seasonal_particles" data-toggle-value="less" onclick="_update_item('seasonal_particles', 'less')">
+                                <h5>${tl(trans.less_particles)}</h5>
+                            </div>
+                            <div class="btn primary-selection no-icon" id="toggle-seasonal_particles-none" data-toggle="seasonal_particles" data-toggle-value="none" onclick="_update_item('seasonal_particles', 'none')">
+                                <h5>${tl(trans.no_particles)}</h5>
                             </div>
                         </div>
                     </div>
-                </div>
-                ${settings.seasonal ? html.node`
-                <div class="alert alert-info">
-                    ${{ html: tl(trans.seasonal_offset).replace("{offset}", `<strong>${stored_season.offset}</strong>`) }}
-                </div>
-                ` : ""}
-                <h4>${tl(trans.settings)}</h4>
-                <div class="setting" data-type="toggle" id="container-seasonal" onclick="_update_item('seasonal')">
-                    <button class="btn reset" onclick="_reset_item('seasonal')">${tl(trans.reset)}</button>
-                    <div class="heading">
-                        <h5>${trans_legacy.en.settings.customise.seasonal.option.name}</h5>
-                    </div>
-                    <div class="toggle-wrap">
-                        <button class="toggle" id="toggle-seasonal" aria-checked="true">
-                            <div class="dot"></div>
-                        </button>
-                    </div>
-                </div>
-                <div class="sep"></div>
-                <div class="setting" data-type="options">
-                    <div class="heading">
-                        <h5>${tl(trans.seasonal_particles.name)}</h5>
-                        <p>${tl(trans.seasonal_particles.body)}</p>
-                    </div>
-                    <div class="primary-selections">
-                        <div class="btn primary-selection no-icon" id="toggle-seasonal_particles-all" data-toggle="seasonal_particles" data-toggle-value="all" onclick="_update_item('seasonal_particles', 'all')">
-                            <h5>${tl(trans.all_particles)}</h5>
+                    <div class="setting hide-if-seasonal-disabled" data-type="toggle" id="container-seasonal_particles_fps" onclick="_update_item('seasonal_particles_fps')">
+                        <button class="btn reset" onclick="_reset_item('seasonal_particles_fps')">${tl(trans.reset)}</button>
+                        <div class="heading">
+                            <h5>${trans_legacy.en.settings.customise.seasonal.fps_particles.name}</h5>
+                            <p>${trans_legacy.en.settings.customise.seasonal.fps_particles.bio}</p>
                         </div>
-                        <div class="btn primary-selection no-icon" id="toggle-seasonal_particles-less" data-toggle="seasonal_particles" data-toggle-value="less" onclick="_update_item('seasonal_particles', 'less')">
-                            <h5>${tl(trans.less_particles)}</h5>
-                        </div>
-                        <div class="btn primary-selection no-icon" id="toggle-seasonal_particles-none" data-toggle="seasonal_particles" data-toggle-value="none" onclick="_update_item('seasonal_particles', 'none')">
-                            <h5>${tl(trans.no_particles)}</h5>
+                        <div class="toggle-wrap">
+                            <button class="toggle" id="toggle-seasonal_particles_fps" aria-checked="true">
+                                <div class="dot"></div>
+                            </button>
                         </div>
                     </div>
-                </div>
-                <div class="setting hide-if-seasonal-disabled" data-type="toggle" id="container-seasonal_particles_fps" onclick="_update_item('seasonal_particles_fps')">
-                    <button class="btn reset" onclick="_reset_item('seasonal_particles_fps')">${tl(trans.reset)}</button>
-                    <div class="heading">
-                        <h5>${trans_legacy.en.settings.customise.seasonal.fps_particles.name}</h5>
-                        <p>${trans_legacy.en.settings.customise.seasonal.fps_particles.bio}</p>
-                    </div>
-                    <div class="toggle-wrap">
-                        <button class="toggle" id="toggle-seasonal_particles_fps" aria-checked="true">
-                            <div class="dot"></div>
-                        </button>
-                    </div>
-                </div>
-                <div class="sep"></div>
-                <div class="setting hide-if-seasonal-disabled" data-type="toggle" id="container-seasonal_overlays" onclick="_update_item('seasonal_overlays')">
-                    <button class="btn reset" onclick="_reset_item('seasonal_overlays')">${tl(trans.reset)}</button>
-                    <div class="heading">
-                        <h5>${trans_legacy.en.settings.customise.seasonal.overlays.name}</h5>
-                        <p>${trans_legacy.en.settings.customise.seasonal.overlays.bio}</p>
-                    </div>
-                    <div class="toggle-wrap">
-                        <button class="toggle" id="toggle-seasonal_overlays" aria-checked="true">
-                            <div class="dot"></div>
-                        </button>
+                    <div class="setting hide-if-seasonal-disabled" data-type="toggle" id="container-seasonal_overlays" onclick="_update_item('seasonal_overlays')">
+                        <button class="btn reset" onclick="_reset_item('seasonal_overlays')">${tl(trans.reset)}</button>
+                        <div class="heading">
+                            <h5>${trans_legacy.en.settings.customise.seasonal.overlays.name}</h5>
+                            <p>${trans_legacy.en.settings.customise.seasonal.overlays.bio}</p>
+                        </div>
+                        <div class="toggle-wrap">
+                            <button class="toggle" id="toggle-seasonal_overlays" aria-checked="true">
+                                <div class="dot"></div>
+                            </button>
+                        </div>
                     </div>
                 </div>
             </div>
@@ -10792,15 +13589,17 @@
       render(page.structure.main, html`
             <div class="bleh--panel">
                 <div class="alert alert-danger">${tl(trans.beware_notice)}</div>
-                ${setting({ id: "branch" })}
-                ${setting({ id: "dev" })}
-                <div class="setting" data-type="toggle">
-                    <div class="heading">
-                        <h5>Refresh theme</h5>
-                        <p>Force download the latest version of the stylesheet</p>
-                    </div>
-                    <div class="toggle-wrap">
-                        <button class="bleh--btn primary" onclick="_force_refresh_theme()">Refresh</button>
+                <div class="setting-group">
+                    ${setting({ id: "branch" })}
+                    ${setting({ id: "dev" })}
+                    <div class="setting" data-type="action">
+                        <div class="heading">
+                            <h5>Refresh theme</h5>
+                            <p>Force download the latest version of the stylesheet</p>
+                        </div>
+                        <div class="toggle-wrap">
+                            <button class="bleh--btn primary" onclick="_force_refresh_theme()">Refresh</button>
+                        </div>
                     </div>
                 </div>
                 <div class="sep"></div>
@@ -10830,6 +13629,23 @@
         body: "haaaiaiii test bodyyy.......",
         persist: true
       })}>Deliver persistent notification</button>
+                <button class="continue" onclick=${() => {
+        let notification = notify({
+          id: "async",
+          title: "progress",
+          body: "downloading...",
+          progress: true
+        });
+        download_with_progress(`https://lastfm.freetls.fastly.net/i/u/ar0/6644c67eaa3669676252d3190f9b019f.jpg?a=${Math.random()}`, (percent) => {
+          notification.set_body(`downloading... ${percent}%`);
+          notification.set(percent);
+        }).then(async (blob) => {
+          const text2 = await blob.text();
+          notification.set_body("download complete");
+          notification.set(100);
+          console.info(text2);
+        });
+      }}>Deliver async progress notification</button>
                 <div class="sep"></div>
                 <h4>${tl(trans.development)}</h4>
                 <button class="see-more" onclick=${() => {
@@ -10859,72 +13675,148 @@
           name: tl(trans.activity_tracking.name)
         }
       ]);
+      const auth_key = localStorage.getItem("bleh_auth");
+      const auth_valid = localStorage.getItem("bleh_auth_valid");
+      let badge_count = 0;
+      let badges = load_badges(auth.name);
+      if (badges) badge_count = badges.length;
+      if (auth.pro) badge_count++;
       render(page.structure.main, html`
             <div class="bleh--panel sponsor-badge-panel" data-sponsoring="${auth.sponsor}">
-                <div class="profile-container">
-                    <div class="avatar-side small">
-                        <div class="avatar">
-                            <img src="${auth.avatar.replace("/avatar42s/", "/avatar170s/")}" alt="${tl(trans.your_avatar)}" loading="lazy">
-                        </div>
-                    </div>
-                    <div class="info-side">
-                        <div class="header-info">
-                            <div class="sub-text">${tl(trans.you)}</div>
-                            <div class="header standalone title-container">
-                                <h1>${auth.name}</h1>
-                                <div class="badges">
-                                    ${auth.pro ? html.node`
-                                    <span class="label user-status-subscriber">${tl(trans.badges["user-status-subscriber"].name)}</span>
-                                    ` : ""}
-                                </div>
+                <h4>${tl(trans.profile)}</h4>
+                <div class="setting-group">
+                    <div class="setting" data-type="info">
+                        <div class="avatar-container">
+                            <div class="avatar-inner">
+                                <img src=${auth.avatar} alt=${auth.name} />
                             </div>
                         </div>
-                    </div>
-                </div>
-                ${ff("api") ? html.node`
-                <h4>${trans_legacy.en.settings.profiles.api.name}</h4>
-                <div class="alert alert-info">${trans_legacy.en.settings.profiles.api.bio}</div>
-                <div class="setting" data-type="text" id="container-api_key">
-                    <button class="btn reset" onclick="_reset_item('api_key')">${tl(trans.reset)}</button>
-                    <div class="heading content-form">
-                        <div class="input-container">
-                            <input type="password" maxlength="120" id="text-api_key" value="${settings.api_key}" placeholder="${trans_legacy.en.settings.profiles.api.placeholder}">
-                            <button class="btn primary save" onclick=${() => {
-        let key = document.getElementById("text-api_key").value;
-        settings.api_key = key;
-        localStorage.setItem("bleh", JSON.stringify(settings));
-        notify({
-          title: trans_legacy.en.settings.profiles.api.name,
-          body: trans_legacy.en.settings.profiles.api.saved,
-          icon: "icon-16-api"
+                        <div class="heading">
+                            <h5>${auth.name}</h5>
+                        </div>
+                        <div class="info">
+                            <p>${tl(trans.profile_and_badges).replace("{c}", badge_count.toString())}</p>
+                            ${badge_count > 0 ? html.node`
+                            <button class="see-more" onclick=${() => {
+        dialog({
+          id: "badges",
+          title: auth.name,
+          body: html.node`
+                                        <div class="generic-table-list badge-list">
+                                            ${badges ? badges.map((badge) => html.node`
+                                                <div class="generic-table-list-entry badge-list-entry">
+                                                    <div class="icon-container colourful user-status--bleh-${badge.type} user-status--bleh-user-${auth.name}">
+                                                        <div class="bleh-icon" style="--icon: var(--mask)" />
+                                                    </div>
+                                                    <div class="name colourful user-status--bleh-${badge.type} user-status--bleh-user-${auth.name}">
+                                                        ${badge.name}
+                                                    </div>
+                                                    <div class="text">
+                                                        ${badge.reason}
+                                                    </div>
+                                                </div>
+                                            `) : ""}
+                                            ${auth.pro ? html.node`
+                                                <div class="generic-table-list-entry badge-list-entry">
+                                                    <div class="icon-container colourful user-status-subscriber">
+                                                        <div class="bleh-icon" style="--icon: var(--mask)" />
+                                                    </div>
+                                                    <div class="name colourful user-status-subscriber">
+                                                        ${tl(trans.badges["user-status-subscriber"].name)}
+                                                    </div>
+                                                    <div class="text">
+                                                        ${tl(trans.badges["user-status-subscriber"].reason)}
+                                                    </div>
+                                                </div>
+                                            ` : ""}
+                                        </div>
+                                    `
         });
-        test_api_key();
-      }}>${tl(trans.save)}</button>
-                            <a class="btn-add" href="${root}api/account/create" target="_blank">${trans_legacy.en.settings.create}</a>
+      }}>${tl(trans.view)}</button>
+                            ` : ""}
+                        </div>
+                    </div>
+                    ${auth.sponsor ? html.node`
+                    <div class="setting" data-type="action">
+                        <div class="heading">
+                            <h5>${tl(trans.you_are_a_sponsor)}</h5>
+                            <p>${tl(trans.sponsor_get_badge)}</p>
+                        </div>
+                        <div class="toggle-wrap">
+                            <button class="btn primary icon sponsor" data-type="sponsor" onclick="_sponsor_manage()">
+                                ${tl(trans.manage_sponsor)}
+                            </button>
+                        </div>
+                    </div>
+                    ` : html.node`
+                    <div class="setting" data-type="action">
+                        <div class="heading">
+                            <h5>${tl(trans.news_sponsor_cta)}</h5>
+                            <p>${tl(trans.api.body)}</p>
+                        </div>
+                        <div class="toggle-wrap">
+                            <button class="btn primary icon sponsor" data-type="sponsor" onclick="_sponsor()">
+                                ${tl(trans.sponsor)}
+                            </button>
+                        </div>
+                    </div>
+                    `}
+                    <div class="setting" data-type="info">
+                        <div class="heading">
+                            <h5>${tl(trans.current_version)}</h5>
+                        </div>
+                        <div class="info">
+                            <button class="see-more update-check sponsor-related" onclick="_sponsor_check()">
+                                ${tl(trans.update_check)}
+                            </button>
+                            <p>${sponsor_list.latest}</p>
                         </div>
                     </div>
                 </div>
-                ` : ""}
-                <div class="sep"></div>
-                <div class="setting" data-type="toggle">
-                    <div class="heading">
-                        <h5>${html.node([
-        tl(trans.sponsor_data).replace("{v}", `<span class="version-link sponsor-related">${sponsor_list.latest}</span>`)
-      ])}</h5>
+            </div>
+            <div class="bleh--panel">
+                <h4>${tl(trans.api.short)}</h4>
+                <div class="setting-group">
+                    <div class="setting" data-type="action">
+                        <div class="heading">
+                            <h5>${tl(trans.api.name)}</h5>
+                            <p>${tl(trans.api.body)}</p>
+                        </div>
+                        <div class="toggle-wrap">
+                            <a class="btn primary icon connect" href="${root}api/auth?api_key=${api_key}&cb=${root}bleh/api">
+                                ${tl(trans.connect)}
+                            </a>
+                        </div>
                     </div>
-                    <div class="toggle-wrap">
-                        <button class="see-more update-check sponsor-related" onclick="_sponsor_check()">${tl(trans.update_check)}</button>
+                    <div class="setting" data-type="info">
+                        <div class="heading">
+                            <h5>${tl(trans.api_status)}</h5>
+                        </div>
+                        <div class="info">
+                            ${auth_key && auth_valid === "true" ? html.node`
+                            <p>${tl(trans.connected)}</p>
+                            ` : html.node`
+                            <p>${tl(trans.not_connected)}</p>
+                            `}
+                        </div>
                     </div>
                 </div>
-                ${setting({ id: "profile_shortcut" })}
-                ${setting({ id: "avatar_radius" })}
-                ${setting({ id: "bio_markdown" })}
+            </div>
+            <div class="bleh--panel">
+                <h4>${tl(trans.other)}</h4>
+                <div class="setting-group">
+                    ${setting({ id: "profile_shortcut" })}
+                    ${setting({ id: "avatar_radius" })}
+                    ${setting({ id: "bio_markdown" })}
+                </div>
             </div>
             <div class="bleh--panel">
                 <h4>${tl(trans.notes)}</h4>
-                <div class="profile-notes">
-                    <div class="loading-data-container">
-                        <div class="loading-data-text failed">${tl(trans.no_notes)}</div>
+                <div class="setting-group">
+                    <div class="profile-notes">
+                        <div class="loading-data-container">
+                            <div class="loading-data-text failed">${tl(trans.no_notes)}</div>
+                        </div>
                     </div>
                 </div>
             </div>
@@ -10932,28 +13824,16 @@
                 <h4>${tl(trans.activity)}</h4>
                 <p>${tl(trans.what_are_activities)}</p>
                 <div class="inner-preview pad">
-                    <div class="preview-card activity-preview">
-
-                    </div>
+                    <div class="preview-card activity-preview" />
                 </div>
-                <div class="setting" data-type="toggle" id="container-activities" onclick="_update_item('activities')">
-                    <button class="btn reset" onclick="_reset_item('activities')">${tl(trans.reset)}</button>
-                    <div class="heading">
-                        <h5>${tl(trans.activity_tracking.name)}</h5>
-                        <p>${tl(trans.activity_tracking.body)}</p>
-                    </div>
-                    <div class="toggle-wrap">
-                        <button class="toggle" id="toggle-activities" aria-checked="true">
-                            <div class="dot"></div>
-                        </button>
-                    </div>
-                </div>
-                <div class="setting" data-type="toggle">
-                    <div class="heading">
-                        <h5>${tl(trans.clear_history)}</h5>
-                    </div>
-                    <div class="toggle-wrap">
-                        <button class="see-more" onclick=${() => {
+                <div class="setting-group">
+                    ${setting({ id: "activities" })}
+                    <div class="setting" data-type="action">
+                        <div class="heading">
+                            <h5>${tl(trans.clear_history)}</h5>
+                        </div>
+                        <div class="toggle-wrap">
+                            <button class="see-more" onclick=${() => {
         localStorage.removeItem("bwaa_recent_activity");
         notify({
           id: "cleared_history",
@@ -10961,108 +13841,19 @@
           type: "success"
         });
       }}>
-                            ${tl(trans.clear)}
-                        </button>
+                                ${tl(trans.clear)}
+                            </button>
+                        </div>
                     </div>
                 </div>
-                <div class="sep"></div>
-                <div class="setting" data-type="toggle" id="container-activity_shout" onclick="_update_item('activity_shout')">
-                    <div class="icon">
-                        <div class="bleh-icon" style="--icon: var(--icon-16-shoutbox)"></div>
-                    </div>
-                    <div class="heading">
-                        <h5>${tl(trans.shouts)}</h5>
-                        <p>${tl(trans.activity.types.shout)}</p>
-                    </div>
-                    <div class="toggle-wrap">
-                        <button class="toggle" id="toggle-activity_shout" aria-checked="true">
-                            <div class="dot"></div>
-                        </button>
-                    </div>
-                </div>
-                <div class="setting" data-type="toggle" id="container-activity_image" onclick="_update_item('activity_image')">
-                    <div class="icon">
-                        <div class="bleh-icon" style="--icon: var(--icon-16-gallery-vertical)"></div>
-                    </div>
-                    <div class="heading">
-                        <h5>${tl(trans.photos)}</h5>
-                        <p>${tl(trans.activity.types.image)}</p>
-                    </div>
-                    <div class="toggle-wrap">
-                        <button class="toggle" id="toggle-activity_image" aria-checked="true">
-                            <div class="dot"></div>
-                        </button>
-                    </div>
-                </div>
-                <div class="setting" data-type="toggle" id="container-activity_obsess" onclick="_update_item('activity_obsess')">
-                    <div class="icon">
-                        <div class="bleh-icon" style="--icon: var(--icon-16-obsession)"></div>
-                    </div>
-                    <div class="heading">
-                        <h5>${tl(trans.obsessions)}</h5>
-                        <p>${tl(trans.activity.types.obsess)}</p>
-                    </div>
-                    <div class="toggle-wrap">
-                        <button class="toggle" id="toggle-activity_obsess" aria-checked="true">
-                            <div class="dot"></div>
-                        </button>
-                    </div>
-                </div>
-                <div class="setting" data-type="toggle" id="container-activity_love" onclick="_update_item('activity_love')">
-                    <div class="icon">
-                        <div class="bleh-icon" style="--icon: var(--icon-16-heart)"></div>
-                    </div>
-                    <div class="heading">
-                        <h5>${tl(trans.love)}</h5>
-                        <p>${tl(trans.activity.types.love)}</p>
-                    </div>
-                    <div class="toggle-wrap">
-                        <button class="toggle" id="toggle-activity_love" aria-checked="true">
-                            <div class="dot"></div>
-                        </button>
-                    </div>
-                </div>
-                <div class="setting" data-type="toggle" id="container-activity_bookmark" onclick="_update_item('activity_bookmark')">
-                    <div class="icon">
-                        <div class="bleh-icon" style="--icon: var(--icon-16-bookmark)"></div>
-                    </div>
-                    <div class="heading">
-                        <h5>${tl(trans.bookmarks)}</h5>
-                        <p>${tl(trans.activity.types.bookmark)}</p>
-                    </div>
-                    <div class="toggle-wrap">
-                        <button class="toggle" id="toggle-activity_bookmark" aria-checked="true">
-                            <div class="dot"></div>
-                        </button>
-                    </div>
-                </div>
-                <div class="setting" data-type="toggle" id="container-activity_wiki" onclick="_update_item('activity_wiki')">
-                    <div class="icon">
-                        <div class="bleh-icon" style="--icon: var(--icon-16-bio)"></div>
-                    </div>
-                    <div class="heading">
-                        <h5>${tl(trans.wiki)}</h5>
-                        <p>${tl(trans.activity.types.wiki)}</p>
-                    </div>
-                    <div class="toggle-wrap">
-                        <button class="toggle" id="toggle-activity_wiki" aria-checked="true">
-                            <div class="dot"></div>
-                        </button>
-                    </div>
-                </div>
-                <div class="setting" data-type="toggle" id="container-activity_install" onclick="_update_item('activity_install')">
-                    <div class="icon">
-                        <div class="bleh-icon" style="--icon: var(--icon-16-download)"></div>
-                    </div>
-                    <div class="heading">
-                        <h5>${tl(trans.installation)}</h5>
-                        <p>${tl(trans.activity.types.install)}</p>
-                    </div>
-                    <div class="toggle-wrap">
-                        <button class="toggle" id="toggle-activity_install" aria-checked="true">
-                            <div class="dot"></div>
-                        </button>
-                    </div>
+                <div class="setting-group">
+                    ${setting({ id: "activity_shout" })}
+                    ${setting({ id: "activity_image" })}
+                    ${setting({ id: "activity_obsess" })}
+                    ${setting({ id: "activity_love" })}
+                    ${setting({ id: "activity_bookmark" })}
+                    ${setting({ id: "activity_wiki" })}
+                    ${setting({ id: "activity_install" })}
                 </div>
             </div>
             `);
@@ -11071,29 +13862,9 @@
       render(page.structure.main, html`
             <div class="bleh--panel">
                 <h4 class="top-header">${tl(trans.accessibility)}</h4>
-                <div class="setting" data-type="toggle" id="container-reduced_motion" onclick="_update_item('reduced_motion')">
-                    <button class="btn reset" onclick="_reset_item('reduced_motion')">${tl(trans.reset)}</button>
-                    <div class="heading">
-                        <h5>${trans_legacy.en.settings.accessibility.reduced_motion.name}</h5>
-                        <p>${trans_legacy.en.settings.accessibility.reduced_motion.bio}</p>
-                    </div>
-                    <div class="toggle-wrap">
-                        <button class="toggle" id="toggle-reduced_motion" aria-checked="false">
-                            <div class="dot"></div>
-                        </button>
-                    </div>
-                </div>
-                <div class="setting" data-type="toggle" id="container-toggle_icon" onclick="_update_item('toggle_icon')">
-                    <button class="btn reset" onclick="_reset_item('toggle_icon')">${tl(trans.reset)}</button>
-                    <div class="heading">
-                        <h5>${trans_legacy.en.settings.accessibility.toggle_icon.name}</h5>
-                        <p>${trans_legacy.en.settings.accessibility.toggle_icon.bio}</p>
-                    </div>
-                    <div class="toggle-wrap">
-                        <button class="toggle" id="toggle-toggle_icon" aria-checked="false">
-                            <div class="dot"></div>
-                        </button>
-                    </div>
+                <div class="setting-group">
+                    ${setting({ id: "reduced_motion" })}
+                    ${setting({ id: "underline_links" })}
                 </div>
             </div>
             `);
@@ -11123,21 +13894,24 @@
                         </div>
                     </div>
                 </div>
-                ${setting({ id: "shout_markdown" })}
-                <div class="sep"></div>
-                ${setting({ id: "accessible_name_colours" })}
-                ${setting({ id: "underline_links" })}
+                <div class="setting-group">
+                    ${setting({ id: "shout_markdown" })}
+                    ${setting({ id: "accessible_name_colours" })}
+                    ${setting({ id: "underline_links" })}
+                </div>
             </div>
             <div class="bleh--panel">
                 <h4>${tl(trans.language)}</h4>
                 <div class="languages" id="languages"></div>
-                <div class="setting" data-type="toggle">
-                    <div class="heading">
-                        <h5>${tl(trans.submit_language.name)}</h5>
-                        <p>${tl(trans.submit_language.body)}</p>
-                    </div>
-                    <div class="toggle-wrap">
-                        <a class="see-more" href="https://github.com/katelyynn/bleh/wiki" target="_blank">${tl(trans.help_contribute)}</a>
+                <div class="setting-group">
+                    <div class="setting" data-type="action">
+                        <div class="heading">
+                            <h5>${tl(trans.submit_language.name)}</h5>
+                            <p>${tl(trans.submit_language.body)}</p>
+                        </div>
+                        <div class="toggle-wrap">
+                            <a class="see-more" href="https://github.com/katelyynn/bleh/wiki" target="_blank">${tl(trans.help_contribute)}</a>
+                        </div>
                     </div>
                 </div>
             </div>
@@ -11153,10 +13927,56 @@
                 <div class="sep" />
                 <h4>${tl(trans.manage_feature_flags)}</h4>
                 <div class="alert alert-danger">${tl(trans.beware_notice)}</div>
-                <div class="feature-flags" id="feature-flags"></div>
+                <div class="setting-group">
+                    ${Object.entries(version.feature_flags).reverse().map(([flag, details]) => {
+        let value = ff(flag);
+        let checkbox;
+        let state;
+        return html.node`
+                            <div class="setting" data-type="toggle" onclick=${() => {
+          let current = checkbox.checked;
+          checkbox.checked = !current;
+          state.setAttribute("aria-checked", !current);
+          settings.feature_flags[flag] = !current;
+          document.documentElement.setAttribute(`data-ff--${flag}`, (!current).toString());
+          localStorage.setItem("bleh", JSON.stringify(settings));
+        }}>
+                                <div class="heading">
+                                    <h5>${details.name}</h5>
+                                    ${details.notice ? html.node`<p>${{ html: details.notice }}</p>` : ""}
+                                    <div class="info-row">
+                                        <div class="new-badge flag-${details.default}">${details.default}</div><p class="date">${details.date}</p><p>${flag}</p>
+                                    </div>
+                                </div>
+                                <div class="toggle-wrap">
+                                    <input type="checkbox" ref=${(el) => checkbox = el} value=${value} checked=${value} />
+                                    <button class="toggle" aria-checked=${value} ref=${(el) => state = el}>
+                                        <div class="dot" />
+                                    </button>
+                                </div>
+                            </div>
+                        `;
+      })}
+                </div>
             </div>
             `);
     } else if (page_id == "music") {
+      let chartlist_bar = function(value, max) {
+        let count_bar = html.node`
+                <div class="chartlist-count-bar">
+                    <a class="chartlist-count-bar-link">
+                        <span class="chartlist-count-bar-slug" data-max-stat-value="${max}" data-stat-value="${value}" style="width: ${max / max * 100}%" />
+                        <span class="chartlist-count-bar-value">${value.toLocaleString(lang)}</span>
+                    </a>
+                </div>
+            `;
+        let parsed_scrobble_as_rank = parse_scrobbles_as_rank(value);
+        count_bar.setAttribute("data-bleh--scrobble-milestone", parsed_scrobble_as_rank.milestone);
+        count_bar.style.setProperty("--hue-over", parsed_scrobble_as_rank.hue);
+        count_bar.style.setProperty("--sat-over", parsed_scrobble_as_rank.sat);
+        count_bar.style.setProperty("--lit-over", parsed_scrobble_as_rank.lit);
+        return count_bar;
+      };
       register_skip_to([
         {
           id: "corrections",
@@ -11192,31 +14012,10 @@
           name: tl(trans.gendered_tags.name)
         }
       ]);
-      console.info(artist_corrections, album_track_corrections);
-      let preview_bar = "background: linear-gradient(90deg";
-      let preview_bar_text = "";
-      let global_sat = getComputedStyle(document.body).getPropertyValue("--sat");
-      let global_lit = getComputedStyle(document.body).getPropertyValue("--lit");
-      let h3_sat = getComputedStyle(document.body).getPropertyValue("--h3-sat");
-      let h3_lit = getComputedStyle(document.body).getPropertyValue("--h3-lit");
-      let maximum = 16e3;
-      let max_rank = 11;
-      for (let rank = 0; rank <= max_rank; rank++) {
-        let this_rank = ranks[parseInt(rank)];
-        let percent = this_rank.start / maximum * 100;
-        preview_bar = `${preview_bar}, hsl(${this_rank.hue}, ${h3_sat.replace(global_sat, this_rank.sat)}, ${h3_lit.replace(global_lit, this_rank.lit)}) ${percent}%`;
-        if ((this_rank.start > 500 || this_rank.start == 0) && this_rank.start != 1500) {
-          let text2 = `${this_rank.start}`;
-          preview_bar_text = `${preview_bar_text}<div class="preview-bar-text-entry" style="left: ${percent}%">${text2.replaceAll("_", ",")}</div>`;
-        }
-      }
-      preview_bar = `${preview_bar});`;
+      let bars;
       render(page.structure.main, html`
-            <div class="bleh--panel lotus">
-                <h4>${html.node([
-        tl(trans.brand_version_number).replace("{brand}", `<a class="lotus lotus-name" href="https://github.com/katelyynn/lotus" target="_blank">lotus</a>`).replace("{number}", `<span class="version-link lotus">${artist_corrections.version >= album_track_corrections.version ? artist_corrections.version : album_track_corrections.version}</span>`)
-      ])}</h4>
-                <p>${tl(trans.what_is_lotus)}</p>
+            <div class="bleh--panel">
+                <h4>${tl(trans.music_corrections)}</h4>
                 <div class="inner-preview pad">
                     <div class="lotus-preview">
                         <div class="before">
@@ -11229,32 +14028,31 @@
                         </div>
                     </div>
                 </div>
-                <div class="screen-row actions-only">
-                    <div class="actions">
-                        <button class="see-more update-check" onclick="_lotus_check()">${tl(trans.update_check)}</button>
-                        <div class="fill"></div>
-                        <button class="see-more expand" onclick="_open_correction_modal()">${tl(trans.view_all)}</button>
+                <div class="setting-group">
+                    ${setting({ id: "corrections" })}
+                    <div class="setting" data-type="info">
+                        <div class="heading">
+                            <h5>${tl(trans.current_version)}</h5>
+                        </div>
+                        <div class="info">
+                            <button class="see-more update-check" onclick="_lotus_check()">
+                                ${tl(trans.update_check)}
+                            </button>
+                            <p>${artist_corrections.version >= album_track_corrections.version ? artist_corrections.version : album_track_corrections.version}</p>
+                        </div>
                     </div>
-                </div>
-                <div class="setting" data-type="toggle" id="container-corrections" onclick="_update_item('corrections')">
-                    <button class="btn reset" onclick="_reset_item('corrections')">${tl(trans.reset)}</button>
-                    <div class="heading">
-                        <h5>${tl(trans.correct_titles_with_lotus)}</h5>
-                    </div>
-                    <div class="toggle-wrap">
-                        <button class="toggle lotus" id="toggle-corrections" aria-checked="true">
-                            <div class="dot"></div>
-                        </button>
-                    </div>
-                </div>
-                <div class="setting" data-type="toggle">
-                    <div class="heading">
-                        <h5>${tl(trans.help_contribute)}</h5>
-                    </div>
-                    <div class="toggle-wrap">
-                        <a class="see-more" href="https://github.com/katelyynn/lotus/issues/new/choose" target="_blank">
-                            ${tl(trans.suggest_correction)}
-                        </a>
+                    <div class="setting" data-type="action">
+                        <div class="heading">
+                            <h5>${tl(trans.help_contribute)}</h5>
+                        </div>
+                        <div class="toggle-wrap">
+                            <a class="see-more" href="https://github.com/katelyynn/lotus/issues/new/choose" target="_blank">
+                                ${tl(trans.suggest_correction)}
+                            </a>
+                            <button class="see-more" onclick="_open_correction_modal()">
+                                ${tl(trans.view_all)}
+                            </button>
+                        </div>
                     </div>
                 </div>
             </div>
@@ -11285,59 +14083,10 @@
                         </div>
                     </section>
                 </div>
-                <div class="setting" data-type="toggle" id="container-format_guest_features" onclick="_update_item('format_guest_features')">
-                    <button class="btn reset" onclick="_reset_item('format_guest_features')">${tl(trans.reset)}</button>
-                    <div class="heading">
-                        <h5>${tl(trans.format_guest_features.name)}</h5>
-                        <p>${tl(trans.format_guest_features.body)}</p>
-                    </div>
-                    <div class="toggle-wrap">
-                        <button class="toggle" id="toggle-format_guest_features" aria-checked="true">
-                            <div class="dot"></div>
-                        </button>
-                    </div>
-                </div>
-                <div class="setting hide-if-format-guest-disabled" id="container-show_guest_features" onclick="_update_item('show_guest_features')">
-                    <button class="btn reset" onclick="_reset_item('show_guest_features')">${tl(trans.reset)}</button>
-                    <div class="heading">
-                        <h5>${tl(trans.show_guest_features.name)}</h5>
-                        <p>${tl(trans.show_guest_features.body)}</p>
-                    </div>
-                    <div class="toggle-wrap">
-                        <button class="toggle" id="toggle-show_guest_features" aria-checked="true">
-                            <div class="dot"></div>
-                        </button>
-                    </div>
-                </div>
-                <div class="inner-preview pad flex">
-                    <section class="redesigned-header mockup redesigned-album-header no-top-margin">
-                        <div class="avatar-side">
-                            <img src="https://lastfm.freetls.fastly.net/i/u/avatar170s/def68d94aae8e52ef2d1c0c9d3e16ff4.jpg">
-                        </div>
-                        <div class="info-side">
-                            <div class="sub-text">${tl(trans.album)}</div>
-                            <div class="title-container">
-                                <h1>
-                                    <div class="title">my anti-aircraft friend</div>
-                                    <div class="feat" data-bleh--tag-type="(remaster" data-bleh--tag-group="remasters">Remastered</div>
-                                </h1>
-                            </div>
-                            <h2>
-                                <a class="header-new-crumb">julie</a>
-                            </h2>
-                        </div>
-                    </section>
-                </div>
-                <div class="setting hide-if-format-guest-disabled" data-type="toggle" id="container-show_remaster_tags" onclick="_update_item('show_remaster_tags')">
-                    <button class="btn reset" onclick="_reset_item('show_remaster_tags')">${tl(trans.reset)}</button>
-                    <div class="heading">
-                        <h5>${tl(trans.show_remaster_tags)} <div class="new-badge">${tl(trans.beta)}</div></h5>
-                    </div>
-                    <div class="toggle-wrap">
-                        <button class="toggle" id="toggle-show_remaster_tags" aria-checked="true">
-                            <div class="dot"></div>
-                        </button>
-                    </div>
+                <div class="setting-group">
+                    ${setting({ id: "format_guest_features" })}
+                    ${setting({ id: "show_guest_features" })}
+                    ${setting({ id: "show_remaster_tags" })}
                 </div>
             </div>
             <div class="bleh--panel">
@@ -11388,113 +14137,39 @@
                         </div>
                     </div>
                 </div>
-                <div class="setting" data-type="toggle" id="container-stacked_chartlist_info" onclick="_update_item('stacked_chartlist_info')">
-                    <button class="btn reset" onclick="_reset_item('stacked_chartlist_info')">${tl(trans.reset)}</button>
-                    <div class="heading">
-                        <h5>${tl(trans.track_column_view)}</h5>
-                    </div>
-                    <div class="toggle-wrap">
-                        <button class="toggle" id="toggle-stacked_chartlist_info" aria-checked="true">
-                            <div class="dot"></div>
-                        </button>
-                    </div>
-                </div>
-                ${setting({ id: "show_bulk_edit_album" })}
-                <div class="setting" data-type="toggle" id="container-glacier_library_graphs" onclick="_update_item('glacier_library_graphs')">
-                    <button class="btn reset" onclick="_reset_item('glacier_library_graphs')">${tl(trans.reset)}</button>
-                    <div class="heading">
-                        <h5>${tl(trans.glacier_graphs.name)}</h5>
-                        <p>${tl(trans.glacier_graphs.body)}</p>
-                    </div>
-                    <div class="toggle-wrap">
-                        <button class="toggle" id="toggle-glacier_library_graphs" aria-checked="true" type="button">
-                            <div class="dot"></div>
-                        </button>
-                    </div>
+                <div class="setting-group">
+                    ${setting({ id: "stacked_chartlist_info" })}
+                    ${setting({ id: "show_bulk_edit_album" })}
+                    ${setting({ id: "glacier_library_graphs" })}
                 </div>
                 <div class="inner-preview pad">
-                    <div class="personal-stats-preview-bar-container">
-                        <div class="personal-stats-preview-bar" style="${preview_bar}"></div>
-                        <div class="personal-stats-preview-text">${{ html: preview_bar_text }}</div>
-                    </div>
-                    <div class="sep"></div>
-                    <div class="tracks">
-                        <div class="track">
-                            <div class="cover"></div>
-                            <div class="title"></div>
-                            <div class="bar">
-                                <div class="fill not-colourful-example" style="width: 100%"></div>
-                                <div class="fill colourful colourful-example" style="width: 100%; --hue: -16.888749999999998; --sat: 1.5; --lit: 0.875"></div>
-                            </div>
-                        </div>
-                        <div class="track">
-                            <div class="cover"></div>
-                            <div class="title"></div>
-                            <div class="bar">
-                                <div class="fill not-colourful-example" style="width: 85%"></div>
-                                <div class="fill colourful colourful-example" style="width: 85%; --hue: 0.21863999999999972; --sat: 1.399218; --lit: 0.891406"></div>
-                            </div>
-                        </div>
-                        <div class="track">
-                            <div class="cover"></div>
-                            <div class="title"></div>
-                            <div class="bar">
-                                <div class="fill not-colourful-example" style="width: 60%"></div>
-                                <div class="fill colourful colourful-example" style="width: 60%; --hue: 18.77; --sat: 1.425; --lit: 0.9175833333333334"></div>
-                            </div>
-                        </div>
-                        <div class="track">
-                            <div class="cover"></div>
-                            <div class="title"></div>
-                            <div class="bar">
-                                <div class="fill not-colourful-example" style="width: 30%"></div>
-                                <div class="fill colourful colourful-example" style="width: 30%; --hue: 50.769767441860466; --sat: 1.361813953488372; --lit: 0.943406976744186"></div>
-                            </div>
-                        </div>
-                        <div class="track">
-                            <div class="cover"></div>
-                            <div class="title"></div>
-                            <div class="bar">
-                                <div class="fill not-colourful-example" style="width: 5%"></div>
-                                <div class="fill colourful colourful-example" style="width: 5%; --hue: 92.42; --sat: 1.35; --lit: 0.925"></div>
-                            </div>
-                        </div>
+                    <div class="bars" ref=${(el) => bars = el}>
+                        ${() => {
+        let max = 3e4;
+        for (let value = 1e3; value <= max; value += 1e3) {
+          bars.appendChild(chartlist_bar(value, max));
+        }
+      }}
                     </div>
                 </div>
-                <div class="setting" data-type="toggle" id="container-colourful_counts" onclick="_update_item('colourful_counts')">
-                    <div class="heading">
-                        <h5>${tl(trans.colourful_counts.name)}</h5>
-                        <p>${tl(trans.colourful_counts.body)}</p>
-                    </div>
-                    <div class="toggle-wrap">
-                        <button class="toggle" id="toggle-colourful_counts" aria-checked="true">
-                            <div class="dot"></div>
-                        </button>
-                    </div>
+                <div class="setting-group">
+                    ${setting({ id: "colourful_counts" })}
                 </div>
             </div>
             <div class="bleh--panel">
                 <h4>${tl(trans.redirections)}</h4>
-                <div class="setting" data-type="toggle" id="container-travis" onclick="_update_item('travis')">
-                    <div class="heading">
-                        <h5>${tl(trans.redirect_messages.name)}</h5>
-                        <p>${tl(trans.redirect_messages.body)}</p>
-                    </div>
-                    <div class="toggle-wrap">
-                        <button class="toggle" id="toggle-travis" aria-checked="true">
-                            <div class="dot"></div>
-                        </button>
-                    </div>
-                </div>
-                <div class="setting" data-type="toggle">
-                    <div class="heading">
-                        <h5>${tl(trans.legacy_redirects.name)}</h5>
-                        <p>${tl(trans.legacy_redirects.body)}</p>
-                    </div>
-                    <div class="toggle-wrap">
-                        <a class="see-more" href="${root}settings/website" target="_blank">
-                            ${tl(trans.change_now)}
-                        </a>
+                <div class="setting-group">
+                    ${setting({ id: "travis" })}
+                    <div class="setting" data-type="toggle">
+                        <div class="heading">
+                            <h5>${tl(trans.legacy_redirects.name)}</h5>
+                            <p>${tl(trans.legacy_redirects.body)}</p>
+                        </div>
+                        <div class="toggle-wrap">
+                            <a class="see-more" href="${root}settings/website" target="_blank">
+                                ${tl(trans.change_now)}
+                            </a>
+                        </div>
                     </div>
                 </div>
             </div>
@@ -11510,29 +14185,9 @@
                         <div class="album-cover swatch" style="background-image: url('https://lastfm.freetls.fastly.net/i/u/770x0/dd76702cea38c838a3090dd9496d92d9.jpg')"></div>
                     </div>
                 </div>
-                <div class="setting" data-type="range" id="container-gloss">
-                    <button class="btn reset" onclick="_reset_item('gloss')">${tl(trans.reset)}</button>
-                    <div class="heading">
-                        <h5>${tl(trans.gloss.name)}</h5>
-                        <p>${tl(trans.gloss.body)}</p>
-                    </div>
-                    <div class="range">
-                        <div class="track" id="slider-track-gloss"><div class="fill"></div><div class="nub"></div></div>
-                        <input type="range" min="0" max="1" value="0" step="0.05" id="slider-gloss" oninput="_update_item('gloss', this.value)">
-                        <p id="value-gloss">0</p>
-                    </div>
-                </div>
-                <div class="setting" data-type="toggle" id="container-grid_glow" onclick="_update_item('grid_glow')">
-                    <button class="btn reset" onclick="_reset_item('grid_glow')">${tl(trans.reset)}</button>
-                    <div class="heading">
-                        <h5>${tl(trans.grid_glow.name)}</h5>
-                        <p>${tl(trans.grid_glow.body)}</p>
-                    </div>
-                    <div class="toggle-wrap">
-                        <button class="toggle" id="toggle-grid_glow" aria-checked="true" type="button">
-                            <div class="dot"></div>
-                        </button>
-                    </div>
+                <div class="setting-group">
+                    ${setting({ id: "gloss" })}
+                    ${setting({ id: "grid_glow" })}
                 </div>
             </div>
             <div class="bleh--panel">
@@ -11558,20 +14213,90 @@
                         </ul>
                     </section>
                 </div>
-                <div class="setting" data-type="toggle" id="container-gendered_tags" onclick="_update_item('gendered_tags')">
-                    <button class="btn reset" onclick="_reset_item('gendered_tags')">${tl(trans.reset)}</button>
-                    <div class="heading">
-                        <h5>${tl(trans.gendered_tags.name)}</h5>
-                        <p>${tl(trans.gendered_tags.body)}</p>
-                    </div>
-                    <div class="toggle-wrap">
-                        <button class="toggle" id="toggle-gendered_tags" aria-checked="true">
-                            <div class="dot"></div>
-                        </button>
-                    </div>
+                <div class="setting-group">
+                    ${setting({ id: "gendered_tags" })}
                 </div>
             </div>
             `);
+    } else if (page_id == "update") {
+      register_skip_to([]);
+      let update_btn;
+      let pause_btn;
+      const update_required = localStorage.getItem("bleh_update_required") || "false";
+      const last_checked = localStorage.getItem("bleh_update_checked") || null;
+      const version_to_install = localStorage.getItem("bleh_update_to") || null;
+      let paused = localStorage.getItem("bleh_update_paused") || "false";
+      let paused_until = localStorage.getItem("bleh_update_paused_until") || null;
+      render(page.structure.main, html`
+            <section class="bleh--panel">
+                <div class="update-center-header">
+                    ${paused === "true" ? html.node`
+                    <div class="update-center-icon">
+                        <div class="update-container">
+                            <div class="bleh-icon" data-type="update" />
+                        </div>
+                        <div class="check-circle paused colourful">
+                            <div class="bleh-icon" data-type="paused" />
+                        </div>
+                    </div>
+                    <div class="update-center-details">
+                        <h2>${tl(trans.updates_paused)}</h2>
+                        <p class="last-checked">${tl(trans.paused_until_date).replace("{d}", moment(paused_until).fromNow())}</p>
+                    </div>
+                    <button class="btn primary icon" data-type="update" ref=${(el) => update_btn = el} disabled>${tl(trans.check)}</button>
+                    ` : update_required === "false" ? html.node`
+                    <div class="update-center-icon">
+                        <div class="update-container">
+                            <div class="bleh-icon" data-type="update" />
+                        </div>
+                        ${last_checked ? html.node`
+                        <div class="check-circle colourful">
+                            <div class="bleh-icon" data-type="check-thick" />
+                        </div>
+                        ` : ""}
+                    </div>
+                    <div class="update-center-details">
+                        ${last_checked ? html.node`
+                        <h2>${tl(trans.you_are_up_to_date)}</h2>
+                        <p class="last-checked">${tl(trans.last_checked_date).replace("{d}", moment(last_checked).fromNow())}</p>
+                        ` : html.node`
+                        <h2>${tl(trans.missing_updates)}</h2>
+                        <p class="last-checked">${tl(trans.never_checked)}</p>
+                        `}
+                    </div>
+                    <button class="btn primary icon" data-type="update" ref=${(el) => update_btn = el} onclick=${() => update_check(true, update_btn, () => {
+        notify({
+          id: "update",
+          title: tl(trans.updates),
+          body: tl(trans.checked_for_updates),
+          icon: "icon-16-update"
+        });
+        render_setting_page("update");
+      })}>${tl(trans.check)}</button>
+                    ` : html.node`
+                    <div class="update-center-icon">
+                        <div class="update-container">
+                            <div class="bleh-icon" data-type="update" />
+                        </div>
+                    </div>
+                    <div class="update-center-details">
+                        <h2>${tl(trans.update_available_to_install)}</h2>
+                        ${last_checked ? html.node`
+                        <p class="last-checked">${tl(trans.last_checked_date).replace("{d}", moment(last_checked).fromNow())}</p>
+                        ` : html.node`
+                        <p class="last-checked">${tl(trans.never_checked)}</p>
+                        `}
+                    </div>
+                    <button class="btn primary icon" data-type="update" ref=${(el) => update_btn = el} onclick=${() => start_update()}>${tl(trans.install_now)}</button>
+                    `}
+                </div>
+                ${last_checked && paused === "false" && update_required === "true" ? html.node`
+                <div class="alert alert-info">${tl(trans.you_are_installing_version).replace("{v}", version_to_install)}</div>
+                ` : html.node`
+                <div class="alert alert-info">${tl(trans.you_are_running_version).replace("{v}", version.build)}</div>
+                `}
+            </section>
+        `);
     }
   }
   function register_skip_to(list = null) {
@@ -11653,11 +14378,8 @@
       refresh_all();
     } else if (page_id == "profiles") {
       init_profile_notes();
-      init_profile_page();
       activity_preview();
       refresh_all();
-    } else if (page_id == "sku") {
-      bleh_sku_page();
     }
     if (page_id == "text")
       prepare_language_page();
@@ -11722,52 +14444,16 @@
       document.documentElement.setAttribute(`data-ff--${flag}`, current_state);
     }
   }
-  function bleh_sku_page() {
-    let flags_container = document.getElementById("feature-flags");
-    for (let flag in version.feature_flags) {
-      let current_state = version.feature_flags[flag].default;
-      if (settings.feature_flags[flag] != void 0)
-        current_state = settings.feature_flags[flag];
-      let feature_flag_element = document.createElement("div");
-      feature_flag_element.classList.add("setting");
-      feature_flag_element.setAttribute("data-type", "toggle");
-      feature_flag_element.setAttribute("onclick", `_update_flag_toggle('${flag}', this)`);
-      render(feature_flag_element, html`
-            <div class="heading">
-                <h5>${version.feature_flags[flag].name}</h5>
-                ${version.feature_flags[flag].notice ? html.node`<p>${{ html: version.feature_flags[flag].notice }}</p>` : ""}
-                <div class="info-row">
-                    <div class="new-badge flag-${version.feature_flags[flag].default}">${version.feature_flags[flag].default}</div><p class="date">${version.feature_flags[flag].date}</p><p>${flag}</p>
-                </div>
-            </div>
-            <div class="toggle-wrap">
-                <button id="feature-flag-toggle-${flag}" class="toggle" aria-checked="${current_state}">
-                    <div class="dot"></div>
-                </button>
-            </div>
-        `);
-      flags_container.appendChild(feature_flag_element);
-      document.documentElement.setAttribute(`data-ff--${flag}`, current_state);
-    }
-  }
   unsafeWindow._update_flag_toggle = function(flag, container) {
     update_flag_toggle(flag, container);
   };
   function update_flag_toggle(flag, container) {
     let button = container.querySelector(".toggle");
-    if (!button)
-      return;
-    let current_state = version.feature_flags[flag].default;
-    if (settings.feature_flags[flag] != void 0) current_state = settings.feature_flags[flag];
-    if (current_state == true) {
-      button.setAttribute("aria-checked", "false");
-      settings.feature_flags[flag] = false;
-      document.documentElement.setAttribute(`data-ff--${flag}`, false);
-    } else {
-      button.setAttribute("aria-checked", "true");
-      settings.feature_flags[flag] = true;
-      document.documentElement.setAttribute(`data-ff--${flag}`, true);
-    }
+    if (!button) return;
+    let current_state = ff(flag);
+    button.setAttribute("aria-checked", !current_state);
+    settings.feature_flags[flag] = !current_state;
+    document.documentElement.setAttribute(`data-ff--${flag}`, `${!current_state}`);
     localStorage.setItem("bleh", JSON.stringify(settings));
   }
   function display_colour_presets() {
@@ -12151,28 +14837,9 @@
           swatch.classList.add("view-item", "colour-btn");
         if (type == "custom")
           swatch.textContent = tl(trans[colour.type]);
-        if (colour.type == "default" && stored_season.id != "none") {
-          swatch.textContent = tl(trans.seasonal.name);
-          if (exclusives.hasOwnProperty(stored_season.id)) {
-            swatch.setAttribute("onclick", "");
-            swatch.classList.add("select-button");
-            tippy(swatch, {
-              theme: "menu",
-              content: "",
-              allowHTML: true,
-              placement: "bottom",
-              interactive: true,
-              interactiveBorder: 10,
-              trigger: "click",
-              onShow(instance) {
-                let content = instance.popper.querySelector(".tippy-content");
-                display_seasonal_exclusives(content, colours, exclusives);
-              }
-            });
-          }
-        }
         if (colour.type == "customise") {
           swatch.classList.add("select-button");
+          let colour2;
           tippy(swatch, {
             theme: "window",
             content: html.node`
@@ -12180,62 +14847,77 @@
                             <div class="alert alert-info seasonal-hsl-alert">
                                 ${tl(trans.seasonal_warning)}
                             </div>
-                            ${ff("colour_based_on_hex") ? html.node`
-                            <div class="setting" data-type="text">
-                                <div class="heading">
-                                    <h5>${tl(trans.convert_from_hex)}</h5>
-                                </div>
-                                <div class="input-container content-form">
-                                    <input type="color" maxlength="7" id="text-hex" placeholder="#ffffff">
-                                    <button class="btn primary icon convert" onclick="_convert_hex()">${tl(trans.convert)}</button>
-                                </div>
-                            </div>
-                            ` : ""}
-                            <div class="setting dim-using-hue-gradient dim-during-seasonal" data-type="range" id="container-hue">
-                                <button class="btn reset" onclick="_reset_item('hue')">${tl(trans.reset)}</button>
-                                <div class="heading">
-                                    <h5>${tl(trans.hue)}</h5>
-                                </div>
-                                <div class="range">
-                                    <div class="track" id="slider-track-hue" data-id="hue"><div class="fill"></div><div class="nub"></div></div>
-                                    <input type="range" min="0" max="360" value="${settings.hue}" id="slider-hue" oninput="_update_item('hue', this.value)">
-                                    <p id="value-hue">${settings.hue}${settings_base.hue.unit}</p>
-                                    <div class="hint">
-                                        <p style="left: 0">0</p>
-                                        <p style="left: calc((255 / 360) * 100%)">255</p>
-                                        <p style="left: 100%">360</p>
+                            <div class="setting-group blend">
+                                ${ff("colour_based_on_hex") ? html.node`
+                                <div class="setting" data-type="text">
+                                    <div class="heading">
+                                        <h5>${tl(trans.convert_from_hex)}</h5>
+                                    </div>
+                                    <div class="input-container content-form">
+                                        ${colour2 = input({
+              type: "colour",
+              value: "#999999",
+              maxlength: 7,
+              warn_if_empty: true
+            })}
+                                        <button class="btn primary icon convert" onclick=${() => {
+              let value = colour2.querySelector("input").value;
+              let hsl = hex_to_hsl(value);
+              update_params({
+                hue: hsl.h,
+                sat: clamp_sat(hsl.s / 100 * 3),
+                lit: hsl.l / 100 + 0.35
+              });
+            }}>${tl(trans.convert)}</button>
                                     </div>
                                 </div>
-                            </div>
-                            <div class="setting dim-using-hue-gradient dim-during-seasonal" data-type="range" id="container-sat">
-                                <button class="btn reset" onclick="_reset_item('sat')">${tl(trans.reset)}</button>
-                                <div class="heading">
-                                    <h5>${tl(trans.sat)}</h5>
-                                </div>
-                                <div class="range">
-                                    <div class="track" id="slider-track-sat"><div class="fill"></div><div class="nub"></div></div>
-                                    <input type="range" min="0" max="1.5" value="${settings.sat}" step="0.025" id="slider-sat" oninput="_update_item('sat', this.value)">
-                                    <p id="value-sat">${settings.sat}${settings_base.sat.unit}</p>
-                                    <div class="hint">
-                                        <p style="left: 0">0</p>
-                                        <p style="left: calc((1 / 1.5) * 100%)">1</p>
-                                        <p style="left: 100%">1.5</p>
+                                ` : ""}
+                                <div class="setting dim-using-hue-gradient dim-during-seasonal" data-type="range" id="container-hue">
+                                    <button class="btn reset" onclick="_reset_item('hue')">${tl(trans.reset)}</button>
+                                    <div class="heading">
+                                        <h5>${tl(trans.hue)}</h5>
+                                    </div>
+                                    <div class="range">
+                                        <div class="track" id="slider-track-hue" data-id="hue"><div class="fill"></div><div class="nub"></div></div>
+                                        <input type="range" min="0" max="360" value="${settings.hue}" id="slider-hue" oninput="_update_item('hue', this.value)">
+                                        <p id="value-hue">${settings.hue}${settings_base.hue.unit}</p>
+                                        <div class="hint">
+                                            <p style="left: 0">0</p>
+                                            <p style="left: calc((255 / 360) * 100%)">255</p>
+                                            <p style="left: 100%">360</p>
+                                        </div>
                                     </div>
                                 </div>
-                            </div>
-                            <div class="setting dim-using-hue-gradient dim-during-seasonal" data-type="range" id="container-lit">
-                                <button class="btn reset" onclick="_reset_item('lit')">${tl(trans.reset)}</button>
-                                <div class="heading">
-                                    <h5>${tl(trans.lit)}</h5>
+                                <div class="setting dim-using-hue-gradient dim-during-seasonal" data-type="range" id="container-sat">
+                                    <button class="btn reset" onclick="_reset_item('sat')">${tl(trans.reset)}</button>
+                                    <div class="heading">
+                                        <h5>${tl(trans.sat)}</h5>
+                                    </div>
+                                    <div class="range">
+                                        <div class="track" id="slider-track-sat"><div class="fill"></div><div class="nub"></div></div>
+                                        <input type="range" min="0" max="1.5" value="${settings.sat}" step="0.025" id="slider-sat" oninput="_update_item('sat', this.value)">
+                                        <p id="value-sat">${settings.sat}${settings_base.sat.unit}</p>
+                                        <div class="hint">
+                                            <p style="left: 0">0</p>
+                                            <p style="left: calc((1 / 1.5) * 100%)">1</p>
+                                            <p style="left: 100%">1.5</p>
+                                        </div>
+                                    </div>
                                 </div>
-                                <div class="range">
-                                    <div class="track" id="slider-track-lit"><div class="fill"></div><div class="nub"></div></div>
-                                    <input type="range" min="0" max="1.5" value="${settings.lit}" step="0.025" id="slider-lit" oninput="_update_item('lit', this.value)">
-                                    <p id="value-lit">${settings.lit}${settings_base.lit.unit}</p>
-                                    <div class="hint">
-                                        <p style="left: 0">0</p>
-                                        <p style="left: calc((1 / 1.5) * 100%)">1</p>
-                                        <p style="left: 100%">1.5</p>
+                                <div class="setting dim-using-hue-gradient dim-during-seasonal" data-type="range" id="container-lit">
+                                    <button class="btn reset" onclick="_reset_item('lit')">${tl(trans.reset)}</button>
+                                    <div class="heading">
+                                        <h5>${tl(trans.lit)}</h5>
+                                    </div>
+                                    <div class="range">
+                                        <div class="track" id="slider-track-lit"><div class="fill"></div><div class="nub"></div></div>
+                                        <input type="range" min="0" max="1.5" value="${settings.lit}" step="0.025" id="slider-lit" oninput="_update_item('lit', this.value)">
+                                        <p id="value-lit">${settings.lit}${settings_base.lit.unit}</p>
+                                        <div class="hint">
+                                            <p style="left: 0">0</p>
+                                            <p style="left: calc((1 / 1.5) * 100%)">1</p>
+                                            <p style="left: 100%">1.5</p>
+                                        </div>
                                     </div>
                                 </div>
                             </div>
@@ -12266,32 +14948,52 @@
             delay: [250, 0]
           });
         }
+        if (colour.type == "default" && stored_season.id != "none") {
+          swatch.textContent = tl(trans.seasonal.name);
+          if (exclusives.hasOwnProperty(stored_season.id)) {
+            swatch.setAttribute("onclick", "");
+            swatch.classList.add("select-button");
+            exclusives[stored_season.id] = [
+              {
+                type: "default",
+                name: tl(trans.default),
+                sets: {
+                  hue: 255,
+                  sat: 1,
+                  lit: 1
+                },
+                displays: {
+                  hue: "var(--hue-seasonal, 255)",
+                  sat: "var(--sat-seasonal, 1)",
+                  lit: "var(--lit-seasonal, 1)"
+                }
+              },
+              ...exclusives[stored_season.id]
+            ];
+            tippy(swatch, {
+              theme: "menu",
+              content: "",
+              allowHTML: true,
+              placement: "bottom",
+              interactive: true,
+              interactiveBorder: 10,
+              trigger: "click",
+              onShow(instance) {
+                let content = instance.popper.querySelector(".tippy-content");
+                display_seasonal_exclusives(content, colours, exclusives);
+              }
+            });
+          }
+        }
         swatch_group.appendChild(swatch);
       });
     }
   }
   function display_seasonal_exclusives(instance, colours, exclusives) {
     instance.innerHTML = "";
-    exclusives[stored_season.id] = [
-      {
-        type: "default",
-        name: tl(trans.default),
-        sets: {
-          hue: 255,
-          sat: 1,
-          lit: 1
-        },
-        displays: {
-          hue: "var(--hue-seasonal, 255)",
-          sat: "var(--sat-seasonal, 1)",
-          lit: "var(--lit-seasonal, 1)"
-        }
-      },
-      ...exclusives[stored_season.id]
-    ];
     exclusives[stored_season.id].forEach((colour) => {
       colour.sets = { accent_type: colour.type, ...colour.sets };
-      colour.displays = colour.sets;
+      if (!colour.displays) colour.displays = colour.sets;
       let item = document.createElement("button");
       item.classList.add("dropdown-menu-clickable-item", "swatch");
       item.setAttribute("data-swatch-type", colour.type);
@@ -12304,64 +15006,6 @@
         item.setAttribute("aria-checked", "true");
       instance.appendChild(item);
     });
-  }
-  function init_profile_page() {
-    let profile_name_obj = document.body.querySelector(".title-container .badges");
-    if (ff("badges")) {
-      let stock_badges = profile_name_obj.querySelectorAll(".label");
-      stock_badges.forEach((badge) => {
-        if (badge.classList[1] == "user-status-None")
-          return;
-        badge.classList.add("no-hover");
-        tippy(badge, {
-          theme: "badge",
-          placement: "bottom",
-          content: html.node`
-                    <div class="badge-name">${badge.textContent}</div>
-                    <div class="badge-reason">${tl(trans.badges[badge.classList[1]].reason)}</div>
-                `
-        });
-      });
-    }
-    let badges = load_badges(auth.name);
-    if (badges) {
-      badges.forEach((this_badge) => {
-        let badge = document.createElement("span");
-        badge.classList.add("label", `user-status--bleh-${this_badge.type}`, `user-status--bleh-user-${page.name}`);
-        badge.textContent = this_badge.name;
-        profile_name_obj.appendChild(badge);
-        if (ff("badges")) {
-          badge.classList.add("no-hover");
-          tippy(badge, {
-            theme: "badge",
-            placement: "bottom",
-            content: html.node`
-                        <div class="badge-name">${this_badge.name}</div>
-                        <div class="badge-reason">${this_badge.reason}</div>
-                    `
-          });
-        }
-        if (this_badge.type == "sponsor")
-          badge.setAttribute("onclick", "_sponsor()");
-      });
-    } else {
-      let badge = document.createElement("span");
-      badge.classList.add("label", "user-status--bleh-missing");
-      badge.textContent = tl(trans.badges.missing.name);
-      profile_name_obj.appendChild(badge);
-      if (ff("badges")) {
-        badge.classList.add("no-hover");
-        tippy(badge, {
-          theme: "badge",
-          placement: "bottom",
-          content: html.node`
-                    <div class="badge-name">${tl(trans.badges.missing.name)}</div>
-                    <div class="badge-reason">${tl(trans.badges.missing.reason)}</div>
-                `,
-          allowHTML: true
-        });
-      }
-    }
   }
   function init_profile_notes() {
     let profile_notes = JSON.parse(localStorage.getItem("bleh_profile_notes")) || {};
@@ -12377,7 +15021,7 @@
                     <a class="mention" href="${root}user/${user}">@${user}</a>
                 </div>
                 <div class="text preview">
-                    <p id="profile-note-row-preview--${user}">${profile_notes[user]}</p>
+                    <p id="profile-note-row-preview--${user}">${{ html: profile_notes[user] }}</p>
                 </div>
                 <div class="actions">
                     <button class="icon chibi edit" onclick=${() => edit_profile_note(user)}>
@@ -12545,19 +15189,7 @@
     }
   };
   function export_settings() {
-    dialog({
-      id: "export_settings",
-      title: tl(trans.export_settings),
-      body: html.node`
-            <textarea class="modal-text">${JSON.stringify(settings)}</textarea>
-            <div class="modal-footer">
-                <div class="fill"></div>
-                <button class="btn primary done" onclick="_dialog_rm({id: 'export_settings'})">
-                    ${tl(trans.done)}
-                </button>
-            </div>
-        `
-    });
+    share(JSON.stringify(settings));
   }
   unsafeWindow._export_settings = function() {
     export_settings();
@@ -12847,10 +15479,10 @@
     activity_item.classList.add("activity-item", `activity--${activity.type}`);
     let involved_text = "";
     activity.involved.forEach((involved) => {
-      let name = involved.name;
+      let name2 = involved.name;
       let sister = involved.sister;
       if (involved.type == "track" && settings.format_guest_features) {
-        let formatted_title = name_includes(name, sister);
+        let formatted_title = name_includes(name2, sister);
         let song_title;
         let song_tags = {};
         if (formatted_title) {
@@ -12858,22 +15490,22 @@
           song_tags = formatted_title[1];
           sister = formatted_title[2];
         }
-        name = html.node`
+        name2 = html.node`
                 <div class="title">${song_title.trim()}</div>
                 ${song_tags.map((tag) => html.node`
                     <div class="feat" data-bleh--tag-type="${tag.type}" data-bleh--tag-group="${tag.group}">${tag.text}</div>
                 `)}
             `;
       } else if ((involved.type == "album" || involved.type == "track") && settings.corrections) {
-        name = html.node`${correct_item_by_artist(name, sister)}`;
+        name2 = html.node`${correct_item_by_artist(name2, sister)}`;
         sister = correct_artist(sister);
       } else if (involved.type == "artist" && settings.corrections) {
         sister = correct_artist(sister);
       }
       if (involved_text != "")
-        involved_text = html.node`${involved_text}, <a class="involved--${involved.type}">${name}</a>`;
+        involved_text = html.node`${involved_text}, <a class="involved--${involved.type}">${name2}</a>`;
       else
-        involved_text = html.node`${involved_text}<a class="involved--${involved.type}">${name}</a>`;
+        involved_text = html.node`${involved_text}<a class="involved--${involved.type}">${name2}</a>`;
     });
     render(activity_item, html`
         <div class="type">
@@ -12888,8 +15520,104 @@
     if (parent.childElementCount > 3)
       parent.removeChild(parent.lastElementChild);
   }
+  function theme_bubbles() {
+    let bubbles = html.node`
+        <div class="theme-bubbles" />
+    `;
+    render_theme_bubbles();
+    return bubbles;
+    function update_theme_bubble(theme) {
+      save_setting("theme", theme);
+      render_theme_bubbles();
+    }
+    function render_theme_bubbles() {
+      let themes = [
+        {
+          id: "auto",
+          name: tl(trans.auto),
+          hide: !ff("auto_theme"),
+          new_release: true
+        },
+        {
+          id: "glass",
+          type: "light",
+          name: tl(trans.glass),
+          hide: !ff("glass"),
+          new_release: true
+        },
+        {
+          id: "light",
+          type: "light",
+          name: tl(trans.themes.light)
+        },
+        {
+          id: "ink",
+          type: "light",
+          name: tl(trans.themes.ink)
+        },
+        {
+          id: "dark",
+          formal: "ash",
+          type: "dark",
+          name: tl(trans.themes.dark)
+        },
+        {
+          id: "darker",
+          formal: "dark",
+          type: "darker",
+          name: tl(trans.themes.darker)
+        },
+        {
+          id: "oled",
+          formal: "void",
+          type: "oled",
+          name: tl(trans.themes.oled)
+        }
+      ];
+      render(bubbles, html``);
+      render(bubbles, html`
+            ${themes.map((theme) => {
+        if (theme.hide) return html.node``;
+        if (!theme.formal) theme.formal = theme.id;
+        let bubble = html.node`
+                    <button class="theme-bubble" aria-selected=${settings.theme == theme.id} onclick=${() => update_theme_bubble(theme.id)}>
+                        <div class="bubble">
+                            <div class="inner theme-preview" data-bleh--theme=${theme.id} data-bleh--theme_type=${theme.type}>
+                                <div class="bleh-icon" data-type="theme_${theme.formal}" />
+                            </div>
+                        </div>
+                        <strong>
+                            ${theme.name}
+                            ${theme.new_release ? html.node`<div class="new-badge">${tl(trans.new)}</div>` : ""}
+                        </strong>
+                    </button>
+                `;
+        tippy(bubble, {
+          theme: "theme-preview",
+          content: html.node`
+                        <div class="theme-preview" data-bleh--theme=${theme.id} data-bleh--theme_type=${theme.type}>
+                            ${theme_preview()}
+                        </div>
+                    `,
+          delay: [500, 0]
+        });
+        return bubble;
+      })}
+        `);
+    }
+  }
 
   // src/components/lotus.js
+  var flat_patterns = [];
+  Object.entries(includes).forEach(([group, pats]) => {
+    pats.forEach((pat) => {
+      flat_patterns.push({
+        group,
+        pat: pat.toLowerCase()
+      });
+    });
+  });
+  flat_patterns.sort((a, b) => b.pat.length - a.pat.length);
   function lotus(force = false) {
     if (!settings.corrections)
       return;
@@ -13066,71 +15794,67 @@
     }
   }
   function name_includes(original_title, original_artist) {
-    console.log(original_title, original_artist);
-    let formatted_title = original_title;
     let original_title_corrected = false;
-    if (album_track_corrections.hasOwnProperty(original_artist.toLowerCase()) && settings.corrections) {
-      if (album_track_corrections[original_artist.toLowerCase()].hasOwnProperty(formatted_title)) {
-        formatted_title = album_track_corrections[original_artist.toLowerCase()][formatted_title];
+    let formatted_title = original_title;
+    const artist_key = original_artist.toLowerCase();
+    if (album_track_corrections.hasOwnProperty(artist_key) && settings.corrections) {
+      const corr_map = album_track_corrections[artist_key];
+      if (corr_map.hasOwnProperty(formatted_title)) {
+        formatted_title = corr_map[formatted_title];
         log(`corrected ${original_title} by ${original_artist} as ${formatted_title}`, "lotus");
         original_title_corrected = true;
       }
     }
-    formatted_title = formatted_title.replaceAll(" & feat. ", ";").replaceAll(" & with ", ";");
-    let lowercase_title = formatted_title.toLowerCase();
-    console.log("lowercase", lowercase_title);
-    let extras = [];
-    console.log(formatted_title, lowercase_title);
-    for (let group in includes) {
-      for (let possible_match in includes[group]) {
-        if (lowercase_title.includes(includes[group][possible_match])) {
-          let chr = lowercase_title.indexOf(`${includes[group][possible_match]}`);
-          if (chr < 1)
-            continue;
-          console.log(group, group == "remasters", lowercase_title.includes(" remaster"));
-          if (group == "remasters" && !lowercase_title.includes(" remaster") && !lowercase_title.includes("(remaster")) {
-            continue;
-          } else {
-            extras.push({
-              type: includes[group][possible_match],
-              group,
-              chr
-            });
-          }
-        }
+    const lower_title = formatted_title.toLowerCase();
+    const matches = flat_patterns.map(({ group, pat }) => ({
+      group,
+      pat,
+      idx: lower_title.indexOf(pat)
+    })).filter((m) => {
+      if (m.idx < 1) return false;
+      if (m.group === "remasters" && !lower_title.includes(" remaster") && !lower_title.includes("(remaster")) {
+        return false;
       }
+      return true;
+    }).sort((a, b) => a.idx - b.idx);
+    if (artist_corrections.hasOwnProperty(original_artist) && settings.corrections) {
+      original_artist = correct_artist(
+        artist_corrections[original_artist]
+      );
     }
-    extras.sort((a, b) => a.chr - b.chr);
-    for (let extra in extras) {
-      formatted_title = formatted_title.slice(0, extras[extra].chr - 1);
-      break;
+    if (matches.length === 0) {
+      return [
+        formatted_title,
+        [],
+        original_artist,
+        [],
+        original_title_corrected
+      ];
     }
+    const cleaned_title = formatted_title.slice(0, matches[0].idx).trim().replace(/[\(\[\{]+$/, "").trim();
+    const extras = matches.map((match, i) => {
+      const start = match.idx;
+      const end = i + 1 < matches.length ? matches[i + 1].idx : formatted_title.length;
+      const tag_text = formatted_title.slice(start, end).replace(/^[\(\[\{\-\s]+/, "").replace(/[\(\)\[\]\{\}\-\s]+$/, "").trim();
+      return {
+        group: match.group,
+        text: tag_text
+      };
+    });
     let song_guests = [];
-    console.log(extras);
-    for (let extra in extras) {
-      console.log(extras[extra]);
-      if (parseInt(extra) + 1 < extras.length) {
-        let chr = extras[extra].chr;
-        let next_chr = extras[parseInt(extra) + 1].chr;
-        extras[extra].text = original_title.slice(chr, next_chr - 1).replaceAll("(", "").replaceAll(")", "").replaceAll("[", "").replaceAll("]", "").replaceAll("- ", "");
-      } else {
-        let chr = extras[extra].chr;
-        extras[extra].text = original_title.slice(chr).replaceAll("(", "").replaceAll(")", "").replaceAll("[", "").replaceAll("]", "").replaceAll("- ", "");
-      }
-      let field_group = extras[extra].group;
-      let field_text = extras[extra].text.replace(" feat. ", "").replace("feat. ", "").replace("featuring ", "").replace("Feat. ", "").replace("ft. ", "").replace("FEAT. ", "").replace("Ft. ", "").replace("WITH", "with").replace("w/ ", "").replace("with ", "").replace("With ", "").replaceAll(" & ", ";").replaceAll(", ", ";").replaceAll(" and ", ";").replaceAll(" with ", ";").replaceAll("- ", "").replaceAll(",; ", ";").replaceAll("Tyler;the", "Tyler, the").replaceAll("Tyler;The", "Tyler, The").replaceAll(" of BTS", ";BTS");
-      console.log("pre-split", field_text);
-      if (field_group == "guests") {
-        song_guests = field_text.split(";");
-        for (let guest in song_guests)
-          song_guests[guest] = correct_artist(song_guests[guest]);
-      }
-    }
-    if (artist_corrections.hasOwnProperty(original_artist) && settings.corrections)
-      original_artist = correct_artist(artist_corrections[original_artist]);
-    if (extras.length > 0)
-      log(`parsed ${original_title} as ${formatted_title} by ${original_artist} with`, "guest features", "info", { extras, song_guests });
-    return [formatted_title, extras, original_artist, song_guests, original_title_corrected];
+    extras.forEach((extra) => {
+      if (extra.group !== "guests") return;
+      const normalized = extra.text.replace(/feat\.?|ft\.?|featuring|with|w\//gi, "").replace(/ & /g, ";").replace(/, /g, ";").replace(/ and /gi, ";").replace(/- /g, "").replace(/,;/g, ";").replace(/tyler;the/gi, "Tyler, The").replace(/ of bts/gi, ";BTS").replace(/marina;the diamonds/gi, "Marina and The Diamonds").replace(/selena gomez;the scene/gi, "Selena Gomez & the Scene");
+      const guests = normalized.split(/;+/).map((s) => s.trim()).filter(Boolean).map(correct_artist);
+      song_guests.push(...guests);
+    });
+    return [
+      cleaned_title,
+      extras,
+      original_artist,
+      song_guests,
+      original_title_corrected
+    ];
   }
   function artist_title() {
     let title = document.body.querySelector(".header-new-title");
@@ -13144,7 +15868,7 @@
         return;
       title.textContent = correct_artist(title_text, true);
     } else {
-      title_text = title_text.replaceAll(" & ", ";").replaceAll(", ", ";").replace("Tyler;the", "Tyler, The").replace("Tyler;The", "Tyler, The").replace("Marina;the Diamonds", "Marina and The Diamonds").replaceAll(";;", ";");
+      title_text = title_text.replaceAll(" & ", ";").replaceAll(", ", ";").replace("Tyler;the", "Tyler, The").replace("Tyler;The", "Tyler, The").replace("Marina;the Diamonds", "Marina and The Diamonds").replace(/selena gomez;the scene/gi, "Selena Gomez & the Scene").replaceAll(";;", ";");
       page.multi = true;
       title.innerHTML = "";
       let split = title_text.split(";");
@@ -13262,14 +15986,14 @@
           involved_link = `${root}bwaa`;
         else if (involved.type == "bleh")
           involved_link = `${root}bleh`;
-        let name = involved.name;
+        let name2 = involved.name;
         let sister = involved.sister;
         if (involved.type != "artist" && involved.type != "user" && involved.type != "tag" && involved.type != "bwaa" && involved.type != "bleh") {
-          tooltip_name = name;
+          tooltip_name = name2;
           tooltip_sister = sister;
         }
         if (involved.type == "track" && settings.format_guest_features) {
-          let formatted_title = name_includes(name, sister);
+          let formatted_title = name_includes(name2, sister);
           let song_title;
           let song_tags;
           if (formatted_title) {
@@ -13279,24 +16003,24 @@
             tooltip_name = song_title;
             tooltip_sister = sister;
           }
-          name = html.node`
-                    <div class="title">${sanitise_text(song_title).trim()}</div>
+          name2 = html.node`
+                    <div class="title">${song_title.trim()}</div>
                     ${song_tags.map((tag) => html.node`
                         <div class="feat" data-bleh--tag-type="${tag.type}" data-bleh--tag-group="${tag.group}">${tag.text}</div>
                     `)}
                 `;
         } else if ((involved.type == "album" || involved.type == "track") && settings.corrections) {
-          name = correct_item_by_artist(name, sister);
-          tooltip_name = name;
+          name2 = correct_item_by_artist(name2, sister);
+          tooltip_name = name2;
           sister = correct_artist(sister);
           tooltip_sister = sister;
         } else if (involved.type == "artist" && settings.corrections) {
-          name = correct_artist(name);
+          name2 = correct_artist(name2);
         }
         if (involved_text != "")
-          involved_text = html.node`${involved_text}, <a class="involved--${involved.type}" href="${involved_link}">${name}</a>`;
+          involved_text = html.node`${involved_text}, <a class="involved--${involved.type}" href="${involved_link}">${name2}</a>`;
         else
-          involved_text = html.node`${involved_text}<a class="involved--${involved.type}" href="${involved_link}">${name}</a>`;
+          involved_text = html.node`${involved_text}<a class="involved--${involved.type}" href="${involved_link}">${name2}</a>`;
       });
       render(activity_item, html`
             <div class="type">${tl(trans.activity.listing[activity.type])}<div class="date">${moment(activity.date).fromNow(true)}</div></div>
@@ -13305,7 +16029,11 @@
       activity_list.appendChild(activity_item);
       if (tooltip_name)
         tippy(activity_item.querySelector(".name a"), {
-          content: `${tooltip_sister} - ${tooltip_name}`
+          theme: "name-sister-combo",
+          content: html.node`
+                    <span class="name">${tooltip_name}</span>
+                    <span class="sister">${tooltip_sister}</span>
+                `
         });
     });
     return activity_list;
@@ -13478,6 +16206,7 @@
     if (!changelog) {
       log("not cached, fetching", "changelog");
       request_changelog();
+      dialog_rm2({ id: "rabbit" });
     } else {
       if (changelog_expire < current_time)
         request_changelog();
@@ -13589,20 +16318,44 @@
   };
 
   // src/navigation.js
-  function patch_masthead(element) {
-    let masthead_logo = element.querySelector(".masthead-logo");
+  function patch_masthead() {
+    let masthead_logo = document.body.querySelector(".masthead-logo");
     if (!masthead_logo) return;
     if (!masthead_logo.hasAttribute("data-kate-processed")) {
       masthead_logo.setAttribute("data-kate-processed", "true");
-      masthead_logo.appendChild(html.node`
-            <a class="home-link" href="${root}music">
-                <div class="bleh-logo">${version.brand}</div>
-            </a>`);
+      update_masthead(masthead_logo);
+    }
+  }
+  function update_masthead(masthead_logo = document.body.querySelector(".masthead-logo")) {
+    const update_required = localStorage.getItem("bleh_update_required") || "false";
+    render(masthead_logo, html``);
+    render(masthead_logo, html`
+        <a href="/">Last.fm</a>
+        <a class="home-link" href="${root}music">
+            <div class="bleh-logo">${version.brand}</div>
+        </a>
+    `);
+    if (update_required === "false") {
       masthead_logo.appendChild(html.node`
             <a class="bleh--version" href="${root}bleh">
-                ${version.build}.${version.sku}${settings.branch != "uwu" ? `.${settings.branch}` : ""}${settings.dev ? html.node`<div class="new-badge subtle">✦</div>` : ""}
+                ${version.build}.${version.sku}
+                ${settings.dev ? html.node`<div class="new-badge subtle">✦</div>` : ""}
             </a>
         `);
+    } else {
+      let link = html.node`
+            <a class="bleh--version" onclick=${() => prompt_for_update()}>
+                <div class="update-container">
+                    <div class="bleh-icon" style="--icon: var(--icon-16-update)" />
+                </div>
+                ${version.build}.${version.sku}
+                ${settings.dev ? html.node`<div class="new-badge subtle">✦</div>` : ""}
+            </a>
+        `;
+      tippy(link, {
+        content: tl(trans.update_available_to_install)
+      });
+      masthead_logo.appendChild(link);
     }
   }
   function append_nav() {
@@ -13624,30 +16377,38 @@
       document.body.appendChild(loader);
       page.structure.loader = loader;
     }
+    if (!page.structure.style_warning) {
+      const style_warning = html.node`
+            <div class="style-warning" style="position: fixed; top: 0; left: 0; right: 0; padding: 20px; background: #fff; z-index: 1000000000; display: flex; align-items: center; gap: 30px">
+                <strong>${tl(trans.style_warning)}</strong>
+                <button class="btn-primary" onclick=${() => {
+        save_setting("dev", false);
+        window.location.reload();
+      }}>${tl(trans.re_enable_style_loading)}</button>
+            </div>
+        `;
+      document.body.appendChild(style_warning);
+      page.structure.style_warning = style_warning;
+    }
     let masthead = document.body.querySelector(".masthead");
     let new_auth = masthead.querySelector(".auth-dropdown-menu");
     let auth_link2 = masthead.querySelector(".masthead-nav-wrap > .site-auth .auth-link");
     if (!auth_link2) return;
     if (auth_link2.hasAttribute("data-bleh")) return;
     auth_link2.setAttribute("data-bleh", "true");
-    let text2 = document.createElement("p");
-    text2.textContent = auth.name;
-    auth_link2.appendChild(text2);
-    if (masthead.querySelector(".masthead-pro-wrap"))
-      auth.pro = true;
-    else
-      auth.pro = false;
+    auth_link2.appendChild(html.node`
+        <p>${auth.name}</p>
+    `);
+    auth.pro = !!masthead.querySelector(".masthead-pro-wrap");
     let badges = load_badges(auth.name, true);
     if (badges) {
-      let badge = document.createElement("span");
-      badge.classList.add("label", `user-status--bleh-${badges[0].type}`, `user-status--bleh-user-${auth.name}`, "auth-badge");
-      badge.textContent = badges[0].name;
-      auth_link2.appendChild(badge);
+      auth_link2.appendChild(html.node`
+            <span class="label user-status--bleh-${badges[0].type} user-status--bleh-user-${auth.name} auth-badge">${badges[0].name}</span>
+        `);
     } else if (auth.pro) {
-      let pro_badge = document.createElement("p");
-      pro_badge.classList.add("label", "user-status-subscriber", "auth-badge");
-      pro_badge.textContent = "Pro";
-      auth_link2.appendChild(pro_badge);
+      auth_link2.appendChild(html.node`
+            <span class="label user-status-subscriber auth-badge">${tl(trans.badges["user-status-subscriber"].name)}</span>
+        `);
     }
     let notif_count = new_auth.querySelector('[data-analytics-label="notifications"] + .auth-avatar-notification-count-badge');
     if (!notif_count) notif_count = "0";
@@ -13656,7 +16417,7 @@
     if (!inbox_count) inbox_count = "0";
     else inbox_count = inbox_count.textContent;
     let links = masthead.querySelector(".masthead-nav .navlist-items");
-    links.innerHTML = "";
+    render(links, html``);
     let notif_container = html.node`
     <li class="masthead-nav-item">
         <a class="masthead-nav-control" href="${root}inbox/notifications" data-label="notifications" data-count=${notif_count}>
@@ -13732,6 +16493,49 @@
       button.style.setProperty("--flag-url", `url('https://katelyynn.github.io/bleh/fm/flags/${button.getAttribute("name")}.svg')`);
       language_menu.appendChild(language_option);
     });
+    let themes = [
+      {
+        id: "auto",
+        name: tl(trans.auto),
+        hide: !ff("auto_theme"),
+        new_release: true
+      },
+      {
+        id: "glass",
+        type: "light",
+        name: tl(trans.glass),
+        hide: !ff("glass"),
+        new_release: true
+      },
+      {
+        id: "light",
+        type: "light",
+        name: tl(trans.themes.light)
+      },
+      {
+        id: "ink",
+        type: "light",
+        name: tl(trans.themes.ink)
+      },
+      {
+        id: "dark",
+        formal: "ash",
+        type: "dark",
+        name: tl(trans.themes.dark)
+      },
+      {
+        id: "darker",
+        formal: "dark",
+        type: "darker",
+        name: tl(trans.themes.darker)
+      },
+      {
+        id: "oled",
+        formal: "void",
+        type: "oled",
+        name: tl(trans.themes.oled)
+      }
+    ];
     let site_auth = document.body.querySelector(".site-auth");
     let token = new_auth.querySelector('[name="csrfmiddlewaretoken"]').getAttribute("value");
     if (ff("refreshed_auth_menu")) {
@@ -13746,6 +16550,7 @@
           badges = load_badges(auth.name);
           let page_2;
           let side;
+          let banner = load_banner(auth.name);
           instance.setContent(html.node`
                     <div class="auth-menu-v2">
                         <div class="side primary">
@@ -13753,7 +16558,9 @@
                                 <div class="avatar">
                                     <img src="${auth.avatar.replace("avatar42s", "avatar170s")}" alt="${auth.name}" />
                                 </div>
-                                ${!auth.avatar.endsWith("818148bf682d429dc215c1705eb27b98.png") ? html.node`
+                                ${banner != "" ? html.node`
+                                <div class="bg" style="background-image: url(${banner})" />
+                                ` : !auth.avatar.endsWith("818148bf682d429dc215c1705eb27b98.png") ? html.node`
                                 <div class="bg" style="background-image: url(${auth.avatar.replace("avatar42s", "avatar170s")})" />
                                 ` : ""}
                                 <div class="name">${auth.name}</div>
@@ -13848,32 +16655,22 @@
                                     </button>
                                     <div class="button-combo-sep" />
                                     <button class="dropdown-menu-clickable-item chibi" data-type="continue" onclick=${() => {
+            render(page_2, html``);
             render(page_2, html`
                                             <button class="dropdown-menu-clickable-item" data-type="back" onclick=${() => {
               side.setAttribute("data-page", "1");
             }}>
                                                 ${tl(trans.back)}
                                             </button>
-                                            <button class="dropdown-menu-clickable-item theme-item-in-menu"
-                                                    data-bleh-theme="light" onclick="change_theme_from_menu('light')">
-                                                ${tl(trans.themes.light)}
-                                            </button>
-                                            <button class="dropdown-menu-clickable-item theme-item-in-menu"
-                                                    data-bleh-theme="ink" onclick="change_theme_from_menu('ink')">
-                                                ${tl(trans.themes.ink)}
-                                            </button>
-                                            <button class="dropdown-menu-clickable-item theme-item-in-menu"
-                                                    data-bleh-theme="dark" onclick="change_theme_from_menu('dark')">
-                                                ${tl(trans.themes.dark)}
-                                            </button>
-                                            <button class="dropdown-menu-clickable-item theme-item-in-menu"
-                                                    data-bleh-theme="darker" onclick="change_theme_from_menu('darker')">
-                                                ${tl(trans.themes.darker)}
-                                            </button>
-                                            <button class="dropdown-menu-clickable-item theme-item-in-menu"
-                                                    data-bleh-theme="oled" onclick="change_theme_from_menu('oled')">
-                                                ${tl(trans.themes.oled)}
-                                            </button>
+                                            ${themes.map((theme) => {
+              if (theme.hide) return html.node``;
+              if (!theme.formal) theme.formal = theme.id;
+              return html.node`
+                                                    <button class="dropdown-menu-clickable-item theme-item-in-menu" data-bleh-theme=${theme.id} data-type="theme_${theme.formal}" onclick="${() => change_theme_from_menu(theme.id)}">
+                                                        ${theme.name}
+                                                    </button> 
+                                                `;
+            })}
                                         `);
             show_theme_change_in_menu("", page_2);
             side.setAttribute("data-page", "2");
@@ -14065,27 +16862,32 @@
   // src/components/about_artist.js
   function bleh_about_artist() {
     let legacy_container = page.structure.main.querySelector(".about-artist");
-    if (!legacy_container)
-      return;
+    if (!legacy_container) return;
     let avatar3 = legacy_container.querySelector(".gallery-preview-image--0 img");
     let listeners = legacy_container.querySelector(".about-artist-listeners");
     let tags = legacy_container.querySelector(".about-artist-tags");
     let wiki = legacy_container.querySelector(".wiki-block.visible-lg");
-    if (wiki != null)
-      wiki.classList.remove("visible-lg");
+    if (wiki) wiki.classList.remove("visible-lg");
     let about_artist_container = legacy_container.parentElement;
     about_artist_container.classList.add("about-artist-container");
     render(about_artist_container, html`
         <div class="about-artist-panel">
             <div class="avatar-side">
-                ${avatar3 != null ? html.node`<img src="${avatar3.getAttribute("src")}"><a onclick=${() => expand_avatar(avatar3.getAttribute("src").replace("/300x300/", "/ar0/"))} class="bleh--avatar-clickable-link"></a>` : html.node`<img class="missing-artist">`}
+                ${avatar3 ? html.node`
+                    <img src=${avatar3.getAttribute("src")}>
+                    <a onclick=${() => expand_avatar(avatar3.getAttribute("src").replace("/300x300/", "/ar0/"))} class="bleh--avatar-clickable-link"></a>
+                ` : html.node`
+                    <img class="missing-artist">
+                `}
             </div>
             <div class="info-side">
                 <div class="sub-text">${tl(trans.about)}</div>
-                <h1><a href="${root}music/${sanitise(page.sister)}">${page.sister}</a></h1>
-                ${listeners != null ? html.node([listeners.outerHTML]) : ""}
-                ${tags != null ? html.node([tags.outerHTML]) : ""}
-                ${wiki != null ? html.node([wiki.outerHTML]) : ""}
+                <h1>
+                    <a href="${root}music/${sanitise(page.sister)}">${correct_artist(page.sister)}</a>
+                </h1>
+                ${listeners}
+                ${tags}
+                ${wiki}
             </div>
         </div>
         ${page.sister_others.length > 0 ? html.node`<div class="sep"></div><div class="sub-text">${tl(trans.others_featured)}</div>` : ""}
@@ -14104,298 +16906,6 @@
         `);
     }
     page.structure.side.appendChild(about_artist_container);
-  }
-
-  // src/pages/wiki.js
-  function bleh_wiki() {
-    let wiki_panel = document.createElement("section");
-    wiki_panel.classList.add("wiki-panel");
-    wiki_panel.innerHTML = page.structure.main.innerHTML;
-    page.structure.main.innerHTML = "";
-    page.structure.main.appendChild(wiki_panel);
-    page.structure.main.classList.add("not-a-panel");
-    let original_edit_button = page.structure.main.querySelector(".qa-wiki-edit");
-    let original_version_history = page.structure.main.querySelector(".wiki-history-link--desktop a");
-    let side_actions = document.createElement("section");
-    side_actions.classList.add("side-actions");
-    if (!page.mobile)
-      page.structure.side.appendChild(side_actions);
-    else
-      page.structure.main.appendChild(side_actions);
-    if (original_edit_button) {
-      let side_edit = document.createElement("a");
-      side_edit.classList.add("btn", "side-action");
-      side_edit.setAttribute("href", original_edit_button.getAttribute("href"));
-      side_edit.setAttribute("data-type", "edit");
-      side_edit.textContent = original_edit_button.textContent;
-      side_actions.appendChild(side_edit);
-    }
-    if (original_version_history) {
-      let side_history = document.createElement("a");
-      side_history.classList.add("btn", "side-action");
-      side_history.setAttribute("href", original_version_history.getAttribute("href"));
-      side_history.setAttribute("data-type", "history");
-      side_history.textContent = original_version_history.textContent;
-      side_actions.appendChild(side_history);
-    }
-    let wiki_author = wiki_panel.querySelector(".wiki-author");
-    if (wiki_author) {
-      let h2 = wiki_panel.querySelector("h2.text-18");
-      let sub_text = document.createElement("div");
-      sub_text.classList.add("sub-text", "space-below", "header-style");
-      sub_text.innerHTML = `
-            <div class="breadcrumb-origin prominent">
-                ${h2 ? h2.innerHTML : page.structure.container.querySelector(".content-top-header").textContent}
-            </div>
-            <div class="wiki-author-side">
-                ${wiki_author.innerHTML}
-            </div>
-        `;
-      wiki_panel.insertBefore(sub_text, wiki_panel.firstElementChild);
-      if (h2)
-        wiki_panel.removeChild(h2);
-    }
-    let wiki = wiki_panel.querySelector(".wiki");
-    if (!wiki) return;
-    patch_wiki_contents(wiki);
-  }
-  function bleh_wiki_history() {
-    let breadcrumb_root = page.structure.container.querySelector(".subpage-breadcrumb");
-    let breadcrumb_name = page.structure.container.querySelector(".subpage-title");
-    if (!breadcrumb_root) {
-      breadcrumb_root = page.structure.container.querySelector(".content-top-back-link");
-      breadcrumb_name = page.structure.container.querySelector(".content-top-header");
-    }
-    let sub_text = document.createElement("div");
-    sub_text.classList.add("sub-text", "space-below", "header-style");
-    sub_text.innerHTML = `
-        <div class="breadcrumb">
-            ${breadcrumb_root.querySelector("a").outerHTML}
-            <div class="breadcrumb-name prominent">
-                ${breadcrumb_name.textContent}
-            </div>
-        </div>
-    `;
-    breadcrumb_root.style.setProperty("display", "none");
-    breadcrumb_name.style.setProperty("display", "none");
-    let buffer_container = page.structure.container.querySelector(".row ~ .buffer-4");
-    if (!buffer_container)
-      buffer_container = page.structure.container.querySelector(".wiki-history");
-    let wiki_history_table = buffer_container.querySelector(".wiki-history-table");
-    let pagination = buffer_container.querySelector(".pagination");
-    let wiki_panel = document.createElement("section");
-    wiki_panel.classList.add("wiki-history-panel");
-    wiki_panel.appendChild(sub_text);
-    wiki_panel.appendChild(wiki_history_table);
-    page.structure.main.appendChild(wiki_panel);
-    buffer_container.style.setProperty("display", "none");
-    if (pagination)
-      wiki_panel.appendChild(pagination);
-    let side_actions = document.createElement("section");
-    side_actions.classList.add("side-actions");
-    side_actions.innerHTML = `
-        <a class="btn side-action" data-type="latest-wiki" href="${sub_text.querySelector("a").getAttribute("href")}">
-            ${tl(trans.view_latest_version)}
-        </a>
-    `;
-    if (!page.mobile)
-      page.structure.side.appendChild(side_actions);
-    else
-      page.structure.main.appendChild(side_actions);
-    let entries = page.structure.main.querySelectorAll(".wiki-history-entry");
-    entries.forEach((entry) => {
-      let author = entry.querySelector(".wiki-history-author");
-      let avatar3 = author.querySelector(".wiki-history-author-avatar");
-      let name = author.querySelector(".link-block-target");
-      if (name && avatar3) {
-        let badge = patch_avatar(avatar3, name.textContent, "wiki");
-        avatar3.setAttribute("data-avatar-themed", "true");
-        avatar3.classList.add(`user-status--bleh-${badge.type}`, `user-status--bleh-user-${name.textContent}`);
-        name.classList.add(`user-status--bleh-${badge.type}`, `user-status--bleh-user-${name.textContent}`);
-      }
-    });
-  }
-  function bleh_wiki_editor() {
-    let wiki_edit_panel = document.createElement("section");
-    wiki_edit_panel.classList.add("wiki-edit-panel");
-    wiki_edit_panel.innerHTML = page.structure.main.innerHTML;
-    page.structure.main.innerHTML = "";
-    page.structure.main.appendChild(wiki_edit_panel);
-    page.structure.main.classList.add("not-a-panel");
-    let breadcrumb_root = page.structure.container.querySelector(".subpage-breadcrumb");
-    let breadcrumb_name = page.structure.container.querySelector(".subpage-title");
-    if (!breadcrumb_name) {
-      breadcrumb_name = page.structure.content_top.querySelector(".content-top-header");
-      if (breadcrumb_name)
-        page.structure.content_top.style.setProperty("display", "none");
-    }
-    if (!breadcrumb_root) {
-      breadcrumb_root = page.structure.container.querySelector(".content-top-back-link");
-      breadcrumb_name = page.structure.container.querySelector(".content-top-header");
-    }
-    let sub_text = document.createElement("div");
-    sub_text.classList.add("sub-text", "space-below", "header-style");
-    sub_text.innerHTML = `
-        <div class="breadcrumb">
-            ${breadcrumb_root.querySelector("a").outerHTML}
-            <div class="breadcrumb-name prominent">
-                ${breadcrumb_name.textContent}
-            </div>
-        </div>
-    `;
-    breadcrumb_root.style.setProperty("display", "none");
-    breadcrumb_name.style.setProperty("display", "none");
-    wiki_edit_panel.insertBefore(sub_text, wiki_edit_panel.firstElementChild);
-    let wiki_syntax = document.createElement("section");
-    wiki_syntax.classList.add("bleh--blank-panel", "wiki-syntax-panel");
-    wiki_syntax.innerHTML = `
-        <h3 class="text-18">${tl(trans.fancy_syntax)}</h3>
-        <div class="syntax-listing">
-            <div class="syntax-listing-item">
-                <div class="code-side">[artist]julie[/artist]</div>
-                <div class="detail-side">${tl(trans.links_to).replace("{link}", `<a href="${root}music/julie" data-link-type="artist" target="_blank">julie</a>`)}</div>
-            </div>
-            <div class="syntax-listing-item">
-                <div class="code-side">[album artist=julie]pushing daisies[/album]</div>
-                <div class="detail-side">${tl(trans.links_to).replace("{link}", `<a href="${root}music/julie/pushing+daisies" data-link-type="album" target="_blank">pushing daisies</a>`)}</div>
-            </div>
-            <div class="syntax-listing-item">
-                <div class="code-side">[track artist=julie]very little effort[/track]</div>
-                <div class="detail-side">${tl(trans.links_to).replace("{link}", `<a href="${root}music/julie/_/very+little+effort" data-link-type="track" target="_blank">very little effort</a>`)}</div>
-            </div>
-        </div>
-        <div class="sep"></div>
-        <div class="syntax-listing">
-            <div class="syntax-listing-item">
-                <div class="code-side">[url]https://katelyn.moe/bleh[/url]</div>
-                <div class="detail-side">${tl(trans.links_to).replace("{link}", `<a href="https://katelyn.moe/bleh" target="_blank">https://katelyn.moe/bleh</a>`)}</div>
-            </div>
-            <div class="syntax-listing-item">
-                <div class="code-side">[url=https://katelyn.moe/bleh]blehhh[/url]</div>
-                <div class="detail-side">${tl(trans.links_to).replace("{link}", `<a href="https://katelyn.moe/bleh" target="_blank">blehhh</a>`)}</div>
-            </div>
-        </div>
-        <div class="sep"></div>
-        <div class="syntax-listing">
-            <div class="syntax-listing-item">
-                <div class="code-side">[tag]grunge[/tag]</div>
-                <div class="detail-side">${tl(trans.links_to).replace("{link}", `<a href="${root}tag/grunge" data-link-type="tag" target="_blank">grunge</a>`)}</div>
-            </div>
-            <div class="syntax-listing-item">
-                <div class="code-side">[user]${auth.name}[/user]</div>
-                <div class="detail-side">${tl(trans.links_to).replace("{link}", `<a class="mention" href="${root}user/${auth.name}" target="_blank">@${auth.name}</a>`)}</div>
-            </div>
-        </div>
-    `;
-    page.structure.side.innerHTML = "";
-    let side_actions = document.createElement("section");
-    side_actions.classList.add("side-actions");
-    side_actions.innerHTML = `
-        <a class="btn side-action" data-type="latest-wiki" href="${sub_text.querySelector("a").getAttribute("href")}">
-            ${tl(trans.view_latest_version)}
-        </a>
-    `;
-    if (!page.mobile)
-      page.structure.side.appendChild(side_actions);
-    else
-      page.structure.main.appendChild(side_actions);
-    let wiki_presets_panel = document.createElement("section");
-    wiki_presets_panel.classList.add("wiki-presets-panel");
-    wiki_presets_panel.innerHTML = `
-        <h3 class="text-18">${tl(trans.symbol_presets)}</h3>
-        <div class="presets">
-            <div class="preset">\u201C</div>
-            <div class="preset">\u201D</div>
-            <div class="preset">\u2014</div>
-            <div class="preset">\u2018</div>
-            <div class="preset">\u2019</div>
-            <div class="preset">-</div>
-        </div>
-        <ul class="wiki-standards generic-list">
-            <li>Tracks should be contained in \u201C\u201D, while albums and artists are left without.</li>
-            <li>A pair of \u2018 \u2019 are usually used for quotations.</li>
-        </ul>
-    `;
-    page.structure.side.appendChild(wiki_presets_panel);
-    page.structure.side.appendChild(wiki_syntax);
-    let rules = page.structure.main.querySelector(".wiki-style-rules");
-    rules.removeAttribute("id");
-    let rules_panel = document.createElement("section");
-    rules_panel.classList.add("rules-panel");
-    rules_panel.setAttribute("id", "stylerules");
-    rules_panel.innerHTML = rules.innerHTML;
-    page.structure.side.appendChild(rules_panel);
-  }
-  function patch_wiki() {
-    if (ff("show_wiki_label")) {
-      let wiki_col = page.structure.main.querySelector(".wiki-column");
-      let wiki_empty = false;
-      if (!wiki_col)
-        wiki_col = page.structure.main.querySelector(".wiki-section");
-      if (!wiki_col) return;
-      let wiki_block = wiki_col.querySelector(".wiki-block.visible-lg .wiki-block-inner-2");
-      if (!wiki_block) {
-        wiki_block = wiki_col.querySelector(".wiki-block-cta");
-        wiki_empty = true;
-      }
-      let read_more = wiki_block.querySelector("a:last-child");
-      if (read_more) {
-        read_more.classList.add("read-more");
-        read_more.textContent = tl(trans.read_more).toLowerCase();
-      }
-      let wiki_header = document.createElement("div");
-      wiki_header.classList.add("sub-text");
-      wiki_header.innerHTML = `
-            <p>${tl(trans.about)}</p>
-            <span class="right-links">
-                <p><a class="wiki-edit-small" href="${document.location.href}/+wiki/edit">${tl(trans.edit_wiki).toLowerCase()}</a></p>
-                ${!wiki_empty ? `<p>${read_more.outerHTML}</p>` : ""}
-            </span>
-        `;
-      wiki_col.insertBefore(wiki_header, wiki_col.firstElementChild);
-      if (!wiki_empty) {
-        patch_wiki_contents(wiki_block);
-      }
-    }
-  }
-  function patch_wiki_contents(wiki_block) {
-    let links = wiki_block.querySelectorAll("a");
-    links.forEach((link) => {
-      let href = link.getAttribute("href");
-      let type;
-      let name = link.textContent.trim();
-      let sister;
-      if (!href.startsWith(root)) {
-        tippy(link, {
-          content: link.getAttribute("href")
-        });
-        return;
-      }
-      if (href.endsWith("/+wiki"))
-        return;
-      href = href.replace(root, "").replace("music/", "");
-      if (href.startsWith("tag/")) {
-        type = "tag";
-      } else {
-        let split = href.split("/");
-        if (split.length == 1) {
-          type = "artist";
-        } else if (split.length == 2) {
-          type = "album";
-          name = desanitise(split[1]);
-          sister = desanitise(split[0]);
-        } else if (split.length == 3) {
-          type = "track";
-          name = desanitise(split[2]);
-          sister = desanitise(split[0]);
-        }
-      }
-      if (sister != void 0)
-        tippy(link, {
-          content: `${sister} - ${name}`
-        });
-      link.setAttribute("data-link-type", type);
-    });
   }
 
   // src/pages/tag.js
@@ -14542,7 +17052,7 @@
                 <div class="info-side">
                     <div class="sub-text">${tl(trans.album)}</div>
                     <div class="title-container">
-                        <h1>${title}</h1>
+                        ${title}
                         ${position ? position : ""}
                     </div>
                     <h2>${artist}</h2>
@@ -14596,10 +17106,12 @@
       try {
         let bg = header_inner.getAttribute("style").replace("background: #", "");
         let hsl = hex_to_hsl(bg);
+        let sat = clamp_sat(hsl.s / 100 * 3);
+        let lit = clamp_lit(sat, hsl.l / 100 + 0.35);
         document.body.style.setProperty("--hue-album", hsl.h);
-        document.body.style.setProperty("--sat-album", clamp_sat(hsl.s / 100 * 3));
-        document.body.style.setProperty("--lit-album", hsl.l / 100 + 0.35);
-        log(`sourced hsl of (${hsl.h}, ${hsl.s}, ${hsl.l}) - using final value of (${hsl.h}, ${clamp_sat(hsl.s / 100 * 3)}, ${hsl.l / 100 + 0.35})`, "hue from album");
+        document.body.style.setProperty("--sat-album", sat);
+        document.body.style.setProperty("--lit-album", lit);
+        log(`sourced hsl of (${hsl.h}, ${hsl.s}, ${hsl.l}) - using final value of (${hsl.h}, ${sat}, ${lit})`, "hue from album");
         load_chart_colours();
       } catch (e) {
         log("no cover present", "hue from album");
@@ -14636,12 +17148,42 @@
   }
   function album_missing_a_tracklist() {
     let tracklist = page.structure.main.querySelector("#tracklist");
-    if (!tracklist) {
+    let settings_btn;
+    if (tracklist) {
+      let top = tracklist.querySelector(".section-controls");
+      top.classList = "top-container";
+      let header = top.querySelector("h3");
+      let select_btn = top.querySelector(".dropdown-menu-clickable-button");
+      if (select_btn) {
+        select_btn.classList.add("select-button", "link-select", "blend-v2-btn");
+        select_btn.classList.remove("dropdown-menu-clickable-button");
+      }
+      header.after(html.node`
+            <div class="accompany view-buttons blend blend-v2">
+                ${select_btn}
+            </div>
+            <div class="view-buttons blend blend-v2">
+                <button class="left-icon blend-v2-btn" data-type="settings" ref=${(el) => settings_btn = el}>
+                    ${tl(trans.settings)}
+                </button>
+            </div>
+        `);
+    } else {
       let top_overview = page.structure.main.querySelector(".top-overview-panel");
       if (!top_overview) return;
+      let top = html.node`
+            <div class="top-container">
+                <h3 class="text-18">${tl(trans.tracklist)}</h3>
+                <div class="view-buttons blend blend-v2">
+                    <button class="left-icon blend-v2-btn" data-type="settings" ref=${(el) => settings_btn = el}>
+                        ${tl(trans.settings)}
+                    </button>
+                </div>
+            </div>
+        `;
       tracklist = html.node`
             <section>
-                <h3 class="text-18">${tl(trans.tracklist)}</h3>
+                ${top}
                 <div class="loading-data-container">
                     <p class="loading-data-text">${tl(trans.gathering_your_plays)}</p>
                 </div>
@@ -14654,7 +17196,7 @@
         let album_url = `${url_split[url_split.length - 2]}/${url_split[url_split.length - 1]}`;
         let album_as_track_url = window.location.href.replace(album_url, `${url_split[url_split.length - 2]}/_/${url_split[url_split.length - 1]}`);
         render(tracklist, html`
-                <h3 class="text-18">${tl(trans.tracklist)}</h3>
+                ${top}
                 <div class="loading-data-container">
                     <p class="loading-data-text failed">${tl(trans.failed_to_find_tracks)}</p>
                     <a class="see-more" href="${album_as_track_url}">${tl(trans.open_album_as_track)}</a>
@@ -14675,22 +17217,37 @@
           let album_url = `${url_split[url_split.length - 2]}/${url_split[url_split.length - 1]}`;
           let album_as_track_url = window.location.href.replace(album_url, `${url_split[url_split.length - 2]}/_/${url_split[url_split.length - 1]}`);
           render(tracklist, html`
-                        <h3 class="text-18">${tl(trans.tracklist)}</h3>
+                        ${top}
                         <div class="loading-data-container">
                             <p class="loading-data-text failed">${tl(trans.failed_to_find_tracks)}</p>
-                            <a class="btn" href="${album_as_track_url}">${tl(trans.open_album_as_track)}</a>
+                            <a class="see-more" href=${album_as_track_url}>${tl(trans.open_album_as_track)}</a>
                         </div>
                     `);
           return;
         }
         inner_tracklist.classList.remove("chartlist--with-image");
         render(tracklist, html`
-                    <h3 class="text-18">${tl(trans.tracklist)}</h3>
+                    ${top}
                     <div class="alert alert-info">${tl(trans.sourced_from_own_plays)}</div>
                     ${inner_tracklist}
                 `);
       });
     }
+    tippy(settings_btn, {
+      theme: "window",
+      content: html.node`
+            <div class="dialog-settings">
+                <div class="setting-group blend">
+                    ${setting({ id: "format_guest_features" })}
+                    ${setting({ id: "show_guest_features" })}
+                </div>
+            </div>
+        `,
+      placement: "bottom",
+      interactive: true,
+      interactiveBorder: 10,
+      trigger: "click"
+    });
   }
 
   // src/pages/artist.js
@@ -14754,7 +17311,7 @@
                     <div class="sub-text">${tl(trans.artist)}</div>
                     `}
                     <div class="title-container" data-multi="${page.multi}">
-                        <h1>${title}</h1>
+                        ${title}
                         ${position ? position : ""}
                         ${on_tour ? on_tour : ""}
                     </div>
@@ -14843,15 +17400,109 @@
       show_your_scrobbles();
       bleh_music_page_charts();
       bleh_tags_mini();
+      let top_tracks = page.structure.main.querySelector("#top-tracks");
+      if (top_tracks) {
+        let settings_btn;
+        let top = top_tracks.querySelector(".section-controls");
+        top.classList = "top-container";
+        let header = top.querySelector("h3");
+        let select_btn = top.querySelector(".dropdown-menu-clickable-button");
+        if (select_btn) {
+          select_btn.classList.add("select-button", "link-select", "blend-v2-btn");
+          select_btn.classList.remove("dropdown-menu-clickable-button");
+        }
+        let play = top.querySelector(".section-playlink");
+        if (play) {
+          play.classList.add("blend-v2-btn", "radio");
+          play.classList.remove("section-playlink", "hover-section-control");
+          play.setAttribute("data-type", "play");
+        }
+        header.after(html.node`
+                <div class="accompany view-buttons blend blend-v2">
+                    ${select_btn}
+                </div>
+                <div class="view-buttons blend blend-v2">
+                    ${play}
+                    <button class="left-icon blend-v2-btn" data-type="settings" ref=${(el) => settings_btn = el}>
+                        ${tl(trans.settings)}
+                    </button>
+                </div>
+            `);
+        tippy(settings_btn, {
+          theme: "window",
+          content: html.node`
+                    <div class="dialog-settings">
+                        <div class="setting-group blend">
+                            ${setting({ id: "format_guest_features" })}
+                            ${setting({ id: "show_guest_features" })}
+                        </div>
+                    </div>
+                `,
+          placement: "bottom",
+          interactive: true,
+          interactiveBorder: 10,
+          trigger: "click"
+        });
+      }
+      let top_albums = page.structure.main.querySelector("#top-albums");
+      if (top_albums) {
+        let top = top_albums.querySelector(".section-controls");
+        top.classList = "top-container";
+        let header = top.querySelector("h3");
+        let select_btn = top.querySelector(".dropdown-menu-clickable-button");
+        if (select_btn) {
+          select_btn.classList.add("select-button", "link-select", "blend-v2-btn");
+          select_btn.classList.remove("dropdown-menu-clickable-button");
+          header.after(html.node`
+                    <div class="accompany view-buttons blend blend-v2">
+                        ${select_btn}
+                    </div>
+                `);
+        }
+      }
       if (katsune && featured_items) {
-        let featured_panel = document.createElement("section");
-        featured_panel.classList.add("featured-items-panel");
-        featured_panel.innerHTML = featured_items.innerHTML;
-        let listen_panel = page.structure.side.querySelector(".listen-panel");
-        if (listen_panel)
-          listen_panel.after(featured_panel);
-        else
-          page.structure.side.insertBefore(featured_panel, page.structure.side.firstElementChild);
+        let featured_panel = html.node`
+                <section class="featured-items-panel">
+                    ${Array.from(featured_items.querySelectorAll("li")).map((item) => {
+          item.classList.remove("artist-header-featured-items-item-wrap--video-thumbnail");
+          let type = item.getAttribute("itemprop");
+          let text2 = tl(trans.latest_album);
+          if (type == "track")
+            text2 = tl(trans.popular_now);
+          let header = item.querySelector(".artist-header-featured-items-item-header");
+          header.parentElement.removeChild(header);
+          let name2 = correct_item_by_artist(item.querySelector(".artist-header-featured-items-item-name").textContent.trim(), page.name);
+          let aux = item.querySelector(".artist-header-featured-items-item-aux-text")?.textContent.trim();
+          let link = item.querySelector(".link-block-cover-link")?.getAttribute("href");
+          let img = item.querySelector("img")?.src;
+          if (type == "track")
+            img = img.replace("0.jpg", "mqdefault.jpg");
+          return html.node`
+                            <div class="featured-artist-item">
+                                <div class="sub-text normal" data-type=${type}>
+                                    <span class="bleh-icon" style="--icon: var(--mask)" />
+                                    ${text2}
+                                </div>
+                                <div class="source-album js-link-block link-block" data-type=${type}>
+                                    <div class="source-album-art">
+                                        <span class="cover-art">
+                                            <img src=${img} alt=${name2} />
+                                        </span>
+                                    </div>
+                                    <div class="source-album-details">
+                                        <h4 class="source-album-name">
+                                            <a href=${link}>${name2}</a>
+                                        </h4>
+                                        <p class="source-album-stats">${aux}</p>
+                                    </div>
+                                    <a class="js-link-block-cover-link link-block-cover-link" href=${link} tabindex="-1" aria-hidden="true" />
+                                </div>
+                            </div>
+                        `;
+        })}
+                </section>
+            `;
+        page.structure.main.querySelector(".top-overview-panel").after(featured_panel);
       }
     } else {
       let btn_add = page.structure.side.querySelector(".add-button");
@@ -14869,9 +17520,91 @@
         bleh_wiki_editor();
       else if (page.subpage == "listeners_overview")
         bleh_top_listeners();
+      else if (page.subpage == "listeners_you-know")
+        bleh_listeners();
+      else if (page.subpage == "tracks")
+        bleh_artist_tracks();
+      else if (page.subpage == "albums")
+        bleh_artist_albums();
     }
     log("status is", "page", "info", page);
     update_page();
+  }
+  function bleh_artist_tracks() {
+    let top_tracks = page.structure.main.querySelector("section");
+    if (top_tracks) {
+      let settings_btn;
+      let top = top_tracks.querySelector(".section-controls");
+      top.classList = "top-container";
+      let header = top.querySelector("h2");
+      header.classList.remove("subpage-title");
+      let select_btn = top.querySelector(".dropdown-menu-clickable-button");
+      if (select_btn) {
+        select_btn.classList.add("select-button", "link-select", "blend-v2-btn");
+        select_btn.classList.remove("dropdown-menu-clickable-button");
+      }
+      header.after(html.node`
+                <div class="accompany view-buttons blend blend-v2">
+                    ${select_btn}
+                </div>
+                <div class="view-buttons blend blend-v2">
+                    <button class="left-icon blend-v2-btn" data-type="settings" ref=${(el) => settings_btn = el}>
+                        ${tl(trans.settings)}
+                    </button>
+                </div>
+            `);
+      tippy(settings_btn, {
+        theme: "window",
+        content: html.node`
+                <div class="dialog-settings">
+                    <div class="setting-group blend">
+                        ${setting({ id: "format_guest_features" })}
+                        ${setting({ id: "show_guest_features" })}
+                    </div>
+                </div>
+            `,
+        placement: "bottom",
+        interactive: true,
+        interactiveBorder: 10,
+        trigger: "click"
+      });
+    }
+  }
+  function bleh_artist_albums() {
+    let top_albums = page.structure.main.querySelector("#artist-albums-section");
+    if (top_albums) {
+      let top = top_albums.querySelector(".section-controls");
+      top.classList = "top-container";
+      let header = top.querySelector("h3");
+      let select_btn = top.querySelector(".dropdown-menu-clickable-button");
+      if (select_btn) {
+        select_btn.classList.add("select-button", "link-select", "blend-v2-btn");
+        select_btn.classList.remove("dropdown-menu-clickable-button");
+      }
+      header.after(html.node`
+            <div class="accompany view-buttons blend blend-v2">
+                ${select_btn}
+            </div>
+        `);
+    }
+  }
+  function bleh_listeners() {
+    page.structure.side.appendChild(html.node`
+        <section class="side-actions">
+            <a class="btn side-action" data-type="profile" href="${root}user/${auth.name}/library/music/${sanitise(page.name)}">
+                ${auth.name}
+            </a>
+            ${settings.profile_shortcut != "" ? html.node`
+            <a class="btn side-action" data-type="profile_shortcut" href="${root}user/${settings.profile_shortcut}/library/music/${sanitise(page.name)}">
+                ${settings.profile_shortcut}
+            </a>
+            ` : ""}
+            <div class="sep" />
+            <button class="btn side-action" data-type="add" onclick=${() => other_listener(sanitise(page.name))}>
+                ${tl(trans.custom)}
+            </button>
+        </section>
+    `);
   }
 
   // src/pages/bleh_setup.js
@@ -14894,6 +17627,9 @@
     page.state.trans = 0;
     page.structure.row.removeChild(page.structure.row.firstElementChild);
     page.structure.row.removeChild(page.structure.row.firstElementChild);
+    page.structure.container.removeAttribute("data-beret");
+    page.structure.container.removeAttribute("data-short");
+    page.structure.content.classList.add("cards-view");
     let masthead = document.body.querySelector(".masthead");
     masthead.classList.add("in-setup");
     page.structure.main.innerHTML = `
@@ -14945,64 +17681,7 @@
       page.structure.setup.setAttribute("data-animating", "false");
       render(page.structure.setup_content, html`
             <p>${tl(trans.choose_a_theme)}</p>
-            <div class="setting-items full">
-                <div class="side-left full even-more">
-                    <button class="btn theme-item" data-bleh-theme="light" data-bleh--theme_type="light" onclick="change_theme_from_settings('light')">
-                        <div class="preview-container">
-                        <div class="preview" data-bleh--theme="light" data-bleh--theme_type="light">
-                            ${theme_preview()}
-                        </div>
-                        </div>
-                        <div class="text">
-                            <h5>${tl(trans.themes.light)}</h5>
-                        </div>
-                    </button>
-                    <button class="btn theme-item" data-bleh-theme="ink" data-bleh--theme_type="light" onclick="change_theme_from_settings('ink')">
-                        <div class="preview-container">
-                        <div class="preview" data-bleh--theme="ink" data-bleh--theme_type="light">
-                            ${theme_preview()}
-                        </div>
-                        </div>
-                        <div class="text">
-                            <h5>${tl(trans.themes.ink)}</h5>
-                        </div>
-                    </button>
-                </div>
-            </div>
-            <div class="setting-items full">
-                <div class="side-left full even-more">
-                    <button class="btn theme-item" data-bleh-theme="dark" onclick="change_theme_from_settings('dark')">
-                        <div class="preview-container">
-                        <div class="preview" data-bleh--theme="dark">
-                            ${theme_preview()}
-                        </div>
-                        </div>
-                        <div class="text">
-                            <h5>${tl(trans.themes.dark)}</h5>
-                        </div>
-                    </button>
-                    <button class="btn theme-item" data-bleh-theme="darker" onclick="change_theme_from_settings('darker')">
-                        <div class="preview-container">
-                        <div class="preview" data-bleh--theme="darker">
-                            ${theme_preview()}
-                        </div>
-                        </div>
-                        <div class="text">
-                            <h5>${tl(trans.themes.darker)}</h5>
-                        </div>
-                    </button>
-                    <button class="btn theme-item" data-bleh-theme="oled" onclick="change_theme_from_settings('oled')">
-                        <div class="preview-container">
-                        <div class="preview" data-bleh--theme="oled">
-                            ${theme_preview()}
-                        </div>
-                        </div>
-                        <div class="text">
-                            <h5>${tl(trans.themes.oled)}</h5>
-                        </div>
-                    </button>
-                </div>
-            </div>
+            ${theme_bubbles}
         `);
       page.structure.setup_footer.innerHTML = `
             <button class="see-more cancel" onclick="_setup_accessibility()">
@@ -15025,41 +17704,9 @@
       render(page.structure.setup_content, html`
             <p>${tl(trans.accessibility_explain)}</p>
             <div class="settings">
-                <div class="setting" data-type="toggle" id="container-reduced_motion" onclick="_update_item('reduced_motion')">
-                    <button class="btn reset" onclick="_reset_item('reduced_motion')">${tl(trans.reset)}</button>
-                    <div class="heading">
-                        <h5>${trans_legacy.en.settings.accessibility.reduced_motion.name}</h5>
-                        <p>${trans_legacy.en.settings.accessibility.reduced_motion.bio}</p>
-                    </div>
-                    <div class="toggle-wrap">
-                        <button class="toggle" id="toggle-reduced_motion" aria-checked="false">
-                            <div class="dot"></div>
-                        </button>
-                    </div>
-                </div>
-                <div class="setting" data-type="toggle" id="container-underline_links" onclick="_update_item('underline_links')">
-                    <button class="btn reset" onclick="_reset_item('underline_links')">${tl(trans.reset)}</button>
-                    <div class="heading">
-                        <h5>${tl(trans.underline_links.name)}</h5>
-                        <p>${tl(trans.underline_links.body)}</p>
-                    </div>
-                    <div class="toggle-wrap">
-                        <button class="toggle" id="toggle-underline_links" aria-checked="false">
-                            <div class="dot"></div>
-                        </button>
-                    </div>
-                </div>
-                <div class="setting" data-type="toggle" id="container-toggle_icon" onclick="_update_item('toggle_icon')">
-                    <button class="btn reset" onclick="_reset_item('toggle_icon')">${tl(trans.reset)}</button>
-                    <div class="heading">
-                        <h5>${trans_legacy.en.settings.accessibility.toggle_icon.name}</h5>
-                        <p>${trans_legacy.en.settings.accessibility.toggle_icon.bio}</p>
-                    </div>
-                    <div class="toggle-wrap">
-                        <button class="toggle" id="toggle-toggle_icon" aria-checked="false">
-                            <div class="dot"></div>
-                        </button>
-                    </div>
+                <div class="setting-group">
+                    ${setting({ id: "reduced_motion" })}
+                    ${setting({ id: "underline_links" })}
                 </div>
             </div>
         `);
@@ -15141,28 +17788,10 @@
                         </div>
                     </section>
                 </div>
-                <div class="setting" data-type="toggle" id="container-corrections" onclick="_update_item('corrections')">
-                    <button class="btn reset" onclick="_reset_item('corrections')">${tl(trans.reset)}</button>
-                    <div class="heading">
-                        <h5>${tl(trans.correct_titles_with_lotus)}</h5>
-                    </div>
-                    <div class="toggle-wrap">
-                        <button class="toggle" id="toggle-corrections" aria-checked="true">
-                            <div class="dot"></div>
-                        </button>
-                    </div>
-                </div>
-                <div class="setting" data-type="toggle" id="container-format_guest_features" onclick="_update_item('format_guest_features')">
-                    <button class="btn reset" onclick="_reset_item('format_guest_features')">${tl(trans.reset)}</button>
-                    <div class="heading">
-                        <h5>${tl(trans.format_guest_features.name)}</h5>
-                        <p>${tl(trans.format_guest_features.body)}</p>
-                    </div>
-                    <div class="toggle-wrap">
-                        <button class="toggle" id="toggle-format_guest_features" aria-checked="true">
-                            <div class="dot"></div>
-                        </button>
-                    </div>
+                <div class="setting-group">
+                    ${setting({ id: "corrections" })}
+                    ${setting({ id: "format_guest_features" })}
+                    ${setting({ id: "stacked_chartlist_info" })}
                 </div>
             </div>
         `);
@@ -15234,7 +17863,7 @@
     render(page_content, html`
         <div class="row">
             <div class="col-main">
-                <section class="error">
+                <section class="error-panel sour">
                     <div class="info">
                         <h1>${tl(trans.erm)}</h1>
                         <div class="subtle">${error_content.textContent}</div>
@@ -15293,16 +17922,18 @@
       theme: "window",
       content: html.node`
             <div class="dialog-settings">
-                <div class="setting" data-type="toggle" id="container-simulate_scroll" onclick="_update_item('simulate_scroll')">
-                    <button class="btn reset" onclick="_reset_item('simulate_scroll')">${tl(trans.reset)}</button>
-                    <div class="heading">
-                        <h5>${trans_legacy.en.charts.scroll.name}</h5>
-                        <p>${trans_legacy.en.charts.scroll.bio}</p>
-                    </div>
-                    <div class="toggle-wrap">
-                        <button class="toggle" id="toggle-simulate_scroll" aria-checked="true">
-                            <div class="dot"></div>
-                        </button>
+                <div class="setting-group blend">
+                    <div class="setting" data-type="toggle" id="container-simulate_scroll" onclick="_update_item('simulate_scroll')">
+                        <button class="btn reset" onclick="_reset_item('simulate_scroll')">${tl(trans.reset)}</button>
+                        <div class="heading">
+                            <h5>${trans_legacy.en.charts.scroll.name}</h5>
+                            <p>${trans_legacy.en.charts.scroll.bio}</p>
+                        </div>
+                        <div class="toggle-wrap">
+                            <button class="toggle" id="toggle-simulate_scroll" aria-checked="true">
+                                <div class="dot"></div>
+                            </button>
+                        </div>
                     </div>
                 </div>
             </div>
@@ -15347,17 +17978,17 @@
         let list_item;
         let image = item.querySelector(".globalchart-image img");
         let rank = item.querySelector(".globalchart-rank");
-        let name = item.querySelector(".globalchart-name a");
-        let link = name.getAttribute("href");
+        let name2 = item.querySelector(".globalchart-name a");
+        let link = name2.getAttribute("href");
         image.setAttribute("src", image.getAttribute("src").replace("/avatar70s/", "/avatar300s/"));
         if (index == 1) {
-          name.textContent = correct_artist(name.textContent);
+          name2.textContent = correct_artist(name2.textContent);
           list_item = html.node`
                     <li class="music-bookmarks-artists-item-wrap charts-list-item">
                         <div class="music-bookmarks-artists-item charts-list-item-inner">
                             <div class="charts-list-rank">${rank.textContent.trim()}</div>
                             <h3 class="music-bookmarks-artists-item-name">
-                                ${name}
+                                ${name2}
                             </h3>
                             <div class="media-item">
                                 <span class="music-bookmarks-albums-item-image cover-art">
@@ -15374,13 +18005,13 @@
         } else {
           let artist = item.querySelector(".globalchart-track-artist-name a");
           artist.textContent = correct_artist(artist.textContent);
-          name.textContent = correct_item_by_artist(name.textContent, artist.textContent);
+          name2.textContent = correct_item_by_artist(name2.textContent, artist.textContent);
           list_item = html.node`
                     <li class="music-bookmarks-albums-item-wrap charts-list-item">
                         <div class="music-bookmarks-albums-item charts-list-item-inner">
                             <div class="charts-list-rank">${rank.textContent.trim()}</div>
                             <h3 class="music-bookmarks-albums-item-name">
-                                ${name}
+                                ${name2}
                             </h3>
                             <p class="music-bookmarks-albums-item-artist">
                                 ${artist}
@@ -15420,9 +18051,13 @@
     checkup_page_structure(false, content_top);
     log("status is", "page", "info", page);
     update_page();
-    register_background(auth.avatar.replace("/avatar42s/", "/ar0/"));
-    let banner = document.createElement("div");
-    banner.classList.add("top-banner", "home-banner", "colourful");
+    let banner = load_banner(auth.name);
+    if (banner)
+      register_background(banner);
+    else if (!auth.avatar.endsWith("818148bf682d429dc215c1705eb27b98.png"))
+      register_background(auth.avatar.replace("/avatar42s/", "/ar0/"));
+    else
+      register_background(null);
     let hour = (/* @__PURE__ */ new Date()).getHours();
     let time;
     if (hour >= 22 || hour <= 6)
@@ -15434,70 +18069,73 @@
     else
       time = "evening";
     log(`hour ${hour} time ${time}`, "time");
-    banner.innerHTML = `
-        <div class="avatar">
-            <img src="${auth.avatar.replace("/avatar42s/", "/avatar170s/")}" alt="${tl(trans.your_avatar)}">
-            ${auth.sponsor ? `
-            <span class="avatar-status-dot user-status--bleh-sponsor"></span>
-            ` : ""}
+    let welcome = html.node`
+        <div class="top-banner home-banner">
+            <div class="avatar">
+                <img src="${auth.avatar.replace("/avatar42s/", "/avatar170s/")}" alt="${tl(trans.your_avatar)}">
+                ${auth.sponsor ? html.node`
+                <span class="avatar-status-dot user-status--bleh-sponsor"></span>
+                ` : ""}
+            </div>
+            <h1>${{ html: tl(trans[`good_${time}_user`]).replace("{user}", `<a class="mention" href="${root}user/${auth.name}">@${auth.name}</a>`) }}</h1>
         </div>
-        <h1>${tl(trans[`good_${time}_user`]).replace("{user}", `<a class="mention" href="${root}user/${auth.name}">@${auth.name}</a>`)}</h1>
     `;
-    page.structure.container.insertBefore(banner, page.structure.container.firstElementChild);
-    let nav = document.createElement("nav");
-    nav.classList.add("navlist", "secondary-nav", "navlist--more", "redesigned-navigation");
-    nav.innerHTML = `
-        <ul class="navlist-items">
-            <li class="navlist-item secondary-nav-item secondary-nav-item--home">
-                <a href="${root}music" class="secondary-nav-item-link ${page.subpage == "music" ? "secondary-nav-item-link--active" : ""}">
-                    ${tl(trans.home)}<div class="new-badge">${tl(trans.beta)}</div>
-                </a>
-            </li>
-            <li class="navlist-item secondary-nav-item secondary-nav-item--recommendations">
-                <a href="${root}music/+recommended" class="secondary-nav-item-link ${page.type == "recommended" ? "secondary-nav-item-link--active" : ""}">
-                    ${tl(trans.recommendations)}<div class="new-badge">${tl(trans.beta)}</div>
-                </a>
-            </li>
-            <li class="navlist-item secondary-nav-item secondary-nav-item--releases">
-                <a href="${root}music/+releases/out-now" class="secondary-nav-item-link ${page.type == "releases" ? "secondary-nav-item-link--active" : ""}">
-                    ${tl(trans.releases)}
-                </a>
-            </li>
-            <li class="navlist-item secondary-nav-item secondary-nav-item--events dont-rearrange">
-                <a href="${root}events" class="secondary-nav-item-link ${page.type == "events" ? "secondary-nav-item-link--active" : ""}">
-                    ${tl(trans.events)}<div class="new-badge">${tl(trans.beta)}</div>
-                </a>
-            </li>
-            <li class="navlist-item secondary-nav-item secondary-nav-item--bookmarks">
-                <a href="${root}music/+bookmarks" class="secondary-nav-item-link ${page.type == "bookmarks" ? "secondary-nav-item-link--active" : ""}">
-                    ${tl(trans.bookmarks)}
-                </a>
-            </li>
-            <li class="navlist-item secondary-nav-item secondary-nav-item--charts">
-                <a href="${root}charts" class="secondary-nav-item-link ${page.type == "charts" ? "secondary-nav-item-link--active" : ""}">
-                    ${tl(trans.charts)}
-                </a>
-            </li>
-            <li class="fill"></li>
-            <li class="navlist-item secondary-nav-item secondary-nav-item--settings">
-                <a href="${root}settings" class="secondary-nav-item-link ${page.type == "settings" ? "secondary-nav-item-link--active" : ""}">
-                    ${tl(trans.settings)}
-                </a>
-            </li>
-            <li class="navlist-item secondary-nav-item secondary-nav-item--bleh">
-                <a href="${root}bleh" class="secondary-nav-item-link ${page.type == "error" ? "secondary-nav-item-link--active" : ""}">
-                    ${tl(trans.settings)}
-                </a>
-            </li>
-            <li class="navlist-item secondary-nav-item secondary-nav-item--more">
-                <a class="secondary-nav-item-link no-text">
-                    ${tl(trans.more)}
-                </a>
-            </li>
-        </ul>
+    page.structure.container.insertBefore(welcome, page.structure.container.firstElementChild);
+    let nav = html.node`
+        <nav class="navlist secondary-nav navlist--more redesigned-navigation">
+            <ul class="navlist-items">
+                <li class="navlist-item secondary-nav-item secondary-nav-item--home">
+                    <a href="${root}music" class="secondary-nav-item-link ${page.subpage == "music" ? "secondary-nav-item-link--active" : ""}">
+                        ${tl(trans.home)}<div class="new-badge">${tl(trans.beta)}</div>
+                    </a>
+                </li>
+                <li class="navlist-item secondary-nav-item secondary-nav-item--recommendations">
+                    <a href="${root}music/+recommended" class="secondary-nav-item-link ${page.type == "recommended" ? "secondary-nav-item-link--active" : ""}">
+                        ${tl(trans.recommendations)}<div class="new-badge">${tl(trans.beta)}</div>
+                    </a>
+                </li>
+                <li class="navlist-item secondary-nav-item secondary-nav-item--releases">
+                    <a href="${root}music/+releases/out-now" class="secondary-nav-item-link ${page.type == "releases" ? "secondary-nav-item-link--active" : ""}">
+                        ${tl(trans.releases)}
+                    </a>
+                </li>
+                <li class="navlist-item secondary-nav-item secondary-nav-item--events dont-rearrange">
+                    <a href="${root}events" class="secondary-nav-item-link ${page.type == "events" ? "secondary-nav-item-link--active" : ""}">
+                        ${tl(trans.events)}<div class="new-badge">${tl(trans.beta)}</div>
+                    </a>
+                </li>
+                <li class="navlist-item secondary-nav-item secondary-nav-item--bookmarks">
+                    <a href="${root}music/+bookmarks" class="secondary-nav-item-link ${page.type == "bookmarks" ? "secondary-nav-item-link--active" : ""}">
+                        ${tl(trans.bookmarks)}
+                    </a>
+                </li>
+                <li class="navlist-item secondary-nav-item secondary-nav-item--charts">
+                    <a href="${root}charts" class="secondary-nav-item-link ${page.type == "charts" ? "secondary-nav-item-link--active" : ""}">
+                        ${tl(trans.charts)}
+                    </a>
+                </li>
+                <li class="fill"></li>
+                <li class="navlist-item secondary-nav-item secondary-nav-item--settings">
+                    <a href="${root}settings" class="secondary-nav-item-link ${page.type == "settings" ? "secondary-nav-item-link--active" : ""}">
+                        ${tl(trans.settings)}
+                    </a>
+                </li>
+                <li class="navlist-item secondary-nav-item secondary-nav-item--bleh">
+                    <a href="${root}bleh" class="secondary-nav-item-link ${page.type == "error" ? "secondary-nav-item-link--active" : ""}">
+                        ${tl(trans.settings)}
+                    </a>
+                </li>
+                <li class="navlist-item secondary-nav-item secondary-nav-item--more">
+                    <a class="secondary-nav-item-link no-text">
+                        ${tl(trans.more)}
+                    </a>
+                </li>
+            </ul>
+        </nav>
     `;
     page.structure.nav = nav;
-    banner.after(nav);
+    welcome.after(nav);
+    checkup_nav();
     if (page.type == "charts")
       bleh_charts();
     if (page.type == "settings")
@@ -15506,19 +18144,11 @@
     tippy(menu_button, {
       theme: "menu",
       content: html.node`
-            <button class="dropdown-menu-clickable-item update" onclick="_force_refresh_theme()">
-                ${trans_legacy.en.settings.home.update.update_now}
-            </button>
-            ${settings.dev ? html.node`
-            <a class="dropdown-menu-clickable-item update" href="https://github.com/katelyynn/bleh/raw/uwu/fm/bleh.user.css">
-                ${trans_legacy.en.settings.home.update.css}
-            </a>
-            ` : ""}
             <button class="dropdown-menu-clickable-item sponsor" onclick="_sponsor()">
                 ${tl(trans.sponsor)}
             </button>
             <a class="dropdown-menu-clickable-item issues" href="https://github.com/katelyynn/bleh/issues" target="_blank">
-                ${trans_legacy.en.settings.home.issues.name}
+                ${tl(trans.report_issue)}
             </a>
         `,
       placement: "bottom",
@@ -15666,14 +18296,14 @@
         button.classList.add("btn", "side-action");
       });
       side_actions.appendChild(form);
-      let sep = document.createElement("div");
-      sep.classList.add("sep");
-      side_actions.appendChild(sep);
       let main_panel = page.structure.main.querySelector(".event-summary-with-poster");
       if (!main_panel)
         main_panel = page.structure.main.querySelector(".event-details");
       let edit_button = main_panel.querySelector(".event-metadata + .event-metadata a");
       if (edit_button) {
+        let sep = document.createElement("div");
+        sep.classList.add("sep");
+        side_actions.appendChild(sep);
         edit_button.classList.add("btn", "side-action");
         edit_button.setAttribute("data-type", "edit");
         side_actions.appendChild(edit_button);
@@ -15693,16 +18323,17 @@
       let users = page.structure.main.querySelectorAll(".attendee-summary-user-inner-wrap");
       users.forEach((user) => {
         let avatar3 = user.querySelector(".attendee-summary-user-avatar");
-        let name = user.querySelector(".attendee-summary-user-link").textContent;
-        patch_avatar(avatar3, name, "event");
+        let name2 = user.querySelector(".attendee-summary-user-link").textContent;
+        patch_avatar(avatar3, name2, "event");
       });
       let cancelled = page.structure.main.querySelector(".event-status--cancelled");
       if (cancelled) {
         page.structure.main.removeChild(cancelled);
-        let alert = document.createElement("section");
-        alert.classList.add("cta", "first", "colourful", "error");
-        alert.innerHTML = `<strong>${tl(trans.event_cancelled)}</strong>`;
-        page.structure.main.insertBefore(alert, page.structure.main.firstElementChild);
+        page.structure.main.insertBefore(html.node`
+                <section class="cta first colourful error">
+                    <strong>${tl(trans.event_cancelled)}</strong>
+                </section>
+            `, page.structure.main.firstElementChild);
       }
     } else {
       if (page.subpage == "event_attendance_going" || page.subpage == "event_attendance_interested") {
@@ -15725,8 +18356,8 @@
         let users = page.structure.main.querySelectorAll(".user-list-inner-wrap");
         users.forEach((user) => {
           let avatar3 = user.querySelector(".user-list-avatar");
-          let name = user.querySelector(".user-list-link").textContent;
-          let badge = patch_avatar(avatar3, name, "follow");
+          let name2 = user.querySelector(".user-list-link").textContent;
+          let badge = patch_avatar(avatar3, name2, "follow");
           if (badge.type == "avatar-status-dot--staff")
             user.classList.add("staff-user");
         });
@@ -15771,14 +18402,13 @@
     bleh_events_manage();
     let back = document.body.querySelector(".content-top-back-link a");
     let nav = page.structure.nav.querySelector("ul");
-    let back_nav = document.createElement("li");
-    back_nav.classList.add("navlist-item", "secondary-nav-item", "secondary-nav-item--back");
-    back_nav.innerHTML = `
-        <a class="secondary-nav-item-link" href="${back.getAttribute("href")}">
-            ${trans_legacy.en.settings.back}
-        </a>
-    `;
-    nav.insertBefore(back_nav, nav.firstElementChild);
+    nav.insertBefore(html.node`
+        <li class="navlist-item secondary-nav-item secondary-nav-item--back">
+            <a class="secondary-nav-item-link" href="${back.getAttribute("href")}">
+                ${tl(trans.back)}
+            </a>
+        </li>
+    `, nav.firstElementChild);
   }
   function bleh_events_home() {
     page.subpage = "home";
@@ -15838,11 +18468,11 @@
         let link = notification.getAttribute("href");
         if (link.endsWith("/obsessions/set") || link.endsWith("/listening-report/month")) return;
         let avatar3 = notification.querySelector(".avatar");
-        let name = notification.querySelector(".inbox-notifications__item-description strong");
-        if (!name) return;
+        let name2 = notification.querySelector(".inbox-notifications__item-description strong");
+        if (!name2) return;
         let name_text = sanitise(return_name_from_avatar(avatar3.querySelector("img")));
         let badge = patch_avatar(avatar3, name_text);
-        name.classList.add("notification-user-name", `user-status--bleh-${badge.type}`, `user-status--bleh-user-${name_text}`);
+        name2.classList.add("notification-user-name", `user-status--bleh-${badge.type}`, `user-status--bleh-user-${name_text}`);
         if (notification.classList.contains("inbox-notifications__item--highlight"))
           notification.classList.add("notification-user-name", `user-status--bleh-${badge.type}`, `user-status--bleh-user-${name_text}`);
       });
@@ -15881,10 +18511,12 @@
     let search_form = page.structure.main.querySelector(".search-form");
     let search = search_form.querySelector("#site-search");
     let value = search.getAttribute("value");
-    let site_search = document.body.querySelector("#masthead-search-field");
-    site_search.setAttribute("value", value);
-    site_search.focus();
-    page.structure.main.removeChild(search_form);
+    if (!page.mobile) {
+      let site_search = document.body.querySelector("#masthead-search-field");
+      site_search.setAttribute("value", value);
+      site_search.focus();
+      page.structure.main.removeChild(search_form);
+    }
     page.name = value != "" ? value : "empty..";
     checkup_page_structure(false, content_top);
     log("status is", "page", "info", page);
@@ -15981,7 +18613,7 @@
                 <div class="info-side">
                     <div class="sub-text">${tl(trans.track)}</div>
                     <div class="title-container">
-                        <h1>${title}</h1>
+                        ${title}
                         ${position ? position : ""}
                     </div>
                     <h2>${artist}</h2>
@@ -16103,42 +18735,13 @@
     let shout_controls = page.structure.main.querySelector(".shoutbox-controls-wrapper:not([data-shouts])");
     if (shout_controls) {
       shout_controls.setAttribute("data-shouts", "true");
-      let panel = shout_controls.parentElement;
-      let select_btn = panel.querySelector(".dropdown-menu-clickable-button");
-      let settings_btn;
-      panel.insertBefore(html.node`
-            <div class="top-container">
-                ${panel.querySelector("h2")}
-                <div class="view-buttons blend">
-                    ${() => {
-        select_btn.classList.add("btn", "view-item", "interact-item");
-        select_btn.classList.remove("section-control");
-        return shout_controls;
-      }}
-                    <button class="panel-settings-button btn view-item interact-item" ref=${(el) => settings_btn = el}>${tl(trans.settings)}</button>
-                </div>
-            </div>
-        `, panel.firstElementChild);
-      tippy(settings_btn, {
-        theme: "window",
-        content: html.node`
-                <div class="dialog-settings">
-                    ${setting({ id: "shout_markdown" })}
-                    <div class="sep"></div>
-                    ${setting({ id: "accessible_name_colours" })}
-                    ${setting({ id: "underline_links" })}
-                </div>
-            `,
-        placement: "bottom",
-        interactive: true,
-        interactiveBorder: 10,
-        trigger: "click"
-      });
+      shout_header(shout_controls);
     }
     let shouts = page.structure.main.querySelectorAll(".shout:not([data-kate-processed])");
-    shouts.forEach((shout) => {
+    shouts.forEach((shout, index) => {
       try {
         shout.setAttribute("data-kate-processed", "true");
+        shout.style.setProperty("--delay", index * 0.04 + "s");
         let shout_name = shout.querySelector(".shout-user a");
         if (!shout_name) return;
         let shout_name_text = shout_name.textContent;
@@ -16153,9 +18756,7 @@
         }
         if (settings.shout_markdown) {
           let shout_body = shout.querySelector(".shout-body p");
-          shout_parse_queue.push({
-            element: shout_body
-          });
+          shout_parse_queue.push({ element: shout_body });
         }
         let shout_timestamp = shout.querySelector(".shout-timestamp time");
         if (shout_timestamp) {
@@ -16171,6 +18772,8 @@
         console.error("bleh - a shout failed to patch", e);
       }
     });
+    if (settings.shout_markdown && shout_parse_queue.length > 0)
+      parse_shout_queue();
     let shout_forms = document.querySelectorAll(".shout-form:not([data-kate-processed])");
     shout_forms.forEach((shout_form) => {
       shout_form.setAttribute("data-kate-processed", "true");
@@ -16184,9 +18787,9 @@
           send_button.querySelector(".btn-post-shout").click();
           notify({
             id: "shout",
-            title: trans_legacy.en.shout.name,
-            body: trans_legacy.en.shout.sent,
-            icon: "icon-16-send"
+            title: tl(trans.shouts),
+            body: tl(trans.sent),
+            icon: "icon-16-shoutbox"
           });
         }
       });
@@ -16200,279 +18803,92 @@
     button.textContent = tl(trans.send);
     if (page.mobile) return;
     tippy(button, {
-      content: tl(trans.send_quickly_with).replace("{kbd}", "<kbd>ctrl+\u21B5</kbd>"),
+      content: tl(trans.send_quickly_with).replace("{kbd}", '<span class="keybind"><kbd>\u2318</kbd><kbd>\u21B5</kbd></span>'),
       delay: [500, 0],
       allowHTML: true
     });
   }
+  function shout_header(shout_controls) {
+    if (!shout_controls) return;
+    let panel;
+    let settings_btn;
+    if (page.subpage == "shoutbox_shout") {
+      panel = page.structure.main.querySelector(":scope > section");
+      let link = window.location.href;
+      panel.insertBefore(html.node`
+            <div class="top-container">
+                <h2>
+                    <a class="text-colour-link" href=${link}>${tl(trans.shouts)}</a>
+                </h2>
+                <div class="accompany view-buttons blend blend-v2">
+                    <p class="notice">${tl(trans.single_shout)}</p>
+                </div>
+                <div class="view-buttons blend blend-v2">
+                    <button class="left-icon blend-v2-btn" data-type="settings" ref=${(el) => settings_btn = el}>
+                        ${tl(trans.settings)}
+                    </button>
+                </div>
+            </div>
+        `, panel.firstElementChild);
+    } else {
+      panel = shout_controls.parentElement;
+      let select_btn = panel.querySelector(".dropdown-menu-clickable-button");
+      let header = panel.querySelector("h2");
+      if (header) header.parentElement.removeChild(header);
+      let link = window.location.href;
+      let shoutbox_link = "+shoutbox";
+      if (page.type == "user" || "event")
+        shoutbox_link = "shoutbox";
+      if (!page.subpage.startsWith("shoutbox"))
+        link += `/${shoutbox_link}`;
+      panel.insertBefore(html.node`
+            <div class="top-container">
+                <h2>
+                    <a class="text-colour-link" href=${link}>${tl(trans.shouts)}</a>
+                </h2>
+                ${select_btn ? html.node`
+                    <div class="accompany view-buttons blend blend-v2">
+                        ${() => {
+        select_btn.classList.add("select-button", "link-select", "blend-v2-btn");
+        select_btn.classList.remove("section-control", "dropdown-menu-clickable-button");
+        return shout_controls;
+      }}
+                    </div>
+                ` : ""}
+                <div class="view-buttons blend blend-v2">
+                    <button class="left-icon blend-v2-btn" data-type="settings" ref=${(el) => settings_btn = el}>
+                        ${tl(trans.settings)}
+                    </button>
+                </div>
+            </div>
+        `, panel.firstElementChild);
+    }
+    tippy(settings_btn, {
+      theme: "window",
+      content: html.node`
+            <div class="dialog-settings">
+                <div class="setting-group blend">
+                    ${setting({ id: "shout_markdown" })}
+                    ${setting({ id: "accessible_name_colours" })}
+                    ${setting({ id: "underline_links" })}
+                </div>
+            </div>
+        `,
+      placement: "bottom",
+      interactive: true,
+      interactiveBorder: 10,
+      trigger: "click"
+    });
+  }
   function parse_shout_queue() {
-    let response = parse_shout(0);
-    if (response == 0) return;
-    setTimeout(function() {
-      parse_shout(0);
-    }, 100);
+    if (shout_parse_queue.length === 0) return;
+    const shout = shout_parse_queue.shift();
+    const parsed2 = markdown(shout.element.textContent);
+    render(shout.element, html.node`${parsed2}`);
+    log("parsed one shout", "shout", "log");
+    if (shout_parse_queue.length > 0)
+      setTimeout(parse_shout_queue, 50);
   }
-  function parse_shout(index) {
-    if (shout_parse_queue.length <= 0)
-      return 0;
-    let shout = shout_parse_queue[index];
-    console.log(index, shout_parse_queue, shout);
-    let converter = new showdown.Converter({
-      emoji: true,
-      excludeTrailingPunctuationFromURLs: true,
-      headerLevelStart: 5,
-      noHeaderId: true,
-      openLinksInNewWindow: true,
-      requireSpaceBeforeHeadingText: true,
-      simpleLineBreaks: true,
-      simplifiedAutoLink: true,
-      strikethrough: true,
-      underline: true,
-      ghCodeBlocks: false,
-      smartIndentationFix: true
-    });
-    let parsed_body = converter.makeHtml(shout.element.textContent.replace(/([@])([a-zA-Z0-9_]+)/g, `[$1$2](${root}user/$2)`).replace(/\[artist\]([a-zA-Z0-9]+)\[\/artist\]/g, `[$1](${root}music/$1)`).replace(/\[album artist=([a-zA-Z0-9]+)\]([a-zA-Z0-9\s]+)\[\/album\]/g, `[$2](${root}music/$1/$2)`).replace(/\[track artist=([a-zA-Z0-9]+)\]([a-zA-Z0-9\s]+)\[\/track\]/g, `[$2](${root}music/$1/_/$2)`).replace(/https:\/\/open\.spotify\.com\/user\/([A-Za-z0-9]+)\?si=([A-Za-z0-9]+)/g, "[@$1](https://open.spotify.com/user/$1)").replace(/&/g, "&amp;").replace(/</g, "&lt;").replace(/>/g, "&gt;").replace(/"/g, "&quot;").replace(/'/g, "&#039;"));
-    shout.element.innerHTML = parsed_body;
-    log(`parsed index ${index}`, "shout", "log");
-    shout_parse_queue.splice(index, 1);
-    return 1;
-  }
-  unsafeWindow._show_hidden_shout = function(shout_id) {
-    document.getElementById(`bleh--shout-${shout_id}`).setAttribute("data-bleh--shout-expanded", "true");
-  };
-
-  // src/style.js
-  function append_style() {
-    document.documentElement.classList.add("bleh-supports-loading");
-    for (var member in settings) delete settings[member];
-    Object.assign(settings, JSON.parse(localStorage.getItem("bleh")) || create_settings_template());
-    let cached_style = localStorage.getItem("bleh_cached_style") || "";
-    let url = window.location.href;
-    let url_split = url.split("/");
-    let url_length = url_split.length - 1;
-    if (url_split[url_length] == "playback" || url_split[url_length - 1] == "labs")
-      return;
-    document.documentElement.setAttribute("data-bleh--theme", settings.theme);
-    if (settings.dev) {
-      log("dev mode is on, will fetch for version only", "style");
-      check_style_info();
-      return;
-    }
-    if (cached_style == "") {
-      log("never cached, fetching", "style");
-      fetch_new_style();
-    } else {
-      log("requesting cache", "style");
-      load_cached_style(cached_style);
-    }
-  }
-  function load_cached_style(cached_style) {
-    let style_cache = document.createElement("style");
-    style_cache.setAttribute("id", "bleh--cached-style");
-    style_cache.textContent = cached_style;
-    document.documentElement.appendChild(style_cache);
-    log("loaded cache", "style");
-    setTimeout(function() {
-      document.body.classList.add("bleh");
-      theme_version.state = getComputedStyle(document.body).getPropertyValue("--version-build").replaceAll("'", "").replaceAll('"', "");
-      log(`theme version reporting as ${theme_version.state}`, "style");
-      chart_reflow();
-      log("checking timeout", "style");
-      check_if_style_cache_is_valid();
-    }, 200);
-  }
-  function check_if_style_cache_is_valid() {
-    let cached_style_timeout = new Date(localStorage.getItem("bleh_cached_style_timeout"));
-    let current_time = /* @__PURE__ */ new Date();
-    if (cached_style_timeout < current_time) {
-      if (theme_version.state != version.build && theme_version.state != "") {
-        log(`version mismatch! running ${version.build}, downloaded theme ${theme_version.state}`, "update");
-        prompt_for_update();
-        return;
-      }
-      log("fetching new, expired timeout", "style");
-      fetch_new_style();
-    } else {
-      log(`timeout valid until ${cached_style_timeout}`, "style");
-    }
-  }
-  function check_style_info() {
-    let cached_style_timeout = new Date(localStorage.getItem("bleh_cached_style_timeout"));
-    let current_time = /* @__PURE__ */ new Date();
-    if (cached_style_timeout < current_time) {
-      fetch_style_info();
-    }
-  }
-  unsafeWindow._prompt_for_update = function() {
-    prompt_for_update();
-  };
-  function prompt_for_update() {
-    dialog({
-      id: "bleh_update",
-      title: tl(trans.update_to_version).replace("{v}", theme_version.state),
-      body: html.node`
-            <div class="forms">
-                <div class="form">
-                    <div class="form-group proceed">
-                        <button class="btn primary icon" data-type="update" onclick=${() => start_update()}>${tl(trans.update_now)}</button>
-                    </div>
-                </div>
-                <div class="form">
-                    <div class="form-group deny">
-                        <button class="btn icon" data-type="ignore" onclick=${() => ignore_update()}>${tl(trans.ignore_for_now)}</button>
-                    </div>
-                </div>
-            </div>
-            <div class="sep" />
-            <p class="subtle">${tl(trans.update_not_looking_right)}</p>
-        `,
-      dismiss: false,
-      type: "update",
-      replace_if_possible: true
-    });
-  }
-  function ignore_update() {
-    dialog_rm2({
-      id: "bleh_update"
-    });
-    let api_expire = /* @__PURE__ */ new Date();
-    api_expire.setHours(api_expire.getHours() + 1);
-    localStorage.setItem("bleh_cached_style_timeout", api_expire);
-    log(`cached until ${api_expire}`, "style");
-  }
-  function start_update() {
-    open(`https://github.com/katelyynn/bleh/raw/${settings.branch}/fm/bleh.user.js`);
-    if (!settings.dev) {
-      final_update();
-    } else {
-      dialog({
-        id: "bleh_update",
-        title: tl(trans.update_to_version).replace("{v}", theme_version.state),
-        body: html.node`
-                <div class="forms">
-                    <div class="form">
-                        <div class="form-group proceed">
-                            <button class="btn primary icon" data-type="update" onclick=${() => start_css_update()}>${tl(trans.update_styles)}</button>
-                        </div>
-                    </div>
-                </div>
-                <div class="sep" />
-                <p class="subtle">${tl(trans.you_have_theme_loading_disabled)}</p>
-            `,
-        dismiss: false,
-        type: "update",
-        replace_if_possible: true
-      });
-    }
-  }
-  function start_css_update() {
-    if (settings.branch == "")
-      save_setting("branch", "uwu");
-    open(`https://github.com/katelyynn/bleh/raw/${settings.branch}/fm/bleh.user.css`);
-    final_update();
-  }
-  function final_update() {
-    dialog({
-      id: "bleh_update",
-      title: tl(trans.update_to_version).replace("{v}", theme_version.state),
-      body: html.node`
-            <div class="forms">
-                <div class="form">
-                    <div class="form-group proceed">
-                        <button class="btn primary icon" data-type="finish" onclick=${() => finish_update()}>${tl(trans.finish)}</button>
-                    </div>
-                </div>
-            </div>
-        `,
-      dismiss: false,
-      type: "update",
-      replace_if_possible: true
-    });
-  }
-  function finish_update() {
-    if (!settings.dev) {
-      dialog({
-        id: "bleh_wait",
-        title: tl(trans.update_to_version).replace("{v}", theme_version.state),
-        body: html.node`
-                <div class="loading-data-container">
-                    <div class="loading-data-text">${tl(trans.downloading_styles)}</div>
-                </div>
-            `,
-        type: "wait",
-        dismiss: false,
-        replace_if_possible: true
-      });
-      fetch_new_style(false, true);
-    } else {
-      invoke_reload();
-    }
-  }
-  function fetch_new_style(delete_old_style = false, reload_on_finish = false) {
-    let xhr = new XMLHttpRequest();
-    let url = `https://katelyynn.github.io/bleh/fm/bleh.css?${Math.random()}`;
-    log(`making request ${url}`, "style");
-    xhr.open("GET", url, true);
-    xhr.onload = function() {
-      log(`style responded ${xhr.status}`, "style");
-      let style = document.createElement("style");
-      style.textContent = this.response;
-      document.documentElement.appendChild(style);
-      if (delete_old_style)
-        document.documentElement.removeChild(document.getElementById("bleh--cached-style"));
-      localStorage.setItem("bleh_cached_style", this.response);
-      let api_expire = /* @__PURE__ */ new Date();
-      api_expire.setHours(api_expire.getHours() + 1);
-      localStorage.setItem("bleh_cached_style_timeout", api_expire);
-      log(`cached until ${api_expire}`, "style");
-      if (reload_on_finish) {
-        invoke_reload();
-        return;
-      }
-      setTimeout(function() {
-        document.body.classList.add("bleh");
-        theme_version.state = getComputedStyle(document.body).getPropertyValue("--version-build").replaceAll("'", "").replaceAll('"', "");
-        chart_reflow();
-        if (theme_version.state != version.build && theme_version.state != "") {
-          log(`version mismatch! running ${version.build}, downloaded theme ${theme_version.state}`, "update");
-          prompt_for_update();
-          return;
-        }
-      }, 200);
-    };
-    xhr.send();
-  }
-  function fetch_style_info(delete_old_style = false, reload_on_finish = false) {
-    let xhr = new XMLHttpRequest();
-    let url = "https://katelyynn.github.io/bleh/fm/bleh.css";
-    xhr.open("GET", url, true);
-    xhr.onload = function() {
-      log(`style responded ${xhr.status}`, "style");
-      let style = document.createElement("style");
-      style.textContent = this.response;
-      document.documentElement.appendChild(style);
-      localStorage.setItem("bleh_cached_style", this.response);
-      let api_expire = /* @__PURE__ */ new Date();
-      api_expire.setHours(api_expire.getHours() + 1);
-      localStorage.setItem("bleh_cached_style_timeout", api_expire);
-      log(`cached until ${api_expire}`, "style");
-      setTimeout(function() {
-        theme_version.state = getComputedStyle(document.body).getPropertyValue("--version-build").replaceAll("'", "").replaceAll('"', "");
-        document.documentElement.removeChild(style);
-        if (theme_version.state != version.build && theme_version.state != "") {
-          log(`version mismatch! running ${version.build}, downloaded theme ${theme_version.state}`, "update");
-          prompt_for_update();
-          return;
-        }
-      }, 200);
-    };
-    xhr.send();
-  }
-  unsafeWindow._force_refresh_theme = function() {
-    localStorage.removeItem("bleh_cached_style");
-    localStorage.removeItem("bleh_cached_style_timeout");
-    window.setTimeout(invoke_reload, 400);
-  };
 
   // src/components/radio.js
   function bleh_radio() {
@@ -16518,6 +18934,7 @@
 
   // src/pages/api.js
   function bleh_api() {
+    if (page.subpage == "docs") return;
     page.structure.container = document.body.querySelector(".page-content");
     try {
       page.structure.row = page.structure.container.querySelector(".row");
@@ -16530,7 +18947,17 @@
     checkup_page_structure(false, content_top);
     log("status is", "page", "info", page);
     update_page();
-    register_background(auth.avatar.replace("/avatar42s/", "/ar0/"));
+    let banner = load_banner(auth.name);
+    if (banner)
+      register_background(banner);
+    else if (!auth.avatar.endsWith("818148bf682d429dc215c1705eb27b98.png"))
+      register_background(auth.avatar.replace("/avatar42s/", "/ar0/"));
+    else
+      register_background(null);
+    if (page.subpage == "create_account") return;
+    page.structure.container.removeAttribute("data-beret");
+    page.structure.container.removeAttribute("data-short");
+    page.structure.content.classList.add("cards-view");
     let success = page.structure.container.querySelector(".alert-success");
     if (!success) {
       let old = page.structure.main.querySelector("section");
@@ -16540,7 +18967,7 @@
       let token = old.querySelector('form [name="csrfmiddlewaretoken"]').value;
       let cancel = old.querySelector(".form-submit a").getAttribute("href");
       render(page.structure.main, html`
-            <section class="api-connector">
+            <section class="api-connector sour">
                 <div class="avatar">
                     <img src="${auth.avatar.replace("/avatar42s/", "/avatar170s/")}" alt="${tl(trans.your_avatar)}">
                 </div>
@@ -16572,8 +18999,8 @@
         `);
     } else {
       page.name = success.querySelector("strong").textContent;
-      page.structure.main.innerHTML = `
-            <section class="api-connector">
+      render(page.structure.main, html`
+            <section class="api-connector sour">
                 <div class="avatar">
                     <img src="${auth.avatar.replace("/avatar42s/", "/avatar170s/")}" alt="${tl(trans.your_avatar)}">
                 </div>
@@ -16584,14 +19011,14 @@
                 <div class="sep"></div>
                 <div class="description">${tl(trans.you_can_now_close_this_tab)}</div>
                 <div class="connector-footer">
-                    <div class="btn-fill" />
+                    <div class="btn-fill"/>
                     <a class="see-more" href="${root}settings/applications">
                         ${tl(trans.manage_applications)}
                     </a>
-                    <div class="btn-fill" />
+                    <div class="btn-fill"/>
                 </div>
             </section>
-        `;
+        `);
     }
   }
 
@@ -16600,11 +19027,11 @@
     let users = page.structure.main.querySelectorAll(".user-list-item:not(.user-list-item-mobile-ad)");
     users.forEach((user) => {
       let avatar3 = user.querySelector(".user-list-avatar");
-      let name = user.querySelector(".user-list-link").textContent;
-      let badge = patch_avatar(avatar3, name, "follow");
+      let name2 = user.querySelector(".user-list-link").textContent;
+      let badge = patch_avatar(avatar3, name2, "follow");
       if (badge.type) {
-        user.querySelector(".user-list-link").classList.add(`user-status--bleh-${badge.type}`, `user-status--bleh-user-${name}`);
-        user.classList.add("colourful", `user-status--bleh-${badge.type}`, `user-status--bleh-user-${name}`);
+        user.querySelector(".user-list-link").classList.add(`user-status--bleh-${badge.type}`, `user-status--bleh-user-${name2}`);
+        user.classList.add("colourful", `user-status--bleh-${badge.type}`, `user-status--bleh-user-${name2}`);
       }
       let artists = user.querySelectorAll(".user-list-shared-artists a");
       artists.forEach((artist) => {
@@ -16618,6 +19045,1182 @@
         }));
       }
     });
+  }
+
+  // src/footer.js
+  function bleh_footer() {
+    let footer = document.body.querySelector("footer.footer");
+    let extras = html.node`
+        <div class="footer-extras">
+            ${footer.querySelector(".footer-top")}
+            ${footer.querySelector(".footer-bottom")}
+        </div>
+    `;
+    let kate = "katelyn";
+    if (sponsor_list && sponsor_list.special)
+      kate = sponsor_list.special[0];
+    render(footer, html`
+        <div class="footer-credit">
+            ${{ html: tl(trans.made_with_love).replace("{u}", `<a href="${root}user/${kate}">${kate}</a>`).replace("{c}", '<a href="https://github.com/katelyynn/bleh/graphs/contributors" target="_blank">').replace("{/c}", "</a>").replace("{h}", `<span class="bleh-icon heart sponsor-related">${tl(trans.love_lower)}</span>`) }}
+        </div>
+        <div class="footer-web">
+            <a href="https://github.com/katelyynn/bleh" target="_blank">${tl(trans.view_source)}</a>
+            <a href="https://github.com/katelyynn/bleh/issues/new/choose" target="_blank">${tl(trans.report_issue)}</a>
+            <a class="more" onclick=${() => extras.toggleAttribute("aria-expanded")}><span class="bleh-icon" /></a>
+        </div>
+        ${extras}
+    `);
+    let heart = footer.querySelector(".heart");
+    heart.addEventListener("click", () => sponsor());
+    tippy(heart, {
+      content: tl(trans.sponsor),
+      delay: [1e3, 0]
+    });
+  }
+
+  // src/components/rabbit.js
+  function register_rabbit() {
+    let input_box;
+    let selected = 0;
+    let feed = 0;
+    let matches = [];
+    let rabbit_hole;
+    let tip;
+    let depth = 0;
+    let searching;
+    let selected_search;
+    let fake;
+    let back;
+    const allowed_pages = [
+      "user",
+      "artist",
+      "album",
+      "track",
+      "tag"
+    ];
+    document.addEventListener("keydown", (e) => {
+      const cmd = e.getModifierState("Control") || e.getModifierState("Meta");
+      const key = e.key.toLowerCase();
+      if (cmd && ["k", ","].includes(key) && !page.structure.dialogs.hasChildNodes()) {
+        e.preventDefault();
+        depth = 0;
+        if (e.getModifierState("Shift")) {
+          rabbit();
+          use_page_as_ctx();
+          back = false;
+        } else {
+          rabbit();
+        }
+      } else if (page.structure.dialogs.hasChildNodes() && page.structure.dialogs.querySelector(':scope > [data-modal-type="rabbit"]')) {
+        if (e.key == "Escape") {
+          if (depth == 0 && input_box.querySelector("input").value == "" || !back) {
+            dialog_rm2({ id: "rabbit" });
+          } else {
+            input_box.querySelector("input").value = "";
+            depth = 0;
+            rabbit_search();
+          }
+        }
+        if (e.key == "Tab") {
+          e.preventDefault();
+          rabbit_tab();
+        }
+        if (e.key == "ArrowDown") {
+          e.preventDefault();
+          if (selected < matches.length - 1)
+            selected++;
+          else
+            selected = 0;
+          if (matches[selected].disabled) {
+            if (selected + 1 < matches.length - 1)
+              selected++;
+            else
+              selected = 0;
+          }
+          rabbit_select();
+        } else if (e.key == "ArrowUp") {
+          e.preventDefault();
+          if (selected > 0)
+            selected--;
+          else
+            selected = matches.length - 1;
+          if (matches[selected].disabled) {
+            if (selected - 1 > 0)
+              selected--;
+            else
+              selected = 0;
+          }
+          rabbit_select();
+        } else if (e.key == "Enter") {
+          rabbit_enter();
+        }
+      }
+      if (!page.structure.dialogs.hasChildNodes()) {
+        if (cmd && ["s"].includes(key)) {
+          e.preventDefault();
+          if (settings.profile_shortcut != "") {
+            window.location.href = `${root}user/${settings.profile_shortcut}`;
+          } else {
+            open_profile_shortcut_window();
+          }
+        }
+        if (cmd && ["b"].includes(key)) {
+          e.preventDefault();
+          window.location.href = `${root}bleh`;
+        }
+        if (cmd && ["d"].includes(key)) {
+          e.preventDefault();
+          rabbit();
+          search();
+          back = false;
+        }
+      }
+    });
+    function rabbit() {
+      page.state.rabbit_modal = dialog({
+        id: "rabbit",
+        title: "rabbit",
+        body: html.node`
+                ${() => {
+          input_box = input({
+            maxlength: 100,
+            placeholder: tl(trans.switch_placeholder),
+            focus: true
+          });
+          input_box.classList.add("rabbit-search");
+          return input_box;
+        }}
+                <div class="rabbit-hole" ref=${(el) => rabbit_hole = el} />
+                <div class="tip" ref=${(el) => tip = el} />
+            `,
+        type: "rabbit",
+        replace_if_possible: true,
+        handle_escape_manually: true
+      });
+      back = true;
+      fake = html.node`
+            <div class="fake-input" style="display: none;" />
+        `;
+      input_box.appendChild(fake);
+      rabbit_search();
+      rabbit_select();
+      input_box.querySelector("input").addEventListener("input", (e) => {
+        rabbit_search();
+      });
+      input_box.querySelector("input").focus();
+    }
+    function rabbit_tab() {
+      input_box.querySelector("input").focus();
+    }
+    function rabbit_search(pre_selected = "", pre_matches = null) {
+      if (depth < 2) {
+        input_box.querySelector("input").style.removeProperty("display");
+        fake.style.display = "none";
+      }
+      selected = 0;
+      if (!pre_matches && depth == 0) {
+        feed = [
+          {
+            type: "search",
+            text: tl(trans.search),
+            body: tl(trans.search_for_music_or_user),
+            keywords: ["user", "music", "tag", "discover", "explore"],
+            action: () => search(),
+            keybind: ["\u2318", "D"]
+          },
+          {
+            type: "on_this_page",
+            text: tl(trans.on_this_page),
+            body: tl(trans.use_current_page_as_context),
+            keywords: ["ctx", "context"],
+            action: () => use_page_as_ctx(),
+            keybind: ["\u2318", "\u21E7", "K"],
+            disabled: !allowed_pages.includes(page.type)
+          },
+          {
+            type: "profile",
+            text: tl(trans.profile),
+            body: tl(trans.opens_your_value).replace("{v}", tl(trans.profile)),
+            keywords: ["profile", "user", "me"],
+            action: () => window.location.href = `${root}user/${auth.name}`,
+            keybind: ["\u2318", "P"]
+          },
+          {
+            type: "profile_shortcut",
+            text: settings.profile_shortcut,
+            body: tl(trans.opens_your_value).replace("{v}", tl(trans.profile_shortcut.name)),
+            keywords: ["profile", "user", "shortcut", "friends"],
+            action: () => window.location.href = `${root}user/${settings.profile_shortcut}`,
+            hide: settings.profile_shortcut == "",
+            keybind: ["\u2318", "S"]
+          },
+          {
+            type: "notifications",
+            text: tl(trans.notifications.name),
+            body: tl(trans.opens_your_value).replace("{v}", tl(trans.notifications.name)),
+            keywords: ["bell", "updates"],
+            action: () => window.location.href = `${root}inbox/notifications`
+          },
+          {
+            type: "inbox",
+            text: tl(trans.inbox.name),
+            body: tl(trans.opens_your_value).replace("{v}", tl(trans.inbox.name)),
+            keywords: ["messages", "direct", "dms"],
+            action: () => window.location.href = `${root}inbox`
+          },
+          {
+            type: "theme",
+            text: tl(trans.themes.name),
+            body: tl(trans.opens_the_value).replace("{v}", tl(trans.theme_picker)),
+            keywords: ["themes", "light", "dark", "ash", "darker", "oled", "amoled", "midnight", "void", "abyss", "dark reader"],
+            action: () => bleh_theme_picker()
+          },
+          {
+            type: "news",
+            text: tl(trans.news),
+            body: tl(trans.opens_the_value).replace("{v}", tl(trans.news)),
+            keywords: ["bleh", "extension", "changelog", "feed"],
+            action: () => news()
+          },
+          {
+            type: "settings",
+            text: tl(trans.settings),
+            body: tl(trans.opens_your_value_settings).replace("{v}", tl(trans.profile)),
+            keywords: ["profile", "user", "pfp", "avi", "avatar", "config", "configuration", "configure", "picture", "photo"],
+            action: () => window.location.href = `${root}settings`
+          },
+          {
+            type: "bleh_settings",
+            text: tl(trans.settings),
+            body: tl(trans.opens_the_value).replace("{v}", tl(trans.bleh_settings)),
+            keywords: ["bleh", "extension", "config", "configuration", "configure"],
+            action: () => window.location.href = `${root}bleh`,
+            keybind: ["\u2318", "B"]
+          }
+        ];
+      } else if (pre_matches) {
+        feed = pre_matches;
+      }
+      if (depth < 3) {
+        let value = "";
+        if (value == "")
+          value = input_box.querySelector("input").value.trim().toLowerCase();
+        matches = [];
+        feed.forEach((item) => {
+          let extended = `${item.text} ${item.body} ${item.keywords.join(" ")} ${item.keybind ? item.keybind.join(" ").replace("\u2318", "Ctrl").replace("\u21E7", "Shift") : ""}`.toLowerCase();
+          let words = value.split(" ");
+          let match = false;
+          words.forEach((word) => {
+            if (extended.includes(word)) {
+              match = true;
+            }
+          });
+          if (item.hide)
+            match = false;
+          if (match)
+            matches.push(item);
+        });
+        render(rabbit_hole, html`
+                ${matches.length > 0 ? matches.map((item, index) => () => {
+          let button = html.node`
+                        <button class="dropdown-menu-clickable-item rabbit-hole-item" data-type=${item.type} onclick=${item.action} disabled=${item.disabled}>
+                            <div class="info">
+                                <div class="text">${item.text}</div>
+                            </div>
+                            ${item.keybind ? html.node`
+                            <div class="keybind">
+                                ${item.keybind.map((key) => html.node`<kbd>${key}</kbd>`)}
+                            </div>
+                            ` : ""}
+                        </button>
+                    `;
+          if (!item.disabled) {
+            button.addEventListener("mouseover", () => {
+              selected = index;
+              rabbit_select(false, true);
+            });
+          }
+          return button;
+        }) : html.node`
+                    <div class="loading-data-container">
+                        <div class="loading-data-text failed">${tl(trans.nothing_matches_your_search)}</div>
+                    </div>
+                `}
+            `);
+        rabbit_select();
+      } else {
+        matches = feed;
+      }
+    }
+    function rabbit_select(click = false, with_mouse = false) {
+      rabbit_tip(tl(trans.select_an_option));
+      if (depth == 3 && click) {
+        searching[selected_search].name = input_box.querySelector("input").value;
+        input_box.querySelector("input").value = "";
+        depth = 2;
+        search_fill();
+        return;
+      } else if (depth == 3) {
+        return;
+      }
+      let buttons = rabbit_hole.querySelectorAll("button");
+      buttons.forEach((button, index) => {
+        if (index == selected) {
+          button.setAttribute("aria-selected", "true");
+          if (!with_mouse) {
+            button.scrollIntoView({
+              behavior: "smooth",
+              block: "center"
+            });
+          }
+          if (click) {
+            input_box.querySelector("input").value = "";
+            button.click();
+          }
+          rabbit_tip(matches[index].body);
+        } else {
+          button.setAttribute("aria-selected", "false");
+        }
+      });
+      input_box.querySelector("input").focus();
+    }
+    function rabbit_tip(text2) {
+      render(tip, html`
+        <div class="left">
+            ${depth == 0 ? html.node`
+            <kbd>Esc</kbd> ${tl(trans.close)}
+            ` : html.node`
+            <kbd>Esc</kbd> ${tl(trans.back)}
+            `}
+        </div>
+        <div class="right">
+            ${text2}
+        </div>
+        `);
+    }
+    function rabbit_enter() {
+      rabbit_select(true);
+    }
+    function append_search(id) {
+      if (id == "artist" || id == "user" || id == "tag")
+        selected_search = "primary";
+      else
+        selected_search = "secondary";
+      depth = 3;
+      searching[selected_search].type = id;
+      input_box.querySelector("input").value = "";
+      input_box.querySelector("input").style.removeProperty("display");
+      fake.style.display = "none";
+    }
+    function bleh_theme_picker() {
+      depth = 1;
+      rabbit_search("internal:theme_picker", [
+        {
+          type: "theme_auto",
+          text: tl(trans.auto),
+          body: tl(trans.changes_your_theme),
+          keywords: ["system"],
+          action: () => save_setting("theme", "light"),
+          hide: !ff("auto_theme")
+        },
+        {
+          type: "theme_light",
+          text: tl(trans.themes.light),
+          body: tl(trans.changes_your_theme),
+          keywords: ["sun", "day"],
+          action: () => save_setting("theme", "light")
+        },
+        {
+          type: "theme_ink",
+          text: tl(trans.themes.ink),
+          body: tl(trans.changes_your_theme),
+          keywords: ["sun", "day", "light", "e-ink"],
+          action: () => save_setting("theme", "ink")
+        },
+        {
+          type: "theme_ash",
+          text: tl(trans.themes.dark),
+          body: tl(trans.changes_your_theme),
+          keywords: ["dark", "night", "grey", "gray"],
+          action: () => save_setting("theme", "dark")
+        },
+        {
+          type: "theme_dark",
+          text: tl(trans.themes.darker),
+          body: tl(trans.changes_your_theme),
+          keywords: ["dark", "night", "grey", "gray"],
+          action: () => save_setting("theme", "darker")
+        },
+        {
+          type: "theme_void",
+          text: tl(trans.themes.oled),
+          body: tl(trans.changes_your_theme),
+          keywords: ["dark", "night", "black"],
+          action: () => save_setting("theme", "oled")
+        }
+      ]);
+    }
+    function use_page_as_ctx() {
+      if (!allowed_pages.includes(page.type))
+        return;
+      depth = 1;
+      let url_start = root;
+      if (page.type == "user")
+        url_start += "user/";
+      else if (page.type == "album" || page.type == "artist" || page.type == "track")
+        url_start += "music/";
+      if (page.type == "album")
+        url_start += `${sanitise(page.sister)}/${sanitise(page.name)}`;
+      else if (page.type == "track")
+        url_start += `${sanitise(page.sister)}/_/${sanitise(page.name)}`;
+      else
+        url_start += sanitise(page.name);
+      if (page.type == "user") {
+        rabbit_search("internal:ctx", [
+          {
+            type: "overview",
+            text: tl(trans.overview),
+            body: tl(trans.opens_the_value_for_type).replace("{v}", tl(trans.overview)).replace("{t}", page.name),
+            keywords: ["home"],
+            action: () => window.location.href = url_start
+          },
+          {
+            type: "reports",
+            text: tl(trans.reports),
+            body: tl(trans.opens_the_value_for_type).replace("{v}", tl(trans.reports)).replace("{t}", page.name),
+            keywords: ["listening report", "reports", "wrapped", "playback", "spotify"],
+            action: () => window.location.href = url_start + "/listening-report"
+          },
+          {
+            type: "library",
+            text: tl(trans.library),
+            body: tl(trans.opens_the_value_for_type).replace("{v}", tl(trans.library)).replace("{t}", page.name),
+            keywords: ["library", "music", "artists", "albums", "tracks", "scrobbles", "history"],
+            action: () => window.location.href = url_start + "/library"
+          },
+          {
+            type: "friends",
+            text: tl(trans.friends),
+            body: tl(trans.opens_the_value_for_type).replace("{v}", tl(trans.friends)).replace("{t}", page.name),
+            keywords: ["friends", "following", "followers", "neighbours", "similar"],
+            action: () => window.location.href = url_start + "/following"
+          },
+          {
+            type: "following",
+            text: tl(trans.following),
+            body: tl(trans.opens_the_value_for_type).replace("{v}", tl(trans.following)).replace("{t}", page.name),
+            keywords: ["friends", "following"],
+            action: () => window.location.href = url_start + "/following"
+          },
+          {
+            type: "followers",
+            text: tl(trans.followers),
+            body: tl(trans.opens_the_value_for_type).replace("{v}", tl(trans.followers)).replace("{t}", page.name),
+            keywords: ["friends", "followers"],
+            action: () => window.location.href = url_start + "/followers"
+          },
+          {
+            type: "neighbours",
+            text: tl(trans.neighbours),
+            body: tl(trans.opens_the_value_for_type).replace("{v}", tl(trans.neighbours)).replace("{t}", page.name),
+            keywords: ["friends", "neighbours", "similar"],
+            action: () => window.location.href = url_start + "/neighbours"
+          },
+          {
+            type: "shouts",
+            text: tl(trans.shouts),
+            body: tl(trans.opens_the_value_for_type).replace("{v}", tl(trans.shouts)).replace("{t}", page.name),
+            keywords: ["shout", "shoutbox", "shouts", "comments"],
+            action: () => window.location.href = url_start + "/shoutbox"
+          },
+          {
+            type: "loved",
+            text: tl(trans.loved),
+            body: tl(trans.opens_the_value_for_type).replace("{v}", tl(trans.loved)).replace("{t}", page.name),
+            keywords: ["loved", "hearted", "favourites", "favorites", "luved"],
+            action: () => window.location.href = url_start + "/loved"
+          },
+          {
+            type: "obsessions",
+            text: tl(trans.obsessions),
+            body: tl(trans.opens_the_value_for_type).replace("{v}", tl(trans.obsessions)).replace("{t}", page.name),
+            keywords: ["loved", "hearted", "favourites", "favorites", "obsessions", "looping"],
+            action: () => window.location.href = url_start + "/obsessions"
+          },
+          {
+            type: "events",
+            text: tl(trans.events),
+            body: tl(trans.opens_the_value_for_type).replace("{v}", tl(trans.events)).replace("{t}", page.name),
+            keywords: ["events", "festivals", "tour", "live"],
+            action: () => window.location.href = url_start + "/events"
+          },
+          {
+            type: "playlists",
+            text: tl(trans.playlists),
+            body: tl(trans.opens_the_value_for_type).replace("{v}", tl(trans.playlists)).replace("{t}", page.name),
+            keywords: ["playlists", "folders"],
+            action: () => window.location.href = url_start + "/playlists"
+          },
+          {
+            type: "tags",
+            text: tl(trans.tags),
+            body: tl(trans.opens_the_value_for_type).replace("{v}", tl(trans.tags)).replace("{t}", page.name),
+            keywords: ["tags", "tagged", "related", "groups", "grouped"],
+            action: () => window.location.href = url_start + "/tags"
+          },
+          {
+            type: "compare",
+            text: tl(trans.compare),
+            body: tl(trans.compares_your_taste).replace("{v}", page.name),
+            keywords: ["similar", "taste", "music", "shared"],
+            action: () => compare(),
+            hide: page.name == auth.name
+          },
+          {
+            type: "collage",
+            text: tl(trans.collage),
+            body: tl(trans.create_a_collage),
+            keywords: ["taste", "music", "chart", "5x5", "topster"],
+            action: () => collage()
+          }
+        ]);
+      } else if (page.type == "artist") {
+        rabbit_search("internal:ctx", [
+          {
+            type: "overview",
+            text: tl(trans.overview),
+            body: tl(trans.opens_the_value_for_type).replace("{v}", tl(trans.overview)).replace("{t}", page.name),
+            keywords: ["home"],
+            action: () => window.location.href = url_start
+          },
+          {
+            type: "tracks",
+            text: tl(trans.tracks),
+            body: tl(trans.opens_the_value_for_type).replace("{v}", tl(trans.tracks)).replace("{t}", page.name),
+            keywords: ["music", "top"],
+            action: () => window.location.href = url_start + "/+tracks"
+          },
+          {
+            type: "albums",
+            text: tl(trans.albums),
+            body: tl(trans.opens_the_value_for_type).replace("{v}", tl(trans.albums)).replace("{t}", page.name),
+            keywords: ["music", "top"],
+            action: () => window.location.href = url_start + "/+albums"
+          },
+          {
+            type: "photos",
+            text: tl(trans.photos),
+            body: tl(trans.opens_the_value_for_type).replace("{v}", tl(trans.photos)).replace("{t}", page.name),
+            keywords: ["gallery", "artwork", "image", "picture", "avatar"],
+            action: () => window.location.href = url_start + "/+images"
+          },
+          {
+            type: "similar",
+            text: tl(trans.similar_artists),
+            body: tl(trans.opens_the_value_for_type).replace("{v}", tl(trans.similar_artists)).replace("{t}", page.name),
+            keywords: ["music"],
+            action: () => window.location.href = url_start + "/+similar"
+          },
+          {
+            type: "wiki",
+            text: tl(trans.biography),
+            body: tl(trans.opens_the_value_for_type).replace("{v}", tl(trans.biography)).replace("{t}", page.name),
+            keywords: ["wiki", "about", "text"],
+            action: () => window.location.href = url_start + "/+wiki"
+          },
+          {
+            type: "listeners",
+            text: tl(trans.listeners),
+            body: tl(trans.opens_the_value_for_type).replace("{v}", tl(trans.listeners)).replace("{t}", page.name),
+            keywords: ["top"],
+            action: () => window.location.href = url_start + "/+listeners"
+          },
+          {
+            type: "listeners_you_know",
+            text: tl(trans.listeners_you_know),
+            body: tl(trans.opens_the_value_for_type).replace("{v}", tl(trans.listeners_you_know)).replace("{t}", page.name),
+            keywords: ["friends"],
+            action: () => window.location.href = url_start + "/+listeners/you-know"
+          },
+          {
+            type: "shouts",
+            text: tl(trans.shouts),
+            body: tl(trans.opens_the_value_for_type).replace("{v}", tl(trans.shouts)).replace("{t}", page.name),
+            keywords: ["shout", "shoutbox", "shouts", "comments"],
+            action: () => window.location.href = url_start + "/shoutbox"
+          },
+          {
+            type: "events",
+            text: tl(trans.events),
+            body: tl(trans.opens_the_value_for_type).replace("{v}", tl(trans.events)).replace("{t}", page.name),
+            keywords: ["events", "festivals", "tour", "live"],
+            action: () => window.location.href = url_start + "/events"
+          },
+          {
+            type: "tags",
+            text: tl(trans.tags),
+            body: tl(trans.opens_the_value_for_type).replace("{v}", tl(trans.tags)).replace("{t}", page.name),
+            keywords: ["tags", "tagged", "related", "groups", "grouped"],
+            action: () => window.location.href = url_start + "/tags"
+          }
+        ]);
+      } else if (page.type == "album") {
+        rabbit_search("internal:ctx", [
+          {
+            type: "overview",
+            text: tl(trans.overview),
+            body: tl(trans.opens_the_value_for_type).replace("{v}", tl(trans.overview)).replace("{t}", page.name),
+            keywords: ["home"],
+            action: () => window.location.href = url_start
+          },
+          {
+            type: "wiki",
+            text: tl(trans.wiki),
+            body: tl(trans.opens_the_value_for_type).replace("{v}", tl(trans.wiki)).replace("{t}", page.name),
+            keywords: ["wiki", "about", "text"],
+            action: () => window.location.href = url_start + "/+wiki"
+          },
+          {
+            type: "photos",
+            text: tl(trans.artwork),
+            body: tl(trans.opens_the_value_for_type).replace("{v}", tl(trans.artwork)).replace("{t}", page.name),
+            keywords: ["gallery", "artwork", "image", "picture", "avatar"],
+            action: () => window.location.href = url_start + "/+images"
+          },
+          {
+            type: "shouts",
+            text: tl(trans.shouts),
+            body: tl(trans.opens_the_value_for_type).replace("{v}", tl(trans.shouts)).replace("{t}", page.name),
+            keywords: ["shout", "shoutbox", "shouts", "comments"],
+            action: () => window.location.href = url_start + "/shoutbox"
+          },
+          {
+            type: "tags",
+            text: tl(trans.tags),
+            body: tl(trans.opens_the_value_for_type).replace("{v}", tl(trans.tags)).replace("{t}", page.name),
+            keywords: ["tags", "tagged", "related", "groups", "grouped"],
+            action: () => window.location.href = url_start + "/tags"
+          }
+        ]);
+      } else if (page.type == "track") {
+        rabbit_search("internal:ctx", [
+          {
+            type: "overview",
+            text: tl(trans.overview),
+            body: tl(trans.opens_the_value_for_type).replace("{v}", tl(trans.overview)).replace("{t}", page.name),
+            keywords: ["home"],
+            action: () => window.location.href = url_start
+          },
+          {
+            type: "albums",
+            text: tl(trans.albums),
+            body: tl(trans.opens_the_value_for_type).replace("{v}", tl(trans.albums)).replace("{t}", page.name),
+            keywords: ["music", "top"],
+            action: () => window.location.href = url_start + "/+albums"
+          },
+          {
+            type: "wiki",
+            text: tl(trans.wiki),
+            body: tl(trans.opens_the_value_for_type).replace("{v}", tl(trans.wiki)).replace("{t}", page.name),
+            keywords: ["wiki", "about", "text"],
+            action: () => window.location.href = url_start + "/+wiki"
+          },
+          {
+            type: "shouts",
+            text: tl(trans.shouts),
+            body: tl(trans.opens_the_value_for_type).replace("{v}", tl(trans.shouts)).replace("{t}", page.name),
+            keywords: ["shout", "shoutbox", "shouts", "comments"],
+            action: () => window.location.href = url_start + "/shoutbox"
+          },
+          {
+            type: "tags",
+            text: tl(trans.tags),
+            body: tl(trans.opens_the_value_for_type).replace("{v}", tl(trans.tags)).replace("{t}", page.name),
+            keywords: ["tags", "tagged", "related", "groups", "grouped"],
+            action: () => window.location.href = url_start + "/tags"
+          }
+        ]);
+      } else if (page.type == "tag") {
+        rabbit_search("internal:ctx", [
+          {
+            type: "overview",
+            text: tl(trans.overview),
+            body: tl(trans.opens_the_value_for_type).replace("{v}", tl(trans.overview)).replace("{t}", page.name),
+            keywords: ["home"],
+            action: () => window.location.href = url_start
+          },
+          {
+            type: "artists",
+            text: tl(trans.artists),
+            body: tl(trans.opens_the_value_for_type).replace("{v}", tl(trans.artists)).replace("{t}", page.name),
+            keywords: ["music", "top"],
+            action: () => window.location.href = url_start + "/artists"
+          },
+          {
+            type: "albums",
+            text: tl(trans.albums),
+            body: tl(trans.opens_the_value_for_type).replace("{v}", tl(trans.albums)).replace("{t}", page.name),
+            keywords: ["music", "top"],
+            action: () => window.location.href = url_start + "/albums"
+          },
+          {
+            type: "tracks",
+            text: tl(trans.tracks),
+            body: tl(trans.opens_the_value_for_type).replace("{v}", tl(trans.tracks)).replace("{t}", page.name),
+            keywords: ["music", "top"],
+            action: () => window.location.href = url_start + "/tracks"
+          },
+          {
+            type: "wiki",
+            text: tl(trans.wiki),
+            body: tl(trans.opens_the_value_for_type).replace("{v}", tl(trans.wiki)).replace("{t}", page.name),
+            keywords: ["wiki", "about", "text"],
+            action: () => window.location.href = url_start + "/wiki"
+          },
+          {
+            type: "shouts",
+            text: tl(trans.shouts),
+            body: tl(trans.opens_the_value_for_type).replace("{v}", tl(trans.shouts)).replace("{t}", page.name),
+            keywords: ["shout", "shoutbox", "shouts", "comments"],
+            action: () => window.location.href = url_start + "/shoutbox"
+          }
+        ]);
+      }
+    }
+    function search() {
+      depth = 2;
+      if (!page.structure.dialogs.hasChildNodes())
+        rabbit();
+      searching = {
+        primary: {
+          name: "",
+          type: ""
+        },
+        secondary: {
+          name: "",
+          type: ""
+        }
+      };
+      search_fill();
+    }
+    function search_fill() {
+      depth = 2;
+      input_box.querySelector("input").style.display = "none";
+      fake.style.removeProperty("display");
+      if (searching.primary.type && searching.secondary.type) {
+        render(fake, html`
+                <label>${searching.primary.type}:</label>
+                <p>${searching.primary.name}</p>
+                <label>${searching.secondary.type}:</label>
+                <p>${searching.secondary.name}</p>
+            `);
+      } else if (searching.primary.type) {
+        render(fake, html`
+                <label>${searching.primary.type}:</label>
+                <p>${searching.primary.name}</p>
+            `);
+      } else {
+        render(fake, html`
+                <i>${tl(trans.choose_a_search_type)}</i>
+            `);
+      }
+      if (searching.primary.type == "artist") {
+        rabbit_search("internal:search", [
+          {
+            type: "finish",
+            text: tl(trans.finish),
+            body: tl(trans.finish_search),
+            keywords: ["finish"],
+            action: () => search_finish()
+          },
+          {
+            type: "artist",
+            text: tl(trans.artist),
+            body: tl(trans.search_for_value).replace("{v}", tl(trans.artist)),
+            keywords: ["profile"],
+            action: () => append_search("artist")
+          },
+          {
+            type: "album",
+            text: tl(trans.album),
+            body: tl(trans.search_for_value).replace("{v}", tl(trans.album)),
+            keywords: ["record"],
+            action: () => append_search("album")
+          },
+          {
+            type: "track",
+            text: tl(trans.track),
+            body: tl(trans.search_for_value).replace("{v}", tl(trans.track)),
+            keywords: ["song"],
+            action: () => append_search("track")
+          }
+        ]);
+      } else if (searching.primary.type == "user") {
+        rabbit_search("internal:search", [
+          {
+            type: "search",
+            text: tl(trans.search),
+            body: tl(trans.finish_search),
+            keywords: ["finish"],
+            action: () => search_finish()
+          },
+          {
+            type: "user",
+            text: tl(trans.profile),
+            body: tl(trans.search_for_value).replace("{v}", tl(trans.profile)),
+            keywords: [],
+            action: () => append_search("user")
+          }
+        ]);
+      } else if (searching.primary.type == "tag") {
+        rabbit_search("internal:search", [
+          {
+            type: "finish",
+            text: tl(trans.finish),
+            body: tl(trans.finish_search),
+            keywords: ["finish"],
+            action: () => search_finish()
+          },
+          {
+            type: "tag",
+            text: tl(trans.tag),
+            body: tl(trans.search_for_value).replace("{v}", tl(trans.tag)),
+            keywords: ["genre"],
+            action: () => append_search("tag")
+          }
+        ]);
+      } else if (searching.secondary.type == "album" || searching.secondary.type == "track") {
+        rabbit_search("internal:search", [
+          {
+            type: "artist",
+            text: tl(trans.artist),
+            body: tl(trans.search_for_value).replace("{v}", tl(trans.artist)),
+            keywords: ["profile"],
+            action: () => append_search("artist")
+          }
+        ]);
+      } else {
+        rabbit_search("internal:search", [
+          {
+            type: "artist",
+            text: tl(trans.artist),
+            body: tl(trans.search_for_value).replace("{v}", tl(trans.artist)),
+            keywords: ["profile"],
+            action: () => append_search("artist")
+          },
+          {
+            type: "album",
+            text: tl(trans.album),
+            body: tl(trans.search_for_value).replace("{v}", tl(trans.album)),
+            keywords: ["record"],
+            action: () => append_search("album")
+          },
+          {
+            type: "track",
+            text: tl(trans.track),
+            body: tl(trans.search_for_value).replace("{v}", tl(trans.track)),
+            keywords: ["song"],
+            action: () => append_search("track")
+          },
+          {
+            type: "user",
+            text: tl(trans.profile),
+            body: tl(trans.search_for_value).replace("{v}", tl(trans.profile)),
+            keywords: [],
+            action: () => append_search("user")
+          },
+          {
+            type: "tag",
+            text: tl(trans.tag),
+            body: tl(trans.search_for_value).replace("{v}", tl(trans.tag)),
+            keywords: ["genre"],
+            action: () => append_search("tag")
+          }
+        ]);
+      }
+    }
+    function search_finish() {
+      if (searching.primary.type == "artist") {
+        if (searching.secondary.type == "album") {
+          window.location.href = `${root}music/${sanitise(searching.primary.name)}/${sanitise(searching.secondary.name)}`;
+        } else if (searching.secondary.type == "track") {
+          window.location.href = `${root}music/${sanitise(searching.primary.name)}/_/${sanitise(searching.secondary.name)}`;
+        } else {
+          window.location.href = `${root}music/${sanitise(searching.primary.name)}`;
+        }
+      } else if (searching.primary.type == "user") {
+        window.location.href = `${root}user/${sanitise(searching.primary.name)}`;
+      } else if (searching.primary.type == "tag") {
+        window.location.href = `${root}tag/${sanitise(searching.primary.name)}`;
+      }
+    }
+  }
+
+  // src/components/dialog_extender.js
+  function dialog_extender() {
+    let wrappers = document.body.querySelectorAll(":scope > .popup_wrapper, :scope > div > .popup_wrapper");
+    wrappers.forEach((wrapper) => {
+      let modal_dialog = wrapper.querySelector(".modal-dialog:not([data-dialog-extender])");
+      if (!modal_dialog) return;
+      modal_dialog.setAttribute("data-dialog-extender", "true");
+      let body = modal_dialog.querySelector(".modal-body");
+      let title = body.querySelector(".modal-title");
+      let contents = body.querySelector(":scope > div");
+      let form = contents.querySelector("form");
+      if (!form) return;
+      let dismiss = modal_dialog.querySelector(".modal-dismiss");
+      let token = form.querySelector('[name="csrfmiddlewaretoken"]');
+      if (token) page.token = token.getAttribute("value");
+      if (form.action && form.action.endsWith("+bookmarks/modal/added")) {
+        title.textContent = tl(trans.saved_to_bookmarks);
+        let new_form;
+        render(contents, html`
+                <div class="big-modal-alert">
+                    ${{ html: tl(trans.bookmark_save_msg).replace("{link}", `<a class="see-more" href="${root}music/+bookmarks">${tl(trans.go_there_now_lower)}</a>`) }}
+                </div>
+                <form method="post" ref=${(el) => new_form = el} onsubmit=${async (e) => {
+          e.preventDefault();
+          let url = `${root}music/+bookmarks/modal/added`;
+          let form_data = new FormData(new_form);
+          console.info(form_data);
+          try {
+            await fetch(url, {
+              method: "POST",
+              body: form_data
+            }).then((res) => {
+              let data2 = res.json();
+              log("received response", "form", "info", { data: data2 });
+              dismiss.click();
+            });
+          } catch (e2) {
+            console.error(e2);
+          }
+        }}>
+                    <input type="hidden" name="csrfmiddlewaretoken" value="${page.token}">
+                    <div class="modal-footer">
+                        ${toggle({
+          value: true,
+          type: "checkbox",
+          name: "always_show",
+          title: tl(trans.always_remind_me)
+        })}
+                        <button class="btn primary done" type="submit">
+                            ${tl(trans.done)}
+                        </button>
+                    </div>
+                </form>
+            `);
+      } else if (body.classList.contains("automatic-edit-modal-body-v2")) {
+        let bulk_edit_active = false;
+        let edit_all = body.querySelector('[name="edit_all"]');
+        if (edit_all && edit_all.disabled) bulk_edit_active = true;
+        if (!bulk_edit_active)
+          title.textContent = tl(trans.edit_scrobble);
+        else
+          title.textContent = tl(trans.edit_scrobbles_in_bulk);
+        modal_dialog.classList.add("automatic-edit-modal");
+        let checkboxes = body.querySelectorAll(".checkbox");
+        checkboxes.forEach((checkbox) => {
+          let input_el = checkbox.querySelector("input");
+          let value = input_el.checked;
+          let name2 = input_el.getAttribute("name");
+          let text2 = checkbox.textContent.trim();
+          let disabled = input_el.disabled;
+          render(checkbox.parentElement, html`
+                    ${toggle({
+            value,
+            type: "checkbox",
+            name: name2,
+            title: text2,
+            disabled,
+            data: input_el.value
+          })}
+                `);
+        });
+        let original_fields = body.querySelectorAll(".edit-scrobble-label--originally");
+        original_fields.forEach((field) => {
+          field.textContent = field.textContent.trim().replace(/"([^"]*)"/g, "\u2018$1\u2019");
+        });
+        let submit = body.querySelector(".form-group--submit");
+        submit.classList = "modal-footer";
+        render(submit, html`
+                <button class="see-more cancel" type="button" onclick=${() => dismiss.click()}>
+                    ${tl(trans.cancel)}
+                </button>
+                <div class="fill" />
+                ${submit.querySelector("input")}
+                <button class="btn primary icon" data-type="item-edit" type="submit">
+                    ${tl(trans.edit)}
+                </button>
+            `);
+      } else if (body.querySelector(".lastfm-bulk-edit-list")) {
+        let checks;
+        let controls = body.querySelector(".lastfm-bulk-edit-form-group-controls");
+        if (controls) {
+          let parent = controls.parentElement;
+          parent.parentElement.removeChild(parent);
+          let disclaimer = body.querySelector(".form-disclaimer");
+          disclaimer.after(html.node`
+                    <div class="button-group">
+                        <button class="flex-button" onclick=${() => {
+            checks.forEach((check) => {
+              check.check();
+            });
+          }} type="button">
+                            <div class="bleh-icon" data-type="select-all" style="--icon: var(--mask)" />
+                            ${tl(trans.select_all)}
+                        </button>
+                        <button class="flex-button" onclick=${() => {
+            checks.forEach((check) => {
+              check.uncheck();
+            });
+          }} type="button">
+                            <div class="bleh-icon" data-type="deselect-all" style="--icon: var(--mask)" />
+                            ${tl(trans.deselect_all)}
+                        </button>
+                    </div>
+                `);
+        }
+        let list = body.querySelector(".lastfm-bulk-edit-list");
+        let checkboxes = list.querySelectorAll(".checkbox");
+        checkboxes.forEach((checkbox) => {
+          let input_el = checkbox.querySelector("input");
+          let value = input_el.checked;
+          let name2 = input_el.getAttribute("name");
+          let disabled = input_el.disabled;
+          let data2 = input_el.getAttribute("value");
+          let item_artist = correct_artist(checkbox.querySelector("div").title);
+          let item_name = correct_item_by_artist(checkbox.querySelector("strong").title, item_artist);
+          let item_scrobbles = checkbox.querySelector("small").textContent.trim();
+          render(checkbox.parentElement, html`
+                    ${toggle({
+            value,
+            type: "checkbox",
+            name: name2,
+            title: item_name + tl(trans.by_artist).replace("{a}", item_artist),
+            body: item_scrobbles,
+            disabled,
+            data: data2
+          })}
+                `);
+        });
+        checks = list.querySelectorAll(".setting");
+        let footer = body.querySelector(".form-group--submit");
+        footer.classList = "modal-footer";
+        render(footer, html`
+                <button class="see-more cancel" type="reset">${tl(trans.cancel)}</button>
+                <div class="fill" />
+                <button class="btn primary continue" type="submit">${tl(trans.continue)}</button>
+            `);
+      }
+    });
+  }
+
+  // src/pages/auth.js
+  async function bleh_auth() {
+    page.structure.container = document.body.querySelector(".page-content");
+    try {
+      page.structure.row = page.structure.container.querySelector(".row");
+      page.structure.main = page.structure.row.querySelector(".col-main");
+      page.structure.side = page.structure.row.querySelector(".col-sidebar");
+    } catch (e) {
+      log("unable to find elements", "page structure");
+    }
+    checkup_page_structure();
+    let banner = load_banner(auth.name);
+    if (banner)
+      register_background(banner);
+    else if (!auth.avatar.endsWith("818148bf682d429dc215c1705eb27b98.png"))
+      register_background(auth.avatar.replace("/avatar42s/", "/ar0/"));
+    else
+      register_background(null);
+    page.type = "bleh_auth";
+    page.subpage = "";
+    log("status is", "page", "info", page);
+    update_page();
+    page.structure.row.removeChild(page.structure.row.firstElementChild);
+    page.structure.row.removeChild(page.structure.row.firstElementChild);
+    page.structure.container.removeAttribute("data-beret");
+    page.structure.container.removeAttribute("data-short");
+    page.structure.content.classList.add("cards-view");
+    if (!page.requested.token) {
+      render(page.structure.main, html`
+            <section class="api-connector sour">
+                <div class="loading-data-container">
+                    <div class="loading-data-text error">${tl(trans.no_token_provided)}</div>
+                </div>
+            </section>
+        `);
+      return;
+    }
+    render(page.structure.main, html`
+        <section class="api-connector sour">
+            <div class="loading-data-container">
+                <div class="loading-data-text">${tl(trans.loading)}</div>
+            </div>
+        </section>
+    `);
+    const res = await fetch(
+      "https://jufufu.katelyn.moe/api/lastfm",
+      {
+        method: "POST",
+        headers: { "content-type": "application/json" },
+        body: JSON.stringify({
+          method: "auth.getSession",
+          params: { token: page.requested.token }
+        })
+      }
+    );
+    const json = await res.json();
+    if (json.error) {
+      log("error", "auth", "error", json);
+      render(page.structure.main, html`
+            <section class="api-connector sour">
+                <div class="loading-data-container">
+                    <div class="loading-data-text error">${json.message}</div>
+                </div>
+            </section>
+        `);
+      return;
+    }
+    const { name: name2, key } = json.session;
+    log(`authorised as ${name2}`, "auth", "info", json.session);
+    localStorage.setItem("bleh_auth", key);
+    localStorage.setItem("bleh_auth_valid", "true");
+    render(page.structure.main, html`
+        <section class="api-connector sour">
+            <div class="avatar">
+                <img src="${auth.avatar.replace("/avatar42s/", "/avatar170s/")}" alt="${tl(trans.your_avatar)}">
+            </div>
+            <div class="info">
+                <h1>bleh</h1>
+                <div class="sub-text no-margin">${tl(trans.has_been_connected)}</div>
+            </div>
+            <div class="sep"></div>
+            <div class="description">${tl(trans.you_can_now_close_this_tab)}</div>
+            <div class="connector-footer">
+                <div class="btn-fill"/>
+                <a class="btn primary continue" href="${root}bleh">
+                    ${tl(trans.continue)}
+                </a>
+                <div class="btn-fill"/>
+            </div>
+        </section>
+    `);
+  }
+
+  // src/pages/labs.js
+  function bleh_labs() {
+    if (page.subpage != "overview") return;
+    let quilt = document.body.querySelector('[data-analytics-action="LaunchAlbumQuilt"]');
+    if (quilt) {
+      page.avatar = auth.avatar;
+      page.name = auth.name;
+      quilt.removeAttribute("href");
+      quilt.onclick = () => {
+        window.location.href = `${root}user/${auth.name}?collage`;
+      };
+    }
   }
 
   // src/page.js
@@ -16653,10 +20256,12 @@
       auth.name = auth_link.state.querySelector("img").getAttribute("alt");
     load_settings();
     load_dialogs();
+    register_rabbit();
     try {
       lookup_lang();
       theme_version.state = getComputedStyle(document.body).getPropertyValue("--version-build").replaceAll("'", "").replaceAll('"', "");
-      patch_masthead(document.body);
+      update_check(false, null, update_masthead);
+      patch_masthead();
       load_notifications();
       set_season();
       start_rain();
@@ -16679,12 +20284,6 @@
         log("loop", "mutation", "log", { mutations });
         lookup_lang();
         patch_masthead(document.body);
-        theme_version.state = getComputedStyle(document.body).getPropertyValue("--version-build").replaceAll("'", "").replaceAll('"', "");
-        if (theme_version.state != version.build && theme_version.state != "" && !has_prompted_for_update.state) {
-          log(`version mismatch! running ${version.build}, downloaded theme ${theme_version.state}`, "update");
-          prompt_for_update();
-          has_prompted_for_update.state = true;
-        }
         main_flow();
       });
       observer.observe(document.body, {
@@ -16732,6 +20331,7 @@
   }
   function main_flow() {
     assign_page();
+    if (page.state.error) return;
     if (page.type == "artist" || page.type == "album") {
       bleh_gallery();
       bleh_gallery_upload_check();
@@ -16757,11 +20357,13 @@
     if (settings.corrections) {
       correct_generic_combo_no_artist("artist-header-featured-items-item");
       correct_generic_combo_no_artist("artist-top-albums-item");
-      correct_generic_combo("source-album-details");
       correct_generic_combo("resource-list--release-list-item");
       correct_generic_combo("similar-albums-item");
       correct_generic_combo("track-similar-tracks-item");
       correct_generic_combo("similar-items-sidebar-item");
+      if (page.type == "track") {
+        correct_generic_combo("source-album-details");
+      }
       if (page.type == "bookmarks" || page.type == "releases") {
         correct_generic_artist("music-bookmarks-artists-item");
         correct_generic_combo("music-bookmarks-albums-item");
@@ -16781,7 +20383,7 @@
       });
     }
     subscribe_to_events();
-    auto_edit_modal();
+    dialog_extender();
   }
   function assign_page() {
     document.documentElement.classList.add("bleh-supports-loading");
@@ -16835,6 +20437,7 @@
   function load_page() {
     set_season();
     seasonal_timer_end();
+    bleh_footer();
     let masthead = document.body.querySelector(".masthead");
     window.addEventListener("scroll", (e) => {
       let scroll = window.scrollY;
@@ -16844,10 +20447,13 @@
         masthead.classList.remove("scrolled");
     });
     detect_mobile();
+    page.platform = detect_platform();
     if (window.location.href.startsWith(setup_url.replace("{root}", root))) {
       bleh_setup();
     } else if (window.location.href.startsWith(sponsor_url.replace("{root}", root))) {
       bleh_sponsor_page();
+    } else if (window.location.href.startsWith(api_url.replace("{root}", root))) {
+      bleh_auth();
     } else if (window.location.href.startsWith(bleh_url.replace("{root}", root))) {
       bleh_home();
       bleh_settings();
@@ -16880,6 +20486,8 @@
         bleh_home();
       else if (page.type == "api")
         bleh_api();
+      else if (page.type == "labs")
+        bleh_labs();
       if (page.type == "user" || page.type == "events") {
         bleh_users();
       }
@@ -16887,6 +20495,32 @@
         patch_wiki();
       if ((page.type == "user" || page.type == "tag" || page.type == "events") && (page.subpage == "overview" || page.subpage == "event_overview"))
         bleh_radio();
+      if (page.subpage == "images_overview") {
+        let sort_button = page.structure.main.querySelector(".dropdown-menu-clickable-button");
+        let sort_menu = page.structure.main.querySelector(".dropdown-menu-clickable");
+        let sort_wrap = document.createElement("div");
+        sort_wrap.classList.add("dropdown-top-wrap");
+        sort_wrap.appendChild(sort_button);
+        sort_wrap.appendChild(sort_menu);
+        page.structure.main.insertBefore(sort_wrap, page.structure.main.firstElementChild);
+      }
+      if (page.subpage == "image") {
+        let images = page.structure.row.querySelectorAll(".gallery-image");
+        images.forEach((image) => {
+          let star = image.querySelector(".gallery-image-preferred-container");
+          if (!star) return;
+          render(star, html`
+                    <div class="bleh-icon" />
+                    ${tl(trans.starred)}
+                `);
+        });
+      }
+      if (["artist", "album", "track", "user", "tag"].includes(page.type)) {
+        if (!["user", "tag"].includes(page.type) && page.subpage.startsWith("shoutbox"))
+          shout_header(page.structure.main.querySelector(".section-controls"));
+        else if (page.subpage == "overview")
+          shout_header(page.structure.main.querySelector(".shoutbox"));
+      }
     }
     append_nav();
     page_title();
@@ -16900,13 +20534,13 @@
         else if (page.type == "album" || page.type == "track")
           template = tl(trans.page_templates.name_sister_type);
       }
-      let name = page.name;
+      let name2 = page.name;
       let sister = page.sister;
       if (page.type == "album" || page.type == "track") {
-        name = correct_item_by_artist(name, sister);
+        name2 = correct_item_by_artist(name2, sister);
         sister = correct_artist(sister);
       } else if (page.type == "artist") {
-        name = correct_artist(name);
+        name2 = correct_artist(name2);
       }
       let title;
       if (page.subpage != "overview" && page.subpage != "event_overview" && page.subpage != "home" && (page.type == "user" || page.type == "artist" || page.type == "album" || page.type == "track" || page.type == "events" || page.type == "tag"))
@@ -16985,7 +20619,7 @@
       }
       if (page.state.error)
         title = tl(trans.error);
-      template = template.replace("{page}", title).replace("{name}", name).replace("{sister}", sister).replace("{brand}", version.brand).replace("{build}", version.build).replace("{sku}", version.sku);
+      template = template.replace("{page}", title).replace("{name}", name2).replace("{sister}", sister).replace("{brand}", version.brand).replace("{build}", version.build).replace("{sku}", version.sku);
       document.title = template;
     }
     if (page.structure.indicator)
@@ -17012,6 +20646,23 @@
       page.mobile = false;
     }
   }
+  function detect_platform() {
+    const platform = navigator.userAgentData?.platform || navigator.platform || "";
+    const ua = navigator.userAgent || "";
+    if (/^Win/i.test(platform)) {
+      return "win32";
+    } else if (/^Mac/i.test(platform)) {
+      return "darwin";
+    } else if (/iP(hone|ad|od)/i.test(ua)) {
+      return "ios";
+    } else if (/Android/i.test(ua)) {
+      return "android";
+    } else if (/^Linux/i.test(platform) || /Linux/i.test(ua)) {
+      return "linux";
+    } else {
+      return "other";
+    }
+  }
   function page_indicator() {
     render(page.structure.indicator, html`
         <div class="bleh">
@@ -17026,7 +20677,7 @@
             <span>${lang}</span>
         </div>
         <div class="page">
-            <strong>page</strong>
+            <strong onclick=${() => console.info(page)}>page</strong>
             <span>${page.type}</span>
             <span>${page.subpage}</span>
         </div>
@@ -17046,6 +20697,8 @@
   function update_page() {
     page.structure.container.setAttribute("data-page-type", page.type);
     page.structure.container.setAttribute("data-page-subpage", page.subpage);
+    page.structure.container.setAttribute("data-beret", ff("beret"));
+    page.structure.container.setAttribute("data-short", ff("short"));
   }
   function register_background(url, origin = null) {
     let flag = ff("katsune");
@@ -17294,10 +20947,22 @@
       en: "Shouts",
       pt: "Mensagens"
     },
+    failed_to_send: {
+      en: "Failed to send"
+    },
+    sent: {
+      en: "Sent"
+    },
+    single_shout: {
+      en: "viewing a single shout"
+    },
     about: {
       en: "About",
       de: "\xDCber",
       pt: "Sobre"
+    },
+    no_about: {
+      en: "{u} is keeping quiet"
     },
     edit_wiki: {
       en: "Edit wiki",
@@ -17307,7 +20972,8 @@
     read_more: {
       en: "Read more",
       de: "Mehr anzeigen",
-      pt: "Ler mais"
+      pt: "Ler mais",
+      ja: "\u3082\u3063\u3068\u8AAD\u3080"
     },
     refresh: {
       en: "Refresh",
@@ -17371,6 +21037,9 @@
       de: "Deine Scrobbels",
       pt: "Seus scrobbles"
     },
+    play: {
+      en: "Play"
+    },
     plays: {
       en: "Plays",
       pt: "Reprodu\xE7\xF5es"
@@ -17388,7 +21057,8 @@
     settings: {
       en: "Settings",
       de: "Einstellungen",
-      pt: "Configura\xE7\xF5es"
+      pt: "Configura\xE7\xF5es",
+      ja: "\u8A2D\u5B9A"
     },
     on_ignore_list: {
       en: "Ignored",
@@ -17417,9 +21087,10 @@
     },
     account_scrobbling_since_replace: {
       // copy this from last.fm 1:1 (including the space at the end if there)
-      en: "\u2022 scrobbling since ",
-      de: "\u2022 scrobbelt seit ",
-      pt: "\u2022 em scrobble desde "
+      en: "scrobbling since ",
+      de: "scrobbelt seit ",
+      pt: "em scrobble desde ",
+      ja: "\u3088\u308Ascrobble"
     },
     edit: {
       en: "Edit",
@@ -17437,17 +21108,22 @@
       de: "Profil editieren",
       pt: "Editar perfil"
     },
+    scrobble: {
+      en: "Scrobble"
+    },
     scrobbles: {
       en: "Scrobbles",
       de: "Scrobbels",
-      pt: "Scrobbles"
+      ja: "Scrobble"
     },
     count_scrobbles: {
       en: "{c} scrobbles",
       de: "{c} scrobbels",
       pt: "{c} scrobbles"
     },
-    // TODO(stel): are all these correct (singular/plural)?
+    new_scrobble: {
+      en: "New scrobble"
+    },
     artist: {
       en: "Artist",
       de: "K\xFCnstler",
@@ -17456,7 +21132,8 @@
     artists: {
       en: "Artists",
       de: "K\xFCnstler",
-      pt: "Artistas"
+      pt: "Artistas",
+      ja: "\u30A2\u30FC\u30C6\u30A3\u30B9\u30C8"
     },
     artists_tooltip: {
       en: "Multiple artists are grouped into this profile",
@@ -17471,7 +21148,11 @@
     albums: {
       en: "Albums",
       de: "Alben",
-      pt: "\xC1lbuns"
+      pt: "\xC1lbuns",
+      ja: "\u30A2\u30EB\u30D0\u30E0"
+    },
+    album_artist: {
+      en: "Album Artist"
     },
     track: {
       en: "Track",
@@ -17481,7 +21162,8 @@
     tracks: {
       en: "Tracks",
       de: "Titel",
-      pt: "Faixas"
+      pt: "Faixas",
+      ja: "\u30C8\u30E9\u30C3\u30AF"
     },
     appearance: {
       en: "Appearance",
@@ -17563,7 +21245,8 @@
     },
     events: {
       en: "Events",
-      pt: "Eventos"
+      pt: "Eventos",
+      ja: "\u30A4\u30D9\u30F3\u30C8"
     },
     lineup: {
       en: "Line-up",
@@ -17585,12 +21268,16 @@
     music: {
       en: "Music",
       de: "Musik",
-      pt: "M\xFAsica"
+      pt: "M\xFAsica",
+      ja: "\u97F3\u697D"
     },
     profile: {
       en: "Profile",
       de: "Profil",
       pt: "Perfil"
+    },
+    current_season: {
+      en: "Current season"
     },
     seasonal: {
       name: {
@@ -17652,11 +21339,21 @@
       de: "Saisonale Zeitleiste",
       pt: "Linha de tempo sazonal"
     },
-    //i removed the 'current' cus it soyunds better without lol, add back if u disagree or sum :3 and add 'aktuellen' infront of Zeitzone in german
+    enable_seasons: {
+      name: {
+        en: "Automatically adapt to seasonal events"
+      },
+      body: {
+        en: "Adapts the default colour, iconset, and shows particles depending on the season"
+      }
+    },
     seasonal_offset: {
       en: "Seasonal events are ran in your timezone, which we calculated as {offset}",
       de: "Saisonale Events werden in deiner Zeitzone ausgef\xFChrt, die wir als {offset} berechnet haben",
       pt: "Eventos sazonais s\xE3o realizados em seu fuso hor\xE1rio, que calculamos como {offset}"
+    },
+    calculated_offset: {
+      en: "Calculated offset based on timezone"
     },
     started: {
       en: "Started",
@@ -17699,11 +21396,13 @@
     bookmarks: {
       en: "Bookmarks",
       de: "Lesezeichen",
-      pt: "Marcadores"
+      pt: "Marcadores",
+      ja: "\u30D6\u30C3\u30AF\u30DE\u30FC\u30AF"
     },
     charts: {
       en: "Charts",
-      pt: "Paradas"
+      pt: "Paradas",
+      ja: "\u30C1\u30E3\u30FC\u30C8"
     },
     welcome_back_user: {
       en: "Welcome back {user}!",
@@ -17979,9 +21678,10 @@
       }
     },
     about_me_preview: {
-      en: "About Me (preview)",
-      de: "\xDCber mich (Vorschau)",
-      pt: "Sobre mim (preview)"
+      // About
+      en: "About (preview)",
+      de: "\xDCber (Vorschau)",
+      pt: "Sobre (preview)"
     },
     markdown_tip: {
       // use <br><br> to add a space between the first sentence and the next
@@ -18018,12 +21718,14 @@
     overview: {
       en: "Overview",
       de: "\xDCbersicht",
-      pt: "Vis\xE3o Geral"
+      pt: "Vis\xE3o Geral",
+      ja: "\u30C0\u30A4\u30B8\u30A7\u30B9\u30C8"
     },
     photos: {
       en: "Photos",
       de: "Fotos",
-      pt: "Fotos"
+      pt: "Fotos",
+      ja: "\u5199\u771F"
     },
     artwork: {
       en: "Artwork",
@@ -18038,7 +21740,8 @@
     biography: {
       en: "Biography",
       de: "Biographie",
-      pt: "Biografia"
+      pt: "Biografia",
+      ja: "\u30D0\u30A4\u30AA\u30B0\u30E9\u30D5\u30A3\u30FC"
     },
     wiki: {
       en: "Wiki"
@@ -18048,16 +21751,19 @@
       de: "Zuh\xF6rer*innen",
       pt: "Ouvintes"
     },
+    listeners_you_know: {
+      en: "Listeners You Know"
+    },
     count_listeners: {
       en: "{c} listeners",
       pt: "{c} ouvintes"
     },
-    // tag sounds better in english
     tag: {
       en: "Tag"
     },
     tags: {
-      en: "Tags"
+      en: "Tags",
+      ja: "\u30BF\u30B0"
     },
     reports: {
       // last.fm listening reports
@@ -18111,22 +21817,29 @@
     recent_tracks: {
       en: "Recent Tracks",
       de: "K\xFCrzlich gespielte Titel",
-      pt: "Faixas Recentes"
+      pt: "Faixas Recentes",
+      ja: "\u6700\u8FD1\u306E\u30C8\u30E9\u30C3\u30AF"
     },
     top_artists: {
       en: "Top Artists",
       de: "Top K\xFCnstler",
-      pt: "Top Artistas"
+      pt: "Top Artistas",
+      ja: "\u30C8\u30C3\u30D7\u30A2\u30FC\u30C6\u30A3\u30B9\u30C8"
     },
     top_albums: {
       en: "Top Albums",
       de: "Top Alben",
-      pt: "Top \xC1lbuns"
+      pt: "Top \xC1lbuns",
+      ja: "\u4EBA\u6C17\u30A2\u30EB\u30D0\u30E0"
     },
     top_tracks: {
       en: "Top Tracks",
       de: "Top Titel",
-      pt: "Top Faixas"
+      pt: "Top Faixas",
+      ja: "\u4EBA\u6C17\u30C8\u30E9\u30C3\u30AF"
+    },
+    top_track: {
+      en: "Top Track"
     },
     you_share_count_with: {
       // as in your musical taste between you and someone else
@@ -18138,10 +21851,12 @@
         en: "{artist}"
       },
       two: {
-        en: "{artist1}, {artist2}"
+        en: "{artist1}, {artist2}",
+        ja: "{artist1}\u3001{artist2}"
       },
       three: {
-        en: "{artist1}, {artist2}, {artist3}"
+        en: "{artist1}, {artist2}, {artist3}",
+        ja: "{artist1}\u3001{artist2}\u3001{artist3}"
       }
     },
     taste_similarity: {
@@ -18149,10 +21864,11 @@
       pt: "Similaridade de gostos"
     },
     plays_lower: {
-      // 20 plays in artist/album grid
+      // eg. 20 plays in artist/album grid
       // copy from last.fm
       en: " plays",
-      pt: " reprodu\xE7\xF5es"
+      pt: " reprodu\xE7\xF5es",
+      ja: "\u66F2\u3092\u518D\u751F"
     },
     message: {
       // as in a direct message
@@ -18188,9 +21904,9 @@
       pt: "Apoie o desenvolvimento futuro"
     },
     why_sponsor: {
-      en: "Receive an accompanying badge on your profile and a big thank you from katelyn for supporting <3",
+      en: "Receive a profile badge and a big thank you from katelyn <3",
       de: "Erhalte ein Abzeichen auf deinem Profil und ein gro\xDFes Dankesch\xF6n von katelyn f\xFCr deine Unterst\xFCtzung <3",
-      pt: "Receba um emblema no seu perfil e um obrigad\xE3o da kate por apoiar <3"
+      pt: "Receba um emblema no seu perfil e um obrigad\xE3o da katelyn por apoiar <3"
     },
     you_are_a_sponsor: {
       en: "You are a sponsor, thank you! :3",
@@ -18198,9 +21914,9 @@
       pt: "Voc\xEA \xE9 um apoiador, muito obrigado! :3"
     },
     sponsor_get_badge: {
-      en: "A monthly sponsorship grants you a custom badge of your choosing.",
+      en: "A monthly sponsorship grants you a custom badge of your choosing",
       de: "Mit einem monatlichen Sponsoring erh\xE4ltst du ein individuelles Abzeichen deiner Wahl",
-      pt: "Um apoio mensal lhe d\xE1 um emblema personalizado de sua escolha."
+      pt: "Um apoio mensal lhe d\xE1 um emblema personalizado de sua escolha"
     },
     sponsor_no_badge: {
       en: "A custom badge is only available with a monthly sponsorship.",
@@ -18211,6 +21927,15 @@
       en: "Manage sponsorship",
       de: "Sponsoring verwalten",
       pt: "Gerenciar apoio"
+    },
+    view: {
+      en: "View"
+    },
+    profile_and_badges: {
+      en: "Profile, {c} badges"
+    },
+    current_version: {
+      en: "Current version"
     },
     labs: {
       en: "Labs"
@@ -18276,11 +22001,6 @@
       de: "Verlinkt auf {link}",
       pt: "Links para {link}"
     },
-    view_latest_version: {
-      en: "View latest version",
-      de: "Neueste Version anzeigen",
-      pt: "Ver a \xFAltima vers\xE3o"
-    },
     explore_in_library: {
       en: "Explore in library",
       de: "In der Bibliothek anzeigen",
@@ -18343,6 +22063,18 @@
     copied_to_clipboard: {
       en: "Copied to clipboard",
       pt: "Copiado para a \xE1rea de transfer\xEAncia"
+    },
+    click_to_copy: {
+      en: "Click to copy"
+    },
+    wiki_standard_tracks: {
+      en: "Track titles should be wrapped in quotation marks \u201C \u201D"
+    },
+    wiki_standard_artists: {
+      en: "Album and artist names are left without quotes"
+    },
+    wiki_standard_quotations: {
+      en: "Use \u2018 \u2019 for quotations from the artist or elsewhere"
     },
     activity: {
       en: "Activity",
@@ -18561,7 +22293,8 @@
     logout: {
       en: "Logout",
       de: "Ausloggen",
-      pt: "Sair"
+      pt: "Sair",
+      ja: "\u30ED\u30B0\u30A2\u30A6\u30C8"
     },
     tracklist: {
       // please copy from native last.fm ui
@@ -18761,12 +22494,14 @@
     default_timeframe: {
       en: "Default timeframe",
       de: "Standardzeitrahmen",
-      pt: "Per\xEDodo padr\xE3o"
+      pt: "Per\xEDodo padr\xE3o",
+      ja: "\u30C7\u30D5\u30A9\u30EB\u30C8\u671F\u9593"
     },
     chart_style: {
       en: "Chart style",
       de: "Diagrammstil",
-      pt: "Estilo da tabela"
+      pt: "Estilo da tabela",
+      ja: "\u30C1\u30E3\u30FC\u30C8\u30B9\u30BF\u30A4\u30EB"
     },
     chart_size: {
       en: "Chart size",
@@ -18876,6 +22611,17 @@
       de: "Nach Updates suchen",
       pt: "Buscar atualiza\xE7\xF5es"
     },
+    music_corrections: {
+      en: "Music corrections"
+    },
+    brand_version: {
+      // used for the lotus header where:
+      // brand = "lotus"
+      // making: 'lotus version'
+      en: "{brand} version",
+      de: "{brand} Version",
+      pt: "{brand} vers\xE3o"
+    },
     brand_version_number: {
       // used for the lotus header where:
       // brand = "lotus"
@@ -18885,15 +22631,15 @@
       de: "{brand} Version {number}",
       pt: "{brand} vers\xE3o {number}"
     },
-    what_is_lotus: {
-      en: "A capitalisation correction system for artists, albums, and tracks - all powered by community contributions.",
-      de: "Ein System zur Korrektur der Gro\xDF- und Kleinschreibung von K\xFCnstlern, Alben und Titeln - alles unterst\xFCtzt durch Beitr\xE4ge der Community.",
-      pt: "Um sistema de corre\xE7\xE3o de capitaliza\xE7\xE3o para artistas, \xE1lbuns e faixas - tudo alimentado por contribui\xE7\xF5es da comunidade."
-    },
     correct_titles_with_lotus: {
-      en: "Correct titles with lotus",
-      de: "Titel korrigieren mit Lotus",
-      pt: "Corrigir t\xEDtulos com lotus"
+      name: {
+        en: "Correct titles with lotus",
+        de: "Titel korrigieren mit Lotus",
+        pt: "Corrigir t\xEDtulos com lotus"
+      },
+      body: {
+        en: "Re-capitalise artists, albums, and tracks based on community contributions"
+      }
     },
     view_all: {
       en: "View all",
@@ -18909,6 +22655,9 @@
       en: "Delete",
       de: "L\xF6schen",
       pt: "Deletar"
+    },
+    deleted: {
+      en: "Deleted"
     },
     search: {
       en: "Search",
@@ -18931,6 +22680,9 @@
       en: "Supports Markdown",
       de: "Unterst\xFCtzt Markdown",
       pt: "Suporta o Markdown"
+    },
+    value_characters_max: {
+      en: "{v} characters max"
     },
     profile_shortcut: {
       name: {
@@ -19034,7 +22786,7 @@
         pt: "Compatibilidade de emojis"
       },
       body: {
-        en: "Required to render emoji properly before Windows 11 \u{1F3F3}\uFE0F\u200D\u26A7\uFE0F",
+        en: "Required to render emoji properly before Windows 11. \u{1F3F3}\uFE0F\u200D\u26A7\uFE0F",
         de: "Erforderlich, um Emojis vor Windows 11 richtig darzustellen \u{1F3F3}\uFE0F\u200D\u26A7\uFE0F",
         pt: "Necess\xE1rio para renderizar emojis corretamente antes do Windows 11 \u{1F3F3}\uFE0F\u200D\u26A7\uFE0F"
       }
@@ -19066,7 +22818,7 @@
         pt: "Redirecionamento de scrobble legado"
       },
       body: {
-        en: 'By default, Last.fm will "auto-correct" some of your scrobbles to (mostly) faulty redirections. By disabling this it does not fully fix the system but keeps artist names in your library intact.',
+        en: "By default, scrobbles will be corrected to faulty replacements that are a decade out of date. Disabling does not fully fix the system but keeps artist names in your library intact.",
         de: "Standardm\xE4\xDFig korrigiert Last.fm einige deiner Scrobbel-Dateien automatisch und f\xFChrt (meist) fehlerhafte Weiterleitungen aus. Durch die Deaktivierung dieser Funktion wird das System zwar nicht vollst\xE4ndig repariert, die K\xFCnstlernamen in Ihrer Bibliothek bleiben jedoch erhalten.",
         pt: 'Por padr\xE3o, a Last.fm ir\xE1 "corrigir automaticamente" alguns dos seus scrobbles para redirecionamentos (na maioria) defeituosos. Desativar essa op\xE7\xE3o n\xE3o corrige completamente o sistema, mas mant\xE9m os nomes dos artistas na sua biblioteca intactos.'
       }
@@ -19090,7 +22842,7 @@
         pt: "Cores baseadas em classifica\xE7\xE3o para paradas de artistas"
       },
       body: {
-        en: "Assigns a colour based on an artist's all-time ranking in your library",
+        en: "Assigns a colour based on an artist\u2019s all-time ranking in your library",
         de: "Weist eine Farbe basierend auf dem Allzeit-Ranking eines K\xFCnstlers in deiner Bibliothek zu",
         pt: "Define uma cor pela coloca\xE7\xE3o do artista no ranking geral da sua biblioteca."
       }
@@ -19109,9 +22861,9 @@
     },
     show_bulk_edit_album: {
       name: {
-        en: 'Show "Bulk Edit" powered album name in tracklists',
-        de: "Albumnamen mit \u201EMassenbearbeitung\u201C in Titellisten anzeigen",
-        pt: 'Exibir o nome do \xE1lbum ajustado pelo "Bulk Edit" nas listas de faixas.'
+        en: "Show \u2018Bulk Edit\u2019 powered album name in tracklists",
+        de: "Albumnamen mit \u201AMassenbearbeitung\u2018 in Titellisten anzeigen",
+        pt: "Exibir o nome do \xE1lbum ajustado pelo \u2018Bulk Edit\u2019 nas listas de faixas."
       },
       body: {
         en: "With this extension the album name is displayed on all tracks by default, whereas with bleh the album name is only displayed on active tracks",
@@ -19126,7 +22878,7 @@
         pt: "Esconder tags baseadas em g\xEAnero"
       },
       body: {
-        en: "These tags are often redundant and can never apply to the full range of what they're intending",
+        en: "These tags are often redundant and can never apply to the full range they\u2019re intending",
         de: "Diese Tags sind oft \xFCberfl\xFCssig und k\xF6nnen nie auf die gesamte Bandbreite dessen angewendet werden, was sie beabsichtigen",
         pt: "Essas tags costumam ser redundantes e nunca conseguem representar totalmente tudo o que se prop\xF5em"
       }
@@ -19138,14 +22890,10 @@
     },
     gloss: {
       name: {
-        en: "Gloss overlay",
-        de: "Glanz-Overlay",
-        pt: "Sobreposi\xE7\xE3o brilhante"
+        en: "Apply gloss to album covers"
       },
       body: {
-        en: "Very shiny",
-        de: "Sehr gl\xE4nzend",
-        pt: "Muito reluzente"
+        en: "Add a layer of shine to album covers globally"
       }
     },
     grid_glow: {
@@ -19155,9 +22903,7 @@
         pt: "Refletir a cor abaixo dos itens da grade"
       },
       body: {
-        en: "Glows in the colour of said album cover",
-        de: "Leuchtet in der Farbe des Albumcovers",
-        pt: "Brilha na cor da capa do \xE1lbum"
+        en: "Applies a glow below grid items based on the primary colour"
       }
     },
     skip_to: {
@@ -19253,6 +22999,9 @@
       de: "{u} dauerhaft l\xF6schen",
       pt: "Deletar {u} permanentemente"
     },
+    other: {
+      en: "Other"
+    },
     connect_app: {
       en: "Connect {name}",
       de: "Verbinde {name}",
@@ -19262,6 +23011,26 @@
       en: "Connect",
       de: "Verbinden",
       pt: "Conectar"
+    },
+    connected: {
+      en: "Connected"
+    },
+    not_connected: {
+      en: "Not connected"
+    },
+    api: {
+      name: {
+        en: "Unlock additional API features"
+      },
+      body: {
+        en: "Link your account to allow API access such as scrobbling"
+      },
+      short: {
+        en: "API"
+      }
+    },
+    api_status: {
+      en: "API status"
     },
     app_would_like_to_connect: {
       // app name is above
@@ -19304,9 +23073,9 @@
         pt: "Usar formata\xE7\xE3o estilosa nos perfis"
       },
       body: {
-        en: 'Allows the use of line breaks, bold text, italics, and images in all "About Me" panels',
+        en: "Allows the use of line breaks, bold text, italics, and images in all \u201CAbout Me\u201D panels",
         de: "Erm\xF6glicht die Verwendung von Zeilenumbr\xFCchen, fettem Text, Kursivschrift und Bildern in allen \u201E\xDCber mich\u201C-Bereichen",
-        pt: 'Permite o uso de quebras de linha, texto em negrito, it\xE1lico e imagens em todos os pain\xE9is "Sobre mim"'
+        pt: "Permite o uso de quebras de linha, texto em negrito, it\xE1lico e imagens em todos os pain\xE9is \u201CSobre mim\u201D"
       }
     },
     markdown_shouts: {
@@ -19319,7 +23088,7 @@
         pt: "Permite o uso de quebras de linha, texto em negrito, it\xE1lico e imagens em todas as caixas de mensagens"
       },
       preview: {
-        en: "hello! **hello!** *hello!*\n[here's a link](https://katelyn.moe) HAII @stellasaur",
+        en: "hello! **hello!** *hello!*\n[here\u2019s a link](https://katelyn.moe) HAII @stellasaur",
         pt: "opa! **opa!** *opa!*\n[aqui est\xE1 um link](https://katelyn.moe) OIEE @stellasaur"
       }
     },
@@ -19363,7 +23132,7 @@
       pt: "Escolha o tema que mais combina com voc\xEA"
     },
     accessibility_explain: {
-      en: "Before we continue, let's assess your accessibility settings.",
+      en: "Before we continue, let\u2019s assess your accessibility settings.",
       pt: "Antes de continuarmos, vamos acessar suas configura\xE7\xF5es de acessibilidade"
     },
     colours_explain: {
@@ -19375,7 +23144,7 @@
       pt: "N\xF3s oferecemos uma variedade de op\xE7\xF5es para ajudar voc\xEA a gerenciar sua biblioteca musical"
     },
     setup_end: {
-      en: "That's all for now, to configure your bleh installation in the future head to {a}the settings{/a} in your menu!",
+      en: "That\u2019s all for now, to configure your bleh installation in the future head to {a}the settings{/a} in your menu!",
       pt: "Por enquanto isso \xE9 tudo, para configurar sua instala\xE7\xE3o do bleh futuramente, v\xE1 at\xE9 {a}nas configura\xE7\xF5es{/a} no seu menu!"
     },
     seasonal_particles: {
@@ -19419,7 +23188,7 @@
       en: "uwu"
     },
     beware_notice: {
-      en: "Beware! Only change these settings if you know what you're doing",
+      en: "Beware! Only change these settings if you know what you\u2019re doing",
       pt: "Cuidado! Apenas mude estas configura\xE7\xF5es se voc\xEA sabe o que voc\xEA est\xE1 fazendo"
     },
     flags: {
@@ -19496,12 +23265,14 @@
     last_count_days: {
       en: "Last {c} days",
       de: "Letzte {c} Tage",
-      pt: "\xDAltimos {c} dias"
+      pt: "\xDAltimos {c} dias",
+      ja: "\u904E\u53BB {c} \u65E5\u9593"
     },
     all_time: {
       en: "All time",
       de: "Insgesamt",
-      pt: "Todo o per\xEDodo"
+      pt: "Todo o per\xEDodo",
+      ja: "\u3059\u3079\u3066\u306E\u671F\u9593"
     },
     choose_a_timeframe_above: {
       en: "Choose a timeframe above",
@@ -19528,7 +23299,7 @@
         pt: "Preferir nomes de cores acess\xEDveis"
       },
       body: {
-        en: "Replaces badge and link-coloured names with your theme's header colour",
+        en: "Replaces badge and link-coloured names with your theme\u2019s header colour",
         pt: "Substitui os nomes coloridos dos emblemas e links pela cor do cabe\xE7alho do seu tema"
       }
     },
@@ -19609,6 +23380,9 @@
       en: "Collage",
       pt: "Colagem"
     },
+    collage_redirect: {
+      en: "Redirected to bleh\u2019s built-in Collage feature"
+    },
     your_collage_is_ready: {
       en: "Your collage is ready!",
       pt: "Sua colagem est\xE1 pronta!"
@@ -19633,7 +23407,7 @@
       en: "This field is required"
     },
     please_dont_clone_yourself: {
-      en: "Please don't clone yourself"
+      en: "Please don\u2019t clone yourself"
     },
     generate: {
       en: "Generate",
@@ -19686,7 +23460,12 @@
       en: "Show plays on grid items"
     },
     collage_grid_gap: {
-      en: "Leave a gap between grid items"
+      name: {
+        en: "Leave a gap between grid items"
+      },
+      body: {
+        en: "Includes outer and inner padding with round grid items"
+      }
     },
     organising_plays: {
       en: "Organising plays"
@@ -19708,6 +23487,260 @@
     },
     downloading_styles: {
       en: "Downloading styles"
+    },
+    style_warning: {
+      en: "You have style loading off! If you did this by accident, you can undo this"
+    },
+    re_enable_style_loading: {
+      en: "Re-enable style loading"
+    },
+    made_with_love: {
+      // lowercase in design
+      en: "made with {h} by {u} and {c}contributors{/c}"
+    },
+    love_lower: {
+      // replaces the {h} in the above sentence
+      // lowercase in design
+      en: "love"
+    },
+    view_source: {
+      en: "View source"
+    },
+    report_issue: {
+      en: "Report issue"
+    },
+    opens_your_value_settings: {
+      en: "Open your {v} settings"
+    },
+    opens_your_value: {
+      en: "Open your {v}"
+    },
+    opens_the_value: {
+      en: "Open the {v}"
+    },
+    theme_picker: {
+      en: "Theme picker"
+    },
+    changes_your_theme: {
+      en: "Changes your theme"
+    },
+    on_this_page: {
+      en: "On this page"
+    },
+    use_current_page_as_context: {
+      en: "Use current page as context"
+    },
+    opens_the_value_for_type: {
+      en: "Open the {v} for {t}"
+    },
+    switch_placeholder: {
+      en: "Quick switch to a page or action"
+    },
+    compares_your_taste: {
+      en: "Compare your taste with {v}"
+    },
+    select_an_option: {
+      en: "Select an option"
+    },
+    nothing_matches_your_search: {
+      en: "Nothing matches your search"
+    },
+    create_a_collage: {
+      en: "Create a collage of your choosing"
+    },
+    search_for_music_or_user: {
+      en: "Search for music or a user"
+    },
+    search_for_value: {
+      en: "Search for {v}"
+    },
+    choose_a_search_type: {
+      en: "Choose a search type"
+    },
+    finish_search: {
+      en: "Finish your search"
+    },
+    view_count_more: {
+      en: "View {c} more"
+    },
+    saved_to_bookmarks: {
+      en: "Saved to bookmarks"
+    },
+    bookmark_save_msg: {
+      en: "Find your bookmarks in your Home or {link}"
+    },
+    go_there_now_lower: {
+      // in sentence above
+      en: "go there now"
+    },
+    always_remind_me: {
+      en: "Always remind me"
+    },
+    edit_scrobble: {
+      en: "Edit scrobble"
+    },
+    edit_scrobbles_in_bulk: {
+      en: "Edit scrobbles in bulk"
+    },
+    timeline: {
+      en: "Timeline"
+    },
+    view_latest: {
+      en: "View latest"
+    },
+    custom: {
+      en: "Custom"
+    },
+    star: {
+      en: "Star"
+    },
+    starred: {
+      en: "Starred"
+    },
+    report: {
+      en: "Report"
+    },
+    auto: {
+      en: "Auto"
+    },
+    glass: {
+      en: "Glass"
+    },
+    high_contrast: {
+      en: "Prefer high contrast"
+    },
+    external: {
+      en: "External"
+    },
+    watch: {
+      en: "Watch"
+    },
+    watch_video: {
+      en: "Watch video"
+    },
+    latest_album: {
+      en: "Latest album"
+    },
+    popular_now: {
+      en: "Popular now"
+    },
+    updates: {
+      en: "Updates"
+    },
+    updated: {
+      en: "Updated"
+    },
+    you_are_up_to_date: {
+      en: "You\u2019re up to date"
+    },
+    update_available_to_install: {
+      en: "Update available to install"
+    },
+    install_now: {
+      en: "Install now"
+    },
+    check_for_updates: {
+      en: "Check for updates"
+    },
+    check: {
+      en: "Check"
+    },
+    last_checked_date: {
+      en: "Last checked {d}"
+    },
+    never_checked: {
+      en: "Never checked"
+    },
+    get_updates_fast: {
+      name: {
+        en: "Get the latest updates as soon as they\u2019re available"
+      },
+      body: {
+        en: "Be among the first to get the latest fixes and improvements as they roll out"
+      }
+    },
+    pause_updates: {
+      en: "Pause updates"
+    },
+    pause_updates_for: {
+      en: "Pause for 1 day"
+    },
+    resume_updates: {
+      en: "Resume updates"
+    },
+    updates_paused: {
+      en: "Updates paused"
+    },
+    paused_until_date: {
+      en: "Updates continue {d}"
+    },
+    missing_updates: {
+      en: "Missing updates"
+    },
+    you_are_running_version: {
+      en: "You are running version {v}"
+    },
+    you_are_installing_version: {
+      en: "You are installing version {v}"
+    },
+    checked_for_updates: {
+      en: "Checked for updates"
+    },
+    select_all: {
+      en: "Select all"
+    },
+    deselect_all: {
+      en: "De-select all"
+    },
+    use_current_time: {
+      en: "Use current time"
+    },
+    time: {
+      en: "Time"
+    },
+    missing_fields: {
+      en: "Missing required fields"
+    },
+    requires_api_in_settings: {
+      en: "Requires API access in Settings"
+    },
+    no_token_provided: {
+      en: "No token provided"
+    },
+    example: {
+      en: "e.g. {v}",
+      de: "z.B. {v}"
+    },
+    item_is_unavailable_on_platform: {
+      en: "\u2018{i}\u2019 is unavailable on {p}"
+    },
+    platforms: {
+      win32: {
+        en: "Windows"
+      },
+      darwin: {
+        en: "macOS"
+      },
+      ios: {
+        en: "iOS"
+      },
+      android: {
+        en: "Android"
+      },
+      linux: {
+        en: "Linux"
+      },
+      other: {
+        en: "Unknown"
+      }
+    },
+    reduced_motion: {
+      name: {
+        en: "Reduce motion in animations"
+      },
+      body: {
+        en: "Decreases the intensity of animations, hover effects, and other moving parts"
+      }
     }
   };
   var trans_legacy = {
@@ -19868,7 +23901,7 @@
           reason: "Translated for a supported language"
         },
         cat: {
-          name: "it's a kitty!!"
+          name: "it\u2019s a kitty!!"
         },
         sponsor: {
           name: "Sponsoring",
@@ -22750,8 +26783,7 @@
       log("your key is undefined", "trans");
       return "NO_TRANSLATION_FOUND";
     }
-    if (key[lang])
-      return key[lang];
+    if (key[lang]) return key[lang];
     log(`no translation found for ${JSON.stringify(key)}`, "trans");
     return key.en;
   }
@@ -22769,13 +26801,13 @@
         let avatar3 = auth_link.state.querySelector("img");
         avatar3.setAttribute("crossorigin", "anonymous");
         try {
-          avatar3.addEventListener("load", function() {
+          avatar3.addEventListener("load", () => {
             let thief = new ColorThief();
             let colour = thief.getColor(avatar3);
             let hsl = rgb_to_hsl(colour[0], colour[1], colour[2]);
             auth.sets.hue = hsl.h;
             auth.sets.sat = clamp_sat(hsl.s / 100 * 3);
-            auth.sets.lit = 1;
+            auth.sets.lit = hsl.l / 100 + 0.35;
           });
         } catch (e) {
         }
@@ -23348,7 +27380,9 @@
       title: trans.theme
     },
     high_contrast: {
-      default: false
+      default: false,
+      type: "checkbox",
+      title: trans.high_contrast
     },
     accent_type: {
       default: "colour",
@@ -23367,8 +27401,8 @@
       default: 1,
       type: "range",
       min: 0,
-      max: 3,
-      step: 0.1,
+      max: 5,
+      step: 0.2,
       title: trans.card_background_saturation.name,
       body: trans.card_background_saturation.body,
       incompatible: [{ setting: "theme", value: "light" }]
@@ -23378,11 +27412,19 @@
       type: "range"
     },
     gloss: {
+      css: "gloss",
       default: 0,
-      type: "range"
+      type: "range",
+      min: 0,
+      max: 1,
+      step: 0.05,
+      title: trans.gloss.name,
+      body: trans.gloss.body
     },
     gendered_tags: {
-      default: true
+      default: true,
+      title: trans.gendered_tags.name,
+      body: trans.gendered_tags.body
     },
     dev: {
       default: false,
@@ -23411,7 +27453,9 @@
       body: trans.accessible_name_colours.body
     },
     reduced_motion: {
-      default: false
+      default: false,
+      title: trans.reduced_motion.name,
+      body: trans.reduced_motion.body
     },
     underline_links: {
       default: false,
@@ -23429,16 +27473,28 @@
       body: trans.show_guest_features.body
     },
     stacked_chartlist_info: {
-      default: true
+      default: true,
+      title: trans.track_column_view
+    },
+    glacier_library_graphs: {
+      default: true,
+      title: trans.glacier_graphs.name,
+      body: trans.glacier_graphs.body
     },
     show_remaster_tags: {
-      default: true
+      default: true,
+      title: trans.show_remaster_tags,
+      beta: true
     },
     corrections: {
-      default: true
+      default: true,
+      title: trans.correct_titles_with_lotus.name,
+      body: trans.correct_titles_with_lotus.body
     },
     colourful_counts: {
-      default: true
+      default: true,
+      title: trans.colourful_counts.name,
+      body: trans.colourful_counts.body
     },
     colourful_tracks: {
       default: true,
@@ -23453,7 +27509,9 @@
       default: true
     },
     travis: {
-      default: false
+      default: false,
+      title: trans.redirect_messages.name,
+      body: trans.redirect_messages.body
     },
     list_view: {
       default: 1,
@@ -23499,7 +27557,9 @@
       body: trans.hue_from_album.body
     },
     seasonal: {
-      default: true
+      default: true,
+      title: trans.enable_seasons.name,
+      body: trans.enable_seasons.body
     },
     seasonal_particles: {
       default: "all",
@@ -23539,7 +27599,7 @@
     },
     font_weight: {
       css: "custom_font_weight",
-      default: 480,
+      default: 440,
       min: 100,
       max: 500,
       step: 10,
@@ -23549,8 +27609,8 @@
     },
     font_weight_medium: {
       css: "custom_font_weight_medium",
-      default: 650,
-      min: 500,
+      default: 570,
+      min: 400,
       max: 700,
       step: 10,
       type: "range",
@@ -23559,8 +27619,8 @@
     },
     font_weight_bold: {
       css: "custom_font_weight_bold",
-      default: 730,
-      min: 700,
+      default: 760,
+      min: 500,
       max: 900,
       step: 10,
       type: "range",
@@ -23570,7 +27630,8 @@
     font_emoji: {
       default: true,
       title: trans.font_emoji.name,
-      body: trans.font_emoji.body
+      body: trans.font_emoji.body,
+      platforms: ["win32", "linux", "android", "other"]
     },
     show_bulk_edit_album: {
       default: false,
@@ -23581,7 +27642,9 @@
       ]
     },
     grid_glow: {
-      default: true
+      default: true,
+      title: trans.grid_glow.name,
+      body: trans.grid_glow.body
     },
     auth_menu_obsessions: {
       deault: false
@@ -23605,13 +27668,75 @@
     },
     collage_grid_gap: {
       default: true,
-      title: trans.collage_grid_gap
+      title: trans.collage_grid_gap.name,
+      body: trans.collage_grid_gap.body
     },
     hu_tao: {
       default: "",
       type: "text",
       max: 40,
       placeholder: trans.enter_password
+    },
+    activities: {
+      default: true,
+      title: trans.activity_tracking.name,
+      body: trans.activity_tracking.body
+    },
+    activity_shout: {
+      default: true,
+      title: trans.shouts,
+      body: trans.activity.types.shout,
+      type: "checkbox",
+      icon: "icon-16-shoutbox",
+      horizontal: true
+    },
+    activity_image: {
+      default: true,
+      title: trans.photos,
+      body: trans.activity.types.image,
+      type: "checkbox",
+      icon: "icon-16-gallery-vertical",
+      horizontal: true
+    },
+    activity_obsess: {
+      default: true,
+      title: trans.obsessions,
+      body: trans.activity.types.obsess,
+      type: "checkbox",
+      icon: "icon-16-obsession",
+      horizontal: true
+    },
+    activity_love: {
+      default: true,
+      title: trans.loved,
+      body: trans.activity.types.love,
+      type: "checkbox",
+      icon: "icon-16-heart",
+      horizontal: true
+    },
+    activity_bookmark: {
+      default: true,
+      title: trans.bookmarks,
+      body: trans.activity.types.bookmark,
+      type: "checkbox",
+      icon: "icon-16-bookmark",
+      horizontal: true
+    },
+    activity_wiki: {
+      default: true,
+      title: trans.wiki,
+      body: trans.activity.types.wiki,
+      type: "checkbox",
+      icon: "icon-16-bio",
+      horizontal: true
+    },
+    activity_install: {
+      default: true,
+      title: trans.installation,
+      body: trans.activity.types.install,
+      type: "checkbox",
+      icon: "icon-16-download",
+      horizontal: true
     }
   };
 
@@ -23683,8 +27808,8 @@
   // src/build/build.json
   var build_default = {
     brand: "bleh",
-    build: "2025.0608.2",
-    sku: "homura",
+    build: "2025.0715",
+    sku: "fleur",
     bio: "bleh!!! ^-^",
     author: "kate",
     url: "https://github.com/katelyynn/bleh/raw/uwu/fm/bleh.user.js",
@@ -23838,7 +27963,7 @@
         notice: "This is very, very experimental ~w~"
       },
       beret: {
-        default: false,
+        default: true,
         name: "beret redesign",
         date: "2025-04-03",
         notice: "Removes individual card styles and instead styles the entire container, much like old bleh"
@@ -23862,6 +27987,66 @@
         default: true,
         name: "Refreshed auth menu",
         date: "2025-06-07"
+      },
+      menu_like_side_actions: {
+        default: true,
+        name: "Menu-like side actions",
+        date: "2025-06-11"
+      },
+      menu_like_side_actions_v2: {
+        default: false,
+        name: "Menu-like side actions v2",
+        date: "2025-06-11"
+      },
+      menu_like_side_actions_v3: {
+        default: false,
+        name: "Menu-like side actions v3",
+        date: "2025-06-12"
+      },
+      menu_like_side_actions_gap: {
+        default: false,
+        name: "Menu-like side actions separator",
+        date: "2025-06-12"
+      },
+      sweet: {
+        default: true,
+        name: "Readable count bars",
+        date: "2025-06-20"
+      },
+      short: {
+        default: true,
+        name: "Extends beret redesign to turn all content into a single card",
+        date: "2025-06-24"
+      },
+      auto_theme: {
+        default: false,
+        name: "Support inheriting theme from system",
+        date: "2025-06-25"
+      },
+      theme_bubbles: {
+        default: true,
+        name: "Simplify theme preview symmetry",
+        date: "2025-06-25"
+      },
+      glass: {
+        default: false,
+        name: "Support experimental glass theme",
+        date: "2025-06-25"
+      },
+      update_center: {
+        default: true,
+        name: "Update center",
+        date: "2025-07-02"
+      },
+      submit_scrobble: {
+        default: true,
+        name: "Submit new scrobble from profile",
+        date: "2025-07-08"
+      },
+      jufufu: {
+        default: true,
+        name: "Connect via the Last.fm API",
+        date: "2025-07-08"
       }
     }
   };

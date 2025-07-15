@@ -9,17 +9,15 @@ import {log} from "./build/log";
 import {page, reload_pending} from "./build/page";
 import {stored_season} from "./build/seasonal";
 import {tl, trans} from "./build/trans";
-import {load_chart_colours} from "./chart";
-import {bleh_music_page_charts} from "./components/music";
+import {chart_reflow, load_chart_colours} from "./chart";
 import {notify} from "./components/notify";
 import {load_skus, show_theme_change_in_menu, show_theme_change_in_settings} from "./pages/bleh_config";
-import {bleh_glacier_date_graph_generate, bleh_glacier_insights} from "./pages/glacier";
-import {bleh_profile_chart_render} from './pages/profile';
+import {bleh_glacier_date_graph_generate} from "./pages/glacier";
+import {save_setting} from "./components/settings.js";
 
 // create blank settings
 export function create_settings_template() {
-    localStorage.setItem('bleh', JSON.stringify(settings_template));
-    return settings_template;
+    return {dev: false};
 }
 
 // load settings
@@ -59,6 +57,14 @@ export function load_settings(skip = false) {
     } else if (settings.seasonal_particles_reduced == false) {
         delete settings.seasonal_particles_reduced;
     }
+
+    // migrates old font settings
+    if (settings.font_weight == 480)
+        settings.font_weight = settings_store.font_weight.default;
+    if (settings.font_weight_medium == 650)
+        settings.font_weight_medium = settings_store.font_weight_medium.default;
+    if (settings.font_weight_bold == 730)
+        settings.font_weight_bold = settings_store.font_weight_bold.default;
 
     // save setting into body
     for (let setting in settings) {
@@ -112,30 +118,9 @@ export function toggle_theme() {
     show_theme_change_in_menu(current_theme);
 
     // save value
-    settings.theme = current_theme;
-    if (current_theme == 'light' || current_theme == 'ink')
-        settings.theme_type = 'light';
-    else
-        settings.theme_type = 'dark';
-    document.documentElement.setAttribute(`data-bleh--theme`, `${current_theme}`);
-    document.documentElement.setAttribute(`data-bleh--theme_type`, `${settings.theme_type}`);
+    save_setting('theme', current_theme);
 
-    // save to settings
-    localStorage.setItem('bleh', JSON.stringify(settings));
-
-    load_chart_colours();
-
-    // trigger re-flow of chart
-    if ((page.type == 'artist' || page.type == 'album' || page.type == 'track') && page.subpage == 'overview')
-        bleh_music_page_charts();
-
-    if (page.type == 'user' && page.subpage == 'overview')
-        bleh_profile_chart_render();
-
-    if (page.type == 'user' && page.subpage.startsWith('library')) {
-        bleh_glacier_date_graph_generate();
-        bleh_glacier_insights();
-    }
+    chart_reflow();
 }
 
 unsafeWindow.change_theme_from_settings = function(theme) {
@@ -155,38 +140,15 @@ unsafeWindow.change_theme_from_settings = function(theme) {
     // save to settings
     localStorage.setItem('bleh', JSON.stringify(settings));
 }
-unsafeWindow.change_theme_from_menu = function(theme) {
-    if (page.subpage.startsWith('listening-report'))
-        return;
+export function change_theme_from_menu(theme) {
+    if (page.subpage.startsWith('listening-report')) return;
 
-    // save value
-    settings.theme = theme;
-    if (theme == 'light' || theme == 'ink')
-        settings.theme_type = 'light';
-    else
-        settings.theme_type = 'dark';
-    document.documentElement.setAttribute(`data-bleh--theme`, `${theme}`);
-    document.documentElement.setAttribute(`data-bleh--theme_type`, `${settings.theme_type}`);
+    save_setting('theme', theme);
 
     // show in settings
     show_theme_change_in_menu(theme);
 
-    // save to settings
-    localStorage.setItem('bleh', JSON.stringify(settings));
-
-    load_chart_colours();
-
-    // trigger re-flow of chart
-    if ((page.type == 'artist' || page.type == 'album' || page.type == 'track') && page.subpage == 'overview')
-        bleh_music_page_charts();
-
-    if (page.type == 'user' && page.subpage == 'overview')
-        bleh_profile_chart_render();
-
-    if (page.type == 'user' && page.subpage.startsWith('library')) {
-        bleh_glacier_date_graph_generate();
-        bleh_glacier_insights();
-    }
+    chart_reflow();
 }
 
 
@@ -480,3 +442,4 @@ export function update_inbuilt_item(item, value, modify=true, element=document.b
         }
     }
 }
+

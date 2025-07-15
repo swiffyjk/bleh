@@ -1,7 +1,7 @@
 {
     "brand": "bleh",
-    "build": "2025.0608.2",
-    "sku": "homura",
+    "build": "2025.0715",
+    "sku": "fleur",
     "bio": "bleh!!! ^-^",
     "author": "kate",
     "url": "https://github.com/katelyynn/bleh/raw/uwu/fm/bleh.user.js",
@@ -155,7 +155,7 @@
             "notice": "This is very, very experimental ~w~"
         },
         "beret": {
-            "default": false,
+            "default": true,
             "name": "beret redesign",
             "date": "2025-04-03",
             "notice": "Removes individual card styles and instead styles the entire container, much like old bleh"
@@ -179,6 +179,66 @@
             "default": true,
             "name": "Refreshed auth menu",
             "date": "2025-06-07"
+        },
+        "menu_like_side_actions": {
+            "default": true,
+            "name": "Menu-like side actions",
+            "date": "2025-06-11"
+        },
+        "menu_like_side_actions_v2": {
+            "default": false,
+            "name": "Menu-like side actions v2",
+            "date": "2025-06-11"
+        },
+        "menu_like_side_actions_v3": {
+            "default": false,
+            "name": "Menu-like side actions v3",
+            "date": "2025-06-12"
+        },
+        "menu_like_side_actions_gap": {
+            "default": false,
+            "name": "Menu-like side actions separator",
+            "date": "2025-06-12"
+        },
+        "sweet": {
+            "default": true,
+            "name": "Readable count bars",
+            "date": "2025-06-20"
+        },
+        "short": {
+            "default": true,
+            "name": "Extends beret redesign to turn all content into a single card",
+            "date": "2025-06-24"
+        },
+        "auto_theme": {
+            "default": false,
+            "name": "Support inheriting theme from system",
+            "date": "2025-06-25"
+        },
+        "theme_bubbles": {
+            "default": true,
+            "name": "Simplify theme preview symmetry",
+            "date": "2025-06-25"
+        },
+        "glass": {
+            "default": false,
+            "name": "Support experimental glass theme",
+            "date": "2025-06-25"
+        },
+        "update_center": {
+            "default": true,
+            "name": "Update center",
+            "date": "2025-07-02"
+        },
+        "submit_scrobble": {
+            "default": true,
+            "name": "Submit new scrobble from profile",
+            "date": "2025-07-08"
+        },
+        "jufufu": {
+            "default": true,
+            "name": "Connect via the Last.fm API",
+            "date": "2025-07-08"
         }
     }
 }

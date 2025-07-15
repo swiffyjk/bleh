@@ -6,7 +6,7 @@
 
 import {log} from "../build/log";
 import {page} from "../build/page";
-import {html} from "lighterhtml";
+import {html, render} from "lighterhtml";
 import {tl, trans} from "../build/trans.js";
 
 export function load_notifications() {
@@ -54,7 +54,8 @@ export function notify({
     persist = false,
     type = 'generic',
     long = false,
-    colourful = false
+    colourful = false,
+    progress = false
 }) {
     log(`creating ${title}`, 'notification', 'info', {
         id: id,
@@ -65,22 +66,22 @@ export function notify({
         persist: persist,
         type: type,
         long: long,
-        colourful: false
+        colourful: colourful,
+        progress: progress
     });
 
     if (type === 'error') {
-        icon = 'icon-16-x';
+        if (!icon) icon = 'icon-16-x';
         colourful = true;
     } else if (type === 'warning') {
-        icon = 'icon-16-warning';
+        if (!icon) icon = 'icon-16-warning';
         colourful = true;
     } else if (type === 'success') {
-        icon = 'icon-16-check';
+        if (!icon) icon = 'icon-16-check';
         colourful = true;
     }
 
-    if (!icon)
-        icon = 'icon-16-info';
+    if (!icon) icon = 'icon-16-info';
 
     let bar;
 
@@ -89,6 +90,10 @@ export function notify({
         action: () => notify_rm(notif),
         text: tl(trans.close)
     });
+
+    if (progress && persist) persist = false;
+
+    let information;
 
     let notif = html.node`
         <div
@@ -104,7 +109,7 @@ export function notify({
                 icon ? `--mask: var(--${icon})` : '',
                 ].join(';')}
         >
-            <div class="notification-information">
+            <div class="notification-information" ref=${el => information = el}>
                  <div class="notification-title">${title}</div>
                 ${(body) ? html.node`
                 <div class="notification-body">${body}</div>
@@ -128,10 +133,27 @@ export function notify({
     `;
     page.structure.notifications.appendChild(notif);
 
-    if (persist)
+    notif.remove = () => {
+        notify_rm(notif);
+    }
+
+    notif.set = (value) => {
+        bar.style.setProperty('width', `${value}%`);
+    }
+
+    notif.set_body = (body) => {
+        render(information, html`
+            <div class="notification-title">${title}</div>
+            ${(body) ? html.node`
+            <div class="notification-body">${body}</div>
+            ` : ''}
+        `);
+    }
+
+    if (persist || progress)
         return notif;
 
-    let ms = (long) ? 6000 : 2000;
+    let ms = (long) ? 7000 : 3000;
     let counter = 100;
     let step = ms / 100;
 

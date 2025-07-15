@@ -7,7 +7,7 @@
 import {settings} from "./build/config";
 import {log} from "./build/log";
 import {auth, page, recent_activity_list, root} from "./build/page";
-import {sanitise, sanitise_text} from "./build/tools";
+import {sanitise} from "./build/tools";
 import {tl, trans} from './build/trans';
 import {correct_artist, correct_item_by_artist, name_includes} from "./components/lotus";
 import {html, render} from "lighterhtml";
@@ -81,7 +81,7 @@ export function render_activity_list() {
 
                 // combine
                 name = html.node`
-                    <div class="title">${sanitise_text(song_title).trim()}</div>
+                    <div class="title">${song_title.trim()}</div>
                     ${song_tags.map((tag) => html.node`
                         <div class="feat" data-bleh--tag-type="${tag.type}" data-bleh--tag-group="${tag.group}">${tag.text}</div>
                     `)}
@@ -110,7 +110,11 @@ export function render_activity_list() {
 
         if (tooltip_name)
             tippy(activity_item.querySelector('.name a'), {
-                content: `${tooltip_sister} - ${tooltip_name}`
+                theme: 'name-sister-combo',
+                content: html.node`
+                    <span class="name">${tooltip_name}</span>
+                    <span class="sister">${tooltip_sister}</span>
+                `
             });
     });
 

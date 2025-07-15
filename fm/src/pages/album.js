@@ -7,7 +7,7 @@
 import {settings} from "../build/config";
 import {log} from "../build/log";
 import {auth, page, root} from "../build/page";
-import {clamp_sat, hex_to_hsl, sanitise} from "../build/tools";
+import {clamp_lit, clamp_sat, hex_to_hsl, sanitise} from "../build/tools";
 import {tl, trans} from "../build/trans";
 import {load_chart_colours} from "../chart";
 import {bleh_about_artist} from "../components/about_artist";
@@ -22,6 +22,7 @@ import {bleh_tags_mini} from "./tag";
 import {bleh_wiki, bleh_wiki_editor, bleh_wiki_history} from "./wiki";
 import {html, render} from "lighterhtml";
 import {expand_avatar} from "../avatar.js";
+import {setting} from "../components/settings.js";
 
 export function bleh_albums() {
     let album_header = document.body.querySelector('.header-new--album');
@@ -85,7 +86,7 @@ export function bleh_albums() {
                 <div class="info-side">
                     <div class="sub-text">${tl(trans.album)}</div>
                     <div class="title-container">
-                        <h1>${title}</h1>
+                        ${title}
                         ${(position) ? position : ''}
                     </div>
                     <h2>${artist}</h2>
@@ -149,11 +150,15 @@ export function bleh_albums() {
         try {
             let bg = header_inner.getAttribute('style').replace('background: #', '');
             let hsl = hex_to_hsl(bg);
-            document.body.style.setProperty('--hue-album', hsl.h);
-            document.body.style.setProperty('--sat-album', clamp_sat((hsl.s / 100) * 3));
-            document.body.style.setProperty('--lit-album', (hsl.l / 100) + 0.35);
 
-            log(`sourced hsl of (${hsl.h}, ${hsl.s}, ${hsl.l}) - using final value of (${hsl.h}, ${clamp_sat((hsl.s / 100) * 3)}, ${(hsl.l / 100) + 0.35})`, 'hue from album');
+            let sat = clamp_sat((hsl.s / 100) * 3);
+            let lit = clamp_lit(sat, (hsl.l / 100) + 0.35);
+
+            document.body.style.setProperty('--hue-album', hsl.h);
+            document.body.style.setProperty('--sat-album', sat);
+            document.body.style.setProperty('--lit-album', lit);
+
+            log(`sourced hsl of (${hsl.h}, ${hsl.s}, ${hsl.l}) - using final value of (${hsl.h}, ${sat}, ${lit})`, 'hue from album');
 
             load_chart_colours();
         } catch(e) {
@@ -202,13 +207,50 @@ export function bleh_albums() {
 function album_missing_a_tracklist() {
     // tracklist
     let tracklist = page.structure.main.querySelector('#tracklist');
-    if (!tracklist) {
+
+    let settings_btn;
+
+    if (tracklist) {
+        let top = tracklist.querySelector('.section-controls');
+        top.classList = 'top-container';
+
+        let header = top.querySelector('h3');
+
+        let select_btn = top.querySelector('.dropdown-menu-clickable-button');
+
+        if (select_btn) {
+            select_btn.classList.add('select-button', 'link-select', 'blend-v2-btn');
+            select_btn.classList.remove('dropdown-menu-clickable-button');
+        }
+
+        header.after(html.node`
+            <div class="accompany view-buttons blend blend-v2">
+                ${select_btn}
+            </div>
+            <div class="view-buttons blend blend-v2">
+                <button class="left-icon blend-v2-btn" data-type="settings" ref=${el => settings_btn = el}>
+                    ${tl(trans.settings)}
+                </button>
+            </div>
+        `);
+    } else {
         let top_overview = page.structure.main.querySelector('.top-overview-panel');
         if (!top_overview) return;
 
+        let top = html.node`
+            <div class="top-container">
+                <h3 class="text-18">${tl(trans.tracklist)}</h3>
+                <div class="view-buttons blend blend-v2">
+                    <button class="left-icon blend-v2-btn" data-type="settings" ref=${el => settings_btn = el}>
+                        ${tl(trans.settings)}
+                    </button>
+                </div>
+            </div>
+        `;
+
         tracklist = html.node`
             <section>
-                <h3 class="text-18">${tl(trans.tracklist)}</h3>
+                ${top}
                 <div class="loading-data-container">
                     <p class="loading-data-text">${tl(trans.gathering_your_plays)}</p>
                 </div>
@@ -227,7 +269,7 @@ function album_missing_a_tracklist() {
             let album_as_track_url = window.location.href.replace(album_url, `${url_split[(url_split.length - 2)]}/_/${url_split[(url_split.length - 1)]}`);
 
             render(tracklist, html`
-                <h3 class="text-18">${tl(trans.tracklist)}</h3>
+                ${top}
                 <div class="loading-data-container">
                     <p class="loading-data-text failed">${tl(trans.failed_to_find_tracks)}</p>
                     <a class="see-more" href="${album_as_track_url}">${tl(trans.open_album_as_track)}</a>
@@ -258,10 +300,10 @@ function album_missing_a_tracklist() {
                     let album_as_track_url = window.location.href.replace(album_url, `${url_split[(url_split.length - 2)]}/_/${url_split[(url_split.length - 1)]}`);
 
                     render(tracklist, html`
-                        <h3 class="text-18">${tl(trans.tracklist)}</h3>
+                        ${top}
                         <div class="loading-data-container">
                             <p class="loading-data-text failed">${tl(trans.failed_to_find_tracks)}</p>
-                            <a class="btn" href="${album_as_track_url}">${tl(trans.open_album_as_track)}</a>
+                            <a class="see-more" href=${album_as_track_url}>${tl(trans.open_album_as_track)}</a>
                         </div>
                     `);
                     return;
@@ -270,10 +312,26 @@ function album_missing_a_tracklist() {
                 inner_tracklist.classList.remove('chartlist--with-image');
 
                 render(tracklist, html`
-                    <h3 class="text-18">${tl(trans.tracklist)}</h3>
+                    ${top}
                     <div class="alert alert-info">${tl(trans.sourced_from_own_plays)}</div>
                     ${inner_tracklist}
                 `);
             })
     }
+
+    tippy(settings_btn, {
+        theme: 'window',
+        content: html.node`
+            <div class="dialog-settings">
+                <div class="setting-group blend">
+                    ${setting({id: 'format_guest_features'})}
+                    ${setting({id: 'show_guest_features'})}
+                </div>
+            </div>
+        `,
+        placement: 'bottom',
+        interactive: true,
+        interactiveBorder: 10,
+        trigger: 'click'
+    });
 }

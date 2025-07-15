@@ -14,6 +14,9 @@ import {prep_chart_colours} from "../chart";
 import {correct_artist, correct_item_by_artist} from "../components/lotus";
 import {refresh_all} from "../config";
 import {ff} from "../sku";
+import {compare} from "../components/compare.js";
+import {input} from "../components/input.js";
+import {setting} from "../components/settings.js";
 
 export function bleh_user_library() {
     // date sidebar into its own panel
@@ -32,6 +35,9 @@ export function bleh_user_library() {
         else
             date_panel.appendChild(item);*/
         date_panel.appendChild(item);
+
+        if (item.classList.contains('row'))
+            item.classList = 'date-selector';
 
         if (index == 0)
             page.structure.glacier.selector = item;
@@ -60,14 +66,13 @@ export function bleh_user_library() {
         `);
         tabs.appendChild(velocity_tab);
     } else {
-        let compare_tab = document.createElement('li');
-        compare_tab.classList.add('navlist-item', 'secondary-nav-item', 'secondary-nav-item--compare');
-        compare_tab.innerHTML = (`
-            <a class="secondary-nav-item-link" onclick="_compare()">
-                ${tl(trans.compare)}
-            </a>
+        tabs.appendChild(html.node`
+            <li class="navlist-item secondary-nav-item secondary-nav-item--compare">
+                <a class="secondary-nav-item-link" onclick=${() => compare()}>
+                    ${tl(trans.compare)}
+                </a>
+            </li>
         `);
-        tabs.appendChild(compare_tab);
     }
 
 
@@ -174,76 +179,102 @@ export function bleh_user_library() {
 }
 
 function bleh_glacier_library_date() {
-    let picker_content = page.structure.glacier.date_panel.querySelector('.date-range-picker-content:not([data-glacier-library-date])');
+    let button = page.structure.glacier.date_panel.querySelector('.date-range-picker-button.disclose-trigger:not([data-glacier-library-date])');
+    if (!button) return;
 
-    if (picker_content == null)
-        return;
+    button.setAttribute('data-glacier-library-date', 'true');
+    console.info('button', button);
+
+    let date_picker = page.structure.glacier.date_panel.querySelector('.library-controls-datepicker');
+    let old_date_btn = date_picker.querySelector('.date-range-picker-button:not(.disclose-trigger)');
+    if (old_date_btn) old_date_btn.remove();
+
+    let date_btn = html.node`
+        <button class="date-range-picker-button">${button.querySelector('.date-range-picker-button-inner').textContent}</button>
+    `;
+    date_picker.appendChild(date_btn);
+
+    let picker_content = page.structure.glacier.date_panel.querySelector('.date-range-picker-content:not([data-glacier-library-date])');
+    if (!picker_content) return;
+
     picker_content.setAttribute('data-glacier-library-date', 'true');
 
-    let picker_presets = picker_content.querySelector('.date-range-picker-presets-wrap');
-    let picker_col_2 = picker_content.querySelector('.date-range-picker-presets--col-2');
-
-    /*let all_time_preset = picker_col_2.querySelector('.date-range-picker-preset:last-child');
-    picker_presets.after(all_time_preset);*/
+    let picker_presets = picker_content.querySelectorAll('.date-range-picker-presets-wrap > .date-range-picker-presets');
 
     // this year
-    let new_wrap = document.createElement('div');
-    new_wrap.classList.add('date-range-picker-presets-wrap');
-
-    let new_presets = document.createElement('ul');
-    new_presets.classList.add('date-range-picker-presets');
-
     let params = new URLSearchParams(document.location.search);
     page.requested.from = params.get('from');
     page.requested.to = params.get('to');
     page.requested.rangetype = params.get('rangetype');
 
-    let current_year = new Date().getFullYear();
-    let previous_year = current_year - 1;
-    if (current_year >= 2025) {
-        new_presets.classList.add('date-range-picker-presets-2');
+    const current_year = new Date().getFullYear();
+    const previous_year = current_year - 1;
 
-        let last_year = document.createElement('div');
-        last_year.classList.add('date-range-picker-preset', 'date-range-picker-preset-custom', 'date-range-picker-preset-last-year');
-        last_year.innerHTML = (`
+    let selected;
+
+    if (page.requested.from == `${current_year}-01-01` && (page.requested.to == `${current_year}-12-31` || page.requested.rangetype == 'year'))
+        selected = 'this_year';
+    else if (page.requested.from == `${previous_year}-01-01` && (page.requested.to == `${previous_year}-12-31` || page.requested.rangetype == 'year'))
+        selected = 'last_year';
+
+    picker_presets[0].appendChild(html.node`
+        <li class="date-range-picker-preset ${selected == 'last_year' ? 'date-range-picker-preset--selected' : ''}">
             <a href="${window.location.href.replace(window.location.search, '')}?from=${previous_year}-01-01&rangetype=year">
                 ${previous_year}
             </a>
-        `);
-        new_presets.appendChild(last_year);
+        </li>
+    `);
 
-        let this_year = document.createElement('div');
-        this_year.classList.add('date-range-picker-preset', 'date-range-picker-preset-custom', 'date-range-picker-preset-this-year');
-        this_year.innerHTML = (`
+    picker_presets[1].appendChild(html.node`
+        <li class="date-range-picker-preset ${selected == 'this_year' ? 'date-range-picker-preset--selected' : ''}">
             <a href="${window.location.href.replace(window.location.search, '')}?from=${current_year}-01-01&rangetype=year">
                 ${current_year}
             </a>
-        `);
-        new_presets.appendChild(this_year);
+        </li>
+    `);
 
-        if (page.requested.from == `${current_year}-01-01` && (page.requested.to == `${current_year}-12-31` || page.requested.rangetype == 'year'))
-            this_year.classList.add('date-range-picker-preset--selected');
-        else if (page.requested.from == `${previous_year}-01-01` && (page.requested.to == `${previous_year}-12-31` || page.requested.rangetype == 'year'))
-            last_year.classList.add('date-range-picker-preset--selected');
-    } else {
-        new_presets.classList.add('date-range-picker-presets-wide');
 
-        let this_year = document.createElement('div');
-        this_year.classList.add('date-range-picker-preset', 'date-range-picker-preset-custom', 'date-range-picker-preset-this-year');
-        this_year.innerHTML = (`
-            <a href="${window.location.href.replace(window.location.search, '')}?from=${current_year}-01-01&rangetype=year">
-                ${current_year}<span class="new-badge">${tl(trans.new)}</span>
-            </a>
-        `);
-        new_presets.appendChild(this_year);
+    picker_content.classList = 'date-range-picker-content-inner';
+    tippy(date_btn, {
+        theme: 'window',
+        content: picker_content,
+        placement: 'bottom',
+        interactive: true,
+        interactiveBorder: 10,
+        trigger: 'click'
+    });
 
-        if (page.requested.from == `${current_year}-01-01` && (page.requested.to == `${current_year}-12-31` || page.requested.rangetype == 'year'))
-            this_year.classList.add('date-range-picker-preset--selected');
-    }
 
-    //picker_col_2.appendChild(this_year);
-    new_wrap.appendChild(new_presets);
-    picker_presets.after(new_wrap);
+    let form = picker_content.querySelector(':scope > .date-range-picker-form');
+
+    let from_group = form.querySelector('.form-group--from');
+    let from_input = from_group.querySelector('input');
+
+    let to_group = form.querySelector('.form-group--to');
+    let to_input = to_group.querySelector('input');
+
+    form.insertBefore(html.node`
+        <div class="input-group library-date-group">
+            ${input({
+                type: 'date',
+                value: from_input.value,
+                name: from_input.name,
+                min: '2000-01-01',
+                show_time: false
+            })}
+            <div class="bleh-icon" style="--icon: var(--icon-16-arrow-right)" />
+            ${input({
+                type: 'date',
+                value: to_input.value,
+                name: to_input.name,
+                min: '2000-01-01',
+                show_time: false
+            })}
+        </div>
+    `, form.firstChild);
+
+    from_group.remove();
+    to_group.remove();
 }
 
 // can update at any time!!
@@ -268,7 +299,7 @@ function bleh_glacier_library_table() {
         return;
 
     console.log('glacier library', table);
-    log('refresh is now marked false (table log)', 'glacier library');
+    log('refresh is now marked false (table log)', 'glacier library', 'log');
     page.structure.glacier.refresh = false;
 
     let current_view = page.structure.glacier.date_panel.querySelector('.date-range-picker-button-inner');
@@ -444,70 +475,27 @@ function bleh_glacier_library_top(static_page = false) {
         theme: 'window',
         content: html.node`
             <div class="dialog-settings">
-                ${(page.subpage == 'library_artists') ? html.node`
-                <div class="setting" data-type="toggle" id="container-colourful_counts" onclick="_update_item('colourful_counts')">
-                    <div class="heading">
-                        <h5>${tl(trans.colourful_counts.name)}</h5>
-                        <p>${tl(trans.colourful_counts.body)}</p>
+                <div class="setting-group blend">
+                    ${(page.subpage == 'library_artists') ? html.node`
+                    <div class="setting" data-type="toggle" id="container-colourful_counts" onclick="_update_item('colourful_counts')">
+                        <div class="heading">
+                            <h5>${tl(trans.colourful_counts.name)}</h5>
+                            <p>${tl(trans.colourful_counts.body)}</p>
+                        </div>
+                        <div class="toggle-wrap">
+                            <button class="toggle" id="toggle-colourful_counts" aria-checked="true">
+                                <div class="dot"></div>
+                            </button>
+                        </div>
                     </div>
-                    <div class="toggle-wrap">
-                        <button class="toggle" id="toggle-colourful_counts" aria-checked="true">
-                            <div class="dot"></div>
-                        </button>
-                    </div>
-                </div>
-                ` : html.node`
-                <div class="setting" data-type="toggle" id="container-format_guest_features" onclick="_update_item('format_guest_features')">
-                    <button class="btn reset" onclick="_reset_item('format_guest_features')">${tl(trans.reset)}</button>
-                    <div class="heading">
-                        <h5>${tl(trans.format_guest_features.name)}</h5>
-                        <p>${tl(trans.format_guest_features.body)}</p>
-                    </div>
-                    <div class="toggle-wrap">
-                        <button class="toggle" id="toggle-format_guest_features" aria-checked="true">
-                            <div class="dot"></div>
-                        </button>
-                    </div>
-                </div>
-                <div class="setting hide-if-format-guest-disabled" data-type="toggle" id="container-show_guest_features" onclick="_update_item('show_guest_features')">
-                    <button class="btn reset" onclick="_reset_item('show_guest_features')">${tl(trans.reset)}</button>
-                    <div class="heading">
-                        <h5>${tl(trans.show_guest_features.name)}</h5>
-                        <p>${tl(trans.show_guest_features.body)}</p>
-                    </div>
-                    <div class="toggle-wrap">
-                        <button class="toggle" id="toggle-show_guest_features" aria-checked="true" type="button">
-                            <div class="dot"></div>
-                        </button>
-                    </div>
-                </div>
-                `}
-                <div class="sep"></div>
-                ${((page.subpage == 'library_artists' || page.subpage == 'library_albums') && auth.pro) ? html.node`
-                <div class="setting" data-type="toggle" id="container-grid_glow" onclick="_update_item('grid_glow')">
-                    <button class="btn reset" onclick="_reset_item('grid_glow')">${tl(trans.reset)}</button>
-                    <div class="heading">
-                        <h5>${tl(trans.grid_glow.name)}</h5>
-                        <p>${tl(trans.grid_glow.body)}</p>
-                    </div>
-                    <div class="toggle-wrap">
-                        <button class="toggle" id="toggle-grid_glow" aria-checked="true" type="button">
-                            <div class="dot"></div>
-                        </button>
-                    </div>
-                </div>
-                ` : ''}
-                <div class="setting" data-type="toggle" id="container-glacier_library_graphs" onclick="_update_item('glacier_library_graphs')">
-                    <button class="btn reset" onclick="_reset_item('glacier_library_graphs')">${tl(trans.reset)}</button>
-                    <div class="heading">
-                        <h5>${tl(trans.glacier_graphs.name)}</h5>
-                        <p>${tl(trans.glacier_graphs.body)}</p>
-                    </div>
-                    <div class="toggle-wrap">
-                        <button class="toggle" id="toggle-glacier_library_graphs" aria-checked="true" type="button">
-                            <div class="dot"></div>
-                        </button>
-                    </div>
+                    ` : html.node`
+                    ${setting({id: 'format_guest_features'})}
+                    ${setting({id: 'show_guest_features'})}
+                    `}
+                    ${((page.subpage == 'library_artists' || page.subpage == 'library_albums') && auth.pro) ? html.node`
+                    ${setting({id: 'grid_glow'})}
+                    ` : ''}
+                    ${setting({id: 'glacier_library_graphs'})}
                 </div>
             </div>
         `,
@@ -698,7 +686,7 @@ export function bleh_glacier_insights(insights = null) {
         }
 
         for (let item in insights) {
-            log(`checking insights status of item ${item} - display of ${insights[item].display}`, 'glacier library', 'info', {checking: insights[item], global: page.state.glacier.insights[item]});
+            log(`checking insights status of item ${item} - display of ${insights[item].display}`, 'glacier library', 'log', {checking: insights[item], global: page.state.glacier.insights[item]});
             if (insights[item].display && JSON.stringify(insights[item]) != JSON.stringify(page.state.glacier.insights[item])) {
                 log(`confirmed insights status of item ${item} - is different`, 'glacier library');
                 page.state.glacier.insights[item] = insights[item];
@@ -737,7 +725,7 @@ function bleh_glacier_insights_generate(type, item) {
     scrobble_canvas.classList.add('scrobble-insights-canvas');
 
     Chart.defaults.color = page.state.chart_colours.text_col;
-    Chart.defaults.font.family = 'Ubuntu Sans';
+    Chart.defaults.font.family = page.state.chart_colours.font;
     if (settings.chart_insights_view == 'line') {
         let gradient = scrobble_canvas.getContext('2d').createLinearGradient(0, 0, 0, 160);
         try {
@@ -918,7 +906,7 @@ export function bleh_glacier_date_graph_generate() {
     scrobble_canvas.classList.add('scrobble-canvas');
 
     Chart.defaults.color = page.state.chart_colours.text_col;
-    Chart.defaults.font.family = 'Ubuntu Sans';
+    Chart.defaults.font.family = page.state.chart_colours.font;
     if (settings.chart_view == 'line') {
         let gradient = scrobble_canvas.getContext('2d').createLinearGradient(0, 0, 0, 160);
         try {
@@ -1143,7 +1131,6 @@ function bleh_glacier_library_focused() {
 
             if (!button) return;
 
-            console.info('libraryyy', wrapper, button);
             button.classList.add('btn', 'view-item', 'glacier-library-button');
 
             let tooltips = wrapper.querySelectorAll('.user-library-controls-tooltip');
@@ -1214,42 +1201,10 @@ function bleh_glacier_library_focused() {
         theme: 'window',
         content: html.node`
             <div class="dialog-settings">
-                <div class="setting" data-type="toggle" id="container-format_guest_features" onclick="_update_item('format_guest_features')">
-                    <button class="btn reset" onclick="_reset_item('format_guest_features')">${tl(trans.reset)}</button>
-                    <div class="heading">
-                        <h5>${tl(trans.format_guest_features.name)}</h5>
-                        <p>${tl(trans.format_guest_features.body)}</p>
-                    </div>
-                    <div class="toggle-wrap">
-                        <button class="toggle" id="toggle-format_guest_features" aria-checked="true">
-                            <div class="dot"></div>
-                        </button>
-                    </div>
-                </div>
-                <div class="setting hide-if-format-guest-disabled" data-type="toggle" id="container-show_guest_features" onclick="_update_item('show_guest_features')">
-                    <button class="btn reset" onclick="_reset_item('show_guest_features')">${tl(trans.reset)}</button>
-                    <div class="heading">
-                        <h5>${tl(trans.show_guest_features.name)}</h5>
-                        <p>${tl(trans.show_guest_features.body)}</p>
-                    </div>
-                    <div class="toggle-wrap">
-                        <button class="toggle" id="toggle-show_guest_features" aria-checked="true" type="button">
-                            <div class="dot"></div>
-                        </button>
-                    </div>
-                </div>
-                <div class="sep"></div>
-                <div class="setting" data-type="toggle" id="container-glacier_library_graphs" onclick="_update_item('glacier_library_graphs')">
-                    <button class="btn reset" onclick="_reset_item('glacier_library_graphs')">${tl(trans.reset)}</button>
-                    <div class="heading">
-                        <h5>${tl(trans.glacier_graphs.name)}</h5>
-                        <p>${tl(trans.glacier_graphs.body)}</p>
-                    </div>
-                    <div class="toggle-wrap">
-                        <button class="toggle" id="toggle-glacier_library_graphs" aria-checked="true" type="button">
-                            <div class="dot"></div>
-                        </button>
-                    </div>
+                <div class="setting-group blend">
+                    ${setting({id: 'format_guest_features'})}
+                    ${setting({id: 'show_guest_features'})}
+                    ${setting({id: 'glacier_library_graphs'})}
                 </div>
             </div>
         `,
@@ -1267,11 +1222,12 @@ function bleh_glacier_library_focused() {
 
     upper_wrap.appendChild(view_buttons);
 
-    let lower_wrap = document.createElement('div');
-    lower_wrap.classList.add('glacier-library-top-lower');
-
-    let lower_metadata = document.createElement('div');
-    lower_metadata.classList.add('glacier-library-metadata');
+    let lower_metadata;
+    let lower_wrap = html.node`
+        <div class="glacier-library-top-lower">
+            <div class="glacier-library-metadata" ref=${el => lower_metadata = el} />
+        </div>
+    `;
 
     let legacy_meta_wrap = page.structure.main.querySelector('.metadata-list');
     if (legacy_meta_wrap) {
@@ -1287,17 +1243,36 @@ function bleh_glacier_library_focused() {
 
             lower_metadata.appendChild(glacier_meta_item);
         });
+
+        header.appendChild(lower_wrap);
     }
-
-    lower_wrap.appendChild(lower_metadata);
-
-    header.appendChild(lower_wrap);
 
     page.structure.main.insertBefore(header, page.structure.main.firstElementChild);
 
 
+    let overview_headers = page.structure.main.querySelectorAll('.library-overview-header');
+    overview_headers.forEach((top) => {
+        top.classList = 'top-container';
+
+        let header = top.querySelector('h2');
+
+        let select_btn = top.querySelector('.dropdown-menu-clickable-button');
+
+        if (!select_btn) return;
+
+        select_btn.classList.add('select-button', 'link-select', 'blend-v2-btn');
+        select_btn.classList.remove('dropdown-menu-list-button');
+
+        header.after(html.node`
+            <div class="accompany view-buttons blend blend-v2">
+                ${select_btn}
+            </div>
+        `);
+    });
+
+
     // move random overview header into their section below
-    let overview_header = page.structure.main.querySelector(':scope > .library-overview-header');
+    let overview_header = page.structure.main.querySelector(':scope > .top-container');
     if (!overview_header) return;
 
     overview_header.nextElementSibling.insertBefore(overview_header, overview_header.nextElementSibling.firstElementChild);
@@ -1313,6 +1288,9 @@ export function bleh_glacier_library_bulk_edit() {
     // move to new area
     let view_buttons = page.structure.main.querySelector('.glacier-library-buttons');
     if (!view_buttons) return;
+
+    let pre_existing_bulk = view_buttons.querySelector('.bulk-edit-button');
+    if (pre_existing_bulk) return;
 
     let edit_form = view_buttons.querySelector(':scope > .library-header-edit-form');
     let delete_button = view_buttons.querySelector(':scope > .delete-icon');

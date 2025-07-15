@@ -34,14 +34,21 @@ export function bleh_gallery() {
     // move image to its own spot above
     let image_details;
     let gallery_section;
+    let first = false;
     try {
         gallery_section = page.structure.main.querySelector('.gallery-section');
         if (gallery_section) {
-            page.structure.nav.after(gallery_section);
+            first = true;
+
+            if (ff('short'))
+                page.structure.row.insertBefore(gallery_section, page.structure.content);
+            else
+                page.structure.nav.after(gallery_section);
 
             // move image details to main column
-            image_details = document.createElement('section');
-            image_details.classList.add('image-details');
+            image_details = html.node`
+                <section class="image-details" />
+            `;
         } else {
             image_details = page.structure.main.querySelector('.image-details');
             image_details.innerHTML = '';
@@ -89,9 +96,10 @@ export function bleh_gallery() {
     breadcrumbs.style.setProperty('display', 'none');
 
     page.structure.main.insertBefore(image_details, page.structure.main.firstElementChild);
+    if (first) image_details.after(html.node`<div class="sep" />`);
 
     let description = image_details.querySelector('.gallery-image-description');
-    if (description == null) {
+    if (!description) {
         description = document.createElement('p');
         description.classList.add('gallery-image-description', 'gallery-image-description-empty');
         description.textContent = trans_legacy.en.gallery.empty.description;
@@ -174,7 +182,7 @@ export function bleh_gallery() {
     tippy(report_text, {
         content: report_text.textContent
     });
-    report_text.textContent = trans_legacy.en.gallery.report.name;
+    report_text.textContent = tl(trans.report);
 
     buttons_extra.appendChild(report_button);
 
@@ -187,7 +195,7 @@ export function bleh_gallery() {
         /*tippy(star_button, {
             content: star_button.textContent
         });*/
-        text.textContent = trans_legacy.en.gallery.prefer.name;
+        text.textContent = tl(trans.star);
     });
 
 
@@ -348,7 +356,7 @@ function patch_gallery_image_listing() {
 
 
     // create nav
-    page.structure.content_top.after(html.node`
+    let nav = html.node`
         <div class="bleh--nav-wrap bleh--nav-wrap--bookmarks">
             <nav class="navlist secondary-nav">
                 <ul class="navlist-items">
@@ -365,7 +373,12 @@ function patch_gallery_image_listing() {
                 </ul>
             </nav>
         </div>
-    `);
+    `;
+
+    if (ff('short'))
+        page.structure.row.insertBefore(nav, page.structure.content);
+    else
+        page.structure.content_top.after(nav);
 
 
     // content
@@ -378,18 +391,6 @@ function patch_gallery_image_listing() {
             </section>
         </div>
     `);
-
-
-    let sort_button = page.structure.main.querySelector('.dropdown-menu-clickable-button');
-    let sort_menu = page.structure.main.querySelector('.dropdown-menu-clickable');
-
-    let sort_wrap = document.createElement('div');
-    sort_wrap.classList.add('dropdown-top-wrap');
-
-    sort_wrap.appendChild(sort_button);
-    sort_wrap.appendChild(sort_menu);
-
-    page.structure.main.insertBefore(sort_wrap, page.structure.main.firstElementChild);
 
 
     // append images

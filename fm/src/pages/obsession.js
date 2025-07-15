@@ -9,7 +9,7 @@ import {settings} from '../build/config';
 import {log} from '../build/log';
 import {artist_corrections} from '../build/music';
 import {page, root} from '../build/page';
-import {clamp_sat, rgb_to_hsl, sanitise, sanitise_text} from '../build/tools';
+import {clamp_sat, rgb_to_hsl, sanitise} from '../build/tools';
 import {tl, trans} from '../build/trans';
 import {correct_item_by_artist, name_includes} from '../components/lotus';
 import {checkup_page_structure} from '../components/structure';
@@ -34,6 +34,9 @@ export function bleh_obsession() {
     checkup_page_structure(false, content_top);
     log('status is', 'page', 'info', page);
     update_page();
+
+    page.structure.container.setAttribute('data-beret', 'false');
+    page.structure.container.setAttribute('data-short', 'false');
 
 
     let background = obsession_container.querySelector('.obsession-background-inner');
@@ -87,7 +90,7 @@ export function bleh_obsession() {
 
         // combine
         render(track_title, html.node`
-            <div class="title">${sanitise_text(song_title).trim()}</div>
+            <div class="title">${song_title.trim()}</div>
             ${song_tags.map((tag) => html.node`
                 <div class="feat" data-bleh--tag-type="${tag.type}" data-bleh--tag-group="${tag.group}">${tag.text}</div>
             `)}
@@ -120,65 +123,25 @@ export function bleh_obsession() {
         }
     }
 
-    let redesigned_track_header = document.createElement('section');
-    redesigned_track_header.classList.add('redesigned-header', 'redesigned-track-header', 'no-background', 'obsession-track-header');
-    redesigned_track_header.innerHTML = (`
-        <!--<div class="avatar-side">
-            <img src="${background.replace('/ar0/', '/avatar170s/')}">
-            <a class="bleh--avatar-clickable-link"></a>
-        </div>-->
-        <div class="info-side">
-            <div class="sub-text">${tl(trans.obsession)}</div>
-            <div class="title-container">
-                <h1><a href="${link}">${track_title.innerHTML}</a></h1>
-            </div>
-            <h2>${track_artist.innerHTML}</h2>
-        </div>
-    `);
+    track_title.classList.remove('obsession-meta-track');
 
-    page.structure.container.insertBefore(redesigned_track_header, page.structure.container.firstElementChild);
+    let track_header = html.node`
+        <section class="redesigned-header redesigned-track-header no-background obsession-track-header">
+            <div class="info-side">
+                <div class="sub-text">${tl(trans.obsession)}</div>
+                <div class="title-container">
+                    <h1><a href="${link}">${track_title}</a></h1>
+                </div>
+                <h2>${html.node([track_artist.innerHTML])}</h2>
+            </div>
+        </section>
+    `;
+
+    page.structure.container.insertBefore(track_header, page.structure.container.firstElementChild);
 
     let video = obsession_container.querySelector('.obsession-video-container');
-    if (video)
-        redesigned_track_header.after(video);
+    if (video) track_header.after(video);
 
-
-    /*let avatar_side = redesigned_track_header.querySelector('.avatar-side');
-    let avatar_link = avatar_side.querySelector('a');
-
-    let expand_link = `_expand_avatar('${background}')`;
-    avatar_link.setAttribute('onclick', expand_link);
-
-    let menu = tippy(avatar_side, {
-        theme: 'context-menu',
-        content: (`
-            <button class="dropdown-menu-clickable-item" onclick="${expand_link}" data-menu-item="expand">
-                ${tl(trans.expand)}
-            </button>
-            <div class="sep"></div>
-            <a class="dropdown-menu-clickable-item" href="${root}bleh?tab=customise" data-menu-item="settings">
-                ${tl(trans.settings)}
-            </a>
-        `),
-        allowHTML: true,
-        placement: 'right-start',
-        trigger: 'manual',
-        interactive: true,
-        interactiveBorder: 10,
-        offset: [0, 0],
-
-        onShow(instance) {
-            instance.popper.addEventListener('click', event => {
-                instance.hide();
-            });
-        }
-    });
-
-    register_menu(avatar_side, menu);*/
-
-
-    let quote = document.createElement('section');
-    quote.classList.add('obsession-quote');
 
     // remove quotations
     let obsession_reason = obsession_container.querySelector('.obsession-reason');
@@ -194,32 +157,34 @@ export function bleh_obsession() {
 
     let date = obsession_container.querySelector('.obsession-details-date-short')
 
-    quote.innerHTML = (`
-        ${(obsession_reason) ? (`
-        <div class="quote">
-            ${obsession_reason.textContent}
-        </div>
-        `) : (`
-        <div class="quote no-quote">
-            ${tl(trans.no_quote)}
-        </div>
-        `)}
-        <div class="sub-text">
-            <div class="obsession-author">
-                ${obsession_avatar.outerHTML}
-                <strong class="name">${obsession_author}</strong>
-                <a class="link-block-cover-link" href="${root}user/${obsession_author}"></a>
+    let quote = html.node`
+        <section class="obsession-quote sour">
+            ${(obsession_reason) ? html.node`
+            <div class="quote">
+                ${obsession_reason.textContent}
             </div>
-            ${(scrobbles) ? (`
-            <div class="obsession-listens">
-                ${scrobbles.innerHTML}
+            ` : html.node`
+            <div class="quote no-quote">
+                ${tl(trans.no_quote)}
             </div>
-            `) : ''}
-            <div class="obsession-date">
-                ${date.textContent}
+            `}
+            <div class="sub-text">
+                <div class="obsession-author">
+                    ${obsession_avatar}
+                    <strong class="name">${obsession_author}</strong>
+                    <a class="link-block-cover-link" href="${root}user/${obsession_author}"></a>
+                </div>
+                ${(scrobbles) ? html.node`
+                <div class="obsession-listens">
+                    ${html.node([scrobbles.innerHTML])}
+                </div>
+                ` : ''}
+                <div class="obsession-date">
+                    ${date.textContent}
+                </div>
             </div>
-        </div>
-    `);
+        </section>
+    `;
 
     let manage = obsession_container.querySelector('form');
     if (manage) {
@@ -237,8 +202,9 @@ export function bleh_obsession() {
         author.classList.add(`user-status--bleh-${badge.type}`, `user-status--bleh-user-${obsession_author}`);
     }
 
-    let related = document.createElement('section');
-    related.classList.add('obsession-related');
+    let related = html.node`
+        <section class="obsession-related sour" />
+    `;
 
     let other_tracks = document.body.querySelector('.other-obsessions');
 

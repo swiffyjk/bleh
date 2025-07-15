@@ -9,7 +9,7 @@ import {log} from "../build/log";
 import {auth, page, root} from "../build/page";
 import {sanitise} from "../build/tools";
 import {tl, trans, trans_legacy} from "../build/trans";
-import {artist_title} from "../components/lotus";
+import {artist_title, correct_item_by_artist} from "../components/lotus";
 import {register_menu} from "../components/menu";
 import {bleh_music_page_charts, bleh_top_listeners, show_your_scrobbles} from "../components/music";
 import {checkup_page_structure} from "../components/structure";
@@ -20,6 +20,8 @@ import {bleh_tags_mini} from "./tag";
 import {bleh_wiki, bleh_wiki_editor, bleh_wiki_history} from "./wiki";
 import {html} from "lighterhtml";
 import {expand_avatar} from "../avatar.js";
+import {other_listener} from "../components/profile_shortcut.js";
+import {setting} from "../components/settings.js";
 
 export function bleh_artists() {
     let artist_header = document.body.querySelector('.header-new--artist');
@@ -100,7 +102,7 @@ export function bleh_artists() {
                     <div class="sub-text">${tl(trans.artist)}</div>
                     `}
                     <div class="title-container" data-multi="${page.multi}">
-                        <h1>${title}</h1>
+                        ${title}
                         ${(position) ? position : ''}
                         ${(on_tour) ? on_tour : ''}
                     </div>
@@ -209,17 +211,135 @@ export function bleh_artists() {
         bleh_tags_mini();
 
 
+        let top_tracks = page.structure.main.querySelector('#top-tracks');
+        if (top_tracks) {
+            let settings_btn;
+
+            let top = top_tracks.querySelector('.section-controls');
+            top.classList = 'top-container';
+
+            let header = top.querySelector('h3');
+
+            let select_btn = top.querySelector('.dropdown-menu-clickable-button');
+            if (select_btn) {
+                select_btn.classList.add('select-button', 'link-select', 'blend-v2-btn');
+                select_btn.classList.remove('dropdown-menu-clickable-button');
+            }
+
+            let play = top.querySelector('.section-playlink');
+            if (play) {
+                play.classList.add('blend-v2-btn', 'radio');
+                play.classList.remove('section-playlink', 'hover-section-control');
+                play.setAttribute('data-type', 'play');
+            }
+
+            header.after(html.node`
+                <div class="accompany view-buttons blend blend-v2">
+                    ${select_btn}
+                </div>
+                <div class="view-buttons blend blend-v2">
+                    ${play}
+                    <button class="left-icon blend-v2-btn" data-type="settings" ref=${el => settings_btn = el}>
+                        ${tl(trans.settings)}
+                    </button>
+                </div>
+            `);
+
+            tippy(settings_btn, {
+                theme: 'window',
+                content: html.node`
+                    <div class="dialog-settings">
+                        <div class="setting-group blend">
+                            ${setting({id: 'format_guest_features'})}
+                            ${setting({id: 'show_guest_features'})}
+                        </div>
+                    </div>
+                `,
+                placement: 'bottom',
+                interactive: true,
+                interactiveBorder: 10,
+                trigger: 'click'
+            });
+        }
+
+        let top_albums = page.structure.main.querySelector('#top-albums');
+        if (top_albums) {
+            let top = top_albums.querySelector('.section-controls');
+            top.classList = 'top-container';
+
+            let header = top.querySelector('h3');
+
+            let select_btn = top.querySelector('.dropdown-menu-clickable-button');
+
+            if (select_btn) {
+                select_btn.classList.add('select-button', 'link-select', 'blend-v2-btn');
+                select_btn.classList.remove('dropdown-menu-clickable-button');
+
+                // TODO: if we ever add settings for this album view, move out of here
+                header.after(html.node`
+                    <div class="accompany view-buttons blend blend-v2">
+                        ${select_btn}
+                    </div>
+                `);
+            }
+        }
+
+
         if (katsune && featured_items) {
-            let featured_panel = document.createElement('section');
-            featured_panel.classList.add('featured-items-panel');
+            let featured_panel = html.node`
+                <section class="featured-items-panel">
+                    ${Array.from(featured_items.querySelectorAll('li')).map(item => {
+                        item.classList.remove('artist-header-featured-items-item-wrap--video-thumbnail');
+                        let type = item.getAttribute('itemprop');
+                        
+                        let text = tl(trans.latest_album);
+                        if (type == 'track')
+                            text = tl(trans.popular_now);
+                        
+                        let header = item.querySelector('.artist-header-featured-items-item-header');
+                        header.parentElement.removeChild(header);
+                        
+                        let name = correct_item_by_artist(item.querySelector('.artist-header-featured-items-item-name').textContent.trim(), page.name);
+                        let aux = item.querySelector('.artist-header-featured-items-item-aux-text')?.textContent.trim();
+                        let link = item.querySelector('.link-block-cover-link')?.getAttribute('href');
+                        let img = item.querySelector('img')?.src;
+                        
+                        if (type == 'track')
+                            img = img.replace('0.jpg', 'mqdefault.jpg');
+                        
+                        return html.node`
+                            <div class="featured-artist-item">
+                                <div class="sub-text normal" data-type=${type}>
+                                    <span class="bleh-icon" style="--icon: var(--mask)" />
+                                    ${text}
+                                </div>
+                                <div class="source-album js-link-block link-block" data-type=${type}>
+                                    <div class="source-album-art">
+                                        <span class="cover-art">
+                                            <img src=${img} alt=${name} />
+                                        </span>
+                                    </div>
+                                    <div class="source-album-details">
+                                        <h4 class="source-album-name">
+                                            <a href=${link}>${name}</a>
+                                        </h4>
+                                        <p class="source-album-stats">${aux}</p>
+                                    </div>
+                                    <a class="js-link-block-cover-link link-block-cover-link" href=${link} tabindex="-1" aria-hidden="true" />
+                                </div>
+                            </div>
+                        `;
+                    })}
+                </section>
+            `;
 
-            featured_panel.innerHTML = featured_items.innerHTML;
-
-            let listen_panel = page.structure.side.querySelector('.listen-panel');
+            /*let listen_panel = page.structure.side.querySelector('.listen-panel');
             if (listen_panel)
                 listen_panel.after(featured_panel);
             else
-                page.structure.side.insertBefore(featured_panel, page.structure.side.firstElementChild);
+                page.structure.side.insertBefore(featured_panel, page.structure.side.firstElementChild);*/
+
+            page.structure.main.querySelector('.top-overview-panel').after(featured_panel);
         }
     } else {
         let btn_add = page.structure.side.querySelector('.add-button');
@@ -238,8 +358,104 @@ export function bleh_artists() {
             bleh_wiki_editor();
         else if (page.subpage == 'listeners_overview')
             bleh_top_listeners();
+        else if (page.subpage == 'listeners_you-know')
+            bleh_listeners();
+        else if (page.subpage == 'tracks')
+            bleh_artist_tracks();
+        else if (page.subpage == 'albums')
+            bleh_artist_albums();
     }
 
     log('status is', 'page', 'info', page);
     update_page();
+}
+
+function bleh_artist_tracks() {
+    let top_tracks = page.structure.main.querySelector('section');
+    if (top_tracks) {
+        let settings_btn;
+
+        let top = top_tracks.querySelector('.section-controls');
+        top.classList = 'top-container';
+
+        let header = top.querySelector('h2');
+        header.classList.remove('subpage-title');
+
+        let select_btn = top.querySelector('.dropdown-menu-clickable-button');
+
+        if (select_btn) {
+            select_btn.classList.add('select-button', 'link-select', 'blend-v2-btn');
+            select_btn.classList.remove('dropdown-menu-clickable-button');
+        }
+
+        header.after(html.node`
+                <div class="accompany view-buttons blend blend-v2">
+                    ${select_btn}
+                </div>
+                <div class="view-buttons blend blend-v2">
+                    <button class="left-icon blend-v2-btn" data-type="settings" ref=${el => settings_btn = el}>
+                        ${tl(trans.settings)}
+                    </button>
+                </div>
+            `);
+
+        tippy(settings_btn, {
+            theme: 'window',
+            content: html.node`
+                <div class="dialog-settings">
+                    <div class="setting-group blend">
+                        ${setting({id: 'format_guest_features'})}
+                        ${setting({id: 'show_guest_features'})}
+                    </div>
+                </div>
+            `,
+            placement: 'bottom',
+            interactive: true,
+            interactiveBorder: 10,
+            trigger: 'click'
+        });
+    }
+}
+
+function bleh_artist_albums() {
+    let top_albums = page.structure.main.querySelector('#artist-albums-section');
+    if (top_albums) {
+        let top = top_albums.querySelector('.section-controls');
+        top.classList = 'top-container';
+
+        let header = top.querySelector('h3');
+
+        let select_btn = top.querySelector('.dropdown-menu-clickable-button');
+
+        if (select_btn) {
+            select_btn.classList.add('select-button', 'link-select', 'blend-v2-btn');
+            select_btn.classList.remove('dropdown-menu-clickable-button');
+        }
+
+        header.after(html.node`
+            <div class="accompany view-buttons blend blend-v2">
+                ${select_btn}
+            </div>
+        `);
+    }
+}
+
+function bleh_listeners() {
+    // i could just render away the ad here but courtesy
+    page.structure.side.appendChild(html.node`
+        <section class="side-actions">
+            <a class="btn side-action" data-type="profile" href="${root}user/${auth.name}/library/music/${sanitise(page.name)}">
+                ${auth.name}
+            </a>
+            ${settings.profile_shortcut != '' ? html.node`
+            <a class="btn side-action" data-type="profile_shortcut" href="${root}user/${settings.profile_shortcut}/library/music/${sanitise(page.name)}">
+                ${settings.profile_shortcut}
+            </a>
+            ` : ''}
+            <div class="sep" />
+            <button class="btn side-action" data-type="add" onclick=${() => other_listener(sanitise(page.name))}>
+                ${tl(trans.custom)}
+            </button>
+        </section>
+    `);
 }

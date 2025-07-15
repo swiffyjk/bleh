@@ -6,7 +6,7 @@
 
 import {log} from "../build/log";
 import {ranks} from "../build/music";
-import {clean_number} from "../build/tools";
+import {clean_number, interpolate_hue} from "../build/tools";
 
 export function patch_artist_ranks_in_list_view(track) {
     let count_bar = track.querySelector('.chartlist-count-bar');
@@ -37,57 +37,41 @@ export function patch_artist_ranks_in_list_view(track) {
 
 export function parse_scrobbles_as_rank(scrobbles) {
     let scrobble_milestone = 0;
-    let scrobble_proximity = 1;
+    let scrobble_proximity = 0;
     let max_rank = 15;
 
+    // find the current rank
     for (let rank = max_rank; rank >= 0; rank--) {
-        if (scrobbles > ranks[rank].start) {
-            //console.info('bleh - PARSING RANK:', rank, ranks[rank].start);
-
-            let this_rank = parseInt(rank);
-
-            scrobble_milestone = this_rank;
-
-            let next_rank = this_rank + 1;
-            let prev_rank = this_rank - 1;
-
-            if (this_rank != max_rank && this_rank != 0)
-                scrobble_proximity = (scrobbles - ranks[prev_rank].start) / ranks[next_rank].start;
-
+        if (scrobbles >= ranks[rank].start) {
+            scrobble_milestone = rank;
             break;
         }
     }
 
+    // get current rank hsl
     let milestone_hue = ranks[scrobble_milestone].hue;
     let milestone_sat = ranks[scrobble_milestone].sat;
     let milestone_lit = ranks[scrobble_milestone].lit;
 
-    //console.info('bleh - default values will be', milestone_hue, milestone_sat, milestone_lit);
+    // calculate proximity to next rank
+    if (scrobble_milestone < max_rank) {
+        let current_start = ranks[scrobble_milestone].start;
+        let next_start = ranks[scrobble_milestone + 1].start;
+        scrobble_proximity = (scrobbles - current_start) / (next_start - current_start);
+    }
 
-    if (scrobble_milestone != max_rank) {
+    // interpolate hsl to the next rank
+    if (scrobble_milestone < max_rank) {
         let next_milestone_hue = ranks[scrobble_milestone + 1].hue;
         let next_milestone_sat = ranks[scrobble_milestone + 1].sat;
         let next_milestone_lit = ranks[scrobble_milestone + 1].lit;
 
-        //console.info('bleh - next up values will be', next_milestone_hue, next_milestone_sat, next_milestone_lit);
+        //milestone_hue += (next_milestone_hue - milestone_hue) * scrobble_proximity;
+        milestone_hue = interpolate_hue(milestone_hue, next_milestone_hue, scrobble_proximity);
 
-        if (milestone_hue > next_milestone_hue)
-            milestone_hue += (next_milestone_hue - milestone_hue) * scrobble_proximity;
-
-        if (milestone_sat < next_milestone_sat)
-            milestone_sat += (milestone_sat - next_milestone_sat) * scrobble_proximity;
-        else
-            milestone_sat += (next_milestone_sat - milestone_sat) * scrobble_proximity;
-
-        if (milestone_lit < next_milestone_lit)
-            milestone_lit += (milestone_lit - next_milestone_lit) * scrobble_proximity;
-        else
-            milestone_lit += (next_milestone_lit - milestone_lit) * scrobble_proximity;
-
-        //console.info('bleh - created proximity values', milestone_hue, milestone_sat, milestone_lit);
+        milestone_sat += (next_milestone_sat - milestone_sat) * scrobble_proximity;
+        milestone_lit += (next_milestone_lit - milestone_lit) * scrobble_proximity;
     }
-
-
 
     log(`milestone for ${scrobbles} is ${scrobble_milestone} within ${scrobble_proximity} proximity`, 'colourful counts', 'info', {hue: milestone_hue, sat: milestone_sat, lit: milestone_lit});
 
