@@ -6802,7 +6802,7 @@
       } else if (type == "checkbox") {
         let toggle2;
         return html.node`
-                <div class="setting v2" data-type="checkbox" onclick=${() => update_toggle(id, toggle2)}>
+                <div class="setting v2 ${settings_store[id].horizontal ? "horizontal" : ""}" data-type="checkbox" onclick=${() => update_toggle(id, toggle2)}>
                     ${icon ? html.node`
                     <div class="icon">
                         <div class="bleh-icon" style="--icon: var(--${icon})" />
@@ -13319,15 +13319,17 @@
       render(page.structure.main, html`
             <div class="bleh--panel">
                 <div class="alert alert-danger">${tl(trans.beware_notice)}</div>
-                ${setting({ id: "branch" })}
-                ${setting({ id: "dev" })}
-                <div class="setting" data-type="toggle">
-                    <div class="heading">
-                        <h5>Refresh theme</h5>
-                        <p>Force download the latest version of the stylesheet</p>
-                    </div>
-                    <div class="toggle-wrap">
-                        <button class="bleh--btn primary" onclick="_force_refresh_theme()">Refresh</button>
+                <div class="setting-group">
+                    ${setting({ id: "branch" })}
+                    ${setting({ id: "dev" })}
+                    <div class="setting" data-type="action">
+                        <div class="heading">
+                            <h5>Refresh theme</h5>
+                            <p>Force download the latest version of the stylesheet</p>
+                        </div>
+                        <div class="toggle-wrap">
+                            <button class="bleh--btn primary" onclick="_force_refresh_theme()">Refresh</button>
+                        </div>
                     </div>
                 </div>
                 <div class="sep"></div>
@@ -13411,26 +13413,7 @@
       if (auth.pro) badge_count++;
       render(page.structure.main, html`
             <div class="bleh--panel sponsor-badge-panel" data-sponsoring="${auth.sponsor}">
-                <div class="profile-container">
-                    <div class="avatar-side small">
-                        <div class="avatar">
-                            <img src="${auth.avatar.replace("/avatar42s/", "/avatar170s/")}" alt="${tl(trans.your_avatar)}" loading="lazy">
-                        </div>
-                    </div>
-                    <div class="info-side">
-                        <div class="header-info">
-                            <div class="sub-text">${tl(trans.you)}</div>
-                            <div class="header standalone title-container">
-                                <h1>${auth.name}</h1>
-                                <div class="badges">
-                                    ${auth.pro ? html.node`
-                                    <span class="label user-status-subscriber">${tl(trans.badges["user-status-subscriber"].name)}</span>
-                                    ` : ""}
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-                </div>
+                <h4>${tl(trans.profile)}</h4>
                 <div class="setting-group">
                     <div class="setting" data-type="info">
                         <div class="avatar-container">
@@ -13507,6 +13490,9 @@
                         </div>
                     </div>
                 </div>
+            </div>
+            <div class="bleh--panel">
+                <h4>${tl(trans.api.short)}</h4>
                 <div class="setting-group">
                     <div class="setting" data-type="action">
                         <div class="heading">
@@ -13532,6 +13518,9 @@
                         </div>
                     </div>
                 </div>
+            </div>
+            <div class="bleh--panel">
+                <h4>${tl(trans.other)}</h4>
                 <div class="setting-group">
                     ${setting({ id: "profile_shortcut" })}
                     ${setting({ id: "avatar_radius" })}
@@ -13630,21 +13619,24 @@
                         </div>
                     </div>
                 </div>
-                ${setting({ id: "shout_markdown" })}
-                <div class="sep"></div>
-                ${setting({ id: "accessible_name_colours" })}
-                ${setting({ id: "underline_links" })}
+                <div class="setting-group">
+                    ${setting({ id: "shout_markdown" })}
+                    ${setting({ id: "accessible_name_colours" })}
+                    ${setting({ id: "underline_links" })}
+                </div>
             </div>
             <div class="bleh--panel">
                 <h4>${tl(trans.language)}</h4>
                 <div class="languages" id="languages"></div>
-                <div class="setting" data-type="toggle">
-                    <div class="heading">
-                        <h5>${tl(trans.submit_language.name)}</h5>
-                        <p>${tl(trans.submit_language.body)}</p>
-                    </div>
-                    <div class="toggle-wrap">
-                        <a class="see-more" href="https://github.com/katelyynn/bleh/wiki" target="_blank">${tl(trans.help_contribute)}</a>
+                <div class="setting-group">
+                    <div class="setting" data-type="action">
+                        <div class="heading">
+                            <h5>${tl(trans.submit_language.name)}</h5>
+                            <p>${tl(trans.submit_language.body)}</p>
+                        </div>
+                        <div class="toggle-wrap">
+                            <a class="see-more" href="https://github.com/katelyynn/bleh/wiki" target="_blank">${tl(trans.help_contribute)}</a>
+                        </div>
                     </div>
                 </div>
             </div>
@@ -13914,29 +13906,9 @@
                         <div class="album-cover swatch" style="background-image: url('https://lastfm.freetls.fastly.net/i/u/770x0/dd76702cea38c838a3090dd9496d92d9.jpg')"></div>
                     </div>
                 </div>
-                <div class="setting" data-type="range" id="container-gloss">
-                    <button class="btn reset" onclick="_reset_item('gloss')">${tl(trans.reset)}</button>
-                    <div class="heading">
-                        <h5>${tl(trans.gloss.name)}</h5>
-                        <p>${tl(trans.gloss.body)}</p>
-                    </div>
-                    <div class="range">
-                        <div class="track" id="slider-track-gloss"><div class="fill"></div><div class="nub"></div></div>
-                        <input type="range" min="0" max="1" value="0" step="0.05" id="slider-gloss" oninput="_update_item('gloss', this.value)">
-                        <p id="value-gloss">0</p>
-                    </div>
-                </div>
-                <div class="setting" data-type="toggle" id="container-grid_glow" onclick="_update_item('grid_glow')">
-                    <button class="btn reset" onclick="_reset_item('grid_glow')">${tl(trans.reset)}</button>
-                    <div class="heading">
-                        <h5>${tl(trans.grid_glow.name)}</h5>
-                        <p>${tl(trans.grid_glow.body)}</p>
-                    </div>
-                    <div class="toggle-wrap">
-                        <button class="toggle" id="toggle-grid_glow" aria-checked="true" type="button">
-                            <div class="dot"></div>
-                        </button>
-                    </div>
+                <div class="setting-group">
+                    ${setting({ id: "gloss" })}
+                    ${setting({ id: "grid_glow" })}
                 </div>
             </div>
             <div class="bleh--panel">
@@ -13962,17 +13934,8 @@
                         </ul>
                     </section>
                 </div>
-                <div class="setting" data-type="toggle" id="container-gendered_tags" onclick="_update_item('gendered_tags')">
-                    <button class="btn reset" onclick="_reset_item('gendered_tags')">${tl(trans.reset)}</button>
-                    <div class="heading">
-                        <h5>${tl(trans.gendered_tags.name)}</h5>
-                        <p>${tl(trans.gendered_tags.body)}</p>
-                    </div>
-                    <div class="toggle-wrap">
-                        <button class="toggle" id="toggle-gendered_tags" aria-checked="true">
-                            <div class="dot"></div>
-                        </button>
-                    </div>
+                <div class="setting-group">
+                    ${setting({ id: "gendered_tags" })}
                 </div>
             </div>
             `);
@@ -14136,7 +14099,6 @@
       refresh_all();
     } else if (page_id == "profiles") {
       init_profile_notes();
-      init_profile_page();
       activity_preview();
       refresh_all();
     }
@@ -14765,64 +14727,6 @@
         item.setAttribute("aria-checked", "true");
       instance.appendChild(item);
     });
-  }
-  function init_profile_page() {
-    let profile_name_obj = document.body.querySelector(".title-container .badges");
-    if (ff("badges")) {
-      let stock_badges = profile_name_obj.querySelectorAll(".label");
-      stock_badges.forEach((badge) => {
-        if (badge.classList[1] == "user-status-None")
-          return;
-        badge.classList.add("no-hover");
-        tippy(badge, {
-          theme: "badge",
-          placement: "bottom",
-          content: html.node`
-                    <div class="badge-name">${badge.textContent}</div>
-                    <div class="badge-reason">${tl(trans.badges[badge.classList[1]].reason)}</div>
-                `
-        });
-      });
-    }
-    let badges = load_badges(auth.name);
-    if (badges) {
-      badges.forEach((this_badge) => {
-        let badge = document.createElement("span");
-        badge.classList.add("label", `user-status--bleh-${this_badge.type}`, `user-status--bleh-user-${page.name}`);
-        badge.textContent = this_badge.name;
-        profile_name_obj.appendChild(badge);
-        if (ff("badges")) {
-          badge.classList.add("no-hover");
-          tippy(badge, {
-            theme: "badge",
-            placement: "bottom",
-            content: html.node`
-                        <div class="badge-name">${this_badge.name}</div>
-                        <div class="badge-reason">${this_badge.reason}</div>
-                    `
-          });
-        }
-        if (this_badge.type == "sponsor")
-          badge.setAttribute("onclick", "_sponsor()");
-      });
-    } else {
-      let badge = document.createElement("span");
-      badge.classList.add("label", "user-status--bleh-missing");
-      badge.textContent = tl(trans.badges.missing.name);
-      profile_name_obj.appendChild(badge);
-      if (ff("badges")) {
-        badge.classList.add("no-hover");
-        tippy(badge, {
-          theme: "badge",
-          placement: "bottom",
-          content: html.node`
-                    <div class="badge-name">${tl(trans.badges.missing.name)}</div>
-                    <div class="badge-reason">${tl(trans.badges.missing.reason)}</div>
-                `,
-          allowHTML: true
-        });
-      }
-    }
   }
   function init_profile_notes() {
     let profile_notes = JSON.parse(localStorage.getItem("bleh_profile_notes")) || {};
@@ -22967,7 +22871,7 @@
         pt: "Redirecionamento de scrobble legado"
       },
       body: {
-        en: 'By default, Last.fm will "auto-correct" some of your scrobbles to (mostly) faulty redirections. By disabling this it does not fully fix the system but keeps artist names in your library intact.',
+        en: "By default, scrobbles will be corrected to faulty replacements that are a decade out of date. Disabling does not fully fix the system but keeps artist names in your library intact.",
         de: "Standardm\xE4\xDFig korrigiert Last.fm einige deiner Scrobbel-Dateien automatisch und f\xFChrt (meist) fehlerhafte Weiterleitungen aus. Durch die Deaktivierung dieser Funktion wird das System zwar nicht vollst\xE4ndig repariert, die K\xFCnstlernamen in Ihrer Bibliothek bleiben jedoch erhalten.",
         pt: 'Por padr\xE3o, a Last.fm ir\xE1 "corrigir automaticamente" alguns dos seus scrobbles para redirecionamentos (na maioria) defeituosos. Desativar essa op\xE7\xE3o n\xE3o corrige completamente o sistema, mas mant\xE9m os nomes dos artistas na sua biblioteca intactos.'
       }
@@ -23027,7 +22931,7 @@
         pt: "Esconder tags baseadas em g\xEAnero"
       },
       body: {
-        en: "These tags are often redundant and can never apply to the full range of what they\u2019re intending",
+        en: "These tags are often redundant and can never apply to the full range they\u2019re intending",
         de: "Diese Tags sind oft \xFCberfl\xFCssig und k\xF6nnen nie auf die gesamte Bandbreite dessen angewendet werden, was sie beabsichtigen",
         pt: "Essas tags costumam ser redundantes e nunca conseguem representar totalmente tudo o que se prop\xF5em"
       }
@@ -23039,14 +22943,10 @@
     },
     gloss: {
       name: {
-        en: "Gloss overlay",
-        de: "Glanz-Overlay",
-        pt: "Sobreposi\xE7\xE3o brilhante"
+        en: "Apply gloss to album covers"
       },
       body: {
-        en: "Very shiny",
-        de: "Sehr gl\xE4nzend",
-        pt: "Muito reluzente"
+        en: "Add a layer of shine to album covers globally"
       }
     },
     grid_glow: {
@@ -23056,9 +22956,7 @@
         pt: "Refletir a cor abaixo dos itens da grade"
       },
       body: {
-        en: "Glows in the colour of said album cover",
-        de: "Leuchtet in der Farbe des Albumcovers",
-        pt: "Brilha na cor da capa do \xE1lbum"
+        en: "Applies a glow below grid items based on the primary colour"
       }
     },
     skip_to: {
@@ -23154,6 +23052,9 @@
       de: "{u} dauerhaft l\xF6schen",
       pt: "Deletar {u} permanentemente"
     },
+    other: {
+      en: "Other"
+    },
     connect_app: {
       en: "Connect {name}",
       de: "Verbinde {name}",
@@ -23176,6 +23077,9 @@
       },
       body: {
         en: "Link your account to allow API access such as scrobbling"
+      },
+      short: {
+        en: "API"
       }
     },
     api_status: {
@@ -23222,9 +23126,9 @@
         pt: "Usar formata\xE7\xE3o estilosa nos perfis"
       },
       body: {
-        en: 'Allows the use of line breaks, bold text, italics, and images in all "About Me" panels',
+        en: "Allows the use of line breaks, bold text, italics, and images in all \u201CAbout Me\u201D panels",
         de: "Erm\xF6glicht die Verwendung von Zeilenumbr\xFCchen, fettem Text, Kursivschrift und Bildern in allen \u201E\xDCber mich\u201C-Bereichen",
-        pt: 'Permite o uso de quebras de linha, texto em negrito, it\xE1lico e imagens em todos os pain\xE9is "Sobre mim"'
+        pt: "Permite o uso de quebras de linha, texto em negrito, it\xE1lico e imagens em todos os pain\xE9is \u201CSobre mim\u201D"
       }
     },
     markdown_shouts: {
@@ -27530,11 +27434,19 @@
       type: "range"
     },
     gloss: {
+      css: "gloss",
       default: 0,
-      type: "range"
+      type: "range",
+      min: 0,
+      max: 1,
+      step: 0.05,
+      title: trans.gloss.name,
+      body: trans.gloss.body
     },
     gendered_tags: {
-      default: true
+      default: true,
+      title: trans.gendered_tags.name,
+      body: trans.gendered_tags.body
     },
     dev: {
       default: false,
@@ -27748,7 +27660,9 @@
       ]
     },
     grid_glow: {
-      default: true
+      default: true,
+      title: trans.grid_glow.name,
+      body: trans.grid_glow.body
     },
     auth_menu_obsessions: {
       deault: false
@@ -27791,49 +27705,56 @@
       title: trans.shouts,
       body: trans.activity.types.shout,
       type: "checkbox",
-      icon: "icon-16-shoutbox"
+      icon: "icon-16-shoutbox",
+      horizontal: true
     },
     activity_image: {
       default: true,
       title: trans.photos,
       body: trans.activity.types.image,
       type: "checkbox",
-      icon: "icon-16-gallery-vertical"
+      icon: "icon-16-gallery-vertical",
+      horizontal: true
     },
     activity_obsess: {
       default: true,
       title: trans.obsessions,
       body: trans.activity.types.obsess,
       type: "checkbox",
-      icon: "icon-16-obsession"
+      icon: "icon-16-obsession",
+      horizontal: true
     },
     activity_love: {
       default: true,
       title: trans.loved,
       body: trans.activity.types.love,
       type: "checkbox",
-      icon: "icon-16-heart"
+      icon: "icon-16-heart",
+      horizontal: true
     },
     activity_bookmark: {
       default: true,
       title: trans.bookmarks,
       body: trans.activity.types.bookmark,
       type: "checkbox",
-      icon: "icon-16-bookmark"
+      icon: "icon-16-bookmark",
+      horizontal: true
     },
     activity_wiki: {
       default: true,
       title: trans.wiki,
       body: trans.activity.types.wiki,
       type: "checkbox",
-      icon: "icon-16-bio"
+      icon: "icon-16-bio",
+      horizontal: true
     },
     activity_install: {
       default: true,
       title: trans.installation,
       body: trans.activity.types.install,
       type: "checkbox",
-      icon: "icon-16-download"
+      icon: "icon-16-download",
+      horizontal: true
     }
   };
 

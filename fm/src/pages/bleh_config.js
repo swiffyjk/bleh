@@ -556,15 +556,17 @@ export function render_setting_page(page_id) {
         render(page.structure.main, html`
             <div class="bleh--panel">
                 <div class="alert alert-danger">${tl(trans.beware_notice)}</div>
-                ${setting({id: 'branch'})}
-                ${setting({id: 'dev'})}
-                <div class="setting" data-type="toggle">
-                    <div class="heading">
-                        <h5>Refresh theme</h5>
-                        <p>Force download the latest version of the stylesheet</p>
-                    </div>
-                    <div class="toggle-wrap">
-                        <button class="bleh--btn primary" onclick="_force_refresh_theme()">Refresh</button>
+                <div class="setting-group">
+                    ${setting({id: 'branch'})}
+                    ${setting({id: 'dev'})}
+                    <div class="setting" data-type="action">
+                        <div class="heading">
+                            <h5>Refresh theme</h5>
+                            <p>Force download the latest version of the stylesheet</p>
+                        </div>
+                        <div class="toggle-wrap">
+                            <button class="bleh--btn primary" onclick="_force_refresh_theme()">Refresh</button>
+                        </div>
                     </div>
                 </div>
                 <div class="sep"></div>
@@ -655,26 +657,7 @@ export function render_setting_page(page_id) {
 
         render(page.structure.main, html`
             <div class="bleh--panel sponsor-badge-panel" data-sponsoring="${auth.sponsor}">
-                <div class="profile-container">
-                    <div class="avatar-side small">
-                        <div class="avatar">
-                            <img src="${auth.avatar.replace('/avatar42s/', '/avatar170s/')}" alt="${tl(trans.your_avatar)}" loading="lazy">
-                        </div>
-                    </div>
-                    <div class="info-side">
-                        <div class="header-info">
-                            <div class="sub-text">${tl(trans.you)}</div>
-                            <div class="header standalone title-container">
-                                <h1>${auth.name}</h1>
-                                <div class="badges">
-                                    ${(auth.pro) ? html.node`
-                                    <span class="label user-status-subscriber">${tl(trans.badges['user-status-subscriber'].name)}</span>
-                                    ` : ''}
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-                </div>
+                <h4>${tl(trans.profile)}</h4>
                 <div class="setting-group">
                     <div class="setting" data-type="info">
                         <div class="avatar-container">
@@ -751,6 +734,9 @@ export function render_setting_page(page_id) {
                         </div>
                     </div>
                 </div>
+            </div>
+            <div class="bleh--panel">
+                <h4>${tl(trans.api.short)}</h4>
                 <div class="setting-group">
                     <div class="setting" data-type="action">
                         <div class="heading">
@@ -776,6 +762,9 @@ export function render_setting_page(page_id) {
                         </div>
                     </div>
                 </div>
+            </div>
+            <div class="bleh--panel">
+                <h4>${tl(trans.other)}</h4>
                 <div class="setting-group">
                     ${setting({id: 'profile_shortcut'})}
                     ${setting({id: 'avatar_radius'})}
@@ -876,21 +865,24 @@ export function render_setting_page(page_id) {
                         </div>
                     </div>
                 </div>
-                ${setting({id: 'shout_markdown'})}
-                <div class="sep"></div>
-                ${setting({id: 'accessible_name_colours'})}
-                ${setting({id: 'underline_links'})}
+                <div class="setting-group">
+                    ${setting({id: 'shout_markdown'})}
+                    ${setting({id: 'accessible_name_colours'})}
+                    ${setting({id: 'underline_links'})}
+                </div>
             </div>
             <div class="bleh--panel">
                 <h4>${tl(trans.language)}</h4>
                 <div class="languages" id="languages"></div>
-                <div class="setting" data-type="toggle">
-                    <div class="heading">
-                        <h5>${tl(trans.submit_language.name)}</h5>
-                        <p>${tl(trans.submit_language.body)}</p>
-                    </div>
-                    <div class="toggle-wrap">
-                        <a class="see-more" href="https://github.com/katelyynn/bleh/wiki" target="_blank">${tl(trans.help_contribute)}</a>
+                <div class="setting-group">
+                    <div class="setting" data-type="action">
+                        <div class="heading">
+                            <h5>${tl(trans.submit_language.name)}</h5>
+                            <p>${tl(trans.submit_language.body)}</p>
+                        </div>
+                        <div class="toggle-wrap">
+                            <a class="see-more" href="https://github.com/katelyynn/bleh/wiki" target="_blank">${tl(trans.help_contribute)}</a>
+                        </div>
                     </div>
                 </div>
             </div>
@@ -1174,29 +1166,9 @@ export function render_setting_page(page_id) {
                         <div class="album-cover swatch" style="background-image: url('https://lastfm.freetls.fastly.net/i/u/770x0/dd76702cea38c838a3090dd9496d92d9.jpg')"></div>
                     </div>
                 </div>
-                <div class="setting" data-type="range" id="container-gloss">
-                    <button class="btn reset" onclick="_reset_item('gloss')">${tl(trans.reset)}</button>
-                    <div class="heading">
-                        <h5>${tl(trans.gloss.name)}</h5>
-                        <p>${tl(trans.gloss.body)}</p>
-                    </div>
-                    <div class="range">
-                        <div class="track" id="slider-track-gloss"><div class="fill"></div><div class="nub"></div></div>
-                        <input type="range" min="0" max="1" value="0" step="0.05" id="slider-gloss" oninput="_update_item('gloss', this.value)">
-                        <p id="value-gloss">0</p>
-                    </div>
-                </div>
-                <div class="setting" data-type="toggle" id="container-grid_glow" onclick="_update_item('grid_glow')">
-                    <button class="btn reset" onclick="_reset_item('grid_glow')">${tl(trans.reset)}</button>
-                    <div class="heading">
-                        <h5>${tl(trans.grid_glow.name)}</h5>
-                        <p>${tl(trans.grid_glow.body)}</p>
-                    </div>
-                    <div class="toggle-wrap">
-                        <button class="toggle" id="toggle-grid_glow" aria-checked="true" type="button">
-                            <div class="dot"></div>
-                        </button>
-                    </div>
+                <div class="setting-group">
+                    ${setting({id: 'gloss'})}
+                    ${setting({id: 'grid_glow'})}
                 </div>
             </div>
             <div class="bleh--panel">
@@ -1222,17 +1194,8 @@ export function render_setting_page(page_id) {
                         </ul>
                     </section>
                 </div>
-                <div class="setting" data-type="toggle" id="container-gendered_tags" onclick="_update_item('gendered_tags')">
-                    <button class="btn reset" onclick="_reset_item('gendered_tags')">${tl(trans.reset)}</button>
-                    <div class="heading">
-                        <h5>${tl(trans.gendered_tags.name)}</h5>
-                        <p>${tl(trans.gendered_tags.body)}</p>
-                    </div>
-                    <div class="toggle-wrap">
-                        <button class="toggle" id="toggle-gendered_tags" aria-checked="true">
-                            <div class="dot"></div>
-                        </button>
-                    </div>
+                <div class="setting-group">
+                    ${setting({id: 'gendered_tags'})}
                 </div>
             </div>
             `);
@@ -1417,7 +1380,6 @@ export function change_settings_page(page_id, setting = null) {
         refresh_all();
     } else if (page_id == 'profiles') {
         init_profile_notes();
-        init_profile_page();
         activity_preview();
         refresh_all();
     }
@@ -2134,75 +2096,6 @@ function display_seasonal_exclusives(instance, colours, exclusives) {
     });
 }
 
-
-function init_profile_page() {
-    let profile_name_obj = document.body.querySelector('.title-container .badges');
-
-    if (ff('badges')) {
-        let stock_badges = profile_name_obj.querySelectorAll('.label');
-        stock_badges.forEach((badge) => {
-            if (badge.classList[1] == 'user-status-None')
-                return;
-
-            badge.classList.add('no-hover');
-
-            tippy(badge, {
-                theme: 'badge',
-                placement: 'bottom',
-                content: html.node`
-                    <div class="badge-name">${badge.textContent}</div>
-                    <div class="badge-reason">${tl(trans.badges[badge.classList[1]].reason)}</div>
-                `
-            });
-        });
-    }
-
-    let badges = load_badges(auth.name);
-
-    if (badges) {
-        badges.forEach((this_badge) => {
-            let badge = document.createElement('span');
-            badge.classList.add('label', `user-status--bleh-${this_badge.type}`, `user-status--bleh-user-${page.name}`);
-            badge.textContent = this_badge.name;
-            profile_name_obj.appendChild(badge);
-
-            if (ff('badges')) {
-                badge.classList.add('no-hover');
-
-                tippy(badge, {
-                    theme: 'badge',
-                    placement: 'bottom',
-                    content: html.node`
-                        <div class="badge-name">${this_badge.name}</div>
-                        <div class="badge-reason">${this_badge.reason}</div>
-                    `
-                });
-            }
-
-            if (this_badge.type == 'sponsor')
-                badge.setAttribute('onclick', '_sponsor()');
-        });
-    } else {
-        let badge = document.createElement('span');
-        badge.classList.add('label', 'user-status--bleh-missing');
-        badge.textContent = tl(trans.badges.missing.name);
-        profile_name_obj.appendChild(badge);
-
-        if (ff('badges')) {
-            badge.classList.add('no-hover');
-
-            tippy(badge, {
-                theme: 'badge',
-                placement: 'bottom',
-                content: html.node`
-                    <div class="badge-name">${tl(trans.badges.missing.name)}</div>
-                    <div class="badge-reason">${tl(trans.badges.missing.reason)}</div>
-                `,
-                allowHTML: true
-            });
-        }
-    }
-}
 
 function init_profile_notes() {
     let profile_notes = JSON.parse(localStorage.getItem('bleh_profile_notes')) || {};

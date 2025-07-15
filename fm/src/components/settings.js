@@ -226,7 +226,7 @@ export function setting({
             let toggle;
 
             return html.node`
-                <div class="setting v2" data-type="checkbox" onclick=${() => update_toggle(id, toggle)}>
+                <div class="setting v2 ${settings_store[id].horizontal ? 'horizontal' : ''}" data-type="checkbox" onclick=${() => update_toggle(id, toggle)}>
                     ${icon ? html.node`
                     <div class="icon">
                         <div class="bleh-icon" style="--icon: var(--${icon})" />

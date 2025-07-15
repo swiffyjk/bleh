@@ -617,11 +617,19 @@ export let settings_store = {
         type: 'range'
     },
     gloss: {
+        css: 'gloss',
         default: 0,
-        type: 'range'
+        type: 'range',
+        min: 0,
+        max: 1,
+        step: 0.05,
+        title: trans.gloss.name,
+        body: trans.gloss.body
     },
     gendered_tags: {
-        default: true
+        default: true,
+        title: trans.gendered_tags.name,
+        body: trans.gendered_tags.body
     },
     dev: {
         default: false,
@@ -835,7 +843,9 @@ export let settings_store = {
         ]
     },
     grid_glow: {
-        default: true
+        default: true,
+        title: trans.grid_glow.name,
+        body: trans.grid_glow.body
     },
     auth_menu_obsessions: {
         deault: false
@@ -878,48 +888,55 @@ export let settings_store = {
         title: trans.shouts,
         body: trans.activity.types.shout,
         type: 'checkbox',
-        icon: 'icon-16-shoutbox'
+        icon: 'icon-16-shoutbox',
+        horizontal: true
     },
     activity_image: {
         default: true,
         title: trans.photos,
         body: trans.activity.types.image,
         type: 'checkbox',
-        icon: 'icon-16-gallery-vertical'
+        icon: 'icon-16-gallery-vertical',
+        horizontal: true
     },
     activity_obsess: {
         default: true,
         title: trans.obsessions,
         body: trans.activity.types.obsess,
         type: 'checkbox',
-        icon: 'icon-16-obsession'
+        icon: 'icon-16-obsession',
+        horizontal: true
     },
     activity_love: {
         default: true,
         title: trans.loved,
         body: trans.activity.types.love,
         type: 'checkbox',
-        icon: 'icon-16-heart'
+        icon: 'icon-16-heart',
+        horizontal: true
     },
     activity_bookmark: {
         default: true,
         title: trans.bookmarks,
         body: trans.activity.types.bookmark,
         type: 'checkbox',
-        icon: 'icon-16-bookmark'
+        icon: 'icon-16-bookmark',
+        horizontal: true
     },
     activity_wiki: {
         default: true,
         title: trans.wiki,
         body: trans.activity.types.wiki,
         type: 'checkbox',
-        icon: 'icon-16-bio'
+        icon: 'icon-16-bio',
+        horizontal: true
     },
     activity_install: {
         default: true,
         title: trans.installation,
         body: trans.activity.types.install,
         type: 'checkbox',
-        icon: 'icon-16-download'
+        icon: 'icon-16-download',
+        horizontal: true
     }
 }

@@ -2070,7 +2070,7 @@ export const trans = {
             pt: 'Redirecionamento de scrobble legado'
         },
         body: {
-            en: 'By default, Last.fm will "auto-correct" some of your scrobbles to (mostly) faulty redirections. By disabling this it does not fully fix the system but keeps artist names in your library intact.',
+            en: 'By default, scrobbles will be corrected to faulty replacements that are a decade out of date. Disabling does not fully fix the system but keeps artist names in your library intact.',
             de: 'Standardmäßig korrigiert Last.fm einige deiner Scrobbel-Dateien automatisch und führt (meist) fehlerhafte Weiterleitungen aus. Durch die Deaktivierung dieser Funktion wird das System zwar nicht vollständig repariert, die Künstlernamen in Ihrer Bibliothek bleiben jedoch erhalten.',
             pt: 'Por padrão, a Last.fm irá "corrigir automaticamente" alguns dos seus scrobbles para redirecionamentos (na maioria) defeituosos. Desativar essa opção não corrige completamente o sistema, mas mantém os nomes dos artistas na sua biblioteca intactos.'
         }
@@ -2130,7 +2130,7 @@ export const trans = {
             pt: 'Esconder tags baseadas em gênero'
         },
         body: {
-            en: 'These tags are often redundant and can never apply to the full range of what they’re intending',
+            en: 'These tags are often redundant and can never apply to the full range they’re intending',
             de: 'Diese Tags sind oft überflüssig und können nie auf die gesamte Bandbreite dessen angewendet werden, was sie beabsichtigen',
             pt: 'Essas tags costumam ser redundantes e nunca conseguem representar totalmente tudo o que se propõem'
         }
@@ -2142,14 +2142,10 @@ export const trans = {
     },
     gloss: {
         name: {
-            en: 'Gloss overlay',
-            de: 'Glanz-Overlay',
-            pt: 'Sobreposição brilhante'
+            en: 'Apply gloss to album covers'
         },
         body: {
-            en: 'Very shiny',
-            de: 'Sehr glänzend',
-            pt: 'Muito reluzente'
+            en: 'Add a layer of shine to album covers globally'
         }
     },
     grid_glow: {
@@ -2159,9 +2155,7 @@ export const trans = {
             pt: 'Refletir a cor abaixo dos itens da grade'
         },
         body: {
-            en: 'Glows in the colour of said album cover',
-            de: 'Leuchtet in der Farbe des Albumcovers',
-            pt: 'Brilha na cor da capa do álbum'
+            en: 'Applies a glow below grid items based on the primary colour'
         }
     },
     skip_to: {
@@ -2257,6 +2251,9 @@ export const trans = {
         de: '{u} dauerhaft löschen',
         pt: 'Deletar {u} permanentemente'
     },
+    other: {
+        en: 'Other'
+    },
     connect_app: {
         en: 'Connect {name}',
         de: 'Verbinde {name}',
@@ -2279,6 +2276,9 @@ export const trans = {
         },
         body: {
             en: 'Link your account to allow API access such as scrobbling'
+        },
+        short: {
+            en: 'API'
         }
     },
     api_status: {
@@ -2325,9 +2325,9 @@ export const trans = {
             pt: 'Usar formatação estilosa nos perfis'
         },
         body: {
-            en: 'Allows the use of line breaks, bold text, italics, and images in all "About Me" panels',
+            en: 'Allows the use of line breaks, bold text, italics, and images in all “About Me” panels',
             de: 'Ermöglicht die Verwendung von Zeilenumbrüchen, fettem Text, Kursivschrift und Bildern in allen „Über mich“-Bereichen',
-            pt: 'Permite o uso de quebras de linha, texto em negrito, itálico e imagens em todos os painéis "Sobre mim"'
+            pt: 'Permite o uso de quebras de linha, texto em negrito, itálico e imagens em todos os painéis “Sobre mim”'
         }
     },
     markdown_shouts: {

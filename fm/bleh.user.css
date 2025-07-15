@@ -239,7 +239,7 @@
         --b6: var(--hue), calc(var(--sat) * 7% * var(--sat-bg, 1)), 14%;
         --b8: var(--hue), calc(var(--sat) * 4% * var(--sat-bg, 1)), 25%;
         --b7: 0, 0%, 0%;
-        --b9: var(--b5);
+        --b9: var(--b6);
 
         --card-border: inset 0 0 0 1px hsla(var(--b4), 0.6);
         --card-border-base: hsl(var(--b3), 0.7);
@@ -464,8 +464,8 @@
             .theme-preview, .grid-items-item.grid-items-item-has-colour
             ) {
             --c1: var(--hue), calc(var(--sat) * 6%), 0%;
-            --c2: var(--hue), calc(var(--sat) * 4%), 6%;
-            --c3: var(--hue), calc(var(--sat) * 2%), 30%;
+            --c2: var(--hue), calc(var(--sat) * 4%), 8%;
+            --c3: var(--hue), calc(var(--sat) * 2%), 38%;
             --ov-c1: var(--hue), calc(var(--sat) * 40%), 100%;
 
             --l2: var(--hue), calc(var(--sat) * 40%), calc(var(--lit) * 63%);
@@ -16693,10 +16693,15 @@
             margin: -12px;
         }
 
+        transition-property: background;
+        transition-duration: var(--trans);
+        transition-timing-function: var(--trans-function);
+
         &:is(
         [data-type="toggle"]
         ):hover {
-            background: hsl(var(--b4), 30%);
+            background: hsl(var(--b4), 25%);
+            transition: none;
         }
 
         &:hover {
@@ -16720,13 +16725,25 @@
             }
         }
 
-        .heading {
+        &.horizontal {
+            & > .heading {
+                flex-direction: row;
+                justify-content: unset !important;
+                align-items: center;
+
+                & > h5 {
+                    width: 250px;
+                }
+            }
+        }
+
+        & > .heading {
             display: flex;
             flex-direction: column;
             gap: 2px;
             flex: 1;
 
-            h5 {
+            & > h5 {
                 color: hsl(var(--c2));
                 font-weight: var(--font-weight-medium);
                 margin: unset;
@@ -16745,7 +16762,7 @@
                 }
             }
 
-            p {
+            & > p {
                 color: hsl(var(--c3));
                 font-size: 13px;
                 cursor: default;
@@ -17103,7 +17120,7 @@
             --bg-atv: transparent;
             --shadow: none;
 
-            --padding: 0 0 0 calc(14px + var(--card-gap) + var(--icon-size) + var(--icon-gap));
+            --padding: 0 0 0 calc(14px + 10px + var(--icon-size) + var(--icon-gap));
             --left: calc(14px + var(--card-gap));
             /*--mask: var(--icon-16-dot);*/
             width: 100% !important;
@@ -17115,7 +17132,7 @@
             justify-content: center;
 
             &.no-icon {
-                --padding: 0 0 0 calc(14px + var(--card-gap));
+                --padding: 0 0 0 calc(14px + 10px);
             }
 
             color: inherit !important;
@@ -17136,7 +17153,7 @@
                 width: 14px;
                 height: 14px;
                 box-sizing: border-box;
-                border: 1px solid var(--card-border-base);
+                border: 2px solid var(--card-border-base);
                 border-radius: 50px;
 
                 left: 0;
@@ -17206,6 +17223,7 @@
                 &:before {
                     border-width: 4px;
                     border-color: hsl(var(--l3-c));
+                    background: hsl(var(--b9));
                 }
             }
         }
@@ -17517,7 +17535,7 @@
         width: 34px !important;
         height: 20px;
         position: relative;
-        --col: hsl(var(--b9));
+        --col: hsl(var(--c3));
 
         --radius: 50px;
 
@@ -17546,6 +17564,7 @@
             --bg: var(--cards-overlay-image-subtlest, none), hsl(var(--h3)) !important;
             --bg-hov: var(--cards-overlay-image-subtlest, none), color-mix(in hsl, hsl(var(--h4)), hsl(var(--h3)) 80%) !important;
             --bg-atv: var(--cards-overlay-image-subtlest, none), color-mix(in hsl, hsl(var(--h4)), hsl(var(--h3)) 60%) !important;
+            --col: hsl(var(--b7));
             --shadow: var(--primary-shadow), 0 3px 12px hsl(var(--h4), 25%), var(--interactable-outer);
             --shadow-hov: var(--interactable-outer), var(--interactable-active-outer);
 
