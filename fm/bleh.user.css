@@ -199,7 +199,7 @@
         }
 
         [data-bleh--theme_type="light"] > & {
-            --font-weight: calc(var(--custom_font_weight, 480) + 60);
+            --font-weight: calc(var(--custom_font_weight, 480) + 90);
             --font-weight-medium: calc(var(--custom_font_weight_medium, 650) + 90);
             --font-weight-bold: calc(var(--custom_font_weight_bold, 730) + 90);
         }
@@ -475,10 +475,10 @@
             --l4: var(--hue), calc(var(--sat) * 60%), calc(var(--lit) * 22%);
 
             --l2-c: var(--hue), calc(clamp(min(0), var(--sat), max(1.5)) * 40%), calc(clamp(min(0.7), var(--lit), max(1.1)) * 63%);
-            --l3-c: var(--hue), calc(clamp(min(0), var(--sat), max(1.5)) * 50%), calc(clamp(min(0.7), var(--lit), max(1.1)) * 30%);
+            --l3-c: var(--hue), calc(clamp(min(0), var(--sat), max(1.5)) * 50%), calc(clamp(min(0.7), var(--lit), max(1.1)) * 36%);
             --l3-c-sat: calc(clamp(min(0), var(--sat), max(1.5)) * 50%);
             --l3-c-lit: calc(clamp(min(0.5), var(--lit), max(1.1)) * 40%);
-            --l4-c: var(--hue), calc(clamp(min(0), var(--sat), max(1.5)) * 60%), calc(clamp(min(0.7), var(--lit), max(1.1)) * 22%);
+            --l4-c: var(--hue), calc(clamp(min(0), var(--sat), max(1.5)) * 60%), calc(clamp(min(0.7), var(--lit), max(1.1)) * 26%);
 
             --h3: var(--hue), calc(clamp(min(0), var(--sat), max(1.5)) * 50%), calc(clamp(min(0.85), var(--lit), max(1.1)) * 85%);
             --h3-s: var(--hue), 50%, 70%;
@@ -489,7 +489,7 @@
             --g4: var(--hue), calc(clamp(min(0), var(--sat), max(1.5)) * 70%), 92%;
 
             /* l2-c in dark modes, l4-c in light modes */
-            --l2-c-theme-switch: var(--l4-c);
+            --l2-c-theme-switch: var(--l3-c);
             --l3-c-theme-switch: var(--l3-c);
             --h3-theme-switch: var(--h4);
 
@@ -18786,11 +18786,11 @@
         &:not(.blend) {
             :is(.btn, a, button):not(.not-a-view-button, .toggle, .reset, .select-button, .btn-primary, .js-close, .blend-v2-btn, .dropdown-menu-clickable-item) {
                 --bg: var(--cards-overlay-image-subtlest, none), hsl(var(--h3));
-                --bg-hov: var(--cards-overlay-image-subtlest, none), hsla(var(--h3), 80%);
-                --bg-atv: var(--cards-overlay-image-subtlest, none), hsla(var(--h3), 60%);
+                --bg-hov: var(--cards-overlay-image-subtlest, none), color-mix(in hsl, hsl(var(--h4)), hsl(var(--h3)) 80%);
+                --bg-atv: var(--cards-overlay-image-subtlest, none), color-mix(in hsl, hsl(var(--h4)), hsl(var(--h3)) 60%);
                 --col: hsl(var(--b7));
                 --mask-colour: hsl(var(--b7), 70%);
-                --shadow: 0 3px 12px hsl(var(--h4), 25%), var(--interactable-outer);
+                --shadow: var(--primary-shadow), 0 3px 12px hsl(var(--h4), 32%), var(--interactable-outer);
                 position: relative;
             }
 
