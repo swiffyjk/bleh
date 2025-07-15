@@ -323,8 +323,10 @@ function album_missing_a_tracklist() {
         theme: 'window',
         content: html.node`
             <div class="dialog-settings">
-                ${setting({id: 'format_guest_features'})}
-                ${setting({id: 'show_guest_features'})}
+                <div class="setting-group blend">
+                    ${setting({id: 'format_guest_features'})}
+                    ${setting({id: 'show_guest_features'})}
+                </div>
             </div>
         `,
         placement: 'bottom',

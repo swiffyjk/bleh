@@ -16,6 +16,7 @@ import {refresh_all} from "../config";
 import {ff} from "../sku";
 import {compare} from "../components/compare.js";
 import {input} from "../components/input.js";
+import {setting} from "../components/settings.js";
 
 export function bleh_user_library() {
     // date sidebar into its own panel
@@ -474,70 +475,27 @@ function bleh_glacier_library_top(static_page = false) {
         theme: 'window',
         content: html.node`
             <div class="dialog-settings">
-                ${(page.subpage == 'library_artists') ? html.node`
-                <div class="setting" data-type="toggle" id="container-colourful_counts" onclick="_update_item('colourful_counts')">
-                    <div class="heading">
-                        <h5>${tl(trans.colourful_counts.name)}</h5>
-                        <p>${tl(trans.colourful_counts.body)}</p>
+                <div class="setting-group blend">
+                    ${(page.subpage == 'library_artists') ? html.node`
+                    <div class="setting" data-type="toggle" id="container-colourful_counts" onclick="_update_item('colourful_counts')">
+                        <div class="heading">
+                            <h5>${tl(trans.colourful_counts.name)}</h5>
+                            <p>${tl(trans.colourful_counts.body)}</p>
+                        </div>
+                        <div class="toggle-wrap">
+                            <button class="toggle" id="toggle-colourful_counts" aria-checked="true">
+                                <div class="dot"></div>
+                            </button>
+                        </div>
                     </div>
-                    <div class="toggle-wrap">
-                        <button class="toggle" id="toggle-colourful_counts" aria-checked="true">
-                            <div class="dot"></div>
-                        </button>
-                    </div>
-                </div>
-                ` : html.node`
-                <div class="setting" data-type="toggle" id="container-format_guest_features" onclick="_update_item('format_guest_features')">
-                    <button class="btn reset" onclick="_reset_item('format_guest_features')">${tl(trans.reset)}</button>
-                    <div class="heading">
-                        <h5>${tl(trans.format_guest_features.name)}</h5>
-                        <p>${tl(trans.format_guest_features.body)}</p>
-                    </div>
-                    <div class="toggle-wrap">
-                        <button class="toggle" id="toggle-format_guest_features" aria-checked="true">
-                            <div class="dot"></div>
-                        </button>
-                    </div>
-                </div>
-                <div class="setting hide-if-format-guest-disabled" data-type="toggle" id="container-show_guest_features" onclick="_update_item('show_guest_features')">
-                    <button class="btn reset" onclick="_reset_item('show_guest_features')">${tl(trans.reset)}</button>
-                    <div class="heading">
-                        <h5>${tl(trans.show_guest_features.name)}</h5>
-                        <p>${tl(trans.show_guest_features.body)}</p>
-                    </div>
-                    <div class="toggle-wrap">
-                        <button class="toggle" id="toggle-show_guest_features" aria-checked="true" type="button">
-                            <div class="dot"></div>
-                        </button>
-                    </div>
-                </div>
-                `}
-                <div class="sep"></div>
-                ${((page.subpage == 'library_artists' || page.subpage == 'library_albums') && auth.pro) ? html.node`
-                <div class="setting" data-type="toggle" id="container-grid_glow" onclick="_update_item('grid_glow')">
-                    <button class="btn reset" onclick="_reset_item('grid_glow')">${tl(trans.reset)}</button>
-                    <div class="heading">
-                        <h5>${tl(trans.grid_glow.name)}</h5>
-                        <p>${tl(trans.grid_glow.body)}</p>
-                    </div>
-                    <div class="toggle-wrap">
-                        <button class="toggle" id="toggle-grid_glow" aria-checked="true" type="button">
-                            <div class="dot"></div>
-                        </button>
-                    </div>
-                </div>
-                ` : ''}
-                <div class="setting" data-type="toggle" id="container-glacier_library_graphs" onclick="_update_item('glacier_library_graphs')">
-                    <button class="btn reset" onclick="_reset_item('glacier_library_graphs')">${tl(trans.reset)}</button>
-                    <div class="heading">
-                        <h5>${tl(trans.glacier_graphs.name)}</h5>
-                        <p>${tl(trans.glacier_graphs.body)}</p>
-                    </div>
-                    <div class="toggle-wrap">
-                        <button class="toggle" id="toggle-glacier_library_graphs" aria-checked="true" type="button">
-                            <div class="dot"></div>
-                        </button>
-                    </div>
+                    ` : html.node`
+                    ${setting({id: 'format_guest_features'})}
+                    ${setting({id: 'show_guest_features'})}
+                    `}
+                    ${((page.subpage == 'library_artists' || page.subpage == 'library_albums') && auth.pro) ? html.node`
+                    ${setting({id: 'grid_glow'})}
+                    ` : ''}
+                    ${setting({id: 'glacier_library_graphs'})}
                 </div>
             </div>
         `,
@@ -1243,42 +1201,10 @@ function bleh_glacier_library_focused() {
         theme: 'window',
         content: html.node`
             <div class="dialog-settings">
-                <div class="setting" data-type="toggle" id="container-format_guest_features" onclick="_update_item('format_guest_features')">
-                    <button class="btn reset" onclick="_reset_item('format_guest_features')">${tl(trans.reset)}</button>
-                    <div class="heading">
-                        <h5>${tl(trans.format_guest_features.name)}</h5>
-                        <p>${tl(trans.format_guest_features.body)}</p>
-                    </div>
-                    <div class="toggle-wrap">
-                        <button class="toggle" id="toggle-format_guest_features" aria-checked="true">
-                            <div class="dot"></div>
-                        </button>
-                    </div>
-                </div>
-                <div class="setting hide-if-format-guest-disabled" data-type="toggle" id="container-show_guest_features" onclick="_update_item('show_guest_features')">
-                    <button class="btn reset" onclick="_reset_item('show_guest_features')">${tl(trans.reset)}</button>
-                    <div class="heading">
-                        <h5>${tl(trans.show_guest_features.name)}</h5>
-                        <p>${tl(trans.show_guest_features.body)}</p>
-                    </div>
-                    <div class="toggle-wrap">
-                        <button class="toggle" id="toggle-show_guest_features" aria-checked="true" type="button">
-                            <div class="dot"></div>
-                        </button>
-                    </div>
-                </div>
-                <div class="sep"></div>
-                <div class="setting" data-type="toggle" id="container-glacier_library_graphs" onclick="_update_item('glacier_library_graphs')">
-                    <button class="btn reset" onclick="_reset_item('glacier_library_graphs')">${tl(trans.reset)}</button>
-                    <div class="heading">
-                        <h5>${tl(trans.glacier_graphs.name)}</h5>
-                        <p>${tl(trans.glacier_graphs.body)}</p>
-                    </div>
-                    <div class="toggle-wrap">
-                        <button class="toggle" id="toggle-glacier_library_graphs" aria-checked="true" type="button">
-                            <div class="dot"></div>
-                        </button>
-                    </div>
+                <div class="setting-group blend">
+                    ${setting({id: 'format_guest_features'})}
+                    ${setting({id: 'show_guest_features'})}
+                    ${setting({id: 'glacier_library_graphs'})}
                 </div>
             </div>
         `,

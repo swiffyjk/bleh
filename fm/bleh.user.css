@@ -245,7 +245,7 @@
         --card-border-base: hsl(var(--b3), 0.7);
 
         --normal-shadow: inset 0 0 0 1px hsla(var(--b2), 0.4), inset 0 -2px 4px hsla(var(--b5), 0.4);
-        --input-shadow: inset 0 -1px 0 0 hsl(var(--b3)), inset 0 1px 2px 1px hsl(var(--b7), 0.2);
+        --input-shadow: inset 0 -1px 0 0 hsl(var(--b3)), inset 0 1px 2px hsl(var(--b7), 0.2);
         --group-shadow: inset 0 1px 0 0 hsl(var(--b2), 0.4), inset 0 0 0 1px hsl(var(--b3), 0.4);
 
         .theme-preview[data-bleh--theme="darker"],
@@ -313,21 +313,25 @@
         .theme-preview[data-bleh--theme="ink"],
         [data-bleh--theme="ink"] &:not(.theme-preview) {
             /* any additional highlights */
-            --b3: var(--hue), calc(var(--sat) * 14% * var(--sat-bg, 1)), 73%;
+            --b3: var(--hue), calc(var(--sat) * 14% * var(--sat-bg, 1)), 78%;
 
             /* card border */
-            --b4: var(--hue), calc(var(--sat) * 12% * var(--sat-bg, 1)), 66%;
+            --b4: var(--hue), calc(var(--sat) * 12% * var(--sat-bg, 1)), 72%;
 
             /* card */
             --b5: var(--hue), calc(var(--sat) * 14% * var(--sat-bg, 1)), 81%;
 
             /* root */
-            --b6: var(--hue), calc(var(--sat) * 9% * var(--sat-bg, 1)), 69%;
+            --b6: var(--hue), calc(var(--sat) * 9% * var(--sat-bg, 1)), 73%;
             --b8: var(--hue), calc(var(--sat) * 12% * var(--sat-bg, 1)), 86%;
             --b7: var(--c1);
             --b9: 0, 0%, 84%;
 
-            --card-border-base: hsl(var(--hue), calc(var(--sat) * 9% * var(--sat-bg, 1)), 64%) !important;
+            --card-border-base: hsl(var(--hue), calc(var(--sat) * 9% * var(--sat-bg, 1)), 70%) !important;
+
+            --normal-shadow: inset 0 0 0 1px hsla(var(--b2), 0.3), inset 0 -2px 4px hsla(var(--b4), 0.5);
+            --input-shadow: inset 0 -1px 0 0 var(--card-border-base), inset 0 1px 3px hsl(var(--b7), 0.1);
+            --group-shadow: inset 0 1px 0 0 hsl(var(--b4), 0.9), inset 0 0 0 1px hsl(var(--b4), 0.4);
         }
     }
 
@@ -536,6 +540,9 @@
             --grid-colour-shadow: var(--grid-colour-shadow-override, 0 27px 15px hsl(var(--h4), 16%));
 
             --opposite-text: var(--c1);
+
+            --primary-shadow: inset 0 0 0 1px hsla(var(--h4), 0.3), inset 0 -2px 4px hsla(var(--l2-c), 0.4);
+            --bar-shadow: inset 0 0 0 1px hsla(var(--h4), 0.1), inset 0 -2px 4px hsla(var(--l2-c), 0.2);
         }
     }
 
@@ -16202,15 +16209,18 @@
                         display: flex;
                         width: 36px;
                         height: 14px;
-                        background-color: hsl(var(--b4));
+                        background-color: hsl(var(--b3));
                         border-radius: var(--item-med-radius);
+                        box-shadow: var(--normal-shadow);
 
                         &.preview-button-primary {
                             background-color: hsl(var(--h3));
+                            box-shadow: var(--primary-shadow);
                         }
 
                         &.preview-track {
                             background-color: hsla(var(--h4), 35%);
+                            box-shadow: unset;
                             width: 60px;
                         }
                     }
@@ -16545,7 +16555,7 @@
             display: flex;
             background: hsl(var(--b3));
             border-radius: var(--item-big-radius);
-            box-shadow: var(--normal-shadow);
+            box-shadow: var(--group-shadow);
             width: calc(100% - (30px + var(--card-gap))); /* 30px = value width */
             height: 8px;
             position: absolute;
@@ -16718,9 +16728,10 @@
         transition-timing-function: var(--trans-function);
 
         &:is(
-        [data-type="toggle"]
-        ):not([aria-disabled="true"]):hover {
-            background: hsl(var(--b4), 25%);
+        [data-type="toggle"],
+        [data-type="checkbox"]
+        ):not([aria-disabled="true"], .standalone):hover {
+            background: hsl(var(--b4), 20%);
             transition: none;
         }
 
@@ -24039,6 +24050,11 @@
             flex-direction: column;
             gap: 2px;
             margin: 0 var(--card-padding);
+
+            .bleh-modal-body > & {
+                margin-left: unset;
+                margin-right: unset;
+            }
         }
 
         strong {
@@ -25169,7 +25185,7 @@
                 height: 60px;
                 border-radius: 50%;
 
-                border: 1px solid var(--card-border-base);
+                border: 1px solid hsl(var(--b4), 70%);
                 box-shadow: var(--interact-shadow);
                 border-radius: 50%;
                 overflow: hidden;

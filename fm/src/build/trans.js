@@ -2996,6 +2996,14 @@ export const trans = {
         other: {
             en: 'Unknown'
         }
+    },
+    reduced_motion: {
+        name: {
+            en: 'Reduce motion in animations'
+        },
+        body: {
+            en: 'Decreases the intensity of animations, hover effects, and other moving parts'
+        }
     }
 }
 

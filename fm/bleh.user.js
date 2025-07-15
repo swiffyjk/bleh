@@ -5447,6 +5447,548 @@
     }
   }
 
+  // src/components/profile_shortcut.js
+  unsafeWindow._open_profile_shortcut_window = function() {
+    open_profile_shortcut_window();
+  };
+  function open_profile_shortcut_window() {
+    let modal = dialog({
+      id: "profile_shortcut",
+      title: tl(trans.profile_shortcut.name),
+      body: html.node`
+        ${setting({ id: "profile_shortcut", text: false, focus: true })}
+        `
+    });
+    modal.querySelector("#text-profile_shortcut").focus();
+  }
+  unsafeWindow._other_listener = function(id) {
+    other_listener(id);
+  };
+  function other_listener(id) {
+    let input2;
+    let submit;
+    dialog({
+      id: "other_listener",
+      title: tl(trans.view_others_library),
+      body: html.node`
+        <div class="setting" data-type="text">
+            <div class="avatar-container">
+                <div class="avatar-inner avatar--bleh-missing">
+                    <img>
+                </div>
+            </div>
+            <div class="input-container content-form">
+                <input type="text" maxlength="40" id="text-profile" ref=${(el) => input2 = el} placeholder="${tl(trans.enter_username)}">
+                <button class="btn chibi icon primary submit" ref=${(el) => submit = el} onclick=${() => {
+        let name2 = input2.value;
+        let link = id;
+        dialog_rm2({
+          id: "other_listener"
+        });
+        window.location.href = `${root}user/${name2}/library/music/${link}`;
+      }}>${tl(trans.done)}</button>
+            </div>
+        </div>
+        `
+    });
+    input2.addEventListener("keydown", (event3) => {
+      if (event3.keyCode === 13) {
+        event3.preventDefault();
+        submit.click();
+      }
+    });
+    tippy(submit, {
+      content: tl(trans.save)
+    });
+    input2.focus();
+  }
+  function set_profile_as_shortcut() {
+    dialog({
+      id: "profile_shortcut",
+      title: tl(trans.profile_shortcut.name),
+      body: html.node`
+            <div class="big-modal-alert alert-danger">
+                ${{ html: tl(trans.profile_shortcut.notice).replace("{u}", `<a class="mention" href="${root}user/${settings.profile_shortcut}" target="_blank">@${settings.profile_shortcut}</a>`) }}
+            </div>
+            <div class="modal-footer">
+                <button class="see-more cancel" onclick=${() => dialog_rm2({ id: "profile_shortcut" })}>
+                    ${tl(trans.back)}
+                </button>
+                <div class="fill"></div>
+                <button class="btn primary save" onclick=${() => confirm_set_profile_as_shortcut()}>
+                    ${tl(trans.replace)}
+                </button>
+            </div>
+        `
+    });
+  }
+  function confirm_set_profile_as_shortcut() {
+    dialog_rm2({
+      id: "profile_shortcut"
+    });
+    let avatar_src = page.structure.container.querySelector(":scope > .redesigned-profile-header .avatar img")?.getAttribute("src");
+    localStorage.setItem("bleh_profile_shortcut_avi", avatar_src);
+    notify({
+      id: "profile_shortcut_saved",
+      title: tl(trans.profile_shortcut.name),
+      body: tl(trans.profile_shortcut.linked).replace("{u}", page.name),
+      icon: "icon-16-profile-shortcut"
+    });
+    page.state.profile_shortcut_button.setAttribute("data-is-shortcut", "true");
+    page.state.profile_shortcut_button.removeAttribute("onclick");
+    settings.profile_shortcut = page.name;
+    localStorage.setItem("bleh", JSON.stringify(settings));
+  }
+  function save_profile_shortcut(input2, value, submit, reset_btn, avatar3) {
+    if (value == "" || value == auth.name) {
+      localStorage.removeItem("bleh_profile_shortcut_avi");
+      avatar3.querySelector("img").setAttribute("src", "");
+      avatar3.querySelector("img").setAttribute("alt", "");
+      reset_btn.disabled = false;
+      input2.disabled = false;
+      submit.disabled = false;
+      save_setting("profile_shortcut", "");
+      return;
+    }
+    avatar3.classList.add("requesting");
+    fetch(`${root}user/${value}/tags`).then(function(response) {
+      console.log("returned", response, response.text);
+      return response.text();
+    }).then(function(dom) {
+      let doc = new DOMParser().parseFromString(dom, "text/html");
+      console.log("DOC", doc);
+      reset_btn.disabled = false;
+      input2.disabled = false;
+      submit.disabled = false;
+      avatar3.classList.remove("requesting");
+      try {
+        let avatar_src = doc.querySelector(".header-avatar-inner-wrap img").getAttribute("src");
+        localStorage.setItem("bleh_profile_shortcut_avi", avatar_src);
+        avatar3.querySelector("img").setAttribute("src", avatar_src);
+        avatar3.querySelector("img").setAttribute("alt", value);
+        notify({
+          id: "profile_shortcut_saved",
+          title: tl(trans.profile_shortcut.name),
+          body: tl(trans.profile_shortcut.linked).replace("{u}", value),
+          icon: "icon-16-profile-shortcut"
+        });
+        save_setting("profile_shortcut", value);
+      } catch (e) {
+        notify({
+          id: "profile_shortcut_error",
+          title: tl(trans.profile_shortcut.name),
+          body: tl(trans.failed_to_find_profile),
+          type: "error"
+        });
+        localStorage.removeItem("bleh_profile_shortcut_avi");
+        avatar3.querySelector("img").setAttribute("src", "");
+        avatar3.querySelector("img").setAttribute("alt", "");
+      }
+    });
+  }
+  unsafeWindow._save_profile_shortcut = function() {
+    let profile_name = document.getElementById("text-profile_shortcut").value;
+    let profile_img = document.getElementById("avatar-profile_shortcut");
+    if (profile_name == "" || profile_name == auth.name) {
+      localStorage.removeItem("bleh_profile_shortcut_avi");
+      document.getElementById("avatar_src-profile_shortcut").setAttribute("src", "");
+      settings.profile_shortcut = "";
+      localStorage.setItem("bleh", JSON.stringify(settings));
+      return;
+    }
+    profile_img.classList.add("requesting");
+    fetch(`${root}user/${profile_name}/tags`).then(function(response) {
+      console.log("returned", response, response.text);
+      return response.text();
+    }).then(function(html2) {
+      let doc = new DOMParser().parseFromString(html2, "text/html");
+      console.log("DOC", doc);
+      profile_img.classList.remove("requesting");
+      try {
+        let avatar_src = doc.querySelector(".header-avatar-inner-wrap img").getAttribute("src");
+        localStorage.setItem("bleh_profile_shortcut_avi", avatar_src);
+        document.getElementById("avatar_src-profile_shortcut").setAttribute("src", avatar_src);
+        notify({
+          id: "profile_shortcut_saved",
+          title: tl(trans.profile_shortcut.name),
+          body: tl(trans.profile_shortcut.linked).replace("{u}", profile_name),
+          icon: "icon-16-profile-shortcut"
+        });
+        settings.profile_shortcut = profile_name;
+        localStorage.setItem("bleh", JSON.stringify(settings));
+      } catch (e) {
+        notify({
+          id: "profile_shortcut_saved",
+          title: tl(trans.profile_shortcut.name),
+          body: tl(trans.failed_to_find_profile),
+          type: "error"
+        });
+        localStorage.removeItem("bleh_profile_shortcut_avi");
+        document.getElementById("avatar_src-profile_shortcut").setAttribute("src", "");
+      }
+    });
+  };
+
+  // src/components/settings.js
+  function setting({
+    id = "",
+    text: text2 = true,
+    focus = false
+  }) {
+    try {
+      let value = settings[id];
+      log(`creating ${id} with value ${value}`, "settings", "log", { settings, settings_id: settings[id] });
+      if (!settings_store[id])
+        return setting_fail(id, { message: "No settings store entry present" });
+      let type = settings_store[id].type || "toggle";
+      let title = settings_store[id].title ? tl(settings_store[id].title) : id;
+      let body = settings_store[id].body ? tl(settings_store[id].body) : null;
+      let icon = settings_store[id].icon;
+      let disabled = false;
+      let disabled_reason = "";
+      if (settings_store[id].platforms && !settings_store[id].platforms.includes(page.platform)) {
+        disabled = true;
+        disabled_reason = tl(trans.item_is_unavailable_on_platform).replace("{i}", title).replace("{p}", tl(trans.platforms[page.platform]));
+      }
+      if (disabled && disabled_reason)
+        return setting_fail(id, { message: disabled_reason, unavailable: true });
+      if (settings_store[id].beta)
+        title = html.node`${title}<span class="new-badge beta">${tl(trans.beta)}</span>`;
+      if (type === "toggle") {
+        let toggle2;
+        return html.node`
+                <div class="setting v2" data-type="toggle" disabled=${disabled} onclick=${() => update_toggle(id, toggle2)}>
+                    ${icon ? html.node`
+                    <div class="icon">
+                        <div class="bleh-icon" style="--icon: var(--${icon})" />
+                    </div>
+                    ` : ""}
+                    ${text2 ? html.node`
+                    <div class="heading">
+                        <h5>${title}</h5>
+                        ${body ? html.node`<p>${body}</p>` : ""}
+                    </div>
+                    ` : ""}
+                    ${settings_store[id].extensions ? html.node`
+                    <div class="extensions">
+                        ${settings_store[id].extensions.map((extension) => () => {
+          let container = html.node`
+                                <div class="extension">
+                                    <div class="bleh-icon" />
+                                </div>
+                            `;
+          tippy(container, {
+            content: tl(trans.requires_extension_value).replace("{v}", tl(extension))
+          });
+          return container;
+        })}
+                    </div>
+                    ` : ""}
+                    ${setting_incompatible_block(settings_store[id].incompatible)}
+                    <div class="toggle-wrap">
+                        <button class="toggle" ref=${(el) => toggle2 = el} aria-checked=${value}>
+                            <div class="dot"></div>
+                        </button>
+                    </div>
+                </div>
+            `;
+      } else if (type === "range") {
+        let option;
+        let min = settings_store[id].min || 0;
+        let max = settings_store[id].max || 0;
+        let step = settings_store[id].step || 0;
+        if (min >= max || step === 0)
+          return setting_fail(id, { message: "A range type requires a min, max, and step defined in the settings store" });
+        let track;
+        let input2;
+        let marker;
+        let working_max = settings_store[id].max - settings_store[id].min;
+        return html.node`
+                <div class="setting v2" data-type="range" disabled=${disabled} ref=${(el) => option = el} data-modified=${value != settings_store[id].default}>
+                    ${text2 ? html.node`
+                    <div class="heading">
+                        <h5>${title}<button class="reset see-more" onclick=${() => reset_range(id, option, track, input2, marker)}>${tl(trans.reset)}</button></h5>
+                        ${body ? html.node`<p>${body}</p>` : ""}
+                    </div>
+                    ` : ""}
+                    ${settings_store[id].extensions ? html.node`
+                    <div class="extensions">
+                        ${settings_store[id].extensions.map((extension) => () => {
+          let container = html.node`
+                                <div class="extension">
+                                    <div class="bleh-icon" />
+                                </div>
+                            `;
+          tippy(container, {
+            content: tl(trans.requires_extension_value).replace("{v}", tl(extension))
+          });
+          return container;
+        })}
+                    </div>
+                    ` : ""}
+                    ${setting_incompatible_block(settings_store[id].incompatible)}
+                    <div class="range">
+                        <div class="track" style="--percent: ${(value - settings_store[id].min) / working_max * 100}%" ref=${(el) => track = el}>
+                            <div class="fill" />
+                            <div class="nub" />
+                        </div>
+                        <input type="range" min=${min} max=${max} step=${step} value=${value} ref=${(el) => input2 = el} oninput=${() => update_range(id, option, track, input2, input2.value, marker)} />
+                        <p class="value-marker" ref=${(el) => marker = el}>${value}${settings_store[id].suffix || ""}</p>
+                    </div>
+                </div>
+            `;
+      } else if (type === "text") {
+        let option;
+        let min = settings_store[id].min || 0;
+        let max = settings_store[id].max || 0;
+        if (max === 0)
+          return setting_fail(id, { message: "A text type requires a max defined in the settings store" });
+        let reset_btn;
+        let avatar3;
+        let input2;
+        let submit;
+        let input_container;
+        let error_tooltip;
+        let container = html.node`
+                <div class="setting v2" data-type="text" disabled=${disabled} ref=${(el) => option = el} data-modified=${value != settings_store[id].default}>
+                    ${text2 ? html.node`
+                    <div class="heading">
+                        <h5>${title}<button class="reset see-more" ref=${(el) => reset_btn = el} onclick=${() => reset_text(id, input2, submit, option, reset_btn, avatar3)}>${tl(trans.reset)}</button></h5>
+                        ${body ? html.node`<p>${body}</p>` : ""}
+                    </div>
+                    ` : ""}
+                    ${settings_store[id].extensions ? html.node`
+                    <div class="extensions">
+                        ${settings_store[id].extensions.map((extension) => () => {
+          let container2 = html.node`
+                                <div class="extension">
+                                    <div class="bleh-icon" />
+                                </div>
+                            `;
+          tippy(container2, {
+            content: tl(trans.requires_extension_value).replace("{v}", tl(extension))
+          });
+          return container2;
+        })}
+                    </div>
+                    ` : ""}
+                    ${setting_incompatible_block(settings_store[id].incompatible)}
+                    ${settings_store[id].avatar ? html.node`
+                    <div class="avatar-container">
+                        <div class="avatar-inner" ref=${(el) => avatar3 = el}>
+                            <img src=${localStorage.getItem(`bleh_${id}_avi`) || ""} alt=${value} />
+                        </div>
+                    </div>
+                    ` : ""}
+                    <div class="input-container content-form in-settings can-submit" data-has-error="false" ref=${(el) => input_container = el}>
+                        <input type="text" maxlength=${max} value=${value} style="--max: ${max}px" ref=${(el) => input2 = el} placeholder=${tl(settings_store[id].placeholder)} />
+                        <button class="btn chibi icon submit" ref=${(el) => submit = el} onclick=${() => update_text(id, input2, submit, option, input2.value, reset_btn, avatar3)}>${tl(trans.save)}</button>
+                    </div>
+                </div>
+            `;
+        input2.addEventListener("keydown", (event3) => {
+          if (event3.keyCode === 13 && input_container.getAttribute("data-has-error") == "false") {
+            event3.preventDefault();
+            submit.click();
+          }
+        });
+        tippy(submit, {
+          content: tl(trans.save)
+        });
+        if (focus)
+          input2.focus();
+        error_tooltip = tippy(input2, {
+          theme: "error",
+          placement: "top",
+          trigger: "manual"
+        });
+        error_tooltip.disable();
+        input2.addEventListener("input", () => {
+          input_container.setAttribute("data-has-error", "false");
+          error_tooltip.disable();
+          submit.disabled = false;
+          if (type == "number") {
+            if (input2.value == "") {
+              error_input(tl(trans.only_numbers_are_allowed), input_container, error_tooltip, submit);
+            } else if (parseInt(input2.value) > max || parseInt(input2.value) < min) {
+              error_input(tl(trans.keep_within_the_range), input_container, error_tooltip, submit);
+            }
+          } else if (type == "text") {
+            if (settings_store[id].warn_if_empty && input2.value == "") {
+              error_input(tl(trans.this_field_is_required), input_container, error_tooltip, submit);
+            } else if (settings_store[id].warn_if_matches_auth && input2.value == auth.name) {
+              error_input(tl(trans.please_dont_clone_yourself), input_container, error_tooltip, submit);
+            }
+          }
+        });
+        return container;
+      } else if (type == "checkbox") {
+        let toggle2;
+        return html.node`
+                <div class="setting v2 ${settings_store[id].horizontal ? "horizontal" : ""}" data-type="checkbox" disabled=${disabled} onclick=${() => update_toggle(id, toggle2)}>
+                    ${icon ? html.node`
+                    <div class="icon">
+                        <div class="bleh-icon" style="--icon: var(--${icon})" />
+                    </div>
+                    ` : ""}
+                    ${text2 ? html.node`
+                    <div class="heading">
+                        <h5>${title}</h5>
+                        ${body ? html.node`<p>${body}</p>` : ""}
+                    </div>
+                    ` : ""}
+                    ${settings_store[id].extensions ? html.node`
+                    <div class="extensions">
+                        ${settings_store[id].extensions.map((extension) => () => {
+          let container = html.node`
+                                <div class="extension">
+                                    <div class="bleh-icon" />
+                                </div>
+                            `;
+          tippy(container, {
+            content: tl(trans.requires_extension_value).replace("{v}", tl(extension))
+          });
+          return container;
+        })}
+                    </div>
+                    ` : ""}
+                    ${setting_incompatible_block(settings_store[id].incompatible)}
+                    <div class="check">
+                        <div class="box" ref=${(el) => toggle2 = el} aria-checked=${value}>
+                            <div class="bleh-icon" />
+                        </div>
+                    </div>
+                </div>
+            `;
+      }
+    } catch (e) {
+      console.error(e);
+      return setting_fail(id, e);
+    }
+    return setting_fail(id);
+  }
+  function error_input(reason, input2, tooltip, submit) {
+    log(reason, "input", "log");
+    input2.setAttribute("data-has-error", "true");
+    tooltip.setContent(reason);
+    tooltip.enable();
+    tooltip.show();
+    submit.disabled = true;
+  }
+  function setting_incompatible_block(entries) {
+    if (!entries)
+      return "";
+    return "";
+    return html.node`
+        <div class="incompatible">
+            ${entries.map((incompatible) => () => {
+      let container = html.node`
+                    <div class="extension">
+                        <div class="bleh-icon" />
+                    </div>
+                `;
+      tippy(container, {
+        content: tl(trans.incompatible_with_value).replace("{v}", tl(settings_store[incompatible.setting].title))
+      });
+      return container;
+    })}
+        </div>
+    `;
+  }
+  function setting_fail(id, e = null) {
+    if (e.unavailable) {
+      return html.node`
+            <div class="setting">
+                <div class="alert alert-info no-margin">
+                    ${e.message}
+                </div>
+            </div>
+        `;
+    }
+    return html.node`
+        <div class="setting">
+            <div class="alert alert-error no-margin">
+                ${tl(trans.value_failed_to_load).replace("{v}", id)}
+                ${e ? html`<br>${e.message}` : ""}
+            </div>
+        </div>
+    `;
+  }
+  function update_toggle(id, toggle2) {
+    let value = settings[id];
+    toggle2.setAttribute("aria-checked", !value);
+    save_setting(id, !value);
+  }
+  function update_range(id, option, track, input2, value, marker, silent = false) {
+    let max = settings_store[id].max - settings_store[id].min;
+    input2.value = value;
+    track.style.setProperty("--percent", `${(value - settings_store[id].min) / max * 100}%`);
+    marker.textContent = `${value}${settings_store[id].suffix || ""}`;
+    option.setAttribute("data-modified", value != settings_store[id].default);
+    save_setting(id, value);
+  }
+  function reset_range(id, option, track, range, marker) {
+    update_range(id, option, track, range, settings_store[id].default, marker, true);
+    notify({
+      id: "reset_setting",
+      title: tl(trans.settings),
+      body: tl(trans.reset_item_to_default),
+      icon: "icon-16-settings"
+    });
+  }
+  function update_text(id, input2, submit, option, value, reset_btn, avatar3, silent = false) {
+    if (settings_store[id].wait) {
+      reset_btn.disabled = true;
+      input2.disabled = true;
+      submit.disabled = true;
+    }
+    input2.value = value;
+    option.setAttribute("data-modified", value != settings_store[id].default);
+    if (id == "profile_shortcut") {
+      save_profile_shortcut(input2, value, submit, reset_btn, avatar3);
+      return;
+    } else if (id == "hu_tao") {
+      if (value == "develop") {
+        dialog_rm2({ id: "hu_tao" });
+        change_settings_page("sku");
+        notify({
+          id: "unlocked",
+          title: tl(trans.development),
+          body: tl(trans.unlocked),
+          type: "success"
+        });
+      }
+    }
+    save_setting(id, value);
+  }
+  function reset_text(id, input2, submit, option, reset_btn, avatar3) {
+    update_text(id, input2, submit, option, settings_store[id].default, reset_btn, avatar3, true);
+    notify({
+      id: "reset_setting",
+      title: tl(trans.settings),
+      body: tl(trans.reset_item_to_default),
+      icon: "icon-16-settings"
+    });
+  }
+  function save_setting(id, value) {
+    settings[id] = value;
+    document.documentElement.setAttribute(`data-bleh--${id}`, value);
+    if (id == "theme") {
+      if (value == "light" || value == "ink" || value == "glass") {
+        settings.theme_type = "light";
+      } else {
+        settings.theme_type = "dark";
+      }
+      document.documentElement.setAttribute(`data-bleh--theme_type`, settings.theme_type);
+    }
+    if (settings_store[id].require_reload == true || settings_store[id].require_reload == "partial" && page.type != "bleh_settings")
+      request_reload();
+    if (settings_store[id].css)
+      document.body.style.setProperty(`--${settings_store[id].css}`, `${value}${settings_store[id].suffix || ""}`);
+    localStorage.setItem("bleh", JSON.stringify(settings));
+    log(`saved ${id} as ${value}`, "settings", "log", { settings, settings_id: settings[id] });
+  }
+
   // src/pages/glacier.js
   function bleh_user_library() {
     let date_items = page.structure.side.querySelectorAll(":scope > :is(div, figure)");
@@ -5790,70 +6332,27 @@
       theme: "window",
       content: html.node`
             <div class="dialog-settings">
-                ${page.subpage == "library_artists" ? html.node`
-                <div class="setting" data-type="toggle" id="container-colourful_counts" onclick="_update_item('colourful_counts')">
-                    <div class="heading">
-                        <h5>${tl(trans.colourful_counts.name)}</h5>
-                        <p>${tl(trans.colourful_counts.body)}</p>
+                <div class="setting-group blend">
+                    ${page.subpage == "library_artists" ? html.node`
+                    <div class="setting" data-type="toggle" id="container-colourful_counts" onclick="_update_item('colourful_counts')">
+                        <div class="heading">
+                            <h5>${tl(trans.colourful_counts.name)}</h5>
+                            <p>${tl(trans.colourful_counts.body)}</p>
+                        </div>
+                        <div class="toggle-wrap">
+                            <button class="toggle" id="toggle-colourful_counts" aria-checked="true">
+                                <div class="dot"></div>
+                            </button>
+                        </div>
                     </div>
-                    <div class="toggle-wrap">
-                        <button class="toggle" id="toggle-colourful_counts" aria-checked="true">
-                            <div class="dot"></div>
-                        </button>
-                    </div>
-                </div>
-                ` : html.node`
-                <div class="setting" data-type="toggle" id="container-format_guest_features" onclick="_update_item('format_guest_features')">
-                    <button class="btn reset" onclick="_reset_item('format_guest_features')">${tl(trans.reset)}</button>
-                    <div class="heading">
-                        <h5>${tl(trans.format_guest_features.name)}</h5>
-                        <p>${tl(trans.format_guest_features.body)}</p>
-                    </div>
-                    <div class="toggle-wrap">
-                        <button class="toggle" id="toggle-format_guest_features" aria-checked="true">
-                            <div class="dot"></div>
-                        </button>
-                    </div>
-                </div>
-                <div class="setting hide-if-format-guest-disabled" data-type="toggle" id="container-show_guest_features" onclick="_update_item('show_guest_features')">
-                    <button class="btn reset" onclick="_reset_item('show_guest_features')">${tl(trans.reset)}</button>
-                    <div class="heading">
-                        <h5>${tl(trans.show_guest_features.name)}</h5>
-                        <p>${tl(trans.show_guest_features.body)}</p>
-                    </div>
-                    <div class="toggle-wrap">
-                        <button class="toggle" id="toggle-show_guest_features" aria-checked="true" type="button">
-                            <div class="dot"></div>
-                        </button>
-                    </div>
-                </div>
-                `}
-                <div class="sep"></div>
-                ${(page.subpage == "library_artists" || page.subpage == "library_albums") && auth.pro ? html.node`
-                <div class="setting" data-type="toggle" id="container-grid_glow" onclick="_update_item('grid_glow')">
-                    <button class="btn reset" onclick="_reset_item('grid_glow')">${tl(trans.reset)}</button>
-                    <div class="heading">
-                        <h5>${tl(trans.grid_glow.name)}</h5>
-                        <p>${tl(trans.grid_glow.body)}</p>
-                    </div>
-                    <div class="toggle-wrap">
-                        <button class="toggle" id="toggle-grid_glow" aria-checked="true" type="button">
-                            <div class="dot"></div>
-                        </button>
-                    </div>
-                </div>
-                ` : ""}
-                <div class="setting" data-type="toggle" id="container-glacier_library_graphs" onclick="_update_item('glacier_library_graphs')">
-                    <button class="btn reset" onclick="_reset_item('glacier_library_graphs')">${tl(trans.reset)}</button>
-                    <div class="heading">
-                        <h5>${tl(trans.glacier_graphs.name)}</h5>
-                        <p>${tl(trans.glacier_graphs.body)}</p>
-                    </div>
-                    <div class="toggle-wrap">
-                        <button class="toggle" id="toggle-glacier_library_graphs" aria-checked="true" type="button">
-                            <div class="dot"></div>
-                        </button>
-                    </div>
+                    ` : html.node`
+                    ${setting({ id: "format_guest_features" })}
+                    ${setting({ id: "show_guest_features" })}
+                    `}
+                    ${(page.subpage == "library_artists" || page.subpage == "library_albums") && auth.pro ? html.node`
+                    ${setting({ id: "grid_glow" })}
+                    ` : ""}
+                    ${setting({ id: "glacier_library_graphs" })}
                 </div>
             </div>
         `,
@@ -6415,42 +6914,10 @@
       theme: "window",
       content: html.node`
             <div class="dialog-settings">
-                <div class="setting" data-type="toggle" id="container-format_guest_features" onclick="_update_item('format_guest_features')">
-                    <button class="btn reset" onclick="_reset_item('format_guest_features')">${tl(trans.reset)}</button>
-                    <div class="heading">
-                        <h5>${tl(trans.format_guest_features.name)}</h5>
-                        <p>${tl(trans.format_guest_features.body)}</p>
-                    </div>
-                    <div class="toggle-wrap">
-                        <button class="toggle" id="toggle-format_guest_features" aria-checked="true">
-                            <div class="dot"></div>
-                        </button>
-                    </div>
-                </div>
-                <div class="setting hide-if-format-guest-disabled" data-type="toggle" id="container-show_guest_features" onclick="_update_item('show_guest_features')">
-                    <button class="btn reset" onclick="_reset_item('show_guest_features')">${tl(trans.reset)}</button>
-                    <div class="heading">
-                        <h5>${tl(trans.show_guest_features.name)}</h5>
-                        <p>${tl(trans.show_guest_features.body)}</p>
-                    </div>
-                    <div class="toggle-wrap">
-                        <button class="toggle" id="toggle-show_guest_features" aria-checked="true" type="button">
-                            <div class="dot"></div>
-                        </button>
-                    </div>
-                </div>
-                <div class="sep"></div>
-                <div class="setting" data-type="toggle" id="container-glacier_library_graphs" onclick="_update_item('glacier_library_graphs')">
-                    <button class="btn reset" onclick="_reset_item('glacier_library_graphs')">${tl(trans.reset)}</button>
-                    <div class="heading">
-                        <h5>${tl(trans.glacier_graphs.name)}</h5>
-                        <p>${tl(trans.glacier_graphs.body)}</p>
-                    </div>
-                    <div class="toggle-wrap">
-                        <button class="toggle" id="toggle-glacier_library_graphs" aria-checked="true" type="button">
-                            <div class="dot"></div>
-                        </button>
-                    </div>
+                <div class="setting-group blend">
+                    ${setting({ id: "format_guest_features" })}
+                    ${setting({ id: "show_guest_features" })}
+                    ${setting({ id: "glacier_library_graphs" })}
                 </div>
             </div>
         `,
@@ -6937,548 +7404,6 @@
     }
     localStorage.setItem("bleh_bookmarked_images", JSON.stringify(bookmarked_images));
   }
-
-  // src/components/settings.js
-  function setting({
-    id = "",
-    text: text2 = true,
-    focus = false
-  }) {
-    try {
-      let value = settings[id];
-      log(`creating ${id} with value ${value}`, "settings", "log", { settings, settings_id: settings[id] });
-      if (!settings_store[id])
-        return setting_fail(id, { message: "No settings store entry present" });
-      let type = settings_store[id].type || "toggle";
-      let title = settings_store[id].title ? tl(settings_store[id].title) : id;
-      let body = settings_store[id].body ? tl(settings_store[id].body) : null;
-      let icon = settings_store[id].icon;
-      let disabled = false;
-      let disabled_reason = "";
-      if (settings_store[id].platforms && !settings_store[id].platforms.includes(page.platform)) {
-        disabled = true;
-        disabled_reason = tl(trans.item_is_unavailable_on_platform).replace("{i}", title).replace("{p}", tl(trans.platforms[page.platform]));
-      }
-      if (disabled && disabled_reason)
-        return setting_fail(id, { message: disabled_reason, unavailable: true });
-      if (settings_store[id].beta)
-        title = html.node`${title}<span class="new-badge beta">${tl(trans.beta)}</span>`;
-      if (type === "toggle") {
-        let toggle2;
-        return html.node`
-                <div class="setting v2" data-type="toggle" disabled=${disabled} onclick=${() => update_toggle(id, toggle2)}>
-                    ${icon ? html.node`
-                    <div class="icon">
-                        <div class="bleh-icon" style="--icon: var(--${icon})" />
-                    </div>
-                    ` : ""}
-                    ${text2 ? html.node`
-                    <div class="heading">
-                        <h5>${title}</h5>
-                        ${body ? html.node`<p>${body}</p>` : ""}
-                    </div>
-                    ` : ""}
-                    ${settings_store[id].extensions ? html.node`
-                    <div class="extensions">
-                        ${settings_store[id].extensions.map((extension) => () => {
-          let container = html.node`
-                                <div class="extension">
-                                    <div class="bleh-icon" />
-                                </div>
-                            `;
-          tippy(container, {
-            content: tl(trans.requires_extension_value).replace("{v}", tl(extension))
-          });
-          return container;
-        })}
-                    </div>
-                    ` : ""}
-                    ${setting_incompatible_block(settings_store[id].incompatible)}
-                    <div class="toggle-wrap">
-                        <button class="toggle" ref=${(el) => toggle2 = el} aria-checked=${value}>
-                            <div class="dot"></div>
-                        </button>
-                    </div>
-                </div>
-            `;
-      } else if (type === "range") {
-        let option;
-        let min = settings_store[id].min || 0;
-        let max = settings_store[id].max || 0;
-        let step = settings_store[id].step || 0;
-        if (min >= max || step === 0)
-          return setting_fail(id, { message: "A range type requires a min, max, and step defined in the settings store" });
-        let track;
-        let input2;
-        let marker;
-        let working_max = settings_store[id].max - settings_store[id].min;
-        return html.node`
-                <div class="setting v2" data-type="range" disabled=${disabled} ref=${(el) => option = el} data-modified=${value != settings_store[id].default}>
-                    ${text2 ? html.node`
-                    <div class="heading">
-                        <h5>${title}<button class="reset see-more" onclick=${() => reset_range(id, option, track, input2, marker)}>${tl(trans.reset)}</button></h5>
-                        ${body ? html.node`<p>${body}</p>` : ""}
-                    </div>
-                    ` : ""}
-                    ${settings_store[id].extensions ? html.node`
-                    <div class="extensions">
-                        ${settings_store[id].extensions.map((extension) => () => {
-          let container = html.node`
-                                <div class="extension">
-                                    <div class="bleh-icon" />
-                                </div>
-                            `;
-          tippy(container, {
-            content: tl(trans.requires_extension_value).replace("{v}", tl(extension))
-          });
-          return container;
-        })}
-                    </div>
-                    ` : ""}
-                    ${setting_incompatible_block(settings_store[id].incompatible)}
-                    <div class="range">
-                        <div class="track" style="--percent: ${(value - settings_store[id].min) / working_max * 100}%" ref=${(el) => track = el}>
-                            <div class="fill" />
-                            <div class="nub" />
-                        </div>
-                        <input type="range" min=${min} max=${max} step=${step} value=${value} ref=${(el) => input2 = el} oninput=${() => update_range(id, option, track, input2, input2.value, marker)} />
-                        <p class="value-marker" ref=${(el) => marker = el}>${value}${settings_store[id].suffix || ""}</p>
-                    </div>
-                </div>
-            `;
-      } else if (type === "text") {
-        let option;
-        let min = settings_store[id].min || 0;
-        let max = settings_store[id].max || 0;
-        if (max === 0)
-          return setting_fail(id, { message: "A text type requires a max defined in the settings store" });
-        let reset_btn;
-        let avatar3;
-        let input2;
-        let submit;
-        let input_container;
-        let error_tooltip;
-        let container = html.node`
-                <div class="setting v2" data-type="text" disabled=${disabled} ref=${(el) => option = el} data-modified=${value != settings_store[id].default}>
-                    ${text2 ? html.node`
-                    <div class="heading">
-                        <h5>${title}<button class="reset see-more" ref=${(el) => reset_btn = el} onclick=${() => reset_text(id, input2, submit, option, reset_btn, avatar3)}>${tl(trans.reset)}</button></h5>
-                        ${body ? html.node`<p>${body}</p>` : ""}
-                    </div>
-                    ` : ""}
-                    ${settings_store[id].extensions ? html.node`
-                    <div class="extensions">
-                        ${settings_store[id].extensions.map((extension) => () => {
-          let container2 = html.node`
-                                <div class="extension">
-                                    <div class="bleh-icon" />
-                                </div>
-                            `;
-          tippy(container2, {
-            content: tl(trans.requires_extension_value).replace("{v}", tl(extension))
-          });
-          return container2;
-        })}
-                    </div>
-                    ` : ""}
-                    ${setting_incompatible_block(settings_store[id].incompatible)}
-                    ${settings_store[id].avatar ? html.node`
-                    <div class="avatar-container">
-                        <div class="avatar-inner" ref=${(el) => avatar3 = el}>
-                            <img src=${localStorage.getItem(`bleh_${id}_avi`) || ""} alt=${value} />
-                        </div>
-                    </div>
-                    ` : ""}
-                    <div class="input-container content-form in-settings can-submit" data-has-error="false" ref=${(el) => input_container = el}>
-                        <input type="text" maxlength=${max} value=${value} style="--max: ${max}px" ref=${(el) => input2 = el} placeholder=${tl(settings_store[id].placeholder)} />
-                        <button class="btn chibi icon submit" ref=${(el) => submit = el} onclick=${() => update_text(id, input2, submit, option, input2.value, reset_btn, avatar3)}>${tl(trans.save)}</button>
-                    </div>
-                </div>
-            `;
-        input2.addEventListener("keydown", (event3) => {
-          if (event3.keyCode === 13 && input_container.getAttribute("data-has-error") == "false") {
-            event3.preventDefault();
-            submit.click();
-          }
-        });
-        tippy(submit, {
-          content: tl(trans.save)
-        });
-        if (focus)
-          input2.focus();
-        error_tooltip = tippy(input2, {
-          theme: "error",
-          placement: "top",
-          trigger: "manual"
-        });
-        error_tooltip.disable();
-        input2.addEventListener("input", () => {
-          input_container.setAttribute("data-has-error", "false");
-          error_tooltip.disable();
-          submit.disabled = false;
-          if (type == "number") {
-            if (input2.value == "") {
-              error_input(tl(trans.only_numbers_are_allowed), input_container, error_tooltip, submit);
-            } else if (parseInt(input2.value) > max || parseInt(input2.value) < min) {
-              error_input(tl(trans.keep_within_the_range), input_container, error_tooltip, submit);
-            }
-          } else if (type == "text") {
-            if (settings_store[id].warn_if_empty && input2.value == "") {
-              error_input(tl(trans.this_field_is_required), input_container, error_tooltip, submit);
-            } else if (settings_store[id].warn_if_matches_auth && input2.value == auth.name) {
-              error_input(tl(trans.please_dont_clone_yourself), input_container, error_tooltip, submit);
-            }
-          }
-        });
-        return container;
-      } else if (type == "checkbox") {
-        let toggle2;
-        return html.node`
-                <div class="setting v2 ${settings_store[id].horizontal ? "horizontal" : ""}" data-type="checkbox" disabled=${disabled} onclick=${() => update_toggle(id, toggle2)}>
-                    ${icon ? html.node`
-                    <div class="icon">
-                        <div class="bleh-icon" style="--icon: var(--${icon})" />
-                    </div>
-                    ` : ""}
-                    ${text2 ? html.node`
-                    <div class="heading">
-                        <h5>${title}</h5>
-                        ${body ? html.node`<p>${body}</p>` : ""}
-                    </div>
-                    ` : ""}
-                    ${settings_store[id].extensions ? html.node`
-                    <div class="extensions">
-                        ${settings_store[id].extensions.map((extension) => () => {
-          let container = html.node`
-                                <div class="extension">
-                                    <div class="bleh-icon" />
-                                </div>
-                            `;
-          tippy(container, {
-            content: tl(trans.requires_extension_value).replace("{v}", tl(extension))
-          });
-          return container;
-        })}
-                    </div>
-                    ` : ""}
-                    ${setting_incompatible_block(settings_store[id].incompatible)}
-                    <div class="check">
-                        <div class="box" ref=${(el) => toggle2 = el} aria-checked=${value}>
-                            <div class="bleh-icon" />
-                        </div>
-                    </div>
-                </div>
-            `;
-      }
-    } catch (e) {
-      console.error(e);
-      return setting_fail(id, e);
-    }
-    return setting_fail(id);
-  }
-  function error_input(reason, input2, tooltip, submit) {
-    log(reason, "input", "log");
-    input2.setAttribute("data-has-error", "true");
-    tooltip.setContent(reason);
-    tooltip.enable();
-    tooltip.show();
-    submit.disabled = true;
-  }
-  function setting_incompatible_block(entries) {
-    if (!entries)
-      return "";
-    return "";
-    return html.node`
-        <div class="incompatible">
-            ${entries.map((incompatible) => () => {
-      let container = html.node`
-                    <div class="extension">
-                        <div class="bleh-icon" />
-                    </div>
-                `;
-      tippy(container, {
-        content: tl(trans.incompatible_with_value).replace("{v}", tl(settings_store[incompatible.setting].title))
-      });
-      return container;
-    })}
-        </div>
-    `;
-  }
-  function setting_fail(id, e = null) {
-    if (e.unavailable) {
-      return html.node`
-            <div class="setting">
-                <div class="alert alert-info no-margin">
-                    ${e.message}
-                </div>
-            </div>
-        `;
-    }
-    return html.node`
-        <div class="setting">
-            <div class="alert alert-error no-margin">
-                ${tl(trans.value_failed_to_load).replace("{v}", id)}
-                ${e ? html`<br>${e.message}` : ""}
-            </div>
-        </div>
-    `;
-  }
-  function update_toggle(id, toggle2) {
-    let value = settings[id];
-    toggle2.setAttribute("aria-checked", !value);
-    save_setting(id, !value);
-  }
-  function update_range(id, option, track, input2, value, marker, silent = false) {
-    let max = settings_store[id].max - settings_store[id].min;
-    input2.value = value;
-    track.style.setProperty("--percent", `${(value - settings_store[id].min) / max * 100}%`);
-    marker.textContent = `${value}${settings_store[id].suffix || ""}`;
-    option.setAttribute("data-modified", value != settings_store[id].default);
-    save_setting(id, value);
-  }
-  function reset_range(id, option, track, range, marker) {
-    update_range(id, option, track, range, settings_store[id].default, marker, true);
-    notify({
-      id: "reset_setting",
-      title: tl(trans.settings),
-      body: tl(trans.reset_item_to_default),
-      icon: "icon-16-settings"
-    });
-  }
-  function update_text(id, input2, submit, option, value, reset_btn, avatar3, silent = false) {
-    if (settings_store[id].wait) {
-      reset_btn.disabled = true;
-      input2.disabled = true;
-      submit.disabled = true;
-    }
-    input2.value = value;
-    option.setAttribute("data-modified", value != settings_store[id].default);
-    if (id == "profile_shortcut") {
-      save_profile_shortcut(input2, value, submit, reset_btn, avatar3);
-      return;
-    } else if (id == "hu_tao") {
-      if (value == "develop") {
-        dialog_rm2({ id: "hu_tao" });
-        change_settings_page("sku");
-        notify({
-          id: "unlocked",
-          title: tl(trans.development),
-          body: tl(trans.unlocked),
-          type: "success"
-        });
-      }
-    }
-    save_setting(id, value);
-  }
-  function reset_text(id, input2, submit, option, reset_btn, avatar3) {
-    update_text(id, input2, submit, option, settings_store[id].default, reset_btn, avatar3, true);
-    notify({
-      id: "reset_setting",
-      title: tl(trans.settings),
-      body: tl(trans.reset_item_to_default),
-      icon: "icon-16-settings"
-    });
-  }
-  function save_setting(id, value) {
-    settings[id] = value;
-    document.documentElement.setAttribute(`data-bleh--${id}`, value);
-    if (id == "theme") {
-      if (value == "light" || value == "ink" || value == "glass") {
-        settings.theme_type = "light";
-      } else {
-        settings.theme_type = "dark";
-      }
-      document.documentElement.setAttribute(`data-bleh--theme_type`, settings.theme_type);
-    }
-    if (settings_store[id].require_reload == true || settings_store[id].require_reload == "partial" && page.type != "bleh_settings")
-      request_reload();
-    if (settings_store[id].css)
-      document.body.style.setProperty(`--${settings_store[id].css}`, `${value}${settings_store[id].suffix || ""}`);
-    localStorage.setItem("bleh", JSON.stringify(settings));
-    log(`saved ${id} as ${value}`, "settings", "log", { settings, settings_id: settings[id] });
-  }
-
-  // src/components/profile_shortcut.js
-  unsafeWindow._open_profile_shortcut_window = function() {
-    open_profile_shortcut_window();
-  };
-  function open_profile_shortcut_window() {
-    let modal = dialog({
-      id: "profile_shortcut",
-      title: tl(trans.profile_shortcut.name),
-      body: html.node`
-        ${setting({ id: "profile_shortcut", text: false, focus: true })}
-        `
-    });
-    modal.querySelector("#text-profile_shortcut").focus();
-  }
-  unsafeWindow._other_listener = function(id) {
-    other_listener(id);
-  };
-  function other_listener(id) {
-    let input2;
-    let submit;
-    dialog({
-      id: "other_listener",
-      title: tl(trans.view_others_library),
-      body: html.node`
-        <div class="setting" data-type="text">
-            <div class="avatar-container">
-                <div class="avatar-inner avatar--bleh-missing">
-                    <img>
-                </div>
-            </div>
-            <div class="input-container content-form">
-                <input type="text" maxlength="40" id="text-profile" ref=${(el) => input2 = el} placeholder="${tl(trans.enter_username)}">
-                <button class="btn chibi icon primary submit" ref=${(el) => submit = el} onclick=${() => {
-        let name2 = input2.value;
-        let link = id;
-        dialog_rm2({
-          id: "other_listener"
-        });
-        window.location.href = `${root}user/${name2}/library/music/${link}`;
-      }}>${tl(trans.done)}</button>
-            </div>
-        </div>
-        `
-    });
-    input2.addEventListener("keydown", (event3) => {
-      if (event3.keyCode === 13) {
-        event3.preventDefault();
-        submit.click();
-      }
-    });
-    tippy(submit, {
-      content: tl(trans.save)
-    });
-    input2.focus();
-  }
-  function set_profile_as_shortcut() {
-    dialog({
-      id: "profile_shortcut",
-      title: tl(trans.profile_shortcut.name),
-      body: html.node`
-            <div class="big-modal-alert alert-danger">
-                ${{ html: tl(trans.profile_shortcut.notice).replace("{u}", `<a class="mention" href="${root}user/${settings.profile_shortcut}" target="_blank">@${settings.profile_shortcut}</a>`) }}
-            </div>
-            <div class="modal-footer">
-                <button class="see-more cancel" onclick=${() => dialog_rm2({ id: "profile_shortcut" })}>
-                    ${tl(trans.back)}
-                </button>
-                <div class="fill"></div>
-                <button class="btn primary save" onclick=${() => confirm_set_profile_as_shortcut()}>
-                    ${tl(trans.replace)}
-                </button>
-            </div>
-        `
-    });
-  }
-  function confirm_set_profile_as_shortcut() {
-    dialog_rm2({
-      id: "profile_shortcut"
-    });
-    let avatar_src = page.structure.container.querySelector(":scope > .redesigned-profile-header .avatar img")?.getAttribute("src");
-    localStorage.setItem("bleh_profile_shortcut_avi", avatar_src);
-    notify({
-      id: "profile_shortcut_saved",
-      title: tl(trans.profile_shortcut.name),
-      body: tl(trans.profile_shortcut.linked).replace("{u}", page.name),
-      icon: "icon-16-profile-shortcut"
-    });
-    page.state.profile_shortcut_button.setAttribute("data-is-shortcut", "true");
-    page.state.profile_shortcut_button.removeAttribute("onclick");
-    settings.profile_shortcut = page.name;
-    localStorage.setItem("bleh", JSON.stringify(settings));
-  }
-  function save_profile_shortcut(input2, value, submit, reset_btn, avatar3) {
-    if (value == "" || value == auth.name) {
-      localStorage.removeItem("bleh_profile_shortcut_avi");
-      avatar3.querySelector("img").setAttribute("src", "");
-      avatar3.querySelector("img").setAttribute("alt", "");
-      reset_btn.disabled = false;
-      input2.disabled = false;
-      submit.disabled = false;
-      save_setting("profile_shortcut", "");
-      return;
-    }
-    avatar3.classList.add("requesting");
-    fetch(`${root}user/${value}/tags`).then(function(response) {
-      console.log("returned", response, response.text);
-      return response.text();
-    }).then(function(dom) {
-      let doc = new DOMParser().parseFromString(dom, "text/html");
-      console.log("DOC", doc);
-      reset_btn.disabled = false;
-      input2.disabled = false;
-      submit.disabled = false;
-      avatar3.classList.remove("requesting");
-      try {
-        let avatar_src = doc.querySelector(".header-avatar-inner-wrap img").getAttribute("src");
-        localStorage.setItem("bleh_profile_shortcut_avi", avatar_src);
-        avatar3.querySelector("img").setAttribute("src", avatar_src);
-        avatar3.querySelector("img").setAttribute("alt", value);
-        notify({
-          id: "profile_shortcut_saved",
-          title: tl(trans.profile_shortcut.name),
-          body: tl(trans.profile_shortcut.linked).replace("{u}", value),
-          icon: "icon-16-profile-shortcut"
-        });
-        save_setting("profile_shortcut", value);
-      } catch (e) {
-        notify({
-          id: "profile_shortcut_error",
-          title: tl(trans.profile_shortcut.name),
-          body: tl(trans.failed_to_find_profile),
-          type: "error"
-        });
-        localStorage.removeItem("bleh_profile_shortcut_avi");
-        avatar3.querySelector("img").setAttribute("src", "");
-        avatar3.querySelector("img").setAttribute("alt", "");
-      }
-    });
-  }
-  unsafeWindow._save_profile_shortcut = function() {
-    let profile_name = document.getElementById("text-profile_shortcut").value;
-    let profile_img = document.getElementById("avatar-profile_shortcut");
-    if (profile_name == "" || profile_name == auth.name) {
-      localStorage.removeItem("bleh_profile_shortcut_avi");
-      document.getElementById("avatar_src-profile_shortcut").setAttribute("src", "");
-      settings.profile_shortcut = "";
-      localStorage.setItem("bleh", JSON.stringify(settings));
-      return;
-    }
-    profile_img.classList.add("requesting");
-    fetch(`${root}user/${profile_name}/tags`).then(function(response) {
-      console.log("returned", response, response.text);
-      return response.text();
-    }).then(function(html2) {
-      let doc = new DOMParser().parseFromString(html2, "text/html");
-      console.log("DOC", doc);
-      profile_img.classList.remove("requesting");
-      try {
-        let avatar_src = doc.querySelector(".header-avatar-inner-wrap img").getAttribute("src");
-        localStorage.setItem("bleh_profile_shortcut_avi", avatar_src);
-        document.getElementById("avatar_src-profile_shortcut").setAttribute("src", avatar_src);
-        notify({
-          id: "profile_shortcut_saved",
-          title: tl(trans.profile_shortcut.name),
-          body: tl(trans.profile_shortcut.linked).replace("{u}", profile_name),
-          icon: "icon-16-profile-shortcut"
-        });
-        settings.profile_shortcut = profile_name;
-        localStorage.setItem("bleh", JSON.stringify(settings));
-      } catch (e) {
-        notify({
-          id: "profile_shortcut_saved",
-          title: tl(trans.profile_shortcut.name),
-          body: tl(trans.failed_to_find_profile),
-          type: "error"
-        });
-        localStorage.removeItem("bleh_profile_shortcut_avi");
-        document.getElementById("avatar_src-profile_shortcut").setAttribute("src", "");
-      }
-    });
-  };
 
   // src/components/toggle.js
   function toggle({
@@ -13937,17 +13862,9 @@
       render(page.structure.main, html`
             <div class="bleh--panel">
                 <h4 class="top-header">${tl(trans.accessibility)}</h4>
-                <div class="setting" data-type="toggle" id="container-reduced_motion" onclick="_update_item('reduced_motion')">
-                    <button class="btn reset" onclick="_reset_item('reduced_motion')">${tl(trans.reset)}</button>
-                    <div class="heading">
-                        <h5>${trans_legacy.en.settings.accessibility.reduced_motion.name}</h5>
-                        <p>${trans_legacy.en.settings.accessibility.reduced_motion.bio}</p>
-                    </div>
-                    <div class="toggle-wrap">
-                        <button class="toggle" id="toggle-reduced_motion" aria-checked="false">
-                            <div class="dot"></div>
-                        </button>
-                    </div>
+                <div class="setting-group">
+                    ${setting({ id: "reduced_motion" })}
+                    ${setting({ id: "underline_links" })}
                 </div>
             </div>
             `);
@@ -17320,8 +17237,10 @@
       theme: "window",
       content: html.node`
             <div class="dialog-settings">
-                ${setting({ id: "format_guest_features" })}
-                ${setting({ id: "show_guest_features" })}
+                <div class="setting-group blend">
+                    ${setting({ id: "format_guest_features" })}
+                    ${setting({ id: "show_guest_features" })}
+                </div>
             </div>
         `,
       placement: "bottom",
@@ -17513,8 +17432,10 @@
           theme: "window",
           content: html.node`
                     <div class="dialog-settings">
-                        ${setting({ id: "format_guest_features" })}
-                        ${setting({ id: "show_guest_features" })}
+                        <div class="setting-group blend">
+                            ${setting({ id: "format_guest_features" })}
+                            ${setting({ id: "show_guest_features" })}
+                        </div>
                     </div>
                 `,
           placement: "bottom",
@@ -17636,8 +17557,10 @@
         theme: "window",
         content: html.node`
                 <div class="dialog-settings">
-                    ${setting({ id: "format_guest_features" })}
-                    ${setting({ id: "show_guest_features" })}
+                    <div class="setting-group blend">
+                        ${setting({ id: "format_guest_features" })}
+                        ${setting({ id: "show_guest_features" })}
+                    </div>
                 </div>
             `,
         placement: "bottom",
@@ -17781,41 +17704,9 @@
       render(page.structure.setup_content, html`
             <p>${tl(trans.accessibility_explain)}</p>
             <div class="settings">
-                <div class="setting" data-type="toggle" id="container-reduced_motion" onclick="_update_item('reduced_motion')">
-                    <button class="btn reset" onclick="_reset_item('reduced_motion')">${tl(trans.reset)}</button>
-                    <div class="heading">
-                        <h5>${trans_legacy.en.settings.accessibility.reduced_motion.name}</h5>
-                        <p>${trans_legacy.en.settings.accessibility.reduced_motion.bio}</p>
-                    </div>
-                    <div class="toggle-wrap">
-                        <button class="toggle" id="toggle-reduced_motion" aria-checked="false">
-                            <div class="dot"></div>
-                        </button>
-                    </div>
-                </div>
-                <div class="setting" data-type="toggle" id="container-underline_links" onclick="_update_item('underline_links')">
-                    <button class="btn reset" onclick="_reset_item('underline_links')">${tl(trans.reset)}</button>
-                    <div class="heading">
-                        <h5>${tl(trans.underline_links.name)}</h5>
-                        <p>${tl(trans.underline_links.body)}</p>
-                    </div>
-                    <div class="toggle-wrap">
-                        <button class="toggle" id="toggle-underline_links" aria-checked="false">
-                            <div class="dot"></div>
-                        </button>
-                    </div>
-                </div>
-                <div class="setting" data-type="toggle" id="container-toggle_icon" onclick="_update_item('toggle_icon')">
-                    <button class="btn reset" onclick="_reset_item('toggle_icon')">${tl(trans.reset)}</button>
-                    <div class="heading">
-                        <h5>${trans_legacy.en.settings.accessibility.toggle_icon.name}</h5>
-                        <p>${trans_legacy.en.settings.accessibility.toggle_icon.bio}</p>
-                    </div>
-                    <div class="toggle-wrap">
-                        <button class="toggle" id="toggle-toggle_icon" aria-checked="false">
-                            <div class="dot"></div>
-                        </button>
-                    </div>
+                <div class="setting-group">
+                    ${setting({ id: "reduced_motion" })}
+                    ${setting({ id: "underline_links" })}
                 </div>
             </div>
         `);
@@ -17897,28 +17788,10 @@
                         </div>
                     </section>
                 </div>
-                <div class="setting" data-type="toggle" id="container-corrections" onclick="_update_item('corrections')">
-                    <button class="btn reset" onclick="_reset_item('corrections')">${tl(trans.reset)}</button>
-                    <div class="heading">
-                        <h5>${tl(trans.correct_titles_with_lotus)}</h5>
-                    </div>
-                    <div class="toggle-wrap">
-                        <button class="toggle" id="toggle-corrections" aria-checked="true">
-                            <div class="dot"></div>
-                        </button>
-                    </div>
-                </div>
-                <div class="setting" data-type="toggle" id="container-format_guest_features" onclick="_update_item('format_guest_features')">
-                    <button class="btn reset" onclick="_reset_item('format_guest_features')">${tl(trans.reset)}</button>
-                    <div class="heading">
-                        <h5>${tl(trans.format_guest_features.name)}</h5>
-                        <p>${tl(trans.format_guest_features.body)}</p>
-                    </div>
-                    <div class="toggle-wrap">
-                        <button class="toggle" id="toggle-format_guest_features" aria-checked="true">
-                            <div class="dot"></div>
-                        </button>
-                    </div>
+                <div class="setting-group">
+                    ${setting({ id: "corrections" })}
+                    ${setting({ id: "format_guest_features" })}
+                    ${setting({ id: "stacked_chartlist_info" })}
                 </div>
             </div>
         `);
@@ -18049,16 +17922,18 @@
       theme: "window",
       content: html.node`
             <div class="dialog-settings">
-                <div class="setting" data-type="toggle" id="container-simulate_scroll" onclick="_update_item('simulate_scroll')">
-                    <button class="btn reset" onclick="_reset_item('simulate_scroll')">${tl(trans.reset)}</button>
-                    <div class="heading">
-                        <h5>${trans_legacy.en.charts.scroll.name}</h5>
-                        <p>${trans_legacy.en.charts.scroll.bio}</p>
-                    </div>
-                    <div class="toggle-wrap">
-                        <button class="toggle" id="toggle-simulate_scroll" aria-checked="true">
-                            <div class="dot"></div>
-                        </button>
+                <div class="setting-group blend">
+                    <div class="setting" data-type="toggle" id="container-simulate_scroll" onclick="_update_item('simulate_scroll')">
+                        <button class="btn reset" onclick="_reset_item('simulate_scroll')">${tl(trans.reset)}</button>
+                        <div class="heading">
+                            <h5>${trans_legacy.en.charts.scroll.name}</h5>
+                            <p>${trans_legacy.en.charts.scroll.bio}</p>
+                        </div>
+                        <div class="toggle-wrap">
+                            <button class="toggle" id="toggle-simulate_scroll" aria-checked="true">
+                                <div class="dot"></div>
+                            </button>
+                        </div>
                     </div>
                 </div>
             </div>
@@ -23858,6 +23733,14 @@
       other: {
         en: "Unknown"
       }
+    },
+    reduced_motion: {
+      name: {
+        en: "Reduce motion in animations"
+      },
+      body: {
+        en: "Decreases the intensity of animations, hover effects, and other moving parts"
+      }
     }
   };
   var trans_legacy = {
@@ -27570,7 +27453,9 @@
       body: trans.accessible_name_colours.body
     },
     reduced_motion: {
-      default: false
+      default: false,
+      title: trans.reduced_motion.name,
+      body: trans.reduced_motion.body
     },
     underline_links: {
       default: false,

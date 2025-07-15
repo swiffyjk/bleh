@@ -16,6 +16,7 @@ import {version} from "../main";
 import {register_background, update_page} from '../page';
 import {display_colour_presets, show_theme_change_in_settings, theme_bubbles} from "./bleh_config";
 import {html, render} from "lighterhtml";
+import {setting} from "../components/settings.js";
 
 export function bleh_setup() {
     page.structure.container = document.body.querySelector('.page-content');
@@ -133,41 +134,9 @@ unsafeWindow._setup_accessibility = function() {
         render(page.structure.setup_content, html`
             <p>${tl(trans.accessibility_explain)}</p>
             <div class="settings">
-                <div class="setting" data-type="toggle" id="container-reduced_motion" onclick="_update_item('reduced_motion')">
-                    <button class="btn reset" onclick="_reset_item('reduced_motion')">${tl(trans.reset)}</button>
-                    <div class="heading">
-                        <h5>${trans_legacy.en.settings.accessibility.reduced_motion.name}</h5>
-                        <p>${trans_legacy.en.settings.accessibility.reduced_motion.bio}</p>
-                    </div>
-                    <div class="toggle-wrap">
-                        <button class="toggle" id="toggle-reduced_motion" aria-checked="false">
-                            <div class="dot"></div>
-                        </button>
-                    </div>
-                </div>
-                <div class="setting" data-type="toggle" id="container-underline_links" onclick="_update_item('underline_links')">
-                    <button class="btn reset" onclick="_reset_item('underline_links')">${tl(trans.reset)}</button>
-                    <div class="heading">
-                        <h5>${tl(trans.underline_links.name)}</h5>
-                        <p>${tl(trans.underline_links.body)}</p>
-                    </div>
-                    <div class="toggle-wrap">
-                        <button class="toggle" id="toggle-underline_links" aria-checked="false">
-                            <div class="dot"></div>
-                        </button>
-                    </div>
-                </div>
-                <div class="setting" data-type="toggle" id="container-toggle_icon" onclick="_update_item('toggle_icon')">
-                    <button class="btn reset" onclick="_reset_item('toggle_icon')">${tl(trans.reset)}</button>
-                    <div class="heading">
-                        <h5>${trans_legacy.en.settings.accessibility.toggle_icon.name}</h5>
-                        <p>${trans_legacy.en.settings.accessibility.toggle_icon.bio}</p>
-                    </div>
-                    <div class="toggle-wrap">
-                        <button class="toggle" id="toggle-toggle_icon" aria-checked="false">
-                            <div class="dot"></div>
-                        </button>
-                    </div>
+                <div class="setting-group">
+                    ${setting({id: 'reduced_motion'})}
+                    ${setting({id: 'underline_links'})}
                 </div>
             </div>
         `);
@@ -253,28 +222,10 @@ unsafeWindow._setup_music = function() {
                         </div>
                     </section>
                 </div>
-                <div class="setting" data-type="toggle" id="container-corrections" onclick="_update_item('corrections')">
-                    <button class="btn reset" onclick="_reset_item('corrections')">${tl(trans.reset)}</button>
-                    <div class="heading">
-                        <h5>${tl(trans.correct_titles_with_lotus)}</h5>
-                    </div>
-                    <div class="toggle-wrap">
-                        <button class="toggle" id="toggle-corrections" aria-checked="true">
-                            <div class="dot"></div>
-                        </button>
-                    </div>
-                </div>
-                <div class="setting" data-type="toggle" id="container-format_guest_features" onclick="_update_item('format_guest_features')">
-                    <button class="btn reset" onclick="_reset_item('format_guest_features')">${tl(trans.reset)}</button>
-                    <div class="heading">
-                        <h5>${tl(trans.format_guest_features.name)}</h5>
-                        <p>${tl(trans.format_guest_features.body)}</p>
-                    </div>
-                    <div class="toggle-wrap">
-                        <button class="toggle" id="toggle-format_guest_features" aria-checked="true">
-                            <div class="dot"></div>
-                        </button>
-                    </div>
+                <div class="setting-group">
+                    ${setting({id: 'corrections'})}
+                    ${setting({id: 'format_guest_features'})}
+                    ${setting({id: 'stacked_chartlist_info'})}
                 </div>
             </div>
         `);

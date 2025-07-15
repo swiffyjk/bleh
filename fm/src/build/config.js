@@ -658,7 +658,9 @@ export let settings_store = {
         body: trans.accessible_name_colours.body
     },
     reduced_motion: {
-        default: false
+        default: false,
+        title: trans.reduced_motion.name,
+        body: trans.reduced_motion.body
     },
     underline_links: {
         default: false,
