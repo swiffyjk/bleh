@@ -154,11 +154,12 @@ export function collage({
         theme: 'window',
         content: html.node`
             <div class="dialog-settings">
-                ${setting({id: 'collage_title'})}
-                <div class="sep" />
-                ${setting({id: 'collage_grid_text'})}
-                ${setting({id: 'collage_grid_plays'})}
-                ${setting({id: 'collage_grid_gap'})}
+                <div class="setting-group blend">
+                    ${setting({id: 'collage_title'})}
+                    ${setting({id: 'collage_grid_gap'})}
+                    ${setting({id: 'collage_grid_text'})}
+                    ${setting({id: 'collage_grid_plays'})}
+                </div>
             </div>
         `,
         placement: 'bottom',

@@ -859,7 +859,8 @@ export let settings_store = {
     },
     collage_grid_gap: {
         default: true,
-        title: trans.collage_grid_gap
+        title: trans.collage_grid_gap.name,
+        body: trans.collage_grid_gap.body
     },
     hu_tao: {
         default: '',

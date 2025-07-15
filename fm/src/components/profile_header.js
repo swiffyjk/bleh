@@ -149,7 +149,7 @@ export function redesign_profile_header(is_own_profile, is_following) {
                     link: () => collage(),
                     action: 'button',
                     text: tl(trans.collage),
-                    new_release: true
+                    updated: true
                 });
             }
 
@@ -311,7 +311,7 @@ export function redesign_profile_header(is_own_profile, is_following) {
     }
 }
 
-export function create_profile_top_item(parent, {name, link, text='', type, new_release = false, action='', tooltip='', allow_html=false, tooltip_theme=''}) {
+export function create_profile_top_item(parent, {name, link, text='', type, new_release = false, updated = false, action='', tooltip='', allow_html=false, tooltip_theme=''}) {
     log(`creating top item of ${name}, ${link}, ${text}`, 'profile');
 
     let side_action;
@@ -324,6 +324,7 @@ export function create_profile_top_item(parent, {name, link, text='', type, new_
             >
                 ${tl(trans[type])}
                 ${(new_release) ? html.node`<div class="new-badge">${tl(trans.new)}</div>` : ''}
+                ${(updated) ? html.node`<div class="new-badge">${tl(trans.updated)}</div>` : ''}
             </button>
         `;
     } else {
@@ -335,6 +336,7 @@ export function create_profile_top_item(parent, {name, link, text='', type, new_
             >
                 ${tl(trans[type])}
                 ${(new_release) ? html.node`<div class="new-badge">${tl(trans.new)}</div>` : ''}
+                ${(updated) ? html.node`<div class="new-badge">${tl(trans.updated)}</div>` : ''}
             </a>
         `;
     }

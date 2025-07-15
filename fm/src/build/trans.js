@@ -2094,7 +2094,7 @@ export const trans = {
             pt: 'Cores baseadas em classificação para paradas de artistas'
         },
         body: {
-            en: 'Assigns a colour based on an artist\'s all-time ranking in your library',
+            en: 'Assigns a colour based on an artist’s all-time ranking in your library',
             de: 'Weist eine Farbe basierend auf dem Allzeit-Ranking eines Künstlers in deiner Bibliothek zu',
             pt: 'Define uma cor pela colocação do artista no ranking geral da sua biblioteca.'
         }
@@ -2130,7 +2130,7 @@ export const trans = {
             pt: 'Esconder tags baseadas em gênero'
         },
         body: {
-            en: 'These tags are often redundant and can never apply to the full range of what they\'re intending',
+            en: 'These tags are often redundant and can never apply to the full range of what they’re intending',
             de: 'Diese Tags sind oft überflüssig und können nie auf die gesamte Bandbreite dessen angewendet werden, was sie beabsichtigen',
             pt: 'Essas tags costumam ser redundantes e nunca conseguem representar totalmente tudo o que se propõem'
         }
@@ -2340,7 +2340,7 @@ export const trans = {
             pt: 'Permite o uso de quebras de linha, texto em negrito, itálico e imagens em todas as caixas de mensagens'
         },
         preview: {
-            en: 'hello! **hello!** *hello!*\n[here\'s a link](https://katelyn.moe) HAII @stellasaur',
+            en: 'hello! **hello!** *hello!*\n[here’s a link](https://katelyn.moe) HAII @stellasaur',
             pt: 'opa! **opa!** *opa!*\n[aqui está um link](https://katelyn.moe) OIEE @stellasaur'
         }
     },
@@ -2384,7 +2384,7 @@ export const trans = {
         pt: 'Escolha o tema que mais combina com você'
     },
     accessibility_explain: {
-        en: 'Before we continue, let\'s assess your accessibility settings.',
+        en: 'Before we continue, let’s assess your accessibility settings.',
         pt: 'Antes de continuarmos, vamos acessar suas configurações de acessibilidade'
     },
     colours_explain: {
@@ -2396,7 +2396,7 @@ export const trans = {
         pt: 'Nós oferecemos uma variedade de opções para ajudar você a gerenciar sua biblioteca musical'
     },
     setup_end: {
-        en: 'That\'s all for now, to configure your bleh installation in the future head to {a}the settings{/a} in your menu!',
+        en: 'That’s all for now, to configure your bleh installation in the future head to {a}the settings{/a} in your menu!',
         pt: 'Por enquanto isso é tudo, para configurar sua instalação do bleh futuramente, vá até {a}nas configurações{/a} no seu menu!'
     },
     seasonal_particles: {
@@ -2440,7 +2440,7 @@ export const trans = {
         en: 'uwu'
     },
     beware_notice: {
-        en: 'Beware! Only change these settings if you know what you\'re doing',
+        en: 'Beware! Only change these settings if you know what you’re doing',
         pt: 'Cuidado! Apenas mude estas configurações se você sabe o que você está fazendo'
     },
     flags: {
@@ -2551,7 +2551,7 @@ export const trans = {
             pt: 'Preferir nomes de cores acessíveis'
         },
         body: {
-            en: 'Replaces badge and link-coloured names with your theme\'s header colour',
+            en: 'Replaces badge and link-coloured names with your theme’s header colour',
             pt: 'Substitui os nomes coloridos dos emblemas e links pela cor do cabeçalho do seu tema'
         }
     },
@@ -2633,7 +2633,7 @@ export const trans = {
         pt: 'Colagem'
     },
     collage_redirect: {
-        en: 'Redirected to bleh\'s built-in Collage feature'
+        en: 'Redirected to bleh’s built-in Collage feature'
     },
     your_collage_is_ready: {
         en: 'Your collage is ready!',
@@ -2659,7 +2659,7 @@ export const trans = {
         en: 'This field is required'
     },
     please_dont_clone_yourself: {
-        en: 'Please don\'t clone yourself'
+        en: 'Please don’t clone yourself'
     },
     generate: {
         en: 'Generate',
@@ -2712,7 +2712,12 @@ export const trans = {
         en: 'Show plays on grid items'
     },
     collage_grid_gap: {
-        en: 'Leave a gap between grid items'
+        name: {
+            en: 'Leave a gap between grid items'
+        },
+        body: {
+            en: 'Includes outer and inner padding with round grid items'
+        }
     },
     organising_plays: {
         en: 'Organising plays'
@@ -2874,8 +2879,11 @@ export const trans = {
     updates: {
         en: 'Updates'
     },
+    updated: {
+        en: 'Updated'
+    },
     you_are_up_to_date: {
-        en: 'You\'re up to date'
+        en: 'You’re up to date'
     },
     update_available_to_install: {
         en: 'Update available to install'
@@ -2897,7 +2905,7 @@ export const trans = {
     },
     get_updates_fast: {
         name: {
-            en: 'Get the latest updates as soon as they\'re available'
+            en: 'Get the latest updates as soon as they’re available'
         },
         body: {
             en: 'Be among the first to get the latest fixes and improvements as they roll out'
@@ -3115,7 +3123,7 @@ export const trans_legacy = {
                 reason: 'Translated for a supported language'
             },
             cat: {
-                name: 'it\'s a kitty!!'
+                name: 'it’s a kitty!!'
             },
             sponsor: {
                 name: 'Sponsoring',

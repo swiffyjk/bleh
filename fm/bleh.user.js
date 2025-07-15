@@ -8403,11 +8403,12 @@
       theme: "window",
       content: html.node`
             <div class="dialog-settings">
-                ${setting({ id: "collage_title" })}
-                <div class="sep" />
-                ${setting({ id: "collage_grid_text" })}
-                ${setting({ id: "collage_grid_plays" })}
-                ${setting({ id: "collage_grid_gap" })}
+                <div class="setting-group blend">
+                    ${setting({ id: "collage_title" })}
+                    ${setting({ id: "collage_grid_gap" })}
+                    ${setting({ id: "collage_grid_text" })}
+                    ${setting({ id: "collage_grid_plays" })}
+                </div>
             </div>
         `,
       placement: "bottom",
@@ -8905,7 +8906,7 @@
             link: () => collage(),
             action: "button",
             text: tl(trans.collage),
-            new_release: true
+            updated: true
           });
         }
         if (settings.profile_shortcut != page.name) {
@@ -9052,7 +9053,7 @@
         page.structure.main.insertBefore(profile_header, page.structure.main.firstElementChild);
     }
   }
-  function create_profile_top_item(parent, { name: name2, link, text: text2 = "", type, new_release = false, action = "", tooltip = "", allow_html = false, tooltip_theme = "" }) {
+  function create_profile_top_item(parent, { name: name2, link, text: text2 = "", type, new_release = false, updated = false, action = "", tooltip = "", allow_html = false, tooltip_theme = "" }) {
     log(`creating top item of ${name2}, ${link}, ${text2}`, "profile");
     let side_action;
     if (action === "button") {
@@ -9064,6 +9065,7 @@
             >
                 ${tl(trans[type])}
                 ${new_release ? html.node`<div class="new-badge">${tl(trans.new)}</div>` : ""}
+                ${updated ? html.node`<div class="new-badge">${tl(trans.updated)}</div>` : ""}
             </button>
         `;
     } else {
@@ -9075,6 +9077,7 @@
             >
                 ${tl(trans[type])}
                 ${new_release ? html.node`<div class="new-badge">${tl(trans.new)}</div>` : ""}
+                ${updated ? html.node`<div class="new-badge">${tl(trans.updated)}</div>` : ""}
             </a>
         `;
     }
@@ -22988,7 +22991,7 @@
         pt: "Cores baseadas em classifica\xE7\xE3o para paradas de artistas"
       },
       body: {
-        en: "Assigns a colour based on an artist's all-time ranking in your library",
+        en: "Assigns a colour based on an artist\u2019s all-time ranking in your library",
         de: "Weist eine Farbe basierend auf dem Allzeit-Ranking eines K\xFCnstlers in deiner Bibliothek zu",
         pt: "Define uma cor pela coloca\xE7\xE3o do artista no ranking geral da sua biblioteca."
       }
@@ -23024,7 +23027,7 @@
         pt: "Esconder tags baseadas em g\xEAnero"
       },
       body: {
-        en: "These tags are often redundant and can never apply to the full range of what they're intending",
+        en: "These tags are often redundant and can never apply to the full range of what they\u2019re intending",
         de: "Diese Tags sind oft \xFCberfl\xFCssig und k\xF6nnen nie auf die gesamte Bandbreite dessen angewendet werden, was sie beabsichtigen",
         pt: "Essas tags costumam ser redundantes e nunca conseguem representar totalmente tudo o que se prop\xF5em"
       }
@@ -23234,7 +23237,7 @@
         pt: "Permite o uso de quebras de linha, texto em negrito, it\xE1lico e imagens em todas as caixas de mensagens"
       },
       preview: {
-        en: "hello! **hello!** *hello!*\n[here's a link](https://katelyn.moe) HAII @stellasaur",
+        en: "hello! **hello!** *hello!*\n[here\u2019s a link](https://katelyn.moe) HAII @stellasaur",
         pt: "opa! **opa!** *opa!*\n[aqui est\xE1 um link](https://katelyn.moe) OIEE @stellasaur"
       }
     },
@@ -23278,7 +23281,7 @@
       pt: "Escolha o tema que mais combina com voc\xEA"
     },
     accessibility_explain: {
-      en: "Before we continue, let's assess your accessibility settings.",
+      en: "Before we continue, let\u2019s assess your accessibility settings.",
       pt: "Antes de continuarmos, vamos acessar suas configura\xE7\xF5es de acessibilidade"
     },
     colours_explain: {
@@ -23290,7 +23293,7 @@
       pt: "N\xF3s oferecemos uma variedade de op\xE7\xF5es para ajudar voc\xEA a gerenciar sua biblioteca musical"
     },
     setup_end: {
-      en: "That's all for now, to configure your bleh installation in the future head to {a}the settings{/a} in your menu!",
+      en: "That\u2019s all for now, to configure your bleh installation in the future head to {a}the settings{/a} in your menu!",
       pt: "Por enquanto isso \xE9 tudo, para configurar sua instala\xE7\xE3o do bleh futuramente, v\xE1 at\xE9 {a}nas configura\xE7\xF5es{/a} no seu menu!"
     },
     seasonal_particles: {
@@ -23334,7 +23337,7 @@
       en: "uwu"
     },
     beware_notice: {
-      en: "Beware! Only change these settings if you know what you're doing",
+      en: "Beware! Only change these settings if you know what you\u2019re doing",
       pt: "Cuidado! Apenas mude estas configura\xE7\xF5es se voc\xEA sabe o que voc\xEA est\xE1 fazendo"
     },
     flags: {
@@ -23445,7 +23448,7 @@
         pt: "Preferir nomes de cores acess\xEDveis"
       },
       body: {
-        en: "Replaces badge and link-coloured names with your theme's header colour",
+        en: "Replaces badge and link-coloured names with your theme\u2019s header colour",
         pt: "Substitui os nomes coloridos dos emblemas e links pela cor do cabe\xE7alho do seu tema"
       }
     },
@@ -23527,7 +23530,7 @@
       pt: "Colagem"
     },
     collage_redirect: {
-      en: "Redirected to bleh's built-in Collage feature"
+      en: "Redirected to bleh\u2019s built-in Collage feature"
     },
     your_collage_is_ready: {
       en: "Your collage is ready!",
@@ -23553,7 +23556,7 @@
       en: "This field is required"
     },
     please_dont_clone_yourself: {
-      en: "Please don't clone yourself"
+      en: "Please don\u2019t clone yourself"
     },
     generate: {
       en: "Generate",
@@ -23606,7 +23609,12 @@
       en: "Show plays on grid items"
     },
     collage_grid_gap: {
-      en: "Leave a gap between grid items"
+      name: {
+        en: "Leave a gap between grid items"
+      },
+      body: {
+        en: "Includes outer and inner padding with round grid items"
+      }
     },
     organising_plays: {
       en: "Organising plays"
@@ -23768,8 +23776,11 @@
     updates: {
       en: "Updates"
     },
+    updated: {
+      en: "Updated"
+    },
     you_are_up_to_date: {
-      en: "You're up to date"
+      en: "You\u2019re up to date"
     },
     update_available_to_install: {
       en: "Update available to install"
@@ -23791,7 +23802,7 @@
     },
     get_updates_fast: {
       name: {
-        en: "Get the latest updates as soon as they're available"
+        en: "Get the latest updates as soon as they\u2019re available"
       },
       body: {
         en: "Be among the first to get the latest fixes and improvements as they roll out"
@@ -24008,7 +24019,7 @@
           reason: "Translated for a supported language"
         },
         cat: {
-          name: "it's a kitty!!"
+          name: "it\u2019s a kitty!!"
         },
         sponsor: {
           name: "Sponsoring",
@@ -27761,7 +27772,8 @@
     },
     collage_grid_gap: {
       default: true,
-      title: trans.collage_grid_gap
+      title: trans.collage_grid_gap.name,
+      body: trans.collage_grid_gap.body
     },
     hu_tao: {
       default: "",
