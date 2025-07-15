@@ -20143,7 +20143,7 @@
             name: name2,
             title: text2,
             disabled,
-            data: "on"
+            data: input_el.value
           })}
                 `);
         });

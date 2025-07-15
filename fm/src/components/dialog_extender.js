@@ -107,7 +107,7 @@ export function dialog_extender() {
                         name: name,
                         title: text,
                         disabled: disabled,
-                        data: 'on'
+                        data: input_el.value
                     })}
                 `);
             });
