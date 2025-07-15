@@ -9,8 +9,7 @@ import {sponsor_list} from "../build/sponsor";
 import {tl, trans} from "../build/trans";
 
 export function load_badges(user, solo = false) {
-    if (sponsor_list == null)
-        return;
+    if (!sponsor_list || !sponsor_list.badges) return;
 
     if (!sponsor_list.badges.hasOwnProperty(user))
         return;

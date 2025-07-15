@@ -752,7 +752,8 @@ export let settings_store = {
     },
     seasonal: {
         default: true,
-        title: trans.enable_seasons
+        title: trans.enable_seasons.name,
+        body: trans.enable_seasons.body
     },
     seasonal_particles: {
         default: 'all',

@@ -18,7 +18,7 @@ import {correct_artist, correct_item_by_artist, name_includes} from "../componen
 import {markdown} from "../components/markdown"
 import {notify} from "../components/notify"
 import {redesign_profile_header} from "../components/profile_header"
-import {custom_select, select, select_prepare, update_inbuilt_select} from "../components/select"
+import {select, select_prepare} from "../components/select"
 import {checkup_page_structure} from "../components/structure"
 import {refresh_all, update_inbuilt_item} from "../config"
 import {register_background, update_page} from "../page"
@@ -411,7 +411,9 @@ export function bleh_profiles() {
             theme: 'window',
             content: html.node`
                 <div class="dialog-settings">
-                    ${setting({id: 'bio_markdown'})}
+                    <div class="setting-group blend">
+                        ${setting({id: 'bio_markdown'})}
+                    </div>
                 </div>
             `,
             placement: 'bottom',
@@ -1136,126 +1138,76 @@ function profile_recents() {
         </button>
     `;
 
+    let count = form.querySelector('[name="chart_length_recent_tracks"]');
+    original_chart_settings = {
+        recent_artwork: form.querySelector('#id_show_recent_tracks_artwork').checked,
+        recent_realtime: form.querySelector('#id_auto_refresh_recent_tracks').checked
+    }
+
     form.classList = '';
+    render(form, html`
+        <input type="hidden" name="csrfmiddlewaretoken" value="${page.token}">
+        <div class="setting-group blend">
+            <div class="setting" data-type="select">
+                <div class="heading">
+                    <h5>${tl(trans.amount_to_display)}</h5>
+                </div>
+                ${select(select_prepare(count), count.value, 'chart_length_recent_tracks')}
+            </div>
+            <div class="setting" data-type="toggle" id="container-recent_artwork" onclick="_update_inbuilt_item('recent_artwork')">
+                <div class="heading">
+                    <h5>${tl(trans.recent_artwork)}</h5>
+                </div>
+                <div class="toggle-wrap">
+                    <input class="companion-checkbox" type="checkbox" name="show_recent_tracks_artwork" id="inbuilt-companion-checkbox-recent_artwork">
+                    <span class="btn toggle" id="toggle-recent_artwork" aria-checked="false">
+                        <div class="dot"></div>
+                    </span>
+                </div>
+            </div>
+            <div class="setting" data-type="toggle" id="container-recent_realtime" onclick="_update_inbuilt_item('recent_realtime')">
+                <div class="heading">
+                    <h5>${tl(trans.recent_realtime.name)}</h5>
+                    <p>${tl(trans.recent_realtime.body)}</p>
+                </div>
+                <div class="toggle-wrap">
+                    <input class="companion-checkbox" type="checkbox" name="auto_refresh_recent_tracks" id="inbuilt-companion-checkbox-recent_realtime">
+                    <span class="btn toggle" id="toggle-recent_realtime" aria-checked="false" type="button">
+                        <div class="dot"></div>
+                    </span>
+                </div>
+            </div>
+            ${setting({id: 'format_guest_features'})}
+            ${setting({id: 'stacked_chartlist_info'})}
+            ${setting({id: 'colourful_tracks'})}
+            <div class="settings-footer">
+                <button type="submit" class="btn-primary save">
+                    ${tl(trans.save)}
+                </button>
+                <a class="btn icon settings not-a-view-button" href="${root}bleh">
+                    ${tl(trans.settings)}
+                </a>
+            </div>
+        </div>
+    `);
+
+    for (let setting in original_chart_settings) {
+        update_inbuilt_item(setting, original_chart_settings[setting], false, form);
+    }
+
+    refresh_all(form);
 
     tooltip = tippy(settings_btn, {
         theme: 'window',
-        content: form.outerHTML,
+        content: form,
         allowHTML: true,
         placement: 'bottom',
         interactive: true,
         interactiveBorder: 10,
-        trigger: 'click',
-
-        onShow(instance) {
-            let form = instance.popper.querySelector('form');
-
-            form.innerHTML = (`
-                <input type="hidden" name="csrfmiddlewaretoken" value="${page.token}">
-                <div class="setting" data-type="select">
-                    <div class="heading">
-                        <h5>${tl(trans.amount_to_display)}</h5>
-                    </div>
-                    <div class="select-wrap custom-selector" id="id_chart_length_recent_tracks_select">
-                        ${original_chart_settings.count}
-                    </div>
-                </div>
-                <div class="setting" data-type="toggle" id="container-recent_artwork" onclick="_update_inbuilt_item('recent_artwork')">
-                    <button class="btn reset" onclick="_reset_inbuilt_item('recent_artwork')">Reset to default</button>
-                    <div class="heading">
-                        <h5>${tl(trans.recent_artwork)}</h5>
-                    </div>
-                    <div class="toggle-wrap">
-                        <input class="companion-checkbox" type="checkbox" name="show_recent_tracks_artwork" id="inbuilt-companion-checkbox-recent_artwork">
-                        <span class="btn toggle" id="toggle-recent_artwork" aria-checked="false">
-                            <div class="dot"></div>
-                        </span>
-                    </div>
-                </div>
-                <div class="setting" data-type="toggle" id="container-recent_realtime" onclick="_update_inbuilt_item('recent_realtime')">
-                    <button class="btn reset" onclick="_reset_inbuilt_item('recent_realtime')">Reset to default</button>
-                    <div class="heading">
-                        <h5>${tl(trans.recent_realtime.name)}</h5>
-                        <p>${tl(trans.recent_realtime.body)}</p>
-                    </div>
-                    <div class="toggle-wrap">
-                        <input class="companion-checkbox" type="checkbox" name="auto_refresh_recent_tracks" id="inbuilt-companion-checkbox-recent_realtime">
-                        <span class="btn toggle" id="toggle-recent_realtime" aria-checked="false" type="button">
-                            <div class="dot"></div>
-                        </span>
-                    </div>
-                </div>
-                <div class="sep"></div>
-                <div class="setting" data-type="toggle" id="container-format_guest_features" onclick="_update_item('format_guest_features')">
-                    <button class="btn reset" onclick="_reset_item('format_guest_features')">${tl(trans.reset)}</button>
-                    <div class="heading">
-                        <h5>${tl(trans.format_guest_features.name)}</h5>
-                        <p>${tl(trans.format_guest_features.body)}</p>
-                    </div>
-                    <div class="toggle-wrap">
-                        <button class="toggle" id="toggle-format_guest_features" aria-checked="true" type="button">
-                            <div class="dot"></div>
-                        </button>
-                    </div>
-                </div>
-                <div class="setting" data-type="toggle" id="container-stacked_chartlist_info" onclick="_update_item('stacked_chartlist_info')">
-                    <button class="btn reset" onclick="_reset_item('stacked_chartlist_info')">${tl(trans.reset)}</button>
-                    <div class="heading">
-                        <h5>${tl(trans.track_column_view)}</h5>
-                    </div>
-                    <div class="toggle-wrap">
-                        <button class="toggle" id="toggle-stacked_chartlist_info" aria-checked="true" type="button">
-                            <div class="dot"></div>
-                        </button>
-                    </div>
-                </div>
-                <div class="setting" data-type="toggle" id="container-colourful_tracks" onclick="_update_item('colourful_tracks')">
-                    <button class="btn reset" onclick="_reset_item('colourful_tracks')">${tl(trans.reset)}</button>
-                    <div class="heading">
-                        <h5>${tl(trans.colourful_tracks.name)}</h5>
-                        <p>${tl(trans.colourful_tracks.body)}</p>
-                    </div>
-                    <div class="toggle-wrap">
-                        <button class="toggle" id="toggle-colourful_tracks" aria-checked="true">
-                            <div class="dot"></div>
-                        </button>
-                    </div>
-                </div>
-                <div class="settings-footer">
-                    <button type="submit" class="btn-primary save">
-                        ${tl(trans.save)}
-                    </button>
-                    <a class="btn icon settings not-a-view-button" href="${root}bleh">
-                        ${tl(trans.settings)}
-                    </a>
-                </div>
-            `);
-
-            custom_select(form.querySelector('#id_chart_length_recent_tracks'), form.querySelector('#id_chart_length_recent_tracks_select'));
-
-            let selects = form.querySelectorAll('select');
-            selects.forEach((select) => {
-                select.setAttribute('onchange', `_update_inbuilt_select('${select.getAttribute('id')}', this.value)`);
-                update_inbuilt_select(select.getAttribute('id'), select.value);
-            });
-
-            for (let setting in original_chart_settings) {
-                update_inbuilt_item(setting, original_chart_settings[setting], false, form);
-            }
-
-            refresh_all(instance.popper);
-        }
+        trigger: 'click'
     });
 
     view_buttons.appendChild(settings_btn);
-
-    original_chart_settings = {
-        recent_artwork: form.querySelector('#id_show_recent_tracks_artwork').checked,
-        count: form.querySelector('#id_chart_length_recent_tracks').outerHTML,
-        recent_realtime: form.querySelector('#id_auto_refresh_recent_tracks').checked
-    }
-
-    form.innerHTML = '';
 }
 
 function profile_artists() {
@@ -1314,34 +1266,36 @@ function profile_artists() {
     form.classList = '';
     render(form, html`
         <input type="hidden" name="csrfmiddlewaretoken" value="${page.token}">
-        <div class="setting" data-type="select">
-            <div class="heading">
-                <h5>${tl(trans.default_timeframe)}</h5>
+        <div class="setting-group blend">
+            <div class="setting" data-type="select">
+                <div class="heading">
+                    <h5>${tl(trans.default_timeframe)}</h5>
+                </div>
+                ${select(select_prepare(timeframe), timeframe.value, 'chart_range_top_artists')}
             </div>
-            ${select(select_prepare(timeframe), timeframe.value, 'chart_range_top_artists')}
-        </div>
-        <div class="setting" data-type="select">
-            <div class="heading">
-                <h5>${tl(trans.chart_style)}</h5>
+            <div class="setting" data-type="select">
+                <div class="heading">
+                    <h5>${tl(trans.chart_style)}</h5>
+                </div>
+                ${select(select_prepare(style), style.value, 'chart_style_top_artists')}
             </div>
-            ${select(select_prepare(style), style.value, 'chart_style_top_artists')}
-        </div>
-        <div class="setting hide-if-artist-list" data-type="select">
-            <div class="heading">
-                <h5>${tl(trans.chart_size)}</h5>
+            <div class="setting hide-if-artist-list" data-type="select">
+                <div class="heading">
+                    <h5>${tl(trans.chart_size)}</h5>
+                </div>
+                ${select(select_prepare(grid_length), grid_length.value, 'artists_image_grid_length')}
             </div>
-            ${select(select_prepare(grid_length), grid_length.value, 'artists_image_grid_length')}
-        </div>
-        <div class="setting hide-if-artist-grid" data-type="select">
-            <div class="heading">
-                <h5>${tl(trans.chart_size)}</h5>
+            <div class="setting hide-if-artist-grid" data-type="select">
+                <div class="heading">
+                    <h5>${tl(trans.chart_size)}</h5>
+                </div>
+                ${select(select_prepare(chartlist_length), chartlist_length.value, 'artists_chartlist_length')}
             </div>
-            ${select(select_prepare(chartlist_length), chartlist_length.value, 'artists_chartlist_length')}
-        </div>
-        <div class="settings-footer">
-            <button type="submit" class="btn-primary save">
-                ${tl(trans.save)}
-            </button>
+            <div class="settings-footer">
+                <button type="submit" class="btn-primary save">
+                    ${tl(trans.save)}
+                </button>
+            </div>
         </div>
     `);
 
@@ -1411,34 +1365,36 @@ function profile_albums() {
     form.classList = '';
     render(form, html`
         <input type="hidden" name="csrfmiddlewaretoken" value="${page.token}">
-        <div class="setting" data-type="select">
-            <div class="heading">
-                <h5>${tl(trans.default_timeframe)}</h5>
+        <div class="setting-group blend">
+            <div class="setting" data-type="select">
+                <div class="heading">
+                    <h5>${tl(trans.default_timeframe)}</h5>
+                </div>
+                ${select(select_prepare(timeframe), timeframe.value, 'chart_range_top_albums')}
             </div>
-            ${select(select_prepare(timeframe), timeframe.value, 'chart_range_top_albums')}
-        </div>
-        <div class="setting" data-type="select">
-            <div class="heading">
-                <h5>${tl(trans.chart_style)}</h5>
+            <div class="setting" data-type="select">
+                <div class="heading">
+                    <h5>${tl(trans.chart_style)}</h5>
+                </div>
+                ${select(select_prepare(style), style.value, 'chart_style_top_albums')}
             </div>
-            ${select(select_prepare(style), style.value, 'chart_style_top_albums')}
-        </div>
-        <div class="setting hide-if-album-list" data-type="select">
-            <div class="heading">
-                <h5>${tl(trans.chart_size)}</h5>
+            <div class="setting hide-if-album-list" data-type="select">
+                <div class="heading">
+                    <h5>${tl(trans.chart_size)}</h5>
+                </div>
+                ${select(select_prepare(grid_length), grid_length.value, 'albums_image_grid_length')}
             </div>
-            ${select(select_prepare(grid_length), grid_length.value, 'albums_image_grid_length')}
-        </div>
-        <div class="setting hide-if-album-grid" data-type="select">
-            <div class="heading">
-                <h5>${tl(trans.chart_size)}</h5>
+            <div class="setting hide-if-album-grid" data-type="select">
+                <div class="heading">
+                    <h5>${tl(trans.chart_size)}</h5>
+                </div>
+                ${select(select_prepare(chartlist_length), chartlist_length.value, 'albums_chartlist_length')}
             </div>
-            ${select(select_prepare(chartlist_length), chartlist_length.value, 'albums_chartlist_length')}
-        </div>
-        <div class="settings-footer">
-            <button type="submit" class="btn-primary save">
-                ${tl(trans.save)}
-            </button>
+            <div class="settings-footer">
+                <button type="submit" class="btn-primary save">
+                    ${tl(trans.save)}
+                </button>
+            </div>
         </div>
     `);
 
@@ -1506,28 +1462,30 @@ function profile_tracks() {
     form.classList = '';
     render(form, html`
         <input type="hidden" name="csrfmiddlewaretoken" value="${page.token}">
-        <div class="setting" data-type="select">
-            <div class="heading">
-                <h5>${tl(trans.default_timeframe)}</h5>
+        <div class="setting-group blend">
+            <div class="setting" data-type="select">
+                <div class="heading">
+                    <h5>${tl(trans.default_timeframe)}</h5>
+                </div>
+                ${select(select_prepare(timeframe), timeframe.value, 'chart_range_top_tracks')}
             </div>
-            ${select(select_prepare(timeframe), timeframe.value, 'chart_range_top_tracks')}
-        </div>
-        <div class="setting hide-if-track-grid" data-type="select">
-            <div class="heading">
-                <h5>${tl(trans.chart_size)}</h5>
+            <div class="setting hide-if-track-grid" data-type="select">
+                <div class="heading">
+                    <h5>${tl(trans.chart_size)}</h5>
+                </div>
+                ${select(select_prepare(chartlist_length), chartlist_length.value, 'chart_length_top_tracks')}
             </div>
-            ${select(select_prepare(chartlist_length), chartlist_length.value, 'chart_length_top_tracks')}
-        </div>
-        <div class="sep" />
-        ${setting({id: 'format_guest_features'})}
-        ${setting({id: 'show_guest_features'})}
-        <div class="more-link">
-            <a href="${root}bleh?tab=music">${tl(trans.settings)}</a>
-        </div>
-        <div class="settings-footer">
-            <button type="submit" class="btn-primary save">
-                ${tl(trans.save)}
-            </button>
+            <div class="sep" />
+            ${setting({id: 'format_guest_features'})}
+            ${setting({id: 'show_guest_features'})}
+            <div class="more-link">
+                <a href="${root}bleh?tab=music">${tl(trans.settings)}</a>
+            </div>
+            <div class="settings-footer">
+                <button type="submit" class="btn-primary save">
+                    ${tl(trans.save)}
+                </button>
+            </div>
         </div>
     `);
 

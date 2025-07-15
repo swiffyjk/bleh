@@ -15,7 +15,7 @@ export function toggle({
     let state;
 
     let elem = html.node`
-        <div class="setting" data-type="${type}" onclick=${() => {
+        <div class="setting standalone" data-type=${type} onclick=${() => {
             if (disabled) return;
 
             let current = checkbox.checked;

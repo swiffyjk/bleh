@@ -603,7 +603,12 @@ export const trans = {
         pt: 'Linha de tempo sazonal'
     },
     enable_seasons: {
-        en: 'Automatically adapt to seasonal events'
+        name: {
+            en: 'Automatically adapt to seasonal events'
+        },
+        body: {
+            en: 'Adapts the default colour, iconset, and shows particles depending on the season'
+        }
     },
     seasonal_offset: {
         en: 'Seasonal events are ran in your timezone, which we calculated as {offset}',
@@ -1162,9 +1167,9 @@ export const trans = {
         pt: 'Apoie o desenvolvimento futuro'
     },
     why_sponsor: {
-        en: 'Receive an accompanying badge on your profile and a big thank you from katelyn for supporting <3',
+        en: 'Receive a profile badge and a big thank you from katelyn <3',
         de: 'Erhalte ein Abzeichen auf deinem Profil und ein großes Dankeschön von katelyn für deine Unterstützung <3',
-        pt: 'Receba um emblema no seu perfil e um obrigadão da kate por apoiar <3'
+        pt: 'Receba um emblema no seu perfil e um obrigadão da katelyn por apoiar <3'
     },
     you_are_a_sponsor: {
         en: 'You are a sponsor, thank you! :3',
@@ -1172,9 +1177,9 @@ export const trans = {
         pt: 'Você é um apoiador, muito obrigado! :3'
     },
     sponsor_get_badge: {
-        en: 'A monthly sponsorship grants you a custom badge of your choosing.',
+        en: 'A monthly sponsorship grants you a custom badge of your choosing',
         de: 'Mit einem monatlichen Sponsoring erhältst du ein individuelles Abzeichen deiner Wahl',
-        pt: 'Um apoio mensal lhe dá um emblema personalizado de sua escolha.'
+        pt: 'Um apoio mensal lhe dá um emblema personalizado de sua escolha'
     },
     sponsor_no_badge: {
         en: 'A custom badge is only available with a monthly sponsorship.',
@@ -1185,6 +1190,15 @@ export const trans = {
         en: 'Manage sponsorship',
         de: 'Sponsoring verwalten',
         pt: 'Gerenciar apoio'
+    },
+    view: {
+        en: 'View'
+    },
+    profile_and_badges: {
+        en: 'Profile, {c} badges'
+    },
+    current_version: {
+        en: 'Current version'
     },
     labs: {
         en: 'Labs'
@@ -2254,10 +2268,10 @@ export const trans = {
         pt: 'Conectar'
     },
     connected: {
-        en: 'Connected!'
+        en: 'Connected'
     },
-    reconnect: {
-        en: 'Connect again'
+    not_connected: {
+        en: 'Not connected'
     },
     api: {
         name: {
@@ -2266,6 +2280,9 @@ export const trans = {
         body: {
             en: 'Link your account to allow API access such as scrobbling'
         }
+    },
+    api_status: {
+        en: 'API status'
     },
     app_would_like_to_connect: {
         // app name is above

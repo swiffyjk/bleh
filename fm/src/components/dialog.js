@@ -37,8 +37,8 @@ export function load_dialogs() {
  */
 export function dialog({
     id = '',
-    title = null,
-    subtitle = null,
+    title,
+    subtitle,
     body = html.node``,
     dismiss = true,
     type = '',
@@ -93,7 +93,7 @@ export function dialog({
         />
     `;
 
-    if (title != null) {
+    if (title) {
         modal.setAttribute('aria-labelledby', 'modal_title');
         modal.appendChild(html.node`
             <div class="bleh-modal-title" id="modal_title">

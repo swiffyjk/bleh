@@ -2902,64 +2902,6 @@
     ]
   };
 
-  // src/api.js
-  function test_api_key() {
-    let xhr = api(`user.getTopTags&user=${auth.name}&limit=1`);
-    xhr.onload = function() {
-      let data2 = JSON.parse(this.response);
-      console.info(data2, this.response);
-      if (!data2.error) {
-        notify({
-          title: trans_legacy.en.settings.profiles.api.name,
-          body: trans_legacy.en.settings.profiles.api.confirmed,
-          icon: "icon-16-api"
-        });
-        return;
-      } else {
-        if (data2.error == 8 || data2.error == 11 || data2.error == 16) {
-          notify({
-            title: trans_legacy.en.settings.profiles.api.name,
-            body: trans_legacy.en.settings.profiles.api.inaccessible,
-            icon: "icon-16-api",
-            persist: true
-          });
-          return;
-        } else if (data2.error == 10 || data2.error == 26) {
-          notify({
-            title: trans_legacy.en.settings.profiles.api.name,
-            body: trans_legacy.en.settings.profiles.api.invalid,
-            icon: "icon-16-api",
-            persist: true
-          });
-          return;
-        } else if (data2.error == 29) {
-          notify({
-            title: trans_legacy.en.settings.profiles.api.name,
-            body: trans_legacy.en.settings.profiles.api.rate_limit,
-            icon: "icon-16-api",
-            persist: true
-          });
-          return;
-        } else {
-          notify({
-            title: trans_legacy.en.settings.profiles.api.name,
-            body: data2.error,
-            icon: "icon-16-api",
-            persist: true
-          });
-          return;
-        }
-      }
-    };
-    xhr.send();
-  }
-  function api(endpoint) {
-    let xhr = new XMLHttpRequest();
-    let url = `https://ws.audioscrobbler.com/2.0/?method=${endpoint}&api_key=${settings.api_key}&format=json`;
-    xhr.open("GET", url, true);
-    return xhr;
-  }
-
   // src/build/seasonal.js
   var seasonal_timer = {
     state: void 0
@@ -3045,8 +2987,7 @@
 
   // src/components/badge.js
   function load_badges(user, solo = false) {
-    if (sponsor_list == null)
-      return;
+    if (!sponsor_list || !sponsor_list.badges) return;
     if (!sponsor_list.badges.hasOwnProperty(user))
       return;
     let badges = [];
@@ -3093,8 +3034,8 @@
   }
   function dialog({
     id = "",
-    title = null,
-    subtitle = null,
+    title,
+    subtitle,
     body = html.node``,
     dismiss = true,
     type = "",
@@ -3144,7 +3085,7 @@
         data-modal-type=${type}
         />
     `;
-    if (title != null) {
+    if (title) {
       modal.setAttribute("aria-labelledby", "modal_title");
       modal.appendChild(html.node`
             <div class="bleh-modal-title" id="modal_title">
@@ -7213,7 +7154,7 @@
     let checkbox;
     let state;
     let elem = html.node`
-        <div class="setting" data-type="${type}" onclick=${() => {
+        <div class="setting standalone" data-type=${type} onclick=${() => {
       if (disabled) return;
       let current = checkbox.checked;
       if (func) func(!current);
@@ -10917,7 +10858,9 @@
         theme: "window",
         content: html.node`
                 <div class="dialog-settings">
-                    ${setting({ id: "bio_markdown" })}
+                    <div class="setting-group blend">
+                        ${setting({ id: "bio_markdown" })}
+                    </div>
                 </div>
             `,
         placement: "bottom",
@@ -11467,116 +11410,71 @@
             ${tl(trans.settings)}
         </button>
     `;
+    let count = form.querySelector('[name="chart_length_recent_tracks"]');
+    original_chart_settings = {
+      recent_artwork: form.querySelector("#id_show_recent_tracks_artwork").checked,
+      recent_realtime: form.querySelector("#id_auto_refresh_recent_tracks").checked
+    };
     form.classList = "";
+    render(form, html`
+        <input type="hidden" name="csrfmiddlewaretoken" value="${page.token}">
+        <div class="setting-group blend">
+            <div class="setting" data-type="select">
+                <div class="heading">
+                    <h5>${tl(trans.amount_to_display)}</h5>
+                </div>
+                ${select(select_prepare(count), count.value, "chart_length_recent_tracks")}
+            </div>
+            <div class="setting" data-type="toggle" id="container-recent_artwork" onclick="_update_inbuilt_item('recent_artwork')">
+                <div class="heading">
+                    <h5>${tl(trans.recent_artwork)}</h5>
+                </div>
+                <div class="toggle-wrap">
+                    <input class="companion-checkbox" type="checkbox" name="show_recent_tracks_artwork" id="inbuilt-companion-checkbox-recent_artwork">
+                    <span class="btn toggle" id="toggle-recent_artwork" aria-checked="false">
+                        <div class="dot"></div>
+                    </span>
+                </div>
+            </div>
+            <div class="setting" data-type="toggle" id="container-recent_realtime" onclick="_update_inbuilt_item('recent_realtime')">
+                <div class="heading">
+                    <h5>${tl(trans.recent_realtime.name)}</h5>
+                    <p>${tl(trans.recent_realtime.body)}</p>
+                </div>
+                <div class="toggle-wrap">
+                    <input class="companion-checkbox" type="checkbox" name="auto_refresh_recent_tracks" id="inbuilt-companion-checkbox-recent_realtime">
+                    <span class="btn toggle" id="toggle-recent_realtime" aria-checked="false" type="button">
+                        <div class="dot"></div>
+                    </span>
+                </div>
+            </div>
+            ${setting({ id: "format_guest_features" })}
+            ${setting({ id: "stacked_chartlist_info" })}
+            ${setting({ id: "colourful_tracks" })}
+            <div class="settings-footer">
+                <button type="submit" class="btn-primary save">
+                    ${tl(trans.save)}
+                </button>
+                <a class="btn icon settings not-a-view-button" href="${root}bleh">
+                    ${tl(trans.settings)}
+                </a>
+            </div>
+        </div>
+    `);
+    for (let setting2 in original_chart_settings) {
+      update_inbuilt_item(setting2, original_chart_settings[setting2], false, form);
+    }
+    refresh_all(form);
     tooltip = tippy(settings_btn, {
       theme: "window",
-      content: form.outerHTML,
+      content: form,
       allowHTML: true,
       placement: "bottom",
       interactive: true,
       interactiveBorder: 10,
-      trigger: "click",
-      onShow(instance) {
-        let form2 = instance.popper.querySelector("form");
-        form2.innerHTML = `
-                <input type="hidden" name="csrfmiddlewaretoken" value="${page.token}">
-                <div class="setting" data-type="select">
-                    <div class="heading">
-                        <h5>${tl(trans.amount_to_display)}</h5>
-                    </div>
-                    <div class="select-wrap custom-selector" id="id_chart_length_recent_tracks_select">
-                        ${original_chart_settings.count}
-                    </div>
-                </div>
-                <div class="setting" data-type="toggle" id="container-recent_artwork" onclick="_update_inbuilt_item('recent_artwork')">
-                    <button class="btn reset" onclick="_reset_inbuilt_item('recent_artwork')">Reset to default</button>
-                    <div class="heading">
-                        <h5>${tl(trans.recent_artwork)}</h5>
-                    </div>
-                    <div class="toggle-wrap">
-                        <input class="companion-checkbox" type="checkbox" name="show_recent_tracks_artwork" id="inbuilt-companion-checkbox-recent_artwork">
-                        <span class="btn toggle" id="toggle-recent_artwork" aria-checked="false">
-                            <div class="dot"></div>
-                        </span>
-                    </div>
-                </div>
-                <div class="setting" data-type="toggle" id="container-recent_realtime" onclick="_update_inbuilt_item('recent_realtime')">
-                    <button class="btn reset" onclick="_reset_inbuilt_item('recent_realtime')">Reset to default</button>
-                    <div class="heading">
-                        <h5>${tl(trans.recent_realtime.name)}</h5>
-                        <p>${tl(trans.recent_realtime.body)}</p>
-                    </div>
-                    <div class="toggle-wrap">
-                        <input class="companion-checkbox" type="checkbox" name="auto_refresh_recent_tracks" id="inbuilt-companion-checkbox-recent_realtime">
-                        <span class="btn toggle" id="toggle-recent_realtime" aria-checked="false" type="button">
-                            <div class="dot"></div>
-                        </span>
-                    </div>
-                </div>
-                <div class="sep"></div>
-                <div class="setting" data-type="toggle" id="container-format_guest_features" onclick="_update_item('format_guest_features')">
-                    <button class="btn reset" onclick="_reset_item('format_guest_features')">${tl(trans.reset)}</button>
-                    <div class="heading">
-                        <h5>${tl(trans.format_guest_features.name)}</h5>
-                        <p>${tl(trans.format_guest_features.body)}</p>
-                    </div>
-                    <div class="toggle-wrap">
-                        <button class="toggle" id="toggle-format_guest_features" aria-checked="true" type="button">
-                            <div class="dot"></div>
-                        </button>
-                    </div>
-                </div>
-                <div class="setting" data-type="toggle" id="container-stacked_chartlist_info" onclick="_update_item('stacked_chartlist_info')">
-                    <button class="btn reset" onclick="_reset_item('stacked_chartlist_info')">${tl(trans.reset)}</button>
-                    <div class="heading">
-                        <h5>${tl(trans.track_column_view)}</h5>
-                    </div>
-                    <div class="toggle-wrap">
-                        <button class="toggle" id="toggle-stacked_chartlist_info" aria-checked="true" type="button">
-                            <div class="dot"></div>
-                        </button>
-                    </div>
-                </div>
-                <div class="setting" data-type="toggle" id="container-colourful_tracks" onclick="_update_item('colourful_tracks')">
-                    <button class="btn reset" onclick="_reset_item('colourful_tracks')">${tl(trans.reset)}</button>
-                    <div class="heading">
-                        <h5>${tl(trans.colourful_tracks.name)}</h5>
-                        <p>${tl(trans.colourful_tracks.body)}</p>
-                    </div>
-                    <div class="toggle-wrap">
-                        <button class="toggle" id="toggle-colourful_tracks" aria-checked="true">
-                            <div class="dot"></div>
-                        </button>
-                    </div>
-                </div>
-                <div class="settings-footer">
-                    <button type="submit" class="btn-primary save">
-                        ${tl(trans.save)}
-                    </button>
-                    <a class="btn icon settings not-a-view-button" href="${root}bleh">
-                        ${tl(trans.settings)}
-                    </a>
-                </div>
-            `;
-        custom_select(form2.querySelector("#id_chart_length_recent_tracks"), form2.querySelector("#id_chart_length_recent_tracks_select"));
-        let selects = form2.querySelectorAll("select");
-        selects.forEach((select2) => {
-          select2.setAttribute("onchange", `_update_inbuilt_select('${select2.getAttribute("id")}', this.value)`);
-          update_inbuilt_select(select2.getAttribute("id"), select2.value);
-        });
-        for (let setting2 in original_chart_settings) {
-          update_inbuilt_item(setting2, original_chart_settings[setting2], false, form2);
-        }
-        refresh_all(instance.popper);
-      }
+      trigger: "click"
     });
     view_buttons.appendChild(settings_btn);
-    original_chart_settings = {
-      recent_artwork: form.querySelector("#id_show_recent_tracks_artwork").checked,
-      count: form.querySelector("#id_chart_length_recent_tracks").outerHTML,
-      recent_realtime: form.querySelector("#id_auto_refresh_recent_tracks").checked
-    };
-    form.innerHTML = "";
   }
   function profile_artists() {
     let panel = page.structure.main.querySelector("#top-artists");
@@ -11624,34 +11522,36 @@
     form.classList = "";
     render(form, html`
         <input type="hidden" name="csrfmiddlewaretoken" value="${page.token}">
-        <div class="setting" data-type="select">
-            <div class="heading">
-                <h5>${tl(trans.default_timeframe)}</h5>
+        <div class="setting-group blend">
+            <div class="setting" data-type="select">
+                <div class="heading">
+                    <h5>${tl(trans.default_timeframe)}</h5>
+                </div>
+                ${select(select_prepare(timeframe), timeframe.value, "chart_range_top_artists")}
             </div>
-            ${select(select_prepare(timeframe), timeframe.value, "chart_range_top_artists")}
-        </div>
-        <div class="setting" data-type="select">
-            <div class="heading">
-                <h5>${tl(trans.chart_style)}</h5>
+            <div class="setting" data-type="select">
+                <div class="heading">
+                    <h5>${tl(trans.chart_style)}</h5>
+                </div>
+                ${select(select_prepare(style), style.value, "chart_style_top_artists")}
             </div>
-            ${select(select_prepare(style), style.value, "chart_style_top_artists")}
-        </div>
-        <div class="setting hide-if-artist-list" data-type="select">
-            <div class="heading">
-                <h5>${tl(trans.chart_size)}</h5>
+            <div class="setting hide-if-artist-list" data-type="select">
+                <div class="heading">
+                    <h5>${tl(trans.chart_size)}</h5>
+                </div>
+                ${select(select_prepare(grid_length), grid_length.value, "artists_image_grid_length")}
             </div>
-            ${select(select_prepare(grid_length), grid_length.value, "artists_image_grid_length")}
-        </div>
-        <div class="setting hide-if-artist-grid" data-type="select">
-            <div class="heading">
-                <h5>${tl(trans.chart_size)}</h5>
+            <div class="setting hide-if-artist-grid" data-type="select">
+                <div class="heading">
+                    <h5>${tl(trans.chart_size)}</h5>
+                </div>
+                ${select(select_prepare(chartlist_length), chartlist_length.value, "artists_chartlist_length")}
             </div>
-            ${select(select_prepare(chartlist_length), chartlist_length.value, "artists_chartlist_length")}
-        </div>
-        <div class="settings-footer">
-            <button type="submit" class="btn-primary save">
-                ${tl(trans.save)}
-            </button>
+            <div class="settings-footer">
+                <button type="submit" class="btn-primary save">
+                    ${tl(trans.save)}
+                </button>
+            </div>
         </div>
     `);
     tippy(settings_btn, {
@@ -11709,34 +11609,36 @@
     form.classList = "";
     render(form, html`
         <input type="hidden" name="csrfmiddlewaretoken" value="${page.token}">
-        <div class="setting" data-type="select">
-            <div class="heading">
-                <h5>${tl(trans.default_timeframe)}</h5>
+        <div class="setting-group blend">
+            <div class="setting" data-type="select">
+                <div class="heading">
+                    <h5>${tl(trans.default_timeframe)}</h5>
+                </div>
+                ${select(select_prepare(timeframe), timeframe.value, "chart_range_top_albums")}
             </div>
-            ${select(select_prepare(timeframe), timeframe.value, "chart_range_top_albums")}
-        </div>
-        <div class="setting" data-type="select">
-            <div class="heading">
-                <h5>${tl(trans.chart_style)}</h5>
+            <div class="setting" data-type="select">
+                <div class="heading">
+                    <h5>${tl(trans.chart_style)}</h5>
+                </div>
+                ${select(select_prepare(style), style.value, "chart_style_top_albums")}
             </div>
-            ${select(select_prepare(style), style.value, "chart_style_top_albums")}
-        </div>
-        <div class="setting hide-if-album-list" data-type="select">
-            <div class="heading">
-                <h5>${tl(trans.chart_size)}</h5>
+            <div class="setting hide-if-album-list" data-type="select">
+                <div class="heading">
+                    <h5>${tl(trans.chart_size)}</h5>
+                </div>
+                ${select(select_prepare(grid_length), grid_length.value, "albums_image_grid_length")}
             </div>
-            ${select(select_prepare(grid_length), grid_length.value, "albums_image_grid_length")}
-        </div>
-        <div class="setting hide-if-album-grid" data-type="select">
-            <div class="heading">
-                <h5>${tl(trans.chart_size)}</h5>
+            <div class="setting hide-if-album-grid" data-type="select">
+                <div class="heading">
+                    <h5>${tl(trans.chart_size)}</h5>
+                </div>
+                ${select(select_prepare(chartlist_length), chartlist_length.value, "albums_chartlist_length")}
             </div>
-            ${select(select_prepare(chartlist_length), chartlist_length.value, "albums_chartlist_length")}
-        </div>
-        <div class="settings-footer">
-            <button type="submit" class="btn-primary save">
-                ${tl(trans.save)}
-            </button>
+            <div class="settings-footer">
+                <button type="submit" class="btn-primary save">
+                    ${tl(trans.save)}
+                </button>
+            </div>
         </div>
     `);
     tippy(settings_btn, {
@@ -11792,28 +11694,30 @@
     form.classList = "";
     render(form, html`
         <input type="hidden" name="csrfmiddlewaretoken" value="${page.token}">
-        <div class="setting" data-type="select">
-            <div class="heading">
-                <h5>${tl(trans.default_timeframe)}</h5>
+        <div class="setting-group blend">
+            <div class="setting" data-type="select">
+                <div class="heading">
+                    <h5>${tl(trans.default_timeframe)}</h5>
+                </div>
+                ${select(select_prepare(timeframe), timeframe.value, "chart_range_top_tracks")}
             </div>
-            ${select(select_prepare(timeframe), timeframe.value, "chart_range_top_tracks")}
-        </div>
-        <div class="setting hide-if-track-grid" data-type="select">
-            <div class="heading">
-                <h5>${tl(trans.chart_size)}</h5>
+            <div class="setting hide-if-track-grid" data-type="select">
+                <div class="heading">
+                    <h5>${tl(trans.chart_size)}</h5>
+                </div>
+                ${select(select_prepare(chartlist_length), chartlist_length.value, "chart_length_top_tracks")}
             </div>
-            ${select(select_prepare(chartlist_length), chartlist_length.value, "chart_length_top_tracks")}
-        </div>
-        <div class="sep" />
-        ${setting({ id: "format_guest_features" })}
-        ${setting({ id: "show_guest_features" })}
-        <div class="more-link">
-            <a href="${root}bleh?tab=music">${tl(trans.settings)}</a>
-        </div>
-        <div class="settings-footer">
-            <button type="submit" class="btn-primary save">
-                ${tl(trans.save)}
-            </button>
+            <div class="sep" />
+            ${setting({ id: "format_guest_features" })}
+            ${setting({ id: "show_guest_features" })}
+            <div class="more-link">
+                <a href="${root}bleh?tab=music">${tl(trans.settings)}</a>
+            </div>
+            <div class="settings-footer">
+                <button type="submit" class="btn-primary save">
+                    ${tl(trans.save)}
+                </button>
+            </div>
         </div>
     `);
     tippy(settings_btn, {
@@ -13313,6 +13217,7 @@
                     <h4>${moment(stored_season.now).format("MMMM Do YYYY")}</h4>
                 </div>
                 <div class="setting-group">
+                    ${setting({ id: "seasonal" })}
                     <div class="setting" data-type="info">
                         <div class="heading">
                             <h5>${tl(trans.current_season)}</h5>
@@ -13361,9 +13266,6 @@
                     ` : ""}
                 </div>
                 <h4>${tl(trans.settings)}</h4>
-                <div class="setting-group">
-                    ${setting({ id: "seasonal" })}
-                </div>
                 <div class="setting-group">
                     <div class="setting" data-type="options">
                         <div class="heading">
@@ -13500,6 +13402,10 @@
       ]);
       const auth_key = localStorage.getItem("bleh_auth");
       const auth_valid = localStorage.getItem("bleh_auth_valid");
+      let badge_count = 0;
+      let badges = load_badges(auth.name);
+      if (badges) badge_count = badges.length;
+      if (auth.pro) badge_count++;
       render(page.structure.main, html`
             <div class="bleh--panel sponsor-badge-panel" data-sponsoring="${auth.sponsor}">
                 <div class="profile-container">
@@ -13522,76 +13428,120 @@
                         </div>
                     </div>
                 </div>
-                ${ff("api") ? html.node`
-                <h4>${trans_legacy.en.settings.profiles.api.name}</h4>
-                <div class="alert alert-info">${trans_legacy.en.settings.profiles.api.bio}</div>
-                <div class="setting" data-type="text" id="container-api_key">
-                    <button class="btn reset" onclick="_reset_item('api_key')">${tl(trans.reset)}</button>
-                    <div class="heading content-form">
-                        <div class="input-container">
-                            <input type="password" maxlength="120" id="text-api_key" value="${settings.api_key}" placeholder="${trans_legacy.en.settings.profiles.api.placeholder}">
-                            <button class="btn primary save" onclick=${() => {
-        let key = document.getElementById("text-api_key").value;
-        settings.api_key = key;
-        localStorage.setItem("bleh", JSON.stringify(settings));
-        notify({
-          title: trans_legacy.en.settings.profiles.api.name,
-          body: trans_legacy.en.settings.profiles.api.saved,
-          icon: "icon-16-api"
+                <div class="setting-group">
+                    <div class="setting" data-type="info">
+                        <div class="avatar-container">
+                            <div class="avatar-inner">
+                                <img src=${auth.avatar} alt=${auth.name} />
+                            </div>
+                        </div>
+                        <div class="heading">
+                            <h5>${auth.name}</h5>
+                        </div>
+                        <div class="info">
+                            <p>${tl(trans.profile_and_badges).replace("{c}", badge_count.toString())}</p>
+                            ${badge_count > 0 ? html.node`
+                            <button class="see-more" onclick=${() => {
+        dialog({
+          id: "badges",
+          title: auth.name,
+          body: html.node`
+                                        <div class="generic-table-list badge-list">
+                                            ${badges.map((badge) => html.node`
+                                                <div class="generic-table-list-entry badge-list-entry">
+                                                    <div class="icon-container colourful user-status--bleh-${badge.type} user-status--bleh-user-${auth.name}">
+                                                        <div class="bleh-icon" style="--icon: var(--mask)" />
+                                                    </div>
+                                                    <div class="name colourful user-status--bleh-${badge.type} user-status--bleh-user-${auth.name}">
+                                                        ${badge.name}
+                                                    </div>
+                                                    <div class="text">
+                                                        ${badge.reason}
+                                                    </div>
+                                                </div>
+                                            `)}
+                                        </div>
+                                    `
         });
-        test_api_key();
-      }}>${tl(trans.save)}</button>
-                            <a class="btn-add" href="${root}api/account/create" target="_blank">${trans_legacy.en.settings.create}</a>
+      }}>${tl(trans.view)}</button>
+                            ` : ""}
+                        </div>
+                    </div>
+                    ${auth.sponsor ? html.node`
+                    <div class="setting" data-type="action">
+                        <div class="heading">
+                            <h5>${tl(trans.you_are_a_sponsor)}</h5>
+                            <p>${tl(trans.sponsor_get_badge)}</p>
+                        </div>
+                        <div class="toggle-wrap">
+                            <button class="btn primary icon sponsor" data-type="sponsor" onclick="_sponsor_manage()">
+                                ${tl(trans.manage_sponsor)}
+                            </button>
+                        </div>
+                    </div>
+                    ` : html.node`
+                    <div class="setting" data-type="action">
+                        <div class="heading">
+                            <h5>${tl(trans.news_sponsor_cta)}</h5>
+                            <p>${tl(trans.api.body)}</p>
+                        </div>
+                        <div class="toggle-wrap">
+                            <button class="btn primary icon sponsor" data-type="sponsor" onclick="_sponsor()">
+                                ${tl(trans.sponsor)}
+                            </button>
+                        </div>
+                    </div>
+                    `}
+                    <div class="setting" data-type="info">
+                        <div class="heading">
+                            <h5>${tl(trans.current_version)}</h5>
+                        </div>
+                        <div class="info">
+                            <button class="see-more update-check sponsor-related" onclick="_sponsor_check()">
+                                ${tl(trans.update_check)}
+                            </button>
+                            <p>${sponsor_list.latest}</p>
                         </div>
                     </div>
                 </div>
-                ` : ""}
-                <div class="sep"></div>
-                <div class="setting" data-type="toggle">
-                    <div class="heading">
-                        <h5>${html.node([
-        tl(trans.sponsor_data).replace("{v}", `<span class="version-link sponsor-related">${sponsor_list.latest}</span>`)
-      ])}</h5>
+                <div class="setting-group">
+                    <div class="setting" data-type="action">
+                        <div class="heading">
+                            <h5>${tl(trans.api.name)}</h5>
+                            <p>${tl(trans.api.body)}</p>
+                        </div>
+                        <div class="toggle-wrap">
+                            <a class="btn primary icon connect" href="${root}api/auth?api_key=${api_key}&cb=${root}bleh/api">
+                                ${tl(trans.connect)}
+                            </a>
+                        </div>
                     </div>
-                    <div class="toggle-wrap">
-                        <button class="see-more update-check sponsor-related" onclick="_sponsor_check()">${tl(trans.update_check)}</button>
-                    </div>
-                </div>
-                ${auth_key && auth_valid === "true" ? html.node`
-                <div class="setting" data-type="action">
-                    <div class="heading">
-                        <h5>${tl(trans.api.name)}</h5>
-                        <p>${tl(trans.api.body)}</p>
-                    </div>
-                    <div class="alert alert-info">${tl(trans.connected)}</div>
-                    <div class="toggle-wrap">
-                        <a class="btn icon connect" href="${root}api/auth?api_key=${api_key}&cb=${root}bleh/api">
-                            ${tl(trans.reconnect)}
-                        </a>
-                    </div>
-                </div>
-                ` : html.node`
-                <div class="setting" data-type="action">
-                    <div class="heading">
-                        <h5>${tl(trans.api.name)}</h5>
-                        <p>${tl(trans.api.body)}</p>
-                    </div>
-                    <div class="toggle-wrap">
-                        <a class="btn primary icon connect" href="${root}api/auth?api_key=${api_key}&cb=${root}bleh/api">
-                            ${tl(trans.connect)}
-                        </a>
+                    <div class="setting" data-type="info">
+                        <div class="heading">
+                            <h5>${tl(trans.api_status)}</h5>
+                        </div>
+                        <div class="info">
+                            ${auth_key && auth_valid === "true" ? html.node`
+                            <p>${tl(trans.connected)}</p>
+                            ` : html.node`
+                            <p>${tl(trans.not_connected)}</p>
+                            `}
+                        </div>
                     </div>
                 </div>
-                `}
-                ${setting({ id: "profile_shortcut" })}
-                ${setting({ id: "avatar_radius" })}
-                ${setting({ id: "bio_markdown" })}
+                <div class="setting-group">
+                    ${setting({ id: "profile_shortcut" })}
+                    ${setting({ id: "avatar_radius" })}
+                    ${setting({ id: "bio_markdown" })}
+                </div>
             </div>
             <div class="bleh--panel">
                 <h4>${tl(trans.notes)}</h4>
-                <div class="profile-notes">
-                    <div class="loading-data-container">
-                        <div class="loading-data-text failed">${tl(trans.no_notes)}</div>
+                <div class="setting-group">
+                    <div class="profile-notes">
+                        <div class="loading-data-container">
+                            <div class="loading-data-text failed">${tl(trans.no_notes)}</div>
+                        </div>
                     </div>
                 </div>
             </div>
@@ -13599,17 +13549,16 @@
                 <h4>${tl(trans.activity)}</h4>
                 <p>${tl(trans.what_are_activities)}</p>
                 <div class="inner-preview pad">
-                    <div class="preview-card activity-preview">
-
-                    </div>
+                    <div class="preview-card activity-preview" />
                 </div>
-                ${setting({ id: "activities" })}
-                <div class="setting" data-type="toggle">
-                    <div class="heading">
-                        <h5>${tl(trans.clear_history)}</h5>
-                    </div>
-                    <div class="toggle-wrap">
-                        <button class="see-more" onclick=${() => {
+                <div class="setting-group">
+                    ${setting({ id: "activities" })}
+                    <div class="setting" data-type="action">
+                        <div class="heading">
+                            <h5>${tl(trans.clear_history)}</h5>
+                        </div>
+                        <div class="toggle-wrap">
+                            <button class="see-more" onclick=${() => {
         localStorage.removeItem("bwaa_recent_activity");
         notify({
           id: "cleared_history",
@@ -13617,18 +13566,20 @@
           type: "success"
         });
       }}>
-                            ${tl(trans.clear)}
-                        </button>
+                                ${tl(trans.clear)}
+                            </button>
+                        </div>
                     </div>
                 </div>
-                <div class="sep"></div>
-                ${setting({ id: "activity_shout" })}
-                ${setting({ id: "activity_image" })}
-                ${setting({ id: "activity_obsess" })}
-                ${setting({ id: "activity_love" })}
-                ${setting({ id: "activity_bookmark" })}
-                ${setting({ id: "activity_wiki" })}
-                ${setting({ id: "activity_install" })}
+                <div class="setting-group">
+                    ${setting({ id: "activity_shout" })}
+                    ${setting({ id: "activity_image" })}
+                    ${setting({ id: "activity_obsess" })}
+                    ${setting({ id: "activity_love" })}
+                    ${setting({ id: "activity_bookmark" })}
+                    ${setting({ id: "activity_wiki" })}
+                    ${setting({ id: "activity_install" })}
+                </div>
             </div>
             `);
     } else if (page_id == "accessibility") {
@@ -21546,7 +21497,12 @@
       pt: "Linha de tempo sazonal"
     },
     enable_seasons: {
-      en: "Automatically adapt to seasonal events"
+      name: {
+        en: "Automatically adapt to seasonal events"
+      },
+      body: {
+        en: "Adapts the default colour, iconset, and shows particles depending on the season"
+      }
     },
     seasonal_offset: {
       en: "Seasonal events are ran in your timezone, which we calculated as {offset}",
@@ -22105,9 +22061,9 @@
       pt: "Apoie o desenvolvimento futuro"
     },
     why_sponsor: {
-      en: "Receive an accompanying badge on your profile and a big thank you from katelyn for supporting <3",
+      en: "Receive a profile badge and a big thank you from katelyn <3",
       de: "Erhalte ein Abzeichen auf deinem Profil und ein gro\xDFes Dankesch\xF6n von katelyn f\xFCr deine Unterst\xFCtzung <3",
-      pt: "Receba um emblema no seu perfil e um obrigad\xE3o da kate por apoiar <3"
+      pt: "Receba um emblema no seu perfil e um obrigad\xE3o da katelyn por apoiar <3"
     },
     you_are_a_sponsor: {
       en: "You are a sponsor, thank you! :3",
@@ -22115,9 +22071,9 @@
       pt: "Voc\xEA \xE9 um apoiador, muito obrigado! :3"
     },
     sponsor_get_badge: {
-      en: "A monthly sponsorship grants you a custom badge of your choosing.",
+      en: "A monthly sponsorship grants you a custom badge of your choosing",
       de: "Mit einem monatlichen Sponsoring erh\xE4ltst du ein individuelles Abzeichen deiner Wahl",
-      pt: "Um apoio mensal lhe d\xE1 um emblema personalizado de sua escolha."
+      pt: "Um apoio mensal lhe d\xE1 um emblema personalizado de sua escolha"
     },
     sponsor_no_badge: {
       en: "A custom badge is only available with a monthly sponsorship.",
@@ -22128,6 +22084,15 @@
       en: "Manage sponsorship",
       de: "Sponsoring verwalten",
       pt: "Gerenciar apoio"
+    },
+    view: {
+      en: "View"
+    },
+    profile_and_badges: {
+      en: "Profile, {c} badges"
+    },
+    current_version: {
+      en: "Current version"
     },
     labs: {
       en: "Labs"
@@ -23197,10 +23162,10 @@
       pt: "Conectar"
     },
     connected: {
-      en: "Connected!"
+      en: "Connected"
     },
-    reconnect: {
-      en: "Connect again"
+    not_connected: {
+      en: "Not connected"
     },
     api: {
       name: {
@@ -23209,6 +23174,9 @@
       body: {
         en: "Link your account to allow API access such as scrobbling"
       }
+    },
+    api_status: {
+      en: "API status"
     },
     app_would_like_to_connect: {
       // app name is above
@@ -27686,7 +27654,8 @@
     },
     seasonal: {
       default: true,
-      title: trans.enable_seasons
+      title: trans.enable_seasons.name,
+      body: trans.enable_seasons.body
     },
     seasonal_particles: {
       default: "all",

@@ -4,7 +4,6 @@
 // Licensed under GPLv3
 //
 
-import {test_api_key} from "../api";
 import {settings, settings_base} from "../build/config";
 import {album_track_corrections, artist_corrections} from "../build/music";
 import {api_key, auth, page, root, theme_preview} from "../build/page";
@@ -457,6 +456,7 @@ export function render_setting_page(page_id) {
                     <h4>${moment(stored_season.now).format('MMMM Do YYYY')}</h4>
                 </div>
                 <div class="setting-group">
+                    ${setting({id: 'seasonal'})}
                     <div class="setting" data-type="info">
                         <div class="heading">
                             <h5>${tl(trans.current_season)}</h5>
@@ -505,9 +505,6 @@ export function render_setting_page(page_id) {
                     ` : ''}
                 </div>
                 <h4>${tl(trans.settings)}</h4>
-                <div class="setting-group">
-                    ${setting({id: 'seasonal'})}
-                </div>
                 <div class="setting-group">
                     <div class="setting" data-type="options">
                         <div class="heading">
@@ -650,6 +647,12 @@ export function render_setting_page(page_id) {
         const auth_key = localStorage.getItem('bleh_auth');
         const auth_valid = localStorage.getItem('bleh_auth_valid');
 
+        let badge_count = 0;
+
+        let badges = load_badges(auth.name);
+        if (badges) badge_count = badges.length;
+        if (auth.pro) badge_count++;
+
         render(page.structure.main, html`
             <div class="bleh--panel sponsor-badge-panel" data-sponsoring="${auth.sponsor}">
                 <div class="profile-container">
@@ -672,81 +675,120 @@ export function render_setting_page(page_id) {
                         </div>
                     </div>
                 </div>
-                ${(ff('api')) ? html.node`
-                <h4>${trans_legacy.en.settings.profiles.api.name}</h4>
-                <div class="alert alert-info">${trans_legacy.en.settings.profiles.api.bio}</div>
-                <div class="setting" data-type="text" id="container-api_key">
-                    <button class="btn reset" onclick="_reset_item('api_key')">${tl(trans.reset)}</button>
-                    <div class="heading content-form">
-                        <div class="input-container">
-                            <input type="password" maxlength="120" id="text-api_key" value="${settings.api_key}" placeholder="${trans_legacy.en.settings.profiles.api.placeholder}">
-                            <button class="btn primary save" onclick=${() => {
-                                let key = document.getElementById('text-api_key').value;
-
-                                // save to settings
-                                settings.api_key = key;
-                                localStorage.setItem('bleh', JSON.stringify(settings));
-
-                                notify({
-                                    title: trans_legacy.en.settings.profiles.api.name,
-                                    body: trans_legacy.en.settings.profiles.api.saved,
-                                    icon: 'icon-16-api'
+                <div class="setting-group">
+                    <div class="setting" data-type="info">
+                        <div class="avatar-container">
+                            <div class="avatar-inner">
+                                <img src=${auth.avatar} alt=${auth.name} />
+                            </div>
+                        </div>
+                        <div class="heading">
+                            <h5>${auth.name}</h5>
+                        </div>
+                        <div class="info">
+                            <p>${tl(trans.profile_and_badges).replace('{c}', badge_count.toString())}</p>
+                            ${badge_count > 0 ? html.node`
+                            <button class="see-more" onclick=${() => {
+                                dialog({
+                                    id: 'badges',
+                                    title: auth.name,
+                                    body: html.node`
+                                        <div class="generic-table-list badge-list">
+                                            ${badges.map((badge) => html.node`
+                                                <div class="generic-table-list-entry badge-list-entry">
+                                                    <div class="icon-container colourful user-status--bleh-${badge.type} user-status--bleh-user-${auth.name}">
+                                                        <div class="bleh-icon" style="--icon: var(--mask)" />
+                                                    </div>
+                                                    <div class="name colourful user-status--bleh-${badge.type} user-status--bleh-user-${auth.name}">
+                                                        ${badge.name}
+                                                    </div>
+                                                    <div class="text">
+                                                        ${badge.reason}
+                                                    </div>
+                                                </div>
+                                            `)}
+                                        </div>
+                                    `
                                 });
-
-                                test_api_key();
-                            }}>${tl(trans.save)}</button>
-                            <a class="btn-add" href="${root}api/account/create" target="_blank">${trans_legacy.en.settings.create}</a>
+                            }}>${tl(trans.view)}</button>
+                            ` : ''}
+                        </div>
+                    </div>
+                    ${auth.sponsor ? html.node`
+                    <div class="setting" data-type="action">
+                        <div class="heading">
+                            <h5>${tl(trans.you_are_a_sponsor)}</h5>
+                            <p>${tl(trans.sponsor_get_badge)}</p>
+                        </div>
+                        <div class="toggle-wrap">
+                            <button class="btn primary icon sponsor" data-type="sponsor" onclick="_sponsor_manage()">
+                                ${tl(trans.manage_sponsor)}
+                            </button>
+                        </div>
+                    </div>
+                    ` : html.node`
+                    <div class="setting" data-type="action">
+                        <div class="heading">
+                            <h5>${tl(trans.news_sponsor_cta)}</h5>
+                            <p>${tl(trans.api.body)}</p>
+                        </div>
+                        <div class="toggle-wrap">
+                            <button class="btn primary icon sponsor" data-type="sponsor" onclick="_sponsor()">
+                                ${tl(trans.sponsor)}
+                            </button>
+                        </div>
+                    </div>
+                    `}
+                    <div class="setting" data-type="info">
+                        <div class="heading">
+                            <h5>${tl(trans.current_version)}</h5>
+                        </div>
+                        <div class="info">
+                            <button class="see-more update-check sponsor-related" onclick="_sponsor_check()">
+                                ${tl(trans.update_check)}
+                            </button>
+                            <p>${sponsor_list.latest}</p>
                         </div>
                     </div>
                 </div>
-                ` : ''}
-                <div class="sep"></div>
-                <div class="setting" data-type="toggle">
-                    <div class="heading">
-                        <h5>${
-                            html.node([
-                                tl(trans.sponsor_data).replace('{v}', `<span class="version-link sponsor-related">${sponsor_list.latest}</span>`)
-                            ])}</h5>
+                <div class="setting-group">
+                    <div class="setting" data-type="action">
+                        <div class="heading">
+                            <h5>${tl(trans.api.name)}</h5>
+                            <p>${tl(trans.api.body)}</p>
+                        </div>
+                        <div class="toggle-wrap">
+                            <a class="btn primary icon connect" href="${root}api/auth?api_key=${api_key}&cb=${root}bleh/api">
+                                ${tl(trans.connect)}
+                            </a>
+                        </div>
                     </div>
-                    <div class="toggle-wrap">
-                        <button class="see-more update-check sponsor-related" onclick="_sponsor_check()">${tl(trans.update_check)}</button>
-                    </div>
-                </div>
-                ${auth_key && auth_valid === 'true' ? html.node`
-                <div class="setting" data-type="action">
-                    <div class="heading">
-                        <h5>${tl(trans.api.name)}</h5>
-                        <p>${tl(trans.api.body)}</p>
-                    </div>
-                    <div class="alert alert-info">${tl(trans.connected)}</div>
-                    <div class="toggle-wrap">
-                        <a class="btn icon connect" href="${root}api/auth?api_key=${api_key}&cb=${root}bleh/api">
-                            ${tl(trans.reconnect)}
-                        </a>
-                    </div>
-                </div>
-                ` : html.node`
-                <div class="setting" data-type="action">
-                    <div class="heading">
-                        <h5>${tl(trans.api.name)}</h5>
-                        <p>${tl(trans.api.body)}</p>
-                    </div>
-                    <div class="toggle-wrap">
-                        <a class="btn primary icon connect" href="${root}api/auth?api_key=${api_key}&cb=${root}bleh/api">
-                            ${tl(trans.connect)}
-                        </a>
+                    <div class="setting" data-type="info">
+                        <div class="heading">
+                            <h5>${tl(trans.api_status)}</h5>
+                        </div>
+                        <div class="info">
+                            ${auth_key && auth_valid === 'true' ? html.node`
+                            <p>${tl(trans.connected)}</p>
+                            ` : html.node`
+                            <p>${tl(trans.not_connected)}</p>
+                            `}
+                        </div>
                     </div>
                 </div>
-                `}
-                ${setting({id: 'profile_shortcut'})}
-                ${setting({id: 'avatar_radius'})}
-                ${setting({id: 'bio_markdown'})}
+                <div class="setting-group">
+                    ${setting({id: 'profile_shortcut'})}
+                    ${setting({id: 'avatar_radius'})}
+                    ${setting({id: 'bio_markdown'})}
+                </div>
             </div>
             <div class="bleh--panel">
                 <h4>${tl(trans.notes)}</h4>
-                <div class="profile-notes">
-                    <div class="loading-data-container">
-                        <div class="loading-data-text failed">${tl(trans.no_notes)}</div>
+                <div class="setting-group">
+                    <div class="profile-notes">
+                        <div class="loading-data-container">
+                            <div class="loading-data-text failed">${tl(trans.no_notes)}</div>
+                        </div>
                     </div>
                 </div>
             </div>
@@ -754,36 +796,37 @@ export function render_setting_page(page_id) {
                 <h4>${tl(trans.activity)}</h4>
                 <p>${tl(trans.what_are_activities)}</p>
                 <div class="inner-preview pad">
-                    <div class="preview-card activity-preview">
-
+                    <div class="preview-card activity-preview" />
+                </div>
+                <div class="setting-group">
+                    ${setting({id: 'activities'})}
+                    <div class="setting" data-type="action">
+                        <div class="heading">
+                            <h5>${tl(trans.clear_history)}</h5>
+                        </div>
+                        <div class="toggle-wrap">
+                            <button class="see-more" onclick=${() => {
+                                localStorage.removeItem('bwaa_recent_activity');
+                                notify({
+                                    id: 'cleared_history',
+                                    title: tl(trans.cleared_activity_history),
+                                    type: 'success'
+                                });
+                            }}>
+                                ${tl(trans.clear)}
+                            </button>
+                        </div>
                     </div>
                 </div>
-                ${setting({id: 'activities'})}
-                <div class="setting" data-type="toggle">
-                    <div class="heading">
-                        <h5>${tl(trans.clear_history)}</h5>
-                    </div>
-                    <div class="toggle-wrap">
-                        <button class="see-more" onclick=${() => {
-                            localStorage.removeItem('bwaa_recent_activity');
-                            notify({
-                                id: 'cleared_history',
-                                title: tl(trans.cleared_activity_history),
-                                type: 'success'
-                            });
-                        }}>
-                            ${tl(trans.clear)}
-                        </button>
-                    </div>
+                <div class="setting-group">
+                    ${setting({id: 'activity_shout'})}
+                    ${setting({id: 'activity_image'})}
+                    ${setting({id: 'activity_obsess'})}
+                    ${setting({id: 'activity_love'})}
+                    ${setting({id: 'activity_bookmark'})}
+                    ${setting({id: 'activity_wiki'})}
+                    ${setting({id: 'activity_install'})}
                 </div>
-                <div class="sep"></div>
-                ${setting({id: 'activity_shout'})}
-                ${setting({id: 'activity_image'})}
-                ${setting({id: 'activity_obsess'})}
-                ${setting({id: 'activity_love'})}
-                ${setting({id: 'activity_bookmark'})}
-                ${setting({id: 'activity_wiki'})}
-                ${setting({id: 'activity_install'})}
             </div>
             `);
     } else if (page_id == 'accessibility') {
