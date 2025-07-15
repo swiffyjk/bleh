@@ -677,7 +677,7 @@ export function render_setting_page(page_id) {
                                     title: auth.name,
                                     body: html.node`
                                         <div class="generic-table-list badge-list">
-                                            ${badges.map((badge) => html.node`
+                                            ${(badges) ? badges.map((badge) => html.node`
                                                 <div class="generic-table-list-entry badge-list-entry">
                                                     <div class="icon-container colourful user-status--bleh-${badge.type} user-status--bleh-user-${auth.name}">
                                                         <div class="bleh-icon" style="--icon: var(--mask)" />
@@ -689,7 +689,20 @@ export function render_setting_page(page_id) {
                                                         ${badge.reason}
                                                     </div>
                                                 </div>
-                                            `)}
+                                            `) : ''}
+                                            ${auth.pro ? html.node`
+                                                <div class="generic-table-list-entry badge-list-entry">
+                                                    <div class="icon-container colourful user-status-subscriber">
+                                                        <div class="bleh-icon" style="--icon: var(--mask)" />
+                                                    </div>
+                                                    <div class="name colourful user-status-subscriber">
+                                                        ${tl(trans.badges['user-status-subscriber'].name)}
+                                                    </div>
+                                                    <div class="text">
+                                                        ${tl(trans.badges['user-status-subscriber'].reason)}
+                                                    </div>
+                                                </div>
+                                            ` : ''}
                                         </div>
                                     `
                                 });

@@ -281,7 +281,7 @@ function main_flow() {
         correct_generic_combo('track-similar-tracks-item');
         correct_generic_combo('similar-items-sidebar-item');
 
-        if (page.type == 'album') {
+        if (page.type == 'track') {
             correct_generic_combo('source-album-details');
         }
 
@@ -480,8 +480,11 @@ function load_page() {
             });
         }
 
-        if (page.subpage.startsWith('shoutbox') && (page.type == 'artist' || page.type == 'album' || page.type == 'track')) {
-            shout_header(page.structure.main.querySelector('.section-controls'));
+        if (['artist', 'album', 'track', 'user', 'tag'].includes(page.type)) {
+            if (!['user', 'tag'].includes(page.type) && page.subpage.startsWith('shoutbox'))
+                shout_header(page.structure.main.querySelector('.section-controls'));
+            else if (page.subpage == 'overview')
+                shout_header(page.structure.main.querySelector('.shoutbox'));
         }
     }
 

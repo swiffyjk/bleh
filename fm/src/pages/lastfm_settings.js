@@ -16,6 +16,11 @@ import {html, render} from "lighterhtml";
 
 // patch last.fm settings
 export function bleh_native_settings() {
+    let no_data = page.structure.container.querySelector(':scope > .no-data-message');
+    if (no_data) {
+        page.structure.main.appendChild(no_data);
+    }
+
     if (page.subpage == 'overview') {
         patch_settings_profile_tab();
     } else if (page.subpage == 'privacy') {
@@ -1111,7 +1116,7 @@ function bleh_accounts() {
     custom_select(communication_panel.querySelector('[name="language"]'), communication_panel.querySelector('[name="language"]').parentElement);
 }
 function bleh_name_change() {
-    let token = page.structure.main.querySelector('[name="csrfmiddlewaretoken"]').getAttribute('value');
+    let token = page.structure.row.querySelector('[name="csrfmiddlewaretoken"]').getAttribute('value');
 
     return;
 }

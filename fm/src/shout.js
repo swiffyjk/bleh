@@ -173,13 +173,15 @@ export function shout_header(shout_controls) {
                 <h2>
                     <a class="text-colour-link" href=${link}>${tl(trans.shouts)}</a>
                 </h2>
-                <div class="accompany view-buttons blend blend-v2">
-                    ${() => {
-                        select_btn.classList.add('select-button', 'link-select', 'blend-v2-btn');
-                        select_btn.classList.remove('section-control', 'dropdown-menu-clickable-button');
-                        return shout_controls;
-                    }}
-                </div>
+                ${select_btn ? html.node`
+                    <div class="accompany view-buttons blend blend-v2">
+                        ${() => {
+                            select_btn.classList.add('select-button', 'link-select', 'blend-v2-btn');
+                            select_btn.classList.remove('section-control', 'dropdown-menu-clickable-button');
+                            return shout_controls;
+                        }}
+                    </div>
+                ` : ''}
                 <div class="view-buttons blend blend-v2">
                     <button class="left-icon blend-v2-btn" data-type="settings" ref=${el => settings_btn = el}>
                         ${tl(trans.settings)}

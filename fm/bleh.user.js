@@ -9317,6 +9317,10 @@
 
   // src/pages/lastfm_settings.js
   function bleh_native_settings() {
+    let no_data = page.structure.container.querySelector(":scope > .no-data-message");
+    if (no_data) {
+      page.structure.main.appendChild(no_data);
+    }
     if (page.subpage == "overview") {
       patch_settings_profile_tab();
     } else if (page.subpage == "privacy") {
@@ -10307,7 +10311,7 @@
     custom_select(communication_panel.querySelector('[name="language"]'), communication_panel.querySelector('[name="language"]').parentElement);
   }
   function bleh_name_change() {
-    let token = page.structure.main.querySelector('[name="csrfmiddlewaretoken"]').getAttribute("value");
+    let token = page.structure.row.querySelector('[name="csrfmiddlewaretoken"]').getAttribute("value");
     return;
   }
   function bleh_applications() {
@@ -13451,7 +13455,7 @@
           title: auth.name,
           body: html.node`
                                         <div class="generic-table-list badge-list">
-                                            ${badges.map((badge) => html.node`
+                                            ${badges ? badges.map((badge) => html.node`
                                                 <div class="generic-table-list-entry badge-list-entry">
                                                     <div class="icon-container colourful user-status--bleh-${badge.type} user-status--bleh-user-${auth.name}">
                                                         <div class="bleh-icon" style="--icon: var(--mask)" />
@@ -13463,7 +13467,20 @@
                                                         ${badge.reason}
                                                     </div>
                                                 </div>
-                                            `)}
+                                            `) : ""}
+                                            ${auth.pro ? html.node`
+                                                <div class="generic-table-list-entry badge-list-entry">
+                                                    <div class="icon-container colourful user-status-subscriber">
+                                                        <div class="bleh-icon" style="--icon: var(--mask)" />
+                                                    </div>
+                                                    <div class="name colourful user-status-subscriber">
+                                                        ${tl(trans.badges["user-status-subscriber"].name)}
+                                                    </div>
+                                                    <div class="text">
+                                                        ${tl(trans.badges["user-status-subscriber"].reason)}
+                                                    </div>
+                                                </div>
+                                            ` : ""}
                                         </div>
                                     `
         });
@@ -16605,27 +16622,32 @@
   // src/components/about_artist.js
   function bleh_about_artist() {
     let legacy_container = page.structure.main.querySelector(".about-artist");
-    if (!legacy_container)
-      return;
+    if (!legacy_container) return;
     let avatar3 = legacy_container.querySelector(".gallery-preview-image--0 img");
     let listeners = legacy_container.querySelector(".about-artist-listeners");
     let tags = legacy_container.querySelector(".about-artist-tags");
     let wiki = legacy_container.querySelector(".wiki-block.visible-lg");
-    if (wiki != null)
-      wiki.classList.remove("visible-lg");
+    if (wiki) wiki.classList.remove("visible-lg");
     let about_artist_container = legacy_container.parentElement;
     about_artist_container.classList.add("about-artist-container");
     render(about_artist_container, html`
         <div class="about-artist-panel">
             <div class="avatar-side">
-                ${avatar3 != null ? html.node`<img src="${avatar3.getAttribute("src")}"><a onclick=${() => expand_avatar(avatar3.getAttribute("src").replace("/300x300/", "/ar0/"))} class="bleh--avatar-clickable-link"></a>` : html.node`<img class="missing-artist">`}
+                ${avatar3 ? html.node`
+                    <img src=${avatar3.getAttribute("src")}>
+                    <a onclick=${() => expand_avatar(avatar3.getAttribute("src").replace("/300x300/", "/ar0/"))} class="bleh--avatar-clickable-link"></a>
+                ` : html.node`
+                    <img class="missing-artist">
+                `}
             </div>
             <div class="info-side">
                 <div class="sub-text">${tl(trans.about)}</div>
-                <h1><a href="${root}music/${sanitise(page.sister)}">${page.sister}</a></h1>
-                ${listeners != null ? html.node([listeners.outerHTML]) : ""}
-                ${tags != null ? html.node([tags.outerHTML]) : ""}
-                ${wiki != null ? html.node([wiki.outerHTML]) : ""}
+                <h1>
+                    <a href="${root}music/${sanitise(page.sister)}">${correct_artist(page.sister)}</a>
+                </h1>
+                ${listeners}
+                ${tags}
+                ${wiki}
             </div>
         </div>
         ${page.sister_others.length > 0 ? html.node`<div class="sep"></div><div class="sub-text">${tl(trans.others_featured)}</div>` : ""}
@@ -18944,13 +18966,15 @@
                 <h2>
                     <a class="text-colour-link" href=${link}>${tl(trans.shouts)}</a>
                 </h2>
-                <div class="accompany view-buttons blend blend-v2">
-                    ${() => {
+                ${select_btn ? html.node`
+                    <div class="accompany view-buttons blend blend-v2">
+                        ${() => {
         select_btn.classList.add("select-button", "link-select", "blend-v2-btn");
         select_btn.classList.remove("section-control", "dropdown-menu-clickable-button");
         return shout_controls;
       }}
-                </div>
+                    </div>
+                ` : ""}
                 <div class="view-buttons blend blend-v2">
                     <button class="left-icon blend-v2-btn" data-type="settings" ref=${(el) => settings_btn = el}>
                         ${tl(trans.settings)}
@@ -20471,7 +20495,7 @@
       correct_generic_combo("similar-albums-item");
       correct_generic_combo("track-similar-tracks-item");
       correct_generic_combo("similar-items-sidebar-item");
-      if (page.type == "album") {
+      if (page.type == "track") {
         correct_generic_combo("source-album-details");
       }
       if (page.type == "bookmarks" || page.type == "releases") {
@@ -20625,8 +20649,11 @@
                 `);
         });
       }
-      if (page.subpage.startsWith("shoutbox") && (page.type == "artist" || page.type == "album" || page.type == "track")) {
-        shout_header(page.structure.main.querySelector(".section-controls"));
+      if (["artist", "album", "track", "user", "tag"].includes(page.type)) {
+        if (!["user", "tag"].includes(page.type) && page.subpage.startsWith("shoutbox"))
+          shout_header(page.structure.main.querySelector(".section-controls"));
+        else if (page.subpage == "overview")
+          shout_header(page.structure.main.querySelector(".shoutbox"));
       }
     }
     append_nav();
