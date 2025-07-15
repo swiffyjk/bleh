@@ -1,22 +1,24 @@
 {
-    "latest": "2025.0608",
+    "latest": "2025.0715",
     "sponsors": [
-        "katesia", "kateshapedbox", "stellasaur",
+        "clairedoll", "kateshapedbox", "evangelicgirl",
         "astrablooms", "ItsProyal", "vwvwvwvwvwvwv", "Orofil",
         "EliteHimself", "iwas15with100k", "keepsweet", "yourfriendoss",
-        "softmancy", "carbon1k", "uix-uix", "scidal"
+        "softmancy", "carbon1k", "uix-uix", "scidal",
+        "Carbonzer", "marrowchant"
     ],
     "sponsors_one_time": [
         "kateshapedbox",
         "vwvwvwvwvwvwv", "EliteHimself", "yourfriendoss",
-        "carbon1k", "uix-uix", "scidal"
+        "carbon1k", "uix-uix", "scidal",
+        "Carbonzer"
     ],
     "sponsor_count_remove": 3,
     "sponsor_account": "kateshapedbox",
     "sponsor_link": "https://github.com/sponsors/katelyynn",
-    "special": ["katesia", "stellasaur"],
+    "special": ["clairedoll", "evangelicgirl"],
     "badges": {
-        "katesia": [
+        "clairedoll": [
             {
                 "type": "contributor"
             },
@@ -90,7 +92,7 @@
             "type": "colon-three",
             "name": ":3²"
         },
-        "stellasaur": [
+        "evangelicgirl": [
             {
                 "type": "contributor"
             },
@@ -187,6 +189,19 @@
         "ArthRMH": {
             "type": "translation",
             "reason": "Português"
-        }
+        },
+        "Carbonzer": {
+            "type": "sponsor"
+        },
+        "marrowchant": [
+            {
+                "type": "sponsor"
+            },
+            {
+                "type": "syrup",
+                "name": "syrup & static",
+                "reason": "sponsor"
+            }
+        ]
     }
 }
