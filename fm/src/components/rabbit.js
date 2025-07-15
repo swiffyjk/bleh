@@ -44,7 +44,10 @@ export function register_rabbit() {
             id: 'key',
             title: e.key
         });*/
-        if (e.getModifierState('Control') && (e.key == 'k' || e.key == 'K' || e.key == ',') && !page.structure.dialogs.hasChildNodes()) {
+
+        const cmd = (e.getModifierState('Control') || e.getModifierState('Meta'));
+
+        if (cmd && ['k', 'K', ','].includes(e.key) && !page.structure.dialogs.hasChildNodes()) {
             e.preventDefault();
 
             depth = 0;
@@ -110,7 +113,7 @@ export function register_rabbit() {
         }
 
         if (!page.structure.dialogs.hasChildNodes()) {
-            if (e.getModifierState('Control') && (e.key == 's' || e.key == 'S')) {
+            if (cmd && (e.key == 's' || e.key == 'S')) {
                 e.preventDefault();
 
                 if (settings.profile_shortcut != '') {
@@ -120,13 +123,13 @@ export function register_rabbit() {
                 }
             }
 
-            if (e.getModifierState('Control') && (e.key == 'b' || e.key == 'B')) {
+            if (cmd && (e.key == 'b' || e.key == 'B')) {
                 e.preventDefault();
 
                 window.location.href = `${root}bleh`;
             }
 
-            if (e.getModifierState('Control') && (e.key == 'd' || e.key == 'D')) {
+            if (cmd && (e.key == 'd' || e.key == 'D')) {
                 e.preventDefault();
 
                 rabbit();
