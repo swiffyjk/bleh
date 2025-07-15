@@ -3739,6 +3739,12 @@
     ).replace(
       /\[track artist=([^[\]]+)\]([^[\]]+)\[\/track\]/g,
       (match, artist, track) => `[${track}](${root}music/${encodeURIComponent(artist)}/_/${encodeURIComponent(track)})`
+    ).replace(
+      /\[url=([^[\]]+)\]([^[\]]+)\[\/url\]/g,
+      (match, url, text3) => `[${text3}](${encodeURI(url)})`
+    ).replace(
+      /\[url\]([^[\]]+)\[\/url\]/g,
+      (match, url) => `[${url}](${encodeURI(url)})`
     ).replace(/https:\/\/open\.spotify\.com\/user\/([A-Za-z0-9]+)\?si=([A-Za-z0-9]+)/g, "[Spotify](https://open.spotify.com/user/$1)").replace(/&/g, "&amp;").replace(/</g, "&lt;").replace(/>/g, "&gt;").replace(/"/g, "&quot;").replace(/'/g, "&#039;"));
     let body = html.node([parsed_body]);
     patch_wiki_contents(body);
@@ -19002,22 +19008,8 @@
   function parse_shout_queue() {
     if (shout_parse_queue.length === 0) return;
     const shout = shout_parse_queue.shift();
-    const converter = new showdown.Converter({
-      emoji: true,
-      excludeTrailingPunctuationFromURLs: true,
-      headerLevelStart: 5,
-      noHeaderId: true,
-      openLinksInNewWindow: true,
-      requireSpaceBeforeHeadingText: true,
-      simpleLineBreaks: true,
-      simplifiedAutoLink: true,
-      strikethrough: true,
-      underline: true,
-      ghCodeBlocks: false,
-      smartIndentationFix: true
-    });
-    const raw = shout.element.textContent.replace(/([@])([a-zA-Z0-9_]+)/g, `[$1$2](${root}user/$2)`).replace(/\[artist\]([a-zA-Z0-9]+)\[\/artist\]/g, `[$1](${root}music/$1)`).replace(/\[album artist=([a-zA-Z0-9]+)\]([a-zA-Z0-9\s]+)\[\/album\]/g, `[$2](${root}music/$1/$2)`).replace(/\[track artist=([a-zA-Z0-9]+)\]([a-zA-Z0-9\s]+)\[\/track\]/g, `[$2](${root}music/$1/_/$2)`).replace(/https:\/\/open\.spotify\.com\/user\/([A-Za-z0-9]+)\?si=([A-Za-z0-9]+)/g, "[@$1](https://open.spotify.com/user/$1)").replace(/&/g, "&amp;").replace(/</g, "&lt;").replace(/>/g, "&gt;").replace(/"/g, "&quot;").replace(/'/g, "&#039;");
-    render(shout.element, html.node([converter.makeHtml(raw)]));
+    const parsed2 = markdown(shout.element.textContent);
+    render(shout.element, html.node`${parsed2}`);
     log("parsed one shout", "shout", "log");
     if (shout_parse_queue.length > 0)
       setTimeout(parse_shout_queue, 50);

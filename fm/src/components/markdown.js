@@ -48,6 +48,16 @@ export function markdown(text, {
             `[${track}](${root}music/` +
             `${encodeURIComponent(artist)}/_/${encodeURIComponent(track)})`
     )
+    .replace(
+        /\[url=([^[\]]+)\]([^[\]]+)\[\/url\]/g,
+        (match, url, text) =>
+            `[${text}](${encodeURI(url)})`
+    )
+    .replace(
+        /\[url\]([^[\]]+)\[\/url\]/g,
+        (match, url) =>
+            `[${url}](${encodeURI(url)})`
+    )
     .replace(/https:\/\/open\.spotify\.com\/user\/([A-Za-z0-9]+)\?si=([A-Za-z0-9]+)/g, '[Spotify](https://open.spotify.com/user/$1)')
     .replace(/&/g, '&amp;')
     .replace(/</g, '&lt;')
