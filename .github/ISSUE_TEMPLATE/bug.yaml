@@ -4,7 +4,7 @@ labels: ['bug']
 body:
   - type: markdown
     attributes:
-      value: sorry you are having trouble >~<
+      value: "sorry you are having trouble >~<"
   - type: input
     id: contact
     attributes:
@@ -43,8 +43,6 @@ body:
       options:
         - label: Yes
         - label: No
-      validations:
-        required: true
   - type: input
     id: language
     attributes:
