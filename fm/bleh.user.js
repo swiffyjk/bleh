@@ -13228,92 +13228,36 @@
       ]);
       render(page.structure.main, html`
             <div class="bleh--panel">
-                <h4>${tl(trans.themes.name)}</h4>
-                ${ff("theme_bubbles") ? theme_bubbles : html.node`
-                <div class="setting-items full">
-                    <div class="side-left full even-more">
-                        ${ff("auto_theme") ? html.node`
-                        <button class="btn theme-item" data-bleh-theme="auto" onclick="change_theme_from_settings('auto')">
-                            <div class="preview-container">
-                            <div class="preview">
-                                ${theme_preview()}
-                            </div>
-                            </div>
-                            <div class="text">
-                                <h5>${tl(trans.auto)} <div class="new-badge">${tl(trans.new)}</div></h5>
-                            </div>
-                        </button>
-                        ` : ""}
-                        <button class="btn theme-item" data-bleh-theme="light" data-bleh--theme_type="light" onclick="change_theme_from_settings('light')">
-                            <div class="preview-container">
-                            <div class="preview" data-bleh--theme="light" data-bleh--theme_type="light">
-                                ${theme_preview()}
-                            </div>
-                            </div>
-                            <div class="text">
-                                <h5>${tl(trans.themes.light)}</h5>
-                            </div>
-                        </button>
-                        <button class="btn theme-item" data-bleh-theme="ink" data-bleh--theme_type="light" onclick="change_theme_from_settings('ink')">
-                            <div class="preview-container">
-                            <div class="preview" data-bleh--theme="ink" data-bleh--theme_type="light">
-                                ${theme_preview()}
-                            </div>
-                            </div>
-                            <div class="text">
-                                <h5>${tl(trans.themes.ink)}</h5>
-                            </div>
-                        </button>
+                <h4>${tl(trans.appearance)}</h4>
+                <div class="setting-group">
+                    <div class="setting" data-type="action">
+                        <div class="heading">
+                            <h5>${tl(trans.themes.name)}</h5>
+                        </div>
+                        <div class="info">
+                            ${theme_bubbles}
+                        </div>
                     </div>
-                </div>
-                <div class="setting-items full">
-                    <div class="side-left full even-more">
-                        <button class="btn theme-item" data-bleh-theme="dark" onclick="change_theme_from_settings('dark')">
-                            <div class="preview-container">
-                            <div class="preview" data-bleh--theme="dark">
-                                ${theme_preview()}
+                    ${ff("high_contrast") ? setting({ id: "high_contrast" }) : ""}
+                    <div class="setting" data-type="action">
+                        <div class="heading">
+                            <h5>${tl(trans.hue)}</h5>
+                        </div>
+                        <div class="info v">
+                            <div class="view-buttons colour-buttons view-buttons-middle" id="colour_custom"></div>
+                            <div class="swatch-group">
+                                <div id="colour_red" class="palette options colours"></div>
+                                <div id="colour_orange" class="palette options colours"></div>
+                                <div id="colour_yellow" class="palette options colours"></div>
+                                <div id="colour_green" class="palette options colours"></div>
+                                <div id="colour_lime" class="palette options colours"></div>
+                                <div id="colour_aqua" class="palette options colours"></div>
+                                <div id="colour_blue" class="palette options colours"></div>
+                                <div id="colour_purple" class="palette options colours"></div>
+                                <div id="colour_pink" class="palette options colours"></div>
                             </div>
-                            </div>
-                            <div class="text">
-                                <h5>${tl(trans.themes.dark)}</h5>
-                            </div>
-                        </button>
-                        <button class="btn theme-item" data-bleh-theme="darker" onclick="change_theme_from_settings('darker')">
-                            <div class="preview-container">
-                            <div class="preview" data-bleh--theme="darker">
-                                ${theme_preview()}
-                            </div>
-                            </div>
-                            <div class="text">
-                                <h5>${tl(trans.themes.darker)}</h5>
-                            </div>
-                        </button>
-                        <button class="btn theme-item" data-bleh-theme="oled" onclick="change_theme_from_settings('oled')">
-                            <div class="preview-container">
-                            <div class="preview" data-bleh--theme="oled">
-                                ${theme_preview()}
-                            </div>
-                            </div>
-                            <div class="text">
-                                <h5>${tl(trans.themes.oled)}</h5>
-                            </div>
-                        </button>
+                        </div>
                     </div>
-                </div>
-                `}
-                ${ff("high_contrast") ? setting({ id: "high_contrast" }) : ""}
-                <h4>${tl(trans.colours)}</h4>
-                <div class="view-buttons colour-buttons view-buttons-middle" id="colour_custom"></div>
-                <div class="swatch-group">
-                    <div id="colour_red" class="palette options colours"></div>
-                    <div id="colour_orange" class="palette options colours"></div>
-                    <div id="colour_yellow" class="palette options colours"></div>
-                    <div id="colour_green" class="palette options colours"></div>
-                    <div id="colour_lime" class="palette options colours"></div>
-                    <div id="colour_aqua" class="palette options colours"></div>
-                    <div id="colour_blue" class="palette options colours"></div>
-                    <div id="colour_purple" class="palette options colours"></div>
-                    <div id="colour_pink" class="palette options colours"></div>
                 </div>
                 <div class="setting-group">
                     ${setting({ id: "hue_from_album" })}

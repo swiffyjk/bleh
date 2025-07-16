@@ -16240,13 +16240,15 @@
     .palette {
         display: grid;
         grid-template-columns: repeat(auto-fit, minmax(70px, 1fr));
-        gap: var(--button-list-gap);
+        gap: var(--gap, var(--button-list-gap));
     }
 
     .swatch-group {
         display: flex;
         justify-content: center;
-        gap: var(--button-list-gap);
+        gap: var(--gap);
+
+        --gap: 6px;
 
         .palette {
             display: flex;
@@ -16268,8 +16270,8 @@
         height: fit-content;
 
         .swatch {
-            width: 52px !important;
-            height: 52px !important;
+            width: 24px !important;
+            height: 24px !important;
 
             @media (max-width: 600px) {
                 width: 100% !important;
@@ -16287,15 +16289,15 @@
         --lit-album: 1;
         width: unset !important;
         height: unset !important;
+        --shadow: inset 0 0 0 2px hsl(var(--h2), 60%) !important;
 
         position: relative;
-        --mask-size: 14px;
-        --mask: var(--icon-16-check);
-        --top: none;
-        --left: none;
-        --margin-top: 0;
-        --right: 6px;
-        --bottom: 6px;
+        --mask-size: 12px;
+        --mask: var(--icon-16-check-thick);
+        --top: 50%;
+        --left: 50%;
+        --margin-top: calc(-1 * (var(--mask-size) / 2));
+        --margin-left: calc(-1 * (var(--mask-size) / 2));
 
         &:before {
             opacity: 0;
@@ -16792,6 +16794,12 @@
             gap: 2px;
             flex: 1;
 
+            max-height: 32px;
+
+            &:has(> p) {
+                max-height: 42px;
+            }
+
             & > h5 {
                 color: hsl(var(--c2));
                 font-weight: var(--font-weight-medium);
@@ -16860,6 +16868,12 @@
             gap: var(--icon-gap);
             flex-shrink: 0;
             color: hsl(var(--c3));
+
+            &.v {
+                flex-direction: column;
+                align-items: end;
+                gap: 12px;
+            }
 
             &[data-season]:not([data-season="none"]) {
                 color: hsl(var(--l3-c));
@@ -18797,7 +18811,6 @@
         }
         &.colour-buttons {
             width: fit-content;
-            margin: 0 auto;
         }
 
         & > form {
@@ -25206,7 +25219,6 @@
 
                 border: 1px solid hsl(var(--b4), 70%);
                 box-shadow: var(--interact-shadow);
-                border-radius: 50%;
                 overflow: hidden;
 
                 .inner {
@@ -25240,6 +25252,28 @@
                 .bubble {
                     border: 1px solid transparent;
                     outline: 2px solid hsl(var(--l3-c));
+                }
+            }
+        }
+
+        .setting > .info > & {
+            .theme-bubble {
+                .bubble {
+                    width: 60px;
+                    height: 40px;
+                    border-radius: var(--item-big-radius);
+
+                    .inner {
+                        .bleh-icon {
+                            --icon-size: 20px;
+                        }
+                    }
+                }
+
+                &:not([aria-selected="true"]) {
+                    strong {
+                        color: hsl(var(--c3));
+                    }
                 }
             }
         }
