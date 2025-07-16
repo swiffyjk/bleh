@@ -41,8 +41,8 @@ body:
       label: Last.fm Pro
       description: Are you subscribed to Last.fm?
       options:
-        - label: Yes
-        - label: No
+        - label: "Yes"
+        - label: "No"
   - type: input
     id: language
     attributes:
