@@ -1,11 +1,10 @@
 name: Bug report
 description: If you are experiencing issues with bleh’s functionality, here’s the place to get help
-labels: []
+labels: ['bug']
 body:
   - type: markdown
     attributes:
-      value: |
-      sorry you are having trouble >~<
+      value: sorry you are having trouble >~<
   - type: input
     id: contact
     attributes:
