@@ -281,6 +281,11 @@ function finish_update() {
         dismiss: false,
         replace_if_possible: true
     });
+
+    // reset update status
+    localStorage.setItem('bleh_update_required', 'false');
+    localStorage.setItem('bleh_update_checked', new Date().toString());
+
     fetch_new_style(false, true, true);
 }
 
