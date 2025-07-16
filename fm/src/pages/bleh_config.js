@@ -201,7 +201,7 @@ export function render_setting_page(page_id) {
                             ${theme_bubbles}
                         </div>
                     </div>
-                    ${(ff('high_contrast')) ? setting({id: 'high_contrast'}) : ''}
+                    ${ff('high_contrast') ? setting({id: 'high_contrast'}) : ''}
                     <div class="setting" data-type="action">
                         <div class="heading">
                             <h5>${tl(trans.hue)}</h5>
@@ -221,14 +221,11 @@ export function render_setting_page(page_id) {
                             </div>
                         </div>
                     </div>
-                </div>
-                <div class="setting-group">
                     ${setting({id: 'hue_from_album'})}
                     ${setting({id: 'colourful_tracks'})}
-                    ${(ff('card_saturation')) ? html.node`
-                        ${setting({id: 'sat_bg'})}
-                    ` : ''}
+                    ${ff('card_saturation') ? setting({id: 'sat_bg'}) : ''}
                 </div>
+                <h4>${tl(trans.fonts)}</h4>
                 <div class="setting-group">
                     ${setting({id: 'font'})}
                     ${setting({id: 'font_weight'})}
