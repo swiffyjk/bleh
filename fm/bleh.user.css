@@ -245,7 +245,8 @@
         --card-border-base: hsl(var(--b3), 0.7);
 
         --normal-shadow: inset 0 0 0 1px hsla(var(--b2), 0.4), inset 0 -2px 4px hsla(var(--b5), 0.4);
-        --input-shadow: inset 0 -1px 0 0 hsl(var(--b3)), inset 0 1px 2px hsl(var(--b7), 0.2);
+        --input-shadow: inset 0 -1px 0 0 hsl(var(--b3), 70%), inset 0 1px 2px hsl(var(--b7), 0.2);
+        --focused-input-shadow: inset 0 -1px 0 0 hsl(var(--h3), 50%), inset 0 -1px 0 0 hsl(var(--b3), 70%), inset 0 1px 2px hsl(var(--b7), 0.2);
         --group-shadow: inset 0 1px 0 0 hsl(var(--b2), 0.4), inset 0 0 0 1px hsl(var(--b3), 0.4);
 
         .theme-preview[data-bleh--theme="darker"],
@@ -285,6 +286,7 @@
             --card-border-base: hsl(var(--b3), 0.6);
 
             --input-shadow: inset 0 -1px 0 0 hsl(var(--b3)), inset 0 1px 2px 1px hsl(var(--b3), 0.4);
+            --focused-input-shadow: inset 0 -1px 0 0 hsl(var(--h3), 50%), inset 0 -1px 0 0 hsl(var(--b3)), inset 0 1px 2px 1px hsl(var(--b3), 0.4);
         }
         .theme-preview[data-bleh--theme="light"],
         [data-bleh--theme="light"] &:not(.theme-preview) {
@@ -308,6 +310,7 @@
 
             --normal-shadow: inset 0 0 0 1px hsla(var(--b2), 0.3), inset 0 -2px 4px hsla(var(--b4), 0.5);
             --input-shadow: inset 0 -1px 0 0 var(--card-border-base), inset 0 1px 3px hsl(var(--b7), 0.1);
+            --focused-input-shadow: inset 0 -1px 0 0 hsl(var(--h3), 80%), inset 0 -1px 0 0 var(--card-border-base), inset 0 1px 3px hsl(var(--b7), 0.1);
             --group-shadow: inset 0 1px 0 0 hsl(var(--b4), 0.9), inset 0 0 0 1px hsl(var(--b4), 0.4);
         }
         .theme-preview[data-bleh--theme="ink"],
@@ -331,6 +334,7 @@
 
             --normal-shadow: inset 0 0 0 1px hsla(var(--b2), 0.3), inset 0 -2px 4px hsla(var(--b4), 0.5);
             --input-shadow: inset 0 -1px 0 0 var(--card-border-base), inset 0 1px 3px hsl(var(--b7), 0.1);
+            --focused-input-shadow: inset 0 -1px 0 0 hsl(var(--h3), 80%), inset 0 -1px 0 0 var(--card-border-base), inset 0 1px 3px hsl(var(--b7), 0.1);
             --group-shadow: inset 0 1px 0 0 hsl(var(--b4), 0.9), inset 0 0 0 1px hsl(var(--b4), 0.4);
         }
     }
@@ -9875,9 +9879,10 @@
             --shadow: var(--input-shadow) !important;
             outline: none !important;
 
+            &[aria-expanded="true"],
             &:focus-visible:not([readonly]) {
                 --focus-outline: none !important;
-                --shadow: inset 0 0 0 2px hsl(var(--l3-c), 30%) !important;
+                --shadow: var(--focused-input-shadow) !important;
             }
 
             [data-bleh--theme="oled"] &,
@@ -16848,6 +16853,7 @@
             }
         }
 
+        &[data-type="checkbox"],
         &[data-type="select"],
         &[data-type="range"],
         &[data-type="text"] {
@@ -25424,6 +25430,32 @@
                 text-align: center;
                 cursor: default;
                 color: hsl(var(--c3));
+            }
+        }
+
+        .manual {
+            width: 266px;
+            height: 100%;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            flex-direction: column;
+            gap: 10px;
+
+            & > .input-container {
+                width: 130px;
+
+                & > input {
+                    text-align: center;
+                    height: 40px;
+                    font-size: 16px !important;
+                }
+            }
+
+            & > p {
+                font-size: 13px;
+                color: hsl(var(--c3));
+                cursor: default;
             }
         }
 

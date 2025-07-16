@@ -3043,6 +3043,18 @@ export const trans = {
         body: {
             en: 'Compares your current progress to last week’s average, requires Last.fm Pro'
         }
+    },
+    manual: {
+        en: 'Manual'
+    },
+    enter_a_manual_date: {
+        en: 'Enter a date in the format YYYY-MM-DD'
+    },
+    minimum_value: {
+        en: 'Minimum: {v}'
+    },
+    maximum_value: {
+        en: 'Maximum: {v}'
     }
 }
 

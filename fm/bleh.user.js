@@ -5041,7 +5041,8 @@
     focus = false,
     disabled,
     show_time = true,
-    name: name2
+    name: name2,
+    func
   }) {
     if (type == "date") {
       let months_between = function(a, b) {
@@ -5058,6 +5059,8 @@
           view.level = "year";
         } else if (view.level === "year") {
           view.level = "month";
+        } else if (view.level === "manual") {
+          view.level = "day";
         } else {
           return;
         }
@@ -5076,6 +5079,8 @@
           inner = render_year_view();
         } else if (view.level === "month") {
           inner = render_month_view();
+        } else if (view.level === "manual") {
+          inner = render_manual_view();
         } else {
           inner = render_day_view();
         }
@@ -5087,6 +5092,12 @@
                         ${months[view.month - 1]} ${view.year}
                     </button>
                     <div class="fill" />
+                    <button class="chibi icon" data-type="manual" type="button" onclick=${() => {
+          view.level = "manual";
+          render_popup();
+        }}>
+                        ${tl(trans.manual)}
+                    </button>
                     <button class="chibi icon" data-type="up" disabled=${!can_prev()} type="button" onclick=${() => {
           if (!can_prev()) return;
           view.month--;
@@ -5118,7 +5129,7 @@
                 <div class="days" data-last-action=${last_action}>
                     ${days(view.year, view.month).map(
           (cell) => cell.type == "empty" ? html.node`<button class="day empty" type="button" disabled />` : html.node`
-                                <button class="day" type="button" aria-selected=${cell.day == state.day && cell.date > min_date && cell.date < max_date && cell.month == view.month ? "true" : "false"} disabled=${cell.date < min_date || cell.date > max_date} onclick=${() => {
+                                <button class="day" type="button" aria-selected=${cell.day == state.day && cell.date >= min_date && cell.date <= max_date && cell.month == view.month ? "true" : "false"} disabled=${cell.date < min_date || cell.date > max_date} onclick=${() => {
             state.day = cell.day;
             state.year = view.year;
             state.month = view.month;
@@ -5140,6 +5151,12 @@
                         ${view.year}
                     </button>
                     <div class="fill" />
+                    <button class="chibi icon" data-type="manual" type="button" onclick=${() => {
+          view.level = "manual";
+          render_popup();
+        }}>
+                        ${tl(trans.manual)}
+                    </button>
                     <button class="chibi icon" data-type="up" type="button" disabled=${view.year <= min_year} onclick=${() => {
           if (view.year < min_year) return;
           view.year--;
@@ -5194,6 +5211,12 @@
                         ${decade_start} – ${decade_start + 9}
                     </button>
                     <div class="fill" />
+                    <button class="chibi icon" data-type="manual" type="button" onclick=${() => {
+          view.level = "manual";
+          render_popup();
+        }}>
+                        ${tl(trans.manual)}
+                    </button>
                     <button class="chibi icon" data-type="up" disabled=${decade_start - 10 < min_year} onclick=${() => {
           if (decade_start - 10 < min_year) return;
           view.year -= 10;
@@ -5223,6 +5246,69 @@
         })}
                 </div>
             `;
+      }, validate_text_date = function(value2) {
+        const m = value2.match(/^(\d{4})-(\d{2})-(\d{2})$/);
+        if (!m) return null;
+        const [_, ys, ms, ds] = m;
+        const date = /* @__PURE__ */ new Date(`${ys}-${ms}-${ds}T00:00:00`);
+        if (date.getFullYear() !== +ys || date.getMonth() + 1 !== +ms || date.getDate() !== +ds) {
+          return null;
+        }
+        if (date < min_date || date > max_date) return null;
+        return date;
+      }, render_manual_view = function() {
+        const min_year = min_date.getFullYear();
+        const max_year = max_date.getFullYear();
+        let manual_date;
+        let elem = html.node`
+                <div class="calendar-header">
+                    <button class="month-year" onclick=${on_month_year_click}>
+                        ${tl(trans.manual)}
+                    </button>
+                    <div class="fill" />
+                    <button class="chibi icon" data-type="manual" type="button" onclick=${() => {
+          view.level = "manual";
+          render_popup();
+        }}>
+                        ${tl(trans.manual)}
+                    </button>
+                    <button class="chibi icon" data-type="up" disabled>
+                        ${tl(trans.back)}
+                    </button>
+                    <button class="chibi icon" data-type="down" disabled>
+                        ${tl(trans.next)}
+                    </button>
+                </div>
+                <div class="manual">
+                    ${manual_date = input({
+          type: "text",
+          value: `${state.year}-${pad2(state.month)}-${pad2(state.day)}`,
+          func: (value2) => {
+            const parsed2 = validate_text_date(
+              value2
+            );
+            if (!parsed2) {
+              manual_date.value(`${state.year}-${pad2(state.month)}-${pad2(state.day)}`);
+              return;
+            }
+            state.year = parsed2.getFullYear();
+            state.month = parsed2.getMonth() + 1;
+            state.day = parsed2.getDate();
+            view.level = "day";
+            view.year = state.year;
+            view.month = state.month;
+            update_display();
+            emit();
+            render_popup();
+          }
+        })}
+                    <p>${tl(trans.enter_a_manual_date)}</p>
+                    <p>${tl(trans.minimum_value).replace("{v}", `${min_date.getFullYear()}-${pad2(min_date.getMonth() + 1)}-${pad2(min_date.getDate())}`)}</p>
+                    <p>${tl(trans.maximum_value).replace("{v}", `${max_date.getFullYear()}-${pad2(max_date.getMonth() + 1)}-${pad2(max_date.getDate())}`)}</p>
+                </div>
+            `;
+        manual_date.focus();
+        return elem;
       }, days = function(year, month) {
         const raw_first = new Date(
           year,
@@ -5402,6 +5488,17 @@
     input_box.addEventListener("input", () => {
       update_input();
     });
+    input_box.addEventListener("keydown", (event3) => {
+      if (event3.keyCode === 13) {
+        event3.preventDefault();
+        if (func) func(input_box.value);
+      }
+    });
+    container.focus = () => {
+      setTimeout(() => {
+        input_box.focus();
+      }, 5);
+    };
     container.value = (val = null) => {
       if (val === null) return input_box.value;
       input_box.value = val;
@@ -23730,6 +23827,18 @@
       body: {
         en: "Compares your current progress to last week\u2019s average, requires Last.fm Pro"
       }
+    },
+    manual: {
+      en: "Manual"
+    },
+    enter_a_manual_date: {
+      en: "Enter a date in the format YYYY-MM-DD"
+    },
+    minimum_value: {
+      en: "Minimum: {v}"
+    },
+    maximum_value: {
+      en: "Maximum: {v}"
     }
   };
   var trans_legacy = {
