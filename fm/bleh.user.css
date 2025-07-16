@@ -17009,7 +17009,7 @@
                         --bg-atv: var(--cards-overlay-image-subtlest, none), hsla(var(--h3), 60%) !important;
                         --col: hsl(var(--b7)) !important;
                         --mask-colour: var(--col);
-                        --shadow: 0 3px 12px hsl(var(--h4), 25%), var(--interactable-outer);
+                        --shadow: var(--primary-shadow), 0 3px 12px hsl(var(--h4), 25%), var(--interactable-outer);
                         --shadow-hov: var(--interactable-outer), var(--interactable-active-outer);
 
                         .bleh-icon {
