@@ -3055,6 +3055,9 @@ export const trans = {
     },
     maximum_value: {
         en: 'Maximum: {v}'
+    },
+    manual_date: {
+        en: 'Type a date manually'
     }
 }
 

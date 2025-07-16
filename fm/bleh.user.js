@@ -5257,8 +5257,6 @@
         if (date < min_date || date > max_date) return null;
         return date;
       }, render_manual_view = function() {
-        const min_year = min_date.getFullYear();
-        const max_year = max_date.getFullYear();
         let manual_date;
         let elem = html.node`
                 <div class="calendar-header">
@@ -5266,10 +5264,7 @@
                         ${tl(trans.manual)}
                     </button>
                     <div class="fill" />
-                    <button class="chibi icon" data-type="manual" type="button" onclick=${() => {
-          view.level = "manual";
-          render_popup();
-        }}>
+                    <button class="chibi icon" data-type="manual" type="button" disabled>
                         ${tl(trans.manual)}
                     </button>
                     <button class="chibi icon" data-type="up" disabled>
@@ -5433,6 +5428,28 @@
           render_popup();
         }
       });
+      let menu = tippy(date_display, {
+        theme: "context-menu",
+        content: html.node`
+                <button class="dropdown-menu-clickable-item" data-type="manual" onclick=${() => {
+          view.level = "manual";
+          tooltip.show();
+        }}>
+                    ${tl(trans.manual_date)}
+                </button>
+            `,
+        placement: "right-start",
+        trigger: "manual",
+        interactive: true,
+        interactiveBorder: 10,
+        offset: [0, 0],
+        onShow(instance) {
+          instance.popper.addEventListener("click", (event3) => {
+            instance.hide();
+          });
+        }
+      });
+      register_menu(date_display, menu);
       container2.value = (val = null) => {
         if (val === null) {
           return new Date(
@@ -23839,6 +23856,9 @@
     },
     maximum_value: {
       en: "Maximum: {v}"
+    },
+    manual_date: {
+      en: "Type a date manually"
     }
   };
   var trans_legacy = {

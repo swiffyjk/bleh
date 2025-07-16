@@ -10004,8 +10004,10 @@
         }
 
         &[data-type="date"] {
-            --mask: var(--icon-16-calendar);
-            --icon-size: 14px;
+            &:after {
+                --mask: var(--icon-16-calendar);
+                --icon-size: 14px;
+            }
 
             & > .modern-input {
                 cursor: pointer;
@@ -25532,5 +25534,8 @@
     }
     [data-type="down"] {
         --mask: var(--icon-16-arrow-down);
+    }
+    [data-type="manual"] {
+        --mask: var(--icon-16-edit);
     }
 }

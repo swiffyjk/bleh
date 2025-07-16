@@ -2,6 +2,7 @@ import {html} from "lighterhtml";
 import {tl, trans} from "../build/trans.js";
 import {log} from "../build/log.js";
 import {pad2} from "../build/tools.js";
+import {register_menu} from "./menu.js";
 
 export function input({
     type = 'text',
@@ -155,6 +156,31 @@ export function input({
                 render_popup();
             }
         });
+
+        let menu = tippy(date_display, {
+            theme: 'context-menu',
+            content: html.node`
+                <button class="dropdown-menu-clickable-item" data-type="manual" onclick=${() => {
+                    view.level = 'manual';
+                    tooltip.show();
+                }}>
+                    ${tl(trans.manual_date)}
+                </button>
+            `,
+            placement: 'right-start',
+            trigger: 'manual',
+            interactive: true,
+            interactiveBorder: 10,
+            offset: [0, 0],
+
+            onShow(instance) {
+                instance.popper.addEventListener('click', event => {
+                    instance.hide();
+                });
+            }
+        });
+
+        register_menu(date_display, menu);
 
         function render_popup() {
             let inner;
@@ -367,8 +393,6 @@ export function input({
         }
 
         function render_manual_view() {
-            const min_year = min_date.getFullYear();
-            const max_year = max_date.getFullYear();
             let manual_date;
 
             let elem = html.node`
@@ -377,10 +401,7 @@ export function input({
                         ${tl(trans.manual)}
                     </button>
                     <div class="fill" />
-                    <button class="chibi icon" data-type="manual" type="button" onclick=${() => {
-                        view.level = 'manual';
-                        render_popup();
-                    }}>
+                    <button class="chibi icon" data-type="manual" type="button" disabled>
                         ${tl(trans.manual)}
                     </button>
                     <button class="chibi icon" data-type="up" disabled>
