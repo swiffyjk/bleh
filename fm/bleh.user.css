@@ -16668,7 +16668,6 @@
         display: flex;
         flex-direction: column;
         gap: 12px;
-        overflow: hidden;
         padding: 12px;
 
         &:not(.blend) {
@@ -16676,6 +16675,18 @@
             border-radius: var(--item-big-radius);
             border: 1px solid transparent;
             box-shadow: var(--group-shadow);
+
+            & > .setting {
+                &:first-child {
+                    border-top-left-radius: var(--item-big-radius);
+                    border-top-right-radius: var(--item-big-radius);
+                }
+
+                &:last-child {
+                    border-bottom-left-radius: var(--item-big-radius);
+                    border-bottom-right-radius: var(--item-big-radius);
+                }
+            }
         }
 
         &.blend {
