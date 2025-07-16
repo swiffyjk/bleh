@@ -255,7 +255,98 @@ export function render_setting_page(page_id) {
             }
         ]);
 
+        const banners = JSON.parse(localStorage.getItem('bleh_profile_banners')) || {};
+        let banner = '';
+        if (banners[page.name] && banners[page.name] != 'none') {
+            banner = banners[page.name];
+        }
+
         render(page.structure.main, html`
+            <div class="bleh--panel">
+                <h4>${trans_legacy.en.settings.customise.profile_header.name}</h4>
+                <div class="inner-preview pad">
+                    <div class="profile-mockup">
+                        <div class="mockup-header">
+                            <img class="mockup-avatar" src="${auth.avatar}">
+                            <div class="mockup-info">
+                                <div class="mockup-subtext"></div>
+                                <div class="mockup-name"></div>
+                            </div>
+                        </div>
+                        <div class="mockup-container">
+                            <div class="mockup-col-main">
+                                <div class="mockup-panel main"></div>
+                            </div>
+                            <div class="mockup-col-sidebar">
+                                <div class="mockup-panel mockup-obsession-panel">
+                                    <img class="mockup-obsession-art" src="https://lastfm.freetls.fastly.net/i/u/64s/510546e3b6df7504392274c528c77780.jpg">
+                                    <div class="mockup-obsession-name"></div>
+                                </div>
+                                <div class="mockup-panel main"></div>
+                            </div>
+                        </div>
+                        <div class="profile-mockup-background from-avatar" style="background-image: url(${auth.avatar.replace('/avatar42s/', '/avatar300s/')})"></div>
+                        ${banner != '' ? html.node`
+                        <div class="profile-mockup-background from-track" style="background-image: url(${banner})"></div>
+                        ` : html.node`
+                        <div class="profile-mockup-background from-track" style="background-image: url(https://lastfm.freetls.fastly.net/i/u/avatar300s/df927f4f88034b7f9a651636b965c9d7)"></div>
+                        `}
+                    </div>
+                </div>
+                <div class="setting-group">
+                    <div class="setting" data-type="options">
+                        <div class="heading">
+                            <h5>${tl(trans.view_backgrounds_on)}</h5>
+                        </div>
+                        <div class="primary-selections">
+                            ${setting({id: 'profile_header_own', standalone: true})}
+                            ${setting({id: 'profile_header_others', standalone: true})}
+                        </div>
+                    </div>
+                    ${setting({id: 'profile_avi_background'})}
+                    <div class="setting" data-type="info">
+                        <div class="heading">
+                            <h5>${tl(trans.profile_banner.name)}</h5>
+                            <p>${tl(trans.profile_banner.body)}</p>
+                            <p>${tl(trans.current_banner_value).replace('{v}', banner)}</p>
+                        </div>
+                        ${() => {
+                            if (banner == '')
+                                return html.node`
+                                    <div class="info">
+                                        <p>${tl(trans.none)}</p>
+                                    </div>
+                                `;
+                            
+                            let banner_image = html.node`
+                                <div class="banner-image" style="background-image: url(${banner})" />
+                            `;
+                            
+                            tippy(banner_image, {
+                                content: banner
+                            });
+                            
+                            return banner_image;
+                        }}
+                    </div>
+                </div>
+                <div class="setting-group">
+                    ${setting({id: 'show_your_progress'})}
+                </div>
+                <div class="sep"></div>
+                <div class="setting" data-type="toggle" id="container-rain" onclick="_update_item('rain')">
+                    <button class="btn reset" onclick="_reset_item('rain')">${tl(trans.reset)}</button>
+                    <div class="heading">
+                        <h5>${trans_legacy.en.settings.customise.rain.name}</h5>
+                        <p>${trans_legacy.en.settings.customise.rain.bio}</p>
+                    </div>
+                    <div class="toggle-wrap">
+                        <button class="toggle" id="toggle-rain" aria-checked="true">
+                            <div class="dot"></div>
+                        </button>
+                    </div>
+                </div>
+            </div>
             <div class="bleh--panel check-artist-hover">
                 <h4 class="top-header">${tl(trans.layout)}</h4>
                 <h4>${trans_legacy.en.settings.layout.header}</h4>
@@ -299,91 +390,30 @@ export function render_setting_page(page_id) {
                 </div>
             </div>
             <div class="bleh--panel">
-                <h4>${trans_legacy.en.settings.customise.profile_header.name}</h4>
-                <div class="inner-preview pad">
-                    <div class="profile-mockup">
-                        <div class="mockup-header">
-                            <img class="mockup-avatar" src="${auth.avatar}">
-                            <div class="mockup-info">
-                                <div class="mockup-subtext"></div>
-                                <div class="mockup-name"></div>
-                            </div>
-                        </div>
-                        <div class="mockup-container">
-                            <div class="mockup-col-main">
-                                <div class="mockup-panel main"></div>
-                            </div>
-                            <div class="mockup-col-sidebar">
-                                <div class="mockup-panel mockup-obsession-panel">
-                                    <img class="mockup-obsession-art" src="https://lastfm.freetls.fastly.net/i/u/64s/510546e3b6df7504392274c528c77780.jpg">
-                                    <div class="mockup-obsession-name"></div>
-                                </div>
-                                <div class="mockup-panel main"></div>
-                            </div>
-                        </div>
-                        <div class="profile-mockup-background from-avatar" style="background-image: url(${auth.avatar.replace('/avatar42s/', '/avatar300s/')});"></div>
-                        <div class="profile-mockup-background from-track" style="background-image: url(https://lastfm.freetls.fastly.net/i/u/avatar300s/df927f4f88034b7f9a651636b965c9d7);"></div>
-                    </div>
+                <h4>${trans_legacy.en.settings.customise.display.name}</h4>
+                <div class="inner-preview pad flex">
+                    <section class="catalogue-tags">
+                        <ul class="tags-list tags-list--global">
+                            <li class="tag">
+                                <a href="/tag/pop">pop</a>
+                            </li>
+                            <li class="tag">
+                                <a href="/tag/country">country</a>
+                            </li>
+                            <li class="tag">
+                                <a href="/tag/singer-songwriter">singer-songwriter</a>
+                            </li>
+                            <li class="tag">
+                                <a href="/tag/female+vocalists">female vocalists</a>
+                            </li>
+                            <li class="tag">
+                                <a href="/tag/synthpop">synthpop</a>
+                            </li>
+                        </ul>
+                    </section>
                 </div>
-                <div class="setting" data-type="toggle" id="container-profile_avi_background" onclick="_update_item('profile_avi_background')">
-                    <button class="btn reset" onclick="_reset_item('profile_avi_background')">${tl(trans.reset)}</button>
-                    <div class="heading">
-                        <h5>${trans_legacy.en.settings.customise.profile_header.see_type}</h5>
-                    </div>
-                    <div class="toggle-wrap">
-                        <button class="toggle" id="toggle-profile_avi_background" aria-checked="false">
-                            <div class="dot"></div>
-                        </button>
-                    </div>
-                </div>
-                <h4>${trans_legacy.en.settings.customise.profile_header.view_on}</h4>
-                <div class="setting" data-type="toggle" id="container-profile_header_own" onclick="_update_item('profile_header_own')">
-                    <button class="btn reset" onclick="_reset_item('profile_header_own')">${tl(trans.reset)}</button>
-                    <div class="heading">
-                        <h5>${trans_legacy.en.settings.customise.profile_header.for_own}</h5>
-                    </div>
-                    <div class="toggle-wrap">
-                        <button class="toggle" id="toggle-profile_header_own" aria-checked="false">
-                            <div class="dot"></div>
-                        </button>
-                    </div>
-                </div>
-                <div class="setting" data-type="toggle" id="container-profile_header_others" onclick="_update_item('profile_header_others')">
-                    <button class="btn reset" onclick="_reset_item('profile_header_others')">${tl(trans.reset)}</button>
-                    <div class="heading">
-                        <h5>${trans_legacy.en.settings.customise.profile_header.for_others}</h5>
-                    </div>
-                    <div class="toggle-wrap">
-                        <button class="toggle" id="toggle-profile_header_others" aria-checked="false">
-                            <div class="dot"></div>
-                        </button>
-                    </div>
-                </div>
-                <div class="sep"></div>
-                <div class="setting" data-type="toggle" id="container-show_your_progress" onclick="_update_item('show_your_progress')">
-                    <button class="btn reset" onclick="_reset_item('show_your_progress')">${tl(trans.reset)}</button>
-                    <div class="heading">
-                        <h5>${trans_legacy.en.settings.customise.show_your_progress.name}</h5>
-                        <p>${trans_legacy.en.settings.customise.show_your_progress.bio}</p>
-                    </div>
-                    <div class="toggle-wrap">
-                        <button class="toggle" id="toggle-show_your_progress" aria-checked="true">
-                            <div class="dot"></div>
-                        </button>
-                    </div>
-                </div>
-                <div class="sep"></div>
-                <div class="setting" data-type="toggle" id="container-rain" onclick="_update_item('rain')">
-                    <button class="btn reset" onclick="_reset_item('rain')">${tl(trans.reset)}</button>
-                    <div class="heading">
-                        <h5>${trans_legacy.en.settings.customise.rain.name}</h5>
-                        <p>${trans_legacy.en.settings.customise.rain.bio}</p>
-                    </div>
-                    <div class="toggle-wrap">
-                        <button class="toggle" id="toggle-rain" aria-checked="true">
-                            <div class="dot"></div>
-                        </button>
-                    </div>
+                <div class="setting-group">
+                    ${setting({id: 'gendered_tags'})}
                 </div>
             </div>
             `);
@@ -1089,13 +1119,13 @@ export function render_setting_page(page_id) {
                 <h4>${tl(trans.redirections)}</h4>
                 <div class="setting-group">
                     ${setting({id: 'travis'})}
-                    <div class="setting" data-type="toggle">
+                    <div class="setting" data-type="action">
                         <div class="heading">
                             <h5>${tl(trans.legacy_redirects.name)}</h5>
                             <p>${tl(trans.legacy_redirects.body)}</p>
                         </div>
                         <div class="toggle-wrap">
-                            <a class="see-more" href="${root}settings/website" target="_blank">
+                            <a class="btn continue" href="${root}settings/website" target="_blank">
                                 ${tl(trans.change_now)}
                             </a>
                         </div>
@@ -1117,33 +1147,6 @@ export function render_setting_page(page_id) {
                 <div class="setting-group">
                     ${setting({id: 'gloss'})}
                     ${setting({id: 'grid_glow'})}
-                </div>
-            </div>
-            <div class="bleh--panel">
-                <h4>${trans_legacy.en.settings.customise.display.name}</h4>
-                <div class="inner-preview pad flex">
-                    <section class="catalogue-tags">
-                        <ul class="tags-list tags-list--global">
-                            <li class="tag">
-                                <a href="/tag/pop">pop</a>
-                            </li>
-                            <li class="tag">
-                                <a href="/tag/country">country</a>
-                            </li>
-                            <li class="tag">
-                                <a href="/tag/singer-songwriter">singer-songwriter</a>
-                            </li>
-                            <li class="tag">
-                                <a href="/tag/female+vocalists">female vocalists</a>
-                            </li>
-                            <li class="tag">
-                                <a href="/tag/synthpop">synthpop</a>
-                            </li>
-                        </ul>
-                    </section>
-                </div>
-                <div class="setting-group">
-                    ${setting({id: 'gendered_tags'})}
                 </div>
             </div>
             `);

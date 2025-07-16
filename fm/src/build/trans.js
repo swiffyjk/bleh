@@ -3004,6 +3004,45 @@ export const trans = {
         body: {
             en: 'Decreases the intensity of animations, hover effects, and other moving parts'
         }
+    },
+    view_backgrounds_on: {
+        en: 'View banners on'
+    },
+    own_profile: {
+        en: 'Own profile'
+    },
+    other_profiles: {
+        en: 'Other profiles'
+    },
+    profile_avi_background: {
+        name: {
+            en: 'Ignore banners and use avatar image'
+        },
+        body: {
+            en: 'All custom and artist-based banner images will be replaced by the user’s avatar'
+        }
+    },
+    profile_banner: {
+        name: {
+            en: 'Profile banner'
+        },
+        body: {
+            en: 'Add your own custom banner image to your profile with ![banner](image url) in your bio'
+        }
+    },
+    none: {
+        en: 'None'
+    },
+    current_banner_value: {
+        en: 'Current banner: {v}'
+    },
+    show_your_progress: {
+        name: {
+            en: 'Show your plays compared to last week'
+        },
+        body: {
+            en: 'Compares your current progress to last week’s average, requires Last.fm Pro'
+        }
     }
 }
 

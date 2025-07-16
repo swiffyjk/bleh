@@ -18,7 +18,8 @@ import {dialog_rm} from "./dialog.js";
 export function setting({
     id = '',
     text = true,
-    focus = false
+    focus = false,
+    standalone = false
 }) {
     try {
         let value = settings[id];
@@ -49,7 +50,7 @@ export function setting({
             let toggle;
 
             return html.node`
-                <div class="setting v2" data-type="toggle" disabled=${disabled} onclick=${() => update_toggle(id, toggle)}>
+                <div class="setting v2 ${standalone ? 'standalone' : ''}" data-type="toggle" disabled=${disabled} onclick=${() => update_toggle(id, toggle)}>
                     ${icon ? html.node`
                     <div class="icon">
                         <div class="bleh-icon" style="--icon: var(--${icon})" />
@@ -101,7 +102,7 @@ export function setting({
             let working_max = settings_store[id].max - settings_store[id].min;
 
             return html.node`
-                <div class="setting v2" data-type="range" disabled=${disabled} ref=${el => option = el} data-modified=${value != settings_store[id].default}>
+                <div class="setting v2 ${standalone ? 'standalone' : ''}" data-type="range" disabled=${disabled} ref=${el => option = el} data-modified=${value != settings_store[id].default}>
                     ${(text) ? html.node`
                     <div class="heading">
                         <h5>${title}<button class="reset see-more" onclick=${() => reset_range(id, option, track, input, marker)}>${tl(trans.reset)}</button></h5>
@@ -152,7 +153,7 @@ export function setting({
             let error_tooltip;
 
             let container = html.node`
-                <div class="setting v2" data-type="text" disabled=${disabled} ref=${el => option = el} data-modified=${value != settings_store[id].default}>
+                <div class="setting v2 ${standalone ? 'standalone' : ''}" data-type="text" disabled=${disabled} ref=${el => option = el} data-modified=${value != settings_store[id].default}>
                     ${(text) ? html.node`
                     <div class="heading">
                         <h5>${title}<button class="reset see-more" ref=${el => reset_btn = el} onclick=${() => reset_text(id, input, submit, option, reset_btn, avatar)}>${tl(trans.reset)}</button></h5>
@@ -236,7 +237,7 @@ export function setting({
             let toggle;
 
             return html.node`
-                <div class="setting v2 ${settings_store[id].horizontal ? 'horizontal' : ''}" data-type="checkbox" disabled=${disabled} onclick=${() => update_toggle(id, toggle)}>
+                <div class="setting v2 ${settings_store[id].horizontal ? 'horizontal' : ''} ${standalone ? 'standalone' : ''}" data-type="checkbox" disabled=${disabled} onclick=${() => update_toggle(id, toggle)}>
                     ${icon ? html.node`
                     <div class="icon">
                         <div class="bleh-icon" style="--icon: var(--${icon})" />
