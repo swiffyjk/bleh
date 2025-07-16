@@ -18953,6 +18953,23 @@
     if (shout_parse_queue.length > 0)
       setTimeout(parse_shout_queue, 50);
   }
+  function shout_messages() {
+    let alerts = page.structure.main.querySelectorAll(".shout-messages > .alert");
+    alerts.forEach((alert) => {
+      if (alert.classList.contains("alert-danger")) {
+        notify({
+          id: "shout",
+          title: tl(trans.shouts),
+          body: tl(trans.failed_to_send),
+          type: "error",
+          icon: "icon-16-shoutbox"
+        });
+      } else {
+        return;
+      }
+      alert.remove();
+    });
+  }
 
   // src/components/radio.js
   function bleh_radio() {
@@ -20446,6 +20463,7 @@
         bg.style.setProperty("background", cover);
       });
     }
+    shout_messages();
     subscribe_to_events();
     dialog_extender();
   }

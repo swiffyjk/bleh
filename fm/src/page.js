@@ -55,7 +55,7 @@ import {bleh_tracks} from "./pages/track";
 import {patch_wiki} from "./pages/wiki";
 import {start_rain} from "./rain";
 import {seasonal_timer_end, set_season} from "./seasonal";
-import {parse_shout_queue, patch_shouts, shout_header} from "./shout";
+import {parse_shout_queue, patch_shouts, shout_header, shout_messages} from "./shout";
 import {ff} from "./sku";
 import {bleh_sponsor_page, sponsors} from "./sponsor";
 import {append_style, update_check} from "./style";
@@ -307,6 +307,8 @@ function main_flow() {
             bg.style.setProperty('background', cover);
         });
     }
+
+    shout_messages();
 
     subscribe_to_events();
 
