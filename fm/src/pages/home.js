@@ -97,7 +97,7 @@ export function bleh_home() {
                 </li>
                 ${ff('minis') ? html.node`
                 <li class="navlist-item secondary-nav-item secondary-nav-item--minis">
-                    <a href="${root}bleh/minis" data-type="minis" class="secondary-nav-item-link ${(page.type == 'minis') ? 'secondary-nav-item-link--active' : ''}">
+                    <a href="${root}bleh/minis" data-type="mini" class="secondary-nav-item-link ${(page.type == 'minis') ? 'secondary-nav-item-link--active' : ''}">
                         ${tl(trans.minis)}
                     </a>
                 </li>

@@ -548,6 +548,8 @@ function page_title() {
             title = tl(trans.charts);
         else if (page.type == 'labs')
             title = tl(trans.labs.name);
+        else if (page.type == 'minis')
+            title = tl(trans.minis);
 
         if (page.type == 'inbox') {
             if (page.subpage == 'notifications')

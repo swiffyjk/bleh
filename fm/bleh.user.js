@@ -17926,7 +17926,7 @@
                 </li>
                 ${ff("minis") ? html.node`
                 <li class="navlist-item secondary-nav-item secondary-nav-item--minis">
-                    <a href="${root}bleh/minis" data-type="minis" class="secondary-nav-item-link ${page.type == "minis" ? "secondary-nav-item-link--active" : ""}">
+                    <a href="${root}bleh/minis" data-type="mini" class="secondary-nav-item-link ${page.type == "minis" ? "secondary-nav-item-link--active" : ""}">
                         ${tl(trans.minis)}
                     </a>
                 </li>
@@ -20518,6 +20518,8 @@
         title = tl(trans.charts);
       else if (page.type == "labs")
         title = tl(trans.labs.name);
+      else if (page.type == "minis")
+        title = tl(trans.minis);
       if (page.type == "inbox") {
         if (page.subpage == "notifications")
           title = tl(trans.notifications.name);
@@ -28133,7 +28135,7 @@
       },
       minis: {
         default: false,
-        name: "mini center replacement for Labs",
+        name: "Minis replacement for Labs",
         date: "2025-07-17"
       }
     }
