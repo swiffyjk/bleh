@@ -241,6 +241,7 @@
 
         --card-border: inset 0 0 0 1px hsla(var(--b4), 0.6);
         --card-border-base: hsl(var(--b3), 0.7);
+        --card-border-base-highlight: hsl(var(--b2), 0.55);
 
         --normal-shadow: inset 0 0 0 1px hsla(var(--b2), 0.4), inset 0 -2px 4px hsla(var(--b5), 0.6);
         --input-shadow: inset 0 -1px 0 0 hsl(var(--b3), 70%), inset 0 1px 2px hsl(var(--b7), 0.2);
@@ -282,6 +283,7 @@
             --b7: 0, 0%, 0%;
 
             --card-border-base: hsl(var(--b3), 0.6);
+            --card-border-base-highlight: hsl(var(--b2), 0.55);
 
             --input-shadow: inset 0 -1px 0 0 hsl(var(--b3)), inset 0 1px 2px 1px hsl(var(--b3), 0.4);
             --focused-input-shadow: inset 0 -1px 0 0 hsl(var(--h3), 50%), inset 0 -1px 0 0 hsl(var(--b3)), inset 0 1px 2px 1px hsl(var(--b3), 0.4);
@@ -304,7 +306,8 @@
             --b7: 0, 0%, 0%;
             --b9: 0, 0%, 100%;
 
-            --card-border-base: hsl(var(--c3), 0.2) !important;
+            --card-border-base: hsl(0, 0%, 87%) !important;
+            --card-border-base-highlight: hsl(0, 0%, 89%);
 
             --normal-shadow: inset 0 0 0 1px hsla(var(--b2), 0.3), inset 0 -2px 4px hsla(var(--b4), 0.5);
             --input-shadow: inset 0 -1px 0 0 var(--card-border-base), inset 0 1px 3px hsl(var(--b7), 0.1);
@@ -323,12 +326,13 @@
             --b5: var(--hue), calc(var(--sat) * 14% * var(--sat-bg, 1)), 81%;
 
             /* root */
-            --b6: var(--hue), calc(var(--sat) * 9% * var(--sat-bg, 1)), 73%;
+            --b6: var(--hue), calc(var(--sat) * 9% * var(--sat-bg, 1)), 74%;
             --b8: var(--hue), calc(var(--sat) * 12% * var(--sat-bg, 1)), 86%;
             --b7: var(--c1);
             --b9: 0, 0%, 84%;
 
             --card-border-base: hsl(var(--hue), calc(var(--sat) * 9% * var(--sat-bg, 1)), 70%) !important;
+            --card-border-base-highlight: hsl(var(--hue), calc(var(--sat) * 9% * var(--sat-bg, 1)), 72%) !important;
 
             --normal-shadow: inset 0 0 0 1px hsla(var(--b2), 0.3), inset 0 -2px 4px hsla(var(--b4), 0.5);
             --input-shadow: inset 0 -1px 0 0 var(--card-border-base), inset 0 1px 3px hsl(var(--b7), 0.1);
@@ -2161,6 +2165,7 @@
                 justify-content: unset;
                 width: var(--cards-width);
                 border: 1px solid var(--card-border-base) !important;
+                border-top: 1px solid var(--card-border-base-highlight) !important;
                 border-radius: var(--card-radius) !important;
                 padding: var(--card-padding) 0;
                 gap: var(--card-gap) !important;
@@ -10315,6 +10320,8 @@
 
         &[data-modal-type="avatar"] {
             background: unset;
+            backdrop-filter: unset;
+            -webkit-backdrop-filter: unset;
             padding: unset;
             outline: unset;
             border: unset;
@@ -16268,13 +16275,13 @@
     .swatch-info {
         gap: var(--item-list-gap) !important;
 
-        &:has(> .swatch-group > .swatch-container:hover) {
-            & > .swatch-group > .swatch-container:not(:hover) {
+        /*&:has(> .swatch-group > .swatch-container:is(:hover, [aria-expanded="true"])) {
+            & > .swatch-group > .swatch-container:not(:hover, [aria-expanded="true"]) {
                 & > strong {
                     opacity: 0 !important;
                 }
             }
-        }
+        }*/
     }
     .swatch-sep {
         width: 2px !important;
@@ -16317,12 +16324,13 @@
             }
         }
 
+        /*&[aria-expanded="true"],
         &:hover {
             & > strong {
                 opacity: 1;
                 color: hsl(var(--c3));
             }
-        }
+        }*/
 
         &:not([aria-checked="true"], :hover) {
             overflow: hidden;
@@ -16333,8 +16341,6 @@
         box-shadow: var(--primary-shadow), 0 3px 12px hsl(var(--h4), 32%), var(--interact-shadow);
         color: hsl(var(--b7));
         --mask-colour: currentColor;
-        --sat-album: 1;
-        --lit-album: 1;
         --font-size: 0;
 
         position: relative;
@@ -16361,9 +16367,11 @@
         &[data-swatch-type="customise"] {
             --mask: var(--icon-16-plus);
 
-            background: hsl(var(--b6), 20%);
-            color: hsl(var(--c2));
-            box-shadow: var(--group-shadow);
+            &:not([aria-checked="true"] > &) {
+                background: hsl(var(--b6), 20%);
+                color: hsl(var(--c2));
+                box-shadow: var(--group-shadow);
+            }
         }
     }
 

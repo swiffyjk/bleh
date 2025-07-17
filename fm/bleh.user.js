@@ -14546,7 +14546,7 @@
         { sets: {
           hue: 0,
           sat: 1.2,
-          lit: 0.93
+          lit: 0.9
         }, label: trans.red },
         { sets: {
           hue: 19,
@@ -14554,28 +14554,28 @@
           lit: 0.95
         }, label: trans.orange },
         { sets: {
-          hue: 36,
-          sat: 1,
+          hue: 48,
+          sat: 1.5,
           lit: 1
         }, label: trans.yellow },
         { sets: {
-          hue: 105,
-          sat: 1.025,
-          lit: 1
+          hue: 98,
+          sat: 1.05,
+          lit: 1.025
         }, label: trans.lime },
         { sets: {
-          hue: 141,
+          hue: 131,
           sat: 1,
-          lit: 0.95
+          lit: 0.925
         }, label: trans.green },
         { sets: {
-          hue: 190,
-          sat: 1.2,
-          lit: 1
+          hue: 188,
+          sat: 1,
+          lit: 1.1
         }, label: trans.aqua },
         { sets: {
-          hue: 217,
-          sat: 1.2,
+          hue: 228,
+          sat: 1.3,
           lit: 0.9
         }, label: trans.blue },
         { sets: {
@@ -14801,6 +14801,9 @@
           }
         }
         text_elem.textContent = text2;
+        tippy(swatch, {
+          content: text2
+        });
         swatch_group.appendChild(swatch);
       });
     }
