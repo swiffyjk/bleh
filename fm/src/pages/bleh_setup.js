@@ -108,20 +108,39 @@ unsafeWindow._setup_themes = function() {
     setTimeout(function() {
         page.structure.setup.setAttribute('data-animating', 'false');
         render(page.structure.setup_content, html`
-            <p>${tl(trans.choose_a_theme)}</p>
-            ${theme_bubbles}
+            <div class="setting-group">
+                <div class="setting" data-type="action">
+                    <div class="heading">
+                        <h5>${tl(trans.themes.name)}</h5>
+                    </div>
+                    <div class="info">
+                        ${theme_bubbles}
+                    </div>
+                </div>
+                <div class="setting" data-type="action">
+                    <div class="heading">
+                        <h5>${tl(trans.hue)}</h5>
+                    </div>
+                    <div class="info swatch-info">
+                        <div id="colour_custom" class="swatch-group palette"></div>
+                        <div class="sep swatch-sep" />
+                        <div id="colour_palette" class="swatch-group palette"></div>
+                    </div>
+                </div>
+            </div>
         `);
         page.structure.setup_footer.innerHTML = (`
             <button class="see-more cancel" onclick="_setup_accessibility()">
                 ${tl(trans.back)}
             </button>
             <div class="fill"></div>
-            <button class="btn primary continue" onclick="_setup_colours()">
+            <button class="btn primary continue" onclick="_setup_music()">
                 ${tl(trans.next)}
             </button>
         `);
 
         show_theme_change_in_settings();
+        display_colour_presets();
         refresh_all(page.structure.setup_content);
     }, page.state.trans);
 }
@@ -150,41 +169,6 @@ unsafeWindow._setup_accessibility = function() {
             </button>
         `);
 
-        refresh_all(page.structure.setup_content);
-    }, page.state.trans);
-}
-
-unsafeWindow._setup_colours = function() {
-    page.structure.setup.setAttribute('data-page', 'colours');
-    page.structure.setup.setAttribute('data-animating', 'true');
-    setTimeout(function() {
-        page.structure.setup.setAttribute('data-animating', 'false');
-        render(page.structure.setup_content, html`
-            <p>${tl(trans.colours_explain)}</p>
-            <div class="view-buttons colour-buttons view-buttons-middle" id="colour_custom"></div>
-            <div class="swatch-group">
-                <div id="colour_red" class="palette options colours"></div>
-                <div id="colour_orange" class="palette options colours"></div>
-                <div id="colour_yellow" class="palette options colours"></div>
-                <div id="colour_green" class="palette options colours"></div>
-                <div id="colour_lime" class="palette options colours"></div>
-                <div id="colour_aqua" class="palette options colours"></div>
-                <div id="colour_blue" class="palette options colours"></div>
-                <div id="colour_purple" class="palette options colours"></div>
-                <div id="colour_pink" class="palette options colours"></div>
-            </div>
-        `);
-        page.structure.setup_footer.innerHTML = (`
-            <button class="see-more cancel" onclick="_setup_themes()">
-                ${tl(trans.back)}
-            </button>
-            <div class="fill"></div>
-            <button class="btn primary continue" onclick="_setup_music()">
-                ${tl(trans.next)}
-            </button>
-        `);
-
-        display_colour_presets();
         refresh_all(page.structure.setup_content);
     }, page.state.trans);
 }
@@ -230,7 +214,7 @@ unsafeWindow._setup_music = function() {
             </div>
         `);
         page.structure.setup_footer.innerHTML = (`
-            <button class="see-more cancel" onclick="_setup_colours()">
+            <button class="see-more cancel" onclick="_setup_themes()">
                 ${tl(trans.back)}
             </button>
             <div class="fill"></div>
