@@ -30,7 +30,6 @@ import {start_update, update_check} from "../style.js";
 
 export function bleh_settings() {
     page.name = auth.name;
-    page.type = 'bleh_settings';
     page.subpage = '';
 
     page.state.settings_page = '';
@@ -45,65 +44,70 @@ export function bleh_settings() {
     page.requested.tab = params.get('tab');
     page.requested.setting = params.get('setting');
 
+    let path = window.location.pathname.split('/');
+    let tab = path[path.length - 1];
+
+    if (tab == 'bleh') tab = null;
+
+    if (page.requested.tab && !tab) tab = page.requested.tab;
+
     const update_required = localStorage.getItem('bleh_update_required') || 'false';
+
+    const tabs = {
+        themes: {
+            name: tl(trans.appearance)
+        },
+        music: {
+            name: tl(trans.music)
+        },
+        customise: {
+            name: tl(trans.layout)
+        },
+        profiles: {
+            name: tl(trans.profiles)
+        },
+        seasonal: {
+            name: tl(trans.seasonal.name)
+        },
+        text: {
+            name: tl(trans.text)
+        },
+        accessibility: {
+            name: tl(trans.accessibility)
+        },
+        update: {
+            name: tl(trans.updates),
+            icon: 'update',
+            label: html.node`
+                ${tl(trans.updates)}${update_required === 'true' ? html.node`<div class="new-badge">${tl(trans.new)}</div>` : ''}
+            `,
+            hide_if: !ff('update_center')
+        },
+        performance: {
+            name: tl(trans.troubleshooting)
+        },
+        sku: {
+            name: tl(trans.flags),
+            password: settings.hu_tao
+        }
+    }
 
 
     // go wild
     let nav = html.node`
         <nav class="navlist secondary-nav navlist--more redesigned-navigation bleh-settings-navigation">
             <ul class="navlist-items">
-                <li class="navlist-item secondary-nav-item">
-                    <a class="secondary-nav-item-link bleh--nav" data-bleh-page="themes" onclick=${() => change_settings_page('themes')}>
-                        ${tl(trans.appearance)}
-                    </a>
-                </li>
-                <li class="navlist-item secondary-nav-item">
-                    <a class="secondary-nav-item-link bleh--nav" data-bleh-page="music" onclick=${() => change_settings_page('music')}>
-                        ${tl(trans.music)}
-                    </a>
-                </li>
-                <li class="navlist-item secondary-nav-item">
-                    <a class="secondary-nav-item-link bleh--nav" data-bleh-page="customise" onclick=${() => change_settings_page('customise')}>
-                        ${tl(trans.layout)}
-                    </a>
-                </li>
-                <li class="navlist-item secondary-nav-item">
-                    <a class="secondary-nav-item-link bleh--nav" data-bleh-page="profiles" onclick=${() => change_settings_page('profiles')}>
-                        ${tl(trans.profiles)}
-                    </a>
-                </li>
-                <li class="navlist-item secondary-nav-item">
-                    <a class="secondary-nav-item-link bleh--nav" data-bleh-page="seasonal" onclick=${() => change_settings_page('seasonal')}>
-                        ${tl(trans.seasonal.name)}
-                    </a>
-                </li>
-                <li class="navlist-item secondary-nav-item">
-                    <a class="secondary-nav-item-link bleh--nav" data-bleh-page="text" onclick=${() => change_settings_page('text')}>
-                        ${tl(trans.text)}
-                    </a>
-                </li>
-                <li class="navlist-item secondary-nav-item">
-                    <a class="secondary-nav-item-link bleh--nav" data-bleh-page="accessibility" onclick=${() => change_settings_page('accessibility')}>
-                        ${tl(trans.accessibility)}
-                    </a>
-                </li>
-                ${ff('update_center') ? html.node`
-                <li class="navlist-item secondary-nav-item">
-                    <a class="secondary-nav-item-link bleh--nav" data-bleh-page="update" data-type="update" onclick=${() => change_settings_page('update')}>
-                        ${tl(trans.updates)}${update_required === 'true' ? html.node`<div class="new-badge">${tl(trans.new)}</div>` : ''}
-                    </a>
-                </li>
-                ` : ''}
-                <li class="navlist-item secondary-nav-item">
-                    <a class="secondary-nav-item-link bleh--nav" data-bleh-page="performance" onclick=${() => change_settings_page('performance')}>
-                        ${tl(trans.troubleshooting)}
-                    </a>
-                </li>
-                <li class="navlist-item secondary-nav-item">
-                    <a class="secondary-nav-item-link bleh--nav" data-password=${settings.hu_tao} data-bleh-page="sku" onclick=${() => change_settings_page('sku')}>
-                        ${tl(trans.flags)}
-                    </a>
-                </li>
+                ${Object.entries(tabs).map(([id, tab]) => {
+                    if (tab.hide_if) return;
+                    
+                    return html.node`
+                        <li class="navlist-item secondary-nav-item">
+                            <a class="secondary-nav-item-link bleh--nav" data-bleh-page=${id} data-type=${tab.icon} data-password=${tab.password} onclick=${() => change_settings_page(id)}>
+                                ${tab.label ? tab.label : tab.name}
+                            </a>
+                        </li>
+                    `;
+                })}
             </ul>
         </nav>
     `;
@@ -148,10 +152,10 @@ export function bleh_settings() {
     else
         page.structure.row.insertBefore(nav, page.structure.content);
 
-    if (!page.requested.tab)
+    if (!tab)
         change_settings_page('themes');
     else
-        change_settings_page(page.requested.tab);
+        change_settings_page(tab);
 
     if (page.requested.setting) {
         scroll_to_setting(page.requested.setting);
@@ -1274,6 +1278,7 @@ export function change_settings_page(page_id, setting = null) {
     if (page_id == page.state.settings_page)
         return;
 
+    window.history.pushState(page_id, '', `${root}bleh/${page_id}`);
     page.state.settings_page = page_id;
 
     page.structure.main.innerHTML = '';

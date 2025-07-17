@@ -123,7 +123,7 @@ export function bleh_albums() {
                         ${tl(trans.artwork)}
                     </a>
                     <div class="sep"></div>
-                    <a class="dropdown-menu-clickable-item" href="${root}bleh?tab=customise" data-menu-item="settings">
+                    <a class="dropdown-menu-clickable-item" href="${root}bleh/customise" data-menu-item="settings">
                         ${tl(trans.settings)}
                     </a>
                 `,

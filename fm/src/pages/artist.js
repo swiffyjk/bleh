@@ -154,7 +154,7 @@ export function bleh_artists() {
                         ${tl(trans.photos)}
                     </a>
                     <div class="sep"></div>
-                    <a class="dropdown-menu-clickable-item" href="${root}bleh?tab=customise" data-menu-item="settings">
+                    <a class="dropdown-menu-clickable-item" href="${root}bleh/customise" data-menu-item="settings">
                         ${tl(trans.settings)}
                     </a>
                 `,
@@ -181,7 +181,7 @@ export function bleh_artists() {
                 let view_menu = tippy(view_button, {
                     theme: 'context-menu',
                     content: html.node`
-                        <a class="dropdown-menu-clickable-item" href="${root}bleh?tab=customise" data-menu-item="settings">
+                        <a class="dropdown-menu-clickable-item" href="${root}bleh/customise" data-menu-item="settings">
                             ${tl(trans.settings)}
                         </a>
                     `,

@@ -15,6 +15,7 @@ import {bleh_charts} from "./chart";
 import {bleh_native_settings} from './lastfm_settings';
 import {html, render} from "lighterhtml";
 import {load_banner} from "../components/banner.js";
+import {ff} from "../sku.js";
 
 export function bleh_home() {
     page.structure.container = document.body.querySelector('.page-content');
@@ -70,7 +71,7 @@ export function bleh_home() {
         <nav class="navlist secondary-nav navlist--more redesigned-navigation">
             <ul class="navlist-items">
                 <li class="navlist-item secondary-nav-item secondary-nav-item--home">
-                    <a href="${root}music" class="secondary-nav-item-link ${(page.subpage == 'music') ? 'secondary-nav-item-link--active' : ''}">
+                    <a href="${root}music" class="secondary-nav-item-link ${(page.subpage == 'music' || page.type == 'events') ? 'secondary-nav-item-link--active' : ''}">
                         ${tl(trans.home)}<div class="new-badge">${tl(trans.beta)}</div>
                     </a>
                 </li>
@@ -84,11 +85,6 @@ export function bleh_home() {
                         ${tl(trans.releases)}
                     </a>
                 </li>
-                <li class="navlist-item secondary-nav-item secondary-nav-item--events dont-rearrange">
-                    <a href="${root}events" class="secondary-nav-item-link ${(page.type == 'events') ? 'secondary-nav-item-link--active' : ''}">
-                        ${tl(trans.events)}<div class="new-badge">${tl(trans.beta)}</div>
-                    </a>
-                </li>
                 <li class="navlist-item secondary-nav-item secondary-nav-item--bookmarks">
                     <a href="${root}music/+bookmarks" class="secondary-nav-item-link ${(page.type == 'bookmarks') ? 'secondary-nav-item-link--active' : ''}">
                         ${tl(trans.bookmarks)}
@@ -99,6 +95,13 @@ export function bleh_home() {
                         ${tl(trans.charts)}
                     </a>
                 </li>
+                ${ff('games') ? html.node`
+                <li class="navlist-item secondary-nav-item secondary-nav-item--games">
+                    <a href="${root}bleh/games" data-type="games" class="secondary-nav-item-link ${(page.type == 'games') ? 'secondary-nav-item-link--active' : ''}">
+                        ${tl(trans.games)}
+                    </a>
+                </li>
+                ` : ''}
                 <li class="fill"></li>
                 <li class="navlist-item secondary-nav-item secondary-nav-item--settings">
                     <a href="${root}settings" class="secondary-nav-item-link ${(page.type == 'settings') ? 'secondary-nav-item-link--active' : ''}">
@@ -106,7 +109,7 @@ export function bleh_home() {
                     </a>
                 </li>
                 <li class="navlist-item secondary-nav-item secondary-nav-item--bleh">
-                    <a href="${root}bleh" class="secondary-nav-item-link ${(page.type == 'error') ? 'secondary-nav-item-link--active' : ''}">
+                    <a href="${root}bleh" class="secondary-nav-item-link ${(page.type == 'bleh_settings') ? 'secondary-nav-item-link--active' : ''}">
                         ${tl(trans.settings)}
                     </a>
                 </li>
@@ -169,7 +172,7 @@ export function bleh_home() {
                     <h4>${tl(trans.activity)}</h4>
                     ${render_activity_list()}
                     <div class="more-link">
-                        <a href="${root}bleh?tab=profiles&setting=activities">${tl(trans.activity_settings)}</a>
+                        <a href="${root}bleh/profiles?setting=activities">${tl(trans.activity_settings)}</a>
                     </div>
                 </div>
             </section>

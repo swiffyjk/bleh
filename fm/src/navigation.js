@@ -186,7 +186,7 @@ export function append_nav() {
     // configure bleh
     let bleh_container = html.node`
         <li class="masthead-nav-item">
-            <a class="masthead-nav-control" href="${root}bleh${(stored_season.id != 'none') ? '?tab=seasonal' : ''}" data-label="bleh" data-season="${stored_season.id}" data-season-active="${(stored_season.id != 'none') ? 'true' : 'false'}">
+            <a class="masthead-nav-control" href="${root}bleh${(stored_season.id != 'none') ? '/seasonal' : ''}" data-label="bleh" data-season="${stored_season.id}" data-season-active="${(stored_season.id != 'none') ? 'true' : 'false'}">
                 ${(stored_season.id == 'none') ? tl(trans.bleh_settings) : moment(stored_season.end.replace('y0', stored_season.year).replace('{offset}', stored_season.offset)).to(stored_season.now, true)}
             </a>
         </li>

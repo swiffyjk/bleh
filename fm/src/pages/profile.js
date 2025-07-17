@@ -173,7 +173,7 @@ export function bleh_profiles() {
                     <h2>${tl(trans.activity)}</h2>
                     ${render_activity_list()}
                     <div class="more-link">
-                        <a href="${root}bleh?tab=profiles&setting=activities">${tl(trans.activity_settings)}</a>
+                        <a href="${root}bleh/profiles?setting=activities">${tl(trans.activity_settings)}</a>
                     </div>
                 </section>
             `;
@@ -1479,7 +1479,7 @@ function profile_tracks() {
             ${setting({id: 'format_guest_features'})}
             ${setting({id: 'show_guest_features'})}
             <div class="more-link">
-                <a href="${root}bleh?tab=music">${tl(trans.settings)}</a>
+                <a href="${root}bleh/music">${tl(trans.settings)}</a>
             </div>
             <div class="settings-footer">
                 <button type="submit" class="btn-primary save">

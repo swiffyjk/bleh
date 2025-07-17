@@ -1104,10 +1104,11 @@
     }
   };
   var shout_parse_queue = [];
-  var bleh_url = "https://www.last.fm{root}bleh";
-  var setup_url = "https://www.last.fm{root}bleh/setup";
-  var sponsor_url = "https://www.last.fm{root}bleh/sponsor";
-  var api_url = "https://www.last.fm{root}bleh/api";
+  var bleh_url = "{root}bleh";
+  var setup_url = "{root}bleh/setup";
+  var sponsor_url = "{root}bleh/sponsor";
+  var api_url = "{root}bleh/api";
+  var games_url = "{root}bleh/games";
   var api_key = "85c118b69b1437844fe75fcd2bf27261";
   var theme_preview = () => html.node`
     <div class="preview-inner">
@@ -7598,7 +7599,7 @@
   }) {
     if (!can_api) can_api = localStorage.getItem("bleh_auth") && localStorage.getItem("bleh_auth_valid") === "true";
     if (!can_api) {
-      window.location.href = `${root}bleh?tab=profiles`;
+      window.location.href = `${root}bleh/profiles`;
       return;
     }
     const random = random_list[Math.floor(Math.random() * random_list.length)];
@@ -9318,17 +9319,26 @@
         type: "edit",
         link: `${root}settings`
       });
-      create_profile_top_item(profile_header, {
-        name: page.name,
-        type: "labs",
-        link: `${root}labs`,
-        tooltip: `
-                <strong>${tl(trans.labs_by_last)}</strong>
-                <p>${tl(trans.labs_by_last.tagline)}</p>
-            `,
-        tooltip_style: "stack",
-        allow_html: true
-      });
+      if (ff("games")) {
+        create_profile_top_item(profile_header, {
+          name: page.name,
+          type: "games",
+          link: `${root}bleh/games`,
+          new_release: true
+        });
+      } else {
+        create_profile_top_item(profile_header, {
+          name: page.name,
+          type: "labs",
+          link: `${root}labs`,
+          tooltip: `
+                    <strong>${tl(trans.labs_by_last)}</strong>
+                    <p>${tl(trans.labs_by_last.tagline)}</p>
+                `,
+          tooltip_style: "stack",
+          allow_html: true
+        });
+      }
       create_profile_top_item(profile_header, {
         name: page.name,
         type: "obsession",
@@ -9341,7 +9351,7 @@
           link: () => collage(),
           action: "button",
           text: tl(trans.collage),
-          new_release: true
+          updated: true
         });
       }
     }
@@ -11051,7 +11061,7 @@
                     <h2>${tl(trans.activity)}</h2>
                     ${render_activity_list()}
                     <div class="more-link">
-                        <a href="${root}bleh?tab=profiles&setting=activities">${tl(trans.activity_settings)}</a>
+                        <a href="${root}bleh/profiles?setting=activities">${tl(trans.activity_settings)}</a>
                     </div>
                 </section>
             `;
@@ -12099,7 +12109,7 @@
             ${setting({ id: "format_guest_features" })}
             ${setting({ id: "show_guest_features" })}
             <div class="more-link">
-                <a href="${root}bleh?tab=music">${tl(trans.settings)}</a>
+                <a href="${root}bleh/music">${tl(trans.settings)}</a>
             </div>
             <div class="settings-footer">
                 <button type="submit" class="btn-primary save">
@@ -13212,7 +13222,6 @@
   // src/pages/bleh_config.js
   function bleh_settings() {
     page.name = auth.name;
-    page.type = "bleh_settings";
     page.subpage = "";
     page.state.settings_page = "";
     update_page();
@@ -13221,62 +13230,62 @@
     let params = new URLSearchParams(document.location.search);
     page.requested.tab = params.get("tab");
     page.requested.setting = params.get("setting");
+    let path = window.location.pathname.split("/");
+    let tab = path[path.length - 1];
+    if (tab == "bleh") tab = null;
+    if (page.requested.tab && !tab) tab = page.requested.tab;
     const update_required = localStorage.getItem("bleh_update_required") || "false";
+    const tabs = {
+      themes: {
+        name: tl(trans.appearance)
+      },
+      music: {
+        name: tl(trans.music)
+      },
+      customise: {
+        name: tl(trans.layout)
+      },
+      profiles: {
+        name: tl(trans.profiles)
+      },
+      seasonal: {
+        name: tl(trans.seasonal.name)
+      },
+      text: {
+        name: tl(trans.text)
+      },
+      accessibility: {
+        name: tl(trans.accessibility)
+      },
+      update: {
+        name: tl(trans.updates),
+        icon: "update",
+        label: html.node`
+                ${tl(trans.updates)}${update_required === "true" ? html.node`<div class="new-badge">${tl(trans.new)}</div>` : ""}
+            `,
+        hide_if: !ff("update_center")
+      },
+      performance: {
+        name: tl(trans.troubleshooting)
+      },
+      sku: {
+        name: tl(trans.flags),
+        password: settings.hu_tao
+      }
+    };
     let nav = html.node`
         <nav class="navlist secondary-nav navlist--more redesigned-navigation bleh-settings-navigation">
             <ul class="navlist-items">
-                <li class="navlist-item secondary-nav-item">
-                    <a class="secondary-nav-item-link bleh--nav" data-bleh-page="themes" onclick=${() => change_settings_page("themes")}>
-                        ${tl(trans.appearance)}
-                    </a>
-                </li>
-                <li class="navlist-item secondary-nav-item">
-                    <a class="secondary-nav-item-link bleh--nav" data-bleh-page="music" onclick=${() => change_settings_page("music")}>
-                        ${tl(trans.music)}
-                    </a>
-                </li>
-                <li class="navlist-item secondary-nav-item">
-                    <a class="secondary-nav-item-link bleh--nav" data-bleh-page="customise" onclick=${() => change_settings_page("customise")}>
-                        ${tl(trans.layout)}
-                    </a>
-                </li>
-                <li class="navlist-item secondary-nav-item">
-                    <a class="secondary-nav-item-link bleh--nav" data-bleh-page="profiles" onclick=${() => change_settings_page("profiles")}>
-                        ${tl(trans.profiles)}
-                    </a>
-                </li>
-                <li class="navlist-item secondary-nav-item">
-                    <a class="secondary-nav-item-link bleh--nav" data-bleh-page="seasonal" onclick=${() => change_settings_page("seasonal")}>
-                        ${tl(trans.seasonal.name)}
-                    </a>
-                </li>
-                <li class="navlist-item secondary-nav-item">
-                    <a class="secondary-nav-item-link bleh--nav" data-bleh-page="text" onclick=${() => change_settings_page("text")}>
-                        ${tl(trans.text)}
-                    </a>
-                </li>
-                <li class="navlist-item secondary-nav-item">
-                    <a class="secondary-nav-item-link bleh--nav" data-bleh-page="accessibility" onclick=${() => change_settings_page("accessibility")}>
-                        ${tl(trans.accessibility)}
-                    </a>
-                </li>
-                ${ff("update_center") ? html.node`
-                <li class="navlist-item secondary-nav-item">
-                    <a class="secondary-nav-item-link bleh--nav" data-bleh-page="update" data-type="update" onclick=${() => change_settings_page("update")}>
-                        ${tl(trans.updates)}${update_required === "true" ? html.node`<div class="new-badge">${tl(trans.new)}</div>` : ""}
-                    </a>
-                </li>
-                ` : ""}
-                <li class="navlist-item secondary-nav-item">
-                    <a class="secondary-nav-item-link bleh--nav" data-bleh-page="performance" onclick=${() => change_settings_page("performance")}>
-                        ${tl(trans.troubleshooting)}
-                    </a>
-                </li>
-                <li class="navlist-item secondary-nav-item">
-                    <a class="secondary-nav-item-link bleh--nav" data-password=${settings.hu_tao} data-bleh-page="sku" onclick=${() => change_settings_page("sku")}>
-                        ${tl(trans.flags)}
-                    </a>
-                </li>
+                ${Object.entries(tabs).map(([id, tab2]) => {
+      if (tab2.hide_if) return;
+      return html.node`
+                        <li class="navlist-item secondary-nav-item">
+                            <a class="secondary-nav-item-link bleh--nav" data-bleh-page=${id} data-type=${tab2.icon} data-password=${tab2.password} onclick=${() => change_settings_page(id)}>
+                                ${tab2.label ? tab2.label : tab2.name}
+                            </a>
+                        </li>
+                    `;
+    })}
             </ul>
         </nav>
     `;
@@ -13316,10 +13325,10 @@
       page.structure.container.insertBefore(nav, page.structure.row);
     else
       page.structure.row.insertBefore(nav, page.structure.content);
-    if (!page.requested.tab)
+    if (!tab)
       change_settings_page("themes");
     else
-      change_settings_page(page.requested.tab);
+      change_settings_page(tab);
     if (page.requested.setting) {
       scroll_to_setting(page.requested.setting);
     }
@@ -14392,6 +14401,7 @@
   function change_settings_page(page_id, setting2 = null) {
     if (page_id == page.state.settings_page)
       return;
+    window.history.pushState(page_id, "", `${root}bleh/${page_id}`);
     page.state.settings_page = page_id;
     page.structure.main.innerHTML = "";
     if (ff("bleh_settings_tabs")) {
@@ -16274,7 +16284,7 @@
     links.appendChild(inbox_container);
     let bleh_container = html.node`
         <li class="masthead-nav-item">
-            <a class="masthead-nav-control" href="${root}bleh${stored_season.id != "none" ? "?tab=seasonal" : ""}" data-label="bleh" data-season="${stored_season.id}" data-season-active="${stored_season.id != "none" ? "true" : "false"}">
+            <a class="masthead-nav-control" href="${root}bleh${stored_season.id != "none" ? "/seasonal" : ""}" data-label="bleh" data-season="${stored_season.id}" data-season-active="${stored_season.id != "none" ? "true" : "false"}">
                 ${stored_season.id == "none" ? tl(trans.bleh_settings) : moment(stored_season.end.replace("y0", stored_season.year).replace("{offset}", stored_season.offset)).to(stored_season.now, true)}
             </a>
         </li>
@@ -16902,7 +16912,7 @@
                         ${tl(trans.artwork)}
                     </a>
                     <div class="sep"></div>
-                    <a class="dropdown-menu-clickable-item" href="${root}bleh?tab=customise" data-menu-item="settings">
+                    <a class="dropdown-menu-clickable-item" href="${root}bleh/customise" data-menu-item="settings">
                         ${tl(trans.settings)}
                     </a>
                 `,
@@ -17173,7 +17183,7 @@
                         ${tl(trans.photos)}
                     </a>
                     <div class="sep"></div>
-                    <a class="dropdown-menu-clickable-item" href="${root}bleh?tab=customise" data-menu-item="settings">
+                    <a class="dropdown-menu-clickable-item" href="${root}bleh/customise" data-menu-item="settings">
                         ${tl(trans.settings)}
                     </a>
                 `,
@@ -17196,7 +17206,7 @@
           let view_menu = tippy(view_button, {
             theme: "context-menu",
             content: html.node`
-                        <a class="dropdown-menu-clickable-item" href="${root}bleh?tab=customise" data-menu-item="settings">
+                        <a class="dropdown-menu-clickable-item" href="${root}bleh/customise" data-menu-item="settings">
                             ${tl(trans.settings)}
                         </a>
                     `,
@@ -17890,7 +17900,7 @@
         <nav class="navlist secondary-nav navlist--more redesigned-navigation">
             <ul class="navlist-items">
                 <li class="navlist-item secondary-nav-item secondary-nav-item--home">
-                    <a href="${root}music" class="secondary-nav-item-link ${page.subpage == "music" ? "secondary-nav-item-link--active" : ""}">
+                    <a href="${root}music" class="secondary-nav-item-link ${page.subpage == "music" || page.type == "events" ? "secondary-nav-item-link--active" : ""}">
                         ${tl(trans.home)}<div class="new-badge">${tl(trans.beta)}</div>
                     </a>
                 </li>
@@ -17904,11 +17914,6 @@
                         ${tl(trans.releases)}
                     </a>
                 </li>
-                <li class="navlist-item secondary-nav-item secondary-nav-item--events dont-rearrange">
-                    <a href="${root}events" class="secondary-nav-item-link ${page.type == "events" ? "secondary-nav-item-link--active" : ""}">
-                        ${tl(trans.events)}<div class="new-badge">${tl(trans.beta)}</div>
-                    </a>
-                </li>
                 <li class="navlist-item secondary-nav-item secondary-nav-item--bookmarks">
                     <a href="${root}music/+bookmarks" class="secondary-nav-item-link ${page.type == "bookmarks" ? "secondary-nav-item-link--active" : ""}">
                         ${tl(trans.bookmarks)}
@@ -17919,6 +17924,13 @@
                         ${tl(trans.charts)}
                     </a>
                 </li>
+                ${ff("games") ? html.node`
+                <li class="navlist-item secondary-nav-item secondary-nav-item--games">
+                    <a href="${root}bleh/games" data-type="games" class="secondary-nav-item-link ${page.type == "games" ? "secondary-nav-item-link--active" : ""}">
+                        ${tl(trans.games)}
+                    </a>
+                </li>
+                ` : ""}
                 <li class="fill"></li>
                 <li class="navlist-item secondary-nav-item secondary-nav-item--settings">
                     <a href="${root}settings" class="secondary-nav-item-link ${page.type == "settings" ? "secondary-nav-item-link--active" : ""}">
@@ -17926,7 +17938,7 @@
                     </a>
                 </li>
                 <li class="navlist-item secondary-nav-item secondary-nav-item--bleh">
-                    <a href="${root}bleh" class="secondary-nav-item-link ${page.type == "error" ? "secondary-nav-item-link--active" : ""}">
+                    <a href="${root}bleh" class="secondary-nav-item-link ${page.type == "bleh_settings" ? "secondary-nav-item-link--active" : ""}">
                         ${tl(trans.settings)}
                     </a>
                 </li>
@@ -17981,7 +17993,7 @@
                     <h4>${tl(trans.activity)}</h4>
                     ${render_activity_list()}
                     <div class="more-link">
-                        <a href="${root}bleh?tab=profiles&setting=activities">${tl(trans.activity_settings)}</a>
+                        <a href="${root}bleh/profiles?setting=activities">${tl(trans.activity_settings)}</a>
                     </div>
                 </div>
             </section>
@@ -18459,7 +18471,7 @@
                 </a>
                 ` : ""}
                 <div class="sep"></div>
-                <a class="dropdown-menu-clickable-item" href="${root}bleh?tab=customise" data-menu-item="settings">
+                <a class="dropdown-menu-clickable-item" href="${root}bleh/customise" data-menu-item="settings">
                     ${tl(trans.settings)}
                 </a>
             `,
@@ -18695,6 +18707,7 @@
       setTimeout(parse_shout_queue, 50);
   }
   function shout_messages() {
+    if (!page.structure.main) return;
     let alerts = page.structure.main.querySelectorAll(".shout-messages > .alert");
     alerts.forEach((alert) => {
       if (alert.classList.contains("alert-danger")) {
@@ -20045,6 +20058,93 @@
     }
   }
 
+  // src/pages/games.js
+  function bleh_games() {
+    update_page();
+    page.structure.row.removeChild(page.structure.row.firstElementChild);
+    page.structure.row.removeChild(page.structure.row.firstElementChild);
+    let path = window.location.pathname.split("/");
+    let game = path[path.length - 1];
+    if (game == "games") game = null;
+    const valid_games = {
+      pixel: {
+        name: tl(trans.pixel?.name),
+        body: tl(trans.pixel?.body),
+        func: bleh_games_pixel
+      },
+      rainbow: {
+        name: tl(trans.rainbow?.name),
+        body: tl(trans.rainbow?.body),
+        func: bleh_games_rainbow
+      },
+      receipt: {
+        name: tl(trans.receipt?.name),
+        body: tl(trans.receipt?.body),
+        func: bleh_games_receipt
+      },
+      collage: {
+        name: tl(trans.collage),
+        body: tl(trans.collage_description),
+        func: () => {
+          window.location.href = `${root}user/${auth.name}?collage`;
+        }
+      }
+    };
+    if (game && !valid_games[game]) {
+      render(page.structure.main, html`
+            <div class="loading-data-container">
+                <div class="loading-data-text error">${tl(trans.no_game_found).replace("{v}", game)}</div>
+            </div>
+        `);
+      return;
+    }
+    if (game) {
+      page.structure.container.setAttribute("data-game", game);
+      valid_games[game].func();
+      return;
+    }
+    render(page.structure.main, html`
+        <section class="games">
+            <h2>${tl(trans.games)}</h2>
+            <div class="game-list">
+                ${Object.entries(valid_games).map(([id, game2]) => html.node`
+                    <button class="game" data-type=${id} data-game=${id} onclick=${() => {
+      window.history.pushState(id, "", `${root}bleh/games/${id}`);
+      page.structure.container.setAttribute("data-game", id);
+      render(page.structure.main, html``);
+      valid_games[id].func();
+    }}>
+                        <div class="game-icon colourful">
+                            <div class="bleh-icon" />
+                        </div>
+                        <div class="game-info">
+                            <h5>${game2.name}</h5>
+                            <p>${game2.body}</p>
+                        </div>
+                        <div class="bleh-icon game-arrow" style="--icon: var(--mask)" data-type="arrow-right" />
+                    </button>
+                `)}
+            </div>
+            <p class="card-tip">${{ html: tl(trans.labs_cta).replace("{a}", `<a class="see-more" href="${root}labs">`).replace("{/a}", "</a>") }}</p>
+        </section>
+    `);
+  }
+  function bleh_games_pixel() {
+    render(page.structure.main, html`
+        pixel
+    `);
+  }
+  function bleh_games_rainbow() {
+    render(page.structure.main, html`
+        rainbow
+    `);
+  }
+  function bleh_games_receipt() {
+    render(page.structure.main, html`
+        receipt
+    `);
+  }
+
   // src/page.js
   function bleh() {
     let head_observer = new MutationObserver((mutations) => {
@@ -20271,13 +20371,18 @@
     });
     detect_mobile();
     page.platform = detect_platform();
-    if (window.location.href.startsWith(setup_url.replace("{root}", root))) {
+    if (window.location.pathname.startsWith(setup_url.replace("{root}", root))) {
       bleh_setup();
-    } else if (window.location.href.startsWith(sponsor_url.replace("{root}", root))) {
+    } else if (window.location.pathname.startsWith(sponsor_url.replace("{root}", root))) {
       bleh_sponsor_page();
-    } else if (window.location.href.startsWith(api_url.replace("{root}", root))) {
+    } else if (window.location.pathname.startsWith(api_url.replace("{root}", root))) {
       bleh_auth();
-    } else if (window.location.href.startsWith(bleh_url.replace("{root}", root))) {
+    } else if (window.location.pathname.startsWith(games_url.replace("{root}", root))) {
+      page.type = "games";
+      bleh_home();
+      bleh_games();
+    } else if (window.location.pathname.startsWith(bleh_url.replace("{root}", root))) {
+      page.type = "bleh_settings";
       bleh_home();
       bleh_settings();
     } else {
@@ -23648,6 +23753,45 @@
     },
     grey: {
       en: "Grey"
+    },
+    games: {
+      en: "Games"
+    },
+    no_game_found: {
+      en: "No game found for \u2018{v}\u2019"
+    },
+    pixel: {
+      name: {
+        en: "Pixel"
+      },
+      body: {
+        en: "Guess the album from it\u2019s pixelated artwork and clues"
+      }
+    },
+    rainbow: {
+      name: {
+        en: "Rainbow"
+      },
+      body: {
+        en: "Arrange your listening history into a swirl of colours"
+      }
+    },
+    receipt: {
+      name: {
+        en: "Receipt"
+      },
+      body: {
+        en: "Print out your top tracks as a receipt"
+      }
+    },
+    tools: {
+      en: "Tools"
+    },
+    collage_description: {
+      en: "Generate a personalised image based on your listening history and options"
+    },
+    labs_cta: {
+      en: "If you\u2019re looking for more, try out Last.fm\u2019s own Labs feature. {a}View now{/a}"
     }
   };
   var trans_legacy = {
@@ -27963,6 +28107,11 @@
         default: true,
         name: "Connect via the Last.fm API",
         date: "2025-07-08"
+      },
+      games: {
+        default: false,
+        name: "Game center replacement for Labs",
+        date: "2025-07-17"
       }
     }
   };

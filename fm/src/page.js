@@ -12,6 +12,7 @@ import {
     auth,
     auth_link,
     bleh_url,
+    games_url,
     last_page_subpage,
     last_page_type,
     page,
@@ -68,6 +69,7 @@ import {register_rabbit} from "./components/rabbit.js";
 import {dialog_extender} from "./components/dialog_extender.js";
 import {bleh_auth} from "./pages/auth.js";
 import {bleh_labs} from "./pages/labs.js";
+import {bleh_games} from "./pages/games.js";
 
 export function bleh() {
     let head_observer = new MutationObserver((mutations) => {
@@ -400,13 +402,18 @@ function load_page() {
     detect_mobile();
     page.platform = detect_platform();
 
-    if (window.location.href.startsWith(setup_url.replace('{root}', root))) {
+    if (window.location.pathname.startsWith(setup_url.replace('{root}', root))) {
         bleh_setup();
-    } else if (window.location.href.startsWith(sponsor_url.replace('{root}', root))) {
+    } else if (window.location.pathname.startsWith(sponsor_url.replace('{root}', root))) {
         bleh_sponsor_page();
-    } else if (window.location.href.startsWith(api_url.replace('{root}', root))) {
+    } else if (window.location.pathname.startsWith(api_url.replace('{root}', root))) {
         bleh_auth();
-    } else if (window.location.href.startsWith(bleh_url.replace('{root}', root))) {
+    } else if (window.location.pathname.startsWith(games_url.replace('{root}', root))) {
+        page.type = 'games';
+        bleh_home();
+        bleh_games();
+    } else if (window.location.pathname.startsWith(bleh_url.replace('{root}', root))) {
+        page.type = 'bleh_settings';
         bleh_home();
         bleh_settings();
     } else {

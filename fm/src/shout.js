@@ -228,6 +228,8 @@ export function parse_shout_queue() {
 }
 
 export function shout_messages() {
+    if (!page.structure.main) return;
+
     let alerts = page.structure.main.querySelectorAll('.shout-messages > .alert');
     alerts.forEach((alert) => {
         if (alert.classList.contains('alert-danger')) {

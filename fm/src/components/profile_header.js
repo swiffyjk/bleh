@@ -184,17 +184,26 @@ export function redesign_profile_header(is_own_profile, is_following) {
             type: 'edit',
             link: `${root}settings`
         });
-        create_profile_top_item(profile_header, {
-            name: page.name,
-            type: 'labs',
-            link: `${root}labs`,
-            tooltip: (`
-                <strong>${tl(trans.labs_by_last)}</strong>
-                <p>${tl(trans.labs_by_last.tagline)}</p>
-            `),
-            tooltip_style: 'stack',
-            allow_html: true
-        });
+        if (ff('games')) {
+            create_profile_top_item(profile_header, {
+                name: page.name,
+                type: 'games',
+                link: `${root}bleh/games`,
+                new_release: true
+            });
+        } else {
+            create_profile_top_item(profile_header, {
+                name: page.name,
+                type: 'labs',
+                link: `${root}labs`,
+                tooltip: (`
+                    <strong>${tl(trans.labs_by_last)}</strong>
+                    <p>${tl(trans.labs_by_last.tagline)}</p>
+                `),
+                tooltip_style: 'stack',
+                allow_html: true
+            });
+        }
         create_profile_top_item(profile_header, {
             name: page.name,
             type: 'obsession',
@@ -208,7 +217,7 @@ export function redesign_profile_header(is_own_profile, is_following) {
                 link: () => collage(),
                 action: 'button',
                 text: tl(trans.collage),
-                new_release: true
+                updated: true
             });
         }
     }

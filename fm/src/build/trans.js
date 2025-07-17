@@ -3088,6 +3088,45 @@ export const trans = {
     },
     grey: {
         en: 'Grey'
+    },
+    games: {
+        en: 'Games'
+    },
+    no_game_found: {
+        en: 'No game found for ‘{v}’'
+    },
+    pixel: {
+        name: {
+            en: 'Pixel'
+        },
+        body: {
+            en: 'Guess the album from it’s pixelated artwork and clues'
+        }
+    },
+    rainbow: {
+        name: {
+            en: 'Rainbow'
+        },
+        body: {
+            en: 'Arrange your listening history into a swirl of colours'
+        }
+    },
+    receipt: {
+        name: {
+            en: 'Receipt'
+        },
+        body: {
+            en: 'Print out your top tracks as a receipt'
+        }
+    },
+    tools: {
+        en: 'Tools'
+    },
+    collage_description: {
+        en: 'Generate a personalised image based on your listening history and options'
+    },
+    labs_cta: {
+        en: 'If you’re looking for more, try out Last.fm’s own Labs feature. {a}View now{/a}'
     }
 }
 
