@@ -3058,6 +3058,36 @@ export const trans = {
     },
     manual_date: {
         en: 'Type a date manually'
+    },
+    red: {
+        en: 'Red'
+    },
+    orange: {
+        en: 'Orange'
+    },
+    yellow: {
+        en: 'Yellow'
+    },
+    lime: {
+        en: 'Lime'
+    },
+    green: {
+        en: 'Green'
+    },
+    aqua: {
+        en: 'Aqua'
+    },
+    blue: {
+        en: 'Blue'
+    },
+    purple: {
+        en: 'Purple'
+    },
+    pink: {
+        en: 'Pink'
+    },
+    grey: {
+        en: 'Grey'
     }
 }
 

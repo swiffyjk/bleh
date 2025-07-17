@@ -206,19 +206,10 @@ export function render_setting_page(page_id) {
                         <div class="heading">
                             <h5>${tl(trans.hue)}</h5>
                         </div>
-                        <div class="info v">
-                            <div class="view-buttons colour-buttons view-buttons-middle" id="colour_custom"></div>
-                            <div class="swatch-group">
-                                <div id="colour_red" class="palette options colours"></div>
-                                <div id="colour_orange" class="palette options colours"></div>
-                                <div id="colour_yellow" class="palette options colours"></div>
-                                <div id="colour_green" class="palette options colours"></div>
-                                <div id="colour_lime" class="palette options colours"></div>
-                                <div id="colour_aqua" class="palette options colours"></div>
-                                <div id="colour_blue" class="palette options colours"></div>
-                                <div id="colour_purple" class="palette options colours"></div>
-                                <div id="colour_pink" class="palette options colours"></div>
-                            </div>
+                        <div class="info swatch-info">
+                            <div id="colour_custom" class="swatch-group palette"></div>
+                            <div class="sep swatch-sep" />
+                            <div id="colour_palette" class="swatch-group palette"></div>
                         </div>
                     </div>
                     ${setting({id: 'hue_from_album'})}
@@ -1491,293 +1482,57 @@ export function display_colour_presets() {
                 type: 'customise'
             }
         ],
-        red: [
+        palette: [
             {sets: {
-                hue: 360,
-                sat: 1.4,
-                lit: 0.9
-            }},
-            {sets: {
-                hue: 360,
-                sat: 1.4,
-                lit: 0.95
-            }},
-            {sets: {
-                hue: 360,
-                sat: 1.325,
-                lit: 1
-            }},
-            {sets: {
-                hue: 360,
-                sat: 1.225,
-                lit: 1
-            }},
-            {sets: {
-                hue: 360,
-                sat: 1.1,
-                lit: 1
-            }},
-            {sets: {
-                hue: 360,
-                sat: 1.05,
-                lit: 1.05
-            }}
-        ],
-        orange: [
-            {sets: {
-                hue: 10,
-                sat: 1.425,
-                lit: 0.9
-            }},
-            {sets: {
-                hue: 13,
-                sat: 1.4,
-                lit: 0.95
-            }},
-            {sets: {
-                hue: 16,
-                sat: 1.325,
-                lit: 1
-            }},
-            {sets: {
-                hue: 20,
-                sat: 1.225,
-                lit: 1
-            }},
-            {sets: {
-                hue: 21,
-                sat: 1.275,
-                lit: 1
-            }},
-            {sets: {
-                hue: 26,
-                sat: 1.35,
-                lit: 1.05
-            }}
-        ],
-        yellow: [
-            {sets: {
-                hue: 22,
-                sat: 1.3,
-                lit: 0.9
-            }},
-            {sets: {
-                hue: 24,
+                hue: 0,
                 sat: 1.2,
+                lit: 0.93
+            }, label: trans.red},
+            {sets: {
+                hue: 19,
+                sat: 1.275,
                 lit: 0.95
-            }},
-            {sets: {
-                hue: 27,
-                sat: 1.16,
-                lit: 1
-            }},
-            {sets: {
-                hue: 32,
-                sat: 1.1,
-                lit: 1
-            }},
+            }, label: trans.orange},
             {sets: {
                 hue: 36,
                 sat: 1,
                 lit: 1
-            }},
-            {sets: {
-                hue: 41,
-                sat: 1.05,
-                lit: 1.05
-            }}
-        ],
-        green: [
-            {sets: {
-                hue: 85,
-                sat: 1.4,
-                lit: 0.9
-            }},
-            {sets: {
-                hue: 90,
-                sat: 1.3,
-                lit: 0.95
-            }},
-            {sets: {
-                hue: 94,
-                sat: 1.2,
-                lit: 1
-            }},
-            {sets: {
-                hue: 99,
-                sat: 1.1,
-                lit: 1
-            }},
+            }, label: trans.yellow},
             {sets: {
                 hue: 105,
                 sat: 1.025,
                 lit: 1
-            }},
-            {sets: {
-                hue: 108,
-                sat: 1,
-                lit: 1.05
-            }}
-        ],
-        lime: [
-            {sets: {
-                hue: 115,
-                sat: 1.15,
-                lit: 0.9
-            }},
-            {sets: {
-                hue: 121,
-                sat: 1.09,
-                lit: 0.95
-            }},
-            {sets: {
-                hue: 127,
-                sat: 1.05,
-                lit: 1
-            }},
-            {sets: {
-                hue: 135,
-                sat: 1.03,
-                lit: 1
-            }},
+            }, label: trans.lime},
             {sets: {
                 hue: 141,
                 sat: 1,
-                lit: 1
-            }},
-            {sets: {
-                hue: 148,
-                sat: 1,
-                lit: 1.05
-            }}
-        ],
-        aqua: [
-            {sets: {
-                hue: 212,
-                sat: 1.45,
-                lit: 0.9
-            }},
-            {sets: {
-                hue: 207,
-                sat: 1.375,
                 lit: 0.95
-            }},
-            {sets: {
-                hue: 200,
-                sat: 1.3,
-                lit: 1
-            }},
-            {sets: {
-                hue: 195,
-                sat: 1.25,
-                lit: 1
-            }},
+            }, label: trans.green},
             {sets: {
                 hue: 190,
                 sat: 1.2,
                 lit: 1
-            }},
-            {sets: {
-                hue: 185,
-                sat: 1.1,
-                lit: 1.05
-            }}
-        ],
-        blue: [
-            {sets: {
-                hue: 233,
-                sat: 1.4,
-                lit: 0.9
-            }},
-            {sets: {
-                hue: 230,
-                sat: 1.3,
-                lit: 0.95
-            }},
-            {sets: {
-                hue: 226,
-                sat: 1.25,
-                lit: 1
-            }},
-            {sets: {
-                hue: 220,
-                sat: 1.2,
-                lit: 1
-            }},
+            }, label: trans.aqua},
             {sets: {
                 hue: 217,
-                sat: 1.15,
-                lit: 1
-            }},
-            {sets: {
-                hue: 212,
-                sat: 1.025,
-                lit: 1.05
-            }}
-        ],
-        purple: [
-            {sets: {
-                hue: 246,
-                sat: 1.32,
-                lit: 0.9
-            }},
-            {sets: {
-                hue: 244,
                 sat: 1.2,
-                lit: 0.95
-            }},
+                lit: 0.9
+            }, label: trans.blue},
             {sets: {
-                hue: 246,
-                sat: 1.12,
-                lit: 1
-            }},
-            {sets: {
-                hue: 249,
-                sat: 1.11,
-                lit: 1
-            }},
-            {sets: {
-                hue: 253,
+                hue: 255,
                 sat: 1.07,
                 lit: 1
-            }},
-            {sets: {
-                hue: 256,
-                sat: 1.01,
-                lit: 1.03
-            }}
-        ],
-        pink: [
-            {sets: {
-                hue: 346,
-                sat: 1.3,
-                lit: 0.9
-            }},
-            {sets: {
-                hue: 340,
-                sat: 1.225,
-                lit: 0.95
-            }},
-            {sets: {
-                hue: 335,
-                sat: 1.175,
-                lit: 1
-            }},
-            {sets: {
-                hue: 325,
-                sat: 1.12,
-                lit: 1
-            }},
+            }, label: trans.purple},
             {sets: {
                 hue: 317,
-                sat: 1.05,
+                sat: 1.1,
                 lit: 1
-            }},
+            }, label: trans.pink},
             {sets: {
-                hue: 309,
-                sat: 1,
-                lit: 1.05
-            }}
+                hue: 0,
+                sat: 0,
+                lit: 1
+            }, label: trans.grey}
         ]
     }
     let exclusives = {
@@ -1823,13 +1578,8 @@ export function display_colour_presets() {
     exclusives.new_years = exclusives.christmas;
 
     for (let type in colours) {
-        let swatch_group = document.body.querySelector(`#colour_${type}`);
-
-        if (!swatch_group)
-            return;
-
-        if (type != 'custom')
-            colours[type].reverse();
+        const swatch_group = page.structure.main.querySelector(`#colour_${type}`);
+        if (!swatch_group) return;
 
         colours[type].forEach((colour) => {
             if (colour.requires_flag && version.feature_flags.hasOwnProperty(colour.requires_flag)) {
@@ -1837,25 +1587,32 @@ export function display_colour_presets() {
                     return;
             }
 
+            let text;
+            if (colour.label) text = tl(colour.label);
+
             if (!colour.type)
                 colour.type = 'colour';
 
             if (!colour.displays && colour.sets)
                 colour.displays = colour.sets;
 
-            let swatch = document.createElement('button');
-            swatch.classList.add('swatch', 'btn');
-            swatch.setAttribute('data-swatch-type', colour.type);
+            let blob;
+            let text_elem;
+            let swatch = html.node`
+                <button class="swatch-container" onclick=${() => {
+                    if (!colour.sets) return;
+                    
+                    update_params(colour.sets);
+                }}>
+                    <div class="swatch colourful" ref=${el => blob = el} data-swatch-type=${colour.type} />
+                    <strong ref=${el => text_elem = el} />
+                </button>
+            `;
 
             if (type == 'custom')
-                swatch.classList.add('view-item', 'colour-btn');
-
-            if (type == 'custom')
-                swatch.textContent = tl(trans[colour.type]);
+                text = tl(trans[colour.type]);
 
             if (colour.type == 'customise') {
-                swatch.classList.add('select-button');
-
                 let colour;
 
                 tippy(swatch, {
@@ -1956,11 +1713,9 @@ export function display_colour_presets() {
             if (colour.sets) {
                 colour.sets.accent_type = colour.type;
 
-                swatch.setAttribute('onclick', `_update_params(${JSON.stringify(colour.sets)})`);
-
-                swatch.style.setProperty('--hue-over', colour.displays.hue);
-                swatch.style.setProperty('--sat-over', colour.displays.sat);
-                swatch.style.setProperty('--lit-over', colour.displays.lit);
+                blob.style.setProperty('--hue-over', colour.displays.hue);
+                blob.style.setProperty('--sat-over', colour.displays.sat);
+                blob.style.setProperty('--lit-over', colour.displays.lit);
 
                 tippy(swatch, {
                     theme: 'key_value',
@@ -1974,11 +1729,10 @@ export function display_colour_presets() {
             }
 
             if (colour.type == 'default' && stored_season.id != 'none') {
-                swatch.textContent = tl(trans.seasonal.name);
+                text = tl(trans.seasonal.name);
 
                 if (exclusives.hasOwnProperty(stored_season.id)) {
-                    swatch.setAttribute('onclick', '');
-                    swatch.classList.add('select-button');
+                    delete colour.sets;
 
                     exclusives[stored_season.id] = [
                         {
@@ -2015,6 +1769,8 @@ export function display_colour_presets() {
                     });
                 }
             }
+
+            text_elem.textContent = text;
 
             swatch_group.appendChild(swatch);
         });
