@@ -1108,7 +1108,7 @@
   var setup_url = "{root}bleh/setup";
   var sponsor_url = "{root}bleh/sponsor";
   var api_url = "{root}bleh/api";
-  var games_url = "{root}bleh/games";
+  var minis_url = "{root}bleh/minis";
   var api_key = "85c118b69b1437844fe75fcd2bf27261";
   var theme_preview = () => html.node`
     <div class="preview-inner">
@@ -9319,11 +9319,11 @@
         type: "edit",
         link: `${root}settings`
       });
-      if (ff("games")) {
+      if (ff("minis")) {
         create_profile_top_item(profile_header, {
           name: page.name,
-          type: "games",
-          link: `${root}bleh/games`,
+          type: "minis",
+          link: `${root}bleh/minis`,
           new_release: true
         });
       } else {
@@ -17924,10 +17924,10 @@
                         ${tl(trans.charts)}
                     </a>
                 </li>
-                ${ff("games") ? html.node`
-                <li class="navlist-item secondary-nav-item secondary-nav-item--games">
-                    <a href="${root}bleh/games" data-type="games" class="secondary-nav-item-link ${page.type == "games" ? "secondary-nav-item-link--active" : ""}">
-                        ${tl(trans.games)}
+                ${ff("minis") ? html.node`
+                <li class="navlist-item secondary-nav-item secondary-nav-item--minis">
+                    <a href="${root}bleh/minis" data-type="minis" class="secondary-nav-item-link ${page.type == "minis" ? "secondary-nav-item-link--active" : ""}">
+                        ${tl(trans.minis)}
                     </a>
                 </li>
                 ` : ""}
@@ -20058,29 +20058,32 @@
     }
   }
 
-  // src/pages/games.js
-  function bleh_games() {
-    update_page();
-    page.structure.row.removeChild(page.structure.row.firstElementChild);
-    page.structure.row.removeChild(page.structure.row.firstElementChild);
+  // src/pages/minis.js
+  var valid_minis;
+  function bleh_minis(skip = false) {
+    if (!skip) {
+      update_page();
+      page.structure.row.removeChild(page.structure.row.firstElementChild);
+      page.structure.row.removeChild(page.structure.row.firstElementChild);
+    }
     let path = window.location.pathname.split("/");
-    let game = path[path.length - 1];
-    if (game == "games") game = null;
-    const valid_games = {
+    let mini = path[path.length - 1];
+    if (mini == "minis") mini = null;
+    valid_minis = {
       pixel: {
         name: tl(trans.pixel?.name),
         body: tl(trans.pixel?.body),
-        func: bleh_games_pixel
+        func: bleh_minis_pixel
       },
       rainbow: {
         name: tl(trans.rainbow?.name),
         body: tl(trans.rainbow?.body),
-        func: bleh_games_rainbow
+        func: bleh_minis_rainbow
       },
       receipt: {
         name: tl(trans.receipt?.name),
         body: tl(trans.receipt?.body),
-        func: bleh_games_receipt
+        func: bleh_minis_receipt
       },
       collage: {
         name: tl(trans.collage),
@@ -20090,38 +20093,40 @@
         }
       }
     };
-    if (game && !valid_games[game]) {
+    if (mini && !valid_minis[mini]) {
       render(page.structure.main, html`
             <div class="loading-data-container">
-                <div class="loading-data-text error">${tl(trans.no_game_found).replace("{v}", game)}</div>
+                <div class="loading-data-text error">${tl(trans.no_mini_found).replace("{v}", mini)}</div>
             </div>
         `);
       return;
     }
-    if (game) {
-      page.structure.container.setAttribute("data-game", game);
-      valid_games[game].func();
+    if (mini) {
+      page.structure.container.setAttribute("data-mini", mini);
+      valid_minis[mini].func();
       return;
     }
     render(page.structure.main, html`
-        <section class="games">
-            <h2>${tl(trans.games)}</h2>
-            <div class="game-list">
-                ${Object.entries(valid_games).map(([id, game2]) => html.node`
-                    <button class="game" data-type=${id} data-game=${id} onclick=${() => {
-      window.history.pushState(id, "", `${root}bleh/games/${id}`);
-      page.structure.container.setAttribute("data-game", id);
+        <section class="minis">
+            <div class="minis-header">
+                <h2>${tl(trans.minis)}</h2>
+            </div>
+            <div class="mini-list">
+                ${Object.entries(valid_minis).map(([id, mini2]) => html.node`
+                    <button class="mini" data-type=${id} data-mini=${id} onclick=${() => {
+      window.history.replaceState(id, "", `${root}bleh/minis/${id}`);
+      page.structure.container.setAttribute("data-mini", id);
       render(page.structure.main, html``);
-      valid_games[id].func();
+      valid_minis[id].func();
     }}>
-                        <div class="game-icon colourful">
+                        <div class="mini-icon colourful">
                             <div class="bleh-icon" />
                         </div>
-                        <div class="game-info">
-                            <h5>${game2.name}</h5>
-                            <p>${game2.body}</p>
+                        <div class="mini-info">
+                            <h5>${mini2.name}</h5>
+                            <p>${mini2.body}</p>
                         </div>
-                        <div class="bleh-icon game-arrow" style="--icon: var(--mask)" data-type="arrow-right" />
+                        <div class="bleh-icon mini-arrow" style="--icon: var(--mask)" data-type="arrow-right" />
                     </button>
                 `)}
             </div>
@@ -20129,19 +20134,37 @@
         </section>
     `);
   }
-  function bleh_games_pixel() {
+  function return_to_minis(mini) {
+    return html.node`
+        <div class="minis-header">
+            <h2 class="previous" onclick=${() => {
+      window.history.replaceState(null, "", `${root}bleh/minis`);
+      bleh_minis(true);
+    }}>${tl(trans.minis)}</h2>
+            <div class="bleh-icon mini-arrow" style="--icon: var(--mask)" data-type="arrow-right" />
+            <h2>${valid_minis[mini].name}</h2>
+        </div>
+    `;
+  }
+  function bleh_minis_pixel() {
     render(page.structure.main, html`
-        pixel
+        <section class="minis">
+            ${return_to_minis("pixel")}
+        </section>
     `);
   }
-  function bleh_games_rainbow() {
+  function bleh_minis_rainbow() {
     render(page.structure.main, html`
-        rainbow
+        <section class="minis">
+            ${return_to_minis("rainbow")}
+        </section>
     `);
   }
-  function bleh_games_receipt() {
+  function bleh_minis_receipt() {
     render(page.structure.main, html`
-        receipt
+        <section class="minis">
+            ${return_to_minis("receipt")}
+        </section>
     `);
   }
 
@@ -20377,10 +20400,10 @@
       bleh_sponsor_page();
     } else if (window.location.pathname.startsWith(api_url.replace("{root}", root))) {
       bleh_auth();
-    } else if (window.location.pathname.startsWith(games_url.replace("{root}", root))) {
-      page.type = "games";
+    } else if (window.location.pathname.startsWith(minis_url.replace("{root}", root))) {
+      page.type = "minis";
       bleh_home();
-      bleh_games();
+      bleh_minis();
     } else if (window.location.pathname.startsWith(bleh_url.replace("{root}", root))) {
       page.type = "bleh_settings";
       bleh_home();
@@ -23754,11 +23777,11 @@
     grey: {
       en: "Grey"
     },
-    games: {
-      en: "Games"
+    minis: {
+      en: "Minis"
     },
-    no_game_found: {
-      en: "No game found for \u2018{v}\u2019"
+    no_mini_found: {
+      en: "No mini found for \u2018{v}\u2019"
     },
     pixel: {
       name: {
@@ -28108,9 +28131,9 @@
         name: "Connect via the Last.fm API",
         date: "2025-07-08"
       },
-      games: {
+      minis: {
         default: false,
-        name: "Game center replacement for Labs",
+        name: "mini center replacement for Labs",
         date: "2025-07-17"
       }
     }

@@ -95,10 +95,10 @@ export function bleh_home() {
                         ${tl(trans.charts)}
                     </a>
                 </li>
-                ${ff('games') ? html.node`
-                <li class="navlist-item secondary-nav-item secondary-nav-item--games">
-                    <a href="${root}bleh/games" data-type="games" class="secondary-nav-item-link ${(page.type == 'games') ? 'secondary-nav-item-link--active' : ''}">
-                        ${tl(trans.games)}
+                ${ff('minis') ? html.node`
+                <li class="navlist-item secondary-nav-item secondary-nav-item--minis">
+                    <a href="${root}bleh/minis" data-type="minis" class="secondary-nav-item-link ${(page.type == 'minis') ? 'secondary-nav-item-link--active' : ''}">
+                        ${tl(trans.minis)}
                     </a>
                 </li>
                 ` : ''}

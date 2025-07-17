@@ -184,11 +184,11 @@ export function redesign_profile_header(is_own_profile, is_following) {
             type: 'edit',
             link: `${root}settings`
         });
-        if (ff('games')) {
+        if (ff('minis')) {
             create_profile_top_item(profile_header, {
                 name: page.name,
-                type: 'games',
-                link: `${root}bleh/games`,
+                type: 'minis',
+                link: `${root}bleh/minis`,
                 new_release: true
             });
         } else {

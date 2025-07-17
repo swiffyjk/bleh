@@ -3089,11 +3089,11 @@ export const trans = {
     grey: {
         en: 'Grey'
     },
-    games: {
-        en: 'Games'
+    minis: {
+        en: 'Minis'
     },
-    no_game_found: {
-        en: 'No game found for ‘{v}’'
+    no_mini_found: {
+        en: 'No mini found for ‘{v}’'
     },
     pixel: {
         name: {

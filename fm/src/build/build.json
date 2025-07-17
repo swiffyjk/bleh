@@ -240,9 +240,9 @@
             "name": "Connect via the Last.fm API",
             "date": "2025-07-08"
         },
-        "games": {
+        "minis": {
             "default": false,
-            "name": "Game center replacement for Labs",
+            "name": "mini center replacement for Labs",
             "date": "2025-07-17"
         }
     }

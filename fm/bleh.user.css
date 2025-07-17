@@ -25597,7 +25597,7 @@
     }
 
 
-    .game-list {
+    .mini-list {
         display: flex;
         flex-direction: column;
         gap: 12px;
@@ -25611,7 +25611,7 @@
             margin-top: var(--card-gap) !important;
         }
 
-        & > .game {
+        & > .mini {
             display: flex;
             align-items: center;
             gap: var(--card-gap);
@@ -25625,6 +25625,7 @@
             --padding: 12px;
             margin: -12px !important;
             border-radius: 0 !important;
+            transform: none !important;
 
             &:first-child {
                 border-top-left-radius: var(--item-big-radius) !important;
@@ -25636,7 +25637,7 @@
                 border-bottom-right-radius: var(--item-big-radius) !important;
             }
 
-            & + .game {
+            & + .mini {
                 margin-top: calc(-12px + 1px + 12px) !important;
 
                 &:after {
@@ -25651,7 +25652,7 @@
                 }
             }
 
-            & > .game-icon {
+            & > .mini-icon {
                 width: 40px;
                 height: 40px;
                 background: hsl(var(--h3));
@@ -25668,28 +25669,28 @@
                 --icon-size: 24px;
             }
 
-            & > .game-info {
+            & > .mini-info {
                 flex: 1;
             }
 
-            &[data-game="pixel"] {
-                & > .game-icon {
+            &[data-mini="pixel"] {
+                & > .mini-icon {
                     --hue-over: 344;
                     --sat-over: 1.2;
                     --lit-over: 0.9;
                 }
             }
 
-            &[data-game="rainbow"] {
-                & > .game-icon {
+            &[data-mini="rainbow"] {
+                & > .mini-icon {
                     --hue-over: 98;
                     --sat-over: 1.05;
                     --lit-over: 1.025;
                 }
             }
 
-            &[data-game="receipt"] {
-                & > .game-icon {
+            &[data-mini="receipt"] {
+                & > .mini-icon {
                     --hue-over: 0;
                     --sat-over: 0;
                     --lit-over: 1;
@@ -25716,5 +25717,34 @@
         font-size: 13px;
         color: hsl(var(--c3));
         cursor: default;
+    }
+}
+
+.minis-header {
+    display: flex;
+    align-items: center;
+    gap: 4px;
+    margin-bottom: var(--card-gap);
+
+    & > h2 {
+        margin: unset !important;
+    }
+
+    & > .previous {
+        color: hsl(var(--c3));
+        cursor: pointer;
+
+        transition-property: color;
+        transition-duration: var(--trans);
+        transition-timing-function: var(--trans-function);
+
+        &:hover {
+            color: hsl(var(--c1));
+            transition: none;
+        }
+    }
+
+    & > .mini-arrow {
+        --icon-size: 12px;
     }
 }
