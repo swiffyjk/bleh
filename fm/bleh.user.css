@@ -16267,6 +16267,14 @@
 
     .swatch-info {
         gap: var(--item-list-gap) !important;
+
+        &:has(> .swatch-group > .swatch-container:hover) {
+            & > .swatch-group > .swatch-container:not(:hover) {
+                & > strong {
+                    opacity: 0 !important;
+                }
+            }
+        }
     }
     .swatch-sep {
         width: 2px !important;
@@ -16279,14 +16287,15 @@
         --bg-hov: transparent;
         --bg-atv: transparent;
         --shadow: none;
-        --padding: 0;
+        --padding: 0 4px;
+        margin: 0 -4px !important;
         --radius: 0;
 
         display: flex;
         flex-direction: column;
         align-items: center;
         gap: var(--item-list-gap);
-        width: 24px;
+        width: 32px;
 
         & > strong,
         & > .swatch[data-swatch-type="colour"]:before {
@@ -16299,18 +16308,29 @@
                 opacity: 1;
             }
 
+            & > strong {
+                color: hsl(var(--c2)) !important;
+            }
+
             & > .swatch {
                 background: hsl(var(--h3));
             }
         }
 
-        &:not([aria-checked="true"]) {
+        &:hover {
+            & > strong {
+                opacity: 1;
+                color: hsl(var(--c3));
+            }
+        }
+
+        &:not([aria-checked="true"], :hover) {
             overflow: hidden;
         }
     }
-    .palette .swatch {
+    .palette .swatch:not(.dropdown-menu-clickable-item) {
         background: hsl(var(--h3));
-        box-shadow: var(--primary-shadow), 0 3px 12px hsl(var(--h4), 32%);
+        box-shadow: var(--primary-shadow), 0 3px 12px hsl(var(--h4), 32%), var(--interact-shadow);
         color: hsl(var(--b7));
         --mask-colour: currentColor;
         --sat-album: 1;
@@ -16340,6 +16360,10 @@
         }
         &[data-swatch-type="customise"] {
             --mask: var(--icon-16-plus);
+
+            background: transparent;
+            color: hsl(var(--c2));
+            box-shadow: var(--normal-shadow), var(--interact-shadow);
         }
     }
 

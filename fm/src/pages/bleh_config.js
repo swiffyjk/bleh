@@ -1613,6 +1613,8 @@ export function display_colour_presets() {
                 text = tl(trans[colour.type]);
 
             if (colour.type == 'customise') {
+                text = tl(trans.edit);
+
                 let colour;
 
                 tippy(swatch, {
@@ -1716,16 +1718,6 @@ export function display_colour_presets() {
                 blob.style.setProperty('--hue-over', colour.displays.hue);
                 blob.style.setProperty('--sat-over', colour.displays.sat);
                 blob.style.setProperty('--lit-over', colour.displays.lit);
-
-                tippy(swatch, {
-                    theme: 'key_value',
-                    content: html.node`
-                        <span class="key">hue<span class="value">${colour.sets.hue}</span></span>
-                        <span class="key">sat<span class="value">${colour.sets.sat}</span></span>
-                        <span class="key">lit<span class="value">${colour.sets.lit}</span></span>
-                    `,
-                    delay: [250, 0]
-                });
             }
 
             if (colour.type == 'default' && stored_season.id != 'none') {

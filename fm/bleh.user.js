@@ -12745,6 +12745,8 @@
       let s = swatch.style.getPropertyValue("--sat-over");
       let l = swatch.style.getPropertyValue("--lit-over");
       let parent = swatch.parentElement;
+      if (swatch.classList[0] == "dropdown-menu-clickable-item")
+        parent = swatch;
       if (h == settings.hue && s == settings.sat && l == settings.lit || swatch.getAttribute("data-swatch-type") == "default" && settings.hue == 255 && settings.sat == 1 && settings.lit == 1) {
         parent.setAttribute("aria-checked", "true");
         if (swatch.classList[0] != "dropdown-menu-clickable-item")
@@ -14662,6 +14664,7 @@
         if (type == "custom")
           text2 = tl(trans[colour.type]);
         if (colour.type == "customise") {
+          text2 = tl(trans.edit);
           let colour2;
           tippy(swatch, {
             theme: "window",
@@ -14760,15 +14763,6 @@
           blob.style.setProperty("--hue-over", colour.displays.hue);
           blob.style.setProperty("--sat-over", colour.displays.sat);
           blob.style.setProperty("--lit-over", colour.displays.lit);
-          tippy(swatch, {
-            theme: "key_value",
-            content: html.node`
-                        <span class="key">hue<span class="value">${colour.sets.hue}</span></span>
-                        <span class="key">sat<span class="value">${colour.sets.sat}</span></span>
-                        <span class="key">lit<span class="value">${colour.sets.lit}</span></span>
-                    `,
-            delay: [250, 0]
-          });
         }
         if (colour.type == "default" && stored_season.id != "none") {
           text2 = tl(trans.seasonal.name);

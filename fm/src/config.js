@@ -361,6 +361,8 @@ function update_colour_swatches() {
         let l = swatch.style.getPropertyValue('--lit-over');
 
         let parent = swatch.parentElement;
+        if (swatch.classList[0] == 'dropdown-menu-clickable-item')
+            parent = swatch;
 
         if (
             (h == settings.hue && s == settings.sat && l == settings.lit) ||
