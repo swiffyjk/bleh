@@ -6260,6 +6260,58 @@
     }
   }
 
+  // src/components/pixel.js
+  function pixel({
+    host,
+    sidebar
+  } = {}) {
+    if (!host || !sidebar) return;
+    let text2 = "my anti-aircraft friend";
+    let title_elem;
+    render(host, html`
+        <div class="pixel-artwork">
+            <img src="https://lastfm.freetls.fastly.net/i/u/ar0/def68d94aae8e52ef2d1c0c9d3e16ff4.jpg" alt=${auth.name} />
+        </div>
+        <div class="pixel-info">
+            <div class="sub-text">${tl(trans.jumbled_title)}</div>
+            <div class="pixel-album-name">
+                <h1 ref=${(el) => title_elem = el}>${jumble_string(text2)}</h1>
+                <button class="chibi icon" data-type="jumble" onclick=${() => {
+      title_elem.textContent = jumble_string(text2);
+    }}>
+                    ${tl(trans.re_jumble)}
+                </button>
+            </div>
+            <p class="card-tip">${tl(trans.jumbled_guess)}</p>
+            <div class="pixel-guess">
+                ${input({
+      type: "text",
+      placeholder: tl(trans.enter_a_guess),
+      func: (value) => {
+        console.info(value);
+      }
+    })}
+            </div>
+        </div>
+    `);
+  }
+  function shuffle_array(arr) {
+    for (let i = arr.length - 1; i > 0; i--) {
+      const j = Math.floor(Math.random() * (i + 1));
+      [arr[i], arr[j]] = [arr[j], arr[i]];
+    }
+    return arr;
+  }
+  function jumble_string(input2) {
+    let output = input2.split(" ").map((word) => {
+      if (!word) return "";
+      const letters = word.split("");
+      return shuffle_array(letters).join("");
+    }).join(" ");
+    if (output == input2) return jumble_string(input2);
+    return output;
+  }
+
   // src/pages/minis.js
   var valid_minis;
   function bleh_minis(skip = false) {
@@ -6402,11 +6454,21 @@
     });
   }
   function bleh_minis_pixel() {
+    let content;
+    let mini_settings;
     render(page.structure.main, html`
         <section class="minis">
             ${return_to_minis("pixel")}
+            <div class="minis-content pixel-content" ref=${(el) => content = el} />
         </section>
     `);
+    render(page.structure.side, html`
+        <section class="current-mini-settings" ref=${(el) => mini_settings = el} />
+    `);
+    pixel({
+      host: content,
+      sidebar: mini_settings
+    });
   }
   function bleh_minis_lyrics() {
     render(page.structure.main, html`
@@ -24024,6 +24086,18 @@
       body: {
         en: "Guess the song from a random lyric"
       }
+    },
+    jumbled_title: {
+      en: "Jumbled title"
+    },
+    re_jumble: {
+      en: "Re-jumble"
+    },
+    jumbled_guess: {
+      en: "Guess the album name with the pixelated cover, jumbled title, and hints!"
+    },
+    enter_a_guess: {
+      en: "Enter a guess"
     }
   };
   var trans_legacy = {

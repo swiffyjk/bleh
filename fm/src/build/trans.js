@@ -3155,6 +3155,18 @@ export const trans = {
         body: {
             en: 'Guess the song from a random lyric'
         }
+    },
+    jumbled_title: {
+        en: 'Jumbled title'
+    },
+    re_jumble: {
+        en: 'Re-jumble'
+    },
+    jumbled_guess: {
+        en: 'Guess the album name with the pixelated cover, jumbled title, and hints!'
+    },
+    enter_a_guess: {
+        en: 'Enter a guess'
     }
 }
 

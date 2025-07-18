@@ -12,6 +12,7 @@
     @import url('https://fonts.googleapis.com/css2?family=Noto+Sans+JP:wght@100..900&display=swap');
     @import url('https://fonts.googleapis.com/css2?family=Noto+Color+Emoji&display=swap');
     @import url('https://fonts.googleapis.com/css2?family=Darumadrop+One&display=swap');
+    @import url('https://fonts.googleapis.com/css2?family=Bitcount+Grid+Single:wght@100..900&display=swap');
 
     /* we need to make the vertical alignment better in this font */
     @font-face {
@@ -15167,7 +15168,8 @@
         .has-error,
         [data-page-subpage="applications_overview"],
         [data-page-type="releases"],
-        [data-page-type="bleh_auth"]
+        [data-page-type="bleh_auth"],
+        [data-mini="pixel"]
         ),
     .namespace--music_bookmarks_overview {
         .col-main {
@@ -25792,5 +25794,48 @@
     .suggest-side {
         background: hsl(var(--b5));
         border-radius: var(--card-radius);
+    }
+
+
+    .pixel-content {
+        display: flex;
+        gap: calc(var(--card-padding) * 2);
+
+        .pixel-info {
+            .pixel-album-name {
+                display: flex;
+                align-items: center;
+                gap: var(--item-list-gap);
+
+                & > h1 {
+                    font-family: 'Bitcount Grid Single', var(--font);
+                    font-size: 44px;
+                    line-height: 50px;
+                    font-weight: 400;
+                    margin: unset;
+                    letter-spacing: unset;
+                }
+
+                & > .chibi {
+                    --bg: transparent;
+                    --bg-hov: hsl(var(--b4), 60%);
+                    --bg-atv: hsl(var(--b4), 80%);
+                    --shadow: none;
+                }
+            }
+        }
+    }
+    .pixel-artwork {
+        background: hsl(var(--b4), 10%);
+        box-shadow: var(--group-shadow);
+        padding: 10px;
+        border-radius: calc(var(--item-big-radius) + 10px);
+        width: fit-content;
+
+        & > img {
+            border-radius: var(--item-big-radius);
+            width: 500px;
+            aspect-ratio: 1 / 1;
+        }
     }
 }

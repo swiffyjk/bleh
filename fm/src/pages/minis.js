@@ -4,6 +4,7 @@ import {html, render} from "lighterhtml";
 import {tl, trans} from "../build/trans.js";
 import {collage} from "../components/collage.js";
 import {compare} from "../components/compare.js";
+import {pixel} from "../components/pixel.js";
 
 let valid_minis;
 
@@ -169,11 +170,24 @@ function bleh_minis_compare() {
 }
 
 function bleh_minis_pixel() {
+    let content;
+    let mini_settings;
+
     render(page.structure.main, html`
         <section class="minis">
             ${return_to_minis('pixel')}
+            <div class="minis-content pixel-content" ref=${el => content = el} />
         </section>
     `);
+
+    render(page.structure.side, html`
+        <section class="current-mini-settings" ref=${el => mini_settings = el} />
+    `);
+
+    pixel({
+        host: content,
+        sidebar: mini_settings
+    });
 }
 
 function bleh_minis_lyrics() {
