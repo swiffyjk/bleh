@@ -11,6 +11,7 @@ import {music_grids} from "./music_grid.js";
 import {settings} from "../build/config.js";
 import {version} from "../main.js";
 import {download} from "./share.js";
+import {render_user} from "../pages/minis.js";
 
 export function collage({
     host,
@@ -54,8 +55,8 @@ export function collage({
     render(host, html`
         <div class="compare-header">
             <div class="compare-users">
-                <div class="compare-user" ref=${el => user = el}>
-                    ${render_user()}
+                <div class="compare-user focus" ref=${el => user = el}>
+                    ${render_user(page.name, page.avatar, user, true)}
                 </div>
             </div>
             <div class="compare-selection">
@@ -141,6 +142,7 @@ export function collage({
     let type_select = type.querySelector('select');
 
     let setting_group;
+    let inputter;
     render(sidebar, html`
         <h2>${tl(trans.settings)}</h2>
         <div class="setting-group" ref=${el => setting_group = el}>
@@ -149,7 +151,7 @@ export function collage({
                     <h5>${tl(trans.profile)}</h5>
                 </div>
                 <div class="input-container content-form">
-                    <input type="text" class="input" placeholder=${tl(trans.enter_a_profile)} value=${page.requested.profile} onchange=${e => {
+                    <input type="text" class="input" ref=${el => inputter = el} placeholder=${tl(trans.enter_a_profile)} value=${page.requested.profile} onchange=${e => {
                         page.requested.profile = e.target.value;
                         page.name = page.requested.profile;
                         
@@ -157,9 +159,39 @@ export function collage({
                         if (page.name == auth.name) page.avatar = auth.avatar;
                         
                         render(user, html`
-                            ${render_user()}
+                            ${render_user(page.name, page.avatar, user, true)}
                         `);
                     }}>
+                    ${() => {
+                        let btn = html.node`
+                            <button class="btn chibi icon" data-type="profile" onclick=${() => {
+                                inputter.value = auth.name;
+                                inputter.dispatchEvent(new Event('change'));
+                            }}>${tl(trans.profile)}</button>
+                        `;
+                        
+                        tippy(btn, {
+                            content: tl(trans.profile)
+                        });
+                        
+                        return btn;
+                    }}
+                    ${() => {
+                        let btn = html.node`
+                            <button class="btn chibi icon" data-type="profile_shortcut" onclick=${() => {
+                                if (settings.profile_shortcut == '') return;
+                                
+                                inputter.value = settings.profile_shortcut;
+                                inputter.dispatchEvent(new Event('change'));
+                            }}>${tl(trans.profile_shortcut.name)}</button>
+                        `;
+                        
+                        tippy(btn, {
+                            content: tl(trans.profile_shortcut.name)
+                        });
+                        
+                        return btn;
+                    }}
                 </div>
             </div>
             ${setting({id: 'collage_title'})}
@@ -169,39 +201,6 @@ export function collage({
         </div>
     `);
     let collage_settings = setting_group.querySelectorAll(':scope > .setting');
-
-    function render_user() {
-        if (page.avatar == '') {
-            fetch(`${root}user/${page.name}/tags`)
-                .then(function (response) {
-                    console.log('returned', response, response.text);
-
-                    return response.text();
-                })
-                .then(function (dom) {
-                    let doc = new DOMParser().parseFromString(dom, 'text/html');
-                    console.log('DOC', doc);
-
-                    try {
-                        page.avatar = doc.querySelector('.header-avatar-inner-wrap img').getAttribute('src');
-                        page.name = doc.querySelector('.header-title').textContent.trim();
-
-                        render(user, html`
-                            ${render_user()}
-                        `);
-                    } catch (e) {
-                        console.error(e);
-                    }
-                });
-        }
-
-        return html`
-            <div class="avatar">
-                <img src=${page.avatar} alt="${tl(trans.avatar_for_user).replace('{u}', page.name)}">
-            </div>
-            <strong>${page.name}</strong>
-        `;
-    }
 
     function make_collage(bypass = false) {
         if (

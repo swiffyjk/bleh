@@ -3,6 +3,7 @@ import {auth, page, root} from "../build/page.js";
 import {html, render} from "lighterhtml";
 import {tl, trans} from "../build/trans.js";
 import {collage} from "../components/collage.js";
+import {compare} from "../components/compare.js";
 
 let valid_minis;
 
@@ -66,12 +67,12 @@ export function bleh_minis(skip = false) {
 
     render(page.structure.side, html``);
 
+    page.avatar = '';
+    page.name = page.requested.profile;
+    if (page.name == auth.name) page.avatar = auth.avatar;
+
     if (mini) {
         page.structure.container.setAttribute('data-mini', mini);
-
-        page.name = page.requested.profile;
-        if (page.name == auth.name)
-            page.avatar = auth.avatar;
 
         valid_minis[mini].func();
         return;
@@ -146,46 +147,19 @@ function bleh_minis_compare() {
 
     render(page.structure.main, html`
         <section class="minis">
-            ${return_to_minis('collage')}
+            ${return_to_minis('compare')}
             <div class="minis-content" ref=${el => content = el} />
         </section>
     `);
 
     render(page.structure.side, html`
-        <section class="current-mini-settings" rel=${el => mini_settings = el} />
-        <section class="minis-settings">
-            <h2>${tl(trans.settings)}</h2>
-            <div class="setting-group">
-                <div class="setting v" data-type="text">
-                    <div class="heading">
-                        <h5>${tl(trans.profile)}</h5>
-                    </div>
-                    <div class="input-container content-form">
-                        <input type="text" class="input" placeholder=${tl(trans.enter_a_profile)} value=${auth.name} oninput=${e => {
-                            page.requested.profile = e.target.value;
-                        }}>
-                    </div>
-                </div>
-                <div class="setting v" data-type="text">
-                    <div class="heading">
-                        <h5>${tl(trans.secondary_profile)}</h5>
-                        <p>${tl(trans.minis_profile)}</p>
-                    </div>
-                    <div class="input-container content-form">
-                        <input type="text" class="input" placeholder=${tl(trans.enter_a_profile)} value=${page.requested.secondary} oninput=${e => {
-                            page.requested.secondary = e.target.value;
-                        }}>
-                    </div>
-                </div>
-            </div>
-        </section>
+        <section class="current-mini-settings" ref=${el => mini_settings = el} />
     `);
 
-    render(page.structure.main, html`
-        <section class="minis">
-            ${return_to_minis('compare')}
-        </section>
-    `);
+    compare({
+        host: content,
+        sidebar: mini_settings
+    });
 }
 
 function bleh_minis_pixel() {
@@ -210,4 +184,46 @@ function bleh_minis_receipt() {
             ${return_to_minis('receipt')}
         </section>
     `);
+}
+
+export function render_user(name, avatar, user, replace_page = false) {
+    if (avatar == '' && name != '') {
+        fetch(`${root}user/${name}/tags`)
+            .then(function (response) {
+                console.log('returned', response, response.text);
+
+                return response.text();
+            })
+            .then(function (dom) {
+                let doc = new DOMParser().parseFromString(dom, 'text/html');
+                console.log('DOC', doc);
+
+                try {
+                    avatar = doc.querySelector('.header-avatar-inner-wrap img').getAttribute('src');
+                    name = doc.querySelector('.header-title').textContent.trim();
+
+                    if (replace_page) {
+                        page.avatar = avatar;
+                        page.name = name;
+                    }
+
+                    if (!user) user = page.structure.main.querySelector('.compare-user.focus');
+                    render(user, render_user(name, avatar, user, replace_page));
+                } catch (e) {
+                    console.error(e);
+                }
+            });
+
+        return html`
+            <div class="avatar loading" />
+            <strong>${name}</strong>
+        `;
+    }
+
+    return html`
+        <div class="avatar">
+            <img src=${avatar} alt=${tl(trans.avatar_for_user).replace('{u}', name)}>
+        </div>
+        <strong>${name}</strong>
+    `;
 }

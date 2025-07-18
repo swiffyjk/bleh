@@ -4690,880 +4690,6 @@
       bleh_glacier_insights(insights);
   }
 
-  // src/components/compare.js
-  function compare() {
-    if (page.state.scrobbles === 0) {
-      notify({
-        id: "compare_not_possible",
-        title: tl(trans.compare),
-        body: tl(trans.profile_does_not_have_enough_scrobbles),
-        icon: "icon-16-arrows"
-      });
-      return;
-    }
-    let pages;
-    let timeframe;
-    let type;
-    let submit;
-    let body;
-    dialog({
-      id: "compare",
-      title: tl(trans.compare),
-      body: html.node`
-            <div class="compare-header">
-                <div class="compare-users">
-                    <div class="compare-user">
-                        <div class="avatar">
-                            <img src="${auth.avatar.replace("/avatar42s/", "/avatar170s/")}" alt="${tl(trans.your_avatar)}">
-                        </div>
-                        <strong>${auth.name}</strong>
-                    </div>
-                    <div class="bleh-icon"></div>
-                    <div class="compare-user">
-                        <div class="avatar">
-                            <img src="${page.avatar}" alt="${tl(trans.avatar_for_user).replace("{u}", page.name)}">
-                        </div>
-                        <strong>${page.name}</strong>
-                    </div>
-                </div>
-                <div class="compare-selection">
-                    ${pages = select([
-        {
-          value: "1",
-          text: 50
-        },
-        {
-          value: "2",
-          text: 100
-        },
-        {
-          value: "3",
-          text: 150
-        },
-        {
-          value: "4",
-          text: 200
-        },
-        {
-          value: "5",
-          text: 250
-        },
-        {
-          value: "6",
-          text: 300
-        }
-      ], "3")}
-                    ${type = select([
-        {
-          value: "artists",
-          text: html`<div class="bleh-icon" style="--icon: var(--icon-16-artist)" />${tl(trans.artists)}`
-        },
-        {
-          value: "albums",
-          text: html`<div class="bleh-icon" style="--icon: var(--icon-16-album)" />${tl(trans.albums)}`
-        },
-        {
-          value: "tracks",
-          text: html`<div class="bleh-icon" style="--icon: var(--icon-16-track)" />${tl(trans.tracks)}`
-        }
-      ], "albums")}
-                    ${timeframe = select([
-        {
-          value: "LAST_7_DAYS",
-          text: tl(trans.last_count_days).replace("{c}", "7")
-        },
-        {
-          value: "LAST_30_DAYS",
-          text: tl(trans.last_count_days).replace("{c}", "30")
-        },
-        {
-          value: "LAST_90_DAYS",
-          text: tl(trans.last_count_days).replace("{c}", "90")
-        },
-        {
-          value: "LAST_180_DAYS",
-          text: tl(trans.last_count_days).replace("{c}", "180")
-        },
-        {
-          value: "LAST_365_DAYS",
-          text: tl(trans.last_count_days).replace("{c}", "365")
-        }
-      ], "LAST_90_DAYS")}
-                    <button class="btn chibi icon primary compare" ref=${(el) => submit = el} onclick=${() => begin_comparing()}>${tl(trans.compare)}</button>
-                </div>
-            </div>
-            <div class="compare-body" data-filled="false" ref=${(el) => body = el}>
-                <div class="loading-data-container">
-                    <div class="loading-data-text info">${tl(trans.choose_a_timeframe_above)}</div>
-                </div>
-            </div>
-        `,
-      type: "compare"
-    });
-    tippy(submit, {
-      content: tl(trans.compare)
-    });
-    function begin_comparing(bypass = false) {
-      if (parseInt(pages.value) > 3 && !bypass) {
-        let warn = notify({
-          id: "collage_warning",
-          title: tl(trans.are_you_sure),
-          body: tl(trans.this_will_require_loading_count_pages).replace("{c}", parseInt(pages.value) * 2),
-          type: "warning",
-          actions: [
-            {
-              type: "check",
-              action: () => {
-                notify_rm(warn);
-                begin_comparing(true);
-              },
-              text: tl(trans.continue)
-            }
-          ],
-          persist: true
-        });
-        return;
-      }
-      pages.querySelector("button").disabled = true;
-      type.querySelector("button").disabled = true;
-      timeframe.querySelector("button").disabled = true;
-      submit.disabled = true;
-      page.state.compare = {
-        you: [],
-        other: [],
-        shared: []
-      };
-      body.setAttribute("data-filled", "false");
-      get_grid(auth.name, 1, parseInt(pages.value), page.name);
-    }
-    function get_grid(user, current_page, page_count, next_user = null) {
-      render(body, html`
-            <div class="loading-data-container">
-                <div class="loading-data-text">${tl(trans.gathering_plays_for_user_pages).replace("{u}", user).replace("{current_page}", current_page).replace("{pages}", page_count)}</div>
-            </div>
-        `);
-      fetch(`${root}user/${user}/library/${type.value}?format=list&date_preset=${timeframe.value}&page=${current_page}&ajax=1`).then(function(response) {
-        console.log("returned", response, response.text);
-        return response.text();
-      }).then(function(dom) {
-        let doc = new DOMParser().parseFromString(dom, "text/html");
-        console.log("DOC", doc);
-        let next_button = doc.querySelector(".pagination-next");
-        try {
-          let tracks = doc.querySelectorAll(".chartlist-row");
-          tracks.forEach((track) => {
-            let item = {};
-            item.avatar = track.querySelector(".chartlist-image img");
-            if (item.avatar)
-              item.avatar = item.avatar.getAttribute("src");
-            item.name = track.querySelector(".chartlist-name a").textContent.trim();
-            if (type.value != "artists")
-              item.sister = track.querySelector(".chartlist-artist a").textContent.trim();
-            item.plays = clean_number(track.querySelector(".chartlist-count-bar-slug").getAttribute("data-stat-value"));
-            if (next_user)
-              page.state.compare.you.push(item);
-            else
-              page.state.compare.other.push(item);
-          });
-        } catch (e) {
-          notify({
-            id: "compare",
-            title: tl(trans.failed),
-            body: tl(trans.there_was_a_network_error),
-            type: "error"
-          });
-          console.error(e);
-        }
-        if (next_button && current_page < page_count) {
-          get_grid(user, current_page + 1, page_count, next_user);
-        } else if (next_user) {
-          get_grid(next_user, 1, page_count);
-        } else {
-          pages.querySelector("button").disabled = false;
-          type.querySelector("button").disabled = false;
-          timeframe.querySelector("button").disabled = false;
-          submit.disabled = false;
-          continue_comparing();
-        }
-      });
-    }
-    function continue_comparing() {
-      log("gathered initial values", "compare", "info", page.state.compare);
-      page.state.compare.you.forEach((your_item) => {
-        let other_item;
-        if (type.value == "albums")
-          other_item = page.state.compare.other.find((other) => your_item.name === other.name && your_item.sister === other.sister);
-        else
-          other_item = page.state.compare.other.find((other) => your_item.name === other.name);
-        if (other_item) {
-          page.state.compare.shared.push({
-            avatar: your_item.avatar,
-            name: your_item.name,
-            sister: your_item.sister ? your_item.sister : "",
-            plays: {
-              you: your_item.plays,
-              other: other_item.plays,
-              shared: your_item.plays + other_item.plays
-            }
-          });
-        }
-      });
-      page.state.compare.shared.sort((a, b) => b.plays.shared - a.plays.shared);
-      log("gathered shared values", "compare", "info", page.state.compare);
-      body.innerHTML = "";
-      if (page.state.compare.shared.length == 0) {
-        render(body, html`
-                <div class="loading-data-container">
-                    <div class="loading-data-text failed">${tl(trans.nothing_in_common)}</div>
-                </div>
-            `);
-        body.setAttribute("data-filled", "false");
-        return;
-      }
-      body.setAttribute("data-filled", "true");
-      if (type.value != "tracks") {
-        let grid = document.createElement("ol");
-        grid.classList.add("grid-items", "grid-items--numbered", "compare-grid");
-        page.state.compare.shared.forEach((data2) => {
-          let template;
-          if (type.value == "artists")
-            template = sanitise(data2.name);
-          else
-            template = `${sanitise(data2.sister)}/${sanitise(data2.name)}`;
-          grid.appendChild(html.node`
-                    <li class="compare-item grid-items-item">
-                        <div class="grid-items-cover-image js-link-block link-block">
-                            <div class="grid-items-cover-image-image ${data2.avatar.endsWith("/c6f59c1e5e7240a4c0d427abd71f3dbb.jpg") || data2.avatar.endsWith("/2a96cbd8b46e442fc41c2b86b821562f.jpg") ? "grid-items-cover-default" : ""}">
-                                <img src="${data2.avatar.replace("/avatar70s/", "/avatar300s/").replace("/64s/", "/avatar300s/")}" alt="${data2.name}" loading="lazy">
-                            </div>
-                            <div class="grid-items-item-details">
-                                <p class="grid-items-item-main-text">
-                                    <a class="link-block-target" href="${root}music/${template}" title="${data2.name}">
-                                        ${data2.name}
-                                    </a>
-                                </p>
-                                ${type.value == "albums" ? html.node`
-                                <p class="grid-items-item-aux-text">
-                                    <a class="grid-items-item-aux-block" href="${root}music/${data2.sister}">
-                                        ${data2.sister}
-                                    </a>
-                                </p>
-                                ` : ""}
-                                <p class="grid-items-item-aux-text">
-                                    <a class="grid-item-plays with-avatar" href="${root}user/${auth.name}/library/music/${template}?date_preset=${timeframe.value}" target="_blank">
-                                        <span class="avatar">
-                                            <img src="${auth.avatar}" alt="${tl(trans.your_avatar)}">
-                                        </span>
-                                        ${data2.plays.you.toLocaleString(lang)}
-                                    </a>
-                                    <a class="grid-item-plays with-avatar" href="${root}user/${page.name}/library/music/${template}?date_preset=${timeframe.value}" target="_blank">
-                                        <span class="avatar">
-                                            <img src="${page.avatar}" alt="${tl(trans.avatar_for_user).replace("{u}", page.name)}">
-                                        </span>
-                                        ${data2.plays.other.toLocaleString(lang)}
-                                    </a>
-                                </p>
-                            </div>
-                            <a class="js-link-block-cover-link link-block-cover-link" href="${root}music/${template}" tabindex="-1" aria-hidden="true"></a>
-                        </div>
-                    </li>
-                `);
-        });
-        render(body, grid);
-        music_grids(grid);
-      } else {
-        let table = document.createElement("table");
-        table.classList.add("chartlist", "chartlist--with-index", "chartlist--with-index--length-2", "chartlist--with-image", "chartlist--with-artist", "chartlist--with-bar", "compare-chartlist");
-        let tbody = document.createElement("tbody");
-        table.appendChild(tbody);
-        let max = 0;
-        page.state.compare.shared.forEach((item) => {
-          if (item.plays.you > max)
-            max = item.plays.you;
-          if (item.plays.other > max)
-            max = item.plays.other;
-        });
-        page.state.compare.shared.forEach((data2, index) => {
-          let template = `${sanitise(data2.sister)}/_/${sanitise(data2.name)}`;
-          tbody.appendChild(html.node`
-                    <tr class="chartlist-row chartlist-row--with-artist compare-item">
-                        <td class="chartlist-index">${index + 1}</td>
-                        <td class="chartlist-image">
-                            <a class="cover-art" href="${root}music/${template}">
-                                <img src="${data2.avatar}" alt="${data2.name}" loading="lazy">
-                            </a>
-                        </td>
-                        <td class="chartlist-name">
-                            <a href="${root}music/${template}" title="${data2.name}">
-                                ${data2.name}
-                            </a>
-                        </td>
-                        <td class="chartlist-artist">
-                            <a href="${root}music/${data2.sister}" title="${data2.sister}">
-                                ${data2.sister}
-                            </a>
-                        </td>
-                        <td class="chartlist-bar with-multiple">
-                            <span class="chartlist-count-bar">
-                                <a class="chartlist-count-bar-link" href="${root}user/${auth.name}/library/music/${template}?date_preset=${timeframe.value}" target="_blank">
-                                    <span class="chartlist-count-bar-slug" data-max-stat-value="${max}" data-stat-value="${data2.plays.you}" style="width: ${data2.plays.you / max * 100}%;"></span>
-                                    <span class="chartlist-count-bar-value">${data2.plays.you}</span>
-                                </a>
-                                <span class="avatar">
-                                    <img src="${auth.avatar}" alt="${tl(trans.your_avatar)}">
-                                </span>
-                            </span>
-                            <span class="chartlist-count-bar">
-                                <a class="chartlist-count-bar-link" href="${root}user/${page.name}/library/music/${template}?date_preset=${timeframe.value}" target="_blank">
-                                    <span class="chartlist-count-bar-slug" data-max-stat-value="${max}" data-stat-value="${data2.plays.other}" style="width: ${data2.plays.other / max * 100}%;"></span>
-                                    <span class="chartlist-count-bar-value">${data2.plays.other}</span>
-                                </a>
-                                <span class="avatar">
-                                    <img src="${page.avatar}" alt="${tl(trans.avatar_for_user).replace("{u}", page.name)}">
-                                </span>
-                            </span>
-                        </td>
-                    </tr>
-                `);
-        });
-        body.appendChild(table);
-        patch_titles(body);
-      }
-    }
-  }
-
-  // src/components/input.js
-  function input({
-    type = "text",
-    value,
-    placeholder,
-    min,
-    max,
-    maxlength,
-    warn_if_empty = false,
-    focus = false,
-    disabled,
-    show_time = true,
-    name: name2,
-    func
-  }) {
-    if (type == "date") {
-      let months_between = function(a, b) {
-        return (b.getFullYear() - a.getFullYear()) * 12 + (b.getMonth() - a.getMonth());
-      }, can_nav_month_view = function() {
-        return months_between(min_date, max_date) >= 1;
-      }, can_nav_year_view = function() {
-        return max_date.getFullYear() - min_date.getFullYear() >= 1;
-      }, on_month_year_click = function() {
-        last_action = "";
-        if (view.level === "day" && can_nav_month_view()) {
-          view.level = "month";
-        } else if (view.level === "month" && can_nav_year_view()) {
-          view.level = "year";
-        } else if (view.level === "year") {
-          view.level = "month";
-        } else if (view.level === "manual") {
-          view.level = "day";
-        } else {
-          return;
-        }
-        render_popup();
-      }, can_prev = function() {
-        const py = view.month === 1 ? view.year - 1 : view.year;
-        const pm = view.month === 1 ? 12 : view.month - 1;
-        return py > min_date.getFullYear() || py === min_date.getFullYear() && pm >= min_date.getMonth() + 1;
-      }, can_next = function() {
-        const ny = view.month === 12 ? view.year + 1 : view.year;
-        const nm = view.month === 12 ? 1 : view.month + 1;
-        return ny < max_date.getFullYear() || ny === max_date.getFullYear() && nm <= max_date.getMonth() + 1;
-      }, render_popup = function() {
-        let inner;
-        if (view.level === "year") {
-          inner = render_year_view();
-        } else if (view.level === "month") {
-          inner = render_month_view();
-        } else if (view.level === "manual") {
-          inner = render_manual_view();
-        } else {
-          inner = render_day_view();
-        }
-        tooltip.setContent(html.node`<div class="calendar">${inner}</div>`);
-      }, render_day_view = function() {
-        return html.node`
-                <div class="calendar-header">
-                    <button class="month-year" type="button" onclick=${on_month_year_click} disabled=${!can_nav_month_view()}>
-                        ${months[view.month - 1]} ${view.year}
-                    </button>
-                    <div class="fill" />
-                    <button class="chibi icon" data-type="manual" type="button" onclick=${() => {
-          view.level = "manual";
-          render_popup();
-        }}>
-                        ${tl(trans.manual)}
-                    </button>
-                    <button class="chibi icon" data-type="up" disabled=${!can_prev()} type="button" onclick=${() => {
-          if (!can_prev()) return;
-          view.month--;
-          if (view.month < 1) {
-            view.month = 12;
-            view.year--;
-          }
-          last_action = "prev";
-          render_popup();
-        }}>
-                        ${tl(trans.back)}
-                    </button>
-                    <button class="chibi icon" data-type="down" disabled=${!can_next()} type="button" onclick=${() => {
-          if (!can_next()) return;
-          view.month++;
-          if (view.month > 12) {
-            view.month = 1;
-            view.year++;
-          }
-          last_action = "next";
-          render_popup();
-        }}>
-                        ${tl(trans.next)}
-                    </button>
-                </div>
-                <div class="date-header">
-                    ${weekdays.map((day) => html.node`<div class="date">${day}</div>`)}
-                </div>
-                <div class="days" data-last-action=${last_action}>
-                    ${days(view.year, view.month).map(
-          (cell) => cell.type == "empty" ? html.node`<button class="day empty" type="button" disabled />` : html.node`
-                                <button class="day" type="button" aria-selected=${cell.day == state.day && cell.date >= min_date && cell.date <= max_date && cell.month == view.month ? "true" : "false"} disabled=${cell.date < min_date || cell.date > max_date} onclick=${() => {
-            state.day = cell.day;
-            state.year = view.year;
-            state.month = view.month;
-            update_display();
-            emit();
-            last_action = "";
-            render_popup();
-          }}>${cell.day}</button>
-                            `
-        )}
-                </div>
-            `;
-      }, render_month_view = function() {
-        const min_year = min_date.getFullYear();
-        const max_year = max_date.getFullYear();
-        return html.node`
-                <div class="calendar-header">
-                    <button class="month-year" type="button" onclick=${on_month_year_click} disabled=${!can_nav_year_view()}>
-                        ${view.year}
-                    </button>
-                    <div class="fill" />
-                    <button class="chibi icon" data-type="manual" type="button" onclick=${() => {
-          view.level = "manual";
-          render_popup();
-        }}>
-                        ${tl(trans.manual)}
-                    </button>
-                    <button class="chibi icon" data-type="up" type="button" disabled=${view.year <= min_year} onclick=${() => {
-          if (view.year < min_year) return;
-          view.year--;
-          last_action = "prev";
-          render_popup();
-        }}>
-                        ${tl(trans.back)}
-                    </button>
-                    <button class="chibi icon" data-type="down" type="button" disabled=${view.year >= max_year} onclick=${() => {
-          if (view.year > max_year) return;
-          view.year++;
-          last_action = "next";
-          render_popup();
-        }}>
-                        ${tl(trans.next)}
-                    </button>
-                </div>
-                <div class="months" data-last-action=${last_action}>
-                    ${months.map((label, i) => {
-          const month_start = new Date(view.year, i, 1);
-          const month_end = new Date(
-            view.year,
-            i + 1,
-            0,
-            23,
-            59,
-            59,
-            999
-          );
-          return html.node`
-                            <button class="month" aria-selected=${view.year === state.year && i + 1 === state.month} disabled=${month_end < min_date || month_start > max_date} onclick=${() => {
-            view.month = i + 1;
-            view.level = "day";
-            last_action = "";
-            update_display();
-            emit();
-            render_popup();
-          }}>
-                                ${label}
-                            </button>
-                        `;
-        })}
-                </div>
-            `;
-      }, render_year_view = function() {
-        const min_year = min_date.getFullYear();
-        const max_year = max_date.getFullYear();
-        const decade_start = Math.floor(view.year / 10) * 10;
-        return html.node`
-                <div class="calendar-header">
-                    <button class="month-year" onclick=${on_month_year_click}>
-                        ${decade_start} – ${decade_start + 9}
-                    </button>
-                    <div class="fill" />
-                    <button class="chibi icon" data-type="manual" type="button" onclick=${() => {
-          view.level = "manual";
-          render_popup();
-        }}>
-                        ${tl(trans.manual)}
-                    </button>
-                    <button class="chibi icon" data-type="up" disabled=${decade_start - 10 < min_year} onclick=${() => {
-          if (decade_start - 10 < min_year) return;
-          view.year -= 10;
-          render_popup();
-        }}>
-                        ${tl(trans.back)}
-                    </button>
-                    <button class="chibi icon" data-type="down" disabled=${decade_start + 10 > max_year} onclick=${() => {
-          if (decade_start + 10 > max_year) return;
-          view.year += 10;
-          render_popup();
-        }}>
-                        ${tl(trans.next)}
-                    </button>
-                </div>
-                <div class="years">
-                    ${Array.from({ length: 10 }, (_, i) => decade_start + i).map((yr) => {
-          return html.node`
-                            <button class="year" aria-selected=${yr === state.year} disabled=${yr < min_date.getFullYear() || yr > max_date.getFullYear()} onclick=${() => {
-            view.year = yr;
-            view.level = "month";
-            render_popup();
-          }}>
-                                ${yr}
-                            </button>
-                        `;
-        })}
-                </div>
-            `;
-      }, validate_text_date = function(value2) {
-        const m = value2.match(/^(\d{4})-(\d{2})-(\d{2})$/);
-        if (!m) return null;
-        const [_, ys, ms, ds] = m;
-        const date = /* @__PURE__ */ new Date(`${ys}-${ms}-${ds}T00:00:00`);
-        if (date.getFullYear() !== +ys || date.getMonth() + 1 !== +ms || date.getDate() !== +ds) {
-          return null;
-        }
-        if (date < min_date || date > max_date) return null;
-        return date;
-      }, render_manual_view = function() {
-        let manual_date;
-        let elem = html.node`
-                <div class="calendar-header">
-                    <button class="month-year" onclick=${on_month_year_click}>
-                        ${tl(trans.manual)}
-                    </button>
-                    <div class="fill" />
-                    <button class="chibi icon" data-type="manual" type="button" disabled>
-                        ${tl(trans.manual)}
-                    </button>
-                    <button class="chibi icon" data-type="up" disabled>
-                        ${tl(trans.back)}
-                    </button>
-                    <button class="chibi icon" data-type="down" disabled>
-                        ${tl(trans.next)}
-                    </button>
-                </div>
-                <div class="manual">
-                    ${manual_date = input({
-          type: "text",
-          value: `${state.year}-${pad2(state.month)}-${pad2(state.day)}`,
-          func: (value2) => {
-            const parsed2 = validate_text_date(
-              value2
-            );
-            if (!parsed2) {
-              manual_date.value(`${state.year}-${pad2(state.month)}-${pad2(state.day)}`);
-              return;
-            }
-            state.year = parsed2.getFullYear();
-            state.month = parsed2.getMonth() + 1;
-            state.day = parsed2.getDate();
-            view.level = "day";
-            view.year = state.year;
-            view.month = state.month;
-            update_display();
-            emit();
-            render_popup();
-          }
-        })}
-                    <p>${tl(trans.enter_a_manual_date)}</p>
-                    <p>${tl(trans.minimum_value).replace("{v}", `${min_date.getFullYear()}-${pad2(min_date.getMonth() + 1)}-${pad2(min_date.getDate())}`)}</p>
-                    <p>${tl(trans.maximum_value).replace("{v}", `${max_date.getFullYear()}-${pad2(max_date.getMonth() + 1)}-${pad2(max_date.getDate())}`)}</p>
-                </div>
-            `;
-        manual_date.focus();
-        return elem;
-      }, days = function(year, month) {
-        const raw_first = new Date(
-          year,
-          month - 1,
-          1
-        ).getDay();
-        const offset = (raw_first + 6) % 7;
-        const days_in_month = new Date(
-          year,
-          month,
-          0
-        ).getDate();
-        const cells = [];
-        for (let i = 0; i < offset; i++) cells.push({ type: "empty" });
-        for (let day = 1; day <= days_in_month; day++) {
-          cells.push({
-            type: "day",
-            day,
-            month: state.month,
-            date: new Date(
-              year,
-              month - 1,
-              day
-            )
-          });
-        }
-        const rem = (7 - cells.length % 7) % 7;
-        for (let i = 0; i < rem; i++) cells.push({ type: "empty" });
-        console.info("cells", cells, state.month, view.month);
-        return cells;
-      }, update_display = function() {
-        date_display.textContent = format_date(state);
-      }, emit = function() {
-        const date_object = new Date(
-          state.year,
-          state.month - 1,
-          state.day,
-          state.hours,
-          state.mins,
-          state.secs
-        );
-        legacy_date.value = `${state.year}-${pad2(state.month)}-${pad2(state.day)}`;
-        container2.dispatchEvent(new CustomEvent("change"), { detail: date_object });
-      }, format_date = function({ year, month, day }) {
-        const date_object = new Date(
-          year,
-          month - 1,
-          day
-        );
-        return date_object.toLocaleDateString(void 0, {
-          year: "numeric",
-          month: "short",
-          day: "numeric"
-        });
-      };
-      let now = /* @__PURE__ */ new Date();
-      if (value != null) now = new Date(value);
-      console.info(min, max, new Date(max));
-      const min_date = min != null ? new Date(min) : new Date(now.getTime() - 14 * 24 * 60 * 60 * 1e3);
-      min_date.setHours(0, 0, 0, 0);
-      const max_date = max != null ? new Date(max) : /* @__PURE__ */ new Date();
-      max_date.setHours(23, 59, 59, 999);
-      let last_action;
-      const state = {
-        year: now.getFullYear(),
-        month: now.getMonth() + 1,
-        day: now.getDate(),
-        hours: now.getHours(),
-        mins: now.getMinutes(),
-        secs: now.getSeconds()
-      };
-      let view = {
-        level: "day",
-        year: state.year,
-        month: state.month
-      };
-      let legacy_date;
-      let date_display;
-      let time_input;
-      let popup_inner = html.node`<div class="calendar" />`;
-      const locale = void 0;
-      const months = Array.from(
-        { length: 12 },
-        (_, i) => new Intl.DateTimeFormat(locale, { month: "short" }).format(new Date(2e3, i, 1))
-      );
-      const raw_weekdays = Array.from(
-        { length: 7 },
-        (_, i) => new Intl.DateTimeFormat(locale, { weekday: "short" }).format(new Date(1970, 0, 4 + i))
-      );
-      const weekdays = raw_weekdays.slice(1).concat(raw_weekdays[0]);
-      const container2 = html.node`
-            <div class="input-group">
-                <div class="content-form input-container" data-type="date">
-                    <input class="legacy-input" type="date" ref=${(el) => legacy_date = el} name=${name2} value="${state.year}-${pad2(state.month)}-${pad2(state.day)}">
-                    <div class="date-input modern-input" ref=${(el) => date_display = el} disabled=${disabled}>${format_date(state)}</div>
-                </div>
-                ${show_time ? html.node`
-                <div class="content-form input-container" data-type="time">
-                    <input class="modern-input" type="time" step="1" ref=${(el) => time_input = el} disabled=${disabled} value="${pad2(state.hours)}:${pad2(state.mins)}:${pad2(state.secs)}">
-                </div>
-                ` : ""}
-            </div>
-        `;
-      if (time_input) {
-        time_input.addEventListener("input", () => {
-          const parts = time_input.value.split(":").map((n) => parseInt(n, 10));
-          state.hours = parts[0] || 0;
-          state.mins = parts[1] || 0;
-          state.secs = parts[2] || 0;
-          emit();
-        });
-      }
-      let tooltip = tippy(date_display, {
-        theme: "window",
-        content: "",
-        placement: "top",
-        interactive: true,
-        interactiveBorder: 10,
-        trigger: "click",
-        onShow() {
-          last_action = "";
-          render_popup();
-        }
-      });
-      let menu = tippy(date_display, {
-        theme: "context-menu",
-        content: html.node`
-                <button class="dropdown-menu-clickable-item" data-type="manual" onclick=${() => {
-          view.level = "manual";
-          tooltip.show();
-        }}>
-                    ${tl(trans.manual_date)}
-                </button>
-            `,
-        placement: "right-start",
-        trigger: "manual",
-        interactive: true,
-        interactiveBorder: 10,
-        offset: [0, 0],
-        onShow(instance) {
-          instance.popper.addEventListener("click", (event3) => {
-            instance.hide();
-          });
-        }
-      });
-      register_menu(date_display, menu);
-      container2.value = (val = null) => {
-        if (val === null) {
-          return new Date(
-            state.year,
-            state.month - 1,
-            state.day,
-            state.hours,
-            state.mins,
-            state.secs
-          );
-        }
-        const date_object = new Date(val);
-        state.year = date_object.getFullYear();
-        state.month = date_object.getMonth() + 1;
-        state.day = date_object.getDate();
-        state.hours = date_object.getHours();
-        state.mins = date_object.getMinutes();
-        state.secs = date_object.getSeconds();
-        view.year = state.year;
-        view.month = state.month;
-        render_popup();
-        update_display();
-        if (time_input) time_input.value = `${pad2(state.hours)}:${pad2(state.mins)}:${pad2(state.secs)}`;
-        return date_object;
-      };
-      container2.disabled = (val = null) => {
-        if (val === null) return time_input.disabled;
-        if (!val)
-          date_display.removeAttribute("disabled");
-        else
-          date_display.setAttribute("disabled", "true");
-        if (time_input) time_input.disabled = val;
-        return val;
-      };
-      return container2;
-    }
-    let input_box;
-    let error_tooltip;
-    let colour_block;
-    let container = html.node`
-        <div class="content-form input-container colourful" data-type=${type} data-has-error="false">
-            ${type == "colour" ? html.node`<span class="colour-block" ref=${(el) => colour_block = el} />` : ""}
-            <input class="modern-input" disabled=${disabled} autofocus=${focus} type=${type} value=${value} placeholder=${placeholder} min=${min} max=${max} maxlength=${maxlength} ref=${(el) => input_box = el} />
-        </div>
-    `;
-    error_tooltip = tippy(input_box, {
-      theme: "error",
-      placement: "top",
-      trigger: "manual"
-    });
-    error_tooltip.disable();
-    update_input(true);
-    input_box.addEventListener("input", () => {
-      update_input();
-    });
-    input_box.addEventListener("keydown", (event3) => {
-      if (event3.keyCode === 13) {
-        event3.preventDefault();
-        if (func) func(input_box.value);
-      }
-    });
-    container.focus = () => {
-      setTimeout(() => {
-        input_box.focus();
-      }, 5);
-    };
-    container.value = (val = null) => {
-      if (val === null) return input_box.value;
-      input_box.value = val;
-      return val;
-    };
-    container.disabled = (state = null) => {
-      if (state === null) return input_box.getAttribute("disabled") || false;
-      if (state === true)
-        input_box.setAttribute("disabled", "true");
-      else
-        input_box.removeAttribute("disabled");
-      return state;
-    };
-    return container;
-    function update_input(skip_most = false) {
-      container.setAttribute("data-has-error", "false");
-      error_tooltip.disable();
-      if (type != "number" && !skip_most) {
-        if (input_box.value == "" && warn_if_empty) {
-          error_input2(tl(trans.this_field_is_required));
-        } else if (input_box.value.length > maxlength) {
-          error_input2(tl(trans.keep_within_the_range));
-        }
-      }
-      if (type == "number" && !skip_most) {
-        if (input_box.value == "") {
-          error_input2(tl(trans.only_numbers_are_allowed));
-        } else if (parseInt(input_box.value) > max || parseInt(input_box.value) < min) {
-          error_input2(tl(trans.keep_within_the_range));
-        }
-      } else if (type == "colour") {
-        if (!input_box.value.startsWith("#"))
-          input_box.value = `#${input_box.value}`;
-        colour_block.style.backgroundColor = input_box.value;
-      }
-    }
-    function error_input2(reason) {
-      log(reason, "input", "log");
-      container.setAttribute("data-has-error", "true");
-      error_tooltip.setContent(reason);
-      error_tooltip.enable();
-      error_tooltip.show();
-    }
-  }
-
   // src/components/profile_shortcut.js
   unsafeWindow._open_profile_shortcut_window = function() {
     open_profile_shortcut_window();
@@ -6105,6 +5231,1595 @@
       document.body.style.setProperty(`--${settings_store[id].css}`, `${value}${settings_store[id].suffix || ""}`);
     localStorage.setItem("bleh", JSON.stringify(settings));
     log(`saved ${id} as ${value}`, "settings", "log", { settings, settings_id: settings[id] });
+  }
+
+  // src/components/input.js
+  function input({
+    type = "text",
+    value,
+    placeholder,
+    min,
+    max,
+    maxlength,
+    warn_if_empty = false,
+    focus = false,
+    disabled,
+    show_time = true,
+    name: name2,
+    func
+  }) {
+    if (type == "date") {
+      let months_between = function(a, b) {
+        return (b.getFullYear() - a.getFullYear()) * 12 + (b.getMonth() - a.getMonth());
+      }, can_nav_month_view = function() {
+        return months_between(min_date, max_date) >= 1;
+      }, can_nav_year_view = function() {
+        return max_date.getFullYear() - min_date.getFullYear() >= 1;
+      }, on_month_year_click = function() {
+        last_action = "";
+        if (view.level === "day" && can_nav_month_view()) {
+          view.level = "month";
+        } else if (view.level === "month" && can_nav_year_view()) {
+          view.level = "year";
+        } else if (view.level === "year") {
+          view.level = "month";
+        } else if (view.level === "manual") {
+          view.level = "day";
+        } else {
+          return;
+        }
+        render_popup();
+      }, can_prev = function() {
+        const py = view.month === 1 ? view.year - 1 : view.year;
+        const pm = view.month === 1 ? 12 : view.month - 1;
+        return py > min_date.getFullYear() || py === min_date.getFullYear() && pm >= min_date.getMonth() + 1;
+      }, can_next = function() {
+        const ny = view.month === 12 ? view.year + 1 : view.year;
+        const nm = view.month === 12 ? 1 : view.month + 1;
+        return ny < max_date.getFullYear() || ny === max_date.getFullYear() && nm <= max_date.getMonth() + 1;
+      }, render_popup = function() {
+        let inner;
+        if (view.level === "year") {
+          inner = render_year_view();
+        } else if (view.level === "month") {
+          inner = render_month_view();
+        } else if (view.level === "manual") {
+          inner = render_manual_view();
+        } else {
+          inner = render_day_view();
+        }
+        tooltip.setContent(html.node`<div class="calendar">${inner}</div>`);
+      }, render_day_view = function() {
+        return html.node`
+                <div class="calendar-header">
+                    <button class="month-year" type="button" onclick=${on_month_year_click} disabled=${!can_nav_month_view()}>
+                        ${months[view.month - 1]} ${view.year}
+                    </button>
+                    <div class="fill" />
+                    <button class="chibi icon" data-type="manual" type="button" onclick=${() => {
+          view.level = "manual";
+          render_popup();
+        }}>
+                        ${tl(trans.manual)}
+                    </button>
+                    <button class="chibi icon" data-type="up" disabled=${!can_prev()} type="button" onclick=${() => {
+          if (!can_prev()) return;
+          view.month--;
+          if (view.month < 1) {
+            view.month = 12;
+            view.year--;
+          }
+          last_action = "prev";
+          render_popup();
+        }}>
+                        ${tl(trans.back)}
+                    </button>
+                    <button class="chibi icon" data-type="down" disabled=${!can_next()} type="button" onclick=${() => {
+          if (!can_next()) return;
+          view.month++;
+          if (view.month > 12) {
+            view.month = 1;
+            view.year++;
+          }
+          last_action = "next";
+          render_popup();
+        }}>
+                        ${tl(trans.next)}
+                    </button>
+                </div>
+                <div class="date-header">
+                    ${weekdays.map((day) => html.node`<div class="date">${day}</div>`)}
+                </div>
+                <div class="days" data-last-action=${last_action}>
+                    ${days(view.year, view.month).map(
+          (cell) => cell.type == "empty" ? html.node`<button class="day empty" type="button" disabled />` : html.node`
+                                <button class="day" type="button" aria-selected=${cell.day == state.day && cell.date >= min_date && cell.date <= max_date && cell.month == view.month ? "true" : "false"} disabled=${cell.date < min_date || cell.date > max_date} onclick=${() => {
+            state.day = cell.day;
+            state.year = view.year;
+            state.month = view.month;
+            update_display();
+            emit();
+            last_action = "";
+            render_popup();
+          }}>${cell.day}</button>
+                            `
+        )}
+                </div>
+            `;
+      }, render_month_view = function() {
+        const min_year = min_date.getFullYear();
+        const max_year = max_date.getFullYear();
+        return html.node`
+                <div class="calendar-header">
+                    <button class="month-year" type="button" onclick=${on_month_year_click} disabled=${!can_nav_year_view()}>
+                        ${view.year}
+                    </button>
+                    <div class="fill" />
+                    <button class="chibi icon" data-type="manual" type="button" onclick=${() => {
+          view.level = "manual";
+          render_popup();
+        }}>
+                        ${tl(trans.manual)}
+                    </button>
+                    <button class="chibi icon" data-type="up" type="button" disabled=${view.year <= min_year} onclick=${() => {
+          if (view.year < min_year) return;
+          view.year--;
+          last_action = "prev";
+          render_popup();
+        }}>
+                        ${tl(trans.back)}
+                    </button>
+                    <button class="chibi icon" data-type="down" type="button" disabled=${view.year >= max_year} onclick=${() => {
+          if (view.year > max_year) return;
+          view.year++;
+          last_action = "next";
+          render_popup();
+        }}>
+                        ${tl(trans.next)}
+                    </button>
+                </div>
+                <div class="months" data-last-action=${last_action}>
+                    ${months.map((label, i) => {
+          const month_start = new Date(view.year, i, 1);
+          const month_end = new Date(
+            view.year,
+            i + 1,
+            0,
+            23,
+            59,
+            59,
+            999
+          );
+          return html.node`
+                            <button class="month" aria-selected=${view.year === state.year && i + 1 === state.month} disabled=${month_end < min_date || month_start > max_date} onclick=${() => {
+            view.month = i + 1;
+            view.level = "day";
+            last_action = "";
+            update_display();
+            emit();
+            render_popup();
+          }}>
+                                ${label}
+                            </button>
+                        `;
+        })}
+                </div>
+            `;
+      }, render_year_view = function() {
+        const min_year = min_date.getFullYear();
+        const max_year = max_date.getFullYear();
+        const decade_start = Math.floor(view.year / 10) * 10;
+        return html.node`
+                <div class="calendar-header">
+                    <button class="month-year" onclick=${on_month_year_click}>
+                        ${decade_start} – ${decade_start + 9}
+                    </button>
+                    <div class="fill" />
+                    <button class="chibi icon" data-type="manual" type="button" onclick=${() => {
+          view.level = "manual";
+          render_popup();
+        }}>
+                        ${tl(trans.manual)}
+                    </button>
+                    <button class="chibi icon" data-type="up" disabled=${decade_start - 10 < min_year} onclick=${() => {
+          if (decade_start - 10 < min_year) return;
+          view.year -= 10;
+          render_popup();
+        }}>
+                        ${tl(trans.back)}
+                    </button>
+                    <button class="chibi icon" data-type="down" disabled=${decade_start + 10 > max_year} onclick=${() => {
+          if (decade_start + 10 > max_year) return;
+          view.year += 10;
+          render_popup();
+        }}>
+                        ${tl(trans.next)}
+                    </button>
+                </div>
+                <div class="years">
+                    ${Array.from({ length: 10 }, (_, i) => decade_start + i).map((yr) => {
+          return html.node`
+                            <button class="year" aria-selected=${yr === state.year} disabled=${yr < min_date.getFullYear() || yr > max_date.getFullYear()} onclick=${() => {
+            view.year = yr;
+            view.level = "month";
+            render_popup();
+          }}>
+                                ${yr}
+                            </button>
+                        `;
+        })}
+                </div>
+            `;
+      }, validate_text_date = function(value2) {
+        const m = value2.match(/^(\d{4})-(\d{2})-(\d{2})$/);
+        if (!m) return null;
+        const [_, ys, ms, ds] = m;
+        const date = /* @__PURE__ */ new Date(`${ys}-${ms}-${ds}T00:00:00`);
+        if (date.getFullYear() !== +ys || date.getMonth() + 1 !== +ms || date.getDate() !== +ds) {
+          return null;
+        }
+        if (date < min_date || date > max_date) return null;
+        return date;
+      }, render_manual_view = function() {
+        let manual_date;
+        let elem = html.node`
+                <div class="calendar-header">
+                    <button class="month-year" onclick=${on_month_year_click}>
+                        ${tl(trans.manual)}
+                    </button>
+                    <div class="fill" />
+                    <button class="chibi icon" data-type="manual" type="button" disabled>
+                        ${tl(trans.manual)}
+                    </button>
+                    <button class="chibi icon" data-type="up" disabled>
+                        ${tl(trans.back)}
+                    </button>
+                    <button class="chibi icon" data-type="down" disabled>
+                        ${tl(trans.next)}
+                    </button>
+                </div>
+                <div class="manual">
+                    ${manual_date = input({
+          type: "text",
+          value: `${state.year}-${pad2(state.month)}-${pad2(state.day)}`,
+          func: (value2) => {
+            const parsed2 = validate_text_date(
+              value2
+            );
+            if (!parsed2) {
+              manual_date.value(`${state.year}-${pad2(state.month)}-${pad2(state.day)}`);
+              return;
+            }
+            state.year = parsed2.getFullYear();
+            state.month = parsed2.getMonth() + 1;
+            state.day = parsed2.getDate();
+            view.level = "day";
+            view.year = state.year;
+            view.month = state.month;
+            update_display();
+            emit();
+            render_popup();
+          }
+        })}
+                    <p>${tl(trans.enter_a_manual_date)}</p>
+                    <p>${tl(trans.minimum_value).replace("{v}", `${min_date.getFullYear()}-${pad2(min_date.getMonth() + 1)}-${pad2(min_date.getDate())}`)}</p>
+                    <p>${tl(trans.maximum_value).replace("{v}", `${max_date.getFullYear()}-${pad2(max_date.getMonth() + 1)}-${pad2(max_date.getDate())}`)}</p>
+                </div>
+            `;
+        manual_date.focus();
+        return elem;
+      }, days = function(year, month) {
+        const raw_first = new Date(
+          year,
+          month - 1,
+          1
+        ).getDay();
+        const offset = (raw_first + 6) % 7;
+        const days_in_month = new Date(
+          year,
+          month,
+          0
+        ).getDate();
+        const cells = [];
+        for (let i = 0; i < offset; i++) cells.push({ type: "empty" });
+        for (let day = 1; day <= days_in_month; day++) {
+          cells.push({
+            type: "day",
+            day,
+            month: state.month,
+            date: new Date(
+              year,
+              month - 1,
+              day
+            )
+          });
+        }
+        const rem = (7 - cells.length % 7) % 7;
+        for (let i = 0; i < rem; i++) cells.push({ type: "empty" });
+        console.info("cells", cells, state.month, view.month);
+        return cells;
+      }, update_display = function() {
+        date_display.textContent = format_date(state);
+      }, emit = function() {
+        const date_object = new Date(
+          state.year,
+          state.month - 1,
+          state.day,
+          state.hours,
+          state.mins,
+          state.secs
+        );
+        legacy_date.value = `${state.year}-${pad2(state.month)}-${pad2(state.day)}`;
+        container2.dispatchEvent(new CustomEvent("change"), { detail: date_object });
+      }, format_date = function({ year, month, day }) {
+        const date_object = new Date(
+          year,
+          month - 1,
+          day
+        );
+        return date_object.toLocaleDateString(void 0, {
+          year: "numeric",
+          month: "short",
+          day: "numeric"
+        });
+      };
+      let now = /* @__PURE__ */ new Date();
+      if (value != null) now = new Date(value);
+      console.info(min, max, new Date(max));
+      const min_date = min != null ? new Date(min) : new Date(now.getTime() - 14 * 24 * 60 * 60 * 1e3);
+      min_date.setHours(0, 0, 0, 0);
+      const max_date = max != null ? new Date(max) : /* @__PURE__ */ new Date();
+      max_date.setHours(23, 59, 59, 999);
+      let last_action;
+      const state = {
+        year: now.getFullYear(),
+        month: now.getMonth() + 1,
+        day: now.getDate(),
+        hours: now.getHours(),
+        mins: now.getMinutes(),
+        secs: now.getSeconds()
+      };
+      let view = {
+        level: "day",
+        year: state.year,
+        month: state.month
+      };
+      let legacy_date;
+      let date_display;
+      let time_input;
+      let popup_inner = html.node`<div class="calendar" />`;
+      const locale = void 0;
+      const months = Array.from(
+        { length: 12 },
+        (_, i) => new Intl.DateTimeFormat(locale, { month: "short" }).format(new Date(2e3, i, 1))
+      );
+      const raw_weekdays = Array.from(
+        { length: 7 },
+        (_, i) => new Intl.DateTimeFormat(locale, { weekday: "short" }).format(new Date(1970, 0, 4 + i))
+      );
+      const weekdays = raw_weekdays.slice(1).concat(raw_weekdays[0]);
+      const container2 = html.node`
+            <div class="input-group">
+                <div class="content-form input-container" data-type="date">
+                    <input class="legacy-input" type="date" ref=${(el) => legacy_date = el} name=${name2} value="${state.year}-${pad2(state.month)}-${pad2(state.day)}">
+                    <div class="date-input modern-input" ref=${(el) => date_display = el} disabled=${disabled}>${format_date(state)}</div>
+                </div>
+                ${show_time ? html.node`
+                <div class="content-form input-container" data-type="time">
+                    <input class="modern-input" type="time" step="1" ref=${(el) => time_input = el} disabled=${disabled} value="${pad2(state.hours)}:${pad2(state.mins)}:${pad2(state.secs)}">
+                </div>
+                ` : ""}
+            </div>
+        `;
+      if (time_input) {
+        time_input.addEventListener("input", () => {
+          const parts = time_input.value.split(":").map((n) => parseInt(n, 10));
+          state.hours = parts[0] || 0;
+          state.mins = parts[1] || 0;
+          state.secs = parts[2] || 0;
+          emit();
+        });
+      }
+      let tooltip = tippy(date_display, {
+        theme: "window",
+        content: "",
+        placement: "top",
+        interactive: true,
+        interactiveBorder: 10,
+        trigger: "click",
+        onShow() {
+          last_action = "";
+          render_popup();
+        }
+      });
+      let menu = tippy(date_display, {
+        theme: "context-menu",
+        content: html.node`
+                <button class="dropdown-menu-clickable-item" data-type="manual" onclick=${() => {
+          view.level = "manual";
+          tooltip.show();
+        }}>
+                    ${tl(trans.manual_date)}
+                </button>
+            `,
+        placement: "right-start",
+        trigger: "manual",
+        interactive: true,
+        interactiveBorder: 10,
+        offset: [0, 0],
+        onShow(instance) {
+          instance.popper.addEventListener("click", (event3) => {
+            instance.hide();
+          });
+        }
+      });
+      register_menu(date_display, menu);
+      container2.value = (val = null) => {
+        if (val === null) {
+          return new Date(
+            state.year,
+            state.month - 1,
+            state.day,
+            state.hours,
+            state.mins,
+            state.secs
+          );
+        }
+        const date_object = new Date(val);
+        state.year = date_object.getFullYear();
+        state.month = date_object.getMonth() + 1;
+        state.day = date_object.getDate();
+        state.hours = date_object.getHours();
+        state.mins = date_object.getMinutes();
+        state.secs = date_object.getSeconds();
+        view.year = state.year;
+        view.month = state.month;
+        render_popup();
+        update_display();
+        if (time_input) time_input.value = `${pad2(state.hours)}:${pad2(state.mins)}:${pad2(state.secs)}`;
+        return date_object;
+      };
+      container2.disabled = (val = null) => {
+        if (val === null) return time_input.disabled;
+        if (!val)
+          date_display.removeAttribute("disabled");
+        else
+          date_display.setAttribute("disabled", "true");
+        if (time_input) time_input.disabled = val;
+        return val;
+      };
+      return container2;
+    }
+    let input_box;
+    let error_tooltip;
+    let colour_block;
+    let container = html.node`
+        <div class="content-form input-container colourful" data-type=${type} data-has-error="false">
+            ${type == "colour" ? html.node`<span class="colour-block" ref=${(el) => colour_block = el} />` : ""}
+            <input class="modern-input" disabled=${disabled} autofocus=${focus} type=${type} value=${value} placeholder=${placeholder} min=${min} max=${max} maxlength=${maxlength} ref=${(el) => input_box = el} />
+        </div>
+    `;
+    error_tooltip = tippy(input_box, {
+      theme: "error",
+      placement: "top",
+      trigger: "manual"
+    });
+    error_tooltip.disable();
+    update_input(true);
+    input_box.addEventListener("input", () => {
+      update_input();
+    });
+    input_box.addEventListener("keydown", (event3) => {
+      if (event3.keyCode === 13) {
+        event3.preventDefault();
+        if (func) func(input_box.value);
+      }
+    });
+    container.focus = () => {
+      setTimeout(() => {
+        input_box.focus();
+      }, 5);
+    };
+    container.value = (val = null) => {
+      if (val === null) return input_box.value;
+      input_box.value = val;
+      return val;
+    };
+    container.disabled = (state = null) => {
+      if (state === null) return input_box.getAttribute("disabled") || false;
+      if (state === true)
+        input_box.setAttribute("disabled", "true");
+      else
+        input_box.removeAttribute("disabled");
+      return state;
+    };
+    return container;
+    function update_input(skip_most = false) {
+      container.setAttribute("data-has-error", "false");
+      error_tooltip.disable();
+      if (type != "number" && !skip_most) {
+        if (input_box.value == "" && warn_if_empty) {
+          error_input2(tl(trans.this_field_is_required));
+        } else if (input_box.value.length > maxlength) {
+          error_input2(tl(trans.keep_within_the_range));
+        }
+      }
+      if (type == "number" && !skip_most) {
+        if (input_box.value == "") {
+          error_input2(tl(trans.only_numbers_are_allowed));
+        } else if (parseInt(input_box.value) > max || parseInt(input_box.value) < min) {
+          error_input2(tl(trans.keep_within_the_range));
+        }
+      } else if (type == "colour") {
+        if (!input_box.value.startsWith("#"))
+          input_box.value = `#${input_box.value}`;
+        colour_block.style.backgroundColor = input_box.value;
+      }
+    }
+    function error_input2(reason) {
+      log(reason, "input", "log");
+      container.setAttribute("data-has-error", "true");
+      error_tooltip.setContent(reason);
+      error_tooltip.enable();
+      error_tooltip.show();
+    }
+  }
+
+  // src/components/share.js
+  function share(url) {
+    let input2;
+    dialog({
+      id: "share",
+      title: tl(trans.share),
+      body: html.node`
+            <div class="share-top content-form">
+                <input
+                    type="text"
+                    readonly
+                    value=${url}
+                    class="share-input"
+                    ref=${(el) => input2 = el}
+                />
+                <button 
+                    class="btn primary icon copy"
+                    onclick=${() => {
+        input2.select();
+        document.execCommand("copy");
+        notify({
+          title: tl(trans.copied_to_clipboard),
+          icon: "icon-16-copy"
+        });
+      }}
+                >${tl(trans.copy)}</button>
+            </div>
+            <div class="share-links">
+                <a 
+                    href=${`https://twitter.com/intent/tweet?url=${encodeURIComponent(url)}`}
+                    target="_blank"
+                    class="share-link share-link-twitter"
+                >Twitter</a>
+                <a 
+                    href=${`https://www.facebook.com/sharer/sharer.php?u=${encodeURIComponent(url)}`}
+                    target="_blank"
+                    class="share-link share-link-facebook"
+                >Facebook</a>
+            </div>
+        `,
+      replace_if_possible: true
+    });
+  }
+  function download(url, filename = null) {
+    log(`downloading ${filename}`, "download");
+    let link = html.node`
+        <a href=${url} download />
+    `;
+    if (filename)
+      link.setAttribute("download", filename);
+    link.click();
+    notify({
+      id: "downloaded",
+      title: tl(trans.downloaded),
+      body: filename,
+      icon: "icon-16-download"
+    });
+  }
+
+  // src/components/collage.js
+  function collage({
+    host,
+    sidebar
+  } = {}) {
+    if (!host || !sidebar) return;
+    let width;
+    let height;
+    let timeframe;
+    let type;
+    let settings_btn;
+    let submit;
+    let body;
+    let value = 5;
+    let min = 1;
+    let max = 20;
+    let current_year = (/* @__PURE__ */ new Date()).getFullYear();
+    let previous_year = current_year - 1;
+    const default_type = page.requested.type || "albums";
+    const default_timeframe = page.requested.timeframe || "date_preset=LAST_90_DAYS";
+    if (page.requested.redirect) {
+      setTimeout(() => {
+        notify({
+          id: "collage_redirect",
+          title: tl(trans.collage),
+          body: tl(trans.collage_redirect),
+          icon: "icon-16-collage",
+          persist: true
+        });
+      }, 100);
+    }
+    let user;
+    render(host, html`
+        <div class="compare-header">
+            <div class="compare-users">
+                <div class="compare-user focus" ref=${(el) => user = el}>
+                    ${render_user(page.name, page.avatar, user, true)}
+                </div>
+            </div>
+            <div class="compare-selection">
+                <div class="input-group">
+                    ${width = input({
+      type: "number",
+      value,
+      placeholder: value,
+      min,
+      max
+    })}
+                    <div class="bleh-icon" style="--icon: var(--icon-16-x)" />
+                    ${height = input({
+      type: "number",
+      value,
+      placeholder: value,
+      min,
+      max
+    })}
+                </div>
+                ${type = select([
+      {
+        value: "artists",
+        text: html`<div class="bleh-icon" style="--icon: var(--icon-16-artist)" />${tl(trans.artists)}`
+      },
+      {
+        value: "albums",
+        text: html`<div class="bleh-icon" style="--icon: var(--icon-16-album)" />${tl(trans.albums)}`
+      },
+      {
+        value: "tracks",
+        text: html`<div class="bleh-icon" style="--icon: var(--icon-16-track)" />${tl(trans.tracks)}`
+      }
+    ], default_type)}
+                ${timeframe = select([
+      {
+        value: "date_preset=LAST_7_DAYS",
+        text: tl(trans.last_count_days).replace("{c}", "7")
+      },
+      {
+        value: "date_preset=LAST_30_DAYS",
+        text: tl(trans.last_count_days).replace("{c}", "30")
+      },
+      {
+        value: "date_preset=LAST_90_DAYS",
+        text: tl(trans.last_count_days).replace("{c}", "90")
+      },
+      {
+        value: "date_preset=LAST_180_DAYS",
+        text: tl(trans.last_count_days).replace("{c}", "180")
+      },
+      {
+        value: "date_preset=LAST_365_DAYS",
+        text: tl(trans.last_count_days).replace("{c}", "365")
+      },
+      {
+        value: "date_preset=ALL",
+        text: tl(trans.all_time)
+      },
+      {
+        value: `from=${current_year}-01-01&rangetype=year`,
+        text: current_year
+      },
+      {
+        value: `from=${previous_year}-01-01&rangetype=year`,
+        text: previous_year
+      }
+    ], default_timeframe)}
+                <button class="btn primary icon" data-type="collage" ref=${(el) => submit = el} onclick=${() => make_collage()}>${tl(trans.generate)}</button>
+            </div>
+        </div>
+        <div class="compare-body" data-filled="false" ref=${(el) => body = el}>
+            <div class="loading-data-container">
+                <div class="loading-data-text info">${tl(trans.choose_a_timeframe_above)}</div>
+            </div>
+        </div>
+    `);
+    let width_input = width.querySelector("input");
+    let height_input = height.querySelector("input");
+    let timeframe_select = timeframe.querySelector("select");
+    let type_select = type.querySelector("select");
+    let setting_group;
+    let inputter;
+    render(sidebar, html`
+        <h2>${tl(trans.settings)}</h2>
+        <div class="setting-group" ref=${(el) => setting_group = el}>
+            <div class="setting v" data-type="text">
+                <div class="heading">
+                    <h5>${tl(trans.profile)}</h5>
+                </div>
+                <div class="input-container content-form">
+                    <input type="text" class="input" ref=${(el) => inputter = el} placeholder=${tl(trans.enter_a_profile)} value=${page.requested.profile} onchange=${(e) => {
+      page.requested.profile = e.target.value;
+      page.name = page.requested.profile;
+      page.avatar = "";
+      if (page.name == auth.name) page.avatar = auth.avatar;
+      render(user, html`
+                            ${render_user(page.name, page.avatar, user, true)}
+                        `);
+    }}>
+                    ${() => {
+      let btn = html.node`
+                            <button class="btn chibi icon" data-type="profile" onclick=${() => {
+        inputter.value = auth.name;
+        inputter.dispatchEvent(new Event("change"));
+      }}>${tl(trans.profile)}</button>
+                        `;
+      tippy(btn, {
+        content: tl(trans.profile)
+      });
+      return btn;
+    }}
+                    ${() => {
+      let btn = html.node`
+                            <button class="btn chibi icon" data-type="profile_shortcut" onclick=${() => {
+        if (settings.profile_shortcut == "") return;
+        inputter.value = settings.profile_shortcut;
+        inputter.dispatchEvent(new Event("change"));
+      }}>${tl(trans.profile_shortcut.name)}</button>
+                        `;
+      tippy(btn, {
+        content: tl(trans.profile_shortcut.name)
+      });
+      return btn;
+    }}
+                </div>
+            </div>
+            ${setting({ id: "collage_title" })}
+            ${setting({ id: "collage_grid_gap" })}
+            ${setting({ id: "collage_grid_text" })}
+            ${setting({ id: "collage_grid_plays" })}
+        </div>
+    `);
+    let collage_settings = setting_group.querySelectorAll(":scope > .setting");
+    function make_collage(bypass = false) {
+      if (width_input.value == "" || height_input.value == "" || parseInt(width_input.value) < min || parseInt(width_input.value) > max || parseInt(height_input.value) < min || parseInt(height_input.value) > max) {
+        notify({
+          id: "collage_failed",
+          title: tl(trans.name_failed).replace("{name}", tl(trans.collage)),
+          body: tl(trans.your_settings_are_invalid),
+          type: "error"
+        });
+        return;
+      }
+      let per_page = 50;
+      let pages = Math.ceil(width_input.value * height_input.value / per_page);
+      if (pages > 4 && !bypass) {
+        let warn = notify({
+          id: "collage_warning",
+          title: tl(trans.are_you_sure),
+          body: tl(trans.this_will_require_loading_count_pages).replace("{c}", pages),
+          type: "warning",
+          actions: [
+            {
+              type: "check",
+              action: () => {
+                notify_rm(warn);
+                make_collage(true);
+              },
+              text: tl(trans.continue)
+            }
+          ],
+          persist: true
+        });
+        return;
+      }
+      type.querySelector("button").disabled = true;
+      timeframe.querySelector("button").disabled = true;
+      collage_settings.forEach((option) => {
+        option.setAttribute("disabled", true);
+      });
+      submit.disabled = true;
+      page.state.collage = [];
+      get_grid(1, pages);
+    }
+    function get_grid(current_page, pages) {
+      render(body, html`
+            <div class="loading-data-container">
+                <div class="loading-data-text">${tl(trans.gathering_plays_for_user_pages).replace("{u}", page.name).replace("{current_page}", current_page).replace("{pages}", pages)}</div>
+            </div>
+        `);
+      fetch(`${root}user/${page.name}/library/${type_select.value}?format=list&${timeframe_select.value}&page=${current_page}&ajax=1`).then(function(response) {
+        console.log("returned", response, response.text);
+        return response.text();
+      }).then(function(dom) {
+        let doc = new DOMParser().parseFromString(dom, "text/html");
+        console.log("DOC", doc);
+        let next_button = doc.querySelector(".pagination-next");
+        try {
+          let tracks = doc.querySelectorAll(".chartlist-row");
+          tracks.forEach((track) => {
+            let item = {};
+            item.avatar = track.querySelector(".chartlist-image img");
+            if (item.avatar)
+              item.avatar = item.avatar.getAttribute("src");
+            item.name = track.querySelector(".chartlist-name a").textContent.trim();
+            if (type_select.value != "artists")
+              item.sister = track.querySelector(".chartlist-artist a").textContent.trim();
+            item.plays = clean_number(track.querySelector(".chartlist-count-bar-slug").getAttribute("data-stat-value"));
+            page.state.collage.push(item);
+          });
+        } catch (e) {
+          notify({
+            id: "collage_failed",
+            title: tl(trans.name_failed).replace("{name}", tl(trans.collage)),
+            body: tl(trans.there_was_a_network_error),
+            type: "error"
+          });
+          console.error(e);
+        }
+        if (next_button && current_page < pages) {
+          get_grid(current_page + 1, pages);
+        } else {
+          continue_collage();
+        }
+      });
+    }
+    async function continue_collage() {
+      log("gathered initial values", "collage", "info", page.state.collage);
+      if (page.state.collage.length == 0) {
+        render(body, html`
+                <div class="loading-data-container">
+                    <div class="loading-data-text failed">${tl(trans.no_plays_in_range)}</div>
+                </div>
+            `);
+        type.querySelector("button").disabled = false;
+        timeframe.querySelector("button").disabled = false;
+        collage_settings.forEach((option) => {
+          option.setAttribute("disabled", false);
+        });
+        submit.disabled = false;
+        return;
+      }
+      let grid = html.node`
+            <ol class="grid-items grid-items--numbered collage-grid" style="--width: ${width_input.value}; --height: ${height_input.value}" data-width=${width_input.value} data-height=${height_input.value} />
+        `;
+      if (!settings.collage_grid_gap) {
+        grid.style.setProperty("--item-list-gap", "0px");
+        grid.style.setProperty("--item-med-radius", "0");
+      }
+      let total = width_input.value * height_input.value - 1;
+      grid.style.setProperty("--highest", Math.max(+width_input.value, +height_input.value).toString());
+      page.state.collage.some((data2, index) => {
+        if (index > total)
+          return false;
+        let template;
+        if (type_select.value == "artists")
+          template = sanitise(data2.name);
+        else
+          template = `${sanitise(data2.sister)}/${sanitise(data2.name)}`;
+        grid.appendChild(html.node`
+                <li class="compare-item grid-items-item">
+                    <div class="grid-items-cover-image">
+                        <div class="grid-items-cover-image-image ${data2.avatar.endsWith("/c6f59c1e5e7240a4c0d427abd71f3dbb.jpg") || data2.avatar.endsWith("/2a96cbd8b46e442fc41c2b86b821562f.jpg") ? "grid-items-cover-default" : ""}">
+                            <img src="${data2.avatar.replace("/avatar70s/", "/avatar300s/").replace("/64s/", "/avatar300s/")}" alt="${data2.name}" loading="lazy">
+                        </div>
+                        ${settings.collage_grid_text || settings.collage_grid_plays ? html.node`
+                        <div class="grid-items-item-details">
+                            ${settings.collage_grid_text ? html.node`
+                            <p class="grid-items-item-main-text">
+                                <a class="link-block-target" href="${root}music/${template}" title="${data2.name}">
+                                    ${data2.name}
+                                </a>
+                            </p>
+                            ` : ""}
+                            ${type_select.value != "artists" ? html.node`
+                            <p class="grid-items-item-aux-text">
+                                ${settings.collage_grid_text ? html.node`
+                                <a class="grid-items-item-aux-block" href="${root}music/${data2.sister}">
+                                    ${data2.sister}
+                                </a>
+                                ${settings.collage_grid_plays ? html.node`
+                                <a class="grid-item-plays" href="${root}user/${page.name}/library/music/${template}?date_preset=${timeframe_select.value}" target="_blank">
+                                    ${data2.plays.toLocaleString(lang)}
+                                </a>
+                                ` : ""}
+                                ` : settings.collage_grid_plays ? html.node`
+                                <a class="grid-item-plays" href="${root}user/${page.name}/library/music/${template}?date_preset=${timeframe_select.value}" target="_blank">
+                                    ${data2.plays.toLocaleString(lang)}${tl(trans.plays_lower)}
+                                </a>
+                                ` : ""}
+                            </p>
+                            ` : html.node`
+                            ${settings.collage_grid_plays ? html.node`
+                            <p class="grid-items-item-aux-text">
+                                <a class="grid-item-plays" href="${root}user/${page.name}/library/music/${template}?date_preset=${timeframe_select.value}" target="_blank">
+                                    ${data2.plays.toLocaleString(lang)}${tl(trans.plays_lower)}
+                                </a>
+                            </p>
+                            ` : ""}
+                            `}
+                        </div>
+                        ` : ""}
+                    </div>
+                </li>
+            `);
+      });
+      let collage_dom = html.node`
+            <div class="collage">
+                ${settings.collage_title ? html.node`
+                <div class="header">
+                    <div class="type" data-type=${type_select.value}>
+                        <div class="bleh-icon" />
+                        <strong class="brand">${version.brand}</strong>
+                        <strong>${timeframe.querySelector("button").textContent}</strong>
+                        <strong>${tl(trans.top_type).replace("{type}", tl(trans[type_select.value]))}</strong>
+                        <strong>${width_input.value}x${height_input.value}</strong>
+                    </div>
+                    <div class="user">
+                        <div class="avatar">
+                            <img src="${page.avatar}" alt="${tl(trans.avatar_for_user).replace("{u}", page.name)}">
+                        </div>
+                        <strong>${page.name}</strong>
+                    </div>
+                </div>
+                ` : ""}
+                ${grid}
+            </div>
+        `;
+      render(body, html`
+            <div class="loading-data-container">
+                <div class="loading-data-text">${tl(trans.waiting_for_images)}</div>
+            </div>
+            ${collage_dom}
+        `);
+      music_grids(grid, false);
+      const default_size = 380;
+      const base = 4;
+      const highest = Math.max(+width_input.value, +height_input.value);
+      const grid_item_size = Math.min(
+        default_size,
+        Math.floor(default_size * base / highest)
+      );
+      const grid_item_gap = settings.collage_grid_gap ? 10 : 0;
+      const padding = settings.collage_grid_gap ? 15 : 0;
+      const title_height = settings.collage_title ? 32 + 15 : 0;
+      const width2 = padding * 2 + grid_item_size * width_input.value + grid_item_gap * (width_input.value - 1);
+      const height2 = padding * 2 + title_height + grid_item_size * height_input.value + grid_item_gap * (height_input.value - 1);
+      const cv_scale = 1;
+      collage_dom.style.width = `${width2}px`;
+      collage_dom.style.height = `${height2}px`;
+      collage_dom.style.padding = `${padding}px`;
+      collage_dom.style.gap = `${padding}px`;
+      collage_dom.style.setProperty("--item-list-gap", `${grid_item_gap}px`);
+      collage_dom.style.setProperty("--grid-item-size", `${grid_item_size}px`);
+      let initial_canvas = html.node`
+            <canvas width=${width2 * cv_scale} height=${height2 * cv_scale} />
+        `;
+      html2canvas(collage_dom, {
+        useCORS: true,
+        letterRendering: true,
+        canvas: initial_canvas,
+        scale: cv_scale,
+        onclone: (doc) => {
+          doc.querySelectorAll("*").forEach((el) => {
+            if (el.classList == "brand")
+              el.style.setProperty("font-family", "Darumadrop One");
+            else
+              el.style.setProperty("font-family", "Overpass, Inter, Ubuntu Sans, Spline Sans, Roboto, Noto Sans, Noto Sans JP, Noto Sans KR, Noto Sans TC, Lucida Grande, Verdana, Tahoma, -apple-system, BlinkMacSystemFont, sans-serif");
+          });
+        }
+      }).then((canvas) => {
+        canvas.toBlob((blob) => {
+          const blob_url = URL.createObjectURL(blob);
+          const filename = tl(trans.chart_template_filename).replace("{timeframe}", timeframe.querySelector("button").textContent).replace("{user}", page.name).replace("{type}", tl(trans[type_select.value])).replace("{size}", `${width_input.value}x${height_input.value}`).replace("{brand}", version.brand);
+          render(body, html`
+                    <div class="collage-finished">
+                        <strong>${tl(trans.your_collage_is_ready)}</strong>
+                        <div class="button-group">
+                            <button
+                                class="btn primary icon"
+                                data-type="download"
+                                onclick=${() => download(blob_url, filename)}
+                            >
+                                ${tl(trans.download)}
+                            </button>
+                            <button
+                                class="btn open"
+                                data-type="open"
+                                onclick=${() => open(blob_url)}
+                            >
+                                ${tl(trans.open)}
+                            </button>
+                        </div>
+                    </div>
+                    ${canvas}
+                `);
+          type.querySelector("button").disabled = false;
+          timeframe.querySelector("button").disabled = false;
+          collage_settings.forEach((option) => {
+            option.setAttribute("disabled", false);
+          });
+          submit.disabled = false;
+        }, "image/png");
+      });
+    }
+  }
+
+  // src/pages/minis.js
+  var valid_minis;
+  function bleh_minis(skip = false) {
+    if (!skip) {
+      update_page();
+      page.structure.row.removeChild(page.structure.row.firstElementChild);
+      page.structure.row.removeChild(page.structure.row.firstElementChild);
+    }
+    let params = new URLSearchParams(document.location.search);
+    page.requested.profile = params.get("profile") || auth.name;
+    page.requested.secondary = params.get("secondary");
+    page.requested.redirect = params.get("redirect");
+    page.requested.type = params.get("type");
+    page.requested.timeframe = params.get("timeframe");
+    let path = window.location.pathname.split("/");
+    let mini = path[path.length - 1];
+    if (mini == "minis") mini = null;
+    valid_minis = {
+      collage: {
+        name: tl(trans.collage),
+        body: tl(trans.collage_description),
+        func: bleh_minis_collage
+      },
+      compare: {
+        name: tl(trans.compare),
+        body: tl(trans.compare_description),
+        func: bleh_minis_compare
+      },
+      pixel: {
+        name: tl(trans.pixel?.name),
+        body: tl(trans.pixel?.body),
+        func: bleh_minis_pixel
+      },
+      rainbow: {
+        name: tl(trans.rainbow?.name),
+        body: tl(trans.rainbow?.body),
+        func: bleh_minis_rainbow
+      },
+      receipt: {
+        name: tl(trans.receipt?.name),
+        body: tl(trans.receipt?.body),
+        func: bleh_minis_receipt
+      }
+    };
+    if (mini && !valid_minis[mini]) {
+      render(page.structure.main, html`
+            <div class="loading-data-container">
+                <div class="loading-data-text error">${tl(trans.no_mini_found).replace("{v}", mini)}</div>
+            </div>
+        `);
+      return;
+    }
+    render(page.structure.side, html``);
+    page.avatar = "";
+    page.name = page.requested.profile;
+    if (page.name == auth.name) page.avatar = auth.avatar;
+    if (mini) {
+      page.structure.container.setAttribute("data-mini", mini);
+      valid_minis[mini].func();
+      return;
+    }
+    render(page.structure.main, html`
+        <section class="minis">
+            <div class="minis-header">
+                <h2>${tl(trans.minis)}</h2>
+            </div>
+            <div class="mini-list">
+                ${Object.entries(valid_minis).map(([id, mini2]) => html.node`
+                    <button class="mini" data-type=${id} data-mini=${id} onclick=${() => {
+      window.history.replaceState(id, "", `${root}bleh/minis/${id}`);
+      page.structure.container.setAttribute("data-mini", id);
+      render(page.structure.main, html``);
+      valid_minis[id].func();
+    }}>
+                        <div class="mini-icon colourful">
+                            <div class="bleh-icon" />
+                        </div>
+                        <div class="mini-info">
+                            <h5>${mini2.name}</h5>
+                            <p>${mini2.body}</p>
+                        </div>
+                        <div class="bleh-icon mini-arrow" style="--icon: var(--mask)" data-type="arrow-right" />
+                    </button>
+                `)}
+            </div>
+            <p class="card-tip">${{ html: tl(trans.labs_cta).replace("{a}", `<a class="see-more" href="${root}labs">`).replace("{/a}", "</a>") }}</p>
+        </section>
+    `);
+  }
+  function return_to_minis(mini) {
+    return html.node`
+        <div class="minis-header">
+            <h2 class="previous" onclick=${() => {
+      window.history.replaceState(null, "", `${root}bleh/minis`);
+      bleh_minis(true);
+    }}>${tl(trans.minis)}</h2>
+            <div class="bleh-icon mini-arrow" style="--icon: var(--mask)" data-type="arrow-right" />
+            <h2>${valid_minis[mini].name}</h2>
+        </div>
+    `;
+  }
+  function bleh_minis_collage() {
+    let content;
+    let mini_settings;
+    render(page.structure.main, html`
+        <section class="minis">
+            ${return_to_minis("collage")}
+            <div class="minis-content" ref=${(el) => content = el} />
+        </section>
+    `);
+    render(page.structure.side, html`
+        <section class="current-mini-settings" ref=${(el) => mini_settings = el} />
+    `);
+    collage({
+      host: content,
+      sidebar: mini_settings
+    });
+  }
+  function bleh_minis_compare() {
+    let content;
+    let mini_settings;
+    render(page.structure.main, html`
+        <section class="minis">
+            ${return_to_minis("compare")}
+            <div class="minis-content" ref=${(el) => content = el} />
+        </section>
+    `);
+    render(page.structure.side, html`
+        <section class="current-mini-settings" ref=${(el) => mini_settings = el} />
+    `);
+    compare({
+      host: content,
+      sidebar: mini_settings
+    });
+  }
+  function bleh_minis_pixel() {
+    render(page.structure.main, html`
+        <section class="minis">
+            ${return_to_minis("pixel")}
+        </section>
+    `);
+  }
+  function bleh_minis_rainbow() {
+    render(page.structure.main, html`
+        <section class="minis">
+            ${return_to_minis("rainbow")}
+        </section>
+    `);
+  }
+  function bleh_minis_receipt() {
+    render(page.structure.main, html`
+        <section class="minis">
+            ${return_to_minis("receipt")}
+        </section>
+    `);
+  }
+  function render_user(name2, avatar3, user, replace_page = false) {
+    if (avatar3 == "" && name2 != "") {
+      fetch(`${root}user/${name2}/tags`).then(function(response) {
+        console.log("returned", response, response.text);
+        return response.text();
+      }).then(function(dom) {
+        let doc = new DOMParser().parseFromString(dom, "text/html");
+        console.log("DOC", doc);
+        try {
+          avatar3 = doc.querySelector(".header-avatar-inner-wrap img").getAttribute("src");
+          name2 = doc.querySelector(".header-title").textContent.trim();
+          if (replace_page) {
+            page.avatar = avatar3;
+            page.name = name2;
+          }
+          if (!user) user = page.structure.main.querySelector(".compare-user.focus");
+          render(user, render_user(name2, avatar3, user, replace_page));
+        } catch (e) {
+          console.error(e);
+        }
+      });
+      return html`
+            <div class="avatar loading" />
+            <strong>${name2}</strong>
+        `;
+    }
+    return html`
+        <div class="avatar">
+            <img src=${avatar3} alt=${tl(trans.avatar_for_user).replace("{u}", name2)}>
+        </div>
+        <strong>${name2}</strong>
+    `;
+  }
+
+  // src/components/compare.js
+  function compare({
+    host,
+    sidebar
+  } = {}) {
+    if (!host || !sidebar) return;
+    let pages;
+    let timeframe;
+    let type;
+    let submit;
+    let body;
+    if (page.name == auth.name) {
+      page.name = "";
+      page.avatar = "";
+      page.requested.profile = "";
+    }
+    let user;
+    render(host, html`
+        <div class="compare-header">
+            <div class="compare-users">
+                <div class="compare-user">
+                    <div class="avatar">
+                        <img src="${auth.avatar.replace("/avatar42s/", "/avatar170s/")}" alt="${tl(trans.your_avatar)}">
+                    </div>
+                    <strong>${auth.name}</strong>
+                </div>
+                <div class="bleh-icon"></div>
+                <div class="compare-user focus" ref=${(el) => user = el}>
+                    ${render_user(page.name, page.avatar, user, true)}
+                </div>
+            </div>
+            <div class="compare-selection">
+                ${pages = select([
+      {
+        value: "1",
+        text: 50
+      },
+      {
+        value: "2",
+        text: 100
+      },
+      {
+        value: "3",
+        text: 150
+      },
+      {
+        value: "4",
+        text: 200
+      },
+      {
+        value: "5",
+        text: 250
+      },
+      {
+        value: "6",
+        text: 300
+      }
+    ], "3")}
+                ${type = select([
+      {
+        value: "artists",
+        text: html`<div class="bleh-icon" style="--icon: var(--icon-16-artist)" />${tl(trans.artists)}`
+      },
+      {
+        value: "albums",
+        text: html`<div class="bleh-icon" style="--icon: var(--icon-16-album)" />${tl(trans.albums)}`
+      },
+      {
+        value: "tracks",
+        text: html`<div class="bleh-icon" style="--icon: var(--icon-16-track)" />${tl(trans.tracks)}`
+      }
+    ], "albums")}
+                ${timeframe = select([
+      {
+        value: "LAST_7_DAYS",
+        text: tl(trans.last_count_days).replace("{c}", "7")
+      },
+      {
+        value: "LAST_30_DAYS",
+        text: tl(trans.last_count_days).replace("{c}", "30")
+      },
+      {
+        value: "LAST_90_DAYS",
+        text: tl(trans.last_count_days).replace("{c}", "90")
+      },
+      {
+        value: "LAST_180_DAYS",
+        text: tl(trans.last_count_days).replace("{c}", "180")
+      },
+      {
+        value: "LAST_365_DAYS",
+        text: tl(trans.last_count_days).replace("{c}", "365")
+      }
+    ], "LAST_90_DAYS")}
+                <button class="btn icon primary compare" ref=${(el) => submit = el} onclick=${() => begin_comparing()}>${tl(trans.compare)}</button>
+            </div>
+        </div>
+        <div class="compare-body" data-filled="false" ref=${(el) => body = el}>
+            <div class="loading-data-container">
+                <div class="loading-data-text info">${tl(trans.choose_a_timeframe_above)}</div>
+            </div>
+        </div>
+    `);
+    let setting_group;
+    let input2;
+    render(sidebar, html`
+        <h2>${tl(trans.settings)}</h2>
+        <div class="setting-group" ref=${(el) => setting_group = el}>
+            <div class="setting v" data-type="text">
+                <div class="heading">
+                    <h5>${tl(trans.compare_with)}</h5>
+                </div>
+                <div class="input-container content-form">
+                    <input type="text" class="input" ref=${(el) => input2 = el} placeholder=${tl(trans.enter_a_profile)} value=${page.requested.profile} onchange=${(e) => {
+      page.requested.profile = e.target.value;
+      page.name = page.requested.profile;
+      page.avatar = "";
+      if (page.name == auth.name) page.avatar = auth.avatar;
+      render(user, html`
+                            ${render_user(page.name, page.avatar, user, true)}
+                        `);
+    }}>
+                    ${() => {
+      let btn = html.node`
+                            <button class="btn chibi icon" data-type="profile_shortcut" onclick=${() => {
+        if (settings.profile_shortcut == "") return;
+        input2.value = settings.profile_shortcut;
+        input2.dispatchEvent(new Event("change"));
+      }}>${tl(trans.profile_shortcut.name)}</button>
+                        `;
+      tippy(btn, {
+        content: tl(trans.profile_shortcut.name)
+      });
+      return btn;
+    }}
+                </div>
+            </div>
+        </div>
+    `);
+    let compare_settings = setting_group.querySelectorAll(":scope > .setting");
+    function begin_comparing(bypass = false) {
+      if (page.name == "") return;
+      if (parseInt(pages.value) > 3 && !bypass) {
+        let warn = notify({
+          id: "collage_warning",
+          title: tl(trans.are_you_sure),
+          body: tl(trans.this_will_require_loading_count_pages).replace("{c}", parseInt(pages.value) * 2),
+          type: "warning",
+          actions: [
+            {
+              type: "check",
+              action: () => {
+                notify_rm(warn);
+                begin_comparing(true);
+              },
+              text: tl(trans.continue)
+            }
+          ],
+          persist: true
+        });
+        return;
+      }
+      pages.querySelector("button").disabled = true;
+      type.querySelector("button").disabled = true;
+      timeframe.querySelector("button").disabled = true;
+      compare_settings.forEach((option) => {
+        option.setAttribute("disabled", true);
+      });
+      submit.disabled = true;
+      page.state.compare = {
+        you: [],
+        other: [],
+        shared: []
+      };
+      get_grid(auth.name, 1, parseInt(pages.value), page.name);
+    }
+    function get_grid(user2, current_page, page_count, next_user = null) {
+      render(body, html`
+            <div class="loading-data-container">
+                <div class="loading-data-text">${tl(trans.gathering_plays_for_user_pages).replace("{u}", user2).replace("{current_page}", current_page).replace("{pages}", page_count)}</div>
+            </div>
+        `);
+      fetch(`${root}user/${user2}/library/${type.value}?format=list&date_preset=${timeframe.value}&page=${current_page}&ajax=1`).then(function(response) {
+        console.log("returned", response, response.text);
+        return response.text();
+      }).then(function(dom) {
+        let doc = new DOMParser().parseFromString(dom, "text/html");
+        console.log("DOC", doc);
+        let next_button = doc.querySelector(".pagination-next");
+        try {
+          let tracks = doc.querySelectorAll(".chartlist-row");
+          tracks.forEach((track) => {
+            let item = {};
+            item.avatar = track.querySelector(".chartlist-image img");
+            if (item.avatar)
+              item.avatar = item.avatar.getAttribute("src");
+            item.name = track.querySelector(".chartlist-name a").textContent.trim();
+            if (type.value != "artists")
+              item.sister = track.querySelector(".chartlist-artist a").textContent.trim();
+            item.plays = clean_number(track.querySelector(".chartlist-count-bar-slug").getAttribute("data-stat-value"));
+            if (next_user)
+              page.state.compare.you.push(item);
+            else
+              page.state.compare.other.push(item);
+          });
+        } catch (e) {
+          notify({
+            id: "compare",
+            title: tl(trans.failed),
+            body: tl(trans.there_was_a_network_error),
+            type: "error"
+          });
+          console.error(e);
+        }
+        if (next_button && current_page < page_count) {
+          get_grid(user2, current_page + 1, page_count, next_user);
+        } else if (next_user) {
+          get_grid(next_user, 1, page_count);
+        } else {
+          pages.querySelector("button").disabled = false;
+          type.querySelector("button").disabled = false;
+          timeframe.querySelector("button").disabled = false;
+          compare_settings.forEach((option) => {
+            option.setAttribute("disabled", false);
+          });
+          submit.disabled = false;
+          continue_comparing();
+        }
+      });
+    }
+    function continue_comparing() {
+      log("gathered initial values", "compare", "info", page.state.compare);
+      page.state.compare.you.forEach((your_item) => {
+        let other_item;
+        if (type.value == "albums")
+          other_item = page.state.compare.other.find((other) => your_item.name === other.name && your_item.sister === other.sister);
+        else
+          other_item = page.state.compare.other.find((other) => your_item.name === other.name);
+        if (other_item) {
+          page.state.compare.shared.push({
+            avatar: your_item.avatar,
+            name: your_item.name,
+            sister: your_item.sister ? your_item.sister : "",
+            plays: {
+              you: your_item.plays,
+              other: other_item.plays,
+              shared: your_item.plays + other_item.plays
+            }
+          });
+        }
+      });
+      page.state.compare.shared.sort((a, b) => b.plays.shared - a.plays.shared);
+      log("gathered shared values", "compare", "info", page.state.compare);
+      body.innerHTML = "";
+      if (page.state.compare.shared.length == 0) {
+        render(body, html`
+                <div class="loading-data-container">
+                    <div class="loading-data-text failed">${tl(trans.nothing_in_common)}</div>
+                </div>
+            `);
+        return;
+      }
+      if (type.value != "tracks") {
+        let grid = document.createElement("ol");
+        grid.classList.add("grid-items", "grid-items--numbered", "compare-grid");
+        page.state.compare.shared.forEach((data2) => {
+          let template;
+          if (type.value == "artists")
+            template = sanitise(data2.name);
+          else
+            template = `${sanitise(data2.sister)}/${sanitise(data2.name)}`;
+          grid.appendChild(html.node`
+                    <li class="compare-item grid-items-item">
+                        <div class="grid-items-cover-image js-link-block link-block">
+                            <div class="grid-items-cover-image-image ${data2.avatar.endsWith("/c6f59c1e5e7240a4c0d427abd71f3dbb.jpg") || data2.avatar.endsWith("/2a96cbd8b46e442fc41c2b86b821562f.jpg") ? "grid-items-cover-default" : ""}">
+                                <img src="${data2.avatar.replace("/avatar70s/", "/avatar300s/").replace("/64s/", "/avatar300s/")}" alt="${data2.name}" loading="lazy">
+                            </div>
+                            <div class="grid-items-item-details">
+                                <p class="grid-items-item-main-text">
+                                    <a class="link-block-target" href="${root}music/${template}" title="${data2.name}">
+                                        ${data2.name}
+                                    </a>
+                                </p>
+                                ${type.value == "albums" ? html.node`
+                                <p class="grid-items-item-aux-text">
+                                    <a class="grid-items-item-aux-block" href="${root}music/${data2.sister}">
+                                        ${data2.sister}
+                                    </a>
+                                </p>
+                                ` : ""}
+                                <p class="grid-items-item-aux-text">
+                                    <a class="grid-item-plays with-avatar" href="${root}user/${auth.name}/library/music/${template}?date_preset=${timeframe.value}" target="_blank">
+                                        <span class="avatar">
+                                            <img src="${auth.avatar}" alt="${tl(trans.your_avatar)}">
+                                        </span>
+                                        ${data2.plays.you.toLocaleString(lang)}
+                                    </a>
+                                    <a class="grid-item-plays with-avatar" href="${root}user/${page.name}/library/music/${template}?date_preset=${timeframe.value}" target="_blank">
+                                        <span class="avatar">
+                                            <img src="${page.avatar}" alt="${tl(trans.avatar_for_user).replace("{u}", page.name)}">
+                                        </span>
+                                        ${data2.plays.other.toLocaleString(lang)}
+                                    </a>
+                                </p>
+                            </div>
+                            <a class="js-link-block-cover-link link-block-cover-link" href="${root}music/${template}" tabindex="-1" aria-hidden="true"></a>
+                        </div>
+                    </li>
+                `);
+        });
+        render(body, grid);
+        music_grids(grid);
+      } else {
+        let table = document.createElement("table");
+        table.classList.add("chartlist", "chartlist--with-index", "chartlist--with-index--length-2", "chartlist--with-image", "chartlist--with-artist", "chartlist--with-bar", "compare-chartlist");
+        let tbody = document.createElement("tbody");
+        table.appendChild(tbody);
+        let max = 0;
+        page.state.compare.shared.forEach((item) => {
+          if (item.plays.you > max)
+            max = item.plays.you;
+          if (item.plays.other > max)
+            max = item.plays.other;
+        });
+        page.state.compare.shared.forEach((data2, index) => {
+          let template = `${sanitise(data2.sister)}/_/${sanitise(data2.name)}`;
+          tbody.appendChild(html.node`
+                    <tr class="chartlist-row chartlist-row--with-artist compare-item">
+                        <td class="chartlist-index">${index + 1}</td>
+                        <td class="chartlist-image">
+                            <a class="cover-art" href="${root}music/${template}">
+                                <img src="${data2.avatar}" alt="${data2.name}" loading="lazy">
+                            </a>
+                        </td>
+                        <td class="chartlist-name">
+                            <a href="${root}music/${template}" title="${data2.name}">
+                                ${data2.name}
+                            </a>
+                        </td>
+                        <td class="chartlist-artist">
+                            <a href="${root}music/${data2.sister}" title="${data2.sister}">
+                                ${data2.sister}
+                            </a>
+                        </td>
+                        <td class="chartlist-bar with-multiple">
+                            <span class="chartlist-count-bar">
+                                <a class="chartlist-count-bar-link" href="${root}user/${auth.name}/library/music/${template}?date_preset=${timeframe.value}" target="_blank">
+                                    <span class="chartlist-count-bar-slug" data-max-stat-value="${max}" data-stat-value="${data2.plays.you}" style="width: ${data2.plays.you / max * 100}%;"></span>
+                                    <span class="chartlist-count-bar-value">${data2.plays.you}</span>
+                                </a>
+                                <span class="avatar">
+                                    <img src="${auth.avatar}" alt="${tl(trans.your_avatar)}">
+                                </span>
+                            </span>
+                            <span class="chartlist-count-bar">
+                                <a class="chartlist-count-bar-link" href="${root}user/${page.name}/library/music/${template}?date_preset=${timeframe.value}" target="_blank">
+                                    <span class="chartlist-count-bar-slug" data-max-stat-value="${max}" data-stat-value="${data2.plays.other}" style="width: ${data2.plays.other / max * 100}%;"></span>
+                                    <span class="chartlist-count-bar-value">${data2.plays.other}</span>
+                                </a>
+                                <span class="avatar">
+                                    <img src="${page.avatar}" alt="${tl(trans.avatar_for_user).replace("{u}", page.name)}">
+                                </span>
+                            </span>
+                        </td>
+                    </tr>
+                `);
+        });
+        body.appendChild(table);
+        patch_titles(body);
+      }
+    }
   }
 
   // src/pages/glacier.js
@@ -7105,65 +7820,6 @@
       view_buttons.insertBefore(bulk_edit, delete_button);
     else
       view_buttons.insertBefore(bulk_edit, edit_form);
-  }
-
-  // src/components/share.js
-  function share(url) {
-    let input2;
-    dialog({
-      id: "share",
-      title: tl(trans.share),
-      body: html.node`
-            <div class="share-top content-form">
-                <input
-                    type="text"
-                    readonly
-                    value=${url}
-                    class="share-input"
-                    ref=${(el) => input2 = el}
-                />
-                <button 
-                    class="btn primary icon copy"
-                    onclick=${() => {
-        input2.select();
-        document.execCommand("copy");
-        notify({
-          title: tl(trans.copied_to_clipboard),
-          icon: "icon-16-copy"
-        });
-      }}
-                >${tl(trans.copy)}</button>
-            </div>
-            <div class="share-links">
-                <a 
-                    href=${`https://twitter.com/intent/tweet?url=${encodeURIComponent(url)}`}
-                    target="_blank"
-                    class="share-link share-link-twitter"
-                >Twitter</a>
-                <a 
-                    href=${`https://www.facebook.com/sharer/sharer.php?u=${encodeURIComponent(url)}`}
-                    target="_blank"
-                    class="share-link share-link-facebook"
-                >Facebook</a>
-            </div>
-        `,
-      replace_if_possible: true
-    });
-  }
-  function download(url, filename = null) {
-    log(`downloading ${filename}`, "download");
-    let link = html.node`
-        <a href=${url} download />
-    `;
-    if (filename)
-      link.setAttribute("download", filename);
-    link.click();
-    notify({
-      id: "downloaded",
-      title: tl(trans.downloaded),
-      body: filename,
-      icon: "icon-16-download"
-    });
   }
 
   // src/pages/gallery.js
@@ -8654,441 +9310,6 @@
     panel.removeChild(legacy_top_listeners_container);
   }
 
-  // src/components/collage.js
-  function collage({
-    host,
-    sidebar
-  } = {}) {
-    if (!host || !sidebar) return;
-    let width;
-    let height;
-    let timeframe;
-    let type;
-    let settings_btn;
-    let submit;
-    let body;
-    let value = 5;
-    let min = 1;
-    let max = 20;
-    let current_year = (/* @__PURE__ */ new Date()).getFullYear();
-    let previous_year = current_year - 1;
-    const default_type = page.requested.type || "albums";
-    const default_timeframe = page.requested.timeframe || "date_preset=LAST_90_DAYS";
-    if (page.requested.redirect) {
-      setTimeout(() => {
-        notify({
-          id: "collage_redirect",
-          title: tl(trans.collage),
-          body: tl(trans.collage_redirect),
-          icon: "icon-16-collage",
-          persist: true
-        });
-      }, 100);
-    }
-    let user;
-    render(host, html`
-        <div class="compare-header">
-            <div class="compare-users">
-                <div class="compare-user" ref=${(el) => user = el}>
-                    ${render_user()}
-                </div>
-            </div>
-            <div class="compare-selection">
-                <div class="input-group">
-                    ${width = input({
-      type: "number",
-      value,
-      placeholder: value,
-      min,
-      max
-    })}
-                    <div class="bleh-icon" style="--icon: var(--icon-16-x)" />
-                    ${height = input({
-      type: "number",
-      value,
-      placeholder: value,
-      min,
-      max
-    })}
-                </div>
-                ${type = select([
-      {
-        value: "artists",
-        text: html`<div class="bleh-icon" style="--icon: var(--icon-16-artist)" />${tl(trans.artists)}`
-      },
-      {
-        value: "albums",
-        text: html`<div class="bleh-icon" style="--icon: var(--icon-16-album)" />${tl(trans.albums)}`
-      },
-      {
-        value: "tracks",
-        text: html`<div class="bleh-icon" style="--icon: var(--icon-16-track)" />${tl(trans.tracks)}`
-      }
-    ], default_type)}
-                ${timeframe = select([
-      {
-        value: "date_preset=LAST_7_DAYS",
-        text: tl(trans.last_count_days).replace("{c}", "7")
-      },
-      {
-        value: "date_preset=LAST_30_DAYS",
-        text: tl(trans.last_count_days).replace("{c}", "30")
-      },
-      {
-        value: "date_preset=LAST_90_DAYS",
-        text: tl(trans.last_count_days).replace("{c}", "90")
-      },
-      {
-        value: "date_preset=LAST_180_DAYS",
-        text: tl(trans.last_count_days).replace("{c}", "180")
-      },
-      {
-        value: "date_preset=LAST_365_DAYS",
-        text: tl(trans.last_count_days).replace("{c}", "365")
-      },
-      {
-        value: "date_preset=ALL",
-        text: tl(trans.all_time)
-      },
-      {
-        value: `from=${current_year}-01-01&rangetype=year`,
-        text: current_year
-      },
-      {
-        value: `from=${previous_year}-01-01&rangetype=year`,
-        text: previous_year
-      }
-    ], default_timeframe)}
-                <button class="btn primary icon" data-type="collage" ref=${(el) => submit = el} onclick=${() => make_collage()}>${tl(trans.generate)}</button>
-            </div>
-        </div>
-        <div class="compare-body" data-filled="false" ref=${(el) => body = el}>
-            <div class="loading-data-container">
-                <div class="loading-data-text info">${tl(trans.choose_a_timeframe_above)}</div>
-            </div>
-        </div>
-    `);
-    let width_input = width.querySelector("input");
-    let height_input = height.querySelector("input");
-    let timeframe_select = timeframe.querySelector("select");
-    let type_select = type.querySelector("select");
-    let setting_group;
-    render(sidebar, html`
-        <h2>${tl(trans.settings)}</h2>
-        <div class="setting-group" ref=${(el) => setting_group = el}>
-            <div class="setting v" data-type="text">
-                <div class="heading">
-                    <h5>${tl(trans.profile)}</h5>
-                </div>
-                <div class="input-container content-form">
-                    <input type="text" class="input" placeholder=${tl(trans.enter_a_profile)} value=${page.requested.profile} onchange=${(e) => {
-      page.requested.profile = e.target.value;
-      page.name = page.requested.profile;
-      page.avatar = "";
-      if (page.name == auth.name) page.avatar = auth.avatar;
-      render(user, html`
-                            ${render_user()}
-                        `);
-    }}>
-                </div>
-            </div>
-            ${setting({ id: "collage_title" })}
-            ${setting({ id: "collage_grid_gap" })}
-            ${setting({ id: "collage_grid_text" })}
-            ${setting({ id: "collage_grid_plays" })}
-        </div>
-    `);
-    let collage_settings = setting_group.querySelectorAll(":scope > .setting");
-    function render_user() {
-      if (page.avatar == "") {
-        fetch(`${root}user/${page.name}/tags`).then(function(response) {
-          console.log("returned", response, response.text);
-          return response.text();
-        }).then(function(dom) {
-          let doc = new DOMParser().parseFromString(dom, "text/html");
-          console.log("DOC", doc);
-          try {
-            page.avatar = doc.querySelector(".header-avatar-inner-wrap img").getAttribute("src");
-            page.name = doc.querySelector(".header-title").textContent.trim();
-            render(user, html`
-                            ${render_user()}
-                        `);
-          } catch (e) {
-            console.error(e);
-          }
-        });
-      }
-      return html`
-            <div class="avatar">
-                <img src=${page.avatar} alt="${tl(trans.avatar_for_user).replace("{u}", page.name)}">
-            </div>
-            <strong>${page.name}</strong>
-        `;
-    }
-    function make_collage(bypass = false) {
-      if (width_input.value == "" || height_input.value == "" || parseInt(width_input.value) < min || parseInt(width_input.value) > max || parseInt(height_input.value) < min || parseInt(height_input.value) > max) {
-        notify({
-          id: "collage_failed",
-          title: tl(trans.name_failed).replace("{name}", tl(trans.collage)),
-          body: tl(trans.your_settings_are_invalid),
-          type: "error"
-        });
-        return;
-      }
-      let per_page = 50;
-      let pages = Math.ceil(width_input.value * height_input.value / per_page);
-      if (pages > 4 && !bypass) {
-        let warn = notify({
-          id: "collage_warning",
-          title: tl(trans.are_you_sure),
-          body: tl(trans.this_will_require_loading_count_pages).replace("{c}", pages),
-          type: "warning",
-          actions: [
-            {
-              type: "check",
-              action: () => {
-                notify_rm(warn);
-                make_collage(true);
-              },
-              text: tl(trans.continue)
-            }
-          ],
-          persist: true
-        });
-        return;
-      }
-      type.querySelector("button").disabled = true;
-      timeframe.querySelector("button").disabled = true;
-      collage_settings.forEach((option) => {
-        option.setAttribute("disabled", true);
-      });
-      submit.disabled = true;
-      page.state.collage = [];
-      get_grid(1, pages);
-    }
-    function get_grid(current_page, pages) {
-      render(body, html`
-            <div class="loading-data-container">
-                <div class="loading-data-text">${tl(trans.gathering_plays_for_user_pages).replace("{u}", page.name).replace("{current_page}", current_page).replace("{pages}", pages)}</div>
-            </div>
-        `);
-      fetch(`${root}user/${page.name}/library/${type_select.value}?format=list&${timeframe_select.value}&page=${current_page}&ajax=1`).then(function(response) {
-        console.log("returned", response, response.text);
-        return response.text();
-      }).then(function(dom) {
-        let doc = new DOMParser().parseFromString(dom, "text/html");
-        console.log("DOC", doc);
-        let next_button = doc.querySelector(".pagination-next");
-        try {
-          let tracks = doc.querySelectorAll(".chartlist-row");
-          tracks.forEach((track) => {
-            let item = {};
-            item.avatar = track.querySelector(".chartlist-image img");
-            if (item.avatar)
-              item.avatar = item.avatar.getAttribute("src");
-            item.name = track.querySelector(".chartlist-name a").textContent.trim();
-            if (type_select.value != "artists")
-              item.sister = track.querySelector(".chartlist-artist a").textContent.trim();
-            item.plays = clean_number(track.querySelector(".chartlist-count-bar-slug").getAttribute("data-stat-value"));
-            page.state.collage.push(item);
-          });
-        } catch (e) {
-          notify({
-            id: "collage_failed",
-            title: tl(trans.name_failed).replace("{name}", tl(trans.collage)),
-            body: tl(trans.there_was_a_network_error),
-            type: "error"
-          });
-          console.error(e);
-        }
-        if (next_button && current_page < pages) {
-          get_grid(current_page + 1, pages);
-        } else {
-          continue_collage();
-        }
-      });
-    }
-    async function continue_collage() {
-      log("gathered initial values", "collage", "info", page.state.collage);
-      if (page.state.collage.length == 0) {
-        render(body, html`
-                <div class="loading-data-container">
-                    <div class="loading-data-text failed">${tl(trans.no_plays_in_range)}</div>
-                </div>
-            `);
-        type.querySelector("button").disabled = false;
-        timeframe.querySelector("button").disabled = false;
-        collage_settings.forEach((option) => {
-          option.setAttribute("disabled", false);
-        });
-        submit.disabled = false;
-        return;
-      }
-      let grid = html.node`
-            <ol class="grid-items grid-items--numbered collage-grid" style="--width: ${width_input.value}; --height: ${height_input.value}" data-width=${width_input.value} data-height=${height_input.value} />
-        `;
-      if (!settings.collage_grid_gap) {
-        grid.style.setProperty("--item-list-gap", "0px");
-        grid.style.setProperty("--item-med-radius", "0");
-      }
-      let total = width_input.value * height_input.value - 1;
-      grid.style.setProperty("--highest", Math.max(+width_input.value, +height_input.value).toString());
-      page.state.collage.some((data2, index) => {
-        if (index > total)
-          return false;
-        let template;
-        if (type_select.value == "artists")
-          template = sanitise(data2.name);
-        else
-          template = `${sanitise(data2.sister)}/${sanitise(data2.name)}`;
-        grid.appendChild(html.node`
-                <li class="compare-item grid-items-item">
-                    <div class="grid-items-cover-image">
-                        <div class="grid-items-cover-image-image ${data2.avatar.endsWith("/c6f59c1e5e7240a4c0d427abd71f3dbb.jpg") || data2.avatar.endsWith("/2a96cbd8b46e442fc41c2b86b821562f.jpg") ? "grid-items-cover-default" : ""}">
-                            <img src="${data2.avatar.replace("/avatar70s/", "/avatar300s/").replace("/64s/", "/avatar300s/")}" alt="${data2.name}" loading="lazy">
-                        </div>
-                        ${settings.collage_grid_text || settings.collage_grid_plays ? html.node`
-                        <div class="grid-items-item-details">
-                            ${settings.collage_grid_text ? html.node`
-                            <p class="grid-items-item-main-text">
-                                <a class="link-block-target" href="${root}music/${template}" title="${data2.name}">
-                                    ${data2.name}
-                                </a>
-                            </p>
-                            ` : ""}
-                            ${type_select.value != "artists" ? html.node`
-                            <p class="grid-items-item-aux-text">
-                                ${settings.collage_grid_text ? html.node`
-                                <a class="grid-items-item-aux-block" href="${root}music/${data2.sister}">
-                                    ${data2.sister}
-                                </a>
-                                ${settings.collage_grid_plays ? html.node`
-                                <a class="grid-item-plays" href="${root}user/${page.name}/library/music/${template}?date_preset=${timeframe_select.value}" target="_blank">
-                                    ${data2.plays.toLocaleString(lang)}
-                                </a>
-                                ` : ""}
-                                ` : settings.collage_grid_plays ? html.node`
-                                <a class="grid-item-plays" href="${root}user/${page.name}/library/music/${template}?date_preset=${timeframe_select.value}" target="_blank">
-                                    ${data2.plays.toLocaleString(lang)}${tl(trans.plays_lower)}
-                                </a>
-                                ` : ""}
-                            </p>
-                            ` : html.node`
-                            ${settings.collage_grid_plays ? html.node`
-                            <p class="grid-items-item-aux-text">
-                                <a class="grid-item-plays" href="${root}user/${page.name}/library/music/${template}?date_preset=${timeframe_select.value}" target="_blank">
-                                    ${data2.plays.toLocaleString(lang)}${tl(trans.plays_lower)}
-                                </a>
-                            </p>
-                            ` : ""}
-                            `}
-                        </div>
-                        ` : ""}
-                    </div>
-                </li>
-            `);
-      });
-      let collage_dom = html.node`
-            <div class="collage">
-                ${settings.collage_title ? html.node`
-                <div class="header">
-                    <div class="type" data-type=${type_select.value}>
-                        <div class="bleh-icon" />
-                        <strong class="brand">${version.brand}</strong>
-                        <strong>${timeframe.querySelector("button").textContent}</strong>
-                        <strong>${tl(trans.top_type).replace("{type}", tl(trans[type_select.value]))}</strong>
-                        <strong>${width_input.value}x${height_input.value}</strong>
-                    </div>
-                    <div class="user">
-                        <div class="avatar">
-                            <img src="${page.avatar}" alt="${tl(trans.avatar_for_user).replace("{u}", page.name)}">
-                        </div>
-                        <strong>${page.name}</strong>
-                    </div>
-                </div>
-                ` : ""}
-                ${grid}
-            </div>
-        `;
-      render(body, html`
-            <div class="loading-data-container">
-                <div class="loading-data-text">${tl(trans.waiting_for_images)}</div>
-            </div>
-            ${collage_dom}
-        `);
-      music_grids(grid, false);
-      const default_size = 380;
-      const base = 4;
-      const highest = Math.max(+width_input.value, +height_input.value);
-      const grid_item_size = Math.min(
-        default_size,
-        Math.floor(default_size * base / highest)
-      );
-      const grid_item_gap = settings.collage_grid_gap ? 10 : 0;
-      const padding = settings.collage_grid_gap ? 15 : 0;
-      const title_height = settings.collage_title ? 32 + 15 : 0;
-      const width2 = padding * 2 + grid_item_size * width_input.value + grid_item_gap * (width_input.value - 1);
-      const height2 = padding * 2 + title_height + grid_item_size * height_input.value + grid_item_gap * (height_input.value - 1);
-      const cv_scale = 1;
-      collage_dom.style.width = `${width2}px`;
-      collage_dom.style.height = `${height2}px`;
-      collage_dom.style.padding = `${padding}px`;
-      collage_dom.style.gap = `${padding}px`;
-      collage_dom.style.setProperty("--item-list-gap", `${grid_item_gap}px`);
-      collage_dom.style.setProperty("--grid-item-size", `${grid_item_size}px`);
-      let initial_canvas = html.node`
-            <canvas width=${width2 * cv_scale} height=${height2 * cv_scale} />
-        `;
-      html2canvas(collage_dom, {
-        useCORS: true,
-        letterRendering: true,
-        canvas: initial_canvas,
-        scale: cv_scale,
-        onclone: (doc) => {
-          doc.querySelectorAll("*").forEach((el) => {
-            if (el.classList == "brand")
-              el.style.setProperty("font-family", "Darumadrop One");
-            else
-              el.style.setProperty("font-family", "Overpass, Inter, Ubuntu Sans, Spline Sans, Roboto, Noto Sans, Noto Sans JP, Noto Sans KR, Noto Sans TC, Lucida Grande, Verdana, Tahoma, -apple-system, BlinkMacSystemFont, sans-serif");
-          });
-        }
-      }).then((canvas) => {
-        canvas.toBlob((blob) => {
-          const blob_url = URL.createObjectURL(blob);
-          const filename = tl(trans.chart_template_filename).replace("{timeframe}", timeframe.querySelector("button").textContent).replace("{user}", page.name).replace("{type}", tl(trans[type_select.value])).replace("{size}", `${width_input.value}x${height_input.value}`).replace("{brand}", version.brand);
-          render(body, html`
-                    <div class="collage-finished">
-                        <strong>${tl(trans.your_collage_is_ready)}</strong>
-                        <div class="button-group">
-                            <button
-                                class="btn primary icon"
-                                data-type="download"
-                                onclick=${() => download(blob_url, filename)}
-                            >
-                                ${tl(trans.download)}
-                            </button>
-                            <button
-                                class="btn open"
-                                data-type="open"
-                                onclick=${() => open(blob_url)}
-                            >
-                                ${tl(trans.open)}
-                            </button>
-                        </div>
-                    </div>
-                    ${canvas}
-                `);
-          type.querySelector("button").disabled = false;
-          timeframe.querySelector("button").disabled = false;
-          collage_settings.forEach((option) => {
-            option.setAttribute("disabled", false);
-          });
-          submit.disabled = false;
-        }, "image/png");
-      });
-    }
-  }
-
   // src/sponsor.js
   function sponsors(force = false) {
     if (!ff("sponsor"))
@@ -9329,8 +9550,7 @@
           create_profile_top_item(profile_header, {
             name: page.name,
             type: "compare",
-            link: () => compare(),
-            action: "button"
+            link: `${root}bleh/minis/compare?profile=${page.name}`
           });
         }
         if (ff("charts")) {
@@ -20111,190 +20331,6 @@
     }
   }
 
-  // src/pages/minis.js
-  var valid_minis;
-  function bleh_minis(skip = false) {
-    if (!skip) {
-      update_page();
-      page.structure.row.removeChild(page.structure.row.firstElementChild);
-      page.structure.row.removeChild(page.structure.row.firstElementChild);
-    }
-    let params = new URLSearchParams(document.location.search);
-    page.requested.profile = params.get("profile") || auth.name;
-    page.requested.secondary = params.get("secondary");
-    page.requested.redirect = params.get("redirect");
-    page.requested.type = params.get("type");
-    page.requested.timeframe = params.get("timeframe");
-    let path = window.location.pathname.split("/");
-    let mini = path[path.length - 1];
-    if (mini == "minis") mini = null;
-    valid_minis = {
-      collage: {
-        name: tl(trans.collage),
-        body: tl(trans.collage_description),
-        func: bleh_minis_collage
-      },
-      compare: {
-        name: tl(trans.compare),
-        body: tl(trans.compare_description),
-        func: bleh_minis_compare
-      },
-      pixel: {
-        name: tl(trans.pixel?.name),
-        body: tl(trans.pixel?.body),
-        func: bleh_minis_pixel
-      },
-      rainbow: {
-        name: tl(trans.rainbow?.name),
-        body: tl(trans.rainbow?.body),
-        func: bleh_minis_rainbow
-      },
-      receipt: {
-        name: tl(trans.receipt?.name),
-        body: tl(trans.receipt?.body),
-        func: bleh_minis_receipt
-      }
-    };
-    if (mini && !valid_minis[mini]) {
-      render(page.structure.main, html`
-            <div class="loading-data-container">
-                <div class="loading-data-text error">${tl(trans.no_mini_found).replace("{v}", mini)}</div>
-            </div>
-        `);
-      return;
-    }
-    render(page.structure.side, html``);
-    if (mini) {
-      page.structure.container.setAttribute("data-mini", mini);
-      page.name = page.requested.profile;
-      if (page.name == auth.name)
-        page.avatar = auth.avatar;
-      valid_minis[mini].func();
-      return;
-    }
-    render(page.structure.main, html`
-        <section class="minis">
-            <div class="minis-header">
-                <h2>${tl(trans.minis)}</h2>
-            </div>
-            <div class="mini-list">
-                ${Object.entries(valid_minis).map(([id, mini2]) => html.node`
-                    <button class="mini" data-type=${id} data-mini=${id} onclick=${() => {
-      window.history.replaceState(id, "", `${root}bleh/minis/${id}`);
-      page.structure.container.setAttribute("data-mini", id);
-      render(page.structure.main, html``);
-      valid_minis[id].func();
-    }}>
-                        <div class="mini-icon colourful">
-                            <div class="bleh-icon" />
-                        </div>
-                        <div class="mini-info">
-                            <h5>${mini2.name}</h5>
-                            <p>${mini2.body}</p>
-                        </div>
-                        <div class="bleh-icon mini-arrow" style="--icon: var(--mask)" data-type="arrow-right" />
-                    </button>
-                `)}
-            </div>
-            <p class="card-tip">${{ html: tl(trans.labs_cta).replace("{a}", `<a class="see-more" href="${root}labs">`).replace("{/a}", "</a>") }}</p>
-        </section>
-    `);
-  }
-  function return_to_minis(mini) {
-    return html.node`
-        <div class="minis-header">
-            <h2 class="previous" onclick=${() => {
-      window.history.replaceState(null, "", `${root}bleh/minis`);
-      bleh_minis(true);
-    }}>${tl(trans.minis)}</h2>
-            <div class="bleh-icon mini-arrow" style="--icon: var(--mask)" data-type="arrow-right" />
-            <h2>${valid_minis[mini].name}</h2>
-        </div>
-    `;
-  }
-  function bleh_minis_collage() {
-    let content;
-    let mini_settings;
-    render(page.structure.main, html`
-        <section class="minis">
-            ${return_to_minis("collage")}
-            <div class="minis-content" ref=${(el) => content = el} />
-        </section>
-    `);
-    render(page.structure.side, html`
-        <section class="current-mini-settings" ref=${(el) => mini_settings = el} />
-    `);
-    collage({
-      host: content,
-      sidebar: mini_settings
-    });
-  }
-  function bleh_minis_compare() {
-    let content;
-    let mini_settings;
-    render(page.structure.main, html`
-        <section class="minis">
-            ${return_to_minis("collage")}
-            <div class="minis-content" ref=${(el) => content = el} />
-        </section>
-    `);
-    render(page.structure.side, html`
-        <section class="current-mini-settings" rel=${(el) => mini_settings = el} />
-        <section class="minis-settings">
-            <h2>${tl(trans.settings)}</h2>
-            <div class="setting-group">
-                <div class="setting v" data-type="text">
-                    <div class="heading">
-                        <h5>${tl(trans.profile)}</h5>
-                    </div>
-                    <div class="input-container content-form">
-                        <input type="text" class="input" placeholder=${tl(trans.enter_a_profile)} value=${auth.name} oninput=${(e) => {
-      page.requested.profile = e.target.value;
-    }}>
-                    </div>
-                </div>
-                <div class="setting v" data-type="text">
-                    <div class="heading">
-                        <h5>${tl(trans.secondary_profile)}</h5>
-                        <p>${tl(trans.minis_profile)}</p>
-                    </div>
-                    <div class="input-container content-form">
-                        <input type="text" class="input" placeholder=${tl(trans.enter_a_profile)} value=${page.requested.secondary} oninput=${(e) => {
-      page.requested.secondary = e.target.value;
-    }}>
-                    </div>
-                </div>
-            </div>
-        </section>
-    `);
-    render(page.structure.main, html`
-        <section class="minis">
-            ${return_to_minis("compare")}
-        </section>
-    `);
-  }
-  function bleh_minis_pixel() {
-    render(page.structure.main, html`
-        <section class="minis">
-            ${return_to_minis("pixel")}
-        </section>
-    `);
-  }
-  function bleh_minis_rainbow() {
-    render(page.structure.main, html`
-        <section class="minis">
-            ${return_to_minis("rainbow")}
-        </section>
-    `);
-  }
-  function bleh_minis_receipt() {
-    render(page.structure.main, html`
-        <section class="minis">
-            ${return_to_minis("receipt")}
-        </section>
-    `);
-  }
-
   // src/page.js
   function bleh() {
     let head_observer = new MutationObserver((mutations) => {
@@ -23951,11 +23987,8 @@
     enter_a_profile: {
       en: "Enter a profile"
     },
-    minis_profile: {
-      en: "Only applicable in some minis"
-    },
-    secondary_profile: {
-      en: "Secondary profile"
+    compare_with: {
+      en: "Compare with"
     },
     value_settings: {
       en: "{v} Settings"

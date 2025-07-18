@@ -15044,7 +15044,7 @@
 
     .library-search-results.async-content-loading,
     .data-loading,
-    .loading:not(.library-fetch, .library-date-picker),
+    .loading:not(.library-fetch, .library-date-picker, .avatar),
     .lazy-shoutbox.async-content-loading {
         color: hsl(var(--c3));
         position: relative;
@@ -24790,6 +24790,14 @@
                 background: var(--avatar-generic-background);
                 border-radius: var(--avatar-radius);
                 --mask-size: 18px;
+
+                &:after {
+                    padding-top: unset;
+                    --left: 50%;
+                    --margin-left: calc(-1 * (var(--mask-size) / 2));
+                    --mask: var(--icon-16-spinner);
+                    animation: spinner 1.2s linear infinite;
+                }
             }
         }
     }

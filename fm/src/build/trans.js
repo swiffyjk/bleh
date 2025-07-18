@@ -3134,11 +3134,8 @@ export const trans = {
     enter_a_profile: {
         en: 'Enter a profile'
     },
-    minis_profile: {
-        en: 'Only applicable in some minis'
-    },
-    secondary_profile: {
-        en: 'Secondary profile'
+    compare_with: {
+        en: 'Compare with'
     },
     value_settings: {
         en: '{v} Settings'
