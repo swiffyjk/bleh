@@ -472,6 +472,8 @@ export function artist_title() {
 }
 
 export function patch_header_title() {
+    page.suggest = null;
+
     if (!settings.corrections && !settings.format_guest_features && !page.multi)
         return;
 
@@ -519,9 +521,11 @@ export function patch_header_title() {
             render(track_title, html.node`
                 <div class="title">${song_title.trim()}</div>
                 ${song_tags.map((tag) => html.node`
-                    <div class="feat" data-bleh--tag-type="${tag.type}" data-bleh--tag-group="${tag.group}">${tag.text}</div>
+                    <div class="feat" data-bleh--tag-type=${tag.type} data-bleh--tag-group=${tag.group}>${tag.text}</div>
                 `)}
             `);
+
+            if (song_tags.some(tag => tag.group === 'spotify')) page.suggest = sanitise(song_title.trim());
 
             let song_artist_element = document.body.querySelector('span[itemprop="byArtist"]');
             let song_guests = formatted_title[3];

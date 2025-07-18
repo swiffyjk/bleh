@@ -3142,6 +3142,14 @@ export const trans = {
     },
     value_settings: {
         en: '{v} Settings'
+    },
+    suggest_title: {
+        name: {
+            en: 'This page doesn’t seem official'
+        },
+        body: {
+            en: 'Navigate to {v} instead'
+        }
     }
 }
 

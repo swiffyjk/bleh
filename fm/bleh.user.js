@@ -2706,8 +2706,10 @@
     versions: [
       "(taylor",
       "- spotify singles",
-      "(spotify",
       "(+"
+    ],
+    spotify: [
+      "(spotify)"
     ],
     remasters: [
       "- remaster",
@@ -15759,6 +15761,7 @@
     }
   }
   function patch_header_title() {
+    page.suggest = null;
     if (!settings.corrections && !settings.format_guest_features && !page.multi)
       return;
     page.corrected = false;
@@ -15792,9 +15795,10 @@
           render(track_title, html.node`
                 <div class="title">${song_title.trim()}</div>
                 ${song_tags.map((tag) => html.node`
-                    <div class="feat" data-bleh--tag-type="${tag.type}" data-bleh--tag-group="${tag.group}">${tag.text}</div>
+                    <div class="feat" data-bleh--tag-type=${tag.type} data-bleh--tag-group=${tag.group}>${tag.text}</div>
                 `)}
             `);
+          if (song_tags.some((tag) => tag.group === "spotify")) page.suggest = sanitise(song_title.trim());
           let song_artist_element = document.body.querySelector('span[itemprop="byArtist"]');
           let song_guests = formatted_title[3];
           page.sister_others = formatted_title[3];
@@ -16929,6 +16933,14 @@
                     </div>
                     <h2>${artist}</h2>
                 </div>
+                ${page.suggest ? html.node`
+                <div class="suggest-side">
+                    <div class="cta suggest">
+                        <strong>${tl(trans.suggest_title.name)}</strong>
+                        <a class="see-more" href="${root}music/${sanitise(page.sister)}/${page.suggest}">${tl(trans.suggest_title.body).replace("{v}", page.suggest)}</a>
+                    </div>
+                </div>
+                ` : ""}
         `;
       if (avatar3)
         register_background(avatar3.getAttribute("content"));
@@ -23947,6 +23959,14 @@
     },
     value_settings: {
       en: "{v} Settings"
+    },
+    suggest_title: {
+      name: {
+        en: "This page doesn\u2019t seem official"
+      },
+      body: {
+        en: "Navigate to {v} instead"
+      }
     }
   };
   var trans_legacy = {

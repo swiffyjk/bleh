@@ -91,6 +91,14 @@ export function bleh_albums() {
                     </div>
                     <h2>${artist}</h2>
                 </div>
+                ${page.suggest ? html.node`
+                <div class="suggest-side">
+                    <div class="cta suggest">
+                        <strong>${tl(trans.suggest_title.name)}</strong>
+                        <a class="see-more" href="${root}music/${sanitise(page.sister)}/${page.suggest}">${tl(trans.suggest_title.body).replace('{v}', page.suggest)}</a>
+                    </div>
+                </div>
+                ` : ''}
         `
 
         if (avatar)
