@@ -25758,8 +25758,8 @@
         }
     }
 
-    .suggest {
-        backdrop-filter: blur(15px) brightness(var(--blur-brightness));
-        -webkit-backdrop-filter: blur(15px) brightness(var(--blur-brightness));
+    .suggest-side {
+        background: hsl(var(--b5));
+        border-radius: var(--card-radius);
     }
 }
