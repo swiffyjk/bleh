@@ -9051,22 +9051,38 @@
           });
         }
       }).then((canvas) => {
-        render(body, html`
-                <div class="collage-finished">
-                    <strong>${tl(trans.your_collage_is_ready)}</strong>
-                    <div class="button-group">
-                        <button class="btn primary icon" data-type="download" onclick=${() => download(canvas.toDataURL("image/png"), tl(trans.chart_template_filename).replace("{timeframe}", timeframe.querySelector("button").textContent).replace("{user}", page.name).replace("{type}", tl(trans[type_select.value])).replace("{size}", `${width_input.value}x${height_input.value}`).replace("{brand}", version.brand))}>${tl(trans.download)}</button>
-                        <button class="btn open" data-type="open" onclick=${() => open(canvas.toDataURL("image/png"))}>${tl(trans.open)}</button>
+        canvas.toBlob((blob) => {
+          const blob_url = URL.createObjectURL(blob);
+          const filename = tl(trans.chart_template_filename).replace("{timeframe}", timeframe.querySelector("button").textContent).replace("{user}", page.name).replace("{type}", tl(trans[type_select.value])).replace("{size}", `${width_input.value}x${height_input.value}`).replace("{brand}", version.brand);
+          render(body, html`
+                    <div class="collage-finished">
+                        <strong>${tl(trans.your_collage_is_ready)}</strong>
+                        <div class="button-group">
+                            <button
+                                class="btn primary icon"
+                                data-type="download"
+                                onclick=${() => download(blob_url, filename)}
+                            >
+                                ${tl(trans.download)}
+                            </button>
+                            <button
+                                class="btn open"
+                                data-type="open"
+                                onclick=${() => open(blob_url)}
+                            >
+                                ${tl(trans.open)}
+                            </button>
+                        </div>
                     </div>
-                </div>
-                ${canvas}
-            `);
-        type.querySelector("button").disabled = false;
-        timeframe.querySelector("button").disabled = false;
-        collage_settings.forEach((option) => {
-          option.setAttribute("disabled", false);
-        });
-        submit.disabled = false;
+                    ${canvas}
+                `);
+          type.querySelector("button").disabled = false;
+          timeframe.querySelector("button").disabled = false;
+          collage_settings.forEach((option) => {
+            option.setAttribute("disabled", false);
+          });
+          submit.disabled = false;
+        }, "image/png");
       });
     }
   }
