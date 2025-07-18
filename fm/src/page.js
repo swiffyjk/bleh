@@ -468,12 +468,14 @@ function load_page() {
             let sort_menu = page.structure.main.querySelector('.dropdown-menu-clickable');
 
             let sort_wrap = document.createElement('div');
-            sort_wrap.classList.add('dropdown-top-wrap');
+            if (sort_wrap) {
+                sort_wrap.classList.add('dropdown-top-wrap');
 
-            sort_wrap.appendChild(sort_button);
-            sort_wrap.appendChild(sort_menu);
+                sort_wrap.appendChild(sort_button);
+                sort_wrap.appendChild(sort_menu);
 
-            page.structure.main.insertBefore(sort_wrap, page.structure.main.firstElementChild);
+                page.structure.main.insertBefore(sort_wrap, page.structure.main.firstElementChild);
+            }
         }
 
         if (page.subpage == 'image') {

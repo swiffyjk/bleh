@@ -1004,7 +1004,8 @@
   var dialogs = {};
   tippy.setDefaultProps({
     arrow: false,
-    duration: [0, 220]
+    duration: [0, 220],
+    offset: [0, 4]
   });
   var auth = {
     name: null,
@@ -20613,10 +20614,12 @@
         let sort_button = page.structure.main.querySelector(".dropdown-menu-clickable-button");
         let sort_menu = page.structure.main.querySelector(".dropdown-menu-clickable");
         let sort_wrap = document.createElement("div");
-        sort_wrap.classList.add("dropdown-top-wrap");
-        sort_wrap.appendChild(sort_button);
-        sort_wrap.appendChild(sort_menu);
-        page.structure.main.insertBefore(sort_wrap, page.structure.main.firstElementChild);
+        if (sort_wrap) {
+          sort_wrap.classList.add("dropdown-top-wrap");
+          sort_wrap.appendChild(sort_button);
+          sort_wrap.appendChild(sort_menu);
+          page.structure.main.insertBefore(sort_wrap, page.structure.main.firstElementChild);
+        }
       }
       if (page.subpage == "image") {
         let images = page.structure.row.querySelectorAll(".gallery-image");
