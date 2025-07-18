@@ -146,8 +146,7 @@ export function redesign_profile_header(is_own_profile, is_following) {
                 create_profile_top_item(profile_header, {
                     name: page.name,
                     type: 'collage',
-                    link: () => collage(),
-                    action: 'button',
+                    link: `${root}bleh/minis/collage?profile=${page.name}`,
                     text: tl(trans.collage),
                     updated: true
                 });
@@ -214,8 +213,7 @@ export function redesign_profile_header(is_own_profile, is_following) {
             create_profile_top_item(profile_header, {
                 name: page.name,
                 type: 'collage',
-                link: () => collage(),
-                action: 'button',
+                link: `${root}bleh/minis/collage`,
                 text: tl(trans.collage),
                 updated: true
             });

@@ -3127,6 +3127,21 @@ export const trans = {
     },
     labs_cta: {
         en: 'If you’re looking for more, try out Last.fm’s own Labs feature. {a}View now{/a}'
+    },
+    compare_description: {
+        en: 'Find your shared artists, albums, and tracks with another'
+    },
+    enter_a_profile: {
+        en: 'Enter a profile'
+    },
+    minis_profile: {
+        en: 'Only applicable in some minis'
+    },
+    secondary_profile: {
+        en: 'Secondary profile'
+    },
+    value_settings: {
+        en: '{v} Settings'
     }
 }
 

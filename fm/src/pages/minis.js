@@ -2,6 +2,7 @@ import {update_page} from "../page.js";
 import {auth, page, root} from "../build/page.js";
 import {html, render} from "lighterhtml";
 import {tl, trans} from "../build/trans.js";
+import {collage} from "../components/collage.js";
 
 let valid_minis;
 
@@ -14,6 +15,11 @@ export function bleh_minis(skip = false) {
         page.structure.row.removeChild(page.structure.row.firstElementChild);
     }
 
+    let params = new URLSearchParams(document.location.search);
+    page.requested.profile = params.get('profile') || auth.name;
+    page.requested.secondary = params.get('secondary');
+    page.requested.redirect = params.get('redirect');
+
     let path = window.location.pathname.split('/');
     let mini = path[path.length - 1];
 
@@ -23,16 +29,12 @@ export function bleh_minis(skip = false) {
         collage: {
             name: tl(trans.collage),
             body: tl(trans.collage_description),
-            func: () => {
-                window.location.href = `${root}user/${auth.name}?collage`;
-            }
+            func: bleh_minis_collage
         },
         compare: {
             name: tl(trans.compare),
             body: tl(trans.compare_description),
-            func: () => {
-                window.location.href = `${root}user/${auth.name}?collage`;
-            }
+            func: bleh_minis_compare
         },
         pixel: {
             name: tl(trans.pixel?.name),
@@ -60,8 +62,15 @@ export function bleh_minis(skip = false) {
         return;
     }
 
+    render(page.structure.side, html``);
+
     if (mini) {
         page.structure.container.setAttribute('data-mini', mini);
+
+        page.name = page.requested.profile;
+        if (page.name == auth.name)
+            page.avatar = auth.avatar;
+
         valid_minis[mini].func();
         return;
     }
@@ -106,6 +115,75 @@ function return_to_minis(mini) {
             <h2>${valid_minis[mini].name}</h2>
         </div>
     `;
+}
+
+function bleh_minis_collage() {
+    let content;
+    let mini_settings;
+
+    render(page.structure.main, html`
+        <section class="minis">
+            ${return_to_minis('collage')}
+            <div class="minis-content" ref=${el => content = el} />
+        </section>
+    `);
+
+    render(page.structure.side, html`
+        <section class="current-mini-settings" ref=${el => mini_settings = el} />
+    `);
+
+    collage({
+        host: content,
+        sidebar: mini_settings
+    });
+}
+
+function bleh_minis_compare() {
+    let content;
+    let mini_settings;
+
+    render(page.structure.main, html`
+        <section class="minis">
+            ${return_to_minis('collage')}
+            <div class="minis-content" ref=${el => content = el} />
+        </section>
+    `);
+
+    render(page.structure.side, html`
+        <section class="current-mini-settings" rel=${el => mini_settings = el} />
+        <section class="minis-settings">
+            <h2>${tl(trans.settings)}</h2>
+            <div class="setting-group">
+                <div class="setting v" data-type="text">
+                    <div class="heading">
+                        <h5>${tl(trans.profile)}</h5>
+                    </div>
+                    <div class="input-container content-form">
+                        <input type="text" class="input" placeholder=${tl(trans.enter_a_profile)} value=${auth.name} oninput=${e => {
+                            page.requested.profile = e.target.value;
+                        }}>
+                    </div>
+                </div>
+                <div class="setting v" data-type="text">
+                    <div class="heading">
+                        <h5>${tl(trans.secondary_profile)}</h5>
+                        <p>${tl(trans.minis_profile)}</p>
+                    </div>
+                    <div class="input-container content-form">
+                        <input type="text" class="input" placeholder=${tl(trans.enter_a_profile)} value=${page.requested.secondary} oninput=${e => {
+                            page.requested.secondary = e.target.value;
+                        }}>
+                    </div>
+                </div>
+            </div>
+        </section>
+    `);
+
+    render(page.structure.main, html`
+        <section class="minis">
+            ${return_to_minis('compare')}
+        </section>
+    `);
 }
 
 function bleh_minis_pixel() {

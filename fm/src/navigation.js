@@ -466,12 +466,19 @@ export function append_nav() {
                                         ${tl(trans.more)}
                                     </button>
                                 </div>
-                                <button class="dropdown-menu-clickable-item" data-menu-item="news" onclick=${() => {
-                                    news();
-                                    instance.hide();
-                                }}>
-                                    ${tl(trans.news)}
-                                </button>
+                                <div class="button-combo">
+                                    <a class="dropdown-menu-clickable-item" data-type="mini" href="${root}bleh/minis">
+                                        ${tl(trans.minis)}
+                                    </a>
+                                    <div class="button-combo-sep" />
+                                    <button class="dropdown-menu-clickable-item chibi" data-menu-item="news" onclick=${() => {
+                                        news();
+                                        instance.hide();
+                                    }}>
+                                        ${tl(trans.news)}
+                                    </button>
+                                </div>
+                                
                                 <div class="button-combo">
                                     <a class="dropdown-menu-clickable-item" data-menu-item="bleh" href="${root}bleh">
                                         ${tl(trans.settings)}
