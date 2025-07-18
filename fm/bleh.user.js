@@ -6189,7 +6189,7 @@
         `);
       music_grids(grid, false);
       const default_size = 380;
-      const base = 4;
+      const base = 6;
       const highest = Math.max(+width_input.value, +height_input.value);
       const grid_item_size = Math.min(
         default_size,
@@ -6328,8 +6328,9 @@
     }
     render(page.structure.main, html`
         <section class="minis">
-            <div class="minis-header">
+            <div class="minis-header main">
                 <h2>${tl(trans.minis)}</h2>
+                <p>${tl(trans.minis_description)}</p>
             </div>
             <div class="mini-list">
                 ${Object.entries(valid_minis).map(([id, mini2]) => html.node`
@@ -23960,6 +23961,9 @@
     minis: {
       en: "Minis"
     },
+    minis_description: {
+      en: "Play mini-games, puzzles, and interact with tools all powered by your listening history"
+    },
     no_mini_found: {
       en: "No mini found for \u2018{v}\u2019"
     },
@@ -23986,9 +23990,6 @@
       body: {
         en: "Print out your top tracks as a receipt"
       }
-    },
-    tools: {
-      en: "Tools"
     },
     collage_description: {
       en: "Generate a personalised image based on your listening history and options"

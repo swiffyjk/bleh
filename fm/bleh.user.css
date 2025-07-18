@@ -25761,6 +25761,11 @@
         gap: 4px;
         margin-bottom: var(--card-gap);
 
+        &.main {
+            flex-direction: column;
+            align-items: unset;
+        }
+
         & > h2 {
             margin: unset !important;
         }

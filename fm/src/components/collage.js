@@ -428,7 +428,7 @@ export function collage({
         // 10 = item-list-gap
         // 15 = card-gap
         const default_size = 380;
-        const base = 4;
+        const base = 6;
         const highest = Math.max(+width_input.value, +height_input.value);
 
         const grid_item_size = Math.min(

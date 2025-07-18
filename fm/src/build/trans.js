@@ -3092,6 +3092,9 @@ export const trans = {
     minis: {
         en: 'Minis'
     },
+    minis_description: {
+        en: 'Play mini-games, puzzles, and interact with tools all powered by your listening history'
+    },
     no_mini_found: {
         en: 'No mini found for ‘{v}’'
     },
@@ -3118,9 +3121,6 @@ export const trans = {
         body: {
             en: 'Print out your top tracks as a receipt'
         }
-    },
-    tools: {
-        en: 'Tools'
     },
     collage_description: {
         en: 'Generate a personalised image based on your listening history and options'

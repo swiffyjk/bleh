@@ -85,8 +85,9 @@ export function bleh_minis(skip = false) {
 
     render(page.structure.main, html`
         <section class="minis">
-            <div class="minis-header">
+            <div class="minis-header main">
                 <h2>${tl(trans.minis)}</h2>
+                <p>${tl(trans.minis_description)}</p>
             </div>
             <div class="mini-list">
                 ${Object.entries(valid_minis).map(([id, mini]) => html.node`
