@@ -20070,6 +20070,20 @@
     let mini = path[path.length - 1];
     if (mini == "minis") mini = null;
     valid_minis = {
+      collage: {
+        name: tl(trans.collage),
+        body: tl(trans.collage_description),
+        func: () => {
+          window.location.href = `${root}user/${auth.name}?collage`;
+        }
+      },
+      compare: {
+        name: tl(trans.compare),
+        body: tl(trans.compare_description),
+        func: () => {
+          window.location.href = `${root}user/${auth.name}?collage`;
+        }
+      },
       pixel: {
         name: tl(trans.pixel?.name),
         body: tl(trans.pixel?.body),
@@ -20084,13 +20098,6 @@
         name: tl(trans.receipt?.name),
         body: tl(trans.receipt?.body),
         func: bleh_minis_receipt
-      },
-      collage: {
-        name: tl(trans.collage),
-        body: tl(trans.collage_description),
-        func: () => {
-          window.location.href = `${root}user/${auth.name}?collage`;
-        }
       }
     };
     if (mini && !valid_minis[mini]) {
