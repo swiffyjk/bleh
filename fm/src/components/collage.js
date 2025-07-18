@@ -13,8 +13,6 @@ import {version} from "../main.js";
 import {download} from "./share.js";
 
 export function collage({
-    default_type = 'albums',
-    default_timeframe = 'date_preset=LAST_90_DAYS',
     host,
     sidebar
 }={}) {
@@ -36,6 +34,9 @@ export function collage({
 
     let current_year = new Date().getFullYear();
     let previous_year = current_year - 1;
+
+    const default_type = page.requested.type || 'albums';
+    const default_timeframe = page.requested.timeframe || 'date_preset=LAST_90_DAYS';
 
     if (page.requested.redirect) {
         setTimeout(() => {
@@ -428,7 +429,7 @@ export function collage({
         // 10 = item-list-gap
         // 15 = card-gap
         const default_size = 380;
-        const base = 5;
+        const base = 4;
         const highest = Math.max(+width_input.value, +height_input.value);
 
         const grid_item_size = Math.min(

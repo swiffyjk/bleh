@@ -8654,8 +8654,6 @@
 
   // src/components/collage.js
   function collage({
-    default_type = "albums",
-    default_timeframe = "date_preset=LAST_90_DAYS",
     host,
     sidebar
   } = {}) {
@@ -8672,6 +8670,8 @@
     let max = 20;
     let current_year = (/* @__PURE__ */ new Date()).getFullYear();
     let previous_year = current_year - 1;
+    const default_type = page.requested.type || "albums";
+    const default_timeframe = page.requested.timeframe || "date_preset=LAST_90_DAYS";
     if (page.requested.redirect) {
       setTimeout(() => {
         notify({
@@ -9016,7 +9016,7 @@
         `);
       music_grids(grid, false);
       const default_size = 380;
-      const base = 5;
+      const base = 4;
       const highest = Math.max(+width_input.value, +height_input.value);
       const grid_item_size = Math.min(
         default_size,
@@ -11095,9 +11095,6 @@
     if (loved_tab)
       loved_tab.textContent = tl(trans.loved);
     if (!is_subpage) {
-      if (page.requested.collage == "") collage({
-        redirect: true
-      });
       let is_following = page.structure.container.querySelector(".label.user-follow");
       profile_recents();
       profile_artists();
@@ -11946,10 +11943,7 @@
       let btn = list.querySelector(".dropdown-menu-clickable-item--selected");
       let link = new URL("https://www.last.fm" + btn.getAttribute("href"));
       let selected = link.searchParams.get("artists_date_preset");
-      collage({
-        default_type: "artists",
-        date_preset: `date_preset=${selected}`
-      });
+      window.location.href = `${root}bleh/minis/collage?type=artists&timeframe=date_preset=${selected}`;
     }}>${tl(trans.collage)}</button>
                 ${form ? html.node`
                 <button class="left-icon blend-v2-btn" data-type="settings" ref=${(el) => settings_btn = el}>
@@ -12033,10 +12027,7 @@
       let btn = list.querySelector(".dropdown-menu-clickable-item--selected");
       let link = new URL("https://www.last.fm" + btn.getAttribute("href"));
       let selected = link.searchParams.get("albums_date_preset");
-      collage({
-        default_type: "albums",
-        date_preset: `date_preset=${selected}`
-      });
+      window.location.href = `${root}bleh/minis/collage?type=albums&timeframe=date_preset=${selected}`;
     }}>${tl(trans.collage)}</button>
                 ${form ? html.node`
                 <button class="left-icon blend-v2-btn" data-type="settings" ref=${(el) => settings_btn = el}>
@@ -12120,10 +12111,7 @@
       let btn = list.querySelector(".dropdown-menu-clickable-item--selected");
       let link = new URL("https://www.last.fm" + btn.getAttribute("href"));
       let selected = link.searchParams.get("tracks_date_preset");
-      collage({
-        default_type: "tracks",
-        date_preset: `date_preset=${selected}`
-      });
+      window.location.href = `${root}bleh/minis/collage?type=tracks&timeframe=date_preset=${selected}`;
     }}>${tl(trans.collage)}</button>
                 ${form ? html.node`
                 <button class="left-icon blend-v2-btn" data-type="settings" ref=${(el) => settings_btn = el}>
@@ -15721,8 +15709,8 @@
     let song_guests = [];
     extras.forEach((extra) => {
       if (extra.group !== "guests") return;
-      const normalized = extra.text.replace(/feat\.?|ft\.?|featuring|with|w\//gi, "").replace(/ & /g, ";").replace(/, /g, ";").replace(/ and /gi, ";").replace(/- /g, "").replace(/,;/g, ";").replace(/tyler;the/gi, "Tyler, The").replace(/ of bts/gi, ";BTS").replace(/marina;the diamonds/gi, "Marina and The Diamonds").replace(/selena gomez;the scene/gi, "Selena Gomez & the Scene");
-      const guests = normalized.split(/;+/).map((s) => s.trim()).filter(Boolean).map(correct_artist);
+      const normalised = extra.text.replace(/\b(?:feat|ft|featuring)\.?\b/gi, "").replace(/\bwith\b/gi, "").replace(/w\//gi, "").replace(/ & /g, ";").replace(/, /g, ";").replace(/ and /gi, ";").replace(/- /g, "").replace(/,;/g, ";").replace(/tyler;the/gi, "Tyler, The").replace(/ of bts/gi, ";BTS").replace(/marina;the diamonds/gi, "Marina and The Diamonds").replace(/selena gomez;the scene/gi, "Selena Gomez & the Scene").replace(/^[\.\-\s;]+/, "").trim();
+      const guests = normalised.split(/;+/).map((s) => s.trim()).filter(Boolean).map(correct_artist);
       song_guests.push(...guests);
     });
     return [
@@ -20123,6 +20111,8 @@
     page.requested.profile = params.get("profile") || auth.name;
     page.requested.secondary = params.get("secondary");
     page.requested.redirect = params.get("redirect");
+    page.requested.type = params.get("type");
+    page.requested.timeframe = params.get("timeframe");
     let path = window.location.pathname.split("/");
     let mini = path[path.length - 1];
     if (mini == "minis") mini = null;

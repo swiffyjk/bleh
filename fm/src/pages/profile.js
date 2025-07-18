@@ -27,7 +27,6 @@ import {bleh_user_library} from "./glacier"
 import {use_pronouns} from "./lastfm_settings"
 import {bleh_obsession} from "./obsession"
 import {html, render} from "lighterhtml";
-import {collage} from "../components/collage.js";
 import {save_setting, setting} from "../components/settings.js";
 import {save_banner_to_cache} from "../components/banner.js";
 import {submit_scrobble} from '../components/scrobble.js'
@@ -151,10 +150,6 @@ export function bleh_profiles() {
         loved_tab.textContent = tl(trans.loved);
 
     if (!is_subpage) {
-        if (page.requested.collage == '') collage({
-            redirect: true
-        });
-
         let is_following = page.structure.container.querySelector('.label.user-follow');
 
 
@@ -1238,11 +1233,8 @@ function profile_artists() {
                     let btn = list.querySelector('.dropdown-menu-clickable-item--selected');
                     let link = new URL('https://www.last.fm' + btn.getAttribute('href'));
                     let selected = link.searchParams.get('artists_date_preset');
-
-                    collage({
-                        default_type: 'artists',
-                        date_preset: `date_preset=${selected}`
-                    });
+                    
+                    window.location.href = `${root}bleh/minis/collage?type=artists&timeframe=date_preset=${selected}`;
                 }}>${tl(trans.collage)}</button>
                 ${form ? html.node`
                 <button class="left-icon blend-v2-btn" data-type="settings" ref=${el => settings_btn = el}>
@@ -1338,10 +1330,7 @@ function profile_albums() {
                     let link = new URL('https://www.last.fm' + btn.getAttribute('href'));
                     let selected = link.searchParams.get('albums_date_preset');
 
-                    collage({
-                        default_type: 'albums',
-                        date_preset: `date_preset=${selected}`
-                    });
+                    window.location.href = `${root}bleh/minis/collage?type=albums&timeframe=date_preset=${selected}`;
                 }}>${tl(trans.collage)}</button>
                 ${form ? html.node`
                 <button class="left-icon blend-v2-btn" data-type="settings" ref=${el => settings_btn = el}>
@@ -1437,10 +1426,7 @@ function profile_tracks() {
                     let link = new URL('https://www.last.fm' + btn.getAttribute('href'));
                     let selected = link.searchParams.get('tracks_date_preset');
 
-                    collage({
-                        default_type: 'tracks',
-                        date_preset: `date_preset=${selected}`
-                    });
+                    window.location.href = `${root}bleh/minis/collage?type=tracks&timeframe=date_preset=${selected}`;
                 }}>${tl(trans.collage)}</button>
                 ${form ? html.node`
                 <button class="left-icon blend-v2-btn" data-type="settings" ref=${el => settings_btn = el}>

@@ -381,8 +381,10 @@ export function name_includes(original_title, original_artist) {
     let song_guests = [];
     extras.forEach(extra => {
         if (extra.group !== 'guests') return;
-        const normalized = extra.text
-            .replace(/feat\.?|ft\.?|featuring|with|w\//gi, '')
+        const normalised = extra.text
+            .replace(/\b(?:feat|ft|featuring)\.?\b/gi, '')
+            .replace(/\bwith\b/gi, '')
+            .replace(/w\//gi, '')
             .replace(/ & /g, ';')
             .replace(/, /g, ';')
             .replace(/ and /gi, ';')
@@ -391,8 +393,10 @@ export function name_includes(original_title, original_artist) {
             .replace(/tyler;the/gi, 'Tyler, The')
             .replace(/ of bts/gi, ';BTS')
             .replace(/marina;the diamonds/gi, 'Marina and The Diamonds')
-            .replace(/selena gomez;the scene/gi, 'Selena Gomez & the Scene');
-        const guests = normalized
+            .replace(/selena gomez;the scene/gi, 'Selena Gomez & the Scene')
+            .replace(/^[\.\-\s;]+/, '')
+            .trim();
+        const guests = normalised
             .split(/;+/)
             .map(s => s.trim())
             .filter(Boolean)

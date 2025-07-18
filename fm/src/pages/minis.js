@@ -19,6 +19,8 @@ export function bleh_minis(skip = false) {
     page.requested.profile = params.get('profile') || auth.name;
     page.requested.secondary = params.get('secondary');
     page.requested.redirect = params.get('redirect');
+    page.requested.type = params.get('type');
+    page.requested.timeframe = params.get('timeframe');
 
     let path = window.location.pathname.split('/');
     let mini = path[path.length - 1];
