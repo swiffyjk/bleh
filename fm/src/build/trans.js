@@ -3147,6 +3147,14 @@ export const trans = {
         body: {
             en: 'Navigate to {v} instead'
         }
+    },
+    lyrics: {
+        name: {
+            en: 'Lyrics'
+        },
+        body: {
+            en: 'Guess the song from a random lyric'
+        }
     }
 }
 

@@ -44,6 +44,11 @@ export function bleh_minis(skip = false) {
             body: tl(trans.pixel?.body),
             func: bleh_minis_pixel
         },
+        lyrics: {
+            name: tl(trans.lyrics?.name),
+            body: tl(trans.lyrics?.body),
+            func: bleh_minis_lyrics
+        },
         rainbow: {
             name: tl(trans.rainbow?.name),
             body: tl(trans.rainbow?.body),
@@ -166,6 +171,14 @@ function bleh_minis_pixel() {
     render(page.structure.main, html`
         <section class="minis">
             ${return_to_minis('pixel')}
+        </section>
+    `);
+}
+
+function bleh_minis_lyrics() {
+    render(page.structure.main, html`
+        <section class="minis">
+            ${return_to_minis('lyrics')}
         </section>
     `);
 }

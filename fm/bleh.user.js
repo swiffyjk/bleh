@@ -6293,6 +6293,11 @@
         body: tl(trans.pixel?.body),
         func: bleh_minis_pixel
       },
+      lyrics: {
+        name: tl(trans.lyrics?.name),
+        body: tl(trans.lyrics?.body),
+        func: bleh_minis_lyrics
+      },
       rainbow: {
         name: tl(trans.rainbow?.name),
         body: tl(trans.rainbow?.body),
@@ -6399,6 +6404,13 @@
     render(page.structure.main, html`
         <section class="minis">
             ${return_to_minis("pixel")}
+        </section>
+    `);
+  }
+  function bleh_minis_lyrics() {
+    render(page.structure.main, html`
+        <section class="minis">
+            ${return_to_minis("lyrics")}
         </section>
     `);
   }
@@ -24002,6 +24014,14 @@
       },
       body: {
         en: "Navigate to {v} instead"
+      }
+    },
+    lyrics: {
+      name: {
+        en: "Lyrics"
+      },
+      body: {
+        en: "Guess the song from a random lyric"
       }
     }
   };
