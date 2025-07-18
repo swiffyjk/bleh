@@ -25823,6 +25823,8 @@
                     --bg-atv: hsl(var(--b4), 80%);
                     --shadow: none;
 
+                    --col: hsl(var(--c3));
+                    --mask-colour: currentColor;
                     --icon-size: 24px;
                     --button-height: 40px;
                     height: var(--button-height) !important;
