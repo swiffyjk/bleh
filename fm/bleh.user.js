@@ -28258,7 +28258,7 @@
         date: "2025-07-08"
       },
       minis: {
-        default: false,
+        default: true,
         name: "Minis replacement for Labs",
         date: "2025-07-17"
       }
