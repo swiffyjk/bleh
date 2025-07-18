@@ -11,6 +11,7 @@ export function pixel({
 
     let text = 'my anti-aircraft friend';
     let title_elem;
+    let hints_container;
     render(host, html`
         <div class="pixel-artwork">
             <img src="https://lastfm.freetls.fastly.net/i/u/ar0/def68d94aae8e52ef2d1c0c9d3e16ff4.jpg" alt=${auth.name} />
@@ -19,13 +20,22 @@ export function pixel({
             <div class="sub-text">${tl(trans.jumbled_title)}</div>
             <div class="pixel-album-name">
                 <h1 ref=${el => title_elem = el}>${jumble_string(text)}</h1>
-                <button class="chibi icon" data-type="jumble" onclick=${() => {
-                    title_elem.textContent = jumble_string(text);
-                }}>
-                    ${tl(trans.re_jumble)}
-                </button>
+                ${() => {
+                    let btn = html.node`
+                        <button class="chibi icon" data-type="jumble" onclick=${() => {
+                            title_elem.textContent = jumble_string(text);
+                        }}>
+                            ${tl(trans.re_jumble)}
+                        </button>
+                    `;
+                    
+                    tippy(btn, {
+                        content: tl(trans.re_jumble)
+                    });
+                    
+                    return btn;
+                }}
             </div>
-            <p class="card-tip">${tl(trans.jumbled_guess)}</p>
             <div class="pixel-guess">
                 ${input({
                     type: 'text',
@@ -34,7 +44,10 @@ export function pixel({
                         console.info(value);
                     }
                 })}
+                <p class="card-tip">${tl(trans.jumbled_guess)}</p>
             </div>
+            <h2>${tl(trans.hints)}</h2>
+            <div class="hints" ref=${el => hints_container = el}></div>
         </div>
     `);
 }

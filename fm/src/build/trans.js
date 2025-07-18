@@ -3167,6 +3167,9 @@ export const trans = {
     },
     enter_a_guess: {
         en: 'Enter a guess'
+    },
+    hints: {
+        en: 'Hints'
     }
 }
 
