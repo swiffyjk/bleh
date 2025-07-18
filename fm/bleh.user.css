@@ -25822,6 +25822,10 @@
                     --bg-hov: hsl(var(--b4), 60%);
                     --bg-atv: hsl(var(--b4), 80%);
                     --shadow: none;
+
+                    --icon-size: 24px;
+                    --button-height: 40px;
+                    height: var(--button-height) !important;
                 }
             }
         }
