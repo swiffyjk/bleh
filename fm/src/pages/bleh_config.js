@@ -600,6 +600,14 @@ export function render_setting_page(page_id) {
             </div>
         `);
     } else if (page_id == 'profiles') {
+        if (auth.pro === null) {
+            setTimeout(() => {
+                render_setting_page('profiles');
+            }, 10);
+            page_loading();
+            return;
+        }
+
         register_skip_to([
             {
                 id: 'profile_shortcut',
@@ -643,19 +651,29 @@ export function render_setting_page(page_id) {
                                     title: auth.name,
                                     body: html.node`
                                         <div class="generic-table-list badge-list">
-                                            ${(badges) ? badges.map((badge) => html.node`
-                                                <div class="generic-table-list-entry badge-list-entry">
-                                                    <div class="icon-container colourful user-status--bleh-${badge.type} user-status--bleh-user-${auth.name}">
-                                                        <div class="bleh-icon" style="--icon: var(--mask)" />
+                                            ${(badges) ? badges.map(badge => {
+                                                let style;
+                                                let classname = '';
+                                                if (badge.icon && badge.hue && badge.sat && badge.lit) {
+                                                    style = `--mask: url(${badge.icon}); --hue: ${badge.hue}; --sat: ${badge.sat}; --lit: ${badge.lit}`;
+                                                } else {
+                                                    classname = `user-status--bleh-${badge.type} user-status--bleh-user-${auth.name}`;
+                                                }
+
+                                                return html.node`
+                                                    <div class="generic-table-list-entry badge-list-entry">
+                                                        <div class="icon-container colourful ${classname}" style=${style}>
+                                                            <div class="bleh-icon" style="--icon: var(--mask)" />
+                                                        </div>
+                                                        <div class="name colourful ${classname}" style=${style}>
+                                                            ${badge.name}
+                                                        </div>
+                                                        <div class="text">
+                                                            ${badge.reason}
+                                                        </div>
                                                     </div>
-                                                    <div class="name colourful user-status--bleh-${badge.type} user-status--bleh-user-${auth.name}">
-                                                        ${badge.name}
-                                                    </div>
-                                                    <div class="text">
-                                                        ${badge.reason}
-                                                    </div>
-                                                </div>
-                                            `) : ''}
+                                                `;
+                                            }) : ''}
                                             ${auth.pro ? html.node`
                                                 <div class="generic-table-list-entry badge-list-entry">
                                                     <div class="icon-container colourful user-status-subscriber">
@@ -1806,8 +1824,10 @@ function display_seasonal_exclusives(instance, colours, exclusives) {
 
 
 function init_profile_notes() {
-    let profile_notes = JSON.parse(localStorage.getItem('bleh_profile_notes')) || {};
     let profile_notes_table = page.structure.main.querySelector('.profile-notes');
+    if (!profile_notes_table) return;
+
+    let profile_notes = JSON.parse(localStorage.getItem('bleh_profile_notes')) || {};
 
     if (Object.keys(profile_notes).length == 0)
         return;
@@ -2105,6 +2125,7 @@ unsafeWindow._convert_hex = function() {
 
 function activity_preview() {
     let preview = page.structure.main.querySelector('.activity-preview');
+    if (!preview) return;
 
     let random_types = [
         'love', 'love', 'love',

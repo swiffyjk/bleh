@@ -8,7 +8,7 @@ import {settings} from "./build/config";
 import {auth, page, root} from "./build/page";
 import {stored_season} from "./build/seasonal";
 import {lang, tl, trans, trans_legacy} from "./build/trans";
-import {load_badges} from "./components/badge";
+import {create_badge, load_badges} from "./components/badge";
 import {version} from "./main";
 import {show_theme_change_in_menu} from "./pages/bleh_config";
 import {ff} from "./sku";
@@ -313,24 +313,7 @@ export function append_nav() {
                                 <div class="name">${auth.name}</div>
                                 ${(badges || auth.pro) ? html.node`
                                     <div class="badges">
-                                        ${badges ? badges.map(badge => () => {
-                                            let el = html.node`
-                                                <span class="label user-status--bleh-${badge.type} user-status--bleh-user-${auth.name} no-hover">
-                                                    ${badge.name}
-                                                </span>
-                                            `;
-
-                                            tippy(el, {
-                                                theme: 'badge',
-                                                placement: 'bottom',
-                                                content: html.node`
-                                                    <div class="badge-name">${badge.name}</div>
-                                                    <div class="badge-reason">${badge.reason}</div>
-                                                `
-                                            });
-                                            
-                                            return el;
-                                        }) : ''}
+                                        ${badges ? badges.map(badge => create_badge(badge)) : ''}
                                         ${auth.pro ? () => {
                                             let el = html.node`
                                                 <span class="label user-status-subscriber no-hover">

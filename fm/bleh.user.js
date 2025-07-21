@@ -1009,7 +1009,7 @@
   });
   var auth = {
     name: null,
-    pro: false,
+    pro: null,
     sponsor: false,
     avatar: null,
     sets: {
@@ -2990,46 +2990,6 @@
     badges: {}
   };
 
-  // src/components/badge.js
-  function load_badges(user, solo = false) {
-    if (!sponsor_list || !sponsor_list.badges) return;
-    if (!sponsor_list.badges.hasOwnProperty(user))
-      return;
-    let badges = [];
-    if (!Array.isArray(sponsor_list.badges[user])) {
-      log("1 badge found", "sponsor", "info", sponsor_list.badges[user]);
-      badges.push(sponsor_list.badges[user]);
-    } else {
-      log("multiple badges found", "sponsor", "info", sponsor_list.badges[user]);
-      if (solo)
-        badges.push(sponsor_list.badges[user][Object.keys(sponsor_list.badges[user]).length - 1]);
-      else
-        badges = sponsor_list.badges[user];
-    }
-    badges.forEach((badge) => {
-      if (!badge.name) {
-        if (trans.badges[badge.type]) {
-          badge.name = tl(trans.badges[badge.type].name);
-        } else {
-          badge.name = tl(trans.unavailable);
-          badge.reason = tl(trans.requires_higher_bleh_version);
-        }
-      }
-      if (trans.badges[badge.type] && trans.badges[badge.type].reason)
-        badge.reason = tl(trans.badges[badge.type].reason);
-      if (badge.reason)
-        return;
-      if (badge.type == "sponsor" || badge.type == "contributor")
-        badge.reason = badge.type;
-      else if (badge.type == "cute" || badge.type == "queen")
-        badge.reason = tl(trans.badges.cute.reason);
-      else
-        badge.reason = tl(trans.badges.reserved.reason);
-    });
-    log("final badge list", "sponsor", "info", badges);
-    return badges;
-  }
-
   // src/components/dialog.js
   function load_dialogs() {
     let dialogs2 = document.createElement("div");
@@ -3205,6 +3165,240 @@
     kill_window(id);
   };
 
+  // src/sku.js
+  function ff(flag) {
+    log(`parsing ${flag}`, "flag", "log", {
+      setting: settings.feature_flags[flag],
+      sku: version.feature_flags[flag]
+    });
+    if (settings.feature_flags[flag] != null)
+      return settings.feature_flags[flag];
+    if (version.feature_flags[flag] != null)
+      return version.feature_flags[flag].default;
+  }
+
+  // src/sponsor.js
+  function sponsors(force = false) {
+    if (!ff("sponsor"))
+      return;
+    let sponsor_data = localStorage.getItem("kat_sponsors");
+    let sponsor_expire = new Date(localStorage.getItem("kat_sponsors_expire"));
+    let current_time = /* @__PURE__ */ new Date();
+    if (!sponsor_data) {
+      log("not cached, fetching", "sponsor");
+      sponsor_request(true);
+    } else {
+      for (var member in sponsor_list) delete sponsor_list[member];
+      Object.assign(sponsor_list, JSON.parse(sponsor_data));
+      if (sponsor_list)
+        auth.sponsor = sponsor_list.sponsors.includes(auth.name);
+      if (sponsor_expire < current_time && !force) {
+        sponsor_request();
+      } else if (force) {
+        sponsor_request(true);
+      }
+    }
+  }
+  function sponsor_request(notify2 = false) {
+    let button = document.body.querySelector('[onclick="_sponsor_check()"]');
+    if (button)
+      button.setAttribute("disabled", "");
+    let xhr = new XMLHttpRequest();
+    let url = `https://katelyynn.github.io/bleh/fm/badges/badges.json?${Math.random()}`;
+    xhr.open("GET", url, true);
+    xhr.onload = function() {
+      log(`list responded with ${xhr.status}`, "sponsor");
+      let api_expire = /* @__PURE__ */ new Date();
+      if (xhr.status != 200) {
+        log("request has been cancelled, will request again in 1h", "sponsor");
+        api_expire.setHours(api_expire.getHours() + 1);
+      }
+      if (xhr.status == 200) {
+        if (sponsor_list.latest != 0 || sponsor_list && parseFloat(JSON.parse(this.response).latest) >= parseFloat(sponsor_list.latest)) {
+          for (const member in sponsor_list) delete sponsor_list[member];
+          Object.assign(sponsor_list, JSON.parse(this.response));
+          if (sponsor_list)
+            auth.sponsor = sponsor_list.sponsors.includes(auth.name);
+          if (notify2)
+            deliver_notif(trans_legacy.en.settings.home.sponsor.download, false, true, "sponsor");
+          localStorage.setItem("kat_sponsors", this.response);
+        }
+        api_expire.setHours(api_expire.getHours() + 4);
+        log(`list cached until ${api_expire}`, "sponsor");
+      }
+      localStorage.setItem("kat_sponsors_expire", api_expire);
+      if (button != null)
+        button.removeAttribute("disabled");
+    };
+    xhr.send();
+  }
+  unsafeWindow._sponsor_check = function() {
+    sponsors(true);
+  };
+  unsafeWindow._sponsor = function(replace = false) {
+    sponsor(replace);
+  };
+  function sponsor(replace = false) {
+    dialog({
+      id: "sponsor",
+      title: tl(trans.support_future_development),
+      body: html.node`
+            <div class="modal-vertical-inner support-inner">
+                <div class="avatar">
+                    <img src="${auth.avatar.replace("/avatar42s/", "/avatar170s/")}" alt="${tl(trans.your_avatar)}">
+                    <span class="avatar-status-dot user-status--bleh-sponsor"></span>
+                </div>
+                <h1>${tl(trans.support_future_development)}</h1>
+                <p>${html.node([
+        tl(trans.why_sponsor).replace("katelyn", sponsor_list && sponsor_list.special ? `<a class="mention" href="${root}user/${sponsor_list.special[0]}">@${sponsor_list.special[0]}</a>` : "katelyn")
+      ])}</p>
+            </div>
+            <div class="modal-footer">
+                <div class="fill"></div>
+                <a class="btn primary sponsor" href="${sponsor_list.sponsor_link}" target="_blank">
+                    ${tl(trans.sponsor)}
+                </a>
+                <div class="fill"></div>
+            </div>
+        `,
+      type: "sponsor",
+      replace_if_possible: replace
+    });
+  }
+  unsafeWindow._sponsor_manage = function() {
+    sponsor_manage();
+  };
+  function sponsor_manage() {
+    if (sponsor_list.sponsors_one_time && sponsor_list.sponsors_one_time.includes(auth.name)) {
+      dialog({
+        id: "sponsor_manage",
+        title: tl(trans.sponsor),
+        body: html.node`
+                <div class="modal-vertical-inner support-inner">
+                    <div class="avatar">
+                        <img src="${auth.avatar.replace("/avatar42s/", "/avatar170s/")}" alt="${tl(trans.your_avatar)}">
+                        <span class="avatar-status-dot user-status--bleh-sponsor"></span>
+                    </div>
+                    <h1>${tl(trans.you_are_a_sponsor)}</h1>
+                    <p>${tl(trans.sponsor_no_badge)}</p>
+                </div>
+            `,
+        type: "sponsor"
+      });
+    } else {
+      dialog({
+        id: "sponsor_manage",
+        title: tl(trans.sponsor),
+        body: html.node`
+                <div class="modal-vertical-inner support-inner">
+                    <div class="avatar">
+                        <img src="${auth.avatar.replace("/avatar42s/", "/avatar170s/")}" alt="${tl(trans.your_avatar)}">
+                        <span class="avatar-status-dot user-status--bleh-sponsor"></span>
+                    </div>
+                    <h1>${tl(trans.you_are_a_sponsor)}</h1>
+                    <p>${tl(trans.sponsor_get_badge)}</p>
+                </div>
+                <div class="modal-footer">
+                    <div class="fill"></div>
+                    <a class="btn primary sponsor" href="${root}user/${sponsor_list.sponsor_account}" target="_blank">
+                        ${tl(trans.manage_sponsor)}
+                    </a>
+                    <div class="fill"></div>
+                </div>
+            `,
+        type: "sponsor"
+      });
+    }
+  }
+  function bleh_sponsor_page() {
+    document.body.style.removeProperty("--hue-album");
+    document.body.style.removeProperty("--sat-album");
+    document.body.style.removeProperty("--lit-album");
+    let adaptive_skin_container = document.querySelector(".adaptive-skin-container:not([data-bleh])");
+    if (adaptive_skin_container == null)
+      return;
+    adaptive_skin_container.setAttribute("data-bleh", "true");
+    adaptive_skin_container.innerHTML = "";
+    log("internal bleh sponsor", "page");
+    page.type = "bleh_sponsor";
+    page.subpage = "";
+    sponsor();
+  }
+
+  // src/components/badge.js
+  function load_badges(user, solo = false) {
+    if (!sponsor_list || !sponsor_list.badges) return;
+    if (!sponsor_list.badges.hasOwnProperty(user))
+      return;
+    let badges = [];
+    if (!Array.isArray(sponsor_list.badges[user])) {
+      log("1 badge found", "sponsor", "info", sponsor_list.badges[user]);
+      badges.push(sponsor_list.badges[user]);
+    } else {
+      log("multiple badges found", "sponsor", "info", sponsor_list.badges[user]);
+      if (solo)
+        badges.push(sponsor_list.badges[user][Object.keys(sponsor_list.badges[user]).length - 1]);
+      else
+        badges = sponsor_list.badges[user];
+    }
+    badges.forEach((badge) => {
+      if (!badge.name) {
+        if (trans.badges[badge.type]) {
+          badge.name = tl(trans.badges[badge.type].name);
+        } else {
+          badge.name = tl(trans.unavailable);
+          badge.reason = tl(trans.requires_higher_bleh_version);
+        }
+      }
+      if (trans.badges[badge.type] && trans.badges[badge.type].reason)
+        badge.reason = tl(trans.badges[badge.type].reason);
+      if (badge.reason)
+        return;
+      if (badge.type == "sponsor" || badge.type == "contributor")
+        badge.reason = badge.type;
+      else if (badge.type == "cute" || badge.type == "queen")
+        badge.reason = tl(trans.badges.cute.reason);
+      else
+        badge.reason = tl(trans.badges.reserved.reason);
+    });
+    log("final badge list", "sponsor", "info", badges);
+    return badges;
+  }
+  function create_badge(badge = {
+    type: "",
+    icon: "",
+    reason: "",
+    hue: 0,
+    sat: 0,
+    lit: 0,
+    name: ""
+  }, name2 = page.name) {
+    let elem = html.node`
+        <span class="label no-hover">
+            ${badge.name}
+        </span>
+    `;
+    if (badge.icon != "" && badge.hue > 0 && badge.sat > 0 && badge.lit > 0) {
+      elem.style.setProperty("--mask", `url(${badge.icon})`);
+      elem.style.setProperty("--hue-over", badge.hue);
+      elem.style.setProperty("--sat-over", badge.sat);
+      elem.style.setProperty("--lit-over", badge.lit);
+    } else {
+      elem.classList.add(`user-status--bleh-${badge.type}`, `user-status--bleh-user-${name2}`);
+    }
+    tippy(elem, {
+      theme: "badge",
+      placement: "bottom",
+      content: html.node`
+            <div class="badge-name">${badge.name}</div>
+            <div class="badge-reason">${badge.reason}</div>
+        `
+    });
+    if (badge.type == "sponsor")
+      elem.onclick = sponsor;
+    return elem;
+  }
+
   // src/avatar.js
   function patch_avatar(avatar3, name2, type = "", parent = null, side = "right") {
     if (avatar3.hasAttribute("data-bleh-avatar"))
@@ -3378,18 +3572,6 @@
       type: "avatar",
       has_overlays: false
     });
-  }
-
-  // src/sku.js
-  function ff(flag) {
-    log(`parsing ${flag}`, "flag", "log", {
-      setting: settings.feature_flags[flag],
-      sku: version.feature_flags[flag]
-    });
-    if (settings.feature_flags[flag] != null)
-      return settings.feature_flags[flag];
-    if (version.feature_flags[flag] != null)
-      return version.feature_flags[flag].default;
   }
 
   // src/pages/wiki.js
@@ -9397,154 +9579,6 @@
     panel.removeChild(legacy_top_listeners_container);
   }
 
-  // src/sponsor.js
-  function sponsors(force = false) {
-    if (!ff("sponsor"))
-      return;
-    let sponsor_data = localStorage.getItem("kat_sponsors");
-    let sponsor_expire = new Date(localStorage.getItem("kat_sponsors_expire"));
-    let current_time = /* @__PURE__ */ new Date();
-    if (!sponsor_data) {
-      log("not cached, fetching", "sponsor");
-      sponsor_request(true);
-    } else {
-      for (var member in sponsor_list) delete sponsor_list[member];
-      Object.assign(sponsor_list, JSON.parse(sponsor_data));
-      if (sponsor_list)
-        auth.sponsor = sponsor_list.sponsors.includes(auth.name);
-      if (sponsor_expire < current_time && !force) {
-        sponsor_request();
-      } else if (force) {
-        sponsor_request(true);
-      }
-    }
-  }
-  function sponsor_request(notify2 = false) {
-    let button = document.body.querySelector('[onclick="_sponsor_check()"]');
-    if (button)
-      button.setAttribute("disabled", "");
-    let xhr = new XMLHttpRequest();
-    let url = `https://katelyynn.github.io/bleh/fm/badges/badges.json?${Math.random()}`;
-    xhr.open("GET", url, true);
-    xhr.onload = function() {
-      log(`list responded with ${xhr.status}`, "sponsor");
-      let api_expire = /* @__PURE__ */ new Date();
-      if (xhr.status != 200) {
-        log("request has been cancelled, will request again in 1h", "sponsor");
-        api_expire.setHours(api_expire.getHours() + 1);
-      }
-      if (xhr.status == 200) {
-        if (sponsor_list.latest != 0 || sponsor_list && parseFloat(JSON.parse(this.response).latest) >= parseFloat(sponsor_list.latest)) {
-          for (const member in sponsor_list) delete sponsor_list[member];
-          Object.assign(sponsor_list, JSON.parse(this.response));
-          if (sponsor_list)
-            auth.sponsor = sponsor_list.sponsors.includes(auth.name);
-          if (notify2)
-            deliver_notif(trans_legacy.en.settings.home.sponsor.download, false, true, "sponsor");
-          localStorage.setItem("kat_sponsors", this.response);
-        }
-        api_expire.setHours(api_expire.getHours() + 4);
-        log(`list cached until ${api_expire}`, "sponsor");
-      }
-      localStorage.setItem("kat_sponsors_expire", api_expire);
-      if (button != null)
-        button.removeAttribute("disabled");
-    };
-    xhr.send();
-  }
-  unsafeWindow._sponsor_check = function() {
-    sponsors(true);
-  };
-  unsafeWindow._sponsor = function(replace = false) {
-    sponsor(replace);
-  };
-  function sponsor(replace = false) {
-    dialog({
-      id: "sponsor",
-      title: tl(trans.support_future_development),
-      body: html.node`
-            <div class="modal-vertical-inner support-inner">
-                <div class="avatar">
-                    <img src="${auth.avatar.replace("/avatar42s/", "/avatar170s/")}" alt="${tl(trans.your_avatar)}">
-                    <span class="avatar-status-dot user-status--bleh-sponsor"></span>
-                </div>
-                <h1>${tl(trans.support_future_development)}</h1>
-                <p>${html.node([
-        tl(trans.why_sponsor).replace("katelyn", sponsor_list && sponsor_list.special ? `<a class="mention" href="${root}user/${sponsor_list.special[0]}">@${sponsor_list.special[0]}</a>` : "katelyn")
-      ])}</p>
-            </div>
-            <div class="modal-footer">
-                <div class="fill"></div>
-                <a class="btn primary sponsor" href="${sponsor_list.sponsor_link}" target="_blank">
-                    ${tl(trans.sponsor)}
-                </a>
-                <div class="fill"></div>
-            </div>
-        `,
-      type: "sponsor",
-      replace_if_possible: replace
-    });
-  }
-  unsafeWindow._sponsor_manage = function() {
-    sponsor_manage();
-  };
-  function sponsor_manage() {
-    if (sponsor_list.sponsors_one_time && sponsor_list.sponsors_one_time.includes(auth.name)) {
-      dialog({
-        id: "sponsor_manage",
-        title: tl(trans.sponsor),
-        body: html.node`
-                <div class="modal-vertical-inner support-inner">
-                    <div class="avatar">
-                        <img src="${auth.avatar.replace("/avatar42s/", "/avatar170s/")}" alt="${tl(trans.your_avatar)}">
-                        <span class="avatar-status-dot user-status--bleh-sponsor"></span>
-                    </div>
-                    <h1>${tl(trans.you_are_a_sponsor)}</h1>
-                    <p>${tl(trans.sponsor_no_badge)}</p>
-                </div>
-            `,
-        type: "sponsor"
-      });
-    } else {
-      dialog({
-        id: "sponsor_manage",
-        title: tl(trans.sponsor),
-        body: html.node`
-                <div class="modal-vertical-inner support-inner">
-                    <div class="avatar">
-                        <img src="${auth.avatar.replace("/avatar42s/", "/avatar170s/")}" alt="${tl(trans.your_avatar)}">
-                        <span class="avatar-status-dot user-status--bleh-sponsor"></span>
-                    </div>
-                    <h1>${tl(trans.you_are_a_sponsor)}</h1>
-                    <p>${tl(trans.sponsor_get_badge)}</p>
-                </div>
-                <div class="modal-footer">
-                    <div class="fill"></div>
-                    <a class="btn primary sponsor" href="${root}user/${sponsor_list.sponsor_account}" target="_blank">
-                        ${tl(trans.manage_sponsor)}
-                    </a>
-                    <div class="fill"></div>
-                </div>
-            `,
-        type: "sponsor"
-      });
-    }
-  }
-  function bleh_sponsor_page() {
-    document.body.style.removeProperty("--hue-album");
-    document.body.style.removeProperty("--sat-album");
-    document.body.style.removeProperty("--lit-album");
-    let adaptive_skin_container = document.querySelector(".adaptive-skin-container:not([data-bleh])");
-    if (adaptive_skin_container == null)
-      return;
-    adaptive_skin_container.setAttribute("data-bleh", "true");
-    adaptive_skin_container.innerHTML = "";
-    log("internal bleh sponsor", "page");
-    page.type = "bleh_sponsor";
-    page.subpage = "";
-    sponsor();
-  }
-
   // src/components/profile_header.js
   function redesign_profile_header(is_own_profile, is_following) {
     let base_header = document.body.querySelector(".header-info-secondary");
@@ -11873,24 +11907,8 @@
     }
     let badges = load_badges(page.name);
     if (badges) {
-      badges.forEach((this_badge) => {
-        let badge = document.createElement("span");
-        badge.classList.add("label", `user-status--bleh-${this_badge.type}`, `user-status--bleh-user-${page.name}`);
-        badge.textContent = this_badge.name;
-        profile_name_obj.appendChild(badge);
-        if (ff("badges")) {
-          badge.classList.add("no-hover");
-          tippy(badge, {
-            theme: "badge",
-            placement: "bottom",
-            content: html.node`
-                        <div class="badge-name">${this_badge.name}</div>
-                        <div class="badge-reason">${this_badge.reason}</div>
-                    `
-          });
-        }
-        if (this_badge.type == "sponsor")
-          badge.setAttribute("onclick", "_sponsor()");
+      badges.forEach((badge) => {
+        profile_name_obj.appendChild(create_badge(badge));
       });
     }
     let badge_elements = profile_name_obj.querySelectorAll(".label");
@@ -14102,6 +14120,13 @@
             </div>
         `);
     } else if (page_id == "profiles") {
+      if (auth.pro === null) {
+        setTimeout(() => {
+          render_setting_page("profiles");
+        }, 10);
+        page_loading();
+        return;
+      }
       register_skip_to([
         {
           id: "profile_shortcut",
@@ -14141,19 +14166,28 @@
           title: auth.name,
           body: html.node`
                                         <div class="generic-table-list badge-list">
-                                            ${badges ? badges.map((badge) => html.node`
-                                                <div class="generic-table-list-entry badge-list-entry">
-                                                    <div class="icon-container colourful user-status--bleh-${badge.type} user-status--bleh-user-${auth.name}">
-                                                        <div class="bleh-icon" style="--icon: var(--mask)" />
+                                            ${badges ? badges.map((badge) => {
+            let style;
+            let classname = "";
+            if (badge.icon && badge.hue && badge.sat && badge.lit) {
+              style = `--mask: url(${badge.icon}); --hue: ${badge.hue}; --sat: ${badge.sat}; --lit: ${badge.lit}`;
+            } else {
+              classname = `user-status--bleh-${badge.type} user-status--bleh-user-${auth.name}`;
+            }
+            return html.node`
+                                                    <div class="generic-table-list-entry badge-list-entry">
+                                                        <div class="icon-container colourful ${classname}" style=${style}>
+                                                            <div class="bleh-icon" style="--icon: var(--mask)" />
+                                                        </div>
+                                                        <div class="name colourful ${classname}" style=${style}>
+                                                            ${badge.name}
+                                                        </div>
+                                                        <div class="text">
+                                                            ${badge.reason}
+                                                        </div>
                                                     </div>
-                                                    <div class="name colourful user-status--bleh-${badge.type} user-status--bleh-user-${auth.name}">
-                                                        ${badge.name}
-                                                    </div>
-                                                    <div class="text">
-                                                        ${badge.reason}
-                                                    </div>
-                                                </div>
-                                            `) : ""}
+                                                `;
+          }) : ""}
                                             ${auth.pro ? html.node`
                                                 <div class="generic-table-list-entry badge-list-entry">
                                                     <div class="icon-container colourful user-status-subscriber">
@@ -15182,8 +15216,9 @@
     });
   }
   function init_profile_notes() {
-    let profile_notes = JSON.parse(localStorage.getItem("bleh_profile_notes")) || {};
     let profile_notes_table = page.structure.main.querySelector(".profile-notes");
+    if (!profile_notes_table) return;
+    let profile_notes = JSON.parse(localStorage.getItem("bleh_profile_notes")) || {};
     if (Object.keys(profile_notes).length == 0)
       return;
     profile_notes_table.classList = "generic-table-list user-vertical-list take-space profile-notes";
@@ -15420,6 +15455,7 @@
   };
   function activity_preview() {
     let preview = page.structure.main.querySelector(".activity-preview");
+    if (!preview) return;
     let random_types = [
       "love",
       "love",
@@ -16742,22 +16778,7 @@
                                 <div class="name">${auth.name}</div>
                                 ${badges || auth.pro ? html.node`
                                     <div class="badges">
-                                        ${badges ? badges.map((badge) => () => {
-            let el = html.node`
-                                                <span class="label user-status--bleh-${badge.type} user-status--bleh-user-${auth.name} no-hover">
-                                                    ${badge.name}
-                                                </span>
-                                            `;
-            tippy(el, {
-              theme: "badge",
-              placement: "bottom",
-              content: html.node`
-                                                    <div class="badge-name">${badge.name}</div>
-                                                    <div class="badge-reason">${badge.reason}</div>
-                                                `
-            });
-            return el;
-          }) : ""}
+                                        ${badges ? badges.map((badge) => create_badge(badge)) : ""}
                                         ${auth.pro ? () => {
             let el = html.node`
                                                 <span class="label user-status-subscriber no-hover">

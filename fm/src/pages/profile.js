@@ -12,7 +12,7 @@ import {sponsor_list} from "../build/sponsor"
 import {clean_number, lazy, sanitise} from "../build/tools"
 import {lang, tl, trans} from "../build/trans"
 import {prep_chart_colours} from '../chart'
-import {load_badges} from "../components/badge"
+import {create_badge, load_badges} from "../components/badge"
 import {dialog} from "../components/dialog"
 import {correct_artist, correct_item_by_artist, name_includes} from "../components/lotus"
 import {markdown} from "../components/markdown"
@@ -748,27 +748,8 @@ export function bleh_profiles() {
     let badges = load_badges(page.name);
 
     if (badges) {
-        badges.forEach((this_badge) => {
-            let badge = document.createElement('span');
-            badge.classList.add('label', `user-status--bleh-${this_badge.type}`, `user-status--bleh-user-${page.name}`);
-            badge.textContent = this_badge.name;
-            profile_name_obj.appendChild(badge);
-
-            if (ff('badges')) {
-                badge.classList.add('no-hover');
-
-                tippy(badge, {
-                    theme: 'badge',
-                    placement: 'bottom',
-                    content: html.node`
-                        <div class="badge-name">${this_badge.name}</div>
-                        <div class="badge-reason">${this_badge.reason}</div>
-                    `,
-                });
-            }
-
-            if (this_badge.type == 'sponsor')
-                badge.setAttribute('onclick', '_sponsor()');
+        badges.forEach((badge) => {
+            profile_name_obj.appendChild(create_badge(badge));
         });
     }
 
