@@ -16753,6 +16753,10 @@
             & > .check {
                 height: 32px !important;
             }
+
+            & > .heading {
+                min-width: 200px;
+            }
         }
     }
 
