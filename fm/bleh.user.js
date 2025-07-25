@@ -3342,6 +3342,7 @@
         badges = sponsor_list.badges[user];
     }
     badges.forEach((badge) => {
+      badge.user = user;
       if (!badge.name) {
         if (trans.badges[badge.type]) {
           badge.name = tl(trans.badges[badge.type].name);
@@ -3371,8 +3372,9 @@
     hue: 0,
     sat: 0,
     lit: 0,
-    name: ""
-  }, name2 = page.name) {
+    name: "",
+    user: ""
+  }) {
     let elem = html.node`
         <span class="label no-hover">
             ${badge.name}
@@ -3384,7 +3386,7 @@
       elem.style.setProperty("--sat-over", badge.sat);
       elem.style.setProperty("--lit-over", badge.lit);
     } else {
-      elem.classList.add(`user-status--bleh-${badge.type}`, `user-status--bleh-user-${name2}`);
+      elem.classList.add(`user-status--bleh-${badge.type}`, `user-status--bleh-user-${badge.user}`);
     }
     tippy(elem, {
       theme: "badge",

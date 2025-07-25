@@ -8,7 +8,6 @@ import {log} from "../build/log";
 import {sponsor_list} from "../build/sponsor";
 import {tl, trans} from "../build/trans";
 import {html} from "lighterhtml";
-import {page} from "../build/page.js";
 import {sponsor} from "../sponsor.js";
 
 export function load_badges(user, solo = false) {
@@ -33,6 +32,8 @@ export function load_badges(user, solo = false) {
 
     // now we run thru to add missing metadata
     badges.forEach((badge) => {
+        badge.user = user;
+
         if (!badge.name) {
             if (trans.badges[badge.type]) {
                 badge.name = tl(trans.badges[badge.type].name);
@@ -68,8 +69,9 @@ export function create_badge(badge={
     hue: 0,
     sat: 0,
     lit: 0,
-    name: ''
-}, name=page.name) {
+    name: '',
+    user: ''
+}) {
     let elem = html.node`
         <span class="label no-hover">
             ${badge.name}
@@ -83,7 +85,7 @@ export function create_badge(badge={
         elem.style.setProperty('--sat-over', badge.sat);
         elem.style.setProperty('--lit-over', badge.lit);
     } else {
-        elem.classList.add(`user-status--bleh-${badge.type}`, `user-status--bleh-user-${name}`);
+        elem.classList.add(`user-status--bleh-${badge.type}`, `user-status--bleh-user-${badge.user}`);
     }
 
     tippy(elem, {
