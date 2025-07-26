@@ -710,36 +710,20 @@ export function update_page() {
 }
 
 export function register_background(url, origin = null) {
-    let flag = ff('katsune');
+    let background = page.structure.container.querySelector(':scope > .bleh-background');
 
-    let background;
-    if (flag) {
-        background = page.structure.container.querySelector('.bleh-background');
+    if (!background) {
+        background = html.node`
+            <div class="bleh-background katsune-bleh-background" />
+        `;
 
-        if (!background) {
-            background = document.createElement('div');
-            background.classList.add('bleh-background', 'katsune-bleh-background');
-
-            let border = document.createElement('div');
-            border.classList.add('katsune-bleh-background-border');
-            background.appendChild(border);
-
-            page.structure.container.insertBefore(background, page.structure.container.firstElementChild);
-        }
-    } else {
-        background = document.body.querySelector('.bleh-background');
-
-        if (!background) {
-            background = document.createElement('div');
-            background.classList.add('bleh-background');
-
-            document.body.appendChild(background);
-        }
+        page.structure.container.insertBefore(background, page.structure.container.firstElementChild);
     }
 
     background.setAttribute('data-page-type', page.type);
     background.setAttribute('data-page-subpage', page.subpage);
     background.setAttribute('data-background-origin', origin);
+    background.setAttribute('data-background-coloured', settings.hue_from_album);
 
     if (url)
         background.style.setProperty('background-image', `url(${url})`);

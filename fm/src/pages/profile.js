@@ -59,6 +59,7 @@ export function bleh_profiles() {
 
     page.supports_shoutbox = page.structure.nav.querySelector('.secondary-nav-item--shoutbox');
 
+
     let new_account = false;
 
     if (ff('refreshed_nav')) {
@@ -99,6 +100,8 @@ export function bleh_profiles() {
             </section>
         `;
 
+        const avatar_img = avatar.querySelector(':scope > img');
+
         if (page.name == auth.name && !settings.profile_header_own) {
             register_background(null, 'hidden');
         } else if (page.name != auth.name && !settings.profile_header_others) {
@@ -106,7 +109,7 @@ export function bleh_profiles() {
         } else {
             if (settings.profile_avi_background) {
                 if (avatar)
-                    register_background(avatar.querySelector('img').getAttribute('src').replace('/avatar170s/', '/ar0/'), 'avatar');
+                    register_background(avatar_img.querySelector('img').getAttribute('src').replace('/avatar170s/', '/ar0/'), 'avatar');
                 else
                     register_background(null, 'none');
             } else {
@@ -117,6 +120,9 @@ export function bleh_profiles() {
                     register_background(null, 'none');
             }
         }
+
+        if (page.name == settings.profile_shortcut)
+            localStorage.setItem('bleh_profile_shortcut_avi', avatar_img.getAttribute('src'));
 
         page.structure.container.insertBefore(redesigned_profile_header, page.structure.container.firstElementChild);
         profile_header.classList.add('legacy-header');

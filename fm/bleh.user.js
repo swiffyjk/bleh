@@ -11401,6 +11401,7 @@
                 </div>
             </section>
         `;
+      const avatar_img = avatar3.querySelector(":scope > img");
       if (page.name == auth.name && !settings.profile_header_own) {
         register_background(null, "hidden");
       } else if (page.name != auth.name && !settings.profile_header_others) {
@@ -11408,7 +11409,7 @@
       } else {
         if (settings.profile_avi_background) {
           if (avatar3)
-            register_background(avatar3.querySelector("img").getAttribute("src").replace("/avatar170s/", "/ar0/"), "avatar");
+            register_background(avatar_img.querySelector("img").getAttribute("src").replace("/avatar170s/", "/ar0/"), "avatar");
           else
             register_background(null, "none");
         } else {
@@ -11419,6 +11420,8 @@
             register_background(null, "none");
         }
       }
+      if (page.name == settings.profile_shortcut)
+        localStorage.setItem("bleh_profile_shortcut_avi", avatar_img.getAttribute("src"));
       page.structure.container.insertBefore(redesigned_profile_header, page.structure.container.firstElementChild);
       profile_header.classList.add("legacy-header");
       let header_avatar = redesigned_profile_header.querySelector(".avatar-side");
@@ -18967,6 +18970,13 @@
           });
           shout_timestamp.removeAttribute("title");
         }
+        let actions = shout.querySelectorAll(".shout-actions .shout-action");
+        actions.forEach((action) => {
+          let buttons = action.querySelectorAll("button, a");
+          buttons.forEach((button) => {
+            button.classList.add("shout-action-button", "see-more");
+          });
+        });
         let send_button = shout.querySelector(".form-group--submit");
         shout_send(send_button);
       } catch (e) {
@@ -20929,29 +20939,17 @@
     page.structure.container.setAttribute("data-short", ff("short"));
   }
   function register_background(url, origin = null) {
-    let flag = ff("katsune");
-    let background;
-    if (flag) {
-      background = page.structure.container.querySelector(".bleh-background");
-      if (!background) {
-        background = document.createElement("div");
-        background.classList.add("bleh-background", "katsune-bleh-background");
-        let border = document.createElement("div");
-        border.classList.add("katsune-bleh-background-border");
-        background.appendChild(border);
-        page.structure.container.insertBefore(background, page.structure.container.firstElementChild);
-      }
-    } else {
-      background = document.body.querySelector(".bleh-background");
-      if (!background) {
-        background = document.createElement("div");
-        background.classList.add("bleh-background");
-        document.body.appendChild(background);
-      }
+    let background = page.structure.container.querySelector(":scope > .bleh-background");
+    if (!background) {
+      background = html.node`
+            <div class="bleh-background katsune-bleh-background" />
+        `;
+      page.structure.container.insertBefore(background, page.structure.container.firstElementChild);
     }
     background.setAttribute("data-page-type", page.type);
     background.setAttribute("data-page-subpage", page.subpage);
     background.setAttribute("data-background-origin", origin);
+    background.setAttribute("data-background-coloured", settings.hue_from_album);
     if (url)
       background.style.setProperty("background-image", `url(${url})`);
     else
