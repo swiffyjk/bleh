@@ -122,8 +122,7 @@ export function render_activity_list() {
 }
 
 export function subscribe_to_events() {
-    if (!settings.activities)
-        return;
+    if (!settings.activities) return;
 
     let love_track = document.body.querySelectorAll(`form[action$="${auth.name}/loved"]:not([data-bleh-subscribed])`);
     love_track.forEach((form) => {

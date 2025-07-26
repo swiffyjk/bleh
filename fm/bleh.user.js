@@ -3945,12 +3945,11 @@
   // src/components/colourful_counts.js
   function patch_artist_ranks_in_list_view(track) {
     let count_bar = track.querySelector(".chartlist-count-bar");
-    if (count_bar == void 0)
-      return;
+    if (!count_bar) return;
     let count_bar_link = count_bar.querySelector(".chartlist-count-bar-link");
     if (count_bar_link.getAttribute("href").includes("?from=") || count_bar_link.getAttribute("href").includes("?date_preset=") && !count_bar_link.getAttribute("href").endsWith("?date_preset=ALL") && !count_bar_link.getAttribute("href").endsWith("?date_preset=null"))
       return;
-    let count = clean_number(count_bar.querySelector(".chartlist-count-bar-value").textContent.trim().replace(" scrobbles", ""));
+    let count = count_bar.querySelector(".chartlist-count-bar-slug").getAttribute("data-stat-value");
     if (!count_bar.hasAttribute("data-kate-processed")) {
       count_bar.setAttribute("data-kate-processed", "true");
       let parsed_scrobble_as_rank = parse_scrobbles_as_rank(count);
@@ -16262,8 +16261,7 @@
     return activity_list;
   }
   function subscribe_to_events() {
-    if (!settings.activities)
-      return;
+    if (!settings.activities) return;
     let love_track = document.body.querySelectorAll(`form[action$="${auth.name}/loved"]:not([data-bleh-subscribed])`);
     love_track.forEach((form) => {
       form.setAttribute("data-bleh-subscribed", "true");

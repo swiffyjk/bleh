@@ -4692,7 +4692,13 @@
 
     /*     SCROBBLE PROGRESS     */
     .tab-container {
+        justify-content: center;
         height: fit-content;
+
+        & > li {
+            font: inherit;
+            flex: unset;
+        }
     }
     .tab-container .selector {
         display: none;
@@ -5723,7 +5729,7 @@
             margin-top: -6px;
             background: hsl(var(--h3), 50%);
             border-radius: 50px;
-            box-shadow: 0 0 30px 2px hsl(var(--h3));
+            box-shadow: 0 0 30px 1px hsl(var(--h4));
             transition-property: opacity;
             transition-duration: var(--trans);
             transition-timing-function: var(--trans-function);
