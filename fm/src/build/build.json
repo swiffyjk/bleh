@@ -244,6 +244,11 @@
             "default": true,
             "name": "Minis replacement for Labs",
             "date": "2025-07-17"
+        },
+        "mualani": {
+            "default": false,
+            "name": "Experimental redesigned tab toolbar",
+            "date": "2025-07-26"
         }
     }
 }

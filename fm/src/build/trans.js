@@ -433,6 +433,9 @@ export const trans = {
         de: 'Aussehen',
         pt: 'Aparência'
     },
+    visual: {
+        en: 'Visual'
+    },
     theme: {
         en: 'Theme',
         pt: 'Tema'

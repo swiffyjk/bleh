@@ -55,7 +55,7 @@ export function bleh_settings() {
 
     const tabs = {
         themes: {
-            name: tl(trans.appearance)
+            name: tl(trans.visual)
         },
         music: {
             name: tl(trans.music)
@@ -95,21 +95,23 @@ export function bleh_settings() {
 
     // go wild
     let nav = html.node`
-        <nav class="navlist secondary-nav navlist--more redesigned-navigation bleh-settings-navigation">
-            <ul class="navlist-items">
-                ${Object.entries(tabs).map(([id, tab]) => {
-                    if (tab.hide_if) return;
-                    
-                    return html.node`
-                        <li class="navlist-item secondary-nav-item">
-                            <a class="secondary-nav-item-link bleh--nav" data-bleh-page=${id} data-type=${tab.icon} data-password=${tab.password} onclick=${() => change_settings_page(id)}>
-                                ${tab.label ? tab.label : tab.name}
-                            </a>
-                        </li>
-                    `;
-                })}
-            </ul>
-        </nav>
+        <div class="toolbar">
+            <nav class="navlist secondary-nav navlist--more redesigned-navigation bleh-settings-navigation">
+                <ul class="navlist-items">
+                    ${Object.entries(tabs).map(([id, tab]) => {
+                        if (tab.hide_if) return;
+                        
+                        return html.node`
+                            <li class="navlist-item secondary-nav-item">
+                                <a class="secondary-nav-item-link bleh--nav" data-bleh-page=${id} data-type=${tab.icon} data-password=${tab.password} onclick=${() => change_settings_page(id)}>
+                                    ${tab.label ? tab.label : tab.name}
+                                </a>
+                            </li>
+                        `;
+                    })}
+                </ul>
+            </nav>
+        </div>
     `;
 
 

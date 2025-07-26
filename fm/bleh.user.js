@@ -13610,7 +13610,7 @@
     const update_required = localStorage.getItem("bleh_update_required") || "false";
     const tabs = {
       themes: {
-        name: tl(trans.appearance)
+        name: tl(trans.visual)
       },
       music: {
         name: tl(trans.music)
@@ -13647,20 +13647,22 @@
       }
     };
     let nav = html.node`
-        <nav class="navlist secondary-nav navlist--more redesigned-navigation bleh-settings-navigation">
-            <ul class="navlist-items">
-                ${Object.entries(tabs).map(([id, tab2]) => {
+        <div class="toolbar">
+            <nav class="navlist secondary-nav navlist--more redesigned-navigation bleh-settings-navigation">
+                <ul class="navlist-items">
+                    ${Object.entries(tabs).map(([id, tab2]) => {
       if (tab2.hide_if) return;
       return html.node`
-                        <li class="navlist-item secondary-nav-item">
-                            <a class="secondary-nav-item-link bleh--nav" data-bleh-page=${id} data-type=${tab2.icon} data-password=${tab2.password} onclick=${() => change_settings_page(id)}>
-                                ${tab2.label ? tab2.label : tab2.name}
-                            </a>
-                        </li>
-                    `;
+                            <li class="navlist-item secondary-nav-item">
+                                <a class="secondary-nav-item-link bleh--nav" data-bleh-page=${id} data-type=${tab2.icon} data-password=${tab2.password} onclick=${() => change_settings_page(id)}>
+                                    ${tab2.label ? tab2.label : tab2.name}
+                                </a>
+                            </li>
+                        `;
     })}
-            </ul>
-        </nav>
+                </ul>
+            </nav>
+        </div>
     `;
     render(page.structure.side, html`
         <div class="cta first priority sponsor colourful">
@@ -21400,6 +21402,9 @@
       de: "Aussehen",
       pt: "Apar\xEAncia"
     },
+    visual: {
+      en: "Visual"
+    },
     theme: {
       en: "Theme",
       pt: "Tema"
@@ -28466,6 +28471,11 @@
         default: true,
         name: "Minis replacement for Labs",
         date: "2025-07-17"
+      },
+      mualani: {
+        default: false,
+        name: "Experimental redesigned tab toolbar",
+        date: "2025-07-26"
       }
     }
   };
