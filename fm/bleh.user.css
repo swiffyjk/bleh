@@ -317,7 +317,7 @@
             --card-border-base: hsl(0, 0%, 87%) !important;
             --card-border-base-highlight: hsl(0, 0%, 89%);
 
-            --normal-shadow: inset 0 1px 0 0 hsl(var(--b2), 45%), inset 0 -30px 20px -20px hsl(var(--b4), 15%);
+            --normal-shadow: inset 0 1px 0 0 hsl(var(--b2), 60%), inset 0 -30px 20px -20px hsl(var(--b4), 15%);
             --input-shadow: inset 0 -1px 0 0 var(--card-border-base), inset 0 1px 3px hsl(var(--b7), 0.1);
             --focused-input-shadow: inset 0 -1px 0 0 hsl(var(--h3), 80%), inset 0 -1px 0 0 var(--card-border-base), inset 0 1px 3px hsl(var(--b7), 0.1);
             --group-shadow: inset 0 1px 0 0 hsl(var(--b4), 0.9), inset 0 0 0 1px hsl(var(--b4), 0.4);
@@ -9314,9 +9314,9 @@
     .dropdown-menu-clickable-item[aria-checked="true"],
     .dropdown-menu-clickable-item--selected {
         --mask: var(--icon-16-check) !important;
-        --mask-size: 12px !important;
+        --mask-size: 14px !important;
         /*--btn-left: calc(var(--button-sides) + 12px + 4px) !important;*/
-        --margin-top: -6px !important;
+        --margin-top: calc(-1 * (var(--mask-size) / 2)) !important;
     }
 
     .dropdown-menu-clickable-item {
@@ -11817,13 +11817,13 @@
                 scrollbar-width: thin;
 
                 .dropdown-menu-clickable-item:not(.v2) {
-                    --btn-left: calc(var(--button-sides) + 12px + 4px) !important;
+                    --btn-left: calc(var(--button-sides) + var(--mask-size, 14px) + 4px) !important;
                 }
 
                 .active {
                     --mask: var(--icon-16-check);
-                    --mask-size: 12px;
-                    --margin-top: -6px;
+                    --mask-size: 14px;
+                    --margin-top: calc(-1 * (var(--mask-size, 14px) / 2));
                 }
             }
 
@@ -17038,8 +17038,8 @@
                     justify-content: center;
                     align-items: center;
 
-                    --icon: var(--icon-16-check-thick);
-                    --icon-size: 12px;
+                    --icon: var(--icon-16-check);
+                    --icon-size: 16px;
 
                     .bleh-icon {
                         transform: scale(0);
