@@ -7,7 +7,7 @@
 import {handle_error_500} from "../page";
 import {log} from "./log";
 import {auth, auth_link, setRoot} from "./page";
-import {clamp_sat, rgb_to_hsl} from "./tools";
+import {clamp_lit, clamp_sat, rgb_to_hsl} from "./tools";
 
 // loads your selected language in last.fm
 export let lang = 'en';
@@ -6231,15 +6231,27 @@ export function tl(key) {
     return key.en;
 }
 
-export function lookup_lang() {
-    const troot = document.querySelector('.masthead-logo a');
+function get_lang() {
+    const path = window.location.pathname;
+    const segments = path.split('/');
+    const lang = segments[1];
 
-    if (!troot) {
+    if (/^[a-z]{2}$/.test(lang)) {
+        return `/${lang}/`;
+    }
+
+    return '/';
+}
+
+export function lookup_lang() {
+    const logo = document.querySelector('.masthead-logo a');
+
+    if (!logo) {
         handle_error_500();
         return;
     }
 
-    setRoot(troot.getAttribute('href'));
+    setRoot(get_lang());
 
     let previous_avi = auth.avatar;
     if (auth_link.state) {
@@ -6258,7 +6270,7 @@ export function lookup_lang() {
 
                     auth.sets.hue = hsl.h;
                     auth.sets.sat = clamp_sat((hsl.s / 100) * 3);
-                    auth.sets.lit = (hsl.l / 100) + 0.35;
+                    auth.sets.lit = clamp_lit(auth.sets.sat, (hsl.l / 100) + 0.35);
                 });
             } catch(e) {}
         }

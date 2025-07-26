@@ -90,20 +90,24 @@ function comp_to_hex(comp) {
 /**
  * Clamps maximum saturation to 1.5
  * @param {number} sat
- * @returns {string}
+ * @returns {number}
  */
 export function clamp_sat(sat) {
     if (sat > 1.5)
-        return 1.5.toString();
+        return 1.5;
 
-    return sat.toFixed(2);
+    return round_two(sat);
 }
 
 export function clamp_lit(sat, lit) {
     if (sat >= 1.3 && lit < 0.8)
         return 0.8;
 
-    return lit;
+    return round_two(lit);
+}
+
+function round_two(value) {
+    return Math.round(value * 100) / 100;
 }
 
 /**

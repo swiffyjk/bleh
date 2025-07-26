@@ -16844,7 +16844,6 @@
             flex-direction: column;
             gap: 2px;
             flex: 1;
-            min-width: 300px;
 
             & > h5 {
                 color: hsl(var(--c2));
@@ -23752,9 +23751,9 @@
 
     .music-links {
         display: flex;
-        gap: var(--card-gap);
+        gap: var(--item-list-gap) var(--card-gap);
         flex-wrap: wrap;
-        max-width: 700px;
+        max-width: 650px;
 
         li {
             display: flex;
@@ -23775,6 +23774,8 @@
             --radius: 0;
             flex: unset;
             --left: 0;
+
+            --icon-size: 16px;
 
             &:not(.resource-external-link--homepage) {
                 --sat-user: 1;

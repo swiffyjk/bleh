@@ -2484,13 +2484,16 @@
   }
   function clamp_sat(sat) {
     if (sat > 1.5)
-      return 1.5.toString();
-    return sat.toFixed(2);
+      return 1.5;
+    return round_two(sat);
   }
   function clamp_lit(sat, lit) {
     if (sat >= 1.3 && lit < 0.8)
       return 0.8;
-    return lit;
+    return round_two(lit);
+  }
+  function round_two(value) {
+    return Math.round(value * 100) / 100;
   }
   function clean_number(string) {
     return parseInt(
@@ -9013,26 +9016,6 @@
     }
     let metadata = col_main.querySelector(".metadata-column");
     if (metadata) {
-      if (settings.simulate_scroll) {
-        metadata.addEventListener("wheel", (e) => {
-          e.preventDefault();
-          if (e.deltaY > 0) {
-            metadata.scrollBy({
-              top: 0,
-              left: 200,
-              behavior: "smooth"
-            });
-          } else {
-            metadata.scrollBy({
-              top: 0,
-              left: -200,
-              behavior: "smooth"
-            });
-          }
-        });
-      } else {
-        metadata.classList.add("no-scroll-simulation");
-      }
       let groups = [];
       let headers = metadata.querySelectorAll(".catalogue-metadata-heading:not(.visible-xs)");
       headers.forEach((item, index) => {
@@ -9044,20 +9027,43 @@
       values.forEach((item, index) => {
         groups[index].value = item;
       });
-      metadata.innerHTML = "";
-      groups.forEach((group) => {
-        let group_wrap = document.createElement("div");
-        group_wrap.classList.add("metadata-group");
-        group_wrap.appendChild(group.header);
-        group_wrap.appendChild(group.value);
-        metadata.appendChild(group_wrap);
-      });
+      render(metadata, html`
+            ${groups.map((group) => html.node`
+                <div class="metadata-group">
+                    ${group.header}
+                    ${group.value}
+                </div>
+            `)}
+        `);
+      if (groups.length > 2) {
+        if (settings.simulate_scroll) {
+          metadata.addEventListener("wheel", (e) => {
+            e.preventDefault();
+            if (e.deltaY > 0) {
+              metadata.scrollBy({
+                top: 0,
+                left: 200,
+                behavior: "smooth"
+              });
+            } else {
+              metadata.scrollBy({
+                top: 0,
+                left: -200,
+                behavior: "smooth"
+              });
+            }
+          });
+        } else {
+          metadata.classList.add("no-scroll-simulation");
+        }
+      }
     }
     if (page_is_blocked) {
-      let alert = document.createElement("section");
-      alert.classList.add("cta", "blocked-cta");
-      alert.innerHTML = `<strong>${tl(trans.blocked_page)}</strong>`;
-      page.structure.main.insertBefore(alert, page.structure.main.firstElementChild);
+      page.structure.main.insertBefore(html.node`
+            <section class="cta blocked-cta">
+                <strong>${tl(trans.blocked_page)}</strong>
+            </section>
+        `, page.structure.main.firstElementChild);
       return;
     }
     let play_on;
@@ -27179,13 +27185,22 @@
     log(`no translation found for ${JSON.stringify(key)}`, "trans");
     return key.en;
   }
+  function get_lang() {
+    const path = window.location.pathname;
+    const segments = path.split("/");
+    const lang2 = segments[1];
+    if (/^[a-z]{2}$/.test(lang2)) {
+      return `/${lang2}/`;
+    }
+    return "/";
+  }
   function lookup_lang() {
-    const troot = document.querySelector(".masthead-logo a");
-    if (!troot) {
+    const logo = document.querySelector(".masthead-logo a");
+    if (!logo) {
       handle_error_500();
       return;
     }
-    setRoot(troot.getAttribute("href"));
+    setRoot(get_lang());
     let previous_avi = auth.avatar;
     if (auth_link.state) {
       auth.avatar = auth_link.state.querySelector("img").getAttribute("src");
@@ -27199,7 +27214,7 @@
             let hsl = rgb_to_hsl(colour[0], colour[1], colour[2]);
             auth.sets.hue = hsl.h;
             auth.sets.sat = clamp_sat(hsl.s / 100 * 3);
-            auth.sets.lit = hsl.l / 100 + 0.35;
+            auth.sets.lit = clamp_lit(auth.sets.sat, hsl.l / 100 + 0.35);
           });
         } catch (e) {
         }
