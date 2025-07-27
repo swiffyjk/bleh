@@ -3518,7 +3518,7 @@
         gap: var(--button-list-gap);
         flex: 1;
 
-        .fill {
+        & > .fill {
             flex: 1;
         }
     }

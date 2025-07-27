@@ -10008,13 +10008,15 @@
           navlist = page.structure.main.querySelector(".navlist");
           if (navlist) {
             navlist.classList.add("redesigned-navigation");
-            if (ff("short")) {
-              page.structure.row.insertBefore(navlist, page.structure.content);
+            if (ff("mualani")) {
+              let toolbar = html.node`
+                            <div class="toolbar">
+                                ${navlist}
+                            </div>
+                        `;
+              page.structure.row.insertBefore(toolbar, page.structure.content);
             } else {
-              if (page.structure.content_top)
-                page.structure.content_top.after(navlist);
-              else
-                page.structure.container.insertBefore(navlist, page.structure.row);
+              page.structure.row.insertBefore(navlist, page.structure.content);
             }
           }
           let btn_add = page.structure.main.querySelector(":scope > .btn-add");
@@ -10064,11 +10066,19 @@
     if (!ff("short")) return;
     if (page.structure.nav) page.structure.nav.setAttribute("data-assigned", "true");
     let navlists = page.structure.container.querySelectorAll(":scope > .navlist");
-    console.info(page.structure.container.innerHTML);
     navlists.forEach((nav, index) => {
       console.info(index);
       if (index < 1) return;
-      page.structure.row.insertBefore(nav, page.structure.content);
+      if (ff("mualani")) {
+        let toolbar = html.node`
+                <div class="toolbar">
+                    ${nav}
+                </div>
+            `;
+        page.structure.row.insertBefore(toolbar, page.structure.content);
+      } else {
+        page.structure.row.insertBefore(nav, page.structure.content);
+      }
     });
   }
 
@@ -13630,6 +13640,9 @@
       accessibility: {
         name: tl(trans.accessibility)
       },
+      fill: {
+        type: "fill"
+      },
       update: {
         name: tl(trans.updates),
         icon: "update",
@@ -13652,6 +13665,11 @@
                 <ul class="navlist-items">
                     ${Object.entries(tabs).map(([id, tab2]) => {
       if (tab2.hide_if) return;
+      if (tab2.type && tab2.type == "fill") {
+        return html.node`
+                                <div class="fill" />
+                            `;
+      }
       return html.node`
                             <li class="navlist-item secondary-nav-item">
                                 <a class="secondary-nav-item-link bleh--nav" data-bleh-page=${id} data-type=${tab2.icon} data-password=${tab2.password} onclick=${() => change_settings_page(id)}>

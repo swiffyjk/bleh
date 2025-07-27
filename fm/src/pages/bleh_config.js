@@ -75,6 +75,9 @@ export function bleh_settings() {
         accessibility: {
             name: tl(trans.accessibility)
         },
+        fill: {
+            type: 'fill'
+        },
         update: {
             name: tl(trans.updates),
             icon: 'update',
@@ -100,6 +103,12 @@ export function bleh_settings() {
                 <ul class="navlist-items">
                     ${Object.entries(tabs).map(([id, tab]) => {
                         if (tab.hide_if) return;
+                        
+                        if (tab.type && tab.type == 'fill') {
+                            return html.node`
+                                <div class="fill" />
+                            `;
+                        }
                         
                         return html.node`
                             <li class="navlist-item secondary-nav-item">
