@@ -55,7 +55,9 @@ export function bleh_user_library() {
 
 
     // tabs
-    let tabs = page.structure.container.querySelector('.library-controls .navlist-items');
+    let search = page.structure.content_top.querySelector('.library-search');
+    let nav = page.structure.content_top.querySelector('.library-controls nav');
+    let tabs = nav.querySelector('.navlist-items');
     if (page.name == auth.name) {
         let velocity_tab = document.createElement('li');
         velocity_tab.classList.add('navlist-item', 'secondary-nav-item', 'secondary-nav-item--velocity');
@@ -73,6 +75,25 @@ export function bleh_user_library() {
                 </a>
             </li>
         `);
+    }
+
+    let scrobbles = tabs.querySelector('.secondary-nav-item--overview');
+    scrobbles.classList.remove('secondary-nav-item--overview');
+    scrobbles.classList.add('secondary-nav-item--scrobbles');
+
+    if (ff('mualani')) {
+        let toolbar = html.node`
+            <div class="toolbar">
+                ${search}
+                ${nav}
+            </div>
+        `;
+
+        nav.classList.add('redesigned-navigation');
+
+        page.structure.content_top.style.display = 'none';
+
+        page.structure.content_top.after(toolbar);
     }
 
 

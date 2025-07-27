@@ -72,12 +72,12 @@ export function bleh_home() {
             <ul class="navlist-items">
                 <li class="navlist-item secondary-nav-item secondary-nav-item--home">
                     <a href="${root}music" class="secondary-nav-item-link ${(page.subpage == 'music' || page.type == 'events') ? 'secondary-nav-item-link--active' : ''}">
-                        ${tl(trans.home)}<div class="new-badge">${tl(trans.beta)}</div>
+                        ${tl(trans.home)}
                     </a>
                 </li>
                 <li class="navlist-item secondary-nav-item secondary-nav-item--recommendations">
                     <a href="${root}music/+recommended" class="secondary-nav-item-link ${(page.type == 'recommended') ? 'secondary-nav-item-link--active' : ''}">
-                        ${tl(trans.recommendations)}<div class="new-badge">${tl(trans.beta)}</div>
+                        ${tl(trans.recommendations)}
                     </a>
                 </li>
                 <li class="navlist-item secondary-nav-item secondary-nav-item--releases">
@@ -157,6 +157,37 @@ export function bleh_home() {
 
 
     if (page.subpage == 'music') {
+        let toolbar = html.node`
+            <div class="toolbar">
+                <nav class="navlist secondary-nav navlist--more redesigned-navigation">
+                    <ul class="navlist-items">
+                        <li class="navlist-item secondary-nav-item">
+                            <a href="${root}user/${auth.name}" data-type="mention" class="secondary-nav-item-link">
+                                ${tl(trans.profile)}
+                            </a>
+                        </li>
+                        <li class="navlist-item secondary-nav-item">
+                            <a href="${root}user/${auth.name}/library" data-type="library" class="secondary-nav-item-link">
+                                ${tl(trans.library)}
+                            </a>
+                        </li>
+                        <li class="navlist-item secondary-nav-item">
+                            <a href="${root}user/${auth.name}/following" data-type="profile" class="secondary-nav-item-link">
+                                ${tl(trans.friends)}
+                            </a>
+                        </li>
+                        <li class="navlist-item secondary-nav-item">
+                            <a href="${root}user/${auth.name}/shoutbox" data-type="shouts" class="secondary-nav-item-link">
+                                ${tl(trans.shouts)}
+                            </a>
+                        </li>
+                    </ul>
+                </nav>
+            </div>
+        `;
+
+        page.structure.row.insertBefore(toolbar, page.structure.content);
+
         // top panel
         let beret = html.node`
             <section class="beret-music bleh--panel">

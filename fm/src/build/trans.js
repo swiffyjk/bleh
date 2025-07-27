@@ -650,9 +650,7 @@ export const trans = {
         pt: 'Avançado'
     },
     recommendations: {
-        en: 'Recommendations',
-        de: 'Empfelungen',
-        pt: 'Recomendações'
+        en: 'Suggested'
     },
     releases: {
         en: 'Releases',

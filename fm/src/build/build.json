@@ -246,7 +246,7 @@
             "date": "2025-07-17"
         },
         "mualani": {
-            "default": false,
+            "default": true,
             "name": "Experimental redesigned tab toolbar",
             "date": "2025-07-26"
         }

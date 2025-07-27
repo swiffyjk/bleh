@@ -498,9 +498,18 @@ export function bleh_profiles() {
             page.structure.content_top.classList.add('listening-report-navlist');
             page.structure.row.classList.add('listening-report');
 
+            let nav = page.structure.content_top.querySelector('.navlist');
+            nav.classList.add('redesigned-navigation');
+            page.structure.content_top.after(html.node`
+                <div class="toolbar">
+                    ${nav}
+                </div>
+            `);
+            page.structure.content_top.style.display = 'none';
+
             let report_box_container = document.body.querySelector('.report-box-container--overview');
             if (report_box_container) {
-                page.structure.content_top.after(report_box_container);
+                page.structure.row.appendChild(report_box_container);
             } else {
                 let dashboard = page.structure.container.querySelector('.user-dashboard');
                 if (!dashboard) return;
@@ -830,17 +839,17 @@ function patch_profile_following() {
 
 
     // create nav
-    let friends_nav = document.createElement('div');
-    friends_nav.classList.add('bleh--nav-wrap', 'bleh--friends-nav');
-    friends_nav.innerHTML = (`
-        <nav class="navlist secondary-nav redesigned-navigation">
-            <ul class="navlist-items bleh--navlist-items">
-                ${following_tab.outerHTML}
-                ${followers_tab.outerHTML}
-                ${neighbours_tab.outerHTML}
-            </ul>
-        </nav>
-    `);
+    let friends_nav = html.node`
+        <div class="toolbar">
+            <nav class="navlist secondary-nav redesigned-navigation">
+                <ul class="navlist-items">
+                    ${{html: following_tab.outerHTML}}
+                    ${{html: followers_tab.outerHTML}}
+                    ${{html: neighbours_tab.outerHTML}}
+                </ul>
+            </nav>
+        </div>
+    `;
 
     // we do this later to preserve the 'Following' text
     link.textContent = tl(trans.friends);

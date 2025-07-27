@@ -7115,7 +7115,9 @@
         page.structure.main.insertBefore(date_panel, page.structure.main.firstChild);
     }
     page.structure.glacier.date_panel = date_panel;
-    let tabs = page.structure.container.querySelector(".library-controls .navlist-items");
+    let search = page.structure.content_top.querySelector(".library-search");
+    let nav = page.structure.content_top.querySelector(".library-controls nav");
+    let tabs = nav.querySelector(".navlist-items");
     if (page.name == auth.name) {
       let velocity_tab = document.createElement("li");
       velocity_tab.classList.add("navlist-item", "secondary-nav-item", "secondary-nav-item--velocity");
@@ -7133,6 +7135,20 @@
                 </a>
             </li>
         `);
+    }
+    let scrobbles = tabs.querySelector(".secondary-nav-item--overview");
+    scrobbles.classList.remove("secondary-nav-item--overview");
+    scrobbles.classList.add("secondary-nav-item--scrobbles");
+    if (ff("mualani")) {
+      let toolbar = html.node`
+            <div class="toolbar">
+                ${search}
+                ${nav}
+            </div>
+        `;
+      nav.classList.add("redesigned-navigation");
+      page.structure.content_top.style.display = "none";
+      page.structure.content_top.after(toolbar);
     }
     if (!ff("glacier_library"))
       return;
@@ -11731,9 +11747,17 @@
         document.documentElement.setAttribute("data-bleh--theme", "oled");
         page.structure.content_top.classList.add("listening-report-navlist");
         page.structure.row.classList.add("listening-report");
+        let nav = page.structure.content_top.querySelector(".navlist");
+        nav.classList.add("redesigned-navigation");
+        page.structure.content_top.after(html.node`
+                <div class="toolbar">
+                    ${nav}
+                </div>
+            `);
+        page.structure.content_top.style.display = "none";
         let report_box_container = document.body.querySelector(".report-box-container--overview");
         if (report_box_container) {
-          page.structure.content_top.after(report_box_container);
+          page.structure.row.appendChild(report_box_container);
         } else {
           let dashboard = page.structure.container.querySelector(".user-dashboard");
           if (!dashboard) return;
@@ -11978,16 +12002,16 @@
     let neighbours_tab = navlist.querySelector(".secondary-nav-item--neighbours");
     navlist.removeChild(followers_tab);
     navlist.removeChild(neighbours_tab);
-    let friends_nav = document.createElement("div");
-    friends_nav.classList.add("bleh--nav-wrap", "bleh--friends-nav");
-    friends_nav.innerHTML = `
-        <nav class="navlist secondary-nav redesigned-navigation">
-            <ul class="navlist-items bleh--navlist-items">
-                ${following_tab.outerHTML}
-                ${followers_tab.outerHTML}
-                ${neighbours_tab.outerHTML}
-            </ul>
-        </nav>
+    let friends_nav = html.node`
+        <div class="toolbar">
+            <nav class="navlist secondary-nav redesigned-navigation">
+                <ul class="navlist-items">
+                    ${{ html: following_tab.outerHTML }}
+                    ${{ html: followers_tab.outerHTML }}
+                    ${{ html: neighbours_tab.outerHTML }}
+                </ul>
+            </nav>
+        </div>
     `;
     link.textContent = tl(trans.friends);
     page.structure.content_top.after(friends_nav);
@@ -18313,12 +18337,12 @@
             <ul class="navlist-items">
                 <li class="navlist-item secondary-nav-item secondary-nav-item--home">
                     <a href="${root}music" class="secondary-nav-item-link ${page.subpage == "music" || page.type == "events" ? "secondary-nav-item-link--active" : ""}">
-                        ${tl(trans.home)}<div class="new-badge">${tl(trans.beta)}</div>
+                        ${tl(trans.home)}
                     </a>
                 </li>
                 <li class="navlist-item secondary-nav-item secondary-nav-item--recommendations">
                     <a href="${root}music/+recommended" class="secondary-nav-item-link ${page.type == "recommended" ? "secondary-nav-item-link--active" : ""}">
-                        ${tl(trans.recommendations)}<div class="new-badge">${tl(trans.beta)}</div>
+                        ${tl(trans.recommendations)}
                     </a>
                 </li>
                 <li class="navlist-item secondary-nav-item secondary-nav-item--releases">
@@ -18391,6 +18415,35 @@
       }
     });
     if (page.subpage == "music") {
+      let toolbar = html.node`
+            <div class="toolbar">
+                <nav class="navlist secondary-nav navlist--more redesigned-navigation">
+                    <ul class="navlist-items">
+                        <li class="navlist-item secondary-nav-item">
+                            <a href="${root}user/${auth.name}" data-type="mention" class="secondary-nav-item-link">
+                                ${tl(trans.profile)}
+                            </a>
+                        </li>
+                        <li class="navlist-item secondary-nav-item">
+                            <a href="${root}user/${auth.name}/library" data-type="library" class="secondary-nav-item-link">
+                                ${tl(trans.library)}
+                            </a>
+                        </li>
+                        <li class="navlist-item secondary-nav-item">
+                            <a href="${root}user/${auth.name}/following" data-type="profile" class="secondary-nav-item-link">
+                                ${tl(trans.friends)}
+                            </a>
+                        </li>
+                        <li class="navlist-item secondary-nav-item">
+                            <a href="${root}user/${auth.name}/shoutbox" data-type="shouts" class="secondary-nav-item-link">
+                                ${tl(trans.shouts)}
+                            </a>
+                        </li>
+                    </ul>
+                </nav>
+            </div>
+        `;
+      page.structure.row.insertBefore(toolbar, page.structure.content);
       let beret = html.node`
             <section class="beret-music bleh--panel">
                 <div class="panel-side panel-side-main">
@@ -19583,7 +19636,13 @@
                             </div>
                             ${item.keybind ? html.node`
                             <div class="keybind">
-                                ${item.keybind.map((key) => html.node`<kbd>${key}</kbd>`)}
+                                ${item.keybind.map((key) => {
+            if (key == "\u2318")
+              return html.node`<kbd><div class="bleh-icon" data-type="command" /></kbd>`;
+            else if (key == "\u21E7")
+              return html.node`<kbd><div class="bleh-icon" data-type="shift" /></kbd>`;
+            return html.node`<kbd>${key}</kbd>`;
+          })}
                             </div>
                             ` : ""}
                         </button>
@@ -21637,9 +21696,7 @@
       pt: "Avan\xE7ado"
     },
     recommendations: {
-      en: "Recommendations",
-      de: "Empfelungen",
-      pt: "Recomenda\xE7\xF5es"
+      en: "Suggested"
     },
     releases: {
       en: "Releases",
@@ -28491,7 +28548,7 @@
         date: "2025-07-17"
       },
       mualani: {
-        default: false,
+        default: true,
         name: "Experimental redesigned tab toolbar",
         date: "2025-07-26"
       }

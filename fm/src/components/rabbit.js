@@ -310,7 +310,14 @@ export function register_rabbit() {
                             </div>
                             ${item.keybind ? html.node`
                             <div class="keybind">
-                                ${item.keybind.map(key => html.node`<kbd>${key}</kbd>`)}
+                                ${item.keybind.map(key => {
+                                    if (key == '⌘')
+                                        return html.node`<kbd><div class="bleh-icon" data-type="command" /></kbd>`;
+                                    else if (key == '⇧')
+                                        return html.node`<kbd><div class="bleh-icon" data-type="shift" /></kbd>`;
+                                    
+                                    return html.node`<kbd>${key}</kbd>`;
+                                })}
                             </div>
                             ` : ''}
                         </button>
