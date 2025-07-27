@@ -7302,7 +7302,7 @@
     .btn-primary,
     .shout-action-button,
     .content-form select,
-    .dropdown-menu-clickable-item, .auth-dropdown-menu-item, .navlist-hidden-list a,
+    .dropdown-menu-clickable-item, .auth-dropdown-menu-item, .navlist-hidden-list a, .display-options-clickable-item,
     .inbox-compose-button, .inbox-notifications__item-link,
     .inbox-table .inbox-message,
     .header-new-playlink,
@@ -7714,7 +7714,7 @@
     .side-right .setting-item,
     .external, .open,
     .btn--has-icon-right,
-    .dropdown-menu-clickable-button, .dropdown-menu-clickable-button-js-only,
+    .dropdown-menu-clickable-button, .dropdown-menu-clickable-button-js-only, .display-options-clickable-button,
     .btn-shortcut,
     .gallery-next .arrow,
     .header-new-gallery--link .header-new-gallery-inner,
@@ -7898,7 +7898,7 @@
     :is(.shout-body, .about-me-sidebar, .bleh--about-me-preview, .user-list-about-me) > p a:before,
     /*     DROPDOWNS     */
     .dropdown-menu-clickable-item:not(.v2):before, .auth-dropdown-menu-item:before,
-    .dropdown-menu-list-button::after, .dropdown-menu-clickable-button:not(.link-select)::after, .dropdown-menu-clickable-button-js-only::after,
+    .dropdown-menu-list-button::after, .dropdown-menu-clickable-button:not(.link-select)::after, .dropdown-menu-clickable-button-js-only::after, .display-options-clickable-button:after,
     /*     PAGINATION     */
     .pagination-previous a:before, .pagination-next a:before,
     /*     MORE LINK >     */
@@ -8025,7 +8025,7 @@
     .gallery-next .arrow,
     .header-new-gallery--link .header-new-gallery-inner:before,
     .form-group-controls:has(select):before,
-    .dropdown-menu-list-button::after, .dropdown-menu-clickable-button::after, .dropdown-menu-clickable-button-js-only::after,
+    .dropdown-menu-list-button::after, .dropdown-menu-clickable-button::after, .dropdown-menu-clickable-button-js-only::after, .display-options-clickable-button:after,
     .all-results-list li:before,
     .language-nav, .auth-link
     {
@@ -8154,6 +8154,7 @@
     }
 
 
+    .display-options-clickable-button,
     .dropdown-menu-list-button, .dropdown-menu-clickable-button, .dropdown-menu-clickable-button-js-only {
         --mask: var(--icon-16-dropdown);
 
@@ -9324,7 +9325,7 @@
         transform-origin: top;
     }
     .dropdown-menu-item-dark,
-    .dropdown-menu-clickable-item, .auth-dropdown-menu-item, .navlist-hidden-list a,
+    .dropdown-menu-clickable-item, .auth-dropdown-menu-item, .navlist-hidden-list a, .display-options-clickable-item,
     .library-search-results li,
     .date-range-picker-preset a
     {
@@ -9344,7 +9345,7 @@
 
         &[aria-checked="true"], &[aria-selected="true"],
         .date-range-picker-preset--selected > &,
-        &.dropdown-menu-clickable-item--selected,
+        &.dropdown-menu-clickable-item--selected, &.display-options-clickable-item--selected,
         &.active {
             --bg: hsla(var(--h4), 10%) !important;
             --bg-hov: hsla(var(--h4), 16%) !important;
@@ -13854,6 +13855,14 @@
             .edit-track {
                 --mask: var(--icon-16-track);
             }
+        }
+    }
+    .automatic-edit-table-options-container {
+        display: flex;
+        gap: var(--button-list-gap);
+
+        & > .automatic-edit-rule-table-options {
+            margin: unset !important;
         }
     }
 
