@@ -9330,8 +9330,8 @@
     .date-range-picker-preset a
     {
         --bg: transparent !important;
-        --bg-hov: hsla(var(--b4), 60%) !important;
-        --bg-atv: hsla(var(--b4), 80%) !important;
+        --bg-hov: hsla(var(--b4), 40%) !important;
+        --bg-atv: hsla(var(--b4), 60%) !important;
         --shadow: none !important;
         --shadow-hov: none !important;
         --col: hsl(var(--c2)) !important;
@@ -9347,9 +9347,9 @@
         .date-range-picker-preset--selected > &,
         &.dropdown-menu-clickable-item--selected, &.display-options-clickable-item--selected,
         &.active {
-            --bg: hsla(var(--h4), 10%) !important;
-            --bg-hov: hsla(var(--h4), 16%) !important;
-            --bg-atv: hsla(var(--h4), 26%) !important;
+            --bg: hsla(var(--h4), 20%) !important;
+            --bg-hov: hsla(var(--h4), 30%) !important;
+            --bg-atv: hsla(var(--h4), 40%) !important;
             --col: hsl(var(--l3-c)) !important;
             --mask-colour: color-mix(in hsl, hsl(var(--l3-c)), hsl(var(--l4-c)) 40%);
         }
@@ -24490,10 +24490,10 @@
 
     .markdown-enabled {
         position: relative;
-        padding-left: calc(12px + 4px);
-        --mask-size: 12px;
+        padding-left: calc(var(--mask-size) + 4px);
+        --mask-size: 16px;
         --left: 0;
-        --margin-top: -6px;
+        --margin-top: calc(-1 * (var(--mask-size) / 2));
         --mask: var(--icon-16-md);
     }
 
