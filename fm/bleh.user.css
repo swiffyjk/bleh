@@ -3582,7 +3582,7 @@
     .toolbar > .secondary-nav {
         [data-ff--mualani="true"] & {
             --button-verts: 6px;
-            --button-sides: 8px;
+            --button-sides: 12px;
             --icon-gap: 2px;
             margin: unset !important;
 
@@ -3677,7 +3677,7 @@
             text-align: center;
             transform: none !important;
             transform-origin: center !important;
-            min-width: 65px !important;
+            /*min-width: 65px !important;*/
 
             &:after {
                 display: none !important;
@@ -3895,10 +3895,10 @@
 
 
     /* artist listeners tabs */
-    .secondary-nav-item--overview a[href*="+listeners"]:before {
-        --mask: var(--icon-16-listener);
+    .secondary-nav-item--global {
+        --mask: var(--icon-16-globe);
     }
-    .secondary-nav-item--you-know a:before {
+    .secondary-nav-item--you-know {
         --mask: var(--icon-16-user);
     }
 

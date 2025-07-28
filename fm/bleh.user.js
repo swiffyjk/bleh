@@ -10770,16 +10770,16 @@
         <h4>${tl(trans.block_list)}</h4>
         <div class="user-top-panel">
             <div class="user-top-avatar user-top-avatar-side-left"><div class="bleh-icon"></div></div>
-            <img class="user-top-avatar user-top-avatar-main" src="${auth.avatar.replace("avatar42s", "avatar300s")}" alt="${auth.name}">
+            <img class="user-top-avatar user-top-avatar-main" src=${auth.avatar.replace("avatar42s", "avatar300s")} alt=${auth.name}>
             <div class="user-top-avatar user-top-avatar-side-right"><div class="bleh-icon"></div></div>
         </div>
         <div class="setting" data-type="text">
             <div class="heading">
                 <h5>${tl(trans.profile)}</h5>
                 <form action="${root}settings/privacy#ignorelist" name="ignorelist" method="post">
-                    <input type="hidden" name="csrfmiddlewaretoken" value="${page.token}">
+                    <input type="hidden" name="csrfmiddlewaretoken" value=${page.token}>
                     <div class="input-container">
-                        <input type="text" maxlength="80" id="id_user" name="user" placeholder="${tl(trans.enter_username)}">
+                        <input type="text" maxlength="80" id="id_user" name="user" placeholder=${tl(trans.enter_username)}>
                         <input type="hidden" name="listaction" value="add">
                         <input type="hidden" name="submit" value="ignorelist">
                         <button class="bleh--btn primary icon block" type="submit">${tl(trans.block)}</button>
@@ -17771,8 +17771,20 @@
       }
     } else {
       let btn_add = page.structure.side.querySelector(".add-button");
-      if (btn_add != null)
-        btn_add.setAttribute("data-page-subpage", page.subpage);
+      if (btn_add) btn_add.setAttribute("data-page-subpage", page.subpage);
+      if (page.subpage.startsWith("listeners_")) {
+        let toolbar = page.structure.row.querySelector(":scope > .toolbar > .navlist > .navlist-items");
+        let overview = toolbar.querySelector(".secondary-nav-item--overview");
+        overview.classList.remove("secondary-nav-item--overview");
+        overview.classList.add("secondary-nav-item--global");
+        overview.querySelector("a").textContent = tl(trans.global);
+        let mutuals = toolbar.querySelector(".secondary-nav-item--you-know a");
+        mutuals.textContent = tl(trans.mutuals);
+        if (page.subpage == "listeners_overview")
+          bleh_top_listeners();
+        else if (page.subpage == "listeners_you-know")
+          bleh_listeners();
+      }
       if (page.subpage == "images_image-upload")
         bleh_gallery_upload();
       else if (page.subpage == "images_overview")
@@ -17783,10 +17795,6 @@
         bleh_wiki_history();
       else if (page.subpage == "wiki_edit")
         bleh_wiki_editor();
-      else if (page.subpage == "listeners_overview")
-        bleh_top_listeners();
-      else if (page.subpage == "listeners_you-know")
-        bleh_listeners();
       else if (page.subpage == "tracks")
         bleh_artist_tracks();
       else if (page.subpage == "albums")
@@ -24221,6 +24229,12 @@
     },
     hints: {
       en: "Hints"
+    },
+    global: {
+      en: "Global"
+    },
+    mutuals: {
+      en: "Mutuals"
     }
   };
   var trans_legacy = {

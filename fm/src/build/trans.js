@@ -3171,6 +3171,12 @@ export const trans = {
     },
     hints: {
         en: 'Hints'
+    },
+    global: {
+        en: 'Global'
+    },
+    mutuals: {
+        en: 'Mutuals'
     }
 }
 
