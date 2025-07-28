@@ -15205,12 +15205,14 @@
         [data-mini="pixel"]
         ),
     .namespace--music_bookmarks_overview {
-        .col-main {
-            width: var(--cards-width);
-            display: block;
-        }
-        .col-sidebar {
-            display: none !important;
+        .content:not(.override) {
+            & > .col-main {
+                width: var(--cards-width);
+                display: block;
+            }
+            & > .col-sidebar {
+                display: none !important;
+            }
         }
 
         & > .row.col-main-is-primary > .content {
@@ -23790,27 +23792,6 @@
                 height: unset;
                 left: unset;
                 aspect-ratio: 1 / 1;
-            }
-        }
-    }
-
-    .beret-music {
-        flex-direction: row !important;
-        gap: calc(var(--card-padding) * 2 + var(--card-gap)) !important;
-
-        .panel-side {
-            display: flex;
-            flex-direction: column;
-
-            h4 {
-                margin-bottom: var(--card-gap);
-            }
-
-            &.panel-side-main {
-                width: calc(var(--cards-main-width) - (var(--card-padding) * 2));
-            }
-            &.panel-side-alt {
-                width: calc(var(--cards-sidebar-width) - (var(--card-padding) * 2));
             }
         }
     }

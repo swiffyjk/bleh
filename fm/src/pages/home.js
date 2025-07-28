@@ -190,23 +190,27 @@ export function bleh_home() {
 
         // top panel
         let beret = html.node`
-            <section class="beret-music bleh--panel">
-                <div class="panel-side panel-side-main">
-                    <h4>${tl(trans.recent_tracks)}</h4>
-                    <div class="recent-listening-container">
-                        <div class="loading-data-container">
-                            <p class="loading-data-text">${tl(trans.finding_your_tracks)}</p>
+            <div class="content override">
+                <div class="col-main">
+                    <section>
+                        <h2>${tl(trans.recent_tracks)}</h2>
+                        <div class="recent-listening-container">
+                            <div class="loading-data-container">
+                                <p class="loading-data-text">${tl(trans.finding_your_tracks)}</p>
+                            </div>
                         </div>
-                    </div>
+                    </section>
                 </div>
-                <div class="panel-side panel-side-alt">
-                    <h4>${tl(trans.activity)}</h4>
-                    ${render_activity_list()}
-                    <div class="more-link">
-                        <a href="${root}bleh/profiles?setting=activities">${tl(trans.activity_settings)}</a>
-                    </div>
+                <div class="col-sidebar">
+                    <section>
+                        <h2>${tl(trans.activity)}</h2>
+                        ${render_activity_list()}
+                        <div class="more-link">
+                            <a href="${root}bleh/profiles?setting=activities">${tl(trans.activity_settings)}</a>
+                        </div>
+                    </section>
                 </div>
-            </section>
+            </div>
         `;
 
         let track_list = beret.querySelector('.recent-listening-container');
@@ -227,7 +231,7 @@ export function bleh_home() {
                 track_list.outerHTML = tracklist_panel.outerHTML;
         });
 
-        page.structure.main.appendChild(beret);
+        page.structure.row.insertBefore(beret, page.structure.content);
 
 
         let music_sections = document.body.querySelectorAll('.music-section');
