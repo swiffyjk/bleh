@@ -106,6 +106,14 @@ export let page = {
     token: '',
     mobile: false,
     platform: 'other',
+    now: {
+        last_fetched: null,
+        name: null,
+        artist: null,
+        album: null,
+        avatar: null,
+        active: false
+    },
     structure: {
         wrapper: null,
         container: null,

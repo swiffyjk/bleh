@@ -254,6 +254,11 @@
             "default": false,
             "name": "Unlock work-in-progress minis",
             "date": "2025-07-29"
+        },
+        "status_in_menu": {
+            "default": true,
+            "name": "Show current listening status in profile menu",
+            "date": "2025-07-29"
         }
     }
 }

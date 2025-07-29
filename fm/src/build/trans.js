@@ -1670,6 +1670,11 @@ export const trans = {
         de: 'Avatar für ',
         pt: 'Avatar de'
     },
+    by: {
+        en: 'by',
+        de: 'von',
+        pt: 'por'
+    },
     by_artist: {
         // {name} by {artist} - hence the space in english
         en: ' by {a}',
@@ -3182,6 +3187,20 @@ export const trans = {
     missing_component: {
         // cases when last.fm simply doesn't provide a tasteometer or other things
         en: 'Last.fm failed to load this component'
+    },
+    last_scrobbled_replace: {
+        en: '{u} last scrobbled…',
+        de: '{u} scrobbelte zuletzt…',
+        fr: '{u} a scrobblé pour la dernière fois...',
+        ja: '{u} が Scrobble した最新アイテム…',
+        es: 'Último scrobbling de {u}…',
+        it: 'Gli ultimi scrobbling di {u}…',
+        pl: '{u} ostatnio scrobblował…',
+        pt: 'Última faixa de {u} incluída no scrobble…',
+        ru: '{u} скробблил(а) в последний раз…',
+        sv: '{u} skrobblade senast…',
+        tr: '{u} adlı kullanıcının son skropladıkları …',
+        zh: '{u} 上次记录了...'
     }
 }
 

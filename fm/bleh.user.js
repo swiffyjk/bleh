@@ -1045,6 +1045,14 @@
     token: "",
     mobile: false,
     platform: "other",
+    now: {
+      last_fetched: null,
+      name: null,
+      artist: null,
+      album: null,
+      avatar: null,
+      active: false
+    },
     structure: {
       wrapper: null,
       container: null,
@@ -16801,6 +16809,7 @@
           let page_2;
           let side;
           let banner = load_banner(auth.name);
+          let status_container;
           instance.setContent(html.node`
                     <div class="auth-menu-v2">
                         <div class="side primary">
@@ -16968,7 +16977,29 @@
                             <div class="side-page" data-page="2" ref=${(el) => page_2 = el} />
                         </div>
                     </div>
+                    ${ff("status_in_menu") ? html.node`
+                    <div class="auth-menu-status" ref=${(el) => status_container = el}>
+                        <div class="status">
+                            <div class="loading-data-container">
+                                <div class="loading-data-text">${tl(trans.loading)}</div>
+                            </div>
+                        </div>
+                    </div>
+                    ` : ""}
                 `);
+          live_status().then((status) => {
+            render(status_container, html`
+                        <div class="status">
+                            <div class="bleh-icon" />
+                            <div class="status-bg" style="background-image: url(${status.avatar})" />
+                            <div class="status-text">
+                                ${status.name}
+                                ${tl(trans.by)}
+                                ${status.artist}
+                            </div>
+                        </div>
+                    `);
+          });
         },
         onHide(instance) {
           page.structure.notifications.setAttribute("data-auth-open", "false");
@@ -17099,6 +17130,43 @@
             </a>
         </div>
     `);
+  }
+  async function live_status() {
+    if (page.now.next_fetch && Date.now() < page.now.next_fetch) return page.now;
+    try {
+      const res = await fetch(`${root}user/${auth.name}/partial/now`);
+      if (!res.ok) {
+        log("failed to fetch", "live", "error", { res });
+        return;
+      }
+      const dom = await res.text();
+      const parser = new DOMParser();
+      const doc = parser.parseFromString(dom, "text/html");
+      const intro = doc.querySelector(".user-now-intro");
+      let active = true;
+      if (intro.textContent.trim() === tl(trans.last_scrobbled_replace).replace("{u}", auth.name))
+        active = false;
+      const track = doc.querySelector(".user-now-track a");
+      const links = doc.querySelectorAll(".user-now-artist-and-album a");
+      const artist = links[0];
+      const album = links[1];
+      const avatar3 = doc.querySelector(".cover-art img")?.src;
+      artist.textContent = correct_artist(artist.textContent);
+      track.textContent = correct_item_by_artist(track.textContent, artist.textContent);
+      let next = /* @__PURE__ */ new Date();
+      next.setMinutes(next.getMinutes() + 1);
+      page.now = {
+        next_fetch: next,
+        name: track,
+        artist,
+        album,
+        avatar: avatar3,
+        active
+      };
+      return page.now;
+    } catch (error) {
+      log("exception during fetch", "live", "error", { error });
+    }
   }
 
   // src/components/about_artist.js
@@ -22714,6 +22782,11 @@
       de: "Avatar f\xFCr ",
       pt: "Avatar de"
     },
+    by: {
+      en: "by",
+      de: "von",
+      pt: "por"
+    },
     by_artist: {
       // {name} by {artist} - hence the space in english
       en: " by {a}",
@@ -24226,6 +24299,20 @@
     missing_component: {
       // cases when last.fm simply doesn't provide a tasteometer or other things
       en: "Last.fm failed to load this component"
+    },
+    last_scrobbled_replace: {
+      en: "{u} last scrobbled\u2026",
+      de: "{u} scrobbelte zuletzt\u2026",
+      fr: "{u} a scrobbl\xE9 pour la derni\xE8re fois...",
+      ja: "{u} \u304C Scrobble \u3057\u305F\u6700\u65B0\u30A2\u30A4\u30C6\u30E0\u2026",
+      es: "\xDAltimo scrobbling de {u}\u2026",
+      it: "Gli ultimi scrobbling di {u}\u2026",
+      pl: "{u} ostatnio scrobblowa\u0142\u2026",
+      pt: "\xDAltima faixa de {u} inclu\xEDda no scrobble\u2026",
+      ru: "{u} \u0441\u043A\u0440\u043E\u0431\u0431\u043B\u0438\u043B(\u0430) \u0432 \u043F\u043E\u0441\u043B\u0435\u0434\u043D\u0438\u0439 \u0440\u0430\u0437\u2026",
+      sv: "{u} skrobblade senast\u2026",
+      tr: "{u} adl\u0131 kullan\u0131c\u0131n\u0131n son skroplad\u0131klar\u0131 \u2026",
+      zh: "{u} \u4E0A\u6B21\u8BB0\u5F55\u4E86..."
     }
   };
   var trans_legacy = {
@@ -28564,6 +28651,11 @@
       unlock_minis: {
         default: false,
         name: "Unlock work-in-progress minis",
+        date: "2025-07-29"
+      },
+      status_in_menu: {
+        default: true,
+        name: "Show current listening status in profile menu",
         date: "2025-07-29"
       }
     }

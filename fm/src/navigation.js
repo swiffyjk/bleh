@@ -19,6 +19,8 @@ import {open_profile_shortcut_window} from "./components/profile_shortcut.js";
 import {save_setting} from "./components/settings.js";
 import {load_banner} from "./components/banner.js";
 import {prompt_for_update} from "./style.js";
+import {log} from "./build/log.js";
+import {correct_artist, correct_item_by_artist} from "./components/lotus.js";
 
 export function patch_masthead() {
     let masthead_logo = document.body.querySelector('.masthead-logo');
@@ -298,6 +300,8 @@ export function append_nav() {
 
                 let banner = load_banner(auth.name);
 
+                let status_container;
+
                 instance.setContent(html.node`
                     <div class="auth-menu-v2">
                         <div class="side primary">
@@ -475,7 +479,30 @@ export function append_nav() {
                             <div class="side-page" data-page="2" ref=${el => page_2 = el} />
                         </div>
                     </div>
+                    ${ff('status_in_menu') ? html.node`
+                    <div class="auth-menu-status" ref=${el => status_container = el}>
+                        <div class="status">
+                            <div class="loading-data-container">
+                                <div class="loading-data-text">${tl(trans.loading)}</div>
+                            </div>
+                        </div>
+                    </div>
+                    ` : ''}
                 `);
+
+                live_status().then(status => {
+                    render(status_container, html`
+                        <div class="status">
+                            <div class="bleh-icon" />
+                            <div class="status-bg" style="background-image: url(${status.avatar})" />
+                            <div class="status-text">
+                                ${status.name}
+                                ${tl(trans.by)}
+                                ${status.artist}
+                            </div>
+                        </div>
+                    `);
+                })
             },
 
             onHide(instance) {
@@ -615,4 +642,52 @@ export function append_nav() {
             </a>
         </div>
     `);
+}
+
+export async function live_status() {
+    if (page.now.next_fetch && Date.now() < page.now.next_fetch) return page.now;
+
+    try {
+        const res = await fetch(`${root}user/${auth.name}/partial/now`);
+        if (!res.ok) {
+            log('failed to fetch', 'live', 'error', {res});
+            return;
+        }
+
+        const dom = await res.text();
+        const parser = new DOMParser();
+        const doc = parser.parseFromString(dom, 'text/html');
+
+        const intro = doc.querySelector('.user-now-intro');
+
+        let active = true;
+        if (intro.textContent.trim() === tl(trans.last_scrobbled_replace).replace('{u}', auth.name))
+            active = false;
+
+        const track = doc.querySelector('.user-now-track a');
+        const links = doc.querySelectorAll('.user-now-artist-and-album a');
+
+        const artist = links[0];
+        const album = links[1];
+        const avatar = doc.querySelector('.cover-art img')?.src;
+
+        artist.textContent = correct_artist(artist.textContent);
+        track.textContent = correct_item_by_artist(track.textContent, artist.textContent);
+
+        let next = new Date();
+        next.setMinutes(next.getMinutes() + 1);
+
+        page.now = {
+            next_fetch: next,
+            name: track,
+            artist,
+            album,
+            avatar,
+            active
+        };
+
+        return page.now;
+    } catch (error) {
+        log('exception during fetch', 'live', 'error', {error: error});
+    }
 }
