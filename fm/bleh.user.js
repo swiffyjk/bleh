@@ -3627,9 +3627,17 @@
       let name2 = author.querySelector(".link-block-target");
       if (name2 && avatar3) {
         let badge = patch_avatar(avatar3, name2.textContent, "wiki");
-        avatar3.setAttribute("data-avatar-themed", "true");
-        avatar3.classList.add(`user-status--bleh-${badge.type}`, `user-status--bleh-user-${name2.textContent}`);
-        name2.classList.add(`user-status--bleh-${badge.type}`, `user-status--bleh-user-${name2.textContent}`);
+        if (badge && badge.type) {
+          if (badge.hue > -1 && badge.sat > -1 && badge.lit > -1) {
+            name2.style.setProperty("--hue-over", badge.hue);
+            name2.style.setProperty("--sat-over", badge.sat);
+            name2.style.setProperty("--lit-over", badge.lit);
+          } else {
+            name2.classList.add(`user-status--bleh-${badge.type}`, `user-status--bleh-user-${badge.user}`);
+          }
+        } else if (badge) {
+          name2.classList.add(badge.type);
+        }
       }
     });
   }

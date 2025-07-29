@@ -12211,7 +12211,7 @@
                     margin: unset;
 
                     & > a {
-                        color: inherit;
+                        color: inherit !important;
                     }
                 }
             }

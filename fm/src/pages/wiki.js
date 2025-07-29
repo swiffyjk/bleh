@@ -165,9 +165,18 @@ export function bleh_wiki_history() {
 
         if (name && avatar) {
             let badge = patch_avatar(avatar, name.textContent, 'wiki');
-            avatar.setAttribute('data-avatar-themed', 'true');
-            avatar.classList.add(`user-status--bleh-${badge.type}`, `user-status--bleh-user-${name.textContent}`);
-            name.classList.add(`user-status--bleh-${badge.type}`, `user-status--bleh-user-${name.textContent}`);
+
+            if (badge && badge.type) {
+                if (badge.hue > -1 && badge.sat > -1 && badge.lit > -1) {
+                    name.style.setProperty('--hue-over', badge.hue);
+                    name.style.setProperty('--sat-over', badge.sat);
+                    name.style.setProperty('--lit-over', badge.lit);
+                } else {
+                    name.classList.add(`user-status--bleh-${badge.type}`, `user-status--bleh-user-${badge.user}`);
+                }
+            } else if (badge) {
+                name.classList.add(badge.type);
+            }
         }
     });
 }
