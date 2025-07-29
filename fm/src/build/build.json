@@ -1,7 +1,7 @@
 {
     "brand": "bleh",
-    "build": "2025.0715",
-    "sku": "fleur",
+    "build": "2025.0729",
+    "sku": "claire",
     "bio": "bleh!!! ^-^",
     "author": "kate",
     "url": "https://github.com/katelyynn/bleh/raw/uwu/fm/bleh.user.js",
@@ -249,6 +249,11 @@
             "default": true,
             "name": "Experimental redesigned tab toolbar",
             "date": "2025-07-26"
+        },
+        "unlock_minis": {
+            "default": false,
+            "name": "Unlock work-in-progress minis",
+            "date": "2025-07-29"
         }
     }
 }

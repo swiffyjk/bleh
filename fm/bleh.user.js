@@ -6549,29 +6549,36 @@
       pixel: {
         name: tl(trans.pixel?.name),
         body: tl(trans.pixel?.body),
-        func: bleh_minis_pixel
+        func: bleh_minis_pixel,
+        hide_if: !ff("unlock_minis")
       },
       lyrics: {
         name: tl(trans.lyrics?.name),
         body: tl(trans.lyrics?.body),
-        func: bleh_minis_lyrics
+        func: bleh_minis_lyrics,
+        hide_if: !ff("unlock_minis")
       },
       rainbow: {
         name: tl(trans.rainbow?.name),
         body: tl(trans.rainbow?.body),
-        func: bleh_minis_rainbow
+        func: bleh_minis_rainbow,
+        hide_if: !ff("unlock_minis")
       },
       receipt: {
         name: tl(trans.receipt?.name),
         body: tl(trans.receipt?.body),
-        func: bleh_minis_receipt
+        func: bleh_minis_receipt,
+        hide_if: !ff("unlock_minis")
       }
     };
-    if (mini && !valid_minis[mini]) {
+    if (mini && (!valid_minis[mini] || valid_minis[mini].hide_if)) {
       render(page.structure.main, html`
-            <div class="loading-data-container">
-                <div class="loading-data-text error">${tl(trans.no_mini_found).replace("{v}", mini)}</div>
-            </div>
+            <section class="minis">
+                ${return_to_minis()}
+                <div class="loading-data-container">
+                    <div class="loading-data-text error">${tl(trans.no_mini_found).replace("{v}", mini)}</div>
+                </div>
+            </section>
         `);
       return;
     }
@@ -6591,29 +6598,32 @@
                 <p>${tl(trans.minis_description)}</p>
             </div>
             <div class="mini-list">
-                ${Object.entries(valid_minis).map(([id, mini2]) => html.node`
-                    <button class="mini" data-type=${id} data-mini=${id} onclick=${() => {
-      window.history.replaceState(id, "", `${root}bleh/minis/${id}`);
-      page.structure.container.setAttribute("data-mini", id);
-      render(page.structure.main, html``);
-      valid_minis[id].func();
-    }}>
-                        <div class="mini-icon colourful">
-                            <div class="bleh-icon" />
-                        </div>
-                        <div class="mini-info">
-                            <h5>${mini2.name}</h5>
-                            <p>${mini2.body}</p>
-                        </div>
-                        <div class="bleh-icon mini-arrow" style="--icon: var(--mask)" data-type="arrow-right" />
-                    </button>
-                `)}
+                ${Object.entries(valid_minis).map(([id, mini2]) => {
+      if (mini2.hide_if) return html.node``;
+      return html.node`
+                        <button class="mini" data-type=${id} data-mini=${id} onclick=${() => {
+        window.history.replaceState(id, "", `${root}bleh/minis/${id}`);
+        page.structure.container.setAttribute("data-mini", id);
+        render(page.structure.main, html``);
+        valid_minis[id].func();
+      }}>
+                            <div class="mini-icon colourful">
+                                <div class="bleh-icon" />
+                            </div>
+                            <div class="mini-info">
+                                <h5>${mini2.name}</h5>
+                                <p>${mini2.body}</p>
+                            </div>
+                            <div class="bleh-icon mini-arrow" style="--icon: var(--mask)" data-type="arrow-right" />
+                        </button>
+                    `;
+    })}
             </div>
             <p class="card-tip">${{ html: tl(trans.labs_cta).replace("{a}", `<a class="see-more" href="${root}labs">`).replace("{/a}", "</a>") }}</p>
         </section>
     `);
   }
-  function return_to_minis(mini) {
+  function return_to_minis(mini = "") {
     return html.node`
         <div class="minis-header">
             <h2 class="previous" onclick=${() => {
@@ -6621,7 +6631,7 @@
       bleh_minis(true);
     }}>${tl(trans.minis)}</h2>
             <div class="bleh-icon mini-arrow" style="--icon: var(--mask)" data-type="arrow-right" />
-            <h2>${valid_minis[mini].name}</h2>
+            <h2>${mini ? valid_minis[mini].name : tl(trans.error)}</h2>
         </div>
     `;
   }
@@ -28330,8 +28340,8 @@
   // src/build/build.json
   var build_default = {
     brand: "bleh",
-    build: "2025.0715",
-    sku: "fleur",
+    build: "2025.0729",
+    sku: "claire",
     bio: "bleh!!! ^-^",
     author: "kate",
     url: "https://github.com/katelyynn/bleh/raw/uwu/fm/bleh.user.js",
@@ -28579,6 +28589,11 @@
         default: true,
         name: "Experimental redesigned tab toolbar",
         date: "2025-07-26"
+      },
+      unlock_minis: {
+        default: false,
+        name: "Unlock work-in-progress minis",
+        date: "2025-07-29"
       }
     }
   };
