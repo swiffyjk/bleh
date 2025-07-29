@@ -20424,15 +20424,27 @@
         });
         let submit = body.querySelector(".form-group--submit");
         submit.classList = "modal-footer";
+        let delete_form = body.querySelector(".edit-scrobble-form-delete");
+        let delete_btn;
+        if (delete_form) delete_btn = delete_form.querySelector(".btn-delete");
         render(submit, html`
                 <button class="see-more cancel" type="button" onclick=${() => dismiss.click()}>
                     ${tl(trans.cancel)}
                 </button>
                 <div class="fill" />
-                ${submit.querySelector("input")}
-                <button class="btn primary icon" data-type="item-edit" type="submit">
-                    ${tl(trans.edit)}
-                </button>
+                <div class="button-group">
+                    ${delete_form ? html.node`
+                    <button class="btn icon danger-subtle" data-type="delete" type="button" onclick=${() => {
+          delete_btn.click();
+        }}>
+                        ${tl(trans.delete)}
+                    </button>
+                    ` : ""}
+                    ${submit.querySelector("input")}
+                    <button class="btn primary icon" data-type="item-edit" type="submit">
+                        ${tl(trans.edit)}
+                    </button>
+                </div>
             `);
       } else if (body.querySelector(".lastfm-bulk-edit-list")) {
         let checks;
