@@ -65,8 +65,8 @@
             "type": "kitty",
             "icon": "data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHdpZHRoPSIyMCIgaGVpZ2h0PSIyMCIgZmlsbD0ibm9uZSIgc3Ryb2tlPSJjdXJyZW50Q29sb3IiIHN0cm9rZS1saW5lY2FwPSJyb3VuZCIgc3Ryb2tlLWxpbmVqb2luPSJyb3VuZCIgc3Ryb2tlLXdpZHRoPSIyLjI1IiBjbGFzcz0ibHVjaWRlIGx1Y2lkZS1jYXQiIHZpZXdCb3g9IjAgMCAyNCAyNCI+PHBhdGggZD0iTTEyIDVjLjY3IDAgMS4zNS4wOSAyIC4yNiAxLjc4LTIgNS4wMy0yLjg0IDYuNDItMi4yNiAxLjQuNTgtLjQyIDctLjQyIDcgLjU3IDEuMDcgMSAyLjI0IDEgMy40NEMyMSAxNy45IDE2Ljk3IDIxIDEyIDIxcy05LTMtOS03LjU2YzAtMS4yNS41LTIuNCAxLTMuNDQgMCAwLTEuODktNi40Mi0uNS03czQuNzIuMjMgNi41IDIuMjNBOSA5IDAgMCAxIDEyIDVNOCAxNHYuNU0xNiAxNHYuNSIvPjxwYXRoIGQ9Ik0xMS4yNSAxNi4yNWgxLjVMMTIgMTd6Ii8+PC9zdmc+",
             "name": "its a kitty!!",
-            "hue": 0,
-            "sat": 0,
+            "hue": 0.0001,
+            "sat": 0.0001,
             "lit": 1.5
         },
         "kateshapedbox": [
