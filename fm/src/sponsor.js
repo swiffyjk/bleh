@@ -48,7 +48,7 @@ function sponsor_request(notify = false) {
         button.setAttribute('disabled', '');
 
     let xhr = new XMLHttpRequest();
-    let url = `https://katelyynn.github.io/bleh/fm/badges/badges.json?${Math.random()}`;
+    let url = `https://katelyynn.github.io/bleh/fm/badges.json?${Math.random()}`;
     xhr.open('GET',url,true);
 
     xhr.onload = function() {
