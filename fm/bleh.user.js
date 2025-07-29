@@ -9559,14 +9559,16 @@
     let taste_artists = [];
     if (!is_own_profile && page.name != sponsor_list.sponsor_account) {
       let taste_meter = base_header.querySelector(".tasteometer");
-      taste = taste_meter.classList[1].replace("tasteometer-compat-", "");
-      let artists = taste_meter.querySelectorAll("a");
-      artists.forEach((artist) => {
-        taste_artists.push(correct_artist(artist.getAttribute("title")));
-      });
-      taste_percentage = taste_meter.querySelector(".tasteometer-viz").getAttribute("title");
-      if (taste_percentage == "99%")
-        taste_percentage = "100%";
+      if (taste_meter) {
+        taste = taste_meter.classList[1].replace("tasteometer-compat-", "");
+        let artists = taste_meter.querySelectorAll("a");
+        artists.forEach((artist) => {
+          taste_artists.push(correct_artist(artist.getAttribute("title")));
+        });
+        taste_percentage = taste_meter.querySelector(".tasteometer-viz").getAttribute("title");
+        if (taste_percentage == "99%")
+          taste_percentage = "100%";
+      }
     }
     let side_sep = html.node`<div class="sep"></div>`;
     let about_me = page.structure.container.querySelector(".about-me-sidebar");
@@ -9716,8 +9718,25 @@
         });
       }
     }
+    if (about_me) {
+      about_me.appendChild(side_sep);
+      about_me.appendChild(profile_header);
+    } else {
+      if (!page.mobile)
+        page.structure.side.insertBefore(profile_header, page.structure.side.firstElementChild);
+      else
+        page.structure.main.insertBefore(profile_header, page.structure.main.firstElementChild);
+    }
     let listen_container = page.structure.row.querySelector(".listen-panel");
     if (!is_own_profile && page.name != sponsor_list.sponsor_account && katsune) {
+      if (taste == "") {
+        listen_container.appendChild(html.node`
+                <div class="loading-data-container">
+                    <div class="loading-data-text error">${tl(trans.missing_component)}</div>
+                </div>
+            `);
+        return;
+      }
       let taste_wrap = html.node`
             <div class="btn listen-item icon">
                 <div class="span">
@@ -9779,7 +9798,7 @@
                     </a>
                     ` : ""}
                     <div class="sep"></div>
-                    <button class="dropdown-menu-clickable-item" data-type="compare" onclick=${() => compare()}>${tl(trans.compare)}</button>
+                    <a class="dropdown-menu-clickable-item" data-type="compare" href="${root}bleh/minis/compare?profile=${page.name}">${tl(trans.compare)}</a>
                 `,
           placement: "right-start",
           trigger: "manual",
@@ -9794,15 +9813,6 @@
         });
         register_menu(taste_wrap, menu);
       }
-    }
-    if (about_me) {
-      about_me.appendChild(side_sep);
-      about_me.appendChild(profile_header);
-    } else {
-      if (!page.mobile)
-        page.structure.side.insertBefore(profile_header, page.structure.side.firstElementChild);
-      else
-        page.structure.main.insertBefore(profile_header, page.structure.main.firstElementChild);
     }
   }
   function create_profile_top_item(parent, { name: name2, link, text: text2 = "", type, new_release = false, updated = false, action = "", tooltip = "", allow_html = false, tooltip_theme = "" }) {
@@ -24212,6 +24222,10 @@
     },
     mutuals: {
       en: "Mutuals"
+    },
+    missing_component: {
+      // cases when last.fm simply doesn't provide a tasteometer or other things
+      en: "Last.fm failed to load this component"
     }
   };
   var trans_legacy = {

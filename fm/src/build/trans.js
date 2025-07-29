@@ -3178,6 +3178,10 @@ export const trans = {
     },
     mutuals: {
         en: 'Mutuals'
+    },
+    missing_component: {
+        // cases when last.fm simply doesn't provide a tasteometer or other things
+        en: 'Last.fm failed to load this component'
     }
 }
 
