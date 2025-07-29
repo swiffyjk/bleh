@@ -2760,7 +2760,8 @@ export const trans = {
     },
     made_with_love: {
         // lowercase in design
-        en: 'made with {h} by {u} and {c}contributors{/c}'
+        en: 'made with {h} by {u} and {c}contributors{/c}',
+        de: 'kreiert mit {h} von {u} und {c}Mitwirkenden{/c}'
     },
     love_lower: {
         // replaces the {h} in the above sentence

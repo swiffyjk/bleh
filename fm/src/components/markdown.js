@@ -69,5 +69,16 @@ export function markdown(text, {
 
     patch_wiki_contents(body);
 
+    local_restriction(body);
+    let texts = body.querySelectorAll('p');
+    texts.forEach((text) => {
+        local_restriction(text);
+    });
+
     return body;
+}
+
+function local_restriction(text) {
+    if (text.textContent.trim().startsWith('Due to local laws, we are temporarily'))
+        text.classList.add('local-restriction');
 }

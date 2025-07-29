@@ -3939,7 +3939,16 @@
     ).replace(/https:\/\/open\.spotify\.com\/user\/([A-Za-z0-9]+)\?si=([A-Za-z0-9]+)/g, "[Spotify](https://open.spotify.com/user/$1)").replace(/&/g, "&amp;").replace(/</g, "&lt;").replace(/>/g, "&gt;").replace(/"/g, "&quot;").replace(/'/g, "&#039;"));
     let body = html.node([parsed_body]);
     patch_wiki_contents(body);
+    local_restriction(body);
+    let texts = body.querySelectorAll("p");
+    texts.forEach((text3) => {
+      local_restriction(text3);
+    });
     return body;
+  }
+  function local_restriction(text2) {
+    if (text2.textContent.trim().startsWith("Due to local laws, we are temporarily"))
+      text2.classList.add("local-restriction");
   }
 
   // src/components/colourful_counts.js
@@ -23818,7 +23827,8 @@
     },
     made_with_love: {
       // lowercase in design
-      en: "made with {h} by {u} and {c}contributors{/c}"
+      en: "made with {h} by {u} and {c}contributors{/c}",
+      de: "kreiert mit {h} von {u} und {c}Mitwirkenden{/c}"
     },
     love_lower: {
       // replaces the {h} in the above sentence

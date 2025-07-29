@@ -6650,7 +6650,7 @@
     .shout-actions {
         margin: unset;
         position: absolute;
-        top: 0;
+        top: 6px;
         right: calc(var(--card-padding) - 12px);
 
         opacity: 0.3;
@@ -6787,6 +6787,16 @@
                 border-radius: var(--item-med-radius);
             }
         }
+    }
+
+    .local-restriction {
+        padding: 8px;
+        border-radius: var(--item-big-radius);
+        border: 1px solid var(--card-border-base);
+        background: hsl(var(--b4), 20%);
+        color: hsl(var(--c3));
+        max-width: 400px;
+        cursor: default;
     }
 
 
@@ -20512,6 +20522,10 @@
         .edit-scrobble-form {
             margin-top: unset !important;
 
+            .alert + .edit-scrobble-top-box + & {
+                margin-top: var(--card-gap) !important;
+            }
+
             .edit-scrobble-label--originally {
                 display: flex !important;
                 color: hsl(var(--c3)) !important;
@@ -24177,11 +24191,13 @@
         background: var(--card-specific-background) !important;
         border-radius: var(--card-radius);
         --card-specific-background: hsl(var(--f4), 15%);
-        padding: 15px var(--card-padding) !important;
+        padding: 12px;
         box-shadow: unset !important;
         color: hsl(var(--c2)) !important;
         order: 10;
         cursor: default;
+
+        --show-icon: none;
 
         font-size: var(--font-size);
         line-height: var(--line-height);
@@ -24195,6 +24211,7 @@
 
             &.suggest,
             .bleh-modal-body > & {
+                padding: 15px var(--card-padding);
                 margin-left: unset;
                 margin-right: unset;
             }
@@ -24233,11 +24250,6 @@
             strong {
                 color: hsl(var(--l3-c));
             }
-        }
-
-        &.sponsor {
-            padding-left: calc(var(--card-padding) + 18px + var(--card-gap)) !important;
-            --left: var(--card-padding);
         }
 
         &:before {
