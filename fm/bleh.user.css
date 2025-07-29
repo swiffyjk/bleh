@@ -1,7 +1,7 @@
 /* ==UserStyle==
 @name           bleh (dev)
 @namespace      github.com/katelyynn/bleh
-@version        2025.0729
+@version        2025.0729.1
 @license        GPL-3.0
 @author         kate
 @updateURL      https://github.com/katelyynn/bleh/raw/uwu/fm/bleh.user.css
@@ -62,7 +62,7 @@
     }
 
     body {
-        --version-build: '2025.0729';
+        --version-build: '2025.0729.1';
 
         --font: var(--custom_font, ''), Overpass, Inter, Ubuntu Sans, Spline Sans, Roboto, Noto Sans, Noto Sans JP, Lucida Grande, Verdana, Tahoma, -apple-system, BlinkMacSystemFont, sans-serif, Apple Color Emoji, var(--font_emoji_name, '');
         --font-code: Spline Sans Mono, Iosevka, JetBrains Mono, Roboto Mono, monospace, var(--font);

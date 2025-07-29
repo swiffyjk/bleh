@@ -1,7 +1,7 @@
 // ==UserScript==
 // @name         bleh
 // @namespace    http://last.fm/
-// @version      2025.0715
+// @version      2025.0729
 // @description  bleh!!! ^-^
 // @author       kate
 // @match        https://www.last.fm/*
@@ -13538,14 +13538,7 @@
     if (!force) {
       const last_checked = localStorage.getItem("bleh_update_checked") || null;
       const next_check = localStorage.getItem("bleh_update_next_check") || null;
-      const update_to = localStorage.getItem("bleh_update_to") || null;
       const current_time = /* @__PURE__ */ new Date();
-      if (update_to == version.build) {
-        log("reset update status as update is already installed", "update", "info", { update_to, current_build: version.build });
-        localStorage.setItem("bleh_update_required", "false");
-        localStorage.setItem("bleh_update_checked", (/* @__PURE__ */ new Date()).toString());
-        return;
-      }
       if (last_checked && next_check && new Date(next_check) > current_time) {
         log("update check skipped", "update", "info", { next_in: next_check, current_time });
         if (func) func();
@@ -28340,7 +28333,7 @@
   // src/build/build.json
   var build_default = {
     brand: "bleh",
-    build: "2025.0729",
+    build: "2025.0729.1",
     sku: "claire",
     bio: "bleh!!! ^-^",
     author: "kate",
