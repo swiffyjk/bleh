@@ -3356,6 +3356,8 @@
       }
       if (trans.badges[badge.type] && trans.badges[badge.type].reason)
         badge.reason = tl(trans.badges[badge.type].reason);
+      else if (badge.reason && trans.badges[badge.reason] && trans.badges[badge.reason].reason)
+        badge.reason = tl(trans.badges[badge.reason].reason);
       if (badge.reason)
         return;
       if (badge.type == "sponsor" || badge.type == "contributor")
@@ -3372,25 +3374,30 @@
     type: "",
     icon: "",
     reason: "",
-    hue: 0,
-    sat: 0,
-    lit: 0,
+    hue: -1,
+    sat: -1,
+    lit: -1,
     name: "",
-    user: ""
-  }) {
+    user: "",
+    inbuilt: false
+  }, on_avatar = false) {
+    const classlist = on_avatar ? "avatar-status-dot" : "label no-hover";
     let elem = html.node`
-        <span class="label no-hover">
+        <span class=${classlist}>
             ${badge.name}
         </span>
     `;
-    if (badge.icon != "" && badge.hue > 0 && badge.sat > 0 && badge.lit > 0) {
+    if (badge.icon != "" && badge.hue > -1 && badge.sat > -1 && badge.lit > -1) {
       elem.style.setProperty("--mask", `url(${badge.icon})`);
       elem.style.setProperty("--hue-over", badge.hue);
       elem.style.setProperty("--sat-over", badge.sat);
       elem.style.setProperty("--lit-over", badge.lit);
+    } else if (badge.inbuilt) {
+      elem.classList.add(badge.type);
     } else {
       elem.classList.add(`user-status--bleh-${badge.type}`, `user-status--bleh-user-${badge.user}`);
     }
+    if (on_avatar) return elem;
     tippy(elem, {
       theme: "badge",
       placement: "bottom",
@@ -3406,142 +3413,63 @@
 
   // src/avatar.js
   function patch_avatar(avatar3, name2, type = "", parent = null, side = "right") {
-    if (avatar3.hasAttribute("data-bleh-avatar"))
-      return {};
+    if (avatar3.hasAttribute("data-bleh-avatar")) return {};
     avatar3.setAttribute("data-bleh-avatar", "true");
     let avatar_img = avatar3.querySelector("img");
     if (!avatar_img) return {};
     avatar_img.setAttribute("src", avatar_img.getAttribute("src").replace("/64s/", "/avatar70s/"));
-    let badges = load_badges(name2, true);
-    let buttons = html.node`
-        <div class="user-buttons view-buttons">
-            ${() => {
-      let btn = html.node`
-                    <a class="btn view-item chibi" data-type="profile" href="${root}user/${name2}">${tl(trans.profile)}</a>
-                `;
-      tippy(btn, {
-        content: tl(trans.profile)
-      });
-      return btn;
-    }}
-            ${() => {
-      let btn = html.node`
-                    <a class="btn view-item chibi" data-type="library" href="${root}user/${name2}/library">${tl(trans.library)}</a>
-                `;
-      tippy(btn, {
-        content: btn.textContent
-      });
-      return btn;
-    }}
-                    ${() => {
-      let btn = html.node`
-                    <a class="btn view-item chibi" data-type="shouts" href="${root}user/${name2}/shoutbox">${tl(trans.shouts)}</a>
-                `;
-      tippy(btn, {
-        content: btn.textContent
-      });
-      return btn;
-    }}
-        </div>
-    `;
-    if (badges) {
-      let pre_existing_badge = avatar3.querySelector(".avatar-status-dot");
-      if (pre_existing_badge)
-        avatar3.removeChild(pre_existing_badge);
-      avatar3.setAttribute("title", "");
-      let this_badge = sponsor_list.badges[name2];
-      if (!Array.isArray(sponsor_list.badges[name2])) {
-        log(`@${name2} 1 badge:`, "shout", "info", sponsor_list.badges[name2]);
-      } else {
-        log(`@${name2} multiple badges:`, "shout", "info", sponsor_list.badges[name2]);
-        let badges_length = Object.keys(sponsor_list.badges[name2]).length - 1;
-        this_badge = sponsor_list.badges[name2][badges_length];
-        log(`@${name2} using badge ${badges_length} as primary`, "shout", "info", this_badge);
-      }
-      let badge = document.createElement("span");
-      badge.classList.add("avatar-status-dot", `user-status--bleh-${this_badge.type}`, `user-status--bleh-user-${name2}`);
-      avatar3.appendChild(badge);
-      if (!parent)
-        avatar3.classList.add("avatar-can-hoverbox");
-      else
-        parent.classList.add("parent-can-hoverbox");
-      tippy(parent ? parent : avatar3, {
-        theme: "user",
-        content: html.node`
-                <div class="image-info">
-                    <div class="inner-image">
-                        ${html.node([avatar_img.outerHTML])}
-                    </div>
-                    <div class="info">
-                        <h5 class="title">${name2}</h5>
-                        <p class="badge user-status--bleh-${this_badge.type} user-status--bleh-user-${name2}" data-badge-type="${this_badge.type}" data-badge-user="${name2}">${this_badge.name}</p>
-                    </div>
+    avatar3.setAttribute("title", "");
+    let badges = load_badges(name2);
+    let pre_existing_badge = avatar3.querySelector(".avatar-status-dot");
+    if (badges && pre_existing_badge) avatar3.removeChild(pre_existing_badge);
+    if (!parent) avatar3.classList.add("avatar-can-hoverbox");
+    else parent.classList.add("parent-can-hoverbox");
+    let pre_existing_badge_type;
+    if (pre_existing_badge) pre_existing_badge_type = pre_existing_badge.classList[1].replace("avatar-status-dot--", "user-status-");
+    if (pre_existing_badge_type == "user-follow") {
+      pre_existing_badge = null;
+      pre_existing_badge_type = null;
+    }
+    if (badges) avatar3.appendChild(create_badge(badges[badges.length - 1], true));
+    tippy(parent ? parent : avatar3, {
+      theme: "user",
+      content: html.node`
+            <div class="image-header">
+                <div class="inner-image">
+                    ${html.node([avatar_img.outerHTML])}
                     <a href="${root}user/${name2}" class="link-over"></a>
                 </div>
-                ${buttons}
-            `,
-        placement: side,
-        interactive: true,
-        delay: [200, 0]
-      });
-      return this_badge;
-    } else {
-      let pre_existing_badge = avatar3.querySelector(".avatar-status-dot");
-      if (!pre_existing_badge) {
-        if (!parent)
-          avatar3.classList.add("avatar-can-hoverbox");
-        else
-          parent.classList.add("parent-can-hoverbox");
-        tippy(parent ? parent : avatar3, {
-          theme: "user",
-          content: html.node`
-                    <div class="image-info">
-                        <div class="inner-image">
-                            ${html.node([avatar_img.outerHTML])}
-                        </div>
-                        <div class="info">
-                            <h5 class="title">${name2}</h5>
-                        </div>
-                        <a href="${root}user/${name2}" class="link-over"></a>
-                    </div>
-                    ${buttons}
-                `,
-          placement: side,
-          interactive: true,
-          delay: [200, 0]
-        });
-        return {};
-      } else {
-        if (!parent)
-          avatar3.classList.add("avatar-can-hoverbox");
-        else
-          parent.classList.add("parent-can-hoverbox");
-        let type2 = pre_existing_badge.classList[1].replace("avatar-status-dot--", "user-status-");
-        tippy(parent ? parent : avatar3, {
-          theme: "user",
-          content: html.node`
-                    <div class="image-info">
-                        <div class="inner-image">
-                            ${html.node([avatar_img.outerHTML])}
-                        </div>
-                        <div class="info">
-                            <h5 class="title">${name2}</h5>
-                            <p class="badge ${type2}">${tl(trans.badges[type2].name)}</p>
-                        </div>
-                        <a href="${root}user/${name2}" class="link-over"></a>
-                    </div>
-                    ${buttons}
-                `,
-          placement: side,
-          interactive: true,
-          delay: [200, 0]
-        });
-        avatar3.setAttribute("title", "");
-        return {
-          type: pre_existing_badge.classList[1]
-        };
-      }
-    }
+            </div>
+            <div class="info">
+                <h5 class="title"><a href="${root}user/${name2}">${name2}</a></h5>
+                ${badges ? html.node`
+                <div class="badges">
+                    ${badges.map((badge) => create_badge(badge))}
+                    ${pre_existing_badge ? create_badge({
+        type: pre_existing_badge_type,
+        name: tl(trans.badges[pre_existing_badge_type].name),
+        reason: tl(trans.badges[pre_existing_badge_type].reason),
+        inbuilt: true
+      }) : ""}
+                </div>
+                ` : pre_existing_badge ? html.node`
+                <div class="badges">
+                    ${create_badge({
+        type: pre_existing_badge_type,
+        name: tl(trans.badges[pre_existing_badge_type].name),
+        reason: tl(trans.badges[pre_existing_badge_type].reason),
+        inbuilt: true
+      })}
+                </div>
+                ` : ""}
+            </div>
+        `,
+      placement: side,
+      interactive: true,
+      trigger: "click"
+    });
+    if (badges) return badges[badges.length - 1];
+    else if (pre_existing_badge) return pre_existing_badge.classList[1];
   }
   function return_name_from_avatar(avatar3) {
     if (!avatar3)
@@ -19053,12 +18981,17 @@
         let shout_name_text = shout_name.textContent;
         let shout_avatar = shout.querySelector(".shout-user-avatar");
         let badge = patch_avatar(shout_avatar, shout_name_text, "shout");
-        if (badge.type) {
-          if (badge.type == "avatar-status-dot--staff")
-            shout.classList.add("staff-shout");
-          shout_avatar.setAttribute("data-avatar-themed", "true");
-          shout_avatar.classList.add(`user-status--bleh-${badge.type}`, `user-status--bleh-user-${shout_name_text}`);
-          shout_name.classList.add(`user-status--bleh-${badge.type}`, `user-status--bleh-user-${shout_name_text}`);
+        if (badge && badge.type) {
+          if (badge.type == "avatar-status-dot--staff") shout.classList.add("staff-shout");
+          if (badge.hue > -1 && badge.sat > -1 && badge.lit > -1) {
+            shout_name.style.setProperty("--hue-over", badge.hue);
+            shout_name.style.setProperty("--sat-over", badge.sat);
+            shout_name.style.setProperty("--lit-over", badge.lit);
+          } else {
+            shout_name.classList.add(`user-status--bleh-${badge.type}`, `user-status--bleh-user-${badge.user}`);
+          }
+        } else if (badge) {
+          shout_name.classList.add(badge.type);
         }
         if (settings.shout_markdown) {
           let shout_body = shout.querySelector(".shout-body p");
@@ -19359,11 +19292,7 @@
     users.forEach((user) => {
       let avatar3 = user.querySelector(".user-list-avatar");
       let name2 = user.querySelector(".user-list-link").textContent;
-      let badge = patch_avatar(avatar3, name2, "follow");
-      if (badge.type) {
-        user.querySelector(".user-list-link").classList.add(`user-status--bleh-${badge.type}`, `user-status--bleh-user-${name2}`);
-        user.classList.add("colourful", `user-status--bleh-${badge.type}`, `user-status--bleh-user-${name2}`);
-      }
+      patch_avatar(avatar3, name2, "follow");
       let artists = user.querySelectorAll(".user-list-shared-artists a");
       artists.forEach((artist) => {
         artist.textContent = correct_artist(artist.textContent);

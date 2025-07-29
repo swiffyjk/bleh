@@ -39,13 +39,18 @@ export function patch_shouts() {
 
             let badge = patch_avatar(shout_avatar, shout_name_text, 'shout');
 
-            if (badge.type) {
-                if (badge.type == 'avatar-status-dot--staff')
-                    shout.classList.add('staff-shout');
+            if (badge && badge.type) {
+                if (badge.type == 'avatar-status-dot--staff') shout.classList.add('staff-shout');
 
-                shout_avatar.setAttribute('data-avatar-themed', 'true');
-                shout_avatar.classList.add(`user-status--bleh-${badge.type}`, `user-status--bleh-user-${shout_name_text}`);
-                shout_name.classList.add(`user-status--bleh-${badge.type}`, `user-status--bleh-user-${shout_name_text}`);
+                if (badge.hue > -1 && badge.sat > -1 && badge.lit > -1) {
+                    shout_name.style.setProperty('--hue-over', badge.hue);
+                    shout_name.style.setProperty('--sat-over', badge.sat);
+                    shout_name.style.setProperty('--lit-over', badge.lit);
+                } else {
+                    shout_name.classList.add(`user-status--bleh-${badge.type}`, `user-status--bleh-user-${badge.user}`);
+                }
+            } else if (badge) {
+                shout_name.classList.add(badge.type);
             }
 
             if (settings.shout_markdown) {

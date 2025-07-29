@@ -43,9 +43,10 @@ export function load_badges(user, solo = false) {
             }
         }
 
-        // if there's a translation available, use it instead of defaulting
         if (trans.badges[badge.type] && trans.badges[badge.type].reason)
             badge.reason = tl(trans.badges[badge.type].reason);
+        else if (badge.reason && trans.badges[badge.reason] && trans.badges[badge.reason].reason)
+            badge.reason = tl(trans.badges[badge.reason].reason);
 
         if (badge.reason)
             return;
@@ -70,10 +71,13 @@ export function create_badge(badge={
     sat: -1,
     lit: -1,
     name: '',
-    user: ''
-}) {
+    user: '',
+    inbuilt: false
+}, on_avatar = false) {
+    const classlist = on_avatar ? 'avatar-status-dot' : 'label no-hover';
+
     let elem = html.node`
-        <span class="label no-hover">
+        <span class=${classlist}>
             ${badge.name}
         </span>
     `;
@@ -84,9 +88,13 @@ export function create_badge(badge={
         elem.style.setProperty('--hue-over', badge.hue);
         elem.style.setProperty('--sat-over', badge.sat);
         elem.style.setProperty('--lit-over', badge.lit);
+    } else if (badge.inbuilt) {
+        elem.classList.add(badge.type);
     } else {
         elem.classList.add(`user-status--bleh-${badge.type}`, `user-status--bleh-user-${badge.user}`);
     }
+
+    if (on_avatar) return elem;
 
     tippy(elem, {
         theme: 'badge',
