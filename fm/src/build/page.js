@@ -19,7 +19,8 @@ export let notifications = {};
 
 tippy.setDefaultProps({
     arrow: false,
-    duration: [0, 220]
+    duration: [0, 220],
+    offset: [0, 4]
 });
 
 /**
@@ -32,7 +33,7 @@ tippy.setDefaultProps({
  */
 export let auth = {
     name: null,
-    pro: false,
+    pro: null,
     sponsor: false,
     avatar: null,
     sets: {
@@ -169,10 +170,11 @@ export let page = {
 
 export let shout_parse_queue = [];
 
-export const bleh_url = 'https://www.last.fm{root}bleh';
-export const setup_url = 'https://www.last.fm{root}bleh/setup';
-export const sponsor_url = 'https://www.last.fm{root}bleh/sponsor';
-export const api_url = 'https://www.last.fm{root}bleh/api';
+export const bleh_url = '{root}bleh';
+export const setup_url = '{root}bleh/setup';
+export const sponsor_url = '{root}bleh/sponsor';
+export const api_url = '{root}bleh/api';
+export const minis_url = '{root}bleh/minis';
 
 // WARN: please provide your own if hosting a fork
 export const api_key = '85c118b69b1437844fe75fcd2bf27261';

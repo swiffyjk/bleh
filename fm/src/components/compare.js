@@ -9,24 +9,18 @@ import {log} from '../build/log';
 import {auth, page, root} from '../build/page';
 import {clean_number, sanitise} from '../build/tools';
 import {lang, tl, trans} from '../build/trans';
-import {dialog} from './dialog';
 import {music_grids} from './music_grid';
 import {notify, notify_rm} from './notify';
 import {select} from './select';
 import {patch_titles} from './track';
+import {render_user} from "../pages/minis.js";
+import {settings} from "../build/config.js";
 
-export function compare() {
-    // TODO: get current user scrobbles from auth menu
-    // only problem is you would have to remove the "scrobbles" text
-    if (page.state.scrobbles === 0) {
-        notify({
-            id: 'compare_not_possible',
-            title: tl(trans.compare),
-            body: tl(trans.profile_does_not_have_enough_scrobbles),
-            icon: 'icon-16-arrows'
-        });
-        return;
-    }
+export function compare({
+    host,
+    sidebar
+}={}) {
+    if (!host || !sidebar) return;
 
     let pages;
     let timeframe;
@@ -35,106 +29,146 @@ export function compare() {
     let submit;
     let body;
 
-    dialog({
-        id: 'compare',
-        title: tl(trans.compare),
-        body: html.node`
-            <div class="compare-header">
-                <div class="compare-users">
-                    <div class="compare-user">
-                        <div class="avatar">
-                            <img src="${auth.avatar.replace('/avatar42s/', '/avatar170s/')}" alt="${tl(trans.your_avatar)}">
-                        </div>
-                        <strong>${auth.name}</strong>
-                    </div>
-                    <div class="bleh-icon"></div>
-                    <div class="compare-user">
-                        <div class="avatar">
-                            <img src="${page.avatar}" alt="${tl(trans.avatar_for_user).replace('{u}', page.name)}">
-                        </div>
-                        <strong>${page.name}</strong>
-                    </div>
-                </div>
-                <div class="compare-selection">
-                    ${pages = select([
-                        {
-                            value: '1',
-                            text: 50,
-                        },
-                        {
-                            value: '2',
-                            text: 100,
-                        },
-                        {
-                            value: '3',
-                            text: 150,
-                        },
-                        {
-                            value: '4',
-                            text: 200,
-                        },
-                        {
-                            value: '5',
-                            text: 250,
-                        },
-                        {
-                            value: '6',
-                            text: 300,
-                        }
-                    ], '3')}
-                    ${type = select([
-                        {
-                            value: 'artists',
-                            text: html`<div class="bleh-icon" style="--icon: var(--icon-16-artist)" />${tl(trans.artists)}`,
-                        },
-                        {
-                            value: 'albums',
-                            text: html`<div class="bleh-icon" style="--icon: var(--icon-16-album)" />${tl(trans.albums)}`,
-                        },
-                        {
-                            value: 'tracks',
-                            text: html`<div class="bleh-icon" style="--icon: var(--icon-16-track)" />${tl(trans.tracks)}`,
-                        }
-                    ], 'albums')}
-                    ${timeframe = select([
-                        {
-                            value: 'LAST_7_DAYS',
-                            text: tl(trans.last_count_days).replace('{c}', '7'),
-                        },
-                        {
-                            value: 'LAST_30_DAYS',
-                            text: tl(trans.last_count_days).replace('{c}', '30'),
-                        },
-                        {
-                            value: 'LAST_90_DAYS',
-                            text: tl(trans.last_count_days).replace('{c}', '90'),
-                        },
-                        {
-                            value: 'LAST_180_DAYS',
-                            text: tl(trans.last_count_days).replace('{c}', '180'),
-                        },
-                        {
-                            value: 'LAST_365_DAYS',
-                            text: tl(trans.last_count_days).replace('{c}', '365'),
-                        }
-                    ], 'LAST_90_DAYS')}
-                    <button class="btn chibi icon primary compare" ref=${el => submit = el} onclick=${() => begin_comparing()}>${tl(trans.compare)}</button>
-                </div>
-            </div>
-            <div class="compare-body" data-filled="false" ref=${el => body = el}>
-                <div class="loading-data-container">
-                    <div class="loading-data-text info">${tl(trans.choose_a_timeframe_above)}</div>
-                </div>
-            </div>
-        `,
-        type: 'compare'
-    });
+    if (page.name == auth.name) {
+        page.name = '';
+        page.avatar = '';
+        page.requested.profile = '';
+    }
 
-    tippy(submit, {
-        content: tl(trans.compare)
-    });
+    let user;
+    render(host, html`
+        <div class="compare-header">
+            <div class="compare-users">
+                <div class="compare-user">
+                    <div class="avatar">
+                        <img src="${auth.avatar.replace('/avatar42s/', '/avatar170s/')}" alt="${tl(trans.your_avatar)}">
+                    </div>
+                    <strong>${auth.name}</strong>
+                </div>
+                <div class="bleh-icon"></div>
+                <div class="compare-user focus" ref=${el => user = el}>
+                    ${render_user(page.name, page.avatar, user, true)}
+                </div>
+            </div>
+            <div class="compare-selection">
+                ${pages = select([
+                    {
+                        value: '1',
+                        text: 50,
+                    },
+                    {
+                        value: '2',
+                        text: 100,
+                    },
+                    {
+                        value: '3',
+                        text: 150,
+                    },
+                    {
+                        value: '4',
+                        text: 200,
+                    },
+                    {
+                        value: '5',
+                        text: 250,
+                    },
+                    {
+                        value: '6',
+                        text: 300,
+                    }
+                ], '3')}
+                ${type = select([
+                    {
+                        value: 'artists',
+                        text: html`<div class="bleh-icon" style="--icon: var(--icon-16-artist)" />${tl(trans.artists)}`,
+                    },
+                    {
+                        value: 'albums',
+                        text: html`<div class="bleh-icon" style="--icon: var(--icon-16-album)" />${tl(trans.albums)}`,
+                    },
+                    {
+                        value: 'tracks',
+                        text: html`<div class="bleh-icon" style="--icon: var(--icon-16-track)" />${tl(trans.tracks)}`,
+                    }
+                ], 'albums')}
+                ${timeframe = select([
+                    {
+                        value: 'LAST_7_DAYS',
+                        text: tl(trans.last_count_days).replace('{c}', '7'),
+                    },
+                    {
+                        value: 'LAST_30_DAYS',
+                        text: tl(trans.last_count_days).replace('{c}', '30'),
+                    },
+                    {
+                        value: 'LAST_90_DAYS',
+                        text: tl(trans.last_count_days).replace('{c}', '90'),
+                    },
+                    {
+                        value: 'LAST_180_DAYS',
+                        text: tl(trans.last_count_days).replace('{c}', '180'),
+                    },
+                    {
+                        value: 'LAST_365_DAYS',
+                        text: tl(trans.last_count_days).replace('{c}', '365'),
+                    }
+                ], 'LAST_90_DAYS')}
+                <button class="btn icon primary compare" ref=${el => submit = el} onclick=${() => begin_comparing()}>${tl(trans.compare)}</button>
+            </div>
+        </div>
+        <div class="compare-body" data-filled="false" ref=${el => body = el}>
+            <div class="loading-data-container">
+                <div class="loading-data-text info">${tl(trans.choose_a_timeframe_above)}</div>
+            </div>
+        </div>
+    `);
+
+    let setting_group;
+    let input;
+    render(sidebar, html`
+        <h2>${tl(trans.settings)}</h2>
+        <div class="setting-group" ref=${el => setting_group = el}>
+            <div class="setting v" data-type="text">
+                <div class="heading">
+                    <h5>${tl(trans.compare_with)}</h5>
+                </div>
+                <div class="input-container content-form">
+                    <input type="text" class="input" ref=${el => input = el} placeholder=${tl(trans.enter_a_profile)} value=${page.requested.profile} onchange=${e => {
+                        page.requested.profile = e.target.value;
+                        page.name = page.requested.profile;
+                        
+                        page.avatar = '';
+                        if (page.name == auth.name) page.avatar = auth.avatar;
+                        
+                        render(user, html`
+                            ${render_user(page.name, page.avatar, user, true)}
+                        `);
+                    }}>
+                    ${() => {
+                        let btn = html.node`
+                            <button class="btn chibi icon" data-type="profile_shortcut" onclick=${() => {
+                                if (settings.profile_shortcut == '') return;
+                                
+                                input.value = settings.profile_shortcut;
+                                input.dispatchEvent(new Event('change'));
+                            }}>${tl(trans.profile_shortcut.name)}</button>
+                        `;
+                        
+                        tippy(btn, {
+                            content: tl(trans.profile_shortcut.name)
+                        });
+                        
+                        return btn;
+                    }}
+                </div>
+            </div>
+        </div>
+    `);
+    let compare_settings = setting_group.querySelectorAll(':scope > .setting');
 
     function begin_comparing(bypass = false) {
+        if (page.name == '') return;
+
         if (parseInt(pages.value) > 3 && !bypass) {
             let warn = notify({
                 id: 'collage_warning',
@@ -159,6 +193,9 @@ export function compare() {
         pages.querySelector('button').disabled = true;
         type.querySelector('button').disabled = true;
         timeframe.querySelector('button').disabled = true;
+        compare_settings.forEach(option => {
+            option.setAttribute('disabled', true);
+        });
         submit.disabled = true;
 
         page.state.compare = {
@@ -166,7 +203,6 @@ export function compare() {
             other: [],
             shared: []
         };
-        body.setAttribute('data-filled', 'false');
         get_grid(auth.name, 1, parseInt(pages.value), page.name);
     }
 
@@ -225,6 +261,9 @@ export function compare() {
                     pages.querySelector('button').disabled = false;
                     type.querySelector('button').disabled = false;
                     timeframe.querySelector('button').disabled = false;
+                    compare_settings.forEach(option => {
+                        option.setAttribute('disabled', false);
+                    });
                     submit.disabled = false;
 
                     continue_comparing();
@@ -268,12 +307,9 @@ export function compare() {
                     <div class="loading-data-text failed">${tl(trans.nothing_in_common)}</div>
                 </div>
             `);
-            body.setAttribute('data-filled', 'false');
 
             return;
         }
-
-        body.setAttribute('data-filled', 'true');
 
         if (type.value != 'tracks') {
             let grid = document.createElement('ol');

@@ -7,7 +7,7 @@
 import {handle_error_500} from "../page";
 import {log} from "./log";
 import {auth, auth_link, setRoot} from "./page";
-import {clamp_sat, rgb_to_hsl} from "./tools";
+import {clamp_lit, clamp_sat, rgb_to_hsl} from "./tools";
 
 // loads your selected language in last.fm
 export let lang = 'en';
@@ -433,6 +433,9 @@ export const trans = {
         de: 'Aussehen',
         pt: 'Aparência'
     },
+    visual: {
+        en: 'Visual'
+    },
     theme: {
         en: 'Theme',
         pt: 'Tema'
@@ -647,9 +650,7 @@ export const trans = {
         pt: 'Avançado'
     },
     recommendations: {
-        en: 'Recommendations',
-        de: 'Empfelungen',
-        pt: 'Recomendações'
+        en: 'Suggested'
     },
     releases: {
         en: 'Releases',
@@ -2759,7 +2760,8 @@ export const trans = {
     },
     made_with_love: {
         // lowercase in design
-        en: 'made with {h} by {u} and {c}contributors{/c}'
+        en: 'made with {h} by {u} and {c}contributors{/c}',
+        de: 'kreiert mit {h} von {u} und {c}Mitwirkenden{/c}'
     },
     love_lower: {
         // replaces the {h} in the above sentence
@@ -3004,6 +3006,178 @@ export const trans = {
         body: {
             en: 'Decreases the intensity of animations, hover effects, and other moving parts'
         }
+    },
+    view_backgrounds_on: {
+        en: 'View banners on'
+    },
+    own_profile: {
+        en: 'Own profile'
+    },
+    other_profiles: {
+        en: 'Other profiles'
+    },
+    profile_avi_background: {
+        name: {
+            en: 'Ignore banners and use avatar image'
+        },
+        body: {
+            en: 'All custom and artist-based banner images will be replaced by the user’s avatar'
+        }
+    },
+    profile_banner: {
+        name: {
+            en: 'Profile banner'
+        },
+        body: {
+            en: 'Add your own custom banner image to your profile with ![banner](image url) in your bio'
+        }
+    },
+    none: {
+        en: 'None'
+    },
+    current_banner_value: {
+        en: 'Current banner: {v}'
+    },
+    show_your_progress: {
+        name: {
+            en: 'Show your plays compared to last week'
+        },
+        body: {
+            en: 'Compares your current progress to last week’s average, requires Last.fm Pro'
+        }
+    },
+    manual: {
+        en: 'Manual'
+    },
+    enter_a_manual_date: {
+        en: 'Enter a date in the format YYYY-MM-DD'
+    },
+    minimum_value: {
+        en: 'Minimum: {v}'
+    },
+    maximum_value: {
+        en: 'Maximum: {v}'
+    },
+    manual_date: {
+        en: 'Type a date manually'
+    },
+    red: {
+        en: 'Red'
+    },
+    orange: {
+        en: 'Orange'
+    },
+    yellow: {
+        en: 'Yellow'
+    },
+    lime: {
+        en: 'Lime'
+    },
+    green: {
+        en: 'Green'
+    },
+    aqua: {
+        en: 'Aqua'
+    },
+    blue: {
+        en: 'Blue'
+    },
+    purple: {
+        en: 'Purple'
+    },
+    pink: {
+        en: 'Pink'
+    },
+    grey: {
+        en: 'Grey'
+    },
+    minis: {
+        en: 'Minis'
+    },
+    minis_description: {
+        en: 'Play mini-games, puzzles, and interact with tools all powered by your listening history'
+    },
+    no_mini_found: {
+        en: 'No mini found for ‘{v}’'
+    },
+    pixel: {
+        name: {
+            en: 'Pixel'
+        },
+        body: {
+            en: 'Guess the album from it’s pixelated artwork and clues'
+        }
+    },
+    rainbow: {
+        name: {
+            en: 'Rainbow'
+        },
+        body: {
+            en: 'Arrange your listening history into a swirl of colours'
+        }
+    },
+    receipt: {
+        name: {
+            en: 'Receipt'
+        },
+        body: {
+            en: 'Print out your top tracks as a receipt'
+        }
+    },
+    collage_description: {
+        en: 'Generate a personalised image based on your listening history and options'
+    },
+    labs_cta: {
+        en: 'If you’re looking for more, try out Last.fm’s own Labs feature. {a}View now{/a}'
+    },
+    compare_description: {
+        en: 'Find your shared artists, albums, and tracks with another'
+    },
+    enter_a_profile: {
+        en: 'Enter a profile'
+    },
+    compare_with: {
+        en: 'Compare with'
+    },
+    value_settings: {
+        en: '{v} Settings'
+    },
+    suggest_title: {
+        name: {
+            en: 'This page doesn’t seem official'
+        },
+        body: {
+            en: 'Navigate to {v} instead'
+        }
+    },
+    lyrics: {
+        name: {
+            en: 'Lyrics'
+        },
+        body: {
+            en: 'Guess the song from a random lyric'
+        }
+    },
+    jumbled_title: {
+        en: 'Jumbled title'
+    },
+    re_jumble: {
+        en: 'Re-jumble'
+    },
+    jumbled_guess: {
+        en: 'Guess the album name with the pixelated cover, jumbled title, and hints!'
+    },
+    enter_a_guess: {
+        en: 'Enter a guess'
+    },
+    hints: {
+        en: 'Hints'
+    },
+    global: {
+        en: 'Global'
+    },
+    mutuals: {
+        en: 'Mutuals'
     }
 }
 
@@ -6065,15 +6239,27 @@ export function tl(key) {
     return key.en;
 }
 
-export function lookup_lang() {
-    const troot = document.querySelector('.masthead-logo a');
+function get_lang() {
+    const path = window.location.pathname;
+    const segments = path.split('/');
+    const lang = segments[1];
 
-    if (!troot) {
+    if (/^[a-z]{2}$/.test(lang)) {
+        return `/${lang}/`;
+    }
+
+    return '/';
+}
+
+export function lookup_lang() {
+    const logo = document.querySelector('.masthead-logo a');
+
+    if (!logo) {
         handle_error_500();
         return;
     }
 
-    setRoot(troot.getAttribute('href'));
+    setRoot(get_lang());
 
     let previous_avi = auth.avatar;
     if (auth_link.state) {
@@ -6092,7 +6278,7 @@ export function lookup_lang() {
 
                     auth.sets.hue = hsl.h;
                     auth.sets.sat = clamp_sat((hsl.s / 100) * 3);
-                    auth.sets.lit = (hsl.l / 100) + 0.35;
+                    auth.sets.lit = clamp_lit(auth.sets.sat, (hsl.l / 100) + 0.35);
                 });
             } catch(e) {}
         }

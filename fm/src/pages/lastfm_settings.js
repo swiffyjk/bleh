@@ -759,16 +759,16 @@ function bleh_communication_panel(token) {
         <h4>${tl(trans.block_list)}</h4>
         <div class="user-top-panel">
             <div class="user-top-avatar user-top-avatar-side-left"><div class="bleh-icon"></div></div>
-            <img class="user-top-avatar user-top-avatar-main" src="${auth.avatar.replace('avatar42s', 'avatar300s')}" alt="${auth.name}">
+            <img class="user-top-avatar user-top-avatar-main" src=${auth.avatar.replace('avatar42s', 'avatar300s')} alt=${auth.name}>
             <div class="user-top-avatar user-top-avatar-side-right"><div class="bleh-icon"></div></div>
         </div>
         <div class="setting" data-type="text">
             <div class="heading">
                 <h5>${tl(trans.profile)}</h5>
                 <form action="${root}settings/privacy#ignorelist" name="ignorelist" method="post">
-                    <input type="hidden" name="csrfmiddlewaretoken" value="${page.token}">
+                    <input type="hidden" name="csrfmiddlewaretoken" value=${page.token}>
                     <div class="input-container">
-                        <input type="text" maxlength="80" id="id_user" name="user" placeholder="${tl(trans.enter_username)}">
+                        <input type="text" maxlength="80" id="id_user" name="user" placeholder=${tl(trans.enter_username)}>
                         <input type="hidden" name="listaction" value="add">
                         <input type="hidden" name="submit" value="ignorelist">
                         <button class="bleh--btn primary icon block" type="submit">${tl(trans.block)}</button>

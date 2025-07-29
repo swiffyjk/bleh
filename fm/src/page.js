@@ -14,6 +14,7 @@ import {
     bleh_url,
     last_page_subpage,
     last_page_type,
+    minis_url,
     page,
     root,
     setup_url,
@@ -55,7 +56,7 @@ import {bleh_tracks} from "./pages/track";
 import {patch_wiki} from "./pages/wiki";
 import {start_rain} from "./rain";
 import {seasonal_timer_end, set_season} from "./seasonal";
-import {parse_shout_queue, patch_shouts, shout_header} from "./shout";
+import {parse_shout_queue, patch_shouts, shout_header, shout_messages} from "./shout";
 import {ff} from "./sku";
 import {bleh_sponsor_page, sponsors} from "./sponsor";
 import {append_style, update_check} from "./style";
@@ -68,6 +69,7 @@ import {register_rabbit} from "./components/rabbit.js";
 import {dialog_extender} from "./components/dialog_extender.js";
 import {bleh_auth} from "./pages/auth.js";
 import {bleh_labs} from "./pages/labs.js";
+import {bleh_minis} from "./pages/minis.js";
 
 export function bleh() {
     let head_observer = new MutationObserver((mutations) => {
@@ -308,6 +310,8 @@ function main_flow() {
         });
     }
 
+    shout_messages();
+
     subscribe_to_events();
 
     dialog_extender();
@@ -398,13 +402,18 @@ function load_page() {
     detect_mobile();
     page.platform = detect_platform();
 
-    if (window.location.href.startsWith(setup_url.replace('{root}', root))) {
+    if (window.location.pathname.startsWith(setup_url.replace('{root}', root))) {
         bleh_setup();
-    } else if (window.location.href.startsWith(sponsor_url.replace('{root}', root))) {
+    } else if (window.location.pathname.startsWith(sponsor_url.replace('{root}', root))) {
         bleh_sponsor_page();
-    } else if (window.location.href.startsWith(api_url.replace('{root}', root))) {
+    } else if (window.location.pathname.startsWith(api_url.replace('{root}', root))) {
         bleh_auth();
-    } else if (window.location.href.startsWith(bleh_url.replace('{root}', root))) {
+    } else if (window.location.pathname.startsWith(minis_url.replace('{root}', root))) {
+        page.type = 'minis';
+        bleh_home();
+        bleh_minis();
+    } else if (window.location.pathname.startsWith(bleh_url.replace('{root}', root))) {
+        page.type = 'bleh_settings';
         bleh_home();
         bleh_settings();
     } else {
@@ -459,12 +468,14 @@ function load_page() {
             let sort_menu = page.structure.main.querySelector('.dropdown-menu-clickable');
 
             let sort_wrap = document.createElement('div');
-            sort_wrap.classList.add('dropdown-top-wrap');
+            if (sort_wrap) {
+                sort_wrap.classList.add('dropdown-top-wrap');
 
-            sort_wrap.appendChild(sort_button);
-            sort_wrap.appendChild(sort_menu);
+                sort_wrap.appendChild(sort_button);
+                sort_wrap.appendChild(sort_menu);
 
-            page.structure.main.insertBefore(sort_wrap, page.structure.main.firstElementChild);
+                page.structure.main.insertBefore(sort_wrap, page.structure.main.firstElementChild);
+            }
         }
 
         if (page.subpage == 'image') {
@@ -539,6 +550,8 @@ function page_title() {
             title = tl(trans.charts);
         else if (page.type == 'labs')
             title = tl(trans.labs.name);
+        else if (page.type == 'minis')
+            title = tl(trans.minis);
 
         if (page.type == 'inbox') {
             if (page.subpage == 'notifications')
@@ -697,36 +710,20 @@ export function update_page() {
 }
 
 export function register_background(url, origin = null) {
-    let flag = ff('katsune');
+    let background = page.structure.container.querySelector(':scope > .bleh-background');
 
-    let background;
-    if (flag) {
-        background = page.structure.container.querySelector('.bleh-background');
+    if (!background) {
+        background = html.node`
+            <div class="bleh-background katsune-bleh-background" />
+        `;
 
-        if (!background) {
-            background = document.createElement('div');
-            background.classList.add('bleh-background', 'katsune-bleh-background');
-
-            let border = document.createElement('div');
-            border.classList.add('katsune-bleh-background-border');
-            background.appendChild(border);
-
-            page.structure.container.insertBefore(background, page.structure.container.firstElementChild);
-        }
-    } else {
-        background = document.body.querySelector('.bleh-background');
-
-        if (!background) {
-            background = document.createElement('div');
-            background.classList.add('bleh-background');
-
-            document.body.appendChild(background);
-        }
+        page.structure.container.insertBefore(background, page.structure.container.firstElementChild);
     }
 
     background.setAttribute('data-page-type', page.type);
     background.setAttribute('data-page-subpage', page.subpage);
     background.setAttribute('data-background-origin', origin);
+    background.setAttribute('data-background-coloured', settings.hue_from_album);
 
     if (url)
         background.style.setProperty('background-image', `url(${url})`);

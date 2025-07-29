@@ -20,6 +20,6 @@ export function bleh_auto_edits() {
             <a class="secondary-nav-item-link" href="${root}settings/subscription">
                 ${tl(trans.back)}
             </a>
-        <li>
+        </li>
     `, nav.firstElementChild);
 }

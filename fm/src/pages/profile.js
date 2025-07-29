@@ -12,7 +12,7 @@ import {sponsor_list} from "../build/sponsor"
 import {clean_number, lazy, sanitise} from "../build/tools"
 import {lang, tl, trans} from "../build/trans"
 import {prep_chart_colours} from '../chart'
-import {load_badges} from "../components/badge"
+import {create_badge, load_badges} from "../components/badge"
 import {dialog} from "../components/dialog"
 import {correct_artist, correct_item_by_artist, name_includes} from "../components/lotus"
 import {markdown} from "../components/markdown"
@@ -27,7 +27,6 @@ import {bleh_user_library} from "./glacier"
 import {use_pronouns} from "./lastfm_settings"
 import {bleh_obsession} from "./obsession"
 import {html, render} from "lighterhtml";
-import {collage} from "../components/collage.js";
 import {save_setting, setting} from "../components/settings.js";
 import {save_banner_to_cache} from "../components/banner.js";
 import {submit_scrobble} from '../components/scrobble.js'
@@ -59,6 +58,7 @@ export function bleh_profiles() {
     checkup_page_structure(is_subpage, profile_header);
 
     page.supports_shoutbox = page.structure.nav.querySelector('.secondary-nav-item--shoutbox');
+
 
     let new_account = false;
 
@@ -100,6 +100,8 @@ export function bleh_profiles() {
             </section>
         `;
 
+        const avatar_img = avatar.querySelector(':scope > img');
+
         if (page.name == auth.name && !settings.profile_header_own) {
             register_background(null, 'hidden');
         } else if (page.name != auth.name && !settings.profile_header_others) {
@@ -107,7 +109,7 @@ export function bleh_profiles() {
         } else {
             if (settings.profile_avi_background) {
                 if (avatar)
-                    register_background(avatar.querySelector('img').getAttribute('src').replace('/avatar170s/', '/ar0/'), 'avatar');
+                    register_background(avatar_img.querySelector('img').getAttribute('src').replace('/avatar170s/', '/ar0/'), 'avatar');
                 else
                     register_background(null, 'none');
             } else {
@@ -118,6 +120,9 @@ export function bleh_profiles() {
                     register_background(null, 'none');
             }
         }
+
+        if (page.name == settings.profile_shortcut)
+            localStorage.setItem('bleh_profile_shortcut_avi', avatar_img.getAttribute('src'));
 
         page.structure.container.insertBefore(redesigned_profile_header, page.structure.container.firstElementChild);
         profile_header.classList.add('legacy-header');
@@ -151,10 +156,6 @@ export function bleh_profiles() {
         loved_tab.textContent = tl(trans.loved);
 
     if (!is_subpage) {
-        if (page.requested.collage == '') collage({
-            redirect: true
-        });
-
         let is_following = page.structure.container.querySelector('.label.user-follow');
 
 
@@ -173,7 +174,7 @@ export function bleh_profiles() {
                     <h2>${tl(trans.activity)}</h2>
                     ${render_activity_list()}
                     <div class="more-link">
-                        <a href="${root}bleh?tab=profiles&setting=activities">${tl(trans.activity_settings)}</a>
+                        <a href="${root}bleh/profiles?setting=activities">${tl(trans.activity_settings)}</a>
                     </div>
                 </section>
             `;
@@ -497,9 +498,18 @@ export function bleh_profiles() {
             page.structure.content_top.classList.add('listening-report-navlist');
             page.structure.row.classList.add('listening-report');
 
+            let nav = page.structure.content_top.querySelector('.navlist');
+            nav.classList.add('redesigned-navigation');
+            page.structure.content_top.after(html.node`
+                <div class="toolbar">
+                    ${nav}
+                </div>
+            `);
+            page.structure.content_top.style.display = 'none';
+
             let report_box_container = document.body.querySelector('.report-box-container--overview');
             if (report_box_container) {
-                page.structure.content_top.after(report_box_container);
+                page.structure.row.appendChild(report_box_container);
             } else {
                 let dashboard = page.structure.container.querySelector('.user-dashboard');
                 if (!dashboard) return;
@@ -753,27 +763,8 @@ export function bleh_profiles() {
     let badges = load_badges(page.name);
 
     if (badges) {
-        badges.forEach((this_badge) => {
-            let badge = document.createElement('span');
-            badge.classList.add('label', `user-status--bleh-${this_badge.type}`, `user-status--bleh-user-${page.name}`);
-            badge.textContent = this_badge.name;
-            profile_name_obj.appendChild(badge);
-
-            if (ff('badges')) {
-                badge.classList.add('no-hover');
-
-                tippy(badge, {
-                    theme: 'badge',
-                    placement: 'bottom',
-                    content: html.node`
-                        <div class="badge-name">${this_badge.name}</div>
-                        <div class="badge-reason">${this_badge.reason}</div>
-                    `,
-                });
-            }
-
-            if (this_badge.type == 'sponsor')
-                badge.setAttribute('onclick', '_sponsor()');
+        badges.forEach((badge) => {
+            profile_name_obj.appendChild(create_badge(badge));
         });
     }
 
@@ -848,17 +839,17 @@ function patch_profile_following() {
 
 
     // create nav
-    let friends_nav = document.createElement('div');
-    friends_nav.classList.add('bleh--nav-wrap', 'bleh--friends-nav');
-    friends_nav.innerHTML = (`
-        <nav class="navlist secondary-nav redesigned-navigation">
-            <ul class="navlist-items bleh--navlist-items">
-                ${following_tab.outerHTML}
-                ${followers_tab.outerHTML}
-                ${neighbours_tab.outerHTML}
-            </ul>
-        </nav>
-    `);
+    let friends_nav = html.node`
+        <div class="toolbar">
+            <nav class="navlist secondary-nav redesigned-navigation">
+                <ul class="navlist-items">
+                    ${{html: following_tab.outerHTML}}
+                    ${{html: followers_tab.outerHTML}}
+                    ${{html: neighbours_tab.outerHTML}}
+                </ul>
+            </nav>
+        </div>
+    `;
 
     // we do this later to preserve the 'Following' text
     link.textContent = tl(trans.friends);
@@ -1238,11 +1229,8 @@ function profile_artists() {
                     let btn = list.querySelector('.dropdown-menu-clickable-item--selected');
                     let link = new URL('https://www.last.fm' + btn.getAttribute('href'));
                     let selected = link.searchParams.get('artists_date_preset');
-
-                    collage({
-                        default_type: 'artists',
-                        date_preset: `date_preset=${selected}`
-                    });
+                    
+                    window.location.href = `${root}bleh/minis/collage?type=artists&timeframe=date_preset=${selected}`;
                 }}>${tl(trans.collage)}</button>
                 ${form ? html.node`
                 <button class="left-icon blend-v2-btn" data-type="settings" ref=${el => settings_btn = el}>
@@ -1338,10 +1326,7 @@ function profile_albums() {
                     let link = new URL('https://www.last.fm' + btn.getAttribute('href'));
                     let selected = link.searchParams.get('albums_date_preset');
 
-                    collage({
-                        default_type: 'albums',
-                        date_preset: `date_preset=${selected}`
-                    });
+                    window.location.href = `${root}bleh/minis/collage?type=albums&timeframe=date_preset=${selected}`;
                 }}>${tl(trans.collage)}</button>
                 ${form ? html.node`
                 <button class="left-icon blend-v2-btn" data-type="settings" ref=${el => settings_btn = el}>
@@ -1437,10 +1422,7 @@ function profile_tracks() {
                     let link = new URL('https://www.last.fm' + btn.getAttribute('href'));
                     let selected = link.searchParams.get('tracks_date_preset');
 
-                    collage({
-                        default_type: 'tracks',
-                        date_preset: `date_preset=${selected}`
-                    });
+                    window.location.href = `${root}bleh/minis/collage?type=tracks&timeframe=date_preset=${selected}`;
                 }}>${tl(trans.collage)}</button>
                 ${form ? html.node`
                 <button class="left-icon blend-v2-btn" data-type="settings" ref=${el => settings_btn = el}>
@@ -1479,7 +1461,7 @@ function profile_tracks() {
             ${setting({id: 'format_guest_features'})}
             ${setting({id: 'show_guest_features'})}
             <div class="more-link">
-                <a href="${root}bleh?tab=music">${tl(trans.settings)}</a>
+                <a href="${root}bleh/music">${tl(trans.settings)}</a>
             </div>
             <div class="settings-footer">
                 <button type="submit" class="btn-primary save">

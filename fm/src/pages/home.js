@@ -15,6 +15,7 @@ import {bleh_charts} from "./chart";
 import {bleh_native_settings} from './lastfm_settings';
 import {html, render} from "lighterhtml";
 import {load_banner} from "../components/banner.js";
+import {ff} from "../sku.js";
 
 export function bleh_home() {
     page.structure.container = document.body.querySelector('.page-content');
@@ -70,23 +71,18 @@ export function bleh_home() {
         <nav class="navlist secondary-nav navlist--more redesigned-navigation">
             <ul class="navlist-items">
                 <li class="navlist-item secondary-nav-item secondary-nav-item--home">
-                    <a href="${root}music" class="secondary-nav-item-link ${(page.subpage == 'music') ? 'secondary-nav-item-link--active' : ''}">
-                        ${tl(trans.home)}<div class="new-badge">${tl(trans.beta)}</div>
+                    <a href="${root}music" class="secondary-nav-item-link ${(page.subpage == 'music' || page.type == 'events') ? 'secondary-nav-item-link--active' : ''}">
+                        ${tl(trans.home)}
                     </a>
                 </li>
                 <li class="navlist-item secondary-nav-item secondary-nav-item--recommendations">
                     <a href="${root}music/+recommended" class="secondary-nav-item-link ${(page.type == 'recommended') ? 'secondary-nav-item-link--active' : ''}">
-                        ${tl(trans.recommendations)}<div class="new-badge">${tl(trans.beta)}</div>
+                        ${tl(trans.recommendations)}
                     </a>
                 </li>
                 <li class="navlist-item secondary-nav-item secondary-nav-item--releases">
                     <a href="${root}music/+releases/out-now" class="secondary-nav-item-link ${(page.type == 'releases') ? 'secondary-nav-item-link--active' : ''}">
                         ${tl(trans.releases)}
-                    </a>
-                </li>
-                <li class="navlist-item secondary-nav-item secondary-nav-item--events dont-rearrange">
-                    <a href="${root}events" class="secondary-nav-item-link ${(page.type == 'events') ? 'secondary-nav-item-link--active' : ''}">
-                        ${tl(trans.events)}<div class="new-badge">${tl(trans.beta)}</div>
                     </a>
                 </li>
                 <li class="navlist-item secondary-nav-item secondary-nav-item--bookmarks">
@@ -99,6 +95,13 @@ export function bleh_home() {
                         ${tl(trans.charts)}
                     </a>
                 </li>
+                ${ff('minis') ? html.node`
+                <li class="navlist-item secondary-nav-item secondary-nav-item--minis">
+                    <a href="${root}bleh/minis" data-type="mini" class="secondary-nav-item-link ${(page.type == 'minis') ? 'secondary-nav-item-link--active' : ''}">
+                        ${tl(trans.minis)}
+                    </a>
+                </li>
+                ` : ''}
                 <li class="fill"></li>
                 <li class="navlist-item secondary-nav-item secondary-nav-item--settings">
                     <a href="${root}settings" class="secondary-nav-item-link ${(page.type == 'settings') ? 'secondary-nav-item-link--active' : ''}">
@@ -106,7 +109,7 @@ export function bleh_home() {
                     </a>
                 </li>
                 <li class="navlist-item secondary-nav-item secondary-nav-item--bleh">
-                    <a href="${root}bleh" class="secondary-nav-item-link ${(page.type == 'error') ? 'secondary-nav-item-link--active' : ''}">
+                    <a href="${root}bleh" class="secondary-nav-item-link ${(page.type == 'bleh_settings') ? 'secondary-nav-item-link--active' : ''}">
                         ${tl(trans.settings)}
                     </a>
                 </li>
@@ -154,25 +157,60 @@ export function bleh_home() {
 
 
     if (page.subpage == 'music') {
+        let toolbar = html.node`
+            <div class="toolbar">
+                <nav class="navlist secondary-nav navlist--more redesigned-navigation">
+                    <ul class="navlist-items">
+                        <li class="navlist-item secondary-nav-item">
+                            <a href="${root}user/${auth.name}" data-type="mention" class="secondary-nav-item-link">
+                                ${tl(trans.profile)}
+                            </a>
+                        </li>
+                        <li class="navlist-item secondary-nav-item">
+                            <a href="${root}user/${auth.name}/library" data-type="library" class="secondary-nav-item-link">
+                                ${tl(trans.library)}
+                            </a>
+                        </li>
+                        <li class="navlist-item secondary-nav-item">
+                            <a href="${root}user/${auth.name}/following" data-type="profile" class="secondary-nav-item-link">
+                                ${tl(trans.friends)}
+                            </a>
+                        </li>
+                        <li class="navlist-item secondary-nav-item">
+                            <a href="${root}user/${auth.name}/shoutbox" data-type="shouts" class="secondary-nav-item-link">
+                                ${tl(trans.shouts)}
+                            </a>
+                        </li>
+                    </ul>
+                </nav>
+            </div>
+        `;
+
+        page.structure.row.insertBefore(toolbar, page.structure.content);
+
         // top panel
         let beret = html.node`
-            <section class="beret-music bleh--panel">
-                <div class="panel-side panel-side-main">
-                    <h4>${tl(trans.recent_tracks)}</h4>
-                    <div class="recent-listening-container">
-                        <div class="loading-data-container">
-                            <p class="loading-data-text">${tl(trans.finding_your_tracks)}</p>
+            <div class="content override">
+                <div class="col-main">
+                    <section>
+                        <h2>${tl(trans.recent_tracks)}</h2>
+                        <div class="recent-listening-container">
+                            <div class="loading-data-container">
+                                <p class="loading-data-text">${tl(trans.finding_your_tracks)}</p>
+                            </div>
                         </div>
-                    </div>
+                    </section>
                 </div>
-                <div class="panel-side panel-side-alt">
-                    <h4>${tl(trans.activity)}</h4>
-                    ${render_activity_list()}
-                    <div class="more-link">
-                        <a href="${root}bleh?tab=profiles&setting=activities">${tl(trans.activity_settings)}</a>
-                    </div>
+                <div class="col-sidebar">
+                    <section>
+                        <h2>${tl(trans.activity)}</h2>
+                        ${render_activity_list()}
+                        <div class="more-link">
+                            <a href="${root}bleh/profiles?setting=activities">${tl(trans.activity_settings)}</a>
+                        </div>
+                    </section>
                 </div>
-            </section>
+            </div>
         `;
 
         let track_list = beret.querySelector('.recent-listening-container');
@@ -193,7 +231,7 @@ export function bleh_home() {
                 track_list.outerHTML = tracklist_panel.outerHTML;
         });
 
-        page.structure.main.appendChild(beret);
+        page.structure.row.insertBefore(beret, page.structure.content);
 
 
         let music_sections = document.body.querySelectorAll('.music-section');

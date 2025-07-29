@@ -1,4 +1,10 @@
 {
+    "2025.0729": {
+        "type": "minor",
+        "force": false,
+        "bio": "HAIIIIII new small update :3 :3 :3\n\n# Design\n- __Adjusted gradients and colours to be prettier__\n- __Inline tabs (aka. the second row of tabs below the main ones) are now contained in a cute vertical toolbar__\n- Continued work on redesigning settings, now with the Appearance/Visual tab\n- Fixed minor design issues from last update\n\n# Minis\n- __Migrated Collage and Compare tools to a new Minis section__\n    - This will be the future home of any games, tools, or experiments that utilise yours and others music library.\n- __Collage now generates a much shorter url and filesize__\n    - The final resolution of the collage image is now capped rather than being unlimited like before. Along with this, the URL when clicking Open or Download is much shorter.\n\n# Badges\n- __Badges can now be loaded fully externally__\n    - This means loading the badge icon and it's colours without having to download a new stylesheet!\n\n# Other\n- __In date pickers, you can now click the Edit icon to enter a manual date__\n- __Fixed gallery pages crashing if no sort button was present__\n- __Music pages with (Spotify) in the name now suggest the page without said tag__\n- Fixed song tag extraction eating text in some scenarios\n- When your shout fails to send, you will be sent a notification instead\n- The update status is now reset after an update completes\n- Added a silly local restriction message into the markdown parser",
+        "name": "claire"
+    },
     "2025.0715": {
         "type": "major",
         "force": false,

@@ -512,28 +512,6 @@ export function show_your_scrobbles() {
 
     let metadata = col_main.querySelector('.metadata-column');
     if (metadata) {
-        if (settings.simulate_scroll) {
-            metadata.addEventListener('wheel', (e) => {
-                e.preventDefault();
-
-                if (e.deltaY > 0) {
-                    metadata.scrollBy({
-                        top: 0,
-                        left: +200,
-                        behavior: 'smooth'
-                    });
-                } else {
-                    metadata.scrollBy({
-                        top: 0,
-                        left: -200,
-                        behavior: 'smooth'
-                    });
-                }
-            });
-        } else {
-            metadata.classList.add('no-scroll-simulation');
-        }
-
         let groups = [];
 
         let headers = metadata.querySelectorAll('.catalogue-metadata-heading:not(.visible-xs)');
@@ -547,22 +525,46 @@ export function show_your_scrobbles() {
             groups[index].value = item;
         });
 
-        metadata.innerHTML = '';
-        groups.forEach((group) => {
-            let group_wrap = document.createElement('div');
-            group_wrap.classList.add('metadata-group');
-            group_wrap.appendChild(group.header);
-            group_wrap.appendChild(group.value);
-            metadata.appendChild(group_wrap);
-        });
+        render(metadata, html`
+            ${groups.map((group) => html.node`
+                <div class="metadata-group">
+                    ${group.header}
+                    ${group.value}
+                </div>
+            `)}
+        `);
+
+        if (groups.length > 2) {
+            if (settings.simulate_scroll) {
+                metadata.addEventListener('wheel', (e) => {
+                    e.preventDefault();
+
+                    if (e.deltaY > 0) {
+                        metadata.scrollBy({
+                            top: 0,
+                            left: +200,
+                            behavior: 'smooth'
+                        });
+                    } else {
+                        metadata.scrollBy({
+                            top: 0,
+                            left: -200,
+                            behavior: 'smooth'
+                        });
+                    }
+                });
+            } else {
+                metadata.classList.add('no-scroll-simulation');
+            }
+        }
     }
 
     if (page_is_blocked) {
-        let alert = document.createElement('section');
-        alert.classList.add('cta', 'blocked-cta');
-        alert.innerHTML = `<strong>${tl(trans.blocked_page)}</strong>`;
-
-        page.structure.main.insertBefore(alert, page.structure.main.firstElementChild);
+        page.structure.main.insertBefore(html.node`
+            <section class="cta blocked-cta">
+                <strong>${tl(trans.blocked_page)}</strong>
+            </section>
+        `, page.structure.main.firstElementChild);
 
         return;
     }

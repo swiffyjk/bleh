@@ -8,12 +8,7 @@ export function bleh_labs() {
         page.avatar = auth.avatar;
         page.name = auth.name;
 
-        quilt.removeAttribute('href');
-        quilt.onclick = () => {
-            window.location.href = `${root}user/${auth.name}?collage`;
-        }
-        /*quilt.onclick = () => collage({
-            redirect: true
-        });*/
+        quilt.setAttribute('href', `${root}bleh/minis/collage?redirect=true`);
+        quilt.removeAttribute('target');
     }
 }

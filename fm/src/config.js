@@ -354,33 +354,36 @@ function update_colour_swatches() {
     let custom = null;
     let seasonal = null;
 
-    let swatches = document.querySelectorAll('.swatch');
+    let swatches = page.structure.main.querySelectorAll('.swatch');
     swatches.forEach((swatch) => {
         let h = swatch.style.getPropertyValue('--hue-over');
         let s = swatch.style.getPropertyValue('--sat-over');
         let l = swatch.style.getPropertyValue('--lit-over');
 
+        let parent = swatch.parentElement;
+        if (swatch.classList[0] == 'dropdown-menu-clickable-item')
+            parent = swatch;
+
         if (
             (h == settings.hue && s == settings.sat && l == settings.lit) ||
             (swatch.getAttribute('data-swatch-type') == 'default' && settings.hue == 255 && settings.sat == 1 && settings.lit == 1) // default
         ) {
-            swatch.setAttribute('aria-checked', 'true');
+            parent.setAttribute('aria-checked', 'true');
 
             if (swatch.classList[0] != 'dropdown-menu-clickable-item')
                 found = true;
         } else {
-            swatch.setAttribute('aria-checked', 'false');
+            parent.setAttribute('aria-checked', 'false');
         }
 
         if (!custom && swatch.getAttribute('data-swatch-type') == 'customise')
-            custom = swatch;
+            custom = parent;
 
         if (!seasonal && swatch.getAttribute('data-swatch-type') == 'default')
-            seasonal = swatch;
+            seasonal = parent;
     });
 
-    if (found)
-        return;
+    if (found) return;
 
     if (custom && settings.accent_type != 'season')
         custom.setAttribute('aria-checked', 'true');

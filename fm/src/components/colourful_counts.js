@@ -6,13 +6,11 @@
 
 import {log} from "../build/log";
 import {ranks} from "../build/music";
-import {clean_number, interpolate_hue} from "../build/tools";
+import {interpolate_hue} from "../build/tools";
 
 export function patch_artist_ranks_in_list_view(track) {
     let count_bar = track.querySelector('.chartlist-count-bar');
-
-    if (count_bar == undefined)
-        return;
+    if (!count_bar) return;
 
     let count_bar_link = count_bar.querySelector('.chartlist-count-bar-link');
     if (count_bar_link.getAttribute('href')
@@ -21,7 +19,7 @@ export function patch_artist_ranks_in_list_view(track) {
         .includes('?date_preset=') && !count_bar_link.getAttribute('href').endsWith('?date_preset=ALL') && !count_bar_link.getAttribute('href').endsWith('?date_preset=null')))
         return;
 
-    let count = clean_number(count_bar.querySelector('.chartlist-count-bar-value').textContent.trim().replace(' scrobbles',''));
+    let count = count_bar.querySelector('.chartlist-count-bar-slug').getAttribute('data-stat-value');
 
     if (!count_bar.hasAttribute('data-kate-processed')) {
         count_bar.setAttribute('data-kate-processed','true');

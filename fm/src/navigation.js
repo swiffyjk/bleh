@@ -8,7 +8,7 @@ import {settings} from "./build/config";
 import {auth, page, root} from "./build/page";
 import {stored_season} from "./build/seasonal";
 import {lang, tl, trans, trans_legacy} from "./build/trans";
-import {load_badges} from "./components/badge";
+import {create_badge, load_badges} from "./components/badge";
 import {version} from "./main";
 import {show_theme_change_in_menu} from "./pages/bleh_config";
 import {ff} from "./sku";
@@ -186,7 +186,7 @@ export function append_nav() {
     // configure bleh
     let bleh_container = html.node`
         <li class="masthead-nav-item">
-            <a class="masthead-nav-control" href="${root}bleh${(stored_season.id != 'none') ? '?tab=seasonal' : ''}" data-label="bleh" data-season="${stored_season.id}" data-season-active="${(stored_season.id != 'none') ? 'true' : 'false'}">
+            <a class="masthead-nav-control" href="${root}bleh${(stored_season.id != 'none') ? '/seasonal' : ''}" data-label="bleh" data-season="${stored_season.id}" data-season-active="${(stored_season.id != 'none') ? 'true' : 'false'}">
                 ${(stored_season.id == 'none') ? tl(trans.bleh_settings) : moment(stored_season.end.replace('y0', stored_season.year).replace('{offset}', stored_season.offset)).to(stored_season.now, true)}
             </a>
         </li>
@@ -313,24 +313,7 @@ export function append_nav() {
                                 <div class="name">${auth.name}</div>
                                 ${(badges || auth.pro) ? html.node`
                                     <div class="badges">
-                                        ${badges ? badges.map(badge => () => {
-                                            let el = html.node`
-                                                <span class="label user-status--bleh-${badge.type} user-status--bleh-user-${auth.name} no-hover">
-                                                    ${badge.name}
-                                                </span>
-                                            `;
-
-                                            tippy(el, {
-                                                theme: 'badge',
-                                                placement: 'bottom',
-                                                content: html.node`
-                                                    <div class="badge-name">${badge.name}</div>
-                                                    <div class="badge-reason">${badge.reason}</div>
-                                                `
-                                            });
-                                            
-                                            return el;
-                                        }) : ''}
+                                        ${badges ? badges.map(badge => create_badge(badge)) : ''}
                                         ${auth.pro ? () => {
                                             let el = html.node`
                                                 <span class="label user-status-subscriber no-hover">
@@ -466,12 +449,19 @@ export function append_nav() {
                                         ${tl(trans.more)}
                                     </button>
                                 </div>
-                                <button class="dropdown-menu-clickable-item" data-menu-item="news" onclick=${() => {
-                                    news();
-                                    instance.hide();
-                                }}>
-                                    ${tl(trans.news)}
-                                </button>
+                                <div class="button-combo">
+                                    <a class="dropdown-menu-clickable-item" data-type="mini" href="${root}bleh/minis">
+                                        ${tl(trans.minis)}
+                                    </a>
+                                    <div class="button-combo-sep" />
+                                    <button class="dropdown-menu-clickable-item chibi" data-menu-item="news" onclick=${() => {
+                                        news();
+                                        instance.hide();
+                                    }}>
+                                        ${tl(trans.news)}
+                                    </button>
+                                </div>
+                                
                                 <div class="button-combo">
                                     <a class="dropdown-menu-clickable-item" data-menu-item="bleh" href="${root}bleh">
                                         ${tl(trans.settings)}

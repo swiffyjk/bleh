@@ -65,6 +65,15 @@ export function patch_shouts() {
             }
 
 
+            let actions = shout.querySelectorAll('.shout-actions .shout-action');
+            actions.forEach((action) => {
+                let buttons = action.querySelectorAll('button, a');
+                buttons.forEach((button) => {
+                    button.classList.add('shout-action-button', 'see-more');
+                });
+            });
+
+
             let send_button = shout.querySelector('.form-group--submit');
             shout_send(send_button);
         } catch(e) {
@@ -228,6 +237,8 @@ export function parse_shout_queue() {
 }
 
 export function shout_messages() {
+    if (!page.structure.main) return;
+
     let alerts = page.structure.main.querySelectorAll('.shout-messages > .alert');
     alerts.forEach((alert) => {
         if (alert.classList.contains('alert-danger')) {

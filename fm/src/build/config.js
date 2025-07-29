@@ -711,7 +711,9 @@ export let settings_store = {
         type: 'other'
     },
     show_your_progress: {
-        default: true
+        default: true,
+        title: trans.show_your_progress.name,
+        body: trans.show_your_progress.body
     },
     travis: {
         default: false,
@@ -764,7 +766,8 @@ export let settings_store = {
     seasonal: {
         default: true,
         title: trans.enable_seasons.name,
-        body: trans.enable_seasons.body
+        body: trans.enable_seasons.body,
+        require_reload: true
     },
     seasonal_particles: {
         default: 'all',
@@ -774,13 +777,19 @@ export let settings_store = {
         default: true
     },
     profile_header_own: {
-        default: true
+        default: true,
+        type: 'checkbox',
+        title: trans.own_profile
     },
     profile_header_others: {
-        default: true
+        default: true,
+        type: 'checkbox',
+        title: trans.other_profiles
     },
     profile_avi_background: {
-        default: false
+        default: false,
+        title: trans.profile_avi_background.name,
+        body: trans.profile_avi_background.body
     },
     profile_shortcut: {
         default: '',

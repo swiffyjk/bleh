@@ -115,7 +115,10 @@ export let includes = {
     ],
     versions: [
         '(taylor', '- spotify singles',
-        '(spotify', '(+'
+        '(+'
+    ],
+    spotify: [
+        '(spotify)'
     ],
     remasters: [
         '- remaster', '(remaster'

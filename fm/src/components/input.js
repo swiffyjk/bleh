@@ -2,6 +2,7 @@ import {html} from "lighterhtml";
 import {tl, trans} from "../build/trans.js";
 import {log} from "../build/log.js";
 import {pad2} from "../build/tools.js";
+import {register_menu} from "./menu.js";
 
 export function input({
     type = 'text',
@@ -14,7 +15,8 @@ export function input({
     focus = false,
     disabled,
     show_time = true,
-    name
+    name,
+    func
 }) {
     if (type == 'date') {
         let now = new Date();
@@ -88,6 +90,8 @@ export function input({
                 view.level = 'year';
             } else if (view.level === 'year') {
                 view.level = 'month';
+            } else if (view.level === 'manual') {
+                view.level = 'day';
             } else {
                 return;
             }
@@ -153,12 +157,39 @@ export function input({
             }
         });
 
+        let menu = tippy(date_display, {
+            theme: 'context-menu',
+            content: html.node`
+                <button class="dropdown-menu-clickable-item" data-type="manual" onclick=${() => {
+                    view.level = 'manual';
+                    tooltip.show();
+                }}>
+                    ${tl(trans.manual_date)}
+                </button>
+            `,
+            placement: 'right-start',
+            trigger: 'manual',
+            interactive: true,
+            interactiveBorder: 10,
+            offset: [0, 0],
+
+            onShow(instance) {
+                instance.popper.addEventListener('click', event => {
+                    instance.hide();
+                });
+            }
+        });
+
+        register_menu(date_display, menu);
+
         function render_popup() {
             let inner;
             if (view.level === 'year') {
                 inner = render_year_view();
             } else if (view.level === 'month') {
                 inner = render_month_view();
+            } else if (view.level === 'manual') {
+                inner = render_manual_view();
             } else {
                 inner = render_day_view();
             }
@@ -172,6 +203,12 @@ export function input({
                         ${months[view.month - 1]} ${view.year}
                     </button>
                     <div class="fill" />
+                    <button class="chibi icon" data-type="manual" type="button" onclick=${() => {
+                        view.level = 'manual';
+                        render_popup();
+                    }}>
+                        ${tl(trans.manual)}
+                    </button>
                     <button class="chibi icon" data-type="up" disabled=${!can_prev()} type="button" onclick=${() => {
                         if (!can_prev()) return;
 
@@ -211,7 +248,7 @@ export function input({
                         cell.type == 'empty'
                             ? html.node`<button class="day empty" type="button" disabled />`
                             : html.node`
-                                <button class="day" type="button" aria-selected=${cell.day == state.day && cell.date > min_date && cell.date < max_date && cell.month == view.month ? 'true' : 'false'} disabled=${cell.date < min_date || cell.date > max_date} onclick=${() => {
+                                <button class="day" type="button" aria-selected=${cell.day == state.day && cell.date >= min_date && cell.date <= max_date && cell.month == view.month ? 'true' : 'false'} disabled=${cell.date < min_date || cell.date > max_date} onclick=${() => {
                                     state.day = cell.day;
                                     state.year = view.year;
                                     state.month = view.month;
@@ -236,6 +273,12 @@ export function input({
                         ${view.year}
                     </button>
                     <div class="fill" />
+                    <button class="chibi icon" data-type="manual" type="button" onclick=${() => {
+                        view.level = 'manual';
+                        render_popup();
+                    }}>
+                        ${tl(trans.manual)}
+                    </button>
                     <button class="chibi icon" data-type="up" type="button" disabled=${view.year <= min_year} onclick=${() => {
                         if (view.year < min_year) return;
                         
@@ -294,6 +337,12 @@ export function input({
                         ${decade_start} – ${decade_start + 9}
                     </button>
                     <div class="fill" />
+                    <button class="chibi icon" data-type="manual" type="button" onclick=${() => {
+                        view.level = 'manual';
+                        render_popup();
+                    }}>
+                        ${tl(trans.manual)}
+                    </button>
                     <button class="chibi icon" data-type="up" disabled=${decade_start - 10 < min_year} onclick=${() => {
                         if (decade_start - 10 < min_year) return;
                         
@@ -325,6 +374,77 @@ export function input({
                     })}
                 </div>
             `;
+        }
+
+        function validate_text_date(value) {
+            const m = value.match(/^(\d{4})-(\d{2})-(\d{2})$/);
+            if (!m) return null;
+            const [_, ys, ms, ds] = m;
+            const date = new Date(`${ys}-${ms}-${ds}T00:00:00`);
+            if (
+                date.getFullYear() !== +ys ||
+                date.getMonth() + 1 !== +ms ||
+                date.getDate() !== +ds
+            ) {
+                return null;
+            }
+            if (date < min_date || date > max_date) return null;
+            return date;
+        }
+
+        function render_manual_view() {
+            let manual_date;
+
+            let elem = html.node`
+                <div class="calendar-header">
+                    <button class="month-year" onclick=${on_month_year_click}>
+                        ${tl(trans.manual)}
+                    </button>
+                    <div class="fill" />
+                    <button class="chibi icon" data-type="manual" type="button" disabled>
+                        ${tl(trans.manual)}
+                    </button>
+                    <button class="chibi icon" data-type="up" disabled>
+                        ${tl(trans.back)}
+                    </button>
+                    <button class="chibi icon" data-type="down" disabled>
+                        ${tl(trans.next)}
+                    </button>
+                </div>
+                <div class="manual">
+                    ${manual_date = input({
+                        type: 'text',
+                        value: `${state.year}-${pad2(state.month)}-${pad2(state.day)}`,
+                        func: (value) => {
+                            const parsed = validate_text_date(
+                                value
+                            );
+                            
+                            if (!parsed) {
+                                manual_date.value(`${state.year}-${pad2(state.month)}-${pad2(state.day)}`);
+                                return;
+                            }
+                            
+                            state.year = parsed.getFullYear();
+                            state.month = parsed.getMonth() + 1;
+                            state.day = parsed.getDate();
+                            view.level = 'day';
+                            view.year = state.year;
+                            view.month = state.month;
+                            update_display();
+                            emit();
+                            render_popup();
+                        }
+                    })}
+                    <p>${tl(trans.enter_a_manual_date)}</p>
+                    <p>${tl(trans.minimum_value).replace('{v}', `${min_date.getFullYear()}-${pad2(min_date.getMonth() + 1)}-${pad2(min_date.getDate())}`)}</p>
+                    <p>${tl(trans.maximum_value).replace('{v}', `${max_date.getFullYear()}-${pad2(max_date.getMonth() + 1)}-${pad2(max_date.getDate())}`)}</p>
+                </div>
+            `;
+
+            manual_date.focus();
+
+            return elem;
         }
 
         function days(year, month) {
@@ -460,6 +580,20 @@ export function input({
     input_box.addEventListener('input', () => {
         update_input();
     });
+
+    input_box.addEventListener('keydown', (event) => {
+        if (event.keyCode === 13) {
+            event.preventDefault();
+
+            if (func) func(input_box.value);
+        }
+    });
+
+    container.focus = () => {
+        setTimeout(() => {
+            input_box.focus();
+        }, 5);
+    }
 
     container.value = (val = null) => {
         if (val === null) return input_box.value;

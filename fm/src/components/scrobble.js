@@ -19,7 +19,7 @@ export function submit_scrobble({
     if (!can_api) can_api = localStorage.getItem('bleh_auth') && localStorage.getItem('bleh_auth_valid') === 'true';
 
     if (!can_api) {
-        window.location.href = `${root}bleh?tab=profiles`;
+        window.location.href = `${root}bleh/profiles`;
         return;
     }
 

@@ -30,7 +30,6 @@ import {start_update, update_check} from "../style.js";
 
 export function bleh_settings() {
     page.name = auth.name;
-    page.type = 'bleh_settings';
     page.subpage = '';
 
     page.state.settings_page = '';
@@ -45,67 +44,83 @@ export function bleh_settings() {
     page.requested.tab = params.get('tab');
     page.requested.setting = params.get('setting');
 
+    let path = window.location.pathname.split('/');
+    let tab = path[path.length - 1];
+
+    if (tab == 'bleh') tab = null;
+
+    if (page.requested.tab && !tab) tab = page.requested.tab;
+
     const update_required = localStorage.getItem('bleh_update_required') || 'false';
+
+    const tabs = {
+        themes: {
+            name: tl(trans.visual)
+        },
+        music: {
+            name: tl(trans.music)
+        },
+        customise: {
+            name: tl(trans.layout)
+        },
+        profiles: {
+            name: tl(trans.profiles)
+        },
+        seasonal: {
+            name: tl(trans.seasonal.name)
+        },
+        text: {
+            name: tl(trans.text)
+        },
+        accessibility: {
+            name: tl(trans.accessibility)
+        },
+        fill: {
+            type: 'fill'
+        },
+        update: {
+            name: tl(trans.updates),
+            icon: 'update',
+            label: html.node`
+                ${tl(trans.updates)}${update_required === 'true' ? html.node`<div class="new-badge">${tl(trans.new)}</div>` : ''}
+            `,
+            hide_if: !ff('update_center')
+        },
+        performance: {
+            name: tl(trans.troubleshooting)
+        },
+        sku: {
+            name: tl(trans.flags),
+            password: settings.hu_tao
+        }
+    }
 
 
     // go wild
     let nav = html.node`
-        <nav class="navlist secondary-nav navlist--more redesigned-navigation bleh-settings-navigation">
-            <ul class="navlist-items">
-                <li class="navlist-item secondary-nav-item">
-                    <a class="secondary-nav-item-link bleh--nav" data-bleh-page="themes" onclick=${() => change_settings_page('themes')}>
-                        ${tl(trans.appearance)}
-                    </a>
-                </li>
-                <li class="navlist-item secondary-nav-item">
-                    <a class="secondary-nav-item-link bleh--nav" data-bleh-page="music" onclick=${() => change_settings_page('music')}>
-                        ${tl(trans.music)}
-                    </a>
-                </li>
-                <li class="navlist-item secondary-nav-item">
-                    <a class="secondary-nav-item-link bleh--nav" data-bleh-page="customise" onclick=${() => change_settings_page('customise')}>
-                        ${tl(trans.layout)}
-                    </a>
-                </li>
-                <li class="navlist-item secondary-nav-item">
-                    <a class="secondary-nav-item-link bleh--nav" data-bleh-page="profiles" onclick=${() => change_settings_page('profiles')}>
-                        ${tl(trans.profiles)}
-                    </a>
-                </li>
-                <li class="navlist-item secondary-nav-item">
-                    <a class="secondary-nav-item-link bleh--nav" data-bleh-page="seasonal" onclick=${() => change_settings_page('seasonal')}>
-                        ${tl(trans.seasonal.name)}
-                    </a>
-                </li>
-                <li class="navlist-item secondary-nav-item">
-                    <a class="secondary-nav-item-link bleh--nav" data-bleh-page="text" onclick=${() => change_settings_page('text')}>
-                        ${tl(trans.text)}
-                    </a>
-                </li>
-                <li class="navlist-item secondary-nav-item">
-                    <a class="secondary-nav-item-link bleh--nav" data-bleh-page="accessibility" onclick=${() => change_settings_page('accessibility')}>
-                        ${tl(trans.accessibility)}
-                    </a>
-                </li>
-                ${ff('update_center') ? html.node`
-                <li class="navlist-item secondary-nav-item">
-                    <a class="secondary-nav-item-link bleh--nav" data-bleh-page="update" data-type="update" onclick=${() => change_settings_page('update')}>
-                        ${tl(trans.updates)}${update_required === 'true' ? html.node`<div class="new-badge">${tl(trans.new)}</div>` : ''}
-                    </a>
-                </li>
-                ` : ''}
-                <li class="navlist-item secondary-nav-item">
-                    <a class="secondary-nav-item-link bleh--nav" data-bleh-page="performance" onclick=${() => change_settings_page('performance')}>
-                        ${tl(trans.troubleshooting)}
-                    </a>
-                </li>
-                <li class="navlist-item secondary-nav-item">
-                    <a class="secondary-nav-item-link bleh--nav" data-password=${settings.hu_tao} data-bleh-page="sku" onclick=${() => change_settings_page('sku')}>
-                        ${tl(trans.flags)}
-                    </a>
-                </li>
-            </ul>
-        </nav>
+        <div class="toolbar">
+            <nav class="navlist secondary-nav navlist--more redesigned-navigation bleh-settings-navigation">
+                <ul class="navlist-items">
+                    ${Object.entries(tabs).map(([id, tab]) => {
+                        if (tab.hide_if) return;
+                        
+                        if (tab.type && tab.type == 'fill') {
+                            return html.node`
+                                <div class="fill" />
+                            `;
+                        }
+                        
+                        return html.node`
+                            <li class="navlist-item secondary-nav-item">
+                                <a class="secondary-nav-item-link bleh--nav" data-bleh-page=${id} data-type=${tab.icon} data-password=${tab.password} onclick=${() => change_settings_page(id)}>
+                                    ${tab.label ? tab.label : tab.name}
+                                </a>
+                            </li>
+                        `;
+                    })}
+                </ul>
+            </nav>
+        </div>
     `;
 
 
@@ -148,10 +163,10 @@ export function bleh_settings() {
     else
         page.structure.row.insertBefore(nav, page.structure.content);
 
-    if (!page.requested.tab)
+    if (!tab)
         change_settings_page('themes');
     else
-        change_settings_page(page.requested.tab);
+        change_settings_page(tab);
 
     if (page.requested.setting) {
         scroll_to_setting(page.requested.setting);
@@ -191,100 +206,32 @@ export function render_setting_page(page_id) {
 
         render(page.structure.main, html`
             <div class="bleh--panel">
-                <h4>${tl(trans.themes.name)}</h4>
-                ${ff('theme_bubbles') ? theme_bubbles : html.node`
-                <div class="setting-items full">
-                    <div class="side-left full even-more">
-                        ${ff('auto_theme') ? html.node`
-                        <button class="btn theme-item" data-bleh-theme="auto" onclick="change_theme_from_settings('auto')">
-                            <div class="preview-container">
-                            <div class="preview">
-                                ${theme_preview()}
-                            </div>
-                            </div>
-                            <div class="text">
-                                <h5>${tl(trans.auto)} <div class="new-badge">${tl(trans.new)}</div></h5>
-                            </div>
-                        </button>
-                        ` : ''}
-                        <button class="btn theme-item" data-bleh-theme="light" data-bleh--theme_type="light" onclick="change_theme_from_settings('light')">
-                            <div class="preview-container">
-                            <div class="preview" data-bleh--theme="light" data-bleh--theme_type="light">
-                                ${theme_preview()}
-                            </div>
-                            </div>
-                            <div class="text">
-                                <h5>${tl(trans.themes.light)}</h5>
-                            </div>
-                        </button>
-                        <button class="btn theme-item" data-bleh-theme="ink" data-bleh--theme_type="light" onclick="change_theme_from_settings('ink')">
-                            <div class="preview-container">
-                            <div class="preview" data-bleh--theme="ink" data-bleh--theme_type="light">
-                                ${theme_preview()}
-                            </div>
-                            </div>
-                            <div class="text">
-                                <h5>${tl(trans.themes.ink)}</h5>
-                            </div>
-                        </button>
-                    </div>
-                </div>
-                <div class="setting-items full">
-                    <div class="side-left full even-more">
-                        <button class="btn theme-item" data-bleh-theme="dark" onclick="change_theme_from_settings('dark')">
-                            <div class="preview-container">
-                            <div class="preview" data-bleh--theme="dark">
-                                ${theme_preview()}
-                            </div>
-                            </div>
-                            <div class="text">
-                                <h5>${tl(trans.themes.dark)}</h5>
-                            </div>
-                        </button>
-                        <button class="btn theme-item" data-bleh-theme="darker" onclick="change_theme_from_settings('darker')">
-                            <div class="preview-container">
-                            <div class="preview" data-bleh--theme="darker">
-                                ${theme_preview()}
-                            </div>
-                            </div>
-                            <div class="text">
-                                <h5>${tl(trans.themes.darker)}</h5>
-                            </div>
-                        </button>
-                        <button class="btn theme-item" data-bleh-theme="oled" onclick="change_theme_from_settings('oled')">
-                            <div class="preview-container">
-                            <div class="preview" data-bleh--theme="oled">
-                                ${theme_preview()}
-                            </div>
-                            </div>
-                            <div class="text">
-                                <h5>${tl(trans.themes.oled)}</h5>
-                            </div>
-                        </button>
-                    </div>
-                </div>
-                `}
-                ${(ff('high_contrast')) ? setting({id: 'high_contrast'}) : ''}
-                <h4>${tl(trans.colours)}</h4>
-                <div class="view-buttons colour-buttons view-buttons-middle" id="colour_custom"></div>
-                <div class="swatch-group">
-                    <div id="colour_red" class="palette options colours"></div>
-                    <div id="colour_orange" class="palette options colours"></div>
-                    <div id="colour_yellow" class="palette options colours"></div>
-                    <div id="colour_green" class="palette options colours"></div>
-                    <div id="colour_lime" class="palette options colours"></div>
-                    <div id="colour_aqua" class="palette options colours"></div>
-                    <div id="colour_blue" class="palette options colours"></div>
-                    <div id="colour_purple" class="palette options colours"></div>
-                    <div id="colour_pink" class="palette options colours"></div>
-                </div>
+                <h4>${tl(trans.appearance)}</h4>
                 <div class="setting-group">
+                    <div class="setting" data-type="action">
+                        <div class="heading">
+                            <h5>${tl(trans.themes.name)}</h5>
+                        </div>
+                        <div class="info">
+                            ${theme_bubbles}
+                        </div>
+                    </div>
+                    ${ff('high_contrast') ? setting({id: 'high_contrast'}) : ''}
+                    <div class="setting" data-type="action">
+                        <div class="heading">
+                            <h5>${tl(trans.hue)}</h5>
+                        </div>
+                        <div class="info swatch-info">
+                            <div id="colour_custom" class="swatch-group palette"></div>
+                            <div class="sep swatch-sep" />
+                            <div id="colour_palette" class="swatch-group palette"></div>
+                        </div>
+                    </div>
                     ${setting({id: 'hue_from_album'})}
                     ${setting({id: 'colourful_tracks'})}
-                    ${(ff('card_saturation')) ? html.node`
-                        ${setting({id: 'sat_bg'})}
-                    ` : ''}
+                    ${ff('card_saturation') ? setting({id: 'sat_bg'}) : ''}
                 </div>
+                <h4>${tl(trans.fonts)}</h4>
                 <div class="setting-group">
                     ${setting({id: 'font'})}
                     ${setting({id: 'font_weight'})}
@@ -314,7 +261,98 @@ export function render_setting_page(page_id) {
             }
         ]);
 
+        const banners = JSON.parse(localStorage.getItem('bleh_profile_banners')) || {};
+        let banner = '';
+        if (banners[page.name] && banners[page.name] != 'none') {
+            banner = banners[page.name];
+        }
+
         render(page.structure.main, html`
+            <div class="bleh--panel">
+                <h4>${trans_legacy.en.settings.customise.profile_header.name}</h4>
+                <div class="inner-preview pad">
+                    <div class="profile-mockup">
+                        <div class="mockup-header">
+                            <img class="mockup-avatar" src="${auth.avatar}">
+                            <div class="mockup-info">
+                                <div class="mockup-subtext"></div>
+                                <div class="mockup-name"></div>
+                            </div>
+                        </div>
+                        <div class="mockup-container">
+                            <div class="mockup-col-main">
+                                <div class="mockup-panel main"></div>
+                            </div>
+                            <div class="mockup-col-sidebar">
+                                <div class="mockup-panel mockup-obsession-panel">
+                                    <img class="mockup-obsession-art" src="https://lastfm.freetls.fastly.net/i/u/64s/510546e3b6df7504392274c528c77780.jpg">
+                                    <div class="mockup-obsession-name"></div>
+                                </div>
+                                <div class="mockup-panel main"></div>
+                            </div>
+                        </div>
+                        <div class="profile-mockup-background from-avatar" style="background-image: url(${auth.avatar.replace('/avatar42s/', '/avatar300s/')})"></div>
+                        ${banner != '' ? html.node`
+                        <div class="profile-mockup-background from-track" style="background-image: url(${banner})"></div>
+                        ` : html.node`
+                        <div class="profile-mockup-background from-track" style="background-image: url(https://lastfm.freetls.fastly.net/i/u/avatar300s/df927f4f88034b7f9a651636b965c9d7)"></div>
+                        `}
+                    </div>
+                </div>
+                <div class="setting-group">
+                    <div class="setting" data-type="options">
+                        <div class="heading">
+                            <h5>${tl(trans.view_backgrounds_on)}</h5>
+                        </div>
+                        <div class="primary-selections">
+                            ${setting({id: 'profile_header_own', standalone: true})}
+                            ${setting({id: 'profile_header_others', standalone: true})}
+                        </div>
+                    </div>
+                    ${setting({id: 'profile_avi_background'})}
+                    <div class="setting" data-type="info">
+                        <div class="heading">
+                            <h5>${tl(trans.profile_banner.name)}</h5>
+                            <p>${tl(trans.profile_banner.body)}</p>
+                            <p>${tl(trans.current_banner_value).replace('{v}', banner)}</p>
+                        </div>
+                        ${() => {
+                            if (banner == '')
+                                return html.node`
+                                    <div class="info">
+                                        <p>${tl(trans.none)}</p>
+                                    </div>
+                                `;
+                            
+                            let banner_image = html.node`
+                                <div class="banner-image" style="background-image: url(${banner})" />
+                            `;
+                            
+                            tippy(banner_image, {
+                                content: banner
+                            });
+                            
+                            return banner_image;
+                        }}
+                    </div>
+                </div>
+                <div class="setting-group">
+                    ${setting({id: 'show_your_progress'})}
+                </div>
+                <div class="sep"></div>
+                <div class="setting" data-type="toggle" id="container-rain" onclick="_update_item('rain')">
+                    <button class="btn reset" onclick="_reset_item('rain')">${tl(trans.reset)}</button>
+                    <div class="heading">
+                        <h5>${trans_legacy.en.settings.customise.rain.name}</h5>
+                        <p>${trans_legacy.en.settings.customise.rain.bio}</p>
+                    </div>
+                    <div class="toggle-wrap">
+                        <button class="toggle" id="toggle-rain" aria-checked="true">
+                            <div class="dot"></div>
+                        </button>
+                    </div>
+                </div>
+            </div>
             <div class="bleh--panel check-artist-hover">
                 <h4 class="top-header">${tl(trans.layout)}</h4>
                 <h4>${trans_legacy.en.settings.layout.header}</h4>
@@ -358,91 +396,30 @@ export function render_setting_page(page_id) {
                 </div>
             </div>
             <div class="bleh--panel">
-                <h4>${trans_legacy.en.settings.customise.profile_header.name}</h4>
-                <div class="inner-preview pad">
-                    <div class="profile-mockup">
-                        <div class="mockup-header">
-                            <img class="mockup-avatar" src="${auth.avatar}">
-                            <div class="mockup-info">
-                                <div class="mockup-subtext"></div>
-                                <div class="mockup-name"></div>
-                            </div>
-                        </div>
-                        <div class="mockup-container">
-                            <div class="mockup-col-main">
-                                <div class="mockup-panel main"></div>
-                            </div>
-                            <div class="mockup-col-sidebar">
-                                <div class="mockup-panel mockup-obsession-panel">
-                                    <img class="mockup-obsession-art" src="https://lastfm.freetls.fastly.net/i/u/64s/510546e3b6df7504392274c528c77780.jpg">
-                                    <div class="mockup-obsession-name"></div>
-                                </div>
-                                <div class="mockup-panel main"></div>
-                            </div>
-                        </div>
-                        <div class="profile-mockup-background from-avatar" style="background-image: url(${auth.avatar.replace('/avatar42s/', '/avatar300s/')});"></div>
-                        <div class="profile-mockup-background from-track" style="background-image: url(https://lastfm.freetls.fastly.net/i/u/avatar300s/df927f4f88034b7f9a651636b965c9d7);"></div>
-                    </div>
+                <h4>${trans_legacy.en.settings.customise.display.name}</h4>
+                <div class="inner-preview pad flex">
+                    <section class="catalogue-tags">
+                        <ul class="tags-list tags-list--global">
+                            <li class="tag">
+                                <a href="/tag/pop">pop</a>
+                            </li>
+                            <li class="tag">
+                                <a href="/tag/country">country</a>
+                            </li>
+                            <li class="tag">
+                                <a href="/tag/singer-songwriter">singer-songwriter</a>
+                            </li>
+                            <li class="tag">
+                                <a href="/tag/female+vocalists">female vocalists</a>
+                            </li>
+                            <li class="tag">
+                                <a href="/tag/synthpop">synthpop</a>
+                            </li>
+                        </ul>
+                    </section>
                 </div>
-                <div class="setting" data-type="toggle" id="container-profile_avi_background" onclick="_update_item('profile_avi_background')">
-                    <button class="btn reset" onclick="_reset_item('profile_avi_background')">${tl(trans.reset)}</button>
-                    <div class="heading">
-                        <h5>${trans_legacy.en.settings.customise.profile_header.see_type}</h5>
-                    </div>
-                    <div class="toggle-wrap">
-                        <button class="toggle" id="toggle-profile_avi_background" aria-checked="false">
-                            <div class="dot"></div>
-                        </button>
-                    </div>
-                </div>
-                <h4>${trans_legacy.en.settings.customise.profile_header.view_on}</h4>
-                <div class="setting" data-type="toggle" id="container-profile_header_own" onclick="_update_item('profile_header_own')">
-                    <button class="btn reset" onclick="_reset_item('profile_header_own')">${tl(trans.reset)}</button>
-                    <div class="heading">
-                        <h5>${trans_legacy.en.settings.customise.profile_header.for_own}</h5>
-                    </div>
-                    <div class="toggle-wrap">
-                        <button class="toggle" id="toggle-profile_header_own" aria-checked="false">
-                            <div class="dot"></div>
-                        </button>
-                    </div>
-                </div>
-                <div class="setting" data-type="toggle" id="container-profile_header_others" onclick="_update_item('profile_header_others')">
-                    <button class="btn reset" onclick="_reset_item('profile_header_others')">${tl(trans.reset)}</button>
-                    <div class="heading">
-                        <h5>${trans_legacy.en.settings.customise.profile_header.for_others}</h5>
-                    </div>
-                    <div class="toggle-wrap">
-                        <button class="toggle" id="toggle-profile_header_others" aria-checked="false">
-                            <div class="dot"></div>
-                        </button>
-                    </div>
-                </div>
-                <div class="sep"></div>
-                <div class="setting" data-type="toggle" id="container-show_your_progress" onclick="_update_item('show_your_progress')">
-                    <button class="btn reset" onclick="_reset_item('show_your_progress')">${tl(trans.reset)}</button>
-                    <div class="heading">
-                        <h5>${trans_legacy.en.settings.customise.show_your_progress.name}</h5>
-                        <p>${trans_legacy.en.settings.customise.show_your_progress.bio}</p>
-                    </div>
-                    <div class="toggle-wrap">
-                        <button class="toggle" id="toggle-show_your_progress" aria-checked="true">
-                            <div class="dot"></div>
-                        </button>
-                    </div>
-                </div>
-                <div class="sep"></div>
-                <div class="setting" data-type="toggle" id="container-rain" onclick="_update_item('rain')">
-                    <button class="btn reset" onclick="_reset_item('rain')">${tl(trans.reset)}</button>
-                    <div class="heading">
-                        <h5>${trans_legacy.en.settings.customise.rain.name}</h5>
-                        <p>${trans_legacy.en.settings.customise.rain.bio}</p>
-                    </div>
-                    <div class="toggle-wrap">
-                        <button class="toggle" id="toggle-rain" aria-checked="true">
-                            <div class="dot"></div>
-                        </button>
-                    </div>
+                <div class="setting-group">
+                    ${setting({id: 'gendered_tags'})}
                 </div>
             </div>
             `);
@@ -634,6 +611,14 @@ export function render_setting_page(page_id) {
             </div>
         `);
     } else if (page_id == 'profiles') {
+        if (auth.pro === null) {
+            setTimeout(() => {
+                render_setting_page('profiles');
+            }, 10);
+            page_loading();
+            return;
+        }
+
         register_skip_to([
             {
                 id: 'profile_shortcut',
@@ -677,19 +662,29 @@ export function render_setting_page(page_id) {
                                     title: auth.name,
                                     body: html.node`
                                         <div class="generic-table-list badge-list">
-                                            ${(badges) ? badges.map((badge) => html.node`
-                                                <div class="generic-table-list-entry badge-list-entry">
-                                                    <div class="icon-container colourful user-status--bleh-${badge.type} user-status--bleh-user-${auth.name}">
-                                                        <div class="bleh-icon" style="--icon: var(--mask)" />
+                                            ${(badges) ? badges.map(badge => {
+                                                let style;
+                                                let classname = '';
+                                                if (badge.icon && badge.hue && badge.sat && badge.lit) {
+                                                    style = `--mask: url(${badge.icon}); --hue: ${badge.hue}; --sat: ${badge.sat}; --lit: ${badge.lit}`;
+                                                } else {
+                                                    classname = `user-status--bleh-${badge.type} user-status--bleh-user-${auth.name}`;
+                                                }
+
+                                                return html.node`
+                                                    <div class="generic-table-list-entry badge-list-entry">
+                                                        <div class="icon-container colourful ${classname}" style=${style}>
+                                                            <div class="bleh-icon" style="--icon: var(--mask)" />
+                                                        </div>
+                                                        <div class="name colourful ${classname}" style=${style}>
+                                                            ${badge.name}
+                                                        </div>
+                                                        <div class="text">
+                                                            ${badge.reason}
+                                                        </div>
                                                     </div>
-                                                    <div class="name colourful user-status--bleh-${badge.type} user-status--bleh-user-${auth.name}">
-                                                        ${badge.name}
-                                                    </div>
-                                                    <div class="text">
-                                                        ${badge.reason}
-                                                    </div>
-                                                </div>
-                                            `) : ''}
+                                                `;
+                                            }) : ''}
                                             ${auth.pro ? html.node`
                                                 <div class="generic-table-list-entry badge-list-entry">
                                                     <div class="icon-container colourful user-status-subscriber">
@@ -1148,13 +1143,13 @@ export function render_setting_page(page_id) {
                 <h4>${tl(trans.redirections)}</h4>
                 <div class="setting-group">
                     ${setting({id: 'travis'})}
-                    <div class="setting" data-type="toggle">
+                    <div class="setting" data-type="action">
                         <div class="heading">
                             <h5>${tl(trans.legacy_redirects.name)}</h5>
                             <p>${tl(trans.legacy_redirects.body)}</p>
                         </div>
                         <div class="toggle-wrap">
-                            <a class="see-more" href="${root}settings/website" target="_blank">
+                            <a class="btn continue" href="${root}settings/website" target="_blank">
                                 ${tl(trans.change_now)}
                             </a>
                         </div>
@@ -1176,33 +1171,6 @@ export function render_setting_page(page_id) {
                 <div class="setting-group">
                     ${setting({id: 'gloss'})}
                     ${setting({id: 'grid_glow'})}
-                </div>
-            </div>
-            <div class="bleh--panel">
-                <h4>${trans_legacy.en.settings.customise.display.name}</h4>
-                <div class="inner-preview pad flex">
-                    <section class="catalogue-tags">
-                        <ul class="tags-list tags-list--global">
-                            <li class="tag">
-                                <a href="/tag/pop">pop</a>
-                            </li>
-                            <li class="tag">
-                                <a href="/tag/country">country</a>
-                            </li>
-                            <li class="tag">
-                                <a href="/tag/singer-songwriter">singer-songwriter</a>
-                            </li>
-                            <li class="tag">
-                                <a href="/tag/female+vocalists">female vocalists</a>
-                            </li>
-                            <li class="tag">
-                                <a href="/tag/synthpop">synthpop</a>
-                            </li>
-                        </ul>
-                    </section>
-                </div>
-                <div class="setting-group">
-                    ${setting({id: 'gendered_tags'})}
                 </div>
             </div>
             `);
@@ -1339,6 +1307,7 @@ export function change_settings_page(page_id, setting = null) {
     if (page_id == page.state.settings_page)
         return;
 
+    window.history.pushState(page_id, '', `${root}bleh/${page_id}`);
     page.state.settings_page = page_id;
 
     page.structure.main.innerHTML = '';
@@ -1547,293 +1516,57 @@ export function display_colour_presets() {
                 type: 'customise'
             }
         ],
-        red: [
+        palette: [
             {sets: {
-                hue: 360,
-                sat: 1.4,
+                hue: 0,
+                sat: 1.2,
                 lit: 0.9
-            }},
+            }, label: trans.red},
             {sets: {
-                hue: 360,
-                sat: 1.4,
-                lit: 0.95
-            }},
-            {sets: {
-                hue: 360,
-                sat: 1.325,
-                lit: 1
-            }},
-            {sets: {
-                hue: 360,
-                sat: 1.225,
-                lit: 1
-            }},
-            {sets: {
-                hue: 360,
-                sat: 1.1,
-                lit: 1
-            }},
-            {sets: {
-                hue: 360,
-                sat: 1.05,
-                lit: 1.05
-            }}
-        ],
-        orange: [
-            {sets: {
-                hue: 10,
-                sat: 1.425,
-                lit: 0.9
-            }},
-            {sets: {
-                hue: 13,
-                sat: 1.4,
-                lit: 0.95
-            }},
-            {sets: {
-                hue: 16,
-                sat: 1.325,
-                lit: 1
-            }},
-            {sets: {
-                hue: 20,
-                sat: 1.225,
-                lit: 1
-            }},
-            {sets: {
-                hue: 21,
+                hue: 19,
                 sat: 1.275,
-                lit: 1
-            }},
-            {sets: {
-                hue: 26,
-                sat: 1.35,
-                lit: 1.05
-            }}
-        ],
-        yellow: [
-            {sets: {
-                hue: 22,
-                sat: 1.3,
-                lit: 0.9
-            }},
-            {sets: {
-                hue: 24,
-                sat: 1.2,
                 lit: 0.95
-            }},
+            }, label: trans.orange},
             {sets: {
-                hue: 27,
-                sat: 1.16,
+                hue: 48,
+                sat: 1.5,
                 lit: 1
-            }},
+            }, label: trans.yellow},
             {sets: {
-                hue: 32,
-                sat: 1.1,
-                lit: 1
-            }},
-            {sets: {
-                hue: 36,
-                sat: 1,
-                lit: 1
-            }},
-            {sets: {
-                hue: 41,
+                hue: 98,
                 sat: 1.05,
-                lit: 1.05
-            }}
-        ],
-        green: [
+                lit: 1.025
+            }, label: trans.lime},
             {sets: {
-                hue: 85,
-                sat: 1.4,
-                lit: 0.9
-            }},
-            {sets: {
-                hue: 90,
-                sat: 1.3,
-                lit: 0.95
-            }},
-            {sets: {
-                hue: 94,
-                sat: 1.2,
-                lit: 1
-            }},
-            {sets: {
-                hue: 99,
-                sat: 1.1,
-                lit: 1
-            }},
-            {sets: {
-                hue: 105,
-                sat: 1.025,
-                lit: 1
-            }},
-            {sets: {
-                hue: 108,
+                hue: 131,
                 sat: 1,
-                lit: 1.05
-            }}
-        ],
-        lime: [
+                lit: 0.925
+            }, label: trans.green},
             {sets: {
-                hue: 115,
-                sat: 1.15,
-                lit: 0.9
-            }},
-            {sets: {
-                hue: 121,
-                sat: 1.09,
-                lit: 0.95
-            }},
-            {sets: {
-                hue: 127,
-                sat: 1.05,
-                lit: 1
-            }},
-            {sets: {
-                hue: 135,
-                sat: 1.03,
-                lit: 1
-            }},
-            {sets: {
-                hue: 141,
+                hue: 188,
                 sat: 1,
-                lit: 1
-            }},
+                lit: 1.1
+            }, label: trans.aqua},
             {sets: {
-                hue: 148,
-                sat: 1,
-                lit: 1.05
-            }}
-        ],
-        aqua: [
-            {sets: {
-                hue: 212,
-                sat: 1.45,
-                lit: 0.9
-            }},
-            {sets: {
-                hue: 207,
-                sat: 1.375,
-                lit: 0.95
-            }},
-            {sets: {
-                hue: 200,
+                hue: 228,
                 sat: 1.3,
-                lit: 1
-            }},
-            {sets: {
-                hue: 195,
-                sat: 1.25,
-                lit: 1
-            }},
-            {sets: {
-                hue: 190,
-                sat: 1.2,
-                lit: 1
-            }},
-            {sets: {
-                hue: 185,
-                sat: 1.1,
-                lit: 1.05
-            }}
-        ],
-        blue: [
-            {sets: {
-                hue: 233,
-                sat: 1.4,
                 lit: 0.9
-            }},
+            }, label: trans.blue},
             {sets: {
-                hue: 230,
-                sat: 1.3,
-                lit: 0.95
-            }},
-            {sets: {
-                hue: 226,
-                sat: 1.25,
-                lit: 1
-            }},
-            {sets: {
-                hue: 220,
-                sat: 1.2,
-                lit: 1
-            }},
-            {sets: {
-                hue: 217,
-                sat: 1.15,
-                lit: 1
-            }},
-            {sets: {
-                hue: 212,
-                sat: 1.025,
-                lit: 1.05
-            }}
-        ],
-        purple: [
-            {sets: {
-                hue: 246,
-                sat: 1.32,
-                lit: 0.9
-            }},
-            {sets: {
-                hue: 244,
-                sat: 1.2,
-                lit: 0.95
-            }},
-            {sets: {
-                hue: 246,
-                sat: 1.12,
-                lit: 1
-            }},
-            {sets: {
-                hue: 249,
-                sat: 1.11,
-                lit: 1
-            }},
-            {sets: {
-                hue: 253,
+                hue: 255,
                 sat: 1.07,
                 lit: 1
-            }},
-            {sets: {
-                hue: 256,
-                sat: 1.01,
-                lit: 1.03
-            }}
-        ],
-        pink: [
-            {sets: {
-                hue: 346,
-                sat: 1.3,
-                lit: 0.9
-            }},
-            {sets: {
-                hue: 340,
-                sat: 1.225,
-                lit: 0.95
-            }},
-            {sets: {
-                hue: 335,
-                sat: 1.175,
-                lit: 1
-            }},
-            {sets: {
-                hue: 325,
-                sat: 1.12,
-                lit: 1
-            }},
+            }, label: trans.purple},
             {sets: {
                 hue: 317,
-                sat: 1.05,
+                sat: 1.1,
                 lit: 1
-            }},
+            }, label: trans.pink},
             {sets: {
-                hue: 309,
-                sat: 1,
-                lit: 1.05
-            }}
+                hue: 0,
+                sat: 0,
+                lit: 1
+            }, label: trans.grey}
         ]
     }
     let exclusives = {
@@ -1879,13 +1612,8 @@ export function display_colour_presets() {
     exclusives.new_years = exclusives.christmas;
 
     for (let type in colours) {
-        let swatch_group = document.body.querySelector(`#colour_${type}`);
-
-        if (!swatch_group)
-            return;
-
-        if (type != 'custom')
-            colours[type].reverse();
+        const swatch_group = page.structure.main.querySelector(`#colour_${type}`);
+        if (!swatch_group) return;
 
         colours[type].forEach((colour) => {
             if (colour.requires_flag && version.feature_flags.hasOwnProperty(colour.requires_flag)) {
@@ -1893,24 +1621,33 @@ export function display_colour_presets() {
                     return;
             }
 
+            let text;
+            if (colour.label) text = tl(colour.label);
+
             if (!colour.type)
                 colour.type = 'colour';
 
             if (!colour.displays && colour.sets)
                 colour.displays = colour.sets;
 
-            let swatch = document.createElement('button');
-            swatch.classList.add('swatch', 'btn');
-            swatch.setAttribute('data-swatch-type', colour.type);
+            let blob;
+            let text_elem;
+            let swatch = html.node`
+                <button class="swatch-container" onclick=${() => {
+                    if (!colour.sets) return;
+                    
+                    update_params(colour.sets);
+                }}>
+                    <div class="swatch colourful" ref=${el => blob = el} data-swatch-type=${colour.type} />
+                    <strong ref=${el => text_elem = el} />
+                </button>
+            `;
 
             if (type == 'custom')
-                swatch.classList.add('view-item', 'colour-btn');
-
-            if (type == 'custom')
-                swatch.textContent = tl(trans[colour.type]);
+                text = tl(trans[colour.type]);
 
             if (colour.type == 'customise') {
-                swatch.classList.add('select-button');
+                text = tl(trans.edit);
 
                 let colour;
 
@@ -2012,29 +1749,16 @@ export function display_colour_presets() {
             if (colour.sets) {
                 colour.sets.accent_type = colour.type;
 
-                swatch.setAttribute('onclick', `_update_params(${JSON.stringify(colour.sets)})`);
-
-                swatch.style.setProperty('--hue-over', colour.displays.hue);
-                swatch.style.setProperty('--sat-over', colour.displays.sat);
-                swatch.style.setProperty('--lit-over', colour.displays.lit);
-
-                tippy(swatch, {
-                    theme: 'key_value',
-                    content: html.node`
-                        <span class="key">hue<span class="value">${colour.sets.hue}</span></span>
-                        <span class="key">sat<span class="value">${colour.sets.sat}</span></span>
-                        <span class="key">lit<span class="value">${colour.sets.lit}</span></span>
-                    `,
-                    delay: [250, 0]
-                });
+                blob.style.setProperty('--hue-over', colour.displays.hue);
+                blob.style.setProperty('--sat-over', colour.displays.sat);
+                blob.style.setProperty('--lit-over', colour.displays.lit);
             }
 
             if (colour.type == 'default' && stored_season.id != 'none') {
-                swatch.textContent = tl(trans.seasonal.name);
+                text = tl(trans.seasonal.name);
 
                 if (exclusives.hasOwnProperty(stored_season.id)) {
-                    swatch.setAttribute('onclick', '');
-                    swatch.classList.add('select-button');
+                    delete colour.sets;
 
                     exclusives[stored_season.id] = [
                         {
@@ -2072,6 +1796,12 @@ export function display_colour_presets() {
                 }
             }
 
+            text_elem.textContent = text;
+
+            tippy(swatch, {
+                content: text
+            });
+
             swatch_group.appendChild(swatch);
         });
     }
@@ -2105,8 +1835,10 @@ function display_seasonal_exclusives(instance, colours, exclusives) {
 
 
 function init_profile_notes() {
-    let profile_notes = JSON.parse(localStorage.getItem('bleh_profile_notes')) || {};
     let profile_notes_table = page.structure.main.querySelector('.profile-notes');
+    if (!profile_notes_table) return;
+
+    let profile_notes = JSON.parse(localStorage.getItem('bleh_profile_notes')) || {};
 
     if (Object.keys(profile_notes).length == 0)
         return;
@@ -2404,6 +2136,7 @@ unsafeWindow._convert_hex = function() {
 
 function activity_preview() {
     let preview = page.structure.main.querySelector('.activity-preview');
+    if (!preview) return;
 
     let random_types = [
         'love', 'love', 'love',

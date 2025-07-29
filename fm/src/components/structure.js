@@ -183,13 +183,16 @@ export function checkup_page_structure(is_subpage = false, header = null) {
                 if (navlist) {
                     navlist.classList.add('redesigned-navigation');
 
-                    if (ff('short')) {
-                        page.structure.row.insertBefore(navlist, page.structure.content);
+                    if (ff('mualani')) {
+                        let toolbar = html.node`
+                            <div class="toolbar">
+                                ${navlist}
+                            </div>
+                        `;
+
+                        page.structure.row.insertBefore(toolbar, page.structure.content);
                     } else {
-                        if (page.structure.content_top)
-                            page.structure.content_top.after(navlist);
-                        else
-                            page.structure.container.insertBefore(navlist, page.structure.row);
+                        page.structure.row.insertBefore(navlist, page.structure.content);
                     }
                 }
 
@@ -261,11 +264,20 @@ export function checkup_nav() {
     if (page.structure.nav) page.structure.nav.setAttribute('data-assigned', 'true');
 
     let navlists = page.structure.container.querySelectorAll(':scope > .navlist');
-    console.info(page.structure.container.innerHTML);
     navlists.forEach((nav, index) => {
         console.info(index);
         if (index < 1) return;
 
-        page.structure.row.insertBefore(nav, page.structure.content);
+        if (ff('mualani')) {
+            let toolbar = html.node`
+                <div class="toolbar">
+                    ${nav}
+                </div>
+            `;
+
+            page.structure.row.insertBefore(toolbar, page.structure.content);
+        } else {
+            page.structure.row.insertBefore(nav, page.structure.content);
+        }
     });
 }

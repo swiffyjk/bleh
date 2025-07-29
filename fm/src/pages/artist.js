@@ -154,7 +154,7 @@ export function bleh_artists() {
                         ${tl(trans.photos)}
                     </a>
                     <div class="sep"></div>
-                    <a class="dropdown-menu-clickable-item" href="${root}bleh?tab=customise" data-menu-item="settings">
+                    <a class="dropdown-menu-clickable-item" href="${root}bleh/customise" data-menu-item="settings">
                         ${tl(trans.settings)}
                     </a>
                 `,
@@ -181,7 +181,7 @@ export function bleh_artists() {
                 let view_menu = tippy(view_button, {
                     theme: 'context-menu',
                     content: html.node`
-                        <a class="dropdown-menu-clickable-item" href="${root}bleh?tab=customise" data-menu-item="settings">
+                        <a class="dropdown-menu-clickable-item" href="${root}bleh/customise" data-menu-item="settings">
                             ${tl(trans.settings)}
                         </a>
                     `,
@@ -343,8 +343,24 @@ export function bleh_artists() {
         }
     } else {
         let btn_add = page.structure.side.querySelector('.add-button');
-        if (btn_add != null)
-            btn_add.setAttribute('data-page-subpage', page.subpage);
+        if (btn_add) btn_add.setAttribute('data-page-subpage', page.subpage);
+
+        if (page.subpage.startsWith('listeners_')) {
+            let toolbar = page.structure.row.querySelector(':scope > .toolbar > .navlist > .navlist-items');
+
+            let overview = toolbar.querySelector('.secondary-nav-item--overview');
+            overview.classList.remove('secondary-nav-item--overview');
+            overview.classList.add('secondary-nav-item--global');
+            overview.querySelector('a').textContent = tl(trans.global);
+
+            let mutuals = toolbar.querySelector('.secondary-nav-item--you-know a');
+            mutuals.textContent = tl(trans.mutuals);
+
+            if (page.subpage == 'listeners_overview')
+                bleh_top_listeners();
+            else if (page.subpage == 'listeners_you-know')
+                bleh_listeners();
+        }
 
         if (page.subpage == 'images_image-upload')
             bleh_gallery_upload();
@@ -356,10 +372,6 @@ export function bleh_artists() {
             bleh_wiki_history();
         else if (page.subpage == 'wiki_edit')
             bleh_wiki_editor();
-        else if (page.subpage == 'listeners_overview')
-            bleh_top_listeners();
-        else if (page.subpage == 'listeners_you-know')
-            bleh_listeners();
         else if (page.subpage == 'tracks')
             bleh_artist_tracks();
         else if (page.subpage == 'albums')

@@ -163,7 +163,18 @@ export function update_check(force = false, btn = null, func = null) {
     if (!force) {
         const last_checked = localStorage.getItem('bleh_update_checked') || null;
         const next_check = localStorage.getItem('bleh_update_next_check') || null;
+        const update_to = localStorage.getItem('bleh_update_to') || null;
         const current_time = new Date();
+
+        if (update_to == version.build) {
+            log('reset update status as update is already installed', 'update', 'info', {update_to: update_to, current_build: version.build});
+
+            // reset update status
+            localStorage.setItem('bleh_update_required', 'false');
+            localStorage.setItem('bleh_update_checked', new Date().toString());
+
+            return;
+        }
 
         if (last_checked && next_check && new Date(next_check) > current_time) {
             log('update check skipped', 'update', 'info', {next_in: next_check, current_time: current_time});
@@ -281,6 +292,11 @@ function finish_update() {
         dismiss: false,
         replace_if_possible: true
     });
+
+    // reset update status
+    localStorage.setItem('bleh_update_required', 'false');
+    localStorage.setItem('bleh_update_checked', new Date().toString());
+
     fetch_new_style(false, true, true);
 }
 

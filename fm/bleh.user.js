@@ -1004,11 +1004,12 @@
   var dialogs = {};
   tippy.setDefaultProps({
     arrow: false,
-    duration: [0, 220]
+    duration: [0, 220],
+    offset: [0, 4]
   });
   var auth = {
     name: null,
-    pro: false,
+    pro: null,
     sponsor: false,
     avatar: null,
     sets: {
@@ -1104,10 +1105,11 @@
     }
   };
   var shout_parse_queue = [];
-  var bleh_url = "https://www.last.fm{root}bleh";
-  var setup_url = "https://www.last.fm{root}bleh/setup";
-  var sponsor_url = "https://www.last.fm{root}bleh/sponsor";
-  var api_url = "https://www.last.fm{root}bleh/api";
+  var bleh_url = "{root}bleh";
+  var setup_url = "{root}bleh/setup";
+  var sponsor_url = "{root}bleh/sponsor";
+  var api_url = "{root}bleh/api";
+  var minis_url = "{root}bleh/minis";
   var api_key = "85c118b69b1437844fe75fcd2bf27261";
   var theme_preview = () => html.node`
     <div class="preview-inner">
@@ -2482,13 +2484,16 @@
   }
   function clamp_sat(sat) {
     if (sat > 1.5)
-      return 1.5.toString();
-    return sat.toFixed(2);
+      return 1.5;
+    return round_two(sat);
   }
   function clamp_lit(sat, lit) {
     if (sat >= 1.3 && lit < 0.8)
       return 0.8;
-    return lit;
+    return round_two(lit);
+  }
+  function round_two(value) {
+    return Math.round(value * 100) / 100;
   }
   function clean_number(string) {
     return parseInt(
@@ -2705,8 +2710,10 @@
     versions: [
       "(taylor",
       "- spotify singles",
-      "(spotify",
       "(+"
+    ],
+    spotify: [
+      "(spotify)"
     ],
     remasters: [
       "- remaster",
@@ -2986,46 +2993,6 @@
     badges: {}
   };
 
-  // src/components/badge.js
-  function load_badges(user, solo = false) {
-    if (!sponsor_list || !sponsor_list.badges) return;
-    if (!sponsor_list.badges.hasOwnProperty(user))
-      return;
-    let badges = [];
-    if (!Array.isArray(sponsor_list.badges[user])) {
-      log("1 badge found", "sponsor", "info", sponsor_list.badges[user]);
-      badges.push(sponsor_list.badges[user]);
-    } else {
-      log("multiple badges found", "sponsor", "info", sponsor_list.badges[user]);
-      if (solo)
-        badges.push(sponsor_list.badges[user][Object.keys(sponsor_list.badges[user]).length - 1]);
-      else
-        badges = sponsor_list.badges[user];
-    }
-    badges.forEach((badge) => {
-      if (!badge.name) {
-        if (trans.badges[badge.type]) {
-          badge.name = tl(trans.badges[badge.type].name);
-        } else {
-          badge.name = tl(trans.unavailable);
-          badge.reason = tl(trans.requires_higher_bleh_version);
-        }
-      }
-      if (trans.badges[badge.type] && trans.badges[badge.type].reason)
-        badge.reason = tl(trans.badges[badge.type].reason);
-      if (badge.reason)
-        return;
-      if (badge.type == "sponsor" || badge.type == "contributor")
-        badge.reason = badge.type;
-      else if (badge.type == "cute" || badge.type == "queen")
-        badge.reason = tl(trans.badges.cute.reason);
-      else
-        badge.reason = tl(trans.badges.reserved.reason);
-    });
-    log("final badge list", "sponsor", "info", badges);
-    return badges;
-  }
-
   // src/components/dialog.js
   function load_dialogs() {
     let dialogs2 = document.createElement("div");
@@ -3201,6 +3168,242 @@
     kill_window(id);
   };
 
+  // src/sku.js
+  function ff(flag) {
+    log(`parsing ${flag}`, "flag", "log", {
+      setting: settings.feature_flags[flag],
+      sku: version.feature_flags[flag]
+    });
+    if (settings.feature_flags[flag] != null)
+      return settings.feature_flags[flag];
+    if (version.feature_flags[flag] != null)
+      return version.feature_flags[flag].default;
+  }
+
+  // src/sponsor.js
+  function sponsors(force = false) {
+    if (!ff("sponsor"))
+      return;
+    let sponsor_data = localStorage.getItem("kat_sponsors");
+    let sponsor_expire = new Date(localStorage.getItem("kat_sponsors_expire"));
+    let current_time = /* @__PURE__ */ new Date();
+    if (!sponsor_data) {
+      log("not cached, fetching", "sponsor");
+      sponsor_request(true);
+    } else {
+      for (var member in sponsor_list) delete sponsor_list[member];
+      Object.assign(sponsor_list, JSON.parse(sponsor_data));
+      if (sponsor_list)
+        auth.sponsor = sponsor_list.sponsors.includes(auth.name);
+      if (sponsor_expire < current_time && !force) {
+        sponsor_request();
+      } else if (force) {
+        sponsor_request(true);
+      }
+    }
+  }
+  function sponsor_request(notify2 = false) {
+    let button = document.body.querySelector('[onclick="_sponsor_check()"]');
+    if (button)
+      button.setAttribute("disabled", "");
+    let xhr = new XMLHttpRequest();
+    let url = `https://katelyynn.github.io/bleh/fm/badges/badges.json?${Math.random()}`;
+    xhr.open("GET", url, true);
+    xhr.onload = function() {
+      log(`list responded with ${xhr.status}`, "sponsor");
+      let api_expire = /* @__PURE__ */ new Date();
+      if (xhr.status != 200) {
+        log("request has been cancelled, will request again in 1h", "sponsor");
+        api_expire.setHours(api_expire.getHours() + 1);
+      }
+      if (xhr.status == 200) {
+        if (sponsor_list.latest != 0 || sponsor_list && parseFloat(JSON.parse(this.response).latest) >= parseFloat(sponsor_list.latest)) {
+          for (const member in sponsor_list) delete sponsor_list[member];
+          Object.assign(sponsor_list, JSON.parse(this.response));
+          if (sponsor_list)
+            auth.sponsor = sponsor_list.sponsors.includes(auth.name);
+          if (notify2)
+            deliver_notif(trans_legacy.en.settings.home.sponsor.download, false, true, "sponsor");
+          localStorage.setItem("kat_sponsors", this.response);
+        }
+        api_expire.setHours(api_expire.getHours() + 4);
+        log(`list cached until ${api_expire}`, "sponsor");
+      }
+      localStorage.setItem("kat_sponsors_expire", api_expire);
+      if (button != null)
+        button.removeAttribute("disabled");
+    };
+    xhr.send();
+  }
+  unsafeWindow._sponsor_check = function() {
+    sponsors(true);
+  };
+  unsafeWindow._sponsor = function(replace = false) {
+    sponsor(replace);
+  };
+  function sponsor(replace = false) {
+    dialog({
+      id: "sponsor",
+      title: tl(trans.support_future_development),
+      body: html.node`
+            <div class="modal-vertical-inner support-inner">
+                <div class="avatar">
+                    <img src="${auth.avatar.replace("/avatar42s/", "/avatar170s/")}" alt="${tl(trans.your_avatar)}">
+                    <span class="avatar-status-dot user-status--bleh-sponsor"></span>
+                </div>
+                <h1>${tl(trans.support_future_development)}</h1>
+                <p>${html.node([
+        tl(trans.why_sponsor).replace("katelyn", sponsor_list && sponsor_list.special ? `<a class="mention" href="${root}user/${sponsor_list.special[0]}">@${sponsor_list.special[0]}</a>` : "katelyn")
+      ])}</p>
+            </div>
+            <div class="modal-footer">
+                <div class="fill"></div>
+                <a class="btn primary sponsor" href="${sponsor_list.sponsor_link}" target="_blank">
+                    ${tl(trans.sponsor)}
+                </a>
+                <div class="fill"></div>
+            </div>
+        `,
+      type: "sponsor",
+      replace_if_possible: replace
+    });
+  }
+  unsafeWindow._sponsor_manage = function() {
+    sponsor_manage();
+  };
+  function sponsor_manage() {
+    if (sponsor_list.sponsors_one_time && sponsor_list.sponsors_one_time.includes(auth.name)) {
+      dialog({
+        id: "sponsor_manage",
+        title: tl(trans.sponsor),
+        body: html.node`
+                <div class="modal-vertical-inner support-inner">
+                    <div class="avatar">
+                        <img src="${auth.avatar.replace("/avatar42s/", "/avatar170s/")}" alt="${tl(trans.your_avatar)}">
+                        <span class="avatar-status-dot user-status--bleh-sponsor"></span>
+                    </div>
+                    <h1>${tl(trans.you_are_a_sponsor)}</h1>
+                    <p>${tl(trans.sponsor_no_badge)}</p>
+                </div>
+            `,
+        type: "sponsor"
+      });
+    } else {
+      dialog({
+        id: "sponsor_manage",
+        title: tl(trans.sponsor),
+        body: html.node`
+                <div class="modal-vertical-inner support-inner">
+                    <div class="avatar">
+                        <img src="${auth.avatar.replace("/avatar42s/", "/avatar170s/")}" alt="${tl(trans.your_avatar)}">
+                        <span class="avatar-status-dot user-status--bleh-sponsor"></span>
+                    </div>
+                    <h1>${tl(trans.you_are_a_sponsor)}</h1>
+                    <p>${tl(trans.sponsor_get_badge)}</p>
+                </div>
+                <div class="modal-footer">
+                    <div class="fill"></div>
+                    <a class="btn primary sponsor" href="${root}user/${sponsor_list.sponsor_account}" target="_blank">
+                        ${tl(trans.manage_sponsor)}
+                    </a>
+                    <div class="fill"></div>
+                </div>
+            `,
+        type: "sponsor"
+      });
+    }
+  }
+  function bleh_sponsor_page() {
+    document.body.style.removeProperty("--hue-album");
+    document.body.style.removeProperty("--sat-album");
+    document.body.style.removeProperty("--lit-album");
+    let adaptive_skin_container = document.querySelector(".adaptive-skin-container:not([data-bleh])");
+    if (adaptive_skin_container == null)
+      return;
+    adaptive_skin_container.setAttribute("data-bleh", "true");
+    adaptive_skin_container.innerHTML = "";
+    log("internal bleh sponsor", "page");
+    page.type = "bleh_sponsor";
+    page.subpage = "";
+    sponsor();
+  }
+
+  // src/components/badge.js
+  function load_badges(user, solo = false) {
+    if (!sponsor_list || !sponsor_list.badges) return;
+    if (!sponsor_list.badges.hasOwnProperty(user))
+      return;
+    let badges = [];
+    if (!Array.isArray(sponsor_list.badges[user])) {
+      log("1 badge found", "sponsor", "info", sponsor_list.badges[user]);
+      badges.push(sponsor_list.badges[user]);
+    } else {
+      log("multiple badges found", "sponsor", "info", sponsor_list.badges[user]);
+      if (solo)
+        badges.push(sponsor_list.badges[user][Object.keys(sponsor_list.badges[user]).length - 1]);
+      else
+        badges = sponsor_list.badges[user];
+    }
+    badges.forEach((badge) => {
+      badge.user = user;
+      if (!badge.name) {
+        if (trans.badges[badge.type]) {
+          badge.name = tl(trans.badges[badge.type].name);
+        } else {
+          badge.name = tl(trans.unavailable);
+          badge.reason = tl(trans.requires_higher_bleh_version);
+        }
+      }
+      if (trans.badges[badge.type] && trans.badges[badge.type].reason)
+        badge.reason = tl(trans.badges[badge.type].reason);
+      if (badge.reason)
+        return;
+      if (badge.type == "sponsor" || badge.type == "contributor")
+        badge.reason = badge.type;
+      else if (badge.type == "cute" || badge.type == "queen")
+        badge.reason = tl(trans.badges.cute.reason);
+      else
+        badge.reason = tl(trans.badges.reserved.reason);
+    });
+    log("final badge list", "sponsor", "info", badges);
+    return badges;
+  }
+  function create_badge(badge = {
+    type: "",
+    icon: "",
+    reason: "",
+    hue: 0,
+    sat: 0,
+    lit: 0,
+    name: "",
+    user: ""
+  }) {
+    let elem = html.node`
+        <span class="label no-hover">
+            ${badge.name}
+        </span>
+    `;
+    if (badge.icon != "" && badge.hue > 0 && badge.sat > 0 && badge.lit > 0) {
+      elem.style.setProperty("--mask", `url(${badge.icon})`);
+      elem.style.setProperty("--hue-over", badge.hue);
+      elem.style.setProperty("--sat-over", badge.sat);
+      elem.style.setProperty("--lit-over", badge.lit);
+    } else {
+      elem.classList.add(`user-status--bleh-${badge.type}`, `user-status--bleh-user-${badge.user}`);
+    }
+    tippy(elem, {
+      theme: "badge",
+      placement: "bottom",
+      content: html.node`
+            <div class="badge-name">${badge.name}</div>
+            <div class="badge-reason">${badge.reason}</div>
+        `
+    });
+    if (badge.type == "sponsor")
+      elem.onclick = sponsor;
+    return elem;
+  }
+
   // src/avatar.js
   function patch_avatar(avatar3, name2, type = "", parent = null, side = "right") {
     if (avatar3.hasAttribute("data-bleh-avatar"))
@@ -3374,18 +3577,6 @@
       type: "avatar",
       has_overlays: false
     });
-  }
-
-  // src/sku.js
-  function ff(flag) {
-    log(`parsing ${flag}`, "flag", "log", {
-      setting: settings.feature_flags[flag],
-      sku: version.feature_flags[flag]
-    });
-    if (settings.feature_flags[flag] != null)
-      return settings.feature_flags[flag];
-    if (version.feature_flags[flag] != null)
-      return version.feature_flags[flag].default;
   }
 
   // src/pages/wiki.js
@@ -3748,18 +3939,26 @@
     ).replace(/https:\/\/open\.spotify\.com\/user\/([A-Za-z0-9]+)\?si=([A-Za-z0-9]+)/g, "[Spotify](https://open.spotify.com/user/$1)").replace(/&/g, "&amp;").replace(/</g, "&lt;").replace(/>/g, "&gt;").replace(/"/g, "&quot;").replace(/'/g, "&#039;"));
     let body = html.node([parsed_body]);
     patch_wiki_contents(body);
+    local_restriction(body);
+    let texts = body.querySelectorAll("p");
+    texts.forEach((text3) => {
+      local_restriction(text3);
+    });
     return body;
+  }
+  function local_restriction(text2) {
+    if (text2.textContent.trim().startsWith("Due to local laws, we are temporarily"))
+      text2.classList.add("local-restriction");
   }
 
   // src/components/colourful_counts.js
   function patch_artist_ranks_in_list_view(track) {
     let count_bar = track.querySelector(".chartlist-count-bar");
-    if (count_bar == void 0)
-      return;
+    if (!count_bar) return;
     let count_bar_link = count_bar.querySelector(".chartlist-count-bar-link");
     if (count_bar_link.getAttribute("href").includes("?from=") || count_bar_link.getAttribute("href").includes("?date_preset=") && !count_bar_link.getAttribute("href").endsWith("?date_preset=ALL") && !count_bar_link.getAttribute("href").endsWith("?date_preset=null"))
       return;
-    let count = clean_number(count_bar.querySelector(".chartlist-count-bar-value").textContent.trim().replace(" scrobbles", ""));
+    let count = count_bar.querySelector(".chartlist-count-bar-slug").getAttribute("data-stat-value");
     if (!count_bar.hasAttribute("data-kate-processed")) {
       count_bar.setAttribute("data-kate-processed", "true");
       let parsed_scrobble_as_rank = parse_scrobbles_as_rank(count);
@@ -4687,766 +4886,6 @@
       bleh_glacier_insights(insights);
   }
 
-  // src/components/compare.js
-  function compare() {
-    if (page.state.scrobbles === 0) {
-      notify({
-        id: "compare_not_possible",
-        title: tl(trans.compare),
-        body: tl(trans.profile_does_not_have_enough_scrobbles),
-        icon: "icon-16-arrows"
-      });
-      return;
-    }
-    let pages;
-    let timeframe;
-    let type;
-    let submit;
-    let body;
-    dialog({
-      id: "compare",
-      title: tl(trans.compare),
-      body: html.node`
-            <div class="compare-header">
-                <div class="compare-users">
-                    <div class="compare-user">
-                        <div class="avatar">
-                            <img src="${auth.avatar.replace("/avatar42s/", "/avatar170s/")}" alt="${tl(trans.your_avatar)}">
-                        </div>
-                        <strong>${auth.name}</strong>
-                    </div>
-                    <div class="bleh-icon"></div>
-                    <div class="compare-user">
-                        <div class="avatar">
-                            <img src="${page.avatar}" alt="${tl(trans.avatar_for_user).replace("{u}", page.name)}">
-                        </div>
-                        <strong>${page.name}</strong>
-                    </div>
-                </div>
-                <div class="compare-selection">
-                    ${pages = select([
-        {
-          value: "1",
-          text: 50
-        },
-        {
-          value: "2",
-          text: 100
-        },
-        {
-          value: "3",
-          text: 150
-        },
-        {
-          value: "4",
-          text: 200
-        },
-        {
-          value: "5",
-          text: 250
-        },
-        {
-          value: "6",
-          text: 300
-        }
-      ], "3")}
-                    ${type = select([
-        {
-          value: "artists",
-          text: html`<div class="bleh-icon" style="--icon: var(--icon-16-artist)" />${tl(trans.artists)}`
-        },
-        {
-          value: "albums",
-          text: html`<div class="bleh-icon" style="--icon: var(--icon-16-album)" />${tl(trans.albums)}`
-        },
-        {
-          value: "tracks",
-          text: html`<div class="bleh-icon" style="--icon: var(--icon-16-track)" />${tl(trans.tracks)}`
-        }
-      ], "albums")}
-                    ${timeframe = select([
-        {
-          value: "LAST_7_DAYS",
-          text: tl(trans.last_count_days).replace("{c}", "7")
-        },
-        {
-          value: "LAST_30_DAYS",
-          text: tl(trans.last_count_days).replace("{c}", "30")
-        },
-        {
-          value: "LAST_90_DAYS",
-          text: tl(trans.last_count_days).replace("{c}", "90")
-        },
-        {
-          value: "LAST_180_DAYS",
-          text: tl(trans.last_count_days).replace("{c}", "180")
-        },
-        {
-          value: "LAST_365_DAYS",
-          text: tl(trans.last_count_days).replace("{c}", "365")
-        }
-      ], "LAST_90_DAYS")}
-                    <button class="btn chibi icon primary compare" ref=${(el) => submit = el} onclick=${() => begin_comparing()}>${tl(trans.compare)}</button>
-                </div>
-            </div>
-            <div class="compare-body" data-filled="false" ref=${(el) => body = el}>
-                <div class="loading-data-container">
-                    <div class="loading-data-text info">${tl(trans.choose_a_timeframe_above)}</div>
-                </div>
-            </div>
-        `,
-      type: "compare"
-    });
-    tippy(submit, {
-      content: tl(trans.compare)
-    });
-    function begin_comparing(bypass = false) {
-      if (parseInt(pages.value) > 3 && !bypass) {
-        let warn = notify({
-          id: "collage_warning",
-          title: tl(trans.are_you_sure),
-          body: tl(trans.this_will_require_loading_count_pages).replace("{c}", parseInt(pages.value) * 2),
-          type: "warning",
-          actions: [
-            {
-              type: "check",
-              action: () => {
-                notify_rm(warn);
-                begin_comparing(true);
-              },
-              text: tl(trans.continue)
-            }
-          ],
-          persist: true
-        });
-        return;
-      }
-      pages.querySelector("button").disabled = true;
-      type.querySelector("button").disabled = true;
-      timeframe.querySelector("button").disabled = true;
-      submit.disabled = true;
-      page.state.compare = {
-        you: [],
-        other: [],
-        shared: []
-      };
-      body.setAttribute("data-filled", "false");
-      get_grid(auth.name, 1, parseInt(pages.value), page.name);
-    }
-    function get_grid(user, current_page, page_count, next_user = null) {
-      render(body, html`
-            <div class="loading-data-container">
-                <div class="loading-data-text">${tl(trans.gathering_plays_for_user_pages).replace("{u}", user).replace("{current_page}", current_page).replace("{pages}", page_count)}</div>
-            </div>
-        `);
-      fetch(`${root}user/${user}/library/${type.value}?format=list&date_preset=${timeframe.value}&page=${current_page}&ajax=1`).then(function(response) {
-        console.log("returned", response, response.text);
-        return response.text();
-      }).then(function(dom) {
-        let doc = new DOMParser().parseFromString(dom, "text/html");
-        console.log("DOC", doc);
-        let next_button = doc.querySelector(".pagination-next");
-        try {
-          let tracks = doc.querySelectorAll(".chartlist-row");
-          tracks.forEach((track) => {
-            let item = {};
-            item.avatar = track.querySelector(".chartlist-image img");
-            if (item.avatar)
-              item.avatar = item.avatar.getAttribute("src");
-            item.name = track.querySelector(".chartlist-name a").textContent.trim();
-            if (type.value != "artists")
-              item.sister = track.querySelector(".chartlist-artist a").textContent.trim();
-            item.plays = clean_number(track.querySelector(".chartlist-count-bar-slug").getAttribute("data-stat-value"));
-            if (next_user)
-              page.state.compare.you.push(item);
-            else
-              page.state.compare.other.push(item);
-          });
-        } catch (e) {
-          notify({
-            id: "compare",
-            title: tl(trans.failed),
-            body: tl(trans.there_was_a_network_error),
-            type: "error"
-          });
-          console.error(e);
-        }
-        if (next_button && current_page < page_count) {
-          get_grid(user, current_page + 1, page_count, next_user);
-        } else if (next_user) {
-          get_grid(next_user, 1, page_count);
-        } else {
-          pages.querySelector("button").disabled = false;
-          type.querySelector("button").disabled = false;
-          timeframe.querySelector("button").disabled = false;
-          submit.disabled = false;
-          continue_comparing();
-        }
-      });
-    }
-    function continue_comparing() {
-      log("gathered initial values", "compare", "info", page.state.compare);
-      page.state.compare.you.forEach((your_item) => {
-        let other_item;
-        if (type.value == "albums")
-          other_item = page.state.compare.other.find((other) => your_item.name === other.name && your_item.sister === other.sister);
-        else
-          other_item = page.state.compare.other.find((other) => your_item.name === other.name);
-        if (other_item) {
-          page.state.compare.shared.push({
-            avatar: your_item.avatar,
-            name: your_item.name,
-            sister: your_item.sister ? your_item.sister : "",
-            plays: {
-              you: your_item.plays,
-              other: other_item.plays,
-              shared: your_item.plays + other_item.plays
-            }
-          });
-        }
-      });
-      page.state.compare.shared.sort((a, b) => b.plays.shared - a.plays.shared);
-      log("gathered shared values", "compare", "info", page.state.compare);
-      body.innerHTML = "";
-      if (page.state.compare.shared.length == 0) {
-        render(body, html`
-                <div class="loading-data-container">
-                    <div class="loading-data-text failed">${tl(trans.nothing_in_common)}</div>
-                </div>
-            `);
-        body.setAttribute("data-filled", "false");
-        return;
-      }
-      body.setAttribute("data-filled", "true");
-      if (type.value != "tracks") {
-        let grid = document.createElement("ol");
-        grid.classList.add("grid-items", "grid-items--numbered", "compare-grid");
-        page.state.compare.shared.forEach((data2) => {
-          let template;
-          if (type.value == "artists")
-            template = sanitise(data2.name);
-          else
-            template = `${sanitise(data2.sister)}/${sanitise(data2.name)}`;
-          grid.appendChild(html.node`
-                    <li class="compare-item grid-items-item">
-                        <div class="grid-items-cover-image js-link-block link-block">
-                            <div class="grid-items-cover-image-image ${data2.avatar.endsWith("/c6f59c1e5e7240a4c0d427abd71f3dbb.jpg") || data2.avatar.endsWith("/2a96cbd8b46e442fc41c2b86b821562f.jpg") ? "grid-items-cover-default" : ""}">
-                                <img src="${data2.avatar.replace("/avatar70s/", "/avatar300s/").replace("/64s/", "/avatar300s/")}" alt="${data2.name}" loading="lazy">
-                            </div>
-                            <div class="grid-items-item-details">
-                                <p class="grid-items-item-main-text">
-                                    <a class="link-block-target" href="${root}music/${template}" title="${data2.name}">
-                                        ${data2.name}
-                                    </a>
-                                </p>
-                                ${type.value == "albums" ? html.node`
-                                <p class="grid-items-item-aux-text">
-                                    <a class="grid-items-item-aux-block" href="${root}music/${data2.sister}">
-                                        ${data2.sister}
-                                    </a>
-                                </p>
-                                ` : ""}
-                                <p class="grid-items-item-aux-text">
-                                    <a class="grid-item-plays with-avatar" href="${root}user/${auth.name}/library/music/${template}?date_preset=${timeframe.value}" target="_blank">
-                                        <span class="avatar">
-                                            <img src="${auth.avatar}" alt="${tl(trans.your_avatar)}">
-                                        </span>
-                                        ${data2.plays.you.toLocaleString(lang)}
-                                    </a>
-                                    <a class="grid-item-plays with-avatar" href="${root}user/${page.name}/library/music/${template}?date_preset=${timeframe.value}" target="_blank">
-                                        <span class="avatar">
-                                            <img src="${page.avatar}" alt="${tl(trans.avatar_for_user).replace("{u}", page.name)}">
-                                        </span>
-                                        ${data2.plays.other.toLocaleString(lang)}
-                                    </a>
-                                </p>
-                            </div>
-                            <a class="js-link-block-cover-link link-block-cover-link" href="${root}music/${template}" tabindex="-1" aria-hidden="true"></a>
-                        </div>
-                    </li>
-                `);
-        });
-        render(body, grid);
-        music_grids(grid);
-      } else {
-        let table = document.createElement("table");
-        table.classList.add("chartlist", "chartlist--with-index", "chartlist--with-index--length-2", "chartlist--with-image", "chartlist--with-artist", "chartlist--with-bar", "compare-chartlist");
-        let tbody = document.createElement("tbody");
-        table.appendChild(tbody);
-        let max = 0;
-        page.state.compare.shared.forEach((item) => {
-          if (item.plays.you > max)
-            max = item.plays.you;
-          if (item.plays.other > max)
-            max = item.plays.other;
-        });
-        page.state.compare.shared.forEach((data2, index) => {
-          let template = `${sanitise(data2.sister)}/_/${sanitise(data2.name)}`;
-          tbody.appendChild(html.node`
-                    <tr class="chartlist-row chartlist-row--with-artist compare-item">
-                        <td class="chartlist-index">${index + 1}</td>
-                        <td class="chartlist-image">
-                            <a class="cover-art" href="${root}music/${template}">
-                                <img src="${data2.avatar}" alt="${data2.name}" loading="lazy">
-                            </a>
-                        </td>
-                        <td class="chartlist-name">
-                            <a href="${root}music/${template}" title="${data2.name}">
-                                ${data2.name}
-                            </a>
-                        </td>
-                        <td class="chartlist-artist">
-                            <a href="${root}music/${data2.sister}" title="${data2.sister}">
-                                ${data2.sister}
-                            </a>
-                        </td>
-                        <td class="chartlist-bar with-multiple">
-                            <span class="chartlist-count-bar">
-                                <a class="chartlist-count-bar-link" href="${root}user/${auth.name}/library/music/${template}?date_preset=${timeframe.value}" target="_blank">
-                                    <span class="chartlist-count-bar-slug" data-max-stat-value="${max}" data-stat-value="${data2.plays.you}" style="width: ${data2.plays.you / max * 100}%;"></span>
-                                    <span class="chartlist-count-bar-value">${data2.plays.you}</span>
-                                </a>
-                                <span class="avatar">
-                                    <img src="${auth.avatar}" alt="${tl(trans.your_avatar)}">
-                                </span>
-                            </span>
-                            <span class="chartlist-count-bar">
-                                <a class="chartlist-count-bar-link" href="${root}user/${page.name}/library/music/${template}?date_preset=${timeframe.value}" target="_blank">
-                                    <span class="chartlist-count-bar-slug" data-max-stat-value="${max}" data-stat-value="${data2.plays.other}" style="width: ${data2.plays.other / max * 100}%;"></span>
-                                    <span class="chartlist-count-bar-value">${data2.plays.other}</span>
-                                </a>
-                                <span class="avatar">
-                                    <img src="${page.avatar}" alt="${tl(trans.avatar_for_user).replace("{u}", page.name)}">
-                                </span>
-                            </span>
-                        </td>
-                    </tr>
-                `);
-        });
-        body.appendChild(table);
-        patch_titles(body);
-      }
-    }
-  }
-
-  // src/components/input.js
-  function input({
-    type = "text",
-    value,
-    placeholder,
-    min,
-    max,
-    maxlength,
-    warn_if_empty = false,
-    focus = false,
-    disabled,
-    show_time = true,
-    name: name2
-  }) {
-    if (type == "date") {
-      let months_between = function(a, b) {
-        return (b.getFullYear() - a.getFullYear()) * 12 + (b.getMonth() - a.getMonth());
-      }, can_nav_month_view = function() {
-        return months_between(min_date, max_date) >= 1;
-      }, can_nav_year_view = function() {
-        return max_date.getFullYear() - min_date.getFullYear() >= 1;
-      }, on_month_year_click = function() {
-        last_action = "";
-        if (view.level === "day" && can_nav_month_view()) {
-          view.level = "month";
-        } else if (view.level === "month" && can_nav_year_view()) {
-          view.level = "year";
-        } else if (view.level === "year") {
-          view.level = "month";
-        } else {
-          return;
-        }
-        render_popup();
-      }, can_prev = function() {
-        const py = view.month === 1 ? view.year - 1 : view.year;
-        const pm = view.month === 1 ? 12 : view.month - 1;
-        return py > min_date.getFullYear() || py === min_date.getFullYear() && pm >= min_date.getMonth() + 1;
-      }, can_next = function() {
-        const ny = view.month === 12 ? view.year + 1 : view.year;
-        const nm = view.month === 12 ? 1 : view.month + 1;
-        return ny < max_date.getFullYear() || ny === max_date.getFullYear() && nm <= max_date.getMonth() + 1;
-      }, render_popup = function() {
-        let inner;
-        if (view.level === "year") {
-          inner = render_year_view();
-        } else if (view.level === "month") {
-          inner = render_month_view();
-        } else {
-          inner = render_day_view();
-        }
-        tooltip.setContent(html.node`<div class="calendar">${inner}</div>`);
-      }, render_day_view = function() {
-        return html.node`
-                <div class="calendar-header">
-                    <button class="month-year" type="button" onclick=${on_month_year_click} disabled=${!can_nav_month_view()}>
-                        ${months[view.month - 1]} ${view.year}
-                    </button>
-                    <div class="fill" />
-                    <button class="chibi icon" data-type="up" disabled=${!can_prev()} type="button" onclick=${() => {
-          if (!can_prev()) return;
-          view.month--;
-          if (view.month < 1) {
-            view.month = 12;
-            view.year--;
-          }
-          last_action = "prev";
-          render_popup();
-        }}>
-                        ${tl(trans.back)}
-                    </button>
-                    <button class="chibi icon" data-type="down" disabled=${!can_next()} type="button" onclick=${() => {
-          if (!can_next()) return;
-          view.month++;
-          if (view.month > 12) {
-            view.month = 1;
-            view.year++;
-          }
-          last_action = "next";
-          render_popup();
-        }}>
-                        ${tl(trans.next)}
-                    </button>
-                </div>
-                <div class="date-header">
-                    ${weekdays.map((day) => html.node`<div class="date">${day}</div>`)}
-                </div>
-                <div class="days" data-last-action=${last_action}>
-                    ${days(view.year, view.month).map(
-          (cell) => cell.type == "empty" ? html.node`<button class="day empty" type="button" disabled />` : html.node`
-                                <button class="day" type="button" aria-selected=${cell.day == state.day && cell.date > min_date && cell.date < max_date && cell.month == view.month ? "true" : "false"} disabled=${cell.date < min_date || cell.date > max_date} onclick=${() => {
-            state.day = cell.day;
-            state.year = view.year;
-            state.month = view.month;
-            update_display();
-            emit();
-            last_action = "";
-            render_popup();
-          }}>${cell.day}</button>
-                            `
-        )}
-                </div>
-            `;
-      }, render_month_view = function() {
-        const min_year = min_date.getFullYear();
-        const max_year = max_date.getFullYear();
-        return html.node`
-                <div class="calendar-header">
-                    <button class="month-year" type="button" onclick=${on_month_year_click} disabled=${!can_nav_year_view()}>
-                        ${view.year}
-                    </button>
-                    <div class="fill" />
-                    <button class="chibi icon" data-type="up" type="button" disabled=${view.year <= min_year} onclick=${() => {
-          if (view.year < min_year) return;
-          view.year--;
-          last_action = "prev";
-          render_popup();
-        }}>
-                        ${tl(trans.back)}
-                    </button>
-                    <button class="chibi icon" data-type="down" type="button" disabled=${view.year >= max_year} onclick=${() => {
-          if (view.year > max_year) return;
-          view.year++;
-          last_action = "next";
-          render_popup();
-        }}>
-                        ${tl(trans.next)}
-                    </button>
-                </div>
-                <div class="months" data-last-action=${last_action}>
-                    ${months.map((label, i) => {
-          const month_start = new Date(view.year, i, 1);
-          const month_end = new Date(
-            view.year,
-            i + 1,
-            0,
-            23,
-            59,
-            59,
-            999
-          );
-          return html.node`
-                            <button class="month" aria-selected=${view.year === state.year && i + 1 === state.month} disabled=${month_end < min_date || month_start > max_date} onclick=${() => {
-            view.month = i + 1;
-            view.level = "day";
-            last_action = "";
-            update_display();
-            emit();
-            render_popup();
-          }}>
-                                ${label}
-                            </button>
-                        `;
-        })}
-                </div>
-            `;
-      }, render_year_view = function() {
-        const min_year = min_date.getFullYear();
-        const max_year = max_date.getFullYear();
-        const decade_start = Math.floor(view.year / 10) * 10;
-        return html.node`
-                <div class="calendar-header">
-                    <button class="month-year" onclick=${on_month_year_click}>
-                        ${decade_start} – ${decade_start + 9}
-                    </button>
-                    <div class="fill" />
-                    <button class="chibi icon" data-type="up" disabled=${decade_start - 10 < min_year} onclick=${() => {
-          if (decade_start - 10 < min_year) return;
-          view.year -= 10;
-          render_popup();
-        }}>
-                        ${tl(trans.back)}
-                    </button>
-                    <button class="chibi icon" data-type="down" disabled=${decade_start + 10 > max_year} onclick=${() => {
-          if (decade_start + 10 > max_year) return;
-          view.year += 10;
-          render_popup();
-        }}>
-                        ${tl(trans.next)}
-                    </button>
-                </div>
-                <div class="years">
-                    ${Array.from({ length: 10 }, (_, i) => decade_start + i).map((yr) => {
-          return html.node`
-                            <button class="year" aria-selected=${yr === state.year} disabled=${yr < min_date.getFullYear() || yr > max_date.getFullYear()} onclick=${() => {
-            view.year = yr;
-            view.level = "month";
-            render_popup();
-          }}>
-                                ${yr}
-                            </button>
-                        `;
-        })}
-                </div>
-            `;
-      }, days = function(year, month) {
-        const raw_first = new Date(
-          year,
-          month - 1,
-          1
-        ).getDay();
-        const offset = (raw_first + 6) % 7;
-        const days_in_month = new Date(
-          year,
-          month,
-          0
-        ).getDate();
-        const cells = [];
-        for (let i = 0; i < offset; i++) cells.push({ type: "empty" });
-        for (let day = 1; day <= days_in_month; day++) {
-          cells.push({
-            type: "day",
-            day,
-            month: state.month,
-            date: new Date(
-              year,
-              month - 1,
-              day
-            )
-          });
-        }
-        const rem = (7 - cells.length % 7) % 7;
-        for (let i = 0; i < rem; i++) cells.push({ type: "empty" });
-        console.info("cells", cells, state.month, view.month);
-        return cells;
-      }, update_display = function() {
-        date_display.textContent = format_date(state);
-      }, emit = function() {
-        const date_object = new Date(
-          state.year,
-          state.month - 1,
-          state.day,
-          state.hours,
-          state.mins,
-          state.secs
-        );
-        legacy_date.value = `${state.year}-${pad2(state.month)}-${pad2(state.day)}`;
-        container2.dispatchEvent(new CustomEvent("change"), { detail: date_object });
-      }, format_date = function({ year, month, day }) {
-        const date_object = new Date(
-          year,
-          month - 1,
-          day
-        );
-        return date_object.toLocaleDateString(void 0, {
-          year: "numeric",
-          month: "short",
-          day: "numeric"
-        });
-      };
-      let now = /* @__PURE__ */ new Date();
-      if (value != null) now = new Date(value);
-      console.info(min, max, new Date(max));
-      const min_date = min != null ? new Date(min) : new Date(now.getTime() - 14 * 24 * 60 * 60 * 1e3);
-      min_date.setHours(0, 0, 0, 0);
-      const max_date = max != null ? new Date(max) : /* @__PURE__ */ new Date();
-      max_date.setHours(23, 59, 59, 999);
-      let last_action;
-      const state = {
-        year: now.getFullYear(),
-        month: now.getMonth() + 1,
-        day: now.getDate(),
-        hours: now.getHours(),
-        mins: now.getMinutes(),
-        secs: now.getSeconds()
-      };
-      let view = {
-        level: "day",
-        year: state.year,
-        month: state.month
-      };
-      let legacy_date;
-      let date_display;
-      let time_input;
-      let popup_inner = html.node`<div class="calendar" />`;
-      const locale = void 0;
-      const months = Array.from(
-        { length: 12 },
-        (_, i) => new Intl.DateTimeFormat(locale, { month: "short" }).format(new Date(2e3, i, 1))
-      );
-      const raw_weekdays = Array.from(
-        { length: 7 },
-        (_, i) => new Intl.DateTimeFormat(locale, { weekday: "short" }).format(new Date(1970, 0, 4 + i))
-      );
-      const weekdays = raw_weekdays.slice(1).concat(raw_weekdays[0]);
-      const container2 = html.node`
-            <div class="input-group">
-                <div class="content-form input-container" data-type="date">
-                    <input class="legacy-input" type="date" ref=${(el) => legacy_date = el} name=${name2} value="${state.year}-${pad2(state.month)}-${pad2(state.day)}">
-                    <div class="date-input modern-input" ref=${(el) => date_display = el} disabled=${disabled}>${format_date(state)}</div>
-                </div>
-                ${show_time ? html.node`
-                <div class="content-form input-container" data-type="time">
-                    <input class="modern-input" type="time" step="1" ref=${(el) => time_input = el} disabled=${disabled} value="${pad2(state.hours)}:${pad2(state.mins)}:${pad2(state.secs)}">
-                </div>
-                ` : ""}
-            </div>
-        `;
-      if (time_input) {
-        time_input.addEventListener("input", () => {
-          const parts = time_input.value.split(":").map((n) => parseInt(n, 10));
-          state.hours = parts[0] || 0;
-          state.mins = parts[1] || 0;
-          state.secs = parts[2] || 0;
-          emit();
-        });
-      }
-      let tooltip = tippy(date_display, {
-        theme: "window",
-        content: "",
-        placement: "top",
-        interactive: true,
-        interactiveBorder: 10,
-        trigger: "click",
-        onShow() {
-          last_action = "";
-          render_popup();
-        }
-      });
-      container2.value = (val = null) => {
-        if (val === null) {
-          return new Date(
-            state.year,
-            state.month - 1,
-            state.day,
-            state.hours,
-            state.mins,
-            state.secs
-          );
-        }
-        const date_object = new Date(val);
-        state.year = date_object.getFullYear();
-        state.month = date_object.getMonth() + 1;
-        state.day = date_object.getDate();
-        state.hours = date_object.getHours();
-        state.mins = date_object.getMinutes();
-        state.secs = date_object.getSeconds();
-        view.year = state.year;
-        view.month = state.month;
-        render_popup();
-        update_display();
-        if (time_input) time_input.value = `${pad2(state.hours)}:${pad2(state.mins)}:${pad2(state.secs)}`;
-        return date_object;
-      };
-      container2.disabled = (val = null) => {
-        if (val === null) return time_input.disabled;
-        if (!val)
-          date_display.removeAttribute("disabled");
-        else
-          date_display.setAttribute("disabled", "true");
-        if (time_input) time_input.disabled = val;
-        return val;
-      };
-      return container2;
-    }
-    let input_box;
-    let error_tooltip;
-    let colour_block;
-    let container = html.node`
-        <div class="content-form input-container colourful" data-type=${type} data-has-error="false">
-            ${type == "colour" ? html.node`<span class="colour-block" ref=${(el) => colour_block = el} />` : ""}
-            <input class="modern-input" disabled=${disabled} autofocus=${focus} type=${type} value=${value} placeholder=${placeholder} min=${min} max=${max} maxlength=${maxlength} ref=${(el) => input_box = el} />
-        </div>
-    `;
-    error_tooltip = tippy(input_box, {
-      theme: "error",
-      placement: "top",
-      trigger: "manual"
-    });
-    error_tooltip.disable();
-    update_input(true);
-    input_box.addEventListener("input", () => {
-      update_input();
-    });
-    container.value = (val = null) => {
-      if (val === null) return input_box.value;
-      input_box.value = val;
-      return val;
-    };
-    container.disabled = (state = null) => {
-      if (state === null) return input_box.getAttribute("disabled") || false;
-      if (state === true)
-        input_box.setAttribute("disabled", "true");
-      else
-        input_box.removeAttribute("disabled");
-      return state;
-    };
-    return container;
-    function update_input(skip_most = false) {
-      container.setAttribute("data-has-error", "false");
-      error_tooltip.disable();
-      if (type != "number" && !skip_most) {
-        if (input_box.value == "" && warn_if_empty) {
-          error_input2(tl(trans.this_field_is_required));
-        } else if (input_box.value.length > maxlength) {
-          error_input2(tl(trans.keep_within_the_range));
-        }
-      }
-      if (type == "number" && !skip_most) {
-        if (input_box.value == "") {
-          error_input2(tl(trans.only_numbers_are_allowed));
-        } else if (parseInt(input_box.value) > max || parseInt(input_box.value) < min) {
-          error_input2(tl(trans.keep_within_the_range));
-        }
-      } else if (type == "colour") {
-        if (!input_box.value.startsWith("#"))
-          input_box.value = `#${input_box.value}`;
-        colour_block.style.backgroundColor = input_box.value;
-      }
-    }
-    function error_input2(reason) {
-      log(reason, "input", "log");
-      container.setAttribute("data-has-error", "true");
-      error_tooltip.setContent(reason);
-      error_tooltip.enable();
-      error_tooltip.show();
-    }
-  }
-
   // src/components/profile_shortcut.js
   unsafeWindow._open_profile_shortcut_window = function() {
     open_profile_shortcut_window();
@@ -5633,7 +5072,8 @@
   function setting({
     id = "",
     text: text2 = true,
-    focus = false
+    focus = false,
+    standalone = false
   }) {
     try {
       let value = settings[id];
@@ -5657,7 +5097,7 @@
       if (type === "toggle") {
         let toggle2;
         return html.node`
-                <div class="setting v2" data-type="toggle" disabled=${disabled} onclick=${() => update_toggle(id, toggle2)}>
+                <div class="setting v2 ${standalone ? "standalone" : ""}" data-type="toggle" disabled=${disabled} onclick=${() => update_toggle(id, toggle2)}>
                     ${icon ? html.node`
                     <div class="icon">
                         <div class="bleh-icon" style="--icon: var(--${icon})" />
@@ -5704,7 +5144,7 @@
         let marker;
         let working_max = settings_store[id].max - settings_store[id].min;
         return html.node`
-                <div class="setting v2" data-type="range" disabled=${disabled} ref=${(el) => option = el} data-modified=${value != settings_store[id].default}>
+                <div class="setting v2 ${standalone ? "standalone" : ""}" data-type="range" disabled=${disabled} ref=${(el) => option = el} data-modified=${value != settings_store[id].default}>
                     ${text2 ? html.node`
                     <div class="heading">
                         <h5>${title}<button class="reset see-more" onclick=${() => reset_range(id, option, track, input2, marker)}>${tl(trans.reset)}</button></h5>
@@ -5750,7 +5190,7 @@
         let input_container;
         let error_tooltip;
         let container = html.node`
-                <div class="setting v2" data-type="text" disabled=${disabled} ref=${(el) => option = el} data-modified=${value != settings_store[id].default}>
+                <div class="setting v2 ${standalone ? "standalone" : ""}" data-type="text" disabled=${disabled} ref=${(el) => option = el} data-modified=${value != settings_store[id].default}>
                     ${text2 ? html.node`
                     <div class="heading">
                         <h5>${title}<button class="reset see-more" ref=${(el) => reset_btn = el} onclick=${() => reset_text(id, input2, submit, option, reset_btn, avatar3)}>${tl(trans.reset)}</button></h5>
@@ -5825,7 +5265,7 @@
       } else if (type == "checkbox") {
         let toggle2;
         return html.node`
-                <div class="setting v2 ${settings_store[id].horizontal ? "horizontal" : ""}" data-type="checkbox" disabled=${disabled} onclick=${() => update_toggle(id, toggle2)}>
+                <div class="setting v2 ${settings_store[id].horizontal ? "horizontal" : ""} ${standalone ? "standalone" : ""}" data-type="checkbox" disabled=${disabled} onclick=${() => update_toggle(id, toggle2)}>
                     ${icon ? html.node`
                     <div class="icon">
                         <div class="bleh-icon" style="--icon: var(--${icon})" />
@@ -5989,6 +5429,1691 @@
     log(`saved ${id} as ${value}`, "settings", "log", { settings, settings_id: settings[id] });
   }
 
+  // src/components/input.js
+  function input({
+    type = "text",
+    value,
+    placeholder,
+    min,
+    max,
+    maxlength,
+    warn_if_empty = false,
+    focus = false,
+    disabled,
+    show_time = true,
+    name: name2,
+    func
+  }) {
+    if (type == "date") {
+      let months_between = function(a, b) {
+        return (b.getFullYear() - a.getFullYear()) * 12 + (b.getMonth() - a.getMonth());
+      }, can_nav_month_view = function() {
+        return months_between(min_date, max_date) >= 1;
+      }, can_nav_year_view = function() {
+        return max_date.getFullYear() - min_date.getFullYear() >= 1;
+      }, on_month_year_click = function() {
+        last_action = "";
+        if (view.level === "day" && can_nav_month_view()) {
+          view.level = "month";
+        } else if (view.level === "month" && can_nav_year_view()) {
+          view.level = "year";
+        } else if (view.level === "year") {
+          view.level = "month";
+        } else if (view.level === "manual") {
+          view.level = "day";
+        } else {
+          return;
+        }
+        render_popup();
+      }, can_prev = function() {
+        const py = view.month === 1 ? view.year - 1 : view.year;
+        const pm = view.month === 1 ? 12 : view.month - 1;
+        return py > min_date.getFullYear() || py === min_date.getFullYear() && pm >= min_date.getMonth() + 1;
+      }, can_next = function() {
+        const ny = view.month === 12 ? view.year + 1 : view.year;
+        const nm = view.month === 12 ? 1 : view.month + 1;
+        return ny < max_date.getFullYear() || ny === max_date.getFullYear() && nm <= max_date.getMonth() + 1;
+      }, render_popup = function() {
+        let inner;
+        if (view.level === "year") {
+          inner = render_year_view();
+        } else if (view.level === "month") {
+          inner = render_month_view();
+        } else if (view.level === "manual") {
+          inner = render_manual_view();
+        } else {
+          inner = render_day_view();
+        }
+        tooltip.setContent(html.node`<div class="calendar">${inner}</div>`);
+      }, render_day_view = function() {
+        return html.node`
+                <div class="calendar-header">
+                    <button class="month-year" type="button" onclick=${on_month_year_click} disabled=${!can_nav_month_view()}>
+                        ${months[view.month - 1]} ${view.year}
+                    </button>
+                    <div class="fill" />
+                    <button class="chibi icon" data-type="manual" type="button" onclick=${() => {
+          view.level = "manual";
+          render_popup();
+        }}>
+                        ${tl(trans.manual)}
+                    </button>
+                    <button class="chibi icon" data-type="up" disabled=${!can_prev()} type="button" onclick=${() => {
+          if (!can_prev()) return;
+          view.month--;
+          if (view.month < 1) {
+            view.month = 12;
+            view.year--;
+          }
+          last_action = "prev";
+          render_popup();
+        }}>
+                        ${tl(trans.back)}
+                    </button>
+                    <button class="chibi icon" data-type="down" disabled=${!can_next()} type="button" onclick=${() => {
+          if (!can_next()) return;
+          view.month++;
+          if (view.month > 12) {
+            view.month = 1;
+            view.year++;
+          }
+          last_action = "next";
+          render_popup();
+        }}>
+                        ${tl(trans.next)}
+                    </button>
+                </div>
+                <div class="date-header">
+                    ${weekdays.map((day) => html.node`<div class="date">${day}</div>`)}
+                </div>
+                <div class="days" data-last-action=${last_action}>
+                    ${days(view.year, view.month).map(
+          (cell) => cell.type == "empty" ? html.node`<button class="day empty" type="button" disabled />` : html.node`
+                                <button class="day" type="button" aria-selected=${cell.day == state.day && cell.date >= min_date && cell.date <= max_date && cell.month == view.month ? "true" : "false"} disabled=${cell.date < min_date || cell.date > max_date} onclick=${() => {
+            state.day = cell.day;
+            state.year = view.year;
+            state.month = view.month;
+            update_display();
+            emit();
+            last_action = "";
+            render_popup();
+          }}>${cell.day}</button>
+                            `
+        )}
+                </div>
+            `;
+      }, render_month_view = function() {
+        const min_year = min_date.getFullYear();
+        const max_year = max_date.getFullYear();
+        return html.node`
+                <div class="calendar-header">
+                    <button class="month-year" type="button" onclick=${on_month_year_click} disabled=${!can_nav_year_view()}>
+                        ${view.year}
+                    </button>
+                    <div class="fill" />
+                    <button class="chibi icon" data-type="manual" type="button" onclick=${() => {
+          view.level = "manual";
+          render_popup();
+        }}>
+                        ${tl(trans.manual)}
+                    </button>
+                    <button class="chibi icon" data-type="up" type="button" disabled=${view.year <= min_year} onclick=${() => {
+          if (view.year < min_year) return;
+          view.year--;
+          last_action = "prev";
+          render_popup();
+        }}>
+                        ${tl(trans.back)}
+                    </button>
+                    <button class="chibi icon" data-type="down" type="button" disabled=${view.year >= max_year} onclick=${() => {
+          if (view.year > max_year) return;
+          view.year++;
+          last_action = "next";
+          render_popup();
+        }}>
+                        ${tl(trans.next)}
+                    </button>
+                </div>
+                <div class="months" data-last-action=${last_action}>
+                    ${months.map((label, i) => {
+          const month_start = new Date(view.year, i, 1);
+          const month_end = new Date(
+            view.year,
+            i + 1,
+            0,
+            23,
+            59,
+            59,
+            999
+          );
+          return html.node`
+                            <button class="month" aria-selected=${view.year === state.year && i + 1 === state.month} disabled=${month_end < min_date || month_start > max_date} onclick=${() => {
+            view.month = i + 1;
+            view.level = "day";
+            last_action = "";
+            update_display();
+            emit();
+            render_popup();
+          }}>
+                                ${label}
+                            </button>
+                        `;
+        })}
+                </div>
+            `;
+      }, render_year_view = function() {
+        const min_year = min_date.getFullYear();
+        const max_year = max_date.getFullYear();
+        const decade_start = Math.floor(view.year / 10) * 10;
+        return html.node`
+                <div class="calendar-header">
+                    <button class="month-year" onclick=${on_month_year_click}>
+                        ${decade_start} – ${decade_start + 9}
+                    </button>
+                    <div class="fill" />
+                    <button class="chibi icon" data-type="manual" type="button" onclick=${() => {
+          view.level = "manual";
+          render_popup();
+        }}>
+                        ${tl(trans.manual)}
+                    </button>
+                    <button class="chibi icon" data-type="up" disabled=${decade_start - 10 < min_year} onclick=${() => {
+          if (decade_start - 10 < min_year) return;
+          view.year -= 10;
+          render_popup();
+        }}>
+                        ${tl(trans.back)}
+                    </button>
+                    <button class="chibi icon" data-type="down" disabled=${decade_start + 10 > max_year} onclick=${() => {
+          if (decade_start + 10 > max_year) return;
+          view.year += 10;
+          render_popup();
+        }}>
+                        ${tl(trans.next)}
+                    </button>
+                </div>
+                <div class="years">
+                    ${Array.from({ length: 10 }, (_, i) => decade_start + i).map((yr) => {
+          return html.node`
+                            <button class="year" aria-selected=${yr === state.year} disabled=${yr < min_date.getFullYear() || yr > max_date.getFullYear()} onclick=${() => {
+            view.year = yr;
+            view.level = "month";
+            render_popup();
+          }}>
+                                ${yr}
+                            </button>
+                        `;
+        })}
+                </div>
+            `;
+      }, validate_text_date = function(value2) {
+        const m = value2.match(/^(\d{4})-(\d{2})-(\d{2})$/);
+        if (!m) return null;
+        const [_, ys, ms, ds] = m;
+        const date = /* @__PURE__ */ new Date(`${ys}-${ms}-${ds}T00:00:00`);
+        if (date.getFullYear() !== +ys || date.getMonth() + 1 !== +ms || date.getDate() !== +ds) {
+          return null;
+        }
+        if (date < min_date || date > max_date) return null;
+        return date;
+      }, render_manual_view = function() {
+        let manual_date;
+        let elem = html.node`
+                <div class="calendar-header">
+                    <button class="month-year" onclick=${on_month_year_click}>
+                        ${tl(trans.manual)}
+                    </button>
+                    <div class="fill" />
+                    <button class="chibi icon" data-type="manual" type="button" disabled>
+                        ${tl(trans.manual)}
+                    </button>
+                    <button class="chibi icon" data-type="up" disabled>
+                        ${tl(trans.back)}
+                    </button>
+                    <button class="chibi icon" data-type="down" disabled>
+                        ${tl(trans.next)}
+                    </button>
+                </div>
+                <div class="manual">
+                    ${manual_date = input({
+          type: "text",
+          value: `${state.year}-${pad2(state.month)}-${pad2(state.day)}`,
+          func: (value2) => {
+            const parsed2 = validate_text_date(
+              value2
+            );
+            if (!parsed2) {
+              manual_date.value(`${state.year}-${pad2(state.month)}-${pad2(state.day)}`);
+              return;
+            }
+            state.year = parsed2.getFullYear();
+            state.month = parsed2.getMonth() + 1;
+            state.day = parsed2.getDate();
+            view.level = "day";
+            view.year = state.year;
+            view.month = state.month;
+            update_display();
+            emit();
+            render_popup();
+          }
+        })}
+                    <p>${tl(trans.enter_a_manual_date)}</p>
+                    <p>${tl(trans.minimum_value).replace("{v}", `${min_date.getFullYear()}-${pad2(min_date.getMonth() + 1)}-${pad2(min_date.getDate())}`)}</p>
+                    <p>${tl(trans.maximum_value).replace("{v}", `${max_date.getFullYear()}-${pad2(max_date.getMonth() + 1)}-${pad2(max_date.getDate())}`)}</p>
+                </div>
+            `;
+        manual_date.focus();
+        return elem;
+      }, days = function(year, month) {
+        const raw_first = new Date(
+          year,
+          month - 1,
+          1
+        ).getDay();
+        const offset = (raw_first + 6) % 7;
+        const days_in_month = new Date(
+          year,
+          month,
+          0
+        ).getDate();
+        const cells = [];
+        for (let i = 0; i < offset; i++) cells.push({ type: "empty" });
+        for (let day = 1; day <= days_in_month; day++) {
+          cells.push({
+            type: "day",
+            day,
+            month: state.month,
+            date: new Date(
+              year,
+              month - 1,
+              day
+            )
+          });
+        }
+        const rem = (7 - cells.length % 7) % 7;
+        for (let i = 0; i < rem; i++) cells.push({ type: "empty" });
+        console.info("cells", cells, state.month, view.month);
+        return cells;
+      }, update_display = function() {
+        date_display.textContent = format_date(state);
+      }, emit = function() {
+        const date_object = new Date(
+          state.year,
+          state.month - 1,
+          state.day,
+          state.hours,
+          state.mins,
+          state.secs
+        );
+        legacy_date.value = `${state.year}-${pad2(state.month)}-${pad2(state.day)}`;
+        container2.dispatchEvent(new CustomEvent("change"), { detail: date_object });
+      }, format_date = function({ year, month, day }) {
+        const date_object = new Date(
+          year,
+          month - 1,
+          day
+        );
+        return date_object.toLocaleDateString(void 0, {
+          year: "numeric",
+          month: "short",
+          day: "numeric"
+        });
+      };
+      let now = /* @__PURE__ */ new Date();
+      if (value != null) now = new Date(value);
+      console.info(min, max, new Date(max));
+      const min_date = min != null ? new Date(min) : new Date(now.getTime() - 14 * 24 * 60 * 60 * 1e3);
+      min_date.setHours(0, 0, 0, 0);
+      const max_date = max != null ? new Date(max) : /* @__PURE__ */ new Date();
+      max_date.setHours(23, 59, 59, 999);
+      let last_action;
+      const state = {
+        year: now.getFullYear(),
+        month: now.getMonth() + 1,
+        day: now.getDate(),
+        hours: now.getHours(),
+        mins: now.getMinutes(),
+        secs: now.getSeconds()
+      };
+      let view = {
+        level: "day",
+        year: state.year,
+        month: state.month
+      };
+      let legacy_date;
+      let date_display;
+      let time_input;
+      let popup_inner = html.node`<div class="calendar" />`;
+      const locale = void 0;
+      const months = Array.from(
+        { length: 12 },
+        (_, i) => new Intl.DateTimeFormat(locale, { month: "short" }).format(new Date(2e3, i, 1))
+      );
+      const raw_weekdays = Array.from(
+        { length: 7 },
+        (_, i) => new Intl.DateTimeFormat(locale, { weekday: "short" }).format(new Date(1970, 0, 4 + i))
+      );
+      const weekdays = raw_weekdays.slice(1).concat(raw_weekdays[0]);
+      const container2 = html.node`
+            <div class="input-group">
+                <div class="content-form input-container" data-type="date">
+                    <input class="legacy-input" type="date" ref=${(el) => legacy_date = el} name=${name2} value="${state.year}-${pad2(state.month)}-${pad2(state.day)}">
+                    <div class="date-input modern-input" ref=${(el) => date_display = el} disabled=${disabled}>${format_date(state)}</div>
+                </div>
+                ${show_time ? html.node`
+                <div class="content-form input-container" data-type="time">
+                    <input class="modern-input" type="time" step="1" ref=${(el) => time_input = el} disabled=${disabled} value="${pad2(state.hours)}:${pad2(state.mins)}:${pad2(state.secs)}">
+                </div>
+                ` : ""}
+            </div>
+        `;
+      if (time_input) {
+        time_input.addEventListener("input", () => {
+          const parts = time_input.value.split(":").map((n) => parseInt(n, 10));
+          state.hours = parts[0] || 0;
+          state.mins = parts[1] || 0;
+          state.secs = parts[2] || 0;
+          emit();
+        });
+      }
+      let tooltip = tippy(date_display, {
+        theme: "window",
+        content: "",
+        placement: "top",
+        interactive: true,
+        interactiveBorder: 10,
+        trigger: "click",
+        onShow() {
+          last_action = "";
+          render_popup();
+        }
+      });
+      let menu = tippy(date_display, {
+        theme: "context-menu",
+        content: html.node`
+                <button class="dropdown-menu-clickable-item" data-type="manual" onclick=${() => {
+          view.level = "manual";
+          tooltip.show();
+        }}>
+                    ${tl(trans.manual_date)}
+                </button>
+            `,
+        placement: "right-start",
+        trigger: "manual",
+        interactive: true,
+        interactiveBorder: 10,
+        offset: [0, 0],
+        onShow(instance) {
+          instance.popper.addEventListener("click", (event3) => {
+            instance.hide();
+          });
+        }
+      });
+      register_menu(date_display, menu);
+      container2.value = (val = null) => {
+        if (val === null) {
+          return new Date(
+            state.year,
+            state.month - 1,
+            state.day,
+            state.hours,
+            state.mins,
+            state.secs
+          );
+        }
+        const date_object = new Date(val);
+        state.year = date_object.getFullYear();
+        state.month = date_object.getMonth() + 1;
+        state.day = date_object.getDate();
+        state.hours = date_object.getHours();
+        state.mins = date_object.getMinutes();
+        state.secs = date_object.getSeconds();
+        view.year = state.year;
+        view.month = state.month;
+        render_popup();
+        update_display();
+        if (time_input) time_input.value = `${pad2(state.hours)}:${pad2(state.mins)}:${pad2(state.secs)}`;
+        return date_object;
+      };
+      container2.disabled = (val = null) => {
+        if (val === null) return time_input.disabled;
+        if (!val)
+          date_display.removeAttribute("disabled");
+        else
+          date_display.setAttribute("disabled", "true");
+        if (time_input) time_input.disabled = val;
+        return val;
+      };
+      return container2;
+    }
+    let input_box;
+    let error_tooltip;
+    let colour_block;
+    let container = html.node`
+        <div class="content-form input-container colourful" data-type=${type} data-has-error="false">
+            ${type == "colour" ? html.node`<span class="colour-block" ref=${(el) => colour_block = el} />` : ""}
+            <input class="modern-input" disabled=${disabled} autofocus=${focus} type=${type} value=${value} placeholder=${placeholder} min=${min} max=${max} maxlength=${maxlength} ref=${(el) => input_box = el} />
+        </div>
+    `;
+    error_tooltip = tippy(input_box, {
+      theme: "error",
+      placement: "top",
+      trigger: "manual"
+    });
+    error_tooltip.disable();
+    update_input(true);
+    input_box.addEventListener("input", () => {
+      update_input();
+    });
+    input_box.addEventListener("keydown", (event3) => {
+      if (event3.keyCode === 13) {
+        event3.preventDefault();
+        if (func) func(input_box.value);
+      }
+    });
+    container.focus = () => {
+      setTimeout(() => {
+        input_box.focus();
+      }, 5);
+    };
+    container.value = (val = null) => {
+      if (val === null) return input_box.value;
+      input_box.value = val;
+      return val;
+    };
+    container.disabled = (state = null) => {
+      if (state === null) return input_box.getAttribute("disabled") || false;
+      if (state === true)
+        input_box.setAttribute("disabled", "true");
+      else
+        input_box.removeAttribute("disabled");
+      return state;
+    };
+    return container;
+    function update_input(skip_most = false) {
+      container.setAttribute("data-has-error", "false");
+      error_tooltip.disable();
+      if (type != "number" && !skip_most) {
+        if (input_box.value == "" && warn_if_empty) {
+          error_input2(tl(trans.this_field_is_required));
+        } else if (input_box.value.length > maxlength) {
+          error_input2(tl(trans.keep_within_the_range));
+        }
+      }
+      if (type == "number" && !skip_most) {
+        if (input_box.value == "") {
+          error_input2(tl(trans.only_numbers_are_allowed));
+        } else if (parseInt(input_box.value) > max || parseInt(input_box.value) < min) {
+          error_input2(tl(trans.keep_within_the_range));
+        }
+      } else if (type == "colour") {
+        if (!input_box.value.startsWith("#"))
+          input_box.value = `#${input_box.value}`;
+        colour_block.style.backgroundColor = input_box.value;
+      }
+    }
+    function error_input2(reason) {
+      log(reason, "input", "log");
+      container.setAttribute("data-has-error", "true");
+      error_tooltip.setContent(reason);
+      error_tooltip.enable();
+      error_tooltip.show();
+    }
+  }
+
+  // src/components/share.js
+  function share(url) {
+    let input2;
+    dialog({
+      id: "share",
+      title: tl(trans.share),
+      body: html.node`
+            <div class="share-top content-form">
+                <input
+                    type="text"
+                    readonly
+                    value=${url}
+                    class="share-input"
+                    ref=${(el) => input2 = el}
+                />
+                <button 
+                    class="btn primary icon copy"
+                    onclick=${() => {
+        input2.select();
+        document.execCommand("copy");
+        notify({
+          title: tl(trans.copied_to_clipboard),
+          icon: "icon-16-copy"
+        });
+      }}
+                >${tl(trans.copy)}</button>
+            </div>
+            <div class="share-links">
+                <a 
+                    href=${`https://twitter.com/intent/tweet?url=${encodeURIComponent(url)}`}
+                    target="_blank"
+                    class="share-link share-link-twitter"
+                >Twitter</a>
+                <a 
+                    href=${`https://www.facebook.com/sharer/sharer.php?u=${encodeURIComponent(url)}`}
+                    target="_blank"
+                    class="share-link share-link-facebook"
+                >Facebook</a>
+            </div>
+        `,
+      replace_if_possible: true
+    });
+  }
+  function download(url, filename = null) {
+    log(`downloading ${filename}`, "download");
+    let link = html.node`
+        <a href=${url} download />
+    `;
+    if (filename)
+      link.setAttribute("download", filename);
+    link.click();
+    notify({
+      id: "downloaded",
+      title: tl(trans.downloaded),
+      body: filename,
+      icon: "icon-16-download"
+    });
+  }
+
+  // src/components/collage.js
+  function collage({
+    host,
+    sidebar
+  } = {}) {
+    if (!host || !sidebar) return;
+    let width;
+    let height;
+    let timeframe;
+    let type;
+    let settings_btn;
+    let submit;
+    let body;
+    let value = 5;
+    let min = 1;
+    let max = 20;
+    let current_year = (/* @__PURE__ */ new Date()).getFullYear();
+    let previous_year = current_year - 1;
+    const default_type = page.requested.type || "albums";
+    const default_timeframe = page.requested.timeframe || "date_preset=LAST_90_DAYS";
+    if (page.requested.redirect) {
+      setTimeout(() => {
+        notify({
+          id: "collage_redirect",
+          title: tl(trans.collage),
+          body: tl(trans.collage_redirect),
+          icon: "icon-16-collage",
+          persist: true
+        });
+      }, 100);
+    }
+    let user;
+    render(host, html`
+        <div class="compare-header">
+            <div class="compare-users">
+                <div class="compare-user focus" ref=${(el) => user = el}>
+                    ${render_user(page.name, page.avatar, user, true)}
+                </div>
+            </div>
+            <div class="compare-selection">
+                <div class="input-group">
+                    ${width = input({
+      type: "number",
+      value,
+      placeholder: value,
+      min,
+      max
+    })}
+                    <div class="bleh-icon" style="--icon: var(--icon-16-x)" />
+                    ${height = input({
+      type: "number",
+      value,
+      placeholder: value,
+      min,
+      max
+    })}
+                </div>
+                ${type = select([
+      {
+        value: "artists",
+        text: html`<div class="bleh-icon" style="--icon: var(--icon-16-artist)" />${tl(trans.artists)}`
+      },
+      {
+        value: "albums",
+        text: html`<div class="bleh-icon" style="--icon: var(--icon-16-album)" />${tl(trans.albums)}`
+      },
+      {
+        value: "tracks",
+        text: html`<div class="bleh-icon" style="--icon: var(--icon-16-track)" />${tl(trans.tracks)}`
+      }
+    ], default_type)}
+                ${timeframe = select([
+      {
+        value: "date_preset=LAST_7_DAYS",
+        text: tl(trans.last_count_days).replace("{c}", "7")
+      },
+      {
+        value: "date_preset=LAST_30_DAYS",
+        text: tl(trans.last_count_days).replace("{c}", "30")
+      },
+      {
+        value: "date_preset=LAST_90_DAYS",
+        text: tl(trans.last_count_days).replace("{c}", "90")
+      },
+      {
+        value: "date_preset=LAST_180_DAYS",
+        text: tl(trans.last_count_days).replace("{c}", "180")
+      },
+      {
+        value: "date_preset=LAST_365_DAYS",
+        text: tl(trans.last_count_days).replace("{c}", "365")
+      },
+      {
+        value: "date_preset=ALL",
+        text: tl(trans.all_time)
+      },
+      {
+        value: `from=${current_year}-01-01&rangetype=year`,
+        text: current_year
+      },
+      {
+        value: `from=${previous_year}-01-01&rangetype=year`,
+        text: previous_year
+      }
+    ], default_timeframe)}
+                <button class="btn primary icon" data-type="collage" ref=${(el) => submit = el} onclick=${() => make_collage()}>${tl(trans.generate)}</button>
+            </div>
+        </div>
+        <div class="compare-body" data-filled="false" ref=${(el) => body = el}>
+            <div class="loading-data-container">
+                <div class="loading-data-text info">${tl(trans.choose_a_timeframe_above)}</div>
+            </div>
+        </div>
+    `);
+    let width_input = width.querySelector("input");
+    let height_input = height.querySelector("input");
+    let timeframe_select = timeframe.querySelector("select");
+    let type_select = type.querySelector("select");
+    let setting_group;
+    let inputter;
+    render(sidebar, html`
+        <h2>${tl(trans.settings)}</h2>
+        <div class="setting-group" ref=${(el) => setting_group = el}>
+            <div class="setting v" data-type="text">
+                <div class="heading">
+                    <h5>${tl(trans.profile)}</h5>
+                </div>
+                <div class="input-container content-form">
+                    <input type="text" class="input" ref=${(el) => inputter = el} placeholder=${tl(trans.enter_a_profile)} value=${page.requested.profile} onchange=${(e) => {
+      page.requested.profile = e.target.value;
+      page.name = page.requested.profile;
+      page.avatar = "";
+      if (page.name == auth.name) page.avatar = auth.avatar;
+      render(user, html`
+                            ${render_user(page.name, page.avatar, user, true)}
+                        `);
+    }}>
+                    ${() => {
+      let btn = html.node`
+                            <button class="btn chibi icon" data-type="profile" onclick=${() => {
+        inputter.value = auth.name;
+        inputter.dispatchEvent(new Event("change"));
+      }}>${tl(trans.profile)}</button>
+                        `;
+      tippy(btn, {
+        content: tl(trans.profile)
+      });
+      return btn;
+    }}
+                    ${() => {
+      let btn = html.node`
+                            <button class="btn chibi icon" data-type="profile_shortcut" onclick=${() => {
+        if (settings.profile_shortcut == "") return;
+        inputter.value = settings.profile_shortcut;
+        inputter.dispatchEvent(new Event("change"));
+      }}>${tl(trans.profile_shortcut.name)}</button>
+                        `;
+      tippy(btn, {
+        content: tl(trans.profile_shortcut.name)
+      });
+      return btn;
+    }}
+                </div>
+            </div>
+            ${setting({ id: "collage_title" })}
+            ${setting({ id: "collage_grid_gap" })}
+            ${setting({ id: "collage_grid_text" })}
+            ${setting({ id: "collage_grid_plays" })}
+        </div>
+    `);
+    let collage_settings = setting_group.querySelectorAll(":scope > .setting");
+    function make_collage(bypass = false) {
+      if (width_input.value == "" || height_input.value == "" || parseInt(width_input.value) < min || parseInt(width_input.value) > max || parseInt(height_input.value) < min || parseInt(height_input.value) > max) {
+        notify({
+          id: "collage_failed",
+          title: tl(trans.name_failed).replace("{name}", tl(trans.collage)),
+          body: tl(trans.your_settings_are_invalid),
+          type: "error"
+        });
+        return;
+      }
+      let per_page = 50;
+      let pages = Math.ceil(width_input.value * height_input.value / per_page);
+      if (pages > 4 && !bypass) {
+        let warn = notify({
+          id: "collage_warning",
+          title: tl(trans.are_you_sure),
+          body: tl(trans.this_will_require_loading_count_pages).replace("{c}", pages),
+          type: "warning",
+          actions: [
+            {
+              type: "check",
+              action: () => {
+                notify_rm(warn);
+                make_collage(true);
+              },
+              text: tl(trans.continue)
+            }
+          ],
+          persist: true
+        });
+        return;
+      }
+      type.querySelector("button").disabled = true;
+      timeframe.querySelector("button").disabled = true;
+      collage_settings.forEach((option) => {
+        option.setAttribute("disabled", true);
+      });
+      submit.disabled = true;
+      page.state.collage = [];
+      get_grid(1, pages);
+    }
+    function get_grid(current_page, pages) {
+      render(body, html`
+            <div class="loading-data-container">
+                <div class="loading-data-text">${tl(trans.gathering_plays_for_user_pages).replace("{u}", page.name).replace("{current_page}", current_page).replace("{pages}", pages)}</div>
+            </div>
+        `);
+      fetch(`${root}user/${page.name}/library/${type_select.value}?format=list&${timeframe_select.value}&page=${current_page}&ajax=1`).then(function(response) {
+        console.log("returned", response, response.text);
+        return response.text();
+      }).then(function(dom) {
+        let doc = new DOMParser().parseFromString(dom, "text/html");
+        console.log("DOC", doc);
+        let next_button = doc.querySelector(".pagination-next");
+        try {
+          let tracks = doc.querySelectorAll(".chartlist-row");
+          tracks.forEach((track) => {
+            let item = {};
+            item.avatar = track.querySelector(".chartlist-image img");
+            if (item.avatar)
+              item.avatar = item.avatar.getAttribute("src");
+            item.name = track.querySelector(".chartlist-name a").textContent.trim();
+            if (type_select.value != "artists")
+              item.sister = track.querySelector(".chartlist-artist a").textContent.trim();
+            item.plays = clean_number(track.querySelector(".chartlist-count-bar-slug").getAttribute("data-stat-value"));
+            page.state.collage.push(item);
+          });
+        } catch (e) {
+          notify({
+            id: "collage_failed",
+            title: tl(trans.name_failed).replace("{name}", tl(trans.collage)),
+            body: tl(trans.there_was_a_network_error),
+            type: "error"
+          });
+          console.error(e);
+        }
+        if (next_button && current_page < pages) {
+          get_grid(current_page + 1, pages);
+        } else {
+          continue_collage();
+        }
+      });
+    }
+    async function continue_collage() {
+      log("gathered initial values", "collage", "info", page.state.collage);
+      if (page.state.collage.length == 0) {
+        render(body, html`
+                <div class="loading-data-container">
+                    <div class="loading-data-text failed">${tl(trans.no_plays_in_range)}</div>
+                </div>
+            `);
+        type.querySelector("button").disabled = false;
+        timeframe.querySelector("button").disabled = false;
+        collage_settings.forEach((option) => {
+          option.setAttribute("disabled", false);
+        });
+        submit.disabled = false;
+        return;
+      }
+      let grid = html.node`
+            <ol class="grid-items grid-items--numbered collage-grid" style="--width: ${width_input.value}; --height: ${height_input.value}" data-width=${width_input.value} data-height=${height_input.value} />
+        `;
+      if (!settings.collage_grid_gap) {
+        grid.style.setProperty("--item-list-gap", "0px");
+        grid.style.setProperty("--item-med-radius", "0");
+      }
+      let total = width_input.value * height_input.value - 1;
+      grid.style.setProperty("--highest", Math.max(+width_input.value, +height_input.value).toString());
+      page.state.collage.some((data2, index) => {
+        if (index > total)
+          return false;
+        let template;
+        if (type_select.value == "artists")
+          template = sanitise(data2.name);
+        else
+          template = `${sanitise(data2.sister)}/${sanitise(data2.name)}`;
+        grid.appendChild(html.node`
+                <li class="compare-item grid-items-item">
+                    <div class="grid-items-cover-image">
+                        <div class="grid-items-cover-image-image ${data2.avatar.endsWith("/c6f59c1e5e7240a4c0d427abd71f3dbb.jpg") || data2.avatar.endsWith("/2a96cbd8b46e442fc41c2b86b821562f.jpg") ? "grid-items-cover-default" : ""}">
+                            <img src="${data2.avatar.replace("/avatar70s/", "/avatar300s/").replace("/64s/", "/avatar300s/")}" alt="${data2.name}" loading="lazy">
+                        </div>
+                        ${settings.collage_grid_text || settings.collage_grid_plays ? html.node`
+                        <div class="grid-items-item-details">
+                            ${settings.collage_grid_text ? html.node`
+                            <p class="grid-items-item-main-text">
+                                <a class="link-block-target" href="${root}music/${template}" title="${data2.name}">
+                                    ${data2.name}
+                                </a>
+                            </p>
+                            ` : ""}
+                            ${type_select.value != "artists" ? html.node`
+                            <p class="grid-items-item-aux-text">
+                                ${settings.collage_grid_text ? html.node`
+                                <a class="grid-items-item-aux-block" href="${root}music/${data2.sister}">
+                                    ${data2.sister}
+                                </a>
+                                ${settings.collage_grid_plays ? html.node`
+                                <a class="grid-item-plays" href="${root}user/${page.name}/library/music/${template}?date_preset=${timeframe_select.value}" target="_blank">
+                                    ${data2.plays.toLocaleString(lang)}
+                                </a>
+                                ` : ""}
+                                ` : settings.collage_grid_plays ? html.node`
+                                <a class="grid-item-plays" href="${root}user/${page.name}/library/music/${template}?date_preset=${timeframe_select.value}" target="_blank">
+                                    ${data2.plays.toLocaleString(lang)}${tl(trans.plays_lower)}
+                                </a>
+                                ` : ""}
+                            </p>
+                            ` : html.node`
+                            ${settings.collage_grid_plays ? html.node`
+                            <p class="grid-items-item-aux-text">
+                                <a class="grid-item-plays" href="${root}user/${page.name}/library/music/${template}?date_preset=${timeframe_select.value}" target="_blank">
+                                    ${data2.plays.toLocaleString(lang)}${tl(trans.plays_lower)}
+                                </a>
+                            </p>
+                            ` : ""}
+                            `}
+                        </div>
+                        ` : ""}
+                    </div>
+                </li>
+            `);
+      });
+      let collage_dom = html.node`
+            <div class="collage">
+                ${settings.collage_title ? html.node`
+                <div class="header">
+                    <div class="type" data-type=${type_select.value}>
+                        <div class="bleh-icon" />
+                        <strong class="brand">${version.brand}</strong>
+                        <strong>${timeframe.querySelector("button").textContent}</strong>
+                        <strong>${tl(trans.top_type).replace("{type}", tl(trans[type_select.value]))}</strong>
+                        <strong>${width_input.value}x${height_input.value}</strong>
+                    </div>
+                    <div class="user">
+                        <div class="avatar">
+                            <img src="${page.avatar}" alt="${tl(trans.avatar_for_user).replace("{u}", page.name)}">
+                        </div>
+                        <strong>${page.name}</strong>
+                    </div>
+                </div>
+                ` : ""}
+                ${grid}
+            </div>
+        `;
+      render(body, html`
+            <div class="loading-data-container">
+                <div class="loading-data-text">${tl(trans.waiting_for_images)}</div>
+            </div>
+            ${collage_dom}
+        `);
+      music_grids(grid, false);
+      const default_size = 380;
+      const base = 6;
+      const highest = Math.max(+width_input.value, +height_input.value);
+      const grid_item_size = Math.min(
+        default_size,
+        Math.floor(default_size * base / highest)
+      );
+      const grid_item_gap = settings.collage_grid_gap ? 10 : 0;
+      const padding = settings.collage_grid_gap ? 15 : 0;
+      const title_height = settings.collage_title ? 32 + 15 : 0;
+      const width2 = padding * 2 + grid_item_size * width_input.value + grid_item_gap * (width_input.value - 1);
+      const height2 = padding * 2 + title_height + grid_item_size * height_input.value + grid_item_gap * (height_input.value - 1);
+      const cv_scale = 1;
+      collage_dom.style.width = `${width2}px`;
+      collage_dom.style.height = `${height2}px`;
+      collage_dom.style.padding = `${padding}px`;
+      collage_dom.style.gap = `${padding}px`;
+      collage_dom.style.setProperty("--item-list-gap", `${grid_item_gap}px`);
+      collage_dom.style.setProperty("--grid-item-size", `${grid_item_size}px`);
+      let initial_canvas = html.node`
+            <canvas width=${width2 * cv_scale} height=${height2 * cv_scale} />
+        `;
+      html2canvas(collage_dom, {
+        useCORS: true,
+        letterRendering: true,
+        canvas: initial_canvas,
+        scale: cv_scale,
+        onclone: (doc) => {
+          doc.querySelectorAll("*").forEach((el) => {
+            if (el.classList == "brand")
+              el.style.setProperty("font-family", "Darumadrop One");
+            else
+              el.style.setProperty("font-family", "Overpass, Inter, Ubuntu Sans, Spline Sans, Roboto, Noto Sans, Noto Sans JP, Noto Sans KR, Noto Sans TC, Lucida Grande, Verdana, Tahoma, -apple-system, BlinkMacSystemFont, sans-serif");
+          });
+        }
+      }).then((canvas) => {
+        canvas.toBlob((blob) => {
+          const blob_url = URL.createObjectURL(blob);
+          const filename = tl(trans.chart_template_filename).replace("{timeframe}", timeframe.querySelector("button").textContent).replace("{user}", page.name).replace("{type}", tl(trans[type_select.value])).replace("{size}", `${width_input.value}x${height_input.value}`).replace("{brand}", version.brand);
+          render(body, html`
+                    <div class="collage-finished">
+                        <strong>${tl(trans.your_collage_is_ready)}</strong>
+                        <div class="button-group">
+                            <button
+                                class="btn primary icon"
+                                data-type="download"
+                                onclick=${() => download(blob_url, filename)}
+                            >
+                                ${tl(trans.download)}
+                            </button>
+                            <button
+                                class="btn open"
+                                data-type="open"
+                                onclick=${() => open(blob_url)}
+                            >
+                                ${tl(trans.open)}
+                            </button>
+                        </div>
+                    </div>
+                    ${canvas}
+                `);
+          type.querySelector("button").disabled = false;
+          timeframe.querySelector("button").disabled = false;
+          collage_settings.forEach((option) => {
+            option.setAttribute("disabled", false);
+          });
+          submit.disabled = false;
+        }, "image/png");
+      });
+    }
+  }
+
+  // src/components/pixel.js
+  function pixel({
+    host,
+    sidebar
+  } = {}) {
+    if (!host || !sidebar) return;
+    let text2 = "my anti-aircraft friend";
+    let title_elem;
+    let hints_container;
+    render(host, html`
+        <div class="pixel-artwork">
+            <img src="https://lastfm.freetls.fastly.net/i/u/ar0/def68d94aae8e52ef2d1c0c9d3e16ff4.jpg" alt=${auth.name} />
+        </div>
+        <div class="pixel-info">
+            <div class="sub-text">${tl(trans.jumbled_title)}</div>
+            <div class="pixel-album-name">
+                <h1 ref=${(el) => title_elem = el}>${jumble_string(text2)}</h1>
+                ${() => {
+      let btn = html.node`
+                        <button class="chibi icon" data-type="jumble" onclick=${() => {
+        title_elem.textContent = jumble_string(text2);
+      }}>
+                            ${tl(trans.re_jumble)}
+                        </button>
+                    `;
+      tippy(btn, {
+        content: tl(trans.re_jumble)
+      });
+      return btn;
+    }}
+            </div>
+            <div class="pixel-guess">
+                ${input({
+      type: "text",
+      placeholder: tl(trans.enter_a_guess),
+      func: (value) => {
+        console.info(value);
+      }
+    })}
+                <p class="card-tip">${tl(trans.jumbled_guess)}</p>
+            </div>
+            <h2>${tl(trans.hints)}</h2>
+            <div class="hints" ref=${(el) => hints_container = el}></div>
+        </div>
+    `);
+  }
+  function shuffle_array(arr) {
+    for (let i = arr.length - 1; i > 0; i--) {
+      const j = Math.floor(Math.random() * (i + 1));
+      [arr[i], arr[j]] = [arr[j], arr[i]];
+    }
+    return arr;
+  }
+  function jumble_string(input2) {
+    let output = input2.split(" ").map((word) => {
+      if (!word) return "";
+      const letters = word.split("");
+      return shuffle_array(letters).join("");
+    }).join(" ");
+    if (output == input2) return jumble_string(input2);
+    return output;
+  }
+
+  // src/pages/minis.js
+  var valid_minis;
+  function bleh_minis(skip = false) {
+    if (!skip) {
+      update_page();
+      page.structure.row.removeChild(page.structure.row.firstElementChild);
+      page.structure.row.removeChild(page.structure.row.firstElementChild);
+    }
+    let params = new URLSearchParams(document.location.search);
+    page.requested.profile = params.get("profile") || auth.name;
+    page.requested.secondary = params.get("secondary");
+    page.requested.redirect = params.get("redirect");
+    page.requested.type = params.get("type");
+    page.requested.timeframe = params.get("timeframe");
+    let path = window.location.pathname.split("/");
+    let mini = path[path.length - 1];
+    if (mini == "minis") mini = null;
+    valid_minis = {
+      collage: {
+        name: tl(trans.collage),
+        body: tl(trans.collage_description),
+        func: bleh_minis_collage
+      },
+      compare: {
+        name: tl(trans.compare),
+        body: tl(trans.compare_description),
+        func: bleh_minis_compare
+      },
+      pixel: {
+        name: tl(trans.pixel?.name),
+        body: tl(trans.pixel?.body),
+        func: bleh_minis_pixel,
+        hide_if: !ff("unlock_minis")
+      },
+      lyrics: {
+        name: tl(trans.lyrics?.name),
+        body: tl(trans.lyrics?.body),
+        func: bleh_minis_lyrics,
+        hide_if: !ff("unlock_minis")
+      },
+      rainbow: {
+        name: tl(trans.rainbow?.name),
+        body: tl(trans.rainbow?.body),
+        func: bleh_minis_rainbow,
+        hide_if: !ff("unlock_minis")
+      },
+      receipt: {
+        name: tl(trans.receipt?.name),
+        body: tl(trans.receipt?.body),
+        func: bleh_minis_receipt,
+        hide_if: !ff("unlock_minis")
+      }
+    };
+    if (mini && (!valid_minis[mini] || valid_minis[mini].hide_if)) {
+      render(page.structure.main, html`
+            <section class="minis">
+                ${return_to_minis()}
+                <div class="loading-data-container">
+                    <div class="loading-data-text error">${tl(trans.no_mini_found).replace("{v}", mini)}</div>
+                </div>
+            </section>
+        `);
+      return;
+    }
+    render(page.structure.side, html``);
+    page.avatar = "";
+    page.name = page.requested.profile;
+    if (page.name == auth.name) page.avatar = auth.avatar;
+    if (mini) {
+      page.structure.container.setAttribute("data-mini", mini);
+      valid_minis[mini].func();
+      return;
+    }
+    render(page.structure.main, html`
+        <section class="minis">
+            <div class="minis-header main">
+                <h2>${tl(trans.minis)}</h2>
+                <p>${tl(trans.minis_description)}</p>
+            </div>
+            <div class="mini-list">
+                ${Object.entries(valid_minis).map(([id, mini2]) => {
+      if (mini2.hide_if) return html.node``;
+      return html.node`
+                        <button class="mini" data-type=${id} data-mini=${id} onclick=${() => {
+        window.history.replaceState(id, "", `${root}bleh/minis/${id}`);
+        page.structure.container.setAttribute("data-mini", id);
+        render(page.structure.main, html``);
+        valid_minis[id].func();
+      }}>
+                            <div class="mini-icon colourful">
+                                <div class="bleh-icon" />
+                            </div>
+                            <div class="mini-info">
+                                <h5>${mini2.name}</h5>
+                                <p>${mini2.body}</p>
+                            </div>
+                            <div class="bleh-icon mini-arrow" style="--icon: var(--mask)" data-type="arrow-right" />
+                        </button>
+                    `;
+    })}
+            </div>
+            <p class="card-tip">${{ html: tl(trans.labs_cta).replace("{a}", `<a class="see-more" href="${root}labs">`).replace("{/a}", "</a>") }}</p>
+        </section>
+    `);
+  }
+  function return_to_minis(mini = "") {
+    return html.node`
+        <div class="minis-header">
+            <h2 class="previous" onclick=${() => {
+      window.history.replaceState(null, "", `${root}bleh/minis`);
+      bleh_minis(true);
+    }}>${tl(trans.minis)}</h2>
+            <div class="bleh-icon mini-arrow" style="--icon: var(--mask)" data-type="arrow-right" />
+            <h2>${mini ? valid_minis[mini].name : tl(trans.error)}</h2>
+        </div>
+    `;
+  }
+  function bleh_minis_collage() {
+    let content;
+    let mini_settings;
+    render(page.structure.main, html`
+        <section class="minis">
+            ${return_to_minis("collage")}
+            <div class="minis-content" ref=${(el) => content = el} />
+        </section>
+    `);
+    render(page.structure.side, html`
+        <section class="current-mini-settings" ref=${(el) => mini_settings = el} />
+    `);
+    collage({
+      host: content,
+      sidebar: mini_settings
+    });
+  }
+  function bleh_minis_compare() {
+    let content;
+    let mini_settings;
+    render(page.structure.main, html`
+        <section class="minis">
+            ${return_to_minis("compare")}
+            <div class="minis-content" ref=${(el) => content = el} />
+        </section>
+    `);
+    render(page.structure.side, html`
+        <section class="current-mini-settings" ref=${(el) => mini_settings = el} />
+    `);
+    compare({
+      host: content,
+      sidebar: mini_settings
+    });
+  }
+  function bleh_minis_pixel() {
+    let content;
+    let mini_settings;
+    render(page.structure.main, html`
+        <section class="minis">
+            ${return_to_minis("pixel")}
+            <div class="minis-content pixel-content" ref=${(el) => content = el} />
+        </section>
+    `);
+    render(page.structure.side, html`
+        <section class="current-mini-settings" ref=${(el) => mini_settings = el} />
+    `);
+    pixel({
+      host: content,
+      sidebar: mini_settings
+    });
+  }
+  function bleh_minis_lyrics() {
+    render(page.structure.main, html`
+        <section class="minis">
+            ${return_to_minis("lyrics")}
+        </section>
+    `);
+  }
+  function bleh_minis_rainbow() {
+    render(page.structure.main, html`
+        <section class="minis">
+            ${return_to_minis("rainbow")}
+        </section>
+    `);
+  }
+  function bleh_minis_receipt() {
+    render(page.structure.main, html`
+        <section class="minis">
+            ${return_to_minis("receipt")}
+        </section>
+    `);
+  }
+  function render_user(name2, avatar3, user, replace_page = false) {
+    if (avatar3 == "" && name2 != "") {
+      fetch(`${root}user/${name2}/tags`).then(function(response) {
+        console.log("returned", response, response.text);
+        return response.text();
+      }).then(function(dom) {
+        let doc = new DOMParser().parseFromString(dom, "text/html");
+        console.log("DOC", doc);
+        try {
+          avatar3 = doc.querySelector(".header-avatar-inner-wrap img").getAttribute("src");
+          name2 = doc.querySelector(".header-title").textContent.trim();
+          if (replace_page) {
+            page.avatar = avatar3;
+            page.name = name2;
+          }
+          if (!user) user = page.structure.main.querySelector(".compare-user.focus");
+          render(user, render_user(name2, avatar3, user, replace_page));
+        } catch (e) {
+          console.error(e);
+        }
+      });
+      return html`
+            <div class="avatar loading" />
+            <strong>${name2}</strong>
+        `;
+    }
+    return html`
+        <div class="avatar">
+            <img src=${avatar3} alt=${tl(trans.avatar_for_user).replace("{u}", name2)}>
+        </div>
+        <strong>${name2}</strong>
+    `;
+  }
+
+  // src/components/compare.js
+  function compare({
+    host,
+    sidebar
+  } = {}) {
+    if (!host || !sidebar) return;
+    let pages;
+    let timeframe;
+    let type;
+    let submit;
+    let body;
+    if (page.name == auth.name) {
+      page.name = "";
+      page.avatar = "";
+      page.requested.profile = "";
+    }
+    let user;
+    render(host, html`
+        <div class="compare-header">
+            <div class="compare-users">
+                <div class="compare-user">
+                    <div class="avatar">
+                        <img src="${auth.avatar.replace("/avatar42s/", "/avatar170s/")}" alt="${tl(trans.your_avatar)}">
+                    </div>
+                    <strong>${auth.name}</strong>
+                </div>
+                <div class="bleh-icon"></div>
+                <div class="compare-user focus" ref=${(el) => user = el}>
+                    ${render_user(page.name, page.avatar, user, true)}
+                </div>
+            </div>
+            <div class="compare-selection">
+                ${pages = select([
+      {
+        value: "1",
+        text: 50
+      },
+      {
+        value: "2",
+        text: 100
+      },
+      {
+        value: "3",
+        text: 150
+      },
+      {
+        value: "4",
+        text: 200
+      },
+      {
+        value: "5",
+        text: 250
+      },
+      {
+        value: "6",
+        text: 300
+      }
+    ], "3")}
+                ${type = select([
+      {
+        value: "artists",
+        text: html`<div class="bleh-icon" style="--icon: var(--icon-16-artist)" />${tl(trans.artists)}`
+      },
+      {
+        value: "albums",
+        text: html`<div class="bleh-icon" style="--icon: var(--icon-16-album)" />${tl(trans.albums)}`
+      },
+      {
+        value: "tracks",
+        text: html`<div class="bleh-icon" style="--icon: var(--icon-16-track)" />${tl(trans.tracks)}`
+      }
+    ], "albums")}
+                ${timeframe = select([
+      {
+        value: "LAST_7_DAYS",
+        text: tl(trans.last_count_days).replace("{c}", "7")
+      },
+      {
+        value: "LAST_30_DAYS",
+        text: tl(trans.last_count_days).replace("{c}", "30")
+      },
+      {
+        value: "LAST_90_DAYS",
+        text: tl(trans.last_count_days).replace("{c}", "90")
+      },
+      {
+        value: "LAST_180_DAYS",
+        text: tl(trans.last_count_days).replace("{c}", "180")
+      },
+      {
+        value: "LAST_365_DAYS",
+        text: tl(trans.last_count_days).replace("{c}", "365")
+      }
+    ], "LAST_90_DAYS")}
+                <button class="btn icon primary compare" ref=${(el) => submit = el} onclick=${() => begin_comparing()}>${tl(trans.compare)}</button>
+            </div>
+        </div>
+        <div class="compare-body" data-filled="false" ref=${(el) => body = el}>
+            <div class="loading-data-container">
+                <div class="loading-data-text info">${tl(trans.choose_a_timeframe_above)}</div>
+            </div>
+        </div>
+    `);
+    let setting_group;
+    let input2;
+    render(sidebar, html`
+        <h2>${tl(trans.settings)}</h2>
+        <div class="setting-group" ref=${(el) => setting_group = el}>
+            <div class="setting v" data-type="text">
+                <div class="heading">
+                    <h5>${tl(trans.compare_with)}</h5>
+                </div>
+                <div class="input-container content-form">
+                    <input type="text" class="input" ref=${(el) => input2 = el} placeholder=${tl(trans.enter_a_profile)} value=${page.requested.profile} onchange=${(e) => {
+      page.requested.profile = e.target.value;
+      page.name = page.requested.profile;
+      page.avatar = "";
+      if (page.name == auth.name) page.avatar = auth.avatar;
+      render(user, html`
+                            ${render_user(page.name, page.avatar, user, true)}
+                        `);
+    }}>
+                    ${() => {
+      let btn = html.node`
+                            <button class="btn chibi icon" data-type="profile_shortcut" onclick=${() => {
+        if (settings.profile_shortcut == "") return;
+        input2.value = settings.profile_shortcut;
+        input2.dispatchEvent(new Event("change"));
+      }}>${tl(trans.profile_shortcut.name)}</button>
+                        `;
+      tippy(btn, {
+        content: tl(trans.profile_shortcut.name)
+      });
+      return btn;
+    }}
+                </div>
+            </div>
+        </div>
+    `);
+    let compare_settings = setting_group.querySelectorAll(":scope > .setting");
+    function begin_comparing(bypass = false) {
+      if (page.name == "") return;
+      if (parseInt(pages.value) > 3 && !bypass) {
+        let warn = notify({
+          id: "collage_warning",
+          title: tl(trans.are_you_sure),
+          body: tl(trans.this_will_require_loading_count_pages).replace("{c}", parseInt(pages.value) * 2),
+          type: "warning",
+          actions: [
+            {
+              type: "check",
+              action: () => {
+                notify_rm(warn);
+                begin_comparing(true);
+              },
+              text: tl(trans.continue)
+            }
+          ],
+          persist: true
+        });
+        return;
+      }
+      pages.querySelector("button").disabled = true;
+      type.querySelector("button").disabled = true;
+      timeframe.querySelector("button").disabled = true;
+      compare_settings.forEach((option) => {
+        option.setAttribute("disabled", true);
+      });
+      submit.disabled = true;
+      page.state.compare = {
+        you: [],
+        other: [],
+        shared: []
+      };
+      get_grid(auth.name, 1, parseInt(pages.value), page.name);
+    }
+    function get_grid(user2, current_page, page_count, next_user = null) {
+      render(body, html`
+            <div class="loading-data-container">
+                <div class="loading-data-text">${tl(trans.gathering_plays_for_user_pages).replace("{u}", user2).replace("{current_page}", current_page).replace("{pages}", page_count)}</div>
+            </div>
+        `);
+      fetch(`${root}user/${user2}/library/${type.value}?format=list&date_preset=${timeframe.value}&page=${current_page}&ajax=1`).then(function(response) {
+        console.log("returned", response, response.text);
+        return response.text();
+      }).then(function(dom) {
+        let doc = new DOMParser().parseFromString(dom, "text/html");
+        console.log("DOC", doc);
+        let next_button = doc.querySelector(".pagination-next");
+        try {
+          let tracks = doc.querySelectorAll(".chartlist-row");
+          tracks.forEach((track) => {
+            let item = {};
+            item.avatar = track.querySelector(".chartlist-image img");
+            if (item.avatar)
+              item.avatar = item.avatar.getAttribute("src");
+            item.name = track.querySelector(".chartlist-name a").textContent.trim();
+            if (type.value != "artists")
+              item.sister = track.querySelector(".chartlist-artist a").textContent.trim();
+            item.plays = clean_number(track.querySelector(".chartlist-count-bar-slug").getAttribute("data-stat-value"));
+            if (next_user)
+              page.state.compare.you.push(item);
+            else
+              page.state.compare.other.push(item);
+          });
+        } catch (e) {
+          notify({
+            id: "compare",
+            title: tl(trans.failed),
+            body: tl(trans.there_was_a_network_error),
+            type: "error"
+          });
+          console.error(e);
+        }
+        if (next_button && current_page < page_count) {
+          get_grid(user2, current_page + 1, page_count, next_user);
+        } else if (next_user) {
+          get_grid(next_user, 1, page_count);
+        } else {
+          pages.querySelector("button").disabled = false;
+          type.querySelector("button").disabled = false;
+          timeframe.querySelector("button").disabled = false;
+          compare_settings.forEach((option) => {
+            option.setAttribute("disabled", false);
+          });
+          submit.disabled = false;
+          continue_comparing();
+        }
+      });
+    }
+    function continue_comparing() {
+      log("gathered initial values", "compare", "info", page.state.compare);
+      page.state.compare.you.forEach((your_item) => {
+        let other_item;
+        if (type.value == "albums")
+          other_item = page.state.compare.other.find((other) => your_item.name === other.name && your_item.sister === other.sister);
+        else
+          other_item = page.state.compare.other.find((other) => your_item.name === other.name);
+        if (other_item) {
+          page.state.compare.shared.push({
+            avatar: your_item.avatar,
+            name: your_item.name,
+            sister: your_item.sister ? your_item.sister : "",
+            plays: {
+              you: your_item.plays,
+              other: other_item.plays,
+              shared: your_item.plays + other_item.plays
+            }
+          });
+        }
+      });
+      page.state.compare.shared.sort((a, b) => b.plays.shared - a.plays.shared);
+      log("gathered shared values", "compare", "info", page.state.compare);
+      body.innerHTML = "";
+      if (page.state.compare.shared.length == 0) {
+        render(body, html`
+                <div class="loading-data-container">
+                    <div class="loading-data-text failed">${tl(trans.nothing_in_common)}</div>
+                </div>
+            `);
+        return;
+      }
+      if (type.value != "tracks") {
+        let grid = document.createElement("ol");
+        grid.classList.add("grid-items", "grid-items--numbered", "compare-grid");
+        page.state.compare.shared.forEach((data2) => {
+          let template;
+          if (type.value == "artists")
+            template = sanitise(data2.name);
+          else
+            template = `${sanitise(data2.sister)}/${sanitise(data2.name)}`;
+          grid.appendChild(html.node`
+                    <li class="compare-item grid-items-item">
+                        <div class="grid-items-cover-image js-link-block link-block">
+                            <div class="grid-items-cover-image-image ${data2.avatar.endsWith("/c6f59c1e5e7240a4c0d427abd71f3dbb.jpg") || data2.avatar.endsWith("/2a96cbd8b46e442fc41c2b86b821562f.jpg") ? "grid-items-cover-default" : ""}">
+                                <img src="${data2.avatar.replace("/avatar70s/", "/avatar300s/").replace("/64s/", "/avatar300s/")}" alt="${data2.name}" loading="lazy">
+                            </div>
+                            <div class="grid-items-item-details">
+                                <p class="grid-items-item-main-text">
+                                    <a class="link-block-target" href="${root}music/${template}" title="${data2.name}">
+                                        ${data2.name}
+                                    </a>
+                                </p>
+                                ${type.value == "albums" ? html.node`
+                                <p class="grid-items-item-aux-text">
+                                    <a class="grid-items-item-aux-block" href="${root}music/${data2.sister}">
+                                        ${data2.sister}
+                                    </a>
+                                </p>
+                                ` : ""}
+                                <p class="grid-items-item-aux-text">
+                                    <a class="grid-item-plays with-avatar" href="${root}user/${auth.name}/library/music/${template}?date_preset=${timeframe.value}" target="_blank">
+                                        <span class="avatar">
+                                            <img src="${auth.avatar}" alt="${tl(trans.your_avatar)}">
+                                        </span>
+                                        ${data2.plays.you.toLocaleString(lang)}
+                                    </a>
+                                    <a class="grid-item-plays with-avatar" href="${root}user/${page.name}/library/music/${template}?date_preset=${timeframe.value}" target="_blank">
+                                        <span class="avatar">
+                                            <img src="${page.avatar}" alt="${tl(trans.avatar_for_user).replace("{u}", page.name)}">
+                                        </span>
+                                        ${data2.plays.other.toLocaleString(lang)}
+                                    </a>
+                                </p>
+                            </div>
+                            <a class="js-link-block-cover-link link-block-cover-link" href="${root}music/${template}" tabindex="-1" aria-hidden="true"></a>
+                        </div>
+                    </li>
+                `);
+        });
+        render(body, grid);
+        music_grids(grid);
+      } else {
+        let table = document.createElement("table");
+        table.classList.add("chartlist", "chartlist--with-index", "chartlist--with-index--length-2", "chartlist--with-image", "chartlist--with-artist", "chartlist--with-bar", "compare-chartlist");
+        let tbody = document.createElement("tbody");
+        table.appendChild(tbody);
+        let max = 0;
+        page.state.compare.shared.forEach((item) => {
+          if (item.plays.you > max)
+            max = item.plays.you;
+          if (item.plays.other > max)
+            max = item.plays.other;
+        });
+        page.state.compare.shared.forEach((data2, index) => {
+          let template = `${sanitise(data2.sister)}/_/${sanitise(data2.name)}`;
+          tbody.appendChild(html.node`
+                    <tr class="chartlist-row chartlist-row--with-artist compare-item">
+                        <td class="chartlist-index">${index + 1}</td>
+                        <td class="chartlist-image">
+                            <a class="cover-art" href="${root}music/${template}">
+                                <img src="${data2.avatar}" alt="${data2.name}" loading="lazy">
+                            </a>
+                        </td>
+                        <td class="chartlist-name">
+                            <a href="${root}music/${template}" title="${data2.name}">
+                                ${data2.name}
+                            </a>
+                        </td>
+                        <td class="chartlist-artist">
+                            <a href="${root}music/${data2.sister}" title="${data2.sister}">
+                                ${data2.sister}
+                            </a>
+                        </td>
+                        <td class="chartlist-bar with-multiple">
+                            <span class="chartlist-count-bar">
+                                <a class="chartlist-count-bar-link" href="${root}user/${auth.name}/library/music/${template}?date_preset=${timeframe.value}" target="_blank">
+                                    <span class="chartlist-count-bar-slug" data-max-stat-value="${max}" data-stat-value="${data2.plays.you}" style="width: ${data2.plays.you / max * 100}%;"></span>
+                                    <span class="chartlist-count-bar-value">${data2.plays.you}</span>
+                                </a>
+                                <span class="avatar">
+                                    <img src="${auth.avatar}" alt="${tl(trans.your_avatar)}">
+                                </span>
+                            </span>
+                            <span class="chartlist-count-bar">
+                                <a class="chartlist-count-bar-link" href="${root}user/${page.name}/library/music/${template}?date_preset=${timeframe.value}" target="_blank">
+                                    <span class="chartlist-count-bar-slug" data-max-stat-value="${max}" data-stat-value="${data2.plays.other}" style="width: ${data2.plays.other / max * 100}%;"></span>
+                                    <span class="chartlist-count-bar-value">${data2.plays.other}</span>
+                                </a>
+                                <span class="avatar">
+                                    <img src="${page.avatar}" alt="${tl(trans.avatar_for_user).replace("{u}", page.name)}">
+                                </span>
+                            </span>
+                        </td>
+                    </tr>
+                `);
+        });
+        body.appendChild(table);
+        patch_titles(body);
+      }
+    }
+  }
+
   // src/pages/glacier.js
   function bleh_user_library() {
     let date_items = page.structure.side.querySelectorAll(":scope > :is(div, figure)");
@@ -6009,7 +7134,9 @@
         page.structure.main.insertBefore(date_panel, page.structure.main.firstChild);
     }
     page.structure.glacier.date_panel = date_panel;
-    let tabs = page.structure.container.querySelector(".library-controls .navlist-items");
+    let search = page.structure.content_top.querySelector(".library-search");
+    let nav = page.structure.content_top.querySelector(".library-controls nav");
+    let tabs = nav.querySelector(".navlist-items");
     if (page.name == auth.name) {
       let velocity_tab = document.createElement("li");
       velocity_tab.classList.add("navlist-item", "secondary-nav-item", "secondary-nav-item--velocity");
@@ -6027,6 +7154,20 @@
                 </a>
             </li>
         `);
+    }
+    let scrobbles = tabs.querySelector(".secondary-nav-item--overview");
+    scrobbles.classList.remove("secondary-nav-item--overview");
+    scrobbles.classList.add("secondary-nav-item--scrobbles");
+    if (ff("mualani")) {
+      let toolbar = html.node`
+            <div class="toolbar">
+                ${search}
+                ${nav}
+            </div>
+        `;
+      nav.classList.add("redesigned-navigation");
+      page.structure.content_top.style.display = "none";
+      page.structure.content_top.after(toolbar);
     }
     if (!ff("glacier_library"))
       return;
@@ -6989,65 +8130,6 @@
       view_buttons.insertBefore(bulk_edit, edit_form);
   }
 
-  // src/components/share.js
-  function share(url) {
-    let input2;
-    dialog({
-      id: "share",
-      title: tl(trans.share),
-      body: html.node`
-            <div class="share-top content-form">
-                <input
-                    type="text"
-                    readonly
-                    value=${url}
-                    class="share-input"
-                    ref=${(el) => input2 = el}
-                />
-                <button 
-                    class="btn primary icon copy"
-                    onclick=${() => {
-        input2.select();
-        document.execCommand("copy");
-        notify({
-          title: tl(trans.copied_to_clipboard),
-          icon: "icon-16-copy"
-        });
-      }}
-                >${tl(trans.copy)}</button>
-            </div>
-            <div class="share-links">
-                <a 
-                    href=${`https://twitter.com/intent/tweet?url=${encodeURIComponent(url)}`}
-                    target="_blank"
-                    class="share-link share-link-twitter"
-                >Twitter</a>
-                <a 
-                    href=${`https://www.facebook.com/sharer/sharer.php?u=${encodeURIComponent(url)}`}
-                    target="_blank"
-                    class="share-link share-link-facebook"
-                >Facebook</a>
-            </div>
-        `,
-      replace_if_possible: true
-    });
-  }
-  function download(url, filename = null) {
-    log(`downloading ${filename}`, "download");
-    let link = html.node`
-        <a href=${url} download />
-    `;
-    if (filename)
-      link.setAttribute("download", filename);
-    link.click();
-    notify({
-      id: "downloaded",
-      title: tl(trans.downloaded),
-      body: filename,
-      icon: "icon-16-download"
-    });
-  }
-
   // src/pages/gallery.js
   function bleh_gallery() {
     if (page.subpage != "image")
@@ -7483,7 +8565,7 @@
   }) {
     if (!can_api) can_api = localStorage.getItem("bleh_auth") && localStorage.getItem("bleh_auth_valid") === "true";
     if (!can_api) {
-      window.location.href = `${root}bleh?tab=profiles`;
+      window.location.href = `${root}bleh/profiles`;
       return;
     }
     const random = random_list[Math.floor(Math.random() * random_list.length)];
@@ -7968,26 +9050,6 @@
     }
     let metadata = col_main.querySelector(".metadata-column");
     if (metadata) {
-      if (settings.simulate_scroll) {
-        metadata.addEventListener("wheel", (e) => {
-          e.preventDefault();
-          if (e.deltaY > 0) {
-            metadata.scrollBy({
-              top: 0,
-              left: 200,
-              behavior: "smooth"
-            });
-          } else {
-            metadata.scrollBy({
-              top: 0,
-              left: -200,
-              behavior: "smooth"
-            });
-          }
-        });
-      } else {
-        metadata.classList.add("no-scroll-simulation");
-      }
       let groups = [];
       let headers = metadata.querySelectorAll(".catalogue-metadata-heading:not(.visible-xs)");
       headers.forEach((item, index) => {
@@ -7999,20 +9061,43 @@
       values.forEach((item, index) => {
         groups[index].value = item;
       });
-      metadata.innerHTML = "";
-      groups.forEach((group) => {
-        let group_wrap = document.createElement("div");
-        group_wrap.classList.add("metadata-group");
-        group_wrap.appendChild(group.header);
-        group_wrap.appendChild(group.value);
-        metadata.appendChild(group_wrap);
-      });
+      render(metadata, html`
+            ${groups.map((group) => html.node`
+                <div class="metadata-group">
+                    ${group.header}
+                    ${group.value}
+                </div>
+            `)}
+        `);
+      if (groups.length > 2) {
+        if (settings.simulate_scroll) {
+          metadata.addEventListener("wheel", (e) => {
+            e.preventDefault();
+            if (e.deltaY > 0) {
+              metadata.scrollBy({
+                top: 0,
+                left: 200,
+                behavior: "smooth"
+              });
+            } else {
+              metadata.scrollBy({
+                top: 0,
+                left: -200,
+                behavior: "smooth"
+              });
+            }
+          });
+        } else {
+          metadata.classList.add("no-scroll-simulation");
+        }
+      }
     }
     if (page_is_blocked) {
-      let alert = document.createElement("section");
-      alert.classList.add("cta", "blocked-cta");
-      alert.innerHTML = `<strong>${tl(trans.blocked_page)}</strong>`;
-      page.structure.main.insertBefore(alert, page.structure.main.firstElementChild);
+      page.structure.main.insertBefore(html.node`
+            <section class="cta blocked-cta">
+                <strong>${tl(trans.blocked_page)}</strong>
+            </section>
+        `, page.structure.main.firstElementChild);
       return;
     }
     let play_on;
@@ -8536,539 +9621,6 @@
     panel.removeChild(legacy_top_listeners_container);
   }
 
-  // src/components/collage.js
-  function collage({
-    default_type = "artists",
-    default_timeframe = "date_preset=LAST_90_DAYS",
-    redirect = false
-  } = {}) {
-    if (page.state.scrobbles === 0) {
-      notify({
-        id: "collage_not_possible",
-        title: tl(trans.collage),
-        body: tl(trans.profile_does_not_have_enough_scrobbles),
-        icon: "icon-16-collage"
-      });
-      return;
-    }
-    let width;
-    let height;
-    let timeframe;
-    let type;
-    let settings_btn;
-    let submit;
-    let body;
-    let value = 5;
-    let min = 1;
-    let max = 20;
-    let current_year = (/* @__PURE__ */ new Date()).getFullYear();
-    let previous_year = current_year - 1;
-    dialog({
-      id: "collage",
-      title: tl(trans.collage),
-      body: html.node`
-            ${redirect ? html.node`
-            <div class="alert alert-info">
-                ${tl(trans.collage_redirect)}
-            </div>
-            ` : ""}
-            <div class="compare-header">
-                <div class="compare-users">
-                    <div class="compare-user">
-                        <div class="avatar">
-                            <img src="${page.avatar}" alt="${tl(trans.avatar_for_user).replace("{u}", page.name)}">
-                        </div>
-                        <strong>${page.name}</strong>
-                    </div>
-                </div>
-                <div class="compare-selection">
-                    <div class="input-group">
-                        ${width = input({
-        type: "number",
-        value,
-        placeholder: value,
-        min,
-        max
-      })}
-                        <div class="bleh-icon" style="--icon: var(--icon-16-x)" />
-                        ${height = input({
-        type: "number",
-        value,
-        placeholder: value,
-        min,
-        max
-      })}
-                    </div>
-                    ${type = select([
-        {
-          value: "artists",
-          text: html`<div class="bleh-icon" style="--icon: var(--icon-16-artist)" />${tl(trans.artists)}`
-        },
-        {
-          value: "albums",
-          text: html`<div class="bleh-icon" style="--icon: var(--icon-16-album)" />${tl(trans.albums)}`
-        },
-        {
-          value: "tracks",
-          text: html`<div class="bleh-icon" style="--icon: var(--icon-16-track)" />${tl(trans.tracks)}`
-        }
-      ], default_type)}
-                    ${timeframe = select([
-        {
-          value: "date_preset=LAST_7_DAYS",
-          text: tl(trans.last_count_days).replace("{c}", "7")
-        },
-        {
-          value: "date_preset=LAST_30_DAYS",
-          text: tl(trans.last_count_days).replace("{c}", "30")
-        },
-        {
-          value: "date_preset=LAST_90_DAYS",
-          text: tl(trans.last_count_days).replace("{c}", "90")
-        },
-        {
-          value: "date_preset=LAST_180_DAYS",
-          text: tl(trans.last_count_days).replace("{c}", "180")
-        },
-        {
-          value: "date_preset=LAST_365_DAYS",
-          text: tl(trans.last_count_days).replace("{c}", "365")
-        },
-        {
-          value: "date_preset=ALL",
-          text: tl(trans.all_time)
-        },
-        {
-          value: `from=${current_year}-01-01&rangetype=year`,
-          text: current_year
-        },
-        {
-          value: `from=${previous_year}-01-01&rangetype=year`,
-          text: previous_year
-        }
-      ], default_timeframe)}
-                    <button class="btn chibi icon" data-type="settings" ref=${(el) => settings_btn = el}>${tl(trans.settings)}</button>
-                    <button class="btn primary icon" data-type="collage" ref=${(el) => submit = el} onclick=${() => make_collage()}>${tl(trans.generate)}</button>
-                </div>
-            </div>
-            <div class="compare-body" data-filled="false" ref=${(el) => body = el}>
-                <div class="loading-data-container">
-                    <div class="loading-data-text info">${tl(trans.choose_a_timeframe_above)}</div>
-                </div>
-            </div>
-        `
-    });
-    let width_input = width.querySelector("input");
-    let height_input = height.querySelector("input");
-    let timeframe_select = timeframe.querySelector("select");
-    let type_select = type.querySelector("select");
-    tippy(settings_btn, {
-      content: tl(trans.settings)
-    });
-    tippy(settings_btn, {
-      theme: "window",
-      content: html.node`
-            <div class="dialog-settings">
-                <div class="setting-group blend">
-                    ${setting({ id: "collage_title" })}
-                    ${setting({ id: "collage_grid_gap" })}
-                    ${setting({ id: "collage_grid_text" })}
-                    ${setting({ id: "collage_grid_plays" })}
-                </div>
-            </div>
-        `,
-      placement: "bottom",
-      interactive: true,
-      interactiveBorder: 10,
-      trigger: "click"
-    });
-    function make_collage(bypass = false) {
-      if (width_input.value == "" || height_input.value == "" || parseInt(width_input.value) < min || parseInt(width_input.value) > max || parseInt(height_input.value) < min || parseInt(height_input.value) > max) {
-        notify({
-          id: "collage_failed",
-          title: tl(trans.name_failed).replace("{name}", tl(trans.collage)),
-          body: tl(trans.your_settings_are_invalid),
-          type: "error"
-        });
-        return;
-      }
-      let per_page = 50;
-      let pages = Math.ceil(width_input.value * height_input.value / per_page);
-      if (pages > 4 && !bypass) {
-        let warn = notify({
-          id: "collage_warning",
-          title: tl(trans.are_you_sure),
-          body: tl(trans.this_will_require_loading_count_pages).replace("{c}", pages),
-          type: "warning",
-          actions: [
-            {
-              type: "check",
-              action: () => {
-                notify_rm(warn);
-                make_collage(true);
-              },
-              text: tl(trans.continue)
-            }
-          ],
-          persist: true
-        });
-        return;
-      }
-      type.querySelector("button").disabled = true;
-      timeframe.querySelector("button").disabled = true;
-      settings_btn.disabled = true;
-      submit.disabled = true;
-      page.state.collage = [];
-      body.setAttribute("data-filled", "false");
-      get_grid(1, pages);
-    }
-    function get_grid(current_page, pages) {
-      render(body, html`
-            <div class="loading-data-container">
-                <div class="loading-data-text">${tl(trans.gathering_plays_for_user_pages).replace("{u}", page.name).replace("{current_page}", current_page).replace("{pages}", pages)}</div>
-            </div>
-        `);
-      fetch(`${root}user/${page.name}/library/${type_select.value}?format=list&${timeframe_select.value}&page=${current_page}&ajax=1`).then(function(response) {
-        console.log("returned", response, response.text);
-        return response.text();
-      }).then(function(dom) {
-        let doc = new DOMParser().parseFromString(dom, "text/html");
-        console.log("DOC", doc);
-        let next_button = doc.querySelector(".pagination-next");
-        try {
-          let tracks = doc.querySelectorAll(".chartlist-row");
-          tracks.forEach((track) => {
-            let item = {};
-            item.avatar = track.querySelector(".chartlist-image img");
-            if (item.avatar)
-              item.avatar = item.avatar.getAttribute("src");
-            item.name = track.querySelector(".chartlist-name a").textContent.trim();
-            if (type_select.value != "artists")
-              item.sister = track.querySelector(".chartlist-artist a").textContent.trim();
-            item.plays = clean_number(track.querySelector(".chartlist-count-bar-slug").getAttribute("data-stat-value"));
-            page.state.collage.push(item);
-          });
-        } catch (e) {
-          notify({
-            id: "collage_failed",
-            title: tl(trans.name_failed).replace("{name}", tl(trans.collage)),
-            body: tl(trans.there_was_a_network_error),
-            type: "error"
-          });
-          console.error(e);
-        }
-        if (next_button && current_page < pages) {
-          get_grid(current_page + 1, pages);
-        } else {
-          continue_collage();
-        }
-      });
-    }
-    async function continue_collage() {
-      log("gathered initial values", "collage", "info", page.state.collage);
-      if (page.state.collage.length == 0) {
-        render(body, html`
-                <div class="loading-data-container">
-                    <div class="loading-data-text failed">${tl(trans.no_plays_in_range)}</div>
-                </div>
-            `);
-        body.setAttribute("data-filled", "false");
-        type.querySelector("button").disabled = false;
-        timeframe.querySelector("button").disabled = false;
-        settings_btn.disabled = false;
-        submit.disabled = false;
-        return;
-      }
-      let grid = html.node`
-            <ol class="grid-items grid-items--numbered collage-grid" style="--width: ${width_input.value}; --height: ${height_input.value}" data-width=${width_input.value} data-height=${height_input.value} />
-        `;
-      if (!settings.collage_grid_gap) {
-        grid.style.setProperty("--item-list-gap", "0px");
-        grid.style.setProperty("--item-med-radius", "0");
-      }
-      let total = width_input.value * height_input.value - 1;
-      grid.style.setProperty("--highest", Math.max(+width_input.value, +height_input.value).toString());
-      page.state.collage.some((data2, index) => {
-        if (index > total)
-          return false;
-        let template;
-        if (type_select.value == "artists")
-          template = sanitise(data2.name);
-        else
-          template = `${sanitise(data2.sister)}/${sanitise(data2.name)}`;
-        grid.appendChild(html.node`
-                <li class="compare-item grid-items-item">
-                    <div class="grid-items-cover-image">
-                        <div class="grid-items-cover-image-image ${data2.avatar.endsWith("/c6f59c1e5e7240a4c0d427abd71f3dbb.jpg") || data2.avatar.endsWith("/2a96cbd8b46e442fc41c2b86b821562f.jpg") ? "grid-items-cover-default" : ""}">
-                            <img src="${data2.avatar.replace("/avatar70s/", "/avatar300s/").replace("/64s/", "/avatar300s/")}" alt="${data2.name}" loading="lazy">
-                        </div>
-                        ${settings.collage_grid_text || settings.collage_grid_plays ? html.node`
-                        <div class="grid-items-item-details">
-                            ${settings.collage_grid_text ? html.node`
-                            <p class="grid-items-item-main-text">
-                                <a class="link-block-target" href="${root}music/${template}" title="${data2.name}">
-                                    ${data2.name}
-                                </a>
-                            </p>
-                            ` : ""}
-                            ${type_select.value != "artists" ? html.node`
-                            <p class="grid-items-item-aux-text">
-                                ${settings.collage_grid_text ? html.node`
-                                <a class="grid-items-item-aux-block" href="${root}music/${data2.sister}">
-                                    ${data2.sister}
-                                </a>
-                                ${settings.collage_grid_plays ? html.node`
-                                <a class="grid-item-plays" href="${root}user/${page.name}/library/music/${template}?date_preset=${timeframe_select.value}" target="_blank">
-                                    ${data2.plays.toLocaleString(lang)}
-                                </a>
-                                ` : ""}
-                                ` : settings.collage_grid_plays ? html.node`
-                                <a class="grid-item-plays" href="${root}user/${page.name}/library/music/${template}?date_preset=${timeframe_select.value}" target="_blank">
-                                    ${data2.plays.toLocaleString(lang)}${tl(trans.plays_lower)}
-                                </a>
-                                ` : ""}
-                            </p>
-                            ` : html.node`
-                            ${settings.collage_grid_plays ? html.node`
-                            <p class="grid-items-item-aux-text">
-                                <a class="grid-item-plays" href="${root}user/${page.name}/library/music/${template}?date_preset=${timeframe_select.value}" target="_blank">
-                                    ${data2.plays.toLocaleString(lang)}${tl(trans.plays_lower)}
-                                </a>
-                            </p>
-                            ` : ""}
-                            `}
-                        </div>
-                        ` : ""}
-                    </div>
-                </li>
-            `);
-      });
-      let collage_dom = html.node`
-            <div class="collage">
-                ${settings.collage_title ? html.node`
-                <div class="header">
-                    <div class="type" data-type=${type_select.value}>
-                        <div class="bleh-icon" />
-                        <strong class="brand">${version.brand}</strong>
-                        <strong>${timeframe.querySelector("button").textContent}</strong>
-                        <strong>${tl(trans.top_type).replace("{type}", tl(trans[type_select.value]))}</strong>
-                        <strong>${width_input.value}x${height_input.value}</strong>
-                    </div>
-                    <div class="user">
-                        <div class="avatar">
-                            <img src="${page.avatar}" alt="${tl(trans.avatar_for_user).replace("{u}", page.name)}">
-                        </div>
-                        <strong>${page.name}</strong>
-                    </div>
-                </div>
-                ` : ""}
-                ${grid}
-            </div>
-        `;
-      render(body, html`
-            <div class="loading-data-container">
-                <div class="loading-data-text">${tl(trans.waiting_for_images)}</div>
-            </div>
-            ${collage_dom}
-        `);
-      music_grids(grid, false);
-      const grid_item_size = 380;
-      const grid_item_gap = settings.collage_grid_gap ? 10 : 0;
-      const padding = settings.collage_grid_gap ? 15 : 0;
-      const title_height = settings.collage_title ? 32 + 15 : 0;
-      const width2 = padding * 2 + grid_item_size * width_input.value + grid_item_gap * (width_input.value - 1);
-      const height2 = padding * 2 + title_height + grid_item_size * height_input.value + grid_item_gap * (height_input.value - 1);
-      const cv_scale = 1;
-      collage_dom.style.width = `${width2}px`;
-      collage_dom.style.height = `${height2}px`;
-      collage_dom.style.padding = `${padding}px`;
-      collage_dom.style.gap = `${padding}px`;
-      collage_dom.style["--item-list-gap"] = `${grid_item_gap}px`;
-      collage_dom.style["--grid-item-size"] = `${grid_item_size}px`;
-      let initial_canvas = html.node`
-            <canvas width=${width2 * cv_scale} height=${height2 * cv_scale} />
-        `;
-      html2canvas(collage_dom, {
-        useCORS: true,
-        letterRendering: true,
-        canvas: initial_canvas,
-        scale: cv_scale,
-        onclone: (doc) => {
-          doc.querySelectorAll("*").forEach((el) => {
-            if (el.classList == "brand")
-              el.style.setProperty("font-family", "Darumadrop One");
-            else
-              el.style.setProperty("font-family", "Overpass, Inter, Ubuntu Sans, Spline Sans, Roboto, Noto Sans, Noto Sans JP, Noto Sans KR, Noto Sans TC, Lucida Grande, Verdana, Tahoma, -apple-system, BlinkMacSystemFont, sans-serif");
-          });
-        }
-      }).then((canvas) => {
-        body.setAttribute("data-filled", "true");
-        render(body, html`
-                <div class="collage-finished">
-                    <strong>${tl(trans.your_collage_is_ready)}</strong>
-                    <div class="button-group">
-                        <button class="btn primary icon" data-type="download" onclick=${() => download(canvas.toDataURL("image/png"), tl(trans.chart_template_filename).replace("{timeframe}", timeframe.querySelector("button").textContent).replace("{user}", page.name).replace("{type}", tl(trans[type_select.value])).replace("{size}", `${width_input.value}x${height_input.value}`).replace("{brand}", version.brand))}>${tl(trans.download)}</button>
-                        <button class="btn open" data-type="open" onclick=${() => open(canvas.toDataURL("image/png"))}>${tl(trans.open)}</button>
-                    </div>
-                </div>
-                ${canvas}
-            `);
-        type.querySelector("button").disabled = false;
-        timeframe.querySelector("button").disabled = false;
-        settings_btn.disabled = false;
-        submit.disabled = false;
-      });
-    }
-  }
-
-  // src/sponsor.js
-  function sponsors(force = false) {
-    if (!ff("sponsor"))
-      return;
-    let sponsor_data = localStorage.getItem("kat_sponsors");
-    let sponsor_expire = new Date(localStorage.getItem("kat_sponsors_expire"));
-    let current_time = /* @__PURE__ */ new Date();
-    if (!sponsor_data) {
-      log("not cached, fetching", "sponsor");
-      sponsor_request(true);
-    } else {
-      for (var member in sponsor_list) delete sponsor_list[member];
-      Object.assign(sponsor_list, JSON.parse(sponsor_data));
-      if (sponsor_list)
-        auth.sponsor = sponsor_list.sponsors.includes(auth.name);
-      if (sponsor_expire < current_time && !force) {
-        sponsor_request();
-      } else if (force) {
-        sponsor_request(true);
-      }
-    }
-  }
-  function sponsor_request(notify2 = false) {
-    let button = document.body.querySelector('[onclick="_sponsor_check()"]');
-    if (button)
-      button.setAttribute("disabled", "");
-    let xhr = new XMLHttpRequest();
-    let url = `https://katelyynn.github.io/bleh/fm/badges/badges.json?${Math.random()}`;
-    xhr.open("GET", url, true);
-    xhr.onload = function() {
-      log(`list responded with ${xhr.status}`, "sponsor");
-      let api_expire = /* @__PURE__ */ new Date();
-      if (xhr.status != 200) {
-        log("request has been cancelled, will request again in 1h", "sponsor");
-        api_expire.setHours(api_expire.getHours() + 1);
-      }
-      if (xhr.status == 200) {
-        if (sponsor_list.latest != 0 || sponsor_list && parseFloat(JSON.parse(this.response).latest) >= parseFloat(sponsor_list.latest)) {
-          for (const member in sponsor_list) delete sponsor_list[member];
-          Object.assign(sponsor_list, JSON.parse(this.response));
-          if (sponsor_list)
-            auth.sponsor = sponsor_list.sponsors.includes(auth.name);
-          if (notify2)
-            deliver_notif(trans_legacy.en.settings.home.sponsor.download, false, true, "sponsor");
-          localStorage.setItem("kat_sponsors", this.response);
-        }
-        api_expire.setHours(api_expire.getHours() + 4);
-        log(`list cached until ${api_expire}`, "sponsor");
-      }
-      localStorage.setItem("kat_sponsors_expire", api_expire);
-      if (button != null)
-        button.removeAttribute("disabled");
-    };
-    xhr.send();
-  }
-  unsafeWindow._sponsor_check = function() {
-    sponsors(true);
-  };
-  unsafeWindow._sponsor = function(replace = false) {
-    sponsor(replace);
-  };
-  function sponsor(replace = false) {
-    dialog({
-      id: "sponsor",
-      title: tl(trans.support_future_development),
-      body: html.node`
-            <div class="modal-vertical-inner support-inner">
-                <div class="avatar">
-                    <img src="${auth.avatar.replace("/avatar42s/", "/avatar170s/")}" alt="${tl(trans.your_avatar)}">
-                    <span class="avatar-status-dot user-status--bleh-sponsor"></span>
-                </div>
-                <h1>${tl(trans.support_future_development)}</h1>
-                <p>${html.node([
-        tl(trans.why_sponsor).replace("katelyn", sponsor_list && sponsor_list.special ? `<a class="mention" href="${root}user/${sponsor_list.special[0]}">@${sponsor_list.special[0]}</a>` : "katelyn")
-      ])}</p>
-            </div>
-            <div class="modal-footer">
-                <div class="fill"></div>
-                <a class="btn primary sponsor" href="${sponsor_list.sponsor_link}" target="_blank">
-                    ${tl(trans.sponsor)}
-                </a>
-                <div class="fill"></div>
-            </div>
-        `,
-      type: "sponsor",
-      replace_if_possible: replace
-    });
-  }
-  unsafeWindow._sponsor_manage = function() {
-    sponsor_manage();
-  };
-  function sponsor_manage() {
-    if (sponsor_list.sponsors_one_time && sponsor_list.sponsors_one_time.includes(auth.name)) {
-      dialog({
-        id: "sponsor_manage",
-        title: tl(trans.sponsor),
-        body: html.node`
-                <div class="modal-vertical-inner support-inner">
-                    <div class="avatar">
-                        <img src="${auth.avatar.replace("/avatar42s/", "/avatar170s/")}" alt="${tl(trans.your_avatar)}">
-                        <span class="avatar-status-dot user-status--bleh-sponsor"></span>
-                    </div>
-                    <h1>${tl(trans.you_are_a_sponsor)}</h1>
-                    <p>${tl(trans.sponsor_no_badge)}</p>
-                </div>
-            `,
-        type: "sponsor"
-      });
-    } else {
-      dialog({
-        id: "sponsor_manage",
-        title: tl(trans.sponsor),
-        body: html.node`
-                <div class="modal-vertical-inner support-inner">
-                    <div class="avatar">
-                        <img src="${auth.avatar.replace("/avatar42s/", "/avatar170s/")}" alt="${tl(trans.your_avatar)}">
-                        <span class="avatar-status-dot user-status--bleh-sponsor"></span>
-                    </div>
-                    <h1>${tl(trans.you_are_a_sponsor)}</h1>
-                    <p>${tl(trans.sponsor_get_badge)}</p>
-                </div>
-                <div class="modal-footer">
-                    <div class="fill"></div>
-                    <a class="btn primary sponsor" href="${root}user/${sponsor_list.sponsor_account}" target="_blank">
-                        ${tl(trans.manage_sponsor)}
-                    </a>
-                    <div class="fill"></div>
-                </div>
-            `,
-        type: "sponsor"
-      });
-    }
-  }
-  function bleh_sponsor_page() {
-    document.body.style.removeProperty("--hue-album");
-    document.body.style.removeProperty("--sat-album");
-    document.body.style.removeProperty("--lit-album");
-    let adaptive_skin_container = document.querySelector(".adaptive-skin-container:not([data-bleh])");
-    if (adaptive_skin_container == null)
-      return;
-    adaptive_skin_container.setAttribute("data-bleh", "true");
-    adaptive_skin_container.innerHTML = "";
-    log("internal bleh sponsor", "page");
-    page.type = "bleh_sponsor";
-    page.subpage = "";
-    sponsor();
-  }
-
   // src/components/profile_header.js
   function redesign_profile_header(is_own_profile, is_following) {
     let base_header = document.body.querySelector(".header-info-secondary");
@@ -9161,16 +9713,14 @@
           create_profile_top_item(profile_header, {
             name: page.name,
             type: "compare",
-            link: () => compare(),
-            action: "button"
+            link: `${root}bleh/minis/compare?profile=${page.name}`
           });
         }
         if (ff("charts")) {
           create_profile_top_item(profile_header, {
             name: page.name,
             type: "collage",
-            link: () => collage(),
-            action: "button",
+            link: `${root}bleh/minis/collage?profile=${page.name}`,
             text: tl(trans.collage),
             updated: true
           });
@@ -9203,17 +9753,26 @@
         type: "edit",
         link: `${root}settings`
       });
-      create_profile_top_item(profile_header, {
-        name: page.name,
-        type: "labs",
-        link: `${root}labs`,
-        tooltip: `
-                <strong>${tl(trans.labs_by_last)}</strong>
-                <p>${tl(trans.labs_by_last.tagline)}</p>
-            `,
-        tooltip_style: "stack",
-        allow_html: true
-      });
+      if (ff("minis")) {
+        create_profile_top_item(profile_header, {
+          name: page.name,
+          type: "minis",
+          link: `${root}bleh/minis`,
+          new_release: true
+        });
+      } else {
+        create_profile_top_item(profile_header, {
+          name: page.name,
+          type: "labs",
+          link: `${root}labs`,
+          tooltip: `
+                    <strong>${tl(trans.labs_by_last)}</strong>
+                    <p>${tl(trans.labs_by_last.tagline)}</p>
+                `,
+          tooltip_style: "stack",
+          allow_html: true
+        });
+      }
       create_profile_top_item(profile_header, {
         name: page.name,
         type: "obsession",
@@ -9223,10 +9782,9 @@
         create_profile_top_item(profile_header, {
           name: page.name,
           type: "collage",
-          link: () => collage(),
-          action: "button",
+          link: `${root}bleh/minis/collage`,
           text: tl(trans.collage),
-          new_release: true
+          updated: true
         });
       }
     }
@@ -9485,13 +10043,15 @@
           navlist = page.structure.main.querySelector(".navlist");
           if (navlist) {
             navlist.classList.add("redesigned-navigation");
-            if (ff("short")) {
-              page.structure.row.insertBefore(navlist, page.structure.content);
+            if (ff("mualani")) {
+              let toolbar = html.node`
+                            <div class="toolbar">
+                                ${navlist}
+                            </div>
+                        `;
+              page.structure.row.insertBefore(toolbar, page.structure.content);
             } else {
-              if (page.structure.content_top)
-                page.structure.content_top.after(navlist);
-              else
-                page.structure.container.insertBefore(navlist, page.structure.row);
+              page.structure.row.insertBefore(navlist, page.structure.content);
             }
           }
           let btn_add = page.structure.main.querySelector(":scope > .btn-add");
@@ -9541,11 +10101,19 @@
     if (!ff("short")) return;
     if (page.structure.nav) page.structure.nav.setAttribute("data-assigned", "true");
     let navlists = page.structure.container.querySelectorAll(":scope > .navlist");
-    console.info(page.structure.container.innerHTML);
     navlists.forEach((nav, index) => {
       console.info(index);
       if (index < 1) return;
-      page.structure.row.insertBefore(nav, page.structure.content);
+      if (ff("mualani")) {
+        let toolbar = html.node`
+                <div class="toolbar">
+                    ${nav}
+                </div>
+            `;
+        page.structure.row.insertBefore(toolbar, page.structure.content);
+      } else {
+        page.structure.row.insertBefore(nav, page.structure.content);
+      }
     });
   }
 
@@ -9559,7 +10127,7 @@
             <a class="secondary-nav-item-link" href="${root}settings/subscription">
                 ${tl(trans.back)}
             </a>
-        <li>
+        </li>
     `, nav.firstElementChild);
   }
 
@@ -10221,16 +10789,16 @@
         <h4>${tl(trans.block_list)}</h4>
         <div class="user-top-panel">
             <div class="user-top-avatar user-top-avatar-side-left"><div class="bleh-icon"></div></div>
-            <img class="user-top-avatar user-top-avatar-main" src="${auth.avatar.replace("avatar42s", "avatar300s")}" alt="${auth.name}">
+            <img class="user-top-avatar user-top-avatar-main" src=${auth.avatar.replace("avatar42s", "avatar300s")} alt=${auth.name}>
             <div class="user-top-avatar user-top-avatar-side-right"><div class="bleh-icon"></div></div>
         </div>
         <div class="setting" data-type="text">
             <div class="heading">
                 <h5>${tl(trans.profile)}</h5>
                 <form action="${root}settings/privacy#ignorelist" name="ignorelist" method="post">
-                    <input type="hidden" name="csrfmiddlewaretoken" value="${page.token}">
+                    <input type="hidden" name="csrfmiddlewaretoken" value=${page.token}>
                     <div class="input-container">
-                        <input type="text" maxlength="80" id="id_user" name="user" placeholder="${tl(trans.enter_username)}">
+                        <input type="text" maxlength="80" id="id_user" name="user" placeholder=${tl(trans.enter_username)}>
                         <input type="hidden" name="listaction" value="add">
                         <input type="hidden" name="submit" value="ignorelist">
                         <button class="bleh--btn primary icon block" type="submit">${tl(trans.block)}</button>
@@ -10883,6 +11451,7 @@
                 </div>
             </section>
         `;
+      const avatar_img = avatar3.querySelector(":scope > img");
       if (page.name == auth.name && !settings.profile_header_own) {
         register_background(null, "hidden");
       } else if (page.name != auth.name && !settings.profile_header_others) {
@@ -10890,7 +11459,7 @@
       } else {
         if (settings.profile_avi_background) {
           if (avatar3)
-            register_background(avatar3.querySelector("img").getAttribute("src").replace("/avatar170s/", "/ar0/"), "avatar");
+            register_background(avatar_img.querySelector("img").getAttribute("src").replace("/avatar170s/", "/ar0/"), "avatar");
           else
             register_background(null, "none");
         } else {
@@ -10901,6 +11470,8 @@
             register_background(null, "none");
         }
       }
+      if (page.name == settings.profile_shortcut)
+        localStorage.setItem("bleh_profile_shortcut_avi", avatar_img.getAttribute("src"));
       page.structure.container.insertBefore(redesigned_profile_header, page.structure.container.firstElementChild);
       profile_header.classList.add("legacy-header");
       let header_avatar = redesigned_profile_header.querySelector(".avatar-side");
@@ -10922,9 +11493,6 @@
     if (loved_tab)
       loved_tab.textContent = tl(trans.loved);
     if (!is_subpage) {
-      if (page.requested.collage == "") collage({
-        redirect: true
-      });
       let is_following = page.structure.container.querySelector(".label.user-follow");
       profile_recents();
       profile_artists();
@@ -10936,7 +11504,7 @@
                     <h2>${tl(trans.activity)}</h2>
                     ${render_activity_list()}
                     <div class="more-link">
-                        <a href="${root}bleh?tab=profiles&setting=activities">${tl(trans.activity_settings)}</a>
+                        <a href="${root}bleh/profiles?setting=activities">${tl(trans.activity_settings)}</a>
                     </div>
                 </section>
             `;
@@ -11198,9 +11766,17 @@
         document.documentElement.setAttribute("data-bleh--theme", "oled");
         page.structure.content_top.classList.add("listening-report-navlist");
         page.structure.row.classList.add("listening-report");
+        let nav = page.structure.content_top.querySelector(".navlist");
+        nav.classList.add("redesigned-navigation");
+        page.structure.content_top.after(html.node`
+                <div class="toolbar">
+                    ${nav}
+                </div>
+            `);
+        page.structure.content_top.style.display = "none";
         let report_box_container = document.body.querySelector(".report-box-container--overview");
         if (report_box_container) {
-          page.structure.content_top.after(report_box_container);
+          page.structure.row.appendChild(report_box_container);
         } else {
           let dashboard = page.structure.container.querySelector(".user-dashboard");
           if (!dashboard) return;
@@ -11394,24 +11970,8 @@
     }
     let badges = load_badges(page.name);
     if (badges) {
-      badges.forEach((this_badge) => {
-        let badge = document.createElement("span");
-        badge.classList.add("label", `user-status--bleh-${this_badge.type}`, `user-status--bleh-user-${page.name}`);
-        badge.textContent = this_badge.name;
-        profile_name_obj.appendChild(badge);
-        if (ff("badges")) {
-          badge.classList.add("no-hover");
-          tippy(badge, {
-            theme: "badge",
-            placement: "bottom",
-            content: html.node`
-                        <div class="badge-name">${this_badge.name}</div>
-                        <div class="badge-reason">${this_badge.reason}</div>
-                    `
-          });
-        }
-        if (this_badge.type == "sponsor")
-          badge.setAttribute("onclick", "_sponsor()");
+      badges.forEach((badge) => {
+        profile_name_obj.appendChild(create_badge(badge));
       });
     }
     let badge_elements = profile_name_obj.querySelectorAll(".label");
@@ -11461,16 +12021,16 @@
     let neighbours_tab = navlist.querySelector(".secondary-nav-item--neighbours");
     navlist.removeChild(followers_tab);
     navlist.removeChild(neighbours_tab);
-    let friends_nav = document.createElement("div");
-    friends_nav.classList.add("bleh--nav-wrap", "bleh--friends-nav");
-    friends_nav.innerHTML = `
-        <nav class="navlist secondary-nav redesigned-navigation">
-            <ul class="navlist-items bleh--navlist-items">
-                ${following_tab.outerHTML}
-                ${followers_tab.outerHTML}
-                ${neighbours_tab.outerHTML}
-            </ul>
-        </nav>
+    let friends_nav = html.node`
+        <div class="toolbar">
+            <nav class="navlist secondary-nav redesigned-navigation">
+                <ul class="navlist-items">
+                    ${{ html: following_tab.outerHTML }}
+                    ${{ html: followers_tab.outerHTML }}
+                    ${{ html: neighbours_tab.outerHTML }}
+                </ul>
+            </nav>
+        </div>
     `;
     link.textContent = tl(trans.friends);
     page.structure.content_top.after(friends_nav);
@@ -11773,10 +12333,7 @@
       let btn = list.querySelector(".dropdown-menu-clickable-item--selected");
       let link = new URL("https://www.last.fm" + btn.getAttribute("href"));
       let selected = link.searchParams.get("artists_date_preset");
-      collage({
-        default_type: "artists",
-        date_preset: `date_preset=${selected}`
-      });
+      window.location.href = `${root}bleh/minis/collage?type=artists&timeframe=date_preset=${selected}`;
     }}>${tl(trans.collage)}</button>
                 ${form ? html.node`
                 <button class="left-icon blend-v2-btn" data-type="settings" ref=${(el) => settings_btn = el}>
@@ -11860,10 +12417,7 @@
       let btn = list.querySelector(".dropdown-menu-clickable-item--selected");
       let link = new URL("https://www.last.fm" + btn.getAttribute("href"));
       let selected = link.searchParams.get("albums_date_preset");
-      collage({
-        default_type: "albums",
-        date_preset: `date_preset=${selected}`
-      });
+      window.location.href = `${root}bleh/minis/collage?type=albums&timeframe=date_preset=${selected}`;
     }}>${tl(trans.collage)}</button>
                 ${form ? html.node`
                 <button class="left-icon blend-v2-btn" data-type="settings" ref=${(el) => settings_btn = el}>
@@ -11947,10 +12501,7 @@
       let btn = list.querySelector(".dropdown-menu-clickable-item--selected");
       let link = new URL("https://www.last.fm" + btn.getAttribute("href"));
       let selected = link.searchParams.get("tracks_date_preset");
-      collage({
-        default_type: "tracks",
-        date_preset: `date_preset=${selected}`
-      });
+      window.location.href = `${root}bleh/minis/collage?type=tracks&timeframe=date_preset=${selected}`;
     }}>${tl(trans.collage)}</button>
                 ${form ? html.node`
                 <button class="left-icon blend-v2-btn" data-type="settings" ref=${(el) => settings_btn = el}>
@@ -11984,7 +12535,7 @@
             ${setting({ id: "format_guest_features" })}
             ${setting({ id: "show_guest_features" })}
             <div class="more-link">
-                <a href="${root}bleh?tab=music">${tl(trans.settings)}</a>
+                <a href="${root}bleh/music">${tl(trans.settings)}</a>
             </div>
             <div class="settings-footer">
                 <button type="submit" class="btn-primary save">
@@ -12624,25 +13175,27 @@
     let found = false;
     let custom = null;
     let seasonal = null;
-    let swatches = document.querySelectorAll(".swatch");
+    let swatches = page.structure.main.querySelectorAll(".swatch");
     swatches.forEach((swatch) => {
       let h = swatch.style.getPropertyValue("--hue-over");
       let s = swatch.style.getPropertyValue("--sat-over");
       let l = swatch.style.getPropertyValue("--lit-over");
+      let parent = swatch.parentElement;
+      if (swatch.classList[0] == "dropdown-menu-clickable-item")
+        parent = swatch;
       if (h == settings.hue && s == settings.sat && l == settings.lit || swatch.getAttribute("data-swatch-type") == "default" && settings.hue == 255 && settings.sat == 1 && settings.lit == 1) {
-        swatch.setAttribute("aria-checked", "true");
+        parent.setAttribute("aria-checked", "true");
         if (swatch.classList[0] != "dropdown-menu-clickable-item")
           found = true;
       } else {
-        swatch.setAttribute("aria-checked", "false");
+        parent.setAttribute("aria-checked", "false");
       }
       if (!custom && swatch.getAttribute("data-swatch-type") == "customise")
-        custom = swatch;
+        custom = parent;
       if (!seasonal && swatch.getAttribute("data-swatch-type") == "default")
-        seasonal = swatch;
+        seasonal = parent;
     });
-    if (found)
-      return;
+    if (found) return;
     if (custom && settings.accent_type != "season")
       custom.setAttribute("aria-checked", "true");
     else if (seasonal)
@@ -12985,7 +13538,14 @@
     if (!force) {
       const last_checked = localStorage.getItem("bleh_update_checked") || null;
       const next_check = localStorage.getItem("bleh_update_next_check") || null;
+      const update_to = localStorage.getItem("bleh_update_to") || null;
       const current_time = /* @__PURE__ */ new Date();
+      if (update_to == version.build) {
+        log("reset update status as update is already installed", "update", "info", { update_to, current_build: version.build });
+        localStorage.setItem("bleh_update_required", "false");
+        localStorage.setItem("bleh_update_checked", (/* @__PURE__ */ new Date()).toString());
+        return;
+      }
       if (last_checked && next_check && new Date(next_check) > current_time) {
         log("update check skipped", "update", "info", { next_in: next_check, current_time });
         if (func) func();
@@ -13075,6 +13635,8 @@
       dismiss: false,
       replace_if_possible: true
     });
+    localStorage.setItem("bleh_update_required", "false");
+    localStorage.setItem("bleh_update_checked", (/* @__PURE__ */ new Date()).toString());
     fetch_new_style(false, true, true);
   }
   unsafeWindow._force_refresh_theme = function() {
@@ -13086,7 +13648,6 @@
   // src/pages/bleh_config.js
   function bleh_settings() {
     page.name = auth.name;
-    page.type = "bleh_settings";
     page.subpage = "";
     page.state.settings_page = "";
     update_page();
@@ -13095,64 +13656,74 @@
     let params = new URLSearchParams(document.location.search);
     page.requested.tab = params.get("tab");
     page.requested.setting = params.get("setting");
+    let path = window.location.pathname.split("/");
+    let tab = path[path.length - 1];
+    if (tab == "bleh") tab = null;
+    if (page.requested.tab && !tab) tab = page.requested.tab;
     const update_required = localStorage.getItem("bleh_update_required") || "false";
+    const tabs = {
+      themes: {
+        name: tl(trans.visual)
+      },
+      music: {
+        name: tl(trans.music)
+      },
+      customise: {
+        name: tl(trans.layout)
+      },
+      profiles: {
+        name: tl(trans.profiles)
+      },
+      seasonal: {
+        name: tl(trans.seasonal.name)
+      },
+      text: {
+        name: tl(trans.text)
+      },
+      accessibility: {
+        name: tl(trans.accessibility)
+      },
+      fill: {
+        type: "fill"
+      },
+      update: {
+        name: tl(trans.updates),
+        icon: "update",
+        label: html.node`
+                ${tl(trans.updates)}${update_required === "true" ? html.node`<div class="new-badge">${tl(trans.new)}</div>` : ""}
+            `,
+        hide_if: !ff("update_center")
+      },
+      performance: {
+        name: tl(trans.troubleshooting)
+      },
+      sku: {
+        name: tl(trans.flags),
+        password: settings.hu_tao
+      }
+    };
     let nav = html.node`
-        <nav class="navlist secondary-nav navlist--more redesigned-navigation bleh-settings-navigation">
-            <ul class="navlist-items">
-                <li class="navlist-item secondary-nav-item">
-                    <a class="secondary-nav-item-link bleh--nav" data-bleh-page="themes" onclick=${() => change_settings_page("themes")}>
-                        ${tl(trans.appearance)}
-                    </a>
-                </li>
-                <li class="navlist-item secondary-nav-item">
-                    <a class="secondary-nav-item-link bleh--nav" data-bleh-page="music" onclick=${() => change_settings_page("music")}>
-                        ${tl(trans.music)}
-                    </a>
-                </li>
-                <li class="navlist-item secondary-nav-item">
-                    <a class="secondary-nav-item-link bleh--nav" data-bleh-page="customise" onclick=${() => change_settings_page("customise")}>
-                        ${tl(trans.layout)}
-                    </a>
-                </li>
-                <li class="navlist-item secondary-nav-item">
-                    <a class="secondary-nav-item-link bleh--nav" data-bleh-page="profiles" onclick=${() => change_settings_page("profiles")}>
-                        ${tl(trans.profiles)}
-                    </a>
-                </li>
-                <li class="navlist-item secondary-nav-item">
-                    <a class="secondary-nav-item-link bleh--nav" data-bleh-page="seasonal" onclick=${() => change_settings_page("seasonal")}>
-                        ${tl(trans.seasonal.name)}
-                    </a>
-                </li>
-                <li class="navlist-item secondary-nav-item">
-                    <a class="secondary-nav-item-link bleh--nav" data-bleh-page="text" onclick=${() => change_settings_page("text")}>
-                        ${tl(trans.text)}
-                    </a>
-                </li>
-                <li class="navlist-item secondary-nav-item">
-                    <a class="secondary-nav-item-link bleh--nav" data-bleh-page="accessibility" onclick=${() => change_settings_page("accessibility")}>
-                        ${tl(trans.accessibility)}
-                    </a>
-                </li>
-                ${ff("update_center") ? html.node`
-                <li class="navlist-item secondary-nav-item">
-                    <a class="secondary-nav-item-link bleh--nav" data-bleh-page="update" data-type="update" onclick=${() => change_settings_page("update")}>
-                        ${tl(trans.updates)}${update_required === "true" ? html.node`<div class="new-badge">${tl(trans.new)}</div>` : ""}
-                    </a>
-                </li>
-                ` : ""}
-                <li class="navlist-item secondary-nav-item">
-                    <a class="secondary-nav-item-link bleh--nav" data-bleh-page="performance" onclick=${() => change_settings_page("performance")}>
-                        ${tl(trans.troubleshooting)}
-                    </a>
-                </li>
-                <li class="navlist-item secondary-nav-item">
-                    <a class="secondary-nav-item-link bleh--nav" data-password=${settings.hu_tao} data-bleh-page="sku" onclick=${() => change_settings_page("sku")}>
-                        ${tl(trans.flags)}
-                    </a>
-                </li>
-            </ul>
-        </nav>
+        <div class="toolbar">
+            <nav class="navlist secondary-nav navlist--more redesigned-navigation bleh-settings-navigation">
+                <ul class="navlist-items">
+                    ${Object.entries(tabs).map(([id, tab2]) => {
+      if (tab2.hide_if) return;
+      if (tab2.type && tab2.type == "fill") {
+        return html.node`
+                                <div class="fill" />
+                            `;
+      }
+      return html.node`
+                            <li class="navlist-item secondary-nav-item">
+                                <a class="secondary-nav-item-link bleh--nav" data-bleh-page=${id} data-type=${tab2.icon} data-password=${tab2.password} onclick=${() => change_settings_page(id)}>
+                                    ${tab2.label ? tab2.label : tab2.name}
+                                </a>
+                            </li>
+                        `;
+    })}
+                </ul>
+            </nav>
+        </div>
     `;
     render(page.structure.side, html`
         <div class="cta first priority sponsor colourful">
@@ -13190,10 +13761,10 @@
       page.structure.container.insertBefore(nav, page.structure.row);
     else
       page.structure.row.insertBefore(nav, page.structure.content);
-    if (!page.requested.tab)
+    if (!tab)
       change_settings_page("themes");
     else
-      change_settings_page(page.requested.tab);
+      change_settings_page(tab);
     if (page.requested.setting) {
       scroll_to_setting(page.requested.setting);
     }
@@ -13228,100 +13799,32 @@
       ]);
       render(page.structure.main, html`
             <div class="bleh--panel">
-                <h4>${tl(trans.themes.name)}</h4>
-                ${ff("theme_bubbles") ? theme_bubbles : html.node`
-                <div class="setting-items full">
-                    <div class="side-left full even-more">
-                        ${ff("auto_theme") ? html.node`
-                        <button class="btn theme-item" data-bleh-theme="auto" onclick="change_theme_from_settings('auto')">
-                            <div class="preview-container">
-                            <div class="preview">
-                                ${theme_preview()}
-                            </div>
-                            </div>
-                            <div class="text">
-                                <h5>${tl(trans.auto)} <div class="new-badge">${tl(trans.new)}</div></h5>
-                            </div>
-                        </button>
-                        ` : ""}
-                        <button class="btn theme-item" data-bleh-theme="light" data-bleh--theme_type="light" onclick="change_theme_from_settings('light')">
-                            <div class="preview-container">
-                            <div class="preview" data-bleh--theme="light" data-bleh--theme_type="light">
-                                ${theme_preview()}
-                            </div>
-                            </div>
-                            <div class="text">
-                                <h5>${tl(trans.themes.light)}</h5>
-                            </div>
-                        </button>
-                        <button class="btn theme-item" data-bleh-theme="ink" data-bleh--theme_type="light" onclick="change_theme_from_settings('ink')">
-                            <div class="preview-container">
-                            <div class="preview" data-bleh--theme="ink" data-bleh--theme_type="light">
-                                ${theme_preview()}
-                            </div>
-                            </div>
-                            <div class="text">
-                                <h5>${tl(trans.themes.ink)}</h5>
-                            </div>
-                        </button>
-                    </div>
-                </div>
-                <div class="setting-items full">
-                    <div class="side-left full even-more">
-                        <button class="btn theme-item" data-bleh-theme="dark" onclick="change_theme_from_settings('dark')">
-                            <div class="preview-container">
-                            <div class="preview" data-bleh--theme="dark">
-                                ${theme_preview()}
-                            </div>
-                            </div>
-                            <div class="text">
-                                <h5>${tl(trans.themes.dark)}</h5>
-                            </div>
-                        </button>
-                        <button class="btn theme-item" data-bleh-theme="darker" onclick="change_theme_from_settings('darker')">
-                            <div class="preview-container">
-                            <div class="preview" data-bleh--theme="darker">
-                                ${theme_preview()}
-                            </div>
-                            </div>
-                            <div class="text">
-                                <h5>${tl(trans.themes.darker)}</h5>
-                            </div>
-                        </button>
-                        <button class="btn theme-item" data-bleh-theme="oled" onclick="change_theme_from_settings('oled')">
-                            <div class="preview-container">
-                            <div class="preview" data-bleh--theme="oled">
-                                ${theme_preview()}
-                            </div>
-                            </div>
-                            <div class="text">
-                                <h5>${tl(trans.themes.oled)}</h5>
-                            </div>
-                        </button>
-                    </div>
-                </div>
-                `}
-                ${ff("high_contrast") ? setting({ id: "high_contrast" }) : ""}
-                <h4>${tl(trans.colours)}</h4>
-                <div class="view-buttons colour-buttons view-buttons-middle" id="colour_custom"></div>
-                <div class="swatch-group">
-                    <div id="colour_red" class="palette options colours"></div>
-                    <div id="colour_orange" class="palette options colours"></div>
-                    <div id="colour_yellow" class="palette options colours"></div>
-                    <div id="colour_green" class="palette options colours"></div>
-                    <div id="colour_lime" class="palette options colours"></div>
-                    <div id="colour_aqua" class="palette options colours"></div>
-                    <div id="colour_blue" class="palette options colours"></div>
-                    <div id="colour_purple" class="palette options colours"></div>
-                    <div id="colour_pink" class="palette options colours"></div>
-                </div>
+                <h4>${tl(trans.appearance)}</h4>
                 <div class="setting-group">
+                    <div class="setting" data-type="action">
+                        <div class="heading">
+                            <h5>${tl(trans.themes.name)}</h5>
+                        </div>
+                        <div class="info">
+                            ${theme_bubbles}
+                        </div>
+                    </div>
+                    ${ff("high_contrast") ? setting({ id: "high_contrast" }) : ""}
+                    <div class="setting" data-type="action">
+                        <div class="heading">
+                            <h5>${tl(trans.hue)}</h5>
+                        </div>
+                        <div class="info swatch-info">
+                            <div id="colour_custom" class="swatch-group palette"></div>
+                            <div class="sep swatch-sep" />
+                            <div id="colour_palette" class="swatch-group palette"></div>
+                        </div>
+                    </div>
                     ${setting({ id: "hue_from_album" })}
                     ${setting({ id: "colourful_tracks" })}
-                    ${ff("card_saturation") ? html.node`
-                        ${setting({ id: "sat_bg" })}
-                    ` : ""}
+                    ${ff("card_saturation") ? setting({ id: "sat_bg" }) : ""}
                 </div>
+                <h4>${tl(trans.fonts)}</h4>
                 <div class="setting-group">
                     ${setting({ id: "font" })}
                     ${setting({ id: "font_weight" })}
@@ -13349,7 +13852,94 @@
           name: trans_legacy.en.settings.customise.show_your_progress.name
         }
       ]);
+      const banners = JSON.parse(localStorage.getItem("bleh_profile_banners")) || {};
+      let banner = "";
+      if (banners[page.name] && banners[page.name] != "none") {
+        banner = banners[page.name];
+      }
       render(page.structure.main, html`
+            <div class="bleh--panel">
+                <h4>${trans_legacy.en.settings.customise.profile_header.name}</h4>
+                <div class="inner-preview pad">
+                    <div class="profile-mockup">
+                        <div class="mockup-header">
+                            <img class="mockup-avatar" src="${auth.avatar}">
+                            <div class="mockup-info">
+                                <div class="mockup-subtext"></div>
+                                <div class="mockup-name"></div>
+                            </div>
+                        </div>
+                        <div class="mockup-container">
+                            <div class="mockup-col-main">
+                                <div class="mockup-panel main"></div>
+                            </div>
+                            <div class="mockup-col-sidebar">
+                                <div class="mockup-panel mockup-obsession-panel">
+                                    <img class="mockup-obsession-art" src="https://lastfm.freetls.fastly.net/i/u/64s/510546e3b6df7504392274c528c77780.jpg">
+                                    <div class="mockup-obsession-name"></div>
+                                </div>
+                                <div class="mockup-panel main"></div>
+                            </div>
+                        </div>
+                        <div class="profile-mockup-background from-avatar" style="background-image: url(${auth.avatar.replace("/avatar42s/", "/avatar300s/")})"></div>
+                        ${banner != "" ? html.node`
+                        <div class="profile-mockup-background from-track" style="background-image: url(${banner})"></div>
+                        ` : html.node`
+                        <div class="profile-mockup-background from-track" style="background-image: url(https://lastfm.freetls.fastly.net/i/u/avatar300s/df927f4f88034b7f9a651636b965c9d7)"></div>
+                        `}
+                    </div>
+                </div>
+                <div class="setting-group">
+                    <div class="setting" data-type="options">
+                        <div class="heading">
+                            <h5>${tl(trans.view_backgrounds_on)}</h5>
+                        </div>
+                        <div class="primary-selections">
+                            ${setting({ id: "profile_header_own", standalone: true })}
+                            ${setting({ id: "profile_header_others", standalone: true })}
+                        </div>
+                    </div>
+                    ${setting({ id: "profile_avi_background" })}
+                    <div class="setting" data-type="info">
+                        <div class="heading">
+                            <h5>${tl(trans.profile_banner.name)}</h5>
+                            <p>${tl(trans.profile_banner.body)}</p>
+                            <p>${tl(trans.current_banner_value).replace("{v}", banner)}</p>
+                        </div>
+                        ${() => {
+        if (banner == "")
+          return html.node`
+                                    <div class="info">
+                                        <p>${tl(trans.none)}</p>
+                                    </div>
+                                `;
+        let banner_image = html.node`
+                                <div class="banner-image" style="background-image: url(${banner})" />
+                            `;
+        tippy(banner_image, {
+          content: banner
+        });
+        return banner_image;
+      }}
+                    </div>
+                </div>
+                <div class="setting-group">
+                    ${setting({ id: "show_your_progress" })}
+                </div>
+                <div class="sep"></div>
+                <div class="setting" data-type="toggle" id="container-rain" onclick="_update_item('rain')">
+                    <button class="btn reset" onclick="_reset_item('rain')">${tl(trans.reset)}</button>
+                    <div class="heading">
+                        <h5>${trans_legacy.en.settings.customise.rain.name}</h5>
+                        <p>${trans_legacy.en.settings.customise.rain.bio}</p>
+                    </div>
+                    <div class="toggle-wrap">
+                        <button class="toggle" id="toggle-rain" aria-checked="true">
+                            <div class="dot"></div>
+                        </button>
+                    </div>
+                </div>
+            </div>
             <div class="bleh--panel check-artist-hover">
                 <h4 class="top-header">${tl(trans.layout)}</h4>
                 <h4>${trans_legacy.en.settings.layout.header}</h4>
@@ -13393,91 +13983,30 @@
                 </div>
             </div>
             <div class="bleh--panel">
-                <h4>${trans_legacy.en.settings.customise.profile_header.name}</h4>
-                <div class="inner-preview pad">
-                    <div class="profile-mockup">
-                        <div class="mockup-header">
-                            <img class="mockup-avatar" src="${auth.avatar}">
-                            <div class="mockup-info">
-                                <div class="mockup-subtext"></div>
-                                <div class="mockup-name"></div>
-                            </div>
-                        </div>
-                        <div class="mockup-container">
-                            <div class="mockup-col-main">
-                                <div class="mockup-panel main"></div>
-                            </div>
-                            <div class="mockup-col-sidebar">
-                                <div class="mockup-panel mockup-obsession-panel">
-                                    <img class="mockup-obsession-art" src="https://lastfm.freetls.fastly.net/i/u/64s/510546e3b6df7504392274c528c77780.jpg">
-                                    <div class="mockup-obsession-name"></div>
-                                </div>
-                                <div class="mockup-panel main"></div>
-                            </div>
-                        </div>
-                        <div class="profile-mockup-background from-avatar" style="background-image: url(${auth.avatar.replace("/avatar42s/", "/avatar300s/")});"></div>
-                        <div class="profile-mockup-background from-track" style="background-image: url(https://lastfm.freetls.fastly.net/i/u/avatar300s/df927f4f88034b7f9a651636b965c9d7);"></div>
-                    </div>
+                <h4>${trans_legacy.en.settings.customise.display.name}</h4>
+                <div class="inner-preview pad flex">
+                    <section class="catalogue-tags">
+                        <ul class="tags-list tags-list--global">
+                            <li class="tag">
+                                <a href="/tag/pop">pop</a>
+                            </li>
+                            <li class="tag">
+                                <a href="/tag/country">country</a>
+                            </li>
+                            <li class="tag">
+                                <a href="/tag/singer-songwriter">singer-songwriter</a>
+                            </li>
+                            <li class="tag">
+                                <a href="/tag/female+vocalists">female vocalists</a>
+                            </li>
+                            <li class="tag">
+                                <a href="/tag/synthpop">synthpop</a>
+                            </li>
+                        </ul>
+                    </section>
                 </div>
-                <div class="setting" data-type="toggle" id="container-profile_avi_background" onclick="_update_item('profile_avi_background')">
-                    <button class="btn reset" onclick="_reset_item('profile_avi_background')">${tl(trans.reset)}</button>
-                    <div class="heading">
-                        <h5>${trans_legacy.en.settings.customise.profile_header.see_type}</h5>
-                    </div>
-                    <div class="toggle-wrap">
-                        <button class="toggle" id="toggle-profile_avi_background" aria-checked="false">
-                            <div class="dot"></div>
-                        </button>
-                    </div>
-                </div>
-                <h4>${trans_legacy.en.settings.customise.profile_header.view_on}</h4>
-                <div class="setting" data-type="toggle" id="container-profile_header_own" onclick="_update_item('profile_header_own')">
-                    <button class="btn reset" onclick="_reset_item('profile_header_own')">${tl(trans.reset)}</button>
-                    <div class="heading">
-                        <h5>${trans_legacy.en.settings.customise.profile_header.for_own}</h5>
-                    </div>
-                    <div class="toggle-wrap">
-                        <button class="toggle" id="toggle-profile_header_own" aria-checked="false">
-                            <div class="dot"></div>
-                        </button>
-                    </div>
-                </div>
-                <div class="setting" data-type="toggle" id="container-profile_header_others" onclick="_update_item('profile_header_others')">
-                    <button class="btn reset" onclick="_reset_item('profile_header_others')">${tl(trans.reset)}</button>
-                    <div class="heading">
-                        <h5>${trans_legacy.en.settings.customise.profile_header.for_others}</h5>
-                    </div>
-                    <div class="toggle-wrap">
-                        <button class="toggle" id="toggle-profile_header_others" aria-checked="false">
-                            <div class="dot"></div>
-                        </button>
-                    </div>
-                </div>
-                <div class="sep"></div>
-                <div class="setting" data-type="toggle" id="container-show_your_progress" onclick="_update_item('show_your_progress')">
-                    <button class="btn reset" onclick="_reset_item('show_your_progress')">${tl(trans.reset)}</button>
-                    <div class="heading">
-                        <h5>${trans_legacy.en.settings.customise.show_your_progress.name}</h5>
-                        <p>${trans_legacy.en.settings.customise.show_your_progress.bio}</p>
-                    </div>
-                    <div class="toggle-wrap">
-                        <button class="toggle" id="toggle-show_your_progress" aria-checked="true">
-                            <div class="dot"></div>
-                        </button>
-                    </div>
-                </div>
-                <div class="sep"></div>
-                <div class="setting" data-type="toggle" id="container-rain" onclick="_update_item('rain')">
-                    <button class="btn reset" onclick="_reset_item('rain')">${tl(trans.reset)}</button>
-                    <div class="heading">
-                        <h5>${trans_legacy.en.settings.customise.rain.name}</h5>
-                        <p>${trans_legacy.en.settings.customise.rain.bio}</p>
-                    </div>
-                    <div class="toggle-wrap">
-                        <button class="toggle" id="toggle-rain" aria-checked="true">
-                            <div class="dot"></div>
-                        </button>
-                    </div>
+                <div class="setting-group">
+                    ${setting({ id: "gendered_tags" })}
                 </div>
             </div>
             `);
@@ -13664,6 +14193,13 @@
             </div>
         `);
     } else if (page_id == "profiles") {
+      if (auth.pro === null) {
+        setTimeout(() => {
+          render_setting_page("profiles");
+        }, 10);
+        page_loading();
+        return;
+      }
       register_skip_to([
         {
           id: "profile_shortcut",
@@ -13703,19 +14239,28 @@
           title: auth.name,
           body: html.node`
                                         <div class="generic-table-list badge-list">
-                                            ${badges ? badges.map((badge) => html.node`
-                                                <div class="generic-table-list-entry badge-list-entry">
-                                                    <div class="icon-container colourful user-status--bleh-${badge.type} user-status--bleh-user-${auth.name}">
-                                                        <div class="bleh-icon" style="--icon: var(--mask)" />
+                                            ${badges ? badges.map((badge) => {
+            let style;
+            let classname = "";
+            if (badge.icon && badge.hue && badge.sat && badge.lit) {
+              style = `--mask: url(${badge.icon}); --hue: ${badge.hue}; --sat: ${badge.sat}; --lit: ${badge.lit}`;
+            } else {
+              classname = `user-status--bleh-${badge.type} user-status--bleh-user-${auth.name}`;
+            }
+            return html.node`
+                                                    <div class="generic-table-list-entry badge-list-entry">
+                                                        <div class="icon-container colourful ${classname}" style=${style}>
+                                                            <div class="bleh-icon" style="--icon: var(--mask)" />
+                                                        </div>
+                                                        <div class="name colourful ${classname}" style=${style}>
+                                                            ${badge.name}
+                                                        </div>
+                                                        <div class="text">
+                                                            ${badge.reason}
+                                                        </div>
                                                     </div>
-                                                    <div class="name colourful user-status--bleh-${badge.type} user-status--bleh-user-${auth.name}">
-                                                        ${badge.name}
-                                                    </div>
-                                                    <div class="text">
-                                                        ${badge.reason}
-                                                    </div>
-                                                </div>
-                                            `) : ""}
+                                                `;
+          }) : ""}
                                             ${auth.pro ? html.node`
                                                 <div class="generic-table-list-entry badge-list-entry">
                                                     <div class="icon-container colourful user-status-subscriber">
@@ -14160,13 +14705,13 @@
                 <h4>${tl(trans.redirections)}</h4>
                 <div class="setting-group">
                     ${setting({ id: "travis" })}
-                    <div class="setting" data-type="toggle">
+                    <div class="setting" data-type="action">
                         <div class="heading">
                             <h5>${tl(trans.legacy_redirects.name)}</h5>
                             <p>${tl(trans.legacy_redirects.body)}</p>
                         </div>
                         <div class="toggle-wrap">
-                            <a class="see-more" href="${root}settings/website" target="_blank">
+                            <a class="btn continue" href="${root}settings/website" target="_blank">
                                 ${tl(trans.change_now)}
                             </a>
                         </div>
@@ -14188,33 +14733,6 @@
                 <div class="setting-group">
                     ${setting({ id: "gloss" })}
                     ${setting({ id: "grid_glow" })}
-                </div>
-            </div>
-            <div class="bleh--panel">
-                <h4>${trans_legacy.en.settings.customise.display.name}</h4>
-                <div class="inner-preview pad flex">
-                    <section class="catalogue-tags">
-                        <ul class="tags-list tags-list--global">
-                            <li class="tag">
-                                <a href="/tag/pop">pop</a>
-                            </li>
-                            <li class="tag">
-                                <a href="/tag/country">country</a>
-                            </li>
-                            <li class="tag">
-                                <a href="/tag/singer-songwriter">singer-songwriter</a>
-                            </li>
-                            <li class="tag">
-                                <a href="/tag/female+vocalists">female vocalists</a>
-                            </li>
-                            <li class="tag">
-                                <a href="/tag/synthpop">synthpop</a>
-                            </li>
-                        </ul>
-                    </section>
-                </div>
-                <div class="setting-group">
-                    ${setting({ id: "gendered_tags" })}
                 </div>
             </div>
             `);
@@ -14335,6 +14853,7 @@
   function change_settings_page(page_id, setting2 = null) {
     if (page_id == page.state.settings_page)
       return;
+    window.history.pushState(page_id, "", `${root}bleh/${page_id}`);
     page.state.settings_page = page_id;
     page.structure.main.innerHTML = "";
     if (ff("bleh_settings_tabs")) {
@@ -14485,293 +15004,57 @@
           type: "customise"
         }
       ],
-      red: [
+      palette: [
         { sets: {
-          hue: 360,
-          sat: 1.4,
+          hue: 0,
+          sat: 1.2,
           lit: 0.9
-        } },
+        }, label: trans.red },
         { sets: {
-          hue: 360,
-          sat: 1.4,
-          lit: 0.95
-        } },
-        { sets: {
-          hue: 360,
-          sat: 1.325,
-          lit: 1
-        } },
-        { sets: {
-          hue: 360,
-          sat: 1.225,
-          lit: 1
-        } },
-        { sets: {
-          hue: 360,
-          sat: 1.1,
-          lit: 1
-        } },
-        { sets: {
-          hue: 360,
-          sat: 1.05,
-          lit: 1.05
-        } }
-      ],
-      orange: [
-        { sets: {
-          hue: 10,
-          sat: 1.425,
-          lit: 0.9
-        } },
-        { sets: {
-          hue: 13,
-          sat: 1.4,
-          lit: 0.95
-        } },
-        { sets: {
-          hue: 16,
-          sat: 1.325,
-          lit: 1
-        } },
-        { sets: {
-          hue: 20,
-          sat: 1.225,
-          lit: 1
-        } },
-        { sets: {
-          hue: 21,
+          hue: 19,
           sat: 1.275,
-          lit: 1
-        } },
-        { sets: {
-          hue: 26,
-          sat: 1.35,
-          lit: 1.05
-        } }
-      ],
-      yellow: [
-        { sets: {
-          hue: 22,
-          sat: 1.3,
-          lit: 0.9
-        } },
-        { sets: {
-          hue: 24,
-          sat: 1.2,
           lit: 0.95
-        } },
+        }, label: trans.orange },
         { sets: {
-          hue: 27,
-          sat: 1.16,
+          hue: 48,
+          sat: 1.5,
           lit: 1
-        } },
+        }, label: trans.yellow },
         { sets: {
-          hue: 32,
-          sat: 1.1,
-          lit: 1
-        } },
-        { sets: {
-          hue: 36,
-          sat: 1,
-          lit: 1
-        } },
-        { sets: {
-          hue: 41,
+          hue: 98,
           sat: 1.05,
-          lit: 1.05
-        } }
-      ],
-      green: [
+          lit: 1.025
+        }, label: trans.lime },
         { sets: {
-          hue: 85,
-          sat: 1.4,
-          lit: 0.9
-        } },
-        { sets: {
-          hue: 90,
-          sat: 1.3,
-          lit: 0.95
-        } },
-        { sets: {
-          hue: 94,
-          sat: 1.2,
-          lit: 1
-        } },
-        { sets: {
-          hue: 99,
-          sat: 1.1,
-          lit: 1
-        } },
-        { sets: {
-          hue: 105,
-          sat: 1.025,
-          lit: 1
-        } },
-        { sets: {
-          hue: 108,
+          hue: 131,
           sat: 1,
-          lit: 1.05
-        } }
-      ],
-      lime: [
+          lit: 0.925
+        }, label: trans.green },
         { sets: {
-          hue: 115,
-          sat: 1.15,
-          lit: 0.9
-        } },
-        { sets: {
-          hue: 121,
-          sat: 1.09,
-          lit: 0.95
-        } },
-        { sets: {
-          hue: 127,
-          sat: 1.05,
-          lit: 1
-        } },
-        { sets: {
-          hue: 135,
-          sat: 1.03,
-          lit: 1
-        } },
-        { sets: {
-          hue: 141,
+          hue: 188,
           sat: 1,
-          lit: 1
-        } },
+          lit: 1.1
+        }, label: trans.aqua },
         { sets: {
-          hue: 148,
-          sat: 1,
-          lit: 1.05
-        } }
-      ],
-      aqua: [
-        { sets: {
-          hue: 212,
-          sat: 1.45,
-          lit: 0.9
-        } },
-        { sets: {
-          hue: 207,
-          sat: 1.375,
-          lit: 0.95
-        } },
-        { sets: {
-          hue: 200,
+          hue: 228,
           sat: 1.3,
-          lit: 1
-        } },
-        { sets: {
-          hue: 195,
-          sat: 1.25,
-          lit: 1
-        } },
-        { sets: {
-          hue: 190,
-          sat: 1.2,
-          lit: 1
-        } },
-        { sets: {
-          hue: 185,
-          sat: 1.1,
-          lit: 1.05
-        } }
-      ],
-      blue: [
-        { sets: {
-          hue: 233,
-          sat: 1.4,
           lit: 0.9
-        } },
+        }, label: trans.blue },
         { sets: {
-          hue: 230,
-          sat: 1.3,
-          lit: 0.95
-        } },
-        { sets: {
-          hue: 226,
-          sat: 1.25,
-          lit: 1
-        } },
-        { sets: {
-          hue: 220,
-          sat: 1.2,
-          lit: 1
-        } },
-        { sets: {
-          hue: 217,
-          sat: 1.15,
-          lit: 1
-        } },
-        { sets: {
-          hue: 212,
-          sat: 1.025,
-          lit: 1.05
-        } }
-      ],
-      purple: [
-        { sets: {
-          hue: 246,
-          sat: 1.32,
-          lit: 0.9
-        } },
-        { sets: {
-          hue: 244,
-          sat: 1.2,
-          lit: 0.95
-        } },
-        { sets: {
-          hue: 246,
-          sat: 1.12,
-          lit: 1
-        } },
-        { sets: {
-          hue: 249,
-          sat: 1.11,
-          lit: 1
-        } },
-        { sets: {
-          hue: 253,
+          hue: 255,
           sat: 1.07,
           lit: 1
-        } },
-        { sets: {
-          hue: 256,
-          sat: 1.01,
-          lit: 1.03
-        } }
-      ],
-      pink: [
-        { sets: {
-          hue: 346,
-          sat: 1.3,
-          lit: 0.9
-        } },
-        { sets: {
-          hue: 340,
-          sat: 1.225,
-          lit: 0.95
-        } },
-        { sets: {
-          hue: 335,
-          sat: 1.175,
-          lit: 1
-        } },
-        { sets: {
-          hue: 325,
-          sat: 1.12,
-          lit: 1
-        } },
+        }, label: trans.purple },
         { sets: {
           hue: 317,
-          sat: 1.05,
+          sat: 1.1,
           lit: 1
-        } },
+        }, label: trans.pink },
         { sets: {
-          hue: 309,
-          sat: 1,
-          lit: 1.05
-        } }
+          hue: 0,
+          sat: 0,
+          lit: 1
+        }, label: trans.grey }
       ]
     };
     let exclusives = {
@@ -14816,29 +15099,34 @@
     };
     exclusives.new_years = exclusives.christmas;
     for (let type in colours) {
-      let swatch_group = document.body.querySelector(`#colour_${type}`);
-      if (!swatch_group)
-        return;
-      if (type != "custom")
-        colours[type].reverse();
+      const swatch_group = page.structure.main.querySelector(`#colour_${type}`);
+      if (!swatch_group) return;
       colours[type].forEach((colour) => {
         if (colour.requires_flag && version.feature_flags.hasOwnProperty(colour.requires_flag)) {
           if (!ff(colour.requires_flag))
             return;
         }
+        let text2;
+        if (colour.label) text2 = tl(colour.label);
         if (!colour.type)
           colour.type = "colour";
         if (!colour.displays && colour.sets)
           colour.displays = colour.sets;
-        let swatch = document.createElement("button");
-        swatch.classList.add("swatch", "btn");
-        swatch.setAttribute("data-swatch-type", colour.type);
+        let blob;
+        let text_elem;
+        let swatch = html.node`
+                <button class="swatch-container" onclick=${() => {
+          if (!colour.sets) return;
+          update_params(colour.sets);
+        }}>
+                    <div class="swatch colourful" ref=${(el) => blob = el} data-swatch-type=${colour.type} />
+                    <strong ref=${(el) => text_elem = el} />
+                </button>
+            `;
         if (type == "custom")
-          swatch.classList.add("view-item", "colour-btn");
-        if (type == "custom")
-          swatch.textContent = tl(trans[colour.type]);
+          text2 = tl(trans[colour.type]);
         if (colour.type == "customise") {
-          swatch.classList.add("select-button");
+          text2 = tl(trans.edit);
           let colour2;
           tippy(swatch, {
             theme: "window",
@@ -14934,25 +15222,14 @@
         }
         if (colour.sets) {
           colour.sets.accent_type = colour.type;
-          swatch.setAttribute("onclick", `_update_params(${JSON.stringify(colour.sets)})`);
-          swatch.style.setProperty("--hue-over", colour.displays.hue);
-          swatch.style.setProperty("--sat-over", colour.displays.sat);
-          swatch.style.setProperty("--lit-over", colour.displays.lit);
-          tippy(swatch, {
-            theme: "key_value",
-            content: html.node`
-                        <span class="key">hue<span class="value">${colour.sets.hue}</span></span>
-                        <span class="key">sat<span class="value">${colour.sets.sat}</span></span>
-                        <span class="key">lit<span class="value">${colour.sets.lit}</span></span>
-                    `,
-            delay: [250, 0]
-          });
+          blob.style.setProperty("--hue-over", colour.displays.hue);
+          blob.style.setProperty("--sat-over", colour.displays.sat);
+          blob.style.setProperty("--lit-over", colour.displays.lit);
         }
         if (colour.type == "default" && stored_season.id != "none") {
-          swatch.textContent = tl(trans.seasonal.name);
+          text2 = tl(trans.seasonal.name);
           if (exclusives.hasOwnProperty(stored_season.id)) {
-            swatch.setAttribute("onclick", "");
-            swatch.classList.add("select-button");
+            delete colour.sets;
             exclusives[stored_season.id] = [
               {
                 type: "default",
@@ -14985,6 +15262,10 @@
             });
           }
         }
+        text_elem.textContent = text2;
+        tippy(swatch, {
+          content: text2
+        });
         swatch_group.appendChild(swatch);
       });
     }
@@ -15008,8 +15289,9 @@
     });
   }
   function init_profile_notes() {
-    let profile_notes = JSON.parse(localStorage.getItem("bleh_profile_notes")) || {};
     let profile_notes_table = page.structure.main.querySelector(".profile-notes");
+    if (!profile_notes_table) return;
+    let profile_notes = JSON.parse(localStorage.getItem("bleh_profile_notes")) || {};
     if (Object.keys(profile_notes).length == 0)
       return;
     profile_notes_table.classList = "generic-table-list user-vertical-list take-space profile-notes";
@@ -15246,6 +15528,7 @@
   };
   function activity_preview() {
     let preview = page.structure.main.querySelector(".activity-preview");
+    if (!preview) return;
     let random_types = [
       "love",
       "love",
@@ -15844,8 +16127,8 @@
     let song_guests = [];
     extras.forEach((extra) => {
       if (extra.group !== "guests") return;
-      const normalized = extra.text.replace(/feat\.?|ft\.?|featuring|with|w\//gi, "").replace(/ & /g, ";").replace(/, /g, ";").replace(/ and /gi, ";").replace(/- /g, "").replace(/,;/g, ";").replace(/tyler;the/gi, "Tyler, The").replace(/ of bts/gi, ";BTS").replace(/marina;the diamonds/gi, "Marina and The Diamonds").replace(/selena gomez;the scene/gi, "Selena Gomez & the Scene");
-      const guests = normalized.split(/;+/).map((s) => s.trim()).filter(Boolean).map(correct_artist);
+      const normalised = extra.text.replace(/\b(?:feat|ft|featuring)\.?\b/gi, "").replace(/\bwith\b/gi, "").replace(/w\//gi, "").replace(/ & /g, ";").replace(/, /g, ";").replace(/ and /gi, ";").replace(/- /g, "").replace(/,;/g, ";").replace(/tyler;the/gi, "Tyler, The").replace(/ of bts/gi, ";BTS").replace(/marina;the diamonds/gi, "Marina and The Diamonds").replace(/selena gomez;the scene/gi, "Selena Gomez & the Scene").replace(/^[\.\-\s;]+/, "").trim();
+      const guests = normalised.split(/;+/).map((s) => s.trim()).filter(Boolean).map(correct_artist);
       song_guests.push(...guests);
     });
     return [
@@ -15894,6 +16177,7 @@
     }
   }
   function patch_header_title() {
+    page.suggest = null;
     if (!settings.corrections && !settings.format_guest_features && !page.multi)
       return;
     page.corrected = false;
@@ -15927,9 +16211,10 @@
           render(track_title, html.node`
                 <div class="title">${song_title.trim()}</div>
                 ${song_tags.map((tag) => html.node`
-                    <div class="feat" data-bleh--tag-type="${tag.type}" data-bleh--tag-group="${tag.group}">${tag.text}</div>
+                    <div class="feat" data-bleh--tag-type=${tag.type} data-bleh--tag-group=${tag.group}>${tag.text}</div>
                 `)}
             `);
+          if (song_tags.some((tag) => tag.group === "spotify")) page.suggest = sanitise(song_title.trim());
           let song_artist_element = document.body.querySelector('span[itemprop="byArtist"]');
           let song_guests = formatted_title[3];
           page.sister_others = formatted_title[3];
@@ -16039,8 +16324,7 @@
     return activity_list;
   }
   function subscribe_to_events() {
-    if (!settings.activities)
-      return;
+    if (!settings.activities) return;
     let love_track = document.body.querySelectorAll(`form[action$="${auth.name}/loved"]:not([data-bleh-subscribed])`);
     love_track.forEach((form) => {
       form.setAttribute("data-bleh-subscribed", "true");
@@ -16455,7 +16739,7 @@
     links.appendChild(inbox_container);
     let bleh_container = html.node`
         <li class="masthead-nav-item">
-            <a class="masthead-nav-control" href="${root}bleh${stored_season.id != "none" ? "?tab=seasonal" : ""}" data-label="bleh" data-season="${stored_season.id}" data-season-active="${stored_season.id != "none" ? "true" : "false"}">
+            <a class="masthead-nav-control" href="${root}bleh${stored_season.id != "none" ? "/seasonal" : ""}" data-label="bleh" data-season="${stored_season.id}" data-season-active="${stored_season.id != "none" ? "true" : "false"}">
                 ${stored_season.id == "none" ? tl(trans.bleh_settings) : moment(stored_season.end.replace("y0", stored_season.year).replace("{offset}", stored_season.offset)).to(stored_season.now, true)}
             </a>
         </li>
@@ -16566,22 +16850,7 @@
                                 <div class="name">${auth.name}</div>
                                 ${badges || auth.pro ? html.node`
                                     <div class="badges">
-                                        ${badges ? badges.map((badge) => () => {
-            let el = html.node`
-                                                <span class="label user-status--bleh-${badge.type} user-status--bleh-user-${auth.name} no-hover">
-                                                    ${badge.name}
-                                                </span>
-                                            `;
-            tippy(el, {
-              theme: "badge",
-              placement: "bottom",
-              content: html.node`
-                                                    <div class="badge-name">${badge.name}</div>
-                                                    <div class="badge-reason">${badge.reason}</div>
-                                                `
-            });
-            return el;
-          }) : ""}
+                                        ${badges ? badges.map((badge) => create_badge(badge)) : ""}
                                         ${auth.pro ? () => {
             let el = html.node`
                                                 <span class="label user-status-subscriber no-hover">
@@ -16707,12 +16976,19 @@
                                         ${tl(trans.more)}
                                     </button>
                                 </div>
-                                <button class="dropdown-menu-clickable-item" data-menu-item="news" onclick=${() => {
+                                <div class="button-combo">
+                                    <a class="dropdown-menu-clickable-item" data-type="mini" href="${root}bleh/minis">
+                                        ${tl(trans.minis)}
+                                    </a>
+                                    <div class="button-combo-sep" />
+                                    <button class="dropdown-menu-clickable-item chibi" data-menu-item="news" onclick=${() => {
             news();
             instance.hide();
           }}>
-                                    ${tl(trans.news)}
-                                </button>
+                                        ${tl(trans.news)}
+                                    </button>
+                                </div>
+                                
                                 <div class="button-combo">
                                     <a class="dropdown-menu-clickable-item" data-menu-item="bleh" href="${root}bleh">
                                         ${tl(trans.settings)}
@@ -17057,6 +17333,14 @@
                     </div>
                     <h2>${artist}</h2>
                 </div>
+                ${page.suggest ? html.node`
+                <div class="suggest-side">
+                    <div class="cta suggest">
+                        <strong>${tl(trans.suggest_title.name)}</strong>
+                        <a class="see-more" href="${root}music/${sanitise(page.sister)}/${page.suggest}">${tl(trans.suggest_title.body).replace("{v}", page.suggest)}</a>
+                    </div>
+                </div>
+                ` : ""}
         `;
       if (avatar3)
         register_background(avatar3.getAttribute("content"));
@@ -17083,7 +17367,7 @@
                         ${tl(trans.artwork)}
                     </a>
                     <div class="sep"></div>
-                    <a class="dropdown-menu-clickable-item" href="${root}bleh?tab=customise" data-menu-item="settings">
+                    <a class="dropdown-menu-clickable-item" href="${root}bleh/customise" data-menu-item="settings">
                         ${tl(trans.settings)}
                     </a>
                 `,
@@ -17354,7 +17638,7 @@
                         ${tl(trans.photos)}
                     </a>
                     <div class="sep"></div>
-                    <a class="dropdown-menu-clickable-item" href="${root}bleh?tab=customise" data-menu-item="settings">
+                    <a class="dropdown-menu-clickable-item" href="${root}bleh/customise" data-menu-item="settings">
                         ${tl(trans.settings)}
                     </a>
                 `,
@@ -17377,7 +17661,7 @@
           let view_menu = tippy(view_button, {
             theme: "context-menu",
             content: html.node`
-                        <a class="dropdown-menu-clickable-item" href="${root}bleh?tab=customise" data-menu-item="settings">
+                        <a class="dropdown-menu-clickable-item" href="${root}bleh/customise" data-menu-item="settings">
                             ${tl(trans.settings)}
                         </a>
                     `,
@@ -17506,8 +17790,20 @@
       }
     } else {
       let btn_add = page.structure.side.querySelector(".add-button");
-      if (btn_add != null)
-        btn_add.setAttribute("data-page-subpage", page.subpage);
+      if (btn_add) btn_add.setAttribute("data-page-subpage", page.subpage);
+      if (page.subpage.startsWith("listeners_")) {
+        let toolbar = page.structure.row.querySelector(":scope > .toolbar > .navlist > .navlist-items");
+        let overview = toolbar.querySelector(".secondary-nav-item--overview");
+        overview.classList.remove("secondary-nav-item--overview");
+        overview.classList.add("secondary-nav-item--global");
+        overview.querySelector("a").textContent = tl(trans.global);
+        let mutuals = toolbar.querySelector(".secondary-nav-item--you-know a");
+        mutuals.textContent = tl(trans.mutuals);
+        if (page.subpage == "listeners_overview")
+          bleh_top_listeners();
+        else if (page.subpage == "listeners_you-know")
+          bleh_listeners();
+      }
       if (page.subpage == "images_image-upload")
         bleh_gallery_upload();
       else if (page.subpage == "images_overview")
@@ -17518,10 +17814,6 @@
         bleh_wiki_history();
       else if (page.subpage == "wiki_edit")
         bleh_wiki_editor();
-      else if (page.subpage == "listeners_overview")
-        bleh_top_listeners();
-      else if (page.subpage == "listeners_you-know")
-        bleh_listeners();
       else if (page.subpage == "tracks")
         bleh_artist_tracks();
       else if (page.subpage == "albums")
@@ -17680,19 +17972,38 @@
     setTimeout(function() {
       page.structure.setup.setAttribute("data-animating", "false");
       render(page.structure.setup_content, html`
-            <p>${tl(trans.choose_a_theme)}</p>
-            ${theme_bubbles}
+            <div class="setting-group">
+                <div class="setting" data-type="action">
+                    <div class="heading">
+                        <h5>${tl(trans.themes.name)}</h5>
+                    </div>
+                    <div class="info">
+                        ${theme_bubbles}
+                    </div>
+                </div>
+                <div class="setting" data-type="action">
+                    <div class="heading">
+                        <h5>${tl(trans.hue)}</h5>
+                    </div>
+                    <div class="info swatch-info">
+                        <div id="colour_custom" class="swatch-group palette"></div>
+                        <div class="sep swatch-sep" />
+                        <div id="colour_palette" class="swatch-group palette"></div>
+                    </div>
+                </div>
+            </div>
         `);
       page.structure.setup_footer.innerHTML = `
             <button class="see-more cancel" onclick="_setup_accessibility()">
                 ${tl(trans.back)}
             </button>
             <div class="fill"></div>
-            <button class="btn primary continue" onclick="_setup_colours()">
+            <button class="btn primary continue" onclick="_setup_music()">
                 ${tl(trans.next)}
             </button>
         `;
       show_theme_change_in_settings();
+      display_colour_presets();
       refresh_all(page.structure.setup_content);
     }, page.state.trans);
   };
@@ -17719,39 +18030,6 @@
                 ${tl(trans.next)}
             </button>
         `;
-      refresh_all(page.structure.setup_content);
-    }, page.state.trans);
-  };
-  unsafeWindow._setup_colours = function() {
-    page.structure.setup.setAttribute("data-page", "colours");
-    page.structure.setup.setAttribute("data-animating", "true");
-    setTimeout(function() {
-      page.structure.setup.setAttribute("data-animating", "false");
-      render(page.structure.setup_content, html`
-            <p>${tl(trans.colours_explain)}</p>
-            <div class="view-buttons colour-buttons view-buttons-middle" id="colour_custom"></div>
-            <div class="swatch-group">
-                <div id="colour_red" class="palette options colours"></div>
-                <div id="colour_orange" class="palette options colours"></div>
-                <div id="colour_yellow" class="palette options colours"></div>
-                <div id="colour_green" class="palette options colours"></div>
-                <div id="colour_lime" class="palette options colours"></div>
-                <div id="colour_aqua" class="palette options colours"></div>
-                <div id="colour_blue" class="palette options colours"></div>
-                <div id="colour_purple" class="palette options colours"></div>
-                <div id="colour_pink" class="palette options colours"></div>
-            </div>
-        `);
-      page.structure.setup_footer.innerHTML = `
-            <button class="see-more cancel" onclick="_setup_themes()">
-                ${tl(trans.back)}
-            </button>
-            <div class="fill"></div>
-            <button class="btn primary continue" onclick="_setup_music()">
-                ${tl(trans.next)}
-            </button>
-        `;
-      display_colour_presets();
       refresh_all(page.structure.setup_content);
     }, page.state.trans);
   };
@@ -17796,7 +18074,7 @@
             </div>
         `);
       page.structure.setup_footer.innerHTML = `
-            <button class="see-more cancel" onclick="_setup_colours()">
+            <button class="see-more cancel" onclick="_setup_themes()">
                 ${tl(trans.back)}
             </button>
             <div class="fill"></div>
@@ -18085,23 +18363,18 @@
         <nav class="navlist secondary-nav navlist--more redesigned-navigation">
             <ul class="navlist-items">
                 <li class="navlist-item secondary-nav-item secondary-nav-item--home">
-                    <a href="${root}music" class="secondary-nav-item-link ${page.subpage == "music" ? "secondary-nav-item-link--active" : ""}">
-                        ${tl(trans.home)}<div class="new-badge">${tl(trans.beta)}</div>
+                    <a href="${root}music" class="secondary-nav-item-link ${page.subpage == "music" || page.type == "events" ? "secondary-nav-item-link--active" : ""}">
+                        ${tl(trans.home)}
                     </a>
                 </li>
                 <li class="navlist-item secondary-nav-item secondary-nav-item--recommendations">
                     <a href="${root}music/+recommended" class="secondary-nav-item-link ${page.type == "recommended" ? "secondary-nav-item-link--active" : ""}">
-                        ${tl(trans.recommendations)}<div class="new-badge">${tl(trans.beta)}</div>
+                        ${tl(trans.recommendations)}
                     </a>
                 </li>
                 <li class="navlist-item secondary-nav-item secondary-nav-item--releases">
                     <a href="${root}music/+releases/out-now" class="secondary-nav-item-link ${page.type == "releases" ? "secondary-nav-item-link--active" : ""}">
                         ${tl(trans.releases)}
-                    </a>
-                </li>
-                <li class="navlist-item secondary-nav-item secondary-nav-item--events dont-rearrange">
-                    <a href="${root}events" class="secondary-nav-item-link ${page.type == "events" ? "secondary-nav-item-link--active" : ""}">
-                        ${tl(trans.events)}<div class="new-badge">${tl(trans.beta)}</div>
                     </a>
                 </li>
                 <li class="navlist-item secondary-nav-item secondary-nav-item--bookmarks">
@@ -18114,6 +18387,13 @@
                         ${tl(trans.charts)}
                     </a>
                 </li>
+                ${ff("minis") ? html.node`
+                <li class="navlist-item secondary-nav-item secondary-nav-item--minis">
+                    <a href="${root}bleh/minis" data-type="mini" class="secondary-nav-item-link ${page.type == "minis" ? "secondary-nav-item-link--active" : ""}">
+                        ${tl(trans.minis)}
+                    </a>
+                </li>
+                ` : ""}
                 <li class="fill"></li>
                 <li class="navlist-item secondary-nav-item secondary-nav-item--settings">
                     <a href="${root}settings" class="secondary-nav-item-link ${page.type == "settings" ? "secondary-nav-item-link--active" : ""}">
@@ -18121,7 +18401,7 @@
                     </a>
                 </li>
                 <li class="navlist-item secondary-nav-item secondary-nav-item--bleh">
-                    <a href="${root}bleh" class="secondary-nav-item-link ${page.type == "error" ? "secondary-nav-item-link--active" : ""}">
+                    <a href="${root}bleh" class="secondary-nav-item-link ${page.type == "bleh_settings" ? "secondary-nav-item-link--active" : ""}">
                         ${tl(trans.settings)}
                     </a>
                 </li>
@@ -18162,24 +18442,57 @@
       }
     });
     if (page.subpage == "music") {
+      let toolbar = html.node`
+            <div class="toolbar">
+                <nav class="navlist secondary-nav navlist--more redesigned-navigation">
+                    <ul class="navlist-items">
+                        <li class="navlist-item secondary-nav-item">
+                            <a href="${root}user/${auth.name}" data-type="mention" class="secondary-nav-item-link">
+                                ${tl(trans.profile)}
+                            </a>
+                        </li>
+                        <li class="navlist-item secondary-nav-item">
+                            <a href="${root}user/${auth.name}/library" data-type="library" class="secondary-nav-item-link">
+                                ${tl(trans.library)}
+                            </a>
+                        </li>
+                        <li class="navlist-item secondary-nav-item">
+                            <a href="${root}user/${auth.name}/following" data-type="profile" class="secondary-nav-item-link">
+                                ${tl(trans.friends)}
+                            </a>
+                        </li>
+                        <li class="navlist-item secondary-nav-item">
+                            <a href="${root}user/${auth.name}/shoutbox" data-type="shouts" class="secondary-nav-item-link">
+                                ${tl(trans.shouts)}
+                            </a>
+                        </li>
+                    </ul>
+                </nav>
+            </div>
+        `;
+      page.structure.row.insertBefore(toolbar, page.structure.content);
       let beret = html.node`
-            <section class="beret-music bleh--panel">
-                <div class="panel-side panel-side-main">
-                    <h4>${tl(trans.recent_tracks)}</h4>
-                    <div class="recent-listening-container">
-                        <div class="loading-data-container">
-                            <p class="loading-data-text">${tl(trans.finding_your_tracks)}</p>
+            <div class="content override">
+                <div class="col-main">
+                    <section>
+                        <h2>${tl(trans.recent_tracks)}</h2>
+                        <div class="recent-listening-container">
+                            <div class="loading-data-container">
+                                <p class="loading-data-text">${tl(trans.finding_your_tracks)}</p>
+                            </div>
                         </div>
-                    </div>
+                    </section>
                 </div>
-                <div class="panel-side panel-side-alt">
-                    <h4>${tl(trans.activity)}</h4>
-                    ${render_activity_list()}
-                    <div class="more-link">
-                        <a href="${root}bleh?tab=profiles&setting=activities">${tl(trans.activity_settings)}</a>
-                    </div>
+                <div class="col-sidebar">
+                    <section>
+                        <h2>${tl(trans.activity)}</h2>
+                        ${render_activity_list()}
+                        <div class="more-link">
+                            <a href="${root}bleh/profiles?setting=activities">${tl(trans.activity_settings)}</a>
+                        </div>
+                    </section>
                 </div>
-            </section>
+            </div>
         `;
       let track_list = beret.querySelector(".recent-listening-container");
       fetch(`${root}user/${auth.name}/partial/recenttracks?ajax=1`).then(function(response) {
@@ -18192,7 +18505,7 @@
         if (tracklist_panel)
           track_list.outerHTML = tracklist_panel.outerHTML;
       });
-      page.structure.main.appendChild(beret);
+      page.structure.row.insertBefore(beret, page.structure.content);
       let music_sections = document.body.querySelectorAll(".music-section");
       music_sections.forEach((music_section) => {
         page.structure.main.appendChild(music_section);
@@ -18654,7 +18967,7 @@
                 </a>
                 ` : ""}
                 <div class="sep"></div>
-                <a class="dropdown-menu-clickable-item" href="${root}bleh?tab=customise" data-menu-item="settings">
+                <a class="dropdown-menu-clickable-item" href="${root}bleh/customise" data-menu-item="settings">
                     ${tl(trans.settings)}
                 </a>
             `,
@@ -18765,6 +19078,13 @@
           });
           shout_timestamp.removeAttribute("title");
         }
+        let actions = shout.querySelectorAll(".shout-actions .shout-action");
+        actions.forEach((action) => {
+          let buttons = action.querySelectorAll("button, a");
+          buttons.forEach((button) => {
+            button.classList.add("shout-action-button", "see-more");
+          });
+        });
         let send_button = shout.querySelector(".form-group--submit");
         shout_send(send_button);
       } catch (e) {
@@ -18888,6 +19208,24 @@
     log("parsed one shout", "shout", "log");
     if (shout_parse_queue.length > 0)
       setTimeout(parse_shout_queue, 50);
+  }
+  function shout_messages() {
+    if (!page.structure.main) return;
+    let alerts = page.structure.main.querySelectorAll(".shout-messages > .alert");
+    alerts.forEach((alert) => {
+      if (alert.classList.contains("alert-danger")) {
+        notify({
+          id: "shout",
+          title: tl(trans.shouts),
+          body: tl(trans.failed_to_send),
+          type: "error",
+          icon: "icon-16-shoutbox"
+        });
+      } else {
+        return;
+      }
+      alert.remove();
+    });
   }
 
   // src/components/radio.js
@@ -19329,7 +19667,13 @@
                             </div>
                             ${item.keybind ? html.node`
                             <div class="keybind">
-                                ${item.keybind.map((key) => html.node`<kbd>${key}</kbd>`)}
+                                ${item.keybind.map((key) => {
+            if (key == "\u2318")
+              return html.node`<kbd><div class="bleh-icon" data-type="command" /></kbd>`;
+            else if (key == "\u21E7")
+              return html.node`<kbd><div class="bleh-icon" data-type="shift" /></kbd>`;
+            return html.node`<kbd>${key}</kbd>`;
+          })}
                             </div>
                             ` : ""}
                         </button>
@@ -20216,10 +20560,8 @@
     if (quilt) {
       page.avatar = auth.avatar;
       page.name = auth.name;
-      quilt.removeAttribute("href");
-      quilt.onclick = () => {
-        window.location.href = `${root}user/${auth.name}?collage`;
-      };
+      quilt.setAttribute("href", `${root}bleh/minis/collage?redirect=true`);
+      quilt.removeAttribute("target");
     }
   }
 
@@ -20382,6 +20724,7 @@
         bg.style.setProperty("background", cover);
       });
     }
+    shout_messages();
     subscribe_to_events();
     dialog_extender();
   }
@@ -20448,13 +20791,18 @@
     });
     detect_mobile();
     page.platform = detect_platform();
-    if (window.location.href.startsWith(setup_url.replace("{root}", root))) {
+    if (window.location.pathname.startsWith(setup_url.replace("{root}", root))) {
       bleh_setup();
-    } else if (window.location.href.startsWith(sponsor_url.replace("{root}", root))) {
+    } else if (window.location.pathname.startsWith(sponsor_url.replace("{root}", root))) {
       bleh_sponsor_page();
-    } else if (window.location.href.startsWith(api_url.replace("{root}", root))) {
+    } else if (window.location.pathname.startsWith(api_url.replace("{root}", root))) {
       bleh_auth();
-    } else if (window.location.href.startsWith(bleh_url.replace("{root}", root))) {
+    } else if (window.location.pathname.startsWith(minis_url.replace("{root}", root))) {
+      page.type = "minis";
+      bleh_home();
+      bleh_minis();
+    } else if (window.location.pathname.startsWith(bleh_url.replace("{root}", root))) {
+      page.type = "bleh_settings";
       bleh_home();
       bleh_settings();
     } else {
@@ -20499,10 +20847,12 @@
         let sort_button = page.structure.main.querySelector(".dropdown-menu-clickable-button");
         let sort_menu = page.structure.main.querySelector(".dropdown-menu-clickable");
         let sort_wrap = document.createElement("div");
-        sort_wrap.classList.add("dropdown-top-wrap");
-        sort_wrap.appendChild(sort_button);
-        sort_wrap.appendChild(sort_menu);
-        page.structure.main.insertBefore(sort_wrap, page.structure.main.firstElementChild);
+        if (sort_wrap) {
+          sort_wrap.classList.add("dropdown-top-wrap");
+          sort_wrap.appendChild(sort_button);
+          sort_wrap.appendChild(sort_menu);
+          page.structure.main.insertBefore(sort_wrap, page.structure.main.firstElementChild);
+        }
       }
       if (page.subpage == "image") {
         let images = page.structure.row.querySelectorAll(".gallery-image");
@@ -20567,6 +20917,8 @@
         title = tl(trans.charts);
       else if (page.type == "labs")
         title = tl(trans.labs.name);
+      else if (page.type == "minis")
+        title = tl(trans.minis);
       if (page.type == "inbox") {
         if (page.subpage == "notifications")
           title = tl(trans.notifications.name);
@@ -20701,29 +21053,17 @@
     page.structure.container.setAttribute("data-short", ff("short"));
   }
   function register_background(url, origin = null) {
-    let flag = ff("katsune");
-    let background;
-    if (flag) {
-      background = page.structure.container.querySelector(".bleh-background");
-      if (!background) {
-        background = document.createElement("div");
-        background.classList.add("bleh-background", "katsune-bleh-background");
-        let border = document.createElement("div");
-        border.classList.add("katsune-bleh-background-border");
-        background.appendChild(border);
-        page.structure.container.insertBefore(background, page.structure.container.firstElementChild);
-      }
-    } else {
-      background = document.body.querySelector(".bleh-background");
-      if (!background) {
-        background = document.createElement("div");
-        background.classList.add("bleh-background");
-        document.body.appendChild(background);
-      }
+    let background = page.structure.container.querySelector(":scope > .bleh-background");
+    if (!background) {
+      background = html.node`
+            <div class="bleh-background katsune-bleh-background" />
+        `;
+      page.structure.container.insertBefore(background, page.structure.container.firstElementChild);
     }
     background.setAttribute("data-page-type", page.type);
     background.setAttribute("data-page-subpage", page.subpage);
     background.setAttribute("data-background-origin", origin);
+    background.setAttribute("data-background-coloured", settings.hue_from_album);
     if (url)
       background.style.setProperty("background-image", `url(${url})`);
     else
@@ -21170,6 +21510,9 @@
       de: "Aussehen",
       pt: "Apar\xEAncia"
     },
+    visual: {
+      en: "Visual"
+    },
     theme: {
       en: "Theme",
       pt: "Tema"
@@ -21384,9 +21727,7 @@
       pt: "Avan\xE7ado"
     },
     recommendations: {
-      en: "Recommendations",
-      de: "Empfelungen",
-      pt: "Recomenda\xE7\xF5es"
+      en: "Suggested"
     },
     releases: {
       en: "Releases",
@@ -23496,7 +23837,8 @@
     },
     made_with_love: {
       // lowercase in design
-      en: "made with {h} by {u} and {c}contributors{/c}"
+      en: "made with {h} by {u} and {c}contributors{/c}",
+      de: "kreiert mit {h} von {u} und {c}Mitwirkenden{/c}"
     },
     love_lower: {
       // replaces the {h} in the above sentence
@@ -23741,6 +24083,178 @@
       body: {
         en: "Decreases the intensity of animations, hover effects, and other moving parts"
       }
+    },
+    view_backgrounds_on: {
+      en: "View banners on"
+    },
+    own_profile: {
+      en: "Own profile"
+    },
+    other_profiles: {
+      en: "Other profiles"
+    },
+    profile_avi_background: {
+      name: {
+        en: "Ignore banners and use avatar image"
+      },
+      body: {
+        en: "All custom and artist-based banner images will be replaced by the user\u2019s avatar"
+      }
+    },
+    profile_banner: {
+      name: {
+        en: "Profile banner"
+      },
+      body: {
+        en: "Add your own custom banner image to your profile with ![banner](image url) in your bio"
+      }
+    },
+    none: {
+      en: "None"
+    },
+    current_banner_value: {
+      en: "Current banner: {v}"
+    },
+    show_your_progress: {
+      name: {
+        en: "Show your plays compared to last week"
+      },
+      body: {
+        en: "Compares your current progress to last week\u2019s average, requires Last.fm Pro"
+      }
+    },
+    manual: {
+      en: "Manual"
+    },
+    enter_a_manual_date: {
+      en: "Enter a date in the format YYYY-MM-DD"
+    },
+    minimum_value: {
+      en: "Minimum: {v}"
+    },
+    maximum_value: {
+      en: "Maximum: {v}"
+    },
+    manual_date: {
+      en: "Type a date manually"
+    },
+    red: {
+      en: "Red"
+    },
+    orange: {
+      en: "Orange"
+    },
+    yellow: {
+      en: "Yellow"
+    },
+    lime: {
+      en: "Lime"
+    },
+    green: {
+      en: "Green"
+    },
+    aqua: {
+      en: "Aqua"
+    },
+    blue: {
+      en: "Blue"
+    },
+    purple: {
+      en: "Purple"
+    },
+    pink: {
+      en: "Pink"
+    },
+    grey: {
+      en: "Grey"
+    },
+    minis: {
+      en: "Minis"
+    },
+    minis_description: {
+      en: "Play mini-games, puzzles, and interact with tools all powered by your listening history"
+    },
+    no_mini_found: {
+      en: "No mini found for \u2018{v}\u2019"
+    },
+    pixel: {
+      name: {
+        en: "Pixel"
+      },
+      body: {
+        en: "Guess the album from it\u2019s pixelated artwork and clues"
+      }
+    },
+    rainbow: {
+      name: {
+        en: "Rainbow"
+      },
+      body: {
+        en: "Arrange your listening history into a swirl of colours"
+      }
+    },
+    receipt: {
+      name: {
+        en: "Receipt"
+      },
+      body: {
+        en: "Print out your top tracks as a receipt"
+      }
+    },
+    collage_description: {
+      en: "Generate a personalised image based on your listening history and options"
+    },
+    labs_cta: {
+      en: "If you\u2019re looking for more, try out Last.fm\u2019s own Labs feature. {a}View now{/a}"
+    },
+    compare_description: {
+      en: "Find your shared artists, albums, and tracks with another"
+    },
+    enter_a_profile: {
+      en: "Enter a profile"
+    },
+    compare_with: {
+      en: "Compare with"
+    },
+    value_settings: {
+      en: "{v} Settings"
+    },
+    suggest_title: {
+      name: {
+        en: "This page doesn\u2019t seem official"
+      },
+      body: {
+        en: "Navigate to {v} instead"
+      }
+    },
+    lyrics: {
+      name: {
+        en: "Lyrics"
+      },
+      body: {
+        en: "Guess the song from a random lyric"
+      }
+    },
+    jumbled_title: {
+      en: "Jumbled title"
+    },
+    re_jumble: {
+      en: "Re-jumble"
+    },
+    jumbled_guess: {
+      en: "Guess the album name with the pixelated cover, jumbled title, and hints!"
+    },
+    enter_a_guess: {
+      en: "Enter a guess"
+    },
+    hints: {
+      en: "Hints"
+    },
+    global: {
+      en: "Global"
+    },
+    mutuals: {
+      en: "Mutuals"
     }
   };
   var trans_legacy = {
@@ -26787,13 +27301,22 @@
     log(`no translation found for ${JSON.stringify(key)}`, "trans");
     return key.en;
   }
+  function get_lang() {
+    const path = window.location.pathname;
+    const segments = path.split("/");
+    const lang2 = segments[1];
+    if (/^[a-z]{2}$/.test(lang2)) {
+      return `/${lang2}/`;
+    }
+    return "/";
+  }
   function lookup_lang() {
-    const troot = document.querySelector(".masthead-logo a");
-    if (!troot) {
+    const logo = document.querySelector(".masthead-logo a");
+    if (!logo) {
       handle_error_500();
       return;
     }
-    setRoot(troot.getAttribute("href"));
+    setRoot(get_lang());
     let previous_avi = auth.avatar;
     if (auth_link.state) {
       auth.avatar = auth_link.state.querySelector("img").getAttribute("src");
@@ -26807,7 +27330,7 @@
             let hsl = rgb_to_hsl(colour[0], colour[1], colour[2]);
             auth.sets.hue = hsl.h;
             auth.sets.sat = clamp_sat(hsl.s / 100 * 3);
-            auth.sets.lit = hsl.l / 100 + 0.35;
+            auth.sets.lit = clamp_lit(auth.sets.sat, hsl.l / 100 + 0.35);
           });
         } catch (e) {
         }
@@ -27506,7 +28029,9 @@
       type: "other"
     },
     show_your_progress: {
-      default: true
+      default: true,
+      title: trans.show_your_progress.name,
+      body: trans.show_your_progress.body
     },
     travis: {
       default: false,
@@ -27559,7 +28084,8 @@
     seasonal: {
       default: true,
       title: trans.enable_seasons.name,
-      body: trans.enable_seasons.body
+      body: trans.enable_seasons.body,
+      require_reload: true
     },
     seasonal_particles: {
       default: "all",
@@ -27569,13 +28095,19 @@
       default: true
     },
     profile_header_own: {
-      default: true
+      default: true,
+      type: "checkbox",
+      title: trans.own_profile
     },
     profile_header_others: {
-      default: true
+      default: true,
+      type: "checkbox",
+      title: trans.other_profiles
     },
     profile_avi_background: {
-      default: false
+      default: false,
+      title: trans.profile_avi_background.name,
+      body: trans.profile_avi_background.body
     },
     profile_shortcut: {
       default: "",
@@ -27808,8 +28340,8 @@
   // src/build/build.json
   var build_default = {
     brand: "bleh",
-    build: "2025.0715",
-    sku: "fleur",
+    build: "2025.0729",
+    sku: "claire",
     bio: "bleh!!! ^-^",
     author: "kate",
     url: "https://github.com/katelyynn/bleh/raw/uwu/fm/bleh.user.js",
@@ -28047,6 +28579,21 @@
         default: true,
         name: "Connect via the Last.fm API",
         date: "2025-07-08"
+      },
+      minis: {
+        default: true,
+        name: "Minis replacement for Labs",
+        date: "2025-07-17"
+      },
+      mualani: {
+        default: true,
+        name: "Experimental redesigned tab toolbar",
+        date: "2025-07-26"
+      },
+      unlock_minis: {
+        default: false,
+        name: "Unlock work-in-progress minis",
+        date: "2025-07-29"
       }
     }
   };
