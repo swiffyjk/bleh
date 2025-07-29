@@ -8764,7 +8764,7 @@
                 display: flex;
                 justify-content: center;
                 position: relative;
-                padding: 0 calc(var(--icon-size) + var(--icon-gap) + var(--side));
+                padding: 0 calc(var(--icon-size) + var(--item-list-gap) + var(--side));
 
                 & > .bleh-icon {
                     position: absolute;
@@ -8796,9 +8796,23 @@
                     color: hsl(var(--c3));
                     cursor: default;
 
+                    display: flex;
+                    justify-content: center;
+                    gap: 4px;
+
+                    width: 100%;
+                    overflow: hidden;
+                    white-space: nowrap;
+
                     & > a {
                         color: hsl(var(--c2));
                         font-weight: var(--font-weight-medium);
+
+                        min-width: 0;
+                        overflow: hidden;
+                        text-overflow: ellipsis;
+                        white-space: nowrap;
+                        flex-shrink: 1;
 
                         &:hover, &:focus {
                             color: hsl(var(--l3-c)) !important;
@@ -19464,6 +19478,7 @@
             --mask-colour: color-mix(in hsl, hsl(var(--l3-c)), hsl(var(--l4-c)) 30%);
         }
     }
+    [data-type="block"],
     .block {
         --mask: var(--icon-16-block);
     }
@@ -20693,6 +20708,7 @@
     [data-type="item-edit"] {
         --mask: var(--icon-16-edit);
     }
+    [data-type="trash"],
     [data-type="delete"] {
         --mask: var(--icon-16-trash);
     }
@@ -22766,8 +22782,8 @@
             width: 100%;
 
             tr {
-                --bg: hsla(var(--b4), 40%);
-                --bg-hov: hsla(var(--b4), 80%);
+                --bg: hsla(var(--b4), 30%);
+                --bg-hov: hsla(var(--b4), 50%);
 
                 border: unset;
                 border-radius: var(--item-big-radius);
@@ -22786,19 +22802,21 @@
                         justify-content: end;
                         gap: var(--button-list-gap);
 
-                        form {
+                        & > form {
                             margin: unset;
 
-                            button {
-                                width: 32px;
-                                height: 32px;
+                            & > button {
+                                --btn-left: var(--button-sides);
+                                --btn-right: var(--button-sides);
+                                width: var(--button-height);
+                                height: var(--button-height);
                                 position: relative;
                                 --mask: var(--icon-16-edit);
-                                --left: var(--icon-half);
+                                --left: calc((var(--button-height) - var(--icon-size)) / 2);
 
                                 --bg: transparent !important;
-                                --bg-hov: hsla(var(--b3), 30%) !important;
-                                --bg-atv: hsla(var(--b3), 50%) !important;
+                                --bg-hov: hsla(var(--b4), 60%) !important;
+                                --bg-atv: hsla(var(--b4), 80%) !important;
                                 --shadow: none !important;
                                 --shadow-hov: none !important;
 
@@ -22834,7 +22852,7 @@
                     background: var(--bg-hov);
                     transition: none;
 
-                    button {
+                    & > .chart-table--buttons > form > button {
                         transition-property: background-color, transform !important;
                     }
                 }
@@ -24293,7 +24311,7 @@
         background: var(--card-specific-background) !important;
         border-radius: var(--card-radius);
         --card-specific-background: hsl(var(--f4), 15%);
-        padding: 12px;
+        padding: 12px !important;
         box-shadow: unset !important;
         color: hsl(var(--c2)) !important;
         order: 10;
@@ -24313,7 +24331,7 @@
 
             &.suggest,
             .bleh-modal-body > & {
-                padding: 15px var(--card-padding);
+                padding: 15px var(--card-padding) !important;
                 margin-left: unset;
                 margin-right: unset;
             }

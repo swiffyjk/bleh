@@ -10692,6 +10692,7 @@
       let form2 = item.querySelector("form");
       let button = form2.querySelector("button");
       button.classList.add("icon", "chibi", "danger-subtle");
+      button.setAttribute("data-type", "trash");
       let entry = html.node`
             <div class="generic-table-list-entry user-vertical-list-item">
                 <div class="name">

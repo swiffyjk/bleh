@@ -703,6 +703,7 @@ function bleh_communication_panel(token) {
         let button = form.querySelector('button');
 
         button.classList.add('icon', 'chibi', 'danger-subtle');
+        button.setAttribute('data-type', 'trash');
 
         let entry = html.node`
             <div class="generic-table-list-entry user-vertical-list-item">
