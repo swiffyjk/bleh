@@ -10316,8 +10316,8 @@
 
         .modal-close-button {
             --bg: transparent;
-            --bg-hov: hsl(var(--b3), 40%);
-            --bg-atv: hsl(var(--b3), 60%);
+            --bg-hov: hsl(var(--b4), 40%);
+            --bg-atv: hsl(var(--b4), 60%);
             --shadow: none;
             --col: hsl(var(--c3));
             --mask-colour: currentColor;
