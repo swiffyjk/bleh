@@ -66,9 +66,9 @@ export function create_badge(badge={
     type: '',
     icon: '',
     reason: '',
-    hue: 0,
-    sat: 0,
-    lit: 0,
+    hue: -1,
+    sat: -1,
+    lit: -1,
     name: '',
     user: ''
 }) {
@@ -78,7 +78,7 @@ export function create_badge(badge={
         </span>
     `;
 
-    if (badge.icon != '' && badge.hue > 0 && badge.sat > 0 && badge.lit > 0) {
+    if (badge.icon != '' && badge.hue > -1 && badge.sat > -1 && badge.lit > -1) {
         // new style badge
         elem.style.setProperty('--mask', `url(${badge.icon})`);
         elem.style.setProperty('--hue-over', badge.hue);
