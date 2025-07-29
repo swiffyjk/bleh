@@ -28333,8 +28333,8 @@
   // src/build/build.json
   var build_default = {
     brand: "bleh",
-    build: "2025.0729.1",
-    sku: "claire",
+    build: "2025.0801",
+    sku: "mbv",
     bio: "bleh!!! ^-^",
     author: "kate",
     url: "https://github.com/katelyynn/bleh/raw/uwu/fm/bleh.user.js",
