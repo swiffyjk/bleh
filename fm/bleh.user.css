@@ -7248,23 +7248,20 @@
         aspect-ratio: 1 / 1;
     }
     /* missing session */
-    /*[src$="14d19fbdca555c1782176cd789e81af7.png"] {
+    [src$="14d19fbdca555c1782176cd789e81af7.png"] {
         content: url() !important;
         font-size: 0;
         background-color: hsl(var(--c3));
-        --mask: url('data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHdpZHRoPSIzMiIgaGVpZ2h0PSIzMiIgdmlld0JveD0iMCAwIDI0IDI0IiBmaWxsPSJub25lIiBzdHJva2U9ImN1cnJlbnRDb2xvciIgc3Ryb2tlLXdpZHRoPSIyIiBzdHJva2UtbGluZWNhcD0icm91bmQiIHN0cm9rZS1saW5lam9pbj0icm91bmQiIGNsYXNzPSJsdWNpZGUgbHVjaWRlLWRpc2MtYWxidW0iPjxyZWN0IHdpZHRoPSIxOCIgaGVpZ2h0PSIxOCIgeD0iMyIgeT0iMyIgcng9IjIiLz48Y2lyY2xlIGN4PSIxMiIgY3k9IjEyIiByPSI1Ii8+PHBhdGggZD0iTTEyIDEyaC4wMSIvPjwvc3ZnPg==');
+        --mask: var(--icon-16-extension);
         mask-image: var(--mask);
         -webkit-mask-image: var(--mask);
-        mask-size: var(--mask-size, var(--cover-size-50));
-        -webkit-mask-size: var(--mask-size, var(--cover-size-50));
+        mask-size: var(--mask-size, var(--cover-size-32));
+        -webkit-mask-size: var(--mask-size, var(--cover-size-32));
         mask-repeat: no-repeat;
         -webkit-mask-repeat: no-repeat;
         mask-position: center;
         -webkit-mask-position: center;
         aspect-ratio: 1 / 1;
-    }*/
-    [src$="14d19fbdca555c1782176cd789e81af7.png"] {
-        content: url() !important;
     }
     /* missing playlist */
     [src$="df27b3c25d608decf720b24afb507863.jpg"] {
@@ -14333,18 +14330,18 @@
 
     /*     API SESSION     */
     .section-intro {
-        padding: var(--card-padding);
-        /*box-shadow: inset 0 0 0 1px var(--card-border-base);*/
-        background: hsl(var(--f4), 60%);
-        border-radius: var(--card-radius);
-
         display: flex;
         flex-direction: column;
-        gap: var(--card-gap);
+        padding-bottom: var(--card-gap);
+        border-bottom: 1px solid var(--card-border-base);
 
-        h3 {
-            font-size: 20px;
-            line-height: 24px;
+        & > h3 {
+            color: hsl(var(--c1));
+            font-size: 16px;
+            line-height: 20px;
+        }
+        & > p {
+            cursor: default;
         }
     }
     .applications {
@@ -14354,28 +14351,97 @@
     }
     .api-sessions {
         margin: unset;
-        display: grid;
-        grid-template-columns: repeat(auto-fill, minmax(350px, 1fr));
+        display: flex;
+        flex-direction: column;
         gap: var(--item-list-gap);
 
         .api-session {
-            margin: unset;
-            padding: unset;
+            display: flex;
+            flex-direction: column;
+            gap: var(--item-list-gap);
+
+            padding: var(--card-gap);
+            border-radius: var(--item-big-radius);
+            border: 1px solid var(--card-border-base);
+
+            .session-header {
+                display: flex;
+                gap: var(--item-list-gap);
+                align-items: center;
+                min-height: 36px;
+
+                .session-image {
+                    width: 32px;
+                    height: 32px;
+                    background: var(--avatar-generic-background);
+                    border-radius: var(--item-med-radius);
+                    overflow: hidden;
+
+                    & > img {
+                        width: 100%;
+                    }
+
+                    &[data-default-image="false"] {
+                        & > img {
+                            content: url('data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAEAAAABACAMAAACdt4HsAAAAAXNSR0IArs4c6QAAAARnQU1BAACxjwv8YQUAAAH7UExURR7XYB3SXhzIWRq+VRm1UBitTRenShemShisTRm0UBq9VBvHWR3RXRzMWxixTxSQQA9uMQtPIwc1GAQiDwIVCQELBQAFAgABAAAAAAEKBAITCAQgDgczFgpLIQ5qLxOLPhisTBvGWB3VXw5pLwMXCgACAQ1gKhSSQQ9wMg9vMR3TXgQjDwUpEgQhDwg7GhzPXAISCAMaCwQfDQMaDAADARB2NQ1eKgIPBgUkEAlEHg5mLRKFOxadRhiwTh3QXBzNWxq/VRagRxOIPA5rLwpKIQIOBgMVCRvFWBrAVRvBVg9xMgg+GwQdDRWZRAxZJwlAHBzOXBWbRQMYCh3UXhvCVhq7Uxq6UxzLWhB3NQYuFBaeRhF6NgxYJwg8GwUnEQMZCwEIAwUlEAg5GQtUJRB1NBWYRBm5UhOMPgYsExWXQxiyTwEHAwpMIhKCOh3WXxSPQApNIgtVJgYrEw9rMBiuTQYwFRF/OAAEAQUqEgYtFAIQBw1fKhm3Ugc3GBF9OBvDVxafRxzJWRB0Mwg6GQEMBRF+OAAGAwMWChajSRivThaiSBm4UhF7NhmzUA1hKwIRBwxbKBKDOgcyFgpIIApHIBWaRAhAHBONPwUoEgxWJgxcKQg9GwMbDA9sMBrBVhOOPwlDHhSRQBm2URvEVxWWQwtTJROKPQc1FxahSEGd8XQAAAAJcEhZcwAADsMAAA7DAcdvqGQAAAJcSURBVFhH7dTpVxJhFAZwVhFkEEMGGHCBIAuVxEgMDLUCIq00S6QsabNEpbRIWyyLViutLEvL9u3PjOXBGJgh8Zy+ze8LM5fn3jnzzszL43A4nP+ILxCKxCUSSUmpVFYmR3F9CEW5smKTqlJNarRJpI7SG6qqa2qNCBRm2my2pPryUYYtdULE2G1FmoXasK3UhCgjaz2S7DQNSinSDPiNiBVE2sq3oyFPNTJai67J3qxS6XdQagdK2fQ7WdaU3+JUt+5yudt2y4yERy73tJd1KDr37N3X4EVrhk8pQE8O/34+jmhMgc4DXRSa07pF+G/9jAcPdaM76TDKRenprXCiX3ukHUUmfcTRYyKFQtofCFpRyggM4GGHUMglPH5i8OSpIWeYdDjIsNd8+szZc+eHsz8I+YWLiX7LCE7pIgZdej7dqGpsXBRFJrGmly5PSHBM1xdCBwNy8spVxNgFGK+/xhK75keShSmWTk55h1TT10PT9fYbZLqS0XTzFrLMRDO+2ODt3kiA4CduOcon7ohmx1tmfGhPCk8UHkHgl+Zuyb34fQxILOkDlIvT4bZlbufhMGrFkroepSc8RoGV1dj/RDI3JxE/9dP3VMGz5OegD+KU0fOa+a5WKpzaHDWjC43xFy9rsxaGGHi1WGBT4nlep7djOvuiW4bAv7xBSx7d0lvGB5RLnAxPVb6zVS2vrCyPvZ80/32TPqx+RKqQT5/nv0QEa7t3NPh1ZNW2gBFO1zfUi2T8/gMvI1WHUtEEP3+lJth7UNiA30uJAc0enG1IWzw0i0MOh8PJxeP9AUHqhMU/F2ZlAAAAAElFTkSuQmCC');
+                        }
+                    }
+                }
+
+                .session-details {
+                    flex: 1;
+
+                    .api-session-app-name {
+                        font-size: var(--font-size);
+                        font-weight: var(--font-weight-medium);
+                        line-height: var(--line-height);
+                    }
+
+                    .api-session-app-description {
+                        color: hsla(var(--c2), 80%);
+                    }
+                }
+
+                .api-session-connect, .api-session-disconnect {
+                    --bg: transparent;
+                    --bg-hov: hsl(var(--b4), 40%);
+                    --bg-atv: hsl(var(--b4), 60%);
+                    --shadow: none;
+                    position: relative;
+                }
+
+                .api-session-connect {
+                    --mask: var(--icon-16-add);
+                }
+
+                .api-session-disconnect {
+                    --mask: var(--icon-16-x);
+                    --col: hsl(var(--c3));
+                }
+            }
+            .session-footer {
+                border-top: 1px solid var(--card-border-base);
+                padding-top: var(--item-list-gap);
+
+                .api-session-app-last-used, .api-session-status {
+                    color: hsl(var(--c3));
+                    font-size: 13px;
+                    line-height: inherit;
+                }
+            }
 
             &:after {
                 display: none;
             }
 
             .api-session-body-wrap {
-                padding: var(--card-gap);
-                box-shadow: 0 0 0 2px hsl(var(--b4), 50%) inset;
-                border-radius: var(--item-big-radius);
+
                 height: 100%;
 
                 display: flex;
                 align-items: center;
 
-                .api-session-body {
+                & > .api-session-body {
                     flex: 1;
 
                     .api-session-app-description {
@@ -14385,34 +14451,11 @@
                         display: -webkit-box;
                         -webkit-line-clamp: 2;
                     }
-
-                    .api-session-connect, .api-session-disconnect {
-                        --font-size: 0;
-                        --left: var(--icon-half);
-                        width: 32px;
-                        position: relative;
-                    }
-
-                    .api-session-connect {
-                        --mask: var(--icon-16-add);
-                    }
-                    .api-session-disconnect {
-                        --mask: var(--icon-16-x);
-                    }
                 }
             }
         }
     }
 
-
-    .api-session-app-name {
-        font-size: var(--font-size);
-        font-weight: var(--font-weight-medium);
-        line-height: var(--line-height);
-    }
-    .api-session-app-description {
-        color: hsla(var(--c2), 80%);
-    }
     .api-session-connect, .api-session-disconnect {
         margin-top: unset;
         align-self: unset;
@@ -14420,10 +14463,6 @@
     .api-session-body form {
         display: flex;
         align-items: center;
-    }
-    .api-session-app-last-used, .api-session-status {
-        color: hsl(var(--c3));
-        line-height: 16px;
     }
 
     .api-session-body {
@@ -15204,7 +15243,6 @@
         [data-page-subpage="auth"],
         [data-page-type="bleh_setup"],
         .has-error,
-        [data-page-subpage="applications_overview"],
         [data-page-type="releases"],
         [data-page-type="bleh_auth"],
         [data-mini="pixel"]

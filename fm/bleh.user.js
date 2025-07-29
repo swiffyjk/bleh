@@ -11082,6 +11082,41 @@
             ${connected}
         </section>
     `);
+    session_types.forEach((session_type) => {
+      let sessions = session_type.querySelectorAll(".api-session");
+      sessions.forEach((session) => {
+        const details = session.querySelector(".api-session-details");
+        const form = session.querySelector("form");
+        const button = form.querySelector("button");
+        button.classList.add("chibi");
+        tippy(button, {
+          content: button.textContent
+        });
+        const name2 = details.querySelector(".api-session-app-name");
+        const desc = details.querySelector(".api-session-app-description");
+        const status = details.querySelector(".api-session-status");
+        const image = details.querySelector(".api-session-app-image");
+        image.classList = "";
+        const default_image = image.src.endsWith("14d19fbdca555c1782176cd789e81af7.png");
+        render(session, html`
+                <div class="session-header">
+                    <div class="session-image" data-default-image=${default_image}>
+                        ${image}
+                    </div>
+                    <div class="session-details">
+                        ${name2}
+                        ${desc}
+                    </div>
+                    ${form}
+                </div>
+                ${status ? html.node`
+                <div class="session-footer">
+                    ${status}
+                </div>
+                ` : ""}
+            `);
+      });
+    });
   }
 
   // src/pages/obsession.js
