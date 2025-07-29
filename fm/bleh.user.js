@@ -4476,8 +4476,8 @@
           let previous = track.querySelector(":scope > .more-button-wrapper");
           if (previous) previous.style.display = "none";
           const is_own_profile = page.type == "user" && page.name == auth.name;
-          const can_edit = !is_active && (!is_album ? !has_bar : true) && auth.pro;
-          const can_delete = !is_active && !has_bar && !is_album;
+          const can_edit = is_own_profile && !is_active && (!is_album ? !has_bar : true) && auth.pro;
+          const can_delete = is_own_profile && !is_active && !has_bar && !is_album;
           let more_button = html.node`
                     <button class="track-more-button icon chibi" data-type="more" onclick=${() => {
             console.info(menu);
