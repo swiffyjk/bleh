@@ -1,5 +1,5 @@
 {
-    "latest": "2025.0721",
+    "latest": "2025.0729",
     "sponsors": [
         "clairedoll", "kateshapedbox", "evangelicgirl",
         "astrablooms", "ItsProyal", "vwvwvwvwvwvwv", "Orofil",
@@ -224,12 +224,12 @@
             },
             {
                 "type": "syrup",
-                "icon": "data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHdpZHRoPSIxOCIgaGVpZ2h0PSIxOCIgdmlld0JveD0iMCAwIDI0IDI0IiBmaWxsPSJub25lIiBzdHJva2U9ImN1cnJlbnRDb2xvciIgc3Ryb2tlLXdpZHRoPSIyLjUiIHN0cm9rZS1saW5lY2FwPSJyb3VuZCIgc3Ryb2tlLWxpbmVqb2luPSJyb3VuZCIgY2xhc3M9Imx1Y2lkZSBsdWNpZGUtZHJvcGxldC1pY29uIGx1Y2lkZS1kcm9wbGV0Ij48cGF0aCBkPSJNMTIgMjJhNyA3IDAgMCAwIDctN2MwLTItMS0zLjktMy01LjVzLTMuNS00LTQtNi41Yy0uNSAyLjUtMiA0LjktNCA2LjVDNiAxMS4xIDUgMTMgNSAxNWE3IDcgMCAwIDAgNyA3eiIvPjwvc3ZnPg==",
-                "name": "syrup & static",
+                "icon": "data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHdpZHRoPSIxOCIgaGVpZ2h0PSIxOCIgdmlld0JveD0iMCAwIDI0IDI0IiBmaWxsPSJub25lIiBzdHJva2U9ImN1cnJlbnRDb2xvciIgc3Ryb2tlLXdpZHRoPSIyLjUiIHN0cm9rZS1saW5lY2FwPSJyb3VuZCIgc3Ryb2tlLWxpbmVqb2luPSJyb3VuZCIgY2xhc3M9Imx1Y2lkZSBsdWNpZGUtYm9uZS1pY29uIGx1Y2lkZS1ib25lIj48cGF0aCBkPSJNMTcgMTBjLjctLjcgMS42OSAwIDIuNSAwYTIuNSAyLjUgMCAxIDAgMC01IC41LjUgMCAwIDEtLjUtLjUgMi41IDIuNSAwIDEgMC01IDBjMCAuODEuNyAxLjggMCAyLjVsLTcgN2MtLjcuNy0xLjY5IDAtMi41IDBhMi41IDIuNSAwIDAgMCAwIDVjLjI4IDAgLjUuMjIuNS41YTIuNSAyLjUgMCAxIDAgNSAwYzAtLjgxLS43LTEuOCAwLTIuNVoiLz48L3N2Zz4=",
+                "name": "carved into silence",
                 "reason": "sponsor",
-                "hue": 348,
-                "sat": 1.44,
-                "lit": 0.7
+                "hue": 34,
+                "sat": 0.42,
+                "lit": 1.03
             }
         ]
     }
