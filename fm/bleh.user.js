@@ -16987,7 +16987,7 @@
                     </div>
                     ` : ""}
                 `);
-          live_status().then((status) => {
+          function render_status_container(status) {
             render(status_container, html`
                         <div class="status">
                             <div class="bleh-icon" />
@@ -16999,7 +16999,9 @@
                             </div>
                         </div>
                     `);
-          });
+          }
+          if (page.now.name) render_status_container(page.now);
+          live_status().then((status) => render_status_container(status));
         },
         onHide(instance) {
           page.structure.notifications.setAttribute("data-auth-open", "false");
