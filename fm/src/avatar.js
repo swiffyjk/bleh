@@ -46,7 +46,7 @@ export function patch_avatar(avatar, name, type = '', parent=null, side='right')
         content: (html.node`
             <div class="image-header">
                 <div class="inner-image">
-                    ${html.node([avatar_img.outerHTML])}
+                    <img src=${avatar_img.getAttribute('src').replace('/avatar42s/', '/avatar170s/')} alt=${name}>
                     <a href="${root}user/${name}" class="link-over"></a>
                 </div>
             </div>
@@ -110,12 +110,12 @@ export function expand_avatar(src) {
         body: html.node`
             <div class="full-avatar-wrapper">
                 <div class="full-avatar">
-                    <img src="${src}">
+                    <img src=${src}>
                 </div>
                 <div class="modal-footer">
                     <div class="fill"></div>
                     <div class="button-group">
-                        <a class="btn primary open" href="${src}" target="_blank">
+                        <a class="btn primary open" href=${src} target="_blank">
                             ${tl(trans.open_new_tab)}
                         </a>
                     </div>

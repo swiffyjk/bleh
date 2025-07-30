@@ -1671,12 +1671,6 @@
             --left: 7px;
             width: 32px;
         }
-
-        &:is([data-label="notifications"], [data-label="inbox"]) {
-            &[data-count="0"] {
-                --col: hsl(var(--c3)) !important;
-            }
-        }
     }
 
 
@@ -11049,37 +11043,6 @@
         --hue-over: var(--hue-neg);
         --sat-over: 1;
         --lit-over: 1;
-    }
-
-
-    .inbox-notifications__item--highlight .inbox-notifications__item-visual-summary:before {
-        background-color: hsla(var(--l3-c), 20%) !important;
-    }
-    [href^="/user/"][href*="/shoutbox/"] .inbox-notifications__item-visual-summary:before {
-        --mask: var(--icon-20-shoutbox);
-    }
-    [href^="/music/"][href*="/+shoutbox/"] .inbox-notifications__item-visual-summary:before {
-        --mask: var(--icon-20-album);
-    }
-    [href^="/music/"][href*="/+images/"] .inbox-notifications__item-visual-summary:before {
-        --mask: var(--icon-20-photo);
-    }
-    [href^="/user/"][href$="/obsessions/set"] .inbox-notifications__item-visual-summary:before {
-        --mask: var(--icon-20-obsession-remove);
-    }
-    [href^="/user/"][href$="/listening-report/month"] .inbox-notifications__item-visual-summary:before {
-        --mask: var(--icon-20-listening-report-monthly);
-    }
-    [href^="/user/"][href$="/listening-report/year"] .inbox-notifications__item-visual-summary:before {
-        --mask: var(--icon-20-listening-report-yearly);
-    }
-    :is([href^="/festival/"], [href^="/event/"]) .inbox-notifications__item-visual-summary:before {
-        --mask: var(--icon-20-event);
-    }
-
-
-    .inbox-notifications__item-unread-indicator {
-        display: none;
     }
 
 
