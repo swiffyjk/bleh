@@ -747,6 +747,11 @@ export async function live_status() {
         const album = links[1];
         const avatar = doc.querySelector('.cover-art img')?.src;
 
+        // keep them in the same tab
+        track.removeAttribute('target');
+        artist.removeAttribute('target');
+        album.removeAttribute('target');
+
         artist.textContent = correct_artist(artist.textContent);
         track.textContent = correct_item_by_artist(track.textContent, artist.textContent);
 

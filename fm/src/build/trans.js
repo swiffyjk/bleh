@@ -877,6 +877,9 @@ export const trans = {
         de: 'Fortsetzen',
         pt: 'Contiuar'
     },
+    click_for_more_options: {
+        en: 'Click for more options'
+    },
     right_click_for_more_options: {
         en: 'Right click for more options',
         de: 'Rechtsklick für weitere optionen',

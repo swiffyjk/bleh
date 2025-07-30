@@ -13,7 +13,6 @@ import {tl, trans} from "../build/trans";
 import {ff} from "../sku";
 import {compare} from './compare';
 import {correct_artist} from "./lotus";
-import {register_menu} from "./menu";
 import {open_profile_shortcut_window, set_profile_as_shortcut} from './profile_shortcut';
 import {html} from "lighterhtml";
 import {collage} from "./collage.js";
@@ -245,7 +244,7 @@ export function redesign_profile_header(is_own_profile, is_following) {
         }
 
         let taste_wrap = html.node`
-            <div class="btn listen-item icon">
+            <div class="btn listen-item icon taste">
                 <div class="span">
                     <img class="view-item-avatar" src=${auth.avatar} alt=${auth.name}>
                     <img class="view-item-avatar" src=${page.avatar} alt=${page.name}>
@@ -261,11 +260,8 @@ export function redesign_profile_header(is_own_profile, is_following) {
                         </p>
                     </div>
                 </div>
-                <div class="taste-bar colourful" data-taste="${taste}">
-                    <div class="taste-bar-fill" style="width: ${taste_percentage}"></div>
-                </div>
             </div>
-        `
+        `;
 
         tippy(taste_wrap, {
             theme: 'stack',
@@ -273,14 +269,12 @@ export function redesign_profile_header(is_own_profile, is_following) {
                 <span>
                     ${tl(trans.taste_similarity)}
                 </span>
-                <div class="hint">${tl(trans.right_click_for_more_options)}</div>
+                <div class="hint">${tl(trans.click_for_more_options)}</div>
             `,
         });
 
-        listen_container.appendChild(taste_wrap);
-
         if (taste_artists.length > 1) {
-            let menu = tippy(taste_wrap, {
+            tippy(taste_wrap, {
                 theme: 'context-menu',
                 content: html.node`
                     <h4 class="menu-header">${tl(trans.compare_plays)}</h4>
@@ -311,21 +305,16 @@ export function redesign_profile_header(is_own_profile, is_following) {
                     <div class="sep"></div>
                     <a class="dropdown-menu-clickable-item" data-type="compare" href="${root}bleh/minis/compare?profile=${page.name}">${tl(trans.compare)}</a>
                 `,
-                placement: 'right-start',
-                trigger: 'manual',
+                trigger: 'click',
+                placement: 'bottom',
                 interactive: true,
                 interactiveBorder: 10,
-                offset: [0, 0],
-
-                onShow(instance) {
-                    instance.popper.addEventListener('click', event => {
-                        instance.hide();
-                    });
-                }
+                offset: [0, 0]
             });
-
-            register_menu(taste_wrap, menu);
         }
+
+        const row = listen_container.querySelector('.listener-row');
+        row.after(taste_wrap);
     }
 }
 

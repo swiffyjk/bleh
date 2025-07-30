@@ -24280,8 +24280,7 @@
         }
 
         .listen-item {
-            order: 3;
-            margin-top: var(--card-padding);
+            margin-bottom: var(--card-padding);
             border-radius: unset !important;
 
             align-items: unset;
@@ -24399,8 +24398,8 @@
         }
 
         &[data-bleh--scrobble-milestone] > .info > p {
-            --col: hsl(var(--l2-c-theme-switch));
-            text-shadow: 0 0 10px hsla(var(--h4), 40%);
+            color: hsl(var(--l3-c)) !important;
+            text-shadow: 0 0 12px hsla(var(--h4), 60%);
         }
 
         &:before {

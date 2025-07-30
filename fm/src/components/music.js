@@ -238,7 +238,7 @@ export function show_your_scrobbles() {
             katsune: katsune
         }
         // create child for them
-        create_listen_item(listen_container, shortcut_listens);
+        const listen_item = create_listen_item(listen_container, shortcut_listens);
 
         fetch(`${root}user/${shortcut_listens.name}/library/music/${scrobble_page}`)
         .then(function(response) {
@@ -247,28 +247,25 @@ export function show_your_scrobbles() {
             return response.text();
         })
         .then(function(dom) {
-            let doc = new DOMParser().parseFromString(dom, 'text/html');
-            console.log('DOC', doc);
+            const doc = new DOMParser().parseFromString(dom, 'text/html');
 
             let first_metadata_item = doc.querySelector('.metadata-item .metadata-display');
 
             let listens = 0;
 
-            let listen_item = page.structure.main.querySelector(`#listen-item--${shortcut_listens.name}`);
-
             // sometimes this fails even thou they do have plays, this is just a last.fm bug
             // i dont feel comfortable displaying 0 here as it may not be true
             // but i guess i should?
-            if (first_metadata_item != null)
-                listens = clean_number(first_metadata_item.textContent.trim());
+            if (first_metadata_item) listens = clean_number(first_metadata_item.textContent.trim());
 
+            let p;
             listen_item.setAttribute('data-listens', listens);
 
             render(listen_item, html`
-                <img class="view-item-avatar" src="${shortcut_listens.avi}" alt="${shortcut_listens.name}">
+                <img class="view-item-avatar" src=${shortcut_listens.avi} alt=${shortcut_listens.name}>
                 <div class="info">
                     <h3>${shortcut_listens.name}</h3>
-                    <p>${tl(trans.listens.count).replace('{c}', listens.toLocaleString(lang))}</p>
+                    <p class="colourful" ref=${el => p = el}>${tl(trans.listens.count).replace('{c}', listens.toLocaleString(lang))}</p>
                 </div>
             `);
 
@@ -277,9 +274,9 @@ export function show_your_scrobbles() {
                 let parsed_scrobble_as_rank = parse_scrobbles_as_rank(listens);
 
                 listen_item.setAttribute('data-bleh--scrobble-milestone',parsed_scrobble_as_rank.milestone);
-                listen_item.style.setProperty('--hue-over',parsed_scrobble_as_rank.hue);
-                listen_item.style.setProperty('--sat-over',parsed_scrobble_as_rank.sat);
-                listen_item.style.setProperty('--lit-over',parsed_scrobble_as_rank.lit);
+                p.style.setProperty('--hue-over',parsed_scrobble_as_rank.hue);
+                p.style.setProperty('--sat-over',parsed_scrobble_as_rank.sat);
+                p.style.setProperty('--lit-over',parsed_scrobble_as_rank.lit);
             }
         });
     }
@@ -750,20 +747,25 @@ export function show_your_scrobbles() {
 function create_listen_item(parent, {name, listens, link, avi, count=0, button=false, katsune=false}, header_type) {
     log(`creating listen item of ${name}, ${count}, ${listens}`, 'artist', 'info', {avi: avi, link: link});
 
-    let listen_item = document.createElement((!button) ? 'a' : 'button');
+    let listen_item;
+
+    if (button) listen_item = html.node`<button />`;
+    else        listen_item = html.node`<a />`;
+
     listen_item.classList.add('btn', 'listen-item');
     listen_item.setAttribute('href', `${root}user/${name}/library/music/${link}`);
-    //listen_item.setAttribute('target', '_blank');
     listen_item.setAttribute('data-listens', listens);
     listen_item.setAttribute('id', `listen-item--${name}`);
 
+    let p;
+
     if (listens > -1) {
-        // 0 listens
+        // your listens
         render(listen_item, html`
-            <img class="view-item-avatar" src="${avi}" alt="${name}">
+            <img class="view-item-avatar" src=${avi} alt=${name}>
             <div class="info">
                 <h3>${name}</h3>
-                <p>${tl(trans.listens.count).replace('{c}', listens.toLocaleString(lang))}</p>
+                <p class="colourful" ref=${el => p = el}>${tl(trans.listens.count).replace('{c}', listens.toLocaleString(lang))}</p>
             </div>
         `);
 
@@ -791,10 +793,10 @@ function create_listen_item(parent, {name, listens, link, avi, count=0, button=f
     } else if (listens > -2) {
         // loading listens
         render(listen_item, html`
-            <img class="view-item-avatar" src="${avi}" alt="${name}">
+            <img class="view-item-avatar" src=${avi} alt=${name}>
             <div class="info">
                 <h3>${name}</h3>
-                <p>${tl(trans.listens)}</p>
+                <p class="colourful" ref=${el => p = el}>${tl(trans.listens)}</p>
             </div>
         `);
 
@@ -835,12 +837,12 @@ function create_listen_item(parent, {name, listens, link, avi, count=0, button=f
     } else {
         // other listeners by clicking this link (artist)
         render(listen_item, html`
-            ${avi[0] ? html.node`<img class="view-item-avatar" src="${avi[0].getAttribute('src')}" alt="">` : ''}
-            ${avi[1] ? html.node`<img class="view-item-avatar" src="${avi[1].getAttribute('src')}" alt="">` : ''}
-            ${avi[2] ? html.node`<img class="view-item-avatar" src="${avi[2].getAttribute('src')}" alt="">` : ''}
+            ${avi[0] ? html.node`<img class="view-item-avatar" src=${avi[0].getAttribute('src')} alt="">` : ''}
+            ${avi[1] ? html.node`<img class="view-item-avatar" src=${avi[1].getAttribute('src')} alt="">` : ''}
+            ${avi[2] ? html.node`<img class="view-item-avatar" src=${avi[2].getAttribute('src')} alt="">` : ''}
             <div class="info">
                 <h3>${tl(trans.following)}</h3>
-                <p>${tl(trans.others_count).replace('{c}', count)}</p>
+                <p class="colourful" ref=${el => p = el}>${tl(trans.others_count).replace('{c}', count)}</p>
             </div>
         `);
         listen_item.setAttribute('href', `${window.location.href}/+listeners/you-know`);
@@ -850,20 +852,17 @@ function create_listen_item(parent, {name, listens, link, avi, count=0, button=f
     if (settings.colourful_counts && listens > -1 && header_type == 'artist') {
         let parsed_scrobble_as_rank = parse_scrobbles_as_rank(listens);
 
-        listen_item.setAttribute('data-bleh--scrobble-milestone',parsed_scrobble_as_rank.milestone);
-        listen_item.style.setProperty('--hue-user',parsed_scrobble_as_rank.hue);
-        listen_item.style.setProperty('--sat-user',parsed_scrobble_as_rank.sat);
-        listen_item.style.setProperty('--lit-user',parsed_scrobble_as_rank.lit);
+        listen_item.setAttribute('data-bleh--scrobble-milestone', parsed_scrobble_as_rank.milestone);
+        p.style.setProperty('--hue-user',parsed_scrobble_as_rank.hue);
+        p.style.setProperty('--sat-user',parsed_scrobble_as_rank.sat);
+        p.style.setProperty('--lit-user',parsed_scrobble_as_rank.lit);
     }
 
-    if (katsune)
-        listen_item.classList.add('icon');
+    if (katsune) listen_item.classList.add('icon');
 
     parent.appendChild(listen_item);
 
-    // ensure proper listeners element
-    if (listens < -1)
-        return;
+    return listen_item;
 }
 
 

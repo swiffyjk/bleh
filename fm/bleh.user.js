@@ -9849,32 +9849,30 @@
         avi: localStorage.getItem("bleh_profile_shortcut_avi"),
         katsune
       };
-      create_listen_item(listen_container, shortcut_listens);
+      const listen_item = create_listen_item(listen_container, shortcut_listens);
       fetch(`${root}user/${shortcut_listens.name}/library/music/${scrobble_page}`).then(function(response) {
         console.log("returned", response, response.text);
         return response.text();
       }).then(function(dom) {
-        let doc = new DOMParser().parseFromString(dom, "text/html");
-        console.log("DOC", doc);
+        const doc = new DOMParser().parseFromString(dom, "text/html");
         let first_metadata_item = doc.querySelector(".metadata-item .metadata-display");
         let listens = 0;
-        let listen_item = page.structure.main.querySelector(`#listen-item--${shortcut_listens.name}`);
-        if (first_metadata_item != null)
-          listens = clean_number(first_metadata_item.textContent.trim());
+        if (first_metadata_item) listens = clean_number(first_metadata_item.textContent.trim());
+        let p;
         listen_item.setAttribute("data-listens", listens);
         render(listen_item, html`
-                <img class="view-item-avatar" src="${shortcut_listens.avi}" alt="${shortcut_listens.name}">
+                <img class="view-item-avatar" src=${shortcut_listens.avi} alt=${shortcut_listens.name}>
                 <div class="info">
                     <h3>${shortcut_listens.name}</h3>
-                    <p>${tl(trans.listens.count).replace("{c}", listens.toLocaleString(lang))}</p>
+                    <p class="colourful" ref=${(el) => p = el}>${tl(trans.listens.count).replace("{c}", listens.toLocaleString(lang))}</p>
                 </div>
             `);
         if (settings.colourful_counts && page.type == "artist") {
           let parsed_scrobble_as_rank = parse_scrobbles_as_rank(listens);
           listen_item.setAttribute("data-bleh--scrobble-milestone", parsed_scrobble_as_rank.milestone);
-          listen_item.style.setProperty("--hue-over", parsed_scrobble_as_rank.hue);
-          listen_item.style.setProperty("--sat-over", parsed_scrobble_as_rank.sat);
-          listen_item.style.setProperty("--lit-over", parsed_scrobble_as_rank.lit);
+          p.style.setProperty("--hue-over", parsed_scrobble_as_rank.hue);
+          p.style.setProperty("--sat-over", parsed_scrobble_as_rank.sat);
+          p.style.setProperty("--lit-over", parsed_scrobble_as_rank.lit);
         }
       });
     }
@@ -10222,17 +10220,20 @@
   }
   function create_listen_item(parent, { name: name2, listens, link, avi, count = 0, button = false, katsune = false }, header_type) {
     log(`creating listen item of ${name2}, ${count}, ${listens}`, "artist", "info", { avi, link });
-    let listen_item = document.createElement(!button ? "a" : "button");
+    let listen_item;
+    if (button) listen_item = html.node`<button />`;
+    else listen_item = html.node`<a />`;
     listen_item.classList.add("btn", "listen-item");
     listen_item.setAttribute("href", `${root}user/${name2}/library/music/${link}`);
     listen_item.setAttribute("data-listens", listens);
     listen_item.setAttribute("id", `listen-item--${name2}`);
+    let p;
     if (listens > -1) {
       render(listen_item, html`
-            <img class="view-item-avatar" src="${avi}" alt="${name2}">
+            <img class="view-item-avatar" src=${avi} alt=${name2}>
             <div class="info">
                 <h3>${name2}</h3>
-                <p>${tl(trans.listens.count).replace("{c}", listens.toLocaleString(lang))}</p>
+                <p class="colourful" ref=${(el) => p = el}>${tl(trans.listens.count).replace("{c}", listens.toLocaleString(lang))}</p>
             </div>
         `);
       let menu = tippy(listen_item, {
@@ -10256,10 +10257,10 @@
       register_menu(listen_item, menu);
     } else if (listens > -2) {
       render(listen_item, html`
-            <img class="view-item-avatar" src="${avi}" alt="${name2}">
+            <img class="view-item-avatar" src=${avi} alt=${name2}>
             <div class="info">
                 <h3>${name2}</h3>
-                <p>${tl(trans.listens)}</p>
+                <p class="colourful" ref=${(el) => p = el}>${tl(trans.listens)}</p>
             </div>
         `);
       let menu = tippy(listen_item, {
@@ -10294,12 +10295,12 @@
       });
     } else {
       render(listen_item, html`
-            ${avi[0] ? html.node`<img class="view-item-avatar" src="${avi[0].getAttribute("src")}" alt="">` : ""}
-            ${avi[1] ? html.node`<img class="view-item-avatar" src="${avi[1].getAttribute("src")}" alt="">` : ""}
-            ${avi[2] ? html.node`<img class="view-item-avatar" src="${avi[2].getAttribute("src")}" alt="">` : ""}
+            ${avi[0] ? html.node`<img class="view-item-avatar" src=${avi[0].getAttribute("src")} alt="">` : ""}
+            ${avi[1] ? html.node`<img class="view-item-avatar" src=${avi[1].getAttribute("src")} alt="">` : ""}
+            ${avi[2] ? html.node`<img class="view-item-avatar" src=${avi[2].getAttribute("src")} alt="">` : ""}
             <div class="info">
                 <h3>${tl(trans.following)}</h3>
-                <p>${tl(trans.others_count).replace("{c}", count)}</p>
+                <p class="colourful" ref=${(el) => p = el}>${tl(trans.others_count).replace("{c}", count)}</p>
             </div>
         `);
       listen_item.setAttribute("href", `${window.location.href}/+listeners/you-know`);
@@ -10307,15 +10308,13 @@
     if (settings.colourful_counts && listens > -1 && header_type == "artist") {
       let parsed_scrobble_as_rank = parse_scrobbles_as_rank(listens);
       listen_item.setAttribute("data-bleh--scrobble-milestone", parsed_scrobble_as_rank.milestone);
-      listen_item.style.setProperty("--hue-user", parsed_scrobble_as_rank.hue);
-      listen_item.style.setProperty("--sat-user", parsed_scrobble_as_rank.sat);
-      listen_item.style.setProperty("--lit-user", parsed_scrobble_as_rank.lit);
+      p.style.setProperty("--hue-user", parsed_scrobble_as_rank.hue);
+      p.style.setProperty("--sat-user", parsed_scrobble_as_rank.sat);
+      p.style.setProperty("--lit-user", parsed_scrobble_as_rank.lit);
     }
-    if (katsune)
-      listen_item.classList.add("icon");
+    if (katsune) listen_item.classList.add("icon");
     parent.appendChild(listen_item);
-    if (listens < -1)
-      return;
+    return listen_item;
   }
   function show_numbers_on_side(header_type) {
     let metadata = document.body.querySelectorAll(".header-metadata-tnew-item");
@@ -10777,7 +10776,7 @@
         return;
       }
       let taste_wrap = html.node`
-            <div class="btn listen-item icon">
+            <div class="btn listen-item icon taste">
                 <div class="span">
                     <img class="view-item-avatar" src=${auth.avatar} alt=${auth.name}>
                     <img class="view-item-avatar" src=${page.avatar} alt=${page.name}>
@@ -10792,9 +10791,6 @@
                         </p>
                     </div>
                 </div>
-                <div class="taste-bar colourful" data-taste="${taste}">
-                    <div class="taste-bar-fill" style="width: ${taste_percentage}"></div>
-                </div>
             </div>
         `;
       tippy(taste_wrap, {
@@ -10803,12 +10799,11 @@
                 <span>
                     ${tl(trans.taste_similarity)}
                 </span>
-                <div class="hint">${tl(trans.right_click_for_more_options)}</div>
+                <div class="hint">${tl(trans.click_for_more_options)}</div>
             `
       });
-      listen_container.appendChild(taste_wrap);
       if (taste_artists.length > 1) {
-        let menu = tippy(taste_wrap, {
+        tippy(taste_wrap, {
           theme: "context-menu",
           content: html.node`
                     <h4 class="menu-header">${tl(trans.compare_plays)}</h4>
@@ -10839,19 +10834,15 @@
                     <div class="sep"></div>
                     <a class="dropdown-menu-clickable-item" data-type="compare" href="${root}bleh/minis/compare?profile=${page.name}">${tl(trans.compare)}</a>
                 `,
-          placement: "right-start",
-          trigger: "manual",
+          trigger: "click",
+          placement: "bottom",
           interactive: true,
           interactiveBorder: 10,
-          offset: [0, 0],
-          onShow(instance) {
-            instance.popper.addEventListener("click", (event3) => {
-              instance.hide();
-            });
-          }
+          offset: [0, 0]
         });
-        register_menu(taste_wrap, menu);
       }
+      const row = listen_container.querySelector(".listener-row");
+      row.after(taste_wrap);
     }
   }
   function create_profile_top_item(parent, { name: name2, link, text: text2 = "", type, new_release = false, updated = false, action = "", tooltip = "", allow_html = false, tooltip_theme = "" }) {
@@ -18261,6 +18252,9 @@
       const artist = links[0];
       const album = links[1];
       const avatar3 = doc.querySelector(".cover-art img")?.src;
+      track.removeAttribute("target");
+      artist.removeAttribute("target");
+      album.removeAttribute("target");
       artist.textContent = correct_artist(artist.textContent);
       track.textContent = correct_item_by_artist(track.textContent, artist.textContent);
       let next = /* @__PURE__ */ new Date();
@@ -22269,6 +22263,9 @@
       en: "Continue",
       de: "Fortsetzen",
       pt: "Contiuar"
+    },
+    click_for_more_options: {
+      en: "Click for more options"
     },
     right_click_for_more_options: {
       en: "Right click for more options",
