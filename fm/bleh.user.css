@@ -9123,6 +9123,9 @@
     [data-type="shouts"] {
         --mask: var(--icon-16-shoutbox);
     }
+    [data-type="listening-report"] {
+        --mask: var(--icon-16-listening-report);
+    }
     [data-type="back"] {
         --mask: var(--icon-16-arrow-left);
     }
@@ -10965,6 +10968,8 @@
                 & > .avatar {
                     background: var(--avatar-generic-background);
                     border-radius: var(--avatar-radius);
+                    width: 42px;
+                    height: 42px;
 
                     & > img {
                         position: static;

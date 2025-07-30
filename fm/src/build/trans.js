@@ -3235,7 +3235,10 @@ export const trans = {
         en: '{u} and {c} others replied'
     },
     obsession_expired: {
-        en: 'Your obsession expired!'
+        en: 'Your obsession has expired'
+    },
+    listening_report_available: {
+        en: 'View your {m} listening report'
     }
 }
 

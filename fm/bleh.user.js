@@ -17584,7 +17584,6 @@
     auth_link2.appendChild(html.node`
         <p>${auth.name}</p>
     `);
-    auth.pro = !!masthead.querySelector(".masthead-pro-wrap");
     let badges = load_badges(auth.name, true);
     if (badges) {
       auth_link2.appendChild(html.node`
@@ -19717,7 +19716,6 @@
     let notifications = list.querySelectorAll(".inbox-notifications__item");
     notifications.forEach((notification, index) => {
       let active = notification.classList.contains("inbox-notifications__item--highlight");
-      if (index == 0) active = true;
       notification.classList = "notification";
       if (active) notification.classList.add("active");
       const link = notification.querySelector(".inbox-notifications__item-link");
@@ -19744,8 +19742,19 @@
         context.sister = correct_artist(desc_split[0]);
         context.name = correct_item_by_artist(desc_split[1], context.sister);
       } else if (href.endsWith("/listening-report/month")) {
-        type = "report";
-        involved.push(split[1]);
+        type = "listening-report";
+        involved.push(strongs[0].textContent);
+        let img = avatar3.querySelector("img");
+        img.src = auth.avatar;
+        img.alt = auth.name;
+        let label = avatar3.querySelector(".avatar-status-dot");
+        if (auth.pro) {
+          label.classList = "avatar-status-dot avatar-status-dot--subscriber";
+        } else {
+          label.remove();
+        }
+        context.type = "profile";
+        context.name = split[1];
       } else if (href.startsWith(`${root}user/`)) {
         context.type = "profile";
         context.name = split[1];
@@ -19759,7 +19768,7 @@
           involved.push(strong.textContent);
         });
       } else if (href.startsWith(`${root}music/`)) {
-        if (split[2] == "+shoutbox") {
+        if (split[2].startsWith("+")) {
           context.type = "artist";
           context.name = correct_artist(desanitise(split[1]));
         } else if (split[2] == "_") {
@@ -19804,9 +19813,7 @@
                     ` : html.node`
                         ${is_reply ? tl(trans.users_replied).replace("{u}", involved.join(", ")).replace("{c}", others_included) : tl(trans.users_commented).replace("{u}", involved.join(", ")).replace("{c}", others_included)}
                     `}
-                    ` : type == "obsession" ? tl(trans.obsession_expired) : html.node`
-                    
-                    `}
+                    ` : type == "obsession" ? tl(trans.obsession_expired) : type == "listening-report" ? tl(trans.listening_report_available).replace("{m}", involved[0]) : ""}
                 </div>
                 <div class="notification-context">
                     <span class="bleh-icon" style="--icon: var(--icon-16-indent)" />
@@ -20947,6 +20954,7 @@
       page.structure.wrapper = document.body.querySelector(".main-content");
     let main_content = page.structure.wrapper.querySelector(":scope > :last-child:not([data-bleh])");
     if (main_content) {
+      auth.pro = !!main_content.querySelector(":scope > .masthead > .masthead-pro-wrap");
       assign_page_type();
       load_page();
       main_content.setAttribute("data-bleh", "true");
@@ -24525,7 +24533,10 @@
       en: "{u} and {c} others replied"
     },
     obsession_expired: {
-      en: "Your obsession expired!"
+      en: "Your obsession has expired"
+    },
+    listening_report_available: {
+      en: "View your {m} listening report"
     }
   };
   var trans_legacy = {

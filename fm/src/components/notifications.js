@@ -1,4 +1,4 @@
-import {root} from "../build/page.js";
+import {auth, root} from "../build/page.js";
 import {desanitise} from "../build/tools.js";
 import {correct_artist, correct_item_by_artist} from "./lotus.js";
 import {html, render} from "lighterhtml";
@@ -12,7 +12,7 @@ export function bleh_notification_list(list) {
     notifications.forEach((notification, index) => {
         let active = notification.classList.contains('inbox-notifications__item--highlight');
 
-        if (index == 0) active = true;
+        //if (index == 0) active = true;
 
         notification.classList = 'notification';
         if (active) notification.classList.add('active');
@@ -50,8 +50,23 @@ export function bleh_notification_list(list) {
             context.sister = correct_artist(desc_split[0]);
             context.name = correct_item_by_artist(desc_split[1], context.sister);
         } else if (href.endsWith('/listening-report/month')) {
-            type = 'report';
-            involved.push(split[1]);
+            type = 'listening-report';
+            involved.push(strongs[0].textContent);
+
+            let img = avatar.querySelector('img');
+            img.src = auth.avatar;
+            img.alt = auth.name;
+
+            // remove the staff badge lol
+            let label = avatar.querySelector('.avatar-status-dot');
+            if (auth.pro) {
+                label.classList = 'avatar-status-dot avatar-status-dot--subscriber';
+            } else {
+                label.remove();
+            }
+
+            context.type = 'profile';
+            context.name = split[1];
         } else if (href.startsWith(`${root}user/`)) {
             context.type = 'profile';
             context.name = split[1];
@@ -68,7 +83,8 @@ export function bleh_notification_list(list) {
                 involved.push(strong.textContent);
             });
         } else if (href.startsWith(`${root}music/`)) {
-            if (split[2] == '+shoutbox') {
+            if (split[2].startsWith('+')) {
+                // subpage
                 context.type = 'artist';
                 context.name = correct_artist(desanitise(split[1]));
             } else if (split[2] == '_') {
@@ -122,9 +138,8 @@ export function bleh_notification_list(list) {
                     ` : html.node`
                         ${is_reply ? tl(trans.users_replied).replace('{u}', involved.join(', ')).replace('{c}', others_included) : tl(trans.users_commented).replace('{u}', involved.join(', ')).replace('{c}', others_included)}
                     `}
-                    ` : type == 'obsession' ? tl(trans.obsession_expired) : html.node`
-                    
-                    `}
+                    ` : type == 'obsession' ? tl(trans.obsession_expired)
+                      : type == 'listening-report' ? tl(trans.listening_report_available).replace('{m}', involved[0]) : ''}
                 </div>
                 <div class="notification-context">
                     <span class="bleh-icon" style="--icon: var(--icon-16-indent)" />
