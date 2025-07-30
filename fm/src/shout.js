@@ -59,6 +59,12 @@ export function patch_shouts() {
             }
 
 
+            const indicator = html.node`
+                <div class="shout-vote-indicator colourful" aria-checked="false" />
+            `;
+            shout.appendChild(indicator);
+
+
             // timestamp
             let shout_timestamp = shout.querySelector('.shout-timestamp time');
             if (shout_timestamp) {
@@ -77,6 +83,31 @@ export function patch_shouts() {
                     button.classList.add('shout-action-button', 'see-more');
                 });
             });
+
+
+            // detect vote status
+            const form = shout.querySelector('.vote-button-toggle');
+
+            const voted_button = form.querySelector('.vote-button--voted');
+            const unvote_button = form.querySelector('.vote-button:not(.vote-button--voted)');
+
+            // if the ALREADY VOTED button changes to MODIFIED STATE when clicked,
+            // that means the server gave us a shout that is ALREADY VOTED
+            const initial_is_voted = voted_button.getAttribute('data-ajax-form-sets-state') == 'modified-state';
+
+            indicator.setAttribute('aria-checked', initial_is_voted.toString());
+
+            voted_button.addEventListener('click', (e) => vote_button())
+            unvote_button.addEventListener('click', (e) => vote_button());
+
+            function vote_button() {
+                setTimeout(() => {
+                    const modified = form.getAttribute('data-ajax-form-state') == 'modified-state';
+                    const current_is_voted = initial_is_voted != modified;
+
+                    indicator.setAttribute('aria-checked', current_is_voted.toString());
+                }, 0);
+            }
 
 
             let send_button = shout.querySelector('.form-group--submit');

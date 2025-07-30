@@ -145,7 +145,10 @@
 
         --brand: 'bleh';
 
-        --hue-pos: 140;
+        --hue-pos: 120;
+        --sat-pos: 1.05;
+        --lit-pos: 1.025;
+
         --hue-neg: -2;
 
         --hue-fav: 30;
@@ -468,6 +471,8 @@
         --primary-shadow: inset 0 1px 0 0 hsl(var(--h2)), inset 0 -30px 20px -20px hsla(var(--h4), 45%);
         --bar-shadow: inset 0 0 0 1px hsla(var(--h3), 0.06), inset 0 -2px 4px hsla(var(--h4), 0.1);
 
+        --shout-vote-indicator: linear-gradient(90deg, transparent 20%, hsl(var(--h4), 5%));
+
         .theme-preview[data-bleh--theme="oled"],
         [data-bleh--theme="oled"] &:not(.theme-preview) {
             --c1: var(--hue), calc(clamp(min(0), var(--sat), max(1)) * 40%), 100%;
@@ -490,6 +495,8 @@
             --h4: var(--l4-c);
             --f4: var(--hue), calc(clamp(min(0), var(--sat), max(1.5)) * 32%), calc(clamp(min(0.8), var(--lit), max(1.5)) * 25%);
             --g4: var(--hue), calc(clamp(min(0), var(--sat), max(1.5)) * 60%), calc(clamp(min(0.5), var(--lit), max(1.5)) * 10%);
+
+            --shout-vote-indicator: linear-gradient(90deg, transparent 20%, hsl(var(--h4), 8%));
         }
         .theme-preview[data-bleh--theme="light"],
         [data-bleh--theme="light"] &:not(
@@ -529,6 +536,8 @@
 
             --primary-shadow: inset 0 1px 0 0 hsl(var(--l2-c)), inset 0 -30px 20px -20px hsl(var(--h4), 70%);
             --bar-shadow: inset 0 0 0 1px hsla(var(--h4), 0.1), inset 0 -2px 4px hsla(var(--l2-c), 0.2);
+
+            --shout-vote-indicator: linear-gradient(90deg, transparent 20%, hsl(var(--h4), 15%));
         }
         .theme-preview[data-bleh--theme="ink"],
         [data-bleh--theme="ink"] &:not(
@@ -568,6 +577,8 @@
 
             --primary-shadow: inset 0 1px 0 0 hsl(var(--l2-c)), inset 0 -30px 20px -20px hsl(var(--h4), 70%);
             --bar-shadow: inset 0 0 0 1px hsla(var(--h4), 0.1), inset 0 -2px 4px hsla(var(--l2-c), 0.2);
+
+            --shout-vote-indicator: linear-gradient(90deg, transparent 20%, hsl(var(--h4), 15%));
         }
     }
 
@@ -647,6 +658,8 @@
 
         --menu-bg: var(--b6);
 
+        --shout-actions-opacity: 0.45;
+
         &[data-bleh--theme_type="light"], [data-bleh--theme_type="light"] > & {
             --view-buttons: hsl(var(--b4), 10%);
 
@@ -670,6 +683,8 @@
             --blur-brightness: 2.3;
 
             --menu-bg: var(--b5);
+
+            --shout-actions-opacity: 0.6;
         }
 
         &[data-bleh--theme="oled"], [data-bleh--theme="oled"] > & {
@@ -6609,6 +6624,33 @@
         .shout-user-avatar-link {
             display: none;
         }
+
+        & > .shout-vote-indicator {
+            position: absolute;
+            top: 0;
+            right: 0;
+            bottom: 0;
+            width: 500px;
+            background: var(--shout-vote-indicator);
+            opacity: 0;
+            transform: scaleX(0.5);
+            transform-origin: right;
+            pointer-events: none;
+            border-radius: var(--item-big-radius);
+
+            transition-property: opacity, transform;
+            transition-duration: 0.6s;
+            transition-timing-function: var(--trans-function);
+
+            --hue-over: var(--hue-pos);
+            --sat-over: var(--sat-pos);
+            --lit-over: var(--lit-pos);
+
+            &[aria-checked="true"] {
+                opacity: 1;
+                transform: scaleX(1);
+            }
+        }
     }
     @keyframes slide_left {
         from {
@@ -6646,7 +6688,7 @@
         top: 6px;
         right: calc(var(--card-padding) - 12px);
 
-        opacity: 0.3;
+        opacity: var(--shout-actions-opacity);
         transition-property: opacity;
         transition-duration: var(--trans);
         transition-timing-function: var(--trans-function);
@@ -10822,8 +10864,8 @@
     /*     VOTING     */
     .gallery-image-vote-up-on/*, .gallery-image-vote-up-off*/, .vote-button--voted {
         --hue-over: var(--hue-pos);
-        --sat-over: 1;
-        --lit-over: 1;
+        --sat-over: var(--sat-pos);
+        --lit-over: var(--lit-pos);
     }
     .gallery-image-vote-down-on/*, .gallery-image-vote-down-off*/ {
         --hue-over: var(--hue-neg);

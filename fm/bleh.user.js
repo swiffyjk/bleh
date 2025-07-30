@@ -20221,6 +20221,13 @@
     let shouts = page.structure.main.querySelectorAll(".shout:not([data-kate-processed])");
     shouts.forEach((shout, index) => {
       try {
+        let vote_button = function() {
+          setTimeout(() => {
+            const modified = form.getAttribute("data-ajax-form-state") == "modified-state";
+            const current_is_voted = initial_is_voted != modified;
+            indicator.setAttribute("aria-checked", current_is_voted.toString());
+          }, 0);
+        };
         shout.setAttribute("data-kate-processed", "true");
         shout.style.setProperty("--delay", index * 0.04 + "s");
         let shout_name = shout.querySelector(".shout-user a");
@@ -20244,6 +20251,10 @@
           let shout_body = shout.querySelector(".shout-body p");
           shout_parse_queue.push({ element: shout_body });
         }
+        const indicator = html.node`
+                <div class="shout-vote-indicator colourful" aria-checked="false" />
+            `;
+        shout.appendChild(indicator);
         let shout_timestamp = shout.querySelector(".shout-timestamp time");
         if (shout_timestamp) {
           tippy(shout_timestamp, {
@@ -20258,6 +20269,13 @@
             button.classList.add("shout-action-button", "see-more");
           });
         });
+        const form = shout.querySelector(".vote-button-toggle");
+        const voted_button = form.querySelector(".vote-button--voted");
+        const unvote_button = form.querySelector(".vote-button:not(.vote-button--voted)");
+        const initial_is_voted = voted_button.getAttribute("data-ajax-form-sets-state") == "modified-state";
+        indicator.setAttribute("aria-checked", initial_is_voted.toString());
+        voted_button.addEventListener("click", (e) => vote_button());
+        unvote_button.addEventListener("click", (e) => vote_button());
         let send_button = shout.querySelector(".form-group--submit");
         shout_send(send_button);
       } catch (e) {
