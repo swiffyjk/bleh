@@ -17392,6 +17392,7 @@
 
             input {
                 width: calc(var(--max) * 6);
+                min-width: 60px;
                 max-width: 380px;
 
                 &[type="color"] {
@@ -25425,6 +25426,10 @@
                 }
             }
         }
+    }
+
+    [data-type="cmd"] {
+        --mask: var(--icon-16-command);
     }
 
 

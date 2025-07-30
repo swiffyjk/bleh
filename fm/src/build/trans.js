@@ -2803,6 +2803,9 @@ export const trans = {
     opens_the_value_for_type: {
         en: 'Open the {v} for {t}'
     },
+    quick_switcher: {
+        en: 'Switcher'
+    },
     switch_placeholder: {
         en: 'Quick switch to a page or action'
     },

@@ -951,5 +951,60 @@ export let settings_store = {
         type: 'checkbox',
         icon: 'icon-16-download',
         horizontal: true
+    },
+    rabbit_search: {
+        default: 'd',
+        title: trans.search,
+        type: 'text',
+        min: 1,
+        max: 1,
+        icon: 'icon-16-search',
+        placeholder: 'none',
+        keybind: ['⌘', 'D'],
+        warn_if_empty: true
+    },
+    rabbit: {
+        default: 'k',
+        title: trans.quick_switcher,
+        type: 'text',
+        min: 1,
+        max: 1,
+        icon: 'icon-16-command',
+        placeholder: 'none',
+        keybind: ['⌘', 'K'],
+        warn_if_empty: true
+    },
+    rabbit_profile: {
+        default: 'p',
+        title: trans.profile,
+        type: 'text',
+        min: 1,
+        max: 1,
+        icon: 'icon-16-user',
+        placeholder: 'none',
+        keybind: ['⌘', 'P'],
+        warn_if_empty: true
+    },
+    rabbit_shortcut: {
+        default: 's',
+        title: trans.profile_shortcut.name,
+        type: 'text',
+        min: 1,
+        max: 1,
+        icon: 'icon-16-profile-shortcut',
+        placeholder: 'none',
+        keybind: ['⌘', 'S'],
+        warn_if_empty: true
+    },
+    rabbit_bleh_settings: {
+        default: 'b',
+        title: trans.settings,
+        type: 'text',
+        min: 1,
+        max: 1,
+        icon: 'icon-16-bleh',
+        placeholder: 'none',
+        keybind: ['⌘', 'B'],
+        warn_if_empty: true
     }
 }

@@ -135,22 +135,38 @@ export function append_nav() {
     }
 
 
+    let links = masthead.querySelector('.masthead-nav .navlist-items');
+    render(links, html``);
+
+
+    /*let quick_switcher = html.node`
+        <li class="masthead-nav-item">
+            <button class="masthead-nav-control" data-type="cmd">
+                ${tl(trans.quick_switcher)}
+            </button>
+        </li>
+    `;
+
+    tippy(quick_switcher, {
+        content: tl(trans.quick_switcher)
+    });
+
+    links.appendChild(quick_switcher);*/
+
+
     let notif_count = new_auth.querySelector('[data-analytics-label="notifications"] + .auth-avatar-notification-count-badge');
     if (!notif_count) notif_count = '0'; else notif_count = notif_count.textContent;
     let inbox_count = new_auth.querySelector('[data-analytics-label="inbox"] + .auth-avatar-notification-count-badge');
     if (!inbox_count) inbox_count = '0'; else inbox_count = inbox_count.textContent;
 
-
-    let links = masthead.querySelector('.masthead-nav .navlist-items');
-    render(links, html``);
-
     let notif_container = html.node`
-    <li class="masthead-nav-item">
-        <a class="masthead-nav-control" href="${root}inbox/notifications" data-label="notifications" data-count=${notif_count}>
-            <span class="sr-only">${tl(trans.notifications.name)}</span>
-            <div class="counter">${notif_count}</div>
-        </a>
-    </li>`;
+        <li class="masthead-nav-item">
+            <a class="masthead-nav-control" href="${root}inbox/notifications" data-label="notifications" data-count=${notif_count}>
+                <span class="sr-only">${tl(trans.notifications.name)}</span>
+                <div class="counter">${notif_count}</div>
+            </a>
+        </li>
+    `;
 
     if (notif_count > 0) {
         tippy(notif_container, {

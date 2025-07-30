@@ -5012,367 +5012,6 @@
     });
   };
 
-  // src/components/settings.js
-  function setting({
-    id = "",
-    text: text2 = true,
-    focus = false,
-    standalone = false
-  }) {
-    try {
-      let value = settings[id];
-      log(`creating ${id} with value ${value}`, "settings", "log", { settings, settings_id: settings[id] });
-      if (!settings_store[id])
-        return setting_fail(id, { message: "No settings store entry present" });
-      let type = settings_store[id].type || "toggle";
-      let title = settings_store[id].title ? tl(settings_store[id].title) : id;
-      let body = settings_store[id].body ? tl(settings_store[id].body) : null;
-      let icon = settings_store[id].icon;
-      let disabled = false;
-      let disabled_reason = "";
-      if (settings_store[id].platforms && !settings_store[id].platforms.includes(page.platform)) {
-        disabled = true;
-        disabled_reason = tl(trans.item_is_unavailable_on_platform).replace("{i}", title).replace("{p}", tl(trans.platforms[page.platform]));
-      }
-      if (disabled && disabled_reason)
-        return setting_fail(id, { message: disabled_reason, unavailable: true });
-      if (settings_store[id].beta)
-        title = html.node`${title}<span class="new-badge beta">${tl(trans.beta)}</span>`;
-      if (type === "toggle") {
-        let toggle2;
-        return html.node`
-                <div class="setting v2 ${standalone ? "standalone" : ""}" data-type="toggle" disabled=${disabled} onclick=${() => update_toggle(id, toggle2)}>
-                    ${icon ? html.node`
-                    <div class="icon">
-                        <div class="bleh-icon" style="--icon: var(--${icon})" />
-                    </div>
-                    ` : ""}
-                    ${text2 ? html.node`
-                    <div class="heading">
-                        <h5>${title}</h5>
-                        ${body ? html.node`<p>${body}</p>` : ""}
-                    </div>
-                    ` : ""}
-                    ${settings_store[id].extensions ? html.node`
-                    <div class="extensions">
-                        ${settings_store[id].extensions.map((extension) => () => {
-          let container = html.node`
-                                <div class="extension">
-                                    <div class="bleh-icon" />
-                                </div>
-                            `;
-          tippy(container, {
-            content: tl(trans.requires_extension_value).replace("{v}", tl(extension))
-          });
-          return container;
-        })}
-                    </div>
-                    ` : ""}
-                    ${setting_incompatible_block(settings_store[id].incompatible)}
-                    <div class="toggle-wrap">
-                        <button class="toggle" ref=${(el) => toggle2 = el} aria-checked=${value}>
-                            <div class="dot"></div>
-                        </button>
-                    </div>
-                </div>
-            `;
-      } else if (type === "range") {
-        let option;
-        let min = settings_store[id].min || 0;
-        let max = settings_store[id].max || 0;
-        let step = settings_store[id].step || 0;
-        if (min >= max || step === 0)
-          return setting_fail(id, { message: "A range type requires a min, max, and step defined in the settings store" });
-        let track;
-        let input2;
-        let marker;
-        let working_max = settings_store[id].max - settings_store[id].min;
-        return html.node`
-                <div class="setting v2 ${standalone ? "standalone" : ""}" data-type="range" disabled=${disabled} ref=${(el) => option = el} data-modified=${value != settings_store[id].default}>
-                    ${text2 ? html.node`
-                    <div class="heading">
-                        <h5>${title}<button class="reset see-more" onclick=${() => reset_range(id, option, track, input2, marker)}>${tl(trans.reset)}</button></h5>
-                        ${body ? html.node`<p>${body}</p>` : ""}
-                    </div>
-                    ` : ""}
-                    ${settings_store[id].extensions ? html.node`
-                    <div class="extensions">
-                        ${settings_store[id].extensions.map((extension) => () => {
-          let container = html.node`
-                                <div class="extension">
-                                    <div class="bleh-icon" />
-                                </div>
-                            `;
-          tippy(container, {
-            content: tl(trans.requires_extension_value).replace("{v}", tl(extension))
-          });
-          return container;
-        })}
-                    </div>
-                    ` : ""}
-                    ${setting_incompatible_block(settings_store[id].incompatible)}
-                    <div class="range">
-                        <div class="track" style="--percent: ${(value - settings_store[id].min) / working_max * 100}%" ref=${(el) => track = el}>
-                            <div class="fill" />
-                            <div class="nub" />
-                        </div>
-                        <input type="range" min=${min} max=${max} step=${step} value=${value} ref=${(el) => input2 = el} oninput=${() => update_range(id, option, track, input2, input2.value, marker)} />
-                        <p class="value-marker" ref=${(el) => marker = el}>${value}${settings_store[id].suffix || ""}</p>
-                    </div>
-                </div>
-            `;
-      } else if (type === "text") {
-        let option;
-        let min = settings_store[id].min || 0;
-        let max = settings_store[id].max || 0;
-        if (max === 0)
-          return setting_fail(id, { message: "A text type requires a max defined in the settings store" });
-        let reset_btn;
-        let avatar3;
-        let input2;
-        let submit;
-        let input_container;
-        let error_tooltip;
-        let container = html.node`
-                <div class="setting v2 ${standalone ? "standalone" : ""}" data-type="text" disabled=${disabled} ref=${(el) => option = el} data-modified=${value != settings_store[id].default}>
-                    ${text2 ? html.node`
-                    <div class="heading">
-                        <h5>${title}<button class="reset see-more" ref=${(el) => reset_btn = el} onclick=${() => reset_text(id, input2, submit, option, reset_btn, avatar3)}>${tl(trans.reset)}</button></h5>
-                        ${body ? html.node`<p>${body}</p>` : ""}
-                    </div>
-                    ` : ""}
-                    ${settings_store[id].extensions ? html.node`
-                    <div class="extensions">
-                        ${settings_store[id].extensions.map((extension) => () => {
-          let container2 = html.node`
-                                <div class="extension">
-                                    <div class="bleh-icon" />
-                                </div>
-                            `;
-          tippy(container2, {
-            content: tl(trans.requires_extension_value).replace("{v}", tl(extension))
-          });
-          return container2;
-        })}
-                    </div>
-                    ` : ""}
-                    ${setting_incompatible_block(settings_store[id].incompatible)}
-                    ${settings_store[id].avatar ? html.node`
-                    <div class="avatar-container">
-                        <div class="avatar-inner" ref=${(el) => avatar3 = el}>
-                            <img src=${localStorage.getItem(`bleh_${id}_avi`) || ""} alt=${value} />
-                        </div>
-                    </div>
-                    ` : ""}
-                    <div class="input-container content-form in-settings can-submit" data-has-error="false" ref=${(el) => input_container = el}>
-                        <input type="text" maxlength=${max} value=${value} style="--max: ${max}px" ref=${(el) => input2 = el} placeholder=${tl(settings_store[id].placeholder)} />
-                        <button class="btn chibi icon submit" ref=${(el) => submit = el} onclick=${() => update_text(id, input2, submit, option, input2.value, reset_btn, avatar3)}>${tl(trans.save)}</button>
-                    </div>
-                </div>
-            `;
-        input2.addEventListener("keydown", (event3) => {
-          if (event3.keyCode === 13 && input_container.getAttribute("data-has-error") == "false") {
-            event3.preventDefault();
-            submit.click();
-          }
-        });
-        tippy(submit, {
-          content: tl(trans.save)
-        });
-        if (focus)
-          input2.focus();
-        error_tooltip = tippy(input2, {
-          theme: "error",
-          placement: "top",
-          trigger: "manual"
-        });
-        error_tooltip.disable();
-        input2.addEventListener("input", () => {
-          input_container.setAttribute("data-has-error", "false");
-          error_tooltip.disable();
-          submit.disabled = false;
-          if (type == "number") {
-            if (input2.value == "") {
-              error_input(tl(trans.only_numbers_are_allowed), input_container, error_tooltip, submit);
-            } else if (parseInt(input2.value) > max || parseInt(input2.value) < min) {
-              error_input(tl(trans.keep_within_the_range), input_container, error_tooltip, submit);
-            }
-          } else if (type == "text") {
-            if (settings_store[id].warn_if_empty && input2.value == "") {
-              error_input(tl(trans.this_field_is_required), input_container, error_tooltip, submit);
-            } else if (settings_store[id].warn_if_matches_auth && input2.value == auth.name) {
-              error_input(tl(trans.please_dont_clone_yourself), input_container, error_tooltip, submit);
-            }
-          }
-        });
-        return container;
-      } else if (type == "checkbox") {
-        let toggle2;
-        return html.node`
-                <div class="setting v2 ${settings_store[id].horizontal ? "horizontal" : ""} ${standalone ? "standalone" : ""}" data-type="checkbox" disabled=${disabled} onclick=${() => update_toggle(id, toggle2)}>
-                    ${icon ? html.node`
-                    <div class="icon">
-                        <div class="bleh-icon" style="--icon: var(--${icon})" />
-                    </div>
-                    ` : ""}
-                    ${text2 ? html.node`
-                    <div class="heading">
-                        <h5>${title}</h5>
-                        ${body ? html.node`<p>${body}</p>` : ""}
-                    </div>
-                    ` : ""}
-                    ${settings_store[id].extensions ? html.node`
-                    <div class="extensions">
-                        ${settings_store[id].extensions.map((extension) => () => {
-          let container = html.node`
-                                <div class="extension">
-                                    <div class="bleh-icon" />
-                                </div>
-                            `;
-          tippy(container, {
-            content: tl(trans.requires_extension_value).replace("{v}", tl(extension))
-          });
-          return container;
-        })}
-                    </div>
-                    ` : ""}
-                    ${setting_incompatible_block(settings_store[id].incompatible)}
-                    <div class="check">
-                        <div class="box" ref=${(el) => toggle2 = el} aria-checked=${value}>
-                            <div class="bleh-icon" />
-                        </div>
-                    </div>
-                </div>
-            `;
-      }
-    } catch (e) {
-      console.error(e);
-      return setting_fail(id, e);
-    }
-    return setting_fail(id);
-  }
-  function error_input(reason, input2, tooltip, submit) {
-    log(reason, "input", "log");
-    input2.setAttribute("data-has-error", "true");
-    tooltip.setContent(reason);
-    tooltip.enable();
-    tooltip.show();
-    submit.disabled = true;
-  }
-  function setting_incompatible_block(entries) {
-    if (!entries)
-      return "";
-    return "";
-    return html.node`
-        <div class="incompatible">
-            ${entries.map((incompatible) => () => {
-      let container = html.node`
-                    <div class="extension">
-                        <div class="bleh-icon" />
-                    </div>
-                `;
-      tippy(container, {
-        content: tl(trans.incompatible_with_value).replace("{v}", tl(settings_store[incompatible.setting].title))
-      });
-      return container;
-    })}
-        </div>
-    `;
-  }
-  function setting_fail(id, e = null) {
-    if (e.unavailable) {
-      return html.node`
-            <div class="setting">
-                <div class="alert alert-info no-margin">
-                    ${e.message}
-                </div>
-            </div>
-        `;
-    }
-    return html.node`
-        <div class="setting">
-            <div class="alert alert-error no-margin">
-                ${tl(trans.value_failed_to_load).replace("{v}", id)}
-                ${e ? html`<br>${e.message}` : ""}
-            </div>
-        </div>
-    `;
-  }
-  function update_toggle(id, toggle2) {
-    let value = settings[id];
-    toggle2.setAttribute("aria-checked", !value);
-    save_setting(id, !value);
-  }
-  function update_range(id, option, track, input2, value, marker, silent = false) {
-    let max = settings_store[id].max - settings_store[id].min;
-    input2.value = value;
-    track.style.setProperty("--percent", `${(value - settings_store[id].min) / max * 100}%`);
-    marker.textContent = `${value}${settings_store[id].suffix || ""}`;
-    option.setAttribute("data-modified", value != settings_store[id].default);
-    save_setting(id, value);
-  }
-  function reset_range(id, option, track, range, marker) {
-    update_range(id, option, track, range, settings_store[id].default, marker, true);
-    notify({
-      id: "reset_setting",
-      title: tl(trans.settings),
-      body: tl(trans.reset_item_to_default),
-      icon: "icon-16-settings"
-    });
-  }
-  function update_text(id, input2, submit, option, value, reset_btn, avatar3, silent = false) {
-    if (settings_store[id].wait) {
-      reset_btn.disabled = true;
-      input2.disabled = true;
-      submit.disabled = true;
-    }
-    input2.value = value;
-    option.setAttribute("data-modified", value != settings_store[id].default);
-    if (id == "profile_shortcut") {
-      save_profile_shortcut(input2, value, submit, reset_btn, avatar3);
-      return;
-    } else if (id == "hu_tao") {
-      if (value == "develop") {
-        dialog_rm2({ id: "hu_tao" });
-        change_settings_page("sku");
-        notify({
-          id: "unlocked",
-          title: tl(trans.development),
-          body: tl(trans.unlocked),
-          type: "success"
-        });
-      }
-    }
-    save_setting(id, value);
-  }
-  function reset_text(id, input2, submit, option, reset_btn, avatar3) {
-    update_text(id, input2, submit, option, settings_store[id].default, reset_btn, avatar3, true);
-    notify({
-      id: "reset_setting",
-      title: tl(trans.settings),
-      body: tl(trans.reset_item_to_default),
-      icon: "icon-16-settings"
-    });
-  }
-  function save_setting(id, value) {
-    settings[id] = value;
-    document.documentElement.setAttribute(`data-bleh--${id}`, value);
-    if (id == "theme") {
-      if (value == "light" || value == "ink" || value == "glass") {
-        settings.theme_type = "light";
-      } else {
-        settings.theme_type = "dark";
-      }
-      document.documentElement.setAttribute(`data-bleh--theme_type`, settings.theme_type);
-    }
-    if (settings_store[id].require_reload == true || settings_store[id].require_reload == "partial" && page.type != "bleh_settings")
-      request_reload();
-    if (settings_store[id].css)
-      document.body.style.setProperty(`--${settings_store[id].css}`, `${value}${settings_store[id].suffix || ""}`);
-    localStorage.setItem("bleh", JSON.stringify(settings));
-    log(`saved ${id} as ${value}`, "settings", "log", { settings, settings_id: settings[id] });
-  }
-
   // src/components/input.js
   function input({
     type = "text",
@@ -5903,6 +5542,1386 @@
       error_tooltip.enable();
       error_tooltip.show();
     }
+  }
+
+  // src/news.js
+  function news() {
+    let changelog = localStorage.getItem("bleh_changelog");
+    let changelog_expire = new Date(localStorage.getItem("bleh_changelog_expire"));
+    let current_time = /* @__PURE__ */ new Date();
+    if (!changelog) {
+      log("not cached, fetching", "changelog");
+      request_changelog();
+      dialog_rm2({ id: "rabbit" });
+    } else {
+      if (changelog_expire < current_time)
+        request_changelog();
+      else
+        open_changelog(JSON.parse(changelog));
+    }
+  }
+  function request_changelog(open_after = true) {
+    let button = page.state.navigation_menu_news;
+    if (button)
+      button.setAttribute("disabled", "");
+    let xhr = new XMLHttpRequest();
+    let url = `https://katelyynn.github.io/bleh/fm/changelog/changelog.json?${Math.random()}`;
+    xhr.open("GET", url, true);
+    xhr.onload = function() {
+      log(`responded with ${xhr.status}`, "changelog");
+      if (xhr.status != 200) {
+        log("request has been cancelled, will request again in 1h", "changelog");
+        api_expire.setHours(api_expire.getHours() + 1);
+      }
+      let api_expire = /* @__PURE__ */ new Date();
+      if (xhr.status == 200) {
+        if (open_after) {
+          try {
+            open_changelog(JSON.parse(this.response));
+            localStorage.setItem("bleh_changelog", this.response);
+            api_expire.setHours(api_expire.getHours() + 2);
+            log(`cached until ${api_expire}`, "changelog");
+            localStorage.setItem("bleh_changelog_expire", api_expire);
+          } catch (e) {
+            deliver_notif("The changelog is currently unavailable due to errors, try again later.", true);
+            console.error(e);
+          }
+        }
+      }
+      if (button != null)
+        button.removeAttribute("disabled");
+    };
+    xhr.send();
+  }
+  function open_changelog(changelog) {
+    let window2 = dialog({
+      id: "changelog",
+      title: tl(trans.news_from_user).replace("{user}", sponsor_list && sponsor_list.special ? sponsor_list.special[0] : "katelyn"),
+      body: html.node`
+            <div class="cta first sponsor colourful margin-bottom">
+                <strong>${tl(trans.news_sponsor_cta)}</strong>
+                <a class="see-more" onclick="_sponsor(true)">${tl(trans.sponsor)}</a>
+            </div>
+            <div class="changelog-list"></div>
+        `,
+      type: "changelog",
+      allow_scroll: true
+    });
+    let changelog_list = window2.querySelector(".changelog-list");
+    let index = 0;
+    for (let version2 in changelog) {
+      if (version2 == "updated" || version2 == "latest")
+        continue;
+      if (index > 10)
+        continue;
+      let version_item = html.node`
+            <div class="changelog-version-item" data-changelog-type="${changelog[version2].type}" data-changelog-latest="${index == 0 ? "true" : "false"}" data-changelog-version="${version2}">
+            <div class="version-item-header">
+                <div class="sub-text">
+                <div class="breadcrumb">
+                    <div class="breadcrumb-origin">
+                    ${version2}
+                    </div>
+                    <div class="breadcrumb-name">
+                    ${trans_legacy.en.changelog.type[changelog[version2].type]}
+                    </div>
+                </div>
+                </div>
+                <h3>${changelog[version2].name}</h3>
+                ${version2 == "2025.0113" ? html.node`<h4 class="header-over">${changelog[version2].name}</h4>` : ""}
+            </div>
+            </div>
+        `;
+      if (changelog[version2].type == "major")
+        version_item.setAttribute("id", "latest_major_release");
+      let body = document.createElement("div");
+      body.classList.add("version-item-body", "markdown-body");
+      let converter = new showdown.Converter({
+        emoji: true,
+        excludeTrailingPunctuationFromURLs: true,
+        ghMentions: true,
+        ghMentionsLink: `${root}user/{u}`,
+        headerLevelStart: 5,
+        noHeaderId: true,
+        openLinksInNewWindow: true,
+        requireSpaceBeforeHeadingText: true,
+        simpleLineBreaks: true,
+        simplifiedAutoLink: true,
+        strikethrough: true,
+        underline: true,
+        ghCodeBlocks: false,
+        smartIndentationFix: true
+      });
+      let parsed_text = converter.makeHtml(changelog[version2].bio.replace(/([@])([a-zA-Z0-9_]+)/g, `[$1$2](${root}user/$2)`).replace(/\[artist\]([a-zA-Z0-9]+)\[\/artist\]/g, `[$1](${root}music/$1)`).replace(/\[album artist=([a-zA-Z0-9]+)\]([a-zA-Z0-9\s]+)\[\/album\]/g, `[$2](${root}music/$1/$2)`).replace(/\[track artist=([a-zA-Z0-9]+)\]([a-zA-Z0-9\s]+)\[\/track\]/g, `[$2](${root}music/$1/_/$2)`).replace(/https:\/\/open\.spotify\.com\/user\/([A-Za-z0-9]+)\?si=([A-Za-z0-9]+)/g, "[@$1](https://open.spotify.com/user/$1)").replace(/&/g, "&amp;").replace(/</g, "&lt;").replace(/>/g, "&gt;").replace(/"/g, "&quot;").replace(/'/g, "&#039;"));
+      body.innerHTML = parsed_text;
+      version_item.appendChild(body);
+      changelog_list.appendChild(version_item);
+      index += 1;
+    }
+  }
+  unsafeWindow._update_local_changelog_cache = function(json) {
+    localStorage.setItem("bleh_changelog", JSON.stringify(json));
+  };
+
+  // src/components/rabbit.js
+  function register_rabbit() {
+    let input_box;
+    let selected = 0;
+    let feed = 0;
+    let matches = [];
+    let rabbit_hole;
+    let tip;
+    let depth = 0;
+    let searching;
+    let selected_search;
+    let fake;
+    let back;
+    const allowed_pages = [
+      "user",
+      "artist",
+      "album",
+      "track",
+      "tag"
+    ];
+    document.addEventListener("keydown", (e) => {
+      const cmd = e.getModifierState("Control") || e.getModifierState("Meta");
+      const key = e.key.toLowerCase();
+      if (cmd && [settings.rabbit.toLowerCase(), ","].includes(key) && !page.structure.dialogs.hasChildNodes()) {
+        e.preventDefault();
+        depth = 0;
+        if (e.getModifierState("Shift")) {
+          rabbit();
+          use_page_as_ctx();
+          back = false;
+        } else {
+          rabbit();
+        }
+      } else if (page.structure.dialogs.hasChildNodes() && page.structure.dialogs.querySelector(':scope > [data-modal-type="rabbit"]')) {
+        if (e.key == "Escape") {
+          if (depth == 0 && input_box.querySelector("input").value == "" || !back) {
+            dialog_rm2({ id: "rabbit" });
+          } else {
+            input_box.querySelector("input").value = "";
+            depth = 0;
+            rabbit_search();
+          }
+        }
+        if (e.key == "Tab") {
+          e.preventDefault();
+          rabbit_tab();
+        }
+        if (e.key == "ArrowDown") {
+          e.preventDefault();
+          if (selected < matches.length - 1)
+            selected++;
+          else
+            selected = 0;
+          if (matches[selected].disabled) {
+            if (selected + 1 < matches.length - 1)
+              selected++;
+            else
+              selected = 0;
+          }
+          rabbit_select();
+        } else if (e.key == "ArrowUp") {
+          e.preventDefault();
+          if (selected > 0)
+            selected--;
+          else
+            selected = matches.length - 1;
+          if (matches[selected].disabled) {
+            if (selected - 1 > 0)
+              selected--;
+            else
+              selected = 0;
+          }
+          rabbit_select();
+        } else if (e.key == "Enter") {
+          rabbit_enter();
+        }
+      }
+      if (!page.structure.dialogs.hasChildNodes()) {
+        if (cmd && [settings.rabbit_profile.toLowerCase()].includes(key)) {
+          e.preventDefault();
+          window.location.href = `${root}user/${auth.name}`;
+        }
+        if (cmd && [settings.rabbit_shortcut.toLowerCase()].includes(key)) {
+          e.preventDefault();
+          if (settings.profile_shortcut != "") {
+            window.location.href = `${root}user/${settings.profile_shortcut}`;
+          } else {
+            open_profile_shortcut_window();
+          }
+        }
+        if (cmd && [settings.rabbit_bleh_settings.toLowerCase()].includes(key)) {
+          e.preventDefault();
+          window.location.href = `${root}bleh`;
+        }
+        if (cmd && [settings.rabbit_search.toLowerCase()].includes(key)) {
+          e.preventDefault();
+          rabbit();
+          search();
+          back = false;
+        }
+      }
+    });
+    function rabbit() {
+      page.state.rabbit_modal = dialog({
+        id: "rabbit",
+        title: "rabbit",
+        body: html.node`
+                ${() => {
+          input_box = input({
+            maxlength: 100,
+            placeholder: tl(trans.switch_placeholder),
+            focus: true
+          });
+          input_box.classList.add("rabbit-search");
+          return input_box;
+        }}
+                <div class="rabbit-hole" ref=${(el) => rabbit_hole = el} />
+                <div class="tip" ref=${(el) => tip = el} />
+            `,
+        type: "rabbit",
+        replace_if_possible: true,
+        handle_escape_manually: true
+      });
+      back = true;
+      fake = html.node`
+            <div class="fake-input" style="display: none;" />
+        `;
+      input_box.appendChild(fake);
+      rabbit_search();
+      rabbit_select();
+      input_box.querySelector("input").addEventListener("input", (e) => {
+        rabbit_search();
+      });
+      input_box.querySelector("input").focus();
+    }
+    function rabbit_tab() {
+      input_box.querySelector("input").focus();
+    }
+    function rabbit_search(pre_selected = "", pre_matches = null) {
+      if (depth < 2) {
+        input_box.querySelector("input").style.removeProperty("display");
+        fake.style.display = "none";
+      }
+      selected = 0;
+      if (!pre_matches && depth == 0) {
+        feed = [
+          {
+            type: "search",
+            text: tl(trans.search),
+            body: tl(trans.search_for_music_or_user),
+            keywords: ["user", "music", "tag", "discover", "explore"],
+            action: () => search(),
+            keybind: ["\u2318", settings.rabbit_search.toUpperCase()]
+          },
+          {
+            type: "on_this_page",
+            text: tl(trans.on_this_page),
+            body: tl(trans.use_current_page_as_context),
+            keywords: ["ctx", "context"],
+            action: () => use_page_as_ctx(),
+            keybind: ["\u2318", "\u21E7", settings.rabbit.toUpperCase()],
+            disabled: !allowed_pages.includes(page.type)
+          },
+          {
+            type: "profile",
+            text: tl(trans.profile),
+            body: tl(trans.opens_your_value).replace("{v}", tl(trans.profile)),
+            keywords: ["profile", "user", "me"],
+            action: () => window.location.href = `${root}user/${auth.name}`,
+            keybind: ["\u2318", settings.rabbit_profile.toUpperCase()]
+          },
+          {
+            type: "profile_shortcut",
+            text: settings.profile_shortcut,
+            body: tl(trans.opens_your_value).replace("{v}", tl(trans.profile_shortcut.name)),
+            keywords: ["profile", "user", "shortcut", "friends"],
+            action: () => window.location.href = `${root}user/${settings.profile_shortcut}`,
+            hide: settings.profile_shortcut == "",
+            keybind: ["\u2318", settings.rabbit_shortcut.toUpperCase()]
+          },
+          {
+            type: "notifications",
+            text: tl(trans.notifications.name),
+            body: tl(trans.opens_your_value).replace("{v}", tl(trans.notifications.name)),
+            keywords: ["bell", "updates"],
+            action: () => window.location.href = `${root}inbox/notifications`
+          },
+          {
+            type: "inbox",
+            text: tl(trans.inbox.name),
+            body: tl(trans.opens_your_value).replace("{v}", tl(trans.inbox.name)),
+            keywords: ["messages", "direct", "dms"],
+            action: () => window.location.href = `${root}inbox`
+          },
+          {
+            type: "theme",
+            text: tl(trans.themes.name),
+            body: tl(trans.opens_the_value).replace("{v}", tl(trans.theme_picker)),
+            keywords: ["themes", "light", "dark", "ash", "darker", "oled", "amoled", "midnight", "void", "abyss", "dark reader"],
+            action: () => bleh_theme_picker()
+          },
+          {
+            type: "news",
+            text: tl(trans.news),
+            body: tl(trans.opens_the_value).replace("{v}", tl(trans.news)),
+            keywords: ["bleh", "extension", "changelog", "feed"],
+            action: () => news()
+          },
+          {
+            type: "settings",
+            text: tl(trans.settings),
+            body: tl(trans.opens_your_value_settings).replace("{v}", tl(trans.profile)),
+            keywords: ["profile", "user", "pfp", "avi", "avatar", "config", "configuration", "configure", "picture", "photo"],
+            action: () => window.location.href = `${root}settings`
+          },
+          {
+            type: "bleh_settings",
+            text: tl(trans.settings),
+            body: tl(trans.opens_the_value).replace("{v}", tl(trans.bleh_settings)),
+            keywords: ["bleh", "extension", "config", "configuration", "configure"],
+            action: () => window.location.href = `${root}bleh`,
+            keybind: ["\u2318", settings.rabbit_bleh_settings.toUpperCase()]
+          }
+        ];
+      } else if (pre_matches) {
+        feed = pre_matches;
+      }
+      if (depth < 3) {
+        let value = "";
+        if (value == "")
+          value = input_box.querySelector("input").value.trim().toLowerCase();
+        matches = [];
+        feed.forEach((item) => {
+          let extended = `${item.text} ${item.body} ${item.keywords.join(" ")} ${item.keybind ? item.keybind.join(" ").replace("\u2318", "Ctrl").replace("\u21E7", "Shift") : ""}`.toLowerCase();
+          let words = value.split(" ");
+          let match = false;
+          words.forEach((word) => {
+            if (extended.includes(word)) {
+              match = true;
+            }
+          });
+          if (item.hide)
+            match = false;
+          if (match)
+            matches.push(item);
+        });
+        render(rabbit_hole, html`
+                ${matches.length > 0 ? matches.map((item, index) => () => {
+          let button = html.node`
+                        <button class="dropdown-menu-clickable-item rabbit-hole-item" data-type=${item.type} onclick=${item.action} disabled=${item.disabled}>
+                            <div class="info">
+                                <div class="text">${item.text}</div>
+                            </div>
+                            ${item.keybind ? keybind(item.keybind) : ""}
+                        </button>
+                    `;
+          if (!item.disabled) {
+            button.addEventListener("mouseover", () => {
+              selected = index;
+              rabbit_select(false, true);
+            });
+          }
+          return button;
+        }) : html.node`
+                    <div class="loading-data-container">
+                        <div class="loading-data-text failed">${tl(trans.nothing_matches_your_search)}</div>
+                    </div>
+                `}
+            `);
+        rabbit_select();
+      } else {
+        matches = feed;
+      }
+    }
+    function rabbit_select(click = false, with_mouse = false) {
+      rabbit_tip(tl(trans.select_an_option));
+      if (depth == 3 && click) {
+        searching[selected_search].name = input_box.querySelector("input").value;
+        input_box.querySelector("input").value = "";
+        depth = 2;
+        search_fill();
+        return;
+      } else if (depth == 3) {
+        return;
+      }
+      let buttons = rabbit_hole.querySelectorAll("button");
+      buttons.forEach((button, index) => {
+        if (index == selected) {
+          button.setAttribute("aria-selected", "true");
+          if (!with_mouse) {
+            button.scrollIntoView({
+              behavior: "smooth",
+              block: "center"
+            });
+          }
+          if (click) {
+            input_box.querySelector("input").value = "";
+            button.click();
+          }
+          rabbit_tip(matches[index].body);
+        } else {
+          button.setAttribute("aria-selected", "false");
+        }
+      });
+      input_box.querySelector("input").focus();
+    }
+    function rabbit_tip(text2) {
+      render(tip, html`
+        <div class="left">
+            ${depth == 0 ? html.node`
+            <kbd>Esc</kbd> ${tl(trans.close)}
+            ` : html.node`
+            <kbd>Esc</kbd> ${tl(trans.back)}
+            `}
+        </div>
+        <div class="right">
+            ${text2}
+        </div>
+        `);
+    }
+    function rabbit_enter() {
+      rabbit_select(true);
+    }
+    function append_search(id) {
+      if (id == "artist" || id == "user" || id == "tag")
+        selected_search = "primary";
+      else
+        selected_search = "secondary";
+      depth = 3;
+      searching[selected_search].type = id;
+      input_box.querySelector("input").value = "";
+      input_box.querySelector("input").style.removeProperty("display");
+      fake.style.display = "none";
+    }
+    function bleh_theme_picker() {
+      depth = 1;
+      rabbit_search("internal:theme_picker", [
+        {
+          type: "theme_auto",
+          text: tl(trans.auto),
+          body: tl(trans.changes_your_theme),
+          keywords: ["system"],
+          action: () => save_setting("theme", "light"),
+          hide: !ff("auto_theme")
+        },
+        {
+          type: "theme_light",
+          text: tl(trans.themes.light),
+          body: tl(trans.changes_your_theme),
+          keywords: ["sun", "day"],
+          action: () => save_setting("theme", "light")
+        },
+        {
+          type: "theme_ink",
+          text: tl(trans.themes.ink),
+          body: tl(trans.changes_your_theme),
+          keywords: ["sun", "day", "light", "e-ink"],
+          action: () => save_setting("theme", "ink")
+        },
+        {
+          type: "theme_ash",
+          text: tl(trans.themes.dark),
+          body: tl(trans.changes_your_theme),
+          keywords: ["dark", "night", "grey", "gray"],
+          action: () => save_setting("theme", "dark")
+        },
+        {
+          type: "theme_dark",
+          text: tl(trans.themes.darker),
+          body: tl(trans.changes_your_theme),
+          keywords: ["dark", "night", "grey", "gray"],
+          action: () => save_setting("theme", "darker")
+        },
+        {
+          type: "theme_void",
+          text: tl(trans.themes.oled),
+          body: tl(trans.changes_your_theme),
+          keywords: ["dark", "night", "black"],
+          action: () => save_setting("theme", "oled")
+        }
+      ]);
+    }
+    function use_page_as_ctx() {
+      if (!allowed_pages.includes(page.type))
+        return;
+      depth = 1;
+      let url_start = root;
+      if (page.type == "user")
+        url_start += "user/";
+      else if (page.type == "album" || page.type == "artist" || page.type == "track")
+        url_start += "music/";
+      if (page.type == "album")
+        url_start += `${sanitise(page.sister)}/${sanitise(page.name)}`;
+      else if (page.type == "track")
+        url_start += `${sanitise(page.sister)}/_/${sanitise(page.name)}`;
+      else
+        url_start += sanitise(page.name);
+      if (page.type == "user") {
+        rabbit_search("internal:ctx", [
+          {
+            type: "overview",
+            text: tl(trans.overview),
+            body: tl(trans.opens_the_value_for_type).replace("{v}", tl(trans.overview)).replace("{t}", page.name),
+            keywords: ["home"],
+            action: () => window.location.href = url_start
+          },
+          {
+            type: "reports",
+            text: tl(trans.reports),
+            body: tl(trans.opens_the_value_for_type).replace("{v}", tl(trans.reports)).replace("{t}", page.name),
+            keywords: ["listening report", "reports", "wrapped", "playback", "spotify"],
+            action: () => window.location.href = url_start + "/listening-report"
+          },
+          {
+            type: "library",
+            text: tl(trans.library),
+            body: tl(trans.opens_the_value_for_type).replace("{v}", tl(trans.library)).replace("{t}", page.name),
+            keywords: ["library", "music", "artists", "albums", "tracks", "scrobbles", "history"],
+            action: () => window.location.href = url_start + "/library"
+          },
+          {
+            type: "friends",
+            text: tl(trans.friends),
+            body: tl(trans.opens_the_value_for_type).replace("{v}", tl(trans.friends)).replace("{t}", page.name),
+            keywords: ["friends", "following", "followers", "neighbours", "similar"],
+            action: () => window.location.href = url_start + "/following"
+          },
+          {
+            type: "following",
+            text: tl(trans.following),
+            body: tl(trans.opens_the_value_for_type).replace("{v}", tl(trans.following)).replace("{t}", page.name),
+            keywords: ["friends", "following"],
+            action: () => window.location.href = url_start + "/following"
+          },
+          {
+            type: "followers",
+            text: tl(trans.followers),
+            body: tl(trans.opens_the_value_for_type).replace("{v}", tl(trans.followers)).replace("{t}", page.name),
+            keywords: ["friends", "followers"],
+            action: () => window.location.href = url_start + "/followers"
+          },
+          {
+            type: "neighbours",
+            text: tl(trans.neighbours),
+            body: tl(trans.opens_the_value_for_type).replace("{v}", tl(trans.neighbours)).replace("{t}", page.name),
+            keywords: ["friends", "neighbours", "similar"],
+            action: () => window.location.href = url_start + "/neighbours"
+          },
+          {
+            type: "shouts",
+            text: tl(trans.shouts),
+            body: tl(trans.opens_the_value_for_type).replace("{v}", tl(trans.shouts)).replace("{t}", page.name),
+            keywords: ["shout", "shoutbox", "shouts", "comments"],
+            action: () => window.location.href = url_start + "/shoutbox"
+          },
+          {
+            type: "loved",
+            text: tl(trans.loved),
+            body: tl(trans.opens_the_value_for_type).replace("{v}", tl(trans.loved)).replace("{t}", page.name),
+            keywords: ["loved", "hearted", "favourites", "favorites", "luved"],
+            action: () => window.location.href = url_start + "/loved"
+          },
+          {
+            type: "obsessions",
+            text: tl(trans.obsessions),
+            body: tl(trans.opens_the_value_for_type).replace("{v}", tl(trans.obsessions)).replace("{t}", page.name),
+            keywords: ["loved", "hearted", "favourites", "favorites", "obsessions", "looping"],
+            action: () => window.location.href = url_start + "/obsessions"
+          },
+          {
+            type: "events",
+            text: tl(trans.events),
+            body: tl(trans.opens_the_value_for_type).replace("{v}", tl(trans.events)).replace("{t}", page.name),
+            keywords: ["events", "festivals", "tour", "live"],
+            action: () => window.location.href = url_start + "/events"
+          },
+          {
+            type: "playlists",
+            text: tl(trans.playlists),
+            body: tl(trans.opens_the_value_for_type).replace("{v}", tl(trans.playlists)).replace("{t}", page.name),
+            keywords: ["playlists", "folders"],
+            action: () => window.location.href = url_start + "/playlists"
+          },
+          {
+            type: "tags",
+            text: tl(trans.tags),
+            body: tl(trans.opens_the_value_for_type).replace("{v}", tl(trans.tags)).replace("{t}", page.name),
+            keywords: ["tags", "tagged", "related", "groups", "grouped"],
+            action: () => window.location.href = url_start + "/tags"
+          },
+          {
+            type: "compare",
+            text: tl(trans.compare),
+            body: tl(trans.compares_your_taste).replace("{v}", page.name),
+            keywords: ["similar", "taste", "music", "shared"],
+            action: () => compare(),
+            hide: page.name == auth.name
+          },
+          {
+            type: "collage",
+            text: tl(trans.collage),
+            body: tl(trans.create_a_collage),
+            keywords: ["taste", "music", "chart", "5x5", "topster"],
+            action: () => collage()
+          }
+        ]);
+      } else if (page.type == "artist") {
+        rabbit_search("internal:ctx", [
+          {
+            type: "overview",
+            text: tl(trans.overview),
+            body: tl(trans.opens_the_value_for_type).replace("{v}", tl(trans.overview)).replace("{t}", page.name),
+            keywords: ["home"],
+            action: () => window.location.href = url_start
+          },
+          {
+            type: "tracks",
+            text: tl(trans.tracks),
+            body: tl(trans.opens_the_value_for_type).replace("{v}", tl(trans.tracks)).replace("{t}", page.name),
+            keywords: ["music", "top"],
+            action: () => window.location.href = url_start + "/+tracks"
+          },
+          {
+            type: "albums",
+            text: tl(trans.albums),
+            body: tl(trans.opens_the_value_for_type).replace("{v}", tl(trans.albums)).replace("{t}", page.name),
+            keywords: ["music", "top"],
+            action: () => window.location.href = url_start + "/+albums"
+          },
+          {
+            type: "photos",
+            text: tl(trans.photos),
+            body: tl(trans.opens_the_value_for_type).replace("{v}", tl(trans.photos)).replace("{t}", page.name),
+            keywords: ["gallery", "artwork", "image", "picture", "avatar"],
+            action: () => window.location.href = url_start + "/+images"
+          },
+          {
+            type: "similar",
+            text: tl(trans.similar_artists),
+            body: tl(trans.opens_the_value_for_type).replace("{v}", tl(trans.similar_artists)).replace("{t}", page.name),
+            keywords: ["music"],
+            action: () => window.location.href = url_start + "/+similar"
+          },
+          {
+            type: "wiki",
+            text: tl(trans.biography),
+            body: tl(trans.opens_the_value_for_type).replace("{v}", tl(trans.biography)).replace("{t}", page.name),
+            keywords: ["wiki", "about", "text"],
+            action: () => window.location.href = url_start + "/+wiki"
+          },
+          {
+            type: "listeners",
+            text: tl(trans.listeners),
+            body: tl(trans.opens_the_value_for_type).replace("{v}", tl(trans.listeners)).replace("{t}", page.name),
+            keywords: ["top"],
+            action: () => window.location.href = url_start + "/+listeners"
+          },
+          {
+            type: "listeners_you_know",
+            text: tl(trans.listeners_you_know),
+            body: tl(trans.opens_the_value_for_type).replace("{v}", tl(trans.listeners_you_know)).replace("{t}", page.name),
+            keywords: ["friends"],
+            action: () => window.location.href = url_start + "/+listeners/you-know"
+          },
+          {
+            type: "shouts",
+            text: tl(trans.shouts),
+            body: tl(trans.opens_the_value_for_type).replace("{v}", tl(trans.shouts)).replace("{t}", page.name),
+            keywords: ["shout", "shoutbox", "shouts", "comments"],
+            action: () => window.location.href = url_start + "/shoutbox"
+          },
+          {
+            type: "events",
+            text: tl(trans.events),
+            body: tl(trans.opens_the_value_for_type).replace("{v}", tl(trans.events)).replace("{t}", page.name),
+            keywords: ["events", "festivals", "tour", "live"],
+            action: () => window.location.href = url_start + "/events"
+          },
+          {
+            type: "tags",
+            text: tl(trans.tags),
+            body: tl(trans.opens_the_value_for_type).replace("{v}", tl(trans.tags)).replace("{t}", page.name),
+            keywords: ["tags", "tagged", "related", "groups", "grouped"],
+            action: () => window.location.href = url_start + "/tags"
+          }
+        ]);
+      } else if (page.type == "album") {
+        rabbit_search("internal:ctx", [
+          {
+            type: "overview",
+            text: tl(trans.overview),
+            body: tl(trans.opens_the_value_for_type).replace("{v}", tl(trans.overview)).replace("{t}", page.name),
+            keywords: ["home"],
+            action: () => window.location.href = url_start
+          },
+          {
+            type: "wiki",
+            text: tl(trans.wiki),
+            body: tl(trans.opens_the_value_for_type).replace("{v}", tl(trans.wiki)).replace("{t}", page.name),
+            keywords: ["wiki", "about", "text"],
+            action: () => window.location.href = url_start + "/+wiki"
+          },
+          {
+            type: "photos",
+            text: tl(trans.artwork),
+            body: tl(trans.opens_the_value_for_type).replace("{v}", tl(trans.artwork)).replace("{t}", page.name),
+            keywords: ["gallery", "artwork", "image", "picture", "avatar"],
+            action: () => window.location.href = url_start + "/+images"
+          },
+          {
+            type: "shouts",
+            text: tl(trans.shouts),
+            body: tl(trans.opens_the_value_for_type).replace("{v}", tl(trans.shouts)).replace("{t}", page.name),
+            keywords: ["shout", "shoutbox", "shouts", "comments"],
+            action: () => window.location.href = url_start + "/shoutbox"
+          },
+          {
+            type: "tags",
+            text: tl(trans.tags),
+            body: tl(trans.opens_the_value_for_type).replace("{v}", tl(trans.tags)).replace("{t}", page.name),
+            keywords: ["tags", "tagged", "related", "groups", "grouped"],
+            action: () => window.location.href = url_start + "/tags"
+          }
+        ]);
+      } else if (page.type == "track") {
+        rabbit_search("internal:ctx", [
+          {
+            type: "overview",
+            text: tl(trans.overview),
+            body: tl(trans.opens_the_value_for_type).replace("{v}", tl(trans.overview)).replace("{t}", page.name),
+            keywords: ["home"],
+            action: () => window.location.href = url_start
+          },
+          {
+            type: "albums",
+            text: tl(trans.albums),
+            body: tl(trans.opens_the_value_for_type).replace("{v}", tl(trans.albums)).replace("{t}", page.name),
+            keywords: ["music", "top"],
+            action: () => window.location.href = url_start + "/+albums"
+          },
+          {
+            type: "wiki",
+            text: tl(trans.wiki),
+            body: tl(trans.opens_the_value_for_type).replace("{v}", tl(trans.wiki)).replace("{t}", page.name),
+            keywords: ["wiki", "about", "text"],
+            action: () => window.location.href = url_start + "/+wiki"
+          },
+          {
+            type: "shouts",
+            text: tl(trans.shouts),
+            body: tl(trans.opens_the_value_for_type).replace("{v}", tl(trans.shouts)).replace("{t}", page.name),
+            keywords: ["shout", "shoutbox", "shouts", "comments"],
+            action: () => window.location.href = url_start + "/shoutbox"
+          },
+          {
+            type: "tags",
+            text: tl(trans.tags),
+            body: tl(trans.opens_the_value_for_type).replace("{v}", tl(trans.tags)).replace("{t}", page.name),
+            keywords: ["tags", "tagged", "related", "groups", "grouped"],
+            action: () => window.location.href = url_start + "/tags"
+          }
+        ]);
+      } else if (page.type == "tag") {
+        rabbit_search("internal:ctx", [
+          {
+            type: "overview",
+            text: tl(trans.overview),
+            body: tl(trans.opens_the_value_for_type).replace("{v}", tl(trans.overview)).replace("{t}", page.name),
+            keywords: ["home"],
+            action: () => window.location.href = url_start
+          },
+          {
+            type: "artists",
+            text: tl(trans.artists),
+            body: tl(trans.opens_the_value_for_type).replace("{v}", tl(trans.artists)).replace("{t}", page.name),
+            keywords: ["music", "top"],
+            action: () => window.location.href = url_start + "/artists"
+          },
+          {
+            type: "albums",
+            text: tl(trans.albums),
+            body: tl(trans.opens_the_value_for_type).replace("{v}", tl(trans.albums)).replace("{t}", page.name),
+            keywords: ["music", "top"],
+            action: () => window.location.href = url_start + "/albums"
+          },
+          {
+            type: "tracks",
+            text: tl(trans.tracks),
+            body: tl(trans.opens_the_value_for_type).replace("{v}", tl(trans.tracks)).replace("{t}", page.name),
+            keywords: ["music", "top"],
+            action: () => window.location.href = url_start + "/tracks"
+          },
+          {
+            type: "wiki",
+            text: tl(trans.wiki),
+            body: tl(trans.opens_the_value_for_type).replace("{v}", tl(trans.wiki)).replace("{t}", page.name),
+            keywords: ["wiki", "about", "text"],
+            action: () => window.location.href = url_start + "/wiki"
+          },
+          {
+            type: "shouts",
+            text: tl(trans.shouts),
+            body: tl(trans.opens_the_value_for_type).replace("{v}", tl(trans.shouts)).replace("{t}", page.name),
+            keywords: ["shout", "shoutbox", "shouts", "comments"],
+            action: () => window.location.href = url_start + "/shoutbox"
+          }
+        ]);
+      }
+    }
+    function search() {
+      depth = 2;
+      if (!page.structure.dialogs.hasChildNodes())
+        rabbit();
+      searching = {
+        primary: {
+          name: "",
+          type: ""
+        },
+        secondary: {
+          name: "",
+          type: ""
+        }
+      };
+      search_fill();
+    }
+    function search_fill() {
+      depth = 2;
+      input_box.querySelector("input").style.display = "none";
+      fake.style.removeProperty("display");
+      if (searching.primary.type && searching.secondary.type) {
+        render(fake, html`
+                <label>${searching.primary.type}:</label>
+                <p>${searching.primary.name}</p>
+                <label>${searching.secondary.type}:</label>
+                <p>${searching.secondary.name}</p>
+            `);
+      } else if (searching.primary.type) {
+        render(fake, html`
+                <label>${searching.primary.type}:</label>
+                <p>${searching.primary.name}</p>
+            `);
+      } else {
+        render(fake, html`
+                <i>${tl(trans.choose_a_search_type)}</i>
+            `);
+      }
+      if (searching.primary.type == "artist") {
+        rabbit_search("internal:search", [
+          {
+            type: "finish",
+            text: tl(trans.finish),
+            body: tl(trans.finish_search),
+            keywords: ["finish"],
+            action: () => search_finish()
+          },
+          {
+            type: "artist",
+            text: tl(trans.artist),
+            body: tl(trans.search_for_value).replace("{v}", tl(trans.artist)),
+            keywords: ["profile"],
+            action: () => append_search("artist")
+          },
+          {
+            type: "album",
+            text: tl(trans.album),
+            body: tl(trans.search_for_value).replace("{v}", tl(trans.album)),
+            keywords: ["record"],
+            action: () => append_search("album")
+          },
+          {
+            type: "track",
+            text: tl(trans.track),
+            body: tl(trans.search_for_value).replace("{v}", tl(trans.track)),
+            keywords: ["song"],
+            action: () => append_search("track")
+          }
+        ]);
+      } else if (searching.primary.type == "user") {
+        rabbit_search("internal:search", [
+          {
+            type: "search",
+            text: tl(trans.search),
+            body: tl(trans.finish_search),
+            keywords: ["finish"],
+            action: () => search_finish()
+          },
+          {
+            type: "user",
+            text: tl(trans.profile),
+            body: tl(trans.search_for_value).replace("{v}", tl(trans.profile)),
+            keywords: [],
+            action: () => append_search("user")
+          }
+        ]);
+      } else if (searching.primary.type == "tag") {
+        rabbit_search("internal:search", [
+          {
+            type: "finish",
+            text: tl(trans.finish),
+            body: tl(trans.finish_search),
+            keywords: ["finish"],
+            action: () => search_finish()
+          },
+          {
+            type: "tag",
+            text: tl(trans.tag),
+            body: tl(trans.search_for_value).replace("{v}", tl(trans.tag)),
+            keywords: ["genre"],
+            action: () => append_search("tag")
+          }
+        ]);
+      } else if (searching.secondary.type == "album" || searching.secondary.type == "track") {
+        rabbit_search("internal:search", [
+          {
+            type: "artist",
+            text: tl(trans.artist),
+            body: tl(trans.search_for_value).replace("{v}", tl(trans.artist)),
+            keywords: ["profile"],
+            action: () => append_search("artist")
+          }
+        ]);
+      } else {
+        rabbit_search("internal:search", [
+          {
+            type: "artist",
+            text: tl(trans.artist),
+            body: tl(trans.search_for_value).replace("{v}", tl(trans.artist)),
+            keywords: ["profile"],
+            action: () => append_search("artist")
+          },
+          {
+            type: "album",
+            text: tl(trans.album),
+            body: tl(trans.search_for_value).replace("{v}", tl(trans.album)),
+            keywords: ["record"],
+            action: () => append_search("album")
+          },
+          {
+            type: "track",
+            text: tl(trans.track),
+            body: tl(trans.search_for_value).replace("{v}", tl(trans.track)),
+            keywords: ["song"],
+            action: () => append_search("track")
+          },
+          {
+            type: "user",
+            text: tl(trans.profile),
+            body: tl(trans.search_for_value).replace("{v}", tl(trans.profile)),
+            keywords: [],
+            action: () => append_search("user")
+          },
+          {
+            type: "tag",
+            text: tl(trans.tag),
+            body: tl(trans.search_for_value).replace("{v}", tl(trans.tag)),
+            keywords: ["genre"],
+            action: () => append_search("tag")
+          }
+        ]);
+      }
+    }
+    function search_finish() {
+      if (searching.primary.type == "artist") {
+        if (searching.secondary.type == "album") {
+          window.location.href = `${root}music/${sanitise(searching.primary.name)}/${sanitise(searching.secondary.name)}`;
+        } else if (searching.secondary.type == "track") {
+          window.location.href = `${root}music/${sanitise(searching.primary.name)}/_/${sanitise(searching.secondary.name)}`;
+        } else {
+          window.location.href = `${root}music/${sanitise(searching.primary.name)}`;
+        }
+      } else if (searching.primary.type == "user") {
+        window.location.href = `${root}user/${sanitise(searching.primary.name)}`;
+      } else if (searching.primary.type == "tag") {
+        window.location.href = `${root}tag/${sanitise(searching.primary.name)}`;
+      }
+    }
+  }
+  function keybind(list) {
+    return html.node`
+        <div class="keybind">
+            ${list.map((key) => {
+      if (key == "\u2318")
+        return html.node`<kbd><div class="bleh-icon" data-type="command" /></kbd>`;
+      else if (key == "\u21E7")
+        return html.node`<kbd><div class="bleh-icon" data-type="shift" /></kbd>`;
+      return html.node`<kbd>${key}</kbd>`;
+    })}
+        </div>
+    `;
+  }
+
+  // src/components/settings.js
+  function setting({
+    id = "",
+    text: text2 = true,
+    focus = false,
+    standalone = false
+  }) {
+    try {
+      let value = settings[id];
+      log(`creating ${id} with value ${value}`, "settings", "log", { settings, settings_id: settings[id] });
+      if (!settings_store[id])
+        return setting_fail(id, { message: "No settings store entry present" });
+      let type = settings_store[id].type || "toggle";
+      let title = settings_store[id].title ? tl(settings_store[id].title) : id;
+      let body = settings_store[id].body ? tl(settings_store[id].body) : null;
+      let icon = settings_store[id].icon;
+      if (!body && settings_store[id].keybind)
+        body = keybind(settings_store[id].keybind);
+      let disabled = false;
+      let disabled_reason = "";
+      if (settings_store[id].platforms && !settings_store[id].platforms.includes(page.platform)) {
+        disabled = true;
+        disabled_reason = tl(trans.item_is_unavailable_on_platform).replace("{i}", title).replace("{p}", tl(trans.platforms[page.platform]));
+      }
+      if (disabled && disabled_reason)
+        return setting_fail(id, { message: disabled_reason, unavailable: true });
+      if (settings_store[id].beta)
+        title = html.node`${title}<span class="new-badge beta">${tl(trans.beta)}</span>`;
+      if (type === "toggle") {
+        let toggle2;
+        return html.node`
+                <div class="setting v2 ${standalone ? "standalone" : ""}" data-type="toggle" disabled=${disabled} onclick=${() => update_toggle(id, toggle2)}>
+                    ${icon ? html.node`
+                    <div class="icon">
+                        <div class="bleh-icon" style="--icon: var(--${icon})" />
+                    </div>
+                    ` : ""}
+                    ${text2 ? html.node`
+                    <div class="heading">
+                        <h5>${title}</h5>
+                        ${body ? html.node`<p>${body}</p>` : ""}
+                    </div>
+                    ` : ""}
+                    ${settings_store[id].extensions ? html.node`
+                    <div class="extensions">
+                        ${settings_store[id].extensions.map((extension) => () => {
+          let container = html.node`
+                                <div class="extension">
+                                    <div class="bleh-icon" />
+                                </div>
+                            `;
+          tippy(container, {
+            content: tl(trans.requires_extension_value).replace("{v}", tl(extension))
+          });
+          return container;
+        })}
+                    </div>
+                    ` : ""}
+                    ${setting_incompatible_block(settings_store[id].incompatible)}
+                    <div class="toggle-wrap">
+                        <button class="toggle" ref=${(el) => toggle2 = el} aria-checked=${value}>
+                            <div class="dot"></div>
+                        </button>
+                    </div>
+                </div>
+            `;
+      } else if (type === "range") {
+        let option;
+        let min = settings_store[id].min || 0;
+        let max = settings_store[id].max || 0;
+        let step = settings_store[id].step || 0;
+        if (min >= max || step === 0)
+          return setting_fail(id, { message: "A range type requires a min, max, and step defined in the settings store" });
+        let track;
+        let input2;
+        let marker;
+        let working_max = settings_store[id].max - settings_store[id].min;
+        return html.node`
+                <div class="setting v2 ${standalone ? "standalone" : ""}" data-type="range" disabled=${disabled} ref=${(el) => option = el} data-modified=${value != settings_store[id].default}>
+                    ${text2 ? html.node`
+                    <div class="heading">
+                        <h5>${title}<button class="reset see-more" onclick=${() => reset_range(id, option, track, input2, marker)}>${tl(trans.reset)}</button></h5>
+                        ${body ? html.node`<p>${body}</p>` : ""}
+                    </div>
+                    ` : ""}
+                    ${settings_store[id].extensions ? html.node`
+                    <div class="extensions">
+                        ${settings_store[id].extensions.map((extension) => () => {
+          let container = html.node`
+                                <div class="extension">
+                                    <div class="bleh-icon" />
+                                </div>
+                            `;
+          tippy(container, {
+            content: tl(trans.requires_extension_value).replace("{v}", tl(extension))
+          });
+          return container;
+        })}
+                    </div>
+                    ` : ""}
+                    ${setting_incompatible_block(settings_store[id].incompatible)}
+                    <div class="range">
+                        <div class="track" style="--percent: ${(value - settings_store[id].min) / working_max * 100}%" ref=${(el) => track = el}>
+                            <div class="fill" />
+                            <div class="nub" />
+                        </div>
+                        <input type="range" min=${min} max=${max} step=${step} value=${value} ref=${(el) => input2 = el} oninput=${() => update_range(id, option, track, input2, input2.value, marker)} />
+                        <p class="value-marker" ref=${(el) => marker = el}>${value}${settings_store[id].suffix || ""}</p>
+                    </div>
+                </div>
+            `;
+      } else if (type === "text") {
+        let option;
+        let min = settings_store[id].min || 0;
+        let max = settings_store[id].max || 0;
+        if (max === 0)
+          return setting_fail(id, { message: "A text type requires a max defined in the settings store" });
+        let reset_btn;
+        let avatar3;
+        let input2;
+        let submit;
+        let input_container;
+        let error_tooltip;
+        let placeholder = settings_store[id].placeholder;
+        if (placeholder && placeholder != "empty") placeholder = tl(placeholder);
+        let container = html.node`
+                <div class="setting v2 ${standalone ? "standalone" : ""}" data-type="text" disabled=${disabled} ref=${(el) => option = el} data-modified=${value != settings_store[id].default}>
+                    ${icon ? html.node`
+                    <div class="icon">
+                        <div class="bleh-icon" style="--icon: var(--${icon})" />
+                    </div>
+                    ` : ""}
+                    ${text2 ? html.node`
+                    <div class="heading">
+                        <h5>${title}<button class="reset see-more" ref=${(el) => reset_btn = el} onclick=${() => reset_text(id, input2, submit, option, reset_btn, avatar3)}>${tl(trans.reset)}</button></h5>
+                        ${body ? html.node`<p>${body}</p>` : ""}
+                    </div>
+                    ` : ""}
+                    ${settings_store[id].extensions ? html.node`
+                    <div class="extensions">
+                        ${settings_store[id].extensions.map((extension) => () => {
+          let container2 = html.node`
+                                <div class="extension">
+                                    <div class="bleh-icon" />
+                                </div>
+                            `;
+          tippy(container2, {
+            content: tl(trans.requires_extension_value).replace("{v}", tl(extension))
+          });
+          return container2;
+        })}
+                    </div>
+                    ` : ""}
+                    ${setting_incompatible_block(settings_store[id].incompatible)}
+                    ${settings_store[id].avatar ? html.node`
+                    <div class="avatar-container">
+                        <div class="avatar-inner" ref=${(el) => avatar3 = el}>
+                            <img src=${localStorage.getItem(`bleh_${id}_avi`) || ""} alt=${value} />
+                        </div>
+                    </div>
+                    ` : ""}
+                    <div class="input-container content-form in-settings can-submit" data-has-error="false" ref=${(el) => input_container = el}>
+                        <input type="text" maxlength=${max} value=${value} style="--max: ${max}px" ref=${(el) => input2 = el} placeholder=${placeholder} />
+                        <button class="btn chibi icon submit" ref=${(el) => submit = el} onclick=${() => update_text(id, input2, submit, option, input2.value, reset_btn, avatar3)}>${tl(trans.save)}</button>
+                    </div>
+                </div>
+            `;
+        input2.addEventListener("keydown", (event3) => {
+          if (event3.keyCode === 13 && input_container.getAttribute("data-has-error") == "false") {
+            event3.preventDefault();
+            submit.click();
+          }
+        });
+        tippy(submit, {
+          content: tl(trans.save)
+        });
+        if (focus)
+          input2.focus();
+        error_tooltip = tippy(input2, {
+          theme: "error",
+          placement: "top",
+          trigger: "manual"
+        });
+        error_tooltip.disable();
+        input2.addEventListener("input", () => {
+          input_container.setAttribute("data-has-error", "false");
+          error_tooltip.disable();
+          submit.disabled = false;
+          if (type == "number") {
+            if (input2.value == "") {
+              error_input(tl(trans.only_numbers_are_allowed), input_container, error_tooltip, submit);
+            } else if (parseInt(input2.value) > max || parseInt(input2.value) < min) {
+              error_input(tl(trans.keep_within_the_range), input_container, error_tooltip, submit);
+            }
+          } else if (type == "text") {
+            if (settings_store[id].warn_if_empty && input2.value == "") {
+              error_input(tl(trans.this_field_is_required), input_container, error_tooltip, submit);
+            } else if (settings_store[id].warn_if_matches_auth && input2.value == auth.name) {
+              error_input(tl(trans.please_dont_clone_yourself), input_container, error_tooltip, submit);
+            }
+          }
+        });
+        return container;
+      } else if (type == "checkbox") {
+        let toggle2;
+        return html.node`
+                <div class="setting v2 ${settings_store[id].horizontal ? "horizontal" : ""} ${standalone ? "standalone" : ""}" data-type="checkbox" disabled=${disabled} onclick=${() => update_toggle(id, toggle2)}>
+                    ${icon ? html.node`
+                    <div class="icon">
+                        <div class="bleh-icon" style="--icon: var(--${icon})" />
+                    </div>
+                    ` : ""}
+                    ${text2 ? html.node`
+                    <div class="heading">
+                        <h5>${title}</h5>
+                        ${body ? html.node`<p>${body}</p>` : ""}
+                    </div>
+                    ` : ""}
+                    ${settings_store[id].extensions ? html.node`
+                    <div class="extensions">
+                        ${settings_store[id].extensions.map((extension) => () => {
+          let container = html.node`
+                                <div class="extension">
+                                    <div class="bleh-icon" />
+                                </div>
+                            `;
+          tippy(container, {
+            content: tl(trans.requires_extension_value).replace("{v}", tl(extension))
+          });
+          return container;
+        })}
+                    </div>
+                    ` : ""}
+                    ${setting_incompatible_block(settings_store[id].incompatible)}
+                    <div class="check">
+                        <div class="box" ref=${(el) => toggle2 = el} aria-checked=${value}>
+                            <div class="bleh-icon" />
+                        </div>
+                    </div>
+                </div>
+            `;
+      }
+    } catch (e) {
+      console.error(e);
+      return setting_fail(id, e);
+    }
+    return setting_fail(id);
+  }
+  function error_input(reason, input2, tooltip, submit) {
+    log(reason, "input", "log");
+    input2.setAttribute("data-has-error", "true");
+    tooltip.setContent(reason);
+    tooltip.enable();
+    tooltip.show();
+    submit.disabled = true;
+  }
+  function setting_incompatible_block(entries) {
+    if (!entries)
+      return "";
+    return "";
+    return html.node`
+        <div class="incompatible">
+            ${entries.map((incompatible) => () => {
+      let container = html.node`
+                    <div class="extension">
+                        <div class="bleh-icon" />
+                    </div>
+                `;
+      tippy(container, {
+        content: tl(trans.incompatible_with_value).replace("{v}", tl(settings_store[incompatible.setting].title))
+      });
+      return container;
+    })}
+        </div>
+    `;
+  }
+  function setting_fail(id, e = null) {
+    if (e.unavailable) {
+      return html.node`
+            <div class="setting">
+                <div class="alert alert-info no-margin">
+                    ${e.message}
+                </div>
+            </div>
+        `;
+    }
+    return html.node`
+        <div class="setting">
+            <div class="alert alert-error no-margin">
+                ${tl(trans.value_failed_to_load).replace("{v}", id)}
+                ${e ? html`<br>${e.message}` : ""}
+            </div>
+        </div>
+    `;
+  }
+  function update_toggle(id, toggle2) {
+    let value = settings[id];
+    toggle2.setAttribute("aria-checked", !value);
+    save_setting(id, !value);
+  }
+  function update_range(id, option, track, input2, value, marker, silent = false) {
+    let max = settings_store[id].max - settings_store[id].min;
+    input2.value = value;
+    track.style.setProperty("--percent", `${(value - settings_store[id].min) / max * 100}%`);
+    marker.textContent = `${value}${settings_store[id].suffix || ""}`;
+    option.setAttribute("data-modified", value != settings_store[id].default);
+    save_setting(id, value);
+  }
+  function reset_range(id, option, track, range, marker) {
+    update_range(id, option, track, range, settings_store[id].default, marker, true);
+    notify({
+      id: "reset_setting",
+      title: tl(trans.settings),
+      body: tl(trans.reset_item_to_default),
+      icon: "icon-16-settings"
+    });
+  }
+  function update_text(id, input2, submit, option, value, reset_btn, avatar3, silent = false) {
+    if (settings_store[id].wait) {
+      reset_btn.disabled = true;
+      input2.disabled = true;
+      submit.disabled = true;
+    }
+    input2.value = value;
+    option.setAttribute("data-modified", value != settings_store[id].default);
+    if (id == "profile_shortcut") {
+      save_profile_shortcut(input2, value, submit, reset_btn, avatar3);
+      return;
+    } else if (id == "hu_tao") {
+      if (value == "develop") {
+        dialog_rm2({ id: "hu_tao" });
+        change_settings_page("sku");
+        notify({
+          id: "unlocked",
+          title: tl(trans.development),
+          body: tl(trans.unlocked),
+          type: "success"
+        });
+      }
+    }
+    save_setting(id, value);
+  }
+  function reset_text(id, input2, submit, option, reset_btn, avatar3) {
+    update_text(id, input2, submit, option, settings_store[id].default, reset_btn, avatar3, true);
+    notify({
+      id: "reset_setting",
+      title: tl(trans.settings),
+      body: tl(trans.reset_item_to_default),
+      icon: "icon-16-settings"
+    });
+  }
+  function save_setting(id, value) {
+    settings[id] = value;
+    document.documentElement.setAttribute(`data-bleh--${id}`, value);
+    if (id == "theme") {
+      if (value == "light" || value == "ink" || value == "glass") {
+        settings.theme_type = "light";
+      } else {
+        settings.theme_type = "dark";
+      }
+      document.documentElement.setAttribute(`data-bleh--theme_type`, settings.theme_type);
+    }
+    if (settings_store[id].require_reload == true || settings_store[id].require_reload == "partial" && page.type != "bleh_settings")
+      request_reload();
+    if (settings_store[id].css)
+      document.body.style.setProperty(`--${settings_store[id].css}`, `${value}${settings_store[id].suffix || ""}`);
+    localStorage.setItem("bleh", JSON.stringify(settings));
+    log(`saved ${id} as ${value}`, "settings", "log", { settings, settings_id: settings[id] });
   }
 
   // src/components/share.js
@@ -13666,6 +14685,10 @@
       accessibility: {
         name: tl(trans.accessibility)
       },
+      rabbit: {
+        name: tl(trans.quick_switcher),
+        icon: "cmd"
+      },
       fill: {
         type: "fill"
       },
@@ -14393,6 +15416,20 @@
                 <div class="setting-group">
                     ${setting({ id: "reduced_motion" })}
                     ${setting({ id: "underline_links" })}
+                </div>
+            </div>
+            `);
+    } else if (page_id == "rabbit") {
+      register_skip_to([]);
+      render(page.structure.main, html`
+            <div class="bleh--panel">
+                <h4>${tl(trans.quick_switcher)}</h4>
+                <div class="setting-group">
+                    ${setting({ id: "rabbit" })}
+                    ${setting({ id: "rabbit_search" })}
+                    ${setting({ id: "rabbit_profile" })}
+                    ${setting({ id: "rabbit_shortcut" })}
+                    ${setting({ id: "rabbit_bleh_settings" })}
                 </div>
             </div>
             `);
@@ -16465,125 +17502,6 @@
     });
   }
 
-  // src/news.js
-  function news() {
-    let changelog = localStorage.getItem("bleh_changelog");
-    let changelog_expire = new Date(localStorage.getItem("bleh_changelog_expire"));
-    let current_time = /* @__PURE__ */ new Date();
-    if (!changelog) {
-      log("not cached, fetching", "changelog");
-      request_changelog();
-      dialog_rm2({ id: "rabbit" });
-    } else {
-      if (changelog_expire < current_time)
-        request_changelog();
-      else
-        open_changelog(JSON.parse(changelog));
-    }
-  }
-  function request_changelog(open_after = true) {
-    let button = page.state.navigation_menu_news;
-    if (button)
-      button.setAttribute("disabled", "");
-    let xhr = new XMLHttpRequest();
-    let url = `https://katelyynn.github.io/bleh/fm/changelog/changelog.json?${Math.random()}`;
-    xhr.open("GET", url, true);
-    xhr.onload = function() {
-      log(`responded with ${xhr.status}`, "changelog");
-      if (xhr.status != 200) {
-        log("request has been cancelled, will request again in 1h", "changelog");
-        api_expire.setHours(api_expire.getHours() + 1);
-      }
-      let api_expire = /* @__PURE__ */ new Date();
-      if (xhr.status == 200) {
-        if (open_after) {
-          try {
-            open_changelog(JSON.parse(this.response));
-            localStorage.setItem("bleh_changelog", this.response);
-            api_expire.setHours(api_expire.getHours() + 2);
-            log(`cached until ${api_expire}`, "changelog");
-            localStorage.setItem("bleh_changelog_expire", api_expire);
-          } catch (e) {
-            deliver_notif("The changelog is currently unavailable due to errors, try again later.", true);
-            console.error(e);
-          }
-        }
-      }
-      if (button != null)
-        button.removeAttribute("disabled");
-    };
-    xhr.send();
-  }
-  function open_changelog(changelog) {
-    let window2 = dialog({
-      id: "changelog",
-      title: tl(trans.news_from_user).replace("{user}", sponsor_list && sponsor_list.special ? sponsor_list.special[0] : "katelyn"),
-      body: html.node`
-            <div class="cta first sponsor colourful margin-bottom">
-                <strong>${tl(trans.news_sponsor_cta)}</strong>
-                <a class="see-more" onclick="_sponsor(true)">${tl(trans.sponsor)}</a>
-            </div>
-            <div class="changelog-list"></div>
-        `,
-      type: "changelog",
-      allow_scroll: true
-    });
-    let changelog_list = window2.querySelector(".changelog-list");
-    let index = 0;
-    for (let version2 in changelog) {
-      if (version2 == "updated" || version2 == "latest")
-        continue;
-      if (index > 10)
-        continue;
-      let version_item = html.node`
-            <div class="changelog-version-item" data-changelog-type="${changelog[version2].type}" data-changelog-latest="${index == 0 ? "true" : "false"}" data-changelog-version="${version2}">
-            <div class="version-item-header">
-                <div class="sub-text">
-                <div class="breadcrumb">
-                    <div class="breadcrumb-origin">
-                    ${version2}
-                    </div>
-                    <div class="breadcrumb-name">
-                    ${trans_legacy.en.changelog.type[changelog[version2].type]}
-                    </div>
-                </div>
-                </div>
-                <h3>${changelog[version2].name}</h3>
-                ${version2 == "2025.0113" ? html.node`<h4 class="header-over">${changelog[version2].name}</h4>` : ""}
-            </div>
-            </div>
-        `;
-      if (changelog[version2].type == "major")
-        version_item.setAttribute("id", "latest_major_release");
-      let body = document.createElement("div");
-      body.classList.add("version-item-body", "markdown-body");
-      let converter = new showdown.Converter({
-        emoji: true,
-        excludeTrailingPunctuationFromURLs: true,
-        ghMentions: true,
-        ghMentionsLink: `${root}user/{u}`,
-        headerLevelStart: 5,
-        noHeaderId: true,
-        openLinksInNewWindow: true,
-        requireSpaceBeforeHeadingText: true,
-        simpleLineBreaks: true,
-        simplifiedAutoLink: true,
-        strikethrough: true,
-        underline: true,
-        ghCodeBlocks: false,
-        smartIndentationFix: true
-      });
-      let parsed_text = converter.makeHtml(changelog[version2].bio.replace(/([@])([a-zA-Z0-9_]+)/g, `[$1$2](${root}user/$2)`).replace(/\[artist\]([a-zA-Z0-9]+)\[\/artist\]/g, `[$1](${root}music/$1)`).replace(/\[album artist=([a-zA-Z0-9]+)\]([a-zA-Z0-9\s]+)\[\/album\]/g, `[$2](${root}music/$1/$2)`).replace(/\[track artist=([a-zA-Z0-9]+)\]([a-zA-Z0-9\s]+)\[\/track\]/g, `[$2](${root}music/$1/_/$2)`).replace(/https:\/\/open\.spotify\.com\/user\/([A-Za-z0-9]+)\?si=([A-Za-z0-9]+)/g, "[@$1](https://open.spotify.com/user/$1)").replace(/&/g, "&amp;").replace(/</g, "&lt;").replace(/>/g, "&gt;").replace(/"/g, "&quot;").replace(/'/g, "&#039;"));
-      body.innerHTML = parsed_text;
-      version_item.appendChild(body);
-      changelog_list.appendChild(version_item);
-      index += 1;
-    }
-  }
-  unsafeWindow._update_local_changelog_cache = function(json) {
-    localStorage.setItem("bleh_changelog", JSON.stringify(json));
-  };
-
   // src/navigation.js
   function patch_masthead() {
     let masthead_logo = document.body.querySelector(".masthead-logo");
@@ -16677,21 +17595,22 @@
             <span class="label user-status-subscriber auth-badge">${tl(trans.badges["user-status-subscriber"].name)}</span>
         `);
     }
+    let links = masthead.querySelector(".masthead-nav .navlist-items");
+    render(links, html``);
     let notif_count = new_auth.querySelector('[data-analytics-label="notifications"] + .auth-avatar-notification-count-badge');
     if (!notif_count) notif_count = "0";
     else notif_count = notif_count.textContent;
     let inbox_count = new_auth.querySelector('[data-analytics-label="inbox"] + .auth-avatar-notification-count-badge');
     if (!inbox_count) inbox_count = "0";
     else inbox_count = inbox_count.textContent;
-    let links = masthead.querySelector(".masthead-nav .navlist-items");
-    render(links, html``);
     let notif_container = html.node`
-    <li class="masthead-nav-item">
-        <a class="masthead-nav-control" href="${root}inbox/notifications" data-label="notifications" data-count=${notif_count}>
-            <span class="sr-only">${tl(trans.notifications.name)}</span>
-            <div class="counter">${notif_count}</div>
-        </a>
-    </li>`;
+        <li class="masthead-nav-item">
+            <a class="masthead-nav-control" href="${root}inbox/notifications" data-label="notifications" data-count=${notif_count}>
+                <span class="sr-only">${tl(trans.notifications.name)}</span>
+                <div class="counter">${notif_count}</div>
+            </a>
+        </li>
+    `;
     if (notif_count > 0) {
       tippy(notif_container, {
         content: tl(trans.notifications.count).replace("{count}", notif_count)
@@ -19460,890 +20379,6 @@
       content: tl(trans.sponsor),
       delay: [1e3, 0]
     });
-  }
-
-  // src/components/rabbit.js
-  function register_rabbit() {
-    let input_box;
-    let selected = 0;
-    let feed = 0;
-    let matches = [];
-    let rabbit_hole;
-    let tip;
-    let depth = 0;
-    let searching;
-    let selected_search;
-    let fake;
-    let back;
-    const allowed_pages = [
-      "user",
-      "artist",
-      "album",
-      "track",
-      "tag"
-    ];
-    document.addEventListener("keydown", (e) => {
-      const cmd = e.getModifierState("Control") || e.getModifierState("Meta");
-      const key = e.key.toLowerCase();
-      if (cmd && ["k", ","].includes(key) && !page.structure.dialogs.hasChildNodes()) {
-        e.preventDefault();
-        depth = 0;
-        if (e.getModifierState("Shift")) {
-          rabbit();
-          use_page_as_ctx();
-          back = false;
-        } else {
-          rabbit();
-        }
-      } else if (page.structure.dialogs.hasChildNodes() && page.structure.dialogs.querySelector(':scope > [data-modal-type="rabbit"]')) {
-        if (e.key == "Escape") {
-          if (depth == 0 && input_box.querySelector("input").value == "" || !back) {
-            dialog_rm2({ id: "rabbit" });
-          } else {
-            input_box.querySelector("input").value = "";
-            depth = 0;
-            rabbit_search();
-          }
-        }
-        if (e.key == "Tab") {
-          e.preventDefault();
-          rabbit_tab();
-        }
-        if (e.key == "ArrowDown") {
-          e.preventDefault();
-          if (selected < matches.length - 1)
-            selected++;
-          else
-            selected = 0;
-          if (matches[selected].disabled) {
-            if (selected + 1 < matches.length - 1)
-              selected++;
-            else
-              selected = 0;
-          }
-          rabbit_select();
-        } else if (e.key == "ArrowUp") {
-          e.preventDefault();
-          if (selected > 0)
-            selected--;
-          else
-            selected = matches.length - 1;
-          if (matches[selected].disabled) {
-            if (selected - 1 > 0)
-              selected--;
-            else
-              selected = 0;
-          }
-          rabbit_select();
-        } else if (e.key == "Enter") {
-          rabbit_enter();
-        }
-      }
-      if (!page.structure.dialogs.hasChildNodes()) {
-        if (cmd && ["s"].includes(key)) {
-          e.preventDefault();
-          if (settings.profile_shortcut != "") {
-            window.location.href = `${root}user/${settings.profile_shortcut}`;
-          } else {
-            open_profile_shortcut_window();
-          }
-        }
-        if (cmd && ["b"].includes(key)) {
-          e.preventDefault();
-          window.location.href = `${root}bleh`;
-        }
-        if (cmd && ["d"].includes(key)) {
-          e.preventDefault();
-          rabbit();
-          search();
-          back = false;
-        }
-      }
-    });
-    function rabbit() {
-      page.state.rabbit_modal = dialog({
-        id: "rabbit",
-        title: "rabbit",
-        body: html.node`
-                ${() => {
-          input_box = input({
-            maxlength: 100,
-            placeholder: tl(trans.switch_placeholder),
-            focus: true
-          });
-          input_box.classList.add("rabbit-search");
-          return input_box;
-        }}
-                <div class="rabbit-hole" ref=${(el) => rabbit_hole = el} />
-                <div class="tip" ref=${(el) => tip = el} />
-            `,
-        type: "rabbit",
-        replace_if_possible: true,
-        handle_escape_manually: true
-      });
-      back = true;
-      fake = html.node`
-            <div class="fake-input" style="display: none;" />
-        `;
-      input_box.appendChild(fake);
-      rabbit_search();
-      rabbit_select();
-      input_box.querySelector("input").addEventListener("input", (e) => {
-        rabbit_search();
-      });
-      input_box.querySelector("input").focus();
-    }
-    function rabbit_tab() {
-      input_box.querySelector("input").focus();
-    }
-    function rabbit_search(pre_selected = "", pre_matches = null) {
-      if (depth < 2) {
-        input_box.querySelector("input").style.removeProperty("display");
-        fake.style.display = "none";
-      }
-      selected = 0;
-      if (!pre_matches && depth == 0) {
-        feed = [
-          {
-            type: "search",
-            text: tl(trans.search),
-            body: tl(trans.search_for_music_or_user),
-            keywords: ["user", "music", "tag", "discover", "explore"],
-            action: () => search(),
-            keybind: ["\u2318", "D"]
-          },
-          {
-            type: "on_this_page",
-            text: tl(trans.on_this_page),
-            body: tl(trans.use_current_page_as_context),
-            keywords: ["ctx", "context"],
-            action: () => use_page_as_ctx(),
-            keybind: ["\u2318", "\u21E7", "K"],
-            disabled: !allowed_pages.includes(page.type)
-          },
-          {
-            type: "profile",
-            text: tl(trans.profile),
-            body: tl(trans.opens_your_value).replace("{v}", tl(trans.profile)),
-            keywords: ["profile", "user", "me"],
-            action: () => window.location.href = `${root}user/${auth.name}`,
-            keybind: ["\u2318", "P"]
-          },
-          {
-            type: "profile_shortcut",
-            text: settings.profile_shortcut,
-            body: tl(trans.opens_your_value).replace("{v}", tl(trans.profile_shortcut.name)),
-            keywords: ["profile", "user", "shortcut", "friends"],
-            action: () => window.location.href = `${root}user/${settings.profile_shortcut}`,
-            hide: settings.profile_shortcut == "",
-            keybind: ["\u2318", "S"]
-          },
-          {
-            type: "notifications",
-            text: tl(trans.notifications.name),
-            body: tl(trans.opens_your_value).replace("{v}", tl(trans.notifications.name)),
-            keywords: ["bell", "updates"],
-            action: () => window.location.href = `${root}inbox/notifications`
-          },
-          {
-            type: "inbox",
-            text: tl(trans.inbox.name),
-            body: tl(trans.opens_your_value).replace("{v}", tl(trans.inbox.name)),
-            keywords: ["messages", "direct", "dms"],
-            action: () => window.location.href = `${root}inbox`
-          },
-          {
-            type: "theme",
-            text: tl(trans.themes.name),
-            body: tl(trans.opens_the_value).replace("{v}", tl(trans.theme_picker)),
-            keywords: ["themes", "light", "dark", "ash", "darker", "oled", "amoled", "midnight", "void", "abyss", "dark reader"],
-            action: () => bleh_theme_picker()
-          },
-          {
-            type: "news",
-            text: tl(trans.news),
-            body: tl(trans.opens_the_value).replace("{v}", tl(trans.news)),
-            keywords: ["bleh", "extension", "changelog", "feed"],
-            action: () => news()
-          },
-          {
-            type: "settings",
-            text: tl(trans.settings),
-            body: tl(trans.opens_your_value_settings).replace("{v}", tl(trans.profile)),
-            keywords: ["profile", "user", "pfp", "avi", "avatar", "config", "configuration", "configure", "picture", "photo"],
-            action: () => window.location.href = `${root}settings`
-          },
-          {
-            type: "bleh_settings",
-            text: tl(trans.settings),
-            body: tl(trans.opens_the_value).replace("{v}", tl(trans.bleh_settings)),
-            keywords: ["bleh", "extension", "config", "configuration", "configure"],
-            action: () => window.location.href = `${root}bleh`,
-            keybind: ["\u2318", "B"]
-          }
-        ];
-      } else if (pre_matches) {
-        feed = pre_matches;
-      }
-      if (depth < 3) {
-        let value = "";
-        if (value == "")
-          value = input_box.querySelector("input").value.trim().toLowerCase();
-        matches = [];
-        feed.forEach((item) => {
-          let extended = `${item.text} ${item.body} ${item.keywords.join(" ")} ${item.keybind ? item.keybind.join(" ").replace("\u2318", "Ctrl").replace("\u21E7", "Shift") : ""}`.toLowerCase();
-          let words = value.split(" ");
-          let match = false;
-          words.forEach((word) => {
-            if (extended.includes(word)) {
-              match = true;
-            }
-          });
-          if (item.hide)
-            match = false;
-          if (match)
-            matches.push(item);
-        });
-        render(rabbit_hole, html`
-                ${matches.length > 0 ? matches.map((item, index) => () => {
-          let button = html.node`
-                        <button class="dropdown-menu-clickable-item rabbit-hole-item" data-type=${item.type} onclick=${item.action} disabled=${item.disabled}>
-                            <div class="info">
-                                <div class="text">${item.text}</div>
-                            </div>
-                            ${item.keybind ? html.node`
-                            <div class="keybind">
-                                ${item.keybind.map((key) => {
-            if (key == "\u2318")
-              return html.node`<kbd><div class="bleh-icon" data-type="command" /></kbd>`;
-            else if (key == "\u21E7")
-              return html.node`<kbd><div class="bleh-icon" data-type="shift" /></kbd>`;
-            return html.node`<kbd>${key}</kbd>`;
-          })}
-                            </div>
-                            ` : ""}
-                        </button>
-                    `;
-          if (!item.disabled) {
-            button.addEventListener("mouseover", () => {
-              selected = index;
-              rabbit_select(false, true);
-            });
-          }
-          return button;
-        }) : html.node`
-                    <div class="loading-data-container">
-                        <div class="loading-data-text failed">${tl(trans.nothing_matches_your_search)}</div>
-                    </div>
-                `}
-            `);
-        rabbit_select();
-      } else {
-        matches = feed;
-      }
-    }
-    function rabbit_select(click = false, with_mouse = false) {
-      rabbit_tip(tl(trans.select_an_option));
-      if (depth == 3 && click) {
-        searching[selected_search].name = input_box.querySelector("input").value;
-        input_box.querySelector("input").value = "";
-        depth = 2;
-        search_fill();
-        return;
-      } else if (depth == 3) {
-        return;
-      }
-      let buttons = rabbit_hole.querySelectorAll("button");
-      buttons.forEach((button, index) => {
-        if (index == selected) {
-          button.setAttribute("aria-selected", "true");
-          if (!with_mouse) {
-            button.scrollIntoView({
-              behavior: "smooth",
-              block: "center"
-            });
-          }
-          if (click) {
-            input_box.querySelector("input").value = "";
-            button.click();
-          }
-          rabbit_tip(matches[index].body);
-        } else {
-          button.setAttribute("aria-selected", "false");
-        }
-      });
-      input_box.querySelector("input").focus();
-    }
-    function rabbit_tip(text2) {
-      render(tip, html`
-        <div class="left">
-            ${depth == 0 ? html.node`
-            <kbd>Esc</kbd> ${tl(trans.close)}
-            ` : html.node`
-            <kbd>Esc</kbd> ${tl(trans.back)}
-            `}
-        </div>
-        <div class="right">
-            ${text2}
-        </div>
-        `);
-    }
-    function rabbit_enter() {
-      rabbit_select(true);
-    }
-    function append_search(id) {
-      if (id == "artist" || id == "user" || id == "tag")
-        selected_search = "primary";
-      else
-        selected_search = "secondary";
-      depth = 3;
-      searching[selected_search].type = id;
-      input_box.querySelector("input").value = "";
-      input_box.querySelector("input").style.removeProperty("display");
-      fake.style.display = "none";
-    }
-    function bleh_theme_picker() {
-      depth = 1;
-      rabbit_search("internal:theme_picker", [
-        {
-          type: "theme_auto",
-          text: tl(trans.auto),
-          body: tl(trans.changes_your_theme),
-          keywords: ["system"],
-          action: () => save_setting("theme", "light"),
-          hide: !ff("auto_theme")
-        },
-        {
-          type: "theme_light",
-          text: tl(trans.themes.light),
-          body: tl(trans.changes_your_theme),
-          keywords: ["sun", "day"],
-          action: () => save_setting("theme", "light")
-        },
-        {
-          type: "theme_ink",
-          text: tl(trans.themes.ink),
-          body: tl(trans.changes_your_theme),
-          keywords: ["sun", "day", "light", "e-ink"],
-          action: () => save_setting("theme", "ink")
-        },
-        {
-          type: "theme_ash",
-          text: tl(trans.themes.dark),
-          body: tl(trans.changes_your_theme),
-          keywords: ["dark", "night", "grey", "gray"],
-          action: () => save_setting("theme", "dark")
-        },
-        {
-          type: "theme_dark",
-          text: tl(trans.themes.darker),
-          body: tl(trans.changes_your_theme),
-          keywords: ["dark", "night", "grey", "gray"],
-          action: () => save_setting("theme", "darker")
-        },
-        {
-          type: "theme_void",
-          text: tl(trans.themes.oled),
-          body: tl(trans.changes_your_theme),
-          keywords: ["dark", "night", "black"],
-          action: () => save_setting("theme", "oled")
-        }
-      ]);
-    }
-    function use_page_as_ctx() {
-      if (!allowed_pages.includes(page.type))
-        return;
-      depth = 1;
-      let url_start = root;
-      if (page.type == "user")
-        url_start += "user/";
-      else if (page.type == "album" || page.type == "artist" || page.type == "track")
-        url_start += "music/";
-      if (page.type == "album")
-        url_start += `${sanitise(page.sister)}/${sanitise(page.name)}`;
-      else if (page.type == "track")
-        url_start += `${sanitise(page.sister)}/_/${sanitise(page.name)}`;
-      else
-        url_start += sanitise(page.name);
-      if (page.type == "user") {
-        rabbit_search("internal:ctx", [
-          {
-            type: "overview",
-            text: tl(trans.overview),
-            body: tl(trans.opens_the_value_for_type).replace("{v}", tl(trans.overview)).replace("{t}", page.name),
-            keywords: ["home"],
-            action: () => window.location.href = url_start
-          },
-          {
-            type: "reports",
-            text: tl(trans.reports),
-            body: tl(trans.opens_the_value_for_type).replace("{v}", tl(trans.reports)).replace("{t}", page.name),
-            keywords: ["listening report", "reports", "wrapped", "playback", "spotify"],
-            action: () => window.location.href = url_start + "/listening-report"
-          },
-          {
-            type: "library",
-            text: tl(trans.library),
-            body: tl(trans.opens_the_value_for_type).replace("{v}", tl(trans.library)).replace("{t}", page.name),
-            keywords: ["library", "music", "artists", "albums", "tracks", "scrobbles", "history"],
-            action: () => window.location.href = url_start + "/library"
-          },
-          {
-            type: "friends",
-            text: tl(trans.friends),
-            body: tl(trans.opens_the_value_for_type).replace("{v}", tl(trans.friends)).replace("{t}", page.name),
-            keywords: ["friends", "following", "followers", "neighbours", "similar"],
-            action: () => window.location.href = url_start + "/following"
-          },
-          {
-            type: "following",
-            text: tl(trans.following),
-            body: tl(trans.opens_the_value_for_type).replace("{v}", tl(trans.following)).replace("{t}", page.name),
-            keywords: ["friends", "following"],
-            action: () => window.location.href = url_start + "/following"
-          },
-          {
-            type: "followers",
-            text: tl(trans.followers),
-            body: tl(trans.opens_the_value_for_type).replace("{v}", tl(trans.followers)).replace("{t}", page.name),
-            keywords: ["friends", "followers"],
-            action: () => window.location.href = url_start + "/followers"
-          },
-          {
-            type: "neighbours",
-            text: tl(trans.neighbours),
-            body: tl(trans.opens_the_value_for_type).replace("{v}", tl(trans.neighbours)).replace("{t}", page.name),
-            keywords: ["friends", "neighbours", "similar"],
-            action: () => window.location.href = url_start + "/neighbours"
-          },
-          {
-            type: "shouts",
-            text: tl(trans.shouts),
-            body: tl(trans.opens_the_value_for_type).replace("{v}", tl(trans.shouts)).replace("{t}", page.name),
-            keywords: ["shout", "shoutbox", "shouts", "comments"],
-            action: () => window.location.href = url_start + "/shoutbox"
-          },
-          {
-            type: "loved",
-            text: tl(trans.loved),
-            body: tl(trans.opens_the_value_for_type).replace("{v}", tl(trans.loved)).replace("{t}", page.name),
-            keywords: ["loved", "hearted", "favourites", "favorites", "luved"],
-            action: () => window.location.href = url_start + "/loved"
-          },
-          {
-            type: "obsessions",
-            text: tl(trans.obsessions),
-            body: tl(trans.opens_the_value_for_type).replace("{v}", tl(trans.obsessions)).replace("{t}", page.name),
-            keywords: ["loved", "hearted", "favourites", "favorites", "obsessions", "looping"],
-            action: () => window.location.href = url_start + "/obsessions"
-          },
-          {
-            type: "events",
-            text: tl(trans.events),
-            body: tl(trans.opens_the_value_for_type).replace("{v}", tl(trans.events)).replace("{t}", page.name),
-            keywords: ["events", "festivals", "tour", "live"],
-            action: () => window.location.href = url_start + "/events"
-          },
-          {
-            type: "playlists",
-            text: tl(trans.playlists),
-            body: tl(trans.opens_the_value_for_type).replace("{v}", tl(trans.playlists)).replace("{t}", page.name),
-            keywords: ["playlists", "folders"],
-            action: () => window.location.href = url_start + "/playlists"
-          },
-          {
-            type: "tags",
-            text: tl(trans.tags),
-            body: tl(trans.opens_the_value_for_type).replace("{v}", tl(trans.tags)).replace("{t}", page.name),
-            keywords: ["tags", "tagged", "related", "groups", "grouped"],
-            action: () => window.location.href = url_start + "/tags"
-          },
-          {
-            type: "compare",
-            text: tl(trans.compare),
-            body: tl(trans.compares_your_taste).replace("{v}", page.name),
-            keywords: ["similar", "taste", "music", "shared"],
-            action: () => compare(),
-            hide: page.name == auth.name
-          },
-          {
-            type: "collage",
-            text: tl(trans.collage),
-            body: tl(trans.create_a_collage),
-            keywords: ["taste", "music", "chart", "5x5", "topster"],
-            action: () => collage()
-          }
-        ]);
-      } else if (page.type == "artist") {
-        rabbit_search("internal:ctx", [
-          {
-            type: "overview",
-            text: tl(trans.overview),
-            body: tl(trans.opens_the_value_for_type).replace("{v}", tl(trans.overview)).replace("{t}", page.name),
-            keywords: ["home"],
-            action: () => window.location.href = url_start
-          },
-          {
-            type: "tracks",
-            text: tl(trans.tracks),
-            body: tl(trans.opens_the_value_for_type).replace("{v}", tl(trans.tracks)).replace("{t}", page.name),
-            keywords: ["music", "top"],
-            action: () => window.location.href = url_start + "/+tracks"
-          },
-          {
-            type: "albums",
-            text: tl(trans.albums),
-            body: tl(trans.opens_the_value_for_type).replace("{v}", tl(trans.albums)).replace("{t}", page.name),
-            keywords: ["music", "top"],
-            action: () => window.location.href = url_start + "/+albums"
-          },
-          {
-            type: "photos",
-            text: tl(trans.photos),
-            body: tl(trans.opens_the_value_for_type).replace("{v}", tl(trans.photos)).replace("{t}", page.name),
-            keywords: ["gallery", "artwork", "image", "picture", "avatar"],
-            action: () => window.location.href = url_start + "/+images"
-          },
-          {
-            type: "similar",
-            text: tl(trans.similar_artists),
-            body: tl(trans.opens_the_value_for_type).replace("{v}", tl(trans.similar_artists)).replace("{t}", page.name),
-            keywords: ["music"],
-            action: () => window.location.href = url_start + "/+similar"
-          },
-          {
-            type: "wiki",
-            text: tl(trans.biography),
-            body: tl(trans.opens_the_value_for_type).replace("{v}", tl(trans.biography)).replace("{t}", page.name),
-            keywords: ["wiki", "about", "text"],
-            action: () => window.location.href = url_start + "/+wiki"
-          },
-          {
-            type: "listeners",
-            text: tl(trans.listeners),
-            body: tl(trans.opens_the_value_for_type).replace("{v}", tl(trans.listeners)).replace("{t}", page.name),
-            keywords: ["top"],
-            action: () => window.location.href = url_start + "/+listeners"
-          },
-          {
-            type: "listeners_you_know",
-            text: tl(trans.listeners_you_know),
-            body: tl(trans.opens_the_value_for_type).replace("{v}", tl(trans.listeners_you_know)).replace("{t}", page.name),
-            keywords: ["friends"],
-            action: () => window.location.href = url_start + "/+listeners/you-know"
-          },
-          {
-            type: "shouts",
-            text: tl(trans.shouts),
-            body: tl(trans.opens_the_value_for_type).replace("{v}", tl(trans.shouts)).replace("{t}", page.name),
-            keywords: ["shout", "shoutbox", "shouts", "comments"],
-            action: () => window.location.href = url_start + "/shoutbox"
-          },
-          {
-            type: "events",
-            text: tl(trans.events),
-            body: tl(trans.opens_the_value_for_type).replace("{v}", tl(trans.events)).replace("{t}", page.name),
-            keywords: ["events", "festivals", "tour", "live"],
-            action: () => window.location.href = url_start + "/events"
-          },
-          {
-            type: "tags",
-            text: tl(trans.tags),
-            body: tl(trans.opens_the_value_for_type).replace("{v}", tl(trans.tags)).replace("{t}", page.name),
-            keywords: ["tags", "tagged", "related", "groups", "grouped"],
-            action: () => window.location.href = url_start + "/tags"
-          }
-        ]);
-      } else if (page.type == "album") {
-        rabbit_search("internal:ctx", [
-          {
-            type: "overview",
-            text: tl(trans.overview),
-            body: tl(trans.opens_the_value_for_type).replace("{v}", tl(trans.overview)).replace("{t}", page.name),
-            keywords: ["home"],
-            action: () => window.location.href = url_start
-          },
-          {
-            type: "wiki",
-            text: tl(trans.wiki),
-            body: tl(trans.opens_the_value_for_type).replace("{v}", tl(trans.wiki)).replace("{t}", page.name),
-            keywords: ["wiki", "about", "text"],
-            action: () => window.location.href = url_start + "/+wiki"
-          },
-          {
-            type: "photos",
-            text: tl(trans.artwork),
-            body: tl(trans.opens_the_value_for_type).replace("{v}", tl(trans.artwork)).replace("{t}", page.name),
-            keywords: ["gallery", "artwork", "image", "picture", "avatar"],
-            action: () => window.location.href = url_start + "/+images"
-          },
-          {
-            type: "shouts",
-            text: tl(trans.shouts),
-            body: tl(trans.opens_the_value_for_type).replace("{v}", tl(trans.shouts)).replace("{t}", page.name),
-            keywords: ["shout", "shoutbox", "shouts", "comments"],
-            action: () => window.location.href = url_start + "/shoutbox"
-          },
-          {
-            type: "tags",
-            text: tl(trans.tags),
-            body: tl(trans.opens_the_value_for_type).replace("{v}", tl(trans.tags)).replace("{t}", page.name),
-            keywords: ["tags", "tagged", "related", "groups", "grouped"],
-            action: () => window.location.href = url_start + "/tags"
-          }
-        ]);
-      } else if (page.type == "track") {
-        rabbit_search("internal:ctx", [
-          {
-            type: "overview",
-            text: tl(trans.overview),
-            body: tl(trans.opens_the_value_for_type).replace("{v}", tl(trans.overview)).replace("{t}", page.name),
-            keywords: ["home"],
-            action: () => window.location.href = url_start
-          },
-          {
-            type: "albums",
-            text: tl(trans.albums),
-            body: tl(trans.opens_the_value_for_type).replace("{v}", tl(trans.albums)).replace("{t}", page.name),
-            keywords: ["music", "top"],
-            action: () => window.location.href = url_start + "/+albums"
-          },
-          {
-            type: "wiki",
-            text: tl(trans.wiki),
-            body: tl(trans.opens_the_value_for_type).replace("{v}", tl(trans.wiki)).replace("{t}", page.name),
-            keywords: ["wiki", "about", "text"],
-            action: () => window.location.href = url_start + "/+wiki"
-          },
-          {
-            type: "shouts",
-            text: tl(trans.shouts),
-            body: tl(trans.opens_the_value_for_type).replace("{v}", tl(trans.shouts)).replace("{t}", page.name),
-            keywords: ["shout", "shoutbox", "shouts", "comments"],
-            action: () => window.location.href = url_start + "/shoutbox"
-          },
-          {
-            type: "tags",
-            text: tl(trans.tags),
-            body: tl(trans.opens_the_value_for_type).replace("{v}", tl(trans.tags)).replace("{t}", page.name),
-            keywords: ["tags", "tagged", "related", "groups", "grouped"],
-            action: () => window.location.href = url_start + "/tags"
-          }
-        ]);
-      } else if (page.type == "tag") {
-        rabbit_search("internal:ctx", [
-          {
-            type: "overview",
-            text: tl(trans.overview),
-            body: tl(trans.opens_the_value_for_type).replace("{v}", tl(trans.overview)).replace("{t}", page.name),
-            keywords: ["home"],
-            action: () => window.location.href = url_start
-          },
-          {
-            type: "artists",
-            text: tl(trans.artists),
-            body: tl(trans.opens_the_value_for_type).replace("{v}", tl(trans.artists)).replace("{t}", page.name),
-            keywords: ["music", "top"],
-            action: () => window.location.href = url_start + "/artists"
-          },
-          {
-            type: "albums",
-            text: tl(trans.albums),
-            body: tl(trans.opens_the_value_for_type).replace("{v}", tl(trans.albums)).replace("{t}", page.name),
-            keywords: ["music", "top"],
-            action: () => window.location.href = url_start + "/albums"
-          },
-          {
-            type: "tracks",
-            text: tl(trans.tracks),
-            body: tl(trans.opens_the_value_for_type).replace("{v}", tl(trans.tracks)).replace("{t}", page.name),
-            keywords: ["music", "top"],
-            action: () => window.location.href = url_start + "/tracks"
-          },
-          {
-            type: "wiki",
-            text: tl(trans.wiki),
-            body: tl(trans.opens_the_value_for_type).replace("{v}", tl(trans.wiki)).replace("{t}", page.name),
-            keywords: ["wiki", "about", "text"],
-            action: () => window.location.href = url_start + "/wiki"
-          },
-          {
-            type: "shouts",
-            text: tl(trans.shouts),
-            body: tl(trans.opens_the_value_for_type).replace("{v}", tl(trans.shouts)).replace("{t}", page.name),
-            keywords: ["shout", "shoutbox", "shouts", "comments"],
-            action: () => window.location.href = url_start + "/shoutbox"
-          }
-        ]);
-      }
-    }
-    function search() {
-      depth = 2;
-      if (!page.structure.dialogs.hasChildNodes())
-        rabbit();
-      searching = {
-        primary: {
-          name: "",
-          type: ""
-        },
-        secondary: {
-          name: "",
-          type: ""
-        }
-      };
-      search_fill();
-    }
-    function search_fill() {
-      depth = 2;
-      input_box.querySelector("input").style.display = "none";
-      fake.style.removeProperty("display");
-      if (searching.primary.type && searching.secondary.type) {
-        render(fake, html`
-                <label>${searching.primary.type}:</label>
-                <p>${searching.primary.name}</p>
-                <label>${searching.secondary.type}:</label>
-                <p>${searching.secondary.name}</p>
-            `);
-      } else if (searching.primary.type) {
-        render(fake, html`
-                <label>${searching.primary.type}:</label>
-                <p>${searching.primary.name}</p>
-            `);
-      } else {
-        render(fake, html`
-                <i>${tl(trans.choose_a_search_type)}</i>
-            `);
-      }
-      if (searching.primary.type == "artist") {
-        rabbit_search("internal:search", [
-          {
-            type: "finish",
-            text: tl(trans.finish),
-            body: tl(trans.finish_search),
-            keywords: ["finish"],
-            action: () => search_finish()
-          },
-          {
-            type: "artist",
-            text: tl(trans.artist),
-            body: tl(trans.search_for_value).replace("{v}", tl(trans.artist)),
-            keywords: ["profile"],
-            action: () => append_search("artist")
-          },
-          {
-            type: "album",
-            text: tl(trans.album),
-            body: tl(trans.search_for_value).replace("{v}", tl(trans.album)),
-            keywords: ["record"],
-            action: () => append_search("album")
-          },
-          {
-            type: "track",
-            text: tl(trans.track),
-            body: tl(trans.search_for_value).replace("{v}", tl(trans.track)),
-            keywords: ["song"],
-            action: () => append_search("track")
-          }
-        ]);
-      } else if (searching.primary.type == "user") {
-        rabbit_search("internal:search", [
-          {
-            type: "search",
-            text: tl(trans.search),
-            body: tl(trans.finish_search),
-            keywords: ["finish"],
-            action: () => search_finish()
-          },
-          {
-            type: "user",
-            text: tl(trans.profile),
-            body: tl(trans.search_for_value).replace("{v}", tl(trans.profile)),
-            keywords: [],
-            action: () => append_search("user")
-          }
-        ]);
-      } else if (searching.primary.type == "tag") {
-        rabbit_search("internal:search", [
-          {
-            type: "finish",
-            text: tl(trans.finish),
-            body: tl(trans.finish_search),
-            keywords: ["finish"],
-            action: () => search_finish()
-          },
-          {
-            type: "tag",
-            text: tl(trans.tag),
-            body: tl(trans.search_for_value).replace("{v}", tl(trans.tag)),
-            keywords: ["genre"],
-            action: () => append_search("tag")
-          }
-        ]);
-      } else if (searching.secondary.type == "album" || searching.secondary.type == "track") {
-        rabbit_search("internal:search", [
-          {
-            type: "artist",
-            text: tl(trans.artist),
-            body: tl(trans.search_for_value).replace("{v}", tl(trans.artist)),
-            keywords: ["profile"],
-            action: () => append_search("artist")
-          }
-        ]);
-      } else {
-        rabbit_search("internal:search", [
-          {
-            type: "artist",
-            text: tl(trans.artist),
-            body: tl(trans.search_for_value).replace("{v}", tl(trans.artist)),
-            keywords: ["profile"],
-            action: () => append_search("artist")
-          },
-          {
-            type: "album",
-            text: tl(trans.album),
-            body: tl(trans.search_for_value).replace("{v}", tl(trans.album)),
-            keywords: ["record"],
-            action: () => append_search("album")
-          },
-          {
-            type: "track",
-            text: tl(trans.track),
-            body: tl(trans.search_for_value).replace("{v}", tl(trans.track)),
-            keywords: ["song"],
-            action: () => append_search("track")
-          },
-          {
-            type: "user",
-            text: tl(trans.profile),
-            body: tl(trans.search_for_value).replace("{v}", tl(trans.profile)),
-            keywords: [],
-            action: () => append_search("user")
-          },
-          {
-            type: "tag",
-            text: tl(trans.tag),
-            body: tl(trans.search_for_value).replace("{v}", tl(trans.tag)),
-            keywords: ["genre"],
-            action: () => append_search("tag")
-          }
-        ]);
-      }
-    }
-    function search_finish() {
-      if (searching.primary.type == "artist") {
-        if (searching.secondary.type == "album") {
-          window.location.href = `${root}music/${sanitise(searching.primary.name)}/${sanitise(searching.secondary.name)}`;
-        } else if (searching.secondary.type == "track") {
-          window.location.href = `${root}music/${sanitise(searching.primary.name)}/_/${sanitise(searching.secondary.name)}`;
-        } else {
-          window.location.href = `${root}music/${sanitise(searching.primary.name)}`;
-        }
-      } else if (searching.primary.type == "user") {
-        window.location.href = `${root}user/${sanitise(searching.primary.name)}`;
-      } else if (searching.primary.type == "tag") {
-        window.location.href = `${root}tag/${sanitise(searching.primary.name)}`;
-      }
-    }
   }
 
   // src/components/dialog_extender.js
@@ -23937,6 +23972,9 @@
     },
     opens_the_value_for_type: {
       en: "Open the {v} for {t}"
+    },
+    quick_switcher: {
+      en: "Switcher"
     },
     switch_placeholder: {
       en: "Quick switch to a page or action"
@@ -28350,6 +28388,61 @@
       type: "checkbox",
       icon: "icon-16-download",
       horizontal: true
+    },
+    rabbit_search: {
+      default: "d",
+      title: trans.search,
+      type: "text",
+      min: 1,
+      max: 1,
+      icon: "icon-16-search",
+      placeholder: "none",
+      keybind: ["\u2318", "D"],
+      warn_if_empty: true
+    },
+    rabbit: {
+      default: "k",
+      title: trans.quick_switcher,
+      type: "text",
+      min: 1,
+      max: 1,
+      icon: "icon-16-command",
+      placeholder: "none",
+      keybind: ["\u2318", "K"],
+      warn_if_empty: true
+    },
+    rabbit_profile: {
+      default: "p",
+      title: trans.profile,
+      type: "text",
+      min: 1,
+      max: 1,
+      icon: "icon-16-user",
+      placeholder: "none",
+      keybind: ["\u2318", "P"],
+      warn_if_empty: true
+    },
+    rabbit_shortcut: {
+      default: "s",
+      title: trans.profile_shortcut.name,
+      type: "text",
+      min: 1,
+      max: 1,
+      icon: "icon-16-profile-shortcut",
+      placeholder: "none",
+      keybind: ["\u2318", "S"],
+      warn_if_empty: true
+    },
+    rabbit_bleh_settings: {
+      default: "b",
+      title: trans.settings,
+      type: "text",
+      min: 1,
+      max: 1,
+      icon: "icon-16-bleh",
+      placeholder: "none",
+      keybind: ["\u2318", "B"],
+      warn_if_empty: true
     }
   };
 

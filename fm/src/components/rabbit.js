@@ -48,7 +48,7 @@ export function register_rabbit() {
         const cmd = (e.getModifierState('Control') || e.getModifierState('Meta'));
         const key = e.key.toLowerCase();
 
-        if (cmd && ['k', ','].includes(key) && !page.structure.dialogs.hasChildNodes()) {
+        if (cmd && [settings.rabbit.toLowerCase(), ','].includes(key) && !page.structure.dialogs.hasChildNodes()) {
             e.preventDefault();
 
             depth = 0;
@@ -114,7 +114,13 @@ export function register_rabbit() {
         }
 
         if (!page.structure.dialogs.hasChildNodes()) {
-            if (cmd && ['s'].includes(key)) {
+            if (cmd && [settings.rabbit_profile.toLowerCase()].includes(key)) {
+                e.preventDefault();
+
+                window.location.href = `${root}user/${auth.name}`;
+            }
+
+            if (cmd && [settings.rabbit_shortcut.toLowerCase()].includes(key)) {
                 e.preventDefault();
 
                 if (settings.profile_shortcut != '') {
@@ -124,13 +130,13 @@ export function register_rabbit() {
                 }
             }
 
-            if (cmd && ['b'].includes(key)) {
+            if (cmd && [settings.rabbit_bleh_settings.toLowerCase()].includes(key)) {
                 e.preventDefault();
 
                 window.location.href = `${root}bleh`;
             }
 
-            if (cmd && ['d'].includes(key)) {
+            if (cmd && [settings.rabbit_search.toLowerCase()].includes(key)) {
                 e.preventDefault();
 
                 rabbit();
@@ -200,7 +206,7 @@ export function register_rabbit() {
                     body: tl(trans.search_for_music_or_user),
                     keywords: ['user', 'music', 'tag', 'discover', 'explore'],
                     action: () => search(),
-                    keybind: ['⌘', 'D']
+                    keybind: ['⌘', settings.rabbit_search.toUpperCase()]
                 },
                 {
                     type: 'on_this_page',
@@ -208,7 +214,7 @@ export function register_rabbit() {
                     body: tl(trans.use_current_page_as_context),
                     keywords: ['ctx', 'context'],
                     action: () => use_page_as_ctx(),
-                    keybind: ['⌘', '⇧', 'K'],
+                    keybind: ['⌘', '⇧', settings.rabbit.toUpperCase()],
                     disabled: (!allowed_pages.includes(page.type))
                 },
                 {
@@ -217,7 +223,7 @@ export function register_rabbit() {
                     body: tl(trans.opens_your_value).replace('{v}', tl(trans.profile)),
                     keywords: ['profile', 'user', 'me'],
                     action: () => window.location.href = `${root}user/${auth.name}`,
-                    keybind: ['⌘', 'P']
+                    keybind: ['⌘', settings.rabbit_profile.toUpperCase()]
                 },
                 {
                     type: 'profile_shortcut',
@@ -226,7 +232,7 @@ export function register_rabbit() {
                     keywords: ['profile', 'user', 'shortcut', 'friends'],
                     action: () => window.location.href = `${root}user/${settings.profile_shortcut}`,
                     hide: (settings.profile_shortcut == ''),
-                    keybind: ['⌘', 'S']
+                    keybind: ['⌘', settings.rabbit_shortcut.toUpperCase()]
                 },
                 {
                     type: 'notifications',
@@ -269,7 +275,7 @@ export function register_rabbit() {
                     body: tl(trans.opens_the_value).replace('{v}', tl(trans.bleh_settings)),
                     keywords: ['bleh', 'extension', 'config', 'configuration', 'configure'],
                     action: () => window.location.href = `${root}bleh`,
-                    keybind: ['⌘', 'B']
+                    keybind: ['⌘', settings.rabbit_bleh_settings.toUpperCase()]
                 }
             ];
         } else if (pre_matches) {
@@ -308,18 +314,7 @@ export function register_rabbit() {
                             <div class="info">
                                 <div class="text">${item.text}</div>
                             </div>
-                            ${item.keybind ? html.node`
-                            <div class="keybind">
-                                ${item.keybind.map(key => {
-                                    if (key == '⌘')
-                                        return html.node`<kbd><div class="bleh-icon" data-type="command" /></kbd>`;
-                                    else if (key == '⇧')
-                                        return html.node`<kbd><div class="bleh-icon" data-type="shift" /></kbd>`;
-                                    
-                                    return html.node`<kbd>${key}</kbd>`;
-                                })}
-                            </div>
-                            ` : ''}
+                            ${item.keybind ? keybind(item.keybind) : ''}
                         </button>
                     `;
                     
@@ -976,4 +971,19 @@ export function register_rabbit() {
             window.location.href = `${root}tag/${sanitise(searching.primary.name)}`;
         }
     }
+}
+
+export function keybind(list) {
+    return html.node`
+        <div class="keybind">
+            ${list.map(key => {
+                if (key == '⌘')
+                    return html.node`<kbd><div class="bleh-icon" data-type="command" /></kbd>`;
+                else if (key == '⇧')
+                    return html.node`<kbd><div class="bleh-icon" data-type="shift" /></kbd>`;
+                
+                return html.node`<kbd>${key}</kbd>`;
+            })}
+        </div>
+    `;
 }

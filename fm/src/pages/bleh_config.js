@@ -75,6 +75,10 @@ export function bleh_settings() {
         accessibility: {
             name: tl(trans.accessibility)
         },
+        rabbit: {
+            name: tl(trans.quick_switcher),
+            icon: 'cmd'
+        },
         fill: {
             type: 'fill'
         },
@@ -835,6 +839,21 @@ export function render_setting_page(page_id) {
                 <div class="setting-group">
                     ${setting({id: 'reduced_motion'})}
                     ${setting({id: 'underline_links'})}
+                </div>
+            </div>
+            `);
+    } else if (page_id == 'rabbit') {
+        register_skip_to([]);
+
+        render(page.structure.main, html`
+            <div class="bleh--panel">
+                <h4>${tl(trans.quick_switcher)}</h4>
+                <div class="setting-group">
+                    ${setting({id: 'rabbit'})}
+                    ${setting({id: 'rabbit_search'})}
+                    ${setting({id: 'rabbit_profile'})}
+                    ${setting({id: 'rabbit_shortcut'})}
+                    ${setting({id: 'rabbit_bleh_settings'})}
                 </div>
             </div>
             `);

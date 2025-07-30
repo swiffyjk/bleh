@@ -14,6 +14,7 @@ import {request_reload} from "../config.js";
 import {log} from "../build/log.js";
 import {change_settings_page} from "../pages/bleh_config.js";
 import {dialog_rm} from "./dialog.js";
+import {keybind} from "./rabbit.js";
 
 export function setting({
     id = '',
@@ -32,6 +33,9 @@ export function setting({
         let title = settings_store[id].title ? tl(settings_store[id].title) : id;
         let body = settings_store[id].body ? tl(settings_store[id].body) : null;
         let icon = settings_store[id].icon;
+
+        if (!body && settings_store[id].keybind)
+            body = keybind(settings_store[id].keybind);
 
         let disabled = false;
         let disabled_reason = '';
@@ -152,8 +156,16 @@ export function setting({
             let input_container;
             let error_tooltip;
 
+            let placeholder = settings_store[id].placeholder;
+            if (placeholder && placeholder != 'empty') placeholder = tl(placeholder);
+
             let container = html.node`
                 <div class="setting v2 ${standalone ? 'standalone' : ''}" data-type="text" disabled=${disabled} ref=${el => option = el} data-modified=${value != settings_store[id].default}>
+                    ${icon ? html.node`
+                    <div class="icon">
+                        <div class="bleh-icon" style="--icon: var(--${icon})" />
+                    </div>
+                    ` : ''}
                     ${(text) ? html.node`
                     <div class="heading">
                         <h5>${title}<button class="reset see-more" ref=${el => reset_btn = el} onclick=${() => reset_text(id, input, submit, option, reset_btn, avatar)}>${tl(trans.reset)}</button></h5>
@@ -184,7 +196,7 @@ export function setting({
                     </div>
                     ` : ''}
                     <div class="input-container content-form in-settings can-submit" data-has-error="false" ref=${el => input_container = el}>
-                        <input type="text" maxlength=${max} value=${value} style="--max: ${max}px" ref=${el => input = el} placeholder=${tl(settings_store[id].placeholder)} />
+                        <input type="text" maxlength=${max} value=${value} style="--max: ${max}px" ref=${el => input = el} placeholder=${placeholder} />
                         <button class="btn chibi icon submit" ref=${el => submit = el} onclick=${() => update_text(id, input, submit, option, input.value, reset_btn, avatar)}>${tl(trans.save)}</button>
                     </div>
                 </div>
