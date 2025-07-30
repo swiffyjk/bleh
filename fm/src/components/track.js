@@ -15,6 +15,7 @@ import {correct_artist, correct_item_by_artist, name_includes} from "./lotus";
 import {register_menu} from "./menu";
 import {tl, trans} from "../build/trans.js";
 import {notify} from "./notify.js";
+import {redirect} from "./music.js";
 
 export function patch_titles(search=page.structure.main) {
     if (page.subpage === 'tags_overview' || page.subpage == 'tags_tag')
@@ -237,13 +238,13 @@ export function patch_titles(search=page.structure.main) {
                 if (song_artist_element.textContent.replaceAll('+', ' ').trim() === track_artist || song_artist_element.textContent.trim() === '') {
                     log('artist either matches or is blank, replacing', 'tracks', 'log');
                     // replaces with corrected artist if applicable
-                    render(song_artist_element, html`<a href="${root}music/${sanitise(formatted_title[2])}">${formatted_title[2]}</a>`);
+                    render(song_artist_element, html`<a href="${root}music/${redirect()}${sanitise(formatted_title[2])}">${formatted_title[2]}</a>`);
 
                     // append guests
                     let song_guests = formatted_title[3];
                     for (let guest in song_guests) {
                         song_artist_element.appendChild(html.node`
-                            ,<a href="${root}music/${sanitise(song_guests[guest])}">${song_guests[guest]}</a>
+                            ,<a href="${root}music/${redirect()}${sanitise(song_guests[guest])}">${song_guests[guest]}</a>
                         `);
                     }
                 }
@@ -444,7 +445,7 @@ export function patch_titles(search=page.structure.main) {
                             <div class="button-combo">
                                 ${() => {
                                     return html.node`
-                                        <a class="dropdown-menu-clickable-item" data-type="track" href="${root}music/${sanitise(track_artist)}/_/${sanitise(track_title.getAttribute('data-name'))}">
+                                        <a class="dropdown-menu-clickable-item" data-type="track" href="${root}music/${redirect()}${sanitise(track_artist)}/_/${sanitise(track_title.getAttribute('data-name'))}">
                                             ${tl(trans.track)}
                                         </a>
                                     `;
@@ -452,7 +453,7 @@ export function patch_titles(search=page.structure.main) {
                                 <div class="button-combo-sep"/>
                                 ${() => {
                                     let button = html.node`
-                                        <a class="dropdown-menu-clickable-item chibi" data-type="continue" href="${root}user/${page.name}/library/music/${sanitise(track_artist)}/_/${sanitise(track_title.getAttribute('data-name'))}">
+                                        <a class="dropdown-menu-clickable-item chibi" data-type="continue" href="${root}user/${page.name}/library/music/${redirect()}${sanitise(track_artist)}/_/${sanitise(track_title.getAttribute('data-name'))}">
                                             ${tl(trans.explore_in_library)}
                                         </a>
                                     `;
@@ -469,7 +470,7 @@ export function patch_titles(search=page.structure.main) {
                             <div class="button-combo">
                                 ${() => {
                                     return html.node`
-                                        <a class="dropdown-menu-clickable-item" data-type="album" href="${root}music/${sanitise(track_artist)}/${album_name}">
+                                        <a class="dropdown-menu-clickable-item" data-type="album" href="${root}music/${redirect()}${sanitise(track_artist)}/${album_name}">
                                             ${tl(trans.album)}
                                         </a>
                                     `;
@@ -477,7 +478,7 @@ export function patch_titles(search=page.structure.main) {
                                 <div class="button-combo-sep"/>
                                 ${() => {
                                     let button = html.node`
-                                        <a class="dropdown-menu-clickable-item chibi" data-type="continue" href="${root}user/${page.name}/library/music/${sanitise(track_artist)}/${album_name}">
+                                        <a class="dropdown-menu-clickable-item chibi" data-type="continue" href="${root}user/${page.name}/library/music/${redirect()}${sanitise(track_artist)}/${album_name}">
                                             ${tl(trans.explore_in_library)}
                                         </a>
                                     `;
@@ -493,7 +494,7 @@ export function patch_titles(search=page.structure.main) {
                             <div class="button-combo">
                                 ${() => {
                                     return html.node`
-                                        <a class="dropdown-menu-clickable-item" data-type="album" href="${root}music/${sanitise(track_artist)}/${sanitise(track_title.getAttribute('data-name'))}">
+                                        <a class="dropdown-menu-clickable-item" data-type="album" href="${root}music/${redirect()}${sanitise(track_artist)}/${sanitise(track_title.getAttribute('data-name'))}">
                                             ${tl(trans.album)}
                                         </a>
                                     `;
@@ -501,7 +502,7 @@ export function patch_titles(search=page.structure.main) {
                                 <div class="button-combo-sep"/>
                                 ${() => {
                                     let button = html.node`
-                                        <a class="dropdown-menu-clickable-item chibi" data-type="continue" href="${root}user/${page.name}/library/music/${sanitise(track_artist)}/${sanitise(track_title.getAttribute('data-name'))}">
+                                        <a class="dropdown-menu-clickable-item chibi" data-type="continue" href="${root}user/${page.name}/library/music/${redirect()}${sanitise(track_artist)}/${sanitise(track_title.getAttribute('data-name'))}">
                                             ${tl(trans.explore_in_library)}
                                         </a>
                                     `;
@@ -517,7 +518,7 @@ export function patch_titles(search=page.structure.main) {
                             <div class="button-combo">
                                 ${() => {
                                     return html.node`
-                                        <a class="dropdown-menu-clickable-item" data-type="artist" href="${root}music/${sanitise(track_artist)}">
+                                        <a class="dropdown-menu-clickable-item" data-type="artist" href="${root}music/${redirect()}${sanitise(track_artist)}">
                                             ${tl(trans.artist)}
                                         </a>
                                     `;
@@ -525,7 +526,7 @@ export function patch_titles(search=page.structure.main) {
                                 <div class="button-combo-sep"/>
                                 ${() => {
                                     let button = html.node`
-                                        <a class="dropdown-menu-clickable-item chibi" data-type="continue" href="${root}user/${page.name}/library/music/${sanitise(track_artist)}">
+                                        <a class="dropdown-menu-clickable-item chibi" data-type="continue" href="${root}user/${page.name}/library/music/${redirect()}${sanitise(track_artist)}">
                                             ${tl(trans.explore_in_library)}
                                         </a>
                                     `;

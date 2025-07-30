@@ -106,6 +106,7 @@ export let page = {
     token: '',
     mobile: false,
     platform: 'other',
+    suggest: null,
     now: {
         next_fetch: null,
         name: null,

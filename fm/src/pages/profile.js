@@ -30,6 +30,7 @@ import {html, render} from "lighterhtml";
 import {save_setting, setting} from "../components/settings.js";
 import {save_banner_to_cache} from "../components/banner.js";
 import {submit_scrobble} from '../components/scrobble.js'
+import {redirect} from "../components/music.js";
 
 export function bleh_profiles() {
     // the obsessions page is a user subpage but works very differently
@@ -988,7 +989,7 @@ function bleh_featured_profile_track(object, about_me) {
 
         let song_artist_element = document.createElement('div');
         song_artist_element.classList.add('featured-item-artist');
-        song_artist_element.innerHTML = `<a href="${root}music/${sanitise(formatted_title[2])}">${formatted_title[2]}</a>`;
+        song_artist_element.innerHTML = `<a href="${root}music/${redirect()}${sanitise(formatted_title[2])}">${formatted_title[2]}</a>`;
 
         // append guests
         let song_guests = formatted_title[3];
@@ -997,7 +998,7 @@ function bleh_featured_profile_track(object, about_me) {
             song_artist_element.innerHTML = `${song_artist_element.innerHTML},`;
 
             let guest_element = document.createElement('a');
-            guest_element.setAttribute('href', `${root}music/${sanitise(song_guests[guest])}`);
+            guest_element.setAttribute('href', `${root}music/${redirect()}${sanitise(song_guests[guest])}`);
             guest_element.textContent = song_guests[guest];
 
             song_artist_element.appendChild(guest_element);

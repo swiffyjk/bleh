@@ -240,7 +240,7 @@ export function show_your_scrobbles() {
         // create child for them
         const listen_item = create_listen_item(listen_container, shortcut_listens);
 
-        fetch(`${root}user/${shortcut_listens.name}/library/music/${scrobble_page}`)
+        fetch(`${root}user/${shortcut_listens.name}/library/music/${redirect()}${scrobble_page}`)
         .then(function(response) {
             console.log('returned', response, response.text);
 
@@ -753,7 +753,7 @@ function create_listen_item(parent, {name, listens, link, avi, count=0, button=f
     else        listen_item = html.node`<a />`;
 
     listen_item.classList.add('btn', 'listen-item');
-    listen_item.setAttribute('href', `${root}user/${name}/library/music/${link}`);
+    listen_item.setAttribute('href', `${root}user/${name}/library/music/${redirect()}${link}`);
     listen_item.setAttribute('data-listens', listens);
     listen_item.setAttribute('id', `listen-item--${name}`);
 
@@ -1213,8 +1213,8 @@ export function bleh_top_listeners() {
         if (track_wrap) {
             let track_link = new_listener.querySelector('.user-list-about-me a');
             let artist = return_artist_from_track(track_link.getAttribute('href'), false);
-            let track = correct_item_by_artist(track_link.textContent.trim(), artist);
-            track_link.textContent = track;
+
+            track_link.textContent = correct_item_by_artist(track_link.textContent.trim(), artist);
         }
 
         new_container.appendChild(new_listener);
@@ -1222,4 +1222,10 @@ export function bleh_top_listeners() {
 
     view_buttons.after(new_container);
     panel.removeChild(legacy_top_listeners_container);
+}
+
+// allows controlling auto +noredirect
+export function redirect() {
+    if (settings.prefer_no_redirect) return '+noredirect/';
+    else                             return '';
 }

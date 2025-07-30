@@ -11,7 +11,7 @@ import {sanitise} from "../build/tools";
 import {tl, trans, trans_legacy} from "../build/trans";
 import {artist_title, correct_item_by_artist} from "../components/lotus";
 import {register_menu} from "../components/menu";
-import {bleh_music_page_charts, bleh_top_listeners, show_your_scrobbles} from "../components/music";
+import {bleh_music_page_charts, bleh_top_listeners, redirect, show_your_scrobbles} from "../components/music";
 import {checkup_page_structure} from "../components/structure";
 import {register_background, update_page} from "../page";
 import {ff} from "../sku";
@@ -140,7 +140,7 @@ export function bleh_artists() {
             if (settings.default_avatar_action == 'expand' && avatar != null)
                 avatar_link.setAttribute('onclick', `_expand_avatar('${avatar.getAttribute('content')}')`);
             else if (settings.default_avatar_action == 'gallery')
-                avatar_link.href = `${root}music/${sanitise(page.name)}/+images`;
+                avatar_link.href = `${root}music/${redirect()}${sanitise(page.name)}/+images`;
 
             let menu = tippy(avatar_side, {
                 theme: 'context-menu',
@@ -150,7 +150,7 @@ export function bleh_artists() {
                         ${tl(trans.expand)}
                     </button>
                     ` : ''}
-                    <a class="dropdown-menu-clickable-item" href="${root}music/${sanitise(page.name)}/+images" data-menu-item="gallery">
+                    <a class="dropdown-menu-clickable-item" href="${root}music/${redirect()}${sanitise(page.name)}/+images" data-menu-item="gallery">
                         ${tl(trans.photos)}
                     </a>
                     <div class="sep"></div>
@@ -456,11 +456,11 @@ function bleh_listeners() {
     // i could just render away the ad here but courtesy
     page.structure.side.appendChild(html.node`
         <section class="side-actions">
-            <a class="btn side-action" data-type="profile" href="${root}user/${auth.name}/library/music/${sanitise(page.name)}">
+            <a class="btn side-action" data-type="profile" href="${root}user/${auth.name}/library/music/${redirect()}${sanitise(page.name)}">
                 ${auth.name}
             </a>
             ${settings.profile_shortcut != '' ? html.node`
-            <a class="btn side-action" data-type="profile_shortcut" href="${root}user/${settings.profile_shortcut}/library/music/${sanitise(page.name)}">
+            <a class="btn side-action" data-type="profile_shortcut" href="${root}user/${settings.profile_shortcut}/library/music/${redirect()}${sanitise(page.name)}">
                 ${settings.profile_shortcut}
             </a>
             ` : ''}

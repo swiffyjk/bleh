@@ -1110,10 +1110,8 @@ export const trans = {
     },
     you_share_count_with: {
         // as in your musical taste between you and someone else
-        // you share {percentage%} (in taste) with: {list of artists}
-        en: 'You share {c} with',
-        de: 'Du teilst {c} mit',
-        pt: 'Você compartilha {c} com',
+        // you are {percentage%} compatible (in taste) {list of artists}
+        en: 'You are {c} compatible',
         one: {
             en: '{artist}'
         },
@@ -1911,6 +1909,14 @@ export const trans = {
         },
         body: {
             en: 'Re-capitalise artists, albums, and tracks based on community contributions'
+        }
+    },
+    prefer_no_redirect: {
+        name: {
+            en: 'Avoid artist redirects when navigating'
+        },
+        body: {
+            en: 'Automatically adds +noredirect to artist links to avoid being sent to pages like Travi$ Scott'
         }
     },
     view_all: {

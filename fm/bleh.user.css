@@ -843,6 +843,7 @@
         --icon-16-tag: url('data:image/svg+xml;base64,PHN2ZyAgeG1sbnM9Imh0dHA6Ly93d3cudzMub3JnLzIwMDAvc3ZnIiAgd2lkdGg9IjI0IiAgaGVpZ2h0PSIyNCIgIHZpZXdCb3g9IjAgMCAyNCAyNCIgIGZpbGw9ImN1cnJlbnRDb2xvciIgIGNsYXNzPSJpY29uIGljb24tdGFibGVyIGljb25zLXRhYmxlci1maWxsZWQgaWNvbi10YWJsZXItdGFnIj48cGF0aCBzdHJva2U9Im5vbmUiIGQ9Ik0wIDBoMjR2MjRIMHoiIGZpbGw9Im5vbmUiLz48cGF0aCBkPSJNMTEuMTcyIDJhMyAzIDAgMCAxIDIuMTIxIC44NzlsNy43MSA3LjcxYTMuNDEgMy40MSAwIDAgMSAwIDQuODIybC01LjU5MiA1LjU5MmEzLjQxIDMuNDEgMCAwIDEgLTQuODIyIDBsLTcuNzEgLTcuNzFhMyAzIDAgMCAxIC0uODc5IC0yLjEyMXYtNS4xNzJhNCA0IDAgMCAxIDQgLTR6bS0zLjY3MiAzLjVhMiAyIDAgMCAwIC0xLjk5NSAxLjg1bC0uMDA1IC4xNWEyIDIgMCAxIDAgMiAtMiIgLz48L3N2Zz4=');
         --icon-16-listener: url('data:image/svg+xml;base64,PHN2ZyAgeG1sbnM9Imh0dHA6Ly93d3cudzMub3JnLzIwMDAvc3ZnIiAgd2lkdGg9IjI0IiAgaGVpZ2h0PSIyNCIgIHZpZXdCb3g9IjAgMCAyNCAyNCIgIGZpbGw9Im5vbmUiICBzdHJva2U9ImN1cnJlbnRDb2xvciIgIHN0cm9rZS13aWR0aD0iMiIgIHN0cm9rZS1saW5lY2FwPSJyb3VuZCIgIHN0cm9rZS1saW5lam9pbj0icm91bmQiICBjbGFzcz0iaWNvbiBpY29uLXRhYmxlciBpY29ucy10YWJsZXItb3V0bGluZSBpY29uLXRhYmxlci1oZWFkcGhvbmVzIj48cGF0aCBzdHJva2U9Im5vbmUiIGQ9Ik0wIDBoMjR2MjRIMHoiIGZpbGw9Im5vbmUiLz48cGF0aCBkPSJNNCAxM20wIDJhMiAyIDAgMCAxIDIgLTJoMWEyIDIgMCAwIDEgMiAydjNhMiAyIDAgMCAxIC0yIDJoLTFhMiAyIDAgMCAxIC0yIC0yeiIgLz48cGF0aCBkPSJNMTUgMTNtMCAyYTIgMiAwIDAgMSAyIC0yaDFhMiAyIDAgMCAxIDIgMnYzYTIgMiAwIDAgMSAtMiAyaC0xYTIgMiAwIDAgMSAtMiAtMnoiIC8+PHBhdGggZD0iTTQgMTV2LTNhOCA4IDAgMCAxIDE2IDB2MyIgLz48L3N2Zz4=');
         --icon-16-arrows: url('data:image/svg+xml;base64,PHN2ZyAgeG1sbnM9Imh0dHA6Ly93d3cudzMub3JnLzIwMDAvc3ZnIiAgd2lkdGg9IjI0IiAgaGVpZ2h0PSIyNCIgIHZpZXdCb3g9IjAgMCAyNCAyNCIgIGZpbGw9Im5vbmUiICBzdHJva2U9ImN1cnJlbnRDb2xvciIgIHN0cm9rZS13aWR0aD0iMiIgIHN0cm9rZS1saW5lY2FwPSJyb3VuZCIgIHN0cm9rZS1saW5lam9pbj0icm91bmQiICBjbGFzcz0iaWNvbiBpY29uLXRhYmxlciBpY29ucy10YWJsZXItb3V0bGluZSBpY29uLXRhYmxlci1zd2l0Y2gtdmVydGljYWwiPjxwYXRoIHN0cm9rZT0ibm9uZSIgZD0iTTAgMGgyNHYyNEgweiIgZmlsbD0ibm9uZSIvPjxwYXRoIGQ9Ik0zIDhsNCAtNGw0IDQiIC8+PHBhdGggZD0iTTcgNGwwIDkiIC8+PHBhdGggZD0iTTEzIDE2bDQgNGw0IC00IiAvPjxwYXRoIGQ9Ik0xNyAxMGwwIDEwIiAvPjwvc3ZnPg==');
+        --icon-16-taste: url('data:image/svg+xml;base64,PHN2ZyAgeG1sbnM9Imh0dHA6Ly93d3cudzMub3JnLzIwMDAvc3ZnIiAgd2lkdGg9IjI0IiAgaGVpZ2h0PSIyNCIgIHZpZXdCb3g9IjAgMCAyNCAyNCIgIGZpbGw9Im5vbmUiICBzdHJva2U9ImN1cnJlbnRDb2xvciIgIHN0cm9rZS13aWR0aD0iMiIgIHN0cm9rZS1saW5lY2FwPSJyb3VuZCIgIHN0cm9rZS1saW5lam9pbj0icm91bmQiICBjbGFzcz0iaWNvbiBpY29uLXRhYmxlciBpY29ucy10YWJsZXItb3V0bGluZSBpY29uLXRhYmxlci1wZXJjZW50YWdlLTIwIj48cGF0aCBzdHJva2U9Im5vbmUiIGQ9Ik0wIDBoMjR2MjRIMHoiIGZpbGw9Im5vbmUiLz48cGF0aCBkPSJNMTIgM2E5IDkgMCAwIDEgOC40OTcgNi4wMjVsLTguNDk3IDIuOTc1eiIgZmlsbD0iY3VycmVudENvbG9yIiBzdHJva2U9Im5vbmUiIC8+PHBhdGggZD0iTTMgMTJhOSA5IDAgMSAwIDE4IDBhOSA5IDAgMCAwIC0xOCAwIiAvPjwvc3ZnPg==');
         --icon-16-bio: url('data:image/svg+xml;base64,PHN2ZyAgeG1sbnM9Imh0dHA6Ly93d3cudzMub3JnLzIwMDAvc3ZnIiAgd2lkdGg9IjI0IiAgaGVpZ2h0PSIyNCIgIHZpZXdCb3g9IjAgMCAyNCAyNCIgIGZpbGw9Im5vbmUiICBzdHJva2U9ImN1cnJlbnRDb2xvciIgIHN0cm9rZS13aWR0aD0iMiIgIHN0cm9rZS1saW5lY2FwPSJyb3VuZCIgIHN0cm9rZS1saW5lam9pbj0icm91bmQiICBjbGFzcz0iaWNvbiBpY29uLXRhYmxlciBpY29ucy10YWJsZXItb3V0bGluZSBpY29uLXRhYmxlci1hbGlnbi1qdXN0aWZpZWQiPjxwYXRoIHN0cm9rZT0ibm9uZSIgZD0iTTAgMGgyNHYyNEgweiIgZmlsbD0ibm9uZSIvPjxwYXRoIGQ9Ik00IDZsMTYgMCIgLz48cGF0aCBkPSJNNCAxMmwxNiAwIiAvPjxwYXRoIGQ9Ik00IDE4bDEyIDAiIC8+PC9zdmc+');
         --icon-16-bio-edit: var(--icon-16-edit);
         --icon-16-bio-history: url('data:image/svg+xml;base64,PHN2ZyAgeG1sbnM9Imh0dHA6Ly93d3cudzMub3JnLzIwMDAvc3ZnIiAgd2lkdGg9IjI0IiAgaGVpZ2h0PSIyNCIgIHZpZXdCb3g9IjAgMCAyNCAyNCIgIGZpbGw9Im5vbmUiICBzdHJva2U9ImN1cnJlbnRDb2xvciIgIHN0cm9rZS13aWR0aD0iMiIgIHN0cm9rZS1saW5lY2FwPSJyb3VuZCIgIHN0cm9rZS1saW5lam9pbj0icm91bmQiICBjbGFzcz0iaWNvbiBpY29uLXRhYmxlciBpY29ucy10YWJsZXItb3V0bGluZSBpY29uLXRhYmxlci1ob3VyZ2xhc3MtZW1wdHkiPjxwYXRoIHN0cm9rZT0ibm9uZSIgZD0iTTAgMGgyNHYyNEgweiIgZmlsbD0ibm9uZSIvPjxwYXRoIGQ9Ik02IDIwdi0yYTYgNiAwIDEgMSAxMiAwdjJhMSAxIDAgMCAxIC0xIDFoLTEwYTEgMSAwIDAgMSAtMSAtMXoiIC8+PHBhdGggZD0iTTYgNHYyYTYgNiAwIDEgMCAxMiAwdi0yYTEgMSAwIDAgMCAtMSAtMWgtMTBhMSAxIDAgMCAwIC0xIDF6IiAvPjwvc3ZnPg==');
@@ -24288,13 +24289,31 @@
             flex-direction: column;
             gap: var(--item-list-gap);
 
+            &:before {
+                --mask: var(--icon-16-taste);
+                --show-icon: block !important;
+                --left: 0;
+                --margin-left: none;
+                animation: none;
+            }
+
+            --padding: 0 0 0 calc(var(--icon-size) + 10px) !important;
+
             .span {
                 display: flex;
                 align-items: center;
-            }
 
-            .colourful {
-                color: hsl(var(--l3-c));
+                & > img {
+                    display: none;
+                }
+
+                & > .info {
+                    order: -1;
+
+                    & > h3 > .colourful {
+                        color: hsl(var(--l3-c));
+                    }
+                }
             }
 
             .taste-bar {

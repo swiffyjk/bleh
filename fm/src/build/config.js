@@ -716,7 +716,7 @@ export let settings_store = {
         body: trans.show_your_progress.body
     },
     travis: {
-        default: false,
+        default: true,
         title: trans.redirect_messages.name,
         body: trans.redirect_messages.body
     },
@@ -1006,5 +1006,11 @@ export let settings_store = {
         placeholder: 'none',
         keybind: ['⌘', 'B'],
         warn_if_empty: true
+    },
+    prefer_no_redirect: {
+        default: true,
+        title: trans.prefer_no_redirect.name,
+        body: trans.prefer_no_redirect.body,
+        new_release: true
     }
 }

@@ -7,6 +7,7 @@
 import {root} from "../build/page";
 import {html} from "lighterhtml";
 import {patch_wiki_contents} from "../pages/wiki.js";
+import {redirect} from "./music.js";
 
 export function markdown(text, {
     allow_headers = false,
@@ -34,18 +35,18 @@ export function markdown(text, {
     .replace(
         /\[artist\]([^[\]]+)\[\/artist\]/g,
         (match, artist) =>
-            `[${artist}](${root}music/${encodeURIComponent(artist)})`
+            `[${artist}](${root}music/${redirect()}${encodeURIComponent(artist)})`
     )
     .replace(
         /\[album artist=([^[\]]+)\]([^[\]]+)\[\/album\]/g,
         (match, artist, album) =>
-            `[${album}](${root}music/` +
+            `[${album}](${root}music/${redirect()}` +
             `${encodeURIComponent(artist)}/${encodeURIComponent(album)})`
     )
     .replace(
         /\[track artist=([^[\]]+)\]([^[\]]+)\[\/track\]/g,
         (match, artist, track) =>
-            `[${track}](${root}music/` +
+            `[${track}](${root}music/${redirect()}` +
             `${encodeURIComponent(artist)}/_/${encodeURIComponent(track)})`
     )
     .replace(

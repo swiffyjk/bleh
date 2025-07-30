@@ -15,6 +15,7 @@ import {select} from './select';
 import {patch_titles} from './track';
 import {render_user} from "../pages/minis.js";
 import {settings} from "../build/config.js";
+import {redirect} from "./music.js";
 
 export function compare({
     host,
@@ -330,25 +331,25 @@ export function compare({
                             </div>
                             <div class="grid-items-item-details">
                                 <p class="grid-items-item-main-text">
-                                    <a class="link-block-target" href="${root}music/${template}" title="${data.name}">
+                                    <a class="link-block-target" href="${root}music/${redirect()}${template}" title="${data.name}">
                                         ${data.name}
                                     </a>
                                 </p>
                                 ${(type.value == 'albums') ? html.node`
                                 <p class="grid-items-item-aux-text">
-                                    <a class="grid-items-item-aux-block" href="${root}music/${data.sister}">
+                                    <a class="grid-items-item-aux-block" href="${root}music/${redirect()}${data.sister}">
                                         ${data.sister}
                                     </a>
                                 </p>
                                 ` : ''}
                                 <p class="grid-items-item-aux-text">
-                                    <a class="grid-item-plays with-avatar" href="${root}user/${auth.name}/library/music/${template}?date_preset=${timeframe.value}" target="_blank">
+                                    <a class="grid-item-plays with-avatar" href="${root}user/${auth.name}/library/music/${redirect()}${template}?date_preset=${timeframe.value}" target="_blank">
                                         <span class="avatar">
                                             <img src="${auth.avatar}" alt="${tl(trans.your_avatar)}">
                                         </span>
                                         ${data.plays.you.toLocaleString(lang)}
                                     </a>
-                                    <a class="grid-item-plays with-avatar" href="${root}user/${page.name}/library/music/${template}?date_preset=${timeframe.value}" target="_blank">
+                                    <a class="grid-item-plays with-avatar" href="${root}user/${page.name}/library/music/${redirect()}${template}?date_preset=${timeframe.value}" target="_blank">
                                         <span class="avatar">
                                             <img src="${page.avatar}" alt="${tl(trans.avatar_for_user).replace('{u}', page.name)}">
                                         </span>
@@ -356,7 +357,7 @@ export function compare({
                                     </a>
                                 </p>
                             </div>
-                            <a class="js-link-block-cover-link link-block-cover-link" href="${root}music/${template}" tabindex="-1" aria-hidden="true"></a>
+                            <a class="js-link-block-cover-link link-block-cover-link" href="${root}music/${redirect()}${template}" tabindex="-1" aria-hidden="true"></a>
                         </div>
                     </li>
                 `);
@@ -387,23 +388,23 @@ export function compare({
                     <tr class="chartlist-row chartlist-row--with-artist compare-item">
                         <td class="chartlist-index">${index + 1}</td>
                         <td class="chartlist-image">
-                            <a class="cover-art" href="${root}music/${template}">
+                            <a class="cover-art" href="${root}music/${redirect()}${template}">
                                 <img src="${data.avatar}" alt="${data.name}" loading="lazy">
                             </a>
                         </td>
                         <td class="chartlist-name">
-                            <a href="${root}music/${template}" title="${data.name}">
+                            <a href="${root}music/${redirect()}${template}" title="${data.name}">
                                 ${data.name}
                             </a>
                         </td>
                         <td class="chartlist-artist">
-                            <a href="${root}music/${data.sister}" title="${data.sister}">
+                            <a href="${root}music/${redirect()}${data.sister}" title="${data.sister}">
                                 ${data.sister}
                             </a>
                         </td>
                         <td class="chartlist-bar with-multiple">
                             <span class="chartlist-count-bar">
-                                <a class="chartlist-count-bar-link" href="${root}user/${auth.name}/library/music/${template}?date_preset=${timeframe.value}" target="_blank">
+                                <a class="chartlist-count-bar-link" href="${root}user/${auth.name}/library/music/${redirect()}${template}?date_preset=${timeframe.value}" target="_blank">
                                     <span class="chartlist-count-bar-slug" data-max-stat-value="${max}" data-stat-value="${data.plays.you}" style="width: ${(data.plays.you / max) * 100}%;"></span>
                                     <span class="chartlist-count-bar-value">${data.plays.you}</span>
                                 </a>
@@ -412,7 +413,7 @@ export function compare({
                                 </span>
                             </span>
                             <span class="chartlist-count-bar">
-                                <a class="chartlist-count-bar-link" href="${root}user/${page.name}/library/music/${template}?date_preset=${timeframe.value}" target="_blank">
+                                <a class="chartlist-count-bar-link" href="${root}user/${page.name}/library/music/${redirect()}${template}?date_preset=${timeframe.value}" target="_blank">
                                     <span class="chartlist-count-bar-slug" data-max-stat-value="${max}" data-stat-value="${data.plays.other}" style="width: ${(data.plays.other / max) * 100}%;"></span>
                                     <span class="chartlist-count-bar-value">${data.plays.other}</span>
                                 </a>

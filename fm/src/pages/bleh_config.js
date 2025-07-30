@@ -1056,6 +1056,21 @@ export function render_setting_page(page_id) {
                         </div>
                     </div>
                 </div>
+                <div class="setting-group">
+                    ${setting({id: 'prefer_no_redirect'})}
+                    <div class="setting" data-type="action">
+                        <div class="heading">
+                            <h5>${tl(trans.legacy_redirects.name)}</h5>
+                            <p>${tl(trans.legacy_redirects.body)}</p>
+                        </div>
+                        <div class="toggle-wrap">
+                            <a class="btn continue" href="${root}settings/website" target="_blank">
+                                ${tl(trans.change_now)}
+                            </a>
+                        </div>
+                    </div>
+                    ${setting({id: 'travis'})}
+                </div>
             </div>
             <div class="bleh--panel">
                 <h4>${trans_legacy.en.settings.corrections.formatting}</h4>
@@ -1156,23 +1171,6 @@ export function render_setting_page(page_id) {
                 </div>
                 <div class="setting-group">
                     ${setting({id: 'colourful_counts'})}
-                </div>
-            </div>
-            <div class="bleh--panel">
-                <h4>${tl(trans.redirections)}</h4>
-                <div class="setting-group">
-                    ${setting({id: 'travis'})}
-                    <div class="setting" data-type="action">
-                        <div class="heading">
-                            <h5>${tl(trans.legacy_redirects.name)}</h5>
-                            <p>${tl(trans.legacy_redirects.body)}</p>
-                        </div>
-                        <div class="toggle-wrap">
-                            <a class="btn continue" href="${root}settings/website" target="_blank">
-                                ${tl(trans.change_now)}
-                            </a>
-                        </div>
-                    </div>
                 </div>
             </div>
             <div class="bleh--panel">

@@ -49,6 +49,8 @@ export function setting({
 
         if (settings_store[id].beta)
             title = html.node`${title}<span class="new-badge beta">${tl(trans.beta)}</span>`;
+        else if (settings_store[id].new_release)
+            title = html.node`${title}<span class="new-badge beta">${tl(trans.new)}</span>`;
 
         if (type === 'toggle') {
             let toggle;

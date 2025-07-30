@@ -16,6 +16,7 @@ import {refresh_all} from "../config";
 import {ff} from "../sku";
 import {input} from "../components/input.js";
 import {setting} from "../components/settings.js";
+import {redirect} from "../components/music.js";
 
 export function bleh_user_library() {
     // date sidebar into its own panel
@@ -1078,11 +1079,11 @@ function bleh_glacier_library_focused() {
 
     let image = legacy_header.querySelector('.library-header-image img');
 
-    let link = `${root}music/${sanitise(header_title)}`;
+    let link = `${root}music/${redirect()}${sanitise(header_title)}`;
     if (type == 'album')
-        link = `${root}music/${sanitise(artist)}/${sanitise(header_title)}`;
+        link = `${root}music/${redirect()}${sanitise(artist)}/${sanitise(header_title)}`;
     else if (type == 'track')
-        link = `${root}music/${sanitise(artist)}/_/${sanitise(header_title)}`;
+        link = `${root}music/${redirect()}${sanitise(artist)}/_/${sanitise(header_title)}`;
 
 
     let header = document.createElement('section');

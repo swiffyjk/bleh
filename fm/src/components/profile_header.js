@@ -17,6 +17,7 @@ import {open_profile_shortcut_window, set_profile_as_shortcut} from './profile_s
 import {html} from "lighterhtml";
 import {collage} from "./collage.js";
 import {sponsor} from "../sponsor.js";
+import {redirect} from "./music.js";
 
 export function redesign_profile_header(is_own_profile, is_following) {
     let base_header = document.body.querySelector('.header-info-secondary');
@@ -278,27 +279,27 @@ export function redesign_profile_header(is_own_profile, is_following) {
                 theme: 'context-menu',
                 content: html.node`
                     <h4 class="menu-header">${tl(trans.compare_plays)}</h4>
-                    <a class="dropdown-menu-clickable-item" href="${root}user/${page.name}/library/music/${sanitise(taste_artists[0])}" data-menu-item="shared-artist">
+                    <a class="dropdown-menu-clickable-item" href="${root}user/${page.name}/library/music/${redirect()}${sanitise(taste_artists[0])}" data-menu-item="shared-artist">
                         <img class="view-item-avatar" src="${page.avatar}" alt="${page.name}">${taste_artists[0]}
                     </a>
-                    <a class="dropdown-menu-clickable-item" href="${root}user/${auth.name}/library/music/${sanitise(taste_artists[0])}" data-menu-item="shared-artist">
+                    <a class="dropdown-menu-clickable-item" href="${root}user/${auth.name}/library/music/${redirect()}${sanitise(taste_artists[0])}" data-menu-item="shared-artist">
                         <img class="view-item-avatar" src="${auth.avatar}" alt="${auth.name}">${taste_artists[0]}
                     </a>
                     ${(taste_artists.length >= 2) ? html.node`
                     <div class="sep"></div>
-                    <a class="dropdown-menu-clickable-item" href="${root}user/${page.name}/library/music/${sanitise(taste_artists[1])}" data-menu-item="shared-artist">
+                    <a class="dropdown-menu-clickable-item" href="${root}user/${page.name}/library/music/${redirect()}${sanitise(taste_artists[1])}" data-menu-item="shared-artist">
                         <img class="view-item-avatar" src="${page.avatar}" alt="${page.name}">${taste_artists[1]}
                     </a>
-                    <a class="dropdown-menu-clickable-item" href="${root}user/${auth.name}/library/music/${sanitise(taste_artists[1])}" data-menu-item="shared-artist">
+                    <a class="dropdown-menu-clickable-item" href="${root}user/${auth.name}/library/music/${redirect()}${sanitise(taste_artists[1])}" data-menu-item="shared-artist">
                         <img class="view-item-avatar" src="${auth.avatar}" alt="${auth.name}">${taste_artists[1]}
                     </a>
                     ` : ''}
                     ${(taste_artists.length >= 3) ? html.node`
                     <div class="sep"></div>
-                    <a class="dropdown-menu-clickable-item" href="${root}user/${page.name}/library/music/${sanitise(taste_artists[2])}" data-menu-item="shared-artist">
+                    <a class="dropdown-menu-clickable-item" href="${root}user/${page.name}/library/music/${redirect()}${sanitise(taste_artists[2])}" data-menu-item="shared-artist">
                         <img class="view-item-avatar" src="${page.avatar}" alt="${page.name}">${taste_artists[2]}
                     </a>
-                    <a class="dropdown-menu-clickable-item" href="${root}user/${auth.name}/library/music/${sanitise(taste_artists[2])}" data-menu-item="shared-artist">
+                    <a class="dropdown-menu-clickable-item" href="${root}user/${auth.name}/library/music/${redirect()}${sanitise(taste_artists[2])}" data-menu-item="shared-artist">
                         <img class="view-item-avatar" src="${auth.avatar}" alt="${auth.name}">${taste_artists[2]}
                     </a>
                     ` : ''}

@@ -11,6 +11,7 @@ import {sanitise} from "./build/tools";
 import {tl, trans} from './build/trans';
 import {correct_artist, correct_item_by_artist, name_includes} from "./components/lotus";
 import {html, render} from "lighterhtml";
+import {redirect} from "./components/music.js";
 
 export function render_activity_list() {
     load_activities();
@@ -45,11 +46,11 @@ export function render_activity_list() {
             if (involved.type == 'user')
                 involved_link = `${root}user/${involved.name}`;
             else if (involved.type == 'artist')
-                involved_link = `${root}music/${sanitise(involved.name)}`;
+                involved_link = `${root}music/${redirect()}${sanitise(involved.name)}`;
             else if (involved.type == 'album')
-                involved_link = `${root}music/${sanitise(involved.sister)}/${sanitise(involved.name)}`;
+                involved_link = `${root}music/${redirect()}${sanitise(involved.sister)}/${sanitise(involved.name)}`;
             else if (involved.type == 'track')
-                involved_link = `${root}music/${sanitise(involved.sister)}/_/${sanitise(involved.name)}`;
+                involved_link = `${root}music/${redirect()}${sanitise(involved.sister)}/_/${sanitise(involved.name)}`;
             else if (involved.type == 'tag')
                 involved_link = `${root}tag/${sanitise(involved.name)}`;
             else if (involved.type == 'bwaa')
@@ -151,7 +152,7 @@ export function subscribe_to_events() {
                 }, 1);
             }
 
-            register_activity((action == 'LoveTrack') ? 'love' : 'unlove', [{name: track, type: 'track', sister: artist}], `${root}music/${sanitise(artist)}/_/${sanitise(track)}`);
+            register_activity((action == 'LoveTrack') ? 'love' : 'unlove', [{name: track, type: 'track', sister: artist}], `${root}music/${redirect()}${sanitise(artist)}/_/${sanitise(track)}`);
         }, false);
     });
 

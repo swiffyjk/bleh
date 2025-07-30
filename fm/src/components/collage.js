@@ -12,6 +12,7 @@ import {settings} from "../build/config.js";
 import {version} from "../main.js";
 import {download} from "./share.js";
 import {render_user} from "../pages/minis.js";
+import {redirect} from "./music.js";
 
 export function collage({
     host,
@@ -356,7 +357,7 @@ export function collage({
                         <div class="grid-items-item-details">
                             ${settings.collage_grid_text ? html.node`
                             <p class="grid-items-item-main-text">
-                                <a class="link-block-target" href="${root}music/${template}" title="${data.name}">
+                                <a class="link-block-target" href="${root}music/${redirect()}${template}" title="${data.name}">
                                     ${data.name}
                                 </a>
                             </p>
@@ -364,16 +365,16 @@ export function collage({
                             ${(type_select.value != 'artists') ? html.node`
                             <p class="grid-items-item-aux-text">
                                 ${settings.collage_grid_text ? html.node`
-                                <a class="grid-items-item-aux-block" href="${root}music/${data.sister}">
+                                <a class="grid-items-item-aux-block" href="${root}music/${redirect()}${data.sister}">
                                     ${data.sister}
                                 </a>
                                 ${settings.collage_grid_plays ? html.node`
-                                <a class="grid-item-plays" href="${root}user/${page.name}/library/music/${template}?date_preset=${timeframe_select.value}" target="_blank">
+                                <a class="grid-item-plays" href="${root}user/${page.name}/library/music/${redirect()}${template}?date_preset=${timeframe_select.value}" target="_blank">
                                     ${data.plays.toLocaleString(lang)}
                                 </a>
                                 ` : ''}
                                 ` : settings.collage_grid_plays ? html.node`
-                                <a class="grid-item-plays" href="${root}user/${page.name}/library/music/${template}?date_preset=${timeframe_select.value}" target="_blank">
+                                <a class="grid-item-plays" href="${root}user/${page.name}/library/music/${redirect()}${template}?date_preset=${timeframe_select.value}" target="_blank">
                                     ${data.plays.toLocaleString(lang)}${tl(trans.plays_lower)}
                                 </a>
                                 ` : ''}
@@ -381,7 +382,7 @@ export function collage({
                             ` : html.node`
                             ${settings.collage_grid_plays ? html.node`
                             <p class="grid-items-item-aux-text">
-                                <a class="grid-item-plays" href="${root}user/${page.name}/library/music/${template}?date_preset=${timeframe_select.value}" target="_blank">
+                                <a class="grid-item-plays" href="${root}user/${page.name}/library/music/${redirect()}${template}?date_preset=${timeframe_select.value}" target="_blank">
                                     ${data.plays.toLocaleString(lang)}${tl(trans.plays_lower)}
                                 </a>
                             </p>

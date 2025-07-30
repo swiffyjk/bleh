@@ -11,6 +11,7 @@ import {settings} from "../build/config.js";
 import {open_profile_shortcut_window} from "./profile_shortcut.js";
 import {news} from "../news.js";
 import {ff} from "../sku.js";
+import {redirect} from "./music.js";
 
 export function register_rabbit() {
     let input_box;
@@ -959,11 +960,11 @@ export function register_rabbit() {
     function search_finish() {
         if (searching.primary.type == 'artist') {
             if (searching.secondary.type == 'album') {
-                window.location.href = `${root}music/${sanitise(searching.primary.name)}/${sanitise(searching.secondary.name)}`;
+                window.location.href = `${root}music/${redirect()}${sanitise(searching.primary.name)}/${sanitise(searching.secondary.name)}`;
             } else if (searching.secondary.type == 'track') {
-                window.location.href = `${root}music/${sanitise(searching.primary.name)}/_/${sanitise(searching.secondary.name)}`;
+                window.location.href = `${root}music/${redirect()}${sanitise(searching.primary.name)}/_/${sanitise(searching.secondary.name)}`;
             } else {
-                window.location.href = `${root}music/${sanitise(searching.primary.name)}`;
+                window.location.href = `${root}music/${redirect()}${sanitise(searching.primary.name)}`;
             }
         } else if (searching.primary.type == 'user') {
             window.location.href = `${root}user/${sanitise(searching.primary.name)}`;

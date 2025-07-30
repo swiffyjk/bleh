@@ -1045,6 +1045,7 @@
     token: "",
     mobile: false,
     platform: "other",
+    suggest: null,
     now: {
       next_fetch: null,
       name: null,
@@ -3847,57 +3848,187 @@
     });
   }
 
-  // src/components/markdown.js
-  function markdown(text2, {
-    allow_headers = false,
-    allow_links = true,
-    line_breaks = true
-  } = {}) {
-    let converter = new showdown.Converter({
-      emoji: true,
-      excludeTrailingPunctuationFromURLs: true,
-      ghMentions: true,
-      ghMentionsLink: `${root}user/{u}`,
-      headerLevelStart: allow_headers ? 3 : 5,
-      noHeaderId: true,
-      openLinksInNewWindow: true,
-      requireSpaceBeforeHeadingText: true,
-      simpleLineBreaks: line_breaks,
-      simplifiedAutoLink: allow_links,
-      strikethrough: true,
-      underline: true,
-      ghCodeBlocks: false,
-      smartIndentationFix: true
+  // src/components/profile_shortcut.js
+  unsafeWindow._open_profile_shortcut_window = function() {
+    open_profile_shortcut_window();
+  };
+  function open_profile_shortcut_window() {
+    let modal = dialog({
+      id: "profile_shortcut",
+      title: tl(trans.profile_shortcut.name),
+      body: html.node`
+        ${setting({ id: "profile_shortcut", text: false, focus: true })}
+        `
     });
-    let parsed_body = converter.makeHtml(text2.replace(/([@])([a-zA-Z0-9_]+)/g, `[$1$2](${root}user/$2)`).replace(
-      /\[artist\]([^[\]]+)\[\/artist\]/g,
-      (match, artist) => `[${artist}](${root}music/${encodeURIComponent(artist)})`
-    ).replace(
-      /\[album artist=([^[\]]+)\]([^[\]]+)\[\/album\]/g,
-      (match, artist, album) => `[${album}](${root}music/${encodeURIComponent(artist)}/${encodeURIComponent(album)})`
-    ).replace(
-      /\[track artist=([^[\]]+)\]([^[\]]+)\[\/track\]/g,
-      (match, artist, track) => `[${track}](${root}music/${encodeURIComponent(artist)}/_/${encodeURIComponent(track)})`
-    ).replace(
-      /\[url=([^[\]]+)\]([^[\]]+)\[\/url\]/g,
-      (match, url, text3) => `[${text3}](${encodeURI(url)})`
-    ).replace(
-      /\[url\]([^[\]]+)\[\/url\]/g,
-      (match, url) => `[${url}](${encodeURI(url)})`
-    ).replace(/https:\/\/open\.spotify\.com\/user\/([A-Za-z0-9]+)\?si=([A-Za-z0-9]+)/g, "[Spotify](https://open.spotify.com/user/$1)").replace(/&/g, "&amp;").replace(/</g, "&lt;").replace(/>/g, "&gt;").replace(/"/g, "&quot;").replace(/'/g, "&#039;"));
-    let body = html.node([parsed_body]);
-    patch_wiki_contents(body);
-    local_restriction(body);
-    let texts = body.querySelectorAll("p");
-    texts.forEach((text3) => {
-      local_restriction(text3);
+    modal.querySelector("#text-profile_shortcut").focus();
+  }
+  unsafeWindow._other_listener = function(id) {
+    other_listener(id);
+  };
+  function other_listener(id) {
+    let input2;
+    let submit;
+    dialog({
+      id: "other_listener",
+      title: tl(trans.view_others_library),
+      body: html.node`
+        <div class="setting" data-type="text">
+            <div class="avatar-container">
+                <div class="avatar-inner avatar--bleh-missing">
+                    <img>
+                </div>
+            </div>
+            <div class="input-container content-form">
+                <input type="text" maxlength="40" id="text-profile" ref=${(el) => input2 = el} placeholder="${tl(trans.enter_username)}">
+                <button class="btn chibi icon primary submit" ref=${(el) => submit = el} onclick=${() => {
+        let name2 = input2.value;
+        let link = id;
+        dialog_rm2({
+          id: "other_listener"
+        });
+        window.location.href = `${root}user/${name2}/library/music/${link}`;
+      }}>${tl(trans.done)}</button>
+            </div>
+        </div>
+        `
     });
-    return body;
+    input2.addEventListener("keydown", (event3) => {
+      if (event3.keyCode === 13) {
+        event3.preventDefault();
+        submit.click();
+      }
+    });
+    tippy(submit, {
+      content: tl(trans.save)
+    });
+    input2.focus();
   }
-  function local_restriction(text2) {
-    if (text2.textContent.trim().startsWith("Due to local laws, we are temporarily"))
-      text2.classList.add("local-restriction");
+  function set_profile_as_shortcut() {
+    dialog({
+      id: "profile_shortcut",
+      title: tl(trans.profile_shortcut.name),
+      body: html.node`
+            <div class="big-modal-alert alert-danger">
+                ${{ html: tl(trans.profile_shortcut.notice).replace("{u}", `<a class="mention" href="${root}user/${settings.profile_shortcut}" target="_blank">@${settings.profile_shortcut}</a>`) }}
+            </div>
+            <div class="modal-footer">
+                <button class="see-more cancel" onclick=${() => dialog_rm2({ id: "profile_shortcut" })}>
+                    ${tl(trans.back)}
+                </button>
+                <div class="fill"></div>
+                <button class="btn primary save" onclick=${() => confirm_set_profile_as_shortcut()}>
+                    ${tl(trans.replace)}
+                </button>
+            </div>
+        `
+    });
   }
+  function confirm_set_profile_as_shortcut() {
+    dialog_rm2({
+      id: "profile_shortcut"
+    });
+    let avatar_src = page.structure.container.querySelector(":scope > .redesigned-profile-header .avatar img")?.getAttribute("src");
+    localStorage.setItem("bleh_profile_shortcut_avi", avatar_src);
+    notify({
+      id: "profile_shortcut_saved",
+      title: tl(trans.profile_shortcut.name),
+      body: tl(trans.profile_shortcut.linked).replace("{u}", page.name),
+      icon: "icon-16-profile-shortcut"
+    });
+    page.state.profile_shortcut_button.setAttribute("data-is-shortcut", "true");
+    page.state.profile_shortcut_button.removeAttribute("onclick");
+    settings.profile_shortcut = page.name;
+    localStorage.setItem("bleh", JSON.stringify(settings));
+  }
+  function save_profile_shortcut(input2, value, submit, reset_btn, avatar3) {
+    if (value == "" || value == auth.name) {
+      localStorage.removeItem("bleh_profile_shortcut_avi");
+      avatar3.querySelector("img").setAttribute("src", "");
+      avatar3.querySelector("img").setAttribute("alt", "");
+      reset_btn.disabled = false;
+      input2.disabled = false;
+      submit.disabled = false;
+      save_setting("profile_shortcut", "");
+      return;
+    }
+    avatar3.classList.add("requesting");
+    fetch(`${root}user/${value}/tags`).then(function(response) {
+      console.log("returned", response, response.text);
+      return response.text();
+    }).then(function(dom) {
+      let doc = new DOMParser().parseFromString(dom, "text/html");
+      console.log("DOC", doc);
+      reset_btn.disabled = false;
+      input2.disabled = false;
+      submit.disabled = false;
+      avatar3.classList.remove("requesting");
+      try {
+        let avatar_src = doc.querySelector(".header-avatar-inner-wrap img").getAttribute("src");
+        localStorage.setItem("bleh_profile_shortcut_avi", avatar_src);
+        avatar3.querySelector("img").setAttribute("src", avatar_src);
+        avatar3.querySelector("img").setAttribute("alt", value);
+        notify({
+          id: "profile_shortcut_saved",
+          title: tl(trans.profile_shortcut.name),
+          body: tl(trans.profile_shortcut.linked).replace("{u}", value),
+          icon: "icon-16-profile-shortcut"
+        });
+        save_setting("profile_shortcut", value);
+      } catch (e) {
+        notify({
+          id: "profile_shortcut_error",
+          title: tl(trans.profile_shortcut.name),
+          body: tl(trans.failed_to_find_profile),
+          type: "error"
+        });
+        localStorage.removeItem("bleh_profile_shortcut_avi");
+        avatar3.querySelector("img").setAttribute("src", "");
+        avatar3.querySelector("img").setAttribute("alt", "");
+      }
+    });
+  }
+  unsafeWindow._save_profile_shortcut = function() {
+    let profile_name = document.getElementById("text-profile_shortcut").value;
+    let profile_img = document.getElementById("avatar-profile_shortcut");
+    if (profile_name == "" || profile_name == auth.name) {
+      localStorage.removeItem("bleh_profile_shortcut_avi");
+      document.getElementById("avatar_src-profile_shortcut").setAttribute("src", "");
+      settings.profile_shortcut = "";
+      localStorage.setItem("bleh", JSON.stringify(settings));
+      return;
+    }
+    profile_img.classList.add("requesting");
+    fetch(`${root}user/${profile_name}/tags`).then(function(response) {
+      console.log("returned", response, response.text);
+      return response.text();
+    }).then(function(html2) {
+      let doc = new DOMParser().parseFromString(html2, "text/html");
+      console.log("DOC", doc);
+      profile_img.classList.remove("requesting");
+      try {
+        let avatar_src = doc.querySelector(".header-avatar-inner-wrap img").getAttribute("src");
+        localStorage.setItem("bleh_profile_shortcut_avi", avatar_src);
+        document.getElementById("avatar_src-profile_shortcut").setAttribute("src", avatar_src);
+        notify({
+          id: "profile_shortcut_saved",
+          title: tl(trans.profile_shortcut.name),
+          body: tl(trans.profile_shortcut.linked).replace("{u}", profile_name),
+          icon: "icon-16-profile-shortcut"
+        });
+        settings.profile_shortcut = profile_name;
+        localStorage.setItem("bleh", JSON.stringify(settings));
+      } catch (e) {
+        notify({
+          id: "profile_shortcut_saved",
+          title: tl(trans.profile_shortcut.name),
+          body: tl(trans.failed_to_find_profile),
+          type: "error"
+        });
+        localStorage.removeItem("bleh_profile_shortcut_avi");
+        document.getElementById("avatar_src-profile_shortcut").setAttribute("src", "");
+      }
+    });
+  };
 
   // src/components/menu.js
   function register_menu(element, menu) {
@@ -4451,188 +4582,6 @@
     }
   }
 
-  // src/components/profile_shortcut.js
-  unsafeWindow._open_profile_shortcut_window = function() {
-    open_profile_shortcut_window();
-  };
-  function open_profile_shortcut_window() {
-    let modal = dialog({
-      id: "profile_shortcut",
-      title: tl(trans.profile_shortcut.name),
-      body: html.node`
-        ${setting({ id: "profile_shortcut", text: false, focus: true })}
-        `
-    });
-    modal.querySelector("#text-profile_shortcut").focus();
-  }
-  unsafeWindow._other_listener = function(id) {
-    other_listener(id);
-  };
-  function other_listener(id) {
-    let input2;
-    let submit;
-    dialog({
-      id: "other_listener",
-      title: tl(trans.view_others_library),
-      body: html.node`
-        <div class="setting" data-type="text">
-            <div class="avatar-container">
-                <div class="avatar-inner avatar--bleh-missing">
-                    <img>
-                </div>
-            </div>
-            <div class="input-container content-form">
-                <input type="text" maxlength="40" id="text-profile" ref=${(el) => input2 = el} placeholder="${tl(trans.enter_username)}">
-                <button class="btn chibi icon primary submit" ref=${(el) => submit = el} onclick=${() => {
-        let name2 = input2.value;
-        let link = id;
-        dialog_rm2({
-          id: "other_listener"
-        });
-        window.location.href = `${root}user/${name2}/library/music/${link}`;
-      }}>${tl(trans.done)}</button>
-            </div>
-        </div>
-        `
-    });
-    input2.addEventListener("keydown", (event3) => {
-      if (event3.keyCode === 13) {
-        event3.preventDefault();
-        submit.click();
-      }
-    });
-    tippy(submit, {
-      content: tl(trans.save)
-    });
-    input2.focus();
-  }
-  function set_profile_as_shortcut() {
-    dialog({
-      id: "profile_shortcut",
-      title: tl(trans.profile_shortcut.name),
-      body: html.node`
-            <div class="big-modal-alert alert-danger">
-                ${{ html: tl(trans.profile_shortcut.notice).replace("{u}", `<a class="mention" href="${root}user/${settings.profile_shortcut}" target="_blank">@${settings.profile_shortcut}</a>`) }}
-            </div>
-            <div class="modal-footer">
-                <button class="see-more cancel" onclick=${() => dialog_rm2({ id: "profile_shortcut" })}>
-                    ${tl(trans.back)}
-                </button>
-                <div class="fill"></div>
-                <button class="btn primary save" onclick=${() => confirm_set_profile_as_shortcut()}>
-                    ${tl(trans.replace)}
-                </button>
-            </div>
-        `
-    });
-  }
-  function confirm_set_profile_as_shortcut() {
-    dialog_rm2({
-      id: "profile_shortcut"
-    });
-    let avatar_src = page.structure.container.querySelector(":scope > .redesigned-profile-header .avatar img")?.getAttribute("src");
-    localStorage.setItem("bleh_profile_shortcut_avi", avatar_src);
-    notify({
-      id: "profile_shortcut_saved",
-      title: tl(trans.profile_shortcut.name),
-      body: tl(trans.profile_shortcut.linked).replace("{u}", page.name),
-      icon: "icon-16-profile-shortcut"
-    });
-    page.state.profile_shortcut_button.setAttribute("data-is-shortcut", "true");
-    page.state.profile_shortcut_button.removeAttribute("onclick");
-    settings.profile_shortcut = page.name;
-    localStorage.setItem("bleh", JSON.stringify(settings));
-  }
-  function save_profile_shortcut(input2, value, submit, reset_btn, avatar3) {
-    if (value == "" || value == auth.name) {
-      localStorage.removeItem("bleh_profile_shortcut_avi");
-      avatar3.querySelector("img").setAttribute("src", "");
-      avatar3.querySelector("img").setAttribute("alt", "");
-      reset_btn.disabled = false;
-      input2.disabled = false;
-      submit.disabled = false;
-      save_setting("profile_shortcut", "");
-      return;
-    }
-    avatar3.classList.add("requesting");
-    fetch(`${root}user/${value}/tags`).then(function(response) {
-      console.log("returned", response, response.text);
-      return response.text();
-    }).then(function(dom) {
-      let doc = new DOMParser().parseFromString(dom, "text/html");
-      console.log("DOC", doc);
-      reset_btn.disabled = false;
-      input2.disabled = false;
-      submit.disabled = false;
-      avatar3.classList.remove("requesting");
-      try {
-        let avatar_src = doc.querySelector(".header-avatar-inner-wrap img").getAttribute("src");
-        localStorage.setItem("bleh_profile_shortcut_avi", avatar_src);
-        avatar3.querySelector("img").setAttribute("src", avatar_src);
-        avatar3.querySelector("img").setAttribute("alt", value);
-        notify({
-          id: "profile_shortcut_saved",
-          title: tl(trans.profile_shortcut.name),
-          body: tl(trans.profile_shortcut.linked).replace("{u}", value),
-          icon: "icon-16-profile-shortcut"
-        });
-        save_setting("profile_shortcut", value);
-      } catch (e) {
-        notify({
-          id: "profile_shortcut_error",
-          title: tl(trans.profile_shortcut.name),
-          body: tl(trans.failed_to_find_profile),
-          type: "error"
-        });
-        localStorage.removeItem("bleh_profile_shortcut_avi");
-        avatar3.querySelector("img").setAttribute("src", "");
-        avatar3.querySelector("img").setAttribute("alt", "");
-      }
-    });
-  }
-  unsafeWindow._save_profile_shortcut = function() {
-    let profile_name = document.getElementById("text-profile_shortcut").value;
-    let profile_img = document.getElementById("avatar-profile_shortcut");
-    if (profile_name == "" || profile_name == auth.name) {
-      localStorage.removeItem("bleh_profile_shortcut_avi");
-      document.getElementById("avatar_src-profile_shortcut").setAttribute("src", "");
-      settings.profile_shortcut = "";
-      localStorage.setItem("bleh", JSON.stringify(settings));
-      return;
-    }
-    profile_img.classList.add("requesting");
-    fetch(`${root}user/${profile_name}/tags`).then(function(response) {
-      console.log("returned", response, response.text);
-      return response.text();
-    }).then(function(html2) {
-      let doc = new DOMParser().parseFromString(html2, "text/html");
-      console.log("DOC", doc);
-      profile_img.classList.remove("requesting");
-      try {
-        let avatar_src = doc.querySelector(".header-avatar-inner-wrap img").getAttribute("src");
-        localStorage.setItem("bleh_profile_shortcut_avi", avatar_src);
-        document.getElementById("avatar_src-profile_shortcut").setAttribute("src", avatar_src);
-        notify({
-          id: "profile_shortcut_saved",
-          title: tl(trans.profile_shortcut.name),
-          body: tl(trans.profile_shortcut.linked).replace("{u}", profile_name),
-          icon: "icon-16-profile-shortcut"
-        });
-        settings.profile_shortcut = profile_name;
-        localStorage.setItem("bleh", JSON.stringify(settings));
-      } catch (e) {
-        notify({
-          id: "profile_shortcut_saved",
-          title: tl(trans.profile_shortcut.name),
-          body: tl(trans.failed_to_find_profile),
-          type: "error"
-        });
-        localStorage.removeItem("bleh_profile_shortcut_avi");
-        document.getElementById("avatar_src-profile_shortcut").setAttribute("src", "");
-      }
-    });
-  };
-
   // src/components/colourful_counts.js
   function patch_artist_ranks_in_list_view(track) {
     let count_bar = track.querySelector(".chartlist-count-bar");
@@ -5160,11 +5109,11 @@
           console.log("artist matches", song_artist_element.textContent.replaceAll("+", " ").trim() === track_artist, "artist is blank", song_artist_element.textContent.trim() === "", song_artist_element.textContent.trim(), formatted_title[2]);
           if (song_artist_element.textContent.replaceAll("+", " ").trim() === track_artist || song_artist_element.textContent.trim() === "") {
             log("artist either matches or is blank, replacing", "tracks", "log");
-            render(song_artist_element, html`<a href="${root}music/${sanitise(formatted_title[2])}">${formatted_title[2]}</a>`);
+            render(song_artist_element, html`<a href="${root}music/${redirect()}${sanitise(formatted_title[2])}">${formatted_title[2]}</a>`);
             let song_guests = formatted_title[3];
             for (let guest in song_guests) {
               song_artist_element.appendChild(html.node`
-                            ,<a href="${root}music/${sanitise(song_guests[guest])}">${song_guests[guest]}</a>
+                            ,<a href="${root}music/${redirect()}${sanitise(song_guests[guest])}">${song_guests[guest]}</a>
                         `);
             }
           }
@@ -5337,7 +5286,7 @@
                             <div class="button-combo">
                                 ${() => {
                 return html.node`
-                                        <a class="dropdown-menu-clickable-item" data-type="track" href="${root}music/${sanitise(track_artist)}/_/${sanitise(track_title.getAttribute("data-name"))}">
+                                        <a class="dropdown-menu-clickable-item" data-type="track" href="${root}music/${redirect()}${sanitise(track_artist)}/_/${sanitise(track_title.getAttribute("data-name"))}">
                                             ${tl(trans.track)}
                                         </a>
                                     `;
@@ -5345,7 +5294,7 @@
                                 <div class="button-combo-sep"/>
                                 ${() => {
                 let button = html.node`
-                                        <a class="dropdown-menu-clickable-item chibi" data-type="continue" href="${root}user/${page.name}/library/music/${sanitise(track_artist)}/_/${sanitise(track_title.getAttribute("data-name"))}">
+                                        <a class="dropdown-menu-clickable-item chibi" data-type="continue" href="${root}user/${page.name}/library/music/${redirect()}${sanitise(track_artist)}/_/${sanitise(track_title.getAttribute("data-name"))}">
                                             ${tl(trans.explore_in_library)}
                                         </a>
                                     `;
@@ -5360,7 +5309,7 @@
                             <div class="button-combo">
                                 ${() => {
                 return html.node`
-                                        <a class="dropdown-menu-clickable-item" data-type="album" href="${root}music/${sanitise(track_artist)}/${album_name}">
+                                        <a class="dropdown-menu-clickable-item" data-type="album" href="${root}music/${redirect()}${sanitise(track_artist)}/${album_name}">
                                             ${tl(trans.album)}
                                         </a>
                                     `;
@@ -5368,7 +5317,7 @@
                                 <div class="button-combo-sep"/>
                                 ${() => {
                 let button = html.node`
-                                        <a class="dropdown-menu-clickable-item chibi" data-type="continue" href="${root}user/${page.name}/library/music/${sanitise(track_artist)}/${album_name}">
+                                        <a class="dropdown-menu-clickable-item chibi" data-type="continue" href="${root}user/${page.name}/library/music/${redirect()}${sanitise(track_artist)}/${album_name}">
                                             ${tl(trans.explore_in_library)}
                                         </a>
                                     `;
@@ -5382,7 +5331,7 @@
                             <div class="button-combo">
                                 ${() => {
                 return html.node`
-                                        <a class="dropdown-menu-clickable-item" data-type="album" href="${root}music/${sanitise(track_artist)}/${sanitise(track_title.getAttribute("data-name"))}">
+                                        <a class="dropdown-menu-clickable-item" data-type="album" href="${root}music/${redirect()}${sanitise(track_artist)}/${sanitise(track_title.getAttribute("data-name"))}">
                                             ${tl(trans.album)}
                                         </a>
                                     `;
@@ -5390,7 +5339,7 @@
                                 <div class="button-combo-sep"/>
                                 ${() => {
                 let button = html.node`
-                                        <a class="dropdown-menu-clickable-item chibi" data-type="continue" href="${root}user/${page.name}/library/music/${sanitise(track_artist)}/${sanitise(track_title.getAttribute("data-name"))}">
+                                        <a class="dropdown-menu-clickable-item chibi" data-type="continue" href="${root}user/${page.name}/library/music/${redirect()}${sanitise(track_artist)}/${sanitise(track_title.getAttribute("data-name"))}">
                                             ${tl(trans.explore_in_library)}
                                         </a>
                                     `;
@@ -5404,7 +5353,7 @@
                             <div class="button-combo">
                                 ${() => {
                 return html.node`
-                                        <a class="dropdown-menu-clickable-item" data-type="artist" href="${root}music/${sanitise(track_artist)}">
+                                        <a class="dropdown-menu-clickable-item" data-type="artist" href="${root}music/${redirect()}${sanitise(track_artist)}">
                                             ${tl(trans.artist)}
                                         </a>
                                     `;
@@ -5412,7 +5361,7 @@
                                 <div class="button-combo-sep"/>
                                 ${() => {
                 let button = html.node`
-                                        <a class="dropdown-menu-clickable-item chibi" data-type="continue" href="${root}user/${page.name}/library/music/${sanitise(track_artist)}">
+                                        <a class="dropdown-menu-clickable-item chibi" data-type="continue" href="${root}user/${page.name}/library/music/${redirect()}${sanitise(track_artist)}">
                                             ${tl(trans.explore_in_library)}
                                         </a>
                                     `;
@@ -5904,7 +5853,7 @@
                         <div class="grid-items-item-details">
                             ${settings.collage_grid_text ? html.node`
                             <p class="grid-items-item-main-text">
-                                <a class="link-block-target" href="${root}music/${template}" title="${data2.name}">
+                                <a class="link-block-target" href="${root}music/${redirect()}${template}" title="${data2.name}">
                                     ${data2.name}
                                 </a>
                             </p>
@@ -5912,16 +5861,16 @@
                             ${type_select.value != "artists" ? html.node`
                             <p class="grid-items-item-aux-text">
                                 ${settings.collage_grid_text ? html.node`
-                                <a class="grid-items-item-aux-block" href="${root}music/${data2.sister}">
+                                <a class="grid-items-item-aux-block" href="${root}music/${redirect()}${data2.sister}">
                                     ${data2.sister}
                                 </a>
                                 ${settings.collage_grid_plays ? html.node`
-                                <a class="grid-item-plays" href="${root}user/${page.name}/library/music/${template}?date_preset=${timeframe_select.value}" target="_blank">
+                                <a class="grid-item-plays" href="${root}user/${page.name}/library/music/${redirect()}${template}?date_preset=${timeframe_select.value}" target="_blank">
                                     ${data2.plays.toLocaleString(lang)}
                                 </a>
                                 ` : ""}
                                 ` : settings.collage_grid_plays ? html.node`
-                                <a class="grid-item-plays" href="${root}user/${page.name}/library/music/${template}?date_preset=${timeframe_select.value}" target="_blank">
+                                <a class="grid-item-plays" href="${root}user/${page.name}/library/music/${redirect()}${template}?date_preset=${timeframe_select.value}" target="_blank">
                                     ${data2.plays.toLocaleString(lang)}${tl(trans.plays_lower)}
                                 </a>
                                 ` : ""}
@@ -5929,7 +5878,7 @@
                             ` : html.node`
                             ${settings.collage_grid_plays ? html.node`
                             <p class="grid-items-item-aux-text">
-                                <a class="grid-item-plays" href="${root}user/${page.name}/library/music/${template}?date_preset=${timeframe_select.value}" target="_blank">
+                                <a class="grid-item-plays" href="${root}user/${page.name}/library/music/${redirect()}${template}?date_preset=${timeframe_select.value}" target="_blank">
                                     ${data2.plays.toLocaleString(lang)}${tl(trans.plays_lower)}
                                 </a>
                             </p>
@@ -6607,25 +6556,25 @@
                             </div>
                             <div class="grid-items-item-details">
                                 <p class="grid-items-item-main-text">
-                                    <a class="link-block-target" href="${root}music/${template}" title="${data2.name}">
+                                    <a class="link-block-target" href="${root}music/${redirect()}${template}" title="${data2.name}">
                                         ${data2.name}
                                     </a>
                                 </p>
                                 ${type.value == "albums" ? html.node`
                                 <p class="grid-items-item-aux-text">
-                                    <a class="grid-items-item-aux-block" href="${root}music/${data2.sister}">
+                                    <a class="grid-items-item-aux-block" href="${root}music/${redirect()}${data2.sister}">
                                         ${data2.sister}
                                     </a>
                                 </p>
                                 ` : ""}
                                 <p class="grid-items-item-aux-text">
-                                    <a class="grid-item-plays with-avatar" href="${root}user/${auth.name}/library/music/${template}?date_preset=${timeframe.value}" target="_blank">
+                                    <a class="grid-item-plays with-avatar" href="${root}user/${auth.name}/library/music/${redirect()}${template}?date_preset=${timeframe.value}" target="_blank">
                                         <span class="avatar">
                                             <img src="${auth.avatar}" alt="${tl(trans.your_avatar)}">
                                         </span>
                                         ${data2.plays.you.toLocaleString(lang)}
                                     </a>
-                                    <a class="grid-item-plays with-avatar" href="${root}user/${page.name}/library/music/${template}?date_preset=${timeframe.value}" target="_blank">
+                                    <a class="grid-item-plays with-avatar" href="${root}user/${page.name}/library/music/${redirect()}${template}?date_preset=${timeframe.value}" target="_blank">
                                         <span class="avatar">
                                             <img src="${page.avatar}" alt="${tl(trans.avatar_for_user).replace("{u}", page.name)}">
                                         </span>
@@ -6633,7 +6582,7 @@
                                     </a>
                                 </p>
                             </div>
-                            <a class="js-link-block-cover-link link-block-cover-link" href="${root}music/${template}" tabindex="-1" aria-hidden="true"></a>
+                            <a class="js-link-block-cover-link link-block-cover-link" href="${root}music/${redirect()}${template}" tabindex="-1" aria-hidden="true"></a>
                         </div>
                     </li>
                 `);
@@ -6658,23 +6607,23 @@
                     <tr class="chartlist-row chartlist-row--with-artist compare-item">
                         <td class="chartlist-index">${index + 1}</td>
                         <td class="chartlist-image">
-                            <a class="cover-art" href="${root}music/${template}">
+                            <a class="cover-art" href="${root}music/${redirect()}${template}">
                                 <img src="${data2.avatar}" alt="${data2.name}" loading="lazy">
                             </a>
                         </td>
                         <td class="chartlist-name">
-                            <a href="${root}music/${template}" title="${data2.name}">
+                            <a href="${root}music/${redirect()}${template}" title="${data2.name}">
                                 ${data2.name}
                             </a>
                         </td>
                         <td class="chartlist-artist">
-                            <a href="${root}music/${data2.sister}" title="${data2.sister}">
+                            <a href="${root}music/${redirect()}${data2.sister}" title="${data2.sister}">
                                 ${data2.sister}
                             </a>
                         </td>
                         <td class="chartlist-bar with-multiple">
                             <span class="chartlist-count-bar">
-                                <a class="chartlist-count-bar-link" href="${root}user/${auth.name}/library/music/${template}?date_preset=${timeframe.value}" target="_blank">
+                                <a class="chartlist-count-bar-link" href="${root}user/${auth.name}/library/music/${redirect()}${template}?date_preset=${timeframe.value}" target="_blank">
                                     <span class="chartlist-count-bar-slug" data-max-stat-value="${max}" data-stat-value="${data2.plays.you}" style="width: ${data2.plays.you / max * 100}%;"></span>
                                     <span class="chartlist-count-bar-value">${data2.plays.you}</span>
                                 </a>
@@ -6683,7 +6632,7 @@
                                 </span>
                             </span>
                             <span class="chartlist-count-bar">
-                                <a class="chartlist-count-bar-link" href="${root}user/${page.name}/library/music/${template}?date_preset=${timeframe.value}" target="_blank">
+                                <a class="chartlist-count-bar-link" href="${root}user/${page.name}/library/music/${redirect()}${template}?date_preset=${timeframe.value}" target="_blank">
                                     <span class="chartlist-count-bar-slug" data-max-stat-value="${max}" data-stat-value="${data2.plays.other}" style="width: ${data2.plays.other / max * 100}%;"></span>
                                     <span class="chartlist-count-bar-value">${data2.plays.other}</span>
                                 </a>
@@ -7684,11 +7633,11 @@
     function search_finish() {
       if (searching.primary.type == "artist") {
         if (searching.secondary.type == "album") {
-          window.location.href = `${root}music/${sanitise(searching.primary.name)}/${sanitise(searching.secondary.name)}`;
+          window.location.href = `${root}music/${redirect()}${sanitise(searching.primary.name)}/${sanitise(searching.secondary.name)}`;
         } else if (searching.secondary.type == "track") {
-          window.location.href = `${root}music/${sanitise(searching.primary.name)}/_/${sanitise(searching.secondary.name)}`;
+          window.location.href = `${root}music/${redirect()}${sanitise(searching.primary.name)}/_/${sanitise(searching.secondary.name)}`;
         } else {
-          window.location.href = `${root}music/${sanitise(searching.primary.name)}`;
+          window.location.href = `${root}music/${redirect()}${sanitise(searching.primary.name)}`;
         }
       } else if (searching.primary.type == "user") {
         window.location.href = `${root}user/${sanitise(searching.primary.name)}`;
@@ -7739,6 +7688,8 @@
         return setting_fail(id, { message: disabled_reason, unavailable: true });
       if (settings_store[id].beta)
         title = html.node`${title}<span class="new-badge beta">${tl(trans.beta)}</span>`;
+      else if (settings_store[id].new_release)
+        title = html.node`${title}<span class="new-badge beta">${tl(trans.new)}</span>`;
       if (type === "toggle") {
         let toggle2;
         return html.node`
@@ -8079,6 +8030,322 @@
       document.body.style.setProperty(`--${settings_store[id].css}`, `${value}${settings_store[id].suffix || ""}`);
     localStorage.setItem("bleh", JSON.stringify(settings));
     log(`saved ${id} as ${value}`, "settings", "log", { settings, settings_id: settings[id] });
+  }
+
+  // src/config.js
+  function create_settings_template() {
+    return { dev: false };
+  }
+  function load_settings(skip = false) {
+    if (!skip) {
+      for (let setting2 in settings_store) {
+        if (settings[setting2] == null)
+          settings[setting2] = settings_store[setting2].default;
+      }
+    }
+    log(`branch ${settings.branch}`, "load");
+    if (!settings.theme_type) {
+      if (settings.theme == "light" || settings.theme == "ink")
+        settings.theme_type = "light";
+      else
+        settings.theme_type = "dark";
+    }
+    for (let setting2 in settings_template)
+      if (settings[setting2] == void 0)
+        settings[setting2] = settings_template[setting2];
+    if (settings.seasonal_particles == true)
+      settings.seasonal_particles = "all";
+    else if (settings.seasonal_particles == false)
+      settings.seasonal_particles = "none";
+    if (settings.seasonal_particles_reduced == true) {
+      settings.seasonal_particles = "less";
+      delete settings.seasonal_particles_reduced;
+    } else if (settings.seasonal_particles_reduced == false) {
+      delete settings.seasonal_particles_reduced;
+    }
+    if (settings.font_weight == 480)
+      settings.font_weight = settings_store.font_weight.default;
+    if (settings.font_weight_medium == 650)
+      settings.font_weight_medium = settings_store.font_weight_medium.default;
+    if (settings.font_weight_bold == 730)
+      settings.font_weight_bold = settings_store.font_weight_bold.default;
+    for (let setting2 in settings) {
+      if ((setting2 == "hue" || setting2 == "sat" || setting2 == "lit") && settings.hue == settings_base.hue.value && settings.sat == settings_base.sat.value && settings.lit == settings_base.lit.value) continue;
+      try {
+        document.body.style.setProperty(`--${settings_base[setting2].css}`, `${settings[setting2]}${settings_base[setting2].unit}`);
+      } catch (e) {
+        log(`information for ${setting2} not accessible`, "settings", "log");
+      }
+      document.documentElement.setAttribute(`data-bleh--${setting2}`, `${settings[setting2]}`);
+    }
+    load_skus();
+    localStorage.setItem("bleh", JSON.stringify(settings));
+    if (document.body.classList.contains("user-dashboard-layout")) {
+      document.documentElement.setAttribute("data-bleh--theme", "oled");
+      page.state.settings_reload = true;
+    }
+    load_chart_colours();
+  }
+  function toggle_theme() {
+    if (page.subpage.startsWith("listening-report"))
+      return;
+    let current_theme = settings.theme;
+    if (current_theme == "dark")
+      current_theme = "darker";
+    else if (current_theme == "darker")
+      current_theme = "oled";
+    else if (current_theme == "oled" || current_theme == "classic")
+      current_theme = "light";
+    else if (current_theme == "light")
+      current_theme = "ink";
+    else if (current_theme == "ink")
+      current_theme = "dark";
+    show_theme_change_in_menu(current_theme);
+    save_setting("theme", current_theme);
+    chart_reflow();
+  }
+  unsafeWindow.change_theme_from_settings = function(theme) {
+    settings.theme = theme;
+    if (theme == "light" || theme == "ink")
+      settings.theme_type = "light";
+    else
+      settings.theme_type = "dark";
+    document.documentElement.setAttribute(`data-bleh--theme`, `${theme}`);
+    document.documentElement.setAttribute(`data-bleh--theme_type`, `${settings.theme_type}`);
+    show_theme_change_in_settings(theme);
+    show_theme_change_in_menu(theme);
+    localStorage.setItem("bleh", JSON.stringify(settings));
+  };
+  function change_theme_from_menu(theme) {
+    if (page.subpage.startsWith("listening-report")) return;
+    save_setting("theme", theme);
+    show_theme_change_in_menu(theme);
+    chart_reflow();
+  }
+  function reset_all() {
+    for (let item in settings_base)
+      reset_item(item);
+  }
+  function refresh_all(search = document) {
+    for (let item in settings_base)
+      update_item(item, settings[item], false, search);
+  }
+  function reset_item(item) {
+    update_item(item, settings_base[item].value);
+  }
+  function update_params(params = {}) {
+    for (let item in params) {
+      update_item(item, params[item]);
+    }
+  }
+  unsafeWindow._reset_all = function() {
+    reset_all();
+  };
+  unsafeWindow._reset_item = function(item) {
+    reset_item(item);
+  };
+  unsafeWindow._update_params = function(params = {}) {
+    update_params(params);
+  };
+  unsafeWindow._update_item = function(item, value) {
+    update_item(item, value);
+  };
+  function update_item(item, value, modify = true, search = document) {
+    let container = search.querySelector(`#container-${item}`);
+    if (container)
+      console.info(container);
+    else if (settings_base[item].type != "slider" && settings_base[item].type != "options")
+      return;
+    try {
+      let new_value = false;
+      if (value != settings[item])
+        new_value = true;
+      if ((settings_base[item].require_reload == true || settings_base[item].require_reload == "partial" && page.type != "bleh_settings") && new_value)
+        request_reload();
+      if (settings_base[item].type == "slider" && modify)
+        settings[item] = value;
+      if (!modify)
+        console.info(item, value, modify);
+      if (settings_base[item].type == "slider") {
+        try {
+          let slider = search.querySelector(`#slider-${item}`);
+          search.querySelector(`#value-${item}`).textContent = `${settings[item]}${settings_base[item].unit}`;
+          slider.value = settings[item];
+          search.querySelector(`#slider-track-${item}`).style.setProperty("--percent", `${settings[item] / slider.getAttribute("max") * 100}%`);
+        } catch (e) {
+        }
+        document.body.style.setProperty(`--${settings_base[item].css}`, `${value}${settings_base[item].unit}`);
+        document.documentElement.setAttribute(`data-bleh--${item}`, `${value}`);
+        if (item == "hue" || item == "sat" || item == "lit") {
+          if (settings.hue == settings_base.hue.value && settings.sat == settings_base.sat.value && settings.lit == settings_base.lit.value && settings.seasonal && stored_season.id != "none") {
+            document.body.style.removeProperty(`--${settings_base.hue.css}`);
+            document.body.style.removeProperty(`--${settings_base.sat.css}`);
+            document.body.style.removeProperty(`--${settings_base.lit.css}`);
+            document.documentElement.setAttribute("data-bleh--hsl-override", "true");
+          } else {
+            document.documentElement.setAttribute("data-bleh--hsl-override", "false");
+          }
+        }
+      } else if (settings_base[item].type == "toggle") {
+        if (settings[item] == settings_base[item].values[0] && modify) {
+          settings[item] = settings_base[item].values[1];
+          search.querySelector(`#toggle-${item}`).setAttribute("aria-checked", false);
+          document.body.style.setProperty(`--${item}`, settings_base[item].values[1]);
+          document.documentElement.setAttribute(`data-bleh--${item}`, `${settings_base[item].values[1]}`);
+        } else if (modify) {
+          settings[item] = settings_base[item].values[0];
+          console.log(`toggle-${item}`);
+          search.querySelector(`#toggle-${item}`).setAttribute("aria-checked", true);
+          document.body.style.setProperty(`--${item}`, settings_base[item].values[0]);
+          document.documentElement.setAttribute(`data-bleh--${item}`, `${settings_base[item].values[0]}`);
+        } else {
+          if (settings[item] == settings_base[item].values[0]) {
+            search.querySelector(`#toggle-${item}`).setAttribute("aria-checked", true);
+          } else {
+            search.querySelector(`#toggle-${item}`).setAttribute("aria-checked", false);
+          }
+        }
+      } else if (settings_base[item].type == "options") {
+        if (modify) {
+          settings[item] = value;
+          document.body.style.setProperty(`--${item}`, value);
+          document.documentElement.setAttribute(`data-bleh--${item}`, value);
+          let toggle2 = document.getElementById(`toggle-${item}-${value}`);
+          if (toggle2)
+            toggle2.setAttribute("aria-checked", true);
+          let other_toggles = search.querySelectorAll(`[data-toggle="${item}"]`);
+          other_toggles.forEach((toggle3) => {
+            let other_value = toggle3.getAttribute("data-toggle-value");
+            if (other_value == value)
+              return;
+            else
+              toggle3.setAttribute("aria-checked", false);
+          });
+          if ((item == "chart_view" || item == "chart_bar_axis") && page.type == "user" && page.subpage.startsWith("library"))
+            bleh_glacier_date_graph_generate();
+        } else {
+          if (settings[item] == value) {
+            document.getElementById(`toggle-${item}-${value}`).setAttribute("aria-checked", true);
+          } else {
+            document.getElementById(`toggle-${item}-${value}`).setAttribute("aria-checked", false);
+          }
+        }
+      }
+      if (modify)
+        log(`updated ${item} to ${settings[item]}`, "settings");
+      localStorage.setItem("bleh", JSON.stringify(settings));
+    } catch (e) {
+      console.error(e);
+    }
+    if (container) {
+      if (settings[item] != settings_base[item].value)
+        container.classList.add("modified");
+      else
+        container.classList.remove("modified");
+    }
+    if (item == "hue" || item == "sat" || item == "lit") {
+      update_colour_swatches();
+      load_chart_colours();
+    }
+  }
+  function request_reload() {
+    if (page.type == "bleh_setup")
+      return;
+    log("requesting reload", "settings");
+    reload_pending.state = true;
+    notify({
+      title: tl(trans.refresh_pending.name),
+      body: tl(trans.refresh_pending.body),
+      icon: "icon-16-settings",
+      persist: true,
+      actions: [
+        {
+          action: () => invoke_reload(),
+          text: tl(trans.refresh),
+          type: "refresh"
+        }
+      ]
+    });
+  }
+  unsafeWindow._invoke_reload = function() {
+    invoke_reload();
+  };
+  function invoke_reload() {
+    window.location.reload();
+  }
+  function update_colour_swatches() {
+    let found = false;
+    let custom = null;
+    let seasonal = null;
+    let swatches = page.structure.main.querySelectorAll(".swatch");
+    swatches.forEach((swatch) => {
+      let h = swatch.style.getPropertyValue("--hue-over");
+      let s = swatch.style.getPropertyValue("--sat-over");
+      let l = swatch.style.getPropertyValue("--lit-over");
+      let parent = swatch.parentElement;
+      if (swatch.classList[0] == "dropdown-menu-clickable-item")
+        parent = swatch;
+      if (h == settings.hue && s == settings.sat && l == settings.lit || swatch.getAttribute("data-swatch-type") == "default" && settings.hue == 255 && settings.sat == 1 && settings.lit == 1) {
+        parent.setAttribute("aria-checked", "true");
+        if (swatch.classList[0] != "dropdown-menu-clickable-item")
+          found = true;
+      } else {
+        parent.setAttribute("aria-checked", "false");
+      }
+      if (!custom && swatch.getAttribute("data-swatch-type") == "customise")
+        custom = parent;
+      if (!seasonal && swatch.getAttribute("data-swatch-type") == "default")
+        seasonal = parent;
+    });
+    if (found) return;
+    if (custom && settings.accent_type != "season")
+      custom.setAttribute("aria-checked", "true");
+    else if (seasonal)
+      seasonal.setAttribute("aria-checked", "true");
+  }
+  unsafeWindow._reset_inbuilt_item = function(item) {
+    reset_inbuilt_item(item);
+  };
+  unsafeWindow._update_inbuilt_params = function(params = {}) {
+    update_inbuilt_params(params);
+  };
+  unsafeWindow._update_inbuilt_item = function(item, value) {
+    update_inbuilt_item(item, value);
+  };
+  function update_inbuilt_item(item, value, modify = true, element = document.body) {
+    console.warn("update item", item, value, "modify", modify);
+    let test_if_valid = element.querySelector(`#toggle-${item}`);
+    console.warn(test_if_valid, `toggle-${item}`);
+    if (test_if_valid == void 0)
+      return;
+    if (inbuilt_settings[item].type == "toggle") {
+      if (modify) {
+        value = document.getElementById(`toggle-${item}`).getAttribute("aria-checked") === "true";
+        log(`updated (inbuilt) ${item} to ${!value}`, "settings");
+      }
+      if (value == inbuilt_settings[item].values[0] && modify) {
+        element.querySelector(`#inbuilt-companion-checkbox-${item}`).checked = false;
+        element.querySelector(`#toggle-${item}`).setAttribute("aria-checked", false);
+        document.documentElement.setAttribute(`data-bleh--inbuilt-${item}`, inbuilt_settings[item].values[1]);
+      } else if (modify) {
+        element.querySelector(`#inbuilt-companion-checkbox-${item}`).checked = true;
+        element.querySelector(`#toggle-${item}`).setAttribute("aria-checked", true);
+        document.documentElement.setAttribute(`data-bleh--inbuilt-${item}`, inbuilt_settings[item].values[0]);
+      } else {
+        console.warn(item, value, value == true, value == false, typeof value, "boolean");
+        if (value == true) {
+          console.warn(item, value, "TRUE");
+          element.querySelector(`#inbuilt-companion-checkbox-${item}`).checked = true;
+          element.querySelector(`#toggle-${item}`).setAttribute("aria-checked", true);
+          document.documentElement.setAttribute(`data-bleh--inbuilt-${item}`, true);
+        } else if (value == false) {
+          console.warn(item, value, "FALSE");
+          element.querySelector(`#inbuilt-companion-checkbox-${item}`).checked = false;
+          element.querySelector(`#toggle-${item}`).setAttribute("aria-checked", false);
+          document.documentElement.setAttribute(`data-bleh--inbuilt-${item}`, false);
+        }
+      }
+    }
   }
 
   // src/pages/glacier.js
@@ -8914,11 +9181,11 @@
     if (artist)
       artist = artist.textContent.trim();
     let image = legacy_header.querySelector(".library-header-image img");
-    let link = `${root}music/${sanitise(header_title)}`;
+    let link = `${root}music/${redirect()}${sanitise(header_title)}`;
     if (type == "album")
-      link = `${root}music/${sanitise(artist)}/${sanitise(header_title)}`;
+      link = `${root}music/${redirect()}${sanitise(artist)}/${sanitise(header_title)}`;
     else if (type == "track")
-      link = `${root}music/${sanitise(artist)}/_/${sanitise(header_title)}`;
+      link = `${root}music/${redirect()}${sanitise(artist)}/_/${sanitise(header_title)}`;
     let header = document.createElement("section");
     header.classList.add("glacier-library-top", "glacier-library-focused-header");
     let upper_wrap = document.createElement("div");
@@ -9095,1496 +9362,6 @@
       view_buttons.insertBefore(bulk_edit, delete_button);
     else
       view_buttons.insertBefore(bulk_edit, edit_form);
-  }
-
-  // src/pages/gallery.js
-  function bleh_gallery() {
-    if (page.subpage != "image")
-      return;
-    log("focusing on image", "gallery");
-    let image_sidebar = page.structure.side.querySelector(".js-gallery-image-details > div");
-    if (!image_sidebar) return;
-    if (image_sidebar.hasAttribute("data-bleh-gallery"))
-      return;
-    image_sidebar.setAttribute("data-bleh-gallery", "true");
-    if (!ff("new_gallery_experience")) {
-      patch_gallery_focused_image(image_sidebar, page.structure.container.querySelector(".gallery-image-buttons"));
-      return;
-    }
-    let image_details;
-    let gallery_section;
-    let first = false;
-    try {
-      gallery_section = page.structure.main.querySelector(".gallery-section");
-      if (gallery_section) {
-        first = true;
-        if (ff("short"))
-          page.structure.row.insertBefore(gallery_section, page.structure.content);
-        else
-          page.structure.nav.after(gallery_section);
-        image_details = html.node`
-                <section class="image-details" />
-            `;
-      } else {
-        image_details = page.structure.main.querySelector(".image-details");
-        image_details.innerHTML = "";
-      }
-    } catch (e) {
-      gallery_section = page.structure.container.querySelector(".gallery-section");
-      image_details = page.structure.main.querySelector(".image-details");
-      image_details.innerHTML = "";
-    }
-    image_details.appendChild(image_sidebar);
-    let image_title = image_details.querySelector(".gallery-image-title");
-    let image_date = image_details.querySelector(".gallery-image-uploaded-by");
-    if (image_title.textContent.trim() == "") {
-      image_title.classList.add("gallery-image-title-empty");
-      image_title.textContent = trans_legacy.en.gallery.empty.title;
-    }
-    let breadcrumbs = document.body.querySelector(".content-top-lower-row");
-    let breadcrumb_root = breadcrumbs.querySelector("a");
-    let breadcrumb_name = breadcrumbs.querySelector(".subpage-title");
-    let image_title_container = document.createElement("div");
-    image_title_container.classList.add("image-title-container");
-    image_title_container.innerHTML = `
-        <div class="sub-text">
-            <div class="breadcrumb">
-                ${breadcrumb_root.outerHTML}
-                <div class="breadcrumb-name">
-                    ${breadcrumb_name.textContent}
-                </div>
-            </div>
-            ${image_date.outerHTML}
-        </div>
-        <div class="title-layer">
-            ${image_title.outerHTML}
-            <div class="vote-number" data-side="pos">+0</div>
-        </div>
-    `;
-    image_details.insertBefore(image_title_container, image_sidebar);
-    breadcrumbs.style.setProperty("display", "none");
-    page.structure.main.insertBefore(image_details, page.structure.main.firstElementChild);
-    if (first) image_details.after(html.node`<div class="sep" />`);
-    let description = image_details.querySelector(".gallery-image-description");
-    if (!description) {
-      description = document.createElement("p");
-      description.classList.add("gallery-image-description", "gallery-image-description-empty");
-      description.textContent = trans_legacy.en.gallery.empty.description;
-      image_details.querySelector("[data-image-url]").appendChild(description);
-    }
-    let buttons = image_details.querySelector(".gallery-image-buttons");
-    let button_container = document.createElement("div");
-    button_container.classList.add("button-container-wrapper");
-    button_container.appendChild(buttons);
-    let vote_buttons = buttons.querySelector(".gallery-image-vote-buttons");
-    vote_buttons.after(create_divider());
-    let positive_btn = vote_buttons.querySelector(':is([data-ajax-form-state=""] .gallery-image-vote-up-off, [data-ajax-form-state="up-voted"] .gallery-image-vote-up-on, [data-ajax-form-state="down-voted"] .gallery-image-vote-up-off)').cloneNode(true);
-    let negative_btn = vote_buttons.querySelector(':is([data-ajax-form-state=""] .gallery-image-vote-down-off, [data-ajax-form-state="up-voted"] .gallery-image-vote-down-off, [data-ajax-form-state="down-voted"] .gallery-image-vote-down-on)').cloneNode(true);
-    let positive = parseInt(positive_btn.textContent.replace(trans_legacy.en.gallery.up, ""));
-    let negative = parseInt(negative_btn.textContent.replace(trans_legacy.en.gallery.down, ""));
-    let number = positive - negative;
-    let is_negative = number < 0;
-    console.info(positive_btn, positive, negative_btn, negative, number);
-    let vote_badge = image_title_container.querySelector(".vote-number");
-    vote_badge.textContent = `${is_negative ? "" : "+"}${number}`;
-    vote_badge.setAttribute("data-side", is_negative ? "neg" : "pos");
-    tippy(vote_badge, {
-      content: trans_legacy.en.gallery.vote
-    });
-    let buttons_extra = document.createElement("div");
-    buttons_extra.classList.add("gallery-image-buttons", "gallery-image-buttons-extra");
-    button_container.appendChild(buttons_extra);
-    image_details.appendChild(button_container);
-    let open_button = html.node`
-        <button class="image-open-button" onclick=${() => expand_gallery_image()}>
-            ${tl(trans.expand)}
-        </button>
-    `;
-    tippy(open_button, {
-      content: tl(trans.expand_to_full_resolution)
-    });
-    buttons_extra.appendChild(open_button);
-    let share_button = html.node`
-        <button class="image-share-button" onclick=${() => share(window.location.href)}>
-            ${tl(trans.share)}
-        </button>
-    `;
-    buttons_extra.appendChild(share_button);
-    share_button.after(create_divider());
-    let delete_button = image_details.querySelector(".gallery-image-delete");
-    if (delete_button)
-      buttons_extra.appendChild(delete_button);
-    let report_button = image_details.querySelector(".gallery-image-report-form");
-    let report_text = report_button.querySelector("button");
-    tippy(report_text, {
-      content: report_text.textContent
-    });
-    report_text.textContent = tl(trans.report);
-    buttons_extra.appendChild(report_button);
-    let star_buttons = image_details.querySelectorAll(".gallery-image-preferred-button :is(button, a)");
-    star_buttons.forEach((star_button) => {
-      star_button.removeAttribute("title");
-      let text2 = star_button.querySelector(".gallery-image-preferred-states");
-      text2.textContent = tl(trans.star);
-    });
-    let view_all_container = page.structure.main.querySelector(".more-link-fullwidth-right-flush-top");
-    if (view_all_container) {
-      let side_actions = document.createElement("section");
-      side_actions.classList.add("side-actions");
-      if (!page.mobile)
-        page.structure.side.appendChild(side_actions);
-      else
-        page.structure.main.appendChild(side_actions);
-      let view_all = view_all_container.querySelector("a");
-      view_all.classList.add("btn", "side-action");
-      view_all.setAttribute("data-type", "gallery");
-      side_actions.appendChild(view_all);
-      page.structure.main.removeChild(view_all_container);
-      if (page.type == "artist" || ff("display_album_bookmark")) {
-        let view_saved = document.createElement("a");
-        view_saved.classList.add("btn", "side-action");
-        view_saved.setAttribute("href", `${view_all.getAttribute("href")}?tab=saved`);
-        view_saved.setAttribute("data-type", "gallery-saved");
-        view_saved.textContent = trans_legacy.en.gallery.bookmarks.link;
-        side_actions.appendChild(view_saved);
-      }
-    }
-    if (page.type == "artist" || ff("display_album_bookmark"))
-      patch_gallery_focused_image(image_sidebar, buttons);
-  }
-  function expand_gallery_image() {
-    let image_src = page.structure.container.querySelector(".active-slide .js-gallery-image").getAttribute("src").replace("770x0", "ar0");
-    expand_avatar(image_src);
-  }
-  function create_divider() {
-    let divider = document.createElement("div");
-    divider.classList.add("listen-divider");
-    return divider;
-  }
-  function bleh_gallery_upload() {
-    let gallery_section = document.createElement("section");
-    gallery_section.classList.add("gallery-section", "gallery--initialised");
-    let image_container = document.createElement("div");
-    image_container.classList.add("gallery-image-container");
-    let slides = document.createElement("div");
-    slides.classList.add("gallery-slides");
-    let image = document.createElement("div");
-    image.classList.add("gallery-image", "gallery-slide", "image-preview", "active-slide");
-    image.innerHTML = `
-        <img class="image-preview-hook">
-    `;
-    slides.appendChild(image);
-    image_container.appendChild(slides);
-    gallery_section.appendChild(image_container);
-    page.structure.nav.after(gallery_section);
-    let content_top = document.body.querySelector(".page-content");
-    content_top.innerHTML = "";
-    let form = page.structure.main.querySelector(".form-horizontal");
-    form.classList.add("panel-form");
-    let upload_rules_group = form.querySelector(".form-group--description + .form-group");
-    let rules = upload_rules_group.querySelector(".gallery-upload-rules");
-    let rules_panel = document.createElement("section");
-    rules_panel.classList.add("rules-panel");
-    rules_panel.innerHTML = rules.innerHTML;
-    page.structure.side.appendChild(rules_panel);
-    form.removeChild(upload_rules_group);
-  }
-  function bleh_gallery_upload_check() {
-    if (page.subpage != "images_image-upload")
-      return;
-    let image_preview = page.structure.main.querySelector(".form-image-preview");
-    if (!image_preview) return;
-    let image_preview_container = page.structure.container.querySelector(".image-preview-hook");
-    image_preview_container.setAttribute("src", image_preview.getAttribute("src"));
-  }
-  function bleh_gallery_list() {
-    let upload_btn = page.structure.main.querySelector(".btn-add");
-    if (upload_btn) {
-      upload_btn.classList = "btn view-all-button back upload-button";
-      let upload_panel = document.createElement("section");
-      upload_panel.classList.add("view-all-panel", "upload-panel");
-      upload_panel.appendChild(upload_btn);
-      page.structure.side.insertBefore(upload_panel, page.structure.side.firstElementChild);
-    }
-    if (page.type == "artist")
-      patch_gallery_image_listing();
-  }
-  function patch_gallery_image_listing() {
-    let bookmarked_images = JSON.parse(localStorage.getItem("bleh_bookmarked_images")) || {};
-    if (page.requested.tab != "saved" || page.requested.page != null)
-      page.structure.container.setAttribute("data-bleh--gallery-tab", "all");
-    else
-      page.structure.container.setAttribute("data-bleh--gallery-tab", "saved");
-    let nav = html.node`
-        <div class="bleh--nav-wrap bleh--nav-wrap--bookmarks">
-            <nav class="navlist secondary-nav">
-                <ul class="navlist-items">
-                    <li class="navlist-item secondary-nav-item secondary-nav-item--gallery-overview">
-                        <a class="secondary-nav-item-link" onclick=${() => gallery_tab("all")}>
-                            ${tl(trans.all)}
-                        </a>
-                    </li>
-                    <li class="navlist-item secondary-nav-item secondary-nav-item--gallery-bookmarks">
-                        <a class="secondary-nav-item-link" onclick=${() => gallery_tab("saved")}>
-                            ${tl(trans.saved)}
-                        </a>
-                    </li>
-                </ul>
-            </nav>
-        </div>
-    `;
-    if (ff("short"))
-      page.structure.row.insertBefore(nav, page.structure.content);
-    else
-      page.structure.content_top.after(nav);
-    let bookmarks_panel;
-    page.structure.main.classList.add("bleh--gallery");
-    page.structure.main.after(html.node`
-        <div class="col-main bleh--bookmarks not-a-panel">
-            <section class="bookmarks-panel" ref=${(el) => bookmarks_panel = el}>
-                <ul class="image-list" data-kate-processed="true"></ul>
-            </section>
-        </div>
-    `);
-    if (bookmarked_images.hasOwnProperty(page.name)) {
-      bookmarked_images[page.name].forEach((image) => {
-        let image_element = document.createElement("li");
-        image_element.classList.add("image-list-item-wrapper");
-        image_element.setAttribute("data-image-id", image);
-        image_element.innerHTML = `
-                <a class="image-list-item" href="${root}music/+noredirect/${page.name}/+images/${image}">
-                    <img src="https://lastfm.freetls.fastly.net/i/u/avatar170s/${image}" alt=${image} loading="lazy">
-                </a>
-            `;
-        page.structure.container.querySelector(".bookmarks-panel .image-list").appendChild(image_element);
-        if (ff("remove_bookmark")) {
-          let menu = tippy(image_element, {
-            theme: "context-menu",
-            content: html.node`
-                        <button class="dropdown-menu-clickable-item" onclick=${() => update_image_bookmark(image_element, image, false)} data-menu-item="remove-bookmark" data-bleh--image-is-bookmarked="true">
-                            ${trans_legacy.en.gallery.bookmarks.button.unbookmark_this_image.name}
-                        </button>
-                    `,
-            placement: "right-start",
-            trigger: "manual",
-            interactive: true,
-            interactiveBorder: 10,
-            offset: [0, 0],
-            onShow(instance) {
-              instance.popper.addEventListener("click", (event3) => {
-                instance.hide();
-              });
-            }
-          });
-          register_menu(image_element, menu);
-        }
-      });
-      let image_list = page.structure.main.querySelectorAll(".image-list-item");
-      image_list.forEach((image_list_item) => {
-        let image_id_split = image_list_item.getAttribute("href").split("/");
-        let image_id_length = image_id_split.length;
-        let image_id = image_id_split[image_id_length - 1];
-        if (bookmarked_images[page.name].includes(image_id)) {
-          image_list_item.classList.add("image-list-item-bookmarked");
-        }
-      });
-    } else {
-      render(bookmarks_panel, html`
-            <div class="loading-data-container">
-                <div class="loading-data-text failed">${tl(trans.no_images_saved)}</div>
-            </div>
-        `);
-    }
-  }
-  function gallery_tab(id) {
-    page.structure.container.setAttribute("data-bleh--gallery-tab", id);
-  }
-  function patch_gallery_focused_image(focused_image_details, gallery_interactions) {
-    let focused_image_id_split = focused_image_details.getAttribute("data-image-url").split("/");
-    let focused_image_id_length = focused_image_id_split.length - 1;
-    let focused_image_id = focused_image_id_split[focused_image_id_length];
-    let bookmarked_images = JSON.parse(localStorage.getItem("bleh_bookmarked_images")) || {};
-    let image_is_bookmarked = false;
-    if (bookmarked_images.hasOwnProperty(page.name)) {
-      if (bookmarked_images[page.name].includes(focused_image_id)) {
-        image_is_bookmarked = true;
-        log("focused is bookmarked", "gallery");
-      }
-    }
-    let gallery_bookmark_button = document.createElement("button");
-    gallery_bookmark_button.classList.add("bleh--gallery-bookmark-image-btn", "btn--has-icon");
-    gallery_bookmark_button.setAttribute("data-bleh--image-is-bookmarked", image_is_bookmarked);
-    gallery_bookmark_button.setAttribute("onclick", `_update_image_bookmark(this, '${focused_image_id}')`);
-    gallery_bookmark_button.textContent = trans_legacy.en.gallery.bookmarks.button.bookmark_this_image.name;
-    unsafeWindow.bookmark_tooltip = tippy(gallery_bookmark_button, {
-      content: image_is_bookmarked ? trans_legacy.en.gallery.bookmarks.button.unbookmark_this_image.bio : trans_legacy.en.gallery.bookmarks.button.bookmark_this_image.bio
-    });
-    gallery_interactions.appendChild(gallery_bookmark_button);
-  }
-  unsafeWindow._update_image_bookmark = function(button, id, tooltip = true) {
-    update_image_bookmark(button, id, tooltip);
-  };
-  function update_image_bookmark(button, id, tooltip = true) {
-    let bookmarked_images = JSON.parse(localStorage.getItem("bleh_bookmarked_images")) || {};
-    let is_bookmarked = button.getAttribute("data-bleh--image-is-bookmarked") === "true";
-    if (tooltip) {
-      unsafeWindow.bookmark_tooltip.setContent(
-        !is_bookmarked ? trans_legacy.en.gallery.bookmarks.button.unbookmark_this_image.bio : trans_legacy.en.gallery.bookmarks.button.bookmark_this_image.bio
-      );
-    } else {
-      button = page.structure.container.querySelector(`[data-image-id="${id}"]`);
-    }
-    if (!bookmarked_images.hasOwnProperty(page.name))
-      bookmarked_images[page.name] = [];
-    if (is_bookmarked) {
-      button.setAttribute("data-bleh--image-is-bookmarked", "false");
-      let new_artist_bookmarks = [];
-      for (let image in bookmarked_images[page.name]) {
-        if (bookmarked_images[page.name][image] != id) {
-          new_artist_bookmarks.push(bookmarked_images[page.name][image]);
-        }
-      }
-      bookmarked_images[page.name] = new_artist_bookmarks;
-      log(`image ${id} from ${page.name} removed from bookmarks`, "gallery");
-    } else {
-      button.setAttribute("data-bleh--image-is-bookmarked", "true");
-      bookmarked_images[page.name].push(id);
-      log(`image ${id} from ${page.name} added to bookmarks`, "gallery");
-    }
-    localStorage.setItem("bleh_bookmarked_images", JSON.stringify(bookmarked_images));
-  }
-
-  // src/components/toggle.js
-  function toggle({
-    value = false,
-    type = "toggle",
-    name: name2 = "",
-    title = "",
-    body = "",
-    small = "",
-    disabled = false,
-    data: data2 = "",
-    func = null
-  }) {
-    let checkbox;
-    let state;
-    let elem = html.node`
-        <div class="setting standalone" data-type=${type} onclick=${() => {
-      if (disabled) return;
-      let current = checkbox.checked;
-      if (func) func(!current);
-      checkbox.checked = !current;
-      state.setAttribute("aria-checked", !current);
-    }}>
-            <div class="heading">
-                <h5>${title}</h5>
-                ${body != "" ? html.node`<p>${body}</p>` : ""}
-                ${small != "" ? html.node`<small>${small}</small>` : ""}
-            </div>
-            ${type == "toggle" ? html.node`
-            <div class="toggle-wrap">
-                <input type="checkbox" ref=${(el) => checkbox = el} name=${name2} value=${data2} checked=${value} />
-                <button class="toggle" ref=${(el) => state = el} aria-checked=${value}>
-                    <div class="dot" />
-                </button>
-            </div>
-            ` : html.node`
-            <div class="check">
-                <input type="checkbox" ref=${(el) => checkbox = el} name=${name2} value=${data2} checked=${value} disabled=${disabled} />
-                <div class="box" ref=${(el) => state = el} aria-checked=${value} disabled=${disabled}>
-                    <div class="bleh-icon" />
-                </div>
-            </div>
-            `}
-        </div>
-    `;
-    elem.check = () => {
-      if (disabled) return;
-      if (func) func(true);
-      checkbox.checked = true;
-      state.setAttribute("aria-checked", true);
-    };
-    elem.uncheck = () => {
-      if (disabled) return;
-      if (func) func(false);
-      checkbox.checked = false;
-      state.setAttribute("aria-checked", false);
-    };
-    elem.disabled = (state2 = null) => {
-      if (state2 === null) return checkbox.getAttribute("disabled") || false;
-      if (state2 === true)
-        checkbox.setAttribute("disabled", "true");
-      else
-        checkbox.removeAttribute("disabled");
-      return state2;
-    };
-    return elem;
-  }
-
-  // src/components/scrobble.js
-  function submit_scrobble({
-    pre_track = "",
-    pre_album = "",
-    pre_artist = "",
-    pre_album_artist = "",
-    func,
-    can_api
-  }) {
-    if (!can_api) can_api = localStorage.getItem("bleh_auth") && localStorage.getItem("bleh_auth_valid") === "true";
-    if (!can_api) {
-      window.location.href = `${root}bleh/profiles`;
-      return;
-    }
-    const random = random_list[Math.floor(Math.random() * random_list.length)];
-    let track;
-    let album;
-    let artist;
-    let album_artist;
-    let use_current;
-    let date;
-    let create_scrobble;
-    let max_date = /* @__PURE__ */ new Date();
-    max_date.setDate(max_date.getDate() + 1);
-    dialog({
-      id: "submit_scrobble",
-      title: tl(trans.new_scrobble),
-      body: html.node`
-            <div class="new-scrobble-form">
-                <p class="generic-label">${tl(trans.track)}</p>
-                ${track = input({
-        type: "text",
-        value: pre_track,
-        placeholder: tl(trans.example).replace("{v}", random.track),
-        warn_if_empty: true
-      })}
-                <p class="generic-label">${tl(trans.album)}</p>
-                ${album = input({
-        type: "text",
-        value: pre_album,
-        placeholder: tl(trans.example).replace("{v}", random.album)
-      })}
-                <p class="generic-label">${tl(trans.artist)}</p>
-                ${artist = input({
-        type: "text",
-        value: pre_artist,
-        placeholder: tl(trans.example).replace("{v}", random.artist),
-        warn_if_empty: true
-      })}
-                <p class="generic-label">${tl(trans.album_artist)}</p>
-                ${album_artist = input({
-        type: "text",
-        value: pre_album_artist,
-        placeholder: tl(trans.example).replace("{v}", random.album_artist)
-      })}
-                <p class="generic-label">${tl(trans.time)}</p>
-                <div class="toggle-and-time">
-                    ${use_current = toggle({
-        value: true,
-        type: "checkbox",
-        title: tl(trans.use_current_time),
-        func: (state) => {
-          date.disabled(state);
-        }
-      })}
-                    ${date = input({
-        type: "date",
-        max: `${max_date.getFullYear()}-${pad2(max_date.getMonth() + 1)}-${pad2(max_date.getDate())}`,
-        disabled: true
-      })}
-                </div>
-            </div>
-            <div class="modal-footer">
-                <button class="see-more cancel" onclick=${() => dialog_rm2({ id: "submit_scrobble" })}>
-                    ${tl(trans.cancel)}
-                </button>
-                <div class="fill" />
-                <button class="btn primary icon" data-type="add" ref=${(el) => create_scrobble = el} onclick=${async () => {
-        if (track.value() == "" || artist.value() == "") {
-          notify({
-            id: "submit_scrobble",
-            title: tl(trans.new_scrobble),
-            body: tl(trans.missing_fields),
-            type: "error"
-          });
-          return;
-        }
-        track.disabled(true);
-        album.disabled(true);
-        artist.disabled(true);
-        album_artist.disabled(true);
-        use_current.disabled(true);
-        date.disabled(true);
-        create_scrobble.disabled = true;
-        if (album.value() != "" && album_artist.value() == "") album_artist.value(artist.value());
-        let params = {
-          sk: localStorage.getItem("bleh_auth"),
-          artist: artist.value(),
-          track: track.value(),
-          timestamp: Math.floor(date.value() / 1e3)
-        };
-        if (album.value() != "") params.album = album.value();
-        if (album_artist.value() != "") params.albumArtist = album_artist.value();
-        const res = await fetch(
-          "https://jufufu.katelyn.moe/api/lastfm",
-          {
-            method: "POST",
-            headers: { "content-type": "application/json" },
-            body: JSON.stringify({
-              method: "track.scrobble",
-              params
-            })
-          }
-        );
-        const json = await res.json();
-        log("received response", "submit scrobble", "info", { result: json });
-        if (json.error) {
-          log("error", "submit scrobble", "error");
-          notify({
-            id: "submit_scrobble",
-            title: tl(trans.new_scrobble),
-            body: json.message,
-            type: "error",
-            persist: true
-          });
-          dialog_rm2({ id: "submit_scrobble" });
-          return;
-        }
-        notify({
-          id: "submit_scrobble",
-          title: tl(trans.new_scrobble),
-          body: params.track,
-          type: "success"
-        });
-        dialog_rm2({ id: "submit_scrobble" });
-        if (func) func();
-      }}>
-                    ${tl(trans.new)}
-                </button>
-            </div>
-        `
-    });
-  }
-
-  // src/components/music.js
-  unsafeWindow._other_listener = function(id) {
-    other_listener(id);
-  };
-  function show_your_scrobbles() {
-    let katsune = ff("katsune");
-    show_numbers_on_side(page.type);
-    let page_is_blocked = !page.structure.main.querySelector("#shoutbox");
-    if (page.subpage == "overview") {
-      let tabs = document.createElement("nav");
-      tabs.classList.add("navlist", "secondary-nav", "navlist--more", "redesigned-navigation");
-      if (page.type == "artist") {
-        tabs.appendChild(html.node`
-                <ul class="navlist-items">
-                    <li class="navlist-item secondary-nav-item secondary-nav-item--overview">
-                        <a class="secondary-nav-item-link secondary-nav-item-link--active" href="${window.location.href}">
-                            ${tl(trans.overview)}
-                        </a>
-                    </li>
-                    <li class="navlist-item secondary-nav-item secondary-nav-item--tracks">
-                        <a class="secondary-nav-item-link" href="${window.location.href}/+tracks">
-                            ${tl(trans.tracks)}
-                        </a>
-                    </li>
-                    <li class="navlist-item secondary-nav-item secondary-nav-item--albums">
-                        <a class="secondary-nav-item-link" href="${window.location.href}/+albums">
-                            ${tl(trans.albums)}
-                        </a>
-                    </li>
-                    ${!page_is_blocked ? html.node`
-                    <li class="navlist-item secondary-nav-item secondary-nav-item--images">
-                        <a class="secondary-nav-item-link" href="${window.location.href}/+images">
-                            ${tl(trans.photos)}
-                        </a>
-                    </li>
-                    <li class="navlist-item secondary-nav-item secondary-nav-item--similar">
-                        <a class="secondary-nav-item-link" href="${window.location.href}/+similar">
-                            ${tl(trans.similar_artists)}
-                        </a>
-                    </li>
-                    <li class="navlist-item secondary-nav-item secondary-nav-item--wiki">
-                        <a class="secondary-nav-item-link" href="${window.location.href}/+wiki">
-                            ${tl(trans.biography)}
-                        </a>
-                    </li>
-                    <li class="navlist-item secondary-nav-item secondary-nav-item--listeners">
-                        <a class="secondary-nav-item-link" href="${window.location.href}/+listeners">
-                            ${tl(trans.listeners)}
-                        </a>
-                    </li>
-                    <li class="navlist-item secondary-nav-item secondary-nav-item--shoutbox">
-                        <a class="secondary-nav-item-link" href="${window.location.href}/+shoutbox">
-                            ${tl(trans.shouts)}
-                        </a>
-                    </li>
-                    <li class="navlist-item secondary-nav-item secondary-nav-item--events">
-                        <a class="secondary-nav-item-link" href="${window.location.href}/+events">
-                            ${tl(trans.events)}
-                        </a>
-                    </li>
-                    <li class="navlist-item secondary-nav-item secondary-nav-item--tags">
-                        <a class="secondary-nav-item-link" href="${window.location.href}/+tags">
-                            ${tl(trans.tags)}
-                        </a>
-                    </li>
-                    ` : ""}
-                </ul>
-            `);
-      } else if (page.type == "album") {
-        tabs.appendChild(html.node`
-                <ul class="navlist-items">
-                    <li class="navlist-item secondary-nav-item secondary-nav-item--overview">
-                        <a class="secondary-nav-item-link secondary-nav-item-link--active" href="${window.location.href}">
-                            ${tl(trans.overview)}
-                        </a>
-                    </li>
-                    ${!page_is_blocked ? html.node`
-                    <li class="navlist-item secondary-nav-item secondary-nav-item--wiki">
-                        <a class="secondary-nav-item-link" href="${window.location.href}/+wiki">
-                            ${tl(trans.wiki)}
-                        </a>
-                    </li>
-                    <li class="navlist-item secondary-nav-item secondary-nav-item--images">
-                        <a class="secondary-nav-item-link" href="${window.location.href}/+images">
-                            ${tl(trans.artwork)}
-                        </a>
-                    </li>
-                    <li class="navlist-item secondary-nav-item secondary-nav-item--shoutbox">
-                        <a class="secondary-nav-item-link" href="${window.location.href}/+shoutbox">
-                            ${tl(trans.shouts)}
-                        </a>
-                    </li>
-                    <li class="navlist-item secondary-nav-item secondary-nav-item--tags">
-                        <a class="secondary-nav-item-link" href="${window.location.href}/+tags">
-                            ${tl(trans.tags)}
-                        </a>
-                    </li>
-                    ` : ""}
-                </ul>
-            `);
-      } else if (page.type == "track") {
-        tabs.appendChild(html.node`
-                <ul class="navlist-items">
-                    <li class="navlist-item secondary-nav-item secondary-nav-item--overview">
-                        <a class="secondary-nav-item-link secondary-nav-item-link--active" href="${window.location.href}">
-                            ${tl(trans.overview)}
-                        </a>
-                    </li>
-                    <li class="navlist-item secondary-nav-item secondary-nav-item--albums">
-                        <a class="secondary-nav-item-link" href="${window.location.href}/+albums">
-                            ${tl(trans.albums)}
-                        </a>
-                    </li>
-                    ${!page_is_blocked ? html.node`
-                    <li class="navlist-item secondary-nav-item secondary-nav-item--wiki">
-                        <a class="secondary-nav-item-link" href="${window.location.href}/+wiki">
-                            ${tl(trans.wiki)}
-                        </a>
-                    </li>
-                    <li class="navlist-item secondary-nav-item secondary-nav-item--shoutbox">
-                        <a class="secondary-nav-item-link" href="${window.location.href}/+shoutbox">
-                            ${tl(trans.shouts)}
-                        </a>
-                    </li>
-                    <li class="navlist-item secondary-nav-item secondary-nav-item--tags">
-                        <a class="secondary-nav-item-link" href="${window.location.href}/+tags">
-                            ${tl(trans.tags)}
-                        </a>
-                    </li>
-                    ` : ""}
-                </ul>
-            `);
-      }
-      page.structure.container.insertBefore(tabs, page.structure.row);
-      page.structure.tabs = tabs;
-    }
-    let col_main = page.structure.container.querySelector(".top-overview-panel");
-    if (!col_main)
-      col_main = document.body.querySelector(".col-main");
-    if (page.type == "track") {
-      let new_panel = document.createElement("section");
-      new_panel.classList.add("track-info-panel");
-      new_panel.innerHTML = col_main.innerHTML;
-      page.structure.main.insertBefore(new_panel, page.structure.main.firstElementChild);
-      col_main.style.setProperty("display", "none");
-      page.structure.row.appendChild(col_main);
-      console.info(col_main, new_panel);
-      col_main = new_panel;
-    }
-    let top_container = document.createElement("div");
-    top_container.classList.add("top-container");
-    if (katsune)
-      top_container.classList.add("katsune-button-row");
-    let listen_container = document.createElement("div");
-    listen_container.classList.add("listen-container");
-    let page_url = window.location.href;
-    let page_url_split = page_url.split("/");
-    let page_url_length = page_url_split.length - 1;
-    let scrobble_page = page_url_split[page_url_length];
-    if (page.type == "album") {
-      scrobble_page = page_url_split[page_url_length - 1] + "/" + page_url_split[page_url_length];
-    } else if (page.type == "track") {
-      scrobble_page = page_url_split[page_url_length - 2] + "/_/" + page_url_split[page_url_length];
-    }
-    let your_listens = {
-      name: auth.name,
-      listens: 0,
-      link: scrobble_page,
-      avi: auth.avatar,
-      katsune
-    };
-    let scrobble_button = col_main.querySelector(".personal-stats-item--scrobbles .hidden-xs a");
-    if (scrobble_button) {
-      your_listens.listens = clean_number(scrobble_button.textContent.trim());
-    }
-    create_listen_item(listen_container, your_listens, page.type);
-    if (settings.profile_shortcut != "") {
-      let shortcut_listens = {
-        name: settings.profile_shortcut,
-        listens: -1,
-        link: scrobble_page,
-        avi: localStorage.getItem("bleh_profile_shortcut_avi"),
-        katsune
-      };
-      const listen_item = create_listen_item(listen_container, shortcut_listens);
-      fetch(`${root}user/${shortcut_listens.name}/library/music/${scrobble_page}`).then(function(response) {
-        console.log("returned", response, response.text);
-        return response.text();
-      }).then(function(dom) {
-        const doc = new DOMParser().parseFromString(dom, "text/html");
-        let first_metadata_item = doc.querySelector(".metadata-item .metadata-display");
-        let listens = 0;
-        if (first_metadata_item) listens = clean_number(first_metadata_item.textContent.trim());
-        let p;
-        listen_item.setAttribute("data-listens", listens);
-        render(listen_item, html`
-                <img class="view-item-avatar" src=${shortcut_listens.avi} alt=${shortcut_listens.name}>
-                <div class="info">
-                    <h3>${shortcut_listens.name}</h3>
-                    <p class="colourful" ref=${(el) => p = el}>${tl(trans.listens.count).replace("{c}", listens.toLocaleString(lang))}</p>
-                </div>
-            `);
-        if (settings.colourful_counts && page.type == "artist") {
-          let parsed_scrobble_as_rank = parse_scrobbles_as_rank(listens);
-          listen_item.setAttribute("data-bleh--scrobble-milestone", parsed_scrobble_as_rank.milestone);
-          p.style.setProperty("--hue-over", parsed_scrobble_as_rank.hue);
-          p.style.setProperty("--sat-over", parsed_scrobble_as_rank.sat);
-          p.style.setProperty("--lit-over", parsed_scrobble_as_rank.lit);
-        }
-      });
-    }
-    if (page.type != "artist")
-      listen_container.appendChild(create_divider());
-    create_listen_item(listen_container, {
-      name: "other",
-      listens: -3,
-      link: scrobble_page,
-      button: true,
-      katsune
-    }, page.type);
-    col_main.insertBefore(listen_container, col_main.firstElementChild);
-    if (!katsune)
-      col_main.insertBefore(top_container, col_main.firstElementChild);
-    else
-      page.structure.container.querySelector(".bleh-background").after(top_container);
-    if (page.type == "artist") {
-      let other_container = col_main.querySelector(".personal-stats-item--listeners");
-      if (other_container != null) {
-        let listen_divider = document.createElement("div");
-        listen_divider.classList.add("listen-divider");
-        listen_container.appendChild(listen_divider);
-        let avatars = other_container.querySelectorAll(".personal-stats-listener-avatar img");
-        let count = other_container.querySelector(".header-metadata-display a");
-        let other_listeners = {
-          name: "others",
-          listens: -2,
-          link: scrobble_page,
-          avi: avatars,
-          count: count != null ? clean_number(count.textContent.trim()) : 5,
-          katsune
-        };
-        create_listen_item(listen_container, other_listeners, page.type);
-      }
-    }
-    let interact_container = document.createElement("section");
-    interact_container.classList.add("side-actions");
-    let text2 = document.body.querySelector(".header-new-title").textContent.replaceAll(" ", "+").replaceAll("&", "%26");
-    let artist = document.body.querySelector(".header-new-crumb");
-    if (artist != void 0)
-      text2 = `${text2}+${artist.textContent.replaceAll(" ", "+").replaceAll("&", "%26")}`;
-    let header_actions = document.body.querySelector(".header-new-actions");
-    interact_container.innerHTML = header_actions.innerHTML;
-    let buttons = interact_container.querySelectorAll("button");
-    buttons.forEach((button) => {
-      if (button.classList[0] != "header-new-playlink")
-        button.classList.add("btn", "side-action");
-      else
-        button.classList.add("dropdown-menu-clickable-item");
-      if (button.classList[0] == "header-new-more-button")
-        interact_container.removeChild(button.parentElement);
-      if (button.classList[1] == "header-new-love-button") {
-        button.setAttribute("data-type", "love");
-        let new_text = document.createElement("span");
-        new_text.textContent = tl(trans.love);
-        button.appendChild(new_text);
-      }
-    });
-    let links = interact_container.querySelectorAll("a");
-    links.forEach((button) => {
-      if (button.classList[0] != "header-new-playlink")
-        button.classList.add("btn", "side-action");
-      else
-        button.classList.add("dropdown-menu-clickable-item");
-    });
-    let obsession_form = header_actions.querySelector('form[action$="obsessions"]');
-    if (obsession_form) {
-      let obsession_btn = obsession_form.querySelector("button");
-      obsession_btn.classList = "btn side-action";
-      obsession_btn.setAttribute("data-type", "obsession");
-      obsession_btn.textContent = tl(trans.obsession);
-      interact_container.appendChild(obsession_form);
-    }
-    if (ff("submit_scrobble")) {
-      const can_api = localStorage.getItem("bleh_auth") && localStorage.getItem("bleh_auth_valid") === "true";
-      const source_album = page.structure.main.querySelector(".source-album-name");
-      const source_album_artist = page.structure.main.querySelector(".source-album-artist");
-      let props = {
-        can_api
-      };
-      if (page.type == "track")
-        props = {
-          ...props,
-          pre_track: page.name,
-          pre_artist: page.sister,
-          pre_album: source_album ? source_album.textContent : null,
-          pre_album_artist: source_album_artist ? source_album_artist.textContent : page.sister
-        };
-      else if (page.type == "album")
-        props = {
-          ...props,
-          pre_album: page.name,
-          pre_artist: page.sister,
-          pre_album_artist: page.sister
-        };
-      else if (page.type == "artist")
-        props = {
-          ...props,
-          pre_artist: page.name,
-          pre_album_artist: page.name
-        };
-      const scrobble_btn = html.node`
-            <button class="btn side-action" data-type="add" onclick=${() => submit_scrobble(props)}>
-                ${tl(trans.scrobble)}
-            </button>
-        `;
-      if (!can_api) {
-        tippy(scrobble_btn, {
-          content: tl(trans.requires_api_in_settings)
-        });
-      }
-      interact_container.appendChild(scrobble_btn);
-    }
-    let lotus_btn = null;
-    if (settings.corrections) {
-      lotus_btn = document.createElement("a");
-      lotus_btn.classList.add("dropdown-menu-clickable-item", "lotus", "lotus-btn");
-      lotus_btn.textContent = trans_legacy.en.lotus.correct.name;
-      lotus_btn.href = "https://github.com/katelyynn/lotus/issues/new/choose";
-      lotus_btn.target = "_blank";
-      if (page.corrected)
-        lotus_btn.classList.add("active");
-    }
-    let play_btn = interact_container.querySelector(".header-new-playlink");
-    if (play_btn)
-      interact_container.removeChild(play_btn);
-    if (!page.mobile)
-      page.structure.side.insertBefore(interact_container, page.structure.side.firstElementChild);
-    else
-      page.structure.main.insertBefore(interact_container, page.structure.main.firstElementChild);
-    let new_playlist = page.structure.side.querySelector(":scope > form");
-    if (new_playlist) {
-      let header = new_playlist.querySelector("h3");
-      new_playlist.removeChild(header);
-      let playlist_button = new_playlist.querySelector("button");
-      playlist_button.classList = "btn side-action";
-      playlist_button.setAttribute("data-type", "playlist");
-      interact_container.appendChild(new_playlist);
-    }
-    let metadata = col_main.querySelector(".metadata-column");
-    if (metadata) {
-      let groups = [];
-      let headers = metadata.querySelectorAll(".catalogue-metadata-heading:not(.visible-xs)");
-      headers.forEach((item, index) => {
-        groups[index] = {
-          header: item
-        };
-      });
-      let values = metadata.querySelectorAll(".catalogue-metadata-description:not(.visible-xs)");
-      values.forEach((item, index) => {
-        groups[index].value = item;
-      });
-      render(metadata, html`
-            ${groups.map((group) => html.node`
-                <div class="metadata-group">
-                    ${group.header}
-                    ${group.value}
-                </div>
-            `)}
-        `);
-      if (groups.length > 2) {
-        if (settings.simulate_scroll) {
-          metadata.addEventListener("wheel", (e) => {
-            e.preventDefault();
-            if (e.deltaY > 0) {
-              metadata.scrollBy({
-                top: 0,
-                left: 200,
-                behavior: "smooth"
-              });
-            } else {
-              metadata.scrollBy({
-                top: 0,
-                left: -200,
-                behavior: "smooth"
-              });
-            }
-          });
-        } else {
-          metadata.classList.add("no-scroll-simulation");
-        }
-      }
-    }
-    if (page_is_blocked) {
-      page.structure.main.insertBefore(html.node`
-            <section class="cta blocked-cta">
-                <strong>${tl(trans.blocked_page)}</strong>
-            </section>
-        `, page.structure.main.firstElementChild);
-      return;
-    }
-    let play_on;
-    let play_links;
-    let link_group = document.createElement("div");
-    link_group.classList.add("metadata-group");
-    let link_container = document.createElement("div");
-    link_container.classList.add("music-links");
-    if (page.type == "track") {
-      let header = document.createElement("div");
-      header.classList.add("sub-text", "music-small-header");
-      header.textContent = tl(trans.find_on);
-      link_group.appendChild(header);
-      play_on = page.structure.side.querySelector(".play-this-track-playlinks");
-      page.structure.side.removeChild(play_on.parentElement);
-      play_links = play_on.querySelectorAll("li");
-      play_links.forEach((item) => {
-        let link = item.querySelector(".play-this-track-playlink:not(.visible-xs)");
-        link.classList.add("music-link");
-        let replace = item.querySelector(".replace-playlink");
-        if (link.classList.contains("play-this-track-playlink--youtube"))
-          link.textContent = "YouTube";
-        else if (link.classList.contains("play-this-track-playlink--spotify"))
-          link.textContent = "Spotify";
-        else if (link.classList.contains("play-this-track-playlink--itunes"))
-          link.textContent = "Apple";
-        if (replace) {
-          replace.classList.add("dropdown-menu-clickable-item");
-          item.removeChild(replace);
-          let menu = tippy(link, {
-            theme: "context-menu",
-            content: replace,
-            placement: "right-start",
-            trigger: "manual",
-            interactive: true,
-            interactiveBorder: 10,
-            offset: [0, 0],
-            onShow(instance) {
-              instance.popper.addEventListener("click", (event3) => {
-                instance.hide();
-              });
-            }
-          });
-          register_menu(link, menu);
-        }
-        link_container.appendChild(item);
-      });
-      link_container.appendChild(html.node`
-            <li>
-                <a class="play-this-track-playlink music-link play-this-track-playlink--genius" href="https://genius.com/search?q=${sanitise(page.sister)}+${sanitise(page.name)}" target="_blank">
-                    Genius
-                </a>
-            </li>
-            <li>
-                <a class="play-this-track-playlink music-link play-this-track-playlink--tidal" href="https://listen.tidal.com/search?q=${sanitise(page.sister, " ")} ${sanitise(page.name, " ")}" target="_blank">
-                    Tidal
-                </a>
-            </li>
-        `);
-    } else {
-      let header = document.createElement("div");
-      header.classList.add("sub-text", "music-small-header");
-      header.textContent = tl(trans.find_on);
-      link_group.appendChild(header);
-      if (page.type == "album") {
-        render(link_container, html`
-                <a class="play-this-track-playlink music-link play-this-track-playlink--spotify" href="https://open.spotify.com/search/${sanitise(page.sister, " ")} ${sanitise(page.name, " ")}" target="_blank">
-                    Spotify
-                </a>
-                <a class="play-this-track-playlink music-link play-this-track-playlink--itunes" href="https://music.apple.com/gb/search?term=${sanitise(page.sister, " ")} ${sanitise(page.name, " ")}" target="_blank">
-                    Apple
-                </a>
-                <a class="play-this-track-playlink music-link play-this-track-playlink--youtube-music" href="https://music.youtube.com/search?q=${sanitise(page.sister)}+${sanitise(page.name)}" target="_blank">
-                    YouTube
-                </a>
-                <a class="play-this-track-playlink music-link play-this-track-playlink--tidal" href="https://listen.tidal.com/search?q=${sanitise(page.sister, " ")} ${sanitise(page.name, " ")}" target="_blank">
-                    Tidal
-                </a>
-                <a class="play-this-track-playlink music-link play-this-track-playlink--discogs" href="https://www.discogs.com/search?q=${sanitise(page.sister)}+${sanitise(page.name)}&type=all" target="_blank">
-                    Discogs
-                </a>
-                <a class="play-this-track-playlink music-link play-this-track-playlink--aoty" href="https://www.albumoftheyear.org/search/?q=${sanitise(page.sister)}+${sanitise(page.name)}" target="_blank">
-                    AOTY
-                </a>
-                <a class="play-this-track-playlink music-link play-this-track-playlink--rym" href="https://rateyourmusic.com/search?searchterm=${sanitise(page.sister, " ")} ${sanitise(page.name, " ")}" target="_blank">
-                    RYM
-                </a>
-                <a class="play-this-track-playlink music-link play-this-track-playlink--genius" href="https://genius.com/search?q=${sanitise(page.sister)}+${sanitise(page.name)}" target="_blank">
-                    Genius
-                </a>
-            `);
-      } else {
-        render(link_container, html`
-                <a class="play-this-track-playlink music-link play-this-track-playlink--spotify" href="https://open.spotify.com/search/${sanitise(page.name, " ")}" target="_blank">
-                    Spotify
-                </a>
-                <a class="play-this-track-playlink music-link play-this-track-playlink--itunes" href="https://music.apple.com/gb/search?term=${sanitise(page.name, " ")}" target="_blank">
-                    Apple
-                </a>
-                <a class="play-this-track-playlink music-link play-this-track-playlink--youtube-music" href="https://music.youtube.com/search?q=${sanitise(page.name)}" target="_blank">
-                    YouTube
-                </a>
-                <a class="play-this-track-playlink music-link play-this-track-playlink--tidal" href="https://listen.tidal.com/search?q=${sanitise(page.name, " ")}" target="_blank">
-                    Tidal
-                </a>
-                <a class="play-this-track-playlink music-link play-this-track-playlink--discogs" href="https://www.discogs.com/search?q=${sanitise(page.name)}&type=artist" target="_blank">
-                    Discogs
-                </a>
-                <a class="play-this-track-playlink music-link play-this-track-playlink--aoty" href="https://www.albumoftheyear.org/search/?q=${sanitise(page.name)}" target="_blank">
-                    AOTY
-                </a>
-                <a class="play-this-track-playlink music-link play-this-track-playlink--rym" href="https://rateyourmusic.com/search?searchterm=${sanitise(page.name, " ")}" target="_blank">
-                    RYM
-                </a>
-                <a class="play-this-track-playlink music-link play-this-track-playlink--genius" href="https://genius.com/search?q=${sanitise(page.name)}" target="_blank">
-                    Genius
-                </a>
-            `);
-        let externals = page.structure.side.querySelector(".resource-external-links");
-        if (externals) {
-          page.structure.side.removeChild(externals.parentElement);
-          let externals_links = externals.querySelectorAll(".resource-external-link");
-          externals_links.forEach((link) => {
-            link.classList.add("music-link");
-            let type = link.classList[1];
-            if (type == "resource-external-link--homepage")
-              link.textContent = tl(trans.website);
-            else if (type == "resource-external-link--twitter")
-              link.textContent = "Twitter";
-            else if (type == "resource-external-link--facebook")
-              link.textContent = "Facebook";
-            link_container.appendChild(link);
-          });
-        }
-      }
-    }
-    link_group.appendChild(link_container);
-    col_main.appendChild(link_group);
-    let tags = col_main.querySelector(".catalogue-tags");
-    if (tags) {
-      let header_tags = document.createElement("div");
-      header_tags.classList.add("sub-text", "music-small-header");
-      header_tags.textContent = tl(trans.tags);
-      col_main.appendChild(header_tags);
-      col_main.appendChild(tags);
-    }
-    if (!settings.corrections)
-      return;
-    page.structure.side.appendChild(html.node`
-        <section class="lotus cta">
-             <strong>${tl(trans.lotus_cta[page.corrected]).replace("{t}", tl(trans[`${page.type}_lower`]))}</strong>
-            <a class="see-more" href="https://github.com/katelyynn/lotus/issues/new/choose" target="_blank">${tl(trans.suggest_correction)}</a>
-        </section>
-    `);
-  }
-  function create_listen_item(parent, { name: name2, listens, link, avi, count = 0, button = false, katsune = false }, header_type) {
-    log(`creating listen item of ${name2}, ${count}, ${listens}`, "artist", "info", { avi, link });
-    let listen_item;
-    if (button) listen_item = html.node`<button />`;
-    else listen_item = html.node`<a />`;
-    listen_item.classList.add("btn", "listen-item");
-    listen_item.setAttribute("href", `${root}user/${name2}/library/music/${link}`);
-    listen_item.setAttribute("data-listens", listens);
-    listen_item.setAttribute("id", `listen-item--${name2}`);
-    let p;
-    if (listens > -1) {
-      render(listen_item, html`
-            <img class="view-item-avatar" src=${avi} alt=${name2}>
-            <div class="info">
-                <h3>${name2}</h3>
-                <p class="colourful" ref=${(el) => p = el}>${tl(trans.listens.count).replace("{c}", listens.toLocaleString(lang))}</p>
-            </div>
-        `);
-      let menu = tippy(listen_item, {
-        theme: "context-menu",
-        content: html.node`
-                <a class="dropdown-menu-clickable-item" href="${root}user/${name2}" data-menu-item="view_profile">
-                    ${tl(trans.profile)}
-                </a>
-            `,
-        placement: "right-start",
-        trigger: "manual",
-        interactive: true,
-        interactiveBorder: 10,
-        offset: [0, 0],
-        onShow(instance) {
-          instance.popper.addEventListener("click", (event3) => {
-            instance.hide();
-          });
-        }
-      });
-      register_menu(listen_item, menu);
-    } else if (listens > -2) {
-      render(listen_item, html`
-            <img class="view-item-avatar" src=${avi} alt=${name2}>
-            <div class="info">
-                <h3>${name2}</h3>
-                <p class="colourful" ref=${(el) => p = el}>${tl(trans.listens)}</p>
-            </div>
-        `);
-      let menu = tippy(listen_item, {
-        theme: "context-menu",
-        content: html.node`
-                <a class="dropdown-menu-clickable-item" href="${root}user/${name2}" data-menu-item="view_profile">
-                    ${tl(trans.profile)}
-                </a>
-                <div class="sep"></div>
-                <button class="dropdown-menu-clickable-item" onclick="_open_profile_shortcut_window()" data-menu-item="settings">
-                    ${tl(trans.settings)}
-                </button>
-            `,
-        placement: "right-start",
-        trigger: "manual",
-        interactive: true,
-        interactiveBorder: 10,
-        offset: [0, 0],
-        onShow(instance) {
-          instance.popper.addEventListener("click", (event3) => {
-            instance.hide();
-          });
-        }
-      });
-      register_menu(listen_item, menu);
-    } else if (listens == -3) {
-      listen_item.classList.add("listen-item-other");
-      listen_item.removeAttribute("href");
-      listen_item.setAttribute("onclick", `_other_listener('${link}')`);
-      tippy(listen_item, {
-        content: tl(trans.view_others_library)
-      });
-    } else {
-      render(listen_item, html`
-            ${avi[0] ? html.node`<img class="view-item-avatar" src=${avi[0].getAttribute("src")} alt="">` : ""}
-            ${avi[1] ? html.node`<img class="view-item-avatar" src=${avi[1].getAttribute("src")} alt="">` : ""}
-            ${avi[2] ? html.node`<img class="view-item-avatar" src=${avi[2].getAttribute("src")} alt="">` : ""}
-            <div class="info">
-                <h3>${tl(trans.following)}</h3>
-                <p class="colourful" ref=${(el) => p = el}>${tl(trans.others_count).replace("{c}", count)}</p>
-            </div>
-        `);
-      listen_item.setAttribute("href", `${window.location.href}/+listeners/you-know`);
-    }
-    if (settings.colourful_counts && listens > -1 && header_type == "artist") {
-      let parsed_scrobble_as_rank = parse_scrobbles_as_rank(listens);
-      listen_item.setAttribute("data-bleh--scrobble-milestone", parsed_scrobble_as_rank.milestone);
-      p.style.setProperty("--hue-user", parsed_scrobble_as_rank.hue);
-      p.style.setProperty("--sat-user", parsed_scrobble_as_rank.sat);
-      p.style.setProperty("--lit-user", parsed_scrobble_as_rank.lit);
-    }
-    if (katsune) listen_item.classList.add("icon");
-    parent.appendChild(listen_item);
-    return listen_item;
-  }
-  function show_numbers_on_side(header_type) {
-    let metadata = document.body.querySelectorAll(".header-metadata-tnew-item");
-    let listeners = {};
-    let scrobbles = {};
-    let metascore = {};
-    metadata.forEach((item, index) => {
-      let text2 = item.querySelector(".header-metadata-tnew-title").textContent.trim();
-      let value = item.querySelector(".header-metadata-tnew-display abbr");
-      if (index == 0) {
-        listeners.text = text2;
-        listeners.value = clean_number(value.getAttribute("title"));
-        listeners.abbr = value.textContent.trim();
-      } else if (index == 1) {
-        scrobbles.text = text2;
-        scrobbles.value = clean_number(value.getAttribute("title"));
-        scrobbles.abbr = value.textContent.trim();
-      } else if (index == 2) {
-        let link = item.querySelector("a");
-        if (!link)
-          return;
-        metascore.text = text2;
-        metascore.abbr = value.textContent.trim();
-        metascore.link = link.getAttribute("href");
-      }
-    });
-    page.structure.side.classList.remove("hidden-xs");
-    let panel = page.structure.side.querySelector("section.section-with-separator:has(.listener-trend)");
-    if (!panel) {
-      panel = document.createElement("section");
-      panel.classList.add("section-with-separator");
-      if (!page.mobile)
-        page.structure.side.insertBefore(panel, page.structure.side.firstElementChild);
-      else
-        page.structure.main.insertBefore(panel, page.structure.main.firstElementChild);
-    }
-    panel.classList.add("listen-panel");
-    let row = html.node`
-        <div class="listener-row">
-            <div class="listener-side">
-                <h3>${listeners.text}</h3>
-                <p>${listeners.abbr}</p>
-            </div>
-            <div class="scrobble-side">
-                <h3>${scrobbles.text}</h3>
-                <p>${scrobbles.abbr}</p>
-            </div>
-            ${metascore.text ? html.node`
-            <div class="metascore-side">
-                <h3>${metascore.text}</h3>
-                <p><a href="${metascore.link}" target="_blank">${metascore.abbr}</a></p>
-            </div>
-            ` : ""}
-        </div>
-    `;
-    panel.insertBefore(row, panel.firstElementChild);
-    if (page.mobile)
-      page.structure.main.insertBefore(panel, page.structure.main.firstElementChild);
-    tippy(row.querySelector(".listener-side p"), {
-      content: tl(trans.count_listeners).replace("{c}", listeners.value.toLocaleString(lang))
-    });
-    tippy(row.querySelector(".scrobble-side p"), {
-      content: tl(trans.count_scrobbles).replace("{c}", scrobbles.value.toLocaleString(lang))
-    });
-    if (page.type == "album") {
-      let album_artwork = document.body.querySelector(".artwork-and-metadata-row");
-      if (album_artwork)
-        page.structure.side.insertBefore(album_artwork, page.structure.side.firstElementChild);
-    }
-    let masonry = page.structure.row.querySelector(":scope > .col-sidebar.masonry-right");
-    if (masonry) {
-      page.structure.row.appendChild(masonry);
-    }
-    if (page.type == "album" || page.type == "artist") {
-      let upper = document.body.querySelector(".col-main");
-      upper.classList.add("upper-overview-to-hide");
-      page.structure.row.appendChild(upper);
-      let new_upper = document.createElement("section");
-      new_upper.classList.add("top-overview-panel");
-      new_upper.setAttribute("data-page-type", page.type);
-      new_upper.innerHTML = upper.innerHTML;
-      page.structure.main.insertBefore(new_upper, page.structure.main.firstElementChild);
-    }
-    if (page.type == "track") {
-      let video_col = document.body.querySelector(".track-overview-video-column.col-sidebar");
-      if (!video_col) {
-        video_unavailable(video_col);
-        return;
-      }
-      video_col.classList.remove("col-sidebar");
-      page.structure.side.insertBefore(video_col, page.structure.side.firstElementChild);
-      let video = video_col.querySelector(".video-preview");
-      if (!video) {
-        video_unavailable(video_col);
-        return;
-      }
-      video_col.classList.remove("col-sidebar");
-      page.structure.side.insertBefore(video_col, page.structure.side.firstElementChild);
-      let playlink = video.querySelector(".video-preview-playlink a");
-      let replace = video_col.querySelector(".video-preview-replace a");
-      video.appendChild(html.node`
-            <a class="link-block-cover-link" href=${playlink.href} target="_blank" />
-        `);
-      playlink.classList = "see-more";
-      replace.classList = "see-more add";
-      video.after(html.node`
-            <div class="video-actions sub-text">
-                ${replace}
-                ${playlink}
-            </div>
-        `);
-      playlink.textContent = tl(trans.watch_video);
-      playlink.removeAttribute("title");
-      replace.textContent = tl(trans.replace);
-    }
-  }
-  function video_unavailable(video_col = null) {
-    let cta = page.structure.side.querySelector(".video-preview-upload-cta");
-    if (cta)
-      return;
-    if (video_col)
-      page.structure.side.removeChild(video_col);
-    page.structure.side.insertBefore(html.node`
-        <section class="video-placeholder">
-            <div class="bleh-icon" style="--icon: var(--icon-16-video-broken)"></div>
-            ${tl(trans.video_removed)}
-        </section>
-    `, page.structure.side.firstElementChild);
-    let links = page.structure.side.querySelector(".external-links-section .play-this-track-playlinks");
-    if (links)
-      links.classList.add("video-unavailable");
-  }
-  function bleh_music_page_charts() {
-    if (!ff("music_page_charts"))
-      return;
-    log("beginning replacement", "music charts");
-    let panel = page.structure.container.querySelector(".listen-panel");
-    let trend = panel.querySelector(".listener-trend");
-    if (!trend) return;
-    let previous_chart = panel.querySelector(".scrobble-canvas-container");
-    if (previous_chart)
-      panel.removeChild(previous_chart);
-    let table = trend.querySelector("tbody");
-    let days = table.querySelectorAll("tr");
-    let labels = [];
-    let values = [];
-    let has_seen_more_than_0 = false;
-    days.forEach((day, index) => {
-      if (!day) return;
-      let label = moment(day.querySelector("time").getAttribute("datetime"));
-      let value = day.querySelector(".js-value");
-      console.log("day", index, label, day, day.innerHTML);
-      if (!value.getAttribute("data-value"))
-        value = 0;
-      else
-        value = value.getAttribute("data-value");
-      if (value == "0" && index < 120 && !has_seen_more_than_0)
-        return;
-      has_seen_more_than_0 = true;
-      labels.push(label);
-      values.push(value);
-    });
-    prep_chart_colours();
-    let scrobble_canvas_container = document.createElement("div");
-    scrobble_canvas_container.classList.add("scrobble-canvas-container");
-    let scrobble_canvas = document.createElement("canvas");
-    scrobble_canvas.classList.add("scrobble-canvas");
-    let gradient = scrobble_canvas.getContext("2d").createLinearGradient(0, 0, 0, 160);
-    try {
-      gradient.addColorStop(0, page.state.chart_colours.link_bg_col);
-      gradient.addColorStop(1, page.state.chart_colours.link_bg_col_2);
-    } catch (e) {
-      gradient = page.state.chart_colours.link_bg_col;
-    }
-    Chart.defaults.color = page.state.chart_colours.text_col;
-    Chart.defaults.font.family = page.state.chart_colours.font;
-    let scrobble_chart = new Chart(scrobble_canvas.getContext("2d"), {
-      type: "line",
-      data: {
-        labels,
-        datasets: [{
-          data: values,
-          borderWidth: 2,
-          backgroundColor: gradient,
-          borderColor: page.state.chart_colours.link_col,
-          fill: true,
-          pointRadius: 0,
-          pointHitRadius: 20,
-          tension: 0.1
-        }]
-      },
-      options: page.state.chart_line_options
-    });
-    scrobble_canvas_container.appendChild(scrobble_canvas);
-    panel.appendChild(scrobble_canvas_container);
-    trend.style.setProperty("display", "none");
-    log("finished", "music charts");
-  }
-  function bleh_top_listeners() {
-    if (!ff("unify_top_listeners"))
-      return;
-    let panel = page.structure.main.querySelector(":scope > .buffer-standard");
-    let view_buttons = document.createElement("div");
-    view_buttons.classList.add("view-buttons-wrapper");
-    view_buttons.innerHTML = `
-        <div class="view-buttons">
-            <button class="btn view-item" id="toggle-list_view-1" data-toggle="list_view" data-toggle-value="1" onclick="_update_item('list_view', 1)">
-                ${tl(trans.grid)}
-            </button>
-            <button class="btn view-item" id="toggle-list_view-0" data-toggle="list_view" data-toggle-value="0" onclick="_update_item('list_view', 0)">
-                ${tl(trans.list)}
-            </button>
-        </div>
-    `;
-    panel.insertBefore(view_buttons, panel.firstElementChild);
-    refresh_all();
-    let legacy_top_listeners_container = panel.querySelector(".top-listeners");
-    let legacy_top_listeners = legacy_top_listeners_container.querySelectorAll(".top-listeners-item");
-    let new_container = document.createElement("ul");
-    new_container.classList.add("user-list", "top-listeners-list");
-    legacy_top_listeners.forEach((listener, index) => {
-      let new_listener = document.createElement("li");
-      new_listener.classList.add("user-list-item", "listener-list-item");
-      let position = index + 1;
-      if (page.requested.page != null && page.requested.page != "1") {
-        position += (parseInt(page.requested.page) - 1) * 30;
-      }
-      let name_wrap = listener.querySelector(".top-listeners-item-name a");
-      let name2 = name_wrap.textContent;
-      let track_wrap = listener.querySelector(".top-listeners-track");
-      let avatar3 = listener.querySelector(".top-listeners-item-image");
-      let follow = listener.querySelector(".class");
-      new_listener.innerHTML = `
-            <div class="user-list-inner-wrap">
-                <span class="listener-list-position">
-                    ${position}
-                </span>
-                <h4 class="user-list-name">
-                    <a class="user-list-link link-block-target" href="${name_wrap.getAttribute("href")}">
-                        ${name2}
-                    </a>
-                </h4>
-                <span class="avatar user-list-avatar">
-                    ${avatar3.innerHTML}
-                </span>
-                ${follow ? follow.outerHTML : ""}
-                ${track_wrap ? `
-                <div class="user-list-description">
-                    <p class="user-list-about-me">
-                        ${track_wrap.innerHTML}
-                    </p>
-                </div>
-                ` : ""}
-            </div>
-        `;
-      let badge = patch_avatar(new_listener.querySelector(".user-list-avatar"), name2, "listener");
-      if (badge.type) {
-        new_listener.querySelector(".user-list-link").classList.add(`user-status--bleh-${badge.type}`, `user-status--bleh-user-${name2}`);
-        new_listener.classList.add("colourful", `user-status--bleh-${badge.type}`, `user-status--bleh-user-${name2}`);
-      }
-      if (track_wrap) {
-        let track_link = new_listener.querySelector(".user-list-about-me a");
-        let artist = return_artist_from_track(track_link.getAttribute("href"), false);
-        let track = correct_item_by_artist(track_link.textContent.trim(), artist);
-        track_link.textContent = track;
-      }
-      new_container.appendChild(new_listener);
-    });
-    view_buttons.after(new_container);
-    panel.removeChild(legacy_top_listeners_container);
   }
 
   // src/components/profile_header.js
@@ -10807,27 +9584,27 @@
           theme: "context-menu",
           content: html.node`
                     <h4 class="menu-header">${tl(trans.compare_plays)}</h4>
-                    <a class="dropdown-menu-clickable-item" href="${root}user/${page.name}/library/music/${sanitise(taste_artists[0])}" data-menu-item="shared-artist">
+                    <a class="dropdown-menu-clickable-item" href="${root}user/${page.name}/library/music/${redirect()}${sanitise(taste_artists[0])}" data-menu-item="shared-artist">
                         <img class="view-item-avatar" src="${page.avatar}" alt="${page.name}">${taste_artists[0]}
                     </a>
-                    <a class="dropdown-menu-clickable-item" href="${root}user/${auth.name}/library/music/${sanitise(taste_artists[0])}" data-menu-item="shared-artist">
+                    <a class="dropdown-menu-clickable-item" href="${root}user/${auth.name}/library/music/${redirect()}${sanitise(taste_artists[0])}" data-menu-item="shared-artist">
                         <img class="view-item-avatar" src="${auth.avatar}" alt="${auth.name}">${taste_artists[0]}
                     </a>
                     ${taste_artists.length >= 2 ? html.node`
                     <div class="sep"></div>
-                    <a class="dropdown-menu-clickable-item" href="${root}user/${page.name}/library/music/${sanitise(taste_artists[1])}" data-menu-item="shared-artist">
+                    <a class="dropdown-menu-clickable-item" href="${root}user/${page.name}/library/music/${redirect()}${sanitise(taste_artists[1])}" data-menu-item="shared-artist">
                         <img class="view-item-avatar" src="${page.avatar}" alt="${page.name}">${taste_artists[1]}
                     </a>
-                    <a class="dropdown-menu-clickable-item" href="${root}user/${auth.name}/library/music/${sanitise(taste_artists[1])}" data-menu-item="shared-artist">
+                    <a class="dropdown-menu-clickable-item" href="${root}user/${auth.name}/library/music/${redirect()}${sanitise(taste_artists[1])}" data-menu-item="shared-artist">
                         <img class="view-item-avatar" src="${auth.avatar}" alt="${auth.name}">${taste_artists[1]}
                     </a>
                     ` : ""}
                     ${taste_artists.length >= 3 ? html.node`
                     <div class="sep"></div>
-                    <a class="dropdown-menu-clickable-item" href="${root}user/${page.name}/library/music/${sanitise(taste_artists[2])}" data-menu-item="shared-artist">
+                    <a class="dropdown-menu-clickable-item" href="${root}user/${page.name}/library/music/${redirect()}${sanitise(taste_artists[2])}" data-menu-item="shared-artist">
                         <img class="view-item-avatar" src="${page.avatar}" alt="${page.name}">${taste_artists[2]}
                     </a>
-                    <a class="dropdown-menu-clickable-item" href="${root}user/${auth.name}/library/music/${sanitise(taste_artists[2])}" data-menu-item="shared-artist">
+                    <a class="dropdown-menu-clickable-item" href="${root}user/${auth.name}/library/music/${redirect()}${sanitise(taste_artists[2])}" data-menu-item="shared-artist">
                         <img class="view-item-avatar" src="${auth.avatar}" alt="${auth.name}">${taste_artists[2]}
                     </a>
                     ` : ""}
@@ -12226,7 +11003,7 @@
         track_artist.innerHTML = `${track_artist.innerHTML},`;
         let guest_element = document.createElement("a");
         guest_element.classList.add("header-new-crumb");
-        guest_element.setAttribute("href", `${root}music/${sanitise(song_guests[guest])}`);
+        guest_element.setAttribute("href", `${root}music/${redirect()}${sanitise(song_guests[guest])}`);
         guest_element.textContent = song_guests[guest];
         track_artist.appendChild(guest_element);
       }
@@ -12401,6 +11178,217 @@
       banners[page.name] = img;
     }
     localStorage.setItem("bleh_profile_banners", JSON.stringify(banners));
+  }
+
+  // src/components/toggle.js
+  function toggle({
+    value = false,
+    type = "toggle",
+    name: name2 = "",
+    title = "",
+    body = "",
+    small = "",
+    disabled = false,
+    data: data2 = "",
+    func = null
+  }) {
+    let checkbox;
+    let state;
+    let elem = html.node`
+        <div class="setting standalone" data-type=${type} onclick=${() => {
+      if (disabled) return;
+      let current = checkbox.checked;
+      if (func) func(!current);
+      checkbox.checked = !current;
+      state.setAttribute("aria-checked", !current);
+    }}>
+            <div class="heading">
+                <h5>${title}</h5>
+                ${body != "" ? html.node`<p>${body}</p>` : ""}
+                ${small != "" ? html.node`<small>${small}</small>` : ""}
+            </div>
+            ${type == "toggle" ? html.node`
+            <div class="toggle-wrap">
+                <input type="checkbox" ref=${(el) => checkbox = el} name=${name2} value=${data2} checked=${value} />
+                <button class="toggle" ref=${(el) => state = el} aria-checked=${value}>
+                    <div class="dot" />
+                </button>
+            </div>
+            ` : html.node`
+            <div class="check">
+                <input type="checkbox" ref=${(el) => checkbox = el} name=${name2} value=${data2} checked=${value} disabled=${disabled} />
+                <div class="box" ref=${(el) => state = el} aria-checked=${value} disabled=${disabled}>
+                    <div class="bleh-icon" />
+                </div>
+            </div>
+            `}
+        </div>
+    `;
+    elem.check = () => {
+      if (disabled) return;
+      if (func) func(true);
+      checkbox.checked = true;
+      state.setAttribute("aria-checked", true);
+    };
+    elem.uncheck = () => {
+      if (disabled) return;
+      if (func) func(false);
+      checkbox.checked = false;
+      state.setAttribute("aria-checked", false);
+    };
+    elem.disabled = (state2 = null) => {
+      if (state2 === null) return checkbox.getAttribute("disabled") || false;
+      if (state2 === true)
+        checkbox.setAttribute("disabled", "true");
+      else
+        checkbox.removeAttribute("disabled");
+      return state2;
+    };
+    return elem;
+  }
+
+  // src/components/scrobble.js
+  function submit_scrobble({
+    pre_track = "",
+    pre_album = "",
+    pre_artist = "",
+    pre_album_artist = "",
+    func,
+    can_api
+  }) {
+    if (!can_api) can_api = localStorage.getItem("bleh_auth") && localStorage.getItem("bleh_auth_valid") === "true";
+    if (!can_api) {
+      window.location.href = `${root}bleh/profiles`;
+      return;
+    }
+    const random = random_list[Math.floor(Math.random() * random_list.length)];
+    let track;
+    let album;
+    let artist;
+    let album_artist;
+    let use_current;
+    let date;
+    let create_scrobble;
+    let max_date = /* @__PURE__ */ new Date();
+    max_date.setDate(max_date.getDate() + 1);
+    dialog({
+      id: "submit_scrobble",
+      title: tl(trans.new_scrobble),
+      body: html.node`
+            <div class="new-scrobble-form">
+                <p class="generic-label">${tl(trans.track)}</p>
+                ${track = input({
+        type: "text",
+        value: pre_track,
+        placeholder: tl(trans.example).replace("{v}", random.track),
+        warn_if_empty: true
+      })}
+                <p class="generic-label">${tl(trans.album)}</p>
+                ${album = input({
+        type: "text",
+        value: pre_album,
+        placeholder: tl(trans.example).replace("{v}", random.album)
+      })}
+                <p class="generic-label">${tl(trans.artist)}</p>
+                ${artist = input({
+        type: "text",
+        value: pre_artist,
+        placeholder: tl(trans.example).replace("{v}", random.artist),
+        warn_if_empty: true
+      })}
+                <p class="generic-label">${tl(trans.album_artist)}</p>
+                ${album_artist = input({
+        type: "text",
+        value: pre_album_artist,
+        placeholder: tl(trans.example).replace("{v}", random.album_artist)
+      })}
+                <p class="generic-label">${tl(trans.time)}</p>
+                <div class="toggle-and-time">
+                    ${use_current = toggle({
+        value: true,
+        type: "checkbox",
+        title: tl(trans.use_current_time),
+        func: (state) => {
+          date.disabled(state);
+        }
+      })}
+                    ${date = input({
+        type: "date",
+        max: `${max_date.getFullYear()}-${pad2(max_date.getMonth() + 1)}-${pad2(max_date.getDate())}`,
+        disabled: true
+      })}
+                </div>
+            </div>
+            <div class="modal-footer">
+                <button class="see-more cancel" onclick=${() => dialog_rm2({ id: "submit_scrobble" })}>
+                    ${tl(trans.cancel)}
+                </button>
+                <div class="fill" />
+                <button class="btn primary icon" data-type="add" ref=${(el) => create_scrobble = el} onclick=${async () => {
+        if (track.value() == "" || artist.value() == "") {
+          notify({
+            id: "submit_scrobble",
+            title: tl(trans.new_scrobble),
+            body: tl(trans.missing_fields),
+            type: "error"
+          });
+          return;
+        }
+        track.disabled(true);
+        album.disabled(true);
+        artist.disabled(true);
+        album_artist.disabled(true);
+        use_current.disabled(true);
+        date.disabled(true);
+        create_scrobble.disabled = true;
+        if (album.value() != "" && album_artist.value() == "") album_artist.value(artist.value());
+        let params = {
+          sk: localStorage.getItem("bleh_auth"),
+          artist: artist.value(),
+          track: track.value(),
+          timestamp: Math.floor(date.value() / 1e3)
+        };
+        if (album.value() != "") params.album = album.value();
+        if (album_artist.value() != "") params.albumArtist = album_artist.value();
+        const res = await fetch(
+          "https://jufufu.katelyn.moe/api/lastfm",
+          {
+            method: "POST",
+            headers: { "content-type": "application/json" },
+            body: JSON.stringify({
+              method: "track.scrobble",
+              params
+            })
+          }
+        );
+        const json = await res.json();
+        log("received response", "submit scrobble", "info", { result: json });
+        if (json.error) {
+          log("error", "submit scrobble", "error");
+          notify({
+            id: "submit_scrobble",
+            title: tl(trans.new_scrobble),
+            body: json.message,
+            type: "error",
+            persist: true
+          });
+          dialog_rm2({ id: "submit_scrobble" });
+          return;
+        }
+        notify({
+          id: "submit_scrobble",
+          title: tl(trans.new_scrobble),
+          body: params.track,
+          type: "success"
+        });
+        dialog_rm2({ id: "submit_scrobble" });
+        if (func) func();
+      }}>
+                    ${tl(trans.new)}
+                </button>
+            </div>
+        `
+    });
   }
 
   // src/pages/profile.js
@@ -13136,12 +12124,12 @@
         `);
       let song_artist_element = document.createElement("div");
       song_artist_element.classList.add("featured-item-artist");
-      song_artist_element.innerHTML = `<a href="${root}music/${sanitise(formatted_title[2])}">${formatted_title[2]}</a>`;
+      song_artist_element.innerHTML = `<a href="${root}music/${redirect()}${sanitise(formatted_title[2])}">${formatted_title[2]}</a>`;
       let song_guests = formatted_title[3];
       for (let guest in song_guests) {
         song_artist_element.innerHTML = `${song_artist_element.innerHTML},`;
         let guest_element = document.createElement("a");
-        guest_element.setAttribute("href", `${root}music/${sanitise(song_guests[guest])}`);
+        guest_element.setAttribute("href", `${root}music/${redirect()}${sanitise(song_guests[guest])}`);
         guest_element.textContent = song_guests[guest];
         song_artist_element.appendChild(guest_element);
       }
@@ -13934,320 +12922,1338 @@
     };
   }
 
-  // src/config.js
-  function create_settings_template() {
-    return { dev: false };
-  }
-  function load_settings(skip = false) {
-    if (!skip) {
-      for (let setting2 in settings_store) {
-        if (settings[setting2] == null)
-          settings[setting2] = settings_store[setting2].default;
-      }
-    }
-    log(`branch ${settings.branch}`, "load");
-    if (!settings.theme_type) {
-      if (settings.theme == "light" || settings.theme == "ink")
-        settings.theme_type = "light";
-      else
-        settings.theme_type = "dark";
-    }
-    for (let setting2 in settings_template)
-      if (settings[setting2] == void 0)
-        settings[setting2] = settings_template[setting2];
-    if (settings.seasonal_particles == true)
-      settings.seasonal_particles = "all";
-    else if (settings.seasonal_particles == false)
-      settings.seasonal_particles = "none";
-    if (settings.seasonal_particles_reduced == true) {
-      settings.seasonal_particles = "less";
-      delete settings.seasonal_particles_reduced;
-    } else if (settings.seasonal_particles_reduced == false) {
-      delete settings.seasonal_particles_reduced;
-    }
-    if (settings.font_weight == 480)
-      settings.font_weight = settings_store.font_weight.default;
-    if (settings.font_weight_medium == 650)
-      settings.font_weight_medium = settings_store.font_weight_medium.default;
-    if (settings.font_weight_bold == 730)
-      settings.font_weight_bold = settings_store.font_weight_bold.default;
-    for (let setting2 in settings) {
-      if ((setting2 == "hue" || setting2 == "sat" || setting2 == "lit") && settings.hue == settings_base.hue.value && settings.sat == settings_base.sat.value && settings.lit == settings_base.lit.value) continue;
-      try {
-        document.body.style.setProperty(`--${settings_base[setting2].css}`, `${settings[setting2]}${settings_base[setting2].unit}`);
-      } catch (e) {
-        log(`information for ${setting2} not accessible`, "settings", "log");
-      }
-      document.documentElement.setAttribute(`data-bleh--${setting2}`, `${settings[setting2]}`);
-    }
-    load_skus();
-    localStorage.setItem("bleh", JSON.stringify(settings));
-    if (document.body.classList.contains("user-dashboard-layout")) {
-      document.documentElement.setAttribute("data-bleh--theme", "oled");
-      page.state.settings_reload = true;
-    }
-    load_chart_colours();
-  }
-  function toggle_theme() {
-    if (page.subpage.startsWith("listening-report"))
+  // src/pages/gallery.js
+  function bleh_gallery() {
+    if (page.subpage != "image")
       return;
-    let current_theme = settings.theme;
-    if (current_theme == "dark")
-      current_theme = "darker";
-    else if (current_theme == "darker")
-      current_theme = "oled";
-    else if (current_theme == "oled" || current_theme == "classic")
-      current_theme = "light";
-    else if (current_theme == "light")
-      current_theme = "ink";
-    else if (current_theme == "ink")
-      current_theme = "dark";
-    show_theme_change_in_menu(current_theme);
-    save_setting("theme", current_theme);
-    chart_reflow();
-  }
-  unsafeWindow.change_theme_from_settings = function(theme) {
-    settings.theme = theme;
-    if (theme == "light" || theme == "ink")
-      settings.theme_type = "light";
-    else
-      settings.theme_type = "dark";
-    document.documentElement.setAttribute(`data-bleh--theme`, `${theme}`);
-    document.documentElement.setAttribute(`data-bleh--theme_type`, `${settings.theme_type}`);
-    show_theme_change_in_settings(theme);
-    show_theme_change_in_menu(theme);
-    localStorage.setItem("bleh", JSON.stringify(settings));
-  };
-  function change_theme_from_menu(theme) {
-    if (page.subpage.startsWith("listening-report")) return;
-    save_setting("theme", theme);
-    show_theme_change_in_menu(theme);
-    chart_reflow();
-  }
-  function reset_all() {
-    for (let item in settings_base)
-      reset_item(item);
-  }
-  function refresh_all(search = document) {
-    for (let item in settings_base)
-      update_item(item, settings[item], false, search);
-  }
-  function reset_item(item) {
-    update_item(item, settings_base[item].value);
-  }
-  function update_params(params = {}) {
-    for (let item in params) {
-      update_item(item, params[item]);
-    }
-  }
-  unsafeWindow._reset_all = function() {
-    reset_all();
-  };
-  unsafeWindow._reset_item = function(item) {
-    reset_item(item);
-  };
-  unsafeWindow._update_params = function(params = {}) {
-    update_params(params);
-  };
-  unsafeWindow._update_item = function(item, value) {
-    update_item(item, value);
-  };
-  function update_item(item, value, modify = true, search = document) {
-    let container = search.querySelector(`#container-${item}`);
-    if (container)
-      console.info(container);
-    else if (settings_base[item].type != "slider" && settings_base[item].type != "options")
+    log("focusing on image", "gallery");
+    let image_sidebar = page.structure.side.querySelector(".js-gallery-image-details > div");
+    if (!image_sidebar) return;
+    if (image_sidebar.hasAttribute("data-bleh-gallery"))
       return;
+    image_sidebar.setAttribute("data-bleh-gallery", "true");
+    if (!ff("new_gallery_experience")) {
+      patch_gallery_focused_image(image_sidebar, page.structure.container.querySelector(".gallery-image-buttons"));
+      return;
+    }
+    let image_details;
+    let gallery_section;
+    let first = false;
     try {
-      let new_value = false;
-      if (value != settings[item])
-        new_value = true;
-      if ((settings_base[item].require_reload == true || settings_base[item].require_reload == "partial" && page.type != "bleh_settings") && new_value)
-        request_reload();
-      if (settings_base[item].type == "slider" && modify)
-        settings[item] = value;
-      if (!modify)
-        console.info(item, value, modify);
-      if (settings_base[item].type == "slider") {
-        try {
-          let slider = search.querySelector(`#slider-${item}`);
-          search.querySelector(`#value-${item}`).textContent = `${settings[item]}${settings_base[item].unit}`;
-          slider.value = settings[item];
-          search.querySelector(`#slider-track-${item}`).style.setProperty("--percent", `${settings[item] / slider.getAttribute("max") * 100}%`);
-        } catch (e) {
-        }
-        document.body.style.setProperty(`--${settings_base[item].css}`, `${value}${settings_base[item].unit}`);
-        document.documentElement.setAttribute(`data-bleh--${item}`, `${value}`);
-        if (item == "hue" || item == "sat" || item == "lit") {
-          if (settings.hue == settings_base.hue.value && settings.sat == settings_base.sat.value && settings.lit == settings_base.lit.value && settings.seasonal && stored_season.id != "none") {
-            document.body.style.removeProperty(`--${settings_base.hue.css}`);
-            document.body.style.removeProperty(`--${settings_base.sat.css}`);
-            document.body.style.removeProperty(`--${settings_base.lit.css}`);
-            document.documentElement.setAttribute("data-bleh--hsl-override", "true");
-          } else {
-            document.documentElement.setAttribute("data-bleh--hsl-override", "false");
-          }
-        }
-      } else if (settings_base[item].type == "toggle") {
-        if (settings[item] == settings_base[item].values[0] && modify) {
-          settings[item] = settings_base[item].values[1];
-          search.querySelector(`#toggle-${item}`).setAttribute("aria-checked", false);
-          document.body.style.setProperty(`--${item}`, settings_base[item].values[1]);
-          document.documentElement.setAttribute(`data-bleh--${item}`, `${settings_base[item].values[1]}`);
-        } else if (modify) {
-          settings[item] = settings_base[item].values[0];
-          console.log(`toggle-${item}`);
-          search.querySelector(`#toggle-${item}`).setAttribute("aria-checked", true);
-          document.body.style.setProperty(`--${item}`, settings_base[item].values[0]);
-          document.documentElement.setAttribute(`data-bleh--${item}`, `${settings_base[item].values[0]}`);
-        } else {
-          if (settings[item] == settings_base[item].values[0]) {
-            search.querySelector(`#toggle-${item}`).setAttribute("aria-checked", true);
-          } else {
-            search.querySelector(`#toggle-${item}`).setAttribute("aria-checked", false);
-          }
-        }
-      } else if (settings_base[item].type == "options") {
-        if (modify) {
-          settings[item] = value;
-          document.body.style.setProperty(`--${item}`, value);
-          document.documentElement.setAttribute(`data-bleh--${item}`, value);
-          let toggle2 = document.getElementById(`toggle-${item}-${value}`);
-          if (toggle2)
-            toggle2.setAttribute("aria-checked", true);
-          let other_toggles = search.querySelectorAll(`[data-toggle="${item}"]`);
-          other_toggles.forEach((toggle3) => {
-            let other_value = toggle3.getAttribute("data-toggle-value");
-            if (other_value == value)
-              return;
-            else
-              toggle3.setAttribute("aria-checked", false);
-          });
-          if ((item == "chart_view" || item == "chart_bar_axis") && page.type == "user" && page.subpage.startsWith("library"))
-            bleh_glacier_date_graph_generate();
-        } else {
-          if (settings[item] == value) {
-            document.getElementById(`toggle-${item}-${value}`).setAttribute("aria-checked", true);
-          } else {
-            document.getElementById(`toggle-${item}-${value}`).setAttribute("aria-checked", false);
-          }
-        }
+      gallery_section = page.structure.main.querySelector(".gallery-section");
+      if (gallery_section) {
+        first = true;
+        if (ff("short"))
+          page.structure.row.insertBefore(gallery_section, page.structure.content);
+        else
+          page.structure.nav.after(gallery_section);
+        image_details = html.node`
+                <section class="image-details" />
+            `;
+      } else {
+        image_details = page.structure.main.querySelector(".image-details");
+        image_details.innerHTML = "";
       }
-      if (modify)
-        log(`updated ${item} to ${settings[item]}`, "settings");
-      localStorage.setItem("bleh", JSON.stringify(settings));
     } catch (e) {
-      console.error(e);
+      gallery_section = page.structure.container.querySelector(".gallery-section");
+      image_details = page.structure.main.querySelector(".image-details");
+      image_details.innerHTML = "";
     }
-    if (container) {
-      if (settings[item] != settings_base[item].value)
-        container.classList.add("modified");
+    image_details.appendChild(image_sidebar);
+    let image_title = image_details.querySelector(".gallery-image-title");
+    let image_date = image_details.querySelector(".gallery-image-uploaded-by");
+    if (image_title.textContent.trim() == "") {
+      image_title.classList.add("gallery-image-title-empty");
+      image_title.textContent = trans_legacy.en.gallery.empty.title;
+    }
+    let breadcrumbs = document.body.querySelector(".content-top-lower-row");
+    let breadcrumb_root = breadcrumbs.querySelector("a");
+    let breadcrumb_name = breadcrumbs.querySelector(".subpage-title");
+    let image_title_container = document.createElement("div");
+    image_title_container.classList.add("image-title-container");
+    image_title_container.innerHTML = `
+        <div class="sub-text">
+            <div class="breadcrumb">
+                ${breadcrumb_root.outerHTML}
+                <div class="breadcrumb-name">
+                    ${breadcrumb_name.textContent}
+                </div>
+            </div>
+            ${image_date.outerHTML}
+        </div>
+        <div class="title-layer">
+            ${image_title.outerHTML}
+            <div class="vote-number" data-side="pos">+0</div>
+        </div>
+    `;
+    image_details.insertBefore(image_title_container, image_sidebar);
+    breadcrumbs.style.setProperty("display", "none");
+    page.structure.main.insertBefore(image_details, page.structure.main.firstElementChild);
+    if (first) image_details.after(html.node`<div class="sep" />`);
+    let description = image_details.querySelector(".gallery-image-description");
+    if (!description) {
+      description = document.createElement("p");
+      description.classList.add("gallery-image-description", "gallery-image-description-empty");
+      description.textContent = trans_legacy.en.gallery.empty.description;
+      image_details.querySelector("[data-image-url]").appendChild(description);
+    }
+    let buttons = image_details.querySelector(".gallery-image-buttons");
+    let button_container = document.createElement("div");
+    button_container.classList.add("button-container-wrapper");
+    button_container.appendChild(buttons);
+    let vote_buttons = buttons.querySelector(".gallery-image-vote-buttons");
+    vote_buttons.after(create_divider());
+    let positive_btn = vote_buttons.querySelector(':is([data-ajax-form-state=""] .gallery-image-vote-up-off, [data-ajax-form-state="up-voted"] .gallery-image-vote-up-on, [data-ajax-form-state="down-voted"] .gallery-image-vote-up-off)').cloneNode(true);
+    let negative_btn = vote_buttons.querySelector(':is([data-ajax-form-state=""] .gallery-image-vote-down-off, [data-ajax-form-state="up-voted"] .gallery-image-vote-down-off, [data-ajax-form-state="down-voted"] .gallery-image-vote-down-on)').cloneNode(true);
+    let positive = parseInt(positive_btn.textContent.replace(trans_legacy.en.gallery.up, ""));
+    let negative = parseInt(negative_btn.textContent.replace(trans_legacy.en.gallery.down, ""));
+    let number = positive - negative;
+    let is_negative = number < 0;
+    console.info(positive_btn, positive, negative_btn, negative, number);
+    let vote_badge = image_title_container.querySelector(".vote-number");
+    vote_badge.textContent = `${is_negative ? "" : "+"}${number}`;
+    vote_badge.setAttribute("data-side", is_negative ? "neg" : "pos");
+    tippy(vote_badge, {
+      content: trans_legacy.en.gallery.vote
+    });
+    let buttons_extra = document.createElement("div");
+    buttons_extra.classList.add("gallery-image-buttons", "gallery-image-buttons-extra");
+    button_container.appendChild(buttons_extra);
+    image_details.appendChild(button_container);
+    let open_button = html.node`
+        <button class="image-open-button" onclick=${() => expand_gallery_image()}>
+            ${tl(trans.expand)}
+        </button>
+    `;
+    tippy(open_button, {
+      content: tl(trans.expand_to_full_resolution)
+    });
+    buttons_extra.appendChild(open_button);
+    let share_button = html.node`
+        <button class="image-share-button" onclick=${() => share(window.location.href)}>
+            ${tl(trans.share)}
+        </button>
+    `;
+    buttons_extra.appendChild(share_button);
+    share_button.after(create_divider());
+    let delete_button = image_details.querySelector(".gallery-image-delete");
+    if (delete_button)
+      buttons_extra.appendChild(delete_button);
+    let report_button = image_details.querySelector(".gallery-image-report-form");
+    let report_text = report_button.querySelector("button");
+    tippy(report_text, {
+      content: report_text.textContent
+    });
+    report_text.textContent = tl(trans.report);
+    buttons_extra.appendChild(report_button);
+    let star_buttons = image_details.querySelectorAll(".gallery-image-preferred-button :is(button, a)");
+    star_buttons.forEach((star_button) => {
+      star_button.removeAttribute("title");
+      let text2 = star_button.querySelector(".gallery-image-preferred-states");
+      text2.textContent = tl(trans.star);
+    });
+    let view_all_container = page.structure.main.querySelector(".more-link-fullwidth-right-flush-top");
+    if (view_all_container) {
+      let side_actions = document.createElement("section");
+      side_actions.classList.add("side-actions");
+      if (!page.mobile)
+        page.structure.side.appendChild(side_actions);
       else
-        container.classList.remove("modified");
+        page.structure.main.appendChild(side_actions);
+      let view_all = view_all_container.querySelector("a");
+      view_all.classList.add("btn", "side-action");
+      view_all.setAttribute("data-type", "gallery");
+      side_actions.appendChild(view_all);
+      page.structure.main.removeChild(view_all_container);
+      if (page.type == "artist" || ff("display_album_bookmark")) {
+        let view_saved = document.createElement("a");
+        view_saved.classList.add("btn", "side-action");
+        view_saved.setAttribute("href", `${view_all.getAttribute("href")}?tab=saved`);
+        view_saved.setAttribute("data-type", "gallery-saved");
+        view_saved.textContent = trans_legacy.en.gallery.bookmarks.link;
+        side_actions.appendChild(view_saved);
+      }
     }
-    if (item == "hue" || item == "sat" || item == "lit") {
-      update_colour_swatches();
-      load_chart_colours();
-    }
+    if (page.type == "artist" || ff("display_album_bookmark"))
+      patch_gallery_focused_image(image_sidebar, buttons);
   }
-  function request_reload() {
-    if (page.type == "bleh_setup")
+  function expand_gallery_image() {
+    let image_src = page.structure.container.querySelector(".active-slide .js-gallery-image").getAttribute("src").replace("770x0", "ar0");
+    expand_avatar(image_src);
+  }
+  function create_divider() {
+    let divider = document.createElement("div");
+    divider.classList.add("listen-divider");
+    return divider;
+  }
+  function bleh_gallery_upload() {
+    let gallery_section = document.createElement("section");
+    gallery_section.classList.add("gallery-section", "gallery--initialised");
+    let image_container = document.createElement("div");
+    image_container.classList.add("gallery-image-container");
+    let slides = document.createElement("div");
+    slides.classList.add("gallery-slides");
+    let image = document.createElement("div");
+    image.classList.add("gallery-image", "gallery-slide", "image-preview", "active-slide");
+    image.innerHTML = `
+        <img class="image-preview-hook">
+    `;
+    slides.appendChild(image);
+    image_container.appendChild(slides);
+    gallery_section.appendChild(image_container);
+    page.structure.nav.after(gallery_section);
+    let content_top = document.body.querySelector(".page-content");
+    content_top.innerHTML = "";
+    let form = page.structure.main.querySelector(".form-horizontal");
+    form.classList.add("panel-form");
+    let upload_rules_group = form.querySelector(".form-group--description + .form-group");
+    let rules = upload_rules_group.querySelector(".gallery-upload-rules");
+    let rules_panel = document.createElement("section");
+    rules_panel.classList.add("rules-panel");
+    rules_panel.innerHTML = rules.innerHTML;
+    page.structure.side.appendChild(rules_panel);
+    form.removeChild(upload_rules_group);
+  }
+  function bleh_gallery_upload_check() {
+    if (page.subpage != "images_image-upload")
       return;
-    log("requesting reload", "settings");
-    reload_pending.state = true;
-    notify({
-      title: tl(trans.refresh_pending.name),
-      body: tl(trans.refresh_pending.body),
-      icon: "icon-16-settings",
-      persist: true,
-      actions: [
-        {
-          action: () => invoke_reload(),
-          text: tl(trans.refresh),
-          type: "refresh"
+    let image_preview = page.structure.main.querySelector(".form-image-preview");
+    if (!image_preview) return;
+    let image_preview_container = page.structure.container.querySelector(".image-preview-hook");
+    image_preview_container.setAttribute("src", image_preview.getAttribute("src"));
+  }
+  function bleh_gallery_list() {
+    let upload_btn = page.structure.main.querySelector(".btn-add");
+    if (upload_btn) {
+      upload_btn.classList = "btn view-all-button back upload-button";
+      let upload_panel = document.createElement("section");
+      upload_panel.classList.add("view-all-panel", "upload-panel");
+      upload_panel.appendChild(upload_btn);
+      page.structure.side.insertBefore(upload_panel, page.structure.side.firstElementChild);
+    }
+    if (page.type == "artist")
+      patch_gallery_image_listing();
+  }
+  function patch_gallery_image_listing() {
+    let bookmarked_images = JSON.parse(localStorage.getItem("bleh_bookmarked_images")) || {};
+    if (page.requested.tab != "saved" || page.requested.page != null)
+      page.structure.container.setAttribute("data-bleh--gallery-tab", "all");
+    else
+      page.structure.container.setAttribute("data-bleh--gallery-tab", "saved");
+    let nav = html.node`
+        <div class="bleh--nav-wrap bleh--nav-wrap--bookmarks">
+            <nav class="navlist secondary-nav">
+                <ul class="navlist-items">
+                    <li class="navlist-item secondary-nav-item secondary-nav-item--gallery-overview">
+                        <a class="secondary-nav-item-link" onclick=${() => gallery_tab("all")}>
+                            ${tl(trans.all)}
+                        </a>
+                    </li>
+                    <li class="navlist-item secondary-nav-item secondary-nav-item--gallery-bookmarks">
+                        <a class="secondary-nav-item-link" onclick=${() => gallery_tab("saved")}>
+                            ${tl(trans.saved)}
+                        </a>
+                    </li>
+                </ul>
+            </nav>
+        </div>
+    `;
+    if (ff("short"))
+      page.structure.row.insertBefore(nav, page.structure.content);
+    else
+      page.structure.content_top.after(nav);
+    let bookmarks_panel;
+    page.structure.main.classList.add("bleh--gallery");
+    page.structure.main.after(html.node`
+        <div class="col-main bleh--bookmarks not-a-panel">
+            <section class="bookmarks-panel" ref=${(el) => bookmarks_panel = el}>
+                <ul class="image-list" data-kate-processed="true"></ul>
+            </section>
+        </div>
+    `);
+    if (bookmarked_images.hasOwnProperty(page.name)) {
+      bookmarked_images[page.name].forEach((image) => {
+        let image_element = document.createElement("li");
+        image_element.classList.add("image-list-item-wrapper");
+        image_element.setAttribute("data-image-id", image);
+        image_element.innerHTML = `
+                <a class="image-list-item" href="${root}music/+noredirect/${page.name}/+images/${image}">
+                    <img src="https://lastfm.freetls.fastly.net/i/u/avatar170s/${image}" alt=${image} loading="lazy">
+                </a>
+            `;
+        page.structure.container.querySelector(".bookmarks-panel .image-list").appendChild(image_element);
+        if (ff("remove_bookmark")) {
+          let menu = tippy(image_element, {
+            theme: "context-menu",
+            content: html.node`
+                        <button class="dropdown-menu-clickable-item" onclick=${() => update_image_bookmark(image_element, image, false)} data-menu-item="remove-bookmark" data-bleh--image-is-bookmarked="true">
+                            ${trans_legacy.en.gallery.bookmarks.button.unbookmark_this_image.name}
+                        </button>
+                    `,
+            placement: "right-start",
+            trigger: "manual",
+            interactive: true,
+            interactiveBorder: 10,
+            offset: [0, 0],
+            onShow(instance) {
+              instance.popper.addEventListener("click", (event3) => {
+                instance.hide();
+              });
+            }
+          });
+          register_menu(image_element, menu);
         }
-      ]
-    });
+      });
+      let image_list = page.structure.main.querySelectorAll(".image-list-item");
+      image_list.forEach((image_list_item) => {
+        let image_id_split = image_list_item.getAttribute("href").split("/");
+        let image_id_length = image_id_split.length;
+        let image_id = image_id_split[image_id_length - 1];
+        if (bookmarked_images[page.name].includes(image_id)) {
+          image_list_item.classList.add("image-list-item-bookmarked");
+        }
+      });
+    } else {
+      render(bookmarks_panel, html`
+            <div class="loading-data-container">
+                <div class="loading-data-text failed">${tl(trans.no_images_saved)}</div>
+            </div>
+        `);
+    }
   }
-  unsafeWindow._invoke_reload = function() {
-    invoke_reload();
-  };
-  function invoke_reload() {
-    window.location.reload();
+  function gallery_tab(id) {
+    page.structure.container.setAttribute("data-bleh--gallery-tab", id);
   }
-  function update_colour_swatches() {
-    let found = false;
-    let custom = null;
-    let seasonal = null;
-    let swatches = page.structure.main.querySelectorAll(".swatch");
-    swatches.forEach((swatch) => {
-      let h = swatch.style.getPropertyValue("--hue-over");
-      let s = swatch.style.getPropertyValue("--sat-over");
-      let l = swatch.style.getPropertyValue("--lit-over");
-      let parent = swatch.parentElement;
-      if (swatch.classList[0] == "dropdown-menu-clickable-item")
-        parent = swatch;
-      if (h == settings.hue && s == settings.sat && l == settings.lit || swatch.getAttribute("data-swatch-type") == "default" && settings.hue == 255 && settings.sat == 1 && settings.lit == 1) {
-        parent.setAttribute("aria-checked", "true");
-        if (swatch.classList[0] != "dropdown-menu-clickable-item")
-          found = true;
-      } else {
-        parent.setAttribute("aria-checked", "false");
+  function patch_gallery_focused_image(focused_image_details, gallery_interactions) {
+    let focused_image_id_split = focused_image_details.getAttribute("data-image-url").split("/");
+    let focused_image_id_length = focused_image_id_split.length - 1;
+    let focused_image_id = focused_image_id_split[focused_image_id_length];
+    let bookmarked_images = JSON.parse(localStorage.getItem("bleh_bookmarked_images")) || {};
+    let image_is_bookmarked = false;
+    if (bookmarked_images.hasOwnProperty(page.name)) {
+      if (bookmarked_images[page.name].includes(focused_image_id)) {
+        image_is_bookmarked = true;
+        log("focused is bookmarked", "gallery");
       }
-      if (!custom && swatch.getAttribute("data-swatch-type") == "customise")
-        custom = parent;
-      if (!seasonal && swatch.getAttribute("data-swatch-type") == "default")
-        seasonal = parent;
+    }
+    let gallery_bookmark_button = document.createElement("button");
+    gallery_bookmark_button.classList.add("bleh--gallery-bookmark-image-btn", "btn--has-icon");
+    gallery_bookmark_button.setAttribute("data-bleh--image-is-bookmarked", image_is_bookmarked);
+    gallery_bookmark_button.setAttribute("onclick", `_update_image_bookmark(this, '${focused_image_id}')`);
+    gallery_bookmark_button.textContent = trans_legacy.en.gallery.bookmarks.button.bookmark_this_image.name;
+    unsafeWindow.bookmark_tooltip = tippy(gallery_bookmark_button, {
+      content: image_is_bookmarked ? trans_legacy.en.gallery.bookmarks.button.unbookmark_this_image.bio : trans_legacy.en.gallery.bookmarks.button.bookmark_this_image.bio
     });
-    if (found) return;
-    if (custom && settings.accent_type != "season")
-      custom.setAttribute("aria-checked", "true");
-    else if (seasonal)
-      seasonal.setAttribute("aria-checked", "true");
+    gallery_interactions.appendChild(gallery_bookmark_button);
   }
-  unsafeWindow._reset_inbuilt_item = function(item) {
-    reset_inbuilt_item(item);
+  unsafeWindow._update_image_bookmark = function(button, id, tooltip = true) {
+    update_image_bookmark(button, id, tooltip);
   };
-  unsafeWindow._update_inbuilt_params = function(params = {}) {
-    update_inbuilt_params(params);
-  };
-  unsafeWindow._update_inbuilt_item = function(item, value) {
-    update_inbuilt_item(item, value);
-  };
-  function update_inbuilt_item(item, value, modify = true, element = document.body) {
-    console.warn("update item", item, value, "modify", modify);
-    let test_if_valid = element.querySelector(`#toggle-${item}`);
-    console.warn(test_if_valid, `toggle-${item}`);
-    if (test_if_valid == void 0)
-      return;
-    if (inbuilt_settings[item].type == "toggle") {
-      if (modify) {
-        value = document.getElementById(`toggle-${item}`).getAttribute("aria-checked") === "true";
-        log(`updated (inbuilt) ${item} to ${!value}`, "settings");
+  function update_image_bookmark(button, id, tooltip = true) {
+    let bookmarked_images = JSON.parse(localStorage.getItem("bleh_bookmarked_images")) || {};
+    let is_bookmarked = button.getAttribute("data-bleh--image-is-bookmarked") === "true";
+    if (tooltip) {
+      unsafeWindow.bookmark_tooltip.setContent(
+        !is_bookmarked ? trans_legacy.en.gallery.bookmarks.button.unbookmark_this_image.bio : trans_legacy.en.gallery.bookmarks.button.bookmark_this_image.bio
+      );
+    } else {
+      button = page.structure.container.querySelector(`[data-image-id="${id}"]`);
+    }
+    if (!bookmarked_images.hasOwnProperty(page.name))
+      bookmarked_images[page.name] = [];
+    if (is_bookmarked) {
+      button.setAttribute("data-bleh--image-is-bookmarked", "false");
+      let new_artist_bookmarks = [];
+      for (let image in bookmarked_images[page.name]) {
+        if (bookmarked_images[page.name][image] != id) {
+          new_artist_bookmarks.push(bookmarked_images[page.name][image]);
+        }
       }
-      if (value == inbuilt_settings[item].values[0] && modify) {
-        element.querySelector(`#inbuilt-companion-checkbox-${item}`).checked = false;
-        element.querySelector(`#toggle-${item}`).setAttribute("aria-checked", false);
-        document.documentElement.setAttribute(`data-bleh--inbuilt-${item}`, inbuilt_settings[item].values[1]);
-      } else if (modify) {
-        element.querySelector(`#inbuilt-companion-checkbox-${item}`).checked = true;
-        element.querySelector(`#toggle-${item}`).setAttribute("aria-checked", true);
-        document.documentElement.setAttribute(`data-bleh--inbuilt-${item}`, inbuilt_settings[item].values[0]);
-      } else {
-        console.warn(item, value, value == true, value == false, typeof value, "boolean");
-        if (value == true) {
-          console.warn(item, value, "TRUE");
-          element.querySelector(`#inbuilt-companion-checkbox-${item}`).checked = true;
-          element.querySelector(`#toggle-${item}`).setAttribute("aria-checked", true);
-          document.documentElement.setAttribute(`data-bleh--inbuilt-${item}`, true);
-        } else if (value == false) {
-          console.warn(item, value, "FALSE");
-          element.querySelector(`#inbuilt-companion-checkbox-${item}`).checked = false;
-          element.querySelector(`#toggle-${item}`).setAttribute("aria-checked", false);
-          document.documentElement.setAttribute(`data-bleh--inbuilt-${item}`, false);
+      bookmarked_images[page.name] = new_artist_bookmarks;
+      log(`image ${id} from ${page.name} removed from bookmarks`, "gallery");
+    } else {
+      button.setAttribute("data-bleh--image-is-bookmarked", "true");
+      bookmarked_images[page.name].push(id);
+      log(`image ${id} from ${page.name} added to bookmarks`, "gallery");
+    }
+    localStorage.setItem("bleh_bookmarked_images", JSON.stringify(bookmarked_images));
+  }
+
+  // src/components/music.js
+  unsafeWindow._other_listener = function(id) {
+    other_listener(id);
+  };
+  function show_your_scrobbles() {
+    let katsune = ff("katsune");
+    show_numbers_on_side(page.type);
+    let page_is_blocked = !page.structure.main.querySelector("#shoutbox");
+    if (page.subpage == "overview") {
+      let tabs = document.createElement("nav");
+      tabs.classList.add("navlist", "secondary-nav", "navlist--more", "redesigned-navigation");
+      if (page.type == "artist") {
+        tabs.appendChild(html.node`
+                <ul class="navlist-items">
+                    <li class="navlist-item secondary-nav-item secondary-nav-item--overview">
+                        <a class="secondary-nav-item-link secondary-nav-item-link--active" href="${window.location.href}">
+                            ${tl(trans.overview)}
+                        </a>
+                    </li>
+                    <li class="navlist-item secondary-nav-item secondary-nav-item--tracks">
+                        <a class="secondary-nav-item-link" href="${window.location.href}/+tracks">
+                            ${tl(trans.tracks)}
+                        </a>
+                    </li>
+                    <li class="navlist-item secondary-nav-item secondary-nav-item--albums">
+                        <a class="secondary-nav-item-link" href="${window.location.href}/+albums">
+                            ${tl(trans.albums)}
+                        </a>
+                    </li>
+                    ${!page_is_blocked ? html.node`
+                    <li class="navlist-item secondary-nav-item secondary-nav-item--images">
+                        <a class="secondary-nav-item-link" href="${window.location.href}/+images">
+                            ${tl(trans.photos)}
+                        </a>
+                    </li>
+                    <li class="navlist-item secondary-nav-item secondary-nav-item--similar">
+                        <a class="secondary-nav-item-link" href="${window.location.href}/+similar">
+                            ${tl(trans.similar_artists)}
+                        </a>
+                    </li>
+                    <li class="navlist-item secondary-nav-item secondary-nav-item--wiki">
+                        <a class="secondary-nav-item-link" href="${window.location.href}/+wiki">
+                            ${tl(trans.biography)}
+                        </a>
+                    </li>
+                    <li class="navlist-item secondary-nav-item secondary-nav-item--listeners">
+                        <a class="secondary-nav-item-link" href="${window.location.href}/+listeners">
+                            ${tl(trans.listeners)}
+                        </a>
+                    </li>
+                    <li class="navlist-item secondary-nav-item secondary-nav-item--shoutbox">
+                        <a class="secondary-nav-item-link" href="${window.location.href}/+shoutbox">
+                            ${tl(trans.shouts)}
+                        </a>
+                    </li>
+                    <li class="navlist-item secondary-nav-item secondary-nav-item--events">
+                        <a class="secondary-nav-item-link" href="${window.location.href}/+events">
+                            ${tl(trans.events)}
+                        </a>
+                    </li>
+                    <li class="navlist-item secondary-nav-item secondary-nav-item--tags">
+                        <a class="secondary-nav-item-link" href="${window.location.href}/+tags">
+                            ${tl(trans.tags)}
+                        </a>
+                    </li>
+                    ` : ""}
+                </ul>
+            `);
+      } else if (page.type == "album") {
+        tabs.appendChild(html.node`
+                <ul class="navlist-items">
+                    <li class="navlist-item secondary-nav-item secondary-nav-item--overview">
+                        <a class="secondary-nav-item-link secondary-nav-item-link--active" href="${window.location.href}">
+                            ${tl(trans.overview)}
+                        </a>
+                    </li>
+                    ${!page_is_blocked ? html.node`
+                    <li class="navlist-item secondary-nav-item secondary-nav-item--wiki">
+                        <a class="secondary-nav-item-link" href="${window.location.href}/+wiki">
+                            ${tl(trans.wiki)}
+                        </a>
+                    </li>
+                    <li class="navlist-item secondary-nav-item secondary-nav-item--images">
+                        <a class="secondary-nav-item-link" href="${window.location.href}/+images">
+                            ${tl(trans.artwork)}
+                        </a>
+                    </li>
+                    <li class="navlist-item secondary-nav-item secondary-nav-item--shoutbox">
+                        <a class="secondary-nav-item-link" href="${window.location.href}/+shoutbox">
+                            ${tl(trans.shouts)}
+                        </a>
+                    </li>
+                    <li class="navlist-item secondary-nav-item secondary-nav-item--tags">
+                        <a class="secondary-nav-item-link" href="${window.location.href}/+tags">
+                            ${tl(trans.tags)}
+                        </a>
+                    </li>
+                    ` : ""}
+                </ul>
+            `);
+      } else if (page.type == "track") {
+        tabs.appendChild(html.node`
+                <ul class="navlist-items">
+                    <li class="navlist-item secondary-nav-item secondary-nav-item--overview">
+                        <a class="secondary-nav-item-link secondary-nav-item-link--active" href="${window.location.href}">
+                            ${tl(trans.overview)}
+                        </a>
+                    </li>
+                    <li class="navlist-item secondary-nav-item secondary-nav-item--albums">
+                        <a class="secondary-nav-item-link" href="${window.location.href}/+albums">
+                            ${tl(trans.albums)}
+                        </a>
+                    </li>
+                    ${!page_is_blocked ? html.node`
+                    <li class="navlist-item secondary-nav-item secondary-nav-item--wiki">
+                        <a class="secondary-nav-item-link" href="${window.location.href}/+wiki">
+                            ${tl(trans.wiki)}
+                        </a>
+                    </li>
+                    <li class="navlist-item secondary-nav-item secondary-nav-item--shoutbox">
+                        <a class="secondary-nav-item-link" href="${window.location.href}/+shoutbox">
+                            ${tl(trans.shouts)}
+                        </a>
+                    </li>
+                    <li class="navlist-item secondary-nav-item secondary-nav-item--tags">
+                        <a class="secondary-nav-item-link" href="${window.location.href}/+tags">
+                            ${tl(trans.tags)}
+                        </a>
+                    </li>
+                    ` : ""}
+                </ul>
+            `);
+      }
+      page.structure.container.insertBefore(tabs, page.structure.row);
+      page.structure.tabs = tabs;
+    }
+    let col_main = page.structure.container.querySelector(".top-overview-panel");
+    if (!col_main)
+      col_main = document.body.querySelector(".col-main");
+    if (page.type == "track") {
+      let new_panel = document.createElement("section");
+      new_panel.classList.add("track-info-panel");
+      new_panel.innerHTML = col_main.innerHTML;
+      page.structure.main.insertBefore(new_panel, page.structure.main.firstElementChild);
+      col_main.style.setProperty("display", "none");
+      page.structure.row.appendChild(col_main);
+      console.info(col_main, new_panel);
+      col_main = new_panel;
+    }
+    let top_container = document.createElement("div");
+    top_container.classList.add("top-container");
+    if (katsune)
+      top_container.classList.add("katsune-button-row");
+    let listen_container = document.createElement("div");
+    listen_container.classList.add("listen-container");
+    let page_url = window.location.href;
+    let page_url_split = page_url.split("/");
+    let page_url_length = page_url_split.length - 1;
+    let scrobble_page = page_url_split[page_url_length];
+    if (page.type == "album") {
+      scrobble_page = page_url_split[page_url_length - 1] + "/" + page_url_split[page_url_length];
+    } else if (page.type == "track") {
+      scrobble_page = page_url_split[page_url_length - 2] + "/_/" + page_url_split[page_url_length];
+    }
+    let your_listens = {
+      name: auth.name,
+      listens: 0,
+      link: scrobble_page,
+      avi: auth.avatar,
+      katsune
+    };
+    let scrobble_button = col_main.querySelector(".personal-stats-item--scrobbles .hidden-xs a");
+    if (scrobble_button) {
+      your_listens.listens = clean_number(scrobble_button.textContent.trim());
+    }
+    create_listen_item(listen_container, your_listens, page.type);
+    if (settings.profile_shortcut != "") {
+      let shortcut_listens = {
+        name: settings.profile_shortcut,
+        listens: -1,
+        link: scrobble_page,
+        avi: localStorage.getItem("bleh_profile_shortcut_avi"),
+        katsune
+      };
+      const listen_item = create_listen_item(listen_container, shortcut_listens);
+      fetch(`${root}user/${shortcut_listens.name}/library/music/${redirect()}${scrobble_page}`).then(function(response) {
+        console.log("returned", response, response.text);
+        return response.text();
+      }).then(function(dom) {
+        const doc = new DOMParser().parseFromString(dom, "text/html");
+        let first_metadata_item = doc.querySelector(".metadata-item .metadata-display");
+        let listens = 0;
+        if (first_metadata_item) listens = clean_number(first_metadata_item.textContent.trim());
+        let p;
+        listen_item.setAttribute("data-listens", listens);
+        render(listen_item, html`
+                <img class="view-item-avatar" src=${shortcut_listens.avi} alt=${shortcut_listens.name}>
+                <div class="info">
+                    <h3>${shortcut_listens.name}</h3>
+                    <p class="colourful" ref=${(el) => p = el}>${tl(trans.listens.count).replace("{c}", listens.toLocaleString(lang))}</p>
+                </div>
+            `);
+        if (settings.colourful_counts && page.type == "artist") {
+          let parsed_scrobble_as_rank = parse_scrobbles_as_rank(listens);
+          listen_item.setAttribute("data-bleh--scrobble-milestone", parsed_scrobble_as_rank.milestone);
+          p.style.setProperty("--hue-over", parsed_scrobble_as_rank.hue);
+          p.style.setProperty("--sat-over", parsed_scrobble_as_rank.sat);
+          p.style.setProperty("--lit-over", parsed_scrobble_as_rank.lit);
+        }
+      });
+    }
+    if (page.type != "artist")
+      listen_container.appendChild(create_divider());
+    create_listen_item(listen_container, {
+      name: "other",
+      listens: -3,
+      link: scrobble_page,
+      button: true,
+      katsune
+    }, page.type);
+    col_main.insertBefore(listen_container, col_main.firstElementChild);
+    if (!katsune)
+      col_main.insertBefore(top_container, col_main.firstElementChild);
+    else
+      page.structure.container.querySelector(".bleh-background").after(top_container);
+    if (page.type == "artist") {
+      let other_container = col_main.querySelector(".personal-stats-item--listeners");
+      if (other_container != null) {
+        let listen_divider = document.createElement("div");
+        listen_divider.classList.add("listen-divider");
+        listen_container.appendChild(listen_divider);
+        let avatars = other_container.querySelectorAll(".personal-stats-listener-avatar img");
+        let count = other_container.querySelector(".header-metadata-display a");
+        let other_listeners = {
+          name: "others",
+          listens: -2,
+          link: scrobble_page,
+          avi: avatars,
+          count: count != null ? clean_number(count.textContent.trim()) : 5,
+          katsune
+        };
+        create_listen_item(listen_container, other_listeners, page.type);
+      }
+    }
+    let interact_container = document.createElement("section");
+    interact_container.classList.add("side-actions");
+    let text2 = document.body.querySelector(".header-new-title").textContent.replaceAll(" ", "+").replaceAll("&", "%26");
+    let artist = document.body.querySelector(".header-new-crumb");
+    if (artist != void 0)
+      text2 = `${text2}+${artist.textContent.replaceAll(" ", "+").replaceAll("&", "%26")}`;
+    let header_actions = document.body.querySelector(".header-new-actions");
+    interact_container.innerHTML = header_actions.innerHTML;
+    let buttons = interact_container.querySelectorAll("button");
+    buttons.forEach((button) => {
+      if (button.classList[0] != "header-new-playlink")
+        button.classList.add("btn", "side-action");
+      else
+        button.classList.add("dropdown-menu-clickable-item");
+      if (button.classList[0] == "header-new-more-button")
+        interact_container.removeChild(button.parentElement);
+      if (button.classList[1] == "header-new-love-button") {
+        button.setAttribute("data-type", "love");
+        let new_text = document.createElement("span");
+        new_text.textContent = tl(trans.love);
+        button.appendChild(new_text);
+      }
+    });
+    let links = interact_container.querySelectorAll("a");
+    links.forEach((button) => {
+      if (button.classList[0] != "header-new-playlink")
+        button.classList.add("btn", "side-action");
+      else
+        button.classList.add("dropdown-menu-clickable-item");
+    });
+    let obsession_form = header_actions.querySelector('form[action$="obsessions"]');
+    if (obsession_form) {
+      let obsession_btn = obsession_form.querySelector("button");
+      obsession_btn.classList = "btn side-action";
+      obsession_btn.setAttribute("data-type", "obsession");
+      obsession_btn.textContent = tl(trans.obsession);
+      interact_container.appendChild(obsession_form);
+    }
+    if (ff("submit_scrobble")) {
+      const can_api = localStorage.getItem("bleh_auth") && localStorage.getItem("bleh_auth_valid") === "true";
+      const source_album = page.structure.main.querySelector(".source-album-name");
+      const source_album_artist = page.structure.main.querySelector(".source-album-artist");
+      let props = {
+        can_api
+      };
+      if (page.type == "track")
+        props = {
+          ...props,
+          pre_track: page.name,
+          pre_artist: page.sister,
+          pre_album: source_album ? source_album.textContent : null,
+          pre_album_artist: source_album_artist ? source_album_artist.textContent : page.sister
+        };
+      else if (page.type == "album")
+        props = {
+          ...props,
+          pre_album: page.name,
+          pre_artist: page.sister,
+          pre_album_artist: page.sister
+        };
+      else if (page.type == "artist")
+        props = {
+          ...props,
+          pre_artist: page.name,
+          pre_album_artist: page.name
+        };
+      const scrobble_btn = html.node`
+            <button class="btn side-action" data-type="add" onclick=${() => submit_scrobble(props)}>
+                ${tl(trans.scrobble)}
+            </button>
+        `;
+      if (!can_api) {
+        tippy(scrobble_btn, {
+          content: tl(trans.requires_api_in_settings)
+        });
+      }
+      interact_container.appendChild(scrobble_btn);
+    }
+    let lotus_btn = null;
+    if (settings.corrections) {
+      lotus_btn = document.createElement("a");
+      lotus_btn.classList.add("dropdown-menu-clickable-item", "lotus", "lotus-btn");
+      lotus_btn.textContent = trans_legacy.en.lotus.correct.name;
+      lotus_btn.href = "https://github.com/katelyynn/lotus/issues/new/choose";
+      lotus_btn.target = "_blank";
+      if (page.corrected)
+        lotus_btn.classList.add("active");
+    }
+    let play_btn = interact_container.querySelector(".header-new-playlink");
+    if (play_btn)
+      interact_container.removeChild(play_btn);
+    if (!page.mobile)
+      page.structure.side.insertBefore(interact_container, page.structure.side.firstElementChild);
+    else
+      page.structure.main.insertBefore(interact_container, page.structure.main.firstElementChild);
+    let new_playlist = page.structure.side.querySelector(":scope > form");
+    if (new_playlist) {
+      let header = new_playlist.querySelector("h3");
+      new_playlist.removeChild(header);
+      let playlist_button = new_playlist.querySelector("button");
+      playlist_button.classList = "btn side-action";
+      playlist_button.setAttribute("data-type", "playlist");
+      interact_container.appendChild(new_playlist);
+    }
+    let metadata = col_main.querySelector(".metadata-column");
+    if (metadata) {
+      let groups = [];
+      let headers = metadata.querySelectorAll(".catalogue-metadata-heading:not(.visible-xs)");
+      headers.forEach((item, index) => {
+        groups[index] = {
+          header: item
+        };
+      });
+      let values = metadata.querySelectorAll(".catalogue-metadata-description:not(.visible-xs)");
+      values.forEach((item, index) => {
+        groups[index].value = item;
+      });
+      render(metadata, html`
+            ${groups.map((group) => html.node`
+                <div class="metadata-group">
+                    ${group.header}
+                    ${group.value}
+                </div>
+            `)}
+        `);
+      if (groups.length > 2) {
+        if (settings.simulate_scroll) {
+          metadata.addEventListener("wheel", (e) => {
+            e.preventDefault();
+            if (e.deltaY > 0) {
+              metadata.scrollBy({
+                top: 0,
+                left: 200,
+                behavior: "smooth"
+              });
+            } else {
+              metadata.scrollBy({
+                top: 0,
+                left: -200,
+                behavior: "smooth"
+              });
+            }
+          });
+        } else {
+          metadata.classList.add("no-scroll-simulation");
         }
       }
     }
+    if (page_is_blocked) {
+      page.structure.main.insertBefore(html.node`
+            <section class="cta blocked-cta">
+                <strong>${tl(trans.blocked_page)}</strong>
+            </section>
+        `, page.structure.main.firstElementChild);
+      return;
+    }
+    let play_on;
+    let play_links;
+    let link_group = document.createElement("div");
+    link_group.classList.add("metadata-group");
+    let link_container = document.createElement("div");
+    link_container.classList.add("music-links");
+    if (page.type == "track") {
+      let header = document.createElement("div");
+      header.classList.add("sub-text", "music-small-header");
+      header.textContent = tl(trans.find_on);
+      link_group.appendChild(header);
+      play_on = page.structure.side.querySelector(".play-this-track-playlinks");
+      page.structure.side.removeChild(play_on.parentElement);
+      play_links = play_on.querySelectorAll("li");
+      play_links.forEach((item) => {
+        let link = item.querySelector(".play-this-track-playlink:not(.visible-xs)");
+        link.classList.add("music-link");
+        let replace = item.querySelector(".replace-playlink");
+        if (link.classList.contains("play-this-track-playlink--youtube"))
+          link.textContent = "YouTube";
+        else if (link.classList.contains("play-this-track-playlink--spotify"))
+          link.textContent = "Spotify";
+        else if (link.classList.contains("play-this-track-playlink--itunes"))
+          link.textContent = "Apple";
+        if (replace) {
+          replace.classList.add("dropdown-menu-clickable-item");
+          item.removeChild(replace);
+          let menu = tippy(link, {
+            theme: "context-menu",
+            content: replace,
+            placement: "right-start",
+            trigger: "manual",
+            interactive: true,
+            interactiveBorder: 10,
+            offset: [0, 0],
+            onShow(instance) {
+              instance.popper.addEventListener("click", (event3) => {
+                instance.hide();
+              });
+            }
+          });
+          register_menu(link, menu);
+        }
+        link_container.appendChild(item);
+      });
+      link_container.appendChild(html.node`
+            <li>
+                <a class="play-this-track-playlink music-link play-this-track-playlink--genius" href="https://genius.com/search?q=${sanitise(page.sister)}+${sanitise(page.name)}" target="_blank">
+                    Genius
+                </a>
+            </li>
+            <li>
+                <a class="play-this-track-playlink music-link play-this-track-playlink--tidal" href="https://listen.tidal.com/search?q=${sanitise(page.sister, " ")} ${sanitise(page.name, " ")}" target="_blank">
+                    Tidal
+                </a>
+            </li>
+        `);
+    } else {
+      let header = document.createElement("div");
+      header.classList.add("sub-text", "music-small-header");
+      header.textContent = tl(trans.find_on);
+      link_group.appendChild(header);
+      if (page.type == "album") {
+        render(link_container, html`
+                <a class="play-this-track-playlink music-link play-this-track-playlink--spotify" href="https://open.spotify.com/search/${sanitise(page.sister, " ")} ${sanitise(page.name, " ")}" target="_blank">
+                    Spotify
+                </a>
+                <a class="play-this-track-playlink music-link play-this-track-playlink--itunes" href="https://music.apple.com/gb/search?term=${sanitise(page.sister, " ")} ${sanitise(page.name, " ")}" target="_blank">
+                    Apple
+                </a>
+                <a class="play-this-track-playlink music-link play-this-track-playlink--youtube-music" href="https://music.youtube.com/search?q=${sanitise(page.sister)}+${sanitise(page.name)}" target="_blank">
+                    YouTube
+                </a>
+                <a class="play-this-track-playlink music-link play-this-track-playlink--tidal" href="https://listen.tidal.com/search?q=${sanitise(page.sister, " ")} ${sanitise(page.name, " ")}" target="_blank">
+                    Tidal
+                </a>
+                <a class="play-this-track-playlink music-link play-this-track-playlink--discogs" href="https://www.discogs.com/search?q=${sanitise(page.sister)}+${sanitise(page.name)}&type=all" target="_blank">
+                    Discogs
+                </a>
+                <a class="play-this-track-playlink music-link play-this-track-playlink--aoty" href="https://www.albumoftheyear.org/search/?q=${sanitise(page.sister)}+${sanitise(page.name)}" target="_blank">
+                    AOTY
+                </a>
+                <a class="play-this-track-playlink music-link play-this-track-playlink--rym" href="https://rateyourmusic.com/search?searchterm=${sanitise(page.sister, " ")} ${sanitise(page.name, " ")}" target="_blank">
+                    RYM
+                </a>
+                <a class="play-this-track-playlink music-link play-this-track-playlink--genius" href="https://genius.com/search?q=${sanitise(page.sister)}+${sanitise(page.name)}" target="_blank">
+                    Genius
+                </a>
+            `);
+      } else {
+        render(link_container, html`
+                <a class="play-this-track-playlink music-link play-this-track-playlink--spotify" href="https://open.spotify.com/search/${sanitise(page.name, " ")}" target="_blank">
+                    Spotify
+                </a>
+                <a class="play-this-track-playlink music-link play-this-track-playlink--itunes" href="https://music.apple.com/gb/search?term=${sanitise(page.name, " ")}" target="_blank">
+                    Apple
+                </a>
+                <a class="play-this-track-playlink music-link play-this-track-playlink--youtube-music" href="https://music.youtube.com/search?q=${sanitise(page.name)}" target="_blank">
+                    YouTube
+                </a>
+                <a class="play-this-track-playlink music-link play-this-track-playlink--tidal" href="https://listen.tidal.com/search?q=${sanitise(page.name, " ")}" target="_blank">
+                    Tidal
+                </a>
+                <a class="play-this-track-playlink music-link play-this-track-playlink--discogs" href="https://www.discogs.com/search?q=${sanitise(page.name)}&type=artist" target="_blank">
+                    Discogs
+                </a>
+                <a class="play-this-track-playlink music-link play-this-track-playlink--aoty" href="https://www.albumoftheyear.org/search/?q=${sanitise(page.name)}" target="_blank">
+                    AOTY
+                </a>
+                <a class="play-this-track-playlink music-link play-this-track-playlink--rym" href="https://rateyourmusic.com/search?searchterm=${sanitise(page.name, " ")}" target="_blank">
+                    RYM
+                </a>
+                <a class="play-this-track-playlink music-link play-this-track-playlink--genius" href="https://genius.com/search?q=${sanitise(page.name)}" target="_blank">
+                    Genius
+                </a>
+            `);
+        let externals = page.structure.side.querySelector(".resource-external-links");
+        if (externals) {
+          page.structure.side.removeChild(externals.parentElement);
+          let externals_links = externals.querySelectorAll(".resource-external-link");
+          externals_links.forEach((link) => {
+            link.classList.add("music-link");
+            let type = link.classList[1];
+            if (type == "resource-external-link--homepage")
+              link.textContent = tl(trans.website);
+            else if (type == "resource-external-link--twitter")
+              link.textContent = "Twitter";
+            else if (type == "resource-external-link--facebook")
+              link.textContent = "Facebook";
+            link_container.appendChild(link);
+          });
+        }
+      }
+    }
+    link_group.appendChild(link_container);
+    col_main.appendChild(link_group);
+    let tags = col_main.querySelector(".catalogue-tags");
+    if (tags) {
+      let header_tags = document.createElement("div");
+      header_tags.classList.add("sub-text", "music-small-header");
+      header_tags.textContent = tl(trans.tags);
+      col_main.appendChild(header_tags);
+      col_main.appendChild(tags);
+    }
+    if (!settings.corrections)
+      return;
+    page.structure.side.appendChild(html.node`
+        <section class="lotus cta">
+             <strong>${tl(trans.lotus_cta[page.corrected]).replace("{t}", tl(trans[`${page.type}_lower`]))}</strong>
+            <a class="see-more" href="https://github.com/katelyynn/lotus/issues/new/choose" target="_blank">${tl(trans.suggest_correction)}</a>
+        </section>
+    `);
+  }
+  function create_listen_item(parent, { name: name2, listens, link, avi, count = 0, button = false, katsune = false }, header_type) {
+    log(`creating listen item of ${name2}, ${count}, ${listens}`, "artist", "info", { avi, link });
+    let listen_item;
+    if (button) listen_item = html.node`<button />`;
+    else listen_item = html.node`<a />`;
+    listen_item.classList.add("btn", "listen-item");
+    listen_item.setAttribute("href", `${root}user/${name2}/library/music/${redirect()}${link}`);
+    listen_item.setAttribute("data-listens", listens);
+    listen_item.setAttribute("id", `listen-item--${name2}`);
+    let p;
+    if (listens > -1) {
+      render(listen_item, html`
+            <img class="view-item-avatar" src=${avi} alt=${name2}>
+            <div class="info">
+                <h3>${name2}</h3>
+                <p class="colourful" ref=${(el) => p = el}>${tl(trans.listens.count).replace("{c}", listens.toLocaleString(lang))}</p>
+            </div>
+        `);
+      let menu = tippy(listen_item, {
+        theme: "context-menu",
+        content: html.node`
+                <a class="dropdown-menu-clickable-item" href="${root}user/${name2}" data-menu-item="view_profile">
+                    ${tl(trans.profile)}
+                </a>
+            `,
+        placement: "right-start",
+        trigger: "manual",
+        interactive: true,
+        interactiveBorder: 10,
+        offset: [0, 0],
+        onShow(instance) {
+          instance.popper.addEventListener("click", (event3) => {
+            instance.hide();
+          });
+        }
+      });
+      register_menu(listen_item, menu);
+    } else if (listens > -2) {
+      render(listen_item, html`
+            <img class="view-item-avatar" src=${avi} alt=${name2}>
+            <div class="info">
+                <h3>${name2}</h3>
+                <p class="colourful" ref=${(el) => p = el}>${tl(trans.listens)}</p>
+            </div>
+        `);
+      let menu = tippy(listen_item, {
+        theme: "context-menu",
+        content: html.node`
+                <a class="dropdown-menu-clickable-item" href="${root}user/${name2}" data-menu-item="view_profile">
+                    ${tl(trans.profile)}
+                </a>
+                <div class="sep"></div>
+                <button class="dropdown-menu-clickable-item" onclick="_open_profile_shortcut_window()" data-menu-item="settings">
+                    ${tl(trans.settings)}
+                </button>
+            `,
+        placement: "right-start",
+        trigger: "manual",
+        interactive: true,
+        interactiveBorder: 10,
+        offset: [0, 0],
+        onShow(instance) {
+          instance.popper.addEventListener("click", (event3) => {
+            instance.hide();
+          });
+        }
+      });
+      register_menu(listen_item, menu);
+    } else if (listens == -3) {
+      listen_item.classList.add("listen-item-other");
+      listen_item.removeAttribute("href");
+      listen_item.setAttribute("onclick", `_other_listener('${link}')`);
+      tippy(listen_item, {
+        content: tl(trans.view_others_library)
+      });
+    } else {
+      render(listen_item, html`
+            ${avi[0] ? html.node`<img class="view-item-avatar" src=${avi[0].getAttribute("src")} alt="">` : ""}
+            ${avi[1] ? html.node`<img class="view-item-avatar" src=${avi[1].getAttribute("src")} alt="">` : ""}
+            ${avi[2] ? html.node`<img class="view-item-avatar" src=${avi[2].getAttribute("src")} alt="">` : ""}
+            <div class="info">
+                <h3>${tl(trans.following)}</h3>
+                <p class="colourful" ref=${(el) => p = el}>${tl(trans.others_count).replace("{c}", count)}</p>
+            </div>
+        `);
+      listen_item.setAttribute("href", `${window.location.href}/+listeners/you-know`);
+    }
+    if (settings.colourful_counts && listens > -1 && header_type == "artist") {
+      let parsed_scrobble_as_rank = parse_scrobbles_as_rank(listens);
+      listen_item.setAttribute("data-bleh--scrobble-milestone", parsed_scrobble_as_rank.milestone);
+      p.style.setProperty("--hue-user", parsed_scrobble_as_rank.hue);
+      p.style.setProperty("--sat-user", parsed_scrobble_as_rank.sat);
+      p.style.setProperty("--lit-user", parsed_scrobble_as_rank.lit);
+    }
+    if (katsune) listen_item.classList.add("icon");
+    parent.appendChild(listen_item);
+    return listen_item;
+  }
+  function show_numbers_on_side(header_type) {
+    let metadata = document.body.querySelectorAll(".header-metadata-tnew-item");
+    let listeners = {};
+    let scrobbles = {};
+    let metascore = {};
+    metadata.forEach((item, index) => {
+      let text2 = item.querySelector(".header-metadata-tnew-title").textContent.trim();
+      let value = item.querySelector(".header-metadata-tnew-display abbr");
+      if (index == 0) {
+        listeners.text = text2;
+        listeners.value = clean_number(value.getAttribute("title"));
+        listeners.abbr = value.textContent.trim();
+      } else if (index == 1) {
+        scrobbles.text = text2;
+        scrobbles.value = clean_number(value.getAttribute("title"));
+        scrobbles.abbr = value.textContent.trim();
+      } else if (index == 2) {
+        let link = item.querySelector("a");
+        if (!link)
+          return;
+        metascore.text = text2;
+        metascore.abbr = value.textContent.trim();
+        metascore.link = link.getAttribute("href");
+      }
+    });
+    page.structure.side.classList.remove("hidden-xs");
+    let panel = page.structure.side.querySelector("section.section-with-separator:has(.listener-trend)");
+    if (!panel) {
+      panel = document.createElement("section");
+      panel.classList.add("section-with-separator");
+      if (!page.mobile)
+        page.structure.side.insertBefore(panel, page.structure.side.firstElementChild);
+      else
+        page.structure.main.insertBefore(panel, page.structure.main.firstElementChild);
+    }
+    panel.classList.add("listen-panel");
+    let row = html.node`
+        <div class="listener-row">
+            <div class="listener-side">
+                <h3>${listeners.text}</h3>
+                <p>${listeners.abbr}</p>
+            </div>
+            <div class="scrobble-side">
+                <h3>${scrobbles.text}</h3>
+                <p>${scrobbles.abbr}</p>
+            </div>
+            ${metascore.text ? html.node`
+            <div class="metascore-side">
+                <h3>${metascore.text}</h3>
+                <p><a href="${metascore.link}" target="_blank">${metascore.abbr}</a></p>
+            </div>
+            ` : ""}
+        </div>
+    `;
+    panel.insertBefore(row, panel.firstElementChild);
+    if (page.mobile)
+      page.structure.main.insertBefore(panel, page.structure.main.firstElementChild);
+    tippy(row.querySelector(".listener-side p"), {
+      content: tl(trans.count_listeners).replace("{c}", listeners.value.toLocaleString(lang))
+    });
+    tippy(row.querySelector(".scrobble-side p"), {
+      content: tl(trans.count_scrobbles).replace("{c}", scrobbles.value.toLocaleString(lang))
+    });
+    if (page.type == "album") {
+      let album_artwork = document.body.querySelector(".artwork-and-metadata-row");
+      if (album_artwork)
+        page.structure.side.insertBefore(album_artwork, page.structure.side.firstElementChild);
+    }
+    let masonry = page.structure.row.querySelector(":scope > .col-sidebar.masonry-right");
+    if (masonry) {
+      page.structure.row.appendChild(masonry);
+    }
+    if (page.type == "album" || page.type == "artist") {
+      let upper = document.body.querySelector(".col-main");
+      upper.classList.add("upper-overview-to-hide");
+      page.structure.row.appendChild(upper);
+      let new_upper = document.createElement("section");
+      new_upper.classList.add("top-overview-panel");
+      new_upper.setAttribute("data-page-type", page.type);
+      new_upper.innerHTML = upper.innerHTML;
+      page.structure.main.insertBefore(new_upper, page.structure.main.firstElementChild);
+    }
+    if (page.type == "track") {
+      let video_col = document.body.querySelector(".track-overview-video-column.col-sidebar");
+      if (!video_col) {
+        video_unavailable(video_col);
+        return;
+      }
+      video_col.classList.remove("col-sidebar");
+      page.structure.side.insertBefore(video_col, page.structure.side.firstElementChild);
+      let video = video_col.querySelector(".video-preview");
+      if (!video) {
+        video_unavailable(video_col);
+        return;
+      }
+      video_col.classList.remove("col-sidebar");
+      page.structure.side.insertBefore(video_col, page.structure.side.firstElementChild);
+      let playlink = video.querySelector(".video-preview-playlink a");
+      let replace = video_col.querySelector(".video-preview-replace a");
+      video.appendChild(html.node`
+            <a class="link-block-cover-link" href=${playlink.href} target="_blank" />
+        `);
+      playlink.classList = "see-more";
+      replace.classList = "see-more add";
+      video.after(html.node`
+            <div class="video-actions sub-text">
+                ${replace}
+                ${playlink}
+            </div>
+        `);
+      playlink.textContent = tl(trans.watch_video);
+      playlink.removeAttribute("title");
+      replace.textContent = tl(trans.replace);
+    }
+  }
+  function video_unavailable(video_col = null) {
+    let cta = page.structure.side.querySelector(".video-preview-upload-cta");
+    if (cta)
+      return;
+    if (video_col)
+      page.structure.side.removeChild(video_col);
+    page.structure.side.insertBefore(html.node`
+        <section class="video-placeholder">
+            <div class="bleh-icon" style="--icon: var(--icon-16-video-broken)"></div>
+            ${tl(trans.video_removed)}
+        </section>
+    `, page.structure.side.firstElementChild);
+    let links = page.structure.side.querySelector(".external-links-section .play-this-track-playlinks");
+    if (links)
+      links.classList.add("video-unavailable");
+  }
+  function bleh_music_page_charts() {
+    if (!ff("music_page_charts"))
+      return;
+    log("beginning replacement", "music charts");
+    let panel = page.structure.container.querySelector(".listen-panel");
+    let trend = panel.querySelector(".listener-trend");
+    if (!trend) return;
+    let previous_chart = panel.querySelector(".scrobble-canvas-container");
+    if (previous_chart)
+      panel.removeChild(previous_chart);
+    let table = trend.querySelector("tbody");
+    let days = table.querySelectorAll("tr");
+    let labels = [];
+    let values = [];
+    let has_seen_more_than_0 = false;
+    days.forEach((day, index) => {
+      if (!day) return;
+      let label = moment(day.querySelector("time").getAttribute("datetime"));
+      let value = day.querySelector(".js-value");
+      console.log("day", index, label, day, day.innerHTML);
+      if (!value.getAttribute("data-value"))
+        value = 0;
+      else
+        value = value.getAttribute("data-value");
+      if (value == "0" && index < 120 && !has_seen_more_than_0)
+        return;
+      has_seen_more_than_0 = true;
+      labels.push(label);
+      values.push(value);
+    });
+    prep_chart_colours();
+    let scrobble_canvas_container = document.createElement("div");
+    scrobble_canvas_container.classList.add("scrobble-canvas-container");
+    let scrobble_canvas = document.createElement("canvas");
+    scrobble_canvas.classList.add("scrobble-canvas");
+    let gradient = scrobble_canvas.getContext("2d").createLinearGradient(0, 0, 0, 160);
+    try {
+      gradient.addColorStop(0, page.state.chart_colours.link_bg_col);
+      gradient.addColorStop(1, page.state.chart_colours.link_bg_col_2);
+    } catch (e) {
+      gradient = page.state.chart_colours.link_bg_col;
+    }
+    Chart.defaults.color = page.state.chart_colours.text_col;
+    Chart.defaults.font.family = page.state.chart_colours.font;
+    let scrobble_chart = new Chart(scrobble_canvas.getContext("2d"), {
+      type: "line",
+      data: {
+        labels,
+        datasets: [{
+          data: values,
+          borderWidth: 2,
+          backgroundColor: gradient,
+          borderColor: page.state.chart_colours.link_col,
+          fill: true,
+          pointRadius: 0,
+          pointHitRadius: 20,
+          tension: 0.1
+        }]
+      },
+      options: page.state.chart_line_options
+    });
+    scrobble_canvas_container.appendChild(scrobble_canvas);
+    panel.appendChild(scrobble_canvas_container);
+    trend.style.setProperty("display", "none");
+    log("finished", "music charts");
+  }
+  function bleh_top_listeners() {
+    if (!ff("unify_top_listeners"))
+      return;
+    let panel = page.structure.main.querySelector(":scope > .buffer-standard");
+    let view_buttons = document.createElement("div");
+    view_buttons.classList.add("view-buttons-wrapper");
+    view_buttons.innerHTML = `
+        <div class="view-buttons">
+            <button class="btn view-item" id="toggle-list_view-1" data-toggle="list_view" data-toggle-value="1" onclick="_update_item('list_view', 1)">
+                ${tl(trans.grid)}
+            </button>
+            <button class="btn view-item" id="toggle-list_view-0" data-toggle="list_view" data-toggle-value="0" onclick="_update_item('list_view', 0)">
+                ${tl(trans.list)}
+            </button>
+        </div>
+    `;
+    panel.insertBefore(view_buttons, panel.firstElementChild);
+    refresh_all();
+    let legacy_top_listeners_container = panel.querySelector(".top-listeners");
+    let legacy_top_listeners = legacy_top_listeners_container.querySelectorAll(".top-listeners-item");
+    let new_container = document.createElement("ul");
+    new_container.classList.add("user-list", "top-listeners-list");
+    legacy_top_listeners.forEach((listener, index) => {
+      let new_listener = document.createElement("li");
+      new_listener.classList.add("user-list-item", "listener-list-item");
+      let position = index + 1;
+      if (page.requested.page != null && page.requested.page != "1") {
+        position += (parseInt(page.requested.page) - 1) * 30;
+      }
+      let name_wrap = listener.querySelector(".top-listeners-item-name a");
+      let name2 = name_wrap.textContent;
+      let track_wrap = listener.querySelector(".top-listeners-track");
+      let avatar3 = listener.querySelector(".top-listeners-item-image");
+      let follow = listener.querySelector(".class");
+      new_listener.innerHTML = `
+            <div class="user-list-inner-wrap">
+                <span class="listener-list-position">
+                    ${position}
+                </span>
+                <h4 class="user-list-name">
+                    <a class="user-list-link link-block-target" href="${name_wrap.getAttribute("href")}">
+                        ${name2}
+                    </a>
+                </h4>
+                <span class="avatar user-list-avatar">
+                    ${avatar3.innerHTML}
+                </span>
+                ${follow ? follow.outerHTML : ""}
+                ${track_wrap ? `
+                <div class="user-list-description">
+                    <p class="user-list-about-me">
+                        ${track_wrap.innerHTML}
+                    </p>
+                </div>
+                ` : ""}
+            </div>
+        `;
+      let badge = patch_avatar(new_listener.querySelector(".user-list-avatar"), name2, "listener");
+      if (badge.type) {
+        new_listener.querySelector(".user-list-link").classList.add(`user-status--bleh-${badge.type}`, `user-status--bleh-user-${name2}`);
+        new_listener.classList.add("colourful", `user-status--bleh-${badge.type}`, `user-status--bleh-user-${name2}`);
+      }
+      if (track_wrap) {
+        let track_link = new_listener.querySelector(".user-list-about-me a");
+        let artist = return_artist_from_track(track_link.getAttribute("href"), false);
+        track_link.textContent = correct_item_by_artist(track_link.textContent.trim(), artist);
+      }
+      new_container.appendChild(new_listener);
+    });
+    view_buttons.after(new_container);
+    panel.removeChild(legacy_top_listeners_container);
+  }
+  function redirect() {
+    if (settings.prefer_no_redirect) return "+noredirect/";
+    else return "";
+  }
+
+  // src/components/markdown.js
+  function markdown(text2, {
+    allow_headers = false,
+    allow_links = true,
+    line_breaks = true
+  } = {}) {
+    let converter = new showdown.Converter({
+      emoji: true,
+      excludeTrailingPunctuationFromURLs: true,
+      ghMentions: true,
+      ghMentionsLink: `${root}user/{u}`,
+      headerLevelStart: allow_headers ? 3 : 5,
+      noHeaderId: true,
+      openLinksInNewWindow: true,
+      requireSpaceBeforeHeadingText: true,
+      simpleLineBreaks: line_breaks,
+      simplifiedAutoLink: allow_links,
+      strikethrough: true,
+      underline: true,
+      ghCodeBlocks: false,
+      smartIndentationFix: true
+    });
+    let parsed_body = converter.makeHtml(text2.replace(/([@])([a-zA-Z0-9_]+)/g, `[$1$2](${root}user/$2)`).replace(
+      /\[artist\]([^[\]]+)\[\/artist\]/g,
+      (match, artist) => `[${artist}](${root}music/${redirect()}${encodeURIComponent(artist)})`
+    ).replace(
+      /\[album artist=([^[\]]+)\]([^[\]]+)\[\/album\]/g,
+      (match, artist, album) => `[${album}](${root}music/${redirect()}${encodeURIComponent(artist)}/${encodeURIComponent(album)})`
+    ).replace(
+      /\[track artist=([^[\]]+)\]([^[\]]+)\[\/track\]/g,
+      (match, artist, track) => `[${track}](${root}music/${redirect()}${encodeURIComponent(artist)}/_/${encodeURIComponent(track)})`
+    ).replace(
+      /\[url=([^[\]]+)\]([^[\]]+)\[\/url\]/g,
+      (match, url, text3) => `[${text3}](${encodeURI(url)})`
+    ).replace(
+      /\[url\]([^[\]]+)\[\/url\]/g,
+      (match, url) => `[${url}](${encodeURI(url)})`
+    ).replace(/https:\/\/open\.spotify\.com\/user\/([A-Za-z0-9]+)\?si=([A-Za-z0-9]+)/g, "[Spotify](https://open.spotify.com/user/$1)").replace(/&/g, "&amp;").replace(/</g, "&lt;").replace(/>/g, "&gt;").replace(/"/g, "&quot;").replace(/'/g, "&#039;"));
+    let body = html.node([parsed_body]);
+    patch_wiki_contents(body);
+    local_restriction(body);
+    let texts = body.querySelectorAll("p");
+    texts.forEach((text3) => {
+      local_restriction(text3);
+    });
+    return body;
+  }
+  function local_restriction(text2) {
+    if (text2.textContent.trim().startsWith("Due to local laws, we are temporarily"))
+      text2.classList.add("local-restriction");
   }
 
   // src/seasonal.js
@@ -15615,6 +15621,21 @@
                         </div>
                     </div>
                 </div>
+                <div class="setting-group">
+                    ${setting({ id: "prefer_no_redirect" })}
+                    <div class="setting" data-type="action">
+                        <div class="heading">
+                            <h5>${tl(trans.legacy_redirects.name)}</h5>
+                            <p>${tl(trans.legacy_redirects.body)}</p>
+                        </div>
+                        <div class="toggle-wrap">
+                            <a class="btn continue" href="${root}settings/website" target="_blank">
+                                ${tl(trans.change_now)}
+                            </a>
+                        </div>
+                    </div>
+                    ${setting({ id: "travis" })}
+                </div>
             </div>
             <div class="bleh--panel">
                 <h4>${trans_legacy.en.settings.corrections.formatting}</h4>
@@ -15714,23 +15735,6 @@
                 </div>
                 <div class="setting-group">
                     ${setting({ id: "colourful_counts" })}
-                </div>
-            </div>
-            <div class="bleh--panel">
-                <h4>${tl(trans.redirections)}</h4>
-                <div class="setting-group">
-                    ${setting({ id: "travis" })}
-                    <div class="setting" data-type="action">
-                        <div class="heading">
-                            <h5>${tl(trans.legacy_redirects.name)}</h5>
-                            <p>${tl(trans.legacy_redirects.body)}</p>
-                        </div>
-                        <div class="toggle-wrap">
-                            <a class="btn continue" href="${root}settings/website" target="_blank">
-                                ${tl(trans.change_now)}
-                            </a>
-                        </div>
-                    </div>
                 </div>
             </div>
             <div class="bleh--panel">
@@ -16917,8 +16921,7 @@
   });
   flat_patterns.sort((a, b) => b.pat.length - a.pat.length);
   function lotus(force = false) {
-    if (!settings.corrections)
-      return;
+    if (!settings.corrections) return;
     let lotus_artist = localStorage.getItem("lotus_artist");
     let lotus_artist_expire = new Date(localStorage.getItem("lotus_artist_expire"));
     let lotus_album_track = localStorage.getItem("lotus_album_track");
@@ -17012,8 +17015,7 @@
         album.setAttribute("data-kate-processed", "true");
         let artist_name = album.querySelector(`.${parent.replace("-details", "")}-name a`);
         if (!artist_name) return;
-        let corrected_artist_name = correct_artist(artist_name.textContent);
-        artist_name.textContent = corrected_artist_name;
+        artist_name.textContent = correct_artist(artist_name.textContent);
       }
     });
   }
@@ -17045,8 +17047,7 @@
         let album_name = album.querySelector(`.${parent.replace("-details", "")}-name a`);
         if (!album_name) return;
         let artist_name = return_artist_from_generic(album_name.getAttribute("href"));
-        let corrected_album_name = correct_item_by_artist(album_name.textContent, artist_name);
-        album_name.textContent = corrected_album_name;
+        album_name.textContent = correct_item_by_artist(album_name.textContent, artist_name);
       }
     });
   }
@@ -17110,10 +17111,7 @@
       idx: lower_title.indexOf(pat)
     })).filter((m) => {
       if (m.idx < 1) return false;
-      if (m.group === "remasters" && !lower_title.includes(" remaster") && !lower_title.includes("(remaster")) {
-        return false;
-      }
-      return true;
+      return !(m.group === "remasters" && !lower_title.includes(" remaster") && !lower_title.includes("(remaster"));
     }).sort((a, b) => a.idx - b.idx);
     if (artist_corrections.hasOwnProperty(original_artist) && settings.corrections) {
       original_artist = correct_artist(
@@ -17172,8 +17170,7 @@
       let split = title_text.split(";");
       if (split.length < 2) {
         page.multi = false;
-        if (!settings.corrections)
-          return;
+        if (!settings.corrections) return;
         title.textContent = correct_artist(title_text, true);
         return;
       }
@@ -17182,7 +17179,7 @@
           title.innerHTML += ",";
         let part = document.createElement("a");
         part.classList.add("multi-artist-part");
-        part.setAttribute("href", `${root}music/${sanitise(artist)}`);
+        part.setAttribute("href", `${root}music/${redirect()}${sanitise(artist)}`);
         if (settings.corrections)
           part.textContent = correct_artist(artist);
         else
@@ -17212,7 +17209,10 @@
       if (artist_corrections.hasOwnProperty(track_artist.textContent)) {
         let corrected_artist = artist_corrections[track_artist.textContent];
         log(`corrected ${track_artist.textContent} as ${corrected_artist}`, "lotus");
+        track_artist.parentElement.setAttribute("href", `${root}music/${redirect()}${sanitise(corrected_artist)}`);
         track_artist.textContent = corrected_artist;
+      } else {
+        track_artist.parentElement.setAttribute("href", `${root}music/${redirect()}${sanitise(track_artist.textContent)}`);
       }
     }
     if (settings.format_guest_features) {
@@ -17237,7 +17237,7 @@
           for (let guest in song_guests) {
             song_artist_element.innerHTML = `${song_artist_element.innerHTML},`;
             song_artist_element.appendChild(html.node`
-                    <a class="header-new-crumb" href="${root}music/${sanitise(song_guests[guest])}" title=${song_guests[guest]}>${song_guests[guest]}</a>
+                    <a class="header-new-crumb" href="${root}music/${redirect()}${sanitise(song_guests[guest])}">${song_guests[guest]}</a>
                 `);
           }
         }
@@ -17275,11 +17275,11 @@
         if (involved.type == "user")
           involved_link = `${root}user/${involved.name}`;
         else if (involved.type == "artist")
-          involved_link = `${root}music/${sanitise(involved.name)}`;
+          involved_link = `${root}music/${redirect()}${sanitise(involved.name)}`;
         else if (involved.type == "album")
-          involved_link = `${root}music/${sanitise(involved.sister)}/${sanitise(involved.name)}`;
+          involved_link = `${root}music/${redirect()}${sanitise(involved.sister)}/${sanitise(involved.name)}`;
         else if (involved.type == "track")
-          involved_link = `${root}music/${sanitise(involved.sister)}/_/${sanitise(involved.name)}`;
+          involved_link = `${root}music/${redirect()}${sanitise(involved.sister)}/_/${sanitise(involved.name)}`;
         else if (involved.type == "tag")
           involved_link = `${root}tag/${sanitise(involved.name)}`;
         else if (involved.type == "bwaa")
@@ -17360,7 +17360,7 @@
             }
           }, 1);
         }
-        register_activity(action == "LoveTrack" ? "love" : "unlove", [{ name: track, type: "track", sister: artist }], `${root}music/${sanitise(artist)}/_/${sanitise(track)}`);
+        register_activity(action == "LoveTrack" ? "love" : "unlove", [{ name: track, type: "track", sister: artist }], `${root}music/${redirect()}${sanitise(artist)}/_/${sanitise(track)}`);
       }, false);
     });
     let bookmark_item = document.body.querySelectorAll(`form[action="/music/+bookmarks"]:not([data-bleh-subscribed])`);
@@ -18324,7 +18324,7 @@
             <div class="info-side">
                 <div class="sub-text">${tl(trans.about)}</div>
                 <h1>
-                    <a href="${root}music/${sanitise(page.sister)}">${correct_artist(page.sister)}</a>
+                    <a href="${root}music/${redirect()}${sanitise(page.sister)}">${correct_artist(page.sister)}</a>
                 </h1>
                 ${listeners}
                 ${tags}
@@ -18338,7 +18338,7 @@
             <div class="about-guest-features-panel">
                 ${page.sister_others.map((guest) => {
         return html.node`
-                        <a class="about-guest-feature" href="${root}music/${sanitise(guest)}">
+                        <a class="about-guest-feature" href="${root}music/${redirect()}${sanitise(guest)}">
                             ${guest}
                         </a>
                     `;
@@ -18502,7 +18502,7 @@
                 <div class="suggest-side">
                     <div class="cta suggest">
                         <strong>${tl(trans.suggest_title.name)}</strong>
-                        <a class="see-more" href="${root}music/${sanitise(page.sister)}/${page.suggest}">${tl(trans.suggest_title.body).replace("{v}", page.suggest)}</a>
+                        <a class="see-more" href="${root}music/${redirect()}${sanitise(page.sister)}/${page.suggest}">${tl(trans.suggest_title.body).replace("{v}", page.suggest)}</a>
                     </div>
                 </div>
                 ` : ""}
@@ -18519,7 +18519,7 @@
         if (settings.default_avatar_action == "expand" && avatar3)
           avatar_link.setAttribute("onclick", `_expand_avatar('${avatar3.getAttribute("content")}')`);
         else if (settings.default_avatar_action == "gallery")
-          avatar_link.href = `${root}music/${sanitise(page.sister)}/${sanitise(page.name)}/+images`;
+          avatar_link.href = `${root}music/${redirect()}${sanitise(page.sister)}/${sanitise(page.name)}/+images`;
         let menu = tippy(avatar_side, {
           theme: "context-menu",
           content: html.node`
@@ -18528,7 +18528,7 @@
                         ${tl(trans.expand)}
                     </button>
                     ` : ""}
-                    <a class="dropdown-menu-clickable-item" href="${root}music/${sanitise(page.sister)}/${sanitise(page.name)}/+images" data-menu-item="gallery">
+                    <a class="dropdown-menu-clickable-item" href="${root}music/${redirect()}${sanitise(page.sister)}/${sanitise(page.name)}/+images" data-menu-item="gallery">
                         ${tl(trans.artwork)}
                     </a>
                     <div class="sep"></div>
@@ -18790,7 +18790,7 @@
         if (settings.default_avatar_action == "expand" && avatar3 != null)
           avatar_link.setAttribute("onclick", `_expand_avatar('${avatar3.getAttribute("content")}')`);
         else if (settings.default_avatar_action == "gallery")
-          avatar_link.href = `${root}music/${sanitise(page.name)}/+images`;
+          avatar_link.href = `${root}music/${redirect()}${sanitise(page.name)}/+images`;
         let menu = tippy(avatar_side, {
           theme: "context-menu",
           content: html.node`
@@ -18799,7 +18799,7 @@
                         ${tl(trans.expand)}
                     </button>
                     ` : ""}
-                    <a class="dropdown-menu-clickable-item" href="${root}music/${sanitise(page.name)}/+images" data-menu-item="gallery">
+                    <a class="dropdown-menu-clickable-item" href="${root}music/${redirect()}${sanitise(page.name)}/+images" data-menu-item="gallery">
                         ${tl(trans.photos)}
                     </a>
                     <div class="sep"></div>
@@ -19048,11 +19048,11 @@
   function bleh_listeners() {
     page.structure.side.appendChild(html.node`
         <section class="side-actions">
-            <a class="btn side-action" data-type="profile" href="${root}user/${auth.name}/library/music/${sanitise(page.name)}">
+            <a class="btn side-action" data-type="profile" href="${root}user/${auth.name}/library/music/${redirect()}${sanitise(page.name)}">
                 ${auth.name}
             </a>
             ${settings.profile_shortcut != "" ? html.node`
-            <a class="btn side-action" data-type="profile_shortcut" href="${root}user/${settings.profile_shortcut}/library/music/${sanitise(page.name)}">
+            <a class="btn side-action" data-type="profile_shortcut" href="${root}user/${settings.profile_shortcut}/library/music/${redirect()}${sanitise(page.name)}">
                 ${settings.profile_shortcut}
             </a>
             ` : ""}
@@ -22501,10 +22501,8 @@
     },
     you_share_count_with: {
       // as in your musical taste between you and someone else
-      // you share {percentage%} (in taste) with: {list of artists}
-      en: "You share {c} with",
-      de: "Du teilst {c} mit",
-      pt: "Voc\xEA compartilha {c} com",
+      // you are {percentage%} compatible (in taste) {list of artists}
+      en: "You are {c} compatible",
       one: {
         en: "{artist}"
       },
@@ -23302,6 +23300,14 @@
       },
       body: {
         en: "Re-capitalise artists, albums, and tracks based on community contributions"
+      }
+    },
+    prefer_no_redirect: {
+      name: {
+        en: "Avoid artist redirects when navigating"
+      },
+      body: {
+        en: "Automatically adds +noredirect to artist links to avoid being sent to pages like Travi$ Scott"
       }
     },
     view_all: {
@@ -28412,7 +28418,7 @@
       body: trans.show_your_progress.body
     },
     travis: {
-      default: false,
+      default: true,
       title: trans.redirect_messages.name,
       body: trans.redirect_messages.body
     },
@@ -28702,6 +28708,12 @@
       placeholder: "none",
       keybind: ["\u2318", "B"],
       warn_if_empty: true
+    },
+    prefer_no_redirect: {
+      default: true,
+      title: trans.prefer_no_redirect.name,
+      body: trans.prefer_no_redirect.body,
+      new_release: true
     }
   };
 
