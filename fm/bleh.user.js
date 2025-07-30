@@ -19732,6 +19732,8 @@
       const avatar3 = notification.querySelector(".avatar");
       avatar3.classList = "avatar";
       const time = notification.querySelector("time");
+      let is_reply = false;
+      let others_included = 0;
       if (href.endsWith("/obsessions/set")) {
         type = "obsession";
         context.name = split[1];
@@ -19741,7 +19743,10 @@
       } else if (href.startsWith(`${root}user/`)) {
         context.name = split[1];
         strongs.forEach((strong, index) => {
-          if (index == strongs.length - 1 && strongs.length > 1) return;
+          if (index == strongs.length - 1 && strongs.length > 1) {
+            obtain_additional_info(strong.previousSibling.textContent);
+            return;
+          }
           involved.push(strong.textContent);
         });
       } else if (href.startsWith(`${root}music/`)) {
@@ -19755,13 +19760,19 @@
           context.name = correct_item_by_artist(desanitise(split[2]), context.sister);
         }
         strongs.forEach((strong, index) => {
-          if (index == strongs.length - 1) return;
+          if (index == strongs.length - 1) {
+            obtain_additional_info(strong.previousSibling.textContent);
+            return;
+          }
           involved.push(strong.textContent);
         });
       } else if (href.startsWith(`${root}tag/`)) {
         context.name = split[1];
         strongs.forEach((strong, index) => {
-          if (index == strongs.length - 1) return;
+          if (index == strongs.length - 1) {
+            obtain_additional_info(strong.previousSibling.textContent);
+            return;
+          }
           involved.push(strong.textContent);
         });
       }
@@ -19772,7 +19783,7 @@
             </div>
             <div class="notification-content">
                 <div class="notification-title">
-                    ${involved.join(", ")} ${type}
+                    ${involved.join(", ")} and ${others_included} others ${is_reply ? "reply" : "shout"} in ${type}
                 </div>
                 <div class="notification-context">
                     on ${context.name}, ${context.sister}
@@ -19782,6 +19793,11 @@
                 ${time}
             </div>
         `);
+      function obtain_additional_info(text2) {
+        const match = text2.match(/\d+/);
+        if (match) others_included = parseInt(match[0]);
+        if (text2.includes(tl(trans.notification_replied_ctx))) is_reply = true;
+      }
     });
   }
 
@@ -24449,6 +24465,12 @@
       sv: "{u} skrobblade senast\u2026",
       tr: "{u} adl\u0131 kullan\u0131c\u0131n\u0131n son skroplad\u0131klar\u0131 \u2026",
       zh: "{u} \u4E0A\u6B21\u8BB0\u5F55\u4E86..."
+    },
+    notification_replied_ctx: {
+      // notifications can include text with valuable info such as:
+      // and 7 others replied to your shout on
+      // this is searching for the word "replied"
+      en: "replied"
     }
   };
   var trans_legacy = {

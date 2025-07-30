@@ -2,6 +2,7 @@ import {root} from "../build/page.js";
 import {desanitise} from "../build/tools.js";
 import {correct_artist, correct_item_by_artist} from "./lotus.js";
 import {html, render} from "lighterhtml";
+import {tl, trans} from "../build/trans.js";
 
 export function bleh_notification_list(list) {
     list.classList = 'notification-list';
@@ -32,6 +33,9 @@ export function bleh_notification_list(list) {
 
         const time = notification.querySelector('time');
 
+        let is_reply = false;
+        let others_included = 0;
+
         if (href.endsWith('/obsessions/set')) {
             type = 'obsession';
             context.name = split[1];
@@ -42,7 +46,11 @@ export function bleh_notification_list(list) {
             context.name = split[1];
 
             strongs.forEach((strong, index) => {
-                if (index == strongs.length - 1 && strongs.length > 1) return;
+                if (index == strongs.length - 1 && strongs.length > 1) {
+                    obtain_additional_info(strong.previousSibling.textContent);
+
+                    return;
+                }
 
                 involved.push(strong.textContent);
             });
@@ -58,7 +66,11 @@ export function bleh_notification_list(list) {
             }
 
             strongs.forEach((strong, index) => {
-                if (index == strongs.length - 1) return;
+                if (index == strongs.length - 1) {
+                    obtain_additional_info(strong.previousSibling.textContent);
+
+                    return;
+                }
 
                 involved.push(strong.textContent);
             });
@@ -66,7 +78,11 @@ export function bleh_notification_list(list) {
             context.name = split[1];
 
             strongs.forEach((strong, index) => {
-                if (index == strongs.length - 1) return;
+                if (index == strongs.length - 1) {
+                    obtain_additional_info(strong.previousSibling.textContent);
+
+                    return;
+                }
 
                 involved.push(strong.textContent);
             });
@@ -80,7 +96,7 @@ export function bleh_notification_list(list) {
             </div>
             <div class="notification-content">
                 <div class="notification-title">
-                    ${involved.join(', ')} ${type}
+                    ${involved.join(', ')} and ${others_included} others ${is_reply ? 'reply' : 'shout'} in ${type}
                 </div>
                 <div class="notification-context">
                     on ${context.name}, ${context.sister}
@@ -90,5 +106,13 @@ export function bleh_notification_list(list) {
                 ${time}
             </div>
         `);
+
+        // we can use the last sibling to obtain info on if this is a reply or not and other users
+        function obtain_additional_info(text) {
+            const match = text.match(/\d+/);
+            if (match) others_included = parseInt(match[0]);
+
+            if (text.includes(tl(trans.notification_replied_ctx))) is_reply = true;
+        }
     });
 }

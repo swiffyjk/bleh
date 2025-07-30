@@ -3204,6 +3204,12 @@ export const trans = {
         sv: '{u} skrobblade senast…',
         tr: '{u} adlı kullanıcının son skropladıkları …',
         zh: '{u} 上次记录了...'
+    },
+    notification_replied_ctx: {
+        // notifications can include text with valuable info such as:
+        // and 7 others replied to your shout on
+        // this is searching for the word "replied"
+        en: 'replied'
     }
 }
 
