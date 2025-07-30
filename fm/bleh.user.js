@@ -19715,16 +19715,17 @@
   function bleh_notification_list(list) {
     list.classList = "notification-list";
     let notifications = list.querySelectorAll(".inbox-notifications__item");
-    notifications.forEach((notification) => {
+    notifications.forEach((notification, index) => {
       let active = notification.classList.contains("inbox-notifications__item--highlight");
+      if (index == 0) active = true;
       notification.classList = "notification";
       if (active) notification.classList.add("active");
       const link = notification.querySelector(".inbox-notifications__item-link");
       const href = link.getAttribute("href");
       let type = "shoutbox";
       let context = {
-        name: "",
-        sister: ""
+        name: null,
+        sister: null
       };
       let involved = [];
       const strongs = link.querySelectorAll("strong");
@@ -19736,67 +19737,95 @@
       let others_included = 0;
       if (href.endsWith("/obsessions/set")) {
         type = "obsession";
-        context.name = split[1];
+        involved.push(split[1]);
+        const desc = strongs[0].textContent;
+        const desc_split = desc.split(" \u2014 ");
+        context.type = "track";
+        context.sister = correct_artist(desc_split[0]);
+        context.name = correct_item_by_artist(desc_split[1], context.sister);
       } else if (href.endsWith("/listening-report/month")) {
         type = "report";
-        context.name = split[1];
+        involved.push(split[1]);
       } else if (href.startsWith(`${root}user/`)) {
+        context.type = "profile";
         context.name = split[1];
-        strongs.forEach((strong, index) => {
-          if (index == strongs.length - 1 && strongs.length > 1) {
-            obtain_additional_info(strong.previousSibling.textContent);
+        strongs.forEach((strong, index2) => {
+          if (index2 == strongs.length - 1 && strongs.length > 1) {
+            obtain_additional_info(strong.previousSibling.textContent, strong.nextSibling.textContent);
             return;
+          } else if (index2 == strongs.length - 1 && strongs.length == 1) {
+            obtain_additional_info(strong.nextSibling.textContent);
           }
           involved.push(strong.textContent);
         });
       } else if (href.startsWith(`${root}music/`)) {
         if (split[2] == "+shoutbox") {
+          context.type = "artist";
           context.name = correct_artist(desanitise(split[1]));
         } else if (split[2] == "_") {
+          context.type = "track";
           context.sister = correct_artist(desanitise(split[1]));
           context.name = correct_item_by_artist(desanitise(split[3]), context.sister);
         } else {
+          context.type = "album";
           context.sister = correct_artist(desanitise(split[1]));
           context.name = correct_item_by_artist(desanitise(split[2]), context.sister);
         }
-        strongs.forEach((strong, index) => {
-          if (index == strongs.length - 1) {
-            obtain_additional_info(strong.previousSibling.textContent);
+        strongs.forEach((strong, index2) => {
+          if (index2 == strongs.length - 1) {
+            obtain_additional_info(strong.previousSibling.textContent, strong.nextSibling.textContent);
             return;
           }
           involved.push(strong.textContent);
         });
       } else if (href.startsWith(`${root}tag/`)) {
+        context.type = "tag";
         context.name = split[1];
-        strongs.forEach((strong, index) => {
-          if (index == strongs.length - 1) {
-            obtain_additional_info(strong.previousSibling.textContent);
+        strongs.forEach((strong, index2) => {
+          if (index2 == strongs.length - 1) {
+            obtain_additional_info(strong.previousSibling.textContent, strong.nextSibling.textContent);
             return;
           }
           involved.push(strong.textContent);
         });
       }
       console.info(split, context, type, involved);
+      patch_avatar(avatar3, involved[0]);
       render(notification, html`
             <div class="notification-avatar">
                 ${avatar3}
             </div>
+            <div class="bleh-icon" data-type=${type} style="--icon: var(--mask)" />
             <div class="notification-content">
                 <div class="notification-title">
-                    ${involved.join(", ")} and ${others_included} others ${is_reply ? "reply" : "shout"} in ${type}
+                    ${type == "shoutbox" ? html.node`
+                    ${others_included == 0 ? html.node`
+                        ${is_reply ? tl(trans.user_replied).replace("{u}", involved.join(", ")) : tl(trans.user_commented).replace("{u}", involved.join(", "))}
+                    ` : html.node`
+                        ${is_reply ? tl(trans.users_replied).replace("{u}", involved.join(", ")).replace("{c}", others_included) : tl(trans.users_commented).replace("{u}", involved.join(", ")).replace("{c}", others_included)}
+                    `}
+                    ` : type == "obsession" ? tl(trans.obsession_expired) : html.node`
+                    
+                    `}
                 </div>
                 <div class="notification-context">
-                    on ${context.name}, ${context.sister}
+                    <span class="bleh-icon" style="--icon: var(--icon-16-indent)" />
+                    <span class="notification-type" data-type=${context.type}>
+                        <span class="bleh-icon" style="--icon: var(--mask)" />
+                        ${context.sister ? `${context.name} ${tl(trans.by)} ${context.sister}` : context.name}
+                    </span>
                 </div>
             </div>
             <div class="notification-time">
                 ${time}
             </div>
+            <a class="link-block-cover-link" href=${link.getAttribute("href")} />
         `);
-      function obtain_additional_info(text2) {
+      function obtain_additional_info(text2, backup_text = null) {
         const match = text2.match(/\d+/);
         if (match) others_included = parseInt(match[0]);
         if (text2.includes(tl(trans.notification_replied_ctx))) is_reply = true;
+        else if (backup_text && backup_text.trim().includes(tl(trans.notification_replied_ctx))) is_reply = true;
       }
     });
   }
@@ -24470,7 +24499,33 @@
       // notifications can include text with valuable info such as:
       // and 7 others replied to your shout on
       // this is searching for the word "replied"
-      en: "replied"
+      en: "replied",
+      de: "geantwortet",
+      fr: "a r\xE9pondu",
+      ja: "\u8FD4\u4FE1\u3057\u307E\u3057\u305F",
+      es: "respondi\xF3",
+      it: "risposto",
+      pl: "odpowiedzia\u0142",
+      pt: "respondeu",
+      ru: "\u043E\u0442\u0432\u0435\u0442\u0438\u043B(\u0430)",
+      sv: "svarade",
+      tr: "cevap verdi",
+      zh: "\u56DE\u590D\u4E86"
+    },
+    user_commented: {
+      en: "{u} commented"
+    },
+    users_commented: {
+      en: "{u} and {c} others commented"
+    },
+    user_replied: {
+      en: "{u} replied"
+    },
+    users_replied: {
+      en: "{u} and {c} others replied"
+    },
+    obsession_expired: {
+      en: "Your obsession expired!"
     }
   };
   var trans_legacy = {

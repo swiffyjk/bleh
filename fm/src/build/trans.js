@@ -3209,7 +3209,33 @@ export const trans = {
         // notifications can include text with valuable info such as:
         // and 7 others replied to your shout on
         // this is searching for the word "replied"
-        en: 'replied'
+        en: 'replied',
+        de: 'geantwortet',
+        fr: 'a répondu',
+        ja: '返信しました',
+        es: 'respondió',
+        it: 'risposto',
+        pl: 'odpowiedział',
+        pt: 'respondeu',
+        ru: 'ответил(а)',
+        sv: 'svarade',
+        tr: 'cevap verdi',
+        zh: '回复了'
+    },
+    user_commented: {
+        en: '{u} commented'
+    },
+    users_commented: {
+        en: '{u} and {c} others commented'
+    },
+    user_replied: {
+        en: '{u} replied'
+    },
+    users_replied: {
+        en: '{u} and {c} others replied'
+    },
+    obsession_expired: {
+        en: 'Your obsession expired!'
     }
 }
 
