@@ -7300,7 +7300,7 @@
     .shout-action-button,
     .content-form select,
     .dropdown-menu-clickable-item, .auth-dropdown-menu-item, .navlist-hidden-list a, .display-options-clickable-item,
-    .inbox-compose-button, .inbox-notifications__item-link,
+    .inbox-compose-button,
     .inbox-table .inbox-message,
     .header-new-playlink,
     .btn-add, .btn-file,
@@ -7348,7 +7348,8 @@
     .masthead-popup-close,
     .share-link,
     .check .box,
-    .blend-v2-btn
+    .blend-v2-btn,
+    .notification
     {
         --bg: var(--cards-overlay-image-subtlest, none), hsl(var(--b3));
         --bg-hov: var(--cards-overlay-image-subtlest, none), color-mix(in hsl, hsl(var(--b6)), hsl(var(--b3)) 80%);
@@ -10912,14 +10913,15 @@
 
 
     /*     NOTIFICATIONS     */
-    .inbox-notifications {
+    .notification-list {
         display: flex;
         flex-direction: column;
         gap: var(--button-list-gap);
 
-        .inbox-notifications__item-link {
+        .notification {
             display: flex;
             gap: 12px;
+            margin: unset;
 
             --bg: hsl(var(--b4), 40%);
             --bg-hov: hsl(var(--b4), 80%);
@@ -10927,7 +10929,7 @@
             --shadow: none;
             --padding: 12px 12px;
 
-            &.inbox-notifications__item--highlight {
+            &.active {
                 --bg: hsla(var(--h4), 35%);
                 --bg-hov: hsla(var(--h4), 45%);
                 --bg-atv: hsla(var(--h4), 55%);
