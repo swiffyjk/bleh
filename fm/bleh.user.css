@@ -8592,6 +8592,10 @@
 
         text-align: left;
 
+        &.tippy-box {
+            max-width: 600px !important;
+        }
+
         font-size: var(--font-size);
 
         [data-bleh--seasonal_overlays="true"][data-bleh--season="fall"] &,
@@ -10916,8 +10920,36 @@
 
 
     /*     NOTIFICATIONS     */
+    .window-header {
+        font-size: var(--font-size);
+        line-height: var(--line-height);
+        margin-top: calc(var(--card-gap) - var(--item-list-gap));
+        margin-bottom: var(--card-gap);
+
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        gap: 6px;
+        color: hsl(var(--c1));
+        --mask-colour: hsl(var(--c1), 80%);
+
+        .window-title {
+            font-weight: var(--font-weight-medium);
+        }
+    }
     .mini-notifications {
         text-align: left;
+        font-size: var(--font-size);
+        line-height: var(--line-height);
+
+        width: 400px;
+        height: 287px;
+
+        &.content-loading {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+        }
     }
     .notification-list {
         display: flex;
@@ -10946,6 +10978,7 @@
 
             &.mini {
                 --padding: 5px 10px;
+                width: 400px;
 
                 .notification-avatar {
                     & > .avatar {
@@ -11000,6 +11033,15 @@
 
             .notification-content {
                 flex: 1;
+                min-width: 0;
+
+                .notification-title {
+                    flex: 1 1 auto;
+                    min-width: 0;
+                    overflow: hidden;
+                    text-overflow: ellipsis;
+                    white-space: nowrap;
+                }
 
                 .notification-context {
                     display: flex;
@@ -11007,6 +11049,8 @@
                     gap: 4px;
                     color: hsl(var(--c3));
                     --mask-colour: currentColor;
+
+                    min-width: 0;
 
                     & > .bleh-icon {
                         --icon-size: 12px;
@@ -11018,6 +11062,20 @@
                         gap: 4px;
 
                         --icon-size: 14px;
+
+                        flex: 1 1 auto;
+                        min-width: 0;
+                        overflow: hidden;
+                        text-overflow: ellipsis;
+                        white-space: nowrap;
+
+                        & > span:last-child {
+                            overflow: hidden;
+                            text-overflow: ellipsis;
+                            white-space: nowrap;
+                            flex: 1 1 auto;
+                            min-width: 0;
+                        }
                     }
                 }
             }

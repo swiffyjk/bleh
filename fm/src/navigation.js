@@ -177,16 +177,16 @@ export function append_nav() {
     });
 
     if (notif_count > 0) {
-        tippy(notif_container, {
+        tippy(notif_link, {
             content: tl(trans.notifications.count).replace('{count}', notif_count)
         });
     } else {
-        tippy(notif_container, {
+        tippy(notif_link, {
             content: tl(trans.notifications.none)
         });
     }
 
-    tippy(notif_container, {
+    tippy(notif_link, {
         theme: 'auth-menu-v2',
         placement: 'top',
         interactive: true,
@@ -195,7 +195,11 @@ export function append_nav() {
 
         onShow(instance) {
             instance.setContent(html.node`
-                <div class="mini-notifications">
+                <div class="window-header">
+                    <div class="bleh-icon" data-type="notifications" style="--icon: var(--mask)" />
+                    <div class="window-title">${tl(trans.notifications.name)}</div>
+                </div>
+                <div class="mini-notifications content-loading">
                     <div class="loading-data-container">
                         <div class="loading-data-text">${tl(trans.loading)}</div>
                     </div>
@@ -206,8 +210,15 @@ export function append_nav() {
                 bleh_notification_list(notifications, true);
 
                 instance.setContent(html.node`
+                    <div class="window-header">
+                        <div class="bleh-icon" data-type="notifications" style="--icon: var(--mask)" />
+                        <div class="window-title">${tl(trans.notifications.name)}</div>
+                    </div>
                     <div class="mini-notifications">
                         ${notifications}
+                        <p class="more-link">
+                            <a href="${root}inbox/notifications">${tl(trans.read_more)}</a>
+                        </p>
                     </div>
                 `);
             }
@@ -220,9 +231,10 @@ export function append_nav() {
 
     links.appendChild(notif_container);
 
+    let inbox_link;
     let inbox_container = html.node`
         <li class="masthead-nav-item">
-            <a class="masthead-nav-control" href="${root}inbox" data-label="inbox" data-count=${inbox_count}>
+            <a class="masthead-nav-control" href="${root}inbox" data-label="inbox" data-count=${inbox_count} ref=${el => inbox_link = el}>
                 <span class="sr-only">${tl(trans.inbox.name)}</span>
                 <div class="counter">${inbox_count}</div>
             </a>
@@ -230,11 +242,11 @@ export function append_nav() {
     `;
 
     if (inbox_count > 0) {
-        tippy(inbox_container, {
+        tippy(inbox_link, {
             content: tl(trans.inbox.count).replace('{count}', inbox_count)
         });
     } else {
-        tippy(inbox_container, {
+        tippy(inbox_link, {
             content: tl(trans.inbox.none)
         });
     }

@@ -12,16 +12,18 @@ export function bleh_notification_list(list, mini = false) {
 
     let notifications = list.querySelectorAll('.inbox-notifications__item');
     notifications.forEach((notification, index) => {
-        let active = notification.classList.contains('inbox-notifications__item--highlight');
+        if (mini && index > 4) notification.style.display = 'none';
+
+        const link = notification.querySelector('.inbox-notifications__item-link');
+        const href = link.getAttribute('href');
+
+        const active = link.classList.contains('inbox-notifications__item--highlight');
 
         //if (index == 0) active = true;
 
         notification.classList = 'notification';
         if (active) notification.classList.add('active');
         if (mini) notification.classList.add('mini');
-
-        const link = notification.querySelector('.inbox-notifications__item-link');
-        const href = link.getAttribute('href');
 
         let type = 'shoutbox';
         let context = {
@@ -148,7 +150,7 @@ export function bleh_notification_list(list, mini = false) {
                     <span class="bleh-icon" style="--icon: var(--icon-16-indent)" />
                     <span class="notification-type" data-type=${context.type}>
                         <span class="bleh-icon" style="--icon: var(--mask)" />
-                        ${context.sister ? `${context.name} ${tl(trans.by)} ${context.sister}` : context.name}
+                        <span>${context.sister ? `${context.name} ${tl(trans.by)} ${context.sister}` : context.name}</span>
                     </span>
                 </div>
             </div>
