@@ -324,6 +324,8 @@ function assign_page() {
 
     let main_content = page.structure.wrapper.querySelector(':scope > :last-child:not([data-bleh])');
     if (main_content) {
+        auth.pro = !!main_content.querySelector(':scope > .masthead > .masthead-pro-wrap');
+
         assign_page_type();
         load_page();
         main_content.setAttribute('data-bleh', 'true');

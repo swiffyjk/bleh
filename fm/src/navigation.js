@@ -118,8 +118,6 @@ export function append_nav() {
         <p>${auth.name}</p>
     `);
 
-    auth.pro = !!masthead.querySelector('.masthead-pro-wrap');
-
     let badges = load_badges(auth.name, true);
 
     if (badges) {

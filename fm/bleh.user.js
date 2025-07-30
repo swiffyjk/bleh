@@ -1,7 +1,7 @@
 // ==UserScript==
 // @name         bleh
 // @namespace    http://last.fm/
-// @version      2025.0729.1
+// @version      2025.0730
 // @description  bleh!!! ^-^
 // @author       kate
 // @match        https://www.last.fm/*
@@ -11459,7 +11459,7 @@
       } else {
         if (settings.profile_avi_background) {
           if (avatar3)
-            register_background(avatar_img.querySelector("img").getAttribute("src").replace("/avatar170s/", "/ar0/"), "avatar");
+            register_background(avatar_img.getAttribute("src").replace("/avatar170s/", "/ar0/"), "avatar");
           else
             register_background(null, "none");
         } else {
@@ -11474,9 +11474,9 @@
         localStorage.setItem("bleh_profile_shortcut_avi", avatar_img.getAttribute("src"));
       page.structure.container.insertBefore(redesigned_profile_header, page.structure.container.firstElementChild);
       profile_header.classList.add("legacy-header");
-      let header_avatar = redesigned_profile_header.querySelector(".avatar-side");
+      const header_avatar = redesigned_profile_header.querySelector(".avatar-side");
       if (!new_account) {
-        let src = header_avatar.querySelector("img").getAttribute("src");
+        const src = avatar_img.getAttribute("src");
         page.avatar = src;
         let avatar_link = document.createElement("a");
         avatar_link.classList.add("bleh--avatar-clickable-link");
@@ -16676,7 +16676,6 @@
     auth_link2.appendChild(html.node`
         <p>${auth.name}</p>
     `);
-    auth.pro = !!masthead.querySelector(".masthead-pro-wrap");
     let badges = load_badges(auth.name, true);
     if (badges) {
       auth_link2.appendChild(html.node`
@@ -20727,6 +20726,7 @@
       page.structure.wrapper = document.body.querySelector(".main-content");
     let main_content = page.structure.wrapper.querySelector(":scope > :last-child:not([data-bleh])");
     if (main_content) {
+      auth.pro = !!main_content.querySelector(":scope > .masthead > .masthead-pro-wrap");
       assign_page_type();
       load_page();
       main_content.setAttribute("data-bleh", "true");
@@ -28333,7 +28333,7 @@
   // src/build/build.json
   var build_default = {
     brand: "bleh",
-    build: "2025.0729.1",
+    build: "2025.0730",
     sku: "claire",
     bio: "bleh!!! ^-^",
     author: "kate",

@@ -109,7 +109,7 @@ export function bleh_profiles() {
         } else {
             if (settings.profile_avi_background) {
                 if (avatar)
-                    register_background(avatar_img.querySelector('img').getAttribute('src').replace('/avatar170s/', '/ar0/'), 'avatar');
+                    register_background(avatar_img.getAttribute('src').replace('/avatar170s/', '/ar0/'), 'avatar');
                 else
                     register_background(null, 'none');
             } else {
@@ -129,10 +129,10 @@ export function bleh_profiles() {
 
 
         // make avatar clickable
-        let header_avatar = redesigned_profile_header.querySelector('.avatar-side');
+        const header_avatar = redesigned_profile_header.querySelector('.avatar-side');
 
         if (!new_account) {
-            let src = header_avatar.querySelector('img').getAttribute('src');
+            const src = avatar_img.getAttribute('src');
             page.avatar = src;
 
             let avatar_link = document.createElement('a');
