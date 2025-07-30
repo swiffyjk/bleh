@@ -547,7 +547,7 @@ export function append_nav() {
                             <div class="side-page" data-page="2" ref=${el => page_2 = el} />
                         </div>
                     </div>
-                    ${ff('status_in_menu') ? html.node`
+                    ${ff('status_in_menu') && auth.pro ? html.node`
                     <div class="auth-menu-status" ref=${el => status_container = el}>
                         <div class="status">
                             <div class="loading-data-container">
@@ -559,6 +559,8 @@ export function append_nav() {
                 `);
 
                 function render_status_container(status) {
+                    if (!status) return;
+
                     render(status_container, html`
                         <div class="status">
                             <div class="bleh-icon" />
@@ -572,9 +574,11 @@ export function append_nav() {
                     `);
                 }
 
-                if (page.now.name) render_status_container(page.now);
+                if (ff('status_in_menu') && auth.pro) {
+                    if (page.now.name) render_status_container(page.now);
 
-                live_status().then(status => render_status_container(status));
+                    live_status().then(status => render_status_container(status));
+                }
             },
 
             onHide(instance) {

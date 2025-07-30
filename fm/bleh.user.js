@@ -18082,7 +18082,7 @@
                             <div class="side-page" data-page="2" ref=${(el) => page_2 = el} />
                         </div>
                     </div>
-                    ${ff("status_in_menu") ? html.node`
+                    ${ff("status_in_menu") && auth.pro ? html.node`
                     <div class="auth-menu-status" ref=${(el) => status_container = el}>
                         <div class="status">
                             <div class="loading-data-container">
@@ -18093,6 +18093,7 @@
                     ` : ""}
                 `);
           function render_status_container(status) {
+            if (!status) return;
             render(status_container, html`
                         <div class="status">
                             <div class="bleh-icon" />
@@ -18105,8 +18106,10 @@
                         </div>
                     `);
           }
-          if (page.now.name) render_status_container(page.now);
-          live_status().then((status) => render_status_container(status));
+          if (ff("status_in_menu") && auth.pro) {
+            if (page.now.name) render_status_container(page.now);
+            live_status().then((status) => render_status_container(status));
+          }
         },
         onHide(instance) {
           page.structure.notifications.setAttribute("data-auth-open", "false");
