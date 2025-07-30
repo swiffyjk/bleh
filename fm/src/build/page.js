@@ -107,12 +107,16 @@ export let page = {
     mobile: false,
     platform: 'other',
     now: {
-        last_fetched: null,
+        next_fetch: null,
         name: null,
         artist: null,
         album: null,
         avatar: null,
         active: false
+    },
+    notifications: {
+        next_fetch: null,
+        list: null
     },
     structure: {
         wrapper: null,

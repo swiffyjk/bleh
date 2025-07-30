@@ -5,8 +5,10 @@ import {html, render} from "lighterhtml";
 import {tl, trans} from "../build/trans.js";
 import {patch_avatar} from "../avatar.js";
 
-export function bleh_notification_list(list) {
+export function bleh_notification_list(list, mini = false) {
     list.classList = 'notification-list';
+
+    if (mini) list.classList.add('mini');
 
     let notifications = list.querySelectorAll('.inbox-notifications__item');
     notifications.forEach((notification, index) => {
@@ -16,6 +18,7 @@ export function bleh_notification_list(list) {
 
         notification.classList = 'notification';
         if (active) notification.classList.add('active');
+        if (mini) notification.classList.add('mini');
 
         const link = notification.querySelector('.inbox-notifications__item-link');
         const href = link.getAttribute('href');

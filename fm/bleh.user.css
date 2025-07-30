@@ -10916,6 +10916,9 @@
 
 
     /*     NOTIFICATIONS     */
+    .mini-notifications {
+        text-align: left;
+    }
     .notification-list {
         display: flex;
         flex-direction: column;
@@ -10940,6 +10943,21 @@
             --shadow: none;
             --padding: 12px 12px;
             transform: none !important;
+
+            &.mini {
+                --padding: 5px 10px;
+
+                .notification-avatar {
+                    & > .avatar {
+                        width: 32px;
+                        height: 32px;
+                    }
+                }
+
+                .notification-time {
+                    display: none;
+                }
+            }
 
             &.active {
                 --bg: hsla(var(--h4), 35%);

@@ -21,6 +21,7 @@ import {load_banner} from "./components/banner.js";
 import {prompt_for_update} from "./style.js";
 import {log} from "./build/log.js";
 import {correct_artist, correct_item_by_artist} from "./components/lotus.js";
+import {bleh_notification_list} from "./components/notifications.js";
 
 export function patch_masthead() {
     let masthead_logo = document.body.querySelector('.masthead-logo');
@@ -157,14 +158,23 @@ export function append_nav() {
     let inbox_count = new_auth.querySelector('[data-analytics-label="inbox"] + .auth-avatar-notification-count-badge');
     if (!inbox_count) inbox_count = '0'; else inbox_count = inbox_count.textContent;
 
+    let notif_link;
     let notif_container = html.node`
         <li class="masthead-nav-item">
-            <a class="masthead-nav-control" href="${root}inbox/notifications" data-label="notifications" data-count=${notif_count}>
+            <a class="masthead-nav-control" href="${root}inbox/notifications" data-label="notifications" data-count=${notif_count} ref=${el => notif_link = el}>
                 <span class="sr-only">${tl(trans.notifications.name)}</span>
                 <div class="counter">${notif_count}</div>
             </a>
         </li>
     `;
+
+    notif_link.addEventListener('click', (e) => {
+        const cmd = (e.getModifierState('Control') || e.getModifierState('Meta'));
+        const new_tab = e.button === 1 || cmd;
+
+        // only allow clicking link if new tab action
+        if (!new_tab) e.preventDefault();
+    });
 
     if (notif_count > 0) {
         tippy(notif_container, {
@@ -175,6 +185,38 @@ export function append_nav() {
             content: tl(trans.notifications.none)
         });
     }
+
+    tippy(notif_container, {
+        theme: 'auth-menu-v2',
+        placement: 'top',
+        interactive: true,
+        interactiveBorder: 10,
+        trigger: 'click',
+
+        onShow(instance) {
+            instance.setContent(html.node`
+                <div class="mini-notifications">
+                    <div class="loading-data-container">
+                        <div class="loading-data-text">${tl(trans.loading)}</div>
+                    </div>
+                </div>
+            `);
+
+            function render_notifications(notifications) {
+                bleh_notification_list(notifications, true);
+
+                instance.setContent(html.node`
+                    <div class="mini-notifications">
+                        ${notifications}
+                    </div>
+                `);
+            }
+
+            if (page.notifications.list) render_notifications(page.notifications.list);
+
+            fetch_notifications().then(notifications => render_notifications(notifications));
+        }
+    });
 
     links.appendChild(notif_container);
 
@@ -520,7 +562,7 @@ export function append_nav() {
 
                 if (page.now.name) render_status_container(page.now);
 
-                live_status().then(status => render_status_container(status))
+                live_status().then(status => render_status_container(status));
             },
 
             onHide(instance) {
@@ -705,6 +747,37 @@ export async function live_status() {
         };
 
         return page.now;
+    } catch (error) {
+        log('exception during fetch', 'live', 'error', {error: error});
+    }
+}
+
+export async function fetch_notifications() {
+    if (page.notifications.next_fetch && Date.now() < page.notifications.next_fetch) return page.notifications.list;
+
+    try {
+        const res = await fetch(`${root}inbox/notifications`);
+        if (!res.ok) {
+            log('failed to fetch', 'live', 'error', {res});
+            return;
+        }
+
+        const dom = await res.text();
+        const parser = new DOMParser();
+        const doc = parser.parseFromString(dom, 'text/html');
+
+        const list = doc.querySelector('.inbox-notifications');
+
+        let next = new Date();
+        next.setMinutes(next.getMinutes() + 1);
+
+        page.notifications.next = next;
+
+        if (list) {
+            page.notifications.list = list;
+
+            return list;
+        }
     } catch (error) {
         log('exception during fetch', 'live', 'error', {error: error});
     }

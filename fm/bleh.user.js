@@ -1046,12 +1046,16 @@
     mobile: false,
     platform: "other",
     now: {
-      last_fetched: null,
+      next_fetch: null,
       name: null,
       artist: null,
       album: null,
       avatar: null,
       active: false
+    },
+    notifications: {
+      next_fetch: null,
+      list: null
     },
     structure: {
       wrapper: null,
@@ -17502,6 +17506,135 @@
     });
   }
 
+  // src/components/notifications.js
+  function bleh_notification_list(list, mini = false) {
+    list.classList = "notification-list";
+    if (mini) list.classList.add("mini");
+    let notifications = list.querySelectorAll(".inbox-notifications__item");
+    notifications.forEach((notification, index) => {
+      let active = notification.classList.contains("inbox-notifications__item--highlight");
+      notification.classList = "notification";
+      if (active) notification.classList.add("active");
+      if (mini) notification.classList.add("mini");
+      const link = notification.querySelector(".inbox-notifications__item-link");
+      const href = link.getAttribute("href");
+      let type = "shoutbox";
+      let context = {
+        name: null,
+        sister: null
+      };
+      let involved = [];
+      const strongs = link.querySelectorAll("strong");
+      let split = href.replace(root, "").split("/");
+      const avatar3 = notification.querySelector(".avatar");
+      avatar3.classList = "avatar";
+      const time = notification.querySelector("time");
+      let is_reply = false;
+      let others_included = 0;
+      if (href.endsWith("/obsessions/set")) {
+        type = "obsession";
+        involved.push(split[1]);
+        const desc = strongs[0].textContent;
+        const desc_split = desc.split(" \u2014 ");
+        context.type = "track";
+        context.sister = correct_artist(desc_split[0]);
+        context.name = correct_item_by_artist(desc_split[1], context.sister);
+      } else if (href.endsWith("/listening-report/month")) {
+        type = "listening-report";
+        involved.push(strongs[0].textContent);
+        let img = avatar3.querySelector("img");
+        img.src = auth.avatar;
+        img.alt = auth.name;
+        let label = avatar3.querySelector(".avatar-status-dot");
+        if (auth.pro) {
+          label.classList = "avatar-status-dot avatar-status-dot--subscriber";
+        } else {
+          label.remove();
+        }
+        context.type = "profile";
+        context.name = split[1];
+      } else if (href.startsWith(`${root}user/`)) {
+        context.type = "profile";
+        context.name = split[1];
+        strongs.forEach((strong, index2) => {
+          if (index2 == strongs.length - 1 && strongs.length > 1) {
+            obtain_additional_info(strong.previousSibling.textContent, strong.nextSibling.textContent);
+            return;
+          } else if (index2 == strongs.length - 1 && strongs.length == 1) {
+            obtain_additional_info(strong.nextSibling.textContent);
+          }
+          involved.push(strong.textContent);
+        });
+      } else if (href.startsWith(`${root}music/`)) {
+        if (split[2].startsWith("+")) {
+          context.type = "artist";
+          context.name = correct_artist(desanitise(split[1]));
+        } else if (split[2] == "_") {
+          context.type = "track";
+          context.sister = correct_artist(desanitise(split[1]));
+          context.name = correct_item_by_artist(desanitise(split[3]), context.sister);
+        } else {
+          context.type = "album";
+          context.sister = correct_artist(desanitise(split[1]));
+          context.name = correct_item_by_artist(desanitise(split[2]), context.sister);
+        }
+        strongs.forEach((strong, index2) => {
+          if (index2 == strongs.length - 1) {
+            obtain_additional_info(strong.previousSibling.textContent, strong.nextSibling.textContent);
+            return;
+          }
+          involved.push(strong.textContent);
+        });
+      } else if (href.startsWith(`${root}tag/`)) {
+        context.type = "tag";
+        context.name = split[1];
+        strongs.forEach((strong, index2) => {
+          if (index2 == strongs.length - 1) {
+            obtain_additional_info(strong.previousSibling.textContent, strong.nextSibling.textContent);
+            return;
+          }
+          involved.push(strong.textContent);
+        });
+      }
+      console.info(split, context, type, involved);
+      patch_avatar(avatar3, involved[0]);
+      render(notification, html`
+            <div class="notification-avatar">
+                ${avatar3}
+            </div>
+            <div class="bleh-icon" data-type=${type} style="--icon: var(--mask)" />
+            <div class="notification-content">
+                <div class="notification-title">
+                    ${type == "shoutbox" ? html.node`
+                    ${others_included == 0 ? html.node`
+                        ${is_reply ? tl(trans.user_replied).replace("{u}", involved.join(", ")) : tl(trans.user_commented).replace("{u}", involved.join(", "))}
+                    ` : html.node`
+                        ${is_reply ? tl(trans.users_replied).replace("{u}", involved.join(", ")).replace("{c}", others_included) : tl(trans.users_commented).replace("{u}", involved.join(", ")).replace("{c}", others_included)}
+                    `}
+                    ` : type == "obsession" ? tl(trans.obsession_expired) : type == "listening-report" ? tl(trans.listening_report_available).replace("{m}", involved[0]) : ""}
+                </div>
+                <div class="notification-context">
+                    <span class="bleh-icon" style="--icon: var(--icon-16-indent)" />
+                    <span class="notification-type" data-type=${context.type}>
+                        <span class="bleh-icon" style="--icon: var(--mask)" />
+                        ${context.sister ? `${context.name} ${tl(trans.by)} ${context.sister}` : context.name}
+                    </span>
+                </div>
+            </div>
+            <div class="notification-time">
+                ${time}
+            </div>
+            <a class="link-block-cover-link" href=${link.getAttribute("href")} />
+        `);
+      function obtain_additional_info(text2, backup_text = null) {
+        const match = text2.match(/\d+/);
+        if (match) others_included = parseInt(match[0]);
+        if (text2.includes(tl(trans.notification_replied_ctx))) is_reply = true;
+        else if (backup_text && backup_text.trim().includes(tl(trans.notification_replied_ctx))) is_reply = true;
+      }
+    });
+  }
+
   // src/navigation.js
   function patch_masthead() {
     let masthead_logo = document.body.querySelector(".masthead-logo");
@@ -17602,14 +17735,20 @@
     let inbox_count = new_auth.querySelector('[data-analytics-label="inbox"] + .auth-avatar-notification-count-badge');
     if (!inbox_count) inbox_count = "0";
     else inbox_count = inbox_count.textContent;
+    let notif_link;
     let notif_container = html.node`
         <li class="masthead-nav-item">
-            <a class="masthead-nav-control" href="${root}inbox/notifications" data-label="notifications" data-count=${notif_count}>
+            <a class="masthead-nav-control" href="${root}inbox/notifications" data-label="notifications" data-count=${notif_count} ref=${(el) => notif_link = el}>
                 <span class="sr-only">${tl(trans.notifications.name)}</span>
                 <div class="counter">${notif_count}</div>
             </a>
         </li>
     `;
+    notif_link.addEventListener("click", (e) => {
+      const cmd = e.getModifierState("Control") || e.getModifierState("Meta");
+      const new_tab = e.button === 1 || cmd;
+      if (!new_tab) e.preventDefault();
+    });
     if (notif_count > 0) {
       tippy(notif_container, {
         content: tl(trans.notifications.count).replace("{count}", notif_count)
@@ -17619,6 +17758,32 @@
         content: tl(trans.notifications.none)
       });
     }
+    tippy(notif_container, {
+      theme: "auth-menu-v2",
+      placement: "top",
+      interactive: true,
+      interactiveBorder: 10,
+      trigger: "click",
+      onShow(instance) {
+        instance.setContent(html.node`
+                <div class="mini-notifications">
+                    <div class="loading-data-container">
+                        <div class="loading-data-text">${tl(trans.loading)}</div>
+                    </div>
+                </div>
+            `);
+        function render_notifications(notifications) {
+          bleh_notification_list(notifications, true);
+          instance.setContent(html.node`
+                    <div class="mini-notifications">
+                        ${notifications}
+                    </div>
+                `);
+        }
+        if (page.notifications.list) render_notifications(page.notifications.list);
+        fetch_notifications().then((notifications) => render_notifications(notifications));
+      }
+    });
     links.appendChild(notif_container);
     let inbox_container = html.node`
         <li class="masthead-nav-item">
@@ -18093,6 +18258,29 @@
         active
       };
       return page.now;
+    } catch (error) {
+      log("exception during fetch", "live", "error", { error });
+    }
+  }
+  async function fetch_notifications() {
+    if (page.notifications.next_fetch && Date.now() < page.notifications.next_fetch) return page.notifications.list;
+    try {
+      const res = await fetch(`${root}inbox/notifications`);
+      if (!res.ok) {
+        log("failed to fetch", "live", "error", { res });
+        return;
+      }
+      const dom = await res.text();
+      const parser = new DOMParser();
+      const doc = parser.parseFromString(dom, "text/html");
+      const list = doc.querySelector(".inbox-notifications");
+      let next = /* @__PURE__ */ new Date();
+      next.setMinutes(next.getMinutes() + 1);
+      page.notifications.next = next;
+      if (list) {
+        page.notifications.list = list;
+        return list;
+      }
     } catch (error) {
       log("exception during fetch", "live", "error", { error });
     }
@@ -19708,133 +19896,6 @@
             </a>
         </section>
     `;
-  }
-
-  // src/components/notifications.js
-  function bleh_notification_list(list) {
-    list.classList = "notification-list";
-    let notifications = list.querySelectorAll(".inbox-notifications__item");
-    notifications.forEach((notification, index) => {
-      let active = notification.classList.contains("inbox-notifications__item--highlight");
-      notification.classList = "notification";
-      if (active) notification.classList.add("active");
-      const link = notification.querySelector(".inbox-notifications__item-link");
-      const href = link.getAttribute("href");
-      let type = "shoutbox";
-      let context = {
-        name: null,
-        sister: null
-      };
-      let involved = [];
-      const strongs = link.querySelectorAll("strong");
-      let split = href.replace(root, "").split("/");
-      const avatar3 = notification.querySelector(".avatar");
-      avatar3.classList = "avatar";
-      const time = notification.querySelector("time");
-      let is_reply = false;
-      let others_included = 0;
-      if (href.endsWith("/obsessions/set")) {
-        type = "obsession";
-        involved.push(split[1]);
-        const desc = strongs[0].textContent;
-        const desc_split = desc.split(" \u2014 ");
-        context.type = "track";
-        context.sister = correct_artist(desc_split[0]);
-        context.name = correct_item_by_artist(desc_split[1], context.sister);
-      } else if (href.endsWith("/listening-report/month")) {
-        type = "listening-report";
-        involved.push(strongs[0].textContent);
-        let img = avatar3.querySelector("img");
-        img.src = auth.avatar;
-        img.alt = auth.name;
-        let label = avatar3.querySelector(".avatar-status-dot");
-        if (auth.pro) {
-          label.classList = "avatar-status-dot avatar-status-dot--subscriber";
-        } else {
-          label.remove();
-        }
-        context.type = "profile";
-        context.name = split[1];
-      } else if (href.startsWith(`${root}user/`)) {
-        context.type = "profile";
-        context.name = split[1];
-        strongs.forEach((strong, index2) => {
-          if (index2 == strongs.length - 1 && strongs.length > 1) {
-            obtain_additional_info(strong.previousSibling.textContent, strong.nextSibling.textContent);
-            return;
-          } else if (index2 == strongs.length - 1 && strongs.length == 1) {
-            obtain_additional_info(strong.nextSibling.textContent);
-          }
-          involved.push(strong.textContent);
-        });
-      } else if (href.startsWith(`${root}music/`)) {
-        if (split[2].startsWith("+")) {
-          context.type = "artist";
-          context.name = correct_artist(desanitise(split[1]));
-        } else if (split[2] == "_") {
-          context.type = "track";
-          context.sister = correct_artist(desanitise(split[1]));
-          context.name = correct_item_by_artist(desanitise(split[3]), context.sister);
-        } else {
-          context.type = "album";
-          context.sister = correct_artist(desanitise(split[1]));
-          context.name = correct_item_by_artist(desanitise(split[2]), context.sister);
-        }
-        strongs.forEach((strong, index2) => {
-          if (index2 == strongs.length - 1) {
-            obtain_additional_info(strong.previousSibling.textContent, strong.nextSibling.textContent);
-            return;
-          }
-          involved.push(strong.textContent);
-        });
-      } else if (href.startsWith(`${root}tag/`)) {
-        context.type = "tag";
-        context.name = split[1];
-        strongs.forEach((strong, index2) => {
-          if (index2 == strongs.length - 1) {
-            obtain_additional_info(strong.previousSibling.textContent, strong.nextSibling.textContent);
-            return;
-          }
-          involved.push(strong.textContent);
-        });
-      }
-      console.info(split, context, type, involved);
-      patch_avatar(avatar3, involved[0]);
-      render(notification, html`
-            <div class="notification-avatar">
-                ${avatar3}
-            </div>
-            <div class="bleh-icon" data-type=${type} style="--icon: var(--mask)" />
-            <div class="notification-content">
-                <div class="notification-title">
-                    ${type == "shoutbox" ? html.node`
-                    ${others_included == 0 ? html.node`
-                        ${is_reply ? tl(trans.user_replied).replace("{u}", involved.join(", ")) : tl(trans.user_commented).replace("{u}", involved.join(", "))}
-                    ` : html.node`
-                        ${is_reply ? tl(trans.users_replied).replace("{u}", involved.join(", ")).replace("{c}", others_included) : tl(trans.users_commented).replace("{u}", involved.join(", ")).replace("{c}", others_included)}
-                    `}
-                    ` : type == "obsession" ? tl(trans.obsession_expired) : type == "listening-report" ? tl(trans.listening_report_available).replace("{m}", involved[0]) : ""}
-                </div>
-                <div class="notification-context">
-                    <span class="bleh-icon" style="--icon: var(--icon-16-indent)" />
-                    <span class="notification-type" data-type=${context.type}>
-                        <span class="bleh-icon" style="--icon: var(--mask)" />
-                        ${context.sister ? `${context.name} ${tl(trans.by)} ${context.sister}` : context.name}
-                    </span>
-                </div>
-            </div>
-            <div class="notification-time">
-                ${time}
-            </div>
-            <a class="link-block-cover-link" href=${link.getAttribute("href")} />
-        `);
-      function obtain_additional_info(text2, backup_text = null) {
-        const match = text2.match(/\d+/);
-        if (match) others_included = parseInt(match[0]);
-        if (text2.includes(tl(trans.notification_replied_ctx))) is_reply = true;
-        else if (backup_text && backup_text.trim().includes(tl(trans.notification_replied_ctx))) is_reply = true;
-      }
-    });
   }
 
   // src/pages/inbox.js
