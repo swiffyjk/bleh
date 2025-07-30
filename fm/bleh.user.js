@@ -17751,7 +17751,7 @@
       });
     }
     tippy(notif_link, {
-      theme: "auth-menu-v2",
+      theme: "nav-window",
       placement: "top",
       interactive: true,
       interactiveBorder: 10,
@@ -18210,7 +18210,11 @@
     auth_link2.removeAttribute("aria-controls");
     auth_link2.removeAttribute("data-disclose-hover");
     auth_link2.removeAttribute("data-disclose-hover--allow-enter-open");
-    auth_link2.removeAttribute("href");
+    auth_link2.addEventListener("click", (e) => {
+      const cmd = e.getModifierState("Control") || e.getModifierState("Meta");
+      const new_tab = e.button === 1 || cmd;
+      if (!new_tab) e.preventDefault();
+    });
     masthead.appendChild(html.node`
         <div class="mobile-controls">
             <a class="btn mobile-control" aria-checked="${page.type == "overview" || page.type == "recommended" || page.type == "releases" || page.type == "bookmarks" || page.type == "charts"}" data-menu-item="home" href="${root}music">

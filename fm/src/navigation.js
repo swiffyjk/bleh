@@ -187,7 +187,7 @@ export function append_nav() {
     }
 
     tippy(notif_link, {
-        theme: 'auth-menu-v2',
+        theme: 'nav-window',
         placement: 'top',
         interactive: true,
         interactiveBorder: 10,
@@ -695,7 +695,14 @@ export function append_nav() {
     auth_link.removeAttribute('aria-controls');
     auth_link.removeAttribute('data-disclose-hover');
     auth_link.removeAttribute('data-disclose-hover--allow-enter-open');
-    auth_link.removeAttribute('href');
+
+    auth_link.addEventListener('click', (e) => {
+        const cmd = (e.getModifierState('Control') || e.getModifierState('Meta'));
+        const new_tab = e.button === 1 || cmd;
+
+        // only allow clicking link if new tab action
+        if (!new_tab) e.preventDefault();
+    });
 
     // mobile
     masthead.appendChild(html.node`
