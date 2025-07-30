@@ -14,7 +14,6 @@ import {prep_chart_colours} from "../chart";
 import {correct_artist, correct_item_by_artist} from "../components/lotus";
 import {refresh_all} from "../config";
 import {ff} from "../sku";
-import {compare} from "../components/compare.js";
 import {input} from "../components/input.js";
 import {setting} from "../components/settings.js";
 
@@ -70,7 +69,7 @@ export function bleh_user_library() {
     } else {
         tabs.appendChild(html.node`
             <li class="navlist-item secondary-nav-item secondary-nav-item--compare">
-                <a class="secondary-nav-item-link" onclick=${() => compare()}>
+                <a class="secondary-nav-item-link" href="${root}bleh/minis/compare?profile=${page.name}">
                     ${tl(trans.compare)}
                 </a>
             </li>
