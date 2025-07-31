@@ -496,7 +496,7 @@ function load_page() {
         if (['artist', 'album', 'track', 'user', 'tag'].includes(page.type)) {
             if (!['user', 'tag'].includes(page.type) && page.subpage.startsWith('shoutbox'))
                 shout_header(page.structure.main.querySelector('.section-controls'));
-            else if (page.subpage == 'overview')
+            else if (page.subpage == 'overview' || page.subpage == 'image')
                 shout_header(page.structure.main.querySelector('.shoutbox'));
         }
     }

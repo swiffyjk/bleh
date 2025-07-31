@@ -658,14 +658,14 @@
 
         --view-buttons: hsl(var(--b6), 70%);
         --view-buttons-shadow: var(--group-shadow);
+        --view-buttons-hov: hsl(var(--b4), 40%);
+        --view-buttons-atv: hsl(var(--b4), 60%);
 
         --menu-bg: var(--b6);
 
         --shout-actions-opacity: 0.45;
 
         &[data-bleh--theme_type="light"], [data-bleh--theme_type="light"] > & {
-            --view-buttons: hsl(var(--b4), 10%);
-
             --card-shadow: hsla(var(--b7), 0.05) 0 2px 4px 0;
             --card-shadow: 0 1.5px 4px 0 hsla(var(--b7), 0.05);
 
@@ -684,6 +684,8 @@
             --avatar-generic-background: hsl(var(--b4), 30%);
 
             --blur-brightness: 2.3;
+
+            --view-buttons: hsl(var(--b4), 10%);
 
             --menu-bg: var(--b5);
 
@@ -1338,6 +1340,7 @@
         transition-property: background, background-filter, box-shadow;
         transition-duration: 0.3s;
 
+        &:hover,
         &.scrolled {
             background: hsla(var(--b5), 80%);
             backdrop-filter: blur(25px) saturate(220%) brightness(var(--blur-brightness));
@@ -1351,10 +1354,6 @@
             &:before {
                 opacity: 0;
             }
-        }
-
-        &:not(.scrolled) {
-            --b3: var(--b5);
         }
 
         .mobile-controls {
@@ -1594,8 +1593,8 @@
     .auth-link, .language-nav,
     .masthead-nav-control {
         --bg: transparent !important;
-        --bg-hov: hsl(var(--b3), 60%) !important;
-        --bg-atv: hsl(var(--b3), 80%) !important;
+        --bg-hov: hsl(var(--b4), 40%) !important;
+        --bg-atv: hsl(var(--b4), 60%) !important;
         --shadow: none !important;
         --shadow-hov: none !important;
         --col: hsl(var(--c2)) !important;
@@ -1939,6 +1938,7 @@
         gap: var(--card-gap);
 
         .footer-credit {
+            font-weight: var(--font-weight-medium);
             cursor: default;
             padding-top: 120px;
             width: calc(var(--cards-width) - (var(--card-padding) * 2));
@@ -2508,9 +2508,6 @@
                 padding-bottom: unset !important;
             }
         }
-    }
-    .col-main > #shoutbox {
-        padding-bottom: var(--card-padding) !important;
     }
 
 
@@ -3544,12 +3541,6 @@
     .masthead-nav-control {
         /* left padding for icon, otherwise just 12px 16px */
         --padding: 7px var(--button-sides) 7px calc(var(--button-sides) + var(--icon-size) + var(--icon-gap)) !important;
-        --bg: transparent !important;
-        --bg-hov: hsl(var(--b3), 60%) !important;
-        --bg-atv: hsl(var(--b3), 80%) !important;
-        --shadow: none !important;
-        --shadow-hov: none !important;
-        --col: hsl(var(--c2)) !important;
 
         z-index: 1;
         opacity: unset !important;
@@ -8534,9 +8525,9 @@
                 }
 
                 [data-ff--menu_like_side_actions="true"] & {
-                    --bg: hsla(var(--h4), 6%) !important;
-                    --bg-hov: hsla(var(--h4), 12%) !important;
-                    --bg-atv: hsla(var(--h4), 22%) !important;
+                    --bg: hsla(var(--h4), 20%) !important;
+                    --bg-hov: hsla(var(--h4), 30%) !important;
+                    --bg-atv: hsla(var(--h4), 40%) !important;
                     --col: hsl(var(--l3-c)) !important;
                     --mask-colour: color-mix(in hsl, hsl(var(--l3-c)), hsl(var(--l4-c)) 40%);
 
@@ -11479,8 +11470,8 @@
         margin-top: -16px !important;
         font-size: 0 !important;
         --bg: transparent;
-        --bg-hov: hsla(var(--b7), 20%);
-        --bg-atv: hsla(var(--b7), 30%);
+        --bg-hov: hsla(var(--b4), 40%);
+        --bg-atv: hsla(var(--b4), 60%);
         --col: hsl(var(--c3));
         --shadow: none !important;
         --shadow-hov: none !important;
@@ -12340,6 +12331,13 @@
 
                             &.user-status-subscriber {
                                 order: -1;
+                            }
+
+                            &.long {
+                                max-width: unset;
+                                --margin-left: none;
+                                --left: 9px;
+                                padding-right: 8px;
                             }
                         }
                     }
@@ -19245,8 +19243,8 @@
             .footer-language .mimic-link,
             .btn:not(.not-a-view-button, .toggle, [aria-checked="true"], .love-button--loved, [data-toggle-button-current-state="loved"] > form > .btn, [data-toggle-button-current-state="bookmarked"] > form > .btn, .btn-primary.profile-header-set-obsession, [data-analytics-action="UnfollowUser"], [data-is-shortcut="true"], .attendance-btn--turn-off) {
                 --bg: transparent;
-                --bg-hov: hsl(var(--b3), 60%);
-                --bg-atv: hsl(var(--b3), 80%);
+                --bg-hov: var(--view-buttons-hov);
+                --bg-atv: var(--view-buttons-atv);
                 --shadow: none;
                 --col: hsl(var(--c2));
                 --mask-colour: color-mix(in hsl, hsl(var(--c2)), hsl(var(--c3)) 50%);
@@ -20246,15 +20244,17 @@
 
     [data-ff--new_gallery_experience="true"] {
         .gallery-section {
-            background: unset !important;
-            padding: unset !important;
+            padding: 0 var(--card-padding) !important;
+            margin: unset !important;
             box-shadow: unset !important;
             border-radius: unset;
 
-            position: relative;
+            background: var(--toolbar-bg) !important;
+            border-bottom: var(--toolbar-border);
+            border-top-left-radius: var(--card-radius);
+            border-top-right-radius: var(--card-radius);
 
-            margin: 0 var(--card-padding);
-            border-bottom: 1px solid var(--card-border-base);
+            position: relative;
 
             .gallery-image-container {
                 background: unset;
@@ -20534,7 +20534,7 @@
             color: hsl(var(--c1));
             font-size: 16px;
             line-height: 17px;
-            font-weight: var(--font-weight-bold);
+            font-weight: var(--font-weight-medium);
         }
 
         .wiki-edit-small {
@@ -20845,6 +20845,9 @@
         }
     }
 
+    [data-type="copy"] {
+        --mask: var(--icon-16-copy);
+    }
     [data-type="item-edit"] {
         --mask: var(--icon-16-edit);
     }
@@ -24180,8 +24183,8 @@
     /* apply tag styling to everything tag-related */
     .tag a, .tags-add-cta, .tags-add, .tags-view-all {
         --bg: transparent;
-        --bg-hov: hsl(var(--b3), 40%);
-        --bg-atv: hsl(var(--b3), 60%);
+        --bg-hov: hsl(var(--b4), 40%);
+        --bg-atv: hsl(var(--b4), 60%);
         --col: hsl(var(--c3));
         --shadow: inset 0 0 0 1px var(--card-border-base);
         --padding: 5px 10px;
@@ -24456,6 +24459,10 @@
                 opacity: 1;
                 animation: unset;
                 background-color: currentColor !important;
+            }
+
+            .listen-divider + & {
+                margin: 0 calc(-1 * ((var(--button-height) - var(--icon-size)) / 2));
             }
         }
 

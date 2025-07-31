@@ -3393,13 +3393,14 @@
     name: "",
     user: "",
     inbuilt: false
-  }, on_avatar = false) {
+  }, on_avatar = false, long = false) {
     const classlist = on_avatar ? "avatar-status-dot" : "label no-hover";
     let elem = html.node`
         <span class=${classlist}>
             ${badge.name}
         </span>
     `;
+    if (long) elem.classList.add("long");
     if (badge.icon != "" && badge.hue > -1 && badge.sat > -1 && badge.lit > -1) {
       elem.style.setProperty("--mask", `url(${badge.icon})`);
       elem.style.setProperty("--hue-over", badge.hue);
@@ -3457,7 +3458,7 @@
                 <h5 class="title"><a href="${root}user/${name2}">${name2}</a></h5>
                 ${badges ? html.node`
                 <div class="badges">
-                    ${badges.map((badge) => create_badge(badge))}
+                    ${badges.map((badge, index) => create_badge(badge, false, index == badges.length - 1))}
                     ${pre_existing_badge ? create_badge({
         type: pre_existing_badge_type,
         name: tl(trans.badges[pre_existing_badge_type].name),
@@ -3857,7 +3858,7 @@
       id: "profile_shortcut",
       title: tl(trans.profile_shortcut.name),
       body: html.node`
-        ${setting({ id: "profile_shortcut", text: false, focus: true })}
+            ${setting({ id: "profile_shortcut", text: false, focus: true, standalone: true })}
         `
     });
     modal.querySelector("#text-profile_shortcut").focus();
@@ -3872,7 +3873,7 @@
       id: "other_listener",
       title: tl(trans.view_others_library),
       body: html.node`
-        <div class="setting" data-type="text">
+        <div class="setting standalone" data-type="text">
             <div class="avatar-container">
                 <div class="avatar-inner avatar--bleh-missing">
                     <img>
@@ -14136,8 +14137,7 @@
     log("finished", "music charts");
   }
   function bleh_top_listeners() {
-    if (!ff("unify_top_listeners"))
-      return;
+    if (!ff("unify_top_listeners")) return;
     let panel = page.structure.main.querySelector(":scope > .buffer-standard");
     let view_buttons = document.createElement("div");
     view_buttons.classList.add("view-buttons-wrapper");
@@ -14161,9 +14161,8 @@
       let new_listener = document.createElement("li");
       new_listener.classList.add("user-list-item", "listener-list-item");
       let position = index + 1;
-      if (page.requested.page != null && page.requested.page != "1") {
+      if (page.requested.page != null && page.requested.page != "1")
         position += (parseInt(page.requested.page) - 1) * 30;
-      }
       let name_wrap = listener.querySelector(".top-listeners-item-name a");
       let name2 = name_wrap.textContent;
       let track_wrap = listener.querySelector(".top-listeners-track");
@@ -14193,10 +14192,6 @@
             </div>
         `;
       let badge = patch_avatar(new_listener.querySelector(".user-list-avatar"), name2, "listener");
-      if (badge.type) {
-        new_listener.querySelector(".user-list-link").classList.add(`user-status--bleh-${badge.type}`, `user-status--bleh-user-${name2}`);
-        new_listener.classList.add("colourful", `user-status--bleh-${badge.type}`, `user-status--bleh-user-${name2}`);
-      }
       if (track_wrap) {
         let track_link = new_listener.querySelector(".user-list-about-me a");
         let artist = return_artist_from_track(track_link.getAttribute("href"), false);
@@ -20261,8 +20256,9 @@
         } else if (badge) {
           shout_name.classList.add(badge.type);
         }
+        const shout_body = shout.querySelector(".shout-body p");
+        const shout_text = shout_body.textContent.trim();
         if (settings.shout_markdown) {
-          let shout_body = shout.querySelector(".shout-body p");
           shout_parse_queue.push({ element: shout_body });
         }
         const indicator = html.node`
@@ -20278,8 +20274,8 @@
         }
         let actions = shout.querySelectorAll(".shout-actions .shout-action");
         actions.forEach((action) => {
-          let buttons = action.querySelectorAll("button, a");
-          buttons.forEach((button) => {
+          let buttons2 = action.querySelectorAll("button, a");
+          buttons2.forEach((button) => {
             button.classList.add("shout-action-button", "see-more");
           });
         });
@@ -20290,6 +20286,24 @@
         indicator.setAttribute("aria-checked", initial_is_voted.toString());
         voted_button.addEventListener("click", (e) => vote_button());
         unvote_button.addEventListener("click", (e) => vote_button());
+        const menu = shout.querySelector(".shout-more-actions-menu");
+        const buttons = menu.querySelectorAll("button");
+        buttons.forEach((button) => {
+          const type = button.classList[1];
+          if (type == "more-item--delete") {
+            button.textContent = tl(trans.delete);
+          } else if (type == "more-item--report") {
+            button.textContent = tl(trans.report);
+          }
+        });
+        menu.insertBefore(html.node`
+                <button class="dropdown-menu-clickable-item" data-type="copy" onclick=${() => {
+          copy(shout_text);
+        }}>
+                    ${tl(trans.copy)}
+                </button>
+                <div class="sep" />
+            `, menu.firstElementChild);
         let send_button = shout.querySelector(".form-group--submit");
         shout_send(send_button);
       } catch (e) {
@@ -21198,7 +21212,7 @@
       if (["artist", "album", "track", "user", "tag"].includes(page.type)) {
         if (!["user", "tag"].includes(page.type) && page.subpage.startsWith("shoutbox"))
           shout_header(page.structure.main.querySelector(".section-controls"));
-        else if (page.subpage == "overview")
+        else if (page.subpage == "overview" || page.subpage == "image")
           shout_header(page.structure.main.querySelector(".shoutbox"));
       }
     }

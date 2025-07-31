@@ -73,7 +73,7 @@ export function create_badge(badge={
     name: '',
     user: '',
     inbuilt: false
-}, on_avatar = false) {
+}, on_avatar = false, long = false) {
     const classlist = on_avatar ? 'avatar-status-dot' : 'label no-hover';
 
     let elem = html.node`
@@ -81,6 +81,8 @@ export function create_badge(badge={
             ${badge.name}
         </span>
     `;
+
+    if (long) elem.classList.add('long');
 
     if (badge.icon != '' && badge.hue > -1 && badge.sat > -1 && badge.lit > -1) {
         // new style badge

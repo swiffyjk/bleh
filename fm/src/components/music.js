@@ -1134,8 +1134,7 @@ export function bleh_music_page_charts() {
 }
 
 export function bleh_top_listeners() {
-    if (!ff('unify_top_listeners'))
-        return;
+    if (!ff('unify_top_listeners')) return;
 
     let panel = page.structure.main.querySelector(':scope > .buffer-standard');
 
@@ -1167,9 +1166,8 @@ export function bleh_top_listeners() {
         new_listener.classList.add('user-list-item', 'listener-list-item');
 
         let position = index + 1;
-        if (page.requested.page != null && page.requested.page != "1") {
+        if (page.requested.page != null && page.requested.page != '1')
             position += ((parseInt(page.requested.page) - 1) * 30);
-        }
 
         let name_wrap = listener.querySelector('.top-listeners-item-name a');
         let name = name_wrap.textContent;
@@ -1204,11 +1202,6 @@ export function bleh_top_listeners() {
         `);
 
         let badge = patch_avatar(new_listener.querySelector('.user-list-avatar'), name, 'listener');
-
-        if (badge.type) {
-            new_listener.querySelector('.user-list-link').classList.add(`user-status--bleh-${badge.type}`, `user-status--bleh-user-${name}`);
-            new_listener.classList.add('colourful', `user-status--bleh-${badge.type}`, `user-status--bleh-user-${name}`);
-        }
 
         if (track_wrap) {
             let track_link = new_listener.querySelector('.user-list-about-me a');

@@ -54,7 +54,7 @@ export function patch_avatar(avatar, name, type = '', parent=null, side='right')
                 <h5 class="title"><a href="${root}user/${name}">${name}</a></h5>
                 ${badges ? html.node`
                 <div class="badges">
-                    ${badges.map(badge => create_badge(badge))}
+                    ${badges.map((badge, index) => create_badge(badge, false, index == badges.length - 1))}
                     ${pre_existing_badge ? create_badge({
                         type: pre_existing_badge_type,
                         name: tl(trans.badges[pre_existing_badge_type].name),

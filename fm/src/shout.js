@@ -13,6 +13,7 @@ import {deliver_notif, notify} from "./components/notify";
 import {html, render} from "lighterhtml";
 import {setting} from "./components/settings.js";
 import {markdown} from "./components/markdown.js";
+import {copy} from "./build/tools.js";
 
 export function patch_shouts() {
     if (!page.structure.main) return;
@@ -53,8 +54,9 @@ export function patch_shouts() {
                 shout_name.classList.add(badge.type);
             }
 
+            const shout_body = shout.querySelector('.shout-body p');
+            const shout_text = shout_body.textContent.trim();
             if (settings.shout_markdown) {
-                let shout_body = shout.querySelector('.shout-body p');
                 shout_parse_queue.push({element: shout_body});
             }
 
@@ -108,6 +110,28 @@ export function patch_shouts() {
                     indicator.setAttribute('aria-checked', current_is_voted.toString());
                 }, 0);
             }
+
+
+            const menu = shout.querySelector('.shout-more-actions-menu');
+
+            const buttons = menu.querySelectorAll('button');
+            buttons.forEach((button) => {
+                const type = button.classList[1];
+                if (type == 'more-item--delete') {
+                    button.textContent = tl(trans.delete);
+                } else if (type == 'more-item--report') {
+                    button.textContent = tl(trans.report);
+                }
+            });
+
+            menu.insertBefore(html.node`
+                <button class="dropdown-menu-clickable-item" data-type="copy" onclick=${() => {
+                    copy(shout_text);
+                }}>
+                    ${tl(trans.copy)}
+                </button>
+                <div class="sep" />
+            `, menu.firstElementChild);
 
 
             let send_button = shout.querySelector('.form-group--submit');
