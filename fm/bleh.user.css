@@ -2218,7 +2218,7 @@
 
                 background-image: var(--cards-overlay-image-subtle, unset) !important;
                 background-repeat: repeat-x !important;
-                background-position: 0 1px !important;
+                background-position: 0 0 !important;
 
                 position: relative;
 
@@ -7656,6 +7656,7 @@
 
         &[data-season]:not([data-season="none"]) {
             color: hsl(var(--l3-c));
+            font-weight: var(--font-weight-medium);
         }
     }
     .button-combo {
@@ -8659,7 +8660,7 @@
         [data-bleh--seasonal_overlays="true"][data-bleh--season="christmas"] & {
             background-image: var(--overlay-ice-subtle), linear-gradient(180deg, rgba(190, 233, 250, 0.04) 0%, rgba(0, 0, 0, 0) 100%) !important;
             background-repeat: repeat-x !important;
-            background-position: 0 1px !important;
+            background-position: 0 0 !important;
         }
 
         .sep {
@@ -10435,7 +10436,7 @@
         &[data-modal-has-overlays="true"] {
             background-image: var(--cards-overlay-image, unset) !important;
             background-repeat: repeat-x !important;
-            background-position: 0 1px !important;
+            background-position: 0 0 !important;
 
             &:before {
                 content: '';
@@ -12081,7 +12082,7 @@
             [data-bleh--seasonal_overlays="true"][data-bleh--season="christmas"] & {
                 background-image: var(--overlay-ice-subtlest), linear-gradient(180deg, rgba(190,233,250,0.04) 0%, rgba(0,0,0,0) 100%) !important;
                 background-repeat: repeat-x !important;
-                background-position: 0 1px !important;
+                background-position: 0 0 !important;
             }
 
             .alert {

@@ -15035,8 +15035,8 @@
                         <div class="heading">
                             <h5>${tl(trans.current_season)}</h5>
                         </div>
-                        <div class="info" data-season=${stored_season.id}>
-                            <div class="icon-combo">
+                        <div class="info">
+                            <div class="icon-combo" data-season=${stored_season.id}>
                                 <div class="bleh-icon bleh-seasonal-icon"></div>
                                 <p>${tl(trans.seasonal.listing[stored_season.id])}</p>
                             </div>
