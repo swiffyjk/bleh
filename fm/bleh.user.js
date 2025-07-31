@@ -18751,6 +18751,7 @@
       let title = artist_header.querySelector(".header-new-title");
       let on_tour = artist_header.querySelector(".header-new-on-tour");
       let position = artist_header.querySelector(".header-new-chart-position-number");
+      if (on_tour) on_tour.classList.add("label", "no-hover");
       let multi_info_box;
       let redesigned_artist_header = html.node`
             <section class="redesigned-header redesigned-artist-header no-background">
@@ -18771,10 +18772,14 @@
                     ` : html.node`
                     <div class="sub-text">${tl(trans.artist)}</div>
                     `}
-                    <div class="title-container" data-multi="${page.multi}">
+                    <div class="title-container" data-multi=${page.multi}>
                         ${title}
-                        ${position ? position : ""}
-                        ${on_tour ? on_tour : ""}
+                        ${position}
+                        ${on_tour ? html.node`
+                        <div class="badges">
+                            ${on_tour}
+                        </div>
+                        ` : ""}
                     </div>
                 </div>
             </section>
