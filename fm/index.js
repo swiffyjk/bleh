@@ -18,7 +18,6 @@ const banner = `// ==UserScript==
 // @updateURL    ${build.url}
 // @downloadURL  ${build.url}
 // @run-at       document-start
-// @require      https://cdnjs.cloudflare.com/ajax/libs/showdown/2.1.0/showdown.min.js
 // @require      https://unpkg.com/@popperjs/core@2.11.8/dist/umd/popper.min.js
 // @require      https://unpkg.com/tippy.js@6.3.7/dist/tippy.umd.min.js
 // @require      https://cdnjs.cloudflare.com/ajax/libs/moment.js/2.30.1/moment.min.js

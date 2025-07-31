@@ -6812,7 +6812,7 @@
     .shout-body {
         font-size: var(--font-size) !important;
         line-height: var(--line-height) !important;
-        /* line breaks */
+
         p {
             max-height: 700px;
             overflow: hidden;
@@ -6823,8 +6823,8 @@
             }
 
             img {
+                width: unset;
                 max-height: 320px;
-                border-radius: var(--item-med-radius);
             }
         }
     }
@@ -21013,6 +21013,23 @@
 
 
     .markdown-body {
+        /* match default last.fm */
+        .text-center, .text-left, .text-right {
+            & + p {
+                margin-top: var(--card-gap);
+            }
+        }
+
+        .text-center {
+            text-align: center;
+        }
+        .text-left {
+            text-align: left;
+        }
+        .text-right {
+            text-align: right;
+        }
+
         li {
             list-style-type: disc;
 

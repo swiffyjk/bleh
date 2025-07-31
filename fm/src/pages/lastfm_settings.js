@@ -518,7 +518,7 @@ function patch_settings_profile_panel(token, update_picture) {
                                 <div class="title">
                                     ${tl(trans.about_me_preview)}
                                 </div>
-                                <span class="bleh--about-me-preview" ref=${el => preview = el}></span>
+                                <span class="bleh--about-me-preview markdown-body" ref=${el => preview = el}></span>
                             </div>
                             <div class="info-row" style="display: none">
                                 <div class="title">
@@ -560,7 +560,8 @@ function patch_settings_profile_panel(token, update_picture) {
         chars.setAttribute('data-exceeded', value.length >= 500);
 
         render(preview, markdown(value, {
-            allow_headers: true
+            allow_headers: true,
+            allow_banners: true
         }));
 
         let banner = preview.querySelector('img[alt="banner"]');

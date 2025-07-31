@@ -361,7 +361,9 @@ export function bleh_profiles() {
                 // parse body
                 let about_me_text = about_me_sidebar.querySelector('p');
                 let result = bio_parse(about_me_text, true);
-                render(about_me_text, result);
+
+                about_me_text.after(result);
+                about_me_text.remove();
             }
         }
 
@@ -1481,10 +1483,12 @@ function profile_tracks() {
 
 function bio_parse(text, cache = false) {
     let temp = document.createElement('div');
+    temp.classList.add('markdown-body');
 
     render(temp, markdown(text.textContent, {
-        allow_headers: true
-    }))
+        allow_headers: true,
+        allow_banners: true
+    }));
 
     use_banner(temp, cache);
 

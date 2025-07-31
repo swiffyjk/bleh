@@ -292,6 +292,7 @@ export function parse_shout_queue() {
 
     const parsed = markdown(shout.element.textContent);
 
+    shout.element.classList.add('markdown-body');
     render(shout.element, html.node`${parsed}`);
 
     log('parsed one shout', 'shout', 'log');
