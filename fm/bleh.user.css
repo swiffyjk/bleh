@@ -18782,6 +18782,10 @@
     .dropdown-top-wrap {
         display: flex;
         justify-content: end;
+
+        .col-main > & {
+            padding-top: var(--card-padding) !important;
+        }
     }
 
 

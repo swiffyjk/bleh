@@ -13150,12 +13150,12 @@
     else
       page.structure.container.setAttribute("data-bleh--gallery-tab", "saved");
     let nav = html.node`
-        <div class="bleh--nav-wrap bleh--nav-wrap--bookmarks">
-            <nav class="navlist secondary-nav">
+        <div class="toolbar">
+            <nav class="navlist secondary-nav navlist--more redesigned-navigation">
                 <ul class="navlist-items">
                     <li class="navlist-item secondary-nav-item secondary-nav-item--gallery-overview">
                         <a class="secondary-nav-item-link" onclick=${() => gallery_tab("all")}>
-                            ${tl(trans.all)}
+                            ${tl(trans.photos)}
                         </a>
                     </li>
                     <li class="navlist-item secondary-nav-item secondary-nav-item--gallery-bookmarks">
@@ -13167,10 +13167,7 @@
             </nav>
         </div>
     `;
-    if (ff("short"))
-      page.structure.row.insertBefore(nav, page.structure.content);
-    else
-      page.structure.content_top.after(nav);
+    page.structure.row.insertBefore(nav, page.structure.content);
     let bookmarks_panel;
     page.structure.main.classList.add("bleh--gallery");
     page.structure.main.after(html.node`
@@ -13304,7 +13301,7 @@
                 <ul class="navlist-items">
                     <li class="navlist-item secondary-nav-item secondary-nav-item--overview">
                         <a class="secondary-nav-item-link secondary-nav-item-link--active" href="${window.location.href}">
-                            ${tl(trans.overview)}
+                            ${tl(trans.home)}
                         </a>
                     </li>
                     <li class="navlist-item secondary-nav-item secondary-nav-item--tracks">
@@ -13361,7 +13358,7 @@
                 <ul class="navlist-items">
                     <li class="navlist-item secondary-nav-item secondary-nav-item--overview">
                         <a class="secondary-nav-item-link secondary-nav-item-link--active" href="${window.location.href}">
-                            ${tl(trans.overview)}
+                            ${tl(trans.home)}
                         </a>
                     </li>
                     ${!page_is_blocked ? html.node`
@@ -13393,7 +13390,7 @@
                 <ul class="navlist-items">
                     <li class="navlist-item secondary-nav-item secondary-nav-item--overview">
                         <a class="secondary-nav-item-link secondary-nav-item-link--active" href="${window.location.href}">
-                            ${tl(trans.overview)}
+                            ${tl(trans.home)}
                         </a>
                     </li>
                     <li class="navlist-item secondary-nav-item secondary-nav-item--albums">
