@@ -11,11 +11,11 @@ import {auth, page, root} from "../build/page";
 import {clean_number} from "../build/tools";
 import {tl, trans, trans_legacy} from "../build/trans";
 import {correct_artist} from "../components/lotus";
-import {checkup_page_structure} from "../components/structure";
+import {checkup_page_structure, convert_to_toolbar} from "../components/structure";
 import {refresh_all} from "../config";
 import {register_background, update_page} from "../page";
 import {bleh_home} from './home';
-import {html} from "lighterhtml";
+import {html, render} from "lighterhtml";
 
 export function bleh_events() {
     if (page.subpage == 'overview') {
@@ -195,6 +195,8 @@ export function bleh_events() {
         }
     } else {
         if (page.subpage == 'event_attendance_going' || page.subpage == 'event_attendance_interested') {
+            convert_to_toolbar();
+
             // view-related buttons
             let view_buttons = document.createElement('div');
             view_buttons.classList.add('view-buttons-wrapper');
@@ -208,9 +210,15 @@ export function bleh_events() {
                     </button>
                 </div>
             `);
-            page.structure.row.classList.add('force-col-main-primary');
-            page.structure.main.classList.add('primary-column');
-            page.structure.main.insertBefore(view_buttons, page.structure.main.firstChild);
+
+            const user_panel = html.node`
+                <section class="users">
+                    ${view_buttons}
+                    ${html.node([page.structure.main.innerHTML])}
+                </section>
+            `;
+
+            render(page.structure.main, user_panel);
 
             refresh_all();
 

@@ -3483,7 +3483,8 @@
       trigger: "click"
     });
     if (badges) return badges[badges.length - 1];
-    else if (pre_existing_badge) return pre_existing_badge.classList[1];
+    else if (pre_existing_badge) return { type: pre_existing_badge.classList[1] };
+    else return { type: "" };
   }
   function return_name_from_avatar(avatar3) {
     if (!avatar3)
@@ -19826,6 +19827,7 @@
       }
     } else {
       if (page.subpage == "event_attendance_going" || page.subpage == "event_attendance_interested") {
+        convert_to_toolbar();
         let view_buttons = document.createElement("div");
         view_buttons.classList.add("view-buttons-wrapper");
         view_buttons.innerHTML = `
@@ -19838,9 +19840,13 @@
                     </button>
                 </div>
             `;
-        page.structure.row.classList.add("force-col-main-primary");
-        page.structure.main.classList.add("primary-column");
-        page.structure.main.insertBefore(view_buttons, page.structure.main.firstChild);
+        const user_panel = html.node`
+                <section class="users">
+                    ${view_buttons}
+                    ${html.node([page.structure.main.innerHTML])}
+                </section>
+            `;
+        render(page.structure.main, user_panel);
         refresh_all();
         let users = page.structure.main.querySelectorAll(".user-list-inner-wrap");
         users.forEach((user) => {
