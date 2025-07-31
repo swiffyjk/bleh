@@ -3248,6 +3248,15 @@ export const trans = {
     },
     listening_report_available: {
         en: 'View your {m} listening report'
+    },
+    count_mutual_listeners: {
+        en: 'You have {c} mutual listeners'
+    },
+    no_mutual_listeners: {
+        en: 'You have no mutual listeners'
+    },
+    no_mutual_listeners_explain: {
+        en: 'This can be due to either simply lacking mutuals who listen or the page being subject to a broken redirect.'
     }
 }
 

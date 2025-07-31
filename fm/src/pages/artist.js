@@ -18,7 +18,7 @@ import {ff} from "../sku";
 import {bleh_gallery_list, bleh_gallery_upload} from "./gallery";
 import {bleh_tags_mini} from "./tag";
 import {bleh_wiki, bleh_wiki_editor, bleh_wiki_history} from "./wiki";
-import {html} from "lighterhtml";
+import {html, render} from "lighterhtml";
 import {expand_avatar} from "../avatar.js";
 import {other_listener} from "../components/profile_shortcut.js";
 import {setting} from "../components/settings.js";
@@ -459,6 +459,32 @@ function bleh_artist_albums() {
 }
 
 function bleh_listeners() {
+    const buffer = page.structure.main.querySelector(':scope > .buffer-standard');
+
+    const no_data = buffer.querySelector(':scope > .no-data-message');
+
+    if (!no_data) {
+        // there are listeners
+        const p = buffer.querySelector(':scope > p');
+
+        const match = p.textContent.match(/\d+/);
+        const count = parseInt(match[0]);
+
+        p.remove();
+
+        buffer.insertBefore(html.node`
+            <h2>${tl(trans.count_mutual_listeners).replace('{c}', count.toString())}</h2>
+        `, buffer.firstElementChild);
+    } else {
+        // no listeners
+        render(buffer, html`
+            <h2>${tl(trans.no_mutual_listeners)}</h2>
+            <div class="loading-data-container">
+                <div class="loading-data-text info">${tl(trans.no_mutual_listeners_explain)}</div>
+            </div>
+        `);
+    }
+
     // i could just render away the ad here but courtesy
     page.structure.side.appendChild(html.node`
         <section class="side-actions">

@@ -19058,6 +19058,24 @@
     }
   }
   function bleh_listeners() {
+    const buffer = page.structure.main.querySelector(":scope > .buffer-standard");
+    const no_data = buffer.querySelector(":scope > .no-data-message");
+    if (!no_data) {
+      const p = buffer.querySelector(":scope > p");
+      const match = p.textContent.match(/\d+/);
+      const count = parseInt(match[0]);
+      p.remove();
+      buffer.insertBefore(html.node`
+            <h2>${tl(trans.count_mutual_listeners).replace("{c}", count.toString())}</h2>
+        `, buffer.firstElementChild);
+    } else {
+      render(buffer, html`
+            <h2>${tl(trans.no_mutual_listeners)}</h2>
+            <div class="loading-data-container">
+                <div class="loading-data-text info">${tl(trans.no_mutual_listeners_explain)}</div>
+            </div>
+        `);
+    }
     page.structure.side.appendChild(html.node`
         <section class="side-actions">
             <a class="btn side-action" data-type="profile" href="${root}user/${auth.name}/library/music/${redirect()}${sanitise(page.name)}">
@@ -24679,6 +24697,15 @@
     },
     listening_report_available: {
       en: "View your {m} listening report"
+    },
+    count_mutual_listeners: {
+      en: "You have {c} mutual listeners"
+    },
+    no_mutual_listeners: {
+      en: "You have no mutual listeners"
+    },
+    no_mutual_listeners_explain: {
+      en: "This can be due to either simply lacking mutuals who listen or the page being subject to a broken redirect."
     }
   };
   var trans_legacy = {
