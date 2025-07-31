@@ -246,7 +246,9 @@ export function redesign_profile_header(is_own_profile, is_following) {
 
         let taste_wrap = html.node`
             <div class="btn listen-item ${taste != 'super' ? 'icon' : ''} taste">
-                <div class="bleh-icon taste-overlay colourful" data-taste=${taste} />
+                <div class="taste-icon colourful" data-taste=${taste}>
+                    <div class="bleh-icon" />
+                </div>
                 <div class="span">
                     <img class="view-item-avatar" src=${auth.avatar} alt=${auth.name}>
                     <img class="view-item-avatar" src=${page.avatar} alt=${page.name}>

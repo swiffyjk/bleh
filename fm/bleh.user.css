@@ -24328,13 +24328,14 @@
                 animation: none;
             }
 
-            & > .bleh-icon {
+            & > .taste-icon {
                 position: absolute;
                 top: 50%;
                 margin-top: calc(-1 * var(--icon-half));
                 left: 0;
 
                 --mask-colour: hsl(var(--l3-c));
+                filter: drop-shadow(0 0 15px hsl(var(--h4), 80%));
             }
 
             --padding: 0 0 0 calc(var(--icon-size) + 10px) !important;
@@ -24352,6 +24353,7 @@
 
                     & > h3 > .colourful {
                         color: hsl(var(--l3-c));
+                        text-shadow: 0 0 15px hsl(var(--h4), 80%);
                     }
                 }
             }
