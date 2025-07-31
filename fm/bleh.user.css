@@ -18782,10 +18782,6 @@
     .dropdown-top-wrap {
         display: flex;
         justify-content: end;
-
-        .col-main > & {
-            padding-top: var(--card-padding) !important;
-        }
     }
 
 
@@ -18829,6 +18825,8 @@
     }
 
     .bleh--gallery {
+        padding: var(--card-padding) !important;
+
         & > .buffer-standard {
             margin-top: unset;
         }
