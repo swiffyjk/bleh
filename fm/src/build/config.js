@@ -695,6 +695,7 @@ export let settings_store = {
         default: true,
         title: trans.correct_titles_with_lotus.name,
         body: trans.correct_titles_with_lotus.body,
+        require_reload: true
     },
     colourful_counts: {
         default: true,

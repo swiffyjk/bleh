@@ -302,7 +302,7 @@ function update_item(item, value, modify=true, search = document) {
 
     // save to settings
     localStorage.setItem('bleh', JSON.stringify(settings));
-    } catch(e) {console.error(e)}
+    } catch(e) {}
 
     if (container) {
         if (settings[item] != settings_base[item].value)

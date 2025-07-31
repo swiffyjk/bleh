@@ -118,6 +118,9 @@ export function checkup_page_structure(is_subpage = false, header = null) {
             navlist.classList.add('redesigned-navigation');
             page.structure.container.insertBefore(navlist, page.structure.container.firstElementChild);
             page.structure.nav = navlist;
+
+            const overview = page.structure.nav.querySelector('.secondary-nav-item--overview a');
+            if (overview) overview.textContent = tl(trans.home);
         }
 
         if (is_subpage) {
@@ -280,4 +283,18 @@ export function checkup_nav() {
             page.structure.row.insertBefore(nav, page.structure.content);
         }
     });
+}
+
+export function convert_to_toolbar() {
+    const nav = page.structure.content_top.querySelector('.navlist');
+    nav.classList.add('redesigned-navigation');
+
+    page.structure.toolbar = html.node`
+        <div class="toolbar">
+            ${nav}
+        </div>
+    `;
+
+    page.structure.content_top.after(page.structure.toolbar);
+    page.structure.content_top.style.display = 'none';
 }

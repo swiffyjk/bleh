@@ -41,7 +41,7 @@ export function lotus(force = false) {
 
     let current_time = new Date();
 
-    if (lotus_artist == null) {
+    if (!lotus_artist) {
         console.info('lotus - artist list is not cached, fetching');
         lotus_request('artist', true);
     } else {

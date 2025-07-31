@@ -19,7 +19,7 @@ import {markdown} from "../components/markdown"
 import {notify} from "../components/notify"
 import {redesign_profile_header} from "../components/profile_header"
 import {select, select_prepare} from "../components/select"
-import {checkup_page_structure} from "../components/structure"
+import {checkup_page_structure, convert_to_toolbar} from "../components/structure"
 import {refresh_all, update_inbuilt_item} from "../config"
 import {register_background, update_page} from "../page"
 import {ff} from "../sku"
@@ -443,7 +443,9 @@ export function bleh_profiles() {
         if (page.subpage.startsWith('library')) {
             bleh_user_library();
         } else if (page.subpage == 'events') {
-            let selected_tab = page.structure.content_top.querySelector('.secondary-nav-item-link--active');
+            convert_to_toolbar();
+
+            let selected_tab = page.structure.toolbar.querySelector('.secondary-nav-item-link--active');
 
             let value_panel = html.node`
                 <section class="value-panel">
@@ -499,14 +501,7 @@ export function bleh_profiles() {
             page.structure.content_top.classList.add('listening-report-navlist');
             page.structure.row.classList.add('listening-report');
 
-            let nav = page.structure.content_top.querySelector('.navlist');
-            nav.classList.add('redesigned-navigation');
-            page.structure.content_top.after(html.node`
-                <div class="toolbar">
-                    ${nav}
-                </div>
-            `);
-            page.structure.content_top.style.display = 'none';
+            convert_to_toolbar();
 
             let report_box_container = document.body.querySelector('.report-box-container--overview');
             if (report_box_container) {
@@ -825,6 +820,7 @@ function patch_profile_following() {
 
     if (page.subpage != 'following' && page.subpage != 'followers' && page.subpage != 'neighbours') {
         // if we're not on one of these tabs we don't need to preserve the 'Following' text
+        link.href = `${root}user/${page.name}/friends`;
         link.textContent = tl(trans.friends);
         return;
     }
@@ -853,6 +849,7 @@ function patch_profile_following() {
     `;
 
     // we do this later to preserve the 'Following' text
+    link.href = `${root}user/${page.name}/friends`;
     link.textContent = tl(trans.friends);
 
     page.structure.content_top.after(friends_nav);

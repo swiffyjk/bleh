@@ -6305,7 +6305,7 @@ export function tl(key) {
 
     if (key[lang]) return key[lang];
 
-    log(`no translation found for ${JSON.stringify(key)}`, 'trans');
+    log('defaulting to english', 'trans', 'log', {key: key});
     return key.en;
 }
 

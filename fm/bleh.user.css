@@ -837,7 +837,7 @@
         --icon-16-heart-solid: url('data:image/svg+xml;base64,PHN2ZyAgeG1sbnM9Imh0dHA6Ly93d3cudzMub3JnLzIwMDAvc3ZnIiAgd2lkdGg9IjI0IiAgaGVpZ2h0PSIyNCIgIHZpZXdCb3g9IjAgMCAyNCAyNCIgIGZpbGw9ImN1cnJlbnRDb2xvciIgIGNsYXNzPSJpY29uIGljb24tdGFibGVyIGljb25zLXRhYmxlci1maWxsZWQgaWNvbi10YWJsZXItaGVhcnQiPjxwYXRoIHN0cm9rZT0ibm9uZSIgZD0iTTAgMGgyNHYyNEgweiIgZmlsbD0ibm9uZSIvPjxwYXRoIGQ9Ik02Ljk3OSAzLjA3NGE2IDYgMCAwIDEgNC45ODggMS40MjVsLjAzNyAuMDMzbC4wMzQgLS4wM2E2IDYgMCAwIDEgNC43MzMgLTEuNDRsLjI0NiAuMDM2YTYgNiAwIDAgMSAzLjM2NCAxMC4wMDhsLS4xOCAuMTg1bC0uMDQ4IC4wNDFsLTcuNDUgNy4zNzlhMSAxIDAgMCAxIC0xLjMxMyAuMDgybC0uMDk0IC0uMDgybC03LjQ5MyAtNy40MjJhNiA2IDAgMCAxIDMuMTc2IC0xMC4yMTV6IiAvPjwvc3ZnPg==');
         --icon-16-support: url('data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHdpZHRoPSIxOCIgaGVpZ2h0PSIxOCIgdmlld0JveD0iMCAwIDI0IDI0IiBmaWxsPSJub25lIiBzdHJva2U9ImN1cnJlbnRDb2xvciIgc3Ryb2tlLXdpZHRoPSIyLjI1IiBzdHJva2UtbGluZWNhcD0icm91bmQiIHN0cm9rZS1saW5lam9pbj0icm91bmQiIGNsYXNzPSJsdWNpZGUgbHVjaWRlLWhlYXJ0LXBsdXMtaWNvbiBsdWNpZGUtaGVhcnQtcGx1cyI+PHBhdGggZD0iTTEzLjUgMTkuNSAxMiAyMWwtNy03Yy0xLjUtMS40NS0zLTMuMi0zLTUuNUE1LjUgNS41IDAgMCAxIDcuNSAzYzEuNzYgMCAzIC41IDQuNSAyIDEuNS0xLjUgMi43NC0yIDQuNS0yYTUuNSA1LjUgMCAwIDEgNS40MDIgNi41Ii8+PHBhdGggZD0iTTE1IDE1aDYiLz48cGF0aCBkPSJNMTggMTJ2NiIvPjwvc3ZnPg==');
         --icon-16-sponsor-rewards: url('data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHdpZHRoPSIxOCIgaGVpZ2h0PSIxOCIgdmlld0JveD0iMCAwIDI0IDI0IiBmaWxsPSJub25lIiBzdHJva2U9ImN1cnJlbnRDb2xvciIgc3Ryb2tlLXdpZHRoPSIyLjI1IiBzdHJva2UtbGluZWNhcD0icm91bmQiIHN0cm9rZS1saW5lam9pbj0icm91bmQiIGNsYXNzPSJsdWNpZGUgbHVjaWRlLXNob3BwaW5nLWJhZy1pY29uIGx1Y2lkZS1zaG9wcGluZy1iYWciPjxwYXRoIGQ9Ik02IDIgMyA2djE0YTIgMiAwIDAgMCAyIDJoMTRhMiAyIDAgMCAwIDItMlY2bC0zLTRaIi8+PHBhdGggZD0iTTMgNmgxOCIvPjxwYXRoIGQ9Ik0xNiAxMGE0IDQgMCAwIDEtOCAwIi8+PC9zdmc+');
-        --icon-16-home: url('data:image/svg+xml;base64,PHN2ZyAgeG1sbnM9Imh0dHA6Ly93d3cudzMub3JnLzIwMDAvc3ZnIiAgd2lkdGg9IjI0IiAgaGVpZ2h0PSIyNCIgIHZpZXdCb3g9IjAgMCAyNCAyNCIgIGZpbGw9ImN1cnJlbnRDb2xvciIgIGNsYXNzPSJpY29uIGljb24tdGFibGVyIGljb25zLXRhYmxlci1maWxsZWQgaWNvbi10YWJsZXItaG9tZSI+PHBhdGggc3Ryb2tlPSJub25lIiBkPSJNMCAwaDI0djI0SDB6IiBmaWxsPSJub25lIi8+PHBhdGggZD0iTTEyLjcwNyAyLjI5M2w5IDljLjYzIC42MyAuMTg0IDEuNzA3IC0uNzA3IDEuNzA3aC0xdjZhMyAzIDAgMCAxIC0zIDNoLTF2LTdhMyAzIDAgMCAwIC0yLjgyNCAtMi45OTVsLS4xNzYgLS4wMDVoLTJhMyAzIDAgMCAwIC0zIDN2N2gtMWEzIDMgMCAwIDEgLTMgLTN2LTZoLTFjLS44OSAwIC0xLjMzNyAtMS4wNzcgLS43MDcgLTEuNzA3bDkgLTlhMSAxIDAgMCAxIDEuNDE0IDBtLjI5MyAxMS43MDdhMSAxIDAgMCAxIDEgMXY3aC00di03YTEgMSAwIDAgMSAuODgzIC0uOTkzbC4xMTcgLS4wMDd6IiAvPjwvc3ZnPg==');
+        --icon-16-home: url('data:image/svg+xml;base64,PHN2ZyAgeG1sbnM9Imh0dHA6Ly93d3cudzMub3JnLzIwMDAvc3ZnIiAgd2lkdGg9IjI0IiAgaGVpZ2h0PSIyNCIgIHZpZXdCb3g9IjAgMCAyNCAyNCIgIGZpbGw9Im5vbmUiICBzdHJva2U9ImN1cnJlbnRDb2xvciIgIHN0cm9rZS13aWR0aD0iMiIgIHN0cm9rZS1saW5lY2FwPSJyb3VuZCIgIHN0cm9rZS1saW5lam9pbj0icm91bmQiICBjbGFzcz0iaWNvbiBpY29uLXRhYmxlciBpY29ucy10YWJsZXItb3V0bGluZSBpY29uLXRhYmxlci1ob21lIj48cGF0aCBzdHJva2U9Im5vbmUiIGQ9Ik0wIDBoMjR2MjRIMHoiIGZpbGw9Im5vbmUiLz48cGF0aCBkPSJNNSAxMmwtMiAwbDkgLTlsOSA5bC0yIDAiIC8+PHBhdGggZD0iTTUgMTJ2N2EyIDIgMCAwIDAgMiAyaDEwYTIgMiAwIDAgMCAyIC0ydi03IiAvPjxwYXRoIGQ9Ik05IDIxdi02YTIgMiAwIDAgMSAyIC0yaDJhMiAyIDAgMCAxIDIgMnY2IiAvPjwvc3ZnPg==');
         --icon-16-users: url('data:image/svg+xml;base64,PHN2ZyAgeG1sbnM9Imh0dHA6Ly93d3cudzMub3JnLzIwMDAvc3ZnIiAgd2lkdGg9IjI0IiAgaGVpZ2h0PSIyNCIgIHZpZXdCb3g9IjAgMCAyNCAyNCIgIGZpbGw9Im5vbmUiICBzdHJva2U9ImN1cnJlbnRDb2xvciIgIHN0cm9rZS13aWR0aD0iMiIgIHN0cm9rZS1saW5lY2FwPSJyb3VuZCIgIHN0cm9rZS1saW5lam9pbj0icm91bmQiICBjbGFzcz0iaWNvbiBpY29uLXRhYmxlciBpY29ucy10YWJsZXItb3V0bGluZSBpY29uLXRhYmxlci11c2VycyI+PHBhdGggc3Ryb2tlPSJub25lIiBkPSJNMCAwaDI0djI0SDB6IiBmaWxsPSJub25lIi8+PHBhdGggZD0iTTkgN20tNCAwYTQgNCAwIDEgMCA4IDBhNCA0IDAgMSAwIC04IDAiIC8+PHBhdGggZD0iTTMgMjF2LTJhNCA0IDAgMCAxIDQgLTRoNGE0IDQgMCAwIDEgNCA0djIiIC8+PHBhdGggZD0iTTE2IDMuMTNhNCA0IDAgMCAxIDAgNy43NSIgLz48cGF0aCBkPSJNMjEgMjF2LTJhNCA0IDAgMCAwIC0zIC0zLjg1IiAvPjwvc3ZnPg==');
         --icon-16-event: url('data:image/svg+xml;base64,PHN2ZyAgeG1sbnM9Imh0dHA6Ly93d3cudzMub3JnLzIwMDAvc3ZnIiAgd2lkdGg9IjI0IiAgaGVpZ2h0PSIyNCIgIHZpZXdCb3g9IjAgMCAyNCAyNCIgIGZpbGw9Im5vbmUiICBzdHJva2U9ImN1cnJlbnRDb2xvciIgIHN0cm9rZS13aWR0aD0iMiIgIHN0cm9rZS1saW5lY2FwPSJyb3VuZCIgIHN0cm9rZS1saW5lam9pbj0icm91bmQiICBjbGFzcz0iaWNvbiBpY29uLXRhYmxlciBpY29ucy10YWJsZXItb3V0bGluZSBpY29uLXRhYmxlci10aWNrZXQiPjxwYXRoIHN0cm9rZT0ibm9uZSIgZD0iTTAgMGgyNHYyNEgweiIgZmlsbD0ibm9uZSIvPjxwYXRoIGQ9Ik0xNSA1bDAgMiIgLz48cGF0aCBkPSJNMTUgMTFsMCAyIiAvPjxwYXRoIGQ9Ik0xNSAxN2wwIDIiIC8+PHBhdGggZD0iTTUgNWgxNGEyIDIgMCAwIDEgMiAydjNhMiAyIDAgMCAwIDAgNHYzYTIgMiAwIDAgMSAtMiAyaC0xNGEyIDIgMCAwIDEgLTIgLTJ2LTNhMiAyIDAgMCAwIDAgLTR2LTNhMiAyIDAgMCAxIDIgLTIiIC8+PC9zdmc+');
         --icon-16-tag: url('data:image/svg+xml;base64,PHN2ZyAgeG1sbnM9Imh0dHA6Ly93d3cudzMub3JnLzIwMDAvc3ZnIiAgd2lkdGg9IjI0IiAgaGVpZ2h0PSIyNCIgIHZpZXdCb3g9IjAgMCAyNCAyNCIgIGZpbGw9ImN1cnJlbnRDb2xvciIgIGNsYXNzPSJpY29uIGljb24tdGFibGVyIGljb25zLXRhYmxlci1maWxsZWQgaWNvbi10YWJsZXItdGFnIj48cGF0aCBzdHJva2U9Im5vbmUiIGQ9Ik0wIDBoMjR2MjRIMHoiIGZpbGw9Im5vbmUiLz48cGF0aCBkPSJNMTEuMTcyIDJhMyAzIDAgMCAxIDIuMTIxIC44NzlsNy43MSA3LjcxYTMuNDEgMy40MSAwIDAgMSAwIDQuODIybC01LjU5MiA1LjU5MmEzLjQxIDMuNDEgMCAwIDEgLTQuODIyIDBsLTcuNzEgLTcuNzFhMyAzIDAgMCAxIC0uODc5IC0yLjEyMXYtNS4xNzJhNCA0IDAgMCAxIDQgLTR6bS0zLjY3MiAzLjVhMiAyIDAgMCAwIC0xLjk5NSAxLjg1bC0uMDA1IC4xNWEyIDIgMCAxIDAgMiAtMiIgLz48L3N2Zz4=');
@@ -7652,6 +7652,15 @@
             --icon-colour: hsl(var(--c3));
         }
     }
+    .icon-combo {
+        display: flex;
+        align-items: center;
+        gap: var(--icon-gap);
+
+        &[data-season]:not([data-season="none"]) {
+            color: hsl(var(--l3-c));
+        }
+    }
     .button-combo {
         display: flex;
         align-items: center;
@@ -8637,6 +8646,11 @@
         transform-origin: top;
 
         text-align: left;
+
+        &[data-theme="auth-menu-v2"] {
+            width: 383px !important;
+            overflow: hidden;
+        }
 
         &.tippy-box[data-theme="nav-window"] {
             max-width: 600px !important;
@@ -17220,7 +17234,7 @@
         & > .info {
             display: flex;
             align-items: center;
-            gap: var(--icon-gap);
+            gap: var(--card-gap);
             flex-shrink: 0;
             color: hsl(var(--c3));
 
@@ -17228,10 +17242,6 @@
                 flex-direction: column;
                 align-items: end;
                 gap: 12px;
-            }
-
-            &[data-season]:not([data-season="none"]) {
-                color: hsl(var(--l3-c));
             }
         }
 

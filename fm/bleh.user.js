@@ -8235,7 +8235,6 @@
         log(`updated ${item} to ${settings[item]}`, "settings");
       localStorage.setItem("bleh", JSON.stringify(settings));
     } catch (e) {
-      console.error(e);
     }
     if (container) {
       if (settings[item] != settings_base[item].value)
@@ -9736,6 +9735,8 @@
         navlist.classList.add("redesigned-navigation");
         page.structure.container.insertBefore(navlist, page.structure.container.firstElementChild);
         page.structure.nav = navlist;
+        const overview = page.structure.nav.querySelector(".secondary-nav-item--overview a");
+        if (overview) overview.textContent = tl(trans.home);
       }
       if (is_subpage) {
         let content_top = document.body.querySelector(".content-top");
@@ -9860,6 +9861,17 @@
         page.structure.row.insertBefore(nav, page.structure.content);
       }
     });
+  }
+  function convert_to_toolbar() {
+    const nav = page.structure.content_top.querySelector(".navlist");
+    nav.classList.add("redesigned-navigation");
+    page.structure.toolbar = html.node`
+        <div class="toolbar">
+            ${nav}
+        </div>
+    `;
+    page.structure.content_top.after(page.structure.toolbar);
+    page.structure.content_top.style.display = "none";
   }
 
   // src/components/auto_edit.js
@@ -11715,7 +11727,8 @@
       if (page.subpage.startsWith("library")) {
         bleh_user_library();
       } else if (page.subpage == "events") {
-        let selected_tab = page.structure.content_top.querySelector(".secondary-nav-item-link--active");
+        convert_to_toolbar();
+        let selected_tab = page.structure.toolbar.querySelector(".secondary-nav-item-link--active");
         let value_panel = html.node`
                 <section class="value-panel">
                     <h2 class="text-18">${selected_tab ? selected_tab.firstChild.textContent : tl(trans.events)}</h2>
@@ -11758,14 +11771,7 @@
         document.documentElement.setAttribute("data-bleh--theme", "oled");
         page.structure.content_top.classList.add("listening-report-navlist");
         page.structure.row.classList.add("listening-report");
-        let nav = page.structure.content_top.querySelector(".navlist");
-        nav.classList.add("redesigned-navigation");
-        page.structure.content_top.after(html.node`
-                <div class="toolbar">
-                    ${nav}
-                </div>
-            `);
-        page.structure.content_top.style.display = "none";
+        convert_to_toolbar();
         let report_box_container = document.body.querySelector(".report-box-container--overview");
         if (report_box_container) {
           page.structure.row.appendChild(report_box_container);
@@ -12004,6 +12010,7 @@
     let following_tab = navlist.querySelector(".secondary-nav-item--following");
     let link = following_tab.querySelector("a");
     if (page.subpage != "following" && page.subpage != "followers" && page.subpage != "neighbours") {
+      link.href = `${root}user/${page.name}/friends`;
       link.textContent = tl(trans.friends);
       return;
     }
@@ -12024,6 +12031,7 @@
             </nav>
         </div>
     `;
+    link.href = `${root}user/${page.name}/friends`;
     link.textContent = tl(trans.friends);
     page.structure.content_top.after(friends_nav);
     page.structure.row.classList.add("col-main-is-primary");
@@ -15032,8 +15040,10 @@
                             <h5>${tl(trans.current_season)}</h5>
                         </div>
                         <div class="info" data-season=${stored_season.id}>
-                            <div class="bleh-icon bleh-seasonal-icon"></div>
-                            <p>${tl(trans.seasonal.listing[stored_season.id])}</p>
+                            <div class="icon-combo">
+                                <div class="bleh-icon bleh-seasonal-icon"></div>
+                                <p>${tl(trans.seasonal.listing[stored_season.id])}</p>
+                            </div>
                         </div>
                     </div>
                     ${stored_season.id != "none" && stored_season.start && stored_season.end ? html.node`
@@ -15596,7 +15606,8 @@
                 </div>
                 <div class="setting-group">
                     ${setting({ id: "corrections" })}
-                    <div class="setting" data-type="info">
+                    <div class="setting" data-type="info"
+                         disabled=${!artist_corrections.version || !album_track_corrections.version}>
                         <div class="heading">
                             <h5>${tl(trans.current_version)}</h5>
                         </div>
@@ -15604,14 +15615,14 @@
                             <button class="see-more update-check" onclick="_lotus_check()">
                                 ${tl(trans.update_check)}
                             </button>
-                            <p>${artist_corrections.version >= album_track_corrections.version ? artist_corrections.version : album_track_corrections.version}</p>
+                            <p>${artist_corrections.version == album_track_corrections.version ? artist_corrections.version : `${artist_corrections.version}, ${album_track_corrections.version}`}</p>
                         </div>
                     </div>
-                    <div class="setting" data-type="action">
+                    <div class="setting" data-type="info" disabled=${!artist_corrections.version || !album_track_corrections.version}>
                         <div class="heading">
                             <h5>${tl(trans.help_contribute)}</h5>
                         </div>
-                        <div class="toggle-wrap">
+                        <div class="info">
                             <a class="see-more" href="https://github.com/katelyynn/lotus/issues/new/choose" target="_blank">
                                 ${tl(trans.suggest_correction)}
                             </a>
@@ -16927,7 +16938,7 @@
     let lotus_album_track = localStorage.getItem("lotus_album_track");
     let lotus_album_track_expire = new Date(localStorage.getItem("lotus_album_track_expire"));
     let current_time = /* @__PURE__ */ new Date();
-    if (lotus_artist == null) {
+    if (!lotus_artist) {
       console.info("lotus - artist list is not cached, fetching");
       lotus_request("artist", true);
     } else {
@@ -27682,7 +27693,7 @@
       return "NO_TRANSLATION_FOUND";
     }
     if (key[lang]) return key[lang];
-    log(`no translation found for ${JSON.stringify(key)}`, "trans");
+    log("defaulting to english", "trans", "log", { key });
     return key.en;
   }
   function get_lang() {
@@ -28396,7 +28407,8 @@
     corrections: {
       default: true,
       title: trans.correct_titles_with_lotus.name,
-      body: trans.correct_titles_with_lotus.body
+      body: trans.correct_titles_with_lotus.body,
+      require_reload: true
     },
     colourful_counts: {
       default: true,

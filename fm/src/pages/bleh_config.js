@@ -443,8 +443,10 @@ export function render_setting_page(page_id) {
                             <h5>${tl(trans.current_season)}</h5>
                         </div>
                         <div class="info" data-season=${stored_season.id}>
-                            <div class="bleh-icon bleh-seasonal-icon"></div>
-                            <p>${tl(trans.seasonal.listing[stored_season.id])}</p>
+                            <div class="icon-combo">
+                                <div class="bleh-icon bleh-seasonal-icon"></div>
+                                <p>${tl(trans.seasonal.listing[stored_season.id])}</p>
+                            </div>
                         </div>
                     </div>
                     ${(stored_season.id != 'none' && stored_season.start && stored_season.end) ? html.node`
@@ -1031,7 +1033,8 @@ export function render_setting_page(page_id) {
                 </div>
                 <div class="setting-group">
                     ${setting({id: 'corrections'})}
-                    <div class="setting" data-type="info">
+                    <div class="setting" data-type="info"
+                         disabled=${!artist_corrections.version || !album_track_corrections.version}>
                         <div class="heading">
                             <h5>${tl(trans.current_version)}</h5>
                         </div>
@@ -1039,14 +1042,14 @@ export function render_setting_page(page_id) {
                             <button class="see-more update-check" onclick="_lotus_check()">
                                 ${tl(trans.update_check)}
                             </button>
-                            <p>${(artist_corrections.version >= album_track_corrections.version) ? artist_corrections.version : album_track_corrections.version}</p>
+                            <p>${(artist_corrections.version == album_track_corrections.version) ? artist_corrections.version : `${artist_corrections.version}, ${album_track_corrections.version}`}</p>
                         </div>
                     </div>
-                    <div class="setting" data-type="action">
+                    <div class="setting" data-type="info" disabled=${!artist_corrections.version || !album_track_corrections.version}>
                         <div class="heading">
                             <h5>${tl(trans.help_contribute)}</h5>
                         </div>
-                        <div class="toggle-wrap">
+                        <div class="info">
                             <a class="see-more" href="https://github.com/katelyynn/lotus/issues/new/choose" target="_blank">
                                 ${tl(trans.suggest_correction)}
                             </a>
