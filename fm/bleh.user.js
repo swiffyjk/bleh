@@ -3484,7 +3484,7 @@
     });
     if (badges) return badges[badges.length - 1];
     else if (pre_existing_badge) return { type: pre_existing_badge.classList[1] };
-    else return { type: "" };
+    else return { type: "none" };
   }
   function return_name_from_avatar(avatar3) {
     if (!avatar3)
@@ -7340,21 +7340,21 @@
             text: tl(trans.shouts),
             body: tl(trans.opens_the_value_for_type).replace("{v}", tl(trans.shouts)).replace("{t}", page.name),
             keywords: ["shout", "shoutbox", "shouts", "comments"],
-            action: () => window.location.href = url_start + "/shoutbox"
+            action: () => window.location.href = url_start + "/+shoutbox"
           },
           {
             type: "events",
             text: tl(trans.events),
             body: tl(trans.opens_the_value_for_type).replace("{v}", tl(trans.events)).replace("{t}", page.name),
             keywords: ["events", "festivals", "tour", "live"],
-            action: () => window.location.href = url_start + "/events"
+            action: () => window.location.href = url_start + "/+events"
           },
           {
             type: "tags",
             text: tl(trans.tags),
             body: tl(trans.opens_the_value_for_type).replace("{v}", tl(trans.tags)).replace("{t}", page.name),
             keywords: ["tags", "tagged", "related", "groups", "grouped"],
-            action: () => window.location.href = url_start + "/tags"
+            action: () => window.location.href = url_start + "/+tags"
           }
         ]);
       } else if (page.type == "album") {
@@ -7385,14 +7385,14 @@
             text: tl(trans.shouts),
             body: tl(trans.opens_the_value_for_type).replace("{v}", tl(trans.shouts)).replace("{t}", page.name),
             keywords: ["shout", "shoutbox", "shouts", "comments"],
-            action: () => window.location.href = url_start + "/shoutbox"
+            action: () => window.location.href = url_start + "/+shoutbox"
           },
           {
             type: "tags",
             text: tl(trans.tags),
             body: tl(trans.opens_the_value_for_type).replace("{v}", tl(trans.tags)).replace("{t}", page.name),
             keywords: ["tags", "tagged", "related", "groups", "grouped"],
-            action: () => window.location.href = url_start + "/tags"
+            action: () => window.location.href = url_start + "/+tags"
           }
         ]);
       } else if (page.type == "track") {
@@ -7423,14 +7423,14 @@
             text: tl(trans.shouts),
             body: tl(trans.opens_the_value_for_type).replace("{v}", tl(trans.shouts)).replace("{t}", page.name),
             keywords: ["shout", "shoutbox", "shouts", "comments"],
-            action: () => window.location.href = url_start + "/shoutbox"
+            action: () => window.location.href = url_start + "/+shoutbox"
           },
           {
             type: "tags",
             text: tl(trans.tags),
             body: tl(trans.opens_the_value_for_type).replace("{v}", tl(trans.tags)).replace("{t}", page.name),
             keywords: ["tags", "tagged", "related", "groups", "grouped"],
-            action: () => window.location.href = url_start + "/tags"
+            action: () => window.location.href = url_start + "/+tags"
           }
         ]);
       } else if (page.type == "tag") {
@@ -20313,8 +20313,14 @@
         let send_button = shout.querySelector(".form-group--submit");
         shout_send(send_button);
       } catch (e) {
-        deliver_notif("a shout on this page failed to be modified :(");
-        console.error("bleh - a shout failed to patch", e);
+        notify({
+          id: "shout",
+          title: tl(trans.shouts),
+          body: "Failed to be modified :(",
+          type: "error",
+          icon: "icon-16-shoutbox"
+        });
+        log("failed to modify", "shout", "error", { error: e });
       }
     });
     if (settings.shout_markdown && shout_parse_queue.length > 0)
@@ -20382,10 +20388,8 @@
       if (header) header.parentElement.removeChild(header);
       let link = window.location.href;
       let shoutbox_link = "+shoutbox";
-      if (page.type == "user" || "event")
-        shoutbox_link = "shoutbox";
-      if (!page.subpage.startsWith("shoutbox"))
-        link += `/${shoutbox_link}`;
+      if (page.type == "user" || page.type == "event") shoutbox_link = "shoutbox";
+      if (!page.subpage.startsWith("shoutbox")) link += `/${shoutbox_link}`;
       panel.insertBefore(html.node`
             <div class="top-container">
                 <h2>

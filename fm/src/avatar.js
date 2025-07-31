@@ -81,7 +81,7 @@ export function patch_avatar(avatar, name, type = '', parent=null, side='right')
 
     if (badges) return badges[badges.length - 1];
     else if (pre_existing_badge) return {type: pre_existing_badge.classList[1]};
-    else return {type: ''}
+    else return {type: 'none'}
 }
 
 export function return_name_from_avatar(avatar) {

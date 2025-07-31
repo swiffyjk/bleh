@@ -657,21 +657,21 @@ export function register_rabbit() {
                     text: tl(trans.shouts),
                     body: tl(trans.opens_the_value_for_type).replace('{v}', tl(trans.shouts)).replace('{t}', page.name),
                     keywords: ['shout', 'shoutbox', 'shouts', 'comments'],
-                    action: () => window.location.href = url_start + '/shoutbox'
+                    action: () => window.location.href = url_start + '/+shoutbox'
                 },
                 {
                     type: 'events',
                     text: tl(trans.events),
                     body: tl(trans.opens_the_value_for_type).replace('{v}', tl(trans.events)).replace('{t}', page.name),
                     keywords: ['events', 'festivals', 'tour', 'live'],
-                    action: () => window.location.href = url_start + '/events'
+                    action: () => window.location.href = url_start + '/+events'
                 },
                 {
                     type: 'tags',
                     text: tl(trans.tags),
                     body: tl(trans.opens_the_value_for_type).replace('{v}', tl(trans.tags)).replace('{t}', page.name),
                     keywords: ['tags', 'tagged', 'related', 'groups', 'grouped'],
-                    action: () => window.location.href = url_start + '/tags'
+                    action: () => window.location.href = url_start + '/+tags'
                 }
             ]);
         } else if (page.type == 'album') {
@@ -702,14 +702,14 @@ export function register_rabbit() {
                     text: tl(trans.shouts),
                     body: tl(trans.opens_the_value_for_type).replace('{v}', tl(trans.shouts)).replace('{t}', page.name),
                     keywords: ['shout', 'shoutbox', 'shouts', 'comments'],
-                    action: () => window.location.href = url_start + '/shoutbox'
+                    action: () => window.location.href = url_start + '/+shoutbox'
                 },
                 {
                     type: 'tags',
                     text: tl(trans.tags),
                     body: tl(trans.opens_the_value_for_type).replace('{v}', tl(trans.tags)).replace('{t}', page.name),
                     keywords: ['tags', 'tagged', 'related', 'groups', 'grouped'],
-                    action: () => window.location.href = url_start + '/tags'
+                    action: () => window.location.href = url_start + '/+tags'
                 }
             ]);
         } else if (page.type == 'track') {
@@ -740,14 +740,14 @@ export function register_rabbit() {
                     text: tl(trans.shouts),
                     body: tl(trans.opens_the_value_for_type).replace('{v}', tl(trans.shouts)).replace('{t}', page.name),
                     keywords: ['shout', 'shoutbox', 'shouts', 'comments'],
-                    action: () => window.location.href = url_start + '/shoutbox'
+                    action: () => window.location.href = url_start + '/+shoutbox'
                 },
                 {
                     type: 'tags',
                     text: tl(trans.tags),
                     body: tl(trans.opens_the_value_for_type).replace('{v}', tl(trans.tags)).replace('{t}', page.name),
                     keywords: ['tags', 'tagged', 'related', 'groups', 'grouped'],
-                    action: () => window.location.href = url_start + '/tags'
+                    action: () => window.location.href = url_start + '/+tags'
                 }
             ]);
         } else if (page.type == 'tag') {

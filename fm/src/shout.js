@@ -9,7 +9,7 @@ import {settings} from "./build/config";
 import {log} from "./build/log";
 import {auth, page, shout_parse_queue} from "./build/page";
 import {tl, trans} from "./build/trans";
-import {deliver_notif, notify} from "./components/notify";
+import {notify} from "./components/notify";
 import {html, render} from "lighterhtml";
 import {setting} from "./components/settings.js";
 import {markdown} from "./components/markdown.js";
@@ -137,8 +137,14 @@ export function patch_shouts() {
             let send_button = shout.querySelector('.form-group--submit');
             shout_send(send_button);
         } catch(e) {
-            deliver_notif('a shout on this page failed to be modified :(');
-            console.error('bleh - a shout failed to patch', e);
+            notify({
+                id: 'shout',
+                title: tl(trans.shouts),
+                body: 'Failed to be modified :(',
+                type: 'error',
+                icon: 'icon-16-shoutbox'
+            });
+            log('failed to modify', 'shout', 'error', {error: e});
         }
     });
 
@@ -234,11 +240,9 @@ export function shout_header(shout_controls) {
 
         let link = window.location.href;
         let shoutbox_link = '+shoutbox';
-        if (page.type == 'user' || 'event')
-            shoutbox_link = 'shoutbox';
+        if (page.type == 'user' || page.type == 'event') shoutbox_link = 'shoutbox';
 
-        if (!page.subpage.startsWith('shoutbox'))
-            link += `/${shoutbox_link}`;
+        if (!page.subpage.startsWith('shoutbox')) link += `/${shoutbox_link}`;
 
         panel.insertBefore(html.node`
             <div class="top-container">
