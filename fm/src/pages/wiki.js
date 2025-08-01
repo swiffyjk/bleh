@@ -10,6 +10,7 @@ import {copy, desanitise} from "../build/tools";
 import {tl, trans} from "../build/trans";
 import {ff} from "../sku";
 import {html} from "lighterhtml";
+import tippy from "tippy.js";
 
 export function bleh_wiki() {
     // make a new panel

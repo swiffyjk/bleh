@@ -8,6 +8,7 @@ import {log} from "../build/log";
 import {page} from "../build/page";
 import {html, render} from "lighterhtml";
 import {tl, trans} from "../build/trans.js";
+import tippy from "tippy.js";
 
 export function load_notifications() {
     if (!page.structure.notifications) {
@@ -123,9 +124,11 @@ export function notify({
                     let button = html.node`
                         <button class="notification-action" data-type=${action.type} onclick=${action.action}>${action.text}</button>
                     `;
+                    
                     tippy(button, {
                         content: action.text
                     });
+                    
                     return button;
                 }) : ''}
             </div>

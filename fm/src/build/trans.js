@@ -8,6 +8,7 @@ import {handle_error_500} from "../page";
 import {log} from "./log";
 import {auth, auth_link, setRoot} from "./page";
 import {clamp_lit, clamp_sat, rgb_to_hsl} from "./tools";
+import ColorThief from "color-thief-browser";
 
 // loads your selected language in last.fm
 export let lang = 'en';

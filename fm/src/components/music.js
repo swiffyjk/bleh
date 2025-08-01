@@ -20,6 +20,10 @@ import {correct_item_by_artist} from "./lotus";
 import {register_menu} from "./menu";
 import {other_listener} from "./profile_shortcut";
 import {submit_scrobble} from "./scrobble.js";
+import tippy from "tippy.js";
+import {Chart, registerables} from 'chart.js';
+
+Chart.register(...registerables);
 
 unsafeWindow._other_listener = function(id) {
     other_listener(id);

@@ -13,6 +13,7 @@ import {checkup_page_structure} from "../components/structure";
 import {register_background, update_page} from "../page";
 import {ff} from "../sku";
 import {bleh_wiki, bleh_wiki_editor, bleh_wiki_history} from "./wiki";
+import tippy from "tippy.js";
 
 export function bleh_tags() {
     let tag_header = document.body.querySelector('.header--tag');

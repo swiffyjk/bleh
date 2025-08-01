@@ -9,6 +9,7 @@ import {auth, root} from "./build/page";
 import {tl, trans} from "./build/trans";
 import {create_badge, load_badges} from "./components/badge";
 import {dialog} from "./components/dialog";
+import tippy from "tippy.js";
 
 export function patch_avatar(avatar, name, type = '', parent=null, side='right') {
     if (avatar.hasAttribute('data-bleh-avatar')) return {};

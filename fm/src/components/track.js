@@ -16,6 +16,8 @@ import {register_menu} from "./menu";
 import {tl, trans} from "../build/trans.js";
 import {notify} from "./notify.js";
 import {redirect} from "./music.js";
+import tippy from "tippy.js";
+import ColorThief from "color-thief-browser";
 
 export function patch_titles(search=page.structure.main) {
     if (page.subpage === 'tags_overview' || page.subpage == 'tags_tag')

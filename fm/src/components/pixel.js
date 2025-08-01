@@ -2,6 +2,7 @@ import {html, render} from "lighterhtml";
 import {auth} from "../build/page.js";
 import {tl, trans} from "../build/trans.js";
 import {input} from "./input.js";
+import tippy from "tippy.js";
 
 export function pixel({
   host,

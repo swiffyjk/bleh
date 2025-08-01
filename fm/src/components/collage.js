@@ -13,6 +13,8 @@ import {version} from "../main.js";
 import {download} from "./share.js";
 import {render_user} from "../pages/minis.js";
 import {redirect} from "./music.js";
+import tippy from "tippy.js";
+import html2canvas from 'html2canvas-pro';
 
 export function collage({
     host,

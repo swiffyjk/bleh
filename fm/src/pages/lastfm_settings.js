@@ -13,6 +13,7 @@ import {update_inbuilt_item} from "../config";
 import {ff} from "../sku";
 import {markdown} from "../components/markdown";
 import {html, render} from "lighterhtml";
+import tippy from "tippy.js";
 
 // patch last.fm settings
 export function bleh_native_settings() {

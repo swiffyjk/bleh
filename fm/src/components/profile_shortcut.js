@@ -11,6 +11,7 @@ import {tl, trans} from "../build/trans";
 import {dialog, dialog_rm} from "./dialog";
 import {notify} from "./notify";
 import {save_setting, setting} from "./settings.js";
+import tippy from "tippy.js";
 
 unsafeWindow._open_profile_shortcut_window = function() {
     open_profile_shortcut_window();

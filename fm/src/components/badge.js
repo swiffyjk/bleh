@@ -9,6 +9,7 @@ import {sponsor_list} from "../build/sponsor";
 import {tl, trans} from "../build/trans";
 import {html} from "lighterhtml";
 import {sponsor} from "../sponsor.js";
+import tippy from "tippy.js";
 
 export function load_badges(user, solo = false) {
     if (!sponsor_list || !sponsor_list.badges) return;

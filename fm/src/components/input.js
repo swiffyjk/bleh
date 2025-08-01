@@ -3,6 +3,7 @@ import {tl, trans} from "../build/trans.js";
 import {log} from "../build/log.js";
 import {pad2} from "../build/tools.js";
 import {register_menu} from "./menu.js";
+import tippy from "tippy.js";
 
 export function input({
     type = 'text',

@@ -12,6 +12,7 @@ import {register_menu} from "../components/menu";
 import {ff} from "../sku";
 import {html, render} from "lighterhtml";
 import {share} from "../components/share.js";
+import tippy from "tippy.js";
 
 export function bleh_gallery() {
     if (page.subpage != 'image')

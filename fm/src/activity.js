@@ -12,6 +12,7 @@ import {tl, trans} from './build/trans';
 import {correct_artist, correct_item_by_artist, name_includes} from "./components/lotus";
 import {html, render} from "lighterhtml";
 import {redirect} from "./components/music.js";
+import tippy from "tippy.js";
 
 export function render_activity_list() {
     load_activities();

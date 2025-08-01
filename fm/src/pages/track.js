@@ -19,6 +19,7 @@ import {bleh_tags_mini} from "./tag";
 import {bleh_wiki, bleh_wiki_editor, bleh_wiki_history} from "./wiki";
 import {html} from "lighterhtml";
 import {expand_avatar} from "../avatar.js";
+import tippy from "tippy.js";
 
 export function bleh_tracks() {
     let track_header = document.body.querySelector('.header-new--track');

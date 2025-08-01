@@ -16,6 +16,7 @@ import {bleh_native_settings} from './lastfm_settings';
 import {html, render} from "lighterhtml";
 import {load_banner} from "../components/banner.js";
 import {ff} from "../sku.js";
+import tippy from "tippy.js";
 
 export function bleh_home() {
     page.structure.container = document.body.querySelector('.page-content');

@@ -22,6 +22,7 @@ import {prompt_for_update} from "./style.js";
 import {log} from "./build/log.js";
 import {correct_artist, correct_item_by_artist} from "./components/lotus.js";
 import {bleh_notification_list} from "./components/notifications.js";
+import tippy from "tippy.js";
 
 export function patch_masthead() {
     let masthead_logo = document.body.querySelector('.masthead-logo');

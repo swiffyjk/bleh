@@ -15,6 +15,7 @@ import {log} from "../build/log.js";
 import {change_settings_page} from "../pages/bleh_config.js";
 import {dialog_rm} from "./dialog.js";
 import {keybind} from "./rabbit.js";
+import tippy from "tippy.js";
 
 export function setting({
     id = '',
@@ -76,9 +77,11 @@ export function setting({
                                     <div class="bleh-icon" />
                                 </div>
                             `;
+                            
                             tippy(container, {
                                 content: tl(trans.requires_extension_value).replace('{v}', tl(extension))
                             });
+                            
                             return container;
                         })}
                     </div>

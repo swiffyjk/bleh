@@ -22,6 +22,7 @@ import {html, render} from "lighterhtml";
 import {expand_avatar} from "../avatar.js";
 import {other_listener} from "../components/profile_shortcut.js";
 import {setting} from "../components/settings.js";
+import tippy from "tippy.js";
 
 export function bleh_artists() {
     let artist_header = document.body.querySelector('.header-new--artist');

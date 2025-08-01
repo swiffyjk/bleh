@@ -14,6 +14,7 @@ import {html, render} from "lighterhtml";
 import {setting} from "./components/settings.js";
 import {markdown} from "./components/markdown.js";
 import {copy} from "./build/tools.js";
+import tippy from "tippy.js";
 
 export function patch_shouts() {
     if (!page.structure.main) return;

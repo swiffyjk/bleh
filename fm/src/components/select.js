@@ -6,6 +6,7 @@
 
 import {html, render} from "lighterhtml";
 import {tl, trans} from "../build/trans.js";
+import tippy from "tippy.js";
 
 unsafeWindow._update_inbuilt_select = function(id, value) {
     update_inbuilt_select(id, value);

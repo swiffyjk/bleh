@@ -23,6 +23,7 @@ import {bleh_wiki, bleh_wiki_editor, bleh_wiki_history} from "./wiki";
 import {html, render} from "lighterhtml";
 import {expand_avatar} from "../avatar.js";
 import {setting} from "../components/settings.js";
+import tippy from "tippy.js";
 
 export function bleh_albums() {
     let album_header = document.body.querySelector('.header-new--album');

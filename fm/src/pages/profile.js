@@ -31,6 +31,10 @@ import {save_setting, setting} from "../components/settings.js";
 import {save_banner_to_cache} from "../components/banner.js";
 import {submit_scrobble} from '../components/scrobble.js'
 import {redirect} from "../components/music.js";
+import tippy from "tippy.js";
+import {Chart, registerables} from 'chart.js';
+
+Chart.register(...registerables);
 
 export function bleh_profiles() {
     // the obsessions page is a user subpage but works very differently

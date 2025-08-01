@@ -17,6 +17,10 @@ import {ff} from "../sku";
 import {input} from "../components/input.js";
 import {setting} from "../components/settings.js";
 import {redirect} from "../components/music.js";
+import tippy from "tippy.js";
+import {Chart, registerables} from 'chart.js';
+
+Chart.register(...registerables);
 
 export function bleh_user_library() {
     // date sidebar into its own panel

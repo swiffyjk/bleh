@@ -27,6 +27,7 @@ import {parse_scrobbles_as_rank} from "../components/colourful_counts.js";
 import {input} from "../components/input.js";
 import {share} from "../components/share.js";
 import {start_update, update_check} from "../style.js";
+import tippy from "tippy.js";
 
 export function bleh_settings() {
     page.name = auth.name;

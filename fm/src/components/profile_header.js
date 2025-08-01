@@ -18,6 +18,7 @@ import {html} from "lighterhtml";
 import {collage} from "./collage.js";
 import {sponsor} from "../sponsor.js";
 import {redirect} from "./music.js";
+import tippy from "tippy.js";
 
 export function redesign_profile_header(is_own_profile, is_following) {
     let base_header = document.body.querySelector('.header-info-secondary');

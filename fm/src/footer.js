@@ -32,9 +32,4 @@ export function bleh_footer() {
 
     let heart = footer.querySelector('.heart');
     heart.addEventListener('click', () => sponsor());
-
-    tippy(heart, {
-        content: tl(trans.sponsor),
-        delay: [1000, 0]
-    });
 }

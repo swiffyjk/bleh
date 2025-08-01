@@ -12,6 +12,7 @@ import {bleh_glacier_insights} from "../pages/glacier";
 import {parse_scrobbles_as_rank} from "./colourful_counts";
 import {correct_artist, correct_item_by_artist, name_includes} from "./lotus";
 import {html, render} from "lighterhtml";
+import ColorThief from "color-thief-browser";
 
 export function music_grids(search=page.structure.main, use_colour = true) {
     if (!search) return;

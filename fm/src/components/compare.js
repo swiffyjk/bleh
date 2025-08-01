@@ -16,6 +16,7 @@ import {patch_titles} from './track';
 import {render_user} from "../pages/minis.js";
 import {settings} from "../build/config.js";
 import {redirect} from "./music.js";
+import tippy from "tippy.js";
 
 export function compare({
     host,
