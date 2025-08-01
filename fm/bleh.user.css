@@ -19080,7 +19080,7 @@
     [data-type="close"] {
         --mask: var(--icon-16-x);
     }
-    [data-type="info"] {
+    [data-type="info"]:not(.setting) {
         --mask: var(--icon-16-info);
     }
     [data-type="refresh"] {
