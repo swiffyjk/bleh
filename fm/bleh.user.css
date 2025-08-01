@@ -21055,6 +21055,8 @@
             position: relative;
             width: fit-content;
 
+            cursor: pointer;
+
             &:not(:hover) {
                 & > .image-interactions {
                     opacity: 0;
@@ -21065,45 +21067,13 @@
                 }
             }
 
-            & > .image-interactions {
-                position: absolute;
-                top: 0;
-                left: 0;
-                right: 0;
-                padding: 6px;
-                height: fit-content;
-
-                display: flex;
-                justify-content: end;
-                gap: var(--button-list-gap);
-
-                background: linear-gradient(180deg, rgb(0, 0, 0, 40%), transparent);
-                border-radius: var(--item-big-radius);
-
-                transition-property: opacity;
-                transition-duration: var(--trans);
-                transition-timing-function: var(--trans-function);
-
-                z-index: 2;
-
-                & > .btn {
-                    position: relative;
-                    --bg: rgb(0, 0, 0, 10%);
-                    --bg-hov: rgb(0, 0, 0, 30%);
-                    --bg-atv: rgb(0, 0, 0, 50%);
-                    --shadow: none;
-                    --col: #fff;
-                    --mask-colour: var(--col);
-                }
-            }
-
             & > img {
                 border-radius: var(--item-big-radius);
                 transition-property: filter;
                 transition-duration: var(--trans);
                 transition-timing-function: var(--trans-function);
 
-                filter: brightness(90%);
+                filter: brightness(80%);
             }
         }
 

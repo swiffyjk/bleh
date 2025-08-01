@@ -101,11 +101,6 @@ unsafeWindow._expand_avatar = function(src) {
     expand_avatar(src);
 }
 export function expand_avatar(src) {
-    /*let index = src.indexOf('#');
-    if (index > -1) {
-        src = src.slice(0, index);
-    }*/
-    
     dialog({
         id: 'avatar',
         body: html.node`

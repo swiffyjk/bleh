@@ -18967,23 +18967,8 @@
     });
     body.querySelectorAll("img").forEach((image) => {
       image.setAttribute("loading", "lazy");
-      let open2;
       const container = html.node`
-            <div class="markdown-image">
-                <div class="image-interactions">
-                    ${() => {
-        const button = html.node`
-                            <a class="btn chibi icon" data-type="info" rel=${(el) => open2 = el} href=${image.src} target="_blank">
-                                ${tl(trans.open)}
-                            </a>
-                        `;
-        tippy(button, {
-          content: image.src
-        });
-        return button;
-      }}
-                </div>
-            </div>
+            <div class="markdown-image" onclick=${() => expand_avatar(image.src)} />
         `;
       image.after(container);
       container.appendChild(image);

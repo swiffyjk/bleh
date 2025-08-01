@@ -10,7 +10,7 @@ import {patch_wiki_contents} from "../pages/wiki.js";
 import {redirect} from "./music.js";
 import showdown from "showdown";
 import DOMPurify from "dompurify";
-import {tl, trans} from "../build/trans.js";
+import {expand_avatar} from "../avatar.js";
 
 export function markdown(text, {
     allow_headers = false,
@@ -144,25 +144,8 @@ export function markdown(text, {
     body.querySelectorAll('img').forEach((image) => {
         image.setAttribute('loading', 'lazy');
 
-        let open;
         const container = html.node`
-            <div class="markdown-image">
-                <div class="image-interactions">
-                    ${() => {
-                        const button = html.node`
-                            <a class="btn chibi icon" data-type="info" rel=${el => open = el} href=${image.src} target="_blank">
-                                ${tl(trans.open)}
-                            </a>
-                        `;
-
-                        tippy(button, {
-                            content: image.src
-                        });
-                        
-                        return button;
-                    }}
-                </div>
-            </div>
+            <div class="markdown-image" onclick=${() => expand_avatar(image.src)} />
         `;
 
         image.after(container);
