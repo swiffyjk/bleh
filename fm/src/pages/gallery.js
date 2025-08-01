@@ -15,16 +15,14 @@ import {share} from "../components/share.js";
 import tippy from "tippy.js";
 
 export function bleh_gallery() {
-    if (page.subpage != 'image')
-        return;
+    if (page.subpage != 'image') return;
 
     log('focusing on image', 'gallery');
 
     let image_sidebar = page.structure.side.querySelector('.js-gallery-image-details > div');
     if (!image_sidebar) return;
 
-    if (image_sidebar.hasAttribute('data-bleh-gallery'))
-        return;
+    if (image_sidebar.hasAttribute('data-bleh-gallery')) return;
     image_sidebar.setAttribute('data-bleh-gallery', 'true');
 
     if (!ff('new_gallery_experience')) {
@@ -342,6 +340,8 @@ export function bleh_gallery_list() {
         page.structure.side.insertBefore(upload_panel, page.structure.side.firstElementChild)
     }
 
+    page.structure.main.classList.add('bleh--gallery');
+
     if (page.type == 'artist')
         patch_gallery_image_listing();
 }
@@ -381,7 +381,6 @@ function patch_gallery_image_listing() {
 
     // content
     let bookmarks_panel;
-    page.structure.main.classList.add('bleh--gallery');
     page.structure.main.after(html.node`
         <div class="col-main bleh--bookmarks not-a-panel">
             <section class="bookmarks-panel" ref=${el => bookmarks_panel = el}>

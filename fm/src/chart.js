@@ -84,9 +84,9 @@ export function load_chart_colours() {
                 time: {
                     unit: 'month',
                     displayFormats: {
-                        month: 'MMM'
+                        month: 'LLLL'
                     },
-                    tooltipFormat: 'dddd, MMMM Do YYYY'
+                    tooltipFormat: 'MMM yyyy'
                 },
                 grid: {
                     color: axis_col,
@@ -128,6 +128,7 @@ export function load_chart_colours() {
                 }
             },
             y: {
+                display: true,
                 grid: {
                     display: false
                 },

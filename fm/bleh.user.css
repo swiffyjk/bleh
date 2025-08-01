@@ -455,6 +455,7 @@
         --h3-lit: calc(clamp(min(0.5), var(--lit), max(1.5)) * 70%);
         --h4: var(--l4-c);
         --f4: var(--hue), calc(clamp(min(0), var(--sat), max(1.5)) * 35%), calc(clamp(min(0.8), var(--lit), max(1.5)) * 32%);
+        --k4: var(--f4);
         --g4: var(--hue), calc(clamp(min(0), var(--sat), max(1.5)) * 60%), calc(clamp(min(0.5), var(--lit), max(1.5)) * 15%);
 
         /* l2-c in dark modes, l4-c in light modes */
@@ -495,6 +496,7 @@
             --h3-lit: calc(clamp(min(0.5), var(--lit), max(1.5)) * 70%);
             --h4: var(--l4-c);
             --f4: var(--hue), calc(clamp(min(0), var(--sat), max(1.5)) * 32%), calc(clamp(min(0.8), var(--lit), max(1.5)) * 25%);
+            --k4: var(--f4);
             --g4: var(--hue), calc(clamp(min(0), var(--sat), max(1.5)) * 60%), calc(clamp(min(0.5), var(--lit), max(1.5)) * 10%);
 
             --shout-vote-indicator: linear-gradient(90deg, transparent 20%, hsl(var(--h4), 8%));
@@ -524,6 +526,7 @@
             --h3-lit: calc(clamp(min(0.5), var(--lit), max(1.1)) * 82%);
             --h4: var(--hue), calc(clamp(min(0), var(--sat), max(1.5)) * 60%), calc(clamp(min(0.7), var(--lit), max(1.1)) * 70%);
             --f4: var(--hue), calc(clamp(min(0), var(--sat), max(1.5)) * 55%), calc(clamp(min(0.8), var(--lit), max(1.5)) * 72%);
+            --k4: var(--hue), calc(clamp(min(0), var(--sat), max(1.5)) * 35%), calc(clamp(min(0.8), var(--lit), max(1.5)) * 85%);
             --g4: var(--hue), calc(clamp(min(0), var(--sat), max(1.5)) * 70%), 92%;
 
             /* l2-c in dark modes, l4-c in light modes */
@@ -565,6 +568,7 @@
             --h3-lit: calc(clamp(min(0.5), var(--lit), max(1.1)) * 80%);
             --h4: var(--hue), calc(clamp(min(0), var(--sat), max(1.5)) * 30%), calc(clamp(min(0.7), var(--lit), max(1.1)) * 55%);
             --f4: var(--hue), calc(clamp(min(0), var(--sat), max(1.5)) * 32%), calc(clamp(min(0.8), var(--lit), max(1.5)) * 68%);
+            --k4: var(--f4);
             --g4: var(--hue), calc(clamp(min(0), var(--sat), max(1.5)) * 25%), 75%;
 
             /* l2-c in dark modes, l4-c in light modes */
@@ -12828,6 +12832,10 @@
         display: grid;
         grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
         gap: var(--item-list-gap);
+
+        &:before, &:after {
+            display: none;
+        }
     }
     .image-list-item-wrapper {
         padding-left: unset;
@@ -12898,7 +12906,7 @@
             display: var(--show-icon);
             width: var(--size);
             height: var(--size);
-            background-color: hsl(var(--f4));
+            background-color: hsl(var(--k4));
         }
         &:after {
             z-index: 4;
@@ -13931,7 +13939,7 @@
             display: var(--show-icon);
             width: var(--size);
             height: var(--size);
-            background-color: hsl(var(--f4));
+            background-color: hsl(var(--k4));
 
             outline: 3px solid transparent;
 
@@ -19431,6 +19439,10 @@
         & + .buffer-standard,
         & + .alert {
             margin-top: unset !important;
+        }
+
+        &.spacing {
+            margin-bottom: var(--card-gap);
         }
     }
     .metadata-and-wiki-row {

@@ -21,9 +21,8 @@ import {register_menu} from "./menu";
 import {other_listener} from "./profile_shortcut";
 import {submit_scrobble} from "./scrobble.js";
 import tippy from "tippy.js";
-import {Chart, registerables} from 'chart.js';
-
-Chart.register(...registerables);
+import {Chart} from "../main.js";
+import {DateTime} from "luxon";
 
 unsafeWindow._other_listener = function(id) {
     other_listener(id);
@@ -1049,8 +1048,7 @@ function video_unavailable(video_col=null) {
 }
 
 export function bleh_music_page_charts() {
-    if (!ff('music_page_charts'))
-        return;
+    if (!ff('music_page_charts')) return;
 
     log('beginning replacement', 'music charts');
 
@@ -1075,7 +1073,7 @@ export function bleh_music_page_charts() {
         if (!day) return;
 
         //let label = day.querySelector('time').textContent.trim();
-        let label = moment(day.querySelector('time').getAttribute('datetime'));
+        let label = DateTime.fromISO(day.querySelector('time').getAttribute('datetime'));
         let value = day.querySelector('.js-value');
 
         console.log('day', index, label, day, day.innerHTML);

@@ -18,9 +18,7 @@ import {input} from "../components/input.js";
 import {setting} from "../components/settings.js";
 import {redirect} from "../components/music.js";
 import tippy from "tippy.js";
-import {Chart, registerables} from 'chart.js';
-
-Chart.register(...registerables);
+import {Chart} from "../main.js";
 
 export function bleh_user_library() {
     // date sidebar into its own panel
@@ -1283,7 +1281,10 @@ function bleh_glacier_library_focused() {
 
         let select_btn = top.querySelector('.dropdown-menu-clickable-button');
 
-        if (!select_btn) return;
+        if (!select_btn) {
+            top.classList.add('spacing');
+            return;
+        }
 
         select_btn.classList.add('select-button', 'link-select', 'blend-v2-btn');
         select_btn.classList.remove('dropdown-menu-list-button');

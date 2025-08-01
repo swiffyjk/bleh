@@ -9,6 +9,7 @@ import {log} from "./log";
 import {auth, auth_link, setRoot} from "./page";
 import {clamp_lit, clamp_sat, rgb_to_hsl} from "./tools";
 import ColorThief from "color-thief-browser";
+import {Settings} from 'luxon';
 
 // loads your selected language in last.fm
 export let lang = 'en';
@@ -209,7 +210,8 @@ export const trans = {
     },
     shouts: {
         en: 'Shouts',
-        pt: 'Mensagens'
+        pt: 'Mensagens',
+        ja: 'シャウト'
     },
     failed_to_send: {
         en: 'Failed to send'
@@ -6364,6 +6366,8 @@ export function lookup_lang() {
         }
     }
     lang = document.documentElement.getAttribute('lang');
+
+    Settings.defaultLocale = lang;
 
     moment.locale(lang);
 }
