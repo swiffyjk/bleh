@@ -260,11 +260,11 @@ export function bleh_profiles() {
                     </div>
                 </div>
                 ${(scrobbles > 0) ? html.node`
-                <a class="scrobble-canvas-container mini" href="${root}user/${page.name}/library/artists?date_preset=LAST_90_DAYS&page=1">
+                <div class="scrobble-canvas-container mini">
                     <div class="loading-data-container">
                         <div class="loading-data-text">${tl(trans.loading_count_days).replace('{c}', '90')}</div>
                     </div>
-                </a>
+                </div>
                 <div class="more-link">
                     <a href="${root}user/${page.name}/library/artists?date_preset=LAST_90_DAYS&page=1">
                         ${tl(trans.explore_in_library)}
@@ -1603,6 +1603,7 @@ export function bleh_profile_chart_render(panel=page.structure.side.querySelecto
     let links = [];
     let values = [];
 
+    page.state.glacier.links = [];
     entries.forEach((entry) => {
         let period = entry.querySelector('.js-period a');
         let value = entry.querySelector('.js-scrobbles').textContent.trim();
@@ -1610,6 +1611,8 @@ export function bleh_profile_chart_render(panel=page.structure.side.querySelecto
         labels.push(period.textContent.trim());
         links.push(period.getAttribute('href'));
         values.push(value);
+
+        page.state.glacier.links.push(`${root}user/${page.name}/library` + period.getAttribute('href'));
     });
 
     prep_chart_colours();

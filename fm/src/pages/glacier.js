@@ -146,6 +146,13 @@ export function bleh_user_library() {
         // scrobbles tab
         bleh_glacier_library_top(true);
 
+        const pagination = page.structure.main.querySelector(':scope > .pagination');
+        page.structure.main.appendChild(html.node`
+            <section class="pagination-panel">
+                ${pagination}
+            </section>
+        `);
+
         page.state.glacier.insights = {
             artist: {
                 display: false,
@@ -861,7 +868,10 @@ function bleh_glacier_insights_generate(type, item) {
 }
 
 export function bleh_glacier_library_open_index(index) {
-    window.location.href = page.state.glacier.links[index];
+    const link = page.state.glacier.links[index];
+
+    log(`opening link ${link}`, 'glacier library');
+    window.location.href = link;
 }
 
 

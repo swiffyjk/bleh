@@ -23557,6 +23557,12 @@
       bleh_glacier_library_date();
     if (page.subpage == "library_overview" || page.subpage.endsWith("-search")) {
       bleh_glacier_library_top(true);
+      const pagination = page.structure.main.querySelector(":scope > .pagination");
+      page.structure.main.appendChild(html.node`
+            <section class="pagination-panel">
+                ${pagination}
+            </section>
+        `);
       page.state.glacier.insights = {
         artist: {
           display: false,
@@ -24111,7 +24117,9 @@
       page.structure.side.appendChild(scrobble_insights_panel);
   }
   function bleh_glacier_library_open_index(index3) {
-    window.location.href = page.state.glacier.links[index3];
+    const link = page.state.glacier.links[index3];
+    log(`opening link ${link}`, "glacier library");
+    window.location.href = link;
   }
   function bleh_glacier_library_request(request_url) {
     log(`making our own request with ${request_url}`, "glacier library");
@@ -26705,11 +26713,11 @@
                     </div>
                 </div>
                 ${scrobbles > 0 ? html.node`
-                <a class="scrobble-canvas-container mini" href="${root}user/${page.name}/library/artists?date_preset=LAST_90_DAYS&page=1">
+                <div class="scrobble-canvas-container mini">
                     <div class="loading-data-container">
                         <div class="loading-data-text">${tl(trans.loading_count_days).replace("{c}", "90")}</div>
                     </div>
-                </a>
+                </div>
                 <div class="more-link">
                     <a href="${root}user/${page.name}/library/artists?date_preset=LAST_90_DAYS&page=1">
                         ${tl(trans.explore_in_library)}
@@ -27771,12 +27779,14 @@
     let labels = [];
     let links = [];
     let values = [];
+    page.state.glacier.links = [];
     entries2.forEach((entry) => {
       let period = entry.querySelector(".js-period a");
       let value = entry.querySelector(".js-scrobbles").textContent.trim();
       labels.push(period.textContent.trim());
       links.push(period.getAttribute("href"));
       values.push(value);
+      page.state.glacier.links.push(`${root}user/${page.name}/library` + period.getAttribute("href"));
     });
     prep_chart_colours();
     let scrobble_canvas_container = panel.querySelector(".scrobble-canvas-container");
@@ -27876,9 +27886,9 @@
           time: {
             unit: "month",
             displayFormats: {
-              month: "LLLL"
+              month: "LLL"
             },
-            tooltipFormat: "MMM yyyy"
+            tooltipFormat: "EEEE, LLLL d yyyy"
           },
           grid: {
             color: axis_col,

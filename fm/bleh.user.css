@@ -5599,6 +5599,7 @@
     .chartlist-artist {
         display: flex !important;
         color: hsl(var(--c3)) !important;
+        cursor: default;
 
         & > a + a {
             margin-left: 4px;
@@ -19442,7 +19443,7 @@
         }
 
         &.spacing {
-            margin-bottom: var(--card-gap);
+            height: 33px;
         }
     }
     .metadata-and-wiki-row {
