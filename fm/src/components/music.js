@@ -637,6 +637,11 @@ export function show_your_scrobbles() {
                     Tidal
                 </a>
             </li>
+            <li>
+                <a class="play-this-track-playlink music-link play-this-track-playlink--qobuz" href="https://www.qobuz.com/search/tracks/${sanitise(page.sister, '%20')}%20${sanitise(page.name, '%20')}" target="_blank">
+                    Qobuz
+                </a>
+            </li>
         `);
     } else {
         let header = document.createElement('div');
@@ -661,10 +666,13 @@ export function show_your_scrobbles() {
                 <a class="play-this-track-playlink music-link play-this-track-playlink--discogs" href="https://www.discogs.com/search?q=${sanitise(page.sister)}+${sanitise(page.name)}&type=all" target="_blank">
                     Discogs
                 </a>
+                <a class="play-this-track-playlink music-link play-this-track-playlink--qobuz" href="https://www.qobuz.com/search/albums/${sanitise(page.sister, ' ')}%20${sanitise(page.name, ' ')}" target="_blank">
+                    Qobuz
+                </a>
                 <a class="play-this-track-playlink music-link play-this-track-playlink--aoty" href="https://www.albumoftheyear.org/search/?q=${sanitise(page.sister)}+${sanitise(page.name)}" target="_blank">
                     AOTY
                 </a>
-                <a class="play-this-track-playlink music-link play-this-track-playlink--rym" href="https://rateyourmusic.com/search?searchterm=${sanitise(page.sister, ' ')} ${sanitise(page.name, ' ')}" target="_blank">
+                <a class="play-this-track-playlink music-link play-this-track-playlink--rym" href="https://rateyourmusic.com/search?searchterm=${sanitise(page.sister, '%20')} ${sanitise(page.name, '%20')}" target="_blank">
                     RYM
                 </a>
                 <a class="play-this-track-playlink music-link play-this-track-playlink--genius" href="https://genius.com/search?q=${sanitise(page.sister)}+${sanitise(page.name)}" target="_blank">
@@ -687,6 +695,9 @@ export function show_your_scrobbles() {
                 </a>
                 <a class="play-this-track-playlink music-link play-this-track-playlink--discogs" href="https://www.discogs.com/search?q=${sanitise(page.name)}&type=artist" target="_blank">
                     Discogs
+                </a>
+                <a class="play-this-track-playlink music-link play-this-track-playlink--qobuz" href="https://www.qobuz.com/search/artists/${sanitise(page.name, '%20')}" target="_blank">
+                    Qobuz
                 </a>
                 <a class="play-this-track-playlink music-link play-this-track-playlink--aoty" href="https://www.albumoftheyear.org/search/?q=${sanitise(page.name)}" target="_blank">
                     AOTY

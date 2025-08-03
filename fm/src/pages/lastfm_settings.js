@@ -7,13 +7,16 @@
 import {auth, page, root} from "../build/page";
 import {tl, trans} from "../build/trans";
 import {bleh_auto_edits} from "../components/auto_edit";
-import {dialog} from "../components/dialog";
+import {dialog, dialog_rm} from "../components/dialog";
 import {custom_select, select, select_prepare, update_inbuilt_select} from "../components/select";
 import {update_inbuilt_item} from "../config";
 import {ff} from "../sku";
 import {markdown} from "../components/markdown";
 import {html, render} from "lighterhtml";
 import tippy from "tippy.js";
+import Cropper from "cropperjs";
+
+let cropper;
 
 // patch last.fm settings
 export function bleh_native_settings() {
@@ -606,17 +609,19 @@ export function use_pronouns(value) {
 }
 
 
-function avatar(token) {
+function avatar(token='') {
+    if (!token) token = page.token;
+    else page.token = token;
+
     page.state.avatar_changer = dialog({
         id: 'edit_avatar',
         title: tl(trans.change_avatar),
         body: html.node`
             <div class="forms">
                 <form action="${root}settings" name="avatar-form" method="post" enctype="multipart/form-data">
-                    <input type="hidden" name="csrfmiddlewaretoken" value="${token}">
+                    <input type="hidden" name="csrfmiddlewaretoken" value=${page.token}>
                     <div class="form-group form-group--avatar js-form-group upload-avatar">
                         <div class="js-form-group-controls form-group-controls">
-                            <img class="preview">
                             <span class="btn-secondary btn primary btn-file" data-kate-processed="true">
                                 ${tl(trans.upload)}
                                 <input type="file" onchange=${() => update_avatar(event)} name="avatar" data-require="components/file-input" data-file-input-copy="${tl(trans.upload)}" data-no-file-copy="No file chosen" accept="image/*" required="" id="id_avatar" data-kate-processed="true">
@@ -629,7 +634,7 @@ function avatar(token) {
                     <input type="hidden" value="avatar" name="submit">
                 </form>
                 <form action="${root}settings/avatar/delete" method="post">
-                    <input type="hidden" name="csrfmiddlewaretoken" value="${token}">
+                    <input type="hidden" name="csrfmiddlewaretoken" value=${page.token}>
                     <div class="form-group delete-avatar">
                         <button class="mimic-link image-upload-remove" type="submit" value="delete-avatar" name="delete-avatar">${tl(trans.delete)}</button>
                     </div>
@@ -644,31 +649,95 @@ function avatar(token) {
     });
 
     page.state.avatar_changer.querySelector('[name="avatar-form"]').onsubmit = finish_saving_avatar;
-    page.state.avatar_changer_image = page.state.avatar_changer.querySelector('img');
-    page.state.avatar_changer_button = page.state.avatar_changer.querySelector('.btn-file');
-    page.state.avatar_changer_save = page.state.avatar_changer.querySelector('.modal-footer .primary');
-    console.info(page.structure.dialogs);
-}
+    const file_button = page.state.avatar_changer.querySelector('.btn-file');
+    const save_button = page.state.avatar_changer.querySelector('.modal-footer .primary');
 
-function update_avatar(event) {
-    let reader = new FileReader();
-    reader.onload = function() {
-        page.state.avatar_changer_image.src = reader.result;
-        page.state.avatar_changer_button.setAttribute('data-has-file', 'true');
-        page.state.avatar_changer_save.removeAttribute('disabled');
+    let form;
+
+    function update_avatar(e) {
+        console.info(e);
+        if (!e.target.files || !e.target.files[0]) return;
+        form = page.state.avatar_changer.querySelector('.bleh-modal-body');
+
+        let reader = new FileReader();
+        reader.onload = function () {
+            crop(reader.result);
+            save_button.removeAttribute('disabled');
+        }
+        reader.readAsDataURL(e.target.files[0]);
     }
-    reader.readAsDataURL(event.target.files[0]);
-}
 
-function save_avatar() {
-    page.state.avatar_changer.querySelector('#avatar_saver').click();
-}
-function finish_saving_avatar() {
-    page.state.avatar_changer.setAttribute('data-loading', 'true');
-    page.state.avatar_changer.querySelectorAll('.bleh-modal-body button').forEach((button) => {
-        button.setAttribute('disabled', 'true');
-        button.removeAttribute('onclick');
-    });
+    function save_avatar() {
+        page.state.avatar_changer.querySelector('#avatar_saver').click();
+    }
+
+    function finish_saving_avatar() {
+        page.state.avatar_changer.setAttribute('data-loading', 'true');
+        page.state.avatar_changer.querySelectorAll('.bleh-modal-body button').forEach((button) => {
+            button.setAttribute('disabled', 'true');
+            button.removeAttribute('onclick');
+        });
+    }
+
+    function crop(file) {
+        let crop_image;
+        let save;
+
+        const crop_dialog = dialog({
+            id: 'crop',
+            title: tl(trans.change_avatar),
+            body: html.node`
+                <div class="crop">
+                    <img src=${file} ref=${el => crop_image = el}>
+                </div>
+                <div class="modal-footer">
+                    <button class="see-more cancel" onclick=${() => {
+                        if (cropper && cropper.destroy) cropper.destroy();
+                        cropper = null;
+                        
+                        avatar();
+                    }}>${tl(trans.cancel)}</button>
+                    <div class="fill"></div>
+                    <button class="btn primary save" onclick=${() => {
+                        if (!cropper) return;
+
+                        cropper.getCropperSelection().$toCanvas().then(canvas => {
+                            canvas.toBlob(blob => {
+                                const file = new File([blob], 'avatar.jpg', {type: 'image/png'});
+
+                                const inner_form = form.querySelector('form');
+                                inner_form.style.display = 'none';
+                                crop_dialog.querySelector('.bleh-modal-body').appendChild(inner_form);
+
+                                const file_input = inner_form.querySelector('input[type="file"]');
+
+                                const data_transfer = new DataTransfer();
+                                data_transfer.items.add(file);
+                                file_input.files = data_transfer.files;
+
+                                inner_form.querySelector('#avatar_saver').click();
+                            }, 'image/png');
+                        });
+                    }} ref=${el => save = el} disabled>${tl(trans.save)}</button>
+                </div>
+            `
+        });
+
+        crop_image.onload = () => {
+            if (cropper && cropper.destroy) cropper.destroy();
+
+            cropper = new Cropper(crop_image, {
+                dragMode: 'move',
+                zoomable: true,
+                scalable: true,
+                responsive: true,
+                guides: true,
+                background: false
+            });
+
+            save.removeAttribute('disabled');
+        }
+    }
 }
 
 
@@ -741,16 +810,15 @@ function bleh_communication_panel(token) {
 
         let expand = html.node`
             <button class="see-more expand-down" onclick=${() => {
-                expand.style.display = 'none';
-                new_list.setAttribute('data-expanded', 'true');
-            }}>
+            expand.style.display = 'none';
+            new_list.setAttribute('data-expanded', 'true');
+        }}>
                 ${tl(trans.view_count_more).replace('{c}', remainder.toString())}
             </button>
         `;
 
         new_list.appendChild(expand);
     }
-
 
 
     let form = page.structure.main.querySelector('[name="ignorelist"]');
@@ -761,9 +829,14 @@ function bleh_communication_panel(token) {
     render(panel, html`
         <h4>${tl(trans.block_list)}</h4>
         <div class="user-top-panel">
-            <div class="user-top-avatar user-top-avatar-side-left"><div class="bleh-icon"></div></div>
-            <img class="user-top-avatar user-top-avatar-main" src=${auth.avatar.replace('avatar42s', 'avatar300s')} alt=${auth.name}>
-            <div class="user-top-avatar user-top-avatar-side-right"><div class="bleh-icon"></div></div>
+            <div class="user-top-avatar user-top-avatar-side-left">
+                <div class="bleh-icon"></div>
+            </div>
+            <img class="user-top-avatar user-top-avatar-main" src=${auth.avatar.replace('avatar42s', 'avatar300s')}
+                 alt=${auth.name}>
+            <div class="user-top-avatar user-top-avatar-side-right">
+                <div class="bleh-icon"></div>
+            </div>
         </div>
         <div class="setting" data-type="text">
             <div class="heading">

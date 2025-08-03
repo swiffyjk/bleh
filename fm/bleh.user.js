@@ -1936,7 +1936,7 @@
         var clamp = function(value, min2, max2) {
           return Math.min(Math.max(value, min2), max2);
         };
-        var multiplyMatrices = function(A2, B) {
+        var multiplyMatrices2 = function(A2, B) {
           return [
             A2[0] * B[0] + A2[1] * B[1] + A2[2] * B[2],
             A2[3] * B[0] + A2[4] * B[1] + A2[5] * B[2],
@@ -2007,7 +2007,7 @@
           return [l2, c, h, a2];
         };
         var d65toD50 = function(xyz) {
-          return multiplyMatrices(
+          return multiplyMatrices2(
             // eslint-disable-next-line prettier/prettier
             [
               1.0479297925449969,
@@ -2024,7 +2024,7 @@
           );
         };
         var d50toD65 = function(xyz) {
-          return multiplyMatrices(
+          return multiplyMatrices2(
             // eslint-disable-next-line prettier/prettier
             [
               0.955473421488075,
@@ -2076,7 +2076,7 @@
           return [l2, c * Math.cos(h * Math.PI / 180), c * Math.sin(h * Math.PI / 180)];
         };
         var oklab2xyz = function(lab) {
-          var LMSg = multiplyMatrices(
+          var LMSg = multiplyMatrices2(
             // eslint-disable-next-line prettier/prettier
             [
               1,
@@ -2093,7 +2093,7 @@
           ), LMS = LMSg.map(function(val) {
             return Math.pow(val, 3);
           });
-          return multiplyMatrices(
+          return multiplyMatrices2(
             // eslint-disable-next-line prettier/prettier
             [
               1.2268798758459243,
@@ -2167,7 +2167,7 @@
           return packXYZ([xyz[0], xyz[1], xyz[2], args[3]]);
         };
         var xyz2rgbLinear = function(xyz) {
-          return multiplyMatrices(
+          return multiplyMatrices2(
             // eslint-disable-next-line prettier/prettier
             [
               3.2409699419045226,
@@ -2184,7 +2184,7 @@
           );
         };
         var rgbLinear2xyz = function(xyz) {
-          return multiplyMatrices(
+          return multiplyMatrices2(
             // eslint-disable-next-line prettier/prettier
             [
               0.41239079926595934,
@@ -2226,7 +2226,7 @@
           ];
         };
         var p3LinearToXyz = function(p3l) {
-          return multiplyMatrices(
+          return multiplyMatrices2(
             // eslint-disable-next-line prettier/prettier
             [
               0.4865709486482162,
@@ -2243,7 +2243,7 @@
           );
         };
         var xyzToP3Linear = function(xyz) {
-          return multiplyMatrices(
+          return multiplyMatrices2(
             // eslint-disable-next-line prettier/prettier
             [
               2.493496911941425,
@@ -2284,7 +2284,7 @@
           return packXYZ([xyz[0], xyz[1], xyz[2], args[3]]);
         };
         var xyz2a98Linear = function(xyz) {
-          return multiplyMatrices(
+          return multiplyMatrices2(
             // eslint-disable-next-line prettier/prettier
             [
               2.0415879038107465,
@@ -2301,7 +2301,7 @@
           );
         };
         var a98Linear2xyz = function(a98) {
-          return multiplyMatrices(
+          return multiplyMatrices2(
             // eslint-disable-next-line prettier/prettier
             [
               0.5766690429101305,
@@ -2340,7 +2340,7 @@
           return packSrgbLinear([srgb_linear[0], srgb_linear[1], srgb_linear[2], args[3]]);
         };
         var proPhotoLinearToXyz = function(p3) {
-          return multiplyMatrices(
+          return multiplyMatrices2(
             // eslint-disable-next-line prettier/prettier
             [
               0.7977666449006423,
@@ -2357,7 +2357,7 @@
           );
         };
         var xyzToProPhotoLinear = function(xyz) {
-          return multiplyMatrices(
+          return multiplyMatrices2(
             // eslint-disable-next-line prettier/prettier
             [
               1.3457868816471583,
@@ -2408,7 +2408,7 @@
           });
         };
         var rec2020LinearToXyz = function(rec) {
-          return multiplyMatrices(
+          return multiplyMatrices2(
             // eslint-disable-next-line prettier/prettier
             [
               0.6369580483012914,
@@ -2425,7 +2425,7 @@
           );
         };
         var xyzToRec2020Linear = function(xyz) {
-          return multiplyMatrices(
+          return multiplyMatrices2(
             // eslint-disable-next-line prettier/prettier
             [
               1.716651187971268,
@@ -3400,8 +3400,8 @@
             initialValue: "solid",
             prefix: false,
             type: 2,
-            parse: function(_context, style) {
-              switch (style) {
+            parse: function(_context, style10) {
+              switch (style10) {
                 case "none":
                   return 0;
                 case "dashed":
@@ -4571,9 +4571,9 @@
             return CSSParsedCounterDeclaration2;
           }()
         );
-        var parse4 = function(context, descriptor, style) {
+        var parse4 = function(context, descriptor, style10) {
           var tokenizer = new Tokenizer();
-          var value = style !== null && typeof style !== "undefined" ? style.toString() : descriptor.initialValue;
+          var value = style10 !== null && typeof style10 !== "undefined" ? style10.toString() : descriptor.initialValue;
           tokenizer.write(value);
           var parser = new Parser(tokenizer.read());
           switch (descriptor.type) {
@@ -5623,10 +5623,10 @@
                 return _this.counters[counter].pop();
               });
             };
-            CounterState2.prototype.parse = function(style) {
+            CounterState2.prototype.parse = function(style10) {
               var _this = this;
-              var counterIncrement2 = style.counterIncrement;
-              var counterReset2 = style.counterReset;
+              var counterIncrement2 = style10.counterIncrement;
+              var counterReset2 = style10.counterReset;
               var canReset = true;
               if (counterIncrement2 !== null) {
                 counterIncrement2.forEach(function(entry) {
@@ -6196,9 +6196,9 @@
                     }
                     return css2;
                   }, "");
-                  var style = node.cloneNode(false);
-                  style.textContent = css;
-                  return style;
+                  var style10 = node.cloneNode(false);
+                  style10.textContent = css;
+                  return style10;
                 }
               } catch (e2) {
                 this.context.logger.error("Unable to access cssRules property", e2);
@@ -6299,7 +6299,7 @@
               if (window2 && isElementNode(node) && (isHTMLElementNode(node) || isSVGElementNode(node))) {
                 var clone6 = this.createElementClone(node);
                 clone6.style.transitionProperty = "none";
-                var style = window2.getComputedStyle(node);
+                var style10 = window2.getComputedStyle(node);
                 var styleBefore = window2.getComputedStyle(node, ":before");
                 var styleAfter = window2.getComputedStyle(node, ":after");
                 if (this.referenceElement === node && isHTMLElementNode(clone6)) {
@@ -6308,7 +6308,7 @@
                 if (isBodyElement(clone6)) {
                   createPseudoHideStyles(clone6);
                 }
-                var counters = this.counters.parse(new CSSParsedCounterDeclaration(this.context, style));
+                var counters = this.counters.parse(new CSSParsedCounterDeclaration(this.context, style10));
                 var before = this.resolvePseudoContent(node, clone6, styleBefore, PseudoElementType.BEFORE);
                 if (isCustomElement(node)) {
                   copyStyles = true;
@@ -6324,8 +6324,8 @@
                   clone6.appendChild(after);
                 }
                 this.counters.pop(counters);
-                if (style && (this.options.copyStyles || isSVGElementNode(node)) && !isIFrameElement(node) || copyStyles) {
-                  copyCSSStyles(style, clone6);
+                if (style10 && (this.options.copyStyles || isSVGElementNode(node)) && !isIFrameElement(node) || copyStyles) {
+                  copyCSSStyles(style10, clone6);
                 }
                 if (node.scrollTop !== 0 || node.scrollLeft !== 0) {
                   this.scrolledElements.push([clone6, node.scrollLeft, node.scrollTop]);
@@ -6337,20 +6337,20 @@
               }
               return node.cloneNode(false);
             };
-            DocumentCloner2.prototype.resolvePseudoContent = function(node, clone6, style, pseudoElt) {
+            DocumentCloner2.prototype.resolvePseudoContent = function(node, clone6, style10, pseudoElt) {
               var _this = this;
-              if (!style) {
+              if (!style10) {
                 return;
               }
-              var value = style.content;
+              var value = style10.content;
               var document2 = clone6.ownerDocument;
-              if (!document2 || !value || value === "none" || value === "-moz-alt-content" || style.display === "none") {
+              if (!document2 || !value || value === "none" || value === "-moz-alt-content" || style10.display === "none") {
                 return;
               }
-              this.counters.parse(new CSSParsedCounterDeclaration(this.context, style));
-              var declaration = new CSSParsedPseudoDeclaration(this.context, style);
+              this.counters.parse(new CSSParsedCounterDeclaration(this.context, style10));
+              var declaration = new CSSParsedPseudoDeclaration(this.context, style10);
               var anonymousReplacedElement = document2.createElement("html2canvaspseudoelement");
-              copyCSSStyles(style, anonymousReplacedElement);
+              copyCSSStyles(style10, anonymousReplacedElement);
               declaration.content.forEach(function(token) {
                 if (token.type === 0) {
                   anonymousReplacedElement.appendChild(document2.createTextNode(token.value));
@@ -6479,11 +6479,11 @@
           "content"
           // Safari shows pseudoelements if content is set
         ];
-        var copyCSSStyles = function(style, target) {
-          for (var i2 = style.length - 1; i2 >= 0; i2--) {
-            var property = style.item(i2);
+        var copyCSSStyles = function(style10, target) {
+          for (var i2 = style10.length - 1; i2 >= 0; i2--) {
+            var property = style10.item(i2);
             if (ignoredStyleProperties.indexOf(property) === -1) {
-              target.style.setProperty(property, style.getPropertyValue(property));
+              target.style.setProperty(property, style10.getPropertyValue(property));
             }
           }
           return target;
@@ -6529,9 +6529,9 @@
         var createStyles = function(body, styles) {
           var document2 = body.ownerDocument;
           if (document2) {
-            var style = document2.createElement("style");
-            style.textContent = styles;
-            body.appendChild(style);
+            var style10 = document2.createElement("style");
+            style10.textContent = styles;
+            body.appendChild(style10);
           }
         };
         var addBase = function(targetELement, referenceDocument) {
@@ -8360,14 +8360,14 @@
                 });
               });
             };
-            CanvasRenderer2.prototype.renderDashedDottedBorder = function(color3, width, side, curvePoints, style) {
+            CanvasRenderer2.prototype.renderDashedDottedBorder = function(color3, width, side, curvePoints, style10) {
               return __awaiter(this, void 0, void 0, function() {
                 var strokePaths, boxPaths, startX, startY, endX, endY, length, dashLength, spaceLength, useLineDash, multiplier, numberOfDashes, minSpace, maxSpace, path1, path2, path1, path2;
                 return __generator(this, function(_a2) {
                   this.ctx.save();
                   strokePaths = parsePathForBorderStroke(curvePoints, side);
                   boxPaths = parsePathForBorder(curvePoints, side);
-                  if (style === 2) {
+                  if (style10 === 2) {
                     this.path(boxPaths);
                     this.ctx.clip();
                   }
@@ -8391,14 +8391,14 @@
                     length = Math.abs(startY - endY);
                   }
                   this.ctx.beginPath();
-                  if (style === 3) {
+                  if (style10 === 3) {
                     this.formatPath(strokePaths);
                   } else {
                     this.formatPath(boxPaths.slice(0, 2));
                   }
                   dashLength = width < 3 ? width * 3 : width * 2;
                   spaceLength = width < 3 ? width * 2 : width;
-                  if (style === 3) {
+                  if (style10 === 3) {
                     dashLength = width;
                     spaceLength = width;
                   }
@@ -8416,13 +8416,13 @@
                     spaceLength = maxSpace <= 0 || Math.abs(spaceLength - minSpace) < Math.abs(spaceLength - maxSpace) ? minSpace : maxSpace;
                   }
                   if (useLineDash) {
-                    if (style === 3) {
+                    if (style10 === 3) {
                       this.ctx.setLineDash([0, dashLength + spaceLength]);
                     } else {
                       this.ctx.setLineDash([dashLength, spaceLength]);
                     }
                   }
-                  if (style === 3) {
+                  if (style10 === 3) {
                     this.ctx.lineCap = "round";
                     this.ctx.lineWidth = width;
                   } else {
@@ -8431,7 +8431,7 @@
                   this.ctx.strokeStyle = asString(color3);
                   this.ctx.stroke();
                   this.ctx.setLineDash([]);
-                  if (style === 2) {
+                  if (style10 === 2) {
                     if (isBezierCurve(boxPaths[0])) {
                       path1 = boxPaths[3];
                       path2 = boxPaths[0];
@@ -11661,19 +11661,19 @@
             var olRgx = options.disableForced4SpacesIndentedSublists ? /^ ?\d+\.[ \t]/gm : /^ {0,3}\d+\.[ \t]/gm, ulRgx = options.disableForced4SpacesIndentedSublists ? /^ ?[*+-][ \t]/gm : /^ {0,3}[*+-][ \t]/gm, counterRxg = listType === "ul" ? olRgx : ulRgx, result = "";
             if (list.search(counterRxg) !== -1) {
               (function parseCL(txt) {
-                var pos = txt.search(counterRxg), style2 = styleStartNumber(list, listType);
+                var pos = txt.search(counterRxg), style11 = styleStartNumber(list, listType);
                 if (pos !== -1) {
-                  result += "\n\n<" + listType + style2 + ">\n" + processListItems(txt.slice(0, pos), !!trimTrailing) + "</" + listType + ">\n";
+                  result += "\n\n<" + listType + style11 + ">\n" + processListItems(txt.slice(0, pos), !!trimTrailing) + "</" + listType + ">\n";
                   listType = listType === "ul" ? "ol" : "ul";
                   counterRxg = listType === "ul" ? olRgx : ulRgx;
                   parseCL(txt.slice(pos));
                 } else {
-                  result += "\n\n<" + listType + style2 + ">\n" + processListItems(txt, !!trimTrailing) + "</" + listType + ">\n";
+                  result += "\n\n<" + listType + style11 + ">\n" + processListItems(txt, !!trimTrailing) + "</" + listType + ">\n";
                 }
               })(list);
             } else {
-              var style = styleStartNumber(list, listType);
-              result = "\n\n<" + listType + style + ">\n" + processListItems(list, !!trimTrailing) + "</" + listType + ">\n";
+              var style10 = styleStartNumber(list, listType);
+              result = "\n\n<" + listType + style10 + ">\n" + processListItems(list, !!trimTrailing) + "</" + listType + ">\n";
             }
             return result;
           }
@@ -11890,18 +11890,18 @@
               return "";
             }
           }
-          function parseHeaders(header, style) {
+          function parseHeaders(header, style10) {
             var id = "";
             header = header.trim();
             if (options.tablesHeaderId || options.tableHeaderId) {
               id = ' id="' + header.replace(/ /g, "_").toLowerCase() + '"';
             }
             header = showdown3.subParser("spanGamut")(header, options, globals);
-            return "<th" + id + style + ">" + header + "</th>\n";
+            return "<th" + id + style10 + ">" + header + "</th>\n";
           }
-          function parseCells(cell, style) {
+          function parseCells(cell, style10) {
             var subText = showdown3.subParser("spanGamut")(cell, options, globals);
-            return "<td" + style + ">" + subText + "</td>\n";
+            return "<td" + style10 + ">" + subText + "</td>\n";
           }
           function buildTable(headers, cells) {
             var tb = "<table>\n<thead>\n<tr>\n", tblLgn = headers.length;
@@ -12303,8 +12303,8 @@
           for (i = 0; i < headings.length; ++i) {
             var headContent = showdown3.subParser("makeMarkdown.tableCell")(headings[i], globals), allign = "---";
             if (headings[i].hasAttribute("style")) {
-              var style = headings[i].getAttribute("style").toLowerCase().replace(/\s/g, "");
-              switch (style) {
+              var style10 = headings[i].getAttribute("style").toLowerCase().replace(/\s/g, "");
+              switch (style10) {
                 case "text-align:left;":
                   allign = ":---";
                   break;
@@ -12831,7 +12831,7 @@
         var updates = [];
         var len = holes.length;
         var i = 0;
-        var off = 0;
+        var off2 = 0;
         while (i < len) {
           var info = holes[i++];
           var node = find(content2, info.path);
@@ -12845,7 +12845,7 @@
               if (sparse === null)
                 updates.push({ fn: fn2, sparse: false });
               else {
-                off += sparse.length - 2;
+                off2 += sparse.length - 2;
                 updates.push({ fn: fn2, sparse: true, values: sparse });
               }
               break;
@@ -12855,7 +12855,7 @@
               break;
           }
         }
-        len += off;
+        len += off2;
         return function() {
           var length = arguments.length;
           if (len !== length - 1) {
@@ -12864,15 +12864,15 @@
             );
           }
           var i2 = 1;
-          var off2 = 1;
+          var off3 = 1;
           while (i2 < length) {
-            var update = updates[i2 - off2];
+            var update = updates[i2 - off3];
             if (update.sparse) {
               var values = update.values;
               var value = values[0];
               var j = 1;
               var l2 = values.length;
-              off2 += l2 - 2;
+              off3 += l2 - 2;
               while (j < l2)
                 value += arguments[i2++] + values[j++];
               update.fn(value);
@@ -12921,16 +12921,16 @@
       return $1 + "-" + $2.toLowerCase();
     }
     function svg3(node, original) {
-      var style;
+      var style10;
       if (original)
-        style = original.cloneNode(true);
+        style10 = original.cloneNode(true);
       else {
         node.setAttribute("style", "--hyper:style;");
-        style = node.getAttributeNode("style");
+        style10 = node.getAttributeNode("style");
       }
-      style.value = "";
-      node.setAttributeNode(style);
-      return update(style, true);
+      style10.value = "";
+      node.setAttributeNode(style10);
+      return update(style10, true);
     }
     function toStyle(object) {
       var key, css = [];
@@ -12938,7 +12938,7 @@
         css.push(key.replace(hyphen, ized), ":", object[key], ";");
       return css.join("");
     }
-    function update(style, isSVG) {
+    function update(style10, isSVG) {
       var oldType, oldValue;
       return function(newValue) {
         var info, key, styleValue, value;
@@ -12950,18 +12950,18 @@
                   if (oldValue !== newValue) {
                     for (key in oldValue) {
                       if (!(key in newValue)) {
-                        style[key] = "";
+                        style10[key] = "";
                       }
                     }
                   }
                 }
               } else {
                 if (isSVG)
-                  style.value = "";
+                  style10.value = "";
                 else
-                  style.cssText = "";
+                  style10.cssText = "";
               }
-              info = isSVG ? {} : style;
+              info = isSVG ? {} : style10;
               for (key in newValue) {
                 value = newValue[key];
                 styleValue = typeof value === "number" && !IS_NON_DIMENSIONAL.test(key) ? value + "px" : value;
@@ -12972,7 +12972,7 @@
               }
               oldType = "object";
               if (isSVG)
-                style.value = toStyle(oldValue = info);
+                style10.value = toStyle(oldValue = info);
               else
                 oldValue = newValue;
               break;
@@ -12982,9 +12982,9 @@
               oldType = "string";
               oldValue = newValue;
               if (isSVG)
-                style.value = newValue || "";
+                style10.value = newValue || "";
               else
-                style.cssText = newValue || "";
+                style10.cssText = newValue || "";
             }
             break;
         }
@@ -13443,13 +13443,13 @@
   function applyStyles(_ref) {
     var state = _ref.state;
     Object.keys(state.elements).forEach(function(name2) {
-      var style = state.styles[name2] || {};
+      var style10 = state.styles[name2] || {};
       var attributes = state.attributes[name2] || {};
       var element = state.elements[name2];
       if (!isHTMLElement(element) || !getNodeName(element)) {
         return;
       }
-      Object.assign(element.style, style);
+      Object.assign(element.style, style10);
       Object.keys(attributes).forEach(function(name3) {
         var value = attributes[name3];
         if (value === false) {
@@ -13484,14 +13484,14 @@
         var element = state.elements[name2];
         var attributes = state.attributes[name2] || {};
         var styleProperties = Object.keys(state.styles.hasOwnProperty(name2) ? state.styles[name2] : initialStyles[name2]);
-        var style = styleProperties.reduce(function(style2, property) {
-          style2[property] = "";
-          return style2;
+        var style10 = styleProperties.reduce(function(style11, property) {
+          style11[property] = "";
+          return style11;
         }, {});
         if (!isHTMLElement(element) || !getNodeName(element)) {
           return;
         }
-        Object.assign(element.style, style);
+        Object.assign(element.style, style10);
         Object.keys(attributes).forEach(function(attribute2) {
           element.removeAttribute(attribute2);
         });
@@ -15586,7 +15586,7 @@
       updateTransitionEndListener(box, "add", listener);
       currentTransitionEndListener = listener;
     }
-    function on(eventType, handler, options) {
+    function on2(eventType, handler, options) {
       if (options === void 0) {
         options = false;
       }
@@ -15603,10 +15603,10 @@
     }
     function addListeners() {
       if (getIsCustomTouchBehavior()) {
-        on("touchstart", onTrigger2, {
+        on2("touchstart", onTrigger2, {
           passive: true
         });
-        on("touchend", onMouseLeave, {
+        on2("touchend", onMouseLeave, {
           passive: true
         });
       }
@@ -15614,16 +15614,16 @@
         if (eventType === "manual") {
           return;
         }
-        on(eventType, onTrigger2);
+        on2(eventType, onTrigger2);
         switch (eventType) {
           case "mouseenter":
-            on("mouseleave", onMouseLeave);
+            on2("mouseleave", onMouseLeave);
             break;
           case "focus":
-            on(isIE11 ? "focusout" : "blur", onBlurOrFocusOut);
+            on2(isIE11 ? "focusout" : "blur", onBlurOrFocusOut);
             break;
           case "focusin":
-            on("focusout", onBlurOrFocusOut);
+            on2("focusout", onBlurOrFocusOut);
             break;
         }
       });
@@ -18203,7 +18203,7 @@
     if (dismiss && !handle_escape_manually) {
       document.addEventListener("keydown", (e) => {
         if (e.key == "Escape") {
-          dialog_rm2({ id });
+          dialog_rm({ id });
         }
       });
     }
@@ -18217,7 +18217,7 @@
     };
     if (replace || !replace && dialogs.hasOwnProperty(replace_id)) {
       log(`window set to replace ${replace_id}`, "window");
-      dialog_rm2({ id: replace_id });
+      dialog_rm({ id: replace_id });
       delete dialogs[replace_id];
     }
     page.structure.dialogs.appendChild(modal);
@@ -18229,13 +18229,13 @@
     all = false,
     modal_bg = false
   }) {
-    dialog_rm2({
+    dialog_rm({
       id,
       all,
       modal_bg
     });
   };
-  function dialog_rm2({
+  function dialog_rm({
     id,
     all = false,
     modal_bg = false
@@ -18249,7 +18249,7 @@
       log("requested kill all", "window");
       console.info(dialogs);
       for (let dialog2 in dialogs) {
-        dialog_rm2({
+        dialog_rm({
           id: dialog2
         });
       }
@@ -19001,7 +19001,7 @@
                 <button class="btn chibi icon primary submit" ref=${(el) => submit = el} onclick=${() => {
         let name2 = input2.value;
         let link = id;
-        dialog_rm2({
+        dialog_rm({
           id: "other_listener"
         });
         window.location.href = `${root}user/${name2}/library/music/${link}`;
@@ -19030,7 +19030,7 @@
                 ${{ html: tl(trans.profile_shortcut.notice).replace("{u}", `<a class="mention" href="${root}user/${settings.profile_shortcut}" target="_blank">@${settings.profile_shortcut}</a>`) }}
             </div>
             <div class="modal-footer">
-                <button class="see-more cancel" onclick=${() => dialog_rm2({ id: "profile_shortcut" })}>
+                <button class="see-more cancel" onclick=${() => dialog_rm({ id: "profile_shortcut" })}>
                     ${tl(trans.back)}
                 </button>
                 <div class="fill"></div>
@@ -19042,7 +19042,7 @@
     });
   }
   function confirm_set_profile_as_shortcut() {
-    dialog_rm2({
+    dialog_rm({
       id: "profile_shortcut"
     });
     let avatar_src = page.structure.container.querySelector(":scope > .redesigned-profile-header .avatar img")?.getAttribute("src");
@@ -19273,7 +19273,7 @@
             state.year = view.year;
             state.month = view.month;
             update_display();
-            emit();
+            emit2();
             last_action = "";
             render_popup();
           }}>${cell.day}</button>
@@ -19331,7 +19331,7 @@
             view.level = "day";
             last_action = "";
             update_display();
-            emit();
+            emit2();
             render_popup();
           }}>
                                 ${label}
@@ -19432,7 +19432,7 @@
             view.year = state.year;
             view.month = state.month;
             update_display();
-            emit();
+            emit2();
             render_popup();
           }
         })}
@@ -19475,7 +19475,7 @@
         return cells;
       }, update_display = function() {
         date_display.textContent = format_date(state);
-      }, emit = function() {
+      }, emit2 = function() {
         const date_object = new Date(
           state.year,
           state.month - 1,
@@ -19552,7 +19552,7 @@
           state.hours = parts[0] || 0;
           state.mins = parts[1] || 0;
           state.secs = parts[2] || 0;
-          emit();
+          emit2();
         });
       }
       let tooltip = tippy_esm_default(date_display, {
@@ -21779,7 +21779,7 @@
     if (!changelog) {
       log("not cached, fetching", "changelog");
       request_changelog();
-      dialog_rm2({ id: "rabbit" });
+      dialog_rm({ id: "rabbit" });
     } else {
       if (changelog_expire < current_time)
         request_changelog();
@@ -21926,7 +21926,7 @@
       } else if (page.structure.dialogs.hasChildNodes() && page.structure.dialogs.querySelector(':scope > [data-modal-type="rabbit"]')) {
         if (e.key == "Escape") {
           if (depth == 0 && input_box.querySelector("input").value == "" || !back) {
-            dialog_rm2({ id: "rabbit" });
+            dialog_rm({ id: "rabbit" });
           } else {
             input_box.querySelector("input").value = "";
             depth = 0;
@@ -23113,7 +23113,7 @@
       return;
     } else if (id == "hu_tao") {
       if (value == "develop") {
-        dialog_rm2({ id: "hu_tao" });
+        dialog_rm({ id: "hu_tao" });
         change_settings_page("sku");
         notify({
           id: "unlocked",
@@ -25023,7 +25023,2603 @@
     `, nav.firstElementChild);
   }
 
+  // node_modules/@cropper/utils/dist/utils.esm.raw.js
+  var IS_BROWSER = typeof window !== "undefined" && typeof window.document !== "undefined";
+  var WINDOW = IS_BROWSER ? window : {};
+  var IS_TOUCH_DEVICE = IS_BROWSER ? "ontouchstart" in WINDOW.document.documentElement : false;
+  var HAS_POINTER_EVENT = IS_BROWSER ? "PointerEvent" in WINDOW : false;
+  var NAMESPACE = "cropper";
+  var CROPPER_CANVAS = `${NAMESPACE}-canvas`;
+  var CROPPER_CROSSHAIR = `${NAMESPACE}-crosshair`;
+  var CROPPER_GIRD = `${NAMESPACE}-grid`;
+  var CROPPER_HANDLE = `${NAMESPACE}-handle`;
+  var CROPPER_IMAGE = `${NAMESPACE}-image`;
+  var CROPPER_SELECTION = `${NAMESPACE}-selection`;
+  var CROPPER_SHADE = `${NAMESPACE}-shade`;
+  var CROPPER_VIEWER = `${NAMESPACE}-viewer`;
+  var ACTION_SELECT = "select";
+  var ACTION_MOVE = "move";
+  var ACTION_SCALE = "scale";
+  var ACTION_ROTATE = "rotate";
+  var ACTION_TRANSFORM = "transform";
+  var ACTION_NONE = "none";
+  var ACTION_RESIZE_NORTH = "n-resize";
+  var ACTION_RESIZE_EAST = "e-resize";
+  var ACTION_RESIZE_SOUTH = "s-resize";
+  var ACTION_RESIZE_WEST = "w-resize";
+  var ACTION_RESIZE_NORTHEAST = "ne-resize";
+  var ACTION_RESIZE_NORTHWEST = "nw-resize";
+  var ACTION_RESIZE_SOUTHEAST = "se-resize";
+  var ACTION_RESIZE_SOUTHWEST = "sw-resize";
+  var ATTRIBUTE_ACTION = "action";
+  var EVENT_TOUCH_END = IS_TOUCH_DEVICE ? "touchend touchcancel" : "mouseup";
+  var EVENT_TOUCH_MOVE = IS_TOUCH_DEVICE ? "touchmove" : "mousemove";
+  var EVENT_TOUCH_START = IS_TOUCH_DEVICE ? "touchstart" : "mousedown";
+  var EVENT_POINTER_DOWN = HAS_POINTER_EVENT ? "pointerdown" : EVENT_TOUCH_START;
+  var EVENT_POINTER_MOVE = HAS_POINTER_EVENT ? "pointermove" : EVENT_TOUCH_MOVE;
+  var EVENT_POINTER_UP = HAS_POINTER_EVENT ? "pointerup pointercancel" : EVENT_TOUCH_END;
+  var EVENT_ERROR = "error";
+  var EVENT_KEYDOWN = "keydown";
+  var EVENT_LOAD = "load";
+  var EVENT_WHEEL = "wheel";
+  var EVENT_ACTION = "action";
+  var EVENT_ACTION_END = "actionend";
+  var EVENT_ACTION_MOVE = "actionmove";
+  var EVENT_ACTION_START = "actionstart";
+  var EVENT_CHANGE = "change";
+  var EVENT_TRANSFORM = "transform";
+  function isString(value) {
+    return typeof value === "string";
+  }
+  var isNaN2 = Number.isNaN || WINDOW.isNaN;
+  function isNumber(value) {
+    return typeof value === "number" && !isNaN2(value);
+  }
+  function isPositiveNumber(value) {
+    return isNumber(value) && value > 0 && value < Infinity;
+  }
+  function isUndefined(value) {
+    return typeof value === "undefined";
+  }
+  function isObject(value) {
+    return typeof value === "object" && value !== null;
+  }
+  var { hasOwnProperty: hasOwnProperty2 } = Object.prototype;
+  function isPlainObject(value) {
+    if (!isObject(value)) {
+      return false;
+    }
+    try {
+      const { constructor } = value;
+      const { prototype } = constructor;
+      return constructor && prototype && hasOwnProperty2.call(prototype, "isPrototypeOf");
+    } catch (error) {
+      return false;
+    }
+  }
+  function isFunction(value) {
+    return typeof value === "function";
+  }
+  function isElement3(node) {
+    return typeof node === "object" && node !== null && node.nodeType === 1;
+  }
+  var REGEXP_CAMEL_CASE = /([a-z\d])([A-Z])/g;
+  function toKebabCase(value) {
+    return String(value).replace(REGEXP_CAMEL_CASE, "$1-$2").toLowerCase();
+  }
+  var REGEXP_KEBAB_CASE = /-[A-z\d]/g;
+  function toCamelCase(value) {
+    return value.replace(REGEXP_KEBAB_CASE, (substring) => substring.slice(1).toUpperCase());
+  }
+  var REGEXP_SPACES = /\s\s*/;
+  function off(target, types, listener, options) {
+    types.trim().split(REGEXP_SPACES).forEach((type) => {
+      target.removeEventListener(type, listener, options);
+    });
+  }
+  function on(target, types, listener, options) {
+    types.trim().split(REGEXP_SPACES).forEach((type) => {
+      target.addEventListener(type, listener, options);
+    });
+  }
+  function once(target, types, listener, options) {
+    on(target, types, listener, Object.assign(Object.assign({}, options), { once: true }));
+  }
+  var defaultEventOptions = {
+    bubbles: true,
+    cancelable: true,
+    composed: true
+  };
+  function emit(target, type, detail, options) {
+    return target.dispatchEvent(new CustomEvent(type, Object.assign(Object.assign(Object.assign({}, defaultEventOptions), { detail }), options)));
+  }
+  var resolvedPromise = Promise.resolve();
+  function nextTick(context, callback2) {
+    return callback2 ? resolvedPromise.then(context ? callback2.bind(context) : callback2) : resolvedPromise;
+  }
+  function getOffset(element) {
+    const { documentElement } = element.ownerDocument;
+    const box = element.getBoundingClientRect();
+    return {
+      left: box.left + (WINDOW.pageXOffset - documentElement.clientLeft),
+      top: box.top + (WINDOW.pageYOffset - documentElement.clientTop)
+    };
+  }
+  var REGEXP_ANGLE_UNIT = /deg|g?rad|turn$/i;
+  function toAngleInRadian(angle) {
+    const value = parseFloat(angle) || 0;
+    if (value !== 0) {
+      const [unit = "rad"] = String(angle).match(REGEXP_ANGLE_UNIT) || [];
+      switch (unit.toLowerCase()) {
+        case "deg":
+          return value / 360 * (Math.PI * 2);
+        case "grad":
+          return value / 400 * (Math.PI * 2);
+        case "turn":
+          return value * (Math.PI * 2);
+      }
+    }
+    return value;
+  }
+  var SIZE_ADJUSTMENT_TYPE_CONTAIN = "contain";
+  var SIZE_ADJUSTMENT_TYPE_COVER = "cover";
+  function getAdjustedSizes(data2, type = SIZE_ADJUSTMENT_TYPE_CONTAIN) {
+    const { aspectRatio } = data2;
+    let { width, height } = data2;
+    const isValidWidth = isPositiveNumber(width);
+    const isValidHeight = isPositiveNumber(height);
+    if (isValidWidth && isValidHeight) {
+      const adjustedWidth = height * aspectRatio;
+      if (type === SIZE_ADJUSTMENT_TYPE_CONTAIN && adjustedWidth > width || type === SIZE_ADJUSTMENT_TYPE_COVER && adjustedWidth < width) {
+        height = width / aspectRatio;
+      } else {
+        width = height * aspectRatio;
+      }
+    } else if (isValidWidth) {
+      height = width / aspectRatio;
+    } else if (isValidHeight) {
+      width = height * aspectRatio;
+    }
+    return {
+      width,
+      height
+    };
+  }
+  function multiplyMatrices(matrix, ...args) {
+    if (args.length === 0) {
+      return matrix;
+    }
+    const [a1, b1, c1, d1, e1, f1] = matrix;
+    const [a2, b2, c2, d2, e2, f2] = args[0];
+    matrix = [
+      a1 * a2 + c1 * b2,
+      b1 * a2 + d1 * b2,
+      a1 * c2 + c1 * d2,
+      b1 * c2 + d1 * d2,
+      a1 * e2 + c1 * f2 + e1,
+      b1 * e2 + d1 * f2 + f1
+    ];
+    return multiplyMatrices(matrix, ...args.slice(1));
+  }
+
+  // node_modules/@cropper/element/dist/element.esm.raw.js
+  var style = `:host([hidden]){display:none!important}`;
+  var REGEXP_SUFFIX = /left|top|width|height/i;
+  var DEFAULT_SHADOW_ROOT_MODE = "open";
+  var shadowRoots = /* @__PURE__ */ new WeakMap();
+  var styleSheets = /* @__PURE__ */ new WeakMap();
+  var tagNames = /* @__PURE__ */ new Map();
+  var supportsAdoptedStyleSheets = WINDOW.document && Array.isArray(WINDOW.document.adoptedStyleSheets) && "replaceSync" in WINDOW.CSSStyleSheet.prototype;
+  var CropperElement = class extends HTMLElement {
+    get $sharedStyle() {
+      return `${this.themeColor ? `:host{--theme-color: ${this.themeColor};}` : ""}${style}`;
+    }
+    constructor() {
+      var _a, _b;
+      super();
+      this.shadowRootMode = DEFAULT_SHADOW_ROOT_MODE;
+      this.slottable = true;
+      const name2 = (_b = (_a = Object.getPrototypeOf(this)) === null || _a === void 0 ? void 0 : _a.constructor) === null || _b === void 0 ? void 0 : _b.$name;
+      if (name2) {
+        tagNames.set(name2, this.tagName.toLowerCase());
+      }
+    }
+    static get observedAttributes() {
+      return [
+        "shadow-root-mode",
+        "slottable",
+        "theme-color"
+      ];
+    }
+    // Convert attribute to property
+    attributeChangedCallback(name2, oldValue, newValue) {
+      if (Object.is(newValue, oldValue)) {
+        return;
+      }
+      const propertyName = toCamelCase(name2);
+      const oldPropertyValue = this[propertyName];
+      let newPropertyValue = newValue;
+      switch (typeof oldPropertyValue) {
+        case "boolean":
+          newPropertyValue = newValue !== null && newValue !== "false";
+          break;
+        case "number":
+          newPropertyValue = Number(newValue);
+          break;
+      }
+      this[propertyName] = newPropertyValue;
+      switch (name2) {
+        case "theme-color": {
+          const styleSheet = styleSheets.get(this);
+          const styles = this.$sharedStyle;
+          if (styleSheet && styles) {
+            if (supportsAdoptedStyleSheets) {
+              styleSheet.replaceSync(styles);
+            } else {
+              styleSheet.textContent = styles;
+            }
+          }
+          break;
+        }
+      }
+    }
+    // Convert property to attribute
+    $propertyChangedCallback(name2, oldValue, newValue) {
+      if (Object.is(newValue, oldValue)) {
+        return;
+      }
+      name2 = toKebabCase(name2);
+      switch (typeof newValue) {
+        case "boolean":
+          if (newValue === true) {
+            if (!this.hasAttribute(name2)) {
+              this.setAttribute(name2, "");
+            }
+          } else {
+            this.removeAttribute(name2);
+          }
+          break;
+        case "number":
+          if (isNaN2(newValue)) {
+            newValue = "";
+          } else {
+            newValue = String(newValue);
+          }
+        // Fall through
+        // case 'string':
+        // eslint-disable-next-line no-fallthrough
+        default:
+          if (newValue) {
+            if (this.getAttribute(name2) !== newValue) {
+              this.setAttribute(name2, newValue);
+            }
+          } else {
+            this.removeAttribute(name2);
+          }
+      }
+    }
+    connectedCallback() {
+      Object.getPrototypeOf(this).constructor.observedAttributes.forEach((attribute2) => {
+        const property = toCamelCase(attribute2);
+        let value = this[property];
+        if (!isUndefined(value)) {
+          this.$propertyChangedCallback(property, void 0, value);
+        }
+        Object.defineProperty(this, property, {
+          enumerable: true,
+          configurable: true,
+          get() {
+            return value;
+          },
+          set(newValue) {
+            const oldValue = value;
+            value = newValue;
+            this.$propertyChangedCallback(property, oldValue, newValue);
+          }
+        });
+      });
+      const shadow = this.attachShadow({
+        mode: this.shadowRootMode || DEFAULT_SHADOW_ROOT_MODE
+      });
+      if (!this.shadowRoot) {
+        shadowRoots.set(this, shadow);
+      }
+      styleSheets.set(this, this.$addStyles(this.$sharedStyle));
+      if (this.$style) {
+        this.$addStyles(this.$style);
+      }
+      if (this.$template) {
+        const template = document.createElement("template");
+        template.innerHTML = this.$template;
+        shadow.appendChild(template.content);
+      }
+      if (this.slottable) {
+        const slot = document.createElement("slot");
+        shadow.appendChild(slot);
+      }
+    }
+    disconnectedCallback() {
+      if (styleSheets.has(this)) {
+        styleSheets.delete(this);
+      }
+      if (shadowRoots.has(this)) {
+        shadowRoots.delete(this);
+      }
+    }
+    // eslint-disable-next-line class-methods-use-this
+    $getTagNameOf(name2) {
+      var _a;
+      return (_a = tagNames.get(name2)) !== null && _a !== void 0 ? _a : name2;
+    }
+    $setStyles(properties) {
+      Object.keys(properties).forEach((property) => {
+        let value = properties[property];
+        if (isNumber(value)) {
+          if (value !== 0 && REGEXP_SUFFIX.test(property)) {
+            value = `${value}px`;
+          } else {
+            value = String(value);
+          }
+        }
+        this.style[property] = value;
+      });
+      return this;
+    }
+    /**
+     * Outputs the shadow root of the element.
+     * @returns {ShadowRoot} Returns the shadow root.
+     */
+    $getShadowRoot() {
+      return this.shadowRoot || shadowRoots.get(this);
+    }
+    /**
+     * Adds styles to the shadow root.
+     * @param {string} styles The styles to add.
+     * @returns {CSSStyleSheet|HTMLStyleElement} Returns the generated style sheet.
+     */
+    $addStyles(styles) {
+      let styleSheet;
+      const shadow = this.$getShadowRoot();
+      if (supportsAdoptedStyleSheets) {
+        styleSheet = new CSSStyleSheet();
+        styleSheet.replaceSync(styles);
+        shadow.adoptedStyleSheets = shadow.adoptedStyleSheets.concat(styleSheet);
+      } else {
+        styleSheet = document.createElement("style");
+        styleSheet.textContent = styles;
+        shadow.appendChild(styleSheet);
+      }
+      return styleSheet;
+    }
+    /**
+     * Dispatches an event at the element.
+     * @param {string} type The name of the event.
+     * @param {*} [detail] The data passed when initializing the event.
+     * @param {CustomEventInit} [options] The other event options.
+     * @returns {boolean} Returns the result value.
+     */
+    $emit(type, detail, options) {
+      return emit(this, type, detail, options);
+    }
+    /**
+     * Defers the callback to be executed after the next DOM update cycle.
+     * @param {Function} [callback] The callback to execute after the next DOM update cycle.
+     * @returns {Promise} A promise that resolves to nothing.
+     */
+    $nextTick(callback2) {
+      return nextTick(this, callback2);
+    }
+    /**
+     * Defines the constructor as a new custom element.
+     * {@link https://developer.mozilla.org/en-US/docs/Web/API/CustomElementRegistry/define}
+     * @param {string|object} [name] The element name.
+     * @param {object} [options] The element definition options.
+     */
+    static $define(name2, options) {
+      if (isObject(name2)) {
+        options = name2;
+        name2 = "";
+      }
+      if (!name2) {
+        name2 = this.$name || this.name;
+      }
+      name2 = toKebabCase(name2);
+      if (IS_BROWSER && WINDOW.customElements && !WINDOW.customElements.get(name2)) {
+        customElements.define(name2, this, options);
+      }
+    }
+  };
+  CropperElement.$version = "2.0.0";
+
+  // node_modules/@cropper/element-canvas/dist/element-canvas.esm.raw.js
+  var style2 = `:host{display:block;min-height:100px;min-width:200px;overflow:hidden;position:relative;touch-action:none;-webkit-touch-callout:none;-webkit-user-select:none;-moz-user-select:none;user-select:none}:host([background]){background-color:#fff;background-image:repeating-linear-gradient(45deg,#ccc 25%,transparent 0,transparent 75%,#ccc 0,#ccc),repeating-linear-gradient(45deg,#ccc 25%,transparent 0,transparent 75%,#ccc 0,#ccc);background-image:repeating-conic-gradient(#ccc 0 25%,#fff 0 50%);background-position:0 0,.5rem .5rem;background-size:1rem 1rem}:host([disabled]){pointer-events:none}:host([disabled]):after{bottom:0;content:"";cursor:not-allowed;display:block;left:0;pointer-events:none;position:absolute;right:0;top:0}`;
+  var CropperCanvas = class extends CropperElement {
+    constructor() {
+      super(...arguments);
+      this.$onPointerDown = null;
+      this.$onPointerMove = null;
+      this.$onPointerUp = null;
+      this.$onWheel = null;
+      this.$wheeling = false;
+      this.$pointers = /* @__PURE__ */ new Map();
+      this.$style = style2;
+      this.$action = ACTION_NONE;
+      this.background = false;
+      this.disabled = false;
+      this.scaleStep = 0.1;
+      this.themeColor = "#39f";
+    }
+    static get observedAttributes() {
+      return super.observedAttributes.concat([
+        "background",
+        "disabled",
+        "scale-step"
+      ]);
+    }
+    connectedCallback() {
+      super.connectedCallback();
+      if (!this.disabled) {
+        this.$bind();
+      }
+    }
+    disconnectedCallback() {
+      if (!this.disabled) {
+        this.$unbind();
+      }
+      super.disconnectedCallback();
+    }
+    $propertyChangedCallback(name2, oldValue, newValue) {
+      if (Object.is(newValue, oldValue)) {
+        return;
+      }
+      super.$propertyChangedCallback(name2, oldValue, newValue);
+      switch (name2) {
+        case "disabled":
+          if (newValue) {
+            this.$unbind();
+          } else {
+            this.$bind();
+          }
+          break;
+      }
+    }
+    $bind() {
+      if (!this.$onPointerDown) {
+        this.$onPointerDown = this.$handlePointerDown.bind(this);
+        on(this, EVENT_POINTER_DOWN, this.$onPointerDown);
+      }
+      if (!this.$onPointerMove) {
+        this.$onPointerMove = this.$handlePointerMove.bind(this);
+        on(this.ownerDocument, EVENT_POINTER_MOVE, this.$onPointerMove);
+      }
+      if (!this.$onPointerUp) {
+        this.$onPointerUp = this.$handlePointerUp.bind(this);
+        on(this.ownerDocument, EVENT_POINTER_UP, this.$onPointerUp);
+      }
+      if (!this.$onWheel) {
+        this.$onWheel = this.$handleWheel.bind(this);
+        on(this, EVENT_WHEEL, this.$onWheel, {
+          passive: false,
+          capture: true
+        });
+      }
+    }
+    $unbind() {
+      if (this.$onPointerDown) {
+        off(this, EVENT_POINTER_DOWN, this.$onPointerDown);
+        this.$onPointerDown = null;
+      }
+      if (this.$onPointerMove) {
+        off(this.ownerDocument, EVENT_POINTER_MOVE, this.$onPointerMove);
+        this.$onPointerMove = null;
+      }
+      if (this.$onPointerUp) {
+        off(this.ownerDocument, EVENT_POINTER_UP, this.$onPointerUp);
+        this.$onPointerUp = null;
+      }
+      if (this.$onWheel) {
+        off(this, EVENT_WHEEL, this.$onWheel, {
+          capture: true
+        });
+        this.$onWheel = null;
+      }
+    }
+    $handlePointerDown(event3) {
+      const { buttons, button, type } = event3;
+      if (this.disabled || // Handle pointer or mouse event, and ignore touch event
+      (type === "pointerdown" && event3.pointerType === "mouse" || type === "mousedown") && // No primary button (Usually the left button)
+      (isNumber(buttons) && buttons !== 1 || isNumber(button) && button !== 0 || event3.ctrlKey)) {
+        return;
+      }
+      const { $pointers } = this;
+      let action = "";
+      if (event3.changedTouches) {
+        Array.from(event3.changedTouches).forEach(({ identifier, pageX, pageY }) => {
+          $pointers.set(identifier, {
+            startX: pageX,
+            startY: pageY,
+            endX: pageX,
+            endY: pageY
+          });
+        });
+      } else {
+        const { pointerId = 0, pageX, pageY } = event3;
+        $pointers.set(pointerId, {
+          startX: pageX,
+          startY: pageY,
+          endX: pageX,
+          endY: pageY
+        });
+      }
+      if ($pointers.size > 1) {
+        action = ACTION_TRANSFORM;
+      } else if (isElement3(event3.target)) {
+        action = event3.target.action || event3.target.getAttribute(ATTRIBUTE_ACTION) || "";
+      }
+      if (this.$emit(EVENT_ACTION_START, {
+        action,
+        relatedEvent: event3
+      }) === false) {
+        return;
+      }
+      event3.preventDefault();
+      this.$action = action;
+      this.style.willChange = "transform";
+    }
+    $handlePointerMove(event3) {
+      const { $action, $pointers } = this;
+      if (this.disabled || $action === ACTION_NONE || $pointers.size === 0) {
+        return;
+      }
+      if (this.$emit(EVENT_ACTION_MOVE, {
+        action: $action,
+        relatedEvent: event3
+      }) === false) {
+        return;
+      }
+      event3.preventDefault();
+      if (event3.changedTouches) {
+        Array.from(event3.changedTouches).forEach(({ identifier, pageX, pageY }) => {
+          const pointer = $pointers.get(identifier);
+          if (pointer) {
+            Object.assign(pointer, {
+              endX: pageX,
+              endY: pageY
+            });
+          }
+        });
+      } else {
+        const { pointerId = 0, pageX, pageY } = event3;
+        const pointer = $pointers.get(pointerId);
+        if (pointer) {
+          Object.assign(pointer, {
+            endX: pageX,
+            endY: pageY
+          });
+        }
+      }
+      const detail = {
+        action: $action,
+        relatedEvent: event3
+      };
+      if ($action === ACTION_TRANSFORM) {
+        const pointers2 = new Map($pointers);
+        let maxRotateRate = 0;
+        let maxScaleRate = 0;
+        let rotate2 = 0;
+        let scale = 0;
+        let centerX = event3.pageX;
+        let centerY = event3.pageY;
+        $pointers.forEach((pointer, pointerId) => {
+          pointers2.delete(pointerId);
+          pointers2.forEach((pointer2) => {
+            let x1 = pointer2.startX - pointer.startX;
+            let y1 = pointer2.startY - pointer.startY;
+            let x2 = pointer2.endX - pointer.endX;
+            let y2 = pointer2.endY - pointer.endY;
+            let z1 = 0;
+            let z2 = 0;
+            let a1 = 0;
+            let a2 = 0;
+            if (x1 === 0) {
+              if (y1 < 0) {
+                a1 = Math.PI * 2;
+              } else if (y1 > 0) {
+                a1 = Math.PI;
+              }
+            } else if (x1 > 0) {
+              a1 = Math.PI / 2 + Math.atan(y1 / x1);
+            } else if (x1 < 0) {
+              a1 = Math.PI * 1.5 + Math.atan(y1 / x1);
+            }
+            if (x2 === 0) {
+              if (y2 < 0) {
+                a2 = Math.PI * 2;
+              } else if (y2 > 0) {
+                a2 = Math.PI;
+              }
+            } else if (x2 > 0) {
+              a2 = Math.PI / 2 + Math.atan(y2 / x2);
+            } else if (x2 < 0) {
+              a2 = Math.PI * 1.5 + Math.atan(y2 / x2);
+            }
+            if (a2 > 0 || a1 > 0) {
+              const rotateRate = a2 - a1;
+              const absRotateRate = Math.abs(rotateRate);
+              if (absRotateRate > maxRotateRate) {
+                maxRotateRate = absRotateRate;
+                rotate2 = rotateRate;
+                centerX = (pointer.startX + pointer2.startX) / 2;
+                centerY = (pointer.startY + pointer2.startY) / 2;
+              }
+            }
+            x1 = Math.abs(x1);
+            y1 = Math.abs(y1);
+            x2 = Math.abs(x2);
+            y2 = Math.abs(y2);
+            if (x1 > 0 && y1 > 0) {
+              z1 = Math.sqrt(x1 * x1 + y1 * y1);
+            } else if (x1 > 0) {
+              z1 = x1;
+            } else if (y1 > 0) {
+              z1 = y1;
+            }
+            if (x2 > 0 && y2 > 0) {
+              z2 = Math.sqrt(x2 * x2 + y2 * y2);
+            } else if (x2 > 0) {
+              z2 = x2;
+            } else if (y2 > 0) {
+              z2 = y2;
+            }
+            if (z1 > 0 && z2 > 0) {
+              const scaleRate = (z2 - z1) / z1;
+              const absScaleRate = Math.abs(scaleRate);
+              if (absScaleRate > maxScaleRate) {
+                maxScaleRate = absScaleRate;
+                scale = scaleRate;
+                centerX = (pointer.startX + pointer2.startX) / 2;
+                centerY = (pointer.startY + pointer2.startY) / 2;
+              }
+            }
+          });
+        });
+        const rotatable = maxRotateRate > 0;
+        const scalable = maxScaleRate > 0;
+        if (rotatable && scalable) {
+          detail.rotate = rotate2;
+          detail.scale = scale;
+          detail.centerX = centerX;
+          detail.centerY = centerY;
+        } else if (rotatable) {
+          detail.action = ACTION_ROTATE;
+          detail.rotate = rotate2;
+          detail.centerX = centerX;
+          detail.centerY = centerY;
+        } else if (scalable) {
+          detail.action = ACTION_SCALE;
+          detail.scale = scale;
+          detail.centerX = centerX;
+          detail.centerY = centerY;
+        } else {
+          detail.action = ACTION_NONE;
+        }
+      } else {
+        const [pointer] = Array.from($pointers.values());
+        Object.assign(detail, pointer);
+      }
+      $pointers.forEach((pointer) => {
+        pointer.startX = pointer.endX;
+        pointer.startY = pointer.endY;
+      });
+      if (detail.action !== ACTION_NONE) {
+        this.$emit(EVENT_ACTION, detail, {
+          cancelable: false
+        });
+      }
+    }
+    $handlePointerUp(event3) {
+      const { $action, $pointers } = this;
+      if (this.disabled || $action === ACTION_NONE) {
+        return;
+      }
+      if (this.$emit(EVENT_ACTION_END, {
+        action: $action,
+        relatedEvent: event3
+      }) === false) {
+        return;
+      }
+      event3.preventDefault();
+      if (event3.changedTouches) {
+        Array.from(event3.changedTouches).forEach(({ identifier }) => {
+          $pointers.delete(identifier);
+        });
+      } else {
+        const { pointerId = 0 } = event3;
+        $pointers.delete(pointerId);
+      }
+      if ($pointers.size === 0) {
+        this.style.willChange = "";
+        this.$action = ACTION_NONE;
+      }
+    }
+    $handleWheel(event3) {
+      if (this.disabled) {
+        return;
+      }
+      event3.preventDefault();
+      if (this.$wheeling) {
+        return;
+      }
+      this.$wheeling = true;
+      setTimeout(() => {
+        this.$wheeling = false;
+      }, 50);
+      const delta = event3.deltaY > 0 ? -1 : 1;
+      const scale = delta * this.scaleStep;
+      this.$emit(EVENT_ACTION, {
+        action: ACTION_SCALE,
+        scale,
+        relatedEvent: event3
+      }, {
+        cancelable: false
+      });
+    }
+    /**
+     * Changes the current action to a new one.
+     * @param {string} action The new action.
+     * @returns {CropperCanvas} Returns `this` for chaining.
+     */
+    $setAction(action) {
+      if (isString(action)) {
+        this.$action = action;
+      }
+      return this;
+    }
+    /**
+     * Generates a real canvas element, with the image draw into if there is one.
+     * @param {object} [options] The available options.
+     * @param {number} [options.width] The width of the canvas.
+     * @param {number} [options.height] The height of the canvas.
+     * @param {Function} [options.beforeDraw] The function called before drawing the image onto the canvas.
+     * @returns {Promise} Returns a promise that resolves to the generated canvas element.
+     */
+    $toCanvas(options) {
+      return new Promise((resolve2, reject) => {
+        if (!this.isConnected) {
+          reject(new Error("The current element is not connected to the DOM."));
+          return;
+        }
+        const canvas = document.createElement("canvas");
+        let width = this.offsetWidth;
+        let height = this.offsetHeight;
+        let scale = 1;
+        if (isPlainObject(options) && (isPositiveNumber(options.width) || isPositiveNumber(options.height))) {
+          ({ width, height } = getAdjustedSizes({
+            aspectRatio: width / height,
+            width: options.width,
+            height: options.height
+          }));
+          scale = width / this.offsetWidth;
+        }
+        canvas.width = width;
+        canvas.height = height;
+        const cropperImage = this.querySelector(this.$getTagNameOf(CROPPER_IMAGE));
+        if (!cropperImage) {
+          resolve2(canvas);
+          return;
+        }
+        cropperImage.$ready().then((image) => {
+          const context = canvas.getContext("2d");
+          if (context) {
+            const [a, b, c, d, e, f] = cropperImage.$getTransform();
+            let newE = e;
+            let newF = f;
+            let destWidth = image.naturalWidth;
+            let destHeight = image.naturalHeight;
+            if (scale !== 1) {
+              newE *= scale;
+              newF *= scale;
+              destWidth *= scale;
+              destHeight *= scale;
+            }
+            const centerX = destWidth / 2;
+            const centerY = destHeight / 2;
+            context.fillStyle = "transparent";
+            context.fillRect(0, 0, width, height);
+            if (isPlainObject(options) && isFunction(options.beforeDraw)) {
+              options.beforeDraw.call(this, context, canvas);
+            }
+            context.save();
+            context.translate(centerX, centerY);
+            context.transform(a, b, c, d, newE, newF);
+            context.translate(-centerX, -centerY);
+            context.drawImage(image, 0, 0, destWidth, destHeight);
+            context.restore();
+          }
+          resolve2(canvas);
+        }).catch(reject);
+      });
+    }
+  };
+  CropperCanvas.$name = CROPPER_CANVAS;
+  CropperCanvas.$version = "2.0.0";
+
+  // node_modules/@cropper/element-image/dist/element-image.esm.raw.js
+  var style3 = `:host{display:inline-block}img{display:block;height:100%;max-height:none!important;max-width:none!important;min-height:0!important;min-width:0!important;width:100%}`;
+  var canvasCache = /* @__PURE__ */ new WeakMap();
+  var NATIVE_ATTRIBUTES = [
+    "alt",
+    "crossorigin",
+    "decoding",
+    "importance",
+    "loading",
+    "referrerpolicy",
+    "sizes",
+    "src",
+    "srcset"
+  ];
+  var CropperImage = class extends CropperElement {
+    constructor() {
+      super(...arguments);
+      this.$matrix = [1, 0, 0, 1, 0, 0];
+      this.$onLoad = null;
+      this.$onCanvasAction = null;
+      this.$onCanvasActionEnd = null;
+      this.$onCanvasActionStart = null;
+      this.$actionStartTarget = null;
+      this.$style = style3;
+      this.$image = new Image();
+      this.initialCenterSize = "contain";
+      this.rotatable = false;
+      this.scalable = false;
+      this.skewable = false;
+      this.slottable = false;
+      this.translatable = false;
+    }
+    set $canvas(element) {
+      canvasCache.set(this, element);
+    }
+    get $canvas() {
+      return canvasCache.get(this);
+    }
+    static get observedAttributes() {
+      return super.observedAttributes.concat(NATIVE_ATTRIBUTES, [
+        "initial-center-size",
+        "rotatable",
+        "scalable",
+        "skewable",
+        "translatable"
+      ]);
+    }
+    attributeChangedCallback(name2, oldValue, newValue) {
+      if (Object.is(newValue, oldValue)) {
+        return;
+      }
+      super.attributeChangedCallback(name2, oldValue, newValue);
+      if (NATIVE_ATTRIBUTES.includes(name2)) {
+        this.$image.setAttribute(name2, newValue);
+      }
+    }
+    $propertyChangedCallback(name2, oldValue, newValue) {
+      if (Object.is(newValue, oldValue)) {
+        return;
+      }
+      super.$propertyChangedCallback(name2, oldValue, newValue);
+      switch (name2) {
+        case "initialCenterSize":
+          this.$nextTick(() => {
+            this.$center(newValue);
+          });
+          break;
+      }
+    }
+    connectedCallback() {
+      super.connectedCallback();
+      const { $image } = this;
+      const $canvas = this.closest(this.$getTagNameOf(CROPPER_CANVAS));
+      if ($canvas) {
+        this.$canvas = $canvas;
+        this.$setStyles({
+          // Make it a block element to avoid side effects (#1074).
+          display: "block",
+          position: "absolute"
+        });
+        this.$onCanvasActionStart = (event3) => {
+          var _a, _b;
+          this.$actionStartTarget = (_b = (_a = event3.detail) === null || _a === void 0 ? void 0 : _a.relatedEvent) === null || _b === void 0 ? void 0 : _b.target;
+        };
+        this.$onCanvasActionEnd = () => {
+          this.$actionStartTarget = null;
+        };
+        this.$onCanvasAction = this.$handleAction.bind(this);
+        on($canvas, EVENT_ACTION_START, this.$onCanvasActionStart);
+        on($canvas, EVENT_ACTION_END, this.$onCanvasActionEnd);
+        on($canvas, EVENT_ACTION, this.$onCanvasAction);
+      }
+      this.$onLoad = this.$handleLoad.bind(this);
+      on($image, EVENT_LOAD, this.$onLoad);
+      this.$getShadowRoot().appendChild($image);
+    }
+    disconnectedCallback() {
+      const { $image, $canvas } = this;
+      if ($canvas) {
+        if (this.$onCanvasActionStart) {
+          off($canvas, EVENT_ACTION_START, this.$onCanvasActionStart);
+          this.$onCanvasActionStart = null;
+        }
+        if (this.$onCanvasActionEnd) {
+          off($canvas, EVENT_ACTION_END, this.$onCanvasActionEnd);
+          this.$onCanvasActionEnd = null;
+        }
+        if (this.$onCanvasAction) {
+          off($canvas, EVENT_ACTION, this.$onCanvasAction);
+          this.$onCanvasAction = null;
+        }
+      }
+      if ($image && this.$onLoad) {
+        off($image, EVENT_LOAD, this.$onLoad);
+        this.$onLoad = null;
+      }
+      this.$getShadowRoot().removeChild($image);
+      super.disconnectedCallback();
+    }
+    $handleLoad() {
+      const { $image } = this;
+      this.$setStyles({
+        width: $image.naturalWidth,
+        height: $image.naturalHeight
+      });
+      if (this.$canvas) {
+        this.$center(this.initialCenterSize);
+      }
+    }
+    $handleAction(event3) {
+      if (this.hidden || !(this.rotatable || this.scalable || this.translatable)) {
+        return;
+      }
+      const { $canvas } = this;
+      const { detail } = event3;
+      if (detail) {
+        const { relatedEvent } = detail;
+        let { action } = detail;
+        if (action === ACTION_TRANSFORM && (!this.rotatable || !this.scalable)) {
+          if (this.rotatable) {
+            action = ACTION_ROTATE;
+          } else if (this.scalable) {
+            action = ACTION_SCALE;
+          } else {
+            action = ACTION_NONE;
+          }
+        }
+        switch (action) {
+          case ACTION_MOVE:
+            if (this.translatable) {
+              let $selection = null;
+              if (relatedEvent) {
+                $selection = relatedEvent.target.closest(this.$getTagNameOf(CROPPER_SELECTION));
+              }
+              if (!$selection) {
+                $selection = $canvas.querySelector(this.$getTagNameOf(CROPPER_SELECTION));
+              }
+              if ($selection && $selection.multiple && !$selection.active) {
+                $selection = $canvas.querySelector(`${this.$getTagNameOf(CROPPER_SELECTION)}[active]`);
+              }
+              if (!$selection || $selection.hidden || !$selection.movable || $selection.dynamic || !(this.$actionStartTarget && $selection.contains(this.$actionStartTarget))) {
+                this.$move(detail.endX - detail.startX, detail.endY - detail.startY);
+              }
+            }
+            break;
+          case ACTION_ROTATE:
+            if (this.rotatable) {
+              if (relatedEvent) {
+                const { x, y } = this.getBoundingClientRect();
+                this.$rotate(detail.rotate, relatedEvent.clientX - x, relatedEvent.clientY - y);
+              } else {
+                this.$rotate(detail.rotate);
+              }
+            }
+            break;
+          case ACTION_SCALE:
+            if (this.scalable) {
+              if (relatedEvent) {
+                const $selection = relatedEvent.target.closest(this.$getTagNameOf(CROPPER_SELECTION));
+                if (!$selection || !$selection.zoomable || $selection.zoomable && $selection.dynamic) {
+                  const { x, y } = this.getBoundingClientRect();
+                  this.$zoom(detail.scale, relatedEvent.clientX - x, relatedEvent.clientY - y);
+                }
+              } else {
+                this.$zoom(detail.scale);
+              }
+            }
+            break;
+          case ACTION_TRANSFORM:
+            if (this.rotatable && this.scalable) {
+              const { rotate: rotate2 } = detail;
+              let { scale } = detail;
+              if (scale < 0) {
+                scale = 1 / (1 - scale);
+              } else {
+                scale += 1;
+              }
+              const cos = Math.cos(rotate2);
+              const sin = Math.sin(rotate2);
+              const [scaleX, skewY, skewX, scaleY] = [
+                cos * scale,
+                sin * scale,
+                -sin * scale,
+                cos * scale
+              ];
+              if (relatedEvent) {
+                const clientRect = this.getBoundingClientRect();
+                const x = relatedEvent.clientX - clientRect.x;
+                const y = relatedEvent.clientY - clientRect.y;
+                const [a, b, c, d] = this.$matrix;
+                const originX = clientRect.width / 2;
+                const originY = clientRect.height / 2;
+                const moveX = x - originX;
+                const moveY = y - originY;
+                const translateX = (moveX * d - c * moveY) / (a * d - c * b);
+                const translateY = (moveY * a - b * moveX) / (a * d - c * b);
+                this.$transform(scaleX, skewY, skewX, scaleY, translateX * (1 - scaleX) + translateY * skewX, translateY * (1 - scaleY) + translateX * skewY);
+              } else {
+                this.$transform(scaleX, skewY, skewX, scaleY, 0, 0);
+              }
+            }
+            break;
+        }
+      }
+    }
+    /**
+     * Defers the callback to execute after successfully loading the image.
+     * @param {Function} [callback] The callback to execute after successfully loading the image.
+     * @returns {Promise} Returns a promise that resolves to the image element.
+     */
+    $ready(callback2) {
+      const { $image } = this;
+      const promise = new Promise((resolve2, reject) => {
+        const error = new Error("Failed to load the image source");
+        if ($image.complete) {
+          if ($image.naturalWidth > 0 && $image.naturalHeight > 0) {
+            resolve2($image);
+          } else {
+            reject(error);
+          }
+        } else {
+          const onLoad = () => {
+            off($image, EVENT_ERROR, onError);
+            resolve2($image);
+          };
+          const onError = () => {
+            off($image, EVENT_LOAD, onLoad);
+            reject(error);
+          };
+          once($image, EVENT_LOAD, onLoad);
+          once($image, EVENT_ERROR, onError);
+        }
+      });
+      if (isFunction(callback2)) {
+        promise.then((image) => {
+          callback2(image);
+          return image;
+        });
+      }
+      return promise;
+    }
+    /**
+     * Aligns the image to the center of its parent element.
+     * @param {string} [size] The size of the image.
+     * @returns {CropperImage} Returns `this` for chaining.
+     */
+    $center(size) {
+      const { parentElement } = this;
+      if (!parentElement) {
+        return this;
+      }
+      const container = parentElement.getBoundingClientRect();
+      const containerWidth = container.width;
+      const containerHeight = container.height;
+      const { x, y, width, height } = this.getBoundingClientRect();
+      const startX = x + width / 2;
+      const startY = y + height / 2;
+      const endX = container.x + containerWidth / 2;
+      const endY = container.y + containerHeight / 2;
+      this.$move(endX - startX, endY - startY);
+      if (size && (width !== containerWidth || height !== containerHeight)) {
+        const scaleX = containerWidth / width;
+        const scaleY = containerHeight / height;
+        switch (size) {
+          case "cover":
+            this.$scale(Math.max(scaleX, scaleY));
+            break;
+          case "contain":
+            this.$scale(Math.min(scaleX, scaleY));
+            break;
+        }
+      }
+      return this;
+    }
+    /**
+     * Moves the image.
+     * @param {number} x The moving distance in the horizontal direction.
+     * @param {number} [y] The moving distance in the vertical direction.
+     * @returns {CropperImage} Returns `this` for chaining.
+     */
+    $move(x, y = x) {
+      if (this.translatable && isNumber(x) && isNumber(y)) {
+        const [a, b, c, d] = this.$matrix;
+        const e = (x * d - c * y) / (a * d - c * b);
+        const f = (y * a - b * x) / (a * d - c * b);
+        this.$translate(e, f);
+      }
+      return this;
+    }
+    /**
+     * Moves the image to a specific position.
+     * @param {number} x The new position in the horizontal direction.
+     * @param {number} [y] The new position in the vertical direction.
+     * @returns {CropperImage} Returns `this` for chaining.
+     */
+    $moveTo(x, y = x) {
+      if (this.translatable && isNumber(x) && isNumber(y)) {
+        const [a, b, c, d] = this.$matrix;
+        const e = (x * d - c * y) / (a * d - c * b);
+        const f = (y * a - b * x) / (a * d - c * b);
+        this.$setTransform(a, b, c, d, e, f);
+      }
+      return this;
+    }
+    /**
+     * Rotates the image.
+     * {@link https://developer.mozilla.org/en-US/docs/Web/CSS/transform-function/rotate}
+     * {@link https://developer.mozilla.org/en-US/docs/Web/API/CanvasRenderingContext2D/rotate}
+     * @param {number|string} angle The rotation angle (in radians).
+     * @param {number} [x] The rotation origin in the horizontal, defaults to the center of the image.
+     * @param {number} [y] The rotation origin in the vertical, defaults to the center of the image.
+     * @returns {CropperImage} Returns `this` for chaining.
+     */
+    $rotate(angle, x, y) {
+      if (this.rotatable) {
+        const radian = toAngleInRadian(angle);
+        const cos = Math.cos(radian);
+        const sin = Math.sin(radian);
+        const [scaleX, skewY, skewX, scaleY] = [cos, sin, -sin, cos];
+        if (isNumber(x) && isNumber(y)) {
+          const [a, b, c, d] = this.$matrix;
+          const { width, height } = this.getBoundingClientRect();
+          const originX = width / 2;
+          const originY = height / 2;
+          const moveX = x - originX;
+          const moveY = y - originY;
+          const translateX = (moveX * d - c * moveY) / (a * d - c * b);
+          const translateY = (moveY * a - b * moveX) / (a * d - c * b);
+          this.$transform(scaleX, skewY, skewX, scaleY, translateX * (1 - scaleX) - translateY * skewX, translateY * (1 - scaleY) - translateX * skewY);
+        } else {
+          this.$transform(scaleX, skewY, skewX, scaleY, 0, 0);
+        }
+      }
+      return this;
+    }
+    /**
+     * Zooms the image.
+     * @param {number} scale The zoom factor. Positive numbers for zooming in, and negative numbers for zooming out.
+     * @param {number} [x] The zoom origin in the horizontal, defaults to the center of the image.
+     * @param {number} [y] The zoom origin in the vertical, defaults to the center of the image.
+     * @returns {CropperImage} Returns `this` for chaining.
+     */
+    $zoom(scale, x, y) {
+      if (!this.scalable || scale === 0) {
+        return this;
+      }
+      if (scale < 0) {
+        scale = 1 / (1 - scale);
+      } else {
+        scale += 1;
+      }
+      if (isNumber(x) && isNumber(y)) {
+        const [a, b, c, d] = this.$matrix;
+        const { width, height } = this.getBoundingClientRect();
+        const originX = width / 2;
+        const originY = height / 2;
+        const moveX = x - originX;
+        const moveY = y - originY;
+        const translateX = (moveX * d - c * moveY) / (a * d - c * b);
+        const translateY = (moveY * a - b * moveX) / (a * d - c * b);
+        this.$transform(scale, 0, 0, scale, translateX * (1 - scale), translateY * (1 - scale));
+      } else {
+        this.$scale(scale);
+      }
+      return this;
+    }
+    /**
+     * Scales the image.
+     * {@link https://developer.mozilla.org/en-US/docs/Web/CSS/transform-function/scale}
+     * {@link https://developer.mozilla.org/en-US/docs/Web/API/CanvasRenderingContext2D/scale}
+     * @param {number} x The scaling factor in the horizontal direction.
+     * @param {number} [y] The scaling factor in the vertical direction.
+     * @returns {CropperImage} Returns `this` for chaining.
+     */
+    $scale(x, y = x) {
+      if (this.scalable) {
+        this.$transform(x, 0, 0, y, 0, 0);
+      }
+      return this;
+    }
+    /**
+     * Skews the image.
+     * {@link https://developer.mozilla.org/en-US/docs/Web/CSS/transform-function/skew}
+     * {@link https://developer.mozilla.org/en-US/docs/Web/API/CanvasRenderingContext2D/transform}
+     * @param {number|string} x The skewing angle in the horizontal direction.
+     * @param {number|string} [y] The skewing angle in the vertical direction.
+     * @returns {CropperImage} Returns `this` for chaining.
+     */
+    $skew(x, y = 0) {
+      if (this.skewable) {
+        const radianX = toAngleInRadian(x);
+        const radianY = toAngleInRadian(y);
+        this.$transform(1, Math.tan(radianY), Math.tan(radianX), 1, 0, 0);
+      }
+      return this;
+    }
+    /**
+     * Translates the image.
+     * {@link https://developer.mozilla.org/en-US/docs/Web/CSS/transform-function/translate}
+     * {@link https://developer.mozilla.org/en-US/docs/Web/API/CanvasRenderingContext2D/translate}
+     * @param {number} x The translating distance in the horizontal direction.
+     * @param {number} [y] The translating distance in the vertical direction.
+     * @returns {CropperImage} Returns `this` for chaining.
+     */
+    $translate(x, y = x) {
+      if (this.translatable && isNumber(x) && isNumber(y)) {
+        this.$transform(1, 0, 0, 1, x, y);
+      }
+      return this;
+    }
+    /**
+     * Transforms the image.
+     * {@link https://developer.mozilla.org/en-US/docs/Web/CSS/transform-function/matrix}
+     * {@link https://developer.mozilla.org/en-US/docs/Web/API/CanvasRenderingContext2D/transform}
+     * @param {number} a The scaling factor in the horizontal direction.
+     * @param {number} b The skewing angle in the vertical direction.
+     * @param {number} c The skewing angle in the horizontal direction.
+     * @param {number} d The scaling factor in the vertical direction.
+     * @param {number} e The translating distance in the horizontal direction.
+     * @param {number} f The translating distance in the vertical direction.
+     * @returns {CropperImage} Returns `this` for chaining.
+     */
+    $transform(a, b, c, d, e, f) {
+      if (isNumber(a) && isNumber(b) && isNumber(c) && isNumber(d) && isNumber(e) && isNumber(f)) {
+        return this.$setTransform(multiplyMatrices(this.$matrix, [a, b, c, d, e, f]));
+      }
+      return this;
+    }
+    /**
+     * Resets (overrides) the current transform to the specific identity matrix.
+     * {@link https://developer.mozilla.org/en-US/docs/Web/API/CanvasRenderingContext2D/setTransform}
+     * @param {number|Array} a The scaling factor in the horizontal direction.
+     * @param {number} b The skewing angle in the vertical direction.
+     * @param {number} c The skewing angle in the horizontal direction.
+     * @param {number} d The scaling factor in the vertical direction.
+     * @param {number} e The translating distance in the horizontal direction.
+     * @param {number} f The translating distance in the vertical direction.
+     * @returns {CropperImage} Returns `this` for chaining.
+     */
+    $setTransform(a, b, c, d, e, f) {
+      if (this.rotatable || this.scalable || this.skewable || this.translatable) {
+        if (Array.isArray(a)) {
+          [a, b, c, d, e, f] = a;
+        }
+        if (isNumber(a) && isNumber(b) && isNumber(c) && isNumber(d) && isNumber(e) && isNumber(f)) {
+          const oldMatrix = [...this.$matrix];
+          const newMatrix = [a, b, c, d, e, f];
+          if (this.$emit(EVENT_TRANSFORM, {
+            matrix: newMatrix,
+            oldMatrix
+          }) === false) {
+            return this;
+          }
+          this.$matrix = newMatrix;
+          this.style.transform = `matrix(${newMatrix.join(", ")})`;
+        }
+      }
+      return this;
+    }
+    /**
+     * Retrieves the current transformation matrix being applied to the element.
+     * {@link https://developer.mozilla.org/en-US/docs/Web/API/CanvasRenderingContext2D/getTransform}
+     * @returns {Array} Returns the readonly transformation matrix.
+     */
+    $getTransform() {
+      return this.$matrix.slice();
+    }
+    /**
+     * Resets the current transform to the initial identity matrix.
+     * {@link https://developer.mozilla.org/en-US/docs/Web/API/CanvasRenderingContext2D/resetTransform}
+     * @returns {CropperImage} Returns `this` for chaining.
+     */
+    $resetTransform() {
+      return this.$setTransform([1, 0, 0, 1, 0, 0]);
+    }
+  };
+  CropperImage.$name = CROPPER_IMAGE;
+  CropperImage.$version = "2.0.0";
+
+  // node_modules/@cropper/element-shade/dist/element-shade.esm.raw.js
+  var style4 = `:host{display:block;height:0;left:0;outline:var(--theme-color) solid 1px;position:relative;top:0;width:0}:host([transparent]){outline-color:transparent}`;
+  var canvasCache2 = /* @__PURE__ */ new WeakMap();
+  var CropperShade = class extends CropperElement {
+    constructor() {
+      super(...arguments);
+      this.$onCanvasChange = null;
+      this.$onCanvasActionEnd = null;
+      this.$onCanvasActionStart = null;
+      this.$style = style4;
+      this.x = 0;
+      this.y = 0;
+      this.width = 0;
+      this.height = 0;
+      this.slottable = false;
+      this.themeColor = "rgba(0, 0, 0, 0.65)";
+    }
+    set $canvas(element) {
+      canvasCache2.set(this, element);
+    }
+    get $canvas() {
+      return canvasCache2.get(this);
+    }
+    static get observedAttributes() {
+      return super.observedAttributes.concat([
+        "height",
+        "width",
+        "x",
+        "y"
+      ]);
+    }
+    connectedCallback() {
+      super.connectedCallback();
+      const $canvas = this.closest(this.$getTagNameOf(CROPPER_CANVAS));
+      if ($canvas) {
+        this.$canvas = $canvas;
+        this.style.position = "absolute";
+        const $selection = $canvas.querySelector(this.$getTagNameOf(CROPPER_SELECTION));
+        if ($selection) {
+          this.$onCanvasActionStart = (event3) => {
+            if ($selection.hidden && event3.detail.action === ACTION_SELECT) {
+              this.hidden = false;
+            }
+          };
+          this.$onCanvasActionEnd = (event3) => {
+            if ($selection.hidden && event3.detail.action === ACTION_SELECT) {
+              this.hidden = true;
+            }
+          };
+          this.$onCanvasChange = (event3) => {
+            const { x, y, width, height } = event3.detail;
+            this.$change(x, y, width, height);
+            if ($selection.hidden || x === 0 && y === 0 && width === 0 && height === 0) {
+              this.hidden = true;
+            }
+          };
+          on($canvas, EVENT_ACTION_START, this.$onCanvasActionStart);
+          on($canvas, EVENT_ACTION_END, this.$onCanvasActionEnd);
+          on($canvas, EVENT_CHANGE, this.$onCanvasChange);
+        }
+      }
+      this.$render();
+    }
+    disconnectedCallback() {
+      const { $canvas } = this;
+      if ($canvas) {
+        if (this.$onCanvasActionStart) {
+          off($canvas, EVENT_ACTION_START, this.$onCanvasActionStart);
+          this.$onCanvasActionStart = null;
+        }
+        if (this.$onCanvasActionEnd) {
+          off($canvas, EVENT_ACTION_END, this.$onCanvasActionEnd);
+          this.$onCanvasActionEnd = null;
+        }
+        if (this.$onCanvasChange) {
+          off($canvas, EVENT_CHANGE, this.$onCanvasChange);
+          this.$onCanvasChange = null;
+        }
+      }
+      super.disconnectedCallback();
+    }
+    /**
+     * Changes the position and/or size of the shade.
+     * @param {number} x The new position in the horizontal direction.
+     * @param {number} y The new position in the vertical direction.
+     * @param {number} [width] The new width.
+     * @param {number} [height] The new height.
+     * @returns {CropperShade} Returns `this` for chaining.
+     */
+    $change(x, y, width = this.width, height = this.height) {
+      if (!isNumber(x) || !isNumber(y) || !isNumber(width) || !isNumber(height) || x === this.x && y === this.y && width === this.width && height === this.height) {
+        return this;
+      }
+      if (this.hidden) {
+        this.hidden = false;
+      }
+      this.x = x;
+      this.y = y;
+      this.width = width;
+      this.height = height;
+      return this.$render();
+    }
+    /**
+     * Resets the shade to its initial position and size.
+     * @returns {CropperShade} Returns `this` for chaining.
+     */
+    $reset() {
+      return this.$change(0, 0, 0, 0);
+    }
+    /**
+     * Refreshes the position or size of the shade.
+     * @returns {CropperShade} Returns `this` for chaining.
+     */
+    $render() {
+      return this.$setStyles({
+        transform: `translate(${this.x}px, ${this.y}px)`,
+        width: this.width,
+        height: this.height,
+        outlineWidth: WINDOW.innerWidth
+      });
+    }
+  };
+  CropperShade.$name = CROPPER_SHADE;
+  CropperShade.$version = "2.0.0";
+
+  // node_modules/@cropper/element-handle/dist/element-handle.esm.raw.js
+  var style5 = `:host{background-color:var(--theme-color);display:block}:host([action=move]),:host([action=select]){height:100%;left:0;position:absolute;top:0;width:100%}:host([action=move]){cursor:move}:host([action=select]){cursor:crosshair}:host([action$=-resize]){background-color:transparent;height:15px;position:absolute;width:15px}:host([action$=-resize]):after{background-color:var(--theme-color);content:"";display:block;height:5px;left:50%;position:absolute;top:50%;transform:translate(-50%,-50%);width:5px}:host([action=n-resize]),:host([action=s-resize]){cursor:ns-resize;left:50%;transform:translateX(-50%);width:100%}:host([action=n-resize]){top:-8px}:host([action=s-resize]){bottom:-8px}:host([action=e-resize]),:host([action=w-resize]){cursor:ew-resize;height:100%;top:50%;transform:translateY(-50%)}:host([action=e-resize]){right:-8px}:host([action=w-resize]){left:-8px}:host([action=ne-resize]){cursor:nesw-resize;right:-8px;top:-8px}:host([action=nw-resize]){cursor:nwse-resize;left:-8px;top:-8px}:host([action=se-resize]){bottom:-8px;cursor:nwse-resize;right:-8px}:host([action=se-resize]):after{height:15px;width:15px}@media (pointer:coarse){:host([action=se-resize]):after{height:10px;width:10px}}@media (pointer:fine){:host([action=se-resize]):after{height:5px;width:5px}}:host([action=sw-resize]){bottom:-8px;cursor:nesw-resize;left:-8px}:host([plain]){background-color:transparent}`;
+  var CropperHandle = class extends CropperElement {
+    constructor() {
+      super(...arguments);
+      this.$onCanvasCropEnd = null;
+      this.$onCanvasCropStart = null;
+      this.$style = style5;
+      this.action = ACTION_NONE;
+      this.plain = false;
+      this.slottable = false;
+      this.themeColor = "rgba(51, 153, 255, 0.5)";
+    }
+    static get observedAttributes() {
+      return super.observedAttributes.concat([
+        "action",
+        "plain"
+      ]);
+    }
+  };
+  CropperHandle.$name = CROPPER_HANDLE;
+  CropperHandle.$version = "2.0.0";
+
+  // node_modules/@cropper/element-selection/dist/element-selection.esm.raw.js
+  var style6 = `:host{display:block;left:0;position:relative;right:0}:host([outlined]){outline:1px solid var(--theme-color)}:host([multiple]){outline:1px dashed hsla(0,0%,100%,.5)}:host([multiple]):after{bottom:0;content:"";cursor:pointer;display:block;left:0;position:absolute;right:0;top:0}:host([multiple][active]){outline-color:var(--theme-color);z-index:1}:host([multiple])>*{visibility:hidden}:host([multiple][active])>*{visibility:visible}:host([multiple][active]):after{display:none}`;
+  var canvasCache3 = /* @__PURE__ */ new WeakMap();
+  var CropperSelection = class extends CropperElement {
+    constructor() {
+      super(...arguments);
+      this.$onCanvasAction = null;
+      this.$onCanvasActionStart = null;
+      this.$onCanvasActionEnd = null;
+      this.$onDocumentKeyDown = null;
+      this.$action = "";
+      this.$actionStartTarget = null;
+      this.$changing = false;
+      this.$style = style6;
+      this.$initialSelection = {
+        x: 0,
+        y: 0,
+        width: 0,
+        height: 0
+      };
+      this.x = 0;
+      this.y = 0;
+      this.width = 0;
+      this.height = 0;
+      this.aspectRatio = NaN;
+      this.initialAspectRatio = NaN;
+      this.initialCoverage = NaN;
+      this.active = false;
+      this.linked = false;
+      this.dynamic = false;
+      this.movable = false;
+      this.resizable = false;
+      this.zoomable = false;
+      this.multiple = false;
+      this.keyboard = false;
+      this.outlined = false;
+      this.precise = false;
+    }
+    set $canvas(element) {
+      canvasCache3.set(this, element);
+    }
+    get $canvas() {
+      return canvasCache3.get(this);
+    }
+    static get observedAttributes() {
+      return super.observedAttributes.concat([
+        "active",
+        "aspect-ratio",
+        "dynamic",
+        "height",
+        "initial-aspect-ratio",
+        "initial-coverage",
+        "keyboard",
+        "linked",
+        "movable",
+        "multiple",
+        "outlined",
+        "precise",
+        "resizable",
+        "width",
+        "x",
+        "y",
+        "zoomable"
+      ]);
+    }
+    $propertyChangedCallback(name2, oldValue, newValue) {
+      if (Object.is(newValue, oldValue)) {
+        return;
+      }
+      super.$propertyChangedCallback(name2, oldValue, newValue);
+      switch (name2) {
+        case "x":
+        case "y":
+        case "width":
+        case "height":
+          if (!this.$changing) {
+            this.$nextTick(() => {
+              this.$change(this.x, this.y, this.width, this.height, this.aspectRatio, true);
+            });
+          }
+          break;
+        case "aspectRatio":
+        case "initialAspectRatio":
+          this.$nextTick(() => {
+            this.$initSelection();
+          });
+          break;
+        case "initialCoverage":
+          this.$nextTick(() => {
+            if (isPositiveNumber(newValue) && newValue <= 1) {
+              this.$initSelection(true, true);
+            }
+          });
+          break;
+        case "keyboard":
+          this.$nextTick(() => {
+            if (this.$canvas) {
+              if (newValue) {
+                if (!this.$onDocumentKeyDown) {
+                  this.$onDocumentKeyDown = this.$handleKeyDown.bind(this);
+                  on(this.ownerDocument, EVENT_KEYDOWN, this.$onDocumentKeyDown);
+                }
+              } else if (this.$onDocumentKeyDown) {
+                off(this.ownerDocument, EVENT_KEYDOWN, this.$onDocumentKeyDown);
+                this.$onDocumentKeyDown = null;
+              }
+            }
+          });
+          break;
+        case "multiple":
+          this.$nextTick(() => {
+            if (this.$canvas) {
+              const selections = this.$getSelections();
+              if (newValue) {
+                selections.forEach((selection) => {
+                  selection.active = false;
+                });
+                this.active = true;
+                this.$emit(EVENT_CHANGE, {
+                  x: this.x,
+                  y: this.y,
+                  width: this.width,
+                  height: this.height
+                });
+              } else {
+                this.active = false;
+                selections.slice(1).forEach((selection) => {
+                  this.$removeSelection(selection);
+                });
+              }
+            }
+          });
+          break;
+        case "precise":
+          this.$nextTick(() => {
+            this.$change(this.x, this.y);
+          });
+          break;
+        // Backwards compatible with 2.0.0-rc
+        case "linked":
+          if (newValue) {
+            this.dynamic = true;
+          }
+          break;
+      }
+    }
+    connectedCallback() {
+      super.connectedCallback();
+      const $canvas = this.closest(this.$getTagNameOf(CROPPER_CANVAS));
+      if ($canvas) {
+        this.$canvas = $canvas;
+        this.$setStyles({
+          position: "absolute",
+          transform: `translate(${this.x}px, ${this.y}px)`
+        });
+        if (!this.hidden) {
+          this.$render();
+        }
+        this.$initSelection(true);
+        this.$onCanvasActionStart = this.$handleActionStart.bind(this);
+        this.$onCanvasActionEnd = this.$handleActionEnd.bind(this);
+        this.$onCanvasAction = this.$handleAction.bind(this);
+        on($canvas, EVENT_ACTION_START, this.$onCanvasActionStart);
+        on($canvas, EVENT_ACTION_END, this.$onCanvasActionEnd);
+        on($canvas, EVENT_ACTION, this.$onCanvasAction);
+      } else {
+        this.$render();
+      }
+    }
+    disconnectedCallback() {
+      const { $canvas } = this;
+      if ($canvas) {
+        if (this.$onCanvasActionStart) {
+          off($canvas, EVENT_ACTION_START, this.$onCanvasActionStart);
+          this.$onCanvasActionStart = null;
+        }
+        if (this.$onCanvasActionEnd) {
+          off($canvas, EVENT_ACTION_END, this.$onCanvasActionEnd);
+          this.$onCanvasActionEnd = null;
+        }
+        if (this.$onCanvasAction) {
+          off($canvas, EVENT_ACTION, this.$onCanvasAction);
+          this.$onCanvasAction = null;
+        }
+      }
+      super.disconnectedCallback();
+    }
+    $getSelections() {
+      let selections = [];
+      if (this.parentElement) {
+        selections = Array.from(this.parentElement.querySelectorAll(this.$getTagNameOf(CROPPER_SELECTION)));
+      }
+      return selections;
+    }
+    $initSelection(center = false, resize = false) {
+      const { initialCoverage, parentElement } = this;
+      if (isPositiveNumber(initialCoverage) && parentElement) {
+        const aspectRatio = this.aspectRatio || this.initialAspectRatio;
+        let width = (resize ? 0 : this.width) || parentElement.offsetWidth * initialCoverage;
+        let height = (resize ? 0 : this.height) || parentElement.offsetHeight * initialCoverage;
+        if (isPositiveNumber(aspectRatio)) {
+          ({ width, height } = getAdjustedSizes({ aspectRatio, width, height }));
+        }
+        this.$change(this.x, this.y, width, height);
+        if (center) {
+          this.$center();
+        }
+        this.$initialSelection = {
+          x: this.x,
+          y: this.y,
+          width: this.width,
+          height: this.height
+        };
+      }
+    }
+    $createSelection() {
+      const newSelection = this.cloneNode(true);
+      if (this.hasAttribute("id")) {
+        newSelection.removeAttribute("id");
+      }
+      newSelection.initialCoverage = NaN;
+      this.active = false;
+      if (this.parentElement) {
+        this.parentElement.insertBefore(newSelection, this.nextSibling);
+      }
+      return newSelection;
+    }
+    $removeSelection(selection = this) {
+      if (this.parentElement) {
+        const selections = this.$getSelections();
+        if (selections.length > 1) {
+          const index3 = selections.indexOf(selection);
+          const activeSelection = selections[index3 + 1] || selections[index3 - 1];
+          if (activeSelection) {
+            selection.active = false;
+            this.parentElement.removeChild(selection);
+            activeSelection.active = true;
+            activeSelection.$emit(EVENT_CHANGE, {
+              x: activeSelection.x,
+              y: activeSelection.y,
+              width: activeSelection.width,
+              height: activeSelection.height
+            });
+          }
+        } else {
+          this.$clear();
+        }
+      }
+    }
+    $handleActionStart(event3) {
+      var _a, _b;
+      const relatedTarget = (_b = (_a = event3.detail) === null || _a === void 0 ? void 0 : _a.relatedEvent) === null || _b === void 0 ? void 0 : _b.target;
+      this.$action = "";
+      this.$actionStartTarget = relatedTarget;
+      if (!this.hidden && this.multiple && !this.active && relatedTarget === this && this.parentElement) {
+        this.$getSelections().forEach((selection) => {
+          selection.active = false;
+        });
+        this.active = true;
+        this.$emit(EVENT_CHANGE, {
+          x: this.x,
+          y: this.y,
+          width: this.width,
+          height: this.height
+        });
+      }
+    }
+    $handleAction(event3) {
+      const { currentTarget, detail } = event3;
+      if (!currentTarget || !detail) {
+        return;
+      }
+      const { relatedEvent } = detail;
+      let { action } = detail;
+      if (!action && this.multiple) {
+        action = this.$action || (relatedEvent === null || relatedEvent === void 0 ? void 0 : relatedEvent.target.action);
+        this.$action = action;
+      }
+      if (!action || this.hidden && action !== ACTION_SELECT || this.multiple && !this.active && action !== ACTION_SCALE) {
+        return;
+      }
+      const moveX = detail.endX - detail.startX;
+      const moveY = detail.endY - detail.startY;
+      const { width, height } = this;
+      let { aspectRatio } = this;
+      if (!isPositiveNumber(aspectRatio) && relatedEvent.shiftKey) {
+        aspectRatio = isPositiveNumber(width) && isPositiveNumber(height) ? width / height : 1;
+      }
+      switch (action) {
+        case ACTION_SELECT:
+          if (moveX !== 0 && moveY !== 0) {
+            const { $canvas } = this;
+            const offset3 = getOffset(currentTarget);
+            (this.multiple && !this.hidden ? this.$createSelection() : this).$change(detail.startX - offset3.left, detail.startY - offset3.top, Math.abs(moveX), Math.abs(moveY), aspectRatio);
+            if (moveX < 0) {
+              if (moveY < 0) {
+                action = ACTION_RESIZE_NORTHWEST;
+              } else if (moveY > 0) {
+                action = ACTION_RESIZE_SOUTHWEST;
+              }
+            } else if (moveX > 0) {
+              if (moveY < 0) {
+                action = ACTION_RESIZE_NORTHEAST;
+              } else if (moveY > 0) {
+                action = ACTION_RESIZE_SOUTHEAST;
+              }
+            }
+            if ($canvas) {
+              $canvas.$action = action;
+            }
+          }
+          break;
+        case ACTION_MOVE:
+          if (this.movable && (this.dynamic || this.$actionStartTarget && this.contains(this.$actionStartTarget))) {
+            this.$move(moveX, moveY);
+          }
+          break;
+        case ACTION_SCALE:
+          if (relatedEvent && this.zoomable && (this.dynamic || this.contains(relatedEvent.target))) {
+            const offset3 = getOffset(currentTarget);
+            this.$zoom(detail.scale, relatedEvent.pageX - offset3.left, relatedEvent.pageY - offset3.top);
+          }
+          break;
+        default:
+          this.$resize(action, moveX, moveY, aspectRatio);
+      }
+    }
+    $handleActionEnd() {
+      this.$action = "";
+      this.$actionStartTarget = null;
+    }
+    $handleKeyDown(event3) {
+      if (this.hidden || !this.keyboard || this.multiple && !this.active || event3.defaultPrevented) {
+        return;
+      }
+      const { activeElement } = document;
+      if (activeElement && (["INPUT", "TEXTAREA"].includes(activeElement.tagName) || ["true", "plaintext-only"].includes(activeElement.contentEditable))) {
+        return;
+      }
+      switch (event3.key) {
+        case "Backspace":
+          if (event3.metaKey) {
+            event3.preventDefault();
+            this.$removeSelection();
+          }
+          break;
+        case "Delete":
+          event3.preventDefault();
+          this.$removeSelection();
+          break;
+        // Move to the left
+        case "ArrowLeft":
+          event3.preventDefault();
+          this.$move(-1, 0);
+          break;
+        // Move to the right
+        case "ArrowRight":
+          event3.preventDefault();
+          this.$move(1, 0);
+          break;
+        // Move to the top
+        case "ArrowUp":
+          event3.preventDefault();
+          this.$move(0, -1);
+          break;
+        // Move to the bottom
+        case "ArrowDown":
+          event3.preventDefault();
+          this.$move(0, 1);
+          break;
+        case "+":
+          event3.preventDefault();
+          this.$zoom(0.1);
+          break;
+        case "-":
+          event3.preventDefault();
+          this.$zoom(-0.1);
+          break;
+      }
+    }
+    /**
+     * Aligns the selection to the center of its parent element.
+     * @returns {CropperSelection} Returns `this` for chaining.
+     */
+    $center() {
+      const { parentElement } = this;
+      if (!parentElement) {
+        return this;
+      }
+      const x = (parentElement.offsetWidth - this.width) / 2;
+      const y = (parentElement.offsetHeight - this.height) / 2;
+      return this.$change(x, y);
+    }
+    /**
+     * Moves the selection.
+     * @param {number} x The moving distance in the horizontal direction.
+     * @param {number} [y] The moving distance in the vertical direction.
+     * @returns {CropperSelection} Returns `this` for chaining.
+     */
+    $move(x, y = x) {
+      return this.$moveTo(this.x + x, this.y + y);
+    }
+    /**
+     * Moves the selection to a specific position.
+     * @param {number} x The new position in the horizontal direction.
+     * @param {number} [y] The new position in the vertical direction.
+     * @returns {CropperSelection} Returns `this` for chaining.
+     */
+    $moveTo(x, y = x) {
+      if (!this.movable) {
+        return this;
+      }
+      return this.$change(x, y);
+    }
+    /**
+     * Adjusts the size the selection on a specific side or corner.
+     * @param {string} action Indicates the side or corner to resize.
+     * @param {number} [offsetX] The horizontal offset of the specific side or corner.
+     * @param {number} [offsetY] The vertical offset of the specific side or corner.
+     * @param {number} [aspectRatio] The aspect ratio for computing the new size if it is necessary.
+     * @returns {CropperSelection} Returns `this` for chaining.
+     */
+    $resize(action, offsetX = 0, offsetY = 0, aspectRatio = this.aspectRatio) {
+      if (!this.resizable) {
+        return this;
+      }
+      const hasValidAspectRatio = isPositiveNumber(aspectRatio);
+      const { $canvas } = this;
+      let { x, y, width, height } = this;
+      switch (action) {
+        case ACTION_RESIZE_NORTH:
+          y += offsetY;
+          height -= offsetY;
+          if (height < 0) {
+            action = ACTION_RESIZE_SOUTH;
+            height = -height;
+            y -= height;
+          }
+          if (hasValidAspectRatio) {
+            offsetX = offsetY * aspectRatio;
+            x += offsetX / 2;
+            width -= offsetX;
+            if (width < 0) {
+              width = -width;
+              x -= width;
+            }
+          }
+          break;
+        case ACTION_RESIZE_EAST:
+          width += offsetX;
+          if (width < 0) {
+            action = ACTION_RESIZE_WEST;
+            width = -width;
+            x -= width;
+          }
+          if (hasValidAspectRatio) {
+            offsetY = offsetX / aspectRatio;
+            y -= offsetY / 2;
+            height += offsetY;
+            if (height < 0) {
+              height = -height;
+              y -= height;
+            }
+          }
+          break;
+        case ACTION_RESIZE_SOUTH:
+          height += offsetY;
+          if (height < 0) {
+            action = ACTION_RESIZE_NORTH;
+            height = -height;
+            y -= height;
+          }
+          if (hasValidAspectRatio) {
+            offsetX = offsetY * aspectRatio;
+            x -= offsetX / 2;
+            width += offsetX;
+            if (width < 0) {
+              width = -width;
+              x -= width;
+            }
+          }
+          break;
+        case ACTION_RESIZE_WEST:
+          x += offsetX;
+          width -= offsetX;
+          if (width < 0) {
+            action = ACTION_RESIZE_EAST;
+            width = -width;
+            x -= width;
+          }
+          if (hasValidAspectRatio) {
+            offsetY = offsetX / aspectRatio;
+            y += offsetY / 2;
+            height -= offsetY;
+            if (height < 0) {
+              height = -height;
+              y -= height;
+            }
+          }
+          break;
+        case ACTION_RESIZE_NORTHEAST:
+          if (hasValidAspectRatio) {
+            offsetY = -offsetX / aspectRatio;
+          }
+          y += offsetY;
+          height -= offsetY;
+          width += offsetX;
+          if (width < 0 && height < 0) {
+            action = ACTION_RESIZE_SOUTHWEST;
+            width = -width;
+            height = -height;
+            x -= width;
+            y -= height;
+          } else if (width < 0) {
+            action = ACTION_RESIZE_NORTHWEST;
+            width = -width;
+            x -= width;
+          } else if (height < 0) {
+            action = ACTION_RESIZE_SOUTHEAST;
+            height = -height;
+            y -= height;
+          }
+          break;
+        case ACTION_RESIZE_NORTHWEST:
+          if (hasValidAspectRatio) {
+            offsetY = offsetX / aspectRatio;
+          }
+          x += offsetX;
+          y += offsetY;
+          width -= offsetX;
+          height -= offsetY;
+          if (width < 0 && height < 0) {
+            action = ACTION_RESIZE_SOUTHEAST;
+            width = -width;
+            height = -height;
+            x -= width;
+            y -= height;
+          } else if (width < 0) {
+            action = ACTION_RESIZE_NORTHEAST;
+            width = -width;
+            x -= width;
+          } else if (height < 0) {
+            action = ACTION_RESIZE_SOUTHWEST;
+            height = -height;
+            y -= height;
+          }
+          break;
+        case ACTION_RESIZE_SOUTHEAST:
+          if (hasValidAspectRatio) {
+            offsetY = offsetX / aspectRatio;
+          }
+          width += offsetX;
+          height += offsetY;
+          if (width < 0 && height < 0) {
+            action = ACTION_RESIZE_NORTHWEST;
+            width = -width;
+            height = -height;
+            x -= width;
+            y -= height;
+          } else if (width < 0) {
+            action = ACTION_RESIZE_SOUTHWEST;
+            width = -width;
+            x -= width;
+          } else if (height < 0) {
+            action = ACTION_RESIZE_NORTHEAST;
+            height = -height;
+            y -= height;
+          }
+          break;
+        case ACTION_RESIZE_SOUTHWEST:
+          if (hasValidAspectRatio) {
+            offsetY = -offsetX / aspectRatio;
+          }
+          x += offsetX;
+          width -= offsetX;
+          height += offsetY;
+          if (width < 0 && height < 0) {
+            action = ACTION_RESIZE_NORTHEAST;
+            width = -width;
+            height = -height;
+            x -= width;
+            y -= height;
+          } else if (width < 0) {
+            action = ACTION_RESIZE_SOUTHEAST;
+            width = -width;
+            x -= width;
+          } else if (height < 0) {
+            action = ACTION_RESIZE_NORTHWEST;
+            height = -height;
+            y -= height;
+          }
+          break;
+      }
+      if ($canvas) {
+        $canvas.$setAction(action);
+      }
+      return this.$change(x, y, width, height);
+    }
+    /**
+     * Zooms the selection.
+     * @param {number} scale The zoom factor. Positive numbers for zooming in, and negative numbers for zooming out.
+     * @param {number} [x] The zoom origin in the horizontal, defaults to the center of the selection.
+     * @param {number} [y] The zoom origin in the vertical, defaults to the center of the selection.
+     * @returns {CropperSelection} Returns `this` for chaining.
+     */
+    $zoom(scale, x, y) {
+      if (!this.zoomable || scale === 0) {
+        return this;
+      }
+      if (scale < 0) {
+        scale = 1 / (1 - scale);
+      } else {
+        scale += 1;
+      }
+      const { width, height } = this;
+      const newWidth = width * scale;
+      const newHeight = height * scale;
+      let newX = this.x;
+      let newY = this.y;
+      if (isNumber(x) && isNumber(y)) {
+        newX -= (newWidth - width) * ((x - this.x) / width);
+        newY -= (newHeight - height) * ((y - this.y) / height);
+      } else {
+        newX -= (newWidth - width) / 2;
+        newY -= (newHeight - height) / 2;
+      }
+      return this.$change(newX, newY, newWidth, newHeight);
+    }
+    /**
+     * Changes the position and/or size of the selection.
+     * @param {number} x The new position in the horizontal direction.
+     * @param {number} y The new position in the vertical direction.
+     * @param {number} [width] The new width.
+     * @param {number} [height] The new height.
+     * @param {number} [aspectRatio] The new aspect ratio for this change only.
+     * @param {number} [_force] Force change.
+     * @returns {CropperSelection} Returns `this` for chaining.
+     */
+    $change(x, y, width = this.width, height = this.height, aspectRatio = this.aspectRatio, _force = false) {
+      if (this.$changing || !isNumber(x) || !isNumber(y) || !isNumber(width) || !isNumber(height) || width < 0 || height < 0) {
+        return this;
+      }
+      if (isPositiveNumber(aspectRatio)) {
+        ({ width, height } = getAdjustedSizes({ aspectRatio, width, height }, "cover"));
+      }
+      if (!this.precise) {
+        x = Math.round(x);
+        y = Math.round(y);
+        width = Math.round(width);
+        height = Math.round(height);
+      }
+      if (x === this.x && y === this.y && width === this.width && height === this.height && Object.is(aspectRatio, this.aspectRatio) && !_force) {
+        return this;
+      }
+      if (this.hidden) {
+        this.hidden = false;
+      }
+      if (this.$emit(EVENT_CHANGE, {
+        x,
+        y,
+        width,
+        height
+      }) === false) {
+        return this;
+      }
+      this.$changing = true;
+      this.x = x;
+      this.y = y;
+      this.width = width;
+      this.height = height;
+      this.$changing = false;
+      return this.$render();
+    }
+    /**
+     * Resets the selection to its initial position and size.
+     * @returns {CropperSelection} Returns `this` for chaining.
+     */
+    $reset() {
+      const { x, y, width, height } = this.$initialSelection;
+      return this.$change(x, y, width, height);
+    }
+    /**
+     * Clears the selection.
+     * @returns {CropperSelection} Returns `this` for chaining.
+     */
+    $clear() {
+      this.$change(0, 0, 0, 0, NaN, true);
+      this.hidden = true;
+      return this;
+    }
+    /**
+     * Refreshes the position or size of the selection.
+     * @returns {CropperSelection} Returns `this` for chaining.
+     */
+    $render() {
+      return this.$setStyles({
+        transform: `translate(${this.x}px, ${this.y}px)`,
+        width: this.width,
+        height: this.height
+      });
+    }
+    /**
+     * Generates a real canvas element, with the image (selected area only) draw into if there is one.
+     * @param {object} [options] The available options.
+     * @param {number} [options.width] The width of the canvas.
+     * @param {number} [options.height] The height of the canvas.
+     * @param {Function} [options.beforeDraw] The function called before drawing the image onto the canvas.
+     * @returns {Promise} Returns a promise that resolves to the generated canvas element.
+     */
+    $toCanvas(options) {
+      return new Promise((resolve2, reject) => {
+        if (!this.isConnected) {
+          reject(new Error("The current element is not connected to the DOM."));
+          return;
+        }
+        const canvas = document.createElement("canvas");
+        let { width, height } = this;
+        let scale = 1;
+        if (isPlainObject(options) && (isPositiveNumber(options.width) || isPositiveNumber(options.height))) {
+          ({ width, height } = getAdjustedSizes({
+            aspectRatio: width / height,
+            width: options.width,
+            height: options.height
+          }));
+          scale = width / this.width;
+        }
+        canvas.width = width;
+        canvas.height = height;
+        if (!this.$canvas) {
+          resolve2(canvas);
+          return;
+        }
+        const cropperImage = this.$canvas.querySelector(this.$getTagNameOf(CROPPER_IMAGE));
+        if (!cropperImage) {
+          resolve2(canvas);
+          return;
+        }
+        cropperImage.$ready().then((image) => {
+          const context = canvas.getContext("2d");
+          if (context) {
+            const [a, b, c, d, e, f] = cropperImage.$getTransform();
+            const offsetX = -this.x;
+            const offsetY = -this.y;
+            const translateX = (offsetX * d - c * offsetY) / (a * d - c * b);
+            const translateY = (offsetY * a - b * offsetX) / (a * d - c * b);
+            let newE = a * translateX + c * translateY + e;
+            let newF = b * translateX + d * translateY + f;
+            let destWidth = image.naturalWidth;
+            let destHeight = image.naturalHeight;
+            if (scale !== 1) {
+              newE *= scale;
+              newF *= scale;
+              destWidth *= scale;
+              destHeight *= scale;
+            }
+            const centerX = destWidth / 2;
+            const centerY = destHeight / 2;
+            context.fillStyle = "transparent";
+            context.fillRect(0, 0, width, height);
+            if (isPlainObject(options) && isFunction(options.beforeDraw)) {
+              options.beforeDraw.call(this, context, canvas);
+            }
+            context.save();
+            context.translate(centerX, centerY);
+            context.transform(a, b, c, d, newE, newF);
+            context.translate(-centerX, -centerY);
+            context.drawImage(image, 0, 0, destWidth, destHeight);
+            context.restore();
+          }
+          resolve2(canvas);
+        }).catch(reject);
+      });
+    }
+  };
+  CropperSelection.$name = CROPPER_SELECTION;
+  CropperSelection.$version = "2.0.0";
+
+  // node_modules/@cropper/element-grid/dist/element-grid.esm.raw.js
+  var style7 = `:host{display:flex;flex-direction:column;position:relative;touch-action:none;-webkit-user-select:none;-moz-user-select:none;user-select:none}:host([bordered]){border:1px dashed var(--theme-color)}:host([covered]){bottom:0;left:0;position:absolute;right:0;top:0}:host>span{display:flex;flex:1}:host>span+span{border-top:1px dashed var(--theme-color)}:host>span>span{flex:1}:host>span>span+span{border-left:1px dashed var(--theme-color)}`;
+  var CropperGrid = class extends CropperElement {
+    constructor() {
+      super(...arguments);
+      this.$style = style7;
+      this.bordered = false;
+      this.columns = 3;
+      this.covered = false;
+      this.rows = 3;
+      this.slottable = false;
+      this.themeColor = "rgba(238, 238, 238, 0.5)";
+    }
+    static get observedAttributes() {
+      return super.observedAttributes.concat([
+        "bordered",
+        "columns",
+        "covered",
+        "rows"
+      ]);
+    }
+    $propertyChangedCallback(name2, oldValue, newValue) {
+      if (Object.is(newValue, oldValue)) {
+        return;
+      }
+      super.$propertyChangedCallback(name2, oldValue, newValue);
+      if (name2 === "rows" || name2 === "columns") {
+        this.$nextTick(() => {
+          this.$render();
+        });
+      }
+    }
+    connectedCallback() {
+      super.connectedCallback();
+      this.$render();
+    }
+    $render() {
+      const shadow = this.$getShadowRoot();
+      const fragment = document.createDocumentFragment();
+      for (let i = 0; i < this.rows; i += 1) {
+        const row = document.createElement("span");
+        row.setAttribute("role", "row");
+        for (let j = 0; j < this.columns; j += 1) {
+          const column = document.createElement("span");
+          column.setAttribute("role", "gridcell");
+          row.appendChild(column);
+        }
+        fragment.appendChild(row);
+      }
+      if (shadow) {
+        shadow.innerHTML = "";
+        shadow.appendChild(fragment);
+      }
+    }
+  };
+  CropperGrid.$name = CROPPER_GIRD;
+  CropperGrid.$version = "2.0.0";
+
+  // node_modules/@cropper/element-crosshair/dist/element-crosshair.esm.raw.js
+  var style8 = `:host{display:inline-block;height:1em;position:relative;touch-action:none;-webkit-user-select:none;-moz-user-select:none;user-select:none;vertical-align:middle;width:1em}:host:after,:host:before{background-color:var(--theme-color);content:"";display:block;position:absolute}:host:before{height:1px;left:0;top:50%;transform:translateY(-50%);width:100%}:host:after{height:100%;left:50%;top:0;transform:translateX(-50%);width:1px}:host([centered]){left:50%;position:absolute;top:50%;transform:translate(-50%,-50%)}`;
+  var CropperCrosshair = class extends CropperElement {
+    constructor() {
+      super(...arguments);
+      this.$style = style8;
+      this.centered = false;
+      this.slottable = false;
+      this.themeColor = "rgba(238, 238, 238, 0.5)";
+    }
+    static get observedAttributes() {
+      return super.observedAttributes.concat([
+        "centered"
+      ]);
+    }
+  };
+  CropperCrosshair.$name = CROPPER_CROSSHAIR;
+  CropperCrosshair.$version = "2.0.0";
+
+  // node_modules/@cropper/element-viewer/dist/element-viewer.esm.raw.js
+  var style9 = `:host{display:block;height:100%;overflow:hidden;position:relative;width:100%}`;
+  var canvasCache4 = /* @__PURE__ */ new WeakMap();
+  var imageCache = /* @__PURE__ */ new WeakMap();
+  var selectionCache = /* @__PURE__ */ new WeakMap();
+  var sourceImageCache = /* @__PURE__ */ new WeakMap();
+  var RESIZE_BOTH = "both";
+  var RESIZE_HORIZONTAL = "horizontal";
+  var RESIZE_VERTICAL = "vertical";
+  var RESIZE_NONE = "none";
+  var CropperViewer = class extends CropperElement {
+    constructor() {
+      super(...arguments);
+      this.$onSelectionChange = null;
+      this.$onSourceImageLoad = null;
+      this.$onSourceImageTransform = null;
+      this.$scale = 1;
+      this.$style = style9;
+      this.resize = RESIZE_VERTICAL;
+      this.selection = "";
+      this.slottable = false;
+    }
+    set $image(element) {
+      imageCache.set(this, element);
+    }
+    get $image() {
+      return imageCache.get(this);
+    }
+    set $sourceImage(element) {
+      sourceImageCache.set(this, element);
+    }
+    get $sourceImage() {
+      return sourceImageCache.get(this);
+    }
+    set $canvas(element) {
+      canvasCache4.set(this, element);
+    }
+    get $canvas() {
+      return canvasCache4.get(this);
+    }
+    set $selection(element) {
+      selectionCache.set(this, element);
+    }
+    get $selection() {
+      return selectionCache.get(this);
+    }
+    static get observedAttributes() {
+      return super.observedAttributes.concat([
+        "resize",
+        "selection"
+      ]);
+    }
+    connectedCallback() {
+      super.connectedCallback();
+      let $selection = null;
+      if (this.selection) {
+        $selection = this.ownerDocument.querySelector(this.selection);
+      } else {
+        $selection = this.closest(this.$getTagNameOf(CROPPER_SELECTION));
+      }
+      if (isElement3($selection)) {
+        this.$selection = $selection;
+        this.$onSelectionChange = this.$handleSelectionChange.bind(this);
+        on($selection, EVENT_CHANGE, this.$onSelectionChange);
+        const $canvas = $selection.closest(this.$getTagNameOf(CROPPER_CANVAS));
+        if ($canvas) {
+          this.$canvas = $canvas;
+          const $sourceImage = $canvas.querySelector(this.$getTagNameOf(CROPPER_IMAGE));
+          if ($sourceImage) {
+            this.$sourceImage = $sourceImage;
+            this.$image = $sourceImage.cloneNode(true);
+            this.$getShadowRoot().appendChild(this.$image);
+            this.$onSourceImageLoad = this.$handleSourceImageLoad.bind(this);
+            this.$onSourceImageTransform = this.$handleSourceImageTransform.bind(this);
+            on($sourceImage.$image, EVENT_LOAD, this.$onSourceImageLoad);
+            on($sourceImage, EVENT_TRANSFORM, this.$onSourceImageTransform);
+          }
+        }
+        this.$render();
+      }
+    }
+    disconnectedCallback() {
+      const { $selection, $sourceImage } = this;
+      if ($selection && this.$onSelectionChange) {
+        off($selection, EVENT_CHANGE, this.$onSelectionChange);
+        this.$onSelectionChange = null;
+      }
+      if ($sourceImage && this.$onSourceImageLoad) {
+        off($sourceImage.$image, EVENT_LOAD, this.$onSourceImageLoad);
+        this.$onSourceImageLoad = null;
+      }
+      if ($sourceImage && this.$onSourceImageTransform) {
+        off($sourceImage, EVENT_TRANSFORM, this.$onSourceImageTransform);
+        this.$onSourceImageTransform = null;
+      }
+      super.disconnectedCallback();
+    }
+    $handleSelectionChange(event3) {
+      this.$render(event3.detail);
+    }
+    $handleSourceImageLoad() {
+      const { $image, $sourceImage } = this;
+      const oldSrc = $image.getAttribute("src");
+      const newSrc = $sourceImage.getAttribute("src");
+      if (newSrc && newSrc !== oldSrc) {
+        $image.setAttribute("src", newSrc);
+        $image.$ready(() => {
+          setTimeout(() => {
+            this.$render();
+          }, 50);
+        });
+      }
+    }
+    $handleSourceImageTransform(event3) {
+      this.$render(void 0, event3.detail.matrix);
+    }
+    $render(selection, matrix) {
+      const { $canvas, $selection } = this;
+      if (!selection && !$selection.hidden) {
+        selection = $selection;
+      }
+      if (!selection || selection.x === 0 && selection.y === 0 && selection.width === 0 && selection.height === 0) {
+        selection = {
+          x: 0,
+          y: 0,
+          width: $canvas.offsetWidth,
+          height: $canvas.offsetHeight
+        };
+      }
+      const { x, y, width, height } = selection;
+      const styles = {};
+      const { clientWidth, clientHeight } = this;
+      let newWidth = clientWidth;
+      let newHeight = clientHeight;
+      let scale = NaN;
+      switch (this.resize) {
+        case RESIZE_BOTH:
+          scale = 1;
+          newWidth = width;
+          newHeight = height;
+          styles.width = width;
+          styles.height = height;
+          break;
+        case RESIZE_HORIZONTAL:
+          scale = height > 0 ? clientHeight / height : 0;
+          newWidth = width * scale;
+          styles.width = newWidth;
+          break;
+        case RESIZE_VERTICAL:
+          scale = width > 0 ? clientWidth / width : 0;
+          newHeight = height * scale;
+          styles.height = newHeight;
+          break;
+        case RESIZE_NONE:
+        default:
+          if (clientWidth > 0) {
+            scale = width > 0 ? clientWidth / width : 0;
+          } else if (clientHeight > 0) {
+            scale = height > 0 ? clientHeight / height : 0;
+          }
+      }
+      this.$scale = scale;
+      this.$setStyles(styles);
+      if (this.$sourceImage) {
+        this.$transformImageByOffset(matrix !== null && matrix !== void 0 ? matrix : this.$sourceImage.$getTransform(), -x, -y);
+      }
+    }
+    $transformImageByOffset(matrix, x, y) {
+      const { $image, $scale, $sourceImage } = this;
+      if ($sourceImage && $image && $scale >= 0) {
+        const [a, b, c, d, e, f] = matrix;
+        const translateX = (x * d - c * y) / (a * d - c * b);
+        const translateY = (y * a - b * x) / (a * d - c * b);
+        const newE = a * translateX + c * translateY + e;
+        const newF = b * translateX + d * translateY + f;
+        $image.$ready((image) => {
+          this.$setStyles.call($image, {
+            width: image.naturalWidth * $scale,
+            height: image.naturalHeight * $scale
+          });
+        });
+        $image.$setTransform(a, b, c, d, newE * $scale, newF * $scale);
+      }
+    }
+  };
+  CropperViewer.$name = CROPPER_VIEWER;
+  CropperViewer.$version = "2.0.0";
+
+  // node_modules/cropperjs/dist/cropper.esm.raw.js
+  var DEFAULT_TEMPLATE = '<cropper-canvas background><cropper-image rotatable scalable skewable translatable></cropper-image><cropper-shade hidden></cropper-shade><cropper-handle action="select" plain></cropper-handle><cropper-selection initial-coverage="0.5" movable resizable><cropper-grid role="grid" bordered covered></cropper-grid><cropper-crosshair centered></cropper-crosshair><cropper-handle action="move" theme-color="rgba(255, 255, 255, 0.35)"></cropper-handle><cropper-handle action="n-resize"></cropper-handle><cropper-handle action="e-resize"></cropper-handle><cropper-handle action="s-resize"></cropper-handle><cropper-handle action="w-resize"></cropper-handle><cropper-handle action="ne-resize"></cropper-handle><cropper-handle action="nw-resize"></cropper-handle><cropper-handle action="se-resize"></cropper-handle><cropper-handle action="sw-resize"></cropper-handle></cropper-selection></cropper-canvas>';
+  var REGEXP_ALLOWED_ELEMENTS = /^img|canvas$/;
+  var REGEXP_BLOCKED_TAGS = /<(\/?(?:script|style)[^>]*)>/gi;
+  var DEFAULT_OPTIONS2 = {
+    template: DEFAULT_TEMPLATE
+  };
+  CropperCanvas.$define();
+  CropperCrosshair.$define();
+  CropperGrid.$define();
+  CropperHandle.$define();
+  CropperImage.$define();
+  CropperSelection.$define();
+  CropperShade.$define();
+  CropperViewer.$define();
+  var Cropper = class {
+    constructor(element, options) {
+      this.options = DEFAULT_OPTIONS2;
+      if (isString(element)) {
+        element = document.querySelector(element);
+      }
+      if (!isElement3(element) || !REGEXP_ALLOWED_ELEMENTS.test(element.localName)) {
+        throw new Error("The first argument is required and must be an <img> or <canvas> element.");
+      }
+      this.element = element;
+      options = Object.assign(Object.assign({}, DEFAULT_OPTIONS2), options);
+      this.options = options;
+      const { ownerDocument } = element;
+      let { container } = options;
+      if (container) {
+        if (isString(container)) {
+          container = ownerDocument.querySelector(container);
+        }
+        if (!isElement3(container)) {
+          throw new Error("The `container` option must be an element or a valid selector.");
+        }
+      }
+      if (!isElement3(container)) {
+        if (element.parentElement) {
+          container = element.parentElement;
+        } else {
+          container = ownerDocument.body;
+        }
+      }
+      this.container = container;
+      const tagName2 = element.localName;
+      let src = "";
+      if (tagName2 === "img") {
+        ({ src } = element);
+      } else if (tagName2 === "canvas" && window.HTMLCanvasElement) {
+        src = element.toDataURL();
+      }
+      const { template } = options;
+      if (template && isString(template)) {
+        const templateElement = document.createElement("template");
+        const documentFragment = document.createDocumentFragment();
+        templateElement.innerHTML = template.replace(REGEXP_BLOCKED_TAGS, "&lt;$1&gt;");
+        documentFragment.appendChild(templateElement.content);
+        Array.from(documentFragment.querySelectorAll(CROPPER_IMAGE)).forEach((image) => {
+          image.setAttribute("src", src);
+          image.setAttribute("alt", element.alt || "The image to crop");
+        });
+        if (element.parentElement) {
+          element.style.display = "none";
+          container.insertBefore(documentFragment, element.nextSibling);
+        } else {
+          container.appendChild(documentFragment);
+        }
+      }
+    }
+    getCropperCanvas() {
+      return this.container.querySelector(CROPPER_CANVAS);
+    }
+    getCropperImage() {
+      return this.container.querySelector(CROPPER_IMAGE);
+    }
+    getCropperSelection() {
+      return this.container.querySelector(CROPPER_SELECTION);
+    }
+    getCropperSelections() {
+      return this.container.querySelectorAll(CROPPER_SELECTION);
+    }
+  };
+  Cropper.version = "2.0.0";
+
   // src/pages/lastfm_settings.js
+  var cropper;
   function bleh_native_settings() {
     let no_data = page.structure.container.querySelector(":scope > .no-data-message");
     if (no_data) {
@@ -25557,17 +28153,18 @@
     if (value.startsWith("she/") || value.startsWith("he/") || value.startsWith("they/") || value.startsWith("it/") || value.startsWith("xe/") || value.startsWith("any/")) return true;
     return false;
   }
-  function avatar2(token) {
+  function avatar2(token = "") {
+    if (!token) token = page.token;
+    else page.token = token;
     page.state.avatar_changer = dialog({
       id: "edit_avatar",
       title: tl(trans.change_avatar),
       body: html.node`
             <div class="forms">
                 <form action="${root}settings" name="avatar-form" method="post" enctype="multipart/form-data">
-                    <input type="hidden" name="csrfmiddlewaretoken" value="${token}">
+                    <input type="hidden" name="csrfmiddlewaretoken" value=${page.token}>
                     <div class="form-group form-group--avatar js-form-group upload-avatar">
                         <div class="js-form-group-controls form-group-controls">
-                            <img class="preview">
                             <span class="btn-secondary btn primary btn-file" data-kate-processed="true">
                                 ${tl(trans.upload)}
                                 <input type="file" onchange=${() => update_avatar(event)} name="avatar" data-require="components/file-input" data-file-input-copy="${tl(trans.upload)}" data-no-file-copy="No file chosen" accept="image/*" required="" id="id_avatar" data-kate-processed="true">
@@ -25580,7 +28177,7 @@
                     <input type="hidden" value="avatar" name="submit">
                 </form>
                 <form action="${root}settings/avatar/delete" method="post">
-                    <input type="hidden" name="csrfmiddlewaretoken" value="${token}">
+                    <input type="hidden" name="csrfmiddlewaretoken" value=${page.token}>
                     <div class="form-group delete-avatar">
                         <button class="mimic-link image-upload-remove" type="submit" value="delete-avatar" name="delete-avatar">${tl(trans.delete)}</button>
                     </div>
@@ -25594,29 +28191,79 @@
         `
     });
     page.state.avatar_changer.querySelector('[name="avatar-form"]').onsubmit = finish_saving_avatar;
-    page.state.avatar_changer_image = page.state.avatar_changer.querySelector("img");
-    page.state.avatar_changer_button = page.state.avatar_changer.querySelector(".btn-file");
-    page.state.avatar_changer_save = page.state.avatar_changer.querySelector(".modal-footer .primary");
-    console.info(page.structure.dialogs);
-  }
-  function update_avatar(event3) {
-    let reader = new FileReader();
-    reader.onload = function() {
-      page.state.avatar_changer_image.src = reader.result;
-      page.state.avatar_changer_button.setAttribute("data-has-file", "true");
-      page.state.avatar_changer_save.removeAttribute("disabled");
-    };
-    reader.readAsDataURL(event3.target.files[0]);
-  }
-  function save_avatar() {
-    page.state.avatar_changer.querySelector("#avatar_saver").click();
-  }
-  function finish_saving_avatar() {
-    page.state.avatar_changer.setAttribute("data-loading", "true");
-    page.state.avatar_changer.querySelectorAll(".bleh-modal-body button").forEach((button) => {
-      button.setAttribute("disabled", "true");
-      button.removeAttribute("onclick");
-    });
+    const file_button = page.state.avatar_changer.querySelector(".btn-file");
+    const save_button = page.state.avatar_changer.querySelector(".modal-footer .primary");
+    let form;
+    function update_avatar(e) {
+      console.info(e);
+      if (!e.target.files || !e.target.files[0]) return;
+      form = page.state.avatar_changer.querySelector(".bleh-modal-body");
+      let reader = new FileReader();
+      reader.onload = function() {
+        crop(reader.result);
+        save_button.removeAttribute("disabled");
+      };
+      reader.readAsDataURL(e.target.files[0]);
+    }
+    function save_avatar() {
+      page.state.avatar_changer.querySelector("#avatar_saver").click();
+    }
+    function finish_saving_avatar() {
+      page.state.avatar_changer.setAttribute("data-loading", "true");
+      page.state.avatar_changer.querySelectorAll(".bleh-modal-body button").forEach((button) => {
+        button.setAttribute("disabled", "true");
+        button.removeAttribute("onclick");
+      });
+    }
+    function crop(file) {
+      let crop_image;
+      let save;
+      const crop_dialog = dialog({
+        id: "crop",
+        title: tl(trans.change_avatar),
+        body: html.node`
+                <div class="crop">
+                    <img src=${file} ref=${(el) => crop_image = el}>
+                </div>
+                <div class="modal-footer">
+                    <button class="see-more cancel" onclick=${() => {
+          if (cropper && cropper.destroy) cropper.destroy();
+          cropper = null;
+          avatar2();
+        }}>${tl(trans.cancel)}</button>
+                    <div class="fill"></div>
+                    <button class="btn primary save" onclick=${() => {
+          if (!cropper) return;
+          cropper.getCropperSelection().$toCanvas().then((canvas) => {
+            canvas.toBlob((blob) => {
+              const file2 = new File([blob], "avatar.jpg", { type: "image/png" });
+              const inner_form = form.querySelector("form");
+              inner_form.style.display = "none";
+              crop_dialog.querySelector(".bleh-modal-body").appendChild(inner_form);
+              const file_input = inner_form.querySelector('input[type="file"]');
+              const data_transfer = new DataTransfer();
+              data_transfer.items.add(file2);
+              file_input.files = data_transfer.files;
+              inner_form.querySelector("#avatar_saver").click();
+            }, "image/png");
+          });
+        }} ref=${(el) => save = el} disabled>${tl(trans.save)}</button>
+                </div>
+            `
+      });
+      crop_image.onload = () => {
+        if (cropper && cropper.destroy) cropper.destroy();
+        cropper = new Cropper(crop_image, {
+          dragMode: "move",
+          zoomable: true,
+          scalable: true,
+          responsive: true,
+          guides: true,
+          background: false
+        });
+        save.removeAttribute("disabled");
+      };
+    }
   }
   function patch_settings_privacy_tab() {
     let privacy_panel = document.getElementById("privacy");
@@ -25682,9 +28329,14 @@
     render(panel, html`
         <h4>${tl(trans.block_list)}</h4>
         <div class="user-top-panel">
-            <div class="user-top-avatar user-top-avatar-side-left"><div class="bleh-icon"></div></div>
-            <img class="user-top-avatar user-top-avatar-main" src=${auth.avatar.replace("avatar42s", "avatar300s")} alt=${auth.name}>
-            <div class="user-top-avatar user-top-avatar-side-right"><div class="bleh-icon"></div></div>
+            <div class="user-top-avatar user-top-avatar-side-left">
+                <div class="bleh-icon"></div>
+            </div>
+            <img class="user-top-avatar user-top-avatar-main" src=${auth.avatar.replace("avatar42s", "avatar300s")}
+                 alt=${auth.name}>
+            <div class="user-top-avatar user-top-avatar-side-right">
+                <div class="bleh-icon"></div>
+            </div>
         </div>
         <div class="setting" data-type="text">
             <div class="heading">
@@ -26468,7 +29120,7 @@
                 </div>
             </div>
             <div class="modal-footer">
-                <button class="see-more cancel" onclick=${() => dialog_rm2({ id: "submit_scrobble" })}>
+                <button class="see-more cancel" onclick=${() => dialog_rm({ id: "submit_scrobble" })}>
                     ${tl(trans.cancel)}
                 </button>
                 <div class="fill" />
@@ -26520,7 +29172,7 @@
             type: "error",
             persist: true
           });
-          dialog_rm2({ id: "submit_scrobble" });
+          dialog_rm({ id: "submit_scrobble" });
           return;
         }
         notify({
@@ -26529,7 +29181,7 @@
           body: params.track,
           type: "success"
         });
-        dialog_rm2({ id: "submit_scrobble" });
+        dialog_rm({ id: "submit_scrobble" });
         if (func) func();
       }}>
                     ${tl(trans.new)}
@@ -27483,7 +30135,7 @@
     if (!form) return;
     if (page.token == "") page.token = form.querySelector('[name="csrfmiddlewaretoken"]').getAttribute("value");
     let timeframe = form.querySelector('[name="chart_range_top_artists"]');
-    let style = form.querySelector('[name="chart_style_top_artists"]');
+    let style10 = form.querySelector('[name="chart_style_top_artists"]');
     let grid_length = form.querySelector('[name="artists_image_grid_length"]');
     let chartlist_length = form.querySelector('[name="artists_chartlist_length"]');
     form.classList = "";
@@ -27500,7 +30152,7 @@
                 <div class="heading">
                     <h5>${tl(trans.chart_style)}</h5>
                 </div>
-                ${select(select_prepare(style), style.value, "chart_style_top_artists")}
+                ${select(select_prepare(style10), style10.value, "chart_style_top_artists")}
             </div>
             <div class="setting hide-if-artist-list" data-type="select">
                 <div class="heading">
@@ -27567,7 +30219,7 @@
     if (!form) return;
     if (page.token == "") page.token = form.querySelector('[name="csrfmiddlewaretoken"]').getAttribute("value");
     let timeframe = form.querySelector('[name="chart_range_top_albums"]');
-    let style = form.querySelector('[name="chart_style_top_albums"]');
+    let style10 = form.querySelector('[name="chart_style_top_albums"]');
     let grid_length = form.querySelector('[name="albums_image_grid_length"]');
     let chartlist_length = form.querySelector('[name="albums_chartlist_length"]');
     form.classList = "";
@@ -27584,7 +30236,7 @@
                 <div class="heading">
                     <h5>${tl(trans.chart_style)}</h5>
                 </div>
-                ${select(select_prepare(style), style.value, "chart_style_top_albums")}
+                ${select(select_prepare(style10), style10.value, "chart_style_top_albums")}
             </div>
             <div class="setting hide-if-album-list" data-type="select">
                 <div class="heading">
@@ -28783,7 +31435,7 @@
       const pos = typeToPos[type];
       if (type === "era") {
         filled[pos] = value;
-      } else if (!isUndefined(pos)) {
+      } else if (!isUndefined2(pos)) {
         filled[pos] = parseInt(value, 10);
       }
     }
@@ -29539,17 +32191,17 @@
   // node_modules/luxon/src/impl/zoneUtil.js
   function normalizeZone(input2, defaultZone2) {
     let offset3;
-    if (isUndefined(input2) || input2 === null) {
+    if (isUndefined2(input2) || input2 === null) {
       return defaultZone2;
     } else if (input2 instanceof Zone) {
       return input2;
-    } else if (isString(input2)) {
+    } else if (isString2(input2)) {
       const lowered = input2.toLowerCase();
       if (lowered === "default") return defaultZone2;
       else if (lowered === "local" || lowered === "system") return SystemZone.instance;
       else if (lowered === "utc" || lowered === "gmt") return FixedOffsetZone.utcInstance;
       else return FixedOffsetZone.parseSpecifier(lowered) || IANAZone.create(input2);
-    } else if (isNumber(input2)) {
+    } else if (isNumber2(input2)) {
       return FixedOffsetZone.instance(input2);
     } else if (typeof input2 === "object" && "offset" in input2 && typeof input2.offset === "function") {
       return input2;
@@ -29879,17 +32531,17 @@
     return { year, month, day, ...timeObject(ordinalData) };
   }
   function usesLocalWeekValues(obj, loc) {
-    const hasLocaleWeekData = !isUndefined(obj.localWeekday) || !isUndefined(obj.localWeekNumber) || !isUndefined(obj.localWeekYear);
+    const hasLocaleWeekData = !isUndefined2(obj.localWeekday) || !isUndefined2(obj.localWeekNumber) || !isUndefined2(obj.localWeekYear);
     if (hasLocaleWeekData) {
-      const hasIsoWeekData = !isUndefined(obj.weekday) || !isUndefined(obj.weekNumber) || !isUndefined(obj.weekYear);
+      const hasIsoWeekData = !isUndefined2(obj.weekday) || !isUndefined2(obj.weekNumber) || !isUndefined2(obj.weekYear);
       if (hasIsoWeekData) {
         throw new ConflictingSpecificationError(
           "Cannot mix locale-based week fields with ISO-based week fields"
         );
       }
-      if (!isUndefined(obj.localWeekday)) obj.weekday = obj.localWeekday;
-      if (!isUndefined(obj.localWeekNumber)) obj.weekNumber = obj.localWeekNumber;
-      if (!isUndefined(obj.localWeekYear)) obj.weekYear = obj.localWeekYear;
+      if (!isUndefined2(obj.localWeekday)) obj.weekday = obj.localWeekday;
+      if (!isUndefined2(obj.localWeekNumber)) obj.weekNumber = obj.localWeekNumber;
+      if (!isUndefined2(obj.localWeekYear)) obj.weekYear = obj.localWeekYear;
       delete obj.localWeekday;
       delete obj.localWeekNumber;
       delete obj.localWeekYear;
@@ -29948,16 +32600,16 @@
   }
 
   // node_modules/luxon/src/impl/util.js
-  function isUndefined(o) {
+  function isUndefined2(o) {
     return typeof o === "undefined";
   }
-  function isNumber(o) {
+  function isNumber2(o) {
     return typeof o === "number";
   }
   function isInteger(o) {
     return typeof o === "number" && o % 1 === 0;
   }
-  function isString(o) {
+  function isString2(o) {
     return typeof o === "string";
   }
   function isDate(o) {
@@ -30001,7 +32653,7 @@
       return a;
     }, {});
   }
-  function hasOwnProperty2(obj, prop) {
+  function hasOwnProperty3(obj, prop) {
     return Object.prototype.hasOwnProperty.call(obj, prop);
   }
   function validateWeekSettings(settings2) {
@@ -30037,21 +32689,21 @@
     return padded;
   }
   function parseInteger(string) {
-    if (isUndefined(string) || string === null || string === "") {
+    if (isUndefined2(string) || string === null || string === "") {
       return void 0;
     } else {
       return parseInt(string, 10);
     }
   }
   function parseFloating(string) {
-    if (isUndefined(string) || string === null || string === "") {
+    if (isUndefined2(string) || string === null || string === "") {
       return void 0;
     } else {
       return parseFloat(string);
     }
   }
   function parseMillis(fraction) {
-    if (isUndefined(fraction) || fraction === null || fraction === "") {
+    if (isUndefined2(fraction) || fraction === null || fraction === "") {
       return void 0;
     } else {
       const f = parseFloat("0." + fraction) * 1e3;
@@ -30152,7 +32804,7 @@
   function normalizeObject(obj, normalizer) {
     const normalized = {};
     for (const u in obj) {
-      if (hasOwnProperty2(obj, u)) {
+      if (hasOwnProperty3(obj, u)) {
         const v = obj[u];
         if (v === void 0 || v === null) continue;
         normalized[normalizer(u)] = asNumber(v);
@@ -30685,7 +33337,7 @@
   var sqlTimeExtensionRegex = RegExp(`(?: ${sqlTimeRegex.source})?`);
   function int(match2, pos, fallback) {
     const m = match2[pos];
-    return isUndefined(m) ? fallback : parseInteger(m);
+    return isUndefined2(m) ? fallback : parseInteger(m);
   }
   function extractISOYmd(match2, cursor) {
     const item = {
@@ -30981,7 +33633,7 @@
   function normalizeValues(matrix, vals) {
     const factor = durationToMillis(matrix, vals) < 0 ? -1 : 1;
     orderedUnits.reduceRight((previous, current) => {
-      if (!isUndefined(vals[current])) {
+      if (!isUndefined2(vals[current])) {
         if (previous) {
           const previousVal = vals[previous] * factor;
           const conv = matrix[current][previous];
@@ -30995,7 +33647,7 @@
       }
     }, null);
     orderedUnits.reduce((previous, current) => {
-      if (!isUndefined(vals[current])) {
+      if (!isUndefined2(vals[current])) {
         if (previous) {
           const fraction = vals[previous] % 1;
           vals[previous] -= fraction;
@@ -31089,7 +33741,7 @@
      * @return {Duration}
      */
     static fromDurationLike(durationLike) {
-      if (isNumber(durationLike)) {
+      if (isNumber2(durationLike)) {
         return _Duration.fromMillis(durationLike);
       } else if (_Duration.isDuration(durationLike)) {
         return durationLike;
@@ -31268,7 +33920,7 @@
       const showZeros = opts.showZeros !== false;
       const l2 = orderedUnits.map((unit) => {
         const val = this.values[unit];
-        if (isUndefined(val) || val === 0 && !showZeros) {
+        if (isUndefined2(val) || val === 0 && !showZeros) {
           return null;
         }
         return this.loc.numberFormatter({ style: "unit", unitDisplay: "long", ...opts, unit: unit.slice(0, -1) }).format(val);
@@ -31390,7 +34042,7 @@
       if (!this.isValid) return this;
       const dur = _Duration.fromDurationLike(duration), result = {};
       for (const k of orderedUnits) {
-        if (hasOwnProperty2(dur.values, k) || hasOwnProperty2(this.values, k)) {
+        if (hasOwnProperty3(dur.values, k) || hasOwnProperty3(this.values, k)) {
           result[k] = dur.get(k) + this.get(k);
         }
       }
@@ -31517,13 +34169,13 @@
             own += this.matrix[ak][k] * accumulated[ak];
             accumulated[ak] = 0;
           }
-          if (isNumber(vals[k])) {
+          if (isNumber2(vals[k])) {
             own += vals[k];
           }
           const i = Math.trunc(own);
           built[k] = i;
           accumulated[k] = (own * 1e3 - i * 1e3) / 1e3;
-        } else if (isNumber(vals[k])) {
+        } else if (isNumber2(vals[k])) {
           accumulated[k] = vals[k];
         }
       }
@@ -32689,7 +35341,7 @@
         val: isSpace ? " " : value
       };
     }
-    const style = formatOpts[type];
+    const style10 = formatOpts[type];
     let actualType = type;
     if (type === "hour") {
       if (formatOpts.hour12 != null) {
@@ -32706,7 +35358,7 @@
     }
     let val = partTypeStyleToTokenVal[actualType];
     if (typeof val === "object") {
-      val = val[style];
+      val = val[style10];
     }
     if (val) {
       return {
@@ -32726,7 +35378,7 @@
       const all = {};
       let matchIndex = 1;
       for (const i in handlers) {
-        if (hasOwnProperty2(handlers, i)) {
+        if (hasOwnProperty3(handlers, i)) {
           const h = handlers[i], groups = h.groups ? h.groups + 1 : 1;
           if (!h.literal && h.token) {
             all[h.token.val[0]] = h.deser(matches.slice(matchIndex, matchIndex + groups));
@@ -32775,19 +35427,19 @@
     };
     let zone = null;
     let specificOffset;
-    if (!isUndefined(matches.z)) {
+    if (!isUndefined2(matches.z)) {
       zone = IANAZone.create(matches.z);
     }
-    if (!isUndefined(matches.Z)) {
+    if (!isUndefined2(matches.Z)) {
       if (!zone) {
         zone = new FixedOffsetZone(matches.Z);
       }
       specificOffset = matches.Z;
     }
-    if (!isUndefined(matches.q)) {
+    if (!isUndefined2(matches.q)) {
       matches.M = (matches.q - 1) * 3 + 1;
     }
-    if (!isUndefined(matches.h)) {
+    if (!isUndefined2(matches.h)) {
       if (matches.h < 12 && matches.a === 1) {
         matches.h += 12;
       } else if (matches.h === 12 && matches.a === 0) {
@@ -32797,7 +35449,7 @@
     if (matches.G === 0 && matches.y) {
       matches.y = -matches.y;
     }
-    if (!isUndefined(matches.u)) {
+    if (!isUndefined2(matches.u)) {
       matches.S = parseMillis(matches.u);
     }
     const vals = Object.keys(matches).reduce((r, k) => {
@@ -32848,7 +35500,7 @@
         return { input: input2, tokens: this.tokens, invalidReason: this.invalidReason };
       } else {
         const [rawMatches, matches] = match(input2, this.regex, this.handlers), [result, zone, specificOffset] = matches ? dateTimeFromMatches(matches) : [null, null, void 0];
-        if (hasOwnProperty2(matches, "a") && hasOwnProperty2(matches, "H")) {
+        if (hasOwnProperty3(matches, "a") && hasOwnProperty3(matches, "H")) {
           throw new ConflictingSpecificationError(
             "Can't include meridiem when specifying 24-hour format"
           );
@@ -33168,9 +35820,9 @@
     }
     const loc = Locale.fromObject(opts);
     let ts, o;
-    if (!isUndefined(obj.year)) {
+    if (!isUndefined2(obj.year)) {
       for (const u of orderedUnits2) {
-        if (isUndefined(obj[u])) {
+        if (isUndefined2(obj[u])) {
           obj[u] = defaultUnitValues[u];
         }
       }
@@ -33186,7 +35838,7 @@
     return new DateTime({ ts, zone, loc, o });
   }
   function diffRelative(start2, end2, opts) {
-    const round3 = isUndefined(opts.round) ? true : opts.round, rounding = isUndefined(opts.rounding) ? "trunc" : opts.rounding, format = (c, unit) => {
+    const round3 = isUndefined2(opts.round) ? true : opts.round, rounding = isUndefined2(opts.rounding) ? "trunc" : opts.rounding, format = (c, unit) => {
       c = roundTo(c, round3 || opts.calendary ? 0 : 2, opts.calendary ? "round" : rounding);
       const formatter = end2.loc.clone(opts).relFormatter(opts);
       return formatter.format(c, unit);
@@ -33229,14 +35881,14 @@
     constructor(config) {
       const zone = config.zone || Settings.defaultZone;
       let invalid = config.invalid || (Number.isNaN(config.ts) ? new Invalid("invalid input") : null) || (!zone.isValid ? unsupportedZone(zone) : null);
-      this.ts = isUndefined(config.ts) ? Settings.now() : config.ts;
+      this.ts = isUndefined2(config.ts) ? Settings.now() : config.ts;
       let c = null, o = null;
       if (!invalid) {
         const unchanged = config.old && config.old.ts === this.ts && config.old.zone.equals(zone);
         if (unchanged) {
           [c, o] = [config.old.c, config.old.o];
         } else {
-          const ot = isNumber(config.o) && !config.old ? config.o : zone.offset(this.ts);
+          const ot = isNumber2(config.o) && !config.old ? config.o : zone.offset(this.ts);
           c = tsToObj(this.ts, ot);
           invalid = Number.isNaN(c.year) ? new Invalid("invalid input") : null;
           c = invalid ? null : c;
@@ -33352,7 +36004,7 @@
      * @return {DateTime}
      */
     static fromMillis(milliseconds, options = {}) {
-      if (!isNumber(milliseconds)) {
+      if (!isNumber2(milliseconds)) {
         throw new InvalidArgumentError(
           `fromMillis requires a numerical input, but received a ${typeof milliseconds} with value ${milliseconds}`
         );
@@ -33378,7 +36030,7 @@
      * @return {DateTime}
      */
     static fromSeconds(seconds, options = {}) {
-      if (!isNumber(seconds)) {
+      if (!isNumber2(seconds)) {
         throw new InvalidArgumentError("fromSeconds requires a numerical input");
       } else {
         return new _DateTime({
@@ -33430,7 +36082,7 @@
       const loc = Locale.fromObject(opts);
       const normalized = normalizeObject(obj, normalizeUnitWithLocalWeeks);
       const { minDaysInFirstWeek, startOfWeek } = usesLocalWeekValues(normalized, loc);
-      const tsNow = Settings.now(), offsetProvis = !isUndefined(opts.specificOffset) ? opts.specificOffset : zoneToUse.offset(tsNow), containsOrdinal = !isUndefined(normalized.ordinal), containsGregorYear = !isUndefined(normalized.year), containsGregorMD = !isUndefined(normalized.month) || !isUndefined(normalized.day), containsGregor = containsGregorYear || containsGregorMD, definiteWeekDef = normalized.weekYear || normalized.weekNumber;
+      const tsNow = Settings.now(), offsetProvis = !isUndefined2(opts.specificOffset) ? opts.specificOffset : zoneToUse.offset(tsNow), containsOrdinal = !isUndefined2(normalized.ordinal), containsGregorYear = !isUndefined2(normalized.year), containsGregorMD = !isUndefined2(normalized.month) || !isUndefined2(normalized.day), containsGregor = containsGregorYear || containsGregorMD, definiteWeekDef = normalized.weekYear || normalized.weekNumber;
       if ((containsGregor || containsOrdinal) && definiteWeekDef) {
         throw new ConflictingSpecificationError(
           "Can't mix weekYear/weekNumber units with year/month/day or ordinals"
@@ -33456,7 +36108,7 @@
       let foundFirst = false;
       for (const u of units) {
         const v = normalized[u];
-        if (!isUndefined(v)) {
+        if (!isUndefined2(v)) {
           foundFirst = true;
         } else if (foundFirst) {
           normalized[u] = defaultValues[u];
@@ -33560,7 +36212,7 @@
      * @return {DateTime}
      */
     static fromFormat(text3, fmt, opts = {}) {
-      if (isUndefined(text3) || isUndefined(fmt)) {
+      if (isUndefined2(text3) || isUndefined2(fmt)) {
         throw new InvalidArgumentError("fromFormat requires an input string and a format");
       }
       const { locale = null, numberingSystem = null } = opts, localeToUse = Locale.fromOpts({
@@ -34128,7 +36780,7 @@
       if (!this.isValid) return this;
       const normalized = normalizeObject(values, normalizeUnitWithLocalWeeks);
       const { minDaysInFirstWeek, startOfWeek } = usesLocalWeekValues(normalized, this.loc);
-      const settingWeekStuff = !isUndefined(normalized.weekYear) || !isUndefined(normalized.weekNumber) || !isUndefined(normalized.weekday), containsOrdinal = !isUndefined(normalized.ordinal), containsGregorYear = !isUndefined(normalized.year), containsGregorMD = !isUndefined(normalized.month) || !isUndefined(normalized.day), containsGregor = containsGregorYear || containsGregorMD, definiteWeekDef = normalized.weekYear || normalized.weekNumber;
+      const settingWeekStuff = !isUndefined2(normalized.weekYear) || !isUndefined2(normalized.weekNumber) || !isUndefined2(normalized.weekday), containsOrdinal = !isUndefined2(normalized.ordinal), containsGregorYear = !isUndefined2(normalized.year), containsGregorMD = !isUndefined2(normalized.month) || !isUndefined2(normalized.day), containsGregor = containsGregorYear || containsGregorMD, definiteWeekDef = normalized.weekYear || normalized.weekNumber;
       if ((containsGregor || containsOrdinal) && definiteWeekDef) {
         throw new ConflictingSpecificationError(
           "Can't mix weekYear/weekNumber units with year/month/day or ordinals"
@@ -34144,11 +36796,11 @@
           minDaysInFirstWeek,
           startOfWeek
         );
-      } else if (!isUndefined(normalized.ordinal)) {
+      } else if (!isUndefined2(normalized.ordinal)) {
         mixed = ordinalToGregorian({ ...gregorianToOrdinal(this.c), ...normalized });
       } else {
         mixed = { ...this.toObject(), ...normalized };
-        if (isUndefined(normalized.day)) {
+        if (isUndefined2(normalized.day)) {
           mixed.day = Math.min(daysInMonth(mixed.year, mixed.month), mixed.day);
         }
       }
@@ -34779,7 +37431,7 @@
      * @returns {DateTime}
      */
     static fromFormatParser(text3, formatParser, opts = {}) {
-      if (isUndefined(text3) || isUndefined(formatParser)) {
+      if (isUndefined2(text3) || isUndefined2(formatParser)) {
         throw new InvalidArgumentError(
           "fromFormatParser requires an input string and a format parser"
         );
@@ -34967,7 +37619,7 @@
   function friendlyDateTime(dateTimeish) {
     if (DateTime.isDateTime(dateTimeish)) {
       return dateTimeish;
-    } else if (dateTimeish && dateTimeish.valueOf && isNumber(dateTimeish.valueOf())) {
+    } else if (dateTimeish && dateTimeish.valueOf && isNumber2(dateTimeish.valueOf())) {
       return DateTime.fromJSDate(dateTimeish);
     } else if (dateTimeish && typeof dateTimeish === "object") {
       return DateTime.fromObject(dateTimeish);
@@ -35434,6 +38086,11 @@
                     Tidal
                 </a>
             </li>
+            <li>
+                <a class="play-this-track-playlink music-link play-this-track-playlink--qobuz" href="https://www.qobuz.com/search/tracks/${sanitise(page.sister, "%20")}%20${sanitise(page.name, "%20")}" target="_blank">
+                    Qobuz
+                </a>
+            </li>
         `);
     } else {
       let header = document.createElement("div");
@@ -35457,10 +38114,13 @@
                 <a class="play-this-track-playlink music-link play-this-track-playlink--discogs" href="https://www.discogs.com/search?q=${sanitise(page.sister)}+${sanitise(page.name)}&type=all" target="_blank">
                     Discogs
                 </a>
+                <a class="play-this-track-playlink music-link play-this-track-playlink--qobuz" href="https://www.qobuz.com/search/albums/${sanitise(page.sister, " ")}%20${sanitise(page.name, " ")}" target="_blank">
+                    Qobuz
+                </a>
                 <a class="play-this-track-playlink music-link play-this-track-playlink--aoty" href="https://www.albumoftheyear.org/search/?q=${sanitise(page.sister)}+${sanitise(page.name)}" target="_blank">
                     AOTY
                 </a>
-                <a class="play-this-track-playlink music-link play-this-track-playlink--rym" href="https://rateyourmusic.com/search?searchterm=${sanitise(page.sister, " ")} ${sanitise(page.name, " ")}" target="_blank">
+                <a class="play-this-track-playlink music-link play-this-track-playlink--rym" href="https://rateyourmusic.com/search?searchterm=${sanitise(page.sister, "%20")} ${sanitise(page.name, "%20")}" target="_blank">
                     RYM
                 </a>
                 <a class="play-this-track-playlink music-link play-this-track-playlink--genius" href="https://genius.com/search?q=${sanitise(page.sister)}+${sanitise(page.name)}" target="_blank">
@@ -35483,6 +38143,9 @@
                 </a>
                 <a class="play-this-track-playlink music-link play-this-track-playlink--discogs" href="https://www.discogs.com/search?q=${sanitise(page.name)}&type=artist" target="_blank">
                     Discogs
+                </a>
+                <a class="play-this-track-playlink music-link play-this-track-playlink--qobuz" href="https://www.qobuz.com/search/artists/${sanitise(page.name, "%20")}" target="_blank">
+                    Qobuz
                 </a>
                 <a class="play-this-track-playlink music-link play-this-track-playlink--aoty" href="https://www.albumoftheyear.org/search/?q=${sanitise(page.name)}" target="_blank">
                     AOTY
@@ -36246,7 +38909,7 @@
     const MATHML_NAMESPACE = "http://www.w3.org/1998/Math/MathML";
     const SVG_NAMESPACE = "http://www.w3.org/2000/svg";
     const HTML_NAMESPACE = "http://www.w3.org/1999/xhtml";
-    let NAMESPACE = HTML_NAMESPACE;
+    let NAMESPACE2 = HTML_NAMESPACE;
     let IS_EMPTY_INPUT = false;
     let ALLOWED_NAMESPACES = null;
     const DEFAULT_ALLOWED_NAMESPACES = addToSet({}, [MATHML_NAMESPACE, SVG_NAMESPACE, HTML_NAMESPACE], stringToString);
@@ -36299,7 +38962,7 @@
       KEEP_CONTENT = cfg.KEEP_CONTENT !== false;
       IN_PLACE = cfg.IN_PLACE || false;
       IS_ALLOWED_URI$1 = cfg.ALLOWED_URI_REGEXP || IS_ALLOWED_URI;
-      NAMESPACE = cfg.NAMESPACE || HTML_NAMESPACE;
+      NAMESPACE2 = cfg.NAMESPACE || HTML_NAMESPACE;
       MATHML_TEXT_INTEGRATION_POINTS = cfg.MATHML_TEXT_INTEGRATION_POINTS || MATHML_TEXT_INTEGRATION_POINTS;
       HTML_INTEGRATION_POINTS = cfg.HTML_INTEGRATION_POINTS || HTML_INTEGRATION_POINTS;
       CUSTOM_ELEMENT_HANDLING = cfg.CUSTOM_ELEMENT_HANDLING || {};
@@ -36400,7 +39063,7 @@
       let parent = getParentNode2(element);
       if (!parent || !parent.tagName) {
         parent = {
-          namespaceURI: NAMESPACE,
+          namespaceURI: NAMESPACE2,
           tagName: "template"
         };
       }
@@ -36487,18 +39150,18 @@
         const matches = stringMatch(dirty, /^[\r\n\t ]+/);
         leadingWhitespace = matches && matches[0];
       }
-      if (PARSER_MEDIA_TYPE === "application/xhtml+xml" && NAMESPACE === HTML_NAMESPACE) {
+      if (PARSER_MEDIA_TYPE === "application/xhtml+xml" && NAMESPACE2 === HTML_NAMESPACE) {
         dirty = '<html xmlns="http://www.w3.org/1999/xhtml"><head></head><body>' + dirty + "</body></html>";
       }
       const dirtyPayload = trustedTypesPolicy ? trustedTypesPolicy.createHTML(dirty) : dirty;
-      if (NAMESPACE === HTML_NAMESPACE) {
+      if (NAMESPACE2 === HTML_NAMESPACE) {
         try {
           doc = new DOMParser2().parseFromString(dirtyPayload, PARSER_MEDIA_TYPE);
         } catch (_) {
         }
       }
       if (!doc || !doc.documentElement) {
-        doc = implementation.createDocument(NAMESPACE, "template", null);
+        doc = implementation.createDocument(NAMESPACE2, "template", null);
         try {
           doc.documentElement.innerHTML = IS_EMPTY_INPUT ? emptyHTML : dirtyPayload;
         } catch (_) {
@@ -36508,7 +39171,7 @@
       if (dirty && leadingWhitespace) {
         body.insertBefore(document2.createTextNode(leadingWhitespace), body.childNodes[0] || null);
       }
-      if (NAMESPACE === HTML_NAMESPACE) {
+      if (NAMESPACE2 === HTML_NAMESPACE) {
         return getElementsByTagName.call(doc, WHOLE_DOCUMENT ? "html" : "body")[0];
       }
       return WHOLE_DOCUMENT ? doc.documentElement : body;
@@ -37247,15 +39910,15 @@
     xhr.open("GET", url, true);
     xhr.onload = function() {
       log(`style responded ${xhr.status}`, "style");
-      let style = html.node`
+      let style10 = html.node`
             <style>${this.response}</style>
         `;
-      document.documentElement.appendChild(style);
-      style.onload = () => {
+      document.documentElement.appendChild(style10);
+      style10.onload = () => {
         let theme_version2 = getComputedStyle(document.body).getPropertyValue("--version-build").replaceAll("'", "").replaceAll('"', "");
         if (!allow_incompatible && theme_version2 != version.build) {
           log("denied loading, incompatible version", "style", "info", { theme: theme_version2, script: version.build });
-          document.documentElement.removeChild(style);
+          document.documentElement.removeChild(style10);
           return;
         }
         if (delete_old_style)
@@ -37265,7 +39928,7 @@
         chart_reflow();
         if (reload_on_finish) invoke_reload();
       };
-      style.onerror = () => {
+      style10.onerror = () => {
         log("error loading", "style", "error");
       };
       localStorage.setItem("bleh_cached_style", this.response);
@@ -37350,7 +40013,7 @@
     });
   }
   function ignore_update() {
-    dialog_rm2({
+    dialog_rm({
       id: "bleh_update"
     });
   }
@@ -37997,19 +40660,19 @@
           body: html.node`
                                         <div class="generic-table-list badge-list">
                                             ${badges ? badges.map((badge) => {
-            let style;
+            let style10;
             let classname = "";
             if (badge.icon && badge.hue && badge.sat && badge.lit) {
-              style = `--mask: url(${badge.icon}); --hue: ${badge.hue}; --sat: ${badge.sat}; --lit: ${badge.lit}`;
+              style10 = `--mask: url(${badge.icon}); --hue: ${badge.hue}; --sat: ${badge.sat}; --lit: ${badge.lit}`;
             } else {
               classname = `user-status--bleh-${badge.type} user-status--bleh-user-${auth.name}`;
             }
             return html.node`
                                                     <div class="generic-table-list-entry badge-list-entry">
-                                                        <div class="icon-container colourful ${classname}" style=${style}>
+                                                        <div class="icon-container colourful ${classname}" style=${style10}>
                                                             <div class="bleh-icon" style="--icon: var(--mask)" />
                                                         </div>
-                                                        <div class="name colourful ${classname}" style=${style}>
+                                                        <div class="name colourful ${classname}" style=${style10}>
                                                             ${badge.name}
                                                         </div>
                                                         <div class="text">
@@ -39101,7 +41764,7 @@
       body: html.node`
             <textarea class="modal-text" id="bleh--profile-note" placeholder=${tl(trans.anything_you_can_imagine)}>${profile_notes[user]}</textarea>
             <div class="modal-footer">
-                <button class="see-more cancel" onclick=${() => dialog_rm2({ id: "edit_profile_note" })}>
+                <button class="see-more cancel" onclick=${() => dialog_rm({ id: "edit_profile_note" })}>
                     ${tl(trans.cancel)}
                 </button>
                 <div class="fill"></div>
@@ -39118,7 +41781,7 @@
     profile_notes[user] = value_to_save;
     document.getElementById(`profile-note-row-preview--${user}`).textContent = value_to_save;
     localStorage.setItem("bleh_profile_notes", JSON.stringify(profile_notes));
-    dialog_rm2({ id: "edit_profile_note" });
+    dialog_rm({ id: "edit_profile_note" });
   }
   function prepare_corrections_page() {
     let corrections_table_artist = document.getElementById("corrections-artist");
@@ -39221,7 +41884,7 @@
       let try_parse = JSON.parse(requesting_setting);
       localStorage.setItem("bleh", requesting_setting);
       load_settings();
-      dialog_rm2({
+      dialog_rm({
         id: "import_settings"
       });
     } catch (e) {
@@ -39271,7 +41934,7 @@
     for (var member in settings) delete settings[member];
     Object.assign(settings, create_settings_template());
     load_settings(true);
-    dialog_rm2({
+    dialog_rm({
       id: "reset_settings"
     });
   };
@@ -43828,11 +46491,11 @@
       items.forEach((item) => {
         let bg = item.querySelector(".music-featured-item-background");
         if (!bg) return;
-        let style = bg.style.getPropertyValue("background-image");
-        if (!style)
-          style = bg.style.getPropertyValue("background");
-        let cover_substr = style.indexOf("url");
-        let cover = style.substring(cover_substr);
+        let style10 = bg.style.getPropertyValue("background-image");
+        if (!style10)
+          style10 = bg.style.getPropertyValue("background");
+        let cover_substr = style10.indexOf("url");
+        let cover = style10.substring(cover_substr);
         bg.style.setProperty("background", cover);
       });
     }
@@ -52437,7 +55100,7 @@
     }
     return false;
   }
-  function isObject(value) {
+  function isObject2(value) {
     return value !== null && Object.prototype.toString.call(value) === "[object Object]";
   }
   function isNumberFinite(value) {
@@ -52469,7 +55132,7 @@
           fn2.call(thisArg, loopable[i], i);
         }
       }
-    } else if (isObject(loopable)) {
+    } else if (isObject2(loopable)) {
       keys2 = Object.keys(loopable);
       len = keys2.length;
       for (i = 0; i < len; i++) {
@@ -52495,7 +55158,7 @@
     if (isArray2(source)) {
       return source.map(clone5);
     }
-    if (isObject(source)) {
+    if (isObject2(source)) {
       const target = /* @__PURE__ */ Object.create(null);
       const keys2 = Object.keys(source);
       const klen = keys2.length;
@@ -52520,7 +55183,7 @@
     }
     const tval = target[key];
     const sval = source[key];
-    if (isObject(tval) && isObject(sval)) {
+    if (isObject2(tval) && isObject2(sval)) {
       merge(tval, sval, options);
     } else {
       target[key] = clone5(sval);
@@ -52531,7 +55194,7 @@
       source
     ];
     const ilen = sources.length;
-    if (!isObject(target)) {
+    if (!isObject2(target)) {
       return target;
     }
     options = options || {};
@@ -52539,7 +55202,7 @@
     let current;
     for (let i = 0; i < ilen; ++i) {
       current = sources[i];
-      if (!isObject(current)) {
+      if (!isObject2(current)) {
         continue;
       }
       const keys2 = Object.keys(current);
@@ -52560,7 +55223,7 @@
     }
     const tval = target[key];
     const sval = source[key];
-    if (isObject(tval) && isObject(sval)) {
+    if (isObject2(tval) && isObject2(sval)) {
       mergeIf(tval, sval);
     } else if (!Object.prototype.hasOwnProperty.call(target, key)) {
       target[key] = clone5(sval);
@@ -52608,7 +55271,7 @@
     return str.charAt(0).toUpperCase() + str.slice(1);
   }
   var defined = (value) => typeof value !== "undefined";
-  var isFunction = (value) => typeof value === "function";
+  var isFunction2 = (value) => typeof value === "function";
   var setsEqual = (a, b) => {
     if (a.size !== b.size) {
       return false;
@@ -52663,7 +55326,7 @@
   function isNonPrimitive(n2) {
     return typeof n2 === "symbol" || typeof n2 === "object" && n2 !== null && !(Symbol.toPrimitive in n2 || "toString" in n2 || "valueOf" in n2);
   }
-  function isNumber2(n2) {
+  function isNumber3(n2) {
     return !isNonPrimitive(n2) && !isNaN(parseFloat(n2)) && isFinite(n2);
   }
   function almostWhole(x, epsilon) {
@@ -53334,7 +55997,7 @@
           get() {
             const local = this[privateName];
             const target = targetScopeObject[targetName];
-            if (isObject(local)) {
+            if (isObject2(local)) {
               return Object.assign({}, target, local);
             }
             return valueOrDefault(local, target);
@@ -53438,17 +56101,17 @@
   }
   function drawPointLegend(ctx, options, x, y, w) {
     let type, xOffset, yOffset, size, cornerRadius, width, xOffsetW, yOffsetW;
-    const style = options.pointStyle;
+    const style10 = options.pointStyle;
     const rotation = options.rotation;
     const radius = options.radius;
     let rad = (rotation || 0) * RAD_PER_DEG;
-    if (style && typeof style === "object") {
-      type = style.toString();
+    if (style10 && typeof style10 === "object") {
+      type = style10.toString();
       if (type === "[object HTMLImageElement]" || type === "[object HTMLCanvasElement]") {
         ctx.save();
         ctx.translate(x, y);
         ctx.rotate(rad);
-        ctx.drawImage(style, -style.width / 2, -style.height / 2, style.width, style.height);
+        ctx.drawImage(style10, -style10.width / 2, -style10.height / 2, style10.width, style10.height);
         ctx.restore();
         return;
       }
@@ -53457,7 +56120,7 @@
       return;
     }
     ctx.beginPath();
-    switch (style) {
+    switch (style10) {
       // Default includes circle
       default:
         if (w) {
@@ -53693,9 +56356,9 @@
   var numberOrZero = (v) => +v || 0;
   function _readValueToProps(value, props) {
     const ret = {};
-    const objProps = isObject(props);
+    const objProps = isObject2(props);
     const keys2 = objProps ? Object.keys(props) : props;
-    const read2 = isObject(value) ? objProps ? (prop) => valueOrDefault(value[prop], value[props[prop]]) : (prop) => value[prop] : () => value;
+    const read2 = isObject2(value) ? objProps ? (prop) => valueOrDefault(value[prop], value[props[prop]]) : (prop) => value[prop] : () => value;
     for (const prop of keys2) {
       ret[prop] = numberOrZero(read2(prop));
     }
@@ -53730,16 +56393,16 @@
     if (typeof size === "string") {
       size = parseInt(size, 10);
     }
-    let style = valueOrDefault(options.style, fallback.style);
-    if (style && !("" + style).match(FONT_STYLE)) {
-      console.warn('Invalid font style specified: "' + style + '"');
-      style = void 0;
+    let style10 = valueOrDefault(options.style, fallback.style);
+    if (style10 && !("" + style10).match(FONT_STYLE)) {
+      console.warn('Invalid font style specified: "' + style10 + '"');
+      style10 = void 0;
     }
     const font = {
       family: valueOrDefault(options.family, fallback.family),
       lineHeight: toLineHeight(valueOrDefault(options.lineHeight, fallback.lineHeight), size),
       size,
-      style,
+      style: style10,
       weight: valueOrDefault(options.weight, fallback.weight),
       string: ""
     };
@@ -53926,12 +56589,12 @@
       allKeys: _allKeys,
       scriptable: _scriptable,
       indexable: _indexable,
-      isScriptable: isFunction(_scriptable) ? _scriptable : () => _scriptable,
-      isIndexable: isFunction(_indexable) ? _indexable : () => _indexable
+      isScriptable: isFunction2(_scriptable) ? _scriptable : () => _scriptable,
+      isIndexable: isFunction2(_indexable) ? _indexable : () => _indexable
     };
   }
   var readKey = (prefix, name2) => prefix ? prefix + _capitalize(name2) : name2;
-  var needsSubResolver = (prop, value) => isObject(value) && prop !== "adapters" && (Object.getPrototypeOf(value) === null || value.constructor === Object);
+  var needsSubResolver = (prop, value) => isObject2(value) && prop !== "adapters" && (Object.getPrototypeOf(value) === null || value.constructor === Object);
   function _cached(target, prop, resolve2) {
     if (Object.prototype.hasOwnProperty.call(target, prop) || prop === "constructor") {
       return target[prop];
@@ -53943,7 +56606,7 @@
   function _resolveWithContext(target, prop, receiver) {
     const { _proxy, _context, _subProxy, _descriptors: descriptors2 } = target;
     let value = _proxy[prop];
-    if (isFunction(value) && descriptors2.isScriptable(prop)) {
+    if (isFunction2(value) && descriptors2.isScriptable(prop)) {
       value = _resolveScriptable(prop, value, target, receiver);
     }
     if (isArray2(value) && value.length) {
@@ -53971,7 +56634,7 @@
     const { _proxy, _context, _subProxy, _descriptors: descriptors2 } = target;
     if (typeof _context.index !== "undefined" && isIndexable(prop)) {
       return value[_context.index % value.length];
-    } else if (isObject(value[0])) {
+    } else if (isObject2(value[0])) {
       const arr = value;
       const scopes = _proxy._scopes.filter((s2) => s2 !== arr);
       value = [];
@@ -53983,7 +56646,7 @@
     return value;
   }
   function resolveFallback(fallback, prop, value) {
-    return isFunction(fallback) ? fallback(prop, value) : fallback;
+    return isFunction2(fallback) ? fallback(prop, value) : fallback;
   }
   var getScope = (key, parent) => key === true ? parent : typeof key === "string" ? resolveObjectKey(parent, key) : void 0;
   function addScopes(set2, parentScopes, key, parentFallback, value) {
@@ -54036,7 +56699,7 @@
       parent[prop] = {};
     }
     const target = parent[prop];
-    if (isArray2(target) && isObject(value)) {
+    if (isArray2(target) && isObject2(value)) {
       return value;
     }
     return target || {};
@@ -54270,12 +56933,12 @@
     "bottom",
     "left"
   ];
-  function getPositionedStyle(styles, style, suffix) {
+  function getPositionedStyle(styles, style10, suffix) {
     const result = {};
     suffix = suffix ? "-" + suffix : "";
     for (let i = 0; i < 4; i++) {
       const pos = positions[i];
-      result[pos] = parseFloat(styles[style + "-" + pos + suffix]) || 0;
+      result[pos] = parseFloat(styles[style10 + "-" + pos + suffix]) || 0;
     }
     result.width = result.left + result.right;
     result.height = result.top + result.bottom;
@@ -54308,10 +56971,10 @@
       return event3;
     }
     const { canvas, currentDevicePixelRatio } = chart;
-    const style = getComputedStyle3(canvas);
-    const borderBox = style.boxSizing === "border-box";
-    const paddings = getPositionedStyle(style, "padding");
-    const borders = getPositionedStyle(style, "border", "width");
+    const style10 = getComputedStyle3(canvas);
+    const borderBox = style10.boxSizing === "border-box";
+    const paddings = getPositionedStyle(style10, "padding");
+    const borders = getPositionedStyle(style10, "border", "width");
     const { x, y, box } = getCanvasPosition(event3, canvas);
     const xOffset = paddings.left + (box && borders.left);
     const yOffset = paddings.top + (box && borders.top);
@@ -54352,15 +57015,15 @@
   }
   var round1 = (v) => Math.round(v * 10) / 10;
   function getMaximumSize(canvas, bbWidth, bbHeight, aspectRatio) {
-    const style = getComputedStyle3(canvas);
-    const margins = getPositionedStyle(style, "margin");
-    const maxWidth = parseMaxStyle(style.maxWidth, canvas, "clientWidth") || INFINITY;
-    const maxHeight = parseMaxStyle(style.maxHeight, canvas, "clientHeight") || INFINITY;
+    const style10 = getComputedStyle3(canvas);
+    const margins = getPositionedStyle(style10, "margin");
+    const maxWidth = parseMaxStyle(style10.maxWidth, canvas, "clientWidth") || INFINITY;
+    const maxHeight = parseMaxStyle(style10.maxHeight, canvas, "clientHeight") || INFINITY;
     const containerSize = getContainerSize(canvas, bbWidth, bbHeight);
     let { width, height } = containerSize;
-    if (style.boxSizing === "content-box") {
-      const borders = getPositionedStyle(style, "border", "width");
-      const paddings = getPositionedStyle(style, "padding");
+    if (style10.boxSizing === "content-box") {
+      const borders = getPositionedStyle(style10, "border", "width");
+      const paddings = getPositionedStyle(style10, "padding");
       width -= paddings.width + borders.width;
       height -= paddings.height + borders.height;
     }
@@ -54495,14 +57158,14 @@
     return rtl ? getRightToLeftAdapter(rectX, width) : getLeftToRightAdapter();
   }
   function overrideTextDirection(ctx, direction) {
-    let style, original;
+    let style10, original;
     if (direction === "ltr" || direction === "rtl") {
-      style = ctx.canvas.style;
+      style10 = ctx.canvas.style;
       original = [
-        style.getPropertyValue("direction"),
-        style.getPropertyPriority("direction")
+        style10.getPropertyValue("direction"),
+        style10.getPropertyPriority("direction")
       ];
-      style.setProperty("direction", direction, "important");
+      style10.setProperty("direction", direction, "important");
       ctx.prevTextDirection = original;
     }
   }
@@ -54526,12 +57189,12 @@
       normalize: (x) => x
     };
   }
-  function normalizeSegment({ start: start2, end: end2, count, loop, style }) {
+  function normalizeSegment({ start: start2, end: end2, count, loop, style: style10 }) {
     return {
       start: start2 % count,
       end: end2 % count,
       loop: loop && (end2 - start2 + 1) % count === 0,
-      style
+      style: style10
     };
   }
   function getSegment(segment, points, bounds) {
@@ -54572,7 +57235,7 @@
     const { property, start: startBound, end: endBound } = bounds;
     const count = points.length;
     const { compare: compare2, between, normalize } = propertyFn(property);
-    const { start: start2, end: end2, loop, style } = getSegment(segment, points, bounds);
+    const { start: start2, end: end2, loop, style: style10 } = getSegment(segment, points, bounds);
     const result = [];
     let inside = false;
     let subStart = null;
@@ -54600,7 +57263,7 @@
           end: i,
           loop,
           count,
-          style
+          style: style10
         }));
         subStart = null;
       }
@@ -54613,7 +57276,7 @@
         end: end2,
         loop,
         count,
-        style
+        style: style10
       }));
     }
     return result;
@@ -54751,10 +57414,10 @@
     for (const segment of segments) {
       start2 = spanGaps ? start2 : segment.start;
       let prev = points[start2 % count];
-      let style;
+      let style10;
       for (i = start2 + 1; i <= segment.end; i++) {
         const pt = points[i % count];
-        style = readStyle(segmentOptions.setContext(createContext(chartContext, {
+        style10 = readStyle(segmentOptions.setContext(createContext(chartContext, {
           type: "segment",
           p0: prev,
           p1: pt,
@@ -54762,11 +57425,11 @@
           p1DataIndex: i % count,
           datasetIndex
         })));
-        if (styleChanged(style, prevStyle)) {
+        if (styleChanged(style10, prevStyle)) {
           addStyle(start2, i - 1, segment.loop, prevStyle);
         }
         prev = pt;
-        prevStyle = style;
+        prevStyle = style10;
       }
       if (start2 < i - 1) {
         addStyle(start2, i - 1, segment.loop, prevStyle);
@@ -54785,7 +57448,7 @@
       borderColor: options.borderColor
     };
   }
-  function styleChanged(style, prevStyle) {
+  function styleChanged(style10, prevStyle) {
     if (!prevStyle) {
       return false;
     }
@@ -54799,7 +57462,7 @@
       }
       return cache2.indexOf(value);
     };
-    return JSON.stringify(style, replacer) !== JSON.stringify(prevStyle, replacer);
+    return JSON.stringify(style10, replacer) !== JSON.stringify(prevStyle, replacer);
   }
   function getSizeForArea(scale, chartArea, field) {
     return scale.options.clip ? scale[field] : chartArea[field];
@@ -55087,14 +57750,14 @@
       this.configure(config);
     }
     configure(config) {
-      if (!isObject(config)) {
+      if (!isObject2(config)) {
         return;
       }
       const animationOptions = Object.keys(defaults.animation);
       const animatedProps = this._properties;
       Object.getOwnPropertyNames(config).forEach((key) => {
         const cfg = config[key];
-        if (!isObject(cfg)) {
+        if (!isObject2(cfg)) {
           return;
         }
         const resolved = {};
@@ -55226,7 +57889,7 @@
   }
   function toClip(value) {
     let t, r, b, l2;
-    if (isObject(value)) {
+    if (isObject2(value)) {
       t = value.top;
       r = value.right;
       b = value.bottom;
@@ -55480,7 +58143,7 @@
       const dataset = this.getDataset();
       const data2 = dataset.data || (dataset.data = []);
       const _data = this._data;
-      if (isObject(data2)) {
+      if (isObject2(data2)) {
         const meta = this._cachedMeta;
         this._data = convertObjectDataToArray(data2, meta);
       } else if (_data !== data2) {
@@ -55544,7 +58207,7 @@
       } else {
         if (isArray2(data2[start2])) {
           parsed2 = this.parseArrayData(meta, data2, start2, count);
-        } else if (isObject(data2[start2])) {
+        } else if (isObject2(data2[start2])) {
           parsed2 = this.parseObjectData(meta, data2, start2, count);
         } else {
           parsed2 = this.parsePrimitiveData(meta, data2, start2, count);
@@ -56677,13 +59340,13 @@
                 const { labels: { pointStyle, color: color2 } } = chart.legend.options;
                 return data2.labels.map((label, i) => {
                   const meta = chart.getDatasetMeta(0);
-                  const style = meta.controller.getStyle(i);
+                  const style10 = meta.controller.getStyle(i);
                   return {
                     text: label,
-                    fillStyle: style.backgroundColor,
-                    strokeStyle: style.borderColor,
+                    fillStyle: style10.backgroundColor,
+                    strokeStyle: style10.borderColor,
                     fontColor: color2,
-                    lineWidth: style.borderWidth,
+                    lineWidth: style10.borderWidth,
                     pointStyle,
                     hidden: !chart.getDataVisibility(i),
                     index: i
@@ -56717,7 +59380,7 @@
         meta._parsed = data2;
       } else {
         let getter = (i2) => +data2[i2];
-        if (isObject(data2[start2])) {
+        if (isObject2(data2[start2])) {
           const { key = "value" } = this._parsing;
           getter = (i2) => +resolveObjectKey(data2[i2], key);
         }
@@ -56954,7 +59617,7 @@
       const iAxis = iScale.axis;
       const vAxis = vScale.axis;
       const { spanGaps, segment } = this.options;
-      const maxGapLength = isNumber2(spanGaps) ? spanGaps : Number.POSITIVE_INFINITY;
+      const maxGapLength = isNumber3(spanGaps) ? spanGaps : Number.POSITIVE_INFINITY;
       const directUpdate = this.chart._animationsDisabled || reset || mode === "none";
       const end2 = start2 + count;
       const pointsCount = points.length;
@@ -57038,13 +59701,13 @@
                 const { labels: { pointStyle, color: color2 } } = chart.legend.options;
                 return data2.labels.map((label, i) => {
                   const meta = chart.getDatasetMeta(0);
-                  const style = meta.controller.getStyle(i);
+                  const style10 = meta.controller.getStyle(i);
                   return {
                     text: label,
-                    fillStyle: style.backgroundColor,
-                    strokeStyle: style.borderColor,
+                    fillStyle: style10.backgroundColor,
+                    strokeStyle: style10.borderColor,
                     fontColor: color2,
-                    lineWidth: style.borderWidth,
+                    lineWidth: style10.borderWidth,
                     pointStyle,
                     hidden: !chart.getDataVisibility(i),
                     index: i
@@ -57347,7 +60010,7 @@
       const iAxis = iScale.axis;
       const vAxis = vScale.axis;
       const { spanGaps, segment } = this.options;
-      const maxGapLength = isNumber2(spanGaps) ? spanGaps : Number.POSITIVE_INFINITY;
+      const maxGapLength = isNumber3(spanGaps) ? spanGaps : Number.POSITIVE_INFINITY;
       const directUpdate = this.chart._animationsDisabled || reset || mode === "none";
       let prevParsed = start2 > 0 && this.getParsed(start2 - 1);
       for (let i = start2; i < start2 + count; ++i) {
@@ -57783,7 +60446,7 @@
   function updateDims(chartArea, params, layout, stacks) {
     const { pos, box } = layout;
     const maxPadding = chartArea.maxPadding;
-    if (!isObject(pos)) {
+    if (!isObject2(pos)) {
       if (layout.size) {
         chartArea[pos] -= layout.size;
       }
@@ -58059,7 +60722,7 @@
   };
   var isNullOrEmpty = (value) => value === null || value === "";
   function initCanvas(canvas, aspectRatio) {
-    const style = canvas.style;
+    const style10 = canvas.style;
     const renderHeight = canvas.getAttribute("height");
     const renderWidth = canvas.getAttribute("width");
     canvas[EXPANDO_KEY] = {
@@ -58067,14 +60730,14 @@
         height: renderHeight,
         width: renderWidth,
         style: {
-          display: style.display,
-          height: style.height,
-          width: style.width
+          display: style10.display,
+          height: style10.height,
+          width: style10.width
         }
       }
     };
-    style.display = style.display || "block";
-    style.boxSizing = style.boxSizing || "border-box";
+    style10.display = style10.display || "block";
+    style10.boxSizing = style10.boxSizing || "border-box";
     if (isNullOrEmpty(renderWidth)) {
       const displayWidth = readUsedSize(canvas, "width");
       if (displayWidth !== void 0) {
@@ -58256,9 +60919,9 @@
           canvas.setAttribute(prop, value);
         }
       });
-      const style = initial.style || {};
-      Object.keys(style).forEach((key) => {
-        canvas.style[key] = style[key];
+      const style10 = initial.style || {};
+      Object.keys(style10).forEach((key) => {
+        canvas.style[key] = style10[key];
       });
       canvas.width = canvas.width;
       delete canvas[EXPANDO_KEY];
@@ -58326,7 +60989,7 @@
       };
     }
     hasValue() {
-      return isNumber2(this.x) && isNumber2(this.y);
+      return isNumber3(this.x) && isNumber3(this.y);
     }
     getProps(props, final) {
       const anims = this.$animations;
@@ -58538,7 +61201,7 @@
     const width = right2 - left2;
     if (scale.isHorizontal()) {
       titleX = _alignStartEnd(align, left2, right2);
-      if (isObject(position)) {
+      if (isObject2(position)) {
         const positionAxisID = Object.keys(position)[0];
         const value = position[positionAxisID];
         titleY = scales2[positionAxisID].getPixelForValue(value) + height - offset3;
@@ -58549,7 +61212,7 @@
       }
       maxWidth = right2 - left2;
     } else {
-      if (isObject(position)) {
+      if (isObject2(position)) {
         const positionAxisID = Object.keys(position)[0];
         const value = position[positionAxisID];
         titleX = scales2[positionAxisID].getPixelForValue(value) - width + offset3;
@@ -59165,7 +61828,7 @@
       } else if (axis === "x") {
         if (position === "center") {
           borderValue = alignBorderValue((chartArea.top + chartArea.bottom) / 2 + 0.5);
-        } else if (isObject(position)) {
+        } else if (isObject2(position)) {
           const positionAxisID = Object.keys(position)[0];
           const value = position[positionAxisID];
           borderValue = alignBorderValue(this.chart.scales[positionAxisID].getPixelForValue(value));
@@ -59177,7 +61840,7 @@
       } else if (axis === "y") {
         if (position === "center") {
           borderValue = alignBorderValue((chartArea.left + chartArea.right) / 2);
-        } else if (isObject(position)) {
+        } else if (isObject2(position)) {
           const positionAxisID = Object.keys(position)[0];
           const value = position[positionAxisID];
           borderValue = alignBorderValue(this.chart.scales[positionAxisID].getPixelForValue(value));
@@ -59265,7 +61928,7 @@
       } else if (axis === "x") {
         if (position === "center") {
           y = (chartArea.top + chartArea.bottom) / 2 + tickAndPadding;
-        } else if (isObject(position)) {
+        } else if (isObject2(position)) {
           const positionAxisID = Object.keys(position)[0];
           const value = position[positionAxisID];
           y = this.chart.scales[positionAxisID].getPixelForValue(value) + tickAndPadding;
@@ -59274,7 +61937,7 @@
       } else if (axis === "y") {
         if (position === "center") {
           x = (chartArea.left + chartArea.right) / 2 - tickAndPadding;
-        } else if (isObject(position)) {
+        } else if (isObject2(position)) {
           const positionAxisID = Object.keys(position)[0];
           const value = position[positionAxisID];
           x = this.chart.scales[positionAxisID].getPixelForValue(value);
@@ -59528,15 +62191,15 @@
       const ctx = this.ctx;
       const items = this._gridLineItems || (this._gridLineItems = this._computeGridLineItems(chartArea));
       let i, ilen;
-      const drawLine = (p1, p2, style) => {
-        if (!style.width || !style.color) {
+      const drawLine = (p1, p2, style10) => {
+        if (!style10.width || !style10.color) {
           return;
         }
         ctx.save();
-        ctx.lineWidth = style.width;
-        ctx.strokeStyle = style.color;
-        ctx.setLineDash(style.borderDash || []);
-        ctx.lineDashOffset = style.borderDashOffset;
+        ctx.lineWidth = style10.width;
+        ctx.strokeStyle = style10.color;
+        ctx.setLineDash(style10.borderDash || []);
+        ctx.lineDashOffset = style10.borderDashOffset;
         ctx.beginPath();
         ctx.moveTo(p1.x, p1.y);
         ctx.lineTo(p2.x, p2.y);
@@ -59631,7 +62294,7 @@
       const padding = toPadding(title.padding);
       const align = title.align;
       let offset3 = font.lineHeight / 2;
-      if (position === "bottom" || position === "center" || isObject(position)) {
+      if (position === "bottom" || position === "center" || isObject2(position)) {
         offset3 += padding.bottom;
         if (isArray2(title.text)) {
           offset3 += font.lineHeight * (title.text.length - 1);
@@ -60085,7 +62748,7 @@
     const scales2 = /* @__PURE__ */ Object.create(null);
     Object.keys(configScales).forEach((id) => {
       const scaleConf = configScales[id];
-      if (!isObject(scaleConf)) {
+      if (!isObject2(scaleConf)) {
         return console.error(`Invalid scale configuration for scale: ${id}`);
       }
       if (scaleConf._proxy) {
@@ -60302,7 +62965,7 @@
       let options = resolver;
       if (needContext(resolver, names2)) {
         result.$shared = false;
-        context = isFunction(context) ? context() : context;
+        context = isFunction2(context) ? context() : context;
         const subResolver = this.createResolver(scopes, context, subPrefixes);
         options = _attachContext(resolver, context, subResolver);
       }
@@ -60315,7 +62978,7 @@
       ""
     ], descriptorDefaults) {
       const { resolver } = getResolver(this._resolverCache, scopes, prefixes);
-      return isObject(context) ? _attachContext(resolver, context, void 0, descriptorDefaults) : resolver;
+      return isObject2(context) ? _attachContext(resolver, context, void 0, descriptorDefaults) : resolver;
     }
   };
   function getResolver(resolverCache, scopes, prefixes) {
@@ -60336,14 +62999,14 @@
     }
     return cached;
   }
-  var hasFunction = (value) => isObject(value) && Object.getOwnPropertyNames(value).some((key) => isFunction(value[key]));
+  var hasFunction = (value) => isObject2(value) && Object.getOwnPropertyNames(value).some((key) => isFunction2(value[key]));
   function needContext(proxy, names2) {
     const { isScriptable, isIndexable } = _descriptors(proxy);
     for (const prop of names2) {
       const scriptable = isScriptable(prop);
       const indexable = isIndexable(prop);
       const value = (indexable || scriptable) && proxy[prop];
-      if (scriptable && (isFunction(value) || hasFunction(value)) || indexable && isArray2(value)) {
+      if (scriptable && (isFunction2(value) || hasFunction(value)) || indexable && isArray2(value)) {
         return true;
       }
     }
@@ -60821,7 +63484,7 @@
         this.getDatasetMeta(i).controller.configure();
       }
       for (let i = 0, ilen = this.data.datasets.length; i < ilen; ++i) {
-        this._updateDataset(i, isFunction(mode) ? mode({
+        this._updateDataset(i, isFunction2(mode) ? mode({
           datasetIndex: i
         }) : mode);
       }
@@ -61539,13 +64202,13 @@
       ctx.restore();
     }
   };
-  function setStyle(ctx, options, style = options) {
-    ctx.lineCap = valueOrDefault(style.borderCapStyle, options.borderCapStyle);
-    ctx.setLineDash(valueOrDefault(style.borderDash, options.borderDash));
-    ctx.lineDashOffset = valueOrDefault(style.borderDashOffset, options.borderDashOffset);
-    ctx.lineJoin = valueOrDefault(style.borderJoinStyle, options.borderJoinStyle);
-    ctx.lineWidth = valueOrDefault(style.borderWidth, options.borderWidth);
-    ctx.strokeStyle = valueOrDefault(style.borderColor, options.borderColor);
+  function setStyle(ctx, options, style10 = options) {
+    ctx.lineCap = valueOrDefault(style10.borderCapStyle, options.borderCapStyle);
+    ctx.setLineDash(valueOrDefault(style10.borderDash, options.borderDash));
+    ctx.lineDashOffset = valueOrDefault(style10.borderDashOffset, options.borderDashOffset);
+    ctx.lineJoin = valueOrDefault(style10.borderJoinStyle, options.borderJoinStyle);
+    ctx.lineWidth = valueOrDefault(style10.borderWidth, options.borderWidth);
+    ctx.strokeStyle = valueOrDefault(style10.borderColor, options.borderColor);
   }
   function lineTo(ctx, previous, target) {
     ctx.lineTo(target.x, target.y);
@@ -61962,7 +64625,7 @@
     const o = toTRBLCorners(value);
     const maxR = Math.min(maxW, maxH);
     const skip2 = bar.borderSkipped;
-    const enableBorder = enableBorderRadius || isObject(value);
+    const enableBorder = enableBorderRadius || isObject2(value);
     return {
       topLeft: skipOrLimit(!enableBorder || skip2.top || skip2.left, o.topLeft, 0, maxR),
       topRight: skipOrLimit(!enableBorder || skip2.top || skip2.right, o.topRight, 0, maxR),
@@ -62529,7 +65192,7 @@
   }
   function _decodeFill(line, index3, count) {
     const fill2 = parseFillOption(line);
-    if (isObject(fill2)) {
+    if (isObject2(fill2)) {
       return isNaN(fill2.value) ? false : fill2;
     }
     let target = parseFloat(fill2);
@@ -62559,7 +65222,7 @@
       pixel2 = scale.bottom;
     } else if (fill2 === "end") {
       pixel2 = scale.top;
-    } else if (isObject(fill2)) {
+    } else if (isObject2(fill2)) {
       pixel2 = scale.getPixelForValue(fill2.value);
     } else if (scale.getBasePixel) {
       pixel2 = scale.getBasePixel();
@@ -62572,7 +65235,7 @@
       value = startValue;
     } else if (fill2 === "end") {
       value = scale.options.reverse ? scale.min : scale.max;
-    } else if (isObject(fill2)) {
+    } else if (isObject2(fill2)) {
       value = fill2.value;
     } else {
       value = scale.getBaseValue();
@@ -63533,23 +66196,23 @@
           const datasets = chart.data.datasets;
           const { labels: { usePointStyle, pointStyle, textAlign, color: color2, useBorderRadius, borderRadius } } = chart.legend.options;
           return chart._getSortedDatasetMetas().map((meta) => {
-            const style = meta.controller.getStyle(usePointStyle ? 0 : void 0);
-            const borderWidth = toPadding(style.borderWidth);
+            const style10 = meta.controller.getStyle(usePointStyle ? 0 : void 0);
+            const borderWidth = toPadding(style10.borderWidth);
             return {
               text: datasets[meta.index].label,
-              fillStyle: style.backgroundColor,
+              fillStyle: style10.backgroundColor,
               fontColor: color2,
               hidden: !meta.visible,
-              lineCap: style.borderCapStyle,
-              lineDash: style.borderDash,
-              lineDashOffset: style.borderDashOffset,
-              lineJoin: style.borderJoinStyle,
+              lineCap: style10.borderCapStyle,
+              lineDash: style10.borderDash,
+              lineDashOffset: style10.borderDashOffset,
+              lineJoin: style10.borderJoinStyle,
               lineWidth: (borderWidth.width + borderWidth.height) / 4,
-              strokeStyle: style.borderColor,
-              pointStyle: pointStyle || style.pointStyle,
-              rotation: style.rotation,
-              textAlign: textAlign || style.textAlign,
-              borderRadius: useBorderRadius && (borderRadius || style.borderRadius),
+              strokeStyle: style10.borderColor,
+              pointStyle: pointStyle || style10.pointStyle,
+              rotation: style10.rotation,
+              textAlign: textAlign || style10.textAlign,
+              borderRadius: useBorderRadius && (borderRadius || style10.borderRadius),
               datasetIndex: meta.index
             };
           }, this);
@@ -64346,7 +67009,7 @@
         ctx.fillStyle = labelColor.backgroundColor;
         drawPoint(ctx, drawOptions, centerX, centerY);
       } else {
-        ctx.lineWidth = isObject(labelColor.borderWidth) ? Math.max(...Object.values(labelColor.borderWidth)) : labelColor.borderWidth || 1;
+        ctx.lineWidth = isObject2(labelColor.borderWidth) ? Math.max(...Object.values(labelColor.borderWidth)) : labelColor.borderWidth || 1;
         ctx.strokeStyle = labelColor.borderColor;
         ctx.setLineDash(labelColor.borderDash || []);
         ctx.lineDashOffset = labelColor.borderDashOffset || 0;
@@ -65841,7 +68504,7 @@
       return null;
     }
     if (round3) {
-      value = round3 === "week" && (isNumber2(isoWeekday) || isoWeekday === true) ? adapter.startOf(value, "isoWeek", isoWeekday) : adapter.startOf(value, round3);
+      value = round3 === "week" && (isNumber3(isoWeekday) || isoWeekday === true) ? adapter.startOf(value, "isoWeek", isoWeekday) : adapter.startOf(value, round3);
     }
     return +value;
   }
@@ -66068,7 +68731,7 @@
       const minor = timeOpts.unit || determineUnitForAutoTicks(timeOpts.minUnit, min2, max2, this._getLabelCapacity(min2));
       const stepSize = valueOrDefault(options.ticks.stepSize, 1);
       const weekday = minor === "week" ? timeOpts.isoWeekday : false;
-      const hasWeekday = isNumber2(weekday) || weekday === true;
+      const hasWeekday = isNumber3(weekday) || weekday === true;
       const ticks = {};
       let first = min2;
       let time, count;
@@ -66452,6 +69115,9 @@ domsanitizer/esm/index.js:
 @ungap/import-node/esm/index.js:
 hyperhtml-style/esm/index.js:
   (*! (c) Andrea Giammarchi - ISC *)
+
+cropperjs/dist/cropper.esm.raw.js:
+  (*! Cropper.js v2.0.0 | (c) 2015-present Chen Fengyuan | MIT *)
 
 dompurify/dist/purify.es.mjs:
   (*! @license DOMPurify 3.2.6 | (c) Cure53 and other contributors | Released under the Apache license 2.0 and Mozilla Public License 2.0 | github.com/cure53/DOMPurify/blob/3.2.6/LICENSE *)
