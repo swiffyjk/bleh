@@ -26324,6 +26324,7 @@
     .crop {
         width: 600px;
         height: 600px;
+        background: hsl(var(--b4), 10%);
         border-radius: var(--item-big-radius);
         overflow: hidden;
 
@@ -26331,14 +26332,16 @@
             height: 600px;
         }
 
-        & > cropper-canvas {
-            height: 100%;
+        .cropper-crop-box {
+            outline: 2px solid hsl(var(--l3-c));
+            border-radius: var(--item-med-radius);
+            overflow: hidden;
 
-            [action="move"],
-            [action="sw-resize"],
-            [action="se-resize"],
-            [action="nw-resize"],
-            [action="ne-resize"] {
+            & > .cropper-view-box {
+                outline: none;
+            }
+
+            & > [data-cropper-action] {
                 opacity: 0;
             }
         }

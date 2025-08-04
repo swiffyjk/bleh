@@ -32,7 +32,10 @@ const banner = `// ==UserScript==
         banner: {
             js: banner
         },
-        platform: "browser"
+        platform: "browser",
+        loader: {
+            ".css": "text"
+        }
     };
     if (process.argv[2] == "dev") {
         const context = await esbuild.context(buildOptions);

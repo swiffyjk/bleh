@@ -701,23 +701,28 @@ function avatar(token='') {
                     <button class="btn primary save" onclick=${() => {
                         if (!cropper) return;
 
-                        cropper.getCropperSelection().$toCanvas().then(canvas => {
-                            canvas.toBlob(blob => {
-                                const file = new File([blob], 'avatar.jpg', {type: 'image/png'});
-
-                                const inner_form = form.querySelector('form');
-                                inner_form.style.display = 'none';
-                                crop_dialog.querySelector('.bleh-modal-body').appendChild(inner_form);
-
-                                const file_input = inner_form.querySelector('input[type="file"]');
-
-                                const data_transfer = new DataTransfer();
-                                data_transfer.items.add(file);
-                                file_input.files = data_transfer.files;
-
-                                inner_form.querySelector('#avatar_saver').click();
-                            }, 'image/png');
+                        crop_dialog.querySelectorAll('.bleh-modal-body button').forEach((button) => {
+                            button.setAttribute('disabled', 'true');
+                            button.removeAttribute('onclick');
                         });
+
+                        const canvas = cropper.getCroppedCanvas();
+        
+                        canvas.toBlob(blob => {
+                            const cropped_file = new File([blob], 'avatar.png', {type: 'image/png'});
+        
+                            const inner_form = form.querySelector('form');
+                            inner_form.style.display = 'none';
+                            crop_dialog.querySelector('.bleh-modal-body').appendChild(inner_form);
+        
+                            const file_input = inner_form.querySelector('input[type="file"]');
+        
+                            const data_transfer = new DataTransfer();
+                            data_transfer.items.add(cropped_file);
+                            file_input.files = data_transfer.files;
+        
+                            inner_form.querySelector('#avatar_saver').click();
+                        }, 'image/png');
                     }} ref=${el => save = el} disabled>${tl(trans.save)}</button>
                 </div>
             `
@@ -726,13 +731,20 @@ function avatar(token='') {
         crop_image.onload = () => {
             if (cropper && cropper.destroy) cropper.destroy();
 
+            crop_image.style.maxWidth = "none";
+            crop_image.style.width = crop_image.naturalWidth + "px";
+            crop_image.style.height = crop_image.naturalHeight + "px";
+
             cropper = new Cropper(crop_image, {
-                dragMode: 'move',
+                dragMode: 'crop',
+                movable: true,
                 zoomable: true,
-                scalable: true,
-                responsive: true,
+                scalable: false,
+                cropBoxMovable: true,
+                cropBoxResizable: true,
+                background: false,
                 guides: true,
-                background: false
+                autoCropArea: 1
             });
 
             save.removeAttribute('disabled');

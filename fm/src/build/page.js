@@ -189,6 +189,7 @@ export const setup_url = '{root}bleh/setup';
 export const sponsor_url = '{root}bleh/sponsor';
 export const api_url = '{root}bleh/api';
 export const minis_url = '{root}bleh/minis';
+export const mualani_url = '{root}bleh/mualani';
 
 // WARN: please provide your own if hosting a fork
 export const api_key = '85c118b69b1437844fe75fcd2bf27261';

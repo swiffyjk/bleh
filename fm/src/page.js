@@ -15,6 +15,7 @@ import {
     last_page_subpage,
     last_page_type,
     minis_url,
+    mualani_url,
     page,
     root,
     setup_url,
@@ -70,6 +71,7 @@ import {dialog_extender} from "./components/dialog_extender.js";
 import {bleh_auth} from "./pages/auth.js";
 import {bleh_labs} from "./pages/labs.js";
 import {bleh_minis} from "./pages/minis.js";
+import {mualani} from "./pages/mualani.js";
 
 export function bleh() {
     let head_observer = new MutationObserver((mutations) => {
@@ -410,6 +412,8 @@ function load_page() {
         bleh_sponsor_page();
     } else if (window.location.pathname.startsWith(api_url.replace('{root}', root))) {
         bleh_auth();
+    } else if (window.location.pathname.startsWith(mualani_url.replace('{root}', root))) {
+        mualani();
     } else if (window.location.pathname.startsWith(minis_url.replace('{root}', root))) {
         page.type = 'minis';
         bleh_home();
