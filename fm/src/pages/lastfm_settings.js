@@ -685,10 +685,13 @@ function avatar(token='') {
 
         const crop_dialog = dialog({
             id: 'crop',
-            title: tl(trans.change_avatar),
+            title: tl(trans.crop_avatar),
             body: html.node`
                 <div class="crop">
                     <img src=${file} ref=${el => crop_image = el}>
+                </div>
+                <div class="alert alert-info">
+                    ${tl(trans.crop_notice)}
                 </div>
                 <div class="modal-footer">
                     <button class="see-more cancel" onclick=${() => {
@@ -736,6 +739,7 @@ function avatar(token='') {
             crop_image.style.height = crop_image.naturalHeight + "px";
 
             cropper = new Cropper(crop_image, {
+                viewMode: 3,
                 dragMode: 'crop',
                 movable: true,
                 zoomable: true,

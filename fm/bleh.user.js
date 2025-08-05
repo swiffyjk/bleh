@@ -28352,10 +28352,13 @@
       let save;
       const crop_dialog = dialog({
         id: "crop",
-        title: tl(trans.change_avatar),
+        title: tl(trans.crop_avatar),
         body: html.node`
                 <div class="crop">
                     <img src=${file} ref=${(el) => crop_image = el}>
+                </div>
+                <div class="alert alert-info">
+                    ${tl(trans.crop_notice)}
                 </div>
                 <div class="modal-footer">
                     <button class="see-more cancel" onclick=${() => {
@@ -28392,6 +28395,7 @@
         crop_image.style.width = crop_image.naturalWidth + "px";
         crop_image.style.height = crop_image.naturalHeight + "px";
         cropper = new import_cropperjs.default(crop_image, {
+          viewMode: 3,
           dragMode: "crop",
           movable: true,
           zoomable: true,
@@ -49651,6 +49655,12 @@
     change_avatar: {
       en: "Change avatar",
       pt: "Mudar foto de perfil"
+    },
+    crop_avatar: {
+      en: "Crop avatar"
+    },
+    crop_notice: {
+      en: "Use your scroll wheel to zoom in and out, click and drag to move the image."
     },
     edit_profile_note: {
       en: "Edit profile note",

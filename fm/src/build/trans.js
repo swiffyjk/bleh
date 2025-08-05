@@ -2610,6 +2610,12 @@ export const trans = {
         en: 'Change avatar',
         pt: 'Mudar foto de perfil'
     },
+    crop_avatar: {
+        en: 'Crop avatar'
+    },
+    crop_notice: {
+        en: 'Use your scroll wheel to zoom in and out, click and drag to move the image.',
+    },
     edit_profile_note: {
         en: 'Edit profile note',
         pt: 'Editar recado de perfil'

@@ -26324,7 +26324,7 @@
     .crop {
         width: 600px;
         height: 600px;
-        background: hsl(var(--b4), 10%);
+        outline: 2px solid var(--card-border-base);
         border-radius: var(--item-big-radius);
         overflow: hidden;
 
@@ -26333,7 +26333,6 @@
         }
 
         .cropper-crop-box {
-            outline: 2px solid hsl(var(--l3-c));
             border-radius: var(--item-med-radius);
             overflow: hidden;
 
