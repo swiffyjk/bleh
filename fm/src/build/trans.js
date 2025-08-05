@@ -2324,6 +2324,9 @@ export const trans = {
         de: 'Angemeldet als {user}',
         pt: 'Conectado como {user}'
     },
+    not_logged_in: {
+        en: 'Not logged in'
+    },
     ensure_you_trust: {
         // API applications
         // last.fm/settings/applications

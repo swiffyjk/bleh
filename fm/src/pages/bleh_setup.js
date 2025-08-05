@@ -32,7 +32,8 @@ export function bleh_setup() {
 
     checkup_page_structure(false, content_top);
 
-    register_background(auth.avatar.replace('/avatar42s/', '/ar0/'));
+    if (auth.avatar) register_background(auth.avatar.replace('/avatar42s/', '/ar0/'));
+    else register_background(null);
 
     page.type = 'bleh_setup';
     page.subpage = '';
@@ -54,24 +55,34 @@ export function bleh_setup() {
     let masthead = document.body.querySelector('.masthead');
     masthead.classList.add('in-setup');
 
-    page.structure.main.innerHTML = (`
-        <section class="setup">
+    render(page.structure.main, html`
+        <section class="setup" ref=${el => page.structure.setup = el}>
+            ${auth.name ? html.node`
             <div class="avatar">
-                <img src="${auth.avatar.replace('/avatar42s/', '/avatar170s/')}" alt="${tl(trans.your_avatar)}">
+                <img src=${auth.avatar.replace('/avatar42s/', '/avatar170s/')} alt=${tl(trans.your_avatar)}>
             </div>
             <div class="info">
                 <h1>${tl(trans.bleh_setup)}</h1>
-                <div class="subtle">${tl(trans.logged_in_as).replace('{user}', `<a class="mention" href="${root}user/${auth.name}">@${auth.name}</a>`)}</div>
+                <div class="subtle">
+                    ${tl(trans.logged_in_as).replace('{user}', `<a class="mention" href="${root}user/${auth.name}">@${auth.name}</a>`)}
+                </div>
             </div>
+            ` : html.node`
+            <div class="avatar">
+                <img class="missing-avatar" alt=${tl(trans.your_avatar)}>
+            </div>
+            <div class="info">
+                <h1>${tl(trans.bleh_setup)}</h1>
+                <div class="subtle">
+                    ${tl(trans.not_logged_in)}
+                </div>
+            </div>
+            `}
             <div class="sep"></div>
-            <div class="setup-content"></div>
-            <div class="setup-footer"></div>
+            <div class="setup-content" ref=${el => page.structure.setup_content = el}></div>
+            <div class="setup-footer" ref=${el => page.structure.setup_footer = el}></div>
         </section>
     `);
-
-    page.structure.setup = page.structure.main.querySelector('.setup');
-    page.structure.setup_content = page.structure.main.querySelector('.setup-content');
-    page.structure.setup_footer = page.structure.main.querySelector('.setup-footer');
 
     bleh_setup_start();
 }
@@ -236,15 +247,28 @@ unsafeWindow._setup_end = function() {
         render(page.structure.setup_content, html`
             <p>${{html: tl(trans.setup_end).replace('{a}', `<a href="${root}bleh">`).replace('{/a}', '</a>')}}</p>
         `);
-        page.structure.setup_footer.innerHTML = (`
-            <button class="see-more cancel" onclick="_setup_music()">
-                ${tl(trans.back)}
-            </button>
-            <div class="fill"></div>
-            <a class="btn primary continue" href="${root}user/${auth.name}">
-                ${tl(trans.finish)}
-            </a>
-        `);
+
+        if (auth.name) {
+            page.structure.setup_footer.innerHTML = (`
+                <button class="see-more cancel" onclick="_setup_music()">
+                    ${tl(trans.back)}
+                </button>
+                <div class="fill"></div>
+                <a class="btn primary continue" href="${root}user/${auth.name}">
+                    ${tl(trans.finish)}
+                </a>
+            `);
+        } else {
+            page.structure.setup_footer.innerHTML = (`
+                <button class="see-more cancel" onclick="_setup_music()">
+                    ${tl(trans.back)}
+                </button>
+                <div class="fill"></div>
+                <a class="btn primary continue" href="${root}dashboard">
+                    ${tl(trans.finish)}
+                </a>
+            `);
+        }
     }, page.state.trans);
 }
 

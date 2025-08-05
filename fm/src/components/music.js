@@ -200,6 +200,10 @@ export function show_your_scrobbles() {
     listen_container.classList.add('listen-container');
 
 
+    const no_auth_callout = page.structure.main.querySelector('.catalogue-callout');
+    if (no_auth_callout) no_auth_callout.remove();
+
+
     // page url
     let page_url = window.location.href;
     let page_url_split = page_url.split('/');
@@ -310,7 +314,7 @@ export function show_your_scrobbles() {
     if (page.type == 'artist') {
         //
         let other_container = col_main.querySelector('.personal-stats-item--listeners');
-        if (other_container != null) {
+        if (other_container) {
             let listen_divider = document.createElement('div');
             listen_divider.classList.add('listen-divider');
 
@@ -486,10 +490,12 @@ export function show_your_scrobbles() {
     if (play_btn)
         interact_container.removeChild(play_btn);
 
-    if (!page.mobile)
-        page.structure.side.insertBefore(interact_container, page.structure.side.firstElementChild);
-    else
-        page.structure.main.insertBefore(interact_container, page.structure.main.firstElementChild);
+    if (auth.name) {
+        if (!page.mobile)
+            page.structure.side.insertBefore(interact_container, page.structure.side.firstElementChild);
+        else
+            page.structure.main.insertBefore(interact_container, page.structure.main.firstElementChild);
+    }
 
 
 
@@ -759,6 +765,8 @@ export function show_your_scrobbles() {
 }
 
 function create_listen_item(parent, {name, listens, link, avi, count=0, button=false, katsune=false}, header_type) {
+    if (!name) return;
+
     log(`creating listen item of ${name}, ${count}, ${listens}`, 'artist', 'info', {avi: avi, link: link});
 
     let listen_item;
@@ -927,6 +935,7 @@ function show_numbers_on_side(header_type) {
     }
 
     panel.classList.add('listen-panel');
+    panel.setAttribute('data-auth-name', auth.name);
 
 
     let row = html.node`

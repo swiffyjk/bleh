@@ -3,6 +3,8 @@ import {render} from "lighterhtml";
 import {markdown} from "./markdown.js";
 
 export function load_banner(name = page.name) {
+    if (!name) return;
+
     let banners = JSON.parse(localStorage.getItem('bleh_profile_banners')) || {};
 
     if (banners[name]) {

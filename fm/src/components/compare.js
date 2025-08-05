@@ -37,6 +37,12 @@ export function compare({
         page.requested.profile = '';
     }
 
+    let current_year = new Date().getFullYear();
+    let previous_year = current_year - 1;
+
+    const default_type = page.requested.type || 'albums';
+    const default_timeframe = page.requested.timeframe || 'date_preset=LAST_90_DAYS';
+
     let user;
     render(host, html`
         <div class="compare-header">
@@ -92,29 +98,41 @@ export function compare({
                         value: 'tracks',
                         text: html`<div class="bleh-icon" style="--icon: var(--icon-16-track)" />${tl(trans.tracks)}`,
                     }
-                ], 'albums')}
+                ], default_type)}
                 ${timeframe = select([
                     {
-                        value: 'LAST_7_DAYS',
+                        value: 'date_preset=LAST_7_DAYS',
                         text: tl(trans.last_count_days).replace('{c}', '7'),
                     },
                     {
-                        value: 'LAST_30_DAYS',
+                        value: 'date_preset=LAST_30_DAYS',
                         text: tl(trans.last_count_days).replace('{c}', '30'),
                     },
                     {
-                        value: 'LAST_90_DAYS',
+                        value: 'date_preset=LAST_90_DAYS',
                         text: tl(trans.last_count_days).replace('{c}', '90'),
                     },
                     {
-                        value: 'LAST_180_DAYS',
+                        value: 'date_preset=LAST_180_DAYS',
                         text: tl(trans.last_count_days).replace('{c}', '180'),
                     },
                     {
-                        value: 'LAST_365_DAYS',
+                        value: 'date_preset=LAST_365_DAYS',
                         text: tl(trans.last_count_days).replace('{c}', '365'),
+                    },
+                    {
+                        value: 'date_preset=ALL',
+                        text: tl(trans.all_time),
+                    },
+                    {
+                        value: `from=${current_year}-01-01&rangetype=year`,
+                        text: current_year
+                    },
+                    {
+                        value: `from=${previous_year}-01-01&rangetype=year`,
+                        text: previous_year
                     }
-                ], 'LAST_90_DAYS')}
+                ], default_timeframe)}
                 <button class="btn icon primary compare" ref=${el => submit = el} onclick=${() => begin_comparing()}>${tl(trans.compare)}</button>
             </div>
         </div>
@@ -215,7 +233,7 @@ export function compare({
             </div>
         `);
 
-        fetch(`${root}user/${user}/library/${type.value}?format=list&date_preset=${timeframe.value}&page=${current_page}&ajax=1`)
+        fetch(`${root}user/${user}/library/${type.value}?format=list&${timeframe.value}&page=${current_page}&ajax=1`)
             .then(function(response) {
                 console.log('returned', response, response.text);
 
@@ -344,13 +362,13 @@ export function compare({
                                 </p>
                                 ` : ''}
                                 <p class="grid-items-item-aux-text">
-                                    <a class="grid-item-plays with-avatar" href="${root}user/${auth.name}/library/music/${redirect()}${template}?date_preset=${timeframe.value}" target="_blank">
+                                    <a class="grid-item-plays with-avatar" href="${root}user/${auth.name}/library/music/${redirect()}${template}?${timeframe.value}" target="_blank">
                                         <span class="avatar">
                                             <img src="${auth.avatar}" alt="${tl(trans.your_avatar)}">
                                         </span>
                                         ${data.plays.you.toLocaleString(lang)}
                                     </a>
-                                    <a class="grid-item-plays with-avatar" href="${root}user/${page.name}/library/music/${redirect()}${template}?date_preset=${timeframe.value}" target="_blank">
+                                    <a class="grid-item-plays with-avatar" href="${root}user/${page.name}/library/music/${redirect()}${template}?${timeframe.value}" target="_blank">
                                         <span class="avatar">
                                             <img src="${page.avatar}" alt="${tl(trans.avatar_for_user).replace('{u}', page.name)}">
                                         </span>
@@ -405,7 +423,7 @@ export function compare({
                         </td>
                         <td class="chartlist-bar with-multiple">
                             <span class="chartlist-count-bar">
-                                <a class="chartlist-count-bar-link" href="${root}user/${auth.name}/library/music/${redirect()}${template}?date_preset=${timeframe.value}" target="_blank">
+                                <a class="chartlist-count-bar-link" href="${root}user/${auth.name}/library/music/${redirect()}${template}?${timeframe.value}" target="_blank">
                                     <span class="chartlist-count-bar-slug" data-max-stat-value="${max}" data-stat-value="${data.plays.you}" style="width: ${(data.plays.you / max) * 100}%;"></span>
                                     <span class="chartlist-count-bar-value">${data.plays.you}</span>
                                 </a>
@@ -414,7 +432,7 @@ export function compare({
                                 </span>
                             </span>
                             <span class="chartlist-count-bar">
-                                <a class="chartlist-count-bar-link" href="${root}user/${page.name}/library/music/${redirect()}${template}?date_preset=${timeframe.value}" target="_blank">
+                                <a class="chartlist-count-bar-link" href="${root}user/${page.name}/library/music/${redirect()}${template}?${timeframe.value}" target="_blank">
                                     <span class="chartlist-count-bar-slug" data-max-stat-value="${max}" data-stat-value="${data.plays.other}" style="width: ${(data.plays.other / max) * 100}%;"></span>
                                     <span class="chartlist-count-bar-value">${data.plays.other}</span>
                                 </a>

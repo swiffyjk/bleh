@@ -35,7 +35,7 @@ import {
 } from "./components/lotus";
 import {music_grids} from "./components/music_grid";
 import {nag_bar} from "./components/nag_bar";
-import {load_notifications, notify} from "./components/notify";
+import {load_notifications} from "./components/notify";
 import {patch_titles} from "./components/track";
 import {load_settings} from "./config";
 import {theme_version, version} from "./main";
@@ -133,18 +133,6 @@ function bleh_main() {
 
         start_rain();
 
-        // everything past this point requires authorisation
-        if (!auth.name) {
-            notify({
-                title: 'No account added',
-                body: 'Please sign in to an account to access bleh features.',
-                icon: 'icon-16-user',
-                persist: true
-            });
-            document.body.classList.add('bleh-loaded');
-            return;
-        }
-
         load_activities();
         notify_if_new_update();
 
@@ -186,8 +174,8 @@ function handle_error(e = null) {
                 <div class="bleh-icon" style="--icon: var(--icon-error)"></div>
                 <h1>oops.. something broke</h1>
                 <p>An error prevented ${version.brand} from finishing loading, it's recommended to leave the page and refresh.</p>
-                <pre class="error-info">${(e) ? html.node`<span class="error-type">${e.name}</span>: ${e.message}` : ''}<br>on: ${page.type}/${page.subpage}<br>    ${window.location.pathname}<br>    ${version.build}</pre>
-                <p>It would be helpful if you could report this bug on Github, including the error message above and a screenshot of your browser console (the error is highlighted).</p>
+                <pre class="error-info">${(e) ? html.node`<span class="error-type">${e.name}</span>: ${e.message}` : ''}${e.stack ? html.node`<br><span class="error-stack">${e.stack}</span>` : ''}<br>on: ${page.type}/${page.subpage}<br>    ${window.location.pathname}<br>    ${version.build}</pre>
+                <p>It would be helpful if you could report this bug on Github, including the error message above.</p>
             </div>
             <div class="modal-footer">
                 <div class="fill"></div>

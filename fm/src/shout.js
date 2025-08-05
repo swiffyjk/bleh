@@ -94,6 +94,8 @@ export function patch_shouts() {
             const voted_button = form.querySelector('.vote-button--voted');
             const unvote_button = form.querySelector('.vote-button:not(.vote-button--voted)');
 
+            if (!voted_button || !unvote_button) return;
+
             // if the ALREADY VOTED button changes to MODIFIED STATE when clicked,
             // that means the server gave us a shout that is ALREADY VOTED
             const initial_is_voted = voted_button.getAttribute('data-ajax-form-sets-state') == 'modified-state';

@@ -37,7 +37,7 @@ export function bleh_home() {
     let banner = load_banner(auth.name);
     if (banner)
         register_background(banner);
-    else if (!auth.avatar.endsWith('818148bf682d429dc215c1705eb27b98.png'))
+    else if (auth.avatar && !auth.avatar.endsWith('818148bf682d429dc215c1705eb27b98.png'))
         register_background(auth.avatar.replace('/avatar42s/', '/ar0/'));
     else
         register_background(null);
@@ -55,73 +55,120 @@ export function bleh_home() {
         time = 'evening';
     log(`hour ${hour} time ${time}`, 'time');
 
-    let welcome = html.node`
-        <div class="top-banner home-banner">
-            <div class="avatar">
-                <img src="${auth.avatar.replace('/avatar42s/', '/avatar170s/')}" alt="${tl(trans.your_avatar)}">
-                ${(auth.sponsor) ? html.node`
-                <span class="avatar-status-dot user-status--bleh-sponsor"></span>
-                ` : ''}
+    let welcome;
+    if (auth.name) {
+        welcome = html.node`
+            <div class="top-banner home-banner">
+                <div class="avatar">
+                    <img src=${auth.avatar.replace('/avatar42s/', '/avatar170s/')} alt=${tl(trans.your_avatar)}>
+                    ${(auth.sponsor) ? html.node`
+                    <span class="avatar-status-dot user-status--bleh-sponsor"></span>
+                    ` : ''}
+                </div>
+                <h1>${{html: tl(trans[`good_${time}_user`]).replace('{user}', `<a class="mention" href="${root}user/${auth.name}">@${auth.name}</a>`)}}</h1>
             </div>
-            <h1>${{html: tl(trans[`good_${time}_user`]).replace('{user}', `<a class="mention" href="${root}user/${auth.name}">@${auth.name}</a>`)}}</h1>
-        </div>
-    `;
+        `;
+    } else {
+        welcome = html.node`
+            <div class="top-banner home-banner">
+                <div class="avatar">
+                    <img class="missing-avatar" alt=${tl(trans.your_avatar)}>
+                    ${(auth.sponsor) ? html.node`
+                    <span class="avatar-status-dot user-status--bleh-sponsor"></span>
+                    ` : ''}
+                </div>
+                <h1>${tl(trans.not_logged_in)}</h1>
+            </div>
+        `;
+    }
+
     page.structure.container.insertBefore(welcome, page.structure.container.firstElementChild);
 
-    let nav = html.node`
-        <nav class="navlist secondary-nav navlist--more redesigned-navigation">
-            <ul class="navlist-items">
-                <li class="navlist-item secondary-nav-item secondary-nav-item--home">
-                    <a href="${root}music" class="secondary-nav-item-link ${(page.subpage == 'music' || page.type == 'events') ? 'secondary-nav-item-link--active' : ''}">
-                        ${tl(trans.home)}
-                    </a>
-                </li>
-                <li class="navlist-item secondary-nav-item secondary-nav-item--recommendations">
-                    <a href="${root}music/+recommended" class="secondary-nav-item-link ${(page.type == 'recommended') ? 'secondary-nav-item-link--active' : ''}">
-                        ${tl(trans.recommendations)}
-                    </a>
-                </li>
-                <li class="navlist-item secondary-nav-item secondary-nav-item--releases">
-                    <a href="${root}music/+releases/out-now" class="secondary-nav-item-link ${(page.type == 'releases') ? 'secondary-nav-item-link--active' : ''}">
-                        ${tl(trans.releases)}
-                    </a>
-                </li>
-                <li class="navlist-item secondary-nav-item secondary-nav-item--bookmarks">
-                    <a href="${root}music/+bookmarks" class="secondary-nav-item-link ${(page.type == 'bookmarks') ? 'secondary-nav-item-link--active' : ''}">
-                        ${tl(trans.bookmarks)}
-                    </a>
-                </li>
-                <li class="navlist-item secondary-nav-item secondary-nav-item--charts">
-                    <a href="${root}charts" class="secondary-nav-item-link ${(page.type == 'charts') ? 'secondary-nav-item-link--active' : ''}">
-                        ${tl(trans.charts)}
-                    </a>
-                </li>
-                ${ff('minis') ? html.node`
-                <li class="navlist-item secondary-nav-item secondary-nav-item--minis">
-                    <a href="${root}bleh/minis" data-type="mini" class="secondary-nav-item-link ${(page.type == 'minis') ? 'secondary-nav-item-link--active' : ''}">
-                        ${tl(trans.minis)}
-                    </a>
-                </li>
-                ` : ''}
-                <li class="fill"></li>
-                <li class="navlist-item secondary-nav-item secondary-nav-item--settings">
-                    <a href="${root}settings" class="secondary-nav-item-link ${(page.type == 'settings') ? 'secondary-nav-item-link--active' : ''}">
-                        ${tl(trans.settings)}
-                    </a>
-                </li>
-                <li class="navlist-item secondary-nav-item secondary-nav-item--bleh">
-                    <a href="${root}bleh" class="secondary-nav-item-link ${(page.type == 'bleh_settings') ? 'secondary-nav-item-link--active' : ''}">
-                        ${tl(trans.settings)}
-                    </a>
-                </li>
-                <li class="navlist-item secondary-nav-item secondary-nav-item--more">
-                    <a class="secondary-nav-item-link no-text">
-                        ${tl(trans.more)}
-                    </a>
-                </li>
-            </ul>
-        </nav>
-    `;
+    let nav;
+    if (auth.name) {
+        nav = html.node`
+            <nav class="navlist secondary-nav navlist--more redesigned-navigation">
+                <ul class="navlist-items">
+                    <li class="navlist-item secondary-nav-item secondary-nav-item--home">
+                        <a href="${root}music" class="secondary-nav-item-link ${(page.subpage == 'music' || page.type == 'events') ? 'secondary-nav-item-link--active' : ''}">
+                            ${tl(trans.home)}
+                        </a>
+                    </li>
+                    <li class="navlist-item secondary-nav-item secondary-nav-item--recommendations">
+                        <a href="${root}music/+recommended" class="secondary-nav-item-link ${(page.type == 'recommended') ? 'secondary-nav-item-link--active' : ''}">
+                            ${tl(trans.recommendations)}
+                        </a>
+                    </li>
+                    <li class="navlist-item secondary-nav-item secondary-nav-item--releases">
+                        <a href="${root}music/+releases/out-now" class="secondary-nav-item-link ${(page.type == 'releases') ? 'secondary-nav-item-link--active' : ''}">
+                            ${tl(trans.releases)}
+                        </a>
+                    </li>
+                    <li class="navlist-item secondary-nav-item secondary-nav-item--bookmarks">
+                        <a href="${root}music/+bookmarks" class="secondary-nav-item-link ${(page.type == 'bookmarks') ? 'secondary-nav-item-link--active' : ''}">
+                            ${tl(trans.bookmarks)}
+                        </a>
+                    </li>
+                    <li class="navlist-item secondary-nav-item secondary-nav-item--charts">
+                        <a href="${root}charts" class="secondary-nav-item-link ${(page.type == 'charts') ? 'secondary-nav-item-link--active' : ''}">
+                            ${tl(trans.charts)}
+                        </a>
+                    </li>
+                    ${ff('minis') ? html.node`
+                    <li class="navlist-item secondary-nav-item secondary-nav-item--minis">
+                        <a href="${root}bleh/minis" data-type="mini" class="secondary-nav-item-link ${(page.type == 'minis') ? 'secondary-nav-item-link--active' : ''}">
+                            ${tl(trans.minis)}
+                        </a>
+                    </li>
+                    ` : ''}
+                    <li class="fill"></li>
+                    <li class="navlist-item secondary-nav-item secondary-nav-item--settings">
+                        <a href="${root}settings" class="secondary-nav-item-link ${(page.type == 'settings') ? 'secondary-nav-item-link--active' : ''}">
+                            ${tl(trans.settings)}
+                        </a>
+                    </li>
+                    <li class="navlist-item secondary-nav-item secondary-nav-item--bleh">
+                        <a href="${root}bleh" class="secondary-nav-item-link ${(page.type == 'bleh_settings') ? 'secondary-nav-item-link--active' : ''}">
+                            ${tl(trans.settings)}
+                        </a>
+                    </li>
+                    <li class="navlist-item secondary-nav-item secondary-nav-item--more">
+                        <a class="secondary-nav-item-link no-text">
+                            ${tl(trans.more)}
+                        </a>
+                    </li>
+                </ul>
+            </nav>
+        `;
+    } else {
+        nav = html.node`
+            <nav class="navlist secondary-nav navlist--more redesigned-navigation">
+                <ul class="navlist-items">
+                    <li class="navlist-item secondary-nav-item secondary-nav-item--home">
+                        <a href="${root}music" class="secondary-nav-item-link ${(page.subpage == 'music' || page.type == 'events') ? 'secondary-nav-item-link--active' : ''}">
+                            ${tl(trans.home)}
+                        </a>
+                    </li>
+                    <li class="navlist-item secondary-nav-item secondary-nav-item--charts">
+                        <a href="${root}charts" class="secondary-nav-item-link ${(page.type == 'charts') ? 'secondary-nav-item-link--active' : ''}">
+                            ${tl(trans.charts)}
+                        </a>
+                    </li>
+                    <li class="fill"></li>
+                    <li class="navlist-item secondary-nav-item secondary-nav-item--bleh">
+                        <a href="${root}bleh" class="secondary-nav-item-link ${(page.type == 'bleh_settings') ? 'secondary-nav-item-link--active' : ''}">
+                            ${tl(trans.settings)}
+                        </a>
+                    </li>
+                    <li class="navlist-item secondary-nav-item secondary-nav-item--more">
+                        <a class="secondary-nav-item-link no-text">
+                            ${tl(trans.more)}
+                        </a>
+                    </li>
+                </ul>
+            </nav>
+        `;
+    }
 
     page.structure.nav = nav;
     welcome.after(nav);
@@ -158,6 +205,13 @@ export function bleh_home() {
 
 
     if (page.subpage == 'music') {
+        let music_sections = document.body.querySelectorAll('.music-section');
+        music_sections.forEach((music_section) => {
+            page.structure.main.appendChild(music_section);
+        });
+    }
+
+    if (page.subpage == 'music' && auth.name) {
         let toolbar = html.node`
             <div class="toolbar">
                 <nav class="navlist secondary-nav navlist--more redesigned-navigation">
@@ -233,12 +287,6 @@ export function bleh_home() {
         });
 
         page.structure.row.insertBefore(beret, page.structure.content);
-
-
-        let music_sections = document.body.querySelectorAll('.music-section');
-        music_sections.forEach((music_section) => {
-            page.structure.main.appendChild(music_section);
-        });
     } else if (page.type == 'releases') {
         let content = page.structure.main.querySelectorAll(':scope > *');
         let panel = html.node`
