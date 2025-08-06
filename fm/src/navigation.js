@@ -235,20 +235,13 @@ export function append_nav() {
         onShow(instance) {
             let content;
 
-            instance.setContent(html``);
             instance.setContent(html.node`
                 <div class="window-header">
                     <div class="bleh-icon" data-type="inbox" style="--icon: var(--mask)" />
                     <div class="window-title">${tl(trans.inbox)}</div>
                 </div>
                 ${setting({id: 'inbox_view', func: render_inbox})}
-                <div class="window-content" ref=${el => content = el}>
-                    <div class="mini-notifications content-loading">
-                        <div class="loading-data-container">
-                            <div class="loading-data-text">${tl(trans.loading)}</div>
-                        </div>
-                    </div>
-                </div>
+                <div class="window-content" ref=${el => content = el} />
             `);
 
             function render_notifications(notifications) {
@@ -283,6 +276,16 @@ export function append_nav() {
 
             function render_inbox(view = settings.inbox_view) {
                 log(`rendering view ${view}`, 'navigation');
+
+                if (content) {
+                    render(content, html`
+                        <div class="mini-notifications content-loading">
+                            <div class="loading-data-container">
+                                <div class="loading-data-text">${tl(trans.loading)}</div>
+                            </div>
+                        </div>
+                    `);
+                }
 
                 if (view == 'notifications') {
                     if (page.notifications.list) render_notifications(page.notifications.list);
