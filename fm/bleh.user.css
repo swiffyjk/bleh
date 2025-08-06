@@ -568,7 +568,7 @@
             --h3-lit: calc(clamp(min(0.5), var(--lit), max(1.1)) * 80%);
             --h4: var(--hue), calc(clamp(min(0), var(--sat), max(1.5)) * 30%), calc(clamp(min(0.7), var(--lit), max(1.1)) * 55%);
             --f4: var(--hue), calc(clamp(min(0), var(--sat), max(1.5)) * 45%), calc(clamp(min(0.8), var(--lit), max(1.5)) * 55%);
-            --k4: var(--f4);
+            --k4: var(--hue), calc(clamp(min(0), var(--sat), max(1.5)) * 25%), calc(clamp(min(0.8), var(--lit), max(1.5)) * 70%);
             --g4: var(--hue), calc(clamp(min(0), var(--sat), max(1.5)) * 25%), 75%;
 
             /* l2-c in dark modes, l4-c in light modes */
@@ -1483,7 +1483,7 @@
         .bleh-logo {
             font-size: 28px;
             line-height: 28px;
-            margin-top: -6px;
+            margin-top: -10px;
             font-family: var(--font-brand);
             font-weight: 900;
             color: hsl(var(--c1));
@@ -1665,7 +1665,7 @@
     }
 
     .masthead-logo, .masthead-nav-wrap {
-        width: 360px !important;
+        width: 320px !important;
     }
 
     .masthead-search-wrap {
@@ -1677,6 +1677,32 @@
         --padding: 7px var(--button-sides) 7px calc(var(--button-sides) + var(--icon-size) + var(--icon-gap)) !important;
         --mask: var(--icon-16-inbox);
         position: relative;
+    }
+
+    .inbox-info {
+        display: flex;
+        align-items: center;
+        gap: var(--item-list-gap);
+        margin-top: 4px;
+
+        & > .inbox-info-item {
+            display: flex;
+            align-items: center;
+            gap: var(--icon-gap);
+
+            & > .bleh-icon {
+                --icon: var(--mask);
+                --icon-size: 14px;
+            }
+        }
+
+        & > .inbox-sep {
+            display: block;
+            width: 3px;
+            height: 3px;
+            background: hsl(var(--c3));
+            border-radius: 50px;
+        }
     }
 
 
@@ -1708,11 +1734,8 @@
         order: 1;
     }
     .masthead-nav .masthead-nav-control {
-        &:not([data-label="bleh"][data-season-active="true"], [data-label="notifications"], [data-label="inbox"]) {
-            padding: unset !important;
-            font-size: 0 !important;
-            --left: 7px;
-            width: 32px;
+        &[data-label="bleh"]:not([data-season-active="true"]) {
+            display: none !important;
         }
     }
 
@@ -19361,7 +19384,7 @@
                 width: 32px;*/
 
                 width: fit-content;
-                min-width: 38px !important;
+                min-width: var(--button-height) !important;
                 height: var(--button-height);
 
                 .view-item-avatar {
@@ -22820,6 +22843,7 @@
                 &.love-button {
                     --mask: var(--icon-16-heart);
                     --font-size: 0;
+                    --left: calc((var(--button-height) - var(--icon-size)) / 2 ) !important;
                     --btn-left: 12px !important;
 
                     &.love-button--loved {
@@ -22828,6 +22852,7 @@
                 }
                 &.glacier-configure-button {
                     --font-size: 0;
+                    --left: calc((var(--button-height) - var(--icon-size)) / 2 ) !important;
                     --btn-left: var(--button-sides) !important;
                 }
                 &.glacier-search-button {

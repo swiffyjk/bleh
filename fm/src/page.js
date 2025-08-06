@@ -144,6 +144,12 @@ function bleh_main() {
 
         // last.fm is a single page application
         const observer = new MutationObserver((mutations) => {
+            if (
+                mutations[0].addedNodes[0] && mutations[0].addedNodes.length == 0 && mutations[0].addedNodes[0].nodeType == 1 && mutations[0].addedNodes[0].hasAttribute('data-tippy-root')
+            ) {
+                return;
+            }
+
             log('loop', 'mutation', 'log', {mutations: mutations});
             lookup_lang();
             patch_masthead(document.body);

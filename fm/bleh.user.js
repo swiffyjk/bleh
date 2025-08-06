@@ -47353,17 +47353,6 @@
     }
     let links = masthead.querySelector(".masthead-nav .navlist-items");
     render(links, html``);
-    let quick_switcher = html.node`
-        <li class="masthead-nav-item">
-            <button class="masthead-nav-control" data-type="cmd" onclick=${() => page.state.rabbit()}>
-                ${tl(trans.quick_switcher)}
-            </button>
-        </li>
-    `;
-    tippy_esm_default(quick_switcher, {
-      content: tl(trans.quick_switcher)
-    });
-    links.appendChild(quick_switcher);
     let bleh_container = html.node`
         <li class="masthead-nav-item">
             <a class="masthead-nav-control" href="${root}bleh${stored_season.id != "none" ? "/seasonal" : ""}" data-label="bleh" data-season="${stored_season.id}" data-season-active="${stored_season.id != "none" ? "true" : "false"}">
@@ -47400,13 +47389,18 @@
     tippy_esm_default(inbox, {
       theme: "stack",
       content: html.node`
-            <p>${tl(trans.inbox_v2)}</p>
-            <p class="hint">
-                notif: ${notif_count}
-            </p>
-            <p class="hint">
-                inbox: ${inbox_count}
-            </p>
+            <strong>${tl(trans.inbox)}</strong>
+            <div class="inbox-info">
+                <div class="inbox-info-item">
+                    <div class="bleh-icon" data-type="notifications" />
+                    ${notif_count}
+                </div>
+                <div class="inbox-sep" />
+                <div class="inbox-info-item">
+                    <div class="bleh-icon" data-type="messages" />
+                    ${inbox_count}
+                </div>
+            </div>
         `
     });
     inbox.addEventListener("click", (e) => {
@@ -47414,67 +47408,67 @@
       const new_tab = e.button === 1 || cmd;
       if (!new_tab) e.preventDefault();
     });
+    let content;
     tippy_esm_default(inbox, {
+      content: html.node`
+            <div class="window-header">
+                <div class="bleh-icon" data-type="inbox" style="--icon: var(--mask)" />
+                <div class="window-title">${tl(trans.inbox)}</div>
+            </div>
+            ${setting({ id: "inbox_view", func: render_inbox })}
+            <div class="window-content" ref=${(el) => content = el} />
+        `,
       theme: "nav-window",
       placement: "top",
       interactive: true,
       interactiveBorder: 10,
       trigger: "click",
       onShow(instance) {
-        let content;
-        instance.setContent(html.node`
-                <div class="window-header">
-                    <div class="bleh-icon" data-type="inbox" style="--icon: var(--mask)" />
-                    <div class="window-title">${tl(trans.inbox)}</div>
-                </div>
-                ${setting({ id: "inbox_view", func: render_inbox })}
-                <div class="window-content" ref=${(el) => content = el} />
-            `);
-        function render_notifications(notifications) {
-          if (settings.inbox_view != "notifications") return;
-          bleh_notification_list(notifications, true);
-          render(content, html`
-                    <div class="mini-notifications">
-                        ${notifications}
-                        <p class="more-link">
-                            <a href="${root}inbox/notifications">${tl(trans.read_more)}</a>
-                        </p>
-                    </div>
-                `);
-        }
-        function render_messages(messages) {
-          if (settings.inbox_view != "messages") return;
-          render(content, html`
-                    <div class="mini-notifications">
-                        ${messages}
-                        <p class="more-link">
-                            <a href="${root}inbox">${tl(trans.read_more)}</a>
-                        </p>
-                    </div>
-                `);
-        }
         render_inbox();
-        function render_inbox(view = settings.inbox_view) {
-          log(`rendering view ${view}`, "navigation");
-          if (content) {
-            render(content, html`
-                        <div class="mini-notifications content-loading">
-                            <div class="loading-data-container">
-                                <div class="loading-data-text">${tl(trans.loading)}</div>
-                            </div>
-                        </div>
-                    `);
-          }
-          if (view == "notifications") {
-            if (page.notifications.list) render_notifications(page.notifications.list);
-            fetch_notifications().then((notifications) => render_notifications(notifications));
-          } else {
-            if (page.messages.list) render_messages(page.messages.list);
-            fetch_messages().then((messages) => render_messages(messages));
-          }
-        }
       }
     });
+    function render_notifications(notifications) {
+      if (settings.inbox_view != "notifications") return;
+      bleh_notification_list(notifications, true);
+      render(content, html`
+            <div class="mini-notifications">
+                ${notifications}
+                <p class="more-link">
+                    <a href="${root}inbox/notifications">${tl(trans.read_more)}</a>
+                </p>
+            </div>
+        `);
+    }
+    function render_messages(messages) {
+      if (settings.inbox_view != "messages") return;
+      render(content, html`
+            <div class="mini-notifications">
+                ${messages}
+                <p class="more-link">
+                    <a href="${root}inbox">${tl(trans.read_more)}</a>
+                </p>
+            </div>
+        `);
+    }
+    function render_inbox(view = settings.inbox_view) {
+      log(`rendering view ${view}`, "navigation");
+      if (content) {
+        render(content, html`
+                <div class="mini-notifications content-loading">
+                    <div class="loading-data-container">
+                        <div class="loading-data-text">${tl(trans.loading)}</div>
+                    </div>
+                </div>
+            `);
+      }
+      if (view == "notifications") {
+        if (page.notifications.list) render_notifications(page.notifications.list);
+        fetch_notifications().then((notifications) => render_notifications(notifications));
+      } else {
+        if (page.messages.list) render_messages(page.messages.list);
+        fetch_messages().then((messages) => render_messages(messages));
+      }
+    }
     links.appendChild(inbox);
     let selected_language = document.querySelector(".footer-language--active strong")?.textContent;
     let language_options = document.querySelectorAll(".footer-language-form");
@@ -50761,6 +50755,9 @@
       sponsors();
       main_flow();
       const observer = new MutationObserver((mutations) => {
+        if (mutations[0].addedNodes[0] && mutations[0].addedNodes.length == 0 && mutations[0].addedNodes[0].nodeType == 1 && mutations[0].addedNodes[0].hasAttribute("data-tippy-root")) {
+          return;
+        }
         log("loop", "mutation", "log", { mutations });
         lookup_lang();
         patch_masthead(document.body);
