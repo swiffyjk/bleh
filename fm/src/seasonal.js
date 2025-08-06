@@ -12,6 +12,7 @@ import {tl, trans, trans_legacy} from "./build/trans";
 import {load_chart_colours} from "./chart";
 import {notify} from "./components/notify";
 import {html} from "lighterhtml";
+import moment from "moment";
 
 export function set_season() {
     if (!settings.seasonal)

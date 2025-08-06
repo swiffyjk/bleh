@@ -188,6 +188,8 @@ export function register_rabbit() {
         input_box.querySelector('input').focus();
     }
 
+    page.state.rabbit = rabbit;
+
     function rabbit_tab() {
         input_box.querySelector('input').focus();
     }

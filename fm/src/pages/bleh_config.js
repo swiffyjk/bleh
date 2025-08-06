@@ -28,6 +28,7 @@ import {input} from "../components/input.js";
 import {share} from "../components/share.js";
 import {start_update, update_check} from "../style.js";
 import tippy from "tippy.js";
+import moment from "moment";
 
 export function bleh_settings() {
     page.name = auth.name;

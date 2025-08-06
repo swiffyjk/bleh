@@ -28773,6 +28773,7 @@
       });
       input_box.querySelector("input").focus();
     }
+    page.state.rabbit = rabbit;
     function rabbit_tab() {
       input_box.querySelector("input").focus();
     }
@@ -43842,6 +43843,7 @@
   }
 
   // src/seasonal.js
+  var import_moment = __toESM(require_moment(), 1);
   function set_season() {
     if (!settings.seasonal)
       return;
@@ -43854,10 +43856,10 @@
     seasonal_events.forEach((season, index3) => {
       log(`running thru, ${season.id} - ${new Date(season.start.replace("y0", current_year).replace("{offset}", stored_season.offset))} ${new Date(season.end.replace("y0", current_year).replace("{offset}", stored_season.offset))}`, "season", "log");
       log(`${now2 >= new Date(season.start.replace("y0", current_year).replace("{offset}", stored_season.offset))} ${now2 <= new Date(season.end.replace("y0", current_year).replace("{offset}", stored_season.offset))}`, "season", "log");
-      season.days_until = -moment().diff(season.start.replace("y0", current_year).replace("{offset}", stored_season.offset), "days");
+      season.days_until = -(0, import_moment.default)().diff(season.start.replace("y0", current_year).replace("{offset}", stored_season.offset), "days");
       season.is_next_year = false;
       if (season.days_until < 0) {
-        season.days_until = -moment().diff(season.start.replace("y0", current_year + 1).replace("{offset}", stored_season.offset), "days");
+        season.days_until = -(0, import_moment.default)().diff(season.start.replace("y0", current_year + 1).replace("{offset}", stored_season.offset), "days");
         season.is_next_year = true;
       }
       if (now2 >= new Date(season.start.replace("y0", current_year).replace("{offset}", stored_season.offset)) && now2 <= new Date(season.end.replace("y0", current_year).replace("{offset}", stored_season.offset))) {
@@ -43901,7 +43903,7 @@
           notify({
             id: "new_season",
             title: tl(trans.new_season),
-            body: tl(trans.value_for_time).replace("{v}", tl(trans.seasonal.listing[season.id])).replace("{time}", moment(season.end.replace("y0", stored_season.year).replace("{offset}", stored_season.offset)).to(stored_season.now, true)),
+            body: tl(trans.value_for_time).replace("{v}", tl(trans.seasonal.listing[season.id])).replace("{time}", (0, import_moment.default)(season.end.replace("y0", stored_season.year).replace("{offset}", stored_season.offset)).to(stored_season.now, true)),
             icon: "icon-16-season",
             persist: true
           });
@@ -43970,7 +43972,7 @@
     if (!page.header.season) return;
     page.header.season.setAttribute("data-season", stored_season.id);
     if (!stored_season.new_years_eve) {
-      page.header.season.textContent = moment(stored_season.end.replace("y0", stored_season.year).replace("{offset}", stored_season.offset)).to(stored_season.now, true);
+      page.header.season.textContent = (0, import_moment.default)(stored_season.end.replace("y0", stored_season.year).replace("{offset}", stored_season.offset)).to(stored_season.now, true);
     } else {
       let next = stored_season.next_start.replace("y0", stored_season.year).replace("{offset}", stored_season.offset);
       if (stored_season.next_is_new_year)
@@ -43996,7 +43998,7 @@
     if (seconds < 10)
       seconds = "0" + seconds;
     if (days != 0)
-      return moment(stored_season.end.replace("y0", stored_season.year).replace("{offset}", stored_season.offset)).to(stored_season.now, true);
+      return (0, import_moment.default)(stored_season.end.replace("y0", stored_season.year).replace("{offset}", stored_season.offset)).to(stored_season.now, true);
     if (hours == "00" && minutes == "00" && seconds == "00")
       set_season();
     if (hours == "00")
@@ -44238,6 +44240,7 @@
   };
 
   // src/pages/bleh_config.js
+  var import_moment2 = __toESM(require_moment(), 1);
   function bleh_settings() {
     page.name = auth.name;
     page.subpage = "";
@@ -44612,7 +44615,7 @@
             <div class="bleh--panel">
                 <div class="seasonal-inner">
                     <div class="sub-text">${tl(trans.seasonal_timeline)}</div>
-                    <h4>${moment(stored_season.now).format("MMMM Do YYYY")}</h4>
+                    <h4>${(0, import_moment2.default)(stored_season.now).format("MMMM Do YYYY")}</h4>
                 </div>
                 <div class="setting-group">
                     ${setting({ id: "seasonal" })}
@@ -44633,7 +44636,7 @@
                             <h5>${tl(trans.started)}</h5>
                         </div>
                         <div class="info">
-                            <p id="current_season_start">${moment(stored_season.start.replace("y0", stored_season.year).replace("{offset}", stored_season.offset)).from(stored_season.now)}</p>
+                            <p id="current_season_start">${(0, import_moment2.default)(stored_season.start.replace("y0", stored_season.year).replace("{offset}", stored_season.offset)).from(stored_season.now)}</p>
                         </div>
                     </div>
                     <div class="setting" data-type="info">
@@ -44641,7 +44644,7 @@
                             <h5>${tl(trans.ends_in)}</h5>
                         </div>
                         <div class="info">
-                            <p id="current_season">${moment(stored_season.end.replace("y0", stored_season.year).replace("{offset}", stored_season.offset)).to(stored_season.now, true)}</p>
+                            <p id="current_season">${(0, import_moment2.default)(stored_season.end.replace("y0", stored_season.year).replace("{offset}", stored_season.offset)).to(stored_season.now, true)}</p>
                         </div>
                     </div>
                     ` : settings.seasonal ? html.node`
@@ -44650,7 +44653,7 @@
                             <h5>${tl(trans.next_in)}</h5>
                         </div>
                         <div class="info">
-                            <p id="next_season_start">${moment(stored_season.next_start.replace("y0", stored_season.next_is_new_year ? stored_season.year + 1 : stored_season.year).replace("{offset}", stored_season.offset)).to(stored_season.now, true)}</p>
+                            <p id="next_season_start">${(0, import_moment2.default)(stored_season.next_start.replace("y0", stored_season.next_is_new_year ? stored_season.year + 1 : stored_season.year).replace("{offset}", stored_season.offset)).to(stored_season.now, true)}</p>
                         </div>
                     </div>
                     ` : ""}
@@ -44735,11 +44738,11 @@
                     <li>Theme loading is currently ${!settings.dev}</li>
                     <li><span class="lotus lotus-name lotus-name-small">lotus</span> is currently ${settings.corrections}</li>
                     <br>
-                    <li>Theme will expire at <span class="time">${moment(localStorage.getItem("bleh_cached_style_timeout")).format("HH:mm:ss Z")}</span></li>
-                    <li><span class="lotus lotus-name lotus-name-small">lotus</span> (artist) will expire at <span class="time">${moment(localStorage.getItem("lotus_artist_expire")).format("HH:mm:ss Z")}</span></li>
-                    <li><span class="lotus lotus-name lotus-name-small">lotus</span> (album_track) will expire at <span class="time">${moment(localStorage.getItem("lotus_album_track_expire")).format("HH:mm:ss Z")}</span></li>
+                    <li>Theme will expire at <span class="time">${(0, import_moment2.default)(localStorage.getItem("bleh_cached_style_timeout")).format("HH:mm:ss Z")}</span></li>
+                    <li><span class="lotus lotus-name lotus-name-small">lotus</span> (artist) will expire at <span class="time">${(0, import_moment2.default)(localStorage.getItem("lotus_artist_expire")).format("HH:mm:ss Z")}</span></li>
+                    <li><span class="lotus lotus-name lotus-name-small">lotus</span> (album_track) will expire at <span class="time">${(0, import_moment2.default)(localStorage.getItem("lotus_album_track_expire")).format("HH:mm:ss Z")}</span></li>
                     <br>
-                    <li>It is currently <span class="time">${moment().format("HH:mm:ss Z")}</span></li>
+                    <li>It is currently <span class="time">${(0, import_moment2.default)().format("HH:mm:ss Z")}</span></li>
                     <br>
                     <li>Has the timeout expired? ${new Date(localStorage.getItem("bleh_cached_style_timeout")) < /* @__PURE__ */ new Date()}</li>
                 </ul>
@@ -45370,7 +45373,7 @@
                     </div>
                     <div class="update-center-details">
                         <h2>${tl(trans.updates_paused)}</h2>
-                        <p class="last-checked">${tl(trans.paused_until_date).replace("{d}", moment(paused_until).fromNow())}</p>
+                        <p class="last-checked">${tl(trans.paused_until_date).replace("{d}", (0, import_moment2.default)(paused_until).fromNow())}</p>
                     </div>
                     <button class="btn primary icon" data-type="update" ref=${(el) => update_btn = el} disabled>${tl(trans.check)}</button>
                     ` : update_required === "false" ? html.node`
@@ -45387,7 +45390,7 @@
                     <div class="update-center-details">
                         ${last_checked ? html.node`
                         <h2>${tl(trans.you_are_up_to_date)}</h2>
-                        <p class="last-checked">${tl(trans.last_checked_date).replace("{d}", moment(last_checked).fromNow())}</p>
+                        <p class="last-checked">${tl(trans.last_checked_date).replace("{d}", (0, import_moment2.default)(last_checked).fromNow())}</p>
                         ` : html.node`
                         <h2>${tl(trans.missing_updates)}</h2>
                         <p class="last-checked">${tl(trans.never_checked)}</p>
@@ -45411,7 +45414,7 @@
                     <div class="update-center-details">
                         <h2>${tl(trans.update_available_to_install)}</h2>
                         ${last_checked ? html.node`
-                        <p class="last-checked">${tl(trans.last_checked_date).replace("{d}", moment(last_checked).fromNow())}</p>
+                        <p class="last-checked">${tl(trans.last_checked_date).replace("{d}", (0, import_moment2.default)(last_checked).fromNow())}</p>
                         ` : html.node`
                         <p class="last-checked">${tl(trans.never_checked)}</p>
                         `}
@@ -46024,7 +46027,7 @@
                 </div>
                 ` : html.node`<div class="badges"></div>`}
                 <div class="date">
-                    <p>${lang_info[language].last_updated != "latest" ? moment(lang_info[language].last_updated).fromNow() : lang_info[language].last_updated}</p>
+                    <p>${lang_info[language].last_updated != "latest" ? (0, import_moment2.default)(lang_info[language].last_updated).fromNow() : lang_info[language].last_updated}</p>
                 </div>
             </div>
         `;
@@ -46405,7 +46408,7 @@
         <div class="type">
             ${tl(trans.activity.listing[activity.type])}
             <div class="date">
-                ${moment(activity.date).fromNow(true)}
+                ${(0, import_moment2.default)(activity.date).fromNow(true)}
             </div>
         </div>
         <div class="name">${involved_text}</div>
@@ -47292,7 +47295,15 @@
       document.body.appendChild(style_warning);
       page.structure.style_warning = style_warning;
     }
-    let masthead = document.body.querySelector(".masthead");
+    const masthead = document.body.querySelector(".masthead");
+    const inner = masthead.querySelector(".masthead-inner-wrap");
+    const navs = inner.querySelector(".masthead-nav-wrap");
+    const search = inner.querySelector(".masthead-search-form");
+    inner.insertBefore(html.node`
+        <div class="masthead-search-wrap">
+            ${search}
+        </div>
+    `, navs);
     let new_auth = masthead.querySelector(".auth-dropdown-menu");
     let auth_link2 = masthead.querySelector(".masthead-nav-wrap > .site-auth .auth-link");
     if (!auth_link2) return;
@@ -47313,6 +47324,17 @@
     }
     let links = masthead.querySelector(".masthead-nav .navlist-items");
     render(links, html``);
+    let quick_switcher = html.node`
+        <li class="masthead-nav-item">
+            <button class="masthead-nav-control" data-type="cmd" onclick=${() => page.state.rabbit()}>
+                ${tl(trans.quick_switcher)}
+            </button>
+        </li>
+    `;
+    tippy_esm_default(quick_switcher, {
+      content: tl(trans.quick_switcher)
+    });
+    links.appendChild(quick_switcher);
     let notif_count = new_auth.querySelector('[data-analytics-label="notifications"] + .auth-avatar-notification-count-badge');
     if (!notif_count) notif_count = "0";
     else notif_count = notif_count.textContent;
@@ -48969,7 +48991,7 @@
   }
 
   // src/pages/chart.js
-  var import_moment = __toESM(require_moment(), 1);
+  var import_moment3 = __toESM(require_moment(), 1);
   function bleh_charts() {
     if (page.subpage != "overview")
       return;
@@ -48987,7 +49009,7 @@
 
             </div>
             <div class="middle">
-                <div class="sub-text">${(0, import_moment.default)(/* @__PURE__ */ new Date()).format("MMMM Do YYYY")}</div>
+                <div class="sub-text">${(0, import_moment3.default)(/* @__PURE__ */ new Date()).format("MMMM Do YYYY")}</div>
                 <h2>${tl(trans.charts)}</h2>
             </div>
             <div class="right">

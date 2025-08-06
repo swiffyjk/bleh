@@ -108,8 +108,21 @@ export function append_nav() {
         page.structure.style_warning = style_warning;
     }
 
+
+    const masthead = document.body.querySelector('.masthead');
+    const inner = masthead.querySelector('.masthead-inner-wrap');
+
+    const navs = inner.querySelector('.masthead-nav-wrap');
+
+    const search = inner.querySelector('.masthead-search-form');
+    inner.insertBefore(html.node`
+        <div class="masthead-search-wrap">
+            ${search}
+        </div>
+    `, navs);
+
+
     // 2025-04-14
-    let masthead = document.body.querySelector('.masthead');
     let new_auth = masthead.querySelector('.auth-dropdown-menu');
 
     let auth_link = masthead.querySelector('.masthead-nav-wrap > .site-auth .auth-link');
@@ -139,9 +152,9 @@ export function append_nav() {
     render(links, html``);
 
 
-    /*let quick_switcher = html.node`
+    let quick_switcher = html.node`
         <li class="masthead-nav-item">
-            <button class="masthead-nav-control" data-type="cmd">
+            <button class="masthead-nav-control" data-type="cmd" onclick=${() => page.state.rabbit()}>
                 ${tl(trans.quick_switcher)}
             </button>
         </li>
@@ -151,7 +164,7 @@ export function append_nav() {
         content: tl(trans.quick_switcher)
     });
 
-    links.appendChild(quick_switcher);*/
+    links.appendChild(quick_switcher);
 
 
     let notif_count = new_auth.querySelector('[data-analytics-label="notifications"] + .auth-avatar-notification-count-badge');

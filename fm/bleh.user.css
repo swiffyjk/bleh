@@ -1604,8 +1604,8 @@
     .auth-link, .language-nav,
     .masthead-nav-control {
         --bg: transparent !important;
-        --bg-hov: hsl(var(--b4), 40%) !important;
-        --bg-atv: hsl(var(--b4), 60%) !important;
+        --bg-hov: hsl(var(--b4), 60%) !important;
+        --bg-atv: hsl(var(--b4), 80%) !important;
         --shadow: none !important;
         --shadow-hov: none !important;
         --col: hsl(var(--c2)) !important;
@@ -1644,35 +1644,37 @@
             flex: 1;
             outline: none !important;
 
+            text-align: center;
+
             &::placeholder {
                 color: hsl(var(--c3)) !important;
+                font-weight: var(--font-weight-medium);
             }
         }
 
         .masthead-search-inner-wrap {
             display: flex;
             flex: 1;
-            padding-right: 40px;
+            padding-right: 0;
         }
         .masthead-search-submit {
-            --bg: transparent !important;
-            --bg-hov: transparent !important;
-            --bg-atv: transparent !important;
-            --shadow: none !important;
-            --shadow-hov: none !important;
-            width: 38px !important;
-            height: 32px !important;
-            opacity: 1 !important;
-            top: 0;
-            right: 0;
+            display: none !important;
         }
+    }
+
+    .masthead-logo, .masthead-nav-wrap {
+        width: 360px !important;
+    }
+
+    .masthead-search-wrap {
+        flex: 1;
     }
 
 
     .masthead-nav-wrap {
         display: flex;
+        justify-content: end;
         gap: var(--button-list-gap);
-        flex: 1;
 
         .site-auth,
         .masthead-nav {
