@@ -120,6 +120,10 @@ export let page = {
         next_fetch: null,
         list: null
     },
+    messages: {
+        next_fetch: null,
+        list: null
+    },
     structure: {
         wrapper: null,
         container: null,

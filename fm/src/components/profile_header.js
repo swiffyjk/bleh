@@ -246,7 +246,7 @@ export function redesign_profile_header(is_own_profile, is_following) {
         }
 
         let taste_wrap = html.node`
-            <div class="btn listen-item ${taste != 'super' ? 'icon' : ''} taste">
+            <div class="btn listen-item ${(taste != 'super' && taste != 'very_low') ? 'icon' : ''} taste">
                 <div class="taste-icon colourful" data-taste=${taste}>
                     <div class="bleh-icon" />
                 </div>

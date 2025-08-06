@@ -16,7 +16,7 @@ import {html, render} from "lighterhtml";
 import {news} from "./news.js";
 import {change_theme_from_menu, toggle_theme} from "./config.js";
 import {open_profile_shortcut_window} from "./components/profile_shortcut.js";
-import {save_setting} from "./components/settings.js";
+import {save_setting, setting} from "./components/settings.js";
 import {load_banner} from "./components/banner.js";
 import {prompt_for_update} from "./style.js";
 import {log} from "./build/log.js";
@@ -167,106 +167,6 @@ export function append_nav() {
     links.appendChild(quick_switcher);
 
 
-    let notif_count = new_auth.querySelector('[data-analytics-label="notifications"] + .auth-avatar-notification-count-badge');
-    if (!notif_count) notif_count = '0'; else notif_count = notif_count.textContent;
-    let inbox_count = new_auth.querySelector('[data-analytics-label="inbox"] + .auth-avatar-notification-count-badge');
-    if (!inbox_count) inbox_count = '0'; else inbox_count = inbox_count.textContent;
-
-    let notif_link;
-    let notif_container = html.node`
-        <li class="masthead-nav-item">
-            <a class="masthead-nav-control" href="${root}inbox/notifications" data-label="notifications" data-count=${notif_count} ref=${el => notif_link = el}>
-                <span class="sr-only">${tl(trans.notifications.name)}</span>
-                <div class="counter">${notif_count}</div>
-            </a>
-        </li>
-    `;
-
-    notif_link.addEventListener('click', (e) => {
-        const cmd = (e.getModifierState('Control') || e.getModifierState('Meta'));
-        const new_tab = e.button === 1 || cmd;
-
-        // only allow clicking link if new tab action
-        if (!new_tab) e.preventDefault();
-    });
-
-    if (notif_count > 0) {
-        tippy(notif_link, {
-            content: tl(trans.notifications.count).replace('{count}', notif_count)
-        });
-    } else {
-        tippy(notif_link, {
-            content: tl(trans.notifications.none)
-        });
-    }
-
-    tippy(notif_link, {
-        theme: 'nav-window',
-        placement: 'top',
-        interactive: true,
-        interactiveBorder: 10,
-        trigger: 'click',
-
-        onShow(instance) {
-            instance.setContent(html.node`
-                <div class="window-header">
-                    <div class="bleh-icon" data-type="notifications" style="--icon: var(--mask)" />
-                    <div class="window-title">${tl(trans.notifications.name)}</div>
-                </div>
-                <div class="mini-notifications content-loading">
-                    <div class="loading-data-container">
-                        <div class="loading-data-text">${tl(trans.loading)}</div>
-                    </div>
-                </div>
-            `);
-
-            function render_notifications(notifications) {
-                bleh_notification_list(notifications, true);
-
-                instance.setContent(html.node`
-                    <div class="window-header">
-                        <div class="bleh-icon" data-type="notifications" style="--icon: var(--mask)" />
-                        <div class="window-title">${tl(trans.notifications.name)}</div>
-                    </div>
-                    <div class="mini-notifications">
-                        ${notifications}
-                        <p class="more-link">
-                            <a href="${root}inbox/notifications">${tl(trans.read_more)}</a>
-                        </p>
-                    </div>
-                `);
-            }
-
-            if (page.notifications.list) render_notifications(page.notifications.list);
-
-            fetch_notifications().then(notifications => render_notifications(notifications));
-        }
-    });
-
-    links.appendChild(notif_container);
-
-    let inbox_link;
-    let inbox_container = html.node`
-        <li class="masthead-nav-item">
-            <a class="masthead-nav-control" href="${root}inbox" data-label="inbox" data-count=${inbox_count} ref=${el => inbox_link = el}>
-                <span class="sr-only">${tl(trans.inbox.name)}</span>
-                <div class="counter">${inbox_count}</div>
-            </a>
-        </li>
-    `;
-
-    if (inbox_count > 0) {
-        tippy(inbox_link, {
-            content: tl(trans.inbox.count).replace('{count}', inbox_count)
-        });
-    } else {
-        tippy(inbox_link, {
-            content: tl(trans.inbox.none)
-        });
-    }
-
-    links.appendChild(inbox_container);
-
     // configure bleh
     let bleh_container = html.node`
         <li class="masthead-nav-item">
@@ -291,6 +191,113 @@ export function append_nav() {
     links.appendChild(bleh_container);
 
     page.header.season = bleh_container.querySelector('a');
+
+
+    let notif_count = new_auth.querySelector('[data-analytics-label="notifications"] + .auth-avatar-notification-count-badge');
+    if (!notif_count) notif_count = '0'; else notif_count = notif_count.textContent;
+    let inbox_count = new_auth.querySelector('[data-analytics-label="inbox"] + .auth-avatar-notification-count-badge');
+    if (!inbox_count) inbox_count = '0'; else inbox_count = inbox_count.textContent;
+
+    const inbox = html.node`
+        <a class="inbox-item" href="${root}inbox/notifications">
+            ${parseInt(notif_count) + parseInt(inbox_count)}
+        </a>
+    `;
+
+    tippy(inbox, {
+        theme: 'stack',
+        content: html.node`
+            <p>${tl(trans.inbox_v2)}</p>
+            <p class="hint">
+                notif: ${notif_count}
+            </p>
+            <p class="hint">
+                inbox: ${inbox_count}
+            </p>
+        `
+    });
+
+    inbox.addEventListener('click', (e) => {
+        const cmd = (e.getModifierState('Control') || e.getModifierState('Meta'));
+        const new_tab = e.button === 1 || cmd;
+
+        // only allow clicking link if new tab action
+        if (!new_tab) e.preventDefault();
+    });
+
+    tippy(inbox, {
+        theme: 'nav-window',
+        placement: 'top',
+        interactive: true,
+        interactiveBorder: 10,
+        trigger: 'click',
+
+        onShow(instance) {
+            let content;
+
+            instance.setContent(html``);
+            instance.setContent(html.node`
+                <div class="window-header">
+                    <div class="bleh-icon" data-type="inbox" style="--icon: var(--mask)" />
+                    <div class="window-title">${tl(trans.inbox)}</div>
+                </div>
+                ${setting({id: 'inbox_view', func: render_inbox})}
+                <div class="window-content" ref=${el => content = el}>
+                    <div class="mini-notifications content-loading">
+                        <div class="loading-data-container">
+                            <div class="loading-data-text">${tl(trans.loading)}</div>
+                        </div>
+                    </div>
+                </div>
+            `);
+
+            function render_notifications(notifications) {
+                if (settings.inbox_view != 'notifications') return;
+
+                bleh_notification_list(notifications, true);
+
+                render(content, html`
+                    <div class="mini-notifications">
+                        ${notifications}
+                        <p class="more-link">
+                            <a href="${root}inbox/notifications">${tl(trans.read_more)}</a>
+                        </p>
+                    </div>
+                `);
+            }
+
+            function render_messages(messages) {
+                if (settings.inbox_view != 'messages') return;
+
+                render(content, html`
+                    <div class="mini-notifications">
+                        ${messages}
+                        <p class="more-link">
+                            <a href="${root}inbox">${tl(trans.read_more)}</a>
+                        </p>
+                    </div>
+                `);
+            }
+
+            render_inbox();
+
+            function render_inbox(view = settings.inbox_view) {
+                log(`rendering view ${view}`, 'navigation');
+
+                if (view == 'notifications') {
+                    if (page.notifications.list) render_notifications(page.notifications.list);
+
+                    fetch_notifications().then(notifications => render_notifications(notifications));
+                } else {
+                    if (page.messages.list) render_messages(page.messages.list);
+
+                    fetch_messages().then(messages => render_messages(messages));
+                }
+            }
+        }
+    });
+
+    links.appendChild(inbox);
 
 
     // language
@@ -415,7 +422,7 @@ export function append_nav() {
                                                     <div class="badge-reason">${tl(trans.badges['user-status-subscriber'].reason)}</div>
                                                 `
                                             });
-                                            
+
                                             return el;
                                         } : ''}
                                     </div>
@@ -433,32 +440,32 @@ export function append_nav() {
                                             </a>
                                         </form>
                                     `;
-                                    
+
                                     tippy(button, {
                                         content: tl(trans.logout)
                                     });
-                                    
+
                                     return form;
                                 }}
                                 ${(settings.profile_shortcut != '') ? () => {
                                     let button = html.node`
                                         <a class="dropdown-menu-clickable-item chibi" data-type="shortcut" data-is-shortcut="true" href="${root}user/${settings.profile_shortcut}">${settings.profile_shortcut}</a>
                                     `;
-                                    
+
                                     tippy(button, {
                                         content: settings.profile_shortcut
                                     });
-                                    
+
                                     return button;
                                 } : () => {
                                     let button = html.node`
                                         <button class="dropdown-menu-clickable-item chibi" data-type="shortcut" data-is-shortcut="false" onclick=${() => open_profile_shortcut_window()}>${tl(trans.profile_shortcut.name)}</button>
                                     `;
-                
+
                                     tippy(button, {
                                         content: tl(trans.profile_shortcut.name)
                                     });
-                
+
                                     return button;
                                 }}
                             </div>
@@ -492,11 +499,11 @@ export function append_nav() {
                                                 if (theme.hide) return html.node``;
 
                                                 if (!theme.formal) theme.formal = theme.id;
-                                                
+
                                                 return html.node`
                                                     <button class="dropdown-menu-clickable-item theme-item-in-menu" data-bleh-theme=${theme.id} data-type="theme_${theme.formal}" onclick="${() => change_theme_from_menu(theme.id)}">
                                                         ${theme.name}
-                                                    </button> 
+                                                    </button>
                                                 `;
                                             })}
                                         `);
@@ -547,7 +554,7 @@ export function append_nav() {
                                         ${tl(trans.news)}
                                     </button>
                                 </div>
-                                
+
                                 <div class="button-combo">
                                     <a class="dropdown-menu-clickable-item" data-menu-item="bleh" href="${root}bleh">
                                         ${tl(trans.settings)}
@@ -811,12 +818,43 @@ export async function fetch_notifications() {
         const list = doc.querySelector('.inbox-notifications');
 
         let next = new Date();
-        next.setMinutes(next.getMinutes() + 1);
+        next.setMinutes(next.getMinutes() + 2);
 
-        page.notifications.next = next;
+        page.notifications.next_fetch = next;
 
         if (list) {
             page.notifications.list = list;
+
+            return list;
+        }
+    } catch (error) {
+        log('exception during fetch', 'live', 'error', {error: error});
+    }
+}
+
+export async function fetch_messages() {
+    if (page.messages.next_fetch && Date.now() < page.messages.next_fetch) return page.messages.list;
+
+    try {
+        const res = await fetch(`${root}inbox`);
+        if (!res.ok) {
+            log('failed to fetch', 'live', 'error', {res});
+            return;
+        }
+
+        const dom = await res.text();
+        const parser = new DOMParser();
+        const doc = parser.parseFromString(dom, 'text/html');
+
+        const list = doc.querySelector('.inbox-table');
+
+        let next = new Date();
+        next.setMinutes(next.getMinutes() + 2);
+
+        page.messages.next_fetch = next;
+
+        if (list) {
+            page.messages.list = list;
 
             return list;
         }

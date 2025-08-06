@@ -21,7 +21,8 @@ export function setting({
     id = '',
     text = true,
     focus = false,
-    standalone = false
+    standalone = false,
+    func
 }) {
     try {
         let value = settings[id];
@@ -77,11 +78,11 @@ export function setting({
                                     <div class="bleh-icon" />
                                 </div>
                             `;
-                            
+
                             tippy(container, {
                                 content: tl(trans.requires_extension_value).replace('{v}', tl(extension))
                             });
-                            
+
                             return container;
                         })}
                     </div>
@@ -289,6 +290,37 @@ export function setting({
                     </div>
                 </div>
             `;
+        } else if (type == 'tabs') {
+            if (func) func(value);
+
+            let buttons = [];
+
+            const tabs = html.node`
+                <div class="view-buttons view-buttons-middle">
+                    ${Object.entries(settings_store[id].values).map(([key, val]) => {
+                        const icon = val.icon || key;
+
+                        const button = html.node`
+                            <button class="btn view-item" data-type=${icon} data-value=${key} onclick=${() => {
+                                save_setting(id, key);
+
+                                buttons.forEach(btn => {
+                                    btn.setAttribute('aria-checked', btn.getAttribute('data-value') == key);
+                                });
+
+                                if (func) func(key);
+                            }} aria-checked=${value == key}>
+                                ${tl(val.name)}
+                            </button>
+                        `;
+
+                        buttons.push(button);
+                        return button;
+                    })}
+                </div>
+            `;
+
+            return tabs;
         }
     } catch(e) {
         console.error(e);

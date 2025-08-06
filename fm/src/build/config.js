@@ -1013,5 +1013,17 @@ export let settings_store = {
         title: trans.prefer_no_redirect.name,
         body: trans.prefer_no_redirect.body,
         new_release: true
+    },
+    inbox_view: {
+        default: 'notifications',
+        type: 'tabs',
+        values: {
+            notifications: {
+                name: trans.notifications
+            },
+            messages: {
+                name: trans.messages
+            }
+        }
     }
 }

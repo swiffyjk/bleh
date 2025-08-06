@@ -913,39 +913,18 @@ export const trans = {
         de: 'Weiter',
         pt: 'Mais'
     },
-    notifications: {
-        name: {
-            en: 'Notifications',
-            de: 'Benachrichtigungen',
-            pt: 'Notificações'
-        },
-        count: {
-            en: '{count} notifications',
-            de: '{count} Benachrichtigungen',
-            pt: '{count} notificações'
-        },
-        none: {
-            en: 'No new notifications',
-            de: 'Keine neuen Benachrichtigungen',
-            pt: 'Nenhuma notificação nova'
-        }
-    },
     inbox: {
-        name: {
-            en: 'Messages',
-            de: 'Nachrichten',
-            pt: 'Mensagens'
-        },
-        count: {
-            en: '{count} messages',
-            de: '{count} Nachrichten',
-            pt: '{count} mensagens'
-        },
-        none: {
-            en: 'No new messages',
-            de: 'Keine neuen Nachrichten',
-            pt: 'Nenhuma mensagem nova'
-        }
+        en: 'Inbox'
+    },
+    notifications: {
+        en: 'Notifications',
+        de: 'Benachrichtigungen',
+        pt: 'Notificações'
+    },
+    messages: {
+        en: 'Messages',
+        de: 'Nachrichten',
+        pt: 'Mensagens'
     },
     about_me_preview: {
         // About

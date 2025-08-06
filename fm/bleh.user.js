@@ -22905,6 +22905,10 @@
       next_fetch: null,
       list: null
     },
+    messages: {
+      next_fetch: null,
+      list: null
+    },
     structure: {
       wrapper: null,
       container: null,
@@ -29535,7 +29539,8 @@
     id = "",
     text: text3 = true,
     focus = false,
-    standalone = false
+    standalone = false,
+    func
   }) {
     try {
       let value = settings[id];
@@ -29773,6 +29778,30 @@
                     </div>
                 </div>
             `;
+      } else if (type == "tabs") {
+        if (func) func(value);
+        let buttons = [];
+        const tabs = html.node`
+                <div class="view-buttons view-buttons-middle">
+                    ${Object.entries(settings_store[id].values).map(([key, val]) => {
+          const icon2 = val.icon || key;
+          const button = html.node`
+                            <button class="btn view-item" data-type=${icon2} data-value=${key} onclick=${() => {
+            save_setting(id, key);
+            buttons.forEach((btn) => {
+              btn.setAttribute("aria-checked", btn.getAttribute("data-value") == key);
+            });
+            if (func) func(key);
+          }} aria-checked=${value == key}>
+                                ${tl(val.name)}
+                            </button>
+                        `;
+          buttons.push(button);
+          return button;
+        })}
+                </div>
+            `;
+        return tabs;
       }
     } catch (e) {
       console.error(e);
@@ -31433,7 +31462,7 @@
         return;
       }
       let taste_wrap = html.node`
-            <div class="btn listen-item ${taste != "super" ? "icon" : ""} taste">
+            <div class="btn listen-item ${taste != "super" && taste != "very_low" ? "icon" : ""} taste">
                 <div class="taste-icon colourful" data-taste=${taste}>
                     <div class="bleh-icon" />
                 </div>
@@ -47335,92 +47364,6 @@
       content: tl(trans.quick_switcher)
     });
     links.appendChild(quick_switcher);
-    let notif_count = new_auth.querySelector('[data-analytics-label="notifications"] + .auth-avatar-notification-count-badge');
-    if (!notif_count) notif_count = "0";
-    else notif_count = notif_count.textContent;
-    let inbox_count = new_auth.querySelector('[data-analytics-label="inbox"] + .auth-avatar-notification-count-badge');
-    if (!inbox_count) inbox_count = "0";
-    else inbox_count = inbox_count.textContent;
-    let notif_link;
-    let notif_container = html.node`
-        <li class="masthead-nav-item">
-            <a class="masthead-nav-control" href="${root}inbox/notifications" data-label="notifications" data-count=${notif_count} ref=${(el) => notif_link = el}>
-                <span class="sr-only">${tl(trans.notifications.name)}</span>
-                <div class="counter">${notif_count}</div>
-            </a>
-        </li>
-    `;
-    notif_link.addEventListener("click", (e) => {
-      const cmd = e.getModifierState("Control") || e.getModifierState("Meta");
-      const new_tab = e.button === 1 || cmd;
-      if (!new_tab) e.preventDefault();
-    });
-    if (notif_count > 0) {
-      tippy_esm_default(notif_link, {
-        content: tl(trans.notifications.count).replace("{count}", notif_count)
-      });
-    } else {
-      tippy_esm_default(notif_link, {
-        content: tl(trans.notifications.none)
-      });
-    }
-    tippy_esm_default(notif_link, {
-      theme: "nav-window",
-      placement: "top",
-      interactive: true,
-      interactiveBorder: 10,
-      trigger: "click",
-      onShow(instance) {
-        instance.setContent(html.node`
-                <div class="window-header">
-                    <div class="bleh-icon" data-type="notifications" style="--icon: var(--mask)" />
-                    <div class="window-title">${tl(trans.notifications.name)}</div>
-                </div>
-                <div class="mini-notifications content-loading">
-                    <div class="loading-data-container">
-                        <div class="loading-data-text">${tl(trans.loading)}</div>
-                    </div>
-                </div>
-            `);
-        function render_notifications(notifications) {
-          bleh_notification_list(notifications, true);
-          instance.setContent(html.node`
-                    <div class="window-header">
-                        <div class="bleh-icon" data-type="notifications" style="--icon: var(--mask)" />
-                        <div class="window-title">${tl(trans.notifications.name)}</div>
-                    </div>
-                    <div class="mini-notifications">
-                        ${notifications}
-                        <p class="more-link">
-                            <a href="${root}inbox/notifications">${tl(trans.read_more)}</a>
-                        </p>
-                    </div>
-                `);
-        }
-        if (page.notifications.list) render_notifications(page.notifications.list);
-        fetch_notifications().then((notifications) => render_notifications(notifications));
-      }
-    });
-    links.appendChild(notif_container);
-    let inbox_link;
-    let inbox_container = html.node`
-        <li class="masthead-nav-item">
-            <a class="masthead-nav-control" href="${root}inbox" data-label="inbox" data-count=${inbox_count} ref=${(el) => inbox_link = el}>
-                <span class="sr-only">${tl(trans.inbox.name)}</span>
-                <div class="counter">${inbox_count}</div>
-            </a>
-        </li>
-    `;
-    if (inbox_count > 0) {
-      tippy_esm_default(inbox_link, {
-        content: tl(trans.inbox.count).replace("{count}", inbox_count)
-      });
-    } else {
-      tippy_esm_default(inbox_link, {
-        content: tl(trans.inbox.none)
-      });
-    }
-    links.appendChild(inbox_container);
     let bleh_container = html.node`
         <li class="masthead-nav-item">
             <a class="masthead-nav-control" href="${root}bleh${stored_season.id != "none" ? "/seasonal" : ""}" data-label="bleh" data-season="${stored_season.id}" data-season-active="${stored_season.id != "none" ? "true" : "false"}">
@@ -47443,6 +47386,94 @@
     }
     links.appendChild(bleh_container);
     page.header.season = bleh_container.querySelector("a");
+    let notif_count = new_auth.querySelector('[data-analytics-label="notifications"] + .auth-avatar-notification-count-badge');
+    if (!notif_count) notif_count = "0";
+    else notif_count = notif_count.textContent;
+    let inbox_count = new_auth.querySelector('[data-analytics-label="inbox"] + .auth-avatar-notification-count-badge');
+    if (!inbox_count) inbox_count = "0";
+    else inbox_count = inbox_count.textContent;
+    const inbox = html.node`
+        <a class="inbox-item" href="${root}inbox/notifications">
+            ${parseInt(notif_count) + parseInt(inbox_count)}
+        </a>
+    `;
+    tippy_esm_default(inbox, {
+      theme: "stack",
+      content: html.node`
+            <p>${tl(trans.inbox_v2)}</p>
+            <p class="hint">
+                notif: ${notif_count}
+            </p>
+            <p class="hint">
+                inbox: ${inbox_count}
+            </p>
+        `
+    });
+    inbox.addEventListener("click", (e) => {
+      const cmd = e.getModifierState("Control") || e.getModifierState("Meta");
+      const new_tab = e.button === 1 || cmd;
+      if (!new_tab) e.preventDefault();
+    });
+    tippy_esm_default(inbox, {
+      theme: "nav-window",
+      placement: "top",
+      interactive: true,
+      interactiveBorder: 10,
+      trigger: "click",
+      onShow(instance) {
+        let content;
+        instance.setContent(html``);
+        instance.setContent(html.node`
+                <div class="window-header">
+                    <div class="bleh-icon" data-type="inbox" style="--icon: var(--mask)" />
+                    <div class="window-title">${tl(trans.inbox)}</div>
+                </div>
+                ${setting({ id: "inbox_view", func: render_inbox })}
+                <div class="window-content" ref=${(el) => content = el}>
+                    <div class="mini-notifications content-loading">
+                        <div class="loading-data-container">
+                            <div class="loading-data-text">${tl(trans.loading)}</div>
+                        </div>
+                    </div>
+                </div>
+            `);
+        function render_notifications(notifications) {
+          if (settings.inbox_view != "notifications") return;
+          bleh_notification_list(notifications, true);
+          render(content, html`
+                    <div class="mini-notifications">
+                        ${notifications}
+                        <p class="more-link">
+                            <a href="${root}inbox/notifications">${tl(trans.read_more)}</a>
+                        </p>
+                    </div>
+                `);
+        }
+        function render_messages(messages) {
+          if (settings.inbox_view != "messages") return;
+          render(content, html`
+                    <div class="mini-notifications">
+                        ${messages}
+                        <p class="more-link">
+                            <a href="${root}inbox">${tl(trans.read_more)}</a>
+                        </p>
+                    </div>
+                `);
+        }
+        render_inbox();
+        function render_inbox(view = settings.inbox_view) {
+          log(`rendering view ${view}`, "navigation");
+          if (view == "notifications") {
+            if (page.notifications.list) render_notifications(page.notifications.list);
+            fetch_notifications().then((notifications) => render_notifications(notifications));
+          } else {
+            if (page.messages.list) render_messages(page.messages.list);
+            fetch_messages().then((messages) => render_messages(messages));
+          }
+        }
+      }
+    });
+    links.appendChild(inbox);
     let selected_language = document.querySelector(".footer-language--active strong")?.textContent;
     let language_options = document.querySelectorAll(".footer-language-form");
     let language_menu = html.node`
@@ -47622,7 +47653,7 @@
               return html.node`
                                                     <button class="dropdown-menu-clickable-item theme-item-in-menu" data-bleh-theme=${theme.id} data-type="theme_${theme.formal}" onclick="${() => change_theme_from_menu(theme.id)}">
                                                         ${theme.name}
-                                                    </button> 
+                                                    </button>
                                                 `;
             })}
                                         `);
@@ -47673,7 +47704,7 @@
                                         ${tl(trans.news)}
                                     </button>
                                 </div>
-                                
+
                                 <div class="button-combo">
                                     <a class="dropdown-menu-clickable-item" data-menu-item="bleh" href="${root}bleh">
                                         ${tl(trans.settings)}
@@ -47903,10 +47934,33 @@
       const doc = parser.parseFromString(dom, "text/html");
       const list = doc.querySelector(".inbox-notifications");
       let next = /* @__PURE__ */ new Date();
-      next.setMinutes(next.getMinutes() + 1);
-      page.notifications.next = next;
+      next.setMinutes(next.getMinutes() + 2);
+      page.notifications.next_fetch = next;
       if (list) {
         page.notifications.list = list;
+        return list;
+      }
+    } catch (error) {
+      log("exception during fetch", "live", "error", { error });
+    }
+  }
+  async function fetch_messages() {
+    if (page.messages.next_fetch && Date.now() < page.messages.next_fetch) return page.messages.list;
+    try {
+      const res = await fetch(`${root}inbox`);
+      if (!res.ok) {
+        log("failed to fetch", "live", "error", { res });
+        return;
+      }
+      const dom = await res.text();
+      const parser = new DOMParser();
+      const doc = parser.parseFromString(dom, "text/html");
+      const list = doc.querySelector(".inbox-table");
+      let next = /* @__PURE__ */ new Date();
+      next.setMinutes(next.getMinutes() + 2);
+      page.messages.next_fetch = next;
+      if (list) {
+        page.messages.list = list;
         return list;
       }
     } catch (error) {
@@ -52074,39 +52128,18 @@
       de: "Weiter",
       pt: "Mais"
     },
-    notifications: {
-      name: {
-        en: "Notifications",
-        de: "Benachrichtigungen",
-        pt: "Notifica\xE7\xF5es"
-      },
-      count: {
-        en: "{count} notifications",
-        de: "{count} Benachrichtigungen",
-        pt: "{count} notifica\xE7\xF5es"
-      },
-      none: {
-        en: "No new notifications",
-        de: "Keine neuen Benachrichtigungen",
-        pt: "Nenhuma notifica\xE7\xE3o nova"
-      }
-    },
     inbox: {
-      name: {
-        en: "Messages",
-        de: "Nachrichten",
-        pt: "Mensagens"
-      },
-      count: {
-        en: "{count} messages",
-        de: "{count} Nachrichten",
-        pt: "{count} mensagens"
-      },
-      none: {
-        en: "No new messages",
-        de: "Keine neuen Nachrichten",
-        pt: "Nenhuma mensagem nova"
-      }
+      en: "Inbox"
+    },
+    notifications: {
+      en: "Notifications",
+      de: "Benachrichtigungen",
+      pt: "Notifica\xE7\xF5es"
+    },
+    messages: {
+      en: "Messages",
+      de: "Nachrichten",
+      pt: "Mensagens"
     },
     about_me_preview: {
       // About
@@ -58507,6 +58540,18 @@
       title: trans.prefer_no_redirect.name,
       body: trans.prefer_no_redirect.body,
       new_release: true
+    },
+    inbox_view: {
+      default: "notifications",
+      type: "tabs",
+      values: {
+        notifications: {
+          name: trans.notifications
+        },
+        messages: {
+          name: trans.messages
+        }
+      }
     }
   };
 
