@@ -4,7 +4,7 @@
 // Licensed under GPLv3
 //
 
-import {html} from "lighterhtml";
+import {html, render} from "lighterhtml";
 import {settings, settings_store} from "../build/config.js";
 import {tl, trans} from "../build/trans.js";
 import {notify} from "./notify.js";
@@ -22,7 +22,8 @@ export function setting({
     text = true,
     focus = false,
     standalone = false,
-    func
+    func,
+    list
 }) {
     try {
         let value = settings[id];
@@ -321,6 +322,79 @@ export function setting({
             `;
 
             return tabs;
+        } else if (type == 'list') {
+            if (!list) return setting_fail(id, {message: 'List type requires you to pass available items for matching.'});
+
+            let lists;
+
+            const elem = html.node`
+                <div class="setting v2" data-type="list">
+                    ${icon ? html.node`
+                    <div class="icon">
+                        <div class="bleh-icon" style="--icon: var(--${icon})" />
+                    </div>
+                    ` : ''}
+                    ${(text) ? html.node`
+                    <div class="heading">
+                        <h5>${title}</h5>
+                        ${(body) ? html.node`<p>${body}</p>` : ''}
+                    </div>
+                    ` : ''}
+                    <div class="setting-lists" ref=${el => lists = el} />
+                </div>
+            `;
+
+            render_list_items(value);
+
+            function render_list_items(current = settings[id]) {
+                const available = Object.fromEntries(
+                    Object.entries(list).filter(([key]) => !current.includes(key))
+                );
+
+                render(lists, html`
+                    <div class="setting-list current">
+                        ${current.map(val => {
+                            return html.node`
+                                <button class="setting-list-item" onclick=${() => {
+                                    const new_list = current.filter(item => item != val);
+
+                                    save_setting(id, new_list);
+                                    render_list_items(new_list);
+                                }}>
+                                    ${list[val]?.icon ? html.node`
+                                    <div class="bleh-icon" data-type=${list[val].icon} />
+                                    ` : ''}
+                                    <div class="info">
+                                        ${list[val]?.name || '???'}
+                                    </div>
+                                    <div class="bleh-icon indicator" data-type="minus" />
+                                </button>
+                            `;
+                        })}
+                    </div>
+                    <div class="setting-list-sep" />
+                    <div class="setting-list available">
+                        ${Object.entries(available).map(([val, formal]) => {
+                            return html.node`
+                                <button class="setting-list-item" onclick=${() => {
+                                    const new_list = [...current, val];
+
+                                    save_setting(id, new_list);
+                                    render_list_items(new_list);
+                                }}>
+                                    <div class="bleh-icon" data-type=${formal.icon} />
+                                    <div class="info">
+                                        ${formal.name}
+                                    </div>
+                                    <div class="bleh-icon indicator" data-type="add" />
+                                </button>
+                            `;
+                        })}
+                    </div>
+                `);
+            }
+
+            return elem;
         }
     } catch(e) {
         console.error(e);
@@ -364,7 +438,7 @@ function setting_incompatible_block(entries) {
 }
 
 function setting_fail(id, e = null) {
-    if (e.unavailable) {
+    if (e && e.unavailable && e.message) {
         return html.node`
             <div class="setting">
                 <div class="alert alert-info no-margin">
@@ -378,7 +452,7 @@ function setting_fail(id, e = null) {
         <div class="setting">
             <div class="alert alert-error no-margin">
                 ${tl(trans.value_failed_to_load).replace('{v}', id)}
-                ${(e) ? html`<br>${e.message}` : ''}
+                ${(e && e.message) ? html`<br>${e.message}` : ''}
             </div>
         </div>
     `;

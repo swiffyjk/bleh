@@ -29540,7 +29540,8 @@
     text: text3 = true,
     focus = false,
     standalone = false,
-    func
+    func,
+    list
   }) {
     try {
       let value = settings[id];
@@ -29802,6 +29803,71 @@
                 </div>
             `;
         return tabs;
+      } else if (type == "list") {
+        let render_list_items = function(current = settings[id]) {
+          const available = Object.fromEntries(
+            Object.entries(list).filter(([key]) => !current.includes(key))
+          );
+          render(lists, html`
+                    <div class="setting-list current">
+                        ${current.map((val) => {
+            return html.node`
+                                <button class="setting-list-item" onclick=${() => {
+              const new_list = current.filter((item) => item != val);
+              save_setting(id, new_list);
+              render_list_items(new_list);
+            }}>
+                                    ${list[val]?.icon ? html.node`
+                                    <div class="bleh-icon" data-type=${list[val].icon} />
+                                    ` : ""}
+                                    <div class="info">
+                                        ${list[val]?.name || "???"}
+                                    </div>
+                                    <div class="bleh-icon indicator" data-type="minus" />
+                                </button>
+                            `;
+          })}
+                    </div>
+                    <div class="setting-list-sep" />
+                    <div class="setting-list available">
+                        ${Object.entries(available).map(([val, formal]) => {
+            return html.node`
+                                <button class="setting-list-item" onclick=${() => {
+              const new_list = [...current, val];
+              save_setting(id, new_list);
+              render_list_items(new_list);
+            }}>
+                                    <div class="bleh-icon" data-type=${formal.icon} />
+                                    <div class="info">
+                                        ${formal.name}
+                                    </div>
+                                    <div class="bleh-icon indicator" data-type="add" />
+                                </button>
+                            `;
+          })}
+                    </div>
+                `);
+        };
+        if (!list) return setting_fail(id, { message: "List type requires you to pass available items for matching." });
+        let lists;
+        const elem = html.node`
+                <div class="setting v2" data-type="list">
+                    ${icon ? html.node`
+                    <div class="icon">
+                        <div class="bleh-icon" style="--icon: var(--${icon})" />
+                    </div>
+                    ` : ""}
+                    ${text3 ? html.node`
+                    <div class="heading">
+                        <h5>${title}</h5>
+                        ${body ? html.node`<p>${body}</p>` : ""}
+                    </div>
+                    ` : ""}
+                    <div class="setting-lists" ref=${(el) => lists = el} />
+                </div>
+            `;
+        render_list_items(value);
+        return elem;
       }
     } catch (e) {
       console.error(e);
@@ -29838,7 +29904,7 @@
     `;
   }
   function setting_fail(id, e = null) {
-    if (e.unavailable) {
+    if (e && e.unavailable && e.message) {
       return html.node`
             <div class="setting">
                 <div class="alert alert-info no-margin">
@@ -29851,7 +29917,7 @@
         <div class="setting">
             <div class="alert alert-error no-margin">
                 ${tl(trans.value_failed_to_load).replace("{v}", id)}
-                ${e ? html`<br>${e.message}` : ""}
+                ${e && e.message ? html`<br>${e.message}` : ""}
             </div>
         </div>
     `;
@@ -44813,7 +44879,7 @@
             </div>
         `);
     } else if (page_id == "profiles") {
-      if (auth.pro === null) {
+      if (auth.pro === null || !page.state.quick_access_items) {
         setTimeout(() => {
           render_setting_page("profiles");
         }, 10);
@@ -44937,6 +45003,9 @@
                             <p>${sponsor_list.latest}</p>
                         </div>
                     </div>
+                </div>
+                <div class="setting-group">
+                    ${setting({ id: "navigation_items", list: page.state.quick_access_items })}
                 </div>
             </div>
             <div class="bleh--panel">
@@ -47314,6 +47383,28 @@
       document.body.appendChild(style_warning);
       page.structure.style_warning = style_warning;
     }
+    page.state.quick_access_items = {
+      home: {
+        name: tl(trans.home),
+        icon: "home",
+        url: `${root}music`
+      },
+      library: {
+        name: tl(trans.library),
+        icon: "library",
+        url: `${root}user/${auth.name}/library`
+      },
+      shouts: {
+        name: tl(trans.shouts),
+        icon: "shouts",
+        url: `${root}user/${auth.name}/shouts`
+      },
+      obsessions: {
+        name: tl(trans.obsessions),
+        icon: "obsessions",
+        url: `${root}user/${auth.name}/obsessionss`
+      }
+    };
     const masthead = document.body.querySelector(".masthead");
     const inner = masthead.querySelector(".masthead-inner-wrap");
     const navs = inner.querySelector(".masthead-nav-wrap");
@@ -54165,7 +54256,7 @@
         en: "Profile banner"
       },
       body: {
-        en: "Add your own custom banner image to your profile with ![banner](image url) in your bio"
+        en: "Add your own custom banner image to your profile with [banner=url] in your bio"
       }
     },
     none: {

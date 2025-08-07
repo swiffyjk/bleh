@@ -108,6 +108,29 @@ export function append_nav() {
         page.structure.style_warning = style_warning;
     }
 
+    page.state.quick_access_items = {
+        home: {
+            name: tl(trans.home),
+            icon: 'home',
+            url: `${root}music`
+        },
+        library: {
+            name: tl(trans.library),
+            icon: 'library',
+            url: `${root}user/${auth.name}/library`
+        },
+        shouts: {
+            name: tl(trans.shouts),
+            icon: 'shouts',
+            url: `${root}user/${auth.name}/shouts`
+        },
+        obsessions: {
+            name: tl(trans.obsessions),
+            icon: 'obsessions',
+            url: `${root}user/${auth.name}/obsessionss`
+        }
+    }
+
 
     const masthead = document.body.querySelector('.masthead');
     const inner = masthead.querySelector('.masthead-inner-wrap');

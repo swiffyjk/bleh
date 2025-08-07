@@ -109,13 +109,13 @@ export function bleh_settings() {
                 <ul class="navlist-items">
                     ${Object.entries(tabs).map(([id, tab]) => {
                         if (tab.hide_if) return;
-                        
+
                         if (tab.type && tab.type == 'fill') {
                             return html.node`
                                 <div class="fill" />
                             `;
                         }
-                        
+
                         return html.node`
                             <li class="navlist-item secondary-nav-item">
                                 <a class="secondary-nav-item-link bleh--nav" data-bleh-page=${id} data-type=${tab.icon} data-password=${tab.password} onclick=${() => change_settings_page(id)}>
@@ -329,15 +329,15 @@ export function render_setting_page(page_id) {
                                         <p>${tl(trans.none)}</p>
                                     </div>
                                 `;
-                            
+
                             let banner_image = html.node`
                                 <div class="banner-image" style="background-image: url(${banner})" />
                             `;
-                            
+
                             tippy(banner_image, {
                                 content: banner
                             });
-                            
+
                             return banner_image;
                         }}
                     </div>
@@ -619,7 +619,7 @@ export function render_setting_page(page_id) {
             </div>
         `);
     } else if (page_id == 'profiles') {
-        if (auth.pro === null) {
+        if (auth.pro === null || !page.state.quick_access_items) {
             setTimeout(() => {
                 render_setting_page('profiles');
             }, 10);
@@ -749,6 +749,9 @@ export function render_setting_page(page_id) {
                             <p>${sponsor_list.latest}</p>
                         </div>
                     </div>
+                </div>
+                <div class="setting-group">
+                    ${setting({id: 'navigation_items', list: page.state.quick_access_items})}
                 </div>
             </div>
             <div class="bleh--panel">
@@ -925,17 +928,17 @@ export function render_setting_page(page_id) {
                 <div class="setting-group">
                     ${Object.entries(version.feature_flags).reverse().map(([flag, details]) => {
                         let value = ff(flag);
-                        
+
                         let checkbox;
                         let state;
 
                         return html.node`
                             <div class="setting" data-type="toggle" onclick=${() => {
                                 let current = checkbox.checked;
-    
+
                                 checkbox.checked = !current;
                                 state.setAttribute('aria-checked', !current);
-    
+
                                 settings.feature_flags[flag] = !current;
                                 document.documentElement.setAttribute(`data-ff--${flag}`, (!current).toString());
                                 localStorage.setItem('bleh', JSON.stringify(settings));
@@ -1657,7 +1660,7 @@ export function display_colour_presets() {
             let swatch = html.node`
                 <button class="swatch-container" onclick=${() => {
                     if (!colour.sets) return;
-                    
+
                     update_params(colour.sets);
                 }}>
                     <div class="swatch colourful" ref=${el => blob = el} data-swatch-type=${colour.type} />
@@ -1696,7 +1699,7 @@ export function display_colour_presets() {
                                         <button class="btn primary icon convert" onclick=${() => {
                                             let value = colour.querySelector('input').value;
                                             let hsl = hex_to_hsl(value);
-    
+
                                             update_params({
                                                 hue: hsl.h,
                                                 sat: clamp_sat((hsl.s / 100) * 3),

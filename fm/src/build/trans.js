@@ -3057,7 +3057,7 @@ export const trans = {
             en: 'Profile banner'
         },
         body: {
-            en: 'Add your own custom banner image to your profile with ![banner](image url) in your bio'
+            en: 'Add your own custom banner image to your profile with [banner=url] in your bio'
         }
     },
     none: {
