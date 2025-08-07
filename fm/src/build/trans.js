@@ -17,12 +17,12 @@ export let lang = 'en';
 export let lang_info = {
     en: {
         name: 'English',
-        by: ['katesia'],
+        by: ['clairedoll'],
         last_updated: 'latest'
     },
     de: {
         name: 'Deutsch',
-        by: ['stellasaur', 'katesia'],
+        by: ['evangelicgirl', 'clairedoll'],
         last_updated:  '2025-05-11'
     },
     pl: {
@@ -543,7 +543,8 @@ export const trans = {
     profile: {
         en: 'Profile',
         de: 'Profil',
-        pt: 'Perfil'
+        pt: 'Perfil',
+        pl: 'Profil'
     },
     current_season: {
         en: 'Current season'
@@ -710,7 +711,8 @@ export const trans = {
     import: {
         en: 'Import',
         de: 'Importieren',
-        pt: 'Importar'
+        pt: 'Importar',
+        pl: 'Importuj'
     },
     import_settings: {
         en: 'Import settings',
@@ -723,7 +725,8 @@ export const trans = {
     export: {
         en: 'Export',
         de: 'Exportieren',
-        pt: 'Exportar'
+        pt: 'Exportar',
+        pl: 'Eksportuj'
     },
     export_settings: {
         en: 'Export settings',
@@ -732,7 +735,8 @@ export const trans = {
     reset: {
         en: 'Reset',
         de: 'Zurücksetzen',
-        pt: 'Restaurar'
+        pt: 'Restaurar',
+        pl: 'Resetuj'
     },
     reset_settings: {
         en: 'Reset settings to default',
@@ -791,17 +795,20 @@ export const trans = {
     hue: {
         en: 'Accent colour',
         de: 'Akzentfarbe',
-        pt: 'Cor de destaque'
+        pt: 'Cor de destaque',
+        pl: 'Kolor akcentu (hue)'
     },
     sat: {
         en: 'Vibrancy',
         de: 'Lebendigkeit',
-        pt: 'Vivacidade'
+        pt: 'Vivacidade',
+        pl: 'Nasycenie (saturation)'
     },
     lit: {
         en: 'Lightness',
         de: 'Helligkeit',
-        pt: 'Claridade'
+        pt: 'Claridade',
+        pl: 'Jasność (lightness)'
     },
     seasonal_warning: {
         en: 'This season has a custom default accent colour!',
@@ -823,7 +830,14 @@ export const trans = {
     save: {
         en: 'Save',
         de: 'Speichern',
-        pt: 'Salvar'
+        pt: 'Salvar',
+        pl: 'Zapisz'
+    },
+    cancel: {
+        en: 'Cancel',
+        de: 'Abbrechen',
+        pt: 'Cancelar',
+        pl: 'Anuluj'
     },
     add: {
         en: 'Add',
@@ -838,12 +852,14 @@ export const trans = {
     clear: {
         en: 'Clear',
         de: 'Löschen',
-        pt: 'Limpar'
+        pt: 'Limpar',
+        pl: 'Wyczyść'
     },
     close: {
         en: 'Close',
         de: 'Schließen',
-        pt: 'Fechar'
+        pt: 'Fechar',
+        pl: 'Zamknij'
     },
     go: {
         en: 'Go',
@@ -868,7 +884,8 @@ export const trans = {
     done: {
         en: 'Done',
         de: 'Fertig',
-        pt: 'Feito'
+        pt: 'Feito',
+        pl: 'Gotowe'
     },
     finish: {
         en: 'Finish',
@@ -878,7 +895,8 @@ export const trans = {
     continue: {
         en: 'Continue',
         de: 'Fortsetzen',
-        pt: 'Contiuar'
+        pt: 'Contiuar',
+        pl: 'Kontynuuj'
     },
     click_for_more_options: {
         en: 'Click for more options'
@@ -1610,11 +1628,6 @@ export const trans = {
         de: 'Diese Seite wurde von Last.fm eingeschränkt',
         pt: 'Esta página foi limitada pela Last.fm'
     },
-    cancel: {
-        en: 'Cancel',
-        de: 'Abbrechen',
-        pt: 'Cancelar'
-    },
     results_for: {
         // used as a header above the actual search eg.
         // Results for
@@ -2046,7 +2059,7 @@ export const trans = {
             pt: 'Compatibilidade de emojis'
         },
         body: {
-            en: 'Required to render emoji properly before Windows 11. 🏳️‍⚧️',
+            en: 'Required to render emoji properly before Windows 11 🏳️‍⚧️',
             de: 'Erforderlich, um Emojis vor Windows 11 richtig darzustellen 🏳️‍⚧️',
             pt: 'Necessário para renderizar emojis corretamente antes do Windows 11 🏳️‍⚧️'
         }
@@ -2351,8 +2364,8 @@ export const trans = {
             pt: 'Permite o uso de quebras de linha, texto em negrito, itálico e imagens em todas as caixas de mensagens'
         },
         preview: {
-            en: 'hello! **hello!** *hello!*\n[here’s a link](https://katelyn.moe) HAII @stellasaur',
-            pt: 'opa! **opa!** *opa!*\n[aqui está um link](https://katelyn.moe) OIEE @stellasaur'
+            en: 'hello! **hello!** *hello!*\n[here’s a link](https://katelyn.moe) HAII @evangelicgirl',
+            pt: 'opa! **opa!** *opa!*\n[aqui está um link](https://katelyn.moe) OIEE @evangelicgirl'
         }
     },
     gathering_your_plays: {
@@ -2554,6 +2567,7 @@ export const trans = {
         pt: 'Suporte'
     },
     no_plays_in_range: {
+        // no plays in date range
         en: 'No plays in range'
     },
     accessible_name_colours: {
@@ -2607,10 +2621,12 @@ export const trans = {
         pt: 'Atualizar para {v}'
     },
     all: {
+        // all photos
         en: 'All',
         pt: 'Todos'
     },
     saved: {
+        // saved/bookmarked photos
         en: 'Saved',
         pt: 'Salvo'
     },
@@ -2661,6 +2677,8 @@ export const trans = {
         pt: '{name} falhou'
     },
     select_component: {
+        // the 'Select' component (like a dropdown menu)
+        // not an option to chooose your component
         en: 'Select component',
         pt: 'Selecionar componente'
     },
@@ -2669,10 +2687,12 @@ export const trans = {
         pt: 'Apenas números são permitidos aqui'
     },
     keep_within_the_range: {
+        // if the user wrote more text than the text box allows
         en: 'Keep within the range',
         pt: 'Manter dentro do intervalo'
     },
     this_field_is_required: {
+        // field as in a text box
         en: 'This field is required'
     },
     please_dont_clone_yourself: {
@@ -3248,6 +3268,14 @@ export const trans = {
     },
     no_mutual_listeners_explain: {
         en: 'This can be due to either simply lacking mutuals who listen or the page being subject to a broken redirect.'
+    },
+    navigation_items: {
+        name: {
+            en: 'Quick access'
+        },
+        body: {
+            en: 'Arrange your navigation menu to suit your usage best'
+        }
     }
 }
 

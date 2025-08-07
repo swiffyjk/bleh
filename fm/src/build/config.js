@@ -753,7 +753,7 @@ export let settings_store = {
         default: 50,
         min: 0,
         max: 50,
-        step: 1,
+        step: 25,
         type: 'range',
         css: 'avatar-radius',
         suffix: '%',
@@ -860,9 +860,6 @@ export let settings_store = {
         default: true,
         title: trans.grid_glow.name,
         body: trans.grid_glow.body
-    },
-    auth_menu_obsessions: {
-        deault: false
     },
     default_avatar_action: {
         default: 'expand',
@@ -1025,5 +1022,15 @@ export let settings_store = {
                 name: trans.messages
             }
         }
+    },
+    navigation_items: {
+        default: [
+            'home',
+            'library',
+            'shouts'
+        ],
+        type: 'list',
+        title: trans.navigation_items.name,
+        body: trans.navigation_items.body
     }
 }

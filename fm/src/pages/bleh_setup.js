@@ -274,9 +274,9 @@ unsafeWindow._setup_end = function() {
 
 
 /**
-     * notify user if new update and stores in localStorage for next time
-     * @returns if first-time installing, redirect to setup
-     */
+ * notify user if new update and stores in localStorage for next time
+ * @returns if first-time installing, redirect to setup
+ */
 export function notify_if_new_update() {
     let last_version_used = localStorage.getItem('bleh_last_version_used') || '';
 

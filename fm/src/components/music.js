@@ -10,7 +10,7 @@ import {settings} from "../build/config";
 import {log} from "../build/log";
 import {auth, page, root} from "../build/page";
 import {clean_number, return_artist_from_track, sanitise} from "../build/tools";
-import {lang, tl, trans, trans_legacy} from "../build/trans";
+import {lang, tl, trans} from "../build/trans";
 import {prep_chart_colours} from "../chart";
 import {refresh_all} from "../config";
 import {create_divider} from "../pages/gallery";
@@ -395,8 +395,8 @@ export function show_your_scrobbles() {
 
         interact_container.appendChild(obsession_form);
     }
-    
-    
+
+
     if (ff('submit_scrobble')) {
         const can_api = localStorage.getItem('bleh_auth') && localStorage.getItem('bleh_auth_valid') === 'true';
 
@@ -457,34 +457,6 @@ export function show_your_scrobbles() {
     });
 
     interact_container.appendChild(search_btn);*/
-
-
-    // lotus
-    let lotus_btn = null;
-    if (settings.corrections) {
-        lotus_btn = document.createElement('a');
-        /*lotus_btn.classList.add('btn', 'side-action', 'lotus', 'lotus-btn');*/
-        lotus_btn.classList.add('dropdown-menu-clickable-item', 'lotus', 'lotus-btn');
-        lotus_btn.textContent = trans_legacy.en.lotus.correct.name;
-        lotus_btn.href = 'https://github.com/katelyynn/lotus/issues/new/choose';
-        lotus_btn.target = '_blank';
-
-        if (page.corrected)
-            lotus_btn.classList.add('active');
-
-        /*if (page.corrected)
-            tippy(lotus_btn, {
-                content: (`<span class="lotus-active">${trans_legacy.en.lotus.correct.tooltip_active}</span><br><div class="tooltip-sub">${document.body.querySelector('.main-content > [itemscope]').getAttribute('data-page-resource-name')}</div>`),
-                allowHTML: true
-            });
-        else
-            tippy(lotus_btn, {
-                content: (`${trans_legacy.en.lotus.correct.tooltip}<br><div class="tooltip-sub">${document.body.querySelector('.main-content > [itemscope]').getAttribute('data-page-resource-name')}</div>`),
-                allowHTML: true
-            });
-
-        interact_container.appendChild(lotus_btn);*/
-    }
 
     let play_btn = interact_container.querySelector('.header-new-playlink');
     if (play_btn)
@@ -956,7 +928,7 @@ function show_numbers_on_side(header_type) {
             ` : ''}
         </div>
     `
-    
+
     panel.insertBefore(row, panel.firstElementChild);
 
     if (page.mobile)

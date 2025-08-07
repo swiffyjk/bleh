@@ -1176,7 +1176,7 @@ function bleh_glacier_library_focused() {
             let action = button.getAttribute('data-analytics-action');
             if (action) {
                 if (action == 'EditScrobbleOpen') {
-                    button.textContent = trans_legacy.en.glacier.edit;
+                    button.textContent = tl(trans.edit);
                 } else if (action == 'UnloveTrack' || action == 'LoveTrack') {
                     //button.textContent = trans_legacy.en.glacier.love;
 

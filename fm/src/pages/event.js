@@ -9,7 +9,7 @@ import {settings} from "../build/config";
 import {log} from "../build/log";
 import {auth, page, root} from "../build/page";
 import {clean_number} from "../build/tools";
-import {tl, trans, trans_legacy} from "../build/trans";
+import {tl, trans} from "../build/trans";
 import {correct_artist} from "../components/lotus";
 import {checkup_page_structure, convert_to_toolbar} from "../components/structure";
 import {refresh_all} from "../config";
@@ -269,7 +269,7 @@ function bleh_events_manage() {
             <div class="tag-icon event-icon"></div>
         </div>
         <div class="info-side">
-            <div class="sub-text">${trans_legacy.en.event.name}</div>
+            <div class="sub-text">${tl(trans.event)}</div>
             <h1>${header_text}</h1>
         </div>
     `);

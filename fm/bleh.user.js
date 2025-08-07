@@ -31152,7 +31152,7 @@
         let action = button.getAttribute("data-analytics-action");
         if (action) {
           if (action == "EditScrobbleOpen") {
-            button.textContent = trans_legacy.en.glacier.edit;
+            button.textContent = tl(trans.edit);
           } else if (action == "UnloveTrack" || action == "LoveTrack") {
             let listen_divider = document.createElement("div");
             listen_divider.classList.add("listen-divider");
@@ -42152,16 +42152,6 @@
       }
       interact_container.appendChild(scrobble_btn);
     }
-    let lotus_btn = null;
-    if (settings.corrections) {
-      lotus_btn = document.createElement("a");
-      lotus_btn.classList.add("dropdown-menu-clickable-item", "lotus", "lotus-btn");
-      lotus_btn.textContent = trans_legacy.en.lotus.correct.name;
-      lotus_btn.href = "https://github.com/katelyynn/lotus/issues/new/choose";
-      lotus_btn.target = "_blank";
-      if (page.corrected)
-        lotus_btn.classList.add("active");
-    }
     let play_btn = interact_container.querySelector(".header-new-playlink");
     if (play_btn)
       interact_container.removeChild(play_btn);
@@ -47535,320 +47525,221 @@
       }
     ];
     let site_auth = document.body.querySelector(".site-auth");
-    let token = new_auth.querySelector('[name="csrfmiddlewaretoken"]').getAttribute("value");
-    if (ff("refreshed_auth_menu")) {
-      let auth_menu = tippy_esm_default(auth_link2, {
-        theme: "auth-menu-v2",
-        placement: "top",
-        interactive: true,
-        interactiveBorder: 10,
-        trigger: "click",
-        onShow(instance) {
-          page.structure.notifications.setAttribute("data-auth-open", "true");
-          badges = load_badges(auth.name);
-          let page_2;
-          let side;
-          let banner = load_banner(auth.name);
-          let status_container;
-          instance.setContent(html.node`
-                    <div class="auth-menu-v2">
-                        <div class="side primary">
-                            <div class="auth-menu-header">
-                                <div class="avatar">
-                                    <img src="${auth.avatar.replace("avatar42s", "avatar170s")}" alt="${auth.name}" />
-                                </div>
-                                ${banner != "" ? html.node`
-                                <div class="bg" style="background-image: url(${banner})" />
-                                ` : !auth.avatar.endsWith("818148bf682d429dc215c1705eb27b98.png") ? html.node`
-                                <div class="bg" style="background-image: url(${auth.avatar.replace("avatar42s", "avatar170s")})" />
-                                ` : ""}
-                                <div class="name">${auth.name}</div>
-                                ${badges || auth.pro ? html.node`
-                                    <div class="badges">
-                                        ${badges ? badges.map((badge) => create_badge(badge)) : ""}
-                                        ${auth.pro ? () => {
-            let el = html.node`
-                                                <span class="label user-status-subscriber no-hover">
-                                                    ${tl(trans.badges["user-status-subscriber"].name)}
-                                                </span>
-                                            `;
-            tippy_esm_default(el, {
-              theme: "badge",
-              placement: "bottom",
-              content: html.node`
-                                                    <div class="badge-name">${tl(trans.badges["user-status-subscriber"].name)}</div>
-                                                    <div class="badge-reason">${tl(trans.badges["user-status-subscriber"].reason)}</div>
-                                                `
-            });
-            return el;
-          } : ""}
-                                    </div>
-                                ` : ""}
-                                <a class="link-block-cover-link" href="${root}user/${auth.name}" />
+    const token = new_auth.querySelector('[name="csrfmiddlewaretoken"]').getAttribute("value");
+    page.token = token;
+    let auth_menu = tippy_esm_default(auth_link2, {
+      theme: "auth-menu-v2",
+      placement: "top",
+      interactive: true,
+      interactiveBorder: 10,
+      trigger: "click",
+      onShow(instance) {
+        page.structure.notifications.setAttribute("data-auth-open", "true");
+        badges = load_badges(auth.name);
+        let page_2;
+        let side;
+        let banner = load_banner(auth.name);
+        let status_container;
+        instance.setContent(html.node`
+                <div class="auth-menu-v2">
+                    <div class="side primary">
+                        <div class="auth-menu-header">
+                            <div class="avatar">
+                                <img src="${auth.avatar.replace("avatar42s", "avatar170s")}" alt="${auth.name}" />
                             </div>
-                            <div class="floating button-group">
-                                ${() => {
-            let button;
-            let form = html.node`
-                                        <form>
-                                            <input type="hidden" name="csrfmiddlewaretoken" value="${token}">
-                                            <a class="dropdown-menu-clickable-item chibi" ref=${(el) => button = el} data-menu-item="logout" href="${root}logout">
-                                                ${tl(trans.logout)}
-                                            </a>
-                                        </form>
-                                    `;
-            tippy_esm_default(button, {
-              content: tl(trans.logout)
-            });
-            return form;
-          }}
-                                ${settings.profile_shortcut != "" ? () => {
-            let button = html.node`
-                                        <a class="dropdown-menu-clickable-item chibi" data-type="shortcut" data-is-shortcut="true" href="${root}user/${settings.profile_shortcut}">${settings.profile_shortcut}</a>
-                                    `;
-            tippy_esm_default(button, {
-              content: settings.profile_shortcut
-            });
-            return button;
-          } : () => {
-            let button = html.node`
-                                        <button class="dropdown-menu-clickable-item chibi" data-type="shortcut" data-is-shortcut="false" onclick=${() => open_profile_shortcut_window()}>${tl(trans.profile_shortcut.name)}</button>
-                                    `;
-            tippy_esm_default(button, {
-              content: tl(trans.profile_shortcut.name)
-            });
-            return button;
-          }}
-                            </div>
-                        </div>
-                        <div class="vertical-sep" />
-                        <div class="side" ref=${(el) => side = el} data-page="1">
-                            <div class="side-page" data-page="1">
-                                <a class="dropdown-menu-clickable-item" data-type="home" href="${root}music">
-                                    ${tl(trans.home)}
-                                </a>
-                                <a class="dropdown-menu-clickable-item" data-menu-item="library" href="${root}user/${auth.name}/library">
-                                    ${tl(trans.library)}
-                                </a>
-                                <a class="dropdown-menu-clickable-item" data-menu-item="shouts" href="${root}user/${auth.name}/shoutbox">
-                                    ${tl(trans.shouts)}
-                                </a>
-                                <div class="button-combo">
-                                    <button class="dropdown-menu-clickable-item" data-menu-item="themes" onclick=${() => toggle_theme()}>
-                                        ${tl(trans.themes.name)}
-                                    </button>
-                                    <div class="button-combo-sep" />
-                                    <button class="dropdown-menu-clickable-item chibi" data-type="continue" onclick=${() => {
-            render(page_2, html``);
-            render(page_2, html`
-                                            <button class="dropdown-menu-clickable-item" data-type="back" onclick=${() => {
-              side.setAttribute("data-page", "1");
-            }}>
-                                                ${tl(trans.back)}
-                                            </button>
-                                            ${themes.map((theme) => {
-              if (theme.hide) return html.node``;
-              if (!theme.formal) theme.formal = theme.id;
-              return html.node`
-                                                    <button class="dropdown-menu-clickable-item theme-item-in-menu" data-bleh-theme=${theme.id} data-type="theme_${theme.formal}" onclick="${() => change_theme_from_menu(theme.id)}">
-                                                        ${theme.name}
-                                                    </button>
-                                                `;
-            })}
-                                        `);
-            show_theme_change_in_menu("", page_2);
-            side.setAttribute("data-page", "2");
-          }}>
-                                        ${tl(trans.more)}
-                                    </button>
-                                </div>
-                                <div class="button-combo">
-                                    <button class="dropdown-menu-clickable-item" data-menu-item="language" onclick=${() => {
-            render(page_2, html`
-                                            <button class="dropdown-menu-clickable-item" data-type="back" onclick=${() => {
-              side.setAttribute("data-page", "1");
-            }}>
-                                                ${tl(trans.back)}
-                                            </button>
-                                            ${language_menu}
-                                        `);
-            side.setAttribute("data-page", "2");
-          }}>
-                                        ${tl(trans.language)}
-                                    </button>
-                                    <div class="button-combo-sep" />
-                                    <button class="dropdown-menu-clickable-item chibi" data-type="continue" onclick=${() => {
-            render(page_2, html`
-                                            <button class="dropdown-menu-clickable-item" data-type="back" onclick=${() => {
-              side.setAttribute("data-page", "1");
-            }}>
-                                                ${tl(trans.back)}
-                                            </button>
-                                            ${language_menu}
-                                        `);
-            side.setAttribute("data-page", "2");
-          }}>
-                                        ${tl(trans.more)}
-                                    </button>
-                                </div>
-                                <div class="button-combo">
-                                    <a class="dropdown-menu-clickable-item" data-type="mini" href="${root}bleh/minis">
-                                        ${tl(trans.minis)}
-                                    </a>
-                                    <div class="button-combo-sep" />
-                                    <button class="dropdown-menu-clickable-item chibi" data-menu-item="news" onclick=${() => {
-            news();
-            instance.hide();
-          }}>
-                                        ${tl(trans.news)}
-                                    </button>
-                                </div>
-
-                                <div class="button-combo">
-                                    <a class="dropdown-menu-clickable-item" data-menu-item="bleh" href="${root}bleh">
-                                        ${tl(trans.settings)}
-                                    </a>
-                                    <div class="button-combo-sep" />
-                                    <a class="dropdown-menu-clickable-item chibi" data-type="settings" href="${root}settings">
-                                        ${tl(trans.settings)}
-                                    </a>
-                                </div>
-                            </div>
-                            <div class="side-page" data-page="2" ref=${(el) => page_2 = el} />
-                        </div>
-                    </div>
-                    ${ff("status_in_menu") && auth.pro ? html.node`
-                    <div class="auth-menu-status" ref=${(el) => status_container = el}>
-                        <div class="status">
-                            <div class="loading-data-container">
-                                <div class="loading-data-text">${tl(trans.loading)}</div>
-                            </div>
-                        </div>
-                    </div>
-                    ` : ""}
-                `);
-          function render_status_container(status) {
-            if (!status) return;
-            render(status_container, html`
-                        <div class="status">
-                            <div class="bleh-icon" />
-                            <div class="status-bg" style="background-image: url(${status.avatar})" />
-                            <div class="status-text">
-                                ${status.name}
-                                ${tl(trans.by)}
-                                ${status.artist}
-                            </div>
-                        </div>
-                    `);
-          }
-          if (ff("status_in_menu") && auth.pro) {
-            if (page.now.name) render_status_container(page.now);
-            live_status().then((status) => render_status_container(status));
-          }
-        },
-        onHide(instance) {
-          page.structure.notifications.setAttribute("data-auth-open", "false");
-        }
-      });
-    } else {
-      let auth_menu = tippy_esm_default(auth_link2, {
-        theme: "auth-menu",
-        content: html.node`
-                <a class="dropdown-menu-clickable-item" data-menu-item="profile" href="${root}user/${auth.name}">
-                    ${auth.name}
-                </a>
-                <a class="dropdown-menu-clickable-item" data-menu-item="profile-shortcut" href="${root}user/${settings.profile_shortcut}" data-profile-shortcut="${settings.profile_shortcut}">
-                    ${settings.profile_shortcut}
-                </a>
-                <div class="sep"></div>
-                ${settings.auth_menu_obsessions ? html.node`
-                <a class="dropdown-menu-clickable-item" data-menu-item="obsessions" href="${root}user/${auth.name}/obsessions">
-                    ${trans_legacy.en.auth_menu.obsessions}
-                </a>
-                ` : ""}
-                <button class="dropdown-menu-clickable-item" data-menu-item="themes" onclick=${() => toggle_theme()}>
-                    <span class="auth-dropdown-item-row">
-                        <span class="auth-dropdown-item-left">${tl(trans.themes.name)}</span>
-                        <span class="auth-dropdown-item-right" id="theme-value">${tl(trans.themes[settings.theme])}</span>
-                    </span>
-                </button>
-                <button class="dropdown-menu-clickable-item" data-menu-item="language">
-                    <span class="auth-dropdown-item-row">
-                        <span class="auth-dropdown-item-left">${tl(trans.language)}</span>
-                        <span class="auth-dropdown-item-right">${selected_language}</span>
-                    </span>
-                </button>
-                <button class="dropdown-menu-clickable-item" data-menu-item="news" ref=${(el) => page.state.navigation_menu_news = el} onclick=${() => news()}>
-                    ${tl(trans.news)}
-                </button>
-                <a class="dropdown-menu-clickable-item" data-menu-item="bleh" href="${root}bleh">
-                    ${tl(trans.settings)}
-                </a>
-                <div class="sep"></div>
-                <a class="dropdown-menu-clickable-item" data-menu-item="bookmarks" href="${root}music/+bookmarks">
-                    ${tl(trans.bookmarks)}
-                </a>
-                <a class="dropdown-menu-clickable-item" data-menu-item="settings" href="${root}settings">
-                    ${tl(trans.settings)}
-                </a>
-                <form>
-                    <input type="hidden" name="csrfmiddlewaretoken" value="${token}">
-                    <a class="dropdown-menu-clickable-item" data-menu-item="logout" href="${root}logout">
-                        ${tl(trans.logout)}
-                    </a>
-                </form>
-            `,
-        placement: "top",
-        interactive: true,
-        interactiveBorder: 10,
-        trigger: "click",
-        onShow(instance) {
-          instance.popper.style.setProperty("--url", `url(${auth.avatar.replace("avatar42s", "avatar170s")})`);
-          let shortcut_item = instance.popper.querySelector('[data-menu-item="profile-shortcut"]');
-          if (shortcut_item.getAttribute("data-profile-shortcut") != settings.profile_shortcut) {
-            shortcut_item.setAttribute("data-profile-shortcut", settings.profile_shortcut);
-            shortcut_item.setAttribute("href", `${root}user/${settings.profile_shortcut}`);
-            shortcut_item.textContent = settings.profile_shortcut;
-          }
-          instance.popper.querySelector("#theme-value").textContent = tl(trans.themes[settings.theme]);
-          tippy_esm_default(instance.popper.querySelector('[data-menu-item="language"]:not([aria-expanded])'), {
-            theme: "language-menu",
-            content: language_menu,
-            placement: "left",
-            hideOnClick: false,
-            interactive: true,
-            interactiveBorder: 10
-          });
-          let theme_menu_item = tippy_esm_default(instance.popper.querySelector('[data-menu-item="themes"]:not([aria-expanded])'), {
-            theme: "menu",
+                            ${banner != "" ? html.node`
+                            <div class="bg" style="background-image: url(${banner})" />
+                            ` : !auth.avatar.endsWith("818148bf682d429dc215c1705eb27b98.png") ? html.node`
+                            <div class="bg" style="background-image: url(${auth.avatar.replace("avatar42s", "avatar170s")})" />
+                            ` : ""}
+                            <div class="name">${auth.name}</div>
+                            ${badges || auth.pro ? html.node`
+                                <div class="badges">
+                                    ${badges ? badges.map((badge) => create_badge(badge)) : ""}
+                                    ${auth.pro ? () => {
+          let el = html.node`
+                                            <span class="label user-status-subscriber no-hover">
+                                                ${tl(trans.badges["user-status-subscriber"].name)}
+                                            </span>
+                                        `;
+          tippy_esm_default(el, {
+            theme: "badge",
+            placement: "bottom",
             content: html.node`
-                        <button class="dropdown-menu-clickable-item theme-item-in-menu" data-bleh-theme="light" onclick="change_theme_from_menu('light')">
-                            ${tl(trans.themes.light)}
-                        </button>
-                        <button class="dropdown-menu-clickable-item theme-item-in-menu" data-bleh-theme="ink" onclick="change_theme_from_menu('ink')">
-                            ${tl(trans.themes.ink)}
-                        </button>
-                        <button class="dropdown-menu-clickable-item theme-item-in-menu" data-bleh-theme="dark" onclick="change_theme_from_menu('dark')">
-                            ${tl(trans.themes.dark)}
-                        </button>
-                        <button class="dropdown-menu-clickable-item theme-item-in-menu" data-bleh-theme="darker" onclick="change_theme_from_menu('darker')">
-                            ${tl(trans.themes.darker)}
-                        </button>
-                        <button class="dropdown-menu-clickable-item theme-item-in-menu" data-bleh-theme="oled" onclick="change_theme_from_menu('oled')">
-                            ${tl(trans.themes.oled)}
-                        </button>
-                    `,
-            placement: "left",
-            hideOnClick: false,
-            interactive: true,
-            interactiveBorder: 10,
-            onShow(instance_2) {
-              show_theme_change_in_menu("", instance_2.popper);
-            }
+                                                <div class="badge-name">${tl(trans.badges["user-status-subscriber"].name)}</div>
+                                                <div class="badge-reason">${tl(trans.badges["user-status-subscriber"].reason)}</div>
+                                            `
           });
+          return el;
+        } : ""}
+                                </div>
+                            ` : ""}
+                            <a class="link-block-cover-link" href="${root}user/${auth.name}" />
+                        </div>
+                        <div class="floating button-group">
+                            ${() => {
+          let button;
+          let form = html.node`
+                                    <form>
+                                        <input type="hidden" name="csrfmiddlewaretoken" value="${token}">
+                                        <a class="dropdown-menu-clickable-item chibi" ref=${(el) => button = el} data-menu-item="logout" href="${root}logout">
+                                            ${tl(trans.logout)}
+                                        </a>
+                                    </form>
+                                `;
+          tippy_esm_default(button, {
+            content: tl(trans.logout)
+          });
+          return form;
+        }}
+                            ${settings.profile_shortcut != "" ? () => {
+          let button = html.node`
+                                    <a class="dropdown-menu-clickable-item chibi" data-type="shortcut" data-is-shortcut="true" href="${root}user/${settings.profile_shortcut}">${settings.profile_shortcut}</a>
+                                `;
+          tippy_esm_default(button, {
+            content: settings.profile_shortcut
+          });
+          return button;
+        } : () => {
+          let button = html.node`
+                                    <button class="dropdown-menu-clickable-item chibi" data-type="shortcut" data-is-shortcut="false" onclick=${() => open_profile_shortcut_window()}>${tl(trans.profile_shortcut.name)}</button>
+                                `;
+          tippy_esm_default(button, {
+            content: tl(trans.profile_shortcut.name)
+          });
+          return button;
+        }}
+                        </div>
+                    </div>
+                    <div class="vertical-sep" />
+                    <div class="side" ref=${(el) => side = el} data-page="1">
+                        <div class="side-page" data-page="1">
+                            <a class="dropdown-menu-clickable-item" data-type="home" href="${root}music">
+                                ${tl(trans.home)}
+                            </a>
+                            <a class="dropdown-menu-clickable-item" data-menu-item="library" href="${root}user/${auth.name}/library">
+                                ${tl(trans.library)}
+                            </a>
+                            <a class="dropdown-menu-clickable-item" data-menu-item="shouts" href="${root}user/${auth.name}/shoutbox">
+                                ${tl(trans.shouts)}
+                            </a>
+                            <div class="button-combo">
+                                <button class="dropdown-menu-clickable-item" data-menu-item="themes" onclick=${() => toggle_theme()}>
+                                    ${tl(trans.themes.name)}
+                                </button>
+                                <div class="button-combo-sep" />
+                                <button class="dropdown-menu-clickable-item chibi" data-type="continue" onclick=${() => {
+          render(page_2, html``);
+          render(page_2, html`
+                                        <button class="dropdown-menu-clickable-item" data-type="back" onclick=${() => {
+            side.setAttribute("data-page", "1");
+          }}>
+                                            ${tl(trans.back)}
+                                        </button>
+                                        ${themes.map((theme) => {
+            if (theme.hide) return html.node``;
+            if (!theme.formal) theme.formal = theme.id;
+            return html.node`
+                                                <button class="dropdown-menu-clickable-item theme-item-in-menu" data-bleh-theme=${theme.id} data-type="theme_${theme.formal}" onclick="${() => change_theme_from_menu(theme.id)}">
+                                                    ${theme.name}
+                                                </button>
+                                            `;
+          })}
+                                    `);
+          show_theme_change_in_menu("", page_2);
+          side.setAttribute("data-page", "2");
+        }}>
+                                    ${tl(trans.more)}
+                                </button>
+                            </div>
+                            <div class="button-combo">
+                                <button class="dropdown-menu-clickable-item" data-menu-item="language" onclick=${() => {
+          render(page_2, html`
+                                        <button class="dropdown-menu-clickable-item" data-type="back" onclick=${() => {
+            side.setAttribute("data-page", "1");
+          }}>
+                                            ${tl(trans.back)}
+                                        </button>
+                                        ${language_menu}
+                                    `);
+          side.setAttribute("data-page", "2");
+        }}>
+                                    ${tl(trans.language)}
+                                </button>
+                                <div class="button-combo-sep" />
+                                <button class="dropdown-menu-clickable-item chibi" data-type="continue" onclick=${() => {
+          render(page_2, html`
+                                        <button class="dropdown-menu-clickable-item" data-type="back" onclick=${() => {
+            side.setAttribute("data-page", "1");
+          }}>
+                                            ${tl(trans.back)}
+                                        </button>
+                                        ${language_menu}
+                                    `);
+          side.setAttribute("data-page", "2");
+        }}>
+                                    ${tl(trans.more)}
+                                </button>
+                            </div>
+                            <div class="button-combo">
+                                <a class="dropdown-menu-clickable-item" data-type="mini" href="${root}bleh/minis">
+                                    ${tl(trans.minis)}
+                                </a>
+                                <div class="button-combo-sep" />
+                                <button class="dropdown-menu-clickable-item chibi" data-menu-item="news" onclick=${() => {
+          news();
+          instance.hide();
+        }}>
+                                    ${tl(trans.news)}
+                                </button>
+                            </div>
+
+                            <div class="button-combo">
+                                <a class="dropdown-menu-clickable-item" data-menu-item="bleh" href="${root}bleh">
+                                    ${tl(trans.settings)}
+                                </a>
+                                <div class="button-combo-sep" />
+                                <a class="dropdown-menu-clickable-item chibi" data-type="settings" href="${root}settings">
+                                    ${tl(trans.settings)}
+                                </a>
+                            </div>
+                        </div>
+                        <div class="side-page" data-page="2" ref=${(el) => page_2 = el} />
+                    </div>
+                </div>
+                ${ff("status_in_menu") && auth.pro ? html.node`
+                <div class="auth-menu-status" ref=${(el) => status_container = el}>
+                    <div class="status">
+                        <div class="loading-data-container">
+                            <div class="loading-data-text">${tl(trans.loading)}</div>
+                        </div>
+                    </div>
+                </div>
+                ` : ""}
+            `);
+        function render_status_container(status) {
+          if (!status) return;
+          render(status_container, html`
+                    <div class="status">
+                        <div class="bleh-icon" />
+                        <div class="status-bg" style="background-image: url(${status.avatar})" />
+                        <div class="status-text">
+                            ${status.name}
+                            ${tl(trans.by)}
+                            ${status.artist}
+                        </div>
+                    </div>
+                `);
         }
-      });
-    }
+        if (ff("status_in_menu") && auth.pro) {
+          if (page.now.name) render_status_container(page.now);
+          live_status().then((status) => render_status_container(status));
+        }
+      },
+      onHide(instance) {
+        page.structure.notifications.setAttribute("data-auth-open", "false");
+      }
+    });
     let container = new_auth.parentElement;
     container.parentElement.removeChild(container);
     auth_link2.removeAttribute("aria-controls");
@@ -49635,7 +49526,7 @@
             <div class="tag-icon event-icon"></div>
         </div>
         <div class="info-side">
-            <div class="sub-text">${trans_legacy.en.event.name}</div>
+            <div class="sub-text">${tl(trans.event)}</div>
             <h1>${header_text2}</h1>
         </div>
     `;
@@ -51235,12 +51126,12 @@
   var lang_info = {
     en: {
       name: "English",
-      by: ["katesia"],
+      by: ["clairedoll"],
       last_updated: "latest"
     },
     de: {
       name: "Deutsch",
-      by: ["stellasaur", "katesia"],
+      by: ["evangelicgirl", "clairedoll"],
       last_updated: "2025-05-11"
     },
     pl: {
@@ -51760,7 +51651,8 @@
     profile: {
       en: "Profile",
       de: "Profil",
-      pt: "Perfil"
+      pt: "Perfil",
+      pl: "Profil"
     },
     current_season: {
       en: "Current season"
@@ -51927,7 +51819,8 @@
     import: {
       en: "Import",
       de: "Importieren",
-      pt: "Importar"
+      pt: "Importar",
+      pl: "Importuj"
     },
     import_settings: {
       en: "Import settings",
@@ -51940,7 +51833,8 @@
     export: {
       en: "Export",
       de: "Exportieren",
-      pt: "Exportar"
+      pt: "Exportar",
+      pl: "Eksportuj"
     },
     export_settings: {
       en: "Export settings",
@@ -51949,7 +51843,8 @@
     reset: {
       en: "Reset",
       de: "Zur\xFCcksetzen",
-      pt: "Restaurar"
+      pt: "Restaurar",
+      pl: "Resetuj"
     },
     reset_settings: {
       en: "Reset settings to default",
@@ -52008,17 +51903,20 @@
     hue: {
       en: "Accent colour",
       de: "Akzentfarbe",
-      pt: "Cor de destaque"
+      pt: "Cor de destaque",
+      pl: "Kolor akcentu (hue)"
     },
     sat: {
       en: "Vibrancy",
       de: "Lebendigkeit",
-      pt: "Vivacidade"
+      pt: "Vivacidade",
+      pl: "Nasycenie (saturation)"
     },
     lit: {
       en: "Lightness",
       de: "Helligkeit",
-      pt: "Claridade"
+      pt: "Claridade",
+      pl: "Jasno\u015B\u0107 (lightness)"
     },
     seasonal_warning: {
       en: "This season has a custom default accent colour!",
@@ -52040,7 +51938,14 @@
     save: {
       en: "Save",
       de: "Speichern",
-      pt: "Salvar"
+      pt: "Salvar",
+      pl: "Zapisz"
+    },
+    cancel: {
+      en: "Cancel",
+      de: "Abbrechen",
+      pt: "Cancelar",
+      pl: "Anuluj"
     },
     add: {
       en: "Add",
@@ -52055,12 +51960,14 @@
     clear: {
       en: "Clear",
       de: "L\xF6schen",
-      pt: "Limpar"
+      pt: "Limpar",
+      pl: "Wyczy\u015B\u0107"
     },
     close: {
       en: "Close",
       de: "Schlie\xDFen",
-      pt: "Fechar"
+      pt: "Fechar",
+      pl: "Zamknij"
     },
     go: {
       en: "Go",
@@ -52085,7 +51992,8 @@
     done: {
       en: "Done",
       de: "Fertig",
-      pt: "Feito"
+      pt: "Feito",
+      pl: "Gotowe"
     },
     finish: {
       en: "Finish",
@@ -52095,7 +52003,8 @@
     continue: {
       en: "Continue",
       de: "Fortsetzen",
-      pt: "Contiuar"
+      pt: "Contiuar",
+      pl: "Kontynuuj"
     },
     click_for_more_options: {
       en: "Click for more options"
@@ -52827,11 +52736,6 @@
       de: "Diese Seite wurde von Last.fm eingeschr\xE4nkt",
       pt: "Esta p\xE1gina foi limitada pela Last.fm"
     },
-    cancel: {
-      en: "Cancel",
-      de: "Abbrechen",
-      pt: "Cancelar"
-    },
     results_for: {
       // used as a header above the actual search eg.
       // Results for
@@ -53263,7 +53167,7 @@
         pt: "Compatibilidade de emojis"
       },
       body: {
-        en: "Required to render emoji properly before Windows 11. \u{1F3F3}\uFE0F\u200D\u26A7\uFE0F",
+        en: "Required to render emoji properly before Windows 11 \u{1F3F3}\uFE0F\u200D\u26A7\uFE0F",
         de: "Erforderlich, um Emojis vor Windows 11 richtig darzustellen \u{1F3F3}\uFE0F\u200D\u26A7\uFE0F",
         pt: "Necess\xE1rio para renderizar emojis corretamente antes do Windows 11 \u{1F3F3}\uFE0F\u200D\u26A7\uFE0F"
       }
@@ -53568,8 +53472,8 @@
         pt: "Permite o uso de quebras de linha, texto em negrito, it\xE1lico e imagens em todas as caixas de mensagens"
       },
       preview: {
-        en: "hello! **hello!** *hello!*\n[here\u2019s a link](https://katelyn.moe) HAII @stellasaur",
-        pt: "opa! **opa!** *opa!*\n[aqui est\xE1 um link](https://katelyn.moe) OIEE @stellasaur"
+        en: "hello! **hello!** *hello!*\n[here\u2019s a link](https://katelyn.moe) HAII @evangelicgirl",
+        pt: "opa! **opa!** *opa!*\n[aqui est\xE1 um link](https://katelyn.moe) OIEE @evangelicgirl"
       }
     },
     gathering_your_plays: {
@@ -53771,6 +53675,7 @@
       pt: "Suporte"
     },
     no_plays_in_range: {
+      // no plays in date range
       en: "No plays in range"
     },
     accessible_name_colours: {
@@ -53824,10 +53729,12 @@
       pt: "Atualizar para {v}"
     },
     all: {
+      // all photos
       en: "All",
       pt: "Todos"
     },
     saved: {
+      // saved/bookmarked photos
       en: "Saved",
       pt: "Salvo"
     },
@@ -53878,6 +53785,8 @@
       pt: "{name} falhou"
     },
     select_component: {
+      // the 'Select' component (like a dropdown menu)
+      // not an option to chooose your component
       en: "Select component",
       pt: "Selecionar componente"
     },
@@ -53886,10 +53795,12 @@
       pt: "Apenas n\xFAmeros s\xE3o permitidos aqui"
     },
     keep_within_the_range: {
+      // if the user wrote more text than the text box allows
       en: "Keep within the range",
       pt: "Manter dentro do intervalo"
     },
     this_field_is_required: {
+      // field as in a text box
       en: "This field is required"
     },
     please_dont_clone_yourself: {
@@ -54465,6 +54376,14 @@
     },
     no_mutual_listeners_explain: {
       en: "This can be due to either simply lacking mutuals who listen or the page being subject to a broken redirect."
+    },
+    navigation_items: {
+      name: {
+        en: "Quick access"
+      },
+      body: {
+        en: "Arrange your navigation menu to suit your usage best"
+      }
     }
   };
   var trans_legacy = {
@@ -58282,7 +58201,7 @@
       default: 50,
       min: 0,
       max: 50,
-      step: 1,
+      step: 25,
       type: "range",
       css: "avatar-radius",
       suffix: "%",
@@ -58389,9 +58308,6 @@
       default: true,
       title: trans.grid_glow.name,
       body: trans.grid_glow.body
-    },
-    auth_menu_obsessions: {
-      deault: false
     },
     default_avatar_action: {
       default: "expand",
@@ -58554,6 +58470,16 @@
           name: trans.messages
         }
       }
+    },
+    navigation_items: {
+      default: [
+        "home",
+        "library",
+        "shouts"
+      ],
+      type: "list",
+      title: trans.navigation_items.name,
+      body: trans.navigation_items.body
     }
   };
 
