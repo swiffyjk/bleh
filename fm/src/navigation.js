@@ -248,6 +248,8 @@ export function append_nav() {
         trigger: 'click',
 
         onShow(instance) {
+            content = instance.popper.querySelector('.window-content');
+
             render_inbox();
         }
     });
@@ -280,8 +282,12 @@ export function append_nav() {
         `);
     }
 
-    function render_inbox(view = settings.inbox_view) {
+    function render_inbox() {
+        const view = settings.inbox_view;
+
         log(`rendering view ${view}`, 'navigation');
+
+        if (!content) return;
 
         if (content) {
             render(content, html`

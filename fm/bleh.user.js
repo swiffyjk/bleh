@@ -47424,6 +47424,7 @@
       interactiveBorder: 10,
       trigger: "click",
       onShow(instance) {
+        content = instance.popper.querySelector(".window-content");
         render_inbox();
       }
     });
@@ -47450,8 +47451,10 @@
             </div>
         `);
     }
-    function render_inbox(view = settings.inbox_view) {
+    function render_inbox() {
+      const view = settings.inbox_view;
       log(`rendering view ${view}`, "navigation");
+      if (!content) return;
       if (content) {
         render(content, html`
                 <div class="mini-notifications content-loading">
