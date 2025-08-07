@@ -47403,6 +47403,16 @@
         name: tl(trans.obsessions),
         icon: "obsessions",
         url: `${root}user/${auth.name}/obsessionss`
+      },
+      bookmarks: {
+        name: tl(trans.bookmarks),
+        icon: "bookmark",
+        url: `${root}music/+bookmarks`
+      },
+      friends: {
+        name: tl(trans.friends),
+        icon: "user",
+        url: `${root}user/${auth.name}/friends`
       }
     };
     const masthead = document.body.querySelector(".masthead");
@@ -47631,8 +47641,12 @@
         let side;
         let banner = load_banner(auth.name);
         let status_container;
+        const current = settings.navigation_items;
+        let length = current.length;
+        if (length < 2) length = 2;
+        const height = (length + 4) * 32;
         instance.setContent(html.node`
-                <div class="auth-menu-v2">
+                <div class="auth-menu-v2" style="--page-height: ${height}px">
                     <div class="side primary">
                         <div class="auth-menu-header">
                             <div class="avatar">
@@ -47705,15 +47719,16 @@
                     <div class="vertical-sep" />
                     <div class="side" ref=${(el) => side = el} data-page="1">
                         <div class="side-page" data-page="1">
-                            <a class="dropdown-menu-clickable-item" data-type="home" href="${root}music">
-                                ${tl(trans.home)}
-                            </a>
-                            <a class="dropdown-menu-clickable-item" data-menu-item="library" href="${root}user/${auth.name}/library">
-                                ${tl(trans.library)}
-                            </a>
-                            <a class="dropdown-menu-clickable-item" data-menu-item="shouts" href="${root}user/${auth.name}/shoutbox">
-                                ${tl(trans.shouts)}
-                            </a>
+                            ${current.map((val) => {
+          let elem;
+          const formal = page.state.quick_access_items[val];
+          if (formal.url) elem = html.node`<a href=${formal.url} />`;
+          else elem = html.node`<button />`;
+          elem.classList = "dropdown-menu-clickable-item";
+          elem.setAttribute("data-type", formal.icon);
+          elem.textContent = formal.name;
+          return elem;
+        })}
                             <div class="button-combo">
                                 <button class="dropdown-menu-clickable-item" data-menu-item="themes" onclick=${() => toggle_theme()}>
                                     ${tl(trans.themes.name)}
