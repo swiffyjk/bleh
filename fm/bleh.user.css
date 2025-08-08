@@ -8747,6 +8747,7 @@
                     top: 0;
                     bottom: 0;
                     height: var(--page-height);
+                    overflow-x: hidden;
                     overflow-y: auto;
 
                     transition-property: left;
@@ -9090,6 +9091,7 @@
         --bg-hov: transparent;
         --bg-atv: transparent;
         --padding: 0;
+        --radius: 0;
         --shadow: none;
         --col: hsl(var(--l3-c));
         --mask-colour: color-mix(in hsl, hsl(var(--l3-c)), hsl(var(--l4-c)) 30%);
@@ -9616,11 +9618,14 @@
     .dropdown-menu-clickable-item {
         .auth-dropdown-item-row {
             display: flex;
+            justify-content: space-between;
             gap: var(--card-gap);
+            overflow: hidden;
 
             .auth-dropdown-item-left {
                 display: flex;
-                flex: 1;
+                max-width: 100px;
+                overflow: hidden;
             }
             .auth-dropdown-item-right {
                 display: flex;
@@ -17272,7 +17277,7 @@
 
         &:hover {
             & > .heading > h5 > .reset {
-                width: 70px;
+                width: 120px;
                 opacity: 1;
             }
         }

@@ -555,9 +555,9 @@ function page_title() {
 
         if (page.type == 'inbox') {
             if (page.subpage == 'notifications')
-                title = tl(trans.notifications.name);
+                title = tl(trans.notifications);
             else
-                title = tl(trans.inbox.name);
+                title = tl(trans.messages);
         }
 
         if (page.subpage.replace('event_', '').startsWith('shoutbox'))

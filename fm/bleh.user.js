@@ -31683,7 +31683,7 @@
         let overview = page.structure.nav.querySelector(".secondary-nav-item--overview a");
         if (overview) {
           const href = overview.getAttribute("href").replace(root, "");
-          if (href == "settings") overview = null;
+          if (href == "settings" || href == "inbox") overview = null;
         }
         if (overview) overview.textContent = tl(trans.home);
       }
@@ -44985,6 +44985,7 @@
                 </div>
                 <div class="setting-group">
                     ${setting({ id: "navigation_items", list: page.state.quick_access_items })}
+                    ${setting({ id: "navigation_language" })}
                 </div>
             </div>
             <div class="bleh--panel">
@@ -47001,7 +47002,7 @@
     return activity_list;
   }
   function subscribe_to_events() {
-    if (!settings.activities) return;
+    if (!settings.activities || !page.structure.main) return;
     let love_track = document.body.querySelectorAll(`form[action$="${auth.name}/loved"]:not([data-bleh-subscribed])`);
     love_track.forEach((form) => {
       form.setAttribute("data-bleh-subscribed", "true");
@@ -47367,6 +47368,11 @@
         icon: "home",
         url: `${root}music`
       },
+      reports: {
+        name: tl(trans.reports),
+        icon: "reports",
+        url: `${root}user/${auth.name}/listening-report`
+      },
       library: {
         name: tl(trans.library),
         icon: "library",
@@ -47401,12 +47407,24 @@
         name: tl(trans.messages),
         icon: "messages",
         url: `${root}inbox`
+      },
+      collage: {
+        name: tl(trans.collage),
+        icon: "collage",
+        url: `${root}bleh/minis/collage`
+      },
+      compare: {
+        name: tl(trans.compare),
+        icon: "compare",
+        url: `${root}bleh/minis/compare`
       }
     };
     const masthead = document.body.querySelector(".masthead");
     const inner = masthead.querySelector(".masthead-inner-wrap");
     const navs = inner.querySelector(".masthead-nav-wrap");
     const search = inner.querySelector(".masthead-search-form");
+    const form = search.querySelector(".masthead-search-field");
+    form.placeholder = tl(trans.search);
     inner.insertBefore(html.node`
         <div class="masthead-search-wrap">
             ${search}
@@ -47651,7 +47669,8 @@
         const current = settings.navigation_items;
         let length = current.length;
         if (length < 2) length = 2;
-        const height = (length + 4) * 32;
+        const show_language = settings.navigation_language == true ? 1 : 0;
+        const height = (length + 3 + show_language) * 32;
         const themes_disabled = page.subpage.startsWith("listening-report");
         instance.setContent(html.node`
                 <div class="auth-menu-v2" style="--page-height: ${height}px">
@@ -47692,7 +47711,7 @@
                         <div class="floating button-group">
                             ${() => {
           let button;
-          let form = html.node`
+          let form2 = html.node`
                                     <form>
                                         <input type="hidden" name="csrfmiddlewaretoken" value="${token}">
                                         <a class="dropdown-menu-clickable-item chibi" ref=${(el) => button = el} data-menu-item="logout" href="${root}logout">
@@ -47703,7 +47722,7 @@
           tippy_esm_default(button, {
             content: tl(trans.logout)
           });
-          return form;
+          return form2;
         }}
                             ${settings.profile_shortcut != "" ? () => {
           let button = html.node`
@@ -47783,6 +47802,7 @@
                                     ${tl(trans.more)}
                                 </button>
                             </div>
+                            ${show_language ? html.node`
                             <div class="button-combo">
                                 <button class="dropdown-menu-clickable-item" data-menu-item="language" onclick=${() => {
           render(page_2, html`
@@ -47812,6 +47832,7 @@
                                     ${tl(trans.more)}
                                 </button>
                             </div>
+                            ` : ""}
                             <div class="button-combo">
                                 <a class="dropdown-menu-clickable-item" data-type="mini" href="${root}bleh/minis">
                                     ${tl(trans.minis)}
@@ -51084,9 +51105,9 @@
         title = tl(trans.minis);
       if (page.type == "inbox") {
         if (page.subpage == "notifications")
-          title = tl(trans.notifications.name);
+          title = tl(trans.notifications);
         else
-          title = tl(trans.inbox.name);
+          title = tl(trans.messages);
       }
       if (page.subpage.replace("event_", "").startsWith("shoutbox"))
         title = tl(trans.shouts);
@@ -52171,7 +52192,8 @@
       pt: "Mais"
     },
     inbox: {
-      en: "Inbox"
+      en: "Inbox",
+      de: "Posteingang"
     },
     notifications: {
       en: "Notifications",
@@ -54518,6 +54540,9 @@
     },
     edit_quick_access: {
       en: "Edit quick access"
+    },
+    navigation_language: {
+      en: "Show option to change language"
     }
   };
   var trans_legacy = {
@@ -58614,6 +58639,11 @@
       type: "list",
       title: trans.navigation_items.name,
       body: trans.navigation_items.body
+    },
+    navigation_language: {
+      default: true,
+      type: "checkbox",
+      title: trans.navigation_language
     }
   };
 

@@ -752,6 +752,7 @@ export function render_setting_page(page_id) {
                 </div>
                 <div class="setting-group">
                     ${setting({id: 'navigation_items', list: page.state.quick_access_items})}
+                    ${setting({id: 'navigation_language'})}
                 </div>
             </div>
             <div class="bleh--panel">

@@ -1032,5 +1032,10 @@ export let settings_store = {
         type: 'list',
         title: trans.navigation_items.name,
         body: trans.navigation_items.body
+    },
+    navigation_language: {
+        default: true,
+        type: 'checkbox',
+        title: trans.navigation_language
     }
 }

@@ -932,7 +932,8 @@ export const trans = {
         pt: 'Mais'
     },
     inbox: {
-        en: 'Inbox'
+        en: 'Inbox',
+        de: 'Posteingang'
     },
     notifications: {
         en: 'Notifications',
@@ -3279,6 +3280,9 @@ export const trans = {
     },
     edit_quick_access: {
         en: 'Edit quick access'
+    },
+    navigation_language: {
+        en: 'Show option to change language'
     }
 }
 

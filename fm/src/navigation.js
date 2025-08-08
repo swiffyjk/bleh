@@ -115,6 +115,11 @@ export function append_nav() {
             icon: 'home',
             url: `${root}music`
         },
+        reports: {
+            name: tl(trans.reports),
+            icon: 'reports',
+            url: `${root}user/${auth.name}/listening-report`
+        },
         library: {
             name: tl(trans.library),
             icon: 'library',
@@ -149,6 +154,16 @@ export function append_nav() {
             name: tl(trans.messages),
             icon: 'messages',
             url: `${root}inbox`
+        },
+        collage: {
+            name: tl(trans.collage),
+            icon: 'collage',
+            url: `${root}bleh/minis/collage`
+        },
+        compare: {
+            name: tl(trans.compare),
+            icon: 'compare',
+            url: `${root}bleh/minis/compare`
         }
     }
 
@@ -159,6 +174,8 @@ export function append_nav() {
     const navs = inner.querySelector('.masthead-nav-wrap');
 
     const search = inner.querySelector('.masthead-search-form');
+    const form = search.querySelector('.masthead-search-field');
+    form.placeholder = tl(trans.search);
     inner.insertBefore(html.node`
         <div class="masthead-search-wrap">
             ${search}
@@ -476,8 +493,10 @@ export function append_nav() {
             let length = current.length;
             if (length < 2) length = 2;
 
+            const show_language = (settings.navigation_language == true) ? 1 : 0;
+
             // user defined + themes + language + minis + settings
-            const height = (length + 4) * 32;
+            const height = (length + 3 + show_language) * 32;
 
             // you cant change your theme when viewing
             // a listening report
@@ -630,6 +649,7 @@ export function append_nav() {
                                     ${tl(trans.more)}
                                 </button>
                             </div>
+                            ${show_language ? html.node`
                             <div class="button-combo">
                                 <button class="dropdown-menu-clickable-item" data-menu-item="language" onclick=${() => {
                                     render(page_2, html`
@@ -659,6 +679,7 @@ export function append_nav() {
                                     ${tl(trans.more)}
                                 </button>
                             </div>
+                            ` : ''}
                             <div class="button-combo">
                                 <a class="dropdown-menu-clickable-item" data-type="mini" href="${root}bleh/minis">
                                     ${tl(trans.minis)}
