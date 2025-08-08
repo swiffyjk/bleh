@@ -158,9 +158,9 @@ export function register_rabbit() {
                         placeholder: tl(trans.switch_placeholder),
                         focus: true
                     });
-                    
+
                     input_box.classList.add('rabbit-search');
-    
+
                     return input_box;
                 }}
                 <div class="rabbit-hole" ref=${el => rabbit_hole = el} />
@@ -239,15 +239,15 @@ export function register_rabbit() {
                 },
                 {
                     type: 'notifications',
-                    text: tl(trans.notifications.name),
-                    body: tl(trans.opens_your_value).replace('{v}', tl(trans.notifications.name)),
+                    text: tl(trans.notifications),
+                    body: tl(trans.opens_your_value).replace('{v}', tl(trans.notifications)),
                     keywords: ['bell', 'updates'],
                     action: () => window.location.href = `${root}inbox/notifications`
                 },
                 {
                     type: 'inbox',
-                    text: tl(trans.inbox.name),
-                    body: tl(trans.opens_your_value).replace('{v}', tl(trans.inbox.name)),
+                    text: tl(trans.messages),
+                    body: tl(trans.opens_your_value).replace('{v}', tl(trans.messages)),
                     keywords: ['messages', 'direct', 'dms'],
                     action: () => window.location.href = `${root}inbox`
                 },
@@ -320,14 +320,14 @@ export function register_rabbit() {
                             ${item.keybind ? keybind(item.keybind) : ''}
                         </button>
                     `;
-                    
+
                     if (!item.disabled) {
                         button.addEventListener('mouseover', () => {
                             selected = index;
                             rabbit_select(false, true);
                         });
                     }
-                    
+
                     return button;
                 }) : html.node`
                     <div class="loading-data-container">
@@ -984,7 +984,7 @@ export function keybind(list) {
                     return html.node`<kbd><div class="bleh-icon" data-type="command" /></kbd>`;
                 else if (key == '⇧')
                     return html.node`<kbd><div class="bleh-icon" data-type="shift" /></kbd>`;
-                
+
                 return html.node`<kbd>${key}</kbd>`;
             })}
         </div>

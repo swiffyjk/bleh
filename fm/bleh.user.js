@@ -11687,7 +11687,7 @@
           }
           return ret;
         }
-        var showdown3 = {}, parsers = {}, extensions = {}, globalOptions = getDefaultOpts(true), setFlavor = "vanilla", flavor = {
+        var showdown2 = {}, parsers = {}, extensions = {}, globalOptions = getDefaultOpts(true), setFlavor = "vanilla", flavor = {
           github: {
             omitExtraWLInCodeBlocks: true,
             simplifiedAutoLink: true,
@@ -11731,31 +11731,31 @@
           vanilla: getDefaultOpts(true),
           allOn: allOptionsOn()
         };
-        showdown3.helper = {};
-        showdown3.extensions = {};
-        showdown3.setOption = function(key, value) {
+        showdown2.helper = {};
+        showdown2.extensions = {};
+        showdown2.setOption = function(key, value) {
           "use strict";
           globalOptions[key] = value;
           return this;
         };
-        showdown3.getOption = function(key) {
+        showdown2.getOption = function(key) {
           "use strict";
           return globalOptions[key];
         };
-        showdown3.getOptions = function() {
+        showdown2.getOptions = function() {
           "use strict";
           return globalOptions;
         };
-        showdown3.resetOptions = function() {
+        showdown2.resetOptions = function() {
           "use strict";
           globalOptions = getDefaultOpts(true);
         };
-        showdown3.setFlavor = function(name2) {
+        showdown2.setFlavor = function(name2) {
           "use strict";
           if (!flavor.hasOwnProperty(name2)) {
             throw Error(name2 + " flavor was not found");
           }
-          showdown3.resetOptions();
+          showdown2.resetOptions();
           var preset = flavor[name2];
           setFlavor = name2;
           for (var option in preset) {
@@ -11764,23 +11764,23 @@
             }
           }
         };
-        showdown3.getFlavor = function() {
+        showdown2.getFlavor = function() {
           "use strict";
           return setFlavor;
         };
-        showdown3.getFlavorOptions = function(name2) {
+        showdown2.getFlavorOptions = function(name2) {
           "use strict";
           if (flavor.hasOwnProperty(name2)) {
             return flavor[name2];
           }
         };
-        showdown3.getDefaultOptions = function(simple2) {
+        showdown2.getDefaultOptions = function(simple2) {
           "use strict";
           return getDefaultOpts(simple2);
         };
-        showdown3.subParser = function(name2, func) {
+        showdown2.subParser = function(name2, func) {
           "use strict";
-          if (showdown3.helper.isString(name2)) {
+          if (showdown2.helper.isString(name2)) {
             if (typeof func !== "undefined") {
               parsers[name2] = func;
             } else {
@@ -11792,13 +11792,13 @@
             }
           }
         };
-        showdown3.extension = function(name2, ext) {
+        showdown2.extension = function(name2, ext) {
           "use strict";
-          if (!showdown3.helper.isString(name2)) {
+          if (!showdown2.helper.isString(name2)) {
             throw Error("Extension 'name' must be a string");
           }
-          name2 = showdown3.helper.stdExtName(name2);
-          if (showdown3.helper.isUndefined(ext)) {
+          name2 = showdown2.helper.stdExtName(name2);
+          if (showdown2.helper.isUndefined(ext)) {
             if (!extensions.hasOwnProperty(name2)) {
               throw Error("Extension named " + name2 + " is not registered!");
             }
@@ -11807,7 +11807,7 @@
             if (typeof ext === "function") {
               ext = ext();
             }
-            if (!showdown3.helper.isArray(ext)) {
+            if (!showdown2.helper.isArray(ext)) {
               ext = [ext];
             }
             var validExtension = validate(ext, name2);
@@ -11818,15 +11818,15 @@
             }
           }
         };
-        showdown3.getAllExtensions = function() {
+        showdown2.getAllExtensions = function() {
           "use strict";
           return extensions;
         };
-        showdown3.removeExtension = function(name2) {
+        showdown2.removeExtension = function(name2) {
           "use strict";
           delete extensions[name2];
         };
-        showdown3.resetExtensions = function() {
+        showdown2.resetExtensions = function() {
           "use strict";
           extensions = {};
         };
@@ -11836,7 +11836,7 @@
             valid: true,
             error: ""
           };
-          if (!showdown3.helper.isArray(extension)) {
+          if (!showdown2.helper.isArray(extension)) {
             extension = [extension];
           }
           for (var i = 0; i < extension.length; ++i) {
@@ -11846,7 +11846,7 @@
               ret.error = baseMsg + "must be an object, but " + typeof ext + " given";
               return ret;
             }
-            if (!showdown3.helper.isString(ext.type)) {
+            if (!showdown2.helper.isString(ext.type)) {
               ret.valid = false;
               ret.error = baseMsg + 'property "type" must be a string, but ' + typeof ext.type + " given";
               return ret;
@@ -11864,13 +11864,13 @@
               return ret;
             }
             if (type === "listener") {
-              if (showdown3.helper.isUndefined(ext.listeners)) {
+              if (showdown2.helper.isUndefined(ext.listeners)) {
                 ret.valid = false;
                 ret.error = baseMsg + '. Extensions of type "listener" must have a property called "listeners"';
                 return ret;
               }
             } else {
-              if (showdown3.helper.isUndefined(ext.filter) && showdown3.helper.isUndefined(ext.regex)) {
+              if (showdown2.helper.isUndefined(ext.filter) && showdown2.helper.isUndefined(ext.regex)) {
                 ret.valid = false;
                 ret.error = baseMsg + type + ' extensions must define either a "regex" property or a "filter" method';
                 return ret;
@@ -11899,7 +11899,7 @@
                 return ret;
               }
             } else if (ext.regex) {
-              if (showdown3.helper.isString(ext.regex)) {
+              if (showdown2.helper.isString(ext.regex)) {
                 ext.regex = new RegExp(ext.regex, "g");
               }
               if (!(ext.regex instanceof RegExp)) {
@@ -11907,7 +11907,7 @@
                 ret.error = baseMsg + '"regex" property must either be a string or a RegExp object, but ' + typeof ext.regex + " given";
                 return ret;
               }
-              if (showdown3.helper.isUndefined(ext.replace)) {
+              if (showdown2.helper.isUndefined(ext.replace)) {
                 ret.valid = false;
                 ret.error = baseMsg + '"regex" extensions must implement a replace string or function';
                 return ret;
@@ -11916,7 +11916,7 @@
           }
           return ret;
         }
-        showdown3.validateExtension = function(ext) {
+        showdown2.validateExtension = function(ext) {
           "use strict";
           var validateExtension = validate(ext, null);
           if (!validateExtension.valid) {
@@ -11925,40 +11925,40 @@
           }
           return true;
         };
-        if (!showdown3.hasOwnProperty("helper")) {
-          showdown3.helper = {};
+        if (!showdown2.hasOwnProperty("helper")) {
+          showdown2.helper = {};
         }
-        showdown3.helper.isString = function(a) {
+        showdown2.helper.isString = function(a) {
           "use strict";
           return typeof a === "string" || a instanceof String;
         };
-        showdown3.helper.isFunction = function(a) {
+        showdown2.helper.isFunction = function(a) {
           "use strict";
           var getType = {};
           return a && getType.toString.call(a) === "[object Function]";
         };
-        showdown3.helper.isArray = function(a) {
+        showdown2.helper.isArray = function(a) {
           "use strict";
           return Array.isArray(a);
         };
-        showdown3.helper.isUndefined = function(value) {
+        showdown2.helper.isUndefined = function(value) {
           "use strict";
           return typeof value === "undefined";
         };
-        showdown3.helper.forEach = function(obj, callback2) {
+        showdown2.helper.forEach = function(obj, callback2) {
           "use strict";
-          if (showdown3.helper.isUndefined(obj)) {
+          if (showdown2.helper.isUndefined(obj)) {
             throw new Error("obj param is required");
           }
-          if (showdown3.helper.isUndefined(callback2)) {
+          if (showdown2.helper.isUndefined(callback2)) {
             throw new Error("callback param is required");
           }
-          if (!showdown3.helper.isFunction(callback2)) {
+          if (!showdown2.helper.isFunction(callback2)) {
             throw new Error("callback param must be a function/closure");
           }
           if (typeof obj.forEach === "function") {
             obj.forEach(callback2);
-          } else if (showdown3.helper.isArray(obj)) {
+          } else if (showdown2.helper.isArray(obj)) {
             for (var i = 0; i < obj.length; i++) {
               callback2(obj[i], i, obj);
             }
@@ -11972,7 +11972,7 @@
             throw new Error("obj does not seem to be an array or an iterable object");
           }
         };
-        showdown3.helper.stdExtName = function(s2) {
+        showdown2.helper.stdExtName = function(s2) {
           "use strict";
           return s2.replace(/[_?*+\/\\.^-]/g, "").replace(/\s/g, "").toLowerCase();
         };
@@ -11981,8 +11981,8 @@
           var charCodeToEscape = m1.charCodeAt(0);
           return "\xA8E" + charCodeToEscape + "E";
         }
-        showdown3.helper.escapeCharactersCallback = escapeCharactersCallback;
-        showdown3.helper.escapeCharacters = function(text3, charsToEscape, afterBackslash) {
+        showdown2.helper.escapeCharactersCallback = escapeCharactersCallback;
+        showdown2.helper.escapeCharacters = function(text3, charsToEscape, afterBackslash) {
           "use strict";
           var regexString = "([" + charsToEscape.replace(/([\[\]\\])/g, "\\$1") + "])";
           if (afterBackslash) {
@@ -11992,7 +11992,7 @@
           text3 = text3.replace(regex, escapeCharactersCallback);
           return text3;
         };
-        showdown3.helper.unescapeHTMLEntities = function(txt) {
+        showdown2.helper.unescapeHTMLEntities = function(txt) {
           "use strict";
           return txt.replace(/&quot;/g, '"').replace(/&lt;/g, "<").replace(/&gt;/g, ">").replace(/&amp;/g, "&");
         };
@@ -12026,7 +12026,7 @@
           } while (t && (x.lastIndex = s2));
           return pos;
         };
-        showdown3.helper.matchRecursiveRegExp = function(str, left2, right2, flags) {
+        showdown2.helper.matchRecursiveRegExp = function(str, left2, right2, flags) {
           "use strict";
           var matchPos = rgxFindMatchPos(str, left2, right2, flags), results = [];
           for (var i = 0; i < matchPos.length; ++i) {
@@ -12039,9 +12039,9 @@
           }
           return results;
         };
-        showdown3.helper.replaceRecursiveRegExp = function(str, replacement, left2, right2, flags) {
+        showdown2.helper.replaceRecursiveRegExp = function(str, replacement, left2, right2, flags) {
           "use strict";
-          if (!showdown3.helper.isFunction(replacement)) {
+          if (!showdown2.helper.isFunction(replacement)) {
             var repStr = replacement;
             replacement = function() {
               return repStr;
@@ -12073,9 +12073,9 @@
           }
           return finalStr;
         };
-        showdown3.helper.regexIndexOf = function(str, regex, fromIndex) {
+        showdown2.helper.regexIndexOf = function(str, regex, fromIndex) {
           "use strict";
-          if (!showdown3.helper.isString(str)) {
+          if (!showdown2.helper.isString(str)) {
             throw "InvalidArgumentError: first parameter of showdown.helper.regexIndexOf function must be a string";
           }
           if (regex instanceof RegExp === false) {
@@ -12084,14 +12084,14 @@
           var indexOf2 = str.substring(fromIndex || 0).search(regex);
           return indexOf2 >= 0 ? indexOf2 + (fromIndex || 0) : indexOf2;
         };
-        showdown3.helper.splitAtIndex = function(str, index3) {
+        showdown2.helper.splitAtIndex = function(str, index3) {
           "use strict";
-          if (!showdown3.helper.isString(str)) {
+          if (!showdown2.helper.isString(str)) {
             throw "InvalidArgumentError: first parameter of showdown.helper.regexIndexOf function must be a string";
           }
           return [str.substring(0, index3), str.substring(index3)];
         };
-        showdown3.helper.encodeEmailAddress = function(mail) {
+        showdown2.helper.encodeEmailAddress = function(mail) {
           "use strict";
           var encode = [
             function(ch) {
@@ -12115,7 +12115,7 @@
           });
           return mail;
         };
-        showdown3.helper.padEnd = function padEnd(str, targetLength, padString) {
+        showdown2.helper.padEnd = function padEnd(str, targetLength, padString) {
           "use strict";
           targetLength = targetLength >> 0;
           padString = String(padString || " ");
@@ -12145,10 +12145,10 @@
             }
           };
         }
-        showdown3.helper.regexes = {
+        showdown2.helper.regexes = {
           asteriskDashAndColon: /([*_:~])/g
         };
-        showdown3.helper.emojis = {
+        showdown2.helper.emojis = {
           "+1": "\u{1F44D}",
           "-1": "\u{1F44E}",
           "100": "\u{1F4AF}",
@@ -13326,7 +13326,7 @@
           "octocat": '<img alt=":octocat:" height="20" width="20" align="absmiddle" src="https://assets-cdn.github.com/images/icons/emoji/octocat.png">',
           "showdown": `<span style="font-family: 'Anonymous Pro', monospace; text-decoration: underline; text-decoration-style: dashed; text-decoration-color: #3e8b8a;text-underline-position: under;">S</span>`
         };
-        showdown3.Converter = function(converterOptions) {
+        showdown2.Converter = function(converterOptions) {
           "use strict";
           var options = {}, langExtensions = [], outputModifiers = [], listeners = {}, setConvFlavor = setFlavor, metadata = {
             parsed: {},
@@ -13351,19 +13351,19 @@
               throw Error("Converter expects the passed parameter to be an object, but " + typeof converterOptions + " was passed instead.");
             }
             if (options.extensions) {
-              showdown3.helper.forEach(options.extensions, _parseExtension);
+              showdown2.helper.forEach(options.extensions, _parseExtension);
             }
           }
           function _parseExtension(ext, name2) {
             name2 = name2 || null;
-            if (showdown3.helper.isString(ext)) {
-              ext = showdown3.helper.stdExtName(ext);
+            if (showdown2.helper.isString(ext)) {
+              ext = showdown2.helper.stdExtName(ext);
               name2 = ext;
-              if (showdown3.extensions[ext]) {
+              if (showdown2.extensions[ext]) {
                 console.warn("DEPRECATION WARNING: " + ext + " is an old extension that uses a deprecated loading method.Please inform the developer that the extension should be updated!");
-                legacyExtensionLoading(showdown3.extensions[ext], ext);
+                legacyExtensionLoading(showdown2.extensions[ext], ext);
                 return;
-              } else if (!showdown3.helper.isUndefined(extensions[ext])) {
+              } else if (!showdown2.helper.isUndefined(extensions[ext])) {
                 ext = extensions[ext];
               } else {
                 throw Error('Extension "' + ext + '" could not be loaded. It was either not found or is not a valid extension.');
@@ -13372,7 +13372,7 @@
             if (typeof ext === "function") {
               ext = ext();
             }
-            if (!showdown3.helper.isArray(ext)) {
+            if (!showdown2.helper.isArray(ext)) {
               ext = [ext];
             }
             var validExt = validate(ext, name2);
@@ -13399,9 +13399,9 @@
           }
           function legacyExtensionLoading(ext, name2) {
             if (typeof ext === "function") {
-              ext = ext(new showdown3.Converter());
+              ext = ext(new showdown2.Converter());
             }
-            if (!showdown3.helper.isArray(ext)) {
+            if (!showdown2.helper.isArray(ext)) {
               ext = [ext];
             }
             var valid = validate(ext, name2);
@@ -13422,7 +13422,7 @@
             }
           }
           function listen(name2, callback2) {
-            if (!showdown3.helper.isString(name2)) {
+            if (!showdown2.helper.isString(name2)) {
               throw Error("Invalid argument in converter.listen() method: name must be a string, but " + typeof name2 + " given");
             }
             if (typeof callback2 !== "function") {
@@ -13484,25 +13484,25 @@
               text3 = rTrimInputText(text3);
             }
             text3 = "\n\n" + text3 + "\n\n";
-            text3 = showdown3.subParser("detab")(text3, options, globals);
+            text3 = showdown2.subParser("detab")(text3, options, globals);
             text3 = text3.replace(/^[ \t]+$/mg, "");
-            showdown3.helper.forEach(langExtensions, function(ext) {
-              text3 = showdown3.subParser("runExtension")(ext, text3, options, globals);
+            showdown2.helper.forEach(langExtensions, function(ext) {
+              text3 = showdown2.subParser("runExtension")(ext, text3, options, globals);
             });
-            text3 = showdown3.subParser("metadata")(text3, options, globals);
-            text3 = showdown3.subParser("hashPreCodeTags")(text3, options, globals);
-            text3 = showdown3.subParser("githubCodeBlocks")(text3, options, globals);
-            text3 = showdown3.subParser("hashHTMLBlocks")(text3, options, globals);
-            text3 = showdown3.subParser("hashCodeTags")(text3, options, globals);
-            text3 = showdown3.subParser("stripLinkDefinitions")(text3, options, globals);
-            text3 = showdown3.subParser("blockGamut")(text3, options, globals);
-            text3 = showdown3.subParser("unhashHTMLSpans")(text3, options, globals);
-            text3 = showdown3.subParser("unescapeSpecialChars")(text3, options, globals);
+            text3 = showdown2.subParser("metadata")(text3, options, globals);
+            text3 = showdown2.subParser("hashPreCodeTags")(text3, options, globals);
+            text3 = showdown2.subParser("githubCodeBlocks")(text3, options, globals);
+            text3 = showdown2.subParser("hashHTMLBlocks")(text3, options, globals);
+            text3 = showdown2.subParser("hashCodeTags")(text3, options, globals);
+            text3 = showdown2.subParser("stripLinkDefinitions")(text3, options, globals);
+            text3 = showdown2.subParser("blockGamut")(text3, options, globals);
+            text3 = showdown2.subParser("unhashHTMLSpans")(text3, options, globals);
+            text3 = showdown2.subParser("unescapeSpecialChars")(text3, options, globals);
             text3 = text3.replace(/¨D/g, "$$");
             text3 = text3.replace(/¨T/g, "\xA8");
-            text3 = showdown3.subParser("completeHTMLDocument")(text3, options, globals);
-            showdown3.helper.forEach(outputModifiers, function(ext) {
-              text3 = showdown3.subParser("runExtension")(ext, text3, options, globals);
+            text3 = showdown2.subParser("completeHTMLDocument")(text3, options, globals);
+            showdown2.helper.forEach(outputModifiers, function(ext) {
+              text3 = showdown2.subParser("runExtension")(ext, text3, options, globals);
             });
             metadata = globals.metadata;
             return text3;
@@ -13526,7 +13526,7 @@
             clean2(doc);
             var nodes = doc.childNodes, mdDoc = "";
             for (var i = 0; i < nodes.length; i++) {
-              mdDoc += showdown3.subParser("makeMarkdown.node")(nodes[i], globals);
+              mdDoc += showdown2.subParser("makeMarkdown.node")(nodes[i], globals);
             }
             function clean2(node) {
               for (var n2 = 0; n2 < node.childNodes.length; ++n2) {
@@ -13559,7 +13559,7 @@
                       }
                     }
                   }
-                  content = showdown3.helper.unescapeHTMLEntities(content);
+                  content = showdown2.helper.unescapeHTMLEntities(content);
                   presPH.push(content);
                   pres[i2].outerHTML = '<precode language="' + language + '" precodenum="' + i2.toString() + '"></precode>';
                 } else {
@@ -13604,7 +13604,7 @@
             return setConvFlavor;
           };
           this.removeExtension = function(extension) {
-            if (!showdown3.helper.isArray(extension)) {
+            if (!showdown2.helper.isArray(extension)) {
               extension = [extension];
             }
             for (var a = 0; a < extension.length; ++a) {
@@ -13647,11 +13647,11 @@
             metadata.raw = raw;
           };
         };
-        showdown3.subParser("anchors", function(text3, options, globals) {
+        showdown2.subParser("anchors", function(text3, options, globals) {
           "use strict";
           text3 = globals.converter._dispatch("anchors.before", text3, options, globals);
           var writeAnchorTag = function(wholeMatch, linkText, linkId, url, m5, m6, title) {
-            if (showdown3.helper.isUndefined(title)) {
+            if (showdown2.helper.isUndefined(title)) {
               title = "";
             }
             linkId = linkId.toLowerCase();
@@ -13662,20 +13662,20 @@
                 linkId = linkText.toLowerCase().replace(/ ?\n/g, " ");
               }
               url = "#" + linkId;
-              if (!showdown3.helper.isUndefined(globals.gUrls[linkId])) {
+              if (!showdown2.helper.isUndefined(globals.gUrls[linkId])) {
                 url = globals.gUrls[linkId];
-                if (!showdown3.helper.isUndefined(globals.gTitles[linkId])) {
+                if (!showdown2.helper.isUndefined(globals.gTitles[linkId])) {
                   title = globals.gTitles[linkId];
                 }
               } else {
                 return wholeMatch;
               }
             }
-            url = url.replace(showdown3.helper.regexes.asteriskDashAndColon, showdown3.helper.escapeCharactersCallback);
+            url = url.replace(showdown2.helper.regexes.asteriskDashAndColon, showdown2.helper.escapeCharactersCallback);
             var result = '<a href="' + url + '"';
             if (title !== "" && title !== null) {
               title = title.replace(/"/g, "&quot;");
-              title = title.replace(showdown3.helper.regexes.asteriskDashAndColon, showdown3.helper.escapeCharactersCallback);
+              title = title.replace(showdown2.helper.regexes.asteriskDashAndColon, showdown2.helper.escapeCharactersCallback);
               result += ' title="' + title + '"';
             }
             if (options.openLinksInNewWindow && !/^#/.test(url)) {
@@ -13699,7 +13699,7 @@
               if (escape === "\\") {
                 return st + mentions;
               }
-              if (!showdown3.helper.isString(options.ghMentionsLink)) {
+              if (!showdown2.helper.isString(options.ghMentionsLink)) {
                 throw new Error("ghMentionsLink option must be a string");
               }
               var lnk = options.ghMentionsLink.replace(/\{u}/g, username2), target = "";
@@ -13715,7 +13715,7 @@
         var simpleURLRegex = /([*~_]+|\b)(((https?|ftp|dict):\/\/|www\.)[^'">\s]+?\.[^'">\s]+?)()(\1)?(?=\s|$)(?!["<>])/gi, simpleURLRegex2 = /([*~_]+|\b)(((https?|ftp|dict):\/\/|www\.)[^'">\s]+\.[^'">\s]+?)([.!?,()\[\]])?(\1)?(?=\s|$)(?!["<>])/gi, delimUrlRegex = /()<(((https?|ftp|dict):\/\/|www\.)[^'">\s]+)()>()/gi, simpleMailRegex = /(^|\s)(?:mailto:)?([A-Za-z0-9!#$%&'*+-/=?^_`{|}~.]+@[-a-z0-9]+(\.[-a-z0-9]+)*\.[a-z]+)(?=$|\s)/gmi, delimMailRegex = /<()(?:mailto:)?([-.\w]+@[-a-z0-9]+(\.[-a-z0-9]+)*\.[a-z]+)>/gi, replaceLink = function(options) {
           "use strict";
           return function(wm, leadingMagicChars, link, m2, m3, trailingPunctuation, trailingMagicChars) {
-            link = link.replace(showdown3.helper.regexes.asteriskDashAndColon, showdown3.helper.escapeCharactersCallback);
+            link = link.replace(showdown2.helper.regexes.asteriskDashAndColon, showdown2.helper.escapeCharactersCallback);
             var lnkTxt = link, append = "", target = "", lmc = leadingMagicChars || "", tmc = trailingMagicChars || "";
             if (/^www\./i.test(link)) {
               link = link.replace(/^www\./i, "http://www.");
@@ -13733,17 +13733,17 @@
           return function(wholeMatch, b, mail) {
             var href = "mailto:";
             b = b || "";
-            mail = showdown3.subParser("unescapeSpecialChars")(mail, options, globals);
+            mail = showdown2.subParser("unescapeSpecialChars")(mail, options, globals);
             if (options.encodeEmails) {
-              href = showdown3.helper.encodeEmailAddress(href + mail);
-              mail = showdown3.helper.encodeEmailAddress(mail);
+              href = showdown2.helper.encodeEmailAddress(href + mail);
+              mail = showdown2.helper.encodeEmailAddress(mail);
             } else {
               href = href + mail;
             }
             return b + '<a href="' + href + '">' + mail + "</a>";
           };
         };
-        showdown3.subParser("autoLinks", function(text3, options, globals) {
+        showdown2.subParser("autoLinks", function(text3, options, globals) {
           "use strict";
           text3 = globals.converter._dispatch("autoLinks.before", text3, options, globals);
           text3 = text3.replace(delimUrlRegex, replaceLink(options));
@@ -13751,7 +13751,7 @@
           text3 = globals.converter._dispatch("autoLinks.after", text3, options, globals);
           return text3;
         });
-        showdown3.subParser("simplifiedAutoLinks", function(text3, options, globals) {
+        showdown2.subParser("simplifiedAutoLinks", function(text3, options, globals) {
           "use strict";
           if (!options.simplifiedAutoLink) {
             return text3;
@@ -13766,21 +13766,21 @@
           text3 = globals.converter._dispatch("simplifiedAutoLinks.after", text3, options, globals);
           return text3;
         });
-        showdown3.subParser("blockGamut", function(text3, options, globals) {
+        showdown2.subParser("blockGamut", function(text3, options, globals) {
           "use strict";
           text3 = globals.converter._dispatch("blockGamut.before", text3, options, globals);
-          text3 = showdown3.subParser("blockQuotes")(text3, options, globals);
-          text3 = showdown3.subParser("headers")(text3, options, globals);
-          text3 = showdown3.subParser("horizontalRule")(text3, options, globals);
-          text3 = showdown3.subParser("lists")(text3, options, globals);
-          text3 = showdown3.subParser("codeBlocks")(text3, options, globals);
-          text3 = showdown3.subParser("tables")(text3, options, globals);
-          text3 = showdown3.subParser("hashHTMLBlocks")(text3, options, globals);
-          text3 = showdown3.subParser("paragraphs")(text3, options, globals);
+          text3 = showdown2.subParser("blockQuotes")(text3, options, globals);
+          text3 = showdown2.subParser("headers")(text3, options, globals);
+          text3 = showdown2.subParser("horizontalRule")(text3, options, globals);
+          text3 = showdown2.subParser("lists")(text3, options, globals);
+          text3 = showdown2.subParser("codeBlocks")(text3, options, globals);
+          text3 = showdown2.subParser("tables")(text3, options, globals);
+          text3 = showdown2.subParser("hashHTMLBlocks")(text3, options, globals);
+          text3 = showdown2.subParser("paragraphs")(text3, options, globals);
           text3 = globals.converter._dispatch("blockGamut.after", text3, options, globals);
           return text3;
         });
-        showdown3.subParser("blockQuotes", function(text3, options, globals) {
+        showdown2.subParser("blockQuotes", function(text3, options, globals) {
           "use strict";
           text3 = globals.converter._dispatch("blockQuotes.before", text3, options, globals);
           text3 = text3 + "\n\n";
@@ -13792,8 +13792,8 @@
             bq = bq.replace(/^[ \t]*>[ \t]?/gm, "");
             bq = bq.replace(/¨0/g, "");
             bq = bq.replace(/^[ \t]+$/gm, "");
-            bq = showdown3.subParser("githubCodeBlocks")(bq, options, globals);
-            bq = showdown3.subParser("blockGamut")(bq, options, globals);
+            bq = showdown2.subParser("githubCodeBlocks")(bq, options, globals);
+            bq = showdown2.subParser("blockGamut")(bq, options, globals);
             bq = bq.replace(/(^|\n)/g, "$1  ");
             bq = bq.replace(/(\s*<pre>[^\r]+?<\/pre>)/gm, function(wholeMatch, m1) {
               var pre = m1;
@@ -13801,34 +13801,34 @@
               pre = pre.replace(/¨0/g, "");
               return pre;
             });
-            return showdown3.subParser("hashBlock")("<blockquote>\n" + bq + "\n</blockquote>", options, globals);
+            return showdown2.subParser("hashBlock")("<blockquote>\n" + bq + "\n</blockquote>", options, globals);
           });
           text3 = globals.converter._dispatch("blockQuotes.after", text3, options, globals);
           return text3;
         });
-        showdown3.subParser("codeBlocks", function(text3, options, globals) {
+        showdown2.subParser("codeBlocks", function(text3, options, globals) {
           "use strict";
           text3 = globals.converter._dispatch("codeBlocks.before", text3, options, globals);
           text3 += "\xA80";
           var pattern = /(?:\n\n|^)((?:(?:[ ]{4}|\t).*\n+)+)(\n*[ ]{0,3}[^ \t\n]|(?=¨0))/g;
           text3 = text3.replace(pattern, function(wholeMatch, m1, m2) {
             var codeblock = m1, nextChar = m2, end2 = "\n";
-            codeblock = showdown3.subParser("outdent")(codeblock, options, globals);
-            codeblock = showdown3.subParser("encodeCode")(codeblock, options, globals);
-            codeblock = showdown3.subParser("detab")(codeblock, options, globals);
+            codeblock = showdown2.subParser("outdent")(codeblock, options, globals);
+            codeblock = showdown2.subParser("encodeCode")(codeblock, options, globals);
+            codeblock = showdown2.subParser("detab")(codeblock, options, globals);
             codeblock = codeblock.replace(/^\n+/g, "");
             codeblock = codeblock.replace(/\n+$/g, "");
             if (options.omitExtraWLInCodeBlocks) {
               end2 = "";
             }
             codeblock = "<pre><code>" + codeblock + end2 + "</code></pre>";
-            return showdown3.subParser("hashBlock")(codeblock, options, globals) + nextChar;
+            return showdown2.subParser("hashBlock")(codeblock, options, globals) + nextChar;
           });
           text3 = text3.replace(/¨0/, "");
           text3 = globals.converter._dispatch("codeBlocks.after", text3, options, globals);
           return text3;
         });
-        showdown3.subParser("codeSpans", function(text3, options, globals) {
+        showdown2.subParser("codeSpans", function(text3, options, globals) {
           "use strict";
           text3 = globals.converter._dispatch("codeSpans.before", text3, options, globals);
           if (typeof text3 === "undefined") {
@@ -13840,16 +13840,16 @@
               var c = m3;
               c = c.replace(/^([ \t]*)/g, "");
               c = c.replace(/[ \t]*$/g, "");
-              c = showdown3.subParser("encodeCode")(c, options, globals);
+              c = showdown2.subParser("encodeCode")(c, options, globals);
               c = m1 + "<code>" + c + "</code>";
-              c = showdown3.subParser("hashHTMLSpans")(c, options, globals);
+              c = showdown2.subParser("hashHTMLSpans")(c, options, globals);
               return c;
             }
           );
           text3 = globals.converter._dispatch("codeSpans.after", text3, options, globals);
           return text3;
         });
-        showdown3.subParser("completeHTMLDocument", function(text3, options, globals) {
+        showdown2.subParser("completeHTMLDocument", function(text3, options, globals) {
           "use strict";
           if (!options.completeHTMLDocument) {
             return text3;
@@ -13892,7 +13892,7 @@
           text3 = globals.converter._dispatch("completeHTMLDocument.after", text3, options, globals);
           return text3;
         });
-        showdown3.subParser("detab", function(text3, options, globals) {
+        showdown2.subParser("detab", function(text3, options, globals) {
           "use strict";
           text3 = globals.converter._dispatch("detab.before", text3, options, globals);
           text3 = text3.replace(/\t(?=\t)/g, "    ");
@@ -13909,7 +13909,7 @@
           text3 = globals.converter._dispatch("detab.after", text3, options, globals);
           return text3;
         });
-        showdown3.subParser("ellipsis", function(text3, options, globals) {
+        showdown2.subParser("ellipsis", function(text3, options, globals) {
           "use strict";
           if (!options.ellipsis) {
             return text3;
@@ -13919,7 +13919,7 @@
           text3 = globals.converter._dispatch("ellipsis.after", text3, options, globals);
           return text3;
         });
-        showdown3.subParser("emoji", function(text3, options, globals) {
+        showdown2.subParser("emoji", function(text3, options, globals) {
           "use strict";
           if (!options.emoji) {
             return text3;
@@ -13927,15 +13927,15 @@
           text3 = globals.converter._dispatch("emoji.before", text3, options, globals);
           var emojiRgx = /:([\S]+?):/g;
           text3 = text3.replace(emojiRgx, function(wm, emojiCode) {
-            if (showdown3.helper.emojis.hasOwnProperty(emojiCode)) {
-              return showdown3.helper.emojis[emojiCode];
+            if (showdown2.helper.emojis.hasOwnProperty(emojiCode)) {
+              return showdown2.helper.emojis[emojiCode];
             }
             return wm;
           });
           text3 = globals.converter._dispatch("emoji.after", text3, options, globals);
           return text3;
         });
-        showdown3.subParser("encodeAmpsAndAngles", function(text3, options, globals) {
+        showdown2.subParser("encodeAmpsAndAngles", function(text3, options, globals) {
           "use strict";
           text3 = globals.converter._dispatch("encodeAmpsAndAngles.before", text3, options, globals);
           text3 = text3.replace(/&(?!#?[xX]?(?:[0-9a-fA-F]+|\w+);)/g, "&amp;");
@@ -13945,35 +13945,35 @@
           text3 = globals.converter._dispatch("encodeAmpsAndAngles.after", text3, options, globals);
           return text3;
         });
-        showdown3.subParser("encodeBackslashEscapes", function(text3, options, globals) {
+        showdown2.subParser("encodeBackslashEscapes", function(text3, options, globals) {
           "use strict";
           text3 = globals.converter._dispatch("encodeBackslashEscapes.before", text3, options, globals);
-          text3 = text3.replace(/\\(\\)/g, showdown3.helper.escapeCharactersCallback);
-          text3 = text3.replace(/\\([`*_{}\[\]()>#+.!~=|:-])/g, showdown3.helper.escapeCharactersCallback);
+          text3 = text3.replace(/\\(\\)/g, showdown2.helper.escapeCharactersCallback);
+          text3 = text3.replace(/\\([`*_{}\[\]()>#+.!~=|:-])/g, showdown2.helper.escapeCharactersCallback);
           text3 = globals.converter._dispatch("encodeBackslashEscapes.after", text3, options, globals);
           return text3;
         });
-        showdown3.subParser("encodeCode", function(text3, options, globals) {
+        showdown2.subParser("encodeCode", function(text3, options, globals) {
           "use strict";
           text3 = globals.converter._dispatch("encodeCode.before", text3, options, globals);
-          text3 = text3.replace(/&/g, "&amp;").replace(/</g, "&lt;").replace(/>/g, "&gt;").replace(/([*_{}\[\]\\=~-])/g, showdown3.helper.escapeCharactersCallback);
+          text3 = text3.replace(/&/g, "&amp;").replace(/</g, "&lt;").replace(/>/g, "&gt;").replace(/([*_{}\[\]\\=~-])/g, showdown2.helper.escapeCharactersCallback);
           text3 = globals.converter._dispatch("encodeCode.after", text3, options, globals);
           return text3;
         });
-        showdown3.subParser("escapeSpecialCharsWithinTagAttributes", function(text3, options, globals) {
+        showdown2.subParser("escapeSpecialCharsWithinTagAttributes", function(text3, options, globals) {
           "use strict";
           text3 = globals.converter._dispatch("escapeSpecialCharsWithinTagAttributes.before", text3, options, globals);
           var tags = /<\/?[a-z\d_:-]+(?:[\s]+[\s\S]+?)?>/gi, comments = /<!(--(?:(?:[^>-]|-[^>])(?:[^-]|-[^-])*)--)>/gi;
           text3 = text3.replace(tags, function(wholeMatch) {
-            return wholeMatch.replace(/(.)<\/?code>(?=.)/g, "$1`").replace(/([\\`*_~=|])/g, showdown3.helper.escapeCharactersCallback);
+            return wholeMatch.replace(/(.)<\/?code>(?=.)/g, "$1`").replace(/([\\`*_~=|])/g, showdown2.helper.escapeCharactersCallback);
           });
           text3 = text3.replace(comments, function(wholeMatch) {
-            return wholeMatch.replace(/([\\`*_~=|])/g, showdown3.helper.escapeCharactersCallback);
+            return wholeMatch.replace(/([\\`*_~=|])/g, showdown2.helper.escapeCharactersCallback);
           });
           text3 = globals.converter._dispatch("escapeSpecialCharsWithinTagAttributes.after", text3, options, globals);
           return text3;
         });
-        showdown3.subParser("githubCodeBlocks", function(text3, options, globals) {
+        showdown2.subParser("githubCodeBlocks", function(text3, options, globals) {
           "use strict";
           if (!options.ghCodeBlocks) {
             return text3;
@@ -13982,18 +13982,18 @@
           text3 += "\xA80";
           text3 = text3.replace(/(?:^|\n)(?: {0,3})(```+|~~~+)(?: *)([^\s`~]*)\n([\s\S]*?)\n(?: {0,3})\1/g, function(wholeMatch, delim, language, codeblock) {
             var end2 = options.omitExtraWLInCodeBlocks ? "" : "\n";
-            codeblock = showdown3.subParser("encodeCode")(codeblock, options, globals);
-            codeblock = showdown3.subParser("detab")(codeblock, options, globals);
+            codeblock = showdown2.subParser("encodeCode")(codeblock, options, globals);
+            codeblock = showdown2.subParser("detab")(codeblock, options, globals);
             codeblock = codeblock.replace(/^\n+/g, "");
             codeblock = codeblock.replace(/\n+$/g, "");
             codeblock = "<pre><code" + (language ? ' class="' + language + " language-" + language + '"' : "") + ">" + codeblock + end2 + "</code></pre>";
-            codeblock = showdown3.subParser("hashBlock")(codeblock, options, globals);
+            codeblock = showdown2.subParser("hashBlock")(codeblock, options, globals);
             return "\n\n\xA8G" + (globals.ghCodeBlocks.push({ text: wholeMatch, codeblock }) - 1) + "G\n\n";
           });
           text3 = text3.replace(/¨0/, "");
           return globals.converter._dispatch("githubCodeBlocks.after", text3, options, globals);
         });
-        showdown3.subParser("hashBlock", function(text3, options, globals) {
+        showdown2.subParser("hashBlock", function(text3, options, globals) {
           "use strict";
           text3 = globals.converter._dispatch("hashBlock.before", text3, options, globals);
           text3 = text3.replace(/(^\n+|\n+$)/g, "");
@@ -14001,18 +14001,18 @@
           text3 = globals.converter._dispatch("hashBlock.after", text3, options, globals);
           return text3;
         });
-        showdown3.subParser("hashCodeTags", function(text3, options, globals) {
+        showdown2.subParser("hashCodeTags", function(text3, options, globals) {
           "use strict";
           text3 = globals.converter._dispatch("hashCodeTags.before", text3, options, globals);
           var repFunc = function(wholeMatch, match2, left2, right2) {
-            var codeblock = left2 + showdown3.subParser("encodeCode")(match2, options, globals) + right2;
+            var codeblock = left2 + showdown2.subParser("encodeCode")(match2, options, globals) + right2;
             return "\xA8C" + (globals.gHtmlSpans.push(codeblock) - 1) + "C";
           };
-          text3 = showdown3.helper.replaceRecursiveRegExp(text3, repFunc, "<code\\b[^>]*>", "</code>", "gim");
+          text3 = showdown2.helper.replaceRecursiveRegExp(text3, repFunc, "<code\\b[^>]*>", "</code>", "gim");
           text3 = globals.converter._dispatch("hashCodeTags.after", text3, options, globals);
           return text3;
         });
-        showdown3.subParser("hashElement", function(text3, options, globals) {
+        showdown2.subParser("hashElement", function(text3, options, globals) {
           "use strict";
           return function(wholeMatch, m1) {
             var blockText = m1;
@@ -14023,7 +14023,7 @@
             return blockText;
           };
         });
-        showdown3.subParser("hashHTMLBlocks", function(text3, options, globals) {
+        showdown2.subParser("hashHTMLBlocks", function(text3, options, globals) {
           "use strict";
           text3 = globals.converter._dispatch("hashHTMLBlocks.before", text3, options, globals);
           var blockTags = [
@@ -14075,8 +14075,8 @@
           }
           for (var i = 0; i < blockTags.length; ++i) {
             var opTagPos, rgx1 = new RegExp("^ {0,3}(<" + blockTags[i] + "\\b[^>]*>)", "im"), patLeft = "<" + blockTags[i] + "\\b[^>]*>", patRight = "</" + blockTags[i] + ">";
-            while ((opTagPos = showdown3.helper.regexIndexOf(text3, rgx1)) !== -1) {
-              var subTexts = showdown3.helper.splitAtIndex(text3, opTagPos), newSubText1 = showdown3.helper.replaceRecursiveRegExp(subTexts[1], repFunc, patLeft, patRight, "im");
+            while ((opTagPos = showdown2.helper.regexIndexOf(text3, rgx1)) !== -1) {
+              var subTexts = showdown2.helper.splitAtIndex(text3, opTagPos), newSubText1 = showdown2.helper.replaceRecursiveRegExp(subTexts[1], repFunc, patLeft, patRight, "im");
               if (newSubText1 === subTexts[1]) {
                 break;
               }
@@ -14085,19 +14085,19 @@
           }
           text3 = text3.replace(
             /(\n {0,3}(<(hr)\b([^<>])*?\/?>)[ \t]*(?=\n{2,}))/g,
-            showdown3.subParser("hashElement")(text3, options, globals)
+            showdown2.subParser("hashElement")(text3, options, globals)
           );
-          text3 = showdown3.helper.replaceRecursiveRegExp(text3, function(txt) {
+          text3 = showdown2.helper.replaceRecursiveRegExp(text3, function(txt) {
             return "\n\n\xA8K" + (globals.gHtmlBlocks.push(txt) - 1) + "K\n\n";
           }, "^ {0,3}<!--", "-->", "gm");
           text3 = text3.replace(
             /(?:\n\n)( {0,3}(?:<([?%])[^\r]*?\2>)[ \t]*(?=\n{2,}))/g,
-            showdown3.subParser("hashElement")(text3, options, globals)
+            showdown2.subParser("hashElement")(text3, options, globals)
           );
           text3 = globals.converter._dispatch("hashHTMLBlocks.after", text3, options, globals);
           return text3;
         });
-        showdown3.subParser("hashHTMLSpans", function(text3, options, globals) {
+        showdown2.subParser("hashHTMLSpans", function(text3, options, globals) {
           "use strict";
           text3 = globals.converter._dispatch("hashHTMLSpans.before", text3, options, globals);
           function hashHTMLSpan(html3) {
@@ -14118,7 +14118,7 @@
           text3 = globals.converter._dispatch("hashHTMLSpans.after", text3, options, globals);
           return text3;
         });
-        showdown3.subParser("unhashHTMLSpans", function(text3, options, globals) {
+        showdown2.subParser("unhashHTMLSpans", function(text3, options, globals) {
           "use strict";
           text3 = globals.converter._dispatch("unhashHTMLSpans.before", text3, options, globals);
           for (var i = 0; i < globals.gHtmlSpans.length; ++i) {
@@ -14137,28 +14137,28 @@
           text3 = globals.converter._dispatch("unhashHTMLSpans.after", text3, options, globals);
           return text3;
         });
-        showdown3.subParser("hashPreCodeTags", function(text3, options, globals) {
+        showdown2.subParser("hashPreCodeTags", function(text3, options, globals) {
           "use strict";
           text3 = globals.converter._dispatch("hashPreCodeTags.before", text3, options, globals);
           var repFunc = function(wholeMatch, match2, left2, right2) {
-            var codeblock = left2 + showdown3.subParser("encodeCode")(match2, options, globals) + right2;
+            var codeblock = left2 + showdown2.subParser("encodeCode")(match2, options, globals) + right2;
             return "\n\n\xA8G" + (globals.ghCodeBlocks.push({ text: wholeMatch, codeblock }) - 1) + "G\n\n";
           };
-          text3 = showdown3.helper.replaceRecursiveRegExp(text3, repFunc, "^ {0,3}<pre\\b[^>]*>\\s*<code\\b[^>]*>", "^ {0,3}</code>\\s*</pre>", "gim");
+          text3 = showdown2.helper.replaceRecursiveRegExp(text3, repFunc, "^ {0,3}<pre\\b[^>]*>\\s*<code\\b[^>]*>", "^ {0,3}</code>\\s*</pre>", "gim");
           text3 = globals.converter._dispatch("hashPreCodeTags.after", text3, options, globals);
           return text3;
         });
-        showdown3.subParser("headers", function(text3, options, globals) {
+        showdown2.subParser("headers", function(text3, options, globals) {
           "use strict";
           text3 = globals.converter._dispatch("headers.before", text3, options, globals);
           var headerLevelStart = isNaN(parseInt(options.headerLevelStart)) ? 1 : parseInt(options.headerLevelStart), setextRegexH1 = options.smoothLivePreview ? /^(.+)[ \t]*\n={2,}[ \t]*\n+/gm : /^(.+)[ \t]*\n=+[ \t]*\n+/gm, setextRegexH2 = options.smoothLivePreview ? /^(.+)[ \t]*\n-{2,}[ \t]*\n+/gm : /^(.+)[ \t]*\n-+[ \t]*\n+/gm;
           text3 = text3.replace(setextRegexH1, function(wholeMatch, m1) {
-            var spanGamut = showdown3.subParser("spanGamut")(m1, options, globals), hID = options.noHeaderId ? "" : ' id="' + headerId(m1) + '"', hLevel = headerLevelStart, hashBlock = "<h" + hLevel + hID + ">" + spanGamut + "</h" + hLevel + ">";
-            return showdown3.subParser("hashBlock")(hashBlock, options, globals);
+            var spanGamut = showdown2.subParser("spanGamut")(m1, options, globals), hID = options.noHeaderId ? "" : ' id="' + headerId(m1) + '"', hLevel = headerLevelStart, hashBlock = "<h" + hLevel + hID + ">" + spanGamut + "</h" + hLevel + ">";
+            return showdown2.subParser("hashBlock")(hashBlock, options, globals);
           });
           text3 = text3.replace(setextRegexH2, function(matchFound, m1) {
-            var spanGamut = showdown3.subParser("spanGamut")(m1, options, globals), hID = options.noHeaderId ? "" : ' id="' + headerId(m1) + '"', hLevel = headerLevelStart + 1, hashBlock = "<h" + hLevel + hID + ">" + spanGamut + "</h" + hLevel + ">";
-            return showdown3.subParser("hashBlock")(hashBlock, options, globals);
+            var spanGamut = showdown2.subParser("spanGamut")(m1, options, globals), hID = options.noHeaderId ? "" : ' id="' + headerId(m1) + '"', hLevel = headerLevelStart + 1, hashBlock = "<h" + hLevel + hID + ">" + spanGamut + "</h" + hLevel + ">";
+            return showdown2.subParser("hashBlock")(hashBlock, options, globals);
           });
           var atxStyle = options.requireSpaceBeforeHeadingText ? /^(#{1,6})[ \t]+(.+?)[ \t]*#*\n+/gm : /^(#{1,6})[ \t]*(.+?)[ \t]*#*\n+/gm;
           text3 = text3.replace(atxStyle, function(wholeMatch, m1, m2) {
@@ -14166,8 +14166,8 @@
             if (options.customizedHeaderId) {
               hText = m2.replace(/\s?\{([^{]+?)}\s*$/, "");
             }
-            var span = showdown3.subParser("spanGamut")(hText, options, globals), hID = options.noHeaderId ? "" : ' id="' + headerId(m2) + '"', hLevel = headerLevelStart - 1 + m1.length, header = "<h" + hLevel + hID + ">" + span + "</h" + hLevel + ">";
-            return showdown3.subParser("hashBlock")(header, options, globals);
+            var span = showdown2.subParser("spanGamut")(hText, options, globals), hID = options.noHeaderId ? "" : ' id="' + headerId(m2) + '"', hLevel = headerLevelStart - 1 + m1.length, header = "<h" + hLevel + hID + ">" + span + "</h" + hLevel + ">";
+            return showdown2.subParser("hashBlock")(header, options, globals);
           });
           function headerId(m) {
             var title, prefix;
@@ -14178,7 +14178,7 @@
               }
             }
             title = m;
-            if (showdown3.helper.isString(options.prefixHeaderId)) {
+            if (showdown2.helper.isString(options.prefixHeaderId)) {
               prefix = options.prefixHeaderId;
             } else if (options.prefixHeaderId === true) {
               prefix = "section-";
@@ -14208,17 +14208,17 @@
           text3 = globals.converter._dispatch("headers.after", text3, options, globals);
           return text3;
         });
-        showdown3.subParser("horizontalRule", function(text3, options, globals) {
+        showdown2.subParser("horizontalRule", function(text3, options, globals) {
           "use strict";
           text3 = globals.converter._dispatch("horizontalRule.before", text3, options, globals);
-          var key = showdown3.subParser("hashBlock")("<hr />", options, globals);
+          var key = showdown2.subParser("hashBlock")("<hr />", options, globals);
           text3 = text3.replace(/^ {0,2}( ?-){3,}[ \t]*$/gm, key);
           text3 = text3.replace(/^ {0,2}( ?\*){3,}[ \t]*$/gm, key);
           text3 = text3.replace(/^ {0,2}( ?_){3,}[ \t]*$/gm, key);
           text3 = globals.converter._dispatch("horizontalRule.after", text3, options, globals);
           return text3;
         });
-        showdown3.subParser("images", function(text3, options, globals) {
+        showdown2.subParser("images", function(text3, options, globals) {
           "use strict";
           text3 = globals.converter._dispatch("images.before", text3, options, globals);
           var inlineRegExp = /!\[([^\]]*?)][ \t]*()\([ \t]?<?([\S]+?(?:\([\S]*?\)[\S]*?)?)>?(?: =([*\d]+[A-Za-z%]{0,4})x([*\d]+[A-Za-z%]{0,4}))?[ \t]*(?:(["'])([^"]*?)\6)?[ \t]?\)/g, crazyRegExp = /!\[([^\]]*?)][ \t]*()\([ \t]?<([^>]*)>(?: =([*\d]+[A-Za-z%]{0,4})x([*\d]+[A-Za-z%]{0,4}))?[ \t]*(?:(?:(["'])([^"]*?)\6))?[ \t]?\)/g, base64RegExp = /!\[([^\]]*?)][ \t]*()\([ \t]?<?(data:.+?\/.+?;base64,[A-Za-z0-9+/=\n]+?)>?(?: =([*\d]+[A-Za-z%]{0,4})x([*\d]+[A-Za-z%]{0,4}))?[ \t]*(?:(["'])([^"]*?)\6)?[ \t]?\)/g, referenceRegExp = /!\[([^\]]*?)] ?(?:\n *)?\[([\s\S]*?)]()()()()()/g, refShortcutRegExp = /!\[([^\[\]]+)]()()()()()/g;
@@ -14239,12 +14239,12 @@
                 linkId = altText.toLowerCase().replace(/ ?\n/g, " ");
               }
               url = "#" + linkId;
-              if (!showdown3.helper.isUndefined(gUrls[linkId])) {
+              if (!showdown2.helper.isUndefined(gUrls[linkId])) {
                 url = gUrls[linkId];
-                if (!showdown3.helper.isUndefined(gTitles[linkId])) {
+                if (!showdown2.helper.isUndefined(gTitles[linkId])) {
                   title = gTitles[linkId];
                 }
-                if (!showdown3.helper.isUndefined(gDims[linkId])) {
+                if (!showdown2.helper.isUndefined(gDims[linkId])) {
                   width = gDims[linkId].width;
                   height = gDims[linkId].height;
                 }
@@ -14252,11 +14252,11 @@
                 return wholeMatch;
               }
             }
-            altText = altText.replace(/"/g, "&quot;").replace(showdown3.helper.regexes.asteriskDashAndColon, showdown3.helper.escapeCharactersCallback);
-            url = url.replace(showdown3.helper.regexes.asteriskDashAndColon, showdown3.helper.escapeCharactersCallback);
+            altText = altText.replace(/"/g, "&quot;").replace(showdown2.helper.regexes.asteriskDashAndColon, showdown2.helper.escapeCharactersCallback);
+            url = url.replace(showdown2.helper.regexes.asteriskDashAndColon, showdown2.helper.escapeCharactersCallback);
             var result = '<img src="' + url + '" alt="' + altText + '"';
-            if (title && showdown3.helper.isString(title)) {
-              title = title.replace(/"/g, "&quot;").replace(showdown3.helper.regexes.asteriskDashAndColon, showdown3.helper.escapeCharactersCallback);
+            if (title && showdown2.helper.isString(title)) {
+              title = title.replace(/"/g, "&quot;").replace(showdown2.helper.regexes.asteriskDashAndColon, showdown2.helper.escapeCharactersCallback);
               result += ' title="' + title + '"';
             }
             if (width && height) {
@@ -14276,7 +14276,7 @@
           text3 = globals.converter._dispatch("images.after", text3, options, globals);
           return text3;
         });
-        showdown3.subParser("italicsAndBold", function(text3, options, globals) {
+        showdown2.subParser("italicsAndBold", function(text3, options, globals) {
           "use strict";
           text3 = globals.converter._dispatch("italicsAndBold.before", text3, options, globals);
           function parseInside(txt, left2, right2) {
@@ -14327,7 +14327,7 @@
           text3 = globals.converter._dispatch("italicsAndBold.after", text3, options, globals);
           return text3;
         });
-        showdown3.subParser("lists", function(text3, options, globals) {
+        showdown2.subParser("lists", function(text3, options, globals) {
           "use strict";
           function processListItems(listStr, trimTrailing) {
             globals.gListLevel++;
@@ -14339,7 +14339,7 @@
             }
             listStr = listStr.replace(rgx, function(wholeMatch, m1, m2, m3, m4, taskbtn, checked) {
               checked = checked && checked.trim() !== "";
-              var item = showdown3.subParser("outdent")(m4, options, globals), bulletStyle = "";
+              var item = showdown2.subParser("outdent")(m4, options, globals), bulletStyle = "";
               if (taskbtn && options.tasklists) {
                 bulletStyle = ' class="task-list-item" style="list-style-type: none;"';
                 item = item.replace(/^[ \t]*\[(x|X| )?]/m, function() {
@@ -14355,17 +14355,17 @@
                 return "\xA8A" + wm2;
               });
               if (m1 || item.search(/\n{2,}/) > -1) {
-                item = showdown3.subParser("githubCodeBlocks")(item, options, globals);
-                item = showdown3.subParser("blockGamut")(item, options, globals);
+                item = showdown2.subParser("githubCodeBlocks")(item, options, globals);
+                item = showdown2.subParser("blockGamut")(item, options, globals);
               } else {
-                item = showdown3.subParser("lists")(item, options, globals);
+                item = showdown2.subParser("lists")(item, options, globals);
                 item = item.replace(/\n$/, "");
-                item = showdown3.subParser("hashHTMLBlocks")(item, options, globals);
+                item = showdown2.subParser("hashHTMLBlocks")(item, options, globals);
                 item = item.replace(/\n\n+/g, "\n\n");
                 if (isParagraphed) {
-                  item = showdown3.subParser("paragraphs")(item, options, globals);
+                  item = showdown2.subParser("paragraphs")(item, options, globals);
                 } else {
-                  item = showdown3.subParser("spanGamut")(item, options, globals);
+                  item = showdown2.subParser("spanGamut")(item, options, globals);
                 }
               }
               item = item.replace("\xA8A", "");
@@ -14431,7 +14431,7 @@
           text3 = globals.converter._dispatch("lists.after", text3, options, globals);
           return text3;
         });
-        showdown3.subParser("metadata", function(text3, options, globals) {
+        showdown2.subParser("metadata", function(text3, options, globals) {
           "use strict";
           if (!options.metadata) {
             return text3;
@@ -14461,7 +14461,7 @@
           text3 = globals.converter._dispatch("metadata.after", text3, options, globals);
           return text3;
         });
-        showdown3.subParser("outdent", function(text3, options, globals) {
+        showdown2.subParser("outdent", function(text3, options, globals) {
           "use strict";
           text3 = globals.converter._dispatch("outdent.before", text3, options, globals);
           text3 = text3.replace(/^(\t|[ ]{1,4})/gm, "\xA80");
@@ -14469,7 +14469,7 @@
           text3 = globals.converter._dispatch("outdent.after", text3, options, globals);
           return text3;
         });
-        showdown3.subParser("paragraphs", function(text3, options, globals) {
+        showdown2.subParser("paragraphs", function(text3, options, globals) {
           "use strict";
           text3 = globals.converter._dispatch("paragraphs.before", text3, options, globals);
           text3 = text3.replace(/^\n+/g, "");
@@ -14480,7 +14480,7 @@
             if (str.search(/¨(K|G)(\d+)\1/g) >= 0) {
               grafsOut.push(str);
             } else if (str.search(/\S/) >= 0) {
-              str = showdown3.subParser("spanGamut")(str, options, globals);
+              str = showdown2.subParser("spanGamut")(str, options, globals);
               str = str.replace(/^([ \t]*)/g, "<p>");
               str += "</p>";
               grafsOut.push(str);
@@ -14495,7 +14495,7 @@
                 blockText = globals.gHtmlBlocks[num];
               } else {
                 if (codeFlag) {
-                  blockText = showdown3.subParser("encodeCode")(globals.ghCodeBlocks[num].text, options, globals);
+                  blockText = showdown2.subParser("encodeCode")(globals.ghCodeBlocks[num].text, options, globals);
                 } else {
                   blockText = globals.ghCodeBlocks[num].codeblock;
                 }
@@ -14513,7 +14513,7 @@
           text3 = text3.replace(/\n+$/g, "");
           return globals.converter._dispatch("paragraphs.after", text3, options, globals);
         });
-        showdown3.subParser("runExtension", function(ext, text3, options, globals) {
+        showdown2.subParser("runExtension", function(ext, text3, options, globals) {
           "use strict";
           if (ext.filter) {
             text3 = ext.filter(text3, globals.converter, options);
@@ -14526,23 +14526,23 @@
           }
           return text3;
         });
-        showdown3.subParser("spanGamut", function(text3, options, globals) {
+        showdown2.subParser("spanGamut", function(text3, options, globals) {
           "use strict";
           text3 = globals.converter._dispatch("spanGamut.before", text3, options, globals);
-          text3 = showdown3.subParser("codeSpans")(text3, options, globals);
-          text3 = showdown3.subParser("escapeSpecialCharsWithinTagAttributes")(text3, options, globals);
-          text3 = showdown3.subParser("encodeBackslashEscapes")(text3, options, globals);
-          text3 = showdown3.subParser("images")(text3, options, globals);
-          text3 = showdown3.subParser("anchors")(text3, options, globals);
-          text3 = showdown3.subParser("autoLinks")(text3, options, globals);
-          text3 = showdown3.subParser("simplifiedAutoLinks")(text3, options, globals);
-          text3 = showdown3.subParser("emoji")(text3, options, globals);
-          text3 = showdown3.subParser("underline")(text3, options, globals);
-          text3 = showdown3.subParser("italicsAndBold")(text3, options, globals);
-          text3 = showdown3.subParser("strikethrough")(text3, options, globals);
-          text3 = showdown3.subParser("ellipsis")(text3, options, globals);
-          text3 = showdown3.subParser("hashHTMLSpans")(text3, options, globals);
-          text3 = showdown3.subParser("encodeAmpsAndAngles")(text3, options, globals);
+          text3 = showdown2.subParser("codeSpans")(text3, options, globals);
+          text3 = showdown2.subParser("escapeSpecialCharsWithinTagAttributes")(text3, options, globals);
+          text3 = showdown2.subParser("encodeBackslashEscapes")(text3, options, globals);
+          text3 = showdown2.subParser("images")(text3, options, globals);
+          text3 = showdown2.subParser("anchors")(text3, options, globals);
+          text3 = showdown2.subParser("autoLinks")(text3, options, globals);
+          text3 = showdown2.subParser("simplifiedAutoLinks")(text3, options, globals);
+          text3 = showdown2.subParser("emoji")(text3, options, globals);
+          text3 = showdown2.subParser("underline")(text3, options, globals);
+          text3 = showdown2.subParser("italicsAndBold")(text3, options, globals);
+          text3 = showdown2.subParser("strikethrough")(text3, options, globals);
+          text3 = showdown2.subParser("ellipsis")(text3, options, globals);
+          text3 = showdown2.subParser("hashHTMLSpans")(text3, options, globals);
+          text3 = showdown2.subParser("encodeAmpsAndAngles")(text3, options, globals);
           if (options.simpleLineBreaks) {
             if (!/\n\n¨K/.test(text3)) {
               text3 = text3.replace(/\n+/g, "<br />\n");
@@ -14553,11 +14553,11 @@
           text3 = globals.converter._dispatch("spanGamut.after", text3, options, globals);
           return text3;
         });
-        showdown3.subParser("strikethrough", function(text3, options, globals) {
+        showdown2.subParser("strikethrough", function(text3, options, globals) {
           "use strict";
           function parseInside(txt) {
             if (options.simplifiedAutoLink) {
-              txt = showdown3.subParser("simplifiedAutoLinks")(txt, options, globals);
+              txt = showdown2.subParser("simplifiedAutoLinks")(txt, options, globals);
             }
             return "<del>" + txt + "</del>";
           }
@@ -14570,7 +14570,7 @@
           }
           return text3;
         });
-        showdown3.subParser("stripLinkDefinitions", function(text3, options, globals) {
+        showdown2.subParser("stripLinkDefinitions", function(text3, options, globals) {
           "use strict";
           var regex = /^ {0,3}\[([^\]]+)]:[ \t]*\n?[ \t]*<?([^>\s]+)>?(?: =([*\d]+[A-Za-z%]{0,4})x([*\d]+[A-Za-z%]{0,4}))?[ \t]*\n?[ \t]*(?:(\n*)["|'(](.+?)["|')][ \t]*)?(?:\n+|(?=¨0))/gm, base64Regex = /^ {0,3}\[([^\]]+)]:[ \t]*\n?[ \t]*<?(data:.+?\/.+?;base64,[A-Za-z0-9+/=\n]+?)>?(?: =([*\d]+[A-Za-z%]{0,4})x([*\d]+[A-Za-z%]{0,4}))?[ \t]*\n?[ \t]*(?:(\n*)["|'(](.+?)["|')][ \t]*)?(?:\n\n|(?=¨0)|(?=\n\[))/gm;
           text3 += "\xA80";
@@ -14582,7 +14582,7 @@
             if (url.match(/^data:.+?\/.+?;base64,/)) {
               globals.gUrls[linkId] = url.replace(/\s/g, "");
             } else {
-              globals.gUrls[linkId] = showdown3.subParser("encodeAmpsAndAngles")(url, options, globals);
+              globals.gUrls[linkId] = showdown2.subParser("encodeAmpsAndAngles")(url, options, globals);
             }
             if (blankLines) {
               return blankLines + title;
@@ -14604,7 +14604,7 @@
           text3 = text3.replace(/¨0/, "");
           return text3;
         });
-        showdown3.subParser("tables", function(text3, options, globals) {
+        showdown2.subParser("tables", function(text3, options, globals) {
           "use strict";
           if (!options.tables) {
             return text3;
@@ -14627,11 +14627,11 @@
             if (options.tablesHeaderId || options.tableHeaderId) {
               id = ' id="' + header.replace(/ /g, "_").toLowerCase() + '"';
             }
-            header = showdown3.subParser("spanGamut")(header, options, globals);
+            header = showdown2.subParser("spanGamut")(header, options, globals);
             return "<th" + id + style + ">" + header + "</th>\n";
           }
           function parseCells(cell, style) {
-            var subText = showdown3.subParser("spanGamut")(cell, options, globals);
+            var subText = showdown2.subParser("spanGamut")(cell, options, globals);
             return "<td" + style + ">" + subText + "</td>\n";
           }
           function buildTable(headers, cells) {
@@ -14659,7 +14659,7 @@
               if (/\|[ \t]*$/.test(tableLines[i])) {
                 tableLines[i] = tableLines[i].replace(/\|[ \t]*$/, "");
               }
-              tableLines[i] = showdown3.subParser("codeSpans")(tableLines[i], options, globals);
+              tableLines[i] = showdown2.subParser("codeSpans")(tableLines[i], options, globals);
             }
             var rawHeaders = tableLines[0].split("|").map(function(s2) {
               return s2.trim();
@@ -14685,7 +14685,7 @@
               styles.push(parseStyles(rawStyles[i]));
             }
             for (i = 0; i < rawHeaders.length; ++i) {
-              if (showdown3.helper.isUndefined(styles[i])) {
+              if (showdown2.helper.isUndefined(styles[i])) {
                 styles[i] = "";
               }
               headers.push(parseHeaders(rawHeaders[i], styles[i]));
@@ -14693,7 +14693,7 @@
             for (i = 0; i < rawCells.length; ++i) {
               var row = [];
               for (var ii = 0; ii < headers.length; ++ii) {
-                if (showdown3.helper.isUndefined(rawCells[i][ii])) {
+                if (showdown2.helper.isUndefined(rawCells[i][ii])) {
                 }
                 row.push(parseCells(rawCells[i][ii], styles[ii]));
               }
@@ -14702,13 +14702,13 @@
             return buildTable(headers, cells);
           }
           text3 = globals.converter._dispatch("tables.before", text3, options, globals);
-          text3 = text3.replace(/\\(\|)/g, showdown3.helper.escapeCharactersCallback);
+          text3 = text3.replace(/\\(\|)/g, showdown2.helper.escapeCharactersCallback);
           text3 = text3.replace(tableRgx, parseTable);
           text3 = text3.replace(singeColTblRgx, parseTable);
           text3 = globals.converter._dispatch("tables.after", text3, options, globals);
           return text3;
         });
-        showdown3.subParser("underline", function(text3, options, globals) {
+        showdown2.subParser("underline", function(text3, options, globals) {
           "use strict";
           if (!options.underline) {
             return text3;
@@ -14729,11 +14729,11 @@
               return /\S$/.test(m) ? "<u>" + m + "</u>" : wm;
             });
           }
-          text3 = text3.replace(/(_)/g, showdown3.helper.escapeCharactersCallback);
+          text3 = text3.replace(/(_)/g, showdown2.helper.escapeCharactersCallback);
           text3 = globals.converter._dispatch("underline.after", text3, options, globals);
           return text3;
         });
-        showdown3.subParser("unescapeSpecialChars", function(text3, options, globals) {
+        showdown2.subParser("unescapeSpecialChars", function(text3, options, globals) {
           "use strict";
           text3 = globals.converter._dispatch("unescapeSpecialChars.before", text3, options, globals);
           text3 = text3.replace(/¨E(\d+)E/g, function(wholeMatch, m1) {
@@ -14743,13 +14743,13 @@
           text3 = globals.converter._dispatch("unescapeSpecialChars.after", text3, options, globals);
           return text3;
         });
-        showdown3.subParser("makeMarkdown.blockquote", function(node, globals) {
+        showdown2.subParser("makeMarkdown.blockquote", function(node, globals) {
           "use strict";
           var txt = "";
           if (node.hasChildNodes()) {
             var children = node.childNodes, childrenLength = children.length;
             for (var i = 0; i < childrenLength; ++i) {
-              var innerTxt = showdown3.subParser("makeMarkdown.node")(children[i], globals);
+              var innerTxt = showdown2.subParser("makeMarkdown.node")(children[i], globals);
               if (innerTxt === "") {
                 continue;
               }
@@ -14760,45 +14760,45 @@
           txt = "> " + txt.split("\n").join("\n> ");
           return txt;
         });
-        showdown3.subParser("makeMarkdown.codeBlock", function(node, globals) {
+        showdown2.subParser("makeMarkdown.codeBlock", function(node, globals) {
           "use strict";
           var lang2 = node.getAttribute("language"), num = node.getAttribute("precodenum");
           return "```" + lang2 + "\n" + globals.preList[num] + "\n```";
         });
-        showdown3.subParser("makeMarkdown.codeSpan", function(node) {
+        showdown2.subParser("makeMarkdown.codeSpan", function(node) {
           "use strict";
           return "`" + node.innerHTML + "`";
         });
-        showdown3.subParser("makeMarkdown.emphasis", function(node, globals) {
+        showdown2.subParser("makeMarkdown.emphasis", function(node, globals) {
           "use strict";
           var txt = "";
           if (node.hasChildNodes()) {
             txt += "*";
             var children = node.childNodes, childrenLength = children.length;
             for (var i = 0; i < childrenLength; ++i) {
-              txt += showdown3.subParser("makeMarkdown.node")(children[i], globals);
+              txt += showdown2.subParser("makeMarkdown.node")(children[i], globals);
             }
             txt += "*";
           }
           return txt;
         });
-        showdown3.subParser("makeMarkdown.header", function(node, globals, headerLevel) {
+        showdown2.subParser("makeMarkdown.header", function(node, globals, headerLevel) {
           "use strict";
           var headerMark = new Array(headerLevel + 1).join("#"), txt = "";
           if (node.hasChildNodes()) {
             txt = headerMark + " ";
             var children = node.childNodes, childrenLength = children.length;
             for (var i = 0; i < childrenLength; ++i) {
-              txt += showdown3.subParser("makeMarkdown.node")(children[i], globals);
+              txt += showdown2.subParser("makeMarkdown.node")(children[i], globals);
             }
           }
           return txt;
         });
-        showdown3.subParser("makeMarkdown.hr", function() {
+        showdown2.subParser("makeMarkdown.hr", function() {
           "use strict";
           return "---";
         });
-        showdown3.subParser("makeMarkdown.image", function(node) {
+        showdown2.subParser("makeMarkdown.image", function(node) {
           "use strict";
           var txt = "";
           if (node.hasAttribute("src")) {
@@ -14814,14 +14814,14 @@
           }
           return txt;
         });
-        showdown3.subParser("makeMarkdown.links", function(node, globals) {
+        showdown2.subParser("makeMarkdown.links", function(node, globals) {
           "use strict";
           var txt = "";
           if (node.hasChildNodes() && node.hasAttribute("href")) {
             var children = node.childNodes, childrenLength = children.length;
             txt = "[";
             for (var i = 0; i < childrenLength; ++i) {
-              txt += showdown3.subParser("makeMarkdown.node")(children[i], globals);
+              txt += showdown2.subParser("makeMarkdown.node")(children[i], globals);
             }
             txt += "](";
             txt += "<" + node.getAttribute("href") + ">";
@@ -14832,7 +14832,7 @@
           }
           return txt;
         });
-        showdown3.subParser("makeMarkdown.list", function(node, globals, type) {
+        showdown2.subParser("makeMarkdown.list", function(node, globals, type) {
           "use strict";
           var txt = "";
           if (!node.hasChildNodes()) {
@@ -14849,18 +14849,18 @@
             } else {
               bullet = "- ";
             }
-            txt += bullet + showdown3.subParser("makeMarkdown.listItem")(listItems[i], globals);
+            txt += bullet + showdown2.subParser("makeMarkdown.listItem")(listItems[i], globals);
             ++listNum;
           }
           txt += "\n<!-- -->\n";
           return txt.trim();
         });
-        showdown3.subParser("makeMarkdown.listItem", function(node, globals) {
+        showdown2.subParser("makeMarkdown.listItem", function(node, globals) {
           "use strict";
           var listItemTxt = "";
           var children = node.childNodes, childrenLenght = children.length;
           for (var i = 0; i < childrenLenght; ++i) {
-            listItemTxt += showdown3.subParser("makeMarkdown.node")(children[i], globals);
+            listItemTxt += showdown2.subParser("makeMarkdown.node")(children[i], globals);
           }
           if (!/\n$/.test(listItemTxt)) {
             listItemTxt += "\n";
@@ -14869,12 +14869,12 @@
           }
           return listItemTxt;
         });
-        showdown3.subParser("makeMarkdown.node", function(node, globals, spansOnly) {
+        showdown2.subParser("makeMarkdown.node", function(node, globals, spansOnly) {
           "use strict";
           spansOnly = spansOnly || false;
           var txt = "";
           if (node.nodeType === 3) {
-            return showdown3.subParser("makeMarkdown.txt")(node, globals);
+            return showdown2.subParser("makeMarkdown.txt")(node, globals);
           }
           if (node.nodeType === 8) {
             return "<!--" + node.data + "-->\n\n";
@@ -14889,150 +14889,150 @@
             //
             case "h1":
               if (!spansOnly) {
-                txt = showdown3.subParser("makeMarkdown.header")(node, globals, 1) + "\n\n";
+                txt = showdown2.subParser("makeMarkdown.header")(node, globals, 1) + "\n\n";
               }
               break;
             case "h2":
               if (!spansOnly) {
-                txt = showdown3.subParser("makeMarkdown.header")(node, globals, 2) + "\n\n";
+                txt = showdown2.subParser("makeMarkdown.header")(node, globals, 2) + "\n\n";
               }
               break;
             case "h3":
               if (!spansOnly) {
-                txt = showdown3.subParser("makeMarkdown.header")(node, globals, 3) + "\n\n";
+                txt = showdown2.subParser("makeMarkdown.header")(node, globals, 3) + "\n\n";
               }
               break;
             case "h4":
               if (!spansOnly) {
-                txt = showdown3.subParser("makeMarkdown.header")(node, globals, 4) + "\n\n";
+                txt = showdown2.subParser("makeMarkdown.header")(node, globals, 4) + "\n\n";
               }
               break;
             case "h5":
               if (!spansOnly) {
-                txt = showdown3.subParser("makeMarkdown.header")(node, globals, 5) + "\n\n";
+                txt = showdown2.subParser("makeMarkdown.header")(node, globals, 5) + "\n\n";
               }
               break;
             case "h6":
               if (!spansOnly) {
-                txt = showdown3.subParser("makeMarkdown.header")(node, globals, 6) + "\n\n";
+                txt = showdown2.subParser("makeMarkdown.header")(node, globals, 6) + "\n\n";
               }
               break;
             case "p":
               if (!spansOnly) {
-                txt = showdown3.subParser("makeMarkdown.paragraph")(node, globals) + "\n\n";
+                txt = showdown2.subParser("makeMarkdown.paragraph")(node, globals) + "\n\n";
               }
               break;
             case "blockquote":
               if (!spansOnly) {
-                txt = showdown3.subParser("makeMarkdown.blockquote")(node, globals) + "\n\n";
+                txt = showdown2.subParser("makeMarkdown.blockquote")(node, globals) + "\n\n";
               }
               break;
             case "hr":
               if (!spansOnly) {
-                txt = showdown3.subParser("makeMarkdown.hr")(node, globals) + "\n\n";
+                txt = showdown2.subParser("makeMarkdown.hr")(node, globals) + "\n\n";
               }
               break;
             case "ol":
               if (!spansOnly) {
-                txt = showdown3.subParser("makeMarkdown.list")(node, globals, "ol") + "\n\n";
+                txt = showdown2.subParser("makeMarkdown.list")(node, globals, "ol") + "\n\n";
               }
               break;
             case "ul":
               if (!spansOnly) {
-                txt = showdown3.subParser("makeMarkdown.list")(node, globals, "ul") + "\n\n";
+                txt = showdown2.subParser("makeMarkdown.list")(node, globals, "ul") + "\n\n";
               }
               break;
             case "precode":
               if (!spansOnly) {
-                txt = showdown3.subParser("makeMarkdown.codeBlock")(node, globals) + "\n\n";
+                txt = showdown2.subParser("makeMarkdown.codeBlock")(node, globals) + "\n\n";
               }
               break;
             case "pre":
               if (!spansOnly) {
-                txt = showdown3.subParser("makeMarkdown.pre")(node, globals) + "\n\n";
+                txt = showdown2.subParser("makeMarkdown.pre")(node, globals) + "\n\n";
               }
               break;
             case "table":
               if (!spansOnly) {
-                txt = showdown3.subParser("makeMarkdown.table")(node, globals) + "\n\n";
+                txt = showdown2.subParser("makeMarkdown.table")(node, globals) + "\n\n";
               }
               break;
             //
             // SPANS
             //
             case "code":
-              txt = showdown3.subParser("makeMarkdown.codeSpan")(node, globals);
+              txt = showdown2.subParser("makeMarkdown.codeSpan")(node, globals);
               break;
             case "em":
             case "i":
-              txt = showdown3.subParser("makeMarkdown.emphasis")(node, globals);
+              txt = showdown2.subParser("makeMarkdown.emphasis")(node, globals);
               break;
             case "strong":
             case "b":
-              txt = showdown3.subParser("makeMarkdown.strong")(node, globals);
+              txt = showdown2.subParser("makeMarkdown.strong")(node, globals);
               break;
             case "del":
-              txt = showdown3.subParser("makeMarkdown.strikethrough")(node, globals);
+              txt = showdown2.subParser("makeMarkdown.strikethrough")(node, globals);
               break;
             case "a":
-              txt = showdown3.subParser("makeMarkdown.links")(node, globals);
+              txt = showdown2.subParser("makeMarkdown.links")(node, globals);
               break;
             case "img":
-              txt = showdown3.subParser("makeMarkdown.image")(node, globals);
+              txt = showdown2.subParser("makeMarkdown.image")(node, globals);
               break;
             default:
               txt = node.outerHTML + "\n\n";
           }
           return txt;
         });
-        showdown3.subParser("makeMarkdown.paragraph", function(node, globals) {
+        showdown2.subParser("makeMarkdown.paragraph", function(node, globals) {
           "use strict";
           var txt = "";
           if (node.hasChildNodes()) {
             var children = node.childNodes, childrenLength = children.length;
             for (var i = 0; i < childrenLength; ++i) {
-              txt += showdown3.subParser("makeMarkdown.node")(children[i], globals);
+              txt += showdown2.subParser("makeMarkdown.node")(children[i], globals);
             }
           }
           txt = txt.trim();
           return txt;
         });
-        showdown3.subParser("makeMarkdown.pre", function(node, globals) {
+        showdown2.subParser("makeMarkdown.pre", function(node, globals) {
           "use strict";
           var num = node.getAttribute("prenum");
           return "<pre>" + globals.preList[num] + "</pre>";
         });
-        showdown3.subParser("makeMarkdown.strikethrough", function(node, globals) {
+        showdown2.subParser("makeMarkdown.strikethrough", function(node, globals) {
           "use strict";
           var txt = "";
           if (node.hasChildNodes()) {
             txt += "~~";
             var children = node.childNodes, childrenLength = children.length;
             for (var i = 0; i < childrenLength; ++i) {
-              txt += showdown3.subParser("makeMarkdown.node")(children[i], globals);
+              txt += showdown2.subParser("makeMarkdown.node")(children[i], globals);
             }
             txt += "~~";
           }
           return txt;
         });
-        showdown3.subParser("makeMarkdown.strong", function(node, globals) {
+        showdown2.subParser("makeMarkdown.strong", function(node, globals) {
           "use strict";
           var txt = "";
           if (node.hasChildNodes()) {
             txt += "**";
             var children = node.childNodes, childrenLength = children.length;
             for (var i = 0; i < childrenLength; ++i) {
-              txt += showdown3.subParser("makeMarkdown.node")(children[i], globals);
+              txt += showdown2.subParser("makeMarkdown.node")(children[i], globals);
             }
             txt += "**";
           }
           return txt;
         });
-        showdown3.subParser("makeMarkdown.table", function(node, globals) {
+        showdown2.subParser("makeMarkdown.table", function(node, globals) {
           "use strict";
           var txt = "", tableArray = [[], []], headings = node.querySelectorAll("thead>tr>th"), rows = node.querySelectorAll("tbody>tr"), i, ii;
           for (i = 0; i < headings.length; ++i) {
-            var headContent = showdown3.subParser("makeMarkdown.tableCell")(headings[i], globals), allign = "---";
+            var headContent = showdown2.subParser("makeMarkdown.tableCell")(headings[i], globals), allign = "---";
             if (headings[i].hasAttribute("style")) {
               var style = headings[i].getAttribute("style").toLowerCase().replace(/\s/g, "");
               switch (style) {
@@ -15055,7 +15055,7 @@
             for (ii = 0; ii < headings.length; ++ii) {
               var cellContent = " ";
               if (typeof cols[ii] !== "undefined") {
-                cellContent = showdown3.subParser("makeMarkdown.tableCell")(cols[ii], globals);
+                cellContent = showdown2.subParser("makeMarkdown.tableCell")(cols[ii], globals);
               }
               tableArray[r].push(cellContent);
             }
@@ -15073,19 +15073,19 @@
             for (ii = 0; ii < tableArray[i].length; ++ii) {
               if (i === 1) {
                 if (tableArray[i][ii].slice(-1) === ":") {
-                  tableArray[i][ii] = showdown3.helper.padEnd(tableArray[i][ii].slice(-1), cellSpacesCount - 1, "-") + ":";
+                  tableArray[i][ii] = showdown2.helper.padEnd(tableArray[i][ii].slice(-1), cellSpacesCount - 1, "-") + ":";
                 } else {
-                  tableArray[i][ii] = showdown3.helper.padEnd(tableArray[i][ii], cellSpacesCount, "-");
+                  tableArray[i][ii] = showdown2.helper.padEnd(tableArray[i][ii], cellSpacesCount, "-");
                 }
               } else {
-                tableArray[i][ii] = showdown3.helper.padEnd(tableArray[i][ii], cellSpacesCount);
+                tableArray[i][ii] = showdown2.helper.padEnd(tableArray[i][ii], cellSpacesCount);
               }
             }
             txt += "| " + tableArray[i].join(" | ") + " |\n";
           }
           return txt.trim();
         });
-        showdown3.subParser("makeMarkdown.tableCell", function(node, globals) {
+        showdown2.subParser("makeMarkdown.tableCell", function(node, globals) {
           "use strict";
           var txt = "";
           if (!node.hasChildNodes()) {
@@ -15093,16 +15093,16 @@
           }
           var children = node.childNodes, childrenLength = children.length;
           for (var i = 0; i < childrenLength; ++i) {
-            txt += showdown3.subParser("makeMarkdown.node")(children[i], globals, true);
+            txt += showdown2.subParser("makeMarkdown.node")(children[i], globals, true);
           }
           return txt.trim();
         });
-        showdown3.subParser("makeMarkdown.txt", function(node) {
+        showdown2.subParser("makeMarkdown.txt", function(node) {
           "use strict";
           var txt = node.nodeValue;
           txt = txt.replace(/ +/g, " ");
           txt = txt.replace(/¨NBSP;/g, " ");
-          txt = showdown3.helper.unescapeHTMLEntities(txt);
+          txt = showdown2.helper.unescapeHTMLEntities(txt);
           txt = txt.replace(/([*_~|`])/g, "\\$1");
           txt = txt.replace(/^(\s*)>/g, "\\$1>");
           txt = txt.replace(/^#/gm, "\\#");
@@ -15117,12 +15117,12 @@
         if (typeof define === "function" && define.amd) {
           define(function() {
             "use strict";
-            return showdown3;
+            return showdown2;
           });
         } else if (typeof module !== "undefined" && module.exports) {
-          module.exports = showdown3;
+          module.exports = showdown2;
         } else {
-          root2.showdown = showdown3;
+          root2.showdown = showdown2;
         }
       }).call(exports);
     }
@@ -28573,7 +28573,7 @@
     xhr.send();
   }
   function open_changelog(changelog) {
-    let window2 = dialog({
+    const window2 = dialog({
       id: "changelog",
       title: tl(trans.news_from_user).replace("{user}", sponsor_list && sponsor_list.special ? sponsor_list.special[0] : "katelyn"),
       body: html.node`
@@ -28586,56 +28586,36 @@
       type: "changelog",
       allow_scroll: true
     });
-    let changelog_list = window2.querySelector(".changelog-list");
+    const changelog_list = window2.querySelector(".changelog-list");
     let index3 = 0;
     for (let version3 in changelog) {
-      if (version3 == "updated" || version3 == "latest")
-        continue;
-      if (index3 > 10)
-        continue;
-      let version_item = html.node`
+      if (version3 == "updated" || version3 == "latest") continue;
+      if (index3 > 10) continue;
+      const version_item = html.node`
             <div class="changelog-version-item" data-changelog-type="${changelog[version3].type}" data-changelog-latest="${index3 == 0 ? "true" : "false"}" data-changelog-version="${version3}">
-            <div class="version-item-header">
-                <div class="sub-text">
-                <div class="breadcrumb">
-                    <div class="breadcrumb-origin">
-                    ${version3}
+                <div class="version-item-header">
+                    <div class="sub-text">
+                    <div class="breadcrumb">
+                        <div class="breadcrumb-origin">
+                        ${version3}
+                        </div>
+                        <div class="breadcrumb-name">
+                        ${trans_legacy.en.changelog.type[changelog[version3].type]}
+                        </div>
                     </div>
-                    <div class="breadcrumb-name">
-                    ${trans_legacy.en.changelog.type[changelog[version3].type]}
                     </div>
+                    <h3>${changelog[version3].name}</h3>
+                    ${version3 == "2025.0113" ? html.node`<h4 class="header-over">${changelog[version3].name}</h4>` : ""}
                 </div>
+                <div class="version-item-body markdown-body">
+                    ${markdown(changelog[version3].bio)}
                 </div>
-                <h3>${changelog[version3].name}</h3>
-                ${version3 == "2025.0113" ? html.node`<h4 class="header-over">${changelog[version3].name}</h4>` : ""}
-            </div>
             </div>
         `;
       if (changelog[version3].type == "major")
         version_item.setAttribute("id", "latest_major_release");
-      let body = document.createElement("div");
-      body.classList.add("version-item-body", "markdown-body");
-      let converter = new showdown.Converter({
-        emoji: true,
-        excludeTrailingPunctuationFromURLs: true,
-        ghMentions: true,
-        ghMentionsLink: `${root}user/{u}`,
-        headerLevelStart: 5,
-        noHeaderId: true,
-        openLinksInNewWindow: true,
-        requireSpaceBeforeHeadingText: true,
-        simpleLineBreaks: true,
-        simplifiedAutoLink: true,
-        strikethrough: true,
-        underline: true,
-        ghCodeBlocks: false,
-        smartIndentationFix: true
-      });
-      let parsed_text = converter.makeHtml(changelog[version3].bio.replace(/([@])([a-zA-Z0-9_]+)/g, `[$1$2](${root}user/$2)`).replace(/\[artist\]([a-zA-Z0-9]+)\[\/artist\]/g, `[$1](${root}music/$1)`).replace(/\[album artist=([a-zA-Z0-9]+)\]([a-zA-Z0-9\s]+)\[\/album\]/g, `[$2](${root}music/$1/$2)`).replace(/\[track artist=([a-zA-Z0-9]+)\]([a-zA-Z0-9\s]+)\[\/track\]/g, `[$2](${root}music/$1/_/$2)`).replace(/https:\/\/open\.spotify\.com\/user\/([A-Za-z0-9]+)\?si=([A-Za-z0-9]+)/g, "[@$1](https://open.spotify.com/user/$1)").replace(/&/g, "&amp;").replace(/</g, "&lt;").replace(/>/g, "&gt;").replace(/"/g, "&quot;").replace(/'/g, "&#039;"));
-      body.innerHTML = parsed_text;
-      version_item.appendChild(body);
       changelog_list.appendChild(version_item);
-      index3 += 1;
+      index3++;
     }
   }
   unsafeWindow._update_local_changelog_cache = function(json) {
@@ -28825,15 +28805,15 @@
           },
           {
             type: "notifications",
-            text: tl(trans.notifications.name),
-            body: tl(trans.opens_your_value).replace("{v}", tl(trans.notifications.name)),
+            text: tl(trans.notifications),
+            body: tl(trans.opens_your_value).replace("{v}", tl(trans.notifications)),
             keywords: ["bell", "updates"],
             action: () => window.location.href = `${root}inbox/notifications`
           },
           {
             type: "inbox",
-            text: tl(trans.inbox.name),
-            body: tl(trans.opens_your_value).replace("{v}", tl(trans.inbox.name)),
+            text: tl(trans.messages),
+            body: tl(trans.opens_your_value).replace("{v}", tl(trans.messages)),
             keywords: ["messages", "direct", "dms"],
             action: () => window.location.href = `${root}inbox`
           },
@@ -43805,6 +43785,7 @@
       "p",
       "span",
       "em",
+      "u",
       "strong",
       "a",
       "ul",
@@ -43814,7 +43795,12 @@
       "code",
       "pre",
       "img",
-      "blockquote"
+      "blockquote",
+      "h1",
+      "h2",
+      "h3",
+      "h4",
+      "h5"
     ];
     const ALLOWED_ATTR = [
       "href",
