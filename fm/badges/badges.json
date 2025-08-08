@@ -1,17 +1,17 @@
 {
-    "latest": "2025.0729.1",
+    "latest": "2025.0808",
     "sponsors": [
         "clairedoll", "kateshapedbox", "evangelicgirl",
         "astrablooms", "ItsProyal", "vwvwvwvwvwvwv", "Orofil",
         "EliteHimself", "iwas15with100k", "keepsweet", "yourfriendoss",
         "softmancy", "carbon1k", "uix-uix", "scidal",
-        "Carbonzer", "marrowchant"
+        "Carbonzer", "marrowchant", "FenrirXXII"
     ],
     "sponsors_one_time": [
         "kateshapedbox",
         "vwvwvwvwvwvwv", "EliteHimself", "yourfriendoss",
         "carbon1k", "uix-uix", "scidal",
-        "Carbonzer"
+        "Carbonzer", "FenrirXXII"
     ],
     "sponsor_count_remove": 3,
     "sponsor_account": "kateshapedbox",
@@ -247,6 +247,9 @@
             "hue": 228,
             "sat": 1.3,
             "lit": 0.9
+        },
+        "FenrirXXII": {
+            "type": "sponsor"
         }
     }
 }
