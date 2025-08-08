@@ -99,8 +99,7 @@ export function load_settings(skip = false) {
 
 // theme
 export function toggle_theme() {
-    if (page.subpage.startsWith('listening-report'))
-        return;
+    if (page.subpage.startsWith('listening-report')) return;
 
     let current_theme = settings.theme;
 
@@ -445,4 +444,3 @@ export function update_inbuilt_item(item, value, modify=true, element=document.b
         }
     }
 }
-

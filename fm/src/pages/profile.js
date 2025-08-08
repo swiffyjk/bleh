@@ -500,8 +500,6 @@ export function bleh_profiles() {
             page.structure.side.innerHTML = '';
             page.structure.side.appendChild(value_panel);
         } else if (page.subpage.startsWith('listening-report')) {
-            document.documentElement.setAttribute('data-bleh--theme', 'oled');
-
             page.structure.content_top.classList.add('listening-report-navlist');
             page.structure.row.classList.add('listening-report');
 
@@ -509,22 +507,24 @@ export function bleh_profiles() {
 
             let report_box_container = document.body.querySelector('.report-box-container--overview');
             if (report_box_container) {
+                document.documentElement.setAttribute('data-bleh--theme', 'oled');
+                document.documentElement.setAttribute('data-bleh--theme_type', 'dark');
+
                 page.structure.row.appendChild(report_box_container);
             } else {
                 let dashboard = page.structure.container.querySelector('.user-dashboard');
-                if (!dashboard) return;
-
-                // v2
-                dialog({
-                    id: 'listening_report_v2',
-                    title: 'oh no :c',
-                    body: html.node`
-                        <div class="alert alert-error">This listening report is too old</div>
-                        <br>
-                        <p>Legacy listening reports are not properly viewable yet in bleh for now. Sorry for the inconvenience.</p>
-                    `
-                });
-                return;
+                if (dashboard) {
+                    // v2
+                    dialog({
+                        id: 'listening_report_v2',
+                        title: 'oh no :c',
+                        body: html.node`
+                            <div class="alert alert-error">This listening report is too old</div>
+                            <br>
+                            <p>Legacy listening reports are not properly viewable yet in bleh for now. Sorry for the inconvenience.</p>
+                        `
+                    });
+                }
             }
         } else if (page.subpage == 'obsessions_overview') {
             let section_controls = page.structure.container.querySelector('.section-controls');
@@ -1231,7 +1231,7 @@ function profile_artists() {
                     let btn = list.querySelector('.dropdown-menu-clickable-item--selected');
                     let link = new URL('https://www.last.fm' + btn.getAttribute('href'));
                     let selected = link.searchParams.get('artists_date_preset');
-                    
+
                     window.location.href = `${root}bleh/minis/collage?type=artists&timeframe=date_preset=${selected}`;
                 }}>${tl(trans.collage)}</button>
                 ${form ? html.node`

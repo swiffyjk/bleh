@@ -194,26 +194,23 @@ export function subscribe_to_events() {
     });
 
 
-    let post_shouts_btn = document.body.querySelector('.btn-post-shout:not([data-bleh-subscribed])');
-    if (post_shouts_btn != null) {
-        post_shouts_btn.setAttribute('data-bleh-subscribed', 'true');
+    const post_shouts = page.structure.main.querySelectorAll('.btn-post-shout:not([data-bleh-subscribed])');
+    post_shouts.forEach(post => {
+        post.setAttribute('data-bleh-subscribed', 'true');
 
-        post_shouts_btn.addEventListener('click', (event) => {
-            log('heard', 'event', 'info', event);
+        post.addEventListener('click', (e) => {
+            log('heard', 'event', 'info', e);
 
             // wait 0.15s
-            window.setTimeout(function() {
-                let actual_btn = event.target.parentElement;
-
-                let is_loading = actual_btn.classList.contains('btn--loading');
-                console.log('is button loading', is_loading, actual_btn, event.target);
-
+            setTimeout(() => {
+                const is_loading = post.classList.contains('btn--loading');
+                console.info(is_loading, post.classList);
                 if (!is_loading) return;
 
                 register_activity('shout', [{name: page.name, type: page.type, sister: page.sister}], window.location.href);
             }, 150);
         }, false);
-    }
+    });
 
 
     let save_wiki_form = document.body.querySelector('.wiki-edit-form:not([data-bleh-subscribed])');
@@ -315,4 +312,3 @@ export function register_activity(type, involved, context, date=new Date()) {
     log('saved', 'activity', 'info', recent_activity_list);
     localStorage.setItem('bwaa_recent_activity', JSON.stringify(recent_activity_list));
 }
-

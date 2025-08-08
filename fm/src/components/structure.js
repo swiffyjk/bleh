@@ -5,7 +5,7 @@
 //
 
 import {log} from "../build/log";
-import {page} from "../build/page";
+import {page, root} from "../build/page";
 import {load_chart_colours} from "../chart";
 import {ff} from "../sku";
 import {html, render} from "lighterhtml";
@@ -119,7 +119,14 @@ export function checkup_page_structure(is_subpage = false, header = null) {
             page.structure.container.insertBefore(navlist, page.structure.container.firstElementChild);
             page.structure.nav = navlist;
 
-            const overview = page.structure.nav.querySelector('.secondary-nav-item--overview a');
+            let overview = page.structure.nav.querySelector('.secondary-nav-item--overview a');
+
+            if (overview) {
+                const href = overview.getAttribute('href').replace(root, '');
+
+                if (href == 'settings') overview = null;
+            }
+
             if (overview) overview.textContent = tl(trans.home);
         }
 
@@ -295,6 +302,6 @@ export function convert_to_toolbar() {
         </div>
     `;
 
-    page.structure.content_top.after(page.structure.toolbar);
+    page.structure.row.insertBefore(page.structure.toolbar, page.structure.row.firstChild);
     page.structure.content_top.style.display = 'none';
 }

@@ -30052,8 +30052,7 @@
     load_chart_colours();
   }
   function toggle_theme() {
-    if (page.subpage.startsWith("listening-report"))
-      return;
+    if (page.subpage.startsWith("listening-report")) return;
     let current_theme = settings.theme;
     if (current_theme == "dark")
       current_theme = "darker";
@@ -31701,7 +31700,11 @@
         navlist.classList.add("redesigned-navigation");
         page.structure.container.insertBefore(navlist, page.structure.container.firstElementChild);
         page.structure.nav = navlist;
-        const overview = page.structure.nav.querySelector(".secondary-nav-item--overview a");
+        let overview = page.structure.nav.querySelector(".secondary-nav-item--overview a");
+        if (overview) {
+          const href = overview.getAttribute("href").replace(root, "");
+          if (href == "settings") overview = null;
+        }
         if (overview) overview.textContent = tl(trans.home);
       }
       if (is_subpage) {
@@ -31836,7 +31839,7 @@
             ${nav}
         </div>
     `;
-    page.structure.content_top.after(page.structure.toolbar);
+    page.structure.row.insertBefore(page.structure.toolbar, page.structure.row.firstChild);
     page.structure.content_top.style.display = "none";
   }
 
@@ -33808,26 +33811,27 @@
         page.structure.side.innerHTML = "";
         page.structure.side.appendChild(value_panel);
       } else if (page.subpage.startsWith("listening-report")) {
-        document.documentElement.setAttribute("data-bleh--theme", "oled");
         page.structure.content_top.classList.add("listening-report-navlist");
         page.structure.row.classList.add("listening-report");
         convert_to_toolbar();
         let report_box_container = document.body.querySelector(".report-box-container--overview");
         if (report_box_container) {
+          document.documentElement.setAttribute("data-bleh--theme", "oled");
+          document.documentElement.setAttribute("data-bleh--theme_type", "dark");
           page.structure.row.appendChild(report_box_container);
         } else {
           let dashboard = page.structure.container.querySelector(".user-dashboard");
-          if (!dashboard) return;
-          dialog({
-            id: "listening_report_v2",
-            title: "oh no :c",
-            body: html.node`
-                        <div class="alert alert-error">This listening report is too old</div>
-                        <br>
-                        <p>Legacy listening reports are not properly viewable yet in bleh for now. Sorry for the inconvenience.</p>
-                    `
-          });
-          return;
+          if (dashboard) {
+            dialog({
+              id: "listening_report_v2",
+              title: "oh no :c",
+              body: html.node`
+                            <div class="alert alert-error">This listening report is too old</div>
+                            <br>
+                            <p>Legacy listening reports are not properly viewable yet in bleh for now. Sorry for the inconvenience.</p>
+                        `
+            });
+          }
         }
       } else if (page.subpage == "obsessions_overview") {
         let section_controls = page.structure.container.querySelector(".section-controls");
@@ -43808,7 +43812,9 @@
       "li",
       "br",
       "code",
-      "img"
+      "pre",
+      "img",
+      "blockquote"
     ];
     const ALLOWED_ATTR = [
       "href",
@@ -47056,20 +47062,19 @@
         register_activity("obsess", [{ name: track, type: "track", sister: artist }], window.location.href);
       }, false);
     });
-    let post_shouts_btn = document.body.querySelector(".btn-post-shout:not([data-bleh-subscribed])");
-    if (post_shouts_btn != null) {
-      post_shouts_btn.setAttribute("data-bleh-subscribed", "true");
-      post_shouts_btn.addEventListener("click", (event3) => {
-        log("heard", "event", "info", event3);
-        window.setTimeout(function() {
-          let actual_btn = event3.target.parentElement;
-          let is_loading = actual_btn.classList.contains("btn--loading");
-          console.log("is button loading", is_loading, actual_btn, event3.target);
+    const post_shouts = page.structure.main.querySelectorAll(".btn-post-shout:not([data-bleh-subscribed])");
+    post_shouts.forEach((post) => {
+      post.setAttribute("data-bleh-subscribed", "true");
+      post.addEventListener("click", (e) => {
+        log("heard", "event", "info", e);
+        setTimeout(() => {
+          const is_loading = post.classList.contains("btn--loading");
+          console.info(is_loading, post.classList);
           if (!is_loading) return;
           register_activity("shout", [{ name: page.name, type: page.type, sister: page.sister }], window.location.href);
         }, 150);
       }, false);
-    }
+    });
     let save_wiki_form = document.body.querySelector(".wiki-edit-form:not([data-bleh-subscribed])");
     if (save_wiki_form != null) {
       save_wiki_form.setAttribute("data-bleh-subscribed", "true");
@@ -47661,6 +47666,7 @@
         let length = current.length;
         if (length < 2) length = 2;
         const height = (length + 4) * 32;
+        const themes_disabled = page.subpage.startsWith("listening-report");
         instance.setContent(html.node`
                 <div class="auth-menu-v2" style="--page-height: ${height}px">
                     <div class="side primary">
@@ -47763,11 +47769,11 @@
           return elem;
         })}
                             <div class="button-combo">
-                                <button class="dropdown-menu-clickable-item" data-menu-item="themes" onclick=${() => toggle_theme()}>
+                                <button class="dropdown-menu-clickable-item" data-menu-item="themes" disabled=${themes_disabled} onclick=${() => toggle_theme()}>
                                     ${tl(trans.themes.name)}
                                 </button>
                                 <div class="button-combo-sep" />
-                                <button class="dropdown-menu-clickable-item chibi" data-type="continue" onclick=${() => {
+                                <button class="dropdown-menu-clickable-item chibi" data-type="continue" disabled=${themes_disabled} onclick=${() => {
           render(page_2, html``);
           render(page_2, html`
                                         <button class="dropdown-menu-clickable-item" data-type="back" onclick=${() => {

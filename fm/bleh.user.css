@@ -8,12 +8,11 @@
 ==/UserStyle== */
 
 @-moz-document domain("www.last.fm") {
-    @import url('https://fonts.googleapis.com/css2?family=Spline+Sans+Mono:ital,wght@0,300;0,400;0,500;0,600;0,700;1,300;1,400;1,500;1,600;1,700&display=swap');
+    @import url('https://fonts.googleapis.com/css2?family=Google+Sans+Code:ital,wght@0,300..800;1,300..800&display=swap');
     @import url('https://fonts.googleapis.com/css2?family=Noto+Sans+JP:wght@100..900&display=swap');
     @import url('https://fonts.googleapis.com/css2?family=Noto+Color+Emoji&display=swap');
     @import url('https://fonts.googleapis.com/css2?family=Darumadrop+One&display=swap');
     @import url('https://fonts.googleapis.com/css2?family=Bitcount+Grid+Single:wght@100..900&display=swap');
-    @import url('https://fonts.googleapis.com/css2?family=Inter:ital,opsz,wght@0,14..32,100..900;1,14..32,100..900&display=swap');
 
     /* we need to make the vertical alignment better in this font */
     @font-face {
@@ -65,7 +64,7 @@
         --version-build: '2025.0801';
 
         --font: var(--custom_font, ''), Overpass, Inter, Ubuntu Sans, Spline Sans, Roboto, Noto Sans, Noto Sans JP, Lucida Grande, Verdana, Tahoma, -apple-system, BlinkMacSystemFont, sans-serif, Apple Color Emoji, var(--font_emoji_name, '');
-        --font-code: Spline Sans Mono, Iosevka, JetBrains Mono, Roboto Mono, monospace, var(--font);
+        --font-code: Google Sans Code, JetBrains Mono, Roboto Mono, monospace, var(--font);
         --font-brand: Darumadrop One, var(--font);
         --font-size: 14px;
         --line-height: calc(var(--font-size) + 4px);
@@ -3633,6 +3632,9 @@
         border-bottom: var(--toolbar-border);
         border-top-left-radius: var(--card-radius);
         border-top-right-radius: var(--card-radius);
+
+        /* temporary chrome fix */
+        order: -1;
     }
 
     .library-controls > .secondary-nav,
@@ -7934,7 +7936,7 @@
     .metadata-column .cta-link-wrap a:before, .lyrics-snippet-more-link a:before,
     .see-more:before, #events-section > p > a:before,
     .more-link-fullwidth a:before,
-    .modal-body .js-close:before,
+    .modal-body .js-close:not(.btn-primary):before,
     .view-all-button:before,
     .music-featured-item-background:before,
     .gallery-image-preferred-states:before, .gallery-image-votes:before,
@@ -14727,7 +14729,7 @@
                 }
 
                 .api-session-disconnect {
-                    --mask: var(--icon-16-x);
+                    --mask: var(--icon-16-minus);
                     --col: hsl(var(--c3));
                 }
             }
@@ -16417,7 +16419,7 @@
         color: hsl(var(--c3));
         background-color: hsl(var(--b6));
         padding: 0 6px;
-        font-size: var(--font-size);
+        font-size: calc(var(--font-size) - 1px);
         line-height: var(--line-height);
         font-family: var(--font-code);
         border-radius: var(--item-small-radius);
@@ -16978,12 +16980,16 @@
     .modal-body .modal-buttons {
         align-items: center;
 
-        .modal-button {
+        & > .modal-button {
             flex: 1;
 
             &:has(.js-close) {
                 display: flex;
                 justify-content: start;
+            }
+
+            & + .modal-button {
+                justify-content: end !important;
             }
         }
     }
@@ -21122,6 +21128,29 @@
             }
         }
 
+        blockquote,
+        p {
+            margin: var(--card-gap) 0;
+        }
+
+        blockquote {
+            position: relative;
+            padding: 6px 10px 6px calc(10px + 4px + 6px);
+            background: hsl(var(--k4), 40%);
+            border-radius: var(--item-big-radius);
+
+            &:before {
+                content: '';
+                position: absolute;
+                top: 10px;
+                left: 10px;
+                bottom: 10px;
+                width: 3px;
+                border-radius: var(--item-big-radius);
+                background: hsl(var(--l3-c));
+            }
+        }
+
         .text-center {
             text-align: center;
         }
@@ -21229,9 +21258,6 @@
             width: 100%;
         }
 
-        p {
-            margin: var(--card-gap) 0;
-        }
         h5 {
             font-size: 16px;
             line-height: 20px;

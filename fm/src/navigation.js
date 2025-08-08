@@ -479,6 +479,10 @@ export function append_nav() {
             // user defined + themes + language + minis + settings
             const height = (length + 4) * 32;
 
+            // you cant change your theme when viewing
+            // a listening report
+            const themes_disabled = page.subpage.startsWith('listening-report');
+
             instance.setContent(html.node`
                 <div class="auth-menu-v2" style="--page-height: ${height}px">
                     <div class="side primary">
@@ -596,11 +600,11 @@ export function append_nav() {
                                 return elem;
                             })}
                             <div class="button-combo">
-                                <button class="dropdown-menu-clickable-item" data-menu-item="themes" onclick=${() => toggle_theme()}>
+                                <button class="dropdown-menu-clickable-item" data-menu-item="themes" disabled=${themes_disabled} onclick=${() => toggle_theme()}>
                                     ${tl(trans.themes.name)}
                                 </button>
                                 <div class="button-combo-sep" />
-                                <button class="dropdown-menu-clickable-item chibi" data-type="continue" onclick=${() => {
+                                <button class="dropdown-menu-clickable-item chibi" data-type="continue" disabled=${themes_disabled} onclick=${() => {
                                     render(page_2, html``); // fix crash
                                     render(page_2, html`
                                         <button class="dropdown-menu-clickable-item" data-type="back" onclick=${() => {

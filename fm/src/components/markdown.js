@@ -19,7 +19,7 @@ export function markdown(text, {
     allow_banners = false
 }={}) {
     const ALLOWED_TAGS = [
-        'div', 'p', 'span', 'em', 'strong', 'a', 'ul', 'ol', 'li', 'br', 'code', 'img'
+        'div', 'p', 'span', 'em', 'strong', 'a', 'ul', 'ol', 'li', 'br', 'code', 'pre', 'img', 'blockquote'
     ];
     const ALLOWED_ATTR = [
         'href', 'class', 'target', 'src', 'alt', 'title'
