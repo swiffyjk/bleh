@@ -1,3 +1,9 @@
+//
+// bleh, an extension for the music site Last.fm
+// Copyright (c) 2025 katelyn and contributors
+// Licensed under GPLv3
+//
+
 import {page, root} from "../build/page.js";
 import {tl, trans} from "../build/trans.js";
 import {html, render} from "lighterhtml";
@@ -41,10 +47,10 @@ export function dialog_extender() {
                 </div>
                 <form method="post" ref=${el => new_form = el} onsubmit=${async (e) => {
                     e.preventDefault();
-                    
+
                     let url = `${root}music/+bookmarks/modal/added`;
                     let form_data = new FormData(new_form);
-                    
+
                     console.info(form_data);
 
                     try {
@@ -53,7 +59,7 @@ export function dialog_extender() {
                             body: form_data
                         }).then(res => {
                             let data = res.json();
-                            
+
                             log('received response', 'form', 'info', {data: data});
                             dismiss.click();
                         });

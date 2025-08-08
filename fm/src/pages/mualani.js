@@ -1,3 +1,9 @@
+//
+// bleh, an extension for the music site Last.fm
+// Copyright (c) 2025 katelyn and contributors
+// Licensed under GPLv3
+//
+
 import {register_background, update_page} from "../page.js";
 import {auth, page} from "../build/page.js";
 import {log} from "../build/log.js";
@@ -48,7 +54,7 @@ export function mualani() {
         <section class="flexy">
             <h2>Settings</h2>
             <div class="setting-group">
-                
+
             </div>
         </section>
     `);

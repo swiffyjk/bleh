@@ -1,3 +1,9 @@
+//
+// bleh, an extension for the music site Last.fm
+// Copyright (c) 2025 katelyn and contributors
+// Licensed under GPLv3
+//
+
 import {html, render} from "lighterhtml";
 import {auth} from "../build/page.js";
 import {tl, trans} from "../build/trans.js";
@@ -5,8 +11,8 @@ import {input} from "./input.js";
 import tippy from "tippy.js";
 
 export function pixel({
-  host,
-  sidebar
+    host,
+    sidebar
 }={}) {
     if (!host || !sidebar) return;
 
@@ -15,7 +21,7 @@ export function pixel({
     let hints_container;
     render(host, html`
         <div class="pixel-artwork">
-            <img src="https://lastfm.freetls.fastly.net/i/u/ar0/def68d94aae8e52ef2d1c0c9d3e16ff4.jpg" alt=${auth.name} />
+            <img src="https://lastfm.freetls.fastly.net/i/u/ar0/def68d94aae8e52ef2d1c0c9d3e16ff4.jpg" alt=${auth.name}>
         </div>
         <div class="pixel-info">
             <div class="sub-text">${tl(trans.jumbled_title)}</div>
@@ -29,11 +35,11 @@ export function pixel({
                             ${tl(trans.re_jumble)}
                         </button>
                     `;
-                    
+
                     tippy(btn, {
                         content: tl(trans.re_jumble)
                     });
-                    
+
                     return btn;
                 }}
             </div>

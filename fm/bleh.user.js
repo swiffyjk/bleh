@@ -27859,7 +27859,7 @@
     let hints_container;
     render(host, html`
         <div class="pixel-artwork">
-            <img src="https://lastfm.freetls.fastly.net/i/u/ar0/def68d94aae8e52ef2d1c0c9d3e16ff4.jpg" alt=${auth.name} />
+            <img src="https://lastfm.freetls.fastly.net/i/u/ar0/def68d94aae8e52ef2d1c0c9d3e16ff4.jpg" alt=${auth.name}>
         </div>
         <div class="pixel-info">
             <div class="sub-text">${tl(trans.jumbled_title)}</div>
@@ -50726,7 +50726,7 @@
         <section class="flexy">
             <h2>Settings</h2>
             <div class="setting-group">
-                
+
             </div>
         </section>
     `);

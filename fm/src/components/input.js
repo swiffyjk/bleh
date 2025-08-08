@@ -1,3 +1,9 @@
+//
+// bleh, an extension for the music site Last.fm
+// Copyright (c) 2025 katelyn and contributors
+// Licensed under GPLv3
+//
+
 import {html} from "lighterhtml";
 import {tl, trans} from "../build/trans.js";
 import {log} from "../build/log.js";
@@ -282,7 +288,7 @@ export function input({
                     </button>
                     <button class="chibi icon" data-type="up" type="button" disabled=${view.year <= min_year} onclick=${() => {
                         if (view.year < min_year) return;
-                        
+
                         view.year--;
 
                         last_action = 'prev';
@@ -292,7 +298,7 @@ export function input({
                     </button>
                     <button class="chibi icon" data-type="down" type="button" disabled=${view.year >= max_year} onclick=${() => {
                         if (view.year > max_year) return;
-                        
+
                         view.year++;
 
                         last_action = 'next';
@@ -346,7 +352,7 @@ export function input({
                     </button>
                     <button class="chibi icon" data-type="up" disabled=${decade_start - 10 < min_year} onclick=${() => {
                         if (decade_start - 10 < min_year) return;
-                        
+
                         view.year -= 10;
                         render_popup();
                     }}>
@@ -354,7 +360,7 @@ export function input({
                     </button>
                     <button class="chibi icon" data-type="down" disabled=${decade_start + 10 > max_year} onclick=${() => {
                         if (decade_start + 10 > max_year) return;
-                        
+
                         view.year += 10;
                         render_popup();
                     }}>
@@ -420,12 +426,12 @@ export function input({
                             const parsed = validate_text_date(
                                 value
                             );
-                            
+
                             if (!parsed) {
                                 manual_date.value(`${state.year}-${pad2(state.month)}-${pad2(state.day)}`);
                                 return;
                             }
-                            
+
                             state.year = parsed.getFullYear();
                             state.month = parsed.getMonth() + 1;
                             state.day = parsed.getDate();
