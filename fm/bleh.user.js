@@ -31360,18 +31360,10 @@
           taste_percentage = "100%";
       }
     }
-    let side_sep = html.node`<div class="sep"></div>`;
     let about_me = page.structure.container.querySelector(".about-me-sidebar");
-    let profile_header;
-    if (about_me) {
-      profile_header = html.node`
-            <div class="side-actions" />
-        `;
-    } else {
-      profile_header = html.node`
-            <section class="side-actions" />
-        `;
-    }
+    let profile_header = html.node`
+        <section class="side-actions" />
+    `;
     if (!is_own_profile && page.name != sponsor_list.sponsor_account) {
       let follow_wrap = document.body.querySelector(".header-avatar .class > div");
       if (follow_wrap) {
@@ -31508,15 +31500,10 @@
         });
       }
     }
-    if (about_me) {
-      about_me.appendChild(side_sep);
-      about_me.appendChild(profile_header);
-    } else {
-      if (!page.mobile)
-        page.structure.side.insertBefore(profile_header, page.structure.side.firstElementChild);
-      else
-        page.structure.main.insertBefore(profile_header, page.structure.main.firstElementChild);
-    }
+    if (!page.mobile)
+      page.structure.side.insertBefore(profile_header, page.structure.side.firstElementChild);
+    else
+      page.structure.main.insertBefore(profile_header, page.structure.main.firstElementChild);
     let listen_container = page.structure.row.querySelector(".listen-panel");
     if (!is_own_profile && page.name != sponsor_list.sponsor_account && katsune) {
       if (taste == "") {
