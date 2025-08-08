@@ -23,6 +23,7 @@ import {log} from "./build/log.js";
 import {correct_artist, correct_item_by_artist} from "./components/lotus.js";
 import {bleh_notification_list} from "./components/notifications.js";
 import tippy from "tippy.js";
+import { register_menu } from './components/menu.js';
 
 export function patch_masthead() {
     let masthead_logo = document.body.querySelector('.masthead-logo');
@@ -138,6 +139,16 @@ export function append_nav() {
             name: tl(trans.friends),
             icon: 'user',
             url: `${root}user/${auth.name}/friends`
+        },
+        notifications: {
+            name: tl(trans.notifications),
+            icon: 'notifications',
+            url: `${root}inbox/notifications`
+        },
+        messages: {
+            name: tl(trans.messages),
+            icon: 'messages',
+            url: `${root}inbox`
         }
     }
 
@@ -420,6 +431,28 @@ export function append_nav() {
     const token = new_auth.querySelector('[name="csrfmiddlewaretoken"]').getAttribute('value');
     page.token = token;
 
+    const menu = tippy(auth_link, {
+        theme: 'context-menu',
+        content: html.node`
+            <a class="dropdown-menu-clickable-item" data-type="quick_access" href="${root}bleh/profiles">
+                ${tl(trans.edit_quick_access)}
+            </a>
+        `,
+        placement: 'right-start',
+        trigger: 'manual',
+        interactive: true,
+        interactiveBorder: 10,
+        offset: [0, 0],
+
+        onShow(instance) {
+            instance.popper.addEventListener('click', event => {
+                instance.hide();
+            });
+        }
+    });
+
+    register_menu(auth_link, menu);
+
     let auth_menu = tippy(auth_link, {
         theme: 'auth-menu-v2',
         placement: 'top',
@@ -539,6 +572,26 @@ export function append_nav() {
                                 elem.classList = 'dropdown-menu-clickable-item';
                                 elem.setAttribute('data-type', formal.icon);
                                 elem.textContent = formal.name;
+
+                                let count = 0;
+
+                                if (val == 'notifications')
+                                    count = notif_count;
+                                else if (val == 'messages')
+                                    count = inbox_count;
+
+                                if (count) {
+                                    render(elem, html`
+                                        <div class="auth-dropdown-item-row">
+                                            <span class="auth-dropdown-item-left">
+                                                ${formal.name}
+                                            </span>
+                                            <span class="auth-dropdown-item-right">
+                                                ${count}
+                                            </span>
+                                        </div>
+                                    `);
+                                }
 
                                 return elem;
                             })}

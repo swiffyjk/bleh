@@ -3276,6 +3276,9 @@ export const trans = {
         body: {
             en: 'Arrange your navigation menu to suit your usage best'
         }
+    },
+    edit_quick_access: {
+        en: 'Edit quick access'
     }
 }
 
