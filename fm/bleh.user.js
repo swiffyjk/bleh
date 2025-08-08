@@ -29826,7 +29826,7 @@
             });
             if (func) func(key);
           }} aria-checked=${value == key}>
-                                    ${typeof val.name === "object" ? tl(val.name) : val.name}
+                                    <h5>${typeof val.name === "object" ? tl(val.name) : val.name}</h5>
                                 </button>
                             `;
           buttons.push(button);
@@ -33763,8 +33763,8 @@
                     </a>
                     ` : !profile_note ? html.node`
                     <button class="left-icon blend-v2-btn" data-type="add" ref=${(el) => add_note = el} onclick=${() => {
-        add_note.display = "none";
         create_profile_note_panel(page.name, profile_note);
+        add_note.remove();
       }}>
                         ${tl(trans.add_note)}
                     </button>
@@ -47359,18 +47359,12 @@
   }
   function update_masthead(masthead_logo = document.body.querySelector(".masthead-logo")) {
     const update_required = localStorage.getItem("bleh_update_required") || "false";
-    const top_bar = document.body.querySelector(":scope > .top-bar");
-    console.info("TOP BAR", top_bar);
-    let loading_logo = top_bar.querySelector(":scope > .page-loading-logo");
-    console.info("LOGO", loading_logo);
-    if (!loading_logo) loading_logo = masthead_logo.querySelector(".page-loading-logo");
-    console.info("LOGO 2", loading_logo);
     render(masthead_logo, html``);
     render(masthead_logo, html`
         <a href="/">Last.fm</a>
         <a class="home-link" href="${root}music">
             <div class="bleh-logo">${version.brand}</div>
-            ${loading_logo}
+            <div class="lastfm-logo">Last.fm</div>
         </a>
     `);
     if (update_required === "false") {

@@ -370,7 +370,7 @@ export function setting({
 
                                     if (func) func(key);
                                 }} aria-checked=${value == key}>
-                                    ${typeof(val.name) === 'object' ? tl(val.name) : val.name}
+                                    <h5>${typeof(val.name) === 'object' ? tl(val.name) : val.name}</h5>
                                 </button>
                             `;
 

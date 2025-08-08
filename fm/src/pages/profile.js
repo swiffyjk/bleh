@@ -399,9 +399,8 @@ export function bleh_profiles() {
                     </a>
                     ` : !profile_note ? html.node`
                     <button class="left-icon blend-v2-btn" data-type="add" ref=${el => add_note = el} onclick=${() => {
-                        add_note.display = 'none';
-
                         create_profile_note_panel(page.name, profile_note);
+                        add_note.remove();
                     }}>
                         ${tl(trans.add_note)}
                     </button>

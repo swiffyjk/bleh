@@ -39,20 +39,12 @@ export function patch_masthead() {
 export function update_masthead(masthead_logo = document.body.querySelector('.masthead-logo')) {
     const update_required = localStorage.getItem('bleh_update_required') || 'false';
 
-    const top_bar = document.body.querySelector(':scope > .top-bar');
-    console.info('TOP BAR', top_bar);
-
-    let loading_logo = top_bar.querySelector(':scope > .page-loading-logo');
-    console.info('LOGO', loading_logo);
-    if (!loading_logo) loading_logo = masthead_logo.querySelector('.page-loading-logo');
-    console.info('LOGO 2', loading_logo);
-
     render(masthead_logo, html``);
     render(masthead_logo, html`
         <a href="/">Last.fm</a>
         <a class="home-link" href="${root}music">
             <div class="bleh-logo">${version.brand}</div>
-            ${loading_logo}
+            <div class="lastfm-logo">Last.fm</div>
         </a>
     `);
 
