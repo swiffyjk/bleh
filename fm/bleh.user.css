@@ -3575,6 +3575,9 @@
         border-bottom: var(--toolbar-border);
         border-top-left-radius: var(--card-radius);
         border-top-right-radius: var(--card-radius);
+
+        /* temporary chrome fix */
+        order: -1;
     }
 
     .library-controls > .secondary-nav,
