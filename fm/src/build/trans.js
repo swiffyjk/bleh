@@ -3283,6 +3283,14 @@ export const trans = {
     },
     navigation_language: {
         en: 'Show option to change language'
+    },
+    branding_type: {
+        name: {
+            en: 'Branding type'
+        },
+        body: {
+            en: 'Decide which branding source to use for the header'
+        }
     }
 }
 

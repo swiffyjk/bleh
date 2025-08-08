@@ -322,6 +322,66 @@ export function setting({
             `;
 
             return tabs;
+        } else if (type == 'radio') {
+            if (func) func(value);
+
+            let buttons = [];
+
+            const elem = html.node`
+                <div class="setting v2" data-type="options" disabled=${disabled}>
+                    ${icon ? html.node`
+                    <div class="icon">
+                        <div class="bleh-icon" style="--icon: var(--${icon})" />
+                    </div>
+                    ` : ''}
+                    ${(text) ? html.node`
+                    <div class="heading">
+                        <h5>${title}</h5>
+                        ${(body) ? html.node`<p>${body}</p>` : ''}
+                    </div>
+                    ` : ''}
+                    ${(settings_store[id].extensions) ? html.node`
+                    <div class="extensions">
+                        ${settings_store[id].extensions.map(extension => () => {
+                            let container = html.node`
+                                <div class="extension">
+                                    <div class="bleh-icon" />
+                                </div>
+                            `;
+                            tippy(container, {
+                                content: tl(trans.requires_extension_value).replace('{v}', tl(extension))
+                            });
+                            return container;
+                        })}
+                    </div>
+                    ` : ''}
+                    ${setting_incompatible_block(settings_store[id].incompatible)}
+                    <div class="primary-selections">
+                        ${Object.entries(settings_store[id].values).map(([key, val]) => {
+                            const icon = val.icon || key;
+
+                            const button = html.node`
+                                <button class="btn primary-selection no-icon" data-type=${icon} data-value=${key} onclick=${() => {
+                                    save_setting(id, key);
+
+                                    buttons.forEach(btn => {
+                                        btn.setAttribute('aria-checked', btn.getAttribute('data-value') == key);
+                                    });
+
+                                    if (func) func(key);
+                                }} aria-checked=${value == key}>
+                                    ${typeof(val.name) === 'object' ? tl(val.name) : val.name}
+                                </button>
+                            `;
+
+                            buttons.push(button);
+                            return button;
+                        })}
+                    </div>
+                </div>
+            `;
+
+            return elem;
         } else if (type == 'list') {
             if (!list) return setting_fail(id, {message: 'List type requires you to pass available items for matching.'});
 

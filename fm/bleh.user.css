@@ -1474,11 +1474,21 @@
         width: fit-content !important;
 
         & > a {
+            flex-shrink: 1;
             position: static;
 
             &:first-child {
                 display: none !important;
             }
+        }
+
+        .page-loading-logo {
+            flex-shrink: 1;
+            width: auto;
+            height: 28px;
+
+            position: relative;
+            top: -2px;
         }
 
         .bleh-logo {
@@ -1553,6 +1563,23 @@
 
                 & > .bleh-icon {
                     background: conic-gradient(from 270deg, hsl(var(--c1)), hsl(var(--c3)));
+                }
+            }
+        }
+    }
+
+    html {
+        &[data-bleh--branding_type="bleh"] {
+            & > body > .main-content > div > .masthead > .masthead-inner-wrap > .masthead-logo > .home-link {
+                & > .page-loading-logo {
+                    display: none;
+                }
+            }
+        }
+        &[data-bleh--branding_type="lastfm"] {
+            & > body > .main-content > div > .masthead > .masthead-inner-wrap > .masthead-logo > .home-link {
+                & > .bleh-logo {
+                    display: none;
                 }
             }
         }

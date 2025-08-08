@@ -1037,5 +1037,19 @@ export let settings_store = {
         default: true,
         type: 'checkbox',
         title: trans.navigation_language
+    },
+    branding_type: {
+        default: 'bleh',
+        type: 'radio',
+        title: trans.branding_type.name,
+        body: trans.branding_type.body,
+        values: {
+            bleh: {
+                name: 'bleh'
+            },
+            lastfm: {
+                name: 'Last.fm'
+            }
+        }
     }
 }

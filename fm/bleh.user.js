@@ -29783,6 +29783,59 @@
                 </div>
             `;
         return tabs;
+      } else if (type == "radio") {
+        if (func) func(value);
+        let buttons = [];
+        const elem = html.node`
+                <div class="setting v2" data-type="options" disabled=${disabled}>
+                    ${icon ? html.node`
+                    <div class="icon">
+                        <div class="bleh-icon" style="--icon: var(--${icon})" />
+                    </div>
+                    ` : ""}
+                    ${text3 ? html.node`
+                    <div class="heading">
+                        <h5>${title}</h5>
+                        ${body ? html.node`<p>${body}</p>` : ""}
+                    </div>
+                    ` : ""}
+                    ${settings_store[id].extensions ? html.node`
+                    <div class="extensions">
+                        ${settings_store[id].extensions.map((extension) => () => {
+          let container = html.node`
+                                <div class="extension">
+                                    <div class="bleh-icon" />
+                                </div>
+                            `;
+          tippy_esm_default(container, {
+            content: tl(trans.requires_extension_value).replace("{v}", tl(extension))
+          });
+          return container;
+        })}
+                    </div>
+                    ` : ""}
+                    ${setting_incompatible_block(settings_store[id].incompatible)}
+                    <div class="primary-selections">
+                        ${Object.entries(settings_store[id].values).map(([key, val]) => {
+          const icon2 = val.icon || key;
+          const button = html.node`
+                                <button class="btn primary-selection no-icon" data-type=${icon2} data-value=${key} onclick=${() => {
+            save_setting(id, key);
+            buttons.forEach((btn) => {
+              btn.setAttribute("aria-checked", btn.getAttribute("data-value") == key);
+            });
+            if (func) func(key);
+          }} aria-checked=${value == key}>
+                                    ${typeof val.name === "object" ? tl(val.name) : val.name}
+                                </button>
+                            `;
+          buttons.push(button);
+          return button;
+        })}
+                    </div>
+                </div>
+            `;
+        return elem;
       } else if (type == "list") {
         let render_list_items = function(current = settings[id]) {
           const available = Object.fromEntries(
@@ -44603,6 +44656,12 @@
                     </div>
                 </div>
             </div>
+            <div class="bleh--panel">
+                <h4>something</h4>
+                <div class="setting-group">
+                    ${setting({ id: "branding_type" })}
+                </div>
+            </div>
             <div class="bleh--panel check-artist-hover">
                 <h4 class="top-header">${tl(trans.layout)}</h4>
                 <h4>${trans_legacy.en.settings.layout.header}</h4>
@@ -47300,11 +47359,18 @@
   }
   function update_masthead(masthead_logo = document.body.querySelector(".masthead-logo")) {
     const update_required = localStorage.getItem("bleh_update_required") || "false";
+    const top_bar = document.body.querySelector(":scope > .top-bar");
+    console.info("TOP BAR", top_bar);
+    let loading_logo = top_bar.querySelector(":scope > .page-loading-logo");
+    console.info("LOGO", loading_logo);
+    if (!loading_logo) loading_logo = masthead_logo.querySelector(".page-loading-logo");
+    console.info("LOGO 2", loading_logo);
     render(masthead_logo, html``);
     render(masthead_logo, html`
         <a href="/">Last.fm</a>
         <a class="home-link" href="${root}music">
             <div class="bleh-logo">${version.brand}</div>
+            ${loading_logo}
         </a>
     `);
     if (update_required === "false") {
@@ -54543,6 +54609,14 @@
     },
     navigation_language: {
       en: "Show option to change language"
+    },
+    branding_type: {
+      name: {
+        en: "Branding type"
+      },
+      body: {
+        en: "Decide which branding source to use for the header"
+      }
     }
   };
   var trans_legacy = {
@@ -58644,6 +58718,20 @@
       default: true,
       type: "checkbox",
       title: trans.navigation_language
+    },
+    branding_type: {
+      default: "bleh",
+      type: "radio",
+      title: trans.branding_type.name,
+      body: trans.branding_type.body,
+      values: {
+        bleh: {
+          name: "bleh"
+        },
+        lastfm: {
+          name: "Last.fm"
+        }
+      }
     }
   };
 

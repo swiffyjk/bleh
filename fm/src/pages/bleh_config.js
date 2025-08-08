@@ -359,6 +359,12 @@ export function render_setting_page(page_id) {
                     </div>
                 </div>
             </div>
+            <div class="bleh--panel">
+                <h4>something</h4>
+                <div class="setting-group">
+                    ${setting({id: 'branding_type'})}
+                </div>
+            </div>
             <div class="bleh--panel check-artist-hover">
                 <h4 class="top-header">${tl(trans.layout)}</h4>
                 <h4>${trans_legacy.en.settings.layout.header}</h4>
