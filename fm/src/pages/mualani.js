@@ -9,6 +9,8 @@ import {auth, page} from "../build/page.js";
 import {log} from "../build/log.js";
 import {checkup_page_structure} from "../components/structure.js";
 import {html, render} from "lighterhtml";
+import { notify } from '../components/notify.js';
+import { download_with_progress } from '../build/tools.js';
 
 export function mualani() {
     page.structure.container = document.body.querySelector('.page-content');
@@ -56,6 +58,40 @@ export function mualani() {
             <div class="setting-group">
 
             </div>
+        </section>
+        <section class="flexy">
+            <h2>Notifications</h2>
+            <button class="continue" onclick=${() => notify({
+                id: 'test',
+                title: 'testing!',
+                body: 'haaaiaiii test bodyyy.......'
+            })}>Deliver notification</button>
+            <button class="continue" onclick=${() => notify({
+                id: 'test',
+                title: 'testing!',
+                body: 'haaaiaiii test bodyyy.......',
+                persist: true
+            })}>Deliver persistent notification</button>
+            <button class="continue" onclick=${() => {
+                let notification = notify({
+                    id: 'async',
+                    title: 'progress',
+                    body: 'downloading...',
+                    progress: true
+                });
+
+                download_with_progress(`https://lastfm.freetls.fastly.net/i/u/ar0/6644c67eaa3669676252d3190f9b019f.jpg?a=${Math.random()}`, (percent) => {
+                    notification.set_body(`downloading... ${percent}%`);
+                    notification.set(percent);
+                }).then(async (blob) => {
+                    const text = await blob.text();
+
+                    notification.set_body('download complete');
+                    notification.set(100);
+
+                    console.info(text);
+                });
+            }}>Deliver async progress notification</button>
         </section>
     `);
 }

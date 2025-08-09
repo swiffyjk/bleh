@@ -654,19 +654,6 @@ export let settings_store = {
         title: trans.theme_loading.name,
         body: trans.theme_loading.body
     },
-    branch: {
-        default: 'uwu',
-        title: trans.branch.name,
-        body: trans.branch.body,
-        type: 'text',
-        max: 20,
-        placeholder: trans.enter_branch_name,
-        warn_if_empty: true
-    },
-    api_key: {
-        default: '',
-        type: 'text'
-    },
     profile_header_expand: {
         default: true
     },

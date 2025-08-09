@@ -9,7 +9,7 @@ import {album_track_corrections, artist_corrections} from "../build/music";
 import {api_key, auth, page, root, theme_preview} from "../build/page";
 import {stored_season} from "../build/seasonal";
 import {sponsor_list} from "../build/sponsor";
-import {clamp_sat, download_with_progress, hex_to_hsl} from '../build/tools';
+import {clamp_sat, hex_to_hsl} from '../build/tools';
 import {lang, lang_info, tl, trans, trans_legacy} from "../build/trans";
 import {load_badges} from '../components/badge';
 import {dialog, dialog_rm} from "../components/dialog";
@@ -26,7 +26,7 @@ import {save_setting, setting} from "../components/settings.js";
 import {parse_scrobbles_as_rank} from "../components/colourful_counts.js";
 import {input} from "../components/input.js";
 import {share} from "../components/share.js";
-import {start_update, update_check} from "../style.js";
+import {force_refresh_style, start_update, update_check} from "../style.js";
 import tippy from "tippy.js";
 import moment from "moment";
 
@@ -84,7 +84,8 @@ export function bleh_settings() {
             type: 'fill'
         },
         performance: {
-            name: tl(trans.troubleshooting)
+            name: tl(trans.troubleshooting),
+            icon: 'advanced'
         },
         sku: {
             name: tl(trans.flags),
@@ -1003,19 +1004,32 @@ export function render_setting_page(page_id) {
     } else if (page_id == 'performance') {
         register_skip_to([]);
 
+        if (settings.hu_tao != 'develop') {
+            dialog({
+                id: 'development_only',
+                body: html.node`
+                    <div class="modal-vertical-inner error-inner">
+                        <div class="bleh-icon" style="--icon: var(--icon-16-warning)"></div>
+                        <h1>${tl(trans.intended_for_development.name)}</h1>
+                        <p>${tl(trans.intended_for_development.body)}</p>
+                    </div>
+                `,
+                theme: 'error'
+            });
+        }
+
         render(page.structure.main, html`
-            <div class="bleh--panel">
+            <section class="bleh--panel">
                 <div class="alert alert-danger">${tl(trans.beware_notice)}</div>
                 <div class="setting-group">
-                    ${setting({id: 'branch'})}
                     ${setting({id: 'dev'})}
                     <div class="setting" data-type="action">
                         <div class="heading">
-                            <h5>Refresh theme</h5>
-                            <p>Force download the latest version of the stylesheet</p>
+                            <h5>${tl(trans.force_refresh_style.name)}</h5>
+                            <p>${tl(trans.force_refresh_style.body)}</p>
                         </div>
                         <div class="toggle-wrap">
-                            <button class="bleh--btn primary" onclick="_force_refresh_theme()">Refresh</button>
+                            <button class="btn see-more update-check" onclick=${() => force_refresh_style()}>${tl(trans.refresh)}</button>
                         </div>
                     </div>
                 </div>
@@ -1034,39 +1048,6 @@ export function render_setting_page(page_id) {
                     <li>Has the timeout expired? ${new Date(localStorage.getItem('bleh_cached_style_timeout')) < new Date()}</li>
                 </ul>
                 <div class="sep"></div>
-                <h4>Debugging interactions</h4>
-                <button class="continue" onclick=${() => notify({
-                id: 'test',
-                title: 'testing!',
-                body: 'haaaiaiii test bodyyy.......'
-                })}>Deliver notification</button>
-                <button class="continue" onclick=${() => notify({
-                id: 'test',
-                title: 'testing!',
-                body: 'haaaiaiii test bodyyy.......',
-                persist: true
-                })}>Deliver persistent notification</button>
-                <button class="continue" onclick=${() => {
-                    let notification = notify({
-                        id: 'async',
-                        title: 'progress',
-                        body: 'downloading...',
-                        progress: true
-                    });
-
-                    download_with_progress(`https://lastfm.freetls.fastly.net/i/u/ar0/6644c67eaa3669676252d3190f9b019f.jpg?a=${Math.random()}`, (percent) => {
-                        notification.set_body(`downloading... ${percent}%`);
-                        notification.set(percent);
-                    }).then(async (blob) => {
-                        const text = await blob.text();
-
-                        notification.set_body('download complete');
-                        notification.set(100);
-
-                        console.info(text);
-                    });
-                }}>Deliver async progress notification</button>
-                <div class="sep"></div>
                 <h4>${tl(trans.development)}</h4>
                 <button class="see-more" onclick=${() => {
                     if (settings.hu_tao == 'develop') {
@@ -1081,7 +1062,7 @@ export function render_setting_page(page_id) {
                         });
                     }
                 }}>${tl(trans.manage_feature_flags)}</button>
-            </div>
+            </section>
         `);
     } else if (page_id == 'profile') {
         register_skip_to([]);
@@ -2190,14 +2171,6 @@ unsafeWindow._save_font = function() {
 
     // save to settings
     settings.font = font;
-    localStorage.setItem('bleh', JSON.stringify(settings));
-}
-
-unsafeWindow._save_branch = function() {
-    let branch = document.getElementById('text-branch').value;
-
-    // save to settings
-    settings.branch = branch;
     localStorage.setItem('bleh', JSON.stringify(settings));
 }
 

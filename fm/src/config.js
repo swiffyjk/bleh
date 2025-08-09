@@ -30,8 +30,6 @@ export function load_settings(skip = false) {
         }
     }
 
-    log(`branch ${settings.branch}`, 'load');
-
     if (!settings.theme_type) {
         if (settings.theme == 'light' || settings.theme == 'ink')
             settings.theme_type = 'light';

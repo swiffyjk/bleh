@@ -291,7 +291,7 @@ function finish_update() {
 }
 
 
-unsafeWindow._force_refresh_theme = function() {
+export function force_refresh_style() {
     localStorage.removeItem('bleh_cached_style');
     localStorage.removeItem('bleh_cached_style_timeout');
 

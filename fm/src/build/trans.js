@@ -2496,23 +2496,25 @@ export const trans = {
         en: 'Going',
         pt: 'Indo'
     },
-    branch: {
-        name: {
-            en: 'Branch name',
-            pt: 'Nome do branch'
-        },
-        body: {
-            en: 'Control which development branch you are using',
-            pt: 'Controle qual branch de desenvolvimento você está usando'
-        }
-    },
-    enter_branch_name: {
-        // dont translate
-        en: 'uwu'
-    },
     beware_notice: {
         en: 'Beware! Only change these settings if you know what you’re doing',
         pt: 'Cuidado! Apenas mude estas configurações se você sabe o que você está fazendo'
+    },
+    force_refresh_style: {
+        name: {
+            en: 'Force re-download styles'
+        },
+        body: {
+            en: 'Deletes your current cache of the bleh stylesheet and retrieves the latest'
+        }
+    },
+    intended_for_development: {
+        name: {
+            en: 'This page is intended for development'
+        },
+        body: {
+            en: 'Be careful with options here (especially feature flags) as they can break your install.'
+        }
     },
     flags: {
         // shorthand for below

@@ -30046,7 +30046,6 @@
           settings[setting2] = settings_store[setting2].default;
       }
     }
-    log(`branch ${settings.branch}`, "load");
     if (!settings.theme_type) {
       if (settings.theme == "light" || settings.theme == "ink")
         settings.theme_type = "light";
@@ -44462,11 +44461,11 @@
     localStorage.setItem("bleh_update_checked", (/* @__PURE__ */ new Date()).toString());
     fetch_new_style(false, true, true);
   }
-  unsafeWindow._force_refresh_theme = function() {
+  function force_refresh_style() {
     localStorage.removeItem("bleh_cached_style");
     localStorage.removeItem("bleh_cached_style_timeout");
     window.setTimeout(invoke_reload, 400);
-  };
+  }
 
   // src/pages/bleh_config.js
   var import_moment2 = __toESM(require_moment(), 1);
@@ -44515,7 +44514,8 @@
         type: "fill"
       },
       performance: {
-        name: tl(trans.troubleshooting)
+        name: tl(trans.troubleshooting),
+        icon: "advanced"
       },
       sku: {
         name: tl(trans.flags),
@@ -45392,19 +45392,31 @@
         `);
     } else if (page_id == "performance") {
       register_skip_to([]);
+      if (settings.hu_tao != "develop") {
+        dialog({
+          id: "development_only",
+          body: html.node`
+                    <div class="modal-vertical-inner error-inner">
+                        <div class="bleh-icon" style="--icon: var(--icon-16-warning)"></div>
+                        <h1>${tl(trans.intended_for_development.name)}</h1>
+                        <p>${tl(trans.intended_for_development.body)}</p>
+                    </div>
+                `,
+          theme: "error"
+        });
+      }
       render(page.structure.main, html`
-            <div class="bleh--panel">
+            <section class="bleh--panel">
                 <div class="alert alert-danger">${tl(trans.beware_notice)}</div>
                 <div class="setting-group">
-                    ${setting({ id: "branch" })}
                     ${setting({ id: "dev" })}
                     <div class="setting" data-type="action">
                         <div class="heading">
-                            <h5>Refresh theme</h5>
-                            <p>Force download the latest version of the stylesheet</p>
+                            <h5>${tl(trans.force_refresh_style.name)}</h5>
+                            <p>${tl(trans.force_refresh_style.body)}</p>
                         </div>
                         <div class="toggle-wrap">
-                            <button class="bleh--btn primary" onclick="_force_refresh_theme()">Refresh</button>
+                            <button class="btn see-more update-check" onclick=${() => force_refresh_style()}>${tl(trans.refresh)}</button>
                         </div>
                     </div>
                 </div>
@@ -45423,36 +45435,6 @@
                     <li>Has the timeout expired? ${new Date(localStorage.getItem("bleh_cached_style_timeout")) < /* @__PURE__ */ new Date()}</li>
                 </ul>
                 <div class="sep"></div>
-                <h4>Debugging interactions</h4>
-                <button class="continue" onclick=${() => notify({
-        id: "test",
-        title: "testing!",
-        body: "haaaiaiii test bodyyy......."
-      })}>Deliver notification</button>
-                <button class="continue" onclick=${() => notify({
-        id: "test",
-        title: "testing!",
-        body: "haaaiaiii test bodyyy.......",
-        persist: true
-      })}>Deliver persistent notification</button>
-                <button class="continue" onclick=${() => {
-        let notification = notify({
-          id: "async",
-          title: "progress",
-          body: "downloading...",
-          progress: true
-        });
-        download_with_progress(`https://lastfm.freetls.fastly.net/i/u/ar0/6644c67eaa3669676252d3190f9b019f.jpg?a=${Math.random()}`, (percent) => {
-          notification.set_body(`downloading... ${percent}%`);
-          notification.set(percent);
-        }).then(async (blob) => {
-          const text3 = await blob.text();
-          notification.set_body("download complete");
-          notification.set(100);
-          console.info(text3);
-        });
-      }}>Deliver async progress notification</button>
-                <div class="sep"></div>
                 <h4>${tl(trans.development)}</h4>
                 <button class="see-more" onclick=${() => {
         if (settings.hu_tao == "develop") {
@@ -45467,7 +45449,7 @@
           });
         }
       }}>${tl(trans.manage_feature_flags)}</button>
-            </div>
+            </section>
         `);
     } else if (page_id == "profile") {
       register_skip_to([]);
@@ -46408,11 +46390,6 @@
     document.body.style.setProperty(`--${settings_base.font.css}`, font);
     document.documentElement.setAttribute(`data-bleh--font`, font);
     settings.font = font;
-    localStorage.setItem("bleh", JSON.stringify(settings));
-  };
-  unsafeWindow._save_branch = function() {
-    let branch = document.getElementById("text-branch").value;
-    settings.branch = branch;
     localStorage.setItem("bleh", JSON.stringify(settings));
   };
   unsafeWindow._convert_hex = function() {
@@ -50977,6 +50954,37 @@
 
             </div>
         </section>
+        <section class="flexy">
+            <h2>Notifications</h2>
+            <button class="continue" onclick=${() => notify({
+      id: "test",
+      title: "testing!",
+      body: "haaaiaiii test bodyyy......."
+    })}>Deliver notification</button>
+            <button class="continue" onclick=${() => notify({
+      id: "test",
+      title: "testing!",
+      body: "haaaiaiii test bodyyy.......",
+      persist: true
+    })}>Deliver persistent notification</button>
+            <button class="continue" onclick=${() => {
+      let notification = notify({
+        id: "async",
+        title: "progress",
+        body: "downloading...",
+        progress: true
+      });
+      download_with_progress(`https://lastfm.freetls.fastly.net/i/u/ar0/6644c67eaa3669676252d3190f9b019f.jpg?a=${Math.random()}`, (percent) => {
+        notification.set_body(`downloading... ${percent}%`);
+        notification.set(percent);
+      }).then(async (blob) => {
+        const text3 = await blob.text();
+        notification.set_body("download complete");
+        notification.set(100);
+        console.info(text3);
+      });
+    }}>Deliver async progress notification</button>
+        </section>
     `);
   }
 
@@ -53983,23 +53991,25 @@
       en: "Going",
       pt: "Indo"
     },
-    branch: {
-      name: {
-        en: "Branch name",
-        pt: "Nome do branch"
-      },
-      body: {
-        en: "Control which development branch you are using",
-        pt: "Controle qual branch de desenvolvimento voc\xEA est\xE1 usando"
-      }
-    },
-    enter_branch_name: {
-      // dont translate
-      en: "uwu"
-    },
     beware_notice: {
       en: "Beware! Only change these settings if you know what you\u2019re doing",
       pt: "Cuidado! Apenas mude estas configura\xE7\xF5es se voc\xEA sabe o que voc\xEA est\xE1 fazendo"
+    },
+    force_refresh_style: {
+      name: {
+        en: "Force re-download styles"
+      },
+      body: {
+        en: "Deletes your current cache of the bleh stylesheet and retrieves the latest"
+      }
+    },
+    intended_for_development: {
+      name: {
+        en: "This page is intended for development"
+      },
+      body: {
+        en: "Be careful with options here (especially feature flags) as they can break your install."
+      }
     },
     flags: {
       // shorthand for below
@@ -58572,19 +58582,6 @@
       default: false,
       title: trans.theme_loading.name,
       body: trans.theme_loading.body
-    },
-    branch: {
-      default: "uwu",
-      title: trans.branch.name,
-      body: trans.branch.body,
-      type: "text",
-      max: 20,
-      placeholder: trans.enter_branch_name,
-      warn_if_empty: true
-    },
-    api_key: {
-      default: "",
-      type: "text"
     },
     profile_header_expand: {
       default: true
