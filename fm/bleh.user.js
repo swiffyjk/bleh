@@ -2710,14 +2710,19 @@
     versions: [
       "(taylor",
       "- spotify singles",
-      "(+"
+      "(+",
+      "- versão",
+      "(versão",
+      "[versão"
     ],
     spotify: [
       "(spotify)"
     ],
     remasters: [
       "- remaster",
-      "(remaster"
+      "(remaster",
+      "- remasterizado",
+      "(remasterizado"
     ],
     mixes: [
       "- devonshire mix",
@@ -2728,6 +2733,15 @@
       "[remix",
       "- live",
       "(live",
+      "- ao vivo",
+      "(ao vivo",
+      "[ao vivo",
+      "- en vivo",
+      "(en vivo",
+      "[en vivo",
+      "- multishow ao vivo",
+      "(multishow ao vivo",
+      "[multishow ao vivo",
       "- demo",
       "(demo",
       "- rehearsal",
@@ -2822,6 +2836,10 @@
       "(mtv unplugged",
       "- unplugged",
       "(unplugged",
+      "- acústico",
+      "- ácustico",
+      "(acústico",
+      "[acústico",
       "- the long pond studio",
       "(the long pond studio"
     ],
@@ -2863,6 +2881,14 @@
       "- complete edition",
       "(complete edition",
       "[complete edition",
+      ": edição",
+      "- edição",
+      "(edição",
+      "[edição",
+      "- edicion",
+      "- edición",
+      "(edicion",
+      "(edición",
       "- extended",
       "(extended",
       "[extended",

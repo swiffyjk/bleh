@@ -115,19 +115,24 @@ export let includes = {
     ],
     versions: [
         '(taylor', '- spotify singles',
-        '(+'
+        '(+',
+        '- versão', '(versão', '[versão'
     ],
     spotify: [
         '(spotify)'
     ],
     remasters: [
-        '- remaster', '(remaster'
+        '- remaster', '(remaster',
+        '- remasterizado', '(remasterizado'
     ],
     mixes: [
         '- devonshire mix', '(devonshire mix',
         'mike dean master',
         '- remix', '(remix', '[remix',
         '- live', '(live',
+        '- ao vivo', '(ao vivo', '[ao vivo',
+        '- en vivo', '(en vivo', '[en vivo',
+        '- multishow ao vivo', '(multishow ao vivo', '[multishow ao vivo',
         '- demo', '(demo',
         '- rehearsal', '(rehearsal',
         '- sample clearance', '(sample clearance', '[sample clearance',
@@ -160,6 +165,7 @@ export let includes = {
         '- boombox', '(boombox',
         '- mtv unplugged', '(mtv unplugged',
         '- unplugged', '(unplugged',
+        '- acústico', '- ácustico', '(acústico', '[acústico',
         '- the long pond studio', '(the long pond studio'
     ],
     bonus: [
@@ -176,6 +182,8 @@ export let includes = {
         '- deluxe', '(deluxe', '[deluxe',
         '- digital deluxe', '(digital deluxe', '[digital deluxe',
         '- complete edition', '(complete edition', '[complete edition',
+        ': edição', '- edição', '(edição', '[edição',
+        '- edicion', '- edición', '(edicion', '(edición',
         '- extended', '(extended', '[extended',
         '- the extended edition', // denzel
         '- expanded', '(expanded', '[expanded',
