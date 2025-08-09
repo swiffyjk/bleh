@@ -115,13 +115,15 @@ export let includes = {
     ],
     versions: [
         '(taylor', '- spotify singles',
-        '(+'
+        '(+',
+        '- versão', '(versão', '[versão'
     ],
     spotify: [
         '(spotify)'
     ],
     remasters: [
-        '- remaster', '(remaster'
+        '- remaster', '(remaster',
+        '- remasterizado', '(remasterizado'
     ],
     mixes: [
         '- devonshire mix', '(devonshire mix',
@@ -180,6 +182,8 @@ export let includes = {
         '- deluxe', '(deluxe', '[deluxe',
         '- digital deluxe', '(digital deluxe', '[digital deluxe',
         '- complete edition', '(complete edition', '[complete edition',
+        ': edição', '- edição', '(edição', '[edição',
+        '- edicion', '- edición', '(edicion', '(edición',
         '- extended', '(extended', '[extended',
         '- the extended edition', // denzel
         '- expanded', '(expanded', '[expanded',

@@ -2710,14 +2710,19 @@
     versions: [
       "(taylor",
       "- spotify singles",
-      "(+"
+      "(+",
+      "- versão",
+      "(versão",
+      "[versão"
     ],
     spotify: [
       "(spotify)"
     ],
     remasters: [
       "- remaster",
-      "(remaster"
+      "(remaster",
+      "- remasterizado",
+      "(remasterizado"
     ],
     mixes: [
       "- devonshire mix",
@@ -2876,6 +2881,14 @@
       "- complete edition",
       "(complete edition",
       "[complete edition",
+      ": edição",
+      "- edição",
+      "(edição",
+      "[edição",
+      "- edicion",
+      "- edición",
+      "(edicion",
+      "(edición",
       "- extended",
       "(extended",
       "[extended",
