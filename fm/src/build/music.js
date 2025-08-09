@@ -128,6 +128,9 @@ export let includes = {
         'mike dean master',
         '- remix', '(remix', '[remix',
         '- live', '(live',
+        '- ao vivo', '(ao vivo', '[ao vivo',
+        '- en vivo', '(en vivo', '[en vivo',
+        '- multishow ao vivo', '(multishow ao vivo', '[multishow ao vivo',
         '- demo', '(demo',
         '- rehearsal', '(rehearsal',
         '- sample clearance', '(sample clearance', '[sample clearance',
@@ -160,6 +163,7 @@ export let includes = {
         '- boombox', '(boombox',
         '- mtv unplugged', '(mtv unplugged',
         '- unplugged', '(unplugged',
+        '- acústico', '- ácustico', '(acústico', '[acústico',
         '- the long pond studio', '(the long pond studio'
     ],
     bonus: [
