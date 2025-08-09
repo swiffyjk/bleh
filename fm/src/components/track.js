@@ -162,7 +162,7 @@ export function patch_titles(search=page.structure.main) {
             // when focused on a track in a library, an artist field is redundant
             if (!wide) track.classList.add('chartlist-row--with-artist');
 
-            let bar = track.querySelector('.chartlist-count-bar-slug');
+            const bar = track.querySelector('.chartlist-count-bar-slug');
             if (bar) {
                 let value = parseInt(bar.getAttribute('data-stat-value'));
 
@@ -659,7 +659,7 @@ export function patch_titles(search=page.structure.main) {
             const show_album_text = is_active || settings.expand_tracks == 'always';
             track.setAttribute('data-show-album-text', show_album_text);
 
-            if (!is_album && show_album_text) {
+            if (!is_album && !has_bar && show_album_text) {
                 let image_wrap = track.querySelector('.chartlist-image');
                 if (image_wrap) {
                     let link = image_wrap.querySelector('.cover-art');

@@ -213,6 +213,9 @@ export const trans = {
         pt: 'Mensagens',
         ja: 'シャウト'
     },
+    cant_shout: {
+        en: 'You cannot leave shouts here'
+    },
     failed_to_send: {
         en: 'Failed to send'
     },
@@ -1953,7 +1956,39 @@ export const trans = {
         // markdown: https://www.markdownguide.org/cheat-sheet/
         en: 'Supports Markdown',
         de: 'Unterstützt Markdown',
-        pt: 'Suporta o Markdown'
+        pt: 'Suporta o Markdown',
+        bold: {
+            name: {
+                en: 'Bold'
+            },
+            string: {
+                en: '**bold**'
+            }
+        },
+        italics: {
+            name: {
+                en: 'Italics'
+            },
+            string: {
+                en: '*slanted*'
+            }
+        },
+        bold_italics: {
+            name: {
+                en: 'Bold italics'
+            },
+            string: {
+                en: '***slanted but bold***'
+            }
+        },
+        underlined: {
+            name: {
+                en: 'Underlined'
+            },
+            string: {
+                en: '__underlined__'
+            }
+        }
     },
     value_characters_max: {
         en: '{v} characters max'

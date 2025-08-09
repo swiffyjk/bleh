@@ -26906,7 +26906,7 @@
         if (is_album) track.classList.add("bleh--is-album");
         let track_artist = return_artist_from_track(track_title.getAttribute("href"), is_album);
         if (!wide) track.classList.add("chartlist-row--with-artist");
-        let bar = track.querySelector(".chartlist-count-bar-slug");
+        const bar = track.querySelector(".chartlist-count-bar-slug");
         if (bar) {
           let value = parseInt(bar.getAttribute("data-stat-value"));
           if (is_album) {
@@ -27319,7 +27319,7 @@
         }
         const show_album_text = is_active || settings.expand_tracks == "always";
         track.setAttribute("data-show-album-text", show_album_text);
-        if (!is_album && show_album_text) {
+        if (!is_album && !has_bar && show_album_text) {
           let image_wrap = track.querySelector(".chartlist-image");
           if (image_wrap) {
             let link = image_wrap.querySelector(".cover-art");
@@ -32315,6 +32315,10 @@
     let chars;
     let about;
     let preview;
+    const markdown_settings = {
+      allow_headers: true,
+      allow_banners: true
+    };
     render(update_picture, html`
         <h4>${tl(trans.profile)}</h4>
         <div class="banner-preview"></div>
@@ -32363,7 +32367,7 @@
                                 <div class="input about-me" id="about_me">
                                     <textarea name="about_me" placeholder=${tl(trans.anything_you_can_imagine)} cols="40" rows="10" class="textarea--s" maxlength="500" id="id_about_me" oninput=${() => update_about()} ref=${(el) => about = el} data-form-type="other">${form_about_me}</textarea>
                                     <div class="dual-tip">
-                                        <div class="tip markdown-enabled">${tl(trans.supports_markdown)}</div>
+                                        <div class="tip markdown-enabled" onclick=${() => markdown_prompt(markdown_settings)}>${tl(trans.supports_markdown)}</div>
                                         <div class="tip characters" ref=${(el) => chars = el}>
                                             ${tl(trans.value_characters_max).replace("{v}", "500")}
                                         </div>
@@ -32399,19 +32403,12 @@
         </div>
     `);
     page.structure.main.removeChild(page.structure.main.querySelector("#update-profile"));
-    tippy_esm_default(update_picture.querySelector(".markdown-enabled"), {
-      content: tl(trans.markdown_tip),
-      allowHTML: true
-    });
     update_about();
     function update_about() {
       let value = about.value;
       chars.textContent = tl(trans.value_characters_max).replace("{v}", `${value.length}/500`);
       chars.setAttribute("data-exceeded", value.length >= 500);
-      render(preview, markdown(value, {
-        allow_headers: true,
-        allow_banners: true
-      }));
+      render(preview, markdown(value, markdown_settings));
       let banner = preview.querySelector('img[alt="banner"]');
       let banner_img = page.structure.main.querySelector(".banner-preview");
       if (!banner)
@@ -32633,7 +32630,7 @@
                 <div class="bleh-icon"></div>
             </div>
             <img class="user-top-avatar user-top-avatar-main" src=${auth.avatar.replace("avatar42s", "avatar300s")}
-                 alt=${auth.name}>
+                alt=${auth.name}>
             <div class="user-top-avatar user-top-avatar-side-right">
                 <div class="bleh-icon"></div>
             </div>
@@ -43845,7 +43842,8 @@
     allow_headers = false,
     allow_links = true,
     line_breaks = true,
-    allow_banners = false
+    allow_banners = false,
+    in_dialog = false
   } = {}) {
     const ALLOWED_TAGS = [
       "div",
@@ -43960,13 +43958,113 @@
     });
     body.querySelectorAll("img").forEach((image) => {
       image.setAttribute("loading", "lazy");
+      let func = () => expand_avatar(image.src);
+      if (in_dialog) func = () => open(image.src);
       const container = html.node`
-            <div class="markdown-image" onclick=${() => expand_avatar(image.src)} />
+            <div class="markdown-image" onclick=${func} />
         `;
       image.after(container);
       container.appendChild(image);
     });
     return body;
+  }
+  function markdown_prompt({
+    allow_headers = false,
+    allow_links = true,
+    line_breaks = true,
+    allow_banners = false,
+    in_dialog = false
+  } = {}) {
+    const examples = [
+      {
+        name: tl(trans.supports_markdown.bold.name),
+        string: tl(trans.supports_markdown.bold.string)
+      },
+      {
+        name: tl(trans.supports_markdown.italics.name),
+        string: tl(trans.supports_markdown.italics.string)
+      },
+      {
+        name: tl(trans.supports_markdown.bold_italics.name),
+        string: tl(trans.supports_markdown.bold_italics.string)
+      },
+      {
+        name: tl(trans.supports_markdown.underlined.name),
+        string: tl(trans.supports_markdown.underlined.string)
+      },
+      {
+        name: "Fancy link",
+        string: "[example >~<](https://katelyn.moe)"
+      },
+      {
+        name: "Simple link",
+        string: `https://last.fm${root}user/${auth.name}`
+      },
+      {
+        name: "Mentioned user",
+        string: `@${auth.name}`
+      },
+      {
+        name: "Image",
+        string: `![alt text](${auth.avatar})`,
+        string_display: "![alt text](image url here)"
+      },
+      {
+        name: "Banner",
+        string: "[banner=image_url_here]",
+        hide_if: !allow_banners,
+        explain: "Applies a custom banner to your profile, visible to all users"
+      },
+      {
+        name: "Left-alignment",
+        string: "[left]text[/left]"
+      },
+      {
+        name: "Center-alignment",
+        string: "[center]text[/center]"
+      },
+      {
+        name: "Right-alignment",
+        string: "[right]text[/right]"
+      }
+    ];
+    dialog({
+      id: "markdown",
+      title: tl(trans.supports_markdown),
+      body: html.node`
+            <p>You can write fancy text here using Markdown, which lets you make your words pretty with simple shortcuts.</p>
+            <table class="fancy-table">
+                <thead>
+                    <tr>
+                        <th>Name</th>
+                        <th>How</th>
+                        <th>Result</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    ${examples.map((example) => {
+        if (example.hide_if) return html.node``;
+        return html.node`
+                            <tr>
+                                <td>${example.name}</td>
+                                <td><code>${example.string_display ? example.string_display : example.string}</code></td>
+                                ${example.explain ? html.node`
+                                    <td>
+                                        <div class="icon-combo">
+                                            <div class="bleh-icon" data-type="info" style="--icon: var(--mask)" />
+                                            ${example.explain}
+                                        </div>
+                                    </td>
+                                ` : html.node`
+                                    <td class="markdown-body">${markdown(example.string, { in_dialog: true })}</td>
+                                `}
+                            </tr>
+                        `;
+      })}
+                </tbody>
+            </table>
+        `
+    });
   }
   function local_restriction(text3) {
     if (text3.textContent.trim().startsWith("Due to local laws, we are temporarily"))
@@ -50157,7 +50255,7 @@
     });
     if (settings.shout_markdown && shout_parse_queue.length > 0)
       parse_shout_queue();
-    let shout_forms = document.querySelectorAll(".shout-form:not([data-kate-processed])");
+    const shout_forms = document.querySelectorAll(".shout-form:not([data-kate-processed])");
     shout_forms.forEach((shout_form) => {
       shout_form.setAttribute("data-kate-processed", "true");
       let shout_avatar = shout_form.querySelector(".shout-user-avatar");
@@ -50260,6 +50358,16 @@
       interactiveBorder: 10,
       trigger: "click"
     });
+    const cant_shout = panel.querySelector(".shouting-unavailable");
+    if (cant_shout) {
+      render(cant_shout, html`
+            <div class="loading-data-container">
+                <div class="loading-data-text static" data-type="shouts">
+                    ${tl(trans.cant_shout)}
+                </div>
+            </div>
+        `);
+    }
   }
   function parse_shout_queue() {
     if (shout_parse_queue.length === 0) return;
@@ -51509,6 +51617,9 @@
       en: "Shouts",
       pt: "Mensagens",
       ja: "\u30B7\u30E3\u30A6\u30C8"
+    },
+    cant_shout: {
+      en: "You cannot leave shouts here"
     },
     failed_to_send: {
       en: "Failed to send"
@@ -53250,7 +53361,39 @@
       // markdown: https://www.markdownguide.org/cheat-sheet/
       en: "Supports Markdown",
       de: "Unterst\xFCtzt Markdown",
-      pt: "Suporta o Markdown"
+      pt: "Suporta o Markdown",
+      bold: {
+        name: {
+          en: "Bold"
+        },
+        string: {
+          en: "**bold**"
+        }
+      },
+      italics: {
+        name: {
+          en: "Italics"
+        },
+        string: {
+          en: "*slanted*"
+        }
+      },
+      bold_italics: {
+        name: {
+          en: "Bold italics"
+        },
+        string: {
+          en: "***slanted but bold***"
+        }
+      },
+      underlined: {
+        name: {
+          en: "Underlined"
+        },
+        string: {
+          en: "__underlined__"
+        }
+      }
     },
     value_characters_max: {
       en: "{v} characters max"

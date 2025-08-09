@@ -11,7 +11,7 @@ import {dialog, dialog_rm} from "../components/dialog";
 import {custom_select, select, select_prepare, update_inbuilt_select} from "../components/select";
 import {update_inbuilt_item} from "../config";
 import {ff} from "../sku";
-import {markdown} from "../components/markdown";
+import {markdown, markdown_prompt} from "../components/markdown";
 import {html, render} from "lighterhtml";
 import tippy from "tippy.js";
 import Cropper from "cropperjs";
@@ -466,6 +466,11 @@ function patch_settings_profile_panel(token, update_picture) {
     let about;
     let preview;
 
+    const markdown_settings = {
+        allow_headers: true,
+        allow_banners: true
+    }
+
     render(update_picture, html`
         <h4>${tl(trans.profile)}</h4>
         <div class="banner-preview"></div>
@@ -514,7 +519,7 @@ function patch_settings_profile_panel(token, update_picture) {
                                 <div class="input about-me" id="about_me">
                                     <textarea name="about_me" placeholder=${tl(trans.anything_you_can_imagine)} cols="40" rows="10" class="textarea--s" maxlength="500" id="id_about_me" oninput=${() => update_about()} ref=${el => about = el} data-form-type="other">${form_about_me}</textarea>
                                     <div class="dual-tip">
-                                        <div class="tip markdown-enabled">${tl(trans.supports_markdown)}</div>
+                                        <div class="tip markdown-enabled" onclick=${() => markdown_prompt(markdown_settings)}>${tl(trans.supports_markdown)}</div>
                                         <div class="tip characters" ref=${el => chars = el}>
                                             ${tl(trans.value_characters_max).replace('{v}', '500')}
                                         </div>
@@ -552,11 +557,6 @@ function patch_settings_profile_panel(token, update_picture) {
 
     page.structure.main.removeChild(page.structure.main.querySelector('#update-profile'));
 
-    tippy(update_picture.querySelector('.markdown-enabled'), {
-        content: tl(trans.markdown_tip),
-        allowHTML: true
-    });
-
 
     // about me
     update_about();
@@ -566,10 +566,7 @@ function patch_settings_profile_panel(token, update_picture) {
         chars.textContent = tl(trans.value_characters_max).replace('{v}', `${value.length}/500`);
         chars.setAttribute('data-exceeded', value.length >= 500);
 
-        render(preview, markdown(value, {
-            allow_headers: true,
-            allow_banners: true
-        }));
+        render(preview, markdown(value, markdown_settings));
 
         let banner = preview.querySelector('img[alt="banner"]');
         let banner_img = page.structure.main.querySelector('.banner-preview');
@@ -859,7 +856,7 @@ function bleh_communication_panel(token) {
                 <div class="bleh-icon"></div>
             </div>
             <img class="user-top-avatar user-top-avatar-main" src=${auth.avatar.replace('avatar42s', 'avatar300s')}
-                 alt=${auth.name}>
+                alt=${auth.name}>
             <div class="user-top-avatar user-top-avatar-side-right">
                 <div class="bleh-icon"></div>
             </div>

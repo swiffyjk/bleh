@@ -6596,15 +6596,9 @@
         min-height: unset;
     }
     .shouting-unavailable {
-        padding-top: calc(var(--card-gap) * 4);
-        padding-bottom: calc(2px + (var(--card-gap) * 4));
-        margin-top: unset;
-        border-bottom: 1px solid hsl(var(--b4));
-    }
-    .shouting-unavailable:not(:has(p)):before {
-        /* if a user isn't logged in, 2 paragraph elements will be in this container */
-        content: 'This user\'s shoutbox is set to private.';
-        color: hsl(var(--c3));
+        margin: unset;
+        padding: 0 0 var(--card-gap) 0;
+        border-bottom: 1px solid var(--card-border-base);
     }
     .shout-form + .shout-list,
     .shout-list {
@@ -7100,6 +7094,12 @@
             &.private {
                 --mask: var(--icon-16-lock);
 
+                &:before {
+                    animation: none;
+                }
+            }
+
+            &.static {
                 &:before {
                     animation: none;
                 }
@@ -7735,6 +7735,10 @@
         display: flex;
         align-items: center;
         gap: var(--icon-gap);
+
+        & > .bleh-icon {
+            flex-shrink: 0;
+        }
 
         &[data-season]:not([data-season="none"]) {
             color: hsl(var(--l3-c));
@@ -9294,7 +9298,7 @@
     }
     [data-type="shoutbox"],
     [data-type="shouts"] {
-        --mask: var(--icon-16-shoutbox);
+        --mask: var(--icon-16-shoutbox) !important;
     }
     [data-type="listening-report"] {
         --mask: var(--icon-16-listening-report);
@@ -18301,13 +18305,12 @@
         }
 
         img {
-            border-radius: var(--item-big-radius);
             max-width: 100%;
 
             &[alt="banner"] {
                 display: none;
 
-                p:has(> &) {
+                p:has(> .markdown-image > &) {
                     display: none;
                 }
             }
@@ -25048,6 +25051,12 @@
         --left: 0;
         --margin-top: calc(-1 * (var(--mask-size) / 2));
         --mask: var(--icon-16-md);
+
+        cursor: pointer !important;
+
+        &:hover {
+            text-decoration: underline;
+        }
     }
 
 
@@ -26551,6 +26560,42 @@
             width: 1px;
             background: var(--card-border-base);
             display: block;
+        }
+    }
+
+
+    .fancy-table {
+        width: 100%;
+        text-align: left;
+
+        & > thead {
+            border-bottom: 1px solid hsl(var(--b4), 60%);
+        }
+
+        th, td {
+            padding: 10px 0;
+        }
+
+        th {
+            color: hsl(var(--c3));
+        }
+
+        th, td:first-child {
+            font-weight: var(--font-weight-medium);
+            cursor: default;
+        }
+
+        tr:first-child > td {
+            padding-top: 15px;
+        }
+
+        th, td {
+            min-width: 260px;
+        }
+
+        th:first-child, td:first-child {
+            width: 25%;
+            min-width: unset;
         }
     }
 }

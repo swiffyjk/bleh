@@ -4,19 +4,22 @@
 // Licensed under GPLv3
 //
 
-import {root} from "../build/page";
+import {auth, root} from "../build/page";
 import {html} from "lighterhtml";
 import {patch_wiki_contents} from "../pages/wiki.js";
 import {redirect} from "./music.js";
 import showdown from "showdown";
 import DOMPurify from "dompurify";
 import {expand_avatar} from "../avatar.js";
+import { tl, trans } from '../build/trans.js';
+import { dialog } from './dialog.js';
 
 export function markdown(text, {
     allow_headers = false,
     allow_links = true,
     line_breaks = true,
-    allow_banners = false
+    allow_banners = false,
+    in_dialog = false
 }={}) {
     const ALLOWED_TAGS = [
         'div', 'p', 'span', 'em', 'u', 'strong', 'a', 'ul', 'ol', 'li', 'br', 'code', 'pre', 'img', 'blockquote',
@@ -145,8 +148,11 @@ export function markdown(text, {
     body.querySelectorAll('img').forEach((image) => {
         image.setAttribute('loading', 'lazy');
 
+        let func = () => expand_avatar(image.src);
+        if (in_dialog) func = () => open(image.src);
+
         const container = html.node`
-            <div class="markdown-image" onclick=${() => expand_avatar(image.src)} />
+            <div class="markdown-image" onclick=${func} />
         `;
 
         image.after(container);
@@ -154,6 +160,107 @@ export function markdown(text, {
     });
 
     return body;
+}
+
+export function markdown_prompt({
+    allow_headers = false,
+    allow_links = true,
+    line_breaks = true,
+    allow_banners = false,
+    in_dialog = false
+}={}) {
+    const examples = [
+        {
+            name: tl(trans.supports_markdown.bold.name),
+            string: tl(trans.supports_markdown.bold.string)
+        },
+        {
+            name: tl(trans.supports_markdown.italics.name),
+            string: tl(trans.supports_markdown.italics.string)
+        },
+        {
+            name: tl(trans.supports_markdown.bold_italics.name),
+            string: tl(trans.supports_markdown.bold_italics.string)
+        },
+        {
+            name: tl(trans.supports_markdown.underlined.name),
+            string: tl(trans.supports_markdown.underlined.string)
+        },
+        {
+            name: 'Fancy link',
+            string: '[example >~<](https://katelyn.moe)'
+        },
+        {
+            name: 'Simple link',
+            string: `https://last.fm${root}user/${auth.name}`
+        },
+        {
+            name: 'Mentioned user',
+            string: `@${auth.name}`
+        },
+        {
+            name: 'Image',
+            string: `![alt text](${auth.avatar})`,
+            string_display: '![alt text](image url here)'
+        },
+        {
+            name: 'Banner',
+            string: '[banner=image_url_here]',
+            hide_if: !allow_banners,
+            explain: 'Applies a custom banner to your profile, visible to all users'
+        },
+        {
+            name: 'Left-alignment',
+            string: '[left]text[/left]'
+        },
+        {
+            name: 'Center-alignment',
+            string: '[center]text[/center]'
+        },
+        {
+            name: 'Right-alignment',
+            string: '[right]text[/right]'
+        }
+    ]
+
+    dialog({
+        id: 'markdown',
+        title: tl(trans.supports_markdown),
+        body: html.node`
+            <p>You can write fancy text here using Markdown, which lets you make your words pretty with simple shortcuts.</p>
+            <table class="fancy-table">
+                <thead>
+                    <tr>
+                        <th>Name</th>
+                        <th>How</th>
+                        <th>Result</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    ${examples.map(example => {
+                        if (example.hide_if) return html.node``;
+
+                        return html.node`
+                            <tr>
+                                <td>${example.name}</td>
+                                <td><code>${example.string_display ? example.string_display : example.string}</code></td>
+                                ${example.explain ? html.node`
+                                    <td>
+                                        <div class="icon-combo">
+                                            <div class="bleh-icon" data-type="info" style="--icon: var(--mask)" />
+                                            ${example.explain}
+                                        </div>
+                                    </td>
+                                ` : html.node`
+                                    <td class="markdown-body">${markdown(example.string, {in_dialog: true})}</td>
+                                `}
+                            </tr>
+                        `;
+                    })}
+                </tbody>
+            </table>
+        `
+    });
 }
 
 function local_restriction(text) {

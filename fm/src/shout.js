@@ -155,7 +155,7 @@ export function patch_shouts() {
         parse_shout_queue();
 
     // enter a shout field
-    let shout_forms = document.querySelectorAll('.shout-form:not([data-kate-processed])');
+    const shout_forms = document.querySelectorAll('.shout-form:not([data-kate-processed])');
     shout_forms.forEach((shout_form) => {
         shout_form.setAttribute('data-kate-processed', 'true');
         let shout_avatar = shout_form.querySelector('.shout-user-avatar');
@@ -286,6 +286,17 @@ export function shout_header(shout_controls) {
         interactiveBorder: 10,
         trigger: 'click'
     });
+
+    const cant_shout = panel.querySelector('.shouting-unavailable');
+    if (cant_shout) {
+        render(cant_shout, html`
+            <div class="loading-data-container">
+                <div class="loading-data-text static" data-type="shouts">
+                    ${tl(trans.cant_shout)}
+                </div>
+            </div>
+        `);
+    }
 }
 
 export function parse_shout_queue() {
