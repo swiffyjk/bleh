@@ -892,7 +892,7 @@
         --icon-16-charts: url('data:image/svg+xml;base64,PHN2ZyAgeG1sbnM9Imh0dHA6Ly93d3cudzMub3JnLzIwMDAvc3ZnIiAgd2lkdGg9IjI0IiAgaGVpZ2h0PSIyNCIgIHZpZXdCb3g9IjAgMCAyNCAyNCIgIGZpbGw9Im5vbmUiICBzdHJva2U9ImN1cnJlbnRDb2xvciIgIHN0cm9rZS13aWR0aD0iMiIgIHN0cm9rZS1saW5lY2FwPSJyb3VuZCIgIHN0cm9rZS1saW5lam9pbj0icm91bmQiICBjbGFzcz0iaWNvbiBpY29uLXRhYmxlciBpY29ucy10YWJsZXItb3V0bGluZSBpY29uLXRhYmxlci10cmVuZGluZy11cCI+PHBhdGggc3Ryb2tlPSJub25lIiBkPSJNMCAwaDI0djI0SDB6IiBmaWxsPSJub25lIi8+PHBhdGggZD0iTTMgMTdsNiAtNmw0IDRsOCAtOCIgLz48cGF0aCBkPSJNMTQgN2w3IDBsMCA3IiAvPjwvc3ZnPg==');
         --icon-16-info: url('data:image/svg+xml;base64,PHN2ZyAgeG1sbnM9Imh0dHA6Ly93d3cudzMub3JnLzIwMDAvc3ZnIiAgd2lkdGg9IjI0IiAgaGVpZ2h0PSIyNCIgIHZpZXdCb3g9IjAgMCAyNCAyNCIgIGZpbGw9Im5vbmUiICBzdHJva2U9ImN1cnJlbnRDb2xvciIgIHN0cm9rZS13aWR0aD0iMiIgIHN0cm9rZS1saW5lY2FwPSJyb3VuZCIgIHN0cm9rZS1saW5lam9pbj0icm91bmQiICBjbGFzcz0iaWNvbiBpY29uLXRhYmxlciBpY29ucy10YWJsZXItb3V0bGluZSBpY29uLXRhYmxlci1pbmZvLWNpcmNsZSI+PHBhdGggc3Ryb2tlPSJub25lIiBkPSJNMCAwaDI0djI0SDB6IiBmaWxsPSJub25lIi8+PHBhdGggZD0iTTMgMTJhOSA5IDAgMSAwIDE4IDBhOSA5IDAgMCAwIC0xOCAwIiAvPjxwYXRoIGQ9Ik0xMiA5aC4wMSIgLz48cGF0aCBkPSJNMTEgMTJoMXY0aDEiIC8+PC9zdmc+');
         --icon-16-revert: url('data:image/svg+xml;base64,PHN2ZyAgeG1sbnM9Imh0dHA6Ly93d3cudzMub3JnLzIwMDAvc3ZnIiAgd2lkdGg9IjI0IiAgaGVpZ2h0PSIyNCIgIHZpZXdCb3g9IjAgMCAyNCAyNCIgIGZpbGw9Im5vbmUiICBzdHJva2U9ImN1cnJlbnRDb2xvciIgIHN0cm9rZS13aWR0aD0iMiIgIHN0cm9rZS1saW5lY2FwPSJyb3VuZCIgIHN0cm9rZS1saW5lam9pbj0icm91bmQiICBjbGFzcz0iaWNvbiBpY29uLXRhYmxlciBpY29ucy10YWJsZXItb3V0bGluZSBpY29uLXRhYmxlci1yZXN0b3JlIj48cGF0aCBzdHJva2U9Im5vbmUiIGQ9Ik0wIDBoMjR2MjRIMHoiIGZpbGw9Im5vbmUiLz48cGF0aCBkPSJNMy4wNiAxM2E5IDkgMCAxIDAgLjQ5IC00LjA4NyIgLz48cGF0aCBkPSJNMyA0LjAwMXY1aDUiIC8+PHBhdGggZD0iTTEyIDEybS0xIDBhMSAxIDAgMSAwIDIgMGExIDEgMCAxIDAgLTIgMCIgLz48L3N2Zz4=');
-        --icon-16-reset: url('data:image/svg+xml;base64,PHN2ZyAgeG1sbnM9Imh0dHA6Ly93d3cudzMub3JnLzIwMDAvc3ZnIiAgd2lkdGg9IjI0IiAgaGVpZ2h0PSIyNCIgIHZpZXdCb3g9IjAgMCAyNCAyNCIgIGZpbGw9Im5vbmUiICBzdHJva2U9ImN1cnJlbnRDb2xvciIgIHN0cm9rZS13aWR0aD0iNSIgIHN0cm9rZS1saW5lY2FwPSJyb3VuZCIgIHN0cm9rZS1saW5lam9pbj0icm91bmQiICBjbGFzcz0iaWNvbiBpY29uLXRhYmxlciBpY29ucy10YWJsZXItb3V0bGluZSBpY29uLXRhYmxlci1hc3RlcmlzayI+PHBhdGggc3Ryb2tlPSJub25lIiBkPSJNMCAwaDI0djI0SDB6IiBmaWxsPSJub25lIi8+PHBhdGggZD0iTTEyIDEybDggLTQuNSIgLz48cGF0aCBkPSJNMTIgMTJ2OSIgLz48cGF0aCBkPSJNMTIgMTJsLTggLTQuNSIgLz48cGF0aCBkPSJNMTIgMTJsOCA0LjUiIC8+PHBhdGggZD0iTTEyIDN2OSIgLz48cGF0aCBkPSJNMTIgMTJsLTggNC41IiAvPjwvc3ZnPg==');
+        --icon-16-reset: url('data:image/svg+xml;base64,PHN2ZyAgeG1sbnM9Imh0dHA6Ly93d3cudzMub3JnLzIwMDAvc3ZnIiAgd2lkdGg9IjI0IiAgaGVpZ2h0PSIyNCIgIHZpZXdCb3g9IjAgMCAyNCAyNCIgIGZpbGw9Im5vbmUiICBzdHJva2U9ImN1cnJlbnRDb2xvciIgIHN0cm9rZS13aWR0aD0iMyIgIHN0cm9rZS1saW5lY2FwPSJyb3VuZCIgIHN0cm9rZS1saW5lam9pbj0icm91bmQiICBjbGFzcz0iaWNvbiBpY29uLXRhYmxlciBpY29ucy10YWJsZXItb3V0bGluZSBpY29uLXRhYmxlci1hcnJvdy1iYWNrLXVwIj48cGF0aCBzdHJva2U9Im5vbmUiIGQ9Ik0wIDBoMjR2MjRIMHoiIGZpbGw9Im5vbmUiLz48cGF0aCBkPSJNOSAxNGwtNCAtNGw0IC00IiAvPjxwYXRoIGQ9Ik01IDEwaDExYTQgNCAwIDEgMSAwIDhoLTEiIC8+PC9zdmc+');
         --icon-16-md: url('data:image/svg+xml;base64,PHN2ZyAgeG1sbnM9Imh0dHA6Ly93d3cudzMub3JnLzIwMDAvc3ZnIiAgd2lkdGg9IjI0IiAgaGVpZ2h0PSIyNCIgIHZpZXdCb3g9IjAgMCAyNCAyNCIgIGZpbGw9Im5vbmUiICBzdHJva2U9ImN1cnJlbnRDb2xvciIgIHN0cm9rZS13aWR0aD0iMiIgIHN0cm9rZS1saW5lY2FwPSJyb3VuZCIgIHN0cm9rZS1saW5lam9pbj0icm91bmQiICBjbGFzcz0iaWNvbiBpY29uLXRhYmxlciBpY29ucy10YWJsZXItb3V0bGluZSBpY29uLXRhYmxlci1tYXJrZG93biI+PHBhdGggc3Ryb2tlPSJub25lIiBkPSJNMCAwaDI0djI0SDB6IiBmaWxsPSJub25lIi8+PHBhdGggZD0iTTMgNW0wIDJhMiAyIDAgMCAxIDIgLTJoMTRhMiAyIDAgMCAxIDIgMnYxMGEyIDIgMCAwIDEgLTIgMmgtMTRhMiAyIDAgMCAxIC0yIC0yeiIgLz48cGF0aCBkPSJNNyAxNXYtNmwyIDJsMiAtMnY2IiAvPjxwYXRoIGQ9Ik0xNCAxM2wyIDJsMiAtMm0tMiAydi02IiAvPjwvc3ZnPg==');
         --icon-16-grid: url('data:image/svg+xml;base64,PHN2ZyAgeG1sbnM9Imh0dHA6Ly93d3cudzMub3JnLzIwMDAvc3ZnIiAgd2lkdGg9IjI0IiAgaGVpZ2h0PSIyNCIgIHZpZXdCb3g9IjAgMCAyNCAyNCIgIGZpbGw9ImN1cnJlbnRDb2xvciIgIGNsYXNzPSJpY29uIGljb24tdGFibGVyIGljb25zLXRhYmxlci1maWxsZWQgaWNvbi10YWJsZXItbGF5b3V0LWdyaWQiPjxwYXRoIHN0cm9rZT0ibm9uZSIgZD0iTTAgMGgyNHYyNEgweiIgZmlsbD0ibm9uZSIvPjxwYXRoIGQ9Ik05IDNhMiAyIDAgMCAxIDIgMnY0YTIgMiAwIDAgMSAtMiAyaC00YTIgMiAwIDAgMSAtMiAtMnYtNGEyIDIgMCAwIDEgMiAtMnoiIC8+PHBhdGggZD0iTTE5IDNhMiAyIDAgMCAxIDIgMnY0YTIgMiAwIDAgMSAtMiAyaC00YTIgMiAwIDAgMSAtMiAtMnYtNGEyIDIgMCAwIDEgMiAtMnoiIC8+PHBhdGggZD0iTTkgMTNhMiAyIDAgMCAxIDIgMnY0YTIgMiAwIDAgMSAtMiAyaC00YTIgMiAwIDAgMSAtMiAtMnYtNGEyIDIgMCAwIDEgMiAtMnoiIC8+PHBhdGggZD0iTTE5IDEzYTIgMiAwIDAgMSAyIDJ2NGEyIDIgMCAwIDEgLTIgMmgtNGEyIDIgMCAwIDEgLTIgLTJ2LTRhMiAyIDAgMCAxIDIgLTJ6IiAvPjwvc3ZnPg==');
         --icon-16-list: url('data:image/svg+xml;base64,PHN2ZyAgeG1sbnM9Imh0dHA6Ly93d3cudzMub3JnLzIwMDAvc3ZnIiAgd2lkdGg9IjI0IiAgaGVpZ2h0PSIyNCIgIHZpZXdCb3g9IjAgMCAyNCAyNCIgIGZpbGw9ImN1cnJlbnRDb2xvciIgIGNsYXNzPSJpY29uIGljb24tdGFibGVyIGljb25zLXRhYmxlci1maWxsZWQgaWNvbi10YWJsZXItbGF5b3V0LWxpc3QiPjxwYXRoIHN0cm9rZT0ibm9uZSIgZD0iTTAgMGgyNHYyNEgweiIgZmlsbD0ibm9uZSIvPjxwYXRoIGQ9Ik0xOCAzYTMgMyAwIDAgMSAzIDN2MmEzIDMgMCAwIDEgLTMgM2gtMTJhMyAzIDAgMCAxIC0zIC0zdi0yYTMgMyAwIDAgMSAzIC0zeiIgLz48cGF0aCBkPSJNMTggMTNhMyAzIDAgMCAxIDMgM3YyYTMgMyAwIDAgMSAtMyAzaC0xMmEzIDMgMCAwIDEgLTMgLTN2LTJhMyAzIDAgMCAxIDMgLTN6IiAvPjwvc3ZnPg==');
@@ -17304,13 +17304,6 @@
             transition: none;
         }
 
-        &:hover {
-            & > .heading > h5 > .reset {
-                width: 120px;
-                opacity: 1;
-            }
-        }
-
         /*animation: grid_item var(--trans) var(--trans-function);*/
 
         &:not([data-modified="true"]) > .heading > h5 > .reset,
@@ -17352,13 +17345,16 @@
                 & > .reset {
                     margin-left: 2px !important;
                     --mask: var(--icon-16-reset);
-                    --mask-size: 10px;
+                    --mask-size: 14px;
                     text-transform: lowercase !important;
-                    width: var(--mask-size);
                     overflow: hidden;
-                    opacity: 0.2;
+                    opacity: 0.4;
 
-                    transition-property: transform, color, width, opacity !important;
+                    transition-property: color, opacity !important;
+
+                    &:hover {
+                        opacity: 1;
+                    }
                 }
             }
 

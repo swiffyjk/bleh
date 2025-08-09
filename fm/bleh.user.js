@@ -29595,8 +29595,8 @@
         let input2;
         let marker;
         let working_max = settings_store[id].max - settings_store[id].min;
-        return html.node`
-                <div class="setting v2 ${standalone ? "standalone" : ""}" data-type="range" disabled=${disabled} ref=${(el) => option = el} data-modified=${value != settings_store[id].default}>
+        const elem = html.node`
+                <div class="setting v2 ${standalone ? "standalone" : ""} ${settings_store[id].vertical ? "v" : ""}" data-type="range" disabled=${disabled} ref=${(el) => option = el} data-modified=${value != settings_store[id].default}>
                     ${text3 ? html.node`
                     <div class="heading">
                         <h5>${title}<button class="reset see-more" onclick=${() => reset_range(id, option, track, input2, marker)}>${tl(trans.reset)}</button></h5>
@@ -29620,7 +29620,7 @@
                     ` : ""}
                     ${setting_incompatible_block(settings_store[id].incompatible)}
                     <div class="range">
-                        <div class="track" style="--percent: ${(value - settings_store[id].min) / working_max * 100}%" ref=${(el) => track = el}>
+                        <div class="track" style="--percent: ${(value - settings_store[id].min) / working_max * 100}%" data-id=${id} ref=${(el) => track = el}>
                             <div class="fill" />
                             <div class="nub" />
                         </div>
@@ -29629,6 +29629,11 @@
                     </div>
                 </div>
             `;
+        elem.set = (val) => {
+          input2.value = val;
+          update_range(id, option, track, input2, val, marker);
+        };
+        return elem;
       } else if (type === "text") {
         let option;
         let min2 = settings_store[id].min || 0;
@@ -45848,6 +45853,9 @@
       ]
     };
     exclusives.new_years = exclusives.christmas;
+    let hue_range;
+    let sat_range;
+    let lit_range;
     for (let type in colours) {
       const swatch_group = page.structure.main.querySelector(`#colour_${type}`);
       if (!swatch_group) return;
@@ -45867,7 +45875,9 @@
         let swatch = html.node`
                 <button class="swatch-container" onclick=${() => {
           if (!colour.sets) return;
-          update_params(colour.sets);
+          hue_range.set(colour.sets.hue);
+          sat_range.set(colour.sets.sat);
+          lit_range.set(colour.sets.lit);
         }}>
                     <div class="swatch colourful" ref=${(el) => blob = el} data-swatch-type=${colour.type} />
                     <strong ref=${(el) => text_elem = el} />
@@ -45899,65 +45909,18 @@
               warn_if_empty: true
             })}
                                         <button class="btn primary icon convert" onclick=${() => {
-              let value = colour2.querySelector("input").value;
-              let hsl = hex_to_hsl(value);
-              update_params({
-                hue: hsl.h,
-                sat: clamp_sat(hsl.s / 100 * 3),
-                lit: hsl.l / 100 + 0.35
-              });
+              const value = colour2.querySelector("input").value;
+              const hsl = hex_to_hsl(value);
+              hue_range.set(hsl.h);
+              sat_range.set(clamp_sat(hsl.s / 100 * 3));
+              lit_range.set(hsl.l / 100 + 0.35);
             }}>${tl(trans.convert)}</button>
                                     </div>
                                 </div>
                                 ` : ""}
-                                <div class="setting dim-using-hue-gradient dim-during-seasonal" data-type="range" id="container-hue">
-                                    <button class="btn reset" onclick="_reset_item('hue')">${tl(trans.reset)}</button>
-                                    <div class="heading">
-                                        <h5>${tl(trans.hue)}</h5>
-                                    </div>
-                                    <div class="range">
-                                        <div class="track" id="slider-track-hue" data-id="hue"><div class="fill"></div><div class="nub"></div></div>
-                                        <input type="range" min="0" max="360" value="${settings.hue}" id="slider-hue" oninput="_update_item('hue', this.value)">
-                                        <p id="value-hue">${settings.hue}${settings_base.hue.unit}</p>
-                                        <div class="hint">
-                                            <p style="left: 0">0</p>
-                                            <p style="left: calc((255 / 360) * 100%)">255</p>
-                                            <p style="left: 100%">360</p>
-                                        </div>
-                                    </div>
-                                </div>
-                                <div class="setting dim-using-hue-gradient dim-during-seasonal" data-type="range" id="container-sat">
-                                    <button class="btn reset" onclick="_reset_item('sat')">${tl(trans.reset)}</button>
-                                    <div class="heading">
-                                        <h5>${tl(trans.sat)}</h5>
-                                    </div>
-                                    <div class="range">
-                                        <div class="track" id="slider-track-sat"><div class="fill"></div><div class="nub"></div></div>
-                                        <input type="range" min="0" max="1.5" value="${settings.sat}" step="0.025" id="slider-sat" oninput="_update_item('sat', this.value)">
-                                        <p id="value-sat">${settings.sat}${settings_base.sat.unit}</p>
-                                        <div class="hint">
-                                            <p style="left: 0">0</p>
-                                            <p style="left: calc((1 / 1.5) * 100%)">1</p>
-                                            <p style="left: 100%">1.5</p>
-                                        </div>
-                                    </div>
-                                </div>
-                                <div class="setting dim-using-hue-gradient dim-during-seasonal" data-type="range" id="container-lit">
-                                    <button class="btn reset" onclick="_reset_item('lit')">${tl(trans.reset)}</button>
-                                    <div class="heading">
-                                        <h5>${tl(trans.lit)}</h5>
-                                    </div>
-                                    <div class="range">
-                                        <div class="track" id="slider-track-lit"><div class="fill"></div><div class="nub"></div></div>
-                                        <input type="range" min="0" max="1.5" value="${settings.lit}" step="0.025" id="slider-lit" oninput="_update_item('lit', this.value)">
-                                        <p id="value-lit">${settings.lit}${settings_base.lit.unit}</p>
-                                        <div class="hint">
-                                            <p style="left: 0">0</p>
-                                            <p style="left: calc((1 / 1.5) * 100%)">1</p>
-                                            <p style="left: 100%">1.5</p>
-                                        </div>
-                                    </div>
-                                </div>
+                                ${hue_range = setting({ id: "hue" })}
+                                ${sat_range = setting({ id: "sat" })}
+                                ${lit_range = setting({ id: "lit" })}
                             </div>
                         </div>
                     `,
@@ -58278,12 +58241,24 @@
       type: "radio"
     },
     hue: {
+      css: "hue-user",
       default: 255,
-      type: "range"
+      type: "range",
+      min: 0,
+      max: 360,
+      step: 1,
+      title: trans.hue,
+      vertical: true
     },
     sat: {
+      css: "sat-user",
       default: 1,
-      type: "range"
+      type: "range",
+      min: 0,
+      max: 1,
+      step: 0.01,
+      title: trans.sat,
+      vertical: true
     },
     sat_bg: {
       css: "sat-bg",
@@ -58297,8 +58272,14 @@
       incompatible: [{ setting: "theme", value: "light" }]
     },
     lit: {
+      css: "lit-user",
       default: 1,
-      type: "range"
+      type: "range",
+      min: 0,
+      max: 1,
+      step: 0.01,
+      title: trans.lit,
+      vertical: true
     },
     gloss: {
       css: "gloss",

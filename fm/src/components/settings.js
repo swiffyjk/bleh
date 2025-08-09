@@ -112,8 +112,8 @@ export function setting({
 
             let working_max = settings_store[id].max - settings_store[id].min;
 
-            return html.node`
-                <div class="setting v2 ${standalone ? 'standalone' : ''}" data-type="range" disabled=${disabled} ref=${el => option = el} data-modified=${value != settings_store[id].default}>
+            const elem = html.node`
+                <div class="setting v2 ${standalone ? 'standalone' : ''} ${settings_store[id].vertical ? 'v' : ''}" data-type="range" disabled=${disabled} ref=${el => option = el} data-modified=${value != settings_store[id].default}>
                     ${(text) ? html.node`
                     <div class="heading">
                         <h5>${title}<button class="reset see-more" onclick=${() => reset_range(id, option, track, input, marker)}>${tl(trans.reset)}</button></h5>
@@ -137,7 +137,7 @@ export function setting({
                     ` : ''}
                     ${setting_incompatible_block(settings_store[id].incompatible)}
                     <div class="range">
-                        <div class="track" style="--percent: ${((value - settings_store[id].min) / working_max) * 100}%" ref=${el => track = el}>
+                        <div class="track" style="--percent: ${((value - settings_store[id].min) / working_max) * 100}%" data-id=${id} ref=${el => track = el}>
                             <div class="fill" />
                             <div class="nub" />
                         </div>
@@ -146,6 +146,13 @@ export function setting({
                     </div>
                 </div>
             `;
+
+            elem.set = (val) => {
+                input.value = val;
+                update_range(id, option, track, input, val, marker);
+            }
+
+            return elem;
         } else if (type === 'text') {
             let option;
 

@@ -594,12 +594,24 @@ export let settings_store = {
         type: 'radio'
     },
     hue: {
+        css: 'hue-user',
         default: 255,
-        type: 'range'
+        type: 'range',
+        min: 0,
+        max: 360,
+        step: 1,
+        title: trans.hue,
+        vertical: true
     },
     sat: {
+        css: 'sat-user',
         default: 1,
-        type: 'range'
+        type: 'range',
+        min: 0,
+        max: 1,
+        step: 0.01,
+        title: trans.sat,
+        vertical: true
     },
     sat_bg: {
         css: 'sat-bg',
@@ -613,8 +625,14 @@ export let settings_store = {
         incompatible: [{setting: 'theme', value: 'light'}]
     },
     lit: {
+        css: 'lit-user',
         default: 1,
-        type: 'range'
+        type: 'range',
+        min: 0,
+        max: 1,
+        step: 0.01,
+        title: trans.lit,
+        vertical: true
     },
     gloss: {
         css: 'gloss',
