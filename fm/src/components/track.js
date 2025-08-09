@@ -181,7 +181,7 @@ export function patch_titles(search=page.structure.main) {
                 }
             }
 
-            let is_active = track.classList.contains('chartlist-row--now-scrobbling');
+            const is_active = track.classList.contains('chartlist-row--now-scrobbling');
             const has_bar = track.querySelector(':scope > .chartlist-bar');
 
             // menu
@@ -312,7 +312,7 @@ export function patch_titles(search=page.structure.main) {
                             offset: [],
                             getReferenceClientRect: null,
                         });
-    
+
                         if (menu.state.isShown) {
                             menu.hide();
                         } else {
@@ -395,7 +395,7 @@ export function patch_titles(search=page.structure.main) {
                                             </form>
                                         `;
                                     }
-                                    
+
                                     return html.node`
                                         <form style="margin: 0" method="POST" action=${track.getAttribute('data-action')} data-edit-scrobble="">
                                             <input type="hidden" name="csrfmiddlewaretoken" value=${page.token}>
@@ -417,11 +417,11 @@ export function patch_titles(search=page.structure.main) {
                                         button.classList = 'dropdown-menu-clickable-item chibi';
                                         button.textContent = tl(trans.bulk_edit);
                                         button.setAttribute('data-type', 'bulk-edit');
-            
+
                                         tippy(button, {
                                             content: tl(trans.bulk_edit)
                                         });
-            
+
                                         return button;
                                     }}
                                 ` : ''}
@@ -431,16 +431,16 @@ export function patch_titles(search=page.structure.main) {
                             ${() => {
                                 let container = track.querySelector('.chartlist-play');
                                 if (!container) return;
-                                
+
                                 let button = container.querySelector('.chartlist-play-button');
                                 if (!button) return;
-                                
+
                                 button.classList = 'dropdown-menu-clickable-item';
                                 button.textContent = tl(trans.play);
                                 button.setAttribute('data-type', 'play');
-                                
+
                                 track.removeChild(container);
-            
+
                                 return button;
                             }}
                             ${!is_album ? html.node`
@@ -459,11 +459,11 @@ export function patch_titles(search=page.structure.main) {
                                             ${tl(trans.explore_in_library)}
                                         </a>
                                     `;
-                                    
+
                                     tippy(button, {
                                         content: tl(trans.explore_in_library)
                                     });
-                                    
+
                                     return button;
                                 }}
                             </div>
@@ -484,11 +484,11 @@ export function patch_titles(search=page.structure.main) {
                                             ${tl(trans.explore_in_library)}
                                         </a>
                                     `;
-    
+
                                     tippy(button, {
                                         content: tl(trans.explore_in_library)
                                     });
-    
+
                                     return button;
                                 }}
                             </div>
@@ -508,11 +508,11 @@ export function patch_titles(search=page.structure.main) {
                                             ${tl(trans.explore_in_library)}
                                         </a>
                                     `;
-    
+
                                     tippy(button, {
                                         content: tl(trans.explore_in_library)
                                     });
-    
+
                                     return button;
                                 }}
                             </div>
@@ -532,17 +532,17 @@ export function patch_titles(search=page.structure.main) {
                                             ${tl(trans.explore_in_library)}
                                         </a>
                                     `;
-    
+
                                     tippy(button, {
                                         content: tl(trans.explore_in_library)
                                     });
-    
+
                                     return button;
                                 }}
                             </div>
                             ${() => {
                                 if (!is_own_profile || is_album) return;
-                                
+
                                 return html.node`
                                     <form style="margin: 0" method="POST" action="${root}user/${auth.name}/obsessions" data-submit-to-modal="">
                                         <input type="hidden" name="csrfmiddlewaretoken" value=${page.token}>
@@ -556,28 +556,28 @@ export function patch_titles(search=page.structure.main) {
                             }}
                             ${() => {
                                 if (!is_own_profile || !can_delete) return;
-                                
+
                                 let button = html.node`
                                     <button class="dropdown-menu-clickable-item more-item--delete" data-type="delete">
                                         ${tl(trans.delete)}
                                     </button>
                                 `;
-                                
+
                                 let form;
-                                
+
                                 return html.node`
                                     <div class="sep" />
                                     <form ref=${el => form = el} style="margin: 0" method="POST" action="${root}user/${auth.name}/library/delete" onsubmit=${async (e) => {
                                         e.preventDefault();
-    
+
                                         let url = `${root}user/${auth.name}/library/delete`;
                                         let form_data = new FormData(form);
-    
+
                                         console.info(form_data);
-    
+
                                         try {
                                             track.setAttribute('data-ajax-form-state', 'deleted');
-                                            
+
                                             await fetch(url, {
                                                 method: 'POST',
                                                 body: form_data
@@ -587,9 +587,9 @@ export function patch_titles(search=page.structure.main) {
                                                     track.removeAttribute('data-ajax-form-state');
                                                     return;
                                                 }
-    
+
                                                 log('received response', 'form', 'info', {res: res});
-                                                
+
                                                 notify({
                                                     id: 'delete',
                                                     title: tl(trans.deleted),
@@ -656,7 +656,10 @@ export function patch_titles(search=page.structure.main) {
             }
 
 
-            if (!is_album && is_active) {
+            const show_album_text = is_active || settings.expand_tracks == 'always';
+            track.setAttribute('data-show-album-text', show_album_text);
+
+            if (!is_album && show_album_text) {
                 let image_wrap = track.querySelector('.chartlist-image');
                 if (image_wrap) {
                     let link = image_wrap.querySelector('.cover-art');
@@ -672,8 +675,7 @@ export function patch_titles(search=page.structure.main) {
                         `);
                     }
 
-                    if (!settings.colourful_tracks)
-                        return;
+                    if (!settings.colourful_tracks || !is_active) return;
 
                     image.setAttribute('crossorigin', 'anonymous');
                     try {

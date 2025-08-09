@@ -3291,6 +3291,20 @@ export const trans = {
         body: {
             en: 'Decide which branding source to use for the header'
         }
+    },
+    expand_tracks: {
+        name: {
+            en: 'Extend track height to show album text'
+        },
+        body: {
+            en: 'Increases the size of the track’s cover art to make room for it’s accompanying album'
+        }
+    },
+    expand_tracks_when_active: {
+        en: 'Only when actively scrobbling'
+    },
+    expand_tracks_always: {
+        en: 'Always when possible'
     }
 }
 

@@ -1139,6 +1139,7 @@ export function render_setting_page(page_id) {
                             <div class="info">
                                 <div class="title"></div>
                                 <div class="artist"></div>
+                                <div class="album"></div>
                             </div>
                             <div class="time"></div>
                         </div>
@@ -1147,6 +1148,7 @@ export function render_setting_page(page_id) {
                             <div class="info">
                                 <div class="title"></div>
                                 <div class="artist"></div>
+                                <div class="album"></div>
                             </div>
                             <div class="time"></div>
                         </div>
@@ -1155,6 +1157,7 @@ export function render_setting_page(page_id) {
                             <div class="info">
                                 <div class="title"></div>
                                 <div class="artist"></div>
+                                <div class="album"></div>
                             </div>
                             <div class="time"></div>
                         </div>
@@ -1163,6 +1166,7 @@ export function render_setting_page(page_id) {
                             <div class="info">
                                 <div class="title"></div>
                                 <div class="artist"></div>
+                                <div class="album"></div>
                             </div>
                             <div class="time"></div>
                         </div>
@@ -1170,6 +1174,7 @@ export function render_setting_page(page_id) {
                 </div>
                 <div class="setting-group">
                     ${setting({id: 'stacked_chartlist_info'})}
+                    ${setting({id: 'expand_tracks'})}
                     ${setting({id: 'show_bulk_edit_album'})}
                     ${setting({id: 'glacier_library_graphs'})}
                 </div>

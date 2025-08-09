@@ -1069,5 +1069,19 @@ export let settings_store = {
                 name: 'Last.fm'
             }
         }
+    },
+    expand_tracks: {
+        default: 'active',
+        type: 'radio',
+        title: trans.expand_tracks.name,
+        body: trans.expand_tracks.body,
+        values: {
+            active: {
+                name: trans.expand_tracks_when_active
+            },
+            always: {
+                name: trans.expand_tracks_always
+            }
+        }
     }
 }

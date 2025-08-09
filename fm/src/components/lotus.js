@@ -520,7 +520,8 @@ export function patch_header_title() {
                 `)}
             `);
 
-            if (song_tags.some(tag => tag.group === 'spotify')) page.suggest = sanitise(song_title.trim());
+            // (spotify) / (explicit) / (clean) in title
+            if (song_tags.some(tag => tag.group == 'form')) page.suggest = sanitise(song_title.trim());
 
             let song_artist_element = document.body.querySelector('span[itemprop="byArtist"]');
             let song_guests = formatted_title[3];

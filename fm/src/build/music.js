@@ -117,9 +117,6 @@ export let includes = {
         '(taylor', '- spotify singles',
         '(+'
     ],
-    spotify: [
-        '(spotify)'
-    ],
     remasters: [
         '- remaster', '(remaster'
     ],
@@ -172,7 +169,6 @@ export let includes = {
         '- music from', '(music from',
         '- skit', '(skit',
         '- original', '(original', '[original',
-        '[clean', '[explicit',
         '- deluxe', '(deluxe', '[deluxe',
         '- digital deluxe', '(digital deluxe', '[digital deluxe',
         '- complete edition', '(complete edition', '[complete edition',
@@ -189,5 +185,9 @@ export let includes = {
         '- 19', '- 20', '(19', '(20',
         '- 10th', '- 25th', '- 30th', '- 35th', '- 40th', '- 50th', '- 60th',
         '(10th', '(25th', '(30th', '(35th', '(40th', '(50th', '(60th'
+    ],
+    form: [
+        '[clean', '[explicit',
+        '(spotify)'
     ]
 }

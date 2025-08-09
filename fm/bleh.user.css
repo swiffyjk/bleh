@@ -6167,8 +6167,13 @@
                             left: calc(var(--chartlist-type) + 84px - 2px - 28px);
                         }
 
-                        &.chartlist-row--now-scrobbling {
+                        &[data-show-album-text="true"] {
                             /* 56px - 38px = 18px */
+                            .chartlist-image {
+                                width: 56px;
+                                height: 56px;
+                            }
+
                             .chartlist-name {
                                 margin-bottom: 32px;
                             }
@@ -6282,10 +6287,6 @@
             margin-top: unset;
             inset: unset !important;
         }
-    }
-    .chartlist-row--now-scrobbling .chartlist-image {
-        width: 56px;
-        height: 56px;
     }
     .chartlist-row[data-track-type="user"] .chartlist-image {
         border-radius: var(--avatar-radius) !important;
@@ -11947,6 +11948,13 @@
 
         h3.text-18 {
             display: none;
+        }
+
+        &.listen-profile-panel {
+            .listener-row {
+                margin-top: unset;
+                padding: var(--card-padding) 0 var(--card-gap);
+            }
         }
 
         .listener-row {
@@ -17940,18 +17948,29 @@
                     }
                 }
 
-                &.realtime {
-                    background-color: hsla(var(--h4), 10%);
-
+                [data-bleh--stacked_chartlist_info="true"] & {
                     .cover {
                         width: 34px;
                         height: 34px;
                     }
 
-                    [data-bleh--stacked_chartlist_info="true"] & {
-                        .album {
-                            display: block;
-                        }
+                    .album {
+                        display: block;
+                    }
+                }
+
+                &.realtime {
+                    background-color: hsla(var(--h4), 10%);
+                }
+
+                [data-bleh--expand_tracks="active"] &:not(.realtime) {
+                    .cover {
+                        width: 20px;
+                        height: 20px;
+                    }
+
+                    .album {
+                        display: none !important;
                     }
                 }
             }

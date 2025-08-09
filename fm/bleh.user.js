@@ -24577,9 +24577,6 @@
       "- spotify singles",
       "(+"
     ],
-    spotify: [
-      "(spotify)"
-    ],
     remasters: [
       "- remaster",
       "(remaster"
@@ -24717,8 +24714,6 @@
       "- original",
       "(original",
       "[original",
-      "[clean",
-      "[explicit",
       "- deluxe",
       "(deluxe",
       "[deluxe",
@@ -24772,6 +24767,11 @@
       "(40th",
       "(50th",
       "(60th"
+    ],
+    form: [
+      "[clean",
+      "[explicit",
+      "(spotify)"
     ]
   };
 
@@ -26921,7 +26921,7 @@
               insights.track.highest.value = value;
           }
         }
-        let is_active = track.classList.contains("chartlist-row--now-scrobbling");
+        const is_active = track.classList.contains("chartlist-row--now-scrobbling");
         const has_bar = track.querySelector(":scope > .chartlist-bar");
         let track_legacy_menu = track.querySelector(".chartlist-more-menu");
         let track_timestamp = track.querySelector(".chartlist-timestamp span");
@@ -27317,7 +27317,9 @@
           log(`pushed insight track label of ${track_title.getAttribute("data-name")}`, "glacier library", "log");
           insights.track.labels.push(track_title.getAttribute("data-name"));
         }
-        if (!is_album && is_active) {
+        const show_album_text = is_active || settings.expand_tracks == "always";
+        track.setAttribute("data-show-album-text", show_album_text);
+        if (!is_album && show_album_text) {
           let image_wrap = track.querySelector(".chartlist-image");
           if (image_wrap) {
             let link = image_wrap.querySelector(".cover-art");
@@ -27330,8 +27332,7 @@
                             </td>
                         `);
             }
-            if (!settings.colourful_tracks)
-              return;
+            if (!settings.colourful_tracks || !is_active) return;
             image2.setAttribute("crossorigin", "anonymous");
             try {
               image2.addEventListener("load", function() {
@@ -45424,6 +45425,7 @@
                             <div class="info">
                                 <div class="title"></div>
                                 <div class="artist"></div>
+                                <div class="album"></div>
                             </div>
                             <div class="time"></div>
                         </div>
@@ -45432,6 +45434,7 @@
                             <div class="info">
                                 <div class="title"></div>
                                 <div class="artist"></div>
+                                <div class="album"></div>
                             </div>
                             <div class="time"></div>
                         </div>
@@ -45440,6 +45443,7 @@
                             <div class="info">
                                 <div class="title"></div>
                                 <div class="artist"></div>
+                                <div class="album"></div>
                             </div>
                             <div class="time"></div>
                         </div>
@@ -45448,6 +45452,7 @@
                             <div class="info">
                                 <div class="title"></div>
                                 <div class="artist"></div>
+                                <div class="album"></div>
                             </div>
                             <div class="time"></div>
                         </div>
@@ -45455,6 +45460,7 @@
                 </div>
                 <div class="setting-group">
                     ${setting({ id: "stacked_chartlist_info" })}
+                    ${setting({ id: "expand_tracks" })}
                     ${setting({ id: "show_bulk_edit_album" })}
                     ${setting({ id: "glacier_library_graphs" })}
                 </div>
@@ -46922,7 +46928,7 @@
                     <div class="feat" data-bleh--tag-type=${tag.type} data-bleh--tag-group=${tag.group}>${tag.text}</div>
                 `)}
             `);
-          if (song_tags.some((tag) => tag.group === "spotify")) page.suggest = sanitise(song_title.trim());
+          if (song_tags.some((tag) => tag.group == "form")) page.suggest = sanitise(song_title.trim());
           let song_artist_element = document.body.querySelector('span[itemprop="byArtist"]');
           let song_guests = formatted_title[3];
           page.sister_others = formatted_title[3];
@@ -54582,6 +54588,20 @@
       body: {
         en: "Decide which branding source to use for the header"
       }
+    },
+    expand_tracks: {
+      name: {
+        en: "Extend track height to show album text"
+      },
+      body: {
+        en: "Increases the size of the track\u2019s cover art to make room for it\u2019s accompanying album"
+      }
+    },
+    expand_tracks_when_active: {
+      en: "Only when actively scrobbling"
+    },
+    expand_tracks_always: {
+      en: "Always when possible"
     }
   };
   var trans_legacy = {
@@ -58713,6 +58733,20 @@
         },
         lastfm: {
           name: "Last.fm"
+        }
+      }
+    },
+    expand_tracks: {
+      default: "active",
+      type: "radio",
+      title: trans.expand_tracks.name,
+      body: trans.expand_tracks.body,
+      values: {
+        active: {
+          name: trans.expand_tracks_when_active
+        },
+        always: {
+          name: trans.expand_tracks_always
         }
       }
     }
