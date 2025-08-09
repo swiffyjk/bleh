@@ -9306,6 +9306,15 @@
     [data-type="back"] {
         --mask: var(--icon-16-arrow-left);
     }
+    [data-type="general"] {
+        --mask: var(--icon-16-settings);
+    }
+    [data-type="visual"] {
+        --mask: var(--icon-16-themes);
+    }
+    [data-type="layout"] {
+        --mask: var(--icon-16-layout-manage);
+    }
     [data-type="update"] {
         --mask: var(--icon-16-update);
     }

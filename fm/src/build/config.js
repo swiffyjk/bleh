@@ -968,6 +968,11 @@ export let settings_store = {
         icon: 'icon-16-download',
         horizontal: true
     },
+    rabbit: {
+        default: true,
+        title: trans.use_quick_switcher.name,
+        body: trans.use_quick_switcher.body
+    },
     rabbit_search: {
         default: 'd',
         title: trans.search,
@@ -979,9 +984,9 @@ export let settings_store = {
         keybind: ['⌘', 'D'],
         warn_if_empty: true
     },
-    rabbit: {
+    rabbit_primary: {
         default: 'k',
-        title: trans.quick_switcher,
+        title: trans.open,
         type: 'text',
         min: 1,
         max: 1,

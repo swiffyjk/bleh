@@ -534,14 +534,20 @@ export const trans = {
         de: 'Top-Abzeichen',
         pt: 'Emblema superior'
     },
-    layout: {
-        en: 'Layout'
+    general: {
+        en: 'General'
+    },
+    interface: {
+        en: 'Interface'
     },
     music: {
         en: 'Music',
         de: 'Musik',
         pt: 'Música',
         ja: '音楽'
+    },
+    playback: {
+        en: 'Playback'
     },
     profile: {
         en: 'Profile',
@@ -1674,6 +1680,11 @@ export const trans = {
         en: 'by',
         de: 'von',
         pt: 'por'
+    },
+    by_user: {
+        en: 'by {u}',
+        de: 'von {u}',
+        pt: 'por {u}'
     },
     by_artist: {
         // {name} by {artist} - hence the space in english
@@ -2860,7 +2871,18 @@ export const trans = {
         en: 'Open the {v} for {t}'
     },
     quick_switcher: {
-        en: 'Switcher'
+        en: 'Quick switcher'
+    },
+    use_quick_switcher: {
+        name: {
+            en: 'Enable the quick switcher'
+        },
+        body: {
+            en: 'Make full use of your keyboard to navigate exactly where you want to be'
+        }
+    },
+    quick_switcher_keybinds: {
+        en: 'Change keybinds'
     },
     switch_placeholder: {
         en: 'Quick switch to a page or action'
@@ -3070,6 +3092,9 @@ export const trans = {
         body: {
             en: 'Decreases the intensity of animations, hover effects, and other moving parts'
         }
+    },
+    banners: {
+        en: 'Banners'
     },
     view_backgrounds_on: {
         en: 'View banners on'
@@ -3318,6 +3343,9 @@ export const trans = {
     },
     navigation_language: {
         en: 'Show option to change language'
+    },
+    branding: {
+        en: 'Branding'
     },
     branding_type: {
         name: {
