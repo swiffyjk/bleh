@@ -31952,7 +31952,7 @@
     page.structure.container.insertBefore(edit_header, page.structure.container.firstElementChild);
   }
   function patch_settings_profile_tab() {
-    let update_picture = document.getElementById("update-picture");
+    let update_picture = page.structure.main.querySelector("#update-picture");
     if (!update_picture) return;
     let token = document.body.querySelector('[name="csrfmiddlewaretoken"]').getAttribute("value");
     patch_settings_profile_panel(token, update_picture);
@@ -32295,11 +32295,14 @@
     });
   }
   function patch_settings_profile_panel(token, update_picture) {
-    if (update_picture.hasAttribute("data-kate-processed"))
-      return;
-    update_picture.setAttribute("data-kate-processed", "true");
     update_picture.classList.add("bleh--panel");
-    let avatar_url = document.body.querySelector(".image-upload-preview img").getAttribute("src");
+    const upload_form = update_picture.querySelector(".avatar-upload-form");
+    const avatar_url = update_picture.querySelector(".image-upload-preview img").getAttribute("src");
+    const upload_finished = update_picture.querySelector(".alert-success");
+    if (page.state.avatar_changer && upload_finished) {
+      const id = page.state.avatar_changer.getAttribute("data-modal-id");
+      dialog_rm({ id });
+    }
     let form_display_name = document.getElementById("id_full_name").value;
     let form_website = document.getElementById("id_homepage").value;
     let form_country = document.getElementById("id_country");
@@ -32308,12 +32311,12 @@
     let about;
     let preview;
     render(update_picture, html`
-       <h4>${tl(trans.profile)}</h4>
+        <h4>${tl(trans.profile)}</h4>
         <div class="banner-preview"></div>
         <div class="profile-container">
             <div class="avatar-side">
                 <div class="avatar image-upload-preview" onclick=${() => avatar2(token)}>
-                    <img src="${avatar_url}" alt="${tl(trans.your_avatar)}" loading="lazy">
+                    <img src=${avatar_url} alt=${tl(trans.your_avatar)} loading="lazy">
                     <div class="avatar-overlay"></div>
                 </div>
             </div>
@@ -32388,7 +32391,7 @@
                     </form>
                 </div>
             </div>
-        </div> 
+        </div>
     `);
     page.structure.main.removeChild(page.structure.main.querySelector("#update-profile"));
     tippy_esm_default(update_picture.querySelector(".markdown-enabled"), {
@@ -32471,6 +32474,11 @@
       console.info(e);
       if (!e.target.files || !e.target.files[0]) return;
       form = page.state.avatar_changer.querySelector(".bleh-modal-body");
+      if (e.target.files[0].type == "image/gif") {
+        save_avatar();
+        finish_saving_avatar();
+        return;
+      }
       let reader = new FileReader();
       reader.onload = function() {
         crop(reader.result);
@@ -32530,6 +32538,7 @@
                 </div>
             `
       });
+      page.state.avatar_changer = crop_dialog;
       crop_image.onload = () => {
         if (cropper && cropper.destroy) cropper.destroy();
         crop_image.style.maxWidth = "none";

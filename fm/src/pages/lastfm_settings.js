@@ -89,7 +89,7 @@ export function bleh_native_settings() {
 }
 
 function patch_settings_profile_tab() {
-    let update_picture = document.getElementById('update-picture');
+    let update_picture = page.structure.main.querySelector('#update-picture');
     if (!update_picture) return;
 
     // if we can continue, we are on profile tab
@@ -445,13 +445,16 @@ function patch_settings_charts_panel(token) {
 }
 
 function patch_settings_profile_panel(token, update_picture) {
-    if (update_picture.hasAttribute('data-kate-processed'))
-        return;
-
-    update_picture.setAttribute('data-kate-processed', 'true');
     update_picture.classList.add('bleh--panel');
 
-    let avatar_url = document.body.querySelector('.image-upload-preview img').getAttribute('src');
+    const upload_form = update_picture.querySelector('.avatar-upload-form');
+    const avatar_url = update_picture.querySelector('.image-upload-preview img').getAttribute('src');
+    const upload_finished = update_picture.querySelector('.alert-success');
+
+    if (page.state.avatar_changer && upload_finished) {
+        const id = page.state.avatar_changer.getAttribute('data-modal-id');
+        dialog_rm({id});
+    }
 
     let form_display_name = document.getElementById('id_full_name').value;
     let form_website = document.getElementById('id_homepage').value;
@@ -464,12 +467,12 @@ function patch_settings_profile_panel(token, update_picture) {
     let preview;
 
     render(update_picture, html`
-       <h4>${tl(trans.profile)}</h4>
+        <h4>${tl(trans.profile)}</h4>
         <div class="banner-preview"></div>
         <div class="profile-container">
             <div class="avatar-side">
                 <div class="avatar image-upload-preview" onclick=${() => avatar(token)}>
-                    <img src="${avatar_url}" alt="${tl(trans.your_avatar)}" loading="lazy">
+                    <img src=${avatar_url} alt=${tl(trans.your_avatar)} loading="lazy">
                     <div class="avatar-overlay"></div>
                 </div>
             </div>
@@ -544,7 +547,7 @@ function patch_settings_profile_panel(token, update_picture) {
                     </form>
                 </div>
             </div>
-        </div> 
+        </div>
     `);
 
     page.structure.main.removeChild(page.structure.main.querySelector('#update-profile'));
@@ -659,6 +662,12 @@ function avatar(token='') {
         if (!e.target.files || !e.target.files[0]) return;
         form = page.state.avatar_changer.querySelector('.bleh-modal-body');
 
+        if (e.target.files[0].type == 'image/gif') {
+            save_avatar();
+            finish_saving_avatar();
+            return;
+        }
+
         let reader = new FileReader();
         reader.onload = function () {
             crop(reader.result);
@@ -697,7 +706,7 @@ function avatar(token='') {
                     <button class="see-more cancel" onclick=${() => {
                         if (cropper && cropper.destroy) cropper.destroy();
                         cropper = null;
-                        
+
                         avatar();
                     }}>${tl(trans.cancel)}</button>
                     <div class="fill"></div>
@@ -710,26 +719,27 @@ function avatar(token='') {
                         });
 
                         const canvas = cropper.getCroppedCanvas();
-        
+
                         canvas.toBlob(blob => {
                             const cropped_file = new File([blob], 'avatar.png', {type: 'image/png'});
-        
+
                             const inner_form = form.querySelector('form');
                             inner_form.style.display = 'none';
                             crop_dialog.querySelector('.bleh-modal-body').appendChild(inner_form);
-        
+
                             const file_input = inner_form.querySelector('input[type="file"]');
-        
+
                             const data_transfer = new DataTransfer();
                             data_transfer.items.add(cropped_file);
                             file_input.files = data_transfer.files;
-        
+
                             inner_form.querySelector('#avatar_saver').click();
                         }, 'image/png');
                     }} ref=${el => save = el} disabled>${tl(trans.save)}</button>
                 </div>
             `
         });
+        page.state.avatar_changer = crop_dialog;
 
         crop_image.onload = () => {
             if (cropper && cropper.destroy) cropper.destroy();
