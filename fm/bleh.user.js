@@ -48101,8 +48101,8 @@
             <a class="btn mobile-control" aria-checked="${page.type == "user" && page.name == auth.name}" data-menu-item="profile_mobile" href="${root}user/${auth.name}">
                 ${auth.name}
             </a>
-            <a class="btn mobile-control" aria-checked="${page.type == "inbox"}" data-menu-item="notifications" href="${root}inbox/notifications">
-                ${tl(trans.inbox.name)}
+            <a class="btn mobile-control" aria-checked="${page.type == "inbox"}" data-type="inbox" href="${root}inbox/notifications">
+                ${tl(trans.inbox)}
                 ${inbox_count > 0 || notif_count > 0 ? html.node`<div class="notification-count-badge"></div>` : ""}
             </a>
             <a class="btn mobile-control" aria-checked="${page.type == "settings" || page.type == "bleh_settings"}" data-menu-item="settings" href="${root}bleh">
@@ -51522,8 +51522,8 @@
     },
     pt: {
       name: "Portugu\xEAs",
-      by: ["ArthRMH"],
-      last_updated: "2025-06-06"
+      by: ["ArthRMH", "fr0r"],
+      last_updated: "2025-08-10"
     }
   };
   var trans = {
@@ -51571,7 +51571,7 @@
         name: {
           en: "Staff",
           de: "Angestellter",
-          pt: "Administrador"
+          pt: "Equipe"
         },
         reason: {
           en: "Official member of Last.fm",
@@ -51611,7 +51611,7 @@
         name: {
           en: "Contributor",
           de: "Mitwirkender",
-          pt: "Contribuinte"
+          pt: "Contribuidor(a)"
         },
         reason: {
           en: "Has worked on bleh or bwaa",
@@ -51676,7 +51676,8 @@
       }
     },
     requires_higher_bleh_version: {
-      en: "Requires higher bleh version"
+      en: "Requires higher bleh version",
+      pt: "Requer a vers\xE3o mais recente do bleh"
     },
     home: {
       en: "Home",
@@ -51706,13 +51707,16 @@
       en: "You cannot leave shouts here"
     },
     failed_to_send: {
-      en: "Failed to send"
+      en: "Failed to send",
+      pt: "Falha ao enviar"
     },
     sent: {
-      en: "Sent"
+      en: "Sent",
+      pt: "Enviado"
     },
     single_shout: {
-      en: "viewing a single shout"
+      en: "viewing a single shout",
+      pt: "vendo uma mensagem"
     },
     about: {
       en: "About",
@@ -51720,7 +51724,8 @@
       pt: "Sobre"
     },
     no_about: {
-      en: "{u} is keeping quiet"
+      en: "{u} is keeping quiet",
+      pt: "{u} est\xE1 bem quietinho"
     },
     edit_wiki: {
       en: "Edit wiki",
@@ -51739,7 +51744,8 @@
       pt: "Atualizar"
     },
     refreshed: {
-      en: "Refreshed"
+      en: "Refreshed",
+      pt: "Atualizado"
     },
     refresh_tracks: {
       en: "Refresh tracks",
@@ -51747,7 +51753,8 @@
       pt: "Atualizar faixas"
     },
     unavailable: {
-      en: "Unavailable"
+      en: "Unavailable",
+      pt: "Indispon\xEDvel"
     },
     set_obsession: {
       en: "Obsess",
@@ -51880,7 +51887,8 @@
       pt: "{c} scrobbles"
     },
     new_scrobble: {
-      en: "New scrobble"
+      en: "New scrobble",
+      pt: "Novo scrobble"
     },
     artist: {
       en: "Artist",
@@ -52024,7 +52032,8 @@
       pt: "Emblema superior"
     },
     general: {
-      en: "General"
+      en: "General",
+      pt: "Geral"
     },
     interface: {
       en: "Interface"
@@ -52045,7 +52054,8 @@
       pl: "Profil"
     },
     current_season: {
-      en: "Current season"
+      en: "Current season",
+      pt: "Esta\xE7\xE3o atual"
     },
     seasonal: {
       name: {
@@ -52105,14 +52115,16 @@
     seasonal_timeline: {
       en: "Seasonal timeline",
       de: "Saisonale Zeitleiste",
-      pt: "Linha de tempo sazonal"
+      pt: "Linha do tempo sazonal"
     },
     enable_seasons: {
       name: {
-        en: "Automatically adapt to seasonal events"
+        en: "Automatically adapt to seasonal events",
+        pt: "Adaptar automaticamente a eventos sazonais"
       },
       body: {
-        en: "Adapts the default colour, iconset, and shows particles depending on the season"
+        en: "Adapts the default colour, iconset, and shows particles depending on the season",
+        pt: "Adapta a cor padr\xE3o, \xEDcones e exibe part\xEDculas dependendo da sazonalidade"
       }
     },
     seasonal_offset: {
@@ -52121,7 +52133,8 @@
       pt: "Eventos sazonais s\xE3o realizados em seu fuso hor\xE1rio, que calculamos como {offset}"
     },
     calculated_offset: {
-      en: "Calculated offset based on timezone"
+      en: "Calculated offset based on timezone",
+      pt: "Offset calculado com base no fuso hor\xE1rio"
     },
     started: {
       en: "Started",
@@ -52152,7 +52165,8 @@
       pt: "Avan\xE7ado"
     },
     recommendations: {
-      en: "Suggested"
+      en: "Suggested",
+      pt: "Sugest\xF5es"
     },
     releases: {
       en: "Releases",
@@ -52393,7 +52407,7 @@
     continue: {
       en: "Continue",
       de: "Fortsetzen",
-      pt: "Contiuar",
+      pt: "Continuar",
       pl: "Kontynuuj"
     },
     click_for_more_options: {
@@ -52431,7 +52445,8 @@
     },
     inbox: {
       en: "Inbox",
-      de: "Posteingang"
+      de: "Posteingang",
+      pt: "Caixa de entrada"
     },
     notifications: {
       en: "Notifications",
@@ -52460,7 +52475,7 @@
     find_on: {
       en: "Find on",
       de: "Finde auf",
-      pt: "Encontrar em"
+      pt: "Encontre em"
     },
     following: {
       en: "Following",
@@ -52484,7 +52499,7 @@
     overview: {
       en: "Overview",
       de: "\xDCbersicht",
-      pt: "Vis\xE3o Geral",
+      pt: "Vis\xE3o geral",
       ja: "\u30C0\u30A4\u30B8\u30A7\u30B9\u30C8"
     },
     photos: {
@@ -52496,12 +52511,12 @@
     artwork: {
       en: "Artwork",
       de: "Cover",
-      pt: "Arte de Capa"
+      pt: "Arte de capa"
     },
     similar_artists: {
       en: "Similar Artists",
       de: "\xC4hnliche K\xFCnstler*innen",
-      pt: "Artistas Similares"
+      pt: "Artistas similares"
     },
     biography: {
       en: "Biography",
@@ -52518,7 +52533,8 @@
       pt: "Ouvintes"
     },
     listeners_you_know: {
-      en: "Listeners You Know"
+      en: "Listeners You Know",
+      pt: "Ouvintes que voc\xEA conhece"
     },
     count_listeners: {
       en: "{c} listeners",
@@ -52583,7 +52599,7 @@
     recent_tracks: {
       en: "Recent Tracks",
       de: "K\xFCrzlich gespielte Titel",
-      pt: "Faixas Recentes",
+      pt: "Faixas recentes",
       ja: "\u6700\u8FD1\u306E\u30C8\u30E9\u30C3\u30AF"
     },
     top_artists: {
@@ -52605,12 +52621,14 @@
       ja: "\u4EBA\u6C17\u30C8\u30E9\u30C3\u30AF"
     },
     top_track: {
-      en: "Top Track"
+      en: "Top Track",
+      pt: "Top Faixa"
     },
     you_share_count_with: {
       // as in your musical taste between you and someone else
       // you are {percentage%} compatible (in taste) {list of artists}
       en: "You are {c} compatible",
+      pt: "Voce \xE9 {c} compat\xEDvel",
       one: {
         en: "{artist}"
       },
@@ -52693,13 +52711,16 @@
       pt: "Gerenciar apoio"
     },
     view: {
-      en: "View"
+      en: "View",
+      pt: "Ver"
     },
     profile_and_badges: {
-      en: "Profile, {c} badges"
+      en: "Profile, {c} badges",
+      pt: "Perfil, {c} emblemas"
     },
     current_version: {
-      en: "Current version"
+      en: "Current version",
+      pt: "Vers\xE3o atual"
     },
     labs: {
       en: "Labs"
@@ -52743,7 +52764,7 @@
     language: {
       en: "Language",
       de: "Sprache",
-      pt: "Linguagem"
+      pt: "Idioma"
     },
     symbol_presets: {
       // as in a selection of characters (symbols, text) that can
@@ -52829,16 +52850,20 @@
       pt: "Copiado para a \xE1rea de transfer\xEAncia"
     },
     click_to_copy: {
-      en: "Click to copy"
+      en: "Click to copy",
+      pt: "Clique para copiar"
     },
     wiki_standard_tracks: {
-      en: "Track titles should be wrapped in quotation marks \u201C \u201D"
+      en: "Track titles should be wrapped in quotation marks \u201C \u201D",
+      pt: "Os t\xEDtulos das faixas devem ser colocados entre aspas (\u201C \u201D)."
     },
     wiki_standard_artists: {
-      en: "Album and artist names are left without quotes"
+      en: "Album and artist names are left without quotes",
+      pt: "Os nomes dos \xE1lbuns e artistas n\xE3o devem ser colocados entre aspas."
     },
     wiki_standard_quotations: {
-      en: "Use \u2018 \u2019 for quotations from the artist or elsewhere"
+      en: "Use \u2018 \u2019 for quotations from the artist or elsewhere",
+      pt: "Use \u2018 \u2019 para cita\xE7\xF5es do artista ou de outras fontes."
     },
     activity: {
       en: "Activity",
@@ -53378,10 +53403,11 @@
     update_check: {
       en: "Check for updates",
       de: "Nach Updates suchen",
-      pt: "Buscar atualiza\xE7\xF5es"
+      pt: "Procurar atualiza\xE7\xF5es"
     },
     music_corrections: {
-      en: "Music corrections"
+      en: "Music corrections",
+      pt: "Corre\xE7\xF5es de m\xFAsica"
     },
     brand_version: {
       // used for the lotus header where:
@@ -53407,15 +53433,18 @@
         pt: "Corrigir t\xEDtulos com lotus"
       },
       body: {
-        en: "Re-capitalise artists, albums, and tracks based on community contributions"
+        en: "Re-capitalise artists, albums, and tracks based on community contributions",
+        pt: "Recapitalize artistas, \xE1lbuns e faixas com base nas contribui\xE7\xF5es da comunidade"
       }
     },
     prefer_no_redirect: {
       name: {
-        en: "Avoid artist redirects when navigating"
+        en: "Avoid artist redirects when navigating",
+        pt: "Evitar redirecionamentos de artistas ao navegar"
       },
       body: {
-        en: "Automatically adds +noredirect to artist links to avoid being sent to pages like Travi$ Scott"
+        en: "Automatically adds +noredirect to artist links to avoid being sent to pages like Travi$ Scott",
+        pt: "Adiciona automaticamente +noredirect em links de artistas para evitar ser redirecionado para p\xE1ginas como Travi$ Scott"
       }
     },
     view_all: {
@@ -53434,17 +53463,18 @@
       pt: "Deletar"
     },
     deleted: {
-      en: "Deleted"
+      en: "Deleted",
+      pt: "Deletado"
     },
     search: {
       en: "Search",
       de: "Suchen",
-      pt: "Pesquisa"
+      pt: "Pesquisar"
     },
     search_guest: {
       en: "Search guest appearances",
       de: "Suche nach Features",
-      pt: "Buscar participa\xE7\xF5es especiais"
+      pt: "Pesquisar participa\xE7\xF5es especiais"
     },
     anything_you_can_imagine: {
       // placeholder for your about me
@@ -53459,39 +53489,48 @@
       pt: "Suporta o Markdown",
       bold: {
         name: {
-          en: "Bold"
+          en: "Bold",
+          pt: "Negrito"
         },
         string: {
-          en: "**bold**"
+          en: "**bold**",
+          pt: "**negrito**"
         }
       },
       italics: {
         name: {
-          en: "Italics"
+          en: "Italics",
+          pt: "It\xE1lico"
         },
         string: {
-          en: "*slanted*"
+          en: "*slanted*",
+          pt: "*inclinado*"
         }
       },
       bold_italics: {
         name: {
-          en: "Bold italics"
+          en: "Bold italics",
+          pt: "Negrito it\xE1lico"
         },
         string: {
-          en: "***slanted but bold***"
+          en: "***slanted but bold***",
+          pt: "***inclinado, mas em negrito***"
         }
       },
       underlined: {
         name: {
-          en: "Underlined"
+          en: "Underlined",
+          pt: "Sublinhado"
         },
         string: {
-          en: "__underlined__"
+          en: "__underlined__",
+          pt: "__sublinhado__"
         }
       }
     },
     value_characters_max: {
-      en: "{v} characters max"
+      en: "{v} characters max",
+      pt: "m\xE1ximo de {v} caracteres"
     },
     profile_shortcut: {
       name: {
@@ -53699,10 +53738,12 @@
     },
     gloss: {
       name: {
-        en: "Apply gloss to album covers"
+        en: "Apply gloss to album covers",
+        pt: "Aplique relevo nas capas dos \xE1lbuns"
       },
       body: {
-        en: "Add a layer of shine to album covers globally"
+        en: "Add a layer of shine to album covers globally",
+        pt: "Adicione um toque de brilho em todas as capas de \xE1lbuns"
       }
     },
     grid_glow: {
@@ -53712,7 +53753,8 @@
         pt: "Refletir a cor abaixo dos itens da grade"
       },
       body: {
-        en: "Applies a glow below grid items based on the primary colour"
+        en: "Applies a glow below grid items based on the primary colour",
+        pt: "Aplica um brilho abaixo dos itens da grade com base na cor prim\xE1ria"
       }
     },
     skip_to: {
@@ -53809,7 +53851,8 @@
       pt: "Deletar {u} permanentemente"
     },
     other: {
-      en: "Other"
+      en: "Other",
+      pt: "Outro"
     },
     connect_app: {
       en: "Connect {name}",
@@ -53822,24 +53865,29 @@
       pt: "Conectar"
     },
     connected: {
-      en: "Connected"
+      en: "Connected",
+      pt: "Conectado"
     },
     not_connected: {
-      en: "Not connected"
+      en: "Not connected",
+      pt: "N\xE3o conectado"
     },
     api: {
       name: {
-        en: "Unlock additional API features"
+        en: "Unlock additional API features",
+        pt: "Desbloqueie recursos adicionais da API"
       },
       body: {
-        en: "Link your account to allow API access such as scrobbling"
+        en: "Link your account to allow API access such as scrobbling",
+        pt: "Conecte sua conta para permitir o acesso \xE0 API, como o scrobbling"
       },
       short: {
         en: "API"
       }
     },
     api_status: {
-      en: "API status"
+      en: "API status",
+      pt: "Status da API"
     },
     app_would_like_to_connect: {
       // app name is above
@@ -53853,7 +53901,8 @@
       pt: "Conectado como {user}"
     },
     not_logged_in: {
-      en: "Not logged in"
+      en: "Not logged in",
+      pt: "N\xE3o conectado"
     },
     ensure_you_trust: {
       // API applications
@@ -53864,7 +53913,8 @@
     },
     has_been_connected: {
       // app name is above
-      en: "has been connected"
+      en: "has been connected",
+      pt: "foi conectado"
     },
     you_can_now_close_this_tab: {
       en: "You can now close this tab",
@@ -53901,7 +53951,7 @@
       },
       preview: {
         en: "hello! **hello!** *hello!*\n[here\u2019s a link](https://katelyn.moe) HAII @evangelicgirl",
-        pt: "opa! **opa!** *opa!*\n[aqui est\xE1 um link](https://katelyn.moe) OIEE @evangelicgirl"
+        pt: "oi! **ol\xE1!** *opa!*\n[aqui est\xE1 um link](https://katelyn.moe) OIEE @evangelicgirl"
       }
     },
     gathering_your_plays: {
@@ -53949,11 +53999,11 @@
     },
     colours_explain: {
       en: "Choose a colour you like or make your own favourite.",
-      pt: "Escolha uma cor que voc\xEA goste ou crie a sua favorita"
+      pt: "Escolha uma cor que voc\xEA goste ou crie a sua favorita."
     },
     music_explain: {
       en: "We offer a variety of options to help you manage your music library.",
-      pt: "N\xF3s oferecemos uma variedade de op\xE7\xF5es para ajudar voc\xEA a gerenciar sua biblioteca musical"
+      pt: "N\xF3s oferecemos uma variedade de op\xE7\xF5es para ajudar voc\xEA a gerenciar sua biblioteca musical."
     },
     setup_end: {
       en: "That\u2019s all for now, to configure your bleh installation in the future head to {a}the settings{/a} in your menu!",
@@ -53991,10 +54041,12 @@
     },
     force_refresh_style: {
       name: {
-        en: "Force re-download styles"
+        en: "Force re-download styles",
+        pt: "For\xE7ar o re-download dos estilos"
       },
       body: {
-        en: "Deletes your current cache of the bleh stylesheet and retrieves the latest"
+        en: "Deletes your current cache of the bleh stylesheet and retrieves the latest",
+        pt: "Exclui o cache atual da folha de estilo do bleh e recupera a vers\xE3o mais recente"
       }
     },
     intended_for_development: {
@@ -54002,7 +54054,8 @@
         en: "This page is intended for development"
       },
       body: {
-        en: "Be careful with options here (especially feature flags) as they can break your install."
+        en: "Be careful with options here (especially feature flags) as they can break your install.",
+        pt: "Tenha cuidado com as op\xE7\xF5es aqui (especialmente com os flags de recursos), pois elas podem causar problemas na sua instala\xE7\xE3o."
       }
     },
     flags: {
@@ -54011,19 +54064,24 @@
     },
     manage_feature_flags: {
       // feature flags control features (like an option)
-      en: "Manage feature flags"
+      en: "Manage feature flags",
+      pt: "Gerenciar flags de recursos"
     },
     development: {
-      en: "Development"
+      en: "Development",
+      pt: "Desenvolvimento"
     },
     this_section_requires_password: {
-      en: "This section requires a password to view"
+      en: "This section requires a password to view",
+      pt: "Esta se\xE7\xE3o requer uma senha para ser visualizada"
     },
     enter_password: {
-      en: "Enter password"
+      en: "Enter password",
+      pt: "Digite a senha"
     },
     unlocked: {
-      en: "Unlocked"
+      en: "Unlocked",
+      pt: "Desbloqueado"
     },
     privacy: {
       en: "Privacy",
@@ -54038,7 +54096,7 @@
       },
       body: {
         en: "Keeps your activity more private",
-        pt: "Mantem sua atividade mais privada"
+        pt: "Mant\xE9m sua atividade mais privada"
       }
     },
     allow_messages_from: {
@@ -54098,7 +54156,7 @@
     },
     there_was_a_network_error: {
       en: "There was a network error",
-      pt: "Houve um erro de rede"
+      pt: "Ocorreu um erro de rede"
     },
     support: {
       en: "Support",
@@ -54130,10 +54188,12 @@
     },
     theme_loading: {
       name: {
-        en: "Disable loading of styles"
+        en: "Disable loading of styles",
+        pt: "Desative o carregamento de estilos"
       },
       body: {
-        en: "Allows you to load the stylesheet yourself during development"
+        en: "Allows you to load the stylesheet yourself during development",
+        pt: "Permite que voc\xEA mesmo carregue a folha de estilo enquanto desenvolve"
       }
     },
     upload: {
@@ -54145,10 +54205,12 @@
       pt: "Mudar foto de perfil"
     },
     crop_avatar: {
-      en: "Crop avatar"
+      en: "Crop avatar",
+      pt: "Recortar avatar"
     },
     crop_notice: {
-      en: "Use your scroll wheel to zoom in and out, click and drag to move the image."
+      en: "Use your scroll wheel to zoom in and out, click and drag to move the image.",
+      pt: "Use a scroll do seu mouse para dar zoom in e zoom out, clicar e arrastar para mover a imagem."
     },
     edit_profile_note: {
       en: "Edit profile note",
@@ -54197,14 +54259,15 @@
     },
     bulk_edit_extension: {
       en: "Last.fm Bulk Edit",
-      pt: "Edi\xE7\xE3o em Massa do Last.fm"
+      pt: "Edi\xE7\xE3o em massa do Last.fm"
     },
     collage: {
       en: "Collage",
       pt: "Colagem"
     },
     collage_redirect: {
-      en: "Redirected to bleh\u2019s built-in Collage feature"
+      en: "Redirected to bleh\u2019s built-in Collage feature",
+      pt: "Redirecionando ao recurso integrado de Colagem do bleh"
     },
     your_collage_is_ready: {
       en: "Your collage is ready!",
@@ -54231,10 +54294,12 @@
     },
     this_field_is_required: {
       // field as in a text box
-      en: "This field is required"
+      en: "This field is required",
+      pt: "Este campo \xE9 obrigat\xF3rio"
     },
     please_dont_clone_yourself: {
-      en: "Please don\u2019t clone yourself"
+      en: "Please don\u2019t clone yourself",
+      pt: "Por favor, n\xE3o se clone"
     },
     generate: {
       en: "Generate",
@@ -54256,13 +54321,16 @@
       pt: "Baixar"
     },
     downloaded: {
-      en: "Downloaded"
+      en: "Downloaded",
+      pt: "Baixado"
     },
     are_you_sure: {
-      en: "Are you sure?"
+      en: "Are you sure?",
+      pt: "Voc\xEA tem certeza?"
     },
     this_will_require_loading_count_pages: {
-      en: "This will require loading {c} pages"
+      en: "This will require loading {c} pages",
+      pt: "Isso requer carregar {c} p\xE1ginas"
     },
     chart_template_filename: {
       en: "{user} Collage ({timeframe}, Top {type}, {size}) - {brand}",
@@ -54274,92 +54342,118 @@
     },
     collage_title: {
       name: {
-        en: "Collage title"
+        en: "Collage title",
+        pt: "T\xEDtulo da colagem"
       },
       body: {
-        en: "Include a subtle header showing your username and settings you used"
+        en: "Include a subtle header showing your username and settings you used",
+        pt: "Inclua um cabe\xE7alho discreto mostrando seu nome de usu\xE1rio e as configura\xE7\xF5es que voc\xEA usou"
       }
     },
     collage_grid_text: {
-      en: "Show names on grid items"
+      en: "Show names on grid items",
+      pt: "Mostrar nomes nos itens da grade"
     },
     collage_grid_plays: {
-      en: "Show plays on grid items"
+      en: "Show plays on grid items",
+      pt: "Mostrar reprodu\xE7\xF5es nos itens da grade"
     },
     collage_grid_gap: {
       name: {
-        en: "Leave a gap between grid items"
+        en: "Leave a gap between grid items",
+        pt: "Deixe um espa\xE7o entre os itens da grade"
       },
       body: {
         en: "Includes outer and inner padding with round grid items"
       }
     },
     organising_plays: {
-      en: "Organising plays"
+      en: "Organising plays",
+      pt: "Organizando reprodu\xE7\xF5es"
     },
     update_not_looking_right: {
-      en: "Update in the tab that opens"
+      en: "Update in the tab that opens",
+      pt: "Atualizar na aba que se abre"
     },
     update_now: {
-      en: "Update now"
+      en: "Update now",
+      pt: "Atualizar agora"
     },
     ignore_for_now: {
-      en: "Ignore for now"
+      en: "Ignore for now",
+      pt: "Ignore por agora"
     },
     update_styles: {
-      en: "Update styles"
+      en: "Update styles",
+      pt: "Atualizar estilos"
     },
     you_have_theme_loading_disabled: {
-      en: "You disabled theme loading, so you need to update both separately"
+      en: "You disabled theme loading, so you need to update both separately",
+      pt: "Voc\xEA desativou o carregamento do tema, ent\xE3o precisa atualizar os dois separadamente"
     },
     downloading_styles: {
-      en: "Downloading styles"
+      en: "Downloading styles",
+      pt: "Baixando estilos"
     },
     style_warning: {
-      en: "You have style loading off! If you did this by accident, you can undo this"
+      en: "You have style loading off! If you did this by accident, you can undo this",
+      pt: "Voc\xEA desativou o carregamento de estilos! Se voc\xEA fez isso acidentalmente, pode desfazer essa a\xE7\xE3o"
     },
     re_enable_style_loading: {
-      en: "Re-enable style loading"
+      en: "Re-enable style loading",
+      pt: "Reativar carregamento de estilos"
     },
     made_with_love: {
       // lowercase in design
       en: "made with {h} by {u} and {c}contributors{/c}",
-      de: "kreiert mit {h} von {u} und {c}Mitwirkenden{/c}"
+      de: "kreiert mit {h} von {u} und {c}Mitwirkenden{/c}",
+      pt: "feito com {h} por {u} e {c}contribuidores{/c}"
     },
     love_lower: {
       // replaces the {h} in the above sentence
       // lowercase in design
-      en: "love"
+      en: "love",
+      pt: "amor"
     },
     view_source: {
-      en: "View source"
+      en: "View source",
+      pt: "Ver c\xF3digo"
     },
     report_issue: {
-      en: "Report issue"
+      en: "Report issue",
+      pt: "Relatar problema"
     },
     opens_your_value_settings: {
-      en: "Open your {v} settings"
+      en: "Open your {v} settings",
+      pt: "Abra suas op\xE7\xF5es de {v}"
     },
     opens_your_value: {
-      en: "Open your {v}"
+      en: "Open your {v}",
+      pt: "Abra seu {v}"
     },
     opens_the_value: {
-      en: "Open the {v}"
+      en: "Open the {v}",
+      pt: "Abra o {v}"
     },
     theme_picker: {
-      en: "Theme picker"
+      en: "Theme picker",
+      pt: "Seletor de temas"
     },
     changes_your_theme: {
-      en: "Changes your theme"
+      en: "Changes your theme",
+      pt: "Mude seu tema"
     },
     on_this_page: {
-      en: "On this page"
+      en: "On this page",
+      pt: "Nessa p\xE1gina"
     },
     use_current_page_as_context: {
-      en: "Use current page as context"
+      en: "Use current page as context",
+      pt: "Usar a p\xE1gina atual como contexto"
     },
     opens_the_value_for_type: {
-      en: "Open the {v} for {t}"
+      en: "Open the {v} for {t}",
+      pt: "Abra a {v} para {t}"
     },
     quick_switcher: {
       en: "Quick switcher"
@@ -54376,53 +54470,67 @@
       en: "Change keybinds"
     },
     switch_placeholder: {
-      en: "Quick switch to a page or action"
+      en: "Quick switch to a page or action",
+      pt: "Alternar rapidamente para uma p\xE1gina ou a\xE7\xE3o"
     },
     compares_your_taste: {
-      en: "Compare your taste with {v}"
+      en: "Compare your taste with {v}",
+      pt: "Compare o seu gosto com {v}"
     },
     select_an_option: {
-      en: "Select an option"
+      en: "Select an option",
+      pt: "Selecione uma op\xE7\xE3o"
     },
     nothing_matches_your_search: {
-      en: "Nothing matches your search"
+      en: "Nothing matches your search",
+      pt: "Nada corresponde \xE0 sua pesquisa"
     },
     create_a_collage: {
-      en: "Create a collage of your choosing"
+      en: "Create a collage of your choosing",
+      pt: "Crie uma colagem de sua escolha"
     },
     search_for_music_or_user: {
-      en: "Search for music or a user"
+      en: "Search for music or a user",
+      pt: "Pesquise por m\xFAsica ou usu\xE1rio"
     },
     search_for_value: {
-      en: "Search for {v}"
+      en: "Search for {v}",
+      pt: "Pesquise por {v}"
     },
     choose_a_search_type: {
-      en: "Choose a search type"
+      en: "Choose a search type",
+      pt: "Escolha um tipo de pesquisa"
     },
     finish_search: {
-      en: "Finish your search"
+      en: "Finish your search",
+      pt: "Finalize sua pesquisa"
     },
     view_count_more: {
       en: "View {c} more"
     },
     saved_to_bookmarks: {
-      en: "Saved to bookmarks"
+      en: "Saved to bookmarks",
+      pt: "Salvo nos marcadores"
     },
     bookmark_save_msg: {
-      en: "Find your bookmarks in your Home or {link}"
+      en: "Find your bookmarks in your Home or {link}",
+      pt: "Encontre seus marcadores na sua p\xE1gina inicial ou em {link}"
     },
     go_there_now_lower: {
       // in sentence above
-      en: "go there now"
+      en: "go there now",
+      pt: "vai l\xE1 agora"
     },
     always_remind_me: {
       en: "Always remind me"
     },
     edit_scrobble: {
-      en: "Edit scrobble"
+      en: "Edit scrobble",
+      pt: "Editar scrobble"
     },
     edit_scrobbles_in_bulk: {
-      en: "Edit scrobbles in bulk"
+      en: "Edit scrobbles in bulk",
+      pt: "Editar scrobbles em massa"
     },
     timeline: {
       en: "Timeline"
@@ -54440,7 +54548,8 @@
       en: "Starred"
     },
     report: {
-      en: "Report"
+      en: "Report",
+      pt: "Reportar"
     },
     auto: {
       en: "Auto"
@@ -54467,66 +54576,86 @@
       en: "Popular now"
     },
     updates: {
-      en: "Updates"
+      en: "Updates",
+      pt: "Atualiza\xE7\xF5es"
     },
     updated: {
-      en: "Updated"
+      en: "Updated",
+      pt: "Atualizado"
     },
     you_are_up_to_date: {
-      en: "You\u2019re up to date"
+      en: "You\u2019re up to date",
+      pt: "Voc\xEA est\xE1 atualizado"
     },
     update_available_to_install: {
-      en: "Update available to install"
+      en: "Update available to install",
+      pt: "Atualiza\xE7\xE3o dispon\xEDvel para instalar"
     },
     install_now: {
-      en: "Install now"
+      en: "Install now",
+      pt: "Instale agora"
     },
     check_for_updates: {
-      en: "Check for updates"
+      en: "Check for updates",
+      pt: "Verificar atualiza\xE7\xF5es"
     },
     check: {
-      en: "Check"
+      en: "Check",
+      pt: "Verificar"
     },
     last_checked_date: {
-      en: "Last checked {d}"
+      en: "Last checked {d}",
+      pt: "\xDAltima verifica\xE7\xE3o {d}"
     },
     never_checked: {
-      en: "Never checked"
+      en: "Never checked",
+      pt: "Nunca verificado"
     },
     get_updates_fast: {
       name: {
-        en: "Get the latest updates as soon as they\u2019re available"
+        en: "Get the latest updates as soon as they\u2019re available",
+        pt: "Receba as \xFAltimas atualiza\xE7\xF5es assim que estiverem dispon\xEDveis"
       },
       body: {
-        en: "Be among the first to get the latest fixes and improvements as they roll out"
+        en: "Be among the first to get the latest fixes and improvements as they roll out",
+        pt: "Seja um dos primeiros a receber as \xFAltimas corre\xE7\xF5es e melhorias assim que forem lan\xE7adas"
       }
     },
     pause_updates: {
-      en: "Pause updates"
+      en: "Pause updates",
+      pt: "Pausar atualiza\xE7\xF5es"
     },
     pause_updates_for: {
-      en: "Pause for 1 day"
+      en: "Pause for 1 day",
+      pt: "Pausar por 1 dia"
     },
     resume_updates: {
-      en: "Resume updates"
+      en: "Resume updates",
+      pt: "Resumir atualiza\xE7\xF5es"
     },
     updates_paused: {
-      en: "Updates paused"
+      en: "Updates paused",
+      pt: "Atualiza\xE7\xF5es pausadas"
     },
     paused_until_date: {
-      en: "Updates continue {d}"
+      en: "Updates continue {d}",
+      pt: "Atualiza\xE7\xF5es continuam {d}"
     },
     missing_updates: {
-      en: "Missing updates"
+      en: "Missing updates",
+      pt: "Atualiza\xE7\xF5es em falta"
     },
     you_are_running_version: {
-      en: "You are running version {v}"
+      en: "You are running version {v}",
+      pt: "Voc\xEA est\xE1 usando a vers\xE3o {v}"
     },
     you_are_installing_version: {
-      en: "You are installing version {v}"
+      en: "You are installing version {v}",
+      pt: "Voc\xEA est\xE1 instalando a vers\xE3o {v}"
     },
     checked_for_updates: {
-      en: "Checked for updates"
+      en: "Checked for updates",
+      pt: "Verificou por atualiza\xE7\xF5es"
     },
     select_all: {
       en: "Select all"
@@ -54551,10 +54680,12 @@
     },
     example: {
       en: "e.g. {v}",
-      de: "z.B. {v}"
+      de: "z.B. {v}",
+      pt: "ex.: {v}"
     },
     item_is_unavailable_on_platform: {
-      en: "\u2018{i}\u2019 is unavailable on {p}"
+      en: "\u2018{i}\u2019 is unavailable on {p}",
+      pt: "\u2018{i}\u2019 est\xE1 ind\xEDsponivel no {p}"
     },
     platforms: {
       win32: {
@@ -54573,7 +54704,8 @@
         en: "Linux"
       },
       other: {
-        en: "Unknown"
+        en: "Unknown",
+        pt: "Desconhecido"
       }
     },
     reduced_motion: {
@@ -54642,34 +54774,44 @@
       en: "Type a date manually"
     },
     red: {
-      en: "Red"
+      en: "Red",
+      pt: "Vermelho"
     },
     orange: {
-      en: "Orange"
+      en: "Orange",
+      pt: "Laranja"
     },
     yellow: {
-      en: "Yellow"
+      en: "Yellow",
+      pt: "Amarelo"
     },
     lime: {
-      en: "Lime"
+      en: "Lime",
+      pt: "Lima"
     },
     green: {
-      en: "Green"
+      en: "Green",
+      pt: "Verde"
     },
     aqua: {
-      en: "Aqua"
+      en: "Aqua",
+      pt: "\xC1gua"
     },
     blue: {
-      en: "Blue"
+      en: "Blue",
+      pt: "Azul"
     },
     purple: {
-      en: "Purple"
+      en: "Purple",
+      pt: "Roxo"
     },
     pink: {
-      en: "Pink"
+      en: "Pink",
+      pt: "Rosa"
     },
     grey: {
-      en: "Grey"
+      en: "Grey",
+      pt: "Cinza"
     },
     minis: {
       en: "Minis"
@@ -57878,21 +58020,21 @@
   });
   moment.updateLocale("pt", {
     relativeTime: {
-      future: "Em %s",
-      past: "Fazem %s",
-      s: "Alguns Segundos",
+      future: "em %s",
+      past: "h\xE1 %s",
+      s: "alguns segundos",
       ss: "%d segundos",
-      m: "Um minuto",
+      m: "um minuto",
       mm: "%d minutos",
-      h: "Uma hora",
+      h: "uma hora",
       hh: "%d horas",
-      d: "Um dia",
+      d: "um dia",
       dd: "%d dias",
-      w: "Uma semana",
+      w: "uma semana",
       ww: "%d semanas",
-      M: "Um m\xEAs",
+      M: "um m\xEAs",
       MM: "%d meses",
-      y: "Um ano",
+      y: "um ano",
       yy: "%d anos"
     }
   });

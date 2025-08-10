@@ -772,8 +772,8 @@ export function append_nav() {
             <a class="btn mobile-control" aria-checked="${page.type == 'user' && page.name == auth.name}" data-menu-item="profile_mobile" href="${root}user/${auth.name}">
                 ${auth.name}
             </a>
-            <a class="btn mobile-control" aria-checked="${page.type == 'inbox'}" data-menu-item="notifications" href="${root}inbox/notifications">
-                ${tl(trans.inbox.name)}
+            <a class="btn mobile-control" aria-checked="${page.type == 'inbox'}" data-type="inbox" href="${root}inbox/notifications">
+                ${tl(trans.inbox)}
                 ${(inbox_count > 0 || notif_count > 0) ? html.node`<div class="notification-count-badge"></div>` : ''}
             </a>
             <a class="btn mobile-control" aria-checked="${page.type == 'settings' || page.type == 'bleh_settings'}" data-menu-item="settings" href="${root}bleh">
