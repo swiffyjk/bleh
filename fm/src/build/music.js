@@ -194,7 +194,7 @@ export let includes = {
         '- expanded', '(expanded', '[expanded',
         '- anniversary', '(anniversary', '[anniversary',
         '- b-side', '- c-side', '(b-side', '(c-side',
-        '- lp', '- ep', '(lp', '(ep',
+        '- lp', '- ep', '(lp', '(ep', 'ep', // some albums just have EP on the end with no punctuation
         '- single', '(single',
         '- mixtape', '(mixtape',
         '- box set', '(box set',
