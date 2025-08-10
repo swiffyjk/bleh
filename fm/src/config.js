@@ -346,7 +346,7 @@ export function invoke_reload() {
     window.location.reload();
 }
 
-function update_colour_swatches() {
+export function update_colour_swatches() {
     let found = false;
     let custom = null;
     let seasonal = null;

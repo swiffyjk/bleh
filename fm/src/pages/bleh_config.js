@@ -16,7 +16,7 @@ import {dialog, dialog_rm} from "../components/dialog";
 import {correct_artist, correct_item_by_artist, name_includes} from '../components/lotus';
 import {markdown} from '../components/markdown';
 import {notify} from "../components/notify";
-import {create_settings_template, load_settings, refresh_all, update_params} from "../config";
+import {create_settings_template, load_settings, refresh_all, update_colour_swatches, update_params} from "../config";
 import {version} from "../main";
 import {update_page} from "../page";
 import {seasonal_timer_end, seasonal_timer_start} from "../seasonal";
@@ -548,8 +548,8 @@ export function render_setting_page(page_id) {
             </section>
         `);
 
-        show_theme_change_in_settings();
         display_colour_presets();
+        update_colour_swatches();
     } else if (page_id == 'interface') {
         if (!page.state.quick_access_items) {
             setTimeout(() => {
@@ -1232,6 +1232,9 @@ export function render_setting_page(page_id) {
                 </div>
             </section>
         `);
+
+        init_profile_notes();
+        activity_preview();
     } else if (page_id == 'accessibility') {
         register_skip_to([]);
 
@@ -1503,18 +1506,8 @@ export function change_settings_page(page_id, setting = null) {
         `);
     }
 
-    if (page_id == 'customise' || page_id == 'performance' || page_id == 'accessibility' || page_id == 'text' || page_id == 'seasonal' || page_id == 'music' || page_id == 'activities') {
+    if (page_id == 'seasonal') {
         refresh_all();
-    } else if (page_id == 'profiles') {
-        init_profile_notes();
-        activity_preview();
-        refresh_all();
-    }
-
-    if (page_id == 'music') {
-        tippy(document.getElementById('container-show_bulk_edit_album'), {
-            content: trans_legacy.en.settings.music.show_bulk_edit_album.require
-        });
     }
 
     if ((page_id == 'seasonal') && settings.seasonal && stored_season.id != 'none' && stored_season.start && stored_season.end) {
@@ -1530,7 +1523,7 @@ export function change_settings_page(page_id, setting = null) {
     }
 
     if (setting != null) {
-        let setting_container = document.body.querySelector(`#container-${setting}`);
+        let setting_container = page.structure.main.querySelector(`.setting[data-id="${setting}"]`);
 
         if (setting_container != null) {
             let y = setting_container.getBoundingClientRect().top + window.scrollY - 300;
@@ -1542,35 +1535,6 @@ export function change_settings_page(page_id, setting = null) {
     }
 }
 
-export function show_theme_change_in_settings(theme = '') {
-    if (theme != '')
-        settings.theme = theme;
-
-    let btns = document.querySelectorAll('.theme-item');
-    btns.forEach((btn) => {
-        console.log(btn.getAttribute('data-bleh-theme'),settings.theme);
-        if (btn.getAttribute('data-bleh-theme') != settings.theme) {
-            btn.classList.remove('active');
-        } else {
-            btn.classList.add('active');
-        }
-    });
-}
-export function show_theme_change_in_menu(theme = '', element = document.body) {
-    if (theme != '')
-        settings.theme = theme;
-
-    let btns = element.querySelectorAll('.theme-item-in-menu');
-    btns.forEach((btn) => {
-        console.log(btn.getAttribute('data-bleh-theme'),settings.theme);
-        if (btn.getAttribute('data-bleh-theme') != settings.theme) {
-            btn.classList.remove('active');
-        } else {
-            btn.classList.add('active');
-        }
-    });
-}
-
 
 export function load_skus() {
     for (let flag in version.feature_flags) {
@@ -1578,40 +1542,6 @@ export function load_skus() {
 
         if (settings.feature_flags[flag] != null)
             current_state = settings.feature_flags[flag];
-
-        document.documentElement.setAttribute(`data-ff--${flag}`, current_state);
-    }
-}
-
-function bleh_sku_page() {
-    let flags_container = document.getElementById('feature-flags');
-
-    for (let flag in version.feature_flags) {
-        let current_state = version.feature_flags[flag].default;
-
-        if (settings.feature_flags[flag] != undefined)
-            current_state = settings.feature_flags[flag];
-
-        let feature_flag_element = document.createElement('div');
-        feature_flag_element.classList.add('setting');
-        feature_flag_element.setAttribute('data-type', 'toggle');
-        feature_flag_element.setAttribute('onclick', `_update_flag_toggle('${flag}', this)`);
-        render(feature_flag_element, html`
-            <div class="heading">
-                <h5>${version.feature_flags[flag].name}</h5>
-                ${(version.feature_flags[flag].notice) ? html.node`<p>${{html: version.feature_flags[flag].notice}}</p>` : ''}
-                <div class="info-row">
-                    <div class="new-badge flag-${version.feature_flags[flag].default}">${version.feature_flags[flag].default}</div><p class="date">${version.feature_flags[flag].date}</p><p>${flag}</p>
-                </div>
-            </div>
-            <div class="toggle-wrap">
-                <button id="feature-flag-toggle-${flag}" class="toggle" aria-checked="${current_state}">
-                    <div class="dot"></div>
-                </button>
-            </div>
-        `);
-
-        flags_container.appendChild(feature_flag_element);
 
         document.documentElement.setAttribute(`data-ff--${flag}`, current_state);
     }
@@ -1826,7 +1756,7 @@ export function display_colour_presets() {
                                             warn_if_empty: true
                                         })}
                                         <button class="btn primary icon convert" onclick=${() => {
-                                            const value = colour.querySelector('input').value;
+                                            const value = colour.value();
                                             const hsl = hex_to_hsl(value);
 
                                             hue_range.set(hsl.h);
@@ -1836,9 +1766,9 @@ export function display_colour_presets() {
                                     </div>
                                 </div>
                                 ` : ''}
-                                ${hue_range = setting({id: 'hue'})}
-                                ${sat_range = setting({id: 'sat'})}
-                                ${lit_range = setting({id: 'lit'})}
+                                ${hue_range = setting({id: 'hue', func: update_colour_swatches})}
+                                ${sat_range = setting({id: 'sat', func: update_colour_swatches})}
+                                ${lit_range = setting({id: 'lit', func: update_colour_swatches})}
                             </div>
                         </div>
                     `,
@@ -1895,7 +1825,25 @@ export function display_colour_presets() {
                         trigger: 'click',
 
                         onShow(instance) {
-                            let content = instance.popper.querySelector('.tippy-content');
+                            const content = instance.popper.querySelector('.tippy-content');
+
+                            render(content, html`
+                                ${exclusives[stored_season.id].forEach(colour => {
+                                    colour.sets = {accent_type: colour.type, ...colour.sets};
+
+                                    if (!colour.displays) colour.displays = colour.sets;
+
+                                    return html.node`
+                                        <button class="dropdown-menu-clickable-item" aria-checked=${colour.displays.hue == settings.hue && colour.displays.sat == settings.sat && colour.displays.lit} onclick=${() => {
+                                            hue_range.set(colour.displays.hue);
+                                            sat_range.set(colour.displays.sat);
+                                            lit_range.set(colour.displays.lit);
+                                        }} style="--hue-over: ${colour.displays.hue}; --sat-over: ${colour.displays.sat}; --lit-over: ${colour.displays.lit}">
+                                            ${colour.name}
+                                        </button>
+                                    `;
+                                })}
+                            `);
 
                             display_seasonal_exclusives(content, colours, exclusives);
                         }
@@ -1912,32 +1860,6 @@ export function display_colour_presets() {
             swatch_group.appendChild(swatch);
         });
     }
-}
-
-function display_seasonal_exclusives(instance, colours, exclusives) {
-    instance.innerHTML = '';
-
-    exclusives[stored_season.id].forEach((colour) => {
-        colour.sets = {accent_type: colour.type, ...colour.sets};
-
-        if (!colour.displays) colour.displays = colour.sets;
-
-        let item = document.createElement('button');
-        item.classList.add('dropdown-menu-clickable-item', 'swatch');
-        item.setAttribute('data-swatch-type', colour.type);
-        item.textContent = colour.name;
-
-        item.setAttribute('onclick', `_update_params(${JSON.stringify(colour.sets)})`);
-
-        item.style.setProperty('--hue-over', colour.displays.hue);
-        item.style.setProperty('--sat-over', colour.displays.sat);
-        item.style.setProperty('--lit-over', colour.displays.lit);
-
-        if (colour.displays.hue == settings.hue && colour.displays.sat == settings.sat && colour.displays.lit)
-            item.setAttribute('aria-checked', 'true');
-
-        instance.appendChild(item);
-    });
 }
 
 

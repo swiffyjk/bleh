@@ -116,7 +116,7 @@ export function setting({
                 <div class="setting v2 ${standalone ? 'standalone' : ''} ${settings_store[id].vertical ? 'v' : ''}" data-type="range" disabled=${disabled} ref=${el => option = el} data-modified=${value != settings_store[id].default}>
                     ${(text) ? html.node`
                     <div class="heading">
-                        <h5>${title}<button class="reset see-more" onclick=${() => reset_range(id, option, track, input, marker)}>${tl(trans.reset)}</button></h5>
+                        <h5>${title}<button class="reset see-more" onclick=${() => reset_range()}>${tl(trans.reset)}</button></h5>
                         ${(body) ? html.node`<p>${body}</p>` : ''}
                     </div>
                     ` : ''}
@@ -141,15 +141,36 @@ export function setting({
                             <div class="fill" />
                             <div class="nub" />
                         </div>
-                        <input type="range" min=${min} max=${max} step=${step} value=${value} ref=${el => input = el} oninput=${() => update_range(id, option, track, input, input.value, marker)} />
+                        <input type="range" min=${min} max=${max} step=${step} value=${value} ref=${el => input = el} oninput=${() => update_range(input.value)} />
                         <p class="value-marker" ref=${el => marker = el}>${value}${settings_store[id].suffix || ''}</p>
                     </div>
                 </div>
             `;
 
             elem.set = (val) => {
+                update_range(val);
+            }
+
+            const max_range = max - min;
+
+            function update_range(val) {
                 input.value = val;
-                update_range(id, option, track, input, val, marker);
+                track.style.setProperty('--percent', `${((val - settings_store[id].min) / max_range) * 100}%`);
+                marker.textContent = `${val}${settings_store[id].suffix || ''}`;
+
+                option.setAttribute('data-modified', val != settings_store[id].default);
+
+                save_setting(id, val);
+                if (func) func(val);
+            }
+            function reset_range() {
+                update_range(settings_store[id].default);
+                notify({
+                    id: 'reset_setting',
+                    title: tl(trans.settings),
+                    body: tl(trans.reset_item_to_default),
+                    icon: 'icon-16-settings'
+                });
             }
 
             return elem;
@@ -531,27 +552,6 @@ function update_toggle(id, toggle) {
     toggle.setAttribute('aria-checked', !value);
 
     save_setting(id, !value);
-}
-
-function update_range(id, option, track, input, value, marker, silent = false) {
-    let max = settings_store[id].max - settings_store[id].min;
-
-    input.value = value;
-    track.style.setProperty('--percent', `${((value - settings_store[id].min) / max) * 100}%`);
-    marker.textContent = `${value}${settings_store[id].suffix || ''}`;
-
-    option.setAttribute('data-modified', value != settings_store[id].default);
-
-    save_setting(id, value);
-}
-function reset_range(id, option, track, range, marker) {
-    update_range(id, option, track, range, settings_store[id].default, marker, true);
-    notify({
-        id: 'reset_setting',
-        title: tl(trans.settings),
-        body: tl(trans.reset_item_to_default),
-        icon: 'icon-16-settings'
-    });
 }
 
 function update_text(id, input, submit, option, value, reset_btn, avatar, silent = false) {

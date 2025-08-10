@@ -608,7 +608,7 @@ export let settings_store = {
         default: 1,
         type: 'range',
         min: 0,
-        max: 1,
+        max: 2,
         step: 0.01,
         title: trans.sat,
         vertical: true
@@ -629,7 +629,7 @@ export let settings_store = {
         default: 1,
         type: 'range',
         min: 0,
-        max: 1,
+        max: 1.5,
         step: 0.01,
         title: trans.lit,
         vertical: true
