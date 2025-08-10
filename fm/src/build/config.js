@@ -1075,5 +1075,15 @@ export let settings_store = {
                 name: trans.expand_tracks_always
             }
         }
+    },
+    rain: {
+        default: false,
+        title: trans.rain.name,
+        body: trans.rain.body
+    },
+    collage_centered: {
+        default: true,
+        title: trans.collage_centered.name,
+        body: trans.collage_centered.body
     }
 }

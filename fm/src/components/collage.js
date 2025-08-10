@@ -157,10 +157,10 @@ export function collage({
                     <input type="text" class="input" ref=${el => inputter = el} placeholder=${tl(trans.enter_a_profile)} value=${page.requested.profile} onchange=${e => {
                         page.requested.profile = e.target.value;
                         page.name = page.requested.profile;
-                        
+
                         page.avatar = '';
                         if (page.name == auth.name) page.avatar = auth.avatar;
-                        
+
                         render(user, html`
                             ${render_user(page.name, page.avatar, user, true)}
                         `);
@@ -172,33 +172,34 @@ export function collage({
                                 inputter.dispatchEvent(new Event('change'));
                             }}>${tl(trans.profile)}</button>
                         `;
-                        
+
                         tippy(btn, {
                             content: tl(trans.profile)
                         });
-                        
+
                         return btn;
                     }}
                     ${() => {
                         let btn = html.node`
                             <button class="btn chibi icon" data-type="profile_shortcut" onclick=${() => {
                                 if (settings.profile_shortcut == '') return;
-                                
+
                                 inputter.value = settings.profile_shortcut;
                                 inputter.dispatchEvent(new Event('change'));
                             }}>${tl(trans.profile_shortcut.name)}</button>
                         `;
-                        
+
                         tippy(btn, {
                             content: tl(trans.profile_shortcut.name)
                         });
-                        
+
                         return btn;
                     }}
                 </div>
             </div>
             ${setting({id: 'collage_title'})}
             ${setting({id: 'collage_grid_gap'})}
+            ${setting({id: 'collage_centered'})}
             ${setting({id: 'collage_grid_text'})}
             ${setting({id: 'collage_grid_plays'})}
         </div>
@@ -328,7 +329,7 @@ export function collage({
         }
 
         let grid = html.node`
-            <ol class="grid-items grid-items--numbered collage-grid" style="--width: ${width_input.value}; --height: ${height_input.value}" data-width=${width_input.value} data-height=${height_input.value} />
+            <ol class="grid-items grid-items--numbered collage-grid" style="--width: ${width_input.value}; --height: ${height_input.value}" data-width=${width_input.value} data-height=${height_input.value} data-centered=${settings.collage_centered} />
         `;
 
         if (!settings.collage_grid_gap) {

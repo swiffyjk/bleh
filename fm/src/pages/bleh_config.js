@@ -4,7 +4,7 @@
 // Licensed under GPLv3
 //
 
-import {settings, settings_base} from "../build/config";
+import {settings} from "../build/config";
 import {album_track_corrections, artist_corrections} from "../build/music";
 import {api_key, auth, page, root, theme_preview} from "../build/page";
 import {stored_season} from "../build/seasonal";
@@ -16,7 +16,7 @@ import {dialog, dialog_rm} from "../components/dialog";
 import {correct_artist, correct_item_by_artist, name_includes} from '../components/lotus';
 import {markdown} from '../components/markdown';
 import {notify} from "../components/notify";
-import {create_settings_template, load_settings, refresh_all, update_colour_swatches, update_params} from "../config";
+import {load_settings, refresh_all, update_colour_swatches} from "../config";
 import {version} from "../main";
 import {update_page} from "../page";
 import {seasonal_timer_end, seasonal_timer_start} from "../seasonal";
@@ -544,6 +544,12 @@ export function render_setting_page(page_id) {
                 </div>
                 <div class="setting-group">
                     ${setting({id: 'avatar_radius'})}
+                </div>
+            </section>
+            <section class="bleh--panel">
+                <h4>${tl(trans.other)}</h4>
+                <div class="setting-group">
+                    ${setting({id: 'rain'})}
                 </div>
             </section>
         `);
@@ -1169,18 +1175,6 @@ export function render_setting_page(page_id) {
                             <div class="btn primary-selection" id="toggle-default_avatar_action-gallery" data-toggle="default_avatar_action" data-toggle-value="gallery" onclick="_update_item('default_avatar_action', 'gallery')">
                                 <h5>${tl(trans.photos)}</h5>
                             </div>
-                        </div>
-                    </div>
-                    <div class="setting" data-type="toggle" id="container-rain" onclick="_update_item('rain')">
-                        <button class="btn reset" onclick="_reset_item('rain')">${tl(trans.reset)}</button>
-                        <div class="heading">
-                            <h5>${trans_legacy.en.settings.customise.rain.name}</h5>
-                            <p>${trans_legacy.en.settings.customise.rain.bio}</p>
-                        </div>
-                        <div class="toggle-wrap">
-                            <button class="toggle" id="toggle-rain" aria-checked="true">
-                                <div class="dot"></div>
-                            </button>
                         </div>
                     </div>
                 </div>
@@ -2083,33 +2077,10 @@ unsafeWindow._reset_settings = function() {
 
 unsafeWindow._confirm_reset = function() {
     for (var member in settings) delete settings[member];
-    Object.assign(settings, create_settings_template());
     load_settings(true);
 
     dialog_rm({
         id: 'reset_settings'
-    });
-}
-
-unsafeWindow._save_font = function() {
-    let font = document.getElementById('text-font').value;
-
-    document.body.style.setProperty(`--${settings_base.font.css}`, font);
-    document.documentElement.setAttribute(`data-bleh--font`, font);
-
-    // save to settings
-    settings.font = font;
-    localStorage.setItem('bleh', JSON.stringify(settings));
-}
-
-unsafeWindow._convert_hex = function() {
-    let value = page.structure.main.querySelector('#text-hex').value;
-    let hsl = hex_to_hsl(value);
-
-    update_params({
-        hue: hsl.h,
-        sat: clamp_sat((hsl.s / 100) * 3),
-        lit: (hsl.l / 100) + 0.35
     });
 }
 
@@ -2405,73 +2376,61 @@ function activity_preview_new(parent, activity) {
 }
 
 export function theme_bubbles() {
-    let bubbles = html.node`
-        <div class="theme-bubbles" />
-    `;
+    const themes = [
+        {
+            id: 'auto',
+            name: tl(trans.auto),
+            hide: !ff('auto_theme'),
+            new_release: true
+        },
+        {
+            id: 'glass',
+            type: 'light',
+            name: tl(trans.glass),
+            hide: !ff('glass'),
+            new_release: true
+        },
+        {
+            id: 'light',
+            type: 'light',
+            name: tl(trans.themes.light)
+        },
+        {
+            id: 'ink',
+            type: 'light',
+            name: tl(trans.themes.ink)
+        },
+        {
+            id: 'dark',
+            formal: 'ash',
+            type: 'dark',
+            name: tl(trans.themes.dark)
+        },
+        {
+            id: 'darker',
+            formal: 'dark',
+            type: 'darker',
+            name: tl(trans.themes.darker)
+        },
+        {
+            id: 'oled',
+            formal: 'void',
+            type: 'oled',
+            name: tl(trans.themes.oled)
+        }
+    ];
 
-    render_theme_bubbles();
+    let buttons = [];
 
-    return bubbles;
-
-    function update_theme_bubble(theme) {
-        save_setting('theme', theme);
-        render_theme_bubbles();
-    }
-
-    function render_theme_bubbles() {
-        let themes = [
-            {
-                id: 'auto',
-                name: tl(trans.auto),
-                hide: !ff('auto_theme'),
-                new_release: true
-            },
-            {
-                id: 'glass',
-                type: 'light',
-                name: tl(trans.glass),
-                hide: !ff('glass'),
-                new_release: true
-            },
-            {
-                id: 'light',
-                type: 'light',
-                name: tl(trans.themes.light)
-            },
-            {
-                id: 'ink',
-                type: 'light',
-                name: tl(trans.themes.ink)
-            },
-            {
-                id: 'dark',
-                formal: 'ash',
-                type: 'dark',
-                name: tl(trans.themes.dark)
-            },
-            {
-                id: 'darker',
-                formal: 'dark',
-                type: 'darker',
-                name: tl(trans.themes.darker)
-            },
-            {
-                id: 'oled',
-                formal: 'void',
-                type: 'oled',
-                name: tl(trans.themes.oled)
-            }
-        ];
-
-        render(bubbles, html``); // fixes weird lighterhtml crash
-        render(bubbles, html`
+    const bubbles = html.node`
+        <div class="theme-bubbles">
             ${themes.map(theme => {
                 if (theme.hide) return html.node``;
 
                 if (!theme.formal) theme.formal = theme.id;
 
-                let bubble = html.node`
-                    <button class="theme-bubble" aria-selected=${settings.theme == theme.id} onclick=${() => update_theme_bubble(theme.id)}>
+                const bubble = html.node`
+                    <button class="theme-bubble" data-theme-id="${theme.id}" aria-selected=${settings.theme == theme.id} onclick=${() => update_theme_bubble(theme.id)}>
                         <div class="bubble">
                             <div class="inner theme-preview" data-bleh--theme=${theme.id} data-bleh--theme_type=${theme.type}>
                                 <div class="bleh-icon" data-type="theme_${theme.formal}" />
@@ -2494,8 +2453,22 @@ export function theme_bubbles() {
                     delay: [500, 0]
                 });
 
+                buttons.push(bubble);
+
                 return bubble;
             })}
-        `);
+        </div>
+    `;
+
+    return bubbles;
+
+    function update_theme_bubble(theme) {
+        save_setting('theme', theme);
+
+        buttons.forEach(button => {
+            const type = button.getAttribute('data-theme-id');
+
+            button.setAttribute('aria-selected', settings.theme == type);
+        });
     }
 }

@@ -15,6 +15,7 @@ import {markdown, markdown_prompt} from "../components/markdown";
 import {html, render} from "lighterhtml";
 import tippy from "tippy.js";
 import Cropper from "cropperjs";
+import { setting } from '../components/settings';
 
 let cropper;
 
@@ -552,6 +553,9 @@ function patch_settings_profile_panel(token, update_picture) {
                     </form>
                 </div>
             </div>
+        </div>
+        <div class="setting-group">
+            ${setting({id: 'avatar_radius'})}
         </div>
     `);
 

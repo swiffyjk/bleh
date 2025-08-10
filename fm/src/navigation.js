@@ -10,7 +10,6 @@ import {stored_season} from "./build/seasonal";
 import {lang, tl, trans, trans_legacy} from "./build/trans";
 import {create_badge, load_badges} from "./components/badge";
 import {version} from "./main";
-import {show_theme_change_in_menu} from "./pages/bleh_config";
 import {ff} from "./sku";
 import {html, render} from "lighterhtml";
 import {news} from "./news.js";

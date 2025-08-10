@@ -2878,6 +2878,14 @@ export const trans = {
             en: 'Includes outer and inner padding with round grid items'
         }
     },
+    collage_centered: {
+        name: {
+            en: 'Center info on grid items'
+        },
+        body: {
+            en: 'Similar to the look of other collage solutions'
+        }
+    },
     organising_plays: {
         en: 'Organising plays',
         pt: 'Organizando reproduções'
@@ -3512,6 +3520,14 @@ export const trans = {
     },
     expand_tracks_always: {
         en: 'Always when possible'
+    },
+    rain: {
+        name: {
+            en: 'Enable rainfall'
+        },
+        body: {
+            en: 'Immerse yourself in soothing visual rain'
+        }
     }
 }
 

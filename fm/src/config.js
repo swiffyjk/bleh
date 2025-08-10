@@ -11,14 +11,9 @@ import {stored_season} from "./build/seasonal";
 import {tl, trans} from "./build/trans";
 import {chart_reflow, load_chart_colours} from "./chart";
 import {notify} from "./components/notify";
-import {load_skus, show_theme_change_in_menu, show_theme_change_in_settings} from "./pages/bleh_config";
+import {load_skus} from "./pages/bleh_config";
 import {bleh_glacier_date_graph_generate} from "./pages/glacier";
 import {save_setting} from "./components/settings.js";
-
-// create blank settings
-export function create_settings_template() {
-    return {dev: false};
-}
 
 // load settings
 export function load_settings(skip = false) {
