@@ -63,16 +63,12 @@ export function load_settings(skip = false) {
     for (let setting in settings) {
         if (
             (setting == 'hue' || setting == 'sat' || setting == 'lit') &&
-            settings.hue == settings_base.hue.value &&
-            settings.sat == settings_base.sat.value &&
-            settings.lit == settings_base.lit.value
+            settings.hue == settings_store.hue.default &&
+            settings.sat == settings_store.sat.default &&
+            settings.lit == settings_store.lit.default
         ) continue;
 
-        try {
-            document.body.style.setProperty(`--${settings_base[setting].css}`, `${settings[setting]}${settings_base[setting].unit}`);
-        } catch(e) {
-            log(`information for ${setting} not accessible`, 'settings', 'log');
-        }
+        if (settings_store[setting] && settings_store[setting].css) document.body.style.setProperty(`--${settings_store[setting].css}`, `${settings[setting]}${settings_store[setting].suffix || ''}`);
         document.documentElement.setAttribute(`data-bleh--${setting}`, `${settings[setting]}`);
     }
 

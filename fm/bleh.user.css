@@ -20059,7 +20059,12 @@
     .taste-badge,
     .new-badge {
         display: inline-flex;
+
+        font-size: calc(var(--font-size) - 1px);
+        background: hsl(var(--k4), 40%);
         color: hsl(var(--l3-c));
+        padding: 0 4px;
+        border-radius: var(--item-small-radius);
 
         font-weight: var(--font-weight-medium);
 

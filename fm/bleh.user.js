@@ -27228,11 +27228,17 @@
                             </div>
                             ${() => {
                 if (!is_own_profile || is_album) return;
+                let name2 = track.getAttribute("data-track-name");
+                let artist = track.getAttribute("data-artist-name");
+                if (!name2) {
+                  name2 = track_title.getAttribute("data-name");
+                  artist = track_artist;
+                }
                 return html.node`
                                     <form style="margin: 0" method="POST" action="${root}user/${auth.name}/obsessions" data-submit-to-modal="">
                                         <input type="hidden" name="csrfmiddlewaretoken" value=${page.token}>
-                                        <input type="hidden" name="name" value=${track.getAttribute("data-track-name")}>
-                                        <input type="hidden" name="artist_name" value=${track.getAttribute("data-artist-name")}>
+                                        <input type="hidden" name="name" value=${name2}>
+                                        <input type="hidden" name="artist_name" value=${artist}>
                                         <button class="dropdown-menu-clickable-item" data-type="obsession">
                                             ${tl(trans.obsess)}
                                         </button>
@@ -30069,12 +30075,8 @@
     if (settings.font_weight_bold == 730)
       settings.font_weight_bold = settings_store.font_weight_bold.default;
     for (let setting2 in settings) {
-      if ((setting2 == "hue" || setting2 == "sat" || setting2 == "lit") && settings.hue == settings_base.hue.value && settings.sat == settings_base.sat.value && settings.lit == settings_base.lit.value) continue;
-      try {
-        document.body.style.setProperty(`--${settings_base[setting2].css}`, `${settings[setting2]}${settings_base[setting2].unit}`);
-      } catch (e) {
-        log(`information for ${setting2} not accessible`, "settings", "log");
-      }
+      if ((setting2 == "hue" || setting2 == "sat" || setting2 == "lit") && settings.hue == settings_store.hue.default && settings.sat == settings_store.sat.default && settings.lit == settings_store.lit.default) continue;
+      if (settings_store[setting2] && settings_store[setting2].css) document.body.style.setProperty(`--${settings_store[setting2].css}`, `${settings[setting2]}${settings_store[setting2].suffix || ""}`);
       document.documentElement.setAttribute(`data-bleh--${setting2}`, `${settings[setting2]}`);
     }
     load_skus();
@@ -31502,8 +31504,7 @@
         create_profile_top_item(profile_header, {
           name: page.name,
           type: "minis",
-          link: `${root}bleh/minis`,
-          new_release: true
+          link: `${root}bleh/minis`
         });
       } else {
         create_profile_top_item(profile_header, {
@@ -44950,6 +44951,22 @@
       display_colour_presets();
       update_colour_swatches();
     } else if (page_id == "interface") {
+      let chartlist_bar2 = function(value, max2) {
+        let count_bar = html.node`
+                <div class="chartlist-count-bar">
+                    <a class="chartlist-count-bar-link">
+                        <span class="chartlist-count-bar-slug" data-max-stat-value="${max2}" data-stat-value="${value}" style="width: ${max2 / max2 * 100}%" />
+                        <span class="chartlist-count-bar-value">${value.toLocaleString(lang)}</span>
+                    </a>
+                </div>
+            `;
+        let parsed_scrobble_as_rank = parse_scrobbles_as_rank(value);
+        count_bar.setAttribute("data-bleh--scrobble-milestone", parsed_scrobble_as_rank.milestone);
+        count_bar.style.setProperty("--hue-over", parsed_scrobble_as_rank.hue);
+        count_bar.style.setProperty("--sat-over", parsed_scrobble_as_rank.sat);
+        count_bar.style.setProperty("--lit-over", parsed_scrobble_as_rank.lit);
+        return count_bar;
+      };
       if (!page.state.quick_access_items) {
         setTimeout(() => {
           render_setting_page("interface");
@@ -44958,6 +44975,7 @@
         return;
       }
       register_skip_to([]);
+      let bars2;
       render(page.structure.main, html`
             <section class="bleh--panel">
                 <h4>${tl(trans.tracklist)}</h4>
@@ -45014,6 +45032,21 @@
                     ${setting({ id: "stacked_chartlist_info" })}
                     ${setting({ id: "expand_tracks" })}
                     ${setting({ id: "show_bulk_edit_album" })}
+                </div>
+            </section>
+            <section class="bleh--panel">
+                <div class="inner-preview pad">
+                    <div class="bars" ref=${(el) => bars2 = el}>
+                        ${() => {
+        let max2 = 3e4;
+        for (let value = 1e3; value <= max2; value += 1e3) {
+          bars2.appendChild(chartlist_bar2(value, max2));
+        }
+      }}
+                    </div>
+                </div>
+                <div class="setting-group">
+                    ${setting({ id: "colourful_counts" })}
                 </div>
             </section>
             ${!page.mobile ? html.node`
@@ -45113,23 +45146,6 @@
             </section>
         `);
     } else if (page_id == "playback") {
-      let chartlist_bar2 = function(value, max2) {
-        let count_bar = html.node`
-                <div class="chartlist-count-bar">
-                    <a class="chartlist-count-bar-link">
-                        <span class="chartlist-count-bar-slug" data-max-stat-value="${max2}" data-stat-value="${value}" style="width: ${max2 / max2 * 100}%" />
-                        <span class="chartlist-count-bar-value">${value.toLocaleString(lang)}</span>
-                    </a>
-                </div>
-            `;
-        let parsed_scrobble_as_rank = parse_scrobbles_as_rank(value);
-        count_bar.setAttribute("data-bleh--scrobble-milestone", parsed_scrobble_as_rank.milestone);
-        count_bar.style.setProperty("--hue-over", parsed_scrobble_as_rank.hue);
-        count_bar.style.setProperty("--sat-over", parsed_scrobble_as_rank.sat);
-        count_bar.style.setProperty("--lit-over", parsed_scrobble_as_rank.lit);
-        return count_bar;
-      };
-      let bars2;
       render(page.structure.main, html`
             <section class="bleh--panel">
                 <h4>${tl(trans.music_corrections)}</h4>
@@ -45221,21 +45237,6 @@
                     ${setting({ id: "show_guest_features" })}
                     ${setting({ id: "show_remaster_tags" })}
                     ${setting({ id: "glacier_library_graphs" })}
-                </div>
-            </section>
-            <section class="bleh--panel">
-                <div class="inner-preview pad">
-                    <div class="bars" ref=${(el) => bars2 = el}>
-                        ${() => {
-        let max2 = 3e4;
-        for (let value = 1e3; value <= max2; value += 1e3) {
-          bars2.appendChild(chartlist_bar2(value, max2));
-        }
-      }}
-                    </div>
-                </div>
-                <div class="setting-group">
-                    ${setting({ id: "colourful_counts" })}
                 </div>
             </section>
         `);
@@ -59069,12 +59070,14 @@
       ],
       type: "list",
       title: trans.navigation_items.name,
-      body: trans.navigation_items.body
+      body: trans.navigation_items.body,
+      new_release: true
     },
     navigation_language: {
       default: true,
       type: "checkbox",
-      title: trans.navigation_language
+      title: trans.navigation_language,
+      new_release: true
     },
     branding_type: {
       default: "bleh",
@@ -59088,7 +59091,8 @@
         lastfm: {
           name: "Last.fm"
         }
-      }
+      },
+      new_release: true
     },
     expand_tracks: {
       default: "active",
@@ -59102,7 +59106,8 @@
         always: {
           name: trans.expand_tracks_always
         }
-      }
+      },
+      new_release: true
     },
     rain: {
       default: false,
@@ -59112,7 +59117,8 @@
     collage_centered: {
       default: true,
       title: trans.collage_centered.name,
-      body: trans.collage_centered.body
+      body: trans.collage_centered.body,
+      new_release: true
     }
   };
 

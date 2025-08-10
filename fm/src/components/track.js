@@ -543,11 +543,20 @@ export function patch_titles(search=page.structure.main) {
                             ${() => {
                                 if (!is_own_profile || is_album) return;
 
+                                let name = track.getAttribute('data-track-name');
+                                let artist = track.getAttribute('data-artist-name');
+
+                                if (!name) {
+                                    // now playing
+                                    name = track_title.getAttribute('data-name');
+                                    artist = track_artist;
+                                }
+
                                 return html.node`
                                     <form style="margin: 0" method="POST" action="${root}user/${auth.name}/obsessions" data-submit-to-modal="">
                                         <input type="hidden" name="csrfmiddlewaretoken" value=${page.token}>
-                                        <input type="hidden" name="name" value=${track.getAttribute('data-track-name')}>
-                                        <input type="hidden" name="artist_name" value=${track.getAttribute('data-artist-name')}>
+                                        <input type="hidden" name="name" value=${name}>
+                                        <input type="hidden" name="artist_name" value=${artist}>
                                         <button class="dropdown-menu-clickable-item" data-type="obsession">
                                             ${tl(trans.obsess)}
                                         </button>

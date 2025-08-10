@@ -567,6 +567,28 @@ export function render_setting_page(page_id) {
 
         register_skip_to([]);
 
+        function chartlist_bar(value, max) {
+            let count_bar = html.node`
+                <div class="chartlist-count-bar">
+                    <a class="chartlist-count-bar-link">
+                        <span class="chartlist-count-bar-slug" data-max-stat-value="${max}" data-stat-value="${value}" style="width: ${(max / max) * 100}%" />
+                        <span class="chartlist-count-bar-value">${value.toLocaleString(lang)}</span>
+                    </a>
+                </div>
+            `;
+
+            let parsed_scrobble_as_rank = parse_scrobbles_as_rank(value);
+
+            count_bar.setAttribute('data-bleh--scrobble-milestone', parsed_scrobble_as_rank.milestone);
+            count_bar.style.setProperty('--hue-over', parsed_scrobble_as_rank.hue);
+            count_bar.style.setProperty('--sat-over', parsed_scrobble_as_rank.sat);
+            count_bar.style.setProperty('--lit-over', parsed_scrobble_as_rank.lit);
+
+            return count_bar;
+        }
+
+        let bars;
+
         render(page.structure.main, html`
             <section class="bleh--panel">
                 <h4>${tl(trans.tracklist)}</h4>
@@ -623,6 +645,22 @@ export function render_setting_page(page_id) {
                     ${setting({id: 'stacked_chartlist_info'})}
                     ${setting({id: 'expand_tracks'})}
                     ${setting({id: 'show_bulk_edit_album'})}
+                </div>
+            </section>
+            <section class="bleh--panel">
+                <div class="inner-preview pad">
+                    <div class="bars" ref=${el => bars = el}>
+                        ${() => {
+                            let max = 30_000;
+
+                            for (let value = 1_000; value <= max; value += 1_000) {
+                                bars.appendChild(chartlist_bar(value, max));
+                            }
+                        }}
+                    </div>
+                </div>
+                <div class="setting-group">
+                    ${setting({id: 'colourful_counts'})}
                 </div>
             </section>
             ${!page.mobile ? html.node`
@@ -722,28 +760,6 @@ export function render_setting_page(page_id) {
             </section>
         `);
     } else if (page_id == 'playback') {
-        function chartlist_bar(value, max) {
-            let count_bar = html.node`
-                <div class="chartlist-count-bar">
-                    <a class="chartlist-count-bar-link">
-                        <span class="chartlist-count-bar-slug" data-max-stat-value="${max}" data-stat-value="${value}" style="width: ${(max / max) * 100}%" />
-                        <span class="chartlist-count-bar-value">${value.toLocaleString(lang)}</span>
-                    </a>
-                </div>
-            `;
-
-            let parsed_scrobble_as_rank = parse_scrobbles_as_rank(value);
-
-            count_bar.setAttribute('data-bleh--scrobble-milestone', parsed_scrobble_as_rank.milestone);
-            count_bar.style.setProperty('--hue-over', parsed_scrobble_as_rank.hue);
-            count_bar.style.setProperty('--sat-over', parsed_scrobble_as_rank.sat);
-            count_bar.style.setProperty('--lit-over', parsed_scrobble_as_rank.lit);
-
-            return count_bar;
-        }
-
-        let bars;
-
         render(page.structure.main, html`
             <section class="bleh--panel">
                 <h4>${tl(trans.music_corrections)}</h4>
@@ -835,22 +851,6 @@ export function render_setting_page(page_id) {
                     ${setting({id: 'show_guest_features'})}
                     ${setting({id: 'show_remaster_tags'})}
                     ${setting({id: 'glacier_library_graphs'})}
-                </div>
-            </section>
-            <section class="bleh--panel">
-                <div class="inner-preview pad">
-                    <div class="bars" ref=${el => bars = el}>
-                        ${() => {
-                            let max = 30_000;
-
-                            for (let value = 1_000; value <= max; value += 1_000) {
-                                bars.appendChild(chartlist_bar(value, max));
-                            }
-                        }}
-                    </div>
-                </div>
-                <div class="setting-group">
-                    ${setting({id: 'colourful_counts'})}
                 </div>
             </section>
         `);

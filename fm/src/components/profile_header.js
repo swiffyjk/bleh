@@ -180,8 +180,7 @@ export function redesign_profile_header(is_own_profile, is_following) {
             create_profile_top_item(profile_header, {
                 name: page.name,
                 type: 'minis',
-                link: `${root}bleh/minis`,
-                new_release: true
+                link: `${root}bleh/minis`
             });
         } else {
             create_profile_top_item(profile_header, {
