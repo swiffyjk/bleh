@@ -125,8 +125,7 @@ export let includes = {
     ],
     remasters: [
         '- remaster', '(remaster', '[remaster',
-        '- remasterizado', '(remasterizado', '[remasterizado',
-        '- remastered', '(remastered', '[remastered'
+        '- remasterizado', '(remasterizado', '[remasterizado'
     ],
     mixes: [
         '- devonshire mix', '(devonshire mix',
