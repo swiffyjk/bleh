@@ -33,7 +33,7 @@ export let lang_info = {
     pt: {
         name: 'Português',
         by: ['ArthRMH', 'fr0r'],
-        last_updated:  '2025-08-09'
+        last_updated:  '2025-08-10'
     }
 }
 
@@ -187,7 +187,8 @@ export const trans = {
         }
     },
     requires_higher_bleh_version: {
-        en: 'Requires higher bleh version'
+        en: 'Requires higher bleh version',
+        pt: 'Requer a versão mais recente do bleh'
     },
     home: {
         en: 'Home',
@@ -542,7 +543,8 @@ export const trans = {
         pt: 'Emblema superior'
     },
     general: {
-        en: 'General'
+        en: 'General',
+        pt: 'Geral'
     },
     interface: {
         en: 'Interface'
@@ -563,7 +565,8 @@ export const trans = {
         pl: 'Profil'
     },
     current_season: {
-        en: 'Current season'
+        en: 'Current season',
+        pt: 'Estação atual'
     },
     seasonal: {
         name: {
@@ -953,7 +956,8 @@ export const trans = {
     },
     inbox: {
         en: 'Inbox',
-        de: 'Posteingang'
+        de: 'Posteingang',
+        pt: 'Caixa de entrada'
     },
     notifications: {
         en: 'Notifications',
@@ -982,7 +986,7 @@ export const trans = {
     find_on: {
         en: 'Find on',
         de: 'Finde auf',
-        pt: 'Encontrar em'
+        pt: 'Encontre em'
     },
     following: {
         en: 'Following',
@@ -1006,7 +1010,7 @@ export const trans = {
     overview: {
         en: 'Overview',
         de: 'Übersicht',
-        pt: 'Visão Geral',
+        pt: 'Visão geral',
         ja: 'ダイジェスト'
     },
     photos: {
@@ -1018,12 +1022,12 @@ export const trans = {
     artwork: {
         en: 'Artwork',
         de: 'Cover',
-        pt: 'Arte de Capa'
+        pt: 'Arte de capa'
     },
     similar_artists: {
         en: 'Similar Artists',
         de: 'Ähnliche Künstler*innen',
-        pt: 'Artistas Similares'
+        pt: 'Artistas similares'
     },
     biography: {
         en: 'Biography',
@@ -1041,7 +1045,7 @@ export const trans = {
     },
     listeners_you_know: {
         en: 'Listeners You Know',
-        pt: 'Ouvintes Que Você Conhece'
+        pt: 'Ouvintes que você conhece'
     },
     count_listeners: {
         en: '{c} listeners',
@@ -1106,7 +1110,7 @@ export const trans = {
     recent_tracks: {
         en: 'Recent Tracks',
         de: 'Kürzlich gespielte Titel',
-        pt: 'Faixas Recentes',
+        pt: 'Faixas recentes',
         ja: '最近のトラック'
     },
     top_artists: {
@@ -1128,12 +1132,14 @@ export const trans = {
         ja: '人気トラック'
     },
     top_track: {
-        en: 'Top Track'
+        en: 'Top Track',
+        pt: 'Top Faixa'
     },
     you_share_count_with: {
         // as in your musical taste between you and someone else
         // you are {percentage%} compatible (in taste) {list of artists}
         en: 'You are {c} compatible',
+        pt: 'Voce é {c} compatível',
         one: {
             en: '{artist}'
         },
@@ -1938,15 +1944,18 @@ export const trans = {
             pt: 'Corrigir títulos com lotus'
         },
         body: {
-            en: 'Re-capitalise artists, albums, and tracks based on community contributions'
+            en: 'Re-capitalise artists, albums, and tracks based on community contributions',
+            pt: 'Recapitalize artistas, álbuns e faixas com base nas contribuições da comunidade'
         }
     },
     prefer_no_redirect: {
         name: {
-            en: 'Avoid artist redirects when navigating'
+            en: 'Avoid artist redirects when navigating',
+            pt: 'Evitar redirecionamentos de artistas ao navegar'
         },
         body: {
-            en: 'Automatically adds +noredirect to artist links to avoid being sent to pages like Travi$ Scott'
+            en: 'Automatically adds +noredirect to artist links to avoid being sent to pages like Travi$ Scott',
+            pt: 'Adiciona automaticamente +noredirect em links de artistas para evitar ser redirecionado para páginas como Travi$ Scott'
         }
     },
     view_all: {
@@ -1991,34 +2000,42 @@ export const trans = {
         pt: 'Suporta o Markdown',
         bold: {
             name: {
-                en: 'Bold'
+                en: 'Bold',
+                pt: 'Negrito'
             },
             string: {
-                en: '**bold**'
+                en: '**bold**',
+                pt: '**negrito**'
             }
         },
         italics: {
             name: {
-                en: 'Italics'
+                en: 'Italics',
+                pt: 'Itálico'
             },
             string: {
-                en: '*slanted*'
+                en: '*slanted*',
+                pt: '*inclinado*'
             }
         },
         bold_italics: {
             name: {
-                en: 'Bold italics'
+                en: 'Bold italics',
+                pt: 'Negrito itálico'
             },
             string: {
-                en: '***slanted but bold***'
+                en: '***slanted but bold***',
+                pt: '***inclinado, mas em negrito***'
             }
         },
         underlined: {
             name: {
-                en: 'Underlined'
+                en: 'Underlined',
+                pt: 'Sublinhado'
             },
             string: {
-                en: '__underlined__'
+                en: '__underlined__',
+                pt: '__sublinhado__'
             }
         }
     },
@@ -2395,7 +2412,8 @@ export const trans = {
         pt: 'Conectado como {user}'
     },
     not_logged_in: {
-        en: 'Not logged in'
+        en: 'Not logged in',
+        pt: 'Não conectado'
     },
     ensure_you_trust: {
         // API applications
@@ -2534,10 +2552,12 @@ export const trans = {
     },
     force_refresh_style: {
         name: {
-            en: 'Force re-download styles'
+            en: 'Force re-download styles',
+            pt: 'Forçar o re-download dos estilos'
         },
         body: {
-            en: 'Deletes your current cache of the bleh stylesheet and retrieves the latest'
+            en: 'Deletes your current cache of the bleh stylesheet and retrieves the latest',
+            pt: 'Exclui o cache atual da folha de estilo do bleh e recupera a versão mais recente'
         }
     },
     intended_for_development: {
@@ -2545,7 +2565,8 @@ export const trans = {
             en: 'This page is intended for development'
         },
         body: {
-            en: 'Be careful with options here (especially feature flags) as they can break your install.'
+            en: 'Be careful with options here (especially feature flags) as they can break your install.',
+            pt: 'Tenha cuidado com as opções aqui (especialmente com os flags de recursos), pois elas podem causar problemas na sua instalação.'
         }
     },
     flags: {
@@ -2695,10 +2716,12 @@ export const trans = {
         pt: 'Mudar foto de perfil'
     },
     crop_avatar: {
-        en: 'Crop avatar'
+        en: 'Crop avatar',
+        pt: 'Recortar avatar'
     },
     crop_notice: {
         en: 'Use your scroll wheel to zoom in and out, click and drag to move the image.',
+        pt: 'Use a scroll do seu mouse para dar zoom in e zoom out, clicar e arrastar para mover a imagem.'
     },
     edit_profile_note: {
         en: 'Edit profile note',
@@ -2747,7 +2770,7 @@ export const trans = {
     },
     bulk_edit_extension: {
         en: 'Last.fm Bulk Edit',
-        pt: 'Edição em Massa do Last.fm'
+        pt: 'Edição em massa do Last.fm'
     },
     collage: {
         en: 'Collage',
@@ -3172,7 +3195,8 @@ export const trans = {
         pt: 'ex.: {v}'
     },
     item_is_unavailable_on_platform: {
-        en: '‘{i}’ is unavailable on {p}'
+        en: '‘{i}’ is unavailable on {p}',
+        pt: '‘{i}’ está indísponivel no {p}'
     },
     platforms: {
         win32: {
@@ -3191,7 +3215,8 @@ export const trans = {
             en: 'Linux'
         },
         other: {
-            en: 'Unknown'
+            en: 'Unknown',
+            pt: 'Desconhecido'
         }
     },
     reduced_motion: {
