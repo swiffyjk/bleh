@@ -204,10 +204,14 @@ export let includes = {
         ': the anthology', '(the anthology', '[the anthology',
         '- 3am edition', '(3am edition', '[3am edition',
         '- the til dawn edition', '(the til dawn edition', '[the til dawn edition', 
+        '- til dawn edition', '(til dawn edition', '[til dawn edition',
+        '- late night edition', '(late night edition', '[late night edition',
+        '- the late night edition', '(the late night edition', '[the late night edition',
         '- big machine radio release special', '(big machine radio release special', '[big machine radio release special',
         'platinum edition', ': platinum edition', '- platinum', '(platinum', '[platinum', 
         '- international', '(international', '[international', // taylor swift 
         '- uk deluxe', '(uk deluxe', '[uk deluxe',
+        '- magic city edition', '(magic city edition', '[magic city edition',
         '- japan edition', '(japan edition', '[japan edition', // added edition to some for safety
         '- japan version', '(japan version', '[japan version',
         '- platinum blonde edition', '(platinum blonde edition', '[platinum blonde edition', // marina
@@ -216,6 +220,7 @@ export let includes = {
         ': the complete', '(the complete', '[the complete',
         '- the moonlight', '(the moonlight', '[the moonlight',
         '- moonlight', '(moonlight', '[moonlight', // dua lipa
+        'Music From and Inspired By', // on the end of black panther the album
         //,
         '- 19', '- 20', '(19', '(20',
         '- 10th', '- 25th', '- 30th', '- 35th', '- 40th', '- 50th', '- 60th',
