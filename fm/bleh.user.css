@@ -148,7 +148,9 @@
         --sat-pos: 1.05;
         --lit-pos: 1.025;
 
-        --hue-neg: -2;
+        --hue-neg: 0;
+        --sat-neg: 1.1;
+        --lit-neg: 0.9;
 
         --hue-fav: 30;
         --sat-fav: 1.5;
@@ -17412,13 +17414,16 @@
                 margin-top: 4px;
 
                 & > .new-badge {
-                    width: 30px;
+                    width: 37px;
+                    justify-content: center;
                     --hue-over: var(--hue-neg);
-                    --sat-over: 1;
-                    --lit-over: 1;
+                    --sat-over: var(--sat-neg);
+                    --lit-over: var(--lit-neg);
 
                     &.flag-true {
                         --hue-over: var(--hue-pos);
+                        --sat-over: var(--sat-pos);
+                        --lit-over: var(--lit-pos);
                     }
                 }
 
