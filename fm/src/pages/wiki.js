@@ -280,37 +280,37 @@ export function bleh_wiki_editor() {
             <div class="syntax-listing">
                 <div class="syntax-listing-item">
                     <div class="code-side">[artist]julie[/artist]</div>
-                    <div class="detail-side">${tl(trans.links_to).replace('{link}', `<a href="${root}music/julie" data-link-type="artist" target="_blank">julie</a>`)}</div>
+                    <div class="detail-side">${{html: tl(trans.links_to).replace('{link}', `<a href="${root}music/julie" data-link-type="artist" target="_blank">julie</a>`)}}</div>
                 </div>
                 <div class="syntax-listing-item">
                     <div class="code-side">[album artist=julie]pushing daisies[/album]</div>
-                    <div class="detail-side">${tl(trans.links_to).replace('{link}', `<a href="${root}music/julie/pushing+daisies" data-link-type="album" target="_blank">pushing daisies</a>`)}</div>
+                    <div class="detail-side">${{html: tl(trans.links_to).replace('{link}', `<a href="${root}music/julie/pushing+daisies" data-link-type="album" target="_blank">pushing daisies</a>`)}}</div>
                 </div>
                 <div class="syntax-listing-item">
                     <div class="code-side">[track artist=julie]very little effort[/track]</div>
-                    <div class="detail-side">${tl(trans.links_to).replace('{link}', `<a href="${root}music/julie/_/very+little+effort" data-link-type="track" target="_blank">very little effort</a>`)}</div>
+                    <div class="detail-side">${{html: tl(trans.links_to).replace('{link}', `<a href="${root}music/julie/_/very+little+effort" data-link-type="track" target="_blank">very little effort</a>`)}}</div>
                 </div>
             </div>
             <div class="sep"></div>
             <div class="syntax-listing">
                 <div class="syntax-listing-item">
                     <div class="code-side">[url]https://katelyn.moe/bleh[/url]</div>
-                    <div class="detail-side">${tl(trans.links_to).replace('{link}', `<a href="https://katelyn.moe/bleh" target="_blank">https://katelyn.moe/bleh</a>`)}</div>
+                    <div class="detail-side">${{html: tl(trans.links_to).replace('{link}', `<a href="https://katelyn.moe/bleh" target="_blank">https://katelyn.moe/bleh</a>`)}}</div>
                 </div>
                 <div class="syntax-listing-item">
                     <div class="code-side">[url=https://katelyn.moe/bleh]blehhh[/url]</div>
-                    <div class="detail-side">${tl(trans.links_to).replace('{link}', `<a href="https://katelyn.moe/bleh" target="_blank">blehhh</a>`)}</div>
+                    <div class="detail-side">${{html: tl(trans.links_to).replace('{link}', `<a href="https://katelyn.moe/bleh" target="_blank">blehhh</a>`)}}</div>
                 </div>
             </div>
             <div class="sep"></div>
             <div class="syntax-listing">
                 <div class="syntax-listing-item">
                     <div class="code-side">[tag]grunge[/tag]</div>
-                    <div class="detail-side">${tl(trans.links_to).replace('{link}', `<a href="${root}tag/grunge" data-link-type="tag" target="_blank">grunge</a>`)}</div>
+                    <div class="detail-side">${{html: tl(trans.links_to).replace('{link}', `<a href="${root}tag/grunge" data-link-type="tag" target="_blank">grunge</a>`)}}</div>
                 </div>
                 <div class="syntax-listing-item">
                     <div class="code-side">[user]${auth.name}[/user]</div>
-                    <div class="detail-side">${tl(trans.links_to).replace('{link}', `<a class="mention" href="${root}user/${auth.name}" target="_blank">@${auth.name}</a>`)}</div>
+                    <div class="detail-side">${{html: tl(trans.links_to).replace('{link}', `<a class="mention" href="${root}user/${auth.name}" target="_blank">@${auth.name}</a>`)}}</div>
                 </div>
             </div>
         </section>

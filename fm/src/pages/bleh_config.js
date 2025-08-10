@@ -379,12 +379,14 @@ export function render_setting_page(page_id) {
                     </div>
                 </div>
             </section>
+            ${!page.mobile ? html.node`
             <section class="bleh--panel">
                 <h4>${tl(trans.branding)}</h4>
                 <div class="setting-group">
                     ${setting({id: 'branding_type'})}
                 </div>
             </section>
+            ` : ''}
             <section class="bleh--panel">
                 <h4>${tl(trans.api.short)}</h4>
                 <div class="setting-group">
@@ -617,6 +619,7 @@ export function render_setting_page(page_id) {
                     ${setting({id: 'show_bulk_edit_album'})}
                 </div>
             </section>
+            ${!page.mobile ? html.node`
             <section class="bleh--panel">
                 <h4>${tl(trans.navigation_items.name)}</h4>
                 <div class="setting-group">
@@ -624,6 +627,7 @@ export function render_setting_page(page_id) {
                     ${setting({id: 'navigation_language'})}
                 </div>
             </section>
+            ` : ''}
             <section class="bleh--panel">
                 <h4>${tl(trans.shouts)}</h4>
                 <div class="inner-preview pad flex">
@@ -651,6 +655,7 @@ export function render_setting_page(page_id) {
                     ${setting({id: 'shout_markdown'})}
                 </div>
             </section>
+            ${!page.mobile ? html.node`
             <section class="bleh--panel">
                 <h4>${tl(trans.quick_switcher)}</h4>
                 <div class="setting-group">
@@ -681,6 +686,7 @@ export function render_setting_page(page_id) {
                     </div>
                 </div>
             </section>
+            ` : ''}
             <section class="bleh--panel">
                 <h4>${trans_legacy.en.settings.customise.display.name}</h4>
                 <div class="inner-preview pad flex">

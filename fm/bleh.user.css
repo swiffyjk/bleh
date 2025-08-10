@@ -1398,7 +1398,7 @@
                     --bg-hov: var(--bg);
                     --bg-atv: var(--bg);
                     --shadow: none;
-                    --font-size: 10px;
+                    --font-size: 11px;
                     text-align: center;
                     --padding: calc(10px + var(--icon-size) + 2px) 10px 10px;
                     --left: 50%;
@@ -21941,6 +21941,11 @@
                     display: flex;
                     flex-direction: row-reverse;
                     gap: 4px;
+                    flex-wrap: wrap;
+
+                    @media (max-width: 600px) {
+                        justify-content: center;
+                    }
 
                     & > .user-status-subscriber {
                         order: -1;
@@ -22014,6 +22019,10 @@
 
             .header-title-secondary {
                 margin-top: 6px !important;
+
+                @media (max-width: 600px) {
+                    justify-content: center;
+                }
             }
 
             .profile-top-header {
@@ -24192,6 +24201,8 @@
     .music-more-artists {
         margin-left: unset;
         margin-right: unset;
+        padding: unset;
+        overflow: unset;
         display: grid;
         grid-template-columns: repeat(auto-fill, minmax(180px, 1fr));
         gap: var(--card-padding) var(--card-gap);
@@ -24217,6 +24228,19 @@
 
             animation: var(--motion, grid 0.4s var(--trans-function)) !important;
 
+            @media (max-width: 600px) {
+                --avatar-size: 100px;
+
+                padding-left: calc(var(--avatar-size) + 10px);
+                min-height: var(--avatar-size);
+
+                & > div > .media-item {
+                    position: absolute;
+                    top: 0;
+                    left: calc(-1 * (var(--avatar-size) + 10px));
+                }
+            }
+
             .cover-art--placeholder, .avatar--placeholder,
             .playlist-image,
             .cover-art,
@@ -24230,6 +24254,11 @@
                 transform: translateY(0);
                 inset: unset !important;
                 height: unset !important;
+
+                @media (max-width: 600px) {
+                    width: var(--avatar-size);
+                    height: var(--avatar-size);
+                }
 
                 &:after {
                     content: '' !important;
@@ -24348,6 +24377,13 @@
                 height: unset;
                 left: unset;
                 aspect-ratio: 1 / 1;
+
+                @media (max-width: 600px) {
+                    aspect-ratio: unset;
+                    padding: unset;
+                    left: calc(-1 * (var(--avatar-size) + 10px)) !important;
+                    height: var(--avatar-size) !important;
+                }
             }
         }
     }

@@ -25577,37 +25577,37 @@
             <div class="syntax-listing">
                 <div class="syntax-listing-item">
                     <div class="code-side">[artist]julie[/artist]</div>
-                    <div class="detail-side">${tl(trans.links_to).replace("{link}", `<a href="${root}music/julie" data-link-type="artist" target="_blank">julie</a>`)}</div>
+                    <div class="detail-side">${{ html: tl(trans.links_to).replace("{link}", `<a href="${root}music/julie" data-link-type="artist" target="_blank">julie</a>`) }}</div>
                 </div>
                 <div class="syntax-listing-item">
                     <div class="code-side">[album artist=julie]pushing daisies[/album]</div>
-                    <div class="detail-side">${tl(trans.links_to).replace("{link}", `<a href="${root}music/julie/pushing+daisies" data-link-type="album" target="_blank">pushing daisies</a>`)}</div>
+                    <div class="detail-side">${{ html: tl(trans.links_to).replace("{link}", `<a href="${root}music/julie/pushing+daisies" data-link-type="album" target="_blank">pushing daisies</a>`) }}</div>
                 </div>
                 <div class="syntax-listing-item">
                     <div class="code-side">[track artist=julie]very little effort[/track]</div>
-                    <div class="detail-side">${tl(trans.links_to).replace("{link}", `<a href="${root}music/julie/_/very+little+effort" data-link-type="track" target="_blank">very little effort</a>`)}</div>
+                    <div class="detail-side">${{ html: tl(trans.links_to).replace("{link}", `<a href="${root}music/julie/_/very+little+effort" data-link-type="track" target="_blank">very little effort</a>`) }}</div>
                 </div>
             </div>
             <div class="sep"></div>
             <div class="syntax-listing">
                 <div class="syntax-listing-item">
                     <div class="code-side">[url]https://katelyn.moe/bleh[/url]</div>
-                    <div class="detail-side">${tl(trans.links_to).replace("{link}", `<a href="https://katelyn.moe/bleh" target="_blank">https://katelyn.moe/bleh</a>`)}</div>
+                    <div class="detail-side">${{ html: tl(trans.links_to).replace("{link}", `<a href="https://katelyn.moe/bleh" target="_blank">https://katelyn.moe/bleh</a>`) }}</div>
                 </div>
                 <div class="syntax-listing-item">
                     <div class="code-side">[url=https://katelyn.moe/bleh]blehhh[/url]</div>
-                    <div class="detail-side">${tl(trans.links_to).replace("{link}", `<a href="https://katelyn.moe/bleh" target="_blank">blehhh</a>`)}</div>
+                    <div class="detail-side">${{ html: tl(trans.links_to).replace("{link}", `<a href="https://katelyn.moe/bleh" target="_blank">blehhh</a>`) }}</div>
                 </div>
             </div>
             <div class="sep"></div>
             <div class="syntax-listing">
                 <div class="syntax-listing-item">
                     <div class="code-side">[tag]grunge[/tag]</div>
-                    <div class="detail-side">${tl(trans.links_to).replace("{link}", `<a href="${root}tag/grunge" data-link-type="tag" target="_blank">grunge</a>`)}</div>
+                    <div class="detail-side">${{ html: tl(trans.links_to).replace("{link}", `<a href="${root}tag/grunge" data-link-type="tag" target="_blank">grunge</a>`) }}</div>
                 </div>
                 <div class="syntax-listing-item">
                     <div class="code-side">[user]${auth.name}[/user]</div>
-                    <div class="detail-side">${tl(trans.links_to).replace("{link}", `<a class="mention" href="${root}user/${auth.name}" target="_blank">@${auth.name}</a>`)}</div>
+                    <div class="detail-side">${{ html: tl(trans.links_to).replace("{link}", `<a class="mention" href="${root}user/${auth.name}" target="_blank">@${auth.name}</a>`) }}</div>
                 </div>
             </div>
         </section>
@@ -31740,7 +31740,7 @@
         let overview = page.structure.nav.querySelector(".secondary-nav-item--overview a");
         if (overview) {
           const href = overview.getAttribute("href").replace(root, "");
-          if (href == "settings" || href == "inbox") overview = null;
+          if (href == "settings" || href == "inbox" || href == "charts") overview = null;
         }
         if (overview) overview.textContent = tl(trans.home);
       }
@@ -44780,12 +44780,14 @@
                     </div>
                 </div>
             </section>
+            ${!page.mobile ? html.node`
             <section class="bleh--panel">
                 <h4>${tl(trans.branding)}</h4>
                 <div class="setting-group">
                     ${setting({ id: "branding_type" })}
                 </div>
             </section>
+            ` : ""}
             <section class="bleh--panel">
                 <h4>${tl(trans.api.short)}</h4>
                 <div class="setting-group">
@@ -45008,6 +45010,7 @@
                     ${setting({ id: "show_bulk_edit_album" })}
                 </div>
             </section>
+            ${!page.mobile ? html.node`
             <section class="bleh--panel">
                 <h4>${tl(trans.navigation_items.name)}</h4>
                 <div class="setting-group">
@@ -45015,6 +45018,7 @@
                     ${setting({ id: "navigation_language" })}
                 </div>
             </section>
+            ` : ""}
             <section class="bleh--panel">
                 <h4>${tl(trans.shouts)}</h4>
                 <div class="inner-preview pad flex">
@@ -45042,6 +45046,7 @@
                     ${setting({ id: "shout_markdown" })}
                 </div>
             </section>
+            ${!page.mobile ? html.node`
             <section class="bleh--panel">
                 <h4>${tl(trans.quick_switcher)}</h4>
                 <div class="setting-group">
@@ -45072,6 +45077,7 @@
                     </div>
                 </div>
             </section>
+            ` : ""}
             <section class="bleh--panel">
                 <h4>${trans_legacy.en.settings.customise.display.name}</h4>
                 <div class="inner-preview pad flex">

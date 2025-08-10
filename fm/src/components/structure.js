@@ -124,7 +124,7 @@ export function checkup_page_structure(is_subpage = false, header = null) {
             if (overview) {
                 const href = overview.getAttribute('href').replace(root, '');
 
-                if (href == 'settings' || href == 'inbox') overview = null;
+                if (href == 'settings' || href == 'inbox' || href == 'charts') overview = null;
             }
 
             if (overview) overview.textContent = tl(trans.home);
