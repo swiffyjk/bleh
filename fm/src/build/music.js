@@ -220,6 +220,7 @@ export let includes = {
         ': the complete', '(the complete', '[the complete',
         '- the moonlight', '(the moonlight', '[the moonlight',
         '- moonlight', '(moonlight', '[moonlight', // dua lipa
+        '- tour', '(tour', '[tour',
         'Music From and Inspired By', // on the end of black panther the album
         //,
         '- 19', '- 20', '(19', '(20',
