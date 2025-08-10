@@ -915,15 +915,11 @@ export const trans = {
     continue: {
         en: 'Continue',
         de: 'Fortsetzen',
-<<<<<<< Updated upstream
-        pt: 'Contiuar',
+        pt: 'Continuar',
         pl: 'Kontynuuj'
     },
     click_for_more_options: {
         en: 'Click for more options'
-=======
-        pt: 'Continuar'
->>>>>>> Stashed changes
     },
     right_click_for_more_options: {
         en: 'Right click for more options',
@@ -2447,13 +2443,8 @@ export const trans = {
             pt: 'Permite o uso de quebras de linha, texto em negrito, itálico e imagens em todas as caixas de mensagens'
         },
         preview: {
-<<<<<<< Updated upstream
             en: 'hello! **hello!** *hello!*\n[here’s a link](https://katelyn.moe) HAII @evangelicgirl',
-            pt: 'opa! **opa!** *opa!*\n[aqui está um link](https://katelyn.moe) OIEE @evangelicgirl'
-=======
-            en: 'hello! **hello!** *hello!*\n[here’s a link](https://katelyn.moe) HAII @stellasaur',
-            pt: 'oi! **olá!** *opa!*\n[aqui está um link](https://katelyn.moe) OIEE @stellasaur'
->>>>>>> Stashed changes
+            pt: 'oi! **olá!** *opa!*\n[aqui está um link](https://katelyn.moe) OIEE @evangelicgirl'
         }
     },
     gathering_your_plays: {
@@ -2790,13 +2781,9 @@ export const trans = {
         pt: 'Manter dentro do intervalo'
     },
     this_field_is_required: {
-<<<<<<< Updated upstream
         // field as in a text box
-        en: 'This field is required'
-=======
         en: 'This field is required',
         pt: 'Este campo é obrigatório'
->>>>>>> Stashed changes
     },
     please_dont_clone_yourself: {
         en: 'Please don’t clone yourself',
