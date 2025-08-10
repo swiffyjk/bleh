@@ -118,7 +118,7 @@ export let includes = {
         '(+',
         '- versão', '(versão', '[versão',
         ' - without dialogue', '(without dialogue', '[without dialogue',
-        ' - no dialogue', '(no dialogue', '(no dialogue'
+        ' - no dialogue', '(no dialogue', '[no dialogue'
     ],
     spotify: [
         '(spotify)'
