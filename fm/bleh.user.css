@@ -19093,13 +19093,14 @@
         padding: calc(var(--auth-space, 0px) + 52px + var(--card-gap)) var(--card-gap);
         z-index: 99999999999;
 
-        transition-property: padding;
+        transition-property: right, opacity;
         transition-duration: 0.25s;
         transition-timing-function: var(--trans-function);
 
         &[data-auth-open="true"] {
-            --auth-space: 244px;
-            transition-duration: 0s;
+            /*--auth-space: 244px;*/
+            right: -300px;
+            opacity: 0;
         }
 
         .bleh-notification {
@@ -19150,8 +19151,8 @@
                 .notification-action {
                     position: relative;
                     --bg: transparent;
-                    --bg-hov: hsl(var(--b3), 40%);
-                    --bg-atv: hsl(var(--b3), 40%);
+                    --bg-hov: hsl(var(--b4), 40%);
+                    --bg-atv: hsl(var(--b4), 60%);
                     --mask-colour: hsl(var(--c3));
                     --shadow: none;
                     --font-size: 0;
@@ -19161,6 +19162,9 @@
 
                     --top: 50%;
                     --margin-top: calc(-1 * var(--icon-half));
+
+                    --left: 50%;
+                    --margin-left: calc(-1 * var(--icon-half));
                 }
             }
 

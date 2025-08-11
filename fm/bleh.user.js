@@ -25072,7 +25072,7 @@
     if (button)
       button.setAttribute("disabled", "");
     let xhr = new XMLHttpRequest();
-    let url = `https://katelyynn.github.io/bleh/fm/badges.json?${Math.random()}`;
+    let url = `https://katelyynn.github.io/bleh/fm/badges/badges.json?${Math.random()}`;
     xhr.open("GET", url, true);
     xhr.onload = function() {
       log(`list responded with ${xhr.status}`, "sponsor");
@@ -28652,7 +28652,7 @@
     document.addEventListener("keydown", (e) => {
       const cmd = e.getModifierState("Control") || e.getModifierState("Meta");
       const key = e.key.toLowerCase();
-      if (cmd && [settings.rabbit.toLowerCase(), ","].includes(key) && !page.structure.dialogs.hasChildNodes()) {
+      if (cmd && [settings.rabbit_primary.toLowerCase(), ","].includes(key) && !page.structure.dialogs.hasChildNodes()) {
         e.preventDefault();
         depth = 0;
         if (e.getModifierState("Shift")) {
@@ -44532,10 +44532,10 @@
             `}
         </div>
         <section class="side-actions">
-            <button class="btn side-action" data-type="import" onclick="_import_settings()">
+            <button class="btn side-action" data-type="import" onclick=${() => import_settings16()}>
                 ${tl(trans.import)}
             </button>
-            <button class="btn side-action" data-type="export" onclick="_export_settings()">
+            <button class="btn side-action" data-type="export" onclick=${() => export_settings()}>
                 ${tl(trans.export)}
             </button>
             <button class="btn side-action" data-type="reset" onclick="_reset_settings()">
@@ -46245,57 +46245,56 @@
       }
     }
   }
-  unsafeWindow._import_settings = function() {
-    dialog({
+  function import_settings16() {
+    let text3;
+    const modal = dialog({
       id: "import_settings",
       title: tl(trans.import_settings),
       body: html.node`
             <p class="big-modal-alert alert-danger">${tl(trans.import_notice)}</p>
             <br>
-            <textarea class="modal-text" id="import_area"></textarea>
+            <textarea class="modal-text" ref=${(el) => text3 = el} />
             <div class="modal-footer">
                 <button class="see-more cancel" onclick="_dialog_rm({id: 'import_settings'})">
                     ${tl(trans.cancel)}
                 </button>
                 <div class="fill"></div>
-                <button class="btn primary download" onclick="_confirm_import()">
+                <button class="btn primary download" onclick=${() => {
+        try {
+          const parsed2 = JSON.parse(text3.value);
+          localStorage.setItem("bleh", text3.value);
+          Object.assign(settings, parsed2);
+          load_settings();
+          dialog_rm({
+            id: "import_settings"
+          });
+        } catch (e) {
+          dialog({
+            id: "import_failed",
+            title: trans_legacy.en.settings.actions.import.modals.failed.name,
+            body: html.node`
+                                <p class="big-modal-alert alert-error">${trans_legacy.en.settings.actions.import.modals.failed.alert}</p>
+                                <div class="modal-footer">
+                                    <div class="fill"></div>
+                                    <button class="btn primary done" onclick="_dialog_rm({id: 'import_failed'})">
+                                        ${tl(trans.done)}
+                                    </button>
+                                </div>
+                            `
+          });
+          console.error(e);
+        } finally {
+        }
+      }}>
                     ${tl(trans.import)}
                 </button>
             </div>
         `
     });
-  };
-  unsafeWindow._confirm_import = function() {
-    let requesting_setting = document.getElementById("import_area").value;
-    try {
-      let try_parse = JSON.parse(requesting_setting);
-      localStorage.setItem("bleh", requesting_setting);
-      load_settings();
-      dialog_rm({
-        id: "import_settings"
-      });
-    } catch (e) {
-      dialog({
-        id: "import_failed",
-        title: trans_legacy.en.settings.actions.import.modals.failed.name,
-        body: html.node`
-                <p class="big-modal-alert alert-error">${trans_legacy.en.settings.actions.import.modals.failed.alert}</p>
-                <div class="modal-footer">
-                    <div class="fill"></div>
-                    <button class="btn primary done" onclick="_dialog_rm({id: 'import_failed'})">
-                        ${tl(trans.done)}
-                    </button>
-                </div>
-            `
-      });
-    }
-  };
+  }
   function export_settings() {
     share(JSON.stringify(settings));
   }
-  unsafeWindow._export_settings = function() {
-    export_settings();
-  };
   unsafeWindow._reset_settings = function() {
     dialog({
       id: "reset_settings",
@@ -46303,7 +46302,7 @@
       body: html.node`
             <div class="big-modal-alert alert-error">
                 <strong>${tl(trans.reset_notice)}</strong>
-                <a class="see-more" onclick="_export_settings()">${tl(trans.make_a_backup)}</a>
+                <a class="see-more" onclick=${() => export_settings()}>${tl(trans.make_a_backup)}</a>
             </div>
             <div class="modal-footer">
                 <button class="see-more cancel" onclick="_dialog_rm({id: 'reset_settings'})">

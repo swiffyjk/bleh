@@ -55,7 +55,7 @@ export function register_rabbit() {
         const cmd = (e.getModifierState('Control') || e.getModifierState('Meta'));
         const key = e.key.toLowerCase();
 
-        if (cmd && [settings.rabbit.toLowerCase(), ','].includes(key) && !page.structure.dialogs.hasChildNodes()) {
+        if (cmd && [settings.rabbit_primary.toLowerCase(), ','].includes(key) && !page.structure.dialogs.hasChildNodes()) {
             e.preventDefault();
 
             depth = 0;
