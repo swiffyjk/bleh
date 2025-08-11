@@ -103,38 +103,8 @@ export function toggle_theme() {
     else if (current_theme == 'ink')
         current_theme = 'dark';
 
-    show_theme_change_in_menu(current_theme);
-
     // save value
     save_setting('theme', current_theme);
-
-    chart_reflow();
-}
-
-unsafeWindow.change_theme_from_settings = function(theme) {
-    // save value
-    settings.theme = theme;
-    if (theme == 'light' || theme == 'ink')
-        settings.theme_type = 'light';
-    else
-        settings.theme_type = 'dark';
-    document.documentElement.setAttribute(`data-bleh--theme`, `${theme}`);
-    document.documentElement.setAttribute(`data-bleh--theme_type`, `${settings.theme_type}`);
-
-    // show in settings
-    show_theme_change_in_settings(theme);
-    show_theme_change_in_menu(theme);
-
-    // save to settings
-    localStorage.setItem('bleh', JSON.stringify(settings));
-}
-export function change_theme_from_menu(theme) {
-    if (page.subpage.startsWith('listening-report')) return;
-
-    save_setting('theme', theme);
-
-    // show in settings
-    show_theme_change_in_menu(theme);
 
     chart_reflow();
 }

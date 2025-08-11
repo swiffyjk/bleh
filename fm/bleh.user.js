@@ -30100,27 +30100,8 @@
       current_theme = "ink";
     else if (current_theme == "ink")
       current_theme = "dark";
-    show_theme_change_in_menu(current_theme);
     save_setting("theme", current_theme);
-    chart_reflow();
-  }
-  unsafeWindow.change_theme_from_settings = function(theme) {
-    settings.theme = theme;
-    if (theme == "light" || theme == "ink")
-      settings.theme_type = "light";
-    else
-      settings.theme_type = "dark";
-    document.documentElement.setAttribute(`data-bleh--theme`, `${theme}`);
-    document.documentElement.setAttribute(`data-bleh--theme_type`, `${settings.theme_type}`);
-    show_theme_change_in_settings(theme);
-    show_theme_change_in_menu(theme);
-    localStorage.setItem("bleh", JSON.stringify(settings));
-  };
-  function change_theme_from_menu(theme) {
-    if (page.subpage.startsWith("listening-report")) return;
-    save_setting("theme", theme);
-    show_theme_change_in_menu(theme);
-    chart_reflow();
+    chart_reflow2();
   }
   function reset_all() {
     for (let item in settings_base)
@@ -34774,7 +34755,7 @@
   }
 
   // src/chart.js
-  function chart_reflow() {
+  function chart_reflow2() {
     load_chart_colours();
     if ((page.type == "artist" || page.type == "album" || page.type == "track") && page.subpage == "overview")
       bleh_music_page_charts();
@@ -44287,7 +44268,7 @@
     style_cache.onload = () => {
       log("loaded cache", "style");
       document.body.classList.add("bleh");
-      chart_reflow();
+      chart_reflow2();
       log("checking timeout", "style");
       check_if_style_cache_is_valid();
     };
@@ -44328,7 +44309,7 @@
           document.documentElement.removeChild(document.getElementById("bleh--cached-style"));
         log("loaded", "style");
         document.body.classList.add("bleh");
-        chart_reflow();
+        chart_reflow2();
         if (reload_on_finish) invoke_reload();
       };
       style.onerror = () => {
@@ -47915,6 +47896,7 @@
                                 </button>
                                 <div class="button-combo-sep" />
                                 <button class="dropdown-menu-clickable-item chibi" data-type="continue" disabled=${themes_disabled} onclick=${() => {
+          let buttons = [];
           render(page_2, html``);
           render(page_2, html`
                                         <button class="dropdown-menu-clickable-item" data-type="back" onclick=${() => {
@@ -47925,14 +47907,22 @@
                                         ${themes.map((theme) => {
             if (theme.hide) return html.node``;
             if (!theme.formal) theme.formal = theme.id;
-            return html.node`
-                                                <button class="dropdown-menu-clickable-item theme-item-in-menu" data-bleh-theme=${theme.id} data-type="theme_${theme.formal}" onclick="${() => change_theme_from_menu(theme.id)}">
+            const btn = html.node`
+                                                <button class="dropdown-menu-clickable-item theme-item-in-menu" aria-selected=${theme.id == settings.theme} data-bleh-theme=${theme.id} data-type="theme_${theme.formal}" onclick="${() => {
+              buttons.forEach((button) => {
+                const id = button.getAttribute("data-bleh-theme");
+                button.setAttribute("aria-selected", id == theme.id);
+              });
+              save_setting("theme", theme.id);
+              chart_reflow();
+            }}">
                                                     ${theme.name}
                                                 </button>
                                             `;
+            buttons.push(btn);
+            return btn;
           })}
                                     `);
-          show_theme_change_in_menu("", page_2);
           side.setAttribute("data-page", "2");
         }}>
                                     ${tl(trans.more)}

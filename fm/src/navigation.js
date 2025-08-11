@@ -13,7 +13,7 @@ import {version} from "./main";
 import {ff} from "./sku";
 import {html, render} from "lighterhtml";
 import {news} from "./news.js";
-import {change_theme_from_menu, toggle_theme} from "./config.js";
+import {toggle_theme} from "./config.js";
 import {open_profile_shortcut_window} from "./components/profile_shortcut.js";
 import {save_setting, setting} from "./components/settings.js";
 import {load_banner} from "./components/banner.js";
@@ -624,6 +624,8 @@ export function append_nav() {
                                 </button>
                                 <div class="button-combo-sep" />
                                 <button class="dropdown-menu-clickable-item chibi" data-type="continue" disabled=${themes_disabled} onclick=${() => {
+                                    let buttons = [];
+
                                     render(page_2, html``); // fix crash
                                     render(page_2, html`
                                         <button class="dropdown-menu-clickable-item" data-type="back" onclick=${() => {
@@ -636,14 +638,25 @@ export function append_nav() {
 
                                             if (!theme.formal) theme.formal = theme.id;
 
-                                            return html.node`
-                                                <button class="dropdown-menu-clickable-item theme-item-in-menu" data-bleh-theme=${theme.id} data-type="theme_${theme.formal}" onclick="${() => change_theme_from_menu(theme.id)}">
+                                            const btn = html.node`
+                                                <button class="dropdown-menu-clickable-item theme-item-in-menu" aria-selected=${theme.id == settings.theme} data-bleh-theme=${theme.id} data-type="theme_${theme.formal}" onclick="${() => {
+                                                    buttons.forEach(button => {
+                                                        const id = button.getAttribute('data-bleh-theme');
+
+                                                        button.setAttribute('aria-selected', id == theme.id);
+                                                    });
+
+                                                    save_setting('theme', theme.id);
+                                                    chart_reflow();
+                                                }}">
                                                     ${theme.name}
                                                 </button>
                                             `;
+
+                                            buttons.push(btn);
+                                            return btn;
                                         })}
                                     `);
-                                    show_theme_change_in_menu('', page_2);
                                     side.setAttribute('data-page', '2');
                                 }}>
                                     ${tl(trans.more)}
