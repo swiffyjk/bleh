@@ -23,6 +23,7 @@ import {correct_artist, correct_item_by_artist} from "./components/lotus.js";
 import {bleh_notification_list} from "./components/notifications.js";
 import tippy from "tippy.js";
 import { register_menu } from './components/menu.js';
+import { chart_reflow } from './chart.js';
 
 export function patch_masthead() {
     let masthead_logo = document.body.querySelector('.masthead-logo');

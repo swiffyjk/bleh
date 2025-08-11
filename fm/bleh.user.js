@@ -30101,7 +30101,7 @@
     else if (current_theme == "ink")
       current_theme = "dark";
     save_setting("theme", current_theme);
-    chart_reflow2();
+    chart_reflow();
   }
   function reset_all() {
     for (let item in settings_base)
@@ -34755,7 +34755,7 @@
   }
 
   // src/chart.js
-  function chart_reflow2() {
+  function chart_reflow() {
     load_chart_colours();
     if ((page.type == "artist" || page.type == "album" || page.type == "track") && page.subpage == "overview")
       bleh_music_page_charts();
@@ -44268,7 +44268,7 @@
     style_cache.onload = () => {
       log("loaded cache", "style");
       document.body.classList.add("bleh");
-      chart_reflow2();
+      chart_reflow();
       log("checking timeout", "style");
       check_if_style_cache_is_valid();
     };
@@ -44309,7 +44309,7 @@
           document.documentElement.removeChild(document.getElementById("bleh--cached-style"));
         log("loaded", "style");
         document.body.classList.add("bleh");
-        chart_reflow2();
+        chart_reflow();
         if (reload_on_finish) invoke_reload();
       };
       style.onerror = () => {
