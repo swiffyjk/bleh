@@ -117,8 +117,7 @@ function confirm_set_profile_as_shortcut() {
     page.state.profile_shortcut_button.removeAttribute('onclick');
 
     // save to settings
-    settings.profile_shortcut = page.name;
-    localStorage.setItem('bleh', JSON.stringify(settings));
+    save_setting('profile_shortcut', page.name);
 }
 
 export function save_profile_shortcut(input, value, submit, reset_btn, avatar) {
@@ -190,8 +189,7 @@ unsafeWindow._save_profile_shortcut = function() {
         document.getElementById('avatar_src-profile_shortcut').setAttribute('src', '');
 
         // save to settings
-        settings.profile_shortcut = '';
-        localStorage.setItem('bleh', JSON.stringify(settings));
+        save_setting('profile_shortcut', '');
 
         return;
     }
@@ -222,8 +220,7 @@ unsafeWindow._save_profile_shortcut = function() {
             });
 
             // save to settings
-            settings.profile_shortcut = profile_name;
-            localStorage.setItem('bleh', JSON.stringify(settings));
+            save_setting('profile_shortcut', profile_name);
         } catch(e) {
             notify({
                 id: 'profile_shortcut_saved',

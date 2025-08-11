@@ -13,7 +13,7 @@ import {chart_reflow, load_chart_colours} from "./chart";
 import {notify} from "./components/notify";
 import {load_skus} from "./pages/bleh_config";
 import {bleh_glacier_date_graph_generate} from "./pages/glacier";
-import {save_setting} from "./components/settings.js";
+import {compile_settings, save_setting} from "./components/settings.js";
 
 // load settings
 export function load_settings(skip = false) {
@@ -31,11 +31,6 @@ export function load_settings(skip = false) {
         else
             settings.theme_type = 'dark';
     }
-
-    // missing? set to default value
-    for (let setting in settings_template)
-        if (settings[setting] == undefined)
-            settings[setting] = settings_template[setting];
 
     // migrates old season settings
     // todo: remove soon
@@ -75,7 +70,7 @@ export function load_settings(skip = false) {
     load_skus();
 
     // save to settings
-    localStorage.setItem('bleh', JSON.stringify(settings));
+    compile_settings();
 
     // override theme when browsing listening reports
     if (document.body.classList.contains('user-dashboard-layout')) {
@@ -259,7 +254,7 @@ function update_item(item, value, modify=true, search = document) {
         log(`updated ${item} to ${settings[item]}`, 'settings');
 
     // save to settings
-    localStorage.setItem('bleh', JSON.stringify(settings));
+    compile_settings();
     } catch(e) {}
 
     if (container) {

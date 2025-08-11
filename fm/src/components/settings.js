@@ -613,6 +613,21 @@ export function save_setting(id, value) {
     if (settings_store[id].css)
         document.body.style.setProperty(`--${settings_store[id].css}`, `${value}${settings_store[id].suffix || ''}`);
 
-    localStorage.setItem('bleh', JSON.stringify(settings));
+    compile_settings();
     log(`saved ${id} as ${value}`, 'settings', 'log', {settings: settings, settings_id: settings[id]});
+}
+
+export function compile_settings() {
+    let clone = structuredClone(settings);
+
+    for (let setting in clone) {
+        if (settings_store[setting] && clone[setting] == settings_store[setting].default) {
+            //log(`dropped ${setting} as value matches default`, 'settings', 'log', {value: clone[setting], default: settings_store[setting].default});
+            delete clone[setting];
+        }
+    }
+
+    localStorage.setItem('bleh', JSON.stringify(clone));
+
+    return clone;
 }

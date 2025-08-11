@@ -25790,8 +25790,7 @@
     });
     page.state.profile_shortcut_button.setAttribute("data-is-shortcut", "true");
     page.state.profile_shortcut_button.removeAttribute("onclick");
-    settings.profile_shortcut = page.name;
-    localStorage.setItem("bleh", JSON.stringify(settings));
+    save_setting("profile_shortcut", page.name);
   }
   function save_profile_shortcut(input2, value, submit, reset_btn, avatar3) {
     if (value == "" || value == auth.name) {
@@ -25846,8 +25845,7 @@
     if (profile_name == "" || profile_name == auth.name) {
       localStorage.removeItem("bleh_profile_shortcut_avi");
       document.getElementById("avatar_src-profile_shortcut").setAttribute("src", "");
-      settings.profile_shortcut = "";
-      localStorage.setItem("bleh", JSON.stringify(settings));
+      save_setting("profile_shortcut", "");
       return;
     }
     profile_img.classList.add("requesting");
@@ -25868,8 +25866,7 @@
           body: tl(trans.profile_shortcut.linked).replace("{u}", profile_name),
           icon: "icon-16-profile-shortcut"
         });
-        settings.profile_shortcut = profile_name;
-        localStorage.setItem("bleh", JSON.stringify(settings));
+        save_setting("profile_shortcut", profile_name);
       } catch (e) {
         notify({
           id: "profile_shortcut_saved",
@@ -30037,8 +30034,18 @@
       request_reload();
     if (settings_store[id].css)
       document.body.style.setProperty(`--${settings_store[id].css}`, `${value}${settings_store[id].suffix || ""}`);
-    localStorage.setItem("bleh", JSON.stringify(settings));
+    compile_settings();
     log(`saved ${id} as ${value}`, "settings", "log", { settings, settings_id: settings[id] });
+  }
+  function compile_settings() {
+    let clone6 = structuredClone(settings);
+    for (let setting2 in clone6) {
+      if (settings_store[setting2] && clone6[setting2] == settings_store[setting2].default) {
+        delete clone6[setting2];
+      }
+    }
+    localStorage.setItem("bleh", JSON.stringify(clone6));
+    return clone6;
   }
 
   // src/config.js
@@ -30055,9 +30062,6 @@
       else
         settings.theme_type = "dark";
     }
-    for (let setting2 in settings_template)
-      if (settings[setting2] == void 0)
-        settings[setting2] = settings_template[setting2];
     if (settings.seasonal_particles == true)
       settings.seasonal_particles = "all";
     else if (settings.seasonal_particles == false)
@@ -30080,7 +30084,7 @@
       document.documentElement.setAttribute(`data-bleh--${setting2}`, `${settings[setting2]}`);
     }
     load_skus();
-    localStorage.setItem("bleh", JSON.stringify(settings));
+    compile_settings();
     if (document.body.classList.contains("user-dashboard-layout")) {
       document.documentElement.setAttribute("data-bleh--theme", "oled");
       page.state.settings_reload = true;
@@ -30214,7 +30218,7 @@
       }
       if (modify)
         log(`updated ${item} to ${settings[item]}`, "settings");
-      localStorage.setItem("bleh", JSON.stringify(settings));
+      compile_settings();
     } catch (e) {
     }
     if (container) {
@@ -45621,7 +45625,7 @@
           state.setAttribute("aria-checked", !current);
           settings.feature_flags[flag] = !current;
           document.documentElement.setAttribute(`data-ff--${flag}`, (!current).toString());
-          localStorage.setItem("bleh", JSON.stringify(settings));
+          compile_settings();
         }}>
                                 <div class="heading">
                                     <h5>${details.name}</h5>
@@ -45873,7 +45877,7 @@
     button.setAttribute("aria-checked", !current_state);
     settings.feature_flags[flag] = !current_state;
     document.documentElement.setAttribute(`data-ff--${flag}`, `${!current_state}`);
-    localStorage.setItem("bleh", JSON.stringify(settings));
+    compile_settings();
   }
   function display_colour_presets() {
     let colours = {
@@ -46293,7 +46297,7 @@
     });
   }
   function export_settings() {
-    share(JSON.stringify(settings));
+    share(JSON.stringify(compile_settings()));
   }
   unsafeWindow._reset_settings = function() {
     dialog({
@@ -58043,75 +58047,6 @@
 
   // src/build/config.js
   var settings = {};
-  var settings_template = {
-    theme: "dark",
-    high_contrast: false,
-    gloss: 0,
-    gendered_tags: true,
-    show_extra_nav: true,
-    accent_type: "avatar",
-    hue: 255,
-    sat: 1,
-    sat_bg: 1,
-    lit: 1,
-    dev: false,
-    branch: "uwu",
-    api_key: "",
-    profile_header_expand: true,
-    hide_hateful: true,
-    accessible_name_colours: false,
-    reduced_motion: false,
-    underline_links: false,
-    big_numbers: false,
-    format_guest_features: true,
-    show_guest_features: false,
-    stacked_chartlist_info: true,
-    show_remaster_tags: true,
-    corrections: true,
-    colourful_counts: true,
-    colourful_tracks: true,
-    rain: false,
-    feature_flags: {},
-    show_your_progress: true,
-    travis: false,
-    list_view: 1,
-    chart_view: "line",
-    chart_bar_axis: "horizontal",
-    chart_insights_view: "pie",
-    shout_markdown: true,
-    bio_markdown: true,
-    hue_from_album: true,
-    seasonal: true,
-    seasonal_particles: "all",
-    seasonal_particles_fps: false,
-    seasonal_overlays: true,
-    profile_header_own: true,
-    profile_header_others: true,
-    profile_avi_background: false,
-    profile_shortcut: "",
-    font: "",
-    font_weight: 480,
-    font_weight_medium: 650,
-    font_weight_bold: 730,
-    font_emoji: true,
-    show_bulk_edit_album: false,
-    grid_glow: true,
-    auth_menu_obsessions: false,
-    default_avatar_action: "expand",
-    glacier_library_graphs: true,
-    activities: true,
-    activity_shout: true,
-    activity_image: true,
-    activity_obsess: true,
-    activity_love: true,
-    activity_bookmark: true,
-    activity_install: true,
-    activity_wiki: true,
-    simulate_scroll: true,
-    toggle_icon: false,
-    log_show_all: false,
-    avatar_radius: 50
-  };
   var settings_base = {
     theme: {
       css: "theme",

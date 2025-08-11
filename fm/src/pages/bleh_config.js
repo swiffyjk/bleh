@@ -22,7 +22,7 @@ import {update_page} from "../page";
 import {seasonal_timer_end, seasonal_timer_start} from "../seasonal";
 import {ff} from "../sku";
 import {html, render} from "lighterhtml"
-import {save_setting, setting} from "../components/settings.js";
+import {compile_settings, save_setting, setting} from "../components/settings.js";
 import {parse_scrobbles_as_rank} from "../components/colourful_counts.js";
 import {input} from "../components/input.js";
 import {share} from "../components/share.js";
@@ -1270,7 +1270,7 @@ export function render_setting_page(page_id) {
 
                                 settings.feature_flags[flag] = !current;
                                 document.documentElement.setAttribute(`data-ff--${flag}`, (!current).toString());
-                                localStorage.setItem('bleh', JSON.stringify(settings));
+                                compile_settings();
                             }}>
                                 <div class="heading">
                                     <h5>${details.name}</h5>
@@ -1555,7 +1555,7 @@ function update_flag_toggle(flag, container) {
     document.documentElement.setAttribute(`data-ff--${flag}`, `${!current_state}`);
 
     // save to settings
-    localStorage.setItem('bleh', JSON.stringify(settings));
+    compile_settings();
 }
 
 
@@ -2044,7 +2044,7 @@ function import_settings() {
 
 // export settings
 function export_settings() {
-    share(JSON.stringify(settings));
+    share(JSON.stringify(compile_settings()));
 }
 
 
