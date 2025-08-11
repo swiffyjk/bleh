@@ -382,6 +382,8 @@ function assign_page_subpage() {
 function load_page() {
     //hideAll({duration: 0});
 
+    page.structure.notifications.setAttribute('data-auth-open', 'false');
+
     set_season();
     seasonal_timer_end();
 

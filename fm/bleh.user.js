@@ -51127,6 +51127,7 @@
     }
   }
   function load_page() {
+    page.structure.notifications.setAttribute("data-auth-open", "false");
     set_season();
     seasonal_timer_end();
     bleh_footer();
