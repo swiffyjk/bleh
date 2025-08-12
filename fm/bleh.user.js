@@ -51033,8 +51033,7 @@
       music_grids();
     if (page.type == "user" || page.type == "artist" || page.type == "album" || page.type == "track" || page.type == "events" || page.type == "festival" || page.type == "tag") {
       patch_shouts();
-      if (shout_parse_queue.length > 0)
-        parse_shout_queue();
+      if (shout_parse_queue.length > 0) parse_shout_queue();
     }
     if (page.type == "user" && page.subpage.startsWith("library") && (page.subpage != "library_overview" && !page.subpage.startsWith("library_artist_") && !page.subpage.startsWith("library_album_") && !page.subpage.startsWith("library_track_")))
       bleh_glacier_library();
@@ -51044,28 +51043,21 @@
     if (page.type == "user" || page.type == "artist" || page.type == "album" || page.type == "events" || page.type == "festival" || page.type == "tag" || page.type == "overview" || page.type == "bookmarks") {
       patch_titles();
     }
-    if (page.type == "user" || page.type == "artist" || page.type == "album" || page.type == "track") {
-      nag_bar();
-    }
     if (settings.corrections) {
-      correct_generic_combo_no_artist("artist-header-featured-items-item");
-      correct_generic_combo_no_artist("artist-top-albums-item");
       correct_generic_combo("resource-list--release-list-item");
       correct_generic_combo("similar-albums-item");
       correct_generic_combo("track-similar-tracks-item");
       correct_generic_combo("similar-items-sidebar-item");
-      if (page.type == "track") {
-        correct_generic_combo("source-album-details");
-      }
       if (page.type == "bookmarks" || page.type == "releases") {
         correct_generic_artist("music-bookmarks-artists-item");
         correct_generic_combo("music-bookmarks-albums-item");
       }
     }
     if (page.type == "overview" && page.subpage == "music") {
-      let items = page.structure.main.querySelectorAll(".music-featured-item:not(.music-featured-tag)");
+      let items = page.structure.main.querySelectorAll('.music-featured-item:not(.music-featured-tag, [data-passed="true"])');
       items.forEach((item) => {
-        let bg = item.querySelector(".music-featured-item-background");
+        item.setAttribute("data-passed", "true");
+        const bg = item.querySelector(".music-featured-item-background");
         if (!bg) return;
         let style = bg.style.getPropertyValue("background-image");
         if (!style)
@@ -51167,6 +51159,17 @@
         page_title();
         return;
       }
+      if (page.type == "user" || page.type == "artist" || page.type == "album" || page.type == "track") {
+        nag_bar();
+      }
+      if (settings.corrections) {
+        if (page.type == "artist") {
+          correct_generic_combo_no_artist("artist-header-featured-items-item");
+          correct_generic_combo_no_artist("artist-top-albums-item");
+        } else if (page.type == "track") {
+          correct_generic_combo("source-album-details");
+        }
+      }
       if (page.type == "user")
         bleh_profiles();
       else if (page.type == "artist")
@@ -51201,12 +51204,13 @@
       if (page.subpage == "images_overview") {
         let sort_button = page.structure.main.querySelector(".dropdown-menu-clickable-button");
         let sort_menu = page.structure.main.querySelector(".dropdown-menu-clickable");
-        let sort_wrap = document.createElement("div");
-        if (sort_wrap && sort_button) {
-          sort_wrap.classList.add("dropdown-top-wrap");
-          sort_wrap.appendChild(sort_button);
-          sort_wrap.appendChild(sort_menu);
-          page.structure.main.insertBefore(sort_wrap, page.structure.main.firstElementChild);
+        if (sort_button && sort_menu) {
+          page.structure.main.insertBefore(html.node`
+                    <div class="dropdown-top-wrap">
+                        ${sort_button}
+                        ${sort_menu}
+                    </div>
+                `, page.structure.main.firstElementChild);
         }
       }
       if (page.subpage == "image") {
