@@ -111,7 +111,8 @@ export let includes = {
         'feat.', 'featuring',
         '- with', '(with', '[with', 'w/ ',
         'ft.',
-        'ref.'
+        'ref.',
+        '(hosted by'
     ],
     versions: [
         '(taylor', '- spotify singles',
@@ -181,10 +182,12 @@ export let includes = {
         '- single', '(single',
         '- mixtape', '(mixtape',
         '- box set', '(box set',
-        //,
+        //
         '- 19', '- 20', '(19', '(20',
         '- 10th', '- 25th', '- 30th', '- 35th', '- 40th', '- 50th', '- 60th',
-        '(10th', '(25th', '(30th', '(35th', '(40th', '(50th', '(60th'
+        '(10th', '(25th', '(30th', '(35th', '(40th', '(50th', '(60th',
+        //
+        '(magic city edition'
     ],
     form: [
         '[clean', '[explicit',

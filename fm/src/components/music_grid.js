@@ -209,9 +209,9 @@ export function music_grids(search=page.structure.main, use_colour = true) {
 
                 // combine
                 render(name_elem, html.node`
-                    <div class="title">${song_title.trim()}</div>
+                    <span class="title">${song_title.trim()}</span>
                     ${song_tags.map((tag) => html.node`
-                        <div class="feat" data-bleh--tag-type="${tag.type}" data-bleh--tag-group="${tag.group}">${tag.text}</div>
+                        <span class="feat" data-bleh--tag-type="${tag.type}" data-bleh--tag-group="${tag.group}">${tag.text}</span>
                     `)}
                 `);
             } else {

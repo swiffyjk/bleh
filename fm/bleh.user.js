@@ -24570,7 +24570,8 @@
       "[with",
       "w/ ",
       "ft.",
-      "ref."
+      "ref.",
+      "(hosted by"
     ],
     versions: [
       "(taylor",
@@ -24748,7 +24749,7 @@
       "(mixtape",
       "- box set",
       "(box set",
-      //,
+      //
       "- 19",
       "- 20",
       "(19",
@@ -24766,7 +24767,9 @@
       "(35th",
       "(40th",
       "(50th",
-      "(60th"
+      "(60th",
+      //
+      "(magic city edition"
     ],
     form: [
       "[clean",
@@ -26636,9 +26639,9 @@
             artist.textContent = formatted_title[2];
           }
           render(name_elem, html.node`
-                    <div class="title">${song_title.trim()}</div>
+                    <span class="title">${song_title.trim()}</span>
                     ${song_tags.map((tag) => html.node`
-                        <div class="feat" data-bleh--tag-type="${tag.type}" data-bleh--tag-group="${tag.group}">${tag.text}</div>
+                        <span class="feat" data-bleh--tag-type="${tag.type}" data-bleh--tag-group="${tag.group}">${tag.text}</span>
                     `)}
                 `);
         } else {
