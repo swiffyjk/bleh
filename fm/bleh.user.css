@@ -8020,7 +8020,7 @@
     .breadcrumb :is(a, .breadcrumb-origin):before, .gallery-image-uploaded-by:before,
     /* v2 */ .form-arrow:before,
     .select-button:after,
-    .involved--track:before, .involved--album:before, .involved--artist:before, .involved--tag:before,
+    .involved--track:before, .involved--album:before, .involved--artist:before, .involved--tag:before, .involved--user:before,
     .activity-item:before,
     .lotus-name:before,
     .modal-action-button:before,
@@ -18365,7 +18365,6 @@
         --left: 0;
         --mask-size: 14px;
     }
-    .involved--user,
     .mention,
     :is(.shout-body, .about-me-sidebar, .bleh--about-me-preview, .wiki-content, .markdown-body, .user-list-about-me) > p a[href*="/user/"]:not([href^=https], [href*="/library/music/"]) {
         padding: 0 4px;
@@ -20364,7 +20363,7 @@
             width: fit-content;
             font-weight: var(--font-weight-medium);
 
-            .involved--track, .involved--album, .involved--artist, .involved--tag {
+            .involved--track, .involved--album, .involved--artist, .involved--tag, .involved--user {
                 position: relative;
                 padding-left: calc(12px + 2px);
                 --left: 0;
@@ -20385,9 +20384,7 @@
             }
 
             .involved--user {
-                &:before {
-                    content: '@';
-                }
+                --mask: var(--icon-16-user);
             }
 
             .involved--track, .involved--album {
