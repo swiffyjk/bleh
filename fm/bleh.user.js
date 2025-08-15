@@ -27324,7 +27324,7 @@
           log(`pushed insight track label of ${track_title.getAttribute("data-name")}`, "glacier library", "log");
           insights.track.labels.push(track_title.getAttribute("data-name"));
         }
-        const show_album_text = is_active || settings.expand_tracks == "always";
+        const show_album_text = (is_active || settings.expand_tracks == "always") && settings.expand_tracks != "never";
         track.setAttribute("data-show-album-text", show_album_text);
         if (!is_album && !has_bar && show_album_text) {
           let image_wrap = track.querySelector(".chartlist-image");
@@ -47696,20 +47696,40 @@
     links.appendChild(inbox);
     let selected_language = document.querySelector(".footer-language--active strong")?.textContent;
     let language_options = document.querySelectorAll(".footer-language-form");
-    let language_menu = html.node`
+    const language_menu = html.node`
         <div class="language-menu">
             <button class="dropdown-menu-clickable-item lang-item active" data-lang="${lang}" style="--flag-url: url('https://katelyynn.github.io/bleh/fm/flags/${lang}.svg')">
-                ${selected_language}
+                <div class="auth-dropdown-item-row">
+                    <span class="auth-dropdown-item-left">
+                        ${selected_language}
+                    </span>
+                    <span class="auth-dropdown-item-right">
+                        <div class="bleh-icon checkmark" />
+                    </span>
+                </div>
             </button>
             <div class="sep"></div>
         </div>
     `;
     language_options.forEach((language_option) => {
-      let button = language_option.querySelector("button");
+      const button = language_option.querySelector("button");
+      const key = button.getAttribute("name");
       button.classList.remove("mimic-link");
-      button.classList.add("dropdown-menu-clickable-item", "lang-item");
-      button.setAttribute("data-lang", button.getAttribute("name"));
-      button.style.setProperty("--flag-url", `url('https://katelyynn.github.io/bleh/fm/flags/${button.getAttribute("name")}.svg')`);
+      button.classList.add("dropdown-menu-clickable-item", "lang-item", "flex-button");
+      button.setAttribute("data-lang", key);
+      button.style.setProperty("--flag-url", `url('https://katelyynn.github.io/bleh/fm/flags/${key}.svg')`);
+      if (lang_info.hasOwnProperty(key)) {
+        render(button, html`
+                <div class="auth-dropdown-item-row">
+                    <span class="auth-dropdown-item-left">
+                        ${button.textContent}
+                    </span>
+                    <span class="auth-dropdown-item-right">
+                        <div class="bleh-icon checkmark" />
+                    </span>
+                </div>
+            `);
+      }
       language_menu.appendChild(language_option);
     });
     let themes = [
@@ -54486,6 +54506,9 @@
     always_remind_me: {
       en: "Always remind me"
     },
+    never: {
+      en: "Never"
+    },
     edit_scrobble: {
       en: "Edit scrobble",
       pt: "Editar scrobble"
@@ -59037,11 +59060,14 @@
       title: trans.expand_tracks.name,
       body: trans.expand_tracks.body,
       values: {
+        always: {
+          name: trans.expand_tracks_always
+        },
         active: {
           name: trans.expand_tracks_when_active
         },
-        always: {
-          name: trans.expand_tracks_always
+        never: {
+          name: trans.never
         }
       },
       new_release: true

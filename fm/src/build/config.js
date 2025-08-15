@@ -1071,11 +1071,14 @@ export let settings_store = {
         title: trans.expand_tracks.name,
         body: trans.expand_tracks.body,
         values: {
+            always: {
+                name: trans.expand_tracks_always
+            },
             active: {
                 name: trans.expand_tracks_when_active
             },
-            always: {
-                name: trans.expand_tracks_always
+            never: {
+                name: trans.never
             }
         },
         new_release: true

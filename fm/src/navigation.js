@@ -7,7 +7,7 @@
 import {settings} from "./build/config";
 import {auth, page, root} from "./build/page";
 import {stored_season} from "./build/seasonal";
-import {lang, tl, trans, trans_legacy} from "./build/trans";
+import {lang, lang_info, tl, trans, trans_legacy} from "./build/trans";
 import {create_badge, load_badges} from "./components/badge";
 import {version} from "./main";
 import {ff} from "./sku";
@@ -379,21 +379,44 @@ export function append_nav() {
     let selected_language = document.querySelector('.footer-language--active strong')?.textContent;
     let language_options = document.querySelectorAll('.footer-language-form');
 
-    let language_menu = html.node`
+    const language_menu = html.node`
         <div class="language-menu">
             <button class="dropdown-menu-clickable-item lang-item active" data-lang="${lang}" style="--flag-url: url('https://katelyynn.github.io/bleh/fm/flags/${lang}.svg')">
-                ${selected_language}
+                <div class="auth-dropdown-item-row">
+                    <span class="auth-dropdown-item-left">
+                        ${selected_language}
+                    </span>
+                    <span class="auth-dropdown-item-right">
+                        <div class="bleh-icon checkmark" />
+                    </span>
+                </div>
             </button>
             <div class="sep"></div>
         </div>
     `;
 
     language_options.forEach((language_option) => {
-        let button = language_option.querySelector('button');
+        const button = language_option.querySelector('button');
+        const key = button.getAttribute('name');
+
         button.classList.remove('mimic-link');
-        button.classList.add('dropdown-menu-clickable-item', 'lang-item');
-        button.setAttribute('data-lang', button.getAttribute('name'));
-        button.style.setProperty('--flag-url', `url('https://katelyynn.github.io/bleh/fm/flags/${button.getAttribute('name')}.svg')`);
+        button.classList.add('dropdown-menu-clickable-item', 'lang-item', 'flex-button');
+
+        button.setAttribute('data-lang', key);
+        button.style.setProperty('--flag-url', `url('https://katelyynn.github.io/bleh/fm/flags/${key}.svg')`);
+
+        if (lang_info.hasOwnProperty(key)) {
+            render(button, html`
+                <div class="auth-dropdown-item-row">
+                    <span class="auth-dropdown-item-left">
+                        ${button.textContent}
+                    </span>
+                    <span class="auth-dropdown-item-right">
+                        <div class="bleh-icon checkmark" />
+                    </span>
+                </div>
+            `);
+        }
 
         language_menu.appendChild(language_option);
     });

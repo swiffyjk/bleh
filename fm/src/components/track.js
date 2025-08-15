@@ -666,7 +666,7 @@ export function patch_titles(search=page.structure.main) {
             }
 
 
-            const show_album_text = is_active || settings.expand_tracks == 'always';
+            const show_album_text = (is_active || settings.expand_tracks == 'always') && settings.expand_tracks != 'never';
             track.setAttribute('data-show-album-text', show_album_text);
 
             if (!is_album && !has_bar && show_album_text) {
