@@ -20,12 +20,14 @@ import tippy from "tippy.js";
 import ColorThief from "color-thief-browser";
 
 export function patch_titles(search=page.structure.main) {
-    if (page.subpage === 'tags_overview' || page.subpage == 'tags_tag')
+    if (page.subpage === 'tags_overview' || page.subpage == 'tags_tag') return;
+
+    if (!search) {
+        log('tracks could not be searched as search was undefined', 'tracks', 'log', {search});
         return;
+    }
 
-    if (!search) return;
-
-    let tracklists = search.querySelectorAll('.chartlist:not(.chartlist__placeholder)');
+    const tracklists = search.querySelectorAll('.chartlist:not(.chartlist__placeholder)');
 
     let insights = {
         artist: {
@@ -66,13 +68,13 @@ export function patch_titles(search=page.structure.main) {
     tracklists.forEach((tracklist) => {
         if (!tracklist) return;
 
-        log('found, checking', 'tracks', 'log', {tracklist: tracklist});
+        log('found, checking', 'tracks', 'log', {tracklist, search});
 
         // used to ensure this hasnt been run thru
         if (tracklist.querySelector('tbody > .chartlist-row:first-child > .kate-placeholder'))
             return;
 
-        log('new!', 'tracks', 'info', {tracklist: tracklist});
+        log('new!', 'tracks', 'info', {tracklist});
 
         let wide = tracklist.classList.contains('chartlist--wide-artist-column');
 
@@ -80,8 +82,7 @@ export function patch_titles(search=page.structure.main) {
 
         tracks.forEach((track, index) => {
             console.log('track', track);
-            if (track.getAttribute('data-track-type'))
-                return;
+            if (track.getAttribute('data-track-type')) return;
 
             // ads slowly move up the tree until eventually causing a crash
             if (track.classList[0] === 'chartlist-row--interlist-ad') {

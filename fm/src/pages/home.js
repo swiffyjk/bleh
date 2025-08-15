@@ -4,8 +4,7 @@
 // Licensed under GPLv3
 //
 
-import {render_activity_list} from "../activity"
-import {settings} from "../build/config";
+import {render_activity_list} from "../activity";
 import {log} from "../build/log";
 import {auth, page, root} from "../build/page";
 import {tl, trans} from "../build/trans";
@@ -243,20 +242,20 @@ export function bleh_home() {
 
         page.structure.row.insertBefore(toolbar, page.structure.content);
 
-        // top panel
-        let beret = html.node`
+        let track_list;
+        page.structure.row.insertBefore(html.node`
             <div class="content override">
-                <div class="col-main">
+                <div class="col-main" ref=${el => page.structure.main = el}>
                     <section>
                         <h2>${tl(trans.recent_tracks)}</h2>
-                        <div class="recent-listening-container">
+                        <div class="recent-listening-container" ref=${el => track_list = el}>
                             <div class="loading-data-container">
                                 <p class="loading-data-text">${tl(trans.finding_your_tracks)}</p>
                             </div>
                         </div>
                     </section>
                 </div>
-                <div class="col-sidebar">
+                <div class="col-sidebar" ref=${el => page.structure.side = el}>
                     <section>
                         <h2>${tl(trans.activity)}</h2>
                         ${render_activity_list()}
@@ -266,9 +265,7 @@ export function bleh_home() {
                     </section>
                 </div>
             </div>
-        `;
-
-        let track_list = beret.querySelector('.recent-listening-container');
+        `, page.structure.content);
 
         fetch(`${root}user/${auth.name}/partial/recenttracks?ajax=1`)
         .then(function(response) {
@@ -285,8 +282,6 @@ export function bleh_home() {
             if (tracklist_panel)
                 track_list.outerHTML = tracklist_panel.outerHTML;
         });
-
-        page.structure.row.insertBefore(beret, page.structure.content);
     } else if (page.type == 'releases') {
         let content = page.structure.main.querySelectorAll(':scope > *');
         let panel = html.node`
