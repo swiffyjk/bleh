@@ -779,6 +779,12 @@ export let settings_store = {
         default: 'all',
         type: 'options'
     },
+    seasonal_particles_fps: {
+        default: false,
+        type: 'checkbox',
+        title: trans.seasonal_particles_fps.name,
+        body: trans.seasonal_particles_fps.body
+    },
     seasonal_overlays: {
         default: true
     },
@@ -1114,6 +1120,16 @@ export let settings_store = {
         },
         new_release: true,
         beta: true
+    },
+    static_avatars: {
+        default: false,
+        type: 'checkbox',
+        title: trans.static_avatars
+    },
+    static_music: {
+        default: true,
+        type: 'checkbox',
+        title: trans.static_music
     },
     static_banners: {
         default: true,

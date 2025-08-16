@@ -10,12 +10,13 @@ import {tl, trans} from "./build/trans";
 import {create_badge, load_badges} from "./components/badge";
 import {dialog} from "./components/dialog";
 import tippy from "tippy.js";
+import { control_gif_pause } from './build/tools';
 
 export function patch_avatar(avatar, name, type = '', parent=null, side='right') {
     if (avatar.hasAttribute('data-bleh-avatar')) return {};
     avatar.setAttribute('data-bleh-avatar', 'true');
 
-    let avatar_img = avatar.querySelector('img');
+    const avatar_img = avatar.querySelector('img');
     if (!avatar_img) return {};
 
     // last.fm bug: it uses 64s instead of avatar70s for
@@ -79,6 +80,8 @@ export function patch_avatar(avatar, name, type = '', parent=null, side='right')
         interactive: true,
         trigger: 'click'
     });
+
+    control_gif_pause(avatar_img);
 
     if (badges) return badges[badges.length - 1];
     else if (pre_existing_badge) return {type: pre_existing_badge.classList[1]};

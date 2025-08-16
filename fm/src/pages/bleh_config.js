@@ -986,18 +986,7 @@ export function render_setting_page(page_id) {
                             </div>
                         </div>
                     </div>
-                    <div class="setting hide-if-seasonal-disabled" data-type="toggle" id="container-seasonal_particles_fps" onclick="_update_item('seasonal_particles_fps')">
-                        <button class="btn reset" onclick="_reset_item('seasonal_particles_fps')">${tl(trans.reset)}</button>
-                        <div class="heading">
-                            <h5>${trans_legacy.en.settings.customise.seasonal.fps_particles.name}</h5>
-                            <p>${trans_legacy.en.settings.customise.seasonal.fps_particles.bio}</p>
-                        </div>
-                        <div class="toggle-wrap">
-                            <button class="toggle" id="toggle-seasonal_particles_fps" aria-checked="true">
-                                <div class="dot"></div>
-                            </button>
-                        </div>
-                    </div>
+                    ${setting({id: 'seasonal_particles_fps'})}
                     <div class="setting hide-if-seasonal-disabled" data-type="toggle" id="container-seasonal_overlays" onclick="_update_item('seasonal_overlays')">
                         <button class="btn reset" onclick="_reset_item('seasonal_overlays')">${tl(trans.reset)}</button>
                         <div class="heading">
@@ -1246,6 +1235,15 @@ export function render_setting_page(page_id) {
                 <h4>${tl(trans.images)}</h4>
                 <div class="setting-group">
                     ${setting({id: 'static_gifs'})}
+                    <div class="setting" data-type="options">
+                        <div class="heading">
+                            <h5>${tl(trans.apply_to)}<div class="new-badge">${tl(trans.new)}</div></h5>
+                        </div>
+                        <div class="primary-selections">
+                            ${setting({id: 'static_avatars', standalone: true})}
+                            ${setting({id: 'static_music', standalone: true})}
+                        </div>
+                    </div>
                     ${setting({id: 'static_banners'})}
                 </div>
             </section>

@@ -24459,6 +24459,50 @@
   function pad2(num) {
     return String(num).padStart(2, "0");
   }
+  function convert_gif_to_png(url) {
+    return new Promise((resolve2, reject) => {
+      const image = html.node`
+            <img crossorigin="anonymous" src=${url}>
+        `;
+      console.info("image", image);
+      image.onload = () => {
+        const canvas = html.node`
+                <canvas width=${image.width} height=${image.height} />
+            `;
+        console.info("image canvas", canvas);
+        const ctx = canvas.getContext("2d");
+        ctx.drawImage(image, 0, 0);
+        resolve2(canvas.toDataURL("image/png"));
+      };
+      image.onerror = reject;
+    });
+  }
+  function control_gif_pause(image, override = false) {
+    let processed = image.getAttribute("data-gif-pause");
+    if (processed) return;
+    image.setAttribute("data-gif-pause", "true");
+    let setting2 = settings.static_gifs;
+    if (override) setting2 = "never";
+    if (setting2 == "always") return;
+    const original = image.src;
+    convert_gif_to_png(original).then((paused) => {
+      if (setting2 == "never") {
+        image.src = paused;
+        return;
+      }
+      image.addEventListener("mouseenter", () => {
+        image.src = original;
+      });
+      image.addEventListener("mouseleave", () => {
+        image.src = paused;
+      });
+      image.src = paused;
+      log("processed url", "image", "log", { original, paused });
+    }).catch((e) => {
+      log("failed to process url", "image", "error", { original });
+      console.error(e);
+    });
+  }
 
   // src/build/music.js
   var artist_corrections = {};
@@ -25284,7 +25328,7 @@
   function patch_avatar(avatar3, name2, type = "", parent = null, side = "right") {
     if (avatar3.hasAttribute("data-bleh-avatar")) return {};
     avatar3.setAttribute("data-bleh-avatar", "true");
-    let avatar_img = avatar3.querySelector("img");
+    const avatar_img = avatar3.querySelector("img");
     if (!avatar_img) return {};
     avatar_img.setAttribute("src", avatar_img.getAttribute("src").replace("/64s/", "/avatar70s/"));
     avatar3.setAttribute("title", "");
@@ -25337,6 +25381,7 @@
       interactive: true,
       trigger: "click"
     });
+    control_gif_pause(avatar_img);
     if (badges) return badges[badges.length - 1];
     else if (pre_existing_badge) return { type: pre_existing_badge.classList[1] };
     else return { type: "none" };
@@ -33595,15 +33640,14 @@
         localStorage.setItem("bleh_profile_shortcut_avi", avatar_img.getAttribute("src"));
       page.structure.container.insertBefore(redesigned_profile_header, page.structure.container.firstElementChild);
       profile_header.classList.add("legacy-header");
-      let header_avatar = redesigned_profile_header.querySelector(".avatar-side");
       if (!new_account) {
-        let src = header_avatar.querySelector("img").getAttribute("src");
+        const src = avatar_img.src;
         page.avatar = src;
-        let avatar_link = document.createElement("a");
-        avatar_link.classList.add("bleh--avatar-clickable-link");
-        avatar_link.setAttribute("onclick", `_expand_avatar('${src.replace("avatar170s", "ar0")}')`);
-        header_avatar.appendChild(avatar_link);
+        avatar3.addEventListener("click", () => {
+          expand_avatar(src.replace("/avatar170s/", "/ar0/"));
+        });
       }
+      control_gif_pause(avatar_img);
     }
     let library_tab = page.structure.nav.querySelector(".secondary-nav-item--library a");
     library_tab.textContent = tl(trans.library);
@@ -45401,18 +45445,7 @@
                             </div>
                         </div>
                     </div>
-                    <div class="setting hide-if-seasonal-disabled" data-type="toggle" id="container-seasonal_particles_fps" onclick="_update_item('seasonal_particles_fps')">
-                        <button class="btn reset" onclick="_reset_item('seasonal_particles_fps')">${tl(trans.reset)}</button>
-                        <div class="heading">
-                            <h5>${trans_legacy.en.settings.customise.seasonal.fps_particles.name}</h5>
-                            <p>${trans_legacy.en.settings.customise.seasonal.fps_particles.bio}</p>
-                        </div>
-                        <div class="toggle-wrap">
-                            <button class="toggle" id="toggle-seasonal_particles_fps" aria-checked="true">
-                                <div class="dot"></div>
-                            </button>
-                        </div>
-                    </div>
+                    ${setting({ id: "seasonal_particles_fps" })}
                     <div class="setting hide-if-seasonal-disabled" data-type="toggle" id="container-seasonal_overlays" onclick="_update_item('seasonal_overlays')">
                         <button class="btn reset" onclick="_reset_item('seasonal_overlays')">${tl(trans.reset)}</button>
                         <div class="heading">
@@ -45652,6 +45685,15 @@
                 <h4>${tl(trans.images)}</h4>
                 <div class="setting-group">
                     ${setting({ id: "static_gifs" })}
+                    <div class="setting" data-type="options">
+                        <div class="heading">
+                            <h5>${tl(trans.apply_to)}<div class="new-badge">${tl(trans.new)}</div></h5>
+                        </div>
+                        <div class="primary-selections">
+                            ${setting({ id: "static_avatars", standalone: true })}
+                            ${setting({ id: "static_music", standalone: true })}
+                        </div>
+                    </div>
                     ${setting({ id: "static_banners" })}
                 </div>
             </section>
@@ -52152,6 +52194,14 @@
         pt: "Adapta a cor padr\xE3o, \xEDcones e exibe part\xEDculas dependendo da sazonalidade"
       }
     },
+    seasonal_particles_fps: {
+      name: {
+        en: "Reduce quality of particles"
+      },
+      body: {
+        en: "Snow particles use a drop-shadow glow for aesthetics with the added processing cost"
+      }
+    },
     seasonal_offset: {
       en: "Seasonal events are ran in your timezone, which we calculated as {offset}",
       de: "Saisonale Events werden in deiner Zeitzone ausgef\xFChrt, die wir als {offset} berechnet haben",
@@ -54040,8 +54090,8 @@
         pt: "Mostrar particulas durante esta\xE7\xF5es selecionadas"
       },
       body: {
-        en: "During Winter seasons watch pretty snowflakes fall :3",
-        pt: "Durante as sess\xF5es de inverno, veja flocos de neve bonitinhos caindo :3"
+        en: "During colder seasons, watch pretty snowflakes fall \u22C6\u207A\u208A\u2745\u3002",
+        pt: "Durante as sess\xF5es de inverno, veja flocos de neve bonitinhos caindo \u22C6\u207A\u208A\u2745\u3002"
       }
     },
     all_particles: {
@@ -55063,6 +55113,18 @@
     },
     change_zoom: {
       en: "Change zoom level"
+    },
+    static_avatars: {
+      en: "User avatars"
+    },
+    static_music: {
+      en: "Artists and albums"
+    },
+    apply_to: {
+      en: "Apply to"
+    },
+    change_images_for: {
+      en: "Change images for"
     }
   };
   var trans_legacy = {
@@ -58837,6 +58899,12 @@
       default: "all",
       type: "options"
     },
+    seasonal_particles_fps: {
+      default: false,
+      type: "checkbox",
+      title: trans.seasonal_particles_fps.name,
+      body: trans.seasonal_particles_fps.body
+    },
     seasonal_overlays: {
       default: true
     },
@@ -59172,6 +59240,16 @@
       },
       new_release: true,
       beta: true
+    },
+    static_avatars: {
+      default: false,
+      type: "checkbox",
+      title: trans.static_avatars
+    },
+    static_music: {
+      default: true,
+      type: "checkbox",
+      title: trans.static_music
     },
     static_banners: {
       default: true,

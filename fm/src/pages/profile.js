@@ -9,7 +9,7 @@ import {settings} from "../build/config"
 import {log} from "../build/log"
 import {auth, page, root} from "../build/page"
 import {sponsor_list} from "../build/sponsor"
-import {clean_number, lazy, sanitise} from "../build/tools"
+import {clean_number, control_gif_pause, lazy, sanitise} from "../build/tools"
 import {lang, tl, trans} from "../build/trans"
 import {prep_chart_colours} from '../chart'
 import {create_badge, load_badges} from "../components/badge"
@@ -33,6 +33,7 @@ import {submit_scrobble} from '../components/scrobble.js'
 import {redirect} from "../components/music.js";
 import tippy from "tippy.js";
 import {Chart} from "../main.js";
+import { expand_avatar } from '../avatar.js'
 
 export function bleh_profiles() {
     // the obsessions page is a user subpage but works very differently
@@ -132,17 +133,16 @@ export function bleh_profiles() {
 
 
         // make avatar clickable
-        let header_avatar = redesigned_profile_header.querySelector('.avatar-side');
-
         if (!new_account) {
-            let src = header_avatar.querySelector('img').getAttribute('src');
+            const src = avatar_img.src;
             page.avatar = src;
 
-            let avatar_link = document.createElement('a');
-            avatar_link.classList.add('bleh--avatar-clickable-link');
-            avatar_link.setAttribute('onclick', `_expand_avatar('${src.replace('avatar170s', 'ar0')}')`);
-            header_avatar.appendChild(avatar_link);
+            avatar.addEventListener('click', () => {
+                expand_avatar(src.replace('/avatar170s/', '/ar0/'));
+            });
         }
+
+        control_gif_pause(avatar_img);
     }
 
     // translations in other languages

@@ -638,6 +638,14 @@ export const trans = {
             pt: 'Adapta a cor padrão, ícones e exibe partículas dependendo da sazonalidade'
         }
     },
+    seasonal_particles_fps: {
+        name: {
+            en: 'Reduce quality of particles'
+        },
+        body: {
+            en: 'Snow particles use a drop-shadow glow for aesthetics with the added processing cost'
+        }
+    },
     seasonal_offset: {
         en: 'Seasonal events are ran in your timezone, which we calculated as {offset}',
         de: 'Saisonale Events werden in deiner Zeitzone ausgeführt, die wir als {offset} berechnet haben',
@@ -2526,8 +2534,8 @@ export const trans = {
             pt: 'Mostrar particulas durante estações selecionadas'
         },
         body: {
-            en: 'During Winter seasons watch pretty snowflakes fall :3',
-            pt: 'Durante as sessões de inverno, veja flocos de neve bonitinhos caindo :3'
+            en: 'During colder seasons, watch pretty snowflakes fall ⋆⁺₊❅。',
+            pt: 'Durante as sessões de inverno, veja flocos de neve bonitinhos caindo ⋆⁺₊❅。'
         }
     },
     all_particles: {
@@ -3549,6 +3557,18 @@ export const trans = {
     },
     change_zoom: {
         en: 'Change zoom level'
+    },
+    static_avatars: {
+        en: 'User avatars'
+    },
+    static_music: {
+        en: 'Artists and albums'
+    },
+    apply_to: {
+        en: 'Apply to'
+    },
+    change_images_for: {
+        en: 'Change images for'
     }
 }
 

@@ -8,6 +8,8 @@
 import {log} from "./log.js";
 import {notify} from "../components/notify.js";
 import {tl, trans} from "./trans.js";
+import { settings } from './config.js';
+import {html} from "lighterhtml";
 
 /**
  * Converts hex to {h, s, l}
@@ -300,4 +302,60 @@ export function download_with_progress(url, func) {
 
 export function pad2(num) {
     return String(num).padStart(2, '0');
+}
+
+export function convert_gif_to_png(url) {
+    return new Promise((resolve, reject) => {
+        const image = html.node`
+            <img crossorigin="anonymous" src=${url}>
+        `;
+        console.info('image', image);
+
+        image.onload = () => {
+            const canvas = html.node`
+                <canvas width=${image.width} height=${image.height} />
+            `;
+            console.info('image canvas', canvas);
+
+            const ctx = canvas.getContext('2d');
+            ctx.drawImage(image, 0, 0);
+            resolve(canvas.toDataURL('image/png'));
+        }
+
+        image.onerror = reject;
+    })
+}
+
+export function control_gif_pause(image, override = false) {
+    let processed = image.getAttribute('data-gif-pause');
+    if (processed) return;
+    image.setAttribute('data-gif-pause', 'true');
+
+    let setting = settings.static_gifs;
+    if (override) setting = 'never';
+
+    if (setting == 'always') return;
+
+    const original = image.src;
+
+    convert_gif_to_png(original).then(paused => {
+        if (setting == 'never') {
+            image.src = paused;
+            return;
+        }
+
+        image.addEventListener('mouseenter', () => {
+            image.src = original;
+        });
+
+        image.addEventListener('mouseleave', () => {
+            image.src = paused;
+        });
+
+        image.src = paused;
+        log('processed url', 'image', 'log', {original, paused});
+    }).catch(e => {
+        log('failed to process url', 'image', 'error', {original});
+        console.error(e);
+    });
 }
