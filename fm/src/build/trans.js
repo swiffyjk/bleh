@@ -3583,6 +3583,20 @@ export const trans = {
     },
     change_images_for: {
         en: 'Change images for'
+    },
+    leaving_site: {
+        name: {
+            en: 'Leaving site'
+        },
+        body: {
+            en: 'The link you clicked wants to take you to'
+        }
+    },
+    leaving_site_checkbox: {
+        en: 'Trust {v} links in the future'
+    },
+    visit: {
+        en: 'Visit'
     }
 }
 

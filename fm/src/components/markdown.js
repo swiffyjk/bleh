@@ -12,10 +12,12 @@ import showdown from "showdown";
 import DOMPurify from "dompurify";
 import {expand_avatar} from "../avatar.js";
 import { tl, trans } from '../build/trans.js';
-import { dialog } from './dialog.js';
-import { settings_store } from '../build/config.js';
+import { dialog, dialog_rm } from './dialog.js';
+import { settings, settings_store } from '../build/config.js';
 import { log } from '../build/log.js';
 import { save_profile_cache } from '../pages/profile.js';
+import { toggle } from './toggle.js';
+import { save_setting } from './settings.js';
 
 export function markdown(text, {
     allow_headers = false,
@@ -345,4 +347,61 @@ export function markdown_prompt({
 function local_restriction(text) {
     if (text.textContent.trim().startsWith('Due to local laws, we are temporarily'))
         text.classList.add('local-restriction');
+}
+
+export function external_url_prompt(url) {
+    log(`prompted warning for url ${url}`, 'markdown');
+
+    const link = new URL(url);
+    const scheme = link.protocol;
+    const hostname = link.hostname;
+    const path = link.pathname + link.search + link.hash;
+
+    let trust_site;
+
+    dialog({
+        id: 'external_url',
+        type: 'leaving_site',
+        body: html.node`
+            <div class="modal-vertical-inner leaving-site-inner">
+                <h1>${tl(trans.leaving_site.name)}</h1>
+                <p>${tl(trans.leaving_site.body)}</p>
+                <div class="external-warn-input">
+                    <span class="scheme">
+                        ${scheme}//
+                    </span>
+                    <span class="hostname">
+                        ${hostname}
+                    </span>
+                    <span class="path">
+                        ${path}
+                    </span>
+                </div>
+                ${trust_site = toggle({
+                    type: 'checkbox',
+                    title: tl(trans.leaving_site_checkbox).replace('{v}', hostname)
+                })}
+            </div>
+            <div class="modal-footer">
+                <button class="see-more cancel" onclick=${() => dialog_rm({id: 'external_url'})}>
+                    ${tl(trans.back)}
+                </button>
+                <div class="fill"></div>
+                <button class="btn primary continue" onclick=${() => {
+                    if (trust_site.checked()) {
+                        save_setting('trusted_sites', [
+                            ...settings.trusted_sites,
+                            hostname
+                        ]);
+                        log(`added ${hostname} to trusted sites`, 'markdown');
+                    }
+
+                    open(url, '_blank');
+                    dialog_rm({id: 'external_url'});
+                }}>
+                    ${tl(trans.visit)}
+                </button>
+            </div>
+        `
+    });
 }

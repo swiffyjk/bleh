@@ -6,11 +6,13 @@
 
 import {patch_avatar} from "../avatar";
 import {auth, page, root} from "../build/page";
-import {copy, desanitise} from "../build/tools";
+import {copy, desanitise, is_link_external} from "../build/tools";
 import {tl, trans} from "../build/trans";
 import {ff} from "../sku";
 import {html} from "lighterhtml";
 import tippy from "tippy.js";
+import { external_url_prompt } from '../components/markdown';
+import { settings } from '../build/config';
 
 export function bleh_wiki() {
     // make a new panel
@@ -379,13 +381,24 @@ export function patch_wiki_contents(wiki_block) {
         let sister;
 
         if (!href.startsWith(root)) {
-            if (href && link.textContent != href && /^(https?|mailto|ftp|sftp|tel):/.test(href)) {
+            if (href && link.textContent != href && is_link_external(href)) {
                 tippy(link, {
                     theme: 'name-sister-combo',
                     content: html.node`
                     <span class="name">${href}</span>
                     <span class="sister">${tl(trans.external)}</span>
                 `
+                });
+
+                link.addEventListener('click', e => {
+                    const link = new URL(href);
+                    const hostname = link.hostname;
+
+                    if (settings.trusted_sites.includes(hostname)) return;
+
+                    e.preventDefault();
+
+                    external_url_prompt(href);
                 });
             }
 

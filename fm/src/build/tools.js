@@ -359,3 +359,12 @@ export function control_gif_pause(image, override = false) {
         console.error(e);
     });
 }
+
+export function is_link_external(url) {
+    try {
+        const link = new URL(url, window.location.origin);
+        return link.hostname != window.location.hostname;
+    } catch {
+        return false;
+    }
+}

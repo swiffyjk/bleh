@@ -24503,6 +24503,14 @@
       console.error(e);
     });
   }
+  function is_link_external(url) {
+    try {
+      const link = new URL(url, window.location.origin);
+      return link.hostname != window.location.hostname;
+    } catch {
+      return false;
+    }
+  }
 
   // src/build/music.js
   var artist_corrections = {};
@@ -25961,13 +25969,20 @@
       let name = link.textContent.trim();
       let sister;
       if (!href.startsWith(root)) {
-        if (href && link.textContent != href && /^(https?|mailto|ftp|sftp|tel):/.test(href)) {
+        if (href && link.textContent != href && is_link_external(href)) {
           tippy_esm_default(link, {
             theme: "name-sister-combo",
             content: html.node`
                     <span class="name">${href}</span>
                     <span class="sister">${tl(trans.external)}</span>
                 `
+          });
+          link.addEventListener("click", (e) => {
+            const link2 = new URL(href);
+            const hostname = link2.hostname;
+            if (settings.trusted_sites.includes(hostname)) return;
+            e.preventDefault();
+            external_url_prompt(href);
           });
         }
         return;
@@ -33651,6 +33666,9 @@
       if (func) func(false);
       checkbox.checked = false;
       state.setAttribute("aria-checked", false);
+    };
+    elem.checked = () => {
+      return checkbox.checked;
     };
     elem.disabled = (state2 = null) => {
       if (state2 === null) return checkbox.getAttribute("disabled") || false;
@@ -44479,6 +44497,58 @@
     if (text3.textContent.trim().startsWith("Due to local laws, we are temporarily"))
       text3.classList.add("local-restriction");
   }
+  function external_url_prompt(url) {
+    log(`prompted warning for url ${url}`, "markdown");
+    const link = new URL(url);
+    const scheme = link.protocol;
+    const hostname = link.hostname;
+    const path = link.pathname + link.search + link.hash;
+    let trust_site;
+    dialog({
+      id: "external_url",
+      type: "leaving_site",
+      body: html.node`
+            <div class="modal-vertical-inner leaving-site-inner">
+                <h1>${tl(trans.leaving_site.name)}</h1>
+                <p>${tl(trans.leaving_site.body)}</p>
+                <div class="external-warn-input">
+                    <span class="scheme">
+                        ${scheme}//
+                    </span>
+                    <span class="hostname">
+                        ${hostname}
+                    </span>
+                    <span class="path">
+                        ${path}
+                    </span>
+                </div>
+                ${trust_site = toggle({
+        type: "checkbox",
+        title: tl(trans.leaving_site_checkbox).replace("{v}", hostname)
+      })}
+            </div>
+            <div class="modal-footer">
+                <button class="see-more cancel" onclick=${() => dialog_rm({ id: "external_url" })}>
+                    ${tl(trans.back)}
+                </button>
+                <div class="fill"></div>
+                <button class="btn primary continue" onclick=${() => {
+        if (trust_site.checked()) {
+          save_setting("trusted_sites", [
+            ...settings.trusted_sites,
+            hostname
+          ]);
+          log(`added ${hostname} to trusted sites`, "markdown");
+        }
+        open(url, "_blank");
+        dialog_rm({ id: "external_url" });
+      }}>
+                    ${tl(trans.visit)}
+                </button>
+            </div>
+        `
+    });
+  }
 
   // src/seasonal.js
   var import_moment = __toESM(require_moment(), 1);
@@ -44966,7 +45036,7 @@
             `}
         </div>
         <section class="side-actions">
-            <button class="btn side-action" data-type="import" onclick=${() => import_settings16()}>
+            <button class="btn side-action" data-type="import" onclick=${() => import_settings17()}>
                 ${tl(trans.import)}
             </button>
             <button class="btn side-action" data-type="export" onclick=${() => export_settings()}>
@@ -46707,7 +46777,7 @@
       }
     }
   }
-  function import_settings16() {
+  function import_settings17() {
     let text3;
     const modal = dialog({
       id: "import_settings",
@@ -55511,6 +55581,20 @@
     },
     change_images_for: {
       en: "Change images for"
+    },
+    leaving_site: {
+      name: {
+        en: "Leaving site"
+      },
+      body: {
+        en: "The link you clicked wants to take you to"
+      }
+    },
+    leaving_site_checkbox: {
+      en: "Trust {v} links in the future"
+    },
+    visit: {
+      en: "Visit"
     }
   };
   var trans_legacy = {
@@ -59642,6 +59726,10 @@
       type: "checkbox",
       title: trans.static_banners,
       new_release: true
+    },
+    trusted_sites: {
+      default: [],
+      type: "list"
     }
   };
 

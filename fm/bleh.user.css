@@ -23389,6 +23389,54 @@
 
 
 
+    .leaving-site-inner {
+        padding: var(--card-padding) 0 0;
+
+        h1 {
+            font-size: 18px;
+            line-height: 22px;
+            font-weight: var(--font-weight-medium);
+            letter-spacing: unset;
+            margin: unset;
+            cursor: default;
+
+            color: hsl(var(--c1));
+        }
+
+        p {
+            max-width: 360px;
+            text-align: center;
+            cursor: default;
+        }
+    }
+
+    .external-warn-input {
+        padding: 12px 24px;
+        border: 1px solid var(--card-border-base);
+        border-radius: var(--item-med-radius);
+
+        font-size: 16px;
+        line-height: 20px;
+
+        width: 420px;
+        cursor: default;
+
+        display: flex;
+        align-items: center;
+        color: hsl(var(--c3));
+        font-weight: var(--font-weight-medium);
+
+        margin-top: var(--card-padding);
+
+        & > .hostname {
+            color: hsl(var(--c2));
+        }
+
+        & + .setting {
+            width: 100%;
+        }
+    }
+
     .support-inner {
         padding: var(--card-padding) 0;
 

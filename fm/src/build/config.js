@@ -1136,5 +1136,9 @@ export let settings_store = {
         type: 'checkbox',
         title: trans.static_banners,
         new_release: true
+    },
+    trusted_sites: {
+        default: [],
+        type: 'list'
     }
 }
