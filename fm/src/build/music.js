@@ -111,10 +111,11 @@ export let includes = {
         'feat.', 'featuring',
         '- with', '(with', '[with', 'w/ ',
         'ft.',
-        'ref.'
+        'ref.',
+        '- feat'
     ],
     versions: [
-        '(taylor', '- spotify singles',
+        '(taylor', '- spotify singles', '[taylor',
         '(+',
         '- versão', '(versão', '[versão',
         ' - without dialogue', '(without dialogue', '[without dialogue',
@@ -162,11 +163,20 @@ export let includes = {
         '- uk album version', '(uk album version', '[uk album version',
         '- twilight soundtrack version',
         '- transformers soundtrack version',
-        '- full length', '(full length', '[full length',
-        '- long version', '(long version', '[long version',
         '- studio', '(studio', '[studio',
         '(fifty shades darker',
-        '- j stax radio' // fearless international version
+        '- j stax radio', // fearless international version
+        '(10 minute',
+        '- old timey', '(old timey', '[old timey',
+        '- english version', '(english version', '[english version',
+        '- japanese version', '(japanese version', '[japanese version',
+        '- soundtrack', '(soundtrack', '[soundtrack',
+        '- the ultimate mix', '(the ultimate mix', '[the ultimate mix',
+        '- short edit', '(short edit', 'short edit',
+        '- short version', '(short version', '[short version',
+        '- long version', '(long version', '[long version',
+        '- full length', '(full length', '[full length',
+        '[over now' // billie eilish l'amour de ma vie
     ],
     mixes_numbers: [
         '(v1', '(v2', '(v3', '(v4', '(v5', '(v6', '(v7', '(v8', '(v9',
@@ -237,10 +247,17 @@ export let includes = {
         '- moonlight', '(moonlight', '[moonlight', // dua lipa
         '- tour', '(tour', '[tour',
         'music from and inspired by', // on the end of black panther the album
-        'and it’s the same but there’s three more songs so it’s not', // brat
+        'and it’s the same but there’s three more songs so it’s not', // brat, unsure
         '- magic city edition', '(magic city edition', '[magic city edition',
+        '- music inspired', '(music inspired', '[music inspired',
+        '- featured in', '(featured in', '[featured in',
+        '- best weekend ever edition', '(best weekend ever edition', '[best weekend ever edition',
+        'fwd:', // sabrina emails i can't send, unsure
+        '- double disc', '(double disc', '[double disc',
+        '- reissue', '(reissue', '[reissue',
+        '(12 reg. tracks', // confessions madonna
         //,
-        '- 19', '- 20', '(19', '(20',
+        '- 19', '- 20', '(19', '(20', '[19', '[20',
         '- 10th', '- 25th', '- 30th', '- 35th', '- 40th', '- 50th', '- 60th',
         '(10th', '(25th', '(30th', '(35th', '(40th', '(50th', '(60th',
         '- tenth anniversary', 'fifth anniversary',
