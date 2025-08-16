@@ -1488,7 +1488,8 @@ function bio_parse(text, cache = false) {
 
     render(temp, markdown(text.textContent, {
         allow_headers: true,
-        allow_banners: true
+        allow_banners: true,
+        allow_icons: true
     }));
 
     use_banner(temp, cache);

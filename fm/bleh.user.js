@@ -32412,7 +32412,8 @@
     let preview;
     const markdown_settings = {
       allow_headers: true,
-      allow_banners: true
+      allow_banners: true,
+      allow_icons: true
     };
     render(update_picture, html`
         <h4>${tl(trans.profile)}</h4>
@@ -34743,7 +34744,8 @@
     temp.classList.add("markdown-body");
     render(temp, markdown(text3.textContent, {
       allow_headers: true,
-      allow_banners: true
+      allow_banners: true,
+      allow_icons: true
     }));
     use_banner(temp, cache2);
     return temp;
@@ -43934,7 +43936,8 @@
     allow_links = true,
     line_breaks = true,
     allow_banners = false,
-    in_dialog = false
+    in_dialog = false,
+    allow_icons = false
   } = {}) {
     const ALLOWED_TAGS = [
       "div",
@@ -43964,7 +43967,8 @@
       "target",
       "src",
       "alt",
-      "title"
+      "title",
+      "style"
     ];
     const banner = () => [{
       type: "lang",
@@ -43996,10 +44000,18 @@
         return `<div class="text-${align}">${clean2}</div>`;
       }
     }];
+    const icons = () => [{
+      type: "lang",
+      regex: /\[icon=([a-zA-Z-]+)\]/g,
+      replace: (_, icon) => {
+        return `<span class="bleh-icon in-markdown" style="--icon: var(--icon-16-${icon})">A</span>`;
+      }
+    }];
     let extensions = [
       aligner()
     ];
     if (allow_banners) extensions.push(banner());
+    if (allow_icons) extensions.push(icons());
     const converter = new import_showdown.default.Converter({
       extensions,
       emoji: true,

@@ -469,7 +469,8 @@ function patch_settings_profile_panel(token, update_picture) {
 
     const markdown_settings = {
         allow_headers: true,
-        allow_banners: true
+        allow_banners: true,
+        allow_icons: true
     }
 
     render(update_picture, html`

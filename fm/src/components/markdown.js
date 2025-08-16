@@ -19,14 +19,15 @@ export function markdown(text, {
     allow_links = true,
     line_breaks = true,
     allow_banners = false,
-    in_dialog = false
+    in_dialog = false,
+    allow_icons = false
 }={}) {
     const ALLOWED_TAGS = [
         'div', 'p', 'span', 'em', 'u', 'strong', 'a', 'ul', 'ol', 'li', 'br', 'code', 'pre', 'img', 'blockquote',
         'h1', 'h2', 'h3', 'h4', 'h5'
     ];
     const ALLOWED_ATTR = [
-        'href', 'class', 'target', 'src', 'alt', 'title'
+        'href', 'class', 'target', 'src', 'alt', 'title', 'style'
     ];
 
 
@@ -71,11 +72,21 @@ export function markdown(text, {
         }
     }];
 
+    const icons = () => [{
+        type: 'lang',
+        regex: /\[icon=([a-zA-Z-]+)\]/g,
+        replace: (_, icon) => {
+            // Return safe HTML directly
+            return `<span class="bleh-icon in-markdown" style="--icon: var(--icon-16-${icon})">A</span>`;
+        }
+    }];
+
     let extensions = [
         aligner()
     ];
 
     if (allow_banners) extensions.push(banner());
+    if (allow_icons) extensions.push(icons());
 
     const converter = new showdown.Converter({
         extensions,
