@@ -237,6 +237,7 @@ export let includes = {
         '- moonlight', '(moonlight', '[moonlight', // dua lipa
         '- tour', '(tour', '[tour',
         'music from and inspired by', // on the end of black panther the album
+        'and it’s the same but there’s three more songs so it’s not', // brat
         '- magic city edition', '(magic city edition', '[magic city edition',
         //,
         '- 19', '- 20', '(19', '(20',
