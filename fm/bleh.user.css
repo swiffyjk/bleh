@@ -3669,6 +3669,9 @@
 
         /* temporary chrome fix */
         order: -1;
+
+        /* temporary chrome fix */
+        order: -1;
     }
 
     .library-controls > .secondary-nav,

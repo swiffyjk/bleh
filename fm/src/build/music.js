@@ -112,20 +112,24 @@ export let includes = {
         '- with', '(with', '[with', 'w/ ',
         'ft.',
         'ref.',
-        '(hosted by'
+        '- feat'
     ],
     versions: [
         '(taylor', '- spotify singles',
         '(+'
     ],
     remasters: [
-        '- remaster', '(remaster'
+        '- remaster', '(remaster', '[remaster',
+        '- remasterizado', '(remasterizado', '[remasterizado'
     ],
     mixes: [
         '- devonshire mix', '(devonshire mix',
         'mike dean master',
         '- remix', '(remix', '[remix',
         '- live', '(live',
+        '- ao vivo', '(ao vivo', '[ao vivo',
+        '- en vivo', '(en vivo', '[en vivo',
+        '- multishow ao vivo', '(multishow ao vivo', '[multishow ao vivo',
         '- demo', '(demo',
         '- rehearsal', '(rehearsal',
         '- sample clearance', '(sample clearance', '[sample clearance',
@@ -143,11 +147,33 @@ export let includes = {
         '- offline', '- og mix',
         '- club edit', '(club edit',
         '- radio', '(radio',
-        '- orchestral', '(orchestral'
+        '- orchestral', '(orchestral',
+        '- self-titled demo', '(self-titled demo',
+        '- album version', '(album version', '[album version',
+        '- us album version', '(us album version', '[us album version',
+        '- uk album version', '(uk album version', '[uk album version',
+        '- twilight soundtrack version',
+        '- transformers soundtrack version',
+        '- studio', '(studio', '[studio',
+        '(fifty shades darker',
+        '- j stax radio', // fearless international version
+        '(10 minute',
+        '- old timey', '(old timey', '[old timey',
+        '- english version', '(english version', '[english version',
+        '- japanese version', '(japanese version', '[japanese version',
+        '- soundtrack', '(soundtrack', '[soundtrack',
+        '- the ultimate mix', '(the ultimate mix', '[the ultimate mix',
+        '- short edit', '(short edit', 'short edit',
+        '- short version', '(short version', '[short version',
+        '- long version', '(long version', '[long version',
+        '- full length', '(full length', '[full length',
+        '[over now' // billie eilish l'amour de ma vie
     ],
     mixes_numbers: [
         '(v1', '(v2', '(v3', '(v4', '(v5', '(v6', '(v7', '(v8', '(v9',
-        '[v1', '[v2', '[v3', '[v4', '[v5', '[v6', '[v7', '[v8', '[v9'
+        '[v1', '[v2', '[v3', '[v4', '[v5', '[v6', '[v7', '[v8', '[v9',
+        '- mix 1', '- mix 2', '- mix 3', '- mix 4', '- mix 5', '- mix 6', '- mix 7', '- mix 8', '- mix 9',
+        '(mix 1', '(mix 2', '(mix 3', '(mix 4', '(mix 5', '(mix 6', '(mix 7', '(mix 8', '(mix 9'
     ],
     stems: [
         '- acapella', '(acapella', '[acapella', '- a cappella', '(a cappella', '[a cappella',
@@ -158,7 +184,9 @@ export let includes = {
         '- boombox', '(boombox',
         '- mtv unplugged', '(mtv unplugged',
         '- unplugged', '(unplugged',
-        '- the long pond studio', '(the long pond studio'
+        '- acústico', '- ácustico', '(acústico', '[acústico',
+        '- the long pond studio', '(the long pond studio',
+        '- recorded at long pond studio', '(recorded at long pond studio'
     ],
     bonus: [
         '- intro', '(intro', '[intro',
@@ -173,17 +201,51 @@ export let includes = {
         '- deluxe', '(deluxe', '[deluxe',
         '- digital deluxe', '(digital deluxe', '[digital deluxe',
         '- complete edition', '(complete edition', '[complete edition',
+        ': edição', '- edição', '(edição', '[edição',
+        '- edicion', '- edición', '(edicion', '(edición',
         '- extended', '(extended', '[extended',
         '- the extended edition', // denzel
         '- expanded', '(expanded', '[expanded',
         '- anniversary', '(anniversary', '[anniversary',
         '- b-side', '- c-side', '(b-side', '(c-side',
-        '- lp', '- ep', '(lp', '(ep',
+        '- lp', '- ep', '(lp', '(ep', 'ep', // some albums just have EP on the end with no punctuation
         '- single', '(single',
         '- mixtape', '(mixtape',
         '- box set', '(box set',
-        //
-        '- 19', '- 20', '(19', '(20',
+        '- spilled', '(spilled', '[spilled', // olivia rodrigo
+        '- slightly deluxe', '(slightly deluxe', '[slightly deluxe', // ariana grande
+        ': self-titled deluxe', '(self-titled deluxe', '[self-titled deluxe', // paramore
+        ': the anthology', '(the anthology', '[the anthology',
+        '- 3am edition', '(3am edition', '[3am edition',
+        '- the til dawn edition', '(the til dawn edition', '[the til dawn edition',
+        '- til dawn edition', '(til dawn edition', '[til dawn edition',
+        '- late night edition', '(late night edition', '[late night edition',
+        '- the late night edition', '(the late night edition', '[the late night edition',
+        '- big machine radio release special', '(big machine radio release special', '[big machine radio release special',
+        'platinum edition', ': platinum edition', '- platinum', '(platinum', '[platinum',
+        '- international', '(international', '[international', // taylor swift
+        '- uk deluxe', '(uk deluxe', '[uk deluxe',
+        '- magic city edition', '(magic city edition', '[magic city edition',
+        '- japan edition', '(japan edition', '[japan edition', // added edition to some for safety
+        '- japan version', '(japan version', '[japan version',
+        '- australian version', '(australian version', '[australian version',
+        '- platinum blonde edition', '(platinum blonde edition', '[platinum blonde edition', // marina
+        '- after school - deluxe', '(after school - deluxe', '[after school - deluxe', // melanie martinez
+        '- revised', '(revised', '[revised',
+        ': the complete', '(the complete', '[the complete',
+        '- the moonlight', '(the moonlight', '[the moonlight',
+        '- moonlight', '(moonlight', '[moonlight', // dua lipa
+        '- tour', '(tour', '[tour',
+        'music from and inspired by', // on the end of black panther the album
+        '- magic city edition', '(magic city edition', '[magic city edition',
+        '- music inspired', '(music inspired', '[music inspired',
+        '- featured in', '(featured in', '[featured in',
+        '- best weekend ever edition', '(best weekend ever edition', '[best weekend ever edition',
+        '- double disc', '(double disc', '[double disc',
+        '- reissue', '(reissue', '[reissue',
+        '(12 reg. tracks', // confessions madonna
+        //,
+        '- 19', '- 20', '(19', '(20', '[19', '[20',
         '- 10th', '- 25th', '- 30th', '- 35th', '- 40th', '- 50th', '- 60th',
         '(10th', '(25th', '(30th', '(35th', '(40th', '(50th', '(60th',
         //
@@ -192,5 +254,11 @@ export let includes = {
     form: [
         '[clean', '[explicit',
         '(spotify)'
+        '(10th', '(25th', '(30th', '(35th', '(40th', '(50th', '(60th',
+        '- tenth anniversary', 'fifth anniversary',
+        '(tenth anniversary', '(fifth anniversary',
+        ': the tenth anniversary', 'the tenth anniversary', // lady gaga born this way
+        '- 10 year', '- 25 year', '-30 year', '-35 year', '- 40 year', '- 50 year', '- 60 year',
+        '(10 year', '(25 year', '(30 year', '(35 year', '(40 year', '(50 year', '(60 year'
     ]
 }

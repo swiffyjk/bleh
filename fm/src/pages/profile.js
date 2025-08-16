@@ -112,7 +112,7 @@ export function bleh_profiles() {
         } else {
             if (settings.profile_avi_background) {
                 if (avatar)
-                    register_background(avatar_img.querySelector('img').getAttribute('src').replace('/avatar170s/', '/ar0/'), 'avatar');
+                    register_background(avatar_img.getAttribute('src').replace('/avatar170s/', '/ar0/'), 'avatar');
                 else
                     register_background(null, 'none');
             } else {

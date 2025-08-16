@@ -24,7 +24,7 @@ body:
     attributes:
       label: bleh
       description: What version of bleh are you using?
-      placeholder: eg. 2025.????
+      placeholder: find in the top left
     validations:
       required: true
   - type: input
@@ -46,7 +46,7 @@ body:
   - type: input
     id: language
     attributes:
-      label: Language
+      label: Language (selected in bleh)
       description: Which language do you have selected in bleh?
       value: English
   - type: input

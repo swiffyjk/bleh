@@ -24,11 +24,11 @@ This setting requires a page reload to take effect.
 
 Script files can be found in `src`. To combine all the separate files into a loadable bleh install, run `node index.js` in the `fm` directory to update the `bleh.user.js` file for use. For live reloading, use `node index.js dev` instead along with the **Violentmonkey** extension's "track external edits" option.
 
+To convert the working file `bleh.user.css` into the `bleh.css` file used in production, run `node minify.js` and the file will be automatically updated.
+
 ## Licenses
 
 This project includes the 'Overpass' font as woff2 files which is licensed under the SIL Open Font License 1.1. See fonts/LICENSE for details.
-
-To convert the working file `bleh.user.css` into the `bleh.css` file used in production, run `node minify.js` and the file will be automatically updated.
 
 ---
 
