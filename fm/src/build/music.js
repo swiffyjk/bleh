@@ -108,15 +108,21 @@ export let ranks = {
 
 export let includes = {
     guests: [
-        'feat.', 'featuring',
+        'feat.', 'featuring', '- feat',
         '- with', '(with', '[with', 'w/ ',
         'ft.',
         'ref.',
-        '- feat'
+        '(hosted by'
     ],
     versions: [
-        '(taylor', '- spotify singles',
-        '(+'
+        '(taylor', '- spotify singles', '[taylor',
+        '(+',
+        '- versão', '(versão', '[versão',
+        ' - without dialogue', '(without dialogue', '[without dialogue',
+        ' - no dialogue', '(no dialogue', '[no dialogue',
+        '- pop version', '(pop version', '[pop version',
+        '- rock version', '(rock version', '[rock version',
+        '- pop mix', '(pop mix', '[pop mix'
     ],
     remasters: [
         '- remaster', '(remaster', '[remaster',
@@ -198,6 +204,7 @@ export let includes = {
         '- music from', '(music from',
         '- skit', '(skit',
         '- original', '(original', '[original',
+        '[clean', '[explicit',
         '- deluxe', '(deluxe', '[deluxe',
         '- digital deluxe', '(digital deluxe', '[digital deluxe',
         '- complete edition', '(complete edition', '[complete edition',
@@ -248,17 +255,14 @@ export let includes = {
         '- 19', '- 20', '(19', '(20', '[19', '[20',
         '- 10th', '- 25th', '- 30th', '- 35th', '- 40th', '- 50th', '- 60th',
         '(10th', '(25th', '(30th', '(35th', '(40th', '(50th', '(60th',
-        //
-        '(magic city edition'
-    ],
-    form: [
-        '[clean', '[explicit',
-        '(spotify)'
-        '(10th', '(25th', '(30th', '(35th', '(40th', '(50th', '(60th',
         '- tenth anniversary', 'fifth anniversary',
         '(tenth anniversary', '(fifth anniversary',
         ': the tenth anniversary', 'the tenth anniversary', // lady gaga born this way
         '- 10 year', '- 25 year', '-30 year', '-35 year', '- 40 year', '- 50 year', '- 60 year',
         '(10 year', '(25 year', '(30 year', '(35 year', '(40 year', '(50 year', '(60 year'
+    ],
+    form: [
+        '[clean', '[explicit',
+        '(spotify)'
     ]
 }
