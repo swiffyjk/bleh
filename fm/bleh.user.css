@@ -9504,6 +9504,7 @@
     [data-type="playlist"] {
         --mask: var(--icon-16-playlist);
     }
+    [data-type="dev"],
     [data-type="settings"] {
         --mask: var(--icon-16-settings);
     }
@@ -20074,6 +20075,7 @@
     .taste-badge,
     .new-badge {
         display: inline-flex;
+        align-items: center;
 
         font-size: calc(var(--font-size) - 1px);
         background: hsl(var(--k4), 40%);
@@ -20084,7 +20086,13 @@
         font-weight: var(--font-weight-medium);
 
         &.spacing {
-            gap: 6px;
+            gap: 4px;
+        }
+
+        & > .bleh-icon {
+            --icon-size: 12px;
+            height: var(--icon-size);
+            --mask-colour: currentColor;
         }
     }
 

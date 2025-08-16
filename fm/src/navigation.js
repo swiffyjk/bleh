@@ -51,8 +51,13 @@ export function update_masthead(masthead_logo = document.body.querySelector('.ma
     if (update_required === 'false') {
         masthead_logo.appendChild(html.node`
             <a class="bleh--version" href="${root}bleh">
-                ${version.build}.${version.sku}
-                ${(settings.dev) ? html.node`<div class="new-badge subtle">✦</div>` : ''}
+                ${version.build}
+                <div class="new-badge sku spacing">
+                    ${version.sku}
+                    ${settings.dev ? html.node`
+                    <span class="bleh-icon" data-type="dev" style="--icon: var(--mask)"/>
+                    ` : ''}
+                </div>
             </a>
         `);
     } else {
@@ -61,8 +66,13 @@ export function update_masthead(masthead_logo = document.body.querySelector('.ma
                 <div class="update-container">
                     <div class="bleh-icon" style="--icon: var(--icon-16-update)" />
                 </div>
-                ${version.build}.${version.sku}
-                ${(settings.dev) ? html.node`<div class="new-badge subtle">✦</div>` : ''}
+                ${version.build}
+                <div class="new-badge sku spacing">
+                    ${version.sku}
+                    ${settings.dev ? html.node`
+                    <span class="bleh-icon" data-type="dev" style="--icon: var(--mask)"/>
+                    ` : ''}
+                </div>
             </a>
         `;
 
