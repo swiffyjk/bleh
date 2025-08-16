@@ -104,13 +104,26 @@ export function return_name_from_avatar(avatar) {
 unsafeWindow._expand_avatar = function(src) {
     expand_avatar(src);
 }
-export function expand_avatar(src) {
+export function expand_avatar(src, alt = '') {
     dialog({
         id: 'avatar',
         body: html.node`
             <div class="full-avatar-wrapper">
                 <div class="full-avatar">
-                    <img src=${src}>
+                    <img src=${src} alt=${alt}>
+                    ${alt != '' ? () => {
+                        const elem = html.node`
+                            <div class="alt-text">
+                                ALT
+                            </div>
+                        `;
+
+                        tippy(elem, {
+                            content: alt
+                        });
+
+                        return elem;
+                    } : ''}
                 </div>
                 <div class="modal-footer">
                     <div class="fill"></div>

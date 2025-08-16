@@ -10689,6 +10689,8 @@
                     box-shadow: var(--menu-shadow);
                     overflow: hidden;
 
+                    position: relative;
+
                     img {
                         max-height: 70vh;
 
@@ -10696,6 +10698,13 @@
                         min-height: 300px;
 
                         --mask-size: var(--cover-size-300);
+                    }
+
+                    & > .alt-text {
+                        position: absolute;
+                        top: 10px;
+                        right: 10px;
+                        z-index: 20;
                     }
                 }
 
@@ -26674,5 +26683,17 @@
             --cards-main-width: 100vw !important;
             --cards-sidebar-width: 100vw !important;
         }
+    }
+
+    .alt-text {
+        padding: 4px 8px;
+        border-radius: var(--item-med-radius);
+        background: hsl(var(--b6), 40%);
+        font-size: 13px;
+        font-weight: var(--font-weight-medium);
+        cursor: pointer;
+        color: hsl(var(--c3));
+        backdrop-filter: blur(4px);
+        -webkit-backdrop-filter: blur(4px);
     }
 }

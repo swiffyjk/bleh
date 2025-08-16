@@ -148,7 +148,7 @@ export function markdown(text, {
     body.querySelectorAll('img').forEach((image) => {
         image.setAttribute('loading', 'lazy');
 
-        let func = () => expand_avatar(image.src);
+        let func = () => expand_avatar(image.src, image.alt);
         if (in_dialog) func = () => open(image.src);
 
         const container = html.node`

@@ -1,7 +1,7 @@
 // ==UserScript==
 // @name         bleh
 // @namespace    https://last.fm/
-// @version      2025.0801
+// @version      2025.0815
 // @description  bleh!!! ^-^
 // @author       kate
 // @match        https://www.last.fm/*
@@ -25398,13 +25398,24 @@
   unsafeWindow._expand_avatar = function(src) {
     expand_avatar(src);
   };
-  function expand_avatar(src) {
+  function expand_avatar(src, alt = "") {
     dialog({
       id: "avatar",
       body: html.node`
             <div class="full-avatar-wrapper">
                 <div class="full-avatar">
-                    <img src=${src}>
+                    <img src=${src} alt=${alt}>
+                    ${alt != "" ? () => {
+        const elem = html.node`
+                            <div class="alt-text">
+                                ALT
+                            </div>
+                        `;
+        tippy_esm_default(elem, {
+          content: alt
+        });
+        return elem;
+      } : ""}
                 </div>
                 <div class="modal-footer">
                     <div class="fill"></div>
@@ -31749,11 +31760,12 @@
       load_chart_colours();
     }
     let params = new URLSearchParams(document.location.search);
-    page.requested.params = params;
-    page.requested.tab = params.get("tab");
-    page.requested.page = params.get("page");
-    page.requested.token = params.get("token");
-    page.requested.collage = params.get("collage");
+    page.requested = {
+      tab: params.get("tab"),
+      page: params.get("page"),
+      token: params.get("token"),
+      collage: params.get("collage")
+    };
     if (!page.structure.container || !document.body.contains(page.structure.container)) {
       log("page missing container, creating", "page structure");
       page.structure.container = document.createElement("div");
@@ -31797,10 +31809,10 @@
     }
     if (ff("short")) {
       page.structure.content = html.node`
-            <div class="content">
+            <main class="content">
                 ${page.structure.main}
                 ${page.structure.side}
-            </div>
+            </main>
         `;
       page.structure.row.appendChild(page.structure.content);
     }
@@ -44027,7 +44039,7 @@
     });
     body.querySelectorAll("img").forEach((image) => {
       image.setAttribute("loading", "lazy");
-      let func = () => expand_avatar(image.src);
+      let func = () => expand_avatar(image.src, image.alt);
       if (in_dialog) func = () => open(image.src);
       const container = html.node`
             <div class="markdown-image" onclick=${func} />
