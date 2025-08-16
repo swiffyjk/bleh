@@ -118,7 +118,10 @@ export let includes = {
         '(+',
         '- versão', '(versão', '[versão',
         ' - without dialogue', '(without dialogue', '[without dialogue',
-        ' - no dialogue', '(no dialogue', '[no dialogue'
+        ' - no dialogue', '(no dialogue', '[no dialogue',
+        '- pop version', '(pop version', '[pop version',
+        '- rock version', '(rock version', '[rock version',
+        '- pop mix', '(pop mix', '[pop mix'
     ],
     spotify: [
         '(spotify)'
@@ -154,11 +157,22 @@ export let includes = {
         '- radio', '(radio',
         '- orchestral', '(orchestral',
         '- self-titled demo', '(self-titled demo',
-        '- album version', '(album version', '[album version'
+        '- album version', '(album version', '[album version',
+        '- us album version', '(us album version', '[us album version',
+        '- uk album version', '(uk album version', '[uk album version',
+        '- twilight soundtrack version',
+        '- transformers soundtrack version',
+        '- full length', '(full length', '[full length',
+        '- long version', '(long version', '[long version',
+        '- studio', '(studio', '[studio,
+        '(fifty shades darker',
+        '- j stax radio' // fearless international version
     ],
     mixes_numbers: [
         '(v1', '(v2', '(v3', '(v4', '(v5', '(v6', '(v7', '(v8', '(v9',
-        '[v1', '[v2', '[v3', '[v4', '[v5', '[v6', '[v7', '[v8', '[v9'
+        '[v1', '[v2', '[v3', '[v4', '[v5', '[v6', '[v7', '[v8', '[v9',
+        '- mix 1', '- mix 2', '- mix 3', '- mix 4', '- mix 5', '- mix 6', '- mix 7', '- mix 8', '- mix 9',
+        '- mix 1', '- mix 2', '- mix 3', '- mix 4', '- mix 5', '- mix 6', '- mix 7', '(mix 8', '(mix 9'
     ],
     stems: [
         '- acapella', '(acapella', '[acapella', '- a cappella', '(a cappella', '[a cappella',
@@ -214,6 +228,7 @@ export let includes = {
         '- magic city edition', '(magic city edition', '[magic city edition',
         '- japan edition', '(japan edition', '[japan edition', // added edition to some for safety
         '- japan version', '(japan version', '[japan version',
+        '- australian version', '(australian version', '[australian version',
         '- platinum blonde edition', '(platinum blonde edition', '[platinum blonde edition', // marina
         '- after school - deluxe', '(after school - deluxe', '[after school - deluxe', // melanie martinez
         '- revised', '(revised', '[revised',
@@ -221,7 +236,8 @@ export let includes = {
         '- the moonlight', '(the moonlight', '[the moonlight',
         '- moonlight', '(moonlight', '[moonlight', // dua lipa
         '- tour', '(tour', '[tour',
-        'Music From and Inspired By', // on the end of black panther the album
+        'music from and inspired by', // on the end of black panther the album
+        '- magic city edition', '(magic city edition', '[magic city edition',
         //,
         '- 19', '- 20', '(19', '(20',
         '- 10th', '- 25th', '- 30th', '- 35th', '- 40th', '- 50th', '- 60th',
