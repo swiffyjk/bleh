@@ -34745,7 +34745,8 @@
     render(temp, markdown(text3.textContent, {
       allow_headers: true,
       allow_banners: true,
-      allow_icons: true
+      allow_icons: true,
+      allow_hue: true
     }));
     use_banner(temp, cache2);
     return temp;
@@ -43937,7 +43938,8 @@
     line_breaks = true,
     allow_banners = false,
     in_dialog = false,
-    allow_icons = false
+    allow_icons = false,
+    allow_hue = false
   } = {}) {
     const ALLOWED_TAGS = [
       "div",
@@ -43968,8 +43970,14 @@
       "src",
       "alt",
       "title",
-      "style"
+      "style",
+      "data-hue",
+      "data-sat",
+      "data-lit"
     ];
+    let hue2;
+    let sat;
+    let lit;
     const banner = () => [{
       type: "lang",
       regex: /\[banner=([^\]]+)\]/g,
@@ -44007,11 +44015,22 @@
         return `<span class="bleh-icon in-markdown" style="--icon: var(--icon-16-${icon})">A</span>`;
       }
     }];
+    const accent = () => [{
+      type: "lang",
+      regex: /\[accent=([0-9]{1,3}),([0-9]?\.?[0-9]+),([0-9]?\.?[0-9]+)\]/g,
+      replace: (_, h, s2, l2) => {
+        hue2 = Math.min(settings_store.hue.max, Math.max(settings_store.hue.min, parseInt(h, 10)));
+        sat = Math.min(settings_store.sat.max, Math.max(settings_store.sat.min, parseFloat(s2)));
+        lit = Math.min(settings_store.lit.max, Math.max(settings_store.lit.min, parseFloat(l2)));
+        return "";
+      }
+    }];
     let extensions = [
       aligner()
     ];
     if (allow_banners) extensions.push(banner());
     if (allow_icons) extensions.push(icons());
+    if (allow_hue) extensions.push(accent());
     const converter = new import_showdown.default.Converter({
       extensions,
       emoji: true,
@@ -44069,6 +44088,12 @@
       image.after(container);
       container.appendChild(image);
     });
+    if (allow_hue && hue2 && sat && lit) {
+      document.body.style.setProperty("--hue-album", hue2);
+      document.body.style.setProperty("--sat-album", sat);
+      document.body.style.setProperty("--lit-album", lit);
+      log("custom accent settings present", "profile", "info", { hue: hue2, sat, lit });
+    }
     return body;
   }
   function markdown_prompt({

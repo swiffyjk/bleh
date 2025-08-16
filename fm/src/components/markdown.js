@@ -13,6 +13,8 @@ import DOMPurify from "dompurify";
 import {expand_avatar} from "../avatar.js";
 import { tl, trans } from '../build/trans.js';
 import { dialog } from './dialog.js';
+import { settings_store } from '../build/config.js';
+import { log } from '../build/log.js';
 
 export function markdown(text, {
     allow_headers = false,
@@ -20,15 +22,21 @@ export function markdown(text, {
     line_breaks = true,
     allow_banners = false,
     in_dialog = false,
-    allow_icons = false
+    allow_icons = false,
+    allow_hue = false
 }={}) {
     const ALLOWED_TAGS = [
         'div', 'p', 'span', 'em', 'u', 'strong', 'a', 'ul', 'ol', 'li', 'br', 'code', 'pre', 'img', 'blockquote',
         'h1', 'h2', 'h3', 'h4', 'h5'
     ];
     const ALLOWED_ATTR = [
-        'href', 'class', 'target', 'src', 'alt', 'title', 'style'
+        'href', 'class', 'target', 'src', 'alt', 'title', 'style',
+        'data-hue', 'data-sat', 'data-lit'
     ];
+
+    let hue;
+    let sat;
+    let lit;
 
 
     const banner = () => [{
@@ -82,12 +90,26 @@ export function markdown(text, {
         }
     }];
 
+    // sets a profile's hsl values
+    const accent = () => [{
+        type: 'lang',
+        regex: /\[accent=([0-9]{1,3}),([0-9]?\.?[0-9]+),([0-9]?\.?[0-9]+)\]/g,
+        replace: (_, h, s, l) => {
+            hue = Math.min(settings_store.hue.max, Math.max(settings_store.hue.min, parseInt(h, 10)));
+            sat = Math.min(settings_store.sat.max, Math.max(settings_store.sat.min, parseFloat(s)));
+            lit = Math.min(settings_store.lit.max, Math.max(settings_store.lit.min, parseFloat(l)));
+
+            return '';
+        }
+    }];
+
     let extensions = [
         aligner()
     ];
 
     if (allow_banners) extensions.push(banner());
     if (allow_icons) extensions.push(icons());
+    if (allow_hue) extensions.push(accent());
 
     const converter = new showdown.Converter({
         extensions,
@@ -170,6 +192,14 @@ export function markdown(text, {
         image.after(container);
         container.appendChild(image);
     });
+
+    if (allow_hue && hue && sat && lit) {
+        document.body.style.setProperty('--hue-album', hue);
+        document.body.style.setProperty('--sat-album', sat);
+        document.body.style.setProperty('--lit-album', lit);
+
+        log('custom accent settings present', 'profile', 'info', {hue, sat, lit});
+    }
 
     return body;
 }
