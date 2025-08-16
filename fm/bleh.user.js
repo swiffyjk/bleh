@@ -25969,14 +25969,7 @@
       let name = link.textContent.trim();
       let sister;
       if (!href.startsWith(root)) {
-        if (href && link.textContent != href && is_link_external(href)) {
-          tippy_esm_default(link, {
-            theme: "name-sister-combo",
-            content: html.node`
-                    <span class="name">${href}</span>
-                    <span class="sister">${tl(trans.external)}</span>
-                `
-          });
+        if (href && is_link_external(href)) {
           link.addEventListener("click", (e) => {
             const link2 = new URL(href);
             const hostname = link2.hostname;
@@ -25984,8 +25977,17 @@
             e.preventDefault();
             external_url_prompt(href);
           });
+          if (link.textContent != href) {
+            tippy_esm_default(link, {
+              theme: "name-sister-combo",
+              content: html.node`
+                        <span class="name">${href}</span>
+                        <span class="sister">${tl(trans.external)}</span>
+                    `
+            });
+          }
+          return;
         }
-        return;
       }
       if (href.endsWith("/+wiki")) return;
       href = href.replace(root, "").replace("music/", "");

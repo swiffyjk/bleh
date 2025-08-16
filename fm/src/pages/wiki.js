@@ -381,15 +381,7 @@ export function patch_wiki_contents(wiki_block) {
         let sister;
 
         if (!href.startsWith(root)) {
-            if (href && link.textContent != href && is_link_external(href)) {
-                tippy(link, {
-                    theme: 'name-sister-combo',
-                    content: html.node`
-                    <span class="name">${href}</span>
-                    <span class="sister">${tl(trans.external)}</span>
-                `
-                });
-
+            if (href && is_link_external(href)) {
                 link.addEventListener('click', e => {
                     const link = new URL(href);
                     const hostname = link.hostname;
@@ -400,9 +392,19 @@ export function patch_wiki_contents(wiki_block) {
 
                     external_url_prompt(href);
                 });
-            }
 
-            return;
+                if (link.textContent != href) {
+                    tippy(link, {
+                        theme: 'name-sister-combo',
+                        content: html.node`
+                        <span class="name">${href}</span>
+                        <span class="sister">${tl(trans.external)}</span>
+                    `
+                    });
+                }
+
+                return;
+            }
         }
 
         if (href.endsWith('/+wiki')) return;
