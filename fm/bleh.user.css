@@ -26121,20 +26121,14 @@
 
         & > kbd {
             margin: unset !important;
-            font-family: var(--font) !important;
-            font-weight: var(--font-weight-bold) !important;
+            font-family: Overpass, -apple-system, BlinkMacSystemFont, "Segoe UI", "Noto Sans", Helvetica, Arial, sans-serif, "Apple Color Emoji", "Segoe UI Emoji" !important;
+            font-weight: var(--font-weight-medium) !important;
             background: unset;
             padding: unset;
 
             display: flex;
             justify-content: center;
             align-items: center;
-            width: 14px;
-
-            & > .bleh-icon {
-                --icon: var(--mask);
-                --icon-size: 14px;
-            }
         }
     }
 

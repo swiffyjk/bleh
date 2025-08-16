@@ -15,6 +15,7 @@ import {setting} from "./components/settings.js";
 import {markdown} from "./components/markdown.js";
 import {copy} from "./build/tools.js";
 import tippy from "tippy.js";
+import { keybind } from './components/rabbit.js';
 
 export function patch_shouts() {
     if (!page.structure.main) return;
@@ -201,9 +202,9 @@ function shout_send(send_button) {
     if (page.mobile) return;
 
     tippy(button, {
-        content: tl(trans.send_quickly_with).replace('{kbd}', '<span class="keybind"><kbd>⌘</kbd><kbd>↵</kbd></span>'),
-        delay: [500, 0],
-        allowHTML: true
+        content: tl(trans.send_quickly_with).replace('{kbd}', keybind(['⌘', '⏎']).outerHTML),
+        allowHTML: true,
+        delay: [500, 0]
     });
 }
 

@@ -28888,7 +28888,7 @@
             body: tl(trans.use_current_page_as_context),
             keywords: ["ctx", "context"],
             action: () => use_page_as_ctx(),
-            keybind: ["\u2318", "\u21E7", settings.rabbit.toUpperCase()],
+            keybind: ["\u2318", "\u21E7", settings.rabbit_primary.toUpperCase()],
             disabled: !allowed_pages.includes(page.type)
           },
           {
@@ -29606,14 +29606,24 @@
     }
   }
   function keybind(list) {
+    const darwin = ["darwin", "ios"].includes(page.platform);
+    const keymap = {
+      "\u2318": "Ctrl",
+      "\u21E7": "Shift",
+      "\u2325": "Alt",
+      "\u2303": "Ctrl",
+      "\u23CE": "Enter",
+      "\u238B": "Esc",
+      "\u232B": "Backspace"
+    };
     return html.node`
         <div class="keybind">
-            ${list.map((key) => {
-      if (key == "\u2318")
-        return html.node`<kbd><div class="bleh-icon" data-type="command" /></kbd>`;
-      else if (key == "\u21E7")
-        return html.node`<kbd><div class="bleh-icon" data-type="shift" /></kbd>`;
-      return html.node`<kbd>${key}</kbd>`;
+            ${list.map((key, index3) => {
+      const label = darwin ? key : keymap[key] || key;
+      return html.node`
+                    <kbd>${label}</kbd>
+                    ${darwin && index3 < list.length - 1 ? html.node`<kbd class="kbd-sep">+</kbd>` : ""}
+                `;
     })}
         </div>
     `;
@@ -47624,7 +47634,7 @@
       shouts: {
         name: tl(trans.shouts),
         icon: "shouts",
-        url: `${root}user/${auth.name}/shouts`
+        url: `${root}user/${auth.name}/shoutbox`
       },
       obsessions: {
         name: tl(trans.obsessions),
@@ -50420,9 +50430,9 @@
     button.textContent = tl(trans.send);
     if (page.mobile) return;
     tippy_esm_default(button, {
-      content: tl(trans.send_quickly_with).replace("{kbd}", '<span class="keybind"><kbd>\u2318</kbd><kbd>\u21B5</kbd></span>'),
-      delay: [500, 0],
-      allowHTML: true
+      content: tl(trans.send_quickly_with).replace("{kbd}", keybind(["\u2318", "\u23CE"]).outerHTML),
+      allowHTML: true,
+      delay: [500, 0]
     });
   }
   function shout_header(shout_controls) {

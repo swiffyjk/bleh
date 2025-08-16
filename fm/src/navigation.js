@@ -129,7 +129,7 @@ export function append_nav() {
         shouts: {
             name: tl(trans.shouts),
             icon: 'shouts',
-            url: `${root}user/${auth.name}/shouts`
+            url: `${root}user/${auth.name}/shoutbox`
         },
         obsessions: {
             name: tl(trans.obsessions),

@@ -223,7 +223,7 @@ export function register_rabbit() {
                     body: tl(trans.use_current_page_as_context),
                     keywords: ['ctx', 'context'],
                     action: () => use_page_as_ctx(),
-                    keybind: ['⌘', '⇧', settings.rabbit.toUpperCase()],
+                    keybind: ['⌘', '⇧', settings.rabbit_primary.toUpperCase()],
                     disabled: (!allowed_pages.includes(page.type))
                 },
                 {
@@ -983,15 +983,27 @@ export function register_rabbit() {
 }
 
 export function keybind(list) {
+    const darwin = ['darwin', 'ios'].includes(page.platform);
+
+    const keymap = {
+        '⌘': 'Ctrl',
+        '⇧': 'Shift',
+        '⌥': 'Alt',
+        '⌃': 'Ctrl',
+        '⏎': 'Enter',
+        '⎋': 'Esc',
+        '⌫': 'Backspace',
+    }
+
     return html.node`
         <div class="keybind">
-            ${list.map(key => {
-                if (key == '⌘')
-                    return html.node`<kbd><div class="bleh-icon" data-type="command" /></kbd>`;
-                else if (key == '⇧')
-                    return html.node`<kbd><div class="bleh-icon" data-type="shift" /></kbd>`;
+            ${list.map((key, index) => {
+                const label = darwin ? key : (keymap[key] || key);
 
-                return html.node`<kbd>${key}</kbd>`;
+                return html.node`
+                    <kbd>${label}</kbd>
+                    ${darwin && index < list.length - 1 ? html.node`<kbd class="kbd-sep">+</kbd>` : ''}
+                `;
             })}
         </div>
     `;
