@@ -164,7 +164,7 @@ export let includes = {
         '- transformers soundtrack version',
         '- full length', '(full length', '[full length',
         '- long version', '(long version', '[long version',
-        '- studio', '(studio', '[studio,
+        '- studio', '(studio', '[studio',
         '(fifty shades darker',
         '- j stax radio' // fearless international version
     ],
