@@ -1140,5 +1140,32 @@ export let settings_store = {
     trusted_sites: {
         default: [],
         type: 'list'
+    },
+    profile_hue: {
+        default: 255,
+        type: 'range',
+        min: 0,
+        max: 360,
+        step: 1,
+        title: trans.hue,
+        vertical: true
+    },
+    profile_sat: {
+        default: 1,
+        type: 'range',
+        min: 0,
+        max: 2,
+        step: 0.01,
+        title: trans.sat,
+        vertical: true
+    },
+    profile_lit: {
+        default: 1,
+        type: 'range',
+        min: 0,
+        max: 1.5,
+        step: 0.01,
+        title: trans.lit,
+        vertical: true
     }
 }

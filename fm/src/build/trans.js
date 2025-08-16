@@ -977,8 +977,12 @@ export const trans = {
         de: 'Nachrichten',
         pt: 'Mensagens'
     },
+    preview: {
+        en: 'Preview',
+        de: 'Vorschau'
+    },
     about_me_preview: {
-        // About
+        // About Me
         en: 'About (preview)',
         de: 'Über (Vorschau)',
         pt: 'Sobre (preview)'

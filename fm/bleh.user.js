@@ -24347,7 +24347,7 @@
     let hex2 = comp.toString(16);
     return hex2.length == 1 ? "0" + hex2 : hex2;
   }
-  function clamp_sat(sat) {
+  function clamp_sat2(sat) {
     if (sat > 1.5)
       return 1.5;
     return round_two(sat);
@@ -26908,12 +26908,12 @@
         try {
           image.addEventListener("load", function() {
             let thief = new import_color_thief_browser.default();
-            let colour = thief.getColor(image);
-            let hsl = rgb_to_hsl(colour[0], colour[1], colour[2]);
-            grid_colour.style.setProperty("background", `rgb(${colour})`);
+            let colour2 = thief.getColor(image);
+            let hsl = rgb_to_hsl(colour2[0], colour2[1], colour2[2]);
+            grid_colour.style.setProperty("background", `rgb(${colour2})`);
             grid.classList.add("grid-items-item-has-colour");
             grid.style.setProperty("--hue-over", hsl.h);
-            grid.style.setProperty("--sat-over", clamp_sat(hsl.s / 100 * 3));
+            grid.style.setProperty("--sat-over", clamp_sat2(hsl.s / 100 * 3));
             grid.style.setProperty("--lit-over", 1);
           });
         } catch (e) {
@@ -27701,10 +27701,10 @@
             try {
               image2.addEventListener("load", function() {
                 let thief = new import_color_thief_browser2.default();
-                let colour = thief.getColor(image2);
-                let hsl = rgb_to_hsl(colour[0], colour[1], colour[2]);
+                let colour2 = thief.getColor(image2);
+                let hsl = rgb_to_hsl(colour2[0], colour2[1], colour2[2]);
                 track.style.setProperty("--hue-over", hsl.h);
-                track.style.setProperty("--sat-over", clamp_sat(hsl.s / 100 * 3));
+                track.style.setProperty("--sat-over", clamp_sat2(hsl.s / 100 * 3));
                 track.style.setProperty("--lit-over", 1);
               });
             } catch (e) {
@@ -32801,6 +32801,7 @@
         return banner_image;
       }}
         `);
+      const accent_regex = /\[accent=([0-9]{1,3}),([0-9]?\.?[0-9]+),([0-9]?\.?[0-9]+)\]/;
       render(accent_setting2, html`
             <div class="heading">
                 <h5>${tl(trans.profile_accent.name)}</h5>
@@ -32808,6 +32809,92 @@
             </div>
             <div class="info">
                 <div class="colour-tile colourful" style="--hue-over: ${cache2.hue}; --sat-over: ${cache2.sat}; --lit-over: ${cache2.lit}" />
+                <div class="swatch-group palette">
+                    <button class="swatch-container" onclick=${() => {
+        let hue_range;
+        let sat_range;
+        let lit_range;
+        const match2 = about.value.match(accent_regex);
+        console.info(match2);
+        if (match2) {
+          save_setting("profile_hue", parseInt(match2[1], 10));
+          save_setting("profile_sat", parseFloat(match2[2]));
+          save_setting("profile_lit", parseFloat(match2[3]));
+          settings_store.profile_hue.default = settings.hue;
+          settings_store.profile_sat.default = settings.sat;
+          settings_store.profile_lit.default = settings.lit;
+        }
+        let accent_preview;
+        dialog({
+          id: "profile_accent",
+          title: tl(trans.profile_accent.name),
+          body: html.node`
+                                <div class="setting-group">
+                                    <div class="setting" data-type="info" ref=${(el) => accent_setting2 = el}>
+                                        <div class="heading">
+                                            <h5>${tl(trans.preview)}</h5>
+                                        </div>
+                                        <div class="info">
+                                            <div class="colour-tile colourful" ref=${(el) => accent_preview = el} style="--hue-over: ${settings.profile_hue}; --sat-over: ${settings.profile_sat}; --lit-over: ${settings.profile_lit}" />
+                                        </div>
+                                    </div>
+                                    ${ff("colour_based_on_hex") ? html.node`
+                                    <div class="setting" data-type="text">
+                                        <div class="heading">
+                                            <h5>${tl(trans.convert_from_hex)}</h5>
+                                        </div>
+                                        <div class="input-container content-form">
+                                            ${colour = input({
+            type: "colour",
+            value: "#999999",
+            maxlength: 7,
+            warn_if_empty: true
+          })}
+                                            <button class="btn primary icon convert" onclick=${() => {
+            const value2 = colour.value();
+            const hsl = hex_to_hsl(value2);
+            hue_range.set(hsl.h);
+            sat_range.set(clamp_sat(hsl.s / 100 * 3));
+            lit_range.set(hsl.l / 100 + 0.35);
+          }}>${tl(trans.convert)}</button>
+                                        </div>
+                                    </div>
+                                    ` : ""}
+                                    ${hue_range = setting({ id: "profile_hue", func: update_colour_preview })}
+                                    ${sat_range = setting({ id: "profile_sat", func: update_colour_preview })}
+                                    ${lit_range = setting({ id: "profile_lit", func: update_colour_preview })}
+                                </div>
+                                <div class="modal-footer">
+                                    <button class="see-more cancel" onclick=${() => dialog_rm({ id: "profile_accent" })}>
+                                        ${tl(trans.back)}
+                                    </button>
+                                    <div class="fill"></div>
+                                    <button class="btn primary continue" onclick=${() => {
+            const new_accent = `[accent=${settings.profile_hue},${settings.profile_sat},${settings.profile_lit}]`;
+            if (match2) {
+              about.value = about.value.replace(accent_regex, new_accent);
+            } else {
+              const trimmed = about.value.trimEnd();
+              if (trimmed.length == 0) {
+                about.value = new_accent;
+              } else {
+                about.value = trimmed + "\n\n" + new_accent;
+              }
+            }
+            dialog_rm({ id: "profile_accent" });
+          }}>
+                                        ${tl(trans.change)}
+                                    </button>
+                                </div>
+                            `
+        });
+        function update_colour_preview() {
+          accent_preview.style = `--hue-over: ${settings.profile_hue}; --sat-over: ${settings.profile_sat}; --lit-over: ${settings.profile_lit}`;
+        }
+      }}>
+                        <div class="swatch colourful" data-swatch-type="customise" />
+                    </button>
+                </div>
             </div>
         `);
     }
@@ -33455,9 +33542,9 @@
         let bg = obsession_container.style.getPropertyValue("background").replace("rgb(", "").replace(")", "").split(", ");
         let hsl = rgb_to_hsl(parseInt(bg[0]), parseInt(bg[1]), parseInt(bg[2]));
         document.body.style.setProperty("--hue-album", hsl.h);
-        document.body.style.setProperty("--sat-album", clamp_sat(hsl.s / 100 * 3));
+        document.body.style.setProperty("--sat-album", clamp_sat2(hsl.s / 100 * 3));
         document.body.style.setProperty("--lit-album", hsl.l / 100 + 0.35);
-        log(`sourced hsl of (${hsl.h}, ${hsl.s}, ${hsl.l}) - using final value of (${hsl.h}, ${clamp_sat(hsl.s / 100 * 3)}, ${hsl.l / 100 + 0.35})`, "hue from album");
+        log(`sourced hsl of (${hsl.h}, ${hsl.s}, ${hsl.l}) - using final value of (${hsl.h}, ${clamp_sat2(hsl.s / 100 * 3)}, ${hsl.l / 100 + 0.35})`, "hue from album");
       } catch (e) {
         console.error(e);
         log("no cover present", "hue from album");
@@ -46538,35 +46625,35 @@
     for (let type in colours) {
       const swatch_group = page.structure.main.querySelector(`#colour_${type}`);
       if (!swatch_group) return;
-      colours[type].forEach((colour) => {
-        if (colour.requires_flag && version.feature_flags.hasOwnProperty(colour.requires_flag)) {
-          if (!ff(colour.requires_flag))
+      colours[type].forEach((colour2) => {
+        if (colour2.requires_flag && version.feature_flags.hasOwnProperty(colour2.requires_flag)) {
+          if (!ff(colour2.requires_flag))
             return;
         }
         let text3;
-        if (colour.label) text3 = tl(colour.label);
-        if (!colour.type)
-          colour.type = "colour";
-        if (!colour.displays && colour.sets)
-          colour.displays = colour.sets;
+        if (colour2.label) text3 = tl(colour2.label);
+        if (!colour2.type)
+          colour2.type = "colour";
+        if (!colour2.displays && colour2.sets)
+          colour2.displays = colour2.sets;
         let blob;
         let text_elem;
         let swatch = html.node`
                 <button class="swatch-container" onclick=${() => {
-          if (!colour.sets) return;
-          hue_range.set(colour.sets.hue);
-          sat_range.set(colour.sets.sat);
-          lit_range.set(colour.sets.lit);
+          if (!colour2.sets) return;
+          hue_range.set(colour2.sets.hue);
+          sat_range.set(colour2.sets.sat);
+          lit_range.set(colour2.sets.lit);
         }}>
-                    <div class="swatch colourful" ref=${(el) => blob = el} data-swatch-type=${colour.type} />
+                    <div class="swatch colourful" ref=${(el) => blob = el} data-swatch-type=${colour2.type} />
                     <strong ref=${(el) => text_elem = el} />
                 </button>
             `;
         if (type == "custom")
-          text3 = tl(trans[colour.type]);
-        if (colour.type == "customise") {
+          text3 = tl(trans[colour2.type]);
+        if (colour2.type == "customise") {
           text3 = tl(trans.edit);
-          let colour2;
+          let colour3;
           tippy_esm_default(swatch, {
             theme: "window",
             content: html.node`
@@ -46581,17 +46668,17 @@
                                         <h5>${tl(trans.convert_from_hex)}</h5>
                                     </div>
                                     <div class="input-container content-form">
-                                        ${colour2 = input({
+                                        ${colour3 = input({
               type: "colour",
               value: "#999999",
               maxlength: 7,
               warn_if_empty: true
             })}
                                         <button class="btn primary icon convert" onclick=${() => {
-              const value = colour2.value();
+              const value = colour3.value();
               const hsl = hex_to_hsl(value);
               hue_range.set(hsl.h);
-              sat_range.set(clamp_sat(hsl.s / 100 * 3));
+              sat_range.set(clamp_sat2(hsl.s / 100 * 3));
               lit_range.set(hsl.l / 100 + 0.35);
             }}>${tl(trans.convert)}</button>
                                     </div>
@@ -46612,16 +46699,16 @@
             }
           });
         }
-        if (colour.sets) {
-          colour.sets.accent_type = colour.type;
-          blob.style.setProperty("--hue-over", colour.displays.hue);
-          blob.style.setProperty("--sat-over", colour.displays.sat);
-          blob.style.setProperty("--lit-over", colour.displays.lit);
+        if (colour2.sets) {
+          colour2.sets.accent_type = colour2.type;
+          blob.style.setProperty("--hue-over", colour2.displays.hue);
+          blob.style.setProperty("--sat-over", colour2.displays.sat);
+          blob.style.setProperty("--lit-over", colour2.displays.lit);
         }
-        if (colour.type == "default" && stored_season.id != "none") {
+        if (colour2.type == "default" && stored_season.id != "none") {
           text3 = tl(trans.seasonal.name);
           if (exclusives.hasOwnProperty(stored_season.id)) {
-            delete colour.sets;
+            delete colour2.sets;
             exclusives[stored_season.id] = [
               {
                 type: "default",
@@ -46650,16 +46737,16 @@
               onShow(instance) {
                 const content = instance.popper.querySelector(".tippy-content");
                 render(content, html`
-                                ${exclusives[stored_season.id].forEach((colour2) => {
-                  colour2.sets = { accent_type: colour2.type, ...colour2.sets };
-                  if (!colour2.displays) colour2.displays = colour2.sets;
+                                ${exclusives[stored_season.id].forEach((colour3) => {
+                  colour3.sets = { accent_type: colour3.type, ...colour3.sets };
+                  if (!colour3.displays) colour3.displays = colour3.sets;
                   return html.node`
-                                        <button class="dropdown-menu-clickable-item" aria-checked=${colour2.displays.hue == settings.hue && colour2.displays.sat == settings.sat && colour2.displays.lit} onclick=${() => {
-                    hue_range.set(colour2.displays.hue);
-                    sat_range.set(colour2.displays.sat);
-                    lit_range.set(colour2.displays.lit);
-                  }} style="--hue-over: ${colour2.displays.hue}; --sat-over: ${colour2.displays.sat}; --lit-over: ${colour2.displays.lit}">
-                                            ${colour2.name}
+                                        <button class="dropdown-menu-clickable-item" aria-checked=${colour3.displays.hue == settings.hue && colour3.displays.sat == settings.sat && colour3.displays.lit} onclick=${() => {
+                    hue_range.set(colour3.displays.hue);
+                    sat_range.set(colour3.displays.sat);
+                    lit_range.set(colour3.displays.lit);
+                  }} style="--hue-over: ${colour3.displays.hue}; --sat-over: ${colour3.displays.sat}; --lit-over: ${colour3.displays.lit}">
+                                            ${colour3.name}
                                         </button>
                                     `;
                 })}
@@ -48954,7 +49041,7 @@
       try {
         let bg = header_inner.getAttribute("style").replace("background: #", "");
         let hsl = hex_to_hsl(bg);
-        let sat = clamp_sat(hsl.s / 100 * 3);
+        let sat = clamp_sat2(hsl.s / 100 * 3);
         let lit = clamp_lit(sat, hsl.l / 100 + 0.35);
         document.body.style.setProperty("--hue-album", hsl.h);
         document.body.style.setProperty("--sat-album", sat);
@@ -52977,8 +53064,12 @@
       de: "Nachrichten",
       pt: "Mensagens"
     },
+    preview: {
+      en: "Preview",
+      de: "Vorschau"
+    },
     about_me_preview: {
-      // About
+      // About Me
       en: "About (preview)",
       de: "\xDCber (Vorschau)",
       pt: "Sobre (preview)"
@@ -58668,10 +58759,10 @@
         try {
           avatar3.addEventListener("load", () => {
             let thief = new import_color_thief_browser3.default();
-            let colour = thief.getColor(avatar3);
-            let hsl = rgb_to_hsl(colour[0], colour[1], colour[2]);
+            let colour2 = thief.getColor(avatar3);
+            let hsl = rgb_to_hsl(colour2[0], colour2[1], colour2[2]);
             auth.sets.hue = hsl.h;
-            auth.sets.sat = clamp_sat(hsl.s / 100 * 3);
+            auth.sets.sat = clamp_sat2(hsl.s / 100 * 3);
             auth.sets.lit = clamp_lit(auth.sets.sat, hsl.l / 100 + 0.35);
           });
         } catch (e) {
@@ -59732,6 +59823,33 @@
     trusted_sites: {
       default: [],
       type: "list"
+    },
+    profile_hue: {
+      default: 255,
+      type: "range",
+      min: 0,
+      max: 360,
+      step: 1,
+      title: trans.hue,
+      vertical: true
+    },
+    profile_sat: {
+      default: 1,
+      type: "range",
+      min: 0,
+      max: 2,
+      step: 0.01,
+      title: trans.sat,
+      vertical: true
+    },
+    profile_lit: {
+      default: 1,
+      type: "range",
+      min: 0,
+      max: 1.5,
+      step: 0.01,
+      title: trans.lit,
+      vertical: true
     }
   };
 
