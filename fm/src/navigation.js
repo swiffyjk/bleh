@@ -21,7 +21,6 @@ import {log} from "./build/log.js";
 import {correct_artist, correct_item_by_artist} from "./components/lotus.js";
 import {bleh_notification_list} from "./components/notifications.js";
 import tippy from "tippy.js";
-import { register_menu } from './components/menu.js';
 import { chart_reflow } from './chart.js';
 import { load_profile_cache_externally } from './pages/profile.js';
 
@@ -478,31 +477,8 @@ export function append_nav() {
 
 
     // auth menu
-    let site_auth = document.body.querySelector('.site-auth');
     const token = new_auth.querySelector('[name="csrfmiddlewaretoken"]').getAttribute('value');
     page.token = token;
-
-    const menu = tippy(auth_link, {
-        theme: 'context-menu',
-        content: html.node`
-            <a class="dropdown-menu-clickable-item" data-type="quick_access" href="${root}bleh/profiles">
-                ${tl(trans.edit_quick_access)}
-            </a>
-        `,
-        placement: 'right-start',
-        trigger: 'manual',
-        interactive: true,
-        interactiveBorder: 10,
-        offset: [0, 0],
-
-        onShow(instance) {
-            instance.popper.addEventListener('click', event => {
-                instance.hide();
-            });
-        }
-    });
-
-    register_menu(auth_link, menu);
 
     let auth_menu = tippy(auth_link, {
         theme: 'auth-menu-v2',

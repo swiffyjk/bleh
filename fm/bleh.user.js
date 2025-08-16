@@ -48393,28 +48393,8 @@
         name: tl(trans.themes.oled)
       }
     ];
-    let site_auth = document.body.querySelector(".site-auth");
     const token = new_auth.querySelector('[name="csrfmiddlewaretoken"]').getAttribute("value");
     page.token = token;
-    const menu = tippy_esm_default(auth_link2, {
-      theme: "context-menu",
-      content: html.node`
-            <a class="dropdown-menu-clickable-item" data-type="quick_access" href="${root}bleh/profiles">
-                ${tl(trans.edit_quick_access)}
-            </a>
-        `,
-      placement: "right-start",
-      trigger: "manual",
-      interactive: true,
-      interactiveBorder: 10,
-      offset: [0, 0],
-      onShow(instance) {
-        instance.popper.addEventListener("click", (event3) => {
-          instance.hide();
-        });
-      }
-    });
-    register_menu(auth_link2, menu);
     let auth_menu = tippy_esm_default(auth_link2, {
       theme: "auth-menu-v2",
       placement: "top",
