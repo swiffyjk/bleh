@@ -182,7 +182,7 @@ export let includes = {
         '(v1', '(v2', '(v3', '(v4', '(v5', '(v6', '(v7', '(v8', '(v9',
         '[v1', '[v2', '[v3', '[v4', '[v5', '[v6', '[v7', '[v8', '[v9',
         '- mix 1', '- mix 2', '- mix 3', '- mix 4', '- mix 5', '- mix 6', '- mix 7', '- mix 8', '- mix 9',
-        '- mix 1', '- mix 2', '- mix 3', '- mix 4', '- mix 5', '- mix 6', '- mix 7', '(mix 8', '(mix 9'
+        '(mix 1', '(mix 2', '(mix 3', '(mix 4', '(mix 5', '(mix 6', '(mix 7', '(mix 8', '(mix 9'
     ],
     stems: [
         '- acapella', '(acapella', '[acapella', '- a cappella', '(a cappella', '[a cappella',
@@ -247,12 +247,10 @@ export let includes = {
         '- moonlight', '(moonlight', '[moonlight', // dua lipa
         '- tour', '(tour', '[tour',
         'music from and inspired by', // on the end of black panther the album
-        'and it’s the same but there’s three more songs so it’s not', // brat, unsure
         '- magic city edition', '(magic city edition', '[magic city edition',
         '- music inspired', '(music inspired', '[music inspired',
         '- featured in', '(featured in', '[featured in',
         '- best weekend ever edition', '(best weekend ever edition', '[best weekend ever edition',
-        'fwd:', // sabrina emails i can't send, unsure
         '- double disc', '(double disc', '[double disc',
         '- reissue', '(reissue', '[reissue',
         '(12 reg. tracks', // confessions madonna
