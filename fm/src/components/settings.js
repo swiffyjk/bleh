@@ -32,10 +32,10 @@ export function setting({
         if (!settings_store[id])
             return setting_fail(id, {message: 'No settings store entry present'});
 
-        let type = settings_store[id].type || 'toggle';
-        let title = settings_store[id].title ? tl(settings_store[id].title) : id;
+        const type = settings_store[id].type || 'toggle';
+        const title = settings_store[id].title ? tl(settings_store[id].title) : id;
         let body = settings_store[id].body ? tl(settings_store[id].body) : null;
-        let icon = settings_store[id].icon;
+        const icon = settings_store[id].icon;
 
         if (!body && settings_store[id].keybind)
             body = keybind(settings_store[id].keybind);
@@ -50,10 +50,12 @@ export function setting({
         if (disabled && disabled_reason)
             return setting_fail(id, {message: disabled_reason, unavailable: true});
 
+        let html_title = html.node`${title}`;
+
         if (settings_store[id].beta)
-            title = html.node`${title}<span class="new-badge beta">${tl(trans.beta)}</span>`;
-        else if (settings_store[id].new_release)
-            title = html.node`${title}<span class="new-badge beta">${tl(trans.new)}</span>`;
+            html_title.appendChild(html.node`<span class="new-badge beta">${tl(trans.beta)}</span>`);
+        if (settings_store[id].new_release)
+            html_title.appendChild(html.node`<span class="new-badge beta">${tl(trans.new)}</span>`);
 
         if (type === 'toggle') {
             let toggle;
@@ -67,7 +69,7 @@ export function setting({
                     ` : ''}
                     ${(text) ? html.node`
                     <div class="heading">
-                        <h5>${title}</h5>
+                        <h5>${html_title}</h5>
                         ${(body) ? html.node`<p>${body}</p>` : ''}
                     </div>
                     ` : ''}
@@ -116,7 +118,7 @@ export function setting({
                 <div class="setting v2 ${standalone ? 'standalone' : ''} ${settings_store[id].vertical ? 'v' : ''}" data-type="range" disabled=${disabled} ref=${el => option = el} data-modified=${value != settings_store[id].default}>
                     ${(text) ? html.node`
                     <div class="heading">
-                        <h5>${title}<button class="reset see-more" onclick=${() => reset_range()}>${tl(trans.reset)}</button></h5>
+                        <h5>${html_title}<button class="reset see-more" onclick=${() => reset_range()}>${tl(trans.reset)}</button></h5>
                         ${(body) ? html.node`<p>${body}</p>` : ''}
                     </div>
                     ` : ''}
@@ -203,7 +205,7 @@ export function setting({
                     ` : ''}
                     ${(text) ? html.node`
                     <div class="heading">
-                        <h5>${title}<button class="reset see-more" ref=${el => reset_btn = el} onclick=${() => reset_text(id, input, submit, option, reset_btn, avatar)}>${tl(trans.reset)}</button></h5>
+                        <h5>${html_title}<button class="reset see-more" ref=${el => reset_btn = el} onclick=${() => reset_text(id, input, submit, option, reset_btn, avatar)}>${tl(trans.reset)}</button></h5>
                         ${(body) ? html.node`<p>${body}</p>` : ''}
                     </div>
                     ` : ''}
@@ -292,7 +294,7 @@ export function setting({
                     ` : ''}
                     ${(text) ? html.node`
                     <div class="heading">
-                        <h5>${title}</h5>
+                        <h5>${html_title}</h5>
                         ${(body) ? html.node`<p>${body}</p>` : ''}
                     </div>
                     ` : ''}
@@ -364,7 +366,7 @@ export function setting({
                     ` : ''}
                     ${(text) ? html.node`
                     <div class="heading">
-                        <h5>${title}</h5>
+                        <h5>${html_title}</h5>
                         ${(body) ? html.node`<p>${body}</p>` : ''}
                     </div>
                     ` : ''}
@@ -424,7 +426,7 @@ export function setting({
                     ` : ''}
                     ${(text) ? html.node`
                     <div class="heading">
-                        <h5>${title}</h5>
+                        <h5>${html_title}</h5>
                         ${(body) ? html.node`<p>${body}</p>` : ''}
                     </div>
                     ` : ''}

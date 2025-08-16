@@ -3531,6 +3531,24 @@ export const trans = {
         body: {
             en: 'Immerse yourself in soothing visual rain'
         }
+    },
+    images: {
+        en: 'Images'
+    },
+    static_gifs: {
+        en: 'Control animation of GIFs'
+    },
+    always_animate: {
+        en: 'Always animate'
+    },
+    only_on_hover: {
+        en: 'Only on hover'
+    },
+    static_banners: {
+        en: 'Prevent animations in profile banners'
+    },
+    change_zoom: {
+        en: 'Change zoom level'
     }
 }
 

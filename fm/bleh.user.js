@@ -15441,7 +15441,7 @@
           lastWeek: "[Last] dddd [at] LT",
           sameElse: "L"
         };
-        function calendar(key, mom, now3) {
+        function calendar2(key, mom, now3) {
           var output = this._calendar[key] || this._calendar["sameElse"];
           return isFunction2(output) ? output.call(mom, now3) : output;
         }
@@ -18673,7 +18673,7 @@
           return string;
         }
         var proto$1 = Locale2.prototype;
-        proto$1.calendar = calendar;
+        proto$1.calendar = calendar2;
         proto$1.longDateFormat = longDateFormat;
         proto$1.invalidDate = invalidDate;
         proto$1.ordinal = ordinal;
@@ -25903,6 +25903,479 @@
     });
   }
 
+  // src/components/calendar.js
+  function calendar({
+    value,
+    min: min2,
+    max: max2,
+    disabled,
+    show_time = true,
+    name: name2
+  }) {
+    let date_button;
+    let manual_button;
+    let up_button;
+    let down_button;
+    let now2 = /* @__PURE__ */ new Date();
+    if (value != null) now2 = new Date(value);
+    const min_date = min2 != null ? new Date(min2) : new Date(now2.getTime() - 14 * 24 * 60 * 60 * 1e3);
+    min_date.setHours(0, 0, 0, 0);
+    const max_date = max2 != null ? new Date(max2) : /* @__PURE__ */ new Date();
+    max_date.setHours(23, 59, 59, 999);
+    let last_action;
+    const state = {
+      year: now2.getFullYear(),
+      month: now2.getMonth() + 1,
+      day: now2.getDate(),
+      hours: now2.getHours(),
+      mins: now2.getMinutes(),
+      secs: now2.getSeconds()
+    };
+    let view = {
+      level: "day",
+      year: state.year,
+      month: state.month
+    };
+    let legacy_date;
+    let date_display;
+    let time_input;
+    let popup_inner = html.node`<div class="calendar" />`;
+    const locale = void 0;
+    const months2 = Array.from(
+      { length: 12 },
+      (_, i) => new Intl.DateTimeFormat(locale, { month: "short" }).format(new Date(2e3, i, 1))
+    );
+    const raw_weekdays = Array.from(
+      { length: 7 },
+      (_, i) => new Intl.DateTimeFormat(locale, { weekday: "short" }).format(new Date(1970, 0, 4 + i))
+    );
+    const weekdays2 = raw_weekdays.slice(1).concat(raw_weekdays[0]);
+    function months_between(a, b) {
+      return (b.getFullYear() - a.getFullYear()) * 12 + (b.getMonth() - a.getMonth());
+    }
+    function can_nav_month_view() {
+      return months_between(min_date, max_date) >= 1;
+    }
+    function can_nav_year_view() {
+      return max_date.getFullYear() - min_date.getFullYear() >= 1;
+    }
+    function on_month_year_click() {
+      last_action = "";
+      if (view.level === "day" && can_nav_month_view()) {
+        view.level = "month";
+      } else if (view.level === "month" && can_nav_year_view()) {
+        view.level = "year";
+      } else if (view.level === "year") {
+        view.level = "month";
+      } else if (view.level === "manual") {
+        view.level = "day";
+      } else {
+        return;
+      }
+      render_popup();
+    }
+    const container = html.node`
+        <div class="input-group">
+            <div class="content-form input-container" data-type="date">
+                <input class="legacy-input" type="date" ref=${(el) => legacy_date = el} name=${name2} value="${state.year}-${pad2(state.month)}-${pad2(state.day)}">
+                <div class="date-input modern-input" ref=${(el) => date_display = el} disabled=${disabled}>${format_date(state)}</div>
+            </div>
+            ${show_time ? html.node`
+            <div class="content-form input-container" data-type="time">
+                <input class="modern-input" type="time" step="1" ref=${(el) => time_input = el} disabled=${disabled} value="${pad2(state.hours)}:${pad2(state.mins)}:${pad2(state.secs)}">
+            </div>
+            ` : ""}
+        </div>
+    `;
+    if (time_input) {
+      time_input.addEventListener("input", () => {
+        const parts = time_input.value.split(":").map((n2) => parseInt(n2, 10));
+        state.hours = parts[0] || 0;
+        state.mins = parts[1] || 0;
+        state.secs = parts[2] || 0;
+        emit();
+      });
+    }
+    function can_prev() {
+      const py = view.month === 1 ? view.year - 1 : view.year;
+      const pm = view.month === 1 ? 12 : view.month - 1;
+      return py > min_date.getFullYear() || py === min_date.getFullYear() && pm >= min_date.getMonth() + 1;
+    }
+    function can_next() {
+      const ny = view.month === 12 ? view.year + 1 : view.year;
+      const nm = view.month === 12 ? 1 : view.month + 1;
+      return ny < max_date.getFullYear() || ny === max_date.getFullYear() && nm <= max_date.getMonth() + 1;
+    }
+    let tooltip = tippy_esm_default(date_display, {
+      theme: "window",
+      content: "",
+      placement: "top",
+      interactive: true,
+      interactiveBorder: 10,
+      trigger: "click",
+      onShow() {
+        last_action = "";
+        render_popup();
+      }
+    });
+    let menu = tippy_esm_default(date_display, {
+      theme: "context-menu",
+      content: html.node`
+            <button class="dropdown-menu-clickable-item" data-type="manual" onclick=${() => {
+        view.level = "manual";
+        tooltip.show();
+      }}>
+                ${tl(trans.manual_date)}
+            </button>
+        `,
+      placement: "right-start",
+      trigger: "manual",
+      interactive: true,
+      interactiveBorder: 10,
+      offset: [0, 0],
+      onShow(instance) {
+        instance.popper.addEventListener("click", (event3) => {
+          instance.hide();
+        });
+      }
+    });
+    register_menu(date_display, menu);
+    function render_popup() {
+      let inner;
+      if (view.level === "year") {
+        inner = render_year_view();
+      } else if (view.level === "month") {
+        inner = render_month_view();
+      } else if (view.level === "manual") {
+        inner = render_manual_view();
+      } else {
+        inner = render_day_view();
+      }
+      tooltip.setContent(html.node`<div class="calendar">${inner}</div>`);
+      if (date_button) tippy_esm_default(date_button, { content: tl(trans.change_zoom) });
+      if (manual_button) tippy_esm_default(manual_button, { content: manual_button.textContent });
+      if (up_button) tippy_esm_default(up_button, { content: up_button.textContent });
+      if (down_button) tippy_esm_default(down_button, { content: down_button.textContent });
+    }
+    function render_day_view() {
+      return html.node`
+            <div class="calendar-header">
+                <button class="month-year" type="button" ref=${(el) => date_button = el} onclick=${on_month_year_click} disabled=${!can_nav_month_view()}>
+                    ${months2[view.month - 1]} ${view.year}
+                </button>
+                <div class="fill" />
+                <button class="chibi icon" data-type="manual" ref=${(el) => manual_button = el} type="button" onclick=${() => {
+        view.level = "manual";
+        render_popup();
+      }}>
+                    ${tl(trans.manual)}
+                </button>
+                <button class="chibi icon" data-type="up" ref=${(el) => up_button = el} disabled=${!can_prev()} type="button" onclick=${() => {
+        if (!can_prev()) return;
+        view.month--;
+        if (view.month < 1) {
+          view.month = 12;
+          view.year--;
+        }
+        last_action = "prev";
+        render_popup();
+      }}>
+                    ${tl(trans.back)}
+                </button>
+                <button class="chibi icon" data-type="down" ref=${(el) => down_button = el} disabled=${!can_next()} type="button" onclick=${() => {
+        if (!can_next()) return;
+        view.month++;
+        if (view.month > 12) {
+          view.month = 1;
+          view.year++;
+        }
+        last_action = "next";
+        render_popup();
+      }}>
+                    ${tl(trans.next)}
+                </button>
+            </div>
+            <div class="date-header">
+                ${weekdays2.map((day) => html.node`<div class="date">${day}</div>`)}
+            </div>
+            <div class="days" data-last-action=${last_action}>
+                ${days(view.year, view.month).map(
+        (cell) => cell.type == "empty" ? html.node`<button class="day empty" type="button" disabled />` : html.node`
+                            <button class="day" type="button" aria-selected=${cell.day == state.day && cell.date >= min_date && cell.date <= max_date && cell.month == view.month ? "true" : "false"} disabled=${cell.date < min_date || cell.date > max_date} onclick=${() => {
+          state.day = cell.day;
+          state.year = view.year;
+          state.month = view.month;
+          update_display();
+          emit();
+          last_action = "";
+          render_popup();
+        }}>${cell.day}</button>
+                        `
+      )}
+            </div>
+        `;
+    }
+    function render_month_view() {
+      const min_year = min_date.getFullYear();
+      const max_year = max_date.getFullYear();
+      return html.node`
+            <div class="calendar-header">
+                <button class="month-year" type="button" ref=${(el) => date_button = el} onclick=${on_month_year_click} disabled=${!can_nav_year_view()}>
+                    ${view.year}
+                </button>
+                <div class="fill" />
+                <button class="chibi icon" data-type="manual" ref=${(el) => manual_button = el} type="button" onclick=${() => {
+        view.level = "manual";
+        render_popup();
+      }}>
+                    ${tl(trans.manual)}
+                </button>
+                <button class="chibi icon" data-type="up" ref=${(el) => up_button = el} type="button" disabled=${view.year <= min_year} onclick=${() => {
+        if (view.year < min_year) return;
+        view.year--;
+        last_action = "prev";
+        render_popup();
+      }}>
+                    ${tl(trans.back)}
+                </button>
+                <button class="chibi icon" data-type="down" ref=${(el) => down_button = el} type="button" disabled=${view.year >= max_year} onclick=${() => {
+        if (view.year > max_year) return;
+        view.year++;
+        last_action = "next";
+        render_popup();
+      }}>
+                    ${tl(trans.next)}
+                </button>
+            </div>
+            <div class="months" data-last-action=${last_action}>
+                ${months2.map((label, i) => {
+        const month_start = new Date(view.year, i, 1);
+        const month_end = new Date(
+          view.year,
+          i + 1,
+          0,
+          23,
+          59,
+          59,
+          999
+        );
+        return html.node`
+                        <button class="month" aria-selected=${view.year === state.year && i + 1 === state.month} disabled=${month_end < min_date || month_start > max_date} onclick=${() => {
+          view.month = i + 1;
+          view.level = "day";
+          last_action = "";
+          update_display();
+          emit();
+          render_popup();
+        }}>
+                            ${label}
+                        </button>
+                    `;
+      })}
+            </div>
+        `;
+    }
+    function render_year_view() {
+      const min_year = min_date.getFullYear();
+      const max_year = max_date.getFullYear();
+      const decade_start = Math.floor(view.year / 10) * 10;
+      return html.node`
+            <div class="calendar-header">
+                <button class="month-year" ref=${(el) => date_button = el} onclick=${on_month_year_click}>
+                    ${decade_start} – ${decade_start + 9}
+                </button>
+                <div class="fill" />
+                <button class="chibi icon" data-type="manual" ref=${(el) => manual_button = el} type="button" onclick=${() => {
+        view.level = "manual";
+        render_popup();
+      }}>
+                    ${tl(trans.manual)}
+                </button>
+                <button class="chibi icon" data-type="up" ref=${(el) => up_button = el} disabled=${decade_start - 10 < min_year} onclick=${() => {
+        if (decade_start - 10 < min_year) return;
+        view.year -= 10;
+        render_popup();
+      }}>
+                    ${tl(trans.back)}
+                </button>
+                <button class="chibi icon" data-type="down" ref=${(el) => down_button = el} disabled=${decade_start + 10 > max_year} onclick=${() => {
+        if (decade_start + 10 > max_year) return;
+        view.year += 10;
+        render_popup();
+      }}>
+                    ${tl(trans.next)}
+                </button>
+            </div>
+            <div class="years">
+                ${Array.from({ length: 10 }, (_, i) => decade_start + i).map((yr) => {
+        return html.node`
+                        <button class="year" aria-selected=${yr === state.year} disabled=${yr < min_date.getFullYear() || yr > max_date.getFullYear()} onclick=${() => {
+          view.year = yr;
+          view.level = "month";
+          render_popup();
+        }}>
+                            ${yr}
+                        </button>
+                    `;
+      })}
+            </div>
+        `;
+    }
+    function validate_text_date(value2) {
+      const m = value2.match(/^(\d{4})-(\d{2})-(\d{2})$/);
+      if (!m) return null;
+      const [_, ys, ms, ds] = m;
+      const date = /* @__PURE__ */ new Date(`${ys}-${ms}-${ds}T00:00:00`);
+      if (date.getFullYear() !== +ys || date.getMonth() + 1 !== +ms || date.getDate() !== +ds) {
+        return null;
+      }
+      if (date < min_date || date > max_date) return null;
+      return date;
+    }
+    function render_manual_view() {
+      let manual_date;
+      let elem = html.node`
+            <div class="calendar-header">
+                <button class="month-year" ref=${(el) => date_button = el} onclick=${on_month_year_click}>
+                    ${tl(trans.manual)}
+                </button>
+                <div class="fill" />
+                <button class="chibi icon" data-type="manual" ref=${(el) => manual_button = el} type="button" disabled>
+                    ${tl(trans.manual)}
+                </button>
+                <button class="chibi icon" data-type="up" ref=${(el) => up_button = el} disabled>
+                    ${tl(trans.back)}
+                </button>
+                <button class="chibi icon" data-type="down" ref=${(el) => down_button = el} disabled>
+                    ${tl(trans.next)}
+                </button>
+            </div>
+            <div class="manual">
+                ${manual_date = input({
+        type: "text",
+        value: `${state.year}-${pad2(state.month)}-${pad2(state.day)}`,
+        func: (value2) => {
+          const parsed2 = validate_text_date(
+            value2
+          );
+          if (!parsed2) {
+            manual_date.value(`${state.year}-${pad2(state.month)}-${pad2(state.day)}`);
+            return;
+          }
+          state.year = parsed2.getFullYear();
+          state.month = parsed2.getMonth() + 1;
+          state.day = parsed2.getDate();
+          view.level = "day";
+          view.year = state.year;
+          view.month = state.month;
+          update_display();
+          emit();
+          render_popup();
+        }
+      })}
+                <p>${tl(trans.enter_a_manual_date)}</p>
+                <p>${tl(trans.minimum_value).replace("{v}", `${min_date.getFullYear()}-${pad2(min_date.getMonth() + 1)}-${pad2(min_date.getDate())}`)}</p>
+                <p>${tl(trans.maximum_value).replace("{v}", `${max_date.getFullYear()}-${pad2(max_date.getMonth() + 1)}-${pad2(max_date.getDate())}`)}</p>
+            </div>
+        `;
+      manual_date.focus();
+      return elem;
+    }
+    function days(year, month) {
+      const raw_first = new Date(
+        year,
+        month - 1,
+        1
+      ).getDay();
+      const offset3 = (raw_first + 6) % 7;
+      const days_in_month = new Date(
+        year,
+        month,
+        0
+      ).getDate();
+      const cells = [];
+      for (let i = 0; i < offset3; i++) cells.push({ type: "empty" });
+      for (let day = 1; day <= days_in_month; day++) {
+        cells.push({
+          type: "day",
+          day,
+          month: state.month,
+          date: new Date(
+            year,
+            month - 1,
+            day
+          )
+        });
+      }
+      const rem = (7 - cells.length % 7) % 7;
+      for (let i = 0; i < rem; i++) cells.push({ type: "empty" });
+      console.info("cells", cells, state.month, view.month);
+      return cells;
+    }
+    function update_display() {
+      date_display.textContent = format_date(state);
+    }
+    function emit() {
+      const date_object = new Date(
+        state.year,
+        state.month - 1,
+        state.day,
+        state.hours,
+        state.mins,
+        state.secs
+      );
+      legacy_date.value = `${state.year}-${pad2(state.month)}-${pad2(state.day)}`;
+      container.dispatchEvent(new CustomEvent("change"), { detail: date_object });
+    }
+    function format_date({ year, month, day }) {
+      const date_object = new Date(
+        year,
+        month - 1,
+        day
+      );
+      return date_object.toLocaleDateString(void 0, {
+        year: "numeric",
+        month: "short",
+        day: "numeric"
+      });
+    }
+    container.value = (val = null) => {
+      if (val === null) {
+        return new Date(
+          state.year,
+          state.month - 1,
+          state.day,
+          state.hours,
+          state.mins,
+          state.secs
+        );
+      }
+      const date_object = new Date(val);
+      state.year = date_object.getFullYear();
+      state.month = date_object.getMonth() + 1;
+      state.day = date_object.getDate();
+      state.hours = date_object.getHours();
+      state.mins = date_object.getMinutes();
+      state.secs = date_object.getSeconds();
+      view.year = state.year;
+      view.month = state.month;
+      render_popup();
+      update_display();
+      if (time_input) time_input.value = `${pad2(state.hours)}:${pad2(state.mins)}:${pad2(state.secs)}`;
+      return date_object;
+    };
+    container.disabled = (val = null) => {
+      if (val === null) return time_input.disabled;
+      if (!val)
+        date_display.removeAttribute("disabled");
+      else
+        date_display.setAttribute("disabled", "true");
+      if (time_input) time_input.disabled = val;
+      return val;
+    };
+    return container;
+  }
+
   // src/components/input.js
   function input({
     type = "text",
@@ -25919,446 +26392,14 @@
     func
   }) {
     if (type == "date") {
-      let months_between = function(a, b) {
-        return (b.getFullYear() - a.getFullYear()) * 12 + (b.getMonth() - a.getMonth());
-      }, can_nav_month_view = function() {
-        return months_between(min_date, max_date) >= 1;
-      }, can_nav_year_view = function() {
-        return max_date.getFullYear() - min_date.getFullYear() >= 1;
-      }, on_month_year_click = function() {
-        last_action = "";
-        if (view.level === "day" && can_nav_month_view()) {
-          view.level = "month";
-        } else if (view.level === "month" && can_nav_year_view()) {
-          view.level = "year";
-        } else if (view.level === "year") {
-          view.level = "month";
-        } else if (view.level === "manual") {
-          view.level = "day";
-        } else {
-          return;
-        }
-        render_popup();
-      }, can_prev = function() {
-        const py = view.month === 1 ? view.year - 1 : view.year;
-        const pm = view.month === 1 ? 12 : view.month - 1;
-        return py > min_date.getFullYear() || py === min_date.getFullYear() && pm >= min_date.getMonth() + 1;
-      }, can_next = function() {
-        const ny = view.month === 12 ? view.year + 1 : view.year;
-        const nm = view.month === 12 ? 1 : view.month + 1;
-        return ny < max_date.getFullYear() || ny === max_date.getFullYear() && nm <= max_date.getMonth() + 1;
-      }, render_popup = function() {
-        let inner;
-        if (view.level === "year") {
-          inner = render_year_view();
-        } else if (view.level === "month") {
-          inner = render_month_view();
-        } else if (view.level === "manual") {
-          inner = render_manual_view();
-        } else {
-          inner = render_day_view();
-        }
-        tooltip.setContent(html.node`<div class="calendar">${inner}</div>`);
-      }, render_day_view = function() {
-        return html.node`
-                <div class="calendar-header">
-                    <button class="month-year" type="button" onclick=${on_month_year_click} disabled=${!can_nav_month_view()}>
-                        ${months2[view.month - 1]} ${view.year}
-                    </button>
-                    <div class="fill" />
-                    <button class="chibi icon" data-type="manual" type="button" onclick=${() => {
-          view.level = "manual";
-          render_popup();
-        }}>
-                        ${tl(trans.manual)}
-                    </button>
-                    <button class="chibi icon" data-type="up" disabled=${!can_prev()} type="button" onclick=${() => {
-          if (!can_prev()) return;
-          view.month--;
-          if (view.month < 1) {
-            view.month = 12;
-            view.year--;
-          }
-          last_action = "prev";
-          render_popup();
-        }}>
-                        ${tl(trans.back)}
-                    </button>
-                    <button class="chibi icon" data-type="down" disabled=${!can_next()} type="button" onclick=${() => {
-          if (!can_next()) return;
-          view.month++;
-          if (view.month > 12) {
-            view.month = 1;
-            view.year++;
-          }
-          last_action = "next";
-          render_popup();
-        }}>
-                        ${tl(trans.next)}
-                    </button>
-                </div>
-                <div class="date-header">
-                    ${weekdays2.map((day) => html.node`<div class="date">${day}</div>`)}
-                </div>
-                <div class="days" data-last-action=${last_action}>
-                    ${days(view.year, view.month).map(
-          (cell) => cell.type == "empty" ? html.node`<button class="day empty" type="button" disabled />` : html.node`
-                                <button class="day" type="button" aria-selected=${cell.day == state.day && cell.date >= min_date && cell.date <= max_date && cell.month == view.month ? "true" : "false"} disabled=${cell.date < min_date || cell.date > max_date} onclick=${() => {
-            state.day = cell.day;
-            state.year = view.year;
-            state.month = view.month;
-            update_display();
-            emit();
-            last_action = "";
-            render_popup();
-          }}>${cell.day}</button>
-                            `
-        )}
-                </div>
-            `;
-      }, render_month_view = function() {
-        const min_year = min_date.getFullYear();
-        const max_year = max_date.getFullYear();
-        return html.node`
-                <div class="calendar-header">
-                    <button class="month-year" type="button" onclick=${on_month_year_click} disabled=${!can_nav_year_view()}>
-                        ${view.year}
-                    </button>
-                    <div class="fill" />
-                    <button class="chibi icon" data-type="manual" type="button" onclick=${() => {
-          view.level = "manual";
-          render_popup();
-        }}>
-                        ${tl(trans.manual)}
-                    </button>
-                    <button class="chibi icon" data-type="up" type="button" disabled=${view.year <= min_year} onclick=${() => {
-          if (view.year < min_year) return;
-          view.year--;
-          last_action = "prev";
-          render_popup();
-        }}>
-                        ${tl(trans.back)}
-                    </button>
-                    <button class="chibi icon" data-type="down" type="button" disabled=${view.year >= max_year} onclick=${() => {
-          if (view.year > max_year) return;
-          view.year++;
-          last_action = "next";
-          render_popup();
-        }}>
-                        ${tl(trans.next)}
-                    </button>
-                </div>
-                <div class="months" data-last-action=${last_action}>
-                    ${months2.map((label, i) => {
-          const month_start = new Date(view.year, i, 1);
-          const month_end = new Date(
-            view.year,
-            i + 1,
-            0,
-            23,
-            59,
-            59,
-            999
-          );
-          return html.node`
-                            <button class="month" aria-selected=${view.year === state.year && i + 1 === state.month} disabled=${month_end < min_date || month_start > max_date} onclick=${() => {
-            view.month = i + 1;
-            view.level = "day";
-            last_action = "";
-            update_display();
-            emit();
-            render_popup();
-          }}>
-                                ${label}
-                            </button>
-                        `;
-        })}
-                </div>
-            `;
-      }, render_year_view = function() {
-        const min_year = min_date.getFullYear();
-        const max_year = max_date.getFullYear();
-        const decade_start = Math.floor(view.year / 10) * 10;
-        return html.node`
-                <div class="calendar-header">
-                    <button class="month-year" onclick=${on_month_year_click}>
-                        ${decade_start} – ${decade_start + 9}
-                    </button>
-                    <div class="fill" />
-                    <button class="chibi icon" data-type="manual" type="button" onclick=${() => {
-          view.level = "manual";
-          render_popup();
-        }}>
-                        ${tl(trans.manual)}
-                    </button>
-                    <button class="chibi icon" data-type="up" disabled=${decade_start - 10 < min_year} onclick=${() => {
-          if (decade_start - 10 < min_year) return;
-          view.year -= 10;
-          render_popup();
-        }}>
-                        ${tl(trans.back)}
-                    </button>
-                    <button class="chibi icon" data-type="down" disabled=${decade_start + 10 > max_year} onclick=${() => {
-          if (decade_start + 10 > max_year) return;
-          view.year += 10;
-          render_popup();
-        }}>
-                        ${tl(trans.next)}
-                    </button>
-                </div>
-                <div class="years">
-                    ${Array.from({ length: 10 }, (_, i) => decade_start + i).map((yr) => {
-          return html.node`
-                            <button class="year" aria-selected=${yr === state.year} disabled=${yr < min_date.getFullYear() || yr > max_date.getFullYear()} onclick=${() => {
-            view.year = yr;
-            view.level = "month";
-            render_popup();
-          }}>
-                                ${yr}
-                            </button>
-                        `;
-        })}
-                </div>
-            `;
-      }, validate_text_date = function(value2) {
-        const m = value2.match(/^(\d{4})-(\d{2})-(\d{2})$/);
-        if (!m) return null;
-        const [_, ys, ms, ds] = m;
-        const date = /* @__PURE__ */ new Date(`${ys}-${ms}-${ds}T00:00:00`);
-        if (date.getFullYear() !== +ys || date.getMonth() + 1 !== +ms || date.getDate() !== +ds) {
-          return null;
-        }
-        if (date < min_date || date > max_date) return null;
-        return date;
-      }, render_manual_view = function() {
-        let manual_date;
-        let elem = html.node`
-                <div class="calendar-header">
-                    <button class="month-year" onclick=${on_month_year_click}>
-                        ${tl(trans.manual)}
-                    </button>
-                    <div class="fill" />
-                    <button class="chibi icon" data-type="manual" type="button" disabled>
-                        ${tl(trans.manual)}
-                    </button>
-                    <button class="chibi icon" data-type="up" disabled>
-                        ${tl(trans.back)}
-                    </button>
-                    <button class="chibi icon" data-type="down" disabled>
-                        ${tl(trans.next)}
-                    </button>
-                </div>
-                <div class="manual">
-                    ${manual_date = input({
-          type: "text",
-          value: `${state.year}-${pad2(state.month)}-${pad2(state.day)}`,
-          func: (value2) => {
-            const parsed2 = validate_text_date(
-              value2
-            );
-            if (!parsed2) {
-              manual_date.value(`${state.year}-${pad2(state.month)}-${pad2(state.day)}`);
-              return;
-            }
-            state.year = parsed2.getFullYear();
-            state.month = parsed2.getMonth() + 1;
-            state.day = parsed2.getDate();
-            view.level = "day";
-            view.year = state.year;
-            view.month = state.month;
-            update_display();
-            emit();
-            render_popup();
-          }
-        })}
-                    <p>${tl(trans.enter_a_manual_date)}</p>
-                    <p>${tl(trans.minimum_value).replace("{v}", `${min_date.getFullYear()}-${pad2(min_date.getMonth() + 1)}-${pad2(min_date.getDate())}`)}</p>
-                    <p>${tl(trans.maximum_value).replace("{v}", `${max_date.getFullYear()}-${pad2(max_date.getMonth() + 1)}-${pad2(max_date.getDate())}`)}</p>
-                </div>
-            `;
-        manual_date.focus();
-        return elem;
-      }, days = function(year, month) {
-        const raw_first = new Date(
-          year,
-          month - 1,
-          1
-        ).getDay();
-        const offset3 = (raw_first + 6) % 7;
-        const days_in_month = new Date(
-          year,
-          month,
-          0
-        ).getDate();
-        const cells = [];
-        for (let i = 0; i < offset3; i++) cells.push({ type: "empty" });
-        for (let day = 1; day <= days_in_month; day++) {
-          cells.push({
-            type: "day",
-            day,
-            month: state.month,
-            date: new Date(
-              year,
-              month - 1,
-              day
-            )
-          });
-        }
-        const rem = (7 - cells.length % 7) % 7;
-        for (let i = 0; i < rem; i++) cells.push({ type: "empty" });
-        console.info("cells", cells, state.month, view.month);
-        return cells;
-      }, update_display = function() {
-        date_display.textContent = format_date(state);
-      }, emit = function() {
-        const date_object = new Date(
-          state.year,
-          state.month - 1,
-          state.day,
-          state.hours,
-          state.mins,
-          state.secs
-        );
-        legacy_date.value = `${state.year}-${pad2(state.month)}-${pad2(state.day)}`;
-        container2.dispatchEvent(new CustomEvent("change"), { detail: date_object });
-      }, format_date = function({ year, month, day }) {
-        const date_object = new Date(
-          year,
-          month - 1,
-          day
-        );
-        return date_object.toLocaleDateString(void 0, {
-          year: "numeric",
-          month: "short",
-          day: "numeric"
-        });
-      };
-      let now2 = /* @__PURE__ */ new Date();
-      if (value != null) now2 = new Date(value);
-      console.info(min2, max2, new Date(max2));
-      const min_date = min2 != null ? new Date(min2) : new Date(now2.getTime() - 14 * 24 * 60 * 60 * 1e3);
-      min_date.setHours(0, 0, 0, 0);
-      const max_date = max2 != null ? new Date(max2) : /* @__PURE__ */ new Date();
-      max_date.setHours(23, 59, 59, 999);
-      let last_action;
-      const state = {
-        year: now2.getFullYear(),
-        month: now2.getMonth() + 1,
-        day: now2.getDate(),
-        hours: now2.getHours(),
-        mins: now2.getMinutes(),
-        secs: now2.getSeconds()
-      };
-      let view = {
-        level: "day",
-        year: state.year,
-        month: state.month
-      };
-      let legacy_date;
-      let date_display;
-      let time_input;
-      let popup_inner = html.node`<div class="calendar" />`;
-      const locale = void 0;
-      const months2 = Array.from(
-        { length: 12 },
-        (_, i) => new Intl.DateTimeFormat(locale, { month: "short" }).format(new Date(2e3, i, 1))
-      );
-      const raw_weekdays = Array.from(
-        { length: 7 },
-        (_, i) => new Intl.DateTimeFormat(locale, { weekday: "short" }).format(new Date(1970, 0, 4 + i))
-      );
-      const weekdays2 = raw_weekdays.slice(1).concat(raw_weekdays[0]);
-      const container2 = html.node`
-            <div class="input-group">
-                <div class="content-form input-container" data-type="date">
-                    <input class="legacy-input" type="date" ref=${(el) => legacy_date = el} name=${name2} value="${state.year}-${pad2(state.month)}-${pad2(state.day)}">
-                    <div class="date-input modern-input" ref=${(el) => date_display = el} disabled=${disabled}>${format_date(state)}</div>
-                </div>
-                ${show_time ? html.node`
-                <div class="content-form input-container" data-type="time">
-                    <input class="modern-input" type="time" step="1" ref=${(el) => time_input = el} disabled=${disabled} value="${pad2(state.hours)}:${pad2(state.mins)}:${pad2(state.secs)}">
-                </div>
-                ` : ""}
-            </div>
-        `;
-      if (time_input) {
-        time_input.addEventListener("input", () => {
-          const parts = time_input.value.split(":").map((n2) => parseInt(n2, 10));
-          state.hours = parts[0] || 0;
-          state.mins = parts[1] || 0;
-          state.secs = parts[2] || 0;
-          emit();
-        });
-      }
-      let tooltip = tippy_esm_default(date_display, {
-        theme: "window",
-        content: "",
-        placement: "top",
-        interactive: true,
-        interactiveBorder: 10,
-        trigger: "click",
-        onShow() {
-          last_action = "";
-          render_popup();
-        }
+      return calendar({
+        value,
+        min: min2,
+        max: max2,
+        disabled,
+        show_time,
+        name: name2
       });
-      let menu = tippy_esm_default(date_display, {
-        theme: "context-menu",
-        content: html.node`
-                <button class="dropdown-menu-clickable-item" data-type="manual" onclick=${() => {
-          view.level = "manual";
-          tooltip.show();
-        }}>
-                    ${tl(trans.manual_date)}
-                </button>
-            `,
-        placement: "right-start",
-        trigger: "manual",
-        interactive: true,
-        interactiveBorder: 10,
-        offset: [0, 0],
-        onShow(instance) {
-          instance.popper.addEventListener("click", (event3) => {
-            instance.hide();
-          });
-        }
-      });
-      register_menu(date_display, menu);
-      container2.value = (val = null) => {
-        if (val === null) {
-          return new Date(
-            state.year,
-            state.month - 1,
-            state.day,
-            state.hours,
-            state.mins,
-            state.secs
-          );
-        }
-        const date_object = new Date(val);
-        state.year = date_object.getFullYear();
-        state.month = date_object.getMonth() + 1;
-        state.day = date_object.getDate();
-        state.hours = date_object.getHours();
-        state.mins = date_object.getMinutes();
-        state.secs = date_object.getSeconds();
-        view.year = state.year;
-        view.month = state.month;
-        render_popup();
-        update_display();
-        if (time_input) time_input.value = `${pad2(state.hours)}:${pad2(state.mins)}:${pad2(state.secs)}`;
-        return date_object;
-      };
-      container2.disabled = (val = null) => {
-        if (val === null) return time_input.disabled;
-        if (!val)
-          date_display.removeAttribute("disabled");
-        else
-          date_display.setAttribute("disabled", "true");
-        if (time_input) time_input.disabled = val;
-        return val;
-      };
-      return container2;
     }
     let input_box;
     let error_tooltip;
@@ -29536,10 +29577,10 @@
       log(`creating ${id} with value ${value}`, "settings", "log", { settings, settings_id: settings[id] });
       if (!settings_store[id])
         return setting_fail(id, { message: "No settings store entry present" });
-      let type = settings_store[id].type || "toggle";
-      let title = settings_store[id].title ? tl(settings_store[id].title) : id;
+      const type = settings_store[id].type || "toggle";
+      const title = settings_store[id].title ? tl(settings_store[id].title) : id;
       let body = settings_store[id].body ? tl(settings_store[id].body) : null;
-      let icon = settings_store[id].icon;
+      const icon = settings_store[id].icon;
       if (!body && settings_store[id].keybind)
         body = keybind(settings_store[id].keybind);
       let disabled = false;
@@ -29550,10 +29591,11 @@
       }
       if (disabled && disabled_reason)
         return setting_fail(id, { message: disabled_reason, unavailable: true });
+      let html_title = html.node`${title}`;
       if (settings_store[id].beta)
-        title = html.node`${title}<span class="new-badge beta">${tl(trans.beta)}</span>`;
-      else if (settings_store[id].new_release)
-        title = html.node`${title}<span class="new-badge beta">${tl(trans.new)}</span>`;
+        html_title.appendChild(html.node`<span class="new-badge beta">${tl(trans.beta)}</span>`);
+      if (settings_store[id].new_release)
+        html_title.appendChild(html.node`<span class="new-badge beta">${tl(trans.new)}</span>`);
       if (type === "toggle") {
         let toggle2;
         return html.node`
@@ -29565,7 +29607,7 @@
                     ` : ""}
                     ${text3 ? html.node`
                     <div class="heading">
-                        <h5>${title}</h5>
+                        <h5>${html_title}</h5>
                         ${body ? html.node`<p>${body}</p>` : ""}
                     </div>
                     ` : ""}
@@ -29623,7 +29665,7 @@
                 <div class="setting v2 ${standalone ? "standalone" : ""} ${settings_store[id].vertical ? "v" : ""}" data-type="range" disabled=${disabled} ref=${(el) => option = el} data-modified=${value != settings_store[id].default}>
                     ${text3 ? html.node`
                     <div class="heading">
-                        <h5>${title}<button class="reset see-more" onclick=${() => reset_range()}>${tl(trans.reset)}</button></h5>
+                        <h5>${html_title}<button class="reset see-more" onclick=${() => reset_range()}>${tl(trans.reset)}</button></h5>
                         ${body ? html.node`<p>${body}</p>` : ""}
                     </div>
                     ` : ""}
@@ -29681,7 +29723,7 @@
                     ` : ""}
                     ${text3 ? html.node`
                     <div class="heading">
-                        <h5>${title}<button class="reset see-more" ref=${(el) => reset_btn = el} onclick=${() => reset_text(id, input2, submit, option, reset_btn, avatar3)}>${tl(trans.reset)}</button></h5>
+                        <h5>${html_title}<button class="reset see-more" ref=${(el) => reset_btn = el} onclick=${() => reset_text(id, input2, submit, option, reset_btn, avatar3)}>${tl(trans.reset)}</button></h5>
                         ${body ? html.node`<p>${body}</p>` : ""}
                     </div>
                     ` : ""}
@@ -29761,7 +29803,7 @@
                     ` : ""}
                     ${text3 ? html.node`
                     <div class="heading">
-                        <h5>${title}</h5>
+                        <h5>${html_title}</h5>
                         ${body ? html.node`<p>${body}</p>` : ""}
                     </div>
                     ` : ""}
@@ -29824,7 +29866,7 @@
                     ` : ""}
                     ${text3 ? html.node`
                     <div class="heading">
-                        <h5>${title}</h5>
+                        <h5>${html_title}</h5>
                         ${body ? html.node`<p>${body}</p>` : ""}
                     </div>
                     ` : ""}
@@ -29921,7 +29963,7 @@
                     ` : ""}
                     ${text3 ? html.node`
                     <div class="heading">
-                        <h5>${title}</h5>
+                        <h5>${html_title}</h5>
                         ${body ? html.node`<p>${body}</p>` : ""}
                     </div>
                     ` : ""}
@@ -35968,8 +36010,8 @@
         options = getCachedDTF(smaller).resolvedOptions();
         selectedStr = smaller;
       }
-      const { numberingSystem, calendar } = options;
-      return [selectedStr, numberingSystem, calendar];
+      const { numberingSystem, calendar: calendar2 } = options;
+      return [selectedStr, numberingSystem, calendar2];
     }
   }
   function intlConfigString(localeStr, numberingSystem, outputCalendar) {
@@ -40974,11 +41016,11 @@
      * @return {Object}
      */
     resolvedLocaleOptions(opts = {}) {
-      const { locale, numberingSystem, calendar } = Formatter.create(
+      const { locale, numberingSystem, calendar: calendar2 } = Formatter.create(
         this.loc.clone(opts),
         opts
       ).resolvedOptions(this);
-      return { locale, numberingSystem, outputCalendar: calendar };
+      return { locale, numberingSystem, outputCalendar: calendar2 };
     }
     // TRANSFORM
     /**
@@ -45605,6 +45647,15 @@
                     ${setting({ id: "underline_links" })}
                 </div>
             </section>
+            ${ff("static_gifs") ? html.node`
+            <section class="bleh--panel">
+                <h4>${tl(trans.images)}</h4>
+                <div class="setting-group">
+                    ${setting({ id: "static_gifs" })}
+                    ${setting({ id: "static_banners" })}
+                </div>
+            </section>
+            ` : ""}
         `);
     } else if (page_id == "sku") {
       register_skip_to([]);
@@ -54994,6 +55045,24 @@
       body: {
         en: "Immerse yourself in soothing visual rain"
       }
+    },
+    images: {
+      en: "Images"
+    },
+    static_gifs: {
+      en: "Control animation of GIFs"
+    },
+    always_animate: {
+      en: "Always animate"
+    },
+    only_on_hover: {
+      en: "Only on hover"
+    },
+    static_banners: {
+      en: "Prevent animations in profile banners"
+    },
+    change_zoom: {
+      en: "Change zoom level"
     }
   };
   var trans_legacy = {
@@ -59082,6 +59151,33 @@
       title: trans.collage_centered.name,
       body: trans.collage_centered.body,
       new_release: true
+    },
+    images: {
+      en: "Images"
+    },
+    static_gifs: {
+      default: "always",
+      type: "radio",
+      title: trans.static_gifs,
+      values: {
+        always: {
+          name: trans.always_animate
+        },
+        hover: {
+          name: trans.only_on_hover
+        },
+        never: {
+          name: trans.never
+        }
+      },
+      new_release: true,
+      beta: true
+    },
+    static_banners: {
+      default: true,
+      type: "checkbox",
+      title: trans.static_banners,
+      new_release: true
     }
   };
 
@@ -59153,7 +59249,7 @@
   // src/build/build.json
   var build_default = {
     brand: "bleh",
-    build: "2025.0801",
+    build: "2025.0815",
     sku: "mbv",
     bio: "bleh!!! ^-^",
     author: "kate",
@@ -59412,6 +59508,11 @@
         default: true,
         name: "Show current listening status in profile menu",
         date: "2025-07-29"
+      },
+      static_gifs: {
+        default: false,
+        name: "Convert GIFs to static images",
+        date: "2025-08-15"
       }
     }
   };

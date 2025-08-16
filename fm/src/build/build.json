@@ -1,6 +1,6 @@
 {
     "brand": "bleh",
-    "build": "2025.0801",
+    "build": "2025.0815",
     "sku": "mbv",
     "bio": "bleh!!! ^-^",
     "author": "kate",
@@ -259,6 +259,11 @@
             "default": true,
             "name": "Show current listening status in profile menu",
             "date": "2025-07-29"
+        },
+        "static_gifs": {
+            "default": false,
+            "name": "Convert GIFs to static images",
+            "date": "2025-08-15"
         }
     }
 }

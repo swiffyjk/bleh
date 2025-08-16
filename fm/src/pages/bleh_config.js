@@ -1241,6 +1241,15 @@ export function render_setting_page(page_id) {
                     ${setting({id: 'underline_links'})}
                 </div>
             </section>
+            ${ff('static_gifs') ? html.node`
+            <section class="bleh--panel">
+                <h4>${tl(trans.images)}</h4>
+                <div class="setting-group">
+                    ${setting({id: 'static_gifs'})}
+                    ${setting({id: 'static_banners'})}
+                </div>
+            </section>
+            ` : ''}
         `);
     } else if (page_id == 'sku') {
         register_skip_to([]);

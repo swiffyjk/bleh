@@ -1093,5 +1093,32 @@ export let settings_store = {
         title: trans.collage_centered.name,
         body: trans.collage_centered.body,
         new_release: true
+    },
+    images: {
+        en: 'Images'
+    },
+    static_gifs: {
+        default: 'always',
+        type: 'radio',
+        title: trans.static_gifs,
+        values: {
+            always: {
+                name: trans.always_animate
+            },
+            hover: {
+                name: trans.only_on_hover
+            },
+            never: {
+                name: trans.never
+            }
+        },
+        new_release: true,
+        beta: true
+    },
+    static_banners: {
+        default: true,
+        type: 'checkbox',
+        title: trans.static_banners,
+        new_release: true
     }
 }
