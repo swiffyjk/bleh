@@ -470,8 +470,13 @@ function patch_settings_profile_panel(token, update_picture) {
     const markdown_settings = {
         allow_headers: true,
         allow_banners: true,
-        allow_icons: true
+        allow_icons: true,
+        allow_hue: true,
+        take_effect: false
     }
+
+    let banner_setting;
+    let accent_setting;
 
     render(update_picture, html`
         <h4>${tl(trans.profile)}</h4>
@@ -556,6 +561,8 @@ function patch_settings_profile_panel(token, update_picture) {
             </div>
         </div>
         <div class="setting-group">
+            <div class="setting" data-type="info" ref=${el => banner_setting = el} />
+            <div class="setting" data-type="info" ref=${el => accent_setting = el} />
             ${setting({id: 'avatar_radius'})}
         </div>
     `);
@@ -573,12 +580,48 @@ function patch_settings_profile_panel(token, update_picture) {
 
         render(preview, markdown(value, markdown_settings));
 
-        let banner = preview.querySelector('img[alt="banner"]');
-        let banner_img = page.structure.main.querySelector('.banner-preview');
-        if (!banner)
-            banner_img.removeAttribute('style');
-        else
-            banner_img.style.setProperty('background-image', `url(${banner.getAttribute('src')})`);
+        let profile_cache = JSON.parse(localStorage.getItem('bleh_profile_cache')) || {};
+        let cache = profile_cache[auth.name];
+
+        console.info('cache', cache);
+
+        render(banner_setting, html`
+            <div class="heading">
+                <h5>${tl(trans.profile_banner.name)}</h5>
+                <p>${tl(trans.profile_banner.body)}</p>
+                ${cache.banner ? html.node`
+                <p>${tl(trans.current_banner_value).replace('{v}', cache.banner)}</p>
+                ` : ''}
+            </div>
+            ${() => {
+                if (!cache.banner)
+                    return html.node`
+                        <div class="info">
+                            <p>${tl(trans.none)}</p>
+                        </div>
+                    `;
+
+                let banner_image = html.node`
+                    <div class="banner-image" style="background-image: url(${cache.banner})" />
+                `;
+
+                tippy(banner_image, {
+                    content: cache.banner
+                });
+
+                return banner_image;
+            }}
+        `);
+
+        render(accent_setting, html`
+            <div class="heading">
+                <h5>${tl(trans.profile_accent.name)}</h5>
+                <p>${tl(trans.profile_accent.body)}</p>
+            </div>
+            <div class="info">
+                <div class="colour-tile colourful" style="--hue-over: ${cache.hue}; --sat-over: ${cache.sat}; --lit-over: ${cache.lit}" />
+            </div>
+        `);
     }
 
     // subtitle

@@ -5612,15 +5612,15 @@
             function CounterState2() {
               this.counters = {};
             }
-            CounterState2.prototype.getCounterValue = function(name2) {
-              var counter = this.counters[name2];
+            CounterState2.prototype.getCounterValue = function(name) {
+              var counter = this.counters[name];
               if (counter && counter.length) {
                 return counter[counter.length - 1];
               }
               return 1;
             };
-            CounterState2.prototype.getCounterValues = function(name2) {
-              var counter = this.counters[name2];
+            CounterState2.prototype.getCounterValues = function(name) {
+              var counter = this.counters[name];
               return counter ? counter : [];
             };
             CounterState2.prototype.pop = function(counters) {
@@ -9127,39 +9127,39 @@
         function toParamCase(value) {
           return value.replace(REGEXP_CAMEL_CASE, "$1-$2").toLowerCase();
         }
-        function getData(element, name2) {
-          if (isObject2(element[name2])) {
-            return element[name2];
+        function getData(element, name) {
+          if (isObject2(element[name])) {
+            return element[name];
           }
           if (element.dataset) {
-            return element.dataset[name2];
+            return element.dataset[name];
           }
-          return element.getAttribute("data-".concat(toParamCase(name2)));
+          return element.getAttribute("data-".concat(toParamCase(name)));
         }
-        function setData(element, name2, data2) {
+        function setData(element, name, data2) {
           if (isObject2(data2)) {
-            element[name2] = data2;
+            element[name] = data2;
           } else if (element.dataset) {
-            element.dataset[name2] = data2;
+            element.dataset[name] = data2;
           } else {
-            element.setAttribute("data-".concat(toParamCase(name2)), data2);
+            element.setAttribute("data-".concat(toParamCase(name)), data2);
           }
         }
-        function removeData(element, name2) {
-          if (isObject2(element[name2])) {
+        function removeData(element, name) {
+          if (isObject2(element[name])) {
             try {
-              delete element[name2];
+              delete element[name];
             } catch (error) {
-              element[name2] = void 0;
+              element[name] = void 0;
             }
           } else if (element.dataset) {
             try {
-              delete element.dataset[name2];
+              delete element.dataset[name];
             } catch (error) {
-              element.dataset[name2] = void 0;
+              element.dataset[name] = void 0;
             }
           } else {
-            element.removeAttribute("data-".concat(toParamCase(name2)));
+            element.removeAttribute("data-".concat(toParamCase(name)));
           }
         }
         var REGEXP_SPACES = /\s\s*/;
@@ -11750,14 +11750,14 @@
           "use strict";
           globalOptions = getDefaultOpts(true);
         };
-        showdown2.setFlavor = function(name2) {
+        showdown2.setFlavor = function(name) {
           "use strict";
-          if (!flavor.hasOwnProperty(name2)) {
-            throw Error(name2 + " flavor was not found");
+          if (!flavor.hasOwnProperty(name)) {
+            throw Error(name + " flavor was not found");
           }
           showdown2.resetOptions();
-          var preset = flavor[name2];
-          setFlavor = name2;
+          var preset = flavor[name];
+          setFlavor = name;
           for (var option in preset) {
             if (preset.hasOwnProperty(option)) {
               globalOptions[option] = preset[option];
@@ -11768,41 +11768,41 @@
           "use strict";
           return setFlavor;
         };
-        showdown2.getFlavorOptions = function(name2) {
+        showdown2.getFlavorOptions = function(name) {
           "use strict";
-          if (flavor.hasOwnProperty(name2)) {
-            return flavor[name2];
+          if (flavor.hasOwnProperty(name)) {
+            return flavor[name];
           }
         };
         showdown2.getDefaultOptions = function(simple2) {
           "use strict";
           return getDefaultOpts(simple2);
         };
-        showdown2.subParser = function(name2, func) {
+        showdown2.subParser = function(name, func) {
           "use strict";
-          if (showdown2.helper.isString(name2)) {
+          if (showdown2.helper.isString(name)) {
             if (typeof func !== "undefined") {
-              parsers[name2] = func;
+              parsers[name] = func;
             } else {
-              if (parsers.hasOwnProperty(name2)) {
-                return parsers[name2];
+              if (parsers.hasOwnProperty(name)) {
+                return parsers[name];
               } else {
-                throw Error("SubParser named " + name2 + " not registered!");
+                throw Error("SubParser named " + name + " not registered!");
               }
             }
           }
         };
-        showdown2.extension = function(name2, ext) {
+        showdown2.extension = function(name, ext) {
           "use strict";
-          if (!showdown2.helper.isString(name2)) {
+          if (!showdown2.helper.isString(name)) {
             throw Error("Extension 'name' must be a string");
           }
-          name2 = showdown2.helper.stdExtName(name2);
+          name = showdown2.helper.stdExtName(name);
           if (showdown2.helper.isUndefined(ext)) {
-            if (!extensions.hasOwnProperty(name2)) {
-              throw Error("Extension named " + name2 + " is not registered!");
+            if (!extensions.hasOwnProperty(name)) {
+              throw Error("Extension named " + name + " is not registered!");
             }
-            return extensions[name2];
+            return extensions[name];
           } else {
             if (typeof ext === "function") {
               ext = ext();
@@ -11810,9 +11810,9 @@
             if (!showdown2.helper.isArray(ext)) {
               ext = [ext];
             }
-            var validExtension = validate(ext, name2);
+            var validExtension = validate(ext, name);
             if (validExtension.valid) {
-              extensions[name2] = ext;
+              extensions[name] = ext;
             } else {
               throw Error(validExtension.error);
             }
@@ -11822,17 +11822,17 @@
           "use strict";
           return extensions;
         };
-        showdown2.removeExtension = function(name2) {
+        showdown2.removeExtension = function(name) {
           "use strict";
-          delete extensions[name2];
+          delete extensions[name];
         };
         showdown2.resetExtensions = function() {
           "use strict";
           extensions = {};
         };
-        function validate(extension, name2) {
+        function validate(extension, name) {
           "use strict";
-          var errMsg = name2 ? "Error in " + name2 + " extension->" : "Error in unnamed extension", ret = {
+          var errMsg = name ? "Error in " + name + " extension->" : "Error in unnamed extension", ret = {
             valid: true,
             error: ""
           };
@@ -13354,11 +13354,11 @@
               showdown2.helper.forEach(options.extensions, _parseExtension);
             }
           }
-          function _parseExtension(ext, name2) {
-            name2 = name2 || null;
+          function _parseExtension(ext, name) {
+            name = name || null;
             if (showdown2.helper.isString(ext)) {
               ext = showdown2.helper.stdExtName(ext);
-              name2 = ext;
+              name = ext;
               if (showdown2.extensions[ext]) {
                 console.warn("DEPRECATION WARNING: " + ext + " is an old extension that uses a deprecated loading method.Please inform the developer that the extension should be updated!");
                 legacyExtensionLoading(showdown2.extensions[ext], ext);
@@ -13375,7 +13375,7 @@
             if (!showdown2.helper.isArray(ext)) {
               ext = [ext];
             }
-            var validExt = validate(ext, name2);
+            var validExt = validate(ext, name);
             if (!validExt.valid) {
               throw Error(validExt.error);
             }
@@ -13397,14 +13397,14 @@
               }
             }
           }
-          function legacyExtensionLoading(ext, name2) {
+          function legacyExtensionLoading(ext, name) {
             if (typeof ext === "function") {
               ext = ext(new showdown2.Converter());
             }
             if (!showdown2.helper.isArray(ext)) {
               ext = [ext];
             }
-            var valid = validate(ext, name2);
+            var valid = validate(ext, name);
             if (!valid.valid) {
               throw Error(valid.error);
             }
@@ -13421,17 +13421,17 @@
               }
             }
           }
-          function listen(name2, callback2) {
-            if (!showdown2.helper.isString(name2)) {
-              throw Error("Invalid argument in converter.listen() method: name must be a string, but " + typeof name2 + " given");
+          function listen(name, callback2) {
+            if (!showdown2.helper.isString(name)) {
+              throw Error("Invalid argument in converter.listen() method: name must be a string, but " + typeof name + " given");
             }
             if (typeof callback2 !== "function") {
               throw Error("Invalid argument in converter.listen() method: callback must be a function, but " + typeof callback2 + " given");
             }
-            if (!listeners.hasOwnProperty(name2)) {
-              listeners[name2] = [];
+            if (!listeners.hasOwnProperty(name)) {
+              listeners[name] = [];
             }
-            listeners[name2].push(callback2);
+            listeners[name].push(callback2);
           }
           function rTrimInputText(text3) {
             var rsp = text3.match(/^\s*/)[0].length, rgx = new RegExp("^\\s{0," + rsp + "}", "gm");
@@ -13448,8 +13448,8 @@
             }
             return text3;
           };
-          this.listen = function(name2, callback2) {
-            listen(name2, callback2);
+          this.listen = function(name, callback2) {
+            listen(name, callback2);
             return this;
           };
           this.makeHtml = function(text3) {
@@ -13581,19 +13581,19 @@
           this.getOptions = function() {
             return options;
           };
-          this.addExtension = function(extension, name2) {
-            name2 = name2 || null;
-            _parseExtension(extension, name2);
+          this.addExtension = function(extension, name) {
+            name = name || null;
+            _parseExtension(extension, name);
           };
           this.useExtension = function(extensionName) {
             _parseExtension(extensionName);
           };
-          this.setFlavor = function(name2) {
-            if (!flavor.hasOwnProperty(name2)) {
-              throw Error(name2 + " flavor was not found");
+          this.setFlavor = function(name) {
+            if (!flavor.hasOwnProperty(name)) {
+              throw Error(name + " flavor was not found");
             }
-            var preset = flavor[name2];
-            setConvFlavor = name2;
+            var preset = flavor[name];
+            setConvFlavor = name;
             for (var option in preset) {
               if (preset.hasOwnProperty(option)) {
                 options[option] = preset[option];
@@ -15361,13 +15361,13 @@
           }, fn2);
         }
         var deprecations = {};
-        function deprecateSimple(name2, msg) {
+        function deprecateSimple(name, msg) {
           if (hooks.deprecationHandler != null) {
-            hooks.deprecationHandler(name2, msg);
+            hooks.deprecationHandler(name, msg);
           }
-          if (!deprecations[name2]) {
+          if (!deprecations[name]) {
             warn(msg);
-            deprecations[name2] = true;
+            deprecations[name] = true;
           }
         }
         hooks.suppressDeprecationWarnings = false;
@@ -16649,22 +16649,22 @@
           }
           return globalLocale;
         }
-        function isLocaleNameSane(name2) {
-          return !!(name2 && name2.match("^[^/\\\\]*$"));
+        function isLocaleNameSane(name) {
+          return !!(name && name.match("^[^/\\\\]*$"));
         }
-        function loadLocale(name2) {
+        function loadLocale(name) {
           var oldLocale = null, aliasedRequire;
-          if (locales[name2] === void 0 && typeof module !== "undefined" && module && module.exports && isLocaleNameSane(name2)) {
+          if (locales[name] === void 0 && typeof module !== "undefined" && module && module.exports && isLocaleNameSane(name)) {
             try {
               oldLocale = globalLocale._abbr;
               aliasedRequire = __require;
-              aliasedRequire("./locale/" + name2);
+              aliasedRequire("./locale/" + name);
               getSetGlobalLocale(oldLocale);
             } catch (e) {
-              locales[name2] = null;
+              locales[name] = null;
             }
           }
-          return locales[name2];
+          return locales[name];
         }
         function getSetGlobalLocale(key, values) {
           var data2;
@@ -16686,16 +16686,16 @@
           }
           return globalLocale._abbr;
         }
-        function defineLocale(name2, config) {
+        function defineLocale(name, config) {
           if (config !== null) {
             var locale2, parentConfig = baseConfig;
-            config.abbr = name2;
-            if (locales[name2] != null) {
+            config.abbr = name;
+            if (locales[name] != null) {
               deprecateSimple(
                 "defineLocaleOverride",
                 "use moment.updateLocale(localeName, config) to change an existing locale. moment.defineLocale(localeName, config) should only be used for creating a new locale See http://momentjs.com/guides/#/warnings/define-locale/ for more info."
               );
-              parentConfig = locales[name2]._config;
+              parentConfig = locales[name]._config;
             } else if (config.parentLocale != null) {
               if (locales[config.parentLocale] != null) {
                 parentConfig = locales[config.parentLocale]._config;
@@ -16708,58 +16708,58 @@
                     localeFamilies[config.parentLocale] = [];
                   }
                   localeFamilies[config.parentLocale].push({
-                    name: name2,
+                    name,
                     config
                   });
                   return null;
                 }
               }
             }
-            locales[name2] = new Locale2(mergeConfigs(parentConfig, config));
-            if (localeFamilies[name2]) {
-              localeFamilies[name2].forEach(function(x) {
+            locales[name] = new Locale2(mergeConfigs(parentConfig, config));
+            if (localeFamilies[name]) {
+              localeFamilies[name].forEach(function(x) {
                 defineLocale(x.name, x.config);
               });
             }
-            getSetGlobalLocale(name2);
-            return locales[name2];
+            getSetGlobalLocale(name);
+            return locales[name];
           } else {
-            delete locales[name2];
+            delete locales[name];
             return null;
           }
         }
-        function updateLocale(name2, config) {
+        function updateLocale(name, config) {
           if (config != null) {
             var locale2, tmpLocale, parentConfig = baseConfig;
-            if (locales[name2] != null && locales[name2].parentLocale != null) {
-              locales[name2].set(mergeConfigs(locales[name2]._config, config));
+            if (locales[name] != null && locales[name].parentLocale != null) {
+              locales[name].set(mergeConfigs(locales[name]._config, config));
             } else {
-              tmpLocale = loadLocale(name2);
+              tmpLocale = loadLocale(name);
               if (tmpLocale != null) {
                 parentConfig = tmpLocale._config;
               }
               config = mergeConfigs(parentConfig, config);
               if (tmpLocale == null) {
-                config.abbr = name2;
+                config.abbr = name;
               }
               locale2 = new Locale2(config);
-              locale2.parentLocale = locales[name2];
-              locales[name2] = locale2;
+              locale2.parentLocale = locales[name];
+              locales[name] = locale2;
             }
-            getSetGlobalLocale(name2);
+            getSetGlobalLocale(name);
           } else {
-            if (locales[name2] != null) {
-              if (locales[name2].parentLocale != null) {
-                locales[name2] = locales[name2].parentLocale;
-                if (name2 === getSetGlobalLocale()) {
-                  getSetGlobalLocale(name2);
+            if (locales[name] != null) {
+              if (locales[name].parentLocale != null) {
+                locales[name] = locales[name].parentLocale;
+                if (name === getSetGlobalLocale()) {
+                  getSetGlobalLocale(name);
                 }
-              } else if (locales[name2] != null) {
-                delete locales[name2];
+              } else if (locales[name] != null) {
+                delete locales[name];
               }
             }
           }
-          return locales[name2];
+          return locales[name];
         }
         function getLocale(key) {
           var locale2;
@@ -17665,13 +17665,13 @@
           }
           return res;
         }
-        function createAdder(direction, name2) {
+        function createAdder(direction, name) {
           return function(val, period) {
             var dur, tmp;
             if (period !== null && !isNaN(+period)) {
               deprecateSimple(
-                name2,
-                "moment()." + name2 + "(period, number) is deprecated. Please use moment()." + name2 + "(number, period). See http://momentjs.com/guides/#/warnings/add-inverted-param/ for more info."
+                name,
+                "moment()." + name + "(period, number) is deprecated. Please use moment()." + name + "(number, period). See http://momentjs.com/guides/#/warnings/add-inverted-param/ for more info."
               );
               tmp = val;
               val = period;
@@ -18250,10 +18250,10 @@
           return eras2;
         }
         function localeErasParse(eraName, format2, strict) {
-          var i, l2, eras2 = this.eras(), name2, abbr, narrow;
+          var i, l2, eras2 = this.eras(), name, abbr, narrow;
           eraName = eraName.toUpperCase();
           for (i = 0, l2 = eras2.length; i < l2; ++i) {
-            name2 = eras2[i].name.toUpperCase();
+            name = eras2[i].name.toUpperCase();
             abbr = eras2[i].abbr.toUpperCase();
             narrow = eras2[i].narrow.toUpperCase();
             if (strict) {
@@ -18266,7 +18266,7 @@
                   }
                   break;
                 case "NNNN":
-                  if (name2 === eraName) {
+                  if (name === eraName) {
                     return eras2[i];
                   }
                   break;
@@ -18276,7 +18276,7 @@
                   }
                   break;
               }
-            } else if ([name2, abbr, narrow].indexOf(eraName) >= 0) {
+            } else if ([name, abbr, narrow].indexOf(eraName) >= 0) {
               return eras2[i];
             }
           }
@@ -18914,9 +18914,9 @@
           units = normalizeUnits(units);
           return this.isValid() ? this[units + "s"]() : NaN;
         }
-        function makeGetter(name2) {
+        function makeGetter(name) {
           return function() {
-            return this.isValid() ? this._data[name2] : NaN;
+            return this.isValid() ? this._data[name] : NaN;
           };
         }
         var milliseconds = makeGetter("milliseconds"), seconds = makeGetter("seconds"), minutes = makeGetter("minutes"), hours = makeGetter("hours"), days = makeGetter("days"), months2 = makeGetter("months"), years = makeGetter("years");
@@ -19474,12 +19474,12 @@
       var direct = attribute2.value === UID;
       var sparse;
       if (direct || 1 < (sparse = attribute2.value.split(UIDC)).length) {
-        var name2 = attribute2.name;
-        if (cache2.indexOf(name2) < 0) {
-          cache2.push(name2);
+        var name = attribute2.name;
+        if (cache2.indexOf(name) < 0) {
+          cache2.push(name);
           var realName = parts.shift().replace(
             direct ? /^(?:|[\S\s]*?\s)(\S+?)\s*=\s*('|")?$/ : new RegExp(
-              "^(?:|[\\S\\s]*?\\s)(" + name2 + `)\\s*=\\s*('|")[\\S\\s]*`,
+              "^(?:|[\\S\\s]*?\\s)(" + name + `)\\s*=\\s*('|")[\\S\\s]*`,
               "i"
             ),
             "$1"
@@ -19527,12 +19527,12 @@
       path
     };
   }
-  function Attr(node, path, name2, sparse) {
+  function Attr(node, path, name, sparse) {
     return {
       type: "attr",
       node,
       path,
-      name: name2,
+      name,
       sparse
     };
   }
@@ -19727,17 +19727,17 @@
   // node_modules/uhandlers/esm/index.js
   var aria = (node) => (values) => {
     for (const key in values) {
-      const name2 = key === "role" ? key : `aria-${key}`;
+      const name = key === "role" ? key : `aria-${key}`;
       const value = values[key];
       if (value == null)
-        node.removeAttribute(name2);
+        node.removeAttribute(name);
       else
-        node.setAttribute(name2, value);
+        node.setAttribute(name, value);
     }
   };
-  var attribute = (node, name2) => {
+  var attribute = (node, name) => {
     let oldValue, orphan = true;
-    const attributeNode = document.createAttributeNS(null, name2);
+    const attributeNode = document.createAttributeNS(null, name);
     return (newValue) => {
       if (oldValue !== newValue) {
         oldValue = newValue;
@@ -19773,9 +19773,9 @@
         dataset[key] = value;
     }
   };
-  var event2 = (node, name2) => {
-    let oldValue, type = name2.slice(2);
-    if (!(name2 in node) && name2.toLowerCase() in node)
+  var event2 = (node, name) => {
+    let oldValue, type = name.slice(2);
+    if (!(name in node) && name.toLowerCase() in node)
       type = type.toLowerCase();
     return (newValue) => {
       const info = isArray(newValue) ? newValue : [newValue, false];
@@ -19798,17 +19798,17 @@
   };
 
   // node_modules/lighterhtml/esm/tagger.js
-  var hyperProperty = (node, name2) => {
+  var hyperProperty = (node, name) => {
     let oldValue;
     return (newValue) => {
       if (oldValue !== newValue) {
         oldValue = newValue;
-        if (node[name2] !== newValue) {
+        if (node[name] !== newValue) {
           if (newValue == null) {
-            node[name2] = "";
-            node.removeAttribute(name2);
+            node[name] = "";
+            node.removeAttribute(name);
           } else
-            node[name2] = newValue;
+            node[name] = newValue;
         }
       }
     };
@@ -19827,15 +19827,15 @@
     //  * style, the only regular attribute that also accepts an object as value
     //    so that you can style=${{width: 120}}. In this case, the behavior has been
     //    fully inspired by Preact library and its simplicity.
-    attribute(node, name2, original) {
+    attribute(node, name, original) {
       const isSVG = this.type === "svg";
-      switch (name2) {
+      switch (name) {
         case "class":
           if (isSVG)
-            return attribute(node, name2, isSVG);
-          name2 = "className";
+            return attribute(node, name, isSVG);
+          name = "className";
         case "props":
-          return setter(node, name2);
+          return setter(node, name);
         case "aria":
           return aria(node);
         case "style":
@@ -19845,15 +19845,15 @@
         case ".dataset":
           return data(node);
         default:
-          if (name2.slice(0, 1) === ".")
-            return setter(node, name2.slice(1));
-          if (name2.slice(0, 1) === "?")
-            return boolean(node, name2.slice(1));
-          if (name2.slice(0, 2) === "on")
-            return event2(node, name2);
-          if (name2 in node && !(isSVG || readOnly.test(name2)))
-            return hyperProperty(node, name2);
-          return attribute(node, name2, isSVG);
+          if (name.slice(0, 1) === ".")
+            return setter(node, name.slice(1));
+          if (name.slice(0, 1) === "?")
+            return boolean(node, name.slice(1));
+          if (name.slice(0, 2) === "on")
+            return event2(node, name);
+          if (name in node && !(isSVG || readOnly.test(name)))
+            return hyperProperty(node, name);
+          return attribute(node, name, isSVG);
       }
     },
     // in a hyper(node)`<div>${content}</div>` case
@@ -20173,20 +20173,20 @@
   // node_modules/@popperjs/core/lib/modifiers/applyStyles.js
   function applyStyles(_ref) {
     var state = _ref.state;
-    Object.keys(state.elements).forEach(function(name2) {
-      var style = state.styles[name2] || {};
-      var attributes = state.attributes[name2] || {};
-      var element = state.elements[name2];
+    Object.keys(state.elements).forEach(function(name) {
+      var style = state.styles[name] || {};
+      var attributes = state.attributes[name] || {};
+      var element = state.elements[name];
       if (!isHTMLElement(element) || !getNodeName(element)) {
         return;
       }
       Object.assign(element.style, style);
-      Object.keys(attributes).forEach(function(name3) {
-        var value = attributes[name3];
+      Object.keys(attributes).forEach(function(name2) {
+        var value = attributes[name2];
         if (value === false) {
-          element.removeAttribute(name3);
+          element.removeAttribute(name2);
         } else {
-          element.setAttribute(name3, value === true ? "" : value);
+          element.setAttribute(name2, value === true ? "" : value);
         }
       });
     });
@@ -20211,10 +20211,10 @@
       Object.assign(state.elements.arrow.style, initialStyles.arrow);
     }
     return function() {
-      Object.keys(state.elements).forEach(function(name2) {
-        var element = state.elements[name2];
-        var attributes = state.attributes[name2] || {};
-        var styleProperties = Object.keys(state.styles.hasOwnProperty(name2) ? state.styles[name2] : initialStyles[name2]);
+      Object.keys(state.elements).forEach(function(name) {
+        var element = state.elements[name];
+        var attributes = state.attributes[name] || {};
+        var styleProperties = Object.keys(state.styles.hasOwnProperty(name) ? state.styles[name] : initialStyles[name]);
         var style = styleProperties.reduce(function(style2, property) {
           style2[property] = "";
           return style2;
@@ -20457,7 +20457,7 @@
   };
   function arrow(_ref) {
     var _state$modifiersData$;
-    var state = _ref.state, name2 = _ref.name, options = _ref.options;
+    var state = _ref.state, name = _ref.name, options = _ref.options;
     var arrowElement = state.elements.arrow;
     var popperOffsets2 = state.modifiersData.popperOffsets;
     var basePlacement = getBasePlacement(state.placement);
@@ -20481,7 +20481,7 @@
     var center = clientSize / 2 - arrowRect[len] / 2 + centerToReference;
     var offset3 = within(min2, center, max2);
     var axisProp = axis;
-    state.modifiersData[name2] = (_state$modifiersData$ = {}, _state$modifiersData$[axisProp] = offset3, _state$modifiersData$.centerOffset = offset3 - center, _state$modifiersData$);
+    state.modifiersData[name] = (_state$modifiersData$ = {}, _state$modifiersData$[axisProp] = offset3, _state$modifiersData$.centerOffset = offset3 - center, _state$modifiersData$);
   }
   function effect2(_ref2) {
     var state = _ref2.state, options = _ref2.options;
@@ -20983,8 +20983,8 @@
     return [getOppositeVariationPlacement(placement), oppositePlacement, getOppositeVariationPlacement(oppositePlacement)];
   }
   function flip(_ref) {
-    var state = _ref.state, options = _ref.options, name2 = _ref.name;
-    if (state.modifiersData[name2]._skip) {
+    var state = _ref.state, options = _ref.options, name = _ref.name;
+    if (state.modifiersData[name]._skip) {
       return;
     }
     var _options$mainAxis = options.mainAxis, checkMainAxis = _options$mainAxis === void 0 ? true : _options$mainAxis, _options$altAxis = options.altAxis, checkAltAxis = _options$altAxis === void 0 ? true : _options$altAxis, specifiedFallbackPlacements = options.fallbackPlacements, padding = options.padding, boundary = options.boundary, rootBoundary = options.rootBoundary, altBoundary = options.altBoundary, _options$flipVariatio = options.flipVariations, flipVariations = _options$flipVariatio === void 0 ? true : _options$flipVariatio, allowedAutoPlacements = options.allowedAutoPlacements;
@@ -21063,7 +21063,7 @@
       }
     }
     if (state.placement !== firstFittingPlacement) {
-      state.modifiersData[name2]._skip = true;
+      state.modifiersData[name]._skip = true;
       state.placement = firstFittingPlacement;
       state.reset = true;
     }
@@ -21100,7 +21100,7 @@
     });
   }
   function hide(_ref) {
-    var state = _ref.state, name2 = _ref.name;
+    var state = _ref.state, name = _ref.name;
     var referenceRect = state.rects.reference;
     var popperRect = state.rects.popper;
     var preventedOffsets = state.modifiersData.preventOverflow;
@@ -21114,7 +21114,7 @@
     var popperEscapeOffsets = getSideOffsets(popperAltOverflow, popperRect, preventedOffsets);
     var isReferenceHidden = isAnySideFullyClipped(referenceClippingOffsets);
     var hasPopperEscaped = isAnySideFullyClipped(popperEscapeOffsets);
-    state.modifiersData[name2] = {
+    state.modifiersData[name] = {
       referenceClippingOffsets,
       popperEscapeOffsets,
       isReferenceHidden,
@@ -21151,7 +21151,7 @@
     };
   }
   function offset(_ref2) {
-    var state = _ref2.state, options = _ref2.options, name2 = _ref2.name;
+    var state = _ref2.state, options = _ref2.options, name = _ref2.name;
     var _options$offset = options.offset, offset3 = _options$offset === void 0 ? [0, 0] : _options$offset;
     var data2 = placements.reduce(function(acc, placement) {
       acc[placement] = distanceAndSkiddingToXY(placement, state.rects, offset3);
@@ -21162,7 +21162,7 @@
       state.modifiersData.popperOffsets.x += x;
       state.modifiersData.popperOffsets.y += y;
     }
-    state.modifiersData[name2] = data2;
+    state.modifiersData[name] = data2;
   }
   var offset_default = {
     name: "offset",
@@ -21174,8 +21174,8 @@
 
   // node_modules/@popperjs/core/lib/modifiers/popperOffsets.js
   function popperOffsets(_ref) {
-    var state = _ref.state, name2 = _ref.name;
-    state.modifiersData[name2] = computeOffsets({
+    var state = _ref.state, name = _ref.name;
+    state.modifiersData[name] = computeOffsets({
       reference: state.rects.reference,
       element: state.rects.popper,
       strategy: "absolute",
@@ -21197,7 +21197,7 @@
 
   // node_modules/@popperjs/core/lib/modifiers/preventOverflow.js
   function preventOverflow(_ref) {
-    var state = _ref.state, options = _ref.options, name2 = _ref.name;
+    var state = _ref.state, options = _ref.options, name = _ref.name;
     var _options$mainAxis = options.mainAxis, checkMainAxis = _options$mainAxis === void 0 ? true : _options$mainAxis, _options$altAxis = options.altAxis, checkAltAxis = _options$altAxis === void 0 ? false : _options$altAxis, boundary = options.boundary, rootBoundary = options.rootBoundary, altBoundary = options.altBoundary, padding = options.padding, _options$tether = options.tether, tether = _options$tether === void 0 ? true : _options$tether, _options$tetherOffset = options.tetherOffset, tetherOffset = _options$tetherOffset === void 0 ? 0 : _options$tetherOffset;
     var overflow = detectOverflow(state, {
       boundary,
@@ -21278,7 +21278,7 @@
       popperOffsets2[altAxis] = _preventedOffset;
       data2[altAxis] = _preventedOffset - _offset;
     }
-    state.modifiersData[name2] = data2;
+    state.modifiersData[name] = data2;
   }
   var preventOverflow_default = {
     name: "preventOverflow",
@@ -21499,12 +21499,12 @@
               index3 = -1;
               continue;
             }
-            var _state$orderedModifie = state.orderedModifiers[index3], fn2 = _state$orderedModifie.fn, _state$orderedModifie2 = _state$orderedModifie.options, _options = _state$orderedModifie2 === void 0 ? {} : _state$orderedModifie2, name2 = _state$orderedModifie.name;
+            var _state$orderedModifie = state.orderedModifiers[index3], fn2 = _state$orderedModifie.fn, _state$orderedModifie2 = _state$orderedModifie.options, _options = _state$orderedModifie2 === void 0 ? {} : _state$orderedModifie2, name = _state$orderedModifie.name;
             if (typeof fn2 === "function") {
               state = fn2({
                 state,
                 options: _options,
-                name: name2,
+                name,
                 instance
               }) || state;
             }
@@ -21533,11 +21533,11 @@
       });
       function runModifierEffects() {
         state.orderedModifiers.forEach(function(_ref) {
-          var name2 = _ref.name, _ref$options = _ref.options, options2 = _ref$options === void 0 ? {} : _ref$options, effect5 = _ref.effect;
+          var name = _ref.name, _ref$options = _ref.options, options2 = _ref$options === void 0 ? {} : _ref$options, effect5 = _ref.effect;
           if (typeof effect5 === "function") {
             var cleanupFn = effect5({
               state,
-              name: name2,
+              name,
               instance,
               options: options2
             });
@@ -21896,10 +21896,10 @@
   function getExtendedPassedProps(passedProps) {
     var plugins2 = passedProps.plugins || [];
     var pluginProps2 = plugins2.reduce(function(acc, plugin) {
-      var name2 = plugin.name, defaultValue = plugin.defaultValue;
-      if (name2) {
+      var name = plugin.name, defaultValue = plugin.defaultValue;
+      if (name) {
         var _name;
-        acc[name2] = passedProps[name2] !== void 0 ? passedProps[name2] : (_name = defaultProps[name2]) != null ? _name : defaultValue;
+        acc[name] = passedProps[name] !== void 0 ? passedProps[name] : (_name = defaultProps[name]) != null ? _name : defaultValue;
       }
       return acc;
     }, {});
@@ -25325,14 +25325,14 @@
   }
 
   // src/avatar.js
-  function patch_avatar(avatar3, name2, type = "", parent = null, side = "right") {
+  function patch_avatar(avatar3, name, type = "", parent = null, side = "right") {
     if (avatar3.hasAttribute("data-bleh-avatar")) return {};
     avatar3.setAttribute("data-bleh-avatar", "true");
     const avatar_img = avatar3.querySelector("img");
     if (!avatar_img) return {};
     avatar_img.setAttribute("src", avatar_img.getAttribute("src").replace("/64s/", "/avatar70s/"));
     avatar3.setAttribute("title", "");
-    let badges = load_badges(name2);
+    let badges = load_badges(name);
     let pre_existing_badge = avatar3.querySelector(".avatar-status-dot");
     if (badges && pre_existing_badge) avatar3.removeChild(pre_existing_badge);
     if (!parent) avatar3.classList.add("avatar-can-hoverbox");
@@ -25349,12 +25349,12 @@
       content: html.node`
             <div class="image-header">
                 <div class="inner-image">
-                    <img src=${avatar_img.getAttribute("src").replace("/avatar42s/", "/avatar170s/")} alt=${name2}>
-                    <a href="${root}user/${name2}" class="link-over"></a>
+                    <img src=${avatar_img.getAttribute("src").replace("/avatar42s/", "/avatar170s/")} alt=${name}>
+                    <a href="${root}user/${name}" class="link-over"></a>
                 </div>
             </div>
             <div class="info">
-                <h5 class="title"><a href="${root}user/${name2}">${name2}</a></h5>
+                <h5 class="title"><a href="${root}user/${name}">${name}</a></h5>
                 ${badges ? html.node`
                 <div class="badges">
                     ${badges.map((badge, index3) => create_badge(badge, false, index3 == badges.length - 1))}
@@ -25542,19 +25542,19 @@
     entries2.forEach((entry) => {
       let author = entry.querySelector(".wiki-history-author");
       let avatar3 = author.querySelector(".wiki-history-author-avatar");
-      let name2 = author.querySelector(".link-block-target");
-      if (name2 && avatar3) {
-        let badge = patch_avatar(avatar3, name2.textContent, "wiki");
+      let name = author.querySelector(".link-block-target");
+      if (name && avatar3) {
+        let badge = patch_avatar(avatar3, name.textContent, "wiki");
         if (badge && badge.type) {
           if (badge.hue > -1 && badge.sat > -1 && badge.lit > -1) {
-            name2.style.setProperty("--hue-over", badge.hue);
-            name2.style.setProperty("--sat-over", badge.sat);
-            name2.style.setProperty("--lit-over", badge.lit);
+            name.style.setProperty("--hue-over", badge.hue);
+            name.style.setProperty("--sat-over", badge.sat);
+            name.style.setProperty("--lit-over", badge.lit);
           } else {
-            name2.classList.add(`user-status--bleh-${badge.type}`, `user-status--bleh-user-${badge.user}`);
+            name.classList.add(`user-status--bleh-${badge.type}`, `user-status--bleh-user-${badge.user}`);
           }
         } else if (badge) {
-          name2.classList.add(badge.type);
+          name.classList.add(badge.type);
         }
       }
     });
@@ -25715,7 +25715,7 @@
     links.forEach((link) => {
       let href = link.getAttribute("href");
       let type;
-      let name2 = link.textContent.trim();
+      let name = link.textContent.trim();
       let sister;
       if (!href.startsWith(root)) {
         if (href && link.textContent != href && /^(https?|mailto|ftp|sftp|tel):/.test(href)) {
@@ -25740,11 +25740,11 @@
           type = "artist";
         } else if (split.length == 2) {
           type = "album";
-          name2 = desanitise(split[1]);
+          name = desanitise(split[1]);
           sister = desanitise(split[0]);
         } else if (split.length == 3) {
           type = "track";
-          name2 = desanitise(split[2]);
+          name = desanitise(split[2]);
           sister = desanitise(split[0]);
         }
       }
@@ -25752,7 +25752,7 @@
         tippy_esm_default(link, {
           theme: "name-sister-combo",
           content: html.node`
-                    <span class="name">${name2}</span>
+                    <span class="name">${name}</span>
                     <span class="sister">${sister}</span>
                 `
         });
@@ -25793,12 +25793,12 @@
             <div class="input-container content-form">
                 <input type="text" maxlength="40" id="text-profile" ref=${(el) => input2 = el} placeholder="${tl(trans.enter_username)}">
                 <button class="btn chibi icon primary submit" ref=${(el) => submit = el} onclick=${() => {
-        let name2 = input2.value;
+        let name = input2.value;
         let link = id;
         dialog_rm({
           id: "other_listener"
         });
-        window.location.href = `${root}user/${name2}/library/music/${link}`;
+        window.location.href = `${root}user/${name}/library/music/${link}`;
       }}>${tl(trans.done)}</button>
             </div>
         </div>
@@ -25966,7 +25966,7 @@
     max: max2,
     disabled,
     show_time = true,
-    name: name2
+    name
   }) {
     let date_button;
     let manual_button;
@@ -26033,7 +26033,7 @@
     const container = html.node`
         <div class="input-group">
             <div class="content-form input-container" data-type="date">
-                <input class="legacy-input" type="date" ref=${(el) => legacy_date = el} name=${name2} value="${state.year}-${pad2(state.month)}-${pad2(state.day)}">
+                <input class="legacy-input" type="date" ref=${(el) => legacy_date = el} name=${name} value="${state.year}-${pad2(state.month)}-${pad2(state.day)}">
                 <div class="date-input modern-input" ref=${(el) => date_display = el} disabled=${disabled}>${format_date(state)}</div>
             </div>
             ${show_time ? html.node`
@@ -26444,7 +26444,7 @@
     focus = false,
     disabled,
     show_time = true,
-    name: name2,
+    name,
     func
   }) {
     if (type == "date") {
@@ -26454,7 +26454,7 @@
         max: max2,
         disabled,
         show_time,
-        name: name2
+        name
       });
     }
     let input_box;
@@ -26715,16 +26715,16 @@
           }
         }
       }
-      let name2 = grid.querySelector(".grid-items-item-main-text a");
-      if (!name2) return;
+      let name = grid.querySelector(".grid-items-item-main-text a");
+      if (!name) return;
       if (!is_album) {
-        name2.textContent = correct_artist(name2.textContent.trim());
-        insights.artist.labels.push(name2.textContent);
+        name.textContent = correct_artist(name.textContent.trim());
+        insights.artist.labels.push(name.textContent);
       } else {
         let artist = grid.querySelector(".grid-items-item-aux-block");
         if (!artist) return;
         if (settings.format_guest_features) {
-          let name_elem = name2;
+          let name_elem = name;
           let artist_elem = artist;
           let song_title = name_elem.getAttribute("title");
           let formatted_title = name_includes(song_title, artist_elem.textContent.trim());
@@ -26743,7 +26743,7 @@
                 `);
         } else {
           artist.textContent = correct_artist(artist.textContent.trim());
-          name2.textContent = correct_item_by_artist(name2.textContent.trim(), artist.textContent.trim());
+          name.textContent = correct_item_by_artist(name.textContent.trim(), artist.textContent.trim());
         }
       }
     });
@@ -26758,7 +26758,7 @@
   function update_inbuilt_select(id, value) {
     document.documentElement.setAttribute(`data-bleh--inbuilt-${id}`, value);
   }
-  function select(values, initial = "", name2 = "") {
+  function select(values, initial = "", name = "") {
     let select2;
     let button;
     if (values.length === 0) {
@@ -26768,7 +26768,7 @@
       initial = values[0].value;
     let container = html.node`
         <div class="select-wrap custom-selector">
-            <select ref=${(el) => select2 = el} name=${name2}>
+            <select ref=${(el) => select2 = el} name=${name}>
                 ${values.map((value) => html.node`
                     <option value=${value.value} selected=${value.value == initial}>${value.text}</option>
                 `)}
@@ -26794,9 +26794,9 @@
         }
       }
     });
-    set_select(button, menu, values, initial, select2, name2);
+    set_select(button, menu, values, initial, select2, name);
     return container;
-    function set_select(button2, menu2, values2, selected, select3, name3) {
+    function set_select(button2, menu2, values2, selected, select3, name2) {
       values2.some((value) => {
         if (value.value == selected) {
           render(button2, html`${value.text}`);
@@ -26805,11 +26805,11 @@
       });
       select3.value = selected;
       container.value = select3.value;
-      if (name3 != "")
-        document.documentElement.setAttribute(`data-bleh--inbuilt-id_${name3}`, selected);
+      if (name2 != "")
+        document.documentElement.setAttribute(`data-bleh--inbuilt-id_${name2}`, selected);
       menu2.setContent(html.node`
         ${values2.map((value) => html.node`
-            <button class="btn dropdown-menu-clickable-item select-item" aria-checked=${selected == value.value} onclick=${() => set_select(button2, menu2, values2, value.value, select3, name3)}>
+            <button class="btn dropdown-menu-clickable-item select-item" aria-checked=${selected == value.value} onclick=${() => set_select(button2, menu2, values2, value.value, select3, name2)}>
                 ${value.text}
             </button>
         `)}
@@ -27326,16 +27326,16 @@
                             </div>
                             ${() => {
                 if (!is_own_profile || is_album) return;
-                let name2 = track.getAttribute("data-track-name");
+                let name = track.getAttribute("data-track-name");
                 let artist = track.getAttribute("data-artist-name");
-                if (!name2) {
-                  name2 = track_title.getAttribute("data-name");
+                if (!name) {
+                  name = track_title.getAttribute("data-name");
                   artist = track_artist;
                 }
                 return html.node`
                                     <form style="margin: 0" method="POST" action="${root}user/${auth.name}/obsessions" data-submit-to-modal="">
                                         <input type="hidden" name="csrfmiddlewaretoken" value=${page.token}>
-                                        <input type="hidden" name="name" value=${name2}>
+                                        <input type="hidden" name="name" value=${name}>
                                         <input type="hidden" name="artist_name" value=${artist}>
                                         <button class="dropdown-menu-clickable-item" data-type="obsession">
                                             ${tl(trans.obsess)}
@@ -28205,9 +28205,9 @@
         </section>
     `);
   }
-  function render_user(name2, avatar3, user, replace_page = false) {
-    if (avatar3 == "" && name2 != "") {
-      fetch(`${root}user/${name2}/tags`).then(function(response) {
+  function render_user(name, avatar3, user, replace_page = false) {
+    if (avatar3 == "" && name != "") {
+      fetch(`${root}user/${name}/tags`).then(function(response) {
         console.log("returned", response, response.text);
         return response.text();
       }).then(function(dom) {
@@ -28215,27 +28215,27 @@
         console.log("DOC", doc);
         try {
           avatar3 = doc.querySelector(".header-avatar-inner-wrap img").getAttribute("src");
-          name2 = doc.querySelector(".header-title").textContent.trim();
+          name = doc.querySelector(".header-title").textContent.trim();
           if (replace_page) {
             page.avatar = avatar3;
-            page.name = name2;
+            page.name = name;
           }
           if (!user) user = page.structure.main.querySelector(".compare-user.focus");
-          render(user, render_user(name2, avatar3, user, replace_page));
+          render(user, render_user(name, avatar3, user, replace_page));
         } catch (e) {
           console.error(e);
         }
       });
       return html`
             <div class="avatar loading" />
-            <strong>${name2}</strong>
+            <strong>${name}</strong>
         `;
     }
     return html`
         <div class="avatar">
-            <img src=${avatar3} alt=${tl(trans.avatar_for_user).replace("{u}", name2)}>
+            <img src=${avatar3} alt=${tl(trans.avatar_for_user).replace("{u}", name)}>
         </div>
-        <strong>${name2}</strong>
+        <strong>${name}</strong>
     `;
   }
 
@@ -31718,8 +31718,8 @@
       row.after(taste_wrap);
     }
   }
-  function create_profile_top_item(parent, { name: name2, link, text: text3 = "", type, new_release = false, updated = false, action = "", tooltip = "", allow_html = false, tooltip_theme = "" }) {
-    log(`creating top item of ${name2}, ${link}, ${text3}`, "profile");
+  function create_profile_top_item(parent, { name, link, text: text3 = "", type, new_release = false, updated = false, action = "", tooltip = "", allow_html = false, tooltip_theme = "" }) {
+    log(`creating top item of ${name}, ${link}, ${text3}`, "profile");
     let side_action;
     if (action === "button") {
       side_action = html.node`
@@ -31747,7 +31747,7 @@
         `;
     }
     if (type == "shortcut") {
-      if (name2 == settings.profile_shortcut) {
+      if (name == settings.profile_shortcut) {
         side_action.setAttribute("data-is-shortcut", "true");
       } else {
         side_action.setAttribute("data-is-shortcut", "false");
@@ -32413,8 +32413,12 @@
     const markdown_settings = {
       allow_headers: true,
       allow_banners: true,
-      allow_icons: true
+      allow_icons: true,
+      allow_hue: true,
+      take_effect: false
     };
+    let banner_setting;
+    let accent_setting2;
     render(update_picture, html`
         <h4>${tl(trans.profile)}</h4>
         <div class="banner-preview"></div>
@@ -32498,6 +32502,8 @@
             </div>
         </div>
         <div class="setting-group">
+            <div class="setting" data-type="info" ref=${(el) => banner_setting = el} />
+            <div class="setting" data-type="info" ref=${(el) => accent_setting2 = el} />
             ${setting({ id: "avatar_radius" })}
         </div>
     `);
@@ -32508,12 +32514,42 @@
       chars.textContent = tl(trans.value_characters_max).replace("{v}", `${value.length}/500`);
       chars.setAttribute("data-exceeded", value.length >= 500);
       render(preview, markdown(value, markdown_settings));
-      let banner = preview.querySelector('img[alt="banner"]');
-      let banner_img = page.structure.main.querySelector(".banner-preview");
-      if (!banner)
-        banner_img.removeAttribute("style");
-      else
-        banner_img.style.setProperty("background-image", `url(${banner.getAttribute("src")})`);
+      let profile_cache = JSON.parse(localStorage.getItem("bleh_profile_cache")) || {};
+      let cache2 = profile_cache[auth.name];
+      console.info("cache", cache2);
+      render(banner_setting, html`
+            <div class="heading">
+                <h5>${tl(trans.profile_banner.name)}</h5>
+                <p>${tl(trans.profile_banner.body)}</p>
+                ${cache2.banner ? html.node`
+                <p>${tl(trans.current_banner_value).replace("{v}", cache2.banner)}</p>
+                ` : ""}
+            </div>
+            ${() => {
+        if (!cache2.banner)
+          return html.node`
+                        <div class="info">
+                            <p>${tl(trans.none)}</p>
+                        </div>
+                    `;
+        let banner_image = html.node`
+                    <div class="banner-image" style="background-image: url(${cache2.banner})" />
+                `;
+        tippy_esm_default(banner_image, {
+          content: cache2.banner
+        });
+        return banner_image;
+      }}
+        `);
+      render(accent_setting2, html`
+            <div class="heading">
+                <h5>${tl(trans.profile_accent.name)}</h5>
+                <p>${tl(trans.profile_accent.body)}</p>
+            </div>
+            <div class="info">
+                <div class="colour-tile colourful" style="--hue-over: ${cache2.hue}; --sat-over: ${cache2.sat}; --lit-over: ${cache2.lit}" />
+            </div>
+        `);
     }
     update_display_name(form_display_name);
   }
@@ -32678,7 +32714,7 @@
     let exceed_amount = 10;
     let amount = 0;
     list.forEach((item, index3) => {
-      let name2 = item.querySelector("td").textContent.trim();
+      let name = item.querySelector("td").textContent.trim();
       let form2 = item.querySelector("form");
       let button = form2.querySelector("button");
       button.classList.add("icon", "chibi", "danger-subtle");
@@ -32686,11 +32722,11 @@
       let entry = html.node`
             <div class="generic-table-list-entry user-vertical-list-item">
                 <div class="name">
-                    <a class="mention" href="${root}user/${name2}" target="_blank">@${name2}</a>
+                    <a class="mention" href="${root}user/${name}" target="_blank">@${name}</a>
                 </div>
                 <div class="text preview">
-                    ${profile_notes.hasOwnProperty(name2) ? html.node`
-                        <p id="profile-note-row-preview--${name2}">${{ html: profile_notes[name2] }}</p>
+                    ${profile_notes.hasOwnProperty(name) ? html.node`
+                        <p id="profile-note-row-preview--${name}">${{ html: profile_notes[name] }}</p>
                     ` : ""}
                 </div>
                 <div class="actions">
@@ -33106,7 +33142,7 @@
         tippy_esm_default(button, {
           content: button.textContent
         });
-        const name2 = details.querySelector(".api-session-app-name");
+        const name = details.querySelector(".api-session-app-name");
         const desc = details.querySelector(".api-session-app-description");
         const status = details.querySelector(".api-session-status");
         const image = details.querySelector(".api-session-app-image");
@@ -33118,7 +33154,7 @@
                         ${image}
                     </div>
                     <div class="session-details">
-                        ${name2}
+                        ${name}
                         ${desc}
                     </div>
                     ${form}
@@ -33306,8 +33342,8 @@
       related.appendChild(header);
       let users = shared_users.querySelectorAll(".avatar");
       users.forEach((user) => {
-        let name2 = user.querySelector("img").getAttribute("alt");
-        patch_avatar(user, name2);
+        let name = user.querySelector("img").getAttribute("alt");
+        patch_avatar(user, name);
       });
       related.appendChild(shared_users);
     }
@@ -33317,71 +33353,11 @@
       page.structure.container.appendChild(pages);
   }
 
-  // src/components/banner.js
-  function load_banner(name2 = page.name) {
-    if (!name2) return;
-    let banners = JSON.parse(localStorage.getItem("bleh_profile_banners")) || {};
-    if (banners[name2]) {
-      if (banners[name2] == "none")
-        return;
-      return banners[name2];
-    } else {
-      request_banner(name2);
-    }
-  }
-  function bio_parse(text3, cache2 = false) {
-    let temp = document.createElement("div");
-    render(temp, markdown(text3.textContent, {
-      allow_headers: true
-    }));
-    let banner = temp.querySelector('img[alt="banner"]');
-    if (banner) {
-      save_banner_to_cache(banner.getAttribute("src"), name);
-      return banner.getAttribute("src");
-    } else {
-      save_banner_to_cache("none");
-      return "none";
-    }
-  }
-  function request_banner(name2 = page.name) {
-    fetch(`${root}user/${name2}`).then(function(response) {
-      console.log("returned", response, response.text);
-      return response.text();
-    }).then(function(html3) {
-      let doc = new DOMParser().parseFromString(html3, "text/html");
-      console.log("DOC", doc);
-      let about_me_sidebar = doc.querySelector(".about-me-sidebar");
-      if (about_me_sidebar) {
-        let about_me_text = about_me_sidebar.querySelector("p");
-        return bio_parse(about_me_text, true);
-      } else {
-        save_banner_to_cache("none");
-        return "none";
-      }
-    });
-  }
-  function save_banner_to_cache(img, name2 = page.name) {
-    let banners = JSON.parse(localStorage.getItem("bleh_profile_banners")) || {};
-    let banners_o = Object.keys(banners);
-    if (banners_o.length > 150) {
-      let keys2 = Reflect.ownKeys(banners);
-      if (banners[keys2[0]] != auth.name)
-        delete banners[keys2[0]];
-      else
-        delete banners[keys2[1]];
-      delete banners[page.name];
-      banners[page.name] = img;
-    } else {
-      banners[page.name] = img;
-    }
-    localStorage.setItem("bleh_profile_banners", JSON.stringify(banners));
-  }
-
   // src/components/toggle.js
   function toggle({
     value = false,
     type = "toggle",
-    name: name2 = "",
+    name = "",
     title = "",
     body = "",
     small = "",
@@ -33406,14 +33382,14 @@
             </div>
             ${type == "toggle" ? html.node`
             <div class="toggle-wrap">
-                <input type="checkbox" ref=${(el) => checkbox = el} name=${name2} value=${data2} checked=${value} />
+                <input type="checkbox" ref=${(el) => checkbox = el} name=${name} value=${data2} checked=${value} />
                 <button class="toggle" ref=${(el) => state = el} aria-checked=${value}>
                     <div class="dot" />
                 </button>
             </div>
             ` : html.node`
             <div class="check">
-                <input type="checkbox" ref=${(el) => checkbox = el} name=${name2} value=${data2} checked=${value} disabled=${disabled} />
+                <input type="checkbox" ref=${(el) => checkbox = el} name=${name} value=${data2} checked=${value} disabled=${disabled} />
                 <div class="box" ref=${(el) => state = el} aria-checked=${value} disabled=${disabled}>
                     <div class="bleh-icon" />
                 </div>
@@ -33831,8 +33807,10 @@
       }
       let about_me_sidebar = page.structure.row.querySelector(".about-me-sidebar");
       if (!about_me_sidebar) {
-        if (settings.bio_markdown)
+        if (settings.bio_markdown) {
           save_banner_to_cache("none");
+          save_accent_to_cache("none");
+        }
         about_me_sidebar = html.node`
                 <section class="about-me-sidebar">
                     <h2>${tl(trans.about)}</h2>
@@ -33843,7 +33821,7 @@
       } else {
         if (settings.bio_markdown) {
           let about_me_text = about_me_sidebar.querySelector("p");
-          let result = bio_parse2(about_me_text, true);
+          let result = bio_parse(about_me_text, true);
           about_me_text.after(result);
           about_me_text.remove();
         }
@@ -33906,7 +33884,7 @@
       if (!is_own_profile && profile_note)
         create_profile_note_panel(page.name, profile_note);
     } else {
-      load_banner_from_cache();
+      load_profile_cache();
       let btn_add = page.structure.side.querySelector(".add-button");
       if (btn_add) btn_add.setAttribute("data-page-subpage", page.subpage);
       if (page.subpage.startsWith("library")) {
@@ -34330,9 +34308,9 @@
       details.removeChild(artist_elem);
       details.appendChild(song_artist_element);
     } else if (settings.corrections) {
-      let name2 = correct_item_by_artist(name_elem.textContent.trim(), artist_elem.textContent.trim());
+      let name = correct_item_by_artist(name_elem.textContent.trim(), artist_elem.textContent.trim());
       let artist = correct_artist(artist_elem.textContent.trim());
-      name_elem.textContent = name2;
+      name_elem.textContent = name;
       artist_elem.textContent = artist;
     }
     if (form) {
@@ -34739,7 +34717,7 @@
       trigger: "click"
     });
   }
-  function bio_parse2(text3, cache2 = false) {
+  function bio_parse(text3) {
     let temp = document.createElement("div");
     temp.classList.add("markdown-body");
     render(temp, markdown(text3.textContent, {
@@ -34748,50 +34726,12 @@
       allow_icons: true,
       allow_hue: true
     }));
-    use_banner(temp, cache2);
-    return temp;
-  }
-  function use_banner(temp, cache2) {
-    if (page.name == auth.name && !settings.profile_header_own || page.name != auth.name && !settings.profile_header_others)
-      return;
-    let banner = temp.querySelector('img[alt="banner"]');
+    const banner = temp.querySelector('img[alt="banner"]');
     if (banner) {
-      set_profile_banner(banner, cache2);
-    } else {
-      save_banner_to_cache("none");
+      const src = banner.src;
+      register_background(src, "bio");
     }
-  }
-  function set_profile_banner(img, cache2) {
-    let src = img.getAttribute("src");
-    register_background(src, "bio");
-    if (cache2)
-      save_banner_to_cache(src);
-  }
-  function load_banner_from_cache() {
-    let banners = JSON.parse(localStorage.getItem("bleh_profile_banners")) || {};
-    if (banners[page.name]) {
-      if (banners[page.name] == "none")
-        return;
-      register_background(banners[page.name], "bio");
-    } else {
-      request_banner2();
-    }
-  }
-  function request_banner2() {
-    fetch(`${root}user/${page.name}`).then(function(response) {
-      console.log("returned", response, response.text);
-      return response.text();
-    }).then(function(html3) {
-      let doc = new DOMParser().parseFromString(html3, "text/html");
-      console.log("DOC", doc);
-      let about_me_sidebar = doc.querySelector(".about-me-sidebar");
-      if (about_me_sidebar) {
-        let about_me_text = about_me_sidebar.querySelector("p");
-        let result = bio_parse2(about_me_text, true);
-      } else {
-        save_banner_to_cache("none");
-      }
-    });
+    return temp;
   }
   function bleh_profile_chart() {
     let panel = page.structure.row.querySelector(".listen-panel");
@@ -34871,6 +34811,75 @@
       options: page.state.chart_library_line_options
     });
     scrobble_canvas_container.appendChild(scrobble_canvas);
+  }
+  function save_profile_cache({
+    banner,
+    hue: hue2,
+    sat,
+    lit
+  } = {}, profile_cache = JSON.parse(localStorage.getItem("bleh_profile_cache")) || {}, name = page.name) {
+    let profile_cache_o = Object.keys(profile_cache);
+    if (profile_cache_o.length > 300) {
+      let keys2 = Reflect.ownKeys(profile_cache);
+      if (profile_cache[keys2[0]] != auth.name)
+        delete profile_cache[keys2[0]];
+      else
+        delete profile_cache[keys2[1]];
+      delete profile_cache[name];
+      profile_cache[name] = {
+        banner,
+        hue: hue2,
+        sat,
+        lit
+      };
+    } else {
+      profile_cache[name] = {
+        banner,
+        hue: hue2,
+        sat,
+        lit
+      };
+    }
+    log("saved to cache", "profile", "info", { name, cache: profile_cache[name] });
+    localStorage.setItem("bleh_profile_cache", JSON.stringify(profile_cache));
+  }
+  function load_profile_cache_externally(name = page.name) {
+    if (!name) return;
+    let profile_cache = JSON.parse(localStorage.getItem("bleh_profile_cache")) || {};
+    return profile_cache[name] || {};
+  }
+  function load_profile_cache(name = page.name) {
+    if (!name) return;
+    let profile_cache = JSON.parse(localStorage.getItem("bleh_profile_cache")) || {};
+    let cache2 = profile_cache[name];
+    if (profile_cache[name]) {
+      const hue2 = cache2.hue;
+      const sat = cache2.sat;
+      const lit = cache2.lit;
+      const banner = cache2.banner;
+      if (hue2) document.body.style.setProperty("--hue-album", hue2);
+      if (sat) document.body.style.setProperty("--sat-album", sat);
+      if (lit) document.body.style.setProperty("--lit-album", lit);
+      if (banner) register_background(banner, "bio");
+      return;
+    }
+    return request_profile_cache(name);
+  }
+  function request_profile_cache(name = page.name) {
+    fetch(`${root}user/${name}`).then(function(response) {
+      console.log("returned", response, response.text);
+      return response.text();
+    }).then(function(dom) {
+      let doc = new DOMParser().parseFromString(dom, "text/html");
+      console.log("DOC", doc);
+      let about_me_sidebar = doc.querySelector(".about-me-sidebar");
+      if (about_me_sidebar) {
+        let about_me_text = about_me_sidebar.querySelector("p");
+        bio_parse(about_me_text, true);
+      } else {
+        save_profile_cache({});
+      }
+    });
   }
 
   // src/chart.js
@@ -35840,10 +35849,10 @@
      * @param {string} name - Zone name
      * @return {IANAZone}
      */
-    static create(name2) {
-      let zone = ianaZoneCache.get(name2);
+    static create(name) {
+      let zone = ianaZoneCache.get(name);
       if (zone === void 0) {
-        ianaZoneCache.set(name2, zone = new _IANAZone(name2));
+        ianaZoneCache.set(name, zone = new _IANAZone(name));
       }
       return zone;
     }
@@ -35885,10 +35894,10 @@
         return false;
       }
     }
-    constructor(name2) {
+    constructor(name) {
       super();
-      this.zoneName = name2;
-      this.valid = _IANAZone.isValidZone(name2);
+      this.zoneName = name;
+      this.valid = _IANAZone.isValidZone(name);
     }
     /**
      * The type of zone. `iana` for all instances of `IANAZone`.
@@ -42581,29 +42590,29 @@
         </section>
     `);
   }
-  function create_listen_item(parent, { name: name2, listens, link, avi, count = 0, button = false, katsune = false }, header_type) {
-    if (!name2) return;
-    log(`creating listen item of ${name2}, ${count}, ${listens}`, "artist", "info", { avi, link });
+  function create_listen_item(parent, { name, listens, link, avi, count = 0, button = false, katsune = false }, header_type) {
+    if (!name) return;
+    log(`creating listen item of ${name}, ${count}, ${listens}`, "artist", "info", { avi, link });
     let listen_item;
     if (button) listen_item = html.node`<button />`;
     else listen_item = html.node`<a />`;
     listen_item.classList.add("btn", "listen-item");
-    listen_item.setAttribute("href", `${root}user/${name2}/library/music/${redirect()}${link}`);
+    listen_item.setAttribute("href", `${root}user/${name}/library/music/${redirect()}${link}`);
     listen_item.setAttribute("data-listens", listens);
-    listen_item.setAttribute("id", `listen-item--${name2}`);
+    listen_item.setAttribute("id", `listen-item--${name}`);
     let p;
     if (listens > -1) {
       render(listen_item, html`
-            <img class="view-item-avatar" src=${avi} alt=${name2}>
+            <img class="view-item-avatar" src=${avi} alt=${name}>
             <div class="info">
-                <h3>${name2}</h3>
+                <h3>${name}</h3>
                 <p class="colourful" ref=${(el) => p = el}>${tl(trans.listens.count).replace("{c}", listens.toLocaleString(lang))}</p>
             </div>
         `);
       let menu = tippy_esm_default(listen_item, {
         theme: "context-menu",
         content: html.node`
-                <a class="dropdown-menu-clickable-item" href="${root}user/${name2}" data-menu-item="view_profile">
+                <a class="dropdown-menu-clickable-item" href="${root}user/${name}" data-menu-item="view_profile">
                     ${tl(trans.profile)}
                 </a>
             `,
@@ -42621,16 +42630,16 @@
       register_menu(listen_item, menu);
     } else if (listens > -2) {
       render(listen_item, html`
-            <img class="view-item-avatar" src=${avi} alt=${name2}>
+            <img class="view-item-avatar" src=${avi} alt=${name}>
             <div class="info">
-                <h3>${name2}</h3>
+                <h3>${name}</h3>
                 <p class="colourful" ref=${(el) => p = el}>${tl(trans.listens)}</p>
             </div>
         `);
       let menu = tippy_esm_default(listen_item, {
         theme: "context-menu",
         content: html.node`
-                <a class="dropdown-menu-clickable-item" href="${root}user/${name2}" data-menu-item="view_profile">
+                <a class="dropdown-menu-clickable-item" href="${root}user/${name}" data-menu-item="view_profile">
                     ${tl(trans.profile)}
                 </a>
                 <div class="sep"></div>
@@ -42905,7 +42914,7 @@
       if (page.requested.page != null && page.requested.page != "1")
         position += (parseInt(page.requested.page) - 1) * 30;
       let name_wrap = listener.querySelector(".top-listeners-item-name a");
-      let name2 = name_wrap.textContent;
+      let name = name_wrap.textContent;
       let track_wrap = listener.querySelector(".top-listeners-track");
       let avatar3 = listener.querySelector(".top-listeners-item-image");
       let follow = listener.querySelector(".class");
@@ -42916,7 +42925,7 @@
                 </span>
                 <h4 class="user-list-name">
                     <a class="user-list-link link-block-target" href="${name_wrap.getAttribute("href")}">
-                        ${name2}
+                        ${name}
                     </a>
                 </h4>
                 <span class="avatar user-list-avatar">
@@ -42932,7 +42941,7 @@
                 ` : ""}
             </div>
         `;
-      let badge = patch_avatar(new_listener.querySelector(".user-list-avatar"), name2, "listener");
+      let badge = patch_avatar(new_listener.querySelector(".user-list-avatar"), name, "listener");
       if (track_wrap) {
         let track_link = new_listener.querySelector(".user-list-about-me a");
         let artist = return_artist_from_track(track_link.getAttribute("href"), false);
@@ -43503,10 +43512,10 @@
         remove2(node);
       }
     };
-    const _removeAttribute = function _removeAttribute2(name2, element) {
+    const _removeAttribute = function _removeAttribute2(name, element) {
       try {
         arrayPush(DOMPurify.removed, {
-          attribute: element.getAttributeNode(name2),
+          attribute: element.getAttributeNode(name),
           from: element
         });
       } catch (_) {
@@ -43515,8 +43524,8 @@
           from: element
         });
       }
-      element.removeAttribute(name2);
-      if (name2 === "is") {
+      element.removeAttribute(name);
+      if (name === "is") {
         if (RETURN_DOM || RETURN_DOM_FRAGMENT) {
           try {
             _forceRemove(element);
@@ -43524,7 +43533,7 @@
           }
         } else {
           try {
-            element.setAttribute(name2, "");
+            element.setAttribute(name, "");
           } catch (_) {
           }
         }
@@ -43705,13 +43714,13 @@
       while (l2--) {
         const attr = attributes[l2];
         const {
-          name: name2,
+          name,
           namespaceURI,
           value: attrValue
         } = attr;
-        const lcName = transformCaseFunc(name2);
+        const lcName = transformCaseFunc(name);
         const initValue = attrValue;
-        let value = name2 === "value" ? initValue : stringTrim(initValue);
+        let value = name === "value" ? initValue : stringTrim(initValue);
         hookEvent.attrName = lcName;
         hookEvent.attrValue = value;
         hookEvent.keepAttr = true;
@@ -43719,22 +43728,22 @@
         _executeHooks(hooks.uponSanitizeAttribute, currentNode, hookEvent);
         value = hookEvent.attrValue;
         if (SANITIZE_NAMED_PROPS && (lcName === "id" || lcName === "name")) {
-          _removeAttribute(name2, currentNode);
+          _removeAttribute(name, currentNode);
           value = SANITIZE_NAMED_PROPS_PREFIX + value;
         }
         if (SAFE_FOR_XML && regExpTest(/((--!?|])>)|<\/(style|title)/i, value)) {
-          _removeAttribute(name2, currentNode);
+          _removeAttribute(name, currentNode);
           continue;
         }
         if (hookEvent.forceKeepAttr) {
           continue;
         }
         if (!hookEvent.keepAttr) {
-          _removeAttribute(name2, currentNode);
+          _removeAttribute(name, currentNode);
           continue;
         }
         if (!ALLOW_SELF_CLOSE_IN_ATTR && regExpTest(/\/>/i, value)) {
-          _removeAttribute(name2, currentNode);
+          _removeAttribute(name, currentNode);
           continue;
         }
         if (SAFE_FOR_TEMPLATES) {
@@ -43744,7 +43753,7 @@
         }
         const lcTag = transformCaseFunc(currentNode.nodeName);
         if (!_isValidAttribute(lcTag, lcName, value)) {
-          _removeAttribute(name2, currentNode);
+          _removeAttribute(name, currentNode);
           continue;
         }
         if (trustedTypesPolicy && typeof trustedTypes === "object" && typeof trustedTypes.getAttributeType === "function") {
@@ -43765,9 +43774,9 @@
         if (value !== initValue) {
           try {
             if (namespaceURI) {
-              currentNode.setAttributeNS(namespaceURI, name2, value);
+              currentNode.setAttributeNS(namespaceURI, name, value);
             } else {
-              currentNode.setAttribute(name2, value);
+              currentNode.setAttribute(name, value);
             }
             if (_isClobbered(currentNode)) {
               _forceRemove(currentNode);
@@ -43775,7 +43784,7 @@
               arrayPop(DOMPurify.removed);
             }
           } catch (_) {
-            _removeAttribute(name2, currentNode);
+            _removeAttribute(name, currentNode);
           }
         }
       }
@@ -43939,7 +43948,8 @@
     allow_banners = false,
     in_dialog = false,
     allow_icons = false,
-    allow_hue = false
+    allow_hue = false,
+    take_effect = true
   } = {}) {
     const ALLOWED_TAGS = [
       "div",
@@ -44078,6 +44088,21 @@
     body.querySelectorAll("p").forEach((text4) => {
       local_restriction(text4);
     });
+    let profile_cache;
+    let cache2;
+    if (allow_banners || allow_hue) {
+      profile_cache = JSON.parse(localStorage.getItem("bleh_profile_cache")) || {};
+      cache2 = profile_cache[page.name] || {};
+    }
+    if (allow_banners) {
+      const banner2 = body.querySelector('img[alt="banner"]');
+      if (banner2) {
+        const src = banner2.src;
+        cache2.banner = src;
+      } else {
+        delete cache2.banner;
+      }
+    }
     body.querySelectorAll("img").forEach((image) => {
       image.setAttribute("loading", "lazy");
       let func = () => expand_avatar(image.src, image.alt);
@@ -44088,12 +44113,25 @@
       image.after(container);
       container.appendChild(image);
     });
-    if (allow_hue && hue2 && sat && lit) {
-      document.body.style.setProperty("--hue-album", hue2);
-      document.body.style.setProperty("--sat-album", sat);
-      document.body.style.setProperty("--lit-album", lit);
-      log("custom accent settings present", "profile", "info", { hue: hue2, sat, lit });
+    if (allow_hue) {
+      if (hue2 && sat && lit) {
+        if (take_effect) {
+          document.body.style.setProperty("--hue-album", hue2);
+          document.body.style.setProperty("--sat-album", sat);
+          document.body.style.setProperty("--lit-album", lit);
+        }
+        cache2.hue = hue2;
+        cache2.sat = sat;
+        cache2.lit = lit;
+        log("custom accent settings present", "profile", "info", { hue: hue2, sat, lit });
+      } else {
+        if (cache2.hue) delete cache2.hue;
+        if (cache2.sat) delete cache2.sat;
+        if (cache2.lit) delete cache2.lit;
+        log("cleared custom accent settings", "profile", "log");
+      }
     }
+    if (cache2) save_profile_cache(cache2, profile_cache);
     return body;
   }
   function markdown_prompt({
@@ -45597,11 +45635,7 @@
         `);
     } else if (page_id == "profile") {
       register_skip_to([]);
-      const banners = JSON.parse(localStorage.getItem("bleh_profile_banners")) || {};
-      let banner = "";
-      if (banners[page.name] && banners[page.name] != "none") {
-        banner = banners[page.name];
-      }
+      const cache2 = load_profile_cache_externally(auth.name);
       render(page.structure.main, html`
             <section class="bleh--panel">
                 <h4>${tl(trans.banners)}</h4>
@@ -45627,8 +45661,8 @@
                             </div>
                         </div>
                         <div class="profile-mockup-background from-avatar" style="background-image: url(${auth.avatar.replace("/avatar42s/", "/avatar300s/")})"></div>
-                        ${banner != "" ? html.node`
-                        <div class="profile-mockup-background from-track" style="background-image: url(${banner})"></div>
+                        ${cache2.banner ? html.node`
+                        <div class="profile-mockup-background from-track" style="background-image: url(${cache2.banner})"></div>
                         ` : html.node`
                         <div class="profile-mockup-background from-track" style="background-image: url(https://lastfm.freetls.fastly.net/i/u/avatar300s/df927f4f88034b7f9a651636b965c9d7)"></div>
                         `}
@@ -45649,23 +45683,34 @@
                         <div class="heading">
                             <h5>${tl(trans.profile_banner.name)}</h5>
                             <p>${tl(trans.profile_banner.body)}</p>
-                            <p>${tl(trans.current_banner_value).replace("{v}", banner)}</p>
+                            ${cache2.banner ? html.node`
+                            <p>${tl(trans.current_banner_value).replace("{v}", cache2.banner)}</p>
+                            ` : ""}
                         </div>
                         ${() => {
-        if (banner == "")
+        if (!cache2.banner)
           return html.node`
                                     <div class="info">
                                         <p>${tl(trans.none)}</p>
                                     </div>
                                 `;
         let banner_image = html.node`
-                                <div class="banner-image" style="background-image: url(${banner})" />
+                                <div class="banner-image" style="background-image: url(${cache2.banner})" />
                             `;
         tippy_esm_default(banner_image, {
-          content: banner
+          content: cache2.banner
         });
         return banner_image;
       }}
+                    </div>
+                    <div class="setting" data-type="info" ref=${(el) => accent_setting = el}>
+                        <div class="heading">
+                            <h5>${tl(trans.profile_accent.name)}</h5>
+                            <p>${tl(trans.profile_accent.body)}</p>
+                        </div>
+                        <div class="info">
+                            <div class="colour-tile colourful" style="--hue-over: ${cache2.hue}; --sat-over: ${cache2.sat}; --lit-over: ${cache2.lit}" />
+                        </div>
                     </div>
                 </div>
             </section>
@@ -46733,10 +46778,10 @@
     activity_item.classList.add("activity-item", `activity--${activity.type}`);
     let involved_text = "";
     activity.involved.forEach((involved) => {
-      let name2 = involved.name;
+      let name = involved.name;
       let sister = involved.sister;
       if (involved.type == "track" && settings.format_guest_features) {
-        let formatted_title = name_includes(name2, sister);
+        let formatted_title = name_includes(name, sister);
         let song_title;
         let song_tags = {};
         if (formatted_title) {
@@ -46744,22 +46789,22 @@
           song_tags = formatted_title[1];
           sister = formatted_title[2];
         }
-        name2 = html.node`
+        name = html.node`
                 <div class="title">${song_title.trim()}</div>
                 ${song_tags.map((tag) => html.node`
                     <div class="feat" data-bleh--tag-type="${tag.type}" data-bleh--tag-group="${tag.group}">${tag.text}</div>
                 `)}
             `;
       } else if ((involved.type == "album" || involved.type == "track") && settings.corrections) {
-        name2 = html.node`${correct_item_by_artist(name2, sister)}`;
+        name = html.node`${correct_item_by_artist(name, sister)}`;
         sister = correct_artist(sister);
       } else if (involved.type == "artist" && settings.corrections) {
         sister = correct_artist(sister);
       }
       if (involved_text != "")
-        involved_text = html.node`${involved_text}, <a class="involved--${involved.type}">${name2}</a>`;
+        involved_text = html.node`${involved_text}, <a class="involved--${involved.type}">${name}</a>`;
       else
-        involved_text = html.node`${involved_text}<a class="involved--${involved.type}">${name2}</a>`;
+        involved_text = html.node`${involved_text}<a class="involved--${involved.type}">${name}</a>`;
     });
     render(activity_item, html`
         <div class="type">
@@ -47238,14 +47283,14 @@
           involved_link = `${root}bwaa`;
         else if (involved.type == "bleh")
           involved_link = `${root}bleh`;
-        let name2 = involved.name;
+        let name = involved.name;
         let sister = involved.sister;
         if (involved.type != "artist" && involved.type != "user" && involved.type != "tag" && involved.type != "bwaa" && involved.type != "bleh") {
-          tooltip_name = name2;
+          tooltip_name = name;
           tooltip_sister = sister;
         }
         if (involved.type == "track" && settings.format_guest_features) {
-          let formatted_title = name_includes(name2, sister);
+          let formatted_title = name_includes(name, sister);
           let song_title;
           let song_tags;
           if (formatted_title) {
@@ -47255,24 +47300,24 @@
             tooltip_name = song_title;
             tooltip_sister = sister;
           }
-          name2 = html.node`
+          name = html.node`
                     <div class="title">${song_title.trim()}</div>
                     ${song_tags.map((tag) => html.node`
                         <div class="feat" data-bleh--tag-type="${tag.type}" data-bleh--tag-group="${tag.group}">${tag.text}</div>
                     `)}
                 `;
         } else if ((involved.type == "album" || involved.type == "track") && settings.corrections) {
-          name2 = correct_item_by_artist(name2, sister);
-          tooltip_name = name2;
+          name = correct_item_by_artist(name, sister);
+          tooltip_name = name;
           sister = correct_artist(sister);
           tooltip_sister = sister;
         } else if (involved.type == "artist" && settings.corrections) {
-          name2 = correct_artist(name2);
+          name = correct_artist(name);
         }
         if (involved_text != "")
-          involved_text = html.node`${involved_text}, <a class="involved--${involved.type}" href="${involved_link}">${name2}</a>`;
+          involved_text = html.node`${involved_text}, <a class="involved--${involved.type}" href="${involved_link}">${name}</a>`;
         else
-          involved_text = html.node`${involved_text}<a class="involved--${involved.type}" href="${involved_link}">${name2}</a>`;
+          involved_text = html.node`${involved_text}<a class="involved--${involved.type}" href="${involved_link}">${name}</a>`;
       });
       render(activity_item, html`
             <div class="type">${tl(trans.activity.listing[activity.type])}<div class="date">${moment(activity.date).fromNow(true)}</div></div>
@@ -47974,7 +48019,7 @@
         badges = load_badges(auth.name);
         let page_2;
         let side;
-        let banner = load_banner(auth.name);
+        const cache2 = load_profile_cache_externally(auth.name);
         let status_container;
         const current = settings.navigation_items;
         let length = current.length;
@@ -47989,8 +48034,8 @@
                             <div class="avatar">
                                 <img src="${auth.avatar.replace("avatar42s", "avatar170s")}" alt="${auth.name}" />
                             </div>
-                            ${banner != "" ? html.node`
-                            <div class="bg" style="background-image: url(${banner})" />
+                            ${cache2.banner != "" ? html.node`
+                            <div class="bg" style="background-image: url(${cache2.banner})" />
                             ` : !auth.avatar.endsWith("818148bf682d429dc215c1705eb27b98.png") ? html.node`
                             <div class="bg" style="background-image: url(${auth.avatar.replace("avatar42s", "avatar170s")})" />
                             ` : ""}
@@ -48954,7 +48999,7 @@
             text3 = tl(trans.popular_now);
           let header = item.querySelector(".artist-header-featured-items-item-header");
           header.parentElement.removeChild(header);
-          let name2 = correct_item_by_artist(item.querySelector(".artist-header-featured-items-item-name").textContent.trim(), page.name);
+          let name = correct_item_by_artist(item.querySelector(".artist-header-featured-items-item-name").textContent.trim(), page.name);
           let aux = item.querySelector(".artist-header-featured-items-item-aux-text")?.textContent.trim();
           let link = item.querySelector(".link-block-cover-link")?.getAttribute("href");
           let img = item.querySelector("img")?.src;
@@ -48969,12 +49014,12 @@
                                 <div class="source-album js-link-block link-block" data-type=${type}>
                                     <div class="source-album-art">
                                         <span class="cover-art">
-                                            <img src=${img} alt=${name2} />
+                                            <img src=${img} alt=${name} />
                                         </span>
                                     </div>
                                     <div class="source-album-details">
                                         <h4 class="source-album-name">
-                                            <a href=${link}>${name2}</a>
+                                            <a href=${link}>${name}</a>
                                         </h4>
                                         <p class="source-album-stats">${aux}</p>
                                     </div>
@@ -49498,17 +49543,17 @@
         let list_item;
         let image = item.querySelector(".globalchart-image img");
         let rank = item.querySelector(".globalchart-rank");
-        let name2 = item.querySelector(".globalchart-name a");
-        let link = name2.getAttribute("href");
+        let name = item.querySelector(".globalchart-name a");
+        let link = name.getAttribute("href");
         image.setAttribute("src", image.getAttribute("src").replace("/avatar70s/", "/avatar300s/"));
         if (index3 == 1) {
-          name2.textContent = correct_artist(name2.textContent);
+          name.textContent = correct_artist(name.textContent);
           list_item = html.node`
                     <li class="music-bookmarks-artists-item-wrap charts-list-item">
                         <div class="music-bookmarks-artists-item charts-list-item-inner">
                             <div class="charts-list-rank">${rank.textContent.trim()}</div>
                             <h3 class="music-bookmarks-artists-item-name">
-                                ${name2}
+                                ${name}
                             </h3>
                             <div class="media-item">
                                 <span class="music-bookmarks-albums-item-image cover-art">
@@ -49525,13 +49570,13 @@
         } else {
           let artist = item.querySelector(".globalchart-track-artist-name a");
           artist.textContent = correct_artist(artist.textContent);
-          name2.textContent = correct_item_by_artist(name2.textContent, artist.textContent);
+          name.textContent = correct_item_by_artist(name.textContent, artist.textContent);
           list_item = html.node`
                     <li class="music-bookmarks-albums-item-wrap charts-list-item">
                         <div class="music-bookmarks-albums-item charts-list-item-inner">
                             <div class="charts-list-rank">${rank.textContent.trim()}</div>
                             <h3 class="music-bookmarks-albums-item-name">
-                                ${name2}
+                                ${name}
                             </h3>
                             <p class="music-bookmarks-albums-item-artist">
                                 ${artist}
@@ -49568,12 +49613,13 @@
       log("unable to find elements", "page structure");
     }
     let content_top = document.body.querySelector(".content-top");
+    page.name = auth.name;
     checkup_page_structure(false, content_top);
     log("status is", "page", "info", page);
     update_page();
-    let banner = load_banner(auth.name);
-    if (banner)
-      register_background(banner);
+    const cache2 = load_profile_cache_externally(auth.name);
+    if (cache2.banner)
+      register_background(cache2.banner);
     else if (auth.avatar && !auth.avatar.endsWith("818148bf682d429dc215c1705eb27b98.png"))
       register_background(auth.avatar.replace("/avatar42s/", "/ar0/"));
     else
@@ -49925,8 +49971,8 @@
       let users = page.structure.main.querySelectorAll(".attendee-summary-user-inner-wrap");
       users.forEach((user) => {
         let avatar3 = user.querySelector(".attendee-summary-user-avatar");
-        let name2 = user.querySelector(".attendee-summary-user-link").textContent;
-        patch_avatar(avatar3, name2, "event");
+        let name = user.querySelector(".attendee-summary-user-link").textContent;
+        patch_avatar(avatar3, name, "event");
       });
       let cancelled = page.structure.main.querySelector(".event-status--cancelled");
       if (cancelled) {
@@ -49963,8 +50009,8 @@
         let users = page.structure.main.querySelectorAll(".user-list-inner-wrap");
         users.forEach((user) => {
           let avatar3 = user.querySelector(".user-list-avatar");
-          let name2 = user.querySelector(".user-list-link").textContent;
-          let badge = patch_avatar(avatar3, name2, "follow");
+          let name = user.querySelector(".user-list-link").textContent;
+          let badge = patch_avatar(avatar3, name, "follow");
           if (badge.type == "avatar-status-dot--staff")
             user.classList.add("staff-user");
         });
@@ -50076,11 +50122,11 @@
         let link = notification.getAttribute("href");
         if (link.endsWith("/obsessions/set") || link.endsWith("/listening-report/month")) return;
         let avatar3 = notification.querySelector(".avatar");
-        let name2 = notification.querySelector(".inbox-notifications__item-description strong");
-        if (!name2) return;
+        let name = notification.querySelector(".inbox-notifications__item-description strong");
+        if (!name) return;
         let name_text = sanitise(return_name_from_avatar(avatar3.querySelector("img")));
         let badge = patch_avatar(avatar3, name_text);
-        name2.classList.add("notification-user-name", `user-status--bleh-${badge.type}`, `user-status--bleh-user-${name_text}`);
+        name.classList.add("notification-user-name", `user-status--bleh-${badge.type}`, `user-status--bleh-user-${name_text}`);
         if (notification.classList.contains("inbox-notifications__item--highlight"))
           notification.classList.add("notification-user-name", `user-status--bleh-${badge.type}`, `user-status--bleh-user-${name_text}`);
       });
@@ -50638,9 +50684,9 @@
     checkup_page_structure(false, content_top);
     log("status is", "page", "info", page);
     update_page();
-    let banner = load_banner(auth.name);
-    if (banner)
-      register_background(banner);
+    const cache2 = load_profile_cache_externally(auth.name);
+    if (cache2.banner)
+      register_background(cache2.banner);
     else if (!auth.avatar.endsWith("818148bf682d429dc215c1705eb27b98.png"))
       register_background(auth.avatar.replace("/avatar42s/", "/ar0/"));
     else
@@ -50718,8 +50764,8 @@
     let users = page.structure.main.querySelectorAll(".user-list-item:not(.user-list-item-mobile-ad)");
     users.forEach((user) => {
       let avatar3 = user.querySelector(".user-list-avatar");
-      let name2 = user.querySelector(".user-list-link").textContent;
-      patch_avatar(avatar3, name2, "follow");
+      let name = user.querySelector(".user-list-link").textContent;
+      patch_avatar(avatar3, name, "follow");
       let artists = user.querySelectorAll(".user-list-shared-artists a");
       artists.forEach((artist) => {
         artist.textContent = correct_artist(artist.textContent);
@@ -50828,14 +50874,14 @@
         checkboxes.forEach((checkbox) => {
           let input_el = checkbox.querySelector("input");
           let value = input_el.checked;
-          let name2 = input_el.getAttribute("name");
+          let name = input_el.getAttribute("name");
           let text3 = checkbox.textContent.trim();
           let disabled = input_el.disabled;
           render(checkbox.parentElement, html`
                     ${toggle({
             value,
             type: "checkbox",
-            name: name2,
+            name,
             title: text3,
             disabled,
             data: input_el.value
@@ -50903,7 +50949,7 @@
         checkboxes.forEach((checkbox) => {
           let input_el = checkbox.querySelector("input");
           let value = input_el.checked;
-          let name2 = input_el.getAttribute("name");
+          let name = input_el.getAttribute("name");
           let disabled = input_el.disabled;
           let data2 = input_el.getAttribute("value");
           let item_artist = correct_artist(checkbox.querySelector("div").title);
@@ -50913,7 +50959,7 @@
                     ${toggle({
             value,
             type: "checkbox",
-            name: name2,
+            name,
             title: item_name + tl(trans.by_artist).replace("{a}", item_artist),
             body: item_scrobbles,
             disabled,
@@ -50944,9 +50990,9 @@
       log("unable to find elements", "page structure");
     }
     checkup_page_structure();
-    let banner = load_banner(auth.name);
-    if (banner)
-      register_background(banner);
+    const cache2 = load_profile_cache_externally(auth.name);
+    if (cache2.banner)
+      register_background(cache2.banner);
     else if (!auth.avatar.endsWith("818148bf682d429dc215c1705eb27b98.png"))
       register_background(auth.avatar.replace("/avatar42s/", "/ar0/"));
     else
@@ -51000,8 +51046,8 @@
         `);
       return;
     }
-    const { name: name2, key } = json.session;
-    log(`authorised as ${name2}`, "auth", "info", json.session);
+    const { name, key } = json.session;
+    log(`authorised as ${name}`, "auth", "info", json.session);
     localStorage.setItem("bleh_auth", key);
     localStorage.setItem("bleh_auth_valid", "true");
     render(page.structure.main, html`
@@ -51432,13 +51478,13 @@
         else if (page.type == "album" || page.type == "track")
           template = tl(trans.page_templates.name_sister_type);
       }
-      let name2 = page.name;
+      let name = page.name;
       let sister = page.sister;
       if (page.type == "album" || page.type == "track") {
-        name2 = correct_item_by_artist(name2, sister);
+        name = correct_item_by_artist(name, sister);
         sister = correct_artist(sister);
       } else if (page.type == "artist") {
-        name2 = correct_artist(name2);
+        name = correct_artist(name);
       }
       let title;
       if (page.subpage != "overview" && page.subpage != "event_overview" && page.subpage != "home" && (page.type == "user" || page.type == "artist" || page.type == "album" || page.type == "track" || page.type == "events" || page.type == "tag"))
@@ -51519,7 +51565,7 @@
       }
       if (page.state.error)
         title = tl(trans.error);
-      template = template.replace("{page}", title).replace("{name}", name2).replace("{sister}", sister).replace("{build}", version.build).replace("{sku}", version.sku);
+      template = template.replace("{page}", title).replace("{name}", name).replace("{sister}", sister).replace("{build}", version.build).replace("{sku}", version.sku);
       if (settings.branding_type == "bleh")
         template = template.replace("{brand}", version.brand);
       else if (settings.branding_type == "lastfm")
@@ -54907,6 +54953,14 @@
       },
       body: {
         en: "Add your own custom banner image to your profile with [banner=url] in your bio"
+      }
+    },
+    profile_accent: {
+      name: {
+        en: "Profile accent"
+      },
+      body: {
+        en: "Style your profile for all users who view it with [accent=h,s,l] in your bio"
       }
     },
     none: {
@@ -60854,7 +60908,7 @@
     defaults2.describe("animation", {
       _fallback: false,
       _indexable: false,
-      _scriptable: (name2) => name2 !== "onProgress" && name2 !== "onComplete" && name2 !== "fn"
+      _scriptable: (name) => name !== "onProgress" && name !== "onComplete" && name !== "fn"
     });
     defaults2.set("animations", {
       colors: {
@@ -61046,15 +61100,15 @@
     defaults2.route("scale.title", "color", "", "color");
     defaults2.describe("scale", {
       _fallback: false,
-      _scriptable: (name2) => !name2.startsWith("before") && !name2.startsWith("after") && name2 !== "callback" && name2 !== "parser",
-      _indexable: (name2) => name2 !== "borderDash" && name2 !== "tickBorderDash" && name2 !== "dash"
+      _scriptable: (name) => !name.startsWith("before") && !name.startsWith("after") && name !== "callback" && name !== "parser",
+      _indexable: (name) => name !== "borderDash" && name !== "tickBorderDash" && name !== "dash"
     });
     defaults2.describe("scales", {
       _fallback: "scale"
     });
     defaults2.describe("scale.ticks", {
-      _scriptable: (name2) => name2 !== "backdropPadding" && name2 !== "callback",
-      _indexable: (name2) => name2 !== "backdropPadding"
+      _scriptable: (name) => name !== "backdropPadding" && name !== "callback",
+      _indexable: (name) => name !== "backdropPadding"
     });
   }
   var overrides = /* @__PURE__ */ Object.create(null);
@@ -61134,16 +61188,16 @@
     override(scope, values) {
       return set(overrides, scope, values);
     }
-    route(scope, name2, targetScope, targetName) {
+    route(scope, name, targetScope, targetName) {
       const scopeObject = getScope$1(this, scope);
       const targetScopeObject = getScope$1(this, targetScope);
-      const privateName = "_" + name2;
+      const privateName = "_" + name;
       Object.defineProperties(scopeObject, {
         [privateName]: {
-          value: scopeObject[name2],
+          value: scopeObject[name],
           writable: true
         },
-        [name2]: {
+        [name]: {
           enumerable: true,
           get() {
             const local = this[privateName];
@@ -61164,8 +61218,8 @@
     }
   };
   var defaults = /* @__PURE__ */ new Defaults({
-    _scriptable: (name2) => !name2.startsWith("on"),
-    _indexable: (name2) => name2 !== "events",
+    _scriptable: (name) => !name.startsWith("on"),
+    _indexable: (name) => name !== "events",
     hover: {
       _fallback: "interaction"
     },
@@ -61744,7 +61798,7 @@
       isIndexable: isFunction(_indexable) ? _indexable : () => _indexable
     };
   }
-  var readKey = (prefix, name2) => prefix ? prefix + _capitalize(name2) : name2;
+  var readKey = (prefix, name) => prefix ? prefix + _capitalize(name) : name;
   var needsSubResolver = (prop, value) => isObject(value) && prop !== "adapters" && (Object.getPrototypeOf(value) === null || value.constructor === Object);
   function _cached(target, prop, resolve2) {
     if (Object.prototype.hasOwnProperty.call(target, prop) || prop === "constructor") {
@@ -64173,9 +64227,9 @@
       }
       return Object.keys(axis);
     }
-    _getStackIndex(datasetIndex, name2, dataIndex) {
+    _getStackIndex(datasetIndex, name, dataIndex) {
       const stacks = this._getStacks(datasetIndex, dataIndex);
-      const index3 = name2 !== void 0 ? stacks.indexOf(name2) : -1;
+      const index3 = name !== void 0 ? stacks.indexOf(name) : -1;
       return index3 === -1 ? stacks.length - 1 : index3;
     }
     _getRuler() {
@@ -64477,8 +64531,8 @@
       indexAxis: "r"
     };
     static descriptors = {
-      _scriptable: (name2) => name2 !== "spacing",
-      _indexable: (name2) => name2 !== "spacing" && !name2.startsWith("borderDash") && !name2.startsWith("hoverBorderDash")
+      _scriptable: (name) => name !== "spacing",
+      _indexable: (name) => name !== "spacing" && !name.startsWith("borderDash") && !name.startsWith("hoverBorderDash")
     };
     static overrides = {
       aspectRatio: 1,
@@ -66607,9 +66661,9 @@
         this
       ]);
     }
-    _callHooks(name2) {
-      this.chart.notifyPlugins(name2, this.getContext());
-      callback(this.options[name2], [
+    _callHooks(name) {
+      this.chart.notifyPlugins(name, this.getContext());
+      callback(this.options[name], [
         this
       ]);
     }
@@ -69265,7 +69319,7 @@
     };
     static descriptors = {
       _scriptable: true,
-      _indexable: (name2) => name2 !== "borderDash"
+      _indexable: (name) => name !== "borderDash"
     };
     circumference;
     endAngle;
@@ -69526,7 +69580,7 @@
     };
     static descriptors = {
       _scriptable: true,
-      _indexable: (name2) => name2 !== "borderDash" && name2 !== "fill"
+      _indexable: (name) => name !== "borderDash" && name !== "fill"
     };
     constructor(cfg) {
       super();
@@ -71377,13 +71431,13 @@
       }
     },
     descriptors: {
-      _scriptable: (name2) => !name2.startsWith("on"),
+      _scriptable: (name) => !name.startsWith("on"),
       labels: {
-        _scriptable: (name2) => ![
+        _scriptable: (name) => ![
           "generateLabels",
           "filter",
           "sort"
-        ].includes(name2)
+        ].includes(name)
       }
     }
   };
@@ -71873,10 +71927,10 @@
     footer: noop,
     afterFooter: noop
   };
-  function invokeCallbackWithFallback(callbacks, name2, ctx, arg) {
-    const result = callbacks[name2].call(ctx, arg);
+  function invokeCallbackWithFallback(callbacks, name, ctx, arg) {
+    const result = callbacks[name].call(ctx, arg);
     if (typeof result === "undefined") {
-      return defaultCallbacks[name2].call(ctx, arg);
+      return defaultCallbacks[name].call(ctx, arg);
     }
     return result;
   }
@@ -72530,7 +72584,7 @@
       titleFont: "font"
     },
     descriptors: {
-      _scriptable: (name2) => name2 !== "filter" && name2 !== "itemSort" && name2 !== "external",
+      _scriptable: (name) => name !== "filter" && name !== "itemSort" && name !== "external",
       _indexable: false,
       callbacks: {
         _scriptable: false,

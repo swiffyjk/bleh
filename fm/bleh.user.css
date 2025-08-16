@@ -26712,18 +26712,27 @@
         backdrop-filter: blur(4px);
         -webkit-backdrop-filter: blur(4px);
     }
-}
 
-/* more specific selector to override */
-button.lfmmaf-missing-artwork-button {
-    position: relative;
-    --bg: transparent;
-    --bg-hov: hsl(var(--b6), 20%);
-    --bg-atv: hsl(var(--b6), 40%);
-    --shadow: none;
-    --mask: var(--icon-16-plus);
+    /* more specific selector to override */
+    button.lfmmaf-missing-artwork-button {
+        position: relative;
+        --bg: transparent;
+        --bg-hov: hsl(var(--b6), 20%);
+        --bg-atv: hsl(var(--b6), 40%);
+        --shadow: none;
+        --mask: var(--icon-16-plus);
 
-    & > img {
-        display: none !important;
+        & > img {
+            display: none !important;
+        }
+    }
+
+    .colour-tile {
+        display: block;
+        width: 64px;
+        height: 36px;
+        background: hsl(var(--h3));
+        box-shadow: var(--primary-shadow);
+        border-radius: var(--item-med-radius);
     }
 }

@@ -28,7 +28,6 @@ import {use_pronouns} from "./lastfm_settings"
 import {bleh_obsession} from "./obsession"
 import {html, render} from "lighterhtml";
 import {save_setting, setting} from "../components/settings.js";
-import {save_banner_to_cache} from "../components/banner.js";
 import {submit_scrobble} from '../components/scrobble.js'
 import {redirect} from "../components/music.js";
 import tippy from "tippy.js";
@@ -348,8 +347,10 @@ export function bleh_profiles() {
         let about_me_sidebar = page.structure.row.querySelector('.about-me-sidebar');
 
         if (!about_me_sidebar) {
-            if (settings.bio_markdown)
+            if (settings.bio_markdown) {
                 save_banner_to_cache('none');
+                save_accent_to_cache('none');
+            }
 
             about_me_sidebar = html.node`
                 <section class="about-me-sidebar">
@@ -437,7 +438,7 @@ export function bleh_profiles() {
         if (!is_own_profile && profile_note)
             create_profile_note_panel(page.name, profile_note);
     } else {
-        load_banner_from_cache();
+        load_profile_cache();
 
 
         let btn_add = page.structure.side.querySelector('.add-button');
@@ -1482,7 +1483,7 @@ function profile_tracks() {
     });
 }
 
-function bio_parse(text, cache = false) {
+function bio_parse(text) {
     let temp = document.createElement('div');
     temp.classList.add('markdown-body');
 
@@ -1493,64 +1494,13 @@ function bio_parse(text, cache = false) {
         allow_hue: true
     }));
 
-    use_banner(temp, cache);
+    const banner = temp.querySelector('img[alt="banner"]');
+    if (banner) {
+        const src = banner.src;
+        register_background(src, 'bio');
+    }
 
     return temp;
-}
-
-function use_banner(temp, cache) {
-    if ((page.name == auth.name && !settings.profile_header_own) || (page.name != auth.name && !settings.profile_header_others))
-        return;
-
-    let banner = temp.querySelector('img[alt="banner"]');
-    if (banner) {
-        set_profile_banner(banner, cache);
-    } else {
-        save_banner_to_cache('none');
-    }
-}
-
-function set_profile_banner(img, cache) {
-    let src = img.getAttribute('src');
-    register_background(src, 'bio');
-
-    if (cache)
-        save_banner_to_cache(src);
-}
-
-
-function load_banner_from_cache() {
-    let banners = JSON.parse(localStorage.getItem('bleh_profile_banners')) || {};
-
-    if (banners[page.name]) {
-        if (banners[page.name] == 'none')
-            return;
-
-        register_background(banners[page.name], 'bio');
-    } else {
-        request_banner();
-    }
-}
-
-function request_banner() {
-    fetch(`${root}user/${page.name}`)
-    .then(function(response) {
-        console.log('returned', response, response.text);
-
-        return response.text();
-    })
-    .then(function(html) {
-        let doc = new DOMParser().parseFromString(html, 'text/html');
-        console.log('DOC', doc);
-
-        let about_me_sidebar = doc.querySelector('.about-me-sidebar');
-        if (about_me_sidebar) {
-            let about_me_text = about_me_sidebar.querySelector('p');
-            let result = bio_parse(about_me_text, true);
-        } else {
-            save_banner_to_cache('none');
-        }
-    });
 }
 
 
@@ -1653,4 +1603,96 @@ export function bleh_profile_chart_render(panel=page.structure.side.querySelecto
     });
 
     scrobble_canvas_container.appendChild(scrobble_canvas);
+}
+
+export function save_profile_cache({
+    banner,
+    hue,
+    sat,
+    lit
+}={},
+profile_cache=JSON.parse(localStorage.getItem('bleh_profile_cache')) || {},
+name=page.name) {
+    let profile_cache_o = Object.keys(profile_cache);
+
+    if (profile_cache_o.length > 300) {
+        // remove first item of object
+        let keys = Reflect.ownKeys(profile_cache);
+
+        if (profile_cache[keys[0]] != auth.name)
+            delete profile_cache[keys[0]];
+        else
+            delete profile_cache[keys[1]];
+
+        // them move this to the bottom
+        delete profile_cache[name];
+
+        profile_cache[name] = {
+            banner,
+            hue,
+            sat,
+            lit
+        }
+    } else {
+        profile_cache[name] = {
+            banner,
+            hue,
+            sat,
+            lit
+        }
+    }
+
+    log('saved to cache', 'profile', 'info', {name, cache: profile_cache[name]});
+    localStorage.setItem('bleh_profile_cache', JSON.stringify(profile_cache));
+}
+
+export function load_profile_cache_externally(name = page.name) {
+    if (!name) return;
+
+    let profile_cache = JSON.parse(localStorage.getItem('bleh_profile_cache')) || {};
+    return profile_cache[name] || {};
+}
+
+function load_profile_cache(name = page.name) {
+    if (!name) return;
+
+    let profile_cache = JSON.parse(localStorage.getItem('bleh_profile_cache')) || {};
+    let cache = profile_cache[name];
+
+    if (profile_cache[name]) {
+        const hue = cache.hue;
+        const sat = cache.sat;
+        const lit = cache.lit;
+        const banner = cache.banner;
+
+        if (hue) document.body.style.setProperty('--hue-album', hue);
+        if (sat) document.body.style.setProperty('--sat-album', sat);
+        if (lit) document.body.style.setProperty('--lit-album', lit);
+        if (banner) register_background(banner, 'bio');
+
+        return;
+    }
+
+    return request_profile_cache(name);
+}
+
+function request_profile_cache(name = page.name) {
+    fetch(`${root}user/${name}`)
+        .then(function (response) {
+            console.log('returned', response, response.text);
+
+            return response.text();
+        })
+        .then(function (dom) {
+            let doc = new DOMParser().parseFromString(dom, 'text/html');
+            console.log('DOC', doc);
+
+            let about_me_sidebar = doc.querySelector('.about-me-sidebar');
+            if (about_me_sidebar) {
+                let about_me_text = about_me_sidebar.querySelector('p');
+                bio_parse(about_me_text, true);
+            } else {
+                save_profile_cache({});
+            }
+        });
 }

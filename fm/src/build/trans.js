@@ -3280,6 +3280,14 @@ export const trans = {
             en: 'Add your own custom banner image to your profile with [banner=url] in your bio'
         }
     },
+    profile_accent: {
+        name: {
+            en: 'Profile accent'
+        },
+        body: {
+            en: 'Style your profile for all users who view it with [accent=h,s,l] in your bio'
+        }
+    },
     none: {
         en: 'None'
     },

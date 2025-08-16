@@ -16,7 +16,6 @@ import {news} from "./news.js";
 import {toggle_theme} from "./config.js";
 import {open_profile_shortcut_window} from "./components/profile_shortcut.js";
 import {save_setting, setting} from "./components/settings.js";
-import {load_banner} from "./components/banner.js";
 import {prompt_for_update} from "./style.js";
 import {log} from "./build/log.js";
 import {correct_artist, correct_item_by_artist} from "./components/lotus.js";
@@ -24,6 +23,7 @@ import {bleh_notification_list} from "./components/notifications.js";
 import tippy from "tippy.js";
 import { register_menu } from './components/menu.js';
 import { chart_reflow } from './chart.js';
+import { load_profile_cache_externally } from './pages/profile.js';
 
 export function patch_masthead() {
     let masthead_logo = document.body.querySelector('.masthead-logo');
@@ -508,7 +508,7 @@ export function append_nav() {
             let page_2;
             let side;
 
-            let banner = load_banner(auth.name);
+            const cache = load_profile_cache_externally(auth.name);
 
             let status_container;
 
@@ -533,8 +533,8 @@ export function append_nav() {
                             <div class="avatar">
                                 <img src="${auth.avatar.replace('avatar42s', 'avatar170s')}" alt="${auth.name}" />
                             </div>
-                            ${(banner != '') ? html.node`
-                            <div class="bg" style="background-image: url(${banner})" />
+                            ${(cache.banner != '') ? html.node`
+                            <div class="bg" style="background-image: url(${cache.banner})" />
                             ` : (!auth.avatar.endsWith('818148bf682d429dc215c1705eb27b98.png')) ? html.node`
                             <div class="bg" style="background-image: url(${auth.avatar.replace('avatar42s', 'avatar170s')})" />
                             ` : ''}

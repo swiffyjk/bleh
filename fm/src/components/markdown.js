@@ -4,7 +4,7 @@
 // Licensed under GPLv3
 //
 
-import {auth, root} from "../build/page";
+import {auth, page, root} from "../build/page";
 import {html} from "lighterhtml";
 import {patch_wiki_contents} from "../pages/wiki.js";
 import {redirect} from "./music.js";
@@ -15,6 +15,7 @@ import { tl, trans } from '../build/trans.js';
 import { dialog } from './dialog.js';
 import { settings_store } from '../build/config.js';
 import { log } from '../build/log.js';
+import { save_profile_cache } from '../pages/profile.js';
 
 export function markdown(text, {
     allow_headers = false,
@@ -23,7 +24,8 @@ export function markdown(text, {
     allow_banners = false,
     in_dialog = false,
     allow_icons = false,
-    allow_hue = false
+    allow_hue = false,
+    take_effect = true
 }={}) {
     const ALLOWED_TAGS = [
         'div', 'p', 'span', 'em', 'u', 'strong', 'a', 'ul', 'ol', 'li', 'br', 'code', 'pre', 'img', 'blockquote',
@@ -178,6 +180,25 @@ export function markdown(text, {
         local_restriction(text);
     });
 
+    let profile_cache;
+    let cache;
+
+    if (allow_banners || allow_hue) {
+        profile_cache = JSON.parse(localStorage.getItem('bleh_profile_cache')) || {};
+        cache = profile_cache[page.name] || {};
+    }
+
+    if (allow_banners) {
+        const banner = body.querySelector('img[alt="banner"]');
+
+        if (banner) {
+            const src = banner.src;
+            cache.banner = src;
+        } else {
+            delete cache.banner;
+        }
+    }
+
     // add lazy-loading to images
     body.querySelectorAll('img').forEach((image) => {
         image.setAttribute('loading', 'lazy');
@@ -193,13 +214,29 @@ export function markdown(text, {
         container.appendChild(image);
     });
 
-    if (allow_hue && hue && sat && lit) {
-        document.body.style.setProperty('--hue-album', hue);
-        document.body.style.setProperty('--sat-album', sat);
-        document.body.style.setProperty('--lit-album', lit);
+    if (allow_hue) {
+        if (hue && sat && lit) {
+            if (take_effect) {
+                document.body.style.setProperty('--hue-album', hue);
+                document.body.style.setProperty('--sat-album', sat);
+                document.body.style.setProperty('--lit-album', lit);
+            }
 
-        log('custom accent settings present', 'profile', 'info', {hue, sat, lit});
+            cache.hue = hue;
+            cache.sat = sat;
+            cache.lit = lit;
+
+            log('custom accent settings present', 'profile', 'info', {hue, sat, lit});
+        } else {
+            if (cache.hue) delete cache.hue;
+            if (cache.sat) delete cache.sat;
+            if (cache.lit) delete cache.lit;
+
+            log('cleared custom accent settings', 'profile', 'log');
+        }
     }
+
+    if (cache) save_profile_cache(cache, profile_cache);
 
     return body;
 }
