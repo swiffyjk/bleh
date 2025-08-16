@@ -285,12 +285,6 @@ export function markdown_prompt({
             string_display: '![alt text](image url here)'
         },
         {
-            name: 'Banner',
-            string: '[banner=image_url_here]',
-            hide_if: !allow_banners,
-            explain: 'Applies a custom banner to your profile, visible to all users'
-        },
-        {
             name: 'Left-alignment',
             string: '[left]text[/left]'
         },

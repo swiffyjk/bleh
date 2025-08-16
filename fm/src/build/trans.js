@@ -3289,7 +3289,7 @@ export const trans = {
             en: 'Profile accent'
         },
         body: {
-            en: 'Style your profile for all users who view it with [accent=h,s,l] in your bio'
+            en: 'Add flair to your profile visible to all users regardless of personal accent'
         }
     },
     none: {

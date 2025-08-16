@@ -30412,10 +30412,11 @@
   function compile_settings() {
     let clone6 = structuredClone(settings);
     for (let setting2 in clone6) {
-      if (settings_store[setting2] && clone6[setting2] == settings_store[setting2].default) {
+      if (settings_store[setting2] && JSON.stringify(clone6[setting2]) == JSON.stringify(settings_store[setting2].default)) {
         delete clone6[setting2];
       }
     }
+    clone6.version = version.build;
     localStorage.setItem("bleh", JSON.stringify(clone6));
     return clone6;
   }
@@ -44526,12 +44527,6 @@
         string_display: "![alt text](image url here)"
       },
       {
-        name: "Banner",
-        string: "[banner=image_url_here]",
-        hide_if: !allow_banners,
-        explain: "Applies a custom banner to your profile, visible to all users"
-      },
-      {
         name: "Left-alignment",
         string: "[left]text[/left]"
       },
@@ -55376,7 +55371,7 @@
         en: "Profile accent"
       },
       body: {
-        en: "Style your profile for all users who view it with [accent=h,s,l] in your bio"
+        en: "Add flair to your profile visible to all users regardless of personal accent"
       }
     },
     none: {

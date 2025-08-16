@@ -16,6 +16,7 @@ import {change_settings_page} from "../pages/bleh_config.js";
 import {dialog_rm} from "./dialog.js";
 import {keybind} from "./rabbit.js";
 import tippy from "tippy.js";
+import { version } from '../main.js';
 
 export function setting({
     id = '',
@@ -623,11 +624,13 @@ export function compile_settings() {
     let clone = structuredClone(settings);
 
     for (let setting in clone) {
-        if (settings_store[setting] && clone[setting] == settings_store[setting].default) {
+        if (settings_store[setting] && JSON.stringify(clone[setting]) == JSON.stringify(settings_store[setting].default)) {
             //log(`dropped ${setting} as value matches default`, 'settings', 'log', {value: clone[setting], default: settings_store[setting].default});
             delete clone[setting];
         }
     }
+
+    clone.version = version.build;
 
     localStorage.setItem('bleh', JSON.stringify(clone));
 
