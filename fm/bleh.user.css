@@ -10715,6 +10715,9 @@
                         top: 10px;
                         right: 10px;
                         z-index: 20;
+
+                        background: rgb(255, 255, 255, 40%);
+                        color: #000;
                     }
                 }
 
