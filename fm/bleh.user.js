@@ -45233,6 +45233,11 @@
             </section>
         `);
     } else if (page_id == "playback") {
+      let total_artists = 0;
+      let total_album_tracks = 0;
+      if (artist_corrections) total_artists = Object.keys(artist_corrections).length;
+      if (album_track_corrections)
+        total_album_tracks = Object.values(album_track_corrections).reduce((sum, album_tracks) => sum + Object.keys(album_tracks).length, 0);
       render(page.structure.main, html`
             <section class="bleh--panel">
                 <h4>${tl(trans.music_corrections)}</h4>
@@ -45253,13 +45258,25 @@
                     <div class="setting" data-type="info"
                         disabled=${!artist_corrections.version || !album_track_corrections.version}>
                         <div class="heading">
+                            <h5>${tl(trans.corrections_loaded)}</h5>
+                        </div>
+                        <div class="info">
+                            <p>${tl(trans.corrections_loaded_value).replace("{c1}", total_artists).replace("{c2}", total_album_tracks)}</p>
+                            <button class="see-more" onclick="_open_correction_modal()">
+                                ${tl(trans.view_all)}
+                            </button>
+                        </div>
+                    </div>
+                    <div class="setting" data-type="info"
+                        disabled=${!artist_corrections.version || !album_track_corrections.version}>
+                        <div class="heading">
                             <h5>${tl(trans.current_version)}</h5>
                         </div>
                         <div class="info">
+                            <p>${artist_corrections.version == album_track_corrections.version ? artist_corrections.version : `${artist_corrections.version}, ${album_track_corrections.version}`}</p>
                             <button class="see-more update-check" onclick="_lotus_check()">
                                 ${tl(trans.update_check)}
                             </button>
-                            <p>${artist_corrections.version == album_track_corrections.version ? artist_corrections.version : `${artist_corrections.version}, ${album_track_corrections.version}`}</p>
                         </div>
                     </div>
                     <div class="setting" data-type="info" disabled=${!artist_corrections.version || !album_track_corrections.version}>
@@ -45270,9 +45287,6 @@
                             <a class="see-more" href="https://github.com/katelyynn/lotus/issues/new/choose" target="_blank">
                                 ${tl(trans.suggest_correction)}
                             </a>
-                            <button class="see-more" onclick="_open_correction_modal()">
-                                ${tl(trans.view_all)}
-                            </button>
                         </div>
                     </div>
                 </div>
@@ -53495,6 +53509,12 @@
     music_corrections: {
       en: "Music corrections",
       pt: "Corre\xE7\xF5es de m\xFAsica"
+    },
+    corrections_loaded: {
+      en: "Corrections loaded"
+    },
+    corrections_loaded_value: {
+      en: "{c1} artists, {c2} albums and tracks"
     },
     brand_version: {
       // used for the lotus header where:

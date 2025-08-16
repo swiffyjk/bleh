@@ -1928,6 +1928,12 @@ export const trans = {
         en: 'Music corrections',
         pt: 'Correções de música'
     },
+    corrections_loaded: {
+        en: 'Corrections loaded'
+    },
+    corrections_loaded_value: {
+        en: '{c1} artists, {c2} albums and tracks'
+    },
     brand_version: {
         // used for the lotus header where:
         // brand = "lotus"
