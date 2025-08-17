@@ -24911,8 +24911,6 @@
       "- ep",
       "(lp",
       "(ep",
-      "ep",
-      // some albums just have EP on the end with no punctuation
       "- single",
       "(single",
       "- mixtape",
