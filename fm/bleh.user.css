@@ -5967,7 +5967,7 @@
             --mask-size: 12px;
             --margin-top: -6px;
             --left: 0;
-            animation: spinner 0.8s linear infinite;
+            animation: spinner 1s linear infinite;
         }
     }
     .chartlist-now-scrobbling:before,
@@ -20090,11 +20090,21 @@
             gap: 4px;
         }
 
+        & > .bleh-icon-container,
         & > .bleh-icon {
             --icon-size: 12px;
             height: var(--icon-size);
             --mask-colour: currentColor;
         }
+    }
+
+    .bleh-icon-container {
+        display: flex;
+        align-items: center;
+        height: var(--icon-size);
+    }
+    .sku > .bleh-icon-container {
+        animation: staggered_spinner 3s cubic-bezier(0.34, 1.56, 0.64, 1) infinite;
     }
 
 

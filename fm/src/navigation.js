@@ -54,7 +54,9 @@ export function update_masthead(masthead_logo = document.body.querySelector('.ma
                 <div class="new-badge sku spacing">
                     ${version.sku}
                     ${settings.dev ? html.node`
-                    <span class="bleh-icon" data-type="dev" style="--icon: var(--mask)"/>
+                    <span class="bleh-icon-container">
+                        <span class="bleh-icon" data-type="dev" style="--icon: var(--mask)"/>
+                    </span>
                     ` : ''}
                 </div>
             </a>
@@ -69,7 +71,9 @@ export function update_masthead(masthead_logo = document.body.querySelector('.ma
                 <div class="new-badge sku spacing">
                     ${version.sku}
                     ${settings.dev ? html.node`
-                    <span class="bleh-icon" data-type="dev" style="--icon: var(--mask)"/>
+                    <span class="bleh-icon-container">
+                        <span class="bleh-icon" data-type="dev" style="--icon: var(--mask)"/>
+                    </span>
                     ` : ''}
                 </div>
             </a>

@@ -48051,7 +48051,9 @@
                 <div class="new-badge sku spacing">
                     ${version.sku}
                     ${settings.dev ? html.node`
-                    <span class="bleh-icon" data-type="dev" style="--icon: var(--mask)"/>
+                    <span class="bleh-icon-container">
+                        <span class="bleh-icon" data-type="dev" style="--icon: var(--mask)"/>
+                    </span>
                     ` : ""}
                 </div>
             </a>
@@ -48066,7 +48068,9 @@
                 <div class="new-badge sku spacing">
                     ${version.sku}
                     ${settings.dev ? html.node`
-                    <span class="bleh-icon" data-type="dev" style="--icon: var(--mask)"/>
+                    <span class="bleh-icon-container">
+                        <span class="bleh-icon" data-type="dev" style="--icon: var(--mask)"/>
+                    </span>
                     ` : ""}
                 </div>
             </a>
