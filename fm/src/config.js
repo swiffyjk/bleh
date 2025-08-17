@@ -23,6 +23,8 @@ export function load_settings(skip = false) {
             if (settings[setting] == null)
                 settings[setting] = settings_store[setting].default;
         }
+
+        if (!settings.version) settings.version = 0;
     }
 
     if (!settings.theme_type) {
@@ -33,26 +35,27 @@ export function load_settings(skip = false) {
     }
 
     // migrates old season settings
-    // todo: remove soon
-    if (settings.seasonal_particles == true)
+    if (settings.version < 2025.0816) {
+        if (settings.seasonal_particles == true)
         settings.seasonal_particles = 'all';
-    else if (settings.seasonal_particles == false)
-        settings.seasonal_particles = 'none';
+        else if (settings.seasonal_particles == false)
+            settings.seasonal_particles = 'none';
 
-    if (settings.seasonal_particles_reduced == true) {
-        settings.seasonal_particles = 'less';
-        delete settings.seasonal_particles_reduced;
-    } else if (settings.seasonal_particles_reduced == false) {
-        delete settings.seasonal_particles_reduced;
+        if (settings.seasonal_particles_reduced == true) {
+            settings.seasonal_particles = 'less';
+            delete settings.seasonal_particles_reduced;
+        } else if (settings.seasonal_particles_reduced == false) {
+            delete settings.seasonal_particles_reduced;
+        }
+
+        // migrates old font settings
+        if (settings.font_weight == 480)
+            settings.font_weight = settings_store.font_weight.default;
+        if (settings.font_weight_medium == 650)
+            settings.font_weight_medium = settings_store.font_weight_medium.default;
+        if (settings.font_weight_bold == 730 || settings.font_weight_bold == 760)
+            settings.font_weight_bold = settings_store.font_weight_bold.default;
     }
-
-    // migrates old font settings
-    if (settings.font_weight == 480)
-        settings.font_weight = settings_store.font_weight.default;
-    if (settings.font_weight_medium == 650)
-        settings.font_weight_medium = settings_store.font_weight_medium.default;
-    if (settings.font_weight_bold == 730)
-        settings.font_weight_bold = settings_store.font_weight_bold.default;
 
     // save setting into body
     for (let setting in settings) {

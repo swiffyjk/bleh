@@ -1002,7 +1002,7 @@ export function keybind(list) {
 
                 return html.node`
                     <kbd>${label}</kbd>
-                    ${darwin && index < list.length - 1 ? html.node`<kbd class="kbd-sep">+</kbd>` : ''}
+                    ${!darwin && index < list.length - 1 ? html.node`<kbd class="kbd-sep">+</kbd>` : ''}
                 `;
             })}
         </div>

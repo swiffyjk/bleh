@@ -203,9 +203,9 @@
         }
 
         [data-bleh--theme_type="light"] > & {
-            --font-weight: calc(var(--custom_font_weight, 480) + 90);
-            --font-weight-medium: calc(var(--custom_font_weight_medium, 650) + 90);
-            --font-weight-bold: calc(var(--custom_font_weight_bold, 730) + 90);
+            --font-weight: calc(var(--custom_font_weight, 480) + 50);
+            --font-weight-medium: calc(var(--custom_font_weight_medium, 650) + 50);
+            --font-weight-bold: calc(var(--custom_font_weight_bold, 730) + 50);
         }
 
         [data-bleh--reduced_motion="true"] > & {
