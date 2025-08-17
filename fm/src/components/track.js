@@ -8,7 +8,7 @@ import {html, render} from "lighterhtml";
 import {settings} from "../build/config";
 import {log} from "../build/log";
 import {auth, page, root} from "../build/page";
-import {clamp_sat, return_artist_from_track, rgb_to_hsl, sanitise} from "../build/tools";
+import {clamp_sat, copy, return_artist_from_track, rgb_to_hsl, sanitise} from "../build/tools";
 import {bleh_glacier_insights} from "../pages/glacier";
 import {patch_artist_ranks_in_list_view} from "./colourful_counts";
 import {correct_artist, correct_item_by_artist, name_includes} from "./lotus";
@@ -208,6 +208,8 @@ export function patch_titles(search=page.structure.main) {
 
             let image = track.querySelector('.chartlist-image img');
 
+            const album_link = track.querySelector('.chartlist-image a');
+
             if (settings.format_guest_features) {
                 let formatted_title = name_includes(track_title.getAttribute('data-name'), track_artist);
                 console.log('formatted', formatted_title);
@@ -268,7 +270,7 @@ export function patch_titles(search=page.structure.main) {
                                         <div class="feat" data-bleh--tag-type="${tag.type}" data-bleh--tag-group="${tag.group}">${tag.text}</div>
                                     `)}
                                 </div>
-                                ${(is_album) ? '' : html.node`<p class="album">${(image) ? correct_item_by_artist(image.getAttribute('alt'), track_artist) : (album) ? album.textContent : page.name}</p>`}
+                                ${(is_album) ? '' : html.node`<p class="album">${(image && album_link) ? correct_item_by_artist(image.getAttribute('alt'), track_artist) : (album) ? album.textContent : ''}</p>`}
                                 ${(track_timestamp && track_timestamp_contents) ? html.node`<p class="timestamp">${track_timestamp_contents}</p>` : ''}
                             </div>
                         </div>
@@ -448,7 +450,7 @@ export function patch_titles(search=page.structure.main) {
                             <div class="button-combo">
                                 ${() => {
                                     return html.node`
-                                        <a class="dropdown-menu-clickable-item" data-type="track" href="${root}music/${redirect()}${sanitise(track_artist)}/_/${sanitise(track_title.getAttribute('data-name'))}">
+                                        <a class="dropdown-menu-clickable-item" data-type="track" href=${track_title.getAttribute('href')}>
                                             ${tl(trans.track)}
                                         </a>
                                     `;
@@ -456,24 +458,25 @@ export function patch_titles(search=page.structure.main) {
                                 <div class="button-combo-sep"/>
                                 ${() => {
                                     let button = html.node`
-                                        <a class="dropdown-menu-clickable-item chibi" data-type="continue" href="${root}user/${page.name}/library/music/${redirect()}${sanitise(track_artist)}/_/${sanitise(track_title.getAttribute('data-name'))}">
+                                        <a class="dropdown-menu-clickable-item chibi" data-type="continue" href="${root}user/${page.name}/library${track_title.getAttribute('href')}">
                                             ${tl(trans.explore_in_library)}
                                         </a>
                                     `;
 
                                     tippy(button, {
-                                        content: tl(trans.explore_in_library)
+                                        content: tl(trans.explore_in_library),
+                                        delay: [500, 0]
                                     });
 
                                     return button;
                                 }}
                             </div>
                             ` : ''}
-                            ${album_name ? html.node`
+                            ${album_name && album_link ? html.node`
                             <div class="button-combo">
                                 ${() => {
                                     return html.node`
-                                        <a class="dropdown-menu-clickable-item" data-type="album" href="${root}music/${redirect()}${sanitise(track_artist)}/${album_name}">
+                                        <a class="dropdown-menu-clickable-item" data-type="album" href=${album_link.getAttribute('href')}>
                                             ${tl(trans.album)}
                                         </a>
                                     `;
@@ -481,13 +484,14 @@ export function patch_titles(search=page.structure.main) {
                                 <div class="button-combo-sep"/>
                                 ${() => {
                                     let button = html.node`
-                                        <a class="dropdown-menu-clickable-item chibi" data-type="continue" href="${root}user/${page.name}/library/music/${redirect()}${sanitise(track_artist)}/${album_name}">
+                                        <a class="dropdown-menu-clickable-item chibi" data-type="continue" href="${root}user/${page.name}/library${album_link.getAttribute('href')}">
                                             ${tl(trans.explore_in_library)}
                                         </a>
                                     `;
 
                                     tippy(button, {
-                                        content: tl(trans.explore_in_library)
+                                        content: tl(trans.explore_in_library),
+                                        delay: [500, 0]
                                     });
 
                                     return button;
@@ -497,7 +501,7 @@ export function patch_titles(search=page.structure.main) {
                             <div class="button-combo">
                                 ${() => {
                                     return html.node`
-                                        <a class="dropdown-menu-clickable-item" data-type="album" href="${root}music/${redirect()}${sanitise(track_artist)}/${sanitise(track_title.getAttribute('data-name'))}">
+                                        <a class="dropdown-menu-clickable-item" data-type="album" href=${track_title.getAttribute('href')}>
                                             ${tl(trans.album)}
                                         </a>
                                     `;
@@ -505,13 +509,14 @@ export function patch_titles(search=page.structure.main) {
                                 <div class="button-combo-sep"/>
                                 ${() => {
                                     let button = html.node`
-                                        <a class="dropdown-menu-clickable-item chibi" data-type="continue" href="${root}user/${page.name}/library/music/${redirect()}${sanitise(track_artist)}/${sanitise(track_title.getAttribute('data-name'))}">
+                                        <a class="dropdown-menu-clickable-item chibi" data-type="continue" href="${root}user/${page.name}/library${track_title.getAttribute('href')})}">
                                             ${tl(trans.explore_in_library)}
                                         </a>
                                     `;
 
                                     tippy(button, {
-                                        content: tl(trans.explore_in_library)
+                                        content: tl(trans.explore_in_library),
+                                        delay: [500, 0]
                                     });
 
                                     return button;
@@ -535,7 +540,8 @@ export function patch_titles(search=page.structure.main) {
                                     `;
 
                                     tippy(button, {
-                                        content: tl(trans.explore_in_library)
+                                        content: tl(trans.explore_in_library),
+                                        delay: [500, 0]
                                     });
 
                                     return button;
@@ -564,6 +570,11 @@ export function patch_titles(search=page.structure.main) {
                                     </form>
                                 `;
                             }}
+                            <button class="dropdown-menu-clickable-item" data-type="link" onclick=${() => {
+                                copy(track_title.href);
+                            }}>
+                                ${tl(trans.copy)}
+                            </button>
                             ${() => {
                                 if (!is_own_profile || !can_delete) return;
 

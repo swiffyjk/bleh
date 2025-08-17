@@ -9451,6 +9451,9 @@
     [data-type="obsession"] {
         --mask: var(--icon-16-obsession);
     }
+    [data-type="link"] {
+        --mask: var(--icon-16-link);
+    }
     [data-type="support"] {
         --mask: var(--icon-16-support);
     }
@@ -9669,8 +9672,14 @@
         min-width: 170px !important;
         --show-icon: block;
 
+        --button-height: 30px;
+        --btn-top: 6px;
+        --btn-bottom: 6px;
+
         --left: var(--button-sides);
         --right: none;
+
+        --icon-size: 16px;
 
         &[aria-checked="true"], &[aria-selected="true"],
         .date-range-picker-preset--selected > &,
@@ -24111,8 +24120,8 @@
             flex-shrink: 0;
 
             .inner-image {
-                width: 60px;
-                height: 60px;
+                width: 50px;
+                height: 50px;
                 background: hsl(var(--b5));
                 box-shadow: var(--card-shadow);
                 border-radius: var(--item-med-radius);
@@ -24126,9 +24135,21 @@
         .info {
             display: flex;
             flex-direction: column;
-            gap: 2px;
             flex: 1;
-            line-height: var(--line-height);
+            font-size: calc(var(--font-size) - 1px);
+            line-height: calc(var(--line-height) - 1px);
+
+            & > p {
+                cursor: default;
+                margin: unset;
+            }
+
+            & > h5, & > p {
+                max-width: 180px;
+                white-space: nowrap;
+                overflow: hidden;
+                text-overflow: ellipsis;
+            }
 
             .title {
                 color: hsl(var(--c2));
@@ -24137,32 +24158,15 @@
             }
             .artist {
                 color: hsla(var(--c2), 80%);
-                cursor: default;
-
-                a {
-                    color: inherit;
-
-                    & + a {
-                        margin-left: 4px;
-                    }
-                }
             }
             .tags {
                 color: hsla(var(--c2), 70%);
-                cursor: default;
             }
             .album {
-                display: flex;
-                font-size: calc(var(--font-size) - 1px);
                 color: hsl(var(--c3));
-                margin: unset;
-                cursor: default;
             }
             .timestamp {
-                font-size: calc(var(--font-size) - 1px);
                 color: hsl(var(--c3));
-                margin: unset;
-                cursor: default;
             }
         }
 

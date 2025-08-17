@@ -27292,6 +27292,7 @@
         if (!is_album && album)
           album.textContent = correct_item_by_artist(album.textContent, track_artist);
         let image = track.querySelector(".chartlist-image img");
+        const album_link = track.querySelector(".chartlist-image a");
         if (settings.format_guest_features) {
           let formatted_title = name_includes(track_title.getAttribute("data-name"), track_artist);
           console.log("formatted", formatted_title);
@@ -27341,7 +27342,7 @@
                                         <div class="feat" data-bleh--tag-type="${tag.type}" data-bleh--tag-group="${tag.group}">${tag.text}</div>
                                     `)}
                                 </div>
-                                ${is_album ? "" : html.node`<p class="album">${image ? correct_item_by_artist(image.getAttribute("alt"), track_artist) : album ? album.textContent : page.name}</p>`}
+                                ${is_album ? "" : html.node`<p class="album">${image && album_link ? correct_item_by_artist(image.getAttribute("alt"), track_artist) : album ? album.textContent : ""}</p>`}
                                 ${track_timestamp && track_timestamp_contents ? html.node`<p class="timestamp">${track_timestamp_contents}</p>` : ""}
                             </div>
                         </div>
@@ -27494,7 +27495,7 @@
                             <div class="button-combo">
                                 ${() => {
                 return html.node`
-                                        <a class="dropdown-menu-clickable-item" data-type="track" href="${root}music/${redirect()}${sanitise(track_artist)}/_/${sanitise(track_title.getAttribute("data-name"))}">
+                                        <a class="dropdown-menu-clickable-item" data-type="track" href=${track_title.getAttribute("href")}>
                                             ${tl(trans.track)}
                                         </a>
                                     `;
@@ -27502,22 +27503,23 @@
                                 <div class="button-combo-sep"/>
                                 ${() => {
                 let button = html.node`
-                                        <a class="dropdown-menu-clickable-item chibi" data-type="continue" href="${root}user/${page.name}/library/music/${redirect()}${sanitise(track_artist)}/_/${sanitise(track_title.getAttribute("data-name"))}">
+                                        <a class="dropdown-menu-clickable-item chibi" data-type="continue" href="${root}user/${page.name}/library${track_title.getAttribute("href")}">
                                             ${tl(trans.explore_in_library)}
                                         </a>
                                     `;
                 tippy_esm_default(button, {
-                  content: tl(trans.explore_in_library)
+                  content: tl(trans.explore_in_library),
+                  delay: [500, 0]
                 });
                 return button;
               }}
                             </div>
                             ` : ""}
-                            ${album_name ? html.node`
+                            ${album_name && album_link ? html.node`
                             <div class="button-combo">
                                 ${() => {
                 return html.node`
-                                        <a class="dropdown-menu-clickable-item" data-type="album" href="${root}music/${redirect()}${sanitise(track_artist)}/${album_name}">
+                                        <a class="dropdown-menu-clickable-item" data-type="album" href=${album_link.getAttribute("href")}>
                                             ${tl(trans.album)}
                                         </a>
                                     `;
@@ -27525,12 +27527,13 @@
                                 <div class="button-combo-sep"/>
                                 ${() => {
                 let button = html.node`
-                                        <a class="dropdown-menu-clickable-item chibi" data-type="continue" href="${root}user/${page.name}/library/music/${redirect()}${sanitise(track_artist)}/${album_name}">
+                                        <a class="dropdown-menu-clickable-item chibi" data-type="continue" href="${root}user/${page.name}/library${album_link.getAttribute("href")}">
                                             ${tl(trans.explore_in_library)}
                                         </a>
                                     `;
                 tippy_esm_default(button, {
-                  content: tl(trans.explore_in_library)
+                  content: tl(trans.explore_in_library),
+                  delay: [500, 0]
                 });
                 return button;
               }}
@@ -27539,7 +27542,7 @@
                             <div class="button-combo">
                                 ${() => {
                 return html.node`
-                                        <a class="dropdown-menu-clickable-item" data-type="album" href="${root}music/${redirect()}${sanitise(track_artist)}/${sanitise(track_title.getAttribute("data-name"))}">
+                                        <a class="dropdown-menu-clickable-item" data-type="album" href=${track_title.getAttribute("href")}>
                                             ${tl(trans.album)}
                                         </a>
                                     `;
@@ -27547,12 +27550,13 @@
                                 <div class="button-combo-sep"/>
                                 ${() => {
                 let button = html.node`
-                                        <a class="dropdown-menu-clickable-item chibi" data-type="continue" href="${root}user/${page.name}/library/music/${redirect()}${sanitise(track_artist)}/${sanitise(track_title.getAttribute("data-name"))}">
+                                        <a class="dropdown-menu-clickable-item chibi" data-type="continue" href="${root}user/${page.name}/library${track_title.getAttribute("href")})}">
                                             ${tl(trans.explore_in_library)}
                                         </a>
                                     `;
                 tippy_esm_default(button, {
-                  content: tl(trans.explore_in_library)
+                  content: tl(trans.explore_in_library),
+                  delay: [500, 0]
                 });
                 return button;
               }}
@@ -27574,7 +27578,8 @@
                                         </a>
                                     `;
                 tippy_esm_default(button, {
-                  content: tl(trans.explore_in_library)
+                  content: tl(trans.explore_in_library),
+                  delay: [500, 0]
                 });
                 return button;
               }}
@@ -27598,6 +27603,11 @@
                                     </form>
                                 `;
               }}
+                            <button class="dropdown-menu-clickable-item" data-type="link" onclick=${() => {
+                copy(track_title.href);
+              }}>
+                                ${tl(trans.copy)}
+                            </button>
                             ${() => {
                 if (!is_own_profile || !can_delete) return;
                 let button = html.node`
@@ -48424,7 +48434,7 @@
         let length = current.length;
         if (length < 2) length = 2;
         const show_language = settings.navigation_language == true ? 1 : 0;
-        const height = (length + 3 + show_language) * 32;
+        const height = (length + 3 + show_language) * 30;
         const themes_disabled = page.subpage.startsWith("listening-report");
         instance.setContent(html.node`
                 <div class="auth-menu-v2" style="--page-height: ${height}px">
