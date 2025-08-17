@@ -25001,9 +25001,6 @@
       "[tour",
       "music from and inspired by",
       // on the end of black panther the album
-      "- magic city edition",
-      "(magic city edition",
-      "[magic city edition",
       "- music inspired",
       "(music inspired",
       "[music inspired",
