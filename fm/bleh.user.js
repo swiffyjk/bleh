@@ -32770,6 +32770,7 @@
     page.structure.main.removeChild(page.structure.main.querySelector("#update-profile"));
     update_about();
     function update_about() {
+      log("re-rendering", "about", "log");
       let value = about.value;
       chars.textContent = tl(trans.value_characters_max).replace("{v}", `${value.length}/500`);
       chars.setAttribute("data-exceeded", value.length >= 500);
@@ -32801,16 +32802,18 @@
         return banner_image;
       }}
         `);
-      const accent_regex = /\[accent=([0-9]{1,3}),([0-9]?\.?[0-9]+),([0-9]?\.?[0-9]+)\]/;
+      const accent_regex = /\[accent=([0-9]{1,3}),([0-9]*\.?[0-9]+),([0-9]*\.?[0-9]+)\]/;
+      console.info("cache update", about.value, cache2.hue, cache2.sat, cache2.lit);
+      let edit;
       render(accent_setting2, html`
             <div class="heading">
-                <h5>${tl(trans.profile_accent.name)}</h5>
+                <h5>${tl(trans.profile_accent.name)}<span class="new-badge beta">${tl(trans.new)}</span></h5>
                 <p>${tl(trans.profile_accent.body)}</p>
             </div>
             <div class="info">
                 <div class="colour-tile colourful" style="--hue-over: ${cache2.hue}; --sat-over: ${cache2.sat}; --lit-over: ${cache2.lit}" />
                 <div class="swatch-group palette">
-                    <button class="swatch-container" onclick=${() => {
+                    <button class="swatch-container" ref=${(el) => edit = el} onclick=${() => {
         let hue_range;
         let sat_range;
         let lit_range;
@@ -32830,7 +32833,7 @@
           title: tl(trans.profile_accent.name),
           body: html.node`
                                 <div class="setting-group">
-                                    <div class="setting" data-type="info" ref=${(el) => accent_setting2 = el}>
+                                    <div class="setting" data-type="info">
                                         <div class="heading">
                                             <h5>${tl(trans.preview)}</h5>
                                         </div>
@@ -32881,6 +32884,7 @@
                 about.value = trimmed + "\n\n" + new_accent;
               }
             }
+            about.dispatchEvent(new InputEvent("input", { bubbles: true, cancelable: true }));
             dialog_rm({ id: "profile_accent" });
           }}>
                                         ${tl(trans.change)}
@@ -32897,6 +32901,9 @@
                 </div>
             </div>
         `);
+      tippy_esm_default(edit, {
+        content: tl(trans.edit)
+      });
     }
     update_display_name(form_display_name);
   }
@@ -44301,6 +44308,7 @@
     allow_hue = false,
     take_effect = true
   } = {}) {
+    log("rendering", "markdown", "log", { text: text3 });
     const ALLOWED_TAGS = [
       "div",
       "p",
@@ -44377,7 +44385,7 @@
     }];
     const accent = () => [{
       type: "lang",
-      regex: /\[accent=([0-9]{1,3}),([0-9]?\.?[0-9]+),([0-9]?\.?[0-9]+)\]/g,
+      regex: /\[accent=([0-9]{1,3}),([0-9]*\.?[0-9]+),([0-9]*\.?[0-9]+)\]/,
       replace: (_, h, s2, l2) => {
         hue2 = Math.min(settings_store.hue.max, Math.max(settings_store.hue.min, parseInt(h, 10)));
         sat = Math.min(settings_store.sat.max, Math.max(settings_store.sat.min, parseFloat(s2)));
@@ -44464,7 +44472,8 @@
       container.appendChild(image);
     });
     if (allow_hue) {
-      if (hue2 && sat && lit) {
+      console.info(hue2, sat, lit);
+      if (hue2 !== void 0 && sat !== void 0 && lit !== void 0) {
         if (take_effect) {
           document.body.style.setProperty("--hue-album", hue2);
           document.body.style.setProperty("--sat-album", sat);
@@ -46101,7 +46110,7 @@
                     </div>
                     <div class="setting" data-type="info" ref=${(el) => accent_setting = el}>
                         <div class="heading">
-                            <h5>${tl(trans.profile_accent.name)}</h5>
+                            <h5>${tl(trans.profile_accent.name)}<span class="new-badge beta">${tl(trans.new)}</span></h5>
                             <p>${tl(trans.profile_accent.body)}</p>
                         </div>
                         <div class="info">

@@ -19,6 +19,7 @@ import { save_setting, setting } from '../components/settings';
 import { settings, settings_store } from '../build/config';
 import { input } from '../components/input';
 import { hex_to_hsl } from '../build/tools';
+import { log } from '../build/log';
 
 let cropper;
 
@@ -577,6 +578,8 @@ function patch_settings_profile_panel(token, update_picture) {
     update_about();
 
     function update_about() {
+        log('re-rendering', 'about', 'log');
+
         let value = about.value;
         chars.textContent = tl(trans.value_characters_max).replace('{v}', `${value.length}/500`);
         chars.setAttribute('data-exceeded', value.length >= 500);
@@ -616,17 +619,20 @@ function patch_settings_profile_panel(token, update_picture) {
             }}
         `);
 
-        const accent_regex = /\[accent=([0-9]{1,3}),([0-9]?\.?[0-9]+),([0-9]?\.?[0-9]+)\]/;
+        const accent_regex = /\[accent=([0-9]{1,3}),([0-9]*\.?[0-9]+),([0-9]*\.?[0-9]+)\]/;
 
+        console.info('cache update', about.value, cache.hue, cache.sat, cache.lit);
+
+        let edit;
         render(accent_setting, html`
             <div class="heading">
-                <h5>${tl(trans.profile_accent.name)}</h5>
+                <h5>${tl(trans.profile_accent.name)}<span class="new-badge beta">${tl(trans.new)}</span></h5>
                 <p>${tl(trans.profile_accent.body)}</p>
             </div>
             <div class="info">
                 <div class="colour-tile colourful" style="--hue-over: ${cache.hue}; --sat-over: ${cache.sat}; --lit-over: ${cache.lit}" />
                 <div class="swatch-group palette">
-                    <button class="swatch-container" onclick=${() => {
+                    <button class="swatch-container" ref=${el => edit = el} onclick=${() => {
                         let hue_range;
                         let sat_range;
                         let lit_range;
@@ -651,7 +657,7 @@ function patch_settings_profile_panel(token, update_picture) {
                             title: tl(trans.profile_accent.name),
                             body: html.node`
                                 <div class="setting-group">
-                                    <div class="setting" data-type="info" ref=${el => accent_setting = el}>
+                                    <div class="setting" data-type="info">
                                         <div class="heading">
                                             <h5>${tl(trans.preview)}</h5>
                                         </div>
@@ -706,6 +712,8 @@ function patch_settings_profile_panel(token, update_picture) {
                                             }
                                         }
 
+                                        about.dispatchEvent(new InputEvent('input', {bubbles: true, cancelable: true}));
+
                                         dialog_rm({id: 'profile_accent'});
                                     }}>
                                         ${tl(trans.change)}
@@ -723,6 +731,10 @@ function patch_settings_profile_panel(token, update_picture) {
                 </div>
             </div>
         `);
+
+        tippy(edit, {
+            content: tl(trans.edit)
+        });
     }
 
     // subtitle

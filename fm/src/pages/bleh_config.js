@@ -1160,7 +1160,7 @@ export function render_setting_page(page_id) {
                     </div>
                     <div class="setting" data-type="info" ref=${el => accent_setting = el}>
                         <div class="heading">
-                            <h5>${tl(trans.profile_accent.name)}</h5>
+                            <h5>${tl(trans.profile_accent.name)}<span class="new-badge beta">${tl(trans.new)}</span></h5>
                             <p>${tl(trans.profile_accent.body)}</p>
                         </div>
                         <div class="info">

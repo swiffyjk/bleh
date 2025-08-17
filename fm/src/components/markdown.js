@@ -29,6 +29,8 @@ export function markdown(text, {
     allow_hue = false,
     take_effect = true
 }={}) {
+    log('rendering', 'markdown', 'log', {text});
+
     const ALLOWED_TAGS = [
         'div', 'p', 'span', 'em', 'u', 'strong', 'a', 'ul', 'ol', 'li', 'br', 'code', 'pre', 'img', 'blockquote',
         'h1', 'h2', 'h3', 'h4', 'h5'
@@ -97,7 +99,7 @@ export function markdown(text, {
     // sets a profile's hsl values
     const accent = () => [{
         type: 'lang',
-        regex: /\[accent=([0-9]{1,3}),([0-9]?\.?[0-9]+),([0-9]?\.?[0-9]+)\]/g,
+        regex: /\[accent=([0-9]{1,3}),([0-9]*\.?[0-9]+),([0-9]*\.?[0-9]+)\]/,
         replace: (_, h, s, l) => {
             hue = Math.min(settings_store.hue.max, Math.max(settings_store.hue.min, parseInt(h, 10)));
             sat = Math.min(settings_store.sat.max, Math.max(settings_store.sat.min, parseFloat(s)));
@@ -217,7 +219,9 @@ export function markdown(text, {
     });
 
     if (allow_hue) {
-        if (hue && sat && lit) {
+        console.info(hue, sat, lit);
+
+        if (hue !== undefined && sat !== undefined && lit !== undefined) {
             if (take_effect) {
                 document.body.style.setProperty('--hue-album', hue);
                 document.body.style.setProperty('--sat-album', sat);
