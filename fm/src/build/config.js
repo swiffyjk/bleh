@@ -845,7 +845,7 @@ export let settings_store = {
     },
     font_weight_bold: {
         css: 'custom_font_weight_bold',
-        default: 760,
+        default: 680,
         min: 500,
         max: 900,
         step: 10,

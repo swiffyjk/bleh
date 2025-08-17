@@ -377,13 +377,19 @@ function load_page() {
 
     let masthead = document.body.querySelector('.masthead');
     window.addEventListener('scroll', (e) => {
-        let scroll = window.scrollY;
+        detect_scroll();
+    });
+
+    detect_scroll();
+
+    function detect_scroll() {
+        const scroll = window.scrollY;
 
         if (scroll > 30)
             masthead.classList.add('scrolled');
         else
             masthead.classList.remove('scrolled');
-    });
+    }
 
     detect_mobile();
     page.platform = detect_platform();

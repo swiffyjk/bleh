@@ -1,7 +1,7 @@
 // ==UserScript==
 // @name         bleh
 // @namespace    https://last.fm/
-// @version      2025.0815
+// @version      2025.0816
 // @description  bleh!!! ^-^
 // @author       kate
 // @match        https://www.last.fm/*
@@ -29878,7 +29878,7 @@
       const label = darwin ? key : keymap[key] || key;
       return html.node`
                     <kbd>${label}</kbd>
-                    ${darwin && index3 < list.length - 1 ? html.node`<kbd class="kbd-sep">+</kbd>` : ""}
+                    ${!darwin && index3 < list.length - 1 ? html.node`<kbd class="kbd-sep">+</kbd>` : ""}
                 `;
     })}
         </div>
@@ -30424,6 +30424,7 @@
         if (settings[setting2] == null)
           settings[setting2] = settings_store[setting2].default;
       }
+      if (!settings.version) settings.version = 0;
     }
     if (!settings.theme_type) {
       if (settings.theme == "light" || settings.theme == "ink")
@@ -30431,22 +30432,24 @@
       else
         settings.theme_type = "dark";
     }
-    if (settings.seasonal_particles == true)
-      settings.seasonal_particles = "all";
-    else if (settings.seasonal_particles == false)
-      settings.seasonal_particles = "none";
-    if (settings.seasonal_particles_reduced == true) {
-      settings.seasonal_particles = "less";
-      delete settings.seasonal_particles_reduced;
-    } else if (settings.seasonal_particles_reduced == false) {
-      delete settings.seasonal_particles_reduced;
+    if (settings.version < 2025.0816) {
+      if (settings.seasonal_particles == true)
+        settings.seasonal_particles = "all";
+      else if (settings.seasonal_particles == false)
+        settings.seasonal_particles = "none";
+      if (settings.seasonal_particles_reduced == true) {
+        settings.seasonal_particles = "less";
+        delete settings.seasonal_particles_reduced;
+      } else if (settings.seasonal_particles_reduced == false) {
+        delete settings.seasonal_particles_reduced;
+      }
+      if (settings.font_weight == 480)
+        settings.font_weight = settings_store.font_weight.default;
+      if (settings.font_weight_medium == 650)
+        settings.font_weight_medium = settings_store.font_weight_medium.default;
+      if (settings.font_weight_bold == 730 || settings.font_weight_bold == 760)
+        settings.font_weight_bold = settings_store.font_weight_bold.default;
     }
-    if (settings.font_weight == 480)
-      settings.font_weight = settings_store.font_weight.default;
-    if (settings.font_weight_medium == 650)
-      settings.font_weight_medium = settings_store.font_weight_medium.default;
-    if (settings.font_weight_bold == 730)
-      settings.font_weight_bold = settings_store.font_weight_bold.default;
     for (let setting2 in settings) {
       if ((setting2 == "hue" || setting2 == "sat" || setting2 == "lit") && settings.hue == settings_store.hue.default && settings.sat == settings_store.sat.default && settings.lit == settings_store.lit.default) continue;
       if (settings_store[setting2] && settings_store[setting2].css) document.body.style.setProperty(`--${settings_store[setting2].css}`, `${settings[setting2]}${settings_store[setting2].suffix || ""}`);
@@ -51759,12 +51762,16 @@
     bleh_footer();
     let masthead = document.body.querySelector(".masthead");
     window.addEventListener("scroll", (e) => {
-      let scroll = window.scrollY;
+      detect_scroll();
+    });
+    detect_scroll();
+    function detect_scroll() {
+      const scroll = window.scrollY;
       if (scroll > 30)
         masthead.classList.add("scrolled");
       else
         masthead.classList.remove("scrolled");
-    });
+    }
     detect_mobile();
     page.platform = detect_platform();
     if (window.location.pathname.startsWith(setup_url.replace("{root}", root))) {
@@ -59512,7 +59519,7 @@
     },
     font_weight_bold: {
       css: "custom_font_weight_bold",
-      default: 760,
+      default: 680,
       min: 500,
       max: 900,
       step: 10,
