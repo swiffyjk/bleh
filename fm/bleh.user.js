@@ -29992,6 +29992,7 @@
         let step = settings_store[id].step || 0;
         if (min2 >= max2 || step === 0)
           return setting_fail(id, { message: "A range type requires a min, max, and step defined in the settings store" });
+        let reset_btn;
         let track;
         let input2;
         let marker;
@@ -30000,7 +30001,7 @@
                 <div class="setting v2 ${standalone ? "standalone" : ""} ${settings_store[id].vertical ? "v" : ""}" data-type="range" disabled=${disabled} ref=${(el) => option = el} data-modified=${value != settings_store[id].default}>
                     ${text3 ? html.node`
                     <div class="heading">
-                        <h5>${html_title}<button class="reset see-more" onclick=${() => reset_range()}>${tl(trans.reset)}</button></h5>
+                        <h5>${html_title}<button class="reset" ref=${(el) => reset_btn = el} onclick=${() => reset_range()}>${tl(trans.reset)}</button></h5>
                         ${body ? html.node`<p>${body}</p>` : ""}
                     </div>
                     ` : ""}
@@ -30030,6 +30031,9 @@
                     </div>
                 </div>
             `;
+        tippy_esm_default(reset_btn, {
+          content: tl(trans.reset)
+        });
         elem.set = (val) => {
           update_range(val);
         };
@@ -30058,7 +30062,7 @@
                     ` : ""}
                     ${text3 ? html.node`
                     <div class="heading">
-                        <h5>${html_title}<button class="reset see-more" ref=${(el) => reset_btn = el} onclick=${() => reset_text(id, input2, submit, option, reset_btn, avatar3)}>${tl(trans.reset)}</button></h5>
+                        <h5>${html_title}<button class="reset" ref=${(el) => reset_btn = el} onclick=${() => reset_text(id, input2, submit, option, reset_btn, avatar3)}>${tl(trans.reset)}</button></h5>
                         ${body ? html.node`<p>${body}</p>` : ""}
                     </div>
                     ` : ""}
@@ -30096,6 +30100,9 @@
             event3.preventDefault();
             submit.click();
           }
+        });
+        tippy_esm_default(reset_btn, {
+          content: tl(trans.reset)
         });
         tippy_esm_default(submit, {
           content: tl(trans.save)
@@ -30190,10 +30197,27 @@
             `;
         return tabs;
       } else if (type == "radio") {
+        let update_radio = function(val) {
+          save_setting(id, val);
+          elem.setAttribute("data-modified", val != settings_store[id].default);
+          buttons.forEach((btn) => {
+            btn.setAttribute("aria-checked", btn.getAttribute("data-value") == val);
+          });
+          if (func) func(val);
+        }, reset_radio = function() {
+          update_radio(settings_store[id].default);
+          notify({
+            id: "reset_setting",
+            title: tl(trans.settings),
+            body: tl(trans.reset_item_to_default),
+            icon: "icon-16-settings"
+          });
+        };
         if (func) func(value);
         let buttons = [];
+        let reset_btn;
         const elem = html.node`
-                <div class="setting v2" data-type="options" disabled=${disabled}>
+                <div class="setting v2" data-type="options" disabled=${disabled} data-modified=${value != settings_store[id].default}>
                     ${icon ? html.node`
                     <div class="icon">
                         <div class="bleh-icon" style="--icon: var(--${icon})" />
@@ -30201,7 +30225,7 @@
                     ` : ""}
                     ${text3 ? html.node`
                     <div class="heading">
-                        <h5>${html_title}</h5>
+                        <h5>${html_title}<button class="reset" ref=${(el) => reset_btn = el} onclick=${() => reset_radio()}>${tl(trans.reset)}</button></h5>
                         ${body ? html.node`<p>${body}</p>` : ""}
                     </div>
                     ` : ""}
@@ -30226,11 +30250,7 @@
           const icon2 = val.icon || key;
           const button = html.node`
                                 <button class="btn primary-selection no-icon" data-type=${icon2} data-value=${key} onclick=${() => {
-            save_setting(id, key);
-            buttons.forEach((btn) => {
-              btn.setAttribute("aria-checked", btn.getAttribute("data-value") == key);
-            });
-            if (func) func(key);
+            update_radio(key);
           }} aria-checked=${value == key}>
                                     <h5>${typeof val.name === "object" ? tl(val.name) : val.name}</h5>
                                 </button>
@@ -30241,6 +30261,9 @@
                     </div>
                 </div>
             `;
+        tippy_esm_default(reset_btn, {
+          content: tl(trans.reset)
+        });
         return elem;
       } else if (type == "list") {
         let render_list_items = function(current = settings[id]) {
