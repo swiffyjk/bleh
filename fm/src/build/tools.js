@@ -132,9 +132,8 @@ export function clean_number(string) {
  * @see desanitise
  */
 export function sanitise(text, method='+') {
-    return encodeURI(text
-    .replaceAll(' ', method)
-    .replaceAll('/', '%2F'));
+    return encodeURIComponent(text
+    .replaceAll(' ', method));
 }
 
 /**
@@ -159,9 +158,8 @@ export function sanitise_text(text) {
  * @see sanitise
  */
 export function desanitise(text, method='+') {
-    return decodeURI(text
-    .replaceAll(method, ' ')
-    .replaceAll('%2F', '/'));
+    return decodeURIComponent(text
+    .replaceAll(method, ' '));
 }
 
 
@@ -176,10 +174,18 @@ export function return_artist_from_track(url, is_album) {
     let split = url.split('/');
     let length = (split.length - 1);
 
+    let desanitised;
+
     if (is_album)
-        return desanitise(split[length - 1]);
+        desanitised = desanitise(split[length - 1]);
     else
-        return desanitise(split[length - 2]);
+        desanitised = desanitise(split[length - 2]);
+
+    // for some reason last.fm double-encodes urls sometimes,
+    // leading to the % being encoded as %25 (very stupid)
+    if (/%[0-9A-Fa-f]{2}/.test(desanitised)) return desanitise(desanitised);
+
+    return desanitised;
 }
 
 /**

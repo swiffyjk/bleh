@@ -24366,21 +24366,24 @@
     );
   }
   function sanitise(text3, method = "+") {
-    return encodeURI(text3.replaceAll(" ", method).replaceAll("/", "%2F"));
+    return encodeURIComponent(text3.replaceAll(" ", method));
   }
   function sanitise_text(text3) {
     return text3.replace(/&/g, "&amp;").replace(/</g, "&lt;").replace(/>/g, "&gt;").replace(/"/g, "&quot;").replace(/'/g, "&#039;");
   }
   function desanitise(text3, method = "+") {
-    return decodeURI(text3.replaceAll(method, " ").replaceAll("%2F", "/"));
+    return decodeURIComponent(text3.replaceAll(method, " "));
   }
   function return_artist_from_track(url, is_album) {
     let split = url.split("/");
     let length = split.length - 1;
+    let desanitised;
     if (is_album)
-      return desanitise(split[length - 1]);
+      desanitised = desanitise(split[length - 1]);
     else
-      return desanitise(split[length - 2]);
+      desanitised = desanitise(split[length - 2]);
+    if (/%[0-9A-Fa-f]{2}/.test(desanitised)) return desanitise(desanitised);
+    return desanitised;
   }
   function return_artist_from_generic(url) {
     let split = url.split("/");
