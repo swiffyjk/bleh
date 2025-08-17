@@ -8225,6 +8225,7 @@
     span.bleh-icon {
         display: inline-block;
         height: 100%;
+        min-height: var(--icon-size);
     }
 
 

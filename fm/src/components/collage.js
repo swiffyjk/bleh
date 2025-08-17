@@ -5,7 +5,7 @@ import {setting} from "./settings.js";
 import {input} from "./input.js";
 import {auth, page, root} from "../build/page.js";
 import {notify, notify_rm} from "./notify.js";
-import {clean_number, sanitise} from "../build/tools.js";
+import {clean_number, pad2, sanitise} from "../build/tools.js";
 import {log} from "../build/log.js";
 import {music_grids} from "./music_grid.js";
 import {settings} from "../build/config.js";
@@ -475,12 +475,15 @@ export function collage({
             canvas.toBlob(blob => {
                 const blob_url = URL.createObjectURL(blob);
 
+                const date = Date.now();
+
                 const filename = tl(trans.chart_template_filename)
                     .replace('{timeframe}', timeframe.querySelector('button').textContent)
                     .replace('{user}', page.name)
                     .replace('{type}', tl(trans[type_select.value]))
-                    .replace('{size}', `${width_input.value}x${height_input.value}`)
-                    .replace('{brand}', version.brand);
+                    .replace('{size}', `${width_input.value}×${height_input.value}`)
+                    .replace('{brand}', version.brand)
+                    .replace('{date}', `${date.getFullYear()}-${pad2(date.getMonth() + 1)}-${pad2(date.getDate())}`);
 
                 render(body, html`
                     <div class="collage-finished">

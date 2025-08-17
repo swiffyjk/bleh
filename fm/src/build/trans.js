@@ -2862,8 +2862,8 @@ export const trans = {
         pt: 'Isso requer carregar {c} páginas'
     },
     chart_template_filename: {
-        en: '{user} Collage ({timeframe}, Top {type}, {size}) - {brand}',
-        pt: '{user} Colagem ({timeframe}, Top {type}, {size}) - {brand}'
+        en: '{user} Collage ({timeframe}, Top {type}, {size}) - {brand} {date}',
+        pt: '{user} Colagem ({timeframe}, Top {type}, {size}) - {brand} {date}'
     },
     waiting_for_images: {
         en: 'Waiting for images',

@@ -28177,7 +28177,8 @@
       }).then((canvas) => {
         canvas.toBlob((blob) => {
           const blob_url = URL.createObjectURL(blob);
-          const filename = tl(trans.chart_template_filename).replace("{timeframe}", timeframe.querySelector("button").textContent).replace("{user}", page.name).replace("{type}", tl(trans[type_select.value])).replace("{size}", `${width_input.value}x${height_input.value}`).replace("{brand}", version.brand);
+          const date = Date.now();
+          const filename = tl(trans.chart_template_filename).replace("{timeframe}", timeframe.querySelector("button").textContent).replace("{user}", page.name).replace("{type}", tl(trans[type_select.value])).replace("{size}", `${width_input.value}\xD7${height_input.value}`).replace("{brand}", version.brand).replace("{date}", `${date.getFullYear()}-${pad2(date.getMonth() + 1)}-${pad2(date.getDate())}`);
           render(body, html`
                     <div class="collage-finished">
                         <strong>${tl(trans.your_collage_is_ready)}</strong>
@@ -54922,8 +54923,8 @@
       pt: "Isso requer carregar {c} p\xE1ginas"
     },
     chart_template_filename: {
-      en: "{user} Collage ({timeframe}, Top {type}, {size}) - {brand}",
-      pt: "{user} Colagem ({timeframe}, Top {type}, {size}) - {brand}"
+      en: "{user} Collage ({timeframe}, Top {type}, {size}) - {brand} {date}",
+      pt: "{user} Colagem ({timeframe}, Top {type}, {size}) - {brand} {date}"
     },
     waiting_for_images: {
       en: "Waiting for images",
