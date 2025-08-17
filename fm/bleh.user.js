@@ -1,7 +1,7 @@
 // ==UserScript==
 // @name         bleh
 // @namespace    https://last.fm/
-// @version      2025.0815
+// @version      2025.0816
 // @description  bleh!!! ^-^
 // @author       kate
 // @match        https://www.last.fm/*
@@ -51755,12 +51755,16 @@
     bleh_footer();
     let masthead = document.body.querySelector(".masthead");
     window.addEventListener("scroll", (e) => {
-      let scroll = window.scrollY;
+      detect_scroll();
+    });
+    detect_scroll();
+    function detect_scroll() {
+      const scroll = window.scrollY;
       if (scroll > 30)
         masthead.classList.add("scrolled");
       else
         masthead.classList.remove("scrolled");
-    });
+    }
     detect_mobile();
     page.platform = detect_platform();
     if (window.location.pathname.startsWith(setup_url.replace("{root}", root))) {
