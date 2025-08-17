@@ -407,7 +407,7 @@ export function collage({
                         <strong class="brand">${version.brand}</strong>
                         <strong>${timeframe.querySelector('button').textContent}</strong>
                         <strong>${tl(trans.top_type).replace('{type}', tl(trans[type_select.value]))}</strong>
-                        <strong>${width_input.value}x${height_input.value}</strong>
+                        <strong>${width_input.value}×${height_input.value}</strong>
                     </div>
                     <div class="user">
                         <div class="avatar">
@@ -475,7 +475,7 @@ export function collage({
             canvas.toBlob(blob => {
                 const blob_url = URL.createObjectURL(blob);
 
-                const date = Date.now();
+                const date = new Date();
 
                 const filename = tl(trans.chart_template_filename)
                     .replace('{timeframe}', timeframe.querySelector('button').textContent)

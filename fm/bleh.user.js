@@ -28119,7 +28119,7 @@
                         <strong class="brand">${version.brand}</strong>
                         <strong>${timeframe.querySelector("button").textContent}</strong>
                         <strong>${tl(trans.top_type).replace("{type}", tl(trans[type_select.value]))}</strong>
-                        <strong>${width_input.value}x${height_input.value}</strong>
+                        <strong>${width_input.value}×${height_input.value}</strong>
                     </div>
                     <div class="user">
                         <div class="avatar">
@@ -28177,7 +28177,7 @@
       }).then((canvas) => {
         canvas.toBlob((blob) => {
           const blob_url = URL.createObjectURL(blob);
-          const date = Date.now();
+          const date = /* @__PURE__ */ new Date();
           const filename = tl(trans.chart_template_filename).replace("{timeframe}", timeframe.querySelector("button").textContent).replace("{user}", page.name).replace("{type}", tl(trans[type_select.value])).replace("{size}", `${width_input.value}\xD7${height_input.value}`).replace("{brand}", version.brand).replace("{date}", `${date.getFullYear()}-${pad2(date.getMonth() + 1)}-${pad2(date.getDate())}`);
           render(body, html`
                     <div class="collage-finished">
