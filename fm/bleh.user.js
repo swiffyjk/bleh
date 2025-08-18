@@ -43001,7 +43001,7 @@
   function load_profile_cache(name = page.name, cache2 = null, profile_cache = null) {
     if (!name) return;
     if (!profile_cache) profile_cache = JSON.parse(localStorage.getItem("bleh_profile_cache")) || {};
-    if (!cache2) cache2 = profile_cache[name];
+    if (!cache2) cache2 = profile_cache[name] || {};
     if (profile_cache[name]) {
       const hue2 = cache2.hue;
       const sat = cache2.sat;
@@ -43017,7 +43017,7 @@
   }
   function request_profile_cache(name = page.name, cache2 = null, profile_cache = null) {
     if (!profile_cache) profile_cache = JSON.parse(localStorage.getItem("bleh_profile_cache")) || {};
-    if (!cache2) cache2 = profile_cache[name];
+    if (!cache2) cache2 = profile_cache[name] || {};
     return new Promise((resolve2, reject) => {
       fetch(`${root}user/${name}`).then(function(response) {
         console.log("returned", response, response.text);
@@ -43028,21 +43028,19 @@
         const about_me_sidebar = doc.querySelector(".about-me-sidebar");
         if (about_me_sidebar) {
           let about_me_text = about_me_sidebar.querySelector("p");
-          bio_parse(about_me_text, cache3 ? cache3 : true);
+          bio_parse(about_me_text, cache2 ? cache2 : true);
         } else {
-          delete cache3.banner;
-          delete cache3.hue;
-          delete cache3.sat;
-          delete cache3.lit;
+          delete cache2.banner;
+          delete cache2.hue;
+          delete cache2.sat;
+          delete cache2.lit;
         }
-        let profile_cache2 = JSON.parse(localStorage.getItem("bleh_profile_cache")) || {};
-        let cache3 = profile_cache2[name] || {};
         const avatar3 = doc.querySelector(".header-avatar .avatar img");
-        if (avatar3) cache3.avatar = avatar3.src;
+        if (avatar3) cache2.avatar = avatar3.src;
         const secondary = doc.querySelector(".header-title-secondary");
-        parse_sub_text(secondary, name, cache3);
-        if (!cache3 || !profile_cache2) save_profile_cache(cache3, profile_cache2, name);
-        resolve2(profile_cache2[name] || {});
+        parse_sub_text(secondary, name, cache2);
+        if (!cache2 || !profile_cache) save_profile_cache(cache2, profile_cache, name);
+        resolve2(cache2 || {});
       }).catch(reject);
     });
   }

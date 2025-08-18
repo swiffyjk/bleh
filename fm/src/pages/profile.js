@@ -1669,7 +1669,7 @@ function load_profile_cache(name = page.name, cache=null, profile_cache=null) {
     if (!name) return;
 
     if (!profile_cache) profile_cache = JSON.parse(localStorage.getItem('bleh_profile_cache')) || {};
-    if (!cache) cache = profile_cache[name];
+    if (!cache) cache = profile_cache[name] || {};
 
     if (profile_cache[name]) {
         const hue = cache.hue;
@@ -1690,7 +1690,7 @@ function load_profile_cache(name = page.name, cache=null, profile_cache=null) {
 
 function request_profile_cache(name = page.name, cache=null, profile_cache=null) {
     if (!profile_cache) profile_cache = JSON.parse(localStorage.getItem('bleh_profile_cache')) || {};
-    if (!cache) cache = profile_cache[name];
+    if (!cache) cache = profile_cache[name] || {};
 
     return new Promise((resolve, reject) => {
         fetch(`${root}user/${name}`)
@@ -1714,9 +1714,6 @@ function request_profile_cache(name = page.name, cache=null, profile_cache=null)
                     delete cache.lit;
                 }
 
-                let profile_cache = JSON.parse(localStorage.getItem('bleh_profile_cache')) || {};
-                let cache = profile_cache[name] || {};
-
                 const avatar = doc.querySelector('.header-avatar .avatar img');
                 if (avatar) cache.avatar = avatar.src;
 
@@ -1725,7 +1722,7 @@ function request_profile_cache(name = page.name, cache=null, profile_cache=null)
 
                 if (!cache || !profile_cache) save_profile_cache(cache, profile_cache, name);
 
-                resolve(profile_cache[name] || {});
+                resolve(cache || {});
             })
             .catch(reject);
     })
