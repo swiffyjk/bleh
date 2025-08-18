@@ -14,7 +14,6 @@ import {ff} from "./sku";
 import {html, render} from "lighterhtml";
 import {news} from "./news.js";
 import {toggle_theme} from "./config.js";
-import {open_profile_shortcut_window} from "./components/profile_shortcut.js";
 import {save_setting, setting} from "./components/settings.js";
 import {prompt_for_update} from "./style.js";
 import {log} from "./build/log.js";
@@ -22,7 +21,7 @@ import {correct_artist, correct_item_by_artist} from "./components/lotus.js";
 import {bleh_notification_list} from "./components/notifications.js";
 import tippy from "tippy.js";
 import { chart_reflow } from './chart.js';
-import { load_profile_cache_externally } from './pages/profile.js';
+import { load_profile_cache_externally, open_starred_friend_window } from './pages/profile.js';
 
 export function patch_masthead() {
     let masthead_logo = document.body.querySelector('.masthead-logo');
@@ -573,23 +572,23 @@ export function append_nav() {
 
                                 return form;
                             }}
-                            ${(settings.profile_shortcut != '') ? () => {
+                            ${(settings.starred_friend != '') ? () => {
                                 let button = html.node`
-                                    <a class="dropdown-menu-clickable-item chibi" data-type="shortcut" data-is-shortcut="true" href="${root}user/${settings.profile_shortcut}">${settings.profile_shortcut}</a>
+                                    <a class="dropdown-menu-clickable-item chibi" data-type="starred_friend" data-is-shortcut="true" href="${root}user/${settings.starred_friend}">${settings.starred_friend}</a>
                                 `;
 
                                 tippy(button, {
-                                    content: settings.profile_shortcut
+                                    content: settings.starred_friend
                                 });
 
                                 return button;
                             } : () => {
                                 let button = html.node`
-                                    <button class="dropdown-menu-clickable-item chibi" data-type="shortcut" data-is-shortcut="false" onclick=${() => open_profile_shortcut_window()}>${tl(trans.profile_shortcut.name)}</button>
+                                    <button class="dropdown-menu-clickable-item chibi" data-type="starred_friend" data-is-shortcut="false" onclick=${() => open_starred_friend_window()}>${tl(trans.starred_friend.name)}</button>
                                 `;
 
                                 tippy(button, {
-                                    content: tl(trans.profile_shortcut.name)
+                                    content: tl(trans.starred_friend.name)
                                 });
 
                                 return button;

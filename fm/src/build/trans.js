@@ -357,7 +357,42 @@ export const trans = {
             en: 'View their scrobbles alongside yours at all times',
             de: 'Sehe ihre Scrobbels jederzeit neben deine an',
             pt: 'Veja os scrobbles dele(a) junto aos seus o tempo todo'
+        },
+        notice: {
+            en: 'Not seeing the options you‘re after? Fill out your friends list in the settings.'
         }
+    },
+    friend_difference: {
+        en: '‘Friends’ is a bleh-exclusive feature that allows you to keep up to date on your friend’s listening history, it is local and does not influence your following list.'
+    },
+    add_as_friend: {
+        en: 'Add as friend'
+    },
+    remove_friend: {
+        name: {
+            en: 'Remove friend'
+        },
+        body: {
+            en: 'Are you sure you want to remove {u} as a friend, you will stay following them - it‘s only local.'
+        }
+    },
+    added_as_friend: {
+        en: 'Added friend'
+    },
+    removed_friend: {
+        en: 'Removed friend'
+    },
+    added_star: {
+        en: 'Added star status'
+    },
+    add_as_starred_friend: {
+        en: 'Star friend'
+    },
+    removed_star: {
+        en: 'Removed star status'
+    },
+    remove_as_star_friend: {
+        en: 'Remove star status'
     },
     aka: {
         en: 'aka.',

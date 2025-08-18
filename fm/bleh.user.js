@@ -25628,42 +25628,6 @@
     });
     input2.focus();
   }
-  function set_profile_as_shortcut() {
-    dialog({
-      id: "profile_shortcut",
-      title: tl(trans.profile_shortcut.name),
-      body: html.node`
-            <div class="big-modal-alert alert-danger">
-                ${{ html: tl(trans.profile_shortcut.notice).replace("{u}", `<a class="mention" href="${root}user/${settings.profile_shortcut}" target="_blank">@${settings.profile_shortcut}</a>`) }}
-            </div>
-            <div class="modal-footer">
-                <button class="see-more cancel" onclick=${() => dialog_rm({ id: "profile_shortcut" })}>
-                    ${tl(trans.back)}
-                </button>
-                <div class="fill"></div>
-                <button class="btn primary save" onclick=${() => confirm_set_profile_as_shortcut()}>
-                    ${tl(trans.replace)}
-                </button>
-            </div>
-        `
-    });
-  }
-  function confirm_set_profile_as_shortcut() {
-    dialog_rm({
-      id: "profile_shortcut"
-    });
-    let avatar_src = page.structure.container.querySelector(":scope > .redesigned-profile-header .avatar img")?.getAttribute("src");
-    localStorage.setItem("bleh_profile_shortcut_avi", avatar_src);
-    notify({
-      id: "profile_shortcut_saved",
-      title: tl(trans.profile_shortcut.name),
-      body: tl(trans.profile_shortcut.linked).replace("{u}", page.name),
-      icon: "icon-16-profile-shortcut"
-    });
-    page.state.profile_shortcut_button.setAttribute("data-is-shortcut", "true");
-    page.state.profile_shortcut_button.removeAttribute("onclick");
-    save_setting("profile_shortcut", page.name);
-  }
   function save_profile_shortcut(input2, value, submit, reset_btn, avatar3) {
     if (value == "" || value == auth.name) {
       localStorage.removeItem("bleh_profile_shortcut_avi");
@@ -39786,6 +39750,7 @@
       let msg_button = document.body.querySelector(".header-message-user");
       if (msg_button) {
         if (page.name != sponsor_list.sponsor_account) {
+          friends_button(profile_header);
           create_profile_top_item(profile_header, {
             name: page.name,
             type: "message",
@@ -39821,20 +39786,6 @@
             link: `${root}bleh/minis/collage?profile=${page.name}`,
             text: tl(trans.collage),
             updated: true
-          });
-        }
-        if (settings.profile_shortcut != page.name) {
-          page.state.profile_shortcut_button = create_profile_top_item(profile_header, {
-            name: page.name,
-            type: "shortcut",
-            link: () => set_profile_as_shortcut(),
-            action: "button"
-          });
-        } else {
-          create_profile_top_item(profile_header, {
-            name: page.name,
-            type: "shortcut",
-            action: "button"
           });
         }
       }
@@ -40000,19 +39951,124 @@
             </a>
         `;
     }
-    if (type == "shortcut") {
-      if (name == settings.profile_shortcut) {
-        side_action.setAttribute("data-is-shortcut", "true");
-      } else {
-        side_action.setAttribute("data-is-shortcut", "false");
-      }
-      side_action.addEventListener("contextmenu", (e) => {
-        e.preventDefault();
-        open_profile_shortcut_window();
-      });
-    }
     parent.appendChild(side_action);
     return side_action;
+  }
+  function friends_button(parent) {
+    let friend_state = settings.friends.includes(page.name);
+    let star_state = settings.starred_friend == page.name;
+    if (!friend_state && star_state) {
+      star_state = false;
+      save_setting("starred_friend", "");
+    }
+    const elem = html.node`
+        <button class="btn side-action" data-type="friends" onclick=${() => {
+      if (friend_state) {
+        dialog({
+          id: "remove_friend",
+          title: tl(trans.remove_friend.name),
+          body: html.node`
+                        <p>${tl(trans.remove_friend.body).replace("{u}", page.name)}</p>
+                        <div class="modal-footer">
+                            <button class="see-more cancel" onclick=${() => dialog_rm({ id: "remove_friend" })}>
+                                ${tl(trans.cancel)}
+                            </button>
+                            <div class="fill"></div>
+                            <button class="btn primary icon danger" data-type="minus" onclick=${() => {
+            friend_state = false;
+            star_state = false;
+            const new_list = settings.friends.filter((item) => item != page.name);
+            save_setting("friends", new_list);
+            save_setting("starred_friend", "");
+            dialog_rm({ id: "remove_friend" });
+            update_visual();
+            notify({
+              id: "friends",
+              title: tl(trans.removed_friend),
+              body: page.name,
+              icon: "icon-16-minus",
+              type: "error"
+            });
+          }}>
+                                ${tl(trans.remove)}
+                            </button>
+                        </div>
+                    `
+        });
+      } else {
+        friend_state = true;
+        const new_list = [...settings.friends, page.name];
+        save_setting("friends", new_list);
+        update_visual();
+        notify({
+          id: "friends",
+          title: tl(trans.added_as_friend),
+          body: page.name,
+          icon: "icon-16-users",
+          type: "success"
+        });
+      }
+    }} />
+    `;
+    tippy_esm_default(elem, {
+      content: tl(trans.friend_difference)
+    });
+    const menu = tippy_esm_default(elem, {
+      theme: "context-menu",
+      content: html.node``,
+      placement: "right-start",
+      trigger: "manual",
+      interactive: true,
+      interactiveBorder: 10,
+      offset: [0, 0],
+      onShow(instance) {
+        instance.popper.addEventListener("click", (event3) => {
+          instance.hide();
+        });
+        instance.setContent(html.node`
+                <button class="dropdown-menu-clickable-item" data-type="starred_friend" data-is-shortcut=${star_state} onclick=${() => {
+          if (star_state) {
+            star_state = false;
+            save_setting("starred_friend", "");
+            update_visual();
+            notify({
+              id: "friends",
+              title: tl(trans.removed_star),
+              body: page.name,
+              icon: "icon-16-minus",
+              type: "error"
+            });
+          } else {
+            star_state = true;
+            save_setting("starred_friend", page.name);
+            update_visual();
+            notify({
+              id: "friends",
+              title: tl(trans.added_star),
+              body: page.name,
+              icon: "icon-16-starred-friend"
+            });
+          }
+        }}>
+                    ${star_state ? tl(trans.remove_as_star_friend) : tl(trans.add_as_starred_friend)}
+                </button>
+            `);
+      }
+    });
+    register_menu(elem, menu);
+    update_visual();
+    function update_visual() {
+      elem.setAttribute("data-friends", friend_state);
+      elem.setAttribute("data-starred", star_state);
+      if (star_state) {
+        elem.textContent = tl(trans.starred_friend.name);
+      } else if (friend_state) {
+        elem.textContent = tl(trans.friends);
+      } else {
+        elem.textContent = tl(trans.add_as_friend);
+      }
+    }
+    parent.appendChild(elem);
   }
 
   // src/components/structure.js
@@ -42992,6 +43048,20 @@
     }
     ;
   }
+  function open_starred_friend_window() {
+    dialog({
+      id: "starred_friend",
+      title: tl(trans.friends),
+      body: html.node`
+            <div class="setting-group">
+                ${starred = setting({ id: "starred_friend", list: select_prepare_list([{ value: "", text: tl(trans.none) }, ...settings.friends]) })}
+            </div>
+            <div class="alert alert-info">
+                ${tl(trans.starred_friend.notice)}
+            </div>
+        `
+    });
+  }
   async function load_profile_cache_externally(name = page.name) {
     if (!name) return;
     let profile_cache = JSON.parse(localStorage.getItem("bleh_profile_cache")) || {};
@@ -45335,7 +45405,7 @@
             `}
         </div>
         <section class="side-actions">
-            <button class="btn side-action" data-type="import" onclick=${() => import_settings17()}>
+            <button class="btn side-action" data-type="import" onclick=${() => import_settings18()}>
                 ${tl(trans.import)}
             </button>
             <button class="btn side-action" data-type="export" onclick=${() => export_settings()}>
@@ -46249,7 +46319,7 @@
       register_skip_to([]);
       const cache2 = await load_profile_cache_externally(auth.name);
       let friends;
-      let starred;
+      let starred2;
       console.info("friends", settings.friends, settings);
       render(page.structure.main, html`
             <section class="bleh--panel">
@@ -46338,7 +46408,7 @@
         checkup_friend_cache(val);
         render_setting_page("profile");
       } })}
-                    ${starred = setting({ id: "starred_friend", list: select_prepare_list([{ value: "", text: tl(trans.none) }, ...settings.friends]) })}
+                    ${starred2 = setting({ id: "starred_friend", list: select_prepare_list([{ value: "", text: tl(trans.none) }, ...settings.friends]) })}
                 </div>
             </section>
             ` : ""}
@@ -47091,7 +47161,7 @@
       }
     }
   }
-  function import_settings17() {
+  function import_settings18() {
     let text3;
     const modal = dialog({
       id: "import_settings",
@@ -48701,20 +48771,20 @@
           });
           return form2;
         }}
-                            ${settings.profile_shortcut != "" ? () => {
+                            ${settings.starred_friend != "" ? () => {
           let button = html.node`
-                                    <a class="dropdown-menu-clickable-item chibi" data-type="shortcut" data-is-shortcut="true" href="${root}user/${settings.profile_shortcut}">${settings.profile_shortcut}</a>
+                                    <a class="dropdown-menu-clickable-item chibi" data-type="starred_friend" data-is-shortcut="true" href="${root}user/${settings.starred_friend}">${settings.starred_friend}</a>
                                 `;
           tippy_esm_default(button, {
-            content: settings.profile_shortcut
+            content: settings.starred_friend
           });
           return button;
         } : () => {
           let button = html.node`
-                                    <button class="dropdown-menu-clickable-item chibi" data-type="shortcut" data-is-shortcut="false" onclick=${() => open_profile_shortcut_window()}>${tl(trans.profile_shortcut.name)}</button>
+                                    <button class="dropdown-menu-clickable-item chibi" data-type="starred_friend" data-is-shortcut="false" onclick=${() => open_starred_friend_window()}>${tl(trans.starred_friend.name)}</button>
                                 `;
           tippy_esm_default(button, {
-            content: tl(trans.profile_shortcut.name)
+            content: tl(trans.starred_friend.name)
           });
           return button;
         }}
@@ -52659,7 +52729,42 @@
         en: "View their scrobbles alongside yours at all times",
         de: "Sehe ihre Scrobbels jederzeit neben deine an",
         pt: "Veja os scrobbles dele(a) junto aos seus o tempo todo"
+      },
+      notice: {
+        en: "Not seeing the options you\u2018re after? Fill out your friends list in the settings."
       }
+    },
+    friend_difference: {
+      en: "\u2018Friends\u2019 is a bleh-exclusive feature that allows you to keep up to date on your friend\u2019s listening history, it is local and does not influence your following list."
+    },
+    add_as_friend: {
+      en: "Add as friend"
+    },
+    remove_friend: {
+      name: {
+        en: "Remove friend"
+      },
+      body: {
+        en: "Are you sure you want to remove {u} as a friend, you will stay following them - it\u2018s only local."
+      }
+    },
+    added_as_friend: {
+      en: "Added friend"
+    },
+    removed_friend: {
+      en: "Removed friend"
+    },
+    added_star: {
+      en: "Added star status"
+    },
+    add_as_starred_friend: {
+      en: "Star friend"
+    },
+    removed_star: {
+      en: "Removed star status"
+    },
+    remove_as_star_friend: {
+      en: "Remove star status"
     },
     aka: {
       en: "aka.",

@@ -18,7 +18,7 @@ import {correct_artist, correct_item_by_artist, name_includes} from "../componen
 import {markdown} from "../components/markdown"
 import {notify} from "../components/notify"
 import {redesign_profile_header} from "../components/profile_header"
-import {select, select_prepare} from "../components/select"
+import {select, select_prepare, select_prepare_list} from "../components/select"
 import {checkup_page_structure, convert_to_toolbar} from "../components/structure"
 import {refresh_all, update_inbuilt_item} from "../config"
 import {register_background, update_page} from "../page"
@@ -1653,6 +1653,21 @@ export async function checkup_friend_cache(list=settings.friends) {
         const cache = await load_profile_cache_externally(friend);
         log(`finalised cache for friend ${friend}`, 'profile', 'info', {cache: cache});
     };
+}
+
+export function open_starred_friend_window() {
+    dialog({
+        id: 'starred_friend',
+        title: tl(trans.friends),
+        body: html.node`
+            <div class="setting-group">
+                ${starred = setting({id: 'starred_friend', list: select_prepare_list([{value: '', text: tl(trans.none)}, ...settings.friends])})}
+            </div>
+            <div class="alert alert-info">
+                ${tl(trans.starred_friend.notice)}
+            </div>
+        `
+    })
 }
 
 export async function load_profile_cache_externally(name = page.name) {
