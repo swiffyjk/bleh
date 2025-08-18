@@ -27,7 +27,8 @@ export function markdown(text, {
     in_dialog = false,
     allow_icons = false,
     allow_hue = false,
-    take_effect = true
+    take_effect = true,
+    cache = true
 }={}) {
     log('rendering', 'markdown', 'log', {text});
 
@@ -185,9 +186,10 @@ export function markdown(text, {
     });
 
     let profile_cache;
-    let cache;
 
-    if (allow_banners || allow_hue) {
+    const will_cache = typeof cache != 'object';
+
+    if (allow_banners || allow_hue && will_cache) {
         profile_cache = JSON.parse(localStorage.getItem('bleh_profile_cache')) || {};
         cache = profile_cache[page.name] || {};
     }
@@ -242,7 +244,7 @@ export function markdown(text, {
         }
     }
 
-    if (cache) save_profile_cache(cache, profile_cache);
+    if (cache && will_cache) save_profile_cache(cache, profile_cache);
 
     return body;
 }

@@ -29,7 +29,7 @@ import {share} from "../components/share.js";
 import {force_refresh_style, start_update, update_check} from "../style.js";
 import tippy from "tippy.js";
 import moment from "moment";
-import { load_profile_cache_externally } from './profile.js';
+import { checkup_friend_cache, load_profile_cache_externally } from './profile.js';
 import { select_prepare_list } from '../components/select.js';
 
 export function bleh_settings() {
@@ -1180,7 +1180,9 @@ export async function render_setting_page(page_id) {
                 <h4>${tl(trans.friends)}</h4>
                 <div class="setting-group">
                     ${friends = setting({id: 'friends', list: settings.friends, func: (val) => {
-                        if (!settings.friends.includes(settings.starred_friend)) save_setting('starred_friend', '');
+                        if (!val.includes(settings.starred_friend)) save_setting('starred_friend', '');
+
+                        checkup_friend_cache(val);
 
                         render_setting_page('profile');
                     }})}
@@ -1191,7 +1193,6 @@ export async function render_setting_page(page_id) {
             <section class="bleh--panel">
                 <h4>${tl(trans.other)}</h4>
                 <div class="setting-group">
-                    ${setting({id: 'profile_shortcut'})}
                     ${setting({id: 'bio_markdown'})}
                     ${setting({id: 'show_your_progress'})}
                 </div>

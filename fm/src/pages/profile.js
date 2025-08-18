@@ -65,6 +65,9 @@ export async function bleh_profiles() {
 
     let new_account = false;
 
+    let profile_cache = JSON.parse(localStorage.getItem('bleh_profile_cache')) || {};
+    let cache = profile_cache[page.name] || {};
+
     if (ff('refreshed_nav')) {
         let avatar = profile_header.querySelector('.avatar');
         let title_wrap = profile_header.querySelector('.header-title-label-wrap');
@@ -82,7 +85,6 @@ export async function bleh_profiles() {
         }
 
 
-        const cache = await load_profile_cache_externally(auth.name);
         let pronouns;
         if (cache.aka) pronouns = use_pronouns(cache.aka);
 
@@ -126,6 +128,8 @@ export async function bleh_profiles() {
 
         const avatar_img = avatar.querySelector(':scope > img');
 
+        cache.avatar = avatar_img.src;
+
         if (page.name == auth.name && !settings.profile_header_own) {
             register_background(null, 'hidden');
         } else if (page.name != auth.name && !settings.profile_header_others) {
@@ -133,7 +137,7 @@ export async function bleh_profiles() {
         } else {
             if (settings.profile_avi_background) {
                 if (avatar)
-                    register_background(avatar_img.getAttribute('src').replace('/avatar170s/', '/ar0/'), 'avatar');
+                    register_background(avatar_img.src.replace('/avatar170s/', '/ar0/'), 'avatar');
                 else
                     register_background(null, 'none');
             } else {
@@ -337,14 +341,15 @@ export async function bleh_profiles() {
 
         // secondary text
         const profile_sub_text = page.structure.container.querySelector('.redesigned-profile-header .header-title-secondary');
-        if (profile_sub_text) parse_sub_text(profile_sub_text);
+        if (profile_sub_text) parse_sub_text(profile_sub_text, page.name, cache);
 
         let about_me_sidebar = page.structure.row.querySelector('.about-me-sidebar');
 
         if (!about_me_sidebar) {
-            if (settings.bio_markdown) {
-                save_banner_to_cache('none');
-            }
+            delete cache.banner;
+            delete cache.hue;
+            delete cache.sat;
+            delete cache.lit;
 
             about_me_sidebar = html.node`
                 <section class="about-me-sidebar">
@@ -357,7 +362,7 @@ export async function bleh_profiles() {
             if (settings.bio_markdown) {
                 // parse body
                 let about_me_text = about_me_sidebar.querySelector('p');
-                let result = bio_parse(about_me_text, true);
+                let result = bio_parse(about_me_text, cache);
 
                 about_me_text.after(result);
                 about_me_text.remove();
@@ -432,7 +437,7 @@ export async function bleh_profiles() {
         if (!is_own_profile && profile_note)
             create_profile_note_panel(page.name, profile_note);
     } else {
-        load_profile_cache();
+        load_profile_cache(page.name, cache, profile_cache);
 
 
         let btn_add = page.structure.side.querySelector('.add-button');
@@ -769,6 +774,8 @@ export async function bleh_profiles() {
         label_container.appendChild(badge);
     });
     profile_name_obj.appendChild(label_container);
+
+    save_profile_cache(cache, profile_cache, page.name);
 }
 
 
@@ -1477,7 +1484,7 @@ function profile_tracks() {
     });
 }
 
-function bio_parse(text) {
+function bio_parse(text, cache = true) {
     let temp = document.createElement('div');
     temp.classList.add('markdown-body');
 
@@ -1485,7 +1492,8 @@ function bio_parse(text) {
         allow_headers: true,
         allow_banners: true,
         allow_icons: true,
-        allow_hue: true
+        allow_hue: true,
+        cache
     }));
 
     const banner = temp.querySelector('img[alt="banner"]');
@@ -1600,6 +1608,7 @@ export function bleh_profile_chart_render(panel=page.structure.side.querySelecto
 }
 
 export function save_profile_cache({
+    avatar,
     banner,
     hue,
     sat,
@@ -1612,19 +1621,21 @@ name=page.name) {
     let profile_cache_o = Object.keys(profile_cache);
 
     if (profile_cache_o.length > 400) {
-        // remove first item of object
-        let keys = Reflect.ownKeys(profile_cache);
+        // remove first available item of object
+        const keys = Reflect.ownKeys(profile_cache);
 
-        if (profile_cache[keys[0]] != auth.name)
-            delete profile_cache[keys[0]];
-        else
-            delete profile_cache[keys[1]];
+        // we dont delete logged in user or users on local friends list
+        const protected_users = new Set([auth.name, ...(settings.friends)]);
+        const key_to_delete = keys.find(key => !protected_users.has(profile_cache[key]));
+
+        if (key_to_delete) delete profile_cache[key_to_delete];
 
         // them move this to the bottom
         delete profile_cache[name];
     }
 
     profile_cache[name] = {
+        avatar,
         banner,
         hue,
         sat,
@@ -1637,6 +1648,13 @@ name=page.name) {
     localStorage.setItem('bleh_profile_cache', JSON.stringify(profile_cache));
 }
 
+export async function checkup_friend_cache(list=settings.friends) {
+    for (const friend of list) {
+        const cache = await load_profile_cache_externally(friend);
+        log(`finalised cache for friend ${friend}`, 'profile', 'info', {cache: cache});
+    };
+}
+
 export async function load_profile_cache_externally(name = page.name) {
     if (!name) return;
 
@@ -1647,11 +1665,11 @@ export async function load_profile_cache_externally(name = page.name) {
     return await request_profile_cache(name);
 }
 
-function load_profile_cache(name = page.name) {
+function load_profile_cache(name = page.name, cache=null, profile_cache=null) {
     if (!name) return;
 
-    let profile_cache = JSON.parse(localStorage.getItem('bleh_profile_cache')) || {};
-    let cache = profile_cache[name];
+    if (!profile_cache) profile_cache = JSON.parse(localStorage.getItem('bleh_profile_cache')) || {};
+    if (!cache) cache = profile_cache[name];
 
     if (profile_cache[name]) {
         const hue = cache.hue;
@@ -1667,10 +1685,13 @@ function load_profile_cache(name = page.name) {
         return;
     }
 
-    return request_profile_cache(name);
+    return request_profile_cache(name, cache, profile_cache);
 }
 
-function request_profile_cache(name = page.name) {
+function request_profile_cache(name = page.name, cache=null, profile_cache=null) {
+    if (!profile_cache) profile_cache = JSON.parse(localStorage.getItem('bleh_profile_cache')) || {};
+    if (!cache) cache = profile_cache[name];
+
     return new Promise((resolve, reject) => {
         fetch(`${root}user/${name}`)
             .then(function (response) {
@@ -1685,22 +1706,32 @@ function request_profile_cache(name = page.name) {
                 const about_me_sidebar = doc.querySelector('.about-me-sidebar');
                 if (about_me_sidebar) {
                     let about_me_text = about_me_sidebar.querySelector('p');
-                    bio_parse(about_me_text);
+                    bio_parse(about_me_text, cache ? cache : true);
                 } else {
-                    save_profile_cache({}, null, name);
+                    delete cache.banner;
+                    delete cache.hue;
+                    delete cache.sat;
+                    delete cache.lit;
                 }
 
-                const secondary = doc.querySelector('.header-title-secondary');
-                parse_sub_text(secondary, name);
-
                 let profile_cache = JSON.parse(localStorage.getItem('bleh_profile_cache')) || {};
+                let cache = profile_cache[name] || {};
+
+                const avatar = doc.querySelector('.header-avatar .avatar img');
+                if (avatar) cache.avatar = avatar.src;
+
+                const secondary = doc.querySelector('.header-title-secondary');
+                parse_sub_text(secondary, name, cache);
+
+                if (!cache || !profile_cache) save_profile_cache(cache, profile_cache, name);
+
                 resolve(profile_cache[name] || {});
             })
             .catch(reject);
     })
 }
 
-function parse_sub_text(profile_sub_text, name = page.name) {
+function parse_sub_text(profile_sub_text, name = page.name, cache) {
     const display_name = profile_sub_text.querySelector('.header-title-display-name');
     const scrobble_since = profile_sub_text.querySelector('.header-scrobble-since');
     scrobble_since.textContent = scrobble_since.textContent.slice(2).replace(tl(trans.account_scrobbling_since_replace), '');
@@ -1720,11 +1751,6 @@ function parse_sub_text(profile_sub_text, name = page.name) {
         </span>
     `, scrobble_since);
 
-    let profile_cache = JSON.parse(localStorage.getItem('bleh_profile_cache')) || {};
-    let cache = profile_cache[name] || {};
-
     cache.aka = display_name.textContent.trim();
     cache.created = scrobble_since.textContent.trim();
-
-    save_profile_cache(cache, profile_cache, name);
 }

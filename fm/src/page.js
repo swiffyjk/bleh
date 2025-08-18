@@ -50,7 +50,7 @@ import {bleh_gallery, bleh_gallery_upload_check} from "./pages/gallery";
 import {bleh_glacier_library, bleh_glacier_library_bulk_edit} from "./pages/glacier";
 import {bleh_home, bleh_home_legacy} from "./pages/home";
 import {bleh_inbox} from "./pages/inbox";
-import {bleh_profiles} from "./pages/profile";
+import {bleh_profiles, checkup_friend_cache} from "./pages/profile";
 import {bleh_search} from "./pages/search";
 import {bleh_tags} from "./pages/tag";
 import {bleh_tracks} from "./pages/track";
@@ -127,6 +127,8 @@ function bleh_main() {
         patch_masthead();
 
         load_notifications();
+
+        checkup_friend_cache();
 
         // load seasonal data
         set_season();

@@ -266,7 +266,7 @@
             "date": "2025-08-15"
         },
         "friends": {
-            "default": false,
+            "default": true,
             "name": "Friends system",
             "date": "2025-08-18"
         }

@@ -57,6 +57,14 @@ export function load_settings(skip = false) {
             settings.font_weight_bold = settings_store.font_weight_bold.default;
     }
 
+    if (settings.profile_shortcut) {
+        settings.friends = [settings.profile_shortcut];
+        settings.starred_friend = settings.profile_shortcut;
+
+        localStorage.removeItem('bleh_profile_shortcut_avi');
+        delete settings.profile_shortcut;
+    }
+
     // save setting into body
     for (let setting in settings) {
         if (

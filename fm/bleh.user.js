@@ -38188,6 +38188,12 @@
       if (settings.font_weight_bold == 730 || settings.font_weight_bold == 760)
         settings.font_weight_bold = settings_store.font_weight_bold.default;
     }
+    if (settings.profile_shortcut) {
+      settings.friends = [settings.profile_shortcut];
+      settings.starred_friend = settings.profile_shortcut;
+      localStorage.removeItem("bleh_profile_shortcut_avi");
+      delete settings.profile_shortcut;
+    }
     for (let setting2 in settings) {
       if ((setting2 == "hue" || setting2 == "sat" || setting2 == "lit") && settings.hue == settings_store.hue.default && settings.sat == settings_store.sat.default && settings.lit == settings_store.lit.default) continue;
       if (settings_store[setting2] && settings_store[setting2].css) document.body.style.setProperty(`--${settings_store[setting2].css}`, `${settings[setting2]}${settings_store[setting2].suffix || ""}`);
@@ -41716,6 +41722,8 @@
     checkup_page_structure(is_subpage, profile_header);
     page.supports_shoutbox = page.structure.nav.querySelector(".secondary-nav-item--shoutbox");
     let new_account = false;
+    let profile_cache = JSON.parse(localStorage.getItem("bleh_profile_cache")) || {};
+    let cache2 = profile_cache[page.name] || {};
     if (ff("refreshed_nav")) {
       let avatar3 = profile_header.querySelector(".avatar");
       let title_wrap = profile_header.querySelector(".header-title-label-wrap");
@@ -41727,7 +41735,6 @@
       if (sponsor_list && sponsor_list.special && sponsor_list.special.includes(page.name)) {
         title_wrap.querySelector(".header-title a").classList.add("bleh--name-is-cute");
       }
-      const cache2 = await load_profile_cache_externally(auth.name);
       let pronouns;
       if (cache2.aka) pronouns = use_pronouns(cache2.aka);
       let expander;
@@ -41768,6 +41775,7 @@
             </section>
         `;
       const avatar_img = avatar3.querySelector(":scope > img");
+      cache2.avatar = avatar_img.src;
       if (page.name == auth.name && !settings.profile_header_own) {
         register_background(null, "hidden");
       } else if (page.name != auth.name && !settings.profile_header_others) {
@@ -41775,7 +41783,7 @@
       } else {
         if (settings.profile_avi_background) {
           if (avatar3)
-            register_background(avatar_img.getAttribute("src").replace("/avatar170s/", "/ar0/"), "avatar");
+            register_background(avatar_img.src.replace("/avatar170s/", "/ar0/"), "avatar");
           else
             register_background(null, "none");
         } else {
@@ -41938,12 +41946,13 @@
           page.structure.main.insertBefore(sponsor_cta, page.structure.main.firstElementChild);
       }
       const profile_sub_text = page.structure.container.querySelector(".redesigned-profile-header .header-title-secondary");
-      if (profile_sub_text) parse_sub_text(profile_sub_text);
+      if (profile_sub_text) parse_sub_text(profile_sub_text, page.name, cache2);
       let about_me_sidebar = page.structure.row.querySelector(".about-me-sidebar");
       if (!about_me_sidebar) {
-        if (settings.bio_markdown) {
-          save_banner_to_cache("none");
-        }
+        delete cache2.banner;
+        delete cache2.hue;
+        delete cache2.sat;
+        delete cache2.lit;
         about_me_sidebar = html.node`
                 <section class="about-me-sidebar">
                     <h2>${tl(trans.about)}</h2>
@@ -41954,7 +41963,7 @@
       } else {
         if (settings.bio_markdown) {
           let about_me_text = about_me_sidebar.querySelector("p");
-          let result = bio_parse(about_me_text, true);
+          let result = bio_parse(about_me_text, cache2);
           about_me_text.after(result);
           about_me_text.remove();
         }
@@ -42017,7 +42026,7 @@
       if (!is_own_profile && profile_note)
         create_profile_note_panel(page.name, profile_note);
     } else {
-      load_profile_cache();
+      load_profile_cache(page.name, cache2, profile_cache);
       let btn_add = page.structure.side.querySelector(".add-button");
       if (btn_add) btn_add.setAttribute("data-page-subpage", page.subpage);
       if (page.subpage.startsWith("library")) {
@@ -42276,6 +42285,7 @@
       label_container.appendChild(badge);
     });
     profile_name_obj.appendChild(label_container);
+    save_profile_cache(cache2, profile_cache, page.name);
   }
   function create_profile_note_panel(username2, has_note) {
     let about_me_sidebar = page.structure.row.querySelector(".about-me-sidebar");
@@ -42850,14 +42860,15 @@
       trigger: "click"
     });
   }
-  function bio_parse(text3) {
+  function bio_parse(text3, cache2 = true) {
     let temp = document.createElement("div");
     temp.classList.add("markdown-body");
     render(temp, markdown(text3.textContent, {
       allow_headers: true,
       allow_banners: true,
       allow_icons: true,
-      allow_hue: true
+      allow_hue: true,
+      cache: cache2
     }));
     const banner = temp.querySelector('img[alt="banner"]');
     if (banner) {
@@ -42946,6 +42957,7 @@
     scrobble_canvas_container.appendChild(scrobble_canvas);
   }
   function save_profile_cache({
+    avatar: avatar3,
     banner,
     hue: hue2,
     sat,
@@ -42955,14 +42967,14 @@
   } = {}, profile_cache = JSON.parse(localStorage.getItem("bleh_profile_cache")) || {}, name = page.name) {
     let profile_cache_o = Object.keys(profile_cache);
     if (profile_cache_o.length > 400) {
-      let keys2 = Reflect.ownKeys(profile_cache);
-      if (profile_cache[keys2[0]] != auth.name)
-        delete profile_cache[keys2[0]];
-      else
-        delete profile_cache[keys2[1]];
+      const keys2 = Reflect.ownKeys(profile_cache);
+      const protected_users = /* @__PURE__ */ new Set([auth.name, ...settings.friends]);
+      const key_to_delete = keys2.find((key) => !protected_users.has(profile_cache[key]));
+      if (key_to_delete) delete profile_cache[key_to_delete];
       delete profile_cache[name];
     }
     profile_cache[name] = {
+      avatar: avatar3,
       banner,
       hue: hue2,
       sat,
@@ -42973,16 +42985,23 @@
     log("saved to cache", "profile", "info", { name, cache: profile_cache[name] });
     localStorage.setItem("bleh_profile_cache", JSON.stringify(profile_cache));
   }
+  async function checkup_friend_cache(list = settings.friends) {
+    for (const friend of list) {
+      const cache2 = await load_profile_cache_externally(friend);
+      log(`finalised cache for friend ${friend}`, "profile", "info", { cache: cache2 });
+    }
+    ;
+  }
   async function load_profile_cache_externally(name = page.name) {
     if (!name) return;
     let profile_cache = JSON.parse(localStorage.getItem("bleh_profile_cache")) || {};
     if (profile_cache[name]) return profile_cache[name];
     return await request_profile_cache(name);
   }
-  function load_profile_cache(name = page.name) {
+  function load_profile_cache(name = page.name, cache2 = null, profile_cache = null) {
     if (!name) return;
-    let profile_cache = JSON.parse(localStorage.getItem("bleh_profile_cache")) || {};
-    let cache2 = profile_cache[name];
+    if (!profile_cache) profile_cache = JSON.parse(localStorage.getItem("bleh_profile_cache")) || {};
+    if (!cache2) cache2 = profile_cache[name];
     if (profile_cache[name]) {
       const hue2 = cache2.hue;
       const sat = cache2.sat;
@@ -42994,9 +43013,11 @@
       if (banner) register_background(banner, "bio");
       return;
     }
-    return request_profile_cache(name);
+    return request_profile_cache(name, cache2, profile_cache);
   }
-  function request_profile_cache(name = page.name) {
+  function request_profile_cache(name = page.name, cache2 = null, profile_cache = null) {
+    if (!profile_cache) profile_cache = JSON.parse(localStorage.getItem("bleh_profile_cache")) || {};
+    if (!cache2) cache2 = profile_cache[name];
     return new Promise((resolve2, reject) => {
       fetch(`${root}user/${name}`).then(function(response) {
         console.log("returned", response, response.text);
@@ -43007,18 +43028,25 @@
         const about_me_sidebar = doc.querySelector(".about-me-sidebar");
         if (about_me_sidebar) {
           let about_me_text = about_me_sidebar.querySelector("p");
-          bio_parse(about_me_text);
+          bio_parse(about_me_text, cache3 ? cache3 : true);
         } else {
-          save_profile_cache({}, null, name);
+          delete cache3.banner;
+          delete cache3.hue;
+          delete cache3.sat;
+          delete cache3.lit;
         }
+        let profile_cache2 = JSON.parse(localStorage.getItem("bleh_profile_cache")) || {};
+        let cache3 = profile_cache2[name] || {};
+        const avatar3 = doc.querySelector(".header-avatar .avatar img");
+        if (avatar3) cache3.avatar = avatar3.src;
         const secondary = doc.querySelector(".header-title-secondary");
-        parse_sub_text(secondary, name);
-        let profile_cache = JSON.parse(localStorage.getItem("bleh_profile_cache")) || {};
-        resolve2(profile_cache[name] || {});
+        parse_sub_text(secondary, name, cache3);
+        if (!cache3 || !profile_cache2) save_profile_cache(cache3, profile_cache2, name);
+        resolve2(profile_cache2[name] || {});
       }).catch(reject);
     });
   }
-  function parse_sub_text(profile_sub_text, name = page.name) {
+  function parse_sub_text(profile_sub_text, name = page.name, cache2) {
     const display_name = profile_sub_text.querySelector(".header-title-display-name");
     const scrobble_since = profile_sub_text.querySelector(".header-scrobble-since");
     scrobble_since.textContent = scrobble_since.textContent.slice(2).replace(tl(trans.account_scrobbling_since_replace), "");
@@ -43033,11 +43061,8 @@
             ${tl(trans.account_created)}
         </span>
     `, scrobble_since);
-    let profile_cache = JSON.parse(localStorage.getItem("bleh_profile_cache")) || {};
-    let cache2 = profile_cache[name] || {};
     cache2.aka = display_name.textContent.trim();
     cache2.created = scrobble_since.textContent.trim();
-    save_profile_cache(cache2, profile_cache, name);
   }
 
   // src/avatar.js
@@ -44489,7 +44514,8 @@
     in_dialog = false,
     allow_icons = false,
     allow_hue = false,
-    take_effect = true
+    take_effect = true,
+    cache: cache2 = true
   } = {}) {
     log("rendering", "markdown", "log", { text: text3 });
     const ALLOWED_TAGS = [
@@ -44630,8 +44656,8 @@
       local_restriction(text4);
     });
     let profile_cache;
-    let cache2;
-    if (allow_banners || allow_hue) {
+    const will_cache = typeof cache2 != "object";
+    if (allow_banners || allow_hue && will_cache) {
       profile_cache = JSON.parse(localStorage.getItem("bleh_profile_cache")) || {};
       cache2 = profile_cache[page.name] || {};
     }
@@ -44673,7 +44699,7 @@
         log("cleared custom accent settings", "profile", "log");
       }
     }
-    if (cache2) save_profile_cache(cache2, profile_cache);
+    if (cache2 && will_cache) save_profile_cache(cache2, profile_cache);
     return body;
   }
   function markdown_prompt({
@@ -46310,7 +46336,8 @@
                 <h4>${tl(trans.friends)}</h4>
                 <div class="setting-group">
                     ${friends = setting({ id: "friends", list: settings.friends, func: (val) => {
-        if (!settings.friends.includes(settings.starred_friend)) save_setting("starred_friend", "");
+        if (!val.includes(settings.starred_friend)) save_setting("starred_friend", "");
+        checkup_friend_cache(val);
         render_setting_page("profile");
       } })}
                     ${starred = setting({ id: "starred_friend", list: select_prepare_list([{ value: "", text: tl(trans.none) }, ...settings.friends]) })}
@@ -46320,7 +46347,6 @@
             <section class="bleh--panel">
                 <h4>${tl(trans.other)}</h4>
                 <div class="setting-group">
-                    ${setting({ id: "profile_shortcut" })}
                     ${setting({ id: "bio_markdown" })}
                     ${setting({ id: "show_your_progress" })}
                 </div>
@@ -51796,6 +51822,7 @@
       update_check(false, null, update_masthead);
       patch_masthead();
       load_notifications();
+      checkup_friend_cache();
       set_season();
       start_rain();
       load_activities();
@@ -60404,7 +60431,7 @@
         date: "2025-08-15"
       },
       friends: {
-        default: false,
+        default: true,
         name: "Friends system",
         date: "2025-08-18"
       }
