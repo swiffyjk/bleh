@@ -176,7 +176,7 @@ function page_loading() {
     `);
 }
 
-export function render_setting_page(page_id) {
+export async function render_setting_page(page_id) {
     if (page_id == 'general') {
         if (auth.pro === null) {
             setTimeout(() => {
@@ -1086,7 +1086,7 @@ export function render_setting_page(page_id) {
     } else if (page_id == 'profile') {
         register_skip_to([]);
 
-        const cache = load_profile_cache_externally(auth.name);
+        const cache = await load_profile_cache_externally(auth.name);
 
         render(page.structure.main, html`
             <section class="bleh--panel">

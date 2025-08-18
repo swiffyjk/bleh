@@ -11,6 +11,7 @@ import {create_badge, load_badges} from "./components/badge";
 import {dialog} from "./components/dialog";
 import tippy from "tippy.js";
 import { control_gif_pause } from './build/tools';
+import { load_profile_cache_externally } from './pages/profile';
 
 export function patch_avatar(avatar, name, type = '', parent=null, side='right') {
     if (avatar.hasAttribute('data-bleh-avatar')) return {};
@@ -43,10 +44,12 @@ export function patch_avatar(avatar, name, type = '', parent=null, side='right')
 
     if (badges) avatar.appendChild(create_badge(badges[badges.length - 1], true));
 
+    let image_header;
+    let cached = false;
     tippy((parent) ? parent : avatar, {
         theme: 'user',
-        content: (html.node`
-            <div class="image-header">
+        content: html.node`
+            <div class="image-header" ref=${el => image_header = el}>
                 <div class="inner-image">
                     <img src=${avatar_img.getAttribute('src').replace('/avatar42s/', '/avatar170s/')} alt=${name}>
                     <a href="${root}user/${name}" class="link-over"></a>
@@ -75,10 +78,23 @@ export function patch_avatar(avatar, name, type = '', parent=null, side='right')
                 </div>
                 ` : ''}
             </div>
-        `),
+        `,
         placement: side,
         interactive: true,
-        trigger: 'click'
+        trigger: 'click',
+
+        onShow(instance) {
+            if (cached || !image_header) return;
+
+            load_profile_cache_externally(name).then((cache) => {
+                if (cache.banner) {
+                    image_header.classList.add('has-banner');
+                    image_header.style.backgroundImage = `url('${cache.banner}')`;
+                }
+
+                cached = true;
+            });
+        }
     });
 
     control_gif_pause(avatar_img);

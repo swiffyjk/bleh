@@ -34,7 +34,7 @@ import tippy from "tippy.js";
 import {Chart} from "../main.js";
 import { expand_avatar } from '../avatar.js'
 
-export function bleh_profiles() {
+export async function bleh_profiles() {
     // the obsessions page is a user subpage but works very differently
     if (page.subpage == 'obsessions_obsession') {
         bleh_obsession();
@@ -82,7 +82,7 @@ export function bleh_profiles() {
         }
 
 
-        const cache = load_profile_cache_externally(auth.name);
+        const cache = await load_profile_cache_externally(auth.name);
         let pronouns;
         if (cache.aka) pronouns = use_pronouns(cache.aka);
 
@@ -1637,11 +1637,14 @@ name=page.name) {
     localStorage.setItem('bleh_profile_cache', JSON.stringify(profile_cache));
 }
 
-export function load_profile_cache_externally(name = page.name) {
+export async function load_profile_cache_externally(name = page.name) {
     if (!name) return;
 
     let profile_cache = JSON.parse(localStorage.getItem('bleh_profile_cache')) || {};
-    return profile_cache[name] || {};
+
+    if (profile_cache[name]) return profile_cache[name];
+
+    return await request_profile_cache(name);
 }
 
 function load_profile_cache(name = page.name) {
@@ -1668,30 +1671,36 @@ function load_profile_cache(name = page.name) {
 }
 
 function request_profile_cache(name = page.name) {
-    fetch(`${root}user/${name}`)
-        .then(function (response) {
-            console.log('returned', response, response.text);
+    return new Promise((resolve, reject) => {
+        fetch(`${root}user/${name}`)
+            .then(function (response) {
+                console.log('returned', response, response.text);
 
-            return response.text();
-        })
-        .then(function (dom) {
-            let doc = new DOMParser().parseFromString(dom, 'text/html');
-            console.log('DOC', doc);
+                return response.text();
+            })
+            .then(function (dom) {
+                let doc = new DOMParser().parseFromString(dom, 'text/html');
+                console.log('DOC', doc);
 
-            const about_me_sidebar = doc.querySelector('.about-me-sidebar');
-            if (about_me_sidebar) {
-                let about_me_text = about_me_sidebar.querySelector('p');
-                bio_parse(about_me_text, true);
-            } else {
-                save_profile_cache({});
-            }
+                const about_me_sidebar = doc.querySelector('.about-me-sidebar');
+                if (about_me_sidebar) {
+                    let about_me_text = about_me_sidebar.querySelector('p');
+                    bio_parse(about_me_text);
+                } else {
+                    save_profile_cache({}, null, name);
+                }
 
-            const secondary = doc.querySelector('.header-title-secondary');
-            parse_sub_text(secondary);
-        });
+                const secondary = doc.querySelector('.header-title-secondary');
+                parse_sub_text(secondary, name);
+
+                let profile_cache = JSON.parse(localStorage.getItem('bleh_profile_cache')) || {};
+                resolve(profile_cache[name] || {});
+            })
+            .catch(reject);
+    })
 }
 
-function parse_sub_text(profile_sub_text) {
+function parse_sub_text(profile_sub_text, name = page.name) {
     const display_name = profile_sub_text.querySelector('.header-title-display-name');
     const scrobble_since = profile_sub_text.querySelector('.header-scrobble-since');
     scrobble_since.textContent = scrobble_since.textContent.slice(2).replace(tl(trans.account_scrobbling_since_replace), '');
@@ -1712,10 +1721,10 @@ function parse_sub_text(profile_sub_text) {
     `, scrobble_since);
 
     let profile_cache = JSON.parse(localStorage.getItem('bleh_profile_cache')) || {};
-    let cache = profile_cache[page.name] || {};
+    let cache = profile_cache[name] || {};
 
     cache.aka = display_name.textContent.trim();
     cache.created = scrobble_since.textContent.trim();
 
-    save_profile_cache(cache, profile_cache);
+    save_profile_cache(cache, profile_cache, name);
 }

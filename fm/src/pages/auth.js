@@ -18,7 +18,7 @@ export async function bleh_auth() {
 
     checkup_page_structure();
 
-    const cache = load_profile_cache_externally(auth.name);
+    const cache = await load_profile_cache_externally(auth.name);
     if (cache.banner)
         register_background(cache.banner);
     else if (!auth.avatar.endsWith('818148bf682d429dc215c1705eb27b98.png'))

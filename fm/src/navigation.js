@@ -491,14 +491,15 @@ export function append_nav() {
         interactiveBorder: 10,
         trigger: 'click',
 
-        onShow(instance) {
+        onShow: async (instance) => {
             page.structure.notifications.setAttribute('data-auth-open', 'true');
             badges = load_badges(auth.name);
 
             let page_2;
             let side;
 
-            const cache = load_profile_cache_externally(auth.name);
+            const cache = await load_profile_cache_externally(auth.name);
+            console.info('awaited', cache);
 
             let status_container;
 
@@ -523,7 +524,7 @@ export function append_nav() {
                             <div class="avatar">
                                 <img src="${auth.avatar.replace('avatar42s', 'avatar170s')}" alt="${auth.name}" />
                             </div>
-                            ${(cache.banner != '') ? html.node`
+                            ${cache.banner ? html.node`
                             <div class="bg" style="background-image: url(${cache.banner})" />
                             ` : (!auth.avatar.endsWith('818148bf682d429dc215c1705eb27b98.png')) ? html.node`
                             <div class="bg" style="background-image: url(${auth.avatar.replace('avatar42s', 'avatar170s')})" />

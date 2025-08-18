@@ -17,7 +17,7 @@ import {ff} from "../sku.js";
 import tippy from "tippy.js";
 import { load_profile_cache_externally } from './profile.js';
 
-export function bleh_home() {
+export async function bleh_home() {
     page.structure.container = document.body.querySelector('.page-content');
     try {
         page.structure.row = page.structure.container.querySelector('.row');
@@ -35,7 +35,7 @@ export function bleh_home() {
     log('status is', 'page', 'info', page);
     update_page();
 
-    const cache = load_profile_cache_externally(auth.name);
+    const cache = await load_profile_cache_externally(auth.name);
     if (cache.banner)
         register_background(cache.banner);
     else if (auth.avatar && !auth.avatar.endsWith('818148bf682d429dc215c1705eb27b98.png'))

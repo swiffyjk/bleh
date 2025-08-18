@@ -25573,451 +25573,6 @@
     return elem;
   }
 
-  // src/avatar.js
-  function patch_avatar(avatar3, name, type = "", parent = null, side = "right") {
-    if (avatar3.hasAttribute("data-bleh-avatar")) return {};
-    avatar3.setAttribute("data-bleh-avatar", "true");
-    const avatar_img = avatar3.querySelector("img");
-    if (!avatar_img) return {};
-    avatar_img.setAttribute("src", avatar_img.getAttribute("src").replace("/64s/", "/avatar70s/"));
-    avatar3.setAttribute("title", "");
-    let badges = load_badges(name);
-    let pre_existing_badge = avatar3.querySelector(".avatar-status-dot");
-    if (badges && pre_existing_badge) avatar3.removeChild(pre_existing_badge);
-    if (!parent) avatar3.classList.add("avatar-can-hoverbox");
-    else parent.classList.add("parent-can-hoverbox");
-    let pre_existing_badge_type;
-    if (pre_existing_badge) pre_existing_badge_type = pre_existing_badge.classList[1].replace("avatar-status-dot--", "user-status-");
-    if (pre_existing_badge_type == "user-follow") {
-      pre_existing_badge = null;
-      pre_existing_badge_type = null;
-    }
-    if (badges) avatar3.appendChild(create_badge(badges[badges.length - 1], true));
-    tippy_esm_default(parent ? parent : avatar3, {
-      theme: "user",
-      content: html.node`
-            <div class="image-header">
-                <div class="inner-image">
-                    <img src=${avatar_img.getAttribute("src").replace("/avatar42s/", "/avatar170s/")} alt=${name}>
-                    <a href="${root}user/${name}" class="link-over"></a>
-                </div>
-            </div>
-            <div class="info">
-                <h5 class="title"><a href="${root}user/${name}">${name}</a></h5>
-                ${badges ? html.node`
-                <div class="badges">
-                    ${badges.map((badge, index3) => create_badge(badge, false, index3 == badges.length - 1))}
-                    ${pre_existing_badge ? create_badge({
-        type: pre_existing_badge_type,
-        name: tl(trans.badges[pre_existing_badge_type].name),
-        reason: tl(trans.badges[pre_existing_badge_type].reason),
-        inbuilt: true
-      }) : ""}
-                </div>
-                ` : pre_existing_badge ? html.node`
-                <div class="badges">
-                    ${create_badge({
-        type: pre_existing_badge_type,
-        name: tl(trans.badges[pre_existing_badge_type].name),
-        reason: tl(trans.badges[pre_existing_badge_type].reason),
-        inbuilt: true
-      })}
-                </div>
-                ` : ""}
-            </div>
-        `,
-      placement: side,
-      interactive: true,
-      trigger: "click"
-    });
-    control_gif_pause(avatar_img);
-    if (badges) return badges[badges.length - 1];
-    else if (pre_existing_badge) return { type: pre_existing_badge.classList[1] };
-    else return { type: "none" };
-  }
-  function return_name_from_avatar(avatar3) {
-    if (!avatar3)
-      return;
-    if (!avatar3.hasAttribute("alt"))
-      return;
-    if (avatar3.getAttribute("alt") == tl(trans.your_avatar))
-      return auth;
-    return avatar3.getAttribute("alt").replace(tl(trans.avatar_for_user), "");
-  }
-  unsafeWindow._expand_avatar = function(src) {
-    expand_avatar(src);
-  };
-  function expand_avatar(src, alt = "") {
-    dialog({
-      id: "avatar",
-      body: html.node`
-            <div class="full-avatar-wrapper">
-                <div class="full-avatar">
-                    <img src=${src} alt=${alt}>
-                    ${alt != "" ? () => {
-        const elem = html.node`
-                            <div class="alt-text">
-                                ALT
-                            </div>
-                        `;
-        tippy_esm_default(elem, {
-          content: alt
-        });
-        return elem;
-      } : ""}
-                </div>
-                <div class="modal-footer">
-                    <div class="fill"></div>
-                    <div class="button-group">
-                        <a class="btn primary open" href=${src} target="_blank">
-                            ${tl(trans.open_new_tab)}
-                        </a>
-                    </div>
-                    <div class="fill"></div>
-                </div>
-            </div>
-        `,
-      type: "avatar",
-      has_overlays: false
-    });
-  }
-
-  // src/pages/wiki.js
-  function bleh_wiki() {
-    let wiki_panel = document.createElement("section");
-    wiki_panel.classList.add("wiki-panel");
-    wiki_panel.innerHTML = page.structure.main.innerHTML;
-    page.structure.main.innerHTML = "";
-    page.structure.main.appendChild(wiki_panel);
-    page.structure.main.classList.add("not-a-panel");
-    let original_edit_button = page.structure.main.querySelector(".qa-wiki-edit");
-    let original_version_history = page.structure.main.querySelector(".wiki-history-link--desktop a");
-    let side_actions = document.createElement("section");
-    side_actions.classList.add("side-actions");
-    if (!page.mobile)
-      page.structure.side.appendChild(side_actions);
-    else
-      page.structure.main.appendChild(side_actions);
-    if (original_edit_button) {
-      let side_edit = document.createElement("a");
-      side_edit.classList.add("btn", "side-action");
-      side_edit.setAttribute("href", original_edit_button.getAttribute("href"));
-      side_edit.setAttribute("data-type", "edit");
-      side_edit.textContent = tl(trans.edit);
-      side_actions.appendChild(side_edit);
-    }
-    if (original_version_history) {
-      let side_history = document.createElement("a");
-      side_history.classList.add("btn", "side-action");
-      side_history.setAttribute("href", original_version_history.getAttribute("href"));
-      side_history.setAttribute("data-type", "history");
-      side_history.textContent = tl(trans.timeline);
-      side_actions.appendChild(side_history);
-    }
-    let wiki_author = wiki_panel.querySelector(".wiki-author");
-    if (wiki_author) {
-      let h22 = wiki_panel.querySelector("h2.text-18");
-      let sub_text = document.createElement("div");
-      sub_text.classList.add("sub-text", "space-below", "header-style");
-      sub_text.innerHTML = `
-            <div class="breadcrumb-origin prominent">
-                ${h22 ? h22.innerHTML : page.structure.container.querySelector(".content-top-header").textContent}
-            </div>
-            <div class="wiki-author-side">
-                ${wiki_author.innerHTML}
-            </div>
-        `;
-      wiki_panel.insertBefore(sub_text, wiki_panel.firstElementChild);
-      if (h22)
-        wiki_panel.removeChild(h22);
-    }
-    let wiki = wiki_panel.querySelector(".wiki");
-    if (!wiki) return;
-    patch_wiki_contents(wiki);
-    let factbox = wiki_panel.querySelector(".factbox");
-    if (factbox) {
-      let facts = html.node`
-            <section class="facts">
-                ${factbox}
-            </section>
-        `;
-      side_actions.after(facts);
-    }
-  }
-  function bleh_wiki_history() {
-    let breadcrumb_root = page.structure.container.querySelector(".subpage-breadcrumb");
-    let breadcrumb_name = page.structure.container.querySelector(".subpage-title");
-    if (!breadcrumb_root) {
-      breadcrumb_root = page.structure.container.querySelector(".content-top-back-link");
-      breadcrumb_name = page.structure.container.querySelector(".content-top-header");
-    }
-    let sub_text = document.createElement("div");
-    sub_text.classList.add("sub-text", "space-below", "header-style");
-    sub_text.innerHTML = `
-        <div class="breadcrumb">
-            ${breadcrumb_root.querySelector("a").outerHTML}
-            <div class="breadcrumb-name prominent">
-                ${breadcrumb_name.textContent}
-            </div>
-        </div>
-    `;
-    breadcrumb_root.style.setProperty("display", "none");
-    breadcrumb_name.style.setProperty("display", "none");
-    let buffer_container = page.structure.container.querySelector(".row ~ .buffer-4");
-    if (!buffer_container)
-      buffer_container = page.structure.container.querySelector(".wiki-history");
-    let wiki_history_table = buffer_container.querySelector(".wiki-history-table");
-    let pagination = buffer_container.querySelector(".pagination");
-    let wiki_panel = document.createElement("section");
-    wiki_panel.classList.add("wiki-history-panel");
-    wiki_panel.appendChild(sub_text);
-    wiki_panel.appendChild(wiki_history_table);
-    page.structure.main.appendChild(wiki_panel);
-    buffer_container.style.setProperty("display", "none");
-    if (pagination)
-      wiki_panel.appendChild(pagination);
-    let side_actions = html.node`
-        <section class="side-actions">
-            <a class="btn side-action" data-type="latest-wiki" href="${sub_text.querySelector("a").getAttribute("href")}">
-                ${tl(trans.view_latest)}
-            </a>
-        </section>
-    `;
-    if (!page.mobile)
-      page.structure.side.appendChild(side_actions);
-    else
-      page.structure.main.appendChild(side_actions);
-    let entries2 = page.structure.main.querySelectorAll(".wiki-history-entry");
-    entries2.forEach((entry) => {
-      let author = entry.querySelector(".wiki-history-author");
-      let avatar3 = author.querySelector(".wiki-history-author-avatar");
-      let name = author.querySelector(".link-block-target");
-      if (name && avatar3) {
-        let badge = patch_avatar(avatar3, name.textContent, "wiki");
-        if (badge && badge.type) {
-          if (badge.hue > -1 && badge.sat > -1 && badge.lit > -1) {
-            name.style.setProperty("--hue-over", badge.hue);
-            name.style.setProperty("--sat-over", badge.sat);
-            name.style.setProperty("--lit-over", badge.lit);
-          } else {
-            name.classList.add(`user-status--bleh-${badge.type}`, `user-status--bleh-user-${badge.user}`);
-          }
-        } else if (badge) {
-          name.classList.add(badge.type);
-        }
-      }
-    });
-  }
-  function bleh_wiki_editor() {
-    let wiki_edit_panel = document.createElement("section");
-    wiki_edit_panel.classList.add("wiki-edit-panel");
-    wiki_edit_panel.innerHTML = page.structure.main.innerHTML;
-    page.structure.main.innerHTML = "";
-    page.structure.main.appendChild(wiki_edit_panel);
-    page.structure.main.classList.add("not-a-panel");
-    let breadcrumb_root = page.structure.container.querySelector(".subpage-breadcrumb");
-    let breadcrumb_name = page.structure.container.querySelector(".subpage-title");
-    if (!breadcrumb_name) {
-      breadcrumb_name = page.structure.content_top.querySelector(".content-top-header");
-      if (breadcrumb_name)
-        page.structure.content_top.style.setProperty("display", "none");
-    }
-    if (!breadcrumb_root) {
-      breadcrumb_root = page.structure.container.querySelector(".content-top-back-link");
-      breadcrumb_name = page.structure.container.querySelector(".content-top-header");
-    }
-    let sub_text = document.createElement("div");
-    sub_text.classList.add("sub-text", "space-below", "header-style");
-    sub_text.innerHTML = `
-        <div class="breadcrumb">
-            ${breadcrumb_root.querySelector("a").outerHTML}
-            <div class="breadcrumb-name prominent">
-                ${breadcrumb_name.textContent}
-            </div>
-        </div>
-    `;
-    breadcrumb_root.style.setProperty("display", "none");
-    breadcrumb_name.style.setProperty("display", "none");
-    wiki_edit_panel.insertBefore(sub_text, wiki_edit_panel.firstElementChild);
-    page.structure.side.innerHTML = "";
-    const side_actions = html.node`
-        <section class="side-actions">
-            <a class="btn side-action" data-type="latest-wiki" href="${sub_text.querySelector("a").getAttribute("href")}">
-                ${tl(trans.view_latest)}
-            </a>
-        </section>
-    `;
-    if (!page.mobile)
-      page.structure.side.appendChild(side_actions);
-    else
-      page.structure.main.appendChild(side_actions);
-    const presets = [`\u201C`, `\u201D`, `\u2014`, `\u2018`, `\u2019`, `-`];
-    const standards = [
-      tl(trans.wiki_standard_tracks),
-      tl(trans.wiki_standard_artists),
-      tl(trans.wiki_standard_quotations)
-    ];
-    page.structure.side.appendChild(html.node`
-        <section class="wiki-presets-panel">
-            <h3 class="text-18">${tl(trans.symbol_presets)}</h3>
-            <div class="presets">
-                ${presets.map((preset) => {
-      let item = html.node`
-                        <div class="preset" onclick=${() => copy(preset)}>
-                            ${preset}
-                        </div>
-                    `;
-      tippy_esm_default(item, {
-        content: tl(trans.click_to_copy),
-        delay: [500, 0]
-      });
-      return item;
-    })}
-            </div>
-            <ul class="wiki-standards generic-list">
-                ${standards.map((standard) => html.node`<li>${standard}</li>`)}
-            </ul>
-        </section>
-    `);
-    page.structure.side.appendChild(html.node`
-        <section class="wiki-syntax-panel bleh--blank-panel">
-            <h3 class="text-18">${tl(trans.fancy_syntax)}</h3>
-            <div class="syntax-listing">
-                <div class="syntax-listing-item">
-                    <div class="code-side">[artist]julie[/artist]</div>
-                    <div class="detail-side">${{ html: tl(trans.links_to).replace("{link}", `<a href="${root}music/julie" data-link-type="artist" target="_blank">julie</a>`) }}</div>
-                </div>
-                <div class="syntax-listing-item">
-                    <div class="code-side">[album artist=julie]pushing daisies[/album]</div>
-                    <div class="detail-side">${{ html: tl(trans.links_to).replace("{link}", `<a href="${root}music/julie/pushing+daisies" data-link-type="album" target="_blank">pushing daisies</a>`) }}</div>
-                </div>
-                <div class="syntax-listing-item">
-                    <div class="code-side">[track artist=julie]very little effort[/track]</div>
-                    <div class="detail-side">${{ html: tl(trans.links_to).replace("{link}", `<a href="${root}music/julie/_/very+little+effort" data-link-type="track" target="_blank">very little effort</a>`) }}</div>
-                </div>
-            </div>
-            <div class="sep"></div>
-            <div class="syntax-listing">
-                <div class="syntax-listing-item">
-                    <div class="code-side">[url]https://katelyn.moe/bleh[/url]</div>
-                    <div class="detail-side">${{ html: tl(trans.links_to).replace("{link}", `<a href="https://katelyn.moe/bleh" target="_blank">https://katelyn.moe/bleh</a>`) }}</div>
-                </div>
-                <div class="syntax-listing-item">
-                    <div class="code-side">[url=https://katelyn.moe/bleh]blehhh[/url]</div>
-                    <div class="detail-side">${{ html: tl(trans.links_to).replace("{link}", `<a href="https://katelyn.moe/bleh" target="_blank">blehhh</a>`) }}</div>
-                </div>
-            </div>
-            <div class="sep"></div>
-            <div class="syntax-listing">
-                <div class="syntax-listing-item">
-                    <div class="code-side">[tag]grunge[/tag]</div>
-                    <div class="detail-side">${{ html: tl(trans.links_to).replace("{link}", `<a href="${root}tag/grunge" data-link-type="tag" target="_blank">grunge</a>`) }}</div>
-                </div>
-                <div class="syntax-listing-item">
-                    <div class="code-side">[user]${auth.name}[/user]</div>
-                    <div class="detail-side">${{ html: tl(trans.links_to).replace("{link}", `<a class="mention" href="${root}user/${auth.name}" target="_blank">@${auth.name}</a>`) }}</div>
-                </div>
-            </div>
-        </section>
-    `);
-    let rules = page.structure.main.querySelector(".wiki-style-rules");
-    rules.removeAttribute("id");
-    let rules_panel = document.createElement("section");
-    rules_panel.classList.add("rules-panel");
-    rules_panel.setAttribute("id", "stylerules");
-    rules_panel.innerHTML = rules.innerHTML;
-    page.structure.side.appendChild(rules_panel);
-  }
-  function patch_wiki() {
-    if (ff("show_wiki_label")) {
-      let wiki_col = page.structure.main.querySelector(".wiki-column");
-      let wiki_empty = false;
-      if (!wiki_col) {
-        wiki_col = page.structure.main.querySelector(".wiki-section");
-        return;
-      }
-      let wiki_block = wiki_col.querySelector(".wiki-block.visible-lg .wiki-block-inner-2");
-      if (!wiki_block) {
-        wiki_block = wiki_col.querySelector(".wiki-block-cta");
-        wiki_empty = true;
-      }
-      let read_more = wiki_block.querySelector("a:last-child");
-      if (read_more) {
-        read_more.classList.add("read-more");
-        read_more.textContent = tl(trans.read_more).toLowerCase();
-      }
-      wiki_col.insertBefore(html.node`
-            <div class="sub-text">
-                <p>${tl(trans.about)}</p>
-                <span class="right-links">
-                    <p><a class="wiki-edit-small" href="${document.location.href}/+wiki/edit">${tl(trans.edit_wiki).toLowerCase()}</a></p>
-                    ${!wiki_empty && read_more ? html.node`<p>${read_more}</p>` : ""}
-                </span>
-            </div>
-        `, wiki_col.firstElementChild);
-      if (!wiki_empty)
-        patch_wiki_contents(wiki_block);
-    }
-  }
-  function patch_wiki_contents(wiki_block) {
-    let links = wiki_block.querySelectorAll("a");
-    links.forEach((link) => {
-      let href = link.getAttribute("href");
-      let type;
-      let name = link.textContent.trim();
-      let sister;
-      if (!href.startsWith(root)) {
-        if (href && is_link_external(href)) {
-          link.addEventListener("click", (e) => {
-            const link2 = new URL(href);
-            const hostname = link2.hostname;
-            if (settings.trusted_sites.includes(hostname)) return;
-            e.preventDefault();
-            external_url_prompt(href);
-          });
-          if (link.textContent != href) {
-            tippy_esm_default(link, {
-              theme: "name-sister-combo",
-              content: html.node`
-                        <span class="name">${href}</span>
-                        <span class="sister">${tl(trans.external)}</span>
-                    `
-            });
-          }
-          return;
-        }
-      }
-      if (href.endsWith("/+wiki")) return;
-      href = href.replace(root, "").replace("music/", "");
-      if (href.startsWith("user/")) return;
-      if (href.startsWith("tag/")) {
-        type = "tag";
-      } else {
-        let split = href.split("/");
-        if (split.length == 1) {
-          type = "artist";
-        } else if (split.length == 2) {
-          type = "album";
-          name = desanitise(split[1]);
-          sister = desanitise(split[0]);
-        } else if (split.length == 3) {
-          type = "track";
-          name = desanitise(split[2]);
-          sister = desanitise(split[0]);
-        }
-      }
-      if (sister != void 0)
-        tippy_esm_default(link, {
-          theme: "name-sister-combo",
-          content: html.node`
-                    <span class="name">${name}</span>
-                    <span class="sister">${sister}</span>
-                `
-        });
-      link.setAttribute("data-link-type", type);
-    });
-  }
-
   // src/components/profile_shortcut.js
   unsafeWindow._open_profile_shortcut_window = function() {
     open_profile_shortcut_window();
@@ -27155,576 +26710,6 @@
     update_inbuilt_select(id, document.getElementById(id).value);
   };
 
-  // src/components/track.js
-  var import_color_thief_browser2 = __toESM(require_color_thief_min(), 1);
-  function patch_titles(search = page.structure.main) {
-    if (page.subpage === "tags_overview" || page.subpage == "tags_tag") return;
-    if (!search) {
-      log("tracks could not be searched as search was undefined", "tracks", "log", { search });
-      return;
-    }
-    const tracklists = search.querySelectorAll(".chartlist:not(.chartlist__placeholder)");
-    let insights = {
-      artist: {
-        display: false,
-        values: [],
-        labels: [],
-        highest: {
-          value: 0,
-          label: "",
-          link: "",
-          img: ""
-        }
-      },
-      album: {
-        display: false,
-        values: [],
-        labels: [],
-        highest: {
-          value: 0,
-          label: "",
-          link: "",
-          img: ""
-        }
-      },
-      track: {
-        display: false,
-        values: [],
-        labels: [],
-        highest: {
-          value: 0,
-          label: "",
-          link: "",
-          img: ""
-        }
-      }
-    };
-    tracklists.forEach((tracklist) => {
-      if (!tracklist) return;
-      log("found, checking", "tracks", "log", { tracklist, search });
-      if (tracklist.querySelector("tbody > .chartlist-row:first-child > .kate-placeholder"))
-        return;
-      log("new!", "tracks", "info", { tracklist });
-      let wide = tracklist.classList.contains("chartlist--wide-artist-column");
-      let tracks = tracklist.querySelectorAll(":is(.chartlist-row:not(.chartlist__placeholder-row), .chartlist-row--interlist-ad)");
-      tracks.forEach((track, index3) => {
-        console.log("track", track);
-        if (track.getAttribute("data-track-type")) return;
-        if (track.classList[0] === "chartlist-row--interlist-ad") {
-          track.parentElement.removeChild(track);
-          return;
-        }
-        track.style.setProperty("--delay", index3 * 0.04 + "s");
-        let bla = document.createElement("div");
-        bla.classList.add("kate-placeholder");
-        track.appendChild(bla);
-        let track_title = track.querySelector(".chartlist-name a:not(.offset-section-anchor)");
-        if (!track_title) return;
-        if (track_title.hasAttribute("title")) {
-          track_title.setAttribute("data-name", track_title.getAttribute("title"));
-          track_title.removeAttribute("title");
-        }
-        let is_user = track.querySelector(".chartlist-image .avatar");
-        let is_artist = false;
-        if (is_user) {
-          let link = track_title.getAttribute("href");
-          if (link.startsWith(`${root}music/`)) {
-            is_user = false;
-            is_artist = true;
-          }
-        }
-        log(`is user: ${is_user}, is artist: ${is_artist}`, "tracks", "log");
-        if (is_user) {
-          track.setAttribute("data-track-type", "user");
-          if (settings.colourful_counts)
-            patch_artist_ranks_in_list_view(track);
-          log("finished user stuff, returning", "tracks", "log");
-          return;
-        }
-        if (is_artist) {
-          track.setAttribute("data-track-type", "artist");
-          if (settings.colourful_counts)
-            patch_artist_ranks_in_list_view(track);
-          if (settings.corrections)
-            track_title.textContent = correct_artist(track_title.getAttribute("data-name"));
-          insights.artist.display = true;
-          let bar2 = track.querySelector(".chartlist-count-bar-slug");
-          let value = parseInt(bar2.getAttribute("data-stat-value"));
-          insights.artist.values.push(value);
-          if (value > insights.artist.highest.value)
-            insights.artist.highest.value = value;
-          log(`pushed insight artist label of ${track_title.textContent}`, "glacier library", "log");
-          insights.artist.labels.push(track_title.textContent);
-          log("finished artist stuff, returning", "tracks", "log");
-          return;
-        }
-        let is_album = track.hasAttribute("data-album-row");
-        if (is_album) track.classList.add("bleh--is-album");
-        let track_artist = return_artist_from_track(track_title.getAttribute("href"), is_album);
-        if (!wide) track.classList.add("chartlist-row--with-artist");
-        const bar = track.querySelector(".chartlist-count-bar-slug");
-        if (bar) {
-          let value = parseInt(bar.getAttribute("data-stat-value"));
-          if (is_album) {
-            insights.album.display = true;
-            insights.album.values.push(value);
-            if (value > insights.album.highest.value)
-              insights.album.highest.value = value;
-          } else {
-            insights.track.display = true;
-            insights.track.values.push(value);
-            if (value > insights.track.highest.value)
-              insights.track.highest.value = value;
-          }
-        }
-        const is_active = track.classList.contains("chartlist-row--now-scrobbling");
-        const has_bar = track.querySelector(":scope > .chartlist-bar");
-        let track_legacy_menu = track.querySelector(".chartlist-more-menu");
-        let track_timestamp = track.querySelector(".chartlist-timestamp span");
-        let track_timestamp_contents;
-        if (track_timestamp && !is_active) {
-          track_timestamp_contents = track_timestamp.getAttribute("title");
-          if (track_timestamp_contents) {
-            track_timestamp.setAttribute("title", "");
-            tippy_esm_default(track_timestamp, {
-              content: track_timestamp_contents
-            });
-          }
-        }
-        let album = track.querySelector(".chartlist-album a");
-        if (!is_album && album)
-          album.textContent = correct_item_by_artist(album.textContent, track_artist);
-        let image = track.querySelector(".chartlist-image img");
-        const album_link = track.querySelector(".chartlist-image a");
-        if (settings.format_guest_features) {
-          let formatted_title = name_includes(track_title.getAttribute("data-name"), track_artist);
-          console.log("formatted", formatted_title);
-          let song_title = track_title.getAttribute("data-name");
-          let song_tags = {};
-          if (formatted_title) {
-            song_title = formatted_title[0];
-            song_tags = formatted_title[1];
-          }
-          track_title.setAttribute("data-name", correct_item_by_artist(track_title.getAttribute("data-name"), track_artist));
-          render(track_title, html`
-                    <div class="title">${song_title.trim()}</div>
-                    ${song_tags.map((tag) => html.node`
-                        <div class="feat" data-bleh--tag-type="${tag.type}" data-bleh--tag-group="${tag.group}">${tag.text}</div>
-                    `)}
-                `);
-          let song_artist_element = track.querySelector(".chartlist-artist");
-          if (!song_artist_element && !is_user) {
-            song_artist_element = document.createElement("td");
-            song_artist_element.classList.add("chartlist-artist");
-            track.appendChild(song_artist_element);
-          }
-          console.log("artist matches", song_artist_element.textContent.replaceAll("+", " ").trim() === track_artist, "artist is blank", song_artist_element.textContent.trim() === "", song_artist_element.textContent.trim(), formatted_title[2]);
-          if (song_artist_element.textContent.replaceAll("+", " ").trim() === track_artist || song_artist_element.textContent.trim() === "") {
-            log("artist either matches or is blank, replacing", "tracks", "log");
-            render(song_artist_element, html`<a href="${root}music/${redirect()}${sanitise(formatted_title[2])}">${formatted_title[2]}</a>`);
-            let song_guests = formatted_title[3];
-            for (let guest in song_guests) {
-              song_artist_element.appendChild(html.node`
-                            ,<a href="${root}music/${redirect()}${sanitise(song_guests[guest])}">${song_guests[guest]}</a>
-                        `);
-            }
-          }
-          if (track_legacy_menu) {
-            track.preview = html.node`
-                        <div class="track-preview">
-                            <div class="image">
-                                <div class="inner-image">
-                                    ${image ? html.node`<img src=${image.getAttribute("src")} alt=${song_title}>` : html.node`<img class="missing-track" alt="">`}
-                                </div>
-                            </div>
-                            <div class="info">
-                                <h5 class="title">${song_title}</h5>
-                                <p class="artist">${song_artist_element.firstElementChild.textContent}</p>
-                                <div class="tags">
-                                    ${song_tags.map((tag) => html.node`
-                                        <div class="feat" data-bleh--tag-type="${tag.type}" data-bleh--tag-group="${tag.group}">${tag.text}</div>
-                                    `)}
-                                </div>
-                                ${is_album ? "" : html.node`<p class="album">${image && album_link ? correct_item_by_artist(image.getAttribute("alt"), track_artist) : album ? album.textContent : ""}</p>`}
-                                ${track_timestamp && track_timestamp_contents ? html.node`<p class="timestamp">${track_timestamp_contents}</p>` : ""}
-                            </div>
-                        </div>
-                    `;
-          }
-        } else if (settings.corrections) {
-          let song_artist_element = track.querySelector(".chartlist-artist a");
-          if (song_artist_element) {
-            let corrected_title = correct_item_by_artist(track_title.textContent, song_artist_element.textContent);
-            track_title.textContent = corrected_title;
-            track_title.setAttribute("data-name", corrected_title);
-            let corrected_artist = correct_artist(song_artist_element.textContent);
-            song_artist_element.textContent = corrected_artist;
-            song_artist_element.setAttribute("title", corrected_artist);
-          } else {
-            let corrected_title = correct_item_by_artist(track_title.textContent, track_artist);
-            track_title.textContent = corrected_title;
-            track_title.setAttribute("data-name", corrected_title);
-          }
-        }
-        if (track_legacy_menu) {
-          let menu;
-          let previous = track.querySelector(":scope > .more-button-wrapper");
-          if (previous) previous.style.display = "none";
-          const is_own_profile = page.type == "user" && page.name == auth.name;
-          const can_edit = is_own_profile && !is_active && (!is_album ? !has_bar : true) && auth.pro;
-          const can_delete = is_own_profile && !is_active && !has_bar && !is_album;
-          let more_button = html.node`
-                    <button class="track-more-button icon chibi" data-type="more" onclick=${() => {
-            console.info(menu);
-            menu.setProps({
-              placement: "bottom",
-              offset: [],
-              getReferenceClientRect: null
-            });
-            if (menu.state.isShown) {
-              menu.hide();
-            } else {
-              menu.show();
-            }
-          }}>
-                        ${tl(trans.more)}
-                    </button>
-                `;
-          tippy_esm_default(more_button, {
-            content: tl(trans.more)
-          });
-          track.appendChild(html.node`
-                    <td class="more-button-wrapper">
-                        ${more_button}
-                    </td>
-                `);
-          setTimeout(() => {
-            let edit_button = track_legacy_menu.querySelector('[data-analytics-action="EditScrobbleOpen"]');
-            let bulk_edit_button = track_legacy_menu.querySelector('[data-analytics-action="BulkEditScrobblesOpen"]');
-            let delete_button = track_legacy_menu.querySelector(".more-item--delete");
-            if (edit_button) {
-              let form = edit_button.parentElement;
-              page.token = form.querySelector('[name="csrfmiddlewaretoken"]').value;
-              track.setAttribute("data-action", form.getAttribute("action"));
-              if (!is_album) {
-                let album_name2 = form.querySelector('[name="album_name"]');
-                let album_artist_name = form.querySelector('[name="album_artist_name"]');
-                track.setAttribute("data-artist-name", correct_artist(form.querySelector('[name="artist_name"]').value));
-                track.setAttribute("data-track-name", correct_item_by_artist(form.querySelector('[name="track_name"]').value, form.querySelector('[name="artist_name"]').value));
-                if (album_name2) track.setAttribute("data-album-name", correct_item_by_artist(album_name2.value, form.querySelector('[name="artist_name"]').value));
-                if (album_artist_name) track.setAttribute("data-album-artist-name", correct_artist(album_artist_name.value));
-                track.setAttribute("data-timestamp", form.querySelector('[name="timestamp"]').value);
-              } else {
-                track.setAttribute("data-album-name", correct_item_by_artist(form.querySelector('[name="album_name"]').value, form.querySelector('[name="album_artist_name"]').value));
-                track.setAttribute("data-album-artist-name", correct_artist(form.querySelector('[name="album_artist_name"]').value));
-                track.setAttribute("data-album-name-original", correct_item_by_artist(form.querySelector('[name="album_name_original"]').value, form.querySelector('[name="album_artist_name_original"]').value));
-                track.setAttribute("data-album-artist-name-original", correct_artist(form.querySelector('[name="album_artist_name_original"]').value));
-                track.setAttribute("data-album-image", form.querySelector('[name="album_image"]').value);
-                track.setAttribute("data-count", form.querySelector('[name="count"]').value);
-              }
-            } else if (delete_button) {
-              let form = delete_button.parentElement;
-              page.token = form.querySelector('[name="csrfmiddlewaretoken"]').value;
-              track.setAttribute("data-artist-name", correct_artist(form.querySelector('[name="artist_name"]').value));
-              track.setAttribute("data-track-name", correct_item_by_artist(form.querySelector('[name="track_name"]').value, form.querySelector('[name="artist_name"]').value));
-              track.setAttribute("data-timestamp", form.querySelector('[name="timestamp"]').value);
-            }
-            let album_name = sanitise(image ? correct_item_by_artist(image.getAttribute("alt"), track_artist) : album ? album.textContent : "");
-            menu = tippy_esm_default(more_button, {
-              theme: "context-menu",
-              content: html.node`
-                            ${track.preview}
-                            ${can_edit ? html.node`
-                            <div class="button-combo">
-                                ${() => {
-                if (is_album) {
-                  return html.node`
-                                            <form style="margin: 0" method="POST" action=${track.getAttribute("data-action")} data-edit-scrobble="">
-                                                <input type="hidden" name="csrfmiddlewaretoken" value=${page.token}>
-                                                <input type="hidden" name="album_name" value=${track.getAttribute("data-album-name")}>
-                                                <input type="hidden" name="album_artist_name" value=${track.getAttribute("data-album-artist-name")}>
-                                                <input type="hidden" name="album_image" value=${track.getAttribute("data-album-image")}>
-                                                <input type="hidden" name="album_name_original" value=${track.getAttribute("data-album-name-original")}>
-                                                <input type="hidden" name="album_artist_name_original" value=${track.getAttribute("data-album-artist-name-original")}>
-                                                <input type="hidden" name="count" value=${track.getAttribute("data-count")}>
-                                                <button class="dropdown-menu-clickable-item" data-type="edit">
-                                                    ${tl(trans.edit)}
-                                                </button>
-                                            </form>
-                                        `;
-                }
-                return html.node`
-                                        <form style="margin: 0" method="POST" action=${track.getAttribute("data-action")} data-edit-scrobble="">
-                                            <input type="hidden" name="csrfmiddlewaretoken" value=${page.token}>
-                                            <input type="hidden" name="artist_name" value=${track.getAttribute("data-artist-name")}>
-                                            <input type="hidden" name="track_name" value=${track.getAttribute("data-track-name")}>
-                                            <input type="hidden" name="album_name" value=${track.getAttribute("data-album-name")}>
-                                            <input type="hidden" name="album_artist_name" value=${track.getAttribute("data-album-artist-name")}>
-                                            <input type="hidden" name="timestamp" value=${track.getAttribute("data-timestamp")}>
-                                            <button class="dropdown-menu-clickable-item" data-type="edit">
-                                                ${tl(trans.edit)}
-                                            </button>
-                                        </form>
-                                    `;
-              }}
-                                ${bulk_edit_button ? html.node`
-                                    <div class="button-combo-sep" />
-                                    ${() => {
-                let button = track_legacy_menu.querySelector('[data-analytics-action="BulkEditScrobblesOpen"]');
-                button.classList = "dropdown-menu-clickable-item chibi";
-                button.textContent = tl(trans.bulk_edit);
-                button.setAttribute("data-type", "bulk-edit");
-                tippy_esm_default(button, {
-                  content: tl(trans.bulk_edit)
-                });
-                return button;
-              }}
-                                ` : ""}
-                            </div>
-                            <div class="sep" />
-                            ` : ""}
-                            ${() => {
-                let container = track.querySelector(".chartlist-play");
-                if (!container) return;
-                let button = container.querySelector(".chartlist-play-button");
-                if (!button) return;
-                button.classList = "dropdown-menu-clickable-item";
-                button.textContent = tl(trans.play);
-                button.setAttribute("data-type", "play");
-                track.removeChild(container);
-                return button;
-              }}
-                            ${!is_album ? html.node`
-                            <div class="button-combo">
-                                ${() => {
-                return html.node`
-                                        <a class="dropdown-menu-clickable-item" data-type="track" href=${track_title.getAttribute("href")}>
-                                            ${tl(trans.track)}
-                                        </a>
-                                    `;
-              }}
-                                <div class="button-combo-sep"/>
-                                ${() => {
-                let button = html.node`
-                                        <a class="dropdown-menu-clickable-item chibi" data-type="continue" href="${root}user/${page.name}/library${track_title.getAttribute("href")}">
-                                            ${tl(trans.explore_in_library)}
-                                        </a>
-                                    `;
-                tippy_esm_default(button, {
-                  content: tl(trans.explore_in_library),
-                  delay: [500, 0]
-                });
-                return button;
-              }}
-                            </div>
-                            ` : ""}
-                            ${album_name && album_link ? html.node`
-                            <div class="button-combo">
-                                ${() => {
-                return html.node`
-                                        <a class="dropdown-menu-clickable-item" data-type="album" href=${album_link.getAttribute("href")}>
-                                            ${tl(trans.album)}
-                                        </a>
-                                    `;
-              }}
-                                <div class="button-combo-sep"/>
-                                ${() => {
-                let button = html.node`
-                                        <a class="dropdown-menu-clickable-item chibi" data-type="continue" href="${root}user/${page.name}/library${album_link.getAttribute("href")}">
-                                            ${tl(trans.explore_in_library)}
-                                        </a>
-                                    `;
-                tippy_esm_default(button, {
-                  content: tl(trans.explore_in_library),
-                  delay: [500, 0]
-                });
-                return button;
-              }}
-                            </div>
-                            ` : is_album ? html.node`
-                            <div class="button-combo">
-                                ${() => {
-                return html.node`
-                                        <a class="dropdown-menu-clickable-item" data-type="album" href=${track_title.getAttribute("href")}>
-                                            ${tl(trans.album)}
-                                        </a>
-                                    `;
-              }}
-                                <div class="button-combo-sep"/>
-                                ${() => {
-                let button = html.node`
-                                        <a class="dropdown-menu-clickable-item chibi" data-type="continue" href="${root}user/${page.name}/library${track_title.getAttribute("href")})}">
-                                            ${tl(trans.explore_in_library)}
-                                        </a>
-                                    `;
-                tippy_esm_default(button, {
-                  content: tl(trans.explore_in_library),
-                  delay: [500, 0]
-                });
-                return button;
-              }}
-                            </div>
-                            ` : ""}
-                            <div class="button-combo">
-                                ${() => {
-                return html.node`
-                                        <a class="dropdown-menu-clickable-item" data-type="artist" href="${root}music/${redirect()}${sanitise(track_artist)}">
-                                            ${tl(trans.artist)}
-                                        </a>
-                                    `;
-              }}
-                                <div class="button-combo-sep"/>
-                                ${() => {
-                let button = html.node`
-                                        <a class="dropdown-menu-clickable-item chibi" data-type="continue" href="${root}user/${page.name}/library/music/${redirect()}${sanitise(track_artist)}">
-                                            ${tl(trans.explore_in_library)}
-                                        </a>
-                                    `;
-                tippy_esm_default(button, {
-                  content: tl(trans.explore_in_library),
-                  delay: [500, 0]
-                });
-                return button;
-              }}
-                            </div>
-                            ${() => {
-                if (!is_own_profile || is_album) return;
-                let name = track.getAttribute("data-track-name");
-                let artist = track.getAttribute("data-artist-name");
-                if (!name) {
-                  name = track_title.getAttribute("data-name");
-                  artist = track_artist;
-                }
-                return html.node`
-                                    <form style="margin: 0" method="POST" action="${root}user/${auth.name}/obsessions" data-submit-to-modal="">
-                                        <input type="hidden" name="csrfmiddlewaretoken" value=${page.token}>
-                                        <input type="hidden" name="name" value=${name}>
-                                        <input type="hidden" name="artist_name" value=${artist}>
-                                        <button class="dropdown-menu-clickable-item" data-type="obsession">
-                                            ${tl(trans.obsess)}
-                                        </button>
-                                    </form>
-                                `;
-              }}
-                            <button class="dropdown-menu-clickable-item" data-type="link" onclick=${() => {
-                copy(track_title.href);
-              }}>
-                                ${tl(trans.copy)}
-                            </button>
-                            ${() => {
-                if (!is_own_profile || !can_delete) return;
-                let button = html.node`
-                                    <button class="dropdown-menu-clickable-item more-item--delete" data-type="delete">
-                                        ${tl(trans.delete)}
-                                    </button>
-                                `;
-                let form;
-                return html.node`
-                                    <div class="sep" />
-                                    <form ref=${(el) => form = el} style="margin: 0" method="POST" action="${root}user/${auth.name}/library/delete" onsubmit=${async (e) => {
-                  e.preventDefault();
-                  let url = `${root}user/${auth.name}/library/delete`;
-                  let form_data = new FormData(form);
-                  console.info(form_data);
-                  try {
-                    track.setAttribute("data-ajax-form-state", "deleted");
-                    await fetch(url, {
-                      method: "POST",
-                      body: form_data
-                    }).then((res) => {
-                      if (!res.ok) {
-                        log("failed to delete", "form", "error", { res });
-                        track.removeAttribute("data-ajax-form-state");
-                        return;
-                      }
-                      log("received response", "form", "info", { res });
-                      notify({
-                        id: "delete",
-                        title: tl(trans.deleted),
-                        body: track_title.getAttribute("data-name"),
-                        icon: "icon-16-trash",
-                        type: "error"
-                      });
-                    });
-                  } catch (e2) {
-                    console.error(e2);
-                    track.removeAttribute("data-ajax-form-state");
-                  }
-                }}>
-                                        <input type="hidden" name="csrfmiddlewaretoken" value=${page.token}>
-                                        <input type="hidden" name="artist_name" value=${track.getAttribute("data-artist-name")}>
-                                        <input type="hidden" name="track_name" value=${track.getAttribute("data-track-name")}>
-                                        <input type="hidden" name="timestamp" value=${track.getAttribute("data-timestamp")}>
-                                        ${button}
-                                    </form>
-                                `;
-              }}
-                        `,
-              placement: "right-start",
-              trigger: "manual",
-              interactive: true,
-              interactiveBorder: 10,
-              offset: [0, 0],
-              hideOnClick: false,
-              onShow(instance) {
-                track.setAttribute("data-has-menu", true);
-                instance.popper.addEventListener("click", (event3) => {
-                  instance.hide();
-                });
-              },
-              onClickOutside(instance) {
-                instance.hide();
-              },
-              onHide(instance) {
-                track.setAttribute("data-has-menu", false);
-              }
-            });
-            register_menu(track, menu);
-          }, 100);
-        }
-        if (is_album) {
-          log(`pushed insight album label of ${track_title.getAttribute("data-name")}`, "glacier library", "log");
-          insights.album.labels.push(track_title.getAttribute("data-name"));
-        } else {
-          log(`pushed insight track label of ${track_title.getAttribute("data-name")}`, "glacier library", "log");
-          insights.track.labels.push(track_title.getAttribute("data-name"));
-        }
-        const show_album_text = (is_active || settings.expand_tracks == "always") && settings.expand_tracks != "never";
-        track.setAttribute("data-show-album-text", show_album_text);
-        if (!is_album && !has_bar && show_album_text) {
-          let image_wrap = track.querySelector(".chartlist-image");
-          if (image_wrap) {
-            let link = image_wrap.querySelector(".cover-art");
-            let image2 = link.querySelector("img");
-            if (!settings.album_text) {
-              let alt = correct_item_by_artist(image2.getAttribute("alt"), track_artist);
-              track.appendChild(html.node`
-                            <td class="chartlist-album custom-album-text">
-                                <a href="${link.getAttribute("href")}">${alt}</a>
-                            </td>
-                        `);
-            }
-            if (!settings.colourful_tracks || !is_active) return;
-            image2.setAttribute("crossorigin", "anonymous");
-            try {
-              image2.addEventListener("load", function() {
-                let thief = new import_color_thief_browser2.default();
-                let colour2 = thief.getColor(image2);
-                let hsl = rgb_to_hsl(colour2[0], colour2[1], colour2[2]);
-                track.style.setProperty("--hue-over", hsl.h);
-                track.style.setProperty("--sat-over", clamp_sat2(hsl.s / 100 * 3));
-                track.style.setProperty("--lit-over", 1);
-              });
-            } catch (e) {
-            }
-          }
-        }
-      });
-    });
-    if (page.subpage.startsWith("library"))
-      bleh_glacier_insights(insights);
-  }
-
   // src/components/share.js
   function share(url) {
     let input2;
@@ -27782,7769 +26767,6 @@
       body: filename,
       icon: "icon-16-download"
     });
-  }
-
-  // src/components/collage.js
-  var import_html2canvas_pro = __toESM(require_html2canvas_pro(), 1);
-  function collage({
-    host,
-    sidebar
-  } = {}) {
-    if (!host || !sidebar) return;
-    let width;
-    let height;
-    let timeframe;
-    let type;
-    let settings_btn;
-    let submit;
-    let body;
-    let value = 5;
-    let min2 = 1;
-    let max2 = 20;
-    let current_year = (/* @__PURE__ */ new Date()).getFullYear();
-    let previous_year = current_year - 1;
-    const default_type = page.requested.type || "albums";
-    const default_timeframe = page.requested.timeframe || "date_preset=LAST_90_DAYS";
-    if (page.requested.redirect) {
-      setTimeout(() => {
-        notify({
-          id: "collage_redirect",
-          title: tl(trans.collage),
-          body: tl(trans.collage_redirect),
-          icon: "icon-16-collage",
-          persist: true
-        });
-      }, 100);
-    }
-    let user;
-    render(host, html`
-        <div class="compare-header">
-            <div class="compare-users">
-                <div class="compare-user focus" ref=${(el) => user = el}>
-                    ${render_user(page.name, page.avatar, user, true)}
-                </div>
-            </div>
-            <div class="compare-selection">
-                <div class="input-group">
-                    ${width = input({
-      type: "number",
-      value,
-      placeholder: value,
-      min: min2,
-      max: max2
-    })}
-                    <div class="bleh-icon" style="--icon: var(--icon-16-x)" />
-                    ${height = input({
-      type: "number",
-      value,
-      placeholder: value,
-      min: min2,
-      max: max2
-    })}
-                </div>
-                ${type = select([
-      {
-        value: "artists",
-        text: html`<div class="bleh-icon" style="--icon: var(--icon-16-artist)" />${tl(trans.artists)}`
-      },
-      {
-        value: "albums",
-        text: html`<div class="bleh-icon" style="--icon: var(--icon-16-album)" />${tl(trans.albums)}`
-      },
-      {
-        value: "tracks",
-        text: html`<div class="bleh-icon" style="--icon: var(--icon-16-track)" />${tl(trans.tracks)}`
-      }
-    ], default_type)}
-                ${timeframe = select([
-      {
-        value: "date_preset=LAST_7_DAYS",
-        text: tl(trans.last_count_days).replace("{c}", "7")
-      },
-      {
-        value: "date_preset=LAST_30_DAYS",
-        text: tl(trans.last_count_days).replace("{c}", "30")
-      },
-      {
-        value: "date_preset=LAST_90_DAYS",
-        text: tl(trans.last_count_days).replace("{c}", "90")
-      },
-      {
-        value: "date_preset=LAST_180_DAYS",
-        text: tl(trans.last_count_days).replace("{c}", "180")
-      },
-      {
-        value: "date_preset=LAST_365_DAYS",
-        text: tl(trans.last_count_days).replace("{c}", "365")
-      },
-      {
-        value: "date_preset=ALL",
-        text: tl(trans.all_time)
-      },
-      {
-        value: `from=${current_year}-01-01&rangetype=year`,
-        text: current_year
-      },
-      {
-        value: `from=${previous_year}-01-01&rangetype=year`,
-        text: previous_year
-      }
-    ], default_timeframe)}
-                <button class="btn primary icon" data-type="collage" ref=${(el) => submit = el} onclick=${() => make_collage()}>${tl(trans.generate)}</button>
-            </div>
-        </div>
-        <div class="compare-body" data-filled="false" ref=${(el) => body = el}>
-            <div class="loading-data-container">
-                <div class="loading-data-text info">${tl(trans.choose_a_timeframe_above)}</div>
-            </div>
-        </div>
-    `);
-    let width_input = width.querySelector("input");
-    let height_input = height.querySelector("input");
-    let timeframe_select = timeframe.querySelector("select");
-    let type_select = type.querySelector("select");
-    let setting_group;
-    let inputter;
-    render(sidebar, html`
-        <h2>${tl(trans.settings)}</h2>
-        <div class="setting-group" ref=${(el) => setting_group = el}>
-            <div class="setting v" data-type="text">
-                <div class="heading">
-                    <h5>${tl(trans.profile)}</h5>
-                </div>
-                <div class="input-container content-form">
-                    <input type="text" class="input" ref=${(el) => inputter = el} placeholder=${tl(trans.enter_a_profile)} value=${page.requested.profile} onchange=${(e) => {
-      page.requested.profile = e.target.value;
-      page.name = page.requested.profile;
-      page.avatar = "";
-      if (page.name == auth.name) page.avatar = auth.avatar;
-      render(user, html`
-                            ${render_user(page.name, page.avatar, user, true)}
-                        `);
-    }}>
-                    ${() => {
-      let btn = html.node`
-                            <button class="btn chibi icon" data-type="profile" onclick=${() => {
-        inputter.value = auth.name;
-        inputter.dispatchEvent(new Event("change"));
-      }}>${tl(trans.profile)}</button>
-                        `;
-      tippy_esm_default(btn, {
-        content: tl(trans.profile)
-      });
-      return btn;
-    }}
-                    ${() => {
-      let btn = html.node`
-                            <button class="btn chibi icon" data-type="profile_shortcut" onclick=${() => {
-        if (settings.profile_shortcut == "") return;
-        inputter.value = settings.profile_shortcut;
-        inputter.dispatchEvent(new Event("change"));
-      }}>${tl(trans.profile_shortcut.name)}</button>
-                        `;
-      tippy_esm_default(btn, {
-        content: tl(trans.profile_shortcut.name)
-      });
-      return btn;
-    }}
-                </div>
-            </div>
-            ${setting({ id: "collage_title" })}
-            ${setting({ id: "collage_grid_gap" })}
-            ${setting({ id: "collage_centered" })}
-            ${setting({ id: "collage_grid_text" })}
-            ${setting({ id: "collage_grid_plays" })}
-        </div>
-    `);
-    let collage_settings = setting_group.querySelectorAll(":scope > .setting");
-    function make_collage(bypass = false) {
-      if (width_input.value == "" || height_input.value == "" || parseInt(width_input.value) < min2 || parseInt(width_input.value) > max2 || parseInt(height_input.value) < min2 || parseInt(height_input.value) > max2) {
-        notify({
-          id: "collage_failed",
-          title: tl(trans.name_failed).replace("{name}", tl(trans.collage)),
-          body: tl(trans.your_settings_are_invalid),
-          type: "error"
-        });
-        return;
-      }
-      let per_page = 50;
-      let pages = Math.ceil(width_input.value * height_input.value / per_page);
-      if (pages > 4 && !bypass) {
-        let warn = notify({
-          id: "collage_warning",
-          title: tl(trans.are_you_sure),
-          body: tl(trans.this_will_require_loading_count_pages).replace("{c}", pages),
-          type: "warning",
-          actions: [
-            {
-              type: "check",
-              action: () => {
-                notify_rm(warn);
-                make_collage(true);
-              },
-              text: tl(trans.continue)
-            }
-          ],
-          persist: true
-        });
-        return;
-      }
-      type.querySelector("button").disabled = true;
-      timeframe.querySelector("button").disabled = true;
-      collage_settings.forEach((option) => {
-        option.setAttribute("disabled", true);
-      });
-      submit.disabled = true;
-      page.state.collage = [];
-      get_grid(1, pages);
-    }
-    function get_grid(current_page, pages) {
-      render(body, html`
-            <div class="loading-data-container">
-                <div class="loading-data-text">${tl(trans.gathering_plays_for_user_pages).replace("{u}", page.name).replace("{current_page}", current_page).replace("{pages}", pages)}</div>
-            </div>
-        `);
-      fetch(`${root}user/${page.name}/library/${type_select.value}?format=list&${timeframe_select.value}&page=${current_page}&ajax=1`).then(function(response) {
-        console.log("returned", response, response.text);
-        return response.text();
-      }).then(function(dom) {
-        let doc = new DOMParser().parseFromString(dom, "text/html");
-        console.log("DOC", doc);
-        let next_button = doc.querySelector(".pagination-next");
-        try {
-          let tracks = doc.querySelectorAll(".chartlist-row");
-          tracks.forEach((track) => {
-            let item = {};
-            item.avatar = track.querySelector(".chartlist-image img");
-            if (item.avatar)
-              item.avatar = item.avatar.getAttribute("src");
-            item.name = track.querySelector(".chartlist-name a").textContent.trim();
-            if (type_select.value != "artists")
-              item.sister = track.querySelector(".chartlist-artist a").textContent.trim();
-            item.plays = clean_number(track.querySelector(".chartlist-count-bar-slug").getAttribute("data-stat-value"));
-            page.state.collage.push(item);
-          });
-        } catch (e) {
-          notify({
-            id: "collage_failed",
-            title: tl(trans.name_failed).replace("{name}", tl(trans.collage)),
-            body: tl(trans.there_was_a_network_error),
-            type: "error"
-          });
-          console.error(e);
-        }
-        if (next_button && current_page < pages) {
-          get_grid(current_page + 1, pages);
-        } else {
-          continue_collage();
-        }
-      });
-    }
-    async function continue_collage() {
-      log("gathered initial values", "collage", "info", page.state.collage);
-      if (page.state.collage.length == 0) {
-        render(body, html`
-                <div class="loading-data-container">
-                    <div class="loading-data-text failed">${tl(trans.no_plays_in_range)}</div>
-                </div>
-            `);
-        type.querySelector("button").disabled = false;
-        timeframe.querySelector("button").disabled = false;
-        collage_settings.forEach((option) => {
-          option.setAttribute("disabled", false);
-        });
-        submit.disabled = false;
-        return;
-      }
-      let grid = html.node`
-            <ol class="grid-items grid-items--numbered collage-grid" style="--width: ${width_input.value}; --height: ${height_input.value}" data-width=${width_input.value} data-height=${height_input.value} data-centered=${settings.collage_centered} />
-        `;
-      if (!settings.collage_grid_gap) {
-        grid.style.setProperty("--item-list-gap", "0px");
-        grid.style.setProperty("--item-med-radius", "0");
-      }
-      let total = width_input.value * height_input.value - 1;
-      grid.style.setProperty("--highest", Math.max(+width_input.value, +height_input.value).toString());
-      page.state.collage.some((data2, index3) => {
-        if (index3 > total)
-          return false;
-        let template;
-        if (type_select.value == "artists")
-          template = sanitise(data2.name);
-        else
-          template = `${sanitise(data2.sister)}/${sanitise(data2.name)}`;
-        grid.appendChild(html.node`
-                <li class="compare-item grid-items-item">
-                    <div class="grid-items-cover-image">
-                        <div class="grid-items-cover-image-image ${data2.avatar.endsWith("/c6f59c1e5e7240a4c0d427abd71f3dbb.jpg") || data2.avatar.endsWith("/2a96cbd8b46e442fc41c2b86b821562f.jpg") ? "grid-items-cover-default" : ""}">
-                            <img src="${data2.avatar.replace("/avatar70s/", "/avatar300s/").replace("/64s/", "/avatar300s/")}" alt="${data2.name}" loading="lazy">
-                        </div>
-                        ${settings.collage_grid_text || settings.collage_grid_plays ? html.node`
-                        <div class="grid-items-item-details">
-                            ${settings.collage_grid_text ? html.node`
-                            <p class="grid-items-item-main-text">
-                                <a class="link-block-target" href="${root}music/${redirect()}${template}" title="${data2.name}">
-                                    ${data2.name}
-                                </a>
-                            </p>
-                            ` : ""}
-                            ${type_select.value != "artists" ? html.node`
-                            <p class="grid-items-item-aux-text">
-                                ${settings.collage_grid_text ? html.node`
-                                <a class="grid-items-item-aux-block" href="${root}music/${redirect()}${data2.sister}">
-                                    ${data2.sister}
-                                </a>
-                                ${settings.collage_grid_plays ? html.node`
-                                <a class="grid-item-plays" href="${root}user/${page.name}/library/music/${redirect()}${template}?date_preset=${timeframe_select.value}" target="_blank">
-                                    ${data2.plays.toLocaleString(lang)}
-                                </a>
-                                ` : ""}
-                                ` : settings.collage_grid_plays ? html.node`
-                                <a class="grid-item-plays" href="${root}user/${page.name}/library/music/${redirect()}${template}?date_preset=${timeframe_select.value}" target="_blank">
-                                    ${data2.plays.toLocaleString(lang)}${tl(trans.plays_lower)}
-                                </a>
-                                ` : ""}
-                            </p>
-                            ` : html.node`
-                            ${settings.collage_grid_plays ? html.node`
-                            <p class="grid-items-item-aux-text">
-                                <a class="grid-item-plays" href="${root}user/${page.name}/library/music/${redirect()}${template}?date_preset=${timeframe_select.value}" target="_blank">
-                                    ${data2.plays.toLocaleString(lang)}${tl(trans.plays_lower)}
-                                </a>
-                            </p>
-                            ` : ""}
-                            `}
-                        </div>
-                        ` : ""}
-                    </div>
-                </li>
-            `);
-      });
-      let collage_dom = html.node`
-            <div class="collage">
-                ${settings.collage_title ? html.node`
-                <div class="header">
-                    <div class="type" data-type=${type_select.value}>
-                        <div class="bleh-icon" />
-                        <strong class="brand">${version.brand}</strong>
-                        <strong>${timeframe.querySelector("button").textContent}</strong>
-                        <strong>${tl(trans.top_type).replace("{type}", tl(trans[type_select.value]))}</strong>
-                        <strong>${width_input.value}×${height_input.value}</strong>
-                    </div>
-                    <div class="user">
-                        <div class="avatar">
-                            <img src="${page.avatar}" alt="${tl(trans.avatar_for_user).replace("{u}", page.name)}">
-                        </div>
-                        <strong>${page.name}</strong>
-                    </div>
-                </div>
-                ` : ""}
-                ${grid}
-            </div>
-        `;
-      render(body, html`
-            <div class="loading-data-container">
-                <div class="loading-data-text">${tl(trans.waiting_for_images)}</div>
-            </div>
-            ${collage_dom}
-        `);
-      music_grids(grid, false);
-      const default_size = 380;
-      const base = 6;
-      const highest = Math.max(+width_input.value, +height_input.value);
-      const grid_item_size = Math.min(
-        default_size,
-        Math.floor(default_size * base / highest)
-      );
-      const grid_item_gap = settings.collage_grid_gap ? 10 : 0;
-      const padding = settings.collage_grid_gap ? 15 : 0;
-      const title_height = settings.collage_title ? 32 + 15 : 0;
-      const width2 = padding * 2 + grid_item_size * width_input.value + grid_item_gap * (width_input.value - 1);
-      const height2 = padding * 2 + title_height + grid_item_size * height_input.value + grid_item_gap * (height_input.value - 1);
-      const cv_scale = 1;
-      collage_dom.style.width = `${width2}px`;
-      collage_dom.style.height = `${height2}px`;
-      collage_dom.style.padding = `${padding}px`;
-      collage_dom.style.gap = `${padding}px`;
-      collage_dom.style.setProperty("--item-list-gap", `${grid_item_gap}px`);
-      collage_dom.style.setProperty("--grid-item-size", `${grid_item_size}px`);
-      let initial_canvas = html.node`
-            <canvas width=${width2 * cv_scale} height=${height2 * cv_scale} />
-        `;
-      (0, import_html2canvas_pro.default)(collage_dom, {
-        useCORS: true,
-        letterRendering: true,
-        canvas: initial_canvas,
-        scale: cv_scale,
-        onclone: (doc) => {
-          doc.querySelectorAll("*").forEach((el) => {
-            if (el.classList == "brand")
-              el.style.setProperty("font-family", "Darumadrop One");
-            else
-              el.style.setProperty("font-family", "Overpass, Inter, Ubuntu Sans, Spline Sans, Roboto, Noto Sans, Noto Sans JP, Noto Sans KR, Noto Sans TC, Lucida Grande, Verdana, Tahoma, -apple-system, BlinkMacSystemFont, sans-serif");
-          });
-        }
-      }).then((canvas) => {
-        canvas.toBlob((blob) => {
-          const blob_url = URL.createObjectURL(blob);
-          const date = /* @__PURE__ */ new Date();
-          const filename = tl(trans.chart_template_filename).replace("{timeframe}", timeframe.querySelector("button").textContent).replace("{user}", page.name).replace("{type}", tl(trans[type_select.value])).replace("{size}", `${width_input.value}\xD7${height_input.value}`).replace("{brand}", version.brand).replace("{date}", `${date.getFullYear()}-${pad2(date.getMonth() + 1)}-${pad2(date.getDate())}`);
-          render(body, html`
-                    <div class="collage-finished">
-                        <strong>${tl(trans.your_collage_is_ready)}</strong>
-                        <div class="button-group">
-                            <button
-                                class="btn primary icon"
-                                data-type="download"
-                                onclick=${() => download(blob_url, filename)}
-                            >
-                                ${tl(trans.download)}
-                            </button>
-                            <button
-                                class="btn open"
-                                data-type="open"
-                                onclick=${() => open(blob_url)}
-                            >
-                                ${tl(trans.open)}
-                            </button>
-                        </div>
-                    </div>
-                    ${canvas}
-                `);
-          type.querySelector("button").disabled = false;
-          timeframe.querySelector("button").disabled = false;
-          collage_settings.forEach((option) => {
-            option.setAttribute("disabled", false);
-          });
-          submit.disabled = false;
-        }, "image/png");
-      });
-    }
-  }
-
-  // src/components/pixel.js
-  function pixel({
-    host,
-    sidebar
-  } = {}) {
-    if (!host || !sidebar) return;
-    let text3 = "my anti-aircraft friend";
-    let title_elem;
-    let hints_container;
-    render(host, html`
-        <div class="pixel-artwork">
-            <img src="https://lastfm.freetls.fastly.net/i/u/ar0/def68d94aae8e52ef2d1c0c9d3e16ff4.jpg" alt=${auth.name}>
-        </div>
-        <div class="pixel-info">
-            <div class="sub-text">${tl(trans.jumbled_title)}</div>
-            <div class="pixel-album-name">
-                <h1 ref=${(el) => title_elem = el}>${jumble_string(text3)}</h1>
-                ${() => {
-      let btn = html.node`
-                        <button class="chibi icon" data-type="jumble" onclick=${() => {
-        title_elem.textContent = jumble_string(text3);
-      }}>
-                            ${tl(trans.re_jumble)}
-                        </button>
-                    `;
-      tippy_esm_default(btn, {
-        content: tl(trans.re_jumble)
-      });
-      return btn;
-    }}
-            </div>
-            <div class="pixel-guess">
-                ${input({
-      type: "text",
-      placeholder: tl(trans.enter_a_guess),
-      func: (value) => {
-        console.info(value);
-      }
-    })}
-                <p class="card-tip">${tl(trans.jumbled_guess)}</p>
-            </div>
-            <h2>${tl(trans.hints)}</h2>
-            <div class="hints" ref=${(el) => hints_container = el}></div>
-        </div>
-    `);
-  }
-  function shuffle_array(arr) {
-    for (let i = arr.length - 1; i > 0; i--) {
-      const j = Math.floor(Math.random() * (i + 1));
-      [arr[i], arr[j]] = [arr[j], arr[i]];
-    }
-    return arr;
-  }
-  function jumble_string(input2) {
-    let output = input2.split(" ").map((word) => {
-      if (!word) return "";
-      const letters = word.split("");
-      return shuffle_array(letters).join("");
-    }).join(" ");
-    if (output == input2) return jumble_string(input2);
-    return output;
-  }
-
-  // src/pages/minis.js
-  var valid_minis;
-  function bleh_minis(skip2 = false) {
-    if (!skip2) {
-      update_page();
-      page.structure.row.removeChild(page.structure.row.firstElementChild);
-      page.structure.row.removeChild(page.structure.row.firstElementChild);
-    }
-    let params = new URLSearchParams(document.location.search);
-    page.requested.profile = params.get("profile") || auth.name;
-    page.requested.secondary = params.get("secondary");
-    page.requested.redirect = params.get("redirect");
-    page.requested.type = params.get("type");
-    page.requested.timeframe = params.get("timeframe");
-    let path = window.location.pathname.split("/");
-    let mini = path[path.length - 1];
-    if (mini == "minis") mini = null;
-    valid_minis = {
-      collage: {
-        name: tl(trans.collage),
-        body: tl(trans.collage_description),
-        func: bleh_minis_collage
-      },
-      compare: {
-        name: tl(trans.compare),
-        body: tl(trans.compare_description),
-        func: bleh_minis_compare
-      },
-      pixel: {
-        name: tl(trans.pixel?.name),
-        body: tl(trans.pixel?.body),
-        func: bleh_minis_pixel,
-        hide_if: !ff("unlock_minis")
-      },
-      lyrics: {
-        name: tl(trans.lyrics?.name),
-        body: tl(trans.lyrics?.body),
-        func: bleh_minis_lyrics,
-        hide_if: !ff("unlock_minis")
-      },
-      rainbow: {
-        name: tl(trans.rainbow?.name),
-        body: tl(trans.rainbow?.body),
-        func: bleh_minis_rainbow,
-        hide_if: !ff("unlock_minis")
-      },
-      receipt: {
-        name: tl(trans.receipt?.name),
-        body: tl(trans.receipt?.body),
-        func: bleh_minis_receipt,
-        hide_if: !ff("unlock_minis")
-      }
-    };
-    if (mini && (!valid_minis[mini] || valid_minis[mini].hide_if)) {
-      render(page.structure.main, html`
-            <section class="minis">
-                ${return_to_minis()}
-                <div class="loading-data-container">
-                    <div class="loading-data-text error">${tl(trans.no_mini_found).replace("{v}", mini)}</div>
-                </div>
-            </section>
-        `);
-      return;
-    }
-    render(page.structure.side, html``);
-    page.avatar = "";
-    page.name = page.requested.profile;
-    if (page.name == auth.name) page.avatar = auth.avatar;
-    if (mini) {
-      page.structure.container.setAttribute("data-mini", mini);
-      valid_minis[mini].func();
-      return;
-    }
-    render(page.structure.main, html`
-        <section class="minis">
-            <div class="minis-header main">
-                <h2>${tl(trans.minis)}</h2>
-                <p>${tl(trans.minis_description)}</p>
-            </div>
-            <div class="mini-list">
-                ${Object.entries(valid_minis).map(([id, mini2]) => {
-      if (mini2.hide_if) return html.node``;
-      return html.node`
-                        <button class="mini" data-type=${id} data-mini=${id} onclick=${() => {
-        window.history.replaceState(id, "", `${root}bleh/minis/${id}`);
-        page.structure.container.setAttribute("data-mini", id);
-        render(page.structure.main, html``);
-        valid_minis[id].func();
-      }}>
-                            <div class="mini-icon colourful">
-                                <div class="bleh-icon" />
-                            </div>
-                            <div class="mini-info">
-                                <h5>${mini2.name}</h5>
-                                <p>${mini2.body}</p>
-                            </div>
-                            <div class="bleh-icon mini-arrow" style="--icon: var(--mask)" data-type="arrow-right" />
-                        </button>
-                    `;
-    })}
-            </div>
-            <p class="card-tip">${{ html: tl(trans.labs_cta).replace("{a}", `<a class="see-more" href="${root}labs">`).replace("{/a}", "</a>") }}</p>
-        </section>
-    `);
-  }
-  function return_to_minis(mini = "") {
-    return html.node`
-        <div class="minis-header">
-            <h2 class="previous" onclick=${() => {
-      window.history.replaceState(null, "", `${root}bleh/minis`);
-      bleh_minis(true);
-    }}>${tl(trans.minis)}</h2>
-            <div class="bleh-icon mini-arrow" style="--icon: var(--mask)" data-type="arrow-right" />
-            <h2>${mini ? valid_minis[mini].name : tl(trans.error)}</h2>
-        </div>
-    `;
-  }
-  function bleh_minis_collage() {
-    let content;
-    let mini_settings;
-    render(page.structure.main, html`
-        <section class="minis">
-            ${return_to_minis("collage")}
-            <div class="minis-content" ref=${(el) => content = el} />
-        </section>
-    `);
-    render(page.structure.side, html`
-        <section class="current-mini-settings" ref=${(el) => mini_settings = el} />
-    `);
-    collage({
-      host: content,
-      sidebar: mini_settings
-    });
-  }
-  function bleh_minis_compare() {
-    let content;
-    let mini_settings;
-    render(page.structure.main, html`
-        <section class="minis">
-            ${return_to_minis("compare")}
-            <div class="minis-content" ref=${(el) => content = el} />
-        </section>
-    `);
-    render(page.structure.side, html`
-        <section class="current-mini-settings" ref=${(el) => mini_settings = el} />
-    `);
-    compare({
-      host: content,
-      sidebar: mini_settings
-    });
-  }
-  function bleh_minis_pixel() {
-    let content;
-    let mini_settings;
-    render(page.structure.main, html`
-        <section class="minis">
-            ${return_to_minis("pixel")}
-            <div class="minis-content pixel-content" ref=${(el) => content = el} />
-        </section>
-    `);
-    render(page.structure.side, html`
-        <section class="current-mini-settings" ref=${(el) => mini_settings = el} />
-    `);
-    pixel({
-      host: content,
-      sidebar: mini_settings
-    });
-  }
-  function bleh_minis_lyrics() {
-    render(page.structure.main, html`
-        <section class="minis">
-            ${return_to_minis("lyrics")}
-        </section>
-    `);
-  }
-  function bleh_minis_rainbow() {
-    render(page.structure.main, html`
-        <section class="minis">
-            ${return_to_minis("rainbow")}
-        </section>
-    `);
-  }
-  function bleh_minis_receipt() {
-    render(page.structure.main, html`
-        <section class="minis">
-            ${return_to_minis("receipt")}
-        </section>
-    `);
-  }
-  function render_user(name, avatar3, user, replace_page = false) {
-    if (avatar3 == "" && name != "") {
-      fetch(`${root}user/${name}/tags`).then(function(response) {
-        console.log("returned", response, response.text);
-        return response.text();
-      }).then(function(dom) {
-        let doc = new DOMParser().parseFromString(dom, "text/html");
-        console.log("DOC", doc);
-        try {
-          avatar3 = doc.querySelector(".header-avatar-inner-wrap img").getAttribute("src");
-          name = doc.querySelector(".header-title").textContent.trim();
-          if (replace_page) {
-            page.avatar = avatar3;
-            page.name = name;
-          }
-          if (!user) user = page.structure.main.querySelector(".compare-user.focus");
-          render(user, render_user(name, avatar3, user, replace_page));
-        } catch (e) {
-          console.error(e);
-        }
-      });
-      return html`
-            <div class="avatar loading" />
-            <strong>${name}</strong>
-        `;
-    }
-    return html`
-        <div class="avatar">
-            <img src=${avatar3} alt=${tl(trans.avatar_for_user).replace("{u}", name)}>
-        </div>
-        <strong>${name}</strong>
-    `;
-  }
-
-  // src/components/compare.js
-  function compare({
-    host,
-    sidebar
-  } = {}) {
-    if (!host || !sidebar) return;
-    let pages;
-    let timeframe;
-    let type;
-    let submit;
-    let body;
-    if (page.name == auth.name) {
-      page.name = "";
-      page.avatar = "";
-      page.requested.profile = "";
-    }
-    let current_year = (/* @__PURE__ */ new Date()).getFullYear();
-    let previous_year = current_year - 1;
-    const default_type = page.requested.type || "albums";
-    const default_timeframe = page.requested.timeframe || "date_preset=LAST_90_DAYS";
-    let user;
-    render(host, html`
-        <div class="compare-header">
-            <div class="compare-users">
-                <div class="compare-user">
-                    <div class="avatar">
-                        <img src="${auth.avatar.replace("/avatar42s/", "/avatar170s/")}" alt="${tl(trans.your_avatar)}">
-                    </div>
-                    <strong>${auth.name}</strong>
-                </div>
-                <div class="bleh-icon"></div>
-                <div class="compare-user focus" ref=${(el) => user = el}>
-                    ${render_user(page.name, page.avatar, user, true)}
-                </div>
-            </div>
-            <div class="compare-selection">
-                ${pages = select([
-      {
-        value: "1",
-        text: 50
-      },
-      {
-        value: "2",
-        text: 100
-      },
-      {
-        value: "3",
-        text: 150
-      },
-      {
-        value: "4",
-        text: 200
-      },
-      {
-        value: "5",
-        text: 250
-      },
-      {
-        value: "6",
-        text: 300
-      }
-    ], "3")}
-                ${type = select([
-      {
-        value: "artists",
-        text: html`<div class="bleh-icon" style="--icon: var(--icon-16-artist)" />${tl(trans.artists)}`
-      },
-      {
-        value: "albums",
-        text: html`<div class="bleh-icon" style="--icon: var(--icon-16-album)" />${tl(trans.albums)}`
-      },
-      {
-        value: "tracks",
-        text: html`<div class="bleh-icon" style="--icon: var(--icon-16-track)" />${tl(trans.tracks)}`
-      }
-    ], default_type)}
-                ${timeframe = select([
-      {
-        value: "date_preset=LAST_7_DAYS",
-        text: tl(trans.last_count_days).replace("{c}", "7")
-      },
-      {
-        value: "date_preset=LAST_30_DAYS",
-        text: tl(trans.last_count_days).replace("{c}", "30")
-      },
-      {
-        value: "date_preset=LAST_90_DAYS",
-        text: tl(trans.last_count_days).replace("{c}", "90")
-      },
-      {
-        value: "date_preset=LAST_180_DAYS",
-        text: tl(trans.last_count_days).replace("{c}", "180")
-      },
-      {
-        value: "date_preset=LAST_365_DAYS",
-        text: tl(trans.last_count_days).replace("{c}", "365")
-      },
-      {
-        value: "date_preset=ALL",
-        text: tl(trans.all_time)
-      },
-      {
-        value: `from=${current_year}-01-01&rangetype=year`,
-        text: current_year
-      },
-      {
-        value: `from=${previous_year}-01-01&rangetype=year`,
-        text: previous_year
-      }
-    ], default_timeframe)}
-                <button class="btn icon primary compare" ref=${(el) => submit = el} onclick=${() => begin_comparing()}>${tl(trans.compare)}</button>
-            </div>
-        </div>
-        <div class="compare-body" data-filled="false" ref=${(el) => body = el}>
-            <div class="loading-data-container">
-                <div class="loading-data-text info">${tl(trans.choose_a_timeframe_above)}</div>
-            </div>
-        </div>
-    `);
-    let setting_group;
-    let input2;
-    render(sidebar, html`
-        <h2>${tl(trans.settings)}</h2>
-        <div class="setting-group" ref=${(el) => setting_group = el}>
-            <div class="setting v" data-type="text">
-                <div class="heading">
-                    <h5>${tl(trans.compare_with)}</h5>
-                </div>
-                <div class="input-container content-form">
-                    <input type="text" class="input" ref=${(el) => input2 = el} placeholder=${tl(trans.enter_a_profile)} value=${page.requested.profile} onchange=${(e) => {
-      page.requested.profile = e.target.value;
-      page.name = page.requested.profile;
-      page.avatar = "";
-      if (page.name == auth.name) page.avatar = auth.avatar;
-      render(user, html`
-                            ${render_user(page.name, page.avatar, user, true)}
-                        `);
-    }}>
-                    ${() => {
-      let btn = html.node`
-                            <button class="btn chibi icon" data-type="profile_shortcut" onclick=${() => {
-        if (settings.profile_shortcut == "") return;
-        input2.value = settings.profile_shortcut;
-        input2.dispatchEvent(new Event("change"));
-      }}>${tl(trans.profile_shortcut.name)}</button>
-                        `;
-      tippy_esm_default(btn, {
-        content: tl(trans.profile_shortcut.name)
-      });
-      return btn;
-    }}
-                </div>
-            </div>
-        </div>
-    `);
-    let compare_settings = setting_group.querySelectorAll(":scope > .setting");
-    function begin_comparing(bypass = false) {
-      if (page.name == "") return;
-      if (parseInt(pages.value) > 3 && !bypass) {
-        let warn = notify({
-          id: "collage_warning",
-          title: tl(trans.are_you_sure),
-          body: tl(trans.this_will_require_loading_count_pages).replace("{c}", parseInt(pages.value) * 2),
-          type: "warning",
-          actions: [
-            {
-              type: "check",
-              action: () => {
-                notify_rm(warn);
-                begin_comparing(true);
-              },
-              text: tl(trans.continue)
-            }
-          ],
-          persist: true
-        });
-        return;
-      }
-      pages.querySelector("button").disabled = true;
-      type.querySelector("button").disabled = true;
-      timeframe.querySelector("button").disabled = true;
-      compare_settings.forEach((option) => {
-        option.setAttribute("disabled", true);
-      });
-      submit.disabled = true;
-      page.state.compare = {
-        you: [],
-        other: [],
-        shared: []
-      };
-      get_grid(auth.name, 1, parseInt(pages.value), page.name);
-    }
-    function get_grid(user2, current_page, page_count, next_user = null) {
-      render(body, html`
-            <div class="loading-data-container">
-                <div class="loading-data-text">${tl(trans.gathering_plays_for_user_pages).replace("{u}", user2).replace("{current_page}", current_page).replace("{pages}", page_count)}</div>
-            </div>
-        `);
-      fetch(`${root}user/${user2}/library/${type.value}?format=list&${timeframe.value}&page=${current_page}&ajax=1`).then(function(response) {
-        console.log("returned", response, response.text);
-        return response.text();
-      }).then(function(dom) {
-        let doc = new DOMParser().parseFromString(dom, "text/html");
-        console.log("DOC", doc);
-        let next_button = doc.querySelector(".pagination-next");
-        try {
-          let tracks = doc.querySelectorAll(".chartlist-row");
-          tracks.forEach((track) => {
-            let item = {};
-            item.avatar = track.querySelector(".chartlist-image img");
-            if (item.avatar)
-              item.avatar = item.avatar.getAttribute("src");
-            item.name = track.querySelector(".chartlist-name a").textContent.trim();
-            if (type.value != "artists")
-              item.sister = track.querySelector(".chartlist-artist a").textContent.trim();
-            item.plays = clean_number(track.querySelector(".chartlist-count-bar-slug").getAttribute("data-stat-value"));
-            if (next_user)
-              page.state.compare.you.push(item);
-            else
-              page.state.compare.other.push(item);
-          });
-        } catch (e) {
-          notify({
-            id: "compare",
-            title: tl(trans.failed),
-            body: tl(trans.there_was_a_network_error),
-            type: "error"
-          });
-          console.error(e);
-        }
-        if (next_button && current_page < page_count) {
-          get_grid(user2, current_page + 1, page_count, next_user);
-        } else if (next_user) {
-          get_grid(next_user, 1, page_count);
-        } else {
-          pages.querySelector("button").disabled = false;
-          type.querySelector("button").disabled = false;
-          timeframe.querySelector("button").disabled = false;
-          compare_settings.forEach((option) => {
-            option.setAttribute("disabled", false);
-          });
-          submit.disabled = false;
-          continue_comparing();
-        }
-      });
-    }
-    function continue_comparing() {
-      log("gathered initial values", "compare", "info", page.state.compare);
-      page.state.compare.you.forEach((your_item) => {
-        let other_item;
-        if (type.value == "albums")
-          other_item = page.state.compare.other.find((other) => your_item.name === other.name && your_item.sister === other.sister);
-        else
-          other_item = page.state.compare.other.find((other) => your_item.name === other.name);
-        if (other_item) {
-          page.state.compare.shared.push({
-            avatar: your_item.avatar,
-            name: your_item.name,
-            sister: your_item.sister ? your_item.sister : "",
-            plays: {
-              you: your_item.plays,
-              other: other_item.plays,
-              shared: your_item.plays + other_item.plays
-            }
-          });
-        }
-      });
-      page.state.compare.shared.sort((a, b) => b.plays.shared - a.plays.shared);
-      log("gathered shared values", "compare", "info", page.state.compare);
-      body.innerHTML = "";
-      if (page.state.compare.shared.length == 0) {
-        render(body, html`
-                <div class="loading-data-container">
-                    <div class="loading-data-text failed">${tl(trans.nothing_in_common)}</div>
-                </div>
-            `);
-        return;
-      }
-      if (type.value != "tracks") {
-        let grid = document.createElement("ol");
-        grid.classList.add("grid-items", "grid-items--numbered", "compare-grid");
-        page.state.compare.shared.forEach((data2) => {
-          let template;
-          if (type.value == "artists")
-            template = sanitise(data2.name);
-          else
-            template = `${sanitise(data2.sister)}/${sanitise(data2.name)}`;
-          grid.appendChild(html.node`
-                    <li class="compare-item grid-items-item">
-                        <div class="grid-items-cover-image js-link-block link-block">
-                            <div class="grid-items-cover-image-image ${data2.avatar.endsWith("/c6f59c1e5e7240a4c0d427abd71f3dbb.jpg") || data2.avatar.endsWith("/2a96cbd8b46e442fc41c2b86b821562f.jpg") ? "grid-items-cover-default" : ""}">
-                                <img src="${data2.avatar.replace("/avatar70s/", "/avatar300s/").replace("/64s/", "/avatar300s/")}" alt="${data2.name}" loading="lazy">
-                            </div>
-                            <div class="grid-items-item-details">
-                                <p class="grid-items-item-main-text">
-                                    <a class="link-block-target" href="${root}music/${redirect()}${template}" title="${data2.name}">
-                                        ${data2.name}
-                                    </a>
-                                </p>
-                                ${type.value == "albums" ? html.node`
-                                <p class="grid-items-item-aux-text">
-                                    <a class="grid-items-item-aux-block" href="${root}music/${redirect()}${data2.sister}">
-                                        ${data2.sister}
-                                    </a>
-                                </p>
-                                ` : ""}
-                                <p class="grid-items-item-aux-text">
-                                    <a class="grid-item-plays with-avatar" href="${root}user/${auth.name}/library/music/${redirect()}${template}?${timeframe.value}" target="_blank">
-                                        <span class="avatar">
-                                            <img src="${auth.avatar}" alt="${tl(trans.your_avatar)}">
-                                        </span>
-                                        ${data2.plays.you.toLocaleString(lang)}
-                                    </a>
-                                    <a class="grid-item-plays with-avatar" href="${root}user/${page.name}/library/music/${redirect()}${template}?${timeframe.value}" target="_blank">
-                                        <span class="avatar">
-                                            <img src="${page.avatar}" alt="${tl(trans.avatar_for_user).replace("{u}", page.name)}">
-                                        </span>
-                                        ${data2.plays.other.toLocaleString(lang)}
-                                    </a>
-                                </p>
-                            </div>
-                            <a class="js-link-block-cover-link link-block-cover-link" href="${root}music/${redirect()}${template}" tabindex="-1" aria-hidden="true"></a>
-                        </div>
-                    </li>
-                `);
-        });
-        render(body, grid);
-        music_grids(grid);
-      } else {
-        let table = document.createElement("table");
-        table.classList.add("chartlist", "chartlist--with-index", "chartlist--with-index--length-2", "chartlist--with-image", "chartlist--with-artist", "chartlist--with-bar", "compare-chartlist");
-        let tbody = document.createElement("tbody");
-        table.appendChild(tbody);
-        let max2 = 0;
-        page.state.compare.shared.forEach((item) => {
-          if (item.plays.you > max2)
-            max2 = item.plays.you;
-          if (item.plays.other > max2)
-            max2 = item.plays.other;
-        });
-        page.state.compare.shared.forEach((data2, index3) => {
-          let template = `${sanitise(data2.sister)}/_/${sanitise(data2.name)}`;
-          tbody.appendChild(html.node`
-                    <tr class="chartlist-row chartlist-row--with-artist compare-item">
-                        <td class="chartlist-index">${index3 + 1}</td>
-                        <td class="chartlist-image">
-                            <a class="cover-art" href="${root}music/${redirect()}${template}">
-                                <img src="${data2.avatar}" alt="${data2.name}" loading="lazy">
-                            </a>
-                        </td>
-                        <td class="chartlist-name">
-                            <a href="${root}music/${redirect()}${template}" title="${data2.name}">
-                                ${data2.name}
-                            </a>
-                        </td>
-                        <td class="chartlist-artist">
-                            <a href="${root}music/${redirect()}${data2.sister}" title="${data2.sister}">
-                                ${data2.sister}
-                            </a>
-                        </td>
-                        <td class="chartlist-bar with-multiple">
-                            <span class="chartlist-count-bar">
-                                <a class="chartlist-count-bar-link" href="${root}user/${auth.name}/library/music/${redirect()}${template}?${timeframe.value}" target="_blank">
-                                    <span class="chartlist-count-bar-slug" data-max-stat-value="${max2}" data-stat-value="${data2.plays.you}" style="width: ${data2.plays.you / max2 * 100}%;"></span>
-                                    <span class="chartlist-count-bar-value">${data2.plays.you}</span>
-                                </a>
-                                <span class="avatar">
-                                    <img src="${auth.avatar}" alt="${tl(trans.your_avatar)}">
-                                </span>
-                            </span>
-                            <span class="chartlist-count-bar">
-                                <a class="chartlist-count-bar-link" href="${root}user/${page.name}/library/music/${redirect()}${template}?${timeframe.value}" target="_blank">
-                                    <span class="chartlist-count-bar-slug" data-max-stat-value="${max2}" data-stat-value="${data2.plays.other}" style="width: ${data2.plays.other / max2 * 100}%;"></span>
-                                    <span class="chartlist-count-bar-value">${data2.plays.other}</span>
-                                </a>
-                                <span class="avatar">
-                                    <img src="${page.avatar}" alt="${tl(trans.avatar_for_user).replace("{u}", page.name)}">
-                                </span>
-                            </span>
-                        </td>
-                    </tr>
-                `);
-        });
-        body.appendChild(table);
-        patch_titles(body);
-      }
-    }
-  }
-
-  // src/news.js
-  function news() {
-    let changelog = localStorage.getItem("bleh_changelog");
-    let changelog_expire = new Date(localStorage.getItem("bleh_changelog_expire"));
-    let current_time = /* @__PURE__ */ new Date();
-    if (!changelog) {
-      log("not cached, fetching", "changelog");
-      request_changelog();
-      dialog_rm({ id: "rabbit" });
-    } else {
-      if (changelog_expire < current_time)
-        request_changelog();
-      else
-        open_changelog(JSON.parse(changelog));
-    }
-  }
-  function request_changelog(open_after = true) {
-    let button = page.state.navigation_menu_news;
-    if (button)
-      button.setAttribute("disabled", "");
-    let xhr = new XMLHttpRequest();
-    let url = `https://katelyynn.github.io/bleh/fm/changelog/changelog.json?${Math.random()}`;
-    xhr.open("GET", url, true);
-    xhr.onload = function() {
-      log(`responded with ${xhr.status}`, "changelog");
-      if (xhr.status != 200) {
-        log("request has been cancelled, will request again in 1h", "changelog");
-        api_expire.setHours(api_expire.getHours() + 1);
-      }
-      let api_expire = /* @__PURE__ */ new Date();
-      if (xhr.status == 200) {
-        if (open_after) {
-          try {
-            open_changelog(JSON.parse(this.response));
-            localStorage.setItem("bleh_changelog", this.response);
-            api_expire.setHours(api_expire.getHours() + 2);
-            log(`cached until ${api_expire}`, "changelog");
-            localStorage.setItem("bleh_changelog_expire", api_expire);
-          } catch (e) {
-            deliver_notif("The changelog is currently unavailable due to errors, try again later.", true);
-            console.error(e);
-          }
-        }
-      }
-      if (button != null)
-        button.removeAttribute("disabled");
-    };
-    xhr.send();
-  }
-  function open_changelog(changelog) {
-    const window2 = dialog({
-      id: "changelog",
-      title: tl(trans.news_from_user).replace("{user}", sponsor_list && sponsor_list.special ? sponsor_list.special[0] : "katelyn"),
-      body: html.node`
-            <div class="cta first sponsor colourful margin-bottom">
-                <strong>${tl(trans.news_sponsor_cta)}</strong>
-                <a class="see-more" onclick="_sponsor(true)">${tl(trans.sponsor)}</a>
-            </div>
-            <div class="changelog-list"></div>
-        `,
-      type: "changelog",
-      allow_scroll: true
-    });
-    const changelog_list = window2.querySelector(".changelog-list");
-    let index3 = 0;
-    for (let version3 in changelog) {
-      if (version3 == "updated" || version3 == "latest") continue;
-      if (index3 > 10) continue;
-      const version_item = html.node`
-            <div class="changelog-version-item" data-changelog-type="${changelog[version3].type}" data-changelog-latest="${index3 == 0 ? "true" : "false"}" data-changelog-version="${version3}">
-                <div class="version-item-header">
-                    <div class="sub-text">
-                    <div class="breadcrumb">
-                        <div class="breadcrumb-origin">
-                        ${version3}
-                        </div>
-                        <div class="breadcrumb-name">
-                        ${trans_legacy.en.changelog.type[changelog[version3].type]}
-                        </div>
-                    </div>
-                    </div>
-                    <h3>${changelog[version3].name}</h3>
-                    ${version3 == "2025.0113" ? html.node`<h4 class="header-over">${changelog[version3].name}</h4>` : ""}
-                </div>
-                <div class="version-item-body markdown-body">
-                    ${markdown(changelog[version3].bio)}
-                </div>
-            </div>
-        `;
-      if (changelog[version3].type == "major")
-        version_item.setAttribute("id", "latest_major_release");
-      changelog_list.appendChild(version_item);
-      index3++;
-    }
-  }
-  unsafeWindow._update_local_changelog_cache = function(json) {
-    localStorage.setItem("bleh_changelog", JSON.stringify(json));
-  };
-
-  // src/components/rabbit.js
-  function register_rabbit() {
-    let input_box;
-    let selected = 0;
-    let feed = 0;
-    let matches = [];
-    let rabbit_hole;
-    let tip;
-    let depth = 0;
-    let searching;
-    let selected_search;
-    let fake;
-    let back;
-    const allowed_pages = [
-      "user",
-      "artist",
-      "album",
-      "track",
-      "tag"
-    ];
-    document.addEventListener("keydown", (e) => {
-      const cmd = e.getModifierState("Control") || e.getModifierState("Meta");
-      const key = e.key.toLowerCase();
-      if (cmd && [settings.rabbit_primary.toLowerCase(), ","].includes(key) && !page.structure.dialogs.hasChildNodes()) {
-        e.preventDefault();
-        depth = 0;
-        if (e.getModifierState("Shift")) {
-          rabbit();
-          use_page_as_ctx();
-          back = false;
-        } else {
-          rabbit();
-        }
-      } else if (page.structure.dialogs.hasChildNodes() && page.structure.dialogs.querySelector(':scope > [data-modal-type="rabbit"]')) {
-        if (e.key == "Escape") {
-          if (depth == 0 && input_box.querySelector("input").value == "" || !back) {
-            dialog_rm({ id: "rabbit" });
-          } else {
-            input_box.querySelector("input").value = "";
-            depth = 0;
-            rabbit_search();
-          }
-        }
-        if (e.key == "Tab") {
-          e.preventDefault();
-          rabbit_tab();
-        }
-        if (e.key == "ArrowDown") {
-          e.preventDefault();
-          if (selected < matches.length - 1)
-            selected++;
-          else
-            selected = 0;
-          if (matches[selected].disabled) {
-            if (selected + 1 < matches.length - 1)
-              selected++;
-            else
-              selected = 0;
-          }
-          rabbit_select();
-        } else if (e.key == "ArrowUp") {
-          e.preventDefault();
-          if (selected > 0)
-            selected--;
-          else
-            selected = matches.length - 1;
-          if (matches[selected].disabled) {
-            if (selected - 1 > 0)
-              selected--;
-            else
-              selected = 0;
-          }
-          rabbit_select();
-        } else if (e.key == "Enter") {
-          rabbit_enter();
-        }
-      }
-      if (!page.structure.dialogs.hasChildNodes()) {
-        if (cmd && [settings.rabbit_profile.toLowerCase()].includes(key)) {
-          e.preventDefault();
-          window.location.href = `${root}user/${auth.name}`;
-        }
-        if (cmd && [settings.rabbit_shortcut.toLowerCase()].includes(key)) {
-          e.preventDefault();
-          if (settings.profile_shortcut != "") {
-            window.location.href = `${root}user/${settings.profile_shortcut}`;
-          } else {
-            open_profile_shortcut_window();
-          }
-        }
-        if (cmd && [settings.rabbit_bleh_settings.toLowerCase()].includes(key)) {
-          e.preventDefault();
-          window.location.href = `${root}bleh`;
-        }
-        if (cmd && [settings.rabbit_search.toLowerCase()].includes(key)) {
-          e.preventDefault();
-          rabbit();
-          search();
-          back = false;
-        }
-      }
-    });
-    function rabbit() {
-      page.state.rabbit_modal = dialog({
-        id: "rabbit",
-        title: "rabbit",
-        body: html.node`
-                ${() => {
-          input_box = input({
-            maxlength: 100,
-            placeholder: tl(trans.switch_placeholder),
-            focus: true
-          });
-          input_box.classList.add("rabbit-search");
-          return input_box;
-        }}
-                <div class="rabbit-hole" ref=${(el) => rabbit_hole = el} />
-                <div class="tip" ref=${(el) => tip = el} />
-            `,
-        type: "rabbit",
-        replace_if_possible: true,
-        handle_escape_manually: true
-      });
-      back = true;
-      fake = html.node`
-            <div class="fake-input" style="display: none;" />
-        `;
-      input_box.appendChild(fake);
-      rabbit_search();
-      rabbit_select();
-      input_box.querySelector("input").addEventListener("input", (e) => {
-        rabbit_search();
-      });
-      input_box.querySelector("input").focus();
-    }
-    page.state.rabbit = rabbit;
-    function rabbit_tab() {
-      input_box.querySelector("input").focus();
-    }
-    function rabbit_search(pre_selected = "", pre_matches = null) {
-      if (depth < 2) {
-        input_box.querySelector("input").style.removeProperty("display");
-        fake.style.display = "none";
-      }
-      selected = 0;
-      if (!pre_matches && depth == 0) {
-        feed = [
-          {
-            type: "search",
-            text: tl(trans.search),
-            body: tl(trans.search_for_music_or_user),
-            keywords: ["user", "music", "tag", "discover", "explore"],
-            action: () => search(),
-            keybind: ["\u2318", settings.rabbit_search.toUpperCase()]
-          },
-          {
-            type: "on_this_page",
-            text: tl(trans.on_this_page),
-            body: tl(trans.use_current_page_as_context),
-            keywords: ["ctx", "context"],
-            action: () => use_page_as_ctx(),
-            keybind: ["\u2318", "\u21E7", settings.rabbit_primary.toUpperCase()],
-            disabled: !allowed_pages.includes(page.type)
-          },
-          {
-            type: "profile",
-            text: tl(trans.profile),
-            body: tl(trans.opens_your_value).replace("{v}", tl(trans.profile)),
-            keywords: ["profile", "user", "me"],
-            action: () => window.location.href = `${root}user/${auth.name}`,
-            keybind: ["\u2318", settings.rabbit_profile.toUpperCase()]
-          },
-          {
-            type: "profile_shortcut",
-            text: settings.profile_shortcut,
-            body: tl(trans.opens_your_value).replace("{v}", tl(trans.profile_shortcut.name)),
-            keywords: ["profile", "user", "shortcut", "friends"],
-            action: () => window.location.href = `${root}user/${settings.profile_shortcut}`,
-            hide: settings.profile_shortcut == "",
-            keybind: ["\u2318", settings.rabbit_shortcut.toUpperCase()]
-          },
-          {
-            type: "notifications",
-            text: tl(trans.notifications),
-            body: tl(trans.opens_your_value).replace("{v}", tl(trans.notifications)),
-            keywords: ["bell", "updates"],
-            action: () => window.location.href = `${root}inbox/notifications`
-          },
-          {
-            type: "inbox",
-            text: tl(trans.messages),
-            body: tl(trans.opens_your_value).replace("{v}", tl(trans.messages)),
-            keywords: ["messages", "direct", "dms"],
-            action: () => window.location.href = `${root}inbox`
-          },
-          {
-            type: "theme",
-            text: tl(trans.themes.name),
-            body: tl(trans.opens_the_value).replace("{v}", tl(trans.theme_picker)),
-            keywords: ["themes", "light", "dark", "ash", "darker", "oled", "amoled", "midnight", "void", "abyss", "dark reader"],
-            action: () => bleh_theme_picker()
-          },
-          {
-            type: "news",
-            text: tl(trans.news),
-            body: tl(trans.opens_the_value).replace("{v}", tl(trans.news)),
-            keywords: ["bleh", "extension", "changelog", "feed"],
-            action: () => news()
-          },
-          {
-            type: "settings",
-            text: tl(trans.settings),
-            body: tl(trans.opens_your_value_settings).replace("{v}", tl(trans.profile)),
-            keywords: ["profile", "user", "pfp", "avi", "avatar", "config", "configuration", "configure", "picture", "photo"],
-            action: () => window.location.href = `${root}settings`
-          },
-          {
-            type: "bleh_settings",
-            text: tl(trans.settings),
-            body: tl(trans.opens_the_value).replace("{v}", tl(trans.bleh_settings)),
-            keywords: ["bleh", "extension", "config", "configuration", "configure"],
-            action: () => window.location.href = `${root}bleh`,
-            keybind: ["\u2318", settings.rabbit_bleh_settings.toUpperCase()]
-          }
-        ];
-      } else if (pre_matches) {
-        feed = pre_matches;
-      }
-      if (depth < 3) {
-        let value = "";
-        if (value == "")
-          value = input_box.querySelector("input").value.trim().toLowerCase();
-        matches = [];
-        feed.forEach((item) => {
-          let extended = `${item.text} ${item.body} ${item.keywords.join(" ")} ${item.keybind ? item.keybind.join(" ").replace("\u2318", "Ctrl").replace("\u21E7", "Shift") : ""}`.toLowerCase();
-          let words = value.split(" ");
-          let match2 = false;
-          words.forEach((word) => {
-            if (extended.includes(word)) {
-              match2 = true;
-            }
-          });
-          if (item.hide)
-            match2 = false;
-          if (match2)
-            matches.push(item);
-        });
-        render(rabbit_hole, html`
-                ${matches.length > 0 ? matches.map((item, index3) => () => {
-          let button = html.node`
-                        <button class="dropdown-menu-clickable-item rabbit-hole-item" data-type=${item.type} onclick=${item.action} disabled=${item.disabled}>
-                            <div class="info">
-                                <div class="text">${item.text}</div>
-                            </div>
-                            ${item.keybind ? keybind(item.keybind) : ""}
-                        </button>
-                    `;
-          if (!item.disabled) {
-            button.addEventListener("mouseover", () => {
-              selected = index3;
-              rabbit_select(false, true);
-            });
-          }
-          return button;
-        }) : html.node`
-                    <div class="loading-data-container">
-                        <div class="loading-data-text failed">${tl(trans.nothing_matches_your_search)}</div>
-                    </div>
-                `}
-            `);
-        rabbit_select();
-      } else {
-        matches = feed;
-      }
-    }
-    function rabbit_select(click = false, with_mouse = false) {
-      rabbit_tip(tl(trans.select_an_option));
-      if (depth == 3 && click) {
-        searching[selected_search].name = input_box.querySelector("input").value;
-        input_box.querySelector("input").value = "";
-        depth = 2;
-        search_fill();
-        return;
-      } else if (depth == 3) {
-        return;
-      }
-      let buttons = rabbit_hole.querySelectorAll("button");
-      buttons.forEach((button, index3) => {
-        if (index3 == selected) {
-          button.setAttribute("aria-selected", "true");
-          if (!with_mouse) {
-            button.scrollIntoView({
-              behavior: "smooth",
-              block: "center"
-            });
-          }
-          if (click) {
-            input_box.querySelector("input").value = "";
-            button.click();
-          }
-          rabbit_tip(matches[index3].body);
-        } else {
-          button.setAttribute("aria-selected", "false");
-        }
-      });
-      input_box.querySelector("input").focus();
-    }
-    function rabbit_tip(text3) {
-      render(tip, html`
-        <div class="left">
-            ${depth == 0 ? html.node`
-            <kbd>Esc</kbd> ${tl(trans.close)}
-            ` : html.node`
-            <kbd>Esc</kbd> ${tl(trans.back)}
-            `}
-        </div>
-        <div class="right">
-            ${text3}
-        </div>
-        `);
-    }
-    function rabbit_enter() {
-      rabbit_select(true);
-    }
-    function append_search(id) {
-      if (id == "artist" || id == "user" || id == "tag")
-        selected_search = "primary";
-      else
-        selected_search = "secondary";
-      depth = 3;
-      searching[selected_search].type = id;
-      input_box.querySelector("input").value = "";
-      input_box.querySelector("input").style.removeProperty("display");
-      fake.style.display = "none";
-    }
-    function bleh_theme_picker() {
-      depth = 1;
-      rabbit_search("internal:theme_picker", [
-        {
-          type: "theme_auto",
-          text: tl(trans.auto),
-          body: tl(trans.changes_your_theme),
-          keywords: ["system"],
-          action: () => save_setting("theme", "light"),
-          hide: !ff("auto_theme")
-        },
-        {
-          type: "theme_light",
-          text: tl(trans.themes.light),
-          body: tl(trans.changes_your_theme),
-          keywords: ["sun", "day"],
-          action: () => save_setting("theme", "light")
-        },
-        {
-          type: "theme_ink",
-          text: tl(trans.themes.ink),
-          body: tl(trans.changes_your_theme),
-          keywords: ["sun", "day", "light", "e-ink"],
-          action: () => save_setting("theme", "ink")
-        },
-        {
-          type: "theme_ash",
-          text: tl(trans.themes.dark),
-          body: tl(trans.changes_your_theme),
-          keywords: ["dark", "night", "grey", "gray"],
-          action: () => save_setting("theme", "dark")
-        },
-        {
-          type: "theme_dark",
-          text: tl(trans.themes.darker),
-          body: tl(trans.changes_your_theme),
-          keywords: ["dark", "night", "grey", "gray"],
-          action: () => save_setting("theme", "darker")
-        },
-        {
-          type: "theme_void",
-          text: tl(trans.themes.oled),
-          body: tl(trans.changes_your_theme),
-          keywords: ["dark", "night", "black"],
-          action: () => save_setting("theme", "oled")
-        }
-      ]);
-    }
-    function use_page_as_ctx() {
-      if (!allowed_pages.includes(page.type))
-        return;
-      depth = 1;
-      let url_start = root;
-      if (page.type == "user")
-        url_start += "user/";
-      else if (page.type == "album" || page.type == "artist" || page.type == "track")
-        url_start += "music/";
-      if (page.type == "album")
-        url_start += `${sanitise(page.sister)}/${sanitise(page.name)}`;
-      else if (page.type == "track")
-        url_start += `${sanitise(page.sister)}/_/${sanitise(page.name)}`;
-      else
-        url_start += sanitise(page.name);
-      if (page.type == "user") {
-        rabbit_search("internal:ctx", [
-          {
-            type: "overview",
-            text: tl(trans.overview),
-            body: tl(trans.opens_the_value_for_type).replace("{v}", tl(trans.overview)).replace("{t}", page.name),
-            keywords: ["home"],
-            action: () => window.location.href = url_start
-          },
-          {
-            type: "reports",
-            text: tl(trans.reports),
-            body: tl(trans.opens_the_value_for_type).replace("{v}", tl(trans.reports)).replace("{t}", page.name),
-            keywords: ["listening report", "reports", "wrapped", "playback", "spotify"],
-            action: () => window.location.href = url_start + "/listening-report"
-          },
-          {
-            type: "library",
-            text: tl(trans.library),
-            body: tl(trans.opens_the_value_for_type).replace("{v}", tl(trans.library)).replace("{t}", page.name),
-            keywords: ["library", "music", "artists", "albums", "tracks", "scrobbles", "history"],
-            action: () => window.location.href = url_start + "/library"
-          },
-          {
-            type: "friends",
-            text: tl(trans.friends),
-            body: tl(trans.opens_the_value_for_type).replace("{v}", tl(trans.friends)).replace("{t}", page.name),
-            keywords: ["friends", "following", "followers", "neighbours", "similar"],
-            action: () => window.location.href = url_start + "/following"
-          },
-          {
-            type: "following",
-            text: tl(trans.following),
-            body: tl(trans.opens_the_value_for_type).replace("{v}", tl(trans.following)).replace("{t}", page.name),
-            keywords: ["friends", "following"],
-            action: () => window.location.href = url_start + "/following"
-          },
-          {
-            type: "followers",
-            text: tl(trans.followers),
-            body: tl(trans.opens_the_value_for_type).replace("{v}", tl(trans.followers)).replace("{t}", page.name),
-            keywords: ["friends", "followers"],
-            action: () => window.location.href = url_start + "/followers"
-          },
-          {
-            type: "neighbours",
-            text: tl(trans.neighbours),
-            body: tl(trans.opens_the_value_for_type).replace("{v}", tl(trans.neighbours)).replace("{t}", page.name),
-            keywords: ["friends", "neighbours", "similar"],
-            action: () => window.location.href = url_start + "/neighbours"
-          },
-          {
-            type: "shouts",
-            text: tl(trans.shouts),
-            body: tl(trans.opens_the_value_for_type).replace("{v}", tl(trans.shouts)).replace("{t}", page.name),
-            keywords: ["shout", "shoutbox", "shouts", "comments"],
-            action: () => window.location.href = url_start + "/shoutbox"
-          },
-          {
-            type: "loved",
-            text: tl(trans.loved),
-            body: tl(trans.opens_the_value_for_type).replace("{v}", tl(trans.loved)).replace("{t}", page.name),
-            keywords: ["loved", "hearted", "favourites", "favorites", "luved"],
-            action: () => window.location.href = url_start + "/loved"
-          },
-          {
-            type: "obsessions",
-            text: tl(trans.obsessions),
-            body: tl(trans.opens_the_value_for_type).replace("{v}", tl(trans.obsessions)).replace("{t}", page.name),
-            keywords: ["loved", "hearted", "favourites", "favorites", "obsessions", "looping"],
-            action: () => window.location.href = url_start + "/obsessions"
-          },
-          {
-            type: "events",
-            text: tl(trans.events),
-            body: tl(trans.opens_the_value_for_type).replace("{v}", tl(trans.events)).replace("{t}", page.name),
-            keywords: ["events", "festivals", "tour", "live"],
-            action: () => window.location.href = url_start + "/events"
-          },
-          {
-            type: "playlists",
-            text: tl(trans.playlists),
-            body: tl(trans.opens_the_value_for_type).replace("{v}", tl(trans.playlists)).replace("{t}", page.name),
-            keywords: ["playlists", "folders"],
-            action: () => window.location.href = url_start + "/playlists"
-          },
-          {
-            type: "tags",
-            text: tl(trans.tags),
-            body: tl(trans.opens_the_value_for_type).replace("{v}", tl(trans.tags)).replace("{t}", page.name),
-            keywords: ["tags", "tagged", "related", "groups", "grouped"],
-            action: () => window.location.href = url_start + "/tags"
-          },
-          {
-            type: "compare",
-            text: tl(trans.compare),
-            body: tl(trans.compares_your_taste).replace("{v}", page.name),
-            keywords: ["similar", "taste", "music", "shared"],
-            action: () => compare(),
-            hide: page.name == auth.name
-          },
-          {
-            type: "collage",
-            text: tl(trans.collage),
-            body: tl(trans.create_a_collage),
-            keywords: ["taste", "music", "chart", "5x5", "topster"],
-            action: () => collage()
-          }
-        ]);
-      } else if (page.type == "artist") {
-        rabbit_search("internal:ctx", [
-          {
-            type: "overview",
-            text: tl(trans.overview),
-            body: tl(trans.opens_the_value_for_type).replace("{v}", tl(trans.overview)).replace("{t}", page.name),
-            keywords: ["home"],
-            action: () => window.location.href = url_start
-          },
-          {
-            type: "tracks",
-            text: tl(trans.tracks),
-            body: tl(trans.opens_the_value_for_type).replace("{v}", tl(trans.tracks)).replace("{t}", page.name),
-            keywords: ["music", "top"],
-            action: () => window.location.href = url_start + "/+tracks"
-          },
-          {
-            type: "albums",
-            text: tl(trans.albums),
-            body: tl(trans.opens_the_value_for_type).replace("{v}", tl(trans.albums)).replace("{t}", page.name),
-            keywords: ["music", "top"],
-            action: () => window.location.href = url_start + "/+albums"
-          },
-          {
-            type: "photos",
-            text: tl(trans.photos),
-            body: tl(trans.opens_the_value_for_type).replace("{v}", tl(trans.photos)).replace("{t}", page.name),
-            keywords: ["gallery", "artwork", "image", "picture", "avatar"],
-            action: () => window.location.href = url_start + "/+images"
-          },
-          {
-            type: "similar",
-            text: tl(trans.similar_artists),
-            body: tl(trans.opens_the_value_for_type).replace("{v}", tl(trans.similar_artists)).replace("{t}", page.name),
-            keywords: ["music"],
-            action: () => window.location.href = url_start + "/+similar"
-          },
-          {
-            type: "wiki",
-            text: tl(trans.biography),
-            body: tl(trans.opens_the_value_for_type).replace("{v}", tl(trans.biography)).replace("{t}", page.name),
-            keywords: ["wiki", "about", "text"],
-            action: () => window.location.href = url_start + "/+wiki"
-          },
-          {
-            type: "listeners",
-            text: tl(trans.listeners),
-            body: tl(trans.opens_the_value_for_type).replace("{v}", tl(trans.listeners)).replace("{t}", page.name),
-            keywords: ["top"],
-            action: () => window.location.href = url_start + "/+listeners"
-          },
-          {
-            type: "listeners_you_know",
-            text: tl(trans.listeners_you_know),
-            body: tl(trans.opens_the_value_for_type).replace("{v}", tl(trans.listeners_you_know)).replace("{t}", page.name),
-            keywords: ["friends"],
-            action: () => window.location.href = url_start + "/+listeners/you-know"
-          },
-          {
-            type: "shouts",
-            text: tl(trans.shouts),
-            body: tl(trans.opens_the_value_for_type).replace("{v}", tl(trans.shouts)).replace("{t}", page.name),
-            keywords: ["shout", "shoutbox", "shouts", "comments"],
-            action: () => window.location.href = url_start + "/+shoutbox"
-          },
-          {
-            type: "events",
-            text: tl(trans.events),
-            body: tl(trans.opens_the_value_for_type).replace("{v}", tl(trans.events)).replace("{t}", page.name),
-            keywords: ["events", "festivals", "tour", "live"],
-            action: () => window.location.href = url_start + "/+events"
-          },
-          {
-            type: "tags",
-            text: tl(trans.tags),
-            body: tl(trans.opens_the_value_for_type).replace("{v}", tl(trans.tags)).replace("{t}", page.name),
-            keywords: ["tags", "tagged", "related", "groups", "grouped"],
-            action: () => window.location.href = url_start + "/+tags"
-          }
-        ]);
-      } else if (page.type == "album") {
-        rabbit_search("internal:ctx", [
-          {
-            type: "overview",
-            text: tl(trans.overview),
-            body: tl(trans.opens_the_value_for_type).replace("{v}", tl(trans.overview)).replace("{t}", page.name),
-            keywords: ["home"],
-            action: () => window.location.href = url_start
-          },
-          {
-            type: "wiki",
-            text: tl(trans.wiki),
-            body: tl(trans.opens_the_value_for_type).replace("{v}", tl(trans.wiki)).replace("{t}", page.name),
-            keywords: ["wiki", "about", "text"],
-            action: () => window.location.href = url_start + "/+wiki"
-          },
-          {
-            type: "photos",
-            text: tl(trans.artwork),
-            body: tl(trans.opens_the_value_for_type).replace("{v}", tl(trans.artwork)).replace("{t}", page.name),
-            keywords: ["gallery", "artwork", "image", "picture", "avatar"],
-            action: () => window.location.href = url_start + "/+images"
-          },
-          {
-            type: "shouts",
-            text: tl(trans.shouts),
-            body: tl(trans.opens_the_value_for_type).replace("{v}", tl(trans.shouts)).replace("{t}", page.name),
-            keywords: ["shout", "shoutbox", "shouts", "comments"],
-            action: () => window.location.href = url_start + "/+shoutbox"
-          },
-          {
-            type: "tags",
-            text: tl(trans.tags),
-            body: tl(trans.opens_the_value_for_type).replace("{v}", tl(trans.tags)).replace("{t}", page.name),
-            keywords: ["tags", "tagged", "related", "groups", "grouped"],
-            action: () => window.location.href = url_start + "/+tags"
-          }
-        ]);
-      } else if (page.type == "track") {
-        rabbit_search("internal:ctx", [
-          {
-            type: "overview",
-            text: tl(trans.overview),
-            body: tl(trans.opens_the_value_for_type).replace("{v}", tl(trans.overview)).replace("{t}", page.name),
-            keywords: ["home"],
-            action: () => window.location.href = url_start
-          },
-          {
-            type: "albums",
-            text: tl(trans.albums),
-            body: tl(trans.opens_the_value_for_type).replace("{v}", tl(trans.albums)).replace("{t}", page.name),
-            keywords: ["music", "top"],
-            action: () => window.location.href = url_start + "/+albums"
-          },
-          {
-            type: "wiki",
-            text: tl(trans.wiki),
-            body: tl(trans.opens_the_value_for_type).replace("{v}", tl(trans.wiki)).replace("{t}", page.name),
-            keywords: ["wiki", "about", "text"],
-            action: () => window.location.href = url_start + "/+wiki"
-          },
-          {
-            type: "shouts",
-            text: tl(trans.shouts),
-            body: tl(trans.opens_the_value_for_type).replace("{v}", tl(trans.shouts)).replace("{t}", page.name),
-            keywords: ["shout", "shoutbox", "shouts", "comments"],
-            action: () => window.location.href = url_start + "/+shoutbox"
-          },
-          {
-            type: "tags",
-            text: tl(trans.tags),
-            body: tl(trans.opens_the_value_for_type).replace("{v}", tl(trans.tags)).replace("{t}", page.name),
-            keywords: ["tags", "tagged", "related", "groups", "grouped"],
-            action: () => window.location.href = url_start + "/+tags"
-          }
-        ]);
-      } else if (page.type == "tag") {
-        rabbit_search("internal:ctx", [
-          {
-            type: "overview",
-            text: tl(trans.overview),
-            body: tl(trans.opens_the_value_for_type).replace("{v}", tl(trans.overview)).replace("{t}", page.name),
-            keywords: ["home"],
-            action: () => window.location.href = url_start
-          },
-          {
-            type: "artists",
-            text: tl(trans.artists),
-            body: tl(trans.opens_the_value_for_type).replace("{v}", tl(trans.artists)).replace("{t}", page.name),
-            keywords: ["music", "top"],
-            action: () => window.location.href = url_start + "/artists"
-          },
-          {
-            type: "albums",
-            text: tl(trans.albums),
-            body: tl(trans.opens_the_value_for_type).replace("{v}", tl(trans.albums)).replace("{t}", page.name),
-            keywords: ["music", "top"],
-            action: () => window.location.href = url_start + "/albums"
-          },
-          {
-            type: "tracks",
-            text: tl(trans.tracks),
-            body: tl(trans.opens_the_value_for_type).replace("{v}", tl(trans.tracks)).replace("{t}", page.name),
-            keywords: ["music", "top"],
-            action: () => window.location.href = url_start + "/tracks"
-          },
-          {
-            type: "wiki",
-            text: tl(trans.wiki),
-            body: tl(trans.opens_the_value_for_type).replace("{v}", tl(trans.wiki)).replace("{t}", page.name),
-            keywords: ["wiki", "about", "text"],
-            action: () => window.location.href = url_start + "/wiki"
-          },
-          {
-            type: "shouts",
-            text: tl(trans.shouts),
-            body: tl(trans.opens_the_value_for_type).replace("{v}", tl(trans.shouts)).replace("{t}", page.name),
-            keywords: ["shout", "shoutbox", "shouts", "comments"],
-            action: () => window.location.href = url_start + "/shoutbox"
-          }
-        ]);
-      }
-    }
-    function search() {
-      depth = 2;
-      if (!page.structure.dialogs.hasChildNodes())
-        rabbit();
-      searching = {
-        primary: {
-          name: "",
-          type: ""
-        },
-        secondary: {
-          name: "",
-          type: ""
-        }
-      };
-      search_fill();
-    }
-    function search_fill() {
-      depth = 2;
-      input_box.querySelector("input").style.display = "none";
-      fake.style.removeProperty("display");
-      if (searching.primary.type && searching.secondary.type) {
-        render(fake, html`
-                <label>${searching.primary.type}:</label>
-                <p>${searching.primary.name}</p>
-                <label>${searching.secondary.type}:</label>
-                <p>${searching.secondary.name}</p>
-            `);
-      } else if (searching.primary.type) {
-        render(fake, html`
-                <label>${searching.primary.type}:</label>
-                <p>${searching.primary.name}</p>
-            `);
-      } else {
-        render(fake, html`
-                <i>${tl(trans.choose_a_search_type)}</i>
-            `);
-      }
-      if (searching.primary.type == "artist") {
-        rabbit_search("internal:search", [
-          {
-            type: "finish",
-            text: tl(trans.finish),
-            body: tl(trans.finish_search),
-            keywords: ["finish"],
-            action: () => search_finish()
-          },
-          {
-            type: "artist",
-            text: tl(trans.artist),
-            body: tl(trans.search_for_value).replace("{v}", tl(trans.artist)),
-            keywords: ["profile"],
-            action: () => append_search("artist")
-          },
-          {
-            type: "album",
-            text: tl(trans.album),
-            body: tl(trans.search_for_value).replace("{v}", tl(trans.album)),
-            keywords: ["record"],
-            action: () => append_search("album")
-          },
-          {
-            type: "track",
-            text: tl(trans.track),
-            body: tl(trans.search_for_value).replace("{v}", tl(trans.track)),
-            keywords: ["song"],
-            action: () => append_search("track")
-          }
-        ]);
-      } else if (searching.primary.type == "user") {
-        rabbit_search("internal:search", [
-          {
-            type: "search",
-            text: tl(trans.search),
-            body: tl(trans.finish_search),
-            keywords: ["finish"],
-            action: () => search_finish()
-          },
-          {
-            type: "user",
-            text: tl(trans.profile),
-            body: tl(trans.search_for_value).replace("{v}", tl(trans.profile)),
-            keywords: [],
-            action: () => append_search("user")
-          }
-        ]);
-      } else if (searching.primary.type == "tag") {
-        rabbit_search("internal:search", [
-          {
-            type: "finish",
-            text: tl(trans.finish),
-            body: tl(trans.finish_search),
-            keywords: ["finish"],
-            action: () => search_finish()
-          },
-          {
-            type: "tag",
-            text: tl(trans.tag),
-            body: tl(trans.search_for_value).replace("{v}", tl(trans.tag)),
-            keywords: ["genre"],
-            action: () => append_search("tag")
-          }
-        ]);
-      } else if (searching.secondary.type == "album" || searching.secondary.type == "track") {
-        rabbit_search("internal:search", [
-          {
-            type: "artist",
-            text: tl(trans.artist),
-            body: tl(trans.search_for_value).replace("{v}", tl(trans.artist)),
-            keywords: ["profile"],
-            action: () => append_search("artist")
-          }
-        ]);
-      } else {
-        rabbit_search("internal:search", [
-          {
-            type: "artist",
-            text: tl(trans.artist),
-            body: tl(trans.search_for_value).replace("{v}", tl(trans.artist)),
-            keywords: ["profile"],
-            action: () => append_search("artist")
-          },
-          {
-            type: "album",
-            text: tl(trans.album),
-            body: tl(trans.search_for_value).replace("{v}", tl(trans.album)),
-            keywords: ["record"],
-            action: () => append_search("album")
-          },
-          {
-            type: "track",
-            text: tl(trans.track),
-            body: tl(trans.search_for_value).replace("{v}", tl(trans.track)),
-            keywords: ["song"],
-            action: () => append_search("track")
-          },
-          {
-            type: "user",
-            text: tl(trans.profile),
-            body: tl(trans.search_for_value).replace("{v}", tl(trans.profile)),
-            keywords: [],
-            action: () => append_search("user")
-          },
-          {
-            type: "tag",
-            text: tl(trans.tag),
-            body: tl(trans.search_for_value).replace("{v}", tl(trans.tag)),
-            keywords: ["genre"],
-            action: () => append_search("tag")
-          }
-        ]);
-      }
-    }
-    function search_finish() {
-      if (searching.primary.type == "artist") {
-        if (searching.secondary.type == "album") {
-          window.location.href = `${root}music/${redirect()}${sanitise(searching.primary.name)}/${sanitise(searching.secondary.name)}`;
-        } else if (searching.secondary.type == "track") {
-          window.location.href = `${root}music/${redirect()}${sanitise(searching.primary.name)}/_/${sanitise(searching.secondary.name)}`;
-        } else {
-          window.location.href = `${root}music/${redirect()}${sanitise(searching.primary.name)}`;
-        }
-      } else if (searching.primary.type == "user") {
-        window.location.href = `${root}user/${sanitise(searching.primary.name)}`;
-      } else if (searching.primary.type == "tag") {
-        window.location.href = `${root}tag/${sanitise(searching.primary.name)}`;
-      }
-    }
-  }
-  function keybind(list) {
-    const darwin = ["darwin", "ios"].includes(page.platform);
-    const keymap = {
-      "\u2318": "Ctrl",
-      "\u21E7": "Shift",
-      "\u2325": "Alt",
-      "\u2303": "Ctrl",
-      "\u23CE": "Enter",
-      "\u238B": "Esc",
-      "\u232B": "Backspace"
-    };
-    return html.node`
-        <div class="keybind">
-            ${list.map((key, index3) => {
-      const label = darwin ? key : keymap[key] || key;
-      return html.node`
-                    <kbd>${label}</kbd>
-                    ${!darwin && index3 < list.length - 1 ? html.node`<kbd class="kbd-sep">+</kbd>` : ""}
-                `;
-    })}
-        </div>
-    `;
-  }
-
-  // src/components/settings.js
-  function setting({
-    id = "",
-    text: text3 = true,
-    focus = false,
-    standalone = false,
-    func,
-    list
-  }) {
-    try {
-      let value = settings[id];
-      log(`creating ${id} with value ${value}`, "settings", "log", { settings, settings_id: settings[id] });
-      if (!settings_store[id])
-        return setting_fail(id, { message: "No settings store entry present" });
-      const type = settings_store[id].type || "toggle";
-      const title = settings_store[id].title ? tl(settings_store[id].title) : id;
-      let body = settings_store[id].body ? tl(settings_store[id].body) : null;
-      const icon = settings_store[id].icon;
-      if (!body && settings_store[id].keybind)
-        body = keybind(settings_store[id].keybind);
-      let disabled = false;
-      let disabled_reason = "";
-      if (settings_store[id].platforms && !settings_store[id].platforms.includes(page.platform)) {
-        disabled = true;
-        disabled_reason = tl(trans.item_is_unavailable_on_platform).replace("{i}", title).replace("{p}", tl(trans.platforms[page.platform]));
-      }
-      if (disabled && disabled_reason)
-        return setting_fail(id, { message: disabled_reason, unavailable: true });
-      let html_title = html.node`${title}`;
-      if (settings_store[id].beta)
-        html_title.appendChild(html.node`<span class="new-badge beta">${tl(trans.beta)}</span>`);
-      if (settings_store[id].new_release)
-        html_title.appendChild(html.node`<span class="new-badge beta">${tl(trans.new)}</span>`);
-      if (type === "toggle") {
-        let toggle2;
-        return html.node`
-                <div class="setting v2 ${standalone ? "standalone" : ""}" data-type="toggle" disabled=${disabled} onclick=${() => update_toggle(id, toggle2)}>
-                    ${icon ? html.node`
-                    <div class="icon">
-                        <div class="bleh-icon" style="--icon: var(--${icon})" />
-                    </div>
-                    ` : ""}
-                    ${text3 ? html.node`
-                    <div class="heading">
-                        <h5>${html_title}</h5>
-                        ${body ? html.node`<p>${body}</p>` : ""}
-                    </div>
-                    ` : ""}
-                    ${settings_store[id].extensions ? html.node`
-                    <div class="extensions">
-                        ${settings_store[id].extensions.map((extension) => () => {
-          let container = html.node`
-                                <div class="extension">
-                                    <div class="bleh-icon" />
-                                </div>
-                            `;
-          tippy_esm_default(container, {
-            content: tl(trans.requires_extension_value).replace("{v}", tl(extension))
-          });
-          return container;
-        })}
-                    </div>
-                    ` : ""}
-                    ${setting_incompatible_block(settings_store[id].incompatible)}
-                    <div class="toggle-wrap">
-                        <button class="toggle" ref=${(el) => toggle2 = el} aria-checked=${value}>
-                            <div class="dot"></div>
-                        </button>
-                    </div>
-                </div>
-            `;
-      } else if (type === "range") {
-        let update_range = function(val) {
-          input2.value = val;
-          track.style.setProperty("--percent", `${(val - settings_store[id].min) / max_range * 100}%`);
-          marker.textContent = `${val}${settings_store[id].suffix || ""}`;
-          option.setAttribute("data-modified", val != settings_store[id].default);
-          save_setting(id, val);
-          if (func) func(val);
-        }, reset_range = function() {
-          update_range(settings_store[id].default);
-          notify({
-            id: "reset_setting",
-            title: tl(trans.settings),
-            body: tl(trans.reset_item_to_default),
-            icon: "icon-16-settings"
-          });
-        };
-        let option;
-        let min2 = settings_store[id].min || 0;
-        let max2 = settings_store[id].max || 0;
-        let step = settings_store[id].step || 0;
-        if (min2 >= max2 || step === 0)
-          return setting_fail(id, { message: "A range type requires a min, max, and step defined in the settings store" });
-        let reset_btn;
-        let track;
-        let input2;
-        let marker;
-        let working_max = settings_store[id].max - settings_store[id].min;
-        const elem = html.node`
-                <div class="setting v2 ${standalone ? "standalone" : ""} ${settings_store[id].vertical ? "v" : ""}" data-type="range" disabled=${disabled} ref=${(el) => option = el} data-modified=${value != settings_store[id].default}>
-                    ${text3 ? html.node`
-                    <div class="heading">
-                        <h5>${html_title}<button class="reset" ref=${(el) => reset_btn = el} onclick=${() => reset_range()}>${tl(trans.reset)}</button></h5>
-                        ${body ? html.node`<p>${body}</p>` : ""}
-                    </div>
-                    ` : ""}
-                    ${settings_store[id].extensions ? html.node`
-                    <div class="extensions">
-                        ${settings_store[id].extensions.map((extension) => () => {
-          let container = html.node`
-                                <div class="extension">
-                                    <div class="bleh-icon" />
-                                </div>
-                            `;
-          tippy_esm_default(container, {
-            content: tl(trans.requires_extension_value).replace("{v}", tl(extension))
-          });
-          return container;
-        })}
-                    </div>
-                    ` : ""}
-                    ${setting_incompatible_block(settings_store[id].incompatible)}
-                    <div class="range">
-                        <div class="track" style="--percent: ${(value - settings_store[id].min) / working_max * 100}%" data-id=${id} ref=${(el) => track = el}>
-                            <div class="fill" />
-                            <div class="nub" />
-                        </div>
-                        <input type="range" min=${min2} max=${max2} step=${step} value=${value} ref=${(el) => input2 = el} oninput=${() => update_range(input2.value)} />
-                        <p class="value-marker" ref=${(el) => marker = el}>${value}${settings_store[id].suffix || ""}</p>
-                    </div>
-                </div>
-            `;
-        tippy_esm_default(reset_btn, {
-          content: tl(trans.reset)
-        });
-        elem.set = (val) => {
-          update_range(val);
-        };
-        const max_range = max2 - min2;
-        return elem;
-      } else if (type === "text") {
-        let option;
-        let min2 = settings_store[id].min || 0;
-        let max2 = settings_store[id].max || 0;
-        if (max2 === 0)
-          return setting_fail(id, { message: "A text type requires a max defined in the settings store" });
-        let reset_btn;
-        let avatar3;
-        let input2;
-        let submit;
-        let input_container;
-        let error_tooltip;
-        let placeholder = settings_store[id].placeholder;
-        if (placeholder && placeholder != "empty") placeholder = tl(placeholder);
-        let container = html.node`
-                <div class="setting v2 ${standalone ? "standalone" : ""}" data-type="text" disabled=${disabled} ref=${(el) => option = el} data-modified=${value != settings_store[id].default}>
-                    ${icon ? html.node`
-                    <div class="icon">
-                        <div class="bleh-icon" style="--icon: var(--${icon})" />
-                    </div>
-                    ` : ""}
-                    ${text3 ? html.node`
-                    <div class="heading">
-                        <h5>${html_title}<button class="reset" ref=${(el) => reset_btn = el} onclick=${() => reset_text(id, input2, submit, option, reset_btn, avatar3)}>${tl(trans.reset)}</button></h5>
-                        ${body ? html.node`<p>${body}</p>` : ""}
-                    </div>
-                    ` : ""}
-                    ${settings_store[id].extensions ? html.node`
-                    <div class="extensions">
-                        ${settings_store[id].extensions.map((extension) => () => {
-          let container2 = html.node`
-                                <div class="extension">
-                                    <div class="bleh-icon" />
-                                </div>
-                            `;
-          tippy_esm_default(container2, {
-            content: tl(trans.requires_extension_value).replace("{v}", tl(extension))
-          });
-          return container2;
-        })}
-                    </div>
-                    ` : ""}
-                    ${setting_incompatible_block(settings_store[id].incompatible)}
-                    ${settings_store[id].avatar ? html.node`
-                    <div class="avatar-container">
-                        <div class="avatar-inner" ref=${(el) => avatar3 = el}>
-                            <img src=${localStorage.getItem(`bleh_${id}_avi`) || ""} alt=${value} />
-                        </div>
-                    </div>
-                    ` : ""}
-                    <div class="input-container content-form in-settings can-submit" data-has-error="false" ref=${(el) => input_container = el}>
-                        <input type="text" maxlength=${max2} value=${value} style="--max: ${max2}px" ref=${(el) => input2 = el} placeholder=${placeholder} />
-                        <button class="btn chibi icon submit" ref=${(el) => submit = el} onclick=${() => update_text(id, input2, submit, option, input2.value, reset_btn, avatar3)}>${tl(trans.save)}</button>
-                    </div>
-                </div>
-            `;
-        input2.addEventListener("keydown", (event3) => {
-          if (event3.keyCode === 13 && input_container.getAttribute("data-has-error") == "false") {
-            event3.preventDefault();
-            submit.click();
-          }
-        });
-        tippy_esm_default(reset_btn, {
-          content: tl(trans.reset)
-        });
-        tippy_esm_default(submit, {
-          content: tl(trans.save)
-        });
-        if (focus)
-          input2.focus();
-        error_tooltip = tippy_esm_default(input2, {
-          theme: "error",
-          placement: "top",
-          trigger: "manual"
-        });
-        error_tooltip.disable();
-        input2.addEventListener("input", () => {
-          input_container.setAttribute("data-has-error", "false");
-          error_tooltip.disable();
-          submit.disabled = false;
-          if (type == "number") {
-            if (input2.value == "") {
-              error_input(tl(trans.only_numbers_are_allowed), input_container, error_tooltip, submit);
-            } else if (parseInt(input2.value) > max2 || parseInt(input2.value) < min2) {
-              error_input(tl(trans.keep_within_the_range), input_container, error_tooltip, submit);
-            }
-          } else if (type == "text") {
-            if (settings_store[id].warn_if_empty && input2.value == "") {
-              error_input(tl(trans.this_field_is_required), input_container, error_tooltip, submit);
-            } else if (settings_store[id].warn_if_matches_auth && input2.value == auth.name) {
-              error_input(tl(trans.please_dont_clone_yourself), input_container, error_tooltip, submit);
-            }
-          }
-        });
-        return container;
-      } else if (type == "checkbox") {
-        let toggle2;
-        return html.node`
-                <div class="setting v2 ${settings_store[id].horizontal ? "horizontal" : ""} ${standalone ? "standalone" : ""}" data-type="checkbox" disabled=${disabled} onclick=${() => update_toggle(id, toggle2)}>
-                    ${icon ? html.node`
-                    <div class="icon">
-                        <div class="bleh-icon" style="--icon: var(--${icon})" />
-                    </div>
-                    ` : ""}
-                    ${text3 ? html.node`
-                    <div class="heading">
-                        <h5>${html_title}</h5>
-                        ${body ? html.node`<p>${body}</p>` : ""}
-                    </div>
-                    ` : ""}
-                    ${settings_store[id].extensions ? html.node`
-                    <div class="extensions">
-                        ${settings_store[id].extensions.map((extension) => () => {
-          let container = html.node`
-                                <div class="extension">
-                                    <div class="bleh-icon" />
-                                </div>
-                            `;
-          tippy_esm_default(container, {
-            content: tl(trans.requires_extension_value).replace("{v}", tl(extension))
-          });
-          return container;
-        })}
-                    </div>
-                    ` : ""}
-                    ${setting_incompatible_block(settings_store[id].incompatible)}
-                    <div class="check">
-                        <div class="box" ref=${(el) => toggle2 = el} aria-checked=${value}>
-                            <div class="bleh-icon" />
-                        </div>
-                    </div>
-                </div>
-            `;
-      } else if (type == "tabs") {
-        if (func) func(value);
-        let buttons = [];
-        const tabs = html.node`
-                <div class="view-buttons view-buttons-middle">
-                    ${Object.entries(settings_store[id].values).map(([key, val]) => {
-          const icon2 = val.icon || key;
-          const button = html.node`
-                            <button class="btn view-item" data-type=${icon2} data-value=${key} onclick=${() => {
-            save_setting(id, key);
-            buttons.forEach((btn) => {
-              btn.setAttribute("aria-checked", btn.getAttribute("data-value") == key);
-            });
-            if (func) func(key);
-          }} aria-checked=${value == key}>
-                                ${tl(val.name)}
-                            </button>
-                        `;
-          buttons.push(button);
-          return button;
-        })}
-                </div>
-            `;
-        return tabs;
-      } else if (type == "radio") {
-        let update_radio = function(val) {
-          save_setting(id, val);
-          elem.setAttribute("data-modified", val != settings_store[id].default);
-          buttons.forEach((btn) => {
-            btn.setAttribute("aria-checked", btn.getAttribute("data-value") == val);
-          });
-          if (func) func(val);
-        }, reset_radio = function() {
-          update_radio(settings_store[id].default);
-          notify({
-            id: "reset_setting",
-            title: tl(trans.settings),
-            body: tl(trans.reset_item_to_default),
-            icon: "icon-16-settings"
-          });
-        };
-        if (func) func(value);
-        let buttons = [];
-        let reset_btn;
-        const elem = html.node`
-                <div class="setting v2" data-type="options" disabled=${disabled} data-modified=${value != settings_store[id].default}>
-                    ${icon ? html.node`
-                    <div class="icon">
-                        <div class="bleh-icon" style="--icon: var(--${icon})" />
-                    </div>
-                    ` : ""}
-                    ${text3 ? html.node`
-                    <div class="heading">
-                        <h5>${html_title}<button class="reset" ref=${(el) => reset_btn = el} onclick=${() => reset_radio()}>${tl(trans.reset)}</button></h5>
-                        ${body ? html.node`<p>${body}</p>` : ""}
-                    </div>
-                    ` : ""}
-                    ${settings_store[id].extensions ? html.node`
-                    <div class="extensions">
-                        ${settings_store[id].extensions.map((extension) => () => {
-          let container = html.node`
-                                <div class="extension">
-                                    <div class="bleh-icon" />
-                                </div>
-                            `;
-          tippy_esm_default(container, {
-            content: tl(trans.requires_extension_value).replace("{v}", tl(extension))
-          });
-          return container;
-        })}
-                    </div>
-                    ` : ""}
-                    ${setting_incompatible_block(settings_store[id].incompatible)}
-                    <div class="primary-selections">
-                        ${Object.entries(settings_store[id].values).map(([key, val]) => {
-          const icon2 = val.icon || key;
-          const button = html.node`
-                                <button class="btn primary-selection no-icon" data-type=${icon2} data-value=${key} onclick=${() => {
-            update_radio(key);
-          }} aria-checked=${value == key}>
-                                    <h5>${typeof val.name === "object" ? tl(val.name) : val.name}</h5>
-                                </button>
-                            `;
-          buttons.push(button);
-          return button;
-        })}
-                    </div>
-                </div>
-            `;
-        tippy_esm_default(reset_btn, {
-          content: tl(trans.reset)
-        });
-        return elem;
-      } else if (type == "list") {
-        let render_list_items = function(current = settings[id]) {
-          const available = Object.fromEntries(
-            Object.entries(list).filter(([key]) => !current.includes(key))
-          );
-          render(lists, html`
-                    <div class="setting-list current">
-                        ${current.map((val) => {
-            return html.node`
-                                <button class="setting-list-item" onclick=${() => {
-              const new_list = current.filter((item) => item != val);
-              save_setting(id, new_list);
-              render_list_items(new_list);
-            }}>
-                                    ${list[val]?.icon ? html.node`
-                                    <div class="bleh-icon" data-type=${list[val].icon} />
-                                    ` : ""}
-                                    <div class="info">
-                                        ${list[val]?.name || "???"}
-                                    </div>
-                                    <div class="bleh-icon indicator" data-type="minus" />
-                                </button>
-                            `;
-          })}
-                    </div>
-                    <div class="setting-list-sep" />
-                    <div class="setting-list available">
-                        ${Object.entries(available).map(([val, formal]) => {
-            return html.node`
-                                <button class="setting-list-item" onclick=${() => {
-              const new_list = [...current, val];
-              save_setting(id, new_list);
-              render_list_items(new_list);
-            }}>
-                                    <div class="bleh-icon" data-type=${formal.icon} />
-                                    <div class="info">
-                                        ${formal.name}
-                                    </div>
-                                    <div class="bleh-icon indicator" data-type="add" />
-                                </button>
-                            `;
-          })}
-                    </div>
-                `);
-        };
-        if (!list) return setting_fail(id, { message: "List type requires you to pass available items for matching." });
-        let lists;
-        const elem = html.node`
-                <div class="setting v2" data-type="list">
-                    ${icon ? html.node`
-                    <div class="icon">
-                        <div class="bleh-icon" style="--icon: var(--${icon})" />
-                    </div>
-                    ` : ""}
-                    ${text3 ? html.node`
-                    <div class="heading">
-                        <h5>${html_title}</h5>
-                        ${body ? html.node`<p>${body}</p>` : ""}
-                    </div>
-                    ` : ""}
-                    <div class="setting-lists" ref=${(el) => lists = el} />
-                </div>
-            `;
-        render_list_items(value);
-        return elem;
-      }
-    } catch (e) {
-      console.error(e);
-      return setting_fail(id, e);
-    }
-    return setting_fail(id);
-  }
-  function error_input(reason, input2, tooltip, submit) {
-    log(reason, "input", "log");
-    input2.setAttribute("data-has-error", "true");
-    tooltip.setContent(reason);
-    tooltip.enable();
-    tooltip.show();
-    submit.disabled = true;
-  }
-  function setting_incompatible_block(entries2) {
-    if (!entries2)
-      return "";
-    return "";
-    return html.node`
-        <div class="incompatible">
-            ${entries2.map((incompatible) => () => {
-      let container = html.node`
-                    <div class="extension">
-                        <div class="bleh-icon" />
-                    </div>
-                `;
-      tippy_esm_default(container, {
-        content: tl(trans.incompatible_with_value).replace("{v}", tl(settings_store[incompatible.setting].title))
-      });
-      return container;
-    })}
-        </div>
-    `;
-  }
-  function setting_fail(id, e = null) {
-    if (e && e.unavailable && e.message) {
-      return html.node`
-            <div class="setting">
-                <div class="alert alert-info no-margin">
-                    ${e.message}
-                </div>
-            </div>
-        `;
-    }
-    return html.node`
-        <div class="setting">
-            <div class="alert alert-error no-margin">
-                ${tl(trans.value_failed_to_load).replace("{v}", id)}
-                ${e && e.message ? html`<br>${e.message}` : ""}
-            </div>
-        </div>
-    `;
-  }
-  function update_toggle(id, toggle2) {
-    let value = settings[id];
-    toggle2.setAttribute("aria-checked", !value);
-    save_setting(id, !value);
-  }
-  function update_text(id, input2, submit, option, value, reset_btn, avatar3, silent = false) {
-    if (settings_store[id].wait) {
-      reset_btn.disabled = true;
-      input2.disabled = true;
-      submit.disabled = true;
-    }
-    input2.value = value;
-    option.setAttribute("data-modified", value != settings_store[id].default);
-    if (id == "profile_shortcut") {
-      save_profile_shortcut(input2, value, submit, reset_btn, avatar3);
-      return;
-    } else if (id == "hu_tao") {
-      if (value == "develop") {
-        dialog_rm({ id: "hu_tao" });
-        change_settings_page("sku");
-        notify({
-          id: "unlocked",
-          title: tl(trans.development),
-          body: tl(trans.unlocked),
-          type: "success"
-        });
-      }
-    }
-    save_setting(id, value);
-  }
-  function reset_text(id, input2, submit, option, reset_btn, avatar3) {
-    update_text(id, input2, submit, option, settings_store[id].default, reset_btn, avatar3, true);
-    notify({
-      id: "reset_setting",
-      title: tl(trans.settings),
-      body: tl(trans.reset_item_to_default),
-      icon: "icon-16-settings"
-    });
-  }
-  function save_setting(id, value) {
-    settings[id] = value;
-    document.documentElement.setAttribute(`data-bleh--${id}`, value);
-    if (id == "theme") {
-      if (value == "light" || value == "ink" || value == "glass") {
-        settings.theme_type = "light";
-      } else {
-        settings.theme_type = "dark";
-      }
-      document.documentElement.setAttribute(`data-bleh--theme_type`, settings.theme_type);
-    }
-    if (settings_store[id].require_reload == true || settings_store[id].require_reload == "partial" && page.type != "bleh_settings")
-      request_reload();
-    if (settings_store[id].css)
-      document.body.style.setProperty(`--${settings_store[id].css}`, `${value}${settings_store[id].suffix || ""}`);
-    compile_settings();
-    log(`saved ${id} as ${value}`, "settings", "log", { settings, settings_id: settings[id] });
-  }
-  function compile_settings() {
-    let clone6 = structuredClone(settings);
-    for (let setting2 in clone6) {
-      if (settings_store[setting2] && JSON.stringify(clone6[setting2]) == JSON.stringify(settings_store[setting2].default)) {
-        delete clone6[setting2];
-      }
-    }
-    clone6.version = version.build;
-    localStorage.setItem("bleh", JSON.stringify(clone6));
-    return clone6;
-  }
-
-  // src/config.js
-  function load_settings(skip2 = false) {
-    if (!skip2) {
-      for (let setting2 in settings_store) {
-        if (settings[setting2] == null)
-          settings[setting2] = settings_store[setting2].default;
-      }
-      if (!settings.version) settings.version = 0;
-    }
-    if (!settings.theme_type) {
-      if (settings.theme == "light" || settings.theme == "ink")
-        settings.theme_type = "light";
-      else
-        settings.theme_type = "dark";
-    }
-    if (settings.version < 2025.0816) {
-      if (settings.seasonal_particles == true)
-        settings.seasonal_particles = "all";
-      else if (settings.seasonal_particles == false)
-        settings.seasonal_particles = "none";
-      if (settings.seasonal_particles_reduced == true) {
-        settings.seasonal_particles = "less";
-        delete settings.seasonal_particles_reduced;
-      } else if (settings.seasonal_particles_reduced == false) {
-        delete settings.seasonal_particles_reduced;
-      }
-      if (settings.font_weight == 480)
-        settings.font_weight = settings_store.font_weight.default;
-      if (settings.font_weight_medium == 650)
-        settings.font_weight_medium = settings_store.font_weight_medium.default;
-      if (settings.font_weight_bold == 730 || settings.font_weight_bold == 760)
-        settings.font_weight_bold = settings_store.font_weight_bold.default;
-    }
-    for (let setting2 in settings) {
-      if ((setting2 == "hue" || setting2 == "sat" || setting2 == "lit") && settings.hue == settings_store.hue.default && settings.sat == settings_store.sat.default && settings.lit == settings_store.lit.default) continue;
-      if (settings_store[setting2] && settings_store[setting2].css) document.body.style.setProperty(`--${settings_store[setting2].css}`, `${settings[setting2]}${settings_store[setting2].suffix || ""}`);
-      document.documentElement.setAttribute(`data-bleh--${setting2}`, `${settings[setting2]}`);
-    }
-    load_skus();
-    compile_settings();
-    if (document.body.classList.contains("user-dashboard-layout")) {
-      document.documentElement.setAttribute("data-bleh--theme", "oled");
-      page.state.settings_reload = true;
-    }
-    load_chart_colours();
-  }
-  function toggle_theme() {
-    if (page.subpage.startsWith("listening-report")) return;
-    let current_theme = settings.theme;
-    if (current_theme == "dark")
-      current_theme = "darker";
-    else if (current_theme == "darker")
-      current_theme = "oled";
-    else if (current_theme == "oled" || current_theme == "classic")
-      current_theme = "light";
-    else if (current_theme == "light")
-      current_theme = "ink";
-    else if (current_theme == "ink")
-      current_theme = "dark";
-    save_setting("theme", current_theme);
-    chart_reflow();
-  }
-  function reset_all() {
-    for (let item in settings_base)
-      reset_item(item);
-  }
-  function refresh_all(search = document) {
-    for (let item in settings_base)
-      update_item(item, settings[item], false, search);
-  }
-  function reset_item(item) {
-    update_item(item, settings_base[item].value);
-  }
-  function update_params(params = {}) {
-    for (let item in params) {
-      update_item(item, params[item]);
-    }
-  }
-  unsafeWindow._reset_all = function() {
-    reset_all();
-  };
-  unsafeWindow._reset_item = function(item) {
-    reset_item(item);
-  };
-  unsafeWindow._update_params = function(params = {}) {
-    update_params(params);
-  };
-  unsafeWindow._update_item = function(item, value) {
-    update_item(item, value);
-  };
-  function update_item(item, value, modify = true, search = document) {
-    let container = search.querySelector(`#container-${item}`);
-    if (container)
-      console.info(container);
-    else if (settings_base[item].type != "slider" && settings_base[item].type != "options")
-      return;
-    try {
-      let new_value = false;
-      if (value != settings[item])
-        new_value = true;
-      if ((settings_base[item].require_reload == true || settings_base[item].require_reload == "partial" && page.type != "bleh_settings") && new_value)
-        request_reload();
-      if (settings_base[item].type == "slider" && modify)
-        settings[item] = value;
-      if (!modify)
-        console.info(item, value, modify);
-      if (settings_base[item].type == "slider") {
-        try {
-          let slider = search.querySelector(`#slider-${item}`);
-          search.querySelector(`#value-${item}`).textContent = `${settings[item]}${settings_base[item].unit}`;
-          slider.value = settings[item];
-          search.querySelector(`#slider-track-${item}`).style.setProperty("--percent", `${settings[item] / slider.getAttribute("max") * 100}%`);
-        } catch (e) {
-        }
-        document.body.style.setProperty(`--${settings_base[item].css}`, `${value}${settings_base[item].unit}`);
-        document.documentElement.setAttribute(`data-bleh--${item}`, `${value}`);
-        if (item == "hue" || item == "sat" || item == "lit") {
-          if (settings.hue == settings_base.hue.value && settings.sat == settings_base.sat.value && settings.lit == settings_base.lit.value && settings.seasonal && stored_season.id != "none") {
-            document.body.style.removeProperty(`--${settings_base.hue.css}`);
-            document.body.style.removeProperty(`--${settings_base.sat.css}`);
-            document.body.style.removeProperty(`--${settings_base.lit.css}`);
-            document.documentElement.setAttribute("data-bleh--hsl-override", "true");
-          } else {
-            document.documentElement.setAttribute("data-bleh--hsl-override", "false");
-          }
-        }
-      } else if (settings_base[item].type == "toggle") {
-        if (settings[item] == settings_base[item].values[0] && modify) {
-          settings[item] = settings_base[item].values[1];
-          search.querySelector(`#toggle-${item}`).setAttribute("aria-checked", false);
-          document.body.style.setProperty(`--${item}`, settings_base[item].values[1]);
-          document.documentElement.setAttribute(`data-bleh--${item}`, `${settings_base[item].values[1]}`);
-        } else if (modify) {
-          settings[item] = settings_base[item].values[0];
-          console.log(`toggle-${item}`);
-          search.querySelector(`#toggle-${item}`).setAttribute("aria-checked", true);
-          document.body.style.setProperty(`--${item}`, settings_base[item].values[0]);
-          document.documentElement.setAttribute(`data-bleh--${item}`, `${settings_base[item].values[0]}`);
-        } else {
-          if (settings[item] == settings_base[item].values[0]) {
-            search.querySelector(`#toggle-${item}`).setAttribute("aria-checked", true);
-          } else {
-            search.querySelector(`#toggle-${item}`).setAttribute("aria-checked", false);
-          }
-        }
-      } else if (settings_base[item].type == "options") {
-        if (modify) {
-          settings[item] = value;
-          document.body.style.setProperty(`--${item}`, value);
-          document.documentElement.setAttribute(`data-bleh--${item}`, value);
-          let toggle2 = document.getElementById(`toggle-${item}-${value}`);
-          if (toggle2)
-            toggle2.setAttribute("aria-checked", true);
-          let other_toggles = search.querySelectorAll(`[data-toggle="${item}"]`);
-          other_toggles.forEach((toggle3) => {
-            let other_value = toggle3.getAttribute("data-toggle-value");
-            if (other_value == value)
-              return;
-            else
-              toggle3.setAttribute("aria-checked", false);
-          });
-          if ((item == "chart_view" || item == "chart_bar_axis") && page.type == "user" && page.subpage.startsWith("library"))
-            bleh_glacier_date_graph_generate();
-        } else {
-          if (settings[item] == value) {
-            document.getElementById(`toggle-${item}-${value}`).setAttribute("aria-checked", true);
-          } else {
-            document.getElementById(`toggle-${item}-${value}`).setAttribute("aria-checked", false);
-          }
-        }
-      }
-      if (modify)
-        log(`updated ${item} to ${settings[item]}`, "settings");
-      compile_settings();
-    } catch (e) {
-    }
-    if (container) {
-      if (settings[item] != settings_base[item].value)
-        container.classList.add("modified");
-      else
-        container.classList.remove("modified");
-    }
-    if (item == "hue" || item == "sat" || item == "lit") {
-      update_colour_swatches();
-      load_chart_colours();
-    }
-  }
-  function request_reload() {
-    if (page.type == "bleh_setup")
-      return;
-    log("requesting reload", "settings");
-    reload_pending.state = true;
-    notify({
-      title: tl(trans.refresh_pending.name),
-      body: tl(trans.refresh_pending.body),
-      icon: "icon-16-settings",
-      persist: true,
-      actions: [
-        {
-          action: () => invoke_reload(),
-          text: tl(trans.refresh),
-          type: "refresh"
-        }
-      ]
-    });
-  }
-  unsafeWindow._invoke_reload = function() {
-    invoke_reload();
-  };
-  function invoke_reload() {
-    window.location.reload();
-  }
-  function update_colour_swatches() {
-    let found = false;
-    let custom = null;
-    let seasonal = null;
-    let swatches = page.structure.main.querySelectorAll(".swatch");
-    swatches.forEach((swatch) => {
-      let h = swatch.style.getPropertyValue("--hue-over");
-      let s2 = swatch.style.getPropertyValue("--sat-over");
-      let l2 = swatch.style.getPropertyValue("--lit-over");
-      let parent = swatch.parentElement;
-      if (swatch.classList[0] == "dropdown-menu-clickable-item")
-        parent = swatch;
-      if (h == settings.hue && s2 == settings.sat && l2 == settings.lit || swatch.getAttribute("data-swatch-type") == "default" && settings.hue == 255 && settings.sat == 1 && settings.lit == 1) {
-        parent.setAttribute("aria-checked", "true");
-        if (swatch.classList[0] != "dropdown-menu-clickable-item")
-          found = true;
-      } else {
-        parent.setAttribute("aria-checked", "false");
-      }
-      if (!custom && swatch.getAttribute("data-swatch-type") == "customise")
-        custom = parent;
-      if (!seasonal && swatch.getAttribute("data-swatch-type") == "default")
-        seasonal = parent;
-    });
-    if (found) return;
-    if (custom && settings.accent_type != "season")
-      custom.setAttribute("aria-checked", "true");
-    else if (seasonal)
-      seasonal.setAttribute("aria-checked", "true");
-  }
-  unsafeWindow._reset_inbuilt_item = function(item) {
-    reset_inbuilt_item(item);
-  };
-  unsafeWindow._update_inbuilt_params = function(params = {}) {
-    update_inbuilt_params(params);
-  };
-  unsafeWindow._update_inbuilt_item = function(item, value) {
-    update_inbuilt_item(item, value);
-  };
-  function update_inbuilt_item(item, value, modify = true, element = document.body) {
-    console.warn("update item", item, value, "modify", modify);
-    let test_if_valid = element.querySelector(`#toggle-${item}`);
-    console.warn(test_if_valid, `toggle-${item}`);
-    if (test_if_valid == void 0)
-      return;
-    if (inbuilt_settings[item].type == "toggle") {
-      if (modify) {
-        value = document.getElementById(`toggle-${item}`).getAttribute("aria-checked") === "true";
-        log(`updated (inbuilt) ${item} to ${!value}`, "settings");
-      }
-      if (value == inbuilt_settings[item].values[0] && modify) {
-        element.querySelector(`#inbuilt-companion-checkbox-${item}`).checked = false;
-        element.querySelector(`#toggle-${item}`).setAttribute("aria-checked", false);
-        document.documentElement.setAttribute(`data-bleh--inbuilt-${item}`, inbuilt_settings[item].values[1]);
-      } else if (modify) {
-        element.querySelector(`#inbuilt-companion-checkbox-${item}`).checked = true;
-        element.querySelector(`#toggle-${item}`).setAttribute("aria-checked", true);
-        document.documentElement.setAttribute(`data-bleh--inbuilt-${item}`, inbuilt_settings[item].values[0]);
-      } else {
-        console.warn(item, value, value == true, value == false, typeof value, "boolean");
-        if (value == true) {
-          console.warn(item, value, "TRUE");
-          element.querySelector(`#inbuilt-companion-checkbox-${item}`).checked = true;
-          element.querySelector(`#toggle-${item}`).setAttribute("aria-checked", true);
-          document.documentElement.setAttribute(`data-bleh--inbuilt-${item}`, true);
-        } else if (value == false) {
-          console.warn(item, value, "FALSE");
-          element.querySelector(`#inbuilt-companion-checkbox-${item}`).checked = false;
-          element.querySelector(`#toggle-${item}`).setAttribute("aria-checked", false);
-          document.documentElement.setAttribute(`data-bleh--inbuilt-${item}`, false);
-        }
-      }
-    }
-  }
-
-  // src/pages/glacier.js
-  function bleh_user_library() {
-    let date_items = page.structure.side.querySelectorAll(":scope > :is(div, figure)");
-    let date_panel = document.createElement("section");
-    date_panel.classList.add("date-panel");
-    date_panel.setAttribute("data-glacier-graphs", settings.glacier_library_graphs);
-    date_items.forEach((item, index3) => {
-      date_panel.appendChild(item);
-      if (item.classList.contains("row"))
-        item.classList = "date-selector";
-      if (index3 == 0)
-        page.structure.glacier.selector = item;
-    });
-    if (date_items.length > 0) {
-      if (!page.mobile)
-        page.structure.side.appendChild(date_panel);
-      else
-        page.structure.main.insertBefore(date_panel, page.structure.main.firstChild);
-    }
-    page.structure.glacier.date_panel = date_panel;
-    let search = page.structure.content_top.querySelector(".library-search");
-    let nav = page.structure.content_top.querySelector(".library-controls nav");
-    let tabs = nav.querySelector(".navlist-items");
-    if (page.name == auth.name) {
-      let velocity_tab = document.createElement("li");
-      velocity_tab.classList.add("navlist-item", "secondary-nav-item", "secondary-nav-item--velocity");
-      velocity_tab.innerHTML = `
-            <a class="secondary-nav-item-link" href="${root}labs/artist-velocity" target="_blank">
-                ${tl(trans.velocity)}
-            </a>
-        `;
-      tabs.appendChild(velocity_tab);
-    } else {
-      tabs.appendChild(html.node`
-            <li class="navlist-item secondary-nav-item secondary-nav-item--compare">
-                <a class="secondary-nav-item-link" href="${root}bleh/minis/compare?profile=${page.name}">
-                    ${tl(trans.compare)}
-                </a>
-            </li>
-        `);
-    }
-    let scrobbles = tabs.querySelector(".secondary-nav-item--overview");
-    scrobbles.classList.remove("secondary-nav-item--overview");
-    scrobbles.classList.add("secondary-nav-item--scrobbles");
-    if (ff("mualani")) {
-      let toolbar = html.node`
-            <div class="toolbar">
-                ${search}
-                ${nav}
-            </div>
-        `;
-      nav.classList.add("redesigned-navigation");
-      page.structure.content_top.style.display = "none";
-      page.structure.content_top.after(toolbar);
-    }
-    if (!ff("glacier_library"))
-      return;
-    if (settings.glacier_library_graphs && date_items.length > 0) {
-      let chart_view_selector = document.createElement("div");
-      chart_view_selector.classList.add("view-buttons", "chart-view-selector", "view-buttons-middle");
-      chart_view_selector.innerHTML = `
-            <button class="btn view-item" id="toggle-chart_view-line" data-toggle="chart_view" data-toggle-value="line" onclick="_update_item('chart_view', 'line')">
-                ${tl(trans.line)}
-            </button>
-            <button class="btn view-item" id="toggle-chart_view-pie" data-toggle="chart_view" data-toggle-value="pie" onclick="_update_item('chart_view', 'pie')">
-                ${tl(trans.pie)}
-            </button>
-            <button class="btn view-item" id="toggle-chart_view-bar" data-toggle="chart_view" data-toggle-value="bar" onclick="_update_item('chart_view', 'bar')">
-                ${tl(trans.bar)}
-            </button>
-        `;
-      page.structure.glacier.selector.after(chart_view_selector);
-      let chart_axis_selector = document.createElement("div");
-      chart_axis_selector.classList.add("view-buttons", "chart-axis-selector", "view-buttons-middle");
-      chart_axis_selector.innerHTML = `
-            <button class="btn view-item" id="toggle-chart_bar_axis-horizontal" data-toggle="chart_bar_axis" data-toggle-value="horizontal" onclick="_update_item('chart_bar_axis', 'horizontal')">
-                ${tl(trans.horizontal)}
-            </button>
-            <button class="btn view-item" id="toggle-chart_bar_axis-vertical" data-toggle="chart_bar_axis" data-toggle-value="vertical" onclick="_update_item('chart_bar_axis', 'vertical')">
-                ${tl(trans.vertical)}
-            </button>
-        `;
-      chart_view_selector.after(chart_axis_selector);
-      refresh_all(page.structure.glacier.date_panel);
-    }
-    if (date_items.length > 0)
-      bleh_glacier_library_date();
-    if (page.subpage == "library_overview" || page.subpage.endsWith("-search")) {
-      bleh_glacier_library_top(true);
-      const pagination = page.structure.main.querySelector(":scope > .pagination");
-      page.structure.main.appendChild(html.node`
-            <section class="pagination-panel">
-                ${pagination}
-            </section>
-        `);
-      page.state.glacier.insights = {
-        artist: {
-          display: false,
-          values: [],
-          labels: [],
-          highest: {
-            value: 0,
-            label: "",
-            link: "",
-            img: ""
-          }
-        },
-        album: {
-          display: false,
-          values: [],
-          labels: [],
-          highest: {
-            value: 0,
-            label: "",
-            link: "",
-            img: ""
-          }
-        },
-        track: {
-          display: false,
-          values: [],
-          labels: [],
-          highest: {
-            value: 0,
-            label: "",
-            link: "",
-            img: ""
-          }
-        }
-      };
-    }
-    if (date_items.length > 0 && (page.subpage == "library_overview" || page.subpage.startsWith("library_artist_") || page.subpage.startsWith("library_album_") || page.subpage.startsWith("library_track_"))) {
-      log("refresh is now marked true", "glacier library");
-      page.structure.glacier.refresh = true;
-      bleh_glacier_date_graph(true);
-    }
-    if (page.subpage.startsWith("library_artist_") || page.subpage.startsWith("library_album_") || page.subpage.startsWith("library_track_")) {
-      bleh_glacier_library_focused();
-    }
-  }
-  function bleh_glacier_library_date() {
-    let button = page.structure.glacier.date_panel.querySelector(".date-range-picker-button.disclose-trigger:not([data-glacier-library-date])");
-    if (!button) return;
-    button.setAttribute("data-glacier-library-date", "true");
-    console.info("button", button);
-    let date_picker = page.structure.glacier.date_panel.querySelector(".library-controls-datepicker");
-    let old_date_btn = date_picker.querySelector(".date-range-picker-button:not(.disclose-trigger)");
-    if (old_date_btn) old_date_btn.remove();
-    let date_btn = html.node`
-        <button class="date-range-picker-button">${button.querySelector(".date-range-picker-button-inner").textContent}</button>
-    `;
-    date_picker.appendChild(date_btn);
-    let picker_content = page.structure.glacier.date_panel.querySelector(".date-range-picker-content:not([data-glacier-library-date])");
-    if (!picker_content) return;
-    picker_content.setAttribute("data-glacier-library-date", "true");
-    let picker_presets = picker_content.querySelectorAll(".date-range-picker-presets-wrap > .date-range-picker-presets");
-    let params = new URLSearchParams(document.location.search);
-    page.requested.from = params.get("from");
-    page.requested.to = params.get("to");
-    page.requested.rangetype = params.get("rangetype");
-    const current_year = (/* @__PURE__ */ new Date()).getFullYear();
-    const previous_year = current_year - 1;
-    let selected;
-    if (page.requested.from == `${current_year}-01-01` && (page.requested.to == `${current_year}-12-31` || page.requested.rangetype == "year"))
-      selected = "this_year";
-    else if (page.requested.from == `${previous_year}-01-01` && (page.requested.to == `${previous_year}-12-31` || page.requested.rangetype == "year"))
-      selected = "last_year";
-    picker_presets[0].appendChild(html.node`
-        <li class="date-range-picker-preset ${selected == "last_year" ? "date-range-picker-preset--selected" : ""}">
-            <a href="${window.location.href.replace(window.location.search, "")}?from=${previous_year}-01-01&rangetype=year">
-                ${previous_year}
-            </a>
-        </li>
-    `);
-    picker_presets[1].appendChild(html.node`
-        <li class="date-range-picker-preset ${selected == "this_year" ? "date-range-picker-preset--selected" : ""}">
-            <a href="${window.location.href.replace(window.location.search, "")}?from=${current_year}-01-01&rangetype=year">
-                ${current_year}
-            </a>
-        </li>
-    `);
-    picker_content.classList = "date-range-picker-content-inner";
-    tippy_esm_default(date_btn, {
-      theme: "window",
-      content: picker_content,
-      placement: "bottom",
-      interactive: true,
-      interactiveBorder: 10,
-      trigger: "click"
-    });
-    let form = picker_content.querySelector(":scope > .date-range-picker-form");
-    let from_group = form.querySelector(".form-group--from");
-    let from_input = from_group.querySelector("input");
-    let to_group = form.querySelector(".form-group--to");
-    let to_input = to_group.querySelector("input");
-    form.insertBefore(html.node`
-        <div class="input-group library-date-group">
-            ${input({
-      type: "date",
-      value: from_input.value,
-      name: from_input.name,
-      min: "2000-01-01",
-      show_time: false
-    })}
-            <div class="bleh-icon" style="--icon: var(--icon-16-arrow-right)" />
-            ${input({
-      type: "date",
-      value: to_input.value,
-      name: to_input.name,
-      min: "2000-01-01",
-      show_time: false
-    })}
-        </div>
-    `, form.firstChild);
-    from_group.remove();
-    to_group.remove();
-  }
-  function bleh_glacier_library() {
-    bleh_glacier_library_table();
-    bleh_glacier_library_top();
-    bleh_glacier_date_graph();
-  }
-  function bleh_glacier_library_table() {
-    if (!ff("glacier_library"))
-      return;
-    let table = page.structure.glacier.date_panel.querySelector(".highcharts-root");
-    if (table == null)
-      return;
-    console.log("glacier library", table);
-    log("refresh is now marked false (table log)", "glacier library", "log");
-    page.structure.glacier.refresh = false;
-    let current_view = page.structure.glacier.date_panel.querySelector(".date-range-picker-button-inner");
-    if (current_view == null) {
-      console.log("glacier library current view", page.structure.glacier.date_panel.innerHTML);
-      log("returned as current view is null", "glacier library");
-      log("refresh is now marked true", "glacier library");
-      page.structure.glacier.refresh = true;
-      return;
-    }
-    if (table.hasAttribute("data-glacier-library-table"))
-      return;
-    table.setAttribute("data-glacier-library-table", "true");
-    page.structure.glacier.table = table;
-    log("refresh is now marked true (table found)", "glacier library");
-    page.structure.glacier.refresh = true;
-    log("pending refresh", "glacier library");
-  }
-  function bleh_glacier_library_top(static_page = false) {
-    if (!ff("glacier_library"))
-      return;
-    let legacy_top_header;
-    if (!static_page)
-      legacy_top_header = page.structure.main.querySelector(".library-top");
-    else
-      legacy_top_header = page.structure.main.querySelector(".metadata-list");
-    if (!legacy_top_header) return;
-    legacy_top_header.classList.add("glacier-legacy-top-header");
-    if (!static_page) {
-      if (legacy_top_header.style.getPropertyValue("display")) {
-        legacy_top_header.removeAttribute("data-glacier-library-top");
-        return;
-      }
-      if (legacy_top_header.hasAttribute("data-glacier-library-top"))
-        return;
-      legacy_top_header.setAttribute("data-glacier-library-top", "true");
-    }
-    log("loading top", "glacier library");
-    let metadata = legacy_top_header.querySelectorAll(".metadata-item");
-    let first_run = false;
-    let glacier_top = page.structure.glacier.top;
-    if (!glacier_top || !page.structure.main.contains(glacier_top))
-      first_run = true;
-    if (first_run) {
-      glacier_top = document.createElement("section");
-      glacier_top.classList.add("glacier-library-top");
-    }
-    let glacier_meta;
-    if (first_run) {
-      glacier_meta = document.createElement("div");
-      glacier_meta.classList.add("glacier-library-metadata");
-    } else {
-      glacier_meta = page.structure.glacier.top.querySelector(".glacier-library-metadata");
-      glacier_meta.innerHTML = "";
-    }
-    metadata.forEach((meta, index3) => {
-      let text3 = meta.querySelector(".metadata-title");
-      let value = meta.querySelector(".metadata-display").textContent;
-      if (text3) {
-        text3 = text3.textContent;
-        if (page.subpage == "library_overview") {
-          if (index3 == 1)
-            text3 = tl(trans.average);
-        } else if (page.subpage == "library_artists") {
-          text3 = tl(trans.artists);
-        } else if (page.subpage == "library_albums") {
-          text3 = tl(trans.albums);
-        } else if (page.subpage == "library_tracks") {
-          text3 = tl(trans.tracks);
-        }
-      } else {
-        text3 = tl(trans.results_for);
-        value = meta.querySelector(".metadata-display").textContent;
-        let start2 = value.indexOf("\u201C") + 1;
-        let end2 = value.indexOf("\u201D");
-        value = value.substring(start2, end2);
-      }
-      glacier_meta.appendChild(html.node`
-            <div class="glacier-library-metadata-item">
-                <div class="sub-text">${text3}</div>
-                <div class="glacier-library-metadata-item-value">${value}</div>
-            </div>
-        `);
-    });
-    if (first_run)
-      glacier_top.appendChild(glacier_meta);
-    if (!first_run)
-      return;
-    let top_wrap = page.structure.main.querySelector(".library-top-wrap");
-    let view_buttons = document.createElement("div");
-    view_buttons.classList.add("view-buttons", "glacier-library-buttons");
-    let add_divider = false;
-    let sort = legacy_top_header.querySelector(".library-sort");
-    if (!static_page) {
-      let sort_button;
-      if (sort) {
-        sort_button = sort.querySelector(".dropdown-menu-clickable-button");
-        add_divider = true;
-        if (sort_button) {
-          sort_button.classList.add("btn", "view-item", "glacier-library-button");
-          let sort_menu = sort.querySelector(".dropdown-menu-clickable");
-          view_buttons.appendChild(sort_button);
-          view_buttons.appendChild(sort_menu);
-        }
-      }
-    }
-    if (!static_page && page.subpage != "library_tracks") {
-      let format_button = document.createElement("button");
-      format_button.classList.add("btn", "view-item", "glacier-library-button", "glacier-view-button");
-      format_button.setAttribute("onclick", "_update_glacier_view()");
-      page.structure.glacier.format = format_button;
-      add_divider = true;
-      if (top_wrap.getAttribute("data-current-format") == "grid") {
-        format_button.setAttribute("data-glacier-view", "grid");
-        format_button.textContent = tl(trans.grid);
-      } else {
-        format_button.setAttribute("data-glacier-view", "list");
-        format_button.textContent = tl(trans.list);
-      }
-      view_buttons.appendChild(format_button);
-    }
-    if (!static_page && add_divider) {
-      let listen_divider = document.createElement("div");
-      listen_divider.classList.add("listen-divider");
-      view_buttons.appendChild(listen_divider);
-    }
-    let configure_button = document.createElement("button");
-    configure_button.classList.add("btn", "view-item", "glacier-library-button", "glacier-configure-button", "panel-settings-button");
-    configure_button.textContent = tl(trans.settings);
-    tippy_esm_default(configure_button, {
-      content: tl(trans.settings)
-    });
-    tippy_esm_default(configure_button, {
-      theme: "window",
-      content: html.node`
-            <div class="dialog-settings">
-                <div class="setting-group blend">
-                    ${page.subpage == "library_artists" ? html.node`
-                    <div class="setting" data-type="toggle" id="container-colourful_counts" onclick="_update_item('colourful_counts')">
-                        <div class="heading">
-                            <h5>${tl(trans.colourful_counts.name)}</h5>
-                            <p>${tl(trans.colourful_counts.body)}</p>
-                        </div>
-                        <div class="toggle-wrap">
-                            <button class="toggle" id="toggle-colourful_counts" aria-checked="true">
-                                <div class="dot"></div>
-                            </button>
-                        </div>
-                    </div>
-                    ` : html.node`
-                    ${setting({ id: "format_guest_features" })}
-                    ${setting({ id: "show_guest_features" })}
-                    `}
-                    ${(page.subpage == "library_artists" || page.subpage == "library_albums") && auth.pro ? html.node`
-                    ${setting({ id: "grid_glow" })}
-                    ` : ""}
-                    ${setting({ id: "glacier_library_graphs" })}
-                </div>
-            </div>
-        `,
-      placement: "bottom",
-      interactive: true,
-      interactiveBorder: 10,
-      trigger: "click",
-      onShow(instance) {
-        refresh_all(instance.popper);
-      }
-    });
-    view_buttons.appendChild(configure_button);
-    glacier_top.appendChild(view_buttons);
-    page.structure.glacier.top = glacier_top;
-    page.structure.main.insertBefore(glacier_top, page.structure.main.firstElementChild);
-  }
-  unsafeWindow._update_glacier_view = function() {
-    let format = page.structure.main.querySelector(".library-view-button");
-    if (format == null)
-      return;
-    format.click();
-    if (format.getAttribute("href") && format.getAttribute("href").endsWith("reset")) {
-      page.structure.glacier.format.setAttribute("data-glacier-view", "list");
-      page.structure.glacier.format.textContent = tl(trans.list);
-    } else {
-      page.structure.glacier.format.setAttribute("data-glacier-view", "grid");
-      page.structure.glacier.format.textContent = tl(trans.grid);
-    }
-  };
-  function bleh_glacier_date_graph(static_page = false, own_table = null) {
-    if (!page.structure.glacier.refresh)
-      return;
-    if (!settings.glacier_library_graphs)
-      return;
-    log("reviewing graph situation", "glacier library");
-    if (own_table != null) {
-      log("table has been passed to function (from network request presumably?)", "glacier library", "info", own_table);
-    } else {
-      log("no table has been passed, must source ourselves", "glacier library");
-    }
-    bleh_glacier_library_date();
-    let current_view = page.structure.glacier.date_panel.querySelector(".date-range-picker-button-inner");
-    if (!current_view)
-      return;
-    current_view = current_view.textContent.trim();
-    let tab_matches;
-    if (page.name == page.state.glacier.name && (page.subpage == "library_overview" || page.subpage == "library_artists" || page.subpage == "library_albums" || page.subpage == "library_tracks") && (page.state.glacier.current_tab == "library_overview" || page.state.glacier.current_tab == "library_artists" || page.state.glacier.current_tab == "library_albums" || page.state.glacier.current_tab == "library_tracks"))
-      tab_matches = true;
-    if (page.state.glacier.current_view == current_view && !own_table && tab_matches) {
-      bleh_glacier_date_graph_generate();
-      log("refresh is now marked false", "glacier library");
-      page.structure.glacier.refresh = false;
-      log(`returned as view (${current_view}) matches ${page.state.glacier.current_view}. last tab was ${page.state.glacier.current_tab} (${page.state.glacier.name}) and current tab is ${page.subpage} (${page.name})`, "glacier library");
-      return;
-    }
-    page.state.glacier.current_view = current_view;
-    let scrobble_chart_content = page.structure.row.querySelector("#scrobble-chart-content");
-    if (!scrobble_chart_content) return;
-    if (scrobble_chart_content.getAttribute("data-highcharts-chart") && scrobble_chart_content.getAttribute("data-highcharts-chart") == "0") {
-      log("highchart registered", "glacier library");
-      log("refresh is now marked false", "glacier library");
-      page.structure.glacier.refresh = false;
-      return;
-    }
-    let scrobble_chart_wrap = page.structure.row.querySelector(".scrobble-table");
-    if (!scrobble_chart_wrap)
-      return;
-    let scrobble_table;
-    if (own_table)
-      scrobble_table = own_table;
-    else
-      scrobble_table = scrobble_chart_wrap.querySelector(".table");
-    if (!scrobble_table) {
-      let request_url;
-      if (window.location.search == "")
-        request_url = `${window.location.href}/chart?ajax=1`;
-      else
-        request_url = window.location.href.replace(window.location.search, `/chart${window.location.search}&ajax=1`);
-      bleh_glacier_library_request(request_url);
-      return;
-    }
-    let chart_type = scrobble_table.getAttribute("data-bucket-size");
-    let entries2 = scrobble_table.querySelectorAll("tbody tr");
-    page.state.glacier.labels = [];
-    page.state.glacier.links = [];
-    page.state.glacier.values = [];
-    let values_not_empty = 0;
-    entries2.forEach((entry) => {
-      let period = entry.querySelector(".js-period a");
-      let value = entry.querySelector(".js-scrobbles").textContent.trim();
-      page.state.glacier.labels.push(period.textContent.trim());
-      page.state.glacier.links.push(period.getAttribute("href"));
-      page.state.glacier.values.push(value);
-      if (value != "0")
-        values_not_empty += 1;
-    });
-    if (values_not_empty == 0) {
-      log("graph cancelled as all values are 0", "glacier library");
-      page.structure.glacier.refresh = false;
-      return;
-    }
-    scrobble_table.innerHTML = "";
-    bleh_glacier_date_graph_generate();
-    log("refresh is now marked false (finished generating)", "glacier library");
-    page.structure.glacier.refresh = false;
-  }
-  function bleh_glacier_insights(insights = null) {
-    if (insights) {
-      if (page.subpage == "library_artists") {
-        page.state.glacier.insights.album.display = false;
-        page.state.glacier.insights.track.display = false;
-      }
-      if (page.subpage == "library_albums") {
-        page.state.glacier.insights.artist.display = false;
-        page.state.glacier.insights.track.display = false;
-      }
-      if (page.subpage == "library_tracks") {
-        page.state.glacier.insights.artist.display = false;
-        page.state.glacier.insights.album.display = false;
-      }
-      for (let item in insights) {
-        log(`checking insights status of item ${item} - display of ${insights[item].display}`, "glacier library", "log", { checking: insights[item], global: page.state.glacier.insights[item] });
-        if (insights[item].display && JSON.stringify(insights[item]) != JSON.stringify(page.state.glacier.insights[item])) {
-          log(`confirmed insights status of item ${item} - is different`, "glacier library");
-          page.state.glacier.insights[item] = insights[item];
-          bleh_glacier_insights_generate(item, page.state.glacier.insights[item]);
-        }
-      }
-    } else {
-      for (let item in page.state.glacier.insights) {
-        if (page.state.glacier.insights[item].display)
-          bleh_glacier_insights_generate(item, page.state.glacier.insights[item]);
-      }
-    }
-  }
-  function bleh_glacier_insights_generate(type, item) {
-    if (item.highest.value == 0)
-      return;
-    log(`requesting insights generator for ${type}`, "glacier library", "info", item);
-    let new_run = false;
-    let scrobble_insights_panel = page.structure.side.querySelector(`.scrobble-insights-panel[data-type="${type}"]`);
-    if (!scrobble_insights_panel) {
-      scrobble_insights_panel = document.createElement("section");
-      scrobble_insights_panel.classList.add("scrobble-insights-panel");
-      scrobble_insights_panel.setAttribute("data-type", type);
-      new_run = true;
-    }
-    scrobble_insights_panel.innerHTML = `<h2>${trans_legacy.en[type].plural}</h2>`;
-    let scrobble_canvas_container = document.createElement("div");
-    scrobble_canvas_container.classList.add("scrobble-insights-canvas-container");
-    let scrobble_canvas = document.createElement("canvas");
-    scrobble_canvas.classList.add("scrobble-insights-canvas");
-    Chart.defaults.color = page.state.chart_colours.text_col;
-    Chart.defaults.font.family = page.state.chart_colours.font;
-    if (settings.chart_insights_view == "line") {
-      let gradient = scrobble_canvas.getContext("2d").createLinearGradient(0, 0, 0, 160);
-      try {
-        gradient.addColorStop(0, page.state.chart_colours.link_bg_col);
-        gradient.addColorStop(1, page.state.chart_colours.link_bg_col_2);
-      } catch (e) {
-        gradient = page.state.chart_colours.link_bg_col;
-      }
-      let scrobble_chart = new Chart(scrobble_canvas.getContext("2d"), {
-        type: "line",
-        data: {
-          labels: item.labels,
-          datasets: [{
-            data: item.values,
-            borderWidth: 2,
-            backgroundColor: gradient,
-            borderColor: page.state.chart_colours.link_col,
-            fill: true,
-            pointRadius: 0,
-            pointHitRadius: 20,
-            tension: 0.1
-          }]
-        },
-        options: page.state.chart_library_line_options_no_click
-      });
-    } else if (settings.chart_insights_view == "pie") {
-      let scrobble_chart = new Chart(scrobble_canvas.getContext("2d"), {
-        type: "pie",
-        data: {
-          labels: item.labels,
-          datasets: [{
-            data: item.values,
-            borderWidth: 2,
-            backgroundColor: [
-              `hsl(${page.state.chart_colours.link_h_col.replace(page.state.chart_colours.hue, "360")})`,
-              `hsl(${page.state.chart_colours.link_h_col.replace(page.state.chart_colours.hue, "340")})`,
-              `hsl(${page.state.chart_colours.link_h_col.replace(page.state.chart_colours.hue, "320")})`,
-              `hsl(${page.state.chart_colours.link_h_col.replace(page.state.chart_colours.hue, "300")})`,
-              `hsl(${page.state.chart_colours.link_h_col.replace(page.state.chart_colours.hue, "280")})`,
-              `hsl(${page.state.chart_colours.link_h_col.replace(page.state.chart_colours.hue, "270")})`,
-              `hsl(${page.state.chart_colours.link_h_col.replace(page.state.chart_colours.hue, "255")})`,
-              `hsl(${page.state.chart_colours.link_h_col.replace(page.state.chart_colours.hue, "235")})`,
-              `hsl(${page.state.chart_colours.link_h_col.replace(page.state.chart_colours.hue, "220")})`,
-              `hsl(${page.state.chart_colours.link_h_col.replace(page.state.chart_colours.hue, "208")})`,
-              `hsl(${page.state.chart_colours.link_h_col.replace(page.state.chart_colours.hue, "200")})`,
-              `hsl(${page.state.chart_colours.link_h_col.replace(page.state.chart_colours.hue, "180")})`,
-              `hsl(${page.state.chart_colours.link_h_col.replace(page.state.chart_colours.hue, "160")})`,
-              `hsl(${page.state.chart_colours.link_h_col.replace(page.state.chart_colours.hue, "140")})`,
-              `hsl(${page.state.chart_colours.link_h_col.replace(page.state.chart_colours.hue, "120")})`,
-              `hsl(${page.state.chart_colours.link_h_col.replace(page.state.chart_colours.hue, "100")})`,
-              `hsl(${page.state.chart_colours.link_h_col.replace(page.state.chart_colours.hue, "80")})`,
-              `hsl(${page.state.chart_colours.link_h_col.replace(page.state.chart_colours.hue, "60")})`,
-              `hsl(${page.state.chart_colours.link_h_col.replace(page.state.chart_colours.hue, "40")})`,
-              `hsl(${page.state.chart_colours.link_h_col.replace(page.state.chart_colours.hue, "20")})`
-            ],
-            borderColor: page.state.chart_colours.bg_col,
-            pointRadius: 0,
-            pointHitRadius: 20,
-            tension: 0.1
-          }]
-        },
-        options: page.state.chart_library_pie_options_no_click
-      });
-    } else if (settings.chart_insights_view == "bar") {
-      let scrobble_chart = new Chart(scrobble_canvas.getContext("2d"), {
-        type: "bar",
-        data: {
-          labels: item.labels,
-          datasets: [{
-            data: item.values,
-            borderWidth: 0,
-            backgroundColor: [
-              `hsl(${page.state.chart_colours.link_h_col.replace(page.state.chart_colours.hue, "360")})`,
-              `hsl(${page.state.chart_colours.link_h_col.replace(page.state.chart_colours.hue, "340")})`,
-              `hsl(${page.state.chart_colours.link_h_col.replace(page.state.chart_colours.hue, "320")})`,
-              `hsl(${page.state.chart_colours.link_h_col.replace(page.state.chart_colours.hue, "300")})`,
-              `hsl(${page.state.chart_colours.link_h_col.replace(page.state.chart_colours.hue, "280")})`,
-              `hsl(${page.state.chart_colours.link_h_col.replace(page.state.chart_colours.hue, "270")})`,
-              `hsl(${page.state.chart_colours.link_h_col.replace(page.state.chart_colours.hue, "255")})`,
-              `hsl(${page.state.chart_colours.link_h_col.replace(page.state.chart_colours.hue, "235")})`,
-              `hsl(${page.state.chart_colours.link_h_col.replace(page.state.chart_colours.hue, "220")})`,
-              `hsl(${page.state.chart_colours.link_h_col.replace(page.state.chart_colours.hue, "208")})`,
-              `hsl(${page.state.chart_colours.link_h_col.replace(page.state.chart_colours.hue, "200")})`,
-              `hsl(${page.state.chart_colours.link_h_col.replace(page.state.chart_colours.hue, "180")})`,
-              `hsl(${page.state.chart_colours.link_h_col.replace(page.state.chart_colours.hue, "160")})`,
-              `hsl(${page.state.chart_colours.link_h_col.replace(page.state.chart_colours.hue, "140")})`,
-              `hsl(${page.state.chart_colours.link_h_col.replace(page.state.chart_colours.hue, "120")})`,
-              `hsl(${page.state.chart_colours.link_h_col.replace(page.state.chart_colours.hue, "100")})`,
-              `hsl(${page.state.chart_colours.link_h_col.replace(page.state.chart_colours.hue, "80")})`,
-              `hsl(${page.state.chart_colours.link_h_col.replace(page.state.chart_colours.hue, "60")})`,
-              `hsl(${page.state.chart_colours.link_h_col.replace(page.state.chart_colours.hue, "40")})`,
-              `hsl(${page.state.chart_colours.link_h_col.replace(page.state.chart_colours.hue, "20")})`
-            ],
-            borderColor: page.state.chart_colours.bg_col,
-            pointRadius: 0,
-            pointHitRadius: 20,
-            tension: 0.1,
-            borderRadius: 9
-          }]
-        },
-        options: page.state.chart_library_bar_options_no_click
-      });
-    }
-    scrobble_canvas_container.appendChild(scrobble_canvas);
-    scrobble_insights_panel.appendChild(scrobble_canvas_container);
-    if (new_run)
-      page.structure.side.appendChild(scrobble_insights_panel);
-  }
-  function bleh_glacier_library_open_index(index3) {
-    const link = page.state.glacier.links[index3];
-    log(`opening link ${link}`, "glacier library");
-    window.location.href = link;
-  }
-  function bleh_glacier_library_request(request_url) {
-    log(`making our own request with ${request_url}`, "glacier library");
-    console.info(page.structure.glacier.refresh);
-    page.structure.glacier.refresh = false;
-    page.structure.glacier.date_panel.classList.add("data-is-loading");
-    fetch(request_url).then(function(response) {
-      console.log("glacier library returned", response, response.text, response.status);
-      if (response.status != 200)
-        throw new Error();
-      return response.text();
-    }).then(function(html3) {
-      let doc = new DOMParser().parseFromString(html3, "text/html");
-      console.log("glacier library DOC", doc, doc.querySelector(".table"));
-      log("received response", "glacier library");
-      log("refresh is now marked true", "glacier library");
-      page.structure.glacier.refresh = true;
-      let table = doc.querySelector(".table");
-      if (table != null) {
-        bleh_glacier_date_graph(false, table);
-      } else {
-        log("table is null?", "glacier library", "error");
-        console.info("glacier library", doc.body.innerHTML);
-        console.info("glacier library", new DOMParser().parseFromString(doc.body.innerHTML, "text/html"));
-        throw new Error();
-      }
-      page.structure.glacier.date_panel.classList.remove("data-is-loading");
-    });
-  }
-  function bleh_glacier_date_graph_generate() {
-    page.state.glacier.current_tab = page.subpage;
-    page.state.glacier.name = page.name;
-    log("generating", "glacier library", "info", {
-      labels: page.state.glacier.labels,
-      links: page.state.glacier.links,
-      values: page.state.glacier.values
-    });
-    prep_chart_colours();
-    let new_run = false;
-    let scrobble_canvas_container = page.structure.glacier.date_panel.querySelector(".scrobble-canvas-container");
-    if (scrobble_canvas_container == null) {
-      scrobble_canvas_container = document.createElement("div");
-      scrobble_canvas_container.classList.add("scrobble-canvas-container");
-      new_run = true;
-    } else {
-      scrobble_canvas_container.innerHTML = "";
-    }
-    let scrobble_canvas = document.createElement("canvas");
-    scrobble_canvas.classList.add("scrobble-canvas");
-    Chart.defaults.color = page.state.chart_colours.text_col;
-    Chart.defaults.font.family = page.state.chart_colours.font;
-    if (settings.chart_view == "line") {
-      let gradient = scrobble_canvas.getContext("2d").createLinearGradient(0, 0, 0, 160);
-      try {
-        gradient.addColorStop(0, page.state.chart_colours.link_bg_col);
-        gradient.addColorStop(1, page.state.chart_colours.link_bg_col_2);
-      } catch (e) {
-        gradient = page.state.chart_colours.link_bg_col;
-      }
-      let scrobble_chart = new Chart(scrobble_canvas.getContext("2d"), {
-        type: "line",
-        data: {
-          labels: page.state.glacier.labels,
-          datasets: [{
-            data: page.state.glacier.values,
-            borderWidth: 2,
-            backgroundColor: gradient,
-            borderColor: page.state.chart_colours.link_col,
-            fill: true,
-            pointRadius: 0,
-            pointHitRadius: 20,
-            tension: 0.1
-          }]
-        },
-        options: page.state.chart_library_line_options
-      });
-    } else if (settings.chart_view == "pie") {
-      let scrobble_chart = new Chart(scrobble_canvas.getContext("2d"), {
-        type: "pie",
-        data: {
-          labels: page.state.glacier.labels,
-          datasets: [{
-            data: page.state.glacier.values,
-            borderWidth: 2,
-            backgroundColor: [
-              `hsl(${page.state.chart_colours.link_h_col.replace(page.state.chart_colours.hue, "360")})`,
-              `hsl(${page.state.chart_colours.link_h_col.replace(page.state.chart_colours.hue, "340")})`,
-              `hsl(${page.state.chart_colours.link_h_col.replace(page.state.chart_colours.hue, "320")})`,
-              `hsl(${page.state.chart_colours.link_h_col.replace(page.state.chart_colours.hue, "300")})`,
-              `hsl(${page.state.chart_colours.link_h_col.replace(page.state.chart_colours.hue, "280")})`,
-              `hsl(${page.state.chart_colours.link_h_col.replace(page.state.chart_colours.hue, "270")})`,
-              `hsl(${page.state.chart_colours.link_h_col.replace(page.state.chart_colours.hue, "255")})`,
-              `hsl(${page.state.chart_colours.link_h_col.replace(page.state.chart_colours.hue, "235")})`,
-              `hsl(${page.state.chart_colours.link_h_col.replace(page.state.chart_colours.hue, "220")})`,
-              `hsl(${page.state.chart_colours.link_h_col.replace(page.state.chart_colours.hue, "208")})`,
-              `hsl(${page.state.chart_colours.link_h_col.replace(page.state.chart_colours.hue, "200")})`,
-              `hsl(${page.state.chart_colours.link_h_col.replace(page.state.chart_colours.hue, "180")})`,
-              `hsl(${page.state.chart_colours.link_h_col.replace(page.state.chart_colours.hue, "160")})`,
-              `hsl(${page.state.chart_colours.link_h_col.replace(page.state.chart_colours.hue, "140")})`,
-              `hsl(${page.state.chart_colours.link_h_col.replace(page.state.chart_colours.hue, "120")})`,
-              `hsl(${page.state.chart_colours.link_h_col.replace(page.state.chart_colours.hue, "100")})`,
-              `hsl(${page.state.chart_colours.link_h_col.replace(page.state.chart_colours.hue, "80")})`,
-              `hsl(${page.state.chart_colours.link_h_col.replace(page.state.chart_colours.hue, "60")})`,
-              `hsl(${page.state.chart_colours.link_h_col.replace(page.state.chart_colours.hue, "40")})`,
-              `hsl(${page.state.chart_colours.link_h_col.replace(page.state.chart_colours.hue, "20")})`
-            ],
-            borderColor: page.state.chart_colours.bg_col,
-            pointRadius: 0,
-            pointHitRadius: 20,
-            tension: 0.1
-          }]
-        },
-        options: page.state.chart_library_pie_options
-      });
-    } else if (settings.chart_view == "bar") {
-      let scrobble_chart = new Chart(scrobble_canvas.getContext("2d"), {
-        type: "bar",
-        data: {
-          labels: page.state.glacier.labels,
-          datasets: [{
-            data: page.state.glacier.values,
-            borderWidth: 0,
-            backgroundColor: [
-              `hsl(${page.state.chart_colours.link_h_col.replace(page.state.chart_colours.hue, "360")})`,
-              `hsl(${page.state.chart_colours.link_h_col.replace(page.state.chart_colours.hue, "340")})`,
-              `hsl(${page.state.chart_colours.link_h_col.replace(page.state.chart_colours.hue, "320")})`,
-              `hsl(${page.state.chart_colours.link_h_col.replace(page.state.chart_colours.hue, "300")})`,
-              `hsl(${page.state.chart_colours.link_h_col.replace(page.state.chart_colours.hue, "280")})`,
-              `hsl(${page.state.chart_colours.link_h_col.replace(page.state.chart_colours.hue, "270")})`,
-              `hsl(${page.state.chart_colours.link_h_col.replace(page.state.chart_colours.hue, "255")})`,
-              `hsl(${page.state.chart_colours.link_h_col.replace(page.state.chart_colours.hue, "235")})`,
-              `hsl(${page.state.chart_colours.link_h_col.replace(page.state.chart_colours.hue, "220")})`,
-              `hsl(${page.state.chart_colours.link_h_col.replace(page.state.chart_colours.hue, "208")})`,
-              `hsl(${page.state.chart_colours.link_h_col.replace(page.state.chart_colours.hue, "200")})`,
-              `hsl(${page.state.chart_colours.link_h_col.replace(page.state.chart_colours.hue, "180")})`,
-              `hsl(${page.state.chart_colours.link_h_col.replace(page.state.chart_colours.hue, "160")})`,
-              `hsl(${page.state.chart_colours.link_h_col.replace(page.state.chart_colours.hue, "140")})`,
-              `hsl(${page.state.chart_colours.link_h_col.replace(page.state.chart_colours.hue, "120")})`,
-              `hsl(${page.state.chart_colours.link_h_col.replace(page.state.chart_colours.hue, "100")})`,
-              `hsl(${page.state.chart_colours.link_h_col.replace(page.state.chart_colours.hue, "80")})`,
-              `hsl(${page.state.chart_colours.link_h_col.replace(page.state.chart_colours.hue, "60")})`,
-              `hsl(${page.state.chart_colours.link_h_col.replace(page.state.chart_colours.hue, "40")})`,
-              `hsl(${page.state.chart_colours.link_h_col.replace(page.state.chart_colours.hue, "20")})`
-            ],
-            borderColor: page.state.chart_colours.bg_col,
-            pointRadius: 0,
-            pointHitRadius: 20,
-            tension: 0.1,
-            borderRadius: 9
-          }]
-        },
-        options: settings.chart_bar_axis == "horizontal" ? page.state.chart_library_bar_options : page.state.chart_library_bar_v_options
-      });
-    }
-    scrobble_canvas_container.appendChild(scrobble_canvas);
-    if (new_run)
-      page.structure.glacier.date_panel.appendChild(scrobble_canvas_container);
-  }
-  function bleh_glacier_library_focused() {
-    page.state.glacier.insights.artist = {
-      display: false,
-      values: [],
-      labels: [],
-      highest: {
-        value: 0,
-        label: "",
-        link: "",
-        img: ""
-      }
-    };
-    let legacy_header = page.structure.main.querySelector(".library-header");
-    let type;
-    if (page.subpage.startsWith("library_artist"))
-      type = "artist";
-    else if (page.subpage.startsWith("library_album"))
-      type = "album";
-    else if (page.subpage.startsWith("library_track"))
-      type = "track";
-    let header_title = legacy_header.querySelector(".library-header-crumb");
-    if (!header_title)
-      header_title = legacy_header.querySelector(".library-header-title");
-    let duration = header_title.querySelector(".library-header-title-duration");
-    if (duration)
-      header_title.removeChild(duration);
-    header_title = header_title.textContent.trim();
-    let artist = legacy_header.querySelector(".text-colour-link");
-    if (artist)
-      artist = artist.textContent.trim();
-    let image = legacy_header.querySelector(".library-header-image img");
-    let link = `${root}music/${redirect()}${sanitise(header_title)}`;
-    if (type == "album")
-      link = `${root}music/${redirect()}${sanitise(artist)}/${sanitise(header_title)}`;
-    else if (type == "track")
-      link = `${root}music/${redirect()}${sanitise(artist)}/_/${sanitise(header_title)}`;
-    let header = document.createElement("section");
-    header.classList.add("glacier-library-top", "glacier-library-focused-header");
-    let upper_wrap = document.createElement("div");
-    upper_wrap.classList.add("glacier-library-top-upper");
-    let current_suffix = window.location.search;
-    let metadata = html.node`
-        <div class="glacier-library-metadata">
-            <div class="glacier-library-metadata-avatar">
-                ${image}
-            </div>
-            <div class="glacier-library-metadata-item">
-                <div class="sub-text">
-                    ${tl(trans[type])}
-                </div>
-                <div class="glacier-library-metadata-item-value glacier-library-metadata-focus" data-type="${type}">
-                    <a href="${link}">${type == "artist" ? correct_artist(header_title) : correct_item_by_artist(header_title, artist)}</a>${duration ? html.node`<span class="glacier-library-track-duration">${duration.textContent}</span>` : ""}${type != "artist" ? html`${{ html: trans_legacy.en.glacier.by_artist.replace("{a}", `<a href="${root}user/${page.name}/library/music/+noredirect/${sanitise(artist)}${current_suffix}">${sanitise_text(correct_artist(artist))}</a>`) }}` : ""}
-                </div>
-            </div>
-        </div>
-    `;
-    upper_wrap.appendChild(metadata);
-    header.appendChild(upper_wrap);
-    let view_buttons = document.createElement("div");
-    view_buttons.classList.add("view-buttons", "glacier-library-buttons");
-    let cta = legacy_header.querySelector(".library-header-ctas");
-    let love_form = legacy_header.querySelector(".library-header-love-form:not(:has(button))");
-    if (love_form) {
-      let state = love_form.querySelector(":scope > .love-button-toggle").getAttribute("data-ajax-form-state");
-      if (state == "loved")
-        state = 0;
-      else
-        state = 1;
-      let love_form_items = love_form.querySelectorAll(":scope > div > div");
-      love_form_items.forEach((item, index3) => {
-        if (state != index3)
-          item.classList.add("hide");
-        cta.appendChild(item);
-      });
-    }
-    if (cta) {
-      let wrappers = cta.querySelectorAll(":scope > *");
-      wrappers.forEach((wrapper) => {
-        let button;
-        console.info("wrapper", wrapper);
-        if (wrapper.classList[0] == "library-header-cta-item")
-          button = wrapper;
-        else
-          button = wrapper.querySelector("button");
-        if (!button)
-          button = wrapper.querySelector("span");
-        if (!button) return;
-        button.classList.add("btn", "view-item", "glacier-library-button");
-        let tooltips = wrapper.querySelectorAll(".user-library-controls-tooltip");
-        tooltips.forEach((tooltip) => {
-          tooltip.parentElement.removeChild(tooltip);
-        });
-        view_buttons.appendChild(wrapper);
-        let action = button.getAttribute("data-analytics-action");
-        if (action) {
-          if (action == "EditScrobbleOpen") {
-            button.textContent = tl(trans.edit);
-          } else if (action == "UnloveTrack" || action == "LoveTrack") {
-            let listen_divider = document.createElement("div");
-            listen_divider.classList.add("listen-divider");
-            view_buttons.appendChild(listen_divider);
-            button = wrapper.querySelector("button:not(.btn)");
-            if (button)
-              button.classList.add("btn", "view-item", "glacier-library-button");
-          }
-        } else {
-          if (button.classList.contains("delete-icon")) {
-            button.textContent = tl(trans.delete);
-          }
-        }
-      });
-      if (wrappers.length > 0) {
-        let listen_divider = document.createElement("div");
-        listen_divider.classList.add("listen-divider");
-        view_buttons.appendChild(listen_divider);
-      }
-    }
-    if (page.subpage == "library_artist_overview" && auth.pro) {
-      let search = document.createElement("a");
-      search.classList.add("btn", "view-item", "glacier-library-button", "glacier-search-button");
-      search.textContent = tl(trans.search);
-      search.setAttribute("href", `${root}user/${page.name}/library/tracks/search?query=${sanitise(correct_artist(header_title))}`);
-      tippy_esm_default(search, {
-        content: tl(trans.search_guest)
-      });
-      let divider = view_buttons.querySelector(".listen-divider");
-      if (divider)
-        view_buttons.insertBefore(search, divider);
-    }
-    let configure_button = document.createElement("button");
-    configure_button.classList.add("btn", "view-item", "glacier-library-button", "glacier-configure-button", "panel-settings-button");
-    configure_button.textContent = tl(trans.settings);
-    tippy_esm_default(configure_button, {
-      content: tl(trans.settings)
-    });
-    tippy_esm_default(configure_button, {
-      theme: "window",
-      content: html.node`
-            <div class="dialog-settings">
-                <div class="setting-group blend">
-                    ${setting({ id: "format_guest_features" })}
-                    ${setting({ id: "show_guest_features" })}
-                    ${setting({ id: "glacier_library_graphs" })}
-                </div>
-            </div>
-        `,
-      placement: "bottom",
-      interactive: true,
-      interactiveBorder: 10,
-      trigger: "click",
-      onShow(instance) {
-        refresh_all(instance.popper);
-      }
-    });
-    view_buttons.appendChild(configure_button);
-    upper_wrap.appendChild(view_buttons);
-    let lower_metadata;
-    let lower_wrap = html.node`
-        <div class="glacier-library-top-lower">
-            <div class="glacier-library-metadata" ref=${(el) => lower_metadata = el} />
-        </div>
-    `;
-    let legacy_meta_wrap = page.structure.main.querySelector(".metadata-list");
-    if (legacy_meta_wrap) {
-      let metadatas = legacy_meta_wrap.querySelectorAll(".metadata-item:not(.library-header-ctas__wrapper)");
-      metadatas.forEach((meta) => {
-        let glacier_meta_item = document.createElement("div");
-        glacier_meta_item.classList.add("glacier-library-metadata-item");
-        glacier_meta_item.innerHTML = `
-                <div class="sub-text">${meta.querySelector(".metadata-title").textContent}</div>
-                <div class="glacier-library-metadata-item-value">${meta.querySelector(".metadata-display").textContent}</div>
-            `;
-        lower_metadata.appendChild(glacier_meta_item);
-      });
-      header.appendChild(lower_wrap);
-    }
-    page.structure.main.insertBefore(header, page.structure.main.firstElementChild);
-    let overview_headers = page.structure.main.querySelectorAll(".library-overview-header");
-    overview_headers.forEach((top2) => {
-      top2.classList = "top-container";
-      let header2 = top2.querySelector("h2");
-      let select_btn = top2.querySelector(".dropdown-menu-clickable-button");
-      if (!select_btn) {
-        top2.classList.add("spacing");
-        return;
-      }
-      select_btn.classList.add("select-button", "link-select", "blend-v2-btn");
-      select_btn.classList.remove("dropdown-menu-list-button");
-      header2.after(html.node`
-            <div class="accompany view-buttons blend blend-v2">
-                ${select_btn}
-            </div>
-        `);
-    });
-    let overview_header = page.structure.main.querySelector(":scope > .top-container");
-    if (!overview_header) return;
-    overview_header.nextElementSibling.insertBefore(overview_header, overview_header.nextElementSibling.firstElementChild);
-  }
-  function bleh_glacier_library_bulk_edit() {
-    let library_header = page.structure.main.querySelector(".library-header");
-    let bulk_edit = library_header.querySelector('[href="javascript:void(0)"]');
-    if (!bulk_edit) return;
-    let view_buttons = page.structure.main.querySelector(".glacier-library-buttons");
-    if (!view_buttons) return;
-    let pre_existing_bulk = view_buttons.querySelector(".bulk-edit-button");
-    if (pre_existing_bulk) return;
-    let edit_form = view_buttons.querySelector(":scope > .library-header-edit-form");
-    let delete_button = view_buttons.querySelector(":scope > .delete-icon");
-    if (!delete_button) return;
-    bulk_edit.classList.add("btn", "view-item", "glacier-library-button", "bulk-edit-button");
-    bulk_edit.textContent = trans_legacy.en.glacier.bulk_edit;
-    if (!edit_form)
-      view_buttons.insertBefore(bulk_edit, delete_button);
-    else
-      view_buttons.insertBefore(bulk_edit, edit_form);
-  }
-
-  // src/components/profile_header.js
-  function redesign_profile_header(is_own_profile, is_following) {
-    let base_header = document.body.querySelector(".header-info-secondary");
-    if (!base_header) return;
-    let katsune = ff("katsune");
-    let taste = "";
-    let taste_percentage = "";
-    let taste_artists = [];
-    if (!is_own_profile && page.name != sponsor_list.sponsor_account) {
-      let taste_meter = base_header.querySelector(".tasteometer");
-      if (taste_meter) {
-        taste = taste_meter.classList[1].replace("tasteometer-compat-", "");
-        let artists = taste_meter.querySelectorAll("a");
-        artists.forEach((artist) => {
-          taste_artists.push(correct_artist(artist.getAttribute("title")));
-        });
-        taste_percentage = taste_meter.querySelector(".tasteometer-viz").getAttribute("title");
-        if (taste_percentage == "99%")
-          taste_percentage = "100%";
-      }
-    }
-    let about_me = page.structure.container.querySelector(".about-me-sidebar");
-    let profile_header = html.node`
-        <section class="side-actions" />
-    `;
-    if (!is_own_profile && page.name != sponsor_list.sponsor_account) {
-      let follow_wrap = document.body.querySelector(".header-avatar .class > div");
-      if (follow_wrap) {
-        let follow_btn = follow_wrap.querySelector("button");
-        follow_btn.classList.add("btn", "side-action");
-        follow_btn.classList.remove("toggle-button", "header-follower-btn");
-        follow_btn.setAttribute("data-type", "follow");
-        profile_header.appendChild(follow_wrap);
-        if (is_following)
-          follow_btn.setAttribute("data-followed", "true");
-        let mutual_text = document.createElement("i");
-        mutual_text.textContent = tl(trans.following_mutuals);
-        follow_btn.appendChild(mutual_text);
-        if (!katsune)
-          tippy_esm_default(follow_btn, {
-            content: follow_btn.textContent
-          });
-        follow_btn.addEventListener("click", () => {
-          window.setTimeout(() => {
-            follow_btn._tippy.setContent(follow_btn.textContent);
-          }, 50);
-        });
-      } else {
-        let follow_placeholder = document.createElement("button");
-        follow_placeholder.classList.add("btn", "side-action");
-        follow_placeholder.setAttribute("data-type", "follow");
-        follow_placeholder.textContent = tl(trans.blocked);
-        follow_placeholder.setAttribute("disabled", "true");
-        follow_placeholder.setAttribute("data-ignored", "true");
-        profile_header.appendChild(follow_placeholder);
-      }
-    }
-    if (!is_own_profile) {
-      let msg_button = document.body.querySelector(".header-message-user");
-      if (msg_button) {
-        if (page.name != sponsor_list.sponsor_account) {
-          create_profile_top_item(profile_header, {
-            name: page.name,
-            type: "message",
-            link: msg_button.getAttribute("href")
-          });
-        } else {
-          create_profile_top_item(profile_header, {
-            name: page.name,
-            type: "sponsor",
-            link: () => sponsor(),
-            action: "button"
-          });
-          create_profile_top_item(profile_header, {
-            name: page.name,
-            type: "message_sponsor",
-            link: msg_button.getAttribute("href"),
-            full: true
-          });
-        }
-      }
-      if (page.name != sponsor_list.sponsor_account) {
-        if (ff("compare")) {
-          create_profile_top_item(profile_header, {
-            name: page.name,
-            type: "compare",
-            link: `${root}bleh/minis/compare?profile=${page.name}`
-          });
-        }
-        if (ff("charts")) {
-          create_profile_top_item(profile_header, {
-            name: page.name,
-            type: "collage",
-            link: `${root}bleh/minis/collage?profile=${page.name}`,
-            text: tl(trans.collage),
-            updated: true
-          });
-        }
-        if (settings.profile_shortcut != page.name) {
-          page.state.profile_shortcut_button = create_profile_top_item(profile_header, {
-            name: page.name,
-            type: "shortcut",
-            link: () => set_profile_as_shortcut(),
-            action: "button"
-          });
-        } else {
-          create_profile_top_item(profile_header, {
-            name: page.name,
-            type: "shortcut",
-            action: "button"
-          });
-        }
-      }
-      if (page.structure.container.querySelector(".user-status-staff")) {
-        create_profile_top_item(profile_header, {
-          name: page.name,
-          type: "support",
-          link: "https://support.last.fm"
-        });
-      }
-    } else {
-      create_profile_top_item(profile_header, {
-        name: page.name,
-        type: "edit",
-        link: `${root}settings`
-      });
-      if (ff("minis")) {
-        create_profile_top_item(profile_header, {
-          name: page.name,
-          type: "minis",
-          link: `${root}bleh/minis`
-        });
-      } else {
-        create_profile_top_item(profile_header, {
-          name: page.name,
-          type: "labs",
-          link: `${root}labs`,
-          tooltip: `
-                    <strong>${tl(trans.labs_by_last)}</strong>
-                    <p>${tl(trans.labs_by_last.tagline)}</p>
-                `,
-          tooltip_style: "stack",
-          allow_html: true
-        });
-      }
-      create_profile_top_item(profile_header, {
-        name: page.name,
-        type: "obsession",
-        link: `${root}user/${page.name}/obsessions/set`
-      });
-      if (ff("charts")) {
-        create_profile_top_item(profile_header, {
-          name: page.name,
-          type: "collage",
-          link: `${root}bleh/minis/collage`,
-          text: tl(trans.collage),
-          updated: true
-        });
-      }
-    }
-    if (!page.mobile)
-      page.structure.side.insertBefore(profile_header, page.structure.side.firstElementChild);
-    else
-      page.structure.main.insertBefore(profile_header, page.structure.main.firstElementChild);
-    let listen_container = page.structure.row.querySelector(".listen-panel");
-    if (!is_own_profile && page.name != sponsor_list.sponsor_account && katsune) {
-      if (taste == "") {
-        listen_container.appendChild(html.node`
-                <div class="loading-data-container">
-                    <div class="loading-data-text error">${tl(trans.missing_component)}</div>
-                </div>
-            `);
-        return;
-      }
-      let taste_wrap = html.node`
-            <div class="btn listen-item ${taste != "super" && taste != "very_low" ? "icon" : ""} taste">
-                <div class="taste-icon colourful" data-taste=${taste}>
-                    <div class="bleh-icon" />
-                </div>
-                <div class="span">
-                    <img class="view-item-avatar" src=${auth.avatar} alt=${auth.name}>
-                    <img class="view-item-avatar" src=${page.avatar} alt=${page.name}>
-                    <div class="info">
-                        <h3>${html.node([
-        tl(trans.you_share_count_with).replace("{c}", `<span class="colourful" data-taste=${taste}>${taste_percentage}</span>`)
-      ])}</h3>
-                        <p>
-                            ${taste_artists.length == 1 ? tl(trans.you_share_count_with.one).replace("{artist}", taste_artists[0]) : ""}
-                            ${taste_artists.length == 2 ? tl(trans.you_share_count_with.two).replace("{artist1}", taste_artists[0]).replace("{artist2}", taste_artists[1]) : ""}
-                            ${taste_artists.length == 3 ? tl(trans.you_share_count_with.three).replace("{artist1}", taste_artists[0]).replace("{artist2}", taste_artists[1]).replace("{artist3}", taste_artists[2]) : ""}
-                        </p>
-                    </div>
-                </div>
-            </div>
-        `;
-      tippy_esm_default(taste_wrap, {
-        theme: "stack",
-        content: html.node`
-                <span>
-                    ${tl(trans.taste_similarity)}
-                </span>
-                <div class="hint">${tl(trans.click_for_more_options)}</div>
-            `
-      });
-      if (taste_artists.length > 1) {
-        tippy_esm_default(taste_wrap, {
-          theme: "context-menu",
-          content: html.node`
-                    <h4 class="menu-header">${tl(trans.compare_plays)}</h4>
-                    <a class="dropdown-menu-clickable-item" href="${root}user/${page.name}/library/music/${redirect()}${sanitise(taste_artists[0])}" data-menu-item="shared-artist">
-                        <img class="view-item-avatar" src="${page.avatar}" alt="${page.name}">${taste_artists[0]}
-                    </a>
-                    <a class="dropdown-menu-clickable-item" href="${root}user/${auth.name}/library/music/${redirect()}${sanitise(taste_artists[0])}" data-menu-item="shared-artist">
-                        <img class="view-item-avatar" src="${auth.avatar}" alt="${auth.name}">${taste_artists[0]}
-                    </a>
-                    ${taste_artists.length >= 2 ? html.node`
-                    <div class="sep"></div>
-                    <a class="dropdown-menu-clickable-item" href="${root}user/${page.name}/library/music/${redirect()}${sanitise(taste_artists[1])}" data-menu-item="shared-artist">
-                        <img class="view-item-avatar" src="${page.avatar}" alt="${page.name}">${taste_artists[1]}
-                    </a>
-                    <a class="dropdown-menu-clickable-item" href="${root}user/${auth.name}/library/music/${redirect()}${sanitise(taste_artists[1])}" data-menu-item="shared-artist">
-                        <img class="view-item-avatar" src="${auth.avatar}" alt="${auth.name}">${taste_artists[1]}
-                    </a>
-                    ` : ""}
-                    ${taste_artists.length >= 3 ? html.node`
-                    <div class="sep"></div>
-                    <a class="dropdown-menu-clickable-item" href="${root}user/${page.name}/library/music/${redirect()}${sanitise(taste_artists[2])}" data-menu-item="shared-artist">
-                        <img class="view-item-avatar" src="${page.avatar}" alt="${page.name}">${taste_artists[2]}
-                    </a>
-                    <a class="dropdown-menu-clickable-item" href="${root}user/${auth.name}/library/music/${redirect()}${sanitise(taste_artists[2])}" data-menu-item="shared-artist">
-                        <img class="view-item-avatar" src="${auth.avatar}" alt="${auth.name}">${taste_artists[2]}
-                    </a>
-                    ` : ""}
-                    <div class="sep"></div>
-                    <a class="dropdown-menu-clickable-item" data-type="compare" href="${root}bleh/minis/compare?profile=${page.name}">${tl(trans.compare)}</a>
-                `,
-          trigger: "click",
-          placement: "bottom",
-          interactive: true,
-          interactiveBorder: 10,
-          offset: [0, 0]
-        });
-      }
-      const row = listen_container.querySelector(".listener-row");
-      row.after(taste_wrap);
-    }
-  }
-  function create_profile_top_item(parent, { name, link, text: text3 = "", type, new_release = false, updated = false, action = "", tooltip = "", allow_html = false, tooltip_theme = "" }) {
-    log(`creating top item of ${name}, ${link}, ${text3}`, "profile");
-    let side_action;
-    if (action === "button") {
-      side_action = html.node`
-            <button
-                class="btn side-action"
-                data-type=${type}
-                onclick=${link}
-            >
-                ${tl(trans[type])}
-                ${new_release ? html.node`<div class="new-badge">${tl(trans.new)}</div>` : ""}
-                ${updated ? html.node`<div class="new-badge">${tl(trans.updated)}</div>` : ""}
-            </button>
-        `;
-    } else {
-      side_action = html.node`
-            <a
-                class="btn side-action"
-                data-type=${type}
-                href=${link}
-            >
-                ${tl(trans[type])}
-                ${new_release ? html.node`<div class="new-badge">${tl(trans.new)}</div>` : ""}
-                ${updated ? html.node`<div class="new-badge">${tl(trans.updated)}</div>` : ""}
-            </a>
-        `;
-    }
-    if (type == "shortcut") {
-      if (name == settings.profile_shortcut) {
-        side_action.setAttribute("data-is-shortcut", "true");
-      } else {
-        side_action.setAttribute("data-is-shortcut", "false");
-      }
-      side_action.addEventListener("contextmenu", (e) => {
-        e.preventDefault();
-        open_profile_shortcut_window();
-      });
-    }
-    parent.appendChild(side_action);
-    return side_action;
-  }
-
-  // src/components/structure.js
-  function checkup_page_structure(is_subpage = false, header = null) {
-    if (document.body.style.getPropertyValue("--hue-album")) {
-      document.body.style.removeProperty("--hue-album");
-      document.body.style.removeProperty("--sat-album");
-      document.body.style.removeProperty("--lit-album");
-      load_chart_colours();
-    }
-    let params = new URLSearchParams(document.location.search);
-    page.requested = {
-      tab: params.get("tab"),
-      page: params.get("page"),
-      token: params.get("token"),
-      collage: params.get("collage")
-    };
-    if (!page.structure.container || !document.body.contains(page.structure.container)) {
-      log("page missing container, creating", "page structure");
-      page.structure.container = document.createElement("div");
-      page.structure.container.classList.add("page-content", "container");
-      let container_full_width = document.body.querySelector(".container--full-width");
-      if (container_full_width)
-        container_full_width.insertBefore(page.structure.container, container_full_width.firstElementChild);
-      else
-        document.body.querySelector(".adaptive-skin-container").appendChild(page.structure.container);
-    }
-    page.structure.container.setAttribute("data-assigned", "true");
-    let other_container = document.body.querySelector(".page-content.container:not([data-assigned])");
-    if (other_container) other_container.style.setProperty("display", "none");
-    if (!page.structure.row || !document.body.contains(page.structure.row)) {
-      log("page missing row, creating", "page structure");
-      page.structure.row = document.createElement("div");
-      page.structure.row.classList.add("row");
-      page.structure.container.insertBefore(page.structure.row, page.structure.container.firstElementChild);
-    }
-    if (page.structure.row.classList.contains("buffer-4"))
-      page.structure.row.classList = "row col-main-is-primary";
-    page.structure.row.setAttribute("data-assigned", "true");
-    if (!page.structure.main || !document.body.contains(page.structure.main)) {
-      log("page missing main, creating", "page structure");
-      page.structure.main = document.createElement("div");
-      page.structure.main.classList.add("col-main");
-      page.structure.row.appendChild(page.structure.main);
-    }
-    page.structure.main.setAttribute("data-assigned", "true");
-    let other_main = page.structure.row.querySelector(".col-main.hidden-xs:not([data-assigned])");
-    if (other_main) other_main.style.setProperty("display", "none");
-    if (!page.structure.side || !document.body.contains(page.structure.side)) {
-      log("page missing side", "page structure");
-      page.structure.side = page.structure.row.querySelector(".col-sidebar");
-      if (!page.structure.side) {
-        log("page missing side, creating", "page structure");
-        page.structure.side = document.createElement("div");
-        page.structure.side.classList.add("col-sidebar");
-        page.structure.row.appendChild(page.structure.side);
-      }
-    }
-    if (ff("short")) {
-      page.structure.content = html.node`
-            <main class="content">
-                ${page.structure.main}
-                ${page.structure.side}
-            </main>
-        `;
-      page.structure.row.appendChild(page.structure.content);
-    }
-    log("finished", "page structure");
-    if (ff("refreshed_music_nav") && header) {
-      let navlist = header.querySelector(".navlist");
-      if (navlist) {
-        navlist.classList.add("redesigned-navigation");
-        page.structure.container.insertBefore(navlist, page.structure.container.firstElementChild);
-        page.structure.nav = navlist;
-        let overview = page.structure.nav.querySelector(".secondary-nav-item--overview a");
-        if (overview) {
-          const href = overview.getAttribute("href").replace(root, "");
-          if (href == "settings" || href == "inbox" || href == "charts") overview = null;
-        }
-        if (overview) overview.textContent = tl(trans.home);
-      }
-      if (is_subpage) {
-        let content_top = document.body.querySelector(".content-top");
-        if (content_top) {
-          content_top.classList.add("redesigned-content-top");
-          page.structure.content_top = content_top;
-          if (content_top.querySelector(".content-top-back-link"))
-            content_top.style.setProperty("display", "none");
-          let content_top_nav = content_top.querySelector(".navlist");
-          if (!content_top_nav && ff("beret"))
-            content_top.style.setProperty("display", "none");
-          if (ff("short")) {
-            if (!content_top.style.hasOwnProperty("display"))
-              page.structure.row.insertBefore(content_top, page.structure.content);
-            else
-              page.structure.row.appendChild(content_top);
-          } else {
-            if (navlist)
-              navlist.after(content_top);
-            else
-              page.structure.container.insertBefore(content_top, page.structure.container.firstElementChild);
-          }
-        } else {
-          let subpage_title = page.structure.main.querySelector(":scope > .subpage-title");
-          if (!subpage_title)
-            subpage_title = page.structure.main.querySelector(":scope > .section-controls > .subpage-title");
-          if (!subpage_title)
-            subpage_title = page.structure.main.querySelector(":scope > section:first-child .section-controls > .subpage-title");
-          if (subpage_title) {
-            content_top = html.node`
-                        <div class="content-top redesigned-content-top">
-                            <div class="content-top-inner-wrap">
-                                <div class="container content-top-lower">
-                                    <h1 class="content-top-header">${subpage_title.textContent.trim()}</h1>
-                                </div>
-                            </div>
-                        </div>
-                    `;
-            page.structure.content_top = content_top;
-            content_top.style.setProperty("display", "none");
-            if (ff("short"))
-              page.structure.row.appendChild(content_top);
-            else
-              navlist.after(content_top);
-            try {
-              page.structure.main.removeChild(subpage_title);
-            } catch (e) {
-            }
-          }
-          navlist = page.structure.main.querySelector(".navlist");
-          if (navlist) {
-            navlist.classList.add("redesigned-navigation");
-            if (ff("mualani")) {
-              let toolbar = html.node`
-                            <div class="toolbar">
-                                ${navlist}
-                            </div>
-                        `;
-              page.structure.row.insertBefore(toolbar, page.structure.content);
-            } else {
-              page.structure.row.insertBefore(navlist, page.structure.content);
-            }
-          }
-          let btn_add = page.structure.main.querySelector(":scope > .btn-add");
-          if (!btn_add) btn_add = page.structure.main.querySelector(":scope > section:first-child .btn-add");
-          if (btn_add) {
-            let side_actions = document.createElement("section");
-            side_actions.classList.add("side-actions");
-            if (!page.mobile)
-              page.structure.side.appendChild(side_actions);
-            else
-              page.structure.main.appendChild(side_actions);
-            btn_add.classList = "btn side-action";
-            btn_add.setAttribute("data-type", "add");
-            btn_add.textContent = tl(trans.add);
-            side_actions.appendChild(btn_add);
-          }
-          let radio = page.structure.main.querySelector(":scope > .section-controls > .section-playlink");
-          if (radio) {
-            let side_actions = document.createElement("section");
-            side_actions.classList.add("side-actions");
-            if (!page.mobile)
-              page.structure.side.appendChild(side_actions);
-            else
-              page.structure.main.appendChild(side_actions);
-            radio.classList = "btn stationlink js-playlink-station radio-button";
-            let type = radio.getAttribute("data-analytics-label");
-            render(radio, html`
-                        <h3 class="sub-text">${tl(trans.radio)}</h3>
-                        <h4>${tl(trans[type])}</h4>
-                    `);
-            radio.removeAttribute("title");
-            side_actions.appendChild(radio);
-          }
-        }
-        let similar_artists = page.structure.side.querySelector(".similar-items-sidebar");
-        if (similar_artists) {
-          similar_artists.parentElement.classList.add("similar-artists-panel");
-          page.structure.side.removeChild(similar_artists.parentElement);
-        }
-      } else {
-        let content_top = document.body.querySelector(".content-top");
-        if (content_top) content_top.classList.add("legacy-content-top");
-      }
-    }
-  }
-  function checkup_nav() {
-    if (!ff("short")) return;
-    if (page.structure.nav) page.structure.nav.setAttribute("data-assigned", "true");
-    let navlists = page.structure.container.querySelectorAll(":scope > .navlist");
-    navlists.forEach((nav, index3) => {
-      console.info(index3);
-      if (index3 < 1) return;
-      if (ff("mualani")) {
-        let toolbar = html.node`
-                <div class="toolbar">
-                    ${nav}
-                </div>
-            `;
-        page.structure.row.insertBefore(toolbar, page.structure.content);
-      } else {
-        page.structure.row.insertBefore(nav, page.structure.content);
-      }
-    });
-  }
-  function convert_to_toolbar() {
-    const nav = page.structure.content_top.querySelector(".navlist");
-    nav.classList.add("redesigned-navigation");
-    page.structure.toolbar = html.node`
-        <div class="toolbar">
-            ${nav}
-        </div>
-    `;
-    page.structure.row.insertBefore(page.structure.toolbar, page.structure.row.firstChild);
-    page.structure.content_top.style.display = "none";
-  }
-
-  // src/components/auto_edit.js
-  function bleh_auto_edits() {
-    let corrections_panel = document.body.querySelector("#subscription-corrections");
-    page.structure.main.appendChild(corrections_panel);
-    let nav = page.structure.container.querySelector("nav[data-more-string] .navlist-items");
-    nav.insertBefore(html.node`
-        <li class="navlist-item secondary-nav-item secondary-nav-item--back">
-            <a class="secondary-nav-item-link" href="${root}settings/subscription">
-                ${tl(trans.back)}
-            </a>
-        </li>
-    `, nav.firstElementChild);
-  }
-
-  // src/pages/lastfm_settings.js
-  var import_cropperjs = __toESM(require_cropper(), 1);
-  var cropper;
-  function bleh_native_settings() {
-    let no_data = page.structure.container.querySelector(":scope > .no-data-message");
-    if (no_data) {
-      page.structure.main.appendChild(no_data);
-    }
-    if (page.subpage == "overview") {
-      patch_settings_profile_tab();
-    } else if (page.subpage == "privacy") {
-      patch_settings_privacy_tab();
-    } else if (page.subpage == "subscription_overview") {
-      let panel = page.structure.container.querySelector(".row + div");
-      let subscription = panel.querySelector("#current-subscription");
-      let edits = panel.querySelector("#automatic-edits");
-      let merch_h = panel.querySelector(":scope > h2");
-      let merch = panel.querySelector("#mechandise-discount");
-      let history = panel.querySelector("#pro-history");
-      merch.insertBefore(merch_h, merch.firstElementChild);
-      page.structure.main.appendChild(subscription);
-      page.structure.main.appendChild(edits);
-      page.structure.main.appendChild(merch);
-      page.structure.main.appendChild(history);
-      let button = subscription.querySelector(".btn-primary");
-      if (button) button.classList.add("subscription-button", "icon", "primary");
-      let more_link_wrap = edits.querySelector(".more-link");
-      if (more_link_wrap) {
-        more_link_wrap.classList = "";
-        let edit_buttons = more_link_wrap.querySelectorAll("a");
-        edit_buttons.forEach((edit_button, index3) => {
-          edit_button.classList.add("btn", "edit-lead-button", "icon", "primary");
-          if (index3 == 0)
-            edit_button.classList.add("edit-album");
-          else
-            edit_button.classList.add("edit-track");
-        });
-      }
-    } else if (page.subpage.startsWith("subscription_automatic-edits")) {
-      bleh_auto_edits();
-    } else if (page.subpage == "account_overview") {
-      bleh_accounts();
-    } else if (page.subpage == "change-username_overview") {
-      bleh_name_change();
-    } else if (page.subpage == "applications_overview") {
-      bleh_applications();
-    }
-    if (ff("katsune")) return;
-    let edit_header = document.createElement("section");
-    edit_header.classList.add("redesigned-header", "edit-header", "no-background");
-    edit_header.innerHTML = `
-        <div class="tag-side">
-            <div class="tag-icon cog-icon"></div>
-        </div>
-        <div class="info-side">
-            <div class="sub-text">${tl(trans.settings)}</div>
-            <h1>${header_text}</h1>
-        </div>
-    `;
-    page.structure.container.insertBefore(edit_header, page.structure.container.firstElementChild);
-  }
-  function patch_settings_profile_tab() {
-    let update_picture = page.structure.main.querySelector("#update-picture");
-    if (!update_picture) return;
-    let token = document.body.querySelector('[name="csrfmiddlewaretoken"]').getAttribute("value");
-    patch_settings_profile_panel(token, update_picture);
-    patch_settings_charts_panel(token);
-  }
-  function patch_settings_charts_panel(token) {
-    let charts_panel = document.getElementById("update-chart");
-    if (charts_panel.hasAttribute("data-kate-processed"))
-      return;
-    charts_panel.setAttribute("data-kate-processed", "true");
-    charts_panel.classList.add("bleh--panel");
-    let original_chart_settings = {
-      recent: {
-        recent_artwork: document.getElementById("id_show_recent_tracks_artwork").checked,
-        count: document.getElementById("id_chart_length_recent_tracks").outerHTML,
-        recent_realtime: document.getElementById("id_auto_refresh_recent_tracks").checked
-      },
-      artists: {
-        timeframe: document.getElementById("id_chart_range_top_artists").outerHTML,
-        style: document.getElementById("id_chart_style_and_length_top_artists").outerHTML
-      },
-      albums: {
-        timeframe: document.getElementById("id_chart_range_top_albums").outerHTML,
-        style: document.getElementById("id_chart_style_and_length_top_albums").outerHTML
-      },
-      tracks: {
-        count: document.getElementById("id_chart_length_top_tracks").outerHTML,
-        timeframe: document.getElementById("id_chart_range_top_tracks").outerHTML
-      }
-    };
-    charts_panel.innerHTML = `
-        <h4>${tl(trans.recent_tracks)}</h4>
-        <form action="${root}settings#update-chart" name="chart-form" method="post">
-            <input type="hidden" name="csrfmiddlewaretoken" value="${token}">
-            <div class="inner-preview pad">
-                <div class="tracks recent">
-                    <div class="track realtime">
-                        <div class="cover"></div>
-                        <div class="title"></div>
-                        <div class="artist"></div>
-                        <div class="time"></div>
-                    </div>
-                    <div class="track">
-                        <div class="cover"></div>
-                        <div class="title"></div>
-                        <div class="artist"></div>
-                        <div class="time"></div>
-                    </div>
-                    <div class="track">
-                        <div class="cover"></div>
-                        <div class="title"></div>
-                        <div class="artist"></div>
-                        <div class="time"></div>
-                    </div>
-                    <div class="track">
-                        <div class="cover"></div>
-                        <div class="title"></div>
-                        <div class="artist"></div>
-                        <div class="time"></div>
-                    </div>
-                    <div class="track">
-                        <div class="cover"></div>
-                        <div class="title"></div>
-                        <div class="artist"></div>
-                        <div class="time"></div>
-                    </div>
-                </div>
-            </div>
-            <div class="setting" data-type="select">
-                <div class="heading">
-                    <h5>${tl(trans.amount_to_display)}</h5>
-                </div>
-                <div class="select-wrap custom-selector" id="id_chart_length_recent_tracks_select">
-                    ${original_chart_settings.recent.count}
-                </div>
-            </div>
-            <div class="setting" data-type="toggle" onclick="_update_inbuilt_item('recent_artwork')" id="container-recent_artwork">
-                <button class="btn reset" onclick="_reset_inbuilt_item('recent_artwork')">Reset to default</button>
-                <div class="heading">
-                    <h5>${tl(trans.recent_artwork)}</h5>
-                </div>
-                <div class="toggle-wrap">
-                    <input class="companion-checkbox" type="checkbox" name="show_recent_tracks_artwork" id="inbuilt-companion-checkbox-recent_artwork">
-                    <span class="btn toggle" id="toggle-recent_artwork" aria-checked="false">
-                        <div class="dot"></div>
-                    </span>
-                </div>
-            </div>
-            <div class="setting" data-type="toggle" onclick="_update_inbuilt_item('recent_realtime')" id="container-recent_realtime">
-                <button class="btn reset" onclick="_reset_inbuilt_item('recent_realtime')">Reset to default</button>
-                <div class="heading">
-                    <h5>${tl(trans.recent_realtime.name)}</h5>
-                    <p>${tl(trans.recent_realtime.body)}</p>
-                </div>
-                <div class="toggle-wrap">
-                    <input class="companion-checkbox" type="checkbox" name="auto_refresh_recent_tracks" id="inbuilt-companion-checkbox-recent_realtime">
-                    <span class="btn toggle" id="toggle-recent_realtime" aria-checked="false">
-                        <div class="dot"></div>
-                    </span>
-                </div>
-            </div>
-            <div class="sep"></div>
-            <h4>${tl(trans.top_artists)}</h4>
-            <div class="inner-preview pad">
-                <div class="item-grid artist">
-                    <div class="grid-primary artist">
-                        <div class="grid-item"></div>
-                    </div>
-                    <div class="grid-mains">
-                        <div class="grid-main artist">
-                            <div class="grid-item grid-item--extra artist"></div>
-                            <div class="grid-item grid-item--extra artist"></div>
-                            <div class="grid-item"></div>
-                            <div class="grid-item"></div>
-                        </div>
-                        <div class="grid-main artist">
-                            <div class="grid-item grid-item--extra artist"></div>
-                            <div class="grid-item grid-item--extra artist"></div>
-                            <div class="grid-item"></div>
-                            <div class="grid-item"></div>
-                        </div>
-                    </div>
-                </div>
-                <div class="tracks artist">
-                    <div class="track">
-                        <div class="cover"></div>
-                        <div class="title"></div>
-                        <div class="bar">
-                            <div class="fill" style="width: 100%"></div>
-                        </div>
-                    </div>
-                    <div class="track">
-                        <div class="cover"></div>
-                        <div class="title"></div>
-                        <div class="bar">
-                            <div class="fill" style="width: 85%"></div>
-                        </div>
-                    </div>
-                    <div class="track">
-                        <div class="cover"></div>
-                        <div class="title"></div>
-                        <div class="bar">
-                            <div class="fill" style="width: 60%"></div>
-                        </div>
-                    </div>
-                    <div class="track">
-                        <div class="cover"></div>
-                        <div class="title"></div>
-                        <div class="bar">
-                            <div class="fill" style="width: 30%"></div>
-                        </div>
-                    </div>
-                    <div class="track">
-                        <div class="cover"></div>
-                        <div class="title"></div>
-                        <div class="bar">
-                            <div class="fill" style="width: 5%"></div>
-                        </div>
-                    </div>
-                </div>
-            </div>
-            <div class="setting" data-type="select">
-                <div class="heading">
-                    <h5>${tl(trans.default_timeframe)}</h5>
-                </div>
-                <div class="select-wrap custom-selector" id="id_chart_range_top_artists_select">
-                    ${original_chart_settings.artists.timeframe}
-                </div>
-            </div>
-            <div class="setting" data-type="select">
-                <div class="heading">
-                    <h5>${tl(trans.chart_style)}</h5>
-                </div>
-                <div class="select-wrap custom-selector" id="id_chart_style_and_length_top_artists_select">
-                    ${original_chart_settings.artists.style}
-                </div>
-            </div>
-            <div class="sep"></div>
-            <h4>${tl(trans.top_albums)}</h4>
-            <div class="inner-preview pad">
-                <div class="item-grid album">
-                    <div class="grid-primary album">
-                        <div class="grid-item"></div>
-                    </div>
-                    <div class="grid-mains">
-                        <div class="grid-main album">
-                            <div class="grid-item"></div>
-                            <div class="grid-item"></div>
-                            <div class="grid-item grid-item--extra album"></div>
-                            <div class="grid-item grid-item--extra album"></div>
-                        </div>
-                        <div class="grid-main album">
-                            <div class="grid-item"></div>
-                            <div class="grid-item"></div>
-                            <div class="grid-item grid-item--extra album"></div>
-                            <div class="grid-item grid-item--extra album"></div>
-                        </div>
-                    </div>
-                </div>
-                <div class="tracks album">
-                    <div class="track">
-                        <div class="cover"></div>
-                        <div class="title"></div>
-                        <div class="bar">
-                            <div class="fill" style="width: 100%"></div>
-                        </div>
-                    </div>
-                    <div class="track">
-                        <div class="cover"></div>
-                        <div class="title"></div>
-                        <div class="bar">
-                            <div class="fill" style="width: 85%"></div>
-                        </div>
-                    </div>
-                    <div class="track">
-                        <div class="cover"></div>
-                        <div class="title"></div>
-                        <div class="bar">
-                            <div class="fill" style="width: 60%"></div>
-                        </div>
-                    </div>
-                    <div class="track">
-                        <div class="cover"></div>
-                        <div class="title"></div>
-                        <div class="bar">
-                            <div class="fill" style="width: 30%"></div>
-                        </div>
-                    </div>
-                    <div class="track">
-                        <div class="cover"></div>
-                        <div class="title"></div>
-                        <div class="bar">
-                            <div class="fill" style="width: 5%"></div>
-                        </div>
-                    </div>
-                </div>
-            </div>
-            <div class="setting" data-type="select">
-                <div class="heading">
-                    <h5>${tl(trans.default_timeframe)}</h5>
-                </div>
-                <div class="select-wrap custom-selector" id="id_chart_range_top_albums_select">
-                    ${original_chart_settings.albums.timeframe}
-                </div>
-            </div>
-            <div class="setting" data-type="select">
-                <div class="heading">
-                    <h5>${tl(trans.chart_style)}</h5>
-                </div>
-                <div class="select-wrap custom-selector" id="id_chart_style_and_length_top_albums_select">
-                    ${original_chart_settings.albums.style}
-                </div>
-            </div>
-            <div class="sep"></div>
-            <h4>${tl(trans.top_tracks)}</h4>
-            <div class="inner-preview pad">
-                <div class="tracks">
-                    <div class="track">
-                        <div class="cover"></div>
-                        <div class="title"></div>
-                        <div class="artist"></div>
-                        <div class="bar">
-                            <div class="fill" style="width: 100%"></div>
-                        </div>
-                    </div>
-                    <div class="track">
-                        <div class="cover"></div>
-                        <div class="title"></div>
-                        <div class="artist"></div>
-                        <div class="bar">
-                            <div class="fill" style="width: 85%"></div>
-                        </div>
-                    </div>
-                    <div class="track">
-                        <div class="cover"></div>
-                        <div class="title"></div>
-                        <div class="artist"></div>
-                        <div class="bar">
-                            <div class="fill" style="width: 60%"></div>
-                        </div>
-                    </div>
-                    <div class="track">
-                        <div class="cover"></div>
-                        <div class="title"></div>
-                        <div class="artist"></div>
-                        <div class="bar">
-                            <div class="fill" style="width: 30%"></div>
-                        </div>
-                    </div>
-                    <div class="track">
-                        <div class="cover"></div>
-                        <div class="title"></div>
-                        <div class="artist"></div>
-                        <div class="bar">
-                            <div class="fill" style="width: 5%"></div>
-                        </div>
-                    </div>
-                </div>
-            </div>
-            <div class="setting" data-type="select">
-                <div class="heading">
-                    <h5>${tl(trans.default_timeframe)}</h5>
-                </div>
-                <div class="select-wrap custom-selector" id="id_chart_range_top_tracks_select">
-                    ${original_chart_settings.tracks.timeframe}
-                </div>
-            </div>
-            <div class="setting" data-type="select">
-                <div class="heading">
-                    <h5>${tl(trans.amount_to_display)}</h5>
-                </div>
-                <div class="select-wrap custom-selector" id="id_chart_length_top_tracks_select">
-                    ${original_chart_settings.tracks.count}
-                </div>
-            </div>
-            <div class="settings-footer">
-                <button type="submit" class="btn-primary save">
-                    ${tl(trans.save)}
-                </button>
-                <input type="hidden" value="chart" name="submit">
-            </div>
-        </form>
-    `;
-    custom_select(charts_panel.querySelector("#id_chart_length_recent_tracks"), charts_panel.querySelector("#id_chart_length_recent_tracks_select"));
-    custom_select(charts_panel.querySelector("#id_chart_range_top_artists"), charts_panel.querySelector("#id_chart_range_top_artists_select"));
-    custom_select(charts_panel.querySelector("#id_chart_style_and_length_top_artists"), charts_panel.querySelector("#id_chart_style_and_length_top_artists_select"));
-    custom_select(charts_panel.querySelector("#id_chart_range_top_albums"), charts_panel.querySelector("#id_chart_range_top_albums_select"));
-    custom_select(charts_panel.querySelector("#id_chart_style_and_length_top_albums"), charts_panel.querySelector("#id_chart_style_and_length_top_albums_select"));
-    custom_select(charts_panel.querySelector("#id_chart_range_top_tracks"), charts_panel.querySelector("#id_chart_range_top_tracks_select"));
-    custom_select(charts_panel.querySelector("#id_chart_length_top_tracks"), charts_panel.querySelector("#id_chart_length_top_tracks_select"));
-    for (let category in original_chart_settings) {
-      for (let setting2 in original_chart_settings[category]) {
-        update_inbuilt_item(setting2, original_chart_settings[category][setting2], false);
-      }
-    }
-    let selects = document.body.querySelectorAll("select");
-    selects.forEach((select2) => {
-      select2.setAttribute("onchange", `_update_inbuilt_select('${select2.getAttribute("id")}', this.value)`);
-      update_inbuilt_select(select2.getAttribute("id"), select2.value);
-    });
-  }
-  function patch_settings_profile_panel(token, update_picture) {
-    update_picture.classList.add("bleh--panel");
-    const upload_form = update_picture.querySelector(".avatar-upload-form");
-    const avatar_url = update_picture.querySelector(".image-upload-preview img").getAttribute("src");
-    const upload_finished = update_picture.querySelector(".alert-success");
-    if (page.state.avatar_changer && upload_finished) {
-      const id = page.state.avatar_changer.getAttribute("data-modal-id");
-      dialog_rm({ id });
-    }
-    let form_display_name = document.getElementById("id_full_name").value;
-    let form_website = document.getElementById("id_homepage").value;
-    let form_country = document.getElementById("id_country");
-    let form_about_me = document.getElementById("id_about_me").textContent;
-    let chars;
-    let about;
-    let preview;
-    const markdown_settings = {
-      allow_headers: true,
-      allow_banners: true,
-      allow_icons: true,
-      allow_hue: true,
-      take_effect: false
-    };
-    let banner_setting;
-    let accent_setting2;
-    render(update_picture, html`
-        <h4>${tl(trans.profile)}</h4>
-        <div class="banner-preview"></div>
-        <div class="profile-container">
-            <div class="avatar-side">
-                <div class="avatar image-upload-preview" onclick=${() => avatar2(token)}>
-                    <img src=${avatar_url} alt=${tl(trans.your_avatar)} loading="lazy">
-                    <div class="avatar-overlay"></div>
-                </div>
-            </div>
-            <div class="info-side">
-                <div class="header-info">
-                    <div class="header">
-                        <h1>${auth.name}</h1>
-                    </div>
-                    <div class="header-title-secondary">
-                        <span class="header-title-secondary--pre" id="header-title-display-name--pre"></span>
-                        <span class="header-title-display-name" id="header-title-display-name"></span>
-                        <!--<span class="header-title-secondary--pre" id="header-scrobble-since--pre">created</span>
-                        <span class="header-scrobble-since" id="header-scrobble-since"></span>-->
-                    </div>
-                </div>
-                <div class="sub-info">
-                    <form action="${root}settings#update-profile" name="profile-form" data-form-type="identity" method="post">
-                        <input type="hidden" name="csrfmiddlewaretoken" value="${token}">
-                        <div class="info-grid">
-                            <div class="info-row">
-                                <div class="title">
-                                    ${tl(trans.subtitle)}
-                                </div>
-                                <div class="input">
-                                    <input type="text" name="full_name" value=${form_display_name} maxlength="36" id="id_full_name" oninput="_update_display_name(this.value)" data-form-type="other">
-                                    <div class="tip">${tl(trans.pronoun_tip)}</div>
-                                </div>
-                            </div>
-                            <div class="info-row">
-                                <div class="title">
-                                    ${tl(trans.country)}
-                                </div>
-                                ${select(select_prepare(form_country), form_country.value, "country")}
-                            </div>
-                            <div class="info-row">
-                                <div class="title">
-                                    ${tl(trans.about)}
-                                </div>
-                                <div class="input about-me" id="about_me">
-                                    <textarea name="about_me" placeholder=${tl(trans.anything_you_can_imagine)} cols="40" rows="10" class="textarea--s" maxlength="500" id="id_about_me" oninput=${() => update_about()} ref=${(el) => about = el} data-form-type="other">${form_about_me}</textarea>
-                                    <div class="dual-tip">
-                                        <div class="tip markdown-enabled" onclick=${() => markdown_prompt(markdown_settings)}>${tl(trans.supports_markdown)}</div>
-                                        <div class="tip characters" ref=${(el) => chars = el}>
-                                            ${tl(trans.value_characters_max).replace("{v}", "500")}
-                                        </div>
-                                    </div>
-                                </div>
-                            </div>
-                            <div class="info-row">
-                                <div class="title">
-                                    ${tl(trans.about_me_preview)}
-                                </div>
-                                <span class="bleh--about-me-preview markdown-body" ref=${(el) => preview = el}></span>
-                            </div>
-                            <div class="info-row" style="display: none">
-                                <div class="title">
-                                    ${tl(trans.website)}
-                                </div>
-                                <div class="input">
-                                    <input type="url" name="homepage" value="${form_website}" id="id_homepage" data-form-type="website">
-                                </div>
-                            </div>
-                        </div>
-                        <div class="save-row">
-                            <div class="form-submit">
-                                <button type="submit" class="btn-primary save" data-form-type="action">
-                                    ${tl(trans.save)}
-                                </button>
-                                <input type="hidden" value="profile" name="submit">
-                            </div>
-                        </div>
-                    </form>
-                </div>
-            </div>
-        </div>
-        <div class="setting-group">
-            <div class="setting" data-type="info" ref=${(el) => banner_setting = el} />
-            <div class="setting" data-type="info" ref=${(el) => accent_setting2 = el} />
-            ${setting({ id: "avatar_radius" })}
-        </div>
-    `);
-    page.structure.main.removeChild(page.structure.main.querySelector("#update-profile"));
-    update_about();
-    function update_about() {
-      log("re-rendering", "about", "log");
-      let value = about.value;
-      chars.textContent = tl(trans.value_characters_max).replace("{v}", `${value.length}/500`);
-      chars.setAttribute("data-exceeded", value.length >= 500);
-      render(preview, markdown(value, markdown_settings));
-      let profile_cache = JSON.parse(localStorage.getItem("bleh_profile_cache")) || {};
-      let cache2 = profile_cache[auth.name];
-      console.info("cache", cache2);
-      render(banner_setting, html`
-            <div class="heading">
-                <h5>${tl(trans.profile_banner.name)}</h5>
-                <p>${tl(trans.profile_banner.body)}</p>
-                ${cache2.banner ? html.node`
-                <p>${tl(trans.current_banner_value).replace("{v}", cache2.banner)}</p>
-                ` : ""}
-            </div>
-            ${() => {
-        if (!cache2.banner)
-          return html.node`
-                        <div class="info">
-                            <p>${tl(trans.none)}</p>
-                        </div>
-                    `;
-        let banner_image = html.node`
-                    <div class="banner-image" style="background-image: url(${cache2.banner})" />
-                `;
-        tippy_esm_default(banner_image, {
-          content: cache2.banner
-        });
-        return banner_image;
-      }}
-        `);
-      const accent_regex = /\[accent=([0-9]{1,3}),([0-9]*\.?[0-9]+),([0-9]*\.?[0-9]+)\]/;
-      console.info("cache update", about.value, cache2.hue, cache2.sat, cache2.lit);
-      let edit;
-      render(accent_setting2, html`
-            <div class="heading">
-                <h5>${tl(trans.profile_accent.name)}<span class="new-badge beta">${tl(trans.new)}</span></h5>
-                <p>${tl(trans.profile_accent.body)}</p>
-            </div>
-            <div class="info">
-                <div class="colour-tile colourful" style="--hue-over: ${cache2.hue}; --sat-over: ${cache2.sat}; --lit-over: ${cache2.lit}" />
-                <div class="swatch-group palette">
-                    <button class="swatch-container" ref=${(el) => edit = el} onclick=${() => {
-        let hue_range;
-        let sat_range;
-        let lit_range;
-        const match2 = about.value.match(accent_regex);
-        console.info(match2);
-        if (match2) {
-          save_setting("profile_hue", parseInt(match2[1], 10));
-          save_setting("profile_sat", parseFloat(match2[2]));
-          save_setting("profile_lit", parseFloat(match2[3]));
-          settings_store.profile_hue.default = settings.hue;
-          settings_store.profile_sat.default = settings.sat;
-          settings_store.profile_lit.default = settings.lit;
-        }
-        let accent_preview;
-        dialog({
-          id: "profile_accent",
-          title: tl(trans.profile_accent.name),
-          body: html.node`
-                                <div class="setting-group">
-                                    <div class="setting" data-type="info">
-                                        <div class="heading">
-                                            <h5>${tl(trans.preview)}</h5>
-                                        </div>
-                                        <div class="info">
-                                            <div class="colour-tile colourful" ref=${(el) => accent_preview = el} style="--hue-over: ${settings.profile_hue}; --sat-over: ${settings.profile_sat}; --lit-over: ${settings.profile_lit}" />
-                                        </div>
-                                    </div>
-                                    ${ff("colour_based_on_hex") ? html.node`
-                                    <div class="setting" data-type="text">
-                                        <div class="heading">
-                                            <h5>${tl(trans.convert_from_hex)}</h5>
-                                        </div>
-                                        <div class="input-container content-form">
-                                            ${colour = input({
-            type: "colour",
-            value: "#999999",
-            maxlength: 7,
-            warn_if_empty: true
-          })}
-                                            <button class="btn primary icon convert" onclick=${() => {
-            const value2 = colour.value();
-            const hsl = hex_to_hsl(value2);
-            hue_range.set(hsl.h);
-            sat_range.set(clamp_sat(hsl.s / 100 * 3));
-            lit_range.set(hsl.l / 100 + 0.35);
-          }}>${tl(trans.convert)}</button>
-                                        </div>
-                                    </div>
-                                    ` : ""}
-                                    ${hue_range = setting({ id: "profile_hue", func: update_colour_preview })}
-                                    ${sat_range = setting({ id: "profile_sat", func: update_colour_preview })}
-                                    ${lit_range = setting({ id: "profile_lit", func: update_colour_preview })}
-                                </div>
-                                <div class="modal-footer">
-                                    <button class="see-more cancel" onclick=${() => dialog_rm({ id: "profile_accent" })}>
-                                        ${tl(trans.back)}
-                                    </button>
-                                    <div class="fill"></div>
-                                    <button class="btn primary continue" onclick=${() => {
-            const new_accent = `[accent=${settings.profile_hue},${settings.profile_sat},${settings.profile_lit}]`;
-            if (match2) {
-              about.value = about.value.replace(accent_regex, new_accent);
-            } else {
-              const trimmed = about.value.trimEnd();
-              if (trimmed.length == 0) {
-                about.value = new_accent;
-              } else {
-                about.value = trimmed + "\n\n" + new_accent;
-              }
-            }
-            about.dispatchEvent(new InputEvent("input", { bubbles: true, cancelable: true }));
-            dialog_rm({ id: "profile_accent" });
-          }}>
-                                        ${tl(trans.change)}
-                                    </button>
-                                </div>
-                            `
-        });
-        function update_colour_preview() {
-          accent_preview.style = `--hue-over: ${settings.profile_hue}; --sat-over: ${settings.profile_sat}; --lit-over: ${settings.profile_lit}`;
-        }
-      }}>
-                        <div class="swatch colourful" data-swatch-type="customise" />
-                    </button>
-                </div>
-            </div>
-        `);
-      tippy_esm_default(edit, {
-        content: tl(trans.edit)
-      });
-    }
-    update_display_name(form_display_name);
-  }
-  unsafeWindow._update_display_name = function(value) {
-    update_display_name(value);
-  };
-  function update_display_name(value) {
-    document.getElementById("header-title-display-name").textContent = value;
-    let pronouns = use_pronouns(value);
-    document.getElementById("header-title-display-name--pre").textContent = pronouns ? tl(trans.account_pronouns) : tl(trans.aka);
-  }
-  function use_pronouns(value) {
-    value = value.replaceAll(" ", "");
-    if (value.startsWith("she/") || value.startsWith("he/") || value.startsWith("they/") || value.startsWith("it/") || value.startsWith("xe/") || value.startsWith("any/")) return true;
-    return false;
-  }
-  function avatar2(token = "") {
-    if (!token) token = page.token;
-    else page.token = token;
-    page.state.avatar_changer = dialog({
-      id: "edit_avatar",
-      title: tl(trans.change_avatar),
-      body: html.node`
-            <div class="forms">
-                <form action="${root}settings" name="avatar-form" method="post" enctype="multipart/form-data">
-                    <input type="hidden" name="csrfmiddlewaretoken" value=${page.token}>
-                    <div class="form-group form-group--avatar js-form-group upload-avatar">
-                        <div class="js-form-group-controls form-group-controls">
-                            <span class="btn-secondary btn primary btn-file" data-kate-processed="true">
-                                ${tl(trans.upload)}
-                                <input type="file" onchange=${() => update_avatar(event)} name="avatar" data-require="components/file-input" data-file-input-copy="${tl(trans.upload)}" data-no-file-copy="No file chosen" accept="image/*" required="" id="id_avatar" data-kate-processed="true">
-                            </span>
-                        </div>
-                    </div>
-                    <button type="submit" class="btn-primary save" id="avatar_saver">
-                        ${tl(trans.save)}
-                    </button>
-                    <input type="hidden" value="avatar" name="submit">
-                </form>
-                <form action="${root}settings/avatar/delete" method="post">
-                    <input type="hidden" name="csrfmiddlewaretoken" value=${page.token}>
-                    <div class="form-group delete-avatar">
-                        <button class="mimic-link image-upload-remove" type="submit" value="delete-avatar" name="delete-avatar">${tl(trans.delete)}</button>
-                    </div>
-                </form>
-            </div>
-            <div class="modal-footer">
-                <button class="see-more cancel" onclick=${() => dialog_rm({ id: "edit_avatar" })}>${tl(trans.cancel)}</button>
-                <div class="fill"></div>
-                <button class="btn primary save" onclick=${() => save_avatar()} disabled>${tl(trans.save)}</button>
-            </div>
-        `
-    });
-    page.state.avatar_changer.querySelector('[name="avatar-form"]').onsubmit = finish_saving_avatar;
-    const file_button = page.state.avatar_changer.querySelector(".btn-file");
-    const save_button = page.state.avatar_changer.querySelector(".modal-footer .primary");
-    let form;
-    function update_avatar(e) {
-      console.info(e);
-      if (!e.target.files || !e.target.files[0]) return;
-      form = page.state.avatar_changer.querySelector(".bleh-modal-body");
-      if (e.target.files[0].type == "image/gif") {
-        save_avatar();
-        finish_saving_avatar();
-        return;
-      }
-      let reader = new FileReader();
-      reader.onload = function() {
-        crop(reader.result);
-        save_button.removeAttribute("disabled");
-      };
-      reader.readAsDataURL(e.target.files[0]);
-    }
-    function save_avatar() {
-      page.state.avatar_changer.querySelector("#avatar_saver").click();
-    }
-    function finish_saving_avatar() {
-      page.state.avatar_changer.setAttribute("data-loading", "true");
-      page.state.avatar_changer.querySelectorAll(".bleh-modal-body button").forEach((button) => {
-        button.setAttribute("disabled", "true");
-        button.removeAttribute("onclick");
-      });
-    }
-    function crop(file) {
-      let crop_image;
-      let save;
-      const crop_dialog = dialog({
-        id: "crop",
-        title: tl(trans.crop_avatar),
-        body: html.node`
-                <div class="crop">
-                    <img src=${file} ref=${(el) => crop_image = el}>
-                </div>
-                <div class="alert alert-info">
-                    ${tl(trans.crop_notice)}
-                </div>
-                <div class="modal-footer">
-                    <button class="see-more cancel" onclick=${() => {
-          if (cropper && cropper.destroy) cropper.destroy();
-          cropper = null;
-          avatar2();
-        }}>${tl(trans.cancel)}</button>
-                    <div class="fill"></div>
-                    <button class="btn primary save" onclick=${() => {
-          if (!cropper) return;
-          crop_dialog.querySelectorAll(".bleh-modal-body button").forEach((button) => {
-            button.setAttribute("disabled", "true");
-            button.removeAttribute("onclick");
-          });
-          const canvas = cropper.getCroppedCanvas();
-          canvas.toBlob((blob) => {
-            const cropped_file = new File([blob], "avatar.png", { type: "image/png" });
-            const inner_form = form.querySelector("form");
-            inner_form.style.display = "none";
-            crop_dialog.querySelector(".bleh-modal-body").appendChild(inner_form);
-            const file_input = inner_form.querySelector('input[type="file"]');
-            const data_transfer = new DataTransfer();
-            data_transfer.items.add(cropped_file);
-            file_input.files = data_transfer.files;
-            inner_form.querySelector("#avatar_saver").click();
-          }, "image/png");
-        }} ref=${(el) => save = el} disabled>${tl(trans.save)}</button>
-                </div>
-            `
-      });
-      page.state.avatar_changer = crop_dialog;
-      crop_image.onload = () => {
-        if (cropper && cropper.destroy) cropper.destroy();
-        crop_image.style.maxWidth = "none";
-        crop_image.style.width = crop_image.naturalWidth + "px";
-        crop_image.style.height = crop_image.naturalHeight + "px";
-        cropper = new import_cropperjs.default(crop_image, {
-          viewMode: 3,
-          dragMode: "crop",
-          movable: true,
-          zoomable: true,
-          scalable: false,
-          cropBoxMovable: true,
-          cropBoxResizable: true,
-          background: false,
-          guides: true,
-          autoCropArea: 1
-        });
-        save.removeAttribute("disabled");
-      };
-    }
-  }
-  function patch_settings_privacy_tab() {
-    let privacy_panel = document.getElementById("privacy");
-    let token = document.body.querySelector('[name="csrfmiddlewaretoken"]').getAttribute("value");
-    bleh_communication_panel(token);
-    patch_settings_privacy_panel(token, privacy_panel);
-  }
-  function bleh_communication_panel(token) {
-    let profile_notes = JSON.parse(localStorage.getItem("bleh_profile_notes")) || {};
-    let panel = page.structure.main.querySelector("#ignorelist");
-    panel.classList.add("bleh--panel");
-    let list = panel.querySelectorAll(".ignore-list tr");
-    let new_list = document.createElement("div");
-    new_list.classList.add("generic-table-list", "user-vertical-list", "take-space");
-    let exceeded = false;
-    let exceed_amount = 10;
-    let amount = 0;
-    list.forEach((item, index3) => {
-      let name = item.querySelector("td").textContent.trim();
-      let form2 = item.querySelector("form");
-      let button = form2.querySelector("button");
-      button.classList.add("icon", "chibi", "danger-subtle");
-      button.setAttribute("data-type", "trash");
-      let entry = html.node`
-            <div class="generic-table-list-entry user-vertical-list-item">
-                <div class="name">
-                    <a class="mention" href="${root}user/${name}" target="_blank">@${name}</a>
-                </div>
-                <div class="text preview">
-                    ${profile_notes.hasOwnProperty(name) ? html.node`
-                        <p id="profile-note-row-preview--${name}">${{ html: profile_notes[name] }}</p>
-                    ` : ""}
-                </div>
-                <div class="actions">
-                    ${form2}
-                </div>
-            </div>
-        `;
-      if (index3 > exceed_amount && !exceeded)
-        exceeded = true;
-      if (exceeded)
-        entry.classList.add("entry-is-exceeded");
-      new_list.appendChild(entry);
-      amount += 1;
-    });
-    if (exceeded) {
-      let remainder = amount - exceed_amount;
-      new_list.classList.add("list-is-exceeded");
-      new_list.setAttribute("data-expanded", "false");
-      let expand = html.node`
-            <button class="see-more expand-down" onclick=${() => {
-        expand.style.display = "none";
-        new_list.setAttribute("data-expanded", "true");
-      }}>
-                ${tl(trans.view_count_more).replace("{c}", remainder.toString())}
-            </button>
-        `;
-      new_list.appendChild(expand);
-    }
-    let form = page.structure.main.querySelector('[name="ignorelist"]');
-    if (page.token == "")
-      page.token = form.querySelector('[name="csrfmiddlewaretoken"]').getAttribute("value");
-    render(panel, html`
-        <h4>${tl(trans.block_list)}</h4>
-        <div class="user-top-panel">
-            <div class="user-top-avatar user-top-avatar-side-left">
-                <div class="bleh-icon"></div>
-            </div>
-            <img class="user-top-avatar user-top-avatar-main" src=${auth.avatar.replace("avatar42s", "avatar300s")}
-                alt=${auth.name}>
-            <div class="user-top-avatar user-top-avatar-side-right">
-                <div class="bleh-icon"></div>
-            </div>
-        </div>
-        <div class="setting" data-type="text">
-            <div class="heading">
-                <h5>${tl(trans.profile)}</h5>
-                <form action="${root}settings/privacy#ignorelist" name="ignorelist" method="post">
-                    <input type="hidden" name="csrfmiddlewaretoken" value=${page.token}>
-                    <div class="input-container">
-                        <input type="text" maxlength="80" id="id_user" name="user" placeholder=${tl(trans.enter_username)}>
-                        <input type="hidden" name="listaction" value="add">
-                        <input type="hidden" name="submit" value="ignorelist">
-                        <button class="bleh--btn primary icon block" type="submit">${tl(trans.block)}</button>
-                    </div>
-                </form>
-            </div>
-        </div>
-        <div class="alert alert-info">
-            ${tl(trans.blocked_count).replace("{c}", amount)}
-        </div>
-        ${new_list}
-        <div class="sep" />
-        <h5>${tl(trans.when_blocked)}</h5>
-        <div class="to-consider">
-            <ul class="to-consider-good">
-                <li>${tl(trans.blocked_user_public)}</li>
-                <li>${tl(trans.blocked_user_message)}</li>
-                <li>${tl(trans.blocked_user_new_shouts)}</li>
-            </ul>
-            <ul class="to-consider-bad">
-                <li>${tl(trans.blocked_user_old_shouts)}</li>
-                <li>${tl(trans.blocked_user_view_profile)}</li>
-            </ul>
-        </div>
-    `);
-  }
-  function patch_settings_privacy_panel(token, privacy_panel) {
-    privacy_panel.classList.add("bleh--panel");
-    let original_privacy_settings = {
-      recent_listening: document.getElementById("id_hide_realtime").checked,
-      receiving_msgs: document.getElementById("id_message_privacy").outerHTML,
-      disable_shoutbox: document.getElementById("id_shoutbox_disabled").checked
-    };
-    privacy_panel.innerHTML = `
-        <h4>${tl(trans.privacy)}</h4>
-        <form action="${root}settings/privacy" name="privacy" method="post">
-            <input type="hidden" name="csrfmiddlewaretoken" value="${token}">
-            <div class="inner-preview pad">
-                <div class="tracks recent_listening">
-                    <div class="track realtime">
-                        <div class="cover"></div>
-                        <div class="title"></div>
-                        <div class="artist"></div>
-                        <div class="time"></div>
-                    </div>
-                    <div class="track">
-                        <div class="cover"></div>
-                        <div class="title"></div>
-                        <div class="artist"></div>
-                        <div class="time"></div>
-                    </div>
-                    <div class="track">
-                        <div class="cover"></div>
-                        <div class="title"></div>
-                        <div class="artist"></div>
-                        <div class="time"></div>
-                    </div>
-                    <div class="track">
-                        <div class="cover"></div>
-                        <div class="title"></div>
-                        <div class="artist"></div>
-                        <div class="time"></div>
-                    </div>
-                    <div class="track">
-                        <div class="cover"></div>
-                        <div class="title"></div>
-                        <div class="artist"></div>
-                        <div class="time"></div>
-                    </div>
-                </div>
-            </div>
-            <div class="setting" data-type="toggle" onclick="_update_inbuilt_item('recent_listening')" id="container-recent_listening">
-                <button class="btn reset" onclick="_reset_inbuilt_item('recent_listening')">Reset to default</button>
-                <div class="heading">
-                    <h5>${tl(trans.recent_listening.name)}</h5>
-                    <p>${tl(trans.recent_listening.body)}</p>
-                </div>
-                <div class="toggle-wrap">
-                    <input class="companion-checkbox" type="checkbox" name="hide_realtime" id="inbuilt-companion-checkbox-recent_listening">
-                    <span class="btn toggle" id="toggle-recent_listening" aria-checked="false">
-                        <div class="dot"></div>
-                    </span>
-                </div>
-            </div>
-            <div class="sep"></div>
-            <div class="setting" data-type="options">
-                <div class="heading">
-                    <h5>${tl(trans.allow_messages_from)}</h5>
-                </div>
-                <div class="primary-selections">
-                    ${original_privacy_settings.receiving_msgs}
-                    <div class="btn primary-selection" id="primary-selection-receiving_msgs-everyone" onclick="_update_inbuilt_selection('id_message_privacy', 0)">
-                        <h5>${tl(trans.everyone)}</h5>
-                    </div>
-                    <div class="btn primary-selection" id="primary-selection-receiving_msgs-neighbours" onclick="_update_inbuilt_selection('id_message_privacy', 1)">
-                        <h5>${tl(trans.following_and_neighbours)}</h5>
-                    </div>
-                    <div class="btn primary-selection" id="primary-selection-receiving_msgs-follow" onclick="_update_inbuilt_selection('id_message_privacy', 2)">
-                        <h5>${tl(trans.following)}</h5>
-                    </div>
-                </div>
-            </div>
-            <div class="sep"></div>
-            <div class="inner-preview pad">
-                <div class="shouts">
-                    <div class="shout-preview">
-                        <div class="avatar-side">
-                            <div class="shout-avatar-placeholder"></div>
-                        </div>
-                        <div class="info-side">
-                            <div class="header">
-                                <div class="shout-username"></div>
-                                <div class="shout-time"></div>
-                            </div>
-                            <div class="shout-contents"></div>
-                            <div class="shout-contents"></div>
-                        </div>
-                    </div>
-                    <div class="shout-preview">
-                        <div class="avatar-side">
-                            <div class="shout-avatar-placeholder"></div>
-                        </div>
-                        <div class="info-side">
-                            <div class="header">
-                                <div class="shout-username"></div>
-                                <div class="shout-time"></div>
-                            </div>
-                            <div class="shout-contents"></div>
-                            <div class="shout-contents"></div>
-                        </div>
-                    </div>
-                    <div class="shout-preview">
-                        <div class="avatar-side">
-                            <div class="shout-avatar-placeholder"></div>
-                        </div>
-                        <div class="info-side">
-                            <div class="header">
-                                <div class="shout-username"></div>
-                                <div class="shout-time"></div>
-                            </div>
-                            <div class="shout-contents"></div>
-                            <div class="shout-contents"></div>
-                        </div>
-                    </div>
-                </div>
-            </div>
-            <div class="setting" data-type="toggle" onclick="_update_inbuilt_item('disable_shoutbox')" id="container-disable_shoutbox">
-                <button class="btn reset" onclick="_reset_inbuilt_item('disable_shoutbox')">Reset to default</button>
-                <div class="heading">
-                    <h5>${tl(trans.close_shouts.name)}</h5>
-                    <p>${tl(trans.close_shouts.body)}</p>
-                </div>
-                <div class="toggle-wrap">
-                    <input class="companion-checkbox" type="checkbox" name="shoutbox_disabled" id="inbuilt-companion-checkbox-disable_shoutbox">
-                    <span class="btn toggle" id="toggle-disable_shoutbox" aria-checked="false">
-                        <div class="dot"></div>
-                    </span>
-                </div>
-            </div>
-            <div class="settings-footer">
-                <button type="submit" class="btn-primary save">
-                    ${tl(trans.save)}
-                </button>
-                <input type="hidden" value="privacy" name="submit">
-            </div>
-        </form>
-    `;
-    for (let setting2 in original_privacy_settings) {
-      update_inbuilt_item(setting2, original_privacy_settings[setting2], false);
-    }
-    let selects = document.body.querySelectorAll("select");
-    selects.forEach((select2) => {
-      select2.setAttribute("onchange", `_update_inbuilt_select('${select2.getAttribute("id")}', this.value)`);
-      update_inbuilt_select(select2.getAttribute("id"), select2.value);
-    });
-  }
-  function bleh_accounts() {
-    let token = page.structure.main.querySelector('[name="csrfmiddlewaretoken"]').getAttribute("value");
-    let original_settings = {
-      email_language: page.structure.main.querySelector('[name="language"]').outerHTML,
-      marketing_emails: page.structure.main.querySelector('[name="opt_in_marketing"]').checked,
-      email: page.structure.main.querySelector('[name="email"]').value,
-      captcha: page.structure.main.querySelector(".lfm-recaptcha")
-    };
-    let information_panel = document.createElement("section");
-    information_panel.classList.add("bleh--panel");
-    information_panel.innerHTML = `
-        <h4>${tl(trans.information)}</h4>
-        <form action="${root}settings/change-username/send-email" method="post">
-            <input type="hidden" name="csrfmiddlewaretoken" value="${token}">
-            <div class="setting" data-type="text">
-                <div class="heading">
-                    <h5>${tl(trans.username.name)}</h5>
-                    <p>${tl(trans.username.body).replace("{a}", `<a href="https://support.last.fm/" target="_blank">`).replace("{/a}", "</a>")}</p>
-                </div>
-                <div class="input-container content-form">
-                    <input id="id_current_username" type="text" name="current_username" value="${auth.name}" disabled required>
-                    <button class="btn chibi icon primary submit">${tl(trans.send)}</button>
-                    <input type="hidden" value="change_username" name="submit">
-                </div>
-            </div>
-        </form>
-        <form action="${root}settings/account" name="change-email" method="post">
-            <input type="hidden" name="csrfmiddlewaretoken" value="${token}">
-            <div class="setting" data-type="text">
-                <div class="heading">
-                    <h5>${tl(trans.email)}</h5>
-                </div>
-                <div class="input-container content-form">
-                    <input id="id_email" type="text" name="email" value="${original_settings.email}" required>
-                    <button class="btn chibi icon primary submit">${tl(trans.save)}</button>
-                    <input type="hidden" value="email_update" name="submit">
-                </div>
-            </div>
-        </form>
-        <div class="sep"></div>
-        <form class="password-container" action="${root}settings/account/password#change-password" name="change-password" method="post">
-            <input type="hidden" name="csrfmiddlewaretoken" value="${token}">
-            <div class="setting" data-type="text">
-                <div class="heading">
-                    <h5>${tl(trans.password)}</h5>
-                </div>
-                <div class="input-container content-form">
-                    <input id="id_password" type="password" name="password" required>
-                </div>
-            </div>
-            <div class="setting" data-type="text">
-                <div class="heading">
-                    <h5>${tl(trans.new_password)}</h5>
-                </div>
-                <div class="input-container content-form">
-                    <input id="id_new_password" type="password" name="new_password" required>
-                </div>
-            </div>
-            <div class="setting" data-type="text">
-                <div class="heading">
-                    <h5>${tl(trans.confirm_password)}</h5>
-                </div>
-                <div class="input-container content-form">
-                    <input id="id_new_password_confirmation" type="password" name="new_password_confirmation" required>
-                </div>
-            </div>
-            <div class="settings-footer end">
-                <button class="btn-primary save" type="submit">
-                    ${tl(trans.change)}
-                </button>
-            </div>
-        </form>
-    `;
-    let password_container = information_panel.querySelector(".password-container");
-    password_container.insertBefore(original_settings.captcha, password_container.lastElementChild);
-    page.structure.main.insertBefore(information_panel, page.structure.main.firstElementChild);
-    let communication_panel = document.createElement("section");
-    communication_panel.classList.add("bleh--panel");
-    communication_panel.innerHTML = `
-        <h4>${tl(trans.communication)}</h4>
-        <form action="${root}settings/account" name="email-settings" method="post">
-            <input type="hidden" name="csrfmiddlewaretoken" value="${token}">
-            <div class="setting" data-type="select">
-                <div class="heading">
-                    <h5>${tl(trans.email_language)}</h5>
-                </div>
-                <div class="select-wrap custom-selector">
-                    ${original_settings.email_language}
-                </div>
-            </div>
-            <div class="setting" data-type="toggle" id="container-marketing_emails" onclick="_update_inbuilt_item('marketing_emails')">
-                <div class="heading">
-                    <h5>${tl(trans.marketing_emails.name)}</h5>
-                    <p>${tl(trans.marketing_emails.body)}</p>
-                </div>
-                <div class="toggle-wrap">
-                    <input class="companion-checkbox" type="checkbox" name="opt_in_marketing" id="inbuilt-companion-checkbox-marketing_emails">
-                    <span class="btn toggle" id="toggle-marketing_emails" aria-checked="false">
-                        <div class="dot"></div>
-                    </span>
-                </div>
-            </div>
-            <div class="settings-footer end">
-                <button class="btn-primary save" type="submit">
-                    ${tl(trans.save)}
-                </button>
-                <input type="hidden" value="email_settings" name="submit">
-            </div>
-        </form>
-    `;
-    information_panel.after(communication_panel);
-    let security_panel = document.createElement("section");
-    security_panel.classList.add("bleh--panel");
-    security_panel.innerHTML = `
-        <h4>${tl(trans.security)}</h4>
-        <form action="${root}settings/account" name="email-settings" method="post">
-            <input type="hidden" name="csrfmiddlewaretoken" value="${token}">
-            <div class="setting" data-type="toggle">
-                <div class="heading">
-                    <h5>${tl(trans.logout_everywhere)}</h5>
-                </div>
-                <div class="toggle-wrap">
-                    <a class="see-more danger logout" href="${root}settings/account/logout-everywhere">
-                        ${tl(trans.logout)}
-                    </a>
-                </div>
-            </div>
-            <div class="sep"></div>
-            <div class="setting" data-type="toggle">
-                <div class="heading">
-                    <h5>${tl(trans.delete_account.name)}</h5>
-                    <p>${tl(trans.delete_account.body)}</p>
-                </div>
-                <div class="toggle-wrap">
-                    <a class="see-more danger delete-account" href="${root}settings/account/delete">
-                        ${tl(trans.delete_account_permanently).replace("{u}", auth.name)}
-                    </a>
-                </div>
-            </div>
-        </form>
-    `;
-    communication_panel.after(security_panel);
-    let old_panels = page.structure.main.querySelectorAll(":scope > section:not(.bleh--panel)");
-    old_panels.forEach((panel) => {
-      page.structure.main.removeChild(panel);
-    });
-    for (let setting2 in original_settings) {
-      update_inbuilt_item(setting2, original_settings[setting2], false);
-    }
-    custom_select(communication_panel.querySelector('[name="language"]'), communication_panel.querySelector('[name="language"]').parentElement);
-  }
-  function bleh_name_change() {
-    let token = page.structure.row.querySelector('[name="csrfmiddlewaretoken"]').getAttribute("value");
-    return;
-  }
-  function bleh_applications() {
-    let session_types = page.structure.main.querySelectorAll(".api-sessions");
-    let suggested;
-    let connected;
-    if (session_types.length > 1) {
-      suggested = session_types[0];
-      connected = session_types[1];
-    } else {
-      connected = session_types[0];
-    }
-    render(page.structure.main, html`
-        <section class="applications">
-            <div class="section-intro">
-                <h3>Applications</h3>
-                <p>Connect your account to third-party services for a better scrobbling experience. Make sure you trust the services below.</p>
-            </div>
-            ${suggested ? html`
-            <h2>Suggested</h2>
-            ${suggested}
-            ` : ""}
-            <h2>Connected</h2>
-            ${connected}
-        </section>
-    `);
-    session_types.forEach((session_type) => {
-      let sessions = session_type.querySelectorAll(".api-session");
-      sessions.forEach((session) => {
-        const details = session.querySelector(".api-session-details");
-        const form = session.querySelector("form");
-        const button = form.querySelector("button");
-        button.classList.add("chibi");
-        tippy_esm_default(button, {
-          content: button.textContent
-        });
-        const name = details.querySelector(".api-session-app-name");
-        const desc = details.querySelector(".api-session-app-description");
-        const status = details.querySelector(".api-session-status");
-        const image = details.querySelector(".api-session-app-image");
-        image.classList = "";
-        const default_image = image.src.endsWith("14d19fbdca555c1782176cd789e81af7.png");
-        render(session, html`
-                <div class="session-header">
-                    <div class="session-image" data-default-image=${default_image}>
-                        ${image}
-                    </div>
-                    <div class="session-details">
-                        ${name}
-                        ${desc}
-                    </div>
-                    ${form}
-                </div>
-                ${status ? html.node`
-                <div class="session-footer">
-                    ${status}
-                </div>
-                ` : ""}
-            `);
-      });
-    });
-  }
-
-  // src/pages/obsession.js
-  function bleh_obsession() {
-    let obsession_container = document.querySelector(".obsession-container");
-    if (!obsession_container) return;
-    page.structure.container = document.body.querySelector(".page-content:not(.obsession-container .page-content)");
-    try {
-      page.structure.row = page.structure.container.querySelector(".row");
-      page.structure.main = page.structure.row.querySelector(".col-main");
-      page.structure.side = page.structure.row.querySelector(".col-sidebar");
-    } catch (e) {
-      log("unable to find elements", "page structure");
-    }
-    let content_top = document.body.querySelector(".content-top");
-    checkup_page_structure(false, content_top);
-    log("status is", "page", "info", page);
-    update_page();
-    page.structure.container.setAttribute("data-beret", "false");
-    page.structure.container.setAttribute("data-short", "false");
-    let background = obsession_container.querySelector(".obsession-background-inner");
-    background = background.style.getPropertyValue("background-image").replace('url("', "").replace('")', "");
-    if (!background.endsWith("/4128a6eb29f94943c9d206c08e625904.jpg")) {
-      register_background(background);
-      try {
-        let bg = obsession_container.style.getPropertyValue("background").replace("rgb(", "").replace(")", "").split(", ");
-        let hsl = rgb_to_hsl(parseInt(bg[0]), parseInt(bg[1]), parseInt(bg[2]));
-        document.body.style.setProperty("--hue-album", hsl.h);
-        document.body.style.setProperty("--sat-album", clamp_sat2(hsl.s / 100 * 3));
-        document.body.style.setProperty("--lit-album", hsl.l / 100 + 0.35);
-        log(`sourced hsl of (${hsl.h}, ${hsl.s}, ${hsl.l}) - using final value of (${hsl.h}, ${clamp_sat2(hsl.s / 100 * 3)}, ${hsl.l / 100 + 0.35})`, "hue from album");
-      } catch (e) {
-        console.error(e);
-        log("no cover present", "hue from album");
-      }
-    } else {
-      register_background("");
-    }
-    let track_title = obsession_container.querySelector(".obsession-meta-track");
-    let track_artist = obsession_container.querySelector(".obsession-meta-artist");
-    let scrobbles = obsession_container.querySelector(".obsession-meta-scrobbles");
-    let link = track_title.querySelector("a").getAttribute("href");
-    let by = track_artist.querySelector(".obsession-meta-artist-by");
-    track_artist.removeChild(by);
-    let artist_name = track_artist.querySelector("a");
-    if (artist_corrections.hasOwnProperty(artist_name.textContent)) {
-      let corrected_artist = artist_corrections[artist_name.textContent];
-      log(`corrected ${artist_name.textContent} as ${corrected_artist}`, "lotus");
-      artist_name.textContent = corrected_artist;
-    }
-    artist_name.classList.add("header-new-crumb");
-    if (settings.format_guest_features) {
-      let formatted_title = name_includes(track_title.textContent.trim(), artist_name.textContent);
-      let song_title = formatted_title[0];
-      let song_tags = formatted_title[1];
-      page.corrected = formatted_title[4];
-      render(track_title, html.node`
-            <div class="title">${song_title.trim()}</div>
-            ${song_tags.map((tag) => html.node`
-                <div class="feat" data-bleh--tag-type="${tag.type}" data-bleh--tag-group="${tag.group}">${tag.text}</div>
-            `)}
-        `);
-      let song_guests = formatted_title[3];
-      page.sister_others = formatted_title[3];
-      for (let guest in song_guests) {
-        track_artist.innerHTML = `${track_artist.innerHTML},`;
-        let guest_element = document.createElement("a");
-        guest_element.classList.add("header-new-crumb");
-        guest_element.setAttribute("href", `${root}music/${redirect()}${sanitise(song_guests[guest])}`);
-        guest_element.textContent = song_guests[guest];
-        track_artist.appendChild(guest_element);
-      }
-    } else {
-      if (!track_title.hasAttribute("data-kate-processed")) {
-        track_title.setAttribute("data-kate-processed", "true");
-        let corrected_title = correct_item_by_artist(track_title.textContent.trim(), artist_name.textContent);
-        log(`corrected ${track_title.textContent} by ${artist_name.textContent} as ${corrected_title}`, "lotus");
-        if (corrected_title != track_title.textContent)
-          page.corrected = true;
-        track_title.textContent = corrected_title;
-      }
-    }
-    track_title.classList.remove("obsession-meta-track");
-    let track_header = html.node`
-        <section class="redesigned-header redesigned-track-header no-background obsession-track-header">
-            <div class="info-side">
-                <div class="sub-text">${tl(trans.obsession)}</div>
-                <div class="title-container">
-                    <h1><a href="${link}">${track_title}</a></h1>
-                </div>
-                <h2>${html.node([track_artist.innerHTML])}</h2>
-            </div>
-        </section>
-    `;
-    page.structure.container.insertBefore(track_header, page.structure.container.firstElementChild);
-    let video = obsession_container.querySelector(".obsession-video-container");
-    if (video) track_header.after(video);
-    let obsession_reason = obsession_container.querySelector(".obsession-reason");
-    if (obsession_reason) {
-      let obsession_reason_text = obsession_reason.textContent;
-      obsession_reason.textContent = obsession_reason_text.trim().substr(1).slice(0, -1);
-    }
-    let obsession_author = document.querySelector(".obsession-details-intro a").textContent;
-    let obsession_avatar = document.querySelector(".obsession-details-intro-avatar-wrap .avatar");
-    page.name = obsession_author;
-    let date = obsession_container.querySelector(".obsession-details-date-short");
-    let quote = html.node`
-        <section class="obsession-quote sour">
-            ${obsession_reason ? html.node`
-            <div class="quote">
-                ${obsession_reason.textContent}
-            </div>
-            ` : html.node`
-            <div class="quote no-quote">
-                ${tl(trans.no_quote)}
-            </div>
-            `}
-            <div class="sub-text">
-                <div class="obsession-author">
-                    ${obsession_avatar}
-                    <strong class="name">${obsession_author}</strong>
-                    <a class="link-block-cover-link" href="${root}user/${obsession_author}"></a>
-                </div>
-                ${scrobbles ? html.node`
-                <div class="obsession-listens">
-                    ${html.node([scrobbles.innerHTML])}
-                </div>
-                ` : ""}
-                <div class="obsession-date">
-                    ${date.textContent}
-                </div>
-            </div>
-        </section>
-    `;
-    let manage = obsession_container.querySelector("form");
-    if (manage) {
-      quote.appendChild(manage);
-      quote.querySelector("button").textContent = tl(trans.delete);
-    }
-    page.structure.main.insertBefore(quote, page.structure.main.firstElementChild);
-    let author = quote.querySelector(".obsession-author");
-    let badge = patch_avatar(obsession_avatar, obsession_author, "", author, "bottom");
-    if (badge.type) {
-      author.classList.add("colourful");
-      author.classList.add(`user-status--bleh-${badge.type}`, `user-status--bleh-user-${obsession_author}`);
-    }
-    let related = html.node`
-        <section class="obsession-related sour" />
-    `;
-    let other_tracks = document.body.querySelector(".other-obsessions");
-    if (other_tracks) {
-      let header = document.createElement("h2");
-      header.textContent = tl(trans.others_from_profile).replace("{user}", obsession_author);
-      related.appendChild(header);
-      let see_more = other_tracks.nextElementSibling;
-      related.appendChild(other_tracks);
-      if (see_more) {
-        let more = document.createElement("div");
-        more.classList.add("more-link-fullwidth-right");
-        more.appendChild(see_more.querySelector("a"));
-        related.appendChild(more);
-      }
-    }
-    let shared_users = document.body.querySelector(".fellow-obsessors");
-    if (shared_users) {
-      if (other_tracks) {
-        let sep = document.createElement("div");
-        sep.classList.add("sep");
-        related.appendChild(sep);
-      }
-      let header = document.createElement("h2");
-      header.textContent = tl(trans.shared_with_others);
-      related.appendChild(header);
-      let users = shared_users.querySelectorAll(".avatar");
-      users.forEach((user) => {
-        let name = user.querySelector("img").getAttribute("alt");
-        patch_avatar(user, name);
-      });
-      related.appendChild(shared_users);
-    }
-    quote.after(related);
-    let pages = obsession_container.querySelector(".obsession-pagination");
-    if (pages)
-      page.structure.container.appendChild(pages);
-  }
-
-  // src/components/toggle.js
-  function toggle({
-    value = false,
-    type = "toggle",
-    name = "",
-    title = "",
-    body = "",
-    small = "",
-    disabled = false,
-    data: data2 = "",
-    func = null
-  }) {
-    let checkbox;
-    let state;
-    let elem = html.node`
-        <div class="setting standalone" data-type=${type} onclick=${() => {
-      if (disabled) return;
-      let current = checkbox.checked;
-      if (func) func(!current);
-      checkbox.checked = !current;
-      state.setAttribute("aria-checked", !current);
-    }}>
-            <div class="heading">
-                <h5>${title}</h5>
-                ${body != "" ? html.node`<p>${body}</p>` : ""}
-                ${small != "" ? html.node`<small>${small}</small>` : ""}
-            </div>
-            ${type == "toggle" ? html.node`
-            <div class="toggle-wrap">
-                <input type="checkbox" ref=${(el) => checkbox = el} name=${name} value=${data2} checked=${value} />
-                <button class="toggle" ref=${(el) => state = el} aria-checked=${value}>
-                    <div class="dot" />
-                </button>
-            </div>
-            ` : html.node`
-            <div class="check">
-                <input type="checkbox" ref=${(el) => checkbox = el} name=${name} value=${data2} checked=${value} disabled=${disabled} />
-                <div class="box" ref=${(el) => state = el} aria-checked=${value} disabled=${disabled}>
-                    <div class="bleh-icon" />
-                </div>
-            </div>
-            `}
-        </div>
-    `;
-    elem.check = () => {
-      if (disabled) return;
-      if (func) func(true);
-      checkbox.checked = true;
-      state.setAttribute("aria-checked", true);
-    };
-    elem.uncheck = () => {
-      if (disabled) return;
-      if (func) func(false);
-      checkbox.checked = false;
-      state.setAttribute("aria-checked", false);
-    };
-    elem.checked = () => {
-      return checkbox.checked;
-    };
-    elem.disabled = (state2 = null) => {
-      if (state2 === null) return checkbox.getAttribute("disabled") || false;
-      if (state2 === true)
-        checkbox.setAttribute("disabled", "true");
-      else
-        checkbox.removeAttribute("disabled");
-      return state2;
-    };
-    return elem;
-  }
-
-  // src/components/scrobble.js
-  function submit_scrobble({
-    pre_track = "",
-    pre_album = "",
-    pre_artist = "",
-    pre_album_artist = "",
-    func,
-    can_api
-  }) {
-    if (!can_api) can_api = localStorage.getItem("bleh_auth") && localStorage.getItem("bleh_auth_valid") === "true";
-    if (!can_api) {
-      window.location.href = `${root}bleh/profiles`;
-      return;
-    }
-    const random = random_list[Math.floor(Math.random() * random_list.length)];
-    let track;
-    let album;
-    let artist;
-    let album_artist;
-    let use_current;
-    let date;
-    let create_scrobble;
-    let max_date = /* @__PURE__ */ new Date();
-    max_date.setDate(max_date.getDate() + 1);
-    dialog({
-      id: "submit_scrobble",
-      title: tl(trans.new_scrobble),
-      body: html.node`
-            <div class="new-scrobble-form">
-                <p class="generic-label">${tl(trans.track)}</p>
-                ${track = input({
-        type: "text",
-        value: pre_track,
-        placeholder: tl(trans.example).replace("{v}", random.track),
-        warn_if_empty: true
-      })}
-                <p class="generic-label">${tl(trans.album)}</p>
-                ${album = input({
-        type: "text",
-        value: pre_album,
-        placeholder: tl(trans.example).replace("{v}", random.album)
-      })}
-                <p class="generic-label">${tl(trans.artist)}</p>
-                ${artist = input({
-        type: "text",
-        value: pre_artist,
-        placeholder: tl(trans.example).replace("{v}", random.artist),
-        warn_if_empty: true
-      })}
-                <p class="generic-label">${tl(trans.album_artist)}</p>
-                ${album_artist = input({
-        type: "text",
-        value: pre_album_artist,
-        placeholder: tl(trans.example).replace("{v}", random.album_artist)
-      })}
-                <p class="generic-label">${tl(trans.time)}</p>
-                <div class="toggle-and-time">
-                    ${use_current = toggle({
-        value: true,
-        type: "checkbox",
-        title: tl(trans.use_current_time),
-        func: (state) => {
-          date.disabled(state);
-        }
-      })}
-                    ${date = input({
-        type: "date",
-        max: `${max_date.getFullYear()}-${pad2(max_date.getMonth() + 1)}-${pad2(max_date.getDate())}`,
-        disabled: true
-      })}
-                </div>
-            </div>
-            <div class="modal-footer">
-                <button class="see-more cancel" onclick=${() => dialog_rm({ id: "submit_scrobble" })}>
-                    ${tl(trans.cancel)}
-                </button>
-                <div class="fill" />
-                <button class="btn primary icon" data-type="add" ref=${(el) => create_scrobble = el} onclick=${async () => {
-        if (track.value() == "" || artist.value() == "") {
-          notify({
-            id: "submit_scrobble",
-            title: tl(trans.new_scrobble),
-            body: tl(trans.missing_fields),
-            type: "error"
-          });
-          return;
-        }
-        track.disabled(true);
-        album.disabled(true);
-        artist.disabled(true);
-        album_artist.disabled(true);
-        use_current.disabled(true);
-        date.disabled(true);
-        create_scrobble.disabled = true;
-        if (album.value() != "" && album_artist.value() == "") album_artist.value(artist.value());
-        let params = {
-          sk: localStorage.getItem("bleh_auth"),
-          artist: artist.value(),
-          track: track.value(),
-          timestamp: Math.floor(date.value() / 1e3)
-        };
-        if (album.value() != "") params.album = album.value();
-        if (album_artist.value() != "") params.albumArtist = album_artist.value();
-        const res = await fetch(
-          "https://jufufu.katelyn.moe/api/lastfm",
-          {
-            method: "POST",
-            headers: { "content-type": "application/json" },
-            body: JSON.stringify({
-              method: "track.scrobble",
-              params
-            })
-          }
-        );
-        const json = await res.json();
-        log("received response", "submit scrobble", "info", { result: json });
-        if (json.error) {
-          log("error", "submit scrobble", "error");
-          notify({
-            id: "submit_scrobble",
-            title: tl(trans.new_scrobble),
-            body: json.message,
-            type: "error",
-            persist: true
-          });
-          dialog_rm({ id: "submit_scrobble" });
-          return;
-        }
-        notify({
-          id: "submit_scrobble",
-          title: tl(trans.new_scrobble),
-          body: params.track,
-          type: "success"
-        });
-        dialog_rm({ id: "submit_scrobble" });
-        if (func) func();
-      }}>
-                    ${tl(trans.new)}
-                </button>
-            </div>
-        `
-    });
-  }
-
-  // src/pages/profile.js
-  function bleh_profiles() {
-    if (page.subpage == "obsessions_obsession") {
-      bleh_obsession();
-      return;
-    }
-    let profile_header = document.body.querySelector(".header--user");
-    if (!profile_header) return;
-    page.name = profile_header.querySelector(".header-title a").textContent;
-    let is_subpage = page.subpage != "overview";
-    page.structure.container = document.body.querySelector(".page-content:not(.profile-cards-container, .report-box-container .page-content)");
-    try {
-      page.structure.row = page.structure.container.querySelector(".row:not(._buffer)");
-      page.structure.main = page.structure.row.querySelector(".col-main");
-      page.structure.side = page.structure.row.querySelector(".col-sidebar");
-    } catch (e) {
-      log("unable to find elements", "page structure");
-    }
-    checkup_page_structure(is_subpage, profile_header);
-    page.supports_shoutbox = page.structure.nav.querySelector(".secondary-nav-item--shoutbox");
-    let new_account = false;
-    if (ff("refreshed_nav")) {
-      let avatar3 = profile_header.querySelector(".avatar");
-      let title_wrap = profile_header.querySelector(".header-title-label-wrap");
-      let sub_wrap = profile_header.querySelector(".header-title-secondary");
-      if (!avatar3) {
-        avatar3 = profile_header.querySelector(".header-avatar-add");
-        new_account = true;
-      }
-      if (sponsor_list && sponsor_list.special && sponsor_list.special.includes(page.name)) {
-        title_wrap.querySelector(".header-title a").classList.add("bleh--name-is-cute");
-      }
-      const cache2 = load_profile_cache_externally(auth.name);
-      let pronouns;
-      if (cache2.aka) pronouns = use_pronouns(cache2.aka);
-      let expander;
-      let redesigned_profile_header = html.node`
-            <section class="redesigned-header redesigned-profile-header no-background">
-                <div class="avatar-side">
-                    ${avatar3}
-                </div>
-                <div class="info-side">
-                    <div class="sub-text">${tl(trans.profile)}</div>
-                    ${title_wrap ? html.node`<div class="title-container">${title_wrap}</div>` : ""}
-                    ${sub_wrap ? sub_wrap : cache2.aka || cache2.created ? html.node`
-                    <p class="header-title-secondary">
-                        ${cache2.aka ? html.node`
-                        <span class="header-title-secondary--pre">
-                            ${pronouns ? tl(trans.account_pronouns) : tl(trans.aka)}
-                        </span>
-                        <span class="header-title-display-name">
-                            ${cache2.aka}
-                        </span>
-                        ` : ""}
-                        <span class="header-title-secondary--pre">
-                            ${tl(trans.account_created)}
-                        </span>
-                        <span class="header-scrobble-since">
-                            ${cache2.created}
-                        </span>
-                    </p>
-                    ` : ""}
-                </div>
-                <div class="expand-side">
-                    <button class="header-expand-button icon" ref=${(el) => expander = el} onclick=${() => {
-        let current = settings.profile_header_expand;
-        expander.setAttribute("aria-expanded", !current);
-        save_setting("profile_header_expand", !current);
-      }} aria-expanded=${settings.profile_header_expand}>${tl(trans.expand)}</button>
-                </div>
-            </section>
-        `;
-      const avatar_img = avatar3.querySelector(":scope > img");
-      if (page.name == auth.name && !settings.profile_header_own) {
-        register_background(null, "hidden");
-      } else if (page.name != auth.name && !settings.profile_header_others) {
-        register_background(null, "hidden");
-      } else {
-        if (settings.profile_avi_background) {
-          if (avatar3)
-            register_background(avatar_img.getAttribute("src").replace("/avatar170s/", "/ar0/"), "avatar");
-          else
-            register_background(null, "none");
-        } else {
-          let background = document.body.querySelector(".header-background--has-image");
-          if (background)
-            register_background(background.style.backgroundImage.replace('url("', "").replace('")', ""), "artist");
-          else
-            register_background(null, "none");
-        }
-      }
-      if (page.name == settings.profile_shortcut)
-        localStorage.setItem("bleh_profile_shortcut_avi", avatar_img.getAttribute("src"));
-      page.structure.container.insertBefore(redesigned_profile_header, page.structure.container.firstElementChild);
-      profile_header.classList.add("legacy-header");
-      if (!new_account) {
-        const src = avatar_img.src;
-        page.avatar = src;
-        avatar3.addEventListener("click", () => {
-          expand_avatar(src.replace("/avatar170s/", "/ar0/"));
-        });
-      }
-      control_gif_pause(avatar_img);
-    }
-    let library_tab = page.structure.nav.querySelector(".secondary-nav-item--library a");
-    library_tab.textContent = tl(trans.library);
-    let is_own_profile = page.name == auth.name;
-    if (is_own_profile)
-      profile_header.setAttribute("data-is-own-profile", "true");
-    let loved_tab = page.structure.nav.querySelector(".secondary-nav-item--loved a");
-    if (loved_tab)
-      loved_tab.textContent = tl(trans.loved);
-    if (!is_subpage) {
-      let is_following = page.structure.container.querySelector(".label.user-follow");
-      profile_recents();
-      profile_artists();
-      profile_albums();
-      profile_tracks();
-      if (is_own_profile && settings.activities) {
-        let recent_activity_section = html.node`
-                <section class="recent-activity-section">
-                    <h2>${tl(trans.activity)}</h2>
-                    ${render_activity_list()}
-                    <div class="more-link">
-                        <a href="${root}bleh/profiles?setting=activities">${tl(trans.activity_settings)}</a>
-                    </div>
-                </section>
-            `;
-        page.structure.side.appendChild(recent_activity_section);
-      }
-      if (page.name == sponsor_list.sponsor_account && !is_own_profile) {
-        page.structure.container.removeChild(page.structure.nav);
-        page.structure.main.innerHTML = "";
-        page.structure.side.innerHTML = "";
-        let alert2 = document.createElement("section");
-        alert2.classList.add("cta");
-        alert2.innerHTML = `<strong>${tl(trans.sponsor_info)}</strong>`;
-        page.structure.main.appendChild(alert2);
-      }
-      let recent_tracks = page.structure.main.querySelector("#recent-tracks-section");
-      if (!recent_tracks) {
-        recent_tracks = page.structure.main.querySelector(".no-data-message");
-        if (recent_tracks) {
-          recent_tracks.classList = "recent-tracks-section";
-          recent_tracks.innerHTML = `
-                    <h2>
-                        <a class="text-colour-link" href="${window.location.href}/library">${tl(trans.recent_tracks)}</a>
-                    </h2>
-                    <div class="loading-data-container">
-                        <div class="loading-data-text private">
-                            ${recent_tracks.textContent}
-                        </div>
-                    </div>
-                `;
-        }
-      }
-      let scrobbles = 0;
-      let average = 0;
-      let artists = 0;
-      let loved = 0;
-      let metadata = profile_header.querySelectorAll(".header-metadata-display");
-      metadata.forEach((item, index3) => {
-        if (index3 == 0) {
-          let para = item.querySelector("p");
-          scrobbles = clean_number(para.textContent.trim());
-          average = para.getAttribute("title");
-        } else if (index3 == 1) {
-          artists = clean_number(item.textContent.trim());
-        } else if (index3 == 2) {
-          loved = clean_number(item.textContent.trim());
-        }
-      });
-      page.state.scrobbles = scrobbles;
-      page.state.artists = artists;
-      page.state.loved = loved;
-      let scrobble_text;
-      let listen_container = html.node`
-            <section class="listen-panel listen-profile-panel">
-                <div class="listener-row">
-                    <div class="scrobble-side">
-                        <h3>${tl(trans.scrobbles)}</h3>
-                        <p ref=${(el) => scrobble_text = el}><a href="${root}user/${page.name}/library">${scrobbles.toLocaleString(lang)}</a></p>
-                    </div>
-                    <div class="artist-side">
-                        <h3>${tl(trans.artists)}</h3>
-                        <p><a href="${root}user/${page.name}/library/artists">${artists.toLocaleString(lang)}</a></p>
-                    </div>
-                    <div class="loved-side">
-                        <h3>${tl(trans.loved)}</h3>
-                        <p><a href="${root}user/${page.name}/loved">${loved.toLocaleString(lang)}</a></p>
-                    </div>
-                </div>
-                ${scrobbles > 0 ? html.node`
-                <div class="scrobble-canvas-container mini">
-                    <div class="loading-data-container">
-                        <div class="loading-data-text">${tl(trans.loading_count_days).replace("{c}", "90")}</div>
-                    </div>
-                </div>
-                <div class="more-link">
-                    <a href="${root}user/${page.name}/library/artists?date_preset=LAST_90_DAYS&page=1">
-                        ${tl(trans.explore_in_library)}
-                    </a>
-                </div>
-                ` : html.node`
-                <div class="scrobble-canvas-container mini">
-                    <div class="loading-data-container">
-                        <div class="loading-data-text failed">${tl(trans.profile_does_not_have_enough_scrobbles)}</div>
-                    </div>
-                </div>
-                `}
-            </section>
-        `;
-      if (scrobbles > 0) {
-        tippy_esm_default(scrobble_text, {
-          content: average
-        });
-      }
-      if (page.name != sponsor_list.sponsor_account) {
-        if (!page.mobile)
-          page.structure.side.insertBefore(listen_container, page.structure.side.firstChild);
-        else
-          page.structure.main.insertBefore(listen_container, page.structure.main.firstChild);
-        if (scrobbles > 0)
-          bleh_profile_chart();
-      }
-      if (sponsor_list && sponsor_list.special && page.name == sponsor_list.special[0]) {
-        let sponsor_cta = html.node`
-                <div class="cta first sponsor colourful">
-                    ${auth.sponsor ? html`
-                        <strong>${tl(trans.you_are_a_sponsor)}</strong>
-                        <a class="see-more" onclick="_sponsor_manage()">${tl(trans.manage_sponsor)}</a>
-                    ` : html`
-                        <strong>${tl(trans.news_sponsor_cta)}</strong>
-                        <a class="see-more" onclick="_sponsor()">${tl(trans.sponsor)}</a>
-                    `}
-                </div>
-            `;
-        if (!page.mobile)
-          page.structure.side.insertBefore(sponsor_cta, page.structure.side.firstElementChild);
-        else
-          page.structure.main.insertBefore(sponsor_cta, page.structure.main.firstElementChild);
-      }
-      const profile_sub_text = page.structure.container.querySelector(".redesigned-profile-header .header-title-secondary");
-      if (profile_sub_text) parse_sub_text(profile_sub_text);
-      let about_me_sidebar = page.structure.row.querySelector(".about-me-sidebar");
-      if (!about_me_sidebar) {
-        if (settings.bio_markdown) {
-          save_banner_to_cache("none");
-        }
-        about_me_sidebar = html.node`
-                <section class="about-me-sidebar">
-                    <h2>${tl(trans.about)}</h2>
-                    <p class="subtle">${tl(trans.no_about).replace("{u}", page.name)}</p>
-                </section>
-            `;
-        page.structure.side.insertBefore(about_me_sidebar, page.structure.side.firstElementChild);
-      } else {
-        if (settings.bio_markdown) {
-          let about_me_text = about_me_sidebar.querySelector("p");
-          let result = bio_parse(about_me_text, true);
-          about_me_text.after(result);
-          about_me_text.remove();
-        }
-      }
-      if (page.mobile)
-        page.structure.main.insertBefore(about_me_sidebar, page.structure.main.firstElementChild);
-      let featured_track_panel = profile_header.querySelector(".header-featured-track");
-      if (featured_track_panel)
-        bleh_featured_profile_track(featured_track_panel, about_me_sidebar);
-      let about_me_header = about_me_sidebar.querySelector("h2");
-      about_me_header.textContent = tl(trans.about);
-      let profile_note;
-      if (!is_own_profile) {
-        let notes = JSON.parse(localStorage.getItem("bleh_profile_notes")) || {};
-        profile_note = notes[page.name];
-      }
-      let settings_btn;
-      let add_note;
-      about_me_sidebar.insertBefore(html.node`
-            <div class="top-container">
-                ${about_me_header}
-                <div class="view-buttons blend blend-v2">
-                    ${is_own_profile ? html.node`
-                    <a class="left-icon blend-v2-btn" data-type="edit" href="${root}settings#id_about_me">
-                        ${tl(trans.edit)}
-                    </a>
-                    ` : !profile_note ? html.node`
-                    <button class="left-icon blend-v2-btn" data-type="add" ref=${(el) => add_note = el} onclick=${() => {
-        create_profile_note_panel(page.name, profile_note);
-        add_note.remove();
-      }}>
-                        ${tl(trans.add_note)}
-                    </button>
-                    ` : ""}
-                    <button class="left-icon blend-v2-btn" data-type="settings" ref=${(el) => settings_btn = el}>
-                        ${tl(trans.settings)}
-                    </button>
-                </div>
-            </div>
-        `, about_me_sidebar.firstChild);
-      tippy_esm_default(settings_btn, {
-        theme: "window",
-        content: html.node`
-                <div class="dialog-settings">
-                    <div class="setting-group blend">
-                        ${setting({ id: "bio_markdown" })}
-                    </div>
-                </div>
-            `,
-        placement: "bottom",
-        interactive: true,
-        interactiveBorder: 10,
-        trigger: "click",
-        onShow(instance) {
-          refresh_all(instance.popper);
-        }
-      });
-      if (ff("redesigned_profile_header"))
-        redesign_profile_header(is_own_profile, is_following);
-      if (!is_own_profile && profile_note)
-        create_profile_note_panel(page.name, profile_note);
-    } else {
-      load_profile_cache();
-      let btn_add = page.structure.side.querySelector(".add-button");
-      if (btn_add) btn_add.setAttribute("data-page-subpage", page.subpage);
-      if (page.subpage.startsWith("library")) {
-        bleh_user_library();
-      } else if (page.subpage == "events") {
-        convert_to_toolbar();
-        let selected_tab = page.structure.toolbar.querySelector(".secondary-nav-item-link--active");
-        let value_panel = html.node`
-                <section class="value-panel">
-                    <h2 class="text-18">${selected_tab ? selected_tab.firstChild.textContent : tl(trans.events)}</h2>
-                </section>
-            `;
-        let values = page.structure.main.querySelectorAll(".metadata-display");
-        let value_header = html.node`
-                <div class="glacier-library-metadata" />
-            `;
-        values.forEach((value, index3) => {
-          let text3 = tl(trans.going);
-          if (index3 == 1)
-            text3 = tl(trans.interested);
-          value_header.appendChild(html.node`
-                    <div class="glacier-library-metadata-item">
-                        <div class="sub-text">${text3}</div>
-                        <div class="glacier-library-metadata-item-value">${value.textContent}</div>
-                    </div>
-                `);
-        });
-        value_panel.appendChild(value_header);
-        let total_value = page.structure.side.querySelector(".metadata-display");
-        if (total_value) {
-          value_panel.appendChild(html.node`
-                    <h2 class="text-18">${tl(trans.all_time)}</h2>
-                    <div class="glacier-library-metadata">
-                        <div class="glacier-library-metadata-item">
-                            <div class="sub-text">${tl(trans.total)}</div>
-                            <div class="glacier-library-metadata-item-value">${total_value.textContent}</div>
-                        </div>
-                    </div>
-                `);
-        }
-        let legacy_metadata = page.structure.main.querySelector(".metadata-list");
-        if (legacy_metadata)
-          page.structure.main.removeChild(legacy_metadata);
-        page.structure.side.innerHTML = "";
-        page.structure.side.appendChild(value_panel);
-      } else if (page.subpage.startsWith("listening-report")) {
-        page.structure.content_top.classList.add("listening-report-navlist");
-        page.structure.row.classList.add("listening-report");
-        convert_to_toolbar();
-        let report_box_container = document.body.querySelector(".report-box-container--overview");
-        if (report_box_container) {
-          document.documentElement.setAttribute("data-bleh--theme", "oled");
-          document.documentElement.setAttribute("data-bleh--theme_type", "dark");
-          page.structure.row.appendChild(report_box_container);
-        } else {
-          let dashboard = page.structure.container.querySelector(".user-dashboard");
-          if (dashboard) {
-            dialog({
-              id: "listening_report_v2",
-              title: "oh no :c",
-              body: html.node`
-                            <div class="alert alert-error">This listening report is too old</div>
-                            <br>
-                            <p>Legacy listening reports are not properly viewable yet in bleh for now. Sorry for the inconvenience.</p>
-                        `
-            });
-          }
-        }
-      } else if (page.subpage == "obsessions_overview") {
-        let section_controls = page.structure.container.querySelector(".section-controls");
-        let buttons;
-        if (section_controls != null) {
-          section_controls.classList.add("legacy-section-controls");
-          buttons = section_controls.querySelectorAll(":is(button, a)");
-          let header = page.structure.container.querySelector(".content-top-header");
-          page.structure.content_top.innerHTML = `
-                    <div class="content-top-inner-wrap">
-                        <div class="container content-top-lower">
-                            <h1 class="content-top-header">${header.textContent.trim()}</h1>
-                        </div>
-                    </div>
-                `;
-        }
-        let count_text = page.structure.content_top.querySelector("h1").textContent.trim();
-        let chr = count_text.indexOf("(");
-        let count = 0;
-        if (chr != -1)
-          count = count_text.substring(chr).replace("(", "").replace(")", "");
-        page.structure.nav.querySelector(".secondary-nav-item--obsessions a").appendChild(html.node`
-                <div class="new-badge count-badge">${count}</div>
-            `);
-        let new_panel = document.createElement("section");
-        new_panel.classList.add("obsessions-panel");
-        let wrap = document.createElement("div");
-        wrap.classList.add("view-buttons-wrapper");
-        let button_header = document.createElement("div");
-        button_header.classList.add("view-buttons", "obsession-buttons", "blend");
-        buttons.forEach((button) => {
-          if (button.classList.contains("btn-sm")) {
-            button.classList = [];
-            button.classList.add("obsession-btn");
-            tippy_esm_default(button, {
-              content: button.textContent
-            });
-            button.textContent = tl(trans.obsess);
-          }
-          button.classList.add("btn", "view-item", "interact-item", "obsession-top-item");
-          button_header.appendChild(button);
-        });
-        wrap.appendChild(button_header);
-        new_panel.appendChild(wrap);
-        page.structure.main.appendChild(new_panel);
-        let grid = document.createElement("ol");
-        grid.classList.add("grid-items", "grid-items--numbered", "obsessions-grid");
-        let items = page.structure.container.querySelectorAll(".obsession-history-item");
-        items.forEach((item) => {
-          let bg = item.querySelector(".obsession-history-item-background").style.getPropertyValue("background-image").trim();
-          let cover_substr = bg.indexOf("url");
-          let cover = bg.substring(cover_substr).replace('url("', "").replace('")', "").trim();
-          let link = item.querySelector(".obsession-history-item-heading-link");
-          let artist = item.querySelector(".obsession-history-item-artist a");
-          let artist_link = artist.getAttribute("href");
-          artist = artist.textContent.trim();
-          let title = link.textContent.trim();
-          link = link.getAttribute("href");
-          let date = item.querySelector(".obsession-history-item-date").textContent.trim();
-          let obsession_is_first = item.querySelector(".obsession-first") != null;
-          let grid_item = document.createElement("li");
-          grid_item.classList.add("grid-items-item", "obsessions-item");
-          grid_item.innerHTML = `
-                    <div class="grid-items-cover-image">
-                        <div class="grid-items-cover-image-image ${cover.endsWith("4128a6eb29f94943c9d206c08e625904.jpg") ? "grid-items-cover-default" : ""}">
-                            <img src="${cover}" alt="${title}" loading="lazy">
-                        </div>
-                        <div class="grid-items-item-details">
-                            <p class="grid-items-item-main-text">
-                                <a class="link-block-target" href="${link}" title="${title}">
-                                    ${title}
-                                </a>
-                            </p>
-                            <p class="grid-items-item-aux-text obsessions-item-aux">
-                                <a class="grid-items-item-aux-block" href="${artist_link}">
-                                    ${artist}
-                                </a>
-                                <a class="obsessions-item-date" href="${link}">
-                                    ${date}
-                                </a>
-                            </p>
-                        </div>
-                        <a class="link-block-cover-link" href="${link}" tabindex="-1" aria-hidden="true"></a>
-                    </div>
-                `;
-          if (obsession_is_first) {
-            grid_item.classList.add("first");
-            tippy_esm_default(grid_item, {
-              content: tl(trans.obsession_first)
-            });
-          }
-          grid.appendChild(grid_item);
-        });
-        new_panel.appendChild(grid);
-        let no_data = page.structure.container.querySelector(".no-data-message--obsession-history");
-        if (no_data)
-          wrap.after(no_data);
-        let pagination = page.structure.container.querySelector(".pagination");
-        if (pagination)
-          new_panel.appendChild(pagination);
-      } else if (page.subpage == "playlists_playlists") {
-        let section_controls = page.structure.container.querySelector(".section-controls-full-width");
-        let buttons;
-        if (section_controls) {
-          section_controls.classList.add("legacy-section-controls");
-          buttons = section_controls.querySelectorAll(":is(button, a)");
-          let header = page.structure.container.querySelector(".content-top-header");
-          page.structure.content_top.innerHTML = `
-                    <div class="content-top-inner-wrap">
-                        <div class="container content-top-lower">
-                            <h1 class="content-top-header">${header.textContent.trim()}</h1>
-                        </div>
-                    </div>
-                `;
-        }
-        let new_panel = document.createElement("section");
-        new_panel.classList.add("obsessions-panel");
-        page.structure.main.appendChild(new_panel);
-        if (buttons.length > 0) {
-          let wrap = document.createElement("div");
-          wrap.classList.add("view-buttons-wrapper");
-          wrap.innerHTML = `<div class="info"><div class="alert alert-info">Playlists are a work in progress</div></div>`;
-          let button_header = html.node`
-                    <div class="view-buttons playlist-home-buttons blend" />
-                `;
-          buttons.forEach((button) => {
-            if (button.getAttribute("data-analytics-action") == "create") {
-              button.classList.add("primary");
-              button.innerHTML = `${tl(trans.new)} <div class="new-badge">${tl(trans.beta)}</div>`;
-            }
-            button.classList.add("btn", "view-item", "interact-item", "playlist-home-top-item");
-            button_header.appendChild(button);
-          });
-          wrap.appendChild(button_header);
-          new_panel.appendChild(wrap);
-        }
-        let playlists = page.structure.container.querySelector(".playlisting-playlists");
-        if (playlists) {
-          page.structure.container.removeChild(playlists.parentElement);
-          new_panel.appendChild(playlists);
-        } else {
-          let no_data = page.structure.container.querySelector(".no-data-message--playlists");
-          page.structure.container.removeChild(no_data.parentElement);
-          new_panel.appendChild(no_data);
-        }
-      } else if (page.subpage == "loved") {
-        let count_text = page.structure.content_top.querySelector("h1").textContent.trim();
-        let chr = count_text.indexOf("(");
-        let count = 0;
-        if (chr != -1)
-          count = count_text.substring(chr).replace("(", "").replace(")", "");
-        page.structure.nav.querySelector(".secondary-nav-item--loved a").appendChild(html.node`
-                <div class="new-badge count-badge">${count}</div>
-            `);
-      }
-    }
-    log("status is", "page", "info", page);
-    update_page();
-    patch_profile_following();
-    log(`querying badges for ${page.name}`, "profile");
-    let profile_name_obj;
-    profile_name_obj = page.structure.container.querySelector(".redesigned-profile-header .title-container");
-    if (ff("badges")) {
-      let stock_badges = profile_name_obj.querySelectorAll(".label");
-      stock_badges.forEach((badge) => {
-        if (badge.classList[1] == "user-status-None")
-          return;
-        badge.classList.add("no-hover");
-        tippy_esm_default(badge, {
-          theme: "badge",
-          placement: "bottom",
-          content: html.node`
-                    <div class="badge-name">${badge.textContent}</div>
-                    <div class="badge-reason">${tl(trans.badges[badge.classList[1]].reason)}</div>
-                `
-        });
-      });
-    }
-    let badges = load_badges(page.name);
-    if (badges) {
-      badges.forEach((badge) => {
-        profile_name_obj.appendChild(create_badge(badge));
-      });
-    }
-    let badge_elements = profile_name_obj.querySelectorAll(".label");
-    let label_container = document.createElement("div");
-    label_container.classList.add("badges");
-    badge_elements.forEach((badge) => {
-      label_container.appendChild(badge);
-    });
-    profile_name_obj.appendChild(label_container);
-  }
-  function create_profile_note_panel(username2, has_note) {
-    let about_me_sidebar = page.structure.row.querySelector(".about-me-sidebar");
-    let note;
-    about_me_sidebar.after(html.node`
-        <section class="bleh--panel bleh--profile-note-panel">
-            <h2>${tl(trans.notes)}</h2>
-            <div class="content-form">
-                <textarea id="bleh--profile-note" placeholder=${tl(trans.anything_you_can_imagine)} ref=${(el) => note = el}>${has_note ?? has_note}</textarea>
-            </div>
-            <div class="actions">
-                <button class="see-more cancel" onclick=${() => {
-      let notes = JSON.parse(localStorage.getItem("bleh_profile_notes")) || {};
-      delete notes[page.name];
-      note.value = "";
-      localStorage.setItem("bleh_profile_notes", JSON.stringify(notes));
-    }}>${tl(trans.clear)}</button>
-                <button class="btn primary icon" data-type="save" onclick=${() => {
-      let notes = JSON.parse(localStorage.getItem("bleh_profile_notes")) || {};
-      notes[page.name] = note.value.replace(/&/g, "&amp;").replace(/</g, "&lt;").replace(/>/g, "&gt;").replace(/"/g, "&quot;").replace(/'/g, "&#039;");
-      localStorage.setItem("bleh_profile_notes", JSON.stringify(notes));
-    }}>${tl(trans.save)}</button>
-            </div>
-        </section>
-    `);
-  }
-  function patch_profile_following() {
-    let navlist = page.structure.nav.querySelector(".navlist-items");
-    let following_tab = navlist.querySelector(".secondary-nav-item--following");
-    let link = following_tab.querySelector("a");
-    if (page.subpage != "following" && page.subpage != "followers" && page.subpage != "neighbours") {
-      link.href = `${root}user/${page.name}/friends`;
-      link.textContent = tl(trans.friends);
-      return;
-    }
-    if (page.subpage != "following")
-      link.classList.add("secondary-nav-item-link--active");
-    let followers_tab = navlist.querySelector(".secondary-nav-item--followers");
-    let neighbours_tab = navlist.querySelector(".secondary-nav-item--neighbours");
-    navlist.removeChild(followers_tab);
-    navlist.removeChild(neighbours_tab);
-    let friends_nav = html.node`
-        <div class="toolbar">
-            <nav class="navlist secondary-nav redesigned-navigation">
-                <ul class="navlist-items">
-                    ${{ html: following_tab.outerHTML }}
-                    ${{ html: followers_tab.outerHTML }}
-                    ${{ html: neighbours_tab.outerHTML }}
-                </ul>
-            </nav>
-        </div>
-    `;
-    link.href = `${root}user/${page.name}/friends`;
-    link.textContent = tl(trans.friends);
-    page.structure.content_top.after(friends_nav);
-    page.structure.row.classList.add("col-main-is-primary");
-    following_tab = friends_nav.querySelector(".secondary-nav-item--following a");
-    let highlighted_tab = following_tab;
-    if (page.subpage == "followers")
-      highlighted_tab = friends_nav.querySelector(".secondary-nav-item--followers a");
-    else if (page.subpage == "neighbours")
-      highlighted_tab = friends_nav.querySelector(".secondary-nav-item--neighbours a");
-    if (page.subpage != "following") {
-      following_tab.classList.remove("secondary-nav-item-link--active");
-    }
-    if (ff("katsune") && page.subpage != "neighbours") {
-      let count_text = page.structure.content_top.querySelector("h1").textContent.trim();
-      let chr = count_text.indexOf("(");
-      let count = 0;
-      if (chr != -1)
-        count = count_text.substring(chr).replace("(", "").replace(")", "");
-      highlighted_tab.appendChild(html.node`
-            <div class="new-badge count-badge">${count}</div>
-        `);
-    }
-    let view_buttons = document.createElement("div");
-    view_buttons.classList.add("view-buttons-wrapper");
-    view_buttons.innerHTML = `
-        <div class="view-buttons">
-            <button class="btn view-item" id="toggle-list_view-1" data-toggle="list_view" data-toggle-value="1" onclick="_update_item('list_view', 1)">
-                ${tl(trans.grid)}
-            </button>
-            <button class="btn view-item" id="toggle-list_view-0" data-toggle="list_view" data-toggle-value="0" onclick="_update_item('list_view', 0)">
-                ${tl(trans.list)}
-            </button>
-        </div>
-    `;
-    page.structure.main.insertBefore(view_buttons, page.structure.main.firstElementChild);
-    refresh_all();
-  }
-  function refresh_tracks(button, {
-    quiet = false
-  }) {
-    let panel = page.structure.main.querySelector("#recent-tracks-section");
-    panel.classList.remove("has-refreshed");
-    button.setAttribute("disabled", "");
-    fetch(`${root}user/${page.name}/partial/recenttracks?ajax=1`).then(function(response) {
-      console.log("returned", response, response.text);
-      return response.text();
-    }).then(function(html3) {
-      let doc = new DOMParser().parseFromString(html3, "text/html");
-      console.log("DOC", doc);
-      let tracklist_panel = doc.querySelector(".chartlist");
-      button.removeAttribute("disabled");
-      if (!tracklist_panel) {
-        if (!quiet) {
-          notify({
-            title: tl(trans.recent_tracks),
-            body: tl(trans.value_failed_to_load).replace("{v}", tl(trans.library)),
-            icon: "icon-16-refresh",
-            type: "error"
-          });
-        }
-        return;
-      }
-      if (!quiet) {
-        notify({
-          title: tl(trans.recent_tracks),
-          body: tl(trans.refreshed),
-          icon: "icon-16-refresh"
-        });
-      }
-      panel.classList.add("has-refreshed");
-      panel.querySelector(".chartlist").outerHTML = tracklist_panel.outerHTML;
-    });
-  }
-  function bleh_featured_profile_track(object, about_me) {
-    let art = object.querySelector(".featured-item-art");
-    let details = object.querySelector(".featured-item-details");
-    let form = document.body.querySelector(".header-info-primary form");
-    let heading = details.querySelector(".featured-item-heading");
-    let link = heading.querySelector("a")?.getAttribute("href");
-    details.removeChild(heading);
-    let name_elem = details.querySelector(".featured-item-name");
-    let artist_elem = details.querySelector(".featured-item-artist");
-    name_elem.classList = "";
-    artist_elem.classList = "source-album-artist";
-    if (settings.format_guest_features) {
-      let song_title = name_elem.textContent;
-      let formatted_title = name_includes(song_title, artist_elem.textContent);
-      let song_tags = {};
-      if (formatted_title) {
-        song_title = formatted_title[0];
-        song_tags = formatted_title[1];
-      }
-      render(name_elem, html.node`
-            <div class="title">${song_title.trim()}</div>
-            ${song_tags.map((tag) => html.node`
-                <div class="feat" data-bleh--tag-type="${tag.type}" data-bleh--tag-group="${tag.group}">${tag.text}</div>
-            `)}
-        `);
-      let song_artist_element = document.createElement("div");
-      song_artist_element.classList.add("featured-item-artist");
-      song_artist_element.innerHTML = `<a href="${root}music/${redirect()}${sanitise(formatted_title[2])}">${formatted_title[2]}</a>`;
-      let song_guests = formatted_title[3];
-      for (let guest in song_guests) {
-        song_artist_element.innerHTML = `${song_artist_element.innerHTML},`;
-        let guest_element = document.createElement("a");
-        guest_element.setAttribute("href", `${root}music/${redirect()}${sanitise(song_guests[guest])}`);
-        guest_element.textContent = song_guests[guest];
-        song_artist_element.appendChild(guest_element);
-      }
-      details.removeChild(artist_elem);
-      details.appendChild(song_artist_element);
-    } else if (settings.corrections) {
-      let name = correct_item_by_artist(name_elem.textContent.trim(), artist_elem.textContent.trim());
-      let artist = correct_artist(artist_elem.textContent.trim());
-      name_elem.textContent = name;
-      artist_elem.textContent = artist;
-    }
-    if (form) {
-      let button = form.querySelector("button");
-      button.classList = "featured-item-manage";
-      button.setAttribute("data-type", "delete");
-      button.textContent = tl(trans.remove);
-    }
-    let img = art.querySelector(".cover-art");
-    let panel = html.node`
-        <section class="featured-item-panel">
-            <div class="sub-text">
-                ${form ? html.node`
-                <a class="has-icon" data-type="obsession" href=${link}>
-                    <div class="bleh-icon" style="--icon: var(--mask)" />
-                    ${tl(trans.obsession)}
-                </a>
-                ${form}
-                ` : html.node`
-                <div class="has-icon" data-type="track">
-                    <div class="bleh-icon" style="--icon: var(--mask)" />
-                    ${tl(trans.top_track)}
-                </div>
-                `}
-            </div>
-            <div class="source-album js-link-block link-block">
-                <div class="source-album-art">
-                    ${img}
-                </div>
-                <div class="source-album-details">
-                    <h4 class="source-album-name">${name_elem}</h4>
-                    ${artist_elem}
-                </div>
-                <a class="js-link-block-cover-link link-block-cover-link" href=${name_elem.getAttribute("href")} />
-            </div>
-        </section>
-    `;
-    if (about_me)
-      about_me.after(panel);
-    else
-      page.structure.side.insertBefore(panel, page.structure.side.firstElementChild);
-  }
-  function profile_recents() {
-    let panel = page.structure.main.querySelector("#recent-tracks-section");
-    if (!panel) return;
-    let more_link = panel.nextElementSibling;
-    panel.appendChild(more_link);
-    let form = panel.querySelector("#recent-tracks-settings");
-    let link = panel.querySelector('[aria-controls="recent-tracks-settings"]');
-    let tooltip;
-    let view_buttons = document.createElement("div");
-    view_buttons.classList.add("view-buttons", "blend", "blend-v2");
-    let header = document.createElement("div");
-    header.classList.add("top-container");
-    let header_text2 = panel.querySelector("h2");
-    header.appendChild(header_text2);
-    let refresh_btn;
-    if (ff("submit_scrobble") && page.name == auth.name) {
-      const can_api = localStorage.getItem("bleh_auth") && localStorage.getItem("bleh_auth_valid") === "true";
-      let submit_btn = html.node`
-            <button class="left-icon blend-v2-btn" data-type="add" onclick=${() => submit_scrobble({
-        refresh_btn,
-        can_api,
-        func: () => {
-          setTimeout(() => {
-            refresh_tracks(refresh_btn, { quiet: true });
-          }, 200);
-        }
-      })}>
-                ${tl(trans.new)}
-            </button>
-        `;
-      view_buttons.appendChild(submit_btn);
-      if (!can_api) {
-        tippy_esm_default(submit_btn, {
-          content: tl(trans.requires_api_in_settings)
-        });
-      }
-    }
-    refresh_btn = html.node`
-        <button class="left-icon blend-v2-btn" data-type="refresh" onclick=${() => refresh_tracks(refresh_btn, {})}>
-            ${tl(trans.refresh)}
-        </button>
-    `;
-    view_buttons.appendChild(refresh_btn);
-    header.appendChild(view_buttons);
-    panel.insertBefore(header, panel.firstElementChild);
-    if (!form) return;
-    if (page.token == "")
-      page.token = form.querySelector('[name="csrfmiddlewaretoken"]').getAttribute("value");
-    let original_chart_settings = {};
-    let settings_btn = html.node`
-        <button class="left-icon blend-v2-btn" data-type="settings">
-            ${tl(trans.settings)}
-        </button>
-    `;
-    let count = form.querySelector('[name="chart_length_recent_tracks"]');
-    original_chart_settings = {
-      recent_artwork: form.querySelector("#id_show_recent_tracks_artwork").checked,
-      recent_realtime: form.querySelector("#id_auto_refresh_recent_tracks").checked
-    };
-    form.classList = "";
-    render(form, html`
-        <input type="hidden" name="csrfmiddlewaretoken" value="${page.token}">
-        <div class="setting-group blend">
-            <div class="setting" data-type="select">
-                <div class="heading">
-                    <h5>${tl(trans.amount_to_display)}</h5>
-                </div>
-                ${select(select_prepare(count), count.value, "chart_length_recent_tracks")}
-            </div>
-            <div class="setting" data-type="toggle" id="container-recent_artwork" onclick="_update_inbuilt_item('recent_artwork')">
-                <div class="heading">
-                    <h5>${tl(trans.recent_artwork)}</h5>
-                </div>
-                <div class="toggle-wrap">
-                    <input class="companion-checkbox" type="checkbox" name="show_recent_tracks_artwork" id="inbuilt-companion-checkbox-recent_artwork">
-                    <span class="btn toggle" id="toggle-recent_artwork" aria-checked="false">
-                        <div class="dot"></div>
-                    </span>
-                </div>
-            </div>
-            <div class="setting" data-type="toggle" id="container-recent_realtime" onclick="_update_inbuilt_item('recent_realtime')">
-                <div class="heading">
-                    <h5>${tl(trans.recent_realtime.name)}</h5>
-                    <p>${tl(trans.recent_realtime.body)}</p>
-                </div>
-                <div class="toggle-wrap">
-                    <input class="companion-checkbox" type="checkbox" name="auto_refresh_recent_tracks" id="inbuilt-companion-checkbox-recent_realtime">
-                    <span class="btn toggle" id="toggle-recent_realtime" aria-checked="false" type="button">
-                        <div class="dot"></div>
-                    </span>
-                </div>
-            </div>
-            ${setting({ id: "format_guest_features" })}
-            ${setting({ id: "stacked_chartlist_info" })}
-            ${setting({ id: "colourful_tracks" })}
-            <div class="settings-footer">
-                <button type="submit" class="btn-primary save">
-                    ${tl(trans.save)}
-                </button>
-                <a class="btn icon settings not-a-view-button" href="${root}bleh">
-                    ${tl(trans.settings)}
-                </a>
-            </div>
-        </div>
-    `);
-    for (let setting2 in original_chart_settings) {
-      update_inbuilt_item(setting2, original_chart_settings[setting2], false, form);
-    }
-    refresh_all(form);
-    tooltip = tippy_esm_default(settings_btn, {
-      theme: "window",
-      content: form,
-      allowHTML: true,
-      placement: "bottom",
-      interactive: true,
-      interactiveBorder: 10,
-      trigger: "click"
-    });
-    view_buttons.appendChild(settings_btn);
-  }
-  function profile_artists() {
-    let panel = page.structure.main.querySelector("#top-artists");
-    if (!panel) return;
-    panel.classList.remove("section-with-settings");
-    let form = panel.querySelector("#artist-chart-settings");
-    let list = panel.querySelector("#artists_range");
-    let collage_btn;
-    let select_btn = panel.querySelector(".dropdown-menu-clickable-button");
-    let settings_btn;
-    panel.insertBefore(html.node`
-        <div class="top-container">
-            ${panel.querySelector("h2")}
-            <div class="accompany view-buttons blend blend-v2">
-                ${() => {
-      select_btn.classList.add("select-button", "link-select", "blend-v2-btn");
-      select_btn.classList.remove("section-control", "dropdown-menu-clickable-button");
-      return select_btn;
-    }}
-            </div>
-            <div class="view-buttons blend blend-v2">
-                <button class="left-icon blend-v2-btn" data-type="collage" ref=${(el) => collage_btn = el} onclick=${() => {
-      let btn = list.querySelector(".dropdown-menu-clickable-item--selected");
-      let link = new URL("https://www.last.fm" + btn.getAttribute("href"));
-      let selected = link.searchParams.get("artists_date_preset");
-      window.location.href = `${root}bleh/minis/collage?type=artists&timeframe=date_preset=${selected}`;
-    }}>${tl(trans.collage)}</button>
-                ${form ? html.node`
-                <button class="left-icon blend-v2-btn" data-type="settings" ref=${(el) => settings_btn = el}>
-                    ${tl(trans.settings)}
-                </button>
-                ` : ""}
-            </div>
-        </div>
-    `, panel.firstElementChild);
-    if (!form) return;
-    if (page.token == "") page.token = form.querySelector('[name="csrfmiddlewaretoken"]').getAttribute("value");
-    let timeframe = form.querySelector('[name="chart_range_top_artists"]');
-    let style = form.querySelector('[name="chart_style_top_artists"]');
-    let grid_length = form.querySelector('[name="artists_image_grid_length"]');
-    let chartlist_length = form.querySelector('[name="artists_chartlist_length"]');
-    form.classList = "";
-    render(form, html`
-        <input type="hidden" name="csrfmiddlewaretoken" value="${page.token}">
-        <div class="setting-group blend">
-            <div class="setting" data-type="select">
-                <div class="heading">
-                    <h5>${tl(trans.default_timeframe)}</h5>
-                </div>
-                ${select(select_prepare(timeframe), timeframe.value, "chart_range_top_artists")}
-            </div>
-            <div class="setting" data-type="select">
-                <div class="heading">
-                    <h5>${tl(trans.chart_style)}</h5>
-                </div>
-                ${select(select_prepare(style), style.value, "chart_style_top_artists")}
-            </div>
-            <div class="setting hide-if-artist-list" data-type="select">
-                <div class="heading">
-                    <h5>${tl(trans.chart_size)}</h5>
-                </div>
-                ${select(select_prepare(grid_length), grid_length.value, "artists_image_grid_length")}
-            </div>
-            <div class="setting hide-if-artist-grid" data-type="select">
-                <div class="heading">
-                    <h5>${tl(trans.chart_size)}</h5>
-                </div>
-                ${select(select_prepare(chartlist_length), chartlist_length.value, "artists_chartlist_length")}
-            </div>
-            <div class="settings-footer">
-                <button type="submit" class="btn-primary save">
-                    ${tl(trans.save)}
-                </button>
-            </div>
-        </div>
-    `);
-    tippy_esm_default(settings_btn, {
-      theme: "window",
-      content: form,
-      placement: "bottom",
-      interactive: true,
-      interactiveBorder: 10,
-      trigger: "click"
-    });
-  }
-  function profile_albums() {
-    let panel = page.structure.main.querySelector("#top-albums");
-    if (!panel) return;
-    panel.classList.remove("section-with-settings");
-    let form = panel.querySelector("#albums-chart-settings");
-    let list = panel.querySelector("#albums_range");
-    let collage_btn;
-    let select_btn = panel.querySelector(".dropdown-menu-clickable-button");
-    let settings_btn;
-    panel.insertBefore(html.node`
-        <div class="top-container">
-            ${panel.querySelector("h2")}
-            <div class="accompany view-buttons blend blend-v2">
-                ${() => {
-      select_btn.classList.add("select-button", "link-select", "blend-v2-btn");
-      select_btn.classList.remove("section-control", "dropdown-menu-clickable-button");
-      return select_btn;
-    }}
-            </div>
-            <div class="view-buttons blend blend-v2">
-                <button class="left-icon blend-v2-btn" data-type="collage" ref=${(el) => collage_btn = el} onclick=${() => {
-      let btn = list.querySelector(".dropdown-menu-clickable-item--selected");
-      let link = new URL("https://www.last.fm" + btn.getAttribute("href"));
-      let selected = link.searchParams.get("albums_date_preset");
-      window.location.href = `${root}bleh/minis/collage?type=albums&timeframe=date_preset=${selected}`;
-    }}>${tl(trans.collage)}</button>
-                ${form ? html.node`
-                <button class="left-icon blend-v2-btn" data-type="settings" ref=${(el) => settings_btn = el}>
-                    ${tl(trans.settings)}
-                </button>
-                ` : ""}
-            </div>
-        </div>
-    `, panel.firstElementChild);
-    if (!form) return;
-    if (page.token == "") page.token = form.querySelector('[name="csrfmiddlewaretoken"]').getAttribute("value");
-    let timeframe = form.querySelector('[name="chart_range_top_albums"]');
-    let style = form.querySelector('[name="chart_style_top_albums"]');
-    let grid_length = form.querySelector('[name="albums_image_grid_length"]');
-    let chartlist_length = form.querySelector('[name="albums_chartlist_length"]');
-    form.classList = "";
-    render(form, html`
-        <input type="hidden" name="csrfmiddlewaretoken" value="${page.token}">
-        <div class="setting-group blend">
-            <div class="setting" data-type="select">
-                <div class="heading">
-                    <h5>${tl(trans.default_timeframe)}</h5>
-                </div>
-                ${select(select_prepare(timeframe), timeframe.value, "chart_range_top_albums")}
-            </div>
-            <div class="setting" data-type="select">
-                <div class="heading">
-                    <h5>${tl(trans.chart_style)}</h5>
-                </div>
-                ${select(select_prepare(style), style.value, "chart_style_top_albums")}
-            </div>
-            <div class="setting hide-if-album-list" data-type="select">
-                <div class="heading">
-                    <h5>${tl(trans.chart_size)}</h5>
-                </div>
-                ${select(select_prepare(grid_length), grid_length.value, "albums_image_grid_length")}
-            </div>
-            <div class="setting hide-if-album-grid" data-type="select">
-                <div class="heading">
-                    <h5>${tl(trans.chart_size)}</h5>
-                </div>
-                ${select(select_prepare(chartlist_length), chartlist_length.value, "albums_chartlist_length")}
-            </div>
-            <div class="settings-footer">
-                <button type="submit" class="btn-primary save">
-                    ${tl(trans.save)}
-                </button>
-            </div>
-        </div>
-    `);
-    tippy_esm_default(settings_btn, {
-      theme: "window",
-      content: form,
-      placement: "bottom",
-      interactive: true,
-      interactiveBorder: 10,
-      trigger: "click"
-    });
-  }
-  function profile_tracks() {
-    let panel = page.structure.main.querySelector("#top-tracks");
-    if (!panel) return;
-    panel.classList.remove("section-with-settings");
-    let form = panel.querySelector("#track-chart-settings");
-    let list = panel.querySelector("#tracks_range");
-    let collage_btn;
-    let select_btn = panel.querySelector(".dropdown-menu-clickable-button");
-    let settings_btn;
-    panel.insertBefore(html.node`
-        <div class="top-container">
-            ${panel.querySelector("h2")}
-            <div class="accompany view-buttons blend blend-v2">
-                ${() => {
-      select_btn.classList.add("select-button", "link-select", "blend-v2-btn");
-      select_btn.classList.remove("section-control", "dropdown-menu-clickable-button");
-      return select_btn;
-    }}
-            </div>
-            <div class="view-buttons blend blend-v2">
-                <button class="left-icon blend-v2-btn" data-type="collage" ref=${(el) => collage_btn = el} onclick=${() => {
-      let btn = list.querySelector(".dropdown-menu-clickable-item--selected");
-      let link = new URL("https://www.last.fm" + btn.getAttribute("href"));
-      let selected = link.searchParams.get("tracks_date_preset");
-      window.location.href = `${root}bleh/minis/collage?type=tracks&timeframe=date_preset=${selected}`;
-    }}>${tl(trans.collage)}</button>
-                ${form ? html.node`
-                <button class="left-icon blend-v2-btn" data-type="settings" ref=${(el) => settings_btn = el}>
-                    ${tl(trans.settings)}
-                </button>
-                ` : ""}
-            </div>
-        </div>
-    `, panel.firstElementChild);
-    if (!form) return;
-    if (page.token == "") page.token = form.querySelector('[name="csrfmiddlewaretoken"]').getAttribute("value");
-    let timeframe = form.querySelector('[name="chart_range_top_tracks"]');
-    let chartlist_length = form.querySelector('[name="chart_length_top_tracks"]');
-    form.classList = "";
-    render(form, html`
-        <input type="hidden" name="csrfmiddlewaretoken" value="${page.token}">
-        <div class="setting-group blend">
-            <div class="setting" data-type="select">
-                <div class="heading">
-                    <h5>${tl(trans.default_timeframe)}</h5>
-                </div>
-                ${select(select_prepare(timeframe), timeframe.value, "chart_range_top_tracks")}
-            </div>
-            <div class="setting hide-if-track-grid" data-type="select">
-                <div class="heading">
-                    <h5>${tl(trans.chart_size)}</h5>
-                </div>
-                ${select(select_prepare(chartlist_length), chartlist_length.value, "chart_length_top_tracks")}
-            </div>
-            <div class="sep" />
-            ${setting({ id: "format_guest_features" })}
-            ${setting({ id: "show_guest_features" })}
-            <div class="more-link">
-                <a href="${root}bleh/music">${tl(trans.settings)}</a>
-            </div>
-            <div class="settings-footer">
-                <button type="submit" class="btn-primary save">
-                    ${tl(trans.save)}
-                </button>
-            </div>
-        </div>
-    `);
-    tippy_esm_default(settings_btn, {
-      theme: "window",
-      content: form,
-      placement: "bottom",
-      interactive: true,
-      interactiveBorder: 10,
-      trigger: "click"
-    });
-  }
-  function bio_parse(text3) {
-    let temp = document.createElement("div");
-    temp.classList.add("markdown-body");
-    render(temp, markdown(text3.textContent, {
-      allow_headers: true,
-      allow_banners: true,
-      allow_icons: true,
-      allow_hue: true
-    }));
-    const banner = temp.querySelector('img[alt="banner"]');
-    if (banner) {
-      const src = banner.src;
-      register_background(src, "bio");
-    }
-    return temp;
-  }
-  function bleh_profile_chart() {
-    let panel = page.structure.row.querySelector(".listen-panel");
-    let table = panel.querySelector("table");
-    if (table) {
-      bleh_profile_chart_render(panel, table);
-      return;
-    }
-    lazy(panel, () => {
-      fetch(`${root}user/${page.name}/library/artists/chart?date_preset=LAST_90_DAYS&page=1&ajax=1`).then(function(response) {
-        console.log("glacier library returned", response, response.text, response.status);
-        if (response.status != 200)
-          throw new Error();
-        return response.text();
-      }).then(function(html3) {
-        let doc = new DOMParser().parseFromString(html3, "text/html");
-        console.log("glacier library DOC", doc, doc.querySelector(".table"));
-        log("received response", "glacier library");
-        table = doc.querySelector(".table");
-        if (table) {
-          panel.appendChild(table);
-          bleh_profile_chart_render(panel, table);
-        } else {
-          log("table is null?", "glacier library", "error");
-          console.info("glacier library", doc.body.innerHTML);
-          console.info("glacier library", new DOMParser().parseFromString(doc.body.innerHTML, "text/html"));
-          throw new Error();
-        }
-      });
-    }, { threshold: 0.3, rootMargin: "0px" });
-  }
-  function bleh_profile_chart_render(panel = page.structure.side.querySelector(".listen-profile-panel"), table = null) {
-    if (!table) table = panel.querySelector("table");
-    if (!table) return;
-    let entries2 = table.querySelectorAll("tbody tr");
-    let labels = [];
-    let links = [];
-    let values = [];
-    page.state.glacier.links = [];
-    entries2.forEach((entry) => {
-      let period = entry.querySelector(".js-period a");
-      let value = entry.querySelector(".js-scrobbles").textContent.trim();
-      labels.push(period.textContent.trim());
-      links.push(period.getAttribute("href"));
-      values.push(value);
-      page.state.glacier.links.push(`${root}user/${page.name}/library` + period.getAttribute("href"));
-    });
-    prep_chart_colours();
-    let scrobble_canvas_container = panel.querySelector(".scrobble-canvas-container");
-    scrobble_canvas_container.innerHTML = "";
-    let scrobble_canvas = document.createElement("canvas");
-    scrobble_canvas.classList.add("scrobble-canvas");
-    let gradient = scrobble_canvas.getContext("2d").createLinearGradient(0, 0, 0, 160);
-    try {
-      gradient.addColorStop(0, page.state.chart_colours.link_bg_col);
-      gradient.addColorStop(1, page.state.chart_colours.link_bg_col_2);
-    } catch (e) {
-      gradient = page.state.chart_colours.link_bg_col;
-    }
-    Chart.defaults.color = page.state.chart_colours.text_col;
-    Chart.defaults.font.family = page.state.chart_colours.font;
-    let scrobble_chart = new Chart(scrobble_canvas.getContext("2d"), {
-      type: "line",
-      data: {
-        labels,
-        datasets: [{
-          data: values,
-          borderWidth: 2,
-          backgroundColor: gradient,
-          borderColor: page.state.chart_colours.link_col,
-          fill: true,
-          pointRadius: 0,
-          pointHitRadius: 20,
-          tension: 0.1
-        }]
-      },
-      options: page.state.chart_library_line_options
-    });
-    scrobble_canvas_container.appendChild(scrobble_canvas);
-  }
-  function save_profile_cache({
-    banner,
-    hue: hue2,
-    sat,
-    lit,
-    aka,
-    created
-  } = {}, profile_cache = JSON.parse(localStorage.getItem("bleh_profile_cache")) || {}, name = page.name) {
-    let profile_cache_o = Object.keys(profile_cache);
-    if (profile_cache_o.length > 400) {
-      let keys2 = Reflect.ownKeys(profile_cache);
-      if (profile_cache[keys2[0]] != auth.name)
-        delete profile_cache[keys2[0]];
-      else
-        delete profile_cache[keys2[1]];
-      delete profile_cache[name];
-    }
-    profile_cache[name] = {
-      banner,
-      hue: hue2,
-      sat,
-      lit,
-      aka,
-      created
-    };
-    log("saved to cache", "profile", "info", { name, cache: profile_cache[name] });
-    localStorage.setItem("bleh_profile_cache", JSON.stringify(profile_cache));
-  }
-  function load_profile_cache_externally(name = page.name) {
-    if (!name) return;
-    let profile_cache = JSON.parse(localStorage.getItem("bleh_profile_cache")) || {};
-    return profile_cache[name] || {};
-  }
-  function load_profile_cache(name = page.name) {
-    if (!name) return;
-    let profile_cache = JSON.parse(localStorage.getItem("bleh_profile_cache")) || {};
-    let cache2 = profile_cache[name];
-    if (profile_cache[name]) {
-      const hue2 = cache2.hue;
-      const sat = cache2.sat;
-      const lit = cache2.lit;
-      const banner = cache2.banner;
-      if (hue2) document.body.style.setProperty("--hue-album", hue2);
-      if (sat) document.body.style.setProperty("--sat-album", sat);
-      if (lit) document.body.style.setProperty("--lit-album", lit);
-      if (banner) register_background(banner, "bio");
-      return;
-    }
-    return request_profile_cache(name);
-  }
-  function request_profile_cache(name = page.name) {
-    fetch(`${root}user/${name}`).then(function(response) {
-      console.log("returned", response, response.text);
-      return response.text();
-    }).then(function(dom) {
-      let doc = new DOMParser().parseFromString(dom, "text/html");
-      console.log("DOC", doc);
-      const about_me_sidebar = doc.querySelector(".about-me-sidebar");
-      if (about_me_sidebar) {
-        let about_me_text = about_me_sidebar.querySelector("p");
-        bio_parse(about_me_text, true);
-      } else {
-        save_profile_cache({});
-      }
-      const secondary = doc.querySelector(".header-title-secondary");
-      parse_sub_text(secondary);
-    });
-  }
-  function parse_sub_text(profile_sub_text) {
-    const display_name = profile_sub_text.querySelector(".header-title-display-name");
-    const scrobble_since = profile_sub_text.querySelector(".header-scrobble-since");
-    scrobble_since.textContent = scrobble_since.textContent.slice(2).replace(tl(trans.account_scrobbling_since_replace), "");
-    const pronouns = use_pronouns(display_name.textContent);
-    profile_sub_text.insertBefore(html.node`
-        <span class="header-title-secondary--pre">
-            ${pronouns ? tl(trans.account_pronouns) : tl(trans.aka)}
-        </span>
-    `, display_name);
-    profile_sub_text.insertBefore(html.node`
-        <span class="header-title-secondary--pre">
-            ${tl(trans.account_created)}
-        </span>
-    `, scrobble_since);
-    let profile_cache = JSON.parse(localStorage.getItem("bleh_profile_cache")) || {};
-    let cache2 = profile_cache[page.name] || {};
-    cache2.aka = display_name.textContent.trim();
-    cache2.created = scrobble_since.textContent.trim();
-    save_profile_cache(cache2, profile_cache);
-  }
-
-  // src/chart.js
-  function chart_reflow() {
-    load_chart_colours();
-    if ((page.type == "artist" || page.type == "album" || page.type == "track") && page.subpage == "overview")
-      bleh_music_page_charts();
-    if (page.type == "user" && page.subpage == "overview")
-      bleh_profile_chart_render();
-    if (page.type == "user" && page.subpage.startsWith("library")) {
-      bleh_glacier_date_graph_generate();
-      bleh_glacier_insights();
-    }
-  }
-  function prep_chart_colours() {
-    if (page.state.chart_colours.link_col == "hsl()")
-      load_chart_colours();
-  }
-  function load_chart_colours() {
-    let link_col = `hsl(${getComputedStyle(document.body).getPropertyValue("--l3-c")})`;
-    let link_h_col = getComputedStyle(document.body).getPropertyValue("--h3-s");
-    let link_bg_col = `hsla(${getComputedStyle(document.body).getPropertyValue("--h4")}, 30%)`;
-    let link_bg_col_2 = `hsla(${getComputedStyle(document.body).getPropertyValue("--h4")}, 2%)`;
-    let text_col = `hsl(${getComputedStyle(document.body).getPropertyValue("--c3")})`;
-    let axis_col = `hsla(${getComputedStyle(document.body).getPropertyValue("--b4")}, 40%)`;
-    let text_primary_col = `hsl(${getComputedStyle(document.body).getPropertyValue("--c2")})`;
-    let bg_col = `hsl(${getComputedStyle(document.body).getPropertyValue("--b5")})`;
-    let root_bg_col = `hsla(${getComputedStyle(document.body).getPropertyValue("--b6")}, 92%)`;
-    let hue2 = getComputedStyle(document.body).getPropertyValue("--hue");
-    page.state.chart_colours = {
-      link_col,
-      link_h_col,
-      link_bg_col,
-      link_bg_col_2,
-      text_col,
-      axis_col,
-      text_primary_col,
-      bg_col,
-      root_bg_col,
-      hue: hue2,
-      font: getComputedStyle(document.body).getPropertyValue("--font")
-    };
-    console.log("chart colours", page.state.chart_colours);
-    page.state.chart_line_options = {
-      maintainAspectRatio: false,
-      plugins: {
-        legend: {
-          display: false
-        },
-        tooltip: {
-          backgroundColor: root_bg_col,
-          titleColor: text_primary_col,
-          bodyColor: text_primary_col,
-          multiKeyBackground: root_bg_col,
-          boxPadding: 6,
-          padding: 9,
-          cornerRadius: 9,
-          caretSize: 0
-        }
-      },
-      scales: {
-        x: {
-          type: "time",
-          time: {
-            unit: "month",
-            displayFormats: {
-              month: "LLL"
-            },
-            tooltipFormat: "EEEE, LLLL d yyyy"
-          },
-          grid: {
-            color: axis_col,
-            display: false
-          }
-        },
-        y: {
-          display: false,
-          grid: {
-            display: false
-          },
-          suggestedMax: 10
-        }
-      }
-    };
-    page.state.chart_library_line_options = {
-      maintainAspectRatio: false,
-      plugins: {
-        legend: {
-          display: false
-        },
-        tooltip: {
-          backgroundColor: root_bg_col,
-          titleColor: text_primary_col,
-          bodyColor: text_primary_col,
-          multiKeyBackground: root_bg_col,
-          boxPadding: 6,
-          padding: 9,
-          cornerRadius: 9,
-          caretSize: 0
-        }
-      },
-      scales: {
-        x: {
-          grid: {
-            color: axis_col,
-            display: false
-          }
-        },
-        y: {
-          display: true,
-          grid: {
-            display: false
-          },
-          suggestedMax: 10
-        }
-      },
-      onClick: (e, active, chart) => {
-        bleh_glacier_library_open_index(active[0].index);
-      }
-    };
-    page.state.chart_library_line_options_no_click = {
-      maintainAspectRatio: false,
-      plugins: {
-        legend: {
-          display: false
-        },
-        tooltip: {
-          backgroundColor: root_bg_col,
-          titleColor: text_primary_col,
-          bodyColor: text_primary_col,
-          multiKeyBackground: root_bg_col,
-          boxPadding: 6,
-          padding: 9,
-          cornerRadius: 9,
-          caretSize: 0
-        }
-      },
-      scales: {
-        x: {
-          grid: {
-            color: axis_col,
-            display: false
-          }
-        },
-        y: {
-          grid: {
-            display: false
-          },
-          suggestedMax: 10
-        }
-      }
-    };
-    page.state.chart_library_pie_options = {
-      maintainAspectRatio: false,
-      plugins: {
-        legend: {
-          display: false
-        },
-        tooltip: {
-          backgroundColor: root_bg_col,
-          titleColor: text_primary_col,
-          bodyColor: text_primary_col,
-          multiKeyBackground: root_bg_col,
-          boxPadding: 6,
-          padding: 9,
-          cornerRadius: 9,
-          caretSize: 0
-        }
-      },
-      onClick: (e, active, chart) => {
-        bleh_glacier_library_open_index(active[0].index);
-      }
-    };
-    page.state.chart_library_pie_options_no_click = {
-      maintainAspectRatio: false,
-      plugins: {
-        legend: {
-          display: false
-        },
-        tooltip: {
-          backgroundColor: root_bg_col,
-          titleColor: text_primary_col,
-          bodyColor: text_primary_col,
-          padding: 7,
-          cornerRadius: 10,
-          caretSize: 0
-        }
-      }
-    };
-    page.state.chart_library_bar_options = {
-      maintainAspectRatio: false,
-      plugins: {
-        legend: {
-          display: false
-        },
-        tooltip: {
-          backgroundColor: root_bg_col,
-          titleColor: text_primary_col,
-          bodyColor: text_primary_col,
-          multiKeyBackground: root_bg_col,
-          boxPadding: 6,
-          padding: 9,
-          cornerRadius: 9,
-          caretSize: 0
-        }
-      },
-      onClick: (e, active, chart) => {
-        bleh_glacier_library_open_index(active[0].index);
-      }
-    };
-    page.state.chart_library_bar_v_options = {
-      indexAxis: "y",
-      maintainAspectRatio: false,
-      plugins: {
-        legend: {
-          display: false
-        },
-        tooltip: {
-          backgroundColor: root_bg_col,
-          titleColor: text_primary_col,
-          bodyColor: text_primary_col,
-          multiKeyBackground: root_bg_col,
-          boxPadding: 6,
-          padding: 9,
-          cornerRadius: 9,
-          caretSize: 0
-        }
-      },
-      onClick: (e, active, chart) => {
-        bleh_glacier_library_open_index(active[0].index);
-      }
-    };
-    page.state.chart_library_bar_options_no_click = {
-      maintainAspectRatio: false,
-      plugins: {
-        legend: {
-          display: false
-        },
-        tooltip: {
-          backgroundColor: root_bg_col,
-          titleColor: text_primary_col,
-          bodyColor: text_primary_col,
-          multiKeyBackground: root_bg_col,
-          boxPadding: 6,
-          padding: 9,
-          cornerRadius: 9,
-          caretSize: 0
-        }
-      }
-    };
   }
 
   // src/pages/gallery.js
@@ -35891,6 +27113,220 @@
       log(`image ${id} from ${page.name} added to bookmarks`, "gallery");
     }
     localStorage.setItem("bleh_bookmarked_images", JSON.stringify(bookmarked_images));
+  }
+
+  // src/components/toggle.js
+  function toggle({
+    value = false,
+    type = "toggle",
+    name = "",
+    title = "",
+    body = "",
+    small = "",
+    disabled = false,
+    data: data2 = "",
+    func = null
+  }) {
+    let checkbox;
+    let state;
+    let elem = html.node`
+        <div class="setting standalone" data-type=${type} onclick=${() => {
+      if (disabled) return;
+      let current = checkbox.checked;
+      if (func) func(!current);
+      checkbox.checked = !current;
+      state.setAttribute("aria-checked", !current);
+    }}>
+            <div class="heading">
+                <h5>${title}</h5>
+                ${body != "" ? html.node`<p>${body}</p>` : ""}
+                ${small != "" ? html.node`<small>${small}</small>` : ""}
+            </div>
+            ${type == "toggle" ? html.node`
+            <div class="toggle-wrap">
+                <input type="checkbox" ref=${(el) => checkbox = el} name=${name} value=${data2} checked=${value} />
+                <button class="toggle" ref=${(el) => state = el} aria-checked=${value}>
+                    <div class="dot" />
+                </button>
+            </div>
+            ` : html.node`
+            <div class="check">
+                <input type="checkbox" ref=${(el) => checkbox = el} name=${name} value=${data2} checked=${value} disabled=${disabled} />
+                <div class="box" ref=${(el) => state = el} aria-checked=${value} disabled=${disabled}>
+                    <div class="bleh-icon" />
+                </div>
+            </div>
+            `}
+        </div>
+    `;
+    elem.check = () => {
+      if (disabled) return;
+      if (func) func(true);
+      checkbox.checked = true;
+      state.setAttribute("aria-checked", true);
+    };
+    elem.uncheck = () => {
+      if (disabled) return;
+      if (func) func(false);
+      checkbox.checked = false;
+      state.setAttribute("aria-checked", false);
+    };
+    elem.checked = () => {
+      return checkbox.checked;
+    };
+    elem.disabled = (state2 = null) => {
+      if (state2 === null) return checkbox.getAttribute("disabled") || false;
+      if (state2 === true)
+        checkbox.setAttribute("disabled", "true");
+      else
+        checkbox.removeAttribute("disabled");
+      return state2;
+    };
+    return elem;
+  }
+
+  // src/components/scrobble.js
+  function submit_scrobble({
+    pre_track = "",
+    pre_album = "",
+    pre_artist = "",
+    pre_album_artist = "",
+    func,
+    can_api
+  }) {
+    if (!can_api) can_api = localStorage.getItem("bleh_auth") && localStorage.getItem("bleh_auth_valid") === "true";
+    if (!can_api) {
+      window.location.href = `${root}bleh/profiles`;
+      return;
+    }
+    const random = random_list[Math.floor(Math.random() * random_list.length)];
+    let track;
+    let album;
+    let artist;
+    let album_artist;
+    let use_current;
+    let date;
+    let create_scrobble;
+    let max_date = /* @__PURE__ */ new Date();
+    max_date.setDate(max_date.getDate() + 1);
+    dialog({
+      id: "submit_scrobble",
+      title: tl(trans.new_scrobble),
+      body: html.node`
+            <div class="new-scrobble-form">
+                <p class="generic-label">${tl(trans.track)}</p>
+                ${track = input({
+        type: "text",
+        value: pre_track,
+        placeholder: tl(trans.example).replace("{v}", random.track),
+        warn_if_empty: true
+      })}
+                <p class="generic-label">${tl(trans.album)}</p>
+                ${album = input({
+        type: "text",
+        value: pre_album,
+        placeholder: tl(trans.example).replace("{v}", random.album)
+      })}
+                <p class="generic-label">${tl(trans.artist)}</p>
+                ${artist = input({
+        type: "text",
+        value: pre_artist,
+        placeholder: tl(trans.example).replace("{v}", random.artist),
+        warn_if_empty: true
+      })}
+                <p class="generic-label">${tl(trans.album_artist)}</p>
+                ${album_artist = input({
+        type: "text",
+        value: pre_album_artist,
+        placeholder: tl(trans.example).replace("{v}", random.album_artist)
+      })}
+                <p class="generic-label">${tl(trans.time)}</p>
+                <div class="toggle-and-time">
+                    ${use_current = toggle({
+        value: true,
+        type: "checkbox",
+        title: tl(trans.use_current_time),
+        func: (state) => {
+          date.disabled(state);
+        }
+      })}
+                    ${date = input({
+        type: "date",
+        max: `${max_date.getFullYear()}-${pad2(max_date.getMonth() + 1)}-${pad2(max_date.getDate())}`,
+        disabled: true
+      })}
+                </div>
+            </div>
+            <div class="modal-footer">
+                <button class="see-more cancel" onclick=${() => dialog_rm({ id: "submit_scrobble" })}>
+                    ${tl(trans.cancel)}
+                </button>
+                <div class="fill" />
+                <button class="btn primary icon" data-type="add" ref=${(el) => create_scrobble = el} onclick=${async () => {
+        if (track.value() == "" || artist.value() == "") {
+          notify({
+            id: "submit_scrobble",
+            title: tl(trans.new_scrobble),
+            body: tl(trans.missing_fields),
+            type: "error"
+          });
+          return;
+        }
+        track.disabled(true);
+        album.disabled(true);
+        artist.disabled(true);
+        album_artist.disabled(true);
+        use_current.disabled(true);
+        date.disabled(true);
+        create_scrobble.disabled = true;
+        if (album.value() != "" && album_artist.value() == "") album_artist.value(artist.value());
+        let params = {
+          sk: localStorage.getItem("bleh_auth"),
+          artist: artist.value(),
+          track: track.value(),
+          timestamp: Math.floor(date.value() / 1e3)
+        };
+        if (album.value() != "") params.album = album.value();
+        if (album_artist.value() != "") params.albumArtist = album_artist.value();
+        const res = await fetch(
+          "https://jufufu.katelyn.moe/api/lastfm",
+          {
+            method: "POST",
+            headers: { "content-type": "application/json" },
+            body: JSON.stringify({
+              method: "track.scrobble",
+              params
+            })
+          }
+        );
+        const json = await res.json();
+        log("received response", "submit scrobble", "info", { result: json });
+        if (json.error) {
+          log("error", "submit scrobble", "error");
+          notify({
+            id: "submit_scrobble",
+            title: tl(trans.new_scrobble),
+            body: json.message,
+            type: "error",
+            persist: true
+          });
+          dialog_rm({ id: "submit_scrobble" });
+          return;
+        }
+        notify({
+          id: "submit_scrobble",
+          title: tl(trans.new_scrobble),
+          body: params.track,
+          type: "success"
+        });
+        dialog_rm({ id: "submit_scrobble" });
+        if (func) func();
+      }}>
+                    ${tl(trans.new)}
+                </button>
+            </div>
+        `
+    });
   }
 
   // node_modules/luxon/src/errors.js
@@ -43372,6 +34808,8587 @@
     else return "";
   }
 
+  // src/components/track.js
+  var import_color_thief_browser2 = __toESM(require_color_thief_min(), 1);
+  function patch_titles(search = page.structure.main) {
+    if (page.subpage === "tags_overview" || page.subpage == "tags_tag") return;
+    if (!search) {
+      log("tracks could not be searched as search was undefined", "tracks", "log", { search });
+      return;
+    }
+    const tracklists = search.querySelectorAll(".chartlist:not(.chartlist__placeholder)");
+    let insights = {
+      artist: {
+        display: false,
+        values: [],
+        labels: [],
+        highest: {
+          value: 0,
+          label: "",
+          link: "",
+          img: ""
+        }
+      },
+      album: {
+        display: false,
+        values: [],
+        labels: [],
+        highest: {
+          value: 0,
+          label: "",
+          link: "",
+          img: ""
+        }
+      },
+      track: {
+        display: false,
+        values: [],
+        labels: [],
+        highest: {
+          value: 0,
+          label: "",
+          link: "",
+          img: ""
+        }
+      }
+    };
+    tracklists.forEach((tracklist) => {
+      if (!tracklist) return;
+      log("found, checking", "tracks", "log", { tracklist, search });
+      if (tracklist.querySelector("tbody > .chartlist-row:first-child > .kate-placeholder"))
+        return;
+      log("new!", "tracks", "info", { tracklist });
+      let wide = tracklist.classList.contains("chartlist--wide-artist-column");
+      let tracks = tracklist.querySelectorAll(":is(.chartlist-row:not(.chartlist__placeholder-row), .chartlist-row--interlist-ad)");
+      tracks.forEach((track, index3) => {
+        console.log("track", track);
+        if (track.getAttribute("data-track-type")) return;
+        if (track.classList[0] === "chartlist-row--interlist-ad") {
+          track.parentElement.removeChild(track);
+          return;
+        }
+        track.style.setProperty("--delay", index3 * 0.04 + "s");
+        let bla = document.createElement("div");
+        bla.classList.add("kate-placeholder");
+        track.appendChild(bla);
+        let track_title = track.querySelector(".chartlist-name a:not(.offset-section-anchor)");
+        if (!track_title) return;
+        if (track_title.hasAttribute("title")) {
+          track_title.setAttribute("data-name", track_title.getAttribute("title"));
+          track_title.removeAttribute("title");
+        }
+        let is_user = track.querySelector(".chartlist-image .avatar");
+        let is_artist = false;
+        if (is_user) {
+          let link = track_title.getAttribute("href");
+          if (link.startsWith(`${root}music/`)) {
+            is_user = false;
+            is_artist = true;
+          }
+        }
+        log(`is user: ${is_user}, is artist: ${is_artist}`, "tracks", "log");
+        if (is_user) {
+          track.setAttribute("data-track-type", "user");
+          if (settings.colourful_counts)
+            patch_artist_ranks_in_list_view(track);
+          log("finished user stuff, returning", "tracks", "log");
+          return;
+        }
+        if (is_artist) {
+          track.setAttribute("data-track-type", "artist");
+          if (settings.colourful_counts)
+            patch_artist_ranks_in_list_view(track);
+          if (settings.corrections)
+            track_title.textContent = correct_artist(track_title.getAttribute("data-name"));
+          insights.artist.display = true;
+          let bar2 = track.querySelector(".chartlist-count-bar-slug");
+          let value = parseInt(bar2.getAttribute("data-stat-value"));
+          insights.artist.values.push(value);
+          if (value > insights.artist.highest.value)
+            insights.artist.highest.value = value;
+          log(`pushed insight artist label of ${track_title.textContent}`, "glacier library", "log");
+          insights.artist.labels.push(track_title.textContent);
+          log("finished artist stuff, returning", "tracks", "log");
+          return;
+        }
+        let is_album = track.hasAttribute("data-album-row");
+        if (is_album) track.classList.add("bleh--is-album");
+        let track_artist = return_artist_from_track(track_title.getAttribute("href"), is_album);
+        if (!wide) track.classList.add("chartlist-row--with-artist");
+        const bar = track.querySelector(".chartlist-count-bar-slug");
+        if (bar) {
+          let value = parseInt(bar.getAttribute("data-stat-value"));
+          if (is_album) {
+            insights.album.display = true;
+            insights.album.values.push(value);
+            if (value > insights.album.highest.value)
+              insights.album.highest.value = value;
+          } else {
+            insights.track.display = true;
+            insights.track.values.push(value);
+            if (value > insights.track.highest.value)
+              insights.track.highest.value = value;
+          }
+        }
+        const is_active = track.classList.contains("chartlist-row--now-scrobbling");
+        const has_bar = track.querySelector(":scope > .chartlist-bar");
+        let track_legacy_menu = track.querySelector(".chartlist-more-menu");
+        let track_timestamp = track.querySelector(".chartlist-timestamp span");
+        let track_timestamp_contents;
+        if (track_timestamp && !is_active) {
+          track_timestamp_contents = track_timestamp.getAttribute("title");
+          if (track_timestamp_contents) {
+            track_timestamp.setAttribute("title", "");
+            tippy_esm_default(track_timestamp, {
+              content: track_timestamp_contents
+            });
+          }
+        }
+        let album = track.querySelector(".chartlist-album a");
+        if (!is_album && album)
+          album.textContent = correct_item_by_artist(album.textContent, track_artist);
+        let image = track.querySelector(".chartlist-image img");
+        const album_link = track.querySelector(".chartlist-image a");
+        if (settings.format_guest_features) {
+          let formatted_title = name_includes(track_title.getAttribute("data-name"), track_artist);
+          console.log("formatted", formatted_title);
+          let song_title = track_title.getAttribute("data-name");
+          let song_tags = {};
+          if (formatted_title) {
+            song_title = formatted_title[0];
+            song_tags = formatted_title[1];
+          }
+          track_title.setAttribute("data-name", correct_item_by_artist(track_title.getAttribute("data-name"), track_artist));
+          render(track_title, html`
+                    <div class="title">${song_title.trim()}</div>
+                    ${song_tags.map((tag) => html.node`
+                        <div class="feat" data-bleh--tag-type="${tag.type}" data-bleh--tag-group="${tag.group}">${tag.text}</div>
+                    `)}
+                `);
+          let song_artist_element = track.querySelector(".chartlist-artist");
+          if (!song_artist_element && !is_user) {
+            song_artist_element = document.createElement("td");
+            song_artist_element.classList.add("chartlist-artist");
+            track.appendChild(song_artist_element);
+          }
+          console.log("artist matches", song_artist_element.textContent.replaceAll("+", " ").trim() === track_artist, "artist is blank", song_artist_element.textContent.trim() === "", song_artist_element.textContent.trim(), formatted_title[2]);
+          if (song_artist_element.textContent.replaceAll("+", " ").trim() === track_artist || song_artist_element.textContent.trim() === "") {
+            log("artist either matches or is blank, replacing", "tracks", "log");
+            render(song_artist_element, html`<a href="${root}music/${redirect()}${sanitise(formatted_title[2])}">${formatted_title[2]}</a>`);
+            let song_guests = formatted_title[3];
+            for (let guest in song_guests) {
+              song_artist_element.appendChild(html.node`
+                            ,<a href="${root}music/${redirect()}${sanitise(song_guests[guest])}">${song_guests[guest]}</a>
+                        `);
+            }
+          }
+          if (track_legacy_menu) {
+            track.preview = html.node`
+                        <div class="track-preview">
+                            <div class="image">
+                                <div class="inner-image">
+                                    ${image ? html.node`<img src=${image.getAttribute("src")} alt=${song_title}>` : html.node`<img class="missing-track" alt="">`}
+                                </div>
+                            </div>
+                            <div class="info">
+                                <h5 class="title">${song_title}</h5>
+                                <p class="artist">${song_artist_element.firstElementChild.textContent}</p>
+                                <div class="tags">
+                                    ${song_tags.map((tag) => html.node`
+                                        <div class="feat" data-bleh--tag-type="${tag.type}" data-bleh--tag-group="${tag.group}">${tag.text}</div>
+                                    `)}
+                                </div>
+                                ${is_album ? "" : html.node`<p class="album">${image && album_link ? correct_item_by_artist(image.getAttribute("alt"), track_artist) : album ? album.textContent : ""}</p>`}
+                                ${track_timestamp && track_timestamp_contents ? html.node`<p class="timestamp">${track_timestamp_contents}</p>` : ""}
+                            </div>
+                        </div>
+                    `;
+          }
+        } else if (settings.corrections) {
+          let song_artist_element = track.querySelector(".chartlist-artist a");
+          if (song_artist_element) {
+            let corrected_title = correct_item_by_artist(track_title.textContent, song_artist_element.textContent);
+            track_title.textContent = corrected_title;
+            track_title.setAttribute("data-name", corrected_title);
+            let corrected_artist = correct_artist(song_artist_element.textContent);
+            song_artist_element.textContent = corrected_artist;
+            song_artist_element.setAttribute("title", corrected_artist);
+          } else {
+            let corrected_title = correct_item_by_artist(track_title.textContent, track_artist);
+            track_title.textContent = corrected_title;
+            track_title.setAttribute("data-name", corrected_title);
+          }
+        }
+        if (track_legacy_menu) {
+          let menu;
+          let previous = track.querySelector(":scope > .more-button-wrapper");
+          if (previous) previous.style.display = "none";
+          const is_own_profile = page.type == "user" && page.name == auth.name;
+          const can_edit = is_own_profile && !is_active && (!is_album ? !has_bar : true) && auth.pro;
+          const can_delete = is_own_profile && !is_active && !has_bar && !is_album;
+          let more_button = html.node`
+                    <button class="track-more-button icon chibi" data-type="more" onclick=${() => {
+            console.info(menu);
+            menu.setProps({
+              placement: "bottom",
+              offset: [],
+              getReferenceClientRect: null
+            });
+            if (menu.state.isShown) {
+              menu.hide();
+            } else {
+              menu.show();
+            }
+          }}>
+                        ${tl(trans.more)}
+                    </button>
+                `;
+          tippy_esm_default(more_button, {
+            content: tl(trans.more)
+          });
+          track.appendChild(html.node`
+                    <td class="more-button-wrapper">
+                        ${more_button}
+                    </td>
+                `);
+          setTimeout(() => {
+            let edit_button = track_legacy_menu.querySelector('[data-analytics-action="EditScrobbleOpen"]');
+            let bulk_edit_button = track_legacy_menu.querySelector('[data-analytics-action="BulkEditScrobblesOpen"]');
+            let delete_button = track_legacy_menu.querySelector(".more-item--delete");
+            if (edit_button) {
+              let form = edit_button.parentElement;
+              page.token = form.querySelector('[name="csrfmiddlewaretoken"]').value;
+              track.setAttribute("data-action", form.getAttribute("action"));
+              if (!is_album) {
+                let album_name2 = form.querySelector('[name="album_name"]');
+                let album_artist_name = form.querySelector('[name="album_artist_name"]');
+                track.setAttribute("data-artist-name", correct_artist(form.querySelector('[name="artist_name"]').value));
+                track.setAttribute("data-track-name", correct_item_by_artist(form.querySelector('[name="track_name"]').value, form.querySelector('[name="artist_name"]').value));
+                if (album_name2) track.setAttribute("data-album-name", correct_item_by_artist(album_name2.value, form.querySelector('[name="artist_name"]').value));
+                if (album_artist_name) track.setAttribute("data-album-artist-name", correct_artist(album_artist_name.value));
+                track.setAttribute("data-timestamp", form.querySelector('[name="timestamp"]').value);
+              } else {
+                track.setAttribute("data-album-name", correct_item_by_artist(form.querySelector('[name="album_name"]').value, form.querySelector('[name="album_artist_name"]').value));
+                track.setAttribute("data-album-artist-name", correct_artist(form.querySelector('[name="album_artist_name"]').value));
+                track.setAttribute("data-album-name-original", correct_item_by_artist(form.querySelector('[name="album_name_original"]').value, form.querySelector('[name="album_artist_name_original"]').value));
+                track.setAttribute("data-album-artist-name-original", correct_artist(form.querySelector('[name="album_artist_name_original"]').value));
+                track.setAttribute("data-album-image", form.querySelector('[name="album_image"]').value);
+                track.setAttribute("data-count", form.querySelector('[name="count"]').value);
+              }
+            } else if (delete_button) {
+              let form = delete_button.parentElement;
+              page.token = form.querySelector('[name="csrfmiddlewaretoken"]').value;
+              track.setAttribute("data-artist-name", correct_artist(form.querySelector('[name="artist_name"]').value));
+              track.setAttribute("data-track-name", correct_item_by_artist(form.querySelector('[name="track_name"]').value, form.querySelector('[name="artist_name"]').value));
+              track.setAttribute("data-timestamp", form.querySelector('[name="timestamp"]').value);
+            }
+            let album_name = sanitise(image ? correct_item_by_artist(image.getAttribute("alt"), track_artist) : album ? album.textContent : "");
+            menu = tippy_esm_default(more_button, {
+              theme: "context-menu",
+              content: html.node`
+                            ${track.preview}
+                            ${can_edit ? html.node`
+                            <div class="button-combo">
+                                ${() => {
+                if (is_album) {
+                  return html.node`
+                                            <form style="margin: 0" method="POST" action=${track.getAttribute("data-action")} data-edit-scrobble="">
+                                                <input type="hidden" name="csrfmiddlewaretoken" value=${page.token}>
+                                                <input type="hidden" name="album_name" value=${track.getAttribute("data-album-name")}>
+                                                <input type="hidden" name="album_artist_name" value=${track.getAttribute("data-album-artist-name")}>
+                                                <input type="hidden" name="album_image" value=${track.getAttribute("data-album-image")}>
+                                                <input type="hidden" name="album_name_original" value=${track.getAttribute("data-album-name-original")}>
+                                                <input type="hidden" name="album_artist_name_original" value=${track.getAttribute("data-album-artist-name-original")}>
+                                                <input type="hidden" name="count" value=${track.getAttribute("data-count")}>
+                                                <button class="dropdown-menu-clickable-item" data-type="edit">
+                                                    ${tl(trans.edit)}
+                                                </button>
+                                            </form>
+                                        `;
+                }
+                return html.node`
+                                        <form style="margin: 0" method="POST" action=${track.getAttribute("data-action")} data-edit-scrobble="">
+                                            <input type="hidden" name="csrfmiddlewaretoken" value=${page.token}>
+                                            <input type="hidden" name="artist_name" value=${track.getAttribute("data-artist-name")}>
+                                            <input type="hidden" name="track_name" value=${track.getAttribute("data-track-name")}>
+                                            <input type="hidden" name="album_name" value=${track.getAttribute("data-album-name")}>
+                                            <input type="hidden" name="album_artist_name" value=${track.getAttribute("data-album-artist-name")}>
+                                            <input type="hidden" name="timestamp" value=${track.getAttribute("data-timestamp")}>
+                                            <button class="dropdown-menu-clickable-item" data-type="edit">
+                                                ${tl(trans.edit)}
+                                            </button>
+                                        </form>
+                                    `;
+              }}
+                                ${bulk_edit_button ? html.node`
+                                    <div class="button-combo-sep" />
+                                    ${() => {
+                let button = track_legacy_menu.querySelector('[data-analytics-action="BulkEditScrobblesOpen"]');
+                button.classList = "dropdown-menu-clickable-item chibi";
+                button.textContent = tl(trans.bulk_edit);
+                button.setAttribute("data-type", "bulk-edit");
+                tippy_esm_default(button, {
+                  content: tl(trans.bulk_edit)
+                });
+                return button;
+              }}
+                                ` : ""}
+                            </div>
+                            <div class="sep" />
+                            ` : ""}
+                            ${() => {
+                let container = track.querySelector(".chartlist-play");
+                if (!container) return;
+                let button = container.querySelector(".chartlist-play-button");
+                if (!button) return;
+                button.classList = "dropdown-menu-clickable-item";
+                button.textContent = tl(trans.play);
+                button.setAttribute("data-type", "play");
+                track.removeChild(container);
+                return button;
+              }}
+                            ${!is_album ? html.node`
+                            <div class="button-combo">
+                                ${() => {
+                return html.node`
+                                        <a class="dropdown-menu-clickable-item" data-type="track" href=${track_title.getAttribute("href")}>
+                                            ${tl(trans.track)}
+                                        </a>
+                                    `;
+              }}
+                                <div class="button-combo-sep"/>
+                                ${() => {
+                let button = html.node`
+                                        <a class="dropdown-menu-clickable-item chibi" data-type="continue" href="${root}user/${page.name}/library${track_title.getAttribute("href")}">
+                                            ${tl(trans.explore_in_library)}
+                                        </a>
+                                    `;
+                tippy_esm_default(button, {
+                  content: tl(trans.explore_in_library),
+                  delay: [500, 0]
+                });
+                return button;
+              }}
+                            </div>
+                            ` : ""}
+                            ${album_name && album_link ? html.node`
+                            <div class="button-combo">
+                                ${() => {
+                return html.node`
+                                        <a class="dropdown-menu-clickable-item" data-type="album" href=${album_link.getAttribute("href")}>
+                                            ${tl(trans.album)}
+                                        </a>
+                                    `;
+              }}
+                                <div class="button-combo-sep"/>
+                                ${() => {
+                let button = html.node`
+                                        <a class="dropdown-menu-clickable-item chibi" data-type="continue" href="${root}user/${page.name}/library${album_link.getAttribute("href")}">
+                                            ${tl(trans.explore_in_library)}
+                                        </a>
+                                    `;
+                tippy_esm_default(button, {
+                  content: tl(trans.explore_in_library),
+                  delay: [500, 0]
+                });
+                return button;
+              }}
+                            </div>
+                            ` : is_album ? html.node`
+                            <div class="button-combo">
+                                ${() => {
+                return html.node`
+                                        <a class="dropdown-menu-clickable-item" data-type="album" href=${track_title.getAttribute("href")}>
+                                            ${tl(trans.album)}
+                                        </a>
+                                    `;
+              }}
+                                <div class="button-combo-sep"/>
+                                ${() => {
+                let button = html.node`
+                                        <a class="dropdown-menu-clickable-item chibi" data-type="continue" href="${root}user/${page.name}/library${track_title.getAttribute("href")})}">
+                                            ${tl(trans.explore_in_library)}
+                                        </a>
+                                    `;
+                tippy_esm_default(button, {
+                  content: tl(trans.explore_in_library),
+                  delay: [500, 0]
+                });
+                return button;
+              }}
+                            </div>
+                            ` : ""}
+                            <div class="button-combo">
+                                ${() => {
+                return html.node`
+                                        <a class="dropdown-menu-clickable-item" data-type="artist" href="${root}music/${redirect()}${sanitise(track_artist)}">
+                                            ${tl(trans.artist)}
+                                        </a>
+                                    `;
+              }}
+                                <div class="button-combo-sep"/>
+                                ${() => {
+                let button = html.node`
+                                        <a class="dropdown-menu-clickable-item chibi" data-type="continue" href="${root}user/${page.name}/library/music/${redirect()}${sanitise(track_artist)}">
+                                            ${tl(trans.explore_in_library)}
+                                        </a>
+                                    `;
+                tippy_esm_default(button, {
+                  content: tl(trans.explore_in_library),
+                  delay: [500, 0]
+                });
+                return button;
+              }}
+                            </div>
+                            ${() => {
+                if (!is_own_profile || is_album) return;
+                let name = track.getAttribute("data-track-name");
+                let artist = track.getAttribute("data-artist-name");
+                if (!name) {
+                  name = track_title.getAttribute("data-name");
+                  artist = track_artist;
+                }
+                return html.node`
+                                    <form style="margin: 0" method="POST" action="${root}user/${auth.name}/obsessions" data-submit-to-modal="">
+                                        <input type="hidden" name="csrfmiddlewaretoken" value=${page.token}>
+                                        <input type="hidden" name="name" value=${name}>
+                                        <input type="hidden" name="artist_name" value=${artist}>
+                                        <button class="dropdown-menu-clickable-item" data-type="obsession">
+                                            ${tl(trans.obsess)}
+                                        </button>
+                                    </form>
+                                `;
+              }}
+                            <button class="dropdown-menu-clickable-item" data-type="link" onclick=${() => {
+                copy(track_title.href);
+              }}>
+                                ${tl(trans.copy)}
+                            </button>
+                            ${() => {
+                if (!is_own_profile || !can_delete) return;
+                let button = html.node`
+                                    <button class="dropdown-menu-clickable-item more-item--delete" data-type="delete">
+                                        ${tl(trans.delete)}
+                                    </button>
+                                `;
+                let form;
+                return html.node`
+                                    <div class="sep" />
+                                    <form ref=${(el) => form = el} style="margin: 0" method="POST" action="${root}user/${auth.name}/library/delete" onsubmit=${async (e) => {
+                  e.preventDefault();
+                  let url = `${root}user/${auth.name}/library/delete`;
+                  let form_data = new FormData(form);
+                  console.info(form_data);
+                  try {
+                    track.setAttribute("data-ajax-form-state", "deleted");
+                    await fetch(url, {
+                      method: "POST",
+                      body: form_data
+                    }).then((res) => {
+                      if (!res.ok) {
+                        log("failed to delete", "form", "error", { res });
+                        track.removeAttribute("data-ajax-form-state");
+                        return;
+                      }
+                      log("received response", "form", "info", { res });
+                      notify({
+                        id: "delete",
+                        title: tl(trans.deleted),
+                        body: track_title.getAttribute("data-name"),
+                        icon: "icon-16-trash",
+                        type: "error"
+                      });
+                    });
+                  } catch (e2) {
+                    console.error(e2);
+                    track.removeAttribute("data-ajax-form-state");
+                  }
+                }}>
+                                        <input type="hidden" name="csrfmiddlewaretoken" value=${page.token}>
+                                        <input type="hidden" name="artist_name" value=${track.getAttribute("data-artist-name")}>
+                                        <input type="hidden" name="track_name" value=${track.getAttribute("data-track-name")}>
+                                        <input type="hidden" name="timestamp" value=${track.getAttribute("data-timestamp")}>
+                                        ${button}
+                                    </form>
+                                `;
+              }}
+                        `,
+              placement: "right-start",
+              trigger: "manual",
+              interactive: true,
+              interactiveBorder: 10,
+              offset: [0, 0],
+              hideOnClick: false,
+              onShow(instance) {
+                track.setAttribute("data-has-menu", true);
+                instance.popper.addEventListener("click", (event3) => {
+                  instance.hide();
+                });
+              },
+              onClickOutside(instance) {
+                instance.hide();
+              },
+              onHide(instance) {
+                track.setAttribute("data-has-menu", false);
+              }
+            });
+            register_menu(track, menu);
+          }, 100);
+        }
+        if (is_album) {
+          log(`pushed insight album label of ${track_title.getAttribute("data-name")}`, "glacier library", "log");
+          insights.album.labels.push(track_title.getAttribute("data-name"));
+        } else {
+          log(`pushed insight track label of ${track_title.getAttribute("data-name")}`, "glacier library", "log");
+          insights.track.labels.push(track_title.getAttribute("data-name"));
+        }
+        const show_album_text = (is_active || settings.expand_tracks == "always") && settings.expand_tracks != "never";
+        track.setAttribute("data-show-album-text", show_album_text);
+        if (!is_album && !has_bar && show_album_text) {
+          let image_wrap = track.querySelector(".chartlist-image");
+          if (image_wrap) {
+            let link = image_wrap.querySelector(".cover-art");
+            let image2 = link.querySelector("img");
+            if (!settings.album_text) {
+              let alt = correct_item_by_artist(image2.getAttribute("alt"), track_artist);
+              track.appendChild(html.node`
+                            <td class="chartlist-album custom-album-text">
+                                <a href="${link.getAttribute("href")}">${alt}</a>
+                            </td>
+                        `);
+            }
+            if (!settings.colourful_tracks || !is_active) return;
+            image2.setAttribute("crossorigin", "anonymous");
+            try {
+              image2.addEventListener("load", function() {
+                let thief = new import_color_thief_browser2.default();
+                let colour2 = thief.getColor(image2);
+                let hsl = rgb_to_hsl(colour2[0], colour2[1], colour2[2]);
+                track.style.setProperty("--hue-over", hsl.h);
+                track.style.setProperty("--sat-over", clamp_sat2(hsl.s / 100 * 3));
+                track.style.setProperty("--lit-over", 1);
+              });
+            } catch (e) {
+            }
+          }
+        }
+      });
+    });
+    if (page.subpage.startsWith("library"))
+      bleh_glacier_insights(insights);
+  }
+
+  // src/components/collage.js
+  var import_html2canvas_pro = __toESM(require_html2canvas_pro(), 1);
+  function collage({
+    host,
+    sidebar
+  } = {}) {
+    if (!host || !sidebar) return;
+    let width;
+    let height;
+    let timeframe;
+    let type;
+    let settings_btn;
+    let submit;
+    let body;
+    let value = 5;
+    let min2 = 1;
+    let max2 = 20;
+    let current_year = (/* @__PURE__ */ new Date()).getFullYear();
+    let previous_year = current_year - 1;
+    const default_type = page.requested.type || "albums";
+    const default_timeframe = page.requested.timeframe || "date_preset=LAST_90_DAYS";
+    if (page.requested.redirect) {
+      setTimeout(() => {
+        notify({
+          id: "collage_redirect",
+          title: tl(trans.collage),
+          body: tl(trans.collage_redirect),
+          icon: "icon-16-collage",
+          persist: true
+        });
+      }, 100);
+    }
+    let user;
+    render(host, html`
+        <div class="compare-header">
+            <div class="compare-users">
+                <div class="compare-user focus" ref=${(el) => user = el}>
+                    ${render_user(page.name, page.avatar, user, true)}
+                </div>
+            </div>
+            <div class="compare-selection">
+                <div class="input-group">
+                    ${width = input({
+      type: "number",
+      value,
+      placeholder: value,
+      min: min2,
+      max: max2
+    })}
+                    <div class="bleh-icon" style="--icon: var(--icon-16-x)" />
+                    ${height = input({
+      type: "number",
+      value,
+      placeholder: value,
+      min: min2,
+      max: max2
+    })}
+                </div>
+                ${type = select([
+      {
+        value: "artists",
+        text: html`<div class="bleh-icon" style="--icon: var(--icon-16-artist)" />${tl(trans.artists)}`
+      },
+      {
+        value: "albums",
+        text: html`<div class="bleh-icon" style="--icon: var(--icon-16-album)" />${tl(trans.albums)}`
+      },
+      {
+        value: "tracks",
+        text: html`<div class="bleh-icon" style="--icon: var(--icon-16-track)" />${tl(trans.tracks)}`
+      }
+    ], default_type)}
+                ${timeframe = select([
+      {
+        value: "date_preset=LAST_7_DAYS",
+        text: tl(trans.last_count_days).replace("{c}", "7")
+      },
+      {
+        value: "date_preset=LAST_30_DAYS",
+        text: tl(trans.last_count_days).replace("{c}", "30")
+      },
+      {
+        value: "date_preset=LAST_90_DAYS",
+        text: tl(trans.last_count_days).replace("{c}", "90")
+      },
+      {
+        value: "date_preset=LAST_180_DAYS",
+        text: tl(trans.last_count_days).replace("{c}", "180")
+      },
+      {
+        value: "date_preset=LAST_365_DAYS",
+        text: tl(trans.last_count_days).replace("{c}", "365")
+      },
+      {
+        value: "date_preset=ALL",
+        text: tl(trans.all_time)
+      },
+      {
+        value: `from=${current_year}-01-01&rangetype=year`,
+        text: current_year
+      },
+      {
+        value: `from=${previous_year}-01-01&rangetype=year`,
+        text: previous_year
+      }
+    ], default_timeframe)}
+                <button class="btn primary icon" data-type="collage" ref=${(el) => submit = el} onclick=${() => make_collage()}>${tl(trans.generate)}</button>
+            </div>
+        </div>
+        <div class="compare-body" data-filled="false" ref=${(el) => body = el}>
+            <div class="loading-data-container">
+                <div class="loading-data-text info">${tl(trans.choose_a_timeframe_above)}</div>
+            </div>
+        </div>
+    `);
+    let width_input = width.querySelector("input");
+    let height_input = height.querySelector("input");
+    let timeframe_select = timeframe.querySelector("select");
+    let type_select = type.querySelector("select");
+    let setting_group;
+    let inputter;
+    render(sidebar, html`
+        <h2>${tl(trans.settings)}</h2>
+        <div class="setting-group" ref=${(el) => setting_group = el}>
+            <div class="setting v" data-type="text">
+                <div class="heading">
+                    <h5>${tl(trans.profile)}</h5>
+                </div>
+                <div class="input-container content-form">
+                    <input type="text" class="input" ref=${(el) => inputter = el} placeholder=${tl(trans.enter_a_profile)} value=${page.requested.profile} onchange=${(e) => {
+      page.requested.profile = e.target.value;
+      page.name = page.requested.profile;
+      page.avatar = "";
+      if (page.name == auth.name) page.avatar = auth.avatar;
+      render(user, html`
+                            ${render_user(page.name, page.avatar, user, true)}
+                        `);
+    }}>
+                    ${() => {
+      let btn = html.node`
+                            <button class="btn chibi icon" data-type="profile" onclick=${() => {
+        inputter.value = auth.name;
+        inputter.dispatchEvent(new Event("change"));
+      }}>${tl(trans.profile)}</button>
+                        `;
+      tippy_esm_default(btn, {
+        content: tl(trans.profile)
+      });
+      return btn;
+    }}
+                    ${() => {
+      let btn = html.node`
+                            <button class="btn chibi icon" data-type="profile_shortcut" onclick=${() => {
+        if (settings.profile_shortcut == "") return;
+        inputter.value = settings.profile_shortcut;
+        inputter.dispatchEvent(new Event("change"));
+      }}>${tl(trans.profile_shortcut.name)}</button>
+                        `;
+      tippy_esm_default(btn, {
+        content: tl(trans.profile_shortcut.name)
+      });
+      return btn;
+    }}
+                </div>
+            </div>
+            ${setting({ id: "collage_title" })}
+            ${setting({ id: "collage_grid_gap" })}
+            ${setting({ id: "collage_centered" })}
+            ${setting({ id: "collage_grid_text" })}
+            ${setting({ id: "collage_grid_plays" })}
+        </div>
+    `);
+    let collage_settings = setting_group.querySelectorAll(":scope > .setting");
+    function make_collage(bypass = false) {
+      if (width_input.value == "" || height_input.value == "" || parseInt(width_input.value) < min2 || parseInt(width_input.value) > max2 || parseInt(height_input.value) < min2 || parseInt(height_input.value) > max2) {
+        notify({
+          id: "collage_failed",
+          title: tl(trans.name_failed).replace("{name}", tl(trans.collage)),
+          body: tl(trans.your_settings_are_invalid),
+          type: "error"
+        });
+        return;
+      }
+      let per_page = 50;
+      let pages = Math.ceil(width_input.value * height_input.value / per_page);
+      if (pages > 4 && !bypass) {
+        let warn = notify({
+          id: "collage_warning",
+          title: tl(trans.are_you_sure),
+          body: tl(trans.this_will_require_loading_count_pages).replace("{c}", pages),
+          type: "warning",
+          actions: [
+            {
+              type: "check",
+              action: () => {
+                notify_rm(warn);
+                make_collage(true);
+              },
+              text: tl(trans.continue)
+            }
+          ],
+          persist: true
+        });
+        return;
+      }
+      type.querySelector("button").disabled = true;
+      timeframe.querySelector("button").disabled = true;
+      collage_settings.forEach((option) => {
+        option.setAttribute("disabled", true);
+      });
+      submit.disabled = true;
+      page.state.collage = [];
+      get_grid(1, pages);
+    }
+    function get_grid(current_page, pages) {
+      render(body, html`
+            <div class="loading-data-container">
+                <div class="loading-data-text">${tl(trans.gathering_plays_for_user_pages).replace("{u}", page.name).replace("{current_page}", current_page).replace("{pages}", pages)}</div>
+            </div>
+        `);
+      fetch(`${root}user/${page.name}/library/${type_select.value}?format=list&${timeframe_select.value}&page=${current_page}&ajax=1`).then(function(response) {
+        console.log("returned", response, response.text);
+        return response.text();
+      }).then(function(dom) {
+        let doc = new DOMParser().parseFromString(dom, "text/html");
+        console.log("DOC", doc);
+        let next_button = doc.querySelector(".pagination-next");
+        try {
+          let tracks = doc.querySelectorAll(".chartlist-row");
+          tracks.forEach((track) => {
+            let item = {};
+            item.avatar = track.querySelector(".chartlist-image img");
+            if (item.avatar)
+              item.avatar = item.avatar.getAttribute("src");
+            item.name = track.querySelector(".chartlist-name a").textContent.trim();
+            if (type_select.value != "artists")
+              item.sister = track.querySelector(".chartlist-artist a").textContent.trim();
+            item.plays = clean_number(track.querySelector(".chartlist-count-bar-slug").getAttribute("data-stat-value"));
+            page.state.collage.push(item);
+          });
+        } catch (e) {
+          notify({
+            id: "collage_failed",
+            title: tl(trans.name_failed).replace("{name}", tl(trans.collage)),
+            body: tl(trans.there_was_a_network_error),
+            type: "error"
+          });
+          console.error(e);
+        }
+        if (next_button && current_page < pages) {
+          get_grid(current_page + 1, pages);
+        } else {
+          continue_collage();
+        }
+      });
+    }
+    async function continue_collage() {
+      log("gathered initial values", "collage", "info", page.state.collage);
+      if (page.state.collage.length == 0) {
+        render(body, html`
+                <div class="loading-data-container">
+                    <div class="loading-data-text failed">${tl(trans.no_plays_in_range)}</div>
+                </div>
+            `);
+        type.querySelector("button").disabled = false;
+        timeframe.querySelector("button").disabled = false;
+        collage_settings.forEach((option) => {
+          option.setAttribute("disabled", false);
+        });
+        submit.disabled = false;
+        return;
+      }
+      let grid = html.node`
+            <ol class="grid-items grid-items--numbered collage-grid" style="--width: ${width_input.value}; --height: ${height_input.value}" data-width=${width_input.value} data-height=${height_input.value} data-centered=${settings.collage_centered} />
+        `;
+      if (!settings.collage_grid_gap) {
+        grid.style.setProperty("--item-list-gap", "0px");
+        grid.style.setProperty("--item-med-radius", "0");
+      }
+      let total = width_input.value * height_input.value - 1;
+      grid.style.setProperty("--highest", Math.max(+width_input.value, +height_input.value).toString());
+      page.state.collage.some((data2, index3) => {
+        if (index3 > total)
+          return false;
+        let template;
+        if (type_select.value == "artists")
+          template = sanitise(data2.name);
+        else
+          template = `${sanitise(data2.sister)}/${sanitise(data2.name)}`;
+        grid.appendChild(html.node`
+                <li class="compare-item grid-items-item">
+                    <div class="grid-items-cover-image">
+                        <div class="grid-items-cover-image-image ${data2.avatar.endsWith("/c6f59c1e5e7240a4c0d427abd71f3dbb.jpg") || data2.avatar.endsWith("/2a96cbd8b46e442fc41c2b86b821562f.jpg") ? "grid-items-cover-default" : ""}">
+                            <img src="${data2.avatar.replace("/avatar70s/", "/avatar300s/").replace("/64s/", "/avatar300s/")}" alt="${data2.name}" loading="lazy">
+                        </div>
+                        ${settings.collage_grid_text || settings.collage_grid_plays ? html.node`
+                        <div class="grid-items-item-details">
+                            ${settings.collage_grid_text ? html.node`
+                            <p class="grid-items-item-main-text">
+                                <a class="link-block-target" href="${root}music/${redirect()}${template}" title="${data2.name}">
+                                    ${data2.name}
+                                </a>
+                            </p>
+                            ` : ""}
+                            ${type_select.value != "artists" ? html.node`
+                            <p class="grid-items-item-aux-text">
+                                ${settings.collage_grid_text ? html.node`
+                                <a class="grid-items-item-aux-block" href="${root}music/${redirect()}${data2.sister}">
+                                    ${data2.sister}
+                                </a>
+                                ${settings.collage_grid_plays ? html.node`
+                                <a class="grid-item-plays" href="${root}user/${page.name}/library/music/${redirect()}${template}?date_preset=${timeframe_select.value}" target="_blank">
+                                    ${data2.plays.toLocaleString(lang)}
+                                </a>
+                                ` : ""}
+                                ` : settings.collage_grid_plays ? html.node`
+                                <a class="grid-item-plays" href="${root}user/${page.name}/library/music/${redirect()}${template}?date_preset=${timeframe_select.value}" target="_blank">
+                                    ${data2.plays.toLocaleString(lang)}${tl(trans.plays_lower)}
+                                </a>
+                                ` : ""}
+                            </p>
+                            ` : html.node`
+                            ${settings.collage_grid_plays ? html.node`
+                            <p class="grid-items-item-aux-text">
+                                <a class="grid-item-plays" href="${root}user/${page.name}/library/music/${redirect()}${template}?date_preset=${timeframe_select.value}" target="_blank">
+                                    ${data2.plays.toLocaleString(lang)}${tl(trans.plays_lower)}
+                                </a>
+                            </p>
+                            ` : ""}
+                            `}
+                        </div>
+                        ` : ""}
+                    </div>
+                </li>
+            `);
+      });
+      let collage_dom = html.node`
+            <div class="collage">
+                ${settings.collage_title ? html.node`
+                <div class="header">
+                    <div class="type" data-type=${type_select.value}>
+                        <div class="bleh-icon" />
+                        <strong class="brand">${version.brand}</strong>
+                        <strong>${timeframe.querySelector("button").textContent}</strong>
+                        <strong>${tl(trans.top_type).replace("{type}", tl(trans[type_select.value]))}</strong>
+                        <strong>${width_input.value}×${height_input.value}</strong>
+                    </div>
+                    <div class="user">
+                        <div class="avatar">
+                            <img src="${page.avatar}" alt="${tl(trans.avatar_for_user).replace("{u}", page.name)}">
+                        </div>
+                        <strong>${page.name}</strong>
+                    </div>
+                </div>
+                ` : ""}
+                ${grid}
+            </div>
+        `;
+      render(body, html`
+            <div class="loading-data-container">
+                <div class="loading-data-text">${tl(trans.waiting_for_images)}</div>
+            </div>
+            ${collage_dom}
+        `);
+      music_grids(grid, false);
+      const default_size = 380;
+      const base = 6;
+      const highest = Math.max(+width_input.value, +height_input.value);
+      const grid_item_size = Math.min(
+        default_size,
+        Math.floor(default_size * base / highest)
+      );
+      const grid_item_gap = settings.collage_grid_gap ? 10 : 0;
+      const padding = settings.collage_grid_gap ? 15 : 0;
+      const title_height = settings.collage_title ? 32 + 15 : 0;
+      const width2 = padding * 2 + grid_item_size * width_input.value + grid_item_gap * (width_input.value - 1);
+      const height2 = padding * 2 + title_height + grid_item_size * height_input.value + grid_item_gap * (height_input.value - 1);
+      const cv_scale = 1;
+      collage_dom.style.width = `${width2}px`;
+      collage_dom.style.height = `${height2}px`;
+      collage_dom.style.padding = `${padding}px`;
+      collage_dom.style.gap = `${padding}px`;
+      collage_dom.style.setProperty("--item-list-gap", `${grid_item_gap}px`);
+      collage_dom.style.setProperty("--grid-item-size", `${grid_item_size}px`);
+      let initial_canvas = html.node`
+            <canvas width=${width2 * cv_scale} height=${height2 * cv_scale} />
+        `;
+      (0, import_html2canvas_pro.default)(collage_dom, {
+        useCORS: true,
+        letterRendering: true,
+        canvas: initial_canvas,
+        scale: cv_scale,
+        onclone: (doc) => {
+          doc.querySelectorAll("*").forEach((el) => {
+            if (el.classList == "brand")
+              el.style.setProperty("font-family", "Darumadrop One");
+            else
+              el.style.setProperty("font-family", "Overpass, Inter, Ubuntu Sans, Spline Sans, Roboto, Noto Sans, Noto Sans JP, Noto Sans KR, Noto Sans TC, Lucida Grande, Verdana, Tahoma, -apple-system, BlinkMacSystemFont, sans-serif");
+          });
+        }
+      }).then((canvas) => {
+        canvas.toBlob((blob) => {
+          const blob_url = URL.createObjectURL(blob);
+          const date = /* @__PURE__ */ new Date();
+          const filename = tl(trans.chart_template_filename).replace("{timeframe}", timeframe.querySelector("button").textContent).replace("{user}", page.name).replace("{type}", tl(trans[type_select.value])).replace("{size}", `${width_input.value}\xD7${height_input.value}`).replace("{brand}", version.brand).replace("{date}", `${date.getFullYear()}-${pad2(date.getMonth() + 1)}-${pad2(date.getDate())}`);
+          render(body, html`
+                    <div class="collage-finished">
+                        <strong>${tl(trans.your_collage_is_ready)}</strong>
+                        <div class="button-group">
+                            <button
+                                class="btn primary icon"
+                                data-type="download"
+                                onclick=${() => download(blob_url, filename)}
+                            >
+                                ${tl(trans.download)}
+                            </button>
+                            <button
+                                class="btn open"
+                                data-type="open"
+                                onclick=${() => open(blob_url)}
+                            >
+                                ${tl(trans.open)}
+                            </button>
+                        </div>
+                    </div>
+                    ${canvas}
+                `);
+          type.querySelector("button").disabled = false;
+          timeframe.querySelector("button").disabled = false;
+          collage_settings.forEach((option) => {
+            option.setAttribute("disabled", false);
+          });
+          submit.disabled = false;
+        }, "image/png");
+      });
+    }
+  }
+
+  // src/components/pixel.js
+  function pixel({
+    host,
+    sidebar
+  } = {}) {
+    if (!host || !sidebar) return;
+    let text3 = "my anti-aircraft friend";
+    let title_elem;
+    let hints_container;
+    render(host, html`
+        <div class="pixel-artwork">
+            <img src="https://lastfm.freetls.fastly.net/i/u/ar0/def68d94aae8e52ef2d1c0c9d3e16ff4.jpg" alt=${auth.name}>
+        </div>
+        <div class="pixel-info">
+            <div class="sub-text">${tl(trans.jumbled_title)}</div>
+            <div class="pixel-album-name">
+                <h1 ref=${(el) => title_elem = el}>${jumble_string(text3)}</h1>
+                ${() => {
+      let btn = html.node`
+                        <button class="chibi icon" data-type="jumble" onclick=${() => {
+        title_elem.textContent = jumble_string(text3);
+      }}>
+                            ${tl(trans.re_jumble)}
+                        </button>
+                    `;
+      tippy_esm_default(btn, {
+        content: tl(trans.re_jumble)
+      });
+      return btn;
+    }}
+            </div>
+            <div class="pixel-guess">
+                ${input({
+      type: "text",
+      placeholder: tl(trans.enter_a_guess),
+      func: (value) => {
+        console.info(value);
+      }
+    })}
+                <p class="card-tip">${tl(trans.jumbled_guess)}</p>
+            </div>
+            <h2>${tl(trans.hints)}</h2>
+            <div class="hints" ref=${(el) => hints_container = el}></div>
+        </div>
+    `);
+  }
+  function shuffle_array(arr) {
+    for (let i = arr.length - 1; i > 0; i--) {
+      const j = Math.floor(Math.random() * (i + 1));
+      [arr[i], arr[j]] = [arr[j], arr[i]];
+    }
+    return arr;
+  }
+  function jumble_string(input2) {
+    let output = input2.split(" ").map((word) => {
+      if (!word) return "";
+      const letters = word.split("");
+      return shuffle_array(letters).join("");
+    }).join(" ");
+    if (output == input2) return jumble_string(input2);
+    return output;
+  }
+
+  // src/pages/minis.js
+  var valid_minis;
+  function bleh_minis(skip2 = false) {
+    if (!skip2) {
+      update_page();
+      page.structure.row.removeChild(page.structure.row.firstElementChild);
+      page.structure.row.removeChild(page.structure.row.firstElementChild);
+    }
+    let params = new URLSearchParams(document.location.search);
+    page.requested.profile = params.get("profile") || auth.name;
+    page.requested.secondary = params.get("secondary");
+    page.requested.redirect = params.get("redirect");
+    page.requested.type = params.get("type");
+    page.requested.timeframe = params.get("timeframe");
+    let path = window.location.pathname.split("/");
+    let mini = path[path.length - 1];
+    if (mini == "minis") mini = null;
+    valid_minis = {
+      collage: {
+        name: tl(trans.collage),
+        body: tl(trans.collage_description),
+        func: bleh_minis_collage
+      },
+      compare: {
+        name: tl(trans.compare),
+        body: tl(trans.compare_description),
+        func: bleh_minis_compare
+      },
+      pixel: {
+        name: tl(trans.pixel?.name),
+        body: tl(trans.pixel?.body),
+        func: bleh_minis_pixel,
+        hide_if: !ff("unlock_minis")
+      },
+      lyrics: {
+        name: tl(trans.lyrics?.name),
+        body: tl(trans.lyrics?.body),
+        func: bleh_minis_lyrics,
+        hide_if: !ff("unlock_minis")
+      },
+      rainbow: {
+        name: tl(trans.rainbow?.name),
+        body: tl(trans.rainbow?.body),
+        func: bleh_minis_rainbow,
+        hide_if: !ff("unlock_minis")
+      },
+      receipt: {
+        name: tl(trans.receipt?.name),
+        body: tl(trans.receipt?.body),
+        func: bleh_minis_receipt,
+        hide_if: !ff("unlock_minis")
+      }
+    };
+    if (mini && (!valid_minis[mini] || valid_minis[mini].hide_if)) {
+      render(page.structure.main, html`
+            <section class="minis">
+                ${return_to_minis()}
+                <div class="loading-data-container">
+                    <div class="loading-data-text error">${tl(trans.no_mini_found).replace("{v}", mini)}</div>
+                </div>
+            </section>
+        `);
+      return;
+    }
+    render(page.structure.side, html``);
+    page.avatar = "";
+    page.name = page.requested.profile;
+    if (page.name == auth.name) page.avatar = auth.avatar;
+    if (mini) {
+      page.structure.container.setAttribute("data-mini", mini);
+      valid_minis[mini].func();
+      return;
+    }
+    render(page.structure.main, html`
+        <section class="minis">
+            <div class="minis-header main">
+                <h2>${tl(trans.minis)}</h2>
+                <p>${tl(trans.minis_description)}</p>
+            </div>
+            <div class="mini-list">
+                ${Object.entries(valid_minis).map(([id, mini2]) => {
+      if (mini2.hide_if) return html.node``;
+      return html.node`
+                        <button class="mini" data-type=${id} data-mini=${id} onclick=${() => {
+        window.history.replaceState(id, "", `${root}bleh/minis/${id}`);
+        page.structure.container.setAttribute("data-mini", id);
+        render(page.structure.main, html``);
+        valid_minis[id].func();
+      }}>
+                            <div class="mini-icon colourful">
+                                <div class="bleh-icon" />
+                            </div>
+                            <div class="mini-info">
+                                <h5>${mini2.name}</h5>
+                                <p>${mini2.body}</p>
+                            </div>
+                            <div class="bleh-icon mini-arrow" style="--icon: var(--mask)" data-type="arrow-right" />
+                        </button>
+                    `;
+    })}
+            </div>
+            <p class="card-tip">${{ html: tl(trans.labs_cta).replace("{a}", `<a class="see-more" href="${root}labs">`).replace("{/a}", "</a>") }}</p>
+        </section>
+    `);
+  }
+  function return_to_minis(mini = "") {
+    return html.node`
+        <div class="minis-header">
+            <h2 class="previous" onclick=${() => {
+      window.history.replaceState(null, "", `${root}bleh/minis`);
+      bleh_minis(true);
+    }}>${tl(trans.minis)}</h2>
+            <div class="bleh-icon mini-arrow" style="--icon: var(--mask)" data-type="arrow-right" />
+            <h2>${mini ? valid_minis[mini].name : tl(trans.error)}</h2>
+        </div>
+    `;
+  }
+  function bleh_minis_collage() {
+    let content;
+    let mini_settings;
+    render(page.structure.main, html`
+        <section class="minis">
+            ${return_to_minis("collage")}
+            <div class="minis-content" ref=${(el) => content = el} />
+        </section>
+    `);
+    render(page.structure.side, html`
+        <section class="current-mini-settings" ref=${(el) => mini_settings = el} />
+    `);
+    collage({
+      host: content,
+      sidebar: mini_settings
+    });
+  }
+  function bleh_minis_compare() {
+    let content;
+    let mini_settings;
+    render(page.structure.main, html`
+        <section class="minis">
+            ${return_to_minis("compare")}
+            <div class="minis-content" ref=${(el) => content = el} />
+        </section>
+    `);
+    render(page.structure.side, html`
+        <section class="current-mini-settings" ref=${(el) => mini_settings = el} />
+    `);
+    compare({
+      host: content,
+      sidebar: mini_settings
+    });
+  }
+  function bleh_minis_pixel() {
+    let content;
+    let mini_settings;
+    render(page.structure.main, html`
+        <section class="minis">
+            ${return_to_minis("pixel")}
+            <div class="minis-content pixel-content" ref=${(el) => content = el} />
+        </section>
+    `);
+    render(page.structure.side, html`
+        <section class="current-mini-settings" ref=${(el) => mini_settings = el} />
+    `);
+    pixel({
+      host: content,
+      sidebar: mini_settings
+    });
+  }
+  function bleh_minis_lyrics() {
+    render(page.structure.main, html`
+        <section class="minis">
+            ${return_to_minis("lyrics")}
+        </section>
+    `);
+  }
+  function bleh_minis_rainbow() {
+    render(page.structure.main, html`
+        <section class="minis">
+            ${return_to_minis("rainbow")}
+        </section>
+    `);
+  }
+  function bleh_minis_receipt() {
+    render(page.structure.main, html`
+        <section class="minis">
+            ${return_to_minis("receipt")}
+        </section>
+    `);
+  }
+  function render_user(name, avatar3, user, replace_page = false) {
+    if (avatar3 == "" && name != "") {
+      fetch(`${root}user/${name}/tags`).then(function(response) {
+        console.log("returned", response, response.text);
+        return response.text();
+      }).then(function(dom) {
+        let doc = new DOMParser().parseFromString(dom, "text/html");
+        console.log("DOC", doc);
+        try {
+          avatar3 = doc.querySelector(".header-avatar-inner-wrap img").getAttribute("src");
+          name = doc.querySelector(".header-title").textContent.trim();
+          if (replace_page) {
+            page.avatar = avatar3;
+            page.name = name;
+          }
+          if (!user) user = page.structure.main.querySelector(".compare-user.focus");
+          render(user, render_user(name, avatar3, user, replace_page));
+        } catch (e) {
+          console.error(e);
+        }
+      });
+      return html`
+            <div class="avatar loading" />
+            <strong>${name}</strong>
+        `;
+    }
+    return html`
+        <div class="avatar">
+            <img src=${avatar3} alt=${tl(trans.avatar_for_user).replace("{u}", name)}>
+        </div>
+        <strong>${name}</strong>
+    `;
+  }
+
+  // src/components/compare.js
+  function compare({
+    host,
+    sidebar
+  } = {}) {
+    if (!host || !sidebar) return;
+    let pages;
+    let timeframe;
+    let type;
+    let submit;
+    let body;
+    if (page.name == auth.name) {
+      page.name = "";
+      page.avatar = "";
+      page.requested.profile = "";
+    }
+    let current_year = (/* @__PURE__ */ new Date()).getFullYear();
+    let previous_year = current_year - 1;
+    const default_type = page.requested.type || "albums";
+    const default_timeframe = page.requested.timeframe || "date_preset=LAST_90_DAYS";
+    let user;
+    render(host, html`
+        <div class="compare-header">
+            <div class="compare-users">
+                <div class="compare-user">
+                    <div class="avatar">
+                        <img src="${auth.avatar.replace("/avatar42s/", "/avatar170s/")}" alt="${tl(trans.your_avatar)}">
+                    </div>
+                    <strong>${auth.name}</strong>
+                </div>
+                <div class="bleh-icon"></div>
+                <div class="compare-user focus" ref=${(el) => user = el}>
+                    ${render_user(page.name, page.avatar, user, true)}
+                </div>
+            </div>
+            <div class="compare-selection">
+                ${pages = select([
+      {
+        value: "1",
+        text: 50
+      },
+      {
+        value: "2",
+        text: 100
+      },
+      {
+        value: "3",
+        text: 150
+      },
+      {
+        value: "4",
+        text: 200
+      },
+      {
+        value: "5",
+        text: 250
+      },
+      {
+        value: "6",
+        text: 300
+      }
+    ], "3")}
+                ${type = select([
+      {
+        value: "artists",
+        text: html`<div class="bleh-icon" style="--icon: var(--icon-16-artist)" />${tl(trans.artists)}`
+      },
+      {
+        value: "albums",
+        text: html`<div class="bleh-icon" style="--icon: var(--icon-16-album)" />${tl(trans.albums)}`
+      },
+      {
+        value: "tracks",
+        text: html`<div class="bleh-icon" style="--icon: var(--icon-16-track)" />${tl(trans.tracks)}`
+      }
+    ], default_type)}
+                ${timeframe = select([
+      {
+        value: "date_preset=LAST_7_DAYS",
+        text: tl(trans.last_count_days).replace("{c}", "7")
+      },
+      {
+        value: "date_preset=LAST_30_DAYS",
+        text: tl(trans.last_count_days).replace("{c}", "30")
+      },
+      {
+        value: "date_preset=LAST_90_DAYS",
+        text: tl(trans.last_count_days).replace("{c}", "90")
+      },
+      {
+        value: "date_preset=LAST_180_DAYS",
+        text: tl(trans.last_count_days).replace("{c}", "180")
+      },
+      {
+        value: "date_preset=LAST_365_DAYS",
+        text: tl(trans.last_count_days).replace("{c}", "365")
+      },
+      {
+        value: "date_preset=ALL",
+        text: tl(trans.all_time)
+      },
+      {
+        value: `from=${current_year}-01-01&rangetype=year`,
+        text: current_year
+      },
+      {
+        value: `from=${previous_year}-01-01&rangetype=year`,
+        text: previous_year
+      }
+    ], default_timeframe)}
+                <button class="btn icon primary compare" ref=${(el) => submit = el} onclick=${() => begin_comparing()}>${tl(trans.compare)}</button>
+            </div>
+        </div>
+        <div class="compare-body" data-filled="false" ref=${(el) => body = el}>
+            <div class="loading-data-container">
+                <div class="loading-data-text info">${tl(trans.choose_a_timeframe_above)}</div>
+            </div>
+        </div>
+    `);
+    let setting_group;
+    let input2;
+    render(sidebar, html`
+        <h2>${tl(trans.settings)}</h2>
+        <div class="setting-group" ref=${(el) => setting_group = el}>
+            <div class="setting v" data-type="text">
+                <div class="heading">
+                    <h5>${tl(trans.compare_with)}</h5>
+                </div>
+                <div class="input-container content-form">
+                    <input type="text" class="input" ref=${(el) => input2 = el} placeholder=${tl(trans.enter_a_profile)} value=${page.requested.profile} onchange=${(e) => {
+      page.requested.profile = e.target.value;
+      page.name = page.requested.profile;
+      page.avatar = "";
+      if (page.name == auth.name) page.avatar = auth.avatar;
+      render(user, html`
+                            ${render_user(page.name, page.avatar, user, true)}
+                        `);
+    }}>
+                    ${() => {
+      let btn = html.node`
+                            <button class="btn chibi icon" data-type="profile_shortcut" onclick=${() => {
+        if (settings.profile_shortcut == "") return;
+        input2.value = settings.profile_shortcut;
+        input2.dispatchEvent(new Event("change"));
+      }}>${tl(trans.profile_shortcut.name)}</button>
+                        `;
+      tippy_esm_default(btn, {
+        content: tl(trans.profile_shortcut.name)
+      });
+      return btn;
+    }}
+                </div>
+            </div>
+        </div>
+    `);
+    let compare_settings = setting_group.querySelectorAll(":scope > .setting");
+    function begin_comparing(bypass = false) {
+      if (page.name == "") return;
+      if (parseInt(pages.value) > 3 && !bypass) {
+        let warn = notify({
+          id: "collage_warning",
+          title: tl(trans.are_you_sure),
+          body: tl(trans.this_will_require_loading_count_pages).replace("{c}", parseInt(pages.value) * 2),
+          type: "warning",
+          actions: [
+            {
+              type: "check",
+              action: () => {
+                notify_rm(warn);
+                begin_comparing(true);
+              },
+              text: tl(trans.continue)
+            }
+          ],
+          persist: true
+        });
+        return;
+      }
+      pages.querySelector("button").disabled = true;
+      type.querySelector("button").disabled = true;
+      timeframe.querySelector("button").disabled = true;
+      compare_settings.forEach((option) => {
+        option.setAttribute("disabled", true);
+      });
+      submit.disabled = true;
+      page.state.compare = {
+        you: [],
+        other: [],
+        shared: []
+      };
+      get_grid(auth.name, 1, parseInt(pages.value), page.name);
+    }
+    function get_grid(user2, current_page, page_count, next_user = null) {
+      render(body, html`
+            <div class="loading-data-container">
+                <div class="loading-data-text">${tl(trans.gathering_plays_for_user_pages).replace("{u}", user2).replace("{current_page}", current_page).replace("{pages}", page_count)}</div>
+            </div>
+        `);
+      fetch(`${root}user/${user2}/library/${type.value}?format=list&${timeframe.value}&page=${current_page}&ajax=1`).then(function(response) {
+        console.log("returned", response, response.text);
+        return response.text();
+      }).then(function(dom) {
+        let doc = new DOMParser().parseFromString(dom, "text/html");
+        console.log("DOC", doc);
+        let next_button = doc.querySelector(".pagination-next");
+        try {
+          let tracks = doc.querySelectorAll(".chartlist-row");
+          tracks.forEach((track) => {
+            let item = {};
+            item.avatar = track.querySelector(".chartlist-image img");
+            if (item.avatar)
+              item.avatar = item.avatar.getAttribute("src");
+            item.name = track.querySelector(".chartlist-name a").textContent.trim();
+            if (type.value != "artists")
+              item.sister = track.querySelector(".chartlist-artist a").textContent.trim();
+            item.plays = clean_number(track.querySelector(".chartlist-count-bar-slug").getAttribute("data-stat-value"));
+            if (next_user)
+              page.state.compare.you.push(item);
+            else
+              page.state.compare.other.push(item);
+          });
+        } catch (e) {
+          notify({
+            id: "compare",
+            title: tl(trans.failed),
+            body: tl(trans.there_was_a_network_error),
+            type: "error"
+          });
+          console.error(e);
+        }
+        if (next_button && current_page < page_count) {
+          get_grid(user2, current_page + 1, page_count, next_user);
+        } else if (next_user) {
+          get_grid(next_user, 1, page_count);
+        } else {
+          pages.querySelector("button").disabled = false;
+          type.querySelector("button").disabled = false;
+          timeframe.querySelector("button").disabled = false;
+          compare_settings.forEach((option) => {
+            option.setAttribute("disabled", false);
+          });
+          submit.disabled = false;
+          continue_comparing();
+        }
+      });
+    }
+    function continue_comparing() {
+      log("gathered initial values", "compare", "info", page.state.compare);
+      page.state.compare.you.forEach((your_item) => {
+        let other_item;
+        if (type.value == "albums")
+          other_item = page.state.compare.other.find((other) => your_item.name === other.name && your_item.sister === other.sister);
+        else
+          other_item = page.state.compare.other.find((other) => your_item.name === other.name);
+        if (other_item) {
+          page.state.compare.shared.push({
+            avatar: your_item.avatar,
+            name: your_item.name,
+            sister: your_item.sister ? your_item.sister : "",
+            plays: {
+              you: your_item.plays,
+              other: other_item.plays,
+              shared: your_item.plays + other_item.plays
+            }
+          });
+        }
+      });
+      page.state.compare.shared.sort((a, b) => b.plays.shared - a.plays.shared);
+      log("gathered shared values", "compare", "info", page.state.compare);
+      body.innerHTML = "";
+      if (page.state.compare.shared.length == 0) {
+        render(body, html`
+                <div class="loading-data-container">
+                    <div class="loading-data-text failed">${tl(trans.nothing_in_common)}</div>
+                </div>
+            `);
+        return;
+      }
+      if (type.value != "tracks") {
+        let grid = document.createElement("ol");
+        grid.classList.add("grid-items", "grid-items--numbered", "compare-grid");
+        page.state.compare.shared.forEach((data2) => {
+          let template;
+          if (type.value == "artists")
+            template = sanitise(data2.name);
+          else
+            template = `${sanitise(data2.sister)}/${sanitise(data2.name)}`;
+          grid.appendChild(html.node`
+                    <li class="compare-item grid-items-item">
+                        <div class="grid-items-cover-image js-link-block link-block">
+                            <div class="grid-items-cover-image-image ${data2.avatar.endsWith("/c6f59c1e5e7240a4c0d427abd71f3dbb.jpg") || data2.avatar.endsWith("/2a96cbd8b46e442fc41c2b86b821562f.jpg") ? "grid-items-cover-default" : ""}">
+                                <img src="${data2.avatar.replace("/avatar70s/", "/avatar300s/").replace("/64s/", "/avatar300s/")}" alt="${data2.name}" loading="lazy">
+                            </div>
+                            <div class="grid-items-item-details">
+                                <p class="grid-items-item-main-text">
+                                    <a class="link-block-target" href="${root}music/${redirect()}${template}" title="${data2.name}">
+                                        ${data2.name}
+                                    </a>
+                                </p>
+                                ${type.value == "albums" ? html.node`
+                                <p class="grid-items-item-aux-text">
+                                    <a class="grid-items-item-aux-block" href="${root}music/${redirect()}${data2.sister}">
+                                        ${data2.sister}
+                                    </a>
+                                </p>
+                                ` : ""}
+                                <p class="grid-items-item-aux-text">
+                                    <a class="grid-item-plays with-avatar" href="${root}user/${auth.name}/library/music/${redirect()}${template}?${timeframe.value}" target="_blank">
+                                        <span class="avatar">
+                                            <img src="${auth.avatar}" alt="${tl(trans.your_avatar)}">
+                                        </span>
+                                        ${data2.plays.you.toLocaleString(lang)}
+                                    </a>
+                                    <a class="grid-item-plays with-avatar" href="${root}user/${page.name}/library/music/${redirect()}${template}?${timeframe.value}" target="_blank">
+                                        <span class="avatar">
+                                            <img src="${page.avatar}" alt="${tl(trans.avatar_for_user).replace("{u}", page.name)}">
+                                        </span>
+                                        ${data2.plays.other.toLocaleString(lang)}
+                                    </a>
+                                </p>
+                            </div>
+                            <a class="js-link-block-cover-link link-block-cover-link" href="${root}music/${redirect()}${template}" tabindex="-1" aria-hidden="true"></a>
+                        </div>
+                    </li>
+                `);
+        });
+        render(body, grid);
+        music_grids(grid);
+      } else {
+        let table = document.createElement("table");
+        table.classList.add("chartlist", "chartlist--with-index", "chartlist--with-index--length-2", "chartlist--with-image", "chartlist--with-artist", "chartlist--with-bar", "compare-chartlist");
+        let tbody = document.createElement("tbody");
+        table.appendChild(tbody);
+        let max2 = 0;
+        page.state.compare.shared.forEach((item) => {
+          if (item.plays.you > max2)
+            max2 = item.plays.you;
+          if (item.plays.other > max2)
+            max2 = item.plays.other;
+        });
+        page.state.compare.shared.forEach((data2, index3) => {
+          let template = `${sanitise(data2.sister)}/_/${sanitise(data2.name)}`;
+          tbody.appendChild(html.node`
+                    <tr class="chartlist-row chartlist-row--with-artist compare-item">
+                        <td class="chartlist-index">${index3 + 1}</td>
+                        <td class="chartlist-image">
+                            <a class="cover-art" href="${root}music/${redirect()}${template}">
+                                <img src="${data2.avatar}" alt="${data2.name}" loading="lazy">
+                            </a>
+                        </td>
+                        <td class="chartlist-name">
+                            <a href="${root}music/${redirect()}${template}" title="${data2.name}">
+                                ${data2.name}
+                            </a>
+                        </td>
+                        <td class="chartlist-artist">
+                            <a href="${root}music/${redirect()}${data2.sister}" title="${data2.sister}">
+                                ${data2.sister}
+                            </a>
+                        </td>
+                        <td class="chartlist-bar with-multiple">
+                            <span class="chartlist-count-bar">
+                                <a class="chartlist-count-bar-link" href="${root}user/${auth.name}/library/music/${redirect()}${template}?${timeframe.value}" target="_blank">
+                                    <span class="chartlist-count-bar-slug" data-max-stat-value="${max2}" data-stat-value="${data2.plays.you}" style="width: ${data2.plays.you / max2 * 100}%;"></span>
+                                    <span class="chartlist-count-bar-value">${data2.plays.you}</span>
+                                </a>
+                                <span class="avatar">
+                                    <img src="${auth.avatar}" alt="${tl(trans.your_avatar)}">
+                                </span>
+                            </span>
+                            <span class="chartlist-count-bar">
+                                <a class="chartlist-count-bar-link" href="${root}user/${page.name}/library/music/${redirect()}${template}?${timeframe.value}" target="_blank">
+                                    <span class="chartlist-count-bar-slug" data-max-stat-value="${max2}" data-stat-value="${data2.plays.other}" style="width: ${data2.plays.other / max2 * 100}%;"></span>
+                                    <span class="chartlist-count-bar-value">${data2.plays.other}</span>
+                                </a>
+                                <span class="avatar">
+                                    <img src="${page.avatar}" alt="${tl(trans.avatar_for_user).replace("{u}", page.name)}">
+                                </span>
+                            </span>
+                        </td>
+                    </tr>
+                `);
+        });
+        body.appendChild(table);
+        patch_titles(body);
+      }
+    }
+  }
+
+  // src/news.js
+  function news() {
+    let changelog = localStorage.getItem("bleh_changelog");
+    let changelog_expire = new Date(localStorage.getItem("bleh_changelog_expire"));
+    let current_time = /* @__PURE__ */ new Date();
+    if (!changelog) {
+      log("not cached, fetching", "changelog");
+      request_changelog();
+      dialog_rm({ id: "rabbit" });
+    } else {
+      if (changelog_expire < current_time)
+        request_changelog();
+      else
+        open_changelog(JSON.parse(changelog));
+    }
+  }
+  function request_changelog(open_after = true) {
+    let button = page.state.navigation_menu_news;
+    if (button)
+      button.setAttribute("disabled", "");
+    let xhr = new XMLHttpRequest();
+    let url = `https://katelyynn.github.io/bleh/fm/changelog/changelog.json?${Math.random()}`;
+    xhr.open("GET", url, true);
+    xhr.onload = function() {
+      log(`responded with ${xhr.status}`, "changelog");
+      if (xhr.status != 200) {
+        log("request has been cancelled, will request again in 1h", "changelog");
+        api_expire.setHours(api_expire.getHours() + 1);
+      }
+      let api_expire = /* @__PURE__ */ new Date();
+      if (xhr.status == 200) {
+        if (open_after) {
+          try {
+            open_changelog(JSON.parse(this.response));
+            localStorage.setItem("bleh_changelog", this.response);
+            api_expire.setHours(api_expire.getHours() + 2);
+            log(`cached until ${api_expire}`, "changelog");
+            localStorage.setItem("bleh_changelog_expire", api_expire);
+          } catch (e) {
+            deliver_notif("The changelog is currently unavailable due to errors, try again later.", true);
+            console.error(e);
+          }
+        }
+      }
+      if (button != null)
+        button.removeAttribute("disabled");
+    };
+    xhr.send();
+  }
+  function open_changelog(changelog) {
+    const window2 = dialog({
+      id: "changelog",
+      title: tl(trans.news_from_user).replace("{user}", sponsor_list && sponsor_list.special ? sponsor_list.special[0] : "katelyn"),
+      body: html.node`
+            <div class="cta first sponsor colourful margin-bottom">
+                <strong>${tl(trans.news_sponsor_cta)}</strong>
+                <a class="see-more" onclick="_sponsor(true)">${tl(trans.sponsor)}</a>
+            </div>
+            <div class="changelog-list"></div>
+        `,
+      type: "changelog",
+      allow_scroll: true
+    });
+    const changelog_list = window2.querySelector(".changelog-list");
+    let index3 = 0;
+    for (let version3 in changelog) {
+      if (version3 == "updated" || version3 == "latest") continue;
+      if (index3 > 10) continue;
+      const version_item = html.node`
+            <div class="changelog-version-item" data-changelog-type="${changelog[version3].type}" data-changelog-latest="${index3 == 0 ? "true" : "false"}" data-changelog-version="${version3}">
+                <div class="version-item-header">
+                    <div class="sub-text">
+                    <div class="breadcrumb">
+                        <div class="breadcrumb-origin">
+                        ${version3}
+                        </div>
+                        <div class="breadcrumb-name">
+                        ${trans_legacy.en.changelog.type[changelog[version3].type]}
+                        </div>
+                    </div>
+                    </div>
+                    <h3>${changelog[version3].name}</h3>
+                    ${version3 == "2025.0113" ? html.node`<h4 class="header-over">${changelog[version3].name}</h4>` : ""}
+                </div>
+                <div class="version-item-body markdown-body">
+                    ${markdown(changelog[version3].bio)}
+                </div>
+            </div>
+        `;
+      if (changelog[version3].type == "major")
+        version_item.setAttribute("id", "latest_major_release");
+      changelog_list.appendChild(version_item);
+      index3++;
+    }
+  }
+  unsafeWindow._update_local_changelog_cache = function(json) {
+    localStorage.setItem("bleh_changelog", JSON.stringify(json));
+  };
+
+  // src/components/rabbit.js
+  function register_rabbit() {
+    let input_box;
+    let selected = 0;
+    let feed = 0;
+    let matches = [];
+    let rabbit_hole;
+    let tip;
+    let depth = 0;
+    let searching;
+    let selected_search;
+    let fake;
+    let back;
+    const allowed_pages = [
+      "user",
+      "artist",
+      "album",
+      "track",
+      "tag"
+    ];
+    document.addEventListener("keydown", (e) => {
+      const cmd = e.getModifierState("Control") || e.getModifierState("Meta");
+      const key = e.key.toLowerCase();
+      if (cmd && [settings.rabbit_primary.toLowerCase(), ","].includes(key) && !page.structure.dialogs.hasChildNodes()) {
+        e.preventDefault();
+        depth = 0;
+        if (e.getModifierState("Shift")) {
+          rabbit();
+          use_page_as_ctx();
+          back = false;
+        } else {
+          rabbit();
+        }
+      } else if (page.structure.dialogs.hasChildNodes() && page.structure.dialogs.querySelector(':scope > [data-modal-type="rabbit"]')) {
+        if (e.key == "Escape") {
+          if (depth == 0 && input_box.querySelector("input").value == "" || !back) {
+            dialog_rm({ id: "rabbit" });
+          } else {
+            input_box.querySelector("input").value = "";
+            depth = 0;
+            rabbit_search();
+          }
+        }
+        if (e.key == "Tab") {
+          e.preventDefault();
+          rabbit_tab();
+        }
+        if (e.key == "ArrowDown") {
+          e.preventDefault();
+          if (selected < matches.length - 1)
+            selected++;
+          else
+            selected = 0;
+          if (matches[selected].disabled) {
+            if (selected + 1 < matches.length - 1)
+              selected++;
+            else
+              selected = 0;
+          }
+          rabbit_select();
+        } else if (e.key == "ArrowUp") {
+          e.preventDefault();
+          if (selected > 0)
+            selected--;
+          else
+            selected = matches.length - 1;
+          if (matches[selected].disabled) {
+            if (selected - 1 > 0)
+              selected--;
+            else
+              selected = 0;
+          }
+          rabbit_select();
+        } else if (e.key == "Enter") {
+          rabbit_enter();
+        }
+      }
+      if (!page.structure.dialogs.hasChildNodes()) {
+        if (cmd && [settings.rabbit_profile.toLowerCase()].includes(key)) {
+          e.preventDefault();
+          window.location.href = `${root}user/${auth.name}`;
+        }
+        if (cmd && [settings.rabbit_shortcut.toLowerCase()].includes(key)) {
+          e.preventDefault();
+          if (settings.profile_shortcut != "") {
+            window.location.href = `${root}user/${settings.profile_shortcut}`;
+          } else {
+            open_profile_shortcut_window();
+          }
+        }
+        if (cmd && [settings.rabbit_bleh_settings.toLowerCase()].includes(key)) {
+          e.preventDefault();
+          window.location.href = `${root}bleh`;
+        }
+        if (cmd && [settings.rabbit_search.toLowerCase()].includes(key)) {
+          e.preventDefault();
+          rabbit();
+          search();
+          back = false;
+        }
+      }
+    });
+    function rabbit() {
+      page.state.rabbit_modal = dialog({
+        id: "rabbit",
+        title: "rabbit",
+        body: html.node`
+                ${() => {
+          input_box = input({
+            maxlength: 100,
+            placeholder: tl(trans.switch_placeholder),
+            focus: true
+          });
+          input_box.classList.add("rabbit-search");
+          return input_box;
+        }}
+                <div class="rabbit-hole" ref=${(el) => rabbit_hole = el} />
+                <div class="tip" ref=${(el) => tip = el} />
+            `,
+        type: "rabbit",
+        replace_if_possible: true,
+        handle_escape_manually: true
+      });
+      back = true;
+      fake = html.node`
+            <div class="fake-input" style="display: none;" />
+        `;
+      input_box.appendChild(fake);
+      rabbit_search();
+      rabbit_select();
+      input_box.querySelector("input").addEventListener("input", (e) => {
+        rabbit_search();
+      });
+      input_box.querySelector("input").focus();
+    }
+    page.state.rabbit = rabbit;
+    function rabbit_tab() {
+      input_box.querySelector("input").focus();
+    }
+    function rabbit_search(pre_selected = "", pre_matches = null) {
+      if (depth < 2) {
+        input_box.querySelector("input").style.removeProperty("display");
+        fake.style.display = "none";
+      }
+      selected = 0;
+      if (!pre_matches && depth == 0) {
+        feed = [
+          {
+            type: "search",
+            text: tl(trans.search),
+            body: tl(trans.search_for_music_or_user),
+            keywords: ["user", "music", "tag", "discover", "explore"],
+            action: () => search(),
+            keybind: ["\u2318", settings.rabbit_search.toUpperCase()]
+          },
+          {
+            type: "on_this_page",
+            text: tl(trans.on_this_page),
+            body: tl(trans.use_current_page_as_context),
+            keywords: ["ctx", "context"],
+            action: () => use_page_as_ctx(),
+            keybind: ["\u2318", "\u21E7", settings.rabbit_primary.toUpperCase()],
+            disabled: !allowed_pages.includes(page.type)
+          },
+          {
+            type: "profile",
+            text: tl(trans.profile),
+            body: tl(trans.opens_your_value).replace("{v}", tl(trans.profile)),
+            keywords: ["profile", "user", "me"],
+            action: () => window.location.href = `${root}user/${auth.name}`,
+            keybind: ["\u2318", settings.rabbit_profile.toUpperCase()]
+          },
+          {
+            type: "profile_shortcut",
+            text: settings.profile_shortcut,
+            body: tl(trans.opens_your_value).replace("{v}", tl(trans.profile_shortcut.name)),
+            keywords: ["profile", "user", "shortcut", "friends"],
+            action: () => window.location.href = `${root}user/${settings.profile_shortcut}`,
+            hide: settings.profile_shortcut == "",
+            keybind: ["\u2318", settings.rabbit_shortcut.toUpperCase()]
+          },
+          {
+            type: "notifications",
+            text: tl(trans.notifications),
+            body: tl(trans.opens_your_value).replace("{v}", tl(trans.notifications)),
+            keywords: ["bell", "updates"],
+            action: () => window.location.href = `${root}inbox/notifications`
+          },
+          {
+            type: "inbox",
+            text: tl(trans.messages),
+            body: tl(trans.opens_your_value).replace("{v}", tl(trans.messages)),
+            keywords: ["messages", "direct", "dms"],
+            action: () => window.location.href = `${root}inbox`
+          },
+          {
+            type: "theme",
+            text: tl(trans.themes.name),
+            body: tl(trans.opens_the_value).replace("{v}", tl(trans.theme_picker)),
+            keywords: ["themes", "light", "dark", "ash", "darker", "oled", "amoled", "midnight", "void", "abyss", "dark reader"],
+            action: () => bleh_theme_picker()
+          },
+          {
+            type: "news",
+            text: tl(trans.news),
+            body: tl(trans.opens_the_value).replace("{v}", tl(trans.news)),
+            keywords: ["bleh", "extension", "changelog", "feed"],
+            action: () => news()
+          },
+          {
+            type: "settings",
+            text: tl(trans.settings),
+            body: tl(trans.opens_your_value_settings).replace("{v}", tl(trans.profile)),
+            keywords: ["profile", "user", "pfp", "avi", "avatar", "config", "configuration", "configure", "picture", "photo"],
+            action: () => window.location.href = `${root}settings`
+          },
+          {
+            type: "bleh_settings",
+            text: tl(trans.settings),
+            body: tl(trans.opens_the_value).replace("{v}", tl(trans.bleh_settings)),
+            keywords: ["bleh", "extension", "config", "configuration", "configure"],
+            action: () => window.location.href = `${root}bleh`,
+            keybind: ["\u2318", settings.rabbit_bleh_settings.toUpperCase()]
+          }
+        ];
+      } else if (pre_matches) {
+        feed = pre_matches;
+      }
+      if (depth < 3) {
+        let value = "";
+        if (value == "")
+          value = input_box.querySelector("input").value.trim().toLowerCase();
+        matches = [];
+        feed.forEach((item) => {
+          let extended = `${item.text} ${item.body} ${item.keywords.join(" ")} ${item.keybind ? item.keybind.join(" ").replace("\u2318", "Ctrl").replace("\u21E7", "Shift") : ""}`.toLowerCase();
+          let words = value.split(" ");
+          let match2 = false;
+          words.forEach((word) => {
+            if (extended.includes(word)) {
+              match2 = true;
+            }
+          });
+          if (item.hide)
+            match2 = false;
+          if (match2)
+            matches.push(item);
+        });
+        render(rabbit_hole, html`
+                ${matches.length > 0 ? matches.map((item, index3) => () => {
+          let button = html.node`
+                        <button class="dropdown-menu-clickable-item rabbit-hole-item" data-type=${item.type} onclick=${item.action} disabled=${item.disabled}>
+                            <div class="info">
+                                <div class="text">${item.text}</div>
+                            </div>
+                            ${item.keybind ? keybind(item.keybind) : ""}
+                        </button>
+                    `;
+          if (!item.disabled) {
+            button.addEventListener("mouseover", () => {
+              selected = index3;
+              rabbit_select(false, true);
+            });
+          }
+          return button;
+        }) : html.node`
+                    <div class="loading-data-container">
+                        <div class="loading-data-text failed">${tl(trans.nothing_matches_your_search)}</div>
+                    </div>
+                `}
+            `);
+        rabbit_select();
+      } else {
+        matches = feed;
+      }
+    }
+    function rabbit_select(click = false, with_mouse = false) {
+      rabbit_tip(tl(trans.select_an_option));
+      if (depth == 3 && click) {
+        searching[selected_search].name = input_box.querySelector("input").value;
+        input_box.querySelector("input").value = "";
+        depth = 2;
+        search_fill();
+        return;
+      } else if (depth == 3) {
+        return;
+      }
+      let buttons = rabbit_hole.querySelectorAll("button");
+      buttons.forEach((button, index3) => {
+        if (index3 == selected) {
+          button.setAttribute("aria-selected", "true");
+          if (!with_mouse) {
+            button.scrollIntoView({
+              behavior: "smooth",
+              block: "center"
+            });
+          }
+          if (click) {
+            input_box.querySelector("input").value = "";
+            button.click();
+          }
+          rabbit_tip(matches[index3].body);
+        } else {
+          button.setAttribute("aria-selected", "false");
+        }
+      });
+      input_box.querySelector("input").focus();
+    }
+    function rabbit_tip(text3) {
+      render(tip, html`
+        <div class="left">
+            ${depth == 0 ? html.node`
+            <kbd>Esc</kbd> ${tl(trans.close)}
+            ` : html.node`
+            <kbd>Esc</kbd> ${tl(trans.back)}
+            `}
+        </div>
+        <div class="right">
+            ${text3}
+        </div>
+        `);
+    }
+    function rabbit_enter() {
+      rabbit_select(true);
+    }
+    function append_search(id) {
+      if (id == "artist" || id == "user" || id == "tag")
+        selected_search = "primary";
+      else
+        selected_search = "secondary";
+      depth = 3;
+      searching[selected_search].type = id;
+      input_box.querySelector("input").value = "";
+      input_box.querySelector("input").style.removeProperty("display");
+      fake.style.display = "none";
+    }
+    function bleh_theme_picker() {
+      depth = 1;
+      rabbit_search("internal:theme_picker", [
+        {
+          type: "theme_auto",
+          text: tl(trans.auto),
+          body: tl(trans.changes_your_theme),
+          keywords: ["system"],
+          action: () => save_setting("theme", "light"),
+          hide: !ff("auto_theme")
+        },
+        {
+          type: "theme_light",
+          text: tl(trans.themes.light),
+          body: tl(trans.changes_your_theme),
+          keywords: ["sun", "day"],
+          action: () => save_setting("theme", "light")
+        },
+        {
+          type: "theme_ink",
+          text: tl(trans.themes.ink),
+          body: tl(trans.changes_your_theme),
+          keywords: ["sun", "day", "light", "e-ink"],
+          action: () => save_setting("theme", "ink")
+        },
+        {
+          type: "theme_ash",
+          text: tl(trans.themes.dark),
+          body: tl(trans.changes_your_theme),
+          keywords: ["dark", "night", "grey", "gray"],
+          action: () => save_setting("theme", "dark")
+        },
+        {
+          type: "theme_dark",
+          text: tl(trans.themes.darker),
+          body: tl(trans.changes_your_theme),
+          keywords: ["dark", "night", "grey", "gray"],
+          action: () => save_setting("theme", "darker")
+        },
+        {
+          type: "theme_void",
+          text: tl(trans.themes.oled),
+          body: tl(trans.changes_your_theme),
+          keywords: ["dark", "night", "black"],
+          action: () => save_setting("theme", "oled")
+        }
+      ]);
+    }
+    function use_page_as_ctx() {
+      if (!allowed_pages.includes(page.type))
+        return;
+      depth = 1;
+      let url_start = root;
+      if (page.type == "user")
+        url_start += "user/";
+      else if (page.type == "album" || page.type == "artist" || page.type == "track")
+        url_start += "music/";
+      if (page.type == "album")
+        url_start += `${sanitise(page.sister)}/${sanitise(page.name)}`;
+      else if (page.type == "track")
+        url_start += `${sanitise(page.sister)}/_/${sanitise(page.name)}`;
+      else
+        url_start += sanitise(page.name);
+      if (page.type == "user") {
+        rabbit_search("internal:ctx", [
+          {
+            type: "overview",
+            text: tl(trans.overview),
+            body: tl(trans.opens_the_value_for_type).replace("{v}", tl(trans.overview)).replace("{t}", page.name),
+            keywords: ["home"],
+            action: () => window.location.href = url_start
+          },
+          {
+            type: "reports",
+            text: tl(trans.reports),
+            body: tl(trans.opens_the_value_for_type).replace("{v}", tl(trans.reports)).replace("{t}", page.name),
+            keywords: ["listening report", "reports", "wrapped", "playback", "spotify"],
+            action: () => window.location.href = url_start + "/listening-report"
+          },
+          {
+            type: "library",
+            text: tl(trans.library),
+            body: tl(trans.opens_the_value_for_type).replace("{v}", tl(trans.library)).replace("{t}", page.name),
+            keywords: ["library", "music", "artists", "albums", "tracks", "scrobbles", "history"],
+            action: () => window.location.href = url_start + "/library"
+          },
+          {
+            type: "friends",
+            text: tl(trans.friends),
+            body: tl(trans.opens_the_value_for_type).replace("{v}", tl(trans.friends)).replace("{t}", page.name),
+            keywords: ["friends", "following", "followers", "neighbours", "similar"],
+            action: () => window.location.href = url_start + "/following"
+          },
+          {
+            type: "following",
+            text: tl(trans.following),
+            body: tl(trans.opens_the_value_for_type).replace("{v}", tl(trans.following)).replace("{t}", page.name),
+            keywords: ["friends", "following"],
+            action: () => window.location.href = url_start + "/following"
+          },
+          {
+            type: "followers",
+            text: tl(trans.followers),
+            body: tl(trans.opens_the_value_for_type).replace("{v}", tl(trans.followers)).replace("{t}", page.name),
+            keywords: ["friends", "followers"],
+            action: () => window.location.href = url_start + "/followers"
+          },
+          {
+            type: "neighbours",
+            text: tl(trans.neighbours),
+            body: tl(trans.opens_the_value_for_type).replace("{v}", tl(trans.neighbours)).replace("{t}", page.name),
+            keywords: ["friends", "neighbours", "similar"],
+            action: () => window.location.href = url_start + "/neighbours"
+          },
+          {
+            type: "shouts",
+            text: tl(trans.shouts),
+            body: tl(trans.opens_the_value_for_type).replace("{v}", tl(trans.shouts)).replace("{t}", page.name),
+            keywords: ["shout", "shoutbox", "shouts", "comments"],
+            action: () => window.location.href = url_start + "/shoutbox"
+          },
+          {
+            type: "loved",
+            text: tl(trans.loved),
+            body: tl(trans.opens_the_value_for_type).replace("{v}", tl(trans.loved)).replace("{t}", page.name),
+            keywords: ["loved", "hearted", "favourites", "favorites", "luved"],
+            action: () => window.location.href = url_start + "/loved"
+          },
+          {
+            type: "obsessions",
+            text: tl(trans.obsessions),
+            body: tl(trans.opens_the_value_for_type).replace("{v}", tl(trans.obsessions)).replace("{t}", page.name),
+            keywords: ["loved", "hearted", "favourites", "favorites", "obsessions", "looping"],
+            action: () => window.location.href = url_start + "/obsessions"
+          },
+          {
+            type: "events",
+            text: tl(trans.events),
+            body: tl(trans.opens_the_value_for_type).replace("{v}", tl(trans.events)).replace("{t}", page.name),
+            keywords: ["events", "festivals", "tour", "live"],
+            action: () => window.location.href = url_start + "/events"
+          },
+          {
+            type: "playlists",
+            text: tl(trans.playlists),
+            body: tl(trans.opens_the_value_for_type).replace("{v}", tl(trans.playlists)).replace("{t}", page.name),
+            keywords: ["playlists", "folders"],
+            action: () => window.location.href = url_start + "/playlists"
+          },
+          {
+            type: "tags",
+            text: tl(trans.tags),
+            body: tl(trans.opens_the_value_for_type).replace("{v}", tl(trans.tags)).replace("{t}", page.name),
+            keywords: ["tags", "tagged", "related", "groups", "grouped"],
+            action: () => window.location.href = url_start + "/tags"
+          },
+          {
+            type: "compare",
+            text: tl(trans.compare),
+            body: tl(trans.compares_your_taste).replace("{v}", page.name),
+            keywords: ["similar", "taste", "music", "shared"],
+            action: () => compare(),
+            hide: page.name == auth.name
+          },
+          {
+            type: "collage",
+            text: tl(trans.collage),
+            body: tl(trans.create_a_collage),
+            keywords: ["taste", "music", "chart", "5x5", "topster"],
+            action: () => collage()
+          }
+        ]);
+      } else if (page.type == "artist") {
+        rabbit_search("internal:ctx", [
+          {
+            type: "overview",
+            text: tl(trans.overview),
+            body: tl(trans.opens_the_value_for_type).replace("{v}", tl(trans.overview)).replace("{t}", page.name),
+            keywords: ["home"],
+            action: () => window.location.href = url_start
+          },
+          {
+            type: "tracks",
+            text: tl(trans.tracks),
+            body: tl(trans.opens_the_value_for_type).replace("{v}", tl(trans.tracks)).replace("{t}", page.name),
+            keywords: ["music", "top"],
+            action: () => window.location.href = url_start + "/+tracks"
+          },
+          {
+            type: "albums",
+            text: tl(trans.albums),
+            body: tl(trans.opens_the_value_for_type).replace("{v}", tl(trans.albums)).replace("{t}", page.name),
+            keywords: ["music", "top"],
+            action: () => window.location.href = url_start + "/+albums"
+          },
+          {
+            type: "photos",
+            text: tl(trans.photos),
+            body: tl(trans.opens_the_value_for_type).replace("{v}", tl(trans.photos)).replace("{t}", page.name),
+            keywords: ["gallery", "artwork", "image", "picture", "avatar"],
+            action: () => window.location.href = url_start + "/+images"
+          },
+          {
+            type: "similar",
+            text: tl(trans.similar_artists),
+            body: tl(trans.opens_the_value_for_type).replace("{v}", tl(trans.similar_artists)).replace("{t}", page.name),
+            keywords: ["music"],
+            action: () => window.location.href = url_start + "/+similar"
+          },
+          {
+            type: "wiki",
+            text: tl(trans.biography),
+            body: tl(trans.opens_the_value_for_type).replace("{v}", tl(trans.biography)).replace("{t}", page.name),
+            keywords: ["wiki", "about", "text"],
+            action: () => window.location.href = url_start + "/+wiki"
+          },
+          {
+            type: "listeners",
+            text: tl(trans.listeners),
+            body: tl(trans.opens_the_value_for_type).replace("{v}", tl(trans.listeners)).replace("{t}", page.name),
+            keywords: ["top"],
+            action: () => window.location.href = url_start + "/+listeners"
+          },
+          {
+            type: "listeners_you_know",
+            text: tl(trans.listeners_you_know),
+            body: tl(trans.opens_the_value_for_type).replace("{v}", tl(trans.listeners_you_know)).replace("{t}", page.name),
+            keywords: ["friends"],
+            action: () => window.location.href = url_start + "/+listeners/you-know"
+          },
+          {
+            type: "shouts",
+            text: tl(trans.shouts),
+            body: tl(trans.opens_the_value_for_type).replace("{v}", tl(trans.shouts)).replace("{t}", page.name),
+            keywords: ["shout", "shoutbox", "shouts", "comments"],
+            action: () => window.location.href = url_start + "/+shoutbox"
+          },
+          {
+            type: "events",
+            text: tl(trans.events),
+            body: tl(trans.opens_the_value_for_type).replace("{v}", tl(trans.events)).replace("{t}", page.name),
+            keywords: ["events", "festivals", "tour", "live"],
+            action: () => window.location.href = url_start + "/+events"
+          },
+          {
+            type: "tags",
+            text: tl(trans.tags),
+            body: tl(trans.opens_the_value_for_type).replace("{v}", tl(trans.tags)).replace("{t}", page.name),
+            keywords: ["tags", "tagged", "related", "groups", "grouped"],
+            action: () => window.location.href = url_start + "/+tags"
+          }
+        ]);
+      } else if (page.type == "album") {
+        rabbit_search("internal:ctx", [
+          {
+            type: "overview",
+            text: tl(trans.overview),
+            body: tl(trans.opens_the_value_for_type).replace("{v}", tl(trans.overview)).replace("{t}", page.name),
+            keywords: ["home"],
+            action: () => window.location.href = url_start
+          },
+          {
+            type: "wiki",
+            text: tl(trans.wiki),
+            body: tl(trans.opens_the_value_for_type).replace("{v}", tl(trans.wiki)).replace("{t}", page.name),
+            keywords: ["wiki", "about", "text"],
+            action: () => window.location.href = url_start + "/+wiki"
+          },
+          {
+            type: "photos",
+            text: tl(trans.artwork),
+            body: tl(trans.opens_the_value_for_type).replace("{v}", tl(trans.artwork)).replace("{t}", page.name),
+            keywords: ["gallery", "artwork", "image", "picture", "avatar"],
+            action: () => window.location.href = url_start + "/+images"
+          },
+          {
+            type: "shouts",
+            text: tl(trans.shouts),
+            body: tl(trans.opens_the_value_for_type).replace("{v}", tl(trans.shouts)).replace("{t}", page.name),
+            keywords: ["shout", "shoutbox", "shouts", "comments"],
+            action: () => window.location.href = url_start + "/+shoutbox"
+          },
+          {
+            type: "tags",
+            text: tl(trans.tags),
+            body: tl(trans.opens_the_value_for_type).replace("{v}", tl(trans.tags)).replace("{t}", page.name),
+            keywords: ["tags", "tagged", "related", "groups", "grouped"],
+            action: () => window.location.href = url_start + "/+tags"
+          }
+        ]);
+      } else if (page.type == "track") {
+        rabbit_search("internal:ctx", [
+          {
+            type: "overview",
+            text: tl(trans.overview),
+            body: tl(trans.opens_the_value_for_type).replace("{v}", tl(trans.overview)).replace("{t}", page.name),
+            keywords: ["home"],
+            action: () => window.location.href = url_start
+          },
+          {
+            type: "albums",
+            text: tl(trans.albums),
+            body: tl(trans.opens_the_value_for_type).replace("{v}", tl(trans.albums)).replace("{t}", page.name),
+            keywords: ["music", "top"],
+            action: () => window.location.href = url_start + "/+albums"
+          },
+          {
+            type: "wiki",
+            text: tl(trans.wiki),
+            body: tl(trans.opens_the_value_for_type).replace("{v}", tl(trans.wiki)).replace("{t}", page.name),
+            keywords: ["wiki", "about", "text"],
+            action: () => window.location.href = url_start + "/+wiki"
+          },
+          {
+            type: "shouts",
+            text: tl(trans.shouts),
+            body: tl(trans.opens_the_value_for_type).replace("{v}", tl(trans.shouts)).replace("{t}", page.name),
+            keywords: ["shout", "shoutbox", "shouts", "comments"],
+            action: () => window.location.href = url_start + "/+shoutbox"
+          },
+          {
+            type: "tags",
+            text: tl(trans.tags),
+            body: tl(trans.opens_the_value_for_type).replace("{v}", tl(trans.tags)).replace("{t}", page.name),
+            keywords: ["tags", "tagged", "related", "groups", "grouped"],
+            action: () => window.location.href = url_start + "/+tags"
+          }
+        ]);
+      } else if (page.type == "tag") {
+        rabbit_search("internal:ctx", [
+          {
+            type: "overview",
+            text: tl(trans.overview),
+            body: tl(trans.opens_the_value_for_type).replace("{v}", tl(trans.overview)).replace("{t}", page.name),
+            keywords: ["home"],
+            action: () => window.location.href = url_start
+          },
+          {
+            type: "artists",
+            text: tl(trans.artists),
+            body: tl(trans.opens_the_value_for_type).replace("{v}", tl(trans.artists)).replace("{t}", page.name),
+            keywords: ["music", "top"],
+            action: () => window.location.href = url_start + "/artists"
+          },
+          {
+            type: "albums",
+            text: tl(trans.albums),
+            body: tl(trans.opens_the_value_for_type).replace("{v}", tl(trans.albums)).replace("{t}", page.name),
+            keywords: ["music", "top"],
+            action: () => window.location.href = url_start + "/albums"
+          },
+          {
+            type: "tracks",
+            text: tl(trans.tracks),
+            body: tl(trans.opens_the_value_for_type).replace("{v}", tl(trans.tracks)).replace("{t}", page.name),
+            keywords: ["music", "top"],
+            action: () => window.location.href = url_start + "/tracks"
+          },
+          {
+            type: "wiki",
+            text: tl(trans.wiki),
+            body: tl(trans.opens_the_value_for_type).replace("{v}", tl(trans.wiki)).replace("{t}", page.name),
+            keywords: ["wiki", "about", "text"],
+            action: () => window.location.href = url_start + "/wiki"
+          },
+          {
+            type: "shouts",
+            text: tl(trans.shouts),
+            body: tl(trans.opens_the_value_for_type).replace("{v}", tl(trans.shouts)).replace("{t}", page.name),
+            keywords: ["shout", "shoutbox", "shouts", "comments"],
+            action: () => window.location.href = url_start + "/shoutbox"
+          }
+        ]);
+      }
+    }
+    function search() {
+      depth = 2;
+      if (!page.structure.dialogs.hasChildNodes())
+        rabbit();
+      searching = {
+        primary: {
+          name: "",
+          type: ""
+        },
+        secondary: {
+          name: "",
+          type: ""
+        }
+      };
+      search_fill();
+    }
+    function search_fill() {
+      depth = 2;
+      input_box.querySelector("input").style.display = "none";
+      fake.style.removeProperty("display");
+      if (searching.primary.type && searching.secondary.type) {
+        render(fake, html`
+                <label>${searching.primary.type}:</label>
+                <p>${searching.primary.name}</p>
+                <label>${searching.secondary.type}:</label>
+                <p>${searching.secondary.name}</p>
+            `);
+      } else if (searching.primary.type) {
+        render(fake, html`
+                <label>${searching.primary.type}:</label>
+                <p>${searching.primary.name}</p>
+            `);
+      } else {
+        render(fake, html`
+                <i>${tl(trans.choose_a_search_type)}</i>
+            `);
+      }
+      if (searching.primary.type == "artist") {
+        rabbit_search("internal:search", [
+          {
+            type: "finish",
+            text: tl(trans.finish),
+            body: tl(trans.finish_search),
+            keywords: ["finish"],
+            action: () => search_finish()
+          },
+          {
+            type: "artist",
+            text: tl(trans.artist),
+            body: tl(trans.search_for_value).replace("{v}", tl(trans.artist)),
+            keywords: ["profile"],
+            action: () => append_search("artist")
+          },
+          {
+            type: "album",
+            text: tl(trans.album),
+            body: tl(trans.search_for_value).replace("{v}", tl(trans.album)),
+            keywords: ["record"],
+            action: () => append_search("album")
+          },
+          {
+            type: "track",
+            text: tl(trans.track),
+            body: tl(trans.search_for_value).replace("{v}", tl(trans.track)),
+            keywords: ["song"],
+            action: () => append_search("track")
+          }
+        ]);
+      } else if (searching.primary.type == "user") {
+        rabbit_search("internal:search", [
+          {
+            type: "search",
+            text: tl(trans.search),
+            body: tl(trans.finish_search),
+            keywords: ["finish"],
+            action: () => search_finish()
+          },
+          {
+            type: "user",
+            text: tl(trans.profile),
+            body: tl(trans.search_for_value).replace("{v}", tl(trans.profile)),
+            keywords: [],
+            action: () => append_search("user")
+          }
+        ]);
+      } else if (searching.primary.type == "tag") {
+        rabbit_search("internal:search", [
+          {
+            type: "finish",
+            text: tl(trans.finish),
+            body: tl(trans.finish_search),
+            keywords: ["finish"],
+            action: () => search_finish()
+          },
+          {
+            type: "tag",
+            text: tl(trans.tag),
+            body: tl(trans.search_for_value).replace("{v}", tl(trans.tag)),
+            keywords: ["genre"],
+            action: () => append_search("tag")
+          }
+        ]);
+      } else if (searching.secondary.type == "album" || searching.secondary.type == "track") {
+        rabbit_search("internal:search", [
+          {
+            type: "artist",
+            text: tl(trans.artist),
+            body: tl(trans.search_for_value).replace("{v}", tl(trans.artist)),
+            keywords: ["profile"],
+            action: () => append_search("artist")
+          }
+        ]);
+      } else {
+        rabbit_search("internal:search", [
+          {
+            type: "artist",
+            text: tl(trans.artist),
+            body: tl(trans.search_for_value).replace("{v}", tl(trans.artist)),
+            keywords: ["profile"],
+            action: () => append_search("artist")
+          },
+          {
+            type: "album",
+            text: tl(trans.album),
+            body: tl(trans.search_for_value).replace("{v}", tl(trans.album)),
+            keywords: ["record"],
+            action: () => append_search("album")
+          },
+          {
+            type: "track",
+            text: tl(trans.track),
+            body: tl(trans.search_for_value).replace("{v}", tl(trans.track)),
+            keywords: ["song"],
+            action: () => append_search("track")
+          },
+          {
+            type: "user",
+            text: tl(trans.profile),
+            body: tl(trans.search_for_value).replace("{v}", tl(trans.profile)),
+            keywords: [],
+            action: () => append_search("user")
+          },
+          {
+            type: "tag",
+            text: tl(trans.tag),
+            body: tl(trans.search_for_value).replace("{v}", tl(trans.tag)),
+            keywords: ["genre"],
+            action: () => append_search("tag")
+          }
+        ]);
+      }
+    }
+    function search_finish() {
+      if (searching.primary.type == "artist") {
+        if (searching.secondary.type == "album") {
+          window.location.href = `${root}music/${redirect()}${sanitise(searching.primary.name)}/${sanitise(searching.secondary.name)}`;
+        } else if (searching.secondary.type == "track") {
+          window.location.href = `${root}music/${redirect()}${sanitise(searching.primary.name)}/_/${sanitise(searching.secondary.name)}`;
+        } else {
+          window.location.href = `${root}music/${redirect()}${sanitise(searching.primary.name)}`;
+        }
+      } else if (searching.primary.type == "user") {
+        window.location.href = `${root}user/${sanitise(searching.primary.name)}`;
+      } else if (searching.primary.type == "tag") {
+        window.location.href = `${root}tag/${sanitise(searching.primary.name)}`;
+      }
+    }
+  }
+  function keybind(list) {
+    const darwin = ["darwin", "ios"].includes(page.platform);
+    const keymap = {
+      "\u2318": "Ctrl",
+      "\u21E7": "Shift",
+      "\u2325": "Alt",
+      "\u2303": "Ctrl",
+      "\u23CE": "Enter",
+      "\u238B": "Esc",
+      "\u232B": "Backspace"
+    };
+    return html.node`
+        <div class="keybind">
+            ${list.map((key, index3) => {
+      const label = darwin ? key : keymap[key] || key;
+      return html.node`
+                    <kbd>${label}</kbd>
+                    ${!darwin && index3 < list.length - 1 ? html.node`<kbd class="kbd-sep">+</kbd>` : ""}
+                `;
+    })}
+        </div>
+    `;
+  }
+
+  // src/components/settings.js
+  function setting({
+    id = "",
+    text: text3 = true,
+    focus = false,
+    standalone = false,
+    func,
+    list
+  }) {
+    try {
+      let value = settings[id];
+      log(`creating ${id} with value ${value}`, "settings", "log", { settings, settings_id: settings[id] });
+      if (!settings_store[id])
+        return setting_fail(id, { message: "No settings store entry present" });
+      const type = settings_store[id].type || "toggle";
+      const title = settings_store[id].title ? tl(settings_store[id].title) : id;
+      let body = settings_store[id].body ? tl(settings_store[id].body) : null;
+      const icon = settings_store[id].icon;
+      if (!body && settings_store[id].keybind)
+        body = keybind(settings_store[id].keybind);
+      let disabled = false;
+      let disabled_reason = "";
+      if (settings_store[id].platforms && !settings_store[id].platforms.includes(page.platform)) {
+        disabled = true;
+        disabled_reason = tl(trans.item_is_unavailable_on_platform).replace("{i}", title).replace("{p}", tl(trans.platforms[page.platform]));
+      }
+      if (disabled && disabled_reason)
+        return setting_fail(id, { message: disabled_reason, unavailable: true });
+      let html_title = html.node`${title}`;
+      if (settings_store[id].beta)
+        html_title.appendChild(html.node`<span class="new-badge beta">${tl(trans.beta)}</span>`);
+      if (settings_store[id].new_release)
+        html_title.appendChild(html.node`<span class="new-badge beta">${tl(trans.new)}</span>`);
+      if (type === "toggle") {
+        let toggle2;
+        return html.node`
+                <div class="setting v2 ${standalone ? "standalone" : ""}" data-type="toggle" disabled=${disabled} onclick=${() => update_toggle(id, toggle2)}>
+                    ${icon ? html.node`
+                    <div class="icon">
+                        <div class="bleh-icon" style="--icon: var(--${icon})" />
+                    </div>
+                    ` : ""}
+                    ${text3 ? html.node`
+                    <div class="heading">
+                        <h5>${html_title}</h5>
+                        ${body ? html.node`<p>${body}</p>` : ""}
+                    </div>
+                    ` : ""}
+                    ${settings_store[id].extensions ? html.node`
+                    <div class="extensions">
+                        ${settings_store[id].extensions.map((extension) => () => {
+          let container = html.node`
+                                <div class="extension">
+                                    <div class="bleh-icon" />
+                                </div>
+                            `;
+          tippy_esm_default(container, {
+            content: tl(trans.requires_extension_value).replace("{v}", tl(extension))
+          });
+          return container;
+        })}
+                    </div>
+                    ` : ""}
+                    ${setting_incompatible_block(settings_store[id].incompatible)}
+                    <div class="toggle-wrap">
+                        <button class="toggle" ref=${(el) => toggle2 = el} aria-checked=${value}>
+                            <div class="dot"></div>
+                        </button>
+                    </div>
+                </div>
+            `;
+      } else if (type === "range") {
+        let update_range = function(val) {
+          input2.value = val;
+          track.style.setProperty("--percent", `${(val - settings_store[id].min) / max_range * 100}%`);
+          marker.textContent = `${val}${settings_store[id].suffix || ""}`;
+          option.setAttribute("data-modified", val != settings_store[id].default);
+          save_setting(id, val);
+          if (func) func(val);
+        }, reset_range = function() {
+          update_range(settings_store[id].default);
+          notify({
+            id: "reset_setting",
+            title: tl(trans.settings),
+            body: tl(trans.reset_item_to_default),
+            icon: "icon-16-settings"
+          });
+        };
+        let option;
+        let min2 = settings_store[id].min || 0;
+        let max2 = settings_store[id].max || 0;
+        let step = settings_store[id].step || 0;
+        if (min2 >= max2 || step === 0)
+          return setting_fail(id, { message: "A range type requires a min, max, and step defined in the settings store" });
+        let reset_btn;
+        let track;
+        let input2;
+        let marker;
+        let working_max = settings_store[id].max - settings_store[id].min;
+        const elem = html.node`
+                <div class="setting v2 ${standalone ? "standalone" : ""} ${settings_store[id].vertical ? "v" : ""}" data-type="range" disabled=${disabled} ref=${(el) => option = el} data-modified=${value != settings_store[id].default}>
+                    ${text3 ? html.node`
+                    <div class="heading">
+                        <h5>${html_title}<button class="reset" ref=${(el) => reset_btn = el} onclick=${() => reset_range()}>${tl(trans.reset)}</button></h5>
+                        ${body ? html.node`<p>${body}</p>` : ""}
+                    </div>
+                    ` : ""}
+                    ${settings_store[id].extensions ? html.node`
+                    <div class="extensions">
+                        ${settings_store[id].extensions.map((extension) => () => {
+          let container = html.node`
+                                <div class="extension">
+                                    <div class="bleh-icon" />
+                                </div>
+                            `;
+          tippy_esm_default(container, {
+            content: tl(trans.requires_extension_value).replace("{v}", tl(extension))
+          });
+          return container;
+        })}
+                    </div>
+                    ` : ""}
+                    ${setting_incompatible_block(settings_store[id].incompatible)}
+                    <div class="range">
+                        <div class="track" style="--percent: ${(value - settings_store[id].min) / working_max * 100}%" data-id=${id} ref=${(el) => track = el}>
+                            <div class="fill" />
+                            <div class="nub" />
+                        </div>
+                        <input type="range" min=${min2} max=${max2} step=${step} value=${value} ref=${(el) => input2 = el} oninput=${() => update_range(input2.value)} />
+                        <p class="value-marker" ref=${(el) => marker = el}>${value}${settings_store[id].suffix || ""}</p>
+                    </div>
+                </div>
+            `;
+        tippy_esm_default(reset_btn, {
+          content: tl(trans.reset)
+        });
+        elem.set = (val) => {
+          update_range(val);
+        };
+        const max_range = max2 - min2;
+        return elem;
+      } else if (type === "text") {
+        let option;
+        let min2 = settings_store[id].min || 0;
+        let max2 = settings_store[id].max || 0;
+        if (max2 === 0)
+          return setting_fail(id, { message: "A text type requires a max defined in the settings store" });
+        let reset_btn;
+        let avatar3;
+        let input2;
+        let submit;
+        let input_container;
+        let error_tooltip;
+        let placeholder = settings_store[id].placeholder;
+        if (placeholder && placeholder != "empty") placeholder = tl(placeholder);
+        let container = html.node`
+                <div class="setting v2 ${standalone ? "standalone" : ""}" data-type="text" disabled=${disabled} ref=${(el) => option = el} data-modified=${value != settings_store[id].default}>
+                    ${icon ? html.node`
+                    <div class="icon">
+                        <div class="bleh-icon" style="--icon: var(--${icon})" />
+                    </div>
+                    ` : ""}
+                    ${text3 ? html.node`
+                    <div class="heading">
+                        <h5>${html_title}<button class="reset" ref=${(el) => reset_btn = el} onclick=${() => reset_text(id, input2, submit, option, reset_btn, avatar3)}>${tl(trans.reset)}</button></h5>
+                        ${body ? html.node`<p>${body}</p>` : ""}
+                    </div>
+                    ` : ""}
+                    ${settings_store[id].extensions ? html.node`
+                    <div class="extensions">
+                        ${settings_store[id].extensions.map((extension) => () => {
+          let container2 = html.node`
+                                <div class="extension">
+                                    <div class="bleh-icon" />
+                                </div>
+                            `;
+          tippy_esm_default(container2, {
+            content: tl(trans.requires_extension_value).replace("{v}", tl(extension))
+          });
+          return container2;
+        })}
+                    </div>
+                    ` : ""}
+                    ${setting_incompatible_block(settings_store[id].incompatible)}
+                    ${settings_store[id].avatar ? html.node`
+                    <div class="avatar-container">
+                        <div class="avatar-inner" ref=${(el) => avatar3 = el}>
+                            <img src=${localStorage.getItem(`bleh_${id}_avi`) || ""} alt=${value} />
+                        </div>
+                    </div>
+                    ` : ""}
+                    <div class="input-container content-form in-settings can-submit" data-has-error="false" ref=${(el) => input_container = el}>
+                        <input type="text" maxlength=${max2} value=${value} style="--max: ${max2}px" ref=${(el) => input2 = el} placeholder=${placeholder} />
+                        <button class="btn chibi icon submit" ref=${(el) => submit = el} onclick=${() => update_text(id, input2, submit, option, input2.value, reset_btn, avatar3)}>${tl(trans.save)}</button>
+                    </div>
+                </div>
+            `;
+        input2.addEventListener("keydown", (event3) => {
+          if (event3.keyCode === 13 && input_container.getAttribute("data-has-error") == "false") {
+            event3.preventDefault();
+            submit.click();
+          }
+        });
+        tippy_esm_default(reset_btn, {
+          content: tl(trans.reset)
+        });
+        tippy_esm_default(submit, {
+          content: tl(trans.save)
+        });
+        if (focus)
+          input2.focus();
+        error_tooltip = tippy_esm_default(input2, {
+          theme: "error",
+          placement: "top",
+          trigger: "manual"
+        });
+        error_tooltip.disable();
+        input2.addEventListener("input", () => {
+          input_container.setAttribute("data-has-error", "false");
+          error_tooltip.disable();
+          submit.disabled = false;
+          if (type == "number") {
+            if (input2.value == "") {
+              error_input(tl(trans.only_numbers_are_allowed), input_container, error_tooltip, submit);
+            } else if (parseInt(input2.value) > max2 || parseInt(input2.value) < min2) {
+              error_input(tl(trans.keep_within_the_range), input_container, error_tooltip, submit);
+            }
+          } else if (type == "text") {
+            if (settings_store[id].warn_if_empty && input2.value == "") {
+              error_input(tl(trans.this_field_is_required), input_container, error_tooltip, submit);
+            } else if (settings_store[id].warn_if_matches_auth && input2.value == auth.name) {
+              error_input(tl(trans.please_dont_clone_yourself), input_container, error_tooltip, submit);
+            }
+          }
+        });
+        return container;
+      } else if (type == "checkbox") {
+        let toggle2;
+        return html.node`
+                <div class="setting v2 ${settings_store[id].horizontal ? "horizontal" : ""} ${standalone ? "standalone" : ""}" data-type="checkbox" disabled=${disabled} onclick=${() => update_toggle(id, toggle2)}>
+                    ${icon ? html.node`
+                    <div class="icon">
+                        <div class="bleh-icon" style="--icon: var(--${icon})" />
+                    </div>
+                    ` : ""}
+                    ${text3 ? html.node`
+                    <div class="heading">
+                        <h5>${html_title}</h5>
+                        ${body ? html.node`<p>${body}</p>` : ""}
+                    </div>
+                    ` : ""}
+                    ${settings_store[id].extensions ? html.node`
+                    <div class="extensions">
+                        ${settings_store[id].extensions.map((extension) => () => {
+          let container = html.node`
+                                <div class="extension">
+                                    <div class="bleh-icon" />
+                                </div>
+                            `;
+          tippy_esm_default(container, {
+            content: tl(trans.requires_extension_value).replace("{v}", tl(extension))
+          });
+          return container;
+        })}
+                    </div>
+                    ` : ""}
+                    ${setting_incompatible_block(settings_store[id].incompatible)}
+                    <div class="check">
+                        <div class="box" ref=${(el) => toggle2 = el} aria-checked=${value}>
+                            <div class="bleh-icon" />
+                        </div>
+                    </div>
+                </div>
+            `;
+      } else if (type == "tabs") {
+        if (func) func(value);
+        let buttons = [];
+        const tabs = html.node`
+                <div class="view-buttons view-buttons-middle">
+                    ${Object.entries(settings_store[id].values).map(([key, val]) => {
+          const icon2 = val.icon || key;
+          const button = html.node`
+                            <button class="btn view-item" data-type=${icon2} data-value=${key} onclick=${() => {
+            save_setting(id, key);
+            buttons.forEach((btn) => {
+              btn.setAttribute("aria-checked", btn.getAttribute("data-value") == key);
+            });
+            if (func) func(key);
+          }} aria-checked=${value == key}>
+                                ${tl(val.name)}
+                            </button>
+                        `;
+          buttons.push(button);
+          return button;
+        })}
+                </div>
+            `;
+        return tabs;
+      } else if (type == "radio") {
+        let update_radio = function(val) {
+          save_setting(id, val);
+          elem.setAttribute("data-modified", val != settings_store[id].default);
+          buttons.forEach((btn) => {
+            btn.setAttribute("aria-checked", btn.getAttribute("data-value") == val);
+          });
+          if (func) func(val);
+        }, reset_radio = function() {
+          update_radio(settings_store[id].default);
+          notify({
+            id: "reset_setting",
+            title: tl(trans.settings),
+            body: tl(trans.reset_item_to_default),
+            icon: "icon-16-settings"
+          });
+        };
+        if (func) func(value);
+        let buttons = [];
+        let reset_btn;
+        const elem = html.node`
+                <div class="setting v2" data-type="options" disabled=${disabled} data-modified=${value != settings_store[id].default}>
+                    ${icon ? html.node`
+                    <div class="icon">
+                        <div class="bleh-icon" style="--icon: var(--${icon})" />
+                    </div>
+                    ` : ""}
+                    ${text3 ? html.node`
+                    <div class="heading">
+                        <h5>${html_title}<button class="reset" ref=${(el) => reset_btn = el} onclick=${() => reset_radio()}>${tl(trans.reset)}</button></h5>
+                        ${body ? html.node`<p>${body}</p>` : ""}
+                    </div>
+                    ` : ""}
+                    ${settings_store[id].extensions ? html.node`
+                    <div class="extensions">
+                        ${settings_store[id].extensions.map((extension) => () => {
+          let container = html.node`
+                                <div class="extension">
+                                    <div class="bleh-icon" />
+                                </div>
+                            `;
+          tippy_esm_default(container, {
+            content: tl(trans.requires_extension_value).replace("{v}", tl(extension))
+          });
+          return container;
+        })}
+                    </div>
+                    ` : ""}
+                    ${setting_incompatible_block(settings_store[id].incompatible)}
+                    <div class="primary-selections">
+                        ${Object.entries(settings_store[id].values).map(([key, val]) => {
+          const icon2 = val.icon || key;
+          const button = html.node`
+                                <button class="btn primary-selection no-icon" data-type=${icon2} data-value=${key} onclick=${() => {
+            update_radio(key);
+          }} aria-checked=${value == key}>
+                                    <h5>${typeof val.name === "object" ? tl(val.name) : val.name}</h5>
+                                </button>
+                            `;
+          buttons.push(button);
+          return button;
+        })}
+                    </div>
+                </div>
+            `;
+        tippy_esm_default(reset_btn, {
+          content: tl(trans.reset)
+        });
+        return elem;
+      } else if (type == "list") {
+        let render_list_items = function(current = settings[id]) {
+          const available = Object.fromEntries(
+            Object.entries(list).filter(([key]) => !current.includes(key))
+          );
+          render(lists, html`
+                    <div class="setting-list current">
+                        ${current.map((val) => {
+            return html.node`
+                                <button class="setting-list-item" onclick=${() => {
+              const new_list = current.filter((item) => item != val);
+              save_setting(id, new_list);
+              render_list_items(new_list);
+            }}>
+                                    ${list[val]?.icon ? html.node`
+                                    <div class="bleh-icon" data-type=${list[val].icon} />
+                                    ` : ""}
+                                    <div class="info">
+                                        ${list[val]?.name || "???"}
+                                    </div>
+                                    <div class="bleh-icon indicator" data-type="minus" />
+                                </button>
+                            `;
+          })}
+                    </div>
+                    <div class="setting-list-sep" />
+                    <div class="setting-list available">
+                        ${Object.entries(available).map(([val, formal]) => {
+            return html.node`
+                                <button class="setting-list-item" onclick=${() => {
+              const new_list = [...current, val];
+              save_setting(id, new_list);
+              render_list_items(new_list);
+            }}>
+                                    <div class="bleh-icon" data-type=${formal.icon} />
+                                    <div class="info">
+                                        ${formal.name}
+                                    </div>
+                                    <div class="bleh-icon indicator" data-type="add" />
+                                </button>
+                            `;
+          })}
+                    </div>
+                `);
+        };
+        if (!list) return setting_fail(id, { message: "List type requires you to pass available items for matching." });
+        let lists;
+        const elem = html.node`
+                <div class="setting v2" data-type="list">
+                    ${icon ? html.node`
+                    <div class="icon">
+                        <div class="bleh-icon" style="--icon: var(--${icon})" />
+                    </div>
+                    ` : ""}
+                    ${text3 ? html.node`
+                    <div class="heading">
+                        <h5>${html_title}</h5>
+                        ${body ? html.node`<p>${body}</p>` : ""}
+                    </div>
+                    ` : ""}
+                    <div class="setting-lists" ref=${(el) => lists = el} />
+                </div>
+            `;
+        render_list_items(value);
+        return elem;
+      }
+    } catch (e) {
+      console.error(e);
+      return setting_fail(id, e);
+    }
+    return setting_fail(id);
+  }
+  function error_input(reason, input2, tooltip, submit) {
+    log(reason, "input", "log");
+    input2.setAttribute("data-has-error", "true");
+    tooltip.setContent(reason);
+    tooltip.enable();
+    tooltip.show();
+    submit.disabled = true;
+  }
+  function setting_incompatible_block(entries2) {
+    if (!entries2)
+      return "";
+    return "";
+    return html.node`
+        <div class="incompatible">
+            ${entries2.map((incompatible) => () => {
+      let container = html.node`
+                    <div class="extension">
+                        <div class="bleh-icon" />
+                    </div>
+                `;
+      tippy_esm_default(container, {
+        content: tl(trans.incompatible_with_value).replace("{v}", tl(settings_store[incompatible.setting].title))
+      });
+      return container;
+    })}
+        </div>
+    `;
+  }
+  function setting_fail(id, e = null) {
+    if (e && e.unavailable && e.message) {
+      return html.node`
+            <div class="setting">
+                <div class="alert alert-info no-margin">
+                    ${e.message}
+                </div>
+            </div>
+        `;
+    }
+    return html.node`
+        <div class="setting">
+            <div class="alert alert-error no-margin">
+                ${tl(trans.value_failed_to_load).replace("{v}", id)}
+                ${e && e.message ? html`<br>${e.message}` : ""}
+            </div>
+        </div>
+    `;
+  }
+  function update_toggle(id, toggle2) {
+    let value = settings[id];
+    toggle2.setAttribute("aria-checked", !value);
+    save_setting(id, !value);
+  }
+  function update_text(id, input2, submit, option, value, reset_btn, avatar3, silent = false) {
+    if (settings_store[id].wait) {
+      reset_btn.disabled = true;
+      input2.disabled = true;
+      submit.disabled = true;
+    }
+    input2.value = value;
+    option.setAttribute("data-modified", value != settings_store[id].default);
+    if (id == "profile_shortcut") {
+      save_profile_shortcut(input2, value, submit, reset_btn, avatar3);
+      return;
+    } else if (id == "hu_tao") {
+      if (value == "develop") {
+        dialog_rm({ id: "hu_tao" });
+        change_settings_page("sku");
+        notify({
+          id: "unlocked",
+          title: tl(trans.development),
+          body: tl(trans.unlocked),
+          type: "success"
+        });
+      }
+    }
+    save_setting(id, value);
+  }
+  function reset_text(id, input2, submit, option, reset_btn, avatar3) {
+    update_text(id, input2, submit, option, settings_store[id].default, reset_btn, avatar3, true);
+    notify({
+      id: "reset_setting",
+      title: tl(trans.settings),
+      body: tl(trans.reset_item_to_default),
+      icon: "icon-16-settings"
+    });
+  }
+  function save_setting(id, value) {
+    settings[id] = value;
+    document.documentElement.setAttribute(`data-bleh--${id}`, value);
+    if (id == "theme") {
+      if (value == "light" || value == "ink" || value == "glass") {
+        settings.theme_type = "light";
+      } else {
+        settings.theme_type = "dark";
+      }
+      document.documentElement.setAttribute(`data-bleh--theme_type`, settings.theme_type);
+    }
+    if (settings_store[id].require_reload == true || settings_store[id].require_reload == "partial" && page.type != "bleh_settings")
+      request_reload();
+    if (settings_store[id].css)
+      document.body.style.setProperty(`--${settings_store[id].css}`, `${value}${settings_store[id].suffix || ""}`);
+    compile_settings();
+    log(`saved ${id} as ${value}`, "settings", "log", { settings, settings_id: settings[id] });
+  }
+  function compile_settings() {
+    let clone6 = structuredClone(settings);
+    for (let setting2 in clone6) {
+      if (settings_store[setting2] && JSON.stringify(clone6[setting2]) == JSON.stringify(settings_store[setting2].default)) {
+        delete clone6[setting2];
+      }
+    }
+    clone6.version = version.build;
+    localStorage.setItem("bleh", JSON.stringify(clone6));
+    return clone6;
+  }
+
+  // src/config.js
+  function load_settings(skip2 = false) {
+    if (!skip2) {
+      for (let setting2 in settings_store) {
+        if (settings[setting2] == null)
+          settings[setting2] = settings_store[setting2].default;
+      }
+      if (!settings.version) settings.version = 0;
+    }
+    if (!settings.theme_type) {
+      if (settings.theme == "light" || settings.theme == "ink")
+        settings.theme_type = "light";
+      else
+        settings.theme_type = "dark";
+    }
+    if (settings.version < 2025.0816) {
+      if (settings.seasonal_particles == true)
+        settings.seasonal_particles = "all";
+      else if (settings.seasonal_particles == false)
+        settings.seasonal_particles = "none";
+      if (settings.seasonal_particles_reduced == true) {
+        settings.seasonal_particles = "less";
+        delete settings.seasonal_particles_reduced;
+      } else if (settings.seasonal_particles_reduced == false) {
+        delete settings.seasonal_particles_reduced;
+      }
+      if (settings.font_weight == 480)
+        settings.font_weight = settings_store.font_weight.default;
+      if (settings.font_weight_medium == 650)
+        settings.font_weight_medium = settings_store.font_weight_medium.default;
+      if (settings.font_weight_bold == 730 || settings.font_weight_bold == 760)
+        settings.font_weight_bold = settings_store.font_weight_bold.default;
+    }
+    for (let setting2 in settings) {
+      if ((setting2 == "hue" || setting2 == "sat" || setting2 == "lit") && settings.hue == settings_store.hue.default && settings.sat == settings_store.sat.default && settings.lit == settings_store.lit.default) continue;
+      if (settings_store[setting2] && settings_store[setting2].css) document.body.style.setProperty(`--${settings_store[setting2].css}`, `${settings[setting2]}${settings_store[setting2].suffix || ""}`);
+      document.documentElement.setAttribute(`data-bleh--${setting2}`, `${settings[setting2]}`);
+    }
+    load_skus();
+    compile_settings();
+    if (document.body.classList.contains("user-dashboard-layout")) {
+      document.documentElement.setAttribute("data-bleh--theme", "oled");
+      page.state.settings_reload = true;
+    }
+    load_chart_colours();
+  }
+  function toggle_theme() {
+    if (page.subpage.startsWith("listening-report")) return;
+    let current_theme = settings.theme;
+    if (current_theme == "dark")
+      current_theme = "darker";
+    else if (current_theme == "darker")
+      current_theme = "oled";
+    else if (current_theme == "oled" || current_theme == "classic")
+      current_theme = "light";
+    else if (current_theme == "light")
+      current_theme = "ink";
+    else if (current_theme == "ink")
+      current_theme = "dark";
+    save_setting("theme", current_theme);
+    chart_reflow();
+  }
+  function reset_all() {
+    for (let item in settings_base)
+      reset_item(item);
+  }
+  function refresh_all(search = document) {
+    for (let item in settings_base)
+      update_item(item, settings[item], false, search);
+  }
+  function reset_item(item) {
+    update_item(item, settings_base[item].value);
+  }
+  function update_params(params = {}) {
+    for (let item in params) {
+      update_item(item, params[item]);
+    }
+  }
+  unsafeWindow._reset_all = function() {
+    reset_all();
+  };
+  unsafeWindow._reset_item = function(item) {
+    reset_item(item);
+  };
+  unsafeWindow._update_params = function(params = {}) {
+    update_params(params);
+  };
+  unsafeWindow._update_item = function(item, value) {
+    update_item(item, value);
+  };
+  function update_item(item, value, modify = true, search = document) {
+    let container = search.querySelector(`#container-${item}`);
+    if (container)
+      console.info(container);
+    else if (settings_base[item].type != "slider" && settings_base[item].type != "options")
+      return;
+    try {
+      let new_value = false;
+      if (value != settings[item])
+        new_value = true;
+      if ((settings_base[item].require_reload == true || settings_base[item].require_reload == "partial" && page.type != "bleh_settings") && new_value)
+        request_reload();
+      if (settings_base[item].type == "slider" && modify)
+        settings[item] = value;
+      if (!modify)
+        console.info(item, value, modify);
+      if (settings_base[item].type == "slider") {
+        try {
+          let slider = search.querySelector(`#slider-${item}`);
+          search.querySelector(`#value-${item}`).textContent = `${settings[item]}${settings_base[item].unit}`;
+          slider.value = settings[item];
+          search.querySelector(`#slider-track-${item}`).style.setProperty("--percent", `${settings[item] / slider.getAttribute("max") * 100}%`);
+        } catch (e) {
+        }
+        document.body.style.setProperty(`--${settings_base[item].css}`, `${value}${settings_base[item].unit}`);
+        document.documentElement.setAttribute(`data-bleh--${item}`, `${value}`);
+        if (item == "hue" || item == "sat" || item == "lit") {
+          if (settings.hue == settings_base.hue.value && settings.sat == settings_base.sat.value && settings.lit == settings_base.lit.value && settings.seasonal && stored_season.id != "none") {
+            document.body.style.removeProperty(`--${settings_base.hue.css}`);
+            document.body.style.removeProperty(`--${settings_base.sat.css}`);
+            document.body.style.removeProperty(`--${settings_base.lit.css}`);
+            document.documentElement.setAttribute("data-bleh--hsl-override", "true");
+          } else {
+            document.documentElement.setAttribute("data-bleh--hsl-override", "false");
+          }
+        }
+      } else if (settings_base[item].type == "toggle") {
+        if (settings[item] == settings_base[item].values[0] && modify) {
+          settings[item] = settings_base[item].values[1];
+          search.querySelector(`#toggle-${item}`).setAttribute("aria-checked", false);
+          document.body.style.setProperty(`--${item}`, settings_base[item].values[1]);
+          document.documentElement.setAttribute(`data-bleh--${item}`, `${settings_base[item].values[1]}`);
+        } else if (modify) {
+          settings[item] = settings_base[item].values[0];
+          console.log(`toggle-${item}`);
+          search.querySelector(`#toggle-${item}`).setAttribute("aria-checked", true);
+          document.body.style.setProperty(`--${item}`, settings_base[item].values[0]);
+          document.documentElement.setAttribute(`data-bleh--${item}`, `${settings_base[item].values[0]}`);
+        } else {
+          if (settings[item] == settings_base[item].values[0]) {
+            search.querySelector(`#toggle-${item}`).setAttribute("aria-checked", true);
+          } else {
+            search.querySelector(`#toggle-${item}`).setAttribute("aria-checked", false);
+          }
+        }
+      } else if (settings_base[item].type == "options") {
+        if (modify) {
+          settings[item] = value;
+          document.body.style.setProperty(`--${item}`, value);
+          document.documentElement.setAttribute(`data-bleh--${item}`, value);
+          let toggle2 = document.getElementById(`toggle-${item}-${value}`);
+          if (toggle2)
+            toggle2.setAttribute("aria-checked", true);
+          let other_toggles = search.querySelectorAll(`[data-toggle="${item}"]`);
+          other_toggles.forEach((toggle3) => {
+            let other_value = toggle3.getAttribute("data-toggle-value");
+            if (other_value == value)
+              return;
+            else
+              toggle3.setAttribute("aria-checked", false);
+          });
+          if ((item == "chart_view" || item == "chart_bar_axis") && page.type == "user" && page.subpage.startsWith("library"))
+            bleh_glacier_date_graph_generate();
+        } else {
+          if (settings[item] == value) {
+            document.getElementById(`toggle-${item}-${value}`).setAttribute("aria-checked", true);
+          } else {
+            document.getElementById(`toggle-${item}-${value}`).setAttribute("aria-checked", false);
+          }
+        }
+      }
+      if (modify)
+        log(`updated ${item} to ${settings[item]}`, "settings");
+      compile_settings();
+    } catch (e) {
+    }
+    if (container) {
+      if (settings[item] != settings_base[item].value)
+        container.classList.add("modified");
+      else
+        container.classList.remove("modified");
+    }
+    if (item == "hue" || item == "sat" || item == "lit") {
+      update_colour_swatches();
+      load_chart_colours();
+    }
+  }
+  function request_reload() {
+    if (page.type == "bleh_setup")
+      return;
+    log("requesting reload", "settings");
+    reload_pending.state = true;
+    notify({
+      title: tl(trans.refresh_pending.name),
+      body: tl(trans.refresh_pending.body),
+      icon: "icon-16-settings",
+      persist: true,
+      actions: [
+        {
+          action: () => invoke_reload(),
+          text: tl(trans.refresh),
+          type: "refresh"
+        }
+      ]
+    });
+  }
+  unsafeWindow._invoke_reload = function() {
+    invoke_reload();
+  };
+  function invoke_reload() {
+    window.location.reload();
+  }
+  function update_colour_swatches() {
+    let found = false;
+    let custom = null;
+    let seasonal = null;
+    let swatches = page.structure.main.querySelectorAll(".swatch");
+    swatches.forEach((swatch) => {
+      let h = swatch.style.getPropertyValue("--hue-over");
+      let s2 = swatch.style.getPropertyValue("--sat-over");
+      let l2 = swatch.style.getPropertyValue("--lit-over");
+      let parent = swatch.parentElement;
+      if (swatch.classList[0] == "dropdown-menu-clickable-item")
+        parent = swatch;
+      if (h == settings.hue && s2 == settings.sat && l2 == settings.lit || swatch.getAttribute("data-swatch-type") == "default" && settings.hue == 255 && settings.sat == 1 && settings.lit == 1) {
+        parent.setAttribute("aria-checked", "true");
+        if (swatch.classList[0] != "dropdown-menu-clickable-item")
+          found = true;
+      } else {
+        parent.setAttribute("aria-checked", "false");
+      }
+      if (!custom && swatch.getAttribute("data-swatch-type") == "customise")
+        custom = parent;
+      if (!seasonal && swatch.getAttribute("data-swatch-type") == "default")
+        seasonal = parent;
+    });
+    if (found) return;
+    if (custom && settings.accent_type != "season")
+      custom.setAttribute("aria-checked", "true");
+    else if (seasonal)
+      seasonal.setAttribute("aria-checked", "true");
+  }
+  unsafeWindow._reset_inbuilt_item = function(item) {
+    reset_inbuilt_item(item);
+  };
+  unsafeWindow._update_inbuilt_params = function(params = {}) {
+    update_inbuilt_params(params);
+  };
+  unsafeWindow._update_inbuilt_item = function(item, value) {
+    update_inbuilt_item(item, value);
+  };
+  function update_inbuilt_item(item, value, modify = true, element = document.body) {
+    console.warn("update item", item, value, "modify", modify);
+    let test_if_valid = element.querySelector(`#toggle-${item}`);
+    console.warn(test_if_valid, `toggle-${item}`);
+    if (test_if_valid == void 0)
+      return;
+    if (inbuilt_settings[item].type == "toggle") {
+      if (modify) {
+        value = document.getElementById(`toggle-${item}`).getAttribute("aria-checked") === "true";
+        log(`updated (inbuilt) ${item} to ${!value}`, "settings");
+      }
+      if (value == inbuilt_settings[item].values[0] && modify) {
+        element.querySelector(`#inbuilt-companion-checkbox-${item}`).checked = false;
+        element.querySelector(`#toggle-${item}`).setAttribute("aria-checked", false);
+        document.documentElement.setAttribute(`data-bleh--inbuilt-${item}`, inbuilt_settings[item].values[1]);
+      } else if (modify) {
+        element.querySelector(`#inbuilt-companion-checkbox-${item}`).checked = true;
+        element.querySelector(`#toggle-${item}`).setAttribute("aria-checked", true);
+        document.documentElement.setAttribute(`data-bleh--inbuilt-${item}`, inbuilt_settings[item].values[0]);
+      } else {
+        console.warn(item, value, value == true, value == false, typeof value, "boolean");
+        if (value == true) {
+          console.warn(item, value, "TRUE");
+          element.querySelector(`#inbuilt-companion-checkbox-${item}`).checked = true;
+          element.querySelector(`#toggle-${item}`).setAttribute("aria-checked", true);
+          document.documentElement.setAttribute(`data-bleh--inbuilt-${item}`, true);
+        } else if (value == false) {
+          console.warn(item, value, "FALSE");
+          element.querySelector(`#inbuilt-companion-checkbox-${item}`).checked = false;
+          element.querySelector(`#toggle-${item}`).setAttribute("aria-checked", false);
+          document.documentElement.setAttribute(`data-bleh--inbuilt-${item}`, false);
+        }
+      }
+    }
+  }
+
+  // src/pages/glacier.js
+  function bleh_user_library() {
+    let date_items = page.structure.side.querySelectorAll(":scope > :is(div, figure)");
+    let date_panel = document.createElement("section");
+    date_panel.classList.add("date-panel");
+    date_panel.setAttribute("data-glacier-graphs", settings.glacier_library_graphs);
+    date_items.forEach((item, index3) => {
+      date_panel.appendChild(item);
+      if (item.classList.contains("row"))
+        item.classList = "date-selector";
+      if (index3 == 0)
+        page.structure.glacier.selector = item;
+    });
+    if (date_items.length > 0) {
+      if (!page.mobile)
+        page.structure.side.appendChild(date_panel);
+      else
+        page.structure.main.insertBefore(date_panel, page.structure.main.firstChild);
+    }
+    page.structure.glacier.date_panel = date_panel;
+    let search = page.structure.content_top.querySelector(".library-search");
+    let nav = page.structure.content_top.querySelector(".library-controls nav");
+    let tabs = nav.querySelector(".navlist-items");
+    if (page.name == auth.name) {
+      let velocity_tab = document.createElement("li");
+      velocity_tab.classList.add("navlist-item", "secondary-nav-item", "secondary-nav-item--velocity");
+      velocity_tab.innerHTML = `
+            <a class="secondary-nav-item-link" href="${root}labs/artist-velocity" target="_blank">
+                ${tl(trans.velocity)}
+            </a>
+        `;
+      tabs.appendChild(velocity_tab);
+    } else {
+      tabs.appendChild(html.node`
+            <li class="navlist-item secondary-nav-item secondary-nav-item--compare">
+                <a class="secondary-nav-item-link" href="${root}bleh/minis/compare?profile=${page.name}">
+                    ${tl(trans.compare)}
+                </a>
+            </li>
+        `);
+    }
+    let scrobbles = tabs.querySelector(".secondary-nav-item--overview");
+    scrobbles.classList.remove("secondary-nav-item--overview");
+    scrobbles.classList.add("secondary-nav-item--scrobbles");
+    if (ff("mualani")) {
+      let toolbar = html.node`
+            <div class="toolbar">
+                ${search}
+                ${nav}
+            </div>
+        `;
+      nav.classList.add("redesigned-navigation");
+      page.structure.content_top.style.display = "none";
+      page.structure.content_top.after(toolbar);
+    }
+    if (!ff("glacier_library"))
+      return;
+    if (settings.glacier_library_graphs && date_items.length > 0) {
+      let chart_view_selector = document.createElement("div");
+      chart_view_selector.classList.add("view-buttons", "chart-view-selector", "view-buttons-middle");
+      chart_view_selector.innerHTML = `
+            <button class="btn view-item" id="toggle-chart_view-line" data-toggle="chart_view" data-toggle-value="line" onclick="_update_item('chart_view', 'line')">
+                ${tl(trans.line)}
+            </button>
+            <button class="btn view-item" id="toggle-chart_view-pie" data-toggle="chart_view" data-toggle-value="pie" onclick="_update_item('chart_view', 'pie')">
+                ${tl(trans.pie)}
+            </button>
+            <button class="btn view-item" id="toggle-chart_view-bar" data-toggle="chart_view" data-toggle-value="bar" onclick="_update_item('chart_view', 'bar')">
+                ${tl(trans.bar)}
+            </button>
+        `;
+      page.structure.glacier.selector.after(chart_view_selector);
+      let chart_axis_selector = document.createElement("div");
+      chart_axis_selector.classList.add("view-buttons", "chart-axis-selector", "view-buttons-middle");
+      chart_axis_selector.innerHTML = `
+            <button class="btn view-item" id="toggle-chart_bar_axis-horizontal" data-toggle="chart_bar_axis" data-toggle-value="horizontal" onclick="_update_item('chart_bar_axis', 'horizontal')">
+                ${tl(trans.horizontal)}
+            </button>
+            <button class="btn view-item" id="toggle-chart_bar_axis-vertical" data-toggle="chart_bar_axis" data-toggle-value="vertical" onclick="_update_item('chart_bar_axis', 'vertical')">
+                ${tl(trans.vertical)}
+            </button>
+        `;
+      chart_view_selector.after(chart_axis_selector);
+      refresh_all(page.structure.glacier.date_panel);
+    }
+    if (date_items.length > 0)
+      bleh_glacier_library_date();
+    if (page.subpage == "library_overview" || page.subpage.endsWith("-search")) {
+      bleh_glacier_library_top(true);
+      const pagination = page.structure.main.querySelector(":scope > .pagination");
+      page.structure.main.appendChild(html.node`
+            <section class="pagination-panel">
+                ${pagination}
+            </section>
+        `);
+      page.state.glacier.insights = {
+        artist: {
+          display: false,
+          values: [],
+          labels: [],
+          highest: {
+            value: 0,
+            label: "",
+            link: "",
+            img: ""
+          }
+        },
+        album: {
+          display: false,
+          values: [],
+          labels: [],
+          highest: {
+            value: 0,
+            label: "",
+            link: "",
+            img: ""
+          }
+        },
+        track: {
+          display: false,
+          values: [],
+          labels: [],
+          highest: {
+            value: 0,
+            label: "",
+            link: "",
+            img: ""
+          }
+        }
+      };
+    }
+    if (date_items.length > 0 && (page.subpage == "library_overview" || page.subpage.startsWith("library_artist_") || page.subpage.startsWith("library_album_") || page.subpage.startsWith("library_track_"))) {
+      log("refresh is now marked true", "glacier library");
+      page.structure.glacier.refresh = true;
+      bleh_glacier_date_graph(true);
+    }
+    if (page.subpage.startsWith("library_artist_") || page.subpage.startsWith("library_album_") || page.subpage.startsWith("library_track_")) {
+      bleh_glacier_library_focused();
+    }
+  }
+  function bleh_glacier_library_date() {
+    let button = page.structure.glacier.date_panel.querySelector(".date-range-picker-button.disclose-trigger:not([data-glacier-library-date])");
+    if (!button) return;
+    button.setAttribute("data-glacier-library-date", "true");
+    console.info("button", button);
+    let date_picker = page.structure.glacier.date_panel.querySelector(".library-controls-datepicker");
+    let old_date_btn = date_picker.querySelector(".date-range-picker-button:not(.disclose-trigger)");
+    if (old_date_btn) old_date_btn.remove();
+    let date_btn = html.node`
+        <button class="date-range-picker-button">${button.querySelector(".date-range-picker-button-inner").textContent}</button>
+    `;
+    date_picker.appendChild(date_btn);
+    let picker_content = page.structure.glacier.date_panel.querySelector(".date-range-picker-content:not([data-glacier-library-date])");
+    if (!picker_content) return;
+    picker_content.setAttribute("data-glacier-library-date", "true");
+    let picker_presets = picker_content.querySelectorAll(".date-range-picker-presets-wrap > .date-range-picker-presets");
+    let params = new URLSearchParams(document.location.search);
+    page.requested.from = params.get("from");
+    page.requested.to = params.get("to");
+    page.requested.rangetype = params.get("rangetype");
+    const current_year = (/* @__PURE__ */ new Date()).getFullYear();
+    const previous_year = current_year - 1;
+    let selected;
+    if (page.requested.from == `${current_year}-01-01` && (page.requested.to == `${current_year}-12-31` || page.requested.rangetype == "year"))
+      selected = "this_year";
+    else if (page.requested.from == `${previous_year}-01-01` && (page.requested.to == `${previous_year}-12-31` || page.requested.rangetype == "year"))
+      selected = "last_year";
+    picker_presets[0].appendChild(html.node`
+        <li class="date-range-picker-preset ${selected == "last_year" ? "date-range-picker-preset--selected" : ""}">
+            <a href="${window.location.href.replace(window.location.search, "")}?from=${previous_year}-01-01&rangetype=year">
+                ${previous_year}
+            </a>
+        </li>
+    `);
+    picker_presets[1].appendChild(html.node`
+        <li class="date-range-picker-preset ${selected == "this_year" ? "date-range-picker-preset--selected" : ""}">
+            <a href="${window.location.href.replace(window.location.search, "")}?from=${current_year}-01-01&rangetype=year">
+                ${current_year}
+            </a>
+        </li>
+    `);
+    picker_content.classList = "date-range-picker-content-inner";
+    tippy_esm_default(date_btn, {
+      theme: "window",
+      content: picker_content,
+      placement: "bottom",
+      interactive: true,
+      interactiveBorder: 10,
+      trigger: "click"
+    });
+    let form = picker_content.querySelector(":scope > .date-range-picker-form");
+    let from_group = form.querySelector(".form-group--from");
+    let from_input = from_group.querySelector("input");
+    let to_group = form.querySelector(".form-group--to");
+    let to_input = to_group.querySelector("input");
+    form.insertBefore(html.node`
+        <div class="input-group library-date-group">
+            ${input({
+      type: "date",
+      value: from_input.value,
+      name: from_input.name,
+      min: "2000-01-01",
+      show_time: false
+    })}
+            <div class="bleh-icon" style="--icon: var(--icon-16-arrow-right)" />
+            ${input({
+      type: "date",
+      value: to_input.value,
+      name: to_input.name,
+      min: "2000-01-01",
+      show_time: false
+    })}
+        </div>
+    `, form.firstChild);
+    from_group.remove();
+    to_group.remove();
+  }
+  function bleh_glacier_library() {
+    bleh_glacier_library_table();
+    bleh_glacier_library_top();
+    bleh_glacier_date_graph();
+  }
+  function bleh_glacier_library_table() {
+    if (!ff("glacier_library"))
+      return;
+    let table = page.structure.glacier.date_panel.querySelector(".highcharts-root");
+    if (table == null)
+      return;
+    console.log("glacier library", table);
+    log("refresh is now marked false (table log)", "glacier library", "log");
+    page.structure.glacier.refresh = false;
+    let current_view = page.structure.glacier.date_panel.querySelector(".date-range-picker-button-inner");
+    if (current_view == null) {
+      console.log("glacier library current view", page.structure.glacier.date_panel.innerHTML);
+      log("returned as current view is null", "glacier library");
+      log("refresh is now marked true", "glacier library");
+      page.structure.glacier.refresh = true;
+      return;
+    }
+    if (table.hasAttribute("data-glacier-library-table"))
+      return;
+    table.setAttribute("data-glacier-library-table", "true");
+    page.structure.glacier.table = table;
+    log("refresh is now marked true (table found)", "glacier library");
+    page.structure.glacier.refresh = true;
+    log("pending refresh", "glacier library");
+  }
+  function bleh_glacier_library_top(static_page = false) {
+    if (!ff("glacier_library"))
+      return;
+    let legacy_top_header;
+    if (!static_page)
+      legacy_top_header = page.structure.main.querySelector(".library-top");
+    else
+      legacy_top_header = page.structure.main.querySelector(".metadata-list");
+    if (!legacy_top_header) return;
+    legacy_top_header.classList.add("glacier-legacy-top-header");
+    if (!static_page) {
+      if (legacy_top_header.style.getPropertyValue("display")) {
+        legacy_top_header.removeAttribute("data-glacier-library-top");
+        return;
+      }
+      if (legacy_top_header.hasAttribute("data-glacier-library-top"))
+        return;
+      legacy_top_header.setAttribute("data-glacier-library-top", "true");
+    }
+    log("loading top", "glacier library");
+    let metadata = legacy_top_header.querySelectorAll(".metadata-item");
+    let first_run = false;
+    let glacier_top = page.structure.glacier.top;
+    if (!glacier_top || !page.structure.main.contains(glacier_top))
+      first_run = true;
+    if (first_run) {
+      glacier_top = document.createElement("section");
+      glacier_top.classList.add("glacier-library-top");
+    }
+    let glacier_meta;
+    if (first_run) {
+      glacier_meta = document.createElement("div");
+      glacier_meta.classList.add("glacier-library-metadata");
+    } else {
+      glacier_meta = page.structure.glacier.top.querySelector(".glacier-library-metadata");
+      glacier_meta.innerHTML = "";
+    }
+    metadata.forEach((meta, index3) => {
+      let text3 = meta.querySelector(".metadata-title");
+      let value = meta.querySelector(".metadata-display").textContent;
+      if (text3) {
+        text3 = text3.textContent;
+        if (page.subpage == "library_overview") {
+          if (index3 == 1)
+            text3 = tl(trans.average);
+        } else if (page.subpage == "library_artists") {
+          text3 = tl(trans.artists);
+        } else if (page.subpage == "library_albums") {
+          text3 = tl(trans.albums);
+        } else if (page.subpage == "library_tracks") {
+          text3 = tl(trans.tracks);
+        }
+      } else {
+        text3 = tl(trans.results_for);
+        value = meta.querySelector(".metadata-display").textContent;
+        let start2 = value.indexOf("\u201C") + 1;
+        let end2 = value.indexOf("\u201D");
+        value = value.substring(start2, end2);
+      }
+      glacier_meta.appendChild(html.node`
+            <div class="glacier-library-metadata-item">
+                <div class="sub-text">${text3}</div>
+                <div class="glacier-library-metadata-item-value">${value}</div>
+            </div>
+        `);
+    });
+    if (first_run)
+      glacier_top.appendChild(glacier_meta);
+    if (!first_run)
+      return;
+    let top_wrap = page.structure.main.querySelector(".library-top-wrap");
+    let view_buttons = document.createElement("div");
+    view_buttons.classList.add("view-buttons", "glacier-library-buttons");
+    let add_divider = false;
+    let sort = legacy_top_header.querySelector(".library-sort");
+    if (!static_page) {
+      let sort_button;
+      if (sort) {
+        sort_button = sort.querySelector(".dropdown-menu-clickable-button");
+        add_divider = true;
+        if (sort_button) {
+          sort_button.classList.add("btn", "view-item", "glacier-library-button");
+          let sort_menu = sort.querySelector(".dropdown-menu-clickable");
+          view_buttons.appendChild(sort_button);
+          view_buttons.appendChild(sort_menu);
+        }
+      }
+    }
+    if (!static_page && page.subpage != "library_tracks") {
+      let format_button = document.createElement("button");
+      format_button.classList.add("btn", "view-item", "glacier-library-button", "glacier-view-button");
+      format_button.setAttribute("onclick", "_update_glacier_view()");
+      page.structure.glacier.format = format_button;
+      add_divider = true;
+      if (top_wrap.getAttribute("data-current-format") == "grid") {
+        format_button.setAttribute("data-glacier-view", "grid");
+        format_button.textContent = tl(trans.grid);
+      } else {
+        format_button.setAttribute("data-glacier-view", "list");
+        format_button.textContent = tl(trans.list);
+      }
+      view_buttons.appendChild(format_button);
+    }
+    if (!static_page && add_divider) {
+      let listen_divider = document.createElement("div");
+      listen_divider.classList.add("listen-divider");
+      view_buttons.appendChild(listen_divider);
+    }
+    let configure_button = document.createElement("button");
+    configure_button.classList.add("btn", "view-item", "glacier-library-button", "glacier-configure-button", "panel-settings-button");
+    configure_button.textContent = tl(trans.settings);
+    tippy_esm_default(configure_button, {
+      content: tl(trans.settings)
+    });
+    tippy_esm_default(configure_button, {
+      theme: "window",
+      content: html.node`
+            <div class="dialog-settings">
+                <div class="setting-group blend">
+                    ${page.subpage == "library_artists" ? html.node`
+                    <div class="setting" data-type="toggle" id="container-colourful_counts" onclick="_update_item('colourful_counts')">
+                        <div class="heading">
+                            <h5>${tl(trans.colourful_counts.name)}</h5>
+                            <p>${tl(trans.colourful_counts.body)}</p>
+                        </div>
+                        <div class="toggle-wrap">
+                            <button class="toggle" id="toggle-colourful_counts" aria-checked="true">
+                                <div class="dot"></div>
+                            </button>
+                        </div>
+                    </div>
+                    ` : html.node`
+                    ${setting({ id: "format_guest_features" })}
+                    ${setting({ id: "show_guest_features" })}
+                    `}
+                    ${(page.subpage == "library_artists" || page.subpage == "library_albums") && auth.pro ? html.node`
+                    ${setting({ id: "grid_glow" })}
+                    ` : ""}
+                    ${setting({ id: "glacier_library_graphs" })}
+                </div>
+            </div>
+        `,
+      placement: "bottom",
+      interactive: true,
+      interactiveBorder: 10,
+      trigger: "click",
+      onShow(instance) {
+        refresh_all(instance.popper);
+      }
+    });
+    view_buttons.appendChild(configure_button);
+    glacier_top.appendChild(view_buttons);
+    page.structure.glacier.top = glacier_top;
+    page.structure.main.insertBefore(glacier_top, page.structure.main.firstElementChild);
+  }
+  unsafeWindow._update_glacier_view = function() {
+    let format = page.structure.main.querySelector(".library-view-button");
+    if (format == null)
+      return;
+    format.click();
+    if (format.getAttribute("href") && format.getAttribute("href").endsWith("reset")) {
+      page.structure.glacier.format.setAttribute("data-glacier-view", "list");
+      page.structure.glacier.format.textContent = tl(trans.list);
+    } else {
+      page.structure.glacier.format.setAttribute("data-glacier-view", "grid");
+      page.structure.glacier.format.textContent = tl(trans.grid);
+    }
+  };
+  function bleh_glacier_date_graph(static_page = false, own_table = null) {
+    if (!page.structure.glacier.refresh)
+      return;
+    if (!settings.glacier_library_graphs)
+      return;
+    log("reviewing graph situation", "glacier library");
+    if (own_table != null) {
+      log("table has been passed to function (from network request presumably?)", "glacier library", "info", own_table);
+    } else {
+      log("no table has been passed, must source ourselves", "glacier library");
+    }
+    bleh_glacier_library_date();
+    let current_view = page.structure.glacier.date_panel.querySelector(".date-range-picker-button-inner");
+    if (!current_view)
+      return;
+    current_view = current_view.textContent.trim();
+    let tab_matches;
+    if (page.name == page.state.glacier.name && (page.subpage == "library_overview" || page.subpage == "library_artists" || page.subpage == "library_albums" || page.subpage == "library_tracks") && (page.state.glacier.current_tab == "library_overview" || page.state.glacier.current_tab == "library_artists" || page.state.glacier.current_tab == "library_albums" || page.state.glacier.current_tab == "library_tracks"))
+      tab_matches = true;
+    if (page.state.glacier.current_view == current_view && !own_table && tab_matches) {
+      bleh_glacier_date_graph_generate();
+      log("refresh is now marked false", "glacier library");
+      page.structure.glacier.refresh = false;
+      log(`returned as view (${current_view}) matches ${page.state.glacier.current_view}. last tab was ${page.state.glacier.current_tab} (${page.state.glacier.name}) and current tab is ${page.subpage} (${page.name})`, "glacier library");
+      return;
+    }
+    page.state.glacier.current_view = current_view;
+    let scrobble_chart_content = page.structure.row.querySelector("#scrobble-chart-content");
+    if (!scrobble_chart_content) return;
+    if (scrobble_chart_content.getAttribute("data-highcharts-chart") && scrobble_chart_content.getAttribute("data-highcharts-chart") == "0") {
+      log("highchart registered", "glacier library");
+      log("refresh is now marked false", "glacier library");
+      page.structure.glacier.refresh = false;
+      return;
+    }
+    let scrobble_chart_wrap = page.structure.row.querySelector(".scrobble-table");
+    if (!scrobble_chart_wrap)
+      return;
+    let scrobble_table;
+    if (own_table)
+      scrobble_table = own_table;
+    else
+      scrobble_table = scrobble_chart_wrap.querySelector(".table");
+    if (!scrobble_table) {
+      let request_url;
+      if (window.location.search == "")
+        request_url = `${window.location.href}/chart?ajax=1`;
+      else
+        request_url = window.location.href.replace(window.location.search, `/chart${window.location.search}&ajax=1`);
+      bleh_glacier_library_request(request_url);
+      return;
+    }
+    let chart_type = scrobble_table.getAttribute("data-bucket-size");
+    let entries2 = scrobble_table.querySelectorAll("tbody tr");
+    page.state.glacier.labels = [];
+    page.state.glacier.links = [];
+    page.state.glacier.values = [];
+    let values_not_empty = 0;
+    entries2.forEach((entry) => {
+      let period = entry.querySelector(".js-period a");
+      let value = entry.querySelector(".js-scrobbles").textContent.trim();
+      page.state.glacier.labels.push(period.textContent.trim());
+      page.state.glacier.links.push(period.getAttribute("href"));
+      page.state.glacier.values.push(value);
+      if (value != "0")
+        values_not_empty += 1;
+    });
+    if (values_not_empty == 0) {
+      log("graph cancelled as all values are 0", "glacier library");
+      page.structure.glacier.refresh = false;
+      return;
+    }
+    scrobble_table.innerHTML = "";
+    bleh_glacier_date_graph_generate();
+    log("refresh is now marked false (finished generating)", "glacier library");
+    page.structure.glacier.refresh = false;
+  }
+  function bleh_glacier_insights(insights = null) {
+    if (insights) {
+      if (page.subpage == "library_artists") {
+        page.state.glacier.insights.album.display = false;
+        page.state.glacier.insights.track.display = false;
+      }
+      if (page.subpage == "library_albums") {
+        page.state.glacier.insights.artist.display = false;
+        page.state.glacier.insights.track.display = false;
+      }
+      if (page.subpage == "library_tracks") {
+        page.state.glacier.insights.artist.display = false;
+        page.state.glacier.insights.album.display = false;
+      }
+      for (let item in insights) {
+        log(`checking insights status of item ${item} - display of ${insights[item].display}`, "glacier library", "log", { checking: insights[item], global: page.state.glacier.insights[item] });
+        if (insights[item].display && JSON.stringify(insights[item]) != JSON.stringify(page.state.glacier.insights[item])) {
+          log(`confirmed insights status of item ${item} - is different`, "glacier library");
+          page.state.glacier.insights[item] = insights[item];
+          bleh_glacier_insights_generate(item, page.state.glacier.insights[item]);
+        }
+      }
+    } else {
+      for (let item in page.state.glacier.insights) {
+        if (page.state.glacier.insights[item].display)
+          bleh_glacier_insights_generate(item, page.state.glacier.insights[item]);
+      }
+    }
+  }
+  function bleh_glacier_insights_generate(type, item) {
+    if (item.highest.value == 0)
+      return;
+    log(`requesting insights generator for ${type}`, "glacier library", "info", item);
+    let new_run = false;
+    let scrobble_insights_panel = page.structure.side.querySelector(`.scrobble-insights-panel[data-type="${type}"]`);
+    if (!scrobble_insights_panel) {
+      scrobble_insights_panel = document.createElement("section");
+      scrobble_insights_panel.classList.add("scrobble-insights-panel");
+      scrobble_insights_panel.setAttribute("data-type", type);
+      new_run = true;
+    }
+    scrobble_insights_panel.innerHTML = `<h2>${trans_legacy.en[type].plural}</h2>`;
+    let scrobble_canvas_container = document.createElement("div");
+    scrobble_canvas_container.classList.add("scrobble-insights-canvas-container");
+    let scrobble_canvas = document.createElement("canvas");
+    scrobble_canvas.classList.add("scrobble-insights-canvas");
+    Chart.defaults.color = page.state.chart_colours.text_col;
+    Chart.defaults.font.family = page.state.chart_colours.font;
+    if (settings.chart_insights_view == "line") {
+      let gradient = scrobble_canvas.getContext("2d").createLinearGradient(0, 0, 0, 160);
+      try {
+        gradient.addColorStop(0, page.state.chart_colours.link_bg_col);
+        gradient.addColorStop(1, page.state.chart_colours.link_bg_col_2);
+      } catch (e) {
+        gradient = page.state.chart_colours.link_bg_col;
+      }
+      let scrobble_chart = new Chart(scrobble_canvas.getContext("2d"), {
+        type: "line",
+        data: {
+          labels: item.labels,
+          datasets: [{
+            data: item.values,
+            borderWidth: 2,
+            backgroundColor: gradient,
+            borderColor: page.state.chart_colours.link_col,
+            fill: true,
+            pointRadius: 0,
+            pointHitRadius: 20,
+            tension: 0.1
+          }]
+        },
+        options: page.state.chart_library_line_options_no_click
+      });
+    } else if (settings.chart_insights_view == "pie") {
+      let scrobble_chart = new Chart(scrobble_canvas.getContext("2d"), {
+        type: "pie",
+        data: {
+          labels: item.labels,
+          datasets: [{
+            data: item.values,
+            borderWidth: 2,
+            backgroundColor: [
+              `hsl(${page.state.chart_colours.link_h_col.replace(page.state.chart_colours.hue, "360")})`,
+              `hsl(${page.state.chart_colours.link_h_col.replace(page.state.chart_colours.hue, "340")})`,
+              `hsl(${page.state.chart_colours.link_h_col.replace(page.state.chart_colours.hue, "320")})`,
+              `hsl(${page.state.chart_colours.link_h_col.replace(page.state.chart_colours.hue, "300")})`,
+              `hsl(${page.state.chart_colours.link_h_col.replace(page.state.chart_colours.hue, "280")})`,
+              `hsl(${page.state.chart_colours.link_h_col.replace(page.state.chart_colours.hue, "270")})`,
+              `hsl(${page.state.chart_colours.link_h_col.replace(page.state.chart_colours.hue, "255")})`,
+              `hsl(${page.state.chart_colours.link_h_col.replace(page.state.chart_colours.hue, "235")})`,
+              `hsl(${page.state.chart_colours.link_h_col.replace(page.state.chart_colours.hue, "220")})`,
+              `hsl(${page.state.chart_colours.link_h_col.replace(page.state.chart_colours.hue, "208")})`,
+              `hsl(${page.state.chart_colours.link_h_col.replace(page.state.chart_colours.hue, "200")})`,
+              `hsl(${page.state.chart_colours.link_h_col.replace(page.state.chart_colours.hue, "180")})`,
+              `hsl(${page.state.chart_colours.link_h_col.replace(page.state.chart_colours.hue, "160")})`,
+              `hsl(${page.state.chart_colours.link_h_col.replace(page.state.chart_colours.hue, "140")})`,
+              `hsl(${page.state.chart_colours.link_h_col.replace(page.state.chart_colours.hue, "120")})`,
+              `hsl(${page.state.chart_colours.link_h_col.replace(page.state.chart_colours.hue, "100")})`,
+              `hsl(${page.state.chart_colours.link_h_col.replace(page.state.chart_colours.hue, "80")})`,
+              `hsl(${page.state.chart_colours.link_h_col.replace(page.state.chart_colours.hue, "60")})`,
+              `hsl(${page.state.chart_colours.link_h_col.replace(page.state.chart_colours.hue, "40")})`,
+              `hsl(${page.state.chart_colours.link_h_col.replace(page.state.chart_colours.hue, "20")})`
+            ],
+            borderColor: page.state.chart_colours.bg_col,
+            pointRadius: 0,
+            pointHitRadius: 20,
+            tension: 0.1
+          }]
+        },
+        options: page.state.chart_library_pie_options_no_click
+      });
+    } else if (settings.chart_insights_view == "bar") {
+      let scrobble_chart = new Chart(scrobble_canvas.getContext("2d"), {
+        type: "bar",
+        data: {
+          labels: item.labels,
+          datasets: [{
+            data: item.values,
+            borderWidth: 0,
+            backgroundColor: [
+              `hsl(${page.state.chart_colours.link_h_col.replace(page.state.chart_colours.hue, "360")})`,
+              `hsl(${page.state.chart_colours.link_h_col.replace(page.state.chart_colours.hue, "340")})`,
+              `hsl(${page.state.chart_colours.link_h_col.replace(page.state.chart_colours.hue, "320")})`,
+              `hsl(${page.state.chart_colours.link_h_col.replace(page.state.chart_colours.hue, "300")})`,
+              `hsl(${page.state.chart_colours.link_h_col.replace(page.state.chart_colours.hue, "280")})`,
+              `hsl(${page.state.chart_colours.link_h_col.replace(page.state.chart_colours.hue, "270")})`,
+              `hsl(${page.state.chart_colours.link_h_col.replace(page.state.chart_colours.hue, "255")})`,
+              `hsl(${page.state.chart_colours.link_h_col.replace(page.state.chart_colours.hue, "235")})`,
+              `hsl(${page.state.chart_colours.link_h_col.replace(page.state.chart_colours.hue, "220")})`,
+              `hsl(${page.state.chart_colours.link_h_col.replace(page.state.chart_colours.hue, "208")})`,
+              `hsl(${page.state.chart_colours.link_h_col.replace(page.state.chart_colours.hue, "200")})`,
+              `hsl(${page.state.chart_colours.link_h_col.replace(page.state.chart_colours.hue, "180")})`,
+              `hsl(${page.state.chart_colours.link_h_col.replace(page.state.chart_colours.hue, "160")})`,
+              `hsl(${page.state.chart_colours.link_h_col.replace(page.state.chart_colours.hue, "140")})`,
+              `hsl(${page.state.chart_colours.link_h_col.replace(page.state.chart_colours.hue, "120")})`,
+              `hsl(${page.state.chart_colours.link_h_col.replace(page.state.chart_colours.hue, "100")})`,
+              `hsl(${page.state.chart_colours.link_h_col.replace(page.state.chart_colours.hue, "80")})`,
+              `hsl(${page.state.chart_colours.link_h_col.replace(page.state.chart_colours.hue, "60")})`,
+              `hsl(${page.state.chart_colours.link_h_col.replace(page.state.chart_colours.hue, "40")})`,
+              `hsl(${page.state.chart_colours.link_h_col.replace(page.state.chart_colours.hue, "20")})`
+            ],
+            borderColor: page.state.chart_colours.bg_col,
+            pointRadius: 0,
+            pointHitRadius: 20,
+            tension: 0.1,
+            borderRadius: 9
+          }]
+        },
+        options: page.state.chart_library_bar_options_no_click
+      });
+    }
+    scrobble_canvas_container.appendChild(scrobble_canvas);
+    scrobble_insights_panel.appendChild(scrobble_canvas_container);
+    if (new_run)
+      page.structure.side.appendChild(scrobble_insights_panel);
+  }
+  function bleh_glacier_library_open_index(index3) {
+    const link = page.state.glacier.links[index3];
+    log(`opening link ${link}`, "glacier library");
+    window.location.href = link;
+  }
+  function bleh_glacier_library_request(request_url) {
+    log(`making our own request with ${request_url}`, "glacier library");
+    console.info(page.structure.glacier.refresh);
+    page.structure.glacier.refresh = false;
+    page.structure.glacier.date_panel.classList.add("data-is-loading");
+    fetch(request_url).then(function(response) {
+      console.log("glacier library returned", response, response.text, response.status);
+      if (response.status != 200)
+        throw new Error();
+      return response.text();
+    }).then(function(html3) {
+      let doc = new DOMParser().parseFromString(html3, "text/html");
+      console.log("glacier library DOC", doc, doc.querySelector(".table"));
+      log("received response", "glacier library");
+      log("refresh is now marked true", "glacier library");
+      page.structure.glacier.refresh = true;
+      let table = doc.querySelector(".table");
+      if (table != null) {
+        bleh_glacier_date_graph(false, table);
+      } else {
+        log("table is null?", "glacier library", "error");
+        console.info("glacier library", doc.body.innerHTML);
+        console.info("glacier library", new DOMParser().parseFromString(doc.body.innerHTML, "text/html"));
+        throw new Error();
+      }
+      page.structure.glacier.date_panel.classList.remove("data-is-loading");
+    });
+  }
+  function bleh_glacier_date_graph_generate() {
+    page.state.glacier.current_tab = page.subpage;
+    page.state.glacier.name = page.name;
+    log("generating", "glacier library", "info", {
+      labels: page.state.glacier.labels,
+      links: page.state.glacier.links,
+      values: page.state.glacier.values
+    });
+    prep_chart_colours();
+    let new_run = false;
+    let scrobble_canvas_container = page.structure.glacier.date_panel.querySelector(".scrobble-canvas-container");
+    if (scrobble_canvas_container == null) {
+      scrobble_canvas_container = document.createElement("div");
+      scrobble_canvas_container.classList.add("scrobble-canvas-container");
+      new_run = true;
+    } else {
+      scrobble_canvas_container.innerHTML = "";
+    }
+    let scrobble_canvas = document.createElement("canvas");
+    scrobble_canvas.classList.add("scrobble-canvas");
+    Chart.defaults.color = page.state.chart_colours.text_col;
+    Chart.defaults.font.family = page.state.chart_colours.font;
+    if (settings.chart_view == "line") {
+      let gradient = scrobble_canvas.getContext("2d").createLinearGradient(0, 0, 0, 160);
+      try {
+        gradient.addColorStop(0, page.state.chart_colours.link_bg_col);
+        gradient.addColorStop(1, page.state.chart_colours.link_bg_col_2);
+      } catch (e) {
+        gradient = page.state.chart_colours.link_bg_col;
+      }
+      let scrobble_chart = new Chart(scrobble_canvas.getContext("2d"), {
+        type: "line",
+        data: {
+          labels: page.state.glacier.labels,
+          datasets: [{
+            data: page.state.glacier.values,
+            borderWidth: 2,
+            backgroundColor: gradient,
+            borderColor: page.state.chart_colours.link_col,
+            fill: true,
+            pointRadius: 0,
+            pointHitRadius: 20,
+            tension: 0.1
+          }]
+        },
+        options: page.state.chart_library_line_options
+      });
+    } else if (settings.chart_view == "pie") {
+      let scrobble_chart = new Chart(scrobble_canvas.getContext("2d"), {
+        type: "pie",
+        data: {
+          labels: page.state.glacier.labels,
+          datasets: [{
+            data: page.state.glacier.values,
+            borderWidth: 2,
+            backgroundColor: [
+              `hsl(${page.state.chart_colours.link_h_col.replace(page.state.chart_colours.hue, "360")})`,
+              `hsl(${page.state.chart_colours.link_h_col.replace(page.state.chart_colours.hue, "340")})`,
+              `hsl(${page.state.chart_colours.link_h_col.replace(page.state.chart_colours.hue, "320")})`,
+              `hsl(${page.state.chart_colours.link_h_col.replace(page.state.chart_colours.hue, "300")})`,
+              `hsl(${page.state.chart_colours.link_h_col.replace(page.state.chart_colours.hue, "280")})`,
+              `hsl(${page.state.chart_colours.link_h_col.replace(page.state.chart_colours.hue, "270")})`,
+              `hsl(${page.state.chart_colours.link_h_col.replace(page.state.chart_colours.hue, "255")})`,
+              `hsl(${page.state.chart_colours.link_h_col.replace(page.state.chart_colours.hue, "235")})`,
+              `hsl(${page.state.chart_colours.link_h_col.replace(page.state.chart_colours.hue, "220")})`,
+              `hsl(${page.state.chart_colours.link_h_col.replace(page.state.chart_colours.hue, "208")})`,
+              `hsl(${page.state.chart_colours.link_h_col.replace(page.state.chart_colours.hue, "200")})`,
+              `hsl(${page.state.chart_colours.link_h_col.replace(page.state.chart_colours.hue, "180")})`,
+              `hsl(${page.state.chart_colours.link_h_col.replace(page.state.chart_colours.hue, "160")})`,
+              `hsl(${page.state.chart_colours.link_h_col.replace(page.state.chart_colours.hue, "140")})`,
+              `hsl(${page.state.chart_colours.link_h_col.replace(page.state.chart_colours.hue, "120")})`,
+              `hsl(${page.state.chart_colours.link_h_col.replace(page.state.chart_colours.hue, "100")})`,
+              `hsl(${page.state.chart_colours.link_h_col.replace(page.state.chart_colours.hue, "80")})`,
+              `hsl(${page.state.chart_colours.link_h_col.replace(page.state.chart_colours.hue, "60")})`,
+              `hsl(${page.state.chart_colours.link_h_col.replace(page.state.chart_colours.hue, "40")})`,
+              `hsl(${page.state.chart_colours.link_h_col.replace(page.state.chart_colours.hue, "20")})`
+            ],
+            borderColor: page.state.chart_colours.bg_col,
+            pointRadius: 0,
+            pointHitRadius: 20,
+            tension: 0.1
+          }]
+        },
+        options: page.state.chart_library_pie_options
+      });
+    } else if (settings.chart_view == "bar") {
+      let scrobble_chart = new Chart(scrobble_canvas.getContext("2d"), {
+        type: "bar",
+        data: {
+          labels: page.state.glacier.labels,
+          datasets: [{
+            data: page.state.glacier.values,
+            borderWidth: 0,
+            backgroundColor: [
+              `hsl(${page.state.chart_colours.link_h_col.replace(page.state.chart_colours.hue, "360")})`,
+              `hsl(${page.state.chart_colours.link_h_col.replace(page.state.chart_colours.hue, "340")})`,
+              `hsl(${page.state.chart_colours.link_h_col.replace(page.state.chart_colours.hue, "320")})`,
+              `hsl(${page.state.chart_colours.link_h_col.replace(page.state.chart_colours.hue, "300")})`,
+              `hsl(${page.state.chart_colours.link_h_col.replace(page.state.chart_colours.hue, "280")})`,
+              `hsl(${page.state.chart_colours.link_h_col.replace(page.state.chart_colours.hue, "270")})`,
+              `hsl(${page.state.chart_colours.link_h_col.replace(page.state.chart_colours.hue, "255")})`,
+              `hsl(${page.state.chart_colours.link_h_col.replace(page.state.chart_colours.hue, "235")})`,
+              `hsl(${page.state.chart_colours.link_h_col.replace(page.state.chart_colours.hue, "220")})`,
+              `hsl(${page.state.chart_colours.link_h_col.replace(page.state.chart_colours.hue, "208")})`,
+              `hsl(${page.state.chart_colours.link_h_col.replace(page.state.chart_colours.hue, "200")})`,
+              `hsl(${page.state.chart_colours.link_h_col.replace(page.state.chart_colours.hue, "180")})`,
+              `hsl(${page.state.chart_colours.link_h_col.replace(page.state.chart_colours.hue, "160")})`,
+              `hsl(${page.state.chart_colours.link_h_col.replace(page.state.chart_colours.hue, "140")})`,
+              `hsl(${page.state.chart_colours.link_h_col.replace(page.state.chart_colours.hue, "120")})`,
+              `hsl(${page.state.chart_colours.link_h_col.replace(page.state.chart_colours.hue, "100")})`,
+              `hsl(${page.state.chart_colours.link_h_col.replace(page.state.chart_colours.hue, "80")})`,
+              `hsl(${page.state.chart_colours.link_h_col.replace(page.state.chart_colours.hue, "60")})`,
+              `hsl(${page.state.chart_colours.link_h_col.replace(page.state.chart_colours.hue, "40")})`,
+              `hsl(${page.state.chart_colours.link_h_col.replace(page.state.chart_colours.hue, "20")})`
+            ],
+            borderColor: page.state.chart_colours.bg_col,
+            pointRadius: 0,
+            pointHitRadius: 20,
+            tension: 0.1,
+            borderRadius: 9
+          }]
+        },
+        options: settings.chart_bar_axis == "horizontal" ? page.state.chart_library_bar_options : page.state.chart_library_bar_v_options
+      });
+    }
+    scrobble_canvas_container.appendChild(scrobble_canvas);
+    if (new_run)
+      page.structure.glacier.date_panel.appendChild(scrobble_canvas_container);
+  }
+  function bleh_glacier_library_focused() {
+    page.state.glacier.insights.artist = {
+      display: false,
+      values: [],
+      labels: [],
+      highest: {
+        value: 0,
+        label: "",
+        link: "",
+        img: ""
+      }
+    };
+    let legacy_header = page.structure.main.querySelector(".library-header");
+    let type;
+    if (page.subpage.startsWith("library_artist"))
+      type = "artist";
+    else if (page.subpage.startsWith("library_album"))
+      type = "album";
+    else if (page.subpage.startsWith("library_track"))
+      type = "track";
+    let header_title = legacy_header.querySelector(".library-header-crumb");
+    if (!header_title)
+      header_title = legacy_header.querySelector(".library-header-title");
+    let duration = header_title.querySelector(".library-header-title-duration");
+    if (duration)
+      header_title.removeChild(duration);
+    header_title = header_title.textContent.trim();
+    let artist = legacy_header.querySelector(".text-colour-link");
+    if (artist)
+      artist = artist.textContent.trim();
+    let image = legacy_header.querySelector(".library-header-image img");
+    let link = `${root}music/${redirect()}${sanitise(header_title)}`;
+    if (type == "album")
+      link = `${root}music/${redirect()}${sanitise(artist)}/${sanitise(header_title)}`;
+    else if (type == "track")
+      link = `${root}music/${redirect()}${sanitise(artist)}/_/${sanitise(header_title)}`;
+    let header = document.createElement("section");
+    header.classList.add("glacier-library-top", "glacier-library-focused-header");
+    let upper_wrap = document.createElement("div");
+    upper_wrap.classList.add("glacier-library-top-upper");
+    let current_suffix = window.location.search;
+    let metadata = html.node`
+        <div class="glacier-library-metadata">
+            <div class="glacier-library-metadata-avatar">
+                ${image}
+            </div>
+            <div class="glacier-library-metadata-item">
+                <div class="sub-text">
+                    ${tl(trans[type])}
+                </div>
+                <div class="glacier-library-metadata-item-value glacier-library-metadata-focus" data-type="${type}">
+                    <a href="${link}">${type == "artist" ? correct_artist(header_title) : correct_item_by_artist(header_title, artist)}</a>${duration ? html.node`<span class="glacier-library-track-duration">${duration.textContent}</span>` : ""}${type != "artist" ? html`${{ html: trans_legacy.en.glacier.by_artist.replace("{a}", `<a href="${root}user/${page.name}/library/music/+noredirect/${sanitise(artist)}${current_suffix}">${sanitise_text(correct_artist(artist))}</a>`) }}` : ""}
+                </div>
+            </div>
+        </div>
+    `;
+    upper_wrap.appendChild(metadata);
+    header.appendChild(upper_wrap);
+    let view_buttons = document.createElement("div");
+    view_buttons.classList.add("view-buttons", "glacier-library-buttons");
+    let cta = legacy_header.querySelector(".library-header-ctas");
+    let love_form = legacy_header.querySelector(".library-header-love-form:not(:has(button))");
+    if (love_form) {
+      let state = love_form.querySelector(":scope > .love-button-toggle").getAttribute("data-ajax-form-state");
+      if (state == "loved")
+        state = 0;
+      else
+        state = 1;
+      let love_form_items = love_form.querySelectorAll(":scope > div > div");
+      love_form_items.forEach((item, index3) => {
+        if (state != index3)
+          item.classList.add("hide");
+        cta.appendChild(item);
+      });
+    }
+    if (cta) {
+      let wrappers = cta.querySelectorAll(":scope > *");
+      wrappers.forEach((wrapper) => {
+        let button;
+        console.info("wrapper", wrapper);
+        if (wrapper.classList[0] == "library-header-cta-item")
+          button = wrapper;
+        else
+          button = wrapper.querySelector("button");
+        if (!button)
+          button = wrapper.querySelector("span");
+        if (!button) return;
+        button.classList.add("btn", "view-item", "glacier-library-button");
+        let tooltips = wrapper.querySelectorAll(".user-library-controls-tooltip");
+        tooltips.forEach((tooltip) => {
+          tooltip.parentElement.removeChild(tooltip);
+        });
+        view_buttons.appendChild(wrapper);
+        let action = button.getAttribute("data-analytics-action");
+        if (action) {
+          if (action == "EditScrobbleOpen") {
+            button.textContent = tl(trans.edit);
+          } else if (action == "UnloveTrack" || action == "LoveTrack") {
+            let listen_divider = document.createElement("div");
+            listen_divider.classList.add("listen-divider");
+            view_buttons.appendChild(listen_divider);
+            button = wrapper.querySelector("button:not(.btn)");
+            if (button)
+              button.classList.add("btn", "view-item", "glacier-library-button");
+          }
+        } else {
+          if (button.classList.contains("delete-icon")) {
+            button.textContent = tl(trans.delete);
+          }
+        }
+      });
+      if (wrappers.length > 0) {
+        let listen_divider = document.createElement("div");
+        listen_divider.classList.add("listen-divider");
+        view_buttons.appendChild(listen_divider);
+      }
+    }
+    if (page.subpage == "library_artist_overview" && auth.pro) {
+      let search = document.createElement("a");
+      search.classList.add("btn", "view-item", "glacier-library-button", "glacier-search-button");
+      search.textContent = tl(trans.search);
+      search.setAttribute("href", `${root}user/${page.name}/library/tracks/search?query=${sanitise(correct_artist(header_title))}`);
+      tippy_esm_default(search, {
+        content: tl(trans.search_guest)
+      });
+      let divider = view_buttons.querySelector(".listen-divider");
+      if (divider)
+        view_buttons.insertBefore(search, divider);
+    }
+    let configure_button = document.createElement("button");
+    configure_button.classList.add("btn", "view-item", "glacier-library-button", "glacier-configure-button", "panel-settings-button");
+    configure_button.textContent = tl(trans.settings);
+    tippy_esm_default(configure_button, {
+      content: tl(trans.settings)
+    });
+    tippy_esm_default(configure_button, {
+      theme: "window",
+      content: html.node`
+            <div class="dialog-settings">
+                <div class="setting-group blend">
+                    ${setting({ id: "format_guest_features" })}
+                    ${setting({ id: "show_guest_features" })}
+                    ${setting({ id: "glacier_library_graphs" })}
+                </div>
+            </div>
+        `,
+      placement: "bottom",
+      interactive: true,
+      interactiveBorder: 10,
+      trigger: "click",
+      onShow(instance) {
+        refresh_all(instance.popper);
+      }
+    });
+    view_buttons.appendChild(configure_button);
+    upper_wrap.appendChild(view_buttons);
+    let lower_metadata;
+    let lower_wrap = html.node`
+        <div class="glacier-library-top-lower">
+            <div class="glacier-library-metadata" ref=${(el) => lower_metadata = el} />
+        </div>
+    `;
+    let legacy_meta_wrap = page.structure.main.querySelector(".metadata-list");
+    if (legacy_meta_wrap) {
+      let metadatas = legacy_meta_wrap.querySelectorAll(".metadata-item:not(.library-header-ctas__wrapper)");
+      metadatas.forEach((meta) => {
+        let glacier_meta_item = document.createElement("div");
+        glacier_meta_item.classList.add("glacier-library-metadata-item");
+        glacier_meta_item.innerHTML = `
+                <div class="sub-text">${meta.querySelector(".metadata-title").textContent}</div>
+                <div class="glacier-library-metadata-item-value">${meta.querySelector(".metadata-display").textContent}</div>
+            `;
+        lower_metadata.appendChild(glacier_meta_item);
+      });
+      header.appendChild(lower_wrap);
+    }
+    page.structure.main.insertBefore(header, page.structure.main.firstElementChild);
+    let overview_headers = page.structure.main.querySelectorAll(".library-overview-header");
+    overview_headers.forEach((top2) => {
+      top2.classList = "top-container";
+      let header2 = top2.querySelector("h2");
+      let select_btn = top2.querySelector(".dropdown-menu-clickable-button");
+      if (!select_btn) {
+        top2.classList.add("spacing");
+        return;
+      }
+      select_btn.classList.add("select-button", "link-select", "blend-v2-btn");
+      select_btn.classList.remove("dropdown-menu-list-button");
+      header2.after(html.node`
+            <div class="accompany view-buttons blend blend-v2">
+                ${select_btn}
+            </div>
+        `);
+    });
+    let overview_header = page.structure.main.querySelector(":scope > .top-container");
+    if (!overview_header) return;
+    overview_header.nextElementSibling.insertBefore(overview_header, overview_header.nextElementSibling.firstElementChild);
+  }
+  function bleh_glacier_library_bulk_edit() {
+    let library_header = page.structure.main.querySelector(".library-header");
+    let bulk_edit = library_header.querySelector('[href="javascript:void(0)"]');
+    if (!bulk_edit) return;
+    let view_buttons = page.structure.main.querySelector(".glacier-library-buttons");
+    if (!view_buttons) return;
+    let pre_existing_bulk = view_buttons.querySelector(".bulk-edit-button");
+    if (pre_existing_bulk) return;
+    let edit_form = view_buttons.querySelector(":scope > .library-header-edit-form");
+    let delete_button = view_buttons.querySelector(":scope > .delete-icon");
+    if (!delete_button) return;
+    bulk_edit.classList.add("btn", "view-item", "glacier-library-button", "bulk-edit-button");
+    bulk_edit.textContent = trans_legacy.en.glacier.bulk_edit;
+    if (!edit_form)
+      view_buttons.insertBefore(bulk_edit, delete_button);
+    else
+      view_buttons.insertBefore(bulk_edit, edit_form);
+  }
+
+  // src/chart.js
+  function chart_reflow() {
+    load_chart_colours();
+    if ((page.type == "artist" || page.type == "album" || page.type == "track") && page.subpage == "overview")
+      bleh_music_page_charts();
+    if (page.type == "user" && page.subpage == "overview")
+      bleh_profile_chart_render();
+    if (page.type == "user" && page.subpage.startsWith("library")) {
+      bleh_glacier_date_graph_generate();
+      bleh_glacier_insights();
+    }
+  }
+  function prep_chart_colours() {
+    if (page.state.chart_colours.link_col == "hsl()")
+      load_chart_colours();
+  }
+  function load_chart_colours() {
+    let link_col = `hsl(${getComputedStyle(document.body).getPropertyValue("--l3-c")})`;
+    let link_h_col = getComputedStyle(document.body).getPropertyValue("--h3-s");
+    let link_bg_col = `hsla(${getComputedStyle(document.body).getPropertyValue("--h4")}, 30%)`;
+    let link_bg_col_2 = `hsla(${getComputedStyle(document.body).getPropertyValue("--h4")}, 2%)`;
+    let text_col = `hsl(${getComputedStyle(document.body).getPropertyValue("--c3")})`;
+    let axis_col = `hsla(${getComputedStyle(document.body).getPropertyValue("--b4")}, 40%)`;
+    let text_primary_col = `hsl(${getComputedStyle(document.body).getPropertyValue("--c2")})`;
+    let bg_col = `hsl(${getComputedStyle(document.body).getPropertyValue("--b5")})`;
+    let root_bg_col = `hsla(${getComputedStyle(document.body).getPropertyValue("--b6")}, 92%)`;
+    let hue2 = getComputedStyle(document.body).getPropertyValue("--hue");
+    page.state.chart_colours = {
+      link_col,
+      link_h_col,
+      link_bg_col,
+      link_bg_col_2,
+      text_col,
+      axis_col,
+      text_primary_col,
+      bg_col,
+      root_bg_col,
+      hue: hue2,
+      font: getComputedStyle(document.body).getPropertyValue("--font")
+    };
+    console.log("chart colours", page.state.chart_colours);
+    page.state.chart_line_options = {
+      maintainAspectRatio: false,
+      plugins: {
+        legend: {
+          display: false
+        },
+        tooltip: {
+          backgroundColor: root_bg_col,
+          titleColor: text_primary_col,
+          bodyColor: text_primary_col,
+          multiKeyBackground: root_bg_col,
+          boxPadding: 6,
+          padding: 9,
+          cornerRadius: 9,
+          caretSize: 0
+        }
+      },
+      scales: {
+        x: {
+          type: "time",
+          time: {
+            unit: "month",
+            displayFormats: {
+              month: "LLL"
+            },
+            tooltipFormat: "EEEE, LLLL d yyyy"
+          },
+          grid: {
+            color: axis_col,
+            display: false
+          }
+        },
+        y: {
+          display: false,
+          grid: {
+            display: false
+          },
+          suggestedMax: 10
+        }
+      }
+    };
+    page.state.chart_library_line_options = {
+      maintainAspectRatio: false,
+      plugins: {
+        legend: {
+          display: false
+        },
+        tooltip: {
+          backgroundColor: root_bg_col,
+          titleColor: text_primary_col,
+          bodyColor: text_primary_col,
+          multiKeyBackground: root_bg_col,
+          boxPadding: 6,
+          padding: 9,
+          cornerRadius: 9,
+          caretSize: 0
+        }
+      },
+      scales: {
+        x: {
+          grid: {
+            color: axis_col,
+            display: false
+          }
+        },
+        y: {
+          display: true,
+          grid: {
+            display: false
+          },
+          suggestedMax: 10
+        }
+      },
+      onClick: (e, active, chart) => {
+        bleh_glacier_library_open_index(active[0].index);
+      }
+    };
+    page.state.chart_library_line_options_no_click = {
+      maintainAspectRatio: false,
+      plugins: {
+        legend: {
+          display: false
+        },
+        tooltip: {
+          backgroundColor: root_bg_col,
+          titleColor: text_primary_col,
+          bodyColor: text_primary_col,
+          multiKeyBackground: root_bg_col,
+          boxPadding: 6,
+          padding: 9,
+          cornerRadius: 9,
+          caretSize: 0
+        }
+      },
+      scales: {
+        x: {
+          grid: {
+            color: axis_col,
+            display: false
+          }
+        },
+        y: {
+          grid: {
+            display: false
+          },
+          suggestedMax: 10
+        }
+      }
+    };
+    page.state.chart_library_pie_options = {
+      maintainAspectRatio: false,
+      plugins: {
+        legend: {
+          display: false
+        },
+        tooltip: {
+          backgroundColor: root_bg_col,
+          titleColor: text_primary_col,
+          bodyColor: text_primary_col,
+          multiKeyBackground: root_bg_col,
+          boxPadding: 6,
+          padding: 9,
+          cornerRadius: 9,
+          caretSize: 0
+        }
+      },
+      onClick: (e, active, chart) => {
+        bleh_glacier_library_open_index(active[0].index);
+      }
+    };
+    page.state.chart_library_pie_options_no_click = {
+      maintainAspectRatio: false,
+      plugins: {
+        legend: {
+          display: false
+        },
+        tooltip: {
+          backgroundColor: root_bg_col,
+          titleColor: text_primary_col,
+          bodyColor: text_primary_col,
+          padding: 7,
+          cornerRadius: 10,
+          caretSize: 0
+        }
+      }
+    };
+    page.state.chart_library_bar_options = {
+      maintainAspectRatio: false,
+      plugins: {
+        legend: {
+          display: false
+        },
+        tooltip: {
+          backgroundColor: root_bg_col,
+          titleColor: text_primary_col,
+          bodyColor: text_primary_col,
+          multiKeyBackground: root_bg_col,
+          boxPadding: 6,
+          padding: 9,
+          cornerRadius: 9,
+          caretSize: 0
+        }
+      },
+      onClick: (e, active, chart) => {
+        bleh_glacier_library_open_index(active[0].index);
+      }
+    };
+    page.state.chart_library_bar_v_options = {
+      indexAxis: "y",
+      maintainAspectRatio: false,
+      plugins: {
+        legend: {
+          display: false
+        },
+        tooltip: {
+          backgroundColor: root_bg_col,
+          titleColor: text_primary_col,
+          bodyColor: text_primary_col,
+          multiKeyBackground: root_bg_col,
+          boxPadding: 6,
+          padding: 9,
+          cornerRadius: 9,
+          caretSize: 0
+        }
+      },
+      onClick: (e, active, chart) => {
+        bleh_glacier_library_open_index(active[0].index);
+      }
+    };
+    page.state.chart_library_bar_options_no_click = {
+      maintainAspectRatio: false,
+      plugins: {
+        legend: {
+          display: false
+        },
+        tooltip: {
+          backgroundColor: root_bg_col,
+          titleColor: text_primary_col,
+          bodyColor: text_primary_col,
+          multiKeyBackground: root_bg_col,
+          boxPadding: 6,
+          padding: 9,
+          cornerRadius: 9,
+          caretSize: 0
+        }
+      }
+    };
+  }
+
+  // src/components/profile_header.js
+  function redesign_profile_header(is_own_profile, is_following) {
+    let base_header = document.body.querySelector(".header-info-secondary");
+    if (!base_header) return;
+    let katsune = ff("katsune");
+    let taste = "";
+    let taste_percentage = "";
+    let taste_artists = [];
+    if (!is_own_profile && page.name != sponsor_list.sponsor_account) {
+      let taste_meter = base_header.querySelector(".tasteometer");
+      if (taste_meter) {
+        taste = taste_meter.classList[1].replace("tasteometer-compat-", "");
+        let artists = taste_meter.querySelectorAll("a");
+        artists.forEach((artist) => {
+          taste_artists.push(correct_artist(artist.getAttribute("title")));
+        });
+        taste_percentage = taste_meter.querySelector(".tasteometer-viz").getAttribute("title");
+        if (taste_percentage == "99%")
+          taste_percentage = "100%";
+      }
+    }
+    let about_me = page.structure.container.querySelector(".about-me-sidebar");
+    let profile_header = html.node`
+        <section class="side-actions" />
+    `;
+    if (!is_own_profile && page.name != sponsor_list.sponsor_account) {
+      let follow_wrap = document.body.querySelector(".header-avatar .class > div");
+      if (follow_wrap) {
+        let follow_btn = follow_wrap.querySelector("button");
+        follow_btn.classList.add("btn", "side-action");
+        follow_btn.classList.remove("toggle-button", "header-follower-btn");
+        follow_btn.setAttribute("data-type", "follow");
+        profile_header.appendChild(follow_wrap);
+        if (is_following)
+          follow_btn.setAttribute("data-followed", "true");
+        let mutual_text = document.createElement("i");
+        mutual_text.textContent = tl(trans.following_mutuals);
+        follow_btn.appendChild(mutual_text);
+        if (!katsune)
+          tippy_esm_default(follow_btn, {
+            content: follow_btn.textContent
+          });
+        follow_btn.addEventListener("click", () => {
+          window.setTimeout(() => {
+            follow_btn._tippy.setContent(follow_btn.textContent);
+          }, 50);
+        });
+      } else {
+        let follow_placeholder = document.createElement("button");
+        follow_placeholder.classList.add("btn", "side-action");
+        follow_placeholder.setAttribute("data-type", "follow");
+        follow_placeholder.textContent = tl(trans.blocked);
+        follow_placeholder.setAttribute("disabled", "true");
+        follow_placeholder.setAttribute("data-ignored", "true");
+        profile_header.appendChild(follow_placeholder);
+      }
+    }
+    if (!is_own_profile) {
+      let msg_button = document.body.querySelector(".header-message-user");
+      if (msg_button) {
+        if (page.name != sponsor_list.sponsor_account) {
+          create_profile_top_item(profile_header, {
+            name: page.name,
+            type: "message",
+            link: msg_button.getAttribute("href")
+          });
+        } else {
+          create_profile_top_item(profile_header, {
+            name: page.name,
+            type: "sponsor",
+            link: () => sponsor(),
+            action: "button"
+          });
+          create_profile_top_item(profile_header, {
+            name: page.name,
+            type: "message_sponsor",
+            link: msg_button.getAttribute("href"),
+            full: true
+          });
+        }
+      }
+      if (page.name != sponsor_list.sponsor_account) {
+        if (ff("compare")) {
+          create_profile_top_item(profile_header, {
+            name: page.name,
+            type: "compare",
+            link: `${root}bleh/minis/compare?profile=${page.name}`
+          });
+        }
+        if (ff("charts")) {
+          create_profile_top_item(profile_header, {
+            name: page.name,
+            type: "collage",
+            link: `${root}bleh/minis/collage?profile=${page.name}`,
+            text: tl(trans.collage),
+            updated: true
+          });
+        }
+        if (settings.profile_shortcut != page.name) {
+          page.state.profile_shortcut_button = create_profile_top_item(profile_header, {
+            name: page.name,
+            type: "shortcut",
+            link: () => set_profile_as_shortcut(),
+            action: "button"
+          });
+        } else {
+          create_profile_top_item(profile_header, {
+            name: page.name,
+            type: "shortcut",
+            action: "button"
+          });
+        }
+      }
+      if (page.structure.container.querySelector(".user-status-staff")) {
+        create_profile_top_item(profile_header, {
+          name: page.name,
+          type: "support",
+          link: "https://support.last.fm"
+        });
+      }
+    } else {
+      create_profile_top_item(profile_header, {
+        name: page.name,
+        type: "edit",
+        link: `${root}settings`
+      });
+      if (ff("minis")) {
+        create_profile_top_item(profile_header, {
+          name: page.name,
+          type: "minis",
+          link: `${root}bleh/minis`
+        });
+      } else {
+        create_profile_top_item(profile_header, {
+          name: page.name,
+          type: "labs",
+          link: `${root}labs`,
+          tooltip: `
+                    <strong>${tl(trans.labs_by_last)}</strong>
+                    <p>${tl(trans.labs_by_last.tagline)}</p>
+                `,
+          tooltip_style: "stack",
+          allow_html: true
+        });
+      }
+      create_profile_top_item(profile_header, {
+        name: page.name,
+        type: "obsession",
+        link: `${root}user/${page.name}/obsessions/set`
+      });
+      if (ff("charts")) {
+        create_profile_top_item(profile_header, {
+          name: page.name,
+          type: "collage",
+          link: `${root}bleh/minis/collage`,
+          text: tl(trans.collage),
+          updated: true
+        });
+      }
+    }
+    if (!page.mobile)
+      page.structure.side.insertBefore(profile_header, page.structure.side.firstElementChild);
+    else
+      page.structure.main.insertBefore(profile_header, page.structure.main.firstElementChild);
+    let listen_container = page.structure.row.querySelector(".listen-panel");
+    if (!is_own_profile && page.name != sponsor_list.sponsor_account && katsune) {
+      if (taste == "") {
+        listen_container.appendChild(html.node`
+                <div class="loading-data-container">
+                    <div class="loading-data-text error">${tl(trans.missing_component)}</div>
+                </div>
+            `);
+        return;
+      }
+      let taste_wrap = html.node`
+            <div class="btn listen-item ${taste != "super" && taste != "very_low" ? "icon" : ""} taste">
+                <div class="taste-icon colourful" data-taste=${taste}>
+                    <div class="bleh-icon" />
+                </div>
+                <div class="span">
+                    <img class="view-item-avatar" src=${auth.avatar} alt=${auth.name}>
+                    <img class="view-item-avatar" src=${page.avatar} alt=${page.name}>
+                    <div class="info">
+                        <h3>${html.node([
+        tl(trans.you_share_count_with).replace("{c}", `<span class="colourful" data-taste=${taste}>${taste_percentage}</span>`)
+      ])}</h3>
+                        <p>
+                            ${taste_artists.length == 1 ? tl(trans.you_share_count_with.one).replace("{artist}", taste_artists[0]) : ""}
+                            ${taste_artists.length == 2 ? tl(trans.you_share_count_with.two).replace("{artist1}", taste_artists[0]).replace("{artist2}", taste_artists[1]) : ""}
+                            ${taste_artists.length == 3 ? tl(trans.you_share_count_with.three).replace("{artist1}", taste_artists[0]).replace("{artist2}", taste_artists[1]).replace("{artist3}", taste_artists[2]) : ""}
+                        </p>
+                    </div>
+                </div>
+            </div>
+        `;
+      tippy_esm_default(taste_wrap, {
+        theme: "stack",
+        content: html.node`
+                <span>
+                    ${tl(trans.taste_similarity)}
+                </span>
+                <div class="hint">${tl(trans.click_for_more_options)}</div>
+            `
+      });
+      if (taste_artists.length > 1) {
+        tippy_esm_default(taste_wrap, {
+          theme: "context-menu",
+          content: html.node`
+                    <h4 class="menu-header">${tl(trans.compare_plays)}</h4>
+                    <a class="dropdown-menu-clickable-item" href="${root}user/${page.name}/library/music/${redirect()}${sanitise(taste_artists[0])}" data-menu-item="shared-artist">
+                        <img class="view-item-avatar" src="${page.avatar}" alt="${page.name}">${taste_artists[0]}
+                    </a>
+                    <a class="dropdown-menu-clickable-item" href="${root}user/${auth.name}/library/music/${redirect()}${sanitise(taste_artists[0])}" data-menu-item="shared-artist">
+                        <img class="view-item-avatar" src="${auth.avatar}" alt="${auth.name}">${taste_artists[0]}
+                    </a>
+                    ${taste_artists.length >= 2 ? html.node`
+                    <div class="sep"></div>
+                    <a class="dropdown-menu-clickable-item" href="${root}user/${page.name}/library/music/${redirect()}${sanitise(taste_artists[1])}" data-menu-item="shared-artist">
+                        <img class="view-item-avatar" src="${page.avatar}" alt="${page.name}">${taste_artists[1]}
+                    </a>
+                    <a class="dropdown-menu-clickable-item" href="${root}user/${auth.name}/library/music/${redirect()}${sanitise(taste_artists[1])}" data-menu-item="shared-artist">
+                        <img class="view-item-avatar" src="${auth.avatar}" alt="${auth.name}">${taste_artists[1]}
+                    </a>
+                    ` : ""}
+                    ${taste_artists.length >= 3 ? html.node`
+                    <div class="sep"></div>
+                    <a class="dropdown-menu-clickable-item" href="${root}user/${page.name}/library/music/${redirect()}${sanitise(taste_artists[2])}" data-menu-item="shared-artist">
+                        <img class="view-item-avatar" src="${page.avatar}" alt="${page.name}">${taste_artists[2]}
+                    </a>
+                    <a class="dropdown-menu-clickable-item" href="${root}user/${auth.name}/library/music/${redirect()}${sanitise(taste_artists[2])}" data-menu-item="shared-artist">
+                        <img class="view-item-avatar" src="${auth.avatar}" alt="${auth.name}">${taste_artists[2]}
+                    </a>
+                    ` : ""}
+                    <div class="sep"></div>
+                    <a class="dropdown-menu-clickable-item" data-type="compare" href="${root}bleh/minis/compare?profile=${page.name}">${tl(trans.compare)}</a>
+                `,
+          trigger: "click",
+          placement: "bottom",
+          interactive: true,
+          interactiveBorder: 10,
+          offset: [0, 0]
+        });
+      }
+      const row = listen_container.querySelector(".listener-row");
+      row.after(taste_wrap);
+    }
+  }
+  function create_profile_top_item(parent, { name, link, text: text3 = "", type, new_release = false, updated = false, action = "", tooltip = "", allow_html = false, tooltip_theme = "" }) {
+    log(`creating top item of ${name}, ${link}, ${text3}`, "profile");
+    let side_action;
+    if (action === "button") {
+      side_action = html.node`
+            <button
+                class="btn side-action"
+                data-type=${type}
+                onclick=${link}
+            >
+                ${tl(trans[type])}
+                ${new_release ? html.node`<div class="new-badge">${tl(trans.new)}</div>` : ""}
+                ${updated ? html.node`<div class="new-badge">${tl(trans.updated)}</div>` : ""}
+            </button>
+        `;
+    } else {
+      side_action = html.node`
+            <a
+                class="btn side-action"
+                data-type=${type}
+                href=${link}
+            >
+                ${tl(trans[type])}
+                ${new_release ? html.node`<div class="new-badge">${tl(trans.new)}</div>` : ""}
+                ${updated ? html.node`<div class="new-badge">${tl(trans.updated)}</div>` : ""}
+            </a>
+        `;
+    }
+    if (type == "shortcut") {
+      if (name == settings.profile_shortcut) {
+        side_action.setAttribute("data-is-shortcut", "true");
+      } else {
+        side_action.setAttribute("data-is-shortcut", "false");
+      }
+      side_action.addEventListener("contextmenu", (e) => {
+        e.preventDefault();
+        open_profile_shortcut_window();
+      });
+    }
+    parent.appendChild(side_action);
+    return side_action;
+  }
+
+  // src/components/structure.js
+  function checkup_page_structure(is_subpage = false, header = null) {
+    if (document.body.style.getPropertyValue("--hue-album")) {
+      document.body.style.removeProperty("--hue-album");
+      document.body.style.removeProperty("--sat-album");
+      document.body.style.removeProperty("--lit-album");
+      load_chart_colours();
+    }
+    let params = new URLSearchParams(document.location.search);
+    page.requested = {
+      tab: params.get("tab"),
+      page: params.get("page"),
+      token: params.get("token"),
+      collage: params.get("collage")
+    };
+    if (!page.structure.container || !document.body.contains(page.structure.container)) {
+      log("page missing container, creating", "page structure");
+      page.structure.container = document.createElement("div");
+      page.structure.container.classList.add("page-content", "container");
+      let container_full_width = document.body.querySelector(".container--full-width");
+      if (container_full_width)
+        container_full_width.insertBefore(page.structure.container, container_full_width.firstElementChild);
+      else
+        document.body.querySelector(".adaptive-skin-container").appendChild(page.structure.container);
+    }
+    page.structure.container.setAttribute("data-assigned", "true");
+    let other_container = document.body.querySelector(".page-content.container:not([data-assigned])");
+    if (other_container) other_container.style.setProperty("display", "none");
+    if (!page.structure.row || !document.body.contains(page.structure.row)) {
+      log("page missing row, creating", "page structure");
+      page.structure.row = document.createElement("div");
+      page.structure.row.classList.add("row");
+      page.structure.container.insertBefore(page.structure.row, page.structure.container.firstElementChild);
+    }
+    if (page.structure.row.classList.contains("buffer-4"))
+      page.structure.row.classList = "row col-main-is-primary";
+    page.structure.row.setAttribute("data-assigned", "true");
+    if (!page.structure.main || !document.body.contains(page.structure.main)) {
+      log("page missing main, creating", "page structure");
+      page.structure.main = document.createElement("div");
+      page.structure.main.classList.add("col-main");
+      page.structure.row.appendChild(page.structure.main);
+    }
+    page.structure.main.setAttribute("data-assigned", "true");
+    let other_main = page.structure.row.querySelector(".col-main.hidden-xs:not([data-assigned])");
+    if (other_main) other_main.style.setProperty("display", "none");
+    if (!page.structure.side || !document.body.contains(page.structure.side)) {
+      log("page missing side", "page structure");
+      page.structure.side = page.structure.row.querySelector(".col-sidebar");
+      if (!page.structure.side) {
+        log("page missing side, creating", "page structure");
+        page.structure.side = document.createElement("div");
+        page.structure.side.classList.add("col-sidebar");
+        page.structure.row.appendChild(page.structure.side);
+      }
+    }
+    if (ff("short")) {
+      page.structure.content = html.node`
+            <main class="content">
+                ${page.structure.main}
+                ${page.structure.side}
+            </main>
+        `;
+      page.structure.row.appendChild(page.structure.content);
+    }
+    log("finished", "page structure");
+    if (ff("refreshed_music_nav") && header) {
+      let navlist = header.querySelector(".navlist");
+      if (navlist) {
+        navlist.classList.add("redesigned-navigation");
+        page.structure.container.insertBefore(navlist, page.structure.container.firstElementChild);
+        page.structure.nav = navlist;
+        let overview = page.structure.nav.querySelector(".secondary-nav-item--overview a");
+        if (overview) {
+          const href = overview.getAttribute("href").replace(root, "");
+          if (href == "settings" || href == "inbox" || href == "charts") overview = null;
+        }
+        if (overview) overview.textContent = tl(trans.home);
+      }
+      if (is_subpage) {
+        let content_top = document.body.querySelector(".content-top");
+        if (content_top) {
+          content_top.classList.add("redesigned-content-top");
+          page.structure.content_top = content_top;
+          if (content_top.querySelector(".content-top-back-link"))
+            content_top.style.setProperty("display", "none");
+          let content_top_nav = content_top.querySelector(".navlist");
+          if (!content_top_nav && ff("beret"))
+            content_top.style.setProperty("display", "none");
+          if (ff("short")) {
+            if (!content_top.style.hasOwnProperty("display"))
+              page.structure.row.insertBefore(content_top, page.structure.content);
+            else
+              page.structure.row.appendChild(content_top);
+          } else {
+            if (navlist)
+              navlist.after(content_top);
+            else
+              page.structure.container.insertBefore(content_top, page.structure.container.firstElementChild);
+          }
+        } else {
+          let subpage_title = page.structure.main.querySelector(":scope > .subpage-title");
+          if (!subpage_title)
+            subpage_title = page.structure.main.querySelector(":scope > .section-controls > .subpage-title");
+          if (!subpage_title)
+            subpage_title = page.structure.main.querySelector(":scope > section:first-child .section-controls > .subpage-title");
+          if (subpage_title) {
+            content_top = html.node`
+                        <div class="content-top redesigned-content-top">
+                            <div class="content-top-inner-wrap">
+                                <div class="container content-top-lower">
+                                    <h1 class="content-top-header">${subpage_title.textContent.trim()}</h1>
+                                </div>
+                            </div>
+                        </div>
+                    `;
+            page.structure.content_top = content_top;
+            content_top.style.setProperty("display", "none");
+            if (ff("short"))
+              page.structure.row.appendChild(content_top);
+            else
+              navlist.after(content_top);
+            try {
+              page.structure.main.removeChild(subpage_title);
+            } catch (e) {
+            }
+          }
+          navlist = page.structure.main.querySelector(".navlist");
+          if (navlist) {
+            navlist.classList.add("redesigned-navigation");
+            if (ff("mualani")) {
+              let toolbar = html.node`
+                            <div class="toolbar">
+                                ${navlist}
+                            </div>
+                        `;
+              page.structure.row.insertBefore(toolbar, page.structure.content);
+            } else {
+              page.structure.row.insertBefore(navlist, page.structure.content);
+            }
+          }
+          let btn_add = page.structure.main.querySelector(":scope > .btn-add");
+          if (!btn_add) btn_add = page.structure.main.querySelector(":scope > section:first-child .btn-add");
+          if (btn_add) {
+            let side_actions = document.createElement("section");
+            side_actions.classList.add("side-actions");
+            if (!page.mobile)
+              page.structure.side.appendChild(side_actions);
+            else
+              page.structure.main.appendChild(side_actions);
+            btn_add.classList = "btn side-action";
+            btn_add.setAttribute("data-type", "add");
+            btn_add.textContent = tl(trans.add);
+            side_actions.appendChild(btn_add);
+          }
+          let radio = page.structure.main.querySelector(":scope > .section-controls > .section-playlink");
+          if (radio) {
+            let side_actions = document.createElement("section");
+            side_actions.classList.add("side-actions");
+            if (!page.mobile)
+              page.structure.side.appendChild(side_actions);
+            else
+              page.structure.main.appendChild(side_actions);
+            radio.classList = "btn stationlink js-playlink-station radio-button";
+            let type = radio.getAttribute("data-analytics-label");
+            render(radio, html`
+                        <h3 class="sub-text">${tl(trans.radio)}</h3>
+                        <h4>${tl(trans[type])}</h4>
+                    `);
+            radio.removeAttribute("title");
+            side_actions.appendChild(radio);
+          }
+        }
+        let similar_artists = page.structure.side.querySelector(".similar-items-sidebar");
+        if (similar_artists) {
+          similar_artists.parentElement.classList.add("similar-artists-panel");
+          page.structure.side.removeChild(similar_artists.parentElement);
+        }
+      } else {
+        let content_top = document.body.querySelector(".content-top");
+        if (content_top) content_top.classList.add("legacy-content-top");
+      }
+    }
+  }
+  function checkup_nav() {
+    if (!ff("short")) return;
+    if (page.structure.nav) page.structure.nav.setAttribute("data-assigned", "true");
+    let navlists = page.structure.container.querySelectorAll(":scope > .navlist");
+    navlists.forEach((nav, index3) => {
+      console.info(index3);
+      if (index3 < 1) return;
+      if (ff("mualani")) {
+        let toolbar = html.node`
+                <div class="toolbar">
+                    ${nav}
+                </div>
+            `;
+        page.structure.row.insertBefore(toolbar, page.structure.content);
+      } else {
+        page.structure.row.insertBefore(nav, page.structure.content);
+      }
+    });
+  }
+  function convert_to_toolbar() {
+    const nav = page.structure.content_top.querySelector(".navlist");
+    nav.classList.add("redesigned-navigation");
+    page.structure.toolbar = html.node`
+        <div class="toolbar">
+            ${nav}
+        </div>
+    `;
+    page.structure.row.insertBefore(page.structure.toolbar, page.structure.row.firstChild);
+    page.structure.content_top.style.display = "none";
+  }
+
+  // src/components/auto_edit.js
+  function bleh_auto_edits() {
+    let corrections_panel = document.body.querySelector("#subscription-corrections");
+    page.structure.main.appendChild(corrections_panel);
+    let nav = page.structure.container.querySelector("nav[data-more-string] .navlist-items");
+    nav.insertBefore(html.node`
+        <li class="navlist-item secondary-nav-item secondary-nav-item--back">
+            <a class="secondary-nav-item-link" href="${root}settings/subscription">
+                ${tl(trans.back)}
+            </a>
+        </li>
+    `, nav.firstElementChild);
+  }
+
+  // src/pages/lastfm_settings.js
+  var import_cropperjs = __toESM(require_cropper(), 1);
+  var cropper;
+  function bleh_native_settings() {
+    let no_data = page.structure.container.querySelector(":scope > .no-data-message");
+    if (no_data) {
+      page.structure.main.appendChild(no_data);
+    }
+    if (page.subpage == "overview") {
+      patch_settings_profile_tab();
+    } else if (page.subpage == "privacy") {
+      patch_settings_privacy_tab();
+    } else if (page.subpage == "subscription_overview") {
+      let panel = page.structure.container.querySelector(".row + div");
+      let subscription = panel.querySelector("#current-subscription");
+      let edits = panel.querySelector("#automatic-edits");
+      let merch_h = panel.querySelector(":scope > h2");
+      let merch = panel.querySelector("#mechandise-discount");
+      let history = panel.querySelector("#pro-history");
+      merch.insertBefore(merch_h, merch.firstElementChild);
+      page.structure.main.appendChild(subscription);
+      page.structure.main.appendChild(edits);
+      page.structure.main.appendChild(merch);
+      page.structure.main.appendChild(history);
+      let button = subscription.querySelector(".btn-primary");
+      if (button) button.classList.add("subscription-button", "icon", "primary");
+      let more_link_wrap = edits.querySelector(".more-link");
+      if (more_link_wrap) {
+        more_link_wrap.classList = "";
+        let edit_buttons = more_link_wrap.querySelectorAll("a");
+        edit_buttons.forEach((edit_button, index3) => {
+          edit_button.classList.add("btn", "edit-lead-button", "icon", "primary");
+          if (index3 == 0)
+            edit_button.classList.add("edit-album");
+          else
+            edit_button.classList.add("edit-track");
+        });
+      }
+    } else if (page.subpage.startsWith("subscription_automatic-edits")) {
+      bleh_auto_edits();
+    } else if (page.subpage == "account_overview") {
+      bleh_accounts();
+    } else if (page.subpage == "change-username_overview") {
+      bleh_name_change();
+    } else if (page.subpage == "applications_overview") {
+      bleh_applications();
+    }
+    if (ff("katsune")) return;
+    let edit_header = document.createElement("section");
+    edit_header.classList.add("redesigned-header", "edit-header", "no-background");
+    edit_header.innerHTML = `
+        <div class="tag-side">
+            <div class="tag-icon cog-icon"></div>
+        </div>
+        <div class="info-side">
+            <div class="sub-text">${tl(trans.settings)}</div>
+            <h1>${header_text}</h1>
+        </div>
+    `;
+    page.structure.container.insertBefore(edit_header, page.structure.container.firstElementChild);
+  }
+  function patch_settings_profile_tab() {
+    let update_picture = page.structure.main.querySelector("#update-picture");
+    if (!update_picture) return;
+    let token = document.body.querySelector('[name="csrfmiddlewaretoken"]').getAttribute("value");
+    patch_settings_profile_panel(token, update_picture);
+    patch_settings_charts_panel(token);
+  }
+  function patch_settings_charts_panel(token) {
+    let charts_panel = document.getElementById("update-chart");
+    if (charts_panel.hasAttribute("data-kate-processed"))
+      return;
+    charts_panel.setAttribute("data-kate-processed", "true");
+    charts_panel.classList.add("bleh--panel");
+    let original_chart_settings = {
+      recent: {
+        recent_artwork: document.getElementById("id_show_recent_tracks_artwork").checked,
+        count: document.getElementById("id_chart_length_recent_tracks").outerHTML,
+        recent_realtime: document.getElementById("id_auto_refresh_recent_tracks").checked
+      },
+      artists: {
+        timeframe: document.getElementById("id_chart_range_top_artists").outerHTML,
+        style: document.getElementById("id_chart_style_and_length_top_artists").outerHTML
+      },
+      albums: {
+        timeframe: document.getElementById("id_chart_range_top_albums").outerHTML,
+        style: document.getElementById("id_chart_style_and_length_top_albums").outerHTML
+      },
+      tracks: {
+        count: document.getElementById("id_chart_length_top_tracks").outerHTML,
+        timeframe: document.getElementById("id_chart_range_top_tracks").outerHTML
+      }
+    };
+    charts_panel.innerHTML = `
+        <h4>${tl(trans.recent_tracks)}</h4>
+        <form action="${root}settings#update-chart" name="chart-form" method="post">
+            <input type="hidden" name="csrfmiddlewaretoken" value="${token}">
+            <div class="inner-preview pad">
+                <div class="tracks recent">
+                    <div class="track realtime">
+                        <div class="cover"></div>
+                        <div class="title"></div>
+                        <div class="artist"></div>
+                        <div class="time"></div>
+                    </div>
+                    <div class="track">
+                        <div class="cover"></div>
+                        <div class="title"></div>
+                        <div class="artist"></div>
+                        <div class="time"></div>
+                    </div>
+                    <div class="track">
+                        <div class="cover"></div>
+                        <div class="title"></div>
+                        <div class="artist"></div>
+                        <div class="time"></div>
+                    </div>
+                    <div class="track">
+                        <div class="cover"></div>
+                        <div class="title"></div>
+                        <div class="artist"></div>
+                        <div class="time"></div>
+                    </div>
+                    <div class="track">
+                        <div class="cover"></div>
+                        <div class="title"></div>
+                        <div class="artist"></div>
+                        <div class="time"></div>
+                    </div>
+                </div>
+            </div>
+            <div class="setting" data-type="select">
+                <div class="heading">
+                    <h5>${tl(trans.amount_to_display)}</h5>
+                </div>
+                <div class="select-wrap custom-selector" id="id_chart_length_recent_tracks_select">
+                    ${original_chart_settings.recent.count}
+                </div>
+            </div>
+            <div class="setting" data-type="toggle" onclick="_update_inbuilt_item('recent_artwork')" id="container-recent_artwork">
+                <button class="btn reset" onclick="_reset_inbuilt_item('recent_artwork')">Reset to default</button>
+                <div class="heading">
+                    <h5>${tl(trans.recent_artwork)}</h5>
+                </div>
+                <div class="toggle-wrap">
+                    <input class="companion-checkbox" type="checkbox" name="show_recent_tracks_artwork" id="inbuilt-companion-checkbox-recent_artwork">
+                    <span class="btn toggle" id="toggle-recent_artwork" aria-checked="false">
+                        <div class="dot"></div>
+                    </span>
+                </div>
+            </div>
+            <div class="setting" data-type="toggle" onclick="_update_inbuilt_item('recent_realtime')" id="container-recent_realtime">
+                <button class="btn reset" onclick="_reset_inbuilt_item('recent_realtime')">Reset to default</button>
+                <div class="heading">
+                    <h5>${tl(trans.recent_realtime.name)}</h5>
+                    <p>${tl(trans.recent_realtime.body)}</p>
+                </div>
+                <div class="toggle-wrap">
+                    <input class="companion-checkbox" type="checkbox" name="auto_refresh_recent_tracks" id="inbuilt-companion-checkbox-recent_realtime">
+                    <span class="btn toggle" id="toggle-recent_realtime" aria-checked="false">
+                        <div class="dot"></div>
+                    </span>
+                </div>
+            </div>
+            <div class="sep"></div>
+            <h4>${tl(trans.top_artists)}</h4>
+            <div class="inner-preview pad">
+                <div class="item-grid artist">
+                    <div class="grid-primary artist">
+                        <div class="grid-item"></div>
+                    </div>
+                    <div class="grid-mains">
+                        <div class="grid-main artist">
+                            <div class="grid-item grid-item--extra artist"></div>
+                            <div class="grid-item grid-item--extra artist"></div>
+                            <div class="grid-item"></div>
+                            <div class="grid-item"></div>
+                        </div>
+                        <div class="grid-main artist">
+                            <div class="grid-item grid-item--extra artist"></div>
+                            <div class="grid-item grid-item--extra artist"></div>
+                            <div class="grid-item"></div>
+                            <div class="grid-item"></div>
+                        </div>
+                    </div>
+                </div>
+                <div class="tracks artist">
+                    <div class="track">
+                        <div class="cover"></div>
+                        <div class="title"></div>
+                        <div class="bar">
+                            <div class="fill" style="width: 100%"></div>
+                        </div>
+                    </div>
+                    <div class="track">
+                        <div class="cover"></div>
+                        <div class="title"></div>
+                        <div class="bar">
+                            <div class="fill" style="width: 85%"></div>
+                        </div>
+                    </div>
+                    <div class="track">
+                        <div class="cover"></div>
+                        <div class="title"></div>
+                        <div class="bar">
+                            <div class="fill" style="width: 60%"></div>
+                        </div>
+                    </div>
+                    <div class="track">
+                        <div class="cover"></div>
+                        <div class="title"></div>
+                        <div class="bar">
+                            <div class="fill" style="width: 30%"></div>
+                        </div>
+                    </div>
+                    <div class="track">
+                        <div class="cover"></div>
+                        <div class="title"></div>
+                        <div class="bar">
+                            <div class="fill" style="width: 5%"></div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="setting" data-type="select">
+                <div class="heading">
+                    <h5>${tl(trans.default_timeframe)}</h5>
+                </div>
+                <div class="select-wrap custom-selector" id="id_chart_range_top_artists_select">
+                    ${original_chart_settings.artists.timeframe}
+                </div>
+            </div>
+            <div class="setting" data-type="select">
+                <div class="heading">
+                    <h5>${tl(trans.chart_style)}</h5>
+                </div>
+                <div class="select-wrap custom-selector" id="id_chart_style_and_length_top_artists_select">
+                    ${original_chart_settings.artists.style}
+                </div>
+            </div>
+            <div class="sep"></div>
+            <h4>${tl(trans.top_albums)}</h4>
+            <div class="inner-preview pad">
+                <div class="item-grid album">
+                    <div class="grid-primary album">
+                        <div class="grid-item"></div>
+                    </div>
+                    <div class="grid-mains">
+                        <div class="grid-main album">
+                            <div class="grid-item"></div>
+                            <div class="grid-item"></div>
+                            <div class="grid-item grid-item--extra album"></div>
+                            <div class="grid-item grid-item--extra album"></div>
+                        </div>
+                        <div class="grid-main album">
+                            <div class="grid-item"></div>
+                            <div class="grid-item"></div>
+                            <div class="grid-item grid-item--extra album"></div>
+                            <div class="grid-item grid-item--extra album"></div>
+                        </div>
+                    </div>
+                </div>
+                <div class="tracks album">
+                    <div class="track">
+                        <div class="cover"></div>
+                        <div class="title"></div>
+                        <div class="bar">
+                            <div class="fill" style="width: 100%"></div>
+                        </div>
+                    </div>
+                    <div class="track">
+                        <div class="cover"></div>
+                        <div class="title"></div>
+                        <div class="bar">
+                            <div class="fill" style="width: 85%"></div>
+                        </div>
+                    </div>
+                    <div class="track">
+                        <div class="cover"></div>
+                        <div class="title"></div>
+                        <div class="bar">
+                            <div class="fill" style="width: 60%"></div>
+                        </div>
+                    </div>
+                    <div class="track">
+                        <div class="cover"></div>
+                        <div class="title"></div>
+                        <div class="bar">
+                            <div class="fill" style="width: 30%"></div>
+                        </div>
+                    </div>
+                    <div class="track">
+                        <div class="cover"></div>
+                        <div class="title"></div>
+                        <div class="bar">
+                            <div class="fill" style="width: 5%"></div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="setting" data-type="select">
+                <div class="heading">
+                    <h5>${tl(trans.default_timeframe)}</h5>
+                </div>
+                <div class="select-wrap custom-selector" id="id_chart_range_top_albums_select">
+                    ${original_chart_settings.albums.timeframe}
+                </div>
+            </div>
+            <div class="setting" data-type="select">
+                <div class="heading">
+                    <h5>${tl(trans.chart_style)}</h5>
+                </div>
+                <div class="select-wrap custom-selector" id="id_chart_style_and_length_top_albums_select">
+                    ${original_chart_settings.albums.style}
+                </div>
+            </div>
+            <div class="sep"></div>
+            <h4>${tl(trans.top_tracks)}</h4>
+            <div class="inner-preview pad">
+                <div class="tracks">
+                    <div class="track">
+                        <div class="cover"></div>
+                        <div class="title"></div>
+                        <div class="artist"></div>
+                        <div class="bar">
+                            <div class="fill" style="width: 100%"></div>
+                        </div>
+                    </div>
+                    <div class="track">
+                        <div class="cover"></div>
+                        <div class="title"></div>
+                        <div class="artist"></div>
+                        <div class="bar">
+                            <div class="fill" style="width: 85%"></div>
+                        </div>
+                    </div>
+                    <div class="track">
+                        <div class="cover"></div>
+                        <div class="title"></div>
+                        <div class="artist"></div>
+                        <div class="bar">
+                            <div class="fill" style="width: 60%"></div>
+                        </div>
+                    </div>
+                    <div class="track">
+                        <div class="cover"></div>
+                        <div class="title"></div>
+                        <div class="artist"></div>
+                        <div class="bar">
+                            <div class="fill" style="width: 30%"></div>
+                        </div>
+                    </div>
+                    <div class="track">
+                        <div class="cover"></div>
+                        <div class="title"></div>
+                        <div class="artist"></div>
+                        <div class="bar">
+                            <div class="fill" style="width: 5%"></div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="setting" data-type="select">
+                <div class="heading">
+                    <h5>${tl(trans.default_timeframe)}</h5>
+                </div>
+                <div class="select-wrap custom-selector" id="id_chart_range_top_tracks_select">
+                    ${original_chart_settings.tracks.timeframe}
+                </div>
+            </div>
+            <div class="setting" data-type="select">
+                <div class="heading">
+                    <h5>${tl(trans.amount_to_display)}</h5>
+                </div>
+                <div class="select-wrap custom-selector" id="id_chart_length_top_tracks_select">
+                    ${original_chart_settings.tracks.count}
+                </div>
+            </div>
+            <div class="settings-footer">
+                <button type="submit" class="btn-primary save">
+                    ${tl(trans.save)}
+                </button>
+                <input type="hidden" value="chart" name="submit">
+            </div>
+        </form>
+    `;
+    custom_select(charts_panel.querySelector("#id_chart_length_recent_tracks"), charts_panel.querySelector("#id_chart_length_recent_tracks_select"));
+    custom_select(charts_panel.querySelector("#id_chart_range_top_artists"), charts_panel.querySelector("#id_chart_range_top_artists_select"));
+    custom_select(charts_panel.querySelector("#id_chart_style_and_length_top_artists"), charts_panel.querySelector("#id_chart_style_and_length_top_artists_select"));
+    custom_select(charts_panel.querySelector("#id_chart_range_top_albums"), charts_panel.querySelector("#id_chart_range_top_albums_select"));
+    custom_select(charts_panel.querySelector("#id_chart_style_and_length_top_albums"), charts_panel.querySelector("#id_chart_style_and_length_top_albums_select"));
+    custom_select(charts_panel.querySelector("#id_chart_range_top_tracks"), charts_panel.querySelector("#id_chart_range_top_tracks_select"));
+    custom_select(charts_panel.querySelector("#id_chart_length_top_tracks"), charts_panel.querySelector("#id_chart_length_top_tracks_select"));
+    for (let category in original_chart_settings) {
+      for (let setting2 in original_chart_settings[category]) {
+        update_inbuilt_item(setting2, original_chart_settings[category][setting2], false);
+      }
+    }
+    let selects = document.body.querySelectorAll("select");
+    selects.forEach((select2) => {
+      select2.setAttribute("onchange", `_update_inbuilt_select('${select2.getAttribute("id")}', this.value)`);
+      update_inbuilt_select(select2.getAttribute("id"), select2.value);
+    });
+  }
+  function patch_settings_profile_panel(token, update_picture) {
+    update_picture.classList.add("bleh--panel");
+    const upload_form = update_picture.querySelector(".avatar-upload-form");
+    const avatar_url = update_picture.querySelector(".image-upload-preview img").getAttribute("src");
+    const upload_finished = update_picture.querySelector(".alert-success");
+    if (page.state.avatar_changer && upload_finished) {
+      const id = page.state.avatar_changer.getAttribute("data-modal-id");
+      dialog_rm({ id });
+    }
+    let form_display_name = document.getElementById("id_full_name").value;
+    let form_website = document.getElementById("id_homepage").value;
+    let form_country = document.getElementById("id_country");
+    let form_about_me = document.getElementById("id_about_me").textContent;
+    let chars;
+    let about;
+    let preview;
+    const markdown_settings = {
+      allow_headers: true,
+      allow_banners: true,
+      allow_icons: true,
+      allow_hue: true,
+      take_effect: false
+    };
+    let banner_setting;
+    let accent_setting2;
+    render(update_picture, html`
+        <h4>${tl(trans.profile)}</h4>
+        <div class="banner-preview"></div>
+        <div class="profile-container">
+            <div class="avatar-side">
+                <div class="avatar image-upload-preview" onclick=${() => avatar2(token)}>
+                    <img src=${avatar_url} alt=${tl(trans.your_avatar)} loading="lazy">
+                    <div class="avatar-overlay"></div>
+                </div>
+            </div>
+            <div class="info-side">
+                <div class="header-info">
+                    <div class="header">
+                        <h1>${auth.name}</h1>
+                    </div>
+                    <div class="header-title-secondary">
+                        <span class="header-title-secondary--pre" id="header-title-display-name--pre"></span>
+                        <span class="header-title-display-name" id="header-title-display-name"></span>
+                        <!--<span class="header-title-secondary--pre" id="header-scrobble-since--pre">created</span>
+                        <span class="header-scrobble-since" id="header-scrobble-since"></span>-->
+                    </div>
+                </div>
+                <div class="sub-info">
+                    <form action="${root}settings#update-profile" name="profile-form" data-form-type="identity" method="post">
+                        <input type="hidden" name="csrfmiddlewaretoken" value="${token}">
+                        <div class="info-grid">
+                            <div class="info-row">
+                                <div class="title">
+                                    ${tl(trans.subtitle)}
+                                </div>
+                                <div class="input">
+                                    <input type="text" name="full_name" value=${form_display_name} maxlength="36" id="id_full_name" oninput="_update_display_name(this.value)" data-form-type="other">
+                                    <div class="tip">${tl(trans.pronoun_tip)}</div>
+                                </div>
+                            </div>
+                            <div class="info-row">
+                                <div class="title">
+                                    ${tl(trans.country)}
+                                </div>
+                                ${select(select_prepare(form_country), form_country.value, "country")}
+                            </div>
+                            <div class="info-row">
+                                <div class="title">
+                                    ${tl(trans.about)}
+                                </div>
+                                <div class="input about-me" id="about_me">
+                                    <textarea name="about_me" placeholder=${tl(trans.anything_you_can_imagine)} cols="40" rows="10" class="textarea--s" maxlength="500" id="id_about_me" oninput=${() => update_about()} ref=${(el) => about = el} data-form-type="other">${form_about_me}</textarea>
+                                    <div class="dual-tip">
+                                        <div class="tip markdown-enabled" onclick=${() => markdown_prompt(markdown_settings)}>${tl(trans.supports_markdown)}</div>
+                                        <div class="tip characters" ref=${(el) => chars = el}>
+                                            ${tl(trans.value_characters_max).replace("{v}", "500")}
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="info-row">
+                                <div class="title">
+                                    ${tl(trans.about_me_preview)}
+                                </div>
+                                <span class="bleh--about-me-preview markdown-body" ref=${(el) => preview = el}></span>
+                            </div>
+                            <div class="info-row" style="display: none">
+                                <div class="title">
+                                    ${tl(trans.website)}
+                                </div>
+                                <div class="input">
+                                    <input type="url" name="homepage" value="${form_website}" id="id_homepage" data-form-type="website">
+                                </div>
+                            </div>
+                        </div>
+                        <div class="save-row">
+                            <div class="form-submit">
+                                <button type="submit" class="btn-primary save" data-form-type="action">
+                                    ${tl(trans.save)}
+                                </button>
+                                <input type="hidden" value="profile" name="submit">
+                            </div>
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </div>
+        <div class="setting-group">
+            <div class="setting" data-type="info" ref=${(el) => banner_setting = el} />
+            <div class="setting" data-type="info" ref=${(el) => accent_setting2 = el} />
+            ${setting({ id: "avatar_radius" })}
+        </div>
+    `);
+    page.structure.main.removeChild(page.structure.main.querySelector("#update-profile"));
+    update_about();
+    function update_about() {
+      log("re-rendering", "about", "log");
+      let value = about.value;
+      chars.textContent = tl(trans.value_characters_max).replace("{v}", `${value.length}/500`);
+      chars.setAttribute("data-exceeded", value.length >= 500);
+      render(preview, markdown(value, markdown_settings));
+      let profile_cache = JSON.parse(localStorage.getItem("bleh_profile_cache")) || {};
+      let cache2 = profile_cache[auth.name];
+      console.info("cache", cache2);
+      render(banner_setting, html`
+            <div class="heading">
+                <h5>${tl(trans.profile_banner.name)}</h5>
+                <p>${tl(trans.profile_banner.body)}</p>
+                ${cache2.banner ? html.node`
+                <p>${tl(trans.current_banner_value).replace("{v}", cache2.banner)}</p>
+                ` : ""}
+            </div>
+            ${() => {
+        if (!cache2.banner)
+          return html.node`
+                        <div class="info">
+                            <p>${tl(trans.none)}</p>
+                        </div>
+                    `;
+        let banner_image = html.node`
+                    <div class="banner-image" style="background-image: url(${cache2.banner})" />
+                `;
+        tippy_esm_default(banner_image, {
+          content: cache2.banner
+        });
+        return banner_image;
+      }}
+        `);
+      const accent_regex = /\[accent=([0-9]{1,3}),([0-9]*\.?[0-9]+),([0-9]*\.?[0-9]+)\]/;
+      console.info("cache update", about.value, cache2.hue, cache2.sat, cache2.lit);
+      let edit;
+      render(accent_setting2, html`
+            <div class="heading">
+                <h5>${tl(trans.profile_accent.name)}<span class="new-badge beta">${tl(trans.new)}</span></h5>
+                <p>${tl(trans.profile_accent.body)}</p>
+            </div>
+            <div class="info">
+                <div class="colour-tile colourful" style="--hue-over: ${cache2.hue}; --sat-over: ${cache2.sat}; --lit-over: ${cache2.lit}" />
+                <div class="swatch-group palette">
+                    <button class="swatch-container" ref=${(el) => edit = el} onclick=${() => {
+        let hue_range;
+        let sat_range;
+        let lit_range;
+        const match2 = about.value.match(accent_regex);
+        console.info(match2);
+        if (match2) {
+          save_setting("profile_hue", parseInt(match2[1], 10));
+          save_setting("profile_sat", parseFloat(match2[2]));
+          save_setting("profile_lit", parseFloat(match2[3]));
+          settings_store.profile_hue.default = settings.hue;
+          settings_store.profile_sat.default = settings.sat;
+          settings_store.profile_lit.default = settings.lit;
+        }
+        let accent_preview;
+        dialog({
+          id: "profile_accent",
+          title: tl(trans.profile_accent.name),
+          body: html.node`
+                                <div class="setting-group">
+                                    <div class="setting" data-type="info">
+                                        <div class="heading">
+                                            <h5>${tl(trans.preview)}</h5>
+                                        </div>
+                                        <div class="info">
+                                            <div class="colour-tile colourful" ref=${(el) => accent_preview = el} style="--hue-over: ${settings.profile_hue}; --sat-over: ${settings.profile_sat}; --lit-over: ${settings.profile_lit}" />
+                                        </div>
+                                    </div>
+                                    ${ff("colour_based_on_hex") ? html.node`
+                                    <div class="setting" data-type="text">
+                                        <div class="heading">
+                                            <h5>${tl(trans.convert_from_hex)}</h5>
+                                        </div>
+                                        <div class="input-container content-form">
+                                            ${colour = input({
+            type: "colour",
+            value: "#999999",
+            maxlength: 7,
+            warn_if_empty: true
+          })}
+                                            <button class="btn primary icon convert" onclick=${() => {
+            const value2 = colour.value();
+            const hsl = hex_to_hsl(value2);
+            hue_range.set(hsl.h);
+            sat_range.set(clamp_sat(hsl.s / 100 * 3));
+            lit_range.set(hsl.l / 100 + 0.35);
+          }}>${tl(trans.convert)}</button>
+                                        </div>
+                                    </div>
+                                    ` : ""}
+                                    ${hue_range = setting({ id: "profile_hue", func: update_colour_preview })}
+                                    ${sat_range = setting({ id: "profile_sat", func: update_colour_preview })}
+                                    ${lit_range = setting({ id: "profile_lit", func: update_colour_preview })}
+                                </div>
+                                <div class="modal-footer">
+                                    <button class="see-more cancel" onclick=${() => dialog_rm({ id: "profile_accent" })}>
+                                        ${tl(trans.back)}
+                                    </button>
+                                    <div class="fill"></div>
+                                    <button class="btn primary continue" onclick=${() => {
+            const new_accent = `[accent=${settings.profile_hue},${settings.profile_sat},${settings.profile_lit}]`;
+            if (match2) {
+              about.value = about.value.replace(accent_regex, new_accent);
+            } else {
+              const trimmed = about.value.trimEnd();
+              if (trimmed.length == 0) {
+                about.value = new_accent;
+              } else {
+                about.value = trimmed + "\n\n" + new_accent;
+              }
+            }
+            about.dispatchEvent(new InputEvent("input", { bubbles: true, cancelable: true }));
+            dialog_rm({ id: "profile_accent" });
+          }}>
+                                        ${tl(trans.change)}
+                                    </button>
+                                </div>
+                            `
+        });
+        function update_colour_preview() {
+          accent_preview.style = `--hue-over: ${settings.profile_hue}; --sat-over: ${settings.profile_sat}; --lit-over: ${settings.profile_lit}`;
+        }
+      }}>
+                        <div class="swatch colourful" data-swatch-type="customise" />
+                    </button>
+                </div>
+            </div>
+        `);
+      tippy_esm_default(edit, {
+        content: tl(trans.edit)
+      });
+    }
+    update_display_name(form_display_name);
+  }
+  unsafeWindow._update_display_name = function(value) {
+    update_display_name(value);
+  };
+  function update_display_name(value) {
+    document.getElementById("header-title-display-name").textContent = value;
+    let pronouns = use_pronouns(value);
+    document.getElementById("header-title-display-name--pre").textContent = pronouns ? tl(trans.account_pronouns) : tl(trans.aka);
+  }
+  function use_pronouns(value) {
+    value = value.replaceAll(" ", "");
+    if (value.startsWith("she/") || value.startsWith("he/") || value.startsWith("they/") || value.startsWith("it/") || value.startsWith("xe/") || value.startsWith("any/")) return true;
+    return false;
+  }
+  function avatar2(token = "") {
+    if (!token) token = page.token;
+    else page.token = token;
+    page.state.avatar_changer = dialog({
+      id: "edit_avatar",
+      title: tl(trans.change_avatar),
+      body: html.node`
+            <div class="forms">
+                <form action="${root}settings" name="avatar-form" method="post" enctype="multipart/form-data">
+                    <input type="hidden" name="csrfmiddlewaretoken" value=${page.token}>
+                    <div class="form-group form-group--avatar js-form-group upload-avatar">
+                        <div class="js-form-group-controls form-group-controls">
+                            <span class="btn-secondary btn primary btn-file" data-kate-processed="true">
+                                ${tl(trans.upload)}
+                                <input type="file" onchange=${() => update_avatar(event)} name="avatar" data-require="components/file-input" data-file-input-copy="${tl(trans.upload)}" data-no-file-copy="No file chosen" accept="image/*" required="" id="id_avatar" data-kate-processed="true">
+                            </span>
+                        </div>
+                    </div>
+                    <button type="submit" class="btn-primary save" id="avatar_saver">
+                        ${tl(trans.save)}
+                    </button>
+                    <input type="hidden" value="avatar" name="submit">
+                </form>
+                <form action="${root}settings/avatar/delete" method="post">
+                    <input type="hidden" name="csrfmiddlewaretoken" value=${page.token}>
+                    <div class="form-group delete-avatar">
+                        <button class="mimic-link image-upload-remove" type="submit" value="delete-avatar" name="delete-avatar">${tl(trans.delete)}</button>
+                    </div>
+                </form>
+            </div>
+            <div class="modal-footer">
+                <button class="see-more cancel" onclick=${() => dialog_rm({ id: "edit_avatar" })}>${tl(trans.cancel)}</button>
+                <div class="fill"></div>
+                <button class="btn primary save" onclick=${() => save_avatar()} disabled>${tl(trans.save)}</button>
+            </div>
+        `
+    });
+    page.state.avatar_changer.querySelector('[name="avatar-form"]').onsubmit = finish_saving_avatar;
+    const file_button = page.state.avatar_changer.querySelector(".btn-file");
+    const save_button = page.state.avatar_changer.querySelector(".modal-footer .primary");
+    let form;
+    function update_avatar(e) {
+      console.info(e);
+      if (!e.target.files || !e.target.files[0]) return;
+      form = page.state.avatar_changer.querySelector(".bleh-modal-body");
+      if (e.target.files[0].type == "image/gif") {
+        save_avatar();
+        finish_saving_avatar();
+        return;
+      }
+      let reader = new FileReader();
+      reader.onload = function() {
+        crop(reader.result);
+        save_button.removeAttribute("disabled");
+      };
+      reader.readAsDataURL(e.target.files[0]);
+    }
+    function save_avatar() {
+      page.state.avatar_changer.querySelector("#avatar_saver").click();
+    }
+    function finish_saving_avatar() {
+      page.state.avatar_changer.setAttribute("data-loading", "true");
+      page.state.avatar_changer.querySelectorAll(".bleh-modal-body button").forEach((button) => {
+        button.setAttribute("disabled", "true");
+        button.removeAttribute("onclick");
+      });
+    }
+    function crop(file) {
+      let crop_image;
+      let save;
+      const crop_dialog = dialog({
+        id: "crop",
+        title: tl(trans.crop_avatar),
+        body: html.node`
+                <div class="crop">
+                    <img src=${file} ref=${(el) => crop_image = el}>
+                </div>
+                <div class="alert alert-info">
+                    ${tl(trans.crop_notice)}
+                </div>
+                <div class="modal-footer">
+                    <button class="see-more cancel" onclick=${() => {
+          if (cropper && cropper.destroy) cropper.destroy();
+          cropper = null;
+          avatar2();
+        }}>${tl(trans.cancel)}</button>
+                    <div class="fill"></div>
+                    <button class="btn primary save" onclick=${() => {
+          if (!cropper) return;
+          crop_dialog.querySelectorAll(".bleh-modal-body button").forEach((button) => {
+            button.setAttribute("disabled", "true");
+            button.removeAttribute("onclick");
+          });
+          const canvas = cropper.getCroppedCanvas();
+          canvas.toBlob((blob) => {
+            const cropped_file = new File([blob], "avatar.png", { type: "image/png" });
+            const inner_form = form.querySelector("form");
+            inner_form.style.display = "none";
+            crop_dialog.querySelector(".bleh-modal-body").appendChild(inner_form);
+            const file_input = inner_form.querySelector('input[type="file"]');
+            const data_transfer = new DataTransfer();
+            data_transfer.items.add(cropped_file);
+            file_input.files = data_transfer.files;
+            inner_form.querySelector("#avatar_saver").click();
+          }, "image/png");
+        }} ref=${(el) => save = el} disabled>${tl(trans.save)}</button>
+                </div>
+            `
+      });
+      page.state.avatar_changer = crop_dialog;
+      crop_image.onload = () => {
+        if (cropper && cropper.destroy) cropper.destroy();
+        crop_image.style.maxWidth = "none";
+        crop_image.style.width = crop_image.naturalWidth + "px";
+        crop_image.style.height = crop_image.naturalHeight + "px";
+        cropper = new import_cropperjs.default(crop_image, {
+          viewMode: 3,
+          dragMode: "crop",
+          movable: true,
+          zoomable: true,
+          scalable: false,
+          cropBoxMovable: true,
+          cropBoxResizable: true,
+          background: false,
+          guides: true,
+          autoCropArea: 1
+        });
+        save.removeAttribute("disabled");
+      };
+    }
+  }
+  function patch_settings_privacy_tab() {
+    let privacy_panel = document.getElementById("privacy");
+    let token = document.body.querySelector('[name="csrfmiddlewaretoken"]').getAttribute("value");
+    bleh_communication_panel(token);
+    patch_settings_privacy_panel(token, privacy_panel);
+  }
+  function bleh_communication_panel(token) {
+    let profile_notes = JSON.parse(localStorage.getItem("bleh_profile_notes")) || {};
+    let panel = page.structure.main.querySelector("#ignorelist");
+    panel.classList.add("bleh--panel");
+    let list = panel.querySelectorAll(".ignore-list tr");
+    let new_list = document.createElement("div");
+    new_list.classList.add("generic-table-list", "user-vertical-list", "take-space");
+    let exceeded = false;
+    let exceed_amount = 10;
+    let amount = 0;
+    list.forEach((item, index3) => {
+      let name = item.querySelector("td").textContent.trim();
+      let form2 = item.querySelector("form");
+      let button = form2.querySelector("button");
+      button.classList.add("icon", "chibi", "danger-subtle");
+      button.setAttribute("data-type", "trash");
+      let entry = html.node`
+            <div class="generic-table-list-entry user-vertical-list-item">
+                <div class="name">
+                    <a class="mention" href="${root}user/${name}" target="_blank">@${name}</a>
+                </div>
+                <div class="text preview">
+                    ${profile_notes.hasOwnProperty(name) ? html.node`
+                        <p id="profile-note-row-preview--${name}">${{ html: profile_notes[name] }}</p>
+                    ` : ""}
+                </div>
+                <div class="actions">
+                    ${form2}
+                </div>
+            </div>
+        `;
+      if (index3 > exceed_amount && !exceeded)
+        exceeded = true;
+      if (exceeded)
+        entry.classList.add("entry-is-exceeded");
+      new_list.appendChild(entry);
+      amount += 1;
+    });
+    if (exceeded) {
+      let remainder = amount - exceed_amount;
+      new_list.classList.add("list-is-exceeded");
+      new_list.setAttribute("data-expanded", "false");
+      let expand = html.node`
+            <button class="see-more expand-down" onclick=${() => {
+        expand.style.display = "none";
+        new_list.setAttribute("data-expanded", "true");
+      }}>
+                ${tl(trans.view_count_more).replace("{c}", remainder.toString())}
+            </button>
+        `;
+      new_list.appendChild(expand);
+    }
+    let form = page.structure.main.querySelector('[name="ignorelist"]');
+    if (page.token == "")
+      page.token = form.querySelector('[name="csrfmiddlewaretoken"]').getAttribute("value");
+    render(panel, html`
+        <h4>${tl(trans.block_list)}</h4>
+        <div class="user-top-panel">
+            <div class="user-top-avatar user-top-avatar-side-left">
+                <div class="bleh-icon"></div>
+            </div>
+            <img class="user-top-avatar user-top-avatar-main" src=${auth.avatar.replace("avatar42s", "avatar300s")}
+                alt=${auth.name}>
+            <div class="user-top-avatar user-top-avatar-side-right">
+                <div class="bleh-icon"></div>
+            </div>
+        </div>
+        <div class="setting" data-type="text">
+            <div class="heading">
+                <h5>${tl(trans.profile)}</h5>
+                <form action="${root}settings/privacy#ignorelist" name="ignorelist" method="post">
+                    <input type="hidden" name="csrfmiddlewaretoken" value=${page.token}>
+                    <div class="input-container">
+                        <input type="text" maxlength="80" id="id_user" name="user" placeholder=${tl(trans.enter_username)}>
+                        <input type="hidden" name="listaction" value="add">
+                        <input type="hidden" name="submit" value="ignorelist">
+                        <button class="bleh--btn primary icon block" type="submit">${tl(trans.block)}</button>
+                    </div>
+                </form>
+            </div>
+        </div>
+        <div class="alert alert-info">
+            ${tl(trans.blocked_count).replace("{c}", amount)}
+        </div>
+        ${new_list}
+        <div class="sep" />
+        <h5>${tl(trans.when_blocked)}</h5>
+        <div class="to-consider">
+            <ul class="to-consider-good">
+                <li>${tl(trans.blocked_user_public)}</li>
+                <li>${tl(trans.blocked_user_message)}</li>
+                <li>${tl(trans.blocked_user_new_shouts)}</li>
+            </ul>
+            <ul class="to-consider-bad">
+                <li>${tl(trans.blocked_user_old_shouts)}</li>
+                <li>${tl(trans.blocked_user_view_profile)}</li>
+            </ul>
+        </div>
+    `);
+  }
+  function patch_settings_privacy_panel(token, privacy_panel) {
+    privacy_panel.classList.add("bleh--panel");
+    let original_privacy_settings = {
+      recent_listening: document.getElementById("id_hide_realtime").checked,
+      receiving_msgs: document.getElementById("id_message_privacy").outerHTML,
+      disable_shoutbox: document.getElementById("id_shoutbox_disabled").checked
+    };
+    privacy_panel.innerHTML = `
+        <h4>${tl(trans.privacy)}</h4>
+        <form action="${root}settings/privacy" name="privacy" method="post">
+            <input type="hidden" name="csrfmiddlewaretoken" value="${token}">
+            <div class="inner-preview pad">
+                <div class="tracks recent_listening">
+                    <div class="track realtime">
+                        <div class="cover"></div>
+                        <div class="title"></div>
+                        <div class="artist"></div>
+                        <div class="time"></div>
+                    </div>
+                    <div class="track">
+                        <div class="cover"></div>
+                        <div class="title"></div>
+                        <div class="artist"></div>
+                        <div class="time"></div>
+                    </div>
+                    <div class="track">
+                        <div class="cover"></div>
+                        <div class="title"></div>
+                        <div class="artist"></div>
+                        <div class="time"></div>
+                    </div>
+                    <div class="track">
+                        <div class="cover"></div>
+                        <div class="title"></div>
+                        <div class="artist"></div>
+                        <div class="time"></div>
+                    </div>
+                    <div class="track">
+                        <div class="cover"></div>
+                        <div class="title"></div>
+                        <div class="artist"></div>
+                        <div class="time"></div>
+                    </div>
+                </div>
+            </div>
+            <div class="setting" data-type="toggle" onclick="_update_inbuilt_item('recent_listening')" id="container-recent_listening">
+                <button class="btn reset" onclick="_reset_inbuilt_item('recent_listening')">Reset to default</button>
+                <div class="heading">
+                    <h5>${tl(trans.recent_listening.name)}</h5>
+                    <p>${tl(trans.recent_listening.body)}</p>
+                </div>
+                <div class="toggle-wrap">
+                    <input class="companion-checkbox" type="checkbox" name="hide_realtime" id="inbuilt-companion-checkbox-recent_listening">
+                    <span class="btn toggle" id="toggle-recent_listening" aria-checked="false">
+                        <div class="dot"></div>
+                    </span>
+                </div>
+            </div>
+            <div class="sep"></div>
+            <div class="setting" data-type="options">
+                <div class="heading">
+                    <h5>${tl(trans.allow_messages_from)}</h5>
+                </div>
+                <div class="primary-selections">
+                    ${original_privacy_settings.receiving_msgs}
+                    <div class="btn primary-selection" id="primary-selection-receiving_msgs-everyone" onclick="_update_inbuilt_selection('id_message_privacy', 0)">
+                        <h5>${tl(trans.everyone)}</h5>
+                    </div>
+                    <div class="btn primary-selection" id="primary-selection-receiving_msgs-neighbours" onclick="_update_inbuilt_selection('id_message_privacy', 1)">
+                        <h5>${tl(trans.following_and_neighbours)}</h5>
+                    </div>
+                    <div class="btn primary-selection" id="primary-selection-receiving_msgs-follow" onclick="_update_inbuilt_selection('id_message_privacy', 2)">
+                        <h5>${tl(trans.following)}</h5>
+                    </div>
+                </div>
+            </div>
+            <div class="sep"></div>
+            <div class="inner-preview pad">
+                <div class="shouts">
+                    <div class="shout-preview">
+                        <div class="avatar-side">
+                            <div class="shout-avatar-placeholder"></div>
+                        </div>
+                        <div class="info-side">
+                            <div class="header">
+                                <div class="shout-username"></div>
+                                <div class="shout-time"></div>
+                            </div>
+                            <div class="shout-contents"></div>
+                            <div class="shout-contents"></div>
+                        </div>
+                    </div>
+                    <div class="shout-preview">
+                        <div class="avatar-side">
+                            <div class="shout-avatar-placeholder"></div>
+                        </div>
+                        <div class="info-side">
+                            <div class="header">
+                                <div class="shout-username"></div>
+                                <div class="shout-time"></div>
+                            </div>
+                            <div class="shout-contents"></div>
+                            <div class="shout-contents"></div>
+                        </div>
+                    </div>
+                    <div class="shout-preview">
+                        <div class="avatar-side">
+                            <div class="shout-avatar-placeholder"></div>
+                        </div>
+                        <div class="info-side">
+                            <div class="header">
+                                <div class="shout-username"></div>
+                                <div class="shout-time"></div>
+                            </div>
+                            <div class="shout-contents"></div>
+                            <div class="shout-contents"></div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="setting" data-type="toggle" onclick="_update_inbuilt_item('disable_shoutbox')" id="container-disable_shoutbox">
+                <button class="btn reset" onclick="_reset_inbuilt_item('disable_shoutbox')">Reset to default</button>
+                <div class="heading">
+                    <h5>${tl(trans.close_shouts.name)}</h5>
+                    <p>${tl(trans.close_shouts.body)}</p>
+                </div>
+                <div class="toggle-wrap">
+                    <input class="companion-checkbox" type="checkbox" name="shoutbox_disabled" id="inbuilt-companion-checkbox-disable_shoutbox">
+                    <span class="btn toggle" id="toggle-disable_shoutbox" aria-checked="false">
+                        <div class="dot"></div>
+                    </span>
+                </div>
+            </div>
+            <div class="settings-footer">
+                <button type="submit" class="btn-primary save">
+                    ${tl(trans.save)}
+                </button>
+                <input type="hidden" value="privacy" name="submit">
+            </div>
+        </form>
+    `;
+    for (let setting2 in original_privacy_settings) {
+      update_inbuilt_item(setting2, original_privacy_settings[setting2], false);
+    }
+    let selects = document.body.querySelectorAll("select");
+    selects.forEach((select2) => {
+      select2.setAttribute("onchange", `_update_inbuilt_select('${select2.getAttribute("id")}', this.value)`);
+      update_inbuilt_select(select2.getAttribute("id"), select2.value);
+    });
+  }
+  function bleh_accounts() {
+    let token = page.structure.main.querySelector('[name="csrfmiddlewaretoken"]').getAttribute("value");
+    let original_settings = {
+      email_language: page.structure.main.querySelector('[name="language"]').outerHTML,
+      marketing_emails: page.structure.main.querySelector('[name="opt_in_marketing"]').checked,
+      email: page.structure.main.querySelector('[name="email"]').value,
+      captcha: page.structure.main.querySelector(".lfm-recaptcha")
+    };
+    let information_panel = document.createElement("section");
+    information_panel.classList.add("bleh--panel");
+    information_panel.innerHTML = `
+        <h4>${tl(trans.information)}</h4>
+        <form action="${root}settings/change-username/send-email" method="post">
+            <input type="hidden" name="csrfmiddlewaretoken" value="${token}">
+            <div class="setting" data-type="text">
+                <div class="heading">
+                    <h5>${tl(trans.username.name)}</h5>
+                    <p>${tl(trans.username.body).replace("{a}", `<a href="https://support.last.fm/" target="_blank">`).replace("{/a}", "</a>")}</p>
+                </div>
+                <div class="input-container content-form">
+                    <input id="id_current_username" type="text" name="current_username" value="${auth.name}" disabled required>
+                    <button class="btn chibi icon primary submit">${tl(trans.send)}</button>
+                    <input type="hidden" value="change_username" name="submit">
+                </div>
+            </div>
+        </form>
+        <form action="${root}settings/account" name="change-email" method="post">
+            <input type="hidden" name="csrfmiddlewaretoken" value="${token}">
+            <div class="setting" data-type="text">
+                <div class="heading">
+                    <h5>${tl(trans.email)}</h5>
+                </div>
+                <div class="input-container content-form">
+                    <input id="id_email" type="text" name="email" value="${original_settings.email}" required>
+                    <button class="btn chibi icon primary submit">${tl(trans.save)}</button>
+                    <input type="hidden" value="email_update" name="submit">
+                </div>
+            </div>
+        </form>
+        <div class="sep"></div>
+        <form class="password-container" action="${root}settings/account/password#change-password" name="change-password" method="post">
+            <input type="hidden" name="csrfmiddlewaretoken" value="${token}">
+            <div class="setting" data-type="text">
+                <div class="heading">
+                    <h5>${tl(trans.password)}</h5>
+                </div>
+                <div class="input-container content-form">
+                    <input id="id_password" type="password" name="password" required>
+                </div>
+            </div>
+            <div class="setting" data-type="text">
+                <div class="heading">
+                    <h5>${tl(trans.new_password)}</h5>
+                </div>
+                <div class="input-container content-form">
+                    <input id="id_new_password" type="password" name="new_password" required>
+                </div>
+            </div>
+            <div class="setting" data-type="text">
+                <div class="heading">
+                    <h5>${tl(trans.confirm_password)}</h5>
+                </div>
+                <div class="input-container content-form">
+                    <input id="id_new_password_confirmation" type="password" name="new_password_confirmation" required>
+                </div>
+            </div>
+            <div class="settings-footer end">
+                <button class="btn-primary save" type="submit">
+                    ${tl(trans.change)}
+                </button>
+            </div>
+        </form>
+    `;
+    let password_container = information_panel.querySelector(".password-container");
+    password_container.insertBefore(original_settings.captcha, password_container.lastElementChild);
+    page.structure.main.insertBefore(information_panel, page.structure.main.firstElementChild);
+    let communication_panel = document.createElement("section");
+    communication_panel.classList.add("bleh--panel");
+    communication_panel.innerHTML = `
+        <h4>${tl(trans.communication)}</h4>
+        <form action="${root}settings/account" name="email-settings" method="post">
+            <input type="hidden" name="csrfmiddlewaretoken" value="${token}">
+            <div class="setting" data-type="select">
+                <div class="heading">
+                    <h5>${tl(trans.email_language)}</h5>
+                </div>
+                <div class="select-wrap custom-selector">
+                    ${original_settings.email_language}
+                </div>
+            </div>
+            <div class="setting" data-type="toggle" id="container-marketing_emails" onclick="_update_inbuilt_item('marketing_emails')">
+                <div class="heading">
+                    <h5>${tl(trans.marketing_emails.name)}</h5>
+                    <p>${tl(trans.marketing_emails.body)}</p>
+                </div>
+                <div class="toggle-wrap">
+                    <input class="companion-checkbox" type="checkbox" name="opt_in_marketing" id="inbuilt-companion-checkbox-marketing_emails">
+                    <span class="btn toggle" id="toggle-marketing_emails" aria-checked="false">
+                        <div class="dot"></div>
+                    </span>
+                </div>
+            </div>
+            <div class="settings-footer end">
+                <button class="btn-primary save" type="submit">
+                    ${tl(trans.save)}
+                </button>
+                <input type="hidden" value="email_settings" name="submit">
+            </div>
+        </form>
+    `;
+    information_panel.after(communication_panel);
+    let security_panel = document.createElement("section");
+    security_panel.classList.add("bleh--panel");
+    security_panel.innerHTML = `
+        <h4>${tl(trans.security)}</h4>
+        <form action="${root}settings/account" name="email-settings" method="post">
+            <input type="hidden" name="csrfmiddlewaretoken" value="${token}">
+            <div class="setting" data-type="toggle">
+                <div class="heading">
+                    <h5>${tl(trans.logout_everywhere)}</h5>
+                </div>
+                <div class="toggle-wrap">
+                    <a class="see-more danger logout" href="${root}settings/account/logout-everywhere">
+                        ${tl(trans.logout)}
+                    </a>
+                </div>
+            </div>
+            <div class="sep"></div>
+            <div class="setting" data-type="toggle">
+                <div class="heading">
+                    <h5>${tl(trans.delete_account.name)}</h5>
+                    <p>${tl(trans.delete_account.body)}</p>
+                </div>
+                <div class="toggle-wrap">
+                    <a class="see-more danger delete-account" href="${root}settings/account/delete">
+                        ${tl(trans.delete_account_permanently).replace("{u}", auth.name)}
+                    </a>
+                </div>
+            </div>
+        </form>
+    `;
+    communication_panel.after(security_panel);
+    let old_panels = page.structure.main.querySelectorAll(":scope > section:not(.bleh--panel)");
+    old_panels.forEach((panel) => {
+      page.structure.main.removeChild(panel);
+    });
+    for (let setting2 in original_settings) {
+      update_inbuilt_item(setting2, original_settings[setting2], false);
+    }
+    custom_select(communication_panel.querySelector('[name="language"]'), communication_panel.querySelector('[name="language"]').parentElement);
+  }
+  function bleh_name_change() {
+    let token = page.structure.row.querySelector('[name="csrfmiddlewaretoken"]').getAttribute("value");
+    return;
+  }
+  function bleh_applications() {
+    let session_types = page.structure.main.querySelectorAll(".api-sessions");
+    let suggested;
+    let connected;
+    if (session_types.length > 1) {
+      suggested = session_types[0];
+      connected = session_types[1];
+    } else {
+      connected = session_types[0];
+    }
+    render(page.structure.main, html`
+        <section class="applications">
+            <div class="section-intro">
+                <h3>Applications</h3>
+                <p>Connect your account to third-party services for a better scrobbling experience. Make sure you trust the services below.</p>
+            </div>
+            ${suggested ? html`
+            <h2>Suggested</h2>
+            ${suggested}
+            ` : ""}
+            <h2>Connected</h2>
+            ${connected}
+        </section>
+    `);
+    session_types.forEach((session_type) => {
+      let sessions = session_type.querySelectorAll(".api-session");
+      sessions.forEach((session) => {
+        const details = session.querySelector(".api-session-details");
+        const form = session.querySelector("form");
+        const button = form.querySelector("button");
+        button.classList.add("chibi");
+        tippy_esm_default(button, {
+          content: button.textContent
+        });
+        const name = details.querySelector(".api-session-app-name");
+        const desc = details.querySelector(".api-session-app-description");
+        const status = details.querySelector(".api-session-status");
+        const image = details.querySelector(".api-session-app-image");
+        image.classList = "";
+        const default_image = image.src.endsWith("14d19fbdca555c1782176cd789e81af7.png");
+        render(session, html`
+                <div class="session-header">
+                    <div class="session-image" data-default-image=${default_image}>
+                        ${image}
+                    </div>
+                    <div class="session-details">
+                        ${name}
+                        ${desc}
+                    </div>
+                    ${form}
+                </div>
+                ${status ? html.node`
+                <div class="session-footer">
+                    ${status}
+                </div>
+                ` : ""}
+            `);
+      });
+    });
+  }
+
+  // src/pages/obsession.js
+  function bleh_obsession() {
+    let obsession_container = document.querySelector(".obsession-container");
+    if (!obsession_container) return;
+    page.structure.container = document.body.querySelector(".page-content:not(.obsession-container .page-content)");
+    try {
+      page.structure.row = page.structure.container.querySelector(".row");
+      page.structure.main = page.structure.row.querySelector(".col-main");
+      page.structure.side = page.structure.row.querySelector(".col-sidebar");
+    } catch (e) {
+      log("unable to find elements", "page structure");
+    }
+    let content_top = document.body.querySelector(".content-top");
+    checkup_page_structure(false, content_top);
+    log("status is", "page", "info", page);
+    update_page();
+    page.structure.container.setAttribute("data-beret", "false");
+    page.structure.container.setAttribute("data-short", "false");
+    let background = obsession_container.querySelector(".obsession-background-inner");
+    background = background.style.getPropertyValue("background-image").replace('url("', "").replace('")', "");
+    if (!background.endsWith("/4128a6eb29f94943c9d206c08e625904.jpg")) {
+      register_background(background);
+      try {
+        let bg = obsession_container.style.getPropertyValue("background").replace("rgb(", "").replace(")", "").split(", ");
+        let hsl = rgb_to_hsl(parseInt(bg[0]), parseInt(bg[1]), parseInt(bg[2]));
+        document.body.style.setProperty("--hue-album", hsl.h);
+        document.body.style.setProperty("--sat-album", clamp_sat2(hsl.s / 100 * 3));
+        document.body.style.setProperty("--lit-album", hsl.l / 100 + 0.35);
+        log(`sourced hsl of (${hsl.h}, ${hsl.s}, ${hsl.l}) - using final value of (${hsl.h}, ${clamp_sat2(hsl.s / 100 * 3)}, ${hsl.l / 100 + 0.35})`, "hue from album");
+      } catch (e) {
+        console.error(e);
+        log("no cover present", "hue from album");
+      }
+    } else {
+      register_background("");
+    }
+    let track_title = obsession_container.querySelector(".obsession-meta-track");
+    let track_artist = obsession_container.querySelector(".obsession-meta-artist");
+    let scrobbles = obsession_container.querySelector(".obsession-meta-scrobbles");
+    let link = track_title.querySelector("a").getAttribute("href");
+    let by = track_artist.querySelector(".obsession-meta-artist-by");
+    track_artist.removeChild(by);
+    let artist_name = track_artist.querySelector("a");
+    if (artist_corrections.hasOwnProperty(artist_name.textContent)) {
+      let corrected_artist = artist_corrections[artist_name.textContent];
+      log(`corrected ${artist_name.textContent} as ${corrected_artist}`, "lotus");
+      artist_name.textContent = corrected_artist;
+    }
+    artist_name.classList.add("header-new-crumb");
+    if (settings.format_guest_features) {
+      let formatted_title = name_includes(track_title.textContent.trim(), artist_name.textContent);
+      let song_title = formatted_title[0];
+      let song_tags = formatted_title[1];
+      page.corrected = formatted_title[4];
+      render(track_title, html.node`
+            <div class="title">${song_title.trim()}</div>
+            ${song_tags.map((tag) => html.node`
+                <div class="feat" data-bleh--tag-type="${tag.type}" data-bleh--tag-group="${tag.group}">${tag.text}</div>
+            `)}
+        `);
+      let song_guests = formatted_title[3];
+      page.sister_others = formatted_title[3];
+      for (let guest in song_guests) {
+        track_artist.innerHTML = `${track_artist.innerHTML},`;
+        let guest_element = document.createElement("a");
+        guest_element.classList.add("header-new-crumb");
+        guest_element.setAttribute("href", `${root}music/${redirect()}${sanitise(song_guests[guest])}`);
+        guest_element.textContent = song_guests[guest];
+        track_artist.appendChild(guest_element);
+      }
+    } else {
+      if (!track_title.hasAttribute("data-kate-processed")) {
+        track_title.setAttribute("data-kate-processed", "true");
+        let corrected_title = correct_item_by_artist(track_title.textContent.trim(), artist_name.textContent);
+        log(`corrected ${track_title.textContent} by ${artist_name.textContent} as ${corrected_title}`, "lotus");
+        if (corrected_title != track_title.textContent)
+          page.corrected = true;
+        track_title.textContent = corrected_title;
+      }
+    }
+    track_title.classList.remove("obsession-meta-track");
+    let track_header = html.node`
+        <section class="redesigned-header redesigned-track-header no-background obsession-track-header">
+            <div class="info-side">
+                <div class="sub-text">${tl(trans.obsession)}</div>
+                <div class="title-container">
+                    <h1><a href="${link}">${track_title}</a></h1>
+                </div>
+                <h2>${html.node([track_artist.innerHTML])}</h2>
+            </div>
+        </section>
+    `;
+    page.structure.container.insertBefore(track_header, page.structure.container.firstElementChild);
+    let video = obsession_container.querySelector(".obsession-video-container");
+    if (video) track_header.after(video);
+    let obsession_reason = obsession_container.querySelector(".obsession-reason");
+    if (obsession_reason) {
+      let obsession_reason_text = obsession_reason.textContent;
+      obsession_reason.textContent = obsession_reason_text.trim().substr(1).slice(0, -1);
+    }
+    let obsession_author = document.querySelector(".obsession-details-intro a").textContent;
+    let obsession_avatar = document.querySelector(".obsession-details-intro-avatar-wrap .avatar");
+    page.name = obsession_author;
+    let date = obsession_container.querySelector(".obsession-details-date-short");
+    let quote = html.node`
+        <section class="obsession-quote sour">
+            ${obsession_reason ? html.node`
+            <div class="quote">
+                ${obsession_reason.textContent}
+            </div>
+            ` : html.node`
+            <div class="quote no-quote">
+                ${tl(trans.no_quote)}
+            </div>
+            `}
+            <div class="sub-text">
+                <div class="obsession-author">
+                    ${obsession_avatar}
+                    <strong class="name">${obsession_author}</strong>
+                    <a class="link-block-cover-link" href="${root}user/${obsession_author}"></a>
+                </div>
+                ${scrobbles ? html.node`
+                <div class="obsession-listens">
+                    ${html.node([scrobbles.innerHTML])}
+                </div>
+                ` : ""}
+                <div class="obsession-date">
+                    ${date.textContent}
+                </div>
+            </div>
+        </section>
+    `;
+    let manage = obsession_container.querySelector("form");
+    if (manage) {
+      quote.appendChild(manage);
+      quote.querySelector("button").textContent = tl(trans.delete);
+    }
+    page.structure.main.insertBefore(quote, page.structure.main.firstElementChild);
+    let author = quote.querySelector(".obsession-author");
+    let badge = patch_avatar(obsession_avatar, obsession_author, "", author, "bottom");
+    if (badge.type) {
+      author.classList.add("colourful");
+      author.classList.add(`user-status--bleh-${badge.type}`, `user-status--bleh-user-${obsession_author}`);
+    }
+    let related = html.node`
+        <section class="obsession-related sour" />
+    `;
+    let other_tracks = document.body.querySelector(".other-obsessions");
+    if (other_tracks) {
+      let header = document.createElement("h2");
+      header.textContent = tl(trans.others_from_profile).replace("{user}", obsession_author);
+      related.appendChild(header);
+      let see_more = other_tracks.nextElementSibling;
+      related.appendChild(other_tracks);
+      if (see_more) {
+        let more = document.createElement("div");
+        more.classList.add("more-link-fullwidth-right");
+        more.appendChild(see_more.querySelector("a"));
+        related.appendChild(more);
+      }
+    }
+    let shared_users = document.body.querySelector(".fellow-obsessors");
+    if (shared_users) {
+      if (other_tracks) {
+        let sep = document.createElement("div");
+        sep.classList.add("sep");
+        related.appendChild(sep);
+      }
+      let header = document.createElement("h2");
+      header.textContent = tl(trans.shared_with_others);
+      related.appendChild(header);
+      let users = shared_users.querySelectorAll(".avatar");
+      users.forEach((user) => {
+        let name = user.querySelector("img").getAttribute("alt");
+        patch_avatar(user, name);
+      });
+      related.appendChild(shared_users);
+    }
+    quote.after(related);
+    let pages = obsession_container.querySelector(".obsession-pagination");
+    if (pages)
+      page.structure.container.appendChild(pages);
+  }
+
+  // src/pages/profile.js
+  async function bleh_profiles() {
+    if (page.subpage == "obsessions_obsession") {
+      bleh_obsession();
+      return;
+    }
+    let profile_header = document.body.querySelector(".header--user");
+    if (!profile_header) return;
+    page.name = profile_header.querySelector(".header-title a").textContent;
+    let is_subpage = page.subpage != "overview";
+    page.structure.container = document.body.querySelector(".page-content:not(.profile-cards-container, .report-box-container .page-content)");
+    try {
+      page.structure.row = page.structure.container.querySelector(".row:not(._buffer)");
+      page.structure.main = page.structure.row.querySelector(".col-main");
+      page.structure.side = page.structure.row.querySelector(".col-sidebar");
+    } catch (e) {
+      log("unable to find elements", "page structure");
+    }
+    checkup_page_structure(is_subpage, profile_header);
+    page.supports_shoutbox = page.structure.nav.querySelector(".secondary-nav-item--shoutbox");
+    let new_account = false;
+    if (ff("refreshed_nav")) {
+      let avatar3 = profile_header.querySelector(".avatar");
+      let title_wrap = profile_header.querySelector(".header-title-label-wrap");
+      let sub_wrap = profile_header.querySelector(".header-title-secondary");
+      if (!avatar3) {
+        avatar3 = profile_header.querySelector(".header-avatar-add");
+        new_account = true;
+      }
+      if (sponsor_list && sponsor_list.special && sponsor_list.special.includes(page.name)) {
+        title_wrap.querySelector(".header-title a").classList.add("bleh--name-is-cute");
+      }
+      const cache2 = await load_profile_cache_externally(auth.name);
+      let pronouns;
+      if (cache2.aka) pronouns = use_pronouns(cache2.aka);
+      let expander;
+      let redesigned_profile_header = html.node`
+            <section class="redesigned-header redesigned-profile-header no-background">
+                <div class="avatar-side">
+                    ${avatar3}
+                </div>
+                <div class="info-side">
+                    <div class="sub-text">${tl(trans.profile)}</div>
+                    ${title_wrap ? html.node`<div class="title-container">${title_wrap}</div>` : ""}
+                    ${sub_wrap ? sub_wrap : cache2.aka || cache2.created ? html.node`
+                    <p class="header-title-secondary">
+                        ${cache2.aka ? html.node`
+                        <span class="header-title-secondary--pre">
+                            ${pronouns ? tl(trans.account_pronouns) : tl(trans.aka)}
+                        </span>
+                        <span class="header-title-display-name">
+                            ${cache2.aka}
+                        </span>
+                        ` : ""}
+                        <span class="header-title-secondary--pre">
+                            ${tl(trans.account_created)}
+                        </span>
+                        <span class="header-scrobble-since">
+                            ${cache2.created}
+                        </span>
+                    </p>
+                    ` : ""}
+                </div>
+                <div class="expand-side">
+                    <button class="header-expand-button icon" ref=${(el) => expander = el} onclick=${() => {
+        let current = settings.profile_header_expand;
+        expander.setAttribute("aria-expanded", !current);
+        save_setting("profile_header_expand", !current);
+      }} aria-expanded=${settings.profile_header_expand}>${tl(trans.expand)}</button>
+                </div>
+            </section>
+        `;
+      const avatar_img = avatar3.querySelector(":scope > img");
+      if (page.name == auth.name && !settings.profile_header_own) {
+        register_background(null, "hidden");
+      } else if (page.name != auth.name && !settings.profile_header_others) {
+        register_background(null, "hidden");
+      } else {
+        if (settings.profile_avi_background) {
+          if (avatar3)
+            register_background(avatar_img.getAttribute("src").replace("/avatar170s/", "/ar0/"), "avatar");
+          else
+            register_background(null, "none");
+        } else {
+          let background = document.body.querySelector(".header-background--has-image");
+          if (background)
+            register_background(background.style.backgroundImage.replace('url("', "").replace('")', ""), "artist");
+          else
+            register_background(null, "none");
+        }
+      }
+      if (page.name == settings.profile_shortcut)
+        localStorage.setItem("bleh_profile_shortcut_avi", avatar_img.getAttribute("src"));
+      page.structure.container.insertBefore(redesigned_profile_header, page.structure.container.firstElementChild);
+      profile_header.classList.add("legacy-header");
+      if (!new_account) {
+        const src = avatar_img.src;
+        page.avatar = src;
+        avatar3.addEventListener("click", () => {
+          expand_avatar(src.replace("/avatar170s/", "/ar0/"));
+        });
+      }
+      control_gif_pause(avatar_img);
+    }
+    let library_tab = page.structure.nav.querySelector(".secondary-nav-item--library a");
+    library_tab.textContent = tl(trans.library);
+    let is_own_profile = page.name == auth.name;
+    if (is_own_profile)
+      profile_header.setAttribute("data-is-own-profile", "true");
+    let loved_tab = page.structure.nav.querySelector(".secondary-nav-item--loved a");
+    if (loved_tab)
+      loved_tab.textContent = tl(trans.loved);
+    if (!is_subpage) {
+      let is_following = page.structure.container.querySelector(".label.user-follow");
+      profile_recents();
+      profile_artists();
+      profile_albums();
+      profile_tracks();
+      if (is_own_profile && settings.activities) {
+        let recent_activity_section = html.node`
+                <section class="recent-activity-section">
+                    <h2>${tl(trans.activity)}</h2>
+                    ${render_activity_list()}
+                    <div class="more-link">
+                        <a href="${root}bleh/profiles?setting=activities">${tl(trans.activity_settings)}</a>
+                    </div>
+                </section>
+            `;
+        page.structure.side.appendChild(recent_activity_section);
+      }
+      if (page.name == sponsor_list.sponsor_account && !is_own_profile) {
+        page.structure.container.removeChild(page.structure.nav);
+        page.structure.main.innerHTML = "";
+        page.structure.side.innerHTML = "";
+        let alert2 = document.createElement("section");
+        alert2.classList.add("cta");
+        alert2.innerHTML = `<strong>${tl(trans.sponsor_info)}</strong>`;
+        page.structure.main.appendChild(alert2);
+      }
+      let recent_tracks = page.structure.main.querySelector("#recent-tracks-section");
+      if (!recent_tracks) {
+        recent_tracks = page.structure.main.querySelector(".no-data-message");
+        if (recent_tracks) {
+          recent_tracks.classList = "recent-tracks-section";
+          recent_tracks.innerHTML = `
+                    <h2>
+                        <a class="text-colour-link" href="${window.location.href}/library">${tl(trans.recent_tracks)}</a>
+                    </h2>
+                    <div class="loading-data-container">
+                        <div class="loading-data-text private">
+                            ${recent_tracks.textContent}
+                        </div>
+                    </div>
+                `;
+        }
+      }
+      let scrobbles = 0;
+      let average = 0;
+      let artists = 0;
+      let loved = 0;
+      let metadata = profile_header.querySelectorAll(".header-metadata-display");
+      metadata.forEach((item, index3) => {
+        if (index3 == 0) {
+          let para = item.querySelector("p");
+          scrobbles = clean_number(para.textContent.trim());
+          average = para.getAttribute("title");
+        } else if (index3 == 1) {
+          artists = clean_number(item.textContent.trim());
+        } else if (index3 == 2) {
+          loved = clean_number(item.textContent.trim());
+        }
+      });
+      page.state.scrobbles = scrobbles;
+      page.state.artists = artists;
+      page.state.loved = loved;
+      let scrobble_text;
+      let listen_container = html.node`
+            <section class="listen-panel listen-profile-panel">
+                <div class="listener-row">
+                    <div class="scrobble-side">
+                        <h3>${tl(trans.scrobbles)}</h3>
+                        <p ref=${(el) => scrobble_text = el}><a href="${root}user/${page.name}/library">${scrobbles.toLocaleString(lang)}</a></p>
+                    </div>
+                    <div class="artist-side">
+                        <h3>${tl(trans.artists)}</h3>
+                        <p><a href="${root}user/${page.name}/library/artists">${artists.toLocaleString(lang)}</a></p>
+                    </div>
+                    <div class="loved-side">
+                        <h3>${tl(trans.loved)}</h3>
+                        <p><a href="${root}user/${page.name}/loved">${loved.toLocaleString(lang)}</a></p>
+                    </div>
+                </div>
+                ${scrobbles > 0 ? html.node`
+                <div class="scrobble-canvas-container mini">
+                    <div class="loading-data-container">
+                        <div class="loading-data-text">${tl(trans.loading_count_days).replace("{c}", "90")}</div>
+                    </div>
+                </div>
+                <div class="more-link">
+                    <a href="${root}user/${page.name}/library/artists?date_preset=LAST_90_DAYS&page=1">
+                        ${tl(trans.explore_in_library)}
+                    </a>
+                </div>
+                ` : html.node`
+                <div class="scrobble-canvas-container mini">
+                    <div class="loading-data-container">
+                        <div class="loading-data-text failed">${tl(trans.profile_does_not_have_enough_scrobbles)}</div>
+                    </div>
+                </div>
+                `}
+            </section>
+        `;
+      if (scrobbles > 0) {
+        tippy_esm_default(scrobble_text, {
+          content: average
+        });
+      }
+      if (page.name != sponsor_list.sponsor_account) {
+        if (!page.mobile)
+          page.structure.side.insertBefore(listen_container, page.structure.side.firstChild);
+        else
+          page.structure.main.insertBefore(listen_container, page.structure.main.firstChild);
+        if (scrobbles > 0)
+          bleh_profile_chart();
+      }
+      if (sponsor_list && sponsor_list.special && page.name == sponsor_list.special[0]) {
+        let sponsor_cta = html.node`
+                <div class="cta first sponsor colourful">
+                    ${auth.sponsor ? html`
+                        <strong>${tl(trans.you_are_a_sponsor)}</strong>
+                        <a class="see-more" onclick="_sponsor_manage()">${tl(trans.manage_sponsor)}</a>
+                    ` : html`
+                        <strong>${tl(trans.news_sponsor_cta)}</strong>
+                        <a class="see-more" onclick="_sponsor()">${tl(trans.sponsor)}</a>
+                    `}
+                </div>
+            `;
+        if (!page.mobile)
+          page.structure.side.insertBefore(sponsor_cta, page.structure.side.firstElementChild);
+        else
+          page.structure.main.insertBefore(sponsor_cta, page.structure.main.firstElementChild);
+      }
+      const profile_sub_text = page.structure.container.querySelector(".redesigned-profile-header .header-title-secondary");
+      if (profile_sub_text) parse_sub_text(profile_sub_text);
+      let about_me_sidebar = page.structure.row.querySelector(".about-me-sidebar");
+      if (!about_me_sidebar) {
+        if (settings.bio_markdown) {
+          save_banner_to_cache("none");
+        }
+        about_me_sidebar = html.node`
+                <section class="about-me-sidebar">
+                    <h2>${tl(trans.about)}</h2>
+                    <p class="subtle">${tl(trans.no_about).replace("{u}", page.name)}</p>
+                </section>
+            `;
+        page.structure.side.insertBefore(about_me_sidebar, page.structure.side.firstElementChild);
+      } else {
+        if (settings.bio_markdown) {
+          let about_me_text = about_me_sidebar.querySelector("p");
+          let result = bio_parse(about_me_text, true);
+          about_me_text.after(result);
+          about_me_text.remove();
+        }
+      }
+      if (page.mobile)
+        page.structure.main.insertBefore(about_me_sidebar, page.structure.main.firstElementChild);
+      let featured_track_panel = profile_header.querySelector(".header-featured-track");
+      if (featured_track_panel)
+        bleh_featured_profile_track(featured_track_panel, about_me_sidebar);
+      let about_me_header = about_me_sidebar.querySelector("h2");
+      about_me_header.textContent = tl(trans.about);
+      let profile_note;
+      if (!is_own_profile) {
+        let notes = JSON.parse(localStorage.getItem("bleh_profile_notes")) || {};
+        profile_note = notes[page.name];
+      }
+      let settings_btn;
+      let add_note;
+      about_me_sidebar.insertBefore(html.node`
+            <div class="top-container">
+                ${about_me_header}
+                <div class="view-buttons blend blend-v2">
+                    ${is_own_profile ? html.node`
+                    <a class="left-icon blend-v2-btn" data-type="edit" href="${root}settings#id_about_me">
+                        ${tl(trans.edit)}
+                    </a>
+                    ` : !profile_note ? html.node`
+                    <button class="left-icon blend-v2-btn" data-type="add" ref=${(el) => add_note = el} onclick=${() => {
+        create_profile_note_panel(page.name, profile_note);
+        add_note.remove();
+      }}>
+                        ${tl(trans.add_note)}
+                    </button>
+                    ` : ""}
+                    <button class="left-icon blend-v2-btn" data-type="settings" ref=${(el) => settings_btn = el}>
+                        ${tl(trans.settings)}
+                    </button>
+                </div>
+            </div>
+        `, about_me_sidebar.firstChild);
+      tippy_esm_default(settings_btn, {
+        theme: "window",
+        content: html.node`
+                <div class="dialog-settings">
+                    <div class="setting-group blend">
+                        ${setting({ id: "bio_markdown" })}
+                    </div>
+                </div>
+            `,
+        placement: "bottom",
+        interactive: true,
+        interactiveBorder: 10,
+        trigger: "click",
+        onShow(instance) {
+          refresh_all(instance.popper);
+        }
+      });
+      if (ff("redesigned_profile_header"))
+        redesign_profile_header(is_own_profile, is_following);
+      if (!is_own_profile && profile_note)
+        create_profile_note_panel(page.name, profile_note);
+    } else {
+      load_profile_cache();
+      let btn_add = page.structure.side.querySelector(".add-button");
+      if (btn_add) btn_add.setAttribute("data-page-subpage", page.subpage);
+      if (page.subpage.startsWith("library")) {
+        bleh_user_library();
+      } else if (page.subpage == "events") {
+        convert_to_toolbar();
+        let selected_tab = page.structure.toolbar.querySelector(".secondary-nav-item-link--active");
+        let value_panel = html.node`
+                <section class="value-panel">
+                    <h2 class="text-18">${selected_tab ? selected_tab.firstChild.textContent : tl(trans.events)}</h2>
+                </section>
+            `;
+        let values = page.structure.main.querySelectorAll(".metadata-display");
+        let value_header = html.node`
+                <div class="glacier-library-metadata" />
+            `;
+        values.forEach((value, index3) => {
+          let text3 = tl(trans.going);
+          if (index3 == 1)
+            text3 = tl(trans.interested);
+          value_header.appendChild(html.node`
+                    <div class="glacier-library-metadata-item">
+                        <div class="sub-text">${text3}</div>
+                        <div class="glacier-library-metadata-item-value">${value.textContent}</div>
+                    </div>
+                `);
+        });
+        value_panel.appendChild(value_header);
+        let total_value = page.structure.side.querySelector(".metadata-display");
+        if (total_value) {
+          value_panel.appendChild(html.node`
+                    <h2 class="text-18">${tl(trans.all_time)}</h2>
+                    <div class="glacier-library-metadata">
+                        <div class="glacier-library-metadata-item">
+                            <div class="sub-text">${tl(trans.total)}</div>
+                            <div class="glacier-library-metadata-item-value">${total_value.textContent}</div>
+                        </div>
+                    </div>
+                `);
+        }
+        let legacy_metadata = page.structure.main.querySelector(".metadata-list");
+        if (legacy_metadata)
+          page.structure.main.removeChild(legacy_metadata);
+        page.structure.side.innerHTML = "";
+        page.structure.side.appendChild(value_panel);
+      } else if (page.subpage.startsWith("listening-report")) {
+        page.structure.content_top.classList.add("listening-report-navlist");
+        page.structure.row.classList.add("listening-report");
+        convert_to_toolbar();
+        let report_box_container = document.body.querySelector(".report-box-container--overview");
+        if (report_box_container) {
+          document.documentElement.setAttribute("data-bleh--theme", "oled");
+          document.documentElement.setAttribute("data-bleh--theme_type", "dark");
+          page.structure.row.appendChild(report_box_container);
+        } else {
+          let dashboard = page.structure.container.querySelector(".user-dashboard");
+          if (dashboard) {
+            dialog({
+              id: "listening_report_v2",
+              title: "oh no :c",
+              body: html.node`
+                            <div class="alert alert-error">This listening report is too old</div>
+                            <br>
+                            <p>Legacy listening reports are not properly viewable yet in bleh for now. Sorry for the inconvenience.</p>
+                        `
+            });
+          }
+        }
+      } else if (page.subpage == "obsessions_overview") {
+        let section_controls = page.structure.container.querySelector(".section-controls");
+        let buttons;
+        if (section_controls != null) {
+          section_controls.classList.add("legacy-section-controls");
+          buttons = section_controls.querySelectorAll(":is(button, a)");
+          let header = page.structure.container.querySelector(".content-top-header");
+          page.structure.content_top.innerHTML = `
+                    <div class="content-top-inner-wrap">
+                        <div class="container content-top-lower">
+                            <h1 class="content-top-header">${header.textContent.trim()}</h1>
+                        </div>
+                    </div>
+                `;
+        }
+        let count_text = page.structure.content_top.querySelector("h1").textContent.trim();
+        let chr = count_text.indexOf("(");
+        let count = 0;
+        if (chr != -1)
+          count = count_text.substring(chr).replace("(", "").replace(")", "");
+        page.structure.nav.querySelector(".secondary-nav-item--obsessions a").appendChild(html.node`
+                <div class="new-badge count-badge">${count}</div>
+            `);
+        let new_panel = document.createElement("section");
+        new_panel.classList.add("obsessions-panel");
+        let wrap = document.createElement("div");
+        wrap.classList.add("view-buttons-wrapper");
+        let button_header = document.createElement("div");
+        button_header.classList.add("view-buttons", "obsession-buttons", "blend");
+        buttons.forEach((button) => {
+          if (button.classList.contains("btn-sm")) {
+            button.classList = [];
+            button.classList.add("obsession-btn");
+            tippy_esm_default(button, {
+              content: button.textContent
+            });
+            button.textContent = tl(trans.obsess);
+          }
+          button.classList.add("btn", "view-item", "interact-item", "obsession-top-item");
+          button_header.appendChild(button);
+        });
+        wrap.appendChild(button_header);
+        new_panel.appendChild(wrap);
+        page.structure.main.appendChild(new_panel);
+        let grid = document.createElement("ol");
+        grid.classList.add("grid-items", "grid-items--numbered", "obsessions-grid");
+        let items = page.structure.container.querySelectorAll(".obsession-history-item");
+        items.forEach((item) => {
+          let bg = item.querySelector(".obsession-history-item-background").style.getPropertyValue("background-image").trim();
+          let cover_substr = bg.indexOf("url");
+          let cover = bg.substring(cover_substr).replace('url("', "").replace('")', "").trim();
+          let link = item.querySelector(".obsession-history-item-heading-link");
+          let artist = item.querySelector(".obsession-history-item-artist a");
+          let artist_link = artist.getAttribute("href");
+          artist = artist.textContent.trim();
+          let title = link.textContent.trim();
+          link = link.getAttribute("href");
+          let date = item.querySelector(".obsession-history-item-date").textContent.trim();
+          let obsession_is_first = item.querySelector(".obsession-first") != null;
+          let grid_item = document.createElement("li");
+          grid_item.classList.add("grid-items-item", "obsessions-item");
+          grid_item.innerHTML = `
+                    <div class="grid-items-cover-image">
+                        <div class="grid-items-cover-image-image ${cover.endsWith("4128a6eb29f94943c9d206c08e625904.jpg") ? "grid-items-cover-default" : ""}">
+                            <img src="${cover}" alt="${title}" loading="lazy">
+                        </div>
+                        <div class="grid-items-item-details">
+                            <p class="grid-items-item-main-text">
+                                <a class="link-block-target" href="${link}" title="${title}">
+                                    ${title}
+                                </a>
+                            </p>
+                            <p class="grid-items-item-aux-text obsessions-item-aux">
+                                <a class="grid-items-item-aux-block" href="${artist_link}">
+                                    ${artist}
+                                </a>
+                                <a class="obsessions-item-date" href="${link}">
+                                    ${date}
+                                </a>
+                            </p>
+                        </div>
+                        <a class="link-block-cover-link" href="${link}" tabindex="-1" aria-hidden="true"></a>
+                    </div>
+                `;
+          if (obsession_is_first) {
+            grid_item.classList.add("first");
+            tippy_esm_default(grid_item, {
+              content: tl(trans.obsession_first)
+            });
+          }
+          grid.appendChild(grid_item);
+        });
+        new_panel.appendChild(grid);
+        let no_data = page.structure.container.querySelector(".no-data-message--obsession-history");
+        if (no_data)
+          wrap.after(no_data);
+        let pagination = page.structure.container.querySelector(".pagination");
+        if (pagination)
+          new_panel.appendChild(pagination);
+      } else if (page.subpage == "playlists_playlists") {
+        let section_controls = page.structure.container.querySelector(".section-controls-full-width");
+        let buttons;
+        if (section_controls) {
+          section_controls.classList.add("legacy-section-controls");
+          buttons = section_controls.querySelectorAll(":is(button, a)");
+          let header = page.structure.container.querySelector(".content-top-header");
+          page.structure.content_top.innerHTML = `
+                    <div class="content-top-inner-wrap">
+                        <div class="container content-top-lower">
+                            <h1 class="content-top-header">${header.textContent.trim()}</h1>
+                        </div>
+                    </div>
+                `;
+        }
+        let new_panel = document.createElement("section");
+        new_panel.classList.add("obsessions-panel");
+        page.structure.main.appendChild(new_panel);
+        if (buttons.length > 0) {
+          let wrap = document.createElement("div");
+          wrap.classList.add("view-buttons-wrapper");
+          wrap.innerHTML = `<div class="info"><div class="alert alert-info">Playlists are a work in progress</div></div>`;
+          let button_header = html.node`
+                    <div class="view-buttons playlist-home-buttons blend" />
+                `;
+          buttons.forEach((button) => {
+            if (button.getAttribute("data-analytics-action") == "create") {
+              button.classList.add("primary");
+              button.innerHTML = `${tl(trans.new)} <div class="new-badge">${tl(trans.beta)}</div>`;
+            }
+            button.classList.add("btn", "view-item", "interact-item", "playlist-home-top-item");
+            button_header.appendChild(button);
+          });
+          wrap.appendChild(button_header);
+          new_panel.appendChild(wrap);
+        }
+        let playlists = page.structure.container.querySelector(".playlisting-playlists");
+        if (playlists) {
+          page.structure.container.removeChild(playlists.parentElement);
+          new_panel.appendChild(playlists);
+        } else {
+          let no_data = page.structure.container.querySelector(".no-data-message--playlists");
+          page.structure.container.removeChild(no_data.parentElement);
+          new_panel.appendChild(no_data);
+        }
+      } else if (page.subpage == "loved") {
+        let count_text = page.structure.content_top.querySelector("h1").textContent.trim();
+        let chr = count_text.indexOf("(");
+        let count = 0;
+        if (chr != -1)
+          count = count_text.substring(chr).replace("(", "").replace(")", "");
+        page.structure.nav.querySelector(".secondary-nav-item--loved a").appendChild(html.node`
+                <div class="new-badge count-badge">${count}</div>
+            `);
+      }
+    }
+    log("status is", "page", "info", page);
+    update_page();
+    patch_profile_following();
+    log(`querying badges for ${page.name}`, "profile");
+    let profile_name_obj;
+    profile_name_obj = page.structure.container.querySelector(".redesigned-profile-header .title-container");
+    if (ff("badges")) {
+      let stock_badges = profile_name_obj.querySelectorAll(".label");
+      stock_badges.forEach((badge) => {
+        if (badge.classList[1] == "user-status-None")
+          return;
+        badge.classList.add("no-hover");
+        tippy_esm_default(badge, {
+          theme: "badge",
+          placement: "bottom",
+          content: html.node`
+                    <div class="badge-name">${badge.textContent}</div>
+                    <div class="badge-reason">${tl(trans.badges[badge.classList[1]].reason)}</div>
+                `
+        });
+      });
+    }
+    let badges = load_badges(page.name);
+    if (badges) {
+      badges.forEach((badge) => {
+        profile_name_obj.appendChild(create_badge(badge));
+      });
+    }
+    let badge_elements = profile_name_obj.querySelectorAll(".label");
+    let label_container = document.createElement("div");
+    label_container.classList.add("badges");
+    badge_elements.forEach((badge) => {
+      label_container.appendChild(badge);
+    });
+    profile_name_obj.appendChild(label_container);
+  }
+  function create_profile_note_panel(username2, has_note) {
+    let about_me_sidebar = page.structure.row.querySelector(".about-me-sidebar");
+    let note;
+    about_me_sidebar.after(html.node`
+        <section class="bleh--panel bleh--profile-note-panel">
+            <h2>${tl(trans.notes)}</h2>
+            <div class="content-form">
+                <textarea id="bleh--profile-note" placeholder=${tl(trans.anything_you_can_imagine)} ref=${(el) => note = el}>${has_note ?? has_note}</textarea>
+            </div>
+            <div class="actions">
+                <button class="see-more cancel" onclick=${() => {
+      let notes = JSON.parse(localStorage.getItem("bleh_profile_notes")) || {};
+      delete notes[page.name];
+      note.value = "";
+      localStorage.setItem("bleh_profile_notes", JSON.stringify(notes));
+    }}>${tl(trans.clear)}</button>
+                <button class="btn primary icon" data-type="save" onclick=${() => {
+      let notes = JSON.parse(localStorage.getItem("bleh_profile_notes")) || {};
+      notes[page.name] = note.value.replace(/&/g, "&amp;").replace(/</g, "&lt;").replace(/>/g, "&gt;").replace(/"/g, "&quot;").replace(/'/g, "&#039;");
+      localStorage.setItem("bleh_profile_notes", JSON.stringify(notes));
+    }}>${tl(trans.save)}</button>
+            </div>
+        </section>
+    `);
+  }
+  function patch_profile_following() {
+    let navlist = page.structure.nav.querySelector(".navlist-items");
+    let following_tab = navlist.querySelector(".secondary-nav-item--following");
+    let link = following_tab.querySelector("a");
+    if (page.subpage != "following" && page.subpage != "followers" && page.subpage != "neighbours") {
+      link.href = `${root}user/${page.name}/friends`;
+      link.textContent = tl(trans.friends);
+      return;
+    }
+    if (page.subpage != "following")
+      link.classList.add("secondary-nav-item-link--active");
+    let followers_tab = navlist.querySelector(".secondary-nav-item--followers");
+    let neighbours_tab = navlist.querySelector(".secondary-nav-item--neighbours");
+    navlist.removeChild(followers_tab);
+    navlist.removeChild(neighbours_tab);
+    let friends_nav = html.node`
+        <div class="toolbar">
+            <nav class="navlist secondary-nav redesigned-navigation">
+                <ul class="navlist-items">
+                    ${{ html: following_tab.outerHTML }}
+                    ${{ html: followers_tab.outerHTML }}
+                    ${{ html: neighbours_tab.outerHTML }}
+                </ul>
+            </nav>
+        </div>
+    `;
+    link.href = `${root}user/${page.name}/friends`;
+    link.textContent = tl(trans.friends);
+    page.structure.content_top.after(friends_nav);
+    page.structure.row.classList.add("col-main-is-primary");
+    following_tab = friends_nav.querySelector(".secondary-nav-item--following a");
+    let highlighted_tab = following_tab;
+    if (page.subpage == "followers")
+      highlighted_tab = friends_nav.querySelector(".secondary-nav-item--followers a");
+    else if (page.subpage == "neighbours")
+      highlighted_tab = friends_nav.querySelector(".secondary-nav-item--neighbours a");
+    if (page.subpage != "following") {
+      following_tab.classList.remove("secondary-nav-item-link--active");
+    }
+    if (ff("katsune") && page.subpage != "neighbours") {
+      let count_text = page.structure.content_top.querySelector("h1").textContent.trim();
+      let chr = count_text.indexOf("(");
+      let count = 0;
+      if (chr != -1)
+        count = count_text.substring(chr).replace("(", "").replace(")", "");
+      highlighted_tab.appendChild(html.node`
+            <div class="new-badge count-badge">${count}</div>
+        `);
+    }
+    let view_buttons = document.createElement("div");
+    view_buttons.classList.add("view-buttons-wrapper");
+    view_buttons.innerHTML = `
+        <div class="view-buttons">
+            <button class="btn view-item" id="toggle-list_view-1" data-toggle="list_view" data-toggle-value="1" onclick="_update_item('list_view', 1)">
+                ${tl(trans.grid)}
+            </button>
+            <button class="btn view-item" id="toggle-list_view-0" data-toggle="list_view" data-toggle-value="0" onclick="_update_item('list_view', 0)">
+                ${tl(trans.list)}
+            </button>
+        </div>
+    `;
+    page.structure.main.insertBefore(view_buttons, page.structure.main.firstElementChild);
+    refresh_all();
+  }
+  function refresh_tracks(button, {
+    quiet = false
+  }) {
+    let panel = page.structure.main.querySelector("#recent-tracks-section");
+    panel.classList.remove("has-refreshed");
+    button.setAttribute("disabled", "");
+    fetch(`${root}user/${page.name}/partial/recenttracks?ajax=1`).then(function(response) {
+      console.log("returned", response, response.text);
+      return response.text();
+    }).then(function(html3) {
+      let doc = new DOMParser().parseFromString(html3, "text/html");
+      console.log("DOC", doc);
+      let tracklist_panel = doc.querySelector(".chartlist");
+      button.removeAttribute("disabled");
+      if (!tracklist_panel) {
+        if (!quiet) {
+          notify({
+            title: tl(trans.recent_tracks),
+            body: tl(trans.value_failed_to_load).replace("{v}", tl(trans.library)),
+            icon: "icon-16-refresh",
+            type: "error"
+          });
+        }
+        return;
+      }
+      if (!quiet) {
+        notify({
+          title: tl(trans.recent_tracks),
+          body: tl(trans.refreshed),
+          icon: "icon-16-refresh"
+        });
+      }
+      panel.classList.add("has-refreshed");
+      panel.querySelector(".chartlist").outerHTML = tracklist_panel.outerHTML;
+    });
+  }
+  function bleh_featured_profile_track(object, about_me) {
+    let art = object.querySelector(".featured-item-art");
+    let details = object.querySelector(".featured-item-details");
+    let form = document.body.querySelector(".header-info-primary form");
+    let heading = details.querySelector(".featured-item-heading");
+    let link = heading.querySelector("a")?.getAttribute("href");
+    details.removeChild(heading);
+    let name_elem = details.querySelector(".featured-item-name");
+    let artist_elem = details.querySelector(".featured-item-artist");
+    name_elem.classList = "";
+    artist_elem.classList = "source-album-artist";
+    if (settings.format_guest_features) {
+      let song_title = name_elem.textContent;
+      let formatted_title = name_includes(song_title, artist_elem.textContent);
+      let song_tags = {};
+      if (formatted_title) {
+        song_title = formatted_title[0];
+        song_tags = formatted_title[1];
+      }
+      render(name_elem, html.node`
+            <div class="title">${song_title.trim()}</div>
+            ${song_tags.map((tag) => html.node`
+                <div class="feat" data-bleh--tag-type="${tag.type}" data-bleh--tag-group="${tag.group}">${tag.text}</div>
+            `)}
+        `);
+      let song_artist_element = document.createElement("div");
+      song_artist_element.classList.add("featured-item-artist");
+      song_artist_element.innerHTML = `<a href="${root}music/${redirect()}${sanitise(formatted_title[2])}">${formatted_title[2]}</a>`;
+      let song_guests = formatted_title[3];
+      for (let guest in song_guests) {
+        song_artist_element.innerHTML = `${song_artist_element.innerHTML},`;
+        let guest_element = document.createElement("a");
+        guest_element.setAttribute("href", `${root}music/${redirect()}${sanitise(song_guests[guest])}`);
+        guest_element.textContent = song_guests[guest];
+        song_artist_element.appendChild(guest_element);
+      }
+      details.removeChild(artist_elem);
+      details.appendChild(song_artist_element);
+    } else if (settings.corrections) {
+      let name = correct_item_by_artist(name_elem.textContent.trim(), artist_elem.textContent.trim());
+      let artist = correct_artist(artist_elem.textContent.trim());
+      name_elem.textContent = name;
+      artist_elem.textContent = artist;
+    }
+    if (form) {
+      let button = form.querySelector("button");
+      button.classList = "featured-item-manage";
+      button.setAttribute("data-type", "delete");
+      button.textContent = tl(trans.remove);
+    }
+    let img = art.querySelector(".cover-art");
+    let panel = html.node`
+        <section class="featured-item-panel">
+            <div class="sub-text">
+                ${form ? html.node`
+                <a class="has-icon" data-type="obsession" href=${link}>
+                    <div class="bleh-icon" style="--icon: var(--mask)" />
+                    ${tl(trans.obsession)}
+                </a>
+                ${form}
+                ` : html.node`
+                <div class="has-icon" data-type="track">
+                    <div class="bleh-icon" style="--icon: var(--mask)" />
+                    ${tl(trans.top_track)}
+                </div>
+                `}
+            </div>
+            <div class="source-album js-link-block link-block">
+                <div class="source-album-art">
+                    ${img}
+                </div>
+                <div class="source-album-details">
+                    <h4 class="source-album-name">${name_elem}</h4>
+                    ${artist_elem}
+                </div>
+                <a class="js-link-block-cover-link link-block-cover-link" href=${name_elem.getAttribute("href")} />
+            </div>
+        </section>
+    `;
+    if (about_me)
+      about_me.after(panel);
+    else
+      page.structure.side.insertBefore(panel, page.structure.side.firstElementChild);
+  }
+  function profile_recents() {
+    let panel = page.structure.main.querySelector("#recent-tracks-section");
+    if (!panel) return;
+    let more_link = panel.nextElementSibling;
+    panel.appendChild(more_link);
+    let form = panel.querySelector("#recent-tracks-settings");
+    let link = panel.querySelector('[aria-controls="recent-tracks-settings"]');
+    let tooltip;
+    let view_buttons = document.createElement("div");
+    view_buttons.classList.add("view-buttons", "blend", "blend-v2");
+    let header = document.createElement("div");
+    header.classList.add("top-container");
+    let header_text2 = panel.querySelector("h2");
+    header.appendChild(header_text2);
+    let refresh_btn;
+    if (ff("submit_scrobble") && page.name == auth.name) {
+      const can_api = localStorage.getItem("bleh_auth") && localStorage.getItem("bleh_auth_valid") === "true";
+      let submit_btn = html.node`
+            <button class="left-icon blend-v2-btn" data-type="add" onclick=${() => submit_scrobble({
+        refresh_btn,
+        can_api,
+        func: () => {
+          setTimeout(() => {
+            refresh_tracks(refresh_btn, { quiet: true });
+          }, 200);
+        }
+      })}>
+                ${tl(trans.new)}
+            </button>
+        `;
+      view_buttons.appendChild(submit_btn);
+      if (!can_api) {
+        tippy_esm_default(submit_btn, {
+          content: tl(trans.requires_api_in_settings)
+        });
+      }
+    }
+    refresh_btn = html.node`
+        <button class="left-icon blend-v2-btn" data-type="refresh" onclick=${() => refresh_tracks(refresh_btn, {})}>
+            ${tl(trans.refresh)}
+        </button>
+    `;
+    view_buttons.appendChild(refresh_btn);
+    header.appendChild(view_buttons);
+    panel.insertBefore(header, panel.firstElementChild);
+    if (!form) return;
+    if (page.token == "")
+      page.token = form.querySelector('[name="csrfmiddlewaretoken"]').getAttribute("value");
+    let original_chart_settings = {};
+    let settings_btn = html.node`
+        <button class="left-icon blend-v2-btn" data-type="settings">
+            ${tl(trans.settings)}
+        </button>
+    `;
+    let count = form.querySelector('[name="chart_length_recent_tracks"]');
+    original_chart_settings = {
+      recent_artwork: form.querySelector("#id_show_recent_tracks_artwork").checked,
+      recent_realtime: form.querySelector("#id_auto_refresh_recent_tracks").checked
+    };
+    form.classList = "";
+    render(form, html`
+        <input type="hidden" name="csrfmiddlewaretoken" value="${page.token}">
+        <div class="setting-group blend">
+            <div class="setting" data-type="select">
+                <div class="heading">
+                    <h5>${tl(trans.amount_to_display)}</h5>
+                </div>
+                ${select(select_prepare(count), count.value, "chart_length_recent_tracks")}
+            </div>
+            <div class="setting" data-type="toggle" id="container-recent_artwork" onclick="_update_inbuilt_item('recent_artwork')">
+                <div class="heading">
+                    <h5>${tl(trans.recent_artwork)}</h5>
+                </div>
+                <div class="toggle-wrap">
+                    <input class="companion-checkbox" type="checkbox" name="show_recent_tracks_artwork" id="inbuilt-companion-checkbox-recent_artwork">
+                    <span class="btn toggle" id="toggle-recent_artwork" aria-checked="false">
+                        <div class="dot"></div>
+                    </span>
+                </div>
+            </div>
+            <div class="setting" data-type="toggle" id="container-recent_realtime" onclick="_update_inbuilt_item('recent_realtime')">
+                <div class="heading">
+                    <h5>${tl(trans.recent_realtime.name)}</h5>
+                    <p>${tl(trans.recent_realtime.body)}</p>
+                </div>
+                <div class="toggle-wrap">
+                    <input class="companion-checkbox" type="checkbox" name="auto_refresh_recent_tracks" id="inbuilt-companion-checkbox-recent_realtime">
+                    <span class="btn toggle" id="toggle-recent_realtime" aria-checked="false" type="button">
+                        <div class="dot"></div>
+                    </span>
+                </div>
+            </div>
+            ${setting({ id: "format_guest_features" })}
+            ${setting({ id: "stacked_chartlist_info" })}
+            ${setting({ id: "colourful_tracks" })}
+            <div class="settings-footer">
+                <button type="submit" class="btn-primary save">
+                    ${tl(trans.save)}
+                </button>
+                <a class="btn icon settings not-a-view-button" href="${root}bleh">
+                    ${tl(trans.settings)}
+                </a>
+            </div>
+        </div>
+    `);
+    for (let setting2 in original_chart_settings) {
+      update_inbuilt_item(setting2, original_chart_settings[setting2], false, form);
+    }
+    refresh_all(form);
+    tooltip = tippy_esm_default(settings_btn, {
+      theme: "window",
+      content: form,
+      allowHTML: true,
+      placement: "bottom",
+      interactive: true,
+      interactiveBorder: 10,
+      trigger: "click"
+    });
+    view_buttons.appendChild(settings_btn);
+  }
+  function profile_artists() {
+    let panel = page.structure.main.querySelector("#top-artists");
+    if (!panel) return;
+    panel.classList.remove("section-with-settings");
+    let form = panel.querySelector("#artist-chart-settings");
+    let list = panel.querySelector("#artists_range");
+    let collage_btn;
+    let select_btn = panel.querySelector(".dropdown-menu-clickable-button");
+    let settings_btn;
+    panel.insertBefore(html.node`
+        <div class="top-container">
+            ${panel.querySelector("h2")}
+            <div class="accompany view-buttons blend blend-v2">
+                ${() => {
+      select_btn.classList.add("select-button", "link-select", "blend-v2-btn");
+      select_btn.classList.remove("section-control", "dropdown-menu-clickable-button");
+      return select_btn;
+    }}
+            </div>
+            <div class="view-buttons blend blend-v2">
+                <button class="left-icon blend-v2-btn" data-type="collage" ref=${(el) => collage_btn = el} onclick=${() => {
+      let btn = list.querySelector(".dropdown-menu-clickable-item--selected");
+      let link = new URL("https://www.last.fm" + btn.getAttribute("href"));
+      let selected = link.searchParams.get("artists_date_preset");
+      window.location.href = `${root}bleh/minis/collage?type=artists&timeframe=date_preset=${selected}`;
+    }}>${tl(trans.collage)}</button>
+                ${form ? html.node`
+                <button class="left-icon blend-v2-btn" data-type="settings" ref=${(el) => settings_btn = el}>
+                    ${tl(trans.settings)}
+                </button>
+                ` : ""}
+            </div>
+        </div>
+    `, panel.firstElementChild);
+    if (!form) return;
+    if (page.token == "") page.token = form.querySelector('[name="csrfmiddlewaretoken"]').getAttribute("value");
+    let timeframe = form.querySelector('[name="chart_range_top_artists"]');
+    let style = form.querySelector('[name="chart_style_top_artists"]');
+    let grid_length = form.querySelector('[name="artists_image_grid_length"]');
+    let chartlist_length = form.querySelector('[name="artists_chartlist_length"]');
+    form.classList = "";
+    render(form, html`
+        <input type="hidden" name="csrfmiddlewaretoken" value="${page.token}">
+        <div class="setting-group blend">
+            <div class="setting" data-type="select">
+                <div class="heading">
+                    <h5>${tl(trans.default_timeframe)}</h5>
+                </div>
+                ${select(select_prepare(timeframe), timeframe.value, "chart_range_top_artists")}
+            </div>
+            <div class="setting" data-type="select">
+                <div class="heading">
+                    <h5>${tl(trans.chart_style)}</h5>
+                </div>
+                ${select(select_prepare(style), style.value, "chart_style_top_artists")}
+            </div>
+            <div class="setting hide-if-artist-list" data-type="select">
+                <div class="heading">
+                    <h5>${tl(trans.chart_size)}</h5>
+                </div>
+                ${select(select_prepare(grid_length), grid_length.value, "artists_image_grid_length")}
+            </div>
+            <div class="setting hide-if-artist-grid" data-type="select">
+                <div class="heading">
+                    <h5>${tl(trans.chart_size)}</h5>
+                </div>
+                ${select(select_prepare(chartlist_length), chartlist_length.value, "artists_chartlist_length")}
+            </div>
+            <div class="settings-footer">
+                <button type="submit" class="btn-primary save">
+                    ${tl(trans.save)}
+                </button>
+            </div>
+        </div>
+    `);
+    tippy_esm_default(settings_btn, {
+      theme: "window",
+      content: form,
+      placement: "bottom",
+      interactive: true,
+      interactiveBorder: 10,
+      trigger: "click"
+    });
+  }
+  function profile_albums() {
+    let panel = page.structure.main.querySelector("#top-albums");
+    if (!panel) return;
+    panel.classList.remove("section-with-settings");
+    let form = panel.querySelector("#albums-chart-settings");
+    let list = panel.querySelector("#albums_range");
+    let collage_btn;
+    let select_btn = panel.querySelector(".dropdown-menu-clickable-button");
+    let settings_btn;
+    panel.insertBefore(html.node`
+        <div class="top-container">
+            ${panel.querySelector("h2")}
+            <div class="accompany view-buttons blend blend-v2">
+                ${() => {
+      select_btn.classList.add("select-button", "link-select", "blend-v2-btn");
+      select_btn.classList.remove("section-control", "dropdown-menu-clickable-button");
+      return select_btn;
+    }}
+            </div>
+            <div class="view-buttons blend blend-v2">
+                <button class="left-icon blend-v2-btn" data-type="collage" ref=${(el) => collage_btn = el} onclick=${() => {
+      let btn = list.querySelector(".dropdown-menu-clickable-item--selected");
+      let link = new URL("https://www.last.fm" + btn.getAttribute("href"));
+      let selected = link.searchParams.get("albums_date_preset");
+      window.location.href = `${root}bleh/minis/collage?type=albums&timeframe=date_preset=${selected}`;
+    }}>${tl(trans.collage)}</button>
+                ${form ? html.node`
+                <button class="left-icon blend-v2-btn" data-type="settings" ref=${(el) => settings_btn = el}>
+                    ${tl(trans.settings)}
+                </button>
+                ` : ""}
+            </div>
+        </div>
+    `, panel.firstElementChild);
+    if (!form) return;
+    if (page.token == "") page.token = form.querySelector('[name="csrfmiddlewaretoken"]').getAttribute("value");
+    let timeframe = form.querySelector('[name="chart_range_top_albums"]');
+    let style = form.querySelector('[name="chart_style_top_albums"]');
+    let grid_length = form.querySelector('[name="albums_image_grid_length"]');
+    let chartlist_length = form.querySelector('[name="albums_chartlist_length"]');
+    form.classList = "";
+    render(form, html`
+        <input type="hidden" name="csrfmiddlewaretoken" value="${page.token}">
+        <div class="setting-group blend">
+            <div class="setting" data-type="select">
+                <div class="heading">
+                    <h5>${tl(trans.default_timeframe)}</h5>
+                </div>
+                ${select(select_prepare(timeframe), timeframe.value, "chart_range_top_albums")}
+            </div>
+            <div class="setting" data-type="select">
+                <div class="heading">
+                    <h5>${tl(trans.chart_style)}</h5>
+                </div>
+                ${select(select_prepare(style), style.value, "chart_style_top_albums")}
+            </div>
+            <div class="setting hide-if-album-list" data-type="select">
+                <div class="heading">
+                    <h5>${tl(trans.chart_size)}</h5>
+                </div>
+                ${select(select_prepare(grid_length), grid_length.value, "albums_image_grid_length")}
+            </div>
+            <div class="setting hide-if-album-grid" data-type="select">
+                <div class="heading">
+                    <h5>${tl(trans.chart_size)}</h5>
+                </div>
+                ${select(select_prepare(chartlist_length), chartlist_length.value, "albums_chartlist_length")}
+            </div>
+            <div class="settings-footer">
+                <button type="submit" class="btn-primary save">
+                    ${tl(trans.save)}
+                </button>
+            </div>
+        </div>
+    `);
+    tippy_esm_default(settings_btn, {
+      theme: "window",
+      content: form,
+      placement: "bottom",
+      interactive: true,
+      interactiveBorder: 10,
+      trigger: "click"
+    });
+  }
+  function profile_tracks() {
+    let panel = page.structure.main.querySelector("#top-tracks");
+    if (!panel) return;
+    panel.classList.remove("section-with-settings");
+    let form = panel.querySelector("#track-chart-settings");
+    let list = panel.querySelector("#tracks_range");
+    let collage_btn;
+    let select_btn = panel.querySelector(".dropdown-menu-clickable-button");
+    let settings_btn;
+    panel.insertBefore(html.node`
+        <div class="top-container">
+            ${panel.querySelector("h2")}
+            <div class="accompany view-buttons blend blend-v2">
+                ${() => {
+      select_btn.classList.add("select-button", "link-select", "blend-v2-btn");
+      select_btn.classList.remove("section-control", "dropdown-menu-clickable-button");
+      return select_btn;
+    }}
+            </div>
+            <div class="view-buttons blend blend-v2">
+                <button class="left-icon blend-v2-btn" data-type="collage" ref=${(el) => collage_btn = el} onclick=${() => {
+      let btn = list.querySelector(".dropdown-menu-clickable-item--selected");
+      let link = new URL("https://www.last.fm" + btn.getAttribute("href"));
+      let selected = link.searchParams.get("tracks_date_preset");
+      window.location.href = `${root}bleh/minis/collage?type=tracks&timeframe=date_preset=${selected}`;
+    }}>${tl(trans.collage)}</button>
+                ${form ? html.node`
+                <button class="left-icon blend-v2-btn" data-type="settings" ref=${(el) => settings_btn = el}>
+                    ${tl(trans.settings)}
+                </button>
+                ` : ""}
+            </div>
+        </div>
+    `, panel.firstElementChild);
+    if (!form) return;
+    if (page.token == "") page.token = form.querySelector('[name="csrfmiddlewaretoken"]').getAttribute("value");
+    let timeframe = form.querySelector('[name="chart_range_top_tracks"]');
+    let chartlist_length = form.querySelector('[name="chart_length_top_tracks"]');
+    form.classList = "";
+    render(form, html`
+        <input type="hidden" name="csrfmiddlewaretoken" value="${page.token}">
+        <div class="setting-group blend">
+            <div class="setting" data-type="select">
+                <div class="heading">
+                    <h5>${tl(trans.default_timeframe)}</h5>
+                </div>
+                ${select(select_prepare(timeframe), timeframe.value, "chart_range_top_tracks")}
+            </div>
+            <div class="setting hide-if-track-grid" data-type="select">
+                <div class="heading">
+                    <h5>${tl(trans.chart_size)}</h5>
+                </div>
+                ${select(select_prepare(chartlist_length), chartlist_length.value, "chart_length_top_tracks")}
+            </div>
+            <div class="sep" />
+            ${setting({ id: "format_guest_features" })}
+            ${setting({ id: "show_guest_features" })}
+            <div class="more-link">
+                <a href="${root}bleh/music">${tl(trans.settings)}</a>
+            </div>
+            <div class="settings-footer">
+                <button type="submit" class="btn-primary save">
+                    ${tl(trans.save)}
+                </button>
+            </div>
+        </div>
+    `);
+    tippy_esm_default(settings_btn, {
+      theme: "window",
+      content: form,
+      placement: "bottom",
+      interactive: true,
+      interactiveBorder: 10,
+      trigger: "click"
+    });
+  }
+  function bio_parse(text3) {
+    let temp = document.createElement("div");
+    temp.classList.add("markdown-body");
+    render(temp, markdown(text3.textContent, {
+      allow_headers: true,
+      allow_banners: true,
+      allow_icons: true,
+      allow_hue: true
+    }));
+    const banner = temp.querySelector('img[alt="banner"]');
+    if (banner) {
+      const src = banner.src;
+      register_background(src, "bio");
+    }
+    return temp;
+  }
+  function bleh_profile_chart() {
+    let panel = page.structure.row.querySelector(".listen-panel");
+    let table = panel.querySelector("table");
+    if (table) {
+      bleh_profile_chart_render(panel, table);
+      return;
+    }
+    lazy(panel, () => {
+      fetch(`${root}user/${page.name}/library/artists/chart?date_preset=LAST_90_DAYS&page=1&ajax=1`).then(function(response) {
+        console.log("glacier library returned", response, response.text, response.status);
+        if (response.status != 200)
+          throw new Error();
+        return response.text();
+      }).then(function(html3) {
+        let doc = new DOMParser().parseFromString(html3, "text/html");
+        console.log("glacier library DOC", doc, doc.querySelector(".table"));
+        log("received response", "glacier library");
+        table = doc.querySelector(".table");
+        if (table) {
+          panel.appendChild(table);
+          bleh_profile_chart_render(panel, table);
+        } else {
+          log("table is null?", "glacier library", "error");
+          console.info("glacier library", doc.body.innerHTML);
+          console.info("glacier library", new DOMParser().parseFromString(doc.body.innerHTML, "text/html"));
+          throw new Error();
+        }
+      });
+    }, { threshold: 0.3, rootMargin: "0px" });
+  }
+  function bleh_profile_chart_render(panel = page.structure.side.querySelector(".listen-profile-panel"), table = null) {
+    if (!table) table = panel.querySelector("table");
+    if (!table) return;
+    let entries2 = table.querySelectorAll("tbody tr");
+    let labels = [];
+    let links = [];
+    let values = [];
+    page.state.glacier.links = [];
+    entries2.forEach((entry) => {
+      let period = entry.querySelector(".js-period a");
+      let value = entry.querySelector(".js-scrobbles").textContent.trim();
+      labels.push(period.textContent.trim());
+      links.push(period.getAttribute("href"));
+      values.push(value);
+      page.state.glacier.links.push(`${root}user/${page.name}/library` + period.getAttribute("href"));
+    });
+    prep_chart_colours();
+    let scrobble_canvas_container = panel.querySelector(".scrobble-canvas-container");
+    scrobble_canvas_container.innerHTML = "";
+    let scrobble_canvas = document.createElement("canvas");
+    scrobble_canvas.classList.add("scrobble-canvas");
+    let gradient = scrobble_canvas.getContext("2d").createLinearGradient(0, 0, 0, 160);
+    try {
+      gradient.addColorStop(0, page.state.chart_colours.link_bg_col);
+      gradient.addColorStop(1, page.state.chart_colours.link_bg_col_2);
+    } catch (e) {
+      gradient = page.state.chart_colours.link_bg_col;
+    }
+    Chart.defaults.color = page.state.chart_colours.text_col;
+    Chart.defaults.font.family = page.state.chart_colours.font;
+    let scrobble_chart = new Chart(scrobble_canvas.getContext("2d"), {
+      type: "line",
+      data: {
+        labels,
+        datasets: [{
+          data: values,
+          borderWidth: 2,
+          backgroundColor: gradient,
+          borderColor: page.state.chart_colours.link_col,
+          fill: true,
+          pointRadius: 0,
+          pointHitRadius: 20,
+          tension: 0.1
+        }]
+      },
+      options: page.state.chart_library_line_options
+    });
+    scrobble_canvas_container.appendChild(scrobble_canvas);
+  }
+  function save_profile_cache({
+    banner,
+    hue: hue2,
+    sat,
+    lit,
+    aka,
+    created
+  } = {}, profile_cache = JSON.parse(localStorage.getItem("bleh_profile_cache")) || {}, name = page.name) {
+    let profile_cache_o = Object.keys(profile_cache);
+    if (profile_cache_o.length > 400) {
+      let keys2 = Reflect.ownKeys(profile_cache);
+      if (profile_cache[keys2[0]] != auth.name)
+        delete profile_cache[keys2[0]];
+      else
+        delete profile_cache[keys2[1]];
+      delete profile_cache[name];
+    }
+    profile_cache[name] = {
+      banner,
+      hue: hue2,
+      sat,
+      lit,
+      aka,
+      created
+    };
+    log("saved to cache", "profile", "info", { name, cache: profile_cache[name] });
+    localStorage.setItem("bleh_profile_cache", JSON.stringify(profile_cache));
+  }
+  async function load_profile_cache_externally(name = page.name) {
+    if (!name) return;
+    let profile_cache = JSON.parse(localStorage.getItem("bleh_profile_cache")) || {};
+    if (profile_cache[name]) return profile_cache[name];
+    return await request_profile_cache(name);
+  }
+  function load_profile_cache(name = page.name) {
+    if (!name) return;
+    let profile_cache = JSON.parse(localStorage.getItem("bleh_profile_cache")) || {};
+    let cache2 = profile_cache[name];
+    if (profile_cache[name]) {
+      const hue2 = cache2.hue;
+      const sat = cache2.sat;
+      const lit = cache2.lit;
+      const banner = cache2.banner;
+      if (hue2) document.body.style.setProperty("--hue-album", hue2);
+      if (sat) document.body.style.setProperty("--sat-album", sat);
+      if (lit) document.body.style.setProperty("--lit-album", lit);
+      if (banner) register_background(banner, "bio");
+      return;
+    }
+    return request_profile_cache(name);
+  }
+  function request_profile_cache(name = page.name) {
+    return new Promise((resolve2, reject) => {
+      fetch(`${root}user/${name}`).then(function(response) {
+        console.log("returned", response, response.text);
+        return response.text();
+      }).then(function(dom) {
+        let doc = new DOMParser().parseFromString(dom, "text/html");
+        console.log("DOC", doc);
+        const about_me_sidebar = doc.querySelector(".about-me-sidebar");
+        if (about_me_sidebar) {
+          let about_me_text = about_me_sidebar.querySelector("p");
+          bio_parse(about_me_text);
+        } else {
+          save_profile_cache({}, null, name);
+        }
+        const secondary = doc.querySelector(".header-title-secondary");
+        parse_sub_text(secondary, name);
+        let profile_cache = JSON.parse(localStorage.getItem("bleh_profile_cache")) || {};
+        resolve2(profile_cache[name] || {});
+      }).catch(reject);
+    });
+  }
+  function parse_sub_text(profile_sub_text, name = page.name) {
+    const display_name = profile_sub_text.querySelector(".header-title-display-name");
+    const scrobble_since = profile_sub_text.querySelector(".header-scrobble-since");
+    scrobble_since.textContent = scrobble_since.textContent.slice(2).replace(tl(trans.account_scrobbling_since_replace), "");
+    const pronouns = use_pronouns(display_name.textContent);
+    profile_sub_text.insertBefore(html.node`
+        <span class="header-title-secondary--pre">
+            ${pronouns ? tl(trans.account_pronouns) : tl(trans.aka)}
+        </span>
+    `, display_name);
+    profile_sub_text.insertBefore(html.node`
+        <span class="header-title-secondary--pre">
+            ${tl(trans.account_created)}
+        </span>
+    `, scrobble_since);
+    let profile_cache = JSON.parse(localStorage.getItem("bleh_profile_cache")) || {};
+    let cache2 = profile_cache[name] || {};
+    cache2.aka = display_name.textContent.trim();
+    cache2.created = scrobble_since.textContent.trim();
+    save_profile_cache(cache2, profile_cache, name);
+  }
+
+  // src/avatar.js
+  function patch_avatar(avatar3, name, type = "", parent = null, side = "right") {
+    if (avatar3.hasAttribute("data-bleh-avatar")) return {};
+    avatar3.setAttribute("data-bleh-avatar", "true");
+    const avatar_img = avatar3.querySelector("img");
+    if (!avatar_img) return {};
+    avatar_img.setAttribute("src", avatar_img.getAttribute("src").replace("/64s/", "/avatar70s/"));
+    avatar3.setAttribute("title", "");
+    let badges = load_badges(name);
+    let pre_existing_badge = avatar3.querySelector(".avatar-status-dot");
+    if (badges && pre_existing_badge) avatar3.removeChild(pre_existing_badge);
+    if (!parent) avatar3.classList.add("avatar-can-hoverbox");
+    else parent.classList.add("parent-can-hoverbox");
+    let pre_existing_badge_type;
+    if (pre_existing_badge) pre_existing_badge_type = pre_existing_badge.classList[1].replace("avatar-status-dot--", "user-status-");
+    if (pre_existing_badge_type == "user-follow") {
+      pre_existing_badge = null;
+      pre_existing_badge_type = null;
+    }
+    if (badges) avatar3.appendChild(create_badge(badges[badges.length - 1], true));
+    let image_header;
+    let cached = false;
+    tippy_esm_default(parent ? parent : avatar3, {
+      theme: "user",
+      content: html.node`
+            <div class="image-header" ref=${(el) => image_header = el}>
+                <div class="inner-image">
+                    <img src=${avatar_img.getAttribute("src").replace("/avatar42s/", "/avatar170s/")} alt=${name}>
+                    <a href="${root}user/${name}" class="link-over"></a>
+                </div>
+            </div>
+            <div class="info">
+                <h5 class="title"><a href="${root}user/${name}">${name}</a></h5>
+                ${badges ? html.node`
+                <div class="badges">
+                    ${badges.map((badge, index3) => create_badge(badge, false, index3 == badges.length - 1))}
+                    ${pre_existing_badge ? create_badge({
+        type: pre_existing_badge_type,
+        name: tl(trans.badges[pre_existing_badge_type].name),
+        reason: tl(trans.badges[pre_existing_badge_type].reason),
+        inbuilt: true
+      }) : ""}
+                </div>
+                ` : pre_existing_badge ? html.node`
+                <div class="badges">
+                    ${create_badge({
+        type: pre_existing_badge_type,
+        name: tl(trans.badges[pre_existing_badge_type].name),
+        reason: tl(trans.badges[pre_existing_badge_type].reason),
+        inbuilt: true
+      })}
+                </div>
+                ` : ""}
+            </div>
+        `,
+      placement: side,
+      interactive: true,
+      trigger: "click",
+      onShow(instance) {
+        if (cached || !image_header) return;
+        load_profile_cache_externally(name).then((cache2) => {
+          if (cache2.banner) {
+            image_header.classList.add("has-banner");
+            image_header.style.backgroundImage = `url('${cache2.banner}')`;
+          }
+          cached = true;
+        });
+      }
+    });
+    control_gif_pause(avatar_img);
+    if (badges) return badges[badges.length - 1];
+    else if (pre_existing_badge) return { type: pre_existing_badge.classList[1] };
+    else return { type: "none" };
+  }
+  function return_name_from_avatar(avatar3) {
+    if (!avatar3)
+      return;
+    if (!avatar3.hasAttribute("alt"))
+      return;
+    if (avatar3.getAttribute("alt") == tl(trans.your_avatar))
+      return auth;
+    return avatar3.getAttribute("alt").replace(tl(trans.avatar_for_user), "");
+  }
+  unsafeWindow._expand_avatar = function(src) {
+    expand_avatar(src);
+  };
+  function expand_avatar(src, alt = "") {
+    dialog({
+      id: "avatar",
+      body: html.node`
+            <div class="full-avatar-wrapper">
+                <div class="full-avatar">
+                    <img src=${src} alt=${alt}>
+                    ${alt != "" ? () => {
+        const elem = html.node`
+                            <div class="alt-text">
+                                ALT
+                            </div>
+                        `;
+        tippy_esm_default(elem, {
+          content: alt
+        });
+        return elem;
+      } : ""}
+                </div>
+                <div class="modal-footer">
+                    <div class="fill"></div>
+                    <div class="button-group">
+                        <a class="btn primary open" href=${src} target="_blank">
+                            ${tl(trans.open_new_tab)}
+                        </a>
+                    </div>
+                    <div class="fill"></div>
+                </div>
+            </div>
+        `,
+      type: "avatar",
+      has_overlays: false
+    });
+  }
+
+  // src/pages/wiki.js
+  function bleh_wiki() {
+    let wiki_panel = document.createElement("section");
+    wiki_panel.classList.add("wiki-panel");
+    wiki_panel.innerHTML = page.structure.main.innerHTML;
+    page.structure.main.innerHTML = "";
+    page.structure.main.appendChild(wiki_panel);
+    page.structure.main.classList.add("not-a-panel");
+    let original_edit_button = page.structure.main.querySelector(".qa-wiki-edit");
+    let original_version_history = page.structure.main.querySelector(".wiki-history-link--desktop a");
+    let side_actions = document.createElement("section");
+    side_actions.classList.add("side-actions");
+    if (!page.mobile)
+      page.structure.side.appendChild(side_actions);
+    else
+      page.structure.main.appendChild(side_actions);
+    if (original_edit_button) {
+      let side_edit = document.createElement("a");
+      side_edit.classList.add("btn", "side-action");
+      side_edit.setAttribute("href", original_edit_button.getAttribute("href"));
+      side_edit.setAttribute("data-type", "edit");
+      side_edit.textContent = tl(trans.edit);
+      side_actions.appendChild(side_edit);
+    }
+    if (original_version_history) {
+      let side_history = document.createElement("a");
+      side_history.classList.add("btn", "side-action");
+      side_history.setAttribute("href", original_version_history.getAttribute("href"));
+      side_history.setAttribute("data-type", "history");
+      side_history.textContent = tl(trans.timeline);
+      side_actions.appendChild(side_history);
+    }
+    let wiki_author = wiki_panel.querySelector(".wiki-author");
+    if (wiki_author) {
+      let h22 = wiki_panel.querySelector("h2.text-18");
+      let sub_text = document.createElement("div");
+      sub_text.classList.add("sub-text", "space-below", "header-style");
+      sub_text.innerHTML = `
+            <div class="breadcrumb-origin prominent">
+                ${h22 ? h22.innerHTML : page.structure.container.querySelector(".content-top-header").textContent}
+            </div>
+            <div class="wiki-author-side">
+                ${wiki_author.innerHTML}
+            </div>
+        `;
+      wiki_panel.insertBefore(sub_text, wiki_panel.firstElementChild);
+      if (h22)
+        wiki_panel.removeChild(h22);
+    }
+    let wiki = wiki_panel.querySelector(".wiki");
+    if (!wiki) return;
+    patch_wiki_contents(wiki);
+    let factbox = wiki_panel.querySelector(".factbox");
+    if (factbox) {
+      let facts = html.node`
+            <section class="facts">
+                ${factbox}
+            </section>
+        `;
+      side_actions.after(facts);
+    }
+  }
+  function bleh_wiki_history() {
+    let breadcrumb_root = page.structure.container.querySelector(".subpage-breadcrumb");
+    let breadcrumb_name = page.structure.container.querySelector(".subpage-title");
+    if (!breadcrumb_root) {
+      breadcrumb_root = page.structure.container.querySelector(".content-top-back-link");
+      breadcrumb_name = page.structure.container.querySelector(".content-top-header");
+    }
+    let sub_text = document.createElement("div");
+    sub_text.classList.add("sub-text", "space-below", "header-style");
+    sub_text.innerHTML = `
+        <div class="breadcrumb">
+            ${breadcrumb_root.querySelector("a").outerHTML}
+            <div class="breadcrumb-name prominent">
+                ${breadcrumb_name.textContent}
+            </div>
+        </div>
+    `;
+    breadcrumb_root.style.setProperty("display", "none");
+    breadcrumb_name.style.setProperty("display", "none");
+    let buffer_container = page.structure.container.querySelector(".row ~ .buffer-4");
+    if (!buffer_container)
+      buffer_container = page.structure.container.querySelector(".wiki-history");
+    let wiki_history_table = buffer_container.querySelector(".wiki-history-table");
+    let pagination = buffer_container.querySelector(".pagination");
+    let wiki_panel = document.createElement("section");
+    wiki_panel.classList.add("wiki-history-panel");
+    wiki_panel.appendChild(sub_text);
+    wiki_panel.appendChild(wiki_history_table);
+    page.structure.main.appendChild(wiki_panel);
+    buffer_container.style.setProperty("display", "none");
+    if (pagination)
+      wiki_panel.appendChild(pagination);
+    let side_actions = html.node`
+        <section class="side-actions">
+            <a class="btn side-action" data-type="latest-wiki" href="${sub_text.querySelector("a").getAttribute("href")}">
+                ${tl(trans.view_latest)}
+            </a>
+        </section>
+    `;
+    if (!page.mobile)
+      page.structure.side.appendChild(side_actions);
+    else
+      page.structure.main.appendChild(side_actions);
+    let entries2 = page.structure.main.querySelectorAll(".wiki-history-entry");
+    entries2.forEach((entry) => {
+      let author = entry.querySelector(".wiki-history-author");
+      let avatar3 = author.querySelector(".wiki-history-author-avatar");
+      let name = author.querySelector(".link-block-target");
+      if (name && avatar3) {
+        let badge = patch_avatar(avatar3, name.textContent, "wiki");
+        if (badge && badge.type) {
+          if (badge.hue > -1 && badge.sat > -1 && badge.lit > -1) {
+            name.style.setProperty("--hue-over", badge.hue);
+            name.style.setProperty("--sat-over", badge.sat);
+            name.style.setProperty("--lit-over", badge.lit);
+          } else {
+            name.classList.add(`user-status--bleh-${badge.type}`, `user-status--bleh-user-${badge.user}`);
+          }
+        } else if (badge) {
+          name.classList.add(badge.type);
+        }
+      }
+    });
+  }
+  function bleh_wiki_editor() {
+    let wiki_edit_panel = document.createElement("section");
+    wiki_edit_panel.classList.add("wiki-edit-panel");
+    wiki_edit_panel.innerHTML = page.structure.main.innerHTML;
+    page.structure.main.innerHTML = "";
+    page.structure.main.appendChild(wiki_edit_panel);
+    page.structure.main.classList.add("not-a-panel");
+    let breadcrumb_root = page.structure.container.querySelector(".subpage-breadcrumb");
+    let breadcrumb_name = page.structure.container.querySelector(".subpage-title");
+    if (!breadcrumb_name) {
+      breadcrumb_name = page.structure.content_top.querySelector(".content-top-header");
+      if (breadcrumb_name)
+        page.structure.content_top.style.setProperty("display", "none");
+    }
+    if (!breadcrumb_root) {
+      breadcrumb_root = page.structure.container.querySelector(".content-top-back-link");
+      breadcrumb_name = page.structure.container.querySelector(".content-top-header");
+    }
+    let sub_text = document.createElement("div");
+    sub_text.classList.add("sub-text", "space-below", "header-style");
+    sub_text.innerHTML = `
+        <div class="breadcrumb">
+            ${breadcrumb_root.querySelector("a").outerHTML}
+            <div class="breadcrumb-name prominent">
+                ${breadcrumb_name.textContent}
+            </div>
+        </div>
+    `;
+    breadcrumb_root.style.setProperty("display", "none");
+    breadcrumb_name.style.setProperty("display", "none");
+    wiki_edit_panel.insertBefore(sub_text, wiki_edit_panel.firstElementChild);
+    page.structure.side.innerHTML = "";
+    const side_actions = html.node`
+        <section class="side-actions">
+            <a class="btn side-action" data-type="latest-wiki" href="${sub_text.querySelector("a").getAttribute("href")}">
+                ${tl(trans.view_latest)}
+            </a>
+        </section>
+    `;
+    if (!page.mobile)
+      page.structure.side.appendChild(side_actions);
+    else
+      page.structure.main.appendChild(side_actions);
+    const presets = [`\u201C`, `\u201D`, `\u2014`, `\u2018`, `\u2019`, `-`];
+    const standards = [
+      tl(trans.wiki_standard_tracks),
+      tl(trans.wiki_standard_artists),
+      tl(trans.wiki_standard_quotations)
+    ];
+    page.structure.side.appendChild(html.node`
+        <section class="wiki-presets-panel">
+            <h3 class="text-18">${tl(trans.symbol_presets)}</h3>
+            <div class="presets">
+                ${presets.map((preset) => {
+      let item = html.node`
+                        <div class="preset" onclick=${() => copy(preset)}>
+                            ${preset}
+                        </div>
+                    `;
+      tippy_esm_default(item, {
+        content: tl(trans.click_to_copy),
+        delay: [500, 0]
+      });
+      return item;
+    })}
+            </div>
+            <ul class="wiki-standards generic-list">
+                ${standards.map((standard) => html.node`<li>${standard}</li>`)}
+            </ul>
+        </section>
+    `);
+    page.structure.side.appendChild(html.node`
+        <section class="wiki-syntax-panel bleh--blank-panel">
+            <h3 class="text-18">${tl(trans.fancy_syntax)}</h3>
+            <div class="syntax-listing">
+                <div class="syntax-listing-item">
+                    <div class="code-side">[artist]julie[/artist]</div>
+                    <div class="detail-side">${{ html: tl(trans.links_to).replace("{link}", `<a href="${root}music/julie" data-link-type="artist" target="_blank">julie</a>`) }}</div>
+                </div>
+                <div class="syntax-listing-item">
+                    <div class="code-side">[album artist=julie]pushing daisies[/album]</div>
+                    <div class="detail-side">${{ html: tl(trans.links_to).replace("{link}", `<a href="${root}music/julie/pushing+daisies" data-link-type="album" target="_blank">pushing daisies</a>`) }}</div>
+                </div>
+                <div class="syntax-listing-item">
+                    <div class="code-side">[track artist=julie]very little effort[/track]</div>
+                    <div class="detail-side">${{ html: tl(trans.links_to).replace("{link}", `<a href="${root}music/julie/_/very+little+effort" data-link-type="track" target="_blank">very little effort</a>`) }}</div>
+                </div>
+            </div>
+            <div class="sep"></div>
+            <div class="syntax-listing">
+                <div class="syntax-listing-item">
+                    <div class="code-side">[url]https://katelyn.moe/bleh[/url]</div>
+                    <div class="detail-side">${{ html: tl(trans.links_to).replace("{link}", `<a href="https://katelyn.moe/bleh" target="_blank">https://katelyn.moe/bleh</a>`) }}</div>
+                </div>
+                <div class="syntax-listing-item">
+                    <div class="code-side">[url=https://katelyn.moe/bleh]blehhh[/url]</div>
+                    <div class="detail-side">${{ html: tl(trans.links_to).replace("{link}", `<a href="https://katelyn.moe/bleh" target="_blank">blehhh</a>`) }}</div>
+                </div>
+            </div>
+            <div class="sep"></div>
+            <div class="syntax-listing">
+                <div class="syntax-listing-item">
+                    <div class="code-side">[tag]grunge[/tag]</div>
+                    <div class="detail-side">${{ html: tl(trans.links_to).replace("{link}", `<a href="${root}tag/grunge" data-link-type="tag" target="_blank">grunge</a>`) }}</div>
+                </div>
+                <div class="syntax-listing-item">
+                    <div class="code-side">[user]${auth.name}[/user]</div>
+                    <div class="detail-side">${{ html: tl(trans.links_to).replace("{link}", `<a class="mention" href="${root}user/${auth.name}" target="_blank">@${auth.name}</a>`) }}</div>
+                </div>
+            </div>
+        </section>
+    `);
+    let rules = page.structure.main.querySelector(".wiki-style-rules");
+    rules.removeAttribute("id");
+    let rules_panel = document.createElement("section");
+    rules_panel.classList.add("rules-panel");
+    rules_panel.setAttribute("id", "stylerules");
+    rules_panel.innerHTML = rules.innerHTML;
+    page.structure.side.appendChild(rules_panel);
+  }
+  function patch_wiki() {
+    if (ff("show_wiki_label")) {
+      let wiki_col = page.structure.main.querySelector(".wiki-column");
+      let wiki_empty = false;
+      if (!wiki_col) {
+        wiki_col = page.structure.main.querySelector(".wiki-section");
+        return;
+      }
+      let wiki_block = wiki_col.querySelector(".wiki-block.visible-lg .wiki-block-inner-2");
+      if (!wiki_block) {
+        wiki_block = wiki_col.querySelector(".wiki-block-cta");
+        wiki_empty = true;
+      }
+      let read_more = wiki_block.querySelector("a:last-child");
+      if (read_more) {
+        read_more.classList.add("read-more");
+        read_more.textContent = tl(trans.read_more).toLowerCase();
+      }
+      wiki_col.insertBefore(html.node`
+            <div class="sub-text">
+                <p>${tl(trans.about)}</p>
+                <span class="right-links">
+                    <p><a class="wiki-edit-small" href="${document.location.href}/+wiki/edit">${tl(trans.edit_wiki).toLowerCase()}</a></p>
+                    ${!wiki_empty && read_more ? html.node`<p>${read_more}</p>` : ""}
+                </span>
+            </div>
+        `, wiki_col.firstElementChild);
+      if (!wiki_empty)
+        patch_wiki_contents(wiki_block);
+    }
+  }
+  function patch_wiki_contents(wiki_block) {
+    let links = wiki_block.querySelectorAll("a");
+    links.forEach((link) => {
+      let href = link.getAttribute("href");
+      let type;
+      let name = link.textContent.trim();
+      let sister;
+      if (!href.startsWith(root)) {
+        if (href && is_link_external(href)) {
+          link.addEventListener("click", (e) => {
+            const link2 = new URL(href);
+            const hostname = link2.hostname;
+            if (settings.trusted_sites.includes(hostname)) return;
+            e.preventDefault();
+            external_url_prompt(href);
+          });
+          if (link.textContent != href) {
+            tippy_esm_default(link, {
+              theme: "name-sister-combo",
+              content: html.node`
+                        <span class="name">${href}</span>
+                        <span class="sister">${tl(trans.external)}</span>
+                    `
+            });
+          }
+          return;
+        }
+      }
+      if (href.endsWith("/+wiki")) return;
+      href = href.replace(root, "").replace("music/", "");
+      if (href.startsWith("user/")) return;
+      if (href.startsWith("tag/")) {
+        type = "tag";
+      } else {
+        let split = href.split("/");
+        if (split.length == 1) {
+          type = "artist";
+        } else if (split.length == 2) {
+          type = "album";
+          name = desanitise(split[1]);
+          sister = desanitise(split[0]);
+        } else if (split.length == 3) {
+          type = "track";
+          name = desanitise(split[2]);
+          sister = desanitise(split[0]);
+        }
+      }
+      if (sister != void 0)
+        tippy_esm_default(link, {
+          theme: "name-sister-combo",
+          content: html.node`
+                    <span class="name">${name}</span>
+                    <span class="sister">${sister}</span>
+                `
+        });
+      link.setAttribute("data-link-type", type);
+    });
+  }
+
   // src/components/markdown.js
   var import_showdown = __toESM(require_showdown(), 1);
 
@@ -45223,7 +45240,7 @@
         </div>
     `);
   }
-  function render_setting_page(page_id) {
+  async function render_setting_page(page_id) {
     if (page_id == "general") {
       if (auth.pro === null) {
         setTimeout(() => {
@@ -46098,7 +46115,7 @@
         `);
     } else if (page_id == "profile") {
       register_skip_to([]);
-      const cache2 = load_profile_cache_externally(auth.name);
+      const cache2 = await load_profile_cache_externally(auth.name);
       render(page.structure.main, html`
             <section class="bleh--panel">
                 <h4>${tl(trans.banners)}</h4>
@@ -48471,12 +48488,13 @@
       interactive: true,
       interactiveBorder: 10,
       trigger: "click",
-      onShow(instance) {
+      onShow: async (instance) => {
         page.structure.notifications.setAttribute("data-auth-open", "true");
         badges = load_badges(auth.name);
         let page_2;
         let side;
-        const cache2 = load_profile_cache_externally(auth.name);
+        const cache2 = await load_profile_cache_externally(auth.name);
+        console.info("awaited", cache2);
         let status_container;
         const current = settings.navigation_items;
         let length = current.length;
@@ -48491,7 +48509,7 @@
                             <div class="avatar">
                                 <img src="${auth.avatar.replace("avatar42s", "avatar170s")}" alt="${auth.name}" />
                             </div>
-                            ${cache2.banner != "" ? html.node`
+                            ${cache2.banner ? html.node`
                             <div class="bg" style="background-image: url(${cache2.banner})" />
                             ` : !auth.avatar.endsWith("818148bf682d429dc215c1705eb27b98.png") ? html.node`
                             <div class="bg" style="background-image: url(${auth.avatar.replace("avatar42s", "avatar170s")})" />
@@ -50060,7 +50078,7 @@
   }
 
   // src/pages/home.js
-  function bleh_home() {
+  async function bleh_home() {
     page.structure.container = document.body.querySelector(".page-content");
     try {
       page.structure.row = page.structure.container.querySelector(".row");
@@ -50074,7 +50092,7 @@
     checkup_page_structure(false, content_top);
     log("status is", "page", "info", page);
     update_page();
-    const cache2 = load_profile_cache_externally(auth.name);
+    const cache2 = await load_profile_cache_externally(auth.name);
     if (cache2.banner)
       register_background(cache2.banner);
     else if (auth.avatar && !auth.avatar.endsWith("818148bf682d429dc215c1705eb27b98.png"))
@@ -51127,7 +51145,7 @@
   }
 
   // src/pages/api.js
-  function bleh_api() {
+  async function bleh_api() {
     if (page.subpage == "docs") return;
     page.structure.container = document.body.querySelector(".page-content");
     try {
@@ -51141,7 +51159,7 @@
     checkup_page_structure(false, content_top);
     log("status is", "page", "info", page);
     update_page();
-    const cache2 = load_profile_cache_externally(auth.name);
+    const cache2 = await load_profile_cache_externally(auth.name);
     if (cache2.banner)
       register_background(cache2.banner);
     else if (!auth.avatar.endsWith("818148bf682d429dc215c1705eb27b98.png"))
@@ -51447,7 +51465,7 @@
       log("unable to find elements", "page structure");
     }
     checkup_page_structure();
-    const cache2 = load_profile_cache_externally(auth.name);
+    const cache2 = await load_profile_cache_externally(auth.name);
     if (cache2.banner)
       register_background(cache2.banner);
     else if (!auth.avatar.endsWith("818148bf682d429dc215c1705eb27b98.png"))

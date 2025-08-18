@@ -12510,8 +12510,13 @@
                     flex-direction: column;
                     flex: 1;
                     margin: calc(-1 * var(--card-gap)) calc(-1 * var(--card-gap)) var(--gap);
-                    padding: var(--card-gap);
+                    padding: 30px var(--card-gap);
                     background: hsl(var(--b4), 25%);
+                    border-top-left-radius: var(--item-med-radius);
+                    border-top-right-radius: var(--item-med-radius);
+
+                    background-size: cover;
+                    background-position: 0 20%;
 
                     --gap: 20px;
 
@@ -12532,7 +12537,7 @@
                         flex-shrink: 0;
                         position: relative;
 
-                        margin-bottom: calc(-1 * (var(--card-gap) + var(--gap)));
+                        margin-bottom: calc(-1 * (15px + var(--card-gap) + var(--gap)));
 
                         img {
                             width: 100%;
