@@ -38022,7 +38022,7 @@
                     </div>
                     ` : ""}
                     ${setting_incompatible_block(settings_store[id].incompatible)}
-                    ${menu = select(list, "", "", (val) => {
+                    ${menu = select(list, value, "", (val) => {
           update_select(val);
         })}
                 </div>
