@@ -26643,9 +26643,9 @@
     });
     return values;
   }
-  function select_prepare_list(list) {
+  function select_prepare_list(list, icon = null) {
     return list.map((item) => {
-      if (typeof item === "string") return { value: item, text: item };
+      if (typeof item === "string") return { value: item, text: item, icon };
       return item;
     });
   }
