@@ -1048,7 +1048,8 @@ export let settings_store = {
         type: 'list',
         title: trans.navigation_items.name,
         body: trans.navigation_items.body,
-        new_release: true
+        new_release: true,
+        predefined: true
     },
     navigation_language: {
         default: true,
@@ -1167,5 +1168,18 @@ export let settings_store = {
         step: 0.01,
         title: trans.lit,
         vertical: true
+    },
+    friends: {
+        default: [],
+        type: 'list',
+        title: trans.friends,
+        body: trans.friends_setting,
+        new_release: true
+    },
+    starred_friend: {
+        default: '',
+        type: 'select',
+        title: trans.starred_friend.name,
+        body: trans.starred_friend.body
     }
 }

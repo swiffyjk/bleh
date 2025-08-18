@@ -15,12 +15,12 @@ export function update_inbuilt_select(id, value) {
     document.documentElement.setAttribute(`data-bleh--inbuilt-${id}`, value);
 }
 
-export function select(values, initial = '', name = '') {
+export function select(values, initial = '', name = '', func = null) {
     let select;
     let button;
 
     if (values.length === 0) {
-        return select_fail({message: 'Values cannot be empty'});
+        return html.node``;
     }
 
     if (initial == '')
@@ -57,11 +57,15 @@ export function select(values, initial = '', name = '') {
         }
     });
 
-    set_select(button, menu, values, initial, select, name);
+    set_select(initial);
+
+    container.set = (val) => {
+        set_select(val);
+    }
 
     return container;
 
-    function set_select(button, menu, values, selected, select, name) {
+    function set_select(selected) {
         values.some((value) => {
             if (value.value == selected) {
                 render(button, html`${value.text}`);
@@ -75,9 +79,11 @@ export function select(values, initial = '', name = '') {
         if (name != '')
             document.documentElement.setAttribute(`data-bleh--inbuilt-id_${name}`, selected);
 
+        if (func) func(selected);
+
         menu.setContent(html.node`
         ${values.map((value) => html.node`
-            <button class="btn dropdown-menu-clickable-item select-item" aria-checked=${selected == value.value} onclick=${() => set_select(button, menu, values, value.value, select, name)}>
+            <button class="btn dropdown-menu-clickable-item select-item" aria-checked=${selected == value.value} onclick=${() => set_select(value.value)}>
                 ${value.text}
             </button>
         `)}
@@ -96,6 +102,14 @@ export function select_prepare(element) {
     });
 
     return values;
+}
+
+export function select_prepare_list(list) {
+    return list.map(item => {
+        if (typeof item === 'string') return { value: item, text: item };
+
+        return item;
+    });
 }
 
 function select_fail(e = null) {

@@ -264,6 +264,11 @@
             "default": false,
             "name": "Convert GIFs to static images",
             "date": "2025-08-15"
+        },
+        "friends": {
+            "default": false,
+            "name": "Friends system",
+            "date": "2025-08-18"
         }
     }
 }

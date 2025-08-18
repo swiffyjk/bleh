@@ -30,6 +30,7 @@ import {force_refresh_style, start_update, update_check} from "../style.js";
 import tippy from "tippy.js";
 import moment from "moment";
 import { load_profile_cache_externally } from './profile.js';
+import { select_prepare_list } from '../components/select.js';
 
 export function bleh_settings() {
     page.name = auth.name;
@@ -1088,6 +1089,11 @@ export async function render_setting_page(page_id) {
 
         const cache = await load_profile_cache_externally(auth.name);
 
+        let friends;
+        let starred;
+
+        console.info('friends', settings.friends, settings);
+
         render(page.structure.main, html`
             <section class="bleh--panel">
                 <h4>${tl(trans.banners)}</h4>
@@ -1169,6 +1175,19 @@ export async function render_setting_page(page_id) {
                     </div>
                 </div>
             </section>
+            ${ff('friends') ? html.node`
+            <section class="bleh--panel">
+                <h4>${tl(trans.friends)}</h4>
+                <div class="setting-group">
+                    ${friends = setting({id: 'friends', list: settings.friends, func: (val) => {
+                        if (!settings.friends.includes(settings.starred_friend)) save_setting('starred_friend', '');
+
+                        render_setting_page('profile');
+                    }})}
+                    ${starred = setting({id: 'starred_friend', list: select_prepare_list([{value: '', text: tl(trans.none)}, ...settings.friends])})}
+                </div>
+            </section>
+            ` : ''}
             <section class="bleh--panel">
                 <h4>${tl(trans.other)}</h4>
                 <div class="setting-group">

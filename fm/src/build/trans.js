@@ -346,6 +346,19 @@ export const trans = {
         de: 'Freunde',
         pt: 'Amigos'
     },
+    friends_setting: {
+        en: 'Keep up to date on what your friends are listening to'
+    },
+    starred_friend: {
+        name: {
+            en: 'Starred friend'
+        },
+        body: {
+            en: 'View their scrobbles alongside yours at all times',
+            de: 'Sehe ihre Scrobbels jederzeit neben deine an',
+            pt: 'Veja os scrobbles dele(a) junto aos seus o tempo todo'
+        }
+    },
     aka: {
         en: 'aka.',
         pt: 'vulgo'

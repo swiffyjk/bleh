@@ -26571,11 +26571,11 @@
   function update_inbuilt_select(id, value) {
     document.documentElement.setAttribute(`data-bleh--inbuilt-${id}`, value);
   }
-  function select(values, initial = "", name = "") {
+  function select(values, initial = "", name = "", func = null) {
     let select2;
     let button;
     if (values.length === 0) {
-      return select_fail({ message: "Values cannot be empty" });
+      return html.node``;
     }
     if (initial == "")
       initial = values[0].value;
@@ -26607,22 +26607,26 @@
         }
       }
     });
-    set_select(button, menu, values, initial, select2, name);
+    set_select(initial);
+    container.set = (val) => {
+      set_select(val);
+    };
     return container;
-    function set_select(button2, menu2, values2, selected, select3, name2) {
-      values2.some((value) => {
+    function set_select(selected) {
+      values.some((value) => {
         if (value.value == selected) {
-          render(button2, html`${value.text}`);
+          render(button, html`${value.text}`);
           return false;
         }
       });
-      select3.value = selected;
-      container.value = select3.value;
-      if (name2 != "")
-        document.documentElement.setAttribute(`data-bleh--inbuilt-id_${name2}`, selected);
-      menu2.setContent(html.node`
-        ${values2.map((value) => html.node`
-            <button class="btn dropdown-menu-clickable-item select-item" aria-checked=${selected == value.value} onclick=${() => set_select(button2, menu2, values2, value.value, select3, name2)}>
+      select2.value = selected;
+      container.value = select2.value;
+      if (name != "")
+        document.documentElement.setAttribute(`data-bleh--inbuilt-id_${name}`, selected);
+      if (func) func(selected);
+      menu.setContent(html.node`
+        ${values.map((value) => html.node`
+            <button class="btn dropdown-menu-clickable-item select-item" aria-checked=${selected == value.value} onclick=${() => set_select(value.value)}>
                 ${value.text}
             </button>
         `)}
@@ -26639,13 +26643,11 @@
     });
     return values;
   }
-  function select_fail(e = null) {
-    return html.node`
-        <div class="alert alert-error">
-            ${tl(trans.value_failed_to_load).replace("{v}", tl(trans.select_component))}
-            ${e ? html`<br>${e.message}` : ""}
-        </div>
-    `;
+  function select_prepare_list(list) {
+    return list.map((item) => {
+      if (typeof item === "string") return { value: item, text: item };
+      return item;
+    });
   }
   function custom_select(select2, element_to_append) {
     console.info(select2);
@@ -37861,9 +37863,12 @@
         return elem;
       } else if (type == "list") {
         let render_list_items = function(current = settings[id]) {
-          const available = Object.fromEntries(
-            Object.entries(list).filter(([key]) => !current.includes(key))
-          );
+          let available = current;
+          if (settings_store[id].predefined) {
+            available = Object.fromEntries(
+              Object.entries(list).filter(([key]) => !current.includes(key))
+            );
+          }
           render(lists, html`
                     <div class="setting-list current">
                         ${current.map((val) => {
@@ -37872,18 +37877,59 @@
               const new_list = current.filter((item) => item != val);
               save_setting(id, new_list);
               render_list_items(new_list);
+              if (func) func(new_list);
             }}>
                                     ${list[val]?.icon ? html.node`
                                     <div class="bleh-icon" data-type=${list[val].icon} />
                                     ` : ""}
                                     <div class="info">
-                                        ${list[val]?.name || "???"}
+                                        ${list[val]?.name || val}
                                     </div>
                                     <div class="bleh-icon indicator" data-type="minus" />
                                 </button>
                             `;
           })}
+                        ${!settings_store[id].predefined ? html.node`
+                            <button class="setting-list-item" onclick=${() => {
+            let input_box;
+            dialog({
+              id: `add_to_list_${id}`,
+              title,
+              body: html.node`
+                                        ${input_box = input({
+                focus: true,
+                func: complete_add
+              })}
+                                        <div class="modal-footer">
+                                            <button class="see-more cancel" onclick=${() => dialog_rm({ id: `add_to_list_${id}` })}>
+                                                ${tl(trans.cancel)}
+                                            </button>
+                                            <div class="fill"></div>
+                                            <button class="btn primary icon" data-type="add" onclick=${() => complete_add(input_box.value())}>
+                                                ${tl(trans.add)}
+                                            </button>
+                                        </div>
+                                    `
+            });
+            setTimeout(() => {
+              input_box.focus();
+            }, 1);
+            function complete_add(val) {
+              dialog_rm({ id: `add_to_list_${id}` });
+              const new_list = [...current, val];
+              save_setting(id, new_list);
+              render_list_items(new_list);
+              if (func) func(new_list);
+            }
+          }}>
+                                <div class="info">
+                                    ${tl(trans.add)}
+                                </div>
+                                <div class="bleh-icon indicator" data-type="add" />
+                            </button>
+                        ` : ""}
                     </div>
+                    ${settings_store[id].predefined ? html.node`
                     <div class="setting-list-sep" />
                     <div class="setting-list available">
                         ${Object.entries(available).map(([val, formal]) => {
@@ -37892,6 +37938,7 @@
               const new_list = [...current, val];
               save_setting(id, new_list);
               render_list_items(new_list);
+              if (func) func(new_list);
             }}>
                                     <div class="bleh-icon" data-type=${formal.icon} />
                                     <div class="info">
@@ -37902,9 +37949,10 @@
                             `;
           })}
                     </div>
+                    ` : ""}
                 `);
         };
-        if (!list) return setting_fail(id, { message: "List type requires you to pass available items for matching." });
+        if (!list && settings_store[id].predefined) return setting_fail(id, { message: "List type requires you to pass available items for matching." });
         let lists;
         const elem = html.node`
                 <div class="setting v2" data-type="list">
@@ -37923,6 +37971,65 @@
                 </div>
             `;
         render_list_items(value);
+        return elem;
+      } else if (type == "select") {
+        let update_select = function(val) {
+          if (!elem) return;
+          save_setting(id, val);
+          elem.setAttribute("data-modified", val != settings_store[id].default);
+          if (func) func(val);
+        }, reset_select = function() {
+          menu.set(settings_store[id].default);
+          notify({
+            id: "reset_setting",
+            title: tl(trans.settings),
+            body: tl(trans.reset_item_to_default),
+            icon: "icon-16-settings"
+          });
+        };
+        if (!list) return setting_fail(id, { message: "Select type requires you to pass available items." });
+        if (func) func(value);
+        let reset_btn;
+        let menu;
+        if (list.length === 0) disabled = true;
+        let elem;
+        elem = html.node`
+                <div class="setting v2" data-type="options" disabled=${disabled} data-modified=${value != settings_store[id].default}>
+                    ${icon ? html.node`
+                    <div class="icon">
+                        <div class="bleh-icon" style="--icon: var(--${icon})" />
+                    </div>
+                    ` : ""}
+                    ${text3 ? html.node`
+                    <div class="heading">
+                        <h5>${html_title}<button class="reset" ref=${(el) => reset_btn = el} onclick=${() => reset_select()}>${tl(trans.reset)}</button></h5>
+                        ${body ? html.node`<p>${body}</p>` : ""}
+                    </div>
+                    ` : ""}
+                    ${settings_store[id].extensions ? html.node`
+                    <div class="extensions">
+                        ${settings_store[id].extensions.map((extension) => () => {
+          let container = html.node`
+                                <div class="extension">
+                                    <div class="bleh-icon" />
+                                </div>
+                            `;
+          tippy_esm_default(container, {
+            content: tl(trans.requires_extension_value).replace("{v}", tl(extension))
+          });
+          return container;
+        })}
+                    </div>
+                    ` : ""}
+                    ${setting_incompatible_block(settings_store[id].incompatible)}
+                    ${menu = select(list, "", "", (val) => {
+          update_select(val);
+        })}
+                </div>
+            `;
+        tippy_esm_default(reset_btn, {
+          content: tl(trans.reset)
+        });
         return elem;
       }
     } catch (e) {
@@ -38039,6 +38146,7 @@
     let clone6 = structuredClone(settings);
     for (let setting2 in clone6) {
       if (settings_store[setting2] && JSON.stringify(clone6[setting2]) == JSON.stringify(settings_store[setting2].default)) {
+        log(`dropped ${setting2} as value matches default`, "settings", "log", { value: clone6[setting2], default: settings_store[setting2].default });
         delete clone6[setting2];
       }
     }
@@ -46116,6 +46224,9 @@
     } else if (page_id == "profile") {
       register_skip_to([]);
       const cache2 = await load_profile_cache_externally(auth.name);
+      let friends;
+      let starred;
+      console.info("friends", settings.friends, settings);
       render(page.structure.main, html`
             <section class="bleh--panel">
                 <h4>${tl(trans.banners)}</h4>
@@ -46194,6 +46305,18 @@
                     </div>
                 </div>
             </section>
+            ${ff("friends") ? html.node`
+            <section class="bleh--panel">
+                <h4>${tl(trans.friends)}</h4>
+                <div class="setting-group">
+                    ${friends = setting({ id: "friends", list: settings.friends, func: (val) => {
+        if (!settings.friends.includes(settings.starred_friend)) save_setting("starred_friend", "");
+        render_setting_page("profile");
+      } })}
+                    ${starred = setting({ id: "starred_friend", list: select_prepare_list([{ value: "", text: tl(trans.none) }, ...settings.friends]) })}
+                </div>
+            </section>
+            ` : ""}
             <section class="bleh--panel">
                 <h4>${tl(trans.other)}</h4>
                 <div class="setting-group">
@@ -52499,6 +52622,19 @@
       en: "Friends",
       de: "Freunde",
       pt: "Amigos"
+    },
+    friends_setting: {
+      en: "Keep up to date on what your friends are listening to"
+    },
+    starred_friend: {
+      name: {
+        en: "Starred friend"
+      },
+      body: {
+        en: "View their scrobbles alongside yours at all times",
+        de: "Sehe ihre Scrobbels jederzeit neben deine an",
+        pt: "Veja os scrobbles dele(a) junto aos seus o tempo todo"
+      }
     },
     aka: {
       en: "aka.",
@@ -59798,7 +59934,8 @@
       type: "list",
       title: trans.navigation_items.name,
       body: trans.navigation_items.body,
-      new_release: true
+      new_release: true,
+      predefined: true
     },
     navigation_language: {
       default: true,
@@ -59917,6 +60054,19 @@
       step: 0.01,
       title: trans.lit,
       vertical: true
+    },
+    friends: {
+      default: [],
+      type: "list",
+      title: trans.friends,
+      body: trans.friends_setting,
+      new_release: true
+    },
+    starred_friend: {
+      default: "",
+      type: "select",
+      title: trans.starred_friend.name,
+      body: trans.starred_friend.body
     }
   };
 
@@ -60252,6 +60402,11 @@
         default: false,
         name: "Convert GIFs to static images",
         date: "2025-08-15"
+      },
+      friends: {
+        default: false,
+        name: "Friends system",
+        date: "2025-08-18"
       }
     }
   };

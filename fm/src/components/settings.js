@@ -13,10 +13,12 @@ import {auth, page} from "../build/page.js";
 import {request_reload} from "../config.js";
 import {log} from "../build/log.js";
 import {change_settings_page} from "../pages/bleh_config.js";
-import {dialog_rm} from "./dialog.js";
+import {dialog, dialog_rm} from "./dialog.js";
 import {keybind} from "./rabbit.js";
 import tippy from "tippy.js";
 import { version } from '../main.js';
+import { select } from './select.js';
+import { input } from './input.js';
 
 export function setting({
     id = '',
@@ -446,7 +448,7 @@ export function setting({
 
             return elem;
         } else if (type == 'list') {
-            if (!list) return setting_fail(id, {message: 'List type requires you to pass available items for matching.'});
+            if (!list && settings_store[id].predefined) return setting_fail(id, {message: 'List type requires you to pass available items for matching.'});
 
             let lists;
 
@@ -470,9 +472,12 @@ export function setting({
             render_list_items(value);
 
             function render_list_items(current = settings[id]) {
-                const available = Object.fromEntries(
-                    Object.entries(list).filter(([key]) => !current.includes(key))
-                );
+                let available = current;
+                if (settings_store[id].predefined) {
+                    available = Object.fromEntries(
+                        Object.entries(list).filter(([key]) => !current.includes(key))
+                    );
+                }
 
                 render(lists, html`
                     <div class="setting-list current">
@@ -483,18 +488,65 @@ export function setting({
 
                                     save_setting(id, new_list);
                                     render_list_items(new_list);
+
+                                    if (func) func(new_list);
                                 }}>
                                     ${list[val]?.icon ? html.node`
                                     <div class="bleh-icon" data-type=${list[val].icon} />
                                     ` : ''}
                                     <div class="info">
-                                        ${list[val]?.name || '???'}
+                                        ${list[val]?.name || val}
                                     </div>
                                     <div class="bleh-icon indicator" data-type="minus" />
                                 </button>
                             `;
                         })}
+                        ${!settings_store[id].predefined ? html.node`
+                            <button class="setting-list-item" onclick=${() => {
+                                let input_box;
+
+                                dialog({
+                                    id: `add_to_list_${id}`,
+                                    title,
+                                    body: html.node`
+                                        ${input_box = input({
+                                            focus: true,
+                                            func: complete_add
+                                        })}
+                                        <div class="modal-footer">
+                                            <button class="see-more cancel" onclick=${() => dialog_rm({id: `add_to_list_${id}`})}>
+                                                ${tl(trans.cancel)}
+                                            </button>
+                                            <div class="fill"></div>
+                                            <button class="btn primary icon" data-type="add" onclick=${() => complete_add(input_box.value())}>
+                                                ${tl(trans.add)}
+                                            </button>
+                                        </div>
+                                    `
+                                });
+
+                                setTimeout(() => {
+                                    input_box.focus();
+                                }, 1);
+
+                                function complete_add(val) {
+                                    dialog_rm({id: `add_to_list_${id}`});
+
+                                    const new_list = [...current, val];
+                                    save_setting(id, new_list);
+                                    render_list_items(new_list);
+
+                                    if (func) func(new_list);
+                                }
+                            }}>
+                                <div class="info">
+                                    ${tl(trans.add)}
+                                </div>
+                                <div class="bleh-icon indicator" data-type="add" />
+                            </button>
+                        ` : ''}
                     </div>
+                    ${settings_store[id].predefined ? html.node`
                     <div class="setting-list-sep" />
                     <div class="setting-list available">
                         ${Object.entries(available).map(([val, formal]) => {
@@ -504,6 +556,8 @@ export function setting({
 
                                     save_setting(id, new_list);
                                     render_list_items(new_list);
+
+                                    if (func) func(new_list);
                                 }}>
                                     <div class="bleh-icon" data-type=${formal.icon} />
                                     <div class="info">
@@ -514,7 +568,80 @@ export function setting({
                             `;
                         })}
                     </div>
+                    ` : ''}
                 `);
+            }
+
+            return elem;
+        } else if (type == 'select') {
+            if (!list) return setting_fail(id, {message: 'Select type requires you to pass available items.'});
+
+            if (func) func(value);
+
+            let reset_btn;
+
+            let menu;
+
+            if (list.length === 0) disabled = true;
+
+            let elem;
+            elem = html.node`
+                <div class="setting v2" data-type="options" disabled=${disabled} data-modified=${value != settings_store[id].default}>
+                    ${icon ? html.node`
+                    <div class="icon">
+                        <div class="bleh-icon" style="--icon: var(--${icon})" />
+                    </div>
+                    ` : ''}
+                    ${(text) ? html.node`
+                    <div class="heading">
+                        <h5>${html_title}<button class="reset" ref=${el => reset_btn = el} onclick=${() => reset_select()}>${tl(trans.reset)}</button></h5>
+                        ${(body) ? html.node`<p>${body}</p>` : ''}
+                    </div>
+                    ` : ''}
+                    ${(settings_store[id].extensions) ? html.node`
+                    <div class="extensions">
+                        ${settings_store[id].extensions.map(extension => () => {
+                            let container = html.node`
+                                <div class="extension">
+                                    <div class="bleh-icon" />
+                                </div>
+                            `;
+                            tippy(container, {
+                                content: tl(trans.requires_extension_value).replace('{v}', tl(extension))
+                            });
+                            return container;
+                        })}
+                    </div>
+                    ` : ''}
+                    ${setting_incompatible_block(settings_store[id].incompatible)}
+                    ${menu = select(list, '', '', (val) => {
+                        update_select(val);
+                    })}
+                </div>
+            `;
+
+            tippy(reset_btn, {
+                content: tl(trans.reset)
+            });
+
+            function update_select(val) {
+                if (!elem) return;
+
+                save_setting(id, val);
+
+                elem.setAttribute('data-modified', val != settings_store[id].default);
+
+                if (func) func(val);
+            }
+
+            function reset_select() {
+                menu.set(settings_store[id].default);
+                notify({
+                    id: 'reset_setting',
+                    title: tl(trans.settings),
+                    body: tl(trans.reset_item_to_default),
+                    icon: 'icon-16-settings'
+                });
             }
 
             return elem;
@@ -657,7 +784,7 @@ export function compile_settings() {
 
     for (let setting in clone) {
         if (settings_store[setting] && JSON.stringify(clone[setting]) == JSON.stringify(settings_store[setting].default)) {
-            //log(`dropped ${setting} as value matches default`, 'settings', 'log', {value: clone[setting], default: settings_store[setting].default});
+            log(`dropped ${setting} as value matches default`, 'settings', 'log', {value: clone[setting], default: settings_store[setting].default});
             delete clone[setting];
         }
     }
