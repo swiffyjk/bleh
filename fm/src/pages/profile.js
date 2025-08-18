@@ -82,6 +82,10 @@ export function bleh_profiles() {
         }
 
 
+        const cache = load_profile_cache_externally(auth.name);
+        let pronouns;
+        if (cache.aka) pronouns = use_pronouns(cache.aka);
+
         let expander;
         let redesigned_profile_header = html.node`
             <section class="redesigned-header redesigned-profile-header no-background">
@@ -91,7 +95,24 @@ export function bleh_profiles() {
                 <div class="info-side">
                     <div class="sub-text">${tl(trans.profile)}</div>
                     ${title_wrap ? html.node`<div class="title-container">${title_wrap}</div>` : ''}
-                    ${sub_wrap ? sub_wrap : ''}
+                    ${sub_wrap ? sub_wrap : (cache.aka || cache.created) ? html.node`
+                    <p class="header-title-secondary">
+                        ${cache.aka ? html.node`
+                        <span class="header-title-secondary--pre">
+                            ${pronouns ? tl(trans.account_pronouns) : tl(trans.aka)}
+                        </span>
+                        <span class="header-title-display-name">
+                            ${cache.aka}
+                        </span>
+                        ` : ''}
+                        <span class="header-title-secondary--pre">
+                            ${tl(trans.account_created)}
+                        </span>
+                        <span class="header-scrobble-since">
+                            ${cache.created}
+                        </span>
+                    </p>
+                    ` : ''}
                 </div>
                 <div class="expand-side">
                     <button class="header-expand-button icon" ref=${el => expander = el} onclick=${() => {
@@ -315,41 +336,14 @@ export function bleh_profiles() {
         }
 
         // secondary text
-        let profile_sub_text;
-        if (ff('refreshed_nav'))
-            profile_sub_text = page.structure.container.querySelector('.redesigned-profile-header .header-title-secondary');
-        else
-            profile_sub_text = document.body.querySelector('.header-title-secondary');
-
-        if (profile_sub_text) {
-            let display_name = profile_sub_text.querySelector('.header-title-display-name');
-            let scrobble_since = profile_sub_text.querySelector('.header-scrobble-since');
-            scrobble_since.textContent = scrobble_since.textContent.slice(2).replace(tl(trans.account_scrobbling_since_replace), '');
-
-            /*tippy(display_name, {
-                content: display_name.textContent
-            });*/
-
-            // pronouns?
-            let pronouns = use_pronouns(display_name.textContent);
-
-            let display_name_pre = document.createElement('span');
-            display_name_pre.classList.add('header-title-secondary--pre');
-            display_name_pre.textContent = pronouns ? tl(trans.account_pronouns) : tl(trans.aka);
-            profile_sub_text.insertBefore(display_name_pre, display_name);
-
-            let scrobble_since_pre = document.createElement('span');
-            scrobble_since_pre.classList.add('header-title-secondary--pre');
-            scrobble_since_pre.textContent = tl(trans.account_created);
-            profile_sub_text.insertBefore(scrobble_since_pre, scrobble_since);
-        }
+        const profile_sub_text = page.structure.container.querySelector('.redesigned-profile-header .header-title-secondary');
+        if (profile_sub_text) parse_sub_text(profile_sub_text);
 
         let about_me_sidebar = page.structure.row.querySelector('.about-me-sidebar');
 
         if (!about_me_sidebar) {
             if (settings.bio_markdown) {
                 save_banner_to_cache('none');
-                save_accent_to_cache('none');
             }
 
             about_me_sidebar = html.node`
@@ -1609,13 +1603,15 @@ export function save_profile_cache({
     banner,
     hue,
     sat,
-    lit
+    lit,
+    aka,
+    created
 }={},
 profile_cache=JSON.parse(localStorage.getItem('bleh_profile_cache')) || {},
 name=page.name) {
     let profile_cache_o = Object.keys(profile_cache);
 
-    if (profile_cache_o.length > 300) {
+    if (profile_cache_o.length > 400) {
         // remove first item of object
         let keys = Reflect.ownKeys(profile_cache);
 
@@ -1626,20 +1622,15 @@ name=page.name) {
 
         // them move this to the bottom
         delete profile_cache[name];
+    }
 
-        profile_cache[name] = {
-            banner,
-            hue,
-            sat,
-            lit
-        }
-    } else {
-        profile_cache[name] = {
-            banner,
-            hue,
-            sat,
-            lit
-        }
+    profile_cache[name] = {
+        banner,
+        hue,
+        sat,
+        lit,
+        aka,
+        created
     }
 
     log('saved to cache', 'profile', 'info', {name, cache: profile_cache[name]});
@@ -1687,12 +1678,44 @@ function request_profile_cache(name = page.name) {
             let doc = new DOMParser().parseFromString(dom, 'text/html');
             console.log('DOC', doc);
 
-            let about_me_sidebar = doc.querySelector('.about-me-sidebar');
+            const about_me_sidebar = doc.querySelector('.about-me-sidebar');
             if (about_me_sidebar) {
                 let about_me_text = about_me_sidebar.querySelector('p');
                 bio_parse(about_me_text, true);
             } else {
                 save_profile_cache({});
             }
+
+            const secondary = doc.querySelector('.header-title-secondary');
+            parse_sub_text(secondary);
         });
+}
+
+function parse_sub_text(profile_sub_text) {
+    const display_name = profile_sub_text.querySelector('.header-title-display-name');
+    const scrobble_since = profile_sub_text.querySelector('.header-scrobble-since');
+    scrobble_since.textContent = scrobble_since.textContent.slice(2).replace(tl(trans.account_scrobbling_since_replace), '');
+
+    // pronouns?
+    const pronouns = use_pronouns(display_name.textContent);
+
+    profile_sub_text.insertBefore(html.node`
+        <span class="header-title-secondary--pre">
+            ${pronouns ? tl(trans.account_pronouns) : tl(trans.aka)}
+        </span>
+    `, display_name);
+
+    profile_sub_text.insertBefore(html.node`
+        <span class="header-title-secondary--pre">
+            ${tl(trans.account_created)}
+        </span>
+    `, scrobble_since);
+
+    let profile_cache = JSON.parse(localStorage.getItem('bleh_profile_cache')) || {};
+    let cache = profile_cache[page.name] || {};
+
+    cache.aka = display_name.textContent.trim();
+    cache.created = scrobble_since.textContent.trim();
+
+    save_profile_cache(cache, profile_cache);
 }
