@@ -511,7 +511,9 @@ export function setting({
                                     body: html.node`
                                         ${input_box = input({
                                             focus: true,
-                                            func: complete_add
+                                            func: complete_add,
+                                            warn_if_matches_auth: settings_store[id].warn_if_matches_auth,
+                                            warn_if_empty: true
                                         })}
                                         <div class="modal-footer">
                                             <button class="see-more cancel" onclick=${() => dialog_rm({id: `add_to_list_${id}`})}>
@@ -530,6 +532,8 @@ export function setting({
                                 }, 1);
 
                                 function complete_add(val) {
+                                    if (val == auth.name || val.length < 1) return;
+
                                     dialog_rm({id: `add_to_list_${id}`});
 
                                     const new_list = [...current, val];

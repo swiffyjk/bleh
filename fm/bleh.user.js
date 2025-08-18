@@ -26218,6 +26218,7 @@
     max: max2,
     maxlength,
     warn_if_empty = false,
+    warn_if_matches_auth = false,
     focus = false,
     disabled,
     show_time = true,
@@ -26286,6 +26287,8 @@
           error_input2(tl(trans.this_field_is_required));
         } else if (input_box.value.length > maxlength) {
           error_input2(tl(trans.keep_within_the_range));
+        } else if (warn_if_matches_auth && input_box.value == auth.name) {
+          error_input2(tl(trans.please_dont_clone_yourself));
         }
       }
       if (type == "number" && !skip_most) {
@@ -37862,7 +37865,9 @@
               body: html.node`
                                         ${input_box = input({
                 focus: true,
-                func: complete_add
+                func: complete_add,
+                warn_if_matches_auth: settings_store[id].warn_if_matches_auth,
+                warn_if_empty: true
               })}
                                         <div class="modal-footer">
                                             <button class="see-more cancel" onclick=${() => dialog_rm({ id: `add_to_list_${id}` })}>
@@ -37879,6 +37884,7 @@
               input_box.focus();
             }, 1);
             function complete_add(val) {
+              if (val == auth.name || val.length < 1) return;
               dialog_rm({ id: `add_to_list_${id}` });
               const new_list = [...current, val];
               save_setting(id, new_list);
@@ -52731,7 +52737,7 @@
         pt: "Veja os scrobbles dele(a) junto aos seus o tempo todo"
       },
       notice: {
-        en: "Not seeing the options you\u2018re after? Fill out your friends list in the settings."
+        en: "Not seeing the options you\u2019re after? Fill out your friends list in the settings."
       }
     },
     friend_difference: {
@@ -60190,7 +60196,8 @@
       type: "list",
       title: trans.friends,
       body: trans.friends_setting,
-      new_release: true
+      new_release: true,
+      warn_if_matches_auth: true
     },
     starred_friend: {
       default: "",

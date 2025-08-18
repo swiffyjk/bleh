@@ -359,7 +359,7 @@ export const trans = {
             pt: 'Veja os scrobbles dele(a) junto aos seus o tempo todo'
         },
         notice: {
-            en: 'Not seeing the options you‘re after? Fill out your friends list in the settings.'
+            en: 'Not seeing the options you’re after? Fill out your friends list in the settings.'
         }
     },
     friend_difference: {

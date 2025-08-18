@@ -9,6 +9,7 @@ import {tl, trans} from "../build/trans.js";
 import {log} from "../build/log.js";
 import tippy from "tippy.js";
 import { calendar } from './calendar.js';
+import { auth } from '../build/page.js';
 
 export function input({
     type = 'text',
@@ -18,6 +19,7 @@ export function input({
     max,
     maxlength,
     warn_if_empty = false,
+    warn_if_matches_auth = false,
     focus = false,
     disabled,
     show_time = true,
@@ -102,6 +104,8 @@ export function input({
                 error_input(tl(trans.this_field_is_required));
             } else if (input_box.value.length > maxlength) {
                 error_input(tl(trans.keep_within_the_range));
+            } else if (warn_if_matches_auth && input_box.value == auth.name) {
+                error_input(tl(trans.please_dont_clone_yourself));
             }
         }
 

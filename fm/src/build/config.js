@@ -1174,7 +1174,8 @@ export let settings_store = {
         type: 'list',
         title: trans.friends,
         body: trans.friends_setting,
-        new_release: true
+        new_release: true,
+        warn_if_matches_auth: true
     },
     starred_friend: {
         default: '',
