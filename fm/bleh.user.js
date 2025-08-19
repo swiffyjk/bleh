@@ -24774,8 +24774,11 @@
       "- full length",
       "(full length",
       "[full length",
-      "[over now"
+      "[over now",
       // billie eilish l'amour de ma vie
+      "- the remix",
+      "(the remix",
+      "[the remix"
     ],
     mixes_numbers: [
       "(v1",
@@ -25021,6 +25024,12 @@
       "[reissue",
       "(12 reg. tracks",
       // confessions madonna
+      "- special",
+      "(special",
+      "[special",
+      "- highlights from",
+      "(highlights from",
+      "[highlights from",
       //,
       "- 19",
       "- 20",
