@@ -709,8 +709,8 @@ export let settings_store = {
     },
     colourful_tracks: {
         default: true,
-        title: trans.colourful_tracks.name,
-        body: trans.colourful_tracks.body
+        type: 'checkbox',
+        title: trans.colourful_tracks
     },
     feature_flags: {
         default: {},
@@ -766,8 +766,8 @@ export let settings_store = {
     },
     hue_from_album: {
         default: true,
-        title: trans.hue_from_album.name,
-        body: trans.hue_from_album.body
+        type: 'checkbox',
+        title: trans.hue_from_album
     },
     seasonal: {
         default: true,

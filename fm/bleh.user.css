@@ -192,7 +192,7 @@
         --glass-bg: rgb(255 255 255 / 30%);
         --glass-border: var(--glass-border);
         --glass-shadow: inset 2px 2px 1px 0 rgb(255 255 255 / 10%), inset -1px -1px 1px 1px rgb(255 255 255 / 10%);
-        --glass-filter: blur(25px) saturate(220%);
+        --glass-filter: blur(25px) saturate(var(--blur-saturate));
 
         [data-ff--astra="true"] > & {
             --font: var(--custom_font, ''), Work Sans, Ubuntu Sans, Spline Sans, Inter, Roboto, Noto Sans, Noto Sans JP, Noto Sans KR, Noto Sans TC, var(--font_emoji_name, ''), Lucida Grande, Verdana, Tahoma, -apple-system, BlinkMacSystemFont, sans-serif;
@@ -664,7 +664,9 @@
             --card-shadow: unset;
         }
 
-        --blur-brightness: 0.8;
+        --blur-saturate: 180%;
+        --blur-brightness: 0.6;
+        --blur-contrast: 1;
 
         --modal-bg: hsl(var(--b6), 0.6);
 
@@ -695,7 +697,9 @@
 
             --avatar-generic-background: hsl(var(--b4), 30%);
 
-            --blur-brightness: 2.3;
+            --blur-saturate: 130%;
+            --blur-brightness: 1.4;
+            --blur-contrast: 1;
 
             --view-buttons: hsl(var(--b4), 10%);
 
@@ -709,7 +713,9 @@
 
             --card-border: inset 0 0 0 1px hsla(var(--b4), 0.8);
 
+            --blur-saturate: 180%;
             --blur-brightness: 0.7;
+            --blur-contrast: 1;
 
             --modal-bg: hsl(var(--b3), 0.35);
 
@@ -1330,13 +1336,17 @@
             left: 0;
             top: 0;
             right: 0;
-            height: calc(20px + 32px);
+            height: calc(20px + 32px + 110px);
             z-index: 10;
-            background: linear-gradient(0deg, transparent 0%, hsl(var(--b6)) 100%);
-            pointer-events: none;
 
-            background-repeat: repeat-x;
-            background-position: unset !important;
+            background: linear-gradient(0deg, transparent 74%, hsl(var(--b6)) 100%);
+            backdrop-filter: blur(25px) saturate(var(--blur-saturate)) contrast(var(--blur-contrast));
+            -webkit-backdrop-filter: blur(25px) saturate(var(--blur-saturate)) contrast(var(--blur-contrast));
+            --mask: linear-gradient(0deg, transparent 0%, white 90%);
+            mask-image: var(--mask);
+            -webkit-mask-image: var(--mask);
+
+            pointer-events: none;
 
             transition: opacity 0.3s;
         }
@@ -1358,11 +1368,11 @@
         transition-property: background, background-filter, box-shadow;
         transition-duration: 0.3s;
 
-        &:hover,
+        /*&:hover,
         &.scrolled {
             background: hsla(var(--b5), 80%);
-            backdrop-filter: blur(25px) saturate(220%) brightness(var(--blur-brightness));
-            -webkit-backdrop-filter: blur(25px) saturate(220%) brightness(var(--blur-brightness));
+            backdrop-filter: blur(25px) saturate(var(--blur-saturate)) contrast(var(--blur-contrast));
+            -webkit-backdrop-filter: blur(25px) saturate(var(--blur-saturate)) contrast(var(--blur-contrast));
             border-color: var(--card-border-base);
             box-shadow: var(--card-shadow);
 
@@ -1372,7 +1382,7 @@
             &:before {
                 opacity: 0;
             }
-        }
+        }*/
 
         .mobile-controls {
             display: none;
@@ -10630,8 +10640,8 @@
         padding: var(--card-padding);
         position: relative;
 
-        backdrop-filter: blur(25px) saturate(240%) brightness(var(--blur-brightness));
-        -webkit-backdrop-filter: blur(25px) saturate(240%) brightness(var(--blur-brightness));
+        backdrop-filter: blur(25px) saturate(240%) contrast(var(--blur-contrast));
+        -webkit-backdrop-filter: blur(25px) saturate(240%) contrast(var(--blur-contrast));
 
         display: flex;
         flex-direction: column;
@@ -12264,8 +12274,8 @@
     .tooltip-dark,
     .user-dashboard-tooltip {
         background: hsla(var(--b8), 80%);
-        backdrop-filter: blur(30px) saturate(240%) brightness(var(--blur-brightness));
-        -webkit-backdrop-filter: blur(30px) saturate(240%) brightness(var(--blur-brightness));
+        backdrop-filter: blur(30px) saturate(240%) contrast(var(--blur-contrast));
+        -webkit-backdrop-filter: blur(30px) saturate(240%) contrast(var(--blur-contrast));
         border-radius: var(--item-big-radius);
         box-shadow: inset 0 0 0 1px var(--card-border-base), var(--card-shadow);
         padding: 5px 12px;
@@ -17976,7 +17986,7 @@
             &:hover {
                 &:before {
                     border-width: 2px;
-                    border-color: hsl(var(--h2));
+                    border-color: hsl(var(--l2-c));
                 }
             }
 
@@ -17992,7 +18002,7 @@
             [data-bleh--inbuilt-id_message_privacy="f"] &#primary-selection-receiving_msgs-follow {
                 &:before {
                     border-width: 4px;
-                    border-color: hsl(var(--h3));
+                    border-color: hsl(var(--l3-c));
                     background: hsl(var(--b9));
                 }
             }
@@ -26174,13 +26184,13 @@
         .setting > .info > & {
             .theme-bubble {
                 .bubble {
-                    width: 60px;
-                    height: 40px;
+                    width: 54px;
+                    height: 34px;
                     border-radius: var(--item-big-radius);
 
                     .inner {
                         .bleh-icon {
-                            --icon-size: 20px;
+                            --icon-size: 18px;
                         }
                     }
                 }

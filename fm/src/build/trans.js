@@ -539,27 +539,14 @@ export const trans = {
         de: 'Farben',
         pt: 'Colorir'
     },
+    change_my_colour_when: {
+        en: 'Change my accent colour when'
+    },
     hue_from_album: {
-        name: {
-            en: 'Colour album pages based on album art',
-            pt: 'Colore páginas de álbuns com base na capa'
-        },
-        body: {
-            en: 'Highlights the primary colour from the album art to replace your colour temporarily',
-            pt: 'Destaca a cor primária da capa do álbum para substituir sua cor temporariamente'
-        }
+        en: 'Browsing album pages'
     },
     colourful_tracks: {
-        name: {
-            en: 'Colour active track based on album art',
-            de: 'Farbe des aktiven Titels basierend auf dem Albumcover',
-            pt: 'Colore a faixa atual com base na capa'
-        },
-        body: {
-            en: 'Highlights the primary colour from the album art for the individual track',
-            de: 'Hebt die Farbe des Albumcovers für den einzelnen Titel hervor',
-            pt: 'Realça a cor primária da capa para a faixa atual'
-        }
+        en: 'Actively scrobbling a track'
     },
     configure: {
         en: 'Configure',

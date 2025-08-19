@@ -45775,8 +45775,15 @@
                             <div id="colour_palette" class="swatch-group palette"></div>
                         </div>
                     </div>
-                    ${setting({ id: "hue_from_album" })}
-                    ${setting({ id: "colourful_tracks" })}
+                    <div class="setting" data-type="options">
+                        <div class="heading">
+                            <h5>${tl(trans.change_my_colour_when)}</h5>
+                        </div>
+                        <div class="primary-selections">
+                            ${setting({ id: "hue_from_album", standalone: true })}
+                            ${setting({ id: "colourful_tracks", standalone: true })}
+                        </div>
+                    </div>
                     ${ff("card_saturation") ? setting({ id: "sat_bg" }) : ""}
                 </div>
             </section>
@@ -52076,6 +52083,7 @@
     detect_scroll();
     function detect_scroll() {
       const scroll = window.scrollY;
+      return;
       if (scroll > 30)
         masthead.classList.add("scrolled");
       else
@@ -52926,27 +52934,14 @@
       de: "Farben",
       pt: "Colorir"
     },
+    change_my_colour_when: {
+      en: "Change my accent colour when"
+    },
     hue_from_album: {
-      name: {
-        en: "Colour album pages based on album art",
-        pt: "Colore p\xE1ginas de \xE1lbuns com base na capa"
-      },
-      body: {
-        en: "Highlights the primary colour from the album art to replace your colour temporarily",
-        pt: "Destaca a cor prim\xE1ria da capa do \xE1lbum para substituir sua cor temporariamente"
-      }
+      en: "Browsing album pages"
     },
     colourful_tracks: {
-      name: {
-        en: "Colour active track based on album art",
-        de: "Farbe des aktiven Titels basierend auf dem Albumcover",
-        pt: "Colore a faixa atual com base na capa"
-      },
-      body: {
-        en: "Highlights the primary colour from the album art for the individual track",
-        de: "Hebt die Farbe des Albumcovers f\xFCr den einzelnen Titel hervor",
-        pt: "Real\xE7a a cor prim\xE1ria da capa para a faixa atual"
-      }
+      en: "Actively scrobbling a track"
     },
     configure: {
       en: "Configure",
@@ -59740,8 +59735,8 @@
     },
     colourful_tracks: {
       default: true,
-      title: trans.colourful_tracks.name,
-      body: trans.colourful_tracks.body
+      type: "checkbox",
+      title: trans.colourful_tracks
     },
     feature_flags: {
       default: {},
@@ -59797,8 +59792,8 @@
     },
     hue_from_album: {
       default: true,
-      title: trans.hue_from_album.name,
-      body: trans.hue_from_album.body
+      type: "checkbox",
+      title: trans.hue_from_album
     },
     seasonal: {
       default: true,

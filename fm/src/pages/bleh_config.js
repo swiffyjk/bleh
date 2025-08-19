@@ -513,8 +513,15 @@ export async function render_setting_page(page_id) {
                             <div id="colour_palette" class="swatch-group palette"></div>
                         </div>
                     </div>
-                    ${setting({id: 'hue_from_album'})}
-                    ${setting({id: 'colourful_tracks'})}
+                    <div class="setting" data-type="options">
+                        <div class="heading">
+                            <h5>${tl(trans.change_my_colour_when)}</h5>
+                        </div>
+                        <div class="primary-selections">
+                            ${setting({id: 'hue_from_album', standalone: true})}
+                            ${setting({id: 'colourful_tracks', standalone: true})}
+                        </div>
+                    </div>
                     ${ff('card_saturation') ? setting({id: 'sat_bg'}) : ''}
                 </div>
             </section>

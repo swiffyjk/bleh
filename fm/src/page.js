@@ -387,6 +387,8 @@ function load_page() {
     function detect_scroll() {
         const scroll = window.scrollY;
 
+        return;
+
         if (scroll > 30)
             masthead.classList.add('scrolled');
         else
