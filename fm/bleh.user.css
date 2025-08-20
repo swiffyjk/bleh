@@ -26876,4 +26876,10 @@
         box-shadow: var(--primary-shadow);
         border-radius: var(--item-med-radius);
     }
+
+    .social-links-container {
+        padding-top: var(--card-gap);
+        margin-top: var(--card-gap);
+        border-top: 1px dotted var(--card-border-base);
+    }
 }

@@ -28,7 +28,8 @@ export function markdown(text, {
     allow_icons = false,
     allow_hue = false,
     take_effect = true,
-    cache = true
+    cache = true,
+    allow_socials = false
 }={}) {
     log('rendering', 'markdown', 'log', {text});
 
@@ -44,6 +45,8 @@ export function markdown(text, {
     let hue;
     let sat;
     let lit;
+
+    let links = [];
 
 
     const banner = () => [{
@@ -110,6 +113,56 @@ export function markdown(text, {
         }
     }];
 
+    // retrieves social links if a user supplies them
+    const social_links = () => [{
+        type: 'lang',
+        regex: /\[links\]([\s\S]*?)\[\/links\]/g,
+        replace: (_, content) => {
+            const lines = content.trim().split(/\n+/);
+
+            lines.forEach(line => {
+                line = line.trim();
+                if (!line) return;
+                console.info('line', line, line.trim());
+
+                const markdown_regex = line.match(/^\[(.+?)\]\((.+?)\)$/);
+
+                let url;
+                let name;
+
+                if (markdown_regex) {
+                    url = markdown_regex[2].trim();
+                    name = markdown_regex[1].trim();
+                } else {
+                    url = line;
+                }
+
+                try {
+                    const link = new URL(url, `https://www.last.fm${root}`);
+                    const hostname = link.hostname;
+                    const protocol = link.protocol;
+
+                    console.info('proto', protocol, link);
+
+                    if (protocol != 'http:' && protocol != 'https:') return;
+
+                    let final = {
+                        host: hostname,
+                        url: link.href
+                    }
+
+                    if (name) final.name = DOMPurify.sanitize(name, {ALLOWED_TAGS: []});
+
+                    links.push(final);
+                } catch(e) {
+                    return;
+                }
+            });
+
+            return '';
+        }
+    }];
+
     let extensions = [
         aligner()
     ];
@@ -117,6 +170,7 @@ export function markdown(text, {
     if (allow_banners) extensions.push(banner());
     if (allow_icons) extensions.push(icons());
     if (allow_hue) extensions.push(accent());
+    if (allow_socials) extensions.push(social_links());
 
     const converter = new showdown.Converter({
         extensions,
@@ -176,6 +230,40 @@ export function markdown(text, {
     });
 
     const body = html.node([parsed]);
+
+    let link_strings = {
+        'x.com': 'X',
+        'twitter.com': 'Twitter',
+        'github.com': 'GitHub'
+    }
+
+    if (links.length > 0) {
+        body.appendChild(html.node`
+            <div class="social-links-container">
+                <div class="sub-text music-small-header">
+                    ${tl(trans.links)}
+                </div>
+                <div class="music-links social-links">
+                    ${links.map(link => {
+                        console.info('links link', link);
+                        let label = link.host;
+
+                        if (link.name) {
+                            label = link.name;
+                        } else if (link_strings.hasOwnProperty(link.host)) {
+                            label = link_strings[link.host];
+                        }
+
+                        return html.node`
+                            <a class="play-this-track-playlink music-link social-link" href=${link.url} target="_blank" data-host=${link.host}>
+                                ${label}
+                            </a>
+                        `;
+                    })}
+                </div>
+            </div>
+        `);
+    }
 
     patch_wiki_contents(body);
 

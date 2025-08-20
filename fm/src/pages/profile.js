@@ -1493,7 +1493,8 @@ function bio_parse(text, cache = true) {
         allow_banners: true,
         allow_icons: true,
         allow_hue: true,
-        cache
+        cache,
+        allow_socials: true
     }));
 
     const banner = temp.querySelector('img[alt="banner"]');

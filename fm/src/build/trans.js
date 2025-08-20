@@ -553,6 +553,9 @@ export const trans = {
         de: 'Konfigurieren',
         pt: 'Configurar'
     },
+    links: {
+        en: 'Links'
+    },
     //sounds kinda weird so i changed back to english as the final version for event ; german festival sites use 'line-up' aswell so ill stick to that ~stel
     event: {
         en: 'Event',

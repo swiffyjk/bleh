@@ -476,7 +476,8 @@ function patch_settings_profile_panel(token, update_picture) {
         allow_banners: true,
         allow_icons: true,
         allow_hue: true,
-        take_effect: false
+        take_effect: false,
+        allow_socials: true
     }
 
     let banner_setting;
