@@ -1314,12 +1314,12 @@
         left: 0;
         right: 0;
         top: 0 !important;
+        background: linear-gradient(0deg, transparent 24%, hsl(var(--b6)) 100%) !important;
         height: calc(20px + 32px) !important; /* macOS */
         display: flex !important;
         justify-content: center;
         align-items: center;
         z-index: 9990; /* place below windows to avoid duplicates */
-        border-bottom: 1px solid transparent;
 
         /* v2 */
         .masthead-pro-wrap {
@@ -1339,10 +1339,9 @@
             height: calc(20px + 32px + 110px);
             z-index: 10;
 
-            background: linear-gradient(0deg, transparent 74%, hsl(var(--b6)) 100%);
             backdrop-filter: blur(25px) saturate(var(--blur-saturate)) contrast(var(--blur-contrast));
             -webkit-backdrop-filter: blur(25px) saturate(var(--blur-saturate)) contrast(var(--blur-contrast));
-            --mask: linear-gradient(0deg, transparent 0%, white 90%);
+            --mask: linear-gradient(0deg, transparent 30%, white 90%);
             mask-image: var(--mask);
             -webkit-mask-image: var(--mask);
 
