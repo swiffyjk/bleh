@@ -698,8 +698,8 @@
             --avatar-generic-background: hsl(var(--b4), 30%);
 
             --blur-saturate: 130%;
-            --blur-brightness: 1.4;
-            --blur-contrast: 1;
+            --blur-brightness: 2.5;
+            --blur-contrast: 2;
 
             --view-buttons: hsl(var(--b4), 10%);
 
@@ -1339,8 +1339,8 @@
             height: calc(20px + 32px + 110px);
             z-index: 10;
 
-            backdrop-filter: blur(25px) saturate(var(--blur-saturate)) contrast(var(--blur-contrast));
-            -webkit-backdrop-filter: blur(25px) saturate(var(--blur-saturate)) contrast(var(--blur-contrast));
+            backdrop-filter: blur(35px) saturate(var(--blur-saturate)) contrast(var(--blur-contrast));
+            -webkit-backdrop-filter: blur(35px) saturate(var(--blur-saturate)) contrast(var(--blur-contrast));
             --mask: linear-gradient(0deg, transparent 30%, white 90%);
             mask-image: var(--mask);
             -webkit-mask-image: var(--mask);
@@ -1668,6 +1668,10 @@
         height: 32px !important;
         display: flex !important;
         align-items: center;
+
+        &:not(:hover, [aria-expanded="true"]) {
+            filter: drop-shadow(0 1px 4px hsl(var(--b5))) !important;
+        }
 
         &:not(.masthead-nav-control):after {
             display: none !important;
