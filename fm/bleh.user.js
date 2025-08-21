@@ -25550,7 +25550,7 @@
     name: "",
     user: "",
     inbuilt: false
-  }, on_avatar = false, long = false) {
+  }, on_avatar = false, long = false, small = false) {
     const classlist = on_avatar ? "avatar-status-dot" : "label no-hover";
     let elem = html.node`
         <span class=${classlist}>
@@ -25568,7 +25568,7 @@
     } else {
       elem.classList.add(`user-status--bleh-${badge.type}`, `user-status--bleh-user-${badge.user}`);
     }
-    if (on_avatar) return elem;
+    if (on_avatar || small) return elem;
     tippy_esm_default(elem, {
       theme: "badge",
       placement: "bottom",
@@ -43081,8 +43081,12 @@
   }
   async function load_profile_cache_externally(name = page.name) {
     if (!name) return;
+    log(`requested profile cache for ${name}`, "cache");
     let profile_cache = JSON.parse(localStorage.getItem("bleh_profile_cache")) || {};
-    if (profile_cache[name]) return profile_cache[name];
+    if (profile_cache[name]) {
+      log(`returning pre-cached result for ${name}`, "cache", "info", { cache: profile_cache[name] });
+      return profile_cache[name];
+    }
     return await request_profile_cache(name);
   }
   function load_profile_cache(name = page.name, cache2 = null, profile_cache = null) {
@@ -43103,6 +43107,7 @@
     return request_profile_cache(name, cache2, profile_cache);
   }
   function request_profile_cache(name = page.name, cache2 = null, profile_cache = null) {
+    log(`requesting fetch of profile cache for ${name}`, "info");
     if (!profile_cache) profile_cache = JSON.parse(localStorage.getItem("bleh_profile_cache")) || {};
     if (!cache2) cache2 = profile_cache[name] || {};
     return new Promise((resolve2, reject) => {
@@ -48581,9 +48586,7 @@
     `);
     let badges = load_badges(auth.name, true);
     if (badges) {
-      auth_link2.appendChild(html.node`
-            <span class="label user-status--bleh-${badges[0].type} user-status--bleh-user-${auth.name} auth-badge">${badges[0].name}</span>
-        `);
+      auth_link2.appendChild(create_badge(badges[0], false, false, true));
     } else if (auth.pro) {
       auth_link2.appendChild(html.node`
             <span class="label user-status-subscriber auth-badge">${tl(trans.badges["user-status-subscriber"].name)}</span>
@@ -51388,7 +51391,10 @@
   function parse_shout_queue() {
     if (shout_parse_queue.length === 0) return;
     const shout = shout_parse_queue.shift();
-    const parsed2 = markdown(shout.element.textContent);
+    const parsed2 = markdown(shout.element.textContent, {
+      cache: false,
+      take_effect: false
+    });
     shout.element.classList.add("markdown-body");
     render(shout.element, html.node`${parsed2}`);
     log("parsed one shout", "shout", "log");

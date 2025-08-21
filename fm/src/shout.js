@@ -305,7 +305,10 @@ export function parse_shout_queue() {
 
     const shout = shout_parse_queue.shift();
 
-    const parsed = markdown(shout.element.textContent);
+    const parsed = markdown(shout.element.textContent, {
+        cache: false,
+        take_effect: false
+    });
 
     shout.element.classList.add('markdown-body');
     render(shout.element, html.node`${parsed}`);

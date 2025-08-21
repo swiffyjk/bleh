@@ -1339,8 +1339,8 @@
             height: calc(20px + 32px + 110px);
             z-index: 10;
 
-            backdrop-filter: blur(35px) saturate(var(--blur-saturate)) contrast(var(--blur-contrast));
-            -webkit-backdrop-filter: blur(35px) saturate(var(--blur-saturate)) contrast(var(--blur-contrast));
+            backdrop-filter: blur(35px) saturate(var(--blur-saturate)) brightness(var(--blur-brightness)) contrast(var(--blur-contrast));
+            -webkit-backdrop-filter: blur(35px) saturate(var(--blur-saturate)) brightness(var(--blur-brightness)) contrast(var(--blur-contrast));
             --mask: linear-gradient(0deg, transparent 30%, white 90%);
             mask-image: var(--mask);
             -webkit-mask-image: var(--mask);
@@ -1370,8 +1370,8 @@
         /*&:hover,
         &.scrolled {
             background: hsla(var(--b5), 80%);
-            backdrop-filter: blur(25px) saturate(var(--blur-saturate)) contrast(var(--blur-contrast));
-            -webkit-backdrop-filter: blur(25px) saturate(var(--blur-saturate)) contrast(var(--blur-contrast));
+            backdrop-filter: blur(25px) saturate(var(--blur-saturate)) brightness(var(--blur-brightness)) contrast(var(--blur-contrast));
+            -webkit-backdrop-filter: blur(25px) saturate(var(--blur-saturate)) brightness(var(--blur-brightness)) contrast(var(--blur-contrast));
             border-color: var(--card-border-base);
             box-shadow: var(--card-shadow);
 
@@ -2302,6 +2302,9 @@
             justify-content: center;
             width: 100%;
             background: hsl(var(--b5));
+
+            /*backdrop-filter: blur(25px) saturate(var(--blur-saturate)) brightness(var(--blur-brightness)) contrast(var(--blur-contrast));
+            -webkit-backdrop-filter: blur(25px) saturate(var(--blur-saturate)) brightness(var(--blur-brightness)) contrast(var(--blur-contrast));*/
 
             [data-short="true"] > & {
                 flex-direction: column;
@@ -4284,7 +4287,7 @@
 
 
     /*     PROFILE LABEL     */
-    .label.auth-badge, .badges .label,
+    .auth-link > .label, .badges .label,
     .title-container .label, .header-new-on-tour {
         /*width: 100%;*/
         max-width: var(--icon-size);
@@ -4321,7 +4324,7 @@
             transition-delay: 0.2s;
         }
 
-        &:not(.auth-badge, .no-hover):hover {
+        &:not(.no-hover):hover {
             max-width: 220px;
             padding-right: 6px;
             background-color: hsla(var(--h4), 30%) !important;
@@ -4349,13 +4352,19 @@
                 background-color: var(--bg-hov) !important;
                 transition-duration: 0s !important;
             }
-        }
 
-        &.auth-badge {
-            padding-left: 16px;
-            --mask-size: 16px;
-            width: 16px;
-            height: 16px;
+            .auth-link > & {
+                padding-left: 16px;
+                --mask-size: 16px;
+                width: 16px;
+                height: 16px;
+
+                --bg: transparent;
+                --bg-hov: transparent;
+                border-radius: 0 !important;
+                backdrop-filter: none !important;
+                -webkit-backdrop-filter: none !important;
+            }
         }
     }
 
@@ -8078,7 +8087,7 @@
     .gallery-placeholder:before,
     .image-list-item-bookmarked:after, .image-list-item-preferred:after, .obsessions-item:after,
     .data-loading:after, .lazy-shoutbox.async-content-loading:after, .loading:not(.library-fetch, .library-date-picker):after,
-    .user-list-inner-wrap .label:before, .label.auth-badge:before,
+    .user-list-inner-wrap .label:before, .auth-link > .label:before,
     .nag-bar-message:before,
     /*     BLEH     */
     .arrow-divider:before,
@@ -10643,8 +10652,8 @@
         padding: var(--card-padding);
         position: relative;
 
-        backdrop-filter: blur(25px) saturate(240%) contrast(var(--blur-contrast));
-        -webkit-backdrop-filter: blur(25px) saturate(240%) contrast(var(--blur-contrast));
+        backdrop-filter: blur(25px) saturate(var(--blur-saturate)) brightness(var(--blur-brightness)) contrast(var(--blur-contrast));
+        -webkit-backdrop-filter: blur(25px) saturate(var(--blur-saturate)) brightness(var(--blur-brightness)) contrast(var(--blur-contrast));
 
         display: flex;
         flex-direction: column;
@@ -12277,8 +12286,8 @@
     .tooltip-dark,
     .user-dashboard-tooltip {
         background: hsla(var(--b8), 80%);
-        backdrop-filter: blur(30px) saturate(240%) contrast(var(--blur-contrast));
-        -webkit-backdrop-filter: blur(30px) saturate(240%) contrast(var(--blur-contrast));
+        backdrop-filter: blur(30px) saturate(var(--blur-saturate)) brightness(var(--blur-brightness)) contrast(var(--blur-contrast));
+        -webkit-backdrop-filter: blur(30px) saturate(var(--blur-saturate)) brightness(var(--blur-brightness)) contrast(var(--blur-contrast));
         border-radius: var(--item-big-radius);
         box-shadow: inset 0 0 0 1px var(--card-border-base), var(--card-shadow);
         padding: 5px 12px;

@@ -212,9 +212,7 @@ export function append_nav() {
     let badges = load_badges(auth.name, true);
 
     if (badges) {
-        auth_link.appendChild(html.node`
-            <span class="label user-status--bleh-${badges[0].type} user-status--bleh-user-${auth.name} auth-badge">${badges[0].name}</span>
-        `);
+        auth_link.appendChild(create_badge(badges[0], false, false, true));
     } else if (auth.pro) {
         auth_link.appendChild(html.node`
             <span class="label user-status-subscriber auth-badge">${tl(trans.badges['user-status-subscriber'].name)}</span>

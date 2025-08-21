@@ -74,7 +74,7 @@ export function create_badge(badge={
     name: '',
     user: '',
     inbuilt: false
-}, on_avatar = false, long = false) {
+}, on_avatar = false, long = false, small = false) {
     const classlist = on_avatar ? 'avatar-status-dot' : 'label no-hover';
 
     let elem = html.node`
@@ -97,7 +97,7 @@ export function create_badge(badge={
         elem.classList.add(`user-status--bleh-${badge.type}`, `user-status--bleh-user-${badge.user}`);
     }
 
-    if (on_avatar) return elem;
+    if (on_avatar || small) return elem;
 
     tippy(elem, {
         theme: 'badge',

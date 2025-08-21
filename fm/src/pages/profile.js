@@ -1674,9 +1674,14 @@ export function open_starred_friend_window() {
 export async function load_profile_cache_externally(name = page.name) {
     if (!name) return;
 
+    log(`requested profile cache for ${name}`, 'cache');
+
     let profile_cache = JSON.parse(localStorage.getItem('bleh_profile_cache')) || {};
 
-    if (profile_cache[name]) return profile_cache[name];
+    if (profile_cache[name]) {
+        log(`returning pre-cached result for ${name}`, 'cache', 'info', {cache: profile_cache[name]});
+        return profile_cache[name];
+    }
 
     return await request_profile_cache(name);
 }
@@ -1705,6 +1710,8 @@ function load_profile_cache(name = page.name, cache=null, profile_cache=null) {
 }
 
 function request_profile_cache(name = page.name, cache=null, profile_cache=null) {
+    log(`requesting fetch of profile cache for ${name}`, 'info');
+
     if (!profile_cache) profile_cache = JSON.parse(localStorage.getItem('bleh_profile_cache')) || {};
     if (!cache) cache = profile_cache[name] || {};
 
