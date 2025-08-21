@@ -41472,7 +41472,7 @@
                         </div>
                     </div>
                     ${toggle({
-      value: original_settings.marketing_emails.value,
+      value: original_settings.marketing_emails.checked,
       name: original_settings.marketing_emails.name,
       title: tl(trans.marketing_emails.name),
       body: tl(trans.marketing_emails.body),
