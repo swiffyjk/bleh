@@ -3639,6 +3639,31 @@ export const trans = {
     },
     visit: {
         en: 'Visit'
+    },
+    auto_correct_scrobbles: {
+        name: {
+            en: 'Auto correct and redirect scrobbles'
+        },
+        body: {
+            en: 'Changes artist names based on the legacy Last.fm redirect system pre-2015, causes many issues'
+        },
+        warning: {
+            en: 'This setting should be turned off to ensure scrobbles are correctly stored for each artist.'
+        }
+    },
+    timezone: {
+        en: 'Timezone'
+    },
+    location: {
+        name: {
+            en: 'Location'
+        },
+        body: {
+            en: 'Last.fm uses your location for event recommendations and local music data'
+        }
+    },
+    event_radius: {
+        en: 'Event search radius'
     }
 }
 

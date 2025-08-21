@@ -71,6 +71,8 @@ export function bleh_native_settings() {
         bleh_auto_edits();
     } else if (page.subpage == 'account_overview') {
         bleh_accounts();
+    } else if (page.subpage == 'website') {
+        bleh_website();
     } else if (page.subpage == 'change-username_overview') {
         bleh_name_change();
     } else if (page.subpage == 'applications_overview') {
@@ -1310,7 +1312,7 @@ function bleh_accounts() {
                             <h5>${tl(trans.email_language)}</h5>
                         </div>
                         <div class="select-wrap custom-selector">
-                            ${select(select_prepare(original_settings.email_language), original_settings.email_language.value)}
+                            ${select(select_prepare(original_settings.email_language), original_settings.email_language.value, original_settings.email_language.name)}
                         </div>
                     </div>
                     ${toggle({
@@ -1368,6 +1370,90 @@ function bleh_name_change() {
     let token = page.structure.row.querySelector('[name="csrfmiddlewaretoken"]').getAttribute('value');
 
     return;
+}
+
+function bleh_website() {
+    const token = page.structure.row.querySelector('[name="csrfmiddlewaretoken"]').getAttribute('value');
+
+    const auto_correct = page.structure.main.querySelector('[name="corrections_enabled"]');
+
+    const timezone = page.structure.main.querySelector('[name="timezone"]');
+    const help_text = page.structure.main.querySelector('.js-field-help-text');
+
+    const location = page.structure.main.querySelector('[data-require="components/location-form-field-v2"]');
+
+    const radius = page.structure.main.querySelector('[name="event_radius"]');
+
+    let timezone_text;
+    page.structure.main.insertBefore(html.node`
+        <form class="dont-move" action="${root}settings/website" method="post">
+            <input type="hidden" name="csrfmiddlewaretoken" value="${token}">
+            <section class="bleh--panel">
+                <h4>${tl(trans.website)}</h4>
+                <div class="setting-group">
+                    ${toggle({
+                        value: auto_correct.checked,
+                        name: auto_correct.name,
+                        title: tl(trans.auto_correct_scrobbles.name),
+                        body: tl(trans.auto_correct_scrobbles.body),
+                        standalone: false
+                    })}
+                </div>
+                <div class="alert alert-danger">
+                    ${tl(trans.auto_correct_scrobbles.warning)}
+                </div>
+            </section>
+            <section class="bleh--panel">
+                <h4>${tl(trans.events)}</h4>
+                <div class="setting-group">
+                    <div class="setting v2" data-type="select">
+                        <div class="heading">
+                            <h5>${tl(trans.timezone)}</h5>
+                            <p ref=${el => timezone_text = el}>${help_text.textContent.trim()}</p>
+                        </div>
+                        ${select(select_prepare(timezone), timezone.value, timezone.name, (val) => {
+                            fetch(`${root}settings/partial/timezone-help-text?tz=${val}&ajax=1`)
+                                .then(res => res.text())
+                                .then(dom => {
+                                    const parser = new DOMParser();
+                                    const doc = parser.parseFromString(dom, 'text/html');
+
+                                    const text = doc.querySelector('p');
+                                    if (!text) return;
+
+                                    timezone_text.textContent = text.textContent;
+                                })
+                                .catch(e => log('unable to get text', 'timezone', 'error', {e}))
+                        })}
+                    </div>
+                    <div class="setting v2" data-type="action">
+                        <div class="heading">
+                            <h5>${tl(trans.location.name)}</h5>
+                            <p>${tl(trans.location.body)}</p>
+                        </div>
+                        <div class="toggle-wrap">
+                            ${location}
+                        </div>
+                    </div>
+                    <div class="setting v2" data-type="select">
+                        <div class="heading">
+                            <h5>${tl(trans.event_radius)}</h5>
+                        </div>
+                        ${select(select_prepare(radius), radius.value, radius.name)}
+                    </div>
+                </div>
+                <div class="settings-footer">
+                    <button type="submit" class="btn-primary save">
+                        ${tl(trans.save)}
+                    </button>
+                    <input type="hidden" value="website" name="submit">
+                </div>
+            </section>
+        </form>
+    `, page.structure.main.firstElementChild);
+
+    const website = page.structure.main.querySelector('#website');
+    website.remove();
 }
 
 function bleh_applications() {

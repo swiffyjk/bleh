@@ -2397,10 +2397,17 @@
         margin-top: var(--card-gap) !important;
         padding: var(--card-padding) 0;
 
+        & > form.dont-move {
+            display: flex;
+            flex-direction: column;
+            gap: var(--card-gap);
+        }
+
         &.col-main {
             display: flex;
             flex-direction: column;
 
+            & > form > section,
             & > div,
             & > section {
                 margin-top: unset !important;
@@ -2435,7 +2442,7 @@
         }
 
         .lastfm-ad,
-        & > form {
+        & > form:not(.dont-move) {
             order: 10;
             margin-top: unset;
         }
@@ -17397,6 +17404,7 @@
             box-shadow: var(--group-shadow);
             width: 100%;
 
+            & > form > .setting,
             & > .setting {
                 &:first-child {
                     border-top-left-radius: var(--item-big-radius);
@@ -17414,9 +17422,10 @@
             margin: -12px !important;
         }
 
+        & > form > .setting,
         & > .setting {
             & + .setting {
-                margin-top: calc(-12px + 1px + 12px);
+                margin-top: calc(-12px + 1px + 12px) !important;
 
                 &:after {
                     content: '';
@@ -17460,7 +17469,7 @@
 
         &:not(.standalone) {
             padding: 12px;
-            margin: -12px;
+            margin: -12px !important;
         }
 
         .setting-group.blend > & {
