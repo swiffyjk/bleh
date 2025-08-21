@@ -9,13 +9,14 @@ export function toggle({
     small = '',
     disabled = false,
     data = '',
-    func = null
+    func = null,
+    standalone = true
 }) {
     let checkbox;
     let state;
 
     let elem = html.node`
-        <div class="setting standalone" data-type=${type} onclick=${() => {
+        <div class="setting ${standalone ? 'standalone' : ''}" data-type=${type} onclick=${() => {
             if (disabled) return;
 
             let current = checkbox.checked;

@@ -29,7 +29,8 @@ export function markdown(text, {
     allow_hue = false,
     take_effect = true,
     cache = true,
-    allow_socials = false
+    allow_socials = false,
+    name = page.name
 }={}) {
     log('rendering', 'markdown', 'log', {text});
 
@@ -333,7 +334,7 @@ export function markdown(text, {
     }
 
     log('finalised cache from markdown parsing', 'markdown', 'info', {cache});
-    if (cache && will_cache) save_profile_cache(cache, profile_cache);
+    if (cache && will_cache) save_profile_cache(cache, profile_cache, name);
 
     return body;
 }

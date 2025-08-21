@@ -27,7 +27,9 @@ export function bleh_users() {
         if (md) {
             render(md, markdown(md.textContent, {
                 allow_headers: true,
-                line_breaks: false
+                line_breaks: false,
+                cache: false,
+                take_effect: false
             }));
         }
     });

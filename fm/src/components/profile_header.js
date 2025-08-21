@@ -334,6 +334,8 @@ export function create_profile_top_item(parent, {name, link, text='', type, new_
 }
 
 function friends_button(parent) {
+    return;
+
     let friend_state = settings.friends.includes(page.name);
     let star_state = settings.starred_friend == page.name;
 

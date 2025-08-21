@@ -20,6 +20,7 @@ import { settings, settings_store } from '../build/config';
 import { input } from '../components/input';
 import { hex_to_hsl } from '../build/tools';
 import { log } from '../build/log';
+import { toggle } from '../components/toggle';
 
 let cropper;
 
@@ -172,40 +173,41 @@ function patch_settings_charts_panel(token) {
                     </div>
                 </div>
             </div>
-            <div class="setting" data-type="select">
-                <div class="heading">
-                    <h5>${tl(trans.amount_to_display)}</h5>
+            <div class="setting-group">
+                <div class="setting" data-type="select">
+                    <div class="heading">
+                        <h5>${tl(trans.amount_to_display)}</h5>
+                    </div>
+                    <div class="select-wrap custom-selector" id="id_chart_length_recent_tracks_select">
+                        ${original_chart_settings.recent.count}
+                    </div>
                 </div>
-                <div class="select-wrap custom-selector" id="id_chart_length_recent_tracks_select">
-                    ${original_chart_settings.recent.count}
+                <div class="setting" data-type="toggle" onclick="_update_inbuilt_item('recent_artwork')" id="container-recent_artwork">
+                    <button class="btn reset" onclick="_reset_inbuilt_item('recent_artwork')">Reset to default</button>
+                    <div class="heading">
+                        <h5>${tl(trans.recent_artwork)}</h5>
+                    </div>
+                    <div class="toggle-wrap">
+                        <input class="companion-checkbox" type="checkbox" name="show_recent_tracks_artwork" id="inbuilt-companion-checkbox-recent_artwork">
+                        <span class="btn toggle" id="toggle-recent_artwork" aria-checked="false">
+                            <div class="dot"></div>
+                        </span>
+                    </div>
+                </div>
+                <div class="setting" data-type="toggle" onclick="_update_inbuilt_item('recent_realtime')" id="container-recent_realtime">
+                    <button class="btn reset" onclick="_reset_inbuilt_item('recent_realtime')">Reset to default</button>
+                    <div class="heading">
+                        <h5>${tl(trans.recent_realtime.name)}</h5>
+                        <p>${tl(trans.recent_realtime.body)}</p>
+                    </div>
+                    <div class="toggle-wrap">
+                        <input class="companion-checkbox" type="checkbox" name="auto_refresh_recent_tracks" id="inbuilt-companion-checkbox-recent_realtime">
+                        <span class="btn toggle" id="toggle-recent_realtime" aria-checked="false">
+                            <div class="dot"></div>
+                        </span>
+                    </div>
                 </div>
             </div>
-            <div class="setting" data-type="toggle" onclick="_update_inbuilt_item('recent_artwork')" id="container-recent_artwork">
-                <button class="btn reset" onclick="_reset_inbuilt_item('recent_artwork')">Reset to default</button>
-                <div class="heading">
-                    <h5>${tl(trans.recent_artwork)}</h5>
-                </div>
-                <div class="toggle-wrap">
-                    <input class="companion-checkbox" type="checkbox" name="show_recent_tracks_artwork" id="inbuilt-companion-checkbox-recent_artwork">
-                    <span class="btn toggle" id="toggle-recent_artwork" aria-checked="false">
-                        <div class="dot"></div>
-                    </span>
-                </div>
-            </div>
-            <div class="setting" data-type="toggle" onclick="_update_inbuilt_item('recent_realtime')" id="container-recent_realtime">
-                <button class="btn reset" onclick="_reset_inbuilt_item('recent_realtime')">Reset to default</button>
-                <div class="heading">
-                    <h5>${tl(trans.recent_realtime.name)}</h5>
-                    <p>${tl(trans.recent_realtime.body)}</p>
-                </div>
-                <div class="toggle-wrap">
-                    <input class="companion-checkbox" type="checkbox" name="auto_refresh_recent_tracks" id="inbuilt-companion-checkbox-recent_realtime">
-                    <span class="btn toggle" id="toggle-recent_realtime" aria-checked="false">
-                        <div class="dot"></div>
-                    </span>
-                </div>
-            </div>
-            <div class="sep"></div>
             <h4>${tl(trans.top_artists)}</h4>
             <div class="inner-preview pad">
                 <div class="item-grid artist">
@@ -265,23 +267,24 @@ function patch_settings_charts_panel(token) {
                     </div>
                 </div>
             </div>
-            <div class="setting" data-type="select">
-                <div class="heading">
-                    <h5>${tl(trans.default_timeframe)}</h5>
+            <div class="setting-group">
+                <div class="setting" data-type="select">
+                    <div class="heading">
+                        <h5>${tl(trans.default_timeframe)}</h5>
+                    </div>
+                    <div class="select-wrap custom-selector" id="id_chart_range_top_artists_select">
+                        ${original_chart_settings.artists.timeframe}
+                    </div>
                 </div>
-                <div class="select-wrap custom-selector" id="id_chart_range_top_artists_select">
-                    ${original_chart_settings.artists.timeframe}
+                <div class="setting" data-type="select">
+                    <div class="heading">
+                        <h5>${tl(trans.chart_style)}</h5>
+                    </div>
+                    <div class="select-wrap custom-selector" id="id_chart_style_and_length_top_artists_select">
+                        ${original_chart_settings.artists.style}
+                    </div>
                 </div>
             </div>
-            <div class="setting" data-type="select">
-                <div class="heading">
-                    <h5>${tl(trans.chart_style)}</h5>
-                </div>
-                <div class="select-wrap custom-selector" id="id_chart_style_and_length_top_artists_select">
-                    ${original_chart_settings.artists.style}
-                </div>
-            </div>
-            <div class="sep"></div>
             <h4>${tl(trans.top_albums)}</h4>
             <div class="inner-preview pad">
                 <div class="item-grid album">
@@ -341,23 +344,24 @@ function patch_settings_charts_panel(token) {
                     </div>
                 </div>
             </div>
-            <div class="setting" data-type="select">
-                <div class="heading">
-                    <h5>${tl(trans.default_timeframe)}</h5>
+            <div class="setting-group">
+                <div class="setting" data-type="select">
+                    <div class="heading">
+                        <h5>${tl(trans.default_timeframe)}</h5>
+                    </div>
+                    <div class="select-wrap custom-selector" id="id_chart_range_top_albums_select">
+                        ${original_chart_settings.albums.timeframe}
+                    </div>
                 </div>
-                <div class="select-wrap custom-selector" id="id_chart_range_top_albums_select">
-                    ${original_chart_settings.albums.timeframe}
+                <div class="setting" data-type="select">
+                    <div class="heading">
+                        <h5>${tl(trans.chart_style)}</h5>
+                    </div>
+                    <div class="select-wrap custom-selector" id="id_chart_style_and_length_top_albums_select">
+                        ${original_chart_settings.albums.style}
+                    </div>
                 </div>
             </div>
-            <div class="setting" data-type="select">
-                <div class="heading">
-                    <h5>${tl(trans.chart_style)}</h5>
-                </div>
-                <div class="select-wrap custom-selector" id="id_chart_style_and_length_top_albums_select">
-                    ${original_chart_settings.albums.style}
-                </div>
-            </div>
-            <div class="sep"></div>
             <h4>${tl(trans.top_tracks)}</h4>
             <div class="inner-preview pad">
                 <div class="tracks">
@@ -403,20 +407,22 @@ function patch_settings_charts_panel(token) {
                     </div>
                 </div>
             </div>
-            <div class="setting" data-type="select">
-                <div class="heading">
-                    <h5>${tl(trans.default_timeframe)}</h5>
+            <div class="setting-group">
+                <div class="setting" data-type="select">
+                    <div class="heading">
+                        <h5>${tl(trans.default_timeframe)}</h5>
+                    </div>
+                    <div class="select-wrap custom-selector" id="id_chart_range_top_tracks_select">
+                        ${original_chart_settings.tracks.timeframe}
+                    </div>
                 </div>
-                <div class="select-wrap custom-selector" id="id_chart_range_top_tracks_select">
-                    ${original_chart_settings.tracks.timeframe}
-                </div>
-            </div>
-            <div class="setting" data-type="select">
-                <div class="heading">
-                    <h5>${tl(trans.amount_to_display)}</h5>
-                </div>
-                <div class="select-wrap custom-selector" id="id_chart_length_top_tracks_select">
-                    ${original_chart_settings.tracks.count}
+                <div class="setting" data-type="select">
+                    <div class="heading">
+                        <h5>${tl(trans.amount_to_display)}</h5>
+                    </div>
+                    <div class="select-wrap custom-selector" id="id_chart_length_top_tracks_select">
+                        ${original_chart_settings.tracks.count}
+                    </div>
                 </div>
             </div>
             <div class="settings-footer">
@@ -1105,38 +1111,38 @@ function patch_settings_privacy_panel(token, privacy_panel) {
                     </div>
                 </div>
             </div>
-            <div class="setting" data-type="toggle" onclick="_update_inbuilt_item('recent_listening')" id="container-recent_listening">
-                <button class="btn reset" onclick="_reset_inbuilt_item('recent_listening')">Reset to default</button>
-                <div class="heading">
-                    <h5>${tl(trans.recent_listening.name)}</h5>
-                    <p>${tl(trans.recent_listening.body)}</p>
+            <div class="setting-group">
+                <div class="setting" data-type="toggle" onclick="_update_inbuilt_item('recent_listening')" id="container-recent_listening">
+                    <button class="btn reset" onclick="_reset_inbuilt_item('recent_listening')">Reset to default</button>
+                    <div class="heading">
+                        <h5>${tl(trans.recent_listening.name)}</h5>
+                        <p>${tl(trans.recent_listening.body)}</p>
+                    </div>
+                    <div class="toggle-wrap">
+                        <input class="companion-checkbox" type="checkbox" name="hide_realtime" id="inbuilt-companion-checkbox-recent_listening">
+                        <span class="btn toggle" id="toggle-recent_listening" aria-checked="false">
+                            <div class="dot"></div>
+                        </span>
+                    </div>
                 </div>
-                <div class="toggle-wrap">
-                    <input class="companion-checkbox" type="checkbox" name="hide_realtime" id="inbuilt-companion-checkbox-recent_listening">
-                    <span class="btn toggle" id="toggle-recent_listening" aria-checked="false">
-                        <div class="dot"></div>
-                    </span>
+                <div class="setting" data-type="options">
+                    <div class="heading">
+                        <h5>${tl(trans.allow_messages_from)}</h5>
+                    </div>
+                    <div class="primary-selections">
+                        ${original_privacy_settings.receiving_msgs}
+                        <div class="btn primary-selection" id="primary-selection-receiving_msgs-everyone" onclick="_update_inbuilt_selection('id_message_privacy', 0)">
+                            <h5>${tl(trans.everyone)}</h5>
+                        </div>
+                        <div class="btn primary-selection" id="primary-selection-receiving_msgs-neighbours" onclick="_update_inbuilt_selection('id_message_privacy', 1)">
+                            <h5>${tl(trans.following_and_neighbours)}</h5>
+                        </div>
+                        <div class="btn primary-selection" id="primary-selection-receiving_msgs-follow" onclick="_update_inbuilt_selection('id_message_privacy', 2)">
+                            <h5>${tl(trans.following)}</h5>
+                        </div>
+                    </div>
                 </div>
             </div>
-            <div class="sep"></div>
-            <div class="setting" data-type="options">
-                <div class="heading">
-                    <h5>${tl(trans.allow_messages_from)}</h5>
-                </div>
-                <div class="primary-selections">
-                    ${original_privacy_settings.receiving_msgs}
-                    <div class="btn primary-selection" id="primary-selection-receiving_msgs-everyone" onclick="_update_inbuilt_selection('id_message_privacy', 0)">
-                        <h5>${tl(trans.everyone)}</h5>
-                    </div>
-                    <div class="btn primary-selection" id="primary-selection-receiving_msgs-neighbours" onclick="_update_inbuilt_selection('id_message_privacy', 1)">
-                        <h5>${tl(trans.following_and_neighbours)}</h5>
-                    </div>
-                    <div class="btn primary-selection" id="primary-selection-receiving_msgs-follow" onclick="_update_inbuilt_selection('id_message_privacy', 2)">
-                        <h5>${tl(trans.following)}</h5>
-                    </div>
-                </div>
-            </div>
-            <div class="sep"></div>
             <div class="inner-preview pad">
                 <div class="shouts">
                     <div class="shout-preview">
@@ -1180,17 +1186,19 @@ function patch_settings_privacy_panel(token, privacy_panel) {
                     </div>
                 </div>
             </div>
-            <div class="setting" data-type="toggle" onclick="_update_inbuilt_item('disable_shoutbox')" id="container-disable_shoutbox">
-                <button class="btn reset" onclick="_reset_inbuilt_item('disable_shoutbox')">Reset to default</button>
-                <div class="heading">
-                    <h5>${tl(trans.close_shouts.name)}</h5>
-                    <p>${tl(trans.close_shouts.body)}</p>
-                </div>
-                <div class="toggle-wrap">
-                    <input class="companion-checkbox" type="checkbox" name="shoutbox_disabled" id="inbuilt-companion-checkbox-disable_shoutbox">
-                    <span class="btn toggle" id="toggle-disable_shoutbox" aria-checked="false">
-                        <div class="dot"></div>
-                    </span>
+            <div class="setting-group">
+                <div class="setting" data-type="toggle" onclick="_update_inbuilt_item('disable_shoutbox')" id="container-disable_shoutbox">
+                    <button class="btn reset" onclick="_reset_inbuilt_item('disable_shoutbox')">Reset to default</button>
+                    <div class="heading">
+                        <h5>${tl(trans.close_shouts.name)}</h5>
+                        <p>${tl(trans.close_shouts.body)}</p>
+                    </div>
+                    <div class="toggle-wrap">
+                        <input class="companion-checkbox" type="checkbox" name="shoutbox_disabled" id="inbuilt-companion-checkbox-disable_shoutbox">
+                        <span class="btn toggle" id="toggle-disable_shoutbox" aria-checked="false">
+                            <div class="dot"></div>
+                        </span>
+                    </div>
                 </div>
             </div>
             <div class="settings-footer">
@@ -1218,163 +1226,143 @@ function bleh_accounts() {
 
     // get info before destroying
     let original_settings = {
-        email_language: page.structure.main.querySelector('[name="language"]').outerHTML,
-        marketing_emails: page.structure.main.querySelector('[name="opt_in_marketing"]').checked,
+        email_language: page.structure.main.querySelector('[name="language"]'),
+        marketing_emails: page.structure.main.querySelector('[name="opt_in_marketing"]'),
         email: page.structure.main.querySelector('[name="email"]').value,
         captcha: page.structure.main.querySelector('.lfm-recaptcha')
     }
 
-    let information_panel = document.createElement('section');
-    information_panel.classList.add('bleh--panel');
-    information_panel.innerHTML = (`
-        <h4>${tl(trans.information)}</h4>
-        <form action="${root}settings/change-username/send-email" method="post">
-            <input type="hidden" name="csrfmiddlewaretoken" value="${token}">
-            <div class="setting" data-type="text">
-                <div class="heading">
-                    <h5>${tl(trans.username.name)}</h5>
-                    <p>${tl(trans.username.body).replace('{a}', `<a href="https://support.last.fm/" target="_blank">`).replace('{/a}', '</a>')}</p>
-                </div>
-                <div class="input-container content-form">
-                    <input id="id_current_username" type="text" name="current_username" value="${auth.name}" disabled required>
-                    <button class="btn chibi icon primary submit">${tl(trans.send)}</button>
-                    <input type="hidden" value="change_username" name="submit">
-                </div>
+    render(page.structure.main, html`
+        <section class="bleh--panel">
+            <h4>${tl(trans.information)}</h4>
+            <div class="setting-group">
+                <form action="${root}settings/change-username/send-email" method="post">
+                    <input type="hidden" name="csrfmiddlewaretoken" value="${token}">
+                    <div class="setting" data-type="text">
+                        <div class="heading">
+                            <h5>${tl(trans.username.name)}</h5>
+                            <p>${{html: tl(trans.username.body).replace('{a}', `<a href="https://support.last.fm/" target="_blank">`).replace('{/a}', '</a>')}}</p>
+                        </div>
+                        <div class="input-container content-form">
+                            <input id="id_current_username" type="text" name="current_username" value="${auth.name}" disabled required>
+                            <button class="btn chibi icon primary submit">${tl(trans.send)}</button>
+                            <input type="hidden" value="change_username" name="submit">
+                        </div>
+                    </div>
+                </form>
+                <form action="${root}settings/account" name="change-email" method="post">
+                    <input type="hidden" name="csrfmiddlewaretoken" value="${token}">
+                    <div class="setting" data-type="text">
+                        <div class="heading">
+                            <h5>${tl(trans.email)}</h5>
+                        </div>
+                        <div class="input-container content-form">
+                            <input id="id_email" type="text" name="email" value="${original_settings.email}" required>
+                            <button class="btn chibi icon primary submit">${tl(trans.save)}</button>
+                            <input type="hidden" value="email_update" name="submit">
+                        </div>
+                    </div>
+                </form>
             </div>
-        </form>
-        <form action="${root}settings/account" name="change-email" method="post">
-            <input type="hidden" name="csrfmiddlewaretoken" value="${token}">
-            <div class="setting" data-type="text">
-                <div class="heading">
-                    <h5>${tl(trans.email)}</h5>
+            <form class="password-container" action="${root}settings/account/password#change-password" name="change-password" method="post">
+                <input type="hidden" name="csrfmiddlewaretoken" value="${token}">
+                <div class="setting-group">
+                    <div class="setting" data-type="text">
+                        <div class="heading">
+                            <h5>${tl(trans.password)}</h5>
+                        </div>
+                        <div class="input-container content-form">
+                            <input id="id_password" type="password" name="password" required>
+                        </div>
+                    </div>
+                    <div class="setting" data-type="text">
+                        <div class="heading">
+                            <h5>${tl(trans.new_password)}</h5>
+                        </div>
+                        <div class="input-container content-form">
+                            <input id="id_new_password" type="password" name="new_password" required>
+                        </div>
+                    </div>
+                    <div class="setting" data-type="text">
+                        <div class="heading">
+                            <h5>${tl(trans.confirm_password)}</h5>
+                        </div>
+                        <div class="input-container content-form">
+                            <input id="id_new_password_confirmation" type="password" name="new_password_confirmation" required>
+                        </div>
+                    </div>
+                    ${original_settings.captcha}
                 </div>
-                <div class="input-container content-form">
-                    <input id="id_email" type="text" name="email" value="${original_settings.email}" required>
-                    <button class="btn chibi icon primary submit">${tl(trans.save)}</button>
-                    <input type="hidden" value="email_update" name="submit">
+                <div class="settings-footer end">
+                    <button class="btn-primary save" type="submit">
+                        ${tl(trans.change)}
+                    </button>
                 </div>
-            </div>
-        </form>
-        <div class="sep"></div>
-        <form class="password-container" action="${root}settings/account/password#change-password" name="change-password" method="post">
-            <input type="hidden" name="csrfmiddlewaretoken" value="${token}">
-            <div class="setting" data-type="text">
-                <div class="heading">
-                    <h5>${tl(trans.password)}</h5>
+            </form>
+        </section>
+        <section class="bleh--panel">
+            <h4>${tl(trans.communication)}</h4>
+            <form action="${root}settings/account" name="email-settings" method="post">
+                <input type="hidden" name="csrfmiddlewaretoken" value="${token}">
+                <div class="setting-group">
+                    <div class="setting" data-type="select">
+                        <div class="heading">
+                            <h5>${tl(trans.email_language)}</h5>
+                        </div>
+                        <div class="select-wrap custom-selector">
+                            ${select(select_prepare(original_settings.email_language), original_settings.email_language.value)}
+                        </div>
+                    </div>
+                    ${toggle({
+                        value: original_settings.marketing_emails.value,
+                        name: original_settings.marketing_emails.name,
+                        title: tl(trans.marketing_emails.name),
+                        body: tl(trans.marketing_emails.body),
+                        standalone: false
+                    })}
                 </div>
-                <div class="input-container content-form">
-                    <input id="id_password" type="password" name="password" required>
+                <div class="settings-footer end">
+                    <button class="btn-primary save" type="submit">
+                        ${tl(trans.save)}
+                    </button>
+                    <input type="hidden" value="email_settings" name="submit">
                 </div>
-            </div>
-            <div class="setting" data-type="text">
-                <div class="heading">
-                    <h5>${tl(trans.new_password)}</h5>
+            </form>
+        </section>
+        <section class="bleh--panel">
+            <h4>${tl(trans.security)}</h4>
+            <form action="${root}settings/account" name="email-settings" method="post">
+                <input type="hidden" name="csrfmiddlewaretoken" value="${token}">
+                <div class="setting-group">
+                    <div class="setting" data-type="action">
+                        <div class="heading">
+                            <h5>${tl(trans.logout_everywhere)}</h5>
+                        </div>
+                        <div class="toggle-wrap">
+                            <a class="see-more danger logout" href="${root}settings/account/logout-everywhere">
+                                ${tl(trans.logout)}
+                            </a>
+                        </div>
+                    </div>
+                    <div class="setting" data-type="action">
+                        <div class="heading">
+                            <h5>${tl(trans.delete_account.name)}</h5>
+                            <p>${tl(trans.delete_account.body)}</p>
+                        </div>
+                        <div class="toggle-wrap">
+                            <a class="see-more danger delete-account" href="${root}settings/account/delete">
+                                ${tl(trans.delete_account_permanently).replace('{u}', auth.name)}
+                            </a>
+                        </div>
+                    </div>
                 </div>
-                <div class="input-container content-form">
-                    <input id="id_new_password" type="password" name="new_password" required>
-                </div>
-            </div>
-            <div class="setting" data-type="text">
-                <div class="heading">
-                    <h5>${tl(trans.confirm_password)}</h5>
-                </div>
-                <div class="input-container content-form">
-                    <input id="id_new_password_confirmation" type="password" name="new_password_confirmation" required>
-                </div>
-            </div>
-            <div class="settings-footer end">
-                <button class="btn-primary save" type="submit">
-                    ${tl(trans.change)}
-                </button>
-            </div>
-        </form>
+            </form>
+        </section>
     `);
-
-    let password_container = information_panel.querySelector('.password-container');
-    password_container.insertBefore(original_settings.captcha, password_container.lastElementChild);
-
-    page.structure.main.insertBefore(information_panel, page.structure.main.firstElementChild);
-
-    let communication_panel = document.createElement('section');
-    communication_panel.classList.add('bleh--panel');
-    communication_panel.innerHTML = (`
-        <h4>${tl(trans.communication)}</h4>
-        <form action="${root}settings/account" name="email-settings" method="post">
-            <input type="hidden" name="csrfmiddlewaretoken" value="${token}">
-            <div class="setting" data-type="select">
-                <div class="heading">
-                    <h5>${tl(trans.email_language)}</h5>
-                </div>
-                <div class="select-wrap custom-selector">
-                    ${original_settings.email_language}
-                </div>
-            </div>
-            <div class="setting" data-type="toggle" id="container-marketing_emails" onclick="_update_inbuilt_item('marketing_emails')">
-                <div class="heading">
-                    <h5>${tl(trans.marketing_emails.name)}</h5>
-                    <p>${tl(trans.marketing_emails.body)}</p>
-                </div>
-                <div class="toggle-wrap">
-                    <input class="companion-checkbox" type="checkbox" name="opt_in_marketing" id="inbuilt-companion-checkbox-marketing_emails">
-                    <span class="btn toggle" id="toggle-marketing_emails" aria-checked="false">
-                        <div class="dot"></div>
-                    </span>
-                </div>
-            </div>
-            <div class="settings-footer end">
-                <button class="btn-primary save" type="submit">
-                    ${tl(trans.save)}
-                </button>
-                <input type="hidden" value="email_settings" name="submit">
-            </div>
-        </form>
-    `);
-
-    information_panel.after(communication_panel);
-
-    let security_panel = document.createElement('section');
-    security_panel.classList.add('bleh--panel');
-    security_panel.innerHTML = (`
-        <h4>${tl(trans.security)}</h4>
-        <form action="${root}settings/account" name="email-settings" method="post">
-            <input type="hidden" name="csrfmiddlewaretoken" value="${token}">
-            <div class="setting" data-type="toggle">
-                <div class="heading">
-                    <h5>${tl(trans.logout_everywhere)}</h5>
-                </div>
-                <div class="toggle-wrap">
-                    <a class="see-more danger logout" href="${root}settings/account/logout-everywhere">
-                        ${tl(trans.logout)}
-                    </a>
-                </div>
-            </div>
-            <div class="sep"></div>
-            <div class="setting" data-type="toggle">
-                <div class="heading">
-                    <h5>${tl(trans.delete_account.name)}</h5>
-                    <p>${tl(trans.delete_account.body)}</p>
-                </div>
-                <div class="toggle-wrap">
-                    <a class="see-more danger delete-account" href="${root}settings/account/delete">
-                        ${tl(trans.delete_account_permanently).replace('{u}', auth.name)}
-                    </a>
-                </div>
-            </div>
-        </form>
-    `);
-
-    communication_panel.after(security_panel);
-
-    let old_panels = page.structure.main.querySelectorAll(':scope > section:not(.bleh--panel)');
-    old_panels.forEach((panel) => {
-        page.structure.main.removeChild(panel);
-    });
 
     for (let setting in original_settings) {
         update_inbuilt_item(setting, original_settings[setting], false);
     }
-
-    custom_select(communication_panel.querySelector('[name="language"]'), communication_panel.querySelector('[name="language"]').parentElement);
 }
 function bleh_name_change() {
     let token = page.structure.row.querySelector('[name="csrfmiddlewaretoken"]').getAttribute('value');
