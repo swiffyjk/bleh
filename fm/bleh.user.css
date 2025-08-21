@@ -182,7 +182,7 @@
         --banner-height: 280px;
 
         [data-ff--short="true"] > & {
-            --banner-height: 340px;
+            --banner-height: 800px;
         }
 
         [data-bleh--theme="glass"] > & {
@@ -594,7 +594,7 @@
     body {
         --card-padding: 20px;
         --card-radius: var(--item-big-radius);
-        --card-shadow: 0 4px 8px 1px rgba(0, 0, 0, 0.25);
+        --card-shadow: 0 8px 15px 1px rgba(0, 0, 0, 0.45);
         --card-gap: 15px;
 
         --cards-main-width: 902px;
@@ -17628,7 +17628,7 @@
         & > .banner-image {
             width: 200px;
             height: 90px;
-            background-position: 0 var(--profile-header-background-offset);
+            background-position: center var(--profile-header-background-offset);
             background-size: cover;
             border-radius: var(--item-big-radius);
         }
@@ -22312,7 +22312,7 @@
             filter: none;
             height: var(--banner-height);
             background-color: hsl(var(--b6));
-            background-position: 0 40%;
+            background-position: center 40%;
 
             transition-property: opacity;
             transition-duration: var(--trans);
