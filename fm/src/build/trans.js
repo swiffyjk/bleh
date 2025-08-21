@@ -3308,10 +3308,10 @@ export const trans = {
     },
     profile_avi_background: {
         name: {
-            en: 'Ignore banners and use avatar image'
+            en: 'Prefer avatar image for profiles without a banner'
         },
         body: {
-            en: 'All custom and artist-based banner images will be replaced by the user’s avatar'
+            en: 'All artist-based banner images will be replaced by the user’s avatar'
         }
     },
     profile_banner: {

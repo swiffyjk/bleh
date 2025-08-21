@@ -2031,7 +2031,7 @@
 
     /*     FOOTER     */
     .footer {
-        background: radial-gradient(at center bottom, hsla(var(--h4), 7%) 0%, hsl(var(--b6)) 45%);
+        background: transparent;
         color: hsl(var(--c3));
         padding: 0 0 120px 0;
 
@@ -2866,6 +2866,8 @@
                 max-width: var(--cards-width);
                 width: var(--cards-width);
             }
+
+            min-height: 610px;
 
             .listening-report-row,
             & > .row {
@@ -22915,7 +22917,7 @@
                 background: linear-gradient(180deg, hsla(var(--b6), 60%) 0%, hsl(var(--b6)) 100%) !important;
             }
 
-            [data-bleh--profile_header_own="false"] &:is(.from-avatar, .from-track) {
+            [data-bleh--profile_header_own="false"] &:is(.from-avatar, .from-track, .from-banner) {
                 opacity: 0;
                 filter: none;
             }

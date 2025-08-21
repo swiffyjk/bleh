@@ -1127,7 +1127,7 @@ export async function render_setting_page(page_id) {
                         </div>
                         <div class="profile-mockup-background from-avatar" style="background-image: url(${auth.avatar.replace('/avatar42s/', '/avatar300s/')})"></div>
                         ${cache.banner ? html.node`
-                        <div class="profile-mockup-background from-track" style="background-image: url(${cache.banner})"></div>
+                        <div class="profile-mockup-background from-banner" style="background-image: url(${cache.banner})"></div>
                         ` : html.node`
                         <div class="profile-mockup-background from-track" style="background-image: url(https://lastfm.freetls.fastly.net/i/u/avatar300s/df927f4f88034b7f9a651636b965c9d7)"></div>
                         `}
@@ -1144,42 +1144,6 @@ export async function render_setting_page(page_id) {
                         </div>
                     </div>
                     ${setting({id: 'profile_avi_background'})}
-                    <div class="setting" data-type="info">
-                        <div class="heading">
-                            <h5>${tl(trans.profile_banner.name)}</h5>
-                            <p>${tl(trans.profile_banner.body)}</p>
-                            ${cache.banner ? html.node`
-                            <p>${tl(trans.current_banner_value).replace('{v}', cache.banner)}</p>
-                            ` : ''}
-                        </div>
-                        ${() => {
-                            if (!cache.banner)
-                                return html.node`
-                                    <div class="info">
-                                        <p>${tl(trans.none)}</p>
-                                    </div>
-                                `;
-
-                            let banner_image = html.node`
-                                <div class="banner-image" style="background-image: url(${cache.banner})" />
-                            `;
-
-                            tippy(banner_image, {
-                                content: cache.banner
-                            });
-
-                            return banner_image;
-                        }}
-                    </div>
-                    <div class="setting" data-type="info" ref=${el => accent_setting = el}>
-                        <div class="heading">
-                            <h5>${tl(trans.profile_accent.name)}<span class="new-badge beta">${tl(trans.new)}</span></h5>
-                            <p>${tl(trans.profile_accent.body)}</p>
-                        </div>
-                        <div class="info">
-                            <div class="colour-tile colourful" style="--hue-over: ${cache.hue}; --sat-over: ${cache.sat}; --lit-over: ${cache.lit}" />
-                        </div>
-                    </div>
                 </div>
             </section>
             ${ff('friends') ? html.node`

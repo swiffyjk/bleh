@@ -24463,6 +24463,10 @@
     return String(num).padStart(2, "0");
   }
   function convert_gif_to_png(url) {
+    const available_hosts = ["www.last.fm", "lastfm.freetls.fastly.net"];
+    const link = new URL(url, `https://www.last.fm${root}`);
+    if (!available_hosts.includes(link.hostname))
+      return Promise.reject(new Error("url is not in valid hosts list: " + link.hostname));
     return new Promise((resolve2, reject) => {
       const image = html.node`
             <img crossorigin="anonymous" src=${url}>
@@ -40753,7 +40757,7 @@
       allow_socials: true
     };
     let banner_setting;
-    let accent_setting2;
+    let accent_setting;
     render(update_picture, html`
         <h4>${tl(trans.profile)}</h4>
         <div class="banner-preview"></div>
@@ -40838,7 +40842,7 @@
         </div>
         <div class="setting-group">
             <div class="setting" data-type="info" ref=${(el) => banner_setting = el} />
-            <div class="setting" data-type="info" ref=${(el) => accent_setting2 = el} />
+            <div class="setting" data-type="info" ref=${(el) => accent_setting = el} />
             ${setting({ id: "avatar_radius" })}
         </div>
     `);
@@ -40880,7 +40884,7 @@
       const accent_regex = /\[accent=([0-9]{1,3}),([0-9]*\.?[0-9]+),([0-9]*\.?[0-9]+)\]/;
       console.info("cache update", about.value, cache2.hue, cache2.sat, cache2.lit);
       let edit;
-      render(accent_setting2, html`
+      render(accent_setting, html`
             <div class="heading">
                 <h5>${tl(trans.profile_accent.name)}<span class="new-badge beta">${tl(trans.new)}</span></h5>
                 <p>${tl(trans.profile_accent.body)}</p>
@@ -46519,7 +46523,7 @@
                         </div>
                         <div class="profile-mockup-background from-avatar" style="background-image: url(${auth.avatar.replace("/avatar42s/", "/avatar300s/")})"></div>
                         ${cache2.banner ? html.node`
-                        <div class="profile-mockup-background from-track" style="background-image: url(${cache2.banner})"></div>
+                        <div class="profile-mockup-background from-banner" style="background-image: url(${cache2.banner})"></div>
                         ` : html.node`
                         <div class="profile-mockup-background from-track" style="background-image: url(https://lastfm.freetls.fastly.net/i/u/avatar300s/df927f4f88034b7f9a651636b965c9d7)"></div>
                         `}
@@ -46536,39 +46540,6 @@
                         </div>
                     </div>
                     ${setting({ id: "profile_avi_background" })}
-                    <div class="setting" data-type="info">
-                        <div class="heading">
-                            <h5>${tl(trans.profile_banner.name)}</h5>
-                            <p>${tl(trans.profile_banner.body)}</p>
-                            ${cache2.banner ? html.node`
-                            <p>${tl(trans.current_banner_value).replace("{v}", cache2.banner)}</p>
-                            ` : ""}
-                        </div>
-                        ${() => {
-        if (!cache2.banner)
-          return html.node`
-                                    <div class="info">
-                                        <p>${tl(trans.none)}</p>
-                                    </div>
-                                `;
-        let banner_image = html.node`
-                                <div class="banner-image" style="background-image: url(${cache2.banner})" />
-                            `;
-        tippy_esm_default(banner_image, {
-          content: cache2.banner
-        });
-        return banner_image;
-      }}
-                    </div>
-                    <div class="setting" data-type="info" ref=${(el) => accent_setting = el}>
-                        <div class="heading">
-                            <h5>${tl(trans.profile_accent.name)}<span class="new-badge beta">${tl(trans.new)}</span></h5>
-                            <p>${tl(trans.profile_accent.body)}</p>
-                        </div>
-                        <div class="info">
-                            <div class="colour-tile colourful" style="--hue-over: ${cache2.hue}; --sat-over: ${cache2.sat}; --lit-over: ${cache2.lit}" />
-                        </div>
-                    </div>
                 </div>
             </section>
             ${ff("friends") ? html.node`
@@ -52523,13 +52494,20 @@
     page.structure.container.setAttribute("data-beret", ff("beret"));
     page.structure.container.setAttribute("data-short", ff("short"));
   }
-  function register_background(url, origin = null) {
+  async function register_background(url, origin = null) {
     let background = page.structure.container.querySelector(":scope > .bleh-background");
     if (!background) {
       background = html.node`
             <div class="bleh-background katsune-bleh-background" />
         `;
       page.structure.container.insertBefore(background, page.structure.container.firstElementChild);
+    }
+    if (settings.static_banners) {
+      try {
+        url = await convert_gif_to_png(url);
+      } catch (e) {
+        log("could not convert banner image to static", "banner", "error", { e });
+      }
     }
     background.setAttribute("data-page-type", page.type);
     background.setAttribute("data-page-subpage", page.subpage);
@@ -55856,10 +55834,10 @@
     },
     profile_avi_background: {
       name: {
-        en: "Ignore banners and use avatar image"
+        en: "Prefer avatar image for profiles without a banner"
       },
       body: {
-        en: "All custom and artist-based banner images will be replaced by the user\u2019s avatar"
+        en: "All artist-based banner images will be replaced by the user\u2019s avatar"
       }
     },
     profile_banner: {

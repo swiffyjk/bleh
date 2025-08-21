@@ -10,6 +10,7 @@ import {notify} from "../components/notify.js";
 import {tl, trans} from "./trans.js";
 import { settings } from './config.js';
 import {html} from "lighterhtml";
+import { root } from './page.js';
 
 /**
  * Converts hex to {h, s, l}
@@ -311,6 +312,13 @@ export function pad2(num) {
 }
 
 export function convert_gif_to_png(url) {
+    const available_hosts = ['www.last.fm', 'lastfm.freetls.fastly.net'];
+
+    const link = new URL(url, `https://www.last.fm${root}`);
+
+    if (!available_hosts.includes(link.hostname))
+        return Promise.reject(new Error('url is not in valid hosts list: ' + link.hostname));
+
     return new Promise((resolve, reject) => {
         const image = html.node`
             <img crossorigin="anonymous" src=${url}>

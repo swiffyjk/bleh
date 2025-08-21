@@ -72,6 +72,7 @@ import {bleh_auth} from "./pages/auth.js";
 import {bleh_labs} from "./pages/labs.js";
 import {bleh_minis} from "./pages/minis.js";
 import {mualani} from "./pages/mualani.js";
+import { convert_gif_to_png } from './build/tools.js';
 
 export function bleh() {
     let head_observer = new MutationObserver((mutations) => {
@@ -727,7 +728,7 @@ export function update_page() {
     page.structure.container.setAttribute('data-short', ff('short'));
 }
 
-export function register_background(url, origin = null) {
+export async function register_background(url, origin = null) {
     let background = page.structure.container.querySelector(':scope > .bleh-background');
 
     if (!background) {
@@ -736,6 +737,14 @@ export function register_background(url, origin = null) {
         `;
 
         page.structure.container.insertBefore(background, page.structure.container.firstElementChild);
+    }
+
+    if (settings.static_banners) {
+        try {
+            url = await convert_gif_to_png(url);
+        } catch(e) {
+            log('could not convert banner image to static', 'banner', 'error', {e});
+        }
     }
 
     background.setAttribute('data-page-type', page.type);
