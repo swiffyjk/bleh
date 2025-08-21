@@ -115,6 +115,15 @@ export function redesign_profile_header(is_own_profile, is_following) {
                     type: 'message',
                     link: msg_button.getAttribute('href')
                 });
+
+                if (page.name == sponsor_list.special[0]) {
+                    create_profile_top_item(profile_header, {
+                        name: page.name,
+                        type: 'sponsor',
+                        link: () => sponsor(),
+                        action: 'button'
+                    });
+                }
             } else {
                 create_profile_top_item(profile_header, {
                     name: page.name,

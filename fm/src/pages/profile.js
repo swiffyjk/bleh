@@ -134,9 +134,11 @@ export async function bleh_profiles() {
             register_background(null, 'hidden');
         } else if (page.name != auth.name && !settings.profile_header_others) {
             register_background(null, 'hidden');
+        } else if (cache.banner) {
+            register_background(cache.banner, 'bio');
         } else {
             if (settings.profile_avi_background) {
-                if (avatar)
+                if (avatar_img)
                     register_background(avatar_img.src.replace('/avatar170s/', '/ar0/'), 'avatar');
                 else
                     register_background(null, 'none');
@@ -215,11 +217,11 @@ export async function bleh_profiles() {
             page.structure.main.innerHTML = '';
             page.structure.side.innerHTML = '';
 
-            let alert = document.createElement('section');
-            alert.classList.add('cta');
-            alert.innerHTML = `<strong>${tl(trans.sponsor_info)}</strong>`;
-
-            page.structure.main.appendChild(alert);
+            page.structure.main.appendChild(html.node`
+                <section class="cta">
+                    <strong>${tl(trans.sponsor_info)}</strong>
+                </section>
+            `);
         }
 
 
@@ -310,7 +312,7 @@ export async function bleh_profiles() {
             });
         }
 
-        if (page.name != sponsor_list.sponsor_account) {
+        if (sponsor_list && page.name != sponsor_list.sponsor_account) {
             if (!page.mobile)
                 page.structure.side.insertBefore(listen_container, page.structure.side.firstChild);
             else
@@ -318,25 +320,6 @@ export async function bleh_profiles() {
 
             if (scrobbles > 0)
                 bleh_profile_chart();
-        }
-
-        if (sponsor_list && sponsor_list.special && page.name == sponsor_list.special[0]) {
-            let sponsor_cta = html.node`
-                <div class="cta first sponsor colourful">
-                    ${auth.sponsor ? html`
-                        <strong>${tl(trans.you_are_a_sponsor)}</strong>
-                        <a class="see-more" onclick="_sponsor_manage()">${tl(trans.manage_sponsor)}</a>
-                    ` : html`
-                        <strong>${tl(trans.news_sponsor_cta)}</strong>
-                        <a class="see-more" onclick="_sponsor()">${tl(trans.sponsor)}</a>
-                    `}
-                </div>
-            `;
-
-            if (!page.mobile)
-                page.structure.side.insertBefore(sponsor_cta, page.structure.side.firstElementChild);
-            else
-                page.structure.main.insertBefore(sponsor_cta, page.structure.main.firstElementChild);
         }
 
         // secondary text
@@ -374,8 +357,7 @@ export async function bleh_profiles() {
 
         // featured track
         let featured_track_panel = profile_header.querySelector('.header-featured-track');
-        if (featured_track_panel)
-            bleh_featured_profile_track(featured_track_panel, about_me_sidebar);
+        if (featured_track_panel) bleh_featured_profile_track(featured_track_panel);
 
         let about_me_header = about_me_sidebar.querySelector('h2');
         about_me_header.textContent = tl(trans.about);
@@ -955,7 +937,7 @@ function refresh_tracks(button, {
     });
 }
 
-function bleh_featured_profile_track(object, about_me) {
+function bleh_featured_profile_track(object) {
     let art = object.querySelector('.featured-item-art');
     let details = object.querySelector('.featured-item-details');
     let form = document.body.querySelector('.header-info-primary form');
@@ -1042,7 +1024,7 @@ function bleh_featured_profile_track(object, about_me) {
                 `}
             </div>
             <div class="source-album js-link-block link-block">
-                <div class="source-album-art">
+                <div class="source-album-art small">
                     ${img}
                 </div>
                 <div class="source-album-details">
@@ -1054,10 +1036,7 @@ function bleh_featured_profile_track(object, about_me) {
         </section>
     `;
 
-    if (about_me)
-        about_me.after(panel);
-    else
-        page.structure.side.insertBefore(panel, page.structure.side.firstElementChild);
+    page.structure.side.insertBefore(panel, page.structure.side.firstElementChild);
 }
 
 
@@ -1496,12 +1475,6 @@ function bio_parse(text, cache = true) {
         cache,
         allow_socials: true
     }));
-
-    const banner = temp.querySelector('img[alt="banner"]');
-    if (banner) {
-        const src = banner.src;
-        register_background(src, 'bio');
-    }
 
     return temp;
 }
