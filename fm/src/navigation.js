@@ -199,8 +199,30 @@ export function append_nav() {
     // 2025-04-14
     let new_auth = masthead.querySelector('.auth-dropdown-menu');
 
+    let links = masthead.querySelector('.masthead-nav .navlist-items');
+    render(links, html``);
+
     let auth_link = masthead.querySelector('.masthead-nav-wrap > .site-auth .auth-link');
-    if (!auth_link) return;
+    if (!auth_link) {
+        render(links, html`
+            ${() => {
+                const elem = html.node`
+                    <li class="masthead-nav-item">
+                        <a class="masthead-nav-control" href="${root}bleh" data-label="bleh_no_auth">
+                            ${tl(trans.bleh_settings)}
+                        </a>
+                    </li>
+                `;
+
+                tippy(elem, {
+                    content: tl(trans.bleh_settings)
+                });
+
+                return elem;
+            }}
+        `);
+        return;
+    }
 
     if (auth_link.hasAttribute('data-bleh')) return;
     auth_link.setAttribute('data-bleh', 'true');
@@ -218,10 +240,6 @@ export function append_nav() {
             <span class="label user-status-subscriber auth-badge">${tl(trans.badges['user-status-subscriber'].name)}</span>
         `);
     }
-
-
-    let links = masthead.querySelector('.masthead-nav .navlist-items');
-    render(links, html``);
 
 
     /*let quick_switcher = html.node`

@@ -1463,7 +1463,7 @@ function profile_tracks() {
     });
 }
 
-function bio_parse(text, cache = true) {
+function bio_parse(text, cache = true, take_effect = true) {
     let temp = document.createElement('div');
     temp.classList.add('markdown-body');
 
@@ -1473,6 +1473,7 @@ function bio_parse(text, cache = true) {
         allow_icons: true,
         allow_hue: true,
         cache,
+        take_effect,
         allow_socials: true
     }));
 
@@ -1514,7 +1515,6 @@ function bleh_profile_chart() {
                     log('table is null?', 'glacier library', 'error');
                     console.info('glacier library', doc.body.innerHTML);
                     console.info('glacier library', new DOMParser().parseFromString(doc.body.innerHTML, 'text/html'));
-                    throw new Error;
                 }
             });
     }, { threshold: 0.3, rootMargin: '0px' });
@@ -1702,7 +1702,7 @@ function request_profile_cache(name = page.name, cache=null, profile_cache=null)
                 const about_me_sidebar = doc.querySelector('.about-me-sidebar');
                 if (about_me_sidebar) {
                     let about_me_text = about_me_sidebar.querySelector('p');
-                    bio_parse(about_me_text, cache ? cache : true);
+                    bio_parse(about_me_text, cache ? cache : true, false);
                 } else {
                     delete cache.banner;
                     delete cache.hue;

@@ -9893,6 +9893,7 @@
         --mask: var(--icon-16-export);
     }
 
+    [data-label="bleh_no_auth"],
     [data-menu-item="bleh"],
     [data-label="bleh"] {
         --mask: var(--icon-16-settings);

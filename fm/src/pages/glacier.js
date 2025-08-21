@@ -907,7 +907,6 @@ function bleh_glacier_library_request(request_url) {
             log('table is null?', 'glacier library', 'error');
             console.info('glacier library', doc.body.innerHTML);
             console.info('glacier library', new DOMParser().parseFromString(doc.body.innerHTML, 'text/html'));
-            throw new Error;
         }
 
         page.structure.glacier.date_panel.classList.remove('data-is-loading');

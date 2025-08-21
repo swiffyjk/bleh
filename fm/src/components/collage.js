@@ -221,6 +221,16 @@ export function collage({
             return;
         }
 
+        if (!auth.name) {
+            notify({
+                id: 'collage_failed',
+                title: tl(trans.name_failed).replace('{name}', tl(trans.collage)),
+                body: tl(trans.you_need_to_be_logged_in),
+                type: 'error'
+            });
+            return;
+        }
+
         let per_page = 50; // decided by last.fm
         let pages = Math.ceil((width_input.value * height_input.value) / per_page);
 

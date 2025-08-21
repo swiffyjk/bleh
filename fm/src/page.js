@@ -90,8 +90,10 @@ export function bleh() {
     });
 
     let pre_observer = new MutationObserver((mutations) => {
-        if (document.body)
+        if (document.body) {
             log(`${JSON.stringify(document.body.classList)}`, 'load');
+            document.body.classList.add('bleh');
+        }
 
         if (document.body && document.body.querySelector('.adaptive-skin-container') && document.body.querySelector('.footer')) {
             bleh_main();
@@ -107,6 +109,10 @@ export function bleh() {
 }
 
 function bleh_main() {
+    log('main thread starting', 'page', 'log', {
+        document,
+        body: document.body
+    });
     let performance_start = performance.now();
 
     auth_link.state = document.querySelector('a.auth-link');

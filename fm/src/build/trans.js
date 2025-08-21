@@ -3664,6 +3664,9 @@ export const trans = {
     },
     event_radius: {
         en: 'Event search radius'
+    },
+    you_need_to_be_logged_in: {
+        en: 'You need to be logged in'
     }
 }
 

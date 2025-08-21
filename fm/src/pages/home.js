@@ -35,13 +35,18 @@ export async function bleh_home() {
     log('status is', 'page', 'info', page);
     update_page();
 
-    const cache = await load_profile_cache_externally(auth.name);
-    if (cache.banner)
-        register_background(cache.banner);
-    else if (auth.avatar && !auth.avatar.endsWith('818148bf682d429dc215c1705eb27b98.png'))
-        register_background(auth.avatar.replace('/avatar42s/', '/ar0/'));
-    else
+    let cache;
+    if (auth.name) {
+        cache = await load_profile_cache_externally(auth.name);
+        if (cache.banner)
+            register_background(cache.banner);
+        else if (auth.avatar && !auth.avatar.endsWith('818148bf682d429dc215c1705eb27b98.png'))
+            register_background(auth.avatar.replace('/avatar42s/', '/ar0/'));
+        else
+            register_background(null);
+    } else {
         register_background(null);
+    }
 
 
     let hour = new Date().getHours();

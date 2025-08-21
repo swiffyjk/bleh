@@ -156,10 +156,10 @@ export function compare({
                     <input type="text" class="input" ref=${el => input = el} placeholder=${tl(trans.enter_a_profile)} value=${page.requested.profile} onchange=${e => {
                         page.requested.profile = e.target.value;
                         page.name = page.requested.profile;
-                        
+
                         page.avatar = '';
                         if (page.name == auth.name) page.avatar = auth.avatar;
-                        
+
                         render(user, html`
                             ${render_user(page.name, page.avatar, user, true)}
                         `);
@@ -168,16 +168,16 @@ export function compare({
                         let btn = html.node`
                             <button class="btn chibi icon" data-type="profile_shortcut" onclick=${() => {
                                 if (settings.profile_shortcut == '') return;
-                                
+
                                 input.value = settings.profile_shortcut;
                                 input.dispatchEvent(new Event('change'));
                             }}>${tl(trans.profile_shortcut.name)}</button>
                         `;
-                        
+
                         tippy(btn, {
                             content: tl(trans.profile_shortcut.name)
                         });
-                        
+
                         return btn;
                     }}
                 </div>
@@ -191,7 +191,7 @@ export function compare({
 
         if (parseInt(pages.value) > 3 && !bypass) {
             let warn = notify({
-                id: 'collage_warning',
+                id: 'compare_warning',
                 title: tl(trans.are_you_sure),
                 body: tl(trans.this_will_require_loading_count_pages).replace('{c}', parseInt(pages.value) * 2),
                 type: 'warning',
@@ -206,6 +206,16 @@ export function compare({
                     }
                 ],
                 persist: true
+            });
+            return;
+        }
+
+        if (!auth.name) {
+            notify({
+                id: 'compare_failed',
+                title: tl(trans.name_failed).replace('{name}', tl(trans.compare)),
+                body: tl(trans.you_need_to_be_logged_in),
+                type: 'error'
             });
             return;
         }

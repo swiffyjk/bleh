@@ -61,7 +61,7 @@ export function redesign_profile_header(is_own_profile, is_following) {
         <section class="side-actions" />
     `;
 
-    if (!is_own_profile && page.name != sponsor_list.sponsor_account) {
+    if (!is_own_profile && page.name != sponsor_list.sponsor_account && auth.name) {
         // follow
         let follow_wrap = document.body.querySelector('.header-avatar .class > div');
 

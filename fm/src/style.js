@@ -56,7 +56,6 @@ function load_cached_style(cached_style) {
 
     style_cache.onload = () => {
         log('loaded cache', 'style');
-        document.body.classList.add('bleh');
 
         chart_reflow();
 

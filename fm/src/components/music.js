@@ -23,12 +23,13 @@ import {submit_scrobble} from "./scrobble.js";
 import tippy from "tippy.js";
 import {Chart} from "../main.js";
 import {DateTime} from "luxon";
+import { load_profile_cache_externally, open_starred_friend_window } from '../pages/profile.js';
 
 unsafeWindow._other_listener = function(id) {
     other_listener(id);
 }
 
-export function show_your_scrobbles() {
+export async function show_your_scrobbles() {
     let katsune = ff('katsune');
     show_numbers_on_side(page.type);
 
@@ -236,12 +237,14 @@ export function show_your_scrobbles() {
 
 
     // profile shortcut :3
-    if (settings.profile_shortcut != '') {
+    if (settings.starred_friend != '') {
+        const cache = await load_profile_cache_externally(settings.starred_friend);
+
         let shortcut_listens = {
-            name: settings.profile_shortcut,
+            name: settings.starred_friend,
             listens: -1,
             link: scrobble_page,
-            avi: localStorage.getItem('bleh_profile_shortcut_avi'),
+            avi: cache.avatar,
             katsune: katsune
         }
         // create child for them
@@ -801,7 +804,7 @@ function create_listen_item(parent, {name, listens, link, avi, count=0, button=f
                     ${tl(trans.profile)}
                 </a>
                 <div class="sep"></div>
-                <button class="dropdown-menu-clickable-item" onclick="_open_profile_shortcut_window()" data-menu-item="settings">
+                <button class="dropdown-menu-clickable-item" onclick=${() => open_starred_friend_window()} data-menu-item="settings">
                     ${tl(trans.settings)}
                 </button>
             `),

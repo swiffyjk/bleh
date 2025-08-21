@@ -282,6 +282,7 @@ export async function render_setting_page(page_id) {
             <section class="bleh--panel">
                 <h4>${tl(trans.profile)}</h4>
                 <div class="setting-group">
+                    ${auth.name ? html.node`
                     <div class="setting" data-type="info">
                         <div class="avatar-container">
                             <div class="avatar-inner">
@@ -343,6 +344,7 @@ export async function render_setting_page(page_id) {
                             ` : ''}
                         </div>
                     </div>
+                    ` : ''}
                     ${auth.sponsor ? html.node`
                     <div class="setting" data-type="action">
                         <div class="heading">
@@ -389,6 +391,7 @@ export async function render_setting_page(page_id) {
                 </div>
             </section>
             ` : ''}
+            ${auth.name ? html.node`
             <section class="bleh--panel">
                 <h4>${tl(trans.api.short)}</h4>
                 <div class="setting-group">
@@ -417,6 +420,7 @@ export async function render_setting_page(page_id) {
                     </div>
                 </div>
             </section>
+            ` : ''}
             <section class="bleh--panel">
                 <h4>${tl(trans.language)}</h4>
                 <div class="languages">
@@ -471,7 +475,7 @@ export async function render_setting_page(page_id) {
             </section>
         `);
     } else if (page_id == 'visual') {
-        if (auth.sets.hue == 255 && auth.sets.sat == 1 && auth.sets.lit == 1) {
+        if (auth.name && auth.sets.hue == 255 && auth.sets.sat == 1 && auth.sets.lit == 1) {
             setTimeout(() => {
                 render_setting_page('visual');
             }, 10);
@@ -1719,6 +1723,8 @@ export function display_colour_presets() {
                 if (!ff(colour.requires_flag))
                     return;
             }
+
+            if (colour.type == 'avatar' && !auth.name) return;
 
             let text;
             if (colour.label) text = tl(colour.label);

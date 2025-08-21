@@ -33870,7 +33870,7 @@
   unsafeWindow._other_listener = function(id) {
     other_listener(id);
   };
-  function show_your_scrobbles() {
+  async function show_your_scrobbles() {
     let katsune = ff("katsune");
     show_numbers_on_side(page.type);
     let page_is_blocked = !page.structure.main.querySelector("#shoutbox");
@@ -34044,12 +34044,13 @@
       your_listens.listens = clean_number(scrobble_button.textContent.trim());
     }
     create_listen_item(listen_container, your_listens, page.type);
-    if (settings.profile_shortcut != "") {
+    if (settings.starred_friend != "") {
+      const cache2 = await load_profile_cache_externally(settings.starred_friend);
       let shortcut_listens = {
-        name: settings.profile_shortcut,
+        name: settings.starred_friend,
         listens: -1,
         link: scrobble_page,
-        avi: localStorage.getItem("bleh_profile_shortcut_avi"),
+        avi: cache2.avatar,
         katsune
       };
       const listen_item = create_listen_item(listen_container, shortcut_listens);
@@ -34477,7 +34478,7 @@
                     ${tl(trans.profile)}
                 </a>
                 <div class="sep"></div>
-                <button class="dropdown-menu-clickable-item" onclick="_open_profile_shortcut_window()" data-menu-item="settings">
+                <button class="dropdown-menu-clickable-item" onclick=${() => open_starred_friend_window()} data-menu-item="settings">
                     ${tl(trans.settings)}
                 </button>
             `,
@@ -35544,6 +35545,15 @@
         });
         return;
       }
+      if (!auth.name) {
+        notify({
+          id: "collage_failed",
+          title: tl(trans.name_failed).replace("{name}", tl(trans.collage)),
+          body: tl(trans.you_need_to_be_logged_in),
+          type: "error"
+        });
+        return;
+      }
       let per_page = 50;
       let pages = Math.ceil(width_input.value * height_input.value / per_page);
       if (pages > 4 && !bypass) {
@@ -36245,7 +36255,7 @@
       if (page.name == "") return;
       if (parseInt(pages.value) > 3 && !bypass) {
         let warn = notify({
-          id: "collage_warning",
+          id: "compare_warning",
           title: tl(trans.are_you_sure),
           body: tl(trans.this_will_require_loading_count_pages).replace("{c}", parseInt(pages.value) * 2),
           type: "warning",
@@ -36260,6 +36270,15 @@
             }
           ],
           persist: true
+        });
+        return;
+      }
+      if (!auth.name) {
+        notify({
+          id: "compare_failed",
+          title: tl(trans.name_failed).replace("{name}", tl(trans.compare)),
+          body: tl(trans.you_need_to_be_logged_in),
+          type: "error"
         });
         return;
       }
@@ -39108,7 +39127,6 @@
         log("table is null?", "glacier library", "error");
         console.info("glacier library", doc.body.innerHTML);
         console.info("glacier library", new DOMParser().parseFromString(doc.body.innerHTML, "text/html"));
-        throw new Error();
       }
       page.structure.glacier.date_panel.classList.remove("data-is-loading");
     });
@@ -39461,6 +39479,7 @@
 
   // src/chart.js
   function chart_reflow() {
+    if (!document.body) return;
     load_chart_colours();
     if ((page.type == "artist" || page.type == "album" || page.type == "track") && page.subpage == "overview")
       bleh_music_page_charts();
@@ -39734,7 +39753,7 @@
     let profile_header = html.node`
         <section class="side-actions" />
     `;
-    if (!is_own_profile && page.name != sponsor_list.sponsor_account) {
+    if (!is_own_profile && page.name != sponsor_list.sponsor_account && auth.name) {
       let follow_wrap = document.body.querySelector(".header-avatar .class > div");
       if (follow_wrap) {
         let follow_btn = follow_wrap.querySelector("button");
@@ -42997,7 +43016,7 @@
       trigger: "click"
     });
   }
-  function bio_parse(text3, cache2 = true) {
+  function bio_parse(text3, cache2 = true, take_effect = true) {
     let temp = document.createElement("div");
     temp.classList.add("markdown-body");
     render(temp, markdown(text3.textContent, {
@@ -43006,6 +43025,7 @@
       allow_icons: true,
       allow_hue: true,
       cache: cache2,
+      take_effect,
       allow_socials: true
     }));
     return temp;
@@ -43035,7 +43055,6 @@
           log("table is null?", "glacier library", "error");
           console.info("glacier library", doc.body.innerHTML);
           console.info("glacier library", new DOMParser().parseFromString(doc.body.innerHTML, "text/html"));
-          throw new Error();
         }
       });
     }, { threshold: 0.3, rootMargin: "0px" });
@@ -43180,7 +43199,7 @@
         const about_me_sidebar = doc.querySelector(".about-me-sidebar");
         if (about_me_sidebar) {
           let about_me_text = about_me_sidebar.querySelector("p");
-          bio_parse(about_me_text, cache2 ? cache2 : true);
+          bio_parse(about_me_text, cache2 ? cache2 : true, false);
         } else {
           delete cache2.banner;
           delete cache2.hue;
@@ -45294,7 +45313,6 @@
     document.documentElement.appendChild(style_cache);
     style_cache.onload = () => {
       log("loaded cache", "style");
-      document.body.classList.add("bleh");
       chart_reflow();
       log("checking timeout", "style");
       check_if_style_cache_is_valid();
@@ -45691,6 +45709,7 @@
             <section class="bleh--panel">
                 <h4>${tl(trans.profile)}</h4>
                 <div class="setting-group">
+                    ${auth.name ? html.node`
                     <div class="setting" data-type="info">
                         <div class="avatar-container">
                             <div class="avatar-inner">
@@ -45751,6 +45770,7 @@
                             ` : ""}
                         </div>
                     </div>
+                    ` : ""}
                     ${auth.sponsor ? html.node`
                     <div class="setting" data-type="action">
                         <div class="heading">
@@ -45797,6 +45817,7 @@
                 </div>
             </section>
             ` : ""}
+            ${auth.name ? html.node`
             <section class="bleh--panel">
                 <h4>${tl(trans.api.short)}</h4>
                 <div class="setting-group">
@@ -45825,6 +45846,7 @@
                     </div>
                 </div>
             </section>
+            ` : ""}
             <section class="bleh--panel">
                 <h4>${tl(trans.language)}</h4>
                 <div class="languages">
@@ -45874,7 +45896,7 @@
             </section>
         `);
     } else if (page_id == "visual") {
-      if (auth.sets.hue == 255 && auth.sets.sat == 1 && auth.sets.lit == 1) {
+      if (auth.name && auth.sets.hue == 255 && auth.sets.sat == 1 && auth.sets.lit == 1) {
         setTimeout(() => {
           render_setting_page("visual");
         }, 10);
@@ -47053,6 +47075,7 @@
           if (!ff(colour2.requires_flag))
             return;
         }
+        if (colour2.type == "avatar" && !auth.name) return;
         let text3;
         if (colour2.label) text3 = tl(colour2.label);
         if (!colour2.type)
@@ -48605,8 +48628,27 @@
         </div>
     `, navs);
     let new_auth = masthead.querySelector(".auth-dropdown-menu");
+    let links = masthead.querySelector(".masthead-nav .navlist-items");
+    render(links, html``);
     let auth_link2 = masthead.querySelector(".masthead-nav-wrap > .site-auth .auth-link");
-    if (!auth_link2) return;
+    if (!auth_link2) {
+      render(links, html`
+            ${() => {
+        const elem = html.node`
+                    <li class="masthead-nav-item">
+                        <a class="masthead-nav-control" href="${root}bleh" data-label="bleh_no_auth">
+                            ${tl(trans.bleh_settings)}
+                        </a>
+                    </li>
+                `;
+        tippy_esm_default(elem, {
+          content: tl(trans.bleh_settings)
+        });
+        return elem;
+      }}
+        `);
+      return;
+    }
     if (auth_link2.hasAttribute("data-bleh")) return;
     auth_link2.setAttribute("data-bleh", "true");
     auth_link2.appendChild(html.node`
@@ -48620,8 +48662,6 @@
             <span class="label user-status-subscriber auth-badge">${tl(trans.badges["user-status-subscriber"].name)}</span>
         `);
     }
-    let links = masthead.querySelector(".masthead-nav .navlist-items");
-    render(links, html``);
     let bleh_container = html.node`
         <li class="masthead-nav-item">
             <a class="masthead-nav-control" href="${root}bleh${stored_season.id != "none" ? "/seasonal" : ""}" data-label="bleh" data-season="${stored_season.id}" data-season-active="${stored_season.id != "none" ? "true" : "false"}">
@@ -50435,13 +50475,18 @@
     checkup_page_structure(false, content_top);
     log("status is", "page", "info", page);
     update_page();
-    const cache2 = await load_profile_cache_externally(auth.name);
-    if (cache2.banner)
-      register_background(cache2.banner);
-    else if (auth.avatar && !auth.avatar.endsWith("818148bf682d429dc215c1705eb27b98.png"))
-      register_background(auth.avatar.replace("/avatar42s/", "/ar0/"));
-    else
+    let cache2;
+    if (auth.name) {
+      cache2 = await load_profile_cache_externally(auth.name);
+      if (cache2.banner)
+        register_background(cache2.banner);
+      else if (auth.avatar && !auth.avatar.endsWith("818148bf682d429dc215c1705eb27b98.png"))
+        register_background(auth.avatar.replace("/avatar42s/", "/ar0/"));
+      else
+        register_background(null);
+    } else {
       register_background(null);
+    }
     let hour = (/* @__PURE__ */ new Date()).getHours();
     let time;
     if (hour >= 22 || hour <= 6)
@@ -51995,8 +52040,10 @@
       childList: true
     });
     let pre_observer = new MutationObserver((mutations) => {
-      if (document.body)
+      if (document.body) {
         log(`${JSON.stringify(document.body.classList)}`, "load");
+        document.body.classList.add("bleh");
+      }
       if (document.body && document.body.querySelector(".adaptive-skin-container") && document.body.querySelector(".footer")) {
         bleh_main();
         favi();
@@ -52008,6 +52055,10 @@
     });
   }
   function bleh_main() {
+    log("main thread starting", "page", "log", {
+      document,
+      body: document.body
+    });
     let performance_start = performance.now();
     auth_link.state = document.querySelector("a.auth-link");
     if (auth_link.state)
@@ -56175,6 +56226,9 @@
     },
     event_radius: {
       en: "Event search radius"
+    },
+    you_need_to_be_logged_in: {
+      en: "You need to be logged in"
     }
   };
   var trans_legacy = {
