@@ -149,16 +149,6 @@ export function redesign_profile_header(is_own_profile, is_following) {
                     link: `${root}bleh/minis/compare?profile=${page.name}`
                 });
             }
-
-            if (ff('charts')) {
-                create_profile_top_item(profile_header, {
-                    name: page.name,
-                    type: 'collage',
-                    link: `${root}bleh/minis/collage?profile=${page.name}`,
-                    text: tl(trans.collage),
-                    updated: true
-                });
-            }
         }
 
 

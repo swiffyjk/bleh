@@ -100,6 +100,9 @@ export function bleh() {
             favi();
 
             pre_observer.disconnect();
+        } else if (document.body && document.body.querySelector(':scope > .container')) {
+            // error 503
+            document.body.classList.add('bleh-loaded');
         }
     });
 

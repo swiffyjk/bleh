@@ -39826,15 +39826,6 @@
             link: `${root}bleh/minis/compare?profile=${page.name}`
           });
         }
-        if (ff("charts")) {
-          create_profile_top_item(profile_header, {
-            name: page.name,
-            type: "collage",
-            link: `${root}bleh/minis/collage?profile=${page.name}`,
-            text: tl(trans.collage),
-            updated: true
-          });
-        }
       }
       if (page.structure.container.querySelector(".user-status-staff")) {
         create_profile_top_item(profile_header, {
@@ -52048,6 +52039,8 @@
         bleh_main();
         favi();
         pre_observer.disconnect();
+      } else if (document.body && document.body.querySelector(":scope > .container")) {
+        document.body.classList.add("bleh-loaded");
       }
     });
     pre_observer.observe(document.documentElement, {
