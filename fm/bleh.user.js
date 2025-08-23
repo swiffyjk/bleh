@@ -43670,7 +43670,7 @@
           sister = desanitise(split[0]);
         }
       }
-      if (sister != void 0)
+      if (sister)
         tippy_esm_default(link, {
           theme: "name-sister-combo",
           content: html.node`
@@ -43678,7 +43678,7 @@
                     <span class="sister">${sister}</span>
                 `
         });
-      link.setAttribute("data-link-type", type);
+      if (type) link.setAttribute("data-link-type", type);
     });
   }
 
@@ -52641,7 +52641,7 @@
         },
         reason: {
           en: "Official member of Last.fm",
-          de: "Ofizielles Mitglied von Last FM",
+          de: "Ofizielles Mitglied von Last.fm",
           pt: "Membro oficial da Last.fm"
         }
       },
@@ -52652,7 +52652,7 @@
         },
         reason: {
           en: "Official member of Last.fm",
-          de: "Ofizielles Mitglied von Last FM",
+          de: "Ofizielles Mitglied von Last.fm",
           pt: "Membro oficial do Last.fm"
         }
       },
@@ -52661,9 +52661,7 @@
           en: "Alum"
         },
         reason: {
-          en: "Since the beginning",
-          de: "Von Anfang an",
-          pt: "Desde o in\xEDcio"
+          en: "Former member of Last.fm"
         }
       },
       "label--fade": {

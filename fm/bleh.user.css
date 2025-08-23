@@ -3379,24 +3379,22 @@
 
         position: relative;
 
-        /*&:before {
+        &:before {
             content: '';
             position: absolute;
             left: var(--button-sides);
-            bottom: -24px;
+            top: 0;
+            bottom: 0;
             right: var(--button-sides);
-            height: 24px;
-            display: var(--cards-overlay-display);
-            background-image: var(--cards-overlay-image-spikes, unset) !important;
-            background-repeat: repeat-x;
-            background-position: unset !important;
+            height: 42px;
+            display: flex !important;
+            background: linear-gradient(180deg, transparent, hsl(var(--b6), 50%));
             pointer-events: none;
-            opacity: 0.6;
+            opacity: 1;
 
-            /* fix for no-data-message overriding and stuff */
-            /*margin: unset;
-            width: unset;
-        }*/
+            border-top-left-radius: 60px;
+            border-top-right-radius: 60px;
+        }
 
         &:after {
             content: '';
@@ -3719,6 +3717,7 @@
             --icon-gap: 2px;
             margin: unset !important;
 
+            &:before,
             &:after {
                 display: none !important;
             }
@@ -7340,18 +7339,21 @@
         --sat-over: 1;
         --lit-over: 1;
     }
+    .user-status--bleh-avatar-status-dot--staff,
     .avatar-status-dot--staff {
         --mask: var(--icon-staff);
         --hue-over: 360;
         --sat-over: 1.325;
         --lit-over: 0.825;
     }
+    .user-status--bleh-avatar-status-dot--mod,
     .avatar-status-dot--mod {
         --mask: var(--icon-mod);
         --hue-over: 10;
         --sat-over: 1;
         --lit-over: 1;
     }
+    .user-status--bleh-avatar-status-dot--alum,
     .avatar-status-dot--alum {
         --mask: var(--icon-alum);
         --hue-over: 20;
@@ -7359,19 +7361,6 @@
         --lit-over: 1;
     }
 
-
-    .staff-shout {
-        --hue-over: 360;
-        --sat-over: 1.325;
-        --lit-over: 0.825;
-        color: hsl(var(--c2));
-
-        a {
-            --hue-over: var(--hue-neg);
-            --sat-over: 1;
-            --lit-over: 1;
-        }
-    }
 
     /* missing avatar */
     [src=""], .avatar > img:not([src]),

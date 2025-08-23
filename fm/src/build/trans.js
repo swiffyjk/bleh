@@ -86,7 +86,7 @@ export const trans = {
             },
             reason: {
                 en: 'Official member of Last.fm',
-                de: 'Ofizielles Mitglied von Last FM',
+                de: 'Ofizielles Mitglied von Last.fm',
                 pt: 'Membro oficial da Last.fm'
             }
         },
@@ -97,7 +97,7 @@ export const trans = {
             },
             reason: {
                 en: 'Official member of Last.fm',
-                de: 'Ofizielles Mitglied von Last FM',
+                de: 'Ofizielles Mitglied von Last.fm',
                 pt: 'Membro oficial do Last.fm'
             }
         },
@@ -106,9 +106,7 @@ export const trans = {
                 en: 'Alum'
             },
             reason: {
-                en: 'Since the beginning',
-                de: 'Von Anfang an',
-                pt: 'Desde o início'
+                en: 'Former member of Last.fm'
             }
         },
         'label--fade': {

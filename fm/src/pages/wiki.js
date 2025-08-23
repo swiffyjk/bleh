@@ -432,7 +432,7 @@ export function patch_wiki_contents(wiki_block) {
             }
         }
 
-        if (sister != undefined)
+        if (sister)
             tippy(link, {
                 theme: 'name-sister-combo',
                 content: html.node`
@@ -441,6 +441,6 @@ export function patch_wiki_contents(wiki_block) {
                 `
             });
 
-        link.setAttribute('data-link-type', type);
+        if (type) link.setAttribute('data-link-type', type);
     });
 }
