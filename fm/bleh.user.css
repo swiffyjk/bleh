@@ -1339,9 +1339,9 @@
             height: calc(20px + 32px + 110px);
             z-index: 10;
 
-            backdrop-filter: blur(35px) saturate(var(--blur-saturate)) brightness(var(--blur-brightness)) contrast(var(--blur-contrast));
+            /*backdrop-filter: blur(35px) saturate(var(--blur-saturate)) brightness(var(--blur-brightness)) contrast(var(--blur-contrast));
             -webkit-backdrop-filter: blur(35px) saturate(var(--blur-saturate)) brightness(var(--blur-brightness)) contrast(var(--blur-contrast));
-            --mask: linear-gradient(0deg, transparent 30%, white 90%);
+            */--mask: linear-gradient(0deg, transparent 30%, white 90%);
             mask-image: var(--mask);
             -webkit-mask-image: var(--mask);
 
