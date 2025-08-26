@@ -33,6 +33,7 @@ import {redirect} from "../components/music.js";
 import tippy from "tippy.js";
 import {Chart} from "../main.js";
 import { expand_avatar } from '../avatar.js'
+import { status } from '../components/status.js'
 
 export async function bleh_profiles() {
     // the obsessions page is a user subpage but works very differently
@@ -70,31 +71,33 @@ export async function bleh_profiles() {
 
     let about_me_sidebar = page.structure.row.querySelector('.about-me-sidebar');
 
-    if (!about_me_sidebar) {
-        delete cache.banner;
-        delete cache.hue;
-        delete cache.sat;
-        delete cache.lit;
+    if (page.subpage == 'overview') {
+        if (!about_me_sidebar) {
+            delete cache.banner;
+            delete cache.hue;
+            delete cache.sat;
+            delete cache.lit;
 
-        about_me_sidebar = html.node`
-            <section class="about-me-sidebar">
-                <h2>${tl(trans.about)}</h2>
-                <p class="subtle">${tl(trans.no_about).replace('{u}', page.name)}</p>
-            </section>
-        `;
-        page.structure.side.insertBefore(about_me_sidebar, page.structure.side.firstElementChild);
-    } else {
-        if (settings.bio_markdown) {
-            // parse body
-            let about_me_text = about_me_sidebar.querySelector('p');
-            let result = bio_parse(about_me_text, cache);
+            about_me_sidebar = html.node`
+                <section class="about-me-sidebar">
+                    <h2>${tl(trans.about)}</h2>
+                    <p class="subtle">${tl(trans.no_about).replace('{u}', page.name)}</p>
+                </section>
+            `;
+            page.structure.side.insertBefore(about_me_sidebar, page.structure.side.firstElementChild);
+        } else {
+            if (settings.bio_markdown) {
+                // parse body
+                let about_me_text = about_me_sidebar.querySelector('p');
+                let result = bio_parse(about_me_text, cache);
 
-            about_me_text.after(result);
-            about_me_text.remove();
+                about_me_text.after(result);
+                about_me_text.remove();
+            }
         }
-    }
 
-    if (page.mobile) page.structure.main.insertBefore(about_me_sidebar, page.structure.main.firstElementChild);
+        if (page.mobile) page.structure.main.insertBefore(about_me_sidebar, page.structure.main.firstElementChild);
+    }
 
     let avatar = profile_header.querySelector('.avatar');
     let title_wrap = profile_header.querySelector('.header-title-label-wrap');
@@ -322,13 +325,13 @@ export async function bleh_profiles() {
                         ${tl(trans.explore_in_library)}
                     </a>
                 </div>
-                ` : html.node`
+                ` : auth.name ? html.node`
                 <div class="scrobble-canvas-container mini">
                     <div class="loading-data-container">
                         <div class="loading-data-text failed">${tl(trans.profile_does_not_have_enough_scrobbles)}</div>
                     </div>
                 </div>
-                `}
+                ` : html.node``}
             </section>
         `;
 
@@ -911,10 +914,9 @@ function refresh_tracks(button, {
 
         if (!tracklist_panel) {
             if (!quiet) {
-                notify({
+                status({
                     title: tl(trans.recent_tracks),
                     body: tl(trans.value_failed_to_load).replace('{v}', tl(trans.library)),
-                    icon: 'icon-16-refresh',
                     type: 'error'
                 });
             }
@@ -922,10 +924,9 @@ function refresh_tracks(button, {
         }
 
         if (!quiet) {
-            notify({
+            status({
                 title: tl(trans.recent_tracks),
-                body: tl(trans.refreshed),
-                icon: 'icon-16-refresh'
+                body: tl(trans.refreshed)
             });
         }
         panel.classList.add('has-refreshed');

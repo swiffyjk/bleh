@@ -39911,7 +39911,7 @@
     else
       page.structure.main.insertBefore(profile_header, page.structure.main.firstElementChild);
     let listen_container = page.structure.row.querySelector(".listen-panel");
-    if (!is_own_profile && page.name != sponsor_list.sponsor_account && katsune) {
+    if (!is_own_profile && page.name != sponsor_list.sponsor_account && katsune && auth.name) {
       if (taste == "") {
         listen_container.appendChild(html.node`
                 <div class="loading-data-container">
@@ -41922,27 +41922,29 @@
     let profile_cache = JSON.parse(localStorage.getItem("bleh_profile_cache")) || {};
     let cache2 = profile_cache[page.name] || {};
     let about_me_sidebar = page.structure.row.querySelector(".about-me-sidebar");
-    if (!about_me_sidebar) {
-      delete cache2.banner;
-      delete cache2.hue;
-      delete cache2.sat;
-      delete cache2.lit;
-      about_me_sidebar = html.node`
-            <section class="about-me-sidebar">
-                <h2>${tl(trans.about)}</h2>
-                <p class="subtle">${tl(trans.no_about).replace("{u}", page.name)}</p>
-            </section>
-        `;
-      page.structure.side.insertBefore(about_me_sidebar, page.structure.side.firstElementChild);
-    } else {
-      if (settings.bio_markdown) {
-        let about_me_text = about_me_sidebar.querySelector("p");
-        let result = bio_parse(about_me_text, cache2);
-        about_me_text.after(result);
-        about_me_text.remove();
+    if (page.subpage == "overview") {
+      if (!about_me_sidebar) {
+        delete cache2.banner;
+        delete cache2.hue;
+        delete cache2.sat;
+        delete cache2.lit;
+        about_me_sidebar = html.node`
+                <section class="about-me-sidebar">
+                    <h2>${tl(trans.about)}</h2>
+                    <p class="subtle">${tl(trans.no_about).replace("{u}", page.name)}</p>
+                </section>
+            `;
+        page.structure.side.insertBefore(about_me_sidebar, page.structure.side.firstElementChild);
+      } else {
+        if (settings.bio_markdown) {
+          let about_me_text = about_me_sidebar.querySelector("p");
+          let result = bio_parse(about_me_text, cache2);
+          about_me_text.after(result);
+          about_me_text.remove();
+        }
       }
+      if (page.mobile) page.structure.main.insertBefore(about_me_sidebar, page.structure.main.firstElementChild);
     }
-    if (page.mobile) page.structure.main.insertBefore(about_me_sidebar, page.structure.main.firstElementChild);
     let avatar3 = profile_header.querySelector(".avatar");
     let title_wrap = profile_header.querySelector(".header-title-label-wrap");
     let sub_wrap = profile_header.querySelector(".header-title-secondary");
@@ -42126,13 +42128,13 @@
                         ${tl(trans.explore_in_library)}
                     </a>
                 </div>
-                ` : html.node`
+                ` : auth.name ? html.node`
                 <div class="scrobble-canvas-container mini">
                     <div class="loading-data-container">
                         <div class="loading-data-text failed">${tl(trans.profile_does_not_have_enough_scrobbles)}</div>
                     </div>
                 </div>
-                `}
+                ` : html.node``}
             </section>
         `;
       if (scrobbles > 0) {
@@ -42571,20 +42573,18 @@
       button.removeAttribute("disabled");
       if (!tracklist_panel) {
         if (!quiet) {
-          notify({
+          status({
             title: tl(trans.recent_tracks),
             body: tl(trans.value_failed_to_load).replace("{v}", tl(trans.library)),
-            icon: "icon-16-refresh",
             type: "error"
           });
         }
         return;
       }
       if (!quiet) {
-        notify({
+        status({
           title: tl(trans.recent_tracks),
-          body: tl(trans.refreshed),
-          icon: "icon-16-refresh"
+          body: tl(trans.refreshed)
         });
       }
       panel.classList.add("has-refreshed");

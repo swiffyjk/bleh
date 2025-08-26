@@ -209,7 +209,7 @@ export function redesign_profile_header(is_own_profile, is_following) {
 
     let listen_container = page.structure.row.querySelector('.listen-panel');
 
-    if (!is_own_profile && page.name != sponsor_list.sponsor_account && katsune) {
+    if (!is_own_profile && page.name != sponsor_list.sponsor_account && katsune && auth.name) {
         if (taste == '') {
             listen_container.appendChild(html.node`
                 <div class="loading-data-container">
