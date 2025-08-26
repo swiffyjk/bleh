@@ -138,11 +138,6 @@ export async function bleh_home() {
                             ${tl(trans.settings)}
                         </a>
                     </li>
-                    <li class="navlist-item secondary-nav-item secondary-nav-item--more">
-                        <a class="secondary-nav-item-link no-text">
-                            ${tl(trans.more)}
-                        </a>
-                    </li>
                 </ul>
             </nav>
         `;
@@ -166,11 +161,6 @@ export async function bleh_home() {
                             ${tl(trans.settings)}
                         </a>
                     </li>
-                    <li class="navlist-item secondary-nav-item secondary-nav-item--more">
-                        <a class="secondary-nav-item-link no-text">
-                            ${tl(trans.more)}
-                        </a>
-                    </li>
                 </ul>
             </nav>
         `;
@@ -185,29 +175,6 @@ export async function bleh_home() {
 
     if (page.type == 'settings')
         bleh_native_settings();
-
-    let menu_button = nav.querySelector('.secondary-nav-item--more a');
-    tippy(menu_button, {
-        theme: "menu",
-        content: html.node`
-            <button class="dropdown-menu-clickable-item sponsor" onclick="_sponsor()">
-                ${tl(trans.sponsor)}
-            </button>
-            <a class="dropdown-menu-clickable-item issues" href="https://github.com/katelyynn/bleh/issues" target="_blank">
-                ${tl(trans.report_issue)}
-            </a>
-        `,
-        placement: "bottom",
-        interactive: true,
-        interactiveBorder: 10,
-        trigger: "click",
-
-        onShow(instance) {
-            instance.popper.addEventListener('click', event => {
-                instance.hide();
-            });
-        }
-    });
 
 
     if (page.subpage == 'music') {

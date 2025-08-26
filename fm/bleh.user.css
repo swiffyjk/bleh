@@ -240,7 +240,7 @@
         --b5: var(--hue), calc(var(--sat) * 5% * var(--sat-bg, 1)), 18%;
 
         /* root */
-        --b6: var(--hue), calc(var(--sat) * 7% * var(--sat-bg, 1)), 14%;
+        --b6: var(--hue), calc(var(--sat) * 4% * var(--sat-bg, 1)), 14%;
         --b8: var(--hue), calc(var(--sat) * 4% * var(--sat-bg, 1)), 25%;
         --b7: 0, 0%, 0%;
         --b9: var(--b6);
@@ -273,7 +273,7 @@
             --b5: var(--hue), calc(var(--sat) * 6% * var(--sat-bg, 1)), 9%;
 
             /* root */
-            --b6: var(--hue), calc(var(--sat) * 8% * var(--sat-bg, 1)), 6%;
+            --b6: var(--hue), calc(var(--sat) * 5% * var(--sat-bg, 1)), 6%;
             --b8: var(--hue), calc(var(--sat) * 5% * var(--sat-bg, 1)), 15%;
             --b7: 0, 0%, 0%;
         }
@@ -594,7 +594,7 @@
     body {
         --card-padding: 20px;
         --card-radius: var(--item-big-radius);
-        --card-shadow: 0 8px 15px 1px rgba(0, 0, 0, 0.45);
+        --card-shadow: 0 8px 35px rgba(0, 0, 0, 0.45);
         --card-gap: 15px;
 
         --cards-main-width: 902px;
@@ -1665,7 +1665,7 @@
         --shadow: none !important;
         --shadow-hov: none !important;
         --col: hsl(var(--c2)) !important;
-        height: 32px !important;
+        height: var(--button-height) !important;
         display: flex !important;
         align-items: center;
 
@@ -3655,7 +3655,11 @@
 
     .masthead-nav-control {
         /* left padding for icon, otherwise just 12px 16px */
-        --padding: 7px var(--button-sides) 7px calc(var(--button-sides) + var(--icon-size) + var(--icon-gap)) !important;
+        --padding: 7px var(--button-sides) !important;
+
+        &:not(.chibi) {
+            --padding: 7px var(--button-sides) 7px calc(var(--button-sides) + var(--icon-size) + var(--icon-gap)) !important;
+        }
 
         z-index: 1;
         opacity: unset !important;
@@ -7904,8 +7908,7 @@
     .back-button, .delete-button,
     #manage_data .btn-primary,
     .obsession-history-play-all,
-    .done, .cancel, .btn-cancel, .download, .upload, .save, .btn-secondary.js-close:not(.modal-action-button), .form-group button[type="submit"]:not(.btn-post-shout, .image-upload-remove), .modal-button button[type="submit"],
-    .masthead-nav .masthead-nav-control:not(.inbox-item > .masthead-nav-control)
+    .done, .cancel, .btn-cancel, .download, .upload, .save, .btn-secondary.js-close:not(.modal-action-button), .form-group button[type="submit"]:not(.btn-post-shout, .image-upload-remove), .modal-button button[type="submit"]
     {
         --btn-left: calc(var(--button-sides) + var(--icon-size) + var(--icon-gap)) !important;
 

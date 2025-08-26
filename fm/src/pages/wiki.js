@@ -397,9 +397,9 @@ export function patch_wiki_contents(wiki_block) {
                     tippy(link, {
                         theme: 'name-sister-combo',
                         content: html.node`
-                        <span class="name">${href}</span>
-                        <span class="sister">${tl(trans.external)}</span>
-                    `
+                            <span class="name">${href}</span>
+                            <span class="sister">${tl(trans.external)}</span>
+                        `
                     });
                 }
 

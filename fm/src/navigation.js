@@ -22,6 +22,7 @@ import {bleh_notification_list} from "./components/notifications.js";
 import tippy from "tippy.js";
 import { chart_reflow } from './chart.js';
 import { load_profile_cache_externally, open_starred_friend_window } from './pages/profile.js';
+import { sponsor } from './sponsor.js';
 
 export function patch_masthead() {
     let masthead_logo = document.body.querySelector('.masthead-logo');
@@ -281,6 +282,48 @@ export function append_nav() {
     links.appendChild(bleh_container);
 
     page.header.season = bleh_container.querySelector('a');
+
+
+    const more_button = html.node`
+        <button class="masthead-nav-control chibi icon" data-type="more">
+            ${tl(trans.more)}
+        </button>
+    `;
+
+    tippy(more_button, {
+        content: more_button.textContent
+    });
+
+    const more_menu = tippy(more_button, {
+        content: html.node`
+            <button class="dropdown-menu-clickable-item sponsor" onclick=${() => sponsor()}>
+                ${tl(trans.sponsor)}
+            </button>
+            <a class="dropdown-menu-clickable-item lotus" href="https://github.com/katelyynn/lotus/issues/new/choose" target="_blank">
+                ${tl(trans.suggest_correction)}
+            </a>
+            <div class="sep" />
+            <a class="dropdown-menu-clickable-item" data-type="update" href="${root}bleh/general">
+                ${tl(trans.updates)}
+            </a>
+            <a class="dropdown-menu-clickable-item issues" href="https://github.com/katelyynn/bleh/issues" target="_blank">
+                ${tl(trans.report_issue)}
+            </a>
+        `,
+        theme: 'menu',
+        placement: 'top',
+        interactive: true,
+        interactiveBorder: 10,
+        trigger: 'click',
+
+        onShow(instance) {
+            instance.popper.addEventListener('click', event => {
+                instance.hide();
+            });
+        }
+    });
+
+    links.appendChild(more_button);
 
 
     let notif_count = new_auth.querySelector('[data-analytics-label="notifications"] + .auth-avatar-notification-count-badge');

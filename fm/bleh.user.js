@@ -43643,9 +43643,9 @@
             tippy_esm_default(link, {
               theme: "name-sister-combo",
               content: html.node`
-                        <span class="name">${href}</span>
-                        <span class="sister">${tl(trans.external)}</span>
-                    `
+                            <span class="name">${href}</span>
+                            <span class="sister">${tl(trans.external)}</span>
+                        `
             });
           }
           return;
@@ -48675,6 +48675,42 @@
     }
     links.appendChild(bleh_container);
     page.header.season = bleh_container.querySelector("a");
+    const more_button = html.node`
+        <button class="masthead-nav-control chibi icon" data-type="more">
+            ${tl(trans.more)}
+        </button>
+    `;
+    tippy_esm_default(more_button, {
+      content: more_button.textContent
+    });
+    const more_menu = tippy_esm_default(more_button, {
+      content: html.node`
+            <button class="dropdown-menu-clickable-item sponsor" onclick=${() => sponsor()}>
+                ${tl(trans.sponsor)}
+            </button>
+            <a class="dropdown-menu-clickable-item lotus" href="https://github.com/katelyynn/lotus/issues/new/choose" target="_blank">
+                ${tl(trans.suggest_correction)}
+            </a>
+            <div class="sep" />
+            <a class="dropdown-menu-clickable-item" data-type="update" href="${root}bleh/general">
+                ${tl(trans.updates)}
+            </a>
+            <a class="dropdown-menu-clickable-item issues" href="https://github.com/katelyynn/bleh/issues" target="_blank">
+                ${tl(trans.report_issue)}
+            </a>
+        `,
+      theme: "menu",
+      placement: "top",
+      interactive: true,
+      interactiveBorder: 10,
+      trigger: "click",
+      onShow(instance) {
+        instance.popper.addEventListener("click", (event3) => {
+          instance.hide();
+        });
+      }
+    });
+    links.appendChild(more_button);
     let notif_count = new_auth.querySelector('[data-analytics-label="notifications"] + .auth-avatar-notification-count-badge');
     if (!notif_count) notif_count = "0";
     else notif_count = notif_count.textContent;
@@ -50564,11 +50600,6 @@
                             ${tl(trans.settings)}
                         </a>
                     </li>
-                    <li class="navlist-item secondary-nav-item secondary-nav-item--more">
-                        <a class="secondary-nav-item-link no-text">
-                            ${tl(trans.more)}
-                        </a>
-                    </li>
                 </ul>
             </nav>
         `;
@@ -50592,11 +50623,6 @@
                             ${tl(trans.settings)}
                         </a>
                     </li>
-                    <li class="navlist-item secondary-nav-item secondary-nav-item--more">
-                        <a class="secondary-nav-item-link no-text">
-                            ${tl(trans.more)}
-                        </a>
-                    </li>
                 </ul>
             </nav>
         `;
@@ -50608,27 +50634,6 @@
       bleh_charts();
     if (page.type == "settings")
       bleh_native_settings();
-    let menu_button = nav.querySelector(".secondary-nav-item--more a");
-    tippy_esm_default(menu_button, {
-      theme: "menu",
-      content: html.node`
-            <button class="dropdown-menu-clickable-item sponsor" onclick="_sponsor()">
-                ${tl(trans.sponsor)}
-            </button>
-            <a class="dropdown-menu-clickable-item issues" href="https://github.com/katelyynn/bleh/issues" target="_blank">
-                ${tl(trans.report_issue)}
-            </a>
-        `,
-      placement: "bottom",
-      interactive: true,
-      interactiveBorder: 10,
-      trigger: "click",
-      onShow(instance) {
-        instance.popper.addEventListener("click", (event3) => {
-          instance.hide();
-        });
-      }
-    });
     if (page.subpage == "music") {
       let music_sections = document.body.querySelectorAll(".music-section");
       music_sections.forEach((music_section) => {
