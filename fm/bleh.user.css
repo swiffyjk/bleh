@@ -3377,18 +3377,15 @@
         &:before {
             content: '';
             position: absolute;
-            left: var(--button-sides);
-            top: 0;
-            bottom: 0;
-            right: var(--button-sides);
-            height: 42px;
+            left: 0;
+            top: unset;
+            bottom: -10px;
+            right: 0;
+            height: 32px;
             display: flex !important;
-            background: linear-gradient(180deg, transparent, hsl(var(--b6), 50%));
+            background: linear-gradient(180deg, transparent, hsl(var(--b6), 40%));
             pointer-events: none;
             opacity: 1;
-
-            border-top-left-radius: 60px;
-            border-top-right-radius: 60px;
         }
 
         &:after {
