@@ -11,6 +11,7 @@ import {checkup_page_structure} from "../components/structure.js";
 import {html, render} from "lighterhtml";
 import { notify } from '../components/notify.js';
 import { download_with_progress } from '../build/tools.js';
+import { status } from '../components/status.js';
 
 export function mualani() {
     page.structure.container = document.body.querySelector('.page-content');
@@ -92,6 +93,13 @@ export function mualani() {
                     console.info(text);
                 });
             }}>Deliver async progress notification</button>
+        </section>
+        <section class="flexy">
+            <h2>Status alerts</h2>
+            <button class="continue" onclick=${() => status({
+                title: 'test alert',
+                body: 'haiaiai nothing to worry about >_<'
+            })}>Deliver status alert</button>
         </section>
     `);
 }

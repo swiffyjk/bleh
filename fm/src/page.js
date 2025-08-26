@@ -73,6 +73,7 @@ import {bleh_labs} from "./pages/labs.js";
 import {bleh_minis} from "./pages/minis.js";
 import {mualani} from "./pages/mualani.js";
 import { convert_gif_to_png } from './build/tools.js';
+import { load_status } from './components/status.js';
 
 export function bleh() {
     let head_observer = new MutationObserver((mutations) => {
@@ -137,6 +138,7 @@ function bleh_main() {
         patch_masthead();
 
         load_notifications();
+        load_status();
 
         checkup_friend_cache();
 

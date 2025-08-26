@@ -19,6 +19,7 @@ import tippy from "tippy.js";
 import { version } from '../main.js';
 import { select } from './select.js';
 import { input } from './input.js';
+import { status } from './status.js';
 
 export function setting({
     id = '',
@@ -176,11 +177,8 @@ export function setting({
             }
             function reset_range() {
                 update_range(settings_store[id].default);
-                notify({
-                    id: 'reset_setting',
-                    title: tl(trans.settings),
-                    body: tl(trans.reset_item_to_default),
-                    icon: 'icon-16-settings'
+                status({
+                    title: tl(trans.reset_item_to_default)
                 });
             }
 
@@ -438,11 +436,8 @@ export function setting({
 
             function reset_radio() {
                 update_radio(settings_store[id].default);
-                notify({
-                    id: 'reset_setting',
-                    title: tl(trans.settings),
-                    body: tl(trans.reset_item_to_default),
-                    icon: 'icon-16-settings'
+                status({
+                    title: tl(trans.reset_item_to_default)
                 });
             }
 
@@ -640,11 +635,8 @@ export function setting({
 
             function reset_select() {
                 menu.set(settings_store[id].default);
-                notify({
-                    id: 'reset_setting',
-                    title: tl(trans.settings),
-                    body: tl(trans.reset_item_to_default),
-                    icon: 'icon-16-settings'
+                status({
+                    title: tl(trans.reset_item_to_default)
                 });
             }
 

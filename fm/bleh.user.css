@@ -479,8 +479,8 @@
 
         .theme-preview[data-bleh--theme="oled"],
         [data-bleh--theme="oled"] &:not(.theme-preview) {
-            --c1: var(--hue), calc(clamp(min(0), var(--sat), max(1)) * 40%), 100%;
-            --c2: var(--hue), calc(clamp(min(0), var(--sat), max(1)) * 30%), 84%;
+            --c1: var(--hue), calc(clamp(min(0), var(--sat), max(1)) * 30%), 100%;
+            --c2: var(--hue), calc(clamp(min(0), var(--sat), max(1)) * 20%), 84%;
             --c3: var(--hue), calc(clamp(min(0), var(--sat), max(1)) * 10%), 50%;
 
             --l3: var(--hue), calc(var(--sat) * 50%), calc(var(--lit) * 75%);
@@ -26920,5 +26920,68 @@
         padding-top: var(--card-gap);
         margin-top: var(--card-gap);
         border-top: 1px dotted var(--card-border-base);
+    }
+
+    .status-alerts {
+        position: fixed;
+        inset: 0;
+        pointer-events: none;
+        padding: var(--card-padding);
+
+        display: flex;
+        flex-direction: column-reverse;
+        align-items: center;
+        gap: 10px;
+
+        .status-alert {
+            padding: 6px 16px;
+            background: hsl(var(--b4), 40%);
+            backdrop-filter: blur(10px);
+            -webkit-backdrop-filter: blur(10px);
+            border-radius: var(--item-big-radius);
+
+            width: fit-content;
+
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+
+            .status-icon {
+                margin-bottom: 4px;
+            }
+
+            .status-title {
+                font-weight: var(--font-weight-medium);
+                color: hsl(var(--c2));
+            }
+
+            .status-body {
+                color: hsl(var(--c2), 80%);
+            }
+
+            opacity: 1;
+
+            animation: status 0.15s var(--trans-function);
+            transition-property: opacity, transform;
+            transition-duration: 0.15s;
+            transition-timing-function: var(--trans-function);
+
+            &.hiding {
+                opacity: 0;
+                transform: scaleX(1.2);
+            }
+        }
+    }
+
+    @keyframes status {
+        from {
+            opacity: 0;
+            transform: scaleX(1.2);
+        }
+        to {
+            opacity: 1;
+            transform: scaleX(1);
+        }
     }
 }

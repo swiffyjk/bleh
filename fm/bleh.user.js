@@ -24234,7 +24234,7 @@
     ].join(";")}
         >
             <div class="notification-information" ref=${(el) => information = el}>
-                 <div class="notification-title">${title}</div>
+                <div class="notification-title">${title}</div>
                 ${body ? html.node`
                 <div class="notification-body">${body}</div>
                 ` : ""}
@@ -37494,6 +37494,47 @@
     `;
   }
 
+  // src/components/status.js
+  function load_status() {
+    if (!page.structure.status) {
+      let notification_host = html.node`
+            <div class="status-alerts" />
+        `;
+      page.structure.status = notification_host;
+      document.body.appendChild(notification_host);
+    }
+  }
+  function status({
+    title,
+    body,
+    type
+  }) {
+    let icon = "icon-16-info";
+    if (type == "error") {
+      icon = "icon-16-x";
+    }
+    const alert2 = html.node`
+        <div class="status-alert colourful colourful-bg" onclick=${() => status_remove()}>
+            <div class="status-icon">
+                <div class="bleh-icon" style="--icon: var(--${icon})" />
+            </div>
+            <div class="status-title">${title}</div>
+            ${body ? html.node`<div class="status-body">${body}</div>` : ""}
+        </div>
+    `;
+    setTimeout(() => {
+      status_remove();
+    }, 1500);
+    page.structure.status.appendChild(alert2);
+    return alert2;
+    function status_remove() {
+      alert2.classList.add("hiding");
+      setTimeout(() => {
+        alert2.remove();
+      }, 150);
+    }
+  }
+
   // src/components/settings.js
   function setting({
     id = "",
@@ -37575,11 +37616,8 @@
           if (func) func(val);
         }, reset_range = function() {
           update_range(settings_store[id].default);
-          notify({
-            id: "reset_setting",
-            title: tl(trans.settings),
-            body: tl(trans.reset_item_to_default),
-            icon: "icon-16-settings"
+          status({
+            title: tl(trans.reset_item_to_default)
           });
         };
         let option;
@@ -37802,11 +37840,8 @@
           if (func) func(val);
         }, reset_radio = function() {
           update_radio(settings_store[id].default);
-          notify({
-            id: "reset_setting",
-            title: tl(trans.settings),
-            body: tl(trans.reset_item_to_default),
-            icon: "icon-16-settings"
+          status({
+            title: tl(trans.reset_item_to_default)
           });
         };
         if (func) func(value);
@@ -37983,11 +38018,8 @@
           if (func) func(val);
         }, reset_select = function() {
           menu.set(settings_store[id].default);
-          notify({
-            id: "reset_setting",
-            title: tl(trans.settings),
-            body: tl(trans.reset_item_to_default),
-            icon: "icon-16-settings"
+          status({
+            title: tl(trans.reset_item_to_default)
           });
         };
         if (!list) return setting_fail(id, { message: "Select type requires you to pass available items." });
@@ -41657,7 +41689,7 @@
         });
         const name = details.querySelector(".api-session-app-name");
         const desc = details.querySelector(".api-session-app-description");
-        const status = details.querySelector(".api-session-status");
+        const status2 = details.querySelector(".api-session-status");
         const image = details.querySelector(".api-session-app-image");
         image.classList = "";
         const default_image = image.src.endsWith("14d19fbdca555c1782176cd789e81af7.png");
@@ -41672,9 +41704,9 @@
                     </div>
                     ${form}
                 </div>
-                ${status ? html.node`
+                ${status2 ? html.node`
                 <div class="session-footer">
-                    ${status}
+                    ${status2}
                 </div>
                 ` : ""}
             `);
@@ -49118,23 +49150,23 @@
                 </div>
                 ` : ""}
             `);
-        function render_status_container(status) {
-          if (!status) return;
+        function render_status_container(status2) {
+          if (!status2) return;
           render(status_container, html`
                     <div class="status">
                         <div class="bleh-icon" />
-                        <div class="status-bg" style="background-image: url(${status.avatar})" />
+                        <div class="status-bg" style="background-image: url(${status2.avatar})" />
                         <div class="status-text">
-                            ${status.name}
+                            ${status2.name}
                             ${tl(trans.by)}
-                            ${status.artist}
+                            ${status2.artist}
                         </div>
                     </div>
                 `);
         }
         if (ff("status_in_menu") && auth.pro) {
           if (page.now.name) render_status_container(page.now);
-          live_status().then((status) => render_status_container(status));
+          live_status().then((status2) => render_status_container(status2));
         }
       },
       onHide(instance) {
@@ -52019,6 +52051,13 @@
       });
     }}>Deliver async progress notification</button>
         </section>
+        <section class="flexy">
+            <h2>Status alerts</h2>
+            <button class="continue" onclick=${() => status({
+      title: "test alert",
+      body: "haiaiai nothing to worry about >_<"
+    })}>Deliver status alert</button>
+        </section>
     `);
   }
 
@@ -52070,6 +52109,7 @@
       update_check(false, null, update_masthead);
       patch_masthead();
       load_notifications();
+      load_status();
       checkup_friend_cache();
       set_season();
       start_rain();
