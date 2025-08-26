@@ -68,108 +68,134 @@ export async function bleh_profiles() {
     let profile_cache = JSON.parse(localStorage.getItem('bleh_profile_cache')) || {};
     let cache = profile_cache[page.name] || {};
 
-    if (ff('refreshed_nav')) {
-        let avatar = profile_header.querySelector('.avatar');
-        let title_wrap = profile_header.querySelector('.header-title-label-wrap');
-        let sub_wrap = profile_header.querySelector('.header-title-secondary');
+    let about_me_sidebar = page.structure.row.querySelector('.about-me-sidebar');
 
-        // new account
-        if (!avatar) {
-            avatar = profile_header.querySelector('.header-avatar-add');
-            new_account = true;
-        }
+    if (!about_me_sidebar) {
+        delete cache.banner;
+        delete cache.hue;
+        delete cache.sat;
+        delete cache.lit;
 
-        // me :3
-        if (sponsor_list && sponsor_list.special && sponsor_list.special.includes(page.name)) {
-            title_wrap.querySelector('.header-title a').classList.add('bleh--name-is-cute');
-        }
-
-
-        let pronouns;
-        if (cache.aka) pronouns = use_pronouns(cache.aka);
-
-        let expander;
-        let redesigned_profile_header = html.node`
-            <section class="redesigned-header redesigned-profile-header no-background">
-                <div class="avatar-side">
-                    ${avatar}
-                </div>
-                <div class="info-side">
-                    <div class="sub-text">${tl(trans.profile)}</div>
-                    ${title_wrap ? html.node`<div class="title-container">${title_wrap}</div>` : ''}
-                    ${sub_wrap ? sub_wrap : (cache.aka || cache.created) ? html.node`
-                    <p class="header-title-secondary">
-                        ${cache.aka ? html.node`
-                        <span class="header-title-secondary--pre">
-                            ${pronouns ? tl(trans.account_pronouns) : tl(trans.aka)}
-                        </span>
-                        <span class="header-title-display-name">
-                            ${cache.aka}
-                        </span>
-                        ` : ''}
-                        <span class="header-title-secondary--pre">
-                            ${tl(trans.account_created)}
-                        </span>
-                        <span class="header-scrobble-since">
-                            ${cache.created}
-                        </span>
-                    </p>
-                    ` : ''}
-                </div>
-                <div class="expand-side">
-                    <button class="header-expand-button icon" ref=${el => expander = el} onclick=${() => {
-                        let current = settings.profile_header_expand;
-                        expander.setAttribute('aria-expanded', !current);
-                        save_setting('profile_header_expand', !current);
-                    }} aria-expanded=${settings.profile_header_expand}>${tl(trans.expand)}</button>
-                </div>
+        about_me_sidebar = html.node`
+            <section class="about-me-sidebar">
+                <h2>${tl(trans.about)}</h2>
+                <p class="subtle">${tl(trans.no_about).replace('{u}', page.name)}</p>
             </section>
         `;
+        page.structure.side.insertBefore(about_me_sidebar, page.structure.side.firstElementChild);
+    } else {
+        if (settings.bio_markdown) {
+            // parse body
+            let about_me_text = about_me_sidebar.querySelector('p');
+            let result = bio_parse(about_me_text, cache);
 
-        const avatar_img = avatar.querySelector(':scope > img');
-
-        cache.avatar = avatar_img.src;
-
-        if (page.name == auth.name && !settings.profile_header_own) {
-            register_background(null, 'hidden');
-        } else if (page.name != auth.name && !settings.profile_header_others) {
-            register_background(null, 'hidden');
-        } else if (cache.banner) {
-            register_background(cache.banner, 'bio');
-        } else {
-            if (settings.profile_avi_background) {
-                if (avatar_img)
-                    register_background(avatar_img.src.replace('/avatar170s/', '/ar0/'), 'avatar');
-                else
-                    register_background(null, 'none');
-            } else {
-                let background = document.body.querySelector('.header-background--has-image');
-                if (background)
-                    register_background(background.style.backgroundImage.replace('url("', '').replace('")', ''), 'artist');
-                else
-                    register_background(null, 'none');
-            }
+            about_me_text.after(result);
+            about_me_text.remove();
         }
-
-        if (page.name == settings.profile_shortcut)
-            localStorage.setItem('bleh_profile_shortcut_avi', avatar_img.getAttribute('src'));
-
-        page.structure.container.insertBefore(redesigned_profile_header, page.structure.container.firstElementChild);
-        profile_header.classList.add('legacy-header');
-
-
-        // make avatar clickable
-        if (!new_account) {
-            const src = avatar_img.src;
-            page.avatar = src;
-
-            avatar.addEventListener('click', () => {
-                expand_avatar(src.replace('/avatar170s/', '/ar0/'));
-            });
-        }
-
-        control_gif_pause(avatar_img);
     }
+
+    if (page.mobile) page.structure.main.insertBefore(about_me_sidebar, page.structure.main.firstElementChild);
+
+    let avatar = profile_header.querySelector('.avatar');
+    let title_wrap = profile_header.querySelector('.header-title-label-wrap');
+    let sub_wrap = profile_header.querySelector('.header-title-secondary');
+
+    // new account
+    if (!avatar) {
+        avatar = profile_header.querySelector('.header-avatar-add');
+        new_account = true;
+    }
+
+    // me :3
+    if (sponsor_list && sponsor_list.special && sponsor_list.special.includes(page.name)) {
+        title_wrap.querySelector('.header-title a').classList.add('bleh--name-is-cute');
+    }
+
+
+    let pronouns;
+    if (cache.aka) pronouns = use_pronouns(cache.aka);
+
+    let expander;
+    let redesigned_profile_header = html.node`
+        <section class="redesigned-header redesigned-profile-header no-background">
+            <div class="avatar-side">
+                ${avatar}
+            </div>
+            <div class="info-side">
+                <div class="sub-text">${tl(trans.profile)}</div>
+                ${title_wrap ? html.node`<div class="title-container">${title_wrap}</div>` : ''}
+                ${sub_wrap ? sub_wrap : (cache.aka || cache.created) ? html.node`
+                <p class="header-title-secondary">
+                    ${cache.aka ? html.node`
+                    <span class="header-title-secondary--pre">
+                        ${pronouns ? tl(trans.account_pronouns) : tl(trans.aka)}
+                    </span>
+                    <span class="header-title-display-name">
+                        ${cache.aka}
+                    </span>
+                    ` : ''}
+                    <span class="header-title-secondary--pre">
+                        ${tl(trans.account_created)}
+                    </span>
+                    <span class="header-scrobble-since">
+                        ${cache.created}
+                    </span>
+                </p>
+                ` : ''}
+            </div>
+            <div class="expand-side">
+                <button class="header-expand-button icon" ref=${el => expander = el} onclick=${() => {
+                    let current = settings.profile_header_expand;
+                    expander.setAttribute('aria-expanded', !current);
+                    save_setting('profile_header_expand', !current);
+                }} aria-expanded=${settings.profile_header_expand}>${tl(trans.expand)}</button>
+            </div>
+        </section>
+    `;
+
+    const avatar_img = avatar.querySelector(':scope > img');
+
+    cache.avatar = avatar_img.src;
+
+    if (page.name == auth.name && !settings.profile_header_own) {
+        register_background(null, 'hidden');
+    } else if (page.name != auth.name && !settings.profile_header_others) {
+        register_background(null, 'hidden');
+    } else if (cache.banner) {
+        register_background(cache.banner, 'bio');
+    } else {
+        if (settings.profile_avi_background) {
+            if (avatar_img)
+                register_background(avatar_img.src.replace('/avatar170s/', '/ar0/'), 'avatar');
+            else
+                register_background(null, 'none');
+        } else {
+            let background = document.body.querySelector('.header-background--has-image');
+            if (background)
+                register_background(background.style.backgroundImage.replace('url("', '').replace('")', ''), 'artist');
+            else
+                register_background(null, 'none');
+        }
+    }
+
+    if (page.name == settings.profile_shortcut)
+        localStorage.setItem('bleh_profile_shortcut_avi', avatar_img.getAttribute('src'));
+
+    page.structure.container.insertBefore(redesigned_profile_header, page.structure.container.firstElementChild);
+    profile_header.classList.add('legacy-header');
+
+
+    // make avatar clickable
+    if (!new_account) {
+        const src = avatar_img.src;
+        page.avatar = src;
+
+        avatar.addEventListener('click', () => {
+            expand_avatar(src.replace('/avatar170s/', '/ar0/'));
+        });
+    }
+
+    control_gif_pause(avatar_img);
 
     // translations in other languages
     let library_tab = page.structure.nav.querySelector('.secondary-nav-item--library a');
@@ -318,42 +344,13 @@ export async function bleh_profiles() {
             else
                 page.structure.main.insertBefore(listen_container, page.structure.main.firstChild);
 
-            if (scrobbles > 0)
+            if (scrobbles > 0 && auth.name)
                 bleh_profile_chart();
         }
 
         // secondary text
         const profile_sub_text = page.structure.container.querySelector('.redesigned-profile-header .header-title-secondary');
         if (profile_sub_text) parse_sub_text(profile_sub_text, page.name, cache);
-
-        let about_me_sidebar = page.structure.row.querySelector('.about-me-sidebar');
-
-        if (!about_me_sidebar) {
-            delete cache.banner;
-            delete cache.hue;
-            delete cache.sat;
-            delete cache.lit;
-
-            about_me_sidebar = html.node`
-                <section class="about-me-sidebar">
-                    <h2>${tl(trans.about)}</h2>
-                    <p class="subtle">${tl(trans.no_about).replace('{u}', page.name)}</p>
-                </section>
-            `;
-            page.structure.side.insertBefore(about_me_sidebar, page.structure.side.firstElementChild);
-        } else {
-            if (settings.bio_markdown) {
-                // parse body
-                let about_me_text = about_me_sidebar.querySelector('p');
-                let result = bio_parse(about_me_text, cache);
-
-                about_me_text.after(result);
-                about_me_text.remove();
-            }
-        }
-
-        if (page.mobile)
-            page.structure.main.insertBefore(about_me_sidebar, page.structure.main.firstElementChild);
 
         // featured track
         let featured_track_panel = profile_header.querySelector('.header-featured-track');

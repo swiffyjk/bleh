@@ -18,6 +18,7 @@ import { log } from '../build/log.js';
 import { save_profile_cache } from '../pages/profile.js';
 import { toggle } from './toggle.js';
 import { save_setting } from './settings.js';
+import { load_chart_colours } from '../chart.js';
 
 export function markdown(text, {
     allow_headers = false,
@@ -317,6 +318,8 @@ export function markdown(text, {
                 document.body.style.setProperty('--hue-album', hue);
                 document.body.style.setProperty('--sat-album', sat);
                 document.body.style.setProperty('--lit-album', lit);
+
+                load_chart_colours();
             }
 
             cache.hue = hue;

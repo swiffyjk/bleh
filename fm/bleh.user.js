@@ -41921,91 +41921,111 @@
     let new_account = false;
     let profile_cache = JSON.parse(localStorage.getItem("bleh_profile_cache")) || {};
     let cache2 = profile_cache[page.name] || {};
-    if (ff("refreshed_nav")) {
-      let avatar3 = profile_header.querySelector(".avatar");
-      let title_wrap = profile_header.querySelector(".header-title-label-wrap");
-      let sub_wrap = profile_header.querySelector(".header-title-secondary");
-      if (!avatar3) {
-        avatar3 = profile_header.querySelector(".header-avatar-add");
-        new_account = true;
-      }
-      if (sponsor_list && sponsor_list.special && sponsor_list.special.includes(page.name)) {
-        title_wrap.querySelector(".header-title a").classList.add("bleh--name-is-cute");
-      }
-      let pronouns;
-      if (cache2.aka) pronouns = use_pronouns(cache2.aka);
-      let expander;
-      let redesigned_profile_header = html.node`
-            <section class="redesigned-header redesigned-profile-header no-background">
-                <div class="avatar-side">
-                    ${avatar3}
-                </div>
-                <div class="info-side">
-                    <div class="sub-text">${tl(trans.profile)}</div>
-                    ${title_wrap ? html.node`<div class="title-container">${title_wrap}</div>` : ""}
-                    ${sub_wrap ? sub_wrap : cache2.aka || cache2.created ? html.node`
-                    <p class="header-title-secondary">
-                        ${cache2.aka ? html.node`
-                        <span class="header-title-secondary--pre">
-                            ${pronouns ? tl(trans.account_pronouns) : tl(trans.aka)}
-                        </span>
-                        <span class="header-title-display-name">
-                            ${cache2.aka}
-                        </span>
-                        ` : ""}
-                        <span class="header-title-secondary--pre">
-                            ${tl(trans.account_created)}
-                        </span>
-                        <span class="header-scrobble-since">
-                            ${cache2.created}
-                        </span>
-                    </p>
-                    ` : ""}
-                </div>
-                <div class="expand-side">
-                    <button class="header-expand-button icon" ref=${(el) => expander = el} onclick=${() => {
-        let current = settings.profile_header_expand;
-        expander.setAttribute("aria-expanded", !current);
-        save_setting("profile_header_expand", !current);
-      }} aria-expanded=${settings.profile_header_expand}>${tl(trans.expand)}</button>
-                </div>
+    let about_me_sidebar = page.structure.row.querySelector(".about-me-sidebar");
+    if (!about_me_sidebar) {
+      delete cache2.banner;
+      delete cache2.hue;
+      delete cache2.sat;
+      delete cache2.lit;
+      about_me_sidebar = html.node`
+            <section class="about-me-sidebar">
+                <h2>${tl(trans.about)}</h2>
+                <p class="subtle">${tl(trans.no_about).replace("{u}", page.name)}</p>
             </section>
         `;
-      const avatar_img = avatar3.querySelector(":scope > img");
-      cache2.avatar = avatar_img.src;
-      if (page.name == auth.name && !settings.profile_header_own) {
-        register_background(null, "hidden");
-      } else if (page.name != auth.name && !settings.profile_header_others) {
-        register_background(null, "hidden");
-      } else if (cache2.banner) {
-        register_background(cache2.banner, "bio");
-      } else {
-        if (settings.profile_avi_background) {
-          if (avatar_img)
-            register_background(avatar_img.src.replace("/avatar170s/", "/ar0/"), "avatar");
-          else
-            register_background(null, "none");
-        } else {
-          let background = document.body.querySelector(".header-background--has-image");
-          if (background)
-            register_background(background.style.backgroundImage.replace('url("', "").replace('")', ""), "artist");
-          else
-            register_background(null, "none");
-        }
+      page.structure.side.insertBefore(about_me_sidebar, page.structure.side.firstElementChild);
+    } else {
+      if (settings.bio_markdown) {
+        let about_me_text = about_me_sidebar.querySelector("p");
+        let result = bio_parse(about_me_text, cache2);
+        about_me_text.after(result);
+        about_me_text.remove();
       }
-      if (page.name == settings.profile_shortcut)
-        localStorage.setItem("bleh_profile_shortcut_avi", avatar_img.getAttribute("src"));
-      page.structure.container.insertBefore(redesigned_profile_header, page.structure.container.firstElementChild);
-      profile_header.classList.add("legacy-header");
-      if (!new_account) {
-        const src = avatar_img.src;
-        page.avatar = src;
-        avatar3.addEventListener("click", () => {
-          expand_avatar(src.replace("/avatar170s/", "/ar0/"));
-        });
-      }
-      control_gif_pause(avatar_img);
     }
+    if (page.mobile) page.structure.main.insertBefore(about_me_sidebar, page.structure.main.firstElementChild);
+    let avatar3 = profile_header.querySelector(".avatar");
+    let title_wrap = profile_header.querySelector(".header-title-label-wrap");
+    let sub_wrap = profile_header.querySelector(".header-title-secondary");
+    if (!avatar3) {
+      avatar3 = profile_header.querySelector(".header-avatar-add");
+      new_account = true;
+    }
+    if (sponsor_list && sponsor_list.special && sponsor_list.special.includes(page.name)) {
+      title_wrap.querySelector(".header-title a").classList.add("bleh--name-is-cute");
+    }
+    let pronouns;
+    if (cache2.aka) pronouns = use_pronouns(cache2.aka);
+    let expander;
+    let redesigned_profile_header = html.node`
+        <section class="redesigned-header redesigned-profile-header no-background">
+            <div class="avatar-side">
+                ${avatar3}
+            </div>
+            <div class="info-side">
+                <div class="sub-text">${tl(trans.profile)}</div>
+                ${title_wrap ? html.node`<div class="title-container">${title_wrap}</div>` : ""}
+                ${sub_wrap ? sub_wrap : cache2.aka || cache2.created ? html.node`
+                <p class="header-title-secondary">
+                    ${cache2.aka ? html.node`
+                    <span class="header-title-secondary--pre">
+                        ${pronouns ? tl(trans.account_pronouns) : tl(trans.aka)}
+                    </span>
+                    <span class="header-title-display-name">
+                        ${cache2.aka}
+                    </span>
+                    ` : ""}
+                    <span class="header-title-secondary--pre">
+                        ${tl(trans.account_created)}
+                    </span>
+                    <span class="header-scrobble-since">
+                        ${cache2.created}
+                    </span>
+                </p>
+                ` : ""}
+            </div>
+            <div class="expand-side">
+                <button class="header-expand-button icon" ref=${(el) => expander = el} onclick=${() => {
+      let current = settings.profile_header_expand;
+      expander.setAttribute("aria-expanded", !current);
+      save_setting("profile_header_expand", !current);
+    }} aria-expanded=${settings.profile_header_expand}>${tl(trans.expand)}</button>
+            </div>
+        </section>
+    `;
+    const avatar_img = avatar3.querySelector(":scope > img");
+    cache2.avatar = avatar_img.src;
+    if (page.name == auth.name && !settings.profile_header_own) {
+      register_background(null, "hidden");
+    } else if (page.name != auth.name && !settings.profile_header_others) {
+      register_background(null, "hidden");
+    } else if (cache2.banner) {
+      register_background(cache2.banner, "bio");
+    } else {
+      if (settings.profile_avi_background) {
+        if (avatar_img)
+          register_background(avatar_img.src.replace("/avatar170s/", "/ar0/"), "avatar");
+        else
+          register_background(null, "none");
+      } else {
+        let background = document.body.querySelector(".header-background--has-image");
+        if (background)
+          register_background(background.style.backgroundImage.replace('url("', "").replace('")', ""), "artist");
+        else
+          register_background(null, "none");
+      }
+    }
+    if (page.name == settings.profile_shortcut)
+      localStorage.setItem("bleh_profile_shortcut_avi", avatar_img.getAttribute("src"));
+    page.structure.container.insertBefore(redesigned_profile_header, page.structure.container.firstElementChild);
+    profile_header.classList.add("legacy-header");
+    if (!new_account) {
+      const src = avatar_img.src;
+      page.avatar = src;
+      avatar3.addEventListener("click", () => {
+        expand_avatar(src.replace("/avatar170s/", "/ar0/"));
+      });
+    }
+    control_gif_pause(avatar_img);
     let library_tab = page.structure.nav.querySelector(".secondary-nav-item--library a");
     library_tab.textContent = tl(trans.library);
     let is_own_profile = page.name == auth.name;
@@ -42125,34 +42145,11 @@
           page.structure.side.insertBefore(listen_container, page.structure.side.firstChild);
         else
           page.structure.main.insertBefore(listen_container, page.structure.main.firstChild);
-        if (scrobbles > 0)
+        if (scrobbles > 0 && auth.name)
           bleh_profile_chart();
       }
       const profile_sub_text = page.structure.container.querySelector(".redesigned-profile-header .header-title-secondary");
       if (profile_sub_text) parse_sub_text(profile_sub_text, page.name, cache2);
-      let about_me_sidebar = page.structure.row.querySelector(".about-me-sidebar");
-      if (!about_me_sidebar) {
-        delete cache2.banner;
-        delete cache2.hue;
-        delete cache2.sat;
-        delete cache2.lit;
-        about_me_sidebar = html.node`
-                <section class="about-me-sidebar">
-                    <h2>${tl(trans.about)}</h2>
-                    <p class="subtle">${tl(trans.no_about).replace("{u}", page.name)}</p>
-                </section>
-            `;
-        page.structure.side.insertBefore(about_me_sidebar, page.structure.side.firstElementChild);
-      } else {
-        if (settings.bio_markdown) {
-          let about_me_text = about_me_sidebar.querySelector("p");
-          let result = bio_parse(about_me_text, cache2);
-          about_me_text.after(result);
-          about_me_text.remove();
-        }
-      }
-      if (page.mobile)
-        page.structure.main.insertBefore(about_me_sidebar, page.structure.main.firstElementChild);
       let featured_track_panel = profile_header.querySelector(".header-featured-track");
       if (featured_track_panel) bleh_featured_profile_track(featured_track_panel);
       let about_me_header = about_me_sidebar.querySelector("h2");
@@ -44950,6 +44947,7 @@
           document.body.style.setProperty("--hue-album", hue2);
           document.body.style.setProperty("--sat-album", sat);
           document.body.style.setProperty("--lit-album", lit);
+          load_chart_colours();
         }
         cache2.hue = hue2;
         cache2.sat = sat;
@@ -46122,12 +46120,21 @@
                 <h4>${tl(trans.shouts)}</h4>
                 <div class="inner-preview pad flex">
                     <div class="shout js-shout js-link-block" data-kate-processed="true">
+                        ${auth.name ? html.node`
                         <h3 class="shout-user">
                             <a>${auth.name}</a>
                         </h3>
                         <span class="avatar shout-user-avatar">
                             <img src="${auth.avatar.replace("/avatar42s/", "/avatar170s/")}" alt="${tl(trans.your_avatar)}" loading="lazy">
                         </span>
+                        ` : html.node`
+                        <h3 class="shout-user">
+                            <a>${tl(trans.profile)}</a>
+                        </h3>
+                        <span class="avatar shout-user-avatar">
+                            <img class="missing-avatar" alt="${tl(trans.your_avatar)}" loading="lazy">
+                        </span>
+                        `}
                         <a class="shout-permalink shout-timestamp">
                             <time datetime="2024-06-05T02:33:39+01:00" title="Wednesday 5 Jun 2024, 2:33am">
                                 5 Jun 2:33am
@@ -46522,6 +46529,16 @@
             </section>
         `);
     } else if (page_id == "profile") {
+      if (!auth.name) {
+        render(page.structure.main, html`
+                <div class="bleh--panel">
+                    <div class="loading-data-container">
+                        <div class="loading-data-text error">${tl(trans.not_logged_in)}</div>
+                    </div>
+                </div>
+            `);
+        return;
+      }
       register_skip_to([]);
       const cache2 = await load_profile_cache_externally(auth.name);
       let friends;
@@ -48659,7 +48676,7 @@
             ${() => {
         const elem = html.node`
                     <li class="masthead-nav-item">
-                        <a class="masthead-nav-control" href="${root}bleh" data-label="bleh_no_auth">
+                        <a class="masthead-nav-control chibi" href="${root}bleh" data-label="bleh_no_auth">
                             ${tl(trans.bleh_settings)}
                         </a>
                     </li>
@@ -52569,6 +52586,7 @@
     page.structure.container.setAttribute("data-short", ff("short"));
   }
   async function register_background(url, origin = null) {
+    log(`requested register of ${url} from ${origin}`, "background", "log");
     let background = page.structure.container.querySelector(":scope > .bleh-background");
     if (!background) {
       background = html.node`
@@ -52598,6 +52616,7 @@
         background.setAttribute("data-page-user-is-self", "false");
       }
     }
+    log(`registered ${url} from ${origin}`, "background");
     return background;
   }
   function favi() {

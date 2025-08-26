@@ -740,6 +740,7 @@ export function update_page() {
 }
 
 export async function register_background(url, origin = null) {
+    log(`requested register of ${url} from ${origin}`, 'background', 'log');
     let background = page.structure.container.querySelector(':scope > .bleh-background');
 
     if (!background) {
@@ -775,6 +776,8 @@ export async function register_background(url, origin = null) {
             background.setAttribute('data-page-user-is-self', 'false');
         }
     }
+
+    log(`registered ${url} from ${origin}`, 'background');
 
     return background;
 }

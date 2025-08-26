@@ -209,7 +209,7 @@ export function append_nav() {
             ${() => {
                 const elem = html.node`
                     <li class="masthead-nav-item">
-                        <a class="masthead-nav-control" href="${root}bleh" data-label="bleh_no_auth">
+                        <a class="masthead-nav-control chibi" href="${root}bleh" data-label="bleh_no_auth">
                             ${tl(trans.bleh_settings)}
                         </a>
                     </li>
