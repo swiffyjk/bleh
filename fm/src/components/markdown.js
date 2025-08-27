@@ -278,6 +278,7 @@ export function markdown(text, {
     let profile_cache;
 
     const will_cache = cache === true;
+    log(`prepare new cache is ${will_cache}`, 'markdown', 'log', {cache});
 
     if ((allow_banners || allow_hue) && will_cache) {
         profile_cache = JSON.parse(localStorage.getItem('bleh_profile_cache')) || {};

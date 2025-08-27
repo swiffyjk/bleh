@@ -44918,6 +44918,7 @@
     });
     let profile_cache;
     const will_cache = cache2 === true;
+    log(`prepare new cache is ${will_cache}`, "markdown", "log", { cache: cache2 });
     if ((allow_banners || allow_hue) && will_cache) {
       profile_cache = JSON.parse(localStorage.getItem("bleh_profile_cache")) || {};
       cache2 = profile_cache[page.name] || {};
