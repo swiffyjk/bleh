@@ -277,7 +277,7 @@ export function markdown(text, {
 
     let profile_cache;
 
-    const will_cache = !(cache && typeof cache === 'object');
+    const will_cache = cache === true;
 
     if ((allow_banners || allow_hue) && will_cache) {
         profile_cache = JSON.parse(localStorage.getItem('bleh_profile_cache')) || {};
@@ -336,8 +336,10 @@ export function markdown(text, {
         }
     }
 
-    log('finalised cache from markdown parsing', 'markdown', 'info', {cache});
-    if (cache && will_cache) save_profile_cache(cache, profile_cache, name);
+    if (cache && will_cache) {
+        log('finalised cache from markdown parsing', 'markdown', 'info', {cache});
+        save_profile_cache(cache, profile_cache, name);
+    }
 
     return body;
 }

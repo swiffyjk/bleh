@@ -44916,7 +44916,7 @@
       local_restriction(text4);
     });
     let profile_cache;
-    const will_cache = !(cache2 && typeof cache2 === "object");
+    const will_cache = cache2 === true;
     if ((allow_banners || allow_hue) && will_cache) {
       profile_cache = JSON.parse(localStorage.getItem("bleh_profile_cache")) || {};
       cache2 = profile_cache[page.name] || {};
@@ -44960,8 +44960,10 @@
         log("cleared custom accent settings", "profile", "log");
       }
     }
-    log("finalised cache from markdown parsing", "markdown", "info", { cache: cache2 });
-    if (cache2 && will_cache) save_profile_cache(cache2, profile_cache, name);
+    if (cache2 && will_cache) {
+      log("finalised cache from markdown parsing", "markdown", "info", { cache: cache2 });
+      save_profile_cache(cache2, profile_cache, name);
+    }
     return body;
   }
   function markdown_prompt({
