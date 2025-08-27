@@ -37524,7 +37524,7 @@
     `;
     setTimeout(() => {
       status_remove();
-    }, 1500);
+    }, 2200);
     page.structure.status.appendChild(alert2);
     return alert2;
     function status_remove() {
@@ -40803,6 +40803,7 @@
       allow_banners: true,
       allow_icons: true,
       allow_hue: true,
+      cache: true,
       take_effect: false,
       allow_socials: true
     };
@@ -43206,7 +43207,7 @@
     return request_profile_cache(name, cache2, profile_cache);
   }
   function request_profile_cache(name = page.name, cache2 = null, profile_cache = null) {
-    log(`requesting fetch of profile cache for ${name}`, "info");
+    log(`requesting fetch of profile cache for ${name}`, "cache");
     if (!profile_cache) profile_cache = JSON.parse(localStorage.getItem("bleh_profile_cache")) || {};
     if (!cache2) cache2 = profile_cache[name] || {};
     return new Promise((resolve2, reject) => {
@@ -44703,8 +44704,8 @@
     in_dialog = false,
     allow_icons = false,
     allow_hue = false,
-    take_effect = true,
-    cache: cache2 = true,
+    take_effect = false,
+    cache: cache2 = false,
     allow_socials = false,
     name = page.name
   } = {}) {
@@ -51511,10 +51512,7 @@
   function parse_shout_queue() {
     if (shout_parse_queue.length === 0) return;
     const shout = shout_parse_queue.shift();
-    const parsed2 = markdown(shout.element.textContent, {
-      cache: false,
-      take_effect: false
-    });
+    const parsed2 = markdown(shout.element.textContent);
     shout.element.classList.add("markdown-body");
     render(shout.element, html.node`${parsed2}`);
     log("parsed one shout", "shout", "log");
@@ -51687,9 +51685,7 @@
       if (md) {
         render(md, markdown(md.textContent, {
           allow_headers: true,
-          line_breaks: false,
-          cache: false,
-          take_effect: false
+          line_breaks: false
         }));
       }
     });

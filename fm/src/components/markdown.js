@@ -28,8 +28,8 @@ export function markdown(text, {
     in_dialog = false,
     allow_icons = false,
     allow_hue = false,
-    take_effect = true,
-    cache = true,
+    take_effect = false,
+    cache = false,
     allow_socials = false,
     name = page.name
 }={}) {

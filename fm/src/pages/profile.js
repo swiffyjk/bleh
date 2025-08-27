@@ -1681,7 +1681,7 @@ function load_profile_cache(name = page.name, cache=null, profile_cache=null) {
 }
 
 function request_profile_cache(name = page.name, cache=null, profile_cache=null) {
-    log(`requesting fetch of profile cache for ${name}`, 'info');
+    log(`requesting fetch of profile cache for ${name}`, 'cache');
 
     if (!profile_cache) profile_cache = JSON.parse(localStorage.getItem('bleh_profile_cache')) || {};
     if (!cache) cache = profile_cache[name] || {};
