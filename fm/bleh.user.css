@@ -5278,7 +5278,7 @@
             }
 
             &:not(.grid-items-cover-default) {
-                background: #000;
+                background: transparent;
 
                 img {
                     position: relative;
@@ -5301,8 +5301,11 @@
                 transition-duration: var(--trans);
                 transition-timing-function: var(--trans-function);
 
+                border-top-left-radius: 12px;
+                border-top-right-radius: 12px;
+
                 &[style] {
-                    background: hsl(var(--h4), 30%) !important;
+                    background: color-mix(in hsl, hsl(var(--h4)) 60%, black 70%) !important;
                 }
             }
 
