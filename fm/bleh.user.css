@@ -473,7 +473,7 @@
         --avatar-generic-background: hsl(var(--b4));
 
         --primary-shadow: inset 0 1px 0 0 hsl(var(--h2)), inset 0 -30px 20px -20px hsla(var(--h4), 45%);
-        --bar-shadow: inset 0 0 0 1px hsla(var(--h3), 0.06), inset 0 -2px 4px hsla(var(--h4), 0.1);
+        --bar-shadow: inset 0 0 0 1px hsla(var(--h3), 0.03), inset 0 -30px 20px -20px hsla(var(--h4), 45%);
 
         --shout-vote-indicator: linear-gradient(90deg, transparent 20%, hsl(var(--h4), 5%));
 
@@ -541,7 +541,7 @@
             --opposite-text: var(--c1);
 
             --primary-shadow: inset 0 1px 0 0 hsl(var(--l2-c)), inset 0 -30px 20px -20px hsl(var(--h4), 70%);
-            --bar-shadow: inset 0 0 0 1px hsla(var(--h4), 0.1), inset 0 -2px 4px hsla(var(--l2-c), 0.2);
+            --bar-shadow: inset 0 0 0 1px hsla(var(--h4), 0.08), inset 0 -30px 20px -20px hsl(var(--h4), 60%);
 
             --shout-vote-indicator: linear-gradient(90deg, transparent 20%, hsl(var(--h4), 15%));
         }
@@ -583,7 +583,7 @@
             --opposite-text: var(--c1);
 
             --primary-shadow: inset 0 1px 0 0 hsl(var(--l2-c)), inset 0 -30px 20px -20px hsl(var(--h4), 70%);
-            --bar-shadow: inset 0 0 0 1px hsla(var(--h4), 0.1), inset 0 -2px 4px hsla(var(--l2-c), 0.2);
+            --bar-shadow: inset 0 0 0 1px hsla(var(--h4), 0.08), inset 0 -30px 20px -20px hsl(var(--h4), 60%);
 
             --shout-vote-indicator: linear-gradient(90deg, transparent 20%, hsl(var(--h4), 15%));
         }
