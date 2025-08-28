@@ -21,6 +21,7 @@ import { input } from '../components/input';
 import { hex_to_hsl } from '../build/tools';
 import { log } from '../build/log';
 import { toggle } from '../components/toggle';
+import { status } from '../components/status';
 
 let cropper;
 
@@ -725,6 +726,9 @@ function patch_settings_profile_panel(token, update_picture) {
                                         about.dispatchEvent(new InputEvent('input', {bubbles: true, cancelable: true}));
 
                                         dialog_rm({id: 'profile_accent'});
+                                        status({
+                                            title: tl(trans.profile_accent.reminder)
+                                        });
                                     }}>
                                         ${tl(trans.change)}
                                     </button>

@@ -3343,6 +3343,9 @@ export const trans = {
         },
         body: {
             en: 'Add flair to your profile visible to all users regardless of personal accent'
+        },
+        reminder: {
+            en: 'Changed your accent, don’t forget to save!'
         }
     },
     none: {

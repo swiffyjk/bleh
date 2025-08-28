@@ -264,7 +264,7 @@ export let includes = {
         '(10 year', '(25 year', '(30 year', '(35 year', '(40 year', '(50 year', '(60 year'
     ],
     form: [
-        '[clean', '[explicit',
+        '(clean', '[clean', '(explicit', '[explicit',
         '(spotify)'
     ]
 }

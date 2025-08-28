@@ -566,13 +566,17 @@ export async function show_your_scrobbles() {
         link_group.appendChild(header);
 
         play_on = page.structure.side.querySelector('.play-this-track-playlinks');
-        page.structure.side.removeChild(play_on.parentElement);
+        play_on.parentElement.remove();
+
         play_links = play_on.querySelectorAll('li');
 
         play_links.forEach((item) => {
-            let link = item.querySelector('.play-this-track-playlink:not(.visible-xs)');
+            const link = item.querySelector('.play-this-track-playlink:not(.visible-xs)');
+
+            link.classList.remove('play-this-track-playlink');
             link.classList.add('music-link');
-            let replace = item.querySelector('.replace-playlink');
+
+            const replace = item.querySelector('.replace-playlink');
 
             if (link.classList.contains('play-this-track-playlink--youtube'))
                 link.textContent = 'YouTube';
@@ -609,17 +613,17 @@ export async function show_your_scrobbles() {
 
         link_container.appendChild(html.node`
             <li>
-                <a class="play-this-track-playlink music-link play-this-track-playlink--genius" href="https://genius.com/search?q=${sanitise(page.sister)}+${sanitise(page.name)}" target="_blank">
+                <a class="music-link play-this-track-playlink--genius" href="https://genius.com/search?q=${sanitise(page.sister)}+${sanitise(page.name)}" target="_blank">
                     Genius
                 </a>
             </li>
             <li>
-                <a class="play-this-track-playlink music-link play-this-track-playlink--tidal" href="https://listen.tidal.com/search?q=${sanitise(page.sister, ' ')} ${sanitise(page.name, ' ')}" target="_blank">
+                <a class="music-link play-this-track-playlink--tidal" href="https://listen.tidal.com/search?q=${sanitise(page.sister, ' ')} ${sanitise(page.name, ' ')}" target="_blank">
                     Tidal
                 </a>
             </li>
             <li>
-                <a class="play-this-track-playlink music-link play-this-track-playlink--qobuz" href="https://www.qobuz.com/search/tracks/${sanitise(page.sister, '%20')}%20${sanitise(page.name, '%20')}" target="_blank">
+                <a class="music-link play-this-track-playlink--qobuz" href="https://www.qobuz.com/search/tracks/${sanitise(page.sister, '%20')}%20${sanitise(page.name, '%20')}" target="_blank">
                     Qobuz
                 </a>
             </li>
@@ -632,61 +636,61 @@ export async function show_your_scrobbles() {
 
         if (page.type == 'album') {
             render(link_container, html`
-                <a class="play-this-track-playlink music-link play-this-track-playlink--spotify" href="https://open.spotify.com/search/${sanitise(page.sister, ' ')} ${sanitise(page.name, ' ')}" target="_blank">
+                <a class="music-link play-this-track-playlink--spotify" href="https://open.spotify.com/search/${sanitise(page.sister, ' ')} ${sanitise(page.name, ' ')}" target="_blank">
                     Spotify
                 </a>
-                <a class="play-this-track-playlink music-link play-this-track-playlink--itunes" href="https://music.apple.com/gb/search?term=${sanitise(page.sister, ' ')} ${sanitise(page.name, ' ')}" target="_blank">
+                <a class="music-link play-this-track-playlink--itunes" href="https://music.apple.com/gb/search?term=${sanitise(page.sister, ' ')} ${sanitise(page.name, ' ')}" target="_blank">
                     Apple
                 </a>
-                <a class="play-this-track-playlink music-link play-this-track-playlink--youtube-music" href="https://music.youtube.com/search?q=${sanitise(page.sister)}+${sanitise(page.name)}" target="_blank">
+                <a class="music-link play-this-track-playlink--youtube-music" href="https://music.youtube.com/search?q=${sanitise(page.sister)}+${sanitise(page.name)}" target="_blank">
                     YouTube
                 </a>
-                <a class="play-this-track-playlink music-link play-this-track-playlink--tidal" href="https://listen.tidal.com/search?q=${sanitise(page.sister, ' ')} ${sanitise(page.name, ' ')}" target="_blank">
+                <a class="music-link play-this-track-playlink--tidal" href="https://listen.tidal.com/search?q=${sanitise(page.sister, ' ')} ${sanitise(page.name, ' ')}" target="_blank">
                     Tidal
                 </a>
-                <a class="play-this-track-playlink music-link play-this-track-playlink--discogs" href="https://www.discogs.com/search?q=${sanitise(page.sister)}+${sanitise(page.name)}&type=all" target="_blank">
+                <a class="music-link play-this-track-playlink--discogs" href="https://www.discogs.com/search?q=${sanitise(page.sister)}+${sanitise(page.name)}&type=all" target="_blank">
                     Discogs
                 </a>
-                <a class="play-this-track-playlink music-link play-this-track-playlink--qobuz" href="https://www.qobuz.com/search/albums/${sanitise(page.sister, ' ')}%20${sanitise(page.name, ' ')}" target="_blank">
+                <a class="music-link play-this-track-playlink--qobuz" href="https://www.qobuz.com/search/albums/${sanitise(page.sister, ' ')}%20${sanitise(page.name, ' ')}" target="_blank">
                     Qobuz
                 </a>
-                <a class="play-this-track-playlink music-link play-this-track-playlink--aoty" href="https://www.albumoftheyear.org/search/?q=${sanitise(page.sister)}+${sanitise(page.name)}" target="_blank">
+                <a class="music-link play-this-track-playlink--aoty" href="https://www.albumoftheyear.org/search/?q=${sanitise(page.sister)}+${sanitise(page.name)}" target="_blank">
                     AOTY
                 </a>
-                <a class="play-this-track-playlink music-link play-this-track-playlink--rym" href="https://rateyourmusic.com/search?searchterm=${sanitise(page.sister, '%20')} ${sanitise(page.name, '%20')}" target="_blank">
+                <a class="music-link play-this-track-playlink--rym" href="https://rateyourmusic.com/search?searchterm=${sanitise(page.sister, '%20')} ${sanitise(page.name, '%20')}" target="_blank">
                     RYM
                 </a>
-                <a class="play-this-track-playlink music-link play-this-track-playlink--genius" href="https://genius.com/search?q=${sanitise(page.sister)}+${sanitise(page.name)}" target="_blank">
+                <a class="music-link play-this-track-playlink--genius" href="https://genius.com/search?q=${sanitise(page.sister)}+${sanitise(page.name)}" target="_blank">
                     Genius
                 </a>
             `);
         } else {
             render(link_container, html`
-                <a class="play-this-track-playlink music-link play-this-track-playlink--spotify" href="https://open.spotify.com/search/${sanitise(page.name, ' ')}" target="_blank">
+                <a class="music-link play-this-track-playlink--spotify" href="https://open.spotify.com/search/${sanitise(page.name, ' ')}" target="_blank">
                     Spotify
                 </a>
-                <a class="play-this-track-playlink music-link play-this-track-playlink--itunes" href="https://music.apple.com/gb/search?term=${sanitise(page.name, ' ')}" target="_blank">
+                <a class="music-link play-this-track-playlink--itunes" href="https://music.apple.com/gb/search?term=${sanitise(page.name, ' ')}" target="_blank">
                     Apple
                 </a>
-                <a class="play-this-track-playlink music-link play-this-track-playlink--youtube-music" href="https://music.youtube.com/search?q=${sanitise(page.name)}" target="_blank">
+                <a class="music-link play-this-track-playlink--youtube-music" href="https://music.youtube.com/search?q=${sanitise(page.name)}" target="_blank">
                     YouTube
                 </a>
-                <a class="play-this-track-playlink music-link play-this-track-playlink--tidal" href="https://listen.tidal.com/search?q=${sanitise(page.name, ' ')}" target="_blank">
+                <a class="music-link play-this-track-playlink--tidal" href="https://listen.tidal.com/search?q=${sanitise(page.name, ' ')}" target="_blank">
                     Tidal
                 </a>
-                <a class="play-this-track-playlink music-link play-this-track-playlink--discogs" href="https://www.discogs.com/search?q=${sanitise(page.name)}&type=artist" target="_blank">
+                <a class="music-link play-this-track-playlink--discogs" href="https://www.discogs.com/search?q=${sanitise(page.name)}&type=artist" target="_blank">
                     Discogs
                 </a>
-                <a class="play-this-track-playlink music-link play-this-track-playlink--qobuz" href="https://www.qobuz.com/search/artists/${sanitise(page.name, '%20')}" target="_blank">
+                <a class="music-link play-this-track-playlink--qobuz" href="https://www.qobuz.com/search/artists/${sanitise(page.name, '%20')}" target="_blank">
                     Qobuz
                 </a>
-                <a class="play-this-track-playlink music-link play-this-track-playlink--aoty" href="https://www.albumoftheyear.org/search/?q=${sanitise(page.name)}" target="_blank">
+                <a class="music-link play-this-track-playlink--aoty" href="https://www.albumoftheyear.org/search/?q=${sanitise(page.name)}" target="_blank">
                     AOTY
                 </a>
-                <a class="play-this-track-playlink music-link play-this-track-playlink--rym" href="https://rateyourmusic.com/search?searchterm=${sanitise(page.name, ' ')}" target="_blank">
+                <a class="music-link play-this-track-playlink--rym" href="https://rateyourmusic.com/search?searchterm=${sanitise(page.name, ' ')}" target="_blank">
                     RYM
                 </a>
-                <a class="play-this-track-playlink music-link play-this-track-playlink--genius" href="https://genius.com/search?q=${sanitise(page.name)}" target="_blank">
+                <a class="music-link play-this-track-playlink--genius" href="https://genius.com/search?q=${sanitise(page.name)}" target="_blank">
                     Genius
                 </a>
             `);
@@ -1022,12 +1026,9 @@ function show_numbers_on_side(header_type) {
 
 function video_unavailable(video_col=null) {
     let cta = page.structure.side.querySelector('.video-preview-upload-cta');
+    if (cta) return;
 
-    if (cta)
-        return;
-
-    if (video_col)
-        page.structure.side.removeChild(video_col);
+    if (video_col) page.structure.side.removeChild(video_col);
 
     page.structure.side.insertBefore(html.node`
         <section class="video-placeholder">
@@ -1035,11 +1036,6 @@ function video_unavailable(video_col=null) {
             ${tl(trans.video_removed)}
         </section>
     `, page.structure.side.firstElementChild);
-
-
-    let links = page.structure.side.querySelector('.external-links-section .play-this-track-playlinks');
-    if (links)
-        links.classList.add('video-unavailable');
 }
 
 export function bleh_music_page_charts() {
