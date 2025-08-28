@@ -49,11 +49,11 @@ export function load_settings(skip = false) {
         }
 
         // migrates old font settings
-        if (settings.font_weight == 480)
+        if (settings.font_weight == 480 || settings.font_weight == 440)
             settings.font_weight = settings_store.font_weight.default;
-        if (settings.font_weight_medium == 650)
+        if (settings.font_weight_medium == 650 || settings.font_weight_medium == 570)
             settings.font_weight_medium = settings_store.font_weight_medium.default;
-        if (settings.font_weight_bold == 730 || settings.font_weight_bold == 760)
+        if (settings.font_weight_bold == 730 || settings.font_weight_bold == 760 || settings.font_weight_bold == 680)
             settings.font_weight_bold = settings_store.font_weight_bold.default;
     }
 

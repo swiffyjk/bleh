@@ -38223,11 +38223,11 @@
       } else if (settings.seasonal_particles_reduced == false) {
         delete settings.seasonal_particles_reduced;
       }
-      if (settings.font_weight == 480)
+      if (settings.font_weight == 480 || settings.font_weight == 440)
         settings.font_weight = settings_store.font_weight.default;
-      if (settings.font_weight_medium == 650)
+      if (settings.font_weight_medium == 650 || settings.font_weight_medium == 570)
         settings.font_weight_medium = settings_store.font_weight_medium.default;
-      if (settings.font_weight_bold == 730 || settings.font_weight_bold == 760)
+      if (settings.font_weight_bold == 730 || settings.font_weight_bold == 760 || settings.font_weight_bold == 680)
         settings.font_weight_bold = settings_store.font_weight_bold.default;
     }
     if (settings.profile_shortcut) {
@@ -50792,6 +50792,9 @@
     }
   }
   function bleh_home_legacy() {
+    const main_content = document.body.querySelector(".adaptive-skin-container");
+    if (!main_content) return;
+    render(main_content, html``);
     window.location.href = `${root}music`;
   }
 
@@ -60143,9 +60146,9 @@
     },
     font_weight: {
       css: "custom_font_weight",
-      default: 440,
+      default: 500,
       min: 100,
-      max: 500,
+      max: 600,
       step: 10,
       type: "range",
       title: trans.font_weight.name,
@@ -60153,9 +60156,9 @@
     },
     font_weight_medium: {
       css: "custom_font_weight_medium",
-      default: 570,
+      default: 600,
       min: 400,
-      max: 700,
+      max: 750,
       step: 10,
       type: "range",
       title: trans.font_weight_medium.name,
@@ -60163,7 +60166,7 @@
     },
     font_weight_bold: {
       css: "custom_font_weight_bold",
-      default: 680,
+      default: 700,
       min: 500,
       max: 900,
       step: 10,

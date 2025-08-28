@@ -14,7 +14,6 @@ import {bleh_charts} from "./chart";
 import {bleh_native_settings} from './lastfm_settings';
 import {html, render} from "lighterhtml";
 import {ff} from "../sku.js";
-import tippy from "tippy.js";
 import { load_profile_cache_externally } from './profile.js';
 
 export async function bleh_home() {
@@ -271,5 +270,10 @@ export async function bleh_home() {
 }
 
 export function bleh_home_legacy() {
+    const main_content = document.body.querySelector('.adaptive-skin-container');
+    if (!main_content) return;
+
+    render(main_content, html``);
+
     window.location.href = `${root}music`;
 }

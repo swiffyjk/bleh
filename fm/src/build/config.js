@@ -825,9 +825,9 @@ export let settings_store = {
     },
     font_weight: {
         css: 'custom_font_weight',
-        default: 440,
+        default: 500,
         min: 100,
-        max: 500,
+        max: 600,
         step: 10,
         type: 'range',
         title: trans.font_weight.name,
@@ -835,9 +835,9 @@ export let settings_store = {
     },
     font_weight_medium: {
         css: 'custom_font_weight_medium',
-        default: 570,
+        default: 600,
         min: 400,
-        max: 700,
+        max: 750,
         step: 10,
         type: 'range',
         title: trans.font_weight_medium.name,
@@ -845,7 +845,7 @@ export let settings_store = {
     },
     font_weight_bold: {
         css: 'custom_font_weight_bold',
-        default: 680,
+        default: 700,
         min: 500,
         max: 900,
         step: 10,
