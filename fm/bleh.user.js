@@ -48253,7 +48253,7 @@
   }
   function subscribe_to_events() {
     if (!settings.activities || !page.structure.main) return;
-    let love_track = document.body.querySelectorAll(`form[action$="${auth.name}/loved"]:not([data-bleh-subscribed])`);
+    let love_track = page.structure.container.querySelectorAll(`form[action="${root}user/${auth.name}/loved"]:not([data-bleh-subscribed])`);
     love_track.forEach((form) => {
       form.setAttribute("data-bleh-subscribed", "true");
       let track = form.querySelector('[name="track"]').getAttribute("value");
@@ -48262,10 +48262,11 @@
       track = correct_item_by_artist(track, artist);
       let btn = form.querySelector("button");
       btn.addEventListener("click", (event3) => {
+        event3.preventDefault();
         log("heard", "event", "info", event3);
         let action = btn.getAttribute("data-analytics-action");
         if (btn.getAttribute("data-type") == "love") {
-          setTimeout(function() {
+          setTimeout(() => {
             if (!btn.querySelector("span")) {
               let new_text = document.createElement("span");
               new_text.textContent = tl(trans.love);
