@@ -19,6 +19,7 @@ import { save_profile_cache } from '../pages/profile.js';
 import { toggle } from './toggle.js';
 import { save_setting } from './settings.js';
 import { load_chart_colours } from '../chart.js';
+import { sponsor_list } from '../build/sponsor.js';
 
 export function markdown(text, {
     allow_headers = false,
@@ -279,6 +280,13 @@ export function markdown(text, {
 
     const will_cache = cache === true;
     log(`prepare new cache is ${will_cache}`, 'markdown', 'log', {cache});
+
+    // this looks like a mess, but essentially profile colours are
+    // a nice 'thank you' vanity reward for sponsors <3
+    if (allow_hue) {
+        if (!sponsor_list || (sponsor_list && !sponsor_list.sponsors.includes(name)))
+            allow_hue = false;
+    }
 
     if ((allow_banners || allow_hue) && will_cache) {
         profile_cache = JSON.parse(localStorage.getItem('bleh_profile_cache')) || {};

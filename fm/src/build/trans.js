@@ -1217,6 +1217,9 @@ export const trans = {
         de: 'Anschreiben',
         pt: 'Mensagem'
     },
+    sponsor_details: {
+        en: 'Sponsor and badge details'
+    },
     sponsor_data: {
         en: 'Sponsor and badge data version {v}',
         de: 'Sponsoren- und Abzeichen Version {v}',
@@ -1298,6 +1301,12 @@ export const trans = {
         en: 'This is a special bleh-managed profile to handle sponsors',
         de: 'Dies ist ein bleh verwaltetes Profil zur Verwaltung von Sponsoren',
         pt: 'Este é um perfil especial gerenciado pelo bleh para lidar com apoiadores'
+    },
+    sponsors_only: {
+        en: 'Sponsors only'
+    },
+    downloaded_value: {
+        en: 'Downloaded {v}'
     },
     loading: {
         en: 'Loading',
@@ -1990,6 +1999,14 @@ export const trans = {
         en: '{brand} version {number}',
         de: '{brand} Version {number}',
         pt: '{brand} versão {number}'
+    },
+    lotus: {
+        artist: {
+            en: 'Artist corrections'
+        },
+        album_track: {
+            en: 'Album and track corrections'
+        }
     },
     correct_titles_with_lotus: {
         name: {

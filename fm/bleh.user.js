@@ -22858,6 +22858,7 @@
     name: null,
     pro: null,
     sponsor: false,
+    sponsor_full: false,
     avatar: null,
     sets: {
       hue: 255,
@@ -25354,6 +25355,47 @@
       return version.feature_flags[flag].default;
   }
 
+  // src/components/status.js
+  function load_status() {
+    if (!page.structure.status) {
+      let notification_host = html.node`
+            <div class="status-alerts" />
+        `;
+      page.structure.status = notification_host;
+      document.body.appendChild(notification_host);
+    }
+  }
+  function status({
+    title,
+    body,
+    type
+  }) {
+    let icon = "icon-16-info";
+    if (type == "error") {
+      icon = "icon-16-x";
+    }
+    const alert2 = html.node`
+        <div class="status-alert colourful colourful-bg" onclick=${() => status_remove()}>
+            <div class="status-icon">
+                <div class="bleh-icon" style="--icon: var(--${icon})" />
+            </div>
+            <div class="status-title">${title}</div>
+            ${body ? html.node`<div class="status-body">${body}</div>` : ""}
+        </div>
+    `;
+    setTimeout(() => {
+      status_remove();
+    }, 2200);
+    page.structure.status.appendChild(alert2);
+    return alert2;
+    function status_remove() {
+      alert2.classList.add("hiding");
+      setTimeout(() => {
+        alert2.remove();
+      }, 150);
+    }
+  }
+
   // src/sponsor.js
   function sponsors(force = false) {
     if (!ff("sponsor"))
@@ -25367,8 +25409,10 @@
     } else {
       for (var member in sponsor_list) delete sponsor_list[member];
       Object.assign(sponsor_list, JSON.parse(sponsor_data));
-      if (sponsor_list)
+      if (sponsor_list) {
         auth.sponsor = sponsor_list.sponsors.includes(auth.name);
+        auth.sponsor_full = !sponsor_list.sponsors_one_time.includes(auth.name);
+      }
       if (sponsor_expire < current_time && !force) {
         sponsor_request();
       } else if (force) {
@@ -25394,10 +25438,14 @@
         if (sponsor_list.latest != 0 || sponsor_list && parseFloat(JSON.parse(this.response).latest) >= parseFloat(sponsor_list.latest)) {
           for (const member in sponsor_list) delete sponsor_list[member];
           Object.assign(sponsor_list, JSON.parse(this.response));
-          if (sponsor_list)
+          if (sponsor_list) {
             auth.sponsor = sponsor_list.sponsors.includes(auth.name);
+            auth.sponsor_full = !sponsor_list.sponsors_one_time.includes(auth.name);
+          }
           if (notify2)
-            deliver_notif(trans_legacy.en.settings.home.sponsor.download, false, true, "sponsor");
+            status({
+              title: tl(trans.downloaded_value).replace("{v}", tl(trans.sponsor_details))
+            });
           localStorage.setItem("kat_sponsors", this.response);
         }
         api_expire.setHours(api_expire.getHours() + 4);
@@ -37494,47 +37542,6 @@
     `;
   }
 
-  // src/components/status.js
-  function load_status() {
-    if (!page.structure.status) {
-      let notification_host = html.node`
-            <div class="status-alerts" />
-        `;
-      page.structure.status = notification_host;
-      document.body.appendChild(notification_host);
-    }
-  }
-  function status({
-    title,
-    body,
-    type
-  }) {
-    let icon = "icon-16-info";
-    if (type == "error") {
-      icon = "icon-16-x";
-    }
-    const alert2 = html.node`
-        <div class="status-alert colourful colourful-bg" onclick=${() => status_remove()}>
-            <div class="status-icon">
-                <div class="bleh-icon" style="--icon: var(--${icon})" />
-            </div>
-            <div class="status-title">${title}</div>
-            ${body ? html.node`<div class="status-body">${body}</div>` : ""}
-        </div>
-    `;
-    setTimeout(() => {
-      status_remove();
-    }, 2200);
-    page.structure.status.appendChild(alert2);
-    return alert2;
-    function status_remove() {
-      alert2.classList.add("hiding");
-      setTimeout(() => {
-        alert2.remove();
-      }, 150);
-    }
-  }
-
   // src/components/settings.js
   function setting({
     id = "",
@@ -40893,7 +40900,7 @@
         </div>
         <div class="setting-group">
             <div class="setting" data-type="info" ref=${(el) => banner_setting = el} />
-            <div class="setting" data-type="info" ref=${(el) => accent_setting = el} />
+            <div class="setting" data-type="info" disabled=${!auth.sponsor} ref=${(el) => accent_setting = el} />
             ${setting({ id: "avatar_radius" })}
         </div>
     `);
@@ -40937,7 +40944,7 @@
       let edit;
       render(accent_setting, html`
             <div class="heading">
-                <h5>${tl(trans.profile_accent.name)}<span class="new-badge beta">${tl(trans.new)}</span></h5>
+                <h5>${tl(trans.profile_accent.name)}<span class="new-badge sponsor-related">${tl(trans.sponsors_only)}</span><span class="new-badge beta">${tl(trans.new)}</span></h5>
                 <p>${tl(trans.profile_accent.body)}</p>
             </div>
             <div class="info">
@@ -43183,9 +43190,17 @@
     if (!name) return;
     log(`requested profile cache for ${name}`, "cache");
     let profile_cache = JSON.parse(localStorage.getItem("bleh_profile_cache")) || {};
-    if (profile_cache[name]) {
-      log(`returning pre-cached result for ${name}`, "cache", "info", { cache: profile_cache[name] });
-      return profile_cache[name];
+    let cache2 = profile_cache[name];
+    if (cache2) {
+      if (cache2.hue || cache2.sat || cache2.lit) {
+        if (!sponsor_list || sponsor_list && !sponsor_list.sponsors.includes(name)) {
+          delete cache2.hue;
+          delete cache2.sat;
+          delete cache2.lit;
+        }
+      }
+      log(`returning pre-cached result for ${name}`, "cache", "info", { cache: cache2 });
+      return cache2;
     }
     return await request_profile_cache(name);
   }
@@ -43193,7 +43208,14 @@
     if (!name) return;
     if (!profile_cache) profile_cache = JSON.parse(localStorage.getItem("bleh_profile_cache")) || {};
     if (!cache2) cache2 = profile_cache[name] || {};
-    if (profile_cache[name]) {
+    if (cache2) {
+      if (cache2.hue || cache2.sat || cache2.lit) {
+        if (!sponsor_list || sponsor_list && !sponsor_list.sponsors.includes(name)) {
+          delete cache2.hue;
+          delete cache2.sat;
+          delete cache2.lit;
+        }
+      }
       const hue2 = cache2.hue;
       const sat = cache2.sat;
       const lit = cache2.lit;
@@ -44919,6 +44941,10 @@
     let profile_cache;
     const will_cache = cache2 === true;
     log(`prepare new cache is ${will_cache}`, "markdown", "log", { cache: cache2 });
+    if (allow_hue) {
+      if (!sponsor_list || sponsor_list && !sponsor_list.sponsors.includes(name))
+        allow_hue = false;
+    }
     if ((allow_banners || allow_hue) && will_cache) {
       profile_cache = JSON.parse(localStorage.getItem("bleh_profile_cache")) || {};
       cache2 = profile_cache[page.name] || {};
@@ -47859,13 +47885,10 @@
         } else {
           Object.assign(album_track_corrections, JSON.parse(this.response));
         }
-        if (send_notify) {
-          notify({
-            title: trans_legacy.en.lotus[type],
-            icon: "icon-16-lotus",
-            classname: "lotus"
+        if (send_notify)
+          status({
+            title: tl(trans.downloaded_value).replace("{v}", tl(trans.lotus[type]))
           });
-        }
         localStorage.setItem(`lotus_${type}`, this.response);
         api_expire.setHours(api_expire.getHours() + 4);
         log(`${type} list cached until ${api_expire}`, "lotus");
@@ -53835,6 +53858,9 @@
       de: "Anschreiben",
       pt: "Mensagem"
     },
+    sponsor_details: {
+      en: "Sponsor and badge details"
+    },
     sponsor_data: {
       en: "Sponsor and badge data version {v}",
       de: "Sponsoren- und Abzeichen Version {v}",
@@ -53916,6 +53942,12 @@
       en: "This is a special bleh-managed profile to handle sponsors",
       de: "Dies ist ein bleh verwaltetes Profil zur Verwaltung von Sponsoren",
       pt: "Este \xE9 um perfil especial gerenciado pelo bleh para lidar com apoiadores"
+    },
+    sponsors_only: {
+      en: "Sponsors only"
+    },
+    downloaded_value: {
+      en: "Downloaded {v}"
     },
     loading: {
       en: "Loading",
@@ -54608,6 +54640,14 @@
       en: "{brand} version {number}",
       de: "{brand} Version {number}",
       pt: "{brand} vers\xE3o {number}"
+    },
+    lotus: {
+      artist: {
+        en: "Artist corrections"
+      },
+      album_track: {
+        en: "Album and track corrections"
+      }
     },
     correct_titles_with_lotus: {
       name: {

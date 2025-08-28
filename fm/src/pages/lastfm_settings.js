@@ -576,7 +576,7 @@ function patch_settings_profile_panel(token, update_picture) {
         </div>
         <div class="setting-group">
             <div class="setting" data-type="info" ref=${el => banner_setting = el} />
-            <div class="setting" data-type="info" ref=${el => accent_setting = el} />
+            <div class="setting" data-type="info" disabled=${!auth.sponsor} ref=${el => accent_setting = el} />
             ${setting({id: 'avatar_radius'})}
         </div>
     `);
@@ -636,7 +636,7 @@ function patch_settings_profile_panel(token, update_picture) {
         let edit;
         render(accent_setting, html`
             <div class="heading">
-                <h5>${tl(trans.profile_accent.name)}<span class="new-badge beta">${tl(trans.new)}</span></h5>
+                <h5>${tl(trans.profile_accent.name)}<span class="new-badge sponsor-related">${tl(trans.sponsors_only)}</span><span class="new-badge beta">${tl(trans.new)}</span></h5>
                 <p>${tl(trans.profile_accent.body)}</p>
             </div>
             <div class="info">

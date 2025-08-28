@@ -1648,10 +1648,19 @@ export async function load_profile_cache_externally(name = page.name) {
     log(`requested profile cache for ${name}`, 'cache');
 
     let profile_cache = JSON.parse(localStorage.getItem('bleh_profile_cache')) || {};
+    let cache = profile_cache[name];
 
-    if (profile_cache[name]) {
-        log(`returning pre-cached result for ${name}`, 'cache', 'info', {cache: profile_cache[name]});
-        return profile_cache[name];
+    if (cache) {
+        if (cache.hue || cache.sat || cache.lit) {
+            if (!sponsor_list || (sponsor_list && !sponsor_list.sponsors.includes(name))) {
+                delete cache.hue;
+                delete cache.sat;
+                delete cache.lit;
+            }
+        }
+
+        log(`returning pre-cached result for ${name}`, 'cache', 'info', {cache});
+        return cache;
     }
 
     return await request_profile_cache(name);
@@ -1663,7 +1672,15 @@ function load_profile_cache(name = page.name, cache=null, profile_cache=null) {
     if (!profile_cache) profile_cache = JSON.parse(localStorage.getItem('bleh_profile_cache')) || {};
     if (!cache) cache = profile_cache[name] || {};
 
-    if (profile_cache[name]) {
+    if (cache) {
+        if (cache.hue || cache.sat || cache.lit) {
+            if (!sponsor_list || (sponsor_list && !sponsor_list.sponsors.includes(name))) {
+                delete cache.hue;
+                delete cache.sat;
+                delete cache.lit;
+            }
+        }
+
         const hue = cache.hue;
         const sat = cache.sat;
         const lit = cache.lit;

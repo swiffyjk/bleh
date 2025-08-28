@@ -9,12 +9,12 @@ import {log} from "../build/log";
 import {album_track_corrections, artist_corrections, includes} from "../build/music";
 import {page, root} from "../build/page";
 import {return_artist_from_generic, sanitise} from "../build/tools";
-import {trans_legacy} from "../build/trans";
+import {tl, trans, trans_legacy} from "../build/trans";
 import {prepare_corrections_page} from "../pages/bleh_config";
 import {dialog} from "./dialog";
-import {notify} from "./notify";
 import {html, render} from "lighterhtml";
 import {redirect} from "./music.js";
+import { status } from './status.js';
 
 const flat_patterns = [];
 
@@ -99,13 +99,10 @@ function lotus_request(type = 'artist', send_notify = false) {
                 Object.assign(album_track_corrections, JSON.parse(this.response));
             }
 
-            if (send_notify) {
-                notify({
-                    title: trans_legacy.en.lotus[type],
-                    icon: 'icon-16-lotus',
-                    classname: 'lotus'
+            if (send_notify)
+                status({
+                    title: tl(trans.downloaded_value).replace('{v}', tl(trans.lotus[type]))
                 });
-            }
 
             // save to cache for next page load
             localStorage.setItem(`lotus_${type}`, this.response);

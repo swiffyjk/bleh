@@ -29,6 +29,7 @@ tippy.setDefaultProps({
  * @param {string|null} name - Profile name if authorised
  * @param {boolean} pro - Last.fm Pro status
  * @param {boolean} sponsor - Sponsor of the project
+ * @param {boolean} sponsor_full - Monthly sponsor of the project
  * @param {string|null} avatar - Profile avatar if present
  * @param {{hue: number, sat: number, lit: number}} sets - Set of colours based on avatar
  */
@@ -36,6 +37,7 @@ export let auth = {
     name: null,
     pro: null,
     sponsor: false,
+    sponsor_full: false,
     avatar: null,
     sets: {
         hue: 255,
