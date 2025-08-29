@@ -269,6 +269,16 @@
             "default": true,
             "name": "Friends system",
             "date": "2025-08-18"
+        },
+        "adaptive_theme": {
+            "default": false,
+            "name": "Adaptive theme controls",
+            "date": "2025-08-29"
+        },
+        "adaptive_colours": {
+            "default": false,
+            "name": "Adaptive colour controls",
+            "date": "2025-08-29"
         }
     }
 }

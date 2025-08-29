@@ -273,6 +273,9 @@ export async function show_your_scrobbles() {
 
             render(listen_item, html`
                 <img class="view-item-avatar" src=${shortcut_listens.avi} alt=${shortcut_listens.name}>
+                <div class="listen-badge star colourful">
+                    <div class="bleh-icon" />
+                </div>
                 <div class="info">
                     <h3>${shortcut_listens.name}</h3>
                     <p class="colourful" ref=${el => p = el}>${tl(trans.listens.count).replace('{c}', listens.toLocaleString(lang))}</p>
@@ -737,7 +740,7 @@ export async function show_your_scrobbles() {
 
     page.structure.side.appendChild(html.node`
         <section class="lotus cta">
-             <strong>${tl(trans.lotus_cta[page.corrected]).replace('{t}', tl(trans[`${page.type}_lower`]))}</strong>
+            <strong>${tl(trans.lotus_cta[page.corrected]).replace('{t}', tl(trans[`${page.type}_lower`]))}</strong>
             <a class="see-more" href="https://github.com/katelyynn/lotus/issues/new/choose" target="_blank">${tl(trans.suggest_correction)}</a>
         </section>
     `);
@@ -795,6 +798,9 @@ function create_listen_item(parent, {name, listens, link, avi, count=0, button=f
         // loading listens
         render(listen_item, html`
             <img class="view-item-avatar" src=${avi} alt=${name}>
+            <div class="listen-badge star colourful">
+                <div class="bleh-icon" />
+            </div>
             <div class="info">
                 <h3>${name}</h3>
                 <p class="colourful" ref=${el => p = el}>${tl(trans.listens)}</p>

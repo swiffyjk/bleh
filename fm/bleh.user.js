@@ -34116,6 +34116,9 @@
         listen_item.setAttribute("data-listens", listens);
         render(listen_item, html`
                 <img class="view-item-avatar" src=${shortcut_listens.avi} alt=${shortcut_listens.name}>
+                <div class="listen-badge star colourful">
+                    <div class="bleh-icon" />
+                </div>
                 <div class="info">
                     <h3>${shortcut_listens.name}</h3>
                     <p class="colourful" ref=${(el) => p = el}>${tl(trans.listens.count).replace("{c}", listens.toLocaleString(lang))}</p>
@@ -34471,7 +34474,7 @@
       return;
     page.structure.side.appendChild(html.node`
         <section class="lotus cta">
-             <strong>${tl(trans.lotus_cta[page.corrected]).replace("{t}", tl(trans[`${page.type}_lower`]))}</strong>
+            <strong>${tl(trans.lotus_cta[page.corrected]).replace("{t}", tl(trans[`${page.type}_lower`]))}</strong>
             <a class="see-more" href="https://github.com/katelyynn/lotus/issues/new/choose" target="_blank">${tl(trans.suggest_correction)}</a>
         </section>
     `);
@@ -34517,6 +34520,9 @@
     } else if (listens > -2) {
       render(listen_item, html`
             <img class="view-item-avatar" src=${avi} alt=${name}>
+            <div class="listen-badge star colourful">
+                <div class="bleh-icon" />
+            </div>
             <div class="info">
                 <h3>${name}</h3>
                 <p class="colourful" ref=${(el) => p = el}>${tl(trans.listens)}</p>
@@ -36841,6 +36847,13 @@
             action: () => bleh_theme_picker()
           },
           {
+            type: "minis",
+            text: tl(trans.minis),
+            body: tl(trans.opens_your_value).replace("{v}", tl(trans.minis)),
+            keywords: ["bleh", "minis", "tools", "labs", "games", "collage", "compare"],
+            action: () => window.location.href = `${root}bleh/minis`
+          },
+          {
             type: "news",
             text: tl(trans.news),
             body: tl(trans.opens_the_value).replace("{v}", tl(trans.news)),
@@ -37040,8 +37053,8 @@
         rabbit_search("internal:ctx", [
           {
             type: "overview",
-            text: tl(trans.overview),
-            body: tl(trans.opens_the_value_for_type).replace("{v}", tl(trans.overview)).replace("{t}", page.name),
+            text: tl(trans.home),
+            body: tl(trans.opens_the_value_for_type).replace("{v}", tl(trans.home)).replace("{t}", page.name),
             keywords: ["home"],
             action: () => window.location.href = url_start
           },
@@ -37149,8 +37162,8 @@
         rabbit_search("internal:ctx", [
           {
             type: "overview",
-            text: tl(trans.overview),
-            body: tl(trans.opens_the_value_for_type).replace("{v}", tl(trans.overview)).replace("{t}", page.name),
+            text: tl(trans.home),
+            body: tl(trans.opens_the_value_for_type).replace("{v}", tl(trans.home)).replace("{t}", page.name),
             keywords: ["home"],
             action: () => window.location.href = url_start
           },
@@ -37229,8 +37242,8 @@
         rabbit_search("internal:ctx", [
           {
             type: "overview",
-            text: tl(trans.overview),
-            body: tl(trans.opens_the_value_for_type).replace("{v}", tl(trans.overview)).replace("{t}", page.name),
+            text: tl(trans.home),
+            body: tl(trans.opens_the_value_for_type).replace("{v}", tl(trans.home)).replace("{t}", page.name),
             keywords: ["home"],
             action: () => window.location.href = url_start
           },
@@ -37267,8 +37280,8 @@
         rabbit_search("internal:ctx", [
           {
             type: "overview",
-            text: tl(trans.overview),
-            body: tl(trans.opens_the_value_for_type).replace("{v}", tl(trans.overview)).replace("{t}", page.name),
+            text: tl(trans.home),
+            body: tl(trans.opens_the_value_for_type).replace("{v}", tl(trans.home)).replace("{t}", page.name),
             keywords: ["home"],
             action: () => window.location.href = url_start
           },
@@ -37305,8 +37318,8 @@
         rabbit_search("internal:ctx", [
           {
             type: "overview",
-            text: tl(trans.overview),
-            body: tl(trans.opens_the_value_for_type).replace("{v}", tl(trans.overview)).replace("{t}", page.name),
+            text: tl(trans.home),
+            body: tl(trans.opens_the_value_for_type).replace("{v}", tl(trans.home)).replace("{t}", page.name),
             keywords: ["home"],
             action: () => window.location.href = url_start
           },
@@ -47038,6 +47051,10 @@
           requires_flag: "colour_based_on_avatar"
         },
         {
+          type: "adaptive",
+          requires_flag: "adaptive_colours"
+        },
+        {
           type: "customise"
         }
       ],
@@ -47175,9 +47192,6 @@
             theme: "window",
             content: html.node`
                         <div class="dialog-settings">
-                            <div class="alert alert-info seasonal-hsl-alert">
-                                ${tl(trans.seasonal_warning)}
-                            </div>
                             <div class="setting-group blend">
                                 ${ff("colour_based_on_hex") ? html.node`
                                 <div class="setting" data-type="text">
@@ -47210,10 +47224,7 @@
             placement: "bottom",
             interactive: true,
             interactiveBorder: 10,
-            trigger: "click",
-            onShow(instance) {
-              refresh_all(instance.popper);
-            }
+            trigger: "click"
           });
         }
         if (colour2.sets) {
@@ -47741,9 +47752,9 @@
   function theme_bubbles() {
     const themes = [
       {
-        id: "auto",
-        name: tl(trans.auto),
-        hide: !ff("auto_theme"),
+        id: "adaptive",
+        name: tl(trans.adaptive),
+        hide: !ff("adaptive_theme"),
         new_release: true
       },
       {
@@ -53184,7 +53195,10 @@
       pt: "Colorir"
     },
     change_my_colour_when: {
-      en: "Change my accent colour when"
+      en: "Use a context-based accent colour when"
+    },
+    adaptive: {
+      en: "Adaptive"
     },
     hue_from_album: {
       en: "Browsing album pages"
@@ -55692,7 +55706,7 @@
       pt: "Abra a {v} para {t}"
     },
     quick_switcher: {
-      en: "Quick switcher"
+      en: "Rabbit hole"
     },
     use_quick_switcher: {
       name: {
@@ -60309,7 +60323,7 @@
       type: "text",
       min: 1,
       max: 1,
-      icon: "icon-16-command",
+      icon: "icon-16-rabbit",
       placeholder: "none",
       keybind: ["\u2318", "K"],
       warn_if_empty: true
@@ -60848,6 +60862,16 @@
         default: true,
         name: "Friends system",
         date: "2025-08-18"
+      },
+      adaptive_theme: {
+        default: false,
+        name: "Adaptive theme controls",
+        date: "2025-08-29"
+      },
+      adaptive_colours: {
+        default: false,
+        name: "Adaptive colour controls",
+        date: "2025-08-29"
       }
     }
   };

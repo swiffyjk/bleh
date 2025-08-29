@@ -1632,6 +1632,10 @@ export function display_colour_presets() {
                 requires_flag: 'colour_based_on_avatar'
             },
             {
+                type: 'adaptive',
+                requires_flag: 'adaptive_colours'
+            },
+            {
                 type: 'customise'
             }
         ],
@@ -1782,9 +1786,6 @@ export function display_colour_presets() {
                     theme: 'window',
                     content: html.node`
                         <div class="dialog-settings">
-                            <div class="alert alert-info seasonal-hsl-alert">
-                                ${tl(trans.seasonal_warning)}
-                            </div>
                             <div class="setting-group blend">
                                 ${(ff('colour_based_on_hex')) ? html.node`
                                 <div class="setting" data-type="text">
@@ -1818,11 +1819,7 @@ export function display_colour_presets() {
                     placement: 'bottom',
                     interactive: true,
                     interactiveBorder: 10,
-                    trigger: 'click',
-
-                    onShow(instance) {
-                        refresh_all(instance.popper);
-                    }
+                    trigger: 'click'
                 });
             }
 
@@ -2423,9 +2420,9 @@ function activity_preview_new(parent, activity) {
 export function theme_bubbles() {
     const themes = [
         {
-            id: 'auto',
-            name: tl(trans.auto),
-            hide: !ff('auto_theme'),
+            id: 'adaptive',
+            name: tl(trans.adaptive),
+            hide: !ff('adaptive_theme'),
             new_release: true
         },
         {

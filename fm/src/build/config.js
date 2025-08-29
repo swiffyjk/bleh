@@ -983,7 +983,7 @@ export let settings_store = {
         type: 'text',
         min: 1,
         max: 1,
-        icon: 'icon-16-command',
+        icon: 'icon-16-rabbit',
         placeholder: 'none',
         keybind: ['⌘', 'K'],
         warn_if_empty: true

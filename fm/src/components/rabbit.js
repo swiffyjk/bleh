@@ -265,6 +265,13 @@ export function register_rabbit() {
                     action: () => bleh_theme_picker()
                 },
                 {
+                    type: 'minis',
+                    text: tl(trans.minis),
+                    body: tl(trans.opens_your_value).replace('{v}', tl(trans.minis)),
+                    keywords: ['bleh', 'minis', 'tools', 'labs', 'games', 'collage', 'compare'],
+                    action: () => window.location.href = `${root}bleh/minis`
+                },
+                {
                     type: 'news',
                     text: tl(trans.news),
                     body: tl(trans.opens_the_value).replace('{v}', tl(trans.news)),
@@ -497,8 +504,8 @@ export function register_rabbit() {
             rabbit_search('internal:ctx', [
                 {
                     type: 'overview',
-                    text: tl(trans.overview),
-                    body: tl(trans.opens_the_value_for_type).replace('{v}', tl(trans.overview)).replace('{t}', page.name),
+                    text: tl(trans.home),
+                    body: tl(trans.opens_the_value_for_type).replace('{v}', tl(trans.home)).replace('{t}', page.name),
                     keywords: ['home'],
                     action: () => window.location.href = url_start
                 },
@@ -606,8 +613,8 @@ export function register_rabbit() {
             rabbit_search('internal:ctx', [
                 {
                     type: 'overview',
-                    text: tl(trans.overview),
-                    body: tl(trans.opens_the_value_for_type).replace('{v}', tl(trans.overview)).replace('{t}', page.name),
+                    text: tl(trans.home),
+                    body: tl(trans.opens_the_value_for_type).replace('{v}', tl(trans.home)).replace('{t}', page.name),
                     keywords: ['home'],
                     action: () => window.location.href = url_start
                 },
@@ -686,8 +693,8 @@ export function register_rabbit() {
             rabbit_search('internal:ctx', [
                 {
                     type: 'overview',
-                    text: tl(trans.overview),
-                    body: tl(trans.opens_the_value_for_type).replace('{v}', tl(trans.overview)).replace('{t}', page.name),
+                    text: tl(trans.home),
+                    body: tl(trans.opens_the_value_for_type).replace('{v}', tl(trans.home)).replace('{t}', page.name),
                     keywords: ['home'],
                     action: () => window.location.href = url_start
                 },
@@ -724,8 +731,8 @@ export function register_rabbit() {
             rabbit_search('internal:ctx', [
                 {
                     type: 'overview',
-                    text: tl(trans.overview),
-                    body: tl(trans.opens_the_value_for_type).replace('{v}', tl(trans.overview)).replace('{t}', page.name),
+                    text: tl(trans.home),
+                    body: tl(trans.opens_the_value_for_type).replace('{v}', tl(trans.home)).replace('{t}', page.name),
                     keywords: ['home'],
                     action: () => window.location.href = url_start
                 },
@@ -762,8 +769,8 @@ export function register_rabbit() {
             rabbit_search('internal:ctx', [
                 {
                     type: 'overview',
-                    text: tl(trans.overview),
-                    body: tl(trans.opens_the_value_for_type).replace('{v}', tl(trans.overview)).replace('{t}', page.name),
+                    text: tl(trans.home),
+                    body: tl(trans.opens_the_value_for_type).replace('{v}', tl(trans.home)).replace('{t}', page.name),
                     keywords: ['home'],
                     action: () => window.location.href = url_start
                 },

@@ -538,7 +538,10 @@ export const trans = {
         pt: 'Colorir'
     },
     change_my_colour_when: {
-        en: 'Change my accent colour when'
+        en: 'Use a context-based accent colour when'
+    },
+    adaptive: {
+        en: 'Adaptive'
     },
     hue_from_album: {
         en: 'Browsing album pages'
@@ -3046,7 +3049,7 @@ export const trans = {
         pt: 'Abra a {v} para {t}'
     },
     quick_switcher: {
-        en: 'Quick switcher'
+        en: 'Rabbit hole'
     },
     use_quick_switcher: {
         name: {
