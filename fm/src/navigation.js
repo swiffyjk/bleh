@@ -408,6 +408,17 @@ export function append_nav() {
 
         render(content, html`
             <div class="mini-notifications">
+                <div class="alert alert-danger">This is a work in progress, sorry! >_<</div>
+                <p class="more-link">
+                    <a href="${root}inbox">${tl(trans.read_more)}</a>
+                </p>
+            </div>
+        `);
+
+        return;
+
+        render(content, html`
+            <div class="mini-notifications">
                 ${messages}
                 <p class="more-link">
                     <a href="${root}inbox">${tl(trans.read_more)}</a>
