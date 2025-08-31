@@ -1,9 +1,9 @@
 // ==UserScript==
 // @name         bleh
 // @namespace    https://last.fm/
-// @version      2025.0816
+// @version      2025.0831
 // @description  bleh!!! ^-^
-// @author       kate
+// @author       katelyn
 // @match        https://www.last.fm/*
 // @icon         https://www.google.com/s2/favicons?sz=64&domain=last.fm
 // @updateURL    https://github.com/katelyynn/bleh/raw/uwu/fm/bleh.user.js
@@ -42788,7 +42788,6 @@
             </div>
             ${setting({ id: "format_guest_features" })}
             ${setting({ id: "stacked_chartlist_info" })}
-            ${setting({ id: "colourful_tracks" })}
             <div class="settings-footer">
                 <button type="submit" class="btn-primary save">
                     ${tl(trans.save)}
@@ -60659,10 +60658,10 @@
   // src/build/build.json
   var build_default = {
     brand: "bleh",
-    build: "2025.0816",
+    build: "2025.0831",
     sku: "yuzuha",
     bio: "bleh!!! ^-^",
-    author: "kate",
+    author: "katelyn",
     url: "https://github.com/katelyynn/bleh/raw/uwu/fm/bleh.user.js",
     feature_flags: {
       bleh_settings_tabs: {

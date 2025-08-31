@@ -1150,7 +1150,6 @@ function profile_recents() {
             </div>
             ${setting({id: 'format_guest_features'})}
             ${setting({id: 'stacked_chartlist_info'})}
-            ${setting({id: 'colourful_tracks'})}
             <div class="settings-footer">
                 <button type="submit" class="btn-primary save">
                     ${tl(trans.save)}
