@@ -24628,6 +24628,7 @@
       "feat.",
       "featuring",
       "- feat",
+      "[feat.",
       "- with",
       "(with",
       "[with",
@@ -24666,7 +24667,14 @@
       "[remaster",
       "- remasterizado",
       "(remasterizado",
-      "[remasterizado"
+      "[remasterizado",
+      ": high resolution remasters",
+      "- high resolution remasters",
+      "(high resolution remasters",
+      ": the high resolution remasters",
+      "- the high resolution remasters",
+      "(the high resolution remasters"
+      // Pink Floyd bootleg remaster boxsets
     ],
     mixes: [
       "- devonshire mix",
@@ -24785,7 +24793,11 @@
       // billie eilish l'amour de ma vie
       "- the remix",
       "(the remix",
-      "[the remix"
+      "[the remix",
+      "(unfinished original recordings of de-loused in the comatorium",
+      "[unfinished original recordings of de-loused in the comatorium",
+      "- unfinished original recordings of de-loused in the comatorium"
+      // landscape tantrums
     ],
     mixes_numbers: [
       "(v1",
