@@ -44921,10 +44921,14 @@
       ALLOWED_ATTR
     });
     const body = html.node([parsed2]);
-    let link_strings = {
+    const link_strings = {
+      "open.spotify.com": "Spotify",
+      "spotify.com": "Spotify",
+      "youtube.com": "YouTube",
       "x.com": "X",
       "twitter.com": "Twitter",
-      "github.com": "GitHub"
+      "github.com": "GitHub",
+      "discord.com": "Discord"
     };
     if (links.length > 0) {
       body.appendChild(html.node`
@@ -44942,7 +44946,7 @@
           label = link_strings[link.host];
         }
         return html.node`
-                            <a class="play-this-track-playlink music-link social-link" href=${link.url} target="_blank" data-host=${link.host}>
+                            <a class="music-link social-link" href=${link.url} target="_blank" data-host=${link.host}>
                                 ${label}
                             </a>
                         `;
