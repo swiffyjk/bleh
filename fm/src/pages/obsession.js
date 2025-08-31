@@ -15,6 +15,7 @@ import {correct_item_by_artist, name_includes} from '../components/lotus';
 import {checkup_page_structure} from '../components/structure';
 import {register_background, update_page} from '../page';
 import {html, render} from "lighterhtml";
+import {redirect} from "../components/music.js";
 
 export function bleh_obsession() {
     let obsession_container = document.querySelector('.obsession-container');
@@ -104,7 +105,7 @@ export function bleh_obsession() {
 
             let guest_element = document.createElement('a');
             guest_element.classList.add('header-new-crumb');
-            guest_element.setAttribute('href', `${root}music/${sanitise(song_guests[guest])}`);
+            guest_element.setAttribute('href', `${root}music/${redirect()}${sanitise(song_guests[guest])}`);
             guest_element.textContent = song_guests[guest];
 
             track_artist.appendChild(guest_element);

@@ -5,13 +5,16 @@ import {setting} from "./settings.js";
 import {input} from "./input.js";
 import {auth, page, root} from "../build/page.js";
 import {notify, notify_rm} from "./notify.js";
-import {clean_number, sanitise} from "../build/tools.js";
+import {clean_number, pad2, sanitise} from "../build/tools.js";
 import {log} from "../build/log.js";
 import {music_grids} from "./music_grid.js";
 import {settings} from "../build/config.js";
 import {version} from "../main.js";
 import {download} from "./share.js";
 import {render_user} from "../pages/minis.js";
+import {redirect} from "./music.js";
+import tippy from "tippy.js";
+import html2canvas from 'html2canvas-pro';
 
 export function collage({
     host,
@@ -154,10 +157,10 @@ export function collage({
                     <input type="text" class="input" ref=${el => inputter = el} placeholder=${tl(trans.enter_a_profile)} value=${page.requested.profile} onchange=${e => {
                         page.requested.profile = e.target.value;
                         page.name = page.requested.profile;
-                        
+
                         page.avatar = '';
                         if (page.name == auth.name) page.avatar = auth.avatar;
-                        
+
                         render(user, html`
                             ${render_user(page.name, page.avatar, user, true)}
                         `);
@@ -169,33 +172,34 @@ export function collage({
                                 inputter.dispatchEvent(new Event('change'));
                             }}>${tl(trans.profile)}</button>
                         `;
-                        
+
                         tippy(btn, {
                             content: tl(trans.profile)
                         });
-                        
+
                         return btn;
                     }}
                     ${() => {
                         let btn = html.node`
                             <button class="btn chibi icon" data-type="profile_shortcut" onclick=${() => {
                                 if (settings.profile_shortcut == '') return;
-                                
+
                                 inputter.value = settings.profile_shortcut;
                                 inputter.dispatchEvent(new Event('change'));
                             }}>${tl(trans.profile_shortcut.name)}</button>
                         `;
-                        
+
                         tippy(btn, {
                             content: tl(trans.profile_shortcut.name)
                         });
-                        
+
                         return btn;
                     }}
                 </div>
             </div>
             ${setting({id: 'collage_title'})}
             ${setting({id: 'collage_grid_gap'})}
+            ${setting({id: 'collage_centered'})}
             ${setting({id: 'collage_grid_text'})}
             ${setting({id: 'collage_grid_plays'})}
         </div>
@@ -212,6 +216,16 @@ export function collage({
                 id: 'collage_failed',
                 title: tl(trans.name_failed).replace('{name}', tl(trans.collage)),
                 body: tl(trans.your_settings_are_invalid),
+                type: 'error'
+            });
+            return;
+        }
+
+        if (!auth.name) {
+            notify({
+                id: 'collage_failed',
+                title: tl(trans.name_failed).replace('{name}', tl(trans.collage)),
+                body: tl(trans.you_need_to_be_logged_in),
                 type: 'error'
             });
             return;
@@ -325,7 +339,7 @@ export function collage({
         }
 
         let grid = html.node`
-            <ol class="grid-items grid-items--numbered collage-grid" style="--width: ${width_input.value}; --height: ${height_input.value}" data-width=${width_input.value} data-height=${height_input.value} />
+            <ol class="grid-items grid-items--numbered collage-grid" style="--width: ${width_input.value}; --height: ${height_input.value}" data-width=${width_input.value} data-height=${height_input.value} data-centered=${settings.collage_centered} />
         `;
 
         if (!settings.collage_grid_gap) {
@@ -356,7 +370,7 @@ export function collage({
                         <div class="grid-items-item-details">
                             ${settings.collage_grid_text ? html.node`
                             <p class="grid-items-item-main-text">
-                                <a class="link-block-target" href="${root}music/${template}" title="${data.name}">
+                                <a class="link-block-target" href="${root}music/${redirect()}${template}" title="${data.name}">
                                     ${data.name}
                                 </a>
                             </p>
@@ -364,16 +378,16 @@ export function collage({
                             ${(type_select.value != 'artists') ? html.node`
                             <p class="grid-items-item-aux-text">
                                 ${settings.collage_grid_text ? html.node`
-                                <a class="grid-items-item-aux-block" href="${root}music/${data.sister}">
+                                <a class="grid-items-item-aux-block" href="${root}music/${redirect()}${data.sister}">
                                     ${data.sister}
                                 </a>
                                 ${settings.collage_grid_plays ? html.node`
-                                <a class="grid-item-plays" href="${root}user/${page.name}/library/music/${template}?date_preset=${timeframe_select.value}" target="_blank">
+                                <a class="grid-item-plays" href="${root}user/${page.name}/library/music/${redirect()}${template}?date_preset=${timeframe_select.value}" target="_blank">
                                     ${data.plays.toLocaleString(lang)}
                                 </a>
                                 ` : ''}
                                 ` : settings.collage_grid_plays ? html.node`
-                                <a class="grid-item-plays" href="${root}user/${page.name}/library/music/${template}?date_preset=${timeframe_select.value}" target="_blank">
+                                <a class="grid-item-plays" href="${root}user/${page.name}/library/music/${redirect()}${template}?date_preset=${timeframe_select.value}" target="_blank">
                                     ${data.plays.toLocaleString(lang)}${tl(trans.plays_lower)}
                                 </a>
                                 ` : ''}
@@ -381,7 +395,7 @@ export function collage({
                             ` : html.node`
                             ${settings.collage_grid_plays ? html.node`
                             <p class="grid-items-item-aux-text">
-                                <a class="grid-item-plays" href="${root}user/${page.name}/library/music/${template}?date_preset=${timeframe_select.value}" target="_blank">
+                                <a class="grid-item-plays" href="${root}user/${page.name}/library/music/${redirect()}${template}?date_preset=${timeframe_select.value}" target="_blank">
                                     ${data.plays.toLocaleString(lang)}${tl(trans.plays_lower)}
                                 </a>
                             </p>
@@ -403,7 +417,7 @@ export function collage({
                         <strong class="brand">${version.brand}</strong>
                         <strong>${timeframe.querySelector('button').textContent}</strong>
                         <strong>${tl(trans.top_type).replace('{type}', tl(trans[type_select.value]))}</strong>
-                        <strong>${width_input.value}x${height_input.value}</strong>
+                        <strong>${width_input.value}×${height_input.value}</strong>
                     </div>
                     <div class="user">
                         <div class="avatar">
@@ -471,12 +485,15 @@ export function collage({
             canvas.toBlob(blob => {
                 const blob_url = URL.createObjectURL(blob);
 
+                const date = new Date();
+
                 const filename = tl(trans.chart_template_filename)
                     .replace('{timeframe}', timeframe.querySelector('button').textContent)
                     .replace('{user}', page.name)
                     .replace('{type}', tl(trans[type_select.value]))
-                    .replace('{size}', `${width_input.value}x${height_input.value}`)
-                    .replace('{brand}', version.brand);
+                    .replace('{size}', `${width_input.value}×${height_input.value}`)
+                    .replace('{brand}', version.brand)
+                    .replace('{date}', `${date.getFullYear()}-${pad2(date.getMonth() + 1)}-${pad2(date.getDate())}`);
 
                 render(body, html`
                     <div class="collage-finished">

@@ -10,7 +10,7 @@ import {settings} from "../build/config";
 import {log} from "../build/log";
 import {auth, page, root} from "../build/page";
 import {clean_number, return_artist_from_track, sanitise} from "../build/tools";
-import {lang, tl, trans, trans_legacy} from "../build/trans";
+import {lang, tl, trans} from "../build/trans";
 import {prep_chart_colours} from "../chart";
 import {refresh_all} from "../config";
 import {create_divider} from "../pages/gallery";
@@ -20,12 +20,16 @@ import {correct_item_by_artist} from "./lotus";
 import {register_menu} from "./menu";
 import {other_listener} from "./profile_shortcut";
 import {submit_scrobble} from "./scrobble.js";
+import tippy from "tippy.js";
+import {Chart} from "../main.js";
+import {DateTime} from "luxon";
+import { load_profile_cache_externally, open_starred_friend_window } from '../pages/profile.js';
 
 unsafeWindow._other_listener = function(id) {
     other_listener(id);
 }
 
-export function show_your_scrobbles() {
+export async function show_your_scrobbles() {
     let katsune = ff('katsune');
     show_numbers_on_side(page.type);
 
@@ -42,7 +46,7 @@ export function show_your_scrobbles() {
                 <ul class="navlist-items">
                     <li class="navlist-item secondary-nav-item secondary-nav-item--overview">
                         <a class="secondary-nav-item-link secondary-nav-item-link--active" href="${window.location.href}">
-                            ${tl(trans.overview)}
+                            ${tl(trans.home)}
                         </a>
                     </li>
                     <li class="navlist-item secondary-nav-item secondary-nav-item--tracks">
@@ -99,7 +103,7 @@ export function show_your_scrobbles() {
                 <ul class="navlist-items">
                     <li class="navlist-item secondary-nav-item secondary-nav-item--overview">
                         <a class="secondary-nav-item-link secondary-nav-item-link--active" href="${window.location.href}">
-                            ${tl(trans.overview)}
+                            ${tl(trans.home)}
                         </a>
                     </li>
                     ${(!page_is_blocked) ? html.node`
@@ -131,7 +135,7 @@ export function show_your_scrobbles() {
                 <ul class="navlist-items">
                     <li class="navlist-item secondary-nav-item secondary-nav-item--overview">
                         <a class="secondary-nav-item-link secondary-nav-item-link--active" href="${window.location.href}">
-                            ${tl(trans.overview)}
+                            ${tl(trans.home)}
                         </a>
                     </li>
                     <li class="navlist-item secondary-nav-item secondary-nav-item--albums">
@@ -197,6 +201,10 @@ export function show_your_scrobbles() {
     listen_container.classList.add('listen-container');
 
 
+    const no_auth_callout = page.structure.main.querySelector('.catalogue-callout');
+    if (no_auth_callout) no_auth_callout.remove();
+
+
     // page url
     let page_url = window.location.href;
     let page_url_split = page_url.split('/');
@@ -229,46 +237,48 @@ export function show_your_scrobbles() {
 
 
     // profile shortcut :3
-    if (settings.profile_shortcut != '') {
+    if (settings.starred_friend != '') {
+        const cache = await load_profile_cache_externally(settings.starred_friend);
+
         let shortcut_listens = {
-            name: settings.profile_shortcut,
+            name: settings.starred_friend,
             listens: -1,
             link: scrobble_page,
-            avi: localStorage.getItem('bleh_profile_shortcut_avi'),
+            avi: cache.avatar,
             katsune: katsune
         }
         // create child for them
-        create_listen_item(listen_container, shortcut_listens);
+        const listen_item = create_listen_item(listen_container, shortcut_listens);
 
-        fetch(`${root}user/${shortcut_listens.name}/library/music/${scrobble_page}`)
+        fetch(`${root}user/${shortcut_listens.name}/library/music/${redirect()}${scrobble_page}`)
         .then(function(response) {
             console.log('returned', response, response.text);
 
             return response.text();
         })
         .then(function(dom) {
-            let doc = new DOMParser().parseFromString(dom, 'text/html');
-            console.log('DOC', doc);
+            const doc = new DOMParser().parseFromString(dom, 'text/html');
 
             let first_metadata_item = doc.querySelector('.metadata-item .metadata-display');
 
             let listens = 0;
 
-            let listen_item = page.structure.main.querySelector(`#listen-item--${shortcut_listens.name}`);
-
             // sometimes this fails even thou they do have plays, this is just a last.fm bug
             // i dont feel comfortable displaying 0 here as it may not be true
             // but i guess i should?
-            if (first_metadata_item != null)
-                listens = clean_number(first_metadata_item.textContent.trim());
+            if (first_metadata_item) listens = clean_number(first_metadata_item.textContent.trim());
 
+            let p;
             listen_item.setAttribute('data-listens', listens);
 
             render(listen_item, html`
-                <img class="view-item-avatar" src="${shortcut_listens.avi}" alt="${shortcut_listens.name}">
+                <img class="view-item-avatar" src=${shortcut_listens.avi} alt=${shortcut_listens.name}>
+                <div class="listen-badge star colourful">
+                    <div class="bleh-icon" />
+                </div>
                 <div class="info">
                     <h3>${shortcut_listens.name}</h3>
-                    <p>${tl(trans.listens.count).replace('{c}', listens.toLocaleString(lang))}</p>
+                    <p class="colourful" ref=${el => p = el}>${tl(trans.listens.count).replace('{c}', listens.toLocaleString(lang))}</p>
                 </div>
             `);
 
@@ -277,9 +287,9 @@ export function show_your_scrobbles() {
                 let parsed_scrobble_as_rank = parse_scrobbles_as_rank(listens);
 
                 listen_item.setAttribute('data-bleh--scrobble-milestone',parsed_scrobble_as_rank.milestone);
-                listen_item.style.setProperty('--hue-over',parsed_scrobble_as_rank.hue);
-                listen_item.style.setProperty('--sat-over',parsed_scrobble_as_rank.sat);
-                listen_item.style.setProperty('--lit-over',parsed_scrobble_as_rank.lit);
+                p.style.setProperty('--hue-over',parsed_scrobble_as_rank.hue);
+                p.style.setProperty('--sat-over',parsed_scrobble_as_rank.sat);
+                p.style.setProperty('--lit-over',parsed_scrobble_as_rank.lit);
             }
         });
     }
@@ -310,7 +320,7 @@ export function show_your_scrobbles() {
     if (page.type == 'artist') {
         //
         let other_container = col_main.querySelector('.personal-stats-item--listeners');
-        if (other_container != null) {
+        if (other_container) {
             let listen_divider = document.createElement('div');
             listen_divider.classList.add('listen-divider');
 
@@ -391,8 +401,8 @@ export function show_your_scrobbles() {
 
         interact_container.appendChild(obsession_form);
     }
-    
-    
+
+
     if (ff('submit_scrobble')) {
         const can_api = localStorage.getItem('bleh_auth') && localStorage.getItem('bleh_auth_valid') === 'true';
 
@@ -454,42 +464,16 @@ export function show_your_scrobbles() {
 
     interact_container.appendChild(search_btn);*/
 
-
-    // lotus
-    let lotus_btn = null;
-    if (settings.corrections) {
-        lotus_btn = document.createElement('a');
-        /*lotus_btn.classList.add('btn', 'side-action', 'lotus', 'lotus-btn');*/
-        lotus_btn.classList.add('dropdown-menu-clickable-item', 'lotus', 'lotus-btn');
-        lotus_btn.textContent = trans_legacy.en.lotus.correct.name;
-        lotus_btn.href = 'https://github.com/katelyynn/lotus/issues/new/choose';
-        lotus_btn.target = '_blank';
-
-        if (page.corrected)
-            lotus_btn.classList.add('active');
-
-        /*if (page.corrected)
-            tippy(lotus_btn, {
-                content: (`<span class="lotus-active">${trans_legacy.en.lotus.correct.tooltip_active}</span><br><div class="tooltip-sub">${document.body.querySelector('.main-content > [itemscope]').getAttribute('data-page-resource-name')}</div>`),
-                allowHTML: true
-            });
-        else
-            tippy(lotus_btn, {
-                content: (`${trans_legacy.en.lotus.correct.tooltip}<br><div class="tooltip-sub">${document.body.querySelector('.main-content > [itemscope]').getAttribute('data-page-resource-name')}</div>`),
-                allowHTML: true
-            });
-
-        interact_container.appendChild(lotus_btn);*/
-    }
-
     let play_btn = interact_container.querySelector('.header-new-playlink');
     if (play_btn)
         interact_container.removeChild(play_btn);
 
-    if (!page.mobile)
-        page.structure.side.insertBefore(interact_container, page.structure.side.firstElementChild);
-    else
-        page.structure.main.insertBefore(interact_container, page.structure.main.firstElementChild);
+    if (auth.name) {
+        if (!page.mobile)
+            page.structure.side.insertBefore(interact_container, page.structure.side.firstElementChild);
+        else
+            page.structure.main.insertBefore(interact_container, page.structure.main.firstElementChild);
+    }
 
 
 
@@ -585,13 +569,17 @@ export function show_your_scrobbles() {
         link_group.appendChild(header);
 
         play_on = page.structure.side.querySelector('.play-this-track-playlinks');
-        page.structure.side.removeChild(play_on.parentElement);
+        play_on.parentElement.remove();
+
         play_links = play_on.querySelectorAll('li');
 
         play_links.forEach((item) => {
-            let link = item.querySelector('.play-this-track-playlink:not(.visible-xs)');
+            const link = item.querySelector('.play-this-track-playlink:not(.visible-xs)');
+
+            link.classList.remove('play-this-track-playlink');
             link.classList.add('music-link');
-            let replace = item.querySelector('.replace-playlink');
+
+            const replace = item.querySelector('.replace-playlink');
 
             if (link.classList.contains('play-this-track-playlink--youtube'))
                 link.textContent = 'YouTube';
@@ -628,13 +616,18 @@ export function show_your_scrobbles() {
 
         link_container.appendChild(html.node`
             <li>
-                <a class="play-this-track-playlink music-link play-this-track-playlink--genius" href="https://genius.com/search?q=${sanitise(page.sister)}+${sanitise(page.name)}" target="_blank">
+                <a class="music-link play-this-track-playlink--genius" href="https://genius.com/search?q=${sanitise(page.sister)}+${sanitise(page.name)}" target="_blank">
                     Genius
                 </a>
             </li>
             <li>
-                <a class="play-this-track-playlink music-link play-this-track-playlink--tidal" href="https://listen.tidal.com/search?q=${sanitise(page.sister, ' ')} ${sanitise(page.name, ' ')}" target="_blank">
+                <a class="music-link play-this-track-playlink--tidal" href="https://listen.tidal.com/search?q=${sanitise(page.sister, ' ')} ${sanitise(page.name, ' ')}" target="_blank">
                     Tidal
+                </a>
+            </li>
+            <li>
+                <a class="music-link play-this-track-playlink--qobuz" href="https://www.qobuz.com/search/tracks/${sanitise(page.sister, '%20')}%20${sanitise(page.name, '%20')}" target="_blank">
+                    Qobuz
                 </a>
             </li>
         `);
@@ -646,55 +639,61 @@ export function show_your_scrobbles() {
 
         if (page.type == 'album') {
             render(link_container, html`
-                <a class="play-this-track-playlink music-link play-this-track-playlink--spotify" href="https://open.spotify.com/search/${sanitise(page.sister, ' ')} ${sanitise(page.name, ' ')}" target="_blank">
+                <a class="music-link play-this-track-playlink--spotify" href="https://open.spotify.com/search/${sanitise(page.sister, ' ')} ${sanitise(page.name, ' ')}" target="_blank">
                     Spotify
                 </a>
-                <a class="play-this-track-playlink music-link play-this-track-playlink--itunes" href="https://music.apple.com/gb/search?term=${sanitise(page.sister, ' ')} ${sanitise(page.name, ' ')}" target="_blank">
+                <a class="music-link play-this-track-playlink--itunes" href="https://music.apple.com/gb/search?term=${sanitise(page.sister, ' ')} ${sanitise(page.name, ' ')}" target="_blank">
                     Apple
                 </a>
-                <a class="play-this-track-playlink music-link play-this-track-playlink--youtube-music" href="https://music.youtube.com/search?q=${sanitise(page.sister)}+${sanitise(page.name)}" target="_blank">
+                <a class="music-link play-this-track-playlink--youtube-music" href="https://music.youtube.com/search?q=${sanitise(page.sister)}+${sanitise(page.name)}" target="_blank">
                     YouTube
                 </a>
-                <a class="play-this-track-playlink music-link play-this-track-playlink--tidal" href="https://listen.tidal.com/search?q=${sanitise(page.sister, ' ')} ${sanitise(page.name, ' ')}" target="_blank">
+                <a class="music-link play-this-track-playlink--tidal" href="https://listen.tidal.com/search?q=${sanitise(page.sister, ' ')} ${sanitise(page.name, ' ')}" target="_blank">
                     Tidal
                 </a>
-                <a class="play-this-track-playlink music-link play-this-track-playlink--discogs" href="https://www.discogs.com/search?q=${sanitise(page.sister)}+${sanitise(page.name)}&type=all" target="_blank">
+                <a class="music-link play-this-track-playlink--discogs" href="https://www.discogs.com/search?q=${sanitise(page.sister)}+${sanitise(page.name)}&type=all" target="_blank">
                     Discogs
                 </a>
-                <a class="play-this-track-playlink music-link play-this-track-playlink--aoty" href="https://www.albumoftheyear.org/search/?q=${sanitise(page.sister)}+${sanitise(page.name)}" target="_blank">
+                <a class="music-link play-this-track-playlink--qobuz" href="https://www.qobuz.com/search/albums/${sanitise(page.sister, ' ')}%20${sanitise(page.name, ' ')}" target="_blank">
+                    Qobuz
+                </a>
+                <a class="music-link play-this-track-playlink--aoty" href="https://www.albumoftheyear.org/search/?q=${sanitise(page.sister)}+${sanitise(page.name)}" target="_blank">
                     AOTY
                 </a>
-                <a class="play-this-track-playlink music-link play-this-track-playlink--rym" href="https://rateyourmusic.com/search?searchterm=${sanitise(page.sister, ' ')} ${sanitise(page.name, ' ')}" target="_blank">
+                <a class="music-link play-this-track-playlink--rym" href="https://rateyourmusic.com/search?searchterm=${sanitise(page.sister, '%20')} ${sanitise(page.name, '%20')}" target="_blank">
                     RYM
                 </a>
-                <a class="play-this-track-playlink music-link play-this-track-playlink--genius" href="https://genius.com/search?q=${sanitise(page.sister)}+${sanitise(page.name)}" target="_blank">
+                <a class="music-link play-this-track-playlink--genius" href="https://genius.com/search?q=${sanitise(page.sister)}+${sanitise(page.name)}" target="_blank">
                     Genius
                 </a>
             `);
         } else {
             render(link_container, html`
-                <a class="play-this-track-playlink music-link play-this-track-playlink--spotify" href="https://open.spotify.com/search/${sanitise(page.name, ' ')}" target="_blank">
+                <a class="music-link play-this-track-playlink--spotify" href="https://open.spotify.com/search/${sanitise(page.name, ' ')}" target="_blank">
                     Spotify
                 </a>
-                <a class="play-this-track-playlink music-link play-this-track-playlink--itunes" href="https://music.apple.com/gb/search?term=${sanitise(page.name, ' ')}" target="_blank">
+                <a class="music-link play-this-track-playlink--itunes" href="https://music.apple.com/gb/search?term=${sanitise(page.name, ' ')}" target="_blank">
                     Apple
                 </a>
-                <a class="play-this-track-playlink music-link play-this-track-playlink--youtube-music" href="https://music.youtube.com/search?q=${sanitise(page.name)}" target="_blank">
+                <a class="music-link play-this-track-playlink--youtube-music" href="https://music.youtube.com/search?q=${sanitise(page.name)}" target="_blank">
                     YouTube
                 </a>
-                <a class="play-this-track-playlink music-link play-this-track-playlink--tidal" href="https://listen.tidal.com/search?q=${sanitise(page.name, ' ')}" target="_blank">
+                <a class="music-link play-this-track-playlink--tidal" href="https://listen.tidal.com/search?q=${sanitise(page.name, ' ')}" target="_blank">
                     Tidal
                 </a>
-                <a class="play-this-track-playlink music-link play-this-track-playlink--discogs" href="https://www.discogs.com/search?q=${sanitise(page.name)}&type=artist" target="_blank">
+                <a class="music-link play-this-track-playlink--discogs" href="https://www.discogs.com/search?q=${sanitise(page.name)}&type=artist" target="_blank">
                     Discogs
                 </a>
-                <a class="play-this-track-playlink music-link play-this-track-playlink--aoty" href="https://www.albumoftheyear.org/search/?q=${sanitise(page.name)}" target="_blank">
+                <a class="music-link play-this-track-playlink--qobuz" href="https://www.qobuz.com/search/artists/${sanitise(page.name, '%20')}" target="_blank">
+                    Qobuz
+                </a>
+                <a class="music-link play-this-track-playlink--aoty" href="https://www.albumoftheyear.org/search/?q=${sanitise(page.name)}" target="_blank">
                     AOTY
                 </a>
-                <a class="play-this-track-playlink music-link play-this-track-playlink--rym" href="https://rateyourmusic.com/search?searchterm=${sanitise(page.name, ' ')}" target="_blank">
+                <a class="music-link play-this-track-playlink--rym" href="https://rateyourmusic.com/search?searchterm=${sanitise(page.name, ' ')}" target="_blank">
                     RYM
                 </a>
-                <a class="play-this-track-playlink music-link play-this-track-playlink--genius" href="https://genius.com/search?q=${sanitise(page.name)}" target="_blank">
+                <a class="music-link play-this-track-playlink--genius" href="https://genius.com/search?q=${sanitise(page.name)}" target="_blank">
                     Genius
                 </a>
             `);
@@ -741,29 +740,36 @@ export function show_your_scrobbles() {
 
     page.structure.side.appendChild(html.node`
         <section class="lotus cta">
-             <strong>${tl(trans.lotus_cta[page.corrected]).replace('{t}', tl(trans[`${page.type}_lower`]))}</strong>
+            <strong>${tl(trans.lotus_cta[page.corrected]).replace('{t}', tl(trans[`${page.type}_lower`]))}</strong>
             <a class="see-more" href="https://github.com/katelyynn/lotus/issues/new/choose" target="_blank">${tl(trans.suggest_correction)}</a>
         </section>
     `);
 }
 
 function create_listen_item(parent, {name, listens, link, avi, count=0, button=false, katsune=false}, header_type) {
+    if (!name) return;
+
     log(`creating listen item of ${name}, ${count}, ${listens}`, 'artist', 'info', {avi: avi, link: link});
 
-    let listen_item = document.createElement((!button) ? 'a' : 'button');
+    let listen_item;
+
+    if (button) listen_item = html.node`<button />`;
+    else        listen_item = html.node`<a />`;
+
     listen_item.classList.add('btn', 'listen-item');
-    listen_item.setAttribute('href', `${root}user/${name}/library/music/${link}`);
-    //listen_item.setAttribute('target', '_blank');
+    listen_item.setAttribute('href', `${root}user/${name}/library/music/${redirect()}${link}`);
     listen_item.setAttribute('data-listens', listens);
     listen_item.setAttribute('id', `listen-item--${name}`);
 
+    let p;
+
     if (listens > -1) {
-        // 0 listens
+        // your listens
         render(listen_item, html`
-            <img class="view-item-avatar" src="${avi}" alt="${name}">
+            <img class="view-item-avatar" src=${avi} alt=${name}>
             <div class="info">
                 <h3>${name}</h3>
-                <p>${tl(trans.listens.count).replace('{c}', listens.toLocaleString(lang))}</p>
+                <p class="colourful" ref=${el => p = el}>${tl(trans.listens.count).replace('{c}', listens.toLocaleString(lang))}</p>
             </div>
         `);
 
@@ -791,10 +797,13 @@ function create_listen_item(parent, {name, listens, link, avi, count=0, button=f
     } else if (listens > -2) {
         // loading listens
         render(listen_item, html`
-            <img class="view-item-avatar" src="${avi}" alt="${name}">
+            <img class="view-item-avatar" src=${avi} alt=${name}>
+            <div class="listen-badge star colourful">
+                <div class="bleh-icon" />
+            </div>
             <div class="info">
                 <h3>${name}</h3>
-                <p>${tl(trans.listens)}</p>
+                <p class="colourful" ref=${el => p = el}>${tl(trans.listens)}</p>
             </div>
         `);
 
@@ -805,7 +814,7 @@ function create_listen_item(parent, {name, listens, link, avi, count=0, button=f
                     ${tl(trans.profile)}
                 </a>
                 <div class="sep"></div>
-                <button class="dropdown-menu-clickable-item" onclick="_open_profile_shortcut_window()" data-menu-item="settings">
+                <button class="dropdown-menu-clickable-item" onclick=${() => open_starred_friend_window()} data-menu-item="settings">
                     ${tl(trans.settings)}
                 </button>
             `),
@@ -835,12 +844,12 @@ function create_listen_item(parent, {name, listens, link, avi, count=0, button=f
     } else {
         // other listeners by clicking this link (artist)
         render(listen_item, html`
-            ${avi[0] ? html.node`<img class="view-item-avatar" src="${avi[0].getAttribute('src')}" alt="">` : ''}
-            ${avi[1] ? html.node`<img class="view-item-avatar" src="${avi[1].getAttribute('src')}" alt="">` : ''}
-            ${avi[2] ? html.node`<img class="view-item-avatar" src="${avi[2].getAttribute('src')}" alt="">` : ''}
+            ${avi[0] ? html.node`<img class="view-item-avatar" src=${avi[0].getAttribute('src')} alt="">` : ''}
+            ${avi[1] ? html.node`<img class="view-item-avatar" src=${avi[1].getAttribute('src')} alt="">` : ''}
+            ${avi[2] ? html.node`<img class="view-item-avatar" src=${avi[2].getAttribute('src')} alt="">` : ''}
             <div class="info">
                 <h3>${tl(trans.following)}</h3>
-                <p>${tl(trans.others_count).replace('{c}', count)}</p>
+                <p class="colourful" ref=${el => p = el}>${tl(trans.others_count).replace('{c}', count)}</p>
             </div>
         `);
         listen_item.setAttribute('href', `${window.location.href}/+listeners/you-know`);
@@ -850,20 +859,17 @@ function create_listen_item(parent, {name, listens, link, avi, count=0, button=f
     if (settings.colourful_counts && listens > -1 && header_type == 'artist') {
         let parsed_scrobble_as_rank = parse_scrobbles_as_rank(listens);
 
-        listen_item.setAttribute('data-bleh--scrobble-milestone',parsed_scrobble_as_rank.milestone);
-        listen_item.style.setProperty('--hue-user',parsed_scrobble_as_rank.hue);
-        listen_item.style.setProperty('--sat-user',parsed_scrobble_as_rank.sat);
-        listen_item.style.setProperty('--lit-user',parsed_scrobble_as_rank.lit);
+        listen_item.setAttribute('data-bleh--scrobble-milestone', parsed_scrobble_as_rank.milestone);
+        p.style.setProperty('--hue-user',parsed_scrobble_as_rank.hue);
+        p.style.setProperty('--sat-user',parsed_scrobble_as_rank.sat);
+        p.style.setProperty('--lit-user',parsed_scrobble_as_rank.lit);
     }
 
-    if (katsune)
-        listen_item.classList.add('icon');
+    if (katsune) listen_item.classList.add('icon');
 
     parent.appendChild(listen_item);
 
-    // ensure proper listeners element
-    if (listens < -1)
-        return;
+    return listen_item;
 }
 
 
@@ -914,6 +920,7 @@ function show_numbers_on_side(header_type) {
     }
 
     panel.classList.add('listen-panel');
+    panel.setAttribute('data-auth-name', auth.name);
 
 
     let row = html.node`
@@ -934,7 +941,7 @@ function show_numbers_on_side(header_type) {
             ` : ''}
         </div>
     `
-    
+
     panel.insertBefore(row, panel.firstElementChild);
 
     if (page.mobile)
@@ -1025,12 +1032,9 @@ function show_numbers_on_side(header_type) {
 
 function video_unavailable(video_col=null) {
     let cta = page.structure.side.querySelector('.video-preview-upload-cta');
+    if (cta) return;
 
-    if (cta)
-        return;
-
-    if (video_col)
-        page.structure.side.removeChild(video_col);
+    if (video_col) page.structure.side.removeChild(video_col);
 
     page.structure.side.insertBefore(html.node`
         <section class="video-placeholder">
@@ -1038,16 +1042,10 @@ function video_unavailable(video_col=null) {
             ${tl(trans.video_removed)}
         </section>
     `, page.structure.side.firstElementChild);
-
-
-    let links = page.structure.side.querySelector('.external-links-section .play-this-track-playlinks');
-    if (links)
-        links.classList.add('video-unavailable');
 }
 
 export function bleh_music_page_charts() {
-    if (!ff('music_page_charts'))
-        return;
+    if (!ff('music_page_charts')) return;
 
     log('beginning replacement', 'music charts');
 
@@ -1072,7 +1070,7 @@ export function bleh_music_page_charts() {
         if (!day) return;
 
         //let label = day.querySelector('time').textContent.trim();
-        let label = moment(day.querySelector('time').getAttribute('datetime'));
+        let label = DateTime.fromISO(day.querySelector('time').getAttribute('datetime'));
         let value = day.querySelector('.js-value');
 
         console.log('day', index, label, day, day.innerHTML);
@@ -1135,8 +1133,7 @@ export function bleh_music_page_charts() {
 }
 
 export function bleh_top_listeners() {
-    if (!ff('unify_top_listeners'))
-        return;
+    if (!ff('unify_top_listeners')) return;
 
     let panel = page.structure.main.querySelector(':scope > .buffer-standard');
 
@@ -1168,9 +1165,8 @@ export function bleh_top_listeners() {
         new_listener.classList.add('user-list-item', 'listener-list-item');
 
         let position = index + 1;
-        if (page.requested.page != null && page.requested.page != "1") {
+        if (page.requested.page != null && page.requested.page != '1')
             position += ((parseInt(page.requested.page) - 1) * 30);
-        }
 
         let name_wrap = listener.querySelector('.top-listeners-item-name a');
         let name = name_wrap.textContent;
@@ -1206,16 +1202,11 @@ export function bleh_top_listeners() {
 
         let badge = patch_avatar(new_listener.querySelector('.user-list-avatar'), name, 'listener');
 
-        if (badge.type) {
-            new_listener.querySelector('.user-list-link').classList.add(`user-status--bleh-${badge.type}`, `user-status--bleh-user-${name}`);
-            new_listener.classList.add('colourful', `user-status--bleh-${badge.type}`, `user-status--bleh-user-${name}`);
-        }
-
         if (track_wrap) {
             let track_link = new_listener.querySelector('.user-list-about-me a');
             let artist = return_artist_from_track(track_link.getAttribute('href'), false);
-            let track = correct_item_by_artist(track_link.textContent.trim(), artist);
-            track_link.textContent = track;
+
+            track_link.textContent = correct_item_by_artist(track_link.textContent.trim(), artist);
         }
 
         new_container.appendChild(new_listener);
@@ -1223,4 +1214,10 @@ export function bleh_top_listeners() {
 
     view_buttons.after(new_container);
     panel.removeChild(legacy_top_listeners_container);
+}
+
+// allows controlling auto +noredirect
+export function redirect() {
+    if (settings.prefer_no_redirect) return '+noredirect/';
+    else                             return '';
 }

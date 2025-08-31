@@ -15,6 +15,8 @@ import {select} from './select';
 import {patch_titles} from './track';
 import {render_user} from "../pages/minis.js";
 import {settings} from "../build/config.js";
+import {redirect} from "./music.js";
+import tippy from "tippy.js";
 
 export function compare({
     host,
@@ -34,6 +36,12 @@ export function compare({
         page.avatar = '';
         page.requested.profile = '';
     }
+
+    let current_year = new Date().getFullYear();
+    let previous_year = current_year - 1;
+
+    const default_type = page.requested.type || 'albums';
+    const default_timeframe = page.requested.timeframe || 'date_preset=LAST_90_DAYS';
 
     let user;
     render(host, html`
@@ -90,29 +98,41 @@ export function compare({
                         value: 'tracks',
                         text: html`<div class="bleh-icon" style="--icon: var(--icon-16-track)" />${tl(trans.tracks)}`,
                     }
-                ], 'albums')}
+                ], default_type)}
                 ${timeframe = select([
                     {
-                        value: 'LAST_7_DAYS',
+                        value: 'date_preset=LAST_7_DAYS',
                         text: tl(trans.last_count_days).replace('{c}', '7'),
                     },
                     {
-                        value: 'LAST_30_DAYS',
+                        value: 'date_preset=LAST_30_DAYS',
                         text: tl(trans.last_count_days).replace('{c}', '30'),
                     },
                     {
-                        value: 'LAST_90_DAYS',
+                        value: 'date_preset=LAST_90_DAYS',
                         text: tl(trans.last_count_days).replace('{c}', '90'),
                     },
                     {
-                        value: 'LAST_180_DAYS',
+                        value: 'date_preset=LAST_180_DAYS',
                         text: tl(trans.last_count_days).replace('{c}', '180'),
                     },
                     {
-                        value: 'LAST_365_DAYS',
+                        value: 'date_preset=LAST_365_DAYS',
                         text: tl(trans.last_count_days).replace('{c}', '365'),
+                    },
+                    {
+                        value: 'date_preset=ALL',
+                        text: tl(trans.all_time),
+                    },
+                    {
+                        value: `from=${current_year}-01-01&rangetype=year`,
+                        text: current_year
+                    },
+                    {
+                        value: `from=${previous_year}-01-01&rangetype=year`,
+                        text: previous_year
                     }
-                ], 'LAST_90_DAYS')}
+                ], default_timeframe)}
                 <button class="btn icon primary compare" ref=${el => submit = el} onclick=${() => begin_comparing()}>${tl(trans.compare)}</button>
             </div>
         </div>
@@ -136,10 +156,10 @@ export function compare({
                     <input type="text" class="input" ref=${el => input = el} placeholder=${tl(trans.enter_a_profile)} value=${page.requested.profile} onchange=${e => {
                         page.requested.profile = e.target.value;
                         page.name = page.requested.profile;
-                        
+
                         page.avatar = '';
                         if (page.name == auth.name) page.avatar = auth.avatar;
-                        
+
                         render(user, html`
                             ${render_user(page.name, page.avatar, user, true)}
                         `);
@@ -148,16 +168,16 @@ export function compare({
                         let btn = html.node`
                             <button class="btn chibi icon" data-type="profile_shortcut" onclick=${() => {
                                 if (settings.profile_shortcut == '') return;
-                                
+
                                 input.value = settings.profile_shortcut;
                                 input.dispatchEvent(new Event('change'));
                             }}>${tl(trans.profile_shortcut.name)}</button>
                         `;
-                        
+
                         tippy(btn, {
                             content: tl(trans.profile_shortcut.name)
                         });
-                        
+
                         return btn;
                     }}
                 </div>
@@ -171,7 +191,7 @@ export function compare({
 
         if (parseInt(pages.value) > 3 && !bypass) {
             let warn = notify({
-                id: 'collage_warning',
+                id: 'compare_warning',
                 title: tl(trans.are_you_sure),
                 body: tl(trans.this_will_require_loading_count_pages).replace('{c}', parseInt(pages.value) * 2),
                 type: 'warning',
@@ -186,6 +206,16 @@ export function compare({
                     }
                 ],
                 persist: true
+            });
+            return;
+        }
+
+        if (!auth.name) {
+            notify({
+                id: 'compare_failed',
+                title: tl(trans.name_failed).replace('{name}', tl(trans.compare)),
+                body: tl(trans.you_need_to_be_logged_in),
+                type: 'error'
             });
             return;
         }
@@ -213,7 +243,7 @@ export function compare({
             </div>
         `);
 
-        fetch(`${root}user/${user}/library/${type.value}?format=list&date_preset=${timeframe.value}&page=${current_page}&ajax=1`)
+        fetch(`${root}user/${user}/library/${type.value}?format=list&${timeframe.value}&page=${current_page}&ajax=1`)
             .then(function(response) {
                 console.log('returned', response, response.text);
 
@@ -330,25 +360,25 @@ export function compare({
                             </div>
                             <div class="grid-items-item-details">
                                 <p class="grid-items-item-main-text">
-                                    <a class="link-block-target" href="${root}music/${template}" title="${data.name}">
+                                    <a class="link-block-target" href="${root}music/${redirect()}${template}" title="${data.name}">
                                         ${data.name}
                                     </a>
                                 </p>
                                 ${(type.value == 'albums') ? html.node`
                                 <p class="grid-items-item-aux-text">
-                                    <a class="grid-items-item-aux-block" href="${root}music/${data.sister}">
+                                    <a class="grid-items-item-aux-block" href="${root}music/${redirect()}${data.sister}">
                                         ${data.sister}
                                     </a>
                                 </p>
                                 ` : ''}
                                 <p class="grid-items-item-aux-text">
-                                    <a class="grid-item-plays with-avatar" href="${root}user/${auth.name}/library/music/${template}?date_preset=${timeframe.value}" target="_blank">
+                                    <a class="grid-item-plays with-avatar" href="${root}user/${auth.name}/library/music/${redirect()}${template}?${timeframe.value}" target="_blank">
                                         <span class="avatar">
                                             <img src="${auth.avatar}" alt="${tl(trans.your_avatar)}">
                                         </span>
                                         ${data.plays.you.toLocaleString(lang)}
                                     </a>
-                                    <a class="grid-item-plays with-avatar" href="${root}user/${page.name}/library/music/${template}?date_preset=${timeframe.value}" target="_blank">
+                                    <a class="grid-item-plays with-avatar" href="${root}user/${page.name}/library/music/${redirect()}${template}?${timeframe.value}" target="_blank">
                                         <span class="avatar">
                                             <img src="${page.avatar}" alt="${tl(trans.avatar_for_user).replace('{u}', page.name)}">
                                         </span>
@@ -356,7 +386,7 @@ export function compare({
                                     </a>
                                 </p>
                             </div>
-                            <a class="js-link-block-cover-link link-block-cover-link" href="${root}music/${template}" tabindex="-1" aria-hidden="true"></a>
+                            <a class="js-link-block-cover-link link-block-cover-link" href="${root}music/${redirect()}${template}" tabindex="-1" aria-hidden="true"></a>
                         </div>
                     </li>
                 `);
@@ -387,23 +417,23 @@ export function compare({
                     <tr class="chartlist-row chartlist-row--with-artist compare-item">
                         <td class="chartlist-index">${index + 1}</td>
                         <td class="chartlist-image">
-                            <a class="cover-art" href="${root}music/${template}">
+                            <a class="cover-art" href="${root}music/${redirect()}${template}">
                                 <img src="${data.avatar}" alt="${data.name}" loading="lazy">
                             </a>
                         </td>
                         <td class="chartlist-name">
-                            <a href="${root}music/${template}" title="${data.name}">
+                            <a href="${root}music/${redirect()}${template}" title="${data.name}">
                                 ${data.name}
                             </a>
                         </td>
                         <td class="chartlist-artist">
-                            <a href="${root}music/${data.sister}" title="${data.sister}">
+                            <a href="${root}music/${redirect()}${data.sister}" title="${data.sister}">
                                 ${data.sister}
                             </a>
                         </td>
                         <td class="chartlist-bar with-multiple">
                             <span class="chartlist-count-bar">
-                                <a class="chartlist-count-bar-link" href="${root}user/${auth.name}/library/music/${template}?date_preset=${timeframe.value}" target="_blank">
+                                <a class="chartlist-count-bar-link" href="${root}user/${auth.name}/library/music/${redirect()}${template}?${timeframe.value}" target="_blank">
                                     <span class="chartlist-count-bar-slug" data-max-stat-value="${max}" data-stat-value="${data.plays.you}" style="width: ${(data.plays.you / max) * 100}%;"></span>
                                     <span class="chartlist-count-bar-value">${data.plays.you}</span>
                                 </a>
@@ -412,7 +442,7 @@ export function compare({
                                 </span>
                             </span>
                             <span class="chartlist-count-bar">
-                                <a class="chartlist-count-bar-link" href="${root}user/${page.name}/library/music/${template}?date_preset=${timeframe.value}" target="_blank">
+                                <a class="chartlist-count-bar-link" href="${root}user/${page.name}/library/music/${redirect()}${template}?${timeframe.value}" target="_blank">
                                     <span class="chartlist-count-bar-slug" data-max-stat-value="${max}" data-stat-value="${data.plays.other}" style="width: ${(data.plays.other / max) * 100}%;"></span>
                                     <span class="chartlist-count-bar-value">${data.plays.other}</span>
                                 </a>

@@ -9,6 +9,7 @@ import {sponsor_list} from "../build/sponsor";
 import {tl, trans} from "../build/trans";
 import {html} from "lighterhtml";
 import {sponsor} from "../sponsor.js";
+import tippy from "tippy.js";
 
 export function load_badges(user, solo = false) {
     if (!sponsor_list || !sponsor_list.badges) return;
@@ -43,9 +44,10 @@ export function load_badges(user, solo = false) {
             }
         }
 
-        // if there's a translation available, use it instead of defaulting
         if (trans.badges[badge.type] && trans.badges[badge.type].reason)
             badge.reason = tl(trans.badges[badge.type].reason);
+        else if (badge.reason && trans.badges[badge.reason] && trans.badges[badge.reason].reason)
+            badge.reason = tl(trans.badges[badge.reason].reason);
 
         if (badge.reason)
             return;
@@ -66,27 +68,36 @@ export function create_badge(badge={
     type: '',
     icon: '',
     reason: '',
-    hue: 0,
-    sat: 0,
-    lit: 0,
+    hue: -1,
+    sat: -1,
+    lit: -1,
     name: '',
-    user: ''
-}) {
+    user: '',
+    inbuilt: false
+}, on_avatar = false, long = false, small = false) {
+    const classlist = on_avatar ? 'avatar-status-dot' : 'label no-hover';
+
     let elem = html.node`
-        <span class="label no-hover">
+        <span class=${classlist}>
             ${badge.name}
         </span>
     `;
 
-    if (badge.icon != '' && badge.hue > 0 && badge.sat > 0 && badge.lit > 0) {
+    if (long) elem.classList.add('long');
+
+    if (badge.icon != '' && badge.hue > -1 && badge.sat > -1 && badge.lit > -1) {
         // new style badge
         elem.style.setProperty('--mask', `url(${badge.icon})`);
         elem.style.setProperty('--hue-over', badge.hue);
         elem.style.setProperty('--sat-over', badge.sat);
         elem.style.setProperty('--lit-over', badge.lit);
+    } else if (badge.inbuilt) {
+        elem.classList.add(badge.type);
     } else {
         elem.classList.add(`user-status--bleh-${badge.type}`, `user-status--bleh-user-${badge.user}`);
     }
+
+    if (on_avatar || small) return elem;
 
     tippy(elem, {
         theme: 'badge',

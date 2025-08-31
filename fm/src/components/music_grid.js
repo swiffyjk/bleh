@@ -12,6 +12,7 @@ import {bleh_glacier_insights} from "../pages/glacier";
 import {parse_scrobbles_as_rank} from "./colourful_counts";
 import {correct_artist, correct_item_by_artist, name_includes} from "./lotus";
 import {html, render} from "lighterhtml";
+import ColorThief from "color-thief-browser";
 
 export function music_grids(search=page.structure.main, use_colour = true) {
     if (!search) return;
@@ -208,9 +209,9 @@ export function music_grids(search=page.structure.main, use_colour = true) {
 
                 // combine
                 render(name_elem, html.node`
-                    <div class="title">${song_title.trim()}</div>
+                    <span class="title">${song_title.trim()}</span>
                     ${song_tags.map((tag) => html.node`
-                        <div class="feat" data-bleh--tag-type="${tag.type}" data-bleh--tag-group="${tag.group}">${tag.text}</div>
+                        <span class="feat" data-bleh--tag-type="${tag.type}" data-bleh--tag-group="${tag.group}">${tag.text}</span>
                     `)}
                 `);
             } else {

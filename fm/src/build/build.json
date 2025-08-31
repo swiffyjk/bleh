@@ -1,9 +1,9 @@
 {
     "brand": "bleh",
-    "build": "2025.0730",
-    "sku": "claire",
+    "build": "2025.0831",
+    "sku": "yuzuha",
     "bio": "bleh!!! ^-^",
-    "author": "kate",
+    "author": "katelyn",
     "url": "https://github.com/katelyynn/bleh/raw/uwu/fm/bleh.user.js",
     "feature_flags": {
         "bleh_settings_tabs": {
@@ -254,6 +254,31 @@
             "default": false,
             "name": "Unlock work-in-progress minis",
             "date": "2025-07-29"
+        },
+        "status_in_menu": {
+            "default": true,
+            "name": "Show current listening status in profile menu",
+            "date": "2025-07-29"
+        },
+        "static_gifs": {
+            "default": false,
+            "name": "Convert GIFs to static images",
+            "date": "2025-08-15"
+        },
+        "friends": {
+            "default": true,
+            "name": "Friends system",
+            "date": "2025-08-18"
+        },
+        "adaptive_theme": {
+            "default": false,
+            "name": "Adaptive theme controls",
+            "date": "2025-08-29"
+        },
+        "adaptive_colours": {
+            "default": false,
+            "name": "Adaptive colour controls",
+            "date": "2025-08-29"
         }
     }
 }

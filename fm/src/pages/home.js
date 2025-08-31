@@ -4,8 +4,7 @@
 // Licensed under GPLv3
 //
 
-import {render_activity_list} from "../activity"
-import {settings} from "../build/config";
+import {render_activity_list} from "../activity";
 import {log} from "../build/log";
 import {auth, page, root} from "../build/page";
 import {tl, trans} from "../build/trans";
@@ -14,10 +13,10 @@ import {register_background, update_page} from "../page";
 import {bleh_charts} from "./chart";
 import {bleh_native_settings} from './lastfm_settings';
 import {html, render} from "lighterhtml";
-import {load_banner} from "../components/banner.js";
 import {ff} from "../sku.js";
+import { load_profile_cache_externally } from './profile.js';
 
-export function bleh_home() {
+export async function bleh_home() {
     page.structure.container = document.body.querySelector('.page-content');
     try {
         page.structure.row = page.structure.container.querySelector('.row');
@@ -29,17 +28,24 @@ export function bleh_home() {
 
     let content_top = document.body.querySelector('.content-top');
 
+    page.name = auth.name;
+
     checkup_page_structure(false, content_top);
     log('status is', 'page', 'info', page);
     update_page();
 
-    let banner = load_banner(auth.name);
-    if (banner)
-        register_background(banner);
-    else if (!auth.avatar.endsWith('818148bf682d429dc215c1705eb27b98.png'))
-        register_background(auth.avatar.replace('/avatar42s/', '/ar0/'));
-    else
+    let cache;
+    if (auth.name) {
+        cache = await load_profile_cache_externally(auth.name);
+        if (cache.banner)
+            register_background(cache.banner);
+        else if (auth.avatar && !auth.avatar.endsWith('818148bf682d429dc215c1705eb27b98.png'))
+            register_background(auth.avatar.replace('/avatar42s/', '/ar0/'));
+        else
+            register_background(null);
+    } else {
         register_background(null);
+    }
 
 
     let hour = new Date().getHours();
@@ -54,73 +60,110 @@ export function bleh_home() {
         time = 'evening';
     log(`hour ${hour} time ${time}`, 'time');
 
-    let welcome = html.node`
-        <div class="top-banner home-banner">
-            <div class="avatar">
-                <img src="${auth.avatar.replace('/avatar42s/', '/avatar170s/')}" alt="${tl(trans.your_avatar)}">
-                ${(auth.sponsor) ? html.node`
-                <span class="avatar-status-dot user-status--bleh-sponsor"></span>
-                ` : ''}
+    let welcome;
+    if (auth.name) {
+        welcome = html.node`
+            <div class="top-banner home-banner">
+                <div class="avatar">
+                    <img src=${auth.avatar.replace('/avatar42s/', '/avatar170s/')} alt=${tl(trans.your_avatar)}>
+                    ${(auth.sponsor) ? html.node`
+                    <span class="avatar-status-dot user-status--bleh-sponsor"></span>
+                    ` : ''}
+                </div>
+                <h1>${{html: tl(trans[`good_${time}_user`]).replace('{user}', `<a class="mention" href="${root}user/${auth.name}">@${auth.name}</a>`)}}</h1>
             </div>
-            <h1>${{html: tl(trans[`good_${time}_user`]).replace('{user}', `<a class="mention" href="${root}user/${auth.name}">@${auth.name}</a>`)}}</h1>
-        </div>
-    `;
+        `;
+    } else {
+        welcome = html.node`
+            <div class="top-banner home-banner">
+                <div class="avatar">
+                    <img class="missing-avatar" alt=${tl(trans.your_avatar)}>
+                    ${(auth.sponsor) ? html.node`
+                    <span class="avatar-status-dot user-status--bleh-sponsor"></span>
+                    ` : ''}
+                </div>
+                <h1>${tl(trans.not_logged_in)}</h1>
+            </div>
+        `;
+    }
+
     page.structure.container.insertBefore(welcome, page.structure.container.firstElementChild);
 
-    let nav = html.node`
-        <nav class="navlist secondary-nav navlist--more redesigned-navigation">
-            <ul class="navlist-items">
-                <li class="navlist-item secondary-nav-item secondary-nav-item--home">
-                    <a href="${root}music" class="secondary-nav-item-link ${(page.subpage == 'music' || page.type == 'events') ? 'secondary-nav-item-link--active' : ''}">
-                        ${tl(trans.home)}
-                    </a>
-                </li>
-                <li class="navlist-item secondary-nav-item secondary-nav-item--recommendations">
-                    <a href="${root}music/+recommended" class="secondary-nav-item-link ${(page.type == 'recommended') ? 'secondary-nav-item-link--active' : ''}">
-                        ${tl(trans.recommendations)}
-                    </a>
-                </li>
-                <li class="navlist-item secondary-nav-item secondary-nav-item--releases">
-                    <a href="${root}music/+releases/out-now" class="secondary-nav-item-link ${(page.type == 'releases') ? 'secondary-nav-item-link--active' : ''}">
-                        ${tl(trans.releases)}
-                    </a>
-                </li>
-                <li class="navlist-item secondary-nav-item secondary-nav-item--bookmarks">
-                    <a href="${root}music/+bookmarks" class="secondary-nav-item-link ${(page.type == 'bookmarks') ? 'secondary-nav-item-link--active' : ''}">
-                        ${tl(trans.bookmarks)}
-                    </a>
-                </li>
-                <li class="navlist-item secondary-nav-item secondary-nav-item--charts">
-                    <a href="${root}charts" class="secondary-nav-item-link ${(page.type == 'charts') ? 'secondary-nav-item-link--active' : ''}">
-                        ${tl(trans.charts)}
-                    </a>
-                </li>
-                ${ff('minis') ? html.node`
-                <li class="navlist-item secondary-nav-item secondary-nav-item--minis">
-                    <a href="${root}bleh/minis" data-type="mini" class="secondary-nav-item-link ${(page.type == 'minis') ? 'secondary-nav-item-link--active' : ''}">
-                        ${tl(trans.minis)}
-                    </a>
-                </li>
-                ` : ''}
-                <li class="fill"></li>
-                <li class="navlist-item secondary-nav-item secondary-nav-item--settings">
-                    <a href="${root}settings" class="secondary-nav-item-link ${(page.type == 'settings') ? 'secondary-nav-item-link--active' : ''}">
-                        ${tl(trans.settings)}
-                    </a>
-                </li>
-                <li class="navlist-item secondary-nav-item secondary-nav-item--bleh">
-                    <a href="${root}bleh" class="secondary-nav-item-link ${(page.type == 'bleh_settings') ? 'secondary-nav-item-link--active' : ''}">
-                        ${tl(trans.settings)}
-                    </a>
-                </li>
-                <li class="navlist-item secondary-nav-item secondary-nav-item--more">
-                    <a class="secondary-nav-item-link no-text">
-                        ${tl(trans.more)}
-                    </a>
-                </li>
-            </ul>
-        </nav>
-    `;
+    let nav;
+    if (auth.name) {
+        nav = html.node`
+            <nav class="navlist secondary-nav navlist--more redesigned-navigation">
+                <ul class="navlist-items">
+                    <li class="navlist-item secondary-nav-item secondary-nav-item--home">
+                        <a href="${root}music" class="secondary-nav-item-link ${(page.subpage == 'music' || page.type == 'events') ? 'secondary-nav-item-link--active' : ''}">
+                            ${tl(trans.home)}
+                        </a>
+                    </li>
+                    <li class="navlist-item secondary-nav-item secondary-nav-item--recommendations">
+                        <a href="${root}music/+recommended" class="secondary-nav-item-link ${(page.type == 'recommended') ? 'secondary-nav-item-link--active' : ''}">
+                            ${tl(trans.recommendations)}
+                        </a>
+                    </li>
+                    <li class="navlist-item secondary-nav-item secondary-nav-item--releases">
+                        <a href="${root}music/+releases/out-now" class="secondary-nav-item-link ${(page.type == 'releases') ? 'secondary-nav-item-link--active' : ''}">
+                            ${tl(trans.releases)}
+                        </a>
+                    </li>
+                    <li class="navlist-item secondary-nav-item secondary-nav-item--bookmarks">
+                        <a href="${root}music/+bookmarks" class="secondary-nav-item-link ${(page.type == 'bookmarks') ? 'secondary-nav-item-link--active' : ''}">
+                            ${tl(trans.bookmarks)}
+                        </a>
+                    </li>
+                    <li class="navlist-item secondary-nav-item secondary-nav-item--charts">
+                        <a href="${root}charts" class="secondary-nav-item-link ${(page.type == 'charts') ? 'secondary-nav-item-link--active' : ''}">
+                            ${tl(trans.charts)}
+                        </a>
+                    </li>
+                    ${ff('minis') ? html.node`
+                    <li class="navlist-item secondary-nav-item secondary-nav-item--minis">
+                        <a href="${root}bleh/minis" data-type="mini" class="secondary-nav-item-link ${(page.type == 'minis') ? 'secondary-nav-item-link--active' : ''}">
+                            ${tl(trans.minis)}
+                        </a>
+                    </li>
+                    ` : ''}
+                    <li class="fill"></li>
+                    <li class="navlist-item secondary-nav-item secondary-nav-item--settings">
+                        <a href="${root}settings" class="secondary-nav-item-link ${(page.type == 'settings') ? 'secondary-nav-item-link--active' : ''}">
+                            ${tl(trans.settings)}
+                        </a>
+                    </li>
+                    <li class="navlist-item secondary-nav-item secondary-nav-item--bleh">
+                        <a href="${root}bleh" class="secondary-nav-item-link ${(page.type == 'bleh_settings') ? 'secondary-nav-item-link--active' : ''}">
+                            ${tl(trans.settings)}
+                        </a>
+                    </li>
+                </ul>
+            </nav>
+        `;
+    } else {
+        nav = html.node`
+            <nav class="navlist secondary-nav navlist--more redesigned-navigation">
+                <ul class="navlist-items">
+                    <li class="navlist-item secondary-nav-item secondary-nav-item--home">
+                        <a href="${root}music" class="secondary-nav-item-link ${(page.subpage == 'music' || page.type == 'events') ? 'secondary-nav-item-link--active' : ''}">
+                            ${tl(trans.home)}
+                        </a>
+                    </li>
+                    <li class="navlist-item secondary-nav-item secondary-nav-item--charts">
+                        <a href="${root}charts" class="secondary-nav-item-link ${(page.type == 'charts') ? 'secondary-nav-item-link--active' : ''}">
+                            ${tl(trans.charts)}
+                        </a>
+                    </li>
+                    <li class="fill"></li>
+                    <li class="navlist-item secondary-nav-item secondary-nav-item--bleh">
+                        <a href="${root}bleh" class="secondary-nav-item-link ${(page.type == 'bleh_settings') ? 'secondary-nav-item-link--active' : ''}">
+                            ${tl(trans.settings)}
+                        </a>
+                    </li>
+                </ul>
+            </nav>
+        `;
+    }
 
     page.structure.nav = nav;
     welcome.after(nav);
@@ -132,31 +175,15 @@ export function bleh_home() {
     if (page.type == 'settings')
         bleh_native_settings();
 
-    let menu_button = nav.querySelector('.secondary-nav-item--more a');
-    tippy(menu_button, {
-        theme: "menu",
-        content: html.node`
-            <button class="dropdown-menu-clickable-item sponsor" onclick="_sponsor()">
-                ${tl(trans.sponsor)}
-            </button>
-            <a class="dropdown-menu-clickable-item issues" href="https://github.com/katelyynn/bleh/issues" target="_blank">
-                ${tl(trans.report_issue)}
-            </a>
-        `,
-        placement: "bottom",
-        interactive: true,
-        interactiveBorder: 10,
-        trigger: "click",
-
-        onShow(instance) {
-            instance.popper.addEventListener('click', event => {
-                instance.hide();
-            });
-        }
-    });
-
 
     if (page.subpage == 'music') {
+        let music_sections = document.body.querySelectorAll('.music-section');
+        music_sections.forEach((music_section) => {
+            page.structure.main.appendChild(music_section);
+        });
+    }
+
+    if (page.subpage == 'music' && auth.name) {
         let toolbar = html.node`
             <div class="toolbar">
                 <nav class="navlist secondary-nav navlist--more redesigned-navigation">
@@ -188,20 +215,20 @@ export function bleh_home() {
 
         page.structure.row.insertBefore(toolbar, page.structure.content);
 
-        // top panel
-        let beret = html.node`
+        let track_list;
+        page.structure.row.insertBefore(html.node`
             <div class="content override">
-                <div class="col-main">
+                <div class="col-main" ref=${el => page.structure.main = el}>
                     <section>
                         <h2>${tl(trans.recent_tracks)}</h2>
-                        <div class="recent-listening-container">
+                        <div class="recent-listening-container" ref=${el => track_list = el}>
                             <div class="loading-data-container">
                                 <p class="loading-data-text">${tl(trans.finding_your_tracks)}</p>
                             </div>
                         </div>
                     </section>
                 </div>
-                <div class="col-sidebar">
+                <div class="col-sidebar" ref=${el => page.structure.side = el}>
                     <section>
                         <h2>${tl(trans.activity)}</h2>
                         ${render_activity_list()}
@@ -211,9 +238,7 @@ export function bleh_home() {
                     </section>
                 </div>
             </div>
-        `;
-
-        let track_list = beret.querySelector('.recent-listening-container');
+        `, page.structure.content);
 
         fetch(`${root}user/${auth.name}/partial/recenttracks?ajax=1`)
         .then(function(response) {
@@ -230,14 +255,6 @@ export function bleh_home() {
             if (tracklist_panel)
                 track_list.outerHTML = tracklist_panel.outerHTML;
         });
-
-        page.structure.row.insertBefore(beret, page.structure.content);
-
-
-        let music_sections = document.body.querySelectorAll('.music-section');
-        music_sections.forEach((music_section) => {
-            page.structure.main.appendChild(music_section);
-        });
     } else if (page.type == 'releases') {
         let content = page.structure.main.querySelectorAll(':scope > *');
         let panel = html.node`
@@ -253,5 +270,10 @@ export function bleh_home() {
 }
 
 export function bleh_home_legacy() {
+    const main_content = document.body.querySelector('.adaptive-skin-container');
+    if (!main_content) return;
+
+    render(main_content, html``);
+
     window.location.href = `${root}music`;
 }

@@ -11,17 +11,18 @@ import {sanitise} from "../build/tools";
 import {tl, trans, trans_legacy} from "../build/trans";
 import {artist_title, correct_item_by_artist} from "../components/lotus";
 import {register_menu} from "../components/menu";
-import {bleh_music_page_charts, bleh_top_listeners, show_your_scrobbles} from "../components/music";
+import {bleh_music_page_charts, bleh_top_listeners, redirect, show_your_scrobbles} from "../components/music";
 import {checkup_page_structure} from "../components/structure";
 import {register_background, update_page} from "../page";
 import {ff} from "../sku";
 import {bleh_gallery_list, bleh_gallery_upload} from "./gallery";
 import {bleh_tags_mini} from "./tag";
 import {bleh_wiki, bleh_wiki_editor, bleh_wiki_history} from "./wiki";
-import {html} from "lighterhtml";
+import {html, render} from "lighterhtml";
 import {expand_avatar} from "../avatar.js";
 import {other_listener} from "../components/profile_shortcut.js";
 import {setting} from "../components/settings.js";
+import tippy from "tippy.js";
 
 export function bleh_artists() {
     let artist_header = document.body.querySelector('.header-new--artist');
@@ -81,6 +82,8 @@ export function bleh_artists() {
         let on_tour = artist_header.querySelector('.header-new-on-tour');
         let position = artist_header.querySelector('.header-new-chart-position-number');
 
+        if (on_tour) on_tour.classList.add('label', 'no-hover');
+
         let multi_info_box;
         let redesigned_artist_header = html.node`
             <section class="redesigned-header redesigned-artist-header no-background">
@@ -101,10 +104,14 @@ export function bleh_artists() {
                     ` : html.node`
                     <div class="sub-text">${tl(trans.artist)}</div>
                     `}
-                    <div class="title-container" data-multi="${page.multi}">
+                    <div class="title-container" data-multi=${page.multi}>
                         ${title}
-                        ${(position) ? position : ''}
-                        ${(on_tour) ? on_tour : ''}
+                        ${position}
+                        ${on_tour ? html.node`
+                        <div class="badges">
+                            ${on_tour}
+                        </div>
+                        ` : ''}
                     </div>
                 </div>
             </section>
@@ -140,7 +147,7 @@ export function bleh_artists() {
             if (settings.default_avatar_action == 'expand' && avatar != null)
                 avatar_link.setAttribute('onclick', `_expand_avatar('${avatar.getAttribute('content')}')`);
             else if (settings.default_avatar_action == 'gallery')
-                avatar_link.href = `${root}music/${sanitise(page.name)}/+images`;
+                avatar_link.href = `${root}music/${redirect()}${sanitise(page.name)}/+images`;
 
             let menu = tippy(avatar_side, {
                 theme: 'context-menu',
@@ -150,7 +157,7 @@ export function bleh_artists() {
                         ${tl(trans.expand)}
                     </button>
                     ` : ''}
-                    <a class="dropdown-menu-clickable-item" href="${root}music/${sanitise(page.name)}/+images" data-menu-item="gallery">
+                    <a class="dropdown-menu-clickable-item" href="${root}music/${redirect()}${sanitise(page.name)}/+images" data-menu-item="gallery">
                         ${tl(trans.photos)}
                     </a>
                     <div class="sep"></div>
@@ -453,14 +460,40 @@ function bleh_artist_albums() {
 }
 
 function bleh_listeners() {
+    const buffer = page.structure.main.querySelector(':scope > .buffer-standard');
+
+    const no_data = buffer.querySelector(':scope > .no-data-message');
+
+    if (!no_data) {
+        // there are listeners
+        const p = buffer.querySelector(':scope > p');
+
+        const match = p.textContent.match(/\d+/);
+        const count = parseInt(match[0]);
+
+        p.remove();
+
+        buffer.insertBefore(html.node`
+            <h2>${tl(trans.count_mutual_listeners).replace('{c}', count.toString())}</h2>
+        `, buffer.firstElementChild);
+    } else {
+        // no listeners
+        render(buffer, html`
+            <h2>${tl(trans.no_mutual_listeners)}</h2>
+            <div class="loading-data-container">
+                <div class="loading-data-text info">${tl(trans.no_mutual_listeners_explain)}</div>
+            </div>
+        `);
+    }
+
     // i could just render away the ad here but courtesy
     page.structure.side.appendChild(html.node`
         <section class="side-actions">
-            <a class="btn side-action" data-type="profile" href="${root}user/${auth.name}/library/music/${sanitise(page.name)}">
+            <a class="btn side-action" data-type="profile" href="${root}user/${auth.name}/library/music/${redirect()}${sanitise(page.name)}">
                 ${auth.name}
             </a>
             ${settings.profile_shortcut != '' ? html.node`
-            <a class="btn side-action" data-type="profile_shortcut" href="${root}user/${settings.profile_shortcut}/library/music/${sanitise(page.name)}">
+            <a class="btn side-action" data-type="profile_shortcut" href="${root}user/${settings.profile_shortcut}/library/music/${redirect()}${sanitise(page.name)}">
                 ${settings.profile_shortcut}
             </a>
             ` : ''}

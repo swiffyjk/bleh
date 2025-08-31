@@ -8,6 +8,9 @@
 import {log} from "./log.js";
 import {notify} from "../components/notify.js";
 import {tl, trans} from "./trans.js";
+import { settings } from './config.js';
+import {html} from "lighterhtml";
+import { root } from './page.js';
 
 /**
  * Converts hex to {h, s, l}
@@ -130,9 +133,8 @@ export function clean_number(string) {
  * @see desanitise
  */
 export function sanitise(text, method='+') {
-    return encodeURI(text
-    .replaceAll(' ', method)
-    .replaceAll('/', '%2F'));
+    return encodeURIComponent(text
+    .replaceAll(' ', method));
 }
 
 /**
@@ -157,9 +159,7 @@ export function sanitise_text(text) {
  * @see sanitise
  */
 export function desanitise(text, method='+') {
-    return decodeURI(text
-    .replaceAll(method, ' ')
-    .replaceAll('%2F', '/'));
+    return decodeURIComponent(text).replaceAll(method, ' ');
 }
 
 
@@ -174,10 +174,18 @@ export function return_artist_from_track(url, is_album) {
     let split = url.split('/');
     let length = (split.length - 1);
 
+    let desanitised;
+
     if (is_album)
-        return desanitise(split[length - 1]);
+        desanitised = desanitise(split[length - 1]);
     else
-        return desanitise(split[length - 2]);
+        desanitised = desanitise(split[length - 2]);
+
+    // for some reason last.fm double-encodes urls sometimes,
+    // leading to the % being encoded as %25 (very stupid)
+    if (/%[0-9A-Fa-f]{2}/.test(desanitised)) return desanitise(desanitised);
+
+    return desanitised;
 }
 
 /**
@@ -300,4 +308,76 @@ export function download_with_progress(url, func) {
 
 export function pad2(num) {
     return String(num).padStart(2, '0');
+}
+
+export function convert_gif_to_png(url) {
+    const available_hosts = ['www.last.fm', 'lastfm.freetls.fastly.net'];
+
+    const link = new URL(url, `https://www.last.fm${root}`);
+
+    if (!available_hosts.includes(link.hostname))
+        return Promise.reject(new Error('url is not in valid hosts list: ' + link.hostname));
+
+    return new Promise((resolve, reject) => {
+        const image = html.node`
+            <img crossorigin="anonymous" src=${url}>
+        `;
+        console.info('image', image);
+
+        image.onload = () => {
+            const canvas = html.node`
+                <canvas width=${image.width} height=${image.height} />
+            `;
+            console.info('image canvas', canvas);
+
+            const ctx = canvas.getContext('2d');
+            ctx.drawImage(image, 0, 0);
+            resolve(canvas.toDataURL('image/png'));
+        }
+
+        image.onerror = reject;
+    })
+}
+
+export function control_gif_pause(image, override = false) {
+    let processed = image.getAttribute('data-gif-pause');
+    if (processed) return;
+    image.setAttribute('data-gif-pause', 'true');
+
+    let setting = settings.static_gifs;
+    if (override) setting = 'never';
+
+    if (setting == 'always') return;
+
+    const original = image.src;
+
+    convert_gif_to_png(original).then(paused => {
+        if (setting == 'never') {
+            image.src = paused;
+            return;
+        }
+
+        image.addEventListener('mouseenter', () => {
+            image.src = original;
+        });
+
+        image.addEventListener('mouseleave', () => {
+            image.src = paused;
+        });
+
+        image.src = paused;
+        log('processed url', 'image', 'log', {original, paused});
+    }).catch(e => {
+        log('failed to process url', 'image', 'error', {original});
+        console.error(e);
+    });
+}
+
+export function is_link_external(url) {
+    try {
+        const link = new URL(url, window.location.origin);
+        return link.hostname != window.location.hostname;
+    } catch {
+        return false;
+    }
 }

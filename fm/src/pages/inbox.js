@@ -10,6 +10,7 @@ import {page} from "../build/page";
 import {sanitise} from "../build/tools";
 import {checkup_page_structure} from "../components/structure";
 import {update_page} from "../page";
+import {bleh_notification_list} from "../components/notifications.js";
 
 export function bleh_inbox() {
     page.structure.container = document.body.querySelector('.page-content');
@@ -49,8 +50,11 @@ export function bleh_inbox() {
         page.structure.main.appendChild(panel);
 
 
-        if (!notifications)
-            return;
+        if (!notifications) return;
+
+        bleh_notification_list(notifications);
+
+        return;
 
         let notif_links = notifications.querySelectorAll('.inbox-notifications__item-link');
 

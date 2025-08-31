@@ -13,11 +13,16 @@ import {tl, trans} from "../build/trans";
 import {ff} from "../sku";
 import {compare} from './compare';
 import {correct_artist} from "./lotus";
-import {register_menu} from "./menu";
 import {open_profile_shortcut_window, set_profile_as_shortcut} from './profile_shortcut';
 import {html} from "lighterhtml";
 import {collage} from "./collage.js";
 import {sponsor} from "../sponsor.js";
+import {redirect} from "./music.js";
+import tippy from "tippy.js";
+import { register_menu } from './menu.js';
+import { notify } from './notify.js';
+import { dialog, dialog_rm } from './dialog.js';
+import { save_setting } from './settings.js';
 
 export function redesign_profile_header(is_own_profile, is_following) {
     let base_header = document.body.querySelector('.header-info-secondary');
@@ -34,36 +39,29 @@ export function redesign_profile_header(is_own_profile, is_following) {
     if (!is_own_profile && page.name != sponsor_list.sponsor_account) {
         let taste_meter = base_header.querySelector('.tasteometer');
 
-        taste = taste_meter.classList[1].replace('tasteometer-compat-', '');
+        if (taste_meter) {
+            taste = taste_meter.classList[1].replace('tasteometer-compat-', '');
 
-        let artists = taste_meter.querySelectorAll('a');
-        artists.forEach((artist) => {
-            taste_artists.push(correct_artist(artist.getAttribute('title')));
-        });
+            let artists = taste_meter.querySelectorAll('a');
+            artists.forEach((artist) => {
+                taste_artists.push(correct_artist(artist.getAttribute('title')));
+            });
 
-        taste_percentage = taste_meter.querySelector('.tasteometer-viz').getAttribute('title');
-        if (taste_percentage == '99%')
-            taste_percentage = '100%';
+            taste_percentage = taste_meter.querySelector('.tasteometer-viz').getAttribute('title');
+            if (taste_percentage == '99%')
+                taste_percentage = '100%';
+        }
     }
 
 
     // create new
-    let side_sep = html.node`<div class="sep"></div>`;
-
     let about_me = page.structure.container.querySelector('.about-me-sidebar');
 
-    let profile_header;
-    if (about_me) {
-        profile_header = html.node`
-            <div class="side-actions" />
-        `;
-    } else {
-        profile_header = html.node`
-            <section class="side-actions" />
-        `;
-    }
+    let profile_header = html.node`
+        <section class="side-actions" />
+    `;
 
-    if (!is_own_profile && page.name != sponsor_list.sponsor_account) {
+    if (!is_own_profile && page.name != sponsor_list.sponsor_account && auth.name) {
         // follow
         let follow_wrap = document.body.querySelector('.header-avatar .class > div');
 
@@ -110,11 +108,22 @@ export function redesign_profile_header(is_own_profile, is_following) {
         let msg_button = document.body.querySelector('.header-message-user');
         if (msg_button) {
             if (page.name != sponsor_list.sponsor_account) {
+                friends_button(profile_header);
+
                 create_profile_top_item(profile_header, {
                     name: page.name,
                     type: 'message',
                     link: msg_button.getAttribute('href')
                 });
+
+                if (page.name == sponsor_list.special[0]) {
+                    create_profile_top_item(profile_header, {
+                        name: page.name,
+                        type: 'sponsor',
+                        link: () => sponsor(),
+                        action: 'button'
+                    });
+                }
             } else {
                 create_profile_top_item(profile_header, {
                     name: page.name,
@@ -140,31 +149,6 @@ export function redesign_profile_header(is_own_profile, is_following) {
                     link: `${root}bleh/minis/compare?profile=${page.name}`
                 });
             }
-
-            if (ff('charts')) {
-                create_profile_top_item(profile_header, {
-                    name: page.name,
-                    type: 'collage',
-                    link: `${root}bleh/minis/collage?profile=${page.name}`,
-                    text: tl(trans.collage),
-                    updated: true
-                });
-            }
-
-            if (settings.profile_shortcut != page.name) {
-                page.state.profile_shortcut_button = create_profile_top_item(profile_header, {
-                    name: page.name,
-                    type: 'shortcut',
-                    link: () => set_profile_as_shortcut(),
-                    action: 'button'
-                });
-            } else {
-                create_profile_top_item(profile_header, {
-                    name: page.name,
-                    type: 'shortcut',
-                    action: 'button'
-                });
-            }
         }
 
 
@@ -186,8 +170,7 @@ export function redesign_profile_header(is_own_profile, is_following) {
             create_profile_top_item(profile_header, {
                 name: page.name,
                 type: 'minis',
-                link: `${root}bleh/minis`,
-                new_release: true
+                link: `${root}bleh/minis`
             });
         } else {
             create_profile_top_item(profile_header, {
@@ -219,18 +202,36 @@ export function redesign_profile_header(is_own_profile, is_following) {
         }
     }
 
+    if (!page.mobile)
+        page.structure.side.insertBefore(profile_header, page.structure.side.firstElementChild);
+    else
+        page.structure.main.insertBefore(profile_header, page.structure.main.firstElementChild);
+
     let listen_container = page.structure.row.querySelector('.listen-panel');
 
-    if (!is_own_profile && page.name != sponsor_list.sponsor_account && katsune) {
+    if (!is_own_profile && page.name != sponsor_list.sponsor_account && katsune && auth.name) {
+        if (taste == '') {
+            listen_container.appendChild(html.node`
+                <div class="loading-data-container">
+                    <div class="loading-data-text error">${tl(trans.missing_component)}</div>
+                </div>
+            `);
+
+            return;
+        }
+
         let taste_wrap = html.node`
-            <div class="btn listen-item icon">
+            <div class="btn listen-item ${(taste != 'super' && taste != 'very_low') ? 'icon' : ''} taste">
+                <div class="taste-icon colourful" data-taste=${taste}>
+                    <div class="bleh-icon" />
+                </div>
                 <div class="span">
                     <img class="view-item-avatar" src=${auth.avatar} alt=${auth.name}>
                     <img class="view-item-avatar" src=${page.avatar} alt=${page.name}>
                     <div class="info">
                         <h3>${
                             html.node([
-                                tl(trans.you_share_count_with).replace('{c}', `<span class="colourful" data-taste="${taste}">${taste_percentage}</span>`)
+                                tl(trans.you_share_count_with).replace('{c}', `<span class="colourful" data-taste=${taste}>${taste_percentage}</span>`)
                             ])}</h3>
                         <p>
                             ${(taste_artists.length == 1) ? tl(trans.you_share_count_with.one).replace('{artist}', taste_artists[0]) : ''}
@@ -239,11 +240,8 @@ export function redesign_profile_header(is_own_profile, is_following) {
                         </p>
                     </div>
                 </div>
-                <div class="taste-bar colourful" data-taste="${taste}">
-                    <div class="taste-bar-fill" style="width: ${taste_percentage}"></div>
-                </div>
             </div>
-        `
+        `;
 
         tippy(taste_wrap, {
             theme: 'stack',
@@ -251,69 +249,52 @@ export function redesign_profile_header(is_own_profile, is_following) {
                 <span>
                     ${tl(trans.taste_similarity)}
                 </span>
-                <div class="hint">${tl(trans.right_click_for_more_options)}</div>
+                <div class="hint">${tl(trans.click_for_more_options)}</div>
             `,
         });
 
-        listen_container.appendChild(taste_wrap);
-
         if (taste_artists.length > 1) {
-            let menu = tippy(taste_wrap, {
+            tippy(taste_wrap, {
                 theme: 'context-menu',
                 content: html.node`
                     <h4 class="menu-header">${tl(trans.compare_plays)}</h4>
-                    <a class="dropdown-menu-clickable-item" href="${root}user/${page.name}/library/music/${sanitise(taste_artists[0])}" data-menu-item="shared-artist">
+                    <a class="dropdown-menu-clickable-item" href="${root}user/${page.name}/library/music/${redirect()}${sanitise(taste_artists[0])}" data-menu-item="shared-artist">
                         <img class="view-item-avatar" src="${page.avatar}" alt="${page.name}">${taste_artists[0]}
                     </a>
-                    <a class="dropdown-menu-clickable-item" href="${root}user/${auth.name}/library/music/${sanitise(taste_artists[0])}" data-menu-item="shared-artist">
+                    <a class="dropdown-menu-clickable-item" href="${root}user/${auth.name}/library/music/${redirect()}${sanitise(taste_artists[0])}" data-menu-item="shared-artist">
                         <img class="view-item-avatar" src="${auth.avatar}" alt="${auth.name}">${taste_artists[0]}
                     </a>
                     ${(taste_artists.length >= 2) ? html.node`
                     <div class="sep"></div>
-                    <a class="dropdown-menu-clickable-item" href="${root}user/${page.name}/library/music/${sanitise(taste_artists[1])}" data-menu-item="shared-artist">
+                    <a class="dropdown-menu-clickable-item" href="${root}user/${page.name}/library/music/${redirect()}${sanitise(taste_artists[1])}" data-menu-item="shared-artist">
                         <img class="view-item-avatar" src="${page.avatar}" alt="${page.name}">${taste_artists[1]}
                     </a>
-                    <a class="dropdown-menu-clickable-item" href="${root}user/${auth.name}/library/music/${sanitise(taste_artists[1])}" data-menu-item="shared-artist">
+                    <a class="dropdown-menu-clickable-item" href="${root}user/${auth.name}/library/music/${redirect()}${sanitise(taste_artists[1])}" data-menu-item="shared-artist">
                         <img class="view-item-avatar" src="${auth.avatar}" alt="${auth.name}">${taste_artists[1]}
                     </a>
                     ` : ''}
                     ${(taste_artists.length >= 3) ? html.node`
                     <div class="sep"></div>
-                    <a class="dropdown-menu-clickable-item" href="${root}user/${page.name}/library/music/${sanitise(taste_artists[2])}" data-menu-item="shared-artist">
+                    <a class="dropdown-menu-clickable-item" href="${root}user/${page.name}/library/music/${redirect()}${sanitise(taste_artists[2])}" data-menu-item="shared-artist">
                         <img class="view-item-avatar" src="${page.avatar}" alt="${page.name}">${taste_artists[2]}
                     </a>
-                    <a class="dropdown-menu-clickable-item" href="${root}user/${auth.name}/library/music/${sanitise(taste_artists[2])}" data-menu-item="shared-artist">
+                    <a class="dropdown-menu-clickable-item" href="${root}user/${auth.name}/library/music/${redirect()}${sanitise(taste_artists[2])}" data-menu-item="shared-artist">
                         <img class="view-item-avatar" src="${auth.avatar}" alt="${auth.name}">${taste_artists[2]}
                     </a>
                     ` : ''}
                     <div class="sep"></div>
-                    <button class="dropdown-menu-clickable-item" data-type="compare" onclick=${() => compare()}>${tl(trans.compare)}</button>
+                    <a class="dropdown-menu-clickable-item" data-type="compare" href="${root}bleh/minis/compare?profile=${page.name}">${tl(trans.compare)}</a>
                 `,
-                placement: 'right-start',
-                trigger: 'manual',
+                trigger: 'click',
+                placement: 'bottom',
                 interactive: true,
                 interactiveBorder: 10,
-                offset: [0, 0],
-
-                onShow(instance) {
-                    instance.popper.addEventListener('click', event => {
-                        instance.hide();
-                    });
-                }
+                offset: [0, 0]
             });
-
-            register_menu(taste_wrap, menu);
         }
-    }
 
-    if (about_me) {
-        about_me.appendChild(side_sep);
-        about_me.appendChild(profile_header);
-    } else {
-        if (!page.mobile)
-            page.structure.side.insertBefore(profile_header, page.structure.side.firstElementChild);
-        else
-            page.structure.main.insertBefore(profile_header, page.structure.main.firstElementChild);
+        const row = listen_container.querySelector('.listener-row');
+        row.after(taste_wrap);
     }
 }
 
@@ -347,20 +328,145 @@ export function create_profile_top_item(parent, {name, link, text='', type, new_
         `;
     }
 
-    if (type == 'shortcut') {
-        if (name == settings.profile_shortcut) {
-            side_action.setAttribute('data-is-shortcut', 'true');
-        } else {
-            side_action.setAttribute('data-is-shortcut', 'false');
-        }
-
-        side_action.addEventListener('contextmenu', (e) => {
-            e.preventDefault();
-
-            open_profile_shortcut_window();
-        });
-    }
-
     parent.appendChild(side_action);
     return side_action;
+}
+
+function friends_button(parent) {
+    return;
+
+    let friend_state = settings.friends.includes(page.name);
+    let star_state = settings.starred_friend == page.name;
+
+    if (!friend_state && star_state) {
+        star_state = false;
+        save_setting('starred_friend', '');
+    }
+
+    const elem = html.node`
+        <button class="btn side-action" data-type="friends" onclick=${() => {
+            if (friend_state) {
+                dialog({
+                    id: 'remove_friend',
+                    title: tl(trans.remove_friend.name),
+                    body: html.node`
+                        <p>${tl(trans.remove_friend.body).replace('{u}', page.name)}</p>
+                        <div class="modal-footer">
+                            <button class="see-more cancel" onclick=${() => dialog_rm({id: 'remove_friend'})}>
+                                ${tl(trans.cancel)}
+                            </button>
+                            <div class="fill"></div>
+                            <button class="btn primary icon danger" data-type="minus" onclick=${() => {
+                                friend_state = false;
+                                star_state = false;
+
+                                const new_list = settings.friends.filter(item => item != page.name);
+
+                                save_setting('friends', new_list);
+                                save_setting('starred_friend', '');
+
+                                dialog_rm({id: 'remove_friend'});
+                                update_visual();
+
+                                notify({
+                                    id: 'friends',
+                                    title: tl(trans.removed_friend),
+                                    body: page.name,
+                                    icon: 'icon-16-minus',
+                                    type: 'error'
+                                });
+                            }}>
+                                ${tl(trans.remove)}
+                            </button>
+                        </div>
+                    `
+                })
+            } else {
+                friend_state = true;
+
+                const new_list = [...settings.friends, page.name];
+
+                save_setting('friends', new_list);
+                update_visual();
+
+                notify({
+                    id: 'friends',
+                    title: tl(trans.added_as_friend),
+                    body: page.name,
+                    icon: 'icon-16-users',
+                    type: 'success'
+                });
+            }
+        }} />
+    `;
+
+    tippy(elem, {
+        content: tl(trans.friend_difference)
+    });
+
+    const menu = tippy(elem, {
+        theme: 'context-menu',
+        content: html.node``,
+        placement: 'right-start',
+        trigger: 'manual',
+        interactive: true,
+        interactiveBorder: 10,
+        offset: [0, 0],
+
+        onShow(instance) {
+            instance.popper.addEventListener('click', event => {
+                instance.hide();
+            });
+
+            instance.setContent(html.node`
+                <button class="dropdown-menu-clickable-item" data-type="starred_friend" data-is-shortcut=${star_state} onclick=${() => {
+                    if (star_state) {
+                        star_state = false;
+                        save_setting('starred_friend', '');
+                        update_visual();
+
+                        notify({
+                            id: 'friends',
+                            title: tl(trans.removed_star),
+                            body: page.name,
+                            icon: 'icon-16-minus',
+                            type: 'error'
+                        });
+                    } else {
+                        star_state = true;
+                        save_setting('starred_friend', page.name);
+                        update_visual();
+
+                        notify({
+                            id: 'friends',
+                            title: tl(trans.added_star),
+                            body: page.name,
+                            icon: 'icon-16-starred-friend'
+                        });
+                    }
+                }}>
+                    ${star_state ? tl(trans.remove_as_star_friend) : tl(trans.add_as_starred_friend)}
+                </button>
+            `);
+        }
+    });
+
+    register_menu(elem, menu);
+
+    update_visual();
+
+    function update_visual() {
+        elem.setAttribute('data-friends', friend_state);
+        elem.setAttribute('data-starred', star_state);
+
+        if (star_state) {
+            elem.textContent = tl(trans.starred_friend.name);
+        } else if (friend_state) {
+            elem.textContent = tl(trans.friends);
+        } else {
+            elem.textContent = tl(trans.add_as_friend);
+        }
+    }
+
+    parent.appendChild(elem);
 }

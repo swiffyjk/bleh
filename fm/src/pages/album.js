@@ -7,13 +7,13 @@
 import {settings} from "../build/config";
 import {log} from "../build/log";
 import {auth, page, root} from "../build/page";
-import {clamp_lit, clamp_sat, hex_to_hsl, sanitise} from "../build/tools";
+import {clamp_lit, clamp_sat, desanitise, hex_to_hsl, sanitise} from "../build/tools";
 import {tl, trans} from "../build/trans";
 import {load_chart_colours} from "../chart";
 import {bleh_about_artist} from "../components/about_artist";
 import {patch_header_title} from "../components/lotus";
 import {register_menu} from "../components/menu";
-import {bleh_music_page_charts, show_your_scrobbles} from "../components/music";
+import {bleh_music_page_charts, redirect, show_your_scrobbles} from "../components/music";
 import {checkup_page_structure} from "../components/structure";
 import {register_background, update_page} from "../page";
 import {ff} from "../sku";
@@ -23,6 +23,7 @@ import {bleh_wiki, bleh_wiki_editor, bleh_wiki_history} from "./wiki";
 import {html, render} from "lighterhtml";
 import {expand_avatar} from "../avatar.js";
 import {setting} from "../components/settings.js";
+import tippy from "tippy.js";
 
 export function bleh_albums() {
     let album_header = document.body.querySelector('.header-new--album');
@@ -95,11 +96,11 @@ export function bleh_albums() {
                 <div class="suggest-side">
                     <div class="cta suggest">
                         <strong>${tl(trans.suggest_title.name)}</strong>
-                        <a class="see-more" href="${root}music/${sanitise(page.sister)}/${page.suggest}">${tl(trans.suggest_title.body).replace('{v}', page.suggest)}</a>
+                        <a class="see-more" href="${root}music/${redirect()}${sanitise(page.sister)}/${page.suggest}">${tl(trans.suggest_title.body).replace('{v}', desanitise(page.suggest, '+'))}</a>
                     </div>
                 </div>
                 ` : ''}
-        `
+        `;
 
         if (avatar)
             register_background(avatar.getAttribute('content'));
@@ -117,7 +118,7 @@ export function bleh_albums() {
             if (settings.default_avatar_action == 'expand' && avatar)
                 avatar_link.setAttribute('onclick', `_expand_avatar('${avatar.getAttribute('content')}')`);
             else if (settings.default_avatar_action == 'gallery')
-                avatar_link.href = `${root}music/${sanitise(page.sister)}/${sanitise(page.name)}/+images`;
+                avatar_link.href = `${root}music/${redirect()}${sanitise(page.sister)}/${sanitise(page.name)}/+images`;
 
             let menu = tippy(avatar_side, {
                 theme: 'context-menu',
@@ -127,7 +128,7 @@ export function bleh_albums() {
                         ${tl(trans.expand)}
                     </button>
                     ` : ''}
-                    <a class="dropdown-menu-clickable-item" href="${root}music/${sanitise(page.sister)}/${sanitise(page.name)}/+images" data-menu-item="gallery">
+                    <a class="dropdown-menu-clickable-item" href="${root}music/${redirect()}${sanitise(page.sister)}/${sanitise(page.name)}/+images" data-menu-item="gallery">
                         ${tl(trans.artwork)}
                     </a>
                     <div class="sep"></div>

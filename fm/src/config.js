@@ -11,14 +11,9 @@ import {stored_season} from "./build/seasonal";
 import {tl, trans} from "./build/trans";
 import {chart_reflow, load_chart_colours} from "./chart";
 import {notify} from "./components/notify";
-import {load_skus, show_theme_change_in_menu, show_theme_change_in_settings} from "./pages/bleh_config";
+import {load_skus} from "./pages/bleh_config";
 import {bleh_glacier_date_graph_generate} from "./pages/glacier";
-import {save_setting} from "./components/settings.js";
-
-// create blank settings
-export function create_settings_template() {
-    return {dev: false};
-}
+import {compile_settings, save_setting} from "./components/settings.js";
 
 // load settings
 export function load_settings(skip = false) {
@@ -28,9 +23,9 @@ export function load_settings(skip = false) {
             if (settings[setting] == null)
                 settings[setting] = settings_store[setting].default;
         }
-    }
 
-    log(`branch ${settings.branch}`, 'load');
+        if (!settings.version) settings.version = 10000000;
+    }
 
     if (!settings.theme_type) {
         if (settings.theme == 'light' || settings.theme == 'ink')
@@ -39,54 +34,54 @@ export function load_settings(skip = false) {
             settings.theme_type = 'dark';
     }
 
-    // missing? set to default value
-    for (let setting in settings_template)
-        if (settings[setting] == undefined)
-            settings[setting] = settings_template[setting];
-
     // migrates old season settings
-    // todo: remove soon
-    if (settings.seasonal_particles == true)
+    if (settings.version < 2025.0816) {
+        if (settings.seasonal_particles == true)
         settings.seasonal_particles = 'all';
-    else if (settings.seasonal_particles == false)
-        settings.seasonal_particles = 'none';
+        else if (settings.seasonal_particles == false)
+            settings.seasonal_particles = 'none';
 
-    if (settings.seasonal_particles_reduced == true) {
-        settings.seasonal_particles = 'less';
-        delete settings.seasonal_particles_reduced;
-    } else if (settings.seasonal_particles_reduced == false) {
-        delete settings.seasonal_particles_reduced;
+        if (settings.seasonal_particles_reduced == true) {
+            settings.seasonal_particles = 'less';
+            delete settings.seasonal_particles_reduced;
+        } else if (settings.seasonal_particles_reduced == false) {
+            delete settings.seasonal_particles_reduced;
+        }
+
+        // migrates old font settings
+        if (settings.font_weight == 480 || settings.font_weight == 440)
+            settings.font_weight = settings_store.font_weight.default;
+        if (settings.font_weight_medium == 650 || settings.font_weight_medium == 570)
+            settings.font_weight_medium = settings_store.font_weight_medium.default;
+        if (settings.font_weight_bold == 730 || settings.font_weight_bold == 760 || settings.font_weight_bold == 680)
+            settings.font_weight_bold = settings_store.font_weight_bold.default;
     }
 
-    // migrates old font settings
-    if (settings.font_weight == 480)
-        settings.font_weight = settings_store.font_weight.default;
-    if (settings.font_weight_medium == 650)
-        settings.font_weight_medium = settings_store.font_weight_medium.default;
-    if (settings.font_weight_bold == 730)
-        settings.font_weight_bold = settings_store.font_weight_bold.default;
+    if (settings.profile_shortcut) {
+        settings.friends = [settings.profile_shortcut];
+        settings.starred_friend = settings.profile_shortcut;
+
+        localStorage.removeItem('bleh_profile_shortcut_avi');
+        delete settings.profile_shortcut;
+    }
 
     // save setting into body
     for (let setting in settings) {
         if (
             (setting == 'hue' || setting == 'sat' || setting == 'lit') &&
-            settings.hue == settings_base.hue.value &&
-            settings.sat == settings_base.sat.value &&
-            settings.lit == settings_base.lit.value
+            settings.hue == settings_store.hue.default &&
+            settings.sat == settings_store.sat.default &&
+            settings.lit == settings_store.lit.default
         ) continue;
 
-        try {
-            document.body.style.setProperty(`--${settings_base[setting].css}`, `${settings[setting]}${settings_base[setting].unit}`);
-        } catch(e) {
-            log(`information for ${setting} not accessible`, 'settings', 'log');
-        }
+        if (settings_store[setting] && settings_store[setting].css) document.body.style.setProperty(`--${settings_store[setting].css}`, `${settings[setting]}${settings_store[setting].suffix || ''}`);
         document.documentElement.setAttribute(`data-bleh--${setting}`, `${settings[setting]}`);
     }
 
     load_skus();
 
     // save to settings
-    localStorage.setItem('bleh', JSON.stringify(settings));
+    compile_settings();
 
     // override theme when browsing listening reports
     if (document.body.classList.contains('user-dashboard-layout')) {
@@ -99,8 +94,7 @@ export function load_settings(skip = false) {
 
 // theme
 export function toggle_theme() {
-    if (page.subpage.startsWith('listening-report'))
-        return;
+    if (page.subpage.startsWith('listening-report')) return;
 
     let current_theme = settings.theme;
 
@@ -115,38 +109,8 @@ export function toggle_theme() {
     else if (current_theme == 'ink')
         current_theme = 'dark';
 
-    show_theme_change_in_menu(current_theme);
-
     // save value
     save_setting('theme', current_theme);
-
-    chart_reflow();
-}
-
-unsafeWindow.change_theme_from_settings = function(theme) {
-    // save value
-    settings.theme = theme;
-    if (theme == 'light' || theme == 'ink')
-        settings.theme_type = 'light';
-    else
-        settings.theme_type = 'dark';
-    document.documentElement.setAttribute(`data-bleh--theme`, `${theme}`);
-    document.documentElement.setAttribute(`data-bleh--theme_type`, `${settings.theme_type}`);
-
-    // show in settings
-    show_theme_change_in_settings(theme);
-    show_theme_change_in_menu(theme);
-
-    // save to settings
-    localStorage.setItem('bleh', JSON.stringify(settings));
-}
-export function change_theme_from_menu(theme) {
-    if (page.subpage.startsWith('listening-report')) return;
-
-    save_setting('theme', theme);
-
-    // show in settings
-    show_theme_change_in_menu(theme);
 
     chart_reflow();
 }
@@ -301,8 +265,8 @@ function update_item(item, value, modify=true, search = document) {
         log(`updated ${item} to ${settings[item]}`, 'settings');
 
     // save to settings
-    localStorage.setItem('bleh', JSON.stringify(settings));
-    } catch(e) {console.error(e)}
+    compile_settings();
+    } catch(e) {}
 
     if (container) {
         if (settings[item] != settings_base[item].value)
@@ -349,7 +313,7 @@ export function invoke_reload() {
     window.location.reload();
 }
 
-function update_colour_swatches() {
+export function update_colour_swatches() {
     let found = false;
     let custom = null;
     let seasonal = null;
@@ -445,4 +409,3 @@ export function update_inbuilt_item(item, value, modify=true, element=document.b
         }
     }
 }
-

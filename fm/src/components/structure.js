@@ -5,7 +5,7 @@
 //
 
 import {log} from "../build/log";
-import {page} from "../build/page";
+import {page, root} from "../build/page";
 import {load_chart_colours} from "../chart";
 import {ff} from "../sku";
 import {html, render} from "lighterhtml";
@@ -24,7 +24,11 @@ export function basic_page_structure() {
     checkup_page_structure();
 }
 
-// general health
+/**
+ * ensures general health of the page structure, fills in the global page object
+ * @param {boolean} is_subpage controls if the checker should identify content_top's etc.
+ * @param {HTMLObjectElement|null} header legacy header from last.fm to extract data from
+ */
 export function checkup_page_structure(is_subpage = false, header = null) {
     if (document.body.style.getPropertyValue('--hue-album')) {
         document.body.style.removeProperty('--hue-album');
@@ -34,11 +38,12 @@ export function checkup_page_structure(is_subpage = false, header = null) {
     }
 
     let params = new URLSearchParams(document.location.search);
-    page.requested.params = params;
-    page.requested.tab = params.get('tab');
-    page.requested.page = params.get('page');
-    page.requested.token = params.get('token');
-    page.requested.collage = params.get('collage');
+    page.requested = {
+        tab: params.get('tab'),
+        page: params.get('page'),
+        token: params.get('token'),
+        collage: params.get('collage')
+    }
 
     if (!page.structure.container || !document.body.contains(page.structure.container)) {
         log('page missing container, creating', 'page structure');
@@ -101,10 +106,10 @@ export function checkup_page_structure(is_subpage = false, header = null) {
 
     if (ff('short')) {
         page.structure.content = html.node`
-            <div class="content">
+            <main class="content">
                 ${page.structure.main}
                 ${page.structure.side}
-            </div>
+            </main>
         `;
         page.structure.row.appendChild(page.structure.content);
     }
@@ -118,6 +123,18 @@ export function checkup_page_structure(is_subpage = false, header = null) {
             navlist.classList.add('redesigned-navigation');
             page.structure.container.insertBefore(navlist, page.structure.container.firstElementChild);
             page.structure.nav = navlist;
+
+            let overview = page.structure.nav.querySelector('.secondary-nav-item--overview a');
+
+            if (overview) {
+                const href = overview.getAttribute('href').replace(root, '');
+
+                // we only want to replace the 'Overview' text
+                // which is not present on these pages
+                if (href == 'settings' || href == 'inbox' || href == 'charts') overview = null;
+            }
+
+            if (overview) overview.textContent = tl(trans.home);
         }
 
         if (is_subpage) {
@@ -280,4 +297,18 @@ export function checkup_nav() {
             page.structure.row.insertBefore(nav, page.structure.content);
         }
     });
+}
+
+export function convert_to_toolbar() {
+    const nav = page.structure.content_top.querySelector('.navlist');
+    nav.classList.add('redesigned-navigation');
+
+    page.structure.toolbar = html.node`
+        <div class="toolbar">
+            ${nav}
+        </div>
+    `;
+
+    page.structure.row.insertBefore(page.structure.toolbar, page.structure.row.firstChild);
+    page.structure.content_top.style.display = 'none';
 }

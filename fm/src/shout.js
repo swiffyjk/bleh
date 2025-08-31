@@ -9,10 +9,13 @@ import {settings} from "./build/config";
 import {log} from "./build/log";
 import {auth, page, shout_parse_queue} from "./build/page";
 import {tl, trans} from "./build/trans";
-import {deliver_notif, notify} from "./components/notify";
+import {notify} from "./components/notify";
 import {html, render} from "lighterhtml";
 import {setting} from "./components/settings.js";
 import {markdown} from "./components/markdown.js";
+import {copy} from "./build/tools.js";
+import tippy from "tippy.js";
+import { keybind } from './components/rabbit.js';
 
 export function patch_shouts() {
     if (!page.structure.main) return;
@@ -39,19 +42,31 @@ export function patch_shouts() {
 
             let badge = patch_avatar(shout_avatar, shout_name_text, 'shout');
 
-            if (badge.type) {
-                if (badge.type == 'avatar-status-dot--staff')
-                    shout.classList.add('staff-shout');
+            if (badge && badge.type) {
+                if (badge.type == 'avatar-status-dot--staff') shout.classList.add('staff-shout');
 
-                shout_avatar.setAttribute('data-avatar-themed', 'true');
-                shout_avatar.classList.add(`user-status--bleh-${badge.type}`, `user-status--bleh-user-${shout_name_text}`);
-                shout_name.classList.add(`user-status--bleh-${badge.type}`, `user-status--bleh-user-${shout_name_text}`);
+                if (badge.hue > -1 && badge.sat > -1 && badge.lit > -1) {
+                    shout_name.style.setProperty('--hue-over', badge.hue);
+                    shout_name.style.setProperty('--sat-over', badge.sat);
+                    shout_name.style.setProperty('--lit-over', badge.lit);
+                } else {
+                    shout_name.classList.add(`user-status--bleh-${badge.type}`, `user-status--bleh-user-${badge.user}`);
+                }
+            } else if (badge) {
+                shout_name.classList.add(badge.type);
             }
 
+            const shout_body = shout.querySelector('.shout-body p');
+            const shout_text = shout_body.textContent.trim();
             if (settings.shout_markdown) {
-                let shout_body = shout.querySelector('.shout-body p');
                 shout_parse_queue.push({element: shout_body});
             }
+
+
+            const indicator = html.node`
+                <div class="shout-vote-indicator colourful" aria-checked="false" />
+            `;
+            shout.appendChild(indicator);
 
 
             // timestamp
@@ -74,11 +89,66 @@ export function patch_shouts() {
             });
 
 
+            // detect vote status
+            const form = shout.querySelector('.vote-button-toggle');
+
+            const voted_button = form.querySelector('.vote-button--voted');
+            const unvote_button = form.querySelector('.vote-button:not(.vote-button--voted)');
+
+            if (!voted_button || !unvote_button) return;
+
+            // if the ALREADY VOTED button changes to MODIFIED STATE when clicked,
+            // that means the server gave us a shout that is ALREADY VOTED
+            const initial_is_voted = voted_button.getAttribute('data-ajax-form-sets-state') == 'modified-state';
+
+            indicator.setAttribute('aria-checked', initial_is_voted.toString());
+
+            voted_button.addEventListener('click', (e) => vote_button())
+            unvote_button.addEventListener('click', (e) => vote_button());
+
+            function vote_button() {
+                setTimeout(() => {
+                    const modified = form.getAttribute('data-ajax-form-state') == 'modified-state';
+                    const current_is_voted = initial_is_voted != modified;
+
+                    indicator.setAttribute('aria-checked', current_is_voted.toString());
+                }, 0);
+            }
+
+
+            const menu = shout.querySelector('.shout-more-actions-menu');
+
+            const buttons = menu.querySelectorAll('button');
+            buttons.forEach((button) => {
+                const type = button.classList[1];
+                if (type == 'more-item--delete') {
+                    button.textContent = tl(trans.delete);
+                } else if (type == 'more-item--report') {
+                    button.textContent = tl(trans.report);
+                }
+            });
+
+            menu.insertBefore(html.node`
+                <button class="dropdown-menu-clickable-item" data-type="copy" onclick=${() => {
+                    copy(shout_text);
+                }}>
+                    ${tl(trans.copy)}
+                </button>
+                <div class="sep" />
+            `, menu.firstElementChild);
+
+
             let send_button = shout.querySelector('.form-group--submit');
             shout_send(send_button);
         } catch(e) {
-            deliver_notif('a shout on this page failed to be modified :(');
-            console.error('bleh - a shout failed to patch', e);
+            notify({
+                id: 'shout',
+                title: tl(trans.shouts),
+                body: 'Failed to be modified :(',
+                type: 'error',
+                icon: 'icon-16-shoutbox'
+            });
+            log('failed to modify', 'shout', 'error', {error: e});
         }
     });
 
@@ -86,7 +156,7 @@ export function patch_shouts() {
         parse_shout_queue();
 
     // enter a shout field
-    let shout_forms = document.querySelectorAll('.shout-form:not([data-kate-processed])');
+    const shout_forms = document.querySelectorAll('.shout-form:not([data-kate-processed])');
     shout_forms.forEach((shout_form) => {
         shout_form.setAttribute('data-kate-processed', 'true');
         let shout_avatar = shout_form.querySelector('.shout-user-avatar');
@@ -132,9 +202,9 @@ function shout_send(send_button) {
     if (page.mobile) return;
 
     tippy(button, {
-        content: tl(trans.send_quickly_with).replace('{kbd}', '<span class="keybind"><kbd>⌘</kbd><kbd>↵</kbd></span>'),
-        delay: [500, 0],
-        allowHTML: true
+        content: tl(trans.send_quickly_with).replace('{kbd}', keybind(['⌘', '⏎']).outerHTML),
+        allowHTML: true,
+        delay: [500, 0]
     });
 }
 
@@ -174,11 +244,9 @@ export function shout_header(shout_controls) {
 
         let link = window.location.href;
         let shoutbox_link = '+shoutbox';
-        if (page.type == 'user' || 'event')
-            shoutbox_link = 'shoutbox';
+        if (page.type == 'user' || page.type == 'event') shoutbox_link = 'shoutbox';
 
-        if (!page.subpage.startsWith('shoutbox'))
-            link += `/${shoutbox_link}`;
+        if (!page.subpage.startsWith('shoutbox')) link += `/${shoutbox_link}`;
 
         panel.insertBefore(html.node`
             <div class="top-container">
@@ -219,6 +287,17 @@ export function shout_header(shout_controls) {
         interactiveBorder: 10,
         trigger: 'click'
     });
+
+    const cant_shout = panel.querySelector('.shouting-unavailable');
+    if (cant_shout) {
+        render(cant_shout, html`
+            <div class="loading-data-container">
+                <div class="loading-data-text static" data-type="shouts">
+                    ${tl(trans.cant_shout)}
+                </div>
+            </div>
+        `);
+    }
 }
 
 export function parse_shout_queue() {
@@ -228,6 +307,7 @@ export function parse_shout_queue() {
 
     const parsed = markdown(shout.element.textContent);
 
+    shout.element.classList.add('markdown-body');
     render(shout.element, html.node`${parsed}`);
 
     log('parsed one shout', 'shout', 'log');

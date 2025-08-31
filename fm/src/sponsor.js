@@ -8,10 +8,10 @@ import {html} from "lighterhtml";
 import {log} from "./build/log";
 import {auth, page, root} from "./build/page";
 import {sponsor_list} from "./build/sponsor";
-import {tl, trans, trans_legacy} from "./build/trans";
+import {tl, trans} from "./build/trans";
 import {dialog} from "./components/dialog";
-import {deliver_notif} from "./components/notify";
 import {ff} from "./sku";
+import { status } from './components/status';
 
 export function sponsors(force = false) {
     if (!ff('sponsor'))
@@ -30,8 +30,10 @@ export function sponsors(force = false) {
         for (var member in sponsor_list) delete sponsor_list[member];
         Object.assign(sponsor_list, JSON.parse(sponsor_data));
 
-        if (sponsor_list)
+        if (sponsor_list) {
             auth.sponsor = sponsor_list.sponsors.includes(auth.name);
+            auth.sponsor_full = !sponsor_list.sponsors_one_time.includes(auth.name);
+        }
 
         // is it valid?
         if (sponsor_expire < current_time && !force) {
@@ -67,11 +69,15 @@ function sponsor_request(notify = false) {
                 for (const member in sponsor_list) delete sponsor_list[member];
                 Object.assign(sponsor_list, JSON.parse(this.response));
 
-                if (sponsor_list)
+                if (sponsor_list) {
                     auth.sponsor = sponsor_list.sponsors.includes(auth.name);
+                    auth.sponsor_full = !sponsor_list.sponsors_one_time.includes(auth.name);
+                }
 
                 if (notify)
-                    deliver_notif(trans_legacy.en.settings.home.sponsor.download, false, true, 'sponsor');
+                    status({
+                        title: tl(trans.downloaded_value).replace('{v}', tl(trans.sponsor_details))
+                    });
 
                 // save to cache for next page load
                 localStorage.setItem('kat_sponsors', this.response);

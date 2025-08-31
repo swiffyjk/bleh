@@ -10,15 +10,16 @@ import {log} from "./build/log";
 import {tl, trans} from "./build/trans";
 import {chart_reflow} from "./chart";
 import {dialog, dialog_rm} from "./components/dialog";
-import {create_settings_template, invoke_reload} from "./config";
+import {invoke_reload} from "./config";
 import {version} from "./main";
 import {download_with_progress} from "./build/tools.js";
+import cropper_css from 'cropperjs/dist/cropper.min.css';
 
 export function append_style() {
     document.documentElement.classList.add('bleh-supports-loading');
 
     for (var member in settings) delete settings[member];
-    Object.assign(settings, JSON.parse(localStorage.getItem('bleh')) || create_settings_template());
+    Object.assign(settings, JSON.parse(localStorage.getItem('bleh')));
 
     let cached_style = localStorage.getItem('bleh_cached_style') || '';
 
@@ -31,6 +32,7 @@ export function append_style() {
         return;
 
     document.documentElement.setAttribute('data-bleh--theme', settings.theme);
+    document.documentElement.appendChild(html.node`<style>${cropper_css}</style>`);
 
     if (settings.dev) return;
 
@@ -54,7 +56,6 @@ function load_cached_style(cached_style) {
 
     style_cache.onload = () => {
         log('loaded cache', 'style');
-        document.body.classList.add('bleh');
 
         chart_reflow();
 
@@ -289,7 +290,7 @@ function finish_update() {
 }
 
 
-unsafeWindow._force_refresh_theme = function() {
+export function force_refresh_style() {
     localStorage.removeItem('bleh_cached_style');
     localStorage.removeItem('bleh_cached_style_timeout');
 

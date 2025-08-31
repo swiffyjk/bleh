@@ -7,7 +7,14 @@
 import {log} from "./build/log";
 import {bleh} from "./page";
 
-import version2 from "./build/build.json" assert {type: "json"}
+import version2 from "./build/build.json" with {type: "json"}
+
+import {Chart, registerables} from 'chart.js';
+import 'chartjs-adapter-luxon';
+
+Chart.register(...registerables);
+
+export {Chart};
 
 export const version = version2;
 export const theme_version = {

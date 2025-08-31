@@ -5,6 +5,7 @@
 //
 
 import {html} from "lighterhtml";
+import tippy from "tippy.js";
 // require page reload
 export let reload_pending = {
     state: false
@@ -28,6 +29,7 @@ tippy.setDefaultProps({
  * @param {string|null} name - Profile name if authorised
  * @param {boolean} pro - Last.fm Pro status
  * @param {boolean} sponsor - Sponsor of the project
+ * @param {boolean} sponsor_full - Monthly sponsor of the project
  * @param {string|null} avatar - Profile avatar if present
  * @param {{hue: number, sat: number, lit: number}} sets - Set of colours based on avatar
  */
@@ -35,6 +37,7 @@ export let auth = {
     name: null,
     pro: null,
     sponsor: false,
+    sponsor_full: false,
     avatar: null,
     sets: {
         hue: 255,
@@ -106,6 +109,23 @@ export let page = {
     token: '',
     mobile: false,
     platform: 'other',
+    suggest: null,
+    now: {
+        next_fetch: null,
+        name: null,
+        artist: null,
+        album: null,
+        avatar: null,
+        active: false
+    },
+    notifications: {
+        next_fetch: null,
+        list: null
+    },
+    messages: {
+        next_fetch: null,
+        list: null
+    },
     structure: {
         wrapper: null,
         container: null,
@@ -175,6 +195,7 @@ export const setup_url = '{root}bleh/setup';
 export const sponsor_url = '{root}bleh/sponsor';
 export const api_url = '{root}bleh/api';
 export const minis_url = '{root}bleh/minis';
+export const mualani_url = '{root}bleh/mualani';
 
 // WARN: please provide your own if hosting a fork
 export const api_key = '85c118b69b1437844fe75fcd2bf27261';

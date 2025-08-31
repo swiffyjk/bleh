@@ -12,18 +12,17 @@ import {register_menu} from "../components/menu";
 import {ff} from "../sku";
 import {html, render} from "lighterhtml";
 import {share} from "../components/share.js";
+import tippy from "tippy.js";
 
 export function bleh_gallery() {
-    if (page.subpage != 'image')
-        return;
+    if (page.subpage != 'image') return;
 
     log('focusing on image', 'gallery');
 
     let image_sidebar = page.structure.side.querySelector('.js-gallery-image-details > div');
     if (!image_sidebar) return;
 
-    if (image_sidebar.hasAttribute('data-bleh-gallery'))
-        return;
+    if (image_sidebar.hasAttribute('data-bleh-gallery')) return;
     image_sidebar.setAttribute('data-bleh-gallery', 'true');
 
     if (!ff('new_gallery_experience')) {
@@ -271,27 +270,17 @@ export function create_divider() {
 
 
 export function bleh_gallery_upload() {
-    let gallery_section = document.createElement('section');
-    gallery_section.classList.add('gallery-section', 'gallery--initialised');
-
-    let image_container = document.createElement('div');
-    image_container.classList.add('gallery-image-container');
-
-    let slides = document.createElement('div');
-    slides.classList.add('gallery-slides');
-
-
-    let image = document.createElement('div');
-    image.classList.add('gallery-image', 'gallery-slide', 'image-preview', 'active-slide');
-    image.innerHTML = (`
-        <img class="image-preview-hook">
-    `);
-
-
-    slides.appendChild(image);
-    image_container.appendChild(slides);
-    gallery_section.appendChild(image_container);
-    page.structure.nav.after(gallery_section);
+    page.structure.row.insertBefore(html.node`
+        <section class="gallery-section gallery--initialised">
+            <div class="gallery-image-container">
+                <div class="gallery-slides">
+                    <div class="gallery-image gallery-slide image-preview active-slide">
+                        <img class="image-preview-hook" ref=${el => page.state.image_preview = el} />
+                    </div>
+                </div>
+            </div>
+        </section>
+    `, page.structure.row.firstElementChild);
 
 
     // remove content top
@@ -317,15 +306,13 @@ export function bleh_gallery_upload() {
 }
 
 export function bleh_gallery_upload_check() {
-    if (page.subpage != 'images_image-upload')
-        return;
+    if (page.subpage != 'images_image-upload' || !page.state.image_preview) return;
 
     // update image preview
-    let image_preview = page.structure.main.querySelector('.form-image-preview');
+    const image_preview = page.structure.main.querySelector('.form-image-preview');
     if (!image_preview) return;
 
-    let image_preview_container = page.structure.container.querySelector('.image-preview-hook');
-    image_preview_container.setAttribute('src', image_preview.getAttribute('src'));
+    page.state.image_preview.setAttribute('src', image_preview.getAttribute('src'));
 }
 
 
@@ -340,6 +327,8 @@ export function bleh_gallery_list() {
         upload_panel.appendChild(upload_btn);
         page.structure.side.insertBefore(upload_panel, page.structure.side.firstElementChild)
     }
+
+    page.structure.main.classList.add('bleh--gallery');
 
     if (page.type == 'artist')
         patch_gallery_image_listing();
@@ -357,12 +346,12 @@ function patch_gallery_image_listing() {
 
     // create nav
     let nav = html.node`
-        <div class="bleh--nav-wrap bleh--nav-wrap--bookmarks">
-            <nav class="navlist secondary-nav">
+        <div class="toolbar">
+            <nav class="navlist secondary-nav navlist--more redesigned-navigation">
                 <ul class="navlist-items">
                     <li class="navlist-item secondary-nav-item secondary-nav-item--gallery-overview">
                         <a class="secondary-nav-item-link" onclick=${() => gallery_tab('all')}>
-                            ${tl(trans.all)}
+                            ${tl(trans.photos)}
                         </a>
                     </li>
                     <li class="navlist-item secondary-nav-item secondary-nav-item--gallery-bookmarks">
@@ -375,15 +364,11 @@ function patch_gallery_image_listing() {
         </div>
     `;
 
-    if (ff('short'))
-        page.structure.row.insertBefore(nav, page.structure.content);
-    else
-        page.structure.content_top.after(nav);
+    page.structure.row.insertBefore(nav, page.structure.content);
 
 
     // content
     let bookmarks_panel;
-    page.structure.main.classList.add('bleh--gallery');
     page.structure.main.after(html.node`
         <div class="col-main bleh--bookmarks not-a-panel">
             <section class="bookmarks-panel" ref=${el => bookmarks_panel = el}>

@@ -4,7 +4,7 @@ import {log} from "../build/log.js";
 import {checkup_page_structure} from "../components/structure.js";
 import {html, render} from "lighterhtml";
 import {tl, trans} from "../build/trans.js";
-import {load_banner} from '../components/banner.js';
+import { load_profile_cache_externally } from './profile.js';
 
 export async function bleh_auth() {
     page.structure.container = document.body.querySelector('.page-content');
@@ -18,9 +18,9 @@ export async function bleh_auth() {
 
     checkup_page_structure();
 
-    let banner = load_banner(auth.name);
-    if (banner)
-        register_background(banner);
+    const cache = await load_profile_cache_externally(auth.name);
+    if (cache.banner)
+        register_background(cache.banner);
     else if (!auth.avatar.endsWith('818148bf682d429dc215c1705eb27b98.png'))
         register_background(auth.avatar.replace('/avatar42s/', '/ar0/'));
     else

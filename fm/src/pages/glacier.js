@@ -14,9 +14,11 @@ import {prep_chart_colours} from "../chart";
 import {correct_artist, correct_item_by_artist} from "../components/lotus";
 import {refresh_all} from "../config";
 import {ff} from "../sku";
-import {compare} from "../components/compare.js";
 import {input} from "../components/input.js";
 import {setting} from "../components/settings.js";
+import {redirect} from "../components/music.js";
+import tippy from "tippy.js";
+import {Chart} from "../main.js";
 
 export function bleh_user_library() {
     // date sidebar into its own panel
@@ -70,7 +72,7 @@ export function bleh_user_library() {
     } else {
         tabs.appendChild(html.node`
             <li class="navlist-item secondary-nav-item secondary-nav-item--compare">
-                <a class="secondary-nav-item-link" onclick=${() => compare()}>
+                <a class="secondary-nav-item-link" href="${root}bleh/minis/compare?profile=${page.name}">
                     ${tl(trans.compare)}
                 </a>
             </li>
@@ -143,6 +145,13 @@ export function bleh_user_library() {
     if (page.subpage == 'library_overview' || page.subpage.endsWith('-search')) {
         // scrobbles tab
         bleh_glacier_library_top(true);
+
+        const pagination = page.structure.main.querySelector(':scope > .pagination');
+        page.structure.main.appendChild(html.node`
+            <section class="pagination-panel">
+                ${pagination}
+            </section>
+        `);
 
         page.state.glacier.insights = {
             artist: {
@@ -859,7 +868,10 @@ function bleh_glacier_insights_generate(type, item) {
 }
 
 export function bleh_glacier_library_open_index(index) {
-    window.location.href = page.state.glacier.links[index];
+    const link = page.state.glacier.links[index];
+
+    log(`opening link ${link}`, 'glacier library');
+    window.location.href = link;
 }
 
 
@@ -895,7 +907,6 @@ function bleh_glacier_library_request(request_url) {
             log('table is null?', 'glacier library', 'error');
             console.info('glacier library', doc.body.innerHTML);
             console.info('glacier library', new DOMParser().parseFromString(doc.body.innerHTML, 'text/html'));
-            throw new Error;
         }
 
         page.structure.glacier.date_panel.classList.remove('data-is-loading');
@@ -1079,11 +1090,11 @@ function bleh_glacier_library_focused() {
 
     let image = legacy_header.querySelector('.library-header-image img');
 
-    let link = `${root}music/${sanitise(header_title)}`;
+    let link = `${root}music/${redirect()}${sanitise(header_title)}`;
     if (type == 'album')
-        link = `${root}music/${sanitise(artist)}/${sanitise(header_title)}`;
+        link = `${root}music/${redirect()}${sanitise(artist)}/${sanitise(header_title)}`;
     else if (type == 'track')
-        link = `${root}music/${sanitise(artist)}/_/${sanitise(header_title)}`;
+        link = `${root}music/${redirect()}${sanitise(artist)}/_/${sanitise(header_title)}`;
 
 
     let header = document.createElement('section');
@@ -1164,7 +1175,7 @@ function bleh_glacier_library_focused() {
             let action = button.getAttribute('data-analytics-action');
             if (action) {
                 if (action == 'EditScrobbleOpen') {
-                    button.textContent = trans_legacy.en.glacier.edit;
+                    button.textContent = tl(trans.edit);
                 } else if (action == 'UnloveTrack' || action == 'LoveTrack') {
                     //button.textContent = trans_legacy.en.glacier.love;
 
@@ -1279,7 +1290,10 @@ function bleh_glacier_library_focused() {
 
         let select_btn = top.querySelector('.dropdown-menu-clickable-button');
 
-        if (!select_btn) return;
+        if (!select_btn) {
+            top.classList.add('spacing');
+            return;
+        }
 
         select_btn.classList.add('select-button', 'link-select', 'blend-v2-btn');
         select_btn.classList.remove('dropdown-menu-list-button');

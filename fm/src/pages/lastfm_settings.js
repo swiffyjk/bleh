@@ -7,12 +7,23 @@
 import {auth, page, root} from "../build/page";
 import {tl, trans} from "../build/trans";
 import {bleh_auto_edits} from "../components/auto_edit";
-import {dialog} from "../components/dialog";
+import {dialog, dialog_rm} from "../components/dialog";
 import {custom_select, select, select_prepare, update_inbuilt_select} from "../components/select";
 import {update_inbuilt_item} from "../config";
 import {ff} from "../sku";
-import {markdown} from "../components/markdown";
+import {markdown, markdown_prompt} from "../components/markdown";
 import {html, render} from "lighterhtml";
+import tippy from "tippy.js";
+import Cropper from "cropperjs";
+import { save_setting, setting } from '../components/settings';
+import { settings, settings_store } from '../build/config';
+import { input } from '../components/input';
+import { hex_to_hsl } from '../build/tools';
+import { log } from '../build/log';
+import { toggle } from '../components/toggle';
+import { status } from '../components/status';
+
+let cropper;
 
 // patch last.fm settings
 export function bleh_native_settings() {
@@ -61,6 +72,8 @@ export function bleh_native_settings() {
         bleh_auto_edits();
     } else if (page.subpage == 'account_overview') {
         bleh_accounts();
+    } else if (page.subpage == 'website') {
+        bleh_website();
     } else if (page.subpage == 'change-username_overview') {
         bleh_name_change();
     } else if (page.subpage == 'applications_overview') {
@@ -85,7 +98,7 @@ export function bleh_native_settings() {
 }
 
 function patch_settings_profile_tab() {
-    let update_picture = document.getElementById('update-picture');
+    let update_picture = page.structure.main.querySelector('#update-picture');
     if (!update_picture) return;
 
     // if we can continue, we are on profile tab
@@ -163,40 +176,41 @@ function patch_settings_charts_panel(token) {
                     </div>
                 </div>
             </div>
-            <div class="setting" data-type="select">
-                <div class="heading">
-                    <h5>${tl(trans.amount_to_display)}</h5>
+            <div class="setting-group">
+                <div class="setting" data-type="select">
+                    <div class="heading">
+                        <h5>${tl(trans.amount_to_display)}</h5>
+                    </div>
+                    <div class="select-wrap custom-selector" id="id_chart_length_recent_tracks_select">
+                        ${original_chart_settings.recent.count}
+                    </div>
                 </div>
-                <div class="select-wrap custom-selector" id="id_chart_length_recent_tracks_select">
-                    ${original_chart_settings.recent.count}
+                <div class="setting" data-type="toggle" onclick="_update_inbuilt_item('recent_artwork')" id="container-recent_artwork">
+                    <button class="btn reset" onclick="_reset_inbuilt_item('recent_artwork')">Reset to default</button>
+                    <div class="heading">
+                        <h5>${tl(trans.recent_artwork)}</h5>
+                    </div>
+                    <div class="toggle-wrap">
+                        <input class="companion-checkbox" type="checkbox" name="show_recent_tracks_artwork" id="inbuilt-companion-checkbox-recent_artwork">
+                        <span class="btn toggle" id="toggle-recent_artwork" aria-checked="false">
+                            <div class="dot"></div>
+                        </span>
+                    </div>
+                </div>
+                <div class="setting" data-type="toggle" onclick="_update_inbuilt_item('recent_realtime')" id="container-recent_realtime">
+                    <button class="btn reset" onclick="_reset_inbuilt_item('recent_realtime')">Reset to default</button>
+                    <div class="heading">
+                        <h5>${tl(trans.recent_realtime.name)}</h5>
+                        <p>${tl(trans.recent_realtime.body)}</p>
+                    </div>
+                    <div class="toggle-wrap">
+                        <input class="companion-checkbox" type="checkbox" name="auto_refresh_recent_tracks" id="inbuilt-companion-checkbox-recent_realtime">
+                        <span class="btn toggle" id="toggle-recent_realtime" aria-checked="false">
+                            <div class="dot"></div>
+                        </span>
+                    </div>
                 </div>
             </div>
-            <div class="setting" data-type="toggle" onclick="_update_inbuilt_item('recent_artwork')" id="container-recent_artwork">
-                <button class="btn reset" onclick="_reset_inbuilt_item('recent_artwork')">Reset to default</button>
-                <div class="heading">
-                    <h5>${tl(trans.recent_artwork)}</h5>
-                </div>
-                <div class="toggle-wrap">
-                    <input class="companion-checkbox" type="checkbox" name="show_recent_tracks_artwork" id="inbuilt-companion-checkbox-recent_artwork">
-                    <span class="btn toggle" id="toggle-recent_artwork" aria-checked="false">
-                        <div class="dot"></div>
-                    </span>
-                </div>
-            </div>
-            <div class="setting" data-type="toggle" onclick="_update_inbuilt_item('recent_realtime')" id="container-recent_realtime">
-                <button class="btn reset" onclick="_reset_inbuilt_item('recent_realtime')">Reset to default</button>
-                <div class="heading">
-                    <h5>${tl(trans.recent_realtime.name)}</h5>
-                    <p>${tl(trans.recent_realtime.body)}</p>
-                </div>
-                <div class="toggle-wrap">
-                    <input class="companion-checkbox" type="checkbox" name="auto_refresh_recent_tracks" id="inbuilt-companion-checkbox-recent_realtime">
-                    <span class="btn toggle" id="toggle-recent_realtime" aria-checked="false">
-                        <div class="dot"></div>
-                    </span>
-                </div>
-            </div>
-            <div class="sep"></div>
             <h4>${tl(trans.top_artists)}</h4>
             <div class="inner-preview pad">
                 <div class="item-grid artist">
@@ -256,23 +270,24 @@ function patch_settings_charts_panel(token) {
                     </div>
                 </div>
             </div>
-            <div class="setting" data-type="select">
-                <div class="heading">
-                    <h5>${tl(trans.default_timeframe)}</h5>
+            <div class="setting-group">
+                <div class="setting" data-type="select">
+                    <div class="heading">
+                        <h5>${tl(trans.default_timeframe)}</h5>
+                    </div>
+                    <div class="select-wrap custom-selector" id="id_chart_range_top_artists_select">
+                        ${original_chart_settings.artists.timeframe}
+                    </div>
                 </div>
-                <div class="select-wrap custom-selector" id="id_chart_range_top_artists_select">
-                    ${original_chart_settings.artists.timeframe}
+                <div class="setting" data-type="select">
+                    <div class="heading">
+                        <h5>${tl(trans.chart_style)}</h5>
+                    </div>
+                    <div class="select-wrap custom-selector" id="id_chart_style_and_length_top_artists_select">
+                        ${original_chart_settings.artists.style}
+                    </div>
                 </div>
             </div>
-            <div class="setting" data-type="select">
-                <div class="heading">
-                    <h5>${tl(trans.chart_style)}</h5>
-                </div>
-                <div class="select-wrap custom-selector" id="id_chart_style_and_length_top_artists_select">
-                    ${original_chart_settings.artists.style}
-                </div>
-            </div>
-            <div class="sep"></div>
             <h4>${tl(trans.top_albums)}</h4>
             <div class="inner-preview pad">
                 <div class="item-grid album">
@@ -332,23 +347,24 @@ function patch_settings_charts_panel(token) {
                     </div>
                 </div>
             </div>
-            <div class="setting" data-type="select">
-                <div class="heading">
-                    <h5>${tl(trans.default_timeframe)}</h5>
+            <div class="setting-group">
+                <div class="setting" data-type="select">
+                    <div class="heading">
+                        <h5>${tl(trans.default_timeframe)}</h5>
+                    </div>
+                    <div class="select-wrap custom-selector" id="id_chart_range_top_albums_select">
+                        ${original_chart_settings.albums.timeframe}
+                    </div>
                 </div>
-                <div class="select-wrap custom-selector" id="id_chart_range_top_albums_select">
-                    ${original_chart_settings.albums.timeframe}
+                <div class="setting" data-type="select">
+                    <div class="heading">
+                        <h5>${tl(trans.chart_style)}</h5>
+                    </div>
+                    <div class="select-wrap custom-selector" id="id_chart_style_and_length_top_albums_select">
+                        ${original_chart_settings.albums.style}
+                    </div>
                 </div>
             </div>
-            <div class="setting" data-type="select">
-                <div class="heading">
-                    <h5>${tl(trans.chart_style)}</h5>
-                </div>
-                <div class="select-wrap custom-selector" id="id_chart_style_and_length_top_albums_select">
-                    ${original_chart_settings.albums.style}
-                </div>
-            </div>
-            <div class="sep"></div>
             <h4>${tl(trans.top_tracks)}</h4>
             <div class="inner-preview pad">
                 <div class="tracks">
@@ -394,20 +410,22 @@ function patch_settings_charts_panel(token) {
                     </div>
                 </div>
             </div>
-            <div class="setting" data-type="select">
-                <div class="heading">
-                    <h5>${tl(trans.default_timeframe)}</h5>
+            <div class="setting-group">
+                <div class="setting" data-type="select">
+                    <div class="heading">
+                        <h5>${tl(trans.default_timeframe)}</h5>
+                    </div>
+                    <div class="select-wrap custom-selector" id="id_chart_range_top_tracks_select">
+                        ${original_chart_settings.tracks.timeframe}
+                    </div>
                 </div>
-                <div class="select-wrap custom-selector" id="id_chart_range_top_tracks_select">
-                    ${original_chart_settings.tracks.timeframe}
-                </div>
-            </div>
-            <div class="setting" data-type="select">
-                <div class="heading">
-                    <h5>${tl(trans.amount_to_display)}</h5>
-                </div>
-                <div class="select-wrap custom-selector" id="id_chart_length_top_tracks_select">
-                    ${original_chart_settings.tracks.count}
+                <div class="setting" data-type="select">
+                    <div class="heading">
+                        <h5>${tl(trans.amount_to_display)}</h5>
+                    </div>
+                    <div class="select-wrap custom-selector" id="id_chart_length_top_tracks_select">
+                        ${original_chart_settings.tracks.count}
+                    </div>
                 </div>
             </div>
             <div class="settings-footer">
@@ -441,13 +459,16 @@ function patch_settings_charts_panel(token) {
 }
 
 function patch_settings_profile_panel(token, update_picture) {
-    if (update_picture.hasAttribute('data-kate-processed'))
-        return;
-
-    update_picture.setAttribute('data-kate-processed', 'true');
     update_picture.classList.add('bleh--panel');
 
-    let avatar_url = document.body.querySelector('.image-upload-preview img').getAttribute('src');
+    const upload_form = update_picture.querySelector('.avatar-upload-form');
+    const avatar_url = update_picture.querySelector('.image-upload-preview img').getAttribute('src');
+    const upload_finished = update_picture.querySelector('.alert-success');
+
+    if (page.state.avatar_changer && upload_finished) {
+        const id = page.state.avatar_changer.getAttribute('data-modal-id');
+        dialog_rm({id});
+    }
 
     let form_display_name = document.getElementById('id_full_name').value;
     let form_website = document.getElementById('id_homepage').value;
@@ -459,13 +480,26 @@ function patch_settings_profile_panel(token, update_picture) {
     let about;
     let preview;
 
+    const markdown_settings = {
+        allow_headers: true,
+        allow_banners: true,
+        allow_icons: true,
+        allow_hue: true,
+        cache: true,
+        take_effect: false,
+        allow_socials: true
+    }
+
+    let banner_setting;
+    let accent_setting;
+
     render(update_picture, html`
-       <h4>${tl(trans.profile)}</h4>
+        <h4>${tl(trans.profile)}</h4>
         <div class="banner-preview"></div>
         <div class="profile-container">
             <div class="avatar-side">
                 <div class="avatar image-upload-preview" onclick=${() => avatar(token)}>
-                    <img src="${avatar_url}" alt="${tl(trans.your_avatar)}" loading="lazy">
+                    <img src=${avatar_url} alt=${tl(trans.your_avatar)} loading="lazy">
                     <div class="avatar-overlay"></div>
                 </div>
             </div>
@@ -507,7 +541,7 @@ function patch_settings_profile_panel(token, update_picture) {
                                 <div class="input about-me" id="about_me">
                                     <textarea name="about_me" placeholder=${tl(trans.anything_you_can_imagine)} cols="40" rows="10" class="textarea--s" maxlength="500" id="id_about_me" oninput=${() => update_about()} ref=${el => about = el} data-form-type="other">${form_about_me}</textarea>
                                     <div class="dual-tip">
-                                        <div class="tip markdown-enabled">${tl(trans.supports_markdown)}</div>
+                                        <div class="tip markdown-enabled" onclick=${() => markdown_prompt(markdown_settings)}>${tl(trans.supports_markdown)}</div>
                                         <div class="tip characters" ref=${el => chars = el}>
                                             ${tl(trans.value_characters_max).replace('{v}', '500')}
                                         </div>
@@ -518,7 +552,7 @@ function patch_settings_profile_panel(token, update_picture) {
                                 <div class="title">
                                     ${tl(trans.about_me_preview)}
                                 </div>
-                                <span class="bleh--about-me-preview" ref=${el => preview = el}></span>
+                                <span class="bleh--about-me-preview markdown-body" ref=${el => preview = el}></span>
                             </div>
                             <div class="info-row" style="display: none">
                                 <div class="title">
@@ -540,35 +574,181 @@ function patch_settings_profile_panel(token, update_picture) {
                     </form>
                 </div>
             </div>
-        </div> 
+        </div>
+        <div class="setting-group">
+            <div class="setting" data-type="info" ref=${el => banner_setting = el} />
+            <div class="setting" data-type="info" disabled=${!auth.sponsor} ref=${el => accent_setting = el} />
+            ${setting({id: 'avatar_radius'})}
+        </div>
     `);
 
     page.structure.main.removeChild(page.structure.main.querySelector('#update-profile'));
-
-    tippy(update_picture.querySelector('.markdown-enabled'), {
-        content: tl(trans.markdown_tip),
-        allowHTML: true
-    });
 
 
     // about me
     update_about();
 
     function update_about() {
+        log('re-rendering', 'about', 'log');
+
         let value = about.value;
         chars.textContent = tl(trans.value_characters_max).replace('{v}', `${value.length}/500`);
         chars.setAttribute('data-exceeded', value.length >= 500);
 
-        render(preview, markdown(value, {
-            allow_headers: true
-        }));
+        render(preview, markdown(value, markdown_settings));
 
-        let banner = preview.querySelector('img[alt="banner"]');
-        let banner_img = page.structure.main.querySelector('.banner-preview');
-        if (!banner)
-            banner_img.removeAttribute('style');
-        else
-            banner_img.style.setProperty('background-image', `url(${banner.getAttribute('src')})`);
+        let profile_cache = JSON.parse(localStorage.getItem('bleh_profile_cache')) || {};
+        let cache = profile_cache[auth.name];
+
+        console.info('cache', cache);
+
+        render(banner_setting, html`
+            <div class="heading">
+                <h5>${tl(trans.profile_banner.name)}</h5>
+                <p>${tl(trans.profile_banner.body)}</p>
+                ${cache.banner ? html.node`
+                <p>${tl(trans.current_banner_value).replace('{v}', cache.banner)}</p>
+                ` : ''}
+            </div>
+            ${() => {
+                if (!cache.banner)
+                    return html.node`
+                        <div class="info">
+                            <p>${tl(trans.none)}</p>
+                        </div>
+                    `;
+
+                let banner_image = html.node`
+                    <div class="banner-image" style="background-image: url(${cache.banner})" />
+                `;
+
+                tippy(banner_image, {
+                    content: cache.banner
+                });
+
+                return banner_image;
+            }}
+        `);
+
+        const accent_regex = /\[accent=([0-9]{1,3}),([0-9]*\.?[0-9]+),([0-9]*\.?[0-9]+)\]/;
+
+        console.info('cache update', about.value, cache.hue, cache.sat, cache.lit);
+
+        let edit;
+        render(accent_setting, html`
+            <div class="heading">
+                <h5>${tl(trans.profile_accent.name)}<span class="new-badge sponsor-related">${tl(trans.sponsors_only)}</span><span class="new-badge beta">${tl(trans.new)}</span></h5>
+                <p>${tl(trans.profile_accent.body)}</p>
+            </div>
+            <div class="info">
+                <div class="colour-tile colourful" style="--hue-over: ${cache.hue}; --sat-over: ${cache.sat}; --lit-over: ${cache.lit}" />
+                <div class="swatch-group palette">
+                    <button class="swatch-container" ref=${el => edit = el} onclick=${() => {
+                        let hue_range;
+                        let sat_range;
+                        let lit_range;
+
+                        const match = about.value.match(accent_regex);
+
+                        console.info(match);
+                        if (match) {
+                            save_setting('profile_hue', parseInt(match[1], 10));
+                            save_setting('profile_sat', parseFloat(match[2]));
+                            save_setting('profile_lit', parseFloat(match[3]));
+
+                            settings_store.profile_hue.default = settings.hue;
+                            settings_store.profile_sat.default = settings.sat;
+                            settings_store.profile_lit.default = settings.lit;
+                        }
+
+                        let accent_preview;
+
+                        dialog({
+                            id: 'profile_accent',
+                            title: tl(trans.profile_accent.name),
+                            body: html.node`
+                                <div class="setting-group">
+                                    <div class="setting" data-type="info">
+                                        <div class="heading">
+                                            <h5>${tl(trans.preview)}</h5>
+                                        </div>
+                                        <div class="info">
+                                            <div class="colour-tile colourful" ref=${el => accent_preview = el} style="--hue-over: ${settings.profile_hue}; --sat-over: ${settings.profile_sat}; --lit-over: ${settings.profile_lit}" />
+                                        </div>
+                                    </div>
+                                    ${(ff('colour_based_on_hex')) ? html.node`
+                                    <div class="setting" data-type="text">
+                                        <div class="heading">
+                                            <h5>${tl(trans.convert_from_hex)}</h5>
+                                        </div>
+                                        <div class="input-container content-form">
+                                            ${colour = input({
+                                                type: 'colour',
+                                                value: '#999999',
+                                                maxlength: 7,
+                                                warn_if_empty: true
+                                            })}
+                                            <button class="btn primary icon convert" onclick=${() => {
+                                                const value = colour.value();
+                                                const hsl = hex_to_hsl(value);
+
+                                                hue_range.set(hsl.h);
+                                                sat_range.set(clamp_sat((hsl.s / 100) * 3));
+                                                lit_range.set((hsl.l / 100) + 0.35);
+                                            }}>${tl(trans.convert)}</button>
+                                        </div>
+                                    </div>
+                                    ` : ''}
+                                    ${hue_range = setting({id: 'profile_hue', func: update_colour_preview})}
+                                    ${sat_range = setting({id: 'profile_sat', func: update_colour_preview})}
+                                    ${lit_range = setting({id: 'profile_lit', func: update_colour_preview})}
+                                </div>
+                                <div class="modal-footer">
+                                    <button class="see-more cancel" onclick=${() => dialog_rm({id: 'profile_accent'})}>
+                                        ${tl(trans.back)}
+                                    </button>
+                                    <div class="fill"></div>
+                                    <button class="btn primary continue" onclick=${() => {
+                                        const new_accent = `[accent=${settings.profile_hue},${settings.profile_sat},${settings.profile_lit}]`;
+
+                                        if (match) {
+                                            about.value = about.value.replace(accent_regex, new_accent);
+                                        } else {
+                                            const trimmed = about.value.trimEnd();
+
+                                            if (trimmed.length == 0) {
+                                                about.value = new_accent;
+                                            } else {
+                                                about.value = trimmed + '\n\n' + new_accent;
+                                            }
+                                        }
+
+                                        about.dispatchEvent(new InputEvent('input', {bubbles: true, cancelable: true}));
+
+                                        dialog_rm({id: 'profile_accent'});
+                                        status({
+                                            title: tl(trans.profile_accent.reminder)
+                                        });
+                                    }}>
+                                        ${tl(trans.change)}
+                                    </button>
+                                </div>
+                            `
+                        });
+
+                        function update_colour_preview() {
+                            accent_preview.style = `--hue-over: ${settings.profile_hue}; --sat-over: ${settings.profile_sat}; --lit-over: ${settings.profile_lit}`;
+                        }
+                    }}>
+                        <div class="swatch colourful" data-swatch-type="customise" />
+                    </button>
+                </div>
+            </div>
+        `);
+
+        tippy(edit, {
+            content: tl(trans.edit)
+        });
     }
 
     // subtitle
@@ -604,17 +784,19 @@ export function use_pronouns(value) {
 }
 
 
-function avatar(token) {
+function avatar(token='') {
+    if (!token) token = page.token;
+    else page.token = token;
+
     page.state.avatar_changer = dialog({
         id: 'edit_avatar',
         title: tl(trans.change_avatar),
         body: html.node`
             <div class="forms">
                 <form action="${root}settings" name="avatar-form" method="post" enctype="multipart/form-data">
-                    <input type="hidden" name="csrfmiddlewaretoken" value="${token}">
+                    <input type="hidden" name="csrfmiddlewaretoken" value=${page.token}>
                     <div class="form-group form-group--avatar js-form-group upload-avatar">
                         <div class="js-form-group-controls form-group-controls">
-                            <img class="preview">
                             <span class="btn-secondary btn primary btn-file" data-kate-processed="true">
                                 ${tl(trans.upload)}
                                 <input type="file" onchange=${() => update_avatar(event)} name="avatar" data-require="components/file-input" data-file-input-copy="${tl(trans.upload)}" data-no-file-copy="No file chosen" accept="image/*" required="" id="id_avatar" data-kate-processed="true">
@@ -627,7 +809,7 @@ function avatar(token) {
                     <input type="hidden" value="avatar" name="submit">
                 </form>
                 <form action="${root}settings/avatar/delete" method="post">
-                    <input type="hidden" name="csrfmiddlewaretoken" value="${token}">
+                    <input type="hidden" name="csrfmiddlewaretoken" value=${page.token}>
                     <div class="form-group delete-avatar">
                         <button class="mimic-link image-upload-remove" type="submit" value="delete-avatar" name="delete-avatar">${tl(trans.delete)}</button>
                     </div>
@@ -642,31 +824,118 @@ function avatar(token) {
     });
 
     page.state.avatar_changer.querySelector('[name="avatar-form"]').onsubmit = finish_saving_avatar;
-    page.state.avatar_changer_image = page.state.avatar_changer.querySelector('img');
-    page.state.avatar_changer_button = page.state.avatar_changer.querySelector('.btn-file');
-    page.state.avatar_changer_save = page.state.avatar_changer.querySelector('.modal-footer .primary');
-    console.info(page.structure.dialogs);
-}
+    const file_button = page.state.avatar_changer.querySelector('.btn-file');
+    const save_button = page.state.avatar_changer.querySelector('.modal-footer .primary');
 
-function update_avatar(event) {
-    let reader = new FileReader();
-    reader.onload = function() {
-        page.state.avatar_changer_image.src = reader.result;
-        page.state.avatar_changer_button.setAttribute('data-has-file', 'true');
-        page.state.avatar_changer_save.removeAttribute('disabled');
+    let form;
+
+    function update_avatar(e) {
+        console.info(e);
+        if (!e.target.files || !e.target.files[0]) return;
+        form = page.state.avatar_changer.querySelector('.bleh-modal-body');
+
+        if (e.target.files[0].type == 'image/gif') {
+            save_avatar();
+            finish_saving_avatar();
+            return;
+        }
+
+        let reader = new FileReader();
+        reader.onload = function () {
+            crop(reader.result);
+            save_button.removeAttribute('disabled');
+        }
+        reader.readAsDataURL(e.target.files[0]);
     }
-    reader.readAsDataURL(event.target.files[0]);
-}
 
-function save_avatar() {
-    page.state.avatar_changer.querySelector('#avatar_saver').click();
-}
-function finish_saving_avatar() {
-    page.state.avatar_changer.setAttribute('data-loading', 'true');
-    page.state.avatar_changer.querySelectorAll('.bleh-modal-body button').forEach((button) => {
-        button.setAttribute('disabled', 'true');
-        button.removeAttribute('onclick');
-    });
+    function save_avatar() {
+        page.state.avatar_changer.querySelector('#avatar_saver').click();
+    }
+
+    function finish_saving_avatar() {
+        page.state.avatar_changer.setAttribute('data-loading', 'true');
+        page.state.avatar_changer.querySelectorAll('.bleh-modal-body button').forEach((button) => {
+            button.setAttribute('disabled', 'true');
+            button.removeAttribute('onclick');
+        });
+    }
+
+    function crop(file) {
+        let crop_image;
+        let save;
+
+        const crop_dialog = dialog({
+            id: 'crop',
+            title: tl(trans.crop_avatar),
+            body: html.node`
+                <div class="crop">
+                    <img src=${file} ref=${el => crop_image = el}>
+                </div>
+                <div class="alert alert-info">
+                    ${tl(trans.crop_notice)}
+                </div>
+                <div class="modal-footer">
+                    <button class="see-more cancel" onclick=${() => {
+                        if (cropper && cropper.destroy) cropper.destroy();
+                        cropper = null;
+
+                        avatar();
+                    }}>${tl(trans.cancel)}</button>
+                    <div class="fill"></div>
+                    <button class="btn primary save" onclick=${() => {
+                        if (!cropper) return;
+
+                        crop_dialog.querySelectorAll('.bleh-modal-body button').forEach((button) => {
+                            button.setAttribute('disabled', 'true');
+                            button.removeAttribute('onclick');
+                        });
+
+                        const canvas = cropper.getCroppedCanvas();
+
+                        canvas.toBlob(blob => {
+                            const cropped_file = new File([blob], 'avatar.png', {type: 'image/png'});
+
+                            const inner_form = form.querySelector('form');
+                            inner_form.style.display = 'none';
+                            crop_dialog.querySelector('.bleh-modal-body').appendChild(inner_form);
+
+                            const file_input = inner_form.querySelector('input[type="file"]');
+
+                            const data_transfer = new DataTransfer();
+                            data_transfer.items.add(cropped_file);
+                            file_input.files = data_transfer.files;
+
+                            inner_form.querySelector('#avatar_saver').click();
+                        }, 'image/png');
+                    }} ref=${el => save = el} disabled>${tl(trans.save)}</button>
+                </div>
+            `
+        });
+        page.state.avatar_changer = crop_dialog;
+
+        crop_image.onload = () => {
+            if (cropper && cropper.destroy) cropper.destroy();
+
+            crop_image.style.maxWidth = "none";
+            crop_image.style.width = crop_image.naturalWidth + "px";
+            crop_image.style.height = crop_image.naturalHeight + "px";
+
+            cropper = new Cropper(crop_image, {
+                viewMode: 3,
+                dragMode: 'crop',
+                movable: true,
+                zoomable: true,
+                scalable: false,
+                cropBoxMovable: true,
+                cropBoxResizable: true,
+                background: false,
+                guides: true,
+                autoCropArea: 1
+            });
+
+            save.removeAttribute('disabled');
+        }
+    }
 }
 
 
@@ -703,6 +972,7 @@ function bleh_communication_panel(token) {
         let button = form.querySelector('button');
 
         button.classList.add('icon', 'chibi', 'danger-subtle');
+        button.setAttribute('data-type', 'trash');
 
         let entry = html.node`
             <div class="generic-table-list-entry user-vertical-list-item">
@@ -738,16 +1008,15 @@ function bleh_communication_panel(token) {
 
         let expand = html.node`
             <button class="see-more expand-down" onclick=${() => {
-                expand.style.display = 'none';
-                new_list.setAttribute('data-expanded', 'true');
-            }}>
+            expand.style.display = 'none';
+            new_list.setAttribute('data-expanded', 'true');
+        }}>
                 ${tl(trans.view_count_more).replace('{c}', remainder.toString())}
             </button>
         `;
 
         new_list.appendChild(expand);
     }
-
 
 
     let form = page.structure.main.querySelector('[name="ignorelist"]');
@@ -758,9 +1027,14 @@ function bleh_communication_panel(token) {
     render(panel, html`
         <h4>${tl(trans.block_list)}</h4>
         <div class="user-top-panel">
-            <div class="user-top-avatar user-top-avatar-side-left"><div class="bleh-icon"></div></div>
-            <img class="user-top-avatar user-top-avatar-main" src=${auth.avatar.replace('avatar42s', 'avatar300s')} alt=${auth.name}>
-            <div class="user-top-avatar user-top-avatar-side-right"><div class="bleh-icon"></div></div>
+            <div class="user-top-avatar user-top-avatar-side-left">
+                <div class="bleh-icon"></div>
+            </div>
+            <img class="user-top-avatar user-top-avatar-main" src=${auth.avatar.replace('avatar42s', 'avatar300s')}
+                alt=${auth.name}>
+            <div class="user-top-avatar user-top-avatar-side-right">
+                <div class="bleh-icon"></div>
+            </div>
         </div>
         <div class="setting" data-type="text">
             <div class="heading">
@@ -844,38 +1118,38 @@ function patch_settings_privacy_panel(token, privacy_panel) {
                     </div>
                 </div>
             </div>
-            <div class="setting" data-type="toggle" onclick="_update_inbuilt_item('recent_listening')" id="container-recent_listening">
-                <button class="btn reset" onclick="_reset_inbuilt_item('recent_listening')">Reset to default</button>
-                <div class="heading">
-                    <h5>${tl(trans.recent_listening.name)}</h5>
-                    <p>${tl(trans.recent_listening.body)}</p>
+            <div class="setting-group">
+                <div class="setting" data-type="toggle" onclick="_update_inbuilt_item('recent_listening')" id="container-recent_listening">
+                    <button class="btn reset" onclick="_reset_inbuilt_item('recent_listening')">Reset to default</button>
+                    <div class="heading">
+                        <h5>${tl(trans.recent_listening.name)}</h5>
+                        <p>${tl(trans.recent_listening.body)}</p>
+                    </div>
+                    <div class="toggle-wrap">
+                        <input class="companion-checkbox" type="checkbox" name="hide_realtime" id="inbuilt-companion-checkbox-recent_listening">
+                        <span class="btn toggle" id="toggle-recent_listening" aria-checked="false">
+                            <div class="dot"></div>
+                        </span>
+                    </div>
                 </div>
-                <div class="toggle-wrap">
-                    <input class="companion-checkbox" type="checkbox" name="hide_realtime" id="inbuilt-companion-checkbox-recent_listening">
-                    <span class="btn toggle" id="toggle-recent_listening" aria-checked="false">
-                        <div class="dot"></div>
-                    </span>
+                <div class="setting" data-type="options">
+                    <div class="heading">
+                        <h5>${tl(trans.allow_messages_from)}</h5>
+                    </div>
+                    <div class="primary-selections">
+                        ${original_privacy_settings.receiving_msgs}
+                        <div class="btn primary-selection" id="primary-selection-receiving_msgs-everyone" onclick="_update_inbuilt_selection('id_message_privacy', 0)">
+                            <h5>${tl(trans.everyone)}</h5>
+                        </div>
+                        <div class="btn primary-selection" id="primary-selection-receiving_msgs-neighbours" onclick="_update_inbuilt_selection('id_message_privacy', 1)">
+                            <h5>${tl(trans.following_and_neighbours)}</h5>
+                        </div>
+                        <div class="btn primary-selection" id="primary-selection-receiving_msgs-follow" onclick="_update_inbuilt_selection('id_message_privacy', 2)">
+                            <h5>${tl(trans.following)}</h5>
+                        </div>
+                    </div>
                 </div>
             </div>
-            <div class="sep"></div>
-            <div class="setting" data-type="options">
-                <div class="heading">
-                    <h5>${tl(trans.allow_messages_from)}</h5>
-                </div>
-                <div class="primary-selections">
-                    ${original_privacy_settings.receiving_msgs}
-                    <div class="btn primary-selection" id="primary-selection-receiving_msgs-everyone" onclick="_update_inbuilt_selection('id_message_privacy', 0)">
-                        <h5>${tl(trans.everyone)}</h5>
-                    </div>
-                    <div class="btn primary-selection" id="primary-selection-receiving_msgs-neighbours" onclick="_update_inbuilt_selection('id_message_privacy', 1)">
-                        <h5>${tl(trans.following_and_neighbours)}</h5>
-                    </div>
-                    <div class="btn primary-selection" id="primary-selection-receiving_msgs-follow" onclick="_update_inbuilt_selection('id_message_privacy', 2)">
-                        <h5>${tl(trans.following)}</h5>
-                    </div>
-                </div>
-            </div>
-            <div class="sep"></div>
             <div class="inner-preview pad">
                 <div class="shouts">
                     <div class="shout-preview">
@@ -919,17 +1193,19 @@ function patch_settings_privacy_panel(token, privacy_panel) {
                     </div>
                 </div>
             </div>
-            <div class="setting" data-type="toggle" onclick="_update_inbuilt_item('disable_shoutbox')" id="container-disable_shoutbox">
-                <button class="btn reset" onclick="_reset_inbuilt_item('disable_shoutbox')">Reset to default</button>
-                <div class="heading">
-                    <h5>${tl(trans.close_shouts.name)}</h5>
-                    <p>${tl(trans.close_shouts.body)}</p>
-                </div>
-                <div class="toggle-wrap">
-                    <input class="companion-checkbox" type="checkbox" name="shoutbox_disabled" id="inbuilt-companion-checkbox-disable_shoutbox">
-                    <span class="btn toggle" id="toggle-disable_shoutbox" aria-checked="false">
-                        <div class="dot"></div>
-                    </span>
+            <div class="setting-group">
+                <div class="setting" data-type="toggle" onclick="_update_inbuilt_item('disable_shoutbox')" id="container-disable_shoutbox">
+                    <button class="btn reset" onclick="_reset_inbuilt_item('disable_shoutbox')">Reset to default</button>
+                    <div class="heading">
+                        <h5>${tl(trans.close_shouts.name)}</h5>
+                        <p>${tl(trans.close_shouts.body)}</p>
+                    </div>
+                    <div class="toggle-wrap">
+                        <input class="companion-checkbox" type="checkbox" name="shoutbox_disabled" id="inbuilt-companion-checkbox-disable_shoutbox">
+                        <span class="btn toggle" id="toggle-disable_shoutbox" aria-checked="false">
+                            <div class="dot"></div>
+                        </span>
+                    </div>
                 </div>
             </div>
             <div class="settings-footer">
@@ -957,168 +1233,232 @@ function bleh_accounts() {
 
     // get info before destroying
     let original_settings = {
-        email_language: page.structure.main.querySelector('[name="language"]').outerHTML,
-        marketing_emails: page.structure.main.querySelector('[name="opt_in_marketing"]').checked,
+        email_language: page.structure.main.querySelector('[name="language"]'),
+        marketing_emails: page.structure.main.querySelector('[name="opt_in_marketing"]'),
         email: page.structure.main.querySelector('[name="email"]').value,
         captcha: page.structure.main.querySelector('.lfm-recaptcha')
     }
 
-    let information_panel = document.createElement('section');
-    information_panel.classList.add('bleh--panel');
-    information_panel.innerHTML = (`
-        <h4>${tl(trans.information)}</h4>
-        <form action="${root}settings/change-username/send-email" method="post">
-            <input type="hidden" name="csrfmiddlewaretoken" value="${token}">
-            <div class="setting" data-type="text">
-                <div class="heading">
-                    <h5>${tl(trans.username.name)}</h5>
-                    <p>${tl(trans.username.body).replace('{a}', `<a href="https://support.last.fm/" target="_blank">`).replace('{/a}', '</a>')}</p>
-                </div>
-                <div class="input-container content-form">
-                    <input id="id_current_username" type="text" name="current_username" value="${auth.name}" disabled required>
-                    <button class="btn chibi icon primary submit">${tl(trans.send)}</button>
-                    <input type="hidden" value="change_username" name="submit">
-                </div>
+    render(page.structure.main, html`
+        <section class="bleh--panel">
+            <h4>${tl(trans.information)}</h4>
+            <div class="setting-group">
+                <form action="${root}settings/change-username/send-email" method="post">
+                    <input type="hidden" name="csrfmiddlewaretoken" value="${token}">
+                    <div class="setting" data-type="text">
+                        <div class="heading">
+                            <h5>${tl(trans.username.name)}</h5>
+                            <p>${{html: tl(trans.username.body).replace('{a}', `<a href="https://support.last.fm/" target="_blank">`).replace('{/a}', '</a>')}}</p>
+                        </div>
+                        <div class="input-container content-form">
+                            <input id="id_current_username" type="text" name="current_username" value="${auth.name}" disabled required>
+                            <button class="btn chibi icon primary submit">${tl(trans.send)}</button>
+                            <input type="hidden" value="change_username" name="submit">
+                        </div>
+                    </div>
+                </form>
+                <form action="${root}settings/account" name="change-email" method="post">
+                    <input type="hidden" name="csrfmiddlewaretoken" value="${token}">
+                    <div class="setting" data-type="text">
+                        <div class="heading">
+                            <h5>${tl(trans.email)}</h5>
+                        </div>
+                        <div class="input-container content-form">
+                            <input id="id_email" type="text" name="email" value="${original_settings.email}" required>
+                            <button class="btn chibi icon primary submit">${tl(trans.save)}</button>
+                            <input type="hidden" value="email_update" name="submit">
+                        </div>
+                    </div>
+                </form>
             </div>
-        </form>
-        <form action="${root}settings/account" name="change-email" method="post">
-            <input type="hidden" name="csrfmiddlewaretoken" value="${token}">
-            <div class="setting" data-type="text">
-                <div class="heading">
-                    <h5>${tl(trans.email)}</h5>
+            <form class="password-container" action="${root}settings/account/password#change-password" name="change-password" method="post">
+                <input type="hidden" name="csrfmiddlewaretoken" value="${token}">
+                <div class="setting-group">
+                    <div class="setting" data-type="text">
+                        <div class="heading">
+                            <h5>${tl(trans.password)}</h5>
+                        </div>
+                        <div class="input-container content-form">
+                            <input id="id_password" type="password" name="password" required>
+                        </div>
+                    </div>
+                    <div class="setting" data-type="text">
+                        <div class="heading">
+                            <h5>${tl(trans.new_password)}</h5>
+                        </div>
+                        <div class="input-container content-form">
+                            <input id="id_new_password" type="password" name="new_password" required>
+                        </div>
+                    </div>
+                    <div class="setting" data-type="text">
+                        <div class="heading">
+                            <h5>${tl(trans.confirm_password)}</h5>
+                        </div>
+                        <div class="input-container content-form">
+                            <input id="id_new_password_confirmation" type="password" name="new_password_confirmation" required>
+                        </div>
+                    </div>
+                    ${original_settings.captcha}
                 </div>
-                <div class="input-container content-form">
-                    <input id="id_email" type="text" name="email" value="${original_settings.email}" required>
-                    <button class="btn chibi icon primary submit">${tl(trans.save)}</button>
-                    <input type="hidden" value="email_update" name="submit">
+                <div class="settings-footer end">
+                    <button class="btn-primary save" type="submit">
+                        ${tl(trans.change)}
+                    </button>
                 </div>
-            </div>
-        </form>
-        <div class="sep"></div>
-        <form class="password-container" action="${root}settings/account/password#change-password" name="change-password" method="post">
-            <input type="hidden" name="csrfmiddlewaretoken" value="${token}">
-            <div class="setting" data-type="text">
-                <div class="heading">
-                    <h5>${tl(trans.password)}</h5>
+            </form>
+        </section>
+        <section class="bleh--panel">
+            <h4>${tl(trans.communication)}</h4>
+            <form action="${root}settings/account" name="email-settings" method="post">
+                <input type="hidden" name="csrfmiddlewaretoken" value="${token}">
+                <div class="setting-group">
+                    <div class="setting" data-type="select">
+                        <div class="heading">
+                            <h5>${tl(trans.email_language)}</h5>
+                        </div>
+                        <div class="select-wrap custom-selector">
+                            ${select(select_prepare(original_settings.email_language), original_settings.email_language.value, original_settings.email_language.name)}
+                        </div>
+                    </div>
+                    ${toggle({
+                        value: original_settings.marketing_emails.checked,
+                        name: original_settings.marketing_emails.name,
+                        title: tl(trans.marketing_emails.name),
+                        body: tl(trans.marketing_emails.body),
+                        standalone: false
+                    })}
                 </div>
-                <div class="input-container content-form">
-                    <input id="id_password" type="password" name="password" required>
+                <div class="settings-footer end">
+                    <button class="btn-primary save" type="submit">
+                        ${tl(trans.save)}
+                    </button>
+                    <input type="hidden" value="email_settings" name="submit">
                 </div>
-            </div>
-            <div class="setting" data-type="text">
-                <div class="heading">
-                    <h5>${tl(trans.new_password)}</h5>
+            </form>
+        </section>
+        <section class="bleh--panel">
+            <h4>${tl(trans.security)}</h4>
+            <form action="${root}settings/account" name="email-settings" method="post">
+                <input type="hidden" name="csrfmiddlewaretoken" value="${token}">
+                <div class="setting-group">
+                    <div class="setting" data-type="action">
+                        <div class="heading">
+                            <h5>${tl(trans.logout_everywhere)}</h5>
+                        </div>
+                        <div class="toggle-wrap">
+                            <a class="see-more danger logout" href="${root}settings/account/logout-everywhere">
+                                ${tl(trans.logout)}
+                            </a>
+                        </div>
+                    </div>
+                    <div class="setting" data-type="action">
+                        <div class="heading">
+                            <h5>${tl(trans.delete_account.name)}</h5>
+                            <p>${tl(trans.delete_account.body)}</p>
+                        </div>
+                        <div class="toggle-wrap">
+                            <a class="see-more danger delete-account" href="${root}settings/account/delete">
+                                ${tl(trans.delete_account_permanently).replace('{u}', auth.name)}
+                            </a>
+                        </div>
+                    </div>
                 </div>
-                <div class="input-container content-form">
-                    <input id="id_new_password" type="password" name="new_password" required>
-                </div>
-            </div>
-            <div class="setting" data-type="text">
-                <div class="heading">
-                    <h5>${tl(trans.confirm_password)}</h5>
-                </div>
-                <div class="input-container content-form">
-                    <input id="id_new_password_confirmation" type="password" name="new_password_confirmation" required>
-                </div>
-            </div>
-            <div class="settings-footer end">
-                <button class="btn-primary save" type="submit">
-                    ${tl(trans.change)}
-                </button>
-            </div>
-        </form>
+            </form>
+        </section>
     `);
-
-    let password_container = information_panel.querySelector('.password-container');
-    password_container.insertBefore(original_settings.captcha, password_container.lastElementChild);
-
-    page.structure.main.insertBefore(information_panel, page.structure.main.firstElementChild);
-
-    let communication_panel = document.createElement('section');
-    communication_panel.classList.add('bleh--panel');
-    communication_panel.innerHTML = (`
-        <h4>${tl(trans.communication)}</h4>
-        <form action="${root}settings/account" name="email-settings" method="post">
-            <input type="hidden" name="csrfmiddlewaretoken" value="${token}">
-            <div class="setting" data-type="select">
-                <div class="heading">
-                    <h5>${tl(trans.email_language)}</h5>
-                </div>
-                <div class="select-wrap custom-selector">
-                    ${original_settings.email_language}
-                </div>
-            </div>
-            <div class="setting" data-type="toggle" id="container-marketing_emails" onclick="_update_inbuilt_item('marketing_emails')">
-                <div class="heading">
-                    <h5>${tl(trans.marketing_emails.name)}</h5>
-                    <p>${tl(trans.marketing_emails.body)}</p>
-                </div>
-                <div class="toggle-wrap">
-                    <input class="companion-checkbox" type="checkbox" name="opt_in_marketing" id="inbuilt-companion-checkbox-marketing_emails">
-                    <span class="btn toggle" id="toggle-marketing_emails" aria-checked="false">
-                        <div class="dot"></div>
-                    </span>
-                </div>
-            </div>
-            <div class="settings-footer end">
-                <button class="btn-primary save" type="submit">
-                    ${tl(trans.save)}
-                </button>
-                <input type="hidden" value="email_settings" name="submit">
-            </div>
-        </form>
-    `);
-
-    information_panel.after(communication_panel);
-
-    let security_panel = document.createElement('section');
-    security_panel.classList.add('bleh--panel');
-    security_panel.innerHTML = (`
-        <h4>${tl(trans.security)}</h4>
-        <form action="${root}settings/account" name="email-settings" method="post">
-            <input type="hidden" name="csrfmiddlewaretoken" value="${token}">
-            <div class="setting" data-type="toggle">
-                <div class="heading">
-                    <h5>${tl(trans.logout_everywhere)}</h5>
-                </div>
-                <div class="toggle-wrap">
-                    <a class="see-more danger logout" href="${root}settings/account/logout-everywhere">
-                        ${tl(trans.logout)}
-                    </a>
-                </div>
-            </div>
-            <div class="sep"></div>
-            <div class="setting" data-type="toggle">
-                <div class="heading">
-                    <h5>${tl(trans.delete_account.name)}</h5>
-                    <p>${tl(trans.delete_account.body)}</p>
-                </div>
-                <div class="toggle-wrap">
-                    <a class="see-more danger delete-account" href="${root}settings/account/delete">
-                        ${tl(trans.delete_account_permanently).replace('{u}', auth.name)}
-                    </a>
-                </div>
-            </div>
-        </form>
-    `);
-
-    communication_panel.after(security_panel);
-
-    let old_panels = page.structure.main.querySelectorAll(':scope > section:not(.bleh--panel)');
-    old_panels.forEach((panel) => {
-        page.structure.main.removeChild(panel);
-    });
 
     for (let setting in original_settings) {
         update_inbuilt_item(setting, original_settings[setting], false);
     }
-
-    custom_select(communication_panel.querySelector('[name="language"]'), communication_panel.querySelector('[name="language"]').parentElement);
 }
 function bleh_name_change() {
     let token = page.structure.row.querySelector('[name="csrfmiddlewaretoken"]').getAttribute('value');
 
     return;
+}
+
+function bleh_website() {
+    const token = page.structure.row.querySelector('[name="csrfmiddlewaretoken"]').getAttribute('value');
+
+    const auto_correct = page.structure.main.querySelector('[name="corrections_enabled"]');
+
+    const timezone = page.structure.main.querySelector('[name="timezone"]');
+    const help_text = page.structure.main.querySelector('.js-field-help-text');
+
+    const location = page.structure.main.querySelector('[data-require="components/location-form-field-v2"]');
+
+    const radius = page.structure.main.querySelector('[name="event_radius"]');
+
+    let timezone_text;
+    page.structure.main.insertBefore(html.node`
+        <form class="dont-move" action="${root}settings/website" method="post">
+            <input type="hidden" name="csrfmiddlewaretoken" value="${token}">
+            <section class="bleh--panel">
+                <h4>${tl(trans.website)}</h4>
+                <div class="setting-group">
+                    ${toggle({
+                        value: auto_correct.checked,
+                        name: auto_correct.name,
+                        title: tl(trans.auto_correct_scrobbles.name),
+                        body: tl(trans.auto_correct_scrobbles.body),
+                        standalone: false
+                    })}
+                </div>
+                <div class="alert alert-danger">
+                    ${tl(trans.auto_correct_scrobbles.warning)}
+                </div>
+            </section>
+            <section class="bleh--panel">
+                <h4>${tl(trans.events)}</h4>
+                <div class="setting-group">
+                    <div class="setting v2" data-type="select">
+                        <div class="heading">
+                            <h5>${tl(trans.timezone)}</h5>
+                            <p ref=${el => timezone_text = el}>${help_text.textContent.trim()}</p>
+                        </div>
+                        ${select(select_prepare(timezone), timezone.value, timezone.name, (val) => {
+                            fetch(`${root}settings/partial/timezone-help-text?tz=${val}&ajax=1`)
+                                .then(res => res.text())
+                                .then(dom => {
+                                    const parser = new DOMParser();
+                                    const doc = parser.parseFromString(dom, 'text/html');
+
+                                    const text = doc.querySelector('p');
+                                    if (!text) return;
+
+                                    timezone_text.textContent = text.textContent;
+                                })
+                                .catch(e => log('unable to get text', 'timezone', 'error', {e}))
+                        })}
+                    </div>
+                    <div class="setting v2" data-type="action">
+                        <div class="heading">
+                            <h5>${tl(trans.location.name)}</h5>
+                            <p>${tl(trans.location.body)}</p>
+                        </div>
+                        <div class="toggle-wrap">
+                            ${location}
+                        </div>
+                    </div>
+                    <div class="setting v2" data-type="select">
+                        <div class="heading">
+                            <h5>${tl(trans.event_radius)}</h5>
+                        </div>
+                        ${select(select_prepare(radius), radius.value, radius.name)}
+                    </div>
+                </div>
+                <div class="settings-footer">
+                    <button type="submit" class="btn-primary save">
+                        ${tl(trans.save)}
+                    </button>
+                    <input type="hidden" value="website" name="submit">
+                </div>
+            </section>
+        </form>
+    `, page.structure.main.firstElementChild);
+
+    const website = page.structure.main.querySelector('#website');
+    website.remove();
 }
 
 function bleh_applications() {
@@ -1148,4 +1488,47 @@ function bleh_applications() {
             ${connected}
         </section>
     `);
+
+    session_types.forEach((session_type) => {
+        let sessions = session_type.querySelectorAll('.api-session');
+
+        sessions.forEach((session) => {
+            const details = session.querySelector('.api-session-details');
+            const form = session.querySelector('form');
+
+            const button = form.querySelector('button');
+            button.classList.add('chibi');
+
+            tippy(button, {
+                content: button.textContent
+            });
+
+            const name = details.querySelector('.api-session-app-name');
+            const desc = details.querySelector('.api-session-app-description');
+            const status = details.querySelector('.api-session-status');
+            const image = details.querySelector('.api-session-app-image');
+
+            image.classList = '';
+
+            const default_image = image.src.endsWith('14d19fbdca555c1782176cd789e81af7.png');
+
+            render(session, html`
+                <div class="session-header">
+                    <div class="session-image" data-default-image=${default_image}>
+                        ${image}
+                    </div>
+                    <div class="session-details">
+                        ${name}
+                        ${desc}
+                    </div>
+                    ${form}
+                </div>
+                ${status ? html.node`
+                <div class="session-footer">
+                    ${status}
+                </div>
+                ` : ''}
+            `);
+        });
+    });
 }

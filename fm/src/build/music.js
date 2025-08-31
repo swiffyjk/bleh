@@ -108,11 +108,11 @@ export let ranks = {
 
 export let includes = {
     guests: [
-        'feat.', 'featuring', '[feat.',
+        'feat.', 'featuring', '- feat', '[feat.',
         '- with', '(with', '[with', 'w/ ',
         'ft.',
         'ref.',
-        '- feat'
+        '(hosted by'
     ],
     versions: [
         '(taylor', '- spotify singles', '[taylor',
@@ -123,9 +123,6 @@ export let includes = {
         '- pop version', '(pop version', '[pop version',
         '- rock version', '(rock version', '[rock version',
         '- pop mix', '(pop mix', '[pop mix'
-    ],
-    spotify: [
-        '(spotify)'
     ],
     remasters: [
         '- remaster', '(remaster', '[remaster',
@@ -210,7 +207,6 @@ export let includes = {
         '- music from', '(music from',
         '- skit', '(skit',
         '- original', '(original', '[original',
-        '[clean', '[explicit',
         '- deluxe', '(deluxe', '[deluxe',
         '- digital deluxe', '(digital deluxe', '[digital deluxe',
         '- complete edition', '(complete edition', '[complete edition',
@@ -221,7 +217,7 @@ export let includes = {
         '- expanded', '(expanded', '[expanded',
         '- anniversary', '(anniversary', '[anniversary',
         '- b-side', '- c-side', '(b-side', '(c-side',
-        '- lp', '- ep', '(lp', '(ep', 'ep', // some albums just have EP on the end with no punctuation
+        '- lp', '- ep', '(lp', '(ep',
         '- single', '(single',
         '- mixtape', '(mixtape',
         '- box set', '(box set',
@@ -230,13 +226,13 @@ export let includes = {
         ': self-titled deluxe', '(self-titled deluxe', '[self-titled deluxe', // paramore
         ': the anthology', '(the anthology', '[the anthology',
         '- 3am edition', '(3am edition', '[3am edition',
-        '- the til dawn edition', '(the til dawn edition', '[the til dawn edition', 
+        '- the til dawn edition', '(the til dawn edition', '[the til dawn edition',
         '- til dawn edition', '(til dawn edition', '[til dawn edition',
         '- late night edition', '(late night edition', '[late night edition',
         '- the late night edition', '(the late night edition', '[the late night edition',
         '- big machine radio release special', '(big machine radio release special', '[big machine radio release special',
-        'platinum edition', ': platinum edition', '- platinum', '(platinum', '[platinum', 
-        '- international', '(international', '[international', // taylor swift 
+        'platinum edition', ': platinum edition', '- platinum', '(platinum', '[platinum',
+        '- international', '(international', '[international', // taylor swift
         '- uk deluxe', '(uk deluxe', '[uk deluxe',
         '- magic city edition', '(magic city edition', '[magic city edition',
         '- japan edition', '(japan edition', '[japan edition', // added edition to some for safety
@@ -250,7 +246,6 @@ export let includes = {
         '- moonlight', '(moonlight', '[moonlight', // dua lipa
         '- tour', '(tour', '[tour',
         'music from and inspired by', // on the end of black panther the album
-        '- magic city edition', '(magic city edition', '[magic city edition',
         '- music inspired', '(music inspired', '[music inspired',
         '- featured in', '(featured in', '[featured in',
         '- best weekend ever edition', '(best weekend ever edition', '[best weekend ever edition',
@@ -268,5 +263,9 @@ export let includes = {
         ': the tenth anniversary', 'the tenth anniversary', // lady gaga born this way
         '- 10 year', '- 25 year', '-30 year', '-35 year', '- 40 year', '- 50 year', '- 60 year',
         '(10 year', '(25 year', '(30 year', '(35 year', '(40 year', '(50 year', '(60 year'
+    ],
+    form: [
+        '(clean', '[clean', '(explicit', '[explicit',
+        '(spotify)'
     ]
 }

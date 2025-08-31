@@ -11,6 +11,7 @@ import {tl, trans, trans_legacy} from "./build/trans";
 import {dialog, dialog_rm} from "./components/dialog";
 import {deliver_notif} from "./components/notify";
 import {sponsor_list} from "./build/sponsor.js";
+import { markdown } from './components/markdown.js';
 
 export function news() {
     let changelog = localStorage.getItem('bleh_changelog');
@@ -77,7 +78,7 @@ export function request_changelog(open_after = true) {
 }
 
 function open_changelog(changelog) {
-    let window = dialog({
+    const window = dialog({
         id: 'changelog',
         title: tl(trans.news_from_user).replace('{user}', (sponsor_list && sponsor_list.special) ? sponsor_list.special[0] : 'katelyn'),
         body: html.node`
@@ -91,74 +92,42 @@ function open_changelog(changelog) {
         allow_scroll: true
     });
 
-    let changelog_list = window.querySelector('.changelog-list');
+    const changelog_list = window.querySelector('.changelog-list');
 
     let index = 0;
     for (let version in changelog) {
-        if (version == 'updated' || version == 'latest')
-            continue;
+        if (version == 'updated' || version == 'latest') continue;
 
-        if (index > 10)
-            continue;
-       let version_item = html.node`
+        if (index > 10) continue;
+
+        const version_item = html.node`
             <div class="changelog-version-item" data-changelog-type="${changelog[version].type}" data-changelog-latest="${index == 0 ? 'true' : 'false'}" data-changelog-version="${version}">
-            <div class="version-item-header">
-                <div class="sub-text">
-                <div class="breadcrumb">
-                    <div class="breadcrumb-origin">
-                    ${version}
+                <div class="version-item-header">
+                    <div class="sub-text">
+                    <div class="breadcrumb">
+                        <div class="breadcrumb-origin">
+                        ${version}
+                        </div>
+                        <div class="breadcrumb-name">
+                        ${trans_legacy.en.changelog.type[changelog[version].type]}
+                        </div>
                     </div>
-                    <div class="breadcrumb-name">
-                    ${trans_legacy.en.changelog.type[changelog[version].type]}
                     </div>
+                    <h3>${changelog[version].name}</h3>
+                    ${(version == '2025.0113') ? html.node`<h4 class="header-over">${changelog[version].name}</h4>` : ''}
                 </div>
+                <div class="version-item-body markdown-body">
+                    ${markdown(changelog[version].bio)}
                 </div>
-                <h3>${changelog[version].name}</h3>
-                ${(version == '2025.0113') ? html.node`<h4 class="header-over">${changelog[version].name}</h4>` : ''}
-            </div>
             </div>
         `;
 
         if (changelog[version].type == 'major')
             version_item.setAttribute('id', 'latest_major_release');
 
-        let body = document.createElement('div');
-        body.classList.add('version-item-body', 'markdown-body');
-
-        let converter = new showdown.Converter({
-            emoji: true,
-            excludeTrailingPunctuationFromURLs: true,
-            ghMentions: true,
-            ghMentionsLink: `${root}user/{u}`,
-            headerLevelStart: 5,
-            noHeaderId: true,
-            openLinksInNewWindow: true,
-            requireSpaceBeforeHeadingText: true,
-            simpleLineBreaks: true,
-            simplifiedAutoLink: true,
-            strikethrough: true,
-            underline: true,
-            ghCodeBlocks: false,
-            smartIndentationFix: true
-        });
-        let parsed_text = converter.makeHtml(changelog[version].bio
-        .replace(/([@])([a-zA-Z0-9_]+)/g, `[$1$2](${root}user/$2)`)
-        .replace(/\[artist\]([a-zA-Z0-9]+)\[\/artist\]/g, `[$1](${root}music/$1)`)
-        .replace(/\[album artist=([a-zA-Z0-9]+)\]([a-zA-Z0-9\s]+)\[\/album\]/g, `[$2](${root}music/$1/$2)`)
-        .replace(/\[track artist=([a-zA-Z0-9]+)\]([a-zA-Z0-9\s]+)\[\/track\]/g, `[$2](${root}music/$1/_/$2)`)
-        .replace(/https:\/\/open\.spotify\.com\/user\/([A-Za-z0-9]+)\?si=([A-Za-z0-9]+)/g, '[@$1](https://open.spotify.com/user/$1)')
-        .replace(/&/g, '&amp;')
-        .replace(/</g, '&lt;')
-        .replace(/>/g, '&gt;')
-        .replace(/"/g, '&quot;')
-        .replace(/'/g, '&#039;'));
-        body.innerHTML = parsed_text;
-
-        version_item.appendChild(body);
-
         changelog_list.appendChild(version_item);
 
-        index += 1;
+        index++;
     }
 }
 

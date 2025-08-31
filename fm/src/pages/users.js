@@ -16,12 +16,7 @@ export function bleh_users() {
         let avatar = user.querySelector('.user-list-avatar');
         let name = user.querySelector('.user-list-link').textContent;
 
-        let badge = patch_avatar(avatar, name, 'follow');
-
-        if (badge.type) {
-            user.querySelector('.user-list-link').classList.add(`user-status--bleh-${badge.type}`, `user-status--bleh-user-${name}`);
-            user.classList.add('colourful', `user-status--bleh-${badge.type}`, `user-status--bleh-user-${name}`);
-        }
+        patch_avatar(avatar, name, 'follow');
 
         let artists = user.querySelectorAll('.user-list-shared-artists a');
         artists.forEach((artist) => {
@@ -31,7 +26,7 @@ export function bleh_users() {
         let md = user.querySelector('.user-list-about-me');
         if (md) {
             render(md, markdown(md.textContent, {
-                allow_headers: true,
+                allow_headers: false,
                 line_breaks: false
             }));
         }

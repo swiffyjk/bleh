@@ -9,11 +9,12 @@ import {log} from "../build/log";
 import {album_track_corrections, artist_corrections, includes} from "../build/music";
 import {page, root} from "../build/page";
 import {return_artist_from_generic, sanitise} from "../build/tools";
-import {trans_legacy} from "../build/trans";
+import {tl, trans, trans_legacy} from "../build/trans";
 import {prepare_corrections_page} from "../pages/bleh_config";
 import {dialog} from "./dialog";
-import {notify} from "./notify";
 import {html, render} from "lighterhtml";
+import {redirect} from "./music.js";
+import { status } from './status.js';
 
 const flat_patterns = [];
 
@@ -30,8 +31,7 @@ Object.entries(includes).forEach(([group, pats]) => {
 flat_patterns.sort((a, b) => b.pat.length - a.pat.length);
 
 export function lotus(force = false) {
-    if (!settings.corrections)
-        return;
+    if (!settings.corrections) return;
 
     let lotus_artist = localStorage.getItem('lotus_artist');
     let lotus_artist_expire = new Date(localStorage.getItem('lotus_artist_expire'));
@@ -41,7 +41,7 @@ export function lotus(force = false) {
 
     let current_time = new Date();
 
-    if (lotus_artist == null) {
+    if (!lotus_artist) {
         console.info('lotus - artist list is not cached, fetching');
         lotus_request('artist', true);
     } else {
@@ -99,13 +99,10 @@ function lotus_request(type = 'artist', send_notify = false) {
                 Object.assign(album_track_corrections, JSON.parse(this.response));
             }
 
-            if (send_notify) {
-                notify({
-                    title: trans_legacy.en.lotus[type],
-                    icon: 'icon-16-lotus',
-                    classname: 'lotus'
+            if (send_notify)
+                status({
+                    title: tl(trans.downloaded_value).replace('{v}', tl(trans.lotus[type]))
                 });
-            }
 
             // save to cache for next page load
             localStorage.setItem(`lotus_${type}`, this.response);
@@ -165,9 +162,7 @@ export function correct_generic_artist(parent) {
             let artist_name = album.querySelector(`.${parent.replace('-details', '')}-name a`);
             if (!artist_name)  return;
 
-            let corrected_artist_name = correct_artist(artist_name.textContent);
-
-            artist_name.textContent = corrected_artist_name;
+            artist_name.textContent = correct_artist(artist_name.textContent);
         }
     });
 }
@@ -221,8 +216,7 @@ export function correct_generic_combo_no_artist(parent) {
 
             let artist_name = return_artist_from_generic(album_name.getAttribute('href'));
 
-            let corrected_album_name = correct_item_by_artist(album_name.textContent, artist_name);
-            album_name.textContent = corrected_album_name;
+            album_name.textContent = correct_item_by_artist(album_name.textContent, artist_name);
         }
     });
 }
@@ -316,14 +310,9 @@ export function name_includes(original_title, original_artist) {
         }))
         .filter(m => {
             if (m.idx < 1) return false;
-            if (
-                m.group === 'remasters' &&
+            return !(m.group === 'remasters' &&
                 !lower_title.includes(' remaster') &&
-                !lower_title.includes('(remaster')
-            ) {
-                return false;
-            }
-            return true;
+                !lower_title.includes('(remaster'));
         })
         .sort((a, b) => a.idx - b.idx);
 
@@ -445,8 +434,7 @@ export function artist_title() {
         if (split.length < 2) {
             page.multi = false;
 
-            if (!settings.corrections)
-                return;
+            if (!settings.corrections) return;
 
             title.textContent = correct_artist(title_text, true);
 
@@ -459,7 +447,7 @@ export function artist_title() {
 
             let part = document.createElement('a');
             part.classList.add('multi-artist-part');
-            part.setAttribute('href',`${root}music/${sanitise(artist)}`);
+            part.setAttribute('href',`${root}music/${redirect()}${sanitise(artist)}`);
 
             if (settings.corrections)
                 part.textContent = correct_artist(artist);
@@ -502,7 +490,11 @@ export function patch_header_title() {
         if (artist_corrections.hasOwnProperty(track_artist.textContent)) {
             let corrected_artist = artist_corrections[track_artist.textContent];
             log(`corrected ${track_artist.textContent} as ${corrected_artist}`, 'lotus');
+
+            track_artist.parentElement.setAttribute('href', `${root}music/${redirect()}${sanitise(corrected_artist)}`);
             track_artist.textContent = corrected_artist;
+        } else {
+            track_artist.parentElement.setAttribute('href', `${root}music/${redirect()}${sanitise(track_artist.textContent)}`);
         }
     }
 
@@ -525,7 +517,8 @@ export function patch_header_title() {
                 `)}
             `);
 
-            if (song_tags.some(tag => tag.group === 'spotify')) page.suggest = sanitise(song_title.trim());
+            // (spotify) / (explicit) / (clean) in title
+            if (song_tags.some(tag => tag.group == 'form')) page.suggest = sanitise(song_title.trim());
 
             let song_artist_element = document.body.querySelector('span[itemprop="byArtist"]');
             let song_guests = formatted_title[3];
@@ -537,7 +530,7 @@ export function patch_header_title() {
 
                 // no whitespace to make sure it looks correct
                 song_artist_element.appendChild(html.node`
-                    <a class="header-new-crumb" href="${root}music/${sanitise(song_guests[guest])}" title=${song_guests[guest]}>${song_guests[guest]}</a>
+                    <a class="header-new-crumb" href="${root}music/${redirect()}${sanitise(song_guests[guest])}">${song_guests[guest]}</a>
                 `);
             }
         }

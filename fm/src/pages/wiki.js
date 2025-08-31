@@ -6,10 +6,13 @@
 
 import {patch_avatar} from "../avatar";
 import {auth, page, root} from "../build/page";
-import {copy, desanitise} from "../build/tools";
+import {copy, desanitise, is_link_external} from "../build/tools";
 import {tl, trans} from "../build/trans";
 import {ff} from "../sku";
 import {html} from "lighterhtml";
+import tippy from "tippy.js";
+import { external_url_prompt } from '../components/markdown';
+import { settings } from '../build/config';
 
 export function bleh_wiki() {
     // make a new panel
@@ -165,9 +168,18 @@ export function bleh_wiki_history() {
 
         if (name && avatar) {
             let badge = patch_avatar(avatar, name.textContent, 'wiki');
-            avatar.setAttribute('data-avatar-themed', 'true');
-            avatar.classList.add(`user-status--bleh-${badge.type}`, `user-status--bleh-user-${name.textContent}`);
-            name.classList.add(`user-status--bleh-${badge.type}`, `user-status--bleh-user-${name.textContent}`);
+
+            if (badge && badge.type) {
+                if (badge.hue > -1 && badge.sat > -1 && badge.lit > -1) {
+                    name.style.setProperty('--hue-over', badge.hue);
+                    name.style.setProperty('--sat-over', badge.sat);
+                    name.style.setProperty('--lit-over', badge.lit);
+                } else {
+                    name.classList.add(`user-status--bleh-${badge.type}`, `user-status--bleh-user-${badge.user}`);
+                }
+            } else if (badge) {
+                name.classList.add(badge.type);
+            }
         }
     });
 }
@@ -215,52 +227,10 @@ export function bleh_wiki_editor() {
 
     wiki_edit_panel.insertBefore(sub_text, wiki_edit_panel.firstElementChild);
 
-    let wiki_syntax = document.createElement('section');
-    wiki_syntax.classList.add('bleh--blank-panel', 'wiki-syntax-panel');
-    wiki_syntax.innerHTML = (`
-        <h3 class="text-18">${tl(trans.fancy_syntax)}</h3>
-        <div class="syntax-listing">
-            <div class="syntax-listing-item">
-                <div class="code-side">[artist]julie[/artist]</div>
-                <div class="detail-side">${tl(trans.links_to).replace('{link}', `<a href="${root}music/julie" data-link-type="artist" target="_blank">julie</a>`)}</div>
-            </div>
-            <div class="syntax-listing-item">
-                <div class="code-side">[album artist=julie]pushing daisies[/album]</div>
-                <div class="detail-side">${tl(trans.links_to).replace('{link}', `<a href="${root}music/julie/pushing+daisies" data-link-type="album" target="_blank">pushing daisies</a>`)}</div>
-            </div>
-            <div class="syntax-listing-item">
-                <div class="code-side">[track artist=julie]very little effort[/track]</div>
-                <div class="detail-side">${tl(trans.links_to).replace('{link}', `<a href="${root}music/julie/_/very+little+effort" data-link-type="track" target="_blank">very little effort</a>`)}</div>
-            </div>
-        </div>
-        <div class="sep"></div>
-        <div class="syntax-listing">
-            <div class="syntax-listing-item">
-                <div class="code-side">[url]https://katelyn.moe/bleh[/url]</div>
-                <div class="detail-side">${tl(trans.links_to).replace('{link}', `<a href="https://katelyn.moe/bleh" target="_blank">https://katelyn.moe/bleh</a>`)}</div>
-            </div>
-            <div class="syntax-listing-item">
-                <div class="code-side">[url=https://katelyn.moe/bleh]blehhh[/url]</div>
-                <div class="detail-side">${tl(trans.links_to).replace('{link}', `<a href="https://katelyn.moe/bleh" target="_blank">blehhh</a>`)}</div>
-            </div>
-        </div>
-        <div class="sep"></div>
-        <div class="syntax-listing">
-            <div class="syntax-listing-item">
-                <div class="code-side">[tag]grunge[/tag]</div>
-                <div class="detail-side">${tl(trans.links_to).replace('{link}', `<a href="${root}tag/grunge" data-link-type="tag" target="_blank">grunge</a>`)}</div>
-            </div>
-            <div class="syntax-listing-item">
-                <div class="code-side">[user]${auth.name}[/user]</div>
-                <div class="detail-side">${tl(trans.links_to).replace('{link}', `<a class="mention" href="${root}user/${auth.name}" target="_blank">@${auth.name}</a>`)}</div>
-            </div>
-        </div>
-    `);
-
     page.structure.side.innerHTML = '';
 
     // latest
-    let side_actions = html.node`
+    const side_actions = html.node`
         <section class="side-actions">
             <a class="btn side-action" data-type="latest-wiki" href="${sub_text.querySelector('a').getAttribute('href')}">
                 ${tl(trans.view_latest)}
@@ -275,8 +245,8 @@ export function bleh_wiki_editor() {
 
 
     // presets
-    let presets = [`“`, `”`, `—`, `‘`, `’`, `-`];
-    let standards = [
+    const presets = [`“`, `”`, `—`, `‘`, `’`, `-`];
+    const standards = [
         tl(trans.wiki_standard_tracks),
         tl(trans.wiki_standard_artists),
         tl(trans.wiki_standard_quotations)
@@ -291,22 +261,62 @@ export function bleh_wiki_editor() {
                             ${preset}
                         </div>
                     `;
-                    
+
                     tippy(item, {
                         content: tl(trans.click_to_copy),
                         delay: [500, 0]
                     });
-                    
+
                     return item;
                 })}
             </div>
             <ul class="wiki-standards generic-list">
-                ${standards.map((standard) => html.node`<li>${standard}</li>`)}
+                ${standards.map(standard => html.node`<li>${standard}</li>`)}
             </ul>
         </section>
     `);
 
-    page.structure.side.appendChild(wiki_syntax);
+    page.structure.side.appendChild(html.node`
+        <section class="wiki-syntax-panel bleh--blank-panel">
+            <h3 class="text-18">${tl(trans.fancy_syntax)}</h3>
+            <div class="syntax-listing">
+                <div class="syntax-listing-item">
+                    <div class="code-side">[artist]julie[/artist]</div>
+                    <div class="detail-side">${{html: tl(trans.links_to).replace('{link}', `<a href="${root}music/julie" data-link-type="artist" target="_blank">julie</a>`)}}</div>
+                </div>
+                <div class="syntax-listing-item">
+                    <div class="code-side">[album artist=julie]pushing daisies[/album]</div>
+                    <div class="detail-side">${{html: tl(trans.links_to).replace('{link}', `<a href="${root}music/julie/pushing+daisies" data-link-type="album" target="_blank">pushing daisies</a>`)}}</div>
+                </div>
+                <div class="syntax-listing-item">
+                    <div class="code-side">[track artist=julie]very little effort[/track]</div>
+                    <div class="detail-side">${{html: tl(trans.links_to).replace('{link}', `<a href="${root}music/julie/_/very+little+effort" data-link-type="track" target="_blank">very little effort</a>`)}}</div>
+                </div>
+            </div>
+            <div class="sep"></div>
+            <div class="syntax-listing">
+                <div class="syntax-listing-item">
+                    <div class="code-side">[url]https://katelyn.moe/bleh[/url]</div>
+                    <div class="detail-side">${{html: tl(trans.links_to).replace('{link}', `<a href="https://katelyn.moe/bleh" target="_blank">https://katelyn.moe/bleh</a>`)}}</div>
+                </div>
+                <div class="syntax-listing-item">
+                    <div class="code-side">[url=https://katelyn.moe/bleh]blehhh[/url]</div>
+                    <div class="detail-side">${{html: tl(trans.links_to).replace('{link}', `<a href="https://katelyn.moe/bleh" target="_blank">blehhh</a>`)}}</div>
+                </div>
+            </div>
+            <div class="sep"></div>
+            <div class="syntax-listing">
+                <div class="syntax-listing-item">
+                    <div class="code-side">[tag]grunge[/tag]</div>
+                    <div class="detail-side">${{html: tl(trans.links_to).replace('{link}', `<a href="${root}tag/grunge" data-link-type="tag" target="_blank">grunge</a>`)}}</div>
+                </div>
+                <div class="syntax-listing-item">
+                    <div class="code-side">[user]${auth.name}[/user]</div>
+                    <div class="detail-side">${{html: tl(trans.links_to).replace('{link}', `<a class="mention" href="${root}user/${auth.name}" target="_blank">@${auth.name}</a>`)}}</div>
+                </div>
+            </div>
+        </section>
+    `);
 
 
     // rules
@@ -371,22 +381,35 @@ export function patch_wiki_contents(wiki_block) {
         let sister;
 
         if (!href.startsWith(root)) {
-            if (href && link.textContent != href && /^(https?|mailto|ftp|sftp|tel):/.test(href)) {
-                tippy(link, {
-                    theme: 'name-sister-combo',
-                    content: html.node`
-                    <span class="name">${href}</span>
-                    <span class="sister">${tl(trans.external)}</span>
-                `
-                });
-            }
+            if (href && is_link_external(href)) {
+                link.addEventListener('click', e => {
+                    const link = new URL(href);
+                    const hostname = link.hostname;
 
-            return;
+                    if (settings.trusted_sites.includes(hostname)) return;
+
+                    e.preventDefault();
+
+                    external_url_prompt(href);
+                });
+
+                if (link.textContent != href) {
+                    tippy(link, {
+                        theme: 'name-sister-combo',
+                        content: html.node`
+                            <span class="name">${href}</span>
+                            <span class="sister">${tl(trans.external)}</span>
+                        `
+                    });
+                }
+
+                return;
+            }
         }
 
         if (href.endsWith('/+wiki')) return;
 
-        href = href.replace(root, '').replace('music/', '');
+        href = href.replace(root, '').replace('music/+noredirect/', 'music/').replace('music/', '');
 
         if (href.startsWith('user/')) return;
 
@@ -409,7 +432,7 @@ export function patch_wiki_contents(wiki_block) {
             }
         }
 
-        if (sister != undefined)
+        if (sister)
             tippy(link, {
                 theme: 'name-sister-combo',
                 content: html.node`
@@ -418,6 +441,6 @@ export function patch_wiki_contents(wiki_block) {
                 `
             });
 
-        link.setAttribute('data-link-type', type);
+        if (type) link.setAttribute('data-link-type', type);
     });
 }

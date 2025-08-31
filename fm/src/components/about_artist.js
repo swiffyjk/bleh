@@ -10,6 +10,7 @@ import {sanitise} from "../build/tools";
 import {tl, trans} from "../build/trans";
 import {expand_avatar} from "../avatar";
 import {correct_artist} from "./lotus.js";
+import {redirect} from "./music.js";
 
 export function bleh_about_artist() {
     let legacy_container = page.structure.main.querySelector('.about-artist');
@@ -38,7 +39,7 @@ export function bleh_about_artist() {
             <div class="info-side">
                 <div class="sub-text">${tl(trans.about)}</div>
                 <h1>
-                    <a href="${root}music/${sanitise(page.sister)}">${correct_artist(page.sister)}</a>
+                    <a href="${root}music/${redirect()}${sanitise(page.sister)}">${correct_artist(page.sister)}</a>
                 </h1>
                 ${listeners}
                 ${tags}
@@ -54,7 +55,7 @@ export function bleh_about_artist() {
             <div class="about-guest-features-panel">
                 ${page.sister_others.map((guest) => {
                     return html.node`
-                        <a class="about-guest-feature" href="${root}music/${sanitise(guest)}">
+                        <a class="about-guest-feature" href="${root}music/${redirect()}${sanitise(guest)}">
                             ${guest}
                         </a>
                     `

@@ -8,21 +8,26 @@ import {html, render} from "lighterhtml";
 import {settings} from "../build/config";
 import {log} from "../build/log";
 import {auth, page, root} from "../build/page";
-import {clamp_sat, return_artist_from_track, rgb_to_hsl, sanitise} from "../build/tools";
+import {clamp_sat, copy, return_artist_from_track, rgb_to_hsl, sanitise} from "../build/tools";
 import {bleh_glacier_insights} from "../pages/glacier";
 import {patch_artist_ranks_in_list_view} from "./colourful_counts";
 import {correct_artist, correct_item_by_artist, name_includes} from "./lotus";
 import {register_menu} from "./menu";
 import {tl, trans} from "../build/trans.js";
 import {notify} from "./notify.js";
+import {redirect} from "./music.js";
+import tippy from "tippy.js";
+import ColorThief from "color-thief-browser";
 
 export function patch_titles(search=page.structure.main) {
-    if (page.subpage === 'tags_overview' || page.subpage == 'tags_tag')
+    if (page.subpage === 'tags_overview' || page.subpage == 'tags_tag') return;
+
+    if (!search) {
+        log('tracks could not be searched as search was undefined', 'tracks', 'log', {search});
         return;
+    }
 
-    if (!search) return;
-
-    let tracklists = search.querySelectorAll('.chartlist:not(.chartlist__placeholder)');
+    const tracklists = search.querySelectorAll('.chartlist:not(.chartlist__placeholder)');
 
     let insights = {
         artist: {
@@ -63,13 +68,13 @@ export function patch_titles(search=page.structure.main) {
     tracklists.forEach((tracklist) => {
         if (!tracklist) return;
 
-        log('found, checking', 'tracks', 'log', {tracklist: tracklist});
+        log('found, checking', 'tracks', 'log', {tracklist, search});
 
         // used to ensure this hasnt been run thru
         if (tracklist.querySelector('tbody > .chartlist-row:first-child > .kate-placeholder'))
             return;
 
-        log('new!', 'tracks', 'info', {tracklist: tracklist});
+        log('new!', 'tracks', 'info', {tracklist});
 
         let wide = tracklist.classList.contains('chartlist--wide-artist-column');
 
@@ -77,8 +82,7 @@ export function patch_titles(search=page.structure.main) {
 
         tracks.forEach((track, index) => {
             console.log('track', track);
-            if (track.getAttribute('data-track-type'))
-                return;
+            if (track.getAttribute('data-track-type')) return;
 
             // ads slowly move up the tree until eventually causing a crash
             if (track.classList[0] === 'chartlist-row--interlist-ad') {
@@ -159,7 +163,7 @@ export function patch_titles(search=page.structure.main) {
             // when focused on a track in a library, an artist field is redundant
             if (!wide) track.classList.add('chartlist-row--with-artist');
 
-            let bar = track.querySelector('.chartlist-count-bar-slug');
+            const bar = track.querySelector('.chartlist-count-bar-slug');
             if (bar) {
                 let value = parseInt(bar.getAttribute('data-stat-value'));
 
@@ -178,7 +182,7 @@ export function patch_titles(search=page.structure.main) {
                 }
             }
 
-            let is_active = track.classList.contains('chartlist-row--now-scrobbling');
+            const is_active = track.classList.contains('chartlist-row--now-scrobbling');
             const has_bar = track.querySelector(':scope > .chartlist-bar');
 
             // menu
@@ -203,6 +207,8 @@ export function patch_titles(search=page.structure.main) {
                 album.textContent = correct_item_by_artist(album.textContent, track_artist);
 
             let image = track.querySelector('.chartlist-image img');
+
+            const album_link = track.querySelector('.chartlist-image a');
 
             if (settings.format_guest_features) {
                 let formatted_title = name_includes(track_title.getAttribute('data-name'), track_artist);
@@ -237,13 +243,13 @@ export function patch_titles(search=page.structure.main) {
                 if (song_artist_element.textContent.replaceAll('+', ' ').trim() === track_artist || song_artist_element.textContent.trim() === '') {
                     log('artist either matches or is blank, replacing', 'tracks', 'log');
                     // replaces with corrected artist if applicable
-                    render(song_artist_element, html`<a href="${root}music/${sanitise(formatted_title[2])}">${formatted_title[2]}</a>`);
+                    render(song_artist_element, html`<a href="${root}music/${redirect()}${sanitise(formatted_title[2])}">${formatted_title[2]}</a>`);
 
                     // append guests
                     let song_guests = formatted_title[3];
                     for (let guest in song_guests) {
                         song_artist_element.appendChild(html.node`
-                            ,<a href="${root}music/${sanitise(song_guests[guest])}">${song_guests[guest]}</a>
+                            ,<a href="${root}music/${redirect()}${sanitise(song_guests[guest])}">${song_guests[guest]}</a>
                         `);
                     }
                 }
@@ -264,7 +270,7 @@ export function patch_titles(search=page.structure.main) {
                                         <div class="feat" data-bleh--tag-type="${tag.type}" data-bleh--tag-group="${tag.group}">${tag.text}</div>
                                     `)}
                                 </div>
-                                ${(is_album) ? '' : html.node`<p class="album">${(image) ? correct_item_by_artist(image.getAttribute('alt'), track_artist) : (album) ? album.textContent : page.name}</p>`}
+                                ${(is_album) ? '' : html.node`<p class="album">${(image && album_link) ? correct_item_by_artist(image.getAttribute('alt'), track_artist) : (album) ? album.textContent : ''}</p>`}
                                 ${(track_timestamp && track_timestamp_contents) ? html.node`<p class="timestamp">${track_timestamp_contents}</p>` : ''}
                             </div>
                         </div>
@@ -298,8 +304,8 @@ export function patch_titles(search=page.structure.main) {
                 // then we need to decide for ourselves whether u can delete or obsess
                 // since we cant rely on the elements existing anymore
                 const is_own_profile = page.type == 'user' && page.name == auth.name;
-                const can_edit = !is_active && (!is_album ? !has_bar : true) && auth.pro;
-                const can_delete = !is_active && !has_bar && !is_album;
+                const can_edit = is_own_profile && !is_active && (!is_album ? !has_bar : true) && auth.pro;
+                const can_delete = is_own_profile && !is_active && !has_bar && !is_album;
 
                 let more_button = html.node`
                     <button class="track-more-button icon chibi" data-type="more" onclick=${() => {
@@ -309,7 +315,7 @@ export function patch_titles(search=page.structure.main) {
                             offset: [],
                             getReferenceClientRect: null,
                         });
-    
+
                         if (menu.state.isShown) {
                             menu.hide();
                         } else {
@@ -392,7 +398,7 @@ export function patch_titles(search=page.structure.main) {
                                             </form>
                                         `;
                                     }
-                                    
+
                                     return html.node`
                                         <form style="margin: 0" method="POST" action=${track.getAttribute('data-action')} data-edit-scrobble="">
                                             <input type="hidden" name="csrfmiddlewaretoken" value=${page.token}>
@@ -414,11 +420,11 @@ export function patch_titles(search=page.structure.main) {
                                         button.classList = 'dropdown-menu-clickable-item chibi';
                                         button.textContent = tl(trans.bulk_edit);
                                         button.setAttribute('data-type', 'bulk-edit');
-            
+
                                         tippy(button, {
                                             content: tl(trans.bulk_edit)
                                         });
-            
+
                                         return button;
                                     }}
                                 ` : ''}
@@ -428,23 +434,23 @@ export function patch_titles(search=page.structure.main) {
                             ${() => {
                                 let container = track.querySelector('.chartlist-play');
                                 if (!container) return;
-                                
+
                                 let button = container.querySelector('.chartlist-play-button');
                                 if (!button) return;
-                                
+
                                 button.classList = 'dropdown-menu-clickable-item';
                                 button.textContent = tl(trans.play);
                                 button.setAttribute('data-type', 'play');
-                                
+
                                 track.removeChild(container);
-            
+
                                 return button;
                             }}
                             ${!is_album ? html.node`
                             <div class="button-combo">
                                 ${() => {
                                     return html.node`
-                                        <a class="dropdown-menu-clickable-item" data-type="track" href="${root}music/${sanitise(track_artist)}/_/${sanitise(track_title.getAttribute('data-name'))}">
+                                        <a class="dropdown-menu-clickable-item" data-type="track" href=${track_title.getAttribute('href')}>
                                             ${tl(trans.track)}
                                         </a>
                                     `;
@@ -452,24 +458,25 @@ export function patch_titles(search=page.structure.main) {
                                 <div class="button-combo-sep"/>
                                 ${() => {
                                     let button = html.node`
-                                        <a class="dropdown-menu-clickable-item chibi" data-type="continue" href="${root}user/${page.name}/library/music/${sanitise(track_artist)}/_/${sanitise(track_title.getAttribute('data-name'))}">
+                                        <a class="dropdown-menu-clickable-item chibi" data-type="continue" href="${root}user/${page.name}/library${track_title.getAttribute('href')}">
                                             ${tl(trans.explore_in_library)}
                                         </a>
                                     `;
-                                    
+
                                     tippy(button, {
-                                        content: tl(trans.explore_in_library)
+                                        content: tl(trans.explore_in_library),
+                                        delay: [500, 0]
                                     });
-                                    
+
                                     return button;
                                 }}
                             </div>
                             ` : ''}
-                            ${album_name ? html.node`
+                            ${album_name && album_link ? html.node`
                             <div class="button-combo">
                                 ${() => {
                                     return html.node`
-                                        <a class="dropdown-menu-clickable-item" data-type="album" href="${root}music/${sanitise(track_artist)}/${album_name}">
+                                        <a class="dropdown-menu-clickable-item" data-type="album" href=${album_link.getAttribute('href')}>
                                             ${tl(trans.album)}
                                         </a>
                                     `;
@@ -477,15 +484,16 @@ export function patch_titles(search=page.structure.main) {
                                 <div class="button-combo-sep"/>
                                 ${() => {
                                     let button = html.node`
-                                        <a class="dropdown-menu-clickable-item chibi" data-type="continue" href="${root}user/${page.name}/library/music/${sanitise(track_artist)}/${album_name}">
+                                        <a class="dropdown-menu-clickable-item chibi" data-type="continue" href="${root}user/${page.name}/library${album_link.getAttribute('href')}">
                                             ${tl(trans.explore_in_library)}
                                         </a>
                                     `;
-    
+
                                     tippy(button, {
-                                        content: tl(trans.explore_in_library)
+                                        content: tl(trans.explore_in_library),
+                                        delay: [500, 0]
                                     });
-    
+
                                     return button;
                                 }}
                             </div>
@@ -493,7 +501,7 @@ export function patch_titles(search=page.structure.main) {
                             <div class="button-combo">
                                 ${() => {
                                     return html.node`
-                                        <a class="dropdown-menu-clickable-item" data-type="album" href="${root}music/${sanitise(track_artist)}/${sanitise(track_title.getAttribute('data-name'))}">
+                                        <a class="dropdown-menu-clickable-item" data-type="album" href=${track_title.getAttribute('href')}>
                                             ${tl(trans.album)}
                                         </a>
                                     `;
@@ -501,15 +509,16 @@ export function patch_titles(search=page.structure.main) {
                                 <div class="button-combo-sep"/>
                                 ${() => {
                                     let button = html.node`
-                                        <a class="dropdown-menu-clickable-item chibi" data-type="continue" href="${root}user/${page.name}/library/music/${sanitise(track_artist)}/${sanitise(track_title.getAttribute('data-name'))}">
+                                        <a class="dropdown-menu-clickable-item chibi" data-type="continue" href="${root}user/${page.name}/library${track_title.getAttribute('href')})}">
                                             ${tl(trans.explore_in_library)}
                                         </a>
                                     `;
-    
+
                                     tippy(button, {
-                                        content: tl(trans.explore_in_library)
+                                        content: tl(trans.explore_in_library),
+                                        delay: [500, 0]
                                     });
-    
+
                                     return button;
                                 }}
                             </div>
@@ -517,7 +526,7 @@ export function patch_titles(search=page.structure.main) {
                             <div class="button-combo">
                                 ${() => {
                                     return html.node`
-                                        <a class="dropdown-menu-clickable-item" data-type="artist" href="${root}music/${sanitise(track_artist)}">
+                                        <a class="dropdown-menu-clickable-item" data-type="artist" href="${root}music/${redirect()}${sanitise(track_artist)}">
                                             ${tl(trans.artist)}
                                         </a>
                                     `;
@@ -525,56 +534,71 @@ export function patch_titles(search=page.structure.main) {
                                 <div class="button-combo-sep"/>
                                 ${() => {
                                     let button = html.node`
-                                        <a class="dropdown-menu-clickable-item chibi" data-type="continue" href="${root}user/${page.name}/library/music/${sanitise(track_artist)}">
+                                        <a class="dropdown-menu-clickable-item chibi" data-type="continue" href="${root}user/${page.name}/library/music/${redirect()}${sanitise(track_artist)}">
                                             ${tl(trans.explore_in_library)}
                                         </a>
                                     `;
-    
+
                                     tippy(button, {
-                                        content: tl(trans.explore_in_library)
+                                        content: tl(trans.explore_in_library),
+                                        delay: [500, 0]
                                     });
-    
+
                                     return button;
                                 }}
                             </div>
                             ${() => {
                                 if (!is_own_profile || is_album) return;
-                                
+
+                                let name = track.getAttribute('data-track-name');
+                                let artist = track.getAttribute('data-artist-name');
+
+                                if (!name) {
+                                    // now playing
+                                    name = track_title.getAttribute('data-name');
+                                    artist = track_artist;
+                                }
+
                                 return html.node`
                                     <form style="margin: 0" method="POST" action="${root}user/${auth.name}/obsessions" data-submit-to-modal="">
                                         <input type="hidden" name="csrfmiddlewaretoken" value=${page.token}>
-                                        <input type="hidden" name="name" value=${track.getAttribute('data-track-name')}>
-                                        <input type="hidden" name="artist_name" value=${track.getAttribute('data-artist-name')}>
+                                        <input type="hidden" name="name" value=${name}>
+                                        <input type="hidden" name="artist_name" value=${artist}>
                                         <button class="dropdown-menu-clickable-item" data-type="obsession">
                                             ${tl(trans.obsess)}
                                         </button>
                                     </form>
                                 `;
                             }}
+                            <button class="dropdown-menu-clickable-item" data-type="link" onclick=${() => {
+                                copy(track_title.href);
+                            }}>
+                                ${tl(trans.copy)}
+                            </button>
                             ${() => {
                                 if (!is_own_profile || !can_delete) return;
-                                
+
                                 let button = html.node`
                                     <button class="dropdown-menu-clickable-item more-item--delete" data-type="delete">
                                         ${tl(trans.delete)}
                                     </button>
                                 `;
-                                
+
                                 let form;
-                                
+
                                 return html.node`
                                     <div class="sep" />
                                     <form ref=${el => form = el} style="margin: 0" method="POST" action="${root}user/${auth.name}/library/delete" onsubmit=${async (e) => {
                                         e.preventDefault();
-    
+
                                         let url = `${root}user/${auth.name}/library/delete`;
                                         let form_data = new FormData(form);
-    
+
                                         console.info(form_data);
-    
+
                                         try {
                                             track.setAttribute('data-ajax-form-state', 'deleted');
-                                            
+
                                             await fetch(url, {
                                                 method: 'POST',
                                                 body: form_data
@@ -584,9 +608,9 @@ export function patch_titles(search=page.structure.main) {
                                                     track.removeAttribute('data-ajax-form-state');
                                                     return;
                                                 }
-    
+
                                                 log('received response', 'form', 'info', {res: res});
-                                                
+
                                                 notify({
                                                     id: 'delete',
                                                     title: tl(trans.deleted),
@@ -653,7 +677,10 @@ export function patch_titles(search=page.structure.main) {
             }
 
 
-            if (!is_album && is_active) {
+            const show_album_text = (is_active || settings.expand_tracks == 'always') && settings.expand_tracks != 'never';
+            track.setAttribute('data-show-album-text', show_album_text);
+
+            if (!is_album && !has_bar && show_album_text) {
                 let image_wrap = track.querySelector('.chartlist-image');
                 if (image_wrap) {
                     let link = image_wrap.querySelector('.cover-art');
@@ -669,8 +696,7 @@ export function patch_titles(search=page.structure.main) {
                         `);
                     }
 
-                    if (!settings.colourful_tracks)
-                        return;
+                    if (!settings.colourful_tracks || !is_active) return;
 
                     image.setAttribute('crossorigin', 'anonymous');
                     try {

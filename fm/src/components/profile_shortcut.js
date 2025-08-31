@@ -11,6 +11,7 @@ import {tl, trans} from "../build/trans";
 import {dialog, dialog_rm} from "./dialog";
 import {notify} from "./notify";
 import {save_setting, setting} from "./settings.js";
+import tippy from "tippy.js";
 
 unsafeWindow._open_profile_shortcut_window = function() {
     open_profile_shortcut_window();
@@ -20,7 +21,7 @@ export function open_profile_shortcut_window() {
         id: 'profile_shortcut',
         title: tl(trans.profile_shortcut.name),
         body: html.node`
-        ${setting({id: 'profile_shortcut', text: false, focus: true})}
+            ${setting({id: 'profile_shortcut', text: false, focus: true, standalone: true})}
         `
     });
 
@@ -38,7 +39,7 @@ export function other_listener(id) {
         id: 'other_listener',
         title: tl(trans.view_others_library),
         body: html.node`
-        <div class="setting" data-type="text">
+        <div class="setting standalone" data-type="text">
             <div class="avatar-container">
                 <div class="avatar-inner avatar--bleh-missing">
                     <img>
@@ -116,8 +117,7 @@ function confirm_set_profile_as_shortcut() {
     page.state.profile_shortcut_button.removeAttribute('onclick');
 
     // save to settings
-    settings.profile_shortcut = page.name;
-    localStorage.setItem('bleh', JSON.stringify(settings));
+    save_setting('profile_shortcut', page.name);
 }
 
 export function save_profile_shortcut(input, value, submit, reset_btn, avatar) {
@@ -189,8 +189,7 @@ unsafeWindow._save_profile_shortcut = function() {
         document.getElementById('avatar_src-profile_shortcut').setAttribute('src', '');
 
         // save to settings
-        settings.profile_shortcut = '';
-        localStorage.setItem('bleh', JSON.stringify(settings));
+        save_setting('profile_shortcut', '');
 
         return;
     }
@@ -221,8 +220,7 @@ unsafeWindow._save_profile_shortcut = function() {
             });
 
             // save to settings
-            settings.profile_shortcut = profile_name;
-            localStorage.setItem('bleh', JSON.stringify(settings));
+            save_setting('profile_shortcut', profile_name);
         } catch(e) {
             notify({
                 id: 'profile_shortcut_saved',

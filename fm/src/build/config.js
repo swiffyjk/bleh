@@ -594,12 +594,24 @@ export let settings_store = {
         type: 'radio'
     },
     hue: {
+        css: 'hue-user',
         default: 255,
-        type: 'range'
+        type: 'range',
+        min: 0,
+        max: 360,
+        step: 1,
+        title: trans.hue,
+        vertical: true
     },
     sat: {
+        css: 'sat-user',
         default: 1,
-        type: 'range'
+        type: 'range',
+        min: 0,
+        max: 2,
+        step: 0.01,
+        title: trans.sat,
+        vertical: true
     },
     sat_bg: {
         css: 'sat-bg',
@@ -613,8 +625,14 @@ export let settings_store = {
         incompatible: [{setting: 'theme', value: 'light'}]
     },
     lit: {
+        css: 'lit-user',
         default: 1,
-        type: 'range'
+        type: 'range',
+        min: 0,
+        max: 1.5,
+        step: 0.01,
+        title: trans.lit,
+        vertical: true
     },
     gloss: {
         css: 'gloss',
@@ -635,19 +653,6 @@ export let settings_store = {
         default: false,
         title: trans.theme_loading.name,
         body: trans.theme_loading.body
-    },
-    branch: {
-        default: 'uwu',
-        title: trans.branch.name,
-        body: trans.branch.body,
-        type: 'text',
-        max: 20,
-        placeholder: trans.enter_branch_name,
-        warn_if_empty: true
-    },
-    api_key: {
-        default: '',
-        type: 'text'
     },
     profile_header_expand: {
         default: true
@@ -695,6 +700,7 @@ export let settings_store = {
         default: true,
         title: trans.correct_titles_with_lotus.name,
         body: trans.correct_titles_with_lotus.body,
+        require_reload: true
     },
     colourful_counts: {
         default: true,
@@ -703,8 +709,8 @@ export let settings_store = {
     },
     colourful_tracks: {
         default: true,
-        title: trans.colourful_tracks.name,
-        body: trans.colourful_tracks.body
+        type: 'checkbox',
+        title: trans.colourful_tracks
     },
     feature_flags: {
         default: {},
@@ -716,7 +722,7 @@ export let settings_store = {
         body: trans.show_your_progress.body
     },
     travis: {
-        default: false,
+        default: true,
         title: trans.redirect_messages.name,
         body: trans.redirect_messages.body
     },
@@ -752,7 +758,7 @@ export let settings_store = {
         default: 50,
         min: 0,
         max: 50,
-        step: 1,
+        step: 25,
         type: 'range',
         css: 'avatar-radius',
         suffix: '%',
@@ -760,8 +766,8 @@ export let settings_store = {
     },
     hue_from_album: {
         default: true,
-        title: trans.hue_from_album.name,
-        body: trans.hue_from_album.body
+        type: 'checkbox',
+        title: trans.hue_from_album
     },
     seasonal: {
         default: true,
@@ -772,6 +778,12 @@ export let settings_store = {
     seasonal_particles: {
         default: 'all',
         type: 'options'
+    },
+    seasonal_particles_fps: {
+        default: false,
+        type: 'checkbox',
+        title: trans.seasonal_particles_fps.name,
+        body: trans.seasonal_particles_fps.body
     },
     seasonal_overlays: {
         default: true
@@ -813,9 +825,9 @@ export let settings_store = {
     },
     font_weight: {
         css: 'custom_font_weight',
-        default: 440,
+        default: 500,
         min: 100,
-        max: 500,
+        max: 600,
         step: 10,
         type: 'range',
         title: trans.font_weight.name,
@@ -823,9 +835,9 @@ export let settings_store = {
     },
     font_weight_medium: {
         css: 'custom_font_weight_medium',
-        default: 570,
+        default: 600,
         min: 400,
-        max: 700,
+        max: 750,
         step: 10,
         type: 'range',
         title: trans.font_weight_medium.name,
@@ -833,7 +845,7 @@ export let settings_store = {
     },
     font_weight_bold: {
         css: 'custom_font_weight_bold',
-        default: 760,
+        default: 700,
         min: 500,
         max: 900,
         step: 10,
@@ -859,9 +871,6 @@ export let settings_store = {
         default: true,
         title: trans.grid_glow.name,
         body: trans.grid_glow.body
-    },
-    auth_menu_obsessions: {
-        deault: false
     },
     default_avatar_action: {
         default: 'expand',
@@ -951,5 +960,231 @@ export let settings_store = {
         type: 'checkbox',
         icon: 'icon-16-download',
         horizontal: true
+    },
+    rabbit: {
+        default: true,
+        title: trans.use_quick_switcher.name,
+        body: trans.use_quick_switcher.body
+    },
+    rabbit_search: {
+        default: 'd',
+        title: trans.search,
+        type: 'text',
+        min: 1,
+        max: 1,
+        icon: 'icon-16-search',
+        placeholder: 'none',
+        keybind: ['⌘', 'D'],
+        warn_if_empty: true
+    },
+    rabbit_primary: {
+        default: 'k',
+        title: trans.open,
+        type: 'text',
+        min: 1,
+        max: 1,
+        icon: 'icon-16-rabbit',
+        placeholder: 'none',
+        keybind: ['⌘', 'K'],
+        warn_if_empty: true
+    },
+    rabbit_profile: {
+        default: 'p',
+        title: trans.profile,
+        type: 'text',
+        min: 1,
+        max: 1,
+        icon: 'icon-16-user',
+        placeholder: 'none',
+        keybind: ['⌘', 'P'],
+        warn_if_empty: true
+    },
+    rabbit_shortcut: {
+        default: 's',
+        title: trans.profile_shortcut.name,
+        type: 'text',
+        min: 1,
+        max: 1,
+        icon: 'icon-16-profile-shortcut',
+        placeholder: 'none',
+        keybind: ['⌘', 'S'],
+        warn_if_empty: true
+    },
+    rabbit_bleh_settings: {
+        default: 'b',
+        title: trans.settings,
+        type: 'text',
+        min: 1,
+        max: 1,
+        icon: 'icon-16-bleh',
+        placeholder: 'none',
+        keybind: ['⌘', 'B'],
+        warn_if_empty: true
+    },
+    prefer_no_redirect: {
+        default: true,
+        title: trans.prefer_no_redirect.name,
+        body: trans.prefer_no_redirect.body,
+        new_release: true
+    },
+    inbox_view: {
+        default: 'notifications',
+        type: 'tabs',
+        values: {
+            notifications: {
+                name: trans.notifications
+            },
+            messages: {
+                name: trans.messages
+            }
+        }
+    },
+    navigation_items: {
+        default: [
+            'home',
+            'library',
+            'shouts'
+        ],
+        type: 'list',
+        title: trans.navigation_items.name,
+        body: trans.navigation_items.body,
+        new_release: true,
+        predefined: true
+    },
+    navigation_language: {
+        default: true,
+        type: 'checkbox',
+        title: trans.navigation_language,
+        new_release: true
+    },
+    branding_type: {
+        default: 'bleh',
+        type: 'radio',
+        title: trans.branding_type.name,
+        body: trans.branding_type.body,
+        values: {
+            bleh: {
+                name: 'bleh'
+            },
+            lastfm: {
+                name: 'Last.fm'
+            }
+        },
+        new_release: true
+    },
+    expand_tracks: {
+        default: 'active',
+        type: 'radio',
+        title: trans.expand_tracks.name,
+        body: trans.expand_tracks.body,
+        values: {
+            always: {
+                name: trans.expand_tracks_always
+            },
+            active: {
+                name: trans.expand_tracks_when_active
+            },
+            never: {
+                name: trans.never
+            }
+        },
+        new_release: true
+    },
+    rain: {
+        default: false,
+        title: trans.rain.name,
+        body: trans.rain.body
+    },
+    collage_centered: {
+        default: true,
+        title: trans.collage_centered.name,
+        body: trans.collage_centered.body,
+        new_release: true
+    },
+    images: {
+        en: 'Images'
+    },
+    static_gifs: {
+        default: 'always',
+        type: 'radio',
+        title: trans.static_gifs,
+        values: {
+            always: {
+                name: trans.always_animate
+            },
+            hover: {
+                name: trans.only_on_hover
+            },
+            never: {
+                name: trans.never
+            }
+        },
+        new_release: true,
+        beta: true
+    },
+    static_avatars: {
+        default: false,
+        type: 'checkbox',
+        title: trans.static_avatars
+    },
+    static_music: {
+        default: true,
+        type: 'checkbox',
+        title: trans.static_music
+    },
+    static_banners: {
+        default: true,
+        type: 'checkbox',
+        title: trans.static_banners,
+        new_release: true
+    },
+    trusted_sites: {
+        default: [],
+        type: 'list'
+    },
+    profile_hue: {
+        default: 255,
+        type: 'range',
+        min: 0,
+        max: 360,
+        step: 1,
+        title: trans.hue,
+        vertical: true
+    },
+    profile_sat: {
+        default: 1,
+        type: 'range',
+        min: 0,
+        max: 2,
+        step: 0.01,
+        title: trans.sat,
+        vertical: true
+    },
+    profile_lit: {
+        default: 1,
+        type: 'range',
+        min: 0,
+        max: 1.5,
+        step: 0.01,
+        title: trans.lit,
+        vertical: true
+    },
+    friends: {
+        default: [],
+        type: 'list',
+        title: trans.friends,
+        body: trans.friends_setting,
+        new_release: true,
+        warn_if_matches_auth: true
+    },
+    starred_friend: {
+        default: '',
+        type: 'select',
+        title: trans.starred_friend.name,
+        body: trans.starred_friend.body
+    },
+    dismissed: {
+        default: [],
+        type: 'list'
     }
 }

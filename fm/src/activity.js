@@ -11,6 +11,9 @@ import {sanitise} from "./build/tools";
 import {tl, trans} from './build/trans';
 import {correct_artist, correct_item_by_artist, name_includes} from "./components/lotus";
 import {html, render} from "lighterhtml";
+import {redirect} from "./components/music.js";
+import tippy from "tippy.js";
+import moment from 'moment';
 
 export function render_activity_list() {
     load_activities();
@@ -45,11 +48,11 @@ export function render_activity_list() {
             if (involved.type == 'user')
                 involved_link = `${root}user/${involved.name}`;
             else if (involved.type == 'artist')
-                involved_link = `${root}music/${sanitise(involved.name)}`;
+                involved_link = `${root}music/${redirect()}${sanitise(involved.name)}`;
             else if (involved.type == 'album')
-                involved_link = `${root}music/${sanitise(involved.sister)}/${sanitise(involved.name)}`;
+                involved_link = `${root}music/${redirect()}${sanitise(involved.sister)}/${sanitise(involved.name)}`;
             else if (involved.type == 'track')
-                involved_link = `${root}music/${sanitise(involved.sister)}/_/${sanitise(involved.name)}`;
+                involved_link = `${root}music/${redirect()}${sanitise(involved.sister)}/_/${sanitise(involved.name)}`;
             else if (involved.type == 'tag')
                 involved_link = `${root}tag/${sanitise(involved.name)}`;
             else if (involved.type == 'bwaa')
@@ -122,9 +125,9 @@ export function render_activity_list() {
 }
 
 export function subscribe_to_events() {
-    if (!settings.activities) return;
+    if (!settings.activities || !page.structure.main) return;
 
-    let love_track = document.body.querySelectorAll(`form[action$="${auth.name}/loved"]:not([data-bleh-subscribed])`);
+    let love_track = page.structure.container.querySelectorAll(`form[action="${root}user/${auth.name}/loved"]:not([data-bleh-subscribed])`);
     love_track.forEach((form) => {
         form.setAttribute('data-bleh-subscribed', 'true');
 
@@ -137,12 +140,14 @@ export function subscribe_to_events() {
         let btn = form.querySelector('button');
 
         btn.addEventListener('click', (event) => {
+            event.preventDefault();
+
             log('heard', 'event', 'info', event);
 
             let action = btn.getAttribute('data-analytics-action');
 
             if (btn.getAttribute('data-type') == 'love') {
-                setTimeout(function() {
+                setTimeout(() => {
                     if (!btn.querySelector('span')) {
                         let new_text = document.createElement('span');
                         new_text.textContent = tl(trans.love);
@@ -151,7 +156,7 @@ export function subscribe_to_events() {
                 }, 1);
             }
 
-            register_activity((action == 'LoveTrack') ? 'love' : 'unlove', [{name: track, type: 'track', sister: artist}], `${root}music/${sanitise(artist)}/_/${sanitise(track)}`);
+            register_activity((action == 'LoveTrack') ? 'love' : 'unlove', [{name: track, type: 'track', sister: artist}], `${root}music/${redirect()}${sanitise(artist)}/_/${sanitise(track)}`);
         }, false);
     });
 
@@ -192,26 +197,23 @@ export function subscribe_to_events() {
     });
 
 
-    let post_shouts_btn = document.body.querySelector('.btn-post-shout:not([data-bleh-subscribed])');
-    if (post_shouts_btn != null) {
-        post_shouts_btn.setAttribute('data-bleh-subscribed', 'true');
+    const post_shouts = page.structure.main.querySelectorAll('.btn-post-shout:not([data-bleh-subscribed])');
+    post_shouts.forEach(post => {
+        post.setAttribute('data-bleh-subscribed', 'true');
 
-        post_shouts_btn.addEventListener('click', (event) => {
-            log('heard', 'event', 'info', event);
+        post.addEventListener('click', (e) => {
+            log('heard', 'event', 'info', e);
 
             // wait 0.15s
-            window.setTimeout(function() {
-                let actual_btn = event.target.parentElement;
-
-                let is_loading = actual_btn.classList.contains('btn--loading');
-                console.log('is button loading', is_loading, actual_btn, event.target);
-
+            setTimeout(() => {
+                const is_loading = post.classList.contains('btn--loading');
+                console.info(is_loading, post.classList);
                 if (!is_loading) return;
 
                 register_activity('shout', [{name: page.name, type: page.type, sister: page.sister}], window.location.href);
             }, 150);
         }, false);
-    }
+    });
 
 
     let save_wiki_form = document.body.querySelector('.wiki-edit-form:not([data-bleh-subscribed])');
@@ -313,4 +315,3 @@ export function register_activity(type, involved, context, date=new Date()) {
     log('saved', 'activity', 'info', recent_activity_list);
     localStorage.setItem('bwaa_recent_activity', JSON.stringify(recent_activity_list));
 }
-

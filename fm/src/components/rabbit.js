@@ -1,3 +1,9 @@
+//
+// bleh, an extension for the music site Last.fm
+// Copyright (c) 2025 katelyn and contributors
+// Licensed under GPLv3
+//
+
 import {auth, page, root} from "../build/page.js";
 import {dialog, dialog_rm} from "./dialog.js";
 import {html, render} from "lighterhtml";
@@ -11,6 +17,7 @@ import {settings} from "../build/config.js";
 import {open_profile_shortcut_window} from "./profile_shortcut.js";
 import {news} from "../news.js";
 import {ff} from "../sku.js";
+import {redirect} from "./music.js";
 
 export function register_rabbit() {
     let input_box;
@@ -48,7 +55,7 @@ export function register_rabbit() {
         const cmd = (e.getModifierState('Control') || e.getModifierState('Meta'));
         const key = e.key.toLowerCase();
 
-        if (cmd && ['k', ','].includes(key) && !page.structure.dialogs.hasChildNodes()) {
+        if (cmd && [settings.rabbit_primary.toLowerCase(), ','].includes(key) && !page.structure.dialogs.hasChildNodes()) {
             e.preventDefault();
 
             depth = 0;
@@ -114,7 +121,13 @@ export function register_rabbit() {
         }
 
         if (!page.structure.dialogs.hasChildNodes()) {
-            if (cmd && ['s'].includes(key)) {
+            if (cmd && [settings.rabbit_profile.toLowerCase()].includes(key)) {
+                e.preventDefault();
+
+                window.location.href = `${root}user/${auth.name}`;
+            }
+
+            if (cmd && [settings.rabbit_shortcut.toLowerCase()].includes(key)) {
                 e.preventDefault();
 
                 if (settings.profile_shortcut != '') {
@@ -124,13 +137,13 @@ export function register_rabbit() {
                 }
             }
 
-            if (cmd && ['b'].includes(key)) {
+            if (cmd && [settings.rabbit_bleh_settings.toLowerCase()].includes(key)) {
                 e.preventDefault();
 
                 window.location.href = `${root}bleh`;
             }
 
-            if (cmd && ['d'].includes(key)) {
+            if (cmd && [settings.rabbit_search.toLowerCase()].includes(key)) {
                 e.preventDefault();
 
                 rabbit();
@@ -151,9 +164,9 @@ export function register_rabbit() {
                         placeholder: tl(trans.switch_placeholder),
                         focus: true
                     });
-                    
+
                     input_box.classList.add('rabbit-search');
-    
+
                     return input_box;
                 }}
                 <div class="rabbit-hole" ref=${el => rabbit_hole = el} />
@@ -181,6 +194,8 @@ export function register_rabbit() {
         input_box.querySelector('input').focus();
     }
 
+    page.state.rabbit = rabbit;
+
     function rabbit_tab() {
         input_box.querySelector('input').focus();
     }
@@ -200,7 +215,7 @@ export function register_rabbit() {
                     body: tl(trans.search_for_music_or_user),
                     keywords: ['user', 'music', 'tag', 'discover', 'explore'],
                     action: () => search(),
-                    keybind: ['⌘', 'D']
+                    keybind: ['⌘', settings.rabbit_search.toUpperCase()]
                 },
                 {
                     type: 'on_this_page',
@@ -208,7 +223,7 @@ export function register_rabbit() {
                     body: tl(trans.use_current_page_as_context),
                     keywords: ['ctx', 'context'],
                     action: () => use_page_as_ctx(),
-                    keybind: ['⌘', '⇧', 'K'],
+                    keybind: ['⌘', '⇧', settings.rabbit_primary.toUpperCase()],
                     disabled: (!allowed_pages.includes(page.type))
                 },
                 {
@@ -217,7 +232,7 @@ export function register_rabbit() {
                     body: tl(trans.opens_your_value).replace('{v}', tl(trans.profile)),
                     keywords: ['profile', 'user', 'me'],
                     action: () => window.location.href = `${root}user/${auth.name}`,
-                    keybind: ['⌘', 'P']
+                    keybind: ['⌘', settings.rabbit_profile.toUpperCase()]
                 },
                 {
                     type: 'profile_shortcut',
@@ -226,19 +241,19 @@ export function register_rabbit() {
                     keywords: ['profile', 'user', 'shortcut', 'friends'],
                     action: () => window.location.href = `${root}user/${settings.profile_shortcut}`,
                     hide: (settings.profile_shortcut == ''),
-                    keybind: ['⌘', 'S']
+                    keybind: ['⌘', settings.rabbit_shortcut.toUpperCase()]
                 },
                 {
                     type: 'notifications',
-                    text: tl(trans.notifications.name),
-                    body: tl(trans.opens_your_value).replace('{v}', tl(trans.notifications.name)),
+                    text: tl(trans.notifications),
+                    body: tl(trans.opens_your_value).replace('{v}', tl(trans.notifications)),
                     keywords: ['bell', 'updates'],
                     action: () => window.location.href = `${root}inbox/notifications`
                 },
                 {
                     type: 'inbox',
-                    text: tl(trans.inbox.name),
-                    body: tl(trans.opens_your_value).replace('{v}', tl(trans.inbox.name)),
+                    text: tl(trans.messages),
+                    body: tl(trans.opens_your_value).replace('{v}', tl(trans.messages)),
                     keywords: ['messages', 'direct', 'dms'],
                     action: () => window.location.href = `${root}inbox`
                 },
@@ -248,6 +263,13 @@ export function register_rabbit() {
                     body: tl(trans.opens_the_value).replace('{v}', tl(trans.theme_picker)),
                     keywords: ['themes', 'light', 'dark', 'ash', 'darker', 'oled', 'amoled', 'midnight', 'void', 'abyss', 'dark reader'],
                     action: () => bleh_theme_picker()
+                },
+                {
+                    type: 'minis',
+                    text: tl(trans.minis),
+                    body: tl(trans.opens_your_value).replace('{v}', tl(trans.minis)),
+                    keywords: ['bleh', 'minis', 'tools', 'labs', 'games', 'collage', 'compare'],
+                    action: () => window.location.href = `${root}bleh/minis`
                 },
                 {
                     type: 'news',
@@ -269,7 +291,7 @@ export function register_rabbit() {
                     body: tl(trans.opens_the_value).replace('{v}', tl(trans.bleh_settings)),
                     keywords: ['bleh', 'extension', 'config', 'configuration', 'configure'],
                     action: () => window.location.href = `${root}bleh`,
-                    keybind: ['⌘', 'B']
+                    keybind: ['⌘', settings.rabbit_bleh_settings.toUpperCase()]
                 }
             ];
         } else if (pre_matches) {
@@ -308,28 +330,17 @@ export function register_rabbit() {
                             <div class="info">
                                 <div class="text">${item.text}</div>
                             </div>
-                            ${item.keybind ? html.node`
-                            <div class="keybind">
-                                ${item.keybind.map(key => {
-                                    if (key == '⌘')
-                                        return html.node`<kbd><div class="bleh-icon" data-type="command" /></kbd>`;
-                                    else if (key == '⇧')
-                                        return html.node`<kbd><div class="bleh-icon" data-type="shift" /></kbd>`;
-                                    
-                                    return html.node`<kbd>${key}</kbd>`;
-                                })}
-                            </div>
-                            ` : ''}
+                            ${item.keybind ? keybind(item.keybind) : ''}
                         </button>
                     `;
-                    
+
                     if (!item.disabled) {
                         button.addEventListener('mouseover', () => {
                             selected = index;
                             rabbit_select(false, true);
                         });
                     }
-                    
+
                     return button;
                 }) : html.node`
                     <div class="loading-data-container">
@@ -493,8 +504,8 @@ export function register_rabbit() {
             rabbit_search('internal:ctx', [
                 {
                     type: 'overview',
-                    text: tl(trans.overview),
-                    body: tl(trans.opens_the_value_for_type).replace('{v}', tl(trans.overview)).replace('{t}', page.name),
+                    text: tl(trans.home),
+                    body: tl(trans.opens_the_value_for_type).replace('{v}', tl(trans.home)).replace('{t}', page.name),
                     keywords: ['home'],
                     action: () => window.location.href = url_start
                 },
@@ -602,8 +613,8 @@ export function register_rabbit() {
             rabbit_search('internal:ctx', [
                 {
                     type: 'overview',
-                    text: tl(trans.overview),
-                    body: tl(trans.opens_the_value_for_type).replace('{v}', tl(trans.overview)).replace('{t}', page.name),
+                    text: tl(trans.home),
+                    body: tl(trans.opens_the_value_for_type).replace('{v}', tl(trans.home)).replace('{t}', page.name),
                     keywords: ['home'],
                     action: () => window.location.href = url_start
                 },
@@ -661,29 +672,29 @@ export function register_rabbit() {
                     text: tl(trans.shouts),
                     body: tl(trans.opens_the_value_for_type).replace('{v}', tl(trans.shouts)).replace('{t}', page.name),
                     keywords: ['shout', 'shoutbox', 'shouts', 'comments'],
-                    action: () => window.location.href = url_start + '/shoutbox'
+                    action: () => window.location.href = url_start + '/+shoutbox'
                 },
                 {
                     type: 'events',
                     text: tl(trans.events),
                     body: tl(trans.opens_the_value_for_type).replace('{v}', tl(trans.events)).replace('{t}', page.name),
                     keywords: ['events', 'festivals', 'tour', 'live'],
-                    action: () => window.location.href = url_start + '/events'
+                    action: () => window.location.href = url_start + '/+events'
                 },
                 {
                     type: 'tags',
                     text: tl(trans.tags),
                     body: tl(trans.opens_the_value_for_type).replace('{v}', tl(trans.tags)).replace('{t}', page.name),
                     keywords: ['tags', 'tagged', 'related', 'groups', 'grouped'],
-                    action: () => window.location.href = url_start + '/tags'
+                    action: () => window.location.href = url_start + '/+tags'
                 }
             ]);
         } else if (page.type == 'album') {
             rabbit_search('internal:ctx', [
                 {
                     type: 'overview',
-                    text: tl(trans.overview),
-                    body: tl(trans.opens_the_value_for_type).replace('{v}', tl(trans.overview)).replace('{t}', page.name),
+                    text: tl(trans.home),
+                    body: tl(trans.opens_the_value_for_type).replace('{v}', tl(trans.home)).replace('{t}', page.name),
                     keywords: ['home'],
                     action: () => window.location.href = url_start
                 },
@@ -706,22 +717,22 @@ export function register_rabbit() {
                     text: tl(trans.shouts),
                     body: tl(trans.opens_the_value_for_type).replace('{v}', tl(trans.shouts)).replace('{t}', page.name),
                     keywords: ['shout', 'shoutbox', 'shouts', 'comments'],
-                    action: () => window.location.href = url_start + '/shoutbox'
+                    action: () => window.location.href = url_start + '/+shoutbox'
                 },
                 {
                     type: 'tags',
                     text: tl(trans.tags),
                     body: tl(trans.opens_the_value_for_type).replace('{v}', tl(trans.tags)).replace('{t}', page.name),
                     keywords: ['tags', 'tagged', 'related', 'groups', 'grouped'],
-                    action: () => window.location.href = url_start + '/tags'
+                    action: () => window.location.href = url_start + '/+tags'
                 }
             ]);
         } else if (page.type == 'track') {
             rabbit_search('internal:ctx', [
                 {
                     type: 'overview',
-                    text: tl(trans.overview),
-                    body: tl(trans.opens_the_value_for_type).replace('{v}', tl(trans.overview)).replace('{t}', page.name),
+                    text: tl(trans.home),
+                    body: tl(trans.opens_the_value_for_type).replace('{v}', tl(trans.home)).replace('{t}', page.name),
                     keywords: ['home'],
                     action: () => window.location.href = url_start
                 },
@@ -744,22 +755,22 @@ export function register_rabbit() {
                     text: tl(trans.shouts),
                     body: tl(trans.opens_the_value_for_type).replace('{v}', tl(trans.shouts)).replace('{t}', page.name),
                     keywords: ['shout', 'shoutbox', 'shouts', 'comments'],
-                    action: () => window.location.href = url_start + '/shoutbox'
+                    action: () => window.location.href = url_start + '/+shoutbox'
                 },
                 {
                     type: 'tags',
                     text: tl(trans.tags),
                     body: tl(trans.opens_the_value_for_type).replace('{v}', tl(trans.tags)).replace('{t}', page.name),
                     keywords: ['tags', 'tagged', 'related', 'groups', 'grouped'],
-                    action: () => window.location.href = url_start + '/tags'
+                    action: () => window.location.href = url_start + '/+tags'
                 }
             ]);
         } else if (page.type == 'tag') {
             rabbit_search('internal:ctx', [
                 {
                     type: 'overview',
-                    text: tl(trans.overview),
-                    body: tl(trans.opens_the_value_for_type).replace('{v}', tl(trans.overview)).replace('{t}', page.name),
+                    text: tl(trans.home),
+                    body: tl(trans.opens_the_value_for_type).replace('{v}', tl(trans.home)).replace('{t}', page.name),
                     keywords: ['home'],
                     action: () => window.location.href = url_start
                 },
@@ -964,11 +975,11 @@ export function register_rabbit() {
     function search_finish() {
         if (searching.primary.type == 'artist') {
             if (searching.secondary.type == 'album') {
-                window.location.href = `${root}music/${sanitise(searching.primary.name)}/${sanitise(searching.secondary.name)}`;
+                window.location.href = `${root}music/${redirect()}${sanitise(searching.primary.name)}/${sanitise(searching.secondary.name)}`;
             } else if (searching.secondary.type == 'track') {
-                window.location.href = `${root}music/${sanitise(searching.primary.name)}/_/${sanitise(searching.secondary.name)}`;
+                window.location.href = `${root}music/${redirect()}${sanitise(searching.primary.name)}/_/${sanitise(searching.secondary.name)}`;
             } else {
-                window.location.href = `${root}music/${sanitise(searching.primary.name)}`;
+                window.location.href = `${root}music/${redirect()}${sanitise(searching.primary.name)}`;
             }
         } else if (searching.primary.type == 'user') {
             window.location.href = `${root}user/${sanitise(searching.primary.name)}`;
@@ -976,4 +987,31 @@ export function register_rabbit() {
             window.location.href = `${root}tag/${sanitise(searching.primary.name)}`;
         }
     }
+}
+
+export function keybind(list) {
+    const darwin = ['darwin', 'ios'].includes(page.platform);
+
+    const keymap = {
+        '⌘': 'Ctrl',
+        '⇧': 'Shift',
+        '⌥': 'Alt',
+        '⌃': 'Ctrl',
+        '⏎': 'Enter',
+        '⎋': 'Esc',
+        '⌫': 'Backspace',
+    }
+
+    return html.node`
+        <div class="keybind">
+            ${list.map((key, index) => {
+                const label = darwin ? key : (keymap[key] || key);
+
+                return html.node`
+                    <kbd>${label}</kbd>
+                    ${!darwin && index < list.length - 1 ? html.node`<kbd class="kbd-sep">+</kbd>` : ''}
+                `;
+            })}
+        </div>
+    `;
 }

@@ -4,12 +4,14 @@
 // Licensed under GPLv3
 //
 
+import moment from 'moment';
 import {settings} from "../build/config";
 import {page} from "../build/page";
 import {tl, trans, trans_legacy} from "../build/trans";
 import {correct_artist, correct_item_by_artist} from "../components/lotus";
 import {refresh_all} from "../config";
 import {html} from "lighterhtml";
+import tippy from "tippy.js";
 
 export function bleh_charts() {
     if (page.subpage != 'overview')

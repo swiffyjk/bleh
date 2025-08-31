@@ -14,6 +14,8 @@ import {bleh_music_page_charts} from "./components/music.js";
 import {bleh_profile_chart_render} from "./pages/profile.js";
 
 export function chart_reflow() {
+    if (!document.body) return;
+
     load_chart_colours();
 
     // trigger re-flow of chart
@@ -84,9 +86,9 @@ export function load_chart_colours() {
                 time: {
                     unit: 'month',
                     displayFormats: {
-                        month: 'MMM'
+                        month: 'LLL'
                     },
-                    tooltipFormat: 'dddd, MMMM Do YYYY'
+                    tooltipFormat: 'EEEE, LLLL d yyyy'
                 },
                 grid: {
                     color: axis_col,
@@ -128,6 +130,7 @@ export function load_chart_colours() {
                 }
             },
             y: {
+                display: true,
                 grid: {
                     display: false
                 },

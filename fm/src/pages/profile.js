@@ -9,7 +9,7 @@ import {settings} from "../build/config"
 import {log} from "../build/log"
 import {auth, page, root} from "../build/page"
 import {sponsor_list} from "../build/sponsor"
-import {clean_number, lazy, sanitise} from "../build/tools"
+import {clean_number, control_gif_pause, lazy, sanitise} from "../build/tools"
 import {lang, tl, trans} from "../build/trans"
 import {prep_chart_colours} from '../chart'
 import {create_badge, load_badges} from "../components/badge"
@@ -18,8 +18,8 @@ import {correct_artist, correct_item_by_artist, name_includes} from "../componen
 import {markdown} from "../components/markdown"
 import {notify} from "../components/notify"
 import {redesign_profile_header} from "../components/profile_header"
-import {select, select_prepare} from "../components/select"
-import {checkup_page_structure} from "../components/structure"
+import {select, select_prepare, select_prepare_list} from "../components/select"
+import {checkup_page_structure, convert_to_toolbar} from "../components/structure"
 import {refresh_all, update_inbuilt_item} from "../config"
 import {register_background, update_page} from "../page"
 import {ff} from "../sku"
@@ -28,10 +28,14 @@ import {use_pronouns} from "./lastfm_settings"
 import {bleh_obsession} from "./obsession"
 import {html, render} from "lighterhtml";
 import {save_setting, setting} from "../components/settings.js";
-import {save_banner_to_cache} from "../components/banner.js";
 import {submit_scrobble} from '../components/scrobble.js'
+import {redirect} from "../components/music.js";
+import tippy from "tippy.js";
+import {Chart} from "../main.js";
+import { expand_avatar } from '../avatar.js'
+import { status } from '../components/status.js'
 
-export function bleh_profiles() {
+export async function bleh_profiles() {
     // the obsessions page is a user subpage but works very differently
     if (page.subpage == 'obsessions_obsession') {
         bleh_obsession();
@@ -62,85 +66,139 @@ export function bleh_profiles() {
 
     let new_account = false;
 
-    if (ff('refreshed_nav')) {
-        let avatar = profile_header.querySelector('.avatar');
-        let title_wrap = profile_header.querySelector('.header-title-label-wrap');
-        let sub_wrap = profile_header.querySelector('.header-title-secondary');
+    let profile_cache = JSON.parse(localStorage.getItem('bleh_profile_cache')) || {};
+    let cache = profile_cache[page.name] || {};
 
-        // new account
-        if (!avatar) {
-            avatar = profile_header.querySelector('.header-avatar-add');
-            new_account = true;
-        }
+    let about_me_sidebar = page.structure.row.querySelector('.about-me-sidebar');
 
-        // me :3
-        if (sponsor_list && sponsor_list.special && sponsor_list.special.includes(page.name)) {
-            title_wrap.querySelector('.header-title a').classList.add('bleh--name-is-cute');
-        }
+    if (page.subpage == 'overview') {
+        if (!about_me_sidebar) {
+            delete cache.banner;
+            delete cache.hue;
+            delete cache.sat;
+            delete cache.lit;
 
-
-        let expander;
-        let redesigned_profile_header = html.node`
-            <section class="redesigned-header redesigned-profile-header no-background">
-                <div class="avatar-side">
-                    ${avatar}
-                </div>
-                <div class="info-side">
-                    <div class="sub-text">${tl(trans.profile)}</div>
-                    ${title_wrap ? html.node`<div class="title-container">${title_wrap}</div>` : ''}
-                    ${sub_wrap ? sub_wrap : ''}
-                </div>
-                <div class="expand-side">
-                    <button class="header-expand-button icon" ref=${el => expander = el} onclick=${() => {
-                        let current = settings.profile_header_expand;
-                        expander.setAttribute('aria-expanded', !current);
-                        save_setting('profile_header_expand', !current);
-                    }} aria-expanded=${settings.profile_header_expand}>${tl(trans.expand)}</button>
-                </div>
-            </section>
-        `;
-
-        const avatar_img = avatar.querySelector(':scope > img');
-
-        if (page.name == auth.name && !settings.profile_header_own) {
-            register_background(null, 'hidden');
-        } else if (page.name != auth.name && !settings.profile_header_others) {
-            register_background(null, 'hidden');
+            about_me_sidebar = html.node`
+                <section class="about-me-sidebar">
+                    <h2>${tl(trans.about)}</h2>
+                    <p class="subtle">${tl(trans.no_about).replace('{u}', page.name)}</p>
+                </section>
+            `;
+            page.structure.side.insertBefore(about_me_sidebar, page.structure.side.firstElementChild);
         } else {
-            if (settings.profile_avi_background) {
-                if (avatar)
-                    register_background(avatar_img.getAttribute('src').replace('/avatar170s/', '/ar0/'), 'avatar');
-                else
-                    register_background(null, 'none');
-            } else {
-                let background = document.body.querySelector('.header-background--has-image');
-                if (background)
-                    register_background(background.style.backgroundImage.replace('url("', '').replace('")', ''), 'artist');
-                else
-                    register_background(null, 'none');
+            if (settings.bio_markdown) {
+                // parse body
+                let about_me_text = about_me_sidebar.querySelector('p');
+                let result = bio_parse(about_me_text, cache);
+
+                about_me_text.after(result);
+                about_me_text.remove();
             }
         }
 
-        if (page.name == settings.profile_shortcut)
-            localStorage.setItem('bleh_profile_shortcut_avi', avatar_img.getAttribute('src'));
+        if (page.mobile) page.structure.main.insertBefore(about_me_sidebar, page.structure.main.firstElementChild);
+    }
 
-        page.structure.container.insertBefore(redesigned_profile_header, page.structure.container.firstElementChild);
-        profile_header.classList.add('legacy-header');
+    let avatar = profile_header.querySelector('.avatar');
+    let title_wrap = profile_header.querySelector('.header-title-label-wrap');
+    let sub_wrap = profile_header.querySelector('.header-title-secondary');
+
+    // new account
+    if (!avatar) {
+        avatar = profile_header.querySelector('.header-avatar-add');
+        new_account = true;
+    }
+
+    // me :3
+    if (sponsor_list && sponsor_list.special && sponsor_list.special.includes(page.name)) {
+        title_wrap.querySelector('.header-title a').classList.add('bleh--name-is-cute');
+    }
 
 
-        // make avatar clickable
-        const header_avatar = redesigned_profile_header.querySelector('.avatar-side');
+    let pronouns;
+    if (cache.aka) pronouns = use_pronouns(cache.aka);
 
-        if (!new_account) {
-            const src = avatar_img.getAttribute('src');
-            page.avatar = src;
+    let expander;
+    let redesigned_profile_header = html.node`
+        <section class="redesigned-header redesigned-profile-header no-background">
+            <div class="avatar-side">
+                ${avatar}
+            </div>
+            <div class="info-side">
+                <div class="sub-text">${tl(trans.profile)}</div>
+                ${title_wrap ? html.node`<div class="title-container">${title_wrap}</div>` : ''}
+                ${sub_wrap ? sub_wrap : (cache.aka || cache.created) ? html.node`
+                <p class="header-title-secondary">
+                    ${cache.aka ? html.node`
+                    <span class="header-title-secondary--pre">
+                        ${pronouns ? tl(trans.account_pronouns) : tl(trans.aka)}
+                    </span>
+                    <span class="header-title-display-name">
+                        ${cache.aka}
+                    </span>
+                    ` : ''}
+                    <span class="header-title-secondary--pre">
+                        ${tl(trans.account_created)}
+                    </span>
+                    <span class="header-scrobble-since">
+                        ${cache.created}
+                    </span>
+                </p>
+                ` : ''}
+            </div>
+            <div class="expand-side">
+                <button class="header-expand-button icon" ref=${el => expander = el} onclick=${() => {
+                    let current = settings.profile_header_expand;
+                    expander.setAttribute('aria-expanded', !current);
+                    save_setting('profile_header_expand', !current);
+                }} aria-expanded=${settings.profile_header_expand}>${tl(trans.expand)}</button>
+            </div>
+        </section>
+    `;
 
-            let avatar_link = document.createElement('a');
-            avatar_link.classList.add('bleh--avatar-clickable-link');
-            avatar_link.setAttribute('onclick', `_expand_avatar('${src.replace('avatar170s', 'ar0')}')`);
-            header_avatar.appendChild(avatar_link);
+    const avatar_img = avatar.querySelector(':scope > img');
+
+    cache.avatar = avatar_img.src;
+
+    if (page.name == auth.name && !settings.profile_header_own) {
+        register_background(null, 'hidden');
+    } else if (page.name != auth.name && !settings.profile_header_others) {
+        register_background(null, 'hidden');
+    } else if (cache.banner) {
+        register_background(cache.banner, 'bio');
+    } else {
+        if (settings.profile_avi_background) {
+            if (avatar_img)
+                register_background(avatar_img.src.replace('/avatar170s/', '/ar0/'), 'avatar');
+            else
+                register_background(null, 'none');
+        } else {
+            let background = document.body.querySelector('.header-background--has-image');
+            if (background)
+                register_background(background.style.backgroundImage.replace('url("', '').replace('")', ''), 'artist');
+            else
+                register_background(null, 'none');
         }
     }
+
+    if (page.name == settings.profile_shortcut)
+        localStorage.setItem('bleh_profile_shortcut_avi', avatar_img.getAttribute('src'));
+
+    page.structure.container.insertBefore(redesigned_profile_header, page.structure.container.firstElementChild);
+    profile_header.classList.add('legacy-header');
+
+
+    // make avatar clickable
+    if (!new_account) {
+        const src = avatar_img.src;
+        page.avatar = src;
+
+        avatar.addEventListener('click', () => {
+            expand_avatar(src.replace('/avatar170s/', '/ar0/'));
+        });
+    }
+
+    control_gif_pause(avatar_img);
 
     // translations in other languages
     let library_tab = page.structure.nav.querySelector('.secondary-nav-item--library a');
@@ -188,11 +246,11 @@ export function bleh_profiles() {
             page.structure.main.innerHTML = '';
             page.structure.side.innerHTML = '';
 
-            let alert = document.createElement('section');
-            alert.classList.add('cta');
-            alert.innerHTML = `<strong>${tl(trans.sponsor_info)}</strong>`;
-
-            page.structure.main.appendChild(alert);
+            page.structure.main.appendChild(html.node`
+                <section class="cta">
+                    <strong>${tl(trans.sponsor_info)}</strong>
+                </section>
+            `);
         }
 
 
@@ -257,23 +315,23 @@ export function bleh_profiles() {
                     </div>
                 </div>
                 ${(scrobbles > 0) ? html.node`
-                <a class="scrobble-canvas-container mini" href="${root}user/${page.name}/library/artists?date_preset=LAST_90_DAYS&page=1">
+                <div class="scrobble-canvas-container mini">
                     <div class="loading-data-container">
                         <div class="loading-data-text">${tl(trans.loading_count_days).replace('{c}', '90')}</div>
                     </div>
-                </a>
+                </div>
                 <div class="more-link">
                     <a href="${root}user/${page.name}/library/artists?date_preset=LAST_90_DAYS&page=1">
                         ${tl(trans.explore_in_library)}
                     </a>
                 </div>
-                ` : html.node`
+                ` : auth.name ? html.node`
                 <div class="scrobble-canvas-container mini">
                     <div class="loading-data-container">
                         <div class="loading-data-text failed">${tl(trans.profile_does_not_have_enough_scrobbles)}</div>
                     </div>
                 </div>
-                `}
+                ` : html.node``}
             </section>
         `;
 
@@ -283,94 +341,23 @@ export function bleh_profiles() {
             });
         }
 
-        if (page.name != sponsor_list.sponsor_account) {
+        if (sponsor_list && page.name != sponsor_list.sponsor_account) {
             if (!page.mobile)
                 page.structure.side.insertBefore(listen_container, page.structure.side.firstChild);
             else
                 page.structure.main.insertBefore(listen_container, page.structure.main.firstChild);
 
-            if (scrobbles > 0)
+            if (scrobbles > 0 && auth.name)
                 bleh_profile_chart();
         }
 
-        if (sponsor_list && sponsor_list.special && page.name == sponsor_list.special[0]) {
-            let sponsor_cta = html.node`
-                <div class="cta first sponsor colourful">
-                    ${auth.sponsor ? html`
-                        <strong>${tl(trans.you_are_a_sponsor)}</strong>
-                        <a class="see-more" onclick="_sponsor_manage()">${tl(trans.manage_sponsor)}</a>
-                    ` : html`
-                        <strong>${tl(trans.news_sponsor_cta)}</strong>
-                        <a class="see-more" onclick="_sponsor()">${tl(trans.sponsor)}</a>
-                    `}
-                </div>
-            `;
-
-            if (!page.mobile)
-                page.structure.side.insertBefore(sponsor_cta, page.structure.side.firstElementChild);
-            else
-                page.structure.main.insertBefore(sponsor_cta, page.structure.main.firstElementChild);
-        }
-
         // secondary text
-        let profile_sub_text;
-        if (ff('refreshed_nav'))
-            profile_sub_text = page.structure.container.querySelector('.redesigned-profile-header .header-title-secondary');
-        else
-            profile_sub_text = document.body.querySelector('.header-title-secondary');
-
-        if (profile_sub_text) {
-            let display_name = profile_sub_text.querySelector('.header-title-display-name');
-            let scrobble_since = profile_sub_text.querySelector('.header-scrobble-since');
-            scrobble_since.textContent = scrobble_since.textContent.slice(2).replace(tl(trans.account_scrobbling_since_replace), '');
-
-            /*tippy(display_name, {
-                content: display_name.textContent
-            });*/
-
-            // pronouns?
-            let pronouns = use_pronouns(display_name.textContent);
-
-            let display_name_pre = document.createElement('span');
-            display_name_pre.classList.add('header-title-secondary--pre');
-            display_name_pre.textContent = pronouns ? tl(trans.account_pronouns) : tl(trans.aka);
-            profile_sub_text.insertBefore(display_name_pre, display_name);
-
-            let scrobble_since_pre = document.createElement('span');
-            scrobble_since_pre.classList.add('header-title-secondary--pre');
-            scrobble_since_pre.textContent = tl(trans.account_created);
-            profile_sub_text.insertBefore(scrobble_since_pre, scrobble_since);
-        }
-
-        let about_me_sidebar = page.structure.row.querySelector('.about-me-sidebar');
-
-        if (!about_me_sidebar) {
-            if (settings.bio_markdown)
-                save_banner_to_cache('none');
-
-            about_me_sidebar = html.node`
-                <section class="about-me-sidebar">
-                    <h2>${tl(trans.about)}</h2>
-                    <p class="subtle">${tl(trans.no_about).replace('{u}', page.name)}</p>
-                </section>
-            `;
-            page.structure.side.insertBefore(about_me_sidebar, page.structure.side.firstElementChild);
-        } else {
-            if (settings.bio_markdown) {
-                // parse body
-                let about_me_text = about_me_sidebar.querySelector('p');
-                let result = bio_parse(about_me_text, true);
-                render(about_me_text, result);
-            }
-        }
-
-        if (page.mobile)
-            page.structure.main.insertBefore(about_me_sidebar, page.structure.main.firstElementChild);
+        const profile_sub_text = page.structure.container.querySelector('.redesigned-profile-header .header-title-secondary');
+        if (profile_sub_text) parse_sub_text(profile_sub_text, page.name, cache);
 
         // featured track
         let featured_track_panel = profile_header.querySelector('.header-featured-track');
-        if (featured_track_panel)
-            bleh_featured_profile_track(featured_track_panel, about_me_sidebar);
+        if (featured_track_panel) bleh_featured_profile_track(featured_track_panel);
 
         let about_me_header = about_me_sidebar.querySelector('h2');
         about_me_header.textContent = tl(trans.about);
@@ -394,9 +381,8 @@ export function bleh_profiles() {
                     </a>
                     ` : !profile_note ? html.node`
                     <button class="left-icon blend-v2-btn" data-type="add" ref=${el => add_note = el} onclick=${() => {
-                        add_note.display = 'none';
-
                         create_profile_note_panel(page.name, profile_note);
+                        add_note.remove();
                     }}>
                         ${tl(trans.add_note)}
                     </button>
@@ -433,7 +419,7 @@ export function bleh_profiles() {
         if (!is_own_profile && profile_note)
             create_profile_note_panel(page.name, profile_note);
     } else {
-        load_banner_from_cache();
+        load_profile_cache(page.name, cache, profile_cache);
 
 
         let btn_add = page.structure.side.querySelector('.add-button');
@@ -442,7 +428,9 @@ export function bleh_profiles() {
         if (page.subpage.startsWith('library')) {
             bleh_user_library();
         } else if (page.subpage == 'events') {
-            let selected_tab = page.structure.content_top.querySelector('.secondary-nav-item-link--active');
+            convert_to_toolbar();
+
+            let selected_tab = page.structure.toolbar.querySelector('.secondary-nav-item-link--active');
 
             let value_panel = html.node`
                 <section class="value-panel">
@@ -493,38 +481,31 @@ export function bleh_profiles() {
             page.structure.side.innerHTML = '';
             page.structure.side.appendChild(value_panel);
         } else if (page.subpage.startsWith('listening-report')) {
-            document.documentElement.setAttribute('data-bleh--theme', 'oled');
-
             page.structure.content_top.classList.add('listening-report-navlist');
             page.structure.row.classList.add('listening-report');
 
-            let nav = page.structure.content_top.querySelector('.navlist');
-            nav.classList.add('redesigned-navigation');
-            page.structure.content_top.after(html.node`
-                <div class="toolbar">
-                    ${nav}
-                </div>
-            `);
-            page.structure.content_top.style.display = 'none';
+            convert_to_toolbar();
 
             let report_box_container = document.body.querySelector('.report-box-container--overview');
             if (report_box_container) {
+                document.documentElement.setAttribute('data-bleh--theme', 'oled');
+                document.documentElement.setAttribute('data-bleh--theme_type', 'dark');
+
                 page.structure.row.appendChild(report_box_container);
             } else {
                 let dashboard = page.structure.container.querySelector('.user-dashboard');
-                if (!dashboard) return;
-
-                // v2
-                dialog({
-                    id: 'listening_report_v2',
-                    title: 'oh no :c',
-                    body: html.node`
-                        <div class="alert alert-error">This listening report is too old</div>
-                        <br>
-                        <p>Legacy listening reports are not properly viewable yet in bleh for now. Sorry for the inconvenience.</p>
-                    `
-                });
-                return;
+                if (dashboard) {
+                    // v2
+                    dialog({
+                        id: 'listening_report_v2',
+                        title: 'oh no :c',
+                        body: html.node`
+                            <div class="alert alert-error">This listening report is too old</div>
+                            <br>
+                            <p>Legacy listening reports are not properly viewable yet in bleh for now. Sorry for the inconvenience.</p>
+                        `
+                    });
+                }
             }
         } else if (page.subpage == 'obsessions_overview') {
             let section_controls = page.structure.container.querySelector('.section-controls');
@@ -775,6 +756,8 @@ export function bleh_profiles() {
         label_container.appendChild(badge);
     });
     profile_name_obj.appendChild(label_container);
+
+    save_profile_cache(cache, profile_cache, page.name);
 }
 
 
@@ -824,6 +807,7 @@ function patch_profile_following() {
 
     if (page.subpage != 'following' && page.subpage != 'followers' && page.subpage != 'neighbours') {
         // if we're not on one of these tabs we don't need to preserve the 'Following' text
+        link.href = `${root}user/${page.name}/friends`;
         link.textContent = tl(trans.friends);
         return;
     }
@@ -852,6 +836,7 @@ function patch_profile_following() {
     `;
 
     // we do this later to preserve the 'Following' text
+    link.href = `${root}user/${page.name}/friends`;
     link.textContent = tl(trans.friends);
 
     page.structure.content_top.after(friends_nav);
@@ -929,10 +914,9 @@ function refresh_tracks(button, {
 
         if (!tracklist_panel) {
             if (!quiet) {
-                notify({
+                status({
                     title: tl(trans.recent_tracks),
                     body: tl(trans.value_failed_to_load).replace('{v}', tl(trans.library)),
-                    icon: 'icon-16-refresh',
                     type: 'error'
                 });
             }
@@ -940,10 +924,9 @@ function refresh_tracks(button, {
         }
 
         if (!quiet) {
-            notify({
+            status({
                 title: tl(trans.recent_tracks),
-                body: tl(trans.refreshed),
-                icon: 'icon-16-refresh'
+                body: tl(trans.refreshed)
             });
         }
         panel.classList.add('has-refreshed');
@@ -952,7 +935,7 @@ function refresh_tracks(button, {
     });
 }
 
-function bleh_featured_profile_track(object, about_me) {
+function bleh_featured_profile_track(object) {
     let art = object.querySelector('.featured-item-art');
     let details = object.querySelector('.featured-item-details');
     let form = document.body.querySelector('.header-info-primary form');
@@ -988,7 +971,7 @@ function bleh_featured_profile_track(object, about_me) {
 
         let song_artist_element = document.createElement('div');
         song_artist_element.classList.add('featured-item-artist');
-        song_artist_element.innerHTML = `<a href="${root}music/${sanitise(formatted_title[2])}">${formatted_title[2]}</a>`;
+        song_artist_element.innerHTML = `<a href="${root}music/${redirect()}${sanitise(formatted_title[2])}">${formatted_title[2]}</a>`;
 
         // append guests
         let song_guests = formatted_title[3];
@@ -997,7 +980,7 @@ function bleh_featured_profile_track(object, about_me) {
             song_artist_element.innerHTML = `${song_artist_element.innerHTML},`;
 
             let guest_element = document.createElement('a');
-            guest_element.setAttribute('href', `${root}music/${sanitise(song_guests[guest])}`);
+            guest_element.setAttribute('href', `${root}music/${redirect()}${sanitise(song_guests[guest])}`);
             guest_element.textContent = song_guests[guest];
 
             song_artist_element.appendChild(guest_element);
@@ -1039,7 +1022,7 @@ function bleh_featured_profile_track(object, about_me) {
                 `}
             </div>
             <div class="source-album js-link-block link-block">
-                <div class="source-album-art">
+                <div class="source-album-art small">
                     ${img}
                 </div>
                 <div class="source-album-details">
@@ -1051,10 +1034,7 @@ function bleh_featured_profile_track(object, about_me) {
         </section>
     `;
 
-    if (about_me)
-        about_me.after(panel);
-    else
-        page.structure.side.insertBefore(panel, page.structure.side.firstElementChild);
+    page.structure.side.insertBefore(panel, page.structure.side.firstElementChild);
 }
 
 
@@ -1170,7 +1150,6 @@ function profile_recents() {
             </div>
             ${setting({id: 'format_guest_features'})}
             ${setting({id: 'stacked_chartlist_info'})}
-            ${setting({id: 'colourful_tracks'})}
             <div class="settings-footer">
                 <button type="submit" class="btn-primary save">
                     ${tl(trans.save)}
@@ -1229,7 +1208,7 @@ function profile_artists() {
                     let btn = list.querySelector('.dropdown-menu-clickable-item--selected');
                     let link = new URL('https://www.last.fm' + btn.getAttribute('href'));
                     let selected = link.searchParams.get('artists_date_preset');
-                    
+
                     window.location.href = `${root}bleh/minis/collage?type=artists&timeframe=date_preset=${selected}`;
                 }}>${tl(trans.collage)}</button>
                 ${form ? html.node`
@@ -1481,71 +1460,21 @@ function profile_tracks() {
     });
 }
 
-function bio_parse(text, cache = false) {
+function bio_parse(text, cache = true, take_effect = true) {
     let temp = document.createElement('div');
+    temp.classList.add('markdown-body');
 
     render(temp, markdown(text.textContent, {
-        allow_headers: true
-    }))
-
-    use_banner(temp, cache);
+        allow_headers: true,
+        allow_banners: true,
+        allow_icons: true,
+        allow_hue: true,
+        cache,
+        take_effect,
+        allow_socials: true
+    }));
 
     return temp;
-}
-
-function use_banner(temp, cache) {
-    if ((page.name == auth.name && !settings.profile_header_own) || (page.name != auth.name && !settings.profile_header_others))
-        return;
-
-    let banner = temp.querySelector('img[alt="banner"]');
-    if (banner) {
-        set_profile_banner(banner, cache);
-    } else {
-        save_banner_to_cache('none');
-    }
-}
-
-function set_profile_banner(img, cache) {
-    let src = img.getAttribute('src');
-    register_background(src, 'bio');
-
-    if (cache)
-        save_banner_to_cache(src);
-}
-
-
-function load_banner_from_cache() {
-    let banners = JSON.parse(localStorage.getItem('bleh_profile_banners')) || {};
-
-    if (banners[page.name]) {
-        if (banners[page.name] == 'none')
-            return;
-
-        register_background(banners[page.name], 'bio');
-    } else {
-        request_banner();
-    }
-}
-
-function request_banner() {
-    fetch(`${root}user/${page.name}`)
-    .then(function(response) {
-        console.log('returned', response, response.text);
-
-        return response.text();
-    })
-    .then(function(html) {
-        let doc = new DOMParser().parseFromString(html, 'text/html');
-        console.log('DOC', doc);
-
-        let about_me_sidebar = doc.querySelector('.about-me-sidebar');
-        if (about_me_sidebar) {
-            let about_me_text = about_me_sidebar.querySelector('p');
-            let result = bio_parse(about_me_text, true);
-        } else {
-            save_banner_to_cache('none');
-        }
-    });
 }
 
 
@@ -1583,7 +1512,6 @@ function bleh_profile_chart() {
                     log('table is null?', 'glacier library', 'error');
                     console.info('glacier library', doc.body.innerHTML);
                     console.info('glacier library', new DOMParser().parseFromString(doc.body.innerHTML, 'text/html'));
-                    throw new Error;
                 }
             });
     }, { threshold: 0.3, rootMargin: '0px' });
@@ -1599,6 +1527,7 @@ export function bleh_profile_chart_render(panel=page.structure.side.querySelecto
     let links = [];
     let values = [];
 
+    page.state.glacier.links = [];
     entries.forEach((entry) => {
         let period = entry.querySelector('.js-period a');
         let value = entry.querySelector('.js-scrobbles').textContent.trim();
@@ -1606,6 +1535,8 @@ export function bleh_profile_chart_render(panel=page.structure.side.querySelecto
         labels.push(period.textContent.trim());
         links.push(period.getAttribute('href'));
         values.push(value);
+
+        page.state.glacier.links.push(`${root}user/${page.name}/library` + period.getAttribute('href'));
     });
 
     prep_chart_colours();
@@ -1645,4 +1576,188 @@ export function bleh_profile_chart_render(panel=page.structure.side.querySelecto
     });
 
     scrobble_canvas_container.appendChild(scrobble_canvas);
+}
+
+export function save_profile_cache({
+    avatar,
+    banner,
+    hue,
+    sat,
+    lit,
+    aka,
+    created
+}={},
+profile_cache=JSON.parse(localStorage.getItem('bleh_profile_cache')) || {},
+name=page.name) {
+    let profile_cache_o = Object.keys(profile_cache);
+
+    if (profile_cache_o.length > 400) {
+        // remove first available item of object
+        const keys = Reflect.ownKeys(profile_cache);
+
+        // we dont delete logged in user or users on local friends list
+        const protected_users = new Set([auth.name, ...(settings.friends)]);
+        const key_to_delete = keys.find(key => !protected_users.has(profile_cache[key]));
+
+        if (key_to_delete) delete profile_cache[key_to_delete];
+
+        // them move this to the bottom
+        delete profile_cache[name];
+    }
+
+    profile_cache[name] = {
+        avatar,
+        banner,
+        hue,
+        sat,
+        lit,
+        aka,
+        created
+    }
+
+    log('saved to cache', 'profile', 'info', {name, cache: profile_cache[name]});
+    localStorage.setItem('bleh_profile_cache', JSON.stringify(profile_cache));
+}
+
+export async function checkup_friend_cache(list=settings.friends) {
+    for (const friend of list) {
+        const cache = await load_profile_cache_externally(friend);
+        log(`finalised cache for friend ${friend}`, 'profile', 'info', {cache: cache});
+    };
+}
+
+export function open_starred_friend_window() {
+    dialog({
+        id: 'starred_friend',
+        title: tl(trans.friends),
+        body: html.node`
+            <div class="setting-group">
+                ${starred = setting({id: 'starred_friend', list: select_prepare_list([{value: '', text: tl(trans.none)}, ...settings.friends])})}
+            </div>
+            <div class="alert alert-info">
+                ${tl(trans.starred_friend.notice)}
+            </div>
+        `
+    })
+}
+
+export async function load_profile_cache_externally(name = page.name) {
+    if (!name) return;
+
+    log(`requested profile cache for ${name}`, 'cache');
+
+    let profile_cache = JSON.parse(localStorage.getItem('bleh_profile_cache')) || {};
+    let cache = profile_cache[name];
+
+    if (cache) {
+        if (cache.hue || cache.sat || cache.lit) {
+            if (!sponsor_list || (sponsor_list && !sponsor_list.sponsors.includes(name))) {
+                delete cache.hue;
+                delete cache.sat;
+                delete cache.lit;
+            }
+        }
+
+        log(`returning pre-cached result for ${name}`, 'cache', 'info', {cache});
+        return cache;
+    }
+
+    return await request_profile_cache(name);
+}
+
+function load_profile_cache(name = page.name, cache=null, profile_cache=null) {
+    if (!name) return;
+
+    if (!profile_cache) profile_cache = JSON.parse(localStorage.getItem('bleh_profile_cache')) || {};
+    if (!cache) cache = profile_cache[name] || {};
+
+    if (cache) {
+        if (cache.hue || cache.sat || cache.lit) {
+            if (!sponsor_list || (sponsor_list && !sponsor_list.sponsors.includes(name))) {
+                delete cache.hue;
+                delete cache.sat;
+                delete cache.lit;
+            }
+        }
+
+        const hue = cache.hue;
+        const sat = cache.sat;
+        const lit = cache.lit;
+        const banner = cache.banner;
+
+        if (hue) document.body.style.setProperty('--hue-album', hue);
+        if (sat) document.body.style.setProperty('--sat-album', sat);
+        if (lit) document.body.style.setProperty('--lit-album', lit);
+        if (banner) register_background(banner, 'bio');
+
+        return;
+    }
+
+    return request_profile_cache(name, cache, profile_cache);
+}
+
+function request_profile_cache(name = page.name, cache=null, profile_cache=null) {
+    log(`requesting fetch of profile cache for ${name}`, 'cache');
+
+    if (!profile_cache) profile_cache = JSON.parse(localStorage.getItem('bleh_profile_cache')) || {};
+    if (!cache) cache = profile_cache[name] || {};
+
+    return new Promise((resolve, reject) => {
+        fetch(`${root}user/${name}`)
+            .then(function (response) {
+                console.log('returned', response, response.text);
+
+                return response.text();
+            })
+            .then(function (dom) {
+                let doc = new DOMParser().parseFromString(dom, 'text/html');
+                console.log('DOC', doc);
+
+                const about_me_sidebar = doc.querySelector('.about-me-sidebar');
+                if (about_me_sidebar) {
+                    let about_me_text = about_me_sidebar.querySelector('p');
+                    bio_parse(about_me_text, cache ? cache : true, false);
+                } else {
+                    delete cache.banner;
+                    delete cache.hue;
+                    delete cache.sat;
+                    delete cache.lit;
+                }
+
+                const avatar = doc.querySelector('.header-avatar .avatar img');
+                if (avatar) cache.avatar = avatar.src;
+
+                const secondary = doc.querySelector('.header-title-secondary');
+                parse_sub_text(secondary, name, cache);
+
+                if (!cache || !profile_cache) save_profile_cache(cache, profile_cache, name);
+
+                resolve(cache || {});
+            })
+            .catch(reject);
+    })
+}
+
+function parse_sub_text(profile_sub_text, name = page.name, cache) {
+    const display_name = profile_sub_text.querySelector('.header-title-display-name');
+    const scrobble_since = profile_sub_text.querySelector('.header-scrobble-since');
+    scrobble_since.textContent = scrobble_since.textContent.slice(2).replace(tl(trans.account_scrobbling_since_replace), '');
+
+    // pronouns?
+    const pronouns = use_pronouns(display_name.textContent);
+
+    profile_sub_text.insertBefore(html.node`
+        <span class="header-title-secondary--pre">
+            ${pronouns ? tl(trans.account_pronouns) : tl(trans.aka)}
+        </span>
+    `, display_name);
+
+    profile_sub_text.insertBefore(html.node`
+        <span class="header-title-secondary--pre">
+            ${tl(trans.account_created)}
+        </span>
+    `, scrobble_since);
+
+    cache.aka = display_name.textContent.trim();
+    cache.created = scrobble_since.textContent.trim();
 }
