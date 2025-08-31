@@ -530,7 +530,9 @@ function load_page() {
 
     page_title();
 
-    load_dismissed();
+    setTimeout(() => {
+        load_dismissed();
+    }, 1000);
 }
 
 function page_title() {

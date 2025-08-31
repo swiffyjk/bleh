@@ -52522,7 +52522,9 @@
     }
     append_nav();
     page_title();
-    load_dismissed();
+    setTimeout(() => {
+      load_dismissed();
+    }, 1e3);
   }
   function page_title() {
     if (ff("page_title")) {
