@@ -38210,7 +38210,7 @@
   function compile_settings() {
     let clone6 = structuredClone(settings);
     for (let setting2 in clone6) {
-      if (settings_store[setting2] && JSON.stringify(clone6[setting2]) == JSON.stringify(settings_store[setting2].default)) {
+      if (settings_store[setting2] && JSON.stringify(clone6[setting2]) == JSON.stringify(settings_store[setting2].default) && setting2 != "version") {
         log(`dropped ${setting2} as value matches default`, "settings", "log", { value: clone6[setting2], default: settings_store[setting2].default });
         delete clone6[setting2];
       }

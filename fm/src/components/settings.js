@@ -779,7 +779,7 @@ export function compile_settings() {
     let clone = structuredClone(settings);
 
     for (let setting in clone) {
-        if (settings_store[setting] && JSON.stringify(clone[setting]) == JSON.stringify(settings_store[setting].default)) {
+        if (settings_store[setting] && JSON.stringify(clone[setting]) == JSON.stringify(settings_store[setting].default) && setting != 'version') {
             log(`dropped ${setting} as value matches default`, 'settings', 'log', {value: clone[setting], default: settings_store[setting].default});
             delete clone[setting];
         }
