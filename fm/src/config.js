@@ -24,7 +24,7 @@ export function load_settings(skip = false) {
                 settings[setting] = settings_store[setting].default;
         }
 
-        if (!settings.version) settings.version = 0;
+        if (!settings.version) settings.version = 10000000;
     }
 
     if (!settings.theme_type) {

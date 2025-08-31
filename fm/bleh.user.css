@@ -22266,7 +22266,7 @@
                 background: linear-gradient(90deg, hsl(var(--b6)) 0%, transparent 3%, transparent 97%, hsl(var(--b6)) 100%);
             }*/
             &:after {
-                background: linear-gradient(180deg, hsl(var(--b6), 28%) 0%, hsl(var(--b6)) 100%) !important;
+                background: linear-gradient(180deg, hsl(var(--b6), 45%) 0%, hsl(var(--b6)) 100%) !important;
             }
 
             .katsune-bleh-background-border {

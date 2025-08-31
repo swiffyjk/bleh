@@ -18,7 +18,6 @@ const banner = `// ==UserScript==
 // @updateURL    ${build.url}
 // @downloadURL  ${build.url}
 // @run-at       document-start
-// @require      https://cdnjs.cloudflare.com/ajax/libs/moment.js/2.30.1/moment.min.js
 // ==/UserScript==`;
 
 

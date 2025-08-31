@@ -1182,5 +1182,9 @@ export let settings_store = {
         type: 'select',
         title: trans.starred_friend.name,
         body: trans.starred_friend.body
+    },
+    dismissed: {
+        default: [],
+        type: 'list'
     }
 }

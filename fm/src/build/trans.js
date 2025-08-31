@@ -4,6 +4,7 @@
 // Licensed under GPLv3
 //
 
+import moment from 'moment';
 import {handle_error_500} from "../page";
 import {log} from "./log";
 import {auth, auth_link, setRoot} from "./page";

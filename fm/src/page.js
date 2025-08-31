@@ -74,6 +74,7 @@ import {bleh_minis} from "./pages/minis.js";
 import {mualani} from "./pages/mualani.js";
 import { convert_gif_to_png } from './build/tools.js';
 import { load_status } from './components/status.js';
+import { load_dismissed } from './components/dismissed.js';
 
 export function bleh() {
     let head_observer = new MutationObserver((mutations) => {
@@ -528,6 +529,8 @@ function load_page() {
     append_nav();
 
     page_title();
+
+    load_dismissed();
 }
 
 function page_title() {

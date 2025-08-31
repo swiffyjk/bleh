@@ -13,6 +13,7 @@ import {correct_artist, correct_item_by_artist, name_includes} from "./component
 import {html, render} from "lighterhtml";
 import {redirect} from "./components/music.js";
 import tippy from "tippy.js";
+import moment from 'moment';
 
 export function render_activity_list() {
     load_activities();

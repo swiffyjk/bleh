@@ -23,6 +23,7 @@ import tippy from "tippy.js";
 import { chart_reflow } from './chart.js';
 import { load_profile_cache_externally, open_starred_friend_window } from './pages/profile.js';
 import { sponsor } from './sponsor.js';
+import moment from 'moment';
 
 export function patch_masthead() {
     let masthead_logo = document.body.querySelector('.masthead-logo');
