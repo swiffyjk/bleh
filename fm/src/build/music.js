@@ -205,7 +205,6 @@ export let includes = {
         '- music from', '(music from',
         '- skit', '(skit',
         '- original', '(original', '[original',
-        '[clean', '[explicit',
         '- deluxe', '(deluxe', '[deluxe',
         '- digital deluxe', '(digital deluxe', '[digital deluxe',
         '- complete edition', '(complete edition', '[complete edition',

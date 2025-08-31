@@ -7,7 +7,7 @@
 import {settings} from "../build/config";
 import {log} from "../build/log";
 import {auth, page, root} from "../build/page";
-import {clamp_lit, clamp_sat, hex_to_hsl, sanitise} from "../build/tools";
+import {clamp_lit, clamp_sat, desanitise, hex_to_hsl, sanitise} from "../build/tools";
 import {tl, trans} from "../build/trans";
 import {load_chart_colours} from "../chart";
 import {bleh_about_artist} from "../components/about_artist";
@@ -96,7 +96,7 @@ export function bleh_albums() {
                 <div class="suggest-side">
                     <div class="cta suggest">
                         <strong>${tl(trans.suggest_title.name)}</strong>
-                        <a class="see-more" href="${root}music/${redirect()}${sanitise(page.sister)}/${page.suggest}">${tl(trans.suggest_title.body).replace('{v}', page.suggest)}</a>
+                        <a class="see-more" href="${root}music/${redirect()}${sanitise(page.sister)}/${page.suggest}">${tl(trans.suggest_title.body).replace('{v}', desanitise(page.suggest, '+'))}</a>
                     </div>
                 </div>
                 ` : ''}

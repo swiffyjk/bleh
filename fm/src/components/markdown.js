@@ -166,6 +166,12 @@ export function markdown(text, {
         }
     }];
 
+    const header_minify = () => [{
+        type: 'output',
+        regex: /<(\/?)h[1-5]>/gi,
+        replace: '<$1strong>'
+    }];
+
     let extensions = [
         aligner()
     ];
@@ -174,6 +180,7 @@ export function markdown(text, {
     if (allow_icons) extensions.push(icons());
     if (allow_hue) extensions.push(accent());
     if (allow_socials) extensions.push(social_links());
+    if (!allow_headers) extensions.push(header_minify());
 
     const converter = new showdown.Converter({
         extensions,
@@ -202,13 +209,13 @@ export function markdown(text, {
     .replace(
         /\[album artist=([^[\]]+)\]([^[\]]+)\[\/album\]/g,
         (match, artist, album) =>
-            `[${album}](${root}music/${redirect()}` +
+            `[${album}](${root}music/` +
             `${encodeURIComponent(artist)}/${encodeURIComponent(album)})`
     )
     .replace(
         /\[track artist=([^[\]]+)\]([^[\]]+)\[\/track\]/g,
         (match, artist, track) =>
-            `[${track}](${root}music/${redirect()}` +
+            `[${track}](${root}music/` +
             `${encodeURIComponent(artist)}/_/${encodeURIComponent(track)})`
     )
     .replace(

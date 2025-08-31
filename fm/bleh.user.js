@@ -24373,7 +24373,7 @@
     return text3.replace(/&/g, "&amp;").replace(/</g, "&lt;").replace(/>/g, "&gt;").replace(/"/g, "&quot;").replace(/'/g, "&#039;");
   }
   function desanitise(text3, method = "+") {
-    return decodeURIComponent(text3.replaceAll(method, " "));
+    return decodeURIComponent(text3).replaceAll(method, " ");
   }
   function return_artist_from_track(url, is_album) {
     let split = url.split("/");
@@ -24884,8 +24884,6 @@
       "- original",
       "(original",
       "[original",
-      "[clean",
-      "[explicit",
       "- deluxe",
       "(deluxe",
       "[deluxe",
@@ -43718,7 +43716,7 @@
         }
       }
       if (href.endsWith("/+wiki")) return;
-      href = href.replace(root, "").replace("music/", "");
+      href = href.replace(root, "").replace("music/+noredirect/", "music/").replace("music/", "");
       if (href.startsWith("user/")) return;
       if (href.startsWith("tag/")) {
         type = "tag";
@@ -44868,6 +44866,11 @@
         return "";
       }
     }];
+    const header_minify = () => [{
+      type: "output",
+      regex: /<(\/?)h[1-5]>/gi,
+      replace: "<$1strong>"
+    }];
     let extensions = [
       aligner()
     ];
@@ -44875,6 +44878,7 @@
     if (allow_icons) extensions.push(icons());
     if (allow_hue) extensions.push(accent());
     if (allow_socials) extensions.push(social_links());
+    if (!allow_headers) extensions.push(header_minify());
     const converter = new import_showdown.default.Converter({
       extensions,
       emoji: true,
@@ -44897,10 +44901,10 @@
       (match2, artist) => `[${artist}](${root}music/${redirect()}${encodeURIComponent(artist)})`
     ).replace(
       /\[album artist=([^[\]]+)\]([^[\]]+)\[\/album\]/g,
-      (match2, artist, album) => `[${album}](${root}music/${redirect()}${encodeURIComponent(artist)}/${encodeURIComponent(album)})`
+      (match2, artist, album) => `[${album}](${root}music/${encodeURIComponent(artist)}/${encodeURIComponent(album)})`
     ).replace(
       /\[track artist=([^[\]]+)\]([^[\]]+)\[\/track\]/g,
-      (match2, artist, track) => `[${track}](${root}music/${redirect()}${encodeURIComponent(artist)}/_/${encodeURIComponent(track)})`
+      (match2, artist, track) => `[${track}](${root}music/${encodeURIComponent(artist)}/_/${encodeURIComponent(track)})`
     ).replace(
       /\[url=([^[\]]+)\]([^[\]]+)\[\/url\]/g,
       (match2, url, text4) => `[${text4}](${encodeURI(url)})`
@@ -49550,7 +49554,7 @@
                 <div class="suggest-side">
                     <div class="cta suggest">
                         <strong>${tl(trans.suggest_title.name)}</strong>
-                        <a class="see-more" href="${root}music/${redirect()}${sanitise(page.sister)}/${page.suggest}">${tl(trans.suggest_title.body).replace("{v}", page.suggest)}</a>
+                        <a class="see-more" href="${root}music/${redirect()}${sanitise(page.sister)}/${page.suggest}">${tl(trans.suggest_title.body).replace("{v}", desanitise(page.suggest, "+"))}</a>
                     </div>
                 </div>
                 ` : ""}
@@ -51724,7 +51728,7 @@
       let md = user.querySelector(".user-list-about-me");
       if (md) {
         render(md, markdown(md.textContent, {
-          allow_headers: true,
+          allow_headers: false,
           line_breaks: false
         }));
       }

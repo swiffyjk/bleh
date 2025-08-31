@@ -26,7 +26,7 @@ export function bleh_users() {
         let md = user.querySelector('.user-list-about-me');
         if (md) {
             render(md, markdown(md.textContent, {
-                allow_headers: true,
+                allow_headers: false,
                 line_breaks: false
             }));
         }

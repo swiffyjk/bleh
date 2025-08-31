@@ -409,7 +409,7 @@ export function patch_wiki_contents(wiki_block) {
 
         if (href.endsWith('/+wiki')) return;
 
-        href = href.replace(root, '').replace('music/', '');
+        href = href.replace(root, '').replace('music/+noredirect/', 'music/').replace('music/', '');
 
         if (href.startsWith('user/')) return;
 
