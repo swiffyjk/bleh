@@ -264,7 +264,12 @@ export function markdown(text, {
         'bandcamp.com': 'Bandcamp',
         'soundcloud.com': 'Soundcloud',
         'tiktok.com': 'TikTok',
-        'www.tiktok.com': 'TikTok'
+        'www.tiktok.com': 'TikTok',
+        'ko-fi.com': 'Ko-fi',
+        'patreon.com': 'Patreon',
+        'www.patreon.com': 'Patreon',
+        'twitch.tv': 'Twitch',
+        'www.twitch.tv': 'Twitch'
     }
 
     if (links.length > 0) {
