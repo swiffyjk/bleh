@@ -43419,54 +43419,57 @@
     }
     if (badges) avatar3.appendChild(create_badge(badges[badges.length - 1], true));
     let image_header;
-    let cached = false;
-    tippy_esm_default(parent ? parent : avatar3, {
-      theme: "user",
+    const popup = tippy_esm_default(parent ? parent : avatar3, {
+      theme: "context-menu",
       content: html.node`
-            <div class="image-header" ref=${(el) => image_header = el}>
-                <div class="inner-image">
-                    <img src=${avatar_img.getAttribute("src").replace("/avatar42s/", "/avatar170s/")} alt=${name}>
-                    <a href="${root}user/${name}" class="link-over"></a>
+            <div class="track-preview user-preview">
+                <div class="image">
+                    <div class="inner-image">
+                        <img src=${avatar_img.getAttribute("src").replace("/avatar42s/", "/avatar170s/")} alt=${name}>
+                    </div>
                 </div>
-            </div>
-            <div class="info">
-                <h5 class="title"><a href="${root}user/${name}">${name}</a></h5>
-                ${badges ? html.node`
-                <div class="badges">
-                    ${badges.map((badge, index3) => create_badge(badge, false, index3 == badges.length - 1))}
-                    ${pre_existing_badge ? create_badge({
+                <div class="info">
+                    <h5 class="title">${name}</h5>
+                    ${badges ? html.node`
+                    <div class="badges">
+                        ${badges.map((badge, index3) => create_badge(badge, false, index3 == badges.length - 1))}
+                        ${pre_existing_badge ? create_badge({
         type: pre_existing_badge_type,
         name: tl(trans.badges[pre_existing_badge_type].name),
         reason: tl(trans.badges[pre_existing_badge_type].reason),
         inbuilt: true
       }) : ""}
-                </div>
-                ` : pre_existing_badge ? html.node`
-                <div class="badges">
-                    ${create_badge({
+                    </div>
+                    ` : pre_existing_badge ? html.node`
+                    <div class="badges">
+                        ${create_badge({
         type: pre_existing_badge_type,
         name: tl(trans.badges[pre_existing_badge_type].name),
         reason: tl(trans.badges[pre_existing_badge_type].reason),
         inbuilt: true
       })}
+                    </div>
+                    ` : ""}
                 </div>
-                ` : ""}
             </div>
+            <a class="dropdown-menu-clickable-item" data-type="user" href="${root}user/${name}">
+                ${tl(trans.profile)}
+            </a>
+            <a class="dropdown-menu-clickable-item" data-type="library" href="${root}user/${name}/library">
+                ${tl(trans.library)}
+            </a>
+            <a class="dropdown-menu-clickable-item" data-type="friends" href="${root}user/${name}/friends">
+                ${tl(trans.friends)}
+            </a>
+            <a class="dropdown-menu-clickable-item" data-type="shouts" href="${root}user/${name}/shoutbox">
+                ${tl(trans.shouts)}
+            </a>
         `,
       placement: side,
       interactive: true,
-      trigger: "click",
-      onShow(instance) {
-        if (cached || !image_header) return;
-        load_profile_cache_externally(name).then((cache2) => {
-          if (cache2.banner) {
-            image_header.classList.add("has-banner");
-            image_header.style.backgroundImage = `url('${cache2.banner}')`;
-          }
-          cached = true;
-        });
-      }
+      trigger: "click"
     });
+    register_menu(parent ? parent : avatar3, popup);
     control_gif_pause(avatar_img);
     if (badges) return badges[badges.length - 1];
     else if (pre_existing_badge) return { type: pre_existing_badge.classList[1] };

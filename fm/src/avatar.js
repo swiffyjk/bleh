@@ -12,6 +12,7 @@ import {dialog} from "./components/dialog";
 import tippy from "tippy.js";
 import { control_gif_pause } from './build/tools';
 import { load_profile_cache_externally } from './pages/profile';
+import { register_menu } from './components/menu';
 
 export function patch_avatar(avatar, name, type = '', parent=null, side='right') {
     if (avatar.hasAttribute('data-bleh-avatar')) return {};
@@ -45,57 +46,58 @@ export function patch_avatar(avatar, name, type = '', parent=null, side='right')
     if (badges) avatar.appendChild(create_badge(badges[badges.length - 1], true));
 
     let image_header;
-    let cached = false;
-    tippy((parent) ? parent : avatar, {
-        theme: 'user',
+    const popup = tippy((parent) ? parent : avatar, {
+        theme: 'context-menu',
         content: html.node`
-            <div class="image-header" ref=${el => image_header = el}>
-                <div class="inner-image">
-                    <img src=${avatar_img.getAttribute('src').replace('/avatar42s/', '/avatar170s/')} alt=${name}>
-                    <a href="${root}user/${name}" class="link-over"></a>
+            <div class="track-preview user-preview">
+                <div class="image">
+                    <div class="inner-image">
+                        <img src=${avatar_img.getAttribute('src').replace('/avatar42s/', '/avatar170s/')} alt=${name}>
+                    </div>
+                </div>
+                <div class="info">
+                    <h5 class="title">${name}</h5>
+                    ${badges ? html.node`
+                    <div class="badges">
+                        ${badges.map((badge, index) => create_badge(badge, false, index == badges.length - 1))}
+                        ${pre_existing_badge ? create_badge({
+                            type: pre_existing_badge_type,
+                            name: tl(trans.badges[pre_existing_badge_type].name),
+                            reason: tl(trans.badges[pre_existing_badge_type].reason),
+                            inbuilt: true
+                        }) : ''}
+                    </div>
+                    ` : pre_existing_badge ? html.node`
+                    <div class="badges">
+                        ${create_badge({
+                            type: pre_existing_badge_type,
+                            name: tl(trans.badges[pre_existing_badge_type].name),
+                            reason: tl(trans.badges[pre_existing_badge_type].reason),
+                            inbuilt: true
+                        })}
+                    </div>
+                    ` : ''}
                 </div>
             </div>
-            <div class="info">
-                <h5 class="title"><a href="${root}user/${name}">${name}</a></h5>
-                ${badges ? html.node`
-                <div class="badges">
-                    ${badges.map((badge, index) => create_badge(badge, false, index == badges.length - 1))}
-                    ${pre_existing_badge ? create_badge({
-                        type: pre_existing_badge_type,
-                        name: tl(trans.badges[pre_existing_badge_type].name),
-                        reason: tl(trans.badges[pre_existing_badge_type].reason),
-                        inbuilt: true
-                    }) : ''}
-                </div>
-                ` : pre_existing_badge ? html.node`
-                <div class="badges">
-                    ${create_badge({
-                        type: pre_existing_badge_type,
-                        name: tl(trans.badges[pre_existing_badge_type].name),
-                        reason: tl(trans.badges[pre_existing_badge_type].reason),
-                        inbuilt: true
-                    })}
-                </div>
-                ` : ''}
-            </div>
+            <a class="dropdown-menu-clickable-item" data-type="user" href="${root}user/${name}">
+                ${tl(trans.profile)}
+            </a>
+            <a class="dropdown-menu-clickable-item" data-type="library" href="${root}user/${name}/library">
+                ${tl(trans.library)}
+            </a>
+            <a class="dropdown-menu-clickable-item" data-type="friends" href="${root}user/${name}/friends">
+                ${tl(trans.friends)}
+            </a>
+            <a class="dropdown-menu-clickable-item" data-type="shouts" href="${root}user/${name}/shoutbox">
+                ${tl(trans.shouts)}
+            </a>
         `,
         placement: side,
         interactive: true,
-        trigger: 'click',
-
-        onShow(instance) {
-            if (cached || !image_header) return;
-
-            load_profile_cache_externally(name).then((cache) => {
-                if (cache.banner) {
-                    image_header.classList.add('has-banner');
-                    image_header.style.backgroundImage = `url('${cache.banner}')`;
-                }
-
-                cached = true;
-            });
-        }
+        trigger: 'click'
     });
+
+    register_menu((parent) ? parent : avatar, popup);
 
     control_gif_pause(avatar_img);
 
