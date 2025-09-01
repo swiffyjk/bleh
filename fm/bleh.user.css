@@ -1748,6 +1748,10 @@
         }
     }
 
+    img {
+        font: 0 / 0 auto !important;
+    }
+
     .counter {
         font: 0 / 0 auto;
         background: hsl(var(--h3));

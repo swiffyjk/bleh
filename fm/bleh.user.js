@@ -50204,8 +50204,10 @@
           let aux = item.querySelector(".artist-header-featured-items-item-aux-text")?.textContent.trim();
           let link = item.querySelector(".link-block-cover-link")?.getAttribute("href");
           let img = item.querySelector("img")?.src;
-          if (type == "track")
-            img = img.replace("0.jpg", "mqdefault.jpg");
+          if (type == "track") {
+            const top_track = page.structure.main.querySelector("#top-tracks .cover-art img");
+            if (top_track) img = top_track.src.replace("/64s/", "/avatar170s/");
+          }
           return html.node`
                             <div class="featured-artist-item">
                                 <div class="sub-text normal" data-type=${type}>
