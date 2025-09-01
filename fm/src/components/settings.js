@@ -41,6 +41,8 @@ export function setting({
         let body = settings_store[id].body ? tl(settings_store[id].body) : null;
         const icon = settings_store[id].icon;
 
+        const incompatible_with = settings_store[id].incompatible;
+
         if (!body && settings_store[id].keybind)
             body = keybind(settings_store[id].keybind);
 
@@ -64,8 +66,8 @@ export function setting({
         if (type === 'toggle') {
             let toggle;
 
-            return html.node`
-                <div class="setting v2 ${standalone ? 'standalone' : ''}" data-type="toggle" disabled=${disabled} onclick=${() => update_toggle(id, toggle)}>
+            const elem = html.node`
+                <div class="setting v2 ${standalone ? 'standalone' : ''}" data-type="toggle" disabled=${disabled} onclick=${() => update_toggle()}>
                     ${icon ? html.node`
                     <div class="icon">
                         <div class="bleh-icon" style="--icon: var(--${icon})" />
@@ -102,6 +104,33 @@ export function setting({
                     </div>
                 </div>
             `;
+
+            function update_toggle() {
+                let val = settings[id];
+
+                toggle.setAttribute('aria-checked', !val);
+
+                save_setting(id, !val);
+                if (func) func(val);
+            }
+
+            elem.compat = () => {
+                if (!incompatible_with) return;
+
+                elem.setAttribute('disabled', 'false');
+
+                Object.entries(incompatible_with).forEach(([key, val]) => {
+                    if (Array.isArray(val)) {
+                        if (val.includes(settings[key])) elem.setAttribute('disabled', 'true');
+                    } else {
+                        if (JSON.stringify(val) == JSON.stringify(settings[key])) elem.setAttribute('disabled', 'true');
+                    }
+                });
+            }
+
+            elem.compat();
+
+            return elem;
         } else if (type === 'range') {
             let option;
 
@@ -154,6 +183,22 @@ export function setting({
                     </div>
                 </div>
             `;
+
+            elem.compat = () => {
+                if (!incompatible_with) return;
+
+                elem.setAttribute('disabled', 'false');
+
+                Object.entries(incompatible_with).forEach(([key, val]) => {
+                    if (Array.isArray(val)) {
+                        if (val.includes(settings[key])) elem.setAttribute('disabled', 'true');
+                    } else {
+                        if (JSON.stringify(val) == JSON.stringify(settings[key])) elem.setAttribute('disabled', 'true');
+                    }
+                });
+            }
+
+            elem.compat();
 
             tippy(reset_btn, {
                 content: tl(trans.reset)
@@ -246,6 +291,22 @@ export function setting({
                 </div>
             `;
 
+            container.compat = () => {
+                if (!incompatible_with) return;
+
+                container.setAttribute('disabled', 'false');
+
+                Object.entries(incompatible_with).forEach(([key, val]) => {
+                    if (Array.isArray(val)) {
+                        if (val.includes(settings[key])) container.setAttribute('disabled', 'true');
+                    } else {
+                        if (JSON.stringify(val) == JSON.stringify(settings[key])) container.setAttribute('disabled', 'true');
+                    }
+                });
+            }
+
+            container.compat();
+
             input.addEventListener('keydown', (event) => {
                 if (event.keyCode === 13 && input_container.getAttribute('data-has-error') == 'false') {
                     event.preventDefault();
@@ -296,7 +357,7 @@ export function setting({
         } else if (type == 'checkbox') {
             let toggle;
 
-            return html.node`
+            const elem = html.node`
                 <div class="setting v2 ${settings_store[id].horizontal ? 'horizontal' : ''} ${standalone ? 'standalone' : ''}" data-type="checkbox" disabled=${disabled} onclick=${() => update_toggle(id, toggle)}>
                     ${icon ? html.node`
                     <div class="icon">
@@ -332,6 +393,24 @@ export function setting({
                     </div>
                 </div>
             `;
+
+            elem.compat = () => {
+                if (!incompatible_with) return;
+
+                elem.setAttribute('disabled', 'false');
+
+                Object.entries(incompatible_with).forEach(([key, val]) => {
+                    if (Array.isArray(val)) {
+                        if (val.includes(settings[key])) elem.setAttribute('disabled', 'true');
+                    } else {
+                        if (JSON.stringify(val) == JSON.stringify(settings[key])) elem.setAttribute('disabled', 'true');
+                    }
+                });
+            }
+
+            elem.compat();
+
+            return elem;
         } else if (type == 'tabs') {
             if (func) func(value);
 
@@ -418,6 +497,22 @@ export function setting({
                 </div>
             `;
 
+            elem.compat = () => {
+                if (!incompatible_with) return;
+
+                elem.setAttribute('disabled', 'false');
+
+                Object.entries(incompatible_with).forEach(([key, val]) => {
+                    if (Array.isArray(val)) {
+                        if (val.includes(settings[key])) elem.setAttribute('disabled', 'true');
+                    } else {
+                        if (JSON.stringify(val) == JSON.stringify(settings[key])) elem.setAttribute('disabled', 'true');
+                    }
+                });
+            }
+
+            elem.compat();
+
             tippy(reset_btn, {
                 content: tl(trans.reset)
             });
@@ -463,6 +558,22 @@ export function setting({
                     <div class="setting-lists" ref=${el => lists = el} />
                 </div>
             `;
+
+            elem.compat = () => {
+                if (!incompatible_with) return;
+
+                elem.setAttribute('disabled', 'false');
+
+                Object.entries(incompatible_with).forEach(([key, val]) => {
+                    if (Array.isArray(val)) {
+                        if (val.includes(settings[key])) elem.setAttribute('disabled', 'true');
+                    } else {
+                        if (JSON.stringify(val) == JSON.stringify(settings[key])) elem.setAttribute('disabled', 'true');
+                    }
+                });
+            }
+
+            elem.compat();
 
             render_list_items(value);
 
@@ -619,6 +730,22 @@ export function setting({
                 </div>
             `;
 
+            elem.compat = () => {
+                if (!incompatible_with) return;
+
+                elem.setAttribute('disabled', 'false');
+
+                Object.entries(incompatible_with).forEach(([key, val]) => {
+                    if (Array.isArray(val)) {
+                        if (val.includes(settings[key])) elem.setAttribute('disabled', 'true');
+                    } else {
+                        if (JSON.stringify(val) == JSON.stringify(settings[key])) elem.setAttribute('disabled', 'true');
+                    }
+                });
+            }
+
+            elem.compat();
+
             tippy(reset_btn, {
                 content: tl(trans.reset)
             });
@@ -702,14 +829,6 @@ function setting_fail(id, e = null) {
             </div>
         </div>
     `;
-}
-
-function update_toggle(id, toggle) {
-    let value = settings[id];
-
-    toggle.setAttribute('aria-checked', !value);
-
-    save_setting(id, !value);
 }
 
 function update_text(id, input, submit, option, value, reset_btn, avatar, silent = false) {

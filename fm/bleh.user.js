@@ -37583,6 +37583,7 @@
       const title = settings_store[id].title ? tl(settings_store[id].title) : id;
       let body = settings_store[id].body ? tl(settings_store[id].body) : null;
       const icon = settings_store[id].icon;
+      const incompatible_with = settings_store[id].incompatible;
       if (!body && settings_store[id].keybind)
         body = keybind(settings_store[id].keybind);
       let disabled = false;
@@ -37599,9 +37600,15 @@
       if (settings_store[id].new_release)
         html_title.appendChild(html.node`<span class="new-badge beta">${tl(trans.new)}</span>`);
       if (type === "toggle") {
+        let update_toggle2 = function() {
+          let val = settings[id];
+          toggle2.setAttribute("aria-checked", !val);
+          save_setting(id, !val);
+          if (func) func(val);
+        };
         let toggle2;
-        return html.node`
-                <div class="setting v2 ${standalone ? "standalone" : ""}" data-type="toggle" disabled=${disabled} onclick=${() => update_toggle(id, toggle2)}>
+        const elem = html.node`
+                <div class="setting v2 ${standalone ? "standalone" : ""}" data-type="toggle" disabled=${disabled} onclick=${() => update_toggle2()}>
                     ${icon ? html.node`
                     <div class="icon">
                         <div class="bleh-icon" style="--icon: var(--${icon})" />
@@ -37636,6 +37643,19 @@
                     </div>
                 </div>
             `;
+        elem.compat = () => {
+          if (!incompatible_with) return;
+          elem.setAttribute("disabled", "false");
+          Object.entries(incompatible_with).forEach(([key, val]) => {
+            if (Array.isArray(val)) {
+              if (val.includes(settings[key])) elem.setAttribute("disabled", "true");
+            } else {
+              if (JSON.stringify(val) == JSON.stringify(settings[key])) elem.setAttribute("disabled", "true");
+            }
+          });
+        };
+        elem.compat();
+        return elem;
       } else if (type === "range") {
         let update_range = function(val) {
           input2.value = val;
@@ -37695,6 +37715,18 @@
                     </div>
                 </div>
             `;
+        elem.compat = () => {
+          if (!incompatible_with) return;
+          elem.setAttribute("disabled", "false");
+          Object.entries(incompatible_with).forEach(([key, val]) => {
+            if (Array.isArray(val)) {
+              if (val.includes(settings[key])) elem.setAttribute("disabled", "true");
+            } else {
+              if (JSON.stringify(val) == JSON.stringify(settings[key])) elem.setAttribute("disabled", "true");
+            }
+          });
+        };
+        elem.compat();
         tippy_esm_default(reset_btn, {
           content: tl(trans.reset)
         });
@@ -37759,6 +37791,18 @@
                     </div>
                 </div>
             `;
+        container.compat = () => {
+          if (!incompatible_with) return;
+          container.setAttribute("disabled", "false");
+          Object.entries(incompatible_with).forEach(([key, val]) => {
+            if (Array.isArray(val)) {
+              if (val.includes(settings[key])) container.setAttribute("disabled", "true");
+            } else {
+              if (JSON.stringify(val) == JSON.stringify(settings[key])) container.setAttribute("disabled", "true");
+            }
+          });
+        };
+        container.compat();
         input2.addEventListener("keydown", (event3) => {
           if (event3.keyCode === 13 && input_container.getAttribute("data-has-error") == "false") {
             event3.preventDefault();
@@ -37800,7 +37844,7 @@
         return container;
       } else if (type == "checkbox") {
         let toggle2;
-        return html.node`
+        const elem = html.node`
                 <div class="setting v2 ${settings_store[id].horizontal ? "horizontal" : ""} ${standalone ? "standalone" : ""}" data-type="checkbox" disabled=${disabled} onclick=${() => update_toggle(id, toggle2)}>
                     ${icon ? html.node`
                     <div class="icon">
@@ -37836,6 +37880,19 @@
                     </div>
                 </div>
             `;
+        elem.compat = () => {
+          if (!incompatible_with) return;
+          elem.setAttribute("disabled", "false");
+          Object.entries(incompatible_with).forEach(([key, val]) => {
+            if (Array.isArray(val)) {
+              if (val.includes(settings[key])) elem.setAttribute("disabled", "true");
+            } else {
+              if (JSON.stringify(val) == JSON.stringify(settings[key])) elem.setAttribute("disabled", "true");
+            }
+          });
+        };
+        elem.compat();
+        return elem;
       } else if (type == "tabs") {
         if (func) func(value);
         let buttons = [];
@@ -37922,6 +37979,18 @@
                     </div>
                 </div>
             `;
+        elem.compat = () => {
+          if (!incompatible_with) return;
+          elem.setAttribute("disabled", "false");
+          Object.entries(incompatible_with).forEach(([key, val]) => {
+            if (Array.isArray(val)) {
+              if (val.includes(settings[key])) elem.setAttribute("disabled", "true");
+            } else {
+              if (JSON.stringify(val) == JSON.stringify(settings[key])) elem.setAttribute("disabled", "true");
+            }
+          });
+        };
+        elem.compat();
         tippy_esm_default(reset_btn, {
           content: tl(trans.reset)
         });
@@ -38038,6 +38107,18 @@
                     <div class="setting-lists" ref=${(el) => lists = el} />
                 </div>
             `;
+        elem.compat = () => {
+          if (!incompatible_with) return;
+          elem.setAttribute("disabled", "false");
+          Object.entries(incompatible_with).forEach(([key, val]) => {
+            if (Array.isArray(val)) {
+              if (val.includes(settings[key])) elem.setAttribute("disabled", "true");
+            } else {
+              if (JSON.stringify(val) == JSON.stringify(settings[key])) elem.setAttribute("disabled", "true");
+            }
+          });
+        };
+        elem.compat();
         render_list_items(value);
         return elem;
       } else if (type == "select") {
@@ -38092,6 +38173,18 @@
         })}
                 </div>
             `;
+        elem.compat = () => {
+          if (!incompatible_with) return;
+          elem.setAttribute("disabled", "false");
+          Object.entries(incompatible_with).forEach(([key, val]) => {
+            if (Array.isArray(val)) {
+              if (val.includes(settings[key])) elem.setAttribute("disabled", "true");
+            } else {
+              if (JSON.stringify(val) == JSON.stringify(settings[key])) elem.setAttribute("disabled", "true");
+            }
+          });
+        };
+        elem.compat();
         tippy_esm_default(reset_btn, {
           content: tl(trans.reset)
         });
@@ -38149,11 +38242,6 @@
             </div>
         </div>
     `;
-  }
-  function update_toggle(id, toggle2) {
-    let value = settings[id];
-    toggle2.setAttribute("aria-checked", !value);
-    save_setting(id, !value);
   }
   function update_text(id, input2, submit, option, value, reset_btn, avatar3, silent = false) {
     if (settings_store[id].wait) {
@@ -46099,6 +46187,8 @@
       }
       register_skip_to([]);
       let bars2;
+      let column_view;
+      let extend_height;
       render(page.structure.main, html`
             <section class="bleh--panel">
                 <h4>${tl(trans.tracklist)}</h4>
@@ -46152,8 +46242,12 @@
                     </div>
                 </div>
                 <div class="setting-group">
-                    ${setting({ id: "stacked_chartlist_info" })}
-                    ${setting({ id: "expand_tracks" })}
+                    ${column_view = setting({ id: "stacked_chartlist_info", func: (val) => {
+        extend_height.compat(val);
+      } })}
+                    ${extend_height = setting({ id: "expand_tracks", func: (val) => {
+        column_view.compat(val);
+      } })}
                     ${setting({ id: "show_bulk_edit_album" })}
                 </div>
             </section>
@@ -60118,7 +60212,7 @@
       step: 0.2,
       title: trans.card_background_saturation.name,
       body: trans.card_background_saturation.body,
-      incompatible: [{ setting: "theme", value: "light" }]
+      incompatible: { theme: "light" }
     },
     lit: {
       css: "lit-user",
@@ -60584,12 +60678,14 @@
           name: trans.never
         }
       },
-      new_release: true
+      new_release: true,
+      incompatible: { stacked_chartlist_info: false }
     },
     rain: {
       default: false,
       title: trans.rain.name,
-      body: trans.rain.body
+      body: trans.rain.body,
+      require_reload: true
     },
     collage_centered: {
       default: true,

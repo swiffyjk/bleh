@@ -602,6 +602,9 @@ export async function render_setting_page(page_id) {
 
         let bars;
 
+        let column_view;
+        let extend_height;
+
         render(page.structure.main, html`
             <section class="bleh--panel">
                 <h4>${tl(trans.tracklist)}</h4>
@@ -655,8 +658,12 @@ export async function render_setting_page(page_id) {
                     </div>
                 </div>
                 <div class="setting-group">
-                    ${setting({id: 'stacked_chartlist_info'})}
-                    ${setting({id: 'expand_tracks'})}
+                    ${column_view = setting({id: 'stacked_chartlist_info', func: (val) => {
+                        extend_height.compat(val);
+                    }})}
+                    ${extend_height = setting({id: 'expand_tracks', func: (val) => {
+                        column_view.compat(val);
+                    }})}
                     ${setting({id: 'show_bulk_edit_album'})}
                 </div>
             </section>

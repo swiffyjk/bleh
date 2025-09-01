@@ -622,7 +622,7 @@ export let settings_store = {
         step: 0.2,
         title: trans.card_background_saturation.name,
         body: trans.card_background_saturation.body,
-        incompatible: [{setting: 'theme', value: 'light'}]
+        incompatible: {theme: 'light'}
     },
     lit: {
         css: 'lit-user',
@@ -1088,12 +1088,14 @@ export let settings_store = {
                 name: trans.never
             }
         },
-        new_release: true
+        new_release: true,
+        incompatible: {stacked_chartlist_info: false}
     },
     rain: {
         default: false,
         title: trans.rain.name,
-        body: trans.rain.body
+        body: trans.rain.body,
+        require_reload: true
     },
     collage_centered: {
         default: true,
