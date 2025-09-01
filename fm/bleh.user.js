@@ -45031,9 +45031,6 @@
     ).replace(
       /\[url\]([^[\]]+)\[\/url\]/g,
       (match2, url) => `[${url}](${encodeURI(url)})`
-    ).replace(
-      /https:\/\/open\.spotify\.com\/user\/([A-Za-z0-9]+)\?si=([A-Za-z0-9]+)/g,
-      "[Spotify](https://open.spotify.com/user/$1)"
     );
     const raw_html = converter.makeHtml(markdown2);
     const parsed2 = purify.sanitize(raw_html, {

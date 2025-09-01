@@ -241,10 +241,7 @@ export function markdown(text, {
         /\[url\]([^[\]]+)\[\/url\]/g,
         (match, url) =>
             `[${url}](${encodeURI(url)})`
-    )
-    .replace(
-        /https:\/\/open\.spotify\.com\/user\/([A-Za-z0-9]+)\?si=([A-Za-z0-9]+)/g,
-        '[Spotify](https://open.spotify.com/user/$1)');
+    );
 
     const raw_html = converter.makeHtml(markdown);
 
