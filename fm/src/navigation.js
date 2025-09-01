@@ -25,6 +25,7 @@ import { load_profile_cache_externally, open_starred_friend_window } from './pag
 import { sponsor } from './sponsor.js';
 import moment from 'moment';
 import { register_menu } from './components/menu.js';
+import { copy } from './build/tools.js';
 
 export function patch_masthead() {
     let masthead_logo = document.body.querySelector('.masthead-logo');
@@ -285,6 +286,34 @@ export function append_nav() {
     auth_link.appendChild(html.node`
         <p>${auth.name}</p>
     `);
+
+    const auth_drop_menu = tippy(auth_link, {
+        theme: 'context-menu',
+        content: html.node`
+            <a class="dropdown-menu-clickable-item" data-type="quick_access" href="${root}bleh/interface">
+                ${tl(trans.edit_quick_access)}
+            </a>
+            <button class="dropdown-menu-clickable-item" data-type="copy" onclick=${() => copy(auth.name)}>
+                ${tl(trans.copy_username)}
+            </button>
+            <button class="dropdown-menu-clickable-item" data-type="link" onclick=${() => copy(`https://www.last.fm${root}user/${auth.name}`)}>
+                ${tl(trans.copy_link)}
+            </button>
+        `,
+        placement: 'right-start',
+        trigger: 'manual',
+        interactive: true,
+        interactiveBorder: 10,
+        offset: [0, 0],
+
+        onShow(instance) {
+            instance.popper.addEventListener('click', event => {
+                instance.hide();
+            });
+        }
+    });
+
+    register_menu(auth_link, auth_drop_menu);
 
     let badges = load_badges(auth.name, true);
 

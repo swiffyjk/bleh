@@ -1417,6 +1417,12 @@ export const trans = {
         en: 'Copy',
         pt: 'Copiar'
     },
+    copy_username: {
+        en: 'Copy username'
+    },
+    copy_link: {
+        en: 'Copy link'
+    },
     copied_to_clipboard: {
         en: 'Copied to clipboard',
         pt: 'Copiado para a área de transferência'

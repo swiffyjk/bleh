@@ -48798,6 +48798,31 @@
     auth_link2.appendChild(html.node`
         <p>${auth.name}</p>
     `);
+    const auth_drop_menu = tippy_esm_default(auth_link2, {
+      theme: "context-menu",
+      content: html.node`
+            <a class="dropdown-menu-clickable-item" data-type="quick_access" href="${root}bleh/interface">
+                ${tl(trans.edit_quick_access)}
+            </a>
+            <button class="dropdown-menu-clickable-item" data-type="copy" onclick=${() => copy(auth.name)}>
+                ${tl(trans.copy_username)}
+            </button>
+            <button class="dropdown-menu-clickable-item" data-type="link" onclick=${() => copy(`https://www.last.fm${root}user/${auth.name}`)}>
+                ${tl(trans.copy_link)}
+            </button>
+        `,
+      placement: "right-start",
+      trigger: "manual",
+      interactive: true,
+      interactiveBorder: 10,
+      offset: [0, 0],
+      onShow(instance) {
+        instance.popper.addEventListener("click", (event3) => {
+          instance.hide();
+        });
+      }
+    });
+    register_menu(auth_link2, auth_drop_menu);
     let badges = load_badges(auth.name, true);
     if (badges) {
       auth_link2.appendChild(create_badge(badges[0], false, false, true));
@@ -54197,6 +54222,12 @@
     copy: {
       en: "Copy",
       pt: "Copiar"
+    },
+    copy_username: {
+      en: "Copy username"
+    },
+    copy_link: {
+      en: "Copy link"
     },
     copied_to_clipboard: {
       en: "Copied to clipboard",
