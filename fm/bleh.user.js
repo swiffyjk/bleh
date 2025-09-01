@@ -44985,8 +44985,16 @@
       regex: /<(\/?)h[1-5]>/gi,
       replace: "<$1strong>"
     }];
+    const mentions = () => [{
+      type: "lang",
+      regex: /(?<!@)@([a-zA-Z0-9_]+)\b(?!@)/g,
+      replace: (_, username2) => {
+        return `<a class="mention" href="${root}user/${username2}" target="_blank">@${username2}</a>`;
+      }
+    }];
     let extensions = [
-      aligner()
+      aligner(),
+      mentions()
     ];
     if (allow_banners) extensions.push(banner());
     if (allow_icons) extensions.push(icons());
@@ -44997,8 +45005,6 @@
       extensions,
       emoji: true,
       excludeTrailingPunctuationFromURLs: true,
-      ghMentions: true,
-      ghMentionsLink: `${root}user/{u}`,
       headerLevelStart: allow_headers ? starting_header : 5,
       noHeaderId: true,
       openLinksInNewWindow: true,
@@ -45010,7 +45016,7 @@
       ghCodeBlocks: false,
       smartIndentationFix: true
     });
-    const markdown2 = text3.replace(/([@])([a-zA-Z0-9_]+)/g, `[$1$2](${root}user/$2)`).replace(
+    const markdown2 = text3.replace(
       /\[artist\]([^[\]]+)\[\/artist\]/g,
       (match2, artist) => `[${artist}](${root}music/${redirect()}${encodeURIComponent(artist)})`
     ).replace(

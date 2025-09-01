@@ -180,8 +180,17 @@ export function markdown(text, {
         replace: '<$1strong>'
     }];
 
+    const mentions = () => [{
+        type: 'lang',
+        regex: /(?<!@)@([a-zA-Z0-9_]+)\b(?!@)/g,
+        replace: (_, username) => {
+            return `<a class="mention" href="${root}user/${username}" target="_blank">@${username}</a>`;
+        }
+    }];
+
     let extensions = [
-        aligner()
+        aligner(),
+        mentions()
     ];
 
     if (allow_banners) extensions.push(banner());
@@ -194,8 +203,6 @@ export function markdown(text, {
         extensions,
         emoji: true,
         excludeTrailingPunctuationFromURLs: true,
-        ghMentions: true,
-        ghMentionsLink: `${root}user/{u}`,
         headerLevelStart: (allow_headers) ? starting_header : 5,
         noHeaderId: true,
         openLinksInNewWindow: true,
@@ -208,7 +215,6 @@ export function markdown(text, {
         smartIndentationFix: true
     });
     const markdown = text
-    .replace(/([@])([a-zA-Z0-9_]+)/g, `[$1$2](${root}user/$2)`)
     .replace(
         /\[artist\]([^[\]]+)\[\/artist\]/g,
         (match, artist) =>
