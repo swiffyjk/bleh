@@ -23,6 +23,7 @@ import { sponsor_list } from '../build/sponsor.js';
 
 export function markdown(text, {
     allow_headers = false,
+    starting_header = 3,
     allow_links = true,
     line_breaks = true,
     allow_banners = false,
@@ -82,7 +83,14 @@ export function markdown(text, {
     const aligner = () => [{
         type: 'lang',
         regex: /\[(center|left|right)]\s*([\s\S]*?)\s*\[\/\1]/g,
-        replace: (_, align, content) => {
+        replace: (_, align, content, offset, text) => {
+            // dont replace in codeblocks
+            let backticks = 0;
+            for (let i = 0; i < offset; i++)
+                if (text[i] == '`') backticks++;
+
+            if (backticks % 2 == 1) return _;
+
             const inner = converter.makeHtml(content.trim());
 
             const clean = DOMPurify.sanitize(inner, {
@@ -188,7 +196,7 @@ export function markdown(text, {
         excludeTrailingPunctuationFromURLs: true,
         ghMentions: true,
         ghMentionsLink: `${root}user/{u}`,
-        headerLevelStart: (allow_headers) ? 3 : 5,
+        headerLevelStart: (allow_headers) ? starting_header : 5,
         noHeaderId: true,
         openLinksInNewWindow: true,
         requireSpaceBeforeHeadingText: true,

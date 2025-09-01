@@ -36646,7 +36646,11 @@
                     ${version3 == "2025.0113" ? html.node`<h4 class="header-over">${changelog[version3].name}</h4>` : ""}
                 </div>
                 <div class="version-item-body markdown-body">
-                    ${markdown(changelog[version3].bio)}
+                    ${markdown(changelog[version3].bio, {
+        allow_headers: true,
+        starting_header: 5,
+        in_dialog: true
+      })}
                 </div>
             </div>
         `;
@@ -44837,6 +44841,7 @@
   // src/components/markdown.js
   function markdown(text3, {
     allow_headers = false,
+    starting_header = 3,
     allow_links = true,
     line_breaks = true,
     allow_banners = false,
@@ -44908,7 +44913,11 @@
     const aligner = () => [{
       type: "lang",
       regex: /\[(center|left|right)]\s*([\s\S]*?)\s*\[\/\1]/g,
-      replace: (_, align, content) => {
+      replace: (_, align, content, offset3, text4) => {
+        let backticks = 0;
+        for (let i = 0; i < offset3; i++)
+          if (text4[i] == "`") backticks++;
+        if (backticks % 2 == 1) return _;
         const inner = converter.makeHtml(content.trim());
         const clean2 = purify.sanitize(inner, {
           ALLOWED_TAGS,
@@ -44990,7 +44999,7 @@
       excludeTrailingPunctuationFromURLs: true,
       ghMentions: true,
       ghMentionsLink: `${root}user/{u}`,
-      headerLevelStart: allow_headers ? 3 : 5,
+      headerLevelStart: allow_headers ? starting_header : 5,
       noHeaderId: true,
       openLinksInNewWindow: true,
       requireSpaceBeforeHeadingText: true,
