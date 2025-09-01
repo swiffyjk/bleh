@@ -183,7 +183,11 @@ export function return_artist_from_track(url, is_album) {
 
     // for some reason last.fm double-encodes urls sometimes,
     // leading to the % being encoded as %25 (very stupid)
-    if (/%[0-9A-Fa-f]{2}/.test(desanitised)) return desanitise(desanitised);
+    let passes = 0;
+    while (/%[0-9A-Fa-f]{2}/.test(desanitised) && passes < 5) {
+        desanitised = desanitise(desanitised, ' ');
+        passes++;
+    }
 
     return desanitised;
 }

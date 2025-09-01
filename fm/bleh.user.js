@@ -24385,7 +24385,11 @@
       desanitised = desanitise(split[length - 1]);
     else
       desanitised = desanitise(split[length - 2]);
-    if (/%[0-9A-Fa-f]{2}/.test(desanitised)) return desanitise(desanitised);
+    let passes = 0;
+    while (/%[0-9A-Fa-f]{2}/.test(desanitised) && passes < 5) {
+      desanitised = desanitise(desanitised, " ");
+      passes++;
+    }
     return desanitised;
   }
   function return_artist_from_generic(url) {
