@@ -269,7 +269,12 @@ export function markdown(text, {
         'patreon.com': 'Patreon',
         'www.patreon.com': 'Patreon',
         'twitch.tv': 'Twitch',
-        'www.twitch.tv': 'Twitch'
+        'www.twitch.tv': 'Twitch',
+        'linktr.ee': 'Linktree',
+        'carrd.co': 'Carrd',
+        'music.apple.com': 'Apple Music',
+        'music.youtube.com': 'YouTube Music',
+        'facebook.com': 'Facebook'
     }
 
     if (links.length > 0) {
