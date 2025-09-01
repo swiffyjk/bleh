@@ -45049,6 +45049,7 @@
       "twitter.com": "Twitter",
       "github.com": "GitHub",
       "discord.com": "Discord",
+      "discord.gg": "Discord",
       "bandcamp.com": "Bandcamp",
       "soundcloud.com": "Soundcloud",
       "tiktok.com": "TikTok",

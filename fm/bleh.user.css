@@ -284,7 +284,7 @@
             --b3: 0, 0%, 11%;
 
             /* card border */
-            --b4: 0, 0%, 10%;
+            --b4: 0, 0%, 9%;
 
             /* card */
             --b5: 0, 0%, 0%;
@@ -294,7 +294,7 @@
             --b8: 0, 0%, 11%;
             --b7: 0, 0%, 0%;
 
-            --card-border-base: hsl(var(--b3), 0.7);
+            --card-border-base: hsl(var(--b3), 0.6);
             --card-border-base-highlight: hsl(var(--b2), 0.55);
 
             --input-shadow: inset 0 -1px 0 0 hsl(var(--b3)), inset 0 1px 2px 1px hsl(var(--b3), 0.4);
@@ -13383,6 +13383,7 @@
         --lit-over: 1.5;
         --mask: url('data:image/svg+xml;base64,PHN2ZyByb2xlPSJpbWciIHZpZXdCb3g9IjAgMCAyNCAyNCIgeG1sbnM9Imh0dHA6Ly93d3cudzMub3JnLzIwMDAvc3ZnIj48dGl0bGU+WDwvdGl0bGU+PHBhdGggZD0iTTE4LjkwMSAxLjE1M2gzLjY4bC04LjA0IDkuMTlMMjQgMjIuODQ2aC03LjQwNmwtNS44LTcuNTg0LTYuNjM4IDcuNTg0SC40NzRsOC42LTkuODNMMCAxLjE1NGg3LjU5NGw1LjI0MyA2LjkzMlpNMTcuNjEgMjAuNjQ0aDIuMDM5TDYuNDg2IDMuMjRINC4yOThaIi8+PC9zdmc+');
     }
+    [data-host="discord.gg"],
     [data-host="discord.com"] {
         --hue-over: 235;
         --sat-over: 1.5;
@@ -26084,11 +26085,12 @@
                 }
             }
 
-            strong {
+            & > strong {
                 display: flex;
                 flex-direction: column;
                 align-items: center;
                 gap: 2px;
+                font-weight: var(--font-weight);
 
                 & > .new-badge {
                     font-size: 12px;
@@ -26101,6 +26103,10 @@
                 .bubble {
                     border: 1px solid transparent;
                     outline: 2px solid hsl(var(--l3-c));
+                }
+
+                & > strong {
+                    font-weight: var(--font-weight-medium);
                 }
             }
         }
