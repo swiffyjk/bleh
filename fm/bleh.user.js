@@ -48585,16 +48585,37 @@
   }
   function update_masthead(masthead_logo = document.body.querySelector(".masthead-logo")) {
     const update_required = localStorage.getItem("bleh_update_required") || "false";
+    let home_link;
     render(masthead_logo, html``);
     render(masthead_logo, html`
         <a href="/">Last.fm</a>
-        <a class="home-link" href="${root}music">
+        <a class="home-link" href="${root}music" ref=${(el) => home_link = el}>
             <div class="bleh-logo">${version.brand}</div>
             <div class="lastfm-logo">Last.fm</div>
         </a>
     `);
+    const head_menu = tippy_esm_default(home_link, {
+      theme: "window",
+      content: html.node`
+            <div class="setting-group blend">
+                ${setting({ id: "branding_type" })}
+            </div>
+        `,
+      placement: "right-start",
+      trigger: "manual",
+      interactive: true,
+      interactiveBorder: 10,
+      offset: [0, 0],
+      onShow(instance) {
+        instance.popper.addEventListener("click", (event3) => {
+          instance.hide();
+        });
+      }
+    });
+    register_menu(home_link, head_menu);
+    let link;
     if (update_required === "false") {
-      masthead_logo.appendChild(html.node`
+      link = html.node`
             <a class="bleh--version" href="${root}bleh">
                 ${version.build}
                 <div class="new-badge sku spacing">
@@ -48606,9 +48627,9 @@
                     ` : ""}
                 </div>
             </a>
-        `);
+        `;
     } else {
-      let link = html.node`
+      link = html.node`
             <a class="bleh--version" onclick=${() => prompt_for_update()}>
                 <div class="update-container">
                     <div class="bleh-icon" style="--icon: var(--icon-16-update)" />
@@ -48627,8 +48648,28 @@
       tippy_esm_default(link, {
         content: tl(trans.update_available_to_install)
       });
-      masthead_logo.appendChild(link);
     }
+    const last_checked = localStorage.getItem("bleh_update_checked") || null;
+    const link_menu = tippy_esm_default(link, {
+      theme: "context-menu",
+      content: html.node`
+            <a class="dropdown-menu-clickable-item" data-type="update" href="${root}bleh/general">
+                ${last_checked ? tl(trans.last_checked_date).replace("{d}", (0, import_moment4.default)(last_checked).fromNow()) : tl(trans.never_checked)}
+            </a>
+        `,
+      placement: "right-start",
+      trigger: "manual",
+      interactive: true,
+      interactiveBorder: 10,
+      offset: [0, 0],
+      onShow(instance) {
+        instance.popper.addEventListener("click", (event3) => {
+          instance.hide();
+        });
+      }
+    });
+    register_menu(link, link_menu);
+    masthead_logo.appendChild(link);
   }
   function append_nav() {
     if (ff("developer") && !page.structure.indicator) {
@@ -60682,7 +60723,7 @@
   var build_default = {
     brand: "bleh",
     build: "2025.0831",
-    sku: "yuzuha",
+    sku: "alice",
     bio: "bleh!!! ^-^",
     author: "katelyn",
     url: "https://github.com/katelyynn/bleh/raw/uwu/fm/bleh.user.js",
