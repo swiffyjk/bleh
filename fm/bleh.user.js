@@ -44993,14 +44993,14 @@
       }
     }];
     let extensions = [
-      aligner(),
-      mentions()
+      aligner()
     ];
     if (allow_banners) extensions.push(banner());
     if (allow_icons) extensions.push(icons());
     if (allow_hue) extensions.push(accent());
     if (allow_socials) extensions.push(social_links());
     if (!allow_headers) extensions.push(header_minify());
+    extensions.push(mentions());
     const converter = new import_showdown.default.Converter({
       extensions,
       emoji: true,
@@ -45045,7 +45045,11 @@
       "x.com": "X",
       "twitter.com": "Twitter",
       "github.com": "GitHub",
-      "discord.com": "Discord"
+      "discord.com": "Discord",
+      "bandcamp.com": "Bandcamp",
+      "soundcloud.com": "Soundcloud",
+      "tiktok.com": "TikTok",
+      "www.tiktok.com": "TikTok"
     };
     if (links.length > 0) {
       body.appendChild(html.node`

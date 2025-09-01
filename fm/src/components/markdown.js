@@ -189,8 +189,7 @@ export function markdown(text, {
     }];
 
     let extensions = [
-        aligner(),
-        mentions()
+        aligner()
     ];
 
     if (allow_banners) extensions.push(banner());
@@ -198,6 +197,7 @@ export function markdown(text, {
     if (allow_hue) extensions.push(accent());
     if (allow_socials) extensions.push(social_links());
     if (!allow_headers) extensions.push(header_minify());
+    extensions.push(mentions());
 
     const converter = new showdown.Converter({
         extensions,
@@ -259,7 +259,11 @@ export function markdown(text, {
         'x.com': 'X',
         'twitter.com': 'Twitter',
         'github.com': 'GitHub',
-        'discord.com': 'Discord'
+        'discord.com': 'Discord',
+        'bandcamp.com': 'Bandcamp',
+        'soundcloud.com': 'Soundcloud',
+        'tiktok.com': 'TikTok',
+        'www.tiktok.com': 'TikTok'
     }
 
     if (links.length > 0) {
