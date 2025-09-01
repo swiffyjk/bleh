@@ -414,9 +414,11 @@ export function append_nav() {
     let inbox_count = new_auth.querySelector('[data-analytics-label="inbox"] + .auth-avatar-notification-count-badge');
     if (!inbox_count) inbox_count = '0'; else inbox_count = inbox_count.textContent;
 
+    const count = parseInt(notif_count) + parseInt(inbox_count);
+
     const inbox = html.node`
-        <a class="inbox-item" href="${root}inbox/notifications">
-            ${parseInt(notif_count) + parseInt(inbox_count)}
+        <a class="inbox-item chibi" href="${root}inbox/notifications">
+            <div class="counter" data-count=${count}>${count}</div>
         </a>
     `;
 

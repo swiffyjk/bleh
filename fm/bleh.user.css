@@ -1737,9 +1737,31 @@
 
     .inbox-item {
         display: flex;
-        --padding: 7px var(--button-sides) 7px calc(var(--button-sides) + var(--icon-size) + var(--icon-gap)) !important;
+        --padding: 7px var(--button-sides) !important;
         --mask: var(--icon-16-inbox);
         position: relative;
+
+        & > .counter {
+            position: absolute;
+            top: 4px;
+            right: 4px;
+        }
+    }
+
+    .counter {
+        font: 0 / 0 auto;
+        background: hsl(var(--h3));
+        outline: 2px solid hsl(var(--b6));
+        box-shadow: 0 0 30px 8px hsl(var(--h4));
+        color: var(--b7);
+
+        display: flex;
+        justify-content: center;
+        align-items: center;
+
+        width: 6px;
+        height: 6px;
+        border-radius: 50px;
     }
 
     .inbox-info {

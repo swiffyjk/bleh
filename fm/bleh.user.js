@@ -49009,9 +49009,10 @@
     let inbox_count = new_auth.querySelector('[data-analytics-label="inbox"] + .auth-avatar-notification-count-badge');
     if (!inbox_count) inbox_count = "0";
     else inbox_count = inbox_count.textContent;
+    const count = parseInt(notif_count) + parseInt(inbox_count);
     const inbox = html.node`
-        <a class="inbox-item" href="${root}inbox/notifications">
-            ${parseInt(notif_count) + parseInt(inbox_count)}
+        <a class="inbox-item chibi" href="${root}inbox/notifications">
+            <div class="counter" data-count=${count}>${count}</div>
         </a>
     `;
     tippy_esm_default(inbox, {
@@ -49295,19 +49296,19 @@
           elem.classList = "dropdown-menu-clickable-item";
           elem.setAttribute("data-type", formal.icon);
           elem.textContent = formal.name;
-          let count = 0;
+          let count2 = 0;
           if (val == "notifications")
-            count = notif_count;
+            count2 = notif_count;
           else if (val == "messages")
-            count = inbox_count;
-          if (count) {
+            count2 = inbox_count;
+          if (count2) {
             render(elem, html`
                                         <div class="auth-dropdown-item-row">
                                             <span class="auth-dropdown-item-left">
                                                 ${formal.name}
                                             </span>
                                             <span class="auth-dropdown-item-right">
-                                                ${count}
+                                                ${count2}
                                             </span>
                                         </div>
                                     `);
