@@ -514,9 +514,11 @@ export function external_url_prompt(url) {
                     <span class="hostname">
                         ${hostname}
                     </span>
+                    ${path != '/' ? html.node`
                     <span class="path">
                         ${path}
                     </span>
+                    ` : ''}
                 </div>
                 ${trust_site = toggle({
                     type: 'checkbox',

@@ -241,7 +241,7 @@
 
         /* root */
         --b6: var(--hue), calc(var(--sat) * 4% * var(--sat-bg, 1)), 14%;
-        --b8: var(--hue), calc(var(--sat) * 4% * var(--sat-bg, 1)), 25%;
+        --b8: var(--hue), calc(var(--sat) * 4% * var(--sat-bg, 1)), 23%;
         --b7: 0, 0%, 0%;
         --b9: var(--b6);
 
@@ -274,7 +274,7 @@
 
             /* root */
             --b6: var(--hue), calc(var(--sat) * 5% * var(--sat-bg, 1)), 6%;
-            --b8: var(--hue), calc(var(--sat) * 5% * var(--sat-bg, 1)), 15%;
+            --b8: var(--hue), calc(var(--sat) * 5% * var(--sat-bg, 1)), 12%;
             --b7: 0, 0%, 0%;
         }
         .theme-preview[data-bleh--theme="oled"],
@@ -291,7 +291,7 @@
 
             /* root */
             --b6: 0, 0%, 0%;
-            --b8: 0, 0%, 11%;
+            --b8: 0, 0%, 7%;
             --b7: 0, 0%, 0%;
 
             --card-border-base: hsl(var(--b3), 0.6);
@@ -12326,7 +12326,7 @@
         backdrop-filter: blur(30px) saturate(var(--blur-saturate)) brightness(var(--blur-brightness)) contrast(var(--blur-contrast));
         -webkit-backdrop-filter: blur(30px) saturate(var(--blur-saturate)) brightness(var(--blur-brightness)) contrast(var(--blur-contrast));
         border-radius: var(--item-big-radius);
-        box-shadow: inset 0 0 0 1px var(--card-border-base), var(--card-shadow);
+        box-shadow: inset 0 0 0 1px var(--card-border-base), var(--avatar-shadow);
         padding: 5px 12px;
         font-size: calc(var(--font-size) - 1px);
         font-weight: var(--font-weight);
@@ -12648,9 +12648,14 @@
             .tippy-content {
                 display: flex;
                 flex-direction: column;
+                text-align: center;
 
                 .name {
                     font-weight: var(--font-weight-medium);
+
+                    & > .link {
+                        justify-content: center;
+                    }
                 }
                 .sister {
                     color: hsl(var(--c2), 80%);
@@ -23427,19 +23432,23 @@
         width: 420px;
         cursor: default;
 
-        display: flex;
-        align-items: center;
-        color: hsl(var(--c3));
         font-weight: var(--font-weight-medium);
 
         margin-top: var(--card-padding);
 
-        & > .hostname {
-            color: hsl(var(--c2));
-        }
-
         & + .setting {
             width: 100%;
+        }
+    }
+
+    .external-warn-input,
+    .link {
+        display: flex;
+        align-items: center;
+        color: hsl(var(--c3));
+
+        & > .hostname {
+            color: hsl(var(--c2));
         }
     }
 

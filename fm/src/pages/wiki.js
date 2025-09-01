@@ -382,10 +382,12 @@ export function patch_wiki_contents(wiki_block) {
 
         if (!href.startsWith(root)) {
             if (href && is_link_external(href)) {
-                link.addEventListener('click', e => {
-                    const link = new URL(href);
-                    const hostname = link.hostname;
+                const url = new URL(href);
+                const scheme = url.protocol;
+                const hostname = url.hostname;
+                const path = url.pathname + url.search + url.hash;
 
+                link.addEventListener('click', e => {
                     if (settings.trusted_sites.includes(hostname)) return;
 
                     e.preventDefault();
@@ -397,7 +399,23 @@ export function patch_wiki_contents(wiki_block) {
                     tippy(link, {
                         theme: 'name-sister-combo',
                         content: html.node`
-                            <span class="name">${href}</span>
+                            <span class="name">
+                                <span class="link">
+                                    ${scheme != 'https:' ? html.node`
+                                    <span class="scheme">
+                                        ${scheme}//
+                                    </span>
+                                    ` : ''}
+                                    <span class="hostname">
+                                        ${hostname}
+                                    </span>
+                                    ${path != '/' ? html.node`
+                                    <span class="path">
+                                        ${path}
+                                    </span>
+                                    ` : ''}
+                                </span>
+                            </span>
                             <span class="sister">${tl(trans.external)}</span>
                         `
                     });

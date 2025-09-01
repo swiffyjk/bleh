@@ -43808,9 +43808,11 @@
       let sister;
       if (!href.startsWith(root)) {
         if (href && is_link_external(href)) {
+          const url = new URL(href);
+          const scheme = url.protocol;
+          const hostname = url.hostname;
+          const path = url.pathname + url.search + url.hash;
           link.addEventListener("click", (e) => {
-            const link2 = new URL(href);
-            const hostname = link2.hostname;
             if (settings.trusted_sites.includes(hostname)) return;
             e.preventDefault();
             external_url_prompt(href);
@@ -43819,7 +43821,23 @@
             tippy_esm_default(link, {
               theme: "name-sister-combo",
               content: html.node`
-                            <span class="name">${href}</span>
+                            <span class="name">
+                                <span class="link">
+                                    ${scheme != "https:" ? html.node`
+                                    <span class="scheme">
+                                        ${scheme}//
+                                    </span>
+                                    ` : ""}
+                                    <span class="hostname">
+                                        ${hostname}
+                                    </span>
+                                    ${path != "/" ? html.node`
+                                    <span class="path">
+                                        ${path}
+                                    </span>
+                                    ` : ""}
+                                </span>
+                            </span>
                             <span class="sister">${tl(trans.external)}</span>
                         `
             });
@@ -45268,9 +45286,11 @@
                     <span class="hostname">
                         ${hostname}
                     </span>
+                    ${path != "/" ? html.node`
                     <span class="path">
                         ${path}
                     </span>
+                    ` : ""}
                 </div>
                 ${trust_site = toggle({
         type: "checkbox",
