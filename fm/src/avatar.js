@@ -79,7 +79,7 @@ export function patch_avatar(avatar, name, type = '', parent=null, side='right')
                     ` : ''}
                 </div>
             </div>
-            <a class="dropdown-menu-clickable-item" data-type="user" href="${root}user/${name}">
+            <a class="dropdown-menu-clickable-item" data-type="profile" href="${root}user/${name}">
                 ${tl(trans.profile)}
             </a>
             <a class="dropdown-menu-clickable-item" data-type="library" href="${root}user/${name}/library">

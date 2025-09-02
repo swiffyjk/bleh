@@ -700,7 +700,7 @@
             --avatar-generic-background: hsl(var(--b4), 30%);
 
             --blur-saturate: 130%;
-            --blur-brightness: 2.5;
+            --blur-brightness: 3.8;
             --blur-contrast: 2;
 
             --view-buttons: hsl(var(--b4), 10%);
@@ -3937,7 +3937,7 @@
         order: 4;
 
         & > a {
-            --mask: var(--icon-16-user);
+            --mask: var(--icon-16-users);
         }
     }
     .toolbar > .navlist > .navlist-items > .secondary-nav-item--following {
@@ -8825,7 +8825,7 @@
     [data-theme="nav-window"],
     [data-theme="auth-menu-v2"] {
         padding: var(--item-list-gap) !important;
-        background: hsl(var(--menu-bg), 86%) !important;
+        background: hsl(var(--menu-bg), 90%) !important;
         border-radius: var(--card-radius) !important;
         box-shadow: var(--override-full-shadow, var(--overlay-shadow)) !important;
         border: 1px solid var(--card-border-base) !important;
@@ -9521,8 +9521,14 @@
     [data-type="obsession"] {
         --mask: var(--icon-16-obsession);
     }
+    [data-type="expand"] {
+        --mask: var(--icon-16-expand);
+    }
     [data-type="link"] {
         --mask: var(--icon-16-link);
+    }
+    [data-type="listeners"] {
+        --mask: var(--icon-16-listener);
     }
     [data-type="support"] {
         --mask: var(--icon-16-support);
@@ -10860,7 +10866,7 @@
     .date-range-picker-content, .date-picker-content,
     .dropdown-menu-clickable, .auth-dropdown-menu, .navlist-hidden-list, .modal-body, .library-search-results, .events-filter-location-dropdown {
         margin: unset !important;
-        background: hsl(var(--menu-bg), 95%) !important;
+        background: hsl(var(--menu-bg), 90%) !important;
         border-radius: calc(var(--button-radius) + 4px) !important;
         box-shadow: var(--override-full-shadow, var(--overlay-shadow)) !important;
         border: 1px solid var(--card-border-base) !important;
@@ -12370,7 +12376,7 @@
         &[data-theme="language-menu"],
         &[data-theme="menu"] {
             padding: 4px !important;
-            background: hsl(var(--menu-bg), 86%) !important;
+            background: hsl(var(--menu-bg), 90%) !important;
             border-radius: calc(var(--button-radius) + 4px) !important;
             box-shadow: var(--override-full-shadow, var(--overlay-shadow)) !important;
             border: 1px solid var(--card-border-base) !important;

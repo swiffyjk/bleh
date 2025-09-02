@@ -26530,12 +26530,12 @@
         aux_text.removeChild(stat_name);
         plays_elem = aux_text;
         if (is_album) {
-          let artist = grid.querySelector(".grid-items-item-aux-block");
-          aux_text.removeChild(artist);
+          let artist2 = grid.querySelector(".grid-items-item-aux-block");
+          aux_text.removeChild(artist2);
           plays_elem = document.createElement("a");
           plays_elem.textContent = aux_text.textContent;
           aux_text.textContent = "";
-          aux_text.appendChild(artist);
+          aux_text.appendChild(artist2);
           aux_text.appendChild(plays_elem);
         }
       } else {
@@ -26571,11 +26571,12 @@
       }
       let name = grid.querySelector(".grid-items-item-main-text a");
       if (!name) return;
+      let artist;
       if (!is_album) {
         name.textContent = correct_artist(name.textContent.trim());
         insights.artist.labels.push(name.textContent);
       } else {
-        let artist = grid.querySelector(".grid-items-item-aux-block");
+        artist = grid.querySelector(".grid-items-item-aux-block");
         if (!artist) return;
         if (settings.format_guest_features) {
           let name_elem = name;
@@ -26600,6 +26601,119 @@
           name.textContent = correct_item_by_artist(name.textContent.trim(), artist.textContent.trim());
         }
       }
+      const menu = tippy_esm_default(grid, {
+        theme: "context-menu",
+        content: html.node`
+                ${!is_album ? html.node`
+                <div class="button-combo">
+                    ${() => {
+          return html.node`
+                            <a class="dropdown-menu-clickable-item" data-type="artist" href=${name.getAttribute("href")}>
+                                ${tl(trans.artist)}
+                            </a>
+                        `;
+        }}
+                    <div class="button-combo-sep"/>
+                    ${() => {
+          let button = html.node`
+                            <a class="dropdown-menu-clickable-item chibi" data-type="continue" href="${root}user/${page.name}/library${name.getAttribute("href")}">
+                                ${tl(trans.explore_in_library)}
+                            </a>
+                        `;
+          tippy_esm_default(button, {
+            content: tl(trans.explore_in_library),
+            delay: [500, 0]
+          });
+          return button;
+        }}
+                </div>
+                ` : html.node`
+                <div class="button-combo">
+                    ${() => {
+          return html.node`
+                            <a class="dropdown-menu-clickable-item" data-type="album" href=${name.getAttribute("href")}>
+                                ${tl(trans.album)}
+                            </a>
+                        `;
+        }}
+                    <div class="button-combo-sep"/>
+                    ${() => {
+          let button = html.node`
+                            <a class="dropdown-menu-clickable-item chibi" data-type="continue" href="${root}user/${page.name}/library${name.getAttribute("href")}">
+                                ${tl(trans.explore_in_library)}
+                            </a>
+                        `;
+          tippy_esm_default(button, {
+            content: tl(trans.explore_in_library),
+            delay: [500, 0]
+          });
+          return button;
+        }}
+                </div>
+                <div class="button-combo">
+                    ${() => {
+          return html.node`
+                            <a class="dropdown-menu-clickable-item" data-type="artist" href=${artist.getAttribute("href")}>
+                                ${tl(trans.artist)}
+                            </a>
+                        `;
+        }}
+                    <div class="button-combo-sep"/>
+                    ${() => {
+          let button = html.node`
+                            <a class="dropdown-menu-clickable-item chibi" data-type="continue" href="${root}user/${page.name}/library${artist.getAttribute("href")}">
+                                ${tl(trans.explore_in_library)}
+                            </a>
+                        `;
+          tippy_esm_default(button, {
+            content: tl(trans.explore_in_library),
+            delay: [500, 0]
+          });
+          return button;
+        }}
+                </div>
+                `}
+                <a class="dropdown-menu-clickable-item" data-type="gallery" href="${name.getAttribute("href")}/+images">
+                    ${is_album ? tl(trans.artwork) : tl(trans.photos)}
+                </a>
+                <a class="dropdown-menu-clickable-item" data-type="wiki" href="${name.getAttribute("href")}/+wiki">
+                    ${is_album ? tl(trans.wiki) : tl(trans.biography)}
+                </a>
+                ${!is_album ? html.node`
+                <a class="dropdown-menu-clickable-item" data-type="listeners" href="${name.getAttribute("href")}/+listeners/you-know">
+                    ${tl(trans.listeners)}
+                </a>
+                ` : ""}
+                <a class="dropdown-menu-clickable-item" data-type="shouts" href="${name.getAttribute("href")}/+shoutbox">
+                    ${tl(trans.shouts)}
+                </a>
+                <a class="dropdown-menu-clickable-item" data-type="tags" href="${name.getAttribute("href")}/+tags">
+                    ${tl(trans.tags)}
+                </a>
+                <div class="sep" />
+                <button class="dropdown-menu-clickable-item" data-type="expand" onclick=${() => {
+          expand_avatar(image.src.replace("/avatar300s/", "/ar0/").replace("/500x500/", "ar0"));
+        }}>
+                    ${tl(trans.expand)}
+                </button>
+                <button class="dropdown-menu-clickable-item" data-type="link" onclick=${() => {
+          copy(name.href);
+        }}>
+                    ${tl(trans.copy)}
+                </button>
+            `,
+        placement: "right-start",
+        trigger: "manual",
+        interactive: true,
+        interactiveBorder: 10,
+        offset: [0, 0],
+        onShow(instance) {
+          instance.popper.addEventListener("click", (event3) => {
+            instance.hide();
+          });
+        }
+      });
+      register_menu(grid, menu);
     });
     if (page.subpage.startsWith("library"))
       bleh_glacier_insights(insights);
@@ -43446,7 +43560,7 @@
                     ` : ""}
                 </div>
             </div>
-            <a class="dropdown-menu-clickable-item" data-type="user" href="${root}user/${name}">
+            <a class="dropdown-menu-clickable-item" data-type="profile" href="${root}user/${name}">
                 ${tl(trans.profile)}
             </a>
             <a class="dropdown-menu-clickable-item" data-type="library" href="${root}user/${name}/library">
