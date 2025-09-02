@@ -4,15 +4,18 @@
 // Licensed under GPLv3
 //
 
+import { html } from 'lighterhtml';
 import {settings} from "../build/config";
 import {log} from "../build/log";
-import {page} from "../build/page";
+import {auth, page} from "../build/page";
 import {correct_artist, correct_item_by_artist} from "../components/lotus";
 import {checkup_page_structure} from "../components/structure";
 import {patch_titles} from "../components/track";
-import {update_page} from "../page";
+import {register_background, update_page} from "../page";
+import { tl, trans } from '../build/trans';
+import { load_profile_cache_externally } from './profile';
 
-export function bleh_search() {
+export async function bleh_search() {
     page.structure.container = document.body.querySelector('.page-content');
     try {
         page.structure.row = page.structure.container.querySelector('.row');
@@ -88,5 +91,30 @@ export function bleh_search() {
 
             artist_parent.after(image_parent);
         });
+    }
+
+    page.structure.container.insertBefore(html.node`
+        <section class="redesigned-header search-header no-background">
+            <div class="tag-side">
+                <div class="tag-icon search-icon"></div>
+            </div>
+            <div class="info-side">
+                <div class="sub-text">${tl(trans.search)}</div>
+                <h1>${value}</h1>
+            </div>
+        </section>
+    `, page.structure.container.firstElementChild);
+
+    let cache;
+    if (auth.name) {
+        cache = await load_profile_cache_externally(auth.name);
+        if (cache.banner)
+            register_background(cache.banner);
+        else if (auth.avatar && !auth.avatar.endsWith('818148bf682d429dc215c1705eb27b98.png'))
+            register_background(auth.avatar.replace('/avatar42s/', '/ar0/'));
+        else
+            register_background(null);
+    } else {
+        register_background(null);
     }
 }

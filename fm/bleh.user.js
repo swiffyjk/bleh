@@ -51346,7 +51346,7 @@
   }
 
   // src/pages/search.js
-  function bleh_search() {
+  async function bleh_search() {
     page.structure.container = document.body.querySelector(".page-content");
     try {
       page.structure.row = page.structure.container.querySelector(".row");
@@ -51402,6 +51402,29 @@
         image.classList = [];
         artist_parent.after(image_parent);
       });
+    }
+    page.structure.container.insertBefore(html.node`
+        <section class="redesigned-header search-header no-background">
+            <div class="tag-side">
+                <div class="tag-icon search-icon"></div>
+            </div>
+            <div class="info-side">
+                <div class="sub-text">${tl(trans.search)}</div>
+                <h1>${value}</h1>
+            </div>
+        </section>
+    `, page.structure.container.firstElementChild);
+    let cache2;
+    if (auth.name) {
+      cache2 = await load_profile_cache_externally(auth.name);
+      if (cache2.banner)
+        register_background(cache2.banner);
+      else if (auth.avatar && !auth.avatar.endsWith("818148bf682d429dc215c1705eb27b98.png"))
+        register_background(auth.avatar.replace("/avatar42s/", "/ar0/"));
+      else
+        register_background(null);
+    } else {
+      register_background(null);
     }
   }
 
