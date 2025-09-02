@@ -48223,7 +48223,7 @@
     const extras = matches.map((match2, i) => {
       const start2 = match2.idx;
       const end2 = i + 1 < matches.length ? matches[i + 1].idx : formatted_title.length;
-      const tag_text = formatted_title.slice(start2, end2).replace(/^[\(\[\{\-\s]+/, "").replace(/[\(\)\[\]\{\}\-\s]+$/, "").trim();
+      const tag_text = formatted_title.slice(start2, end2).replace(/^[\(\[\{\-\:\s]+/, "").replace(/[\)\]\}\-\:\s]+$/, "").trim();
       return {
         group: match2.group,
         text: tag_text

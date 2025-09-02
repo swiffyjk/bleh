@@ -352,10 +352,10 @@ export function name_includes(original_title, original_artist) {
             : formatted_title.length;
         const tag_text = formatted_title
             .slice(start, end)
-            // strip only leading brackets () [] {} or hyphens and whitespace
-            .replace(/^[\(\[\{\-\s]+/, '')
-            // strip any trailing brackets () [] {}, hyphens or whitespace
-            .replace(/[\(\)\[\]\{\}\-\s]+$/, '')
+            // strip only leading brackets () [] {}, hyphens, colons, and whitespace
+            .replace(/^[\(\[\{\-\:\s]+/, '')
+            // strip any trailing brackets () [] {}, hyphens, colons, or whitespace
+            .replace(/[\)\]\}\-\:\s]+$/, '')
             .trim();
         return {
             group: match.group,
