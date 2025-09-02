@@ -138,12 +138,6 @@ export function collage({
         </div>
     `);
 
-    let width_input = width.querySelector('input');
-    let height_input = height.querySelector('input');
-
-    let timeframe_select = timeframe.querySelector('select');
-    let type_select = type.querySelector('select');
-
     let setting_group;
     let inputter;
     render(sidebar, html`
@@ -208,9 +202,9 @@ export function collage({
 
     function make_collage(bypass = false) {
         if (
-            width_input.value == '' || height_input.value == '' ||
-            parseInt(width_input.value) < min || parseInt(width_input.value) > max ||
-            parseInt(height_input.value) < min || parseInt(height_input.value) > max
+            width.value() == '' || height.value() == '' ||
+            parseInt(width.value()) < min || parseInt(width.value()) > max ||
+            parseInt(height.value()) < min || parseInt(height.value()) > max
         ) {
             notify({
                 id: 'collage_failed',
@@ -232,7 +226,7 @@ export function collage({
         }
 
         let per_page = 50; // decided by last.fm
-        let pages = Math.ceil((width_input.value * height_input.value) / per_page);
+        let pages = Math.ceil((width.value() * height.value()) / per_page);
 
         if (pages > 4 && !bypass) {
             let warn = notify({
@@ -273,7 +267,7 @@ export function collage({
             </div>
         `);
 
-        fetch(`${root}user/${page.name}/library/${type_select.value}?format=list&${timeframe_select.value}&page=${current_page}&ajax=1`)
+        fetch(`${root}user/${page.name}/library/${type.value()}?format=list&${timeframe.value()}&page=${current_page}&ajax=1`)
             .then(function(response) {
                 console.log('returned', response, response.text);
 
@@ -294,7 +288,7 @@ export function collage({
                         if (item.avatar)
                             item.avatar = item.avatar.getAttribute('src');
                         item.name = track.querySelector('.chartlist-name a').textContent.trim();
-                        if (type_select.value != 'artists')
+                        if (type.value() != 'artists')
                             item.sister = track.querySelector('.chartlist-artist a').textContent.trim();
                         item.plays = clean_number(track.querySelector('.chartlist-count-bar-slug').getAttribute('data-stat-value'));
 
@@ -339,7 +333,7 @@ export function collage({
         }
 
         let grid = html.node`
-            <ol class="grid-items grid-items--numbered collage-grid" style="--width: ${width_input.value}; --height: ${height_input.value}" data-width=${width_input.value} data-height=${height_input.value} data-centered=${settings.collage_centered} />
+            <ol class="grid-items grid-items--numbered collage-grid" style="--width: ${width.value()}; --height: ${height.value()}" data-width=${width.value()} data-height=${height.value()} data-centered=${settings.collage_centered} />
         `;
 
         if (!settings.collage_grid_gap) {
@@ -347,15 +341,15 @@ export function collage({
             grid.style.setProperty('--item-med-radius', '0');
         }
 
-        let total = width_input.value * height_input.value - 1;
-        grid.style.setProperty('--highest', Math.max(+width_input.value, +height_input.value).toString());
+        let total = width.value() * height.value() - 1;
+        grid.style.setProperty('--highest', Math.max(+width.value(), +height.value()).toString());
 
         page.state.collage.some((data, index) => {
             if (index > total)
                 return false;
 
             let template;
-            if (type_select.value == 'artists')
+            if (type.value() == 'artists')
                 template = sanitise(data.name);
             else
                 template = `${sanitise(data.sister)}/${sanitise(data.name)}`;
@@ -375,19 +369,19 @@ export function collage({
                                 </a>
                             </p>
                             ` : ''}
-                            ${(type_select.value != 'artists') ? html.node`
+                            ${(type.value() != 'artists') ? html.node`
                             <p class="grid-items-item-aux-text">
                                 ${settings.collage_grid_text ? html.node`
                                 <a class="grid-items-item-aux-block" href="${root}music/${redirect()}${data.sister}">
                                     ${data.sister}
                                 </a>
                                 ${settings.collage_grid_plays ? html.node`
-                                <a class="grid-item-plays" href="${root}user/${page.name}/library/music/${redirect()}${template}?date_preset=${timeframe_select.value}" target="_blank">
+                                <a class="grid-item-plays" href="${root}user/${page.name}/library/music/${redirect()}${template}?date_preset=${timeframe.value()}" target="_blank">
                                     ${data.plays.toLocaleString(lang)}
                                 </a>
                                 ` : ''}
                                 ` : settings.collage_grid_plays ? html.node`
-                                <a class="grid-item-plays" href="${root}user/${page.name}/library/music/${redirect()}${template}?date_preset=${timeframe_select.value}" target="_blank">
+                                <a class="grid-item-plays" href="${root}user/${page.name}/library/music/${redirect()}${template}?date_preset=${timeframe.value()}" target="_blank">
                                     ${data.plays.toLocaleString(lang)}${tl(trans.plays_lower)}
                                 </a>
                                 ` : ''}
@@ -395,7 +389,7 @@ export function collage({
                             ` : html.node`
                             ${settings.collage_grid_plays ? html.node`
                             <p class="grid-items-item-aux-text">
-                                <a class="grid-item-plays" href="${root}user/${page.name}/library/music/${redirect()}${template}?date_preset=${timeframe_select.value}" target="_blank">
+                                <a class="grid-item-plays" href="${root}user/${page.name}/library/music/${redirect()}${template}?date_preset=${timeframe.value()}" target="_blank">
                                     ${data.plays.toLocaleString(lang)}${tl(trans.plays_lower)}
                                 </a>
                             </p>
@@ -412,12 +406,12 @@ export function collage({
             <div class="collage">
                 ${settings.collage_title ? html.node`
                 <div class="header">
-                    <div class="type" data-type=${type_select.value}>
+                    <div class="type" data-type=${type.value()}>
                         <div class="bleh-icon" />
                         <strong class="brand">${version.brand}</strong>
                         <strong>${timeframe.querySelector('button').textContent}</strong>
-                        <strong>${tl(trans.top_type).replace('{type}', tl(trans[type_select.value]))}</strong>
-                        <strong>${width_input.value}×${height_input.value}</strong>
+                        <strong>${tl(trans.top_type).replace('{type}', tl(trans[type.value()]))}</strong>
+                        <strong>${width.value()}×${height.value()}</strong>
                     </div>
                     <div class="user">
                         <div class="avatar">
@@ -443,7 +437,7 @@ export function collage({
         // 15 = card-gap
         const default_size = 380;
         const base = 6;
-        const highest = Math.max(+width_input.value, +height_input.value);
+        const highest = Math.max(+width.value(), +height.value());
 
         const grid_item_size = Math.min(
             default_size,
@@ -452,20 +446,20 @@ export function collage({
         const grid_item_gap = (settings.collage_grid_gap) ? 10 : 0;
         const padding = (settings.collage_grid_gap) ? 15 : 0;
         const title_height = (settings.collage_title) ? (32 + 15) : 0;
-        const width = padding * 2 + grid_item_size * width_input.value + grid_item_gap * (width_input.value - 1);
-        const height = padding * 2 + title_height + grid_item_size * height_input.value + grid_item_gap * (height_input.value - 1);
+        const cv_width = padding * 2 + grid_item_size * width.value() + grid_item_gap * (width.value() - 1);
+        const cv_height = padding * 2 + title_height + grid_item_size * height.value() + grid_item_gap * (height.value() - 1);
 
         const cv_scale = 1;
 
-        collage_dom.style.width = `${width}px`;
-        collage_dom.style.height = `${height}px`;
+        collage_dom.style.width = `${cv_width}px`;
+        collage_dom.style.height = `${cv_height}px`;
         collage_dom.style.padding = `${padding}px`;
         collage_dom.style.gap = `${padding}px`;
         collage_dom.style.setProperty('--item-list-gap', `${grid_item_gap}px`);
         collage_dom.style.setProperty('--grid-item-size', `${grid_item_size}px`);
 
         let initial_canvas = html.node`
-            <canvas width=${width * cv_scale} height=${height * cv_scale} />
+            <canvas width=${cv_width * cv_scale} height=${cv_height * cv_scale} />
         `;
 
         html2canvas(collage_dom, {
@@ -490,8 +484,8 @@ export function collage({
                 const filename = tl(trans.chart_template_filename)
                     .replace('{timeframe}', timeframe.querySelector('button').textContent)
                     .replace('{user}', page.name)
-                    .replace('{type}', tl(trans[type_select.value]))
-                    .replace('{size}', `${width_input.value}×${height_input.value}`)
+                    .replace('{type}', tl(trans[type.value()]))
+                    .replace('{size}', `${width.value()}×${height.value()}`)
                     .replace('{brand}', version.brand)
                     .replace('{date}', `${date.getFullYear()}-${pad2(date.getMonth() + 1)}-${pad2(date.getDate())}`);
 

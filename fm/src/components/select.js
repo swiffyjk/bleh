@@ -63,6 +63,10 @@ export function select(values, initial = '', name = '', func = null) {
         set_select(val);
     }
 
+    container.value = () => {
+        return select.value;
+    }
+
     return container;
 
     function set_select(selected) {

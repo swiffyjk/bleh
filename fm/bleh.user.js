@@ -26657,6 +26657,9 @@
     container.set = (val) => {
       set_select(val);
     };
+    container.value = () => {
+      return select2.value;
+    };
     return container;
     function set_select(selected) {
       values.some((value) => {
@@ -35545,10 +35548,6 @@
             </div>
         </div>
     `);
-    let width_input = width.querySelector("input");
-    let height_input = height.querySelector("input");
-    let timeframe_select = timeframe.querySelector("select");
-    let type_select = type.querySelector("select");
     let setting_group;
     let inputter;
     render(sidebar, html`
@@ -35604,7 +35603,7 @@
     `);
     let collage_settings = setting_group.querySelectorAll(":scope > .setting");
     function make_collage(bypass = false) {
-      if (width_input.value == "" || height_input.value == "" || parseInt(width_input.value) < min2 || parseInt(width_input.value) > max2 || parseInt(height_input.value) < min2 || parseInt(height_input.value) > max2) {
+      if (width.value() == "" || height.value() == "" || parseInt(width.value()) < min2 || parseInt(width.value()) > max2 || parseInt(height.value()) < min2 || parseInt(height.value()) > max2) {
         notify({
           id: "collage_failed",
           title: tl(trans.name_failed).replace("{name}", tl(trans.collage)),
@@ -35623,7 +35622,7 @@
         return;
       }
       let per_page = 50;
-      let pages = Math.ceil(width_input.value * height_input.value / per_page);
+      let pages = Math.ceil(width.value() * height.value() / per_page);
       if (pages > 4 && !bypass) {
         let warn = notify({
           id: "collage_warning",
@@ -35659,7 +35658,7 @@
                 <div class="loading-data-text">${tl(trans.gathering_plays_for_user_pages).replace("{u}", page.name).replace("{current_page}", current_page).replace("{pages}", pages)}</div>
             </div>
         `);
-      fetch(`${root}user/${page.name}/library/${type_select.value}?format=list&${timeframe_select.value}&page=${current_page}&ajax=1`).then(function(response) {
+      fetch(`${root}user/${page.name}/library/${type.value()}?format=list&${timeframe.value()}&page=${current_page}&ajax=1`).then(function(response) {
         console.log("returned", response, response.text);
         return response.text();
       }).then(function(dom) {
@@ -35674,7 +35673,7 @@
             if (item.avatar)
               item.avatar = item.avatar.getAttribute("src");
             item.name = track.querySelector(".chartlist-name a").textContent.trim();
-            if (type_select.value != "artists")
+            if (type.value() != "artists")
               item.sister = track.querySelector(".chartlist-artist a").textContent.trim();
             item.plays = clean_number(track.querySelector(".chartlist-count-bar-slug").getAttribute("data-stat-value"));
             page.state.collage.push(item);
@@ -35712,19 +35711,19 @@
         return;
       }
       let grid = html.node`
-            <ol class="grid-items grid-items--numbered collage-grid" style="--width: ${width_input.value}; --height: ${height_input.value}" data-width=${width_input.value} data-height=${height_input.value} data-centered=${settings.collage_centered} />
+            <ol class="grid-items grid-items--numbered collage-grid" style="--width: ${width.value()}; --height: ${height.value()}" data-width=${width.value()} data-height=${height.value()} data-centered=${settings.collage_centered} />
         `;
       if (!settings.collage_grid_gap) {
         grid.style.setProperty("--item-list-gap", "0px");
         grid.style.setProperty("--item-med-radius", "0");
       }
-      let total = width_input.value * height_input.value - 1;
-      grid.style.setProperty("--highest", Math.max(+width_input.value, +height_input.value).toString());
+      let total = width.value() * height.value() - 1;
+      grid.style.setProperty("--highest", Math.max(+width.value(), +height.value()).toString());
       page.state.collage.some((data2, index3) => {
         if (index3 > total)
           return false;
         let template;
-        if (type_select.value == "artists")
+        if (type.value() == "artists")
           template = sanitise(data2.name);
         else
           template = `${sanitise(data2.sister)}/${sanitise(data2.name)}`;
@@ -35743,19 +35742,19 @@
                                 </a>
                             </p>
                             ` : ""}
-                            ${type_select.value != "artists" ? html.node`
+                            ${type.value() != "artists" ? html.node`
                             <p class="grid-items-item-aux-text">
                                 ${settings.collage_grid_text ? html.node`
                                 <a class="grid-items-item-aux-block" href="${root}music/${redirect()}${data2.sister}">
                                     ${data2.sister}
                                 </a>
                                 ${settings.collage_grid_plays ? html.node`
-                                <a class="grid-item-plays" href="${root}user/${page.name}/library/music/${redirect()}${template}?date_preset=${timeframe_select.value}" target="_blank">
+                                <a class="grid-item-plays" href="${root}user/${page.name}/library/music/${redirect()}${template}?date_preset=${timeframe.value()}" target="_blank">
                                     ${data2.plays.toLocaleString(lang)}
                                 </a>
                                 ` : ""}
                                 ` : settings.collage_grid_plays ? html.node`
-                                <a class="grid-item-plays" href="${root}user/${page.name}/library/music/${redirect()}${template}?date_preset=${timeframe_select.value}" target="_blank">
+                                <a class="grid-item-plays" href="${root}user/${page.name}/library/music/${redirect()}${template}?date_preset=${timeframe.value()}" target="_blank">
                                     ${data2.plays.toLocaleString(lang)}${tl(trans.plays_lower)}
                                 </a>
                                 ` : ""}
@@ -35763,7 +35762,7 @@
                             ` : html.node`
                             ${settings.collage_grid_plays ? html.node`
                             <p class="grid-items-item-aux-text">
-                                <a class="grid-item-plays" href="${root}user/${page.name}/library/music/${redirect()}${template}?date_preset=${timeframe_select.value}" target="_blank">
+                                <a class="grid-item-plays" href="${root}user/${page.name}/library/music/${redirect()}${template}?date_preset=${timeframe.value()}" target="_blank">
                                     ${data2.plays.toLocaleString(lang)}${tl(trans.plays_lower)}
                                 </a>
                             </p>
@@ -35779,12 +35778,12 @@
             <div class="collage">
                 ${settings.collage_title ? html.node`
                 <div class="header">
-                    <div class="type" data-type=${type_select.value}>
+                    <div class="type" data-type=${type.value()}>
                         <div class="bleh-icon" />
                         <strong class="brand">${version.brand}</strong>
                         <strong>${timeframe.querySelector("button").textContent}</strong>
-                        <strong>${tl(trans.top_type).replace("{type}", tl(trans[type_select.value]))}</strong>
-                        <strong>${width_input.value}×${height_input.value}</strong>
+                        <strong>${tl(trans.top_type).replace("{type}", tl(trans[type.value()]))}</strong>
+                        <strong>${width.value()}×${height.value()}</strong>
                     </div>
                     <div class="user">
                         <div class="avatar">
@@ -35806,7 +35805,7 @@
       music_grids(grid, false);
       const default_size = 380;
       const base = 6;
-      const highest = Math.max(+width_input.value, +height_input.value);
+      const highest = Math.max(+width.value(), +height.value());
       const grid_item_size = Math.min(
         default_size,
         Math.floor(default_size * base / highest)
@@ -35814,17 +35813,17 @@
       const grid_item_gap = settings.collage_grid_gap ? 10 : 0;
       const padding = settings.collage_grid_gap ? 15 : 0;
       const title_height = settings.collage_title ? 32 + 15 : 0;
-      const width2 = padding * 2 + grid_item_size * width_input.value + grid_item_gap * (width_input.value - 1);
-      const height2 = padding * 2 + title_height + grid_item_size * height_input.value + grid_item_gap * (height_input.value - 1);
+      const cv_width = padding * 2 + grid_item_size * width.value() + grid_item_gap * (width.value() - 1);
+      const cv_height = padding * 2 + title_height + grid_item_size * height.value() + grid_item_gap * (height.value() - 1);
       const cv_scale = 1;
-      collage_dom.style.width = `${width2}px`;
-      collage_dom.style.height = `${height2}px`;
+      collage_dom.style.width = `${cv_width}px`;
+      collage_dom.style.height = `${cv_height}px`;
       collage_dom.style.padding = `${padding}px`;
       collage_dom.style.gap = `${padding}px`;
       collage_dom.style.setProperty("--item-list-gap", `${grid_item_gap}px`);
       collage_dom.style.setProperty("--grid-item-size", `${grid_item_size}px`);
       let initial_canvas = html.node`
-            <canvas width=${width2 * cv_scale} height=${height2 * cv_scale} />
+            <canvas width=${cv_width * cv_scale} height=${cv_height * cv_scale} />
         `;
       (0, import_html2canvas_pro.default)(collage_dom, {
         useCORS: true,
@@ -35843,7 +35842,7 @@
         canvas.toBlob((blob) => {
           const blob_url = URL.createObjectURL(blob);
           const date = /* @__PURE__ */ new Date();
-          const filename = tl(trans.chart_template_filename).replace("{timeframe}", timeframe.querySelector("button").textContent).replace("{user}", page.name).replace("{type}", tl(trans[type_select.value])).replace("{size}", `${width_input.value}\xD7${height_input.value}`).replace("{brand}", version.brand).replace("{date}", `${date.getFullYear()}-${pad2(date.getMonth() + 1)}-${pad2(date.getDate())}`);
+          const filename = tl(trans.chart_template_filename).replace("{timeframe}", timeframe.querySelector("button").textContent).replace("{user}", page.name).replace("{type}", tl(trans[type.value()])).replace("{size}", `${width.value()}\xD7${height.value()}`).replace("{brand}", version.brand).replace("{date}", `${date.getFullYear()}-${pad2(date.getMonth() + 1)}-${pad2(date.getDate())}`);
           render(body, html`
                     <div class="collage-finished">
                         <strong>${tl(trans.your_collage_is_ready)}</strong>
