@@ -20,7 +20,7 @@ import tippy from "tippy.js";
 import ColorThief from "color-thief-browser";
 
 export function patch_titles(search=page.structure.main) {
-    if (page.subpage === 'tags_overview' || page.subpage == 'tags_tag') return;
+    if (page.subpage === 'tags_overview') return;
 
     if (!search) {
         log('tracks could not be searched as search was undefined', 'tracks', 'log', {search});
@@ -76,9 +76,9 @@ export function patch_titles(search=page.structure.main) {
 
         log('new!', 'tracks', 'info', {tracklist});
 
-        let wide = tracklist.classList.contains('chartlist--wide-artist-column');
+        const wide = tracklist.classList.contains('chartlist--wide-artist-column');
 
-        let tracks = tracklist.querySelectorAll(':is(.chartlist-row:not(.chartlist__placeholder-row), .chartlist-row--interlist-ad)');
+        const tracks = tracklist.querySelectorAll(':is(.chartlist-row:not(.chartlist__placeholder-row), .chartlist-row--interlist-ad)');
 
         tracks.forEach((track, index) => {
             console.log('track', track);
@@ -91,10 +91,9 @@ export function patch_titles(search=page.structure.main) {
             }
 
             track.style.setProperty('--delay', index * 0.04 + 's');
-
-            let bla = document.createElement('div');
-            bla.classList.add('kate-placeholder');
-            track.appendChild(bla);
+            track.appendChild(html.node`
+                <div class="kate-placeholder" />
+            `);
 
 
             let track_title = track.querySelector('.chartlist-name a:not(.offset-section-anchor)');
@@ -120,6 +119,12 @@ export function patch_titles(search=page.structure.main) {
                 }
             }
 
+            const track_type = track.querySelector(':scope > .chartlist-type');
+            if (track_type && track_type.classList[1] == 'chartlist-type--artist') {
+                is_user = false;
+                is_artist = true;
+            }
+
             log(`is user: ${is_user}, is artist: ${is_artist}`, 'tracks', 'log');
 
             if (is_user) {
@@ -133,26 +138,30 @@ export function patch_titles(search=page.structure.main) {
             }
 
             if (is_artist) {
+                track.classList.remove('chartlist-row--with-artist');
                 track.setAttribute('data-track-type', 'artist');
-
-                if (settings.colourful_counts)
-                    patch_artist_ranks_in_list_view(track);
 
                 if (settings.corrections)
                     track_title.textContent = correct_artist(track_title.getAttribute('data-name'));
 
-                insights.artist.display = true;
                 let bar = track.querySelector('.chartlist-count-bar-slug');
-                let value = parseInt(bar.getAttribute('data-stat-value'));
-                insights.artist.values.push(value);
+                if (bar) {
+                    if (settings.colourful_counts) patch_artist_ranks_in_list_view(track);
 
-                if (value > insights.artist.highest.value)
-                    insights.artist.highest.value = value;
+                    insights.artist.display = true;
 
-                log(`pushed insight artist label of ${track_title.textContent}`, 'glacier library', 'log');
-                insights.artist.labels.push(track_title.textContent);
+                    let value = parseInt(bar.getAttribute('data-stat-value'));
+                    insights.artist.values.push(value);
 
-                log('finished artist stuff, returning', 'tracks', 'log');
+                    if (value > insights.artist.highest.value)
+                        insights.artist.highest.value = value;
+
+                    log(`pushed insight artist label of ${track_title.textContent}`, 'glacier library', 'log');
+                    insights.artist.labels.push(track_title.textContent);
+
+                    log('finished artist stuff, returning', 'tracks', 'log');
+                }
+
                 return;
             }
 
