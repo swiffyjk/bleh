@@ -8,7 +8,7 @@ import {html} from "lighterhtml";
 import {settings} from "../build/config";
 import {log} from "../build/log";
 import {auth, page, root} from "../build/page";
-import {sanitise, sanitise_text} from "../build/tools";
+import {desanitise, sanitise, sanitise_text} from "../build/tools";
 import {tl, trans, trans_legacy} from "../build/trans";
 import {prep_chart_colours} from "../chart";
 import {correct_artist, correct_item_by_artist} from "../components/lotus";
@@ -426,7 +426,7 @@ function bleh_glacier_library_top(static_page = false) {
 
             let start = value.indexOf('“') + 1;
             let end = value.indexOf('”');
-            value = value.substring(start, end);
+            value = desanitise(value.substring(start, end));
         }
 
         glacier_meta.appendChild(html.node`

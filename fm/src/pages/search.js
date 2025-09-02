@@ -7,13 +7,15 @@
 import { html } from 'lighterhtml';
 import {settings} from "../build/config";
 import {log} from "../build/log";
-import {auth, page} from "../build/page";
+import {auth, page, root} from "../build/page";
 import {correct_artist, correct_item_by_artist} from "../components/lotus";
 import {checkup_page_structure} from "../components/structure";
 import {patch_titles} from "../components/track";
 import {register_background, update_page} from "../page";
 import { tl, trans } from '../build/trans';
 import { load_profile_cache_externally } from './profile';
+import { sanitise } from '../build/tools';
+import tippy from 'tippy.js';
 
 export async function bleh_search() {
     page.structure.container = document.body.querySelector('.page-content');
@@ -117,4 +119,42 @@ export async function bleh_search() {
     } else {
         register_background(null);
     }
+
+    if (!auth.pro) return;
+
+    const nav_items = page.structure.nav.querySelector('.navlist-items');
+    let explore;
+    nav_items.appendChild(html.node`
+        <li class="fill"></li>
+        <li class="navlist-item secondary-nav-item secondary-nav-item--library">
+            <a class="secondary-nav-item-link" ref=${el => explore = el}>
+                ${tl(trans.explore_in_library)}
+            </a>
+        </li>
+    `);
+
+    tippy(explore, {
+        content: html.node`
+            <a class="dropdown-menu-clickable-item" data-type="artist" href="${root}user/${auth.name}/library/artists/search?query=${sanitise(value)}">
+                ${tl(trans.artists)}
+            </a>
+            <a class="dropdown-menu-clickable-item" data-type="album" href="${root}user/${auth.name}/library/albums/search?query=${sanitise(value)}">
+                ${tl(trans.albums)}
+            </a>
+            <a class="dropdown-menu-clickable-item" data-type="track" href="${root}user/${auth.name}/library/tracks/search?query=${sanitise(value)}">
+                ${tl(trans.tracks)}
+            </a>
+        `,
+        theme: 'menu',
+        placement: 'bottom',
+        interactive: true,
+        interactiveBorder: 10,
+        trigger: 'click',
+
+        onShow(instance) {
+            instance.popper.addEventListener('click', event => {
+                instance.hide();
+            });
+        }
+    });
 }

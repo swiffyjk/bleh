@@ -38907,7 +38907,7 @@
         value = meta.querySelector(".metadata-display").textContent;
         let start2 = value.indexOf("\u201C") + 1;
         let end2 = value.indexOf("\u201D");
-        value = value.substring(start2, end2);
+        value = desanitise(value.substring(start2, end2));
       }
       glacier_meta.appendChild(html.node`
             <div class="glacier-library-metadata-item">
@@ -51426,6 +51426,40 @@
     } else {
       register_background(null);
     }
+    if (!auth.pro) return;
+    const nav_items = page.structure.nav.querySelector(".navlist-items");
+    let explore;
+    nav_items.appendChild(html.node`
+        <li class="fill"></li>
+        <li class="navlist-item secondary-nav-item secondary-nav-item--library">
+            <a class="secondary-nav-item-link" ref=${(el) => explore = el}>
+                ${tl(trans.explore_in_library)}
+            </a>
+        </li>
+    `);
+    tippy_esm_default(explore, {
+      content: html.node`
+            <a class="dropdown-menu-clickable-item" data-type="artist" href="${root}user/${auth.name}/library/artists/search?query=${sanitise(value)}">
+                ${tl(trans.artists)}
+            </a>
+            <a class="dropdown-menu-clickable-item" data-type="album" href="${root}user/${auth.name}/library/albums/search?query=${sanitise(value)}">
+                ${tl(trans.albums)}
+            </a>
+            <a class="dropdown-menu-clickable-item" data-type="track" href="${root}user/${auth.name}/library/tracks/search?query=${sanitise(value)}">
+                ${tl(trans.tracks)}
+            </a>
+        `,
+      theme: "menu",
+      placement: "bottom",
+      interactive: true,
+      interactiveBorder: 10,
+      trigger: "click",
+      onShow(instance) {
+        instance.popper.addEventListener("click", (event3) => {
+          instance.hide();
+        });
+      }
+    });
   }
 
   // src/pages/track.js
