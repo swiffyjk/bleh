@@ -45002,13 +45002,19 @@
     }];
     const mentions = () => [{
       type: "lang",
-      regex: /(?<!@)@([a-zA-Z0-9_]+)\b(?!@)/g,
+      regex: /(?<=^|[\s([{.,])@([a-zA-Z0-9_]+)\b(?!@)/g,
       replace: (_, username2) => {
         return `<a class="mention" href="${root}user/${username2}" target="_blank">@${username2}</a>`;
       }
     }];
+    const blockquotes = () => [{
+      type: "lang",
+      regex: /^ *>.*(?:\n *>.*)*/gm,
+      replace: (m) => m.replace(/>/g, "&gt;")
+    }];
     let extensions = [
-      aligner()
+      aligner(),
+      blockquotes()
     ];
     if (allow_banners) extensions.push(banner());
     if (allow_icons) extensions.push(icons());

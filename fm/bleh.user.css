@@ -12012,6 +12012,7 @@
             flex: 1;
 
             .source-album-name {
+                font-weight: var(--font-weight-medium) !important;
                 margin: unset;
                 -webkit-line-clamp: 1;
 
@@ -20745,7 +20746,7 @@
         color: hsl(var(--c3));
         font-size: var(--font-size);
         line-height: var(--line-height);
-        font-weight: var(--font-weight-medium);
+        font-weight: var(--font-weight);
         cursor: default;
         margin-bottom: 2px;
 
