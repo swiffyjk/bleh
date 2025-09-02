@@ -339,10 +339,8 @@ export function patch_wiki() {
         let wiki_col = page.structure.main.querySelector('.wiki-column');
         let wiki_empty = false;
 
-        if (!wiki_col) {
-            wiki_col = page.structure.main.querySelector('.wiki-section');
-            return;
-        }
+        if (!wiki_col) wiki_col = page.structure.main.querySelector('.wiki-section');
+        if (!wiki_col) return;
 
         let wiki_block = wiki_col.querySelector('.wiki-block.visible-lg .wiki-block-inner-2');
 
