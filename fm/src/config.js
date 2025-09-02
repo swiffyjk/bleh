@@ -34,8 +34,8 @@ export function load_settings(skip = false) {
             settings.theme_type = 'dark';
     }
 
-    // migrates old season settings
-    if (settings.version < 2025.0816) {
+    // migrates old settings
+    if (settings.version < 2025.0931) {
         if (settings.seasonal_particles == true)
         settings.seasonal_particles = 'all';
         else if (settings.seasonal_particles == false)
@@ -48,7 +48,6 @@ export function load_settings(skip = false) {
             delete settings.seasonal_particles_reduced;
         }
 
-        // migrates old font settings
         if (settings.font_weight == 480 || settings.font_weight == 440)
             settings.font_weight = settings_store.font_weight.default;
         if (settings.font_weight_medium == 650 || settings.font_weight_medium == 570)
