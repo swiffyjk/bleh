@@ -231,14 +231,13 @@ export let includes = {
         '- late night edition', '(late night edition', '[late night edition',
         '- the late night edition', '(the late night edition', '[the late night edition',
         '- big machine radio release special', '(big machine radio release special', '[big machine radio release special',
-        'platinum edition', ': platinum edition', '- platinum', '(platinum', '[platinum',
+        ': platinum', '- platinum', '(platinum', '[platinum',
         '- international', '(international', '[international', // taylor swift
         '- uk deluxe', '(uk deluxe', '[uk deluxe',
         '- magic city edition', '(magic city edition', '[magic city edition',
         '- japan edition', '(japan edition', '[japan edition', // added edition to some for safety
         '- japan version', '(japan version', '[japan version',
         '- australian version', '(australian version', '[australian version',
-        '- platinum blonde edition', '(platinum blonde edition', '[platinum blonde edition', // marina
         '- after school - deluxe', '(after school - deluxe', '[after school - deluxe', // melanie martinez
         '- revised', '(revised', '[revised',
         ': the complete', '(the complete', '[the complete',

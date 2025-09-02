@@ -24977,8 +24977,7 @@
       "- big machine radio release special",
       "(big machine radio release special",
       "[big machine radio release special",
-      "platinum edition",
-      ": platinum edition",
+      ": platinum",
       "- platinum",
       "(platinum",
       "[platinum",
@@ -25002,10 +25001,6 @@
       "- australian version",
       "(australian version",
       "[australian version",
-      "- platinum blonde edition",
-      "(platinum blonde edition",
-      "[platinum blonde edition",
-      // marina
       "- after school - deluxe",
       "(after school - deluxe",
       "[after school - deluxe",
@@ -38330,7 +38325,7 @@
       else
         settings.theme_type = "dark";
     }
-    if (settings.version < 2025.0816) {
+    if (settings.version < 2025.0931) {
       if (settings.seasonal_particles == true)
         settings.seasonal_particles = "all";
       else if (settings.seasonal_particles == false)
@@ -60748,9 +60743,6 @@
       title: trans.collage_centered.name,
       body: trans.collage_centered.body,
       new_release: true
-    },
-    images: {
-      en: "Images"
     },
     static_gifs: {
       default: "always",
