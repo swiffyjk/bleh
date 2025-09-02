@@ -1103,9 +1103,6 @@ export let settings_store = {
         body: trans.collage_centered.body,
         new_release: true
     },
-    images: {
-        en: 'Images'
-    },
     static_gifs: {
         default: 'always',
         type: 'radio',
