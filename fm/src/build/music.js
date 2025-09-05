@@ -179,7 +179,9 @@ export let includes = {
         '(unfinished original recordings of de-loused in the comatorium', '[unfinished original recordings of de-loused in the comatorium', '- unfinished original recordings of de-loused in the comatorium', // landscape tantrums
         '- alternate version', '(alternate version', '[alternate version',
         '- cla mix', '(cla mix', '[cla mix',
-        '- chris lord-alge mix', '(chris lord-alge mix', '[chris lord-alge mix'
+        '- chris lord-alge mix', '(chris lord-alge mix', '[chris lord-alge mix',
+        '- mono', '(mono', '[mono',
+        '- stereo', '(stereo', '[stereo'
     ],
     mixes_numbers: [
         '(v1', '(v2', '(v3', '(v4', '(v5', '(v6', '(v7', '(v8', '(v9',
