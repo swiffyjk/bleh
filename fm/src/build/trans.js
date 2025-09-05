@@ -348,6 +348,9 @@ export const trans = {
     friends_setting: {
         en: 'Keep up to date on what your friends are listening to'
     },
+    add_friends: {
+        en: 'Add friends'
+    },
     starred_friend: {
         name: {
             en: 'Starred friend'

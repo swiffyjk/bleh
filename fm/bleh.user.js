@@ -50485,16 +50485,28 @@
             </div>
         `);
     }
+    const friends = settings.friends.filter((friend) => friend != settings.starred_friend);
     page.structure.side.appendChild(html.node`
         <section class="side-actions">
             <a class="btn side-action" data-type="profile" href="${root}user/${auth.name}/library/music/${redirect()}${sanitise(page.name)}">
                 ${auth.name}
             </a>
-            ${settings.profile_shortcut != "" ? html.node`
-            <a class="btn side-action" data-type="profile_shortcut" href="${root}user/${settings.profile_shortcut}/library/music/${redirect()}${sanitise(page.name)}">
-                ${settings.profile_shortcut}
+            ${settings.starred_friend != "" ? html.node`
+            <a class="btn side-action" data-type="profile" href="${root}user/${settings.starred_friend}/library/music/${redirect()}${sanitise(page.name)}">
+                ${settings.starred_friend}
+                <span class="star-icon colourful">
+                    <span class="bleh-icon" />
+                </span>
             </a>
             ` : ""}
+            ${friends.map((friend) => html.node`
+            <a class="btn side-action" data-type="profile" href="${root}user/${friend}/library/music/${redirect()}${sanitise(page.name)}">
+                ${friend}
+            </a>
+            `)}
+            <a class="btn side-action" data-type="add" href="${root}bleh/profile">
+                ${tl(trans.add_friends)}
+            </a>
             <div class="sep" />
             <button class="btn side-action" data-type="add" onclick=${() => other_listener(sanitise(page.name))}>
                 ${tl(trans.custom)}
@@ -53480,6 +53492,9 @@
     },
     friends_setting: {
       en: "Keep up to date on what your friends are listening to"
+    },
+    add_friends: {
+      en: "Add friends"
     },
     starred_friend: {
       name: {
