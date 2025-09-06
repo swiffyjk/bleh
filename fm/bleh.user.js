@@ -43925,10 +43925,12 @@
           const scheme = url.protocol;
           const hostname = url.hostname;
           const path = url.pathname + url.search + url.hash;
+          let dangerous = false;
+          if (!scheme || !scheme.startsWith("http")) dangerous = true;
           link.addEventListener("click", (e) => {
             if (settings.trusted_sites.includes(hostname)) return;
             e.preventDefault();
-            external_url_prompt(href);
+            external_url_prompt(href, dangerous);
           });
           if (link.textContent != href) {
             tippy_esm_default(link, {
@@ -43941,10 +43943,16 @@
                                         ${scheme}//
                                     </span>
                                     ` : ""}
+                                    ${hostname ? html.node`
                                     <span class="hostname">
                                         ${hostname}
                                     </span>
-                                    ${path != "/" ? html.node`
+                                    ` : html.node`
+                                    <span class="hostname">
+                                        ${path}
+                                    </span>
+                                    `}
+                                    ${path != "/" && hostname ? html.node`
                                     <span class="path">
                                         ${path}
                                     </span>
@@ -45097,12 +45105,14 @@
           }
           try {
             const link = new URL(url, `https://www.last.fm${root}`);
-            const hostname = link.hostname;
+            const host = link.hostname;
             const protocol = link.protocol;
+            const path = link.pathname;
             console.info("proto", protocol, link);
             if (protocol != "http:" && protocol != "https:") return;
             let final = {
-              host: hostname,
+              host,
+              path,
               url: link.href
             };
             if (name2) final.name = purify.sanitize(name2, { ALLOWED_TAGS: [] });
@@ -45210,7 +45220,6 @@
                 </div>
                 <div class="music-links social-links">
                     ${links.map((link) => {
-        console.info("links link", link);
         let label = link.host;
         if (link.name) {
           label = link.name;
@@ -45218,7 +45227,7 @@
           label = link_strings[link.host];
         }
         return html.node`
-                            <a class="music-link social-link" href=${link.url} target="_blank" data-host=${link.host}>
+                            <a class="music-link social-link" href=${link.url} target="_blank" data-host=${link.host} data-path=${link.path}>
                                 ${label}
                             </a>
                         `;
@@ -45384,8 +45393,8 @@
     if (text3.textContent.trim().startsWith("Due to local laws, we are temporarily"))
       text3.classList.add("local-restriction");
   }
-  function external_url_prompt(url) {
-    log(`prompted warning for url ${url}`, "markdown");
+  function external_url_prompt(url, dangerous = false) {
+    log(`prompted warning for url ${url}, dangerous is ${dangerous}`, "markdown");
     const link = new URL(url);
     const scheme = link.protocol;
     const hostname = link.hostname;
@@ -45396,25 +45405,38 @@
       type: "leaving_site",
       body: html.node`
             <div class="modal-vertical-inner leaving-site-inner">
+                ${!dangerous ? html.node`
                 <h1>${tl(trans.leaving_site.name)}</h1>
                 <p>${tl(trans.leaving_site.body)}</p>
-                <div class="external-warn-input">
+                ` : html.node`
+                <h1>${tl(trans.leaving_site_dangerous.name)}</h1>
+                <p>${tl(trans.leaving_site_dangerous.body)}</p>
+                `}
+                <div class="external-warn-input" data-dangerous=${dangerous}>
                     <span class="scheme">
                         ${scheme}//
                     </span>
+                    ${hostname ? html.node`
                     <span class="hostname">
                         ${hostname}
                     </span>
-                    ${path != "/" ? html.node`
+                    ` : html.node`
+                    <span class="hostname">
+                        ${path}
+                    </span>
+                    `}
+                    ${path != "/" && hostname ? html.node`
                     <span class="path">
                         ${path}
                     </span>
                     ` : ""}
                 </div>
+                ${hostname != "" ? html.node`
                 ${trust_site = toggle({
         type: "checkbox",
         title: tl(trans.leaving_site_checkbox).replace("{v}", hostname)
       })}
+                ` : ""}
             </div>
             <div class="modal-footer">
                 <button class="see-more cancel" onclick=${() => dialog_rm({ id: "external_url" })}>
@@ -52184,9 +52206,9 @@
         <div class="footer-credit">
             ${{ html: tl(trans.made_with_love).replace("{u}", `<a href="${root}user/${kate}">${kate}</a>`).replace("{c}", '<a href="https://github.com/katelyynn/bleh/graphs/contributors" target="_blank">').replace("{/c}", "</a>").replace("{h}", `<span class="bleh-icon heart sponsor-related">${tl(trans.love_lower)}</span>`) }}
         </div>
-        <div class="footer-web">
-            <a href="https://github.com/katelyynn/bleh" target="_blank">${tl(trans.view_source)}</a>
-            <a href="https://github.com/katelyynn/bleh/issues/new/choose" target="_blank">${tl(trans.report_issue)}</a>
+        <div class="footer-web music-links">
+            <a class="music-link" data-type="source" href="https://github.com/katelyynn/bleh" target="_blank">${tl(trans.view_source)}</a>
+            <a class="music-link" data-type="issue" href="https://github.com/katelyynn/bleh/issues/new/choose" target="_blank">${tl(trans.report_issue)}</a>
             <a class="more" onclick=${() => extras.toggleAttribute("aria-expanded")}><span class="bleh-icon" /></a>
         </div>
         ${extras}
@@ -56804,10 +56826,18 @@
     },
     leaving_site: {
       name: {
-        en: "Leaving site"
+        en: "Don\u2019t get lost"
       },
       body: {
-        en: "The link you clicked wants to take you to"
+        en: "This link is taking you to the following location"
+      }
+    },
+    leaving_site_dangerous: {
+      name: {
+        en: "Be careful"
+      },
+      body: {
+        en: "This link can open an application on your device"
       }
     },
     leaving_site_checkbox: {

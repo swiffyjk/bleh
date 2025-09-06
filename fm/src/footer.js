@@ -22,9 +22,9 @@ export function bleh_footer() {
         <div class="footer-credit">
             ${{html: tl(trans.made_with_love).replace('{u}', `<a href="${root}user/${kate}">${kate}</a>`).replace('{c}', '<a href="https://github.com/katelyynn/bleh/graphs/contributors" target="_blank">').replace('{/c}', '</a>').replace('{h}', `<span class="bleh-icon heart sponsor-related">${tl(trans.love_lower)}</span>`)}}
         </div>
-        <div class="footer-web">
-            <a href="https://github.com/katelyynn/bleh" target="_blank">${tl(trans.view_source)}</a>
-            <a href="https://github.com/katelyynn/bleh/issues/new/choose" target="_blank">${tl(trans.report_issue)}</a>
+        <div class="footer-web music-links">
+            <a class="music-link" data-type="source" href="https://github.com/katelyynn/bleh" target="_blank">${tl(trans.view_source)}</a>
+            <a class="music-link" data-type="issue" href="https://github.com/katelyynn/bleh/issues/new/choose" target="_blank">${tl(trans.report_issue)}</a>
             <a class="more" onclick=${() => extras.toggleAttribute('aria-expanded')}><span class="bleh-icon" /></a>
         </div>
         ${extras}

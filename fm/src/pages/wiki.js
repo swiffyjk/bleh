@@ -385,12 +385,16 @@ export function patch_wiki_contents(wiki_block) {
                 const hostname = url.hostname;
                 const path = url.pathname + url.search + url.hash;
 
+                let dangerous = false;
+
+                if (!scheme || !scheme.startsWith('http')) dangerous = true;
+
                 link.addEventListener('click', e => {
                     if (settings.trusted_sites.includes(hostname)) return;
 
                     e.preventDefault();
 
-                    external_url_prompt(href);
+                    external_url_prompt(href, dangerous);
                 });
 
                 if (link.textContent != href) {
@@ -404,10 +408,16 @@ export function patch_wiki_contents(wiki_block) {
                                         ${scheme}//
                                     </span>
                                     ` : ''}
+                                    ${hostname ? html.node`
                                     <span class="hostname">
                                         ${hostname}
                                     </span>
-                                    ${path != '/' ? html.node`
+                                    ` : html.node`
+                                    <span class="hostname">
+                                        ${path}
+                                    </span>
+                                    `}
+                                    ${path != '/' && hostname ? html.node`
                                     <span class="path">
                                         ${path}
                                     </span>

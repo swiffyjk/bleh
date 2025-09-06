@@ -150,15 +150,17 @@ export function markdown(text, {
 
                 try {
                     const link = new URL(url, `https://www.last.fm${root}`);
-                    const hostname = link.hostname;
+                    const host = link.hostname;
                     const protocol = link.protocol;
+                    const path = link.pathname;
 
                     console.info('proto', protocol, link);
 
                     if (protocol != 'http:' && protocol != 'https:') return;
 
                     let final = {
-                        host: hostname,
+                        host,
+                        path,
                         url: link.href
                     }
 
@@ -292,7 +294,6 @@ export function markdown(text, {
                 </div>
                 <div class="music-links social-links">
                     ${links.map(link => {
-                        console.info('links link', link);
                         let label = link.host;
 
                         if (link.name) {
@@ -302,7 +303,7 @@ export function markdown(text, {
                         }
 
                         return html.node`
-                            <a class="music-link social-link" href=${link.url} target="_blank" data-host=${link.host}>
+                            <a class="music-link social-link" href=${link.url} target="_blank" data-host=${link.host} data-path=${link.path}>
                                 ${label}
                             </a>
                         `;
@@ -497,8 +498,8 @@ function local_restriction(text) {
         text.classList.add('local-restriction');
 }
 
-export function external_url_prompt(url) {
-    log(`prompted warning for url ${url}`, 'markdown');
+export function external_url_prompt(url, dangerous = false) {
+    log(`prompted warning for url ${url}, dangerous is ${dangerous}`, 'markdown');
 
     const link = new URL(url);
     const scheme = link.protocol;
@@ -512,25 +513,38 @@ export function external_url_prompt(url) {
         type: 'leaving_site',
         body: html.node`
             <div class="modal-vertical-inner leaving-site-inner">
+                ${!dangerous ? html.node`
                 <h1>${tl(trans.leaving_site.name)}</h1>
                 <p>${tl(trans.leaving_site.body)}</p>
-                <div class="external-warn-input">
+                ` : html.node`
+                <h1>${tl(trans.leaving_site_dangerous.name)}</h1>
+                <p>${tl(trans.leaving_site_dangerous.body)}</p>
+                `}
+                <div class="external-warn-input" data-dangerous=${dangerous}>
                     <span class="scheme">
                         ${scheme}//
                     </span>
+                    ${hostname ? html.node`
                     <span class="hostname">
                         ${hostname}
                     </span>
-                    ${path != '/' ? html.node`
+                    ` : html.node`
+                    <span class="hostname">
+                        ${path}
+                    </span>
+                    `}
+                    ${path != '/' && hostname ? html.node`
                     <span class="path">
                         ${path}
                     </span>
                     ` : ''}
                 </div>
+                ${hostname != '' ? html.node`
                 ${trust_site = toggle({
                     type: 'checkbox',
                     title: tl(trans.leaving_site_checkbox).replace('{v}', hostname)
                 })}
+                ` : ''}
             </div>
             <div class="modal-footer">
                 <button class="see-more cancel" onclick=${() => dialog_rm({id: 'external_url'})}>

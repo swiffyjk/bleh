@@ -2106,8 +2106,6 @@
             }
         }
         .footer-web {
-            display: flex;
-            gap: 10px;
             cursor: default;
 
             a {
@@ -13544,6 +13542,24 @@
         --mask: url('data:image/svg+xml;base64,PHN2ZyByb2xlPSJpbWciIHZpZXdCb3g9IjAgMCAyNCAyNCIgeG1sbnM9Imh0dHA6Ly93d3cudzMub3JnLzIwMDAvc3ZnIj48dGl0bGU+QmFuZGNhbXA8L3RpdGxlPjxwYXRoIGQ9Ik0wIDE4Ljc1bDcuNDM3LTEzLjVIMjRsLTcuNDM4IDEzLjVIMHoiLz48L3N2Zz4=');
     }
 
+    [data-host="github.com"],
+    [data-type="source"], [data-type="issue"] {
+        --hue-over: 0;
+        --sat-over: 0;
+        --lit-over: 0.8;
+        --mask: url('data:image/svg+xml;base64,PHN2ZyByb2xlPSJpbWciIHZpZXdCb3g9IjAgMCAyNCAyNCIgeG1sbnM9Imh0dHA6Ly93d3cudzMub3JnLzIwMDAvc3ZnIj48dGl0bGU+R2l0SHViPC90aXRsZT48cGF0aCBkPSJNMTIgLjI5N2MtNi42MyAwLTEyIDUuMzczLTEyIDEyIDAgNS4zMDMgMy40MzggOS44IDguMjA1IDExLjM4NS42LjExMy44Mi0uMjU4LjgyLS41NzcgMC0uMjg1LS4wMS0xLjA0LS4wMTUtMi4wNC0zLjMzOC43MjQtNC4wNDItMS42MS00LjA0Mi0xLjYxQzQuNDIyIDE4LjA3IDMuNjMzIDE3LjcgMy42MzMgMTcuN2MtMS4wODctLjc0NC4wODQtLjcyOS4wODQtLjcyOSAxLjIwNS4wODQgMS44MzggMS4yMzYgMS44MzggMS4yMzYgMS4wNyAxLjgzNSAyLjgwOSAxLjMwNSAzLjQ5NS45OTguMTA4LS43NzYuNDE3LTEuMzA1Ljc2LTEuNjA1LTIuNjY1LS4zLTUuNDY2LTEuMzMyLTUuNDY2LTUuOTMgMC0xLjMxLjQ2NS0yLjM4IDEuMjM1LTMuMjItLjEzNS0uMzAzLS41NC0xLjUyMy4xMDUtMy4xNzYgMCAwIDEuMDA1LS4zMjIgMy4zIDEuMjMuOTYtLjI2NyAxLjk4LS4zOTkgMy0uNDA1IDEuMDIuMDA2IDIuMDQuMTM4IDMgLjQwNSAyLjI4LTEuNTUyIDMuMjg1LTEuMjMgMy4yODUtMS4yMy42NDUgMS42NTMuMjQgMi44NzMuMTIgMy4xNzYuNzY1Ljg0IDEuMjMgMS45MSAxLjIzIDMuMjIgMCA0LjYxLTIuODA1IDUuNjI1LTUuNDc1IDUuOTIuNDIuMzYuODEgMS4wOTYuODEgMi4yMiAwIDEuNjA2LS4wMTUgMi44OTYtLjAxNSAzLjI4NiAwIC4zMTUuMjEuNjkuODI1LjU3QzIwLjU2NSAyMi4wOTIgMjQgMTcuNTkyIDI0IDEyLjI5N2MwLTYuNjI3LTUuMzczLTEyLTEyLTEyIi8+PC9zdmc+');
+
+        &[data-path^="/sponsors/"] {
+            --hue-over: 324;
+            --sat-over: 1.22;
+            --lit-over: 1.06;
+            --mask: var(--icon-16-sponsor);
+        }
+    }
+    [data-type="issue"] {
+        --mask: var(--icon-16-issues);
+    }
+
 
     /*     PLAY THIS TRACK     */
     .replace-playlink {
@@ -23421,7 +23437,7 @@
 
 
     .leaving-site-inner {
-        padding: var(--card-padding) 0 0;
+        align-items: start !important;
 
         h1 {
             font-size: 18px;
@@ -23454,7 +23470,7 @@
 
         font-weight: var(--font-weight-medium);
 
-        margin-top: var(--card-padding);
+        margin-top: 10px;
 
         & + .setting {
             width: 100%;

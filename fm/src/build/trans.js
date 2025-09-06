@@ -3659,10 +3659,18 @@ export const trans = {
     },
     leaving_site: {
         name: {
-            en: 'Leaving site'
+            en: 'Don’t get lost'
         },
         body: {
-            en: 'The link you clicked wants to take you to'
+            en: 'This link is taking you to the following location'
+        }
+    },
+    leaving_site_dangerous: {
+        name: {
+            en: 'Be careful'
+        },
+        body: {
+            en: 'This link can open an application on your device'
         }
     },
     leaving_site_checkbox: {
