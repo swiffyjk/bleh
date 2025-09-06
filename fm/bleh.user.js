@@ -45662,8 +45662,10 @@
     let url = window.location.href;
     let url_split = url.split("/");
     let url_length = url_split.length - 1;
-    if (url_split[url_length] == "playback" || url_split[url_length - 1] == "labs")
+    if (url_split[url_length] == "playback" && url_split[2] == "listening-report" || url_split[0] == "labs") {
+      log("disabled loading for special interface", "style");
       return;
+    }
     document.documentElement.setAttribute("data-bleh--theme", settings.theme);
     document.documentElement.appendChild(html.node`<style>${cropper_min_default}</style>`);
     if (settings.dev) return;
