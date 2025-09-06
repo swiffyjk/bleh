@@ -14064,8 +14064,8 @@
 
 
     /*     SETTINGS     */
-    #redirect-bar + .adaptive-skin-container .adaptive-skin-wrapper + .content-top {
-        margin-top: var(--card-gap);
+    #redirect-bar {
+        display: none;
     }
     .content-top-header {
         color: hsl(var(--c1));
