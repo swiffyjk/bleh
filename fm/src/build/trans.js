@@ -3490,7 +3490,10 @@ export const trans = {
         }
     },
     lyrics: {
+        // lyrics
+        en: 'Lyrics',
         name: {
+            // the game
             en: 'Lyrics'
         },
         body: {

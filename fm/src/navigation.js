@@ -389,6 +389,9 @@ export function append_nav() {
             <a class="dropdown-menu-clickable-item" data-type="update" href="${root}bleh/general">
                 ${tl(trans.updates)}
             </a>
+            <button class="dropdown-menu-clickable-item" data-menu-item="news" onclick=${() => news()}>
+                ${tl(trans.news)}
+            </button>
             <a class="dropdown-menu-clickable-item issues" href="https://github.com/katelyynn/bleh/issues" target="_blank">
                 ${tl(trans.report_issue)}
             </a>

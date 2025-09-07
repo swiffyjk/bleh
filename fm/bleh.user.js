@@ -49164,6 +49164,9 @@
             <a class="dropdown-menu-clickable-item" data-type="update" href="${root}bleh/general">
                 ${tl(trans.updates)}
             </a>
+            <button class="dropdown-menu-clickable-item" data-menu-item="news" onclick=${() => news()}>
+                ${tl(trans.news)}
+            </button>
             <a class="dropdown-menu-clickable-item issues" href="https://github.com/katelyynn/bleh/issues" target="_blank">
                 ${tl(trans.report_issue)}
             </a>
@@ -53035,6 +53038,8 @@
         title = tl(trans.similar_artists);
       else if (page.subpage.startsWith("wiki"))
         title = tl(trans.wiki);
+      else if (page.subpage == "lyrics")
+        title = tl(trans.lyrics);
       if (page.subpage == "overview" || page.subpage == "event_overview") {
         if (page.type == "user")
           title = tl(trans.profile);
@@ -56659,7 +56664,10 @@
       }
     },
     lyrics: {
+      // lyrics
+      en: "Lyrics",
       name: {
+        // the game
         en: "Lyrics"
       },
       body: {
