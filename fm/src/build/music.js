@@ -169,6 +169,7 @@ export let includes = {
         '- old timey', '(old timey', '[old timey',
         '- english version', '(english version', '[english version',
         '- japanese version', '(japanese version', '[japanese version',
+        '- spanish version', '(spanish version', '[spanish version',
         '- soundtrack', '(soundtrack', '[soundtrack',
         '- the ultimate mix', '(the ultimate mix', '[the ultimate mix',
         '- short edit', '(short edit', 'short edit',
