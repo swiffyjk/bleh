@@ -24163,6 +24163,12 @@
         /* bulk edit */
         order: -10;
 
+        &.user-preview {
+            .image .inner-image {
+                border-radius: var(--avatar-radius);
+            }
+        }
+
         .image {
             flex-shrink: 0;
 
