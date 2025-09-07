@@ -358,7 +358,7 @@ export function setting({
             let toggle;
 
             const elem = html.node`
-                <div class="setting v2 ${settings_store[id].horizontal ? 'horizontal' : ''} ${standalone ? 'standalone' : ''}" data-type="checkbox" disabled=${disabled} onclick=${() => update_toggle(id, toggle)}>
+                <div class="setting v2 ${settings_store[id].horizontal ? 'horizontal' : ''} ${standalone ? 'standalone' : ''}" data-type="checkbox" disabled=${disabled} onclick=${() => update_toggle()}>
                     ${icon ? html.node`
                     <div class="icon">
                         <div class="bleh-icon" style="--icon: var(--${icon})" />
@@ -393,6 +393,15 @@ export function setting({
                     </div>
                 </div>
             `;
+
+            function update_toggle() {
+                let val = settings[id];
+
+                toggle.setAttribute('aria-checked', !val);
+
+                save_setting(id, !val);
+                if (func) func(val);
+            }
 
             elem.compat = () => {
                 if (!incompatible_with) return;

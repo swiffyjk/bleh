@@ -37723,7 +37723,7 @@
       if (settings_store[id].new_release)
         html_title.appendChild(html.node`<span class="new-badge beta">${tl(trans.new)}</span>`);
       if (type === "toggle") {
-        let update_toggle2 = function() {
+        let update_toggle = function() {
           let val = settings[id];
           toggle2.setAttribute("aria-checked", !val);
           save_setting(id, !val);
@@ -37731,7 +37731,7 @@
         };
         let toggle2;
         const elem = html.node`
-                <div class="setting v2 ${standalone ? "standalone" : ""}" data-type="toggle" disabled=${disabled} onclick=${() => update_toggle2()}>
+                <div class="setting v2 ${standalone ? "standalone" : ""}" data-type="toggle" disabled=${disabled} onclick=${() => update_toggle()}>
                     ${icon ? html.node`
                     <div class="icon">
                         <div class="bleh-icon" style="--icon: var(--${icon})" />
@@ -37966,9 +37966,15 @@
         });
         return container;
       } else if (type == "checkbox") {
+        let update_toggle = function() {
+          let val = settings[id];
+          toggle2.setAttribute("aria-checked", !val);
+          save_setting(id, !val);
+          if (func) func(val);
+        };
         let toggle2;
         const elem = html.node`
-                <div class="setting v2 ${settings_store[id].horizontal ? "horizontal" : ""} ${standalone ? "standalone" : ""}" data-type="checkbox" disabled=${disabled} onclick=${() => update_toggle(id, toggle2)}>
+                <div class="setting v2 ${settings_store[id].horizontal ? "horizontal" : ""} ${standalone ? "standalone" : ""}" data-type="checkbox" disabled=${disabled} onclick=${() => update_toggle()}>
                     ${icon ? html.node`
                     <div class="icon">
                         <div class="bleh-icon" style="--icon: var(--${icon})" />
