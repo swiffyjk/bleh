@@ -710,7 +710,13 @@ export let settings_store = {
     colourful_tracks: {
         default: true,
         type: 'checkbox',
-        title: trans.colourful_tracks
+        title: trans.colourful_active,
+        incompatible: {colourful_tracks_all: true}
+    },
+    colourful_tracks_all: {
+        default: false,
+        type: 'checkbox',
+        title: trans.colourful_all
     },
     feature_flags: {
         default: {},

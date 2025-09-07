@@ -483,16 +483,10 @@ export async function render_setting_page(page_id) {
             return;
         }
 
-        register_skip_to([
-            {
-                id: 'hue_from_album',
-                name: tl(trans.hue_from_album.name)
-            },
-            {
-                id: 'colourful_tracks',
-                name: tl(trans.colourful_tracks.name)
-            }
-        ]);
+        register_skip_to([]);
+
+        let colourful_active;
+        let colourful_all;
 
         render(page.structure.main, html`
             <section class="bleh--panel">
@@ -519,11 +513,17 @@ export async function render_setting_page(page_id) {
                     </div>
                     <div class="setting" data-type="options">
                         <div class="heading">
-                            <h5>${tl(trans.change_my_colour_when)}</h5>
+                            <h5>${tl(trans.change_my_colour_when.name)}</h5>
+                            <p>${tl(trans.change_my_colour_when.body)}</p>
                         </div>
                         <div class="primary-selections">
                             ${setting({id: 'hue_from_album', standalone: true})}
-                            ${setting({id: 'colourful_tracks', standalone: true})}
+                            ${colourful_active = setting({id: 'colourful_tracks', standalone: true, func: () => {
+                                colourful_all.compat();
+                            }})}
+                            ${colourful_all = setting({id: 'colourful_tracks_all', standalone: true, func: () => {
+                                colourful_active.compat();
+                            }})}
                         </div>
                     </div>
                     ${ff('card_saturation') ? setting({id: 'sat_bg'}) : ''}

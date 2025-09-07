@@ -17701,6 +17701,9 @@
                     --icon: var(--icon-16-check-thick);
                     --icon-size: 12px;
 
+                    --col: hsl(var(--b7)) !important;
+                    --mask-colour: var(--col);
+
                     .bleh-icon {
                         transform: scale(0);
                         transform-origin: bottom left;
@@ -17715,8 +17718,6 @@
                         --bg: var(--cards-overlay-image-subtlest, none), hsl(var(--h3)) !important;
                         --bg-hov: var(--cards-overlay-image-subtlest, none), hsla(var(--h3), 80%) !important;
                         --bg-atv: var(--cards-overlay-image-subtlest, none), hsla(var(--h3), 60%) !important;
-                        --col: hsl(var(--b7)) !important;
-                        --mask-colour: var(--col);
                         --shadow: var(--primary-shadow), 0 3px 12px hsl(var(--h4), 25%), var(--interactable-outer);
                         --shadow-hov: var(--interactable-outer), var(--interactable-active-outer);
 
@@ -20133,6 +20134,19 @@
             --icon-size: 12px;
             height: var(--icon-size);
             --mask-colour: currentColor;
+        }
+
+        &.new {
+            animation: new 2.5s linear infinite;
+        }
+    }
+
+    @keyframes new {
+        from, to {
+            background: hsl(var(--k4), 40%);
+        }
+        50% {
+            background: hsl(var(--k4), 60%);
         }
     }
 
@@ -26244,13 +26258,17 @@
             }
 
             .check-circle {
-                background: hsl(var(--h3));
+                background: hsl(var(--h3), 40%);
+                box-shadow: 0px 0px 9px 0px hsl(var(--l2-c), 60%) inset;
                 color: hsl(var(--b7));
                 outline: 6px solid hsl(var(--b5));
                 border-radius: 50px;
                 position: absolute;
                 bottom: 0;
                 right: 0;
+
+                backdrop-filter: blur(4px) saturate(150%);
+                -webkit-backdrop-filter: blur(4px) saturate(150%);
 
                 padding: 4px;
 

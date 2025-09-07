@@ -61,7 +61,7 @@ export function setting({
         if (settings_store[id].beta)
             html_title.appendChild(html.node`<span class="new-badge beta">${tl(trans.beta)}</span>`);
         if (settings_store[id].new_release)
-            html_title.appendChild(html.node`<span class="new-badge beta">${tl(trans.new)}</span>`);
+            html_title.appendChild(html.node`<span class="new-badge new">${tl(trans.new)}</span>`);
 
         if (type === 'toggle') {
             let toggle;
@@ -106,6 +106,13 @@ export function setting({
             `;
 
             function update_toggle() {
+                if (elem.getAttribute('disabled') == 'true') {
+                    status({
+                        title: tl(trans.incompatible_alert)
+                    });
+                    return;
+                }
+
                 let val = settings[id];
 
                 toggle.setAttribute('aria-checked', !val);
@@ -395,6 +402,13 @@ export function setting({
             `;
 
             function update_toggle() {
+                if (elem.getAttribute('disabled') == 'true') {
+                    status({
+                        title: tl(trans.incompatible_alert)
+                    });
+                    return;
+                }
+
                 let val = settings[id];
 
                 toggle.setAttribute('aria-checked', !val);

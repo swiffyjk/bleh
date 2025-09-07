@@ -542,7 +542,12 @@ export const trans = {
         pt: 'Colorir'
     },
     change_my_colour_when: {
-        en: 'Use a context-based accent colour when'
+        name: {
+            en: 'Use a context-based accent colour when'
+        },
+        body: {
+            en: 'Temporarily override your selected accent to match album art'
+        }
     },
     adaptive: {
         en: 'Adaptive'
@@ -550,8 +555,11 @@ export const trans = {
     hue_from_album: {
         en: 'Browsing album pages'
     },
-    colourful_tracks: {
+    colourful_active: {
         en: 'Actively scrobbling a track'
+    },
+    colourful_all: {
+        en: 'Viewing any track'
     },
     configure: {
         en: 'Configure',
@@ -2851,6 +2859,9 @@ export const trans = {
     incompatible_with_value: {
         en: 'Incompatible with {v}',
         pt: 'Incompatível com {v}'
+    },
+    incompatible_alert: {
+        en: 'Incompatible with current settings'
     },
     bulk_edit_extension: {
         en: 'Last.fm Bulk Edit',

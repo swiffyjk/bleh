@@ -37721,9 +37721,15 @@
       if (settings_store[id].beta)
         html_title.appendChild(html.node`<span class="new-badge beta">${tl(trans.beta)}</span>`);
       if (settings_store[id].new_release)
-        html_title.appendChild(html.node`<span class="new-badge beta">${tl(trans.new)}</span>`);
+        html_title.appendChild(html.node`<span class="new-badge new">${tl(trans.new)}</span>`);
       if (type === "toggle") {
         let update_toggle = function() {
+          if (elem.getAttribute("disabled") == "true") {
+            status({
+              title: tl(trans.incompatible_alert)
+            });
+            return;
+          }
           let val = settings[id];
           toggle2.setAttribute("aria-checked", !val);
           save_setting(id, !val);
@@ -37967,6 +37973,12 @@
         return container;
       } else if (type == "checkbox") {
         let update_toggle = function() {
+          if (elem.getAttribute("disabled") == "true") {
+            status({
+              title: tl(trans.incompatible_alert)
+            });
+            return;
+          }
           let val = settings[id];
           toggle2.setAttribute("aria-checked", !val);
           save_setting(id, !val);
@@ -46280,16 +46292,9 @@
         page_loading();
         return;
       }
-      register_skip_to([
-        {
-          id: "hue_from_album",
-          name: tl(trans.hue_from_album.name)
-        },
-        {
-          id: "colourful_tracks",
-          name: tl(trans.colourful_tracks.name)
-        }
-      ]);
+      register_skip_to([]);
+      let colourful_active;
+      let colourful_all;
       render(page.structure.main, html`
             <section class="bleh--panel">
                 <h4>${tl(trans.appearance)}</h4>
@@ -46315,11 +46320,17 @@
                     </div>
                     <div class="setting" data-type="options">
                         <div class="heading">
-                            <h5>${tl(trans.change_my_colour_when)}</h5>
+                            <h5>${tl(trans.change_my_colour_when.name)}</h5>
+                            <p>${tl(trans.change_my_colour_when.body)}</p>
                         </div>
                         <div class="primary-selections">
                             ${setting({ id: "hue_from_album", standalone: true })}
-                            ${setting({ id: "colourful_tracks", standalone: true })}
+                            ${colourful_active = setting({ id: "colourful_tracks", standalone: true, func: () => {
+        colourful_all.compat();
+      } })}
+                            ${colourful_all = setting({ id: "colourful_tracks_all", standalone: true, func: () => {
+        colourful_active.compat();
+      } })}
                         </div>
                     </div>
                     ${ff("card_saturation") ? setting({ id: "sat_bg" }) : ""}
@@ -53722,7 +53733,12 @@
       pt: "Colorir"
     },
     change_my_colour_when: {
-      en: "Use a context-based accent colour when"
+      name: {
+        en: "Use a context-based accent colour when"
+      },
+      body: {
+        en: "Temporarily override your selected accent to match album art"
+      }
     },
     adaptive: {
       en: "Adaptive"
@@ -53730,8 +53746,11 @@
     hue_from_album: {
       en: "Browsing album pages"
     },
-    colourful_tracks: {
+    colourful_active: {
       en: "Actively scrobbling a track"
+    },
+    colourful_all: {
+      en: "Viewing any track"
     },
     configure: {
       en: "Configure",
@@ -56031,6 +56050,9 @@
     incompatible_with_value: {
       en: "Incompatible with {v}",
       pt: "Incompat\xEDvel com {v}"
+    },
+    incompatible_alert: {
+      en: "Incompatible with current settings"
     },
     bulk_edit_extension: {
       en: "Last.fm Bulk Edit",
@@ -60594,7 +60616,13 @@
     colourful_tracks: {
       default: true,
       type: "checkbox",
-      title: trans.colourful_tracks
+      title: trans.colourful_active,
+      incompatible: { colourful_tracks_all: true }
+    },
+    colourful_tracks_all: {
+      default: false,
+      type: "checkbox",
+      title: trans.colourful_all
     },
     feature_flags: {
       default: {},
