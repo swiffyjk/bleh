@@ -49027,7 +49027,7 @@
       },
       friends: {
         name: tl(trans.friends),
-        icon: "user",
+        icon: "friends",
         url: `${root}user/${auth.name}/friends`
       },
       notifications: {
