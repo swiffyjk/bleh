@@ -399,6 +399,7 @@ function load_page() {
 
     function detect_scroll() {
         const scroll = window.scrollY;
+        if (page.structure.content) page.structure.content.style.setProperty('--scroll', `-${scroll}px`);
 
         return;
 
@@ -770,6 +771,8 @@ export async function register_background(url, origin = null) {
     background.setAttribute('data-page-subpage', page.subpage);
     background.setAttribute('data-background-origin', origin);
     background.setAttribute('data-background-coloured', settings.hue_from_album);
+
+    if (page.structure.content) page.structure.content.style.setProperty('--banner', `url(${url})`);
 
     if (url)
         background.style.setProperty('background-image', `url(${url})`);

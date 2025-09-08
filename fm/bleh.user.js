@@ -52866,6 +52866,7 @@
     detect_scroll();
     function detect_scroll() {
       const scroll = window.scrollY;
+      if (page.structure.content) page.structure.content.style.setProperty("--scroll", `-${scroll}px`);
       return;
       if (scroll > 30)
         masthead.classList.add("scrolled");
@@ -53178,6 +53179,7 @@
     background.setAttribute("data-page-subpage", page.subpage);
     background.setAttribute("data-background-origin", origin);
     background.setAttribute("data-background-coloured", settings.hue_from_album);
+    if (page.structure.content) page.structure.content.style.setProperty("--banner", `url(${url})`);
     if (url)
       background.style.setProperty("background-image", `url(${url})`);
     else

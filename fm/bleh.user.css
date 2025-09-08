@@ -260,6 +260,9 @@
         --toolbar-border: 1px solid hsl(var(--b4), 75%);
         --subtle-border: 1px solid hsl(var(--b4), 55%);
 
+        --card-blur-bg: hsl(var(--b5), 97%);
+        --card-blur: blur(20px) saturate(var(--blur-saturate)) brightness(1) contrast(1);
+
         .theme-preview[data-bleh--theme="darker"],
         [data-bleh--theme="darker"] &:not(.theme-preview) {
             /* any additional highlights */
@@ -333,11 +336,13 @@
             --focused-input-shadow: inset 0 -1px 0 0 hsl(var(--h3), 80%), inset 0 -1px 0 0 var(--card-border-base), inset 0 1px 3px hsl(var(--b7), 0.1);
             --group-shadow: inset 0 1px 0 0 hsl(var(--b4), 0.4), inset 0 0 0 1px hsl(var(--b4), 0.4);
 
-            --sidebar-bg: hsl(var(--b6), 30%);
+            --sidebar-bg: hsl(var(--b6), 0%);
             --sidebar-border: 1px solid hsl(var(--b4), 40%);
             --toolbar-bg: hsl(var(--b4), 10%);
             --toolbar-border: 1px solid hsl(var(--b4), 85%);
             --subtle-border: 1px solid hsl(var(--b4), 65%);
+
+            --card-blur-bg: hsl(var(--b5), 92%);
         }
         .theme-preview[data-bleh--theme="ink"],
         [data-bleh--theme="ink"] &:not(.theme-preview) {
@@ -599,7 +604,7 @@
 
         --cards-main-width: 902px;
         --cards-sidebar-width: 400px;
-        --cards-width: calc(1px + var(--cards-main-width) + 1px + var(--cards-sidebar-width) + 1px);
+        --cards-width: calc(1px + var(--cards-main-width) + 1px + var(--cards-sidebar-width));
 
         --item-small-radius: 5px;
         --item-med-radius: 8px;
@@ -2334,7 +2339,7 @@
             display: flex;
             justify-content: center;
             width: 100%;
-            background: hsl(var(--b5));
+            background: transparent;
 
             /*backdrop-filter: blur(25px) saturate(var(--blur-saturate)) brightness(var(--blur-brightness)) contrast(var(--blur-contrast));
             -webkit-backdrop-filter: blur(25px) saturate(var(--blur-saturate)) brightness(var(--blur-brightness)) contrast(var(--blur-contrast));*/
@@ -2415,6 +2420,49 @@
                     &:first-child {
                         margin-top: calc(-1 * var(--card-gap));
                     }*/
+
+                    &:first-child {
+                        & > .col-main {
+                            border-top-left-radius: calc(var(--card-radius) - 1px);
+                        }
+
+                        & > .col-sidebar {
+                            border-top-right-radius: calc(var(--card-radius) - 1px);
+
+                            &:before {
+                                border-top-right-radius: calc(var(--card-radius) - 1px);
+                            }
+                        }
+                    }
+
+                    & > .col-main {
+                        background: hsl(var(--b5));
+                        border-bottom-left-radius: calc(var(--card-radius) - 1px);
+                    }
+
+                    & > .col-sidebar {
+                        position: relative;
+                        background: var(--card-blur-bg);
+                        border-bottom-right-radius: calc(var(--card-radius) - 1px);
+                        overflow: hidden;
+
+                        &:before {
+                            content: '';
+                            position: absolute;
+                            top: 0;
+                            left: 0;
+                            right: 0;
+                            height: 60vh;
+                            display: block;
+                            background-image: var(--banner);
+                            background-repeat: no-repeat;
+                            background-position: center 40%;
+                            background-size: cover;
+                            z-index: -1;
+                            border-bottom-right-radius: calc(var(--card-radius) - 1px);
+                            filter: var(--card-blur);
+                        }
+                    }
                 }
             }
         }
@@ -3716,6 +3764,7 @@
     }
 
     .toolbar {
+        position: relative;
         padding: var(--card-gap) 0;
         background: var(--toolbar-bg);
         border-bottom: var(--toolbar-border);
@@ -3725,8 +3774,16 @@
         /* temporary chrome fix */
         order: -1;
 
-        /* temporary chrome fix */
-        order: -1;
+        &:before {
+            content: '';
+            position: absolute;
+            inset: 0 0 -1px 0;
+            display: block;
+            background: hsl(var(--b5));
+            border-top-left-radius: var(--card-radius);
+            border-top-right-radius: var(--card-radius);
+            z-index: -1;
+        }
     }
 
     .library-controls > .secondary-nav,
