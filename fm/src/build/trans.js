@@ -3192,6 +3192,9 @@ export const trans = {
     popular_now: {
         en: 'Popular now'
     },
+    missing_album_info: {
+        en: 'This album is missing key details, maybe you can help out?'
+    },
     updates: {
         en: 'Updates',
         pt: 'Atualizações'

@@ -34051,7 +34051,7 @@
   async function show_your_scrobbles() {
     let katsune = ff("katsune");
     show_numbers_on_side(page.type);
-    let page_is_blocked = !page.structure.main.querySelector("#shoutbox");
+    const page_is_blocked = !page.structure.main.querySelector("#shoutbox");
     if (page.subpage == "overview") {
       let tabs = document.createElement("nav");
       tabs.classList.add("navlist", "secondary-nav", "navlist--more", "redesigned-navigation");
@@ -34372,25 +34372,24 @@
       }
       interact_container.appendChild(scrobble_btn);
     }
-    let play_btn = interact_container.querySelector(".header-new-playlink");
-    if (play_btn)
-      interact_container.removeChild(play_btn);
+    const play_btn = interact_container.querySelector(".header-new-playlink");
+    if (play_btn) interact_container.removeChild(play_btn);
     if (auth.name) {
       if (!page.mobile)
         page.structure.side.insertBefore(interact_container, page.structure.side.firstElementChild);
       else
         page.structure.main.insertBefore(interact_container, page.structure.main.firstElementChild);
     }
-    let new_playlist = page.structure.side.querySelector(":scope > form");
+    const new_playlist = page.structure.side.querySelector(":scope > form");
     if (new_playlist) {
       let header = new_playlist.querySelector("h3");
-      new_playlist.removeChild(header);
+      header.remove();
       let playlist_button = new_playlist.querySelector("button");
       playlist_button.classList = "btn side-action";
       playlist_button.setAttribute("data-type", "playlist");
       interact_container.appendChild(new_playlist);
     }
-    let metadata = col_main.querySelector(".metadata-column");
+    const metadata = col_main.querySelector(".metadata-column");
     if (metadata) {
       let groups = [];
       let headers = metadata.querySelectorAll(".catalogue-metadata-heading:not(.visible-xs)");
@@ -34590,7 +34589,7 @@
     }
     link_group.appendChild(link_container);
     col_main.appendChild(link_group);
-    let tags = col_main.querySelector(".catalogue-tags");
+    const tags = col_main.querySelector(".catalogue-tags");
     if (tags) {
       let header_tags = document.createElement("div");
       header_tags.classList.add("sub-text", "music-small-header");
@@ -34598,8 +34597,14 @@
       col_main.appendChild(header_tags);
       col_main.appendChild(tags);
     }
-    if (!settings.corrections)
-      return;
+    const no_info = col_main.querySelector(":scope > .section-with-separator.buffer-4");
+    if (no_info) {
+      no_info.classList = "loading-data-container";
+      render(no_info, html`
+            <div class="loading-data-text info">${tl(trans.missing_album_info)}</div>
+        `);
+    }
+    if (!settings.corrections) return;
     page.structure.side.appendChild(html.node`
         <section class="lotus cta">
             <strong>${tl(trans.lotus_cta[page.corrected]).replace("{t}", tl(trans[`${page.type}_lower`]))}</strong>
@@ -56387,6 +56392,9 @@
     },
     popular_now: {
       en: "Popular now"
+    },
+    missing_album_info: {
+      en: "This album is missing key details, maybe you can help out?"
     },
     updates: {
       en: "Updates",

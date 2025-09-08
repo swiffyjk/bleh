@@ -2584,7 +2584,6 @@
     /* no loved tracks */ .namespace--user_loved .no-data-message,
     /* neighbours */ .friends-col-main,
     .panel-form,
-    .bleh--gallery, [data-page-subpage="images_overview"] .col-main:not(.bleh--bookmarks),
     /* listeners */ .col-main:not(.bleh--gallery) > .buffer-standard,
     /* similar artists */ .similar-artists,
     .no-data-message--gallery:not([data-page-subpage="images_overview"] .no-data-message--gallery), .no-data-message--album,

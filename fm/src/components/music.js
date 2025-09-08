@@ -35,7 +35,7 @@ export async function show_your_scrobbles() {
 
     // commonly nsbm pages are stripped of all social interaction and only have three tabs,
     // this is a simple way to detect it
-    let page_is_blocked = !page.structure.main.querySelector('#shoutbox');
+    const page_is_blocked = !page.structure.main.querySelector('#shoutbox');
 
     if (page.subpage == 'overview') {
         let tabs = document.createElement('nav');
@@ -464,9 +464,8 @@ export async function show_your_scrobbles() {
 
     interact_container.appendChild(search_btn);*/
 
-    let play_btn = interact_container.querySelector('.header-new-playlink');
-    if (play_btn)
-        interact_container.removeChild(play_btn);
+    const play_btn = interact_container.querySelector('.header-new-playlink');
+    if (play_btn) interact_container.removeChild(play_btn);
 
     if (auth.name) {
         if (!page.mobile)
@@ -479,10 +478,10 @@ export async function show_your_scrobbles() {
 
 
     // new playlist
-    let new_playlist = page.structure.side.querySelector(':scope > form');
+    const new_playlist = page.structure.side.querySelector(':scope > form');
     if (new_playlist) {
         let header = new_playlist.querySelector('h3');
-        new_playlist.removeChild(header);
+        header.remove();
 
         let playlist_button = new_playlist.querySelector('button');
         playlist_button.classList = 'btn side-action';
@@ -494,7 +493,7 @@ export async function show_your_scrobbles() {
 
 
 
-    let metadata = col_main.querySelector('.metadata-column');
+    const metadata = col_main.querySelector('.metadata-column');
     if (metadata) {
         let groups = [];
 
@@ -722,8 +721,7 @@ export async function show_your_scrobbles() {
     link_group.appendChild(link_container);
     col_main.appendChild(link_group);
 
-    let tags = col_main.querySelector('.catalogue-tags');
-
+    const tags = col_main.querySelector('.catalogue-tags');
     if (tags) {
         let header_tags = document.createElement('div');
         header_tags.classList.add('sub-text', 'music-small-header');
@@ -734,9 +732,19 @@ export async function show_your_scrobbles() {
     }
 
 
+    // no album info
+    const no_info = col_main.querySelector(':scope > .section-with-separator.buffer-4');
+    if (no_info) {
+        no_info.classList = 'loading-data-container';
+
+        render(no_info, html`
+            <div class="loading-data-text info">${tl(trans.missing_album_info)}</div>
+        `);
+    }
+
+
     // lotus
-    if (!settings.corrections )
-        return;
+    if (!settings.corrections) return;
 
     page.structure.side.appendChild(html.node`
         <section class="lotus cta">
