@@ -759,6 +759,7 @@ export async function register_background(url, origin = null) {
         page.structure.container.insertBefore(background, page.structure.container.firstElementChild);
     }
 
+    /*
     if (settings.static_banners) {
         try {
             url = await convert_gif_to_png(url);
@@ -766,6 +767,7 @@ export async function register_background(url, origin = null) {
             log('could not convert banner image to static', 'banner', 'error', {e});
         }
     }
+    */
 
     background.setAttribute('data-page-type', page.type);
     background.setAttribute('data-page-subpage', page.subpage);

@@ -53168,13 +53168,6 @@
         `;
       page.structure.container.insertBefore(background, page.structure.container.firstElementChild);
     }
-    if (settings.static_banners) {
-      try {
-        url = await convert_gif_to_png(url);
-      } catch (e) {
-        log("could not convert banner image to static", "banner", "error", { e });
-      }
-    }
     background.setAttribute("data-page-type", page.type);
     background.setAttribute("data-page-subpage", page.subpage);
     background.setAttribute("data-background-origin", origin);

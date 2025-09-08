@@ -13884,7 +13884,7 @@
                     --left: 1px;
 
                     .user-list-item:has(&) {
-                        background: hsla(var(--h4), 20%);
+                        background: hsla(var(--h4), 15%);
 
                         .user-list-follower-btn {
                             --bg: hsla(var(--h4), 0%);
@@ -15826,6 +15826,10 @@
             & > .col-main {
                 width: var(--cards-width);
                 display: block;
+                padding-left: var(--card-padding);
+                padding-right: var(--card-padding);
+                margin-left: calc(-1 * var(--card-padding)) !important;
+                margin-right: calc(-1 * var(--card-padding)) !important;
             }
             & > .col-sidebar {
                 display: none !important;
