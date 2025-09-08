@@ -260,7 +260,7 @@
         --toolbar-border: 1px solid hsl(var(--b4), 75%);
         --subtle-border: 1px solid hsl(var(--b4), 55%);
 
-        --card-blur-bg: hsl(var(--b5), 97%);
+        --card-blur-bg: hsl(var(--b5), 70%);
         --card-blur: blur(20px) saturate(var(--blur-saturate)) brightness(1) contrast(1);
 
         .theme-preview[data-bleh--theme="darker"],
@@ -309,6 +309,8 @@
             --toolbar-bg: hsl(var(--b4), 20%);
             --toolbar-border: 1px solid hsl(var(--b4), 45%);
             --subtle-border: 1px solid hsl(var(--b4), 35%);
+
+            --card-blur-bg: hsl(var(--b5), 60%);
         }
         .theme-preview[data-bleh--theme="light"],
         [data-bleh--theme="light"] &:not(.theme-preview) {
@@ -342,7 +344,7 @@
             --toolbar-border: 1px solid hsl(var(--b4), 85%);
             --subtle-border: 1px solid hsl(var(--b4), 65%);
 
-            --card-blur-bg: hsl(var(--b5), 92%);
+            --card-blur-bg: hsl(var(--b5), 52%);
         }
         .theme-preview[data-bleh--theme="ink"],
         [data-bleh--theme="ink"] &:not(.theme-preview) {
@@ -2454,13 +2456,10 @@
                             right: 0;
                             height: 60vh;
                             display: block;
-                            background-image: var(--banner);
-                            background-repeat: no-repeat;
-                            background-position: center 40%;
-                            background-size: cover;
                             z-index: -1;
                             border-bottom-right-radius: calc(var(--card-radius) - 1px);
-                            filter: var(--card-blur);
+                            backdrop-filter: var(--card-blur);
+                            -webkit-backdrop-filter: var(--card-blur);
                         }
                     }
                 }
