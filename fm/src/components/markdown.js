@@ -283,7 +283,9 @@ export function markdown(text, {
         'carrd.co': 'Carrd',
         'music.apple.com': 'Apple Music',
         'music.youtube.com': 'YouTube Music',
-        'facebook.com': 'Facebook'
+        'facebook.com': 'Facebook',
+        'www.discogs.com': 'Discogs',
+        'discogs.com': 'Discogs'
     }
 
     if (links.length > 0) {

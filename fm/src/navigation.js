@@ -26,6 +26,7 @@ import { sponsor } from './sponsor.js';
 import moment from 'moment';
 import { register_menu } from './components/menu.js';
 import { copy } from './build/tools.js';
+import { submit_scrobble } from './components/scrobble.js';
 
 export function patch_masthead() {
     let masthead_logo = document.body.querySelector('.masthead-logo');
@@ -233,6 +234,12 @@ export function append_nav() {
             name: tl(trans.compare),
             icon: 'compare',
             url: `${root}bleh/minis/compare`
+        },
+        scrobble: {
+            name: tl(trans.scrobble),
+            icon: 'add',
+            action: () => submit_scrobble(),
+            new_release: true
         }
     }
 
@@ -762,7 +769,7 @@ export function append_nav() {
                                 const formal = page.state.quick_access_items[val];
 
                                 if (formal.url) elem = html.node`<a href=${formal.url} />`;
-                                else elem = html.node`<button />`;
+                                else elem = html.node`<button onclick=${formal.action} />`;
 
                                 elem.classList = 'dropdown-menu-clickable-item';
                                 elem.setAttribute('data-type', formal.icon);

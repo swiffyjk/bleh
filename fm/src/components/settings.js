@@ -625,6 +625,7 @@ export function setting({
                                     ` : ''}
                                     <div class="info">
                                         ${list[val]?.name || val}
+                                        ${list[val]?.new_release ? html.node`<span class="new-badge new">${tl(trans.new)}</span>` : ''}
                                     </div>
                                     <div class="bleh-icon indicator" data-type="minus" />
                                 </button>
@@ -695,6 +696,7 @@ export function setting({
                                     <div class="bleh-icon" data-type=${formal.icon} />
                                     <div class="info">
                                         ${formal.name}
+                                        ${formal.new_release ? html.node`<span class="new-badge new">${tl(trans.new)}</span>` : ''}
                                     </div>
                                     <div class="bleh-icon indicator" data-type="add" />
                                 </button>

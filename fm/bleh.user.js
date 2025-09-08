@@ -27354,10 +27354,10 @@
     pre_album_artist = "",
     func,
     can_api
-  }) {
+  } = {}) {
     if (!can_api) can_api = localStorage.getItem("bleh_auth") && localStorage.getItem("bleh_auth_valid") === "true";
     if (!can_api) {
-      window.location.href = `${root}bleh/profiles`;
+      window.location.href = `${root}bleh/general`;
       return;
     }
     const random = random_list[Math.floor(Math.random() * random_list.length)];
@@ -38159,6 +38159,7 @@
                                     ` : ""}
                                     <div class="info">
                                         ${list[val]?.name || val}
+                                        ${list[val]?.new_release ? html.node`<span class="new-badge new">${tl(trans.new)}</span>` : ""}
                                     </div>
                                     <div class="bleh-icon indicator" data-type="minus" />
                                 </button>
@@ -38221,6 +38222,7 @@
                                     <div class="bleh-icon" data-type=${formal.icon} />
                                     <div class="info">
                                         ${formal.name}
+                                        ${formal.new_release ? html.node`<span class="new-badge new">${tl(trans.new)}</span>` : ""}
                                     </div>
                                     <div class="bleh-icon indicator" data-type="add" />
                                 </button>
@@ -45228,7 +45230,9 @@
       "carrd.co": "Carrd",
       "music.apple.com": "Apple Music",
       "music.youtube.com": "YouTube Music",
-      "facebook.com": "Facebook"
+      "facebook.com": "Facebook",
+      "www.discogs.com": "Discogs",
+      "discogs.com": "Discogs"
     };
     if (links.length > 0) {
       body.appendChild(html.node`
@@ -49066,6 +49070,12 @@
         name: tl(trans.compare),
         icon: "compare",
         url: `${root}bleh/minis/compare`
+      },
+      scrobble: {
+        name: tl(trans.scrobble),
+        icon: "add",
+        action: () => submit_scrobble(),
+        new_release: true
       }
     };
     const masthead = document.body.querySelector(".masthead");
@@ -49489,7 +49499,7 @@
           let elem;
           const formal = page.state.quick_access_items[val];
           if (formal.url) elem = html.node`<a href=${formal.url} />`;
-          else elem = html.node`<button />`;
+          else elem = html.node`<button onclick=${formal.action} />`;
           elem.classList = "dropdown-menu-clickable-item";
           elem.setAttribute("data-type", formal.icon);
           elem.textContent = formal.name;
