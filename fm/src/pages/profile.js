@@ -407,6 +407,7 @@ export async function bleh_profiles() {
             interactive: true,
             interactiveBorder: 10,
             trigger: 'click',
+            appendTo: document.body,
 
             onShow(instance) {
                 refresh_all(instance.popper);
