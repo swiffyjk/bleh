@@ -260,7 +260,7 @@
         --toolbar-border: 1px solid hsl(var(--b4), 75%);
         --subtle-border: 1px solid hsl(var(--b4), 55%);
 
-        --card-blur-bg: hsl(var(--b5), 70%);
+        --card-blur-bg: hsl(var(--b5), 75%);
         --card-blur: blur(20px) saturate(var(--blur-saturate)) brightness(1) contrast(1);
 
         .theme-preview[data-bleh--theme="darker"],
@@ -310,7 +310,7 @@
             --toolbar-border: 1px solid hsl(var(--b4), 45%);
             --subtle-border: 1px solid hsl(var(--b4), 35%);
 
-            --card-blur-bg: hsl(var(--b5), 60%);
+            --card-blur-bg: hsl(var(--b5), 70%);
         }
         .theme-preview[data-bleh--theme="light"],
         [data-bleh--theme="light"] &:not(.theme-preview) {
