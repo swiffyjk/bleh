@@ -271,7 +271,8 @@ function bleh_glacier_library_date() {
         placement: 'bottom',
         interactive: true,
         interactiveBorder: 10,
-        trigger: 'click'
+        trigger: 'click',
+        appendTo: document.body
     });
 
 

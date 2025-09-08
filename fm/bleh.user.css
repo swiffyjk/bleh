@@ -1336,7 +1336,7 @@
         display: flex !important;
         justify-content: center;
         align-items: center;
-        z-index: 9990; /* place below windows to avoid duplicates */
+        z-index: 99990; /* place below windows to avoid duplicates */
 
         /* v2 */
         .masthead-pro-wrap {
@@ -10310,10 +10310,10 @@
         }
     }
 
-    .library-controls-datepicker .date-range-picker-form {
-        margin-top: var(--card-gap);
+    .date-range-picker-form {
+        margin-top: var(--card-gap) !important;
         padding-top: var(--card-gap);
-        border-top: 1px solid hsl(var(--b4));
+        border-top: 1px solid var(--card-border-base);
 
         & > .form-group {
             margin: unset !important;
@@ -19997,7 +19997,7 @@
     .bleh-modals {
         position: fixed;
         inset: 0;
-        z-index: 9998;
+        z-index: 99998;
         pointer-events: none;
 
         display: flex;

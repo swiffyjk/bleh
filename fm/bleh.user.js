@@ -38937,7 +38937,8 @@
       placement: "bottom",
       interactive: true,
       interactiveBorder: 10,
-      trigger: "click"
+      trigger: "click",
+      appendTo: document.body
     });
     let form = picker_content.querySelector(":scope > .date-range-picker-form");
     let from_group = form.querySelector(".form-group--from");
