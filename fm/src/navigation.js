@@ -654,6 +654,7 @@ export function append_nav() {
         interactive: true,
         interactiveBorder: 10,
         trigger: 'click',
+        appendTo: document.body,
 
         onShow: async (instance) => {
             page.structure.notifications.setAttribute('data-auth-open', 'true');

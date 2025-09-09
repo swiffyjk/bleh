@@ -260,8 +260,9 @@
         --toolbar-border: 1px solid hsl(var(--b4), 75%);
         --subtle-border: 1px solid hsl(var(--b4), 55%);
 
-        --card-blur-bg: hsl(var(--b5), 75%);
-        --card-blur: blur(20px) saturate(var(--blur-saturate)) brightness(1) contrast(1);
+        --card-blur-bg: hsl(var(--b5), 78%);
+        --card-blur-bg-alt: hsl(var(--b5), 35%);
+        --card-blur: blur(12px) saturate(var(--blur-saturate)) brightness(1) contrast(1);
 
         .theme-preview[data-bleh--theme="darker"],
         [data-bleh--theme="darker"] &:not(.theme-preview) {
@@ -311,6 +312,7 @@
             --subtle-border: 1px solid hsl(var(--b4), 35%);
 
             --card-blur-bg: hsl(var(--b5), 70%);
+            --card-blur-bg-alt: hsl(var(--b5), 40%);
         }
         .theme-preview[data-bleh--theme="light"],
         [data-bleh--theme="light"] &:not(.theme-preview) {
@@ -345,6 +347,7 @@
             --subtle-border: 1px solid hsl(var(--b4), 65%);
 
             --card-blur-bg: hsl(var(--b5), 52%);
+            --card-blur-bg-alt: hsl(var(--b5), 22%);
         }
         .theme-preview[data-bleh--theme="ink"],
         [data-bleh--theme="ink"] &:not(.theme-preview) {
@@ -13426,9 +13429,11 @@
         mask-size: 100%;
     }
     [data-host="music.apple.com"],
-    .resource-external-link--apple-music:before, .play-this-track-playlink--itunes:before {
+    .resource-external-link--apple-music, .play-this-track-playlink--itunes {
+        --hue-over: 353;
+        --sat-over: 1.3;
+        --lit-over: 1;
         --mask: url('data:image/svg+xml;base64,PHN2ZyByb2xlPSJpbWciIHZpZXdCb3g9IjAgMCAyNCAyNCIgeG1sbnM9Imh0dHA6Ly93d3cudzMub3JnLzIwMDAvc3ZnIj48dGl0bGU+QXBwbGUgTXVzaWM8L3RpdGxlPjxwYXRoIGQ9Ik0yMy45OTQgNi4xMjRhOS4yMyA5LjIzIDAgMDAtLjI0LTIuMTljLS4zMTctMS4zMS0xLjA2Mi0yLjMxLTIuMTgtMy4wNDNhNS4wMjIgNS4wMjIgMCAwMC0xLjg3Ny0uNzI2IDEwLjQ5NiAxMC40OTYgMCAwMC0xLjU2NC0uMTVjLS4wNC0uMDAzLS4wODMtLjAxLS4xMjQtLjAxM0g1Ljk4NmMtLjE1Mi4wMS0uMzAzLjAxNy0uNDU1LjAyNi0uNzQ3LjA0My0xLjQ5LjEyMy0yLjE5My40LTEuMzM2LjUzLTIuMyAxLjQ1Mi0yLjg2NSAyLjc4LS4xOTIuNDQ4LS4yOTIuOTI1LS4zNjMgMS40MDgtLjA1Ni4zOTItLjA4OC43ODUtLjEgMS4xOCAwIC4wMzItLjAwNy4wNjItLjAxLjA5M3YxMi4yMjNjLjAxLjE0LjAxNy4yODMuMDI3LjQyNC4wNS44MTUuMTU0IDEuNjI0LjQ5NyAyLjM3My42NSAxLjQyIDEuNzM4IDIuMzUzIDMuMjM0IDIuODAxLjQyLjEyNy44NTYuMTg3IDEuMjkzLjIyOC41NTUuMDUzIDEuMTEuMDYgMS42NjcuMDZoMTEuMDNhMTIuNSAxMi41IDAgMDAxLjU3LS4xYy44MjItLjEwNiAxLjU5Ni0uMzUgMi4yOTUtLjgxYTUuMDQ2IDUuMDQ2IDAgMDAxLjg4LTIuMjA3Yy4xODYtLjQyLjI5My0uODcuMzctMS4zMjQuMTEzLS42NzUuMTM4LTEuMzU4LjEzNy0yLjA0LS4wMDItMy44IDAtNy41OTUtLjAwMy0xMS4zOTN6bS02LjQyMyAzLjk5djUuNzEyYzAgLjQxNy0uMDU4LjgyNy0uMjQ0IDEuMjA2LS4yOS41OS0uNzYuOTYyLTEuMzg4IDEuMTQtLjM1LjEtLjcwNi4xNTctMS4wNy4xNzMtLjk1LjA0NS0xLjc3My0uNi0xLjk0My0xLjUzNmExLjg4IDEuODggMCAwMTEuMDM4LTIuMDIyYy4zMjMtLjE2LjY3LS4yNSAxLjAxOC0uMzI0LjM3OC0uMDgyLjc1OC0uMTUzIDEuMTM0LS4yNC4yNzQtLjA2My40NTctLjIzLjUxLS41MTZhLjkwNC45MDQgMCAwMC4wMi0uMTkzYzAtMS44MTUgMC0zLjYzLS4wMDItNS40NDNhLjcyNS43MjUgMCAwMC0uMDI2LS4xODVjLS4wNC0uMTUtLjE1LS4yNDMtLjMwNC0uMjM0LS4xNi4wMS0uMzE4LjAzNS0uNDc1LjA2Ni0uNzYuMTUtMS41Mi4zMDMtMi4yOC40NTZsLTIuMzI1LjQ3LTEuMzc0LjI3OGMtLjAxNi4wMDMtLjAzMi4wMS0uMDQ4LjAxMy0uMjc3LjA3Ny0uMzc3LjIwMy0uMzkuNDktLjAwMi4wNDIgMCAuMDg2IDAgLjEzLS4wMDIgMi42MDIgMCA1LjIwNC0uMDAzIDcuODA1IDAgLjQyLS4wNDcuODM2LS4yMTUgMS4yMjctLjI3OC42NC0uNzcgMS4wNC0xLjQzNCAxLjIzMy0uMzUuMS0uNzEuMTYtMS4wNzUuMTcyLS45Ni4wMzYtMS43NTUtLjYtMS45Mi0xLjU0NC0uMTQtLjgxMi4yMy0xLjY4NSAxLjE1NC0yLjA3NS4zNTctLjE1LjczLS4yMzIgMS4xMDgtLjMxLjI4Ny0uMDYuNTc1LS4xMTYuODYtLjE3Ny4zODMtLjA4My41ODMtLjMyMy42LS43MTR2LS4xNWMwLTIuOTYgMC01LjkyMi4wMDItOC44ODIgMC0uMTIzLjAxMy0uMjUuMDQyLS4zNy4wNy0uMjg1LjI3My0uNDQ4LjU0Ni0uNTE4LjI1NS0uMDY2LjUxNS0uMTEyLjc3NC0uMTY1LjczMy0uMTUgMS40NjYtLjI5NiAyLjItLjQ0NGwyLjI3LS40NmMuNjctLjEzNCAxLjM0LS4yNyAyLjAxLS40MDMuMjItLjA0My40NDItLjA4OC42NjMtLjEwNi4zMS0uMDI1LjUyMy4xNy41NTQuNDgyLjAwOC4wNzMuMDEyLjE0OC4wMTIuMjIzLjAwMiAxLjkxLjAwMiAzLjgyMiAwIDUuNzMyeiIvPjwvc3ZnPg==');
-        mask-size: 100%;
     }
     [data-host="youtube.com"],
     .play-this-track-playlink--youtube {
@@ -13533,12 +13538,6 @@
         --mask: url('data:image/svg+xml;base64,PHN2ZyByb2xlPSJpbWciIHZpZXdCb3g9IjAgMCAyNCAyNCIgeG1sbnM9Imh0dHA6Ly93d3cudzMub3JnLzIwMDAvc3ZnIj48dGl0bGU+U291bmRDbG91ZDwvdGl0bGU+PHBhdGggZD0iTTEuMTc1IDEyLjIyNWMtLjA1MSAwLS4wOTQuMDQ2LS4xMDEuMWwtLjIzMyAyLjE1NC4yMzMgMi4xMDVjLjAwNy4wNTguMDUuMDk4LjEwMS4wOTguMDUgMCAuMDktLjA0LjA5OS0uMDk4bC4yNTUtMi4xMDUtLjI3LTIuMTU0YzAtLjA1Ny0uMDQ1LS4xLS4wOS0uMW0tLjg5OS44MjhjLS4wNiAwLS4wOTEuMDM3LS4xMDQuMDk0TDAgMTQuNDc5bC4xNjUgMS4zMDhjMCAuMDU1LjA0NS4wOTQuMDkuMDk0cy4wODktLjA0NS4xMDQtLjEwNGwuMjEtMS4zMTktLjIxLTEuMzM0YzAtLjA2MS0uMDQ0LS4wOS0uMDktLjA5bTEuODMtMS4yMjljLS4wNjEgMC0uMTIuMDQ1LS4xMi4xMDRsLS4yMSAyLjU2My4yMjUgMi40NThjMCAuMDYuMDQ1LjEyLjExOS4xMi4wNjEgMCAuMTA1LS4wNjEuMTIxLS4xMmwuMjU0LTIuNDc0LS4yNTQtMi41NDhjLS4wMTYtLjA2LS4wNjEtLjEyLS4xMjEtLjEybS45NDUtLjA4OWMtLjA3NSAwLS4xMzUuMDYtLjE1LjEzNWwtLjE5MyAyLjY0LjIxIDIuNTQ0Yy4wMTYuMDc3LjA3NS4xMzguMTQ5LjEzOC4wNzUgMCAuMTM1LS4wNjEuMTUtLjE1bC4yNC0yLjUzMi0uMjQtMi42MjNjMC0uMDc1LS4wNi0uMTM1LS4xMzUtLjEzNWwtLjAzMS0uMDE3em0xLjE1NS4zNmMtLjAwNS0uMDktLjA3NS0uMTQ5LS4xNTktLjE0OS0uMDkgMC0uMTU4LjA2LS4xNjQuMTQ5bC0uMjE3IDIuNDMuMiAyLjU2M2MwIC4wOS4wNzUuMTU3LjE1OS4xNTcuMDc0IDAgLjE0OC0uMDY4LjE0OC0uMTU4bC4yMjctMi41NjMtLjIyNy0yLjQ0NC4wMzMuMDE1em0uODA5LTEuNzA5Yy0uMTAxIDAtLjE4LjA5LS4xOC4xODFsLS4yMSAzLjk1Ny4xODcgMi41NjNjMCAuMDkuMDguMTY0LjE4LjE2NC4wOTQgMCAuMTc0LS4wOS4xOC0uMThsLjIwOS0yLjU2My0uMjA5LTMuOTcyYy0uMDA4LS4xMDQtLjA4OC0uMTgtLjE4LS4xOG0uOTU5LS45MTRjLS4xMDUgMC0uMTk1LjA5LS4yMDMuMTk0bC0uMTggNC44NzIuMTY1IDIuNTQ4YzAgLjEyLjA5LjIwOS4xOTUuMjA5LjEwNCAwIC4xOTQtLjA4OS4yMS0uMjA5bC4xOTMtMi41NDgtLjE5Mi00Ljg1NmMtLjAxNi0uMTItLjEwNS0uMjEtLjIxLS4yMW0uOTg5LS40NDljLS4xMjEgMC0uMjExLjA4OS0uMjI1LjIwOWwtLjE2NSA1LjI3NS4xNjUgMi41MmMuMDE0LjExOS4xMDQuMjI1LjIyNS4yMjUuMTE5IDAgLjIyNS0uMTA1LjIyNS0uMjI1bC4xOTUtMi41Mi0uMTk2LTUuMjc1YzAtLjEyLS4xMDUtLjIyNS0uMjI1LS4yMjVtMS4yNDUuMDQ1YzAtLjEzNS0uMTA1LS4yNC0uMjQtLjI0LS4xMTkgMC0uMjQuMTA1LS4yNC4yNGwtLjE0OSA1LjQ0MS4xNDkgMi41MDNjLjAxNi4xMzUuMTIxLjI0LjI1Ni4yNHMuMjQtLjEwNS4yNC0uMjRsLjE2NC0yLjUwMy0uMTY0LTUuNDU2LS4wMTYuMDE1em0uNzQ5LS4xMzRjLS4xMzUgMC0uMjU1LjExOS0uMjU1LjI1NGwtLjE1IDUuMzIyLjE1IDIuNDczYzAgLjE1LjEyLjI1NS4yNTUuMjU1cy4yNTUtLjEyLjI1NS0uMjdsLjE1LTIuNDc0LS4xNjUtNS4zMDdjMC0uMTQ4LS4xMi0uMjctLjI3MS0uMjdtMS4wMDUuMTY2Yy0uMTY0IDAtLjI4NC4xMzUtLjI4NC4yODVsLS4xMDMgNS4xNDMuMTM1IDIuNDc0YzAgLjE0OS4xMTkuMjc3LjI4NC4yNzcuMTQ5IDAgLjI3MS0uMTIuMjg0LS4yODVsLjEyMS0yLjQ0My0uMTM1LTUuMTEyYy0uMDEyLS4xNjQtLjEzNS0uMjg1LS4yODUtLjI4NW0xLjE4NC0uOTQ1Yy0uMDQ1LS4wMjktLjEwNS0uMDQ0LS4xNjUtLjA0NHMtLjExOS4wMTUtLjE2NS4wNDRjLS4wOS4wNTQtLjE0OS4xNS0uMTQ5LjI1NXYuMDYxbC0uMTA0IDYuMDQ4LjExNSAyLjQ0OXYuMDA4Yy4wMDguMDYuMDMuMTM1LjA3NC4xOC4wNTguMDYxLjE0Mi4xMDQuMjM0LjEwNC4wOCAwIC4xNTgtLjA0NC4yMDktLjA5LjA1OC0uMDYuMDkxLS4xMzUuMDkxLS4yMjVsLjAxNS0uMjQuMTE3LTIuMjAzLS4xMzUtNi4wODZjMC0uMTA0LS4wNjEtLjE5My0uMTM1LS4yMzlsLS4wMDItLjAyMnptMS4wMDYtLjU0N2MtLjA0NS0uMDQ1LS4wOS0uMDYxLS4xNS0uMDYxLS4wNzQgMC0uMTQ5LjAxNi0uMjA5LjA2MS0uMDc1LjA2MS0uMTE5LjE1LS4xMTkuMjR2LjAyOWwtLjEzNyA2LjYwOS4wNzYgMS4yMTUuMDYxIDEuMTg1YzAgLjE2NC4xNDguMzE0LjMyOC4zMTQuMTgxIDAgLjMzLS4xNS4zMy0uMzI5bC4xNS0yLjQxNC0uMTUtNi42MzdjMC0uMTItLjA3NC0uMjIxLS4xNjUtLjI3N204LjkzNCAzLjc3N2MtLjQwNSAwLS43OTUuMDg2LTEuMTM5LjIzMi0uMjQtMi42NTQtMi40Ni00LjczNi01LjE4OC00LjczNi0uNjU5IDAtMS4zMDUuMTM1LTEuODg5LjM1OS0uMjI1LjA5LS4yNy4xOC0uMjg1LjM1OXY5LjM2OGMuMDE2LjE4LjE1LjMzLjMzLjM0NWg4LjE4NUMyMi42ODEgMTcuMjE4IDI0IDE1LjkxNCAyNCAxNC4yOHMtMS4zMTktMi45NTItMi45MzgtMi45NTIiLz48L3N2Zz4=');
     }
 
-    .play-this-track-playlink--itunes,
-    .resource-external-link--apple-music {
-        --hue-over: 353;
-        --sat-over: 1.3;
-        --lit-over: 1;
-    }
     [data-host="facebook.com"],
     .share-link-facebook,
     .resource-external-link--facebook {
@@ -20615,12 +20614,22 @@
             box-shadow: unset !important;
             border-radius: unset;
 
-            background: var(--toolbar-bg) !important;
+            background: var(--card-blur-bg-alt) !important;
             border-bottom: var(--toolbar-border);
             border-top-left-radius: var(--card-radius);
             border-top-right-radius: var(--card-radius);
 
             position: relative;
+
+            &:before {
+                content: '';
+                position: absolute;
+                inset: 0;
+                display: block;
+                z-index: -1;
+                backdrop-filter: var(--card-blur);
+                -webkit-backdrop-filter: var(--card-blur);
+            }
 
             .gallery-image-container {
                 background: unset;
