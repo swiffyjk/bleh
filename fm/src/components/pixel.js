@@ -9,6 +9,7 @@ import {auth} from "../build/page.js";
 import {tl, trans} from "../build/trans.js";
 import {input} from "./input.js";
 import tippy from "tippy.js";
+import { status } from './status.js';
 
 export function pixel({
     host,
@@ -16,15 +17,31 @@ export function pixel({
 }={}) {
     if (!host || !sidebar) return;
 
-    let text = 'my anti-aircraft friend';
+    let guess_input;
+
+    let text = 'fancy text‘ test モニタリング';
     let title_elem;
     let hints_container;
     render(host, html`
         <div class="pixel-artwork">
             <img src="https://lastfm.freetls.fastly.net/i/u/ar0/def68d94aae8e52ef2d1c0c9d3e16ff4.jpg" alt=${auth.name}>
         </div>
+        <div class="pixel-guess">
+            ${guess_input = input({
+                type: 'text',
+                placeholder: tl(trans.enter_a_guess),
+                func: (value) => {
+                    status({
+                        title: value
+                    });
+                }
+            })}
+            <button class="primary btn-post-shout" onclick=${() => guess_input.submit()}>
+                ${tl(trans.guess)}
+            </button>
+        </div>
         <div class="pixel-info">
-            <div class="sub-text">${tl(trans.jumbled_title)}</div>
+            <h2>${tl(trans.jumbled_title)}</h2>
             <div class="pixel-album-name">
                 <h1 ref=${el => title_elem = el}>${jumble_string(text)}</h1>
                 ${() => {
@@ -43,16 +60,8 @@ export function pixel({
                     return btn;
                 }}
             </div>
-            <div class="pixel-guess">
-                ${input({
-                    type: 'text',
-                    placeholder: tl(trans.enter_a_guess),
-                    func: (value) => {
-                        console.info(value);
-                    }
-                })}
-                <p class="card-tip">${tl(trans.jumbled_guess)}</p>
-            </div>
+        </div>
+        <div class="pixel-info">
             <h2>${tl(trans.hints)}</h2>
             <div class="hints" ref=${el => hints_container = el}></div>
         </div>

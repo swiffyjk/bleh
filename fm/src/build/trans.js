@@ -3534,6 +3534,9 @@ export const trans = {
     jumbled_guess: {
         en: 'Guess the album name with the pixelated cover, jumbled title, and hints!'
     },
+    guess: {
+        en: 'Guess'
+    },
     enter_a_guess: {
         en: 'Enter a guess'
     },

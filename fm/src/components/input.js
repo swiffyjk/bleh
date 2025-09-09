@@ -69,6 +69,10 @@ export function input({
         }
     });
 
+    container.submit = () => {
+        if (func) func(input_box.value);
+    }
+
     container.focus = () => {
         setTimeout(() => {
             input_box.focus();

@@ -26335,6 +26335,9 @@
         if (func) func(input_box.value);
       }
     });
+    container.submit = () => {
+      if (func) func(input_box.value);
+    };
     container.focus = () => {
       setTimeout(() => {
         input_box.focus();
@@ -36016,15 +36019,30 @@
     sidebar
   } = {}) {
     if (!host || !sidebar) return;
-    let text3 = "my anti-aircraft friend";
+    let guess_input;
+    let text3 = "fancy text\u2018 test \u30E2\u30CB\u30BF\u30EA\u30F3\u30B0";
     let title_elem;
     let hints_container;
     render(host, html`
         <div class="pixel-artwork">
             <img src="https://lastfm.freetls.fastly.net/i/u/ar0/def68d94aae8e52ef2d1c0c9d3e16ff4.jpg" alt=${auth.name}>
         </div>
+        <div class="pixel-guess">
+            ${guess_input = input({
+      type: "text",
+      placeholder: tl(trans.enter_a_guess),
+      func: (value) => {
+        status({
+          title: value
+        });
+      }
+    })}
+            <button class="primary btn-post-shout" onclick=${() => guess_input.submit()}>
+                ${tl(trans.guess)}
+            </button>
+        </div>
         <div class="pixel-info">
-            <div class="sub-text">${tl(trans.jumbled_title)}</div>
+            <h2>${tl(trans.jumbled_title)}</h2>
             <div class="pixel-album-name">
                 <h1 ref=${(el) => title_elem = el}>${jumble_string(text3)}</h1>
                 ${() => {
@@ -36041,16 +36059,8 @@
       return btn;
     }}
             </div>
-            <div class="pixel-guess">
-                ${input({
-      type: "text",
-      placeholder: tl(trans.enter_a_guess),
-      func: (value) => {
-        console.info(value);
-      }
-    })}
-                <p class="card-tip">${tl(trans.jumbled_guess)}</p>
-            </div>
+        </div>
+        <div class="pixel-info">
             <h2>${tl(trans.hints)}</h2>
             <div class="hints" ref=${(el) => hints_container = el}></div>
         </div>
@@ -56737,6 +56747,9 @@
     },
     jumbled_guess: {
       en: "Guess the album name with the pixelated cover, jumbled title, and hints!"
+    },
+    guess: {
+      en: "Guess"
     },
     enter_a_guess: {
       en: "Enter a guess"

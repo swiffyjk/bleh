@@ -15832,7 +15832,6 @@
         .has-error,
         [data-page-type="releases"],
         [data-page-type="bleh_auth"],
-        [data-mini="pixel"],
         [data-page-subpage^="event_attendance_"]
         ),
     .namespace--music_bookmarks_overview {
@@ -26768,7 +26767,12 @@
 
     .pixel-content {
         display: flex;
-        gap: calc(var(--card-padding) * 2);
+        flex-direction: column;
+        align-items: center;
+        gap: var(--card-gap);
+
+        --artwork-padding: 10px;
+        --artwork-size: 360px;
 
         .pixel-info {
             .pixel-album-name {
@@ -26803,21 +26807,34 @@
     .pixel-artwork {
         background: hsl(var(--b4), 10%);
         box-shadow: var(--group-shadow);
-        padding: 10px;
+        padding: var(--artwork-padding);
         border-radius: calc(var(--item-big-radius) + 10px);
         width: fit-content;
 
         & > img {
             border-radius: var(--item-big-radius);
-            width: 500px;
+            width: var(--artwork-size);
             aspect-ratio: 1 / 1;
         }
     }
 
+    .pixel-info {
+        width: 100%;
+    }
+
     .pixel-guess {
+        display: flex;
+        gap: var(--card-gap);
         margin: var(--card-padding) 0;
 
+        --button-sides: var(--card-gap);
+        --font-size: 16px !important;
+
+        width: calc((var(--artwork-padding) * 2) + var(--artwork-size));
+
         & > .input-container {
+            flex: 1;
+
             & > input {
                 --padding: 7px var(--card-gap);
                 height: 40px;
