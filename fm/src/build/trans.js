@@ -3531,8 +3531,14 @@ export const trans = {
     re_jumble: {
         en: 'Re-jumble'
     },
+    begin: {
+        en: 'Begin'
+    },
     jumbled_guess: {
         en: 'Guess the album name with the pixelated cover, jumbled title, and hints!'
+    },
+    you_guessed_correctly: {
+        en: 'You guessed correctly!'
     },
     guess: {
         en: 'Guess'
