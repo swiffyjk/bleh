@@ -534,6 +534,7 @@ function bleh_glacier_library_top(static_page = false) {
         interactive: true,
         interactiveBorder: 10,
         trigger: 'click',
+        appendTo: document.body,
 
         onShow(instance) {
             refresh_all(instance.popper);
@@ -1245,6 +1246,7 @@ function bleh_glacier_library_focused() {
         interactive: true,
         interactiveBorder: 10,
         trigger: 'click',
+        appendTo: document.body,
 
         onShow(instance) {
             refresh_all(instance.popper);

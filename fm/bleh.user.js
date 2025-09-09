@@ -39155,6 +39155,7 @@
       interactive: true,
       interactiveBorder: 10,
       trigger: "click",
+      appendTo: document.body,
       onShow(instance) {
         refresh_all(instance.popper);
       }
@@ -39721,6 +39722,7 @@
       interactive: true,
       interactiveBorder: 10,
       trigger: "click",
+      appendTo: document.body,
       onShow(instance) {
         refresh_all(instance.popper);
       }
@@ -52047,7 +52049,8 @@
       placement: "bottom",
       interactive: true,
       interactiveBorder: 10,
-      trigger: "click"
+      trigger: "click",
+      appendTo: document.body
     });
     const cant_shout = panel.querySelector(".shouting-unavailable");
     if (cant_shout) {

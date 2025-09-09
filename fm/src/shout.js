@@ -285,7 +285,8 @@ export function shout_header(shout_controls) {
         placement: 'bottom',
         interactive: true,
         interactiveBorder: 10,
-        trigger: 'click'
+        trigger: 'click',
+        appendTo: document.body
     });
 
     const cant_shout = panel.querySelector('.shouting-unavailable');
