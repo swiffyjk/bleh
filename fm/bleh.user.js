@@ -36095,6 +36095,11 @@
             <div class="pixel-artwork">
                 <img src=${image}>
             </div>
+            <div class="pixel-info">
+                <div class="pixel-album-name">
+                    <h1 ref=${(el) => title_elem = el}>${jumble_string(name)}</h1>
+                </div>
+            </div>
             <div class="pixel-actions">
                 <button class="icon" data-type="add" onclick=${() => pixel_hint()}>
                     ${tl(trans.add_hint)}
@@ -36123,7 +36128,7 @@
       })}
                 ${() => {
         const btn = html.node`
-                        <button class="primary icon chibi" data-type="send" onclick=${() => guess_input.submit()}>
+                        <button class="primary icon guess" data-type="send" onclick=${() => guess_input.submit()}>
                             ${tl(trans.guess)}
                         </button>
                     `;
@@ -36132,12 +36137,6 @@
         });
         return btn;
       }}
-            </div>
-            <div class="pixel-info">
-                <h2>${tl(trans.jumbled_title)}</h2>
-                <div class="pixel-album-name">
-                    <h1 ref=${(el) => title_elem = el}>${jumble_string(name)}</h1>
-                </div>
             </div>
             <div class="pixel-info">
                 <h2>${tl(trans.hints)}</h2>
@@ -36159,7 +36158,7 @@
         }
       }
       function clean_pixel_name(name2) {
-        return name2.toLowerCase().replace(/[‘’]/g, `'`).trim();
+        return name2.toLowerCase().replace(/[‘’]/g, `'`).normalize("NFD").replace(/[\u0300-\u036f]/g, "").trim();
       }
       function pixel_hint() {
         guess_input.focus();
