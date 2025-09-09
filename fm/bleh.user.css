@@ -3780,7 +3780,9 @@
             position: absolute;
             inset: 0 0 -1px 0;
             display: block;
-            background: hsl(var(--b5));
+            background: hsl(var(--b5), 85%);
+            backdrop-filter: var(--card-blur);
+            -webkit-backdrop-filter: var(--card-blur);
             border-top-left-radius: var(--card-radius);
             border-top-right-radius: var(--card-radius);
             z-index: -1;
