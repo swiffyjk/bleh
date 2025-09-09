@@ -24,7 +24,8 @@ export function input({
     disabled,
     show_time = true,
     name,
-    func
+    func,
+    func_esc
 }) {
     if (type == 'date') {
         return calendar({
@@ -66,6 +67,10 @@ export function input({
             event.preventDefault();
 
             if (func) func(input_box.value);
+        } else if (event.keyCode === 27) {
+            event.preventDefault();
+
+            if (func_esc) func_esc(input_box.value);
         }
     });
 

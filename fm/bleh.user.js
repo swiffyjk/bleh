@@ -26298,7 +26298,8 @@
     disabled,
     show_time = true,
     name,
-    func
+    func,
+    func_esc
   }) {
     if (type == "date") {
       return calendar({
@@ -26333,6 +26334,9 @@
       if (event3.keyCode === 13) {
         event3.preventDefault();
         if (func) func(input_box.value);
+      } else if (event3.keyCode === 27) {
+        event3.preventDefault();
+        if (func_esc) func_esc(input_box.value);
       }
     });
     container.submit = () => {
@@ -36083,6 +36087,7 @@
       plays: 0
     }) {
       let guess_input;
+      let pixelation = 0.02;
       let title_elem;
       let hints_container;
       render(host, html``);
@@ -36090,12 +36095,30 @@
             <div class="pixel-artwork">
                 <img src=${image}>
             </div>
+            <div class="pixel-actions">
+                <button class="icon" data-type="add" onclick=${() => pixel_hint()}>
+                    ${tl(trans.add_hint)}
+                </button>
+                <button class="icon" data-type="jumble" onclick=${() => {
+        title_elem.textContent = jumble_string(name);
+        guess_input.focus();
+      }}>
+                    ${tl(trans.re_jumble)}
+                </button>
+                <button class="icon" data-type="minus" onclick=${() => pixel_give_up()}>
+                    ${tl(trans.give_up)}
+                    ${keybind(["ESC"])}
+                </button>
+            </div>
             <div class="pixel-guess">
                 ${guess_input = input({
         type: "text",
         placeholder: tl(trans.enter_a_guess),
         func: (value) => {
           pixel_make_a_guess(value);
+        },
+        func_esc: () => {
+          pixel_give_up();
         }
       })}
                 ${() => {
@@ -36114,19 +36137,6 @@
                 <h2>${tl(trans.jumbled_title)}</h2>
                 <div class="pixel-album-name">
                     <h1 ref=${(el) => title_elem = el}>${jumble_string(name)}</h1>
-                    ${() => {
-        let btn = html.node`
-                            <button class="chibi icon" data-type="jumble" onclick=${() => {
-          title_elem.textContent = jumble_string(name);
-        }}>
-                                ${tl(trans.re_jumble)}
-                            </button>
-                        `;
-        tippy_esm_default(btn, {
-          content: tl(trans.re_jumble)
-        });
-        return btn;
-      }}
                 </div>
             </div>
             <div class="pixel-info">
@@ -36141,12 +36151,21 @@
         `);
       guess_input.focus();
       function pixel_make_a_guess(guess) {
-        if (guess.toLowerCase() == name.toLowerCase()) {
+        if (clean_pixel_name(guess) == clean_pixel_name(name)) {
           status({
             title: tl(trans.you_guessed_correctly)
           });
           pixel_random();
         }
+      }
+      function clean_pixel_name(name2) {
+        return name2.toLowerCase().replace(/[‘’]/g, `'`).trim();
+      }
+      function pixel_hint() {
+        guess_input.focus();
+      }
+      function pixel_give_up() {
+        pixel_random();
       }
     }
   }
@@ -56834,6 +56853,12 @@
     },
     jumbled_guess: {
       en: "Guess the album name with the pixelated cover, jumbled title, and hints!"
+    },
+    add_hint: {
+      en: "Add hint"
+    },
+    give_up: {
+      en: "Give up"
     },
     you_guessed_correctly: {
       en: "You guessed correctly!"

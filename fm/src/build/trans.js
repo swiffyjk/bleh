@@ -3537,6 +3537,12 @@ export const trans = {
     jumbled_guess: {
         en: 'Guess the album name with the pixelated cover, jumbled title, and hints!'
     },
+    add_hint: {
+        en: 'Add hint'
+    },
+    give_up: {
+        en: 'Give up'
+    },
     you_guessed_correctly: {
         en: 'You guessed correctly!'
     },

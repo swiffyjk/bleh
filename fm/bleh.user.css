@@ -26823,6 +26823,18 @@
         text-align: center;
     }
 
+    .pixel-actions {
+        display: flex;
+        gap: var(--button-list-gap);
+
+        & > button {
+            --bg: hsl(var(--b4), 40%);
+            --bg-hov: hsl(var(--b4), 60%);
+            --bg-atv: hsl(var(--b4), 80%);
+            --shadow: none;
+        }
+    }
+
     .pixel-guess {
         display: flex;
         gap: 10px;
