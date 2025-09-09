@@ -10096,6 +10096,7 @@
     .dropdown-menu-clickable-item.update,
     .dropdown-menu-clickable-item.swatch,
     .dropdown-menu-clickable-item.lotus,
+    .dropdown-menu-clickable-item.accent,
     .more-item--obsession,
     [data-menu-item="labs"],
     [data-menu-item="bleh"],
@@ -10121,7 +10122,8 @@
             .lotus, .swatch,
             .dropdown-menu-clickable-item.sponsor,
             .dropdown-menu-clickable-item.update,
-            .dropdown-menu-clickable-item[data-is-shortcut="true"]
+            .dropdown-menu-clickable-item[data-is-shortcut="true"],
+            .dropdown-menu-clickable-item.accent
             ) {
             --hue-over: var(--hue-neg);
             --sat-over: 1;
@@ -13487,6 +13489,7 @@
         --lit-over: 1.5;
         --mask: url('data:image/svg+xml;base64,PHN2ZyByb2xlPSJpbWciIHZpZXdCb3g9IjAgMCAyNCAyNCIgeG1sbnM9Imh0dHA6Ly93d3cudzMub3JnLzIwMDAvc3ZnIj48dGl0bGU+WDwvdGl0bGU+PHBhdGggZD0iTTE4LjkwMSAxLjE1M2gzLjY4bC04LjA0IDkuMTlMMjQgMjIuODQ2aC03LjQwNmwtNS44LTcuNTg0LTYuNjM4IDcuNTg0SC40NzRsOC42LTkuODNMMCAxLjE1NGg3LjU5NGw1LjI0MyA2LjkzMlpNMTcuNjEgMjAuNjQ0aDIuMDM5TDYuNDg2IDMuMjRINC4yOThaIi8+PC9zdmc+');
     }
+    [data-type="discord"],
     [data-host="discord.gg"],
     [data-host="discord.com"] {
         --hue-over: 235;
@@ -23909,13 +23912,13 @@
             opacity: 0.4;
 
             & > div:nth-child(2),
-            & > div:nth-child(4), & > div:nth-child(5) {
+            & > div:nth-child(4), & > div:nth-child(5), & > div:nth-child(6) {
                 display: none;
             }
         }
 
         div {
-            font-family: Lucida Grande, Verdana, Geneva, Tahoma, sans-serif;
+            font-family: system-ui;
             font-size: 14px;
             line-height: 18px;
             background: #000;
@@ -23923,6 +23926,7 @@
             display: flex;
             width: fit-content;
             pointer-events: auto;
+            cursor: default;
 
             strong {
                 width: 65px;
@@ -23962,7 +23966,7 @@
         }
     }
     .logs {
-        font-family: Lucida Grande, Verdana, Geneva, Tahoma, sans-serif;
+        font-family: system-ui;
         font-size: 14px;
         line-height: 18px;
 
@@ -25523,6 +25527,10 @@
             transition-property: opacity, max-height, transform;
             transition-duration: 0.2s;
             transition-timing-function: var(--trans-function);
+
+            & > .mini-list {
+                width: 100%;
+            }
         }
 
         .sub-text {

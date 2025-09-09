@@ -1240,6 +1240,9 @@ export const trans = {
         de: 'Anschreiben',
         pt: 'Mensagem'
     },
+    join_discord: {
+        en: 'Join Discord'
+    },
     sponsor_details: {
         en: 'Sponsor and badge details'
     },

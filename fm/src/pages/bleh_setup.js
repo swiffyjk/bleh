@@ -6,7 +6,7 @@
 
 import {register_activity} from "../activity";
 import {log} from "../build/log";
-import {auth, page, root} from "../build/page";
+import {auth, discord, page, root} from "../build/page";
 import {tl, trans, trans_legacy} from "../build/trans";
 import {request_changelog} from "../news.js";
 import {notify} from "../components/notify";
@@ -18,6 +18,7 @@ import {display_colour_presets, theme_bubbles} from "./bleh_config";
 import {html, render} from "lighterhtml";
 import {setting} from "../components/settings.js";
 import { ff } from '../sku.js';
+import { sponsor } from '../sponsor.js';
 
 export function bleh_setup() {
     page.structure.container = document.body.querySelector('.page-content');
@@ -248,6 +249,26 @@ unsafeWindow._setup_end = function() {
         page.structure.setup.setAttribute('data-animating', 'false');
         render(page.structure.setup_content, html`
             <p>${{html: tl(trans.setup_end).replace('{a}', `<a href="${root}bleh">`).replace('{/a}', '</a>')}}</p>
+            <div class="mini-list">
+                <a class="btn mini" href="https://discord.gg/${discord}" target="_blank">
+                    <div class="mini-icon colourful" data-type="discord">
+                        <div class="bleh-icon" />
+                    </div>
+                    <div class="mini-info">
+                        <h5>${tl(trans.join_discord)}</h5>
+                    </div>
+                    <div class="bleh-icon mini-arrow" style="--icon: var(--mask)" data-type="arrow-right"></div>
+                </a>
+                <button class="btn mini" onclick=${() => sponsor()}>
+                    <div class="mini-icon colourful" data-type="sponsor">
+                        <div class="bleh-icon" />
+                    </div>
+                    <div class="mini-info">
+                        <h5>${tl(trans.sponsor)}</h5>
+                    </div>
+                    <div class="bleh-icon mini-arrow" style="--icon: var(--mask)" data-type="arrow-right"></div>
+                </button>
+            </div>
         `);
 
         if (auth.name) {

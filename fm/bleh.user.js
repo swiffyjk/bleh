@@ -22979,6 +22979,7 @@
   var minis_url = "{root}bleh/minis";
   var mualani_url = "{root}bleh/mualani";
   var api_key = "85c118b69b1437844fe75fcd2bf27261";
+  var discord = "xU9KxGQpVw";
   var theme_preview = () => html.node`
     <div class="preview-inner">
         <div class="preview-card">
@@ -49204,6 +49205,9 @@
     });
     const more_menu = tippy_esm_default(more_button, {
       content: html.node`
+            <a class="dropdown-menu-clickable-item accent" data-type="discord" href="https://discord.gg/${discord}" target="_blank">
+                ${tl(trans.join_discord)}
+            </a>
             <button class="dropdown-menu-clickable-item sponsor" onclick=${() => sponsor()}>
                 ${tl(trans.sponsor)}
             </button>
@@ -50799,6 +50803,26 @@
       page.structure.setup.setAttribute("data-animating", "false");
       render(page.structure.setup_content, html`
             <p>${{ html: tl(trans.setup_end).replace("{a}", `<a href="${root}bleh">`).replace("{/a}", "</a>") }}</p>
+            <div class="mini-list">
+                <a class="btn mini" href="https://discord.gg/${discord}" target="_blank">
+                    <div class="mini-icon colourful" data-type="discord">
+                        <div class="bleh-icon" />
+                    </div>
+                    <div class="mini-info">
+                        <h5>${tl(trans.join_discord)}</h5>
+                    </div>
+                    <div class="bleh-icon mini-arrow" style="--icon: var(--mask)" data-type="arrow-right"></div>
+                </a>
+                <button class="btn mini" onclick=${() => sponsor()}>
+                    <div class="mini-icon colourful" data-type="sponsor">
+                        <div class="bleh-icon" />
+                    </div>
+                    <div class="mini-info">
+                        <h5>${tl(trans.sponsor)}</h5>
+                    </div>
+                    <div class="bleh-icon mini-arrow" style="--icon: var(--mask)" data-type="arrow-right"></div>
+                </button>
+            </div>
         `);
       if (auth.name) {
         page.structure.setup_footer.innerHTML = `
@@ -53186,6 +53210,10 @@
             <span>${stored_season.year}</span>
             <span>${stored_season.offset}</span>
         </div>
+        <div class="page">
+            <strong>solarium</strong>
+            <span>${settings.solarium}</span>
+        </div>
     `);
   }
   function update_page() {
@@ -54460,6 +54488,9 @@
       en: "Message",
       de: "Anschreiben",
       pt: "Mensagem"
+    },
+    join_discord: {
+      en: "Join Discord"
     },
     sponsor_details: {
       en: "Sponsor and badge details"

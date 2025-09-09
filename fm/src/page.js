@@ -736,6 +736,10 @@ function page_indicator() {
             <span>${stored_season.year}</span>
             <span>${stored_season.offset}</span>
         </div>
+        <div class="page">
+            <strong>solarium</strong>
+            <span>${settings.solarium}</span>
+        </div>
     `);
 }
 

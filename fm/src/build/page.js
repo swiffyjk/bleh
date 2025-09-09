@@ -200,9 +200,11 @@ export const mualani_url = '{root}bleh/mualani';
 // WARN: please provide your own if hosting a fork
 export const api_key = '85c118b69b1437844fe75fcd2bf27261';
 
+export const discord = 'xU9KxGQpVw';
+
 export let has_prompted_for_update = {
     state: false
-};
+}
 
 export let theme_preview = () => html.node`
     <div class="preview-inner">

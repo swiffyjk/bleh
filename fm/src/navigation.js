@@ -5,7 +5,7 @@
 //
 
 import {settings} from "./build/config";
-import {auth, page, root} from "./build/page";
+import {auth, discord, page, root} from "./build/page";
 import {stored_season} from "./build/seasonal";
 import {lang, lang_info, tl, trans, trans_legacy} from "./build/trans";
 import {create_badge, load_badges} from "./components/badge";
@@ -386,6 +386,9 @@ export function append_nav() {
 
     const more_menu = tippy(more_button, {
         content: html.node`
+            <a class="dropdown-menu-clickable-item accent" data-type="discord" href="https://discord.gg/${discord}" target="_blank">
+                ${tl(trans.join_discord)}
+            </a>
             <button class="dropdown-menu-clickable-item sponsor" onclick=${() => sponsor()}>
                 ${tl(trans.sponsor)}
             </button>
