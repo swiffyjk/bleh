@@ -2366,6 +2366,10 @@
 
                 position: relative;
 
+                [data-bleh--solarium="false"] & {
+                    background-color: hsl(var(--b5));
+                }
+
                 &:before {
                     content: '';
                     position: absolute;
@@ -2436,7 +2440,7 @@
                             top: 0;
                             left: 0;
                             right: 0;
-                            height: 60vh;
+                            height: 505px;
                             display: block;
                             z-index: -1;
                             backdrop-filter: var(--card-blur);
@@ -2452,6 +2456,14 @@
                             bottom: 0;
                             display: block;
                             background: var(--sidebar-border);
+                        }
+
+                        [data-bleh--solarium="false"] & {
+                            background: var(--sidebar-bg);
+
+                            &:before {
+                                display: none;
+                            }
                         }
                     }
                 }
@@ -3778,6 +3790,12 @@
             border-top-left-radius: var(--card-radius);
             border-top-right-radius: var(--card-radius);
             z-index: -1;
+        }
+
+        [data-bleh--solarium="false"] & {
+            &:before {
+                display: none;
+            }
         }
     }
 
@@ -17418,6 +17436,7 @@
         flex-direction: column;
         gap: 12px;
         padding: 12px;
+        text-align: left;
 
         &:not(.blend) {
             background: hsl(var(--b6), 20%);
@@ -22372,9 +22391,13 @@
 
             [data-bleh--theme_type="light"] & {
                 &:before {
-                    background: hsl(var(--b5), 70%);
+                    background: hsl(var(--b5), 38%);
                     mix-blend-mode: lighten;
                 }
+            }
+
+            &[data-page-type="error"] {
+                height: 450px;
             }
         }
 

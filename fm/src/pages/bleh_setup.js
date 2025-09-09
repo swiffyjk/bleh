@@ -11,12 +11,13 @@ import {tl, trans, trans_legacy} from "../build/trans";
 import {request_changelog} from "../news.js";
 import {notify} from "../components/notify";
 import {checkup_page_structure} from '../components/structure';
-import {refresh_all} from "../config";
+import {refresh_all, update_colour_swatches} from "../config";
 import {version} from "../main";
 import {register_background, update_page} from '../page';
 import {display_colour_presets, theme_bubbles} from "./bleh_config";
 import {html, render} from "lighterhtml";
 import {setting} from "../components/settings.js";
+import { ff } from '../sku.js';
 
 export function bleh_setup() {
     page.structure.container = document.body.querySelector('.page-content');
@@ -64,7 +65,7 @@ export function bleh_setup() {
             <div class="info">
                 <h1>${tl(trans.bleh_setup)}</h1>
                 <div class="subtle">
-                    ${tl(trans.logged_in_as).replace('{user}', `<a class="mention" href="${root}user/${auth.name}">@${auth.name}</a>`)}
+                    ${{html: tl(trans.logged_in_as).replace('{user}', `<a class="mention" href="${root}user/${auth.name}">@${auth.name}</a>`)}}
                 </div>
             </div>
             ` : html.node`
@@ -128,6 +129,7 @@ unsafeWindow._setup_themes = function() {
                         ${theme_bubbles}
                     </div>
                 </div>
+                ${setting({id: 'solarium'})}
                 <div class="setting" data-type="action">
                     <div class="heading">
                         <h5>${tl(trans.hue)}</h5>
@@ -138,6 +140,7 @@ unsafeWindow._setup_themes = function() {
                         <div id="colour_palette" class="swatch-group palette"></div>
                     </div>
                 </div>
+                ${ff('card_saturation') ? setting({id: 'sat_bg'}) : ''}
             </div>
         `);
         page.structure.setup_footer.innerHTML = (`
@@ -150,9 +153,8 @@ unsafeWindow._setup_themes = function() {
             </button>
         `);
 
-        show_theme_change_in_settings();
         display_colour_presets();
-        refresh_all(page.structure.setup_content);
+        update_colour_swatches();
     }, page.state.trans);
 }
 

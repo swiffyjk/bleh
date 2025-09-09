@@ -46333,6 +46333,7 @@
                             ${theme_bubbles}
                         </div>
                     </div>
+                    ${setting({ id: "solarium" })}
                     ${ff("high_contrast") ? setting({ id: "high_contrast" }) : ""}
                     <div class="setting" data-type="action">
                         <div class="heading">
@@ -50626,7 +50627,7 @@
             <div class="info">
                 <h1>${tl(trans.bleh_setup)}</h1>
                 <div class="subtle">
-                    ${tl(trans.logged_in_as).replace("{user}", `<a class="mention" href="${root}user/${auth.name}">@${auth.name}</a>`)}
+                    ${{ html: tl(trans.logged_in_as).replace("{user}", `<a class="mention" href="${root}user/${auth.name}">@${auth.name}</a>`) }}
                 </div>
             </div>
             ` : html.node`
@@ -50685,6 +50686,7 @@
                         ${theme_bubbles}
                     </div>
                 </div>
+                ${setting({ id: "solarium" })}
                 <div class="setting" data-type="action">
                     <div class="heading">
                         <h5>${tl(trans.hue)}</h5>
@@ -50695,6 +50697,7 @@
                         <div id="colour_palette" class="swatch-group palette"></div>
                     </div>
                 </div>
+                ${ff("card_saturation") ? setting({ id: "sat_bg" }) : ""}
             </div>
         `);
       page.structure.setup_footer.innerHTML = `
@@ -50706,9 +50709,8 @@
                 ${tl(trans.next)}
             </button>
         `;
-      show_theme_change_in_settings();
       display_colour_presets();
-      refresh_all(page.structure.setup_content);
+      update_colour_swatches();
     }, page.state.trans);
   };
   unsafeWindow._setup_accessibility = function() {
@@ -54110,6 +54112,14 @@
       de: "Helligkeit",
       pt: "Claridade",
       pl: "Jasno\u015B\u0107 (lightness)"
+    },
+    solarium: {
+      name: {
+        en: "Enable blurred glass effects"
+      },
+      body: {
+        en: "Makes certain UI elements see-through, which may degrade performance on some devices"
+      }
     },
     seasonal_warning: {
       en: "This season has a custom default accent colour!",
@@ -60517,7 +60527,7 @@
   };
   var settings_store = {
     theme: {
-      default: "dark",
+      default: "darker",
       type: "radio",
       title: trans.theme
     },
@@ -60570,6 +60580,11 @@
       step: 0.01,
       title: trans.lit,
       vertical: true
+    },
+    solarium: {
+      default: true,
+      title: trans.solarium.name,
+      body: trans.solarium.body
     },
     gloss: {
       css: "gloss",

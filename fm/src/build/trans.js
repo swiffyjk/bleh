@@ -892,6 +892,14 @@ export const trans = {
         pt: 'Claridade',
         pl: 'Jasność (lightness)'
     },
+    solarium: {
+        name: {
+            en: 'Enable blurred glass effects'
+        },
+        body: {
+            en: 'Makes certain UI elements see-through, which may degrade performance on some devices'
+        }
+    },
     seasonal_warning: {
         en: 'This season has a custom default accent colour!',
         de: 'Diese Saison hat eine benutzerdefinierte Akzentfarbe',

@@ -580,7 +580,7 @@ export let inbuilt_settings = {
 
 export let settings_store = {
     theme: {
-        default: 'dark',
+        default: 'darker',
         type: 'radio',
         title: trans.theme
     },
@@ -633,6 +633,11 @@ export let settings_store = {
         step: 0.01,
         title: trans.lit,
         vertical: true
+    },
+    solarium: {
+        default: true,
+        title: trans.solarium.name,
+        body: trans.solarium.body
     },
     gloss: {
         css: 'gloss',

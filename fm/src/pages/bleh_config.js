@@ -500,6 +500,7 @@ export async function render_setting_page(page_id) {
                             ${theme_bubbles}
                         </div>
                     </div>
+                    ${setting({id: 'solarium'})}
                     ${ff('high_contrast') ? setting({id: 'high_contrast'}) : ''}
                     <div class="setting" data-type="action">
                         <div class="heading">
