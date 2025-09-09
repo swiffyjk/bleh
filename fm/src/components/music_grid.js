@@ -248,7 +248,8 @@ export function music_grids(search=page.structure.main, use_colour = true) {
 
                         tippy(button, {
                             content: tl(trans.explore_in_library),
-                            delay: [500, 0]
+                            delay: [500, 0],
+                            appendTo: document.body
                         });
 
                         return button;
@@ -273,7 +274,8 @@ export function music_grids(search=page.structure.main, use_colour = true) {
 
                         tippy(button, {
                             content: tl(trans.explore_in_library),
-                            delay: [500, 0]
+                            delay: [500, 0],
+                            appendTo: document.body
                         });
 
                         return button;
@@ -297,7 +299,8 @@ export function music_grids(search=page.structure.main, use_colour = true) {
 
                         tippy(button, {
                             content: tl(trans.explore_in_library),
-                            delay: [500, 0]
+                            delay: [500, 0],
+                            appendTo: document.body
                         });
 
                         return button;
@@ -338,6 +341,7 @@ export function music_grids(search=page.structure.main, use_colour = true) {
             interactive: true,
             interactiveBorder: 10,
             offset: [0, 0],
+            appendTo: document.body,
 
             onShow(instance) {
                 instance.popper.addEventListener('click', event => {

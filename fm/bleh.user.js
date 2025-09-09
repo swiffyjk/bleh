@@ -26622,7 +26622,8 @@
                         `;
           tippy_esm_default(button, {
             content: tl(trans.explore_in_library),
-            delay: [500, 0]
+            delay: [500, 0],
+            appendTo: document.body
           });
           return button;
         }}
@@ -26645,7 +26646,8 @@
                         `;
           tippy_esm_default(button, {
             content: tl(trans.explore_in_library),
-            delay: [500, 0]
+            delay: [500, 0],
+            appendTo: document.body
           });
           return button;
         }}
@@ -26667,7 +26669,8 @@
                         `;
           tippy_esm_default(button, {
             content: tl(trans.explore_in_library),
-            delay: [500, 0]
+            delay: [500, 0],
+            appendTo: document.body
           });
           return button;
         }}
@@ -26707,6 +26710,7 @@
         interactive: true,
         interactiveBorder: 10,
         offset: [0, 0],
+        appendTo: document.body,
         onShow(instance) {
           instance.popper.addEventListener("click", (event3) => {
             instance.hide();
@@ -35116,7 +35120,8 @@
           if (track_timestamp_contents) {
             track_timestamp.setAttribute("title", "");
             tippy_esm_default(track_timestamp, {
-              content: track_timestamp_contents
+              content: track_timestamp_contents,
+              appendTo: document.body
             });
           }
         }
@@ -35220,7 +35225,8 @@
                     </button>
                 `;
           tippy_esm_default(more_button, {
-            content: tl(trans.more)
+            content: tl(trans.more),
+            appendTo: document.body
           });
           track.appendChild(html.node`
                     <td class="more-button-wrapper">
@@ -35304,7 +35310,8 @@
                 button.textContent = tl(trans.bulk_edit);
                 button.setAttribute("data-type", "bulk-edit");
                 tippy_esm_default(button, {
-                  content: tl(trans.bulk_edit)
+                  content: tl(trans.bulk_edit),
+                  appendTo: document.body
                 });
                 return button;
               }}
@@ -35341,7 +35348,8 @@
                                     `;
                 tippy_esm_default(button, {
                   content: tl(trans.explore_in_library),
-                  delay: [500, 0]
+                  delay: [500, 0],
+                  appendTo: document.body
                 });
                 return button;
               }}
@@ -35365,7 +35373,8 @@
                                     `;
                 tippy_esm_default(button, {
                   content: tl(trans.explore_in_library),
-                  delay: [500, 0]
+                  delay: [500, 0],
+                  appendTo: document.body
                 });
                 return button;
               }}
@@ -35388,7 +35397,8 @@
                                     `;
                 tippy_esm_default(button, {
                   content: tl(trans.explore_in_library),
-                  delay: [500, 0]
+                  delay: [500, 0],
+                  appendTo: document.body
                 });
                 return button;
               }}
@@ -35411,7 +35421,8 @@
                                     `;
                 tippy_esm_default(button, {
                   content: tl(trans.explore_in_library),
-                  delay: [500, 0]
+                  delay: [500, 0],
+                  appendTo: document.body
                 });
                 return button;
               }}
@@ -35495,6 +35506,7 @@
               interactiveBorder: 10,
               offset: [0, 0],
               hideOnClick: false,
+              appendTo: document.body,
               onShow(instance) {
                 track.setAttribute("data-has-menu", true);
                 instance.popper.addEventListener("click", (event3) => {
@@ -43609,7 +43621,8 @@
         `,
       placement: side,
       interactive: true,
-      trigger: "click"
+      trigger: "click",
+      appendTo: document.body
     });
     register_menu(parent ? parent : avatar3, popup);
     control_gif_pause(avatar_img);

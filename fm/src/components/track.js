@@ -206,7 +206,8 @@ export function patch_titles(search=page.structure.main) {
                     track_timestamp.setAttribute('title', '');
 
                     tippy(track_timestamp, {
-                        content: track_timestamp_contents
+                        content: track_timestamp_contents,
+                        appendTo: document.body
                     });
                 }
             }
@@ -336,7 +337,8 @@ export function patch_titles(search=page.structure.main) {
                 `;
 
                 tippy(more_button, {
-                    content: tl(trans.more)
+                    content: tl(trans.more),
+                    appendTo: document.body
                 });
 
                 track.appendChild(html.node`
@@ -431,7 +433,8 @@ export function patch_titles(search=page.structure.main) {
                                         button.setAttribute('data-type', 'bulk-edit');
 
                                         tippy(button, {
-                                            content: tl(trans.bulk_edit)
+                                            content: tl(trans.bulk_edit),
+                                            appendTo: document.body
                                         });
 
                                         return button;
@@ -474,7 +477,8 @@ export function patch_titles(search=page.structure.main) {
 
                                     tippy(button, {
                                         content: tl(trans.explore_in_library),
-                                        delay: [500, 0]
+                                        delay: [500, 0],
+                                        appendTo: document.body
                                     });
 
                                     return button;
@@ -500,7 +504,8 @@ export function patch_titles(search=page.structure.main) {
 
                                     tippy(button, {
                                         content: tl(trans.explore_in_library),
-                                        delay: [500, 0]
+                                        delay: [500, 0],
+                                        appendTo: document.body
                                     });
 
                                     return button;
@@ -525,7 +530,8 @@ export function patch_titles(search=page.structure.main) {
 
                                     tippy(button, {
                                         content: tl(trans.explore_in_library),
-                                        delay: [500, 0]
+                                        delay: [500, 0],
+                                        appendTo: document.body
                                     });
 
                                     return button;
@@ -550,7 +556,8 @@ export function patch_titles(search=page.structure.main) {
 
                                     tippy(button, {
                                         content: tl(trans.explore_in_library),
-                                        delay: [500, 0]
+                                        delay: [500, 0],
+                                        appendTo: document.body
                                     });
 
                                     return button;
@@ -648,6 +655,7 @@ export function patch_titles(search=page.structure.main) {
                         interactiveBorder: 10,
                         offset: [0, 0],
                         hideOnClick: false,
+                        appendTo: document.body,
 
                         onShow(instance) {
                             track.setAttribute('data-has-menu', true);

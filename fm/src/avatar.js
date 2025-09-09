@@ -94,7 +94,8 @@ export function patch_avatar(avatar, name, type = '', parent=null, side='right')
         `,
         placement: side,
         interactive: true,
-        trigger: 'click'
+        trigger: 'click',
+        appendTo: document.body
     });
 
     register_menu((parent) ? parent : avatar, popup);

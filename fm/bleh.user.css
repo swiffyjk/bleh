@@ -2358,6 +2358,7 @@
                 border-radius: var(--card-radius) !important;
                 padding: 0;
                 gap: 0 !important;
+                overflow: hidden;
 
                 background-image: var(--cards-overlay-image-subtle, unset) !important;
                 background-repeat: repeat-x !important;
@@ -2421,35 +2422,13 @@
                         gap: var(--card-gap);
                     }
 
-                    /*.content-top[style] + &,
-                    &:first-child {
-                        margin-top: calc(-1 * var(--card-gap));
-                    }*/
-
-                    &:first-child {
-                        & > .col-main {
-                            border-top-left-radius: calc(var(--card-radius) - 1px);
-                        }
-
-                        & > .col-sidebar {
-                            border-top-right-radius: calc(var(--card-radius) - 1px);
-
-                            &:before {
-                                border-top-right-radius: calc(var(--card-radius) - 1px);
-                            }
-                        }
-                    }
-
                     & > .col-main {
                         background: hsl(var(--b5));
-                        border-bottom-left-radius: calc(var(--card-radius) - 1px);
                     }
 
                     & > .col-sidebar {
                         position: relative;
                         background: var(--card-blur-bg);
-                        border-bottom-right-radius: calc(var(--card-radius) - 1px);
-                        overflow: hidden;
 
                         &:before {
                             content: '';
@@ -2460,7 +2439,6 @@
                             height: 60vh;
                             display: block;
                             z-index: -1;
-                            border-bottom-right-radius: calc(var(--card-radius) - 1px);
                             backdrop-filter: var(--card-blur);
                             -webkit-backdrop-filter: var(--card-blur);
                         }
