@@ -26819,6 +26819,26 @@
         }
     }
 
+    .pixel-time {
+        display: flex;
+        align-items: center;
+
+        & > .bleh-icon {
+            --icon-size: 14px;
+            --icon: var(--icon-16-clock);
+            margin-right: 6px;
+
+            position: relative;
+            top: -1px;
+        }
+
+        font-family: 'Bitcount Grid Single', var(--font);
+        font-size: 22px;
+        line-height: 36px;
+        font-weight: 400;
+        color: hsl(var(--c3));
+    }
+
     .pixel-info {
         text-align: center;
     }
@@ -26832,6 +26852,21 @@
             --bg-hov: hsl(var(--b4), 60%);
             --bg-atv: hsl(var(--b4), 80%);
             --shadow: none;
+        }
+    }
+
+    .jumbo {
+        --button-sides: var(--card-gap);
+        --font-size: 16px !important;
+        --button-height: 40px;
+        height: var(--button-height);
+    }
+
+    .current-mini-settings {
+        & > button {
+            margin-top: var(--card-gap);
+            width: 100%;
+            text-align: left;
         }
     }
 

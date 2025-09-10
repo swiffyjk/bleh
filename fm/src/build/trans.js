@@ -3553,7 +3553,25 @@ export const trans = {
         en: 'Enter a guess'
     },
     hints: {
-        en: 'Hints'
+        en: 'Hints',
+        plays: {
+            en: 'You have {v} plays on this album'
+        },
+        release: {
+            en: 'Album was released on {v}'
+        },
+        tag: {
+            en: 'The artist is tagged with {v}'
+        },
+        born: {
+            en: 'The artist was born {v}'
+        }
+    },
+    reveal: {
+        en: 'The album was {name} by {artist}'
+    },
+    time_up: {
+        en: 'Time is up!'
     },
     global: {
         en: 'Global'

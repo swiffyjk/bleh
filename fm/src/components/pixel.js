@@ -69,6 +69,9 @@ export function pixel({
                 </div>
             </div>
         </div>
+        <button class="primary icon jumbo" data-type="pixel" onclick=${() => pixel_prepare()}>
+            ${tl(trans.reset)}
+        </button>
     `);
 
     pixel_home();
@@ -87,6 +90,17 @@ export function pixel({
     }
 
     function pixel_prepare() {
+        user_albums = [];
+
+        render(host, html`
+            <div class="pixel-home">
+                <h1 class="pixel-logo">pixel</h1>
+                <div class="loading-data-container">
+                    <div class="loading-data-text">${tl(trans.loading_album_plays)}</div>
+                </div>
+            </div>
+        `);
+
         if (user_albums.length == 0) {
             fetch(`http://ws.audioscrobbler.com/2.0/?method=user.gettopalbums&user=${page.name}&api_key=${api_key}&format=json&limit=500`)
                 .then(res => {
@@ -159,6 +173,10 @@ export function pixel({
         let pixelation = 0;
         let hint = 0;
         let canvas;
+        let timer;
+        let actions;
+        let guess_btn;
+        let interval;
 
         let title_elem;
         let hints_container;
@@ -172,7 +190,7 @@ export function pixel({
                     <h1 ref=${el => title_elem = el}>${jumble_string(name)}</h1>
                 </div>
             </div>
-            <div class="pixel-actions">
+            <div class="pixel-actions" ref=${el => actions = el}>
                 <button class="icon" data-type="add" onclick=${() => pixel_hint()}>
                     ${tl(trans.add_hint)}
                 </button>
@@ -187,6 +205,7 @@ export function pixel({
                     ${keybind(['ESC'])}
                 </button>
             </div>
+            <div class="pixel-time" ref=${el => timer = el} />
             <div class="pixel-guess">
                 ${guess_input = input({
                     type: 'text',
@@ -200,7 +219,7 @@ export function pixel({
                 })}
                 ${() => {
                     const btn = html.node`
-                        <button class="primary icon guess" data-type="send" onclick=${() => guess_input.submit()}>
+                        <button class="primary icon guess" data-type="send" ref=${el => guess_btn = el} onclick=${() => guess_input.submit()}>
                             ${tl(trans.guess)}
                         </button>
                     `;
@@ -231,6 +250,43 @@ export function pixel({
 
         canvas_image.onload = () => {
             render_canvas();
+        }
+
+        render_timer();
+
+        function render_timer() {
+            const duration = 30 * 1000;
+            const start = Date.now();
+
+            interval = setInterval(() => {
+                const elapsed = Date.now() - start;
+                const remain = duration - elapsed;
+
+                if (remain <= 0) {
+                    pixel_end();
+                    return;
+                }
+
+                const s = Math.floor(remain / 1000);
+                const ms = remain % 1000;
+
+                render(timer, html`
+                    <span class="bleh-icon" />
+                    <span class="s">
+                        ${s}
+                    </span>
+                `);
+            }, 10);
+        }
+
+        function timer_end() {
+            clearInterval(interval);
+            render(timer, html`
+                <span class="bleh-icon" />
+                <span class="s">
+                    0
+                </span>
+            `);
         }
 
         function render_canvas() {
@@ -281,7 +337,21 @@ export function pixel({
         }
 
         function pixel_give_up() {
-            pixel_random();
+            pixel_end();
+        }
+
+        function pixel_end() {
+            timer_end();
+            title_elem.textContent = name;
+
+            guess_input.disabled(true);
+            guess_btn.disabled = true;
+
+            render(actions, html`
+                <button class="icon" data-type="pixel" onclick=${() => pixel_random()}>
+                    ${tl(trans.continue)}
+                </button>
+            `);
         }
     }
 }
