@@ -177,6 +177,7 @@ export function pixel({
         let actions;
         let guess_btn;
         let interval;
+        let image_interval;
 
         let title_elem;
         let hints_container;
@@ -263,6 +264,7 @@ export function pixel({
                 const remain = duration - elapsed;
 
                 if (remain <= 0) {
+                    timer_end();
                     pixel_end();
                     return;
                 }
@@ -279,8 +281,11 @@ export function pixel({
             }, 10);
         }
 
-        function timer_end() {
+        function timer_end(keep = false) {
             clearInterval(interval);
+
+            if (keep) return;
+
             render(timer, html`
                 <span class="bleh-icon" />
                 <span class="s">
@@ -289,19 +294,25 @@ export function pixel({
             `);
         }
 
-        function render_canvas() {
-            const max = pixelations.length - 1;
-            if (pixelation > max) pixelation = max;
+        function render_canvas(override = false) {
+            let value = pixelation;
 
-            log(`drawing canvas image with pixelation ${pixelations[pixelation]} (${pixelation})`, 'pixel');
+            if (!override) {
+                const max = pixelations.length - 1;
+                if (pixelation > max) pixelation = max;
+
+                value = pixelations[pixelation];
+            }
+
+            log(`drawing canvas image with pixelation ${value} (${pixelation})`, 'pixel');
 
             const ctx = canvas.getContext('2d');
 
             canvas.width = canvas_image.width;
             canvas.height = canvas_image.height;
 
-            const scaled_width = canvas_image.width * pixelations[pixelation];
-            const scaled_height = canvas_image.height * pixelations[pixelation];
+            const scaled_width = canvas_image.width * value;
+            const scaled_height = canvas_image.height * value;
 
             ctx.drawImage(canvas_image, 0, 0, scaled_width, scaled_height);
 
@@ -316,7 +327,8 @@ export function pixel({
                     title: tl(trans.you_guessed_correctly)
                 });
 
-                pixel_random();
+                timer_end(true);
+                pixel_end();
             }
         }
 
@@ -337,11 +349,11 @@ export function pixel({
         }
 
         function pixel_give_up() {
+            timer_end();
             pixel_end();
         }
 
         function pixel_end() {
-            timer_end();
             title_elem.textContent = name;
 
             guess_input.disabled(true);
@@ -352,6 +364,16 @@ export function pixel({
                     ${tl(trans.continue)}
                 </button>
             `);
+
+            let i = 0.1;
+
+            image_interval = setInterval(() => {
+                pixelation = i;
+                render_canvas(true);
+                i += 0.1;
+
+                if (i >= 1) clearInterval(image_interval);
+            }, 50);
         }
     }
 }

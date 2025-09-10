@@ -36158,6 +36158,7 @@
       let actions;
       let guess_btn;
       let interval;
+      let image_interval;
       let title_elem;
       let hints_container;
       render(host, html``);
@@ -36233,6 +36234,7 @@
           const elapsed = Date.now() - start2;
           const remain = duration - elapsed;
           if (remain <= 0) {
+            timer_end();
             pixel_end();
             return;
           }
@@ -36246,8 +36248,9 @@
                 `);
         }, 10);
       }
-      function timer_end() {
+      function timer_end(keep = false) {
         clearInterval(interval);
+        if (keep) return;
         render(timer, html`
                 <span class="bleh-icon" />
                 <span class="s">
@@ -36255,15 +36258,19 @@
                 </span>
             `);
       }
-      function render_canvas() {
-        const max2 = pixelations.length - 1;
-        if (pixelation > max2) pixelation = max2;
-        log(`drawing canvas image with pixelation ${pixelations[pixelation]} (${pixelation})`, "pixel");
+      function render_canvas(override = false) {
+        let value = pixelation;
+        if (!override) {
+          const max2 = pixelations.length - 1;
+          if (pixelation > max2) pixelation = max2;
+          value = pixelations[pixelation];
+        }
+        log(`drawing canvas image with pixelation ${value} (${pixelation})`, "pixel");
         const ctx = canvas.getContext("2d");
         canvas.width = canvas_image.width;
         canvas.height = canvas_image.height;
-        const scaled_width = canvas_image.width * pixelations[pixelation];
-        const scaled_height = canvas_image.height * pixelations[pixelation];
+        const scaled_width = canvas_image.width * value;
+        const scaled_height = canvas_image.height * value;
         ctx.drawImage(canvas_image, 0, 0, scaled_width, scaled_height);
         ctx.imageSmoothingEnabled = false;
         ctx.drawImage(canvas, 0, 0, scaled_width, scaled_height, 0, 0, canvas_image.width, canvas_image.height);
@@ -36273,7 +36280,8 @@
           status({
             title: tl(trans.you_guessed_correctly)
           });
-          pixel_random();
+          timer_end(true);
+          pixel_end();
         }
       }
       function clean_pixel_name(name2) {
@@ -36285,10 +36293,10 @@
         render_canvas();
       }
       function pixel_give_up() {
+        timer_end();
         pixel_end();
       }
       function pixel_end() {
-        timer_end();
         title_elem.textContent = name;
         guess_input.disabled(true);
         guess_btn.disabled = true;
@@ -36297,6 +36305,13 @@
                     ${tl(trans.continue)}
                 </button>
             `);
+        let i = 0.1;
+        image_interval = setInterval(() => {
+          pixelation = i;
+          render_canvas(true);
+          i += 0.1;
+          if (i >= 1) clearInterval(image_interval);
+        }, 50);
       }
     }
   }
