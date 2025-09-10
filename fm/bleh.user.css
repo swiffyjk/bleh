@@ -18815,12 +18815,11 @@
 
     /*     RAIN     */
     .rain-container {
-        position: fixed;
-        top: 0;
+        position: absolute;
+        top: calc(-1 * (514px - var(--y)));
         z-index: 9990;
         width: 100%;
-        height: 300px;
-        overflow: hidden;
+        height: 200px;
         pointer-events: none;
 
         .rain {
@@ -18829,7 +18828,7 @@
             z-index: 9992;
 
             &.rain-back {
-                bottom: 50px;
+                bottom: 30px;
                 opacity: 0.5;
                 z-index: 9991;
             }

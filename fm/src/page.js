@@ -532,6 +532,15 @@ function load_page() {
     page_title();
 
     setTimeout(() => {
+        if (page.structure.row) {
+            const rect = page.structure.row.getBoundingClientRect();
+            const y = rect.top + window.scrollY;
+
+            if (page.structure.rain) page.structure.rain.style.setProperty('--y', `${y}px`);
+        }
+    }, 10);
+
+    setTimeout(() => {
         load_dismissed();
     }, 1000);
 }

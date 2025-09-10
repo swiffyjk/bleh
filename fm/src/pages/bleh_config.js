@@ -1827,7 +1827,8 @@ export function display_colour_presets() {
                     placement: 'bottom',
                     interactive: true,
                     interactiveBorder: 10,
-                    trigger: 'click'
+                    trigger: 'click',
+                    appendTo: document.body
                 });
             }
 

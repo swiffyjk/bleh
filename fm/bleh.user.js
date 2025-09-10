@@ -47841,7 +47841,8 @@
             placement: "bottom",
             interactive: true,
             interactiveBorder: 10,
-            trigger: "click"
+            trigger: "click",
+            appendTo: document.body
           });
         }
         if (colour2.sets) {
@@ -52102,20 +52103,25 @@
 
   // src/rain.js
   function rain() {
-    let rain_container_old = document.getElementById("rain-container");
-    if (rain_container_old != void 0)
-      document.body.removeChild(rain_container_old);
-    document.body.appendChild(html.node`
-        <div class="rain-container" id="rain-container">
-            <div class="rain" id="rain"></div>
-            <div class="rain rain-back" id="rain-back"></div>
-        </div>
+    let rain_container = html.node`
+        <div class="rain-container" />
+    `;
+    if (page.structure.rain) {
+      rain_container = page.structure.rain;
+      rain_container.remove();
+    } else {
+      page.structure.rain = rain_container;
+    }
+    let rain_main;
+    let rain_back;
+    render(rain_container, html`
+        <div class="rain" ref=${(el) => rain_main = el} />
+        <div class="rain rain-back" ref=${(el) => rain_back = el} />
     `);
+    document.body.appendChild(rain_container);
     let increment = 0;
     let drops = "";
     let subtle_drops = "";
-    let rain_main = document.getElementById("rain");
-    let rain_back = document.getElementById("rain-back");
     while (increment < 60) {
       let randoms = [
         Math.floor(Math.random() * (98 - 1 + 1) + 1),
@@ -52129,8 +52135,7 @@
     }
   }
   function start_rain() {
-    if (settings.rain)
-      rain();
+    if (settings.rain) rain();
   }
 
   // src/shout.js
@@ -53246,6 +53251,13 @@
     }
     append_nav();
     page_title();
+    setTimeout(() => {
+      if (page.structure.row) {
+        const rect = page.structure.row.getBoundingClientRect();
+        const y = rect.top + window.scrollY;
+        if (page.structure.rain) page.structure.rain.style.setProperty("--y", `${y}px`);
+      }
+    }, 10);
     setTimeout(() => {
       load_dismissed();
     }, 1e3);

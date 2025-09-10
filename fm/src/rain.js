@@ -5,28 +5,32 @@
 //
 
 import {settings} from "./build/config";
-import {html} from "lighterhtml";
+import {html, render} from "lighterhtml";
+import { page } from './build/page';
 
 export function rain() {
-    // clear old
-    let rain_container_old = document.getElementById('rain-container');
-    if (rain_container_old != undefined)
-        document.body.removeChild(rain_container_old);
+    let rain_container = html.node`
+        <div class="rain-container" />
+    `;
+    if (page.structure.rain) {
+        rain_container = page.structure.rain;
+        rain_container.remove();
+    } else {
+        page.structure.rain = rain_container;
+    }
 
-    // make anew
-    document.body.appendChild(html.node`
-        <div class="rain-container" id="rain-container">
-            <div class="rain" id="rain"></div>
-            <div class="rain rain-back" id="rain-back"></div>
-        </div>
+    let rain_main;
+    let rain_back;
+    render(rain_container, html`
+        <div class="rain" ref=${el => rain_main = el} />
+        <div class="rain rain-back" ref=${el => rain_back = el} />
     `);
+
+    document.body.appendChild(rain_container);
 
     let increment = 0;
     let drops = '';
     let subtle_drops = '';
-
-    let rain_main = document.getElementById('rain');
-    let rain_back = document.getElementById('rain-back');
 
     while (increment < 60) {
         // random numbers
@@ -46,6 +50,5 @@ export function rain() {
 }
 
 export function start_rain() {
-    if (settings.rain)
-        rain();
+    if (settings.rain) rain();
 }
