@@ -4397,7 +4397,7 @@
         font-weight: var(--font-weight-medium) !important;
         display: flex;
         align-items: center;
-        color: hsl(var(--c2)) !important;
+        color: hsl(var(--l3-c)) !important;
         padding: unset;
         border-radius: var(--item-med-radius);
         background-color: transparent;
@@ -4478,7 +4478,7 @@
     }
 
     .header-new-on-tour,
-    .label:not(.user-follow, .user-status--bleh-missing) {
+    .label {
         color: hsl(var(--l3-c)) !important;
         --mask-colour: currentColor !important;
     }
@@ -4673,10 +4673,11 @@
 
 
     .label.user-follow {
-        --bg: hsla(var(--b4), 75%) !important;
-        --bg-hov: hsla(var(--b3), 80%) !important;
         --mask: var(--icon-follow);
         order: 11;
+
+        --sat-over: 0;
+        --lit-over: 1;
     }
     .header-new-on-tour {
         --mask: var(--icon-tour);

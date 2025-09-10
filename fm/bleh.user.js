@@ -43101,7 +43101,13 @@
             </button>
         </div>
     `;
-    page.structure.main.insertBefore(view_buttons, page.structure.main.firstElementChild);
+    const user_panel = html.node`
+        <section class="users">
+            ${view_buttons}
+            ${html.node([page.structure.main.innerHTML])}
+        </section>
+    `;
+    render(page.structure.main, user_panel);
     refresh_all();
   }
   function refresh_tracks(button, {
