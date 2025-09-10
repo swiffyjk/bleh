@@ -17319,9 +17319,16 @@
     }
 
     .range {
-        &:not(:hover, :focus-within) .fill {
-            transition: width 0.3s var(--trans-function);
-        }
+        /*&:active {
+            .track {
+                .nub {
+                    background-color: transparent;
+                    box-shadow: var(--primary-shadow);
+                    backdrop-filter: blur(2px) saturate(var(--blur-saturate)) brightness(var(--blur-brightness)) contrast(var(--blur-contrast));
+                    -webkit-backdrop-filter: blur(2px) saturate(var(--blur-saturate)) brightness(var(--blur-brightness)) contrast(var(--blur-contrast));
+                }
+            }
+        }*/
 
         .track {
             display: flex;
@@ -17340,6 +17347,7 @@
                 background-color: hsl(var(--h3));
                 border-radius: var(--item-big-radius);
                 box-shadow: var(--primary-shadow), 0 3px 12px hsl(var(--h4), 32%);
+                transition: width 0.04s var(--trans-function);
             }
 
             .nub {
@@ -17351,7 +17359,7 @@
                 box-shadow: var(--primary-shadow), 0 3px 12px hsl(var(--h4), 32%);
                 margin: -4px -7px;
 
-                transition-property: opacity;
+                transition-property: opacity, background-color, box-shadow, backdrop-filter, -webkit-backdrop-filter;
                 transition-duration: var(--trans);
                 transition-timing-function: var(--trans-function);
             }
