@@ -153,7 +153,7 @@ export function compare({
                     <h5>${tl(trans.compare_with)}</h5>
                 </div>
                 <div class="input-container content-form">
-                    <input type="text" class="input" ref=${el => input = el} placeholder=${tl(trans.enter_a_profile)} value=${page.requested.profile} onchange=${e => {
+                    <input type="text" class="input" ref=${el => inputter = el} placeholder=${tl(trans.enter_a_profile)} value=${page.requested.profile} onchange=${e => {
                         page.requested.profile = e.target.value;
                         page.name = page.requested.profile;
 
@@ -166,16 +166,16 @@ export function compare({
                     }}>
                     ${() => {
                         let btn = html.node`
-                            <button class="btn chibi icon" data-type="profile_shortcut" onclick=${() => {
-                                if (settings.profile_shortcut == '') return;
+                            <button class="btn chibi icon" data-type="starred_friend" data-is-shortcut=${settings.starred_friend != ''} onclick=${() => {
+                                if (settings.starred_friend == '') return;
 
-                                input.value = settings.profile_shortcut;
-                                input.dispatchEvent(new Event('change'));
-                            }}>${tl(trans.profile_shortcut.name)}</button>
+                                inputter.value = settings.starred_friend;
+                                inputter.dispatchEvent(new Event('change'));
+                            }}>${tl(trans.starred_friend.name)}</button>
                         `;
 
                         tippy(btn, {
-                            content: tl(trans.profile_shortcut.name)
+                            content: tl(trans.starred_friend.name)
                         });
 
                         return btn;

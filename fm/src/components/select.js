@@ -44,6 +44,7 @@ export function select(values, initial = '', name = '', func = null) {
         interactive: true,
         interactiveBorder: 10,
         trigger: 'click',
+        appendTo: document.body,
 
         onShow(instance) {
             if (values.length > 15) {
