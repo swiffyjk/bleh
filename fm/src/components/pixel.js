@@ -5,7 +5,7 @@
 //
 
 import {html, render} from "lighterhtml";
-import {api_key, auth} from "../build/page.js";
+import {api_key, auth, page} from "../build/page.js";
 import {tl, trans} from "../build/trans.js";
 import {input} from "./input.js";
 import tippy from "tippy.js";
@@ -13,6 +13,8 @@ import { status } from './status.js';
 import { notify } from './notify.js';
 import { correct_artist, correct_item_by_artist } from './lotus.js';
 import { keybind } from './rabbit.js';
+import { log } from '../build/log.js';
+import { settings } from '../build/config.js';
 
 export function pixel({
     host,
@@ -20,8 +22,54 @@ export function pixel({
 }={}) {
     if (!host || !sidebar) return;
 
-    const user_albums_url = `http://ws.audioscrobbler.com/2.0/?method=user.gettopalbums&user=${auth.name}&api_key=${api_key}&format=json&limit=500`;
     let user_albums = [];
+
+    render(sidebar, html`
+        <h2>${tl(trans.settings)}</h2>
+        <div class="setting-group">
+            <div class="setting v" data-type="text">
+                <div class="heading">
+                    <h5>${tl(trans.profile)}</h5>
+                </div>
+                <div class="input-container content-form">
+                    <input type="text" class="input" ref=${el => inputter = el} placeholder=${tl(trans.enter_a_profile)} value=${page.requested.profile} onchange=${e => {
+                        page.requested.profile = e.target.value;
+                        page.name = page.requested.profile;
+                    }}>
+                    ${() => {
+                        let btn = html.node`
+                            <button class="btn chibi icon" data-type="profile" onclick=${() => {
+                                inputter.value = auth.name;
+                                inputter.dispatchEvent(new Event('change'));
+                            }}>${tl(trans.profile)}</button>
+                        `;
+
+                        tippy(btn, {
+                            content: tl(trans.profile)
+                        });
+
+                        return btn;
+                    }}
+                    ${() => {
+                        let btn = html.node`
+                            <button class="btn chibi icon" data-type="starred_friend" data-is-shortcut=${settings.starred_friend != ''} onclick=${() => {
+                                if (settings.starred_friend == '') return;
+
+                                inputter.value = settings.starred_friend;
+                                inputter.dispatchEvent(new Event('change'));
+                            }}>${tl(trans.starred_friend.name)}</button>
+                        `;
+
+                        tippy(btn, {
+                            content: tl(trans.starred_friend.name)
+                        });
+
+                        return btn;
+                    }}
+                </div>
+            </div>
+        </div>
+    `);
 
     pixel_home();
 
@@ -40,7 +88,7 @@ export function pixel({
 
     function pixel_prepare() {
         if (user_albums.length == 0) {
-            fetch(user_albums_url)
+            fetch(`http://ws.audioscrobbler.com/2.0/?method=user.gettopalbums&user=${page.name}&api_key=${api_key}&format=json&limit=500`)
                 .then(res => {
                     if (!res.ok) {
                         notify({
@@ -96,14 +144,28 @@ export function pixel({
     }) {
         let guess_input;
 
-        let pixelation = 0.02;
+        const hints = [
+            'artist',
+            'country',
+            'date'
+        ];
+        const pixelations = [
+            0.02,
+            0.05,
+            0.1,
+            0.2,
+            0.3
+        ];
+        let pixelation = 0;
+        let hint = 0;
+        let canvas;
 
         let title_elem;
         let hints_container;
         render(host, html``);
         render(host, html`
             <div class="pixel-artwork">
-                <img src=${image}>
+                <canvas ref=${el => canvas = el} />
             </div>
             <div class="pixel-info">
                 <div class="pixel-album-name">
@@ -164,6 +226,34 @@ export function pixel({
 
         guess_input.focus();
 
+        const canvas_image = new Image();
+        canvas_image.src = image;
+
+        canvas_image.onload = () => {
+            render_canvas();
+        }
+
+        function render_canvas() {
+            const max = pixelations.length - 1;
+            if (pixelation > max) pixelation = max;
+
+            log(`drawing canvas image with pixelation ${pixelations[pixelation]} (${pixelation})`, 'pixel');
+
+            const ctx = canvas.getContext('2d');
+
+            canvas.width = canvas_image.width;
+            canvas.height = canvas_image.height;
+
+            const scaled_width = canvas_image.width * pixelations[pixelation];
+            const scaled_height = canvas_image.height * pixelations[pixelation];
+
+            ctx.drawImage(canvas_image, 0, 0, scaled_width, scaled_height);
+
+            ctx.imageSmoothingEnabled = false;
+
+            ctx.drawImage(canvas, 0, 0, scaled_width, scaled_height, 0, 0, canvas_image.width, canvas_image.height);
+        }
+
         function pixel_make_a_guess(guess) {
             if (clean_pixel_name(guess) == clean_pixel_name(name)) {
                 status({
@@ -185,6 +275,9 @@ export function pixel({
 
         function pixel_hint() {
             guess_input.focus();
+
+            pixelation++;
+            render_canvas();
         }
 
         function pixel_give_up() {

@@ -35690,7 +35690,7 @@
         </div>
     `);
     let setting_group;
-    let inputter;
+    let inputter2;
     render(sidebar, html`
         <h2>${tl(trans.settings)}</h2>
         <div class="setting-group" ref=${(el) => setting_group = el}>
@@ -35699,7 +35699,7 @@
                     <h5>${tl(trans.profile)}</h5>
                 </div>
                 <div class="input-container content-form">
-                    <input type="text" class="input" ref=${(el) => inputter = el} placeholder=${tl(trans.enter_a_profile)} value=${page.requested.profile} onchange=${(e) => {
+                    <input type="text" class="input" ref=${(el) => inputter2 = el} placeholder=${tl(trans.enter_a_profile)} value=${page.requested.profile} onchange=${(e) => {
       page.requested.profile = e.target.value;
       page.name = page.requested.profile;
       page.avatar = "";
@@ -35711,8 +35711,8 @@
                     ${() => {
       let btn = html.node`
                             <button class="btn chibi icon" data-type="profile" onclick=${() => {
-        inputter.value = auth.name;
-        inputter.dispatchEvent(new Event("change"));
+        inputter2.value = auth.name;
+        inputter2.dispatchEvent(new Event("change"));
       }}>${tl(trans.profile)}</button>
                         `;
       tippy_esm_default(btn, {
@@ -35722,14 +35722,14 @@
     }}
                     ${() => {
       let btn = html.node`
-                            <button class="btn chibi icon" data-type="profile_shortcut" onclick=${() => {
-        if (settings.profile_shortcut == "") return;
-        inputter.value = settings.profile_shortcut;
-        inputter.dispatchEvent(new Event("change"));
-      }}>${tl(trans.profile_shortcut.name)}</button>
+                            <button class="btn chibi icon" data-type="starred_friend" data-is-shortcut=${settings.starred_friend != ""} onclick=${() => {
+        if (settings.starred_friend == "") return;
+        inputter2.value = settings.starred_friend;
+        inputter2.dispatchEvent(new Event("change"));
+      }}>${tl(trans.starred_friend.name)}</button>
                         `;
       tippy_esm_default(btn, {
-        content: tl(trans.profile_shortcut.name)
+        content: tl(trans.starred_friend.name)
       });
       return btn;
     }}
@@ -36023,8 +36023,48 @@
     sidebar
   } = {}) {
     if (!host || !sidebar) return;
-    const user_albums_url = `http://ws.audioscrobbler.com/2.0/?method=user.gettopalbums&user=${auth.name}&api_key=${api_key}&format=json&limit=500`;
     let user_albums = [];
+    render(sidebar, html`
+        <h2>${tl(trans.settings)}</h2>
+        <div class="setting-group">
+            <div class="setting v" data-type="text">
+                <div class="heading">
+                    <h5>${tl(trans.profile)}</h5>
+                </div>
+                <div class="input-container content-form">
+                    <input type="text" class="input" ref=${(el) => inputter = el} placeholder=${tl(trans.enter_a_profile)} value=${page.requested.profile} onchange=${(e) => {
+      page.requested.profile = e.target.value;
+      page.name = page.requested.profile;
+    }}>
+                    ${() => {
+      let btn = html.node`
+                            <button class="btn chibi icon" data-type="profile" onclick=${() => {
+        inputter.value = auth.name;
+        inputter.dispatchEvent(new Event("change"));
+      }}>${tl(trans.profile)}</button>
+                        `;
+      tippy_esm_default(btn, {
+        content: tl(trans.profile)
+      });
+      return btn;
+    }}
+                    ${() => {
+      let btn = html.node`
+                            <button class="btn chibi icon" data-type="starred_friend" data-is-shortcut=${settings.starred_friend != ""} onclick=${() => {
+        if (settings.starred_friend == "") return;
+        inputter.value = settings.starred_friend;
+        inputter.dispatchEvent(new Event("change"));
+      }}>${tl(trans.starred_friend.name)}</button>
+                        `;
+      tippy_esm_default(btn, {
+        content: tl(trans.starred_friend.name)
+      });
+      return btn;
+    }}
+                </div>
+            </div>
+        </div>
+    `);
     pixel_home();
     function pixel_home() {
       render(host, html`
@@ -36040,7 +36080,7 @@
     }
     function pixel_prepare() {
       if (user_albums.length == 0) {
-        fetch(user_albums_url).then((res) => {
+        fetch(`http://ws.audioscrobbler.com/2.0/?method=user.gettopalbums&user=${page.name}&api_key=${api_key}&format=json&limit=500`).then((res) => {
           if (!res.ok) {
             notify({
               id: "api-error",
@@ -36087,13 +36127,27 @@
       plays: 0
     }) {
       let guess_input;
-      let pixelation = 0.02;
+      const hints = [
+        "artist",
+        "country",
+        "date"
+      ];
+      const pixelations = [
+        0.02,
+        0.05,
+        0.1,
+        0.2,
+        0.3
+      ];
+      let pixelation = 0;
+      let hint = 0;
+      let canvas;
       let title_elem;
       let hints_container;
       render(host, html``);
       render(host, html`
             <div class="pixel-artwork">
-                <img src=${image}>
+                <canvas ref=${(el) => canvas = el} />
             </div>
             <div class="pixel-info">
                 <div class="pixel-album-name">
@@ -36149,6 +36203,24 @@
             plays: ${plays}
         `);
       guess_input.focus();
+      const canvas_image = new Image();
+      canvas_image.src = image;
+      canvas_image.onload = () => {
+        render_canvas();
+      };
+      function render_canvas() {
+        const max2 = pixelations.length - 1;
+        if (pixelation > max2) pixelation = max2;
+        log(`drawing canvas image with pixelation ${pixelations[pixelation]} (${pixelation})`, "pixel");
+        const ctx = canvas.getContext("2d");
+        canvas.width = canvas_image.width;
+        canvas.height = canvas_image.height;
+        const scaled_width = canvas_image.width * pixelations[pixelation];
+        const scaled_height = canvas_image.height * pixelations[pixelation];
+        ctx.drawImage(canvas_image, 0, 0, scaled_width, scaled_height);
+        ctx.imageSmoothingEnabled = false;
+        ctx.drawImage(canvas, 0, 0, scaled_width, scaled_height, 0, 0, canvas_image.width, canvas_image.height);
+      }
       function pixel_make_a_guess(guess) {
         if (clean_pixel_name(guess) == clean_pixel_name(name)) {
           status({
@@ -36162,6 +36234,8 @@
       }
       function pixel_hint() {
         guess_input.focus();
+        pixelation++;
+        render_canvas();
       }
       function pixel_give_up() {
         pixel_random();

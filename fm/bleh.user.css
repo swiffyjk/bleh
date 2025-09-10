@@ -26812,7 +26812,7 @@
         border-radius: calc(var(--item-big-radius) + 10px);
         width: fit-content;
 
-        & > img {
+        & > canvas {
             border-radius: var(--item-big-radius);
             width: var(--artwork-size);
             aspect-ratio: 1 / 1;
