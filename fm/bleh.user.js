@@ -34197,6 +34197,7 @@
             artwork = match2.artwork;
           }
           let artwork_container;
+          let stats;
           const elem = html.node`
                             <div class="source-album js-link-block link-block-cover-link" data-match=${match2 != null}>
                                 <div class="source-album-art" ref=${(el) => artwork_container = el}>
@@ -34209,7 +34210,7 @@
                                 <div class="source-album-details" data-kate-processed="true">
                                     <h4 class="source-album-name">${correct_item_by_artist(title, artist)}</h4>
                                     <p class="source-album-artist">${correct_artist(artist)}</p>
-                                    <p class="source-album-stats oracle-stats">
+                                    <p class="source-album-stats oracle-stats" ref=${(el) => stats = el}>
                                         ${type}
                                         ${match2 ? html.node`
                                         <span class="plays">
@@ -34222,7 +34223,7 @@
                                 </div>
                             </div>
                         `;
-          if (!artwork) load_cover_art(artwork_container, title, artist);
+          if (!artwork) load_cover_art(artwork_container, title, artist, stats, type);
           return elem;
         })}
                 </div>
@@ -34236,7 +34237,7 @@
             `);
       }
     }
-    function load_cover_art(parent, title, artist) {
+    function load_cover_art(parent, title, artist, stats = null, type = null) {
       render(parent, html`
             <span class="cover-art oracle-loading">
                 <span class="loading-spinner">
@@ -34246,7 +34247,7 @@
             </span>
         `);
       if (!ff("oracle_fetch_artwork")) return;
-      fetch(`${root}music/${sanitise(artist)}/${sanitise(title)}/+tags`).then((res) => {
+      fetch(`${root}music/${sanitise(artist)}/${sanitise(title)}/`).then((res) => {
         if (!res.ok) {
           log("error fetching cover art", "oracle", "error", { res });
           throw new Error();
@@ -34259,6 +34260,16 @@
         render(parent, html`
                     <span class="cover-art">
                         <img src=${background_image.getAttribute("content").replace("/ar0/", "/300x300/")} alt=${title}>
+                    </span>
+                `);
+        if (!stats || !type) return;
+        const listeners = doc.querySelector(".header-metadata-tnew-display > p > abbr");
+        if (!listeners) return;
+        render(stats, html`
+                    ${type}
+                    <span class="plays">
+                        <span class="bleh-icon" />
+                        ${listeners.title}
                     </span>
                 `);
       }).catch((err) => {
