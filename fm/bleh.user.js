@@ -34153,7 +34153,7 @@
         });
       });
       let recording = data2.recordings.find(
-        (r) => r.releases && r.releases.some((release) => release.status == "Official")
+        (r) => r.releases && r.releases.some((release) => release.status === "Official") && !r.disambiguation?.toLowerCase().endsWith("live")
       );
       if (!recording) recording = data2.recordings.find((r) => r.releases && r.releases.length > 0);
       if (!recording) {

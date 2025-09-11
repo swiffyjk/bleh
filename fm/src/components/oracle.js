@@ -115,7 +115,9 @@ export function oracle_process() {
         });
 
         let recording = data.recordings.find(r =>
-            r.releases && r.releases.some(release => release.status == 'Official')
+            r.releases &&
+            r.releases.some(release => release.status === 'Official') &&
+            !(r.disambiguation?.toLowerCase().endsWith('live'))
         );
 
         if (!recording) recording = data.recordings.find(r => r.releases && r.releases.length > 0);
