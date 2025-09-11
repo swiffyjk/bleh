@@ -170,16 +170,16 @@ export function oracle_process() {
                             artwork = match.artwork;
                         }
 
+                        let artwork_container;
+
                         const elem = html.node`
                             <div class="source-album js-link-block link-block-cover-link" data-match=${match != null}>
-                                <div class="source-album-art">
+                                <div class="source-album-art" ref=${el => artwork_container = el}>
+                                    ${artwork ? html.node`
                                     <span class="cover-art">
-                                        ${artwork ? html.node`
                                         <img src=${artwork} alt=${title}>
-                                        ` : html.node`
-                                        <img class="empty">
-                                        `}
                                     </span>
+                                    ` : ''}
                                 </div>
                                 <div class="source-album-details" data-kate-processed="true">
                                     <h4 class="source-album-name">${correct_item_by_artist(title, artist)}</h4>
@@ -198,6 +198,8 @@ export function oracle_process() {
                             </div>
                         `;
 
+                        if (!artwork) load_cover_art(artwork_container, title, artist);
+
                         return elem;
                     })}
                 </div>
@@ -210,5 +212,44 @@ export function oracle_process() {
                 </div>
             `);
         }
+    }
+
+    function load_cover_art(parent, title, artist) {
+        render(parent, html`
+            <span class="cover-art oracle-loading">
+                <span class="loading-spinner">
+                    <span class="bleh-icon" />
+                </span>
+                <img class="empty">
+            </span>
+        `);
+
+        if (!ff('oracle_fetch_artwork')) return;
+
+        fetch(`${root}music/${sanitise(artist)}/${sanitise(title)}/+tags`)
+            .then(res => {
+                if (!res.ok) {
+                    log('error fetching cover art', 'oracle', 'error', {res});
+                    throw new Error;
+                }
+
+                return res.text();
+            })
+            .then((dom) => {
+                const doc = new DOMParser().parseFromString(dom, 'text/html');
+
+                const background_image = doc.querySelector('.header-new-background-image');
+                if (!background_image) return;
+
+                render(parent, html`
+                    <span class="cover-art">
+                        <img src=${background_image.getAttribute('content').replace('/ar0/', '/300x300/')} alt=${title}>
+                    </span>
+                `);
+            })
+            .catch(err => {
+                console.error('oracle', err);
+                return;
+            });
     }
 }

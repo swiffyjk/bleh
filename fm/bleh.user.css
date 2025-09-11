@@ -12111,6 +12111,17 @@
             transition-property: transform, filter;
             transition-duration: 0.2s;
             transition-timing-function: cubic-bezier(0.4, 0, 0.2, 1);
+
+            & > .cover-art > .loading-spinner {
+                position: absolute;
+                inset: 0;
+                display: flex;
+                justify-content: center;
+                align-items: center;
+                --icon: var(--icon-16-spinner);
+                --icon-colour: hsl(var(--c3));
+                animation: spinner 1.2s linear infinite;
+            }
         }
         .source-album-details {
             flex: 1;

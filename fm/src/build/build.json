@@ -294,6 +294,11 @@
             "default": false,
             "name": "Re-order listed albums on track pages based on listener count",
             "date": "2025-09-11"
+        },
+        "oracle_fetch_artwork": {
+            "default": false,
+            "name": "Allow oracle to fetch cover art from album tag pages",
+            "date": "2025-09-11"
         }
     }
 }
