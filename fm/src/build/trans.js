@@ -3769,7 +3769,7 @@ export const trans = {
         en: 'You need to be logged in'
     },
     oracle_notice: {
-        en: 'You are currently testing ‘oracle’, a redesigned album and track view in bleh.'
+        en: 'You are currently testing ‘oracle’, a redesigned album and track view'
     },
     send_feedback: {
         en: 'Send feedback'

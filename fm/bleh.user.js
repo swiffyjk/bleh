@@ -57363,7 +57363,7 @@
       en: "You need to be logged in"
     },
     oracle_notice: {
-      en: "You are currently testing \u2018oracle\u2019, a redesigned album and track view in bleh."
+      en: "You are currently testing \u2018oracle\u2019, a redesigned album and track view"
     },
     send_feedback: {
       en: "Send feedback"
