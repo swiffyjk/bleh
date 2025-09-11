@@ -12078,6 +12078,10 @@
             inset: 0;
         }
 
+        &[data-match="true"] {
+            order: -1;
+        }
+
         .source-album-art {
             margin: unset;
             flex-shrink: 0;
@@ -12123,6 +12127,24 @@
                 font-weight: var(--font-weight);
                 margin: unset;
                 margin-top: 4px;
+
+                &.oracle-stats {
+                    display: flex;
+                    gap: 10px;
+
+                    & > span {
+                        display: flex;
+                        align-items: center;
+                        gap: var(--icon-gap);
+
+                        --icon-size: 14px;
+                        --icon-colour: currentColor;
+
+                        &.plays {
+                            --icon: var(--icon-16-users);
+                        }
+                    }
+                }
             }
         }
 

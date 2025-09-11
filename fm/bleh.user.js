@@ -34099,6 +34099,18 @@
     }
     function oracle_track_releases(data2) {
       let releases = [];
+      let lastfm_releases = [];
+      const albums_and_lyrics_row = page.structure.main.querySelector(".album-and-lyrics-row");
+      const lastfm_source_albums = albums_and_lyrics_row.querySelectorAll(".source-album");
+      lastfm_source_albums.forEach((release) => {
+        lastfm_releases.push({
+          title: release.querySelector(".source-album-name").textContent,
+          artist: release.querySelector(".source-album-artist").textContent,
+          plays: release.querySelector(".source-album-stats").firstChild.textContent.trim(),
+          artwork: release.querySelector(".source-album-art > .cover-art > img").src
+        });
+      });
+      albums_and_lyrics_row.remove();
       if (!data2.recordings[0]) {
         render(releases_panel, html`
                 <h3 class="text-18">Releases</h3>
@@ -34127,17 +34139,38 @@
           const title = release.title;
           const artist = release["artist-credit"][0].name;
           const type = release["release-group"]["primary-type"];
+          const match2 = lastfm_releases.find(
+            (r) => r.title == title && r.artist == artist
+          );
+          let plays = 0;
+          let artwork;
+          if (match2) {
+            plays = match2.plays;
+            artwork = match2.artwork;
+          }
           const elem = html.node`
-                            <div class="source-album js-link-block link-block-cover-link">
+                            <div class="source-album js-link-block link-block-cover-link" data-match=${match2 != null}>
                                 <div class="source-album-art">
                                     <span class="cover-art">
+                                        ${artwork ? html.node`
+                                        <img src=${artwork} alt=${title}>
+                                        ` : html.node`
                                         <img class="empty">
+                                        `}
                                     </span>
                                 </div>
                                 <div class="source-album-details" data-kate-processed="true">
                                     <h4 class="source-album-name">${correct_item_by_artist(title, artist)}</h4>
                                     <p class="source-album-artist">${correct_artist(artist)}</p>
-                                    <p class="source-album-stats">${type}</p>
+                                    <p class="source-album-stats oracle-stats">
+                                        ${type}
+                                        ${match2 ? html.node`
+                                        <span class="plays">
+                                            <span class="bleh-icon" />
+                                            ${plays}
+                                        </span>
+                                        ` : ""}
+                                    </p>
                                     <a class="js-link-block-cover-link link-block-cover-link" href="${root}music/${sanitise(artist)}/${sanitise(title)}" tabindex="-1" aria-hidden="true" />
                                 </div>
                             </div>
