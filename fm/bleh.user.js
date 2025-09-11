@@ -34093,8 +34093,21 @@
       return;
     });
     function oracle(data2) {
+      if (page.type == "track") {
+        oracle_track_releases(data2);
+      }
+    }
+    function oracle_track_releases(data2) {
       let releases = [];
-      if (!data2.recordings[0]) return;
+      if (!data2.recordings[0]) {
+        render(releases_panel, html`
+                <h3 class="text-18">Releases</h3>
+                <div class="loading-data-container">
+                    <div class="loading-data-text failed">No releases found</div>
+                </div>
+            `);
+        return;
+      }
       if (data2.recordings[0].releases) {
         data2.recordings[0].releases.forEach((release) => {
           if (release["artist-credit"][0].name == "Various Artists") return;
@@ -34137,7 +34150,7 @@
         render(releases_panel, html`
                 <h3 class="text-18">Releases</h3>
                 <div class="loading-data-container">
-                    <div class="loading-data-text fail">No releases found</div>
+                    <div class="loading-data-text failed">No releases found</div>
                 </div>
             `);
       }

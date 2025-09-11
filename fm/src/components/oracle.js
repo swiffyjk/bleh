@@ -51,11 +51,25 @@ export function oracle_process() {
         });
 
     function oracle(data) {
+        if (page.type == 'track') {
+            oracle_track_releases(data);
+        }
+    }
+
+    function oracle_track_releases(data) {
         // let's comb through the releases to remove
         // various artists
         let releases = [];
 
-        if (!data.recordings[0]) return;
+        if (!data.recordings[0]) {
+            render(releases_panel, html`
+                <h3 class="text-18">Releases</h3>
+                <div class="loading-data-container">
+                    <div class="loading-data-text failed">No releases found</div>
+                </div>
+            `);
+            return;
+        }
 
         if (data.recordings[0].releases) {
             data.recordings[0].releases.forEach(release => {
@@ -108,7 +122,7 @@ export function oracle_process() {
             render(releases_panel, html`
                 <h3 class="text-18">Releases</h3>
                 <div class="loading-data-container">
-                    <div class="loading-data-text fail">No releases found</div>
+                    <div class="loading-data-text failed">No releases found</div>
                 </div>
             `);
         }
