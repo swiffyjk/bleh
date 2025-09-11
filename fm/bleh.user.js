@@ -34167,13 +34167,16 @@
       }
       if (recording) {
         recording.releases.forEach((release) => {
-          if (release["artist-credit"][0].name == "Various Artists") return;
+          const artist = release["artist-credit"] ? release["artist-credit"][0].name : recording["artist-credit"].name;
+          if (artist == "Various Artists") return;
           releases.push(release);
         });
         releases = releases.filter(
-          (release, index3, self3) => index3 === self3.findIndex(
-            (r) => r.title === release.title && r["artist-credit"][0].name === release["artist-credit"][0].name
-          )
+          (release, index3, self3) => index3 === self3.findIndex((r) => {
+            const r_artist = r["artist-credit"]?.[0]?.name;
+            const release_artist = release["artist-credit"]?.[0]?.name;
+            return r.title === release.title && r_artist === release_artist;
+          })
         );
         render(releases_panel, html`
                 <h3 class="text-18">${tl(trans.releases)}<span class="new-badge beta">${tl(trans.beta)}</span></h3>
@@ -34182,7 +34185,7 @@
           if (index3 > 1) return html.node``;
           log("release", "oracle", "log", { release });
           const title = clean_title(release.title);
-          const artist = release["artist-credit"][0].name;
+          const artist = release["artist-credit"]?.[0]?.name || recording["artist-credit"][0].name;
           const type = release["release-group"]["primary-type"];
           const match2 = lastfm_releases.find(
             (r) => r.title == title && r.artist == artist

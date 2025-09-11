@@ -132,18 +132,19 @@ export function oracle_process() {
 
         if (recording) {
             recording.releases.forEach(release => {
-                if (release['artist-credit'][0].name == 'Various Artists') return;
+                const artist = release['artist-credit'] ? release['artist-credit'][0].name : recording['artist-credit'].name;
+
+                if (artist == 'Various Artists') return;
 
                 releases.push(release);
             });
 
             releases = releases.filter(
-                (release, index, self) =>
-                    index === self.findIndex(
-                        r =>
-                            r.title === release.title &&
-                            r['artist-credit'][0].name === release['artist-credit'][0].name
-                    )
+                (release, index, self) => index === self.findIndex(r => {
+                    const r_artist = r['artist-credit']?.[0]?.name;
+                    const release_artist = release['artist-credit']?.[0]?.name;
+                    return r.title === release.title && r_artist === release_artist;
+                })
             );
 
             render(releases_panel, html`
@@ -154,7 +155,7 @@ export function oracle_process() {
 
                         log('release', 'oracle', 'log', {release});
                         const title = clean_title(release.title);
-                        const artist = release['artist-credit'][0].name;
+                        const artist = release['artist-credit']?.[0]?.name || recording['artist-credit'][0].name;
                         const type = release['release-group']['primary-type'];
 
                         // is there a matching last.fm entry available atm?
