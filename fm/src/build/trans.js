@@ -3767,6 +3767,12 @@ export const trans = {
     },
     you_need_to_be_logged_in: {
         en: 'You need to be logged in'
+    },
+    oracle_notice: {
+        en: 'You are currently testing ‘oracle’, a redesigned album and track view in bleh.'
+    },
+    send_feedback: {
+        en: 'Send feedback'
     }
 }
 

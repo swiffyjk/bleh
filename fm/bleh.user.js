@@ -34284,6 +34284,17 @@
       katsune
     }, page.type);
     col_main.insertBefore(listen_container, col_main.firstElementChild);
+    if (ff("oracle")) {
+      col_main.insertBefore(html.node`
+            <div class="oracle">
+                <span class="bleh-icon" />
+                <p>${{ html: tl(trans.oracle_notice).replace("oracle", "<i>oracle</i>") }}</p>
+                <a class="see-more" href="https://github.com/katelyynn/issues/new/choose" target="_blank">
+                    ${tl(trans.send_feedback)}
+                </a>
+            </div>
+        `, listen_container);
+    }
     if (!katsune)
       col_main.insertBefore(top_container, col_main.firstElementChild);
     else
@@ -57249,6 +57260,12 @@
     },
     you_need_to_be_logged_in: {
       en: "You need to be logged in"
+    },
+    oracle_notice: {
+      en: "You are currently testing \u2018oracle\u2019, a redesigned album and track view in bleh."
+    },
+    send_feedback: {
+      en: "Send feedback"
     }
   };
   var trans_legacy = {
@@ -61790,6 +61807,11 @@
         default: false,
         name: "Adaptive colour controls",
         date: "2025-08-29"
+      },
+      oracle: {
+        default: false,
+        name: "Experimental new album and track fetching via MusicBrainz",
+        date: "2025-09-11"
       }
     }
   };

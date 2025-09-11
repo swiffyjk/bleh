@@ -981,6 +981,7 @@
         --icon-16-lyrics: url('data:image/svg+xml;base64,PHN2ZyAgeG1sbnM9Imh0dHA6Ly93d3cudzMub3JnLzIwMDAvc3ZnIiAgd2lkdGg9IjI0IiAgaGVpZ2h0PSIyNCIgIHZpZXdCb3g9IjAgMCAyNCAyNCIgIGZpbGw9ImN1cnJlbnRDb2xvciIgIGNsYXNzPSJpY29uIGljb24tdGFibGVyIGljb25zLXRhYmxlci1maWxsZWQgaWNvbi10YWJsZXItbWljcm9waG9uZSI+PHBhdGggc3Ryb2tlPSJub25lIiBkPSJNMCAwaDI0djI0SDB6IiBmaWxsPSJub25lIi8+PHBhdGggZD0iTTE5IDlhMSAxIDAgMCAxIDEgMWE4IDggMCAwIDEgLTYuOTk5IDcuOTM4bC0uMDAxIDIuMDYyaDNhMSAxIDAgMCAxIDAgMmgtOGExIDEgMCAwIDEgMCAtMmgzdi0yLjA2MmE4IDggMCAwIDEgLTcgLTcuOTM4YTEgMSAwIDEgMSAyIDBhNiA2IDAgMCAwIDEyIDBhMSAxIDAgMCAxIDEgLTFtLTcgLThhNCA0IDAgMCAxIDQgNHY1YTQgNCAwIDEgMSAtOCAwdi01YTQgNCAwIDAgMSA0IC00IiAvPjwvc3ZnPg==');
         --icon-16-jumble: url('data:image/svg+xml;base64,PHN2ZyAgeG1sbnM9Imh0dHA6Ly93d3cudzMub3JnLzIwMDAvc3ZnIiAgd2lkdGg9IjI0IiAgaGVpZ2h0PSIyNCIgIHZpZXdCb3g9IjAgMCAyNCAyNCIgIGZpbGw9Im5vbmUiICBzdHJva2U9ImN1cnJlbnRDb2xvciIgIHN0cm9rZS13aWR0aD0iMiIgIHN0cm9rZS1saW5lY2FwPSJyb3VuZCIgIHN0cm9rZS1saW5lam9pbj0icm91bmQiICBjbGFzcz0iaWNvbiBpY29uLXRhYmxlciBpY29ucy10YWJsZXItb3V0bGluZSBpY29uLXRhYmxlci1hcnJvd3Mtc2h1ZmZsZSI+PHBhdGggc3Ryb2tlPSJub25lIiBkPSJNMCAwaDI0djI0SDB6IiBmaWxsPSJub25lIi8+PHBhdGggZD0iTTE4IDRsMyAzbC0zIDMiIC8+PHBhdGggZD0iTTE4IDIwbDMgLTNsLTMgLTMiIC8+PHBhdGggZD0iTTMgN2gzYTUgNSAwIDAgMSA1IDVhNSA1IDAgMCAwIDUgNWg1IiAvPjxwYXRoIGQ9Ik0yMSA3aC01YTQuOTc4IDQuOTc4IDAgMCAwIC0zIDFtLTQgOGE0Ljk4NCA0Ljk4NCAwIDAgMSAtMyAxaC0zIiAvPjwvc3ZnPg==');
         --icon-16-indent: url('data:image/svg+xml;base64,PHN2ZyAgeG1sbnM9Imh0dHA6Ly93d3cudzMub3JnLzIwMDAvc3ZnIiAgd2lkdGg9IjI0IiAgaGVpZ2h0PSIyNCIgIHZpZXdCb3g9IjAgMCAyNCAyNCIgIGZpbGw9Im5vbmUiICBzdHJva2U9ImN1cnJlbnRDb2xvciIgIHN0cm9rZS13aWR0aD0iMyIgIHN0cm9rZS1saW5lY2FwPSJyb3VuZCIgIHN0cm9rZS1saW5lam9pbj0icm91bmQiICBjbGFzcz0iaWNvbiBpY29uLXRhYmxlciBpY29ucy10YWJsZXItb3V0bGluZSBpY29uLXRhYmxlci1yYWRpdXMtYm90dG9tLWxlZnQiPjxwYXRoIHN0cm9rZT0ibm9uZSIgZD0iTTAgMGgyNHYyNEgweiIgZmlsbD0ibm9uZSIvPjxwYXRoIGQ9Ik0xOSAxOWgtNmE4IDggMCAwIDEgLTggLTh2LTYiIC8+PC9zdmc+');
+        --icon-16-oracle: url('data:image/svg+xml;base64,PHN2ZyAgeG1sbnM9Imh0dHA6Ly93d3cudzMub3JnLzIwMDAvc3ZnIiAgd2lkdGg9IjI0IiAgaGVpZ2h0PSIyNCIgIHZpZXdCb3g9IjAgMCAyNCAyNCIgIGZpbGw9ImN1cnJlbnRDb2xvciIgIGNsYXNzPSJpY29uIGljb24tdGFibGVyIGljb25zLXRhYmxlci1maWxsZWQgaWNvbi10YWJsZXItaGVhZHBob25lcyI+PHBhdGggc3Ryb2tlPSJub25lIiBkPSJNMCAwaDI0djI0SDB6IiBmaWxsPSJub25lIi8+PHBhdGggZD0iTTIxIDE4YTMgMyAwIDAgMSAtMi44MjQgMi45OTVsLS4xNzYgLjAwNWgtMWEzIDMgMCAwIDEgLTIuOTk1IC0yLjgyNGwtLjAwNSAtLjE3NnYtM2EzIDMgMCAwIDEgMi44MjQgLTIuOTk1bC4xNzYgLS4wMDVoMWMuMzUxIDAgLjY4OCAuMDYgMSAuMTcxdi0uMTcxYTcgNyAwIDAgMCAtMTMuOTk2IC0uMjRsLS4wMDQgLjI0di4xN2MuMjUgLS4wODggLjUxNiAtLjE0NCAuNzkxIC0uMTYzbC4yMDkgLS4wMDdoMWEzIDMgMCAwIDEgMi45OTUgMi44MjRsLjAwNSAuMTc2djNhMyAzIDAgMCAxIC0yLjgyNCAyLjk5NWwtLjE3NiAuMDA1aC0xYTMgMyAwIDAgMSAtMi45OTUgLTIuODI0bC0uMDA1IC0uMTc2di02YTkgOSAwIDAgMSAxNy45OTYgLS4yNjVsLjAwNCAuMjY1djZ6IiAvPjwvc3ZnPg==');
 
         --icon-16-progress-tier-0: url('data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHdpZHRoPSIxOCIgaGVpZ2h0PSIxOCIgdmlld0JveD0iMCAwIDI0IDI0IiBmaWxsPSJub25lIiBzdHJva2U9ImN1cnJlbnRDb2xvciIgc3Ryb2tlLXdpZHRoPSIyLjUiIHN0cm9rZS1saW5lY2FwPSJyb3VuZCIgc3Ryb2tlLWxpbmVqb2luPSJyb3VuZCIgY2xhc3M9Imx1Y2lkZSBsdWNpZGUtY2lyY2xlIj48Y2lyY2xlIGN4PSIxMiIgY3k9IjEyIiByPSIxMCIvPjwvc3ZnPg==');
         --icon-16-progress-tier-1: url('data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHdpZHRoPSIxOCIgaGVpZ2h0PSIxOCIgdmlld0JveD0iMCAwIDI0IDI0IiBmaWxsPSJub25lIiBzdHJva2U9ImN1cnJlbnRDb2xvciIgc3Ryb2tlLXdpZHRoPSIyLjUiIHN0cm9rZS1saW5lY2FwPSJyb3VuZCIgc3Ryb2tlLWxpbmVqb2luPSJyb3VuZCIgY2xhc3M9Imx1Y2lkZSBsdWNpZGUtZGlhbW9uZCI+PHBhdGggZD0iTTIuNyAxMC4zYTIuNDEgMi40MSAwIDAgMCAwIDMuNDFsNy41OSA3LjU5YTIuNDEgMi40MSAwIDAgMCAzLjQxIDBsNy41OS03LjU5YTIuNDEgMi40MSAwIDAgMCAwLTMuNDFsLTcuNTktNy41OWEyLjQxIDIuNDEgMCAwIDAtMy40MSAwWiIvPjwvc3ZnPg==');
@@ -27202,5 +27203,33 @@
             opacity: 1;
             transform: scaleX(1);
         }
+    }
+
+
+    .oracle {
+        display: flex;
+        gap: var(--icon-gap);
+        --icon: var(--icon-16-oracle);
+        --icon-colour: hsl(var(--l3-c));
+
+        & > p {
+            flex: 1;
+
+            & > i {
+                font-style: normal;
+                color: hsl(var(--l3-c));
+                font-weight: var(--font-weight-medium);
+            }
+
+            cursor: default;
+        }
+
+        & > span, & > a {
+            flex-shrink: 0;
+        }
+
+        background: linear-gradient(180deg, hsl(var(--k4), 25%), transparent);
+        padding: var(--card-padding);
+        margin: calc(-1 * var(--card-padding)) calc(-1 * var(--card-padding)) 0 calc(-1 * var(--card-padding));
     }
 }

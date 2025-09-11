@@ -310,6 +310,18 @@ export async function show_your_scrobbles() {
     // append
     col_main.insertBefore(listen_container, col_main.firstElementChild);
 
+    if (ff('oracle')) {
+        col_main.insertBefore(html.node`
+            <div class="oracle">
+                <span class="bleh-icon" />
+                <p>${{html: tl(trans.oracle_notice).replace('oracle', '<i>oracle</i>')}}</p>
+                <a class="see-more" href="https://github.com/katelyynn/issues/new/choose" target="_blank">
+                    ${tl(trans.send_feedback)}
+                </a>
+            </div>
+        `, listen_container);
+    }
+
     if (!katsune)
         col_main.insertBefore(top_container, col_main.firstElementChild);
     else

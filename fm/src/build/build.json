@@ -279,6 +279,11 @@
             "default": false,
             "name": "Adaptive colour controls",
             "date": "2025-08-29"
+        },
+        "oracle": {
+            "default": false,
+            "name": "Experimental new album and track fetching via MusicBrainz",
+            "date": "2025-09-11"
         }
     }
 }
