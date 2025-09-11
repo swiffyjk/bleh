@@ -900,6 +900,14 @@ export async function render_setting_page(page_id) {
                     ${setting({id: 'glacier_library_graphs'})}
                 </div>
             </section>
+            ${ff('oracle') ? html.node`
+            <section class="bleh--panel">
+                <h4>${tl(trans.oracle_heading)}</h4>
+                <div class="setting-group">
+                    ${setting({id: 'oracle_beta'})}
+                </div>
+            </section>
+            ` : ''}
         `);
     } else if (page_id == 'customise') {
         register_skip_to([

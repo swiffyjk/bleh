@@ -311,7 +311,7 @@ export async function show_your_scrobbles() {
     // append
     col_main.insertBefore(listen_container, col_main.firstElementChild);
 
-    if (ff('oracle') && page.type != 'artist') {
+    if ((ff('oracle') && settings.oracle_beta) && page.type != 'artist') {
         col_main.insertBefore(html.node`
             <div class="oracle">
                 <span class="bleh-icon" />
@@ -766,7 +766,7 @@ export async function show_your_scrobbles() {
         </section>
     `);
 
-    if (ff('oracle')) oracle_process();
+    if (ff('oracle') && settings.oracle_beta) oracle_process();
 }
 
 function create_listen_item(parent, {name, listens, link, avi, count=0, button=false, katsune=false}, header_type) {

@@ -281,22 +281,22 @@
             "date": "2025-08-29"
         },
         "oracle": {
-            "default": false,
+            "default": true,
             "name": "Experimental new music page features",
             "date": "2025-09-11"
         },
         "oracle_connect": {
-            "default": false,
+            "default": true,
             "name": "Experimental new album and track fetching via MusicBrainz",
             "date": "2025-09-11"
         },
         "oracle_album_reordering": {
-            "default": false,
+            "default": true,
             "name": "Re-order listed albums on track pages based on listener count",
             "date": "2025-09-11"
         },
         "oracle_fetch_artwork": {
-            "default": false,
+            "default": true,
             "name": "Allow oracle to fetch cover art from album tag pages",
             "date": "2025-09-11"
         }

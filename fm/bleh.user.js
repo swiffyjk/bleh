@@ -24377,7 +24377,7 @@
     return text3.replace(/&/g, "&amp;").replace(/</g, "&lt;").replace(/>/g, "&gt;").replace(/"/g, "&quot;").replace(/'/g, "&#039;");
   }
   function desanitise(text3, method = "+") {
-    return decodeURIComponent(text3).replaceAll(method, " ");
+    return decodeURIComponent(text3.replaceAll(method, " "));
   }
   function return_artist_from_track(url, is_album) {
     let split = url.split("/");
@@ -34111,13 +34111,17 @@
     function oracle_connect() {
       if (tries < 1) return;
       tries--;
-      const url = `https://musicbrainz.org/ws/2/recording?query="${sanitise(clean_title(page.name), " ")}" AND artist:"${sanitise(page.sister, " ")}" AND status:Official`;
+      let url;
+      if (page.type == "track")
+        url = `https://musicbrainz.org/ws/2/recording?query="${sanitise(clean_title(page.name), " ")}" AND artist:"${sanitise(page.sister, " ")}" AND status:Official`;
+      else if (page.type == "album")
+        url = `http://musicbrainz.org/ws/2/release?query=release:"${sanitise(clean_title(page.name), " ")}" AND artist:"${sanitise(page.sister, " ")}"`;
       log(`using url ${encodeURI(url)} with ${tries} tries available`, "oracle");
       GM_xmlhttpRequest({
         method: "GET",
         url,
         headers: {
-          "User-Agent": "bleh for Last.fm https://bleh.katelyn.moe https://github.com/katelyynn/bleh",
+          "User-Agent": `bleh/${version.build} <https://github.com/katelyynn/bleh>`,
           "Accept": "application/json"
         },
         onload: function(response) {
@@ -34129,7 +34133,7 @@
           try {
             data2 = JSON.parse(response.responseText);
           } catch (e) {
-            console.error("oracle: failed to parse JSON", e);
+            log("failed to parse", "oracle", "error", { e });
             return;
           }
           log("received connect data", "oracle", "info", { data: data2 });
@@ -34140,14 +34144,73 @@
           console.error("oracle", err);
           setTimeout(() => {
             oracle_connect();
-          }, 500);
+          }, 1e3);
         }
       });
     }
     function oracle(data2) {
       if (page.type == "track") {
         oracle_track_releases(data2);
+      } else if (page.type == "album") {
+        tries = 2;
+        const release = oracle_pick_release(data2);
+        setTimeout(() => {
+          oracle_album_fetch(release);
+        }, 400);
       }
+    }
+    function oracle_pick_release(data2) {
+      if (!data2 || !data2.releases) return null;
+      const filtered = data2.releases.filter((release) => {
+        const artists = release["artist-credit"] || [];
+        const various = artists.some((artist) => artist.name == "Various Artists");
+        const official = release.status == "Official";
+        return !various && official;
+      });
+      if (filtered.length == 0) return null;
+      let best = filtered.find((release) => release.disambiguation?.toLowerCase().includes("explicit"));
+      if (best) return best;
+      best = filtered.find((release) => release.disambiguation?.toLowerCase().includes("clean"));
+      if (best) return best;
+      return filtered[0];
+    }
+    function oracle_album_fetch(data2) {
+      if (tries < 1) return;
+      tries--;
+      const url = `http://musicbrainz.org/ws/2/release/${data2.id}?inc=recordings+labels`;
+      log(`using url ${encodeURI(url)} with ${tries} tries available`, "oracle");
+      GM_xmlhttpRequest({
+        method: "GET",
+        url,
+        headers: {
+          "User-Agent": `bleh/${version.build} <https://github.com/katelyynn/bleh>`,
+          "Accept": "application/json"
+        },
+        onload: function(response) {
+          if (response.status < 200 || response.status >= 300) {
+            log("error fetching connect data", "oracle", "error", { response });
+            return;
+          }
+          let data3;
+          try {
+            data3 = JSON.parse(response.responseText);
+          } catch (e) {
+            log("failed to parse", "oracle", "error", { e });
+            return;
+          }
+          log("received connect album data", "oracle", "info", { data: data3 });
+          page.state.oracle = data3;
+          oracle_album(data3);
+        },
+        onerror: function(err) {
+          console.error("oracle", err);
+          setTimeout(() => {
+            oracle_album_fetch(data2);
+          }, 1e3);
+        }
+      });
+    }
+    function oracle_album(data2) {
     }
     function oracle_track_releases(data2) {
       let releases = [];
@@ -34162,7 +34225,9 @@
         });
       });
       let recording = data2.recordings.find(
-        (r) => r.releases && r.releases.some((release) => release.status === "Official") && !(r.disambiguation?.toLowerCase().endsWith("live") || r.disambiguation?.toLowerCase().endsWith("mix"))
+        (r) => r.releases && r.releases.some((release) => release.status === "Official") && !(r.disambiguation?.toLowerCase().endsWith("live") || r.disambiguation?.toLowerCase().endsWith("mix")) && !r.releases.some(
+          (release) => release["artist-credit"] && release["artist-credit"][0] && release["artist-credit"][0].name == "Various Artists"
+        )
       );
       if (!recording) recording = data2.recordings.find((r) => r.releases && r.releases.length > 0);
       if (!recording) {
@@ -34526,7 +34591,7 @@
       katsune
     }, page.type);
     col_main.insertBefore(listen_container, col_main.firstElementChild);
-    if (ff("oracle") && page.type != "artist") {
+    if (ff("oracle") && settings.oracle_beta && page.type != "artist") {
       col_main.insertBefore(html.node`
             <div class="oracle">
                 <span class="bleh-icon" />
@@ -34877,7 +34942,7 @@
             <a class="see-more" href="https://github.com/katelyynn/lotus/issues/new/choose" target="_blank">${tl(trans.suggest_correction)}</a>
         </section>
     `);
-    if (ff("oracle")) oracle_process();
+    if (ff("oracle") && settings.oracle_beta) oracle_process();
   }
   function create_listen_item(parent, { name, listens, link, avi, count = 0, button = false, katsune = false }, header_type) {
     if (!name) return;
@@ -47241,6 +47306,14 @@
                     ${setting({ id: "glacier_library_graphs" })}
                 </div>
             </section>
+            ${ff("oracle") ? html.node`
+            <section class="bleh--panel">
+                <h4>${tl(trans.oracle_heading)}</h4>
+                <div class="setting-group">
+                    ${setting({ id: "oracle_beta" })}
+                </div>
+            </section>
+            ` : ""}
         `);
     } else if (page_id == "customise") {
       register_skip_to([
@@ -57509,6 +57582,17 @@
     },
     send_feedback: {
       en: "Send feedback"
+    },
+    oracle_heading: {
+      en: "Experimental"
+    },
+    oracle_beta: {
+      name: {
+        en: "Enable the experimental \u2018oracle\u2019 system"
+      },
+      body: {
+        en: "A redesigned album and track view sourcing data from MusicBrainz. May be released in the future or scrapped. Please send feedback from usage."
+      }
     }
   };
   var trans_legacy = {
@@ -61700,6 +61784,12 @@
     dismissed: {
       default: [],
       type: "list"
+    },
+    oracle_beta: {
+      default: false,
+      title: trans.oracle_beta.name,
+      body: trans.oracle_beta.body,
+      beta: true
     }
   };
 
@@ -62052,22 +62142,22 @@
         date: "2025-08-29"
       },
       oracle: {
-        default: false,
+        default: true,
         name: "Experimental new music page features",
         date: "2025-09-11"
       },
       oracle_connect: {
-        default: false,
+        default: true,
         name: "Experimental new album and track fetching via MusicBrainz",
         date: "2025-09-11"
       },
       oracle_album_reordering: {
-        default: false,
+        default: true,
         name: "Re-order listed albums on track pages based on listener count",
         date: "2025-09-11"
       },
       oracle_fetch_artwork: {
-        default: false,
+        default: true,
         name: "Allow oracle to fetch cover art from album tag pages",
         date: "2025-09-11"
       }

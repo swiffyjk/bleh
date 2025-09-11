@@ -6,6 +6,7 @@ import { ff } from '../sku';
 import { correct_artist, correct_item_by_artist } from './lotus';
 import { tl, trans } from '../build/trans';
 import { clean_title } from '../build/music';
+import { version } from '../main';
 
 export function oracle_process() {
     log('beginning', 'oracle');
@@ -64,14 +65,20 @@ export function oracle_process() {
         if (tries < 1) return;
         tries--;
 
-        const url = `https://musicbrainz.org/ws/2/recording?query="${sanitise(clean_title(page.name), ' ')}" AND artist:"${sanitise(page.sister, ' ')}" AND status:Official`;
+        let url;
+
+        if (page.type == 'track')
+            url = `https://musicbrainz.org/ws/2/recording?query="${sanitise(clean_title(page.name), ' ')}" AND artist:"${sanitise(page.sister, ' ')}" AND status:Official`;
+        else if (page.type == 'album')
+            url = `http://musicbrainz.org/ws/2/release?query=release:"${sanitise(clean_title(page.name), ' ')}" AND artist:"${sanitise(page.sister, ' ')}"`;
+
         log(`using url ${encodeURI(url)} with ${tries} tries available`, 'oracle');
 
         GM_xmlhttpRequest({
             method: 'GET',
             url,
             headers: {
-                'User-Agent': 'bleh for Last.fm https://bleh.katelyn.moe https://github.com/katelyynn/bleh',
+                'User-Agent': `bleh/${version.build} <https://github.com/katelyynn/bleh>`,
                 'Accept': 'application/json'
             },
             onload: function(response) {
@@ -84,7 +91,7 @@ export function oracle_process() {
                 try {
                     data = JSON.parse(response.responseText);
                 } catch (e) {
-                    console.error('oracle: failed to parse JSON', e);
+                    log('failed to parse', 'oracle', 'error', {e});
                     return;
                 }
 
@@ -98,7 +105,7 @@ export function oracle_process() {
 
                 setTimeout(() => {
                     oracle_connect();
-                }, 500);
+                }, 1000);
             }
         });
     }
@@ -106,7 +113,88 @@ export function oracle_process() {
     function oracle(data) {
         if (page.type == 'track') {
             oracle_track_releases(data);
+        } else if (page.type == 'album') {
+            tries = 2;
+
+            const release = oracle_pick_release(data);
+
+            setTimeout(() => {
+                oracle_album_fetch(release);
+            }, 400);
         }
+    }
+
+    function oracle_pick_release(data) {
+        if (!data || !data.releases) return null;
+
+        const filtered = data.releases.filter(release => {
+            const artists = release['artist-credit'] || [];
+            const various = artists.some(artist => artist.name == 'Various Artists');
+            const official = release.status == 'Official';
+
+            return !various && official;
+        });
+
+        if (filtered.length == 0) return null;
+
+        // prefer explicit
+        let best = filtered.find(release => release.disambiguation?.toLowerCase().includes('explicit'));
+        if (best) return best;
+
+        // then clean
+        best = filtered.find(release => release.disambiguation?.toLowerCase().includes('clean'));
+        if (best) return best;
+
+        // otherwise any
+        return filtered[0];
+    }
+
+    function oracle_album_fetch(data) {
+        if (tries < 1) return;
+        tries--;
+
+        const url = `http://musicbrainz.org/ws/2/release/${data.id}?inc=recordings+labels`;
+
+        log(`using url ${encodeURI(url)} with ${tries} tries available`, 'oracle');
+
+        GM_xmlhttpRequest({
+            method: 'GET',
+            url,
+            headers: {
+                'User-Agent': `bleh/${version.build} <https://github.com/katelyynn/bleh>`,
+                'Accept': 'application/json'
+            },
+            onload: function(response) {
+                if (response.status < 200 || response.status >= 300) {
+                    log('error fetching connect data', 'oracle', 'error', {response});
+                    return;
+                }
+
+                let data;
+                try {
+                    data = JSON.parse(response.responseText);
+                } catch (e) {
+                    log('failed to parse', 'oracle', 'error', {e});
+                    return;
+                }
+
+                log('received connect album data', 'oracle', 'info', {data});
+                page.state.oracle = data;
+
+                oracle_album(data);
+            },
+            onerror: function(err) {
+                console.error('oracle', err);
+
+                setTimeout(() => {
+                    oracle_album_fetch(data);
+                }, 1000);
+            }
+        });
+    }
+
+    function oracle_album(data) {
+
     }
 
     function oracle_track_releases(data) {
@@ -134,7 +222,12 @@ export function oracle_process() {
             r.releases &&
             r.releases.some(release => release.status === 'Official') &&
             !(r.disambiguation?.toLowerCase().endsWith('live') ||
-            r.disambiguation?.toLowerCase().endsWith('mix'))
+            r.disambiguation?.toLowerCase().endsWith('mix')) &&
+            !r.releases.some(release =>
+                release['artist-credit'] &&
+                release['artist-credit'][0] &&
+                release['artist-credit'][0].name == 'Various Artists'
+            )
         );
 
         if (!recording) recording = data.recordings.find(r => r.releases && r.releases.length > 0);

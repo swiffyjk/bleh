@@ -159,7 +159,7 @@ export function sanitise_text(text) {
  * @see sanitise
  */
 export function desanitise(text, method='+') {
-    return decodeURIComponent(text).replaceAll(method, ' ');
+    return decodeURIComponent(text.replaceAll(method, ' '));
 }
 
 

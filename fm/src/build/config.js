@@ -1196,5 +1196,11 @@ export let settings_store = {
     dismissed: {
         default: [],
         type: 'list'
+    },
+    oracle_beta: {
+        default: false,
+        title: trans.oracle_beta.name,
+        body: trans.oracle_beta.body,
+        beta: true
     }
 }

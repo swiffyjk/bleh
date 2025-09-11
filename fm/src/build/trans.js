@@ -3773,6 +3773,17 @@ export const trans = {
     },
     send_feedback: {
         en: 'Send feedback'
+    },
+    oracle_heading: {
+        en: 'Experimental'
+    },
+    oracle_beta: {
+        name: {
+            en: 'Enable the experimental ‘oracle’ system'
+        },
+        body: {
+            en: 'A redesigned album and track view sourcing data from MusicBrainz. May be released in the future or scrapped. Please send feedback from usage.'
+        }
     }
 }
 
