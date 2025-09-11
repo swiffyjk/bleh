@@ -18,6 +18,7 @@ const banner = `// ==UserScript==
 // @updateURL    ${build.url}
 // @downloadURL  ${build.url}
 // @run-at       document-start
+// @grant        GM_xmlhttpRequest
 // ==/UserScript==`;
 
 
