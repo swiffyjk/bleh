@@ -4,6 +4,7 @@ import { page, root } from '../build/page';
 import { sanitise } from '../build/tools';
 import { ff } from '../sku';
 import { correct_artist, correct_item_by_artist } from './lotus';
+import { tl, trans } from '../build/trans';
 
 export function oracle_process() {
     log('beginning', 'oracle');
@@ -116,7 +117,7 @@ export function oracle_process() {
 
         if (!recording) {
             render(releases_panel, html`
-                <h3 class="text-18">Releases</h3>
+                <h3 class="text-18">${tl(trans.releases)}<span class="new-badge beta">${tl(trans.beta)}</span></h3>
                 <div class="loading-data-container">
                     <div class="loading-data-text failed">No releases found</div>
                 </div>
@@ -141,7 +142,7 @@ export function oracle_process() {
             );
 
             render(releases_panel, html`
-                <h3 class="text-18">Releases</h3>
+                <h3 class="text-18">${tl(trans.releases)}<span class="new-badge beta">${tl(trans.beta)}</span></h3>
                 <div class="source-albums">
                     ${releases.map((release, index) => {
                         if (index > 1) return html.node``;
@@ -197,7 +198,7 @@ export function oracle_process() {
             `);
         } else {
             render(releases_panel, html`
-                <h3 class="text-18">Releases</h3>
+                <h3 class="text-18">${tl(trans.releases)}<span class="new-badge beta">${tl(trans.beta)}</span></h3>
                 <div class="loading-data-container">
                     <div class="loading-data-text failed">No releases found</div>
                 </div>

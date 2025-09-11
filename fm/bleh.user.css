@@ -3744,7 +3744,7 @@
         display: flex;
         align-items: center;
 
-        .new-badge {
+        & > .new-badge {
             margin-left: 6px;
         }
 
@@ -5062,6 +5062,10 @@
             &:after {
                 display: none;
             }
+        }
+
+        & > .new-badge {
+            margin-left: 6px;
         }
     }
     .user-sidebar-header

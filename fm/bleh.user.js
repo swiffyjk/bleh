@@ -34151,7 +34151,7 @@
       const recording = data2.recordings.find((r) => r.releases);
       if (!recording) {
         render(releases_panel, html`
-                <h3 class="text-18">Releases</h3>
+                <h3 class="text-18">${tl(trans.releases)}<span class="new-badge beta">${tl(trans.beta)}</span></h3>
                 <div class="loading-data-container">
                     <div class="loading-data-text failed">No releases found</div>
                 </div>
@@ -34169,7 +34169,7 @@
           )
         );
         render(releases_panel, html`
-                <h3 class="text-18">Releases</h3>
+                <h3 class="text-18">${tl(trans.releases)}<span class="new-badge beta">${tl(trans.beta)}</span></h3>
                 <div class="source-albums">
                     ${releases.map((release, index3) => {
           if (index3 > 1) return html.node``;
@@ -34219,7 +34219,7 @@
             `);
       } else {
         render(releases_panel, html`
-                <h3 class="text-18">Releases</h3>
+                <h3 class="text-18">${tl(trans.releases)}<span class="new-badge beta">${tl(trans.beta)}</span></h3>
                 <div class="loading-data-container">
                     <div class="loading-data-text failed">No releases found</div>
                 </div>
@@ -57438,6 +57438,9 @@
     },
     send_feedback: {
       en: "Send feedback"
+    },
+    releases: {
+      en: "Releases"
     }
   };
   var trans_legacy = {

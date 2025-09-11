@@ -3773,6 +3773,9 @@ export const trans = {
     },
     send_feedback: {
         en: 'Send feedback'
+    },
+    releases: {
+        en: 'Releases'
     }
 }
 
