@@ -55,6 +55,8 @@ export function oracle_process() {
         // various artists
         let releases = [];
 
+        if (!data.recordings[0]) return;
+
         if (data.recordings[0].releases) {
             data.recordings[0].releases.forEach(release => {
                 if (release['artist-credit'][0].name == 'Various Artists') return;

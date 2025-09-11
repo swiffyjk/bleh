@@ -34094,6 +34094,7 @@
     });
     function oracle(data2) {
       let releases = [];
+      if (!data2.recordings[0]) return;
       if (data2.recordings[0].releases) {
         data2.recordings[0].releases.forEach((release) => {
           if (release["artist-credit"][0].name == "Various Artists") return;
