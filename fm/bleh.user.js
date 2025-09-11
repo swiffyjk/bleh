@@ -25099,7 +25099,7 @@
       "(spotify)"
     ]
   };
-  var clean_title_regex = /\s*[-(\[]\s*(explicit|clean|spotify)\s*[\])]?/gi;
+  var clean_title_regex = /\s*[-(\[]\s*(explicit|clean|spotify|(feat\.|ft\.|featuring|with)[^)\]]*)\s*[\])]?/gi;
   function clean_title(title) {
     return title.replace(clean_title_regex, "");
   }
@@ -34106,7 +34106,7 @@
     }
     const albums_and_lyrics_row = page.structure.main.querySelector(".album-and-lyrics-row");
     if (page.type == "track") albums_and_lyrics_row.classList.add("oracle-hidden");
-    const url = `https://musicbrainz.org/ws/2/recording?query=%22${sanitise(page.name, " ")}%22%20AND%20artist:%22${sanitise(page.sister, " ")}%22%20AND%20status:Official`;
+    const url = `https://musicbrainz.org/ws/2/recording?query=%22${sanitise(clean_title(page.name), " ")}%22%20AND%20artist:%22${sanitise(page.sister, " ")}%22%20AND%20status:Official`;
     log(`using url ${url}`, "oracle");
     GM_xmlhttpRequest({
       method: "GET",
@@ -34256,7 +34256,14 @@
       }).then((dom) => {
         const doc = new DOMParser().parseFromString(dom, "text/html");
         const background_image = doc.querySelector(".header-new-background-image");
-        if (!background_image) return;
+        if (!background_image) {
+          render(parent, html`
+                        <span class="cover-art">
+                            <img class="missing-album">
+                        </span>
+                    `);
+          return;
+        }
         render(parent, html`
                     <span class="cover-art">
                         <img src=${background_image.getAttribute("content").replace("/ar0/", "/300x300/")} alt=${title}>

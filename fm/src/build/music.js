@@ -270,7 +270,8 @@ export let includes = {
 }
 
 // converts titles like 'something [explicit]' to 'something'
-export const clean_title_regex = /\s*[-(\[]\s*(explicit|clean|spotify)\s*[\])]?/gi;
+// additionally removes featured artists from title
+export const clean_title_regex = /\s*[-(\[]\s*(explicit|clean|spotify|(feat\.|ft\.|featuring|with)[^)\]]*)\s*[\])]?/gi;
 export function clean_title(title) {
     return title.replace(clean_title_regex, '');
 }
