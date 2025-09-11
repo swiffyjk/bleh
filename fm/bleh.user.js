@@ -34106,7 +34106,7 @@
     }
     const albums_and_lyrics_row = page.structure.main.querySelector(".album-and-lyrics-row");
     if (page.type == "track") albums_and_lyrics_row.classList.add("oracle-hidden");
-    const url = `https://musicbrainz.org/ws/2/recording?query=%22${sanitise(page.name, " ")}%22%20AND%20%22${sanitise(page.sister, " ")}%22`;
+    const url = `https://musicbrainz.org/ws/2/recording?query=%22${sanitise(page.name, " ")}%22%20AND%20artist:%22${sanitise(page.sister, " ")}%22%20AND%20status:Official`;
     log(`using url ${url}`, "oracle");
     GM_xmlhttpRequest({
       method: "GET",
@@ -34152,7 +34152,10 @@
           artwork: release.querySelector(".source-album-art > .cover-art > img").src
         });
       });
-      const recording = data2.recordings.find((r) => r.releases);
+      let recording = data2.recordings.find(
+        (r) => r.releases && r.releases.some((release) => release.status == "Official")
+      );
+      if (!recording) recording = data2.recordings.find((r) => r.releases && r.releases.length > 0);
       if (!recording) {
         render(releases_panel, html`
                 <h3 class="text-18">${tl(trans.releases)}<span class="new-badge beta">${tl(trans.beta)}</span></h3>
