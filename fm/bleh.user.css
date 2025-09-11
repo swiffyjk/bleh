@@ -12082,6 +12082,10 @@
             order: -1;
         }
 
+        &.oracle-loading {
+            animation: oracle 2.4s linear infinite;
+        }
+
         .source-album-art {
             margin: unset;
             flex-shrink: 0;
@@ -12116,11 +12120,21 @@
                     display: flex;
                     gap: 6px;
                 }
+
+                &.oracle-loading {
+                    height: 18px;
+                    width: 260px;
+                }
             }
             .source-album-artist {
                 font-weight: var(--font-weight);
                 color: hsla(var(--c2), 80%);
                 margin-top: 2px;
+
+                &.oracle-loading {
+                    height: 18px;
+                    width: 130px;
+                }
             }
             .source-album-stats {
                 font-size: 13px;
@@ -12145,6 +12159,17 @@
                         }
                     }
                 }
+
+                &.oracle-loading {
+                    height: 16px;
+                    width: 90px;
+                }
+            }
+
+            & > .oracle-loading {
+                background-color: currentColor;
+                border-radius: var(--item-med-radius);
+                opacity: 0.17;
             }
         }
 
@@ -12153,6 +12178,15 @@
                 transform: scale(1.02);
                 filter: brightness(110%);
             }
+        }
+    }
+
+    @keyframes oracle {
+        from, to {
+            opacity: 1;
+        }
+        50% {
+            opacity: 0.5;
         }
     }
 
@@ -15718,6 +15752,16 @@
             .secondary-album-column {
                 display: none;
             }
+        }
+
+        &.oracle-hidden {
+            display: none !important;
+        }
+    }
+
+    .oracle-releases {
+        & > .loading-data-container {
+            height: 64px;
         }
     }
 

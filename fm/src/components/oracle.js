@@ -20,13 +20,39 @@ export function oracle_process() {
         releases_panel = html.node`
             <section class="oracle-releases">
                 <h3 class="text-18">Releases</h3>
-                <div class="loading-data-container">
-                    <div class="loading-data-text">Fetching related releases</div>
+                <div class="source-albums">
+                    <div class="source-album oracle-loading">
+                        <div class="source-album-art">
+                            <span class="cover-art oracle-loading">
+                                <img class="empty">
+                            </span>
+                        </div>
+                        <div class="source-album-details" data-kate-processed="true">
+                            <h4 class="source-album-name oracle-loading" />
+                            <p class="source-album-artist oracle-loading" />
+                            <p class="source-album-stats oracle-stats oracle-loading" />
+                        </div>
+                    </div>
+                    <div class="source-album oracle-loading">
+                        <div class="source-album-art">
+                            <span class="cover-art oracle-loading">
+                                <img class="empty">
+                            </span>
+                        </div>
+                        <div class="source-album-details" data-kate-processed="true">
+                            <h4 class="source-album-name oracle-loading" />
+                            <p class="source-album-artist oracle-loading" />
+                            <p class="source-album-stats oracle-stats oracle-loading" />
+                        </div>
+                    </div>
                 </div>
             </section>
         `;
         info_panel.after(releases_panel);
     }
+
+    const albums_and_lyrics_row = page.structure.main.querySelector('.album-and-lyrics-row');
+    if (page.type == 'track') albums_and_lyrics_row.classList.add('oracle-hidden');
 
     const url = `https://musicbrainz.org/ws/2/recording?fmt=json&query=%22${sanitise(page.name, ' ')}%22%20AND%20%22${sanitise(page.sister, ' ')}%22`;
     log(`using url ${url}`, 'oracle');
@@ -64,7 +90,6 @@ export function oracle_process() {
         // let's also look thru the last.fm provided ones
         // to possibly get listener and cover data
         let lastfm_releases = [];
-        const albums_and_lyrics_row = page.structure.main.querySelector('.album-and-lyrics-row');
         const lastfm_source_albums = albums_and_lyrics_row.querySelectorAll('.source-album');
         lastfm_source_albums.forEach(release => {
             lastfm_releases.push({
@@ -75,9 +100,9 @@ export function oracle_process() {
             });
         });
 
-        albums_and_lyrics_row.remove();
+        const recording = data.recordings.find(r => r.releases);
 
-        if (!data.recordings[0]) {
+        if (!recording) {
             render(releases_panel, html`
                 <h3 class="text-18">Releases</h3>
                 <div class="loading-data-container">
@@ -87,8 +112,8 @@ export function oracle_process() {
             return;
         }
 
-        if (data.recordings[0].releases) {
-            data.recordings[0].releases.forEach(release => {
+        if (recording) {
+            recording.releases.forEach(release => {
                 if (release['artist-credit'][0].name == 'Various Artists') return;
 
                 releases.push(release);

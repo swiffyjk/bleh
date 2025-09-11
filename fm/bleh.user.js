@@ -34069,13 +34069,38 @@
       releases_panel = html.node`
             <section class="oracle-releases">
                 <h3 class="text-18">Releases</h3>
-                <div class="loading-data-container">
-                    <div class="loading-data-text">Fetching related releases</div>
+                <div class="source-albums">
+                    <div class="source-album oracle-loading">
+                        <div class="source-album-art">
+                            <span class="cover-art oracle-loading">
+                                <img class="empty">
+                            </span>
+                        </div>
+                        <div class="source-album-details" data-kate-processed="true">
+                            <h4 class="source-album-name oracle-loading" />
+                            <p class="source-album-artist oracle-loading" />
+                            <p class="source-album-stats oracle-stats oracle-loading" />
+                        </div>
+                    </div>
+                    <div class="source-album oracle-loading">
+                        <div class="source-album-art">
+                            <span class="cover-art oracle-loading">
+                                <img class="empty">
+                            </span>
+                        </div>
+                        <div class="source-album-details" data-kate-processed="true">
+                            <h4 class="source-album-name oracle-loading" />
+                            <p class="source-album-artist oracle-loading" />
+                            <p class="source-album-stats oracle-stats oracle-loading" />
+                        </div>
+                    </div>
                 </div>
             </section>
         `;
       info_panel.after(releases_panel);
     }
+    const albums_and_lyrics_row = page.structure.main.querySelector(".album-and-lyrics-row");
+    if (page.type == "track") albums_and_lyrics_row.classList.add("oracle-hidden");
     const url = `https://musicbrainz.org/ws/2/recording?fmt=json&query=%22${sanitise(page.name, " ")}%22%20AND%20%22${sanitise(page.sister, " ")}%22`;
     log(`using url ${url}`, "oracle");
     fetch(url).then((res) => {
@@ -34100,7 +34125,6 @@
     function oracle_track_releases(data2) {
       let releases = [];
       let lastfm_releases = [];
-      const albums_and_lyrics_row = page.structure.main.querySelector(".album-and-lyrics-row");
       const lastfm_source_albums = albums_and_lyrics_row.querySelectorAll(".source-album");
       lastfm_source_albums.forEach((release) => {
         lastfm_releases.push({
@@ -34110,8 +34134,8 @@
           artwork: release.querySelector(".source-album-art > .cover-art > img").src
         });
       });
-      albums_and_lyrics_row.remove();
-      if (!data2.recordings[0]) {
+      const recording = data2.recordings.find((r) => r.releases);
+      if (!recording) {
         render(releases_panel, html`
                 <h3 class="text-18">Releases</h3>
                 <div class="loading-data-container">
@@ -34120,8 +34144,8 @@
             `);
         return;
       }
-      if (data2.recordings[0].releases) {
-        data2.recordings[0].releases.forEach((release) => {
+      if (recording) {
+        recording.releases.forEach((release) => {
           if (release["artist-credit"][0].name == "Various Artists") return;
           releases.push(release);
         });
