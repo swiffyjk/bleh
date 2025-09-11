@@ -15699,6 +15699,16 @@
         }
     }
 
+    .source-albums {
+        display: grid !important;
+        grid-template-columns: repeat(auto-fill, minmax(400px, 1fr));
+        gap: var(--card-gap);
+    }
+
+    img.empty {
+        opacity: 0 !important;
+    }
+
 
 
 

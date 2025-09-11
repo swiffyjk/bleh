@@ -24,6 +24,7 @@ import tippy from "tippy.js";
 import {Chart} from "../main.js";
 import {DateTime} from "luxon";
 import { load_profile_cache_externally, open_starred_friend_window } from '../pages/profile.js';
+import { oracle_process } from './oracle.js';
 
 unsafeWindow._other_listener = function(id) {
     other_listener(id);
@@ -310,12 +311,12 @@ export async function show_your_scrobbles() {
     // append
     col_main.insertBefore(listen_container, col_main.firstElementChild);
 
-    if (ff('oracle')) {
+    if (ff('oracle') && page.type != 'artist') {
         col_main.insertBefore(html.node`
             <div class="oracle">
                 <span class="bleh-icon" />
                 <p>${{html: tl(trans.oracle_notice).replace('oracle', '<i>oracle</i>')}}</p>
-                <a class="see-more" href="https://github.com/katelyynn/issues/new/choose" target="_blank">
+                <a class="see-more" href="https://github.com/katelyynn/bleh/issues/new/choose" target="_blank">
                     ${tl(trans.send_feedback)}
                 </a>
             </div>
@@ -764,6 +765,8 @@ export async function show_your_scrobbles() {
             <a class="see-more" href="https://github.com/katelyynn/lotus/issues/new/choose" target="_blank">${tl(trans.suggest_correction)}</a>
         </section>
     `);
+
+    if (ff('oracle')) oracle_process();
 }
 
 function create_listen_item(parent, {name, listens, link, avi, count=0, button=false, katsune=false}, header_type) {

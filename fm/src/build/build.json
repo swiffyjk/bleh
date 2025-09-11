@@ -282,7 +282,17 @@
         },
         "oracle": {
             "default": false,
+            "name": "Experimental new music page features",
+            "date": "2025-09-11"
+        },
+        "oracle_connect": {
+            "default": false,
             "name": "Experimental new album and track fetching via MusicBrainz",
+            "date": "2025-09-11"
+        },
+        "oracle_album_reordering": {
+            "default": false,
+            "name": "Re-order listed albums on track pages based on listener count",
             "date": "2025-09-11"
         }
     }
