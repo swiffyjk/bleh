@@ -268,3 +268,9 @@ export let includes = {
         '(spotify)'
     ]
 }
+
+// converts titles like 'something [explicit]' to 'something'
+export const clean_title_regex = /\s*[-(\[]\s*(explicit|clean|spotify)\s*[\])]?/gi;
+export function clean_title(title) {
+    return title.replace(clean_title_regex, '');
+}

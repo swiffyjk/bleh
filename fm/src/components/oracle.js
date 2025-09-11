@@ -5,6 +5,7 @@ import { sanitise } from '../build/tools';
 import { ff } from '../sku';
 import { correct_artist, correct_item_by_artist } from './lotus';
 import { tl, trans } from '../build/trans';
+import { clean_title } from '../build/music';
 
 export function oracle_process() {
     log('beginning', 'oracle');
@@ -106,7 +107,7 @@ export function oracle_process() {
         const lastfm_source_albums = albums_and_lyrics_row.querySelectorAll('.source-album');
         lastfm_source_albums.forEach(release => {
             lastfm_releases.push({
-                title: release.querySelector('.source-album-name').textContent,
+                title: clean_title(release.querySelector('.source-album-name').textContent),
                 artist: release.querySelector('.source-album-artist').textContent,
                 plays: release.querySelector('.source-album-stats').firstChild.textContent.trim(),
                 artwork: release.querySelector('.source-album-art > .cover-art > img').src
@@ -148,7 +149,7 @@ export function oracle_process() {
                         if (index > 1) return html.node``;
 
                         log('release', 'oracle', 'log', {release});
-                        const title = release.title;
+                        const title = clean_title(release.title);
                         const artist = release['artist-credit'][0].name;
                         const type = release['release-group']['primary-type'];
 
