@@ -34106,7 +34106,7 @@
     }
     const albums_and_lyrics_row = page.structure.main.querySelector(".album-and-lyrics-row");
     if (page.type == "track") albums_and_lyrics_row.classList.add("oracle-hidden");
-    const url = `https://musicbrainz.org/ws/2/recording?query="${sanitise(clean_title(page.name), "")}" AND artist:"${sanitise(page.sister, " ")}" AND status:Official`;
+    const url = `https://musicbrainz.org/ws/2/recording?query="${sanitise(clean_title(page.name), " ")}" AND artist:"${sanitise(page.sister, " ")}" AND status:Official`;
     log(`using url ${encodeURI(url)}`, "oracle");
     GM_xmlhttpRequest({
       method: "GET",
@@ -57497,9 +57497,6 @@
     },
     send_feedback: {
       en: "Send feedback"
-    },
-    releases: {
-      en: "Releases"
     }
   };
   var trans_legacy = {
