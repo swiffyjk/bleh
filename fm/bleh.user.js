@@ -34102,21 +34102,34 @@
     }
     const albums_and_lyrics_row = page.structure.main.querySelector(".album-and-lyrics-row");
     if (page.type == "track") albums_and_lyrics_row.classList.add("oracle-hidden");
-    const url = `https://musicbrainz.org/ws/2/recording?fmt=json&query=%22${sanitise(page.name, " ")}%22%20AND%20%22${sanitise(page.sister, " ")}%22`;
+    const url = `https://musicbrainz.org/ws/2/recording?query=%22${sanitise(page.name, " ")}%22%20AND%20%22${sanitise(page.sister, " ")}%22`;
     log(`using url ${url}`, "oracle");
-    fetch(url).then((res) => {
-      if (!res.ok) {
-        log("error fetching connect data", "oracle", "error", { res });
-        throw new Error();
+    GM_xmlhttpRequest({
+      method: "GET",
+      url,
+      headers: {
+        "User-Agent": "bleh for Last.fm https://bleh.katelyn.moe https://github.com/katelyynn/bleh",
+        "Accept": "application/json"
+      },
+      onload: function(response) {
+        if (response.status < 200 || response.status >= 300) {
+          log("error fetching connect data", "oracle", "error", { response });
+          return;
+        }
+        let data2;
+        try {
+          data2 = JSON.parse(response.responseText);
+        } catch (e) {
+          console.error("oracle: failed to parse JSON", e);
+          return;
+        }
+        log("received connect data", "oracle", "info", { data: data2 });
+        page.state.oracle = data2;
+        oracle(data2);
+      },
+      onerror: function(err) {
+        console.error("oracle", err);
       }
-      return res.json();
-    }).then((data2) => {
-      log("received connect data", "oracle", "info", { data: data2 });
-      page.state.oracle = data2;
-      oracle(data2);
-    }).catch((err) => {
-      console.error("oracle", err);
-      return;
     });
     function oracle(data2) {
       if (page.type == "track") {
@@ -34681,7 +34694,7 @@
                 </a>
             </li>
             <li>
-                <a class="music-link play-this-track-playlink--qobuz" href="https://www.qobuz.com/search/tracks/${sanitise(page.sister, "%20")}%20${sanitise(page.name, "%20")}" target="_blank">
+                <a class="music-link play-this-track-playlink--qobuz" href="https://www.qobuz.com/search/tracks/${sanitise(page.sister, " ")}%20${sanitise(page.name, " ")}" target="_blank">
                     Qobuz
                 </a>
             </li>
@@ -34714,7 +34727,7 @@
                 <a class="music-link play-this-track-playlink--aoty" href="https://www.albumoftheyear.org/search/?q=${sanitise(page.sister)}+${sanitise(page.name)}" target="_blank">
                     AOTY
                 </a>
-                <a class="music-link play-this-track-playlink--rym" href="https://rateyourmusic.com/search?searchterm=${sanitise(page.sister, "%20")} ${sanitise(page.name, "%20")}" target="_blank">
+                <a class="music-link play-this-track-playlink--rym" href="https://rateyourmusic.com/search?searchterm=${sanitise(page.sister, " ")} ${sanitise(page.name, " ")}" target="_blank">
                     RYM
                 </a>
                 <a class="music-link play-this-track-playlink--genius" href="https://genius.com/search?q=${sanitise(page.sister)}+${sanitise(page.name)}" target="_blank">
@@ -34738,7 +34751,7 @@
                 <a class="music-link play-this-track-playlink--discogs" href="https://www.discogs.com/search?q=${sanitise(page.name)}&type=artist" target="_blank">
                     Discogs
                 </a>
-                <a class="music-link play-this-track-playlink--qobuz" href="https://www.qobuz.com/search/artists/${sanitise(page.name, "%20")}" target="_blank">
+                <a class="music-link play-this-track-playlink--qobuz" href="https://www.qobuz.com/search/artists/${sanitise(page.name, " ")}" target="_blank">
                     Qobuz
                 </a>
                 <a class="music-link play-this-track-playlink--aoty" href="https://www.albumoftheyear.org/search/?q=${sanitise(page.name)}" target="_blank">

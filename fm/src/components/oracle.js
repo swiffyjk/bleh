@@ -54,27 +54,39 @@ export function oracle_process() {
     const albums_and_lyrics_row = page.structure.main.querySelector('.album-and-lyrics-row');
     if (page.type == 'track') albums_and_lyrics_row.classList.add('oracle-hidden');
 
-    const url = `https://musicbrainz.org/ws/2/recording?fmt=json&query=%22${sanitise(page.name, ' ')}%22%20AND%20%22${sanitise(page.sister, ' ')}%22`;
+    const url = `https://musicbrainz.org/ws/2/recording?query=%22${sanitise(page.name, ' ')}%22%20AND%20%22${sanitise(page.sister, ' ')}%22`;
     log(`using url ${url}`, 'oracle');
-    fetch(url)
-        .then(res => {
-            if (!res.ok) {
-                log('error fetching connect data', 'oracle', 'error', {res});
-                throw new Error;
+
+    GM_xmlhttpRequest({
+        method: 'GET',
+        url,
+        headers: {
+            'User-Agent': 'bleh for Last.fm https://bleh.katelyn.moe https://github.com/katelyynn/bleh',
+            'Accept': 'application/json'
+        },
+        onload: function(response) {
+            if (response.status < 200 || response.status >= 300) {
+                log('error fetching connect data', 'oracle', 'error', {response});
+                return;
             }
 
-            return res.json();
-        })
-        .then(data => {
+            let data;
+            try {
+                data = JSON.parse(response.responseText);
+            } catch (e) {
+                console.error('oracle: failed to parse JSON', e);
+                return;
+            }
+
             log('received connect data', 'oracle', 'info', {data});
             page.state.oracle = data;
 
             oracle(data);
-        })
-        .catch(err => {
+        },
+        onerror: function(err) {
             console.error('oracle', err);
-            return;
-        });
+        }
+    });
 
     function oracle(data) {
         if (page.type == 'track') {

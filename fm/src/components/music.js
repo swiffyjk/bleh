@@ -638,7 +638,7 @@ export async function show_your_scrobbles() {
                 </a>
             </li>
             <li>
-                <a class="music-link play-this-track-playlink--qobuz" href="https://www.qobuz.com/search/tracks/${sanitise(page.sister, '%20')}%20${sanitise(page.name, '%20')}" target="_blank">
+                <a class="music-link play-this-track-playlink--qobuz" href="https://www.qobuz.com/search/tracks/${sanitise(page.sister, ' ')}%20${sanitise(page.name, ' ')}" target="_blank">
                     Qobuz
                 </a>
             </li>
@@ -672,7 +672,7 @@ export async function show_your_scrobbles() {
                 <a class="music-link play-this-track-playlink--aoty" href="https://www.albumoftheyear.org/search/?q=${sanitise(page.sister)}+${sanitise(page.name)}" target="_blank">
                     AOTY
                 </a>
-                <a class="music-link play-this-track-playlink--rym" href="https://rateyourmusic.com/search?searchterm=${sanitise(page.sister, '%20')} ${sanitise(page.name, '%20')}" target="_blank">
+                <a class="music-link play-this-track-playlink--rym" href="https://rateyourmusic.com/search?searchterm=${sanitise(page.sister, ' ')} ${sanitise(page.name, ' ')}" target="_blank">
                     RYM
                 </a>
                 <a class="music-link play-this-track-playlink--genius" href="https://genius.com/search?q=${sanitise(page.sister)}+${sanitise(page.name)}" target="_blank">
@@ -696,7 +696,7 @@ export async function show_your_scrobbles() {
                 <a class="music-link play-this-track-playlink--discogs" href="https://www.discogs.com/search?q=${sanitise(page.name)}&type=artist" target="_blank">
                     Discogs
                 </a>
-                <a class="music-link play-this-track-playlink--qobuz" href="https://www.qobuz.com/search/artists/${sanitise(page.name, '%20')}" target="_blank">
+                <a class="music-link play-this-track-playlink--qobuz" href="https://www.qobuz.com/search/artists/${sanitise(page.name, ' ')}" target="_blank">
                     Qobuz
                 </a>
                 <a class="music-link play-this-track-playlink--aoty" href="https://www.albumoftheyear.org/search/?q=${sanitise(page.name)}" target="_blank">
