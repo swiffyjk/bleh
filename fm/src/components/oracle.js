@@ -16,6 +16,8 @@ export function oracle_process() {
 
     if (!ff('oracle_connect') || page.type == 'artist') return;
 
+    let tries = 2;
+
     const info_panel = page.structure.main.firstElementChild;
     let releases_panel;
     if (page.type == 'track') {
@@ -56,39 +58,50 @@ export function oracle_process() {
     const albums_and_lyrics_row = page.structure.main.querySelector('.album-and-lyrics-row');
     if (page.type == 'track') albums_and_lyrics_row.classList.add('oracle-hidden');
 
-    const url = `https://musicbrainz.org/ws/2/recording?query="${sanitise(clean_title(page.name), ' ')}" AND artist:"${sanitise(page.sister, ' ')}" AND status:Official`;
-    log(`using url ${encodeURI(url)}`, 'oracle');
+    oracle_connect();
 
-    GM_xmlhttpRequest({
-        method: 'GET',
-        url,
-        headers: {
-            'User-Agent': 'bleh for Last.fm https://bleh.katelyn.moe https://github.com/katelyynn/bleh',
-            'Accept': 'application/json'
-        },
-        onload: function(response) {
-            if (response.status < 200 || response.status >= 300) {
-                log('error fetching connect data', 'oracle', 'error', {response});
-                return;
+    function oracle_connect() {
+        if (tries < 1) return;
+        tries--;
+
+        const url = `https://musicbrainz.org/ws/2/recording?query="${sanitise(clean_title(page.name), ' ')}" AND artist:"${sanitise(page.sister, ' ')}" AND status:Official`;
+        log(`using url ${encodeURI(url)} with ${tries} tries available`, 'oracle');
+
+        GM_xmlhttpRequest({
+            method: 'GET',
+            url,
+            headers: {
+                'User-Agent': 'bleh for Last.fm https://bleh.katelyn.moe https://github.com/katelyynn/bleh',
+                'Accept': 'application/json'
+            },
+            onload: function(response) {
+                if (response.status < 200 || response.status >= 300) {
+                    log('error fetching connect data', 'oracle', 'error', {response});
+                    return;
+                }
+
+                let data;
+                try {
+                    data = JSON.parse(response.responseText);
+                } catch (e) {
+                    console.error('oracle: failed to parse JSON', e);
+                    return;
+                }
+
+                log('received connect data', 'oracle', 'info', {data});
+                page.state.oracle = data;
+
+                oracle(data);
+            },
+            onerror: function(err) {
+                console.error('oracle', err);
+
+                setTimeout(() => {
+                    oracle_connect();
+                }, 500);
             }
-
-            let data;
-            try {
-                data = JSON.parse(response.responseText);
-            } catch (e) {
-                console.error('oracle: failed to parse JSON', e);
-                return;
-            }
-
-            log('received connect data', 'oracle', 'info', {data});
-            page.state.oracle = data;
-
-            oracle(data);
-        },
-        onerror: function(err) {
-            console.error('oracle', err);
-        }
-    });
+        });
+    }
 
     function oracle(data) {
         if (page.type == 'track') {
