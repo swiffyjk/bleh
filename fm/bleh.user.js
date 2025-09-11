@@ -34106,8 +34106,8 @@
     }
     const albums_and_lyrics_row = page.structure.main.querySelector(".album-and-lyrics-row");
     if (page.type == "track") albums_and_lyrics_row.classList.add("oracle-hidden");
-    const url = `https://musicbrainz.org/ws/2/recording?query=%22${sanitise(clean_title(page.name), " ")}%22%20AND%20artist:%22${sanitise(page.sister, " ")}%22%20AND%20status:Official`;
-    log(`using url ${url}`, "oracle");
+    const url = `https://musicbrainz.org/ws/2/recording?query="${sanitise(clean_title(page.name), "")}" AND artist:"${sanitise(page.sister, " ")}" AND status:Official`;
+    log(`using url ${encodeURI(url)}`, "oracle");
     GM_xmlhttpRequest({
       method: "GET",
       url,
@@ -34146,14 +34146,14 @@
       const lastfm_source_albums = albums_and_lyrics_row.querySelectorAll(".source-album");
       lastfm_source_albums.forEach((release) => {
         lastfm_releases.push({
-          title: clean_title(release.querySelector(".source-album-name").textContent),
+          title: release.querySelector(".source-album-name").textContent,
           artist: release.querySelector(".source-album-artist").textContent,
           plays: release.querySelector(".source-album-stats").firstChild.textContent.trim(),
           artwork: release.querySelector(".source-album-art > .cover-art > img").src
         });
       });
       let recording = data2.recordings.find(
-        (r) => r.releases && r.releases.some((release) => release.status === "Official") && !r.disambiguation?.toLowerCase().endsWith("live")
+        (r) => r.releases && r.releases.some((release) => release.status === "Official") && !(r.disambiguation?.toLowerCase().endsWith("live") || r.disambiguation?.toLowerCase().endsWith("mix"))
       );
       if (!recording) recording = data2.recordings.find((r) => r.releases && r.releases.length > 0);
       if (!recording) {
@@ -34270,7 +34270,8 @@
                     </span>
                 `);
         if (!stats || !type) return;
-        const listeners = doc.querySelector(".header-metadata-tnew-display > p > abbr");
+        const listeners = doc.querySelector(".header-new-info-desktop .header-metadata-tnew-display > p > abbr");
+        console.info("oracle", listeners);
         if (!listeners) return;
         render(stats, html`
                     ${type}
