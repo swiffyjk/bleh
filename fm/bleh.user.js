@@ -34175,11 +34175,13 @@
         return;
       }
       if (recording) {
+        log("releases in recording", "oracle", "info", { releases: recording.releases });
         recording.releases.forEach((release) => {
           const artist = release["artist-credit"] ? release["artist-credit"][0].name : recording["artist-credit"].name;
           if (artist == "Various Artists") return;
           releases.push(release);
         });
+        log("releases in recording after parsing", "oracle", "info", { releases });
         releases = releases.filter(
           (release, index3, self3) => index3 === self3.findIndex((r) => {
             const r_artist = r["artist-credit"]?.[0]?.name;
@@ -34187,6 +34189,7 @@
             return r.title === release.title && r_artist === release_artist;
           })
         );
+        log("releases in recording after filter", "oracle", "info", { releases });
         render(releases_panel, html`
                 <h3 class="text-18">${tl(trans.releases)}<span class="new-badge beta">${tl(trans.beta)}</span></h3>
                 <div class="source-albums">
