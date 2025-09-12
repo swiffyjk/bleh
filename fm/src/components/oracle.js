@@ -194,7 +194,36 @@ export function oracle_process() {
     }
 
     function oracle_album(data) {
+        const tracks = data.media[0].tracks;
 
+        const track_panel = html.node`
+            <section class="oracle-tracks">
+                <h3 class="text-18">${tl(trans.tracklist)}<span class="new-badge beta">${tl(trans.beta)}</span></h3>
+                <table class="chartlist chartlist--with-index chartlist--with-index--length-1 chartlist--with-artist chartlist--with-more chartlist--with-duration chartlist--with-bar">
+                    <tbody>
+                        ${tracks.map(track => {
+                            const elem = html.node`
+                                <tr class="chartlist-row">
+                                    <td class="chartlist-index">${track.position}</td>
+                                    <td class="chartlist-name">
+                                        <a href="${root}music/${sanitise(page.sister)}/_/${sanitise(track.title)}" data-name="${track.title}">
+                                            ${track.title}
+                                        </a>
+                                    </td>
+                                    <td class="chartlist-duration">
+                                        ${track.length}
+                                    </td>
+                                </tr>
+                            `;
+
+                            return elem;
+                        })}
+                    </tbody>
+                </table>
+            </section>
+        `;
+
+        info_panel.after(track_panel);
     }
 
     function oracle_track_releases(data) {

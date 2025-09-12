@@ -4765,7 +4765,7 @@
     .catalogue-metadata-heading,
     .playlisting-playlist-stat,
     .metadata-and-wiki-row .catalogue-metadata .catalogue-metadata-heading, .factbox-heading {
-        font-weight: var(--font-weight-medium);
+        font-weight: var(--font-weight);
         color: hsl(var(--c3));
         cursor: default;
     }
@@ -12349,7 +12349,7 @@
                     font-size: var(--font-size);
                     line-height: var(--line-height);
                     color: hsl(var(--c3));
-                    font-weight: var(--font-weight-medium);
+                    font-weight: var(--font-weight);
                     cursor: default;
 
                     display: flex;
