@@ -21,6 +21,7 @@ export function oracle_process() {
     let tries = 2;
 
     const info_panel = page.structure.main.firstElementChild;
+    const header = page.structure.container.querySelector('.redesigned-header');
     let releases_panel;
     if (page.type == 'track') {
         releases_panel = html.node`
@@ -123,6 +124,43 @@ export function oracle_process() {
                 oracle_album_fetch(release);
             }, 400);
         }
+    }
+
+    function oracle_pick_recording(data) {
+        if (!data || !data.recordings) return null;
+
+        const filtered = data.recordings.filter(recording => {
+            if (!recording.releases || recording.releases.length === 0) return false;
+
+            return recording.releases.some(release => {
+                const artists = release['artist-credit'] || [];
+                const various = artists.some(artist => artist.name === 'Various Artists');
+                const official = release.status === 'Official';
+
+                return !various && official;
+            });
+        });
+
+        if (filtered.length === 0) return null;
+
+        // prefer explicit
+        let best = filtered.find(recording => recording.disambiguation?.toLowerCase() === 'explicit');
+        if (best) return best;
+
+        // then clean
+        best = filtered.find(recording => recording.disambiguation?.toLowerCase() === 'clean');
+        if (best) return best;
+
+        // try anything explicit
+        best = filtered.find(recording => recording.disambiguation?.toLowerCase().includes('explicit'));
+        if (best) return best;
+
+        // try anything clean
+        best = filtered.find(recording => recording.disambiguation?.toLowerCase().includes('clean'));
+        if (best) return best;
+
+        // otherwise any
+        return filtered[0];
     }
 
     function oracle_pick_release(data) {
@@ -330,19 +368,7 @@ export function oracle_process() {
             });
         });
 
-        let recording = data.recordings.find(r =>
-            r.releases &&
-            r.releases.some(release => release.status === 'Official') &&
-            !(r.disambiguation?.toLowerCase().endsWith('live') ||
-            r.disambiguation?.toLowerCase().endsWith('mix')) &&
-            !r.releases.some(release =>
-                release['artist-credit'] &&
-                release['artist-credit'][0] &&
-                release['artist-credit'][0].name == 'Various Artists'
-            )
-        );
-
-        if (!recording) recording = data.recordings.find(r => r.releases && r.releases.length > 0);
+        const recording = oracle_pick_recording(data);
 
         if (!recording) {
             render(releases_panel, html`
@@ -355,7 +381,7 @@ export function oracle_process() {
         }
 
         if (recording) {
-            log('releases in recording', 'oracle', 'info', {releases: recording.releases});
+            log('releases in recording', 'oracle', 'info', {recording, releases: recording.releases});
             recording.releases.forEach(release => {
                 const artist = release['artist-credit'] ? release['artist-credit'][0].name : recording['artist-credit'].name;
 
@@ -432,6 +458,13 @@ export function oracle_process() {
                     })}
                 </div>
             `);
+
+            const artist_elem = header.querySelector('h2');
+            if (recording.disambiguation == 'explicit') {
+                artist_elem.insertBefore(html.node`
+                    <span class="track-explicit">${tl(trans.explicit)}</span>
+                `, artist_elem.firstChild);
+            }
         } else {
             render(releases_panel, html`
                 <h3 class="text-18">${tl(trans.releases)}<span class="new-badge beta">${tl(trans.beta)}</span></h3>

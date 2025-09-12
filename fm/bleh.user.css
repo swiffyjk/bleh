@@ -27344,12 +27344,23 @@
 
         width: 12px;
         height: 12px;
-        margin: 3px 4px 3px 0;
         font: 0 / 0 auto;
         display: inline-flex;
 
         background: hsl(var(--b4));
         border-radius: 3px;
         color: hsl(var(--c3));
+
+        .chartlist-artist > & {
+            margin: 3px 4px 3px 0;
+        }
+
+        h2 > & {
+            width: 20px;
+            height: 20px;
+            border-radius: 6px;
+            --mask-size: 22px;
+            margin: auto 6px auto 0;
+        }
     }
 }
