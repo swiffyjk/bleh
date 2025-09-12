@@ -27361,6 +27361,7 @@
             border-radius: 6px;
             --mask-size: 22px;
             margin: auto 6px auto 0;
+            outline: 1px solid hsl(var(--b6));
         }
     }
 }
