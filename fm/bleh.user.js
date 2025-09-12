@@ -34240,8 +34240,9 @@
         const total_s = Math.floor(track.length / 1e3);
         const m = Math.floor(total_s / 60);
         const s2 = total_s % 60;
+        const disambig = track.recording.disambiguation;
         const elem = html.node`
-                                <tr class="chartlist-row">
+                                <tr class="chartlist-row" data-disambig=${disambig}>
                                     <td class="chartlist-index">${track.position}</td>
                                     <td class="chartlist-name">
                                         <a href="${root}music/${sanitise(track["artist-credit"][0].name)}/_/${sanitise(track.title)}" data-name="${track.title}">
@@ -35539,6 +35540,11 @@
                             ,<a href="${root}music/${redirect()}${sanitise(song_guests[guest])}">${song_guests[guest]}</a>
                         `);
             }
+          }
+          if (track.getAttribute("data-disambig") == "explicit") {
+            song_artist_element.insertBefore(html.node`
+                        <span class="track-explicit">${tl(trans.explicit)}</span>
+                    `, song_artist_element.firstChild);
           }
           if (track_legacy_menu) {
             track.preview = html.node`
@@ -57645,6 +57651,9 @@
     },
     label: {
       en: "Label"
+    },
+    explicit: {
+      en: "Explicit"
     }
   };
   var trans_legacy = {

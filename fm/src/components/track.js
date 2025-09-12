@@ -264,6 +264,12 @@ export function patch_titles(search=page.structure.main) {
                     }
                 }
 
+                if (track.getAttribute('data-disambig') == 'explicit') {
+                    song_artist_element.insertBefore(html.node`
+                        <span class="track-explicit">${tl(trans.explicit)}</span>
+                    `, song_artist_element.firstChild);
+                }
+
                 if (track_legacy_menu) {
                     track.preview = html.node`
                         <div class="track-preview">

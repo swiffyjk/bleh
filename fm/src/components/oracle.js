@@ -226,8 +226,10 @@ export function oracle_process() {
                             const m = Math.floor(total_s / 60);
                             const s = total_s % 60;
 
+                            const disambig = track.recording.disambiguation;
+
                             const elem = html.node`
-                                <tr class="chartlist-row">
+                                <tr class="chartlist-row" data-disambig=${disambig}>
                                     <td class="chartlist-index">${track.position}</td>
                                     <td class="chartlist-name">
                                         <a href="${root}music/${sanitise(track['artist-credit'][0].name)}/_/${sanitise(track.title)}" data-name="${track.title}">
