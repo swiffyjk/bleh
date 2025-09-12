@@ -75,6 +75,7 @@ import {mualani} from "./pages/mualani.js";
 import { convert_gif_to_png } from './build/tools.js';
 import { load_status } from './components/status.js';
 import { load_dismissed } from './components/dismissed.js';
+import { oracle_data } from './components/oracle.js';
 
 export function bleh() {
     let head_observer = new MutationObserver((mutations) => {
@@ -152,6 +153,7 @@ function bleh_main() {
         notify_if_new_update();
 
         lotus();
+        oracle_data();
         sponsors();
 
         //throw new Error;

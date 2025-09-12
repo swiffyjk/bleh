@@ -22981,6 +22981,8 @@
   var mualani_url = "{root}bleh/mualani";
   var api_key = "85c118b69b1437844fe75fcd2bf27261";
   var discord = "xU9KxGQpVw";
+  var oracle_albums = {};
+  var oracle_tracks = {};
   var theme_preview = () => html.node`
     <div class="preview-inner">
         <div class="preview-card">
@@ -34412,6 +34414,61 @@
         return;
       });
     }
+  }
+  function oracle_data(force = false) {
+    if (!(ff("oracle") && settings.oracle_beta)) return;
+    let cached_albums = localStorage.getItem("oracle_albums");
+    let cached_albums_expire = new Date(localStorage.getItem("oracle_albums_expire"));
+    let cached_tracks = localStorage.getItem("oracle_tracks");
+    let cached_tracks_expire = new Date(localStorage.getItem("oracle_tracks_expire"));
+    let current_time = /* @__PURE__ */ new Date();
+    if (!cached_albums) {
+      log("albums list is not cached, fetching", "oracle");
+      oracle_request("albums", true);
+    } else {
+      Object.assign(oracle_albums, JSON.parse(cached_albums));
+      if (cached_albums_expire < current_time && !force) {
+        oracle_request();
+      } else if (force) {
+        oracle_request("albums", true);
+      }
+    }
+    if (!cached_tracks) {
+      log("tracks list is not cached, fetching", "oracle");
+      oracle_request("tracks", true);
+    } else {
+      Object.assign(oracle_tracks, JSON.parse(cached_tracks));
+      if (cached_tracks_expire < current_time && !force) {
+        oracle_request();
+      } else if (force) {
+        oracle_request("tracks", true);
+      }
+    }
+  }
+  function oracle_request(type = "albums") {
+    let xhr = new XMLHttpRequest();
+    let url = `https://katelyynn.github.io/oracle/${type}.json?${Math.random()}`;
+    xhr.open("GET", url, true);
+    xhr.onload = function() {
+      log(`${type} list responded with ${xhr.status}`, "oracle");
+      if (xhr.status != 200) {
+        log("request has been cancelled, will request again in 1h", "oracle");
+        api_expire.setHours(api_expire.getHours() + 1);
+      }
+      let api_expire = /* @__PURE__ */ new Date();
+      if (xhr.status == 200) {
+        if (type == "albums") {
+          Object.assign(oracle_albums, JSON.parse(this.response));
+        } else {
+          Object.assign(oracle_tracks, JSON.parse(this.response));
+        }
+        localStorage.setItem(`oracle_${type}`, this.response);
+        api_expire.setHours(api_expire.getHours() + 4);
+        log(`${type} list cached until ${api_expire}`, "oracle");
+      }
+      localStorage.setItem(`oracle_${type}_expire`, api_expire);
+    };
+    xhr.send();
   }
 
   // src/components/music.js
@@ -53368,6 +53425,7 @@
       load_activities();
       notify_if_new_update();
       lotus();
+      oracle_data();
       sponsors();
       main_flow();
       const observer = new MutationObserver((mutations) => {

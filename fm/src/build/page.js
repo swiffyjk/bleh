@@ -203,6 +203,9 @@ export const api_key = '85c118b69b1437844fe75fcd2bf27261';
 
 export const discord = 'xU9KxGQpVw';
 
+export let oracle_albums = {};
+export let oracle_tracks = {};
+
 export let has_prompted_for_update = {
     state: false
 }

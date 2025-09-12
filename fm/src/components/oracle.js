@@ -1,12 +1,13 @@
 import { html, render } from 'lighterhtml';
 import { log } from '../build/log';
-import { page, root } from '../build/page';
+import { oracle_albums, oracle_tracks, page, root } from '../build/page';
 import { sanitise } from '../build/tools';
 import { ff } from '../sku';
 import { correct_artist, correct_item_by_artist } from './lotus';
 import { tl, trans } from '../build/trans';
 import { clean_title } from '../build/music';
 import { version } from '../main';
+import { settings } from '../build/config';
 
 export function oracle_process() {
     log('beginning', 'oracle');
@@ -444,4 +445,81 @@ export function oracle_process() {
                 return;
             });
     }
+}
+
+export function oracle_data(force = false) {
+    if (!(ff('oracle') && settings.oracle_beta)) return;
+
+    let cached_albums = localStorage.getItem('oracle_albums');
+    let cached_albums_expire = new Date(localStorage.getItem('oracle_albums_expire'));
+
+    let cached_tracks = localStorage.getItem('oracle_tracks');
+    let cached_tracks_expire = new Date(localStorage.getItem('oracle_tracks_expire'));
+
+    let current_time = new Date();
+
+    if (!cached_albums) {
+        log('albums list is not cached, fetching', 'oracle');
+        oracle_request('albums', true);
+    } else {
+        // we prefer to load the current cache before waiting for a new response
+        Object.assign(oracle_albums, JSON.parse(cached_albums));
+
+        // is it valid?
+        if (cached_albums_expire < current_time && !force) {
+            oracle_request();
+        } else if (force) {
+            oracle_request('albums', true);
+        }
+    }
+
+    if (!cached_tracks) {
+        log('tracks list is not cached, fetching', 'oracle');
+        oracle_request('tracks', true);
+    } else {
+        // we prefer to load the current cache before waiting for a new response
+        Object.assign(oracle_tracks, JSON.parse(cached_tracks));
+
+        // is it valid?
+        if (cached_tracks_expire < current_time && !force) {
+            oracle_request();
+        } else if (force) {
+            oracle_request('tracks', true);
+        }
+    }
+}
+
+function oracle_request(type = 'albums') {
+    let xhr = new XMLHttpRequest();
+    let url = `https://katelyynn.github.io/oracle/${type}.json?${Math.random()}`;
+    xhr.open('GET',url,true);
+
+    xhr.onload = function() {
+        log(`${type} list responded with ${xhr.status}`, 'oracle');
+
+        if (xhr.status != 200) {
+            log('request has been cancelled, will request again in 1h', 'oracle');
+            api_expire.setHours(api_expire.getHours() + 1);
+        }
+
+        // set expire date
+        let api_expire = new Date();
+
+        if (xhr.status == 200) {
+            if (type == 'albums') {
+                Object.assign(oracle_albums, JSON.parse(this.response));
+            } else {
+                Object.assign(oracle_tracks, JSON.parse(this.response));
+            }
+
+            // save to cache for next page load
+            localStorage.setItem(`oracle_${type}`, this.response);
+            api_expire.setHours(api_expire.getHours() + 4);
+            log(`${type} list cached until ${api_expire}`, 'oracle');
+        }
+
+        localStorage.setItem(`oracle_${type}_expire`, api_expire);
+    }
+
+    xhr.send();
 }
