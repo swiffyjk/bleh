@@ -34233,6 +34233,10 @@
             `);
       }
       const tracks = data2.media[0].tracks;
+      const artist = page.sister.toLowerCase();
+      const album = page.name.toLowerCase();
+      const oracle_entry = oracle_albums.hasOwnProperty(artist) && oracle_albums[artist].hasOwnProperty(album) ? oracle_albums[artist][album] : {};
+      log("entry", "oracle", "info", { oracle_entry });
       const track_panel = html.node`
             <section class="oracle-tracks">
                 <h3 class="text-18">${tl(trans.tracklist)}<span class="new-badge beta">${tl(trans.beta)}</span></h3>
@@ -34243,12 +34247,26 @@
         const m = Math.floor(total_s / 60);
         const s2 = total_s % 60;
         const disambig = track.recording.disambiguation;
+        let title = track.title;
+        if (oracle_entry.guests_in_title) {
+          const artists = track["artist-credit"];
+          const guests = artists.filter(
+            (artist2) => artist2.name.toLowerCase() != page.sister.toLowerCase()
+          );
+          if (artists.length > 1) {
+            title += ` (${artists[0].joinphrase.trim()} `;
+            guests.forEach((artist2) => {
+              title += `${artist2.name}${artist2.joinphrase}`;
+            });
+            title += ")";
+          }
+        }
         const elem = html.node`
                                 <tr class="chartlist-row" data-disambig=${disambig}>
                                     <td class="chartlist-index">${track.position}</td>
                                     <td class="chartlist-name">
-                                        <a href="${root}music/${sanitise(track["artist-credit"][0].name)}/_/${sanitise(track.title)}" data-name="${track.title}">
-                                            ${track.title}
+                                        <a href="${root}music/${sanitise(track["artist-credit"][0].name)}/_/${sanitise(title)}" data-name="${title}">
+                                            ${title}
                                         </a>
                                     </td>
                                     <td class="chartlist-duration">
