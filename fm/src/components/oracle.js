@@ -247,6 +247,14 @@ export function oracle_process() {
                 <table class="chartlist chartlist--with-index chartlist--with-index--length-1 chartlist--with-artist chartlist--with-more chartlist--with-duration chartlist--with-bar">
                     <tbody>
                         ${tracks.map(track => {
+                            const artist_lower = track['artist-credit'][0].name.toLowerCase();
+                            const title_lower = track.title.toLowerCase();
+
+                            const track_entry =
+                                oracle_tracks.hasOwnProperty(artist_lower) && oracle_tracks[artist_lower].hasOwnProperty(title_lower)
+                                    ? oracle_tracks[artist_lower][title_lower]
+                                    : null;
+
                             const total_s = Math.floor(track.length / 1000);
                             const m = Math.floor(total_s / 60);
                             const s = total_s % 60;
@@ -255,7 +263,9 @@ export function oracle_process() {
 
                             let title = track.title;
 
-                            if (oracle_entry.guests_in_title) {
+                            if (track_entry) {
+                                title = track_entry;
+                            } else if (oracle_entry.guests_in_title) {
                                 const artists = track['artist-credit'];
                                 const guests = artists.filter(
                                     artist => artist.name.toLowerCase() != page.sister.toLowerCase()
