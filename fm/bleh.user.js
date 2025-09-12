@@ -34177,7 +34177,7 @@
     function oracle_album_fetch(data2) {
       if (tries < 1) return;
       tries--;
-      const url = `http://musicbrainz.org/ws/2/release/${data2.id}?inc=recordings+labels`;
+      const url = `http://musicbrainz.org/ws/2/release/${data2.id}?inc=recordings+labels+artist-credits`;
       log(`using url ${encodeURI(url)} with ${tries} tries available`, "oracle");
       GM_xmlhttpRequest({
         method: "GET",
@@ -34211,6 +34211,25 @@
       });
     }
     function oracle_album(data2) {
+      const labels = data2["label-info"];
+      if (labels && labels.length > 0) {
+        info_panel.appendChild(html.node`
+                <div class="sub-text music-small-header">
+                    <span>
+                        ${tl(trans.label)}<span class="new-badge beta">${tl(trans.beta)}</span>
+                    </span>
+                </div>
+                <div class="music-labels catalogue-tags">
+                    <ul class="tags-list">
+                        ${labels.map((label) => html.node`
+                            <li class="tag">
+                                <a class="music-label" href="${root}tag/${sanitise(label.label.name, "+")}">${label.label.name}</a>
+                            </li>
+                        `)}
+                    </ul>
+                </div>
+            `);
+      }
       const tracks = data2.media[0].tracks;
       const track_panel = html.node`
             <section class="oracle-tracks">
@@ -34218,16 +34237,19 @@
                 <table class="chartlist chartlist--with-index chartlist--with-index--length-1 chartlist--with-artist chartlist--with-more chartlist--with-duration chartlist--with-bar">
                     <tbody>
                         ${tracks.map((track) => {
+        const total_s = Math.floor(track.length / 1e3);
+        const m = Math.floor(total_s / 60);
+        const s2 = total_s % 60;
         const elem = html.node`
                                 <tr class="chartlist-row">
                                     <td class="chartlist-index">${track.position}</td>
                                     <td class="chartlist-name">
-                                        <a href="${root}music/${sanitise(page.sister)}/_/${sanitise(track.title)}" data-name="${track.title}">
+                                        <a href="${root}music/${sanitise(track["artist-credit"][0].name)}/_/${sanitise(track.title)}" data-name="${track.title}">
                                             ${track.title}
                                         </a>
                                     </td>
                                     <td class="chartlist-duration">
-                                        ${track.length}
+                                        ${m}:${s2.toString().padStart(2, "0")}
                                     </td>
                                 </tr>
                             `;
@@ -57620,6 +57642,9 @@
       body: {
         en: "A redesigned album and track view sourcing data from MusicBrainz. May be released in the future or scrapped. Please send feedback from usage."
       }
+    },
+    label: {
+      en: "Label"
     }
   };
   var trans_legacy = {

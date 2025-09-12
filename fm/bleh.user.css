@@ -24822,6 +24822,10 @@
     .music-small-header {
         margin-top: var(--card-gap);
         margin-bottom: 10px;
+
+        & > span > .new-badge {
+            margin-left: 6px;
+        }
     }
 
     .external-links-section {
@@ -24866,7 +24870,6 @@
         --left: calc((28px - var(--icon-size)) / 2);
 
         min-height: unset;
-        text-transform: lowercase !important;
         margin-bottom: unset !important;
         letter-spacing: unset !important;
         margin: unset !important;
@@ -24882,6 +24885,10 @@
             --bg-atv: hsl(var(--h3), 15%);
             color: hsl(var(--l2-c-theme-switch)) !important;
             /*box-shadow: 0 0 0 2px hsl(var(--h4), 30%) inset, var(--interact-shadow) !important;*/
+        }
+
+        &:not(.music-label) {
+            text-transform: lowercase !important;
         }
     }
 

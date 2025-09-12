@@ -3784,6 +3784,9 @@ export const trans = {
         body: {
             en: 'A redesigned album and track view sourcing data from MusicBrainz. May be released in the future or scrapped. Please send feedback from usage.'
         }
+    },
+    label: {
+        en: 'Label'
     }
 }
 
