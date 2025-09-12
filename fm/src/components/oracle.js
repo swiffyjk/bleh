@@ -120,6 +120,11 @@ export function oracle_process() {
 
             const release = oracle_pick_release(data);
 
+            if (!release) {
+                log('no data to use, ending', 'oracle', 'info', {data, release});
+                return;
+            }
+
             setTimeout(() => {
                 oracle_album_fetch(release);
             }, 400);
@@ -407,9 +412,32 @@ export function oracle_process() {
                         if (index > 1) return html.node``;
 
                         log('release', 'oracle', 'log', {release});
-                        const title = clean_title(release.title);
+                        let title = clean_title(release.title);
                         const artist = release['artist-credit']?.[0]?.name || recording['artist-credit'][0].name;
                         const type = release['release-group']['primary-type'];
+
+                        const artist_lower = page.sister.toLowerCase();
+                        const title_lower  = title.toLowerCase();
+
+                        const defaults = {
+                            guests_in_title: false
+                        }
+
+                        const oracle_entry = {
+                            ...defaults,
+                            ...(oracle_albums.hasOwnProperty(artist_lower) &&
+                            oracle_albums[artist_lower].hasOwnProperty(title_lower)
+                                ? oracle_albums[artist_lower][title_lower]
+                                : {})
+                        }
+                        log('entry', 'oracle', 'info', {oracle_entry});
+
+                        if (oracle_entry.disambiguation) {
+                            if (oracle_entry.disambiguation[release.disambiguation])
+                                title = oracle_entry.disambiguation[release.disambiguation];
+                            else if (oracle_entry.disambiguation.other)
+                                title = oracle_entry.disambiguation.other;
+                        }
 
                         // is there a matching last.fm entry available atm?
                         const match = lastfm_releases.find(

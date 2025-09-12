@@ -34157,6 +34157,10 @@
       } else if (page.type == "album") {
         tries = 2;
         const release = oracle_pick_release(data2);
+        if (!release) {
+          log("no data to use, ending", "oracle", "info", { data: data2, release });
+          return;
+        }
         setTimeout(() => {
           oracle_album_fetch(release);
         }, 400);
@@ -34366,9 +34370,25 @@
                     ${releases.map((release, index3) => {
           if (index3 > 1) return html.node``;
           log("release", "oracle", "log", { release });
-          const title = clean_title(release.title);
+          let title = clean_title(release.title);
           const artist = release["artist-credit"]?.[0]?.name || recording["artist-credit"][0].name;
           const type = release["release-group"]["primary-type"];
+          const artist_lower = page.sister.toLowerCase();
+          const title_lower = title.toLowerCase();
+          const defaults2 = {
+            guests_in_title: false
+          };
+          const oracle_entry = {
+            ...defaults2,
+            ...oracle_albums.hasOwnProperty(artist_lower) && oracle_albums[artist_lower].hasOwnProperty(title_lower) ? oracle_albums[artist_lower][title_lower] : {}
+          };
+          log("entry", "oracle", "info", { oracle_entry });
+          if (oracle_entry.disambiguation) {
+            if (oracle_entry.disambiguation[release.disambiguation])
+              title = oracle_entry.disambiguation[release.disambiguation];
+            else if (oracle_entry.disambiguation.other)
+              title = oracle_entry.disambiguation.other;
+          }
           const match2 = lastfm_releases.find(
             (r) => r.title == title && r.artist == artist
           );
