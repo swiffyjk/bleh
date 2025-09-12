@@ -139,10 +139,18 @@ export function oracle_process() {
         if (filtered.length == 0) return null;
 
         // prefer explicit
-        let best = filtered.find(release => release.disambiguation?.toLowerCase().includes('explicit'));
+        let best = filtered.find(release => release.disambiguation?.toLowerCase() == 'explicit');
         if (best) return best;
 
         // then clean
+        best = filtered.find(release => release.disambiguation?.toLowerCase() == 'clean');
+        if (best) return best;
+
+        // try anything explicit
+        best = filtered.find(release => release.disambiguation?.toLowerCase().includes('explicit'));
+        if (best) return best;
+
+        // try anything clean
         best = filtered.find(release => release.disambiguation?.toLowerCase().includes('clean'));
         if (best) return best;
 
@@ -220,11 +228,17 @@ export function oracle_process() {
         const artist = page.sister.toLowerCase();
         const album  = page.name.toLowerCase();
 
-        const oracle_entry =
-            oracle_albums.hasOwnProperty(artist) &&
+        const defaults = {
+            guests_in_title: false
+        }
+
+        const oracle_entry = {
+            ...defaults,
+            ...(oracle_albums.hasOwnProperty(artist) &&
             oracle_albums[artist].hasOwnProperty(album)
                 ? oracle_albums[artist][album]
-                : {};
+                : {})
+        }
         log('entry', 'oracle', 'info', {oracle_entry});
 
         const track_panel = html.node`
@@ -249,8 +263,12 @@ export function oracle_process() {
                                 if (artists.length > 1) {
                                     title += ` (${artists[0].joinphrase.trim()} `;
 
-                                    guests.forEach(artist => {
-                                        title += `${artist.name}${artist.joinphrase}`;
+                                    guests.forEach((artist, index) => {
+                                        let joinphrase = artist.joinphrase;
+
+                                        if (index == (guests.length - 2) && oracle_entry.final_guest_separator) joinphrase = oracle_entry.final_guest_separator;
+
+                                        title += `${artist.name}${joinphrase}`;
                                     });
 
                                     title += ')';

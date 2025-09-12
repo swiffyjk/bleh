@@ -34170,7 +34170,11 @@
         return !various && official;
       });
       if (filtered.length == 0) return null;
-      let best = filtered.find((release) => release.disambiguation?.toLowerCase().includes("explicit"));
+      let best = filtered.find((release) => release.disambiguation?.toLowerCase() == "explicit");
+      if (best) return best;
+      best = filtered.find((release) => release.disambiguation?.toLowerCase() == "clean");
+      if (best) return best;
+      best = filtered.find((release) => release.disambiguation?.toLowerCase().includes("explicit"));
       if (best) return best;
       best = filtered.find((release) => release.disambiguation?.toLowerCase().includes("clean"));
       if (best) return best;
@@ -34235,7 +34239,13 @@
       const tracks = data2.media[0].tracks;
       const artist = page.sister.toLowerCase();
       const album = page.name.toLowerCase();
-      const oracle_entry = oracle_albums.hasOwnProperty(artist) && oracle_albums[artist].hasOwnProperty(album) ? oracle_albums[artist][album] : {};
+      const defaults2 = {
+        guests_in_title: false
+      };
+      const oracle_entry = {
+        ...defaults2,
+        ...oracle_albums.hasOwnProperty(artist) && oracle_albums[artist].hasOwnProperty(album) ? oracle_albums[artist][album] : {}
+      };
       log("entry", "oracle", "info", { oracle_entry });
       const track_panel = html.node`
             <section class="oracle-tracks">
@@ -34255,8 +34265,10 @@
           );
           if (artists.length > 1) {
             title += ` (${artists[0].joinphrase.trim()} `;
-            guests.forEach((artist2) => {
-              title += `${artist2.name}${artist2.joinphrase}`;
+            guests.forEach((artist2, index3) => {
+              let joinphrase = artist2.joinphrase;
+              if (index3 == guests.length - 2 && oracle_entry.final_guest_separator) joinphrase = oracle_entry.final_guest_separator;
+              title += `${artist2.name}${joinphrase}`;
             });
             title += ")";
           }
