@@ -3315,8 +3315,8 @@ export const trans = {
         pt: 'ex.: {v}'
     },
     item_is_unavailable_on_platform: {
-        en: '‘{i}’ is unavailable on {p}',
-        pt: '‘{i}’ está indísponivel no {p}'
+        en: '{i} is unavailable on {p}',
+        pt: '{i} está indísponivel no {p}'
     },
     platforms: {
         win32: {

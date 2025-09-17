@@ -9,7 +9,6 @@
 // @updateURL    https://github.com/katelyynn/bleh/raw/uwu/fm/bleh.user.js
 // @downloadURL  https://github.com/katelyynn/bleh/raw/uwu/fm/bleh.user.js
 // @run-at       document-start
-// @grant        GM_xmlhttpRequest
 // ==/UserScript==
 (() => {
   var __create = Object.create;
@@ -57316,8 +57315,8 @@
       pt: "ex.: {v}"
     },
     item_is_unavailable_on_platform: {
-      en: "\u2018{i}\u2019 is unavailable on {p}",
-      pt: "\u2018{i}\u2019 est\xE1 ind\xEDsponivel no {p}"
+      en: "{i} is unavailable on {p}",
+      pt: "{i} est\xE1 ind\xEDsponivel no {p}"
     },
     platforms: {
       win32: {
