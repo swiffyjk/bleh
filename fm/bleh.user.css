@@ -1692,6 +1692,7 @@
         height: var(--button-height) !important;
         display: flex !important;
         align-items: center;
+        text-shadow: 0 0 10px hsl(var(--b5)) !important;
 
         &:after {
             display: none !important;
