@@ -79,7 +79,6 @@ export function select(values, initial = '', name = '', func = null) {
         });
 
         select.value = selected;
-        container.value = select.value;
 
         if (name != '')
             document.documentElement.setAttribute(`data-bleh--inbuilt-id_${name}`, selected);

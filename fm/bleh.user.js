@@ -9,6 +9,7 @@
 // @updateURL    https://github.com/katelyynn/bleh/raw/uwu/fm/bleh.user.js
 // @downloadURL  https://github.com/katelyynn/bleh/raw/uwu/fm/bleh.user.js
 // @run-at       document-start
+// @grant        GM_xmlhttpRequest
 // ==/UserScript==
 (() => {
   var __create = Object.create;
@@ -26797,7 +26798,6 @@
         }
       });
       select2.value = selected;
-      container.value = select2.value;
       if (name != "")
         document.documentElement.setAttribute(`data-bleh--inbuilt-id_${name}`, selected);
       if (func) func(selected);
