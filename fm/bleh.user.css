@@ -7466,7 +7466,7 @@
     [src=""], .avatar > img:not([src]),
     .avatar--bleh-missing img,
     [src$="818148bf682d429dc215c1705eb27b98.png"] {
-        content: url() !important;
+        content: url('') !important;
         font-size: 0;
         background-color: hsl(var(--c3));
         --mask: var(--icon-user);
@@ -7488,7 +7488,7 @@
     .missing-album,
     [src^="/static/images/defaults/player_default_album"],
     [src$="c6f59c1e5e7240a4c0d427abd71f3dbb.jpg"] {
-        content: url() !important;
+        content: url('') !important;
         font-size: 0;
         background-color: hsl(var(--c3));
         --mask: var(--icon-album);
@@ -7505,7 +7505,7 @@
     /* missing artist */
     .missing-artist,
     [src$="2a96cbd8b46e442fc41c2b86b821562f.jpg"] {
-        content: url() !important;
+        content: url('') !important;
         font-size: 0;
         background-color: hsl(var(--c3));
         --mask: var(--icon-artist);
@@ -7524,7 +7524,7 @@
     .missing-track,
     [src$="4128a6eb29f94943c9d206c08e625904.jpg"]
     {
-        content: url() !important;
+        content: url('') !important;
         font-size: 0;
         background-color: hsl(var(--c3));
         --mask: var(--icon-track);
@@ -7540,7 +7540,7 @@
     }
     /* missing session */
     [src$="14d19fbdca555c1782176cd789e81af7.png"] {
-        content: url() !important;
+        content: url('') !important;
         font-size: 0;
         background-color: hsl(var(--c3));
         --mask: var(--icon-16-extension);
@@ -7556,7 +7556,7 @@
     }
     /* missing playlist */
     [src$="df27b3c25d608decf720b24afb507863.jpg"] {
-        content: url() !important;
+        content: url('') !important;
         font-size: 0;
         background-color: hsl(var(--c3));
         --mask: var(--icon-16-playlist);
