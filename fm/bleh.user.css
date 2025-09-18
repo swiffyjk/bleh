@@ -211,6 +211,8 @@
         [data-bleh--reduced_motion="true"] > & {
             --motion: none;
         }
+
+        --blank: url(data:image/gif;base64,R0lGODlhAQABAIAAAAAAAP///yH5BAEAAAAALAAAAAABAAEAAAIBRAA7);
     }
 
     .music-more-tags-tag-inner-wrap, .music-featured-item-heading-link, .music-featured-item-body,
@@ -263,6 +265,9 @@
         --card-blur-bg: hsl(var(--b5), 82%);
         --card-blur-bg-alt: hsl(var(--b5), 35%);
         --card-blur: blur(12px) saturate(var(--blur-saturate)) brightness(1) contrast(1);
+
+        --menu-item-hov: hsla(var(--b4), 40%);
+        --menu-item-atv: hsla(var(--b4), 60%);
 
         .theme-preview[data-bleh--theme="darker"],
         [data-bleh--theme="darker"] &:not(.theme-preview) {
@@ -348,6 +353,9 @@
 
             --card-blur-bg: hsl(var(--b5), 52%);
             --card-blur-bg-alt: hsl(var(--b5), 22%);
+
+            --menu-item-hov: hsla(var(--b4), 60%);
+            --menu-item-atv: hsla(var(--b4), 80%);
         }
         .theme-preview[data-bleh--theme="ink"],
         [data-bleh--theme="ink"] &:not(.theme-preview) {
@@ -710,8 +718,8 @@
             --avatar-generic-background: hsl(var(--b4), 30%);
 
             --blur-saturate: 130%;
-            --blur-brightness: 3.8;
-            --blur-contrast: 2;
+            --blur-brightness: 1.4;
+            --blur-contrast: 1;
 
             --view-buttons: hsl(var(--b4), 10%);
 
@@ -2445,8 +2453,8 @@
                             height: 505px;
                             display: block;
                             z-index: -1;
-                            backdrop-filter: var(--card-blur);
-                            -webkit-backdrop-filter: var(--card-blur);
+                            backdrop-filter: url(#solarium);
+                            -webkit-backdrop-filter: url(#solarium);
                         }
 
                         &:after {
@@ -7467,7 +7475,7 @@
     [src=""], .avatar > img:not([src]),
     .avatar--bleh-missing img,
     [src$="818148bf682d429dc215c1705eb27b98.png"] {
-        content: url('') !important;
+        content: var(--blank) !important;
         font-size: 0;
         background-color: hsl(var(--c3));
         --mask: var(--icon-user);
@@ -7489,7 +7497,7 @@
     .missing-album,
     [src^="/static/images/defaults/player_default_album"],
     [src$="c6f59c1e5e7240a4c0d427abd71f3dbb.jpg"] {
-        content: url('') !important;
+        content: var(--blank) !important;
         font-size: 0;
         background-color: hsl(var(--c3));
         --mask: var(--icon-album);
@@ -7506,7 +7514,7 @@
     /* missing artist */
     .missing-artist,
     [src$="2a96cbd8b46e442fc41c2b86b821562f.jpg"] {
-        content: url('') !important;
+        content: var(--blank) !important;
         font-size: 0;
         background-color: hsl(var(--c3));
         --mask: var(--icon-artist);
@@ -7525,7 +7533,7 @@
     .missing-track,
     [src$="4128a6eb29f94943c9d206c08e625904.jpg"]
     {
-        content: url('') !important;
+        content: var(--blank) !important;
         font-size: 0;
         background-color: hsl(var(--c3));
         --mask: var(--icon-track);
@@ -7541,7 +7549,7 @@
     }
     /* missing session */
     [src$="14d19fbdca555c1782176cd789e81af7.png"] {
-        content: url('') !important;
+        content: var(--blank) !important;
         font-size: 0;
         background-color: hsl(var(--c3));
         --mask: var(--icon-16-extension);
@@ -7557,7 +7565,7 @@
     }
     /* missing playlist */
     [src$="df27b3c25d608decf720b24afb507863.jpg"] {
-        content: url('') !important;
+        content: var(--blank) !important;
         font-size: 0;
         background-color: hsl(var(--c3));
         --mask: var(--icon-16-playlist);
@@ -8915,7 +8923,7 @@
     [data-theme="nav-window"],
     [data-theme="auth-menu-v2"] {
         padding: var(--item-list-gap) !important;
-        background: hsl(var(--menu-bg), 90%) !important;
+        background: hsl(var(--menu-bg), 85%) !important;
         border-radius: var(--card-radius) !important;
         box-shadow: var(--override-full-shadow, var(--overlay-shadow)) !important;
         border: 1px solid var(--card-border-base) !important;
@@ -9839,8 +9847,8 @@
     .date-range-picker-preset a
     {
         --bg: transparent !important;
-        --bg-hov: hsla(var(--b4), 40%) !important;
-        --bg-atv: hsla(var(--b4), 60%) !important;
+        --bg-hov: var(--menu-item-hov) !important;
+        --bg-atv: var(--menu-item-atv) !important;
         --shadow: none !important;
         --shadow-hov: none !important;
         --col: hsl(var(--c2)) !important;
@@ -10779,8 +10787,8 @@
         padding: var(--card-padding);
         position: relative;
 
-        backdrop-filter: blur(25px) saturate(var(--blur-saturate)) brightness(var(--blur-brightness)) contrast(var(--blur-contrast));
-        -webkit-backdrop-filter: blur(25px) saturate(var(--blur-saturate)) brightness(var(--blur-brightness)) contrast(var(--blur-contrast));
+        backdrop-filter: url(#solarium);
+        -webkit-backdrop-filter: url(#solarium);
 
         display: flex;
         flex-direction: column;
@@ -12489,8 +12497,8 @@
     .tooltip-dark,
     .user-dashboard-tooltip {
         background: hsla(var(--b8), 80%);
-        backdrop-filter: blur(30px) saturate(var(--blur-saturate)) brightness(var(--blur-brightness)) contrast(var(--blur-contrast));
-        -webkit-backdrop-filter: blur(30px) saturate(var(--blur-saturate)) brightness(var(--blur-brightness)) contrast(var(--blur-contrast));
+        backdrop-filter: blur(8px) saturate(var(--blur-saturate)) brightness(var(--blur-brightness)) contrast(var(--blur-contrast));
+        -webkit-backdrop-filter: blur(8px) saturate(var(--blur-saturate)) brightness(var(--blur-brightness)) contrast(var(--blur-contrast));
         border-radius: var(--item-big-radius);
         box-shadow: inset 0 0 0 1px var(--card-border-base), var(--avatar-shadow);
         padding: 5px 12px;
@@ -12535,7 +12543,7 @@
         &[data-theme="language-menu"],
         &[data-theme="menu"] {
             padding: 4px !important;
-            background: hsl(var(--menu-bg), 90%) !important;
+            background: hsl(var(--menu-bg), 85%) !important;
             border-radius: calc(var(--button-radius) + 4px) !important;
             box-shadow: var(--override-full-shadow, var(--overlay-shadow)) !important;
             border: 1px solid var(--card-border-base) !important;
@@ -12657,7 +12665,7 @@
 
         &[data-theme="window"] {
             padding: var(--card-gap) !important;
-            background: hsl(var(--b5), 95%) !important;
+            background: hsl(var(--b5), 90%) !important;
             border-radius: var(--item-big-radius) !important;
             box-shadow: var(--override-full-shadow, var(--overlay-shadow)) !important;
             border: 1px solid var(--card-border-base) !important;
@@ -20118,15 +20126,13 @@
         justify-content: center;
         align-items: center;
 
-        transition-property: background, backdrop-filter, -webkit-backdrop-filter;
+        transition-property: background;
         transition-duration: var(--trans-short);
         transition-timing-function: var(--trans-function);
 
         &.has-dialog {
             pointer-events: auto;
             background: var(--modal-bg);
-            backdrop-filter: blur(2px);
-            -webkit-backdrop-filter: blur(2px);
 
             .bleh-modal {
                 animation: var(--display-under-reduced-motion, modal 0.35s var(--trans-function));
@@ -20320,7 +20326,7 @@
             background: hsl(var(--k4), 40%);
         }
         50% {
-            background: hsl(var(--k4), 60%);
+            background: hsl(var(--k4), 70%);
         }
     }
 
@@ -20742,8 +20748,8 @@
                 inset: 0;
                 display: block;
                 z-index: -1;
-                backdrop-filter: var(--card-blur);
-                -webkit-backdrop-filter: var(--card-blur);
+                backdrop-filter: url(#solarium);
+                -webkit-backdrop-filter: url(#solarium);
             }
 
             .gallery-image-container {
@@ -25520,7 +25526,7 @@
 
 
     .content.cards-view {
-        margin-top: -120px;
+        margin-top: -240px;
     }
 
 

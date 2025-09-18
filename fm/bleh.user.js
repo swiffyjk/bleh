@@ -53492,6 +53492,7 @@
     if (auth_link.state)
       auth.name = auth_link.state.querySelector("img").getAttribute("alt");
     load_settings();
+    solarium();
     load_dialogs();
     register_rabbit();
     try {
@@ -53528,6 +53529,18 @@
     } catch (e) {
       handle_error(e);
     }
+  }
+  function solarium() {
+    if (!settings.solarium) return;
+    document.body.appendChild(html.node`
+        <svg style="position: absolute; width: 0; height: 0">
+            <filter id="solarium" x="-50%" y="-50%" width="200%" height="200%" primitiveUnits="objectBoundingBox">
+                <feImage x="-50%" y="-50%" width="200%" height="200%" result="map"/>
+                <feGaussianBlur in="SourceGraphic" stdDeviation="0.01" result="blur"/>
+                <feDisplacementMap id="disp" in="blur" in2="map" scale="0.8" xChannelSelector="R" yChannelSelector="G"/>
+            </filter>
+        </svg>
+    `);
   }
   function handle_error(e = null) {
     document.body.classList.add("bleh-loaded");
