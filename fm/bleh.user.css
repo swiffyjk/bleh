@@ -262,9 +262,11 @@
         --toolbar-border: 1px solid hsl(var(--b4), 75%);
         --subtle-border: 1px solid hsl(var(--b4), 55%);
 
-        --card-blur-bg: hsl(var(--b5), 82%);
+        --card-blur-bg: hsl(var(--b5), 72%);
         --card-blur-bg-alt: hsl(var(--b5), 35%);
-        --card-blur: blur(12px) saturate(var(--blur-saturate)) brightness(1) contrast(1);
+        --card-blur: blur(6px) saturate(var(--blur-saturate)) brightness(1) contrast(1);
+
+        --solarium: var(--card-blur) url(#solarium);
 
         --menu-item-hov: hsla(var(--b4), 40%);
         --menu-item-atv: hsla(var(--b4), 60%);
@@ -2453,8 +2455,8 @@
                             height: 505px;
                             display: block;
                             z-index: -1;
-                            backdrop-filter: url(#solarium);
-                            -webkit-backdrop-filter: url(#solarium);
+                            backdrop-filter: var(--solarium);
+                            -webkit-backdrop-filter: var(--solarium);
                         }
 
                         &:after {
@@ -10787,8 +10789,8 @@
         padding: var(--card-padding);
         position: relative;
 
-        backdrop-filter: url(#solarium);
-        -webkit-backdrop-filter: url(#solarium);
+        backdrop-filter: var(--solarium);
+        -webkit-backdrop-filter: var(--solarium);
 
         display: flex;
         flex-direction: column;
@@ -20748,8 +20750,8 @@
                 inset: 0;
                 display: block;
                 z-index: -1;
-                backdrop-filter: url(#solarium);
-                -webkit-backdrop-filter: url(#solarium);
+                backdrop-filter: var(--solarium);
+                -webkit-backdrop-filter: var(--solarium);
             }
 
             .gallery-image-container {
