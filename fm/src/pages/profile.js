@@ -1183,7 +1183,8 @@ function profile_recents() {
         placement: 'bottom',
         interactive: true,
         interactiveBorder: 10,
-        trigger: 'click'
+        trigger: 'click',
+        appendTo: document.body
     });
 
     view_buttons.appendChild(settings_btn);
@@ -1281,7 +1282,8 @@ function profile_artists() {
         placement: 'bottom',
         interactive: true,
         interactiveBorder: 10,
-        trigger: 'click'
+        trigger: 'click',
+        appendTo: document.body
     });
 }
 
@@ -1377,7 +1379,8 @@ function profile_albums() {
         placement: 'bottom',
         interactive: true,
         interactiveBorder: 10,
-        trigger: 'click'
+        trigger: 'click',
+        appendTo: document.body
     });
 }
 
@@ -1465,7 +1468,8 @@ function profile_tracks() {
         placement: 'bottom',
         interactive: true,
         interactiveBorder: 10,
-        trigger: 'click'
+        trigger: 'click',
+        appendTo: document.body
     });
 }
 

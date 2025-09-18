@@ -43849,7 +43849,8 @@
       placement: "bottom",
       interactive: true,
       interactiveBorder: 10,
-      trigger: "click"
+      trigger: "click",
+      appendTo: document.body
     });
     view_buttons.appendChild(settings_btn);
   }
@@ -43934,7 +43935,8 @@
       placement: "bottom",
       interactive: true,
       interactiveBorder: 10,
-      trigger: "click"
+      trigger: "click",
+      appendTo: document.body
     });
   }
   function profile_albums() {
@@ -44018,7 +44020,8 @@
       placement: "bottom",
       interactive: true,
       interactiveBorder: 10,
-      trigger: "click"
+      trigger: "click",
+      appendTo: document.body
     });
   }
   function profile_tracks() {
@@ -44094,7 +44097,8 @@
       placement: "bottom",
       interactive: true,
       interactiveBorder: 10,
-      trigger: "click"
+      trigger: "click",
+      appendTo: document.body
     });
   }
   function bio_parse(text3, cache2 = true, take_effect = true) {
