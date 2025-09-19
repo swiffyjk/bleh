@@ -42,6 +42,7 @@ export function setting({
         const icon = settings_store[id].icon;
 
         const incompatible_with = settings_store[id].incompatible;
+        const hide_if_incompatible = settings_store[id].hide_if_incompatible || false;
 
         if (!body && settings_store[id].keybind)
             body = keybind(settings_store[id].keybind);
@@ -67,7 +68,7 @@ export function setting({
             let toggle;
 
             const elem = html.node`
-                <div class="setting v2 ${standalone ? 'standalone' : ''}" data-type="toggle" disabled=${disabled} onclick=${() => update_toggle()}>
+                <div class="setting v2 ${standalone ? 'standalone' : ''}" data-type="toggle" disabled=${disabled} data-hide=${hide_if_incompatible} onclick=${() => update_toggle()}>
                     ${icon ? html.node`
                     <div class="icon">
                         <div class="bleh-icon" style="--icon: var(--${icon})" />
@@ -157,7 +158,7 @@ export function setting({
             let working_max = settings_store[id].max - settings_store[id].min;
 
             const elem = html.node`
-                <div class="setting v2 ${standalone ? 'standalone' : ''} ${settings_store[id].vertical ? 'v' : ''}" data-type="range" disabled=${disabled} ref=${el => option = el} data-modified=${value != settings_store[id].default}>
+                <div class="setting v2 ${standalone ? 'standalone' : ''} ${settings_store[id].vertical ? 'v' : ''}" data-type="range" disabled=${disabled} data-hide=${hide_if_incompatible} ref=${el => option = el} data-modified=${value != settings_store[id].default}>
                     ${(text) ? html.node`
                     <div class="heading">
                         <h5>${html_title}<button class="reset" ref=${el => reset_btn = el} onclick=${() => reset_range()}>${tl(trans.reset)}</button></h5>
@@ -256,7 +257,7 @@ export function setting({
             if (placeholder && placeholder != 'empty') placeholder = tl(placeholder);
 
             let container = html.node`
-                <div class="setting v2 ${standalone ? 'standalone' : ''}" data-type="text" disabled=${disabled} ref=${el => option = el} data-modified=${value != settings_store[id].default}>
+                <div class="setting v2 ${standalone ? 'standalone' : ''}" data-type="text" disabled=${disabled} data-hide=${hide_if_incompatible} ref=${el => option = el} data-modified=${value != settings_store[id].default}>
                     ${icon ? html.node`
                     <div class="icon">
                         <div class="bleh-icon" style="--icon: var(--${icon})" />
@@ -365,7 +366,7 @@ export function setting({
             let toggle;
 
             const elem = html.node`
-                <div class="setting v2 ${settings_store[id].horizontal ? 'horizontal' : ''} ${standalone ? 'standalone' : ''}" data-type="checkbox" disabled=${disabled} onclick=${() => update_toggle()}>
+                <div class="setting v2 ${settings_store[id].horizontal ? 'horizontal' : ''} ${standalone ? 'standalone' : ''}" data-type="checkbox" disabled=${disabled} data-hide=${hide_if_incompatible} onclick=${() => update_toggle()}>
                     ${icon ? html.node`
                     <div class="icon">
                         <div class="bleh-icon" style="--icon: var(--${icon})" />
@@ -473,7 +474,7 @@ export function setting({
             let reset_btn;
 
             const elem = html.node`
-                <div class="setting v2" data-type="options" disabled=${disabled} data-modified=${value != settings_store[id].default}>
+                <div class="setting v2" data-type="options" disabled=${disabled} data-hide=${hide_if_incompatible} data-modified=${value != settings_store[id].default}>
                     ${icon ? html.node`
                     <div class="icon">
                         <div class="bleh-icon" style="--icon: var(--${icon})" />
@@ -721,7 +722,7 @@ export function setting({
 
             let elem;
             elem = html.node`
-                <div class="setting v2" data-type="options" disabled=${disabled} data-modified=${value != settings_store[id].default}>
+                <div class="setting v2" data-type="options" disabled=${disabled} data-hide=${hide_if_incompatible} data-modified=${value != settings_store[id].default}>
                     ${icon ? html.node`
                     <div class="icon">
                         <div class="bleh-icon" style="--icon: var(--${icon})" />

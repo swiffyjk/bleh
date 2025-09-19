@@ -591,12 +591,15 @@ export let settings_store = {
         default: 'light',
         type: 'select',
         title: trans.theme_day,
-        incompatible: {}
+        incompatible: {theme_schedule: false},
+        hide_if_incompatible: true
     },
     theme_night: {
         default: 'darker',
         type: 'select',
-        title: trans.theme_night
+        title: trans.theme_night,
+        incompatible: {theme_schedule: false},
+        hide_if_incompatible: true
     },
     high_contrast: {
         default: false,

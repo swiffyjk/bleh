@@ -38494,6 +38494,7 @@
       let body = settings_store[id].body ? tl(settings_store[id].body) : null;
       const icon = settings_store[id].icon;
       const incompatible_with = settings_store[id].incompatible;
+      const hide_if_incompatible = settings_store[id].hide_if_incompatible || false;
       if (!body && settings_store[id].keybind)
         body = keybind(settings_store[id].keybind);
       let disabled = false;
@@ -38524,7 +38525,7 @@
         };
         let toggle2;
         const elem = html.node`
-                <div class="setting v2 ${standalone ? "standalone" : ""}" data-type="toggle" disabled=${disabled} onclick=${() => update_toggle()}>
+                <div class="setting v2 ${standalone ? "standalone" : ""}" data-type="toggle" disabled=${disabled} data-hide=${hide_if_incompatible} onclick=${() => update_toggle()}>
                     ${icon ? html.node`
                     <div class="icon">
                         <div class="bleh-icon" style="--icon: var(--${icon})" />
@@ -38598,7 +38599,7 @@
         let marker;
         let working_max = settings_store[id].max - settings_store[id].min;
         const elem = html.node`
-                <div class="setting v2 ${standalone ? "standalone" : ""} ${settings_store[id].vertical ? "v" : ""}" data-type="range" disabled=${disabled} ref=${(el) => option = el} data-modified=${value != settings_store[id].default}>
+                <div class="setting v2 ${standalone ? "standalone" : ""} ${settings_store[id].vertical ? "v" : ""}" data-type="range" disabled=${disabled} data-hide=${hide_if_incompatible} ref=${(el) => option = el} data-modified=${value != settings_store[id].default}>
                     ${text3 ? html.node`
                     <div class="heading">
                         <h5>${html_title}<button class="reset" ref=${(el) => reset_btn = el} onclick=${() => reset_range()}>${tl(trans.reset)}</button></h5>
@@ -38666,7 +38667,7 @@
         let placeholder = settings_store[id].placeholder;
         if (placeholder && placeholder != "empty") placeholder = tl(placeholder);
         let container = html.node`
-                <div class="setting v2 ${standalone ? "standalone" : ""}" data-type="text" disabled=${disabled} ref=${(el) => option = el} data-modified=${value != settings_store[id].default}>
+                <div class="setting v2 ${standalone ? "standalone" : ""}" data-type="text" disabled=${disabled} data-hide=${hide_if_incompatible} ref=${(el) => option = el} data-modified=${value != settings_store[id].default}>
                     ${icon ? html.node`
                     <div class="icon">
                         <div class="bleh-icon" style="--icon: var(--${icon})" />
@@ -38773,7 +38774,7 @@
         };
         let toggle2;
         const elem = html.node`
-                <div class="setting v2 ${settings_store[id].horizontal ? "horizontal" : ""} ${standalone ? "standalone" : ""}" data-type="checkbox" disabled=${disabled} onclick=${() => update_toggle()}>
+                <div class="setting v2 ${settings_store[id].horizontal ? "horizontal" : ""} ${standalone ? "standalone" : ""}" data-type="checkbox" disabled=${disabled} data-hide=${hide_if_incompatible} onclick=${() => update_toggle()}>
                     ${icon ? html.node`
                     <div class="icon">
                         <div class="bleh-icon" style="--icon: var(--${icon})" />
@@ -38863,7 +38864,7 @@
         let buttons = [];
         let reset_btn;
         const elem = html.node`
-                <div class="setting v2" data-type="options" disabled=${disabled} data-modified=${value != settings_store[id].default}>
+                <div class="setting v2" data-type="options" disabled=${disabled} data-hide=${hide_if_incompatible} data-modified=${value != settings_store[id].default}>
                     ${icon ? html.node`
                     <div class="icon">
                         <div class="bleh-icon" style="--icon: var(--${icon})" />
@@ -39070,7 +39071,7 @@
         if (list.length === 0) disabled = true;
         let elem;
         elem = html.node`
-                <div class="setting v2" data-type="options" disabled=${disabled} data-modified=${value != settings_store[id].default}>
+                <div class="setting v2" data-type="options" disabled=${disabled} data-hide=${hide_if_incompatible} data-modified=${value != settings_store[id].default}>
                     ${icon ? html.node`
                     <div class="icon">
                         <div class="bleh-icon" style="--icon: var(--${icon})" />
@@ -47102,6 +47103,8 @@
       let colourful_active;
       let colourful_all;
       let sat_bg;
+      let theme_day;
+      let theme_night;
       render(page.structure.main, html`
             <section class="bleh--panel">
                 <h4>${tl(trans.appearance)}</h4>
@@ -47113,9 +47116,37 @@
                         <div class="info">
                             ${theme_bubbles(() => {
         sat_bg.compat();
+        if (theme_day) theme_day.compat();
+        if (theme_night) theme_night.compat();
       })}
                         </div>
                     </div>
+                    ${ff("adaptive_theme") ? html.node`
+                    ${theme_day = setting({ id: "theme_day", list: [
+        {
+          value: "light",
+          text: tl(trans.themes.light)
+        },
+        {
+          value: "ink",
+          text: tl(trans.themes.ink)
+        }
+      ] })}
+                    ${theme_night = setting({ id: "theme_night", list: [
+        {
+          value: "dark",
+          text: tl(trans.themes.dark)
+        },
+        {
+          value: "darker",
+          text: tl(trans.themes.darker)
+        },
+        {
+          value: "oled",
+          text: tl(trans.themes.oled)
+        }
+      ] })}
+                    ` : ""}
                     ${setting({ id: "solarium" })}
                     ${ff("high_contrast") ? setting({ id: "high_contrast" }) : ""}
                     <div class="setting" data-type="action">
@@ -50255,7 +50286,7 @@
         if (length < 2) length = 2;
         const show_language = settings.navigation_language == true ? 1 : 0;
         const height = (length + 3 + show_language) * 30;
-        const themes_disabled = page.subpage.startsWith("listening-report");
+        const themes_disabled = page.subpage.startsWith("listening-report") || page.state.settings_page == "visual";
         instance.setContent(html.node`
                 <div class="auth-menu-v2" style="--page-height: ${height}px">
                     <div class="side primary">
@@ -61480,12 +61511,15 @@
       default: "light",
       type: "select",
       title: trans.theme_day,
-      incompatible: {}
+      incompatible: { theme_schedule: false },
+      hide_if_incompatible: true
     },
     theme_night: {
       default: "darker",
       type: "select",
-      title: trans.theme_night
+      title: trans.theme_night,
+      incompatible: { theme_schedule: false },
+      hide_if_incompatible: true
     },
     high_contrast: {
       default: false,

@@ -681,8 +681,8 @@ export function append_nav() {
             const height = (length + 3 + show_language) * 30;
 
             // you cant change your theme when viewing
-            // a listening report
-            const themes_disabled = page.subpage.startsWith('listening-report');
+            // a listening report or on a page with theme settings
+            const themes_disabled = page.subpage.startsWith('listening-report') || page.state.settings_page == 'visual';
 
             instance.setContent(html.node`
                 <div class="auth-menu-v2" style="--page-height: ${height}px">

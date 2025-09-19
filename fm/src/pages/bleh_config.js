@@ -489,6 +489,9 @@ export async function render_setting_page(page_id) {
         let colourful_all;
         let sat_bg;
 
+        let theme_day;
+        let theme_night;
+
         render(page.structure.main, html`
             <section class="bleh--panel">
                 <h4>${tl(trans.appearance)}</h4>
@@ -500,9 +503,37 @@ export async function render_setting_page(page_id) {
                         <div class="info">
                             ${theme_bubbles(() => {
                                 sat_bg.compat();
+                                if (theme_day) theme_day.compat();
+                                if (theme_night) theme_night.compat();
                             })}
                         </div>
                     </div>
+                    ${ff('adaptive_theme') ? html.node`
+                    ${theme_day = setting({id: 'theme_day', list: [
+                        {
+                            value: 'light',
+                            text: tl(trans.themes.light)
+                        },
+                        {
+                            value: 'ink',
+                            text: tl(trans.themes.ink)
+                        }
+                    ]})}
+                    ${theme_night = setting({id: 'theme_night', list: [
+                        {
+                            value: 'dark',
+                            text: tl(trans.themes.dark)
+                        },
+                        {
+                            value: 'darker',
+                            text: tl(trans.themes.darker)
+                        },
+                        {
+                            value: 'oled',
+                            text: tl(trans.themes.oled)
+                        }
+                    ]})}
+                    ` : ''}
                     ${setting({id: 'solarium'})}
                     ${ff('high_contrast') ? setting({id: 'high_contrast'}) : ''}
                     <div class="setting" data-type="action">
