@@ -47101,6 +47101,7 @@
       register_skip_to([]);
       let colourful_active;
       let colourful_all;
+      let sat_bg;
       render(page.structure.main, html`
             <section class="bleh--panel">
                 <h4>${tl(trans.appearance)}</h4>
@@ -47110,7 +47111,9 @@
                             <h5>${tl(trans.themes.name)}</h5>
                         </div>
                         <div class="info">
-                            ${theme_bubbles}
+                            ${theme_bubbles(() => {
+        sat_bg.compat();
+      })}
                         </div>
                     </div>
                     ${setting({ id: "solarium" })}
@@ -47140,7 +47143,9 @@
       } })}
                         </div>
                     </div>
-                    ${ff("card_saturation") ? setting({ id: "sat_bg" }) : ""}
+                    ${ff("card_saturation") ? html.node`
+                    ${sat_bg = setting({ id: "sat_bg" })}
+                    ` : ""}
                 </div>
             </section>
             <section class="bleh--panel">
@@ -48894,7 +48899,7 @@
     if (parent.childElementCount > 3)
       parent.removeChild(parent.lastElementChild);
   }
-  function theme_bubbles() {
+  function theme_bubbles(func = null) {
     const themes = [
       {
         id: "adaptive",
@@ -48974,6 +48979,7 @@
     return bubbles;
     function update_theme_bubble(theme) {
       save_setting("theme", theme);
+      if (func) func(theme);
       buttons.forEach((button) => {
         const type = button.getAttribute("data-theme-id");
         button.setAttribute("aria-selected", settings.theme == type);

@@ -202,12 +202,6 @@
             --font_emoji_name: Noto Color Emoji;
         }
 
-        [data-bleh--theme_type="light"] > & {
-            --font-weight: calc(var(--custom_font_weight, 480) + 60);
-            --font-weight-medium: calc(var(--custom_font_weight_medium, 650) + 60);
-            --font-weight-bold: calc(var(--custom_font_weight_bold, 730) + 60);
-        }
-
         [data-bleh--reduced_motion="true"] > & {
             --motion: none;
         }

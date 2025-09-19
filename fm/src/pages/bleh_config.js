@@ -487,6 +487,7 @@ export async function render_setting_page(page_id) {
 
         let colourful_active;
         let colourful_all;
+        let sat_bg;
 
         render(page.structure.main, html`
             <section class="bleh--panel">
@@ -497,7 +498,9 @@ export async function render_setting_page(page_id) {
                             <h5>${tl(trans.themes.name)}</h5>
                         </div>
                         <div class="info">
-                            ${theme_bubbles}
+                            ${theme_bubbles(() => {
+                                sat_bg.compat();
+                            })}
                         </div>
                     </div>
                     ${setting({id: 'solarium'})}
@@ -527,7 +530,9 @@ export async function render_setting_page(page_id) {
                             }})}
                         </div>
                     </div>
-                    ${ff('card_saturation') ? setting({id: 'sat_bg'}) : ''}
+                    ${ff('card_saturation') ? html.node`
+                    ${sat_bg = setting({id: 'sat_bg'})}
+                    ` : ''}
                 </div>
             </section>
             <section class="bleh--panel">
@@ -2434,7 +2439,7 @@ function activity_preview_new(parent, activity) {
         parent.removeChild(parent.lastElementChild);
 }
 
-export function theme_bubbles() {
+export function theme_bubbles(func = null) {
     const themes = [
         {
             id: 'adaptive',
@@ -2523,6 +2528,7 @@ export function theme_bubbles() {
 
     function update_theme_bubble(theme) {
         save_setting('theme', theme);
+        if (func) func(theme);
 
         buttons.forEach(button => {
             const type = button.getAttribute('data-theme-id');
