@@ -37223,11 +37223,11 @@
     let compare_settings = setting_group.querySelectorAll(":scope > .setting");
     function begin_comparing(bypass = false) {
       if (page.name == "") return;
-      if (parseInt(pages.value) > 3 && !bypass) {
+      if (parseInt(pages.value()) > 3 && !bypass) {
         let warn = notify({
           id: "compare_warning",
           title: tl(trans.are_you_sure),
-          body: tl(trans.this_will_require_loading_count_pages).replace("{c}", parseInt(pages.value) * 2),
+          body: tl(trans.this_will_require_loading_count_pages).replace("{c}", parseInt(pages.value()) * 2),
           type: "warning",
           actions: [
             {
@@ -37264,7 +37264,7 @@
         other: [],
         shared: []
       };
-      get_grid(auth.name, 1, parseInt(pages.value), page.name);
+      get_grid(auth.name, 1, parseInt(pages.value()), page.name);
     }
     function get_grid(user2, current_page, page_count, next_user = null) {
       render(body, html`
@@ -37272,7 +37272,7 @@
                 <div class="loading-data-text">${tl(trans.gathering_plays_for_user_pages).replace("{u}", user2).replace("{current_page}", current_page).replace("{pages}", page_count)}</div>
             </div>
         `);
-      fetch(`${root}user/${user2}/library/${type.value}?format=list&${timeframe.value}&page=${current_page}&ajax=1`).then(function(response) {
+      fetch(`${root}user/${user2}/library/${type.value()}?format=list&${timeframe.value()}&page=${current_page}&ajax=1`).then(function(response) {
         console.log("returned", response, response.text);
         return response.text();
       }).then(function(dom) {
@@ -37287,7 +37287,7 @@
             if (item.avatar)
               item.avatar = item.avatar.getAttribute("src");
             item.name = track.querySelector(".chartlist-name a").textContent.trim();
-            if (type.value != "artists")
+            if (type.value() != "artists")
               item.sister = track.querySelector(".chartlist-artist a").textContent.trim();
             item.plays = clean_number(track.querySelector(".chartlist-count-bar-slug").getAttribute("data-stat-value"));
             if (next_user)
@@ -37324,7 +37324,7 @@
       log("gathered initial values", "compare", "info", page.state.compare);
       page.state.compare.you.forEach((your_item) => {
         let other_item;
-        if (type.value == "albums")
+        if (type.value() == "albums")
           other_item = page.state.compare.other.find((other) => your_item.name === other.name && your_item.sister === other.sister);
         else
           other_item = page.state.compare.other.find((other) => your_item.name === other.name);
@@ -37352,12 +37352,12 @@
             `);
         return;
       }
-      if (type.value != "tracks") {
+      if (type.value() != "tracks") {
         let grid = document.createElement("ol");
         grid.classList.add("grid-items", "grid-items--numbered", "compare-grid");
         page.state.compare.shared.forEach((data2) => {
           let template;
-          if (type.value == "artists")
+          if (type.value() == "artists")
             template = sanitise(data2.name);
           else
             template = `${sanitise(data2.sister)}/${sanitise(data2.name)}`;
@@ -37373,7 +37373,7 @@
                                         ${data2.name}
                                     </a>
                                 </p>
-                                ${type.value == "albums" ? html.node`
+                                ${type.value() == "albums" ? html.node`
                                 <p class="grid-items-item-aux-text">
                                     <a class="grid-items-item-aux-block" href="${root}music/${redirect()}${data2.sister}">
                                         ${data2.sister}
@@ -37381,13 +37381,13 @@
                                 </p>
                                 ` : ""}
                                 <p class="grid-items-item-aux-text">
-                                    <a class="grid-item-plays with-avatar" href="${root}user/${auth.name}/library/music/${redirect()}${template}?${timeframe.value}" target="_blank">
+                                    <a class="grid-item-plays with-avatar" href="${root}user/${auth.name}/library/music/${redirect()}${template}?${timeframe.value()}" target="_blank">
                                         <span class="avatar">
                                             <img src="${auth.avatar}" alt="${tl(trans.your_avatar)}">
                                         </span>
                                         ${data2.plays.you.toLocaleString(lang)}
                                     </a>
-                                    <a class="grid-item-plays with-avatar" href="${root}user/${page.name}/library/music/${redirect()}${template}?${timeframe.value}" target="_blank">
+                                    <a class="grid-item-plays with-avatar" href="${root}user/${page.name}/library/music/${redirect()}${template}?${timeframe.value()}" target="_blank">
                                         <span class="avatar">
                                             <img src="${page.avatar}" alt="${tl(trans.avatar_for_user).replace("{u}", page.name)}">
                                         </span>
@@ -37436,7 +37436,7 @@
                         </td>
                         <td class="chartlist-bar with-multiple">
                             <span class="chartlist-count-bar">
-                                <a class="chartlist-count-bar-link" href="${root}user/${auth.name}/library/music/${redirect()}${template}?${timeframe.value}" target="_blank">
+                                <a class="chartlist-count-bar-link" href="${root}user/${auth.name}/library/music/${redirect()}${template}?${timeframe.value()}" target="_blank">
                                     <span class="chartlist-count-bar-slug" data-max-stat-value="${max2}" data-stat-value="${data2.plays.you}" style="width: ${data2.plays.you / max2 * 100}%;"></span>
                                     <span class="chartlist-count-bar-value">${data2.plays.you}</span>
                                 </a>
@@ -37445,7 +37445,7 @@
                                 </span>
                             </span>
                             <span class="chartlist-count-bar">
-                                <a class="chartlist-count-bar-link" href="${root}user/${page.name}/library/music/${redirect()}${template}?${timeframe.value}" target="_blank">
+                                <a class="chartlist-count-bar-link" href="${root}user/${page.name}/library/music/${redirect()}${template}?${timeframe.value()}" target="_blank">
                                     <span class="chartlist-count-bar-slug" data-max-stat-value="${max2}" data-stat-value="${data2.plays.other}" style="width: ${data2.plays.other / max2 * 100}%;"></span>
                                     <span class="chartlist-count-bar-value">${data2.plays.other}</span>
                                 </a>
