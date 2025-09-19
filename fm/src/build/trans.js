@@ -504,6 +504,12 @@ export const trans = {
         en: 'Theme',
         pt: 'Tema'
     },
+    theme_day: {
+        en: 'Scheduled theme for day'
+    },
+    theme_night: {
+        en: 'Scheduled theme for night'
+    },
     themes: {
         name: {
             en: 'Themes',

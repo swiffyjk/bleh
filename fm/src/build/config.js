@@ -584,6 +584,20 @@ export let settings_store = {
         type: 'radio',
         title: trans.theme
     },
+    theme_schedule: {
+        default: false
+    },
+    theme_day: {
+        default: 'light',
+        type: 'select',
+        title: trans.theme_day,
+        incompatible: {}
+    },
+    theme_night: {
+        default: 'darker',
+        type: 'select',
+        title: trans.theme_night
+    },
     high_contrast: {
         default: false,
         type: 'checkbox',

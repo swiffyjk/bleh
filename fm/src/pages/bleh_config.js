@@ -2494,7 +2494,7 @@ export function theme_bubbles(func = null) {
                 if (!theme.formal) theme.formal = theme.id;
 
                 const bubble = html.node`
-                    <button class="theme-bubble" data-theme-id="${theme.id}" aria-selected=${settings.theme == theme.id} onclick=${() => update_theme_bubble(theme.id)}>
+                    <button class="theme-bubble" data-theme-id="${theme.id}" onclick=${() => update_theme_bubble(theme.id)}>
                         <div class="bubble">
                             <div class="inner theme-preview" data-bleh--theme=${theme.id} data-bleh--theme_type=${theme.type}>
                                 <div class="bleh-icon" data-type="theme_${theme.formal}" />
@@ -2524,16 +2524,32 @@ export function theme_bubbles(func = null) {
         </div>
     `;
 
+    update_theme_bubble();
+
     return bubbles;
 
-    function update_theme_bubble(theme) {
-        save_setting('theme', theme);
-        if (func) func(theme);
+    function update_theme_bubble(theme = null) {
+        if (theme) {
+            if (theme != 'adaptive') {
+                save_setting('theme_schedule', false);
+                save_setting('theme', theme);
+            } else {
+                save_setting('theme_schedule', true);
+            }
+
+            if (func) func(theme);
+        }
 
         buttons.forEach(button => {
             const type = button.getAttribute('data-theme-id');
 
-            button.setAttribute('aria-selected', settings.theme == type);
+            if (!settings.theme_schedule) {
+                button.setAttribute('aria-selected', settings.theme == type);
+            } else if (type == 'adaptive') {
+                button.setAttribute('aria-selected', true);
+            } else {
+                button.setAttribute('aria-selected', false);
+            }
         });
     }
 }
