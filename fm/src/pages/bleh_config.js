@@ -2486,6 +2486,10 @@ export function theme_bubbles(func = null) {
             new_release: true
         },
         {
+            type: 'sep',
+            hide: !ff('adaptive_theme')
+        },
+        {
             id: 'light',
             type: 'light',
             name: tl(trans.themes.light)
@@ -2494,6 +2498,9 @@ export function theme_bubbles(func = null) {
             id: 'ink',
             type: 'light',
             name: tl(trans.themes.ink)
+        },
+        {
+            type: 'sep'
         },
         {
             id: 'dark',
@@ -2521,6 +2528,12 @@ export function theme_bubbles(func = null) {
         <div class="theme-bubbles">
             ${themes.map(theme => {
                 if (theme.hide) return html.node``;
+
+                if (theme.type == 'sep') {
+                    return html.node`
+                        <div class="sep theme-bubble-sep" />
+                    `;
+                }
 
                 if (!theme.formal) theme.formal = theme.id;
 

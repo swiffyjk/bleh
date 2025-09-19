@@ -48946,6 +48946,10 @@
         new_release: true
       },
       {
+        type: "sep",
+        hide: !ff("adaptive_theme")
+      },
+      {
         id: "light",
         type: "light",
         name: tl(trans.themes.light)
@@ -48954,6 +48958,9 @@
         id: "ink",
         type: "light",
         name: tl(trans.themes.ink)
+      },
+      {
+        type: "sep"
       },
       {
         id: "dark",
@@ -48979,6 +48986,11 @@
         <div class="theme-bubbles">
             ${themes.map((theme) => {
       if (theme.hide) return html.node``;
+      if (theme.type == "sep") {
+        return html.node`
+                        <div class="sep theme-bubble-sep" />
+                    `;
+      }
       if (!theme.formal) theme.formal = theme.id;
       const bubble = html.node`
                     <button class="theme-bubble" data-theme-id="${theme.id}" onclick=${() => update_theme_bubble(theme.id)}>
