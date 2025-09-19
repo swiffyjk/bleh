@@ -12,6 +12,7 @@ import {html, render} from "lighterhtml";
 import { notify } from '../components/notify.js';
 import { download_with_progress } from '../build/tools.js';
 import { status } from '../components/status.js';
+import { dialog } from '../components/dialog.js';
 
 export function mualani() {
     page.structure.container = document.body.querySelector('.page-content');
@@ -101,5 +102,21 @@ export function mualani() {
                 body: 'haiaiai nothing to worry about >_<'
             })}>Deliver status alert</button>
         </section>
+        <section class="flexy">
+            <h2>Modals</h2>
+            <button class="continue" onclick=${() => dialog_loop()}>Open dialog loop</button>
+        </section>
     `);
+}
+
+function dialog_loop() {
+    const num = Math.random();
+
+    dialog({
+        id: `loop_${num}`,
+        title: num,
+        body: html.node`
+            <button onclick=${() => dialog_loop()}>Open a new dialog</button>
+        `
+    });
 }

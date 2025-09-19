@@ -53451,7 +53451,21 @@
       body: "haiaiai nothing to worry about >_<"
     })}>Deliver status alert</button>
         </section>
+        <section class="flexy">
+            <h2>Modals</h2>
+            <button class="continue" onclick=${() => dialog_loop()}>Open dialog loop</button>
+        </section>
     `);
+  }
+  function dialog_loop() {
+    const num = Math.random();
+    dialog({
+      id: `loop_${num}`,
+      title: num,
+      body: html.node`
+            <button onclick=${() => dialog_loop()}>Open a new dialog</button>
+        `
+    });
   }
 
   // src/components/dismissed.js
