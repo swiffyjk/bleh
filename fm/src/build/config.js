@@ -1219,5 +1219,9 @@ export let settings_store = {
         title: trans.oracle_beta.name,
         body: trans.oracle_beta.body,
         beta: true
+    },
+    control_center: {
+        default: [],
+        type: 'list'
     }
 }

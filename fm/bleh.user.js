@@ -57937,6 +57937,9 @@
     },
     explicit: {
       en: "Explicit"
+    },
+    control_center: {
+      en: "Control center"
     }
   };
   var trans_legacy = {
@@ -62151,6 +62154,10 @@
       title: trans.oracle_beta.name,
       body: trans.oracle_beta.body,
       beta: true
+    },
+    control_center: {
+      default: [],
+      type: "list"
     }
   };
 
@@ -62521,6 +62528,11 @@
         default: true,
         name: "Allow oracle to fetch cover art from album tag pages",
         date: "2025-09-11"
+      },
+      control_center: {
+        default: false,
+        name: "Control center",
+        date: "2025-09-20"
       }
     }
   };

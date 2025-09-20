@@ -3796,6 +3796,9 @@ export const trans = {
     },
     explicit: {
         en: 'Explicit'
+    },
+    control_center: {
+        en: 'Control center'
     }
 }
 
