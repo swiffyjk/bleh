@@ -328,13 +328,16 @@ export function name_includes(original_title, original_artist) {
 
     // no tags found → return original title and flags
     if (matches.length === 0) {
-        return [
+        const result = [
             formatted_title,
             [],
             original_artist,
             [],
             original_title_corrected
         ];
+
+        log('finalised', 'lotus', 'log', {result});
+        return result;
     }
 
     // everything before the first tag
@@ -393,13 +396,16 @@ export function name_includes(original_title, original_artist) {
         song_guests.push(...guests);
     });
 
-    return [
+    const result = [
         cleaned_title,
         extras,
         original_artist,
         song_guests,
         original_title_corrected
     ];
+
+    log('finalised', 'lotus', 'log', {result});
+    return result;
 }
 
 

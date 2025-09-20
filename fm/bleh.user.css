@@ -12178,6 +12178,10 @@
                     height: 18px;
                     width: 130px;
                 }
+
+                & > a {
+                    color: inherit;
+                }
             }
             .source-album-stats {
                 font-size: 13px;
@@ -21316,7 +21320,7 @@
                 display: -webkit-box !important;
                 color: hsl(var(--c3)) !important;
                 font-size: var(--font-size-sm);
-                font-weight: var(--font-weight-medium) !important;
+                font-weight: var(--font-weight) !important;
 
                 top: calc(34px - 7px) !important;
                 left: var(--button-sides);
@@ -21359,7 +21363,7 @@
 
         .edit-scrobble-label {
             color: hsl(var(--c3));
-            font-weight: var(--font-weight-medium) !important;
+            font-weight: var(--font-weight) !important;
             margin-bottom: 4px;
             cursor: default;
 

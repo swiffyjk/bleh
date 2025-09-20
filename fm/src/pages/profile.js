@@ -959,6 +959,8 @@ function bleh_featured_profile_track(object) {
     name_elem.classList = '';
     artist_elem.classList = 'source-album-artist';
 
+    let artist_elem_full = artist_elem;
+
     if (settings.format_guest_features) {
         let song_title = name_elem.textContent;
 
@@ -978,25 +980,24 @@ function bleh_featured_profile_track(object) {
             `)}
         `);
 
-        let song_artist_element = document.createElement('div');
-        song_artist_element.classList.add('featured-item-artist');
-        song_artist_element.innerHTML = `<a href="${root}music/${redirect()}${sanitise(formatted_title[2])}">${formatted_title[2]}</a>`;
+        artist_elem_full = html.node`
+            <div class="source-album-artist">
+                <a href="${root}music/${redirect()}${sanitise(formatted_title[2])}">${formatted_title[2]}</a>
+            </div>
+        `;
 
         // append guests
         let song_guests = formatted_title[3];
         for (let guest in song_guests) {
             // &
-            song_artist_element.innerHTML = `${song_artist_element.innerHTML},`;
+            artist_elem_full.innerHTML = `${artist_elem_full.innerHTML},`;
 
             let guest_element = document.createElement('a');
             guest_element.setAttribute('href', `${root}music/${redirect()}${sanitise(song_guests[guest])}`);
             guest_element.textContent = song_guests[guest];
 
-            song_artist_element.appendChild(guest_element);
+            artist_elem_full.appendChild(guest_element);
         }
-
-        details.removeChild(artist_elem);
-        details.appendChild(song_artist_element);
     } else if (settings.corrections) {
         let name = correct_item_by_artist(name_elem.textContent.trim(), artist_elem.textContent.trim());
         let artist = correct_artist(artist_elem.textContent.trim());
@@ -1036,7 +1037,7 @@ function bleh_featured_profile_track(object) {
                 </div>
                 <div class="source-album-details">
                     <h4 class="source-album-name">${name_elem}</h4>
-                    ${artist_elem}
+                    ${artist_elem_full}
                 </div>
                 <a class="js-link-block-cover-link link-block-cover-link" href=${name_elem.getAttribute('href')} />
             </div>
