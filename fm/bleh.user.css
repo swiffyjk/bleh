@@ -21313,7 +21313,7 @@
             }
 
             .edit-scrobble-label--originally {
-                display: flex !important;
+                display: -webkit-box !important;
                 color: hsl(var(--c3)) !important;
                 font-size: var(--font-size-sm);
                 font-weight: var(--font-weight-medium) !important;
@@ -21322,6 +21322,12 @@
                 left: var(--button-sides);
                 margin-bottom: -18px;
                 pointer-events: none;
+
+                overflow: hidden;
+                text-overflow: ellipsis;
+                line-clamp: 1;
+                -webkit-line-clamp: 1;
+                -webkit-box-orient: vertical;
             }
 
             .form-group {
