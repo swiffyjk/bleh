@@ -6848,16 +6848,20 @@ moment.updateLocale('pt', {
     }
 });
 
-export function tl(key) {
+export function tl(key, replacements = {}) {
     if (!key) {
         log('your key is undefined', 'trans');
         return 'NO_TRANSLATION_FOUND';
     }
 
-    if (key[lang]) return key[lang];
+    let translation = key[lang] || key.en;
 
-    log('defaulting to english', 'trans', 'log', {key: key});
-    return key.en;
+    for (const [placeholder, value] of Object.entries(replacements)) {
+        const regex = new RegExp(`{${placeholder}}`, 'g');
+        translation = translation.replace(regex, value);
+    }
+
+    return translation;
 }
 
 function get_lang() {

@@ -863,7 +863,7 @@ export let settings_store = {
     },
     font_weight_medium: {
         css: 'custom_font_weight_medium',
-        default: 600,
+        default: 640,
         min: 400,
         max: 750,
         step: 10,

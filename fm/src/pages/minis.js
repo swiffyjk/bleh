@@ -34,18 +34,21 @@ export function bleh_minis(skip = false) {
         collage: {
             name: tl(trans.collage),
             body: tl(trans.collage_description),
-            func: bleh_minis_collage
+            func: bleh_minis_collage,
+            by: ['clairedoll']
         },
         compare: {
             name: tl(trans.compare),
             body: tl(trans.compare_description),
-            func: bleh_minis_compare
+            func: bleh_minis_compare,
+            by: ['clairedoll']
         },
         pixel: {
             name: tl(trans.pixel?.name),
             body: tl(trans.pixel?.body),
             func: bleh_minis_pixel,
-            hide_if: !ff('unlock_minis')
+            hide_if: !ff('unlock_minis'),
+            by: ['clairedoll']
         },
         lyrics: {
             name: tl(trans.lyrics?.name),
@@ -101,7 +104,7 @@ export function bleh_minis(skip = false) {
             <div class="mini-list">
                 ${Object.entries(valid_minis).map(([id, mini]) => {
                     if (mini.hide_if) return html.node``;
-                    
+
                     return html.node`
                         <button class="mini" data-type=${id} data-mini=${id} onclick=${() => {
                             window.history.replaceState(id, '', `${root}bleh/minis/${id}`);
@@ -152,6 +155,9 @@ function bleh_minis_collage() {
 
     render(page.structure.side, html`
         <section class="current-mini-settings" ref=${el => mini_settings = el} />
+        <section class="mini-faq">
+            <p class="card-tip">${tl(trans.by_user, {'u': valid_minis.collage.by.join(',')})}</p>
+        </section>
     `);
 
     collage({
@@ -173,6 +179,9 @@ function bleh_minis_compare() {
 
     render(page.structure.side, html`
         <section class="current-mini-settings" ref=${el => mini_settings = el} />
+        <section class="mini-faq">
+            <p class="card-tip">${tl(trans.by_user, {'u': valid_minis.compare.by.join(',')})}</p>
+        </section>
     `);
 
     compare({
@@ -194,6 +203,9 @@ function bleh_minis_pixel() {
 
     render(page.structure.side, html`
         <section class="current-mini-settings" ref=${el => mini_settings = el} />
+        <section class="mini-faq">
+            <p class="card-tip">${tl(trans.by_user, {'u': valid_minis.pixel.by.join(',')})}</p>
+        </section>
     `);
 
     pixel({

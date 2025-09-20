@@ -13,6 +13,7 @@
     @import url('https://fonts.googleapis.com/css2?family=Noto+Color+Emoji&display=swap');
     @import url('https://fonts.googleapis.com/css2?family=Darumadrop+One&display=swap');
     @import url('https://fonts.googleapis.com/css2?family=Bitcount+Grid+Single:wght@100..900&display=swap');
+    @import url('https://fonts.googleapis.com/css2?family=Nunito+Sans:ital,opsz,wght@0,6..12,200..1000;1,6..12,200..1000&display=swap');
 
     /* we need to make the vertical alignment better in this font */
     @font-face {
@@ -63,7 +64,7 @@
     body {
         --version-build: '2025.0831';
 
-        --font: var(--custom_font, ''), Overpass, Inter, Ubuntu Sans, Spline Sans, Roboto, Noto Sans, Noto Sans JP, Noto Sans KR, Noto Sans TC, Lucida Grande, Verdana, Tahoma, -apple-system, BlinkMacSystemFont, sans-serif, Apple Color Emoji, var(--font_emoji_name, '');
+        --font: var(--custom_font, ''), Nunito Sans, Overpass, Inter, Ubuntu Sans, Spline Sans, Roboto, Noto Sans, Noto Sans JP, Noto Sans KR, Noto Sans TC, Lucida Grande, Verdana, Tahoma, -apple-system, BlinkMacSystemFont, sans-serif, Apple Color Emoji, var(--font_emoji_name, '');
         --font-code: Google Sans Code, JetBrains Mono, Roboto Mono, monospace, var(--font);
         --font-brand: Darumadrop One, var(--font);
         --font-size: 14px;
@@ -237,7 +238,7 @@
 
         /* root */
         --b6: var(--hue), calc(var(--sat) * 4% * var(--sat-bg, 1)), 14%;
-        --b8: var(--hue), calc(var(--sat) * 4% * var(--sat-bg, 1)), 23%;
+        --b8: var(--hue), calc(var(--sat) * 4% * var(--sat-bg, 1)), 21%;
         --b7: 0, 0%, 0%;
         --b9: var(--b6);
 
@@ -279,7 +280,7 @@
 
             /* root */
             --b6: var(--hue), calc(var(--sat) * 5% * var(--sat-bg, 1)), 6%;
-            --b8: var(--hue), calc(var(--sat) * 5% * var(--sat-bg, 1)), 12%;
+            --b8: var(--hue), calc(var(--sat) * 5% * var(--sat-bg, 1)), 11%;
             --b7: 0, 0%, 0%;
         }
         .theme-preview[data-bleh--theme="oled"],
@@ -7207,7 +7208,7 @@
 
     .no-data-message {
         color: hsl(var(--c3));
-        font-weight: var(--font-weight-medium);
+        font-weight: var(--font-weight);
         cursor: default;
         width: unset !important;
         margin-top: unset !important;
@@ -7254,7 +7255,6 @@
         align-items: center;
 
         .loading-data-text {
-            font-weight: var(--font-weight-medium);
             color: hsl(var(--c3));
             position: relative;
             padding-left: calc(var(--icon-size) + var(--icon-gap));
@@ -18726,7 +18726,6 @@
         padding: 0 4px;
         background-color: hsl(var(--k4), 20%);
         border-radius: var(--item-small-radius);
-        font-weight: var(--font-weight);
         text-decoration: var(--force-underline, none) !important;
 
         transition-property: background-color;
@@ -26811,6 +26810,14 @@
 
             & > .mini-info {
                 flex: 1;
+
+                & > h5 {
+                    color: hsl(var(--c2));
+                }
+
+                & > p {
+                    color: hsl(var(--c3));
+                }
             }
 
             &[data-mini="pixel"] {

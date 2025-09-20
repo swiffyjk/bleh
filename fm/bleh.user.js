@@ -36483,10 +36483,7 @@
         scale: cv_scale,
         onclone: (doc) => {
           doc.querySelectorAll("*").forEach((el) => {
-            if (el.classList == "brand")
-              el.style.setProperty("font-family", "Darumadrop One");
-            else
-              el.style.setProperty("font-family", "Overpass, Inter, Ubuntu Sans, Spline Sans, Roboto, Noto Sans, Noto Sans JP, Noto Sans KR, Noto Sans TC, Lucida Grande, Verdana, Tahoma, -apple-system, BlinkMacSystemFont, sans-serif");
+            el.style.setProperty("font-family", "Nunito Sans, Overpass, Inter, Ubuntu Sans, Spline Sans, Roboto, Noto Sans, Noto Sans JP, Noto Sans KR, Noto Sans TC, Lucida Grande, Verdana, Tahoma, -apple-system, BlinkMacSystemFont, sans-serif");
           });
         }
       }).then((canvas) => {
@@ -36863,18 +36860,21 @@
       collage: {
         name: tl(trans.collage),
         body: tl(trans.collage_description),
-        func: bleh_minis_collage
+        func: bleh_minis_collage,
+        by: ["clairedoll"]
       },
       compare: {
         name: tl(trans.compare),
         body: tl(trans.compare_description),
-        func: bleh_minis_compare
+        func: bleh_minis_compare,
+        by: ["clairedoll"]
       },
       pixel: {
         name: tl(trans.pixel?.name),
         body: tl(trans.pixel?.body),
         func: bleh_minis_pixel,
-        hide_if: !ff("unlock_minis")
+        hide_if: !ff("unlock_minis"),
+        by: ["clairedoll"]
       },
       lyrics: {
         name: tl(trans.lyrics?.name),
@@ -36970,6 +36970,9 @@
     `);
     render(page.structure.side, html`
         <section class="current-mini-settings" ref=${(el) => mini_settings = el} />
+        <section class="mini-faq">
+            <p class="card-tip">${tl(trans.by_user, { "u": valid_minis.collage.by.join(",") })}</p>
+        </section>
     `);
     collage({
       host: content,
@@ -36987,6 +36990,9 @@
     `);
     render(page.structure.side, html`
         <section class="current-mini-settings" ref=${(el) => mini_settings = el} />
+        <section class="mini-faq">
+            <p class="card-tip">${tl(trans.by_user, { "u": valid_minis.compare.by.join(",") })}</p>
+        </section>
     `);
     compare({
       host: content,
@@ -37004,6 +37010,9 @@
     `);
     render(page.structure.side, html`
         <section class="current-mini-settings" ref=${(el) => mini_settings = el} />
+        <section class="mini-faq">
+            <p class="card-tip">${tl(trans.by_user, { "u": valid_minis.pixel.by.join(",") })}</p>
+        </section>
     `);
     pixel({
       host: content,
@@ -60977,14 +60986,17 @@
       yy: "%d anos"
     }
   });
-  function tl(key) {
+  function tl(key, replacements = {}) {
     if (!key) {
       log("your key is undefined", "trans");
       return "NO_TRANSLATION_FOUND";
     }
-    if (key[lang]) return key[lang];
-    log("defaulting to english", "trans", "log", { key });
-    return key.en;
+    let translation = key[lang] || key.en;
+    for (const [placeholder, value] of Object.entries(replacements)) {
+      const regex = new RegExp(`{${placeholder}}`, "g");
+      translation = translation.replace(regex, value);
+    }
+    return translation;
   }
   function get_lang() {
     const path = window.location.pathname;
@@ -61798,7 +61810,7 @@
     },
     font_weight_medium: {
       css: "custom_font_weight_medium",
-      default: 600,
+      default: 640,
       min: 400,
       max: 750,
       step: 10,
