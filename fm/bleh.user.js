@@ -37764,7 +37764,7 @@
             action: () => window.location.href = `${root}inbox/notifications`
           },
           {
-            type: "inbox",
+            type: "messages",
             text: tl(trans.messages),
             body: tl(trans.opens_your_value).replace("{v}", tl(trans.messages)),
             keywords: ["messages", "direct", "dms"],
