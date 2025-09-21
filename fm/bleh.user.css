@@ -3410,7 +3410,7 @@
     .languages {
         display: flex;
         flex-direction: column;
-        margin-bottom: -5px;
+        margin: -5px 0;
 
         .language-row {
             display: flex;
@@ -3418,7 +3418,10 @@
             gap: var(--item-list-gap);
             padding: 5px 0;
             height: 43px;
-            border-top: 1px solid var(--card-border-base);
+
+            &:not(:last-child) {
+                border-bottom: 1px solid var(--card-border-base);
+            }
 
             .flag-container {
                 display: block;
@@ -13853,7 +13856,7 @@
     }
 
     .alert-info {
-        --background: hsl(var(--b4), 25%) !important;
+        --background: hsl(var(--b4), 20%) !important;
         --l3-c: var(--c3) !important;
 
         [data-bleh--season="halloween"] & {

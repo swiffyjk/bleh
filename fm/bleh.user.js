@@ -46999,7 +46999,7 @@
                             <p>${tl(trans.api.body)}</p>
                         </div>
                         <div class="toggle-wrap">
-                            <a class="btn primary icon connect" href="${root}api/auth?api_key=${api_key}&cb=${root}bleh/api">
+                            <a class="btn ${auth_key && auth_valid === "true" ? "" : "primary"} icon connect" href="${root}api/auth?api_key=${api_key}&cb=${root}bleh/api">
                                 ${tl(trans.connect)}
                             </a>
                         </div>
@@ -47021,31 +47021,32 @@
             ` : ""}
             <section class="bleh--panel">
                 <h4>${tl(trans.language)}</h4>
-                <div class="languages">
-                    ${Object.entries(lang_info).map(([key, language]) => {
+                <div class="setting-group">
+                    <div class="languages">
+                        ${Object.entries(lang_info).map(([key, language]) => {
         let date;
         const authors = language.by.map((author) => html.node`
-                            <a class="mention" href="${root}user/${author}" target="_blank">${author}</a>
-                        `);
+                                <a class="mention" href="${root}user/${author}" target="_blank">${author}</a>
+                            `);
         const row = html.node`
-                            <div class="language-row${lang == key ? " active" : ""}">
-                                <div class="flag-container">
-                                    <img src="https://katelyynn.github.io/bleh/fm/flags/${key}.svg" alt="flag for ${key}">
+                                <div class="language-row${lang == key ? " active" : ""}">
+                                    <div class="flag-container">
+                                        <img src="https://katelyynn.github.io/bleh/fm/flags/${key}.svg" alt="flag for ${key}">
+                                    </div>
+                                    <div class="name">
+                                        <h5>${language.name}</h5>
+                                        <p>${{ html: tl(trans.by_user, { "u": language.by.map((user) => `<a href="${root}user/${user}">${user}</a>`).join(", ") }) }}</p>
+                                    </div>
+                                    ${language.new ? html.node`
+                                    <div class="badges">
+                                        <div class="new-badge">${tl(trans.new)}</div>
+                                    </div>
+                                    ` : html.node`<div class="badges"></div>`}
+                                    <div class="date" ref=${(el) => date = el}>
+                                        <p>${language.last_updated != "latest" ? (0, import_moment2.default)(language.last_updated).fromNow() : language.last_updated}</p>
+                                    </div>
                                 </div>
-                                <div class="name">
-                                    <h5>${language.name}</h5>
-                                    <p>${{ html: tl(trans.by_user).replace("{u}", language.by.join(", ")) }}</p>
-                                </div>
-                                ${language.new ? html.node`
-                                <div class="badges">
-                                    <div class="new-badge">${tl(trans.new)}</div>
-                                </div>
-                                ` : html.node`<div class="badges"></div>`}
-                                <div class="date" ref=${(el) => date = el}>
-                                    <p>${language.last_updated != "latest" ? (0, import_moment2.default)(language.last_updated).fromNow() : language.last_updated}</p>
-                                </div>
-                            </div>
-                        `;
+                            `;
         if (language.last_updated != "latest") {
           tippy_esm_default(date, {
             content: language.last_updated
@@ -47053,6 +47054,7 @@
         }
         return row;
       })}
+                    </div>
                 </div>
                 <div class="setting-group">
                     <div class="setting" data-type="action">
