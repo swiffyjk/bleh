@@ -41408,6 +41408,7 @@
   }
   function convert_to_toolbar() {
     const nav = page.structure.content_top.querySelector(".navlist");
+    if (!nav) return;
     nav.classList.add("redesigned-navigation");
     page.structure.toolbar = html.node`
         <div class="toolbar">
@@ -43280,45 +43281,7 @@
         bleh_user_library();
       } else if (page.subpage == "events") {
         convert_to_toolbar();
-        let selected_tab = page.structure.toolbar.querySelector(".secondary-nav-item-link--active");
-        let value_panel = html.node`
-                <section class="value-panel">
-                    <h2 class="text-18">${selected_tab ? selected_tab.firstChild.textContent : tl(trans.events)}</h2>
-                </section>
-            `;
-        let values = page.structure.main.querySelectorAll(".metadata-display");
-        let value_header = html.node`
-                <div class="glacier-library-metadata" />
-            `;
-        values.forEach((value, index3) => {
-          let text3 = tl(trans.going);
-          if (index3 == 1)
-            text3 = tl(trans.interested);
-          value_header.appendChild(html.node`
-                    <div class="glacier-library-metadata-item">
-                        <div class="sub-text">${text3}</div>
-                        <div class="glacier-library-metadata-item-value">${value.textContent}</div>
-                    </div>
-                `);
-        });
-        value_panel.appendChild(value_header);
-        let total_value = page.structure.side.querySelector(".metadata-display");
-        if (total_value) {
-          value_panel.appendChild(html.node`
-                    <h2 class="text-18">${tl(trans.all_time)}</h2>
-                    <div class="glacier-library-metadata">
-                        <div class="glacier-library-metadata-item">
-                            <div class="sub-text">${tl(trans.total)}</div>
-                            <div class="glacier-library-metadata-item-value">${total_value.textContent}</div>
-                        </div>
-                    </div>
-                `);
-        }
-        let legacy_metadata = page.structure.main.querySelector(".metadata-list");
-        if (legacy_metadata)
-          page.structure.main.removeChild(legacy_metadata);
-        page.structure.side.innerHTML = "";
-        page.structure.side.appendChild(value_panel);
+        if (page.structure.toolbar) bleh_profile_events();
       } else if (page.subpage.startsWith("listening-report")) {
         page.structure.content_top.classList.add("listening-report-navlist");
         page.structure.row.classList.add("listening-report");
@@ -44343,6 +44306,58 @@
     `, scrobble_since);
     cache2.aka = display_name.textContent.trim();
     cache2.created = scrobble_since.textContent.trim();
+  }
+  function bleh_profile_events() {
+    const selected_tab = page.structure.toolbar.querySelector(".secondary-nav-item-link--active");
+    let value_panel = html.node`
+        <section class="value-panel">
+            <h2 class="text-18">${selected_tab ? selected_tab.firstChild.textContent : tl(trans.events)}</h2>
+        </section>
+    `;
+    const tabs = page.structure.toolbar.querySelectorAll(".secondary-nav-item-link");
+    tabs.forEach((tab, index3) => {
+      if (index3 < 1) return;
+      tab.classList.add("has-tab-num");
+      const num = tab.firstChild.textContent.trim().slice(-2);
+      tab.appendChild(html.node`
+            <span class="tab-num">
+                ${num}
+            </span>
+        `);
+    });
+    let values = page.structure.main.querySelectorAll(".metadata-display");
+    let value_header = html.node`
+        <div class="glacier-library-metadata" />
+    `;
+    values.forEach((value, index3) => {
+      let text3 = tl(trans.going);
+      if (index3 == 1)
+        text3 = tl(trans.interested);
+      value_header.appendChild(html.node`
+            <div class="glacier-library-metadata-item">
+                <div class="sub-text">${text3}</div>
+                <div class="glacier-library-metadata-item-value">${value.textContent}</div>
+            </div>
+        `);
+    });
+    value_panel.appendChild(value_header);
+    let total_value = page.structure.side.querySelector(".metadata-display");
+    if (total_value) {
+      value_panel.appendChild(html.node`
+            <h2 class="text-18">${tl(trans.all_time)}</h2>
+            <div class="glacier-library-metadata">
+                <div class="glacier-library-metadata-item">
+                    <div class="sub-text">${tl(trans.total)}</div>
+                    <div class="glacier-library-metadata-item-value">${total_value.textContent}</div>
+                </div>
+            </div>
+        `);
+    }
+    let legacy_metadata = page.structure.main.querySelector(".metadata-list");
+    if (legacy_metadata)
+      page.structure.main.removeChild(legacy_metadata);
+    page.structure.side.innerHTML = "";
+    page.structure.side.appendChild(value_panel);
   }
 
   // src/avatar.js
@@ -51335,6 +51350,19 @@
           bleh_top_listeners();
         else if (page.subpage == "listeners_you-know")
           bleh_listeners();
+      }
+      if (page.subpage == "events") {
+        const tabs = page.structure.row.querySelectorAll(":scope > .toolbar .secondary-nav-item-link");
+        tabs.forEach((tab, index3) => {
+          if (index3 < 1) return;
+          tab.classList.add("has-tab-num");
+          const num = tab.firstChild.textContent.trim().slice(-2);
+          tab.appendChild(html.node`
+                    <span class="tab-num">
+                        ${num}
+                    </span>
+                `);
+        });
       }
       if (page.subpage == "images_image-upload")
         bleh_gallery_upload();

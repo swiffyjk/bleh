@@ -4161,6 +4161,26 @@
         display: none !important;
     }
 
+    .has-tab-num {
+        position: relative;
+
+        & > .tab-num {
+            position: absolute;
+            width: var(--icon-size);
+            height: var(--icon-size);
+
+            opacity: 0.7;
+            left: var(--left);
+            margin-left: var(--margin-left);
+            top: var(--top);
+            margin-top: var(--margin-top);
+
+            font-family: 'Bitcount Grid Single', var(--font);
+            font-weight: 400;
+            transform: scaleY(1.4);
+        }
+    }
+
     .secondary-nav-item--venue > a {
         --mask: var(--icon-16-location);
     }
@@ -13919,7 +13939,7 @@
 
             .listener-list-position {
                 position: absolute;
-                left: calc(-18px - var(--item-list-gap) - var(--item-list-gap));
+                left: calc(-18px - var(--item-list-gap));
                 top: 50%;
                 margin-top: -9px;
                 color: hsl(var(--c3));
@@ -26578,7 +26598,7 @@
 
         & > kbd {
             margin: unset !important;
-            font-family: Overpass, -apple-system, BlinkMacSystemFont, "Segoe UI", "Noto Sans", Helvetica, Arial, sans-serif, "Apple Color Emoji", "Segoe UI Emoji" !important;
+            font-family: Nunito Sans, -apple-system, BlinkMacSystemFont, "Segoe UI", "Noto Sans", Helvetica, Arial, sans-serif, "Apple Color Emoji", "Segoe UI Emoji" !important;
             font-weight: var(--font-weight) !important;
             background: unset;
             padding: unset;

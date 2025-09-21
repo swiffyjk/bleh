@@ -371,6 +371,22 @@ export function bleh_artists() {
                 bleh_listeners();
         }
 
+        if (page.subpage == 'events') {
+            const tabs = page.structure.row.querySelectorAll(':scope > .toolbar .secondary-nav-item-link');
+            tabs.forEach((tab, index) => {
+                if (index < 1) return;
+
+                tab.classList.add('has-tab-num');
+
+                const num = tab.firstChild.textContent.trim().slice(-2);
+                tab.appendChild(html.node`
+                    <span class="tab-num">
+                        ${num}
+                    </span>
+                `);
+            });
+        }
+
         if (page.subpage == 'images_image-upload')
             bleh_gallery_upload();
         else if (page.subpage == 'images_overview')

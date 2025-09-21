@@ -301,6 +301,8 @@ export function checkup_nav() {
 
 export function convert_to_toolbar() {
     const nav = page.structure.content_top.querySelector('.navlist');
+    if (!nav) return;
+
     nav.classList.add('redesigned-navigation');
 
     page.structure.toolbar = html.node`
