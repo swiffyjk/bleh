@@ -43281,7 +43281,8 @@
         bleh_user_library();
       } else if (page.subpage == "events") {
         convert_to_toolbar();
-        if (page.structure.toolbar) bleh_profile_events();
+        const no_events = page.structure.main.querySelector(":scope > .no-events");
+        if (!no_events) bleh_profile_events();
       } else if (page.subpage.startsWith("listening-report")) {
         page.structure.content_top.classList.add("listening-report-navlist");
         page.structure.row.classList.add("listening-report");
@@ -44308,23 +44309,25 @@
     cache2.created = scrobble_since.textContent.trim();
   }
   function bleh_profile_events() {
-    const selected_tab = page.structure.toolbar.querySelector(".secondary-nav-item-link--active");
+    const selected_tab = page.structure.toolbar?.querySelector(".secondary-nav-item-link--active");
     let value_panel = html.node`
         <section class="value-panel">
             <h2 class="text-18">${selected_tab ? selected_tab.firstChild.textContent : tl(trans.events)}</h2>
         </section>
     `;
-    const tabs = page.structure.toolbar.querySelectorAll(".secondary-nav-item-link");
-    tabs.forEach((tab, index3) => {
-      if (index3 < 1) return;
-      tab.classList.add("has-tab-num");
-      const num = tab.firstChild.textContent.trim().slice(-2);
-      tab.appendChild(html.node`
-            <span class="tab-num">
-                ${num}
-            </span>
-        `);
-    });
+    if (page.structure.toolbar) {
+      const tabs = page.structure.toolbar.querySelectorAll(".secondary-nav-item-link");
+      tabs.forEach((tab, index3) => {
+        if (index3 < 1) return;
+        tab.classList.add("has-tab-num");
+        const num = tab.firstChild.textContent.trim().slice(-2);
+        tab.appendChild(html.node`
+                <span class="tab-num">
+                    ${num}
+                </span>
+            `);
+      });
+    }
     let values = page.structure.main.querySelectorAll(".metadata-display");
     let value_header = html.node`
         <div class="glacier-library-metadata" />
