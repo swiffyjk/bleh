@@ -25655,149 +25655,6 @@
     return elem;
   }
 
-  // src/components/profile_shortcut.js
-  unsafeWindow._open_profile_shortcut_window = function() {
-    open_profile_shortcut_window();
-  };
-  function open_profile_shortcut_window() {
-    let modal = dialog({
-      id: "profile_shortcut",
-      title: tl(trans.profile_shortcut.name),
-      body: html.node`
-            ${setting({ id: "profile_shortcut", text: false, focus: true, standalone: true })}
-        `
-    });
-    modal.querySelector("#text-profile_shortcut").focus();
-  }
-  unsafeWindow._other_listener = function(id) {
-    other_listener(id);
-  };
-  function other_listener(id) {
-    let input2;
-    let submit;
-    dialog({
-      id: "other_listener",
-      title: tl(trans.view_others_library),
-      body: html.node`
-        <div class="setting standalone" data-type="text">
-            <div class="avatar-container">
-                <div class="avatar-inner avatar--bleh-missing">
-                    <img>
-                </div>
-            </div>
-            <div class="input-container content-form">
-                <input type="text" maxlength="40" id="text-profile" ref=${(el) => input2 = el} placeholder="${tl(trans.enter_username)}">
-                <button class="btn chibi icon primary submit" ref=${(el) => submit = el} onclick=${() => {
-        let name = input2.value;
-        let link = id;
-        dialog_rm({
-          id: "other_listener"
-        });
-        window.location.href = `${root}user/${name}/library/music/${link}`;
-      }}>${tl(trans.done)}</button>
-            </div>
-        </div>
-        `
-    });
-    input2.addEventListener("keydown", (event3) => {
-      if (event3.keyCode === 13) {
-        event3.preventDefault();
-        submit.click();
-      }
-    });
-    tippy_esm_default(submit, {
-      content: tl(trans.save)
-    });
-    input2.focus();
-  }
-  function save_profile_shortcut(input2, value, submit, reset_btn, avatar3) {
-    if (value == "" || value == auth.name) {
-      localStorage.removeItem("bleh_profile_shortcut_avi");
-      avatar3.querySelector("img").setAttribute("src", "");
-      avatar3.querySelector("img").setAttribute("alt", "");
-      reset_btn.disabled = false;
-      input2.disabled = false;
-      submit.disabled = false;
-      save_setting("profile_shortcut", "");
-      return;
-    }
-    avatar3.classList.add("requesting");
-    fetch(`${root}user/${value}/tags`).then(function(response) {
-      console.log("returned", response, response.text);
-      return response.text();
-    }).then(function(dom) {
-      let doc = new DOMParser().parseFromString(dom, "text/html");
-      console.log("DOC", doc);
-      reset_btn.disabled = false;
-      input2.disabled = false;
-      submit.disabled = false;
-      avatar3.classList.remove("requesting");
-      try {
-        let avatar_src = doc.querySelector(".header-avatar-inner-wrap img").getAttribute("src");
-        localStorage.setItem("bleh_profile_shortcut_avi", avatar_src);
-        avatar3.querySelector("img").setAttribute("src", avatar_src);
-        avatar3.querySelector("img").setAttribute("alt", value);
-        notify({
-          id: "profile_shortcut_saved",
-          title: tl(trans.profile_shortcut.name),
-          body: tl(trans.profile_shortcut.linked).replace("{u}", value),
-          icon: "icon-16-profile-shortcut"
-        });
-        save_setting("profile_shortcut", value);
-      } catch (e) {
-        notify({
-          id: "profile_shortcut_error",
-          title: tl(trans.profile_shortcut.name),
-          body: tl(trans.failed_to_find_profile),
-          type: "error"
-        });
-        localStorage.removeItem("bleh_profile_shortcut_avi");
-        avatar3.querySelector("img").setAttribute("src", "");
-        avatar3.querySelector("img").setAttribute("alt", "");
-      }
-    });
-  }
-  unsafeWindow._save_profile_shortcut = function() {
-    let profile_name = document.getElementById("text-profile_shortcut").value;
-    let profile_img = document.getElementById("avatar-profile_shortcut");
-    if (profile_name == "" || profile_name == auth.name) {
-      localStorage.removeItem("bleh_profile_shortcut_avi");
-      document.getElementById("avatar_src-profile_shortcut").setAttribute("src", "");
-      save_setting("profile_shortcut", "");
-      return;
-    }
-    profile_img.classList.add("requesting");
-    fetch(`${root}user/${profile_name}/tags`).then(function(response) {
-      console.log("returned", response, response.text);
-      return response.text();
-    }).then(function(html3) {
-      let doc = new DOMParser().parseFromString(html3, "text/html");
-      console.log("DOC", doc);
-      profile_img.classList.remove("requesting");
-      try {
-        let avatar_src = doc.querySelector(".header-avatar-inner-wrap img").getAttribute("src");
-        localStorage.setItem("bleh_profile_shortcut_avi", avatar_src);
-        document.getElementById("avatar_src-profile_shortcut").setAttribute("src", avatar_src);
-        notify({
-          id: "profile_shortcut_saved",
-          title: tl(trans.profile_shortcut.name),
-          body: tl(trans.profile_shortcut.linked).replace("{u}", profile_name),
-          icon: "icon-16-profile-shortcut"
-        });
-        save_setting("profile_shortcut", profile_name);
-      } catch (e) {
-        notify({
-          id: "profile_shortcut_saved",
-          title: tl(trans.profile_shortcut.name),
-          body: tl(trans.failed_to_find_profile),
-          type: "error"
-        });
-        localStorage.removeItem("bleh_profile_shortcut_avi");
-        document.getElementById("avatar_src-profile_shortcut").setAttribute("src", "");
-      }
-    });
-  };
-
   // src/components/menu.js
   function register_menu(element, menu) {
     element.addEventListener("contextmenu", (e) => {
@@ -27293,6 +27150,102 @@
     }
     localStorage.setItem("bleh_bookmarked_images", JSON.stringify(bookmarked_images));
   }
+
+  // src/components/profile_shortcut.js
+  unsafeWindow._open_profile_shortcut_window = function() {
+    open_profile_shortcut_window();
+  };
+  function open_profile_shortcut_window() {
+    let modal = dialog({
+      id: "profile_shortcut",
+      title: tl(trans.profile_shortcut.name),
+      body: html.node`
+            ${setting({ id: "profile_shortcut", text: false, focus: true, standalone: true })}
+        `
+    });
+    modal.querySelector("#text-profile_shortcut").focus();
+  }
+  unsafeWindow._other_listener = function(id) {
+    other_listener(id);
+  };
+  function other_listener(id) {
+    let input2;
+    let submit;
+    dialog({
+      id: "other_listener",
+      title: tl(trans.view_others_library),
+      body: html.node`
+        <div class="setting standalone" data-type="text">
+            <div class="avatar-container">
+                <div class="avatar-inner avatar--bleh-missing">
+                    <img>
+                </div>
+            </div>
+            <div class="input-container content-form">
+                <input type="text" maxlength="40" id="text-profile" ref=${(el) => input2 = el} placeholder="${tl(trans.enter_username)}">
+                <button class="btn chibi icon primary submit" ref=${(el) => submit = el} onclick=${() => {
+        let name = input2.value;
+        let link = id;
+        dialog_rm({
+          id: "other_listener"
+        });
+        window.location.href = `${root}user/${name}/library/music/${link}`;
+      }}>${tl(trans.done)}</button>
+            </div>
+        </div>
+        `
+    });
+    input2.addEventListener("keydown", (event3) => {
+      if (event3.keyCode === 13) {
+        event3.preventDefault();
+        submit.click();
+      }
+    });
+    tippy_esm_default(submit, {
+      content: tl(trans.save)
+    });
+    input2.focus();
+  }
+  unsafeWindow._save_profile_shortcut = function() {
+    let profile_name = document.getElementById("text-profile_shortcut").value;
+    let profile_img = document.getElementById("avatar-profile_shortcut");
+    if (profile_name == "" || profile_name == auth.name) {
+      localStorage.removeItem("bleh_profile_shortcut_avi");
+      document.getElementById("avatar_src-profile_shortcut").setAttribute("src", "");
+      save_setting("profile_shortcut", "");
+      return;
+    }
+    profile_img.classList.add("requesting");
+    fetch(`${root}user/${profile_name}/tags`).then(function(response) {
+      console.log("returned", response, response.text);
+      return response.text();
+    }).then(function(html3) {
+      let doc = new DOMParser().parseFromString(html3, "text/html");
+      console.log("DOC", doc);
+      profile_img.classList.remove("requesting");
+      try {
+        let avatar_src = doc.querySelector(".header-avatar-inner-wrap img").getAttribute("src");
+        localStorage.setItem("bleh_profile_shortcut_avi", avatar_src);
+        document.getElementById("avatar_src-profile_shortcut").setAttribute("src", avatar_src);
+        notify({
+          id: "profile_shortcut_saved",
+          title: tl(trans.profile_shortcut.name),
+          body: tl(trans.profile_shortcut.linked).replace("{u}", profile_name),
+          icon: "icon-16-profile-shortcut"
+        });
+        save_setting("profile_shortcut", profile_name);
+      } catch (e) {
+        notify({
+          id: "profile_shortcut_saved",
+          title: tl(trans.profile_shortcut.name),
+          body: tl(trans.failed_to_find_profile),
+          type: "error"
+        });
+        localStorage.removeItem("bleh_profile_shortcut_avi");
+        document.getElementById("avatar_src-profile_shortcut").setAttribute("src", "");
+      }
+    });
+  };
 
   // src/components/toggle.js
   function toggle({
@@ -37659,10 +37612,10 @@
         }
         if (cmd && [settings.rabbit_shortcut.toLowerCase()].includes(key)) {
           e.preventDefault();
-          if (settings.profile_shortcut != "") {
-            window.location.href = `${root}user/${settings.profile_shortcut}`;
+          if (settings.starred_friend != "") {
+            window.location.href = `${root}user/${settings.starred_friend}`;
           } else {
-            open_profile_shortcut_window();
+            open_starred_friend_window();
           }
         }
         if (cmd && [settings.rabbit_bleh_settings.toLowerCase()].includes(key)) {
@@ -37741,19 +37694,19 @@
           },
           {
             type: "profile",
-            text: tl(trans.profile),
+            text: auth.name,
             body: tl(trans.opens_your_value).replace("{v}", tl(trans.profile)),
             keywords: ["profile", "user", "me"],
             action: () => window.location.href = `${root}user/${auth.name}`,
             keybind: ["\u2318", settings.rabbit_profile.toUpperCase()]
           },
           {
-            type: "profile_shortcut",
-            text: settings.profile_shortcut,
-            body: tl(trans.opens_your_value).replace("{v}", tl(trans.profile_shortcut.name)),
-            keywords: ["profile", "user", "shortcut", "friends"],
-            action: () => window.location.href = `${root}user/${settings.profile_shortcut}`,
-            hide: settings.profile_shortcut == "",
+            type: "starred_friend",
+            text: settings.starred_friend,
+            body: tl(trans.opens_your_value).replace("{v}", tl(trans.starred_friend)),
+            keywords: ["profile", "user", "shortcut", "friends", "starred"],
+            action: () => window.location.href = `${root}user/${settings.starred_friend}`,
+            hide: settings.starred_friend == "",
             keybind: ["\u2318", settings.rabbit_shortcut.toUpperCase()]
           },
           {
@@ -39191,10 +39144,7 @@
     }
     input2.value = value;
     option.setAttribute("data-modified", value != settings_store[id].default);
-    if (id == "profile_shortcut") {
-      save_profile_shortcut(input2, value, submit, reset_btn, avatar3);
-      return;
-    } else if (id == "hu_tao") {
+    if (id == "hu_tao") {
       if (value == "develop") {
         dialog_rm({ id: "hu_tao" });
         change_settings_page("sku");
@@ -43082,8 +43032,6 @@
           register_background(null, "none");
       }
     }
-    if (page.name == settings.profile_shortcut)
-      localStorage.setItem("bleh_profile_shortcut_avi", avatar_img.getAttribute("src"));
     page.structure.container.insertBefore(redesigned_profile_header, page.structure.container.firstElementChild);
     profile_header.classList.add("legacy-header");
     if (!new_account) {

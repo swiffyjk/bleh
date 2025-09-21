@@ -14,10 +14,10 @@ import {sanitise} from "../build/tools.js";
 import {compare} from "./compare.js";
 import {collage} from "./collage.js";
 import {settings} from "../build/config.js";
-import {open_profile_shortcut_window} from "./profile_shortcut.js";
 import {news} from "../news.js";
 import {ff} from "../sku.js";
 import {redirect} from "./music.js";
+import { open_starred_friend_window } from '../pages/profile.js';
 
 export function register_rabbit() {
     let input_box;
@@ -130,10 +130,10 @@ export function register_rabbit() {
             if (cmd && [settings.rabbit_shortcut.toLowerCase()].includes(key)) {
                 e.preventDefault();
 
-                if (settings.profile_shortcut != '') {
-                    window.location.href = `${root}user/${settings.profile_shortcut}`;
+                if (settings.starred_friend != '') {
+                    window.location.href = `${root}user/${settings.starred_friend}`;
                 } else {
-                    open_profile_shortcut_window();
+                    open_starred_friend_window();
                 }
             }
 
@@ -228,19 +228,19 @@ export function register_rabbit() {
                 },
                 {
                     type: 'profile',
-                    text: tl(trans.profile),
+                    text: auth.name,
                     body: tl(trans.opens_your_value).replace('{v}', tl(trans.profile)),
                     keywords: ['profile', 'user', 'me'],
                     action: () => window.location.href = `${root}user/${auth.name}`,
                     keybind: ['⌘', settings.rabbit_profile.toUpperCase()]
                 },
                 {
-                    type: 'profile_shortcut',
-                    text: settings.profile_shortcut,
-                    body: tl(trans.opens_your_value).replace('{v}', tl(trans.profile_shortcut.name)),
-                    keywords: ['profile', 'user', 'shortcut', 'friends'],
-                    action: () => window.location.href = `${root}user/${settings.profile_shortcut}`,
-                    hide: (settings.profile_shortcut == ''),
+                    type: 'starred_friend',
+                    text: settings.starred_friend,
+                    body: tl(trans.opens_your_value).replace('{v}', tl(trans.starred_friend)),
+                    keywords: ['profile', 'user', 'shortcut', 'friends', 'starred'],
+                    action: () => window.location.href = `${root}user/${settings.starred_friend}`,
+                    hide: (settings.starred_friend == ''),
                     keybind: ['⌘', settings.rabbit_shortcut.toUpperCase()]
                 },
                 {

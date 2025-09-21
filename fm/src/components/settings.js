@@ -8,7 +8,6 @@ import {html, render} from "lighterhtml";
 import {settings, settings_store} from "../build/config.js";
 import {tl, trans} from "../build/trans.js";
 import {notify} from "./notify.js";
-import {save_profile_shortcut} from "./profile_shortcut.js";
 import {auth, page} from "../build/page.js";
 import {request_reload} from "../config.js";
 import {log} from "../build/log.js";
@@ -868,10 +867,7 @@ function update_text(id, input, submit, option, value, reset_btn, avatar, silent
     input.value = value;
     option.setAttribute('data-modified', value != settings_store[id].default);
 
-    if (id == 'profile_shortcut') {
-        save_profile_shortcut(input, value, submit, reset_btn, avatar);
-        return;
-    } else if (id == 'hu_tao') {
+    if (id == 'hu_tao') {
         if (value == 'develop') {
             dialog_rm({id: 'hu_tao'});
             change_settings_page('sku');

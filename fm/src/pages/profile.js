@@ -181,9 +181,6 @@ export async function bleh_profiles() {
         }
     }
 
-    if (page.name == settings.profile_shortcut)
-        localStorage.setItem('bleh_profile_shortcut_avi', avatar_img.getAttribute('src'));
-
     page.structure.container.insertBefore(redesigned_profile_header, page.structure.container.firstElementChild);
     profile_header.classList.add('legacy-header');
 
