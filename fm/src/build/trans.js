@@ -558,6 +558,12 @@ export const trans = {
     adaptive: {
         en: 'Adaptive'
     },
+    adaptive_tip: {
+        en: 'Your theme preference is {day} from {day_time} and {night} from {night_time}. '
+    },
+    change_schedule: {
+        en: 'Change schedule'
+    },
     hue_from_album: {
         en: 'Browsing album pages'
     },

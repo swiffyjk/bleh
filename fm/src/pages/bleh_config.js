@@ -31,6 +31,7 @@ import tippy from "tippy.js";
 import moment from "moment";
 import { checkup_friend_cache, load_profile_cache_externally } from './profile.js';
 import { select_prepare_list } from '../components/select.js';
+import { status } from '../components/status.js';
 
 export function bleh_settings() {
     page.name = auth.name;
@@ -493,6 +494,19 @@ export async function render_setting_page(page_id) {
 
         let theme_day;
         let theme_night;
+        let adaptive_tip;
+
+        function render_tip() {
+            adaptive_tip.setAttribute('aria-hidden', !settings.theme_schedule);
+
+            render(adaptive_tip, html`
+                ${tl(trans.adaptive_tip, {'day': tl(trans.themes[settings.theme_day]), 'night': tl(trans.themes[settings.theme_night])})}<a onclick=${() => {
+                    status({
+                        title: 'work in progress'
+                    })
+                }}>${tl(trans.change_schedule)}</a>
+            `);
+        }
 
         render(page.structure.main, html`
             <section class="bleh--panel">
@@ -502,12 +516,15 @@ export async function render_setting_page(page_id) {
                         <div class="heading">
                             <h5>${tl(trans.themes.name)}</h5>
                         </div>
-                        <div class="info">
+                        <div class="info v">
                             ${theme_bubbles(() => {
                                 sat_bg.compat();
                                 if (theme_day) theme_day.compat();
                                 if (theme_night) theme_night.compat();
+
+                                render_tip();
                             })}
+                            <p class="card-tip" ref=${el => adaptive_tip = el} />
                         </div>
                     </div>
                     ${ff('adaptive_theme') ? html.node`
@@ -605,6 +622,8 @@ export async function render_setting_page(page_id) {
                 </div>
             </section>
         `);
+
+        render_tip();
 
         display_colour_presets();
         update_colour_swatches();
@@ -2476,7 +2495,7 @@ export function theme_bubbles(func = null) {
     const themes = [
         {
             id: 'adaptive',
-            name: tl(trans.adaptive),
+            name: tl(trans.auto),
             hide: !ff('adaptive_theme'),
             new_release: true
         },
@@ -2542,9 +2561,18 @@ export function theme_bubbles(func = null) {
                 const bubble = html.node`
                     <button class="theme-bubble" data-theme-id="${theme.id}" onclick=${() => update_theme_bubble(theme.id)}>
                         <div class="bubble">
-                            <div class="inner theme-preview" data-bleh--theme=${theme.id} data-bleh--theme_type=${theme.type}>
-                                <div class="bleh-icon" data-type="theme_${theme.formal}" />
+                            ${theme.id == 'adaptive' ? html.node`
+                            <div class="inner theme-preview" data-bleh--theme=${settings.theme_day} data-bleh--theme_type="light">
+                                ${theme_preview()}
                             </div>
+                            <div class="inner theme-preview" data-bleh--theme=${settings.theme_night} data-bleh--theme_type="dark">
+                                ${theme_preview()}
+                            </div>
+                            ` : html.node`
+                            <div class="inner theme-preview" data-bleh--theme=${theme.id} data-bleh--theme_type=${theme.type}>
+                                ${theme_preview()}
+                            </div>
+                            `}
                         </div>
                         <strong>
                             ${theme.name}
@@ -2552,16 +2580,6 @@ export function theme_bubbles(func = null) {
                         </strong>
                     </button>
                 `;
-
-                tippy(bubble, {
-                    theme: 'theme-preview',
-                    content: html.node`
-                        <div class="theme-preview" data-bleh--theme=${theme.id} data-bleh--theme_type=${theme.type}>
-                            ${theme_preview()}
-                        </div>
-                    `,
-                    delay: [500, 0]
-                });
 
                 buttons.push(bubble);
 

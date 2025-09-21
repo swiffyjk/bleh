@@ -47070,6 +47070,16 @@
             </section>
         `);
     } else if (page_id == "visual") {
+      let render_tip = function() {
+        adaptive_tip.setAttribute("aria-hidden", !settings.theme_schedule);
+        render(adaptive_tip, html`
+                ${tl(trans.adaptive_tip, { "day": tl(trans.themes[settings.theme_day]), "night": tl(trans.themes[settings.theme_night]) })}<a onclick=${() => {
+          status({
+            title: "work in progress"
+          });
+        }}>${tl(trans.change_schedule)}</a>
+            `);
+      };
       if (auth.name && auth.sets.hue == 255 && auth.sets.sat == 1 && auth.sets.lit == 1) {
         setTimeout(() => {
           render_setting_page("visual");
@@ -47083,6 +47093,7 @@
       let sat_bg;
       let theme_day;
       let theme_night;
+      let adaptive_tip;
       render(page.structure.main, html`
             <section class="bleh--panel">
                 <h4>${tl(trans.appearance)}</h4>
@@ -47091,12 +47102,14 @@
                         <div class="heading">
                             <h5>${tl(trans.themes.name)}</h5>
                         </div>
-                        <div class="info">
+                        <div class="info v">
                             ${theme_bubbles(() => {
         sat_bg.compat();
         if (theme_day) theme_day.compat();
         if (theme_night) theme_night.compat();
+        render_tip();
       })}
+                            <p class="card-tip" ref=${(el) => adaptive_tip = el} />
                         </div>
                     </div>
                     ${ff("adaptive_theme") ? html.node`
@@ -47194,6 +47207,7 @@
                 </div>
             </section>
         `);
+      render_tip();
       display_colour_presets();
       update_colour_swatches();
     } else if (page_id == "interface") {
@@ -48912,7 +48926,7 @@
     const themes = [
       {
         id: "adaptive",
-        name: tl(trans.adaptive),
+        name: tl(trans.auto),
         hide: !ff("adaptive_theme"),
         new_release: true
       },
@@ -48973,9 +48987,18 @@
       const bubble = html.node`
                     <button class="theme-bubble" data-theme-id="${theme.id}" onclick=${() => update_theme_bubble(theme.id)}>
                         <div class="bubble">
-                            <div class="inner theme-preview" data-bleh--theme=${theme.id} data-bleh--theme_type=${theme.type}>
-                                <div class="bleh-icon" data-type="theme_${theme.formal}" />
+                            ${theme.id == "adaptive" ? html.node`
+                            <div class="inner theme-preview" data-bleh--theme=${settings.theme_day} data-bleh--theme_type="light">
+                                ${theme_preview()}
                             </div>
+                            <div class="inner theme-preview" data-bleh--theme=${settings.theme_night} data-bleh--theme_type="dark">
+                                ${theme_preview()}
+                            </div>
+                            ` : html.node`
+                            <div class="inner theme-preview" data-bleh--theme=${theme.id} data-bleh--theme_type=${theme.type}>
+                                ${theme_preview()}
+                            </div>
+                            `}
                         </div>
                         <strong>
                             ${theme.name}
@@ -48983,15 +49006,6 @@
                         </strong>
                     </button>
                 `;
-      tippy_esm_default(bubble, {
-        theme: "theme-preview",
-        content: html.node`
-                        <div class="theme-preview" data-bleh--theme=${theme.id} data-bleh--theme_type=${theme.type}>
-                            ${theme_preview()}
-                        </div>
-                    `,
-        delay: [500, 0]
-      });
       buttons.push(bubble);
       return bubble;
     })}
@@ -54693,6 +54707,12 @@
     },
     adaptive: {
       en: "Adaptive"
+    },
+    adaptive_tip: {
+      en: "Your theme preference is {day} from {day_time} and {night} from {night_time}. "
+    },
+    change_schedule: {
+      en: "Change schedule"
     },
     hue_from_album: {
       en: "Browsing album pages"
