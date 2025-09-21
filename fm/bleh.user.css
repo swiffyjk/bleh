@@ -9637,6 +9637,7 @@
     [data-type="starred_friend"] {
         --mask: var(--icon-16-plus);
 
+        &.rabbit-hole-item,
         &[data-is-shortcut="true"] {
             --mask: var(--icon-16-starred-friend);
 

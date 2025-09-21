@@ -37703,7 +37703,7 @@
           {
             type: "starred_friend",
             text: settings.starred_friend,
-            body: tl(trans.opens_your_value).replace("{v}", tl(trans.starred_friend)),
+            body: tl(trans.opens_your_value).replace("{v}", tl(trans.starred_friend.name)),
             keywords: ["profile", "user", "shortcut", "friends", "starred"],
             action: () => window.location.href = `${root}user/${settings.starred_friend}`,
             hide: settings.starred_friend == "",
