@@ -4828,7 +4828,7 @@
         }
     }
 
-    .factbox-heading + *,
+    .factbox-heading + *, .factbox-item > ul,
     .catalogue-metadata-description {
         font-size: 16px;
         line-height: 20px;
@@ -4838,6 +4838,10 @@
         .cta-link {
             margin: unset;
             text-align: left !important;
+        }
+
+        &#factbox-more-members {
+            margin-top: unset;
         }
     }
 
