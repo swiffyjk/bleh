@@ -273,5 +273,5 @@ export let includes = {
 // additionally removes featured artists from title
 export const clean_title_regex = /\s*[-(\[]\s*(explicit|clean|spotify|(feat\.|ft\.|featuring|with)[^)\]]*)\s*[\])]?/gi;
 export function clean_title(title) {
-    return title.replace(clean_title_regex, '');
+    return title.replace(clean_title_regex, '').replace(/\u2010/g, '-');
 }

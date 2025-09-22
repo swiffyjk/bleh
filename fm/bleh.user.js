@@ -25103,7 +25103,7 @@
   };
   var clean_title_regex = /\s*[-(\[]\s*(explicit|clean|spotify|(feat\.|ft\.|featuring|with)[^)\]]*)\s*[\])]?/gi;
   function clean_title(title) {
-    return title.replace(clean_title_regex, "");
+    return title.replace(clean_title_regex, "").replace(/\u2010/g, "-");
   }
 
   // src/build/seasonal.js
@@ -34029,7 +34029,7 @@
     if (page.type == "track") {
       releases_panel = html.node`
             <section class="oracle-releases">
-                <h3 class="text-18">Releases</h3>
+                <h3 class="text-18">${tl(trans.releases)}</h3>
                 <div class="source-albums">
                     <div class="source-album oracle-loading">
                         <div class="source-album-art">

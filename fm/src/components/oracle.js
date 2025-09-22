@@ -26,7 +26,7 @@ export function oracle_process() {
     if (page.type == 'track') {
         releases_panel = html.node`
             <section class="oracle-releases">
-                <h3 class="text-18">Releases</h3>
+                <h3 class="text-18">${tl(trans.releases)}</h3>
                 <div class="source-albums">
                     <div class="source-album oracle-loading">
                         <div class="source-album-art">
