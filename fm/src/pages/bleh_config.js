@@ -32,6 +32,7 @@ import moment from "moment";
 import { checkup_friend_cache, load_profile_cache_externally } from './profile.js';
 import { select_prepare_list } from '../components/select.js';
 import { status } from '../components/status.js';
+import { match } from '../components/dynamic_theming.js';
 
 export function bleh_settings() {
     page.name = auth.name;
@@ -536,6 +537,7 @@ export async function render_setting_page(page_id) {
                                 ], func: () => {
                                     render_tip();
                                     bubbles.re_render();
+                                    match();
                                 }})}
                             </div>
                             <p class="card-tip">${tl(trans.theme_schedule)}</p>
@@ -558,6 +560,7 @@ export async function render_setting_page(page_id) {
                                 sat_bg.compat();
 
                                 render_tip();
+                                match();
                             })}
                             <p class="card-tip" ref=${el => adaptive_tip = el} />
                         </div>

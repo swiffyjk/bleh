@@ -46669,6 +46669,27 @@
 
   // src/pages/bleh_config.js
   var import_moment2 = __toESM(require_moment(), 1);
+
+  // src/components/dynamic_theming.js
+  function dynamic_theming() {
+    const media = window.matchMedia("(prefers-color-scheme: dark)");
+    page.state.media = media;
+    match2(media);
+    media.addEventListener("change", match2);
+  }
+  function match2(media = page.state.media) {
+    if (!settings.theme_schedule) return;
+    if (media.matches)
+      apply_theme("night");
+    else
+      apply_theme("day");
+  }
+  function apply_theme(time) {
+    log(`applying theme for time ${time}`, "dynamic theming");
+    save_setting("theme", settings[`theme_${time}`]);
+  }
+
+  // src/pages/bleh_config.js
   function bleh_settings() {
     page.name = auth.name;
     page.subpage = "";
@@ -46756,7 +46777,7 @@
             `}
         </div>
         <section class="side-actions">
-            <button class="btn side-action" data-type="import" onclick=${() => import_settings18()}>
+            <button class="btn side-action" data-type="import" onclick=${() => import_settings19()}>
                 ${tl(trans.import)}
             </button>
             <button class="btn side-action" data-type="export" onclick=${() => export_settings()}>
@@ -47115,6 +47136,7 @@
             ], func: () => {
               render_tip();
               bubbles.re_render();
+              match2();
             } })}
                             </div>
                             <p class="card-tip">${tl(trans.theme_schedule)}</p>
@@ -47150,6 +47172,7 @@
                             ${bubbles = theme_bubbles(() => {
         sat_bg.compat();
         render_tip();
+        match2();
       })}
                             <p class="card-tip" ref=${(el) => adaptive_tip = el} />
                         </div>
@@ -48583,7 +48606,7 @@
       }
     }
   }
-  function import_settings18() {
+  function import_settings19() {
     let text3;
     const modal = dialog({
       id: "import_settings",
@@ -53564,23 +53587,6 @@
 
   // src/components/dismissed.js
   function load_dismissed() {
-  }
-
-  // src/components/dynamic_theming.js
-  function dynamic_theming() {
-    const media = window.matchMedia("(prefers-color-scheme: dark)");
-    match2(media);
-    media.addEventListener("change", match2);
-  }
-  function match2(media) {
-    if (media.matches)
-      apply_theme("night");
-    else
-      apply_theme("day");
-  }
-  function apply_theme(time) {
-    log(`applying theme for time ${time}`, "dynamic theming");
-    save_setting("theme", settings[`theme_${time}`]);
   }
 
   // src/page.js
