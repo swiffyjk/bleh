@@ -34113,6 +34113,7 @@
           log("no data to use, ending", "oracle", "info", { data: data2, release });
           return;
         }
+        log("picked release, proceeding", "oracle", "info", { data: data2, release });
         setTimeout(() => {
           oracle_album_fetch(release);
         }, 400);
@@ -34152,6 +34153,10 @@
       let best = filtered.find((release) => release.disambiguation?.toLowerCase() == "explicit");
       if (best) return best;
       best = filtered.find((release) => release.disambiguation?.toLowerCase() == "clean");
+      if (best) return best;
+      best = filtered.find((release) => release.disambiguation?.toLowerCase() == "hi-res");
+      if (best) return best;
+      best = filtered.find((release) => release.disambiguation?.toLowerCase() == "dolby atmos mix");
       if (best) return best;
       best = filtered.find((release) => release.disambiguation?.toLowerCase().includes("explicit"));
       if (best) return best;

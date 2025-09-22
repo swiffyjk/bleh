@@ -125,6 +125,8 @@ export function oracle_process() {
                 return;
             }
 
+            log('picked release, proceeding', 'oracle', 'info', {data, release});
+
             setTimeout(() => {
                 oracle_album_fetch(release);
             }, 400);
@@ -187,6 +189,15 @@ export function oracle_process() {
 
         // then clean
         best = filtered.find(release => release.disambiguation?.toLowerCase() == 'clean');
+        if (best) return best;
+
+        // then hi-res
+        // for taylor
+        best = filtered.find(release => release.disambiguation?.toLowerCase() == 'hi-res');
+        if (best) return best;
+
+        // then dolby atmos
+        best = filtered.find(release => release.disambiguation?.toLowerCase() == 'dolby atmos mix');
         if (best) return best;
 
         // try anything explicit
