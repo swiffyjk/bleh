@@ -47074,8 +47074,44 @@
         adaptive_tip.setAttribute("aria-hidden", !settings.theme_schedule);
         render(adaptive_tip, html`
                 ${tl(trans.adaptive_tip, { "day": tl(trans.themes[settings.theme_day]), "night": tl(trans.themes[settings.theme_night]) })}<a onclick=${() => {
-          status({
-            title: "work in progress"
+          dialog({
+            id: "auto_theme",
+            title: tl(trans.themes.name),
+            body: html.node`
+                            <div class="setting-group">
+                                ${theme_day = setting({ id: "theme_day", list: [
+              {
+                value: "light",
+                text: tl(trans.themes.light)
+              },
+              {
+                value: "ink",
+                text: tl(trans.themes.ink)
+              }
+            ], func: () => {
+              render_tip();
+              bubbles.re_render();
+            } })}
+                                ${theme_night = setting({ id: "theme_night", list: [
+              {
+                value: "dark",
+                text: tl(trans.themes.dark)
+              },
+              {
+                value: "darker",
+                text: tl(trans.themes.darker)
+              },
+              {
+                value: "oled",
+                text: tl(trans.themes.oled)
+              }
+            ], func: () => {
+              render_tip();
+              bubbles.re_render();
+            } })}
+                            </div>
+                            <p class="card-tip">${tl(trans.theme_schedule)}</p>
+                        `
           });
         }}>${tl(trans.change_schedule)}</a>
             `);
@@ -47094,6 +47130,7 @@
       let theme_day;
       let theme_night;
       let adaptive_tip;
+      let bubbles;
       render(page.structure.main, html`
             <section class="bleh--panel">
                 <h4>${tl(trans.appearance)}</h4>
@@ -47103,41 +47140,13 @@
                             <h5>${tl(trans.themes.name)}</h5>
                         </div>
                         <div class="info v">
-                            ${theme_bubbles(() => {
+                            ${bubbles = theme_bubbles(() => {
         sat_bg.compat();
-        if (theme_day) theme_day.compat();
-        if (theme_night) theme_night.compat();
         render_tip();
       })}
                             <p class="card-tip" ref=${(el) => adaptive_tip = el} />
                         </div>
                     </div>
-                    ${ff("adaptive_theme") ? html.node`
-                    ${theme_day = setting({ id: "theme_day", list: [
-        {
-          value: "light",
-          text: tl(trans.themes.light)
-        },
-        {
-          value: "ink",
-          text: tl(trans.themes.ink)
-        }
-      ] })}
-                    ${theme_night = setting({ id: "theme_night", list: [
-        {
-          value: "dark",
-          text: tl(trans.themes.dark)
-        },
-        {
-          value: "darker",
-          text: tl(trans.themes.darker)
-        },
-        {
-          value: "oled",
-          text: tl(trans.themes.oled)
-        }
-      ] })}
-                    ` : ""}
                     ${setting({ id: "solarium" })}
                     ${ff("high_contrast") ? setting({ id: "high_contrast" }) : ""}
                     <div class="setting" data-type="action">
@@ -48985,7 +48994,7 @@
       }
       if (!theme.formal) theme.formal = theme.id;
       const bubble = html.node`
-                    <button class="theme-bubble" data-theme-id="${theme.id}" onclick=${() => update_theme_bubble(theme.id)}>
+                    <button class="theme-bubble" data-theme-id=${theme.id} onclick=${() => update_theme_bubble(theme.id)}>
                         <div class="bubble">
                             ${theme.id == "adaptive" ? html.node`
                             <div class="inner theme-preview" data-bleh--theme=${settings.theme_day} data-bleh--theme_type="light">
@@ -49011,6 +49020,18 @@
     })}
         </div>
     `;
+    bubbles.re_render = () => {
+      const adaptive = buttons.find((button) => button.getAttribute("data-theme-id") == "adaptive");
+      const bubble = adaptive.querySelector(":scope > .bubble");
+      render(bubble, html`
+            <div class="inner theme-preview" data-bleh--theme=${settings.theme_day} data-bleh--theme_type="light">
+                ${theme_preview()}
+            </div>
+            <div class="inner theme-preview" data-bleh--theme=${settings.theme_night} data-bleh--theme_type="dark">
+                ${theme_preview()}
+            </div>
+        `);
+    };
     update_theme_bubble();
     return bubbles;
     function update_theme_bubble(theme = null) {
@@ -54655,10 +54676,23 @@
       pt: "Tema"
     },
     theme_day: {
-      en: "Scheduled theme for day"
+      name: {
+        en: "Day"
+      },
+      body: {
+        en: "When your system reports light theme"
+      }
     },
     theme_night: {
-      en: "Scheduled theme for night"
+      name: {
+        en: "Night"
+      },
+      body: {
+        en: "When your system reports dark theme"
+      }
+    },
+    theme_schedule: {
+      en: "Choose which theme preference to apply within bleh based on your system theme."
     },
     themes: {
       name: {
@@ -54709,7 +54743,7 @@
       en: "Adaptive"
     },
     adaptive_tip: {
-      en: "Your theme preference is {day} from {day_time} and {night} from {night_time}. "
+      en: "Your theme preference will be either {day} or {night}, based on your system. "
     },
     change_schedule: {
       en: "Change schedule"
@@ -61543,14 +61577,16 @@
     theme_day: {
       default: "light",
       type: "select",
-      title: trans.theme_day,
+      title: trans.theme_day.name,
+      body: trans.theme_day.body,
       incompatible: { theme_schedule: false },
       hide_if_incompatible: true
     },
     theme_night: {
       default: "darker",
       type: "select",
-      title: trans.theme_night,
+      title: trans.theme_night.name,
+      body: trans.theme_night.body,
       incompatible: { theme_schedule: false },
       hide_if_incompatible: true
     },

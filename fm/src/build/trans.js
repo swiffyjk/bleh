@@ -505,10 +505,23 @@ export const trans = {
         pt: 'Tema'
     },
     theme_day: {
-        en: 'Scheduled theme for day'
+        name: {
+            en: 'Day'
+        },
+        body: {
+            en: 'When your system reports light theme'
+        }
     },
     theme_night: {
-        en: 'Scheduled theme for night'
+        name: {
+            en: 'Night'
+        },
+        body: {
+            en: 'When your system reports dark theme'
+        }
+    },
+    theme_schedule: {
+        en: 'Choose which theme preference to apply within bleh based on your system theme.'
     },
     themes: {
         name: {
@@ -559,7 +572,7 @@ export const trans = {
         en: 'Adaptive'
     },
     adaptive_tip: {
-        en: 'Your theme preference is {day} from {day_time} and {night} from {night_time}. '
+        en: 'Your theme preference will be either {day} or {night}, based on your system. '
     },
     change_schedule: {
         en: 'Change schedule'

@@ -590,14 +590,16 @@ export let settings_store = {
     theme_day: {
         default: 'light',
         type: 'select',
-        title: trans.theme_day,
+        title: trans.theme_day.name,
+        body: trans.theme_day.body,
         incompatible: {theme_schedule: false},
         hide_if_incompatible: true
     },
     theme_night: {
         default: 'darker',
         type: 'select',
-        title: trans.theme_night,
+        title: trans.theme_night.name,
+        body: trans.theme_night.body,
         incompatible: {theme_schedule: false},
         hide_if_incompatible: true
     },
