@@ -62585,7 +62585,7 @@
         date: "2025-08-18"
       },
       adaptive_theme: {
-        default: false,
+        default: true,
         name: "Adaptive theme controls",
         date: "2025-08-29"
       },
