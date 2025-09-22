@@ -520,6 +520,7 @@ export async function render_setting_page(page_id) {
                                 ], func: () => {
                                     render_tip();
                                     bubbles.re_render();
+                                    match();
                                 }})}
                                 ${theme_night = setting({id: 'theme_night', list: [
                                     {

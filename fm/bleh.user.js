@@ -47119,6 +47119,7 @@
             ], func: () => {
               render_tip();
               bubbles.re_render();
+              match2();
             } })}
                                 ${theme_night = setting({ id: "theme_night", list: [
               {
