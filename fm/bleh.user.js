@@ -39185,10 +39185,13 @@
       }
       document.documentElement.setAttribute(`data-bleh--theme_type`, settings.theme_type);
     }
+    if (settings_store[id] && value == settings_store[id].default && ["hue", "sat", "lit"].includes(id)) {
+      document.body.style.removeProperty(`--${settings_store[id].css}`);
+    } else if (settings_store[id].css) {
+      document.body.style.setProperty(`--${settings_store[id].css}`, `${value}${settings_store[id].suffix || ""}`);
+    }
     if (settings_store[id].require_reload == true || settings_store[id].require_reload == "partial" && page.type != "bleh_settings")
       request_reload();
-    if (settings_store[id].css)
-      document.body.style.setProperty(`--${settings_store[id].css}`, `${value}${settings_store[id].suffix || ""}`);
     compile_settings();
     log(`saved ${id} as ${value}`, "settings", "log", { settings, settings_id: settings[id] });
   }
