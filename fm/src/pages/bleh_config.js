@@ -493,8 +493,6 @@ export async function render_setting_page(page_id) {
         let colourful_all;
         let sat_bg;
 
-        let theme_day;
-        let theme_night;
         let adaptive_tip;
         let bubbles;
 
@@ -516,6 +514,18 @@ export async function render_setting_page(page_id) {
                                     {
                                         value: 'ink',
                                         text: tl(trans.themes.ink)
+                                    },
+                                    {
+                                        value: 'dark',
+                                        text: tl(trans.themes.dark)
+                                    },
+                                    {
+                                        value: 'darker',
+                                        text: tl(trans.themes.darker)
+                                    },
+                                    {
+                                        value: 'oled',
+                                        text: tl(trans.themes.oled)
                                     }
                                 ], func: () => {
                                     render_tip();
@@ -523,6 +533,14 @@ export async function render_setting_page(page_id) {
                                     match();
                                 }})}
                                 ${theme_night = setting({id: 'theme_night', list: [
+                                    {
+                                        value: 'light',
+                                        text: tl(trans.themes.light)
+                                    },
+                                    {
+                                        value: 'ink',
+                                        text: tl(trans.themes.ink)
+                                    },
                                     {
                                         value: 'dark',
                                         text: tl(trans.themes.dark)
@@ -2575,10 +2593,10 @@ export function theme_bubbles(func = null) {
                     <button class="theme-bubble" data-theme-id=${theme.id} onclick=${() => update_theme_bubble(theme.id)}>
                         <div class="bubble">
                             ${theme.id == 'adaptive' ? html.node`
-                            <div class="inner theme-preview" data-bleh--theme=${settings.theme_day} data-bleh--theme_type="light">
+                            <div class="inner theme-preview" data-bleh--theme=${settings.theme_day} data-bleh--theme_type=${['light', 'ink'].includes(settings.theme_day) ? 'light' : 'dark'}>
                                 ${theme_preview()}
                             </div>
-                            <div class="inner theme-preview" data-bleh--theme=${settings.theme_night} data-bleh--theme_type="dark">
+                            <div class="inner theme-preview" data-bleh--theme=${settings.theme_night} data-bleh--theme_type=${['light', 'ink'].includes(settings.theme_night) ? 'light' : 'dark'}>
                                 ${theme_preview()}
                             </div>
                             ` : html.node`
@@ -2607,10 +2625,10 @@ export function theme_bubbles(func = null) {
         const bubble = adaptive.querySelector(':scope > .bubble');
 
         render(bubble, html`
-            <div class="inner theme-preview" data-bleh--theme=${settings.theme_day} data-bleh--theme_type="light">
+            <div class="inner theme-preview" data-bleh--theme=${settings.theme_day} data-bleh--theme_type=${['light', 'ink'].includes(settings.theme_day) ? 'light' : 'dark'}>
                 ${theme_preview()}
             </div>
-            <div class="inner theme-preview" data-bleh--theme=${settings.theme_night} data-bleh--theme_type="dark">
+            <div class="inner theme-preview" data-bleh--theme=${settings.theme_night} data-bleh--theme_type=${['light', 'ink'].includes(settings.theme_night) ? 'light' : 'dark'}>
                 ${theme_preview()}
             </div>
         `);

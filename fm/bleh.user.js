@@ -47115,6 +47115,18 @@
               {
                 value: "ink",
                 text: tl(trans.themes.ink)
+              },
+              {
+                value: "dark",
+                text: tl(trans.themes.dark)
+              },
+              {
+                value: "darker",
+                text: tl(trans.themes.darker)
+              },
+              {
+                value: "oled",
+                text: tl(trans.themes.oled)
               }
             ], func: () => {
               render_tip();
@@ -47122,6 +47134,14 @@
               match2();
             } })}
                                 ${theme_night = setting({ id: "theme_night", list: [
+              {
+                value: "light",
+                text: tl(trans.themes.light)
+              },
+              {
+                value: "ink",
+                text: tl(trans.themes.ink)
+              },
               {
                 value: "dark",
                 text: tl(trans.themes.dark)
@@ -47156,9 +47176,7 @@
       register_skip_to([]);
       let colourful_active;
       let colourful_all;
-      let sat_bg;
-      let theme_day;
-      let theme_night;
+      let sat_bg2;
       let adaptive_tip;
       let bubbles;
       render(page.structure.main, html`
@@ -47171,7 +47189,7 @@
                         </div>
                         <div class="info v">
                             ${bubbles = theme_bubbles(() => {
-        sat_bg.compat();
+        sat_bg2.compat();
         render_tip();
         match2();
       })}
@@ -47206,7 +47224,7 @@
                         </div>
                     </div>
                     ${ff("card_saturation") ? html.node`
-                    ${sat_bg = setting({ id: "sat_bg" })}
+                    ${sat_bg2 = setting({ id: "sat_bg" })}
                     ` : ""}
                 </div>
             </section>
@@ -49028,10 +49046,10 @@
                     <button class="theme-bubble" data-theme-id=${theme.id} onclick=${() => update_theme_bubble(theme.id)}>
                         <div class="bubble">
                             ${theme.id == "adaptive" ? html.node`
-                            <div class="inner theme-preview" data-bleh--theme=${settings.theme_day} data-bleh--theme_type="light">
+                            <div class="inner theme-preview" data-bleh--theme=${settings.theme_day} data-bleh--theme_type=${["light", "ink"].includes(settings.theme_day) ? "light" : "dark"}>
                                 ${theme_preview()}
                             </div>
-                            <div class="inner theme-preview" data-bleh--theme=${settings.theme_night} data-bleh--theme_type="dark">
+                            <div class="inner theme-preview" data-bleh--theme=${settings.theme_night} data-bleh--theme_type=${["light", "ink"].includes(settings.theme_night) ? "light" : "dark"}>
                                 ${theme_preview()}
                             </div>
                             ` : html.node`
@@ -49055,10 +49073,10 @@
       const adaptive = buttons.find((button) => button.getAttribute("data-theme-id") == "adaptive");
       const bubble = adaptive.querySelector(":scope > .bubble");
       render(bubble, html`
-            <div class="inner theme-preview" data-bleh--theme=${settings.theme_day} data-bleh--theme_type="light">
+            <div class="inner theme-preview" data-bleh--theme=${settings.theme_day} data-bleh--theme_type=${["light", "ink"].includes(settings.theme_day) ? "light" : "dark"}>
                 ${theme_preview()}
             </div>
-            <div class="inner theme-preview" data-bleh--theme=${settings.theme_night} data-bleh--theme_type="dark">
+            <div class="inner theme-preview" data-bleh--theme=${settings.theme_night} data-bleh--theme_type=${["light", "ink"].includes(settings.theme_night) ? "light" : "dark"}>
                 ${theme_preview()}
             </div>
         `);
@@ -51590,6 +51608,76 @@
   unsafeWindow._setup_themes = function() {
     page.structure.setup.setAttribute("data-page", "themes");
     page.structure.setup.setAttribute("data-animating", "true");
+    let adaptive_tip;
+    let bubbles;
+    function render_tip() {
+      adaptive_tip.setAttribute("aria-hidden", !settings.theme_schedule);
+      render(adaptive_tip, html`
+            ${tl(trans.adaptive_tip, { "day": tl(trans.themes[settings.theme_day]), "night": tl(trans.themes[settings.theme_night]) })}<a onclick=${() => {
+        dialog({
+          id: "auto_theme",
+          title: tl(trans.themes.name),
+          body: html.node`
+                        <div class="setting-group">
+                            ${theme_day = setting({ id: "theme_day", list: [
+            {
+              value: "light",
+              text: tl(trans.themes.light)
+            },
+            {
+              value: "ink",
+              text: tl(trans.themes.ink)
+            },
+            {
+              value: "dark",
+              text: tl(trans.themes.dark)
+            },
+            {
+              value: "darker",
+              text: tl(trans.themes.darker)
+            },
+            {
+              value: "oled",
+              text: tl(trans.themes.oled)
+            }
+          ], func: () => {
+            render_tip();
+            bubbles.re_render();
+            match2();
+          } })}
+                            ${theme_night = setting({ id: "theme_night", list: [
+            {
+              value: "light",
+              text: tl(trans.themes.light)
+            },
+            {
+              value: "ink",
+              text: tl(trans.themes.ink)
+            },
+            {
+              value: "dark",
+              text: tl(trans.themes.dark)
+            },
+            {
+              value: "darker",
+              text: tl(trans.themes.darker)
+            },
+            {
+              value: "oled",
+              text: tl(trans.themes.oled)
+            }
+          ], func: () => {
+            render_tip();
+            bubbles.re_render();
+            match2();
+          } })}
+                        </div>
+                        <p class="card-tip">${tl(trans.theme_schedule)}</p>
+                    `
+        });
+      }}>${tl(trans.change_schedule)}</a>
+        `);
+    }
     setTimeout(function() {
       page.structure.setup.setAttribute("data-animating", "false");
       render(page.structure.setup_content, html`
@@ -51598,8 +51686,13 @@
                     <div class="heading">
                         <h5>${tl(trans.themes.name)}</h5>
                     </div>
-                    <div class="info">
-                        ${theme_bubbles}
+                    <div class="info v">
+                        ${bubbles = theme_bubbles(() => {
+        sat_bg.compat();
+        render_tip();
+        match2();
+      })}
+                        <p class="card-tip" ref=${(el) => adaptive_tip = el} />
                     </div>
                 </div>
                 ${setting({ id: "solarium" })}
@@ -51613,7 +51706,9 @@
                         <div id="colour_palette" class="swatch-group palette"></div>
                     </div>
                 </div>
-                ${ff("card_saturation") ? setting({ id: "sat_bg" }) : ""}
+                ${ff("card_saturation") ? html.node`
+                ${sat_bg = setting({ id: "sat_bg" })}
+                ` : ""}
             </div>
         `);
       page.structure.setup_footer.innerHTML = `
@@ -51625,6 +51720,7 @@
                 ${tl(trans.next)}
             </button>
         `;
+      render_tip();
       display_colour_presets();
       update_colour_swatches();
     }, page.state.trans);

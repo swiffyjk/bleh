@@ -19,6 +19,9 @@ import {html, render} from "lighterhtml";
 import {setting} from "../components/settings.js";
 import { ff } from '../sku.js';
 import { sponsor } from '../sponsor.js';
+import { settings } from '../build/config.js';
+import { dialog } from '../components/dialog.js';
+import { match } from '../components/dynamic_theming.js';
 
 export function bleh_setup() {
     page.structure.container = document.body.querySelector('.page-content');
@@ -118,6 +121,79 @@ unsafeWindow._setup_themes = function() {
     page.structure.setup.setAttribute('data-page', 'themes');
     page.structure.setup.setAttribute('data-animating', 'true');
 
+    let adaptive_tip;
+    let bubbles;
+
+    function render_tip() {
+        adaptive_tip.setAttribute('aria-hidden', !settings.theme_schedule);
+
+        render(adaptive_tip, html`
+            ${tl(trans.adaptive_tip, {'day': tl(trans.themes[settings.theme_day]), 'night': tl(trans.themes[settings.theme_night])})}<a onclick=${() => {
+                dialog({
+                    id: 'auto_theme',
+                    title: tl(trans.themes.name),
+                    body: html.node`
+                        <div class="setting-group">
+                            ${theme_day = setting({id: 'theme_day', list: [
+                                {
+                                    value: 'light',
+                                    text: tl(trans.themes.light)
+                                },
+                                {
+                                    value: 'ink',
+                                    text: tl(trans.themes.ink)
+                                },
+                                {
+                                    value: 'dark',
+                                    text: tl(trans.themes.dark)
+                                },
+                                {
+                                    value: 'darker',
+                                    text: tl(trans.themes.darker)
+                                },
+                                {
+                                    value: 'oled',
+                                    text: tl(trans.themes.oled)
+                                }
+                            ], func: () => {
+                                render_tip();
+                                bubbles.re_render();
+                                match();
+                            }})}
+                            ${theme_night = setting({id: 'theme_night', list: [
+                                {
+                                    value: 'light',
+                                    text: tl(trans.themes.light)
+                                },
+                                {
+                                    value: 'ink',
+                                    text: tl(trans.themes.ink)
+                                },
+                                {
+                                    value: 'dark',
+                                    text: tl(trans.themes.dark)
+                                },
+                                {
+                                    value: 'darker',
+                                    text: tl(trans.themes.darker)
+                                },
+                                {
+                                    value: 'oled',
+                                    text: tl(trans.themes.oled)
+                                }
+                            ], func: () => {
+                                render_tip();
+                                bubbles.re_render();
+                                match();
+                            }})}
+                        </div>
+                        <p class="card-tip">${tl(trans.theme_schedule)}</p>
+                    `
+                });
+            }}>${tl(trans.change_schedule)}</a>
+        `);
+    }
+
     setTimeout(function() {
         page.structure.setup.setAttribute('data-animating', 'false');
         render(page.structure.setup_content, html`
@@ -126,8 +202,14 @@ unsafeWindow._setup_themes = function() {
                     <div class="heading">
                         <h5>${tl(trans.themes.name)}</h5>
                     </div>
-                    <div class="info">
-                        ${theme_bubbles}
+                    <div class="info v">
+                        ${bubbles = theme_bubbles(() => {
+                            sat_bg.compat();
+
+                            render_tip();
+                            match();
+                        })}
+                        <p class="card-tip" ref=${el => adaptive_tip = el} />
                     </div>
                 </div>
                 ${setting({id: 'solarium'})}
@@ -141,7 +223,9 @@ unsafeWindow._setup_themes = function() {
                         <div id="colour_palette" class="swatch-group palette"></div>
                     </div>
                 </div>
-                ${ff('card_saturation') ? setting({id: 'sat_bg'}) : ''}
+                ${ff('card_saturation') ? html.node`
+                ${sat_bg = setting({id: 'sat_bg'})}
+                ` : ''}
             </div>
         `);
         page.structure.setup_footer.innerHTML = (`
@@ -153,6 +237,8 @@ unsafeWindow._setup_themes = function() {
                 ${tl(trans.next)}
             </button>
         `);
+
+        render_tip();
 
         display_colour_presets();
         update_colour_swatches();
