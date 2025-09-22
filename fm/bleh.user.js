@@ -34244,6 +34244,8 @@
         const m = Math.floor(total_s / 60);
         const s2 = total_s % 60;
         const disambig = track.recording.disambiguation;
+        const video = track.recording.video;
+        if (video) return html.node``;
         let title = track.title;
         if (track_entry) {
           title = track_entry;

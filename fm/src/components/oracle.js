@@ -314,6 +314,9 @@ export function oracle_process() {
                             const s = total_s % 60;
 
                             const disambig = track.recording.disambiguation;
+                            const video = track.recording.video;
+
+                            if (video) return html.node``;
 
                             let title = track.title;
 
