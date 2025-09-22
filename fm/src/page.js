@@ -76,6 +76,7 @@ import { convert_gif_to_png } from './build/tools.js';
 import { load_status } from './components/status.js';
 import { load_dismissed } from './components/dismissed.js';
 import { oracle_data } from './components/oracle.js';
+import { dynamic_theming } from './components/dynamic_theming.js';
 
 export function bleh() {
     let head_observer = new MutationObserver((mutations) => {
@@ -126,6 +127,8 @@ function bleh_main() {
         auth.name = auth_link.state.querySelector('img').getAttribute('alt');
 
     load_settings();
+
+    dynamic_theming();
 
     solarium();
 

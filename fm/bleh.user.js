@@ -587,7 +587,7 @@
           });
           return units;
         }
-        var match1 = /\d/, match2 = /\d\d/, match3 = /\d{3}/, match4 = /\d{4}/, match6 = /[+-]?\d{6}/, match1to2 = /\d\d?/, match3to4 = /\d\d\d\d?/, match5to6 = /\d\d\d\d\d\d?/, match1to3 = /\d{1,3}/, match1to4 = /\d{1,4}/, match1to6 = /[+-]?\d{1,6}/, matchUnsigned = /\d+/, matchSigned = /[+-]?\d+/, matchOffset = /Z|[+-]\d\d:?\d\d/gi, matchShortOffset = /Z|[+-]\d\d(?::?\d\d)?/gi, matchTimestamp = /[+-]?\d+(\.\d{1,3})?/, matchWord = /[0-9]{0,256}['a-z\u00A0-\u05FF\u0700-\uD7FF\uF900-\uFDCF\uFDF0-\uFF07\uFF10-\uFFEF]{1,256}|[\u0600-\u06FF\/]{1,256}(\s*?[\u0600-\u06FF]{1,256}){1,2}/i, match1to2NoLeadingZero = /^[1-9]\d?/, match1to2HasZero = /^([1-9]\d|\d)/, regexes;
+        var match1 = /\d/, match22 = /\d\d/, match3 = /\d{3}/, match4 = /\d{4}/, match6 = /[+-]?\d{6}/, match1to2 = /\d\d?/, match3to4 = /\d\d\d\d?/, match5to6 = /\d\d\d\d\d\d?/, match1to3 = /\d{1,3}/, match1to4 = /\d{1,4}/, match1to6 = /[+-]?\d{1,6}/, matchUnsigned = /\d+/, matchSigned = /[+-]?\d+/, matchOffset = /Z|[+-]\d\d:?\d\d/gi, matchShortOffset = /Z|[+-]\d\d(?::?\d\d)?/gi, matchTimestamp = /[+-]?\d+(\.\d{1,3})?/, matchWord = /[0-9]{0,256}['a-z\u00A0-\u05FF\u0700-\uD7FF\uF900-\uFDCF\uFDF0-\uFF07\uFF10-\uFFEF]{1,256}|[\u0600-\u06FF\/]{1,256}(\s*?[\u0600-\u06FF]{1,256}){1,2}/i, match1to2NoLeadingZero = /^[1-9]\d?/, match1to2HasZero = /^([1-9]\d|\d)/, regexes;
         regexes = {};
         function addRegexToken(token2, regex, strictRegex) {
           regexes[token2] = isFunction2(regex) ? regex : function(isStrict, localeData2) {
@@ -669,7 +669,7 @@
         addFormatToken(0, ["YYYYY", 5], 0, "year");
         addFormatToken(0, ["YYYYYY", 6, true], 0, "year");
         addRegexToken("Y", matchSigned);
-        addRegexToken("YY", match1to2, match2);
+        addRegexToken("YY", match1to2, match22);
         addRegexToken("YYYY", match1to4, match4);
         addRegexToken("YYYYY", match1to6, match6);
         addRegexToken("YYYYYY", match1to6, match6);
@@ -821,7 +821,7 @@
           return this.localeData().months(this, format2);
         });
         addRegexToken("M", match1to2, match1to2NoLeadingZero);
-        addRegexToken("MM", match1to2, match2);
+        addRegexToken("MM", match1to2, match22);
         addRegexToken("MMM", function(isStrict, locale2) {
           return locale2.monthsShortRegex(isStrict);
         });
@@ -1094,9 +1094,9 @@
         addFormatToken("w", ["ww", 2], "wo", "week");
         addFormatToken("W", ["WW", 2], "Wo", "isoWeek");
         addRegexToken("w", match1to2, match1to2NoLeadingZero);
-        addRegexToken("ww", match1to2, match2);
+        addRegexToken("ww", match1to2, match22);
         addRegexToken("W", match1to2, match1to2NoLeadingZero);
-        addRegexToken("WW", match1to2, match2);
+        addRegexToken("WW", match1to2, match22);
         addWeekParseToken(
           ["w", "ww", "W", "WW"],
           function(input2, week, config, token2) {
@@ -1461,9 +1461,9 @@
         addRegexToken("H", match1to2, match1to2HasZero);
         addRegexToken("h", match1to2, match1to2NoLeadingZero);
         addRegexToken("k", match1to2, match1to2NoLeadingZero);
-        addRegexToken("HH", match1to2, match2);
-        addRegexToken("hh", match1to2, match2);
-        addRegexToken("kk", match1to2, match2);
+        addRegexToken("HH", match1to2, match22);
+        addRegexToken("hh", match1to2, match22);
+        addRegexToken("kk", match1to2, match22);
         addRegexToken("hmm", match3to4);
         addRegexToken("hmmss", match5to6);
         addRegexToken("Hmm", match3to4);
@@ -3321,8 +3321,8 @@
         addWeekYearFormatToken("GGGGG", "isoWeekYear");
         addRegexToken("G", matchSigned);
         addRegexToken("g", matchSigned);
-        addRegexToken("GG", match1to2, match2);
-        addRegexToken("gg", match1to2, match2);
+        addRegexToken("GG", match1to2, match22);
+        addRegexToken("gg", match1to2, match22);
         addRegexToken("GGGG", match1to4, match4);
         addRegexToken("gggg", match1to4, match4);
         addRegexToken("GGGGG", match1to6, match6);
@@ -3399,7 +3399,7 @@
         }
         addFormatToken("D", ["DD", 2], "Do", "date");
         addRegexToken("D", match1to2, match1to2NoLeadingZero);
-        addRegexToken("DD", match1to2, match2);
+        addRegexToken("DD", match1to2, match22);
         addRegexToken("Do", function(isStrict, locale2) {
           return isStrict ? locale2._dayOfMonthOrdinalParse || locale2._ordinalParse : locale2._dayOfMonthOrdinalParseLenient;
         });
@@ -3422,12 +3422,12 @@
         }
         addFormatToken("m", ["mm", 2], 0, "minute");
         addRegexToken("m", match1to2, match1to2HasZero);
-        addRegexToken("mm", match1to2, match2);
+        addRegexToken("mm", match1to2, match22);
         addParseToken(["m", "mm"], MINUTE);
         var getSetMinute = makeGetSet("Minutes", false);
         addFormatToken("s", ["ss", 2], 0, "second");
         addRegexToken("s", match1to2, match1to2HasZero);
-        addRegexToken("ss", match1to2, match2);
+        addRegexToken("ss", match1to2, match22);
         addParseToken(["s", "ss"], SECOND);
         var getSetSecond = makeGetSet("Seconds", false);
         addFormatToken("S", 0, 0, function() {
@@ -3456,7 +3456,7 @@
           return this.millisecond() * 1e6;
         });
         addRegexToken("S", match1to3, match1);
-        addRegexToken("SS", match1to3, match2);
+        addRegexToken("SS", match1to3, match22);
         addRegexToken("SSS", match1to3, match3);
         var token, getSetMillisecond;
         for (token = "SSSS"; token.length <= 9; token += "S") {
@@ -18004,8 +18004,8 @@
         showdown2.subParser("hashCodeTags", function(text3, options, globals) {
           "use strict";
           text3 = globals.converter._dispatch("hashCodeTags.before", text3, options, globals);
-          var repFunc = function(wholeMatch, match2, left2, right2) {
-            var codeblock = left2 + showdown2.subParser("encodeCode")(match2, options, globals) + right2;
+          var repFunc = function(wholeMatch, match3, left2, right2) {
+            var codeblock = left2 + showdown2.subParser("encodeCode")(match3, options, globals) + right2;
             return "\xA8C" + (globals.gHtmlSpans.push(codeblock) - 1) + "C";
           };
           text3 = showdown2.helper.replaceRecursiveRegExp(text3, repFunc, "<code\\b[^>]*>", "</code>", "gim");
@@ -18061,10 +18061,10 @@
             "output",
             "video",
             "p"
-          ], repFunc = function(wholeMatch, match2, left2, right2) {
+          ], repFunc = function(wholeMatch, match3, left2, right2) {
             var txt = wholeMatch;
             if (left2.search(/\bmarkdown\b/) !== -1) {
-              txt = left2 + globals.converter.makeHtml(match2) + right2;
+              txt = left2 + globals.converter.makeHtml(match3) + right2;
             }
             return "\n\n\xA8K" + (globals.gHtmlBlocks.push(txt) - 1) + "K\n\n";
           };
@@ -18140,8 +18140,8 @@
         showdown2.subParser("hashPreCodeTags", function(text3, options, globals) {
           "use strict";
           text3 = globals.converter._dispatch("hashPreCodeTags.before", text3, options, globals);
-          var repFunc = function(wholeMatch, match2, left2, right2) {
-            var codeblock = left2 + showdown2.subParser("encodeCode")(match2, options, globals) + right2;
+          var repFunc = function(wholeMatch, match3, left2, right2) {
+            var codeblock = left2 + showdown2.subParser("encodeCode")(match3, options, globals) + right2;
             return "\n\n\xA8G" + (globals.ghCodeBlocks.push({ text: wholeMatch, codeblock }) - 1) + "G\n\n";
           };
           text3 = showdown2.helper.replaceRecursiveRegExp(text3, repFunc, "^ {0,3}<pre\\b[^>]*>\\s*<code\\b[^>]*>", "^ {0,3}</code>\\s*</pre>", "gim");
@@ -18172,9 +18172,9 @@
           function headerId(m) {
             var title, prefix;
             if (options.customizedHeaderId) {
-              var match2 = m.match(/\{([^{]+?)}\s*$/);
-              if (match2 && match2[1]) {
-                m = match2[1];
+              var match3 = m.match(/\{([^{]+?)}\s*$/);
+              if (match3 && match3[1]) {
+                m = match3[1];
               }
             }
             title = m;
@@ -29697,11 +29697,11 @@
     return [null, null];
   }
   function simpleParse(...keys2) {
-    return (match2, cursor) => {
+    return (match3, cursor) => {
       const ret = {};
       let i;
       for (i = 0; i < keys2.length; i++) {
-        ret[keys2[i]] = parseInteger(match2[cursor + i]);
+        ret[keys2[i]] = parseInteger(match3[cursor + i]);
       }
       return [ret, null, cursor + i];
     };
@@ -29721,39 +29721,39 @@
     `${isoTimeBaseRegex.source} ?(?:${offsetRegex.source}|(${ianaRegex.source}))?`
   );
   var sqlTimeExtensionRegex = RegExp(`(?: ${sqlTimeRegex.source})?`);
-  function int(match2, pos, fallback) {
-    const m = match2[pos];
+  function int(match3, pos, fallback) {
+    const m = match3[pos];
     return isUndefined(m) ? fallback : parseInteger(m);
   }
-  function extractISOYmd(match2, cursor) {
+  function extractISOYmd(match3, cursor) {
     const item = {
-      year: int(match2, cursor),
-      month: int(match2, cursor + 1, 1),
-      day: int(match2, cursor + 2, 1)
+      year: int(match3, cursor),
+      month: int(match3, cursor + 1, 1),
+      day: int(match3, cursor + 2, 1)
     };
     return [item, null, cursor + 3];
   }
-  function extractISOTime(match2, cursor) {
+  function extractISOTime(match3, cursor) {
     const item = {
-      hours: int(match2, cursor, 0),
-      minutes: int(match2, cursor + 1, 0),
-      seconds: int(match2, cursor + 2, 0),
-      milliseconds: parseMillis(match2[cursor + 3])
+      hours: int(match3, cursor, 0),
+      minutes: int(match3, cursor + 1, 0),
+      seconds: int(match3, cursor + 2, 0),
+      milliseconds: parseMillis(match3[cursor + 3])
     };
     return [item, null, cursor + 4];
   }
-  function extractISOOffset(match2, cursor) {
-    const local = !match2[cursor] && !match2[cursor + 1], fullOffset = signedOffset(match2[cursor + 1], match2[cursor + 2]), zone = local ? null : FixedOffsetZone.instance(fullOffset);
+  function extractISOOffset(match3, cursor) {
+    const local = !match3[cursor] && !match3[cursor + 1], fullOffset = signedOffset(match3[cursor + 1], match3[cursor + 2]), zone = local ? null : FixedOffsetZone.instance(fullOffset);
     return [{}, zone, cursor + 3];
   }
-  function extractIANAZone(match2, cursor) {
-    const zone = match2[cursor] ? IANAZone.create(match2[cursor]) : null;
+  function extractIANAZone(match3, cursor) {
+    const zone = match3[cursor] ? IANAZone.create(match3[cursor]) : null;
     return [{}, zone, cursor + 1];
   }
   var isoTimeOnly = RegExp(`^T?${isoTimeBaseRegex.source}$`);
   var isoDuration = /^-?P(?:(?:(-?\d{1,20}(?:\.\d{1,20})?)Y)?(?:(-?\d{1,20}(?:\.\d{1,20})?)M)?(?:(-?\d{1,20}(?:\.\d{1,20})?)W)?(?:(-?\d{1,20}(?:\.\d{1,20})?)D)?(?:T(?:(-?\d{1,20}(?:\.\d{1,20})?)H)?(?:(-?\d{1,20}(?:\.\d{1,20})?)M)?(?:(-?\d{1,20})(?:[.,](-?\d{1,20}))?S)?)?)$/;
-  function extractISODuration(match2) {
-    const [s2, yearStr, monthStr, weekStr, dayStr, hourStr, minuteStr, secondStr, millisecondsStr] = match2;
+  function extractISODuration(match3) {
+    const [s2, yearStr, monthStr, weekStr, dayStr, hourStr, minuteStr, secondStr, millisecondsStr] = match3;
     const hasNegativePrefix = s2[0] === "-";
     const negativeSeconds = secondStr && secondStr[0] === "-";
     const maybeNegate = (num, force = false) => num !== void 0 && (force || num && hasNegativePrefix) ? -num : num;
@@ -29796,7 +29796,7 @@
     return result;
   }
   var rfc2822 = /^(?:(Mon|Tue|Wed|Thu|Fri|Sat|Sun),\s)?(\d{1,2})\s(Jan|Feb|Mar|Apr|May|Jun|Jul|Aug|Sep|Oct|Nov|Dec)\s(\d{2,4})\s(\d\d):(\d\d)(?::(\d\d))?\s(?:(UT|GMT|[ECMP][SD]T)|([Zz])|(?:([+-]\d\d)(\d\d)))$/;
-  function extractRFC2822(match2) {
+  function extractRFC2822(match3) {
     const [
       ,
       weekdayStr,
@@ -29810,7 +29810,7 @@
       milOffset,
       offHourStr,
       offMinuteStr
-    ] = match2, result = fromStrings(weekdayStr, yearStr, monthStr, dayStr, hourStr, minuteStr, secondStr);
+    ] = match3, result = fromStrings(weekdayStr, yearStr, monthStr, dayStr, hourStr, minuteStr, secondStr);
     let offset3;
     if (obsOffset) {
       offset3 = obsOffsets[obsOffset];
@@ -29827,12 +29827,12 @@
   var rfc1123 = /^(Mon|Tue|Wed|Thu|Fri|Sat|Sun), (\d\d) (Jan|Feb|Mar|Apr|May|Jun|Jul|Aug|Sep|Oct|Nov|Dec) (\d{4}) (\d\d):(\d\d):(\d\d) GMT$/;
   var rfc850 = /^(Monday|Tuesday|Wednesday|Thursday|Friday|Saturday|Sunday), (\d\d)-(Jan|Feb|Mar|Apr|May|Jun|Jul|Aug|Sep|Oct|Nov|Dec)-(\d\d) (\d\d):(\d\d):(\d\d) GMT$/;
   var ascii = /^(Mon|Tue|Wed|Thu|Fri|Sat|Sun) (Jan|Feb|Mar|Apr|May|Jun|Jul|Aug|Sep|Oct|Nov|Dec) ( \d|\d\d) (\d\d):(\d\d):(\d\d) (\d{4})$/;
-  function extractRFC1123Or850(match2) {
-    const [, weekdayStr, dayStr, monthStr, yearStr, hourStr, minuteStr, secondStr] = match2, result = fromStrings(weekdayStr, yearStr, monthStr, dayStr, hourStr, minuteStr, secondStr);
+  function extractRFC1123Or850(match3) {
+    const [, weekdayStr, dayStr, monthStr, yearStr, hourStr, minuteStr, secondStr] = match3, result = fromStrings(weekdayStr, yearStr, monthStr, dayStr, hourStr, minuteStr, secondStr);
     return [result, FixedOffsetZone.utcInstance];
   }
-  function extractASCII(match2) {
-    const [, weekdayStr, monthStr, dayStr, hourStr, minuteStr, secondStr, yearStr] = match2, result = fromStrings(weekdayStr, yearStr, monthStr, dayStr, hourStr, minuteStr, secondStr);
+  function extractASCII(match3) {
+    const [, weekdayStr, monthStr, dayStr, hourStr, minuteStr, secondStr, yearStr] = match3, result = fromStrings(weekdayStr, yearStr, monthStr, dayStr, hourStr, minuteStr, secondStr);
     return [result, FixedOffsetZone.utcInstance];
   }
   var isoYmdWithTimeExtensionRegex = combineRegexes(isoYmdRegex, isoTimeExtensionRegex);
@@ -34348,19 +34348,19 @@
             else if (oracle_entry.disambiguation.other)
               title = oracle_entry.disambiguation.other;
           }
-          const match2 = lastfm_releases.find(
+          const match3 = lastfm_releases.find(
             (r) => r.title == title && r.artist == artist
           );
           let plays = 0;
           let artwork;
-          if (match2) {
-            plays = match2.plays;
-            artwork = match2.artwork;
+          if (match3) {
+            plays = match3.plays;
+            artwork = match3.artwork;
           }
           let artwork_container;
           let stats;
           const elem = html.node`
-                            <div class="source-album js-link-block link-block-cover-link" data-match=${match2 != null}>
+                            <div class="source-album js-link-block link-block-cover-link" data-match=${match3 != null}>
                                 <div class="source-album-art" ref=${(el) => artwork_container = el}>
                                     ${artwork ? html.node`
                                     <span class="cover-art">
@@ -34373,7 +34373,7 @@
                                     <p class="source-album-artist">${correct_artist(artist)}</p>
                                     <p class="source-album-stats oracle-stats" ref=${(el) => stats = el}>
                                         ${type}
-                                        ${match2 ? html.node`
+                                        ${match3 ? html.node`
                                         <span class="plays">
                                             <span class="bleh-icon" />
                                             ${plays}
@@ -37778,15 +37778,15 @@
         feed.forEach((item) => {
           let extended = `${item.text} ${item.body} ${item.keywords.join(" ")} ${item.keybind ? item.keybind.join(" ").replace("\u2318", "Ctrl").replace("\u21E7", "Shift") : ""}`.toLowerCase();
           let words = value.split(" ");
-          let match2 = false;
+          let match3 = false;
           words.forEach((word) => {
             if (extended.includes(word)) {
-              match2 = true;
+              match3 = true;
             }
           });
           if (item.hide)
-            match2 = false;
-          if (match2)
+            match3 = false;
+          if (match3)
             matches.push(item);
         });
         render(rabbit_hole, html`
@@ -41966,12 +41966,12 @@
         let hue_range;
         let sat_range;
         let lit_range;
-        const match2 = about.value.match(accent_regex);
-        console.info(match2);
-        if (match2) {
-          save_setting("profile_hue", parseInt(match2[1], 10));
-          save_setting("profile_sat", parseFloat(match2[2]));
-          save_setting("profile_lit", parseFloat(match2[3]));
+        const match3 = about.value.match(accent_regex);
+        console.info(match3);
+        if (match3) {
+          save_setting("profile_hue", parseInt(match3[1], 10));
+          save_setting("profile_sat", parseFloat(match3[2]));
+          save_setting("profile_lit", parseFloat(match3[3]));
           settings_store.profile_hue.default = settings.hue;
           settings_store.profile_sat.default = settings.sat;
           settings_store.profile_lit.default = settings.lit;
@@ -42023,7 +42023,7 @@
                                     <div class="fill"></div>
                                     <button class="btn primary continue" onclick=${() => {
             const new_accent = `[accent=${settings.profile_hue},${settings.profile_sat},${settings.profile_lit}]`;
-            if (match2) {
+            if (match3) {
               about.value = about.value.replace(accent_regex, new_accent);
             } else {
               const trimmed = about.value.trimEnd();
@@ -45974,19 +45974,19 @@
     });
     const markdown2 = text3.replace(
       /\[artist\]([^[\]]+)\[\/artist\]/g,
-      (match2, artist) => `[${artist}](${root}music/${redirect()}${encodeURIComponent(artist)})`
+      (match3, artist) => `[${artist}](${root}music/${redirect()}${encodeURIComponent(artist)})`
     ).replace(
       /\[album artist=([^[\]]+)\]([^[\]]+)\[\/album\]/g,
-      (match2, artist, album) => `[${album}](${root}music/${encodeURIComponent(artist)}/${encodeURIComponent(album)})`
+      (match3, artist, album) => `[${album}](${root}music/${encodeURIComponent(artist)}/${encodeURIComponent(album)})`
     ).replace(
       /\[track artist=([^[\]]+)\]([^[\]]+)\[\/track\]/g,
-      (match2, artist, track) => `[${track}](${root}music/${encodeURIComponent(artist)}/_/${encodeURIComponent(track)})`
+      (match3, artist, track) => `[${track}](${root}music/${encodeURIComponent(artist)}/_/${encodeURIComponent(track)})`
     ).replace(
       /\[url=([^[\]]+)\]([^[\]]+)\[\/url\]/g,
-      (match2, url, text4) => `[${text4}](${encodeURI(url)})`
+      (match3, url, text4) => `[${text4}](${encodeURI(url)})`
     ).replace(
       /\[url\]([^[\]]+)\[\/url\]/g,
-      (match2, url) => `[${url}](${encodeURI(url)})`
+      (match3, url) => `[${url}](${encodeURI(url)})`
     );
     const raw_html = converter.makeHtml(markdown2);
     const parsed2 = purify.sanitize(raw_html, {
@@ -49282,12 +49282,12 @@
       return result2;
     }
     const cleaned_title = formatted_title.slice(0, matches[0].idx).trim().replace(/[\(\[\{]+$/, "").trim();
-    const extras = matches.map((match2, i) => {
-      const start2 = match2.idx;
+    const extras = matches.map((match3, i) => {
+      const start2 = match3.idx;
       const end2 = i + 1 < matches.length ? matches[i + 1].idx : formatted_title.length;
       const tag_text = formatted_title.slice(start2, end2).replace(/^[\(\[\{\-\:\s]+/, "").replace(/[\)\]\}\-\:\s]+$/, "").trim();
       return {
-        group: match2.group,
+        group: match3.group,
         text: tag_text
       };
     });
@@ -49776,8 +49776,8 @@
             <a class="link-block-cover-link" href=${link.getAttribute("href")} />
         `);
       function obtain_additional_info(text3, backup_text = null) {
-        const match2 = text3.match(/\d+/);
-        if (match2) others_included = parseInt(match2[0]);
+        const match3 = text3.match(/\d+/);
+        if (match3) others_included = parseInt(match3[0]);
         if (text3.includes(tl(trans.notification_replied_ctx))) is_reply = true;
         else if (backup_text && backup_text.trim().includes(tl(trans.notification_replied_ctx))) is_reply = true;
       }
@@ -51440,8 +51440,8 @@
     const no_data = buffer.querySelector(":scope > .no-data-message");
     if (!no_data) {
       const p = buffer.querySelector(":scope > p");
-      const match2 = p.textContent.match(/\d+/);
-      const count = parseInt(match2[0]);
+      const match3 = p.textContent.match(/\d+/);
+      const count = parseInt(match3[0]);
       p.remove();
       buffer.insertBefore(html.node`
             <h2>${tl(trans.count_mutual_listeners).replace("{c}", count.toString())}</h2>
@@ -53566,6 +53566,23 @@
   function load_dismissed() {
   }
 
+  // src/components/dynamic_theming.js
+  function dynamic_theming() {
+    const media = window.matchMedia("(prefers-color-scheme: dark)");
+    match2(media);
+    media.addEventListener("change", match2);
+  }
+  function match2(media) {
+    if (media.matches)
+      apply_theme("night");
+    else
+      apply_theme("day");
+  }
+  function apply_theme(time) {
+    log(`applying theme for time ${time}`, "dynamic theming");
+    save_setting("theme", settings[`theme_${time}`]);
+  }
+
   // src/page.js
   function bleh() {
     let head_observer = new MutationObserver((mutations) => {
@@ -53606,6 +53623,7 @@
     if (auth_link.state)
       auth.name = auth_link.state.querySelector("img").getAttribute("alt");
     load_settings();
+    dynamic_theming();
     solarium();
     load_dialogs();
     register_rabbit();
