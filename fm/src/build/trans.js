@@ -39,7 +39,7 @@ export let lang_info = {
         sv: {
         name: 'Svenska',
         by: ['Lrexie'],
-        last_updated:  '2025-09-22'
+        last_updated:  '2025-09-23'
     }
 }
 
