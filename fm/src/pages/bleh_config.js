@@ -1285,6 +1285,7 @@ export async function render_setting_page(page_id) {
                     }})}
                     ${starred = setting({id: 'starred_friend', list: select_prepare_list([{value: '', text: tl(trans.none)}, ...settings.friends])})}
                 </div>
+                <p class="card-tip">${tl(trans.friend_difference)}</p>
             </section>
             ` : ''}
             <section class="bleh--panel">
