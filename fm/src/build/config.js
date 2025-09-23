@@ -1078,14 +1078,12 @@ export let settings_store = {
         type: 'list',
         title: trans.navigation_items.name,
         body: trans.navigation_items.body,
-        new_release: true,
         predefined: true
     },
     navigation_language: {
         default: true,
         type: 'checkbox',
-        title: trans.navigation_language,
-        new_release: true
+        title: trans.navigation_language
     },
     branding_type: {
         default: 'bleh',
@@ -1099,8 +1097,7 @@ export let settings_store = {
             lastfm: {
                 name: 'Last.fm'
             }
-        },
-        new_release: true
+        }
     },
     expand_tracks: {
         default: 'active',
@@ -1118,7 +1115,6 @@ export let settings_store = {
                 name: trans.never
             }
         },
-        new_release: true,
         incompatible: {stacked_chartlist_info: false}
     },
     rain: {
@@ -1130,8 +1126,7 @@ export let settings_store = {
     collage_centered: {
         default: true,
         title: trans.collage_centered.name,
-        body: trans.collage_centered.body,
-        new_release: true
+        body: trans.collage_centered.body
     },
     static_gifs: {
         default: 'always',
@@ -1203,7 +1198,6 @@ export let settings_store = {
         type: 'list',
         title: trans.friends,
         body: trans.friends_setting,
-        new_release: true,
         warn_if_matches_auth: true
     },
     starred_friend: {
