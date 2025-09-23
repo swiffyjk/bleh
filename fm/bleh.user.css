@@ -262,8 +262,6 @@
         --card-blur-bg-alt: hsl(var(--b5), 35%);
         --card-blur: blur(6px) saturate(var(--blur-saturate)) brightness(1) contrast(1);
 
-        --solarium: var(--card-blur) url(#solarium);
-
         --menu-item-hov: hsla(var(--b4), 40%);
         --menu-item-atv: hsla(var(--b4), 60%);
 
@@ -696,6 +694,14 @@
         --shout-actions-opacity: 0.45;
 
         --rain: 0, 0%, 100%;
+
+        --solarium: var(--card-blur);
+
+        @supports (filter: url(#solarium)) {
+            body {
+                --solarium: var(--card-blur) url(#solarium);
+            }
+        }
 
         &[data-bleh--theme_type="light"], [data-bleh--theme_type="light"] > & {
             --card-shadow: hsla(var(--b7), 0.05) 0 2px 4px 0;
