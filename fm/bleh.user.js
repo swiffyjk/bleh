@@ -51338,7 +51338,8 @@
           placement: "bottom",
           interactive: true,
           interactiveBorder: 10,
-          trigger: "click"
+          trigger: "click",
+          appendTo: document.body
         });
       }
       let top_albums = page.structure.main.querySelector("#top-albums");
@@ -51486,7 +51487,8 @@
         placement: "bottom",
         interactive: true,
         interactiveBorder: 10,
-        trigger: "click"
+        trigger: "click",
+        appendTo: document.body
       });
     }
   }
