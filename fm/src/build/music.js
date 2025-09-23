@@ -118,11 +118,12 @@ export let includes = {
         '(taylor', '- spotify singles', '[taylor',
         '(+',
         '- versão', '(versão', '[versão',
-        ' - without dialogue', '(without dialogue', '[without dialogue',
-        ' - no dialogue', '(no dialogue', '[no dialogue',
+        '- without dialogue', '(without dialogue', '[without dialogue',
+        '- no dialogue', '(no dialogue', '[no dialogue',
         '- pop version', '(pop version', '[pop version',
         '- rock version', '(rock version', '[rock version',
-        '- pop mix', '(pop mix', '[pop mix'
+        '- pop mix', '(pop mix', '[pop mix',
+        '- emo version', '(emo version', '[emo version'
     ],
     remasters: [
         '- remaster', '(remaster', '[remaster',
@@ -144,7 +145,6 @@ export let includes = {
         '- solo acoustic', '(solo acoustic',
         '- acoustic', '(acoustic',
         '- alternative', '(alternative',
-        '(mix 1', '(mix 2', '(mix 3', '(mix 4', '(mix 5', '(mix 6', '(mix 7', '(mix 8', '(mix 9',
         '- chopped', '(chopped', '[chopped',
         '(kate',
         '(asmr',
@@ -176,7 +176,19 @@ export let includes = {
         '- full length', '(full length', '[full length',
         '[over now', // billie eilish l'amour de ma vie
         '- the remix', '(the remix', '[the remix',
-        '(unfinished original recordings of de-loused in the comatorium', '[unfinished original recordings of de-loused in the comatorium', '- unfinished original recordings of de-loused in the comatorium' // landscape tantrums
+        '(unfinished original recordings of de-loused in the comatorium', '[unfinished original recordings of de-loused in the comatorium', '- unfinished original recordings of de-loused in the comatorium', // landscape tantrums
+        '- esher', '(esher', '[esher',
+        '- first', '(first', '[first',
+        '- hummed', '(hummed', '[hummed',
+        '- second', '(second', '[second',
+        '- songwriting', '(songwriting', '[songwriting'
+        '- stereo', '(stereo', '[stereo',
+        '- strings', '(strings', '[strings'
+        '- take', '(take', '[take',
+        '- takes', '(takes', '[takes',
+        '- unnumbered', '(unnumbered', '[unnumbered',
+        '- vocal', '(vocal', '[vocal',
+        '- without', '(without', '[without'
     ],
     mixes_numbers: [
         '(v1', '(v2', '(v3', '(v4', '(v5', '(v6', '(v7', '(v8', '(v9',
@@ -261,7 +273,9 @@ export let includes = {
         '(tenth anniversary', '(fifth anniversary',
         ': the tenth anniversary', 'the tenth anniversary', // lady gaga born this way
         '- 10 year', '- 25 year', '-30 year', '-35 year', '- 40 year', '- 50 year', '- 60 year',
-        '(10 year', '(25 year', '(30 year', '(35 year', '(40 year', '(50 year', '(60 year'
+        '(10 year', '(25 year', '(30 year', '(35 year', '(40 year', '(50 year', '(60 year',
+        '- transition', '(transition', '[transition',
+        '- reprise', '(reprise', '[reprise'
     ],
     form: [
         '(clean', '[clean', '(explicit', '[explicit',
