@@ -18,6 +18,7 @@ import {news} from "../news.js";
 import {ff} from "../sku.js";
 import {redirect} from "./music.js";
 import { open_starred_friend_window } from '../pages/profile.js';
+import { match } from './dynamic_theming.js';
 
 export function register_rabbit() {
     let input_box;
@@ -261,7 +262,7 @@ export function register_rabbit() {
                     type: 'theme',
                     text: tl(trans.themes.name),
                     body: tl(trans.opens_the_value).replace('{v}', tl(trans.theme_picker)),
-                    keywords: ['themes', 'light', 'dark', 'ash', 'darker', 'oled', 'amoled', 'midnight', 'void', 'abyss', 'dark reader'],
+                    keywords: ['themes', 'light', 'dark', 'ash', 'darker', 'oled', 'amoled', 'midnight', 'void', 'abyss', 'dark reader', 'adaptive', 'auto', 'system', 'change theme'],
                     action: () => bleh_theme_picker()
                 },
                 {
@@ -434,47 +435,65 @@ export function register_rabbit() {
         depth = 1;
         rabbit_search('internal:theme_picker', [
             {
-                type: 'theme_auto',
+                type: 'theme_adaptive',
                 text: tl(trans.auto),
                 body: tl(trans.changes_your_theme),
                 keywords: ['system'],
-                action: () => save_setting('theme', 'light'),
-                hide: !ff('auto_theme')
+                action: () => {
+                    save_setting('theme_schedule', true);
+                    match();
+                },
+                hide: !ff('adaptive_theme')
             },
             {
                 type: 'theme_light',
                 text: tl(trans.themes.light),
                 body: tl(trans.changes_your_theme),
                 keywords: ['sun', 'day'],
-                action: () => save_setting('theme', 'light')
+                action: () => {
+                    save_setting('theme_schedule', false);
+                    save_setting('theme', 'light');
+                }
             },
             {
                 type: 'theme_ink',
                 text: tl(trans.themes.ink),
                 body: tl(trans.changes_your_theme),
                 keywords: ['sun', 'day', 'light', 'e-ink'],
-                action: () => save_setting('theme', 'ink')
+                action: () => {
+                    save_setting('theme_schedule', false);
+                    save_setting('theme', 'ink');
+                }
             },
             {
                 type: 'theme_ash',
                 text: tl(trans.themes.dark),
                 body: tl(trans.changes_your_theme),
                 keywords: ['dark', 'night', 'grey', 'gray'],
-                action: () => save_setting('theme', 'dark')
+                action: () => {
+                    save_setting('theme_schedule', false);
+                    save_setting('theme', 'dark');
+                }
             },
             {
                 type: 'theme_dark',
                 text: tl(trans.themes.darker),
                 body: tl(trans.changes_your_theme),
                 keywords: ['dark', 'night', 'grey', 'gray'],
-                action: () => save_setting('theme', 'darker')
+                action: () => {
+                    save_setting('theme_schedule', false);
+                    save_setting('theme', 'darker');
+                }
             },
             {
                 type: 'theme_void',
                 text: tl(trans.themes.oled),
                 body: tl(trans.changes_your_theme),
                 keywords: ['dark', 'night', 'black'],
-                action: () => save_setting('theme', 'oled')
+                action: () => {
+                    save_setting('theme_schedule', false);
+                    save_setting('theme', 'oled');
+                }
             }
         ]);
     }

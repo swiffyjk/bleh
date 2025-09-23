@@ -9650,9 +9650,11 @@
         &[data-is-shortcut="true"] {
             --mask: var(--icon-16-starred-friend);
 
-            --hue-over: var(--hue-fav);
-            --sat-over: var(--sat-fav);
-            --lit-over: var(--lit-fav);
+            &:not(.rabbit-hole-item) {
+                --hue-over: var(--hue-fav);
+                --sat-over: var(--sat-fav);
+                --lit-over: var(--lit-fav);
+            }
         }
     }
     [data-type="profile_shortcut"] {

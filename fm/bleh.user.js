@@ -37535,6 +37535,25 @@
     localStorage.setItem("bleh_changelog", JSON.stringify(json));
   };
 
+  // src/components/dynamic_theming.js
+  function dynamic_theming() {
+    const media = window.matchMedia("(prefers-color-scheme: dark)");
+    page.state.media = media;
+    match2(media);
+    media.addEventListener("change", match2);
+  }
+  function match2(media = page.state.media) {
+    if (!settings.theme_schedule) return;
+    if (media.matches)
+      apply_theme("night");
+    else
+      apply_theme("day");
+  }
+  function apply_theme(time) {
+    log(`applying theme for time ${time}`, "dynamic theming");
+    save_setting("theme", settings[`theme_${time}`]);
+  }
+
   // src/components/rabbit.js
   function register_rabbit() {
     let input_box;
@@ -37734,7 +37753,7 @@
             type: "theme",
             text: tl(trans.themes.name),
             body: tl(trans.opens_the_value).replace("{v}", tl(trans.theme_picker)),
-            keywords: ["themes", "light", "dark", "ash", "darker", "oled", "amoled", "midnight", "void", "abyss", "dark reader"],
+            keywords: ["themes", "light", "dark", "ash", "darker", "oled", "amoled", "midnight", "void", "abyss", "dark reader", "adaptive", "auto", "system", "change theme"],
             action: () => bleh_theme_picker()
           },
           {
@@ -37881,47 +37900,65 @@
       depth = 1;
       rabbit_search("internal:theme_picker", [
         {
-          type: "theme_auto",
+          type: "theme_adaptive",
           text: tl(trans.auto),
           body: tl(trans.changes_your_theme),
           keywords: ["system"],
-          action: () => save_setting("theme", "light"),
-          hide: !ff("auto_theme")
+          action: () => {
+            save_setting("theme_schedule", true);
+            match2();
+          },
+          hide: !ff("adaptive_theme")
         },
         {
           type: "theme_light",
           text: tl(trans.themes.light),
           body: tl(trans.changes_your_theme),
           keywords: ["sun", "day"],
-          action: () => save_setting("theme", "light")
+          action: () => {
+            save_setting("theme_schedule", false);
+            save_setting("theme", "light");
+          }
         },
         {
           type: "theme_ink",
           text: tl(trans.themes.ink),
           body: tl(trans.changes_your_theme),
           keywords: ["sun", "day", "light", "e-ink"],
-          action: () => save_setting("theme", "ink")
+          action: () => {
+            save_setting("theme_schedule", false);
+            save_setting("theme", "ink");
+          }
         },
         {
           type: "theme_ash",
           text: tl(trans.themes.dark),
           body: tl(trans.changes_your_theme),
           keywords: ["dark", "night", "grey", "gray"],
-          action: () => save_setting("theme", "dark")
+          action: () => {
+            save_setting("theme_schedule", false);
+            save_setting("theme", "dark");
+          }
         },
         {
           type: "theme_dark",
           text: tl(trans.themes.darker),
           body: tl(trans.changes_your_theme),
           keywords: ["dark", "night", "grey", "gray"],
-          action: () => save_setting("theme", "darker")
+          action: () => {
+            save_setting("theme_schedule", false);
+            save_setting("theme", "darker");
+          }
         },
         {
           type: "theme_void",
           text: tl(trans.themes.oled),
           body: tl(trans.changes_your_theme),
           keywords: ["dark", "night", "black"],
-          action: () => save_setting("theme", "oled")
+          action: () => {
+            save_setting("theme_schedule", false);
+            save_setting("theme", "oled");
+          }
         }
       ]);
     }
@@ -46672,27 +46709,6 @@
 
   // src/pages/bleh_config.js
   var import_moment2 = __toESM(require_moment(), 1);
-
-  // src/components/dynamic_theming.js
-  function dynamic_theming() {
-    const media = window.matchMedia("(prefers-color-scheme: dark)");
-    page.state.media = media;
-    match2(media);
-    media.addEventListener("change", match2);
-  }
-  function match2(media = page.state.media) {
-    if (!settings.theme_schedule) return;
-    if (media.matches)
-      apply_theme("night");
-    else
-      apply_theme("day");
-  }
-  function apply_theme(time) {
-    log(`applying theme for time ${time}`, "dynamic theming");
-    save_setting("theme", settings[`theme_${time}`]);
-  }
-
-  // src/pages/bleh_config.js
   function bleh_settings() {
     page.name = auth.name;
     page.subpage = "";
