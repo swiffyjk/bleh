@@ -46696,7 +46696,6 @@
   function bleh_settings() {
     page.name = auth.name;
     page.subpage = "";
-    page.state.settings_page = "";
     update_page();
     page.structure.row.removeChild(page.structure.row.firstElementChild);
     page.structure.row.removeChild(page.structure.row.firstElementChild);
@@ -53960,6 +53959,7 @@
     }
   }
   function load_page() {
+    page.state.settings_page = "";
     page.structure.notifications.setAttribute("data-auth-open", "false");
     set_season();
     seasonal_timer_end();

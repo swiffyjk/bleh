@@ -38,8 +38,6 @@ export function bleh_settings() {
     page.name = auth.name;
     page.subpage = '';
 
-    page.state.settings_page = '';
-
     update_page();
 
     // remove error stuff cus we control this page
