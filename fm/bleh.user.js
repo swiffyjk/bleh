@@ -39221,6 +39221,7 @@
         settings.theme_type = "dark";
       }
       document.documentElement.setAttribute(`data-bleh--theme_type`, settings.theme_type);
+      chart_reflow();
     }
     if (settings_store[id] && value == settings_store[id].default && ["hue", "sat", "lit"].includes(id)) {
       document.body.style.removeProperty(`--${settings_store[id].css}`);
@@ -50320,9 +50321,9 @@
     });
     let themes = [
       {
-        id: "auto",
+        id: "adaptive",
         name: tl(trans.auto),
-        hide: !ff("auto_theme"),
+        hide: !ff("adaptive_theme"),
         new_release: true
       },
       {
@@ -50502,13 +50503,24 @@
             if (theme.hide) return html.node``;
             if (!theme.formal) theme.formal = theme.id;
             const btn = html.node`
-                                                <button class="dropdown-menu-clickable-item theme-item-in-menu" aria-selected=${theme.id == settings.theme} data-bleh-theme=${theme.id} data-type="theme_${theme.formal}" onclick="${() => {
+                                                <button class="dropdown-menu-clickable-item theme-item-in-menu" aria-selected=${!settings.theme_schedule ? settings.theme == theme.id : theme.id == "adaptive"} data-bleh-theme=${theme.id} data-type="theme_${theme.formal}" onclick="${() => {
+              if (theme.id != "adaptive") {
+                save_setting("theme_schedule", false);
+                save_setting("theme", theme.id);
+              } else {
+                save_setting("theme_schedule", true);
+                match2();
+              }
               buttons.forEach((button) => {
-                const id = button.getAttribute("data-bleh-theme");
-                button.setAttribute("aria-selected", id == theme.id);
+                const type = button.getAttribute("data-bleh-theme");
+                if (!settings.theme_schedule) {
+                  button.setAttribute("aria-selected", settings.theme == type);
+                } else if (type == "adaptive") {
+                  button.setAttribute("aria-selected", true);
+                } else {
+                  button.setAttribute("aria-selected", false);
+                }
               });
-              save_setting("theme", theme.id);
-              chart_reflow();
             }}">
                                                     ${theme.name}
                                                 </button>

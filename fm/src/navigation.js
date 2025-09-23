@@ -27,6 +27,7 @@ import moment from 'moment';
 import { register_menu } from './components/menu.js';
 import { copy } from './build/tools.js';
 import { submit_scrobble } from './components/scrobble.js';
+import { match } from './components/dynamic_theming.js';
 
 export function patch_masthead() {
     let masthead_logo = document.body.querySelector('.masthead-logo');
@@ -604,9 +605,9 @@ export function append_nav() {
 
     let themes = [
         {
-            id: 'auto',
+            id: 'adaptive',
             name: tl(trans.auto),
-            hide: !ff('auto_theme'),
+            hide: !ff('adaptive_theme'),
             new_release: true
         },
         {
@@ -821,15 +822,26 @@ export function append_nav() {
                                             if (!theme.formal) theme.formal = theme.id;
 
                                             const btn = html.node`
-                                                <button class="dropdown-menu-clickable-item theme-item-in-menu" aria-selected=${theme.id == settings.theme} data-bleh-theme=${theme.id} data-type="theme_${theme.formal}" onclick="${() => {
+                                                <button class="dropdown-menu-clickable-item theme-item-in-menu" aria-selected=${!settings.theme_schedule ? settings.theme == theme.id : theme.id == 'adaptive'} data-bleh-theme=${theme.id} data-type="theme_${theme.formal}" onclick="${() => {
+                                                    if (theme.id != 'adaptive') {
+                                                        save_setting('theme_schedule', false);
+                                                        save_setting('theme', theme.id);
+                                                    } else {
+                                                        save_setting('theme_schedule', true);
+                                                        match();
+                                                    }
+
                                                     buttons.forEach(button => {
-                                                        const id = button.getAttribute('data-bleh-theme');
+                                                        const type = button.getAttribute('data-bleh-theme');
 
-                                                        button.setAttribute('aria-selected', id == theme.id);
+                                                        if (!settings.theme_schedule) {
+                                                            button.setAttribute('aria-selected', settings.theme == type);
+                                                        } else if (type == 'adaptive') {
+                                                            button.setAttribute('aria-selected', true);
+                                                        } else {
+                                                            button.setAttribute('aria-selected', false);
+                                                        }
                                                     });
-
-                                                    save_setting('theme', theme.id);
-                                                    chart_reflow();
                                                 }}">
                                                     ${theme.name}
                                                 </button>

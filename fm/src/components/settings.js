@@ -19,6 +19,7 @@ import { version } from '../main.js';
 import { select } from './select.js';
 import { input } from './input.js';
 import { status } from './status.js';
+import { chart_reflow } from '../chart.js';
 
 export function setting({
     id = '',
@@ -904,6 +905,7 @@ export function save_setting(id, value) {
         }
 
         document.documentElement.setAttribute(`data-bleh--theme_type`, settings.theme_type);
+        chart_reflow();
     }
 
     // if using a seasonal default,
