@@ -792,7 +792,8 @@ export let settings_store = {
         type: 'range',
         css: 'avatar-radius',
         suffix: '%',
-        title: trans.avatar_radius
+        title: trans.avatar_radius.name,
+        body: trans.avatar_radius.body
     },
     hue_from_album: {
         default: true,

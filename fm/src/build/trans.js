@@ -2204,9 +2204,14 @@ export const trans = {
         pt: 'Ver a biblioteca dos outros'
     },
     avatar_radius: {
-        en: 'Profile avatar shape',
-        de: 'Profil-Avatarform',
-        pt: 'Formato da imagem de perfil'
+        name: {
+            en: 'Profile avatar shape',
+            de: 'Profil-Avatarform',
+            pt: 'Formato da imagem de perfil'
+        },
+        body: {
+            en: 'Applies to all profiles, only visible to you'
+        }
     },
     notes: {
         en: 'Notes',

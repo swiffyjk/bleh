@@ -56506,9 +56506,14 @@
       pt: "Ver a biblioteca dos outros"
     },
     avatar_radius: {
-      en: "Profile avatar shape",
-      de: "Profil-Avatarform",
-      pt: "Formato da imagem de perfil"
+      name: {
+        en: "Profile avatar shape",
+        de: "Profil-Avatarform",
+        pt: "Formato da imagem de perfil"
+      },
+      body: {
+        en: "Applies to all profiles, only visible to you"
+      }
     },
     notes: {
       en: "Notes",
@@ -61910,7 +61915,8 @@
       type: "range",
       css: "avatar-radius",
       suffix: "%",
-      title: trans.avatar_radius
+      title: trans.avatar_radius.name,
+      body: trans.avatar_radius.body
     },
     hue_from_album: {
       default: true,
