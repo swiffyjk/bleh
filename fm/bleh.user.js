@@ -27891,7 +27891,7 @@
       if (!name) return;
       let artist;
       if (!is_album) {
-        name.textContent = correct_artist(name.textContent.trim());
+        name.textContent = romanise(correct_artist(name.textContent.trim()));
         insights.artist.labels.push(name.textContent);
       } else {
         artist = grid.querySelector(".grid-items-item-aux-block");
@@ -27906,7 +27906,7 @@
             song_title = formatted_title[0];
             insights.album.labels.push(song_title);
             song_tags = formatted_title[1];
-            artist.textContent = formatted_title[2];
+            artist.textContent = romanise(formatted_title[2]);
           }
           render(name_elem, html.node`
                     <span class="title">${romanise(song_title.trim())}</span>
@@ -27915,7 +27915,7 @@
                     `)}
                 `);
         } else {
-          artist.textContent = correct_artist(artist.textContent.trim());
+          artist.textContent = romanise(correct_artist(artist.textContent.trim()));
           name.textContent = romanise(correct_item_by_artist(name.textContent.trim(), artist.textContent.trim()));
         }
       }
@@ -50689,7 +50689,7 @@
         album.setAttribute("data-kate-processed", "true");
         let artist_name = album.querySelector(`.${parent.replace("-details", "")}-name a`);
         if (!artist_name) return;
-        artist_name.textContent = correct_artist(artist_name.textContent);
+        artist_name.textContent = romanise(correct_artist(artist_name.textContent));
       }
     });
   }
@@ -50705,7 +50705,7 @@
         let artist_name = album.querySelector(`.${parent.replace("-details", "")}-artist a`);
         if (!artist_name) return;
         let corrected_album_name = romanise(correct_item_by_artist(album_name.textContent, artist_name.textContent));
-        let corrected_artist_name = correct_artist(artist_name.textContent);
+        let corrected_artist_name = romanise(correct_artist(artist_name.textContent));
         album_name.textContent = corrected_album_name;
         artist_name.textContent = corrected_artist_name;
       }
@@ -50726,8 +50726,7 @@
     });
   }
   function correct_item_by_artist(item, artist) {
-    if (!settings.corrections)
-      return item;
+    if (!settings.corrections) return item;
     artist = artist.toLowerCase();
     try {
       if (album_track_corrections.hasOwnProperty(artist)) {
@@ -50747,8 +50746,7 @@
     }
   }
   function correct_artist(artist, broadcast = false) {
-    if (!settings.corrections)
-      return artist;
+    if (!settings.corrections) return artist;
     try {
       if (artist_corrections.hasOwnProperty(artist)) {
         log(`corrected ${artist} as ${artist_corrections[artist]}`, "lotus");
@@ -50879,8 +50877,10 @@
       if (artist_corrections.hasOwnProperty(track_title.textContent)) {
         let corrected_artist = artist_corrections[track_title.textContent];
         log(`corrected ${track_title.textContent} as ${corrected_artist}`, "lotus");
-        track_title.textContent = corrected_artist;
+        track_title.textContent = romanise(corrected_artist);
         page.corrected = true;
+      } else {
+        track_title.textContent = romanise(track_title.textContent);
       }
       return;
     } else {
@@ -50888,9 +50888,10 @@
         let corrected_artist = artist_corrections[track_artist.textContent];
         log(`corrected ${track_artist.textContent} as ${corrected_artist}`, "lotus");
         track_artist.parentElement.setAttribute("href", `${root}music/${redirect()}${sanitise(corrected_artist)}`);
-        track_artist.textContent = corrected_artist;
+        track_artist.textContent = romanise(corrected_artist);
       } else {
         track_artist.parentElement.setAttribute("href", `${root}music/${redirect()}${sanitise(track_artist.textContent)}`);
+        track_artist.textContent = romanise(track_artist.textContent);
       }
     }
     if (settings.format_guest_features) {

@@ -190,7 +190,7 @@ export function music_grids(search=page.structure.main, use_colour = true) {
         let artist;
 
         if (!is_album) {
-            name.textContent = correct_artist(name.textContent.trim());
+            name.textContent = romanise(correct_artist(name.textContent.trim()));
             insights.artist.labels.push(name.textContent);
         } else {
             artist = grid.querySelector('.grid-items-item-aux-block');
@@ -209,7 +209,7 @@ export function music_grids(search=page.structure.main, use_colour = true) {
                     song_title = formatted_title[0];
                     insights.album.labels.push(song_title);
                     song_tags = formatted_title[1];
-                    artist.textContent = formatted_title[2];
+                    artist.textContent = romanise(formatted_title[2]);
                 }
 
                 // combine
@@ -220,7 +220,7 @@ export function music_grids(search=page.structure.main, use_colour = true) {
                     `)}
                 `);
             } else {
-                artist.textContent = correct_artist(artist.textContent.trim());
+                artist.textContent = romanise(correct_artist(artist.textContent.trim()));
 
                 name.textContent = romanise(correct_item_by_artist(name.textContent.trim(), artist.textContent.trim()));
             }
