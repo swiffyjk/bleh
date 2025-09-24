@@ -4044,6 +4044,614 @@
     }
   });
 
+  // node_modules/hangul-js/hangul.js
+  var require_hangul = __commonJS({
+    "node_modules/hangul-js/hangul.js"(exports, module) {
+      (function() {
+        "use strict";
+        var CHO = [
+          "\u3131",
+          "\u3132",
+          "\u3134",
+          "\u3137",
+          "\u3138",
+          "\u3139",
+          "\u3141",
+          "\u3142",
+          "\u3143",
+          "\u3145",
+          "\u3146",
+          "\u3147",
+          "\u3148",
+          "\u3149",
+          "\u314A",
+          "\u314B",
+          "\u314C",
+          "\u314D",
+          "\u314E"
+        ], JUNG = [
+          "\u314F",
+          "\u3150",
+          "\u3151",
+          "\u3152",
+          "\u3153",
+          "\u3154",
+          "\u3155",
+          "\u3156",
+          "\u3157",
+          ["\u3157", "\u314F"],
+          ["\u3157", "\u3150"],
+          ["\u3157", "\u3163"],
+          "\u315B",
+          "\u315C",
+          ["\u315C", "\u3153"],
+          ["\u315C", "\u3154"],
+          ["\u315C", "\u3163"],
+          "\u3160",
+          "\u3161",
+          ["\u3161", "\u3163"],
+          "\u3163"
+        ], JONG = [
+          "",
+          "\u3131",
+          "\u3132",
+          ["\u3131", "\u3145"],
+          "\u3134",
+          ["\u3134", "\u3148"],
+          ["\u3134", "\u314E"],
+          "\u3137",
+          "\u3139",
+          ["\u3139", "\u3131"],
+          ["\u3139", "\u3141"],
+          ["\u3139", "\u3142"],
+          ["\u3139", "\u3145"],
+          ["\u3139", "\u314C"],
+          ["\u3139", "\u314D"],
+          ["\u3139", "\u314E"],
+          "\u3141",
+          "\u3142",
+          ["\u3142", "\u3145"],
+          "\u3145",
+          "\u3146",
+          "\u3147",
+          "\u3148",
+          "\u314A",
+          "\u314B",
+          "\u314C",
+          "\u314D",
+          "\u314E"
+        ], HANGUL_OFFSET = 44032, CONSONANTS2 = [
+          "\u3131",
+          "\u3132",
+          "\u3133",
+          "\u3134",
+          "\u3135",
+          "\u3136",
+          "\u3137",
+          "\u3138",
+          "\u3139",
+          "\u313A",
+          "\u313B",
+          "\u313C",
+          "\u313D",
+          "\u313E",
+          "\u313F",
+          "\u3140",
+          "\u3141",
+          "\u3142",
+          "\u3143",
+          "\u3144",
+          "\u3145",
+          "\u3146",
+          "\u3147",
+          "\u3148",
+          "\u3149",
+          "\u314A",
+          "\u314B",
+          "\u314C",
+          "\u314D",
+          "\u314E"
+        ], COMPLETE_CHO = [
+          "\u3131",
+          "\u3132",
+          "\u3134",
+          "\u3137",
+          "\u3138",
+          "\u3139",
+          "\u3141",
+          "\u3142",
+          "\u3143",
+          "\u3145",
+          "\u3146",
+          "\u3147",
+          "\u3148",
+          "\u3149",
+          "\u314A",
+          "\u314B",
+          "\u314C",
+          "\u314D",
+          "\u314E"
+        ], COMPLETE_JUNG = [
+          "\u314F",
+          "\u3150",
+          "\u3151",
+          "\u3152",
+          "\u3153",
+          "\u3154",
+          "\u3155",
+          "\u3156",
+          "\u3157",
+          "\u3158",
+          "\u3159",
+          "\u315A",
+          "\u315B",
+          "\u315C",
+          "\u315D",
+          "\u315E",
+          "\u315F",
+          "\u3160",
+          "\u3161",
+          "\u3162",
+          "\u3163"
+        ], COMPLETE_JONG = [
+          "",
+          "\u3131",
+          "\u3132",
+          "\u3133",
+          "\u3134",
+          "\u3135",
+          "\u3136",
+          "\u3137",
+          "\u3139",
+          "\u313A",
+          "\u313B",
+          "\u313C",
+          "\u313D",
+          "\u313E",
+          "\u313F",
+          "\u3140",
+          "\u3141",
+          "\u3142",
+          "\u3144",
+          "\u3145",
+          "\u3146",
+          "\u3147",
+          "\u3148",
+          "\u314A",
+          "\u314B",
+          "\u314C",
+          "\u314D",
+          "\u314E"
+        ], COMPLEX_CONSONANTS = [
+          ["\u3131", "\u3145", "\u3133"],
+          ["\u3134", "\u3148", "\u3135"],
+          ["\u3134", "\u314E", "\u3136"],
+          ["\u3139", "\u3131", "\u313A"],
+          ["\u3139", "\u3141", "\u313B"],
+          ["\u3139", "\u3142", "\u313C"],
+          ["\u3139", "\u3145", "\u313D"],
+          ["\u3139", "\u314C", "\u313E"],
+          ["\u3139", "\u314D", "\u313F"],
+          ["\u3139", "\u314E", "\u3140"],
+          ["\u3142", "\u3145", "\u3144"]
+        ], COMPLEX_VOWELS = [
+          ["\u3157", "\u314F", "\u3158"],
+          ["\u3157", "\u3150", "\u3159"],
+          ["\u3157", "\u3163", "\u315A"],
+          ["\u315C", "\u3153", "\u315D"],
+          ["\u315C", "\u3154", "\u315E"],
+          ["\u315C", "\u3163", "\u315F"],
+          ["\u3161", "\u3163", "\u3162"]
+        ], CONSONANTS_HASH, CHO_HASH, JUNG_HASH, JONG_HASH, COMPLEX_CONSONANTS_HASH, COMPLEX_VOWELS_HASH;
+        function _makeHash(array) {
+          var length = array.length, hash3 = { 0: 0 };
+          for (var i = 0; i < length; i++) {
+            if (array[i])
+              hash3[array[i].charCodeAt(0)] = i;
+          }
+          return hash3;
+        }
+        CONSONANTS_HASH = _makeHash(CONSONANTS2);
+        CHO_HASH = _makeHash(COMPLETE_CHO);
+        JUNG_HASH = _makeHash(COMPLETE_JUNG);
+        JONG_HASH = _makeHash(COMPLETE_JONG);
+        function _makeComplexHash(array) {
+          var length = array.length, hash3 = {}, code1, code2;
+          for (var i = 0; i < length; i++) {
+            code1 = array[i][0].charCodeAt(0);
+            code2 = array[i][1].charCodeAt(0);
+            if (typeof hash3[code1] === "undefined") {
+              hash3[code1] = {};
+            }
+            hash3[code1][code2] = array[i][2].charCodeAt(0);
+          }
+          return hash3;
+        }
+        COMPLEX_CONSONANTS_HASH = _makeComplexHash(COMPLEX_CONSONANTS);
+        COMPLEX_VOWELS_HASH = _makeComplexHash(COMPLEX_VOWELS);
+        function _isConsonant(c) {
+          return typeof CONSONANTS_HASH[c] !== "undefined";
+        }
+        function _isCho(c) {
+          return typeof CHO_HASH[c] !== "undefined";
+        }
+        function _isJung(c) {
+          return typeof JUNG_HASH[c] !== "undefined";
+        }
+        function _isJong(c) {
+          return typeof JONG_HASH[c] !== "undefined";
+        }
+        function _isHangul(c) {
+          return 44032 <= c && c <= 55203;
+        }
+        function _isJungJoinable(a, b) {
+          return COMPLEX_VOWELS_HASH[a] && COMPLEX_VOWELS_HASH[a][b] ? COMPLEX_VOWELS_HASH[a][b] : false;
+        }
+        function _isJongJoinable(a, b) {
+          return COMPLEX_CONSONANTS_HASH[a] && COMPLEX_CONSONANTS_HASH[a][b] ? COMPLEX_CONSONANTS_HASH[a][b] : false;
+        }
+        var disassemble = function(string, grouped) {
+          if (string === null) {
+            throw new Error("Arguments cannot be null");
+          }
+          if (typeof string === "object") {
+            string = string.join("");
+          }
+          var result = [], length = string.length, cho, jung, jong, code, r;
+          for (var i = 0; i < length; i++) {
+            var temp = [];
+            code = string.charCodeAt(i);
+            if (_isHangul(code)) {
+              code -= HANGUL_OFFSET;
+              jong = code % 28;
+              jung = (code - jong) / 28 % 21;
+              cho = parseInt((code - jong) / 28 / 21);
+              temp.push(CHO[cho]);
+              if (typeof JUNG[jung] === "object") {
+                temp = temp.concat(JUNG[jung]);
+              } else {
+                temp.push(JUNG[jung]);
+              }
+              if (jong > 0) {
+                if (typeof JONG[jong] === "object") {
+                  temp = temp.concat(JONG[jong]);
+                } else {
+                  temp.push(JONG[jong]);
+                }
+              }
+            } else if (_isConsonant(code)) {
+              if (_isCho(code)) {
+                r = CHO[CHO_HASH[code]];
+              } else {
+                r = JONG[JONG_HASH[code]];
+              }
+              if (typeof r === "string") {
+                temp.push(r);
+              } else {
+                temp = temp.concat(r);
+              }
+            } else if (_isJung(code)) {
+              r = JUNG[JUNG_HASH[code]];
+              if (typeof r === "string") {
+                temp.push(r);
+              } else {
+                temp = temp.concat(r);
+              }
+            } else {
+              temp.push(string.charAt(i));
+            }
+            if (grouped) result.push(temp);
+            else result = result.concat(temp);
+          }
+          return result;
+        };
+        var disassembleToString = function(str) {
+          if (typeof str !== "string") {
+            return "";
+          }
+          str = disassemble(str);
+          return str.join("");
+        };
+        var assemble = function(array) {
+          if (typeof array === "string") {
+            array = disassemble(array);
+          }
+          var result = [], length = array.length, code, stage = 0, complete_index = -1, previous_code, jong_joined = false;
+          function _makeHangul(index3) {
+            var code2, cho, jung1, jung2, jong1 = 0, jong2, hangul2 = "";
+            jong_joined = false;
+            if (complete_index + 1 > index3) {
+              return;
+            }
+            for (var step = 1; ; step++) {
+              if (step === 1) {
+                cho = array[complete_index + step].charCodeAt(0);
+                if (_isJung(cho)) {
+                  if (complete_index + step + 1 <= index3 && _isJung(jung1 = array[complete_index + step + 1].charCodeAt(0))) {
+                    result.push(String.fromCharCode(_isJungJoinable(cho, jung1)));
+                    complete_index = index3;
+                    return;
+                  } else {
+                    result.push(array[complete_index + step]);
+                    complete_index = index3;
+                    return;
+                  }
+                } else if (!_isCho(cho)) {
+                  result.push(array[complete_index + step]);
+                  complete_index = index3;
+                  return;
+                }
+                hangul2 = array[complete_index + step];
+              } else if (step === 2) {
+                jung1 = array[complete_index + step].charCodeAt(0);
+                if (_isCho(jung1)) {
+                  cho = _isJongJoinable(cho, jung1);
+                  hangul2 = String.fromCharCode(cho);
+                  result.push(hangul2);
+                  complete_index = index3;
+                  return;
+                } else {
+                  hangul2 = String.fromCharCode((CHO_HASH[cho] * 21 + JUNG_HASH[jung1]) * 28 + HANGUL_OFFSET);
+                }
+              } else if (step === 3) {
+                jung2 = array[complete_index + step].charCodeAt(0);
+                if (_isJungJoinable(jung1, jung2)) {
+                  jung1 = _isJungJoinable(jung1, jung2);
+                } else {
+                  jong1 = jung2;
+                }
+                hangul2 = String.fromCharCode((CHO_HASH[cho] * 21 + JUNG_HASH[jung1]) * 28 + JONG_HASH[jong1] + HANGUL_OFFSET);
+              } else if (step === 4) {
+                jong2 = array[complete_index + step].charCodeAt(0);
+                if (_isJongJoinable(jong1, jong2)) {
+                  jong1 = _isJongJoinable(jong1, jong2);
+                } else {
+                  jong1 = jong2;
+                }
+                hangul2 = String.fromCharCode((CHO_HASH[cho] * 21 + JUNG_HASH[jung1]) * 28 + JONG_HASH[jong1] + HANGUL_OFFSET);
+              } else if (step === 5) {
+                jong2 = array[complete_index + step].charCodeAt(0);
+                jong1 = _isJongJoinable(jong1, jong2);
+                hangul2 = String.fromCharCode((CHO_HASH[cho] * 21 + JUNG_HASH[jung1]) * 28 + JONG_HASH[jong1] + HANGUL_OFFSET);
+              }
+              if (complete_index + step >= index3) {
+                result.push(hangul2);
+                complete_index = index3;
+                return;
+              }
+            }
+          }
+          for (var i = 0; i < length; i++) {
+            code = array[i].charCodeAt(0);
+            if (!_isCho(code) && !_isJung(code) && !_isJong(code)) {
+              _makeHangul(i - 1);
+              _makeHangul(i);
+              stage = 0;
+              continue;
+            }
+            if (stage === 0) {
+              if (_isCho(code)) {
+                stage = 1;
+              } else if (_isJung(code)) {
+                stage = 4;
+              }
+            } else if (stage == 1) {
+              if (_isJung(code)) {
+                stage = 2;
+              } else {
+                if (_isJongJoinable(previous_code, code)) {
+                  stage = 5;
+                } else {
+                  _makeHangul(i - 1);
+                }
+              }
+            } else if (stage == 2) {
+              if (_isJong(code)) {
+                stage = 3;
+              } else if (_isJung(code)) {
+                if (_isJungJoinable(previous_code, code)) {
+                } else {
+                  _makeHangul(i - 1);
+                  stage = 4;
+                }
+              } else {
+                _makeHangul(i - 1);
+                stage = 1;
+              }
+            } else if (stage == 3) {
+              if (_isJong(code)) {
+                if (!jong_joined && _isJongJoinable(previous_code, code)) {
+                  jong_joined = true;
+                } else {
+                  _makeHangul(i - 1);
+                  stage = 1;
+                }
+              } else if (_isCho(code)) {
+                _makeHangul(i - 1);
+                stage = 1;
+              } else if (_isJung(code)) {
+                _makeHangul(i - 2);
+                stage = 2;
+              }
+            } else if (stage == 4) {
+              if (_isJung(code)) {
+                if (_isJungJoinable(previous_code, code)) {
+                  _makeHangul(i);
+                  stage = 0;
+                } else {
+                  _makeHangul(i - 1);
+                }
+              } else {
+                _makeHangul(i - 1);
+                stage = 1;
+              }
+            } else if (stage == 5) {
+              if (_isJung(code)) {
+                _makeHangul(i - 2);
+                stage = 2;
+              } else {
+                _makeHangul(i - 1);
+                stage = 1;
+              }
+            }
+            previous_code = code;
+          }
+          _makeHangul(i - 1);
+          return result.join("");
+        };
+        var search = function(a, b) {
+          var ad = disassemble(a).join(""), bd = disassemble(b).join("");
+          return ad.indexOf(bd);
+        };
+        var rangeSearch = function(haystack, needle) {
+          var hex2 = disassemble(haystack).join(""), nex = disassemble(needle).join(""), grouped = disassemble(haystack, true), re = new RegExp(nex, "gi"), indices = [], result;
+          if (!needle.length) return [];
+          while (result = re.exec(hex2)) {
+            indices.push(result.index);
+          }
+          function findStart(index3) {
+            for (var i = 0, length = 0; i < grouped.length; ++i) {
+              length += grouped[i].length;
+              if (index3 < length) return i;
+            }
+          }
+          function findEnd(index3) {
+            for (var i = 0, length = 0; i < grouped.length; ++i) {
+              length += grouped[i].length;
+              if (index3 + nex.length <= length) return i;
+            }
+          }
+          return indices.map(function(i) {
+            return [findStart(i), findEnd(i)];
+          });
+        };
+        function Searcher(string) {
+          this.string = string;
+          this.disassembled = disassemble(string).join("");
+        }
+        Searcher.prototype.search = function(string) {
+          return disassemble(string).join("").indexOf(this.disassembled);
+        };
+        var endsWithConsonant = function(string) {
+          if (typeof string === "object") {
+            string = string.join("");
+          }
+          var code = string.charCodeAt(string.length - 1);
+          if (_isHangul(code)) {
+            code -= HANGUL_OFFSET;
+            var jong = code % 28;
+            if (jong > 0) {
+              return true;
+            }
+          } else if (_isConsonant(code)) {
+            return true;
+          }
+          return false;
+        };
+        var endsWith = function(string, target) {
+          return disassemble(string).pop() === target;
+        };
+        var hangul = {
+          disassemble,
+          d: disassemble,
+          // alias for disassemble
+          disassembleToString,
+          ds: disassembleToString,
+          // alias for disassembleToString
+          assemble,
+          a: assemble,
+          // alias for assemble
+          search,
+          rangeSearch,
+          Searcher,
+          endsWithConsonant,
+          endsWith,
+          isHangul: function(c) {
+            if (typeof c === "string")
+              c = c.charCodeAt(0);
+            return _isHangul(c);
+          },
+          isComplete: function(c) {
+            if (typeof c === "string")
+              c = c.charCodeAt(0);
+            return _isHangul(c);
+          },
+          isConsonant: function(c) {
+            if (typeof c === "string")
+              c = c.charCodeAt(0);
+            return _isConsonant(c);
+          },
+          isVowel: function(c) {
+            if (typeof c === "string")
+              c = c.charCodeAt(0);
+            return _isJung(c);
+          },
+          isCho: function(c) {
+            if (typeof c === "string")
+              c = c.charCodeAt(0);
+            return _isCho(c);
+          },
+          isJong: function(c) {
+            if (typeof c === "string")
+              c = c.charCodeAt(0);
+            return _isJong(c);
+          },
+          isHangulAll: function(str) {
+            if (typeof str !== "string") return false;
+            for (var i = 0; i < str.length; i++) {
+              if (!_isHangul(str.charCodeAt(i))) return false;
+            }
+            return true;
+          },
+          isCompleteAll: function(str) {
+            if (typeof str !== "string") return false;
+            for (var i = 0; i < str.length; i++) {
+              if (!_isHangul(str.charCodeAt(i))) return false;
+            }
+            return true;
+          },
+          isConsonantAll: function(str) {
+            if (typeof str !== "string") return false;
+            for (var i = 0; i < str.length; i++) {
+              if (!_isConsonant(str.charCodeAt(i))) return false;
+            }
+            return true;
+          },
+          isVowelAll: function(str) {
+            if (typeof str !== "string") return false;
+            for (var i = 0; i < str.length; i++) {
+              if (!_isJung(str.charCodeAt(i))) return false;
+            }
+            return true;
+          },
+          isChoAll: function(str) {
+            if (typeof str !== "string") return false;
+            for (var i = 0; i < str.length; i++) {
+              if (!_isCho(str.charCodeAt(i))) return false;
+            }
+            return true;
+          },
+          isJongAll: function(str) {
+            if (typeof str !== "string") return false;
+            for (var i = 0; i < str.length; i++) {
+              if (!_isJong(str.charCodeAt(i))) return false;
+            }
+            return true;
+          }
+        };
+        if (typeof define == "function" && define.amd) {
+          define(function() {
+            return hangul;
+          });
+        } else if (typeof module !== "undefined") {
+          module.exports = hangul;
+        } else {
+          window.Hangul = hangul;
+        }
+      })();
+    }
+  });
+
   // node_modules/color-thief-browser/dist/color-thief.min.js
   var require_color_thief_min = __commonJS({
     "node_modules/color-thief-browser/dist/color-thief.min.js"(exports, module) {
@@ -9255,14 +9863,14 @@
           /** @class */
           /* @__PURE__ */ function() {
             function TextContainer2(context, node, styles) {
-              this.text = transform(node.data, styles.textTransform);
+              this.text = transform2(node.data, styles.textTransform);
               this.textBounds = parseTextBounds(context, this.text, styles, node);
             }
             return TextContainer2;
           }()
         );
-        var transform = function(text3, transform2) {
-          switch (transform2) {
+        var transform2 = function(text3, transform3) {
+          switch (transform3) {
             case 1:
               return text3.toLowerCase();
             case 3:
@@ -13283,11 +13891,11 @@
           if (isNumber3(scaleY) && scaleY !== 1) {
             values.push("scaleY(".concat(scaleY, ")"));
           }
-          var transform = values.length ? values.join(" ") : "none";
+          var transform2 = values.length ? values.join(" ") : "none";
           return {
-            WebkitTransform: transform,
-            msTransform: transform,
-            transform
+            WebkitTransform: transform2,
+            msTransform: transform2,
+            transform: transform2
           };
         }
         function getMaxZoomRatio(pointers) {
@@ -19549,9 +20157,9 @@
   var parsed = esm_default3(new esm_default());
   function createInfo(options, template) {
     var markup = (options.convert || esm_default2)(template);
-    var transform = options.transform;
-    if (transform)
-      markup = transform(markup);
+    var transform2 = options.transform;
+    if (transform2)
+      markup = transform2(markup);
     var content = esm_default4(markup, options.type);
     cleanContent(content);
     var holes = [];
@@ -24304,7 +24912,717 @@
     }, 400);
   }
 
+  // node_modules/wanakana/esm/index.js
+  function typeOf(value) {
+    if (value === null) {
+      return "null";
+    }
+    if (value !== Object(value)) {
+      return typeof value;
+    }
+    return {}.toString.call(value).slice(8, -1).toLowerCase();
+  }
+  var ROMANIZATIONS = {
+    HEPBURN: "hepburn"
+  };
+  var DEFAULT_OPTIONS2 = {
+    useObsoleteKana: false,
+    passRomaji: false,
+    convertLongVowelMark: true,
+    upcaseKatakana: false,
+    IMEMode: false,
+    romanization: ROMANIZATIONS.HEPBURN
+  };
+  var LOWERCASE_ZENKAKU_START = 65345;
+  var LOWERCASE_ZENKAKU_END = 65370;
+  var UPPERCASE_ZENKAKU_START = 65313;
+  var UPPERCASE_ZENKAKU_END = 65338;
+  var ZENKAKU_NUMBERS = [65296, 65305];
+  var ZENKAKU_UPPERCASE = [UPPERCASE_ZENKAKU_START, UPPERCASE_ZENKAKU_END];
+  var ZENKAKU_LOWERCASE = [LOWERCASE_ZENKAKU_START, LOWERCASE_ZENKAKU_END];
+  var ZENKAKU_PUNCTUATION_1 = [65281, 65295];
+  var ZENKAKU_PUNCTUATION_2 = [65306, 65311];
+  var ZENKAKU_PUNCTUATION_3 = [65339, 65343];
+  var ZENKAKU_PUNCTUATION_4 = [65371, 65376];
+  var ZENKAKU_SYMBOLS_CURRENCY = [65504, 65518];
+  var HIRAGANA_CHARS = [12352, 12447];
+  var KATAKANA_CHARS = [12448, 12543];
+  var HANKAKU_KATAKANA = [65382, 65439];
+  var KATAKANA_PUNCTUATION = [12539, 12540];
+  var KANA_PUNCTUATION = [65377, 65381];
+  var CJK_SYMBOLS_PUNCTUATION = [12288, 12351];
+  var COMMON_CJK = [19968, 40959];
+  var RARE_CJK = [13312, 19903];
+  var KANA_RANGES = [
+    HIRAGANA_CHARS,
+    KATAKANA_CHARS,
+    KANA_PUNCTUATION,
+    HANKAKU_KATAKANA
+  ];
+  var JA_PUNCTUATION_RANGES = [
+    CJK_SYMBOLS_PUNCTUATION,
+    KANA_PUNCTUATION,
+    KATAKANA_PUNCTUATION,
+    ZENKAKU_PUNCTUATION_1,
+    ZENKAKU_PUNCTUATION_2,
+    ZENKAKU_PUNCTUATION_3,
+    ZENKAKU_PUNCTUATION_4,
+    ZENKAKU_SYMBOLS_CURRENCY
+  ];
+  var JAPANESE_RANGES = [
+    ...KANA_RANGES,
+    ...JA_PUNCTUATION_RANGES,
+    ZENKAKU_UPPERCASE,
+    ZENKAKU_LOWERCASE,
+    ZENKAKU_NUMBERS,
+    COMMON_CJK,
+    RARE_CJK
+  ];
+  var MODERN_ENGLISH = [0, 127];
+  var HEPBURN_MACRON_RANGES = [
+    [256, 257],
+    [274, 275],
+    [298, 299],
+    [332, 333],
+    [362, 363]
+    // Ū ū
+  ];
+  var SMART_QUOTE_RANGES = [
+    [8216, 8217],
+    [8220, 8221]
+    // “ ”
+  ];
+  var ROMAJI_RANGES = [MODERN_ENGLISH, ...HEPBURN_MACRON_RANGES];
+  var EN_PUNCTUATION_RANGES = [
+    [32, 47],
+    [58, 63],
+    [91, 96],
+    [123, 126],
+    ...SMART_QUOTE_RANGES
+  ];
+  var safeIsNaN = Number.isNaN || function ponyfill(value) {
+    return typeof value === "number" && value !== value;
+  };
+  function isEqual(first, second) {
+    if (first === second) {
+      return true;
+    }
+    if (safeIsNaN(first) && safeIsNaN(second)) {
+      return true;
+    }
+    return false;
+  }
+  function areInputsEqual(newInputs, lastInputs) {
+    if (newInputs.length !== lastInputs.length) {
+      return false;
+    }
+    for (var i = 0; i < newInputs.length; i++) {
+      if (!isEqual(newInputs[i], lastInputs[i])) {
+        return false;
+      }
+    }
+    return true;
+  }
+  function memoizeOne(resultFn, isEqual2) {
+    if (isEqual2 === void 0) {
+      isEqual2 = areInputsEqual;
+    }
+    var cache2 = null;
+    function memoized() {
+      var newArgs = [];
+      for (var _i = 0; _i < arguments.length; _i++) {
+        newArgs[_i] = arguments[_i];
+      }
+      if (cache2 && cache2.lastThis === this && isEqual2(newArgs, cache2.lastArgs)) {
+        return cache2.lastResult;
+      }
+      var lastResult = resultFn.apply(this, newArgs);
+      cache2 = {
+        lastResult,
+        lastArgs: newArgs,
+        lastThis: this
+      };
+      return lastResult;
+    }
+    memoized.clear = function clear() {
+      cache2 = null;
+    };
+    return memoized;
+  }
+  var has = Object.prototype.hasOwnProperty;
+  function find2(iter, tar, key) {
+    for (key of iter.keys()) {
+      if (dequal(key, tar))
+        return key;
+    }
+  }
+  function dequal(foo, bar) {
+    var ctor, len, tmp;
+    if (foo === bar)
+      return true;
+    if (foo && bar && (ctor = foo.constructor) === bar.constructor) {
+      if (ctor === Date)
+        return foo.getTime() === bar.getTime();
+      if (ctor === RegExp)
+        return foo.toString() === bar.toString();
+      if (ctor === Array) {
+        if ((len = foo.length) === bar.length) {
+          while (len-- && dequal(foo[len], bar[len]))
+            ;
+        }
+        return len === -1;
+      }
+      if (ctor === Set) {
+        if (foo.size !== bar.size) {
+          return false;
+        }
+        for (len of foo) {
+          tmp = len;
+          if (tmp && typeof tmp === "object") {
+            tmp = find2(bar, tmp);
+            if (!tmp)
+              return false;
+          }
+          if (!bar.has(tmp))
+            return false;
+        }
+        return true;
+      }
+      if (ctor === Map) {
+        if (foo.size !== bar.size) {
+          return false;
+        }
+        for (len of foo) {
+          tmp = len[0];
+          if (tmp && typeof tmp === "object") {
+            tmp = find2(bar, tmp);
+            if (!tmp)
+              return false;
+          }
+          if (!dequal(len[1], bar.get(tmp))) {
+            return false;
+          }
+        }
+        return true;
+      }
+      if (ctor === ArrayBuffer) {
+        foo = new Uint8Array(foo);
+        bar = new Uint8Array(bar);
+      } else if (ctor === DataView) {
+        if ((len = foo.byteLength) === bar.byteLength) {
+          while (len-- && foo.getInt8(len) === bar.getInt8(len))
+            ;
+        }
+        return len === -1;
+      }
+      if (ArrayBuffer.isView(foo)) {
+        if ((len = foo.byteLength) === bar.byteLength) {
+          while (len-- && foo[len] === bar[len])
+            ;
+        }
+        return len === -1;
+      }
+      if (!ctor || typeof foo === "object") {
+        len = 0;
+        for (ctor in foo) {
+          if (has.call(foo, ctor) && ++len && !has.call(bar, ctor))
+            return false;
+          if (!(ctor in bar) || !dequal(foo[ctor], bar[ctor]))
+            return false;
+        }
+        return Object.keys(bar).length === len;
+      }
+    }
+    return foo !== foo && bar !== bar;
+  }
+  function transform(tree) {
+    return Object.entries(tree).reduce((map3, [char, subtree]) => {
+      const endOfBranch = typeOf(subtree) === "string";
+      map3[char] = endOfBranch ? { "": subtree } : transform(subtree);
+      return map3;
+    }, {});
+  }
+  function getSubTreeOf(tree, string) {
+    return string.split("").reduce((correctSubTree, char) => {
+      if (correctSubTree[char] === void 0) {
+        correctSubTree[char] = {};
+      }
+      return correctSubTree[char];
+    }, tree);
+  }
+  function createCustomMapping(customMap = {}) {
+    const customTree = {};
+    if (typeOf(customMap) === "object") {
+      Object.entries(customMap).forEach(([roma, kana]) => {
+        let subTree = customTree;
+        roma.split("").forEach((char) => {
+          if (subTree[char] === void 0) {
+            subTree[char] = {};
+          }
+          subTree = subTree[char];
+        });
+        subTree[""] = kana;
+      });
+    }
+    return function makeMap(map3) {
+      const mapCopy = JSON.parse(JSON.stringify(map3));
+      function transformMap(mapSubtree, customSubtree) {
+        if (mapSubtree === void 0 || typeOf(mapSubtree) === "string") {
+          return customSubtree;
+        }
+        return Object.entries(customSubtree).reduce((newSubtree, [char, subtree]) => {
+          newSubtree[char] = transformMap(mapSubtree[char], subtree);
+          return newSubtree;
+        }, mapSubtree);
+      }
+      return transformMap(mapCopy, customTree);
+    };
+  }
+  function mergeCustomMapping(map3, customMapping) {
+    if (!customMapping) {
+      return map3;
+    }
+    return typeOf(customMapping) === "function" ? customMapping(map3) : createCustomMapping(customMapping)(map3);
+  }
+  var BASIC_KUNREI = {
+    a: "\u3042",
+    i: "\u3044",
+    u: "\u3046",
+    e: "\u3048",
+    o: "\u304A",
+    k: { a: "\u304B", i: "\u304D", u: "\u304F", e: "\u3051", o: "\u3053" },
+    s: { a: "\u3055", i: "\u3057", u: "\u3059", e: "\u305B", o: "\u305D" },
+    t: { a: "\u305F", i: "\u3061", u: "\u3064", e: "\u3066", o: "\u3068" },
+    n: { a: "\u306A", i: "\u306B", u: "\u306C", e: "\u306D", o: "\u306E" },
+    h: { a: "\u306F", i: "\u3072", u: "\u3075", e: "\u3078", o: "\u307B" },
+    m: { a: "\u307E", i: "\u307F", u: "\u3080", e: "\u3081", o: "\u3082" },
+    y: { a: "\u3084", u: "\u3086", o: "\u3088" },
+    r: { a: "\u3089", i: "\u308A", u: "\u308B", e: "\u308C", o: "\u308D" },
+    w: { a: "\u308F", i: "\u3090", e: "\u3091", o: "\u3092" },
+    g: { a: "\u304C", i: "\u304E", u: "\u3050", e: "\u3052", o: "\u3054" },
+    z: { a: "\u3056", i: "\u3058", u: "\u305A", e: "\u305C", o: "\u305E" },
+    d: { a: "\u3060", i: "\u3062", u: "\u3065", e: "\u3067", o: "\u3069" },
+    b: { a: "\u3070", i: "\u3073", u: "\u3076", e: "\u3079", o: "\u307C" },
+    p: { a: "\u3071", i: "\u3074", u: "\u3077", e: "\u307A", o: "\u307D" },
+    v: { a: "\u3094\u3041", i: "\u3094\u3043", u: "\u3094", e: "\u3094\u3047", o: "\u3094\u3049" }
+  };
+  var SPECIAL_SYMBOLS$1 = {
+    ".": "\u3002",
+    ",": "\u3001",
+    ":": "\uFF1A",
+    "/": "\u30FB",
+    "!": "\uFF01",
+    "?": "\uFF1F",
+    "~": "\u301C",
+    "-": "\u30FC",
+    "\u2018": "\u300C",
+    "\u2019": "\u300D",
+    "\u201C": "\u300E",
+    "\u201D": "\u300F",
+    "[": "\uFF3B",
+    "]": "\uFF3D",
+    "(": "\uFF08",
+    ")": "\uFF09",
+    "{": "\uFF5B",
+    "}": "\uFF5D"
+  };
+  var CONSONANTS = {
+    k: "\u304D",
+    s: "\u3057",
+    t: "\u3061",
+    n: "\u306B",
+    h: "\u3072",
+    m: "\u307F",
+    r: "\u308A",
+    g: "\u304E",
+    z: "\u3058",
+    d: "\u3062",
+    b: "\u3073",
+    p: "\u3074",
+    v: "\u3094",
+    q: "\u304F",
+    f: "\u3075"
+  };
+  var SMALL_Y$1 = { ya: "\u3083", yi: "\u3043", yu: "\u3085", ye: "\u3047", yo: "\u3087" };
+  var SMALL_VOWELS = { a: "\u3041", i: "\u3043", u: "\u3045", e: "\u3047", o: "\u3049" };
+  var ALIASES = {
+    sh: "sy",
+    ch: "ty",
+    cy: "ty",
+    chy: "ty",
+    shy: "sy",
+    j: "zy",
+    jy: "zy",
+    // exceptions to above rules
+    shi: "si",
+    chi: "ti",
+    tsu: "tu",
+    ji: "zi",
+    fu: "hu"
+  };
+  var SMALL_LETTERS = Object.assign({
+    tu: "\u3063",
+    wa: "\u308E",
+    ka: "\u30F5",
+    ke: "\u30F6"
+  }, SMALL_VOWELS, SMALL_Y$1);
+  var SPECIAL_CASES = {
+    yi: "\u3044",
+    wu: "\u3046",
+    ye: "\u3044\u3047",
+    wi: "\u3046\u3043",
+    we: "\u3046\u3047",
+    kwa: "\u304F\u3041",
+    whu: "\u3046",
+    // because it's not thya for てゃ but tha
+    // and tha is not てぁ, but てゃ
+    tha: "\u3066\u3083",
+    thu: "\u3066\u3085",
+    tho: "\u3066\u3087",
+    dha: "\u3067\u3083",
+    dhu: "\u3067\u3085",
+    dho: "\u3067\u3087"
+  };
+  var AIUEO_CONSTRUCTIONS = {
+    wh: "\u3046",
+    kw: "\u304F",
+    qw: "\u304F",
+    q: "\u304F",
+    gw: "\u3050",
+    sw: "\u3059",
+    ts: "\u3064",
+    th: "\u3066",
+    tw: "\u3068",
+    dh: "\u3067",
+    dw: "\u3069",
+    fw: "\u3075",
+    f: "\u3075"
+  };
+  function createRomajiToKanaMap$1() {
+    const kanaTree = transform(BASIC_KUNREI);
+    const subtreeOf = (string) => getSubTreeOf(kanaTree, string);
+    Object.entries(CONSONANTS).forEach(([consonant, yKana]) => {
+      Object.entries(SMALL_Y$1).forEach(([roma, kana]) => {
+        subtreeOf(consonant + roma)[""] = yKana + kana;
+      });
+    });
+    Object.entries(SPECIAL_SYMBOLS$1).forEach(([symbol, jsymbol]) => {
+      subtreeOf(symbol)[""] = jsymbol;
+    });
+    Object.entries(AIUEO_CONSTRUCTIONS).forEach(([consonant, aiueoKana]) => {
+      Object.entries(SMALL_VOWELS).forEach(([vowel, kana]) => {
+        const subtree = subtreeOf(consonant + vowel);
+        subtree[""] = aiueoKana + kana;
+      });
+    });
+    ["n", "n'", "xn"].forEach((nChar) => {
+      subtreeOf(nChar)[""] = "\u3093";
+    });
+    kanaTree.c = JSON.parse(JSON.stringify(kanaTree.k));
+    Object.entries(ALIASES).forEach(([string, alternative]) => {
+      const allExceptLast = string.slice(0, string.length - 1);
+      const last = string.charAt(string.length - 1);
+      const parentTree = subtreeOf(allExceptLast);
+      parentTree[last] = JSON.parse(JSON.stringify(subtreeOf(alternative)));
+    });
+    function getAlternatives(string) {
+      return [...Object.entries(ALIASES), ...[["c", "k"]]].reduce((list, [alt, roma]) => string.startsWith(roma) ? list.concat(string.replace(roma, alt)) : list, []);
+    }
+    Object.entries(SMALL_LETTERS).forEach(([kunreiRoma, kana]) => {
+      const last = (char) => char.charAt(char.length - 1);
+      const allExceptLast = (chars) => chars.slice(0, chars.length - 1);
+      const xRoma = `x${kunreiRoma}`;
+      const xSubtree = subtreeOf(xRoma);
+      xSubtree[""] = kana;
+      const parentTree = subtreeOf(`l${allExceptLast(kunreiRoma)}`);
+      parentTree[last(kunreiRoma)] = xSubtree;
+      getAlternatives(kunreiRoma).forEach((altRoma) => {
+        ["l", "x"].forEach((prefix) => {
+          const altParentTree = subtreeOf(prefix + allExceptLast(altRoma));
+          altParentTree[last(altRoma)] = subtreeOf(prefix + kunreiRoma);
+        });
+      });
+    });
+    Object.entries(SPECIAL_CASES).forEach(([string, kana]) => {
+      subtreeOf(string)[""] = kana;
+    });
+    function addTsu(tree) {
+      return Object.entries(tree).reduce((tsuTree, [key, value]) => {
+        if (!key) {
+          tsuTree[key] = `\u3063${value}`;
+        } else {
+          tsuTree[key] = addTsu(value);
+        }
+        return tsuTree;
+      }, {});
+    }
+    [...Object.keys(CONSONANTS), "c", "y", "w", "j"].forEach((consonant) => {
+      const subtree = kanaTree[consonant];
+      subtree[consonant] = addTsu(subtree);
+    });
+    delete kanaTree.n.n;
+    return Object.freeze(JSON.parse(JSON.stringify(kanaTree)));
+  }
+  var romajiToKanaMap = null;
+  function getRomajiToKanaTree() {
+    if (romajiToKanaMap == null) {
+      romajiToKanaMap = createRomajiToKanaMap$1();
+    }
+    return romajiToKanaMap;
+  }
+  var USE_OBSOLETE_KANA_MAP = createCustomMapping({
+    wi: "\u3090",
+    we: "\u3091"
+  });
+  function IME_MODE_MAP(map3) {
+    const mapCopy = JSON.parse(JSON.stringify(map3));
+    mapCopy.n.n = { "": "\u3093" };
+    mapCopy.n[" "] = { "": "\u3093" };
+    return mapCopy;
+  }
+  var createRomajiToKanaMap = memoizeOne((IMEMode, useObsoleteKana, customKanaMapping) => {
+    let map3 = getRomajiToKanaTree();
+    map3 = IMEMode ? IME_MODE_MAP(map3) : map3;
+    map3 = useObsoleteKana ? USE_OBSOLETE_KANA_MAP(map3) : map3;
+    if (customKanaMapping) {
+      map3 = mergeCustomMapping(map3, customKanaMapping);
+    }
+    return map3;
+  }, dequal);
+  var kanaToHepburnMap = null;
+  var BASIC_ROMAJI = {
+    \u3042: "a",
+    \u3044: "i",
+    \u3046: "u",
+    \u3048: "e",
+    \u304A: "o",
+    \u304B: "ka",
+    \u304D: "ki",
+    \u304F: "ku",
+    \u3051: "ke",
+    \u3053: "ko",
+    \u3055: "sa",
+    \u3057: "shi",
+    \u3059: "su",
+    \u305B: "se",
+    \u305D: "so",
+    \u305F: "ta",
+    \u3061: "chi",
+    \u3064: "tsu",
+    \u3066: "te",
+    \u3068: "to",
+    \u306A: "na",
+    \u306B: "ni",
+    \u306C: "nu",
+    \u306D: "ne",
+    \u306E: "no",
+    \u306F: "ha",
+    \u3072: "hi",
+    \u3075: "fu",
+    \u3078: "he",
+    \u307B: "ho",
+    \u307E: "ma",
+    \u307F: "mi",
+    \u3080: "mu",
+    \u3081: "me",
+    \u3082: "mo",
+    \u3089: "ra",
+    \u308A: "ri",
+    \u308B: "ru",
+    \u308C: "re",
+    \u308D: "ro",
+    \u3084: "ya",
+    \u3086: "yu",
+    \u3088: "yo",
+    \u308F: "wa",
+    \u3090: "wi",
+    \u3091: "we",
+    \u3092: "wo",
+    \u3093: "n",
+    \u304C: "ga",
+    \u304E: "gi",
+    \u3050: "gu",
+    \u3052: "ge",
+    \u3054: "go",
+    \u3056: "za",
+    \u3058: "ji",
+    \u305A: "zu",
+    \u305C: "ze",
+    \u305E: "zo",
+    \u3060: "da",
+    \u3062: "ji",
+    \u3065: "zu",
+    \u3067: "de",
+    \u3069: "do",
+    \u3070: "ba",
+    \u3073: "bi",
+    \u3076: "bu",
+    \u3079: "be",
+    \u307C: "bo",
+    \u3071: "pa",
+    \u3074: "pi",
+    \u3077: "pu",
+    \u307A: "pe",
+    \u307D: "po",
+    \u3094\u3041: "va",
+    \u3094\u3043: "vi",
+    \u3094: "vu",
+    \u3094\u3047: "ve",
+    \u3094\u3049: "vo"
+  };
+  var SPECIAL_SYMBOLS = {
+    "\u3002": ".",
+    "\u3001": ",",
+    "\uFF1A": ":",
+    "\u30FB": "/",
+    "\uFF01": "!",
+    "\uFF1F": "?",
+    "\u301C": "~",
+    "\u30FC": "-",
+    "\u300C": "\u2018",
+    "\u300D": "\u2019",
+    "\u300E": "\u201C",
+    "\u300F": "\u201D",
+    "\uFF3B": "[",
+    "\uFF3D": "]",
+    "\uFF08": "(",
+    "\uFF09": ")",
+    "\uFF5B": "{",
+    "\uFF5D": "}",
+    "\u3000": " "
+  };
+  var AMBIGUOUS_VOWELS = ["\u3042", "\u3044", "\u3046", "\u3048", "\u304A", "\u3084", "\u3086", "\u3088"];
+  var SMALL_Y = { \u3083: "ya", \u3085: "yu", \u3087: "yo" };
+  var SMALL_Y_EXTRA = { \u3043: "yi", \u3047: "ye" };
+  var SMALL_AIUEO = {
+    \u3041: "a",
+    \u3043: "i",
+    \u3045: "u",
+    \u3047: "e",
+    \u3049: "o"
+  };
+  var YOON_KANA = [
+    "\u304D",
+    "\u306B",
+    "\u3072",
+    "\u307F",
+    "\u308A",
+    "\u304E",
+    "\u3073",
+    "\u3074",
+    "\u3094",
+    "\u304F",
+    "\u3075"
+  ];
+  var YOON_EXCEPTIONS = {
+    \u3057: "sh",
+    \u3061: "ch",
+    \u3058: "j",
+    \u3062: "j"
+  };
+  var SMALL_KANA = {
+    \u3063: "",
+    \u3083: "ya",
+    \u3085: "yu",
+    \u3087: "yo",
+    \u3041: "a",
+    \u3043: "i",
+    \u3045: "u",
+    \u3047: "e",
+    \u3049: "o"
+  };
+  var SOKUON_WHITELIST = {
+    b: "b",
+    c: "t",
+    d: "d",
+    f: "f",
+    g: "g",
+    h: "h",
+    j: "j",
+    k: "k",
+    m: "m",
+    p: "p",
+    q: "q",
+    r: "r",
+    s: "s",
+    t: "t",
+    v: "v",
+    w: "w",
+    x: "x",
+    z: "z"
+  };
+  function getKanaToHepburnTree() {
+    if (kanaToHepburnMap == null) {
+      kanaToHepburnMap = createKanaToHepburnMap();
+    }
+    return kanaToHepburnMap;
+  }
+  function getKanaToRomajiTree(romanization) {
+    switch (romanization) {
+      case ROMANIZATIONS.HEPBURN:
+        return getKanaToHepburnTree();
+      default:
+        return {};
+    }
+  }
+  function createKanaToHepburnMap() {
+    const romajiTree = transform(BASIC_ROMAJI);
+    const subtreeOf = (string) => getSubTreeOf(romajiTree, string);
+    const setTrans = (string, transliteration) => {
+      subtreeOf(string)[""] = transliteration;
+    };
+    Object.entries(SPECIAL_SYMBOLS).forEach(([jsymbol, symbol]) => {
+      subtreeOf(jsymbol)[""] = symbol;
+    });
+    [...Object.entries(SMALL_Y), ...Object.entries(SMALL_AIUEO)].forEach(([roma, kana]) => {
+      setTrans(roma, kana);
+    });
+    YOON_KANA.forEach((kana) => {
+      const firstRomajiChar = subtreeOf(kana)[""][0];
+      Object.entries(SMALL_Y).forEach(([yKana, yRoma]) => {
+        setTrans(kana + yKana, firstRomajiChar + yRoma);
+      });
+      Object.entries(SMALL_Y_EXTRA).forEach(([yKana, yRoma]) => {
+        setTrans(kana + yKana, firstRomajiChar + yRoma);
+      });
+    });
+    Object.entries(YOON_EXCEPTIONS).forEach(([kana, roma]) => {
+      Object.entries(SMALL_Y).forEach(([yKana, yRoma]) => {
+        setTrans(kana + yKana, roma + yRoma[1]);
+      });
+      setTrans(`${kana}\u3043`, `${roma}yi`);
+      setTrans(`${kana}\u3047`, `${roma}e`);
+    });
+    romajiTree["\u3063"] = resolveTsu(romajiTree);
+    Object.entries(SMALL_KANA).forEach(([kana, roma]) => {
+      setTrans(kana, roma);
+    });
+    AMBIGUOUS_VOWELS.forEach((kana) => {
+      setTrans(`\u3093${kana}`, `n'${subtreeOf(kana)[""]}`);
+    });
+    return Object.freeze(JSON.parse(JSON.stringify(romajiTree)));
+  }
+  function resolveTsu(tree) {
+    return Object.entries(tree).reduce((tsuTree, [key, value]) => {
+      if (!key) {
+        const consonant = value.charAt(0);
+        tsuTree[key] = Object.keys(SOKUON_WHITELIST).includes(consonant) ? SOKUON_WHITELIST[consonant] + value : value;
+      } else {
+        tsuTree[key] = resolveTsu(value);
+      }
+      return tsuTree;
+    }, {});
+  }
+  var createKanaToRomajiMap = memoizeOne((romanization, customRomajiMapping) => {
+    let map3 = getKanaToRomajiTree(romanization);
+    if (customRomajiMapping) {
+      map3 = mergeCustomMapping(map3, customRomajiMapping);
+    }
+    return map3;
+  }, dequal);
+
   // src/build/tools.js
+  var import_hangul_js = __toESM(require_hangul(), 1);
   function hex_to_hsl(hex2) {
     let result = new RegExp(/^#?([a-f\d]{2})([a-f\d]{2})([a-f\d]{2})$/i).exec(hex2);
     let r = parseInt(result[1], 16);
