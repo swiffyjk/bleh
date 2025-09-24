@@ -121,7 +121,7 @@ function round_two(value) {
  * @returns {number}
  */
 export function clean_number(string) {
-    return parseInt(string
+    return int(string
     .replaceAll(',','')
     .replaceAll('.','')
     );
@@ -405,4 +405,8 @@ export function title_case(text) {
         .split(' ')
         .map(word => word.charAt(0).toUpperCase() + word.slice(1))
         .join(' ');
+}
+
+export function int(num) {
+    return parseInt(num.replace(/\u00A0/g, ''));
 }

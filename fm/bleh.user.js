@@ -5714,7 +5714,7 @@
           while (isDigit(codePoints[c])) {
             integers.push(codePoints[c++]);
           }
-          var int2 = integers.length ? parseInt(fromCodePoint$1.apply(void 0, integers), 10) : 0;
+          var int3 = integers.length ? parseInt(fromCodePoint$1.apply(void 0, integers), 10) : 0;
           if (codePoints[c] === FULL_STOP) {
             c++;
           }
@@ -5739,7 +5739,7 @@
             exponent.push(codePoints[c++]);
           }
           var exp = exponent.length ? parseInt(fromCodePoint$1.apply(void 0, exponent), 10) : 0;
-          return sign2 * (int2 + frac * Math.pow(10, -fracd)) * Math.pow(10, expsign * exp);
+          return sign2 * (int3 + frac * Math.pow(10, -fracd)) * Math.pow(10, expsign * exp);
         };
         var LEFT_PARENTHESIS_TOKEN = {
           type: 2
@@ -25804,7 +25804,7 @@
     return Math.round(value * 100) / 100;
   }
   function clean_number(string) {
-    return parseInt(
+    return int(
       string.replaceAll(",", "").replaceAll(".", "")
     );
   }
@@ -25974,6 +25974,9 @@
   }
   function title_case(text3) {
     return text3.split(" ").map((word) => word.charAt(0).toUpperCase() + word.slice(1)).join(" ");
+  }
+  function int(num) {
+    return parseInt(num.replace(/\u00A0/g, ""));
   }
 
   // src/build/music.js
@@ -31219,23 +31222,23 @@
     `${isoTimeBaseRegex.source} ?(?:${offsetRegex.source}|(${ianaRegex.source}))?`
   );
   var sqlTimeExtensionRegex = RegExp(`(?: ${sqlTimeRegex.source})?`);
-  function int(match3, pos, fallback) {
+  function int2(match3, pos, fallback) {
     const m = match3[pos];
     return isUndefined(m) ? fallback : parseInteger(m);
   }
   function extractISOYmd(match3, cursor) {
     const item = {
-      year: int(match3, cursor),
-      month: int(match3, cursor + 1, 1),
-      day: int(match3, cursor + 2, 1)
+      year: int2(match3, cursor),
+      month: int2(match3, cursor + 1, 1),
+      day: int2(match3, cursor + 2, 1)
     };
     return [item, null, cursor + 3];
   }
   function extractISOTime(match3, cursor) {
     const item = {
-      hours: int(match3, cursor, 0),
-      minutes: int(match3, cursor + 1, 0),
-      seconds: int(match3, cursor + 2, 0),
+      hours: int2(match3, cursor, 0),
+      minutes: int2(match3, cursor + 1, 0),
+      seconds: int2(match3, cursor + 2, 0),
       milliseconds: parseMillis(match3[cursor + 3])
     };
     return [item, null, cursor + 4];
