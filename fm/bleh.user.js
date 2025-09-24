@@ -26113,7 +26113,10 @@
       "[rock version",
       "- pop mix",
       "(pop mix",
-      "[pop mix"
+      "[pop mix",
+      "- version",
+      "(version",
+      "[version"
     ],
     remasters: [
       "- remaster",
@@ -26228,6 +26231,9 @@
       "- japanese version",
       "(japanese version",
       "[japanese version",
+      "- spanish version",
+      "(spanish version",
+      "[spanish version",
       "- soundtrack",
       "(soundtrack",
       "[soundtrack",
@@ -26253,8 +26259,23 @@
       "[the remix",
       "(unfinished original recordings of de-loused in the comatorium",
       "[unfinished original recordings of de-loused in the comatorium",
-      "- unfinished original recordings of de-loused in the comatorium"
+      "- unfinished original recordings of de-loused in the comatorium",
       // landscape tantrums
+      "- alternate version",
+      "(alternate version",
+      "[alternate version",
+      "- cla mix",
+      "(cla mix",
+      "[cla mix",
+      "- chris lord-alge mix",
+      "(chris lord-alge mix",
+      "[chris lord-alge mix",
+      "- mono",
+      "(mono",
+      "[mono",
+      "- stereo",
+      "(stereo",
+      "[stereo"
     ],
     mixes_numbers: [
       "(v1",
@@ -26499,6 +26520,33 @@
       "- highlights from",
       "(highlights from",
       "[highlights from",
+      "- disc 1",
+      "- disc 2",
+      "- disc 3",
+      "- disc 4",
+      "- disc 5",
+      "- disc 6",
+      "- disc 7",
+      "- disc 8",
+      "- disc 9",
+      "(disc 1",
+      "(disc 2",
+      "(disc 3",
+      "(disc 4",
+      "(disc 5",
+      "(disc 6",
+      "(disc 7",
+      "(disc 8",
+      "(disc 9",
+      "[disc 1",
+      "[disc 2",
+      "[disc 3",
+      "[disc 4",
+      "[disc 5",
+      "[disc 6",
+      "[disc 7",
+      "[disc 8",
+      "[disc 9",
       //,
       "- 19",
       "- 20",
@@ -44561,7 +44609,7 @@
                     <h2>${tl(trans.activity)}</h2>
                     ${render_activity_list()}
                     <div class="more-link">
-                        <a href="${root}bleh/profiles?setting=activities">${tl(trans.activity_settings)}</a>
+                        <a href="${root}bleh/profile">${tl(trans.activity_settings)}</a>
                     </div>
                 </section>
             `;
@@ -55827,6 +55875,11 @@
       name: "Portugu\xEAs",
       by: ["ArthRMH", "fr0r"],
       last_updated: "2025-08-10"
+    },
+    sv: {
+      name: "Svenska",
+      by: ["Lrexie"],
+      last_updated: "2025-09-23"
     }
   };
   var trans = {
@@ -55834,17 +55887,20 @@
       type: {
         en: "{page} on {brand} {build}.{sku}",
         de: "{page} auf {brand} {build}.{sku}",
-        pt: "{page} no {brand} {build}.{sku}"
+        pt: "{page} no {brand} {build}.{sku}",
+        sv: "{page} p\xE5 {brand} {build}.{sku}"
       },
       name_type: {
         en: "{name} - {page} on {brand} {build}.{sku}",
         de: "{name} - {page} auf {brand} {build}.{sku}",
-        pt: "{name} - {page} no {brand} {build}.{sku}"
+        pt: "{name} - {page} no {brand} {build}.{sku}",
+        sv: "{name} - {page} p\xE5 {brand} {build}.{sku}"
       },
       name_sister_type: {
         en: "{name} by {sister} - {page} on {brand} {build}.{sku}",
         de: "{name} von {sister} - {page} auf {brand} {build}.{sku}",
-        pt: "{name} por {sister} - {page} no {brand} {build}.{sku}"
+        pt: "{name} por {sister} - {page} no {brand} {build}.{sku}",
+        sv: "{name} av {sister} - {page} p\xE5 {brand} {build}.{sku}"
       }
     },
     badges: {
@@ -55852,12 +55908,14 @@
         name: {
           en: "No badges",
           de: "Kein Abzeichen",
-          pt: "Sem emblemas"
+          pt: "Sem emblemas",
+          sv: "Inga emblem"
         },
         reason: {
           en: "Become a sponsor to get a badge!",
           de: "Werde Sponsor und erhalte ein Abzeichen",
-          pt: "Se torne um apoiador para ganhar um emblema!"
+          pt: "Se torne um apoiador para ganhar um emblema!",
+          sv: "Bli en sponsor f\xF6r att f\xE5 ett emblem!"
         }
       },
       "user-status-subscriber": {
@@ -55867,30 +55925,35 @@
         reason: {
           en: "Active Pro subscription",
           de: "Aktives Pro-Abonnement",
-          pt: "Plano Pro ativo"
+          pt: "Plano Pro ativo",
+          sv: "Aktiv Pro prenumeration"
         }
       },
       "user-status-staff": {
         name: {
           en: "Staff",
           de: "Angestellter",
-          pt: "Equipe"
+          pt: "Equipe",
+          sv: "Personal"
         },
         reason: {
           en: "Official member of Last.fm",
           de: "Ofizielles Mitglied von Last.fm",
-          pt: "Membro oficial da Last.fm"
+          pt: "Membro oficial da Last.fm",
+          sv: "Officiell medlem p\xE5 Last.fm"
         }
       },
       "user-status-mod": {
         name: {
           en: "Mod",
-          pt: "Moderador"
+          pt: "Moderador",
+          sv: "Moderator"
         },
         reason: {
           en: "Official member of Last.fm",
           de: "Ofizielles Mitglied von Last.fm",
-          pt: "Membro oficial do Last.fm"
+          pt: "Membro oficial do Last.fm",
+          sv: "Officiell medlem p\xE5 Last.fm"
         }
       },
       "user-status-alum": {
@@ -55898,65 +55961,75 @@
           en: "Alum"
         },
         reason: {
-          en: "Former member of Last.fm"
+          en: "Former member of Last.fm",
+          sv: "F\xF6re-detta medlem p\xE5 Last.fm"
         }
       },
       "label--fade": {
         reason: {
           en: "They follow you!",
           de: "Sie folgen dir!",
-          pt: "Ele(a) te segue!"
+          pt: "Ele(a) te segue!",
+          sv: "Denna medlem f\xF6ljer dig!"
         }
       },
       contributor: {
         name: {
           en: "Contributor",
           de: "Mitwirkender",
-          pt: "Contribuidor(a)"
+          pt: "Contribuidor(a)",
+          sv: "Bidragsgivare"
         },
         reason: {
           en: "Has worked on bleh or bwaa",
           de: "Hat an bleh oder bwaa gearbeitet",
-          pt: "Trabalhou no bleh ou bwaa"
+          pt: "Trabalhou no bleh ou bwaa",
+          sv: "Har arbetat p\xE5 bleh eller bwaa"
         }
       },
       translation: {
         name: {
           en: "Translations",
           de: "\xDCbersetzungen",
-          pt: "Tradu\xE7\xF5es"
+          pt: "Tradu\xE7\xF5es",
+          sv: "\xD6vers\xE4ttningar"
         }
       },
       cat: {
         name: {
           en: "its a kitty!!",
           de: "ein K\xE4tzchen!!!",
-          pt: "\xE9 um gatinho!!"
+          pt: "\xE9 um gatinho!!",
+          sv: "en kissekatt!!"
         }
       },
       sponsor: {
         name: {
           en: "Sponsor",
-          pt: "Apoiador"
+          pt: "Apoiador",
+          sv: "Sponsor"
         },
         reason: {
           en: "thank you from kate <3",
           de: "danke von kate <3",
-          pt: "obrigad\xE3o da kate <3"
+          pt: "obrigad\xE3o da kate <3",
+          sv: "tack ifr\xE5n kate <3"
         }
       },
       cute: {
         reason: {
           en: "Reserved",
           de: "Exklusiv",
-          pt: "Reservado"
+          pt: "Reservado",
+          sv: "Exklusiv"
         }
       },
       reserved: {
         reason: {
           en: "Reserved",
           de: "Exklusiv",
-          pt: "Reservado"
+          pt: "Reservado",
+          sv: "Exklusiv"
         }
       },
       plaster: {
@@ -55978,214 +56051,263 @@
     },
     requires_higher_bleh_version: {
       en: "Requires higher bleh version",
-      pt: "Requer a vers\xE3o mais recente do bleh"
+      pt: "Requer a vers\xE3o mais recente do bleh",
+      sv: "Beh\xF6ver en nyare version av bleh"
     },
     home: {
       en: "Home",
       de: "Startseite",
-      pt: "In\xEDcio"
+      pt: "In\xEDcio",
+      sv: "Startsida"
     },
     library: {
       en: "Library",
       de: "Bibliothek",
       ja: "\u30E9\u30A4\u30D6\u30E9\u30EA",
-      pt: "Biblioteca"
+      pt: "Biblioteca",
+      sv: "Bibliotek"
     },
     playlists: {
-      en: "Playlists"
+      en: "Playlists",
+      sv: "Spellistor"
     },
     view_profile: {
       en: "View profile",
       de: "Profil anzeigen",
-      pt: "Ver perfil"
+      pt: "Ver perfil",
+      sv: "Visa profil"
     },
     shouts: {
       en: "Shouts",
       pt: "Mensagens",
-      ja: "\u30B7\u30E3\u30A6\u30C8"
+      ja: "\u30B7\u30E3\u30A6\u30C8",
+      sv: "Hojtningar"
     },
     cant_shout: {
-      en: "You cannot leave shouts here"
+      en: "You cannot leave shouts here",
+      sv: "Du kan inte hojta h\xE4r"
     },
     failed_to_send: {
       en: "Failed to send",
-      pt: "Falha ao enviar"
+      pt: "Falha ao enviar",
+      sv: "Gick inte att skicka"
     },
     sent: {
       en: "Sent",
-      pt: "Enviado"
+      pt: "Enviado",
+      sv: "Skickat"
     },
     single_shout: {
       en: "viewing a single shout",
-      pt: "vendo uma mensagem"
+      pt: "vendo uma mensagem",
+      sv: "visar en enda hojtning"
     },
     about: {
       en: "About",
       de: "\xDCber",
-      pt: "Sobre"
+      pt: "Sobre",
+      sv: "Om"
     },
     no_about: {
       en: "{u} is keeping quiet",
-      pt: "{u} est\xE1 bem quietinho"
+      pt: "{u} est\xE1 bem quietinho",
+      sv: "{u} h\xE5ller sig tyst"
     },
     edit_wiki: {
       en: "Edit wiki",
       de: "Wiki editieren",
-      pt: "Editar wiki"
+      pt: "Editar wiki",
+      sv: "Redigera wiki"
     },
     read_more: {
       en: "Read more",
       de: "Mehr anzeigen",
       pt: "Ler mais",
-      ja: "\u3082\u3063\u3068\u8AAD\u3080"
+      ja: "\u3082\u3063\u3068\u8AAD\u3080",
+      sv: "L\xE4s mer"
     },
     refresh: {
       en: "Refresh",
       de: "Aktualisieren",
-      pt: "Atualizar"
+      pt: "Atualizar",
+      sv: "Ladda om"
     },
     refreshed: {
       en: "Refreshed",
-      pt: "Atualizado"
+      pt: "Atualizado",
+      sv: "Laddats om"
     },
     refresh_tracks: {
       en: "Refresh tracks",
       de: "Titel aktualisieren",
-      pt: "Atualizar faixas"
+      pt: "Atualizar faixas",
+      sv: "Ladda om l\xE5tar"
     },
     unavailable: {
       en: "Unavailable",
-      pt: "Indispon\xEDvel"
+      pt: "Indispon\xEDvel",
+      sv: "Otillg\xE4nglig"
     },
     set_obsession: {
       en: "Obsess",
       de: "Obsessen",
-      pt: "Obsess\xE3o"
+      pt: "Obsess\xE3o",
+      sv: "Besatthet"
     },
     obsession_first: {
       en: "First to claim this obsession!",
       de: "Die erste Person, die sich diese Obsession f\xFCr sich beansprucht!",
-      pt: "Primeiro a ter esta obsess\xE3o!"
+      pt: "Primeiro a ter esta obsess\xE3o!",
+      sv: "Den f\xF6rsta personen att bli besatt av denna!"
     },
     compare: {
       en: "Compare",
       de: "Vergleichen",
-      pt: "Comparar"
+      pt: "Comparar",
+      sv: "J\xE4mf\xF6r"
     },
     compare_plays: {
       en: "Compare plays",
       de: "Plays vergleichen",
-      pt: "Comparar reprodu\xE7\xF5es"
+      pt: "Comparar reprodu\xE7\xF5es",
+      sv: "J\xE4mf\xF6r spelningar"
     },
     one_page: {
       en: "1 page",
-      pt: "1 p\xE1gina"
+      pt: "1 p\xE1gina",
+      sv: "1 sida"
     },
     count_pages: {
       en: "{c} pages",
-      pt: "{c} p\xE1ginas"
+      pt: "{c} p\xE1ginas",
+      sv: "{c} sidor"
     },
     gathering_plays_for_user_pages: {
       en: "Gathering plays for {u} ({current_page}/{pages})",
-      pt: "Reunindo reprodu\xE7\xF5es para {u} ({current_page}/{pages})"
+      pt: "Reunindo reprodu\xE7\xF5es para {u} ({current_page}/{pages})",
+      sv: "Samlar spelningar av {u} ({current_page}/{pages})"
     },
     nothing_in_common: {
       en: "Nothing in common (\u0E51-\uFE4F-\u0E51)",
-      pt: "Nada em comum (\u0E51-\uFE4F-\u0E51)"
+      pt: "Nada em comum (\u0E51-\uFE4F-\u0E51)",
+      sv: "Inget gemensamt (\u0E51-\uFE4F-\u0E51)"
     },
     others_featured: {
       en: "Others featured",
       de: "Andere gefeatured",
-      pt: "Outros em destaque"
+      pt: "Outros em destaque",
+      sv: "G\xE4startister"
     },
     your_scrobbles: {
       en: "Your scrobbles",
       de: "Deine Scrobbels",
-      pt: "Seus scrobbles"
+      pt: "Seus scrobbles",
+      sv: "Dina skrobblingar"
     },
     play: {
-      en: "Play"
+      en: "Play",
+      sv: "Spela upp"
     },
     plays: {
       en: "Plays",
-      pt: "Reprodu\xE7\xF5es"
+      pt: "Reprodu\xE7\xF5es",
+      sv: "Spelningar"
     },
     try_again: {
       en: "Try again",
       de: "Erneut versuchen",
-      pt: "Tentar novamente"
+      pt: "Tentar novamente",
+      sv: "F\xF6rs\xF6k igen"
     },
     back: {
       en: "Back",
       de: "Zur\xFCck",
-      pt: "Voltar"
+      pt: "Voltar",
+      sv: "Tillbaks"
     },
     settings: {
       en: "Settings",
       de: "Einstellungen",
       pt: "Configura\xE7\xF5es",
-      ja: "\u8A2D\u5B9A"
+      ja: "\u8A2D\u5B9A",
+      sv: "Inst\xE4llningar"
     },
     on_ignore_list: {
       en: "Ignored",
       de: "Ignoriert",
-      pt: "Ignorados"
+      pt: "Ignorados",
+      sv: "Ignorerad"
     },
     friends: {
       en: "Friends",
       de: "Freunde",
-      pt: "Amigos"
+      pt: "Amigos",
+      sv: "V\xE4nner"
     },
     friends_setting: {
-      en: "Keep up to date on what your friends are listening to"
+      en: "Keep up to date on what your friends are listening to",
+      sv: "H\xE5ll koll p\xE5 vad dina v\xE4nner lyssnar p\xE5"
     },
     add_friends: {
       en: "Add friends"
     },
     starred_friend: {
       name: {
-        en: "Starred friend"
+        en: "Starred friend",
+        sv: "Stj\xE4rnm\xE4rkt v\xE4n"
       },
       body: {
         en: "View their scrobbles alongside yours at all times",
         de: "Sehe ihre Scrobbels jederzeit neben deine an",
-        pt: "Veja os scrobbles dele(a) junto aos seus o tempo todo"
+        pt: "Veja os scrobbles dele(a) junto aos seus o tempo todo",
+        sv: "Se deras skrobblingar bredvid dina hela tiden"
       },
       notice: {
-        en: "Not seeing the options you\u2019re after? Fill out your friends list in the settings."
+        en: "Not seeing the options you\u2019re after? Fill out your friends list in the settings.",
+        sv: "Ser du inte inst\xE4llningar du letar efter? Fyll upp din v\xE4nlista i inst\xE4llningarna."
       }
     },
     friend_difference: {
-      en: "\u2018Friends\u2019 is a bleh-exclusive feature that allows you to keep up to date on your friend\u2019s listening history, it is local and does not influence your following list."
+      en: "\u2018Friends\u2019 is a bleh-exclusive feature that allows you to keep up to date on your friend\u2019s listening history, it is local and does not influence your following list.",
+      sv: "\u2019V\xE4nner\u2019 \xE4r en exklusiv del av bleh som till\xE5ter dig att h\xE5lla koll p\xE5 dina v\xE4nners lyssnarhistoria, det hanteras lokalt och r\xF6r inte din f\xF6ljarlista."
     },
     add_as_friend: {
-      en: "Add as friend"
+      en: "Add as friend",
+      sv: "L\xE4gg till som v\xE4n"
     },
     remove_friend: {
       name: {
-        en: "Remove friend"
+        en: "Remove friend",
+        sv: "Ta bort v\xE4n"
       },
       body: {
-        en: "Are you sure you want to remove {u} as a friend, you will stay following them - it\u2018s only local."
+        en: "Are you sure you want to remove {u} as a friend, you will stay following them - it\u2018s only local.",
+        sv: "\xC4r du s\xE4ker p\xE5 att du vill ta bort {u} som v\xE4n? Du f\xF6ljer dem fortfarande - v\xE4nlistan hanteras lokalt."
       }
     },
     added_as_friend: {
-      en: "Added friend"
+      en: "Added friend",
+      sv: "Lagt till som v\xE4n"
     },
     removed_friend: {
-      en: "Removed friend"
+      en: "Removed friend",
+      sv: "Tagit bort v\xE4n"
     },
     added_star: {
-      en: "Added star status"
+      en: "Added star status",
+      sv: "Stj\xE4rnm\xE4rkte"
     },
     add_as_starred_friend: {
-      en: "Star friend"
+      en: "Star friend",
+      sv: "Stj\xE4rnm\xE4rk v\xE4n"
     },
     removed_star: {
-      en: "Removed star status"
+      en: "Removed star status",
+      sv: "Tog bort stj\xE4rnm\xE4rke"
     },
     remove_as_star_friend: {
-      en: "Remove star status"
+      en: "Remove star status",
+      sv: "Ta bort stj\xE4rnm\xE4rke"
     },
     aka: {
       en: "aka.",
@@ -56194,106 +56316,127 @@
     account_pronouns: {
       en: "pronouns",
       de: "pronomen",
-      pt: "pronomes"
+      pt: "pronomes",
+      sv: "pronomen"
     },
     account_created: {
       // dont translate to "scrobbling since", instead just "created"
       en: "created",
       de: "erstellt",
-      pt: "criada"
+      pt: "criada",
+      sv: "skapades"
     },
     account_scrobbling_since_replace: {
       // copy this from last.fm 1:1 (including the space at the end if there)
       en: "scrobbling since ",
       de: "scrobbelt seit ",
       pt: "em scrobble desde ",
-      ja: "\u3088\u308Ascrobble"
+      ja: "\u3088\u308Ascrobble",
+      sv: "skrobblar sedan "
     },
     edit: {
       en: "Edit",
       de: "Editieren",
-      pt: "Editar"
+      pt: "Editar",
+      sv: "Redigera"
     },
     bulk_edit: {
       // as in the last.fm 'Bulk Edit' open-source extension
       en: "Bulk edit",
       de: "Massenbearbeitung",
-      pt: "Edi\xE7\xE3o em massa"
+      pt: "Edi\xE7\xE3o em massa",
+      sv: "Bulkredigera"
     },
     edit_profile: {
       en: "Edit profile",
       de: "Profil editieren",
-      pt: "Editar perfil"
+      pt: "Editar perfil",
+      sv: "Redigera profil"
     },
     scrobble: {
-      en: "Scrobble"
+      en: "Scrobble",
+      sv: "Skrobbla"
     },
     scrobbles: {
       en: "Scrobbles",
       de: "Scrobbels",
-      ja: "Scrobble"
+      ja: "Scrobble",
+      sv: "Skrobblingar"
     },
     count_scrobbles: {
       en: "{c} scrobbles",
       de: "{c} scrobbels",
-      pt: "{c} scrobbles"
+      pt: "{c} scrobbles",
+      sv: "{c} skrobblingar"
     },
     new_scrobble: {
       en: "New scrobble",
-      pt: "Novo scrobble"
+      pt: "Novo scrobble",
+      sv: "Ny skrobbel"
     },
     artist: {
       en: "Artist",
       de: "K\xFCnstler",
-      pt: "Artista"
+      pt: "Artista",
+      sv: "Artist"
     },
     artists: {
       en: "Artists",
       de: "K\xFCnstler",
       pt: "Artistas",
-      ja: "\u30A2\u30FC\u30C6\u30A3\u30B9\u30C8"
+      ja: "\u30A2\u30FC\u30C6\u30A3\u30B9\u30C8",
+      sv: "Artister"
     },
     artists_tooltip: {
       en: "Multiple artists are grouped into this profile",
       de: "Mehrere K\xFCnstler sind in diesem Profil sortiert",
-      pt: "M\xFAltiplos artistas est\xE3o agrupados neste perfil"
+      pt: "M\xFAltiplos artistas est\xE3o agrupados neste perfil",
+      sv: "Flera artister delar denna profil"
     },
     album: {
       en: "Album",
       de: "Album",
-      pt: "\xC1lbum"
+      pt: "\xC1lbum",
+      sv: "Album"
     },
     albums: {
       en: "Albums",
       de: "Alben",
       pt: "\xC1lbuns",
-      ja: "\u30A2\u30EB\u30D0\u30E0"
+      ja: "\u30A2\u30EB\u30D0\u30E0",
+      sv: "Album"
     },
     album_artist: {
-      en: "Album Artist"
+      en: "Album Artist",
+      sv: "Albumartist"
     },
     track: {
       en: "Track",
       de: "Titel",
-      pt: "Faixa"
+      pt: "Faixa",
+      sv: "L\xE5t"
     },
     tracks: {
       en: "Tracks",
       de: "Titel",
       pt: "Faixas",
-      ja: "\u30C8\u30E9\u30C3\u30AF"
+      ja: "\u30C8\u30E9\u30C3\u30AF",
+      sv: "L\xE5tar"
     },
     appearance: {
       en: "Appearance",
       de: "Aussehen",
-      pt: "Apar\xEAncia"
+      pt: "Apar\xEAncia",
+      sv: "Uts\xE9ende"
     },
     visual: {
-      en: "Visual"
+      en: "Visual",
+      sv: "Visuellt"
     },
     theme: {
       en: "Theme",
-      pt: "Tema"
+      pt: "Tema",
+      sv: "Tema"
     },
     theme_day: {
       name: {
@@ -56318,49 +56461,58 @@
       name: {
         en: "Themes",
         de: "Farbschema",
-        pt: "Temas"
+        pt: "Temas",
+        sv: "Teman"
       },
       light: {
         en: "Light",
         de: "Hell",
-        pt: "Claro"
+        pt: "Claro",
+        sv: "Ljus"
       },
       ink: {
         en: "Ink",
         de: "Tinte",
-        pt: "Tinta"
+        pt: "Tinta",
+        sv: "Bl\xE4ck"
       },
       dark: {
         en: "Ash",
         de: "Asche",
-        pt: "Cinza"
+        pt: "Cinza",
+        sv: "Aska"
       },
       darker: {
         en: "Dark",
         de: "Dunkel",
-        pt: "Escuro"
+        pt: "Escuro",
+        sv: "M\xF6rk"
       },
       oled: {
         en: "Void",
         de: "Leere",
-        pt: "Vazio"
+        pt: "Vazio",
+        sv: "Tomhet"
       }
     },
     colours: {
       en: "Colours",
       de: "Farben",
-      pt: "Colorir"
+      pt: "Colorir",
+      sv: "F\xE4rger"
     },
     change_my_colour_when: {
       name: {
-        en: "Use a context-based accent colour when"
+        en: "Use a context-based accent colour when",
+        sv: "Anv\xE4nd kontextbaserad accentf\xE4rg n\xE4r"
       },
       body: {
         en: "Temporarily override your selected accent to match album art"
       }
     },
     adaptive: {
-      en: "Adaptive"
+      en: "Adaptive",
+      sv: "Adaptiv"
     },
     adaptive_tip: {
       en: "Your theme preference will be either {day} or {night}, based on your system. "
@@ -56369,10 +56521,12 @@
       en: "Change schedule"
     },
     hue_from_album: {
-      en: "Browsing album pages"
+      en: "Browsing album pages",
+      sv: "Du \xE4r p\xE5 albumsidor"
     },
     colourful_active: {
-      en: "Actively scrobbling a track"
+      en: "Actively scrobbling a track",
+      sv: "Aktivt skrobblar en l\xE5t"
     },
     colourful_all: {
       en: "Viewing any track"
@@ -56380,333 +56534,402 @@
     configure: {
       en: "Configure",
       de: "Konfigurieren",
-      pt: "Configurar"
+      pt: "Configurar",
+      sv: "Konfigurera"
     },
     links: {
-      en: "Links"
+      en: "Links",
+      sv: "L\xE4nkar"
     },
     //sounds kinda weird so i changed back to english as the final version for event ; german festival sites use 'line-up' aswell so ill stick to that ~stel
     event: {
       en: "Event",
-      pt: "Evento"
+      pt: "Evento",
+      sv: "Evenemang"
     },
     events: {
       en: "Events",
       pt: "Eventos",
-      ja: "\u30A4\u30D9\u30F3\u30C8"
+      ja: "\u30A4\u30D9\u30F3\u30C8",
+      sv: "Evenemang"
     },
     lineup: {
       en: "Line-up",
-      pt: "Programa\xE7\xE3o"
+      pt: "Programa\xE7\xE3o",
+      sv: "Spelschema"
     },
     attendance: {
       en: "Attendance",
       de: "Teilnahme",
-      pt: "Comparecimento"
+      pt: "Comparecimento",
+      sv: "N\xE4rvarande"
     },
     top_badge: {
       en: "Top Badge",
       de: "Top-Abzeichen",
-      pt: "Emblema superior"
+      pt: "Emblema superior",
+      sv: "Toppemblem"
     },
     general: {
       en: "General",
-      pt: "Geral"
+      pt: "Geral",
+      sv: "Generellt"
     },
     interface: {
-      en: "Interface"
+      en: "Interface",
+      sv: "Interface"
     },
     music: {
       en: "Music",
       de: "Musik",
       pt: "M\xFAsica",
-      ja: "\u97F3\u697D"
+      ja: "\u97F3\u697D",
+      sv: "Musik"
     },
     playback: {
-      en: "Playback"
+      en: "Playback",
+      sv: "Uppspelning"
     },
     profile: {
       en: "Profile",
       de: "Profil",
       pt: "Perfil",
-      pl: "Profil"
+      pl: "Profil",
+      sv: "Profil"
     },
     current_season: {
       en: "Current season",
-      pt: "Esta\xE7\xE3o atual"
+      pt: "Esta\xE7\xE3o atual",
+      sv: "Nuvarande \xE5rstid"
     },
     seasonal: {
       name: {
         // translate to 'Seasons' if it reads better
         en: "Seasonal",
         de: "Saisonal",
-        pt: "Esta\xE7\xF5es"
+        pt: "Esta\xE7\xF5es",
+        sv: "\xC5rstider"
       },
       listing: {
         none: {
           en: "None active",
           de: "Keine Aktiv",
-          pt: "Nenhuma ativa"
+          pt: "Nenhuma ativa",
+          sv: "Ingen aktiv"
         },
         easter: {
           en: "Easter",
           de: "Ostern",
-          pt: "P\xE1scoa"
+          pt: "P\xE1scoa",
+          sv: "P\xE5sk"
         },
         pride: {
           en: "Pride",
-          pt: "Orgulho"
+          pt: "Orgulho",
+          sv: "Pride"
         },
         halloween: {
           en: "Halloween",
-          pt: "Dia das Bruxas"
+          pt: "Dia das Bruxas",
+          sv: "Halloween"
         },
         pre_fall: {
           en: "Early autumn",
-          pt: "Pr\xE9-outono"
+          pt: "Pr\xE9-outono",
+          sv: "Tidig h\xF6st"
         },
         fall: {
           en: "Autumn",
           de: "Herbst",
-          pt: "Outono"
+          pt: "Outono",
+          sv: "H\xF6st"
         },
         christmas: {
           en: "Christmas",
           de: "Weihnachten",
-          pt: "Natal"
+          pt: "Natal",
+          sv: "Jul"
         },
         new_years: {
           en: "New Years",
           de: "Silvester",
-          pt: "Ano Novo"
+          pt: "Ano Novo",
+          sv: "Ny\xE5r"
         }
       }
     },
     new_season: {
       en: "New Season!",
-      pt: "Nova Esta\xE7\xE3o!"
+      pt: "Nova Esta\xE7\xE3o!",
+      sv: "Ny \xE5rstid!"
     },
     value_for_time: {
       en: "{v} for {time}",
-      pt: "{v} para {time}"
+      pt: "{v} para {time}",
+      sv: "{v} till {time}"
     },
     seasonal_timeline: {
       en: "Seasonal timeline",
       de: "Saisonale Zeitleiste",
-      pt: "Linha do tempo sazonal"
+      pt: "Linha do tempo sazonal",
+      sv: "Tidslinje f\xF6r \xE5rstider"
     },
     enable_seasons: {
       name: {
         en: "Automatically adapt to seasonal events",
-        pt: "Adaptar automaticamente a eventos sazonais"
+        pt: "Adaptar automaticamente a eventos sazonais",
+        sv: "Adaptera automatiskt f\xF6r \xE5rstider"
       },
       body: {
         en: "Adapts the default colour, iconset, and shows particles depending on the season",
-        pt: "Adapta a cor padr\xE3o, \xEDcones e exibe part\xEDculas dependendo da sazonalidade"
+        pt: "Adapta a cor padr\xE3o, \xEDcones e exibe part\xEDculas dependendo da sazonalidade",
+        sv: "Adaptera f\xE4rg, ikoner, och visa partiklar beroende p\xE5 \xE5rstiden"
       }
     },
     seasonal_particles_fps: {
       name: {
-        en: "Reduce quality of particles"
+        en: "Reduce quality of particles",
+        sv: "S\xE4nk partiklarnas kvalitet"
       },
       body: {
-        en: "Snow particles use a drop-shadow glow for aesthetics with the added processing cost"
+        en: "Snow particles use a drop-shadow glow for aesthetics with the added processing cost",
+        sv: "Sn\xF6partiklarna anv\xE4nder en gl\xF6deffekt f\xF6r estetiska sj\xE4l, med lite extra datorbelastning"
       }
     },
     seasonal_offset: {
       en: "Seasonal events are ran in your timezone, which we calculated as {offset}",
       de: "Saisonale Events werden in deiner Zeitzone ausgef\xFChrt, die wir als {offset} berechnet haben",
-      pt: "Eventos sazonais s\xE3o realizados em seu fuso hor\xE1rio, que calculamos como {offset}"
+      pt: "Eventos sazonais s\xE3o realizados em seu fuso hor\xE1rio, que calculamos como {offset}",
+      sv: "\xC5rstidsevenemang h\xE5lls i din tidszon, som vi r\xE4knade ut vara {offset}"
     },
     calculated_offset: {
       en: "Calculated offset based on timezone",
-      pt: "Offset calculado com base no fuso hor\xE1rio"
+      pt: "Offset calculado com base no fuso hor\xE1rio",
+      sv: "F\xF6rskjutning kalkylerats fr\xE5n tidszon"
     },
     started: {
       en: "Started",
       de: "Gestartet",
-      pt: "Come\xE7ou"
+      pt: "Come\xE7ou",
+      sv: "Har b\xF6rjat"
     },
     next_in: {
       en: "Next in",
-      pt: "Pr\xF3ximo em"
+      pt: "Pr\xF3ximo em",
+      sv: "N\xE4sta om"
     },
     ends_in: {
       en: "Ends in",
       de: "Endet in",
-      pt: "Termina em"
+      pt: "Termina em",
+      sv: "Slutar om"
     },
     text: {
       en: "Text",
-      pt: "Texto"
+      pt: "Texto",
+      sv: "Text"
     },
     accessibility: {
       en: "Accessibility",
       de: "Barrierefreiheit",
-      pt: "Acessibilidade"
+      pt: "Acessibilidade",
+      sv: "Tillg\xE4ngligthet"
     },
     troubleshooting: {
       en: "Advanced",
       de: "Fortgeschritten",
-      pt: "Avan\xE7ado"
+      pt: "Avan\xE7ado",
+      sv: "Advancerat"
     },
     recommendations: {
       en: "Suggested",
-      pt: "Sugest\xF5es"
+      pt: "Sugest\xF5es",
+      sv: "F\xF6rslag"
     },
     releases: {
       en: "Releases",
       de: "Ver\xF6ffentlichungen",
-      pt: "Lan\xE7amentos"
+      pt: "Lan\xE7amentos",
+      sv: "Skivsl\xE4pp"
     },
     bookmarks: {
       en: "Bookmarks",
       de: "Lesezeichen",
       pt: "Marcadores",
-      ja: "\u30D6\u30C3\u30AF\u30DE\u30FC\u30AF"
+      ja: "\u30D6\u30C3\u30AF\u30DE\u30FC\u30AF",
+      sv: "Bokm\xE4rken"
     },
     charts: {
       en: "Charts",
       pt: "Paradas",
-      ja: "\u30C1\u30E3\u30FC\u30C8"
+      ja: "\u30C1\u30E3\u30FC\u30C8",
+      sv: "Topplistor"
     },
     welcome_back_user: {
       en: "Welcome back {user}!",
       de: "Willkommen z\xFCruck {user}!",
-      pt: "Bem-vindo(a) {user}!"
+      pt: "Bem-vindo(a) {user}!",
+      sv: "V\xE4lkommen tillbaka, {user}!"
     },
     // TODO(stel): is my capitalisation correct here at all lol ; yes cutie, well done <3
     good_morning_user: {
       en: "Good morning, {user}",
       de: "Guten Morgen, {user}",
-      pt: "Bom dia, {user}"
+      pt: "Bom dia, {user}",
+      sv: "God morgon, {user}"
     },
     good_afternoon_user: {
       en: "Good afternoon, {user}",
       de: "Guten Nachmittag, {user}",
-      pt: "Boa tarde, {user}"
+      pt: "Boa tarde, {user}",
+      sv: "God eftermiddag, {user}"
     },
     good_evening_user: {
       en: "Good evening, {user}",
       de: "Guten Abend, {user}",
-      pt: "Boa noite, {user}"
+      pt: "Boa noite, {user}",
+      sv: "God kv\xE4ll, {user}"
     },
     good_night_user: {
       en: "Goodnight, {user}",
       de: "Gute Nacht, {user}",
-      pt: "Boa noite, {user}"
+      pt: "Boa noite, {user}",
+      sv: "God natt, {user}"
     },
     bleh_settings: {
       en: "bleh Settings",
       de: "bleh Einstellungen",
-      pt: "Configura\xE7\xF5es do bleh"
+      pt: "Configura\xE7\xF5es do bleh",
+      sv: "bleh-inst\xE4llningar"
     },
     bleh_setup: {
       en: "Setup",
       de: "Einrichtung",
-      pt: "Instala\xE7\xE3o"
+      pt: "Instala\xE7\xE3o",
+      sv: "Installation"
     },
     import: {
       en: "Import",
       de: "Importieren",
       pt: "Importar",
-      pl: "Importuj"
+      pl: "Importuj",
+      sv: "Importera"
     },
     import_settings: {
       en: "Import settings",
-      pt: "Importar configura\xE7\xF5es"
+      pt: "Importar configura\xE7\xF5es",
+      sv: "Importera inst\xE4llningar"
     },
     import_notice: {
       en: "This is a permanent action, beware of where you are copying from",
-      pt: "Esta \xE9 uma a\xE7\xE3o permanente, cuidado com o lugar de onde voc\xEA est\xE1 copiando"
+      pt: "Esta \xE9 uma a\xE7\xE3o permanente, cuidado com o lugar de onde voc\xEA est\xE1 copiando",
+      sv: "Det h\xE4r \xE4r permanent, oberoende av vart du kopierar ifr\xE5n"
     },
     export: {
       en: "Export",
       de: "Exportieren",
       pt: "Exportar",
-      pl: "Eksportuj"
+      pl: "Eksportuj",
+      sv: "Exportera"
     },
     export_settings: {
       en: "Export settings",
-      pt: "Exportar configura\xE7\xF5es"
+      pt: "Exportar configura\xE7\xF5es",
+      sv: "Exportera inst\xE4llningar"
     },
     reset: {
       en: "Reset",
       de: "Zur\xFCcksetzen",
       pt: "Restaurar",
-      pl: "Resetuj"
+      pl: "Resetuj",
+      sv: "\xC5terst\xE4ll"
     },
     reset_settings: {
       en: "Reset settings to default",
-      pt: "Restaurar as configura\xE7\xF5es para o padr\xE3o"
+      pt: "Restaurar as configura\xE7\xF5es para o padr\xE3o",
+      sv: "\xC5terst\xE4ll alla inst\xE4llningar till det vanliga"
     },
     reset_notice: {
       en: "Your settings will be permanently reset, are you sure?",
-      pt: "Sua configura\xE7\xE3o vai ser permanentemente restaurada ao padr\xE3o, voc\xEA tem certeza?"
+      pt: "Sua configura\xE7\xE3o vai ser permanentemente restaurada ao padr\xE3o, voc\xEA tem certeza?",
+      sv: "\xC4r du s\xE4ker p\xE5 att du vill \xE5terst\xE4lla alla inst\xE4llningar? Det \xE4r permanent."
     },
     reset_item_to_default: {
       en: "Reset item to default",
-      pt: "Restaurar itens para o padr\xE3o"
+      pt: "Restaurar itens para o padr\xE3o",
+      sv: "\xC5terst\xE4ll till standard"
     },
     make_a_backup: {
       en: "Make a backup",
-      pt: "Fa\xE7a um backup"
+      pt: "Fa\xE7a um backup",
+      sv: "Skapa en backup"
     },
     news: {
       en: "News",
       de: "Neuigkeiten",
-      pt: "Not\xEDcias"
+      pt: "Not\xEDcias",
+      sv: "Nytt"
     },
     news_from_user: {
       en: "News from {user}",
       de: "Neuigkeiten von {user}",
-      pt: "Not\xEDcias da {user}"
+      pt: "Not\xEDcias da {user}",
+      sv: "Nytt fr\xE5n {user}"
     },
     default: {
       en: "Default",
       de: "Standard",
-      pt: "Padr\xE3o"
+      pt: "Padr\xE3o",
+      sv: "Standard"
     },
     avatar: {
-      en: "Avatar"
+      en: "Avatar",
+      sv: "Profilbild"
     },
     customise: {
       en: "Customise",
       de: "Anpassen",
-      pt: "Customizar"
+      pt: "Customizar",
+      sv: "Anpassa"
     },
     convert: {
       en: "Convert",
       de: "Umwandeln",
-      pt: "Converter"
+      pt: "Converter",
+      sv: "Konvertera"
     },
     convert_from_hex: {
       en: "Convert colour",
       de: "Farbe umwandeln",
-      pt: "Converter cor"
+      pt: "Converter cor",
+      sv: "Konvertera f\xE4rg"
     },
     fonts: {
       en: "Fonts",
       de: "Schriftart",
-      pt: "Fontes"
+      pt: "Fontes",
+      sv: "Typsnitt"
     },
     hue: {
       en: "Accent colour",
       de: "Akzentfarbe",
       pt: "Cor de destaque",
-      pl: "Kolor akcentu (hue)"
+      pl: "Kolor akcentu (hue)",
+      sv: "Accentf\xE4rg"
     },
     sat: {
       en: "Vibrancy",
       de: "Lebendigkeit",
       pt: "Vivacidade",
-      pl: "Nasycenie (saturation)"
+      pl: "Nasycenie (saturation)",
+      sv: "F\xE4rgm\xE4ttnad"
     },
     lit: {
       en: "Lightness",
       de: "Helligkeit",
       pt: "Claridade",
-      pl: "Jasno\u015B\u0107 (lightness)"
+      pl: "Jasno\u015B\u0107 (lightness)",
+      sv: "Ljushet"
     },
     solarium: {
       name: {
@@ -56719,148 +56942,176 @@
     seasonal_warning: {
       en: "This season has a custom default accent colour!",
       de: "Diese Saison hat eine benutzerdefinierte Akzentfarbe",
-      pt: "Esta esta\xE7\xE3o tem uma cor de destaque personalizada!"
+      pt: "Esta esta\xE7\xE3o tem uma cor de destaque personalizada!",
+      sv: "Denna \xE5rstid har en anpassad f\xE4rg!"
     },
     card_background_saturation: {
       name: {
         en: "Card background vibrancy",
         de: "Lebendigkeit des Kartenhintergrunds",
-        pt: "Vivacidade de fundo do cart\xE3o"
+        pt: "Vivacidade de fundo do cart\xE3o",
+        sv: "Bakgrundsf\xE4rg"
       },
       body: {
         en: "Bring some colour into your world (or reduce it)",
         de: "Bringe etwas Farbe in deiner Welt (oder reduziere sie)",
-        pt: "Traz algumas cores ao mundo (ou diminui elas)"
+        pt: "Traz algumas cores ao mundo (ou diminui elas)",
+        sv: "Skaffa lite f\xE4rg i din v\xE4rld (eller minska den)"
       }
     },
     save: {
       en: "Save",
       de: "Speichern",
       pt: "Salvar",
-      pl: "Zapisz"
+      pl: "Zapisz",
+      sv: "Spara"
     },
     cancel: {
       en: "Cancel",
       de: "Abbrechen",
       pt: "Cancelar",
-      pl: "Anuluj"
+      pl: "Anuluj",
+      sv: "Avbryt"
     },
     add: {
       en: "Add",
       de: "Hinzuf\xFCgen",
-      pt: "Adicionar"
+      pt: "Adicionar",
+      sv: "L\xE4gg till"
     },
     remove: {
       en: "Remove",
       de: "Entfernen",
-      pt: "Remover"
+      pt: "Remover",
+      sv: "Radera"
     },
     clear: {
       en: "Clear",
       de: "L\xF6schen",
       pt: "Limpar",
-      pl: "Wyczy\u015B\u0107"
+      pl: "Wyczy\u015B\u0107",
+      sv: "Rensa"
     },
     close: {
       en: "Close",
       de: "Schlie\xDFen",
       pt: "Fechar",
-      pl: "Zamknij"
+      pl: "Zamknij",
+      sv: "St\xE4ng"
     },
     go: {
       en: "Go",
       de: "Los",
-      pt: "Ir"
+      pt: "Ir",
+      sv: "G\xE5"
     },
     skip: {
       en: "Skip",
       de: "\xDCberspringen",
-      pt: "Pular"
+      pt: "Pular",
+      sv: "Hoppa \xF6ver"
     },
     send: {
       en: "Send",
       de: "Senden",
-      pt: "Enviar"
+      pt: "Enviar",
+      sv: "Skicka"
     },
     send_quickly_with: {
       en: "Send quickly with {kbd}",
       de: "Schnell senden mit {kbd}",
-      pt: "Enviar rapidamente com {kbd}"
+      pt: "Enviar rapidamente com {kbd}",
+      sv: "Skicka snabbt med {kbd}"
     },
     done: {
       en: "Done",
       de: "Fertig",
       pt: "Feito",
-      pl: "Gotowe"
+      pl: "Gotowe",
+      sv: "F\xE4rdig"
     },
     finish: {
       en: "Finish",
       de: "Beenden",
-      pt: "Terminar"
+      pt: "Terminar",
+      sv: "Klart"
     },
     continue: {
       en: "Continue",
       de: "Fortsetzen",
       pt: "Continuar",
-      pl: "Kontynuuj"
+      pl: "Kontynuuj",
+      sv: "Forts\xE4tt"
     },
     click_for_more_options: {
-      en: "Click for more options"
+      en: "Click for more options",
+      sv: "Tryck f\xF6r mer alternativ"
     },
     right_click_for_more_options: {
       en: "Right click for more options",
       de: "Rechtsklick f\xFCr weitere optionen",
-      pt: "Clique esquerdo para mais op\xE7\xF5es"
+      pt: "Clique esquerdo para mais op\xE7\xF5es",
+      sv: "H\xF6gerklicka f\xF6r mer alternativ"
     },
     refresh_pending: {
       name: {
         en: "Refresh pending",
         de: "Aktualisierung anstehend",
-        pt: "Atualizar pend\xEAncias"
+        pt: "Atualizar pend\xEAncias",
+        sv: "F\xF6rv\xE4ntar omladdning"
       },
       body: {
         en: "A setting you changed requires a page refresh",
         de: "Eine von dir ge\xE4nderte Einstellung erfordert eine Seitenaktualisierung, damit sie wirksam wird",
-        pt: "Uma configura\xE7\xE3o que voc\xEA mudou exige uma atualiza\xE7\xE3o de p\xE1gina"
+        pt: "Uma configura\xE7\xE3o que voc\xEA mudou exige uma atualiza\xE7\xE3o de p\xE1gina",
+        sv: "En inst\xE4llning du \xE4ndrade p\xE5 beh\xF6ver at sidan laddas om"
       }
     },
     new: {
       en: "New",
       de: "Neu",
-      pt: "Nova"
+      pt: "Nova",
+      sv: "Ny"
     },
     beta: {
-      en: "Beta"
+      en: "Beta",
+      sv: "Beta"
     },
     more: {
       en: "More",
       de: "Weiter",
-      pt: "Mais"
+      pt: "Mais",
+      sv: "Mer"
     },
     inbox: {
       en: "Inbox",
       de: "Posteingang",
-      pt: "Caixa de entrada"
+      pt: "Caixa de entrada",
+      sv: "Brevl\xE5da"
     },
     notifications: {
       en: "Notifications",
       de: "Benachrichtigungen",
-      pt: "Notifica\xE7\xF5es"
+      pt: "Notifica\xE7\xF5es",
+      sv: "Notiser"
     },
     messages: {
       en: "Messages",
       de: "Nachrichten",
-      pt: "Mensagens"
+      pt: "Mensagens",
+      sv: "Meddelanden"
     },
     preview: {
       en: "Preview",
-      de: "Vorschau"
+      de: "Vorschau",
+      sv: "F\xF6rhandsvisning"
     },
     about_me_preview: {
       // About Me
       en: "About (preview)",
       de: "\xDCber (Vorschau)",
-      pt: "Sobre (preview)"
+      pt: "Sobre (preview)",
+      sv: "Om (f\xF6rhandsvisning)"
     },
     markdown_tip: {
       // use <br><br> to add a space between the first sentence and the next
@@ -56868,110 +57119,131 @@
       // may change in the future
       en: 'You can use line breaks, bold text, italics, underlines, images, and headers visible to other bleh users.<br><br>Images are created via ![alt text](link). Changing the alt text to "banner" applies a profile banner.',
       de: "Du kannst Zeilenumbr\xFCche, Fettdruck, Kursivschrift, Unterstreichungen, Bilder und \xDCberschriften verwenden, die f\xFCr andere bleh-Nutzer sichtbar sind.<br><br>Bilder werden \xFCber ![Alt-Text](Link) erstellt. Wenn du den Alt-Text in \u201Ebanner\u201C \xE4nderst, wird ein Profilbanner angewendet.",
-      pt: 'Voc\xEA pode usar quebras de linha, texto em negrito, it\xE1lico, sublinhado, imagens e cabe\xE7alhos vis\xEDveis para outros usu\xE1rios do bleh.<br><br>As imagens s\xE3o criadas usando ![alt text](link). Alterar o alt text para "banner" aplica um banner no perfil.'
+      pt: 'Voc\xEA pode usar quebras de linha, texto em negrito, it\xE1lico, sublinhado, imagens e cabe\xE7alhos vis\xEDveis para outros usu\xE1rios do bleh.<br><br>As imagens s\xE3o criadas usando ![alt text](link). Alterar o alt text para "banner" aplica um banner no perfil.',
+      sv: 'Du kan anv\xE4nda radbrytningar, fetstilt text, kursiv, understrykt, bilder, och rubriker som syns av andra bleh-anv\xE4ndare.<br><br>Bilder skapas via ![alt text](link). \xC4ndras alt text till "banner" s\xE5 till\xE4mpas en banner p\xE5 din profil.'
     },
     find_on: {
       en: "Find on",
       de: "Finde auf",
-      pt: "Encontre em"
+      pt: "Encontre em",
+      sv: "S\xF6k upp p\xE5"
     },
     following: {
       en: "Following",
       de: "Gefolgt",
-      pt: "Seguindo"
+      pt: "Seguindo",
+      sv: "F\xF6ljer"
     },
     followers: {
       en: "Followers",
       de: "Follower*innen",
-      pt: "Seguidores"
+      pt: "Seguidores",
+      sv: "F\xF6ljare"
     },
     neighbours: {
       en: "Neighbours",
       de: "Nachbarn",
-      pt: "Vizinhos"
+      pt: "Vizinhos",
+      sv: "Grannar"
     },
     website: {
       en: "Website",
-      de: "Webseite"
+      de: "Webseite",
+      sv: "Hemsida"
     },
     overview: {
       en: "Overview",
       de: "\xDCbersicht",
       pt: "Vis\xE3o geral",
-      ja: "\u30C0\u30A4\u30B8\u30A7\u30B9\u30C8"
+      ja: "\u30C0\u30A4\u30B8\u30A7\u30B9\u30C8",
+      sv: "\xD6versikt"
     },
     photos: {
       en: "Photos",
       de: "Fotos",
       pt: "Fotos",
-      ja: "\u5199\u771F"
+      ja: "\u5199\u771F",
+      sv: "Foton"
     },
     artwork: {
       en: "Artwork",
       de: "Cover",
-      pt: "Arte de capa"
+      pt: "Arte de capa",
+      sv: "Konst"
     },
     similar_artists: {
       en: "Similar Artists",
       de: "\xC4hnliche K\xFCnstler*innen",
-      pt: "Artistas similares"
+      pt: "Artistas similares",
+      sv: "Liknande artister"
     },
     biography: {
       en: "Biography",
       de: "Biographie",
       pt: "Biografia",
-      ja: "\u30D0\u30A4\u30AA\u30B0\u30E9\u30D5\u30A3\u30FC"
+      ja: "\u30D0\u30A4\u30AA\u30B0\u30E9\u30D5\u30A3\u30FC",
+      sv: "Biografi"
     },
     wiki: {
-      en: "Wiki"
+      en: "Wiki",
+      sv: "Wiki"
     },
     listeners: {
       en: "Listeners",
       de: "Zuh\xF6rer*innen",
-      pt: "Ouvintes"
+      pt: "Ouvintes",
+      sv: "Lyssnare"
     },
     listeners_you_know: {
       en: "Listeners You Know",
-      pt: "Ouvintes que voc\xEA conhece"
+      pt: "Ouvintes que voc\xEA conhece",
+      sv: "Lyssnare du k\xE4nner"
     },
     count_listeners: {
       en: "{c} listeners",
-      pt: "{c} ouvintes"
+      pt: "{c} ouvintes",
+      sv: "{c} lyssnare"
     },
     tag: {
-      en: "Tag"
+      en: "Tag",
+      sv: "Tagga"
     },
     tags: {
       en: "Tags",
-      ja: "\u30BF\u30B0"
+      ja: "\u30BF\u30B0",
+      sv: "Taggar"
     },
     reports: {
       // last.fm listening reports
       en: "Reports",
       de: "Berichte",
       ja: "\u30EC\u30DD\u30FC\u30C8",
-      pt: "Relat\xF3rio"
+      pt: "Relat\xF3rio",
+      sv: "Lyssningsrapport"
     },
     artist_lower: {
       // used inside a sentence not on its own,
       // make lowercase if thats how the language works
       en: "artist",
       de: "K\xFCnstler",
-      pt: "artista"
+      pt: "artista",
+      sv: "artist"
     },
     album_lower: {
       // used inside a sentence not on its own,
       // make lowercase if thats how the language works
       en: "album",
       de: "Album",
-      pt: "\xE1lbum"
+      pt: "\xE1lbum",
+      sv: "album"
     },
     track_lower: {
       // used inside a sentence not on its own,
       // make lowercase if thats how the language works
       en: "track",
       de: "Titel",
-      pt: "faixa"
+      pt: "faixa",
+      sv: "l\xE5t"
     },
     lotus_cta: {
       // {t} is replaced by one of the 3 above
@@ -56980,53 +57252,62 @@
       true: {
         en: "This {t} is being re-capitalised, is it correct?",
         de: "{t} wird neu gro\xDFgeschrieben, ist das richtig?",
-        pt: "{t} teve a capitaliza\xE7\xE3o ajustada, est\xE1 correto?"
+        pt: "{t} teve a capitaliza\xE7\xE3o ajustada, est\xE1 correto?",
+        sv: "{t}-namnet har nu \xE4ndrad kapitalisering, st\xE4mmer det h\xE4r?"
       },
       false: {
         en: "Is this {t} capitalised correctly?",
         de: "Ist {t} richtig gro\xDFgeschrieben?",
-        pt: "Esse(a) {t} est\xE1 capitalizado(a) corretamente?"
+        pt: "Esse(a) {t} est\xE1 capitalizado(a) corretamente?",
+        sv: "St\xE4mmer kapitaliseringen p\xE5 {t}-namnet?"
       }
     },
     suggest_correction: {
       // suggest a correction for the above system
       en: "Suggest a correction",
       de: "eine Korrektur vorschlagen",
-      pt: "Sugira uma corre\xE7\xE3o"
+      pt: "Sugira uma corre\xE7\xE3o",
+      sv: "F\xF6rsl\xE5 en \xE4ndring"
     },
     recent_tracks: {
       en: "Recent Tracks",
       de: "K\xFCrzlich gespielte Titel",
       pt: "Faixas recentes",
-      ja: "\u6700\u8FD1\u306E\u30C8\u30E9\u30C3\u30AF"
+      ja: "\u6700\u8FD1\u306E\u30C8\u30E9\u30C3\u30AF",
+      sv: "Nyligen spelat"
     },
     top_artists: {
       en: "Top Artists",
       de: "Top K\xFCnstler",
       pt: "Top Artistas",
-      ja: "\u30C8\u30C3\u30D7\u30A2\u30FC\u30C6\u30A3\u30B9\u30C8"
+      ja: "\u30C8\u30C3\u30D7\u30A2\u30FC\u30C6\u30A3\u30B9\u30C8",
+      sv: "Toppartister"
     },
     top_albums: {
       en: "Top Albums",
       de: "Top Alben",
       pt: "Top \xC1lbuns",
-      ja: "\u4EBA\u6C17\u30A2\u30EB\u30D0\u30E0"
+      ja: "\u4EBA\u6C17\u30A2\u30EB\u30D0\u30E0",
+      sv: "Toppalbum"
     },
     top_tracks: {
       en: "Top Tracks",
       de: "Top Titel",
       pt: "Top Faixas",
-      ja: "\u4EBA\u6C17\u30C8\u30E9\u30C3\u30AF"
+      ja: "\u4EBA\u6C17\u30C8\u30E9\u30C3\u30AF",
+      sv: "Toppl\xE5tar"
     },
     top_track: {
       en: "Top Track",
-      pt: "Top Faixa"
+      pt: "Top Faixa",
+      sv: "Toppl\xE5t"
     },
     you_share_count_with: {
       // as in your musical taste between you and someone else
       // you are {percentage%} compatible (in taste) {list of artists}
       en: "You are {c} compatible",
       pt: "Voce \xE9 {c} compat\xEDvel",
+      sv: "Du \xE4r {c} kompatibel",
       one: {
         en: "{artist}"
       },
@@ -57041,219 +57322,262 @@
     },
     taste_similarity: {
       en: "Taste similarity",
-      pt: "Similaridade de gostos"
+      pt: "Similaridade de gostos",
+      sv: "Smaklikhet"
     },
     plays_lower: {
       // eg. 20 plays in artist/album grid
       // copy from last.fm
       en: " plays",
       pt: " reprodu\xE7\xF5es",
-      ja: "\u66F2\u3092\u518D\u751F"
+      ja: "\u66F2\u3092\u518D\u751F",
+      sv: " spelningar"
     },
     message: {
       // as in a direct message
       en: "Message",
       de: "Anschreiben",
-      pt: "Mensagem"
+      pt: "Mensagem",
+      sv: "Meddela"
     },
     join_discord: {
       en: "Join Discord"
     },
     sponsor_details: {
-      en: "Sponsor and badge details"
+      en: "Sponsor and badge details",
+      sv: "Sponsor och emblemdetaljer"
     },
     sponsor_data: {
       en: "Sponsor and badge data version {v}",
       de: "Sponsoren- und Abzeichen Version {v}",
-      pt: "Vers\xE3o da data de apoiador e emblemas"
+      pt: "Vers\xE3o da data de apoiador e emblemas",
+      sv: "Sponsor-och-emblemdata, version {v}"
     },
     sponsor: {
       en: "Become a sponsor",
       de: "Werde Sponsor",
-      pt: "Torne-se um apoiador"
+      pt: "Torne-se um apoiador",
+      sv: "Bli en sponsor"
     },
     message_sponsor: {
       // rewards meaning a badge for example
       en: "Receive sponsor rewards",
       de: "Sponsorenpr\xE4mien erhalten",
-      pt: "Receba recompensas de apoiador"
+      pt: "Receba recompensas de apoiador",
+      sv: "F\xE5 sponsorpriser"
     },
     news_sponsor_cta: {
       en: "Want to support future development of bleh?",
       de: "M\xF6chten du die zuk\xFCnftige Entwicklung von bleh unterst\xFCtzen?",
-      pt: "Quer apoiar o desenvolvimento futuro do bleh?"
+      pt: "Quer apoiar o desenvolvimento futuro do bleh?",
+      sv: "Vill du st\xF6dja blehs framtida utveckling?"
     },
     support_future_development: {
       // in the context of sponsoring
       en: "Support future development",
       de: "Unterst\xFCtze die zuk\xFCnftige Entwicklung",
-      pt: "Apoie o desenvolvimento futuro"
+      pt: "Apoie o desenvolvimento futuro",
+      sv: "St\xF6d framtida utveckling"
     },
     why_sponsor: {
       en: "Receive a profile badge and a big thank you from katelyn <3",
       de: "Erhalte ein Abzeichen auf deinem Profil und ein gro\xDFes Dankesch\xF6n von katelyn f\xFCr deine Unterst\xFCtzung <3",
-      pt: "Receba um emblema no seu perfil e um obrigad\xE3o da katelyn por apoiar <3"
+      pt: "Receba um emblema no seu perfil e um obrigad\xE3o da katelyn por apoiar <3",
+      sv: "F\xE5 ett emblem p\xE5 din profil och ett stort tack fr\xE5n katelyn <3"
     },
     you_are_a_sponsor: {
       en: "You are a sponsor, thank you! :3",
       de: "Du bist ein Sponsor, dankesch\xF6n! :3",
-      pt: "Voc\xEA \xE9 um apoiador, muito obrigado! :3"
+      pt: "Voc\xEA \xE9 um apoiador, muito obrigado! :3",
+      sv: "Du \xE4r en sponsor, tack s\xE5 mycket! :3"
     },
     sponsor_get_badge: {
       en: "A monthly sponsorship grants you a custom badge of your choosing",
       de: "Mit einem monatlichen Sponsoring erh\xE4ltst du ein individuelles Abzeichen deiner Wahl",
-      pt: "Um apoio mensal lhe d\xE1 um emblema personalizado de sua escolha"
+      pt: "Um apoio mensal lhe d\xE1 um emblema personalizado de sua escolha",
+      sv: "Med ett m\xE5natligt sponsorskap f\xE5r du ett emblem du sj\xE4lv kan anpassa"
     },
     sponsor_no_badge: {
       en: "A custom badge is only available with a monthly sponsorship.",
       de: "Ein individuelles Abzeichen ist nur mit einem montalichen Sponsoring erh\xE4ltlich",
-      pt: "Um emblema personalizado s\xF3 est\xE1 dispon\xEDvel com um apoio mensal"
+      pt: "Um emblema personalizado s\xF3 est\xE1 dispon\xEDvel com um apoio mensal",
+      sv: "Ett eget anpassat emblem finns bara tillg\xE4ngligt med m\xE5natligt sponsorskap"
     },
     manage_sponsor: {
       en: "Manage sponsorship",
       de: "Sponsoring verwalten",
-      pt: "Gerenciar apoio"
+      pt: "Gerenciar apoio",
+      sv: "Sponsorskapsinst\xE4llningar"
     },
     view: {
       en: "View",
-      pt: "Ver"
+      pt: "Ver",
+      sv: "Visa"
     },
     profile_and_badges: {
       en: "Profile, {c} badges",
-      pt: "Perfil, {c} emblemas"
+      pt: "Perfil, {c} emblemas",
+      sv: "Profil, {c} emblem"
     },
     current_version: {
       en: "Current version",
-      pt: "Vers\xE3o atual"
+      pt: "Vers\xE3o atual",
+      sv: "Nuvarande version"
     },
     labs: {
-      en: "Labs"
+      en: "Labs",
+      sv: "Labs"
     },
     labs_by_last: {
       en: "Labs by Last.fm",
       de: "Labs von Last.fm",
       pt: "Labs da Last.fm",
+      sv: "Labs av Last.fm",
       tagline: {
         en: "Interactive tools and infographics",
         de: "Interaktiven Tools und Infografiken",
-        pt: "Ferramentas interativas e infogr\xE1ficos"
+        pt: "Ferramentas interativas e infogr\xE1ficos",
+        sv: "Interaktiva verktyg och infografik"
       }
     },
     sponsor_info: {
       en: "This is a special bleh-managed profile to handle sponsors",
       de: "Dies ist ein bleh verwaltetes Profil zur Verwaltung von Sponsoren",
-      pt: "Este \xE9 um perfil especial gerenciado pelo bleh para lidar com apoiadores"
+      pt: "Este \xE9 um perfil especial gerenciado pelo bleh para lidar com apoiadores",
+      sv: "Detta \xE4r en speciell profil fr\xE5n bleh f\xF6r att hantera sponsorskap"
     },
     sponsors_only: {
-      en: "Sponsors only"
+      en: "Sponsors only",
+      sv: "Endast sponsorer"
     },
     downloaded_value: {
-      en: "Downloaded {v}"
+      en: "Downloaded {v}",
+      sv: "Laddat ned {v}"
     },
     loading: {
       en: "Loading",
       de: "Laden",
-      pt: "Carregando"
+      pt: "Carregando",
+      sv: "Laddar"
     },
     loading_count_days: {
       en: "Collecting the last {c} days",
       de: "Sammeln der letzten {c} Tage",
-      pt: "Coletando os \xFAltimos {c} dias"
+      pt: "Coletando os \xFAltimos {c} dias",
+      sv: "Samlar de senaste {c} dagarna"
     },
     gathering_plays: {
       en: "Gathering plays",
-      pt: "Coletando reprodu\xE7\xF5es"
+      pt: "Coletando reprodu\xE7\xF5es",
+      sv: "Samlar spelningar"
     },
     following_mutuals: {
       // this is appended after the following button text if mutuals
       // eg. Following (mutually)
       en: "(mutually)",
       de: "(gegenseitig)",
-      pt: "(mutualmente)"
+      pt: "(mutualmente)",
+      sv: "(varandra)"
     },
     language: {
       en: "Language",
       de: "Sprache",
-      pt: "Idioma"
+      pt: "Idioma",
+      sv: "Spr\xE5k"
     },
     symbol_presets: {
       // as in a selection of characters (symbols, text) that can
       // be used when editing wikis
       en: "Symbol presets",
       de: "Symbol Voreinstellungen",
-      pt: "Predefini\xE7\xF5es de s\xEDmbolos"
+      pt: "Predefini\xE7\xF5es de s\xEDmbolos",
+      sv: "Symboler"
     },
     fancy_syntax: {
       // hyperlink as in a link to a website or something,
       // common internet word not sure if it translates?
       en: "Hyperlink guide",
       de: "Hyperlink Leitfaden",
-      pt: "Guia de hiperlink"
+      pt: "Guia de hiperlink",
+      sv: "L\xE4nkguide"
     },
     links_to: {
       // used in wiki editing, {this example} links to {link}
       en: "Links to {link}",
       de: "Verlinkt auf {link}",
-      pt: "Links para {link}"
+      pt: "Links para {link}",
+      sv: "L\xE4nkas till {link}"
     },
     explore_in_library: {
       en: "Explore in library",
       de: "In der Bibliothek anzeigen",
-      pt: "Explorar na biblioteca"
+      pt: "Explorar na biblioteca",
+      sv: "Utforska i bibliotek"
     },
     add_note: {
       // as in a profile note
       en: "Add note",
       de: "Notiz hinzuf\xFCgen",
-      pt: "Adicionar nota"
+      pt: "Adicionar nota",
+      sv: "L\xE4gg till anteckning"
     },
     radio: {
       en: "Radio",
-      pt: "R\xE1dio"
+      pt: "R\xE1dio",
+      sv: "Radio"
     },
     mix: {
       // as in a playlist mix of music
-      en: "Mix"
+      en: "Mix",
+      sv: "Mix"
     },
     recommended: {
       // recommended music
       en: "Recommended",
       de: "Empfohlen",
-      pt: "Recomenda\xE7\xF5es"
+      pt: "Recomenda\xE7\xF5es",
+      sv: "Rekommenderad"
     },
     listening: {
       // used as the card header for radios and listening reports
       en: "Listening",
       de: "H\xF6rverlauf",
-      pt: "Ouvindo"
+      pt: "Ouvindo",
+      sv: "Lyssning"
     },
     you: {
       en: "You",
       de: "Du",
-      pt: "Voc\xEA"
+      pt: "Voc\xEA",
+      sv: "Du"
     },
     open: {
       en: "Open",
       de: "\xD6ffnen",
-      pt: "Abrir"
+      pt: "Abrir",
+      sv: "\xD6ppen"
     },
     expand: {
       en: "Expand",
       de: "Erweitern",
-      pt: "Expandir"
+      pt: "Expandir",
+      sv: "Expandera"
     },
     expand_to_full_resolution: {
       en: "Expand to full resolution",
-      pt: "Expandir para resolu\xE7\xE3o total"
+      pt: "Expandir para resolu\xE7\xE3o total",
+      sv: "Expandera till full uppl\xF6sning"
     },
     share: {
       en: "Share",
       de: "Teilen",
-      pt: "Compartilhar"
+      pt: "Compartilhar",
+      sv: "Dela"
     },
     copy: {
       en: "Copy",
-      pt: "Copiar"
+      pt: "Copiar",
+      sv: "Kopiera"
     },
     copy_username: {
       en: "Copy username"
@@ -57263,310 +57587,370 @@
     },
     copied_to_clipboard: {
       en: "Copied to clipboard",
-      pt: "Copiado para a \xE1rea de transfer\xEAncia"
+      pt: "Copiado para a \xE1rea de transfer\xEAncia",
+      sv: "Kopierats till urklipp"
     },
     click_to_copy: {
       en: "Click to copy",
-      pt: "Clique para copiar"
+      pt: "Clique para copiar",
+      sv: "Klicka f\xF6r att kopiera"
     },
     wiki_standard_tracks: {
       en: "Track titles should be wrapped in quotation marks \u201C \u201D",
-      pt: "Os t\xEDtulos das faixas devem ser colocados entre aspas (\u201C \u201D)."
+      pt: "Os t\xEDtulos das faixas devem ser colocados entre aspas (\u201C \u201D).",
+      sv: "L\xE5tnamn ska omges av citattecken (\u201C \u201D)"
     },
     wiki_standard_artists: {
       en: "Album and artist names are left without quotes",
-      pt: "Os nomes dos \xE1lbuns e artistas n\xE3o devem ser colocados entre aspas."
+      pt: "Os nomes dos \xE1lbuns e artistas n\xE3o devem ser colocados entre aspas.",
+      sv: "Album och artistnamn ska skrivas utan citattecken"
     },
     wiki_standard_quotations: {
       en: "Use \u2018 \u2019 for quotations from the artist or elsewhere",
-      pt: "Use \u2018 \u2019 para cita\xE7\xF5es do artista ou de outras fontes."
+      pt: "Use \u2018 \u2019 para cita\xE7\xF5es do artista ou de outras fontes.",
+      sv: "Anv\xE4nd \u2018 \u2019 f\xF6r citat fr\xE5n artisten eller fr\xE5n annanstans"
     },
     activity: {
       en: "Activity",
       de: "Aktivit\xE4t",
       pt: "Atividade",
+      sv: "Aktivitet",
       listing: {
         shout: {
           en: "Shout",
           de: "Shout hinterlassen",
-          pt: "Enviou mensagem"
+          pt: "Enviou mensagem",
+          sv: "Hojt"
         },
         image_upload: {
           en: "Uploaded image",
           de: "Bild hochgeladen",
-          pt: "Enviou imagem"
+          pt: "Enviou imagem",
+          sv: "Laddat upp bild"
         },
         image_star: {
           en: "Starred image",
           de: "Bild favorisiert",
-          pt: "Favoritou imagem"
+          pt: "Favoritou imagem",
+          sv: "Valt favoritbild"
         },
         obsess: {
           en: "Obsessed",
-          pt: "Obcecou"
+          pt: "Obcecou",
+          sv: "Besatthet"
         },
         unobsess: {
           en: "Removed obsession",
           de: "Nicht mehr obsessed",
-          pt: "Desobcecou"
+          pt: "Desobcecou",
+          sv: "Tagit bort besatthet"
         },
         love: {
           en: "Loved",
           de: "Du liebst",
-          pt: "Favoritou"
+          pt: "Favoritou",
+          sv: "\xC4lskade l\xE5t"
         },
         unlove: {
           en: "Removed love",
           de: "Du liebst nicht mehr",
-          pt: "Desfavoritou"
+          pt: "Desfavoritou",
+          sv: "Tog bort som \xE4lskad"
         },
         install_bwaa: {
           en: "Installed bwaa",
           de: "bwaa installiert",
-          pt: "Instalou o bwaa"
+          pt: "Instalou o bwaa",
+          sv: "Installerade bwaa"
         },
         update_bwaa: {
           en: "Updated bwaa",
           de: "bwaa aktualisiert",
-          pt: "Atualizou o bwaa"
+          pt: "Atualizou o bwaa",
+          sv: "Uppdaterade bwaa"
         },
         install_bleh: {
           en: "Installed bleh",
           de: "bleh installiert",
-          pt: "Instalou o bleh"
+          pt: "Instalou o bleh",
+          sv: "Installerade bleh"
         },
         update_bleh: {
           en: "Updated bleh",
           de: "bleh aktualisiert",
-          pt: "Atualizou o bleh"
+          pt: "Atualizou o bleh",
+          sv: "Uppdaterade bleh"
         },
         bookmark: {
           en: "Bookmarked",
           de: "Lesezeichen hinzugef\xFCgt",
-          pt: "Adicionou marca\xE7\xE3o"
+          pt: "Adicionou marca\xE7\xE3o",
+          sv: "Bokm\xE4rkte"
         },
         unbookmark: {
           en: "Removed bookmark",
           de: "Lesezeichen entfernt",
-          pt: "Removeu marca\xE7\xE3o"
+          pt: "Removeu marca\xE7\xE3o",
+          sv: "Tog bort bokm\xE4rke"
         },
         wiki: {
           en: "Edited",
           de: "Editiert",
-          pt: "Editou"
+          pt: "Editou",
+          sv: "Redigerade"
         }
       },
       types: {
         shout: {
           en: "Comments and replies from you across the site",
           de: "Kommentare und Antworten von dir auf der gesamten Site",
-          pt: "Seus coment\xE1rios e respostas ao redor do site"
+          pt: "Seus coment\xE1rios e respostas ao redor do site",
+          sv: "Kommentarer och svar fr\xE5n dig \xF6ver hela sidan"
         },
         image: {
           en: "Uploading images and starring for your layout",
           de: "Bilder hochladen und Sterne f\xFCr Ihr Layout vergeben",
-          pt: "Imagens enviadas e favoritos do seu layout"
+          pt: "Imagens enviadas e favoritos do seu layout",
+          sv: "Uppladdning av bilder och v\xE4ljer favoritbilder"
         },
         obsess: {
           en: "Tracks you have on loop",
           de: "Titel, die du auf Dauerschleife hast",
-          pt: "Faixas que voc\xEA tem em loop"
+          pt: "Faixas que voc\xEA tem em loop",
+          sv: "L\xE5tar du \xE4r besatt av"
         },
         love: {
           en: "Tracks you love",
           de: "Titel, die du liebst",
-          pt: "Faixas que voc\xEA ama"
+          pt: "Faixas que voc\xEA ama",
+          sv: "L\xE5tar du \xE4lskar"
         },
         bookmark: {
           en: "Music you want to check out",
           de: "Musik, die du abchecken solltest",
-          pt: "M\xFAsica que voc\xEA quer conferir"
+          pt: "M\xFAsica que voc\xEA quer conferir",
+          sv: "Musik du vill komma ih\xE5g till senare"
         },
         wiki: {
           en: "Editing of any wiki",
           de: "Bearbeiten jeglicher Wiki",
-          pt: "Editando de qualquer wiki"
+          pt: "Editando de qualquer wiki",
+          sv: "Wikiredigering"
         },
         install: {
           en: "First installations and updating",
           de: "Erstinstallationen und Aktualisierungen",
-          pt: "Primeiras instala\xE7\xF5es e atualiza\xE7\xF5es"
+          pt: "Primeiras instala\xE7\xF5es e atualiza\xE7\xF5es",
+          sv: "F\xF6rsta installationen och uppdateringar"
         }
       }
     },
     what_are_activities: {
       en: "Keep track of your most recent activity locally on your profile",
       de: "Verfolge deine letzten Aktivit\xE4ten lokal auf dein Profil",
-      pt: "Acompanhe suas atividades mais recentes localmente em seu perfil"
+      pt: "Acompanhe suas atividades mais recentes localmente em seu perfil",
+      sv: "H\xE5ll koll p\xE5 dina senaste aktiviteter lokalt p\xE5 din profil"
     },
     activity_tracking: {
       name: {
         en: "Track my activities",
         de: "Meine Aktivit\xE4ten tracken",
-        pt: "Acompanhar minhas atividades"
+        pt: "Acompanhar minhas atividades",
+        sv: "Sp\xE5ra mina aktiviteter"
       },
       body: {
         en: "Activities will only be registered while enabled",
         de: "Aktivit\xE4ten werden nur getracked, wenn du es aktivierst",
-        pt: "As atividades s\xF3 ser\xE3o registradas enquanto estiverem habilitadas"
+        pt: "As atividades s\xF3 ser\xE3o registradas enquanto estiverem habilitadas",
+        sv: "Aktiviteter l\xE4ggs bara till n\xE4r inst\xE4llningen \xE4r aktiverad"
       }
     },
     clear_history: {
       en: "Clear history",
-      pt: "Limpar hist\xF3rico"
+      pt: "Limpar hist\xF3rico",
+      sv: "T\xF6m historia"
     },
     cleared_activity_history: {
       en: "Cleared your activity history",
       de: "Verlauf l\xF6schen",
-      pt: "Hist\xF3rico de atividades limpo"
+      pt: "Hist\xF3rico de atividades limpo",
+      sv: "T\xF6mde din aktivitetshistoria"
     },
     activity_settings: {
       en: "Activity settings",
       de: "Aktivit\xE4tseinstellungen",
-      pt: "Configura\xE7\xF5es de atividade"
+      pt: "Configura\xE7\xF5es de atividade",
+      sv: "Redigera dina aktiviteter"
     },
     installation: {
       en: "Installation",
       de: "Installation",
-      pt: "Instala\xE7\xE3o"
+      pt: "Instala\xE7\xE3o",
+      sv: "Installation"
     },
     grid: {
       // as in the view mode
       en: "Grid",
       de: "Raster",
-      pt: "Grade"
+      pt: "Grade",
+      sv: "Bildruta"
     },
     list: {
       // as in the view mode
       en: "List",
       de: "Liste",
-      pt: "Linha"
+      pt: "Linha",
+      sv: "Lista"
     },
     line: {
       // as in the type of chart (a line graph)
       en: "Line",
       de: "Liniendiagramm",
-      pt: "Lista"
+      pt: "Lista",
+      sv: "Linjediagram"
     },
     pie: {
       // as in the type of chart (a pie chart)
       en: "Pie",
       de: "Kreis",
-      pt: "Pizza"
+      pt: "Pizza",
+      sv: "Cirkeldiagram"
     },
     bar: {
       // as in the type of chart (a bar chart)
       en: "Bar",
       de: "Balken",
-      pt: "Coluna"
+      pt: "Coluna",
+      sv: "Stapeldiagram"
     },
     horizontal: {
-      en: "Horizontal"
+      en: "Horizontal",
+      sv: "V\xE5gr\xE4tt"
     },
     vertical: {
       en: "Vertical",
-      de: "Vertikal"
+      de: "Vertikal",
+      sv: "Lodr\xE4tt"
     },
     this_year: {
       en: "This year",
       de: "Dieses Jahr",
-      pt: "Este ano"
+      pt: "Este ano",
+      sv: "Detta \xE5r"
     },
     last_year: {
       en: "Last year",
       de: "Letztes Jahr",
-      pt: "Ano passado"
+      pt: "Ano passado",
+      sv: "F\xF6rra \xE5ret"
     },
     love: {
       // as in loving tracks as a concept
       en: "Love",
       de: "Liebst",
-      pt: "Favoritas"
+      pt: "Favoritas",
+      sv: "\xC4lska"
     },
     loved: {
       // as in loved tracks, this can be seen
       // in the native last.fm ui
       en: "Loved",
       de: "Lieblingslieder",
-      pt: "Favoritadas"
+      pt: "Favoritadas",
+      sv: "\xC4lskade l\xE5tar"
     },
     velocity: {
       // as in the last.fm labs 'Velocity' tool
       en: "Velocity",
-      pt: "Velocidade"
+      pt: "Velocidade",
+      sv: "Velocitet"
     },
     logout: {
       en: "Logout",
       de: "Ausloggen",
       pt: "Sair",
-      ja: "\u30ED\u30B0\u30A2\u30A6\u30C8"
+      ja: "\u30ED\u30B0\u30A2\u30A6\u30C8",
+      sv: "Logga ut"
     },
     tracklist: {
       // please copy from native last.fm ui
       en: "Tracklist",
       de: "Titelliste",
-      pt: "Lista de faixas"
+      pt: "Lista de faixas",
+      sv: "Spellista"
     },
     tracklist_from_plays_info: {
       en: "Retrieved own plays as official tracklist is unavailable",
       de: "Eigene Plays abgerufen, da die offizielle Titelliste nicht verf\xFCgbar ist",
-      pt: "Reprodu\xE7\xF5es pr\xF3prias recuperadas, pois a lista de faixas oficial n\xE3o est\xE1 dispon\xEDvel"
+      pt: "Reprodu\xE7\xF5es pr\xF3prias recuperadas, pois a lista de faixas oficial n\xE3o est\xE1 dispon\xEDvel",
+      sv: "H\xE4mtade dina spelningar f\xF6r en officiell spellista finns inte tillg\xE4nglig"
     },
     from_the_album: {
       en: "From {album}",
       de: "Aus {album}",
-      pt: "Do {album}"
+      pt: "Do {album}",
+      sv: "Fr\xE5n {album}"
     },
     listens: {
       // base on native last.fm ui
       en: "listens",
       de: "scrobbels",
       pt: "scrobbles",
+      sv: "skrobblingar",
       count: {
         en: "{c} listens",
         de: "{c} scrobbels",
-        pt: "{c} scrobbles"
+        pt: "{c} scrobbles",
+        sv: "{c} skrobblingar"
       }
     },
     others_count: {
       // the amount of other users
       en: "{c} others",
       de: "{c} weitere",
-      pt: "{c} outros"
+      pt: "{c} outros",
+      sv: "{c} andra"
     },
     loading_album_plays: {
       en: "Collecting your album plays",
       de: "Sammeln deiner Albumwiedergaben",
-      pt: "Coletando suas reprodu\xE7\xF5es de \xE1lbuns"
+      pt: "Coletando suas reprodu\xE7\xF5es de \xE1lbuns",
+      sv: "Samlar ihop dina albumspelningar"
     },
     fail_album_plays: {
       en: "No plays could be found",
       de: "Es konnten keine Plays gefunden werden",
-      pt: "Nenhuma reprodu\xE7\xE3o p\xF4de ser encontrada"
+      pt: "Nenhuma reprodu\xE7\xE3o p\xF4de ser encontrada",
+      sv: "Kunde inte hitta p\xE5 albumspelningar"
     },
     open_album_as_track: {
       en: "Open album title as track",
       de: "Albumtitel als Titel \xF6ffnen",
-      pt: "Abrir t\xEDtulo do \xE1lbum como faixa"
+      pt: "Abrir t\xEDtulo do \xE1lbum como faixa",
+      sv: "\xD6ppna albumtitel som egen l\xE5t"
     },
     ignored: {
       en: "Ignored",
       de: "Ignoriert",
-      pt: "Ignorados"
+      pt: "Ignorados",
+      sv: "Ignorerad"
     },
     count_total: {
       en: "{c} total",
-      de: "{c} insgesamt"
+      de: "{c} insgesamt",
+      sv: "{c} totalt"
     },
     video_removed: {
       en: "Video removed by Last.fm",
       de: "Video von Last.fm entfernt",
-      pt: "V\xEDdeo removido pela Last.fm"
+      pt: "V\xEDdeo removido pela Last.fm",
+      sv: "Video borttagen av Last.fm"
     },
     blocked_page: {
       en: "This page has been limited by Last.fm",
       de: "Diese Seite wurde von Last.fm eingeschr\xE4nkt",
-      pt: "Esta p\xE1gina foi limitada pela Last.fm"
+      pt: "Esta p\xE1gina foi limitada pela Last.fm",
+      sv: "Denna sida har begr\xE4nsats av Last.fm"
     },
     results_for: {
       // used as a header above the actual search eg.
@@ -57574,27 +57958,32 @@
       // "random search text"
       en: "Results for",
       de: "Ergebnisse f\xFCr",
-      pt: "Resultados para"
+      pt: "Resultados para",
+      sv: "S\xF6kresultat f\xF6r"
     },
     create_new_event: {
       en: "Create new event",
       de: "Neues Event kreieren",
-      pt: "Criar novo evento"
+      pt: "Criar novo evento",
+      sv: "Skapa ett nytt evenemang"
     },
     related_to: {
       en: "Related to",
       de: "Verwandt mit",
-      pt: "Relacionado a"
+      pt: "Relacionado a",
+      sv: "F\xF6rknippad med"
     },
     personal_tag: {
       en: "Personal tag",
       de: "Pers\xF6nliches Tag",
-      pt: "Marcador pessoal"
+      pt: "Marcador pessoal",
+      sv: "Din tagg"
     },
     your_avatar: {
       en: "Your avatar",
       de: "Dein Avatar",
-      pt: "Sua foto"
+      pt: "Sua foto",
+      sv: "Din profilbild"
     },
     avatar_for_user: {
       // this is used to replace the text and extract the
@@ -57604,23 +57993,27 @@
       // avatar's (except your own) alt text
       en: "Avatar for ",
       de: "Avatar f\xFCr ",
-      pt: "Avatar de"
+      pt: "Avatar de",
+      sv: "Avatar f\xF6r "
     },
     by: {
       en: "by",
       de: "von",
-      pt: "por"
+      pt: "por",
+      sv: "av"
     },
     by_user: {
       en: "by {u}",
       de: "von {u}",
-      pt: "por {u}"
+      pt: "por {u}",
+      sv: "av {u}"
     },
     by_artist: {
       // {name} by {artist} - hence the space in english
       en: " by {a}",
       de: " von {a}",
-      pt: " por {a}"
+      pt: " por {a}",
+      sv: " av {a}"
     },
     value_by_user: {
       en: "{v} by {u}",
@@ -57631,165 +58024,196 @@
       // scrobble average
       en: "Average",
       de: "Durchschnitt",
-      pt: "M\xE9dia"
+      pt: "M\xE9dia",
+      sv: "Genomsnitt"
     },
     from_user: {
       en: "from {u}",
       de: "Von {u}",
-      pt: "de {u}"
+      pt: "de {u}",
+      sv: "fr\xE5n {u}"
     },
     open_new_tab: {
       en: "Open in a new tab",
       de: "Im neuen Tab \xF6ffnen ",
-      pt: "Abrir em nova aba"
+      pt: "Abrir em nova aba",
+      sv: "\xD6ppna i ny flik"
     },
     event_cancelled: {
       // obviously remove the emoji or replace it as
       // you see fit if desired
       en: "This event has been cancelled (\u2565\uFE4F\u2565)",
       de: "Dieses Event wurde abgesagt (\u2565\uFE4F\u2565)",
-      pt: "Este evento foi cancelado (\u2565\uFE4F\u2565)"
+      pt: "Este evento foi cancelado (\u2565\uFE4F\u2565)",
+      sv: "Detta evenemang har avbrutits (\u2565\uFE4F\u2565)"
     },
     format_guest_features: {
       name: {
         en: "Smart credited artists and song tags",
         de: "Schlaue K\xFCnstler- und Song-Tags",
-        pt: "Tags inteligentes de artistas e m\xFAsicas"
+        pt: "Tags inteligentes de artistas e m\xFAsicas",
+        sv: "Smartformat f\xF6r g\xE4startister och l\xE5ttaggar"
       },
       body: {
         en: "Analyses album and track titles into their guests, versions, remixes, etc.",
         de: "Analysiert Album- und Tracktitel hinsichtlich ihrer Versionen, Remixe usw.",
-        pt: "Analisa t\xEDtulos de \xE1lbuns e faixas e os separa em seus convidados, vers\xF5es, remixes etc."
+        pt: "Analisa t\xEDtulos de \xE1lbuns e faixas e os separa em seus convidados, vers\xF5es, remixes etc.",
+        sv: "Analyserar album och l\xE5ttitlar till g\xE4startister, olika versioner, remixar osv."
       }
     },
     show_guest_features: {
       name: {
         en: "Duplicate credited artists in title",
         de: "Doppelte Nennung der K\xFCnstler im Titel",
-        pt: "Artistas creditados duplicados no t\xEDtulo"
+        pt: "Artistas creditados duplicados no t\xEDtulo",
+        sv: "Duplicera artistnamn i l\xE5ttitel"
       },
       body: {
         en: "Otherwise guests are neatly placed next to the primary artist",
         de: "Ansonsten werden Features neben dem Hauptk\xFCnstler platziert",
-        pt: "Caso contr\xE1rio os convidados s\xE3o organizados de forma elegante ao lado do artista principal"
+        pt: "Caso contr\xE1rio os convidados s\xE3o organizados de forma elegante ao lado do artista principal",
+        sv: "Annars placeras g\xE4startister fint bredvid huvudartisten"
       }
     },
     track_column_view: {
       en: "Use column view for tracklist information",
       de: "Verwende die Spaltenansicht f\xFCr Titellisteninformationen",
-      pt: "Use a visualiza\xE7\xE3o em colunas para as informa\xE7\xF5es das faixas"
+      pt: "Use a visualiza\xE7\xE3o em colunas para as informa\xE7\xF5es das faixas",
+      sv: "Anv\xE4nd kolumnvy f\xF6r l\xE5tlistsinformation"
     },
     show_remaster_tags: {
       en: "Show remaster tags",
       de: "Remaster-Tags anzeigen",
-      pt: "Mostrar as tags de remaster"
+      pt: "Mostrar as tags de remaster",
+      sv: "Visa remaster-taggar"
     },
     recent_realtime: {
       name: {
         en: "Refresh tracks automatically",
         de: "Titel automatisch aktualisieren",
-        pt: "Atualizar faixas automaticamente"
+        pt: "Atualizar faixas automaticamente",
+        sv: "Automatiskt uppdatera l\xE5tar"
       },
       body: {
         en: "View your listening history in realtime",
         de: "Sehe deinen H\xF6rverlauf in Echtzeit an",
-        pt: "Veja seu hist\xF3rico de scrobbles em tempo real"
+        pt: "Veja seu hist\xF3rico de scrobbles em tempo real",
+        sv: "Visa din lyssningshistorik i realtid"
       }
     },
     amount_to_display: {
       en: "Amount to display",
       de: "Anzuzeigender Betrag",
-      pt: "Quantidade a ser exibida"
+      pt: "Quantidade a ser exibida",
+      sv: "M\xE4ngd att visa"
     },
     recent_artwork: {
       en: "Accompany tracks with artwork",
       de: "Titel mit Albumcover anzeigen",
-      pt: "Mostrar as faixas juntamente a capa"
+      pt: "Mostrar as faixas juntamente a capa",
+      sv: "Visa skivomslag vid l\xE5t"
     },
     default_timeframe: {
       en: "Default timeframe",
       de: "Standardzeitrahmen",
       pt: "Per\xEDodo padr\xE3o",
-      ja: "\u30C7\u30D5\u30A9\u30EB\u30C8\u671F\u9593"
+      ja: "\u30C7\u30D5\u30A9\u30EB\u30C8\u671F\u9593",
+      sv: "Standardtidsram"
     },
     chart_style: {
       en: "Chart style",
       de: "Diagrammstil",
       pt: "Estilo da tabela",
-      ja: "\u30C1\u30E3\u30FC\u30C8\u30B9\u30BF\u30A4\u30EB"
+      ja: "\u30C1\u30E3\u30FC\u30C8\u30B9\u30BF\u30A4\u30EB",
+      sv: "Liststil"
     },
     chart_size: {
       en: "Chart size",
-      pt: "Tamanho da tabela"
+      pt: "Tamanho da tabela",
+      sv: "Liststorlek"
     },
     country: {
       en: "Country",
       de: "Land",
-      pt: "Pa\xEDs"
+      pt: "Pa\xEDs",
+      sv: "Land"
     },
     subtitle: {
       en: "Subtitle",
       de: "Untertitel",
-      pt: "Legenda"
+      pt: "Legenda",
+      sv: "Undertext"
     },
     pronoun_tip: {
       en: "Pronouns are specially supported if placed first",
       de: "Pronomen werden unterst\xFCtzt, wenn sie an erster Stelle stehen",
-      pt: "Os pronomes s\xE3o especialmente apoiados se colocados primeiro"
+      pt: "Os pronomes s\xE3o especialmente apoiados se colocados primeiro",
+      sv: "Pronomen har speciellt st\xF6d om det placeras f\xF6rst"
     },
     block_list: {
       en: "Block list",
       de: "Blockierliste",
-      pt: "Lista de bloqueados"
+      pt: "Lista de bloqueados",
+      sv: "Blocklista"
     },
     when_blocked: {
       en: "What happens with blocked users?",
       de: "Was passiert mit beblockten Nutzern?",
-      pt: "O que acontece com os usu\xE1rios bloqueados?"
+      pt: "O que acontece com os usu\xE1rios bloqueados?",
+      sv: "Vad h\xE4nder med blockerade anv\xE4ndare?"
     },
     blocked_count: {
       en: "You have blocked {c} profiles",
       de: "Du hast {c} Nutzer blockiert",
-      pt: "Voc\xEA bloqueou {c} perfis"
+      pt: "Voc\xEA bloqueou {c} perfis",
+      sv: "Du har blockerat {c} profiler"
     },
     enter_username: {
       en: "Enter username",
       de: "Benutzername eingeben",
-      pt: "Insira o nome de usu\xE1rio"
+      pt: "Insira o nome de usu\xE1rio",
+      sv: "Skriv anv\xE4ndarnamn"
     },
     block: {
       en: "Block",
       de: "Blockieren",
-      pt: "Bloquear"
+      pt: "Bloquear",
+      sv: "Blockera"
     },
     blocked: {
       en: "Blocked",
-      pt: "Bloqueado"
+      pt: "Bloqueado",
+      sv: "Blockerad"
     },
     blocked_user_public: {
       en: "Can leave shouts but not viewable to you",
       de: "Kann Shouts hinterlassen, aber nicht sichtbar f\xFCr dich",
-      pt: "Podem deixar mensagens, mas elas n\xE3o s\xE3o vis\xEDveis para voc\xEA"
+      pt: "Podem deixar mensagens, mas elas n\xE3o s\xE3o vis\xEDveis para voc\xEA",
+      sv: "Hojtningar p\xE5 allm\xE4na profiler syns inte f\xF6r dig"
     },
     blocked_user_message: {
       en: "Cannot direct message you",
       de: "Kann keine Direktnachricht senden.",
-      pt: "N\xE3o podem lhe enviar mensagens diretas"
+      pt: "N\xE3o podem lhe enviar mensagens diretas",
+      sv: "Kan inte skicka privat meddelande till dig"
     },
     blocked_user_new_shouts: {
       en: "Cannot leave shouts or reply to you",
       de: "Kann keine Shouts hinterlassen oder dir antworten",
-      pt: "N\xE3o podem deixar mensagens na sua caixa de mensagens ou lhe responder"
+      pt: "N\xE3o podem deixar mensagens na sua caixa de mensagens ou lhe responder",
+      sv: "Kan inte l\xE4mna hojtningar p\xE5 din profil eller svara p\xE5 dina hojtningar"
     },
     blocked_user_old_shouts: {
       en: "You cannot delete pre-existing shouts on your profile",
       de: "Du kannst bereits vorhandene Shouts auf deinem Profil nicht l\xF6schen",
-      pt: "Voc\xEA n\xE3o pode deletar mensagens j\xE1 existentes em seu perfil"
+      pt: "Voc\xEA n\xE3o pode deletar mensagens j\xE1 existentes em seu perfil",
+      sv: " Du kan inte ta bort deras tidigare hojtningar fr\xE5n din profil"
     },
     blocked_user_view_profile: {
       en: "They can still view your profile",
       de: "Sie k\xF6nnen dein Profil weiterhin sehen",
-      pt: "Eles ainda podem ver seu perfil"
+      pt: "Eles ainda podem ver seu perfil",
+      sv: "Dem kan fortfarande se din profil"
     },
     no_quote: {
       en: "..."
@@ -57797,44 +58221,54 @@
     shared_with_others: {
       en: "Shared with others",
       de: "Mit anderen geteilt",
-      pt: "Compartilhado com outros"
+      pt: "Compartilhado com outros",
+      sv: "Delades med andra"
     },
     others_from_profile: {
       en: "More from {user}",
       de: "Mehr von {user}",
-      pt: "Mais de {user}"
+      pt: "Mais de {user}",
+      sv: "Mer fr\xE5n {user}"
     },
     obsess: {
       en: "Obsess",
-      pt: "Definir como obsess\xE3o"
+      pt: "Definir como obsess\xE3o",
+      sv: "St\xE4ll in som besatthet"
     },
     obsession: {
       en: "Obsession",
-      pt: "Obsess\xE3o"
+      pt: "Obsess\xE3o",
+      sv: "Aktuell besatthet"
     },
     obsessions: {
       en: "Obsessions",
-      pt: "Obsess\xF5es"
+      pt: "Obsess\xF5es",
+      sv: "Besattheter"
     },
     finding_your_tracks: {
       en: "Finding your tracks",
       de: "Finde deine Titel",
-      pt: "Encontrando suas faixas"
+      pt: "Encontrando suas faixas",
+      sv: "Hittar p\xE5 dinna l\xE5tar"
     },
     update_check: {
       en: "Check for updates",
       de: "Nach Updates suchen",
-      pt: "Procurar atualiza\xE7\xF5es"
+      pt: "Procurar atualiza\xE7\xF5es",
+      sv: "Kolla efter uppdateringar"
     },
     music_corrections: {
       en: "Music corrections",
-      pt: "Corre\xE7\xF5es de m\xFAsica"
+      pt: "Corre\xE7\xF5es de m\xFAsica",
+      sv: "Musikredigeringar"
     },
     corrections_loaded: {
-      en: "Corrections loaded"
+      en: "Corrections loaded",
+      sv: "Dina redigeringar har laddat"
     },
     corrections_loaded_value: {
-      en: "{c1} artists, {c2} albums and tracks"
+      en: "{c1} artists, {c2} albums and tracks",
+      sv: "{c1} artister, {c2} album och l\xE5tar"
     },
     brand_version: {
       // used for the lotus header where:
@@ -57842,7 +58276,8 @@
       // making: 'lotus version'
       en: "{brand} version",
       de: "{brand} Version",
-      pt: "{brand} vers\xE3o"
+      pt: "{brand} vers\xE3o",
+      sv: "{brand} version"
     },
     brand_version_number: {
       // used for the lotus header where:
@@ -57851,159 +58286,191 @@
       // making: 'lotus version 2025.0507'
       en: "{brand} version {number}",
       de: "{brand} Version {number}",
-      pt: "{brand} vers\xE3o {number}"
+      pt: "{brand} vers\xE3o {number}",
+      sv: "{brand} version {number}"
     },
     lotus: {
       artist: {
-        en: "Artist corrections"
+        en: "Artist corrections",
+        sv: "Artistredigeringar"
       },
       album_track: {
-        en: "Album and track corrections"
+        en: "Album and track corrections",
+        sv: "Album och sp\xE5rredigeringar"
       }
     },
     correct_titles_with_lotus: {
       name: {
         en: "Correct titles with lotus",
         de: "Titel korrigieren mit Lotus",
-        pt: "Corrigir t\xEDtulos com lotus"
+        pt: "Corrigir t\xEDtulos com lotus",
+        sv: "Redigera titlar med lotus"
       },
       body: {
         en: "Re-capitalise artists, albums, and tracks based on community contributions",
-        pt: "Recapitalize artistas, \xE1lbuns e faixas com base nas contribui\xE7\xF5es da comunidade"
+        pt: "Recapitalize artistas, \xE1lbuns e faixas com base nas contribui\xE7\xF5es da comunidade",
+        sv: "\xC4ndra kapitalisering p\xE5 artister, album, och l\xE5tar fr\xE5n gemenskapsbidrag"
       }
     },
     prefer_no_redirect: {
       name: {
         en: "Avoid artist redirects when navigating",
-        pt: "Evitar redirecionamentos de artistas ao navegar"
+        pt: "Evitar redirecionamentos de artistas ao navegar",
+        sv: "Undvik artistomdirigeringar n\xE4r du surfar"
       },
       body: {
         en: "Automatically adds +noredirect to artist links to avoid being sent to pages like Travi$ Scott",
-        pt: "Adiciona automaticamente +noredirect em links de artistas para evitar ser redirecionado para p\xE1ginas como Travi$ Scott"
+        pt: "Adiciona automaticamente +noredirect em links de artistas para evitar ser redirecionado para p\xE1ginas como Travi$ Scott",
+        sv: "L\xE4gger automatiskt +noredirect p\xE5 artistl\xE4nkar f\xF6r att undvika att bli skickad till sidor som t.ex. Travi$ Scott"
       }
     },
     view_all: {
       en: "View all",
       de: "Alle ansehen",
-      pt: "Ver tudo"
+      pt: "Ver tudo",
+      sv: "Visa alla"
     },
     help_contribute: {
       en: "Help contribute",
       de: "Helfe mit",
-      pt: "Ajude a contribuir"
+      pt: "Ajude a contribuir",
+      sv: "Bidra"
     },
     delete: {
       en: "Delete",
       de: "L\xF6schen",
-      pt: "Deletar"
+      pt: "Deletar",
+      sv: "Ta bort"
     },
     deleted: {
       en: "Deleted",
-      pt: "Deletado"
+      pt: "Deletado",
+      sv: "Borttagen"
     },
     search: {
       en: "Search",
       de: "Suchen",
-      pt: "Pesquisar"
+      pt: "Pesquisar",
+      sv: "S\xF6k"
     },
     search_guest: {
       en: "Search guest appearances",
       de: "Suche nach Features",
-      pt: "Pesquisar participa\xE7\xF5es especiais"
+      pt: "Pesquisar participa\xE7\xF5es especiais",
+      sv: "S\xF6k g\xE4startister"
     },
     anything_you_can_imagine: {
       // placeholder for your about me
       en: "Anything you can imagine...",
       de: "Alles, was du dir vorstellen kannst ...",
-      pt: "Tudo que voc\xEA pode imaginar..."
+      pt: "Tudo que voc\xEA pode imaginar...",
+      sv: "Vad som helst du kan f\xF6rest\xE4lla dig..."
     },
     supports_markdown: {
       // markdown: https://www.markdownguide.org/cheat-sheet/
       en: "Supports Markdown",
       de: "Unterst\xFCtzt Markdown",
       pt: "Suporta o Markdown",
+      sv: "St\xF6der Markdown",
       bold: {
         name: {
           en: "Bold",
-          pt: "Negrito"
+          pt: "Negrito",
+          sv: "Fet text"
         },
         string: {
           en: "**bold**",
-          pt: "**negrito**"
+          pt: "**negrito**",
+          sv: "**fet stil**"
         }
       },
       italics: {
         name: {
           en: "Italics",
-          pt: "It\xE1lico"
+          pt: "It\xE1lico",
+          sv: "Kursiv"
         },
         string: {
           en: "*slanted*",
-          pt: "*inclinado*"
+          pt: "*inclinado*",
+          sv: "*kursiv*"
         }
       },
       bold_italics: {
         name: {
           en: "Bold italics",
-          pt: "Negrito it\xE1lico"
+          pt: "Negrito it\xE1lico",
+          sv: "Fet kursiv stil"
         },
         string: {
           en: "***slanted but bold***",
-          pt: "***inclinado, mas em negrito***"
+          pt: "***inclinado, mas em negrito***",
+          sv: "***fet och kursiv samtidigt***"
         }
       },
       underlined: {
         name: {
           en: "Underlined",
-          pt: "Sublinhado"
+          pt: "Sublinhado",
+          sv: "Understrykt"
         },
         string: {
           en: "__underlined__",
-          pt: "__sublinhado__"
+          pt: "__sublinhado__",
+          sv: "__understrykt__"
         }
       }
     },
     value_characters_max: {
       en: "{v} characters max",
-      pt: "m\xE1ximo de {v} caracteres"
+      pt: "m\xE1ximo de {v} caracteres",
+      sv: "max {v} tecken"
     },
     profile_shortcut: {
       name: {
         en: "Profile shortcut",
         de: "Profilverkn\xFCpfung",
-        pt: "Atalho de perfil"
+        pt: "Atalho de perfil",
+        sv: "Profilgenv\xE4g"
       },
       body: {
         en: "View their scrobbles alongside yours at all times",
         de: "Sehe ihre Scrobbels jederzeit neben deine an",
-        pt: "Veja os scrobbles dele(a) junto aos seus o tempo todo"
+        pt: "Veja os scrobbles dele(a) junto aos seus o tempo todo",
+        sv: "Visa deras skrobblingar bredvid dina hela tiden"
       },
       linked: {
         en: "Linked with {u}",
-        pt: "Ligado com {u}"
+        pt: "Ligado com {u}",
+        sv: "L\xE4nkad ihop med {u}"
       },
       notice: {
         en: "You already have {u} as your shortcut, are you sure?",
-        pt: "Voc\xEA j\xE1 tem {u} como seu atalho, voc\xEA tem certeza?"
+        pt: "Voc\xEA j\xE1 tem {u} como seu atalho, voc\xEA tem certeza?",
+        sv: "Du har redan {u} som din genv\xE4g, \xE4r du s\xE4ker?"
       }
     },
     failed_to_find_profile: {
       en: "Failed to find profile",
-      pt: "Falha ao achar perfil"
+      pt: "Falha ao achar perfil",
+      sv: "Kunde ej hitta profilen"
     },
     replace: {
       en: "Replace",
-      pt: "Substituir"
+      pt: "Substituir",
+      sv: "Ers\xE4tt"
     },
     view_others_library: {
       en: "View others library",
-      pt: "Ver a biblioteca dos outros"
+      pt: "Ver a biblioteca dos outros",
+      sv: "Visa andra personers bibliotek"
     },
     avatar_radius: {
       name: {
         en: "Profile avatar shape",
         de: "Profil-Avatarform",
-        pt: "Formato da imagem de perfil"
+        pt: "Formato da imagem de perfil",
+        sv: "Profilbildsform"
       },
       body: {
         en: "Applies to all profiles, only visible to you"
@@ -58012,314 +58479,372 @@
     notes: {
       en: "Notes",
       de: "Notizen",
-      pt: "Notas"
+      pt: "Notas",
+      sv: "Anteckningar"
     },
     no_notes: {
       en: "No profiles here... (\uFF61\u2022\u0301\uFE3F\u2022\u0300\uFF61)",
       de: "Keine Profile hier... (\uFF61\u2022\u0301\uFE3F\u2022\u0300\uFF61)",
-      pt: "Sem perfis aqui... (\uFF61\u2022\u0301\uFE3F\u2022\u0300\uFF61)"
+      pt: "Sem perfis aqui... (\uFF61\u2022\u0301\uFE3F\u2022\u0300\uFF61)",
+      sv: "Inga profiler h\xE4r... (\uFF61\u2022\u0301\uFE3F\u2022\u0300\uFF61)"
     },
     font: {
       name: {
         en: "Font choice",
         de: "Schriftartauswahl",
-        pt: "Escolha de fonte"
+        pt: "Escolha de fonte",
+        sv: "Typsnitts"
       },
       body: {
         en: "Choose a custom selection of fonts that suit you",
         de: "W\xE4hle eine benutzerdefinierte Auswahl an Schriftarten, die zu dir passt",
-        pt: "Selecione uma fonte customizada que te agrada"
+        pt: "Selecione uma fonte customizada que te agrada",
+        sv: "V\xE4lj ett typsnitt som b\xE4st passar dig"
       }
     },
     font_weight: {
       name: {
         en: "Font weight",
         de: "Schriftst\xE4rke",
-        pt: "Espessura da fonte"
+        pt: "Espessura da fonte",
+        sv: "Typsnittsvikt"
       },
       body: {
         en: "Used for regular text paragraphs",
         de: "Wird f\xFCr normale Textabs\xE4tze verwendet",
-        pt: "Usado para par\xE1grafos regulares de texto"
+        pt: "Usado para par\xE1grafos regulares de texto",
+        sv: "Anv\xE4nds f\xF6r vanliga textstycke"
       }
     },
     font_weight_medium: {
       name: {
         en: "Medium font weight",
         de: "Mittlere Schriftst\xE4rke",
-        pt: "Espessura m\xE9dia de fonte"
+        pt: "Espessura m\xE9dia de fonte",
+        sv: "Mindre typsnittsvikt"
       },
       body: {
         en: "Used for button text and small headers",
         de: "Wird f\xFCr Schaltfl\xE4chentext und kleine \xDCberschriften verwendet",
-        pt: "Usada para texto de bot\xF5es e pequenos cabe\xE7alhos"
+        pt: "Usada para texto de bot\xF5es e pequenos cabe\xE7alhos",
+        sv: "Anv\xE4nds f\xF6r knappar och sm\xE5a rubriker"
       }
     },
     font_weight_bold: {
       name: {
         en: "Bold font weight",
         de: "Fette Schriftst\xE4rke",
-        pt: "Espessura da fonte em negrito"
+        pt: "Espessura da fonte em negrito",
+        sv: "Fet typsnittsvikt"
       },
       body: {
         en: "Used for large headers",
         de: "Wird f\xFCr gro\xDFe \xDCberschriften verwendet",
-        pt: "Usado para cabe\xE7alhos grandes"
+        pt: "Usado para cabe\xE7alhos grandes",
+        sv: "Anv\xE4nds f\xF6r stora rubriker"
       }
     },
     font_emoji: {
       name: {
         en: "Emoji compatibility",
         de: "Emoji-Kompatibilit\xE4t",
-        pt: "Compatibilidade de emojis"
+        pt: "Compatibilidade de emojis",
+        sv: "Emoji-kompatibilitet"
       },
       body: {
         en: "Required to render emoji properly before Windows 11 \u{1F3F3}\uFE0F\u200D\u26A7\uFE0F",
         de: "Erforderlich, um Emojis vor Windows 11 richtig darzustellen \u{1F3F3}\uFE0F\u200D\u26A7\uFE0F",
-        pt: "Necess\xE1rio para renderizar emojis corretamente antes do Windows 11 \u{1F3F3}\uFE0F\u200D\u26A7\uFE0F"
+        pt: "Necess\xE1rio para renderizar emojis corretamente antes do Windows 11 \u{1F3F3}\uFE0F\u200D\u26A7\uFE0F",
+        sv: "Kr\xE4vs f\xF6r att visa emojis korrekt innan Windows 11 \u{1F3F3}\uFE0F\u200D\u26A7\uFE0F"
       }
     },
     enter_font_names: {
       en: "Enter installed font name(s), separated by commas",
       de: "Geben die installierte Schriftart durch Kommas getrennt ein",
-      pt: "Nomes das fontes instaladas, separados por v\xEDrgulas"
+      pt: "Nomes das fontes instaladas, separados por v\xEDrgulas",
+      sv: "Skriv installerade typsnittsnamn, separerade av kommatecken"
     },
     change_now: {
       en: "Change now",
       de: "Jetzt \xE4ndern",
-      pt: "Mudar agora"
+      pt: "Mudar agora",
+      sv: "\xC4ndra nu"
     },
     profiles: {
       en: "Profiles",
       de: "Profile",
-      pt: "Perfis"
+      pt: "Perfis",
+      sv: "Profiler"
     },
     redirections: {
       en: "Redirections",
       de: "Umleitungen",
-      pt: "Redirecionamentos"
+      pt: "Redirecionamentos",
+      sv: "Omdirigeringar"
     },
     legacy_redirects: {
       name: {
         en: "Legacy scrobble redirection",
         de: "Legacy-Scrobbel-Umleitung",
-        pt: "Redirecionamento de scrobble legado"
+        pt: "Redirecionamento de scrobble legado",
+        sv: "Legacy skrobbelomdirigeringar"
       },
       body: {
         en: "By default, scrobbles will be corrected to faulty replacements that are a decade out of date. Disabling does not fully fix the system but keeps artist names in your library intact.",
         de: "Standardm\xE4\xDFig korrigiert Last.fm einige deiner Scrobbel-Dateien automatisch und f\xFChrt (meist) fehlerhafte Weiterleitungen aus. Durch die Deaktivierung dieser Funktion wird das System zwar nicht vollst\xE4ndig repariert, die K\xFCnstlernamen in Ihrer Bibliothek bleiben jedoch erhalten.",
-        pt: 'Por padr\xE3o, a Last.fm ir\xE1 "corrigir automaticamente" alguns dos seus scrobbles para redirecionamentos (na maioria) defeituosos. Desativar essa op\xE7\xE3o n\xE3o corrige completamente o sistema, mas mant\xE9m os nomes dos artistas na sua biblioteca intactos.'
+        pt: 'Por padr\xE3o, a Last.fm ir\xE1 "corrigir automaticamente" alguns dos seus scrobbles para redirecionamentos (na maioria) defeituosos. Desativar essa op\xE7\xE3o n\xE3o corrige completamente o sistema, mas mant\xE9m os nomes dos artistas na sua biblioteca intactos.',
+        sv: "Vanligtvis omdirigeras skrobblar till felers\xE4ttningar som \xE4r \xF6ver tio \xE5r gamla. Att avaktivera det fixar inte problemet totalt men artistnamn i ditt egna bibliotek visar r\xE4tt profil."
       }
     },
     redirect_messages: {
       name: {
         en: "Remove page redirection notifications",
         de: "Benachrichtigungen zur Seitenumleitung entfernen",
-        pt: "Remover notifica\xE7\xF5es de redirecionamento de p\xE1gina"
+        pt: "Remover notifica\xE7\xF5es de redirecionamento de p\xE1gina",
+        sv: "Ta bort omdirigeringsnotifikationer"
       },
       body: {
         en: "These notifications can let you undo redirections Last.fm forced upon you, but can also be annoying",
         de: "Mit diesen Benachrichtigungen kannst du die von Last.fm aufgezwungenen Weiterleitungen r\xFCckg\xE4ngig machen, sie k\xF6nnen aber auch l\xE4stig sein.",
-        pt: "Essas notifica\xE7\xF5es podem permitir que voc\xEA desfa\xE7a redirecionamentos que a Last.fm imp\xF4s a voc\xEA, mas tamb\xE9m podem ser irritantes"
+        pt: "Essas notifica\xE7\xF5es podem permitir que voc\xEA desfa\xE7a redirecionamentos que a Last.fm imp\xF4s a voc\xEA, mas tamb\xE9m podem ser irritantes",
+        sv: "Dessa notiser l\xE5ter dig \xE5ngra omdirigeringar Last.fm tvingade p\xE5 dig, men dem kan ocks\xE5 vara st\xF6rande"
       }
     },
     colourful_counts: {
       name: {
         en: "Rank-based colours for artist charts",
         de: "Rangbasierte Farben f\xFCr K\xFCnstlerdiagramme",
-        pt: "Cores baseadas em classifica\xE7\xE3o para paradas de artistas"
+        pt: "Cores baseadas em classifica\xE7\xE3o para paradas de artistas",
+        sv: "Rangbaserade f\xE4rger f\xF6r artistlistor"
       },
       body: {
         en: "Assigns a colour based on an artist\u2019s all-time ranking in your library",
         de: "Weist eine Farbe basierend auf dem Allzeit-Ranking eines K\xFCnstlers in deiner Bibliothek zu",
-        pt: "Define uma cor pela coloca\xE7\xE3o do artista no ranking geral da sua biblioteca."
+        pt: "Define uma cor pela coloca\xE7\xE3o do artista no ranking geral da sua biblioteca.",
+        sv: "Till\xE4mpar en f\xE4rg baserad p\xE5 en artists alltidsranking i ditt bibliotek"
       }
     },
     glacier_graphs: {
       name: {
         en: "Visualise scrobble graphs better",
         de: "Scrobbel-Diagramme besser visualisieren",
-        pt: "Visualize melhor os gr\xE1ficos de scrobble"
+        pt: "Visualize melhor os gr\xE1ficos de scrobble",
+        sv: "B\xE4ttre visualisera skrobbeldiagram"
       },
       body: {
         en: "Choose between a tiny delay for a wide range of graph options or legacy Last.fm graphs",
         de: "W\xE4hle zwischen einer kleinen Verz\xF6gerung f\xFCr eine breite Palette von Diagrammoptionen oder \xE4lteren Last.fm-Diagrammen",
-        pt: "Escolha entre um pequeno atraso para ter mais op\xE7\xF5es de gr\xE1ficos ou usar os gr\xE1ficos cl\xE1ssicos da Last.fm"
+        pt: "Escolha entre um pequeno atraso para ter mais op\xE7\xF5es de gr\xE1ficos ou usar os gr\xE1ficos cl\xE1ssicos da Last.fm",
+        sv: "V\xE4lj mellan en liten f\xF6rdr\xF6jning f\xF6r en stor m\xE4ngd olika diagramalternativ eller anv\xE4nd \xE4ldre Last.fm-diagram"
       }
     },
     show_bulk_edit_album: {
       name: {
         en: "Show \u2018Bulk Edit\u2019 powered album name in tracklists",
         de: "Albumnamen mit \u201AMassenbearbeitung\u2018 in Titellisten anzeigen",
-        pt: "Exibir o nome do \xE1lbum ajustado pelo \u2018Bulk Edit\u2019 nas listas de faixas."
+        pt: "Exibir o nome do \xE1lbum ajustado pelo \u2018Bulk Edit\u2019 nas listas de faixas.",
+        sv: "Visa albumnamn under l\xE5tlistor inom bibliotek med \u2018Bulk Edit\u2019-till\xE4gget"
       },
       body: {
         en: "With this extension the album name is displayed on all tracks by default, whereas with bleh the album name is only displayed on active tracks",
         de: "Mit dieser Erweiterung wird der Albumname standardm\xE4\xDFig auf allen Titeln angezeigt, w\xE4hrend mit bleh der Albumname nur auf aktiven Titeln angezeigt wird",
-        pt: "Com esta extens\xE3o, o nome do \xE1lbum \xE9 exibido em todas as faixas por padr\xE3o, enquanto no bleh ele \xE9 mostrado apenas nas faixas que est\xE3o sendo tocadas no momento."
+        pt: "Com esta extens\xE3o, o nome do \xE1lbum \xE9 exibido em todas as faixas por padr\xE3o, enquanto no bleh ele \xE9 mostrado apenas nas faixas que est\xE3o sendo tocadas no momento.",
+        sv: "Med det h\xE4r till\xE4gget visas albumnamnet alltid under l\xE5ttiteln, medans med bleh s\xE5 visas albumnamnet bara p\xE5 l\xE5ten som aktivt skrobblas"
       }
     },
     gendered_tags: {
       name: {
         en: "Hide gender-based tags",
         de: "Geschlechtsspezifische Tags ausblenden",
-        pt: "Esconder tags baseadas em g\xEAnero"
+        pt: "Esconder tags baseadas em g\xEAnero",
+        sv: "G\xF6m k\xF6nsbaserade taggar"
       },
       body: {
         en: "These tags are often redundant and can never apply to the full range they\u2019re intending",
         de: "Diese Tags sind oft \xFCberfl\xFCssig und k\xF6nnen nie auf die gesamte Bandbreite dessen angewendet werden, was sie beabsichtigen",
-        pt: "Essas tags costumam ser redundantes e nunca conseguem representar totalmente tudo o que se prop\xF5em"
+        pt: "Essas tags costumam ser redundantes e nunca conseguem representar totalmente tudo o que se prop\xF5em",
+        sv: "Dessa taggar \xE4r ofta \xF6verfl\xF6diga och g\xE4ller inte alltid f\xF6r allt dem \xE4r t\xE4nkta att t\xE4cka"
       }
     },
     artwork_and_grids: {
       en: "Artwork and grids",
       de: "Albencover und Raster",
-      pt: "Capas e grades"
+      pt: "Capas e grades",
+      sv: "Albumkonst och rutn\xE4t"
     },
     gloss: {
       name: {
         en: "Apply gloss to album covers",
-        pt: "Aplique relevo nas capas dos \xE1lbuns"
+        pt: "Aplique relevo nas capas dos \xE1lbuns",
+        sv: "L\xE4gg till ett sken p\xE5 albumkonst"
       },
       body: {
         en: "Add a layer of shine to album covers globally",
-        pt: "Adicione um toque de brilho em todas as capas de \xE1lbuns"
+        pt: "Adicione um toque de brilho em todas as capas de \xE1lbuns",
+        sv: "L\xE4gger till ett glansigt lager p\xE5 all albumkonst"
       }
     },
     grid_glow: {
       name: {
         en: "Reflect colour below grid items",
         de: "Farbe unter Rasterelementen reflektieren",
-        pt: "Refletir a cor abaixo dos itens da grade"
+        pt: "Refletir a cor abaixo dos itens da grade",
+        sv: "Reflektera f\xE4rg under rutn\xE4tsobjekt"
       },
       body: {
         en: "Applies a glow below grid items based on the primary colour",
-        pt: "Aplica um brilho abaixo dos itens da grade com base na cor prim\xE1ria"
+        pt: "Aplica um brilho abaixo dos itens da grade com base na cor prim\xE1ria",
+        sv: "L\xE4gger till f\xE4rg under rutn\xE4tsobjekt som \xE4r baserad p\xE5 den prim\xE4ra f\xE4rgen"
       }
     },
     skip_to: {
       en: "Skip to",
       de: "\xFCberspringen zu",
-      pt: "Ir at\xE9"
+      pt: "Ir at\xE9",
+      sv: "Hoppa till"
     },
     information: {
       en: "Information",
-      pt: "Informa\xE7\xE3o"
+      pt: "Informa\xE7\xE3o",
+      sv: "Information"
     },
     username: {
       name: {
         en: "Username",
         de: "Benuztername",
-        pt: "Nome de usu\xE1rio"
+        pt: "Nome de usu\xE1rio",
+        sv: "Anv\xE4ndarnamn"
       },
       body: {
         en: "To change your username hit the button to send an email. Having problems? {a}contact support{/a}.",
         de: "Um deinen Nutzernamen zu \xE4ndern, klicke auf die Schaltfl\xE4che \u201EE-Mail senden\u201C. Gibt es Probleme? {a}kontaktieren Sie den Support{/a}.",
-        pt: "Para alterar seu nome de usu\xE1rio, clique no bot\xE3o para enviar um e-mail. Est\xE1 com problemas?"
+        pt: "Para alterar seu nome de usu\xE1rio, clique no bot\xE3o para enviar um e-mail. Est\xE1 com problemas?",
+        sv: "F\xF6r att \xE4ndra ditt anv\xE4ndarnamn, tryck p\xE5 knappen f\xF6r att skicka mejl. Har du ett problem? {a}Kontakta support{/a}."
       }
     },
     email: {
       en: "Email",
-      pt: "E-mail"
+      pt: "E-mail",
+      sv: "Mejladress"
     },
     password: {
       en: "Password",
       de: "Passwort",
-      pt: "Senha"
+      pt: "Senha",
+      sv: "L\xF6senord"
     },
     new_password: {
       en: "New password",
       de: "Neues Passwort",
-      pt: "Nova senha"
+      pt: "Nova senha",
+      sv: "Nytt l\xF6senord"
     },
     confirm_password: {
       en: "Confirm password",
       de: "Passwort best\xE4tigen",
-      pt: "Confirmar senha"
+      pt: "Confirmar senha",
+      sv: "Verifiera l\xF6senord"
     },
     change: {
       en: "Change",
       de: "\xC4ndern",
-      pt: "Mudar"
+      pt: "Mudar",
+      sv: "\xC4ndra"
     },
     marketing_emails: {
       name: {
         en: "Marketing emails",
-        pt: "E-mails promocionais"
+        pt: "E-mails promocionais",
+        sv: "Marknadsf\xF6ringsmejl"
       },
       body: {
         en: "Last.fm can optionally send promotional emails from time to time",
         de: "Last.fm kann optional von Zeit zu Zeit Werbe-emails senden",
-        pt: "A Last.fm pode, opcionalmente, enviar e-mails promocionais de tempos em tempos."
+        pt: "A Last.fm pode, opcionalmente, enviar e-mails promocionais de tempos em tempos.",
+        sv: "Last.fm kan valfritt skicka reklammejl d\xE5 och d\xE5"
       }
     },
     email_language: {
       en: "Email language",
       de: "Email Sprache",
-      pt: "Idioma dos e-mails"
+      pt: "Idioma dos e-mails",
+      sv: "Mejlspr\xE5k"
     },
     communication: {
       en: "Communication",
       de: "Kommunikation",
-      pt: "Comunica\xE7\xE3o"
+      pt: "Comunica\xE7\xE3o",
+      sv: "Kommunikation"
     },
     security: {
       en: "Security",
       de: "Sicherheit",
-      pt: "Seguran\xE7a"
+      pt: "Seguran\xE7a",
+      sv: "Sekretess"
     },
     logout_everywhere: {
       en: "Logout on all devices",
       de: "Auf allen Ger\xE4ten abmelden",
-      pt: "Encerrar sess\xE3o em todos os dispositivos"
+      pt: "Encerrar sess\xE3o em todos os dispositivos",
+      sv: "Logga ut fr\xE5n alla enheter"
     },
     delete_account: {
       name: {
         en: "Delete account",
         de: "Account l\xF6schen",
-        pt: "Deletar conta"
+        pt: "Deletar conta",
+        sv: "Ta bort konto"
       },
       body: {
         en: "Deletion will take 14 days to complete, after this time your account will either be deleted, anonymised, or put beyond use and cannot be recovered. Once deleted, your username will no longer be available.",
         de: "Die L\xF6schung dauert 14 Tage. Nach Ablauf dieser Frist wird dein Konto entweder gel\xF6scht, anonymisiert, oder unbrauchbar gemacht und kann nicht wiederhergestellt werden. Nach der L\xF6schung ist dein Nutzername nicht mehr verf\xFCgbar.",
-        pt: "A exclus\xE3o levar\xE1 14 dias para ser conclu\xEDda. Ap\xF3s esse per\xEDodo, sua conta ser\xE1 exclu\xEDda, anonimizada ou desativada, e n\xE3o poder\xE1 ser recuperada. Depois de exclu\xEDdo, seu nome de usu\xE1rio n\xE3o estar\xE1 mais dispon\xEDvel."
+        pt: "A exclus\xE3o levar\xE1 14 dias para ser conclu\xEDda. Ap\xF3s esse per\xEDodo, sua conta ser\xE1 exclu\xEDda, anonimizada ou desativada, e n\xE3o poder\xE1 ser recuperada. Depois de exclu\xEDdo, seu nome de usu\xE1rio n\xE3o estar\xE1 mais dispon\xEDvel.",
+        sv: "Det tar 14 dagar att ta bort ditt konto. Efter denna tid blir dit konto antingen borttaget, anonymiserad, eller g\xF6rs oanv\xE4ndbar och kan inte f\xE5s tillbaka. N\xE4r det \xE4r borttaget kan ditt anv\xE4ndarnamn inte bli anv\xE4nt igen."
       }
     },
     delete_account_permanently: {
       en: "Delete {u} permanently",
       de: "{u} dauerhaft l\xF6schen",
-      pt: "Deletar {u} permanentemente"
+      pt: "Deletar {u} permanentemente",
+      sv: "Ta bort {u} permanent"
     },
     other: {
       en: "Other",
-      pt: "Outro"
+      pt: "Outro",
+      sv: "Annat"
     },
     connect_app: {
       en: "Connect {name}",
       de: "Verbinde {name}",
-      pt: "Conectar {name}"
+      pt: "Conectar {name}",
+      sv: "Anslut {name}"
     },
     connect: {
       en: "Connect",
       de: "Verbinden",
-      pt: "Conectar"
+      pt: "Conectar",
+      sv: "Anslut"
     },
     connected: {
       en: "Connected",
-      pt: "Conectado"
+      pt: "Conectado",
+      sv: "Anslutit"
     },
     not_connected: {
       en: "Not connected",
-      pt: "N\xE3o conectado"
+      pt: "N\xE3o conectado",
+      sv: "Inte ansluten"
     },
     api: {
       name: {
         en: "Unlock additional API features",
-        pt: "Desbloqueie recursos adicionais da API"
+        pt: "Desbloqueie recursos adicionais da API",
+        sv: "L\xE5s upp flera API-funktioner"
       },
       body: {
         en: "Link your account to allow API access such as scrobbling",
-        pt: "Conecte sua conta para permitir o acesso \xE0 API, como o scrobbling"
+        pt: "Conecte sua conta para permitir o acesso \xE0 API, como o scrobbling",
+        sv: "Koppla ditt konto f\xF6r att till\xE5ta API-\xE5tkomster, som att skrobbla"
       },
       short: {
         en: "API"
@@ -58327,149 +58852,179 @@
     },
     api_status: {
       en: "API status",
-      pt: "Status da API"
+      pt: "Status da API",
+      sv: "API-status"
     },
     app_would_like_to_connect: {
       // app name is above
       en: "would like to use your account",
       de: "m\xF6chte Ihr Konto nutzen",
-      pt: "gostaria de usar sua conta"
+      pt: "gostaria de usar sua conta",
+      sv: "vill anv\xE4nda ditt konto"
     },
     logged_in_as: {
       en: "Logged in as {user}",
       de: "Angemeldet als {user}",
-      pt: "Conectado como {user}"
+      pt: "Conectado como {user}",
+      sv: "Loggat in som {user}"
     },
     not_logged_in: {
       en: "Not logged in",
-      pt: "N\xE3o conectado"
+      pt: "N\xE3o conectado",
+      sv: "Inte inloggad"
     },
     ensure_you_trust: {
       // API applications
       // last.fm/settings/applications
       en: "Make sure you trust this application",
       de: "Stelle sicher, dass du dieser Anwendung vertraust",
-      pt: "Certifique-se de que voc\xEA confia neste aplicativo"
+      pt: "Certifique-se de que voc\xEA confia neste aplicativo",
+      sv: "Var s\xE4ker p\xE5 att du litar denna applikation"
     },
     has_been_connected: {
       // app name is above
       en: "has been connected",
-      pt: "foi conectado"
+      pt: "foi conectado",
+      sv: "har anslutits"
     },
     you_can_now_close_this_tab: {
       en: "You can now close this tab",
       de: "Du kannst diesen Tab jetzt schlie\xDFen",
-      pt: "Voc\xEA pode fechar esta aba agora"
+      pt: "Voc\xEA pode fechar esta aba agora",
+      sv: "Du kan nu st\xE4nga den h\xE4r fliken"
     },
     manage_applications: {
       // API applications
       // last.fm/settings/applications
       en: "Manage applications",
       de: "Anwendungen verwalten",
-      pt: "Gerenciar aplica\xE7\xF5es"
+      pt: "Gerenciar aplica\xE7\xF5es",
+      sv: "Hantera applikationer"
     },
     markdown_profiles: {
       name: {
         en: "Use fancy formatting on profiles",
         de: "Verwende schicke Formatierungen f\xFCr Profile",
-        pt: "Usar formata\xE7\xE3o estilosa nos perfis"
+        pt: "Usar formata\xE7\xE3o estilosa nos perfis",
+        sv: "Anv\xE4nd snygg formatering p\xE5 profiler"
       },
       body: {
         en: "Allows the use of line breaks, bold text, italics, and images in all \u201CAbout Me\u201D panels",
         de: "Erm\xF6glicht die Verwendung von Zeilenumbr\xFCchen, fettem Text, Kursivschrift und Bildern in allen \u201E\xDCber mich\u201C-Bereichen",
-        pt: "Permite o uso de quebras de linha, texto em negrito, it\xE1lico e imagens em todos os pain\xE9is \u201CSobre mim\u201D"
+        pt: "Permite o uso de quebras de linha, texto em negrito, it\xE1lico e imagens em todos os pain\xE9is \u201CSobre mim\u201D",
+        sv: "Till\xE5ter radbrytning, fet stil, kursiv stil, och bilder inom alla \u201COm mig\u201D-paneler"
       }
     },
     markdown_shouts: {
       name: {
         en: "Use fancy formatting on shouts",
-        pt: "Usar formata\xE7\xE3o estilosa nas caixas de mensagens"
+        pt: "Usar formata\xE7\xE3o estilosa nas caixas de mensagens",
+        sv: "Anv\xE4nd snygg formatering p\xE5 hojtningar"
       },
       body: {
         en: "Allows the use of line breaks, bold text, italics, and images in all shouts",
-        pt: "Permite o uso de quebras de linha, texto em negrito, it\xE1lico e imagens em todas as caixas de mensagens"
+        pt: "Permite o uso de quebras de linha, texto em negrito, it\xE1lico e imagens em todas as caixas de mensagens",
+        sv: "Till\xE5ter radbrytning, fet stil, kursiv stil, och bilder inom alla hojtningar"
       },
       preview: {
         en: "hello! **hello!** *hello!*\n[here\u2019s a link](https://katelyn.moe) HAII @evangelicgirl",
-        pt: "oi! **ol\xE1!** *opa!*\n[aqui est\xE1 um link](https://katelyn.moe) OIEE @evangelicgirl"
+        pt: "oi! **ol\xE1!** *opa!*\n[aqui est\xE1 um link](https://katelyn.moe) OIEE @evangelicgirl",
+        sv: "hej! **hej!** *hej!*\n[h\xE4r \xE4r en l\xE4nk](https://katelyn.moe) HEJJ @evangelicgirl"
       }
     },
     gathering_your_plays: {
       en: "Gathering your album plays",
       de: "Sammeln deiner Albumwiedergaben",
-      pt: "Coletando suas reprodu\xE7\xF5es de \xE1lbuns"
+      pt: "Coletando suas reprodu\xE7\xF5es de \xE1lbuns",
+      sv: "Samlar dina albumspelningar"
     },
     failed_to_find_tracks: {
       en: "You do not have any plays",
       de: "Du hast keine Plays",
-      pt: "Voc\xEA n\xE3o tem nenhuma reprodu\xE7\xE3o"
+      pt: "Voc\xEA n\xE3o tem nenhuma reprodu\xE7\xE3o",
+      sv: "Du har inga spelningar"
     },
     sourced_from_own_plays: {
       // tracklist from your own album plays
       en: "Sourced from your own plays as an official tracklist is unavailable",
       de: "Aus deinen eigenen Plays stammend, da keine offizielle Titelliste verf\xFCgbar ist",
-      pt: "Baseado nas suas pr\xF3prias reprodu\xE7\xF5es, pois a tracklist oficial n\xE3o est\xE1 dispon\xEDvel"
+      pt: "Baseado nas suas pr\xF3prias reprodu\xE7\xF5es, pois a tracklist oficial n\xE3o est\xE1 dispon\xEDvel",
+      sv: "H\xE4mtas fr\xE5n dina egna spelningar f\xF6r en officiell spellista finns inte"
     },
     submit_language: {
       name: {
         en: "Are you fluent in a supported language?",
-        pt: "Voc\xEA \xE9 fluente em algum dos idiomas suportados?"
+        pt: "Voc\xEA \xE9 fluente em algum dos idiomas suportados?",
+        sv: "Kan du tala ett spr\xE5k som st\xF6ds flytande?"
       },
       body: {
         en: "Translations are powered by community contributions from wonderful people like you",
-        pt: "As tradu\xE7\xF5es s\xE3o feitas gra\xE7as \xE0s contribui\xE7\xF5es da comunidade de pessoas incr\xEDveis como voc\xEA"
+        pt: "As tradu\xE7\xF5es s\xE3o feitas gra\xE7as \xE0s contribui\xE7\xF5es da comunidade de pessoas incr\xEDveis como voc\xEA",
+        sv: "\xD6vers\xE4ttningar drivs av bidrag fr\xE5n underbara folk som du"
       }
     },
     welcome_to_bleh: {
       // <br> is a line break
       en: "Welcome to bleh, thank you for installing!<br>You can continue through this quick setup to get you started or skip right to your profile and figure it all out yourself <3",
-      pt: "Bem-vindo ao bleh, obrigado por instalar!<br>Voc\xEA pode seguir este r\xE1pido guia de configura\xE7\xE3o para come\xE7ar, ou pular direto para seu perfil e descobrir tudo por conta pr\xF3pria <3"
+      pt: "Bem-vindo ao bleh, obrigado por instalar!<br>Voc\xEA pode seguir este r\xE1pido guia de configura\xE7\xE3o para come\xE7ar, ou pular direto para seu perfil e descobrir tudo por conta pr\xF3pria <3",
+      sv: "V\xE4lkommen till bleh, tack f\xF6r att du har installerat!<br>Du kan forts\xE4tta genom den h\xE4r snabba setupen f\xF6r att starta eller hoppa rakt till din profil och klura ut det helt sj\xE4lv <3"
     },
     next: {
       en: "Next",
-      pt: "Pr\xF3ximo"
+      pt: "Pr\xF3ximo",
+      sv: "N\xE4sta"
     },
     choose_a_theme: {
       en: "Choose a theme that suits you best!",
-      pt: "Escolha o tema que mais combina com voc\xEA"
+      pt: "Escolha o tema que mais combina com voc\xEA",
+      sv: "V\xE4lj ett tema som passar dig b\xE4st!"
     },
     accessibility_explain: {
       en: "Before we continue, let\u2019s assess your accessibility settings.",
-      pt: "Antes de continuarmos, vamos acessar suas configura\xE7\xF5es de acessibilidade"
+      pt: "Antes de continuarmos, vamos acessar suas configura\xE7\xF5es de acessibilidade",
+      sv: "Innan vi forts\xE4tter ska vi kontrollera dina tillg\xE4nglighetsinst\xE4llningar."
     },
     colours_explain: {
       en: "Choose a colour you like or make your own favourite.",
-      pt: "Escolha uma cor que voc\xEA goste ou crie a sua favorita."
+      pt: "Escolha uma cor que voc\xEA goste ou crie a sua favorita.",
+      sv: "V\xE4lj en f\xE4rg du tycker om eller g\xF6r din egna favorit."
     },
     music_explain: {
       en: "We offer a variety of options to help you manage your music library.",
-      pt: "N\xF3s oferecemos uma variedade de op\xE7\xF5es para ajudar voc\xEA a gerenciar sua biblioteca musical."
+      pt: "N\xF3s oferecemos uma variedade de op\xE7\xF5es para ajudar voc\xEA a gerenciar sua biblioteca musical.",
+      sv: "Vi har massa olika inst\xE4llningar f\xF6r att hj\xE4lpa till att ordna ditt musikbibliotek."
     },
     setup_end: {
       en: "That\u2019s all for now, to configure your bleh installation in the future head to {a}the settings{/a} in your menu!",
-      pt: "Por enquanto isso \xE9 tudo, para configurar sua instala\xE7\xE3o do bleh futuramente, v\xE1 at\xE9 {a}nas configura\xE7\xF5es{/a} no seu menu!"
+      pt: "Por enquanto isso \xE9 tudo, para configurar sua instala\xE7\xE3o do bleh futuramente, v\xE1 at\xE9 {a}nas configura\xE7\xF5es{/a} no seu menu!",
+      sv: "Det var allt just nu, f\xF6r att konfigurera din bleh-installation i framtiden g\xE5 in p\xE5 {a}inst\xE4llningarna{/a} i menyn!"
     },
     seasonal_particles: {
       name: {
         en: "Show particles during select seasons",
-        pt: "Mostrar particulas durante esta\xE7\xF5es selecionadas"
+        pt: "Mostrar particulas durante esta\xE7\xF5es selecionadas",
+        sv: "Visa partiklar under vissa \xE5rstider"
       },
       body: {
         en: "During colder seasons, watch pretty snowflakes fall \u22C6\u207A\u208A\u2745\u3002",
-        pt: "Durante as sess\xF5es de inverno, veja flocos de neve bonitinhos caindo \u22C6\u207A\u208A\u2745\u3002"
+        pt: "Durante as sess\xF5es de inverno, veja flocos de neve bonitinhos caindo \u22C6\u207A\u208A\u2745\u3002",
+        sv: "Under kyligare \xE5rstider, se vackra sn\xF6flingorna glida sakta ner \u22C6\u207A\u208A\u2745\u3002"
       }
     },
     all_particles: {
       en: "Show full particles",
-      pt: "Mostrar todas as part\xEDculas"
+      pt: "Mostrar todas as part\xEDculas",
+      sv: "Visa fulla partiklar"
     },
     less_particles: {
       en: "Show less particles",
-      pt: "Mostrar menos part\xEDculas"
+      pt: "Mostrar menos part\xEDculas",
+      sv: "Visa mindre partiklar"
     },
     no_particles: {
       en: "Disable particles",
-      pt: "Desativar part\xEDculas"
+      pt: "Desativar part\xEDculas",
+      sv: "St\xE4ng av partiklar"
     },
     going: {
       en: "Going",
@@ -58477,672 +59032,835 @@
     },
     beware_notice: {
       en: "Beware! Only change these settings if you know what you\u2019re doing",
-      pt: "Cuidado! Apenas mude estas configura\xE7\xF5es se voc\xEA sabe o que voc\xEA est\xE1 fazendo"
+      pt: "Cuidado! Apenas mude estas configura\xE7\xF5es se voc\xEA sabe o que voc\xEA est\xE1 fazendo",
+      sv: "Var f\xF6rsiktig! \xC4ndra bara dessa inst\xE4llningar om du vet vad du g\xF6r"
     },
     force_refresh_style: {
       name: {
         en: "Force re-download styles",
-        pt: "For\xE7ar o re-download dos estilos"
+        pt: "For\xE7ar o re-download dos estilos",
+        sv: "Tvinga omladdning av stiler"
       },
       body: {
         en: "Deletes your current cache of the bleh stylesheet and retrieves the latest",
-        pt: "Exclui o cache atual da folha de estilo do bleh e recupera a vers\xE3o mais recente"
+        pt: "Exclui o cache atual da folha de estilo do bleh e recupera a vers\xE3o mais recente",
+        sv: "Tar bort din nuvarande cache av bleh-stil och h\xE4mtar hem den senaste"
       }
     },
     intended_for_development: {
       name: {
-        en: "This page is intended for development"
+        en: "This page is intended for development",
+        sv: "Denna sida \xE4r avsedd f\xF6r utveckling"
       },
       body: {
         en: "Be careful with options here (especially feature flags) as they can break your install.",
-        pt: "Tenha cuidado com as op\xE7\xF5es aqui (especialmente com os flags de recursos), pois elas podem causar problemas na sua instala\xE7\xE3o."
+        pt: "Tenha cuidado com as op\xE7\xF5es aqui (especialmente com os flags de recursos), pois elas podem causar problemas na sua instala\xE7\xE3o.",
+        sv: "Var f\xF6rsiktig med inst\xE4llningarna h\xE4r (speciellt funktionsflaggor) eftersom dom kan f\xF6rst\xF6ra din installation."
       }
     },
     flags: {
       // shorthand for below
-      en: "Flags"
+      en: "Flags",
+      sv: "Flaggor"
     },
     manage_feature_flags: {
       // feature flags control features (like an option)
       en: "Manage feature flags",
-      pt: "Gerenciar flags de recursos"
+      pt: "Gerenciar flags de recursos",
+      sv: "Hantera funktionsflaggor"
     },
     development: {
       en: "Development",
-      pt: "Desenvolvimento"
+      pt: "Desenvolvimento",
+      sv: "Utveckling"
     },
     this_section_requires_password: {
       en: "This section requires a password to view",
-      pt: "Esta se\xE7\xE3o requer uma senha para ser visualizada"
+      pt: "Esta se\xE7\xE3o requer uma senha para ser visualizada",
+      sv: "Denna avdelning beh\xF6ver ett l\xF6senord f\xF6r att se"
     },
     enter_password: {
       en: "Enter password",
-      pt: "Digite a senha"
+      pt: "Digite a senha",
+      sv: "Skriv in l\xF6senord"
     },
     unlocked: {
       en: "Unlocked",
-      pt: "Desbloqueado"
+      pt: "Desbloqueado",
+      sv: "Uppl\xE5st"
     },
     privacy: {
       en: "Privacy",
       de: "Datenschutz",
       pl: "Prywatno\u015B\u0107",
-      pt: "Privacidade"
+      pt: "Privacidade",
+      sv: "Sekretess"
     },
     recent_listening: {
       name: {
         en: "Hide your recent listening history",
-        pt: "Ocultar seu hist\xF3rico de scrobbles recente"
+        pt: "Ocultar seu hist\xF3rico de scrobbles recente",
+        sv: "G\xF6m senaste lyssnarinformationen"
       },
       body: {
         en: "Keeps your activity more private",
-        pt: "Mant\xE9m sua atividade mais privada"
+        pt: "Mant\xE9m sua atividade mais privada",
+        sv: "H\xE5ller din aktivitet mer privat"
       }
     },
     allow_messages_from: {
       en: "Allow messages from",
-      pt: "Permitir mensagens de"
+      pt: "Permitir mensagens de",
+      sv: "Till\xE5t meddelanden ifr\xE5n"
     },
     everyone: {
       en: "Everyone",
-      pt: "Todo mundo"
+      pt: "Todo mundo",
+      sv: "Alla"
     },
     following_and_neighbours: {
       en: "Following and neighbours",
-      pt: "Seguindo e vizinhos"
+      pt: "Seguindo e vizinhos",
+      sv: "F\xF6ljare och grannar"
     },
     close_shouts: {
       name: {
         en: "Close my shoutbox",
-        pt: "Fechar minha caixa de mensagens"
+        pt: "Fechar minha caixa de mensagens",
+        sv: "St\xE4ng min hojtl\xE5da"
       },
       body: {
         en: "Removes visibility from everyone (including you)",
-        pt: "Remove a visibilidade de todos (incluindo voc\xEA)"
+        pt: "Remove a visibilidade de todos (incluindo voc\xEA)",
+        sv: "Ta bort synlighet fr\xE5n alla (inkl. dig)"
       }
     },
     error: {
       en: "Error",
-      pt: "Erro"
+      pt: "Erro",
+      sv: "Error"
     },
     erm: {
       // used when a page is taken down
       en: "erm...",
-      pt: "puts..."
+      pt: "puts...",
+      sv: "ehm..."
     },
     shortcut: {
       en: "Shortcut",
-      pt: "Atalho"
+      pt: "Atalho",
+      sv: "Genomv\xE4g"
     },
     last_count_days: {
       en: "Last {c} days",
       de: "Letzte {c} Tage",
       pt: "\xDAltimos {c} dias",
-      ja: "\u904E\u53BB {c} \u65E5\u9593"
+      ja: "\u904E\u53BB {c} \u65E5\u9593",
+      sv: "Senaste {c} dagarna"
     },
     all_time: {
       en: "All time",
       de: "Insgesamt",
       pt: "Todo o per\xEDodo",
-      ja: "\u3059\u3079\u3066\u306E\u671F\u9593"
+      ja: "\u3059\u3079\u3066\u306E\u671F\u9593",
+      sv: "All tid"
     },
     choose_a_timeframe_above: {
       en: "Choose a timeframe above",
-      pt: "Escolha um prazo acima"
+      pt: "Escolha um prazo acima",
+      sv: "V\xE4lj en tidsram ovan"
     },
     failed: {
       en: "Failed",
-      pt: "Falhou"
+      pt: "Falhou",
+      sv: "Misslyckades"
     },
     there_was_a_network_error: {
       en: "There was a network error",
-      pt: "Ocorreu um erro de rede"
+      pt: "Ocorreu um erro de rede",
+      sv: "Ett n\xE4tverksfel har intr\xE4ffat"
     },
     support: {
       en: "Support",
-      pt: "Suporte"
+      pt: "Suporte",
+      sv: "Support"
     },
     no_plays_in_range: {
       // no plays in date range
-      en: "No plays in range"
+      en: "No plays in range",
+      sv: "Inga lyssningar under valda datumintervallet"
     },
     accessible_name_colours: {
       name: {
         en: "Prefer accessible name colours",
-        pt: "Preferir nomes de cores acess\xEDveis"
+        pt: "Preferir nomes de cores acess\xEDveis",
+        sv: "F\xF6redra l\xE4ttl\xE4sta namnf\xE4rger"
       },
       body: {
         en: "Replaces badge and link-coloured names with your theme\u2019s header colour",
-        pt: "Substitui os nomes coloridos dos emblemas e links pela cor do cabe\xE7alho do seu tema"
+        pt: "Substitui os nomes coloridos dos emblemas e links pela cor do cabe\xE7alho do seu tema",
+        sv: "Ers\xE4tter emblem och l\xE4nkf\xE4rgade namn med ditt temas rubrikf\xE4rg"
       }
     },
     underline_links: {
       name: {
         en: "Always underline links",
-        pt: "Sempre sublinhe os links"
+        pt: "Sempre sublinhe os links",
+        sv: "Ha alltid understrykta l\xE4nkar"
       },
       body: {
         en: "Forces buttons, links, and other interactables to have an underline",
-        pt: "For\xE7a bot\xF5es, links e outros interativos a terem um sublinhado"
+        pt: "For\xE7a bot\xF5es, links e outros interativos a terem um sublinhado",
+        sv: "Tvingar knappar, l\xE4nkar och andra interaktiva objekt att ha understrykt text"
       }
     },
     theme_loading: {
       name: {
         en: "Disable loading of styles",
-        pt: "Desative o carregamento de estilos"
+        pt: "Desative o carregamento de estilos",
+        sv: "Avaktivera att ladda stilar"
       },
       body: {
         en: "Allows you to load the stylesheet yourself during development",
-        pt: "Permite que voc\xEA mesmo carregue a folha de estilo enquanto desenvolve"
+        pt: "Permite que voc\xEA mesmo carregue a folha de estilo enquanto desenvolve",
+        sv: "L\xE5ter dig ladda stilschemat sj\xE4lv under utveckling"
       }
     },
     upload: {
       en: "Upload",
-      pt: "Enviar"
+      pt: "Enviar",
+      sv: "Ladda upp"
     },
     change_avatar: {
       en: "Change avatar",
-      pt: "Mudar foto de perfil"
+      pt: "Mudar foto de perfil",
+      sv: "\xC4ndra profilbild"
     },
     crop_avatar: {
       en: "Crop avatar",
-      pt: "Recortar avatar"
+      pt: "Recortar avatar",
+      sv: "Besk\xE4r profilbild"
     },
     crop_notice: {
       en: "Use your scroll wheel to zoom in and out, click and drag to move the image.",
-      pt: "Use a scroll do seu mouse para dar zoom in e zoom out, clicar e arrastar para mover a imagem."
+      pt: "Use a scroll do seu mouse para dar zoom in e zoom out, clicar e arrastar para mover a imagem.",
+      sv: "Anv\xE4nd ditt scrollhjul f\xF6r att zooma in och ut, klicka och dra f\xF6r att flytta p\xE5 bilden."
     },
     edit_profile_note: {
       en: "Edit profile note",
-      pt: "Editar recado de perfil"
+      pt: "Editar recado de perfil",
+      sv: "\xC4ndra profilanteckning"
     },
     update_to_version: {
       en: "Update to {v}",
-      pt: "Atualizar para {v}"
+      pt: "Atualizar para {v}",
+      sv: "Uppdatera till {v}"
     },
     all: {
       // all photos
       en: "All",
-      pt: "Todos"
+      pt: "Todos",
+      sv: "Visa alla"
     },
     saved: {
       // saved/bookmarked photos
       en: "Saved",
-      pt: "Salvo"
+      pt: "Salvo",
+      sv: "Sparade"
     },
     no_images_saved: {
       en: "No photos saved",
-      pt: "Nenhuma foto salva"
+      pt: "Nenhuma foto salva",
+      sv: "Inga foton sparade"
     },
     interested: {
       en: "Interested",
-      pt: "Interessado"
+      pt: "Interessado",
+      sv: "Intresserad"
     },
     total: {
-      en: "Total"
+      en: "Total",
+      sv: "Totalt"
     },
     value_failed_to_load: {
       en: "{v} failed to load",
-      pt: "{v} falhou ao carregar"
+      pt: "{v} falhou ao carregar",
+      sv: "{v} kunde inte laddas"
     },
     profile_does_not_have_enough_scrobbles: {
       en: "Profile does not have enough scrobbles",
-      pt: "O perfil n\xE3o tem scrobbles o suficiente"
+      pt: "O perfil n\xE3o tem scrobbles o suficiente",
+      sv: "Profilen har inte tillr\xE4ckligt med skrobblingar"
     },
     requires_extension_value: {
       en: "Requires extension \u2018{v}\u2019",
-      pt: "Requer extens\xE3o \u2018{v}\u2019"
+      pt: "Requer extens\xE3o \u2018{v}\u2019",
+      sv: "Beh\xF6ver till\xE4gget \u2018{v}\u2019"
     },
     incompatible_with_value: {
       en: "Incompatible with {v}",
-      pt: "Incompat\xEDvel com {v}"
+      pt: "Incompat\xEDvel com {v}",
+      sv: "Inkompatibelt med {v}"
     },
     incompatible_alert: {
       en: "Incompatible with current settings"
     },
     bulk_edit_extension: {
       en: "Last.fm Bulk Edit",
-      pt: "Edi\xE7\xE3o em massa do Last.fm"
+      pt: "Edi\xE7\xE3o em massa do Last.fm",
+      sv: "Last.fm bulkredigering"
     },
     collage: {
       en: "Collage",
-      pt: "Colagem"
+      pt: "Colagem",
+      sv: "Collage"
     },
     collage_redirect: {
       en: "Redirected to bleh\u2019s built-in Collage feature",
-      pt: "Redirecionando ao recurso integrado de Colagem do bleh"
+      pt: "Redirecionando ao recurso integrado de Colagem do bleh",
+      sv: "Omredigerad till blehs egna collagefunktion"
     },
     your_collage_is_ready: {
       en: "Your collage is ready!",
-      pt: "Sua colagem est\xE1 pronta!"
+      pt: "Sua colagem est\xE1 pronta!",
+      sv: "Ditt collage \xE4r redo"
     },
     name_failed: {
       en: "{name} failed",
-      pt: "{name} falhou"
+      pt: "{name} falhou",
+      sv: "{name} misslyckades"
     },
     select_component: {
       // the 'Select' component (like a dropdown menu)
       // not an option to chooose your component
       en: "Select component",
-      pt: "Selecionar componente"
+      pt: "Selecionar componente",
+      sv: "V\xE4lj komponent"
     },
     only_numbers_are_allowed: {
       en: "Only numbers are allowed here",
-      pt: "Apenas n\xFAmeros s\xE3o permitidos aqui"
+      pt: "Apenas n\xFAmeros s\xE3o permitidos aqui",
+      sv: "Endast nummer \xE4r till\xE5tna h\xE4r"
     },
     keep_within_the_range: {
       // if the user wrote more text than the text box allows
       en: "Keep within the range",
-      pt: "Manter dentro do intervalo"
+      pt: "Manter dentro do intervalo",
+      sv: "H\xE5ll dig inom gr\xE4nsen"
     },
     this_field_is_required: {
       // field as in a text box
       en: "This field is required",
-      pt: "Este campo \xE9 obrigat\xF3rio"
+      pt: "Este campo \xE9 obrigat\xF3rio",
+      sv: "F\xE4ltet kr\xE4vs"
     },
     please_dont_clone_yourself: {
       en: "Please don\u2019t clone yourself",
-      pt: "Por favor, n\xE3o se clone"
+      pt: "Por favor, n\xE3o se clone",
+      sv: "Sn\xE4lla, klona inte dig sj\xE4lv"
     },
     generate: {
       en: "Generate",
-      pt: "Gerar"
+      pt: "Gerar",
+      sv: "Generera"
     },
     your_settings_are_invalid: {
       en: "Your settings are invalid",
-      pt: "Suas configura\xE7\xF5es s\xE3o inv\xE1lidas"
+      pt: "Suas configura\xE7\xF5es s\xE3o inv\xE1lidas",
+      sv: "Dina inst\xE4llningar \xE4r ogiltiga"
     },
     top_type: {
-      en: "Top {type}"
+      en: "Top {type}",
+      sv: "Topp{type}"
     },
     made_with_name: {
       en: "Made with {name}",
-      pt: "Feito com {name}"
+      pt: "Feito com {name}",
+      sv: "Skapades med {name}"
     },
     download: {
       en: "Download",
-      pt: "Baixar"
+      pt: "Baixar",
+      sv: "Ladda ned"
     },
     downloaded: {
       en: "Downloaded",
-      pt: "Baixado"
+      pt: "Baixado",
+      sv: "Nedladdat"
     },
     are_you_sure: {
       en: "Are you sure?",
-      pt: "Voc\xEA tem certeza?"
+      pt: "Voc\xEA tem certeza?",
+      sv: "\xC4r du s\xE4ker"
     },
     this_will_require_loading_count_pages: {
       en: "This will require loading {c} pages",
-      pt: "Isso requer carregar {c} p\xE1ginas"
+      pt: "Isso requer carregar {c} p\xE1ginas",
+      sv: "Det h\xE4r kr\xE4ver att {c} sidor laddas"
     },
     chart_template_filename: {
       en: "{user} Collage ({timeframe}, Top {type}, {size}) - {brand} {date}",
-      pt: "{user} Colagem ({timeframe}, Top {type}, {size}) - {brand} {date}"
+      pt: "{user} Colagem ({timeframe}, Top {type}, {size}) - {brand} {date}",
+      sv: "{user} Collage ({timeframe}, Topp{type}, {size}) - {brand} {date}"
     },
     waiting_for_images: {
       en: "Waiting for images",
-      pt: "Aguardando imagens"
+      pt: "Aguardando imagens",
+      sv: "V\xE4ntar p\xE5 bilder"
     },
     collage_title: {
       name: {
         en: "Collage title",
-        pt: "T\xEDtulo da colagem"
+        pt: "T\xEDtulo da colagem",
+        sv: "Collagetitel"
       },
       body: {
         en: "Include a subtle header showing your username and settings you used",
-        pt: "Inclua um cabe\xE7alho discreto mostrando seu nome de usu\xE1rio e as configura\xE7\xF5es que voc\xEA usou"
+        pt: "Inclua um cabe\xE7alho discreto mostrando seu nome de usu\xE1rio e as configura\xE7\xF5es que voc\xEA usou",
+        sv: "L\xE4gger till en liten rubrik som visar ditt anv\xE4ndarnamn och dina inst\xE4llningar"
       }
     },
     collage_grid_text: {
       en: "Show names on grid items",
-      pt: "Mostrar nomes nos itens da grade"
+      pt: "Mostrar nomes nos itens da grade",
+      sv: "Visa namn p\xE5 collageobjekt"
     },
     collage_grid_plays: {
       en: "Show plays on grid items",
-      pt: "Mostrar reprodu\xE7\xF5es nos itens da grade"
+      pt: "Mostrar reprodu\xE7\xF5es nos itens da grade",
+      sv: "Visa spelningar p\xE5 collageobjekt"
     },
     collage_grid_gap: {
       name: {
         en: "Leave a gap between grid items",
-        pt: "Deixe um espa\xE7o entre os itens da grade"
+        pt: "Deixe um espa\xE7o entre os itens da grade",
+        sv: "L\xE4mna rum mellan collageobjekt"
       },
       body: {
-        en: "Includes outer and inner padding with round grid items"
+        en: "Includes outer and inner padding with round grid items",
+        sv: "L\xE4gger till inre och yttre mellanrum med avrundade collageobjekt"
       }
     },
     collage_centered: {
       name: {
-        en: "Center info on grid items"
+        en: "Center info on grid items",
+        sv: "Centrera informationen p\xE5 collageobjekt"
       },
       body: {
-        en: "Similar to the look of other collage solutions"
+        en: "Similar to the look of other collage solutions",
+        sv: "Mer lik till hur andra collagegenererare g\xF6r det"
       }
     },
     organising_plays: {
       en: "Organising plays",
-      pt: "Organizando reprodu\xE7\xF5es"
+      pt: "Organizando reprodu\xE7\xF5es",
+      sv: "Organisera spelningar"
     },
     update_not_looking_right: {
       en: "Update in the tab that opens",
-      pt: "Atualizar na aba que se abre"
+      pt: "Atualizar na aba que se abre",
+      sv: "Uppdatera i fliken som \xF6ppnas"
     },
     update_now: {
       en: "Update now",
-      pt: "Atualizar agora"
+      pt: "Atualizar agora",
+      sv: "Uppdatera nu"
     },
     ignore_for_now: {
       en: "Ignore for now",
-      pt: "Ignore por agora"
+      pt: "Ignore por agora",
+      sv: "Ignorera just nu"
     },
     update_styles: {
       en: "Update styles",
-      pt: "Atualizar estilos"
+      pt: "Atualizar estilos",
+      sv: "Uppdatera stiler"
     },
     you_have_theme_loading_disabled: {
       en: "You disabled theme loading, so you need to update both separately",
-      pt: "Voc\xEA desativou o carregamento do tema, ent\xE3o precisa atualizar os dois separadamente"
+      pt: "Voc\xEA desativou o carregamento do tema, ent\xE3o precisa atualizar os dois separadamente",
+      sv: "Du har st\xE4ngt av att teman laddas, s\xE5 du l\xE4r uppdatera b\xE5da separat"
     },
     downloading_styles: {
       en: "Downloading styles",
-      pt: "Baixando estilos"
+      pt: "Baixando estilos",
+      sv: "Laddar ner stiler"
     },
     style_warning: {
       en: "You have style loading off! If you did this by accident, you can undo this",
-      pt: "Voc\xEA desativou o carregamento de estilos! Se voc\xEA fez isso acidentalmente, pode desfazer essa a\xE7\xE3o"
+      pt: "Voc\xEA desativou o carregamento de estilos! Se voc\xEA fez isso acidentalmente, pode desfazer essa a\xE7\xE3o",
+      sv: "Du har st\xE4ngt av att stiler laddas! Om du gjorde det av misstag s\xE5 kan du \xE5terst\xE4lla det"
     },
     re_enable_style_loading: {
       en: "Re-enable style loading",
-      pt: "Reativar carregamento de estilos"
+      pt: "Reativar carregamento de estilos",
+      sv: "\xC5teraktivera att stiler laddas"
     },
     made_with_love: {
       // lowercase in design
       en: "made with {h} by {u} and {c}contributors{/c}",
       de: "kreiert mit {h} von {u} und {c}Mitwirkenden{/c}",
-      pt: "feito com {h} por {u} e {c}contribuidores{/c}"
+      pt: "feito com {h} por {u} e {c}contribuidores{/c}",
+      sv: "skapad med {h} av {u} och {c}bidragsgivare{/c}"
     },
     love_lower: {
       // replaces the {h} in the above sentence
       // lowercase in design
       en: "love",
-      pt: "amor"
+      pt: "amor",
+      sv: "k\xE4rlek"
     },
     view_source: {
       en: "View source",
-      pt: "Ver c\xF3digo"
+      pt: "Ver c\xF3digo",
+      sv: "Visa k\xE4lla"
     },
     report_issue: {
       en: "Report issue",
-      pt: "Relatar problema"
+      pt: "Relatar problema",
+      sv: "Rapportera problem"
     },
     opens_your_value_settings: {
       en: "Open your {v} settings",
-      pt: "Abra suas op\xE7\xF5es de {v}"
+      pt: "Abra suas op\xE7\xF5es de {v}",
+      sv: "\xD6ppna dina {v}-inst\xE4llningar"
     },
     opens_your_value: {
       en: "Open your {v}",
-      pt: "Abra seu {v}"
+      pt: "Abra seu {v}",
+      sv: "\xD6pnna dina {v}"
     },
     opens_the_value: {
       en: "Open the {v}",
-      pt: "Abra o {v}"
+      pt: "Abra o {v}",
+      sv: "\xD6ppna {v}"
     },
     theme_picker: {
       en: "Theme picker",
-      pt: "Seletor de temas"
+      pt: "Seletor de temas",
+      sv: "Temav\xE4ljare"
     },
     changes_your_theme: {
       en: "Changes your theme",
-      pt: "Mude seu tema"
+      pt: "Mude seu tema",
+      sv: "\xC4ndrar ditt tema"
     },
     on_this_page: {
       en: "On this page",
-      pt: "Nessa p\xE1gina"
+      pt: "Nessa p\xE1gina",
+      sv: "P\xE5 denna sida"
     },
     use_current_page_as_context: {
       en: "Use current page as context",
-      pt: "Usar a p\xE1gina atual como contexto"
+      pt: "Usar a p\xE1gina atual como contexto",
+      sv: "Anv\xE4nd aktuella sidan som referens"
     },
     opens_the_value_for_type: {
       en: "Open the {v} for {t}",
-      pt: "Abra a {v} para {t}"
+      pt: "Abra a {v} para {t}",
+      sv: "\xD6pnnar {v] f\xF6r {t}"
     },
     quick_switcher: {
-      en: "Rabbit hole"
+      en: "Rabbit hole",
+      sv: "Genv\xE4gar"
     },
     use_quick_switcher: {
       name: {
-        en: "Enable the quick switcher"
+        en: "Enable the quick switcher",
+        sv: "Aktivera snabbv\xE4xlare"
       },
       body: {
-        en: "Make full use of your keyboard to navigate exactly where you want to be"
+        en: "Make full use of your keyboard to navigate exactly where you want to be",
+        sv: "G\xF6r full anv\xE4ndning av ditt tangentbord f\xF6r att navigera till precis vart du vill vara"
       }
     },
     quick_switcher_keybinds: {
-      en: "Change keybinds"
+      en: "Change keybinds",
+      sv: "\xC4ndra tangentbordsgenv\xE4gar"
     },
     switch_placeholder: {
       en: "Quick switch to a page or action",
-      pt: "Alternar rapidamente para uma p\xE1gina ou a\xE7\xE3o"
+      pt: "Alternar rapidamente para uma p\xE1gina ou a\xE7\xE3o",
+      sv: "Hoppa snabbt till en sida eller annan \xE5tg\xE4rd"
     },
     compares_your_taste: {
       en: "Compare your taste with {v}",
-      pt: "Compare o seu gosto com {v}"
+      pt: "Compare o seu gosto com {v}",
+      sv: "J\xE4mf\xF6r musiksmak med {v}"
     },
     select_an_option: {
       en: "Select an option",
-      pt: "Selecione uma op\xE7\xE3o"
+      pt: "Selecione uma op\xE7\xE3o",
+      sv: "V\xE4lj ett alternativ"
     },
     nothing_matches_your_search: {
       en: "Nothing matches your search",
-      pt: "Nada corresponde \xE0 sua pesquisa"
+      pt: "Nada corresponde \xE0 sua pesquisa",
+      sv: "Inga resultat matchar din s\xF6kning"
     },
     create_a_collage: {
       en: "Create a collage of your choosing",
-      pt: "Crie uma colagem de sua escolha"
+      pt: "Crie uma colagem de sua escolha",
+      sv: "Skapa ett collage som du vill"
     },
     search_for_music_or_user: {
       en: "Search for music or a user",
-      pt: "Pesquise por m\xFAsica ou usu\xE1rio"
+      pt: "Pesquise por m\xFAsica ou usu\xE1rio",
+      sv: "S\xF6k musik eller en anv\xE4ndare"
     },
     search_for_value: {
       en: "Search for {v}",
-      pt: "Pesquise por {v}"
+      pt: "Pesquise por {v}",
+      sv: "S\xF6k upp {v}"
     },
     choose_a_search_type: {
       en: "Choose a search type",
-      pt: "Escolha um tipo de pesquisa"
+      pt: "Escolha um tipo de pesquisa",
+      sv: "V\xE4lj s\xF6ktyp"
     },
     finish_search: {
       en: "Finish your search",
-      pt: "Finalize sua pesquisa"
+      pt: "Finalize sua pesquisa",
+      sv: "Finalisera s\xF6kning"
     },
     view_count_more: {
-      en: "View {c} more"
+      en: "View {c} more",
+      sv: "Visa {v} fler"
     },
     saved_to_bookmarks: {
       en: "Saved to bookmarks",
-      pt: "Salvo nos marcadores"
+      pt: "Salvo nos marcadores",
+      sv: "Sparad till dina bokm\xE4rken"
     },
     bookmark_save_msg: {
       en: "Find your bookmarks in your Home or {link}",
-      pt: "Encontre seus marcadores na sua p\xE1gina inicial ou em {link}"
+      pt: "Encontre seus marcadores na sua p\xE1gina inicial ou em {link}",
+      sv: "Hitta dina bokm\xE4rken p\xE5 startsidan eller {link}"
     },
     go_there_now_lower: {
       // in sentence above
       en: "go there now",
-      pt: "vai l\xE1 agora"
+      pt: "vai l\xE1 agora",
+      sv: "g\xE5 dit nu"
     },
     always_remind_me: {
-      en: "Always remind me"
+      en: "Always remind me",
+      sv: "P\xE5minn mig alltid"
     },
     never: {
-      en: "Never"
+      en: "Never",
+      sv: "Aldrig"
     },
     edit_scrobble: {
       en: "Edit scrobble",
-      pt: "Editar scrobble"
+      pt: "Editar scrobble",
+      sv: "Redigera skrobbel"
     },
     edit_scrobbles_in_bulk: {
       en: "Edit scrobbles in bulk",
-      pt: "Editar scrobbles em massa"
+      pt: "Editar scrobbles em massa",
+      sv: "Massredigera skrobblingar"
     },
     timeline: {
-      en: "Timeline"
+      en: "Timeline",
+      sv: "Tidslinje"
     },
     view_latest: {
-      en: "View latest"
+      en: "View latest",
+      sv: "Visa senaste"
     },
     custom: {
-      en: "Custom"
+      en: "Custom",
+      sv: "Anpassad"
     },
     star: {
-      en: "Star"
+      en: "Star",
+      sv: "Stj\xE4rna"
     },
     starred: {
-      en: "Starred"
+      en: "Starred",
+      sv: "Stj\xE4rnm\xE4rkt"
     },
     report: {
       en: "Report",
-      pt: "Reportar"
+      pt: "Reportar",
+      sv: "Anm\xE4l"
     },
     auto: {
-      en: "Auto"
+      en: "Auto",
+      sv: "Automatiskt"
     },
     glass: {
-      en: "Glass"
+      en: "Glass",
+      sv: "Glas"
     },
     high_contrast: {
-      en: "Prefer high contrast"
+      en: "Prefer high contrast",
+      sv: "F\xF6redra h\xF6gkontrast"
     },
     external: {
-      en: "External"
+      en: "External",
+      sv: "Extern"
     },
     watch: {
-      en: "Watch"
+      en: "Watch",
+      sv: "Se"
     },
     watch_video: {
-      en: "Watch video"
+      en: "Watch video",
+      sv: "Se video"
     },
     latest_album: {
-      en: "Latest album"
+      en: "Latest album",
+      sv: "Senaste album"
     },
     popular_now: {
-      en: "Popular now"
+      en: "Popular now",
+      sv: "Popul\xE4r just nu"
     },
     missing_album_info: {
       en: "This album is missing key details, maybe you can help out?"
     },
     updates: {
       en: "Updates",
-      pt: "Atualiza\xE7\xF5es"
+      pt: "Atualiza\xE7\xF5es",
+      sv: "Uppdateringar"
     },
     updated: {
       en: "Updated",
-      pt: "Atualizado"
+      pt: "Atualizado",
+      sv: "Uppdaterats"
     },
     you_are_up_to_date: {
       en: "You\u2019re up to date",
-      pt: "Voc\xEA est\xE1 atualizado"
+      pt: "Voc\xEA est\xE1 atualizado",
+      sv: "Du \xE4r p\xE5 den senaste versionen"
     },
     update_available_to_install: {
       en: "Update available to install",
-      pt: "Atualiza\xE7\xE3o dispon\xEDvel para instalar"
+      pt: "Atualiza\xE7\xE3o dispon\xEDvel para instalar",
+      sv: "Ny uppdatering finns tillg\xE4nglig"
     },
     install_now: {
       en: "Install now",
-      pt: "Instale agora"
+      pt: "Instale agora",
+      sv: "Installera nu"
     },
     check_for_updates: {
       en: "Check for updates",
-      pt: "Verificar atualiza\xE7\xF5es"
+      pt: "Verificar atualiza\xE7\xF5es",
+      sv: "Checka efter nya uppdateringar"
     },
     check: {
       en: "Check",
-      pt: "Verificar"
+      pt: "Verificar",
+      sv: "Checka"
     },
     last_checked_date: {
       en: "Last checked {d}",
-      pt: "\xDAltima verifica\xE7\xE3o {d}"
+      pt: "\xDAltima verifica\xE7\xE3o {d}",
+      sv: "Sist kollat {d}"
     },
     never_checked: {
       en: "Never checked",
-      pt: "Nunca verificado"
+      pt: "Nunca verificado",
+      sv: "Aldrig checkat"
     },
     get_updates_fast: {
       name: {
         en: "Get the latest updates as soon as they\u2019re available",
-        pt: "Receba as \xFAltimas atualiza\xE7\xF5es assim que estiverem dispon\xEDveis"
+        pt: "Receba as \xFAltimas atualiza\xE7\xF5es assim que estiverem dispon\xEDveis",
+        sv: "Skaffa senaste uppdateringarna direkt n\xE4r det finns tillg\xE4ngligt"
       },
       body: {
         en: "Be among the first to get the latest fixes and improvements as they roll out",
-        pt: "Seja um dos primeiros a receber as \xFAltimas corre\xE7\xF5es e melhorias assim que forem lan\xE7adas"
+        pt: "Seja um dos primeiros a receber as \xFAltimas corre\xE7\xF5es e melhorias assim que forem lan\xE7adas",
+        sv: "Bli bland dem f\xF6rsta som f\xE5r de senaste fixarna och optimeringarna s\xE5 snart som dom kommit"
       }
     },
     pause_updates: {
       en: "Pause updates",
-      pt: "Pausar atualiza\xE7\xF5es"
+      pt: "Pausar atualiza\xE7\xF5es",
+      sv: "Pausa uppdateringar"
     },
     pause_updates_for: {
       en: "Pause for 1 day",
-      pt: "Pausar por 1 dia"
+      pt: "Pausar por 1 dia",
+      sv: "Pausa i 1 dag"
     },
     resume_updates: {
       en: "Resume updates",
-      pt: "Resumir atualiza\xE7\xF5es"
+      pt: "Resumir atualiza\xE7\xF5es",
+      sv: "\xC5teruppta uppdateringar"
     },
     updates_paused: {
       en: "Updates paused",
-      pt: "Atualiza\xE7\xF5es pausadas"
+      pt: "Atualiza\xE7\xF5es pausadas",
+      sv: "Uppdateringar har pausats"
     },
     paused_until_date: {
       en: "Updates continue {d}",
-      pt: "Atualiza\xE7\xF5es continuam {d}"
+      pt: "Atualiza\xE7\xF5es continuam {d}",
+      sv: "Uppdateringar forts\xE4tter {d}"
     },
     missing_updates: {
       en: "Missing updates",
-      pt: "Atualiza\xE7\xF5es em falta"
+      pt: "Atualiza\xE7\xF5es em falta",
+      sv: "Saknar uppdateringar"
     },
     you_are_running_version: {
       en: "You are running version {v}",
-      pt: "Voc\xEA est\xE1 usando a vers\xE3o {v}"
+      pt: "Voc\xEA est\xE1 usando a vers\xE3o {v}",
+      sv: "Du \xE4r p\xE5 version {v}"
     },
     you_are_installing_version: {
       en: "You are installing version {v}",
-      pt: "Voc\xEA est\xE1 instalando a vers\xE3o {v}"
+      pt: "Voc\xEA est\xE1 instalando a vers\xE3o {v}",
+      sv: "Du har installerat version {v}"
     },
     checked_for_updates: {
       en: "Checked for updates",
-      pt: "Verificou por atualiza\xE7\xF5es"
+      pt: "Verificou por atualiza\xE7\xF5es",
+      sv: "Kolla efter uppdateringar"
     },
     select_all: {
-      en: "Select all"
+      en: "Select all",
+      sv: "Markera alla"
     },
     deselect_all: {
-      en: "De-select all"
+      en: "De-select all",
+      sv: "Avmarkera alla"
     },
     use_current_time: {
-      en: "Use current time"
+      en: "Use current time",
+      sv: "Anv\xE4nd nuvarande tid"
     },
     time: {
-      en: "Time"
+      en: "Time",
+      sv: "Tid"
     },
     missing_fields: {
-      en: "Missing required fields"
+      en: "Missing required fields",
+      sv: "Saknar n\xF6dv\xE4ndiga f\xE4lt"
     },
     requires_api_in_settings: {
-      en: "Requires API access in Settings"
+      en: "Requires API access in Settings",
+      sv: "Beh\xF6ver API-\xE5tkomst i inst\xE4llningar"
     },
     no_token_provided: {
-      en: "No token provided"
+      en: "No token provided",
+      sv: "Ingen token har angivits"
     },
     example: {
       en: "e.g. {v}",
       de: "z.B. {v}",
-      pt: "ex.: {v}"
+      pt: "ex.: {v}",
+      sv: "t.ex. {v}"
     },
     item_is_unavailable_on_platform: {
       en: "{i} is unavailable on {p}",
-      pt: "{i} est\xE1 ind\xEDsponivel no {p}"
+      pt: "{i} est\xE1 ind\xEDsponivel no {p}",
+      sv: "{i} \xE4r inte tillg\xE4nglig p\xE5 {p}"
     },
     platforms: {
       win32: {
@@ -59162,88 +59880,111 @@
       },
       other: {
         en: "Unknown",
-        pt: "Desconhecido"
+        pt: "Desconhecido",
+        sv: "Ok\xE4nd"
       }
     },
     reduced_motion: {
       name: {
-        en: "Reduce motion in animations"
+        en: "Reduce motion in animations",
+        sv: "Minska animationr\xF6relse"
       },
       body: {
-        en: "Decreases the intensity of animations, hover effects, and other moving parts"
+        en: "Decreases the intensity of animations, hover effects, and other moving parts",
+        sv: "Minskar intensiteten av animationer, effekter vid hovring, och andra r\xF6rande delar"
       }
     },
     banners: {
       en: "Banners"
     },
     view_backgrounds_on: {
-      en: "View banners on"
+      en: "View banners on",
+      sv: "Visa banners p\xE5"
     },
     own_profile: {
-      en: "Own profile"
+      en: "Own profile",
+      sv: "Din egen profil"
     },
     other_profiles: {
-      en: "Other profiles"
+      en: "Other profiles",
+      sv: "Andra profiler"
     },
     profile_avi_background: {
       name: {
-        en: "Prefer avatar image for profiles without a banner"
+        en: "Prefer avatar image for profiles without a banner",
+        sv: "F\xF6redra profilbild f\xF6r profiler utan en banner"
       },
       body: {
-        en: "All artist-based banner images will be replaced by the user\u2019s avatar"
+        en: "All artist-based banner images will be replaced by the user\u2019s avatar",
+        sv: "Alla artistbaserade bannerbilder blir ers\xE4tt av anv\xE4ndarens profilbild"
       }
     },
     profile_banner: {
       name: {
-        en: "Profile banner"
+        en: "Profile banner",
+        sv: "Profilbanner"
       },
       body: {
-        en: "Add your own custom banner image to your profile with [banner=url] in your bio"
+        en: "Add your own custom banner image to your profile with [banner=url] in your bio",
+        sv: "L\xE4g till en egen banner till din profil genom att s\xE4tta [banner=url] i din biografi"
       }
     },
     profile_accent: {
       name: {
-        en: "Profile accent"
+        en: "Profile accent",
+        sv: "Profilaccent"
       },
       body: {
-        en: "Add flair to your profile visible to all users regardless of personal accent"
+        en: "Add flair to your profile visible to all users regardless of personal accent",
+        sv: "L\xE4gg till flair p\xE5 din profil som syns f\xF6r alla anv\xE4ndare oberoende p\xE5 egen accentf\xE4rg"
       },
       reminder: {
-        en: "Changed your accent, don\u2019t forget to save!"
+        en: "Changed your accent, don\u2019t forget to save!",
+        sv: "\xC4ndrade din accentf\xE4rg, gl\xF6m inte att spara!"
       }
     },
     none: {
-      en: "None"
+      en: "None",
+      sv: "Ingen"
     },
     current_banner_value: {
-      en: "Current banner: {v}"
+      en: "Current banner: {v}",
+      sv: "Nuvarande banner: {v}"
     },
     show_your_progress: {
       name: {
-        en: "Show your plays compared to last week"
+        en: "Show your plays compared to last week",
+        sv: "Visa dina spelningar j\xE4mf\xF6rt med f\xF6rra veckan"
       },
       body: {
-        en: "Compares your current progress to last week\u2019s average, requires Last.fm Pro"
+        en: "Compares your current progress to last week\u2019s average, requires Last.fm Pro",
+        sv: "J\xE4mf\xF6r denna veckans spelningar med f\xF6rra veckan, kr\xE4ver Last.fm Pro"
       }
     },
     manual: {
-      en: "Manual"
+      en: "Manual",
+      sv: "Manuellt"
     },
     enter_a_manual_date: {
-      en: "Enter a date in the format YYYY-MM-DD"
+      en: "Enter a date in the format YYYY-MM-DD",
+      sv: "Skriv in ett datum med formatet YYYY-MM-DD"
     },
     minimum_value: {
-      en: "Minimum: {v}"
+      en: "Minimum: {v}",
+      sv: "Minst: {v}"
     },
     maximum_value: {
-      en: "Maximum: {v}"
+      en: "Maximum: {v}",
+      sv: "Max: {v}"
     },
     manual_date: {
-      en: "Type a date manually"
+      en: "Type a date manually",
+      sv: "Skriv in ett datum manuellt"
     },
     red: {
       en: "Red",
-      pt: "Vermelho"
+      pt: "Vermelho",
+      sv: "R\xF6d"
     },
     orange: {
       en: "Orange",
@@ -59251,7 +59992,8 @@
     },
     yellow: {
       en: "Yellow",
-      pt: "Amarelo"
+      pt: "Amarelo",
+      sv: "Gul"
     },
     lime: {
       en: "Lime",
@@ -59259,43 +60001,53 @@
     },
     green: {
       en: "Green",
-      pt: "Verde"
+      pt: "Verde",
+      sv: "Gr\xF6n"
     },
     aqua: {
       en: "Aqua",
-      pt: "\xC1gua"
+      pt: "\xC1gua",
+      sv: "Turkos"
     },
     blue: {
       en: "Blue",
-      pt: "Azul"
+      pt: "Azul",
+      sv: "Bl\xE5"
     },
     purple: {
       en: "Purple",
-      pt: "Roxo"
+      pt: "Roxo",
+      sv: "Lila"
     },
     pink: {
       en: "Pink",
-      pt: "Rosa"
+      pt: "Rosa",
+      sv: "Rosa"
     },
     grey: {
       en: "Grey",
-      pt: "Cinza"
+      pt: "Cinza",
+      sv: "Gr\xE5"
     },
     minis: {
-      en: "Minis"
+      en: "Minis",
+      sv: "Mini"
     },
     minis_description: {
-      en: "Play mini-games, puzzles, and interact with tools all powered by your listening history"
+      en: "Play mini-games, puzzles, and interact with tools all powered by your listening history",
+      sv: "Spela minispel, pussel, och interagera med verktyg som \xE4r helt baserad p\xE5 din lyssningshistorik"
     },
     no_mini_found: {
-      en: "No mini found for \u2018{v}\u2019"
+      en: "No mini found for \u2018{v}\u2019",
+      sv: "Ingen mini hittad f\xF6r \u2018{v}\u2019"
     },
     pixel: {
       name: {
         en: "Pixel"
       },
       body: {
-        en: "Guess the album from it\u2019s pixelated artwork and clues"
+        en: "Guess the album from it\u2019s pixelated artwork and clues",
+        sv: "Gissa albumet fr\xE5n sin pixellerad konst och ledtr\xE5dar"
       }
     },
     rainbow: {
@@ -59303,7 +60055,8 @@
         en: "Rainbow"
       },
       body: {
-        en: "Arrange your listening history into a swirl of colours"
+        en: "Arrange your listening history into a swirl of colours",
+        sv: "Ordna ihop din lyssningshistorik till en virvel av f\xE4rg"
       }
     },
     receipt: {
@@ -59311,33 +60064,42 @@
         en: "Receipt"
       },
       body: {
-        en: "Print out your top tracks as a receipt"
+        en: "Print out your top tracks as a receipt",
+        sv: "Skriv ut dina toppl\xE5tar som ett kvitto"
       }
     },
     collage_description: {
-      en: "Generate a personalised image based on your listening history and options"
+      en: "Generate a personalised image based on your listening history and options",
+      sv: "Skapa en personlig bild baserad p\xE5 din lyssningshistoria och inst\xE4llningar"
     },
     labs_cta: {
-      en: "If you\u2019re looking for more, try out Last.fm\u2019s own Labs feature. {a}View now{/a}"
+      en: "If you\u2019re looking for more, try out Last.fm\u2019s own Labs feature. {a}View now{/a}",
+      sv: "Om du letar efter lite mer, testa Last.fm\u2019s egna Labs. {a}Ta mig dit{/a}"
     },
     compare_description: {
-      en: "Find your shared artists, albums, and tracks with another"
+      en: "Find your shared artists, albums, and tracks with another",
+      sv: "Hitta dina delade artister, album, och l\xE5tar med n\xE5n annan"
     },
     enter_a_profile: {
-      en: "Enter a profile"
+      en: "Enter a profile",
+      sv: "Skriv in ett anv\xE4ndarnamn"
     },
     compare_with: {
-      en: "Compare with"
+      en: "Compare with",
+      sv: "J\xE4mf\xF6r"
     },
     value_settings: {
-      en: "{v} Settings"
+      en: "{v} Settings",
+      sv: "{v} Inst\xE4llningar"
     },
     suggest_title: {
       name: {
-        en: "This page doesn\u2019t seem official"
+        en: "This page doesn\u2019t seem official",
+        sv: "Denna sida ser inte ut att vara officiell"
       },
       body: {
-        en: "Navigate to {v} instead"
+        en: "Navigate to {v} instead",
+        sv: "Hoppa till {v} ist\xE4llet"
       }
     },
     lyrics: {
@@ -59348,20 +60110,24 @@
         en: "Lyrics"
       },
       body: {
-        en: "Guess the song from a random lyric"
+        en: "Guess the song from a random lyric",
+        sv: "Gissa l\xE5ten fr\xE5n en slumpad l\xE5ttext"
       }
     },
     jumbled_title: {
-      en: "Jumbled title"
+      en: "Jumbled title",
+      sv: "Omr\xF6rd titel"
     },
     re_jumble: {
-      en: "Re-jumble"
+      en: "Re-jumble",
+      sv: "R\xF6r om igen"
     },
     begin: {
       en: "Begin"
     },
     jumbled_guess: {
-      en: "Guess the album name with the pixelated cover, jumbled title, and hints!"
+      en: "Guess the album name with the pixelated cover, jumbled title, and hints!",
+      sv: "Gissa albumtiteln med pixellerad konst, omr\xF6rd titel, och ledtr\xE5dar!"
     },
     add_hint: {
       en: "Add hint"
@@ -59376,10 +60142,12 @@
       en: "Guess"
     },
     enter_a_guess: {
-      en: "Enter a guess"
+      en: "Enter a guess",
+      sv: "Skriv in en gissning"
     },
     hints: {
       en: "Hints",
+      sv: "Ledtr\xE5dar",
       plays: {
         en: "You have {v} plays on this album"
       },
@@ -59403,11 +60171,13 @@
       en: "Global"
     },
     mutuals: {
-      en: "Mutuals"
+      en: "Mutuals",
+      sv: "\xD6msesidiga f\xF6ljare"
     },
     missing_component: {
       // cases when last.fm simply doesn't provide a tasteometer or other things
-      en: "Last.fm failed to load this component"
+      en: "Last.fm failed to load this component",
+      sv: "Last.fm kunde inte ladda denna komponent"
     },
     last_scrobbled_replace: {
       en: "{u} last scrobbled\u2026",
@@ -59441,108 +60211,139 @@
       zh: "\u56DE\u590D\u4E86"
     },
     user_commented: {
-      en: "{u} commented"
+      en: "{u} commented",
+      sv: "{u} kommenterade"
     },
     users_commented: {
-      en: "{u} and {c} others commented"
+      en: "{u} and {c} others commented",
+      sv: "{u} och {c} andra kommenterade"
     },
     user_replied: {
-      en: "{u} replied"
+      en: "{u} replied",
+      sv: "{u} svarade"
     },
     users_replied: {
-      en: "{u} and {c} others replied"
+      en: "{u} and {c} others replied",
+      sv: "{u} och {c} andra svarade"
     },
     obsession_expired: {
-      en: "Your obsession has expired"
+      en: "Your obsession has expired",
+      sv: "Din besatthet har tagit slut"
     },
     listening_report_available: {
-      en: "View your {m} listening report"
+      en: "View your {m} listening report",
+      sv: "Visa din lyssningsrapport f\xF6r {m}"
     },
     count_mutual_listeners: {
-      en: "You have {c} mutual listeners"
+      en: "You have {c} mutual listeners",
+      sv: "Du har {c} \xF6msesidiga lyssnare"
     },
     no_mutual_listeners: {
-      en: "You have no mutual listeners"
+      en: "You have no mutual listeners",
+      sv: "Du har inga \xF6msesidiga lyssnare"
     },
     no_mutual_listeners_explain: {
-      en: "This can be due to either simply lacking mutuals who listen or the page being subject to a broken redirect."
+      en: "This can be due to either simply lacking mutuals who listen or the page being subject to a broken redirect.",
+      sv: "Det kan inneb\xE4ra att du antingen inte har \xF6msesidiga f\xF6ljare som lyssnar eller att sidan har en gammal omdirigering"
     },
     navigation_items: {
       name: {
-        en: "Quick access"
+        en: "Quick access",
+        sv: "Snabb\xE5tkomst"
       },
       body: {
-        en: "Arrange your navigation menu to suit your usage best"
+        en: "Arrange your navigation menu to suit your usage best",
+        sv: "Ordna din navigationsmeny f\xF6r att b\xE4st passa dig"
       }
     },
     edit_quick_access: {
-      en: "Edit quick access"
+      en: "Edit quick access",
+      sv: "Redigera snabb\xE5tkomst"
     },
     navigation_language: {
-      en: "Show option to change language"
+      en: "Show option to change language",
+      sv: "Visa alternativet att \xE4ndra spr\xE5k"
     },
     branding: {
       en: "Branding"
     },
     branding_type: {
       name: {
-        en: "Branding type"
+        en: "Branding type",
+        sv: "Brandingalternativ"
       },
       body: {
-        en: "Decide which branding source to use for the header"
+        en: "Decide which branding source to use for the header",
+        sv: "V\xE4lj vilken sorts branding f\xF6r att anv\xE4nda p\xE5 sidhuvudet"
       }
     },
     expand_tracks: {
       name: {
-        en: "Extend track height to show album text"
+        en: "Extend track height to show album text",
+        sv: "\xD6ka l\xE5tstorleken f\xF6r att visa albumtiteln"
       },
       body: {
-        en: "Increases the size of the track\u2019s cover art to make room for it\u2019s accompanying album"
+        en: "Increases the size of the track\u2019s cover art to make room for it\u2019s accompanying album",
+        sv: "\xD6kar p\xE5 storleken p\xE5 l\xE5tens albumkonst f\xF6r att f\xE5 plats med albumtiteln"
       }
     },
     expand_tracks_when_active: {
-      en: "Only when actively scrobbling"
+      en: "Only when actively scrobbling",
+      sv: "Endast n\xE4r du skrobblar"
     },
     expand_tracks_always: {
-      en: "Always when possible"
+      en: "Always when possible",
+      sv: "Alltid, n\xE4r det \xE4r m\xF6jligt"
     },
     rain: {
       name: {
-        en: "Enable rainfall"
+        en: "Enable rainfall",
+        sv: "Aktivera regn"
       },
       body: {
-        en: "Immerse yourself in soothing visual rain"
+        en: "Immerse yourself in soothing visual rain",
+        sv: "Omsluta dig sj\xE4lv i en lugnande regneffekt"
       }
     },
     images: {
-      en: "Images"
+      en: "Images",
+      sv: "Bilder"
     },
     static_gifs: {
-      en: "Control animation of GIFs"
+      en: "Control animation of GIFs",
+      sv: "Kontrollera GIF-animation"
     },
     always_animate: {
-      en: "Always animate"
+      en: "Always animate",
+      sv: "Animera alltid"
     },
     only_on_hover: {
-      en: "Only on hover"
+      en: "Only on hover",
+      sv: "Endast under hovring"
     },
     static_banners: {
-      en: "Prevent animations in profile banners"
+      en: "Prevent animations in profile banners",
+      sv: "St\xE4ng av animationer i profilbanners"
     },
     change_zoom: {
-      en: "Change zoom level"
+      en: "Change zoom level",
+      sv: "\xC4ndra zoomniv\xE5"
     },
     static_avatars: {
-      en: "User avatars"
+      en: "User avatars",
+      sv: "Anv\xE4ndarprofilbilder"
     },
     static_music: {
-      en: "Artists and albums"
+      en: "Artists and albums",
+      sv: "Artister och album"
     },
     apply_to: {
-      en: "Apply to"
+      en: "Apply to",
+      sv: "Till\xE4mpa till"
     },
     change_images_for: {
-      en: "Change images for"
+      en: "Change images for",
+      sv: "\xC4ndra bild f\xF6r"
     },
     leaving_site: {
       name: {
@@ -59561,38 +60362,48 @@
       }
     },
     leaving_site_checkbox: {
-      en: "Trust {v} links in the future"
+      en: "Trust {v} links in the future",
+      sv: "Lita p\xE5 l\xE4nkar fr\xE5n {v} i framtiden"
     },
     visit: {
-      en: "Visit"
+      en: "Visit",
+      sv: "Bes\xF6k"
     },
     auto_correct_scrobbles: {
       name: {
-        en: "Auto correct and redirect scrobbles"
+        en: "Auto correct and redirect scrobbles",
+        sv: "Autokorrigering och omdirigering av skrobblingar"
       },
       body: {
-        en: "Changes artist names based on the legacy Last.fm redirect system pre-2015, causes many issues"
+        en: "Changes artist names based on the legacy Last.fm redirect system pre-2015, causes many issues",
+        sv: "\xC4ndrar artistnamn baserad p\xE5 Last.fms omdirigeringssystem fr\xE5n innan 2015, skapar m\xE5nga problem"
       },
       warning: {
-        en: "This setting should be turned off to ensure scrobbles are correctly stored for each artist."
+        en: "This setting should be turned off to ensure scrobbles are correctly stored for each artist.",
+        sv: "Denna inst\xE4llning ska st\xE4ngas av f\xF6r att vara s\xE4ker p\xE5 att dina skrobblingar \xE4r r\xE4tt f\xF6r alla artister"
       }
     },
     timezone: {
-      en: "Timezone"
+      en: "Timezone",
+      sv: "Tidszon"
     },
     location: {
       name: {
-        en: "Location"
+        en: "Location",
+        sv: "Plats"
       },
       body: {
-        en: "Last.fm uses your location for event recommendations and local music data"
+        en: "Last.fm uses your location for event recommendations and local music data",
+        sv: "Last.fm anv\xE4nder din plats f\xF6r evenemangrekommendationer och lokal musikdata"
       }
     },
     event_radius: {
-      en: "Event search radius"
+      en: "Event search radius",
+      sv: "S\xF6kradie f\xF6r evenemang"
     },
     you_need_to_be_logged_in: {
-      en: "You need to be logged in"
+      en: "You need to be logged in",
+      sv: "Du l\xE4r vara inloggad"
     },
     oracle_notice: {
       en: "You are currently testing \u2018oracle\u2019, a redesigned album and track view"

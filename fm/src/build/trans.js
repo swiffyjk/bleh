@@ -346,7 +346,7 @@ export const trans = {
     gathering_plays_for_user_pages: {
         en: 'Gathering plays for {u} ({current_page}/{pages})',
         pt: 'Reunindo reproduções para {u} ({current_page}/{pages})',
-        pt: 'Samlar spelningar av {u} ({current_page}/{pages})'
+        sv: 'Samlar spelningar av {u} ({current_page}/{pages})'
     },
     nothing_in_common: {
         en: 'Nothing in common (๑-﹏-๑)',
@@ -358,7 +358,6 @@ export const trans = {
         de: 'Andere gefeatured',
         pt: 'Outros em destaque',
         sv: 'Gästartister'
-        
     },
     your_scrobbles: {
         en: 'Your scrobbles',
@@ -969,7 +968,7 @@ export const trans = {
         de: 'Einrichtung',
         pt: 'Instalação',
         sv: 'Installation'
-        
+
     },
     import: {
         en: 'Import',
@@ -1146,7 +1145,7 @@ export const trans = {
         en: 'Remove',
         de: 'Entfernen',
         pt: 'Remover',
-        sv: 'Radera''
+        sv: 'Radera'
     },
     clear: {
         en: 'Clear',
@@ -1234,7 +1233,7 @@ export const trans = {
         en: 'New',
         de: 'Neu',
         pt: 'Nova',
-        sv: 'Ny
+        sv: 'Ny'
     },
     beta: {
         en: 'Beta',
@@ -1854,7 +1853,7 @@ export const trans = {
                 en: 'Removed bookmark',
                 de: 'Lesezeichen entfernt',
                 pt: 'Removeu marcação',
-                sv:' Tog bort bokmärke
+                sv: 'Tog bort bokmärke'
             },
             wiki: {
                 en: 'Edited',
@@ -2370,7 +2369,7 @@ export const trans = {
         en: 'You cannot delete pre-existing shouts on your profile',
         de: 'Du kannst bereits vorhandene Shouts auf deinem Profil nicht löschen',
         pt: 'Você não pode deletar mensagens já existentes em seu perfil',
-        sv:' Du kan inte ta bort deras tidigare hojtningar från din profil
+        sv:' Du kan inte ta bort deras tidigare hojtningar från din profil'
     },
     blocked_user_view_profile: {
         en: 'They can still view your profile',
@@ -3224,7 +3223,7 @@ export const trans = {
     flags: {
         // shorthand for below
         en: 'Flags',
-        sv: 'Flaggor''
+        sv: 'Flaggor'
     },
     manage_feature_flags: {
         // feature flags control features (like an option)
@@ -3664,7 +3663,7 @@ export const trans = {
         en: 'made with {h} by {u} and {c}contributors{/c}',
         de: 'kreiert mit {h} von {u} und {c}Mitwirkenden{/c}',
         pt: 'feito com {h} por {u} e {c}contribuidores{/c}',
-        sv: 'skapad med {h} av {u} och {c}bidragsgivare{/c}''
+        sv: 'skapad med {h} av {u} och {c}bidragsgivare{/c}'
     },
     love_lower: {
         // replaces the {h} in the above sentence
@@ -4134,7 +4133,7 @@ export const trans = {
     },
     minimum_value: {
         en: 'Minimum: {v}',
-        sv: 'Minst: {v}
+        sv: 'Minst: {v}'
     },
     maximum_value: {
         en: 'Maximum: {v}',
@@ -4202,7 +4201,7 @@ export const trans = {
     },
     no_mini_found: {
         en: 'No mini found for ‘{v}’',
-        sv: 'Ingen mini hittad för ‘{v}’''
+        sv: 'Ingen mini hittad för ‘{v}’'
     },
     pixel: {
         name: {
