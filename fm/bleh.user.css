@@ -9226,7 +9226,6 @@
 
                     & > a {
                         color: hsl(var(--c2));
-                        font-weight: var(--font-weight-medium);
 
                         min-width: 0;
                         overflow: hidden;
@@ -9237,6 +9236,10 @@
                         &:hover, &:focus {
                             color: hsl(var(--l3-c)) !important;
                         }
+                    }
+
+                    & > :first-child {
+                        font-weight: var(--font-weight-medium);
                     }
 
                     & > :last-child {
