@@ -122,7 +122,8 @@ export let includes = {
         ' - no dialogue', '(no dialogue', '[no dialogue',
         '- pop version', '(pop version', '[pop version',
         '- rock version', '(rock version', '[rock version',
-        '- pop mix', '(pop mix', '[pop mix'
+        '- pop mix', '(pop mix', '[pop mix',
+        '- version', '(version', '[version'
     ],
     remasters: [
         '- remaster', '(remaster', '[remaster',
@@ -169,6 +170,7 @@ export let includes = {
         '- official english', '(official english', '[official english',
         '- english version', '(english version', '[english version',
         '- japanese version', '(japanese version', '[japanese version',
+        '- spanish version', '(spanish version', '[spanish version',
         '- soundtrack', '(soundtrack', '[soundtrack',
         '- the ultimate mix', '(the ultimate mix', '[the ultimate mix',
         '- short edit', '(short edit', 'short edit',
@@ -177,7 +179,12 @@ export let includes = {
         '- full length', '(full length', '[full length',
         '[over now', // billie eilish l'amour de ma vie
         '- the remix', '(the remix', '[the remix',
-        '(unfinished original recordings of de-loused in the comatorium', '[unfinished original recordings of de-loused in the comatorium', '- unfinished original recordings of de-loused in the comatorium' // landscape tantrums
+        '(unfinished original recordings of de-loused in the comatorium', '[unfinished original recordings of de-loused in the comatorium', '- unfinished original recordings of de-loused in the comatorium', // landscape tantrums
+        '- alternate version', '(alternate version', '[alternate version',
+        '- cla mix', '(cla mix', '[cla mix',
+        '- chris lord-alge mix', '(chris lord-alge mix', '[chris lord-alge mix',
+        '- mono', '(mono', '[mono',
+        '- stereo', '(stereo', '[stereo'
     ],
     mixes_numbers: [
         '(v1', '(v2', '(v3', '(v4', '(v5', '(v6', '(v7', '(v8', '(v9',
@@ -254,6 +261,9 @@ export let includes = {
         '(12 reg. tracks', // confessions madonna
         '- special', '(special', '[special',
         '- highlights from', '(highlights from', '[highlights from',
+        '- disc 1', '- disc 2', '- disc 3', '- disc 4', '- disc 5', '- disc 6', '- disc 7', '- disc 8', '- disc 9', 
+        '(disc 1', '(disc 2', '(disc 3', '(disc 4', '(disc 5', '(disc 6', '(disc 7', '(disc 8', '(disc 9', 
+        '[disc 1', '[disc 2', '[disc 3', '[disc 4', '[disc 5', '[disc 6', '[disc 7', '[disc 8', '[disc 9', 
         //,
         '- 19', '- 20', '(19', '(20', '[19', '[20',
         '- 10th', '- 25th', '- 30th', '- 35th', '- 40th', '- 50th', '- 60th',
