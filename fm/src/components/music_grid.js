@@ -206,7 +206,7 @@ export function music_grids(search=page.structure.main, use_colour = true) {
                 let song_tags = {};
 
                 if (formatted_title) {
-                    song_title = formatted_title[0];
+                    song_title = romanise(formatted_title[0].trim());
                     insights.album.labels.push(song_title);
                     song_tags = formatted_title[1];
                     artist.textContent = romanise(formatted_title[2]);
@@ -214,7 +214,7 @@ export function music_grids(search=page.structure.main, use_colour = true) {
 
                 // combine
                 render(name_elem, html.node`
-                    <span class="title">${romanise(song_title.trim())}</span>
+                    <span class="title">${song_title}</span>
                     ${song_tags.map((tag) => html.node`
                         <span class="feat" data-bleh--tag-type="${tag.type}" data-bleh--tag-group="${tag.group}">${romanise(tag.text)}</span>
                     `)}

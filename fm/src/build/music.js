@@ -166,6 +166,7 @@ export let includes = {
         '- j stax radio', // fearless international version
         '(10 minute',
         '- old timey', '(old timey', '[old timey',
+        '- official english', '(official english', '[official english',
         '- english version', '(english version', '[english version',
         '- japanese version', '(japanese version', '[japanese version',
         '- soundtrack', '(soundtrack', '[soundtrack',
@@ -261,7 +262,8 @@ export let includes = {
         '(tenth anniversary', '(fifth anniversary',
         ': the tenth anniversary', 'the tenth anniversary', // lady gaga born this way
         '- 10 year', '- 25 year', '-30 year', '-35 year', '- 40 year', '- 50 year', '- 60 year',
-        '(10 year', '(25 year', '(30 year', '(35 year', '(40 year', '(50 year', '(60 year'
+        '(10 year', '(25 year', '(30 year', '(35 year', '(40 year', '(50 year', '(60 year',
+        '(director'
     ],
     form: [
         '(clean', '[clean', '(explicit', '[explicit',

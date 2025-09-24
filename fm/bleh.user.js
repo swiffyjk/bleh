@@ -26219,6 +26219,9 @@
       "- old timey",
       "(old timey",
       "[old timey",
+      "- official english",
+      "(official english",
+      "[official english",
       "- english version",
       "(english version",
       "[english version",
@@ -26537,7 +26540,8 @@
       "(35 year",
       "(40 year",
       "(50 year",
-      "(60 year"
+      "(60 year",
+      "(director"
     ],
     form: [
       "(clean",
@@ -27903,13 +27907,13 @@
           let formatted_title = name_includes(song_title, artist_elem.textContent.trim());
           let song_tags = {};
           if (formatted_title) {
-            song_title = formatted_title[0];
+            song_title = romanise(formatted_title[0].trim());
             insights.album.labels.push(song_title);
             song_tags = formatted_title[1];
             artist.textContent = romanise(formatted_title[2]);
           }
           render(name_elem, html.node`
-                    <span class="title">${romanise(song_title.trim())}</span>
+                    <span class="title">${song_title}</span>
                     ${song_tags.map((tag) => html.node`
                         <span class="feat" data-bleh--tag-type="${tag.type}" data-bleh--tag-group="${tag.group}">${romanise(tag.text)}</span>
                     `)}
