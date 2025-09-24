@@ -102,7 +102,7 @@
             "date": "2024-12-24"
         },
         "skip_to_setting": {
-            "default": true,
+            "default": false,
             "name": "Skip to... in settings",
             "date": "2024-12-24"
         },

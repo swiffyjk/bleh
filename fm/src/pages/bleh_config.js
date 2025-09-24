@@ -145,12 +145,12 @@ export function bleh_settings() {
                 ${tl(trans.reset)}
             </button>
         </section>
+        ${(ff('skip_to_setting')) ? html.node`
         <div class="bleh--panel">
-            ${(ff('skip_to_setting')) ? html.node`
             <h4>${tl(trans.skip_to)}</h4>
             <div class="skip-to-list"></div>
-            ` : ''}
         </div>
+        ` : ''}
         <div class="bleh--panel">
             <p class="card-tip">${version.brand} ${version.build}.${version.sku}</p>
         </div>
