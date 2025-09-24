@@ -982,6 +982,19 @@ export async function render_setting_page(page_id) {
                     ${setting({id: 'format_guest_features'})}
                     ${setting({id: 'show_guest_features'})}
                     ${setting({id: 'show_remaster_tags'})}
+                </div>
+                <div class="setting-group">
+                    <div class="setting" data-type="options">
+                        <div class="heading">
+                            <h5>${tl(trans.romanise_titles)}</h5>
+                        </div>
+                        <div class="primary-selections">
+                            ${setting({id: 'romanise_jp', standalone: true})}
+                            ${setting({id: 'romanise_ko', standalone: true})}
+                        </div>
+                    </div>
+                </div>
+                <div class="setting-group">
                     ${setting({id: 'glacier_library_graphs'})}
                 </div>
             </section>

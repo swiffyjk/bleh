@@ -8,7 +8,7 @@ import {html, render} from "lighterhtml";
 import {settings} from "../build/config";
 import {log} from "../build/log";
 import {auth, page, root} from "../build/page";
-import {clamp_sat, copy, return_artist_from_track, rgb_to_hsl, sanitise} from "../build/tools";
+import {clamp_sat, copy, return_artist_from_track, rgb_to_hsl, romanise, sanitise} from "../build/tools";
 import {bleh_glacier_insights} from "../pages/glacier";
 import {patch_artist_ranks_in_list_view} from "./colourful_counts";
 import {correct_artist, correct_item_by_artist, name_includes} from "./lotus";
@@ -235,9 +235,9 @@ export function patch_titles(search=page.structure.main) {
 
                 // parse tags into text
                 render(track_title, html`
-                    <div class="title">${song_title.trim()}</div>
+                    <div class="title">${romanise(song_title.trim())}</div>
                     ${song_tags.map((tag) => html.node`
-                        <div class="feat" data-bleh--tag-type="${tag.type}" data-bleh--tag-group="${tag.group}">${tag.text}</div>
+                        <div class="feat" data-bleh--tag-type="${tag.type}" data-bleh--tag-group="${tag.group}">${romanise(tag.text)}</div>
                     `)}
                 `);
 
@@ -253,13 +253,13 @@ export function patch_titles(search=page.structure.main) {
                 if (song_artist_element.textContent.replaceAll('+', ' ').trim() === track_artist || song_artist_element.textContent.trim() === '') {
                     log('artist either matches or is blank, replacing', 'tracks', 'log');
                     // replaces with corrected artist if applicable
-                    render(song_artist_element, html`<a href="${root}music/${redirect()}${sanitise(formatted_title[2])}">${formatted_title[2]}</a>`);
+                    render(song_artist_element, html`<a href="${root}music/${redirect()}${sanitise(formatted_title[2])}">${romanise(formatted_title[2])}</a>`);
 
                     // append guests
                     let song_guests = formatted_title[3];
                     for (let guest in song_guests) {
                         song_artist_element.appendChild(html.node`
-                            ,<a href="${root}music/${redirect()}${sanitise(song_guests[guest])}">${song_guests[guest]}</a>
+                            ,<a href="${root}music/${redirect()}${sanitise(song_guests[guest])}">${romanise(song_guests[guest])}</a>
                         `);
                     }
                 }

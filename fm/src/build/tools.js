@@ -389,10 +389,20 @@ export function is_link_external(url) {
 }
 
 export function romanise(text) {
-    if (/[\u30A0-\u30FF\u3040-\u309F]/.test(text))
-        return wanakana.toRomaji(text);
-    else if (/[\uAC00-\uD7AF]/.test(text))
-        return Hangul.romanize(text);
+    // japanese
+    if (/[\u30A0-\u30FF\u3040-\u309F]/.test(text) && settings.romanise_jp)
+        return title_case(wanakana.toRomaji(text));
+
+    // korean
+    if (/[\uAC00-\uD7AF]/.test(text) && settings.romanise_ko)
+        return title_case(Hangul.romanize(text));
 
     return text;
+}
+
+export function title_case(text) {
+    return text
+        .split(' ')
+        .map(word => word.charAt(0).toUpperCase() + word.slice(1))
+        .join(' ');
 }

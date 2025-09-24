@@ -3828,6 +3828,15 @@ export const trans = {
     },
     control_center: {
         en: 'Control center'
+    },
+    romanise_titles: {
+        en: 'Romanise music titles and artist names for'
+    },
+    romanise_jp: {
+        en: '日本語 (Japanese)'
+    },
+    romanise_ko: {
+        en: '한국어 (Korean)'
     }
 }
 

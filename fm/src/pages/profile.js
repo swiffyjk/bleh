@@ -1663,6 +1663,8 @@ function load_profile_cache(name = page.name, cache=null, profile_cache=null) {
 function request_profile_cache(name = page.name, cache=null, profile_cache=null) {
     log(`requesting fetch of profile cache for ${name}`, 'cache');
 
+    const will_cache = (!cache || !profile_cache);
+
     if (!profile_cache) profile_cache = JSON.parse(localStorage.getItem('bleh_profile_cache')) || {};
     if (!cache) cache = profile_cache[name] || {};
 
@@ -1694,7 +1696,7 @@ function request_profile_cache(name = page.name, cache=null, profile_cache=null)
                 const secondary = doc.querySelector('.header-title-secondary');
                 parse_sub_text(secondary, name, cache);
 
-                if (!cache || !profile_cache) save_profile_cache(cache, profile_cache, name);
+                if (will_cache) save_profile_cache(cache, profile_cache, name);
 
                 resolve(cache || {});
             })

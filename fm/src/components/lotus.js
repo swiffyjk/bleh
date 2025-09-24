@@ -8,7 +8,7 @@ import {settings} from "../build/config";
 import {log} from "../build/log";
 import {album_track_corrections, artist_corrections, includes} from "../build/music";
 import {page, root} from "../build/page";
-import {return_artist_from_generic, sanitise} from "../build/tools";
+import {return_artist_from_generic, romanise, sanitise} from "../build/tools";
 import {tl, trans, trans_legacy} from "../build/trans";
 import {prepare_corrections_page} from "../pages/bleh_config";
 import {dialog} from "./dialog";
@@ -188,7 +188,7 @@ export function correct_generic_combo(parent) {
 
             if (!artist_name) return;
 
-            let corrected_album_name = correct_item_by_artist(album_name.textContent, artist_name.textContent);
+            let corrected_album_name = romanise(correct_item_by_artist(album_name.textContent, artist_name.textContent));
             let corrected_artist_name = correct_artist(artist_name.textContent);
 
             album_name.textContent = corrected_album_name;
@@ -216,7 +216,7 @@ export function correct_generic_combo_no_artist(parent) {
 
             let artist_name = return_artist_from_generic(album_name.getAttribute('href'));
 
-            album_name.textContent = correct_item_by_artist(album_name.textContent, artist_name);
+            album_name.textContent = romanise(correct_item_by_artist(album_name.textContent, artist_name));
         }
     });
 }
@@ -517,9 +517,9 @@ export function patch_header_title() {
 
             // combine
             render(track_title, html.node`
-                <div class="title">${song_title.trim()}</div>
+                <div class="title">${romanise(song_title.trim())}</div>
                 ${song_tags.map((tag) => html.node`
-                    <div class="feat" data-bleh--tag-type=${tag.type} data-bleh--tag-group=${tag.group}>${tag.text}</div>
+                    <div class="feat" data-bleh--tag-type=${tag.type} data-bleh--tag-group=${tag.group}>${romanise(tag.text)}</div>
                 `)}
             `);
 
@@ -536,7 +536,7 @@ export function patch_header_title() {
 
                 // no whitespace to make sure it looks correct
                 song_artist_element.appendChild(html.node`
-                    <a class="header-new-crumb" href="${root}music/${redirect()}${sanitise(song_guests[guest])}">${song_guests[guest]}</a>
+                    <a class="header-new-crumb" href="${root}music/${redirect()}${sanitise(song_guests[guest])}">${romanise(song_guests[guest])}</a>
                 `);
             }
         }
@@ -551,7 +551,7 @@ export function patch_header_title() {
             if (corrected_title != track_title.textContent)
                 page.corrected = true;
 
-            track_title.textContent = corrected_title;
+            track_title.textContent = romanise(corrected_title);
         }
     }
 }

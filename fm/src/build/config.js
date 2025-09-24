@@ -1220,5 +1220,17 @@ export let settings_store = {
     control_center: {
         default: [],
         type: 'list'
+    },
+    romanise_jp: {
+        default: false,
+        type: 'checkbox',
+        title: trans.romanise_jp,
+        new_release: true
+    },
+    romanise_ko: {
+        default: false,
+        type: 'checkbox',
+        title: trans.romanise_ko,
+        new_release: true
     }
 }

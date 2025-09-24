@@ -24922,6 +24922,18 @@
     }
     return {}.toString.call(value).slice(8, -1).toLowerCase();
   }
+  function isEmpty(input2) {
+    if (typeOf(input2) !== "string") {
+      return true;
+    }
+    return !input2.length;
+  }
+  function isCharInRange(char = "", start2, end2) {
+    if (isEmpty(char))
+      return false;
+    const code = char.charCodeAt(0);
+    return start2 <= code && code <= end2;
+  }
   var ROMANIZATIONS = {
     HEPBURN: "hepburn"
   };
@@ -24937,6 +24949,11 @@
   var LOWERCASE_ZENKAKU_END = 65370;
   var UPPERCASE_ZENKAKU_START = 65313;
   var UPPERCASE_ZENKAKU_END = 65338;
+  var HIRAGANA_START = 12353;
+  var KATAKANA_START = 12449;
+  var KATAKANA_END = 12540;
+  var PROLONGED_SOUND_MARK = 12540;
+  var KANA_SLASH_DOT = 12539;
   var ZENKAKU_NUMBERS = [65296, 65305];
   var ZENKAKU_UPPERCASE = [UPPERCASE_ZENKAKU_START, UPPERCASE_ZENKAKU_END];
   var ZENKAKU_LOWERCASE = [LOWERCASE_ZENKAKU_START, LOWERCASE_ZENKAKU_END];
@@ -25134,6 +25151,38 @@
       }
     }
     return foo !== foo && bar !== bar;
+  }
+  var mergeWithDefaultOptions = (opts = {}) => Object.assign({}, DEFAULT_OPTIONS2, opts);
+  function applyMapping(string, mapping, convertEnding) {
+    const root2 = mapping;
+    function nextSubtree(tree, nextChar) {
+      const subtree = tree[nextChar];
+      if (subtree === void 0) {
+        return void 0;
+      }
+      return Object.assign({ "": tree[""] + nextChar }, tree[nextChar]);
+    }
+    function newChunk(remaining, currentCursor) {
+      const firstChar = remaining.charAt(0);
+      return parse4(Object.assign({ "": firstChar }, root2[firstChar]), remaining.slice(1), currentCursor, currentCursor + 1);
+    }
+    function parse4(tree, remaining, lastCursor, currentCursor) {
+      if (!remaining) {
+        if (convertEnding || Object.keys(tree).length === 1) {
+          return tree[""] ? [[lastCursor, currentCursor, tree[""]]] : [];
+        }
+        return [[lastCursor, currentCursor, null]];
+      }
+      if (Object.keys(tree).length === 1) {
+        return [[lastCursor, currentCursor, tree[""]]].concat(newChunk(remaining, currentCursor));
+      }
+      const subtree = nextSubtree(tree, remaining.charAt(0));
+      if (subtree === void 0) {
+        return [[lastCursor, currentCursor, tree[""]]].concat(newChunk(remaining, currentCursor));
+      }
+      return parse4(subtree, remaining.slice(1), lastCursor, currentCursor + 1);
+    }
+    return newChunk(string, 0);
   }
   function transform(tree) {
     return Object.entries(tree).reduce((map3, [char, subtree]) => {
@@ -25380,6 +25429,16 @@
     mapCopy.n[" "] = { "": "\u3093" };
     return mapCopy;
   }
+  function isCharLongDash(char = "") {
+    if (isEmpty(char))
+      return false;
+    return char.charCodeAt(0) === PROLONGED_SOUND_MARK;
+  }
+  function isCharSlashDot(char = "") {
+    if (isEmpty(char))
+      return false;
+    return char.charCodeAt(0) === KANA_SLASH_DOT;
+  }
   var createRomajiToKanaMap = memoizeOne((IMEMode, useObsoleteKana, customKanaMapping) => {
     let map3 = getRomajiToKanaTree();
     map3 = IMEMode ? IME_MODE_MAP(map3) : map3;
@@ -25389,6 +25448,47 @@
     }
     return map3;
   }, dequal);
+  function isCharKatakana(char = "") {
+    return isCharInRange(char, KATAKANA_START, KATAKANA_END);
+  }
+  function isKatakana(input2 = "") {
+    if (isEmpty(input2))
+      return false;
+    return [...input2].every(isCharKatakana);
+  }
+  var isCharInitialLongDash = (char, index3) => isCharLongDash(char) && index3 < 1;
+  var isCharInnerLongDash = (char, index3) => isCharLongDash(char) && index3 > 0;
+  var isKanaAsSymbol = (char) => ["\u30F6", "\u30F5"].includes(char);
+  var LONG_VOWELS = {
+    a: "\u3042",
+    i: "\u3044",
+    u: "\u3046",
+    e: "\u3048",
+    o: "\u3046"
+  };
+  function katakanaToHiragana(input2 = "", toRomaji2, { isDestinationRomaji, convertLongVowelMark } = {}) {
+    let previousKana = "";
+    return input2.split("").reduce((hira, char, index3) => {
+      if (isCharSlashDot(char) || isCharInitialLongDash(char, index3) || isKanaAsSymbol(char)) {
+        return hira.concat(char);
+      }
+      if (convertLongVowelMark && previousKana && isCharInnerLongDash(char, index3)) {
+        const romaji = toRomaji2(previousKana).slice(-1);
+        if (isCharKatakana(input2[index3 - 1]) && romaji === "o" && isDestinationRomaji) {
+          return hira.concat("\u304A");
+        }
+        return hira.concat(LONG_VOWELS[romaji]);
+      }
+      if (!isCharLongDash(char) && isCharKatakana(char)) {
+        const code = char.charCodeAt(0) + (HIRAGANA_START - KATAKANA_START);
+        const hiraChar = String.fromCharCode(code);
+        previousKana = hiraChar;
+        return hira.concat(hiraChar);
+      }
+      previousKana = "";
+      return hira.concat(char);
+    }, []).join("");
+  }
   var kanaToHepburnMap = null;
   var BASIC_ROMAJI = {
     \u3042: "a",
@@ -25620,6 +25720,24 @@
     }
     return map3;
   }, dequal);
+  function toRomaji(input2 = "", options = {}, map3) {
+    const config = mergeWithDefaultOptions(options);
+    if (!map3) {
+      map3 = createKanaToRomajiMap(config.romanization, config.customRomajiMapping);
+    }
+    return splitIntoRomaji(input2, config, map3).map((romajiToken) => {
+      const [start2, end2, romaji] = romajiToken;
+      const makeUpperCase = config.upcaseKatakana && isKatakana(input2.slice(start2, end2));
+      return makeUpperCase ? romaji.toUpperCase() : romaji;
+    }).join("");
+  }
+  function splitIntoRomaji(input2, options, map3) {
+    if (!map3) {
+      map3 = createKanaToRomajiMap(options.romanization, options.customRomajiMapping);
+    }
+    const config = Object.assign({}, { isDestinationRomaji: true }, options);
+    return applyMapping(katakanaToHiragana(input2, toRomaji, config), map3, !options.IMEMode);
+  }
 
   // src/build/tools.js
   var import_hangul_js = __toESM(require_hangul(), 1);
@@ -25846,6 +25964,16 @@
     } catch {
       return false;
     }
+  }
+  function romanise(text3) {
+    if (/[\u30A0-\u30FF\u3040-\u309F]/.test(text3) && settings.romanise_jp)
+      return title_case(toRomaji(text3));
+    if (/[\uAC00-\uD7AF]/.test(text3) && settings.romanise_ko)
+      return title_case(import_hangul_js.default.romanize(text3));
+    return text3;
+  }
+  function title_case(text3) {
+    return text3.split(" ").map((word) => word.charAt(0).toUpperCase() + word.slice(1)).join(" ");
   }
 
   // src/build/music.js
@@ -27781,14 +27909,14 @@
             artist.textContent = formatted_title[2];
           }
           render(name_elem, html.node`
-                    <span class="title">${song_title.trim()}</span>
+                    <span class="title">${romanise(song_title.trim())}</span>
                     ${song_tags.map((tag) => html.node`
-                        <span class="feat" data-bleh--tag-type="${tag.type}" data-bleh--tag-group="${tag.group}">${tag.text}</span>
+                        <span class="feat" data-bleh--tag-type="${tag.type}" data-bleh--tag-group="${tag.group}">${romanise(tag.text)}</span>
                     `)}
                 `);
         } else {
           artist.textContent = correct_artist(artist.textContent.trim());
-          name.textContent = correct_item_by_artist(name.textContent.trim(), artist.textContent.trim());
+          name.textContent = romanise(correct_item_by_artist(name.textContent.trim(), artist.textContent.trim()));
         }
       }
       const menu = tippy_esm_default(grid, {
@@ -35835,6 +35963,7 @@
     let katsune = ff("katsune");
     show_numbers_on_side(page.type);
     const page_is_blocked = !page.structure.main.querySelector("#shoutbox");
+    log(`${page_is_blocked ? "page is blocked" : "page is not blocked"}`, "music");
     if (page.subpage == "overview") {
       let tabs = document.createElement("nav");
       tabs.classList.add("navlist", "secondary-nav", "navlist--more", "redesigned-navigation");
@@ -36760,7 +36889,7 @@
       if (track_wrap) {
         let track_link = new_listener.querySelector(".user-list-about-me a");
         let artist = return_artist_from_track(track_link.getAttribute("href"), false);
-        track_link.textContent = correct_item_by_artist(track_link.textContent.trim(), artist);
+        track_link.textContent = romanise(correct_item_by_artist(track_link.textContent.trim(), artist));
       }
       new_container.appendChild(new_listener);
     });
@@ -36932,9 +37061,9 @@
           }
           track_title.setAttribute("data-name", correct_item_by_artist(track_title.getAttribute("data-name"), track_artist));
           render(track_title, html`
-                    <div class="title">${song_title.trim()}</div>
+                    <div class="title">${romanise(song_title.trim())}</div>
                     ${song_tags.map((tag) => html.node`
-                        <div class="feat" data-bleh--tag-type="${tag.type}" data-bleh--tag-group="${tag.group}">${tag.text}</div>
+                        <div class="feat" data-bleh--tag-type="${tag.type}" data-bleh--tag-group="${tag.group}">${romanise(tag.text)}</div>
                     `)}
                 `);
           let song_artist_element = track.querySelector(".chartlist-artist");
@@ -36946,11 +37075,11 @@
           console.log("artist matches", song_artist_element.textContent.replaceAll("+", " ").trim() === track_artist, "artist is blank", song_artist_element.textContent.trim() === "", song_artist_element.textContent.trim(), formatted_title[2]);
           if (song_artist_element.textContent.replaceAll("+", " ").trim() === track_artist || song_artist_element.textContent.trim() === "") {
             log("artist either matches or is blank, replacing", "tracks", "log");
-            render(song_artist_element, html`<a href="${root}music/${redirect()}${sanitise(formatted_title[2])}">${formatted_title[2]}</a>`);
+            render(song_artist_element, html`<a href="${root}music/${redirect()}${sanitise(formatted_title[2])}">${romanise(formatted_title[2])}</a>`);
             let song_guests = formatted_title[3];
             for (let guest in song_guests) {
               song_artist_element.appendChild(html.node`
-                            ,<a href="${root}music/${redirect()}${sanitise(song_guests[guest])}">${song_guests[guest]}</a>
+                            ,<a href="${root}music/${redirect()}${sanitise(song_guests[guest])}">${romanise(song_guests[guest])}</a>
                         `);
             }
           }
@@ -45576,6 +45705,7 @@
   }
   function request_profile_cache(name = page.name, cache2 = null, profile_cache = null) {
     log(`requesting fetch of profile cache for ${name}`, "cache");
+    const will_cache = !cache2 || !profile_cache;
     if (!profile_cache) profile_cache = JSON.parse(localStorage.getItem("bleh_profile_cache")) || {};
     if (!cache2) cache2 = profile_cache[name] || {};
     return new Promise((resolve2, reject) => {
@@ -45599,7 +45729,7 @@
         if (avatar3) cache2.avatar = avatar3.src;
         const secondary = doc.querySelector(".header-title-secondary");
         parse_sub_text(secondary, name, cache2);
-        if (!cache2 || !profile_cache) save_profile_cache(cache2, profile_cache, name);
+        if (will_cache) save_profile_cache(cache2, profile_cache, name);
         resolve2(cache2 || {});
       }).catch(reject);
     });
@@ -48919,6 +49049,19 @@
                     ${setting({ id: "format_guest_features" })}
                     ${setting({ id: "show_guest_features" })}
                     ${setting({ id: "show_remaster_tags" })}
+                </div>
+                <div class="setting-group">
+                    <div class="setting" data-type="options">
+                        <div class="heading">
+                            <h5>${tl(trans.romanise_titles)}</h5>
+                        </div>
+                        <div class="primary-selections">
+                            ${setting({ id: "romanise_jp", standalone: true })}
+                            ${setting({ id: "romanise_ko", standalone: true })}
+                        </div>
+                    </div>
+                </div>
+                <div class="setting-group">
                     ${setting({ id: "glacier_library_graphs" })}
                 </div>
             </section>
@@ -50561,7 +50704,7 @@
         if (!album_name) return;
         let artist_name = album.querySelector(`.${parent.replace("-details", "")}-artist a`);
         if (!artist_name) return;
-        let corrected_album_name = correct_item_by_artist(album_name.textContent, artist_name.textContent);
+        let corrected_album_name = romanise(correct_item_by_artist(album_name.textContent, artist_name.textContent));
         let corrected_artist_name = correct_artist(artist_name.textContent);
         album_name.textContent = corrected_album_name;
         artist_name.textContent = corrected_artist_name;
@@ -50578,7 +50721,7 @@
         let album_name = album.querySelector(`.${parent.replace("-details", "")}-name a`);
         if (!album_name) return;
         let artist_name = return_artist_from_generic(album_name.getAttribute("href"));
-        album_name.textContent = correct_item_by_artist(album_name.textContent, artist_name);
+        album_name.textContent = romanise(correct_item_by_artist(album_name.textContent, artist_name));
       }
     });
   }
@@ -50759,9 +50902,9 @@
           let song_tags = formatted_title[1];
           page.corrected = formatted_title[4];
           render(track_title, html.node`
-                <div class="title">${song_title.trim()}</div>
+                <div class="title">${romanise(song_title.trim())}</div>
                 ${song_tags.map((tag) => html.node`
-                    <div class="feat" data-bleh--tag-type=${tag.type} data-bleh--tag-group=${tag.group}>${tag.text}</div>
+                    <div class="feat" data-bleh--tag-type=${tag.type} data-bleh--tag-group=${tag.group}>${romanise(tag.text)}</div>
                 `)}
             `);
           if (song_tags.some((tag) => tag.group == "form")) page.suggest = sanitise(song_title.trim());
@@ -50772,7 +50915,7 @@
           for (let guest in song_guests) {
             song_artist_element.innerHTML = `${song_artist_element.innerHTML},`;
             song_artist_element.appendChild(html.node`
-                    <a class="header-new-crumb" href="${root}music/${redirect()}${sanitise(song_guests[guest])}">${song_guests[guest]}</a>
+                    <a class="header-new-crumb" href="${root}music/${redirect()}${sanitise(song_guests[guest])}">${romanise(song_guests[guest])}</a>
                 `);
           }
         }
@@ -50785,7 +50928,7 @@
         log(`corrected ${track_title.textContent} by ${track_artist.textContent} as ${corrected_title}`, "lotus");
         if (corrected_title != track_title.textContent)
           page.corrected = true;
-        track_title.textContent = corrected_title;
+        track_title.textContent = romanise(corrected_title);
       }
     }
   }
@@ -59473,6 +59616,15 @@
     },
     control_center: {
       en: "Control center"
+    },
+    romanise_titles: {
+      en: "Romanise music titles and artist names for"
+    },
+    romanise_jp: {
+      en: "\u65E5\u672C\u8A9E (Japanese)"
+    },
+    romanise_ko: {
+      en: "\uD55C\uAD6D\uC5B4 (Korean)"
     }
   };
   var trans_legacy = {
@@ -63691,6 +63843,18 @@
     control_center: {
       default: [],
       type: "list"
+    },
+    romanise_jp: {
+      default: false,
+      type: "checkbox",
+      title: trans.romanise_jp,
+      new_release: true
+    },
+    romanise_ko: {
+      default: false,
+      type: "checkbox",
+      title: trans.romanise_ko,
+      new_release: true
     }
   };
 
