@@ -2465,6 +2465,10 @@
                             z-index: -1;
                             backdrop-filter: var(--solarium);
                             -webkit-backdrop-filter: var(--solarium);
+
+                            --mask: linear-gradient(180deg, white 86%, transparent);
+                            mask-image: var(--mask);
+                            -webkit-mask-image: var(--mask);
                         }
 
                         &:after {
