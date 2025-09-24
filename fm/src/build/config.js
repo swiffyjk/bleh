@@ -656,7 +656,8 @@ export let settings_store = {
     solarium: {
         default: true,
         title: trans.solarium.name,
-        body: trans.solarium.body
+        body: trans.solarium.body,
+        new_release: true
     },
     gloss: {
         css: 'gloss',
@@ -1032,11 +1033,11 @@ export let settings_store = {
     },
     rabbit_shortcut: {
         default: 's',
-        title: trans.profile_shortcut.name,
+        title: trans.starred_friend.name,
         type: 'text',
         min: 1,
         max: 1,
-        icon: 'icon-16-profile-shortcut',
+        icon: 'icon-16-starred-friend',
         placeholder: 'none',
         keybind: ['⌘', 'S'],
         warn_if_empty: true
@@ -1220,5 +1221,17 @@ export let settings_store = {
     control_center: {
         default: [],
         type: 'list'
+    },
+    romanise_jp: {
+        default: false,
+        type: 'checkbox',
+        title: trans.romanise_jp,
+        new_release: true
+    },
+    romanise_ko: {
+        default: false,
+        type: 'checkbox',
+        title: trans.romanise_ko,
+        new_release: true
     }
 }

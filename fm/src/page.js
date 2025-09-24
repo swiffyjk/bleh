@@ -204,20 +204,17 @@ function solarium() {
             >
                 <feTurbulence
                     type="fractalNoise"
-                    baseFrequency="0.01 0.01"
+                    baseFrequency="0.001 0.005"
                     numOctaves="1"
-                    seed="5"
+                    seed="17"
                     result="turbulence"
                 />
-
                 <feComponentTransfer in="turbulence" result="mapped">
                     <feFuncR type="gamma" amplitude="1" exponent="10" offset="0.5" />
                     <feFuncG type="gamma" amplitude="0" exponent="1" offset="0" />
                     <feFuncB type="gamma" amplitude="0" exponent="1" offset="0.5" />
                 </feComponentTransfer>
-
                 <feGaussianBlur in="turbulence" stdDeviation="3" result="softMap" />
-
                 <feSpecularLighting
                     in="softMap"
                     surfaceScale="5"
@@ -228,7 +225,6 @@ function solarium() {
                 >
                     <fePointLight x="-200" y="-200" z="300" />
                 </feSpecularLighting>
-
                 <feComposite
                     in="specLight"
                     operator="arithmetic"
@@ -238,11 +234,10 @@ function solarium() {
                     k4="0"
                     result="litImage"
                 />
-
                 <feDisplacementMap
                     in="SourceGraphic"
                     in2="softMap"
-                    scale="150"
+                    scale="200"
                     xChannelSelector="R"
                     yChannelSelector="G"
                 />

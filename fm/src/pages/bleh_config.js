@@ -145,15 +145,14 @@ export function bleh_settings() {
                 ${tl(trans.reset)}
             </button>
         </section>
+        ${(ff('skip_to_setting')) ? html.node`
         <div class="bleh--panel">
-            ${(ff('skip_to_setting')) ? html.node`
             <h4>${tl(trans.skip_to)}</h4>
             <div class="skip-to-list"></div>
-            ` : ''}
         </div>
+        ` : ''}
         <div class="bleh--panel">
-            <h4>${tl(trans.about)}</h4>
-            <p>${version.brand} ${version.build}.${version.sku}</p>
+            <p class="card-tip">${version.brand} ${version.build}.${version.sku}</p>
         </div>
     `);
 
@@ -983,6 +982,19 @@ export async function render_setting_page(page_id) {
                     ${setting({id: 'format_guest_features'})}
                     ${setting({id: 'show_guest_features'})}
                     ${setting({id: 'show_remaster_tags'})}
+                </div>
+                <div class="setting-group">
+                    <div class="setting" data-type="options">
+                        <div class="heading">
+                            <h5>${tl(trans.romanise_titles)}</h5>
+                        </div>
+                        <div class="primary-selections">
+                            ${setting({id: 'romanise_jp', standalone: true})}
+                            ${setting({id: 'romanise_ko', standalone: true})}
+                        </div>
+                    </div>
+                </div>
+                <div class="setting-group">
                     ${setting({id: 'glacier_library_graphs'})}
                 </div>
             </section>
@@ -1285,6 +1297,7 @@ export async function render_setting_page(page_id) {
                     }})}
                     ${starred = setting({id: 'starred_friend', list: select_prepare_list([{value: '', text: tl(trans.none)}, ...settings.friends])})}
                 </div>
+                <p class="card-tip">${tl(trans.friend_difference)}</p>
             </section>
             ` : ''}
             <section class="bleh--panel">

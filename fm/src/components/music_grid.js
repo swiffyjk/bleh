@@ -6,7 +6,7 @@
 
 import {settings} from "../build/config";
 import {page, root} from "../build/page";
-import {clamp_sat, clean_number, copy, rgb_to_hsl} from "../build/tools";
+import {clamp_sat, clean_number, copy, rgb_to_hsl, romanise} from "../build/tools";
 import {lang, tl, trans} from "../build/trans";
 import {bleh_glacier_insights} from "../pages/glacier";
 import {parse_scrobbles_as_rank} from "./colourful_counts";
@@ -190,7 +190,7 @@ export function music_grids(search=page.structure.main, use_colour = true) {
         let artist;
 
         if (!is_album) {
-            name.textContent = correct_artist(name.textContent.trim());
+            name.textContent = romanise(correct_artist(name.textContent.trim()));
             insights.artist.labels.push(name.textContent);
         } else {
             artist = grid.querySelector('.grid-items-item-aux-block');
@@ -206,23 +206,23 @@ export function music_grids(search=page.structure.main, use_colour = true) {
                 let song_tags = {};
 
                 if (formatted_title) {
-                    song_title = formatted_title[0];
+                    song_title = romanise(formatted_title[0].trim());
                     insights.album.labels.push(song_title);
                     song_tags = formatted_title[1];
-                    artist.textContent = formatted_title[2];
+                    artist.textContent = romanise(formatted_title[2]);
                 }
 
                 // combine
                 render(name_elem, html.node`
-                    <span class="title">${song_title.trim()}</span>
+                    <span class="title">${song_title}</span>
                     ${song_tags.map((tag) => html.node`
-                        <span class="feat" data-bleh--tag-type="${tag.type}" data-bleh--tag-group="${tag.group}">${tag.text}</span>
+                        <span class="feat" data-bleh--tag-type="${tag.type}" data-bleh--tag-group="${tag.group}">${romanise(tag.text)}</span>
                     `)}
                 `);
             } else {
-                artist.textContent = correct_artist(artist.textContent.trim());
+                artist.textContent = romanise(correct_artist(artist.textContent.trim()));
 
-                name.textContent = correct_item_by_artist(name.textContent.trim(), artist.textContent.trim());
+                name.textContent = romanise(correct_item_by_artist(name.textContent.trim(), artist.textContent.trim()));
             }
         }
 

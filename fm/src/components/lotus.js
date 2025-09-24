@@ -8,7 +8,7 @@ import {settings} from "../build/config";
 import {log} from "../build/log";
 import {album_track_corrections, artist_corrections, includes} from "../build/music";
 import {page, root} from "../build/page";
-import {return_artist_from_generic, sanitise} from "../build/tools";
+import {return_artist_from_generic, romanise, sanitise} from "../build/tools";
 import {tl, trans, trans_legacy} from "../build/trans";
 import {prepare_corrections_page} from "../pages/bleh_config";
 import {dialog} from "./dialog";
@@ -162,7 +162,7 @@ export function correct_generic_artist(parent) {
             let artist_name = album.querySelector(`.${parent.replace('-details', '')}-name a`);
             if (!artist_name)  return;
 
-            artist_name.textContent = correct_artist(artist_name.textContent);
+            artist_name.textContent = romanise(correct_artist(artist_name.textContent));
         }
     });
 }
@@ -188,8 +188,8 @@ export function correct_generic_combo(parent) {
 
             if (!artist_name) return;
 
-            let corrected_album_name = correct_item_by_artist(album_name.textContent, artist_name.textContent);
-            let corrected_artist_name = correct_artist(artist_name.textContent);
+            let corrected_album_name = romanise(correct_item_by_artist(album_name.textContent, artist_name.textContent));
+            let corrected_artist_name = romanise(correct_artist(artist_name.textContent));
 
             album_name.textContent = corrected_album_name;
             artist_name.textContent = corrected_artist_name;
@@ -216,7 +216,7 @@ export function correct_generic_combo_no_artist(parent) {
 
             let artist_name = return_artist_from_generic(album_name.getAttribute('href'));
 
-            album_name.textContent = correct_item_by_artist(album_name.textContent, artist_name);
+            album_name.textContent = romanise(correct_item_by_artist(album_name.textContent, artist_name));
         }
     });
 }
@@ -229,8 +229,8 @@ export function correct_generic_combo_no_artist(parent) {
  * @returns {string} corrected title if applicable or original title
  */
 export function correct_item_by_artist(item, artist) {
-    if (!settings.corrections)
-        return item;
+    if (!settings.corrections) return item;
+
     artist = artist.toLowerCase();
 
     try {
@@ -253,11 +253,11 @@ export function correct_item_by_artist(item, artist) {
 /**
  * correct artist
  * @param {string} artist artist name (NOT converted to lowercase)
+ * @param {boolean} broadcast save to page state correction status
  * @returns corrected artist if applicable or original artist
  */
 export function correct_artist(artist, broadcast = false) {
-    if (!settings.corrections)
-        return artist;
+    if (!settings.corrections) return artist;
 
     try {
         if (artist_corrections.hasOwnProperty(artist)) {
@@ -485,9 +485,11 @@ export function patch_header_title() {
         if (artist_corrections.hasOwnProperty(track_title.textContent)) {
             let corrected_artist = artist_corrections[track_title.textContent];
             log(`corrected ${track_title.textContent} as ${corrected_artist}`, 'lotus');
-            track_title.textContent = corrected_artist;
+            track_title.textContent = romanise(corrected_artist);
 
             page.corrected = true;
+        } else {
+            track_title.textContent = romanise(track_title.textContent);
         }
 
         return;
@@ -498,9 +500,10 @@ export function patch_header_title() {
             log(`corrected ${track_artist.textContent} as ${corrected_artist}`, 'lotus');
 
             track_artist.parentElement.setAttribute('href', `${root}music/${redirect()}${sanitise(corrected_artist)}`);
-            track_artist.textContent = corrected_artist;
+            track_artist.textContent = romanise(corrected_artist);
         } else {
             track_artist.parentElement.setAttribute('href', `${root}music/${redirect()}${sanitise(track_artist.textContent)}`);
+            track_artist.textContent = romanise(track_artist.textContent);
         }
     }
 
@@ -517,9 +520,9 @@ export function patch_header_title() {
 
             // combine
             render(track_title, html.node`
-                <div class="title">${song_title.trim()}</div>
+                <div class="title">${romanise(song_title.trim())}</div>
                 ${song_tags.map((tag) => html.node`
-                    <div class="feat" data-bleh--tag-type=${tag.type} data-bleh--tag-group=${tag.group}>${tag.text}</div>
+                    <div class="feat" data-bleh--tag-type=${tag.type} data-bleh--tag-group=${tag.group}>${romanise(tag.text)}</div>
                 `)}
             `);
 
@@ -536,7 +539,7 @@ export function patch_header_title() {
 
                 // no whitespace to make sure it looks correct
                 song_artist_element.appendChild(html.node`
-                    <a class="header-new-crumb" href="${root}music/${redirect()}${sanitise(song_guests[guest])}">${song_guests[guest]}</a>
+                    <a class="header-new-crumb" href="${root}music/${redirect()}${sanitise(song_guests[guest])}">${romanise(song_guests[guest])}</a>
                 `);
             }
         }
@@ -551,7 +554,7 @@ export function patch_header_title() {
             if (corrected_title != track_title.textContent)
                 page.corrected = true;
 
-            track_title.textContent = corrected_title;
+            track_title.textContent = romanise(corrected_title);
         }
     }
 }

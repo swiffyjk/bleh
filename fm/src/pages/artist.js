@@ -265,7 +265,8 @@ export function bleh_artists() {
                 placement: 'bottom',
                 interactive: true,
                 interactiveBorder: 10,
-                trigger: 'click'
+                trigger: 'click',
+                appendTo: document.body
             });
         }
 
@@ -449,7 +450,8 @@ function bleh_artist_tracks() {
             placement: 'bottom',
             interactive: true,
             interactiveBorder: 10,
-            trigger: 'click'
+            trigger: 'click',
+            appendTo: document.body
         });
     }
 }

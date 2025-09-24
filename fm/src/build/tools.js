@@ -4,14 +4,16 @@
 // Licensed under GPLv3
 //
 
-// https://stackoverflow.com/questions/46432335/hex-to-hsl-convert-javascript
 import {log} from "./log.js";
 import {notify} from "../components/notify.js";
 import {tl, trans} from "./trans.js";
 import { settings } from './config.js';
 import {html} from "lighterhtml";
 import { root } from './page.js';
+import * as wanakana from 'wanakana';
+import Hangul from 'hangul-js';
 
+// https://stackoverflow.com/questions/46432335/hex-to-hsl-convert-javascript
 /**
  * Converts hex to {h, s, l}
  * @param {string} hex
@@ -384,4 +386,23 @@ export function is_link_external(url) {
     } catch {
         return false;
     }
+}
+
+export function romanise(text) {
+    // japanese
+    if (/[\u30A0-\u30FF\u3040-\u309F]/.test(text) && settings.romanise_jp)
+        return title_case(wanakana.toRomaji(text));
+
+    // korean
+    if (/[\uAC00-\uD7AF]/.test(text) && settings.romanise_ko)
+        return title_case(Hangul.romanize(text));
+
+    return text;
+}
+
+export function title_case(text) {
+    return text
+        .split(' ')
+        .map(word => word.charAt(0).toUpperCase() + word.slice(1))
+        .join(' ');
 }

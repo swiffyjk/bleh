@@ -9,7 +9,7 @@ import {patch_avatar} from "../avatar";
 import {settings} from "../build/config";
 import {log} from "../build/log";
 import {auth, page, root} from "../build/page";
-import {clean_number, return_artist_from_track, sanitise} from "../build/tools";
+import {clean_number, return_artist_from_track, romanise, sanitise} from "../build/tools";
 import {lang, tl, trans} from "../build/trans";
 import {prep_chart_colours} from "../chart";
 import {refresh_all} from "../config";
@@ -37,6 +37,7 @@ export async function show_your_scrobbles() {
     // commonly nsbm pages are stripped of all social interaction and only have three tabs,
     // this is a simple way to detect it
     const page_is_blocked = !page.structure.main.querySelector('#shoutbox');
+    log(`${page_is_blocked ? 'page is blocked' : 'page is not blocked'}`, 'music');
 
     if (page.subpage == 'overview') {
         let tabs = document.createElement('nav');
@@ -1229,7 +1230,7 @@ export function bleh_top_listeners() {
             let track_link = new_listener.querySelector('.user-list-about-me a');
             let artist = return_artist_from_track(track_link.getAttribute('href'), false);
 
-            track_link.textContent = correct_item_by_artist(track_link.textContent.trim(), artist);
+            track_link.textContent = romanise(correct_item_by_artist(track_link.textContent.trim(), artist));
         }
 
         new_container.appendChild(new_listener);

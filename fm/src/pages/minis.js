@@ -156,7 +156,7 @@ function bleh_minis_collage() {
     render(page.structure.side, html`
         <section class="current-mini-settings" ref=${el => mini_settings = el} />
         <section class="mini-faq">
-            <p class="card-tip">${tl(trans.by_user, {'u': valid_minis.collage.by.join(',')})}</p>
+            <p class="card-tip">${tl(trans.value_by_user, {'v': valid_minis.collage.name, 'u': valid_minis.collage.by.join(',')})}</p>
         </section>
     `);
 
@@ -180,7 +180,7 @@ function bleh_minis_compare() {
     render(page.structure.side, html`
         <section class="current-mini-settings" ref=${el => mini_settings = el} />
         <section class="mini-faq">
-            <p class="card-tip">${tl(trans.by_user, {'u': valid_minis.compare.by.join(',')})}</p>
+            <p class="card-tip">${tl(trans.value_by_user, {'v': valid_minis.compare.name, 'u': valid_minis.compare.by.join(',')})}</p>
         </section>
     `);
 
@@ -204,7 +204,7 @@ function bleh_minis_pixel() {
     render(page.structure.side, html`
         <section class="current-mini-settings" ref=${el => mini_settings = el} />
         <section class="mini-faq">
-            <p class="card-tip">${tl(trans.by_user, {'u': valid_minis.pixel.by.join(',')})}</p>
+            <p class="card-tip">${tl(trans.value_by_user, {'v': valid_minis.pixel.name, 'u': valid_minis.pixel.by.join(',')})}</p>
         </section>
     `);
 

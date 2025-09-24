@@ -1831,6 +1831,11 @@ export const trans = {
         de: ' von {a}',
         pt: ' por {a}'
     },
+    value_by_user: {
+        en: '{v} by {u}',
+        de: '{v} von {u}',
+        pt: '{v} por {u}'
+    },
     average: {
         // scrobble average
         en: 'Average',
@@ -3823,6 +3828,15 @@ export const trans = {
     },
     control_center: {
         en: 'Control center'
+    },
+    romanise_titles: {
+        en: 'Romanise music titles and artist names for'
+    },
+    romanise_jp: {
+        en: '日本語 (Japanese)'
+    },
+    romanise_ko: {
+        en: '한국어 (Korean)'
     }
 }
 
