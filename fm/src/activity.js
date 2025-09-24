@@ -7,7 +7,7 @@
 import {settings} from "./build/config";
 import {log} from "./build/log";
 import {auth, page, recent_activity_list, root} from "./build/page";
-import {sanitise} from "./build/tools";
+import {romanise, sanitise} from "./build/tools";
 import {tl, trans} from './build/trans';
 import {correct_artist, correct_item_by_artist, name_includes} from "./components/lotus";
 import {html, render} from "lighterhtml";
@@ -77,25 +77,25 @@ export function render_activity_list() {
                 if (formatted_title) {
                     song_title = formatted_title[0];
                     song_tags = formatted_title[1];
-                    sister = formatted_title[2];
+                    sister = romanise(formatted_title[2]);
                     tooltip_name = song_title;
                     tooltip_sister = sister;
                 }
 
                 // combine
                 name = html.node`
-                    <div class="title">${song_title.trim()}</div>
+                    <div class="title">${romanise(song_title.trim())}</div>
                     ${song_tags.map((tag) => html.node`
-                        <div class="feat" data-bleh--tag-type="${tag.type}" data-bleh--tag-group="${tag.group}">${tag.text}</div>
+                        <div class="feat" data-bleh--tag-type="${tag.type}" data-bleh--tag-group="${tag.group}">${romanise(tag.text)}</div>
                     `)}
                 `;
             } else if ((involved.type == 'album' || involved.type == 'track') && settings.corrections) {
-                name = correct_item_by_artist(name, sister);
+                name = romanise(correct_item_by_artist(name, sister));
                 tooltip_name = name;
-                sister = correct_artist(sister);
+                sister = romanise(correct_artist(sister));
                 tooltip_sister = sister;
             } else if (involved.type == 'artist' && settings.corrections) {
-                name = correct_artist(name);
+                name = romanise(correct_artist(name));
             }
 
             if (involved_text != '')

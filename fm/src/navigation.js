@@ -25,7 +25,7 @@ import { load_profile_cache_externally, open_starred_friend_window } from './pag
 import { sponsor } from './sponsor.js';
 import moment from 'moment';
 import { register_menu } from './components/menu.js';
-import { copy } from './build/tools.js';
+import { copy, romanise } from './build/tools.js';
 import { submit_scrobble } from './components/scrobble.js';
 import { match } from './components/dynamic_theming.js';
 
@@ -1021,8 +1021,8 @@ export async function live_status() {
         artist.removeAttribute('target');
         album.removeAttribute('target');
 
-        artist.textContent = correct_artist(artist.textContent);
-        track.textContent = correct_item_by_artist(track.textContent, artist.textContent);
+        artist.textContent = romanise(correct_artist(artist.textContent));
+        track.textContent = romanise(correct_item_by_artist(track.textContent, artist.textContent));
 
         let next = new Date();
         next.setMinutes(next.getMinutes() + 1);
