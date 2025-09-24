@@ -9,7 +9,7 @@ import {settings} from "../build/config"
 import {log} from "../build/log"
 import {auth, page, root} from "../build/page"
 import {sponsor_list} from "../build/sponsor"
-import {clean_number, control_gif_pause, lazy, sanitise} from "../build/tools"
+import {clean_number, control_gif_pause, lazy, romanise, sanitise} from "../build/tools"
 import {lang, tl, trans} from "../build/trans"
 import {prep_chart_colours} from '../chart'
 import {create_badge, load_badges} from "../components/badge"
@@ -924,15 +924,15 @@ function bleh_featured_profile_track(object) {
 
         // combine
         render(name_elem, html.node`
-            <div class="title">${song_title.trim()}</div>
+            <div class="title">${romanise(song_title.trim())}</div>
             ${song_tags.map((tag) => html.node`
-                <div class="feat" data-bleh--tag-type="${tag.type}" data-bleh--tag-group="${tag.group}">${tag.text}</div>
+                <div class="feat" data-bleh--tag-type="${tag.type}" data-bleh--tag-group="${tag.group}">${romanise(tag.text)}</div>
             `)}
         `);
 
         artist_elem_full = html.node`
             <div class="source-album-artist">
-                <a href="${root}music/${redirect()}${sanitise(formatted_title[2])}">${formatted_title[2]}</a>
+                <a href="${root}music/${redirect()}${sanitise(formatted_title[2])}">${romanise(formatted_title[2])}</a>
             </div>
         `;
 
@@ -944,16 +944,13 @@ function bleh_featured_profile_track(object) {
 
             let guest_element = document.createElement('a');
             guest_element.setAttribute('href', `${root}music/${redirect()}${sanitise(song_guests[guest])}`);
-            guest_element.textContent = song_guests[guest];
+            guest_element.textContent = romanise(song_guests[guest]);
 
             artist_elem_full.appendChild(guest_element);
         }
     } else if (settings.corrections) {
-        let name = correct_item_by_artist(name_elem.textContent.trim(), artist_elem.textContent.trim());
-        let artist = correct_artist(artist_elem.textContent.trim());
-
-        name_elem.textContent = name;
-        artist_elem.textContent = artist;
+        name_elem.textContent = romanise(correct_item_by_artist(name_elem.textContent.trim(), artist_elem.textContent.trim()));
+        artist_elem.textContent = romanise(correct_artist(artist_elem.textContent.trim()));
     }
 
     if (form) {

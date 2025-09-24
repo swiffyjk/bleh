@@ -45091,14 +45091,14 @@
         song_tags = formatted_title[1];
       }
       render(name_elem, html.node`
-            <div class="title">${song_title.trim()}</div>
+            <div class="title">${romanise(song_title.trim())}</div>
             ${song_tags.map((tag) => html.node`
-                <div class="feat" data-bleh--tag-type="${tag.type}" data-bleh--tag-group="${tag.group}">${tag.text}</div>
+                <div class="feat" data-bleh--tag-type="${tag.type}" data-bleh--tag-group="${tag.group}">${romanise(tag.text)}</div>
             `)}
         `);
       artist_elem_full = html.node`
             <div class="source-album-artist">
-                <a href="${root}music/${redirect()}${sanitise(formatted_title[2])}">${formatted_title[2]}</a>
+                <a href="${root}music/${redirect()}${sanitise(formatted_title[2])}">${romanise(formatted_title[2])}</a>
             </div>
         `;
       let song_guests = formatted_title[3];
@@ -45106,14 +45106,12 @@
         artist_elem_full.innerHTML = `${artist_elem_full.innerHTML},`;
         let guest_element = document.createElement("a");
         guest_element.setAttribute("href", `${root}music/${redirect()}${sanitise(song_guests[guest])}`);
-        guest_element.textContent = song_guests[guest];
+        guest_element.textContent = romanise(song_guests[guest]);
         artist_elem_full.appendChild(guest_element);
       }
     } else if (settings.corrections) {
-      let name = correct_item_by_artist(name_elem.textContent.trim(), artist_elem.textContent.trim());
-      let artist = correct_artist(artist_elem.textContent.trim());
-      name_elem.textContent = name;
-      artist_elem.textContent = artist;
+      name_elem.textContent = romanise(correct_item_by_artist(name_elem.textContent.trim(), artist_elem.textContent.trim()));
+      artist_elem.textContent = romanise(correct_artist(artist_elem.textContent.trim()));
     }
     if (form) {
       let button = form.querySelector("button");
