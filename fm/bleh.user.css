@@ -8972,16 +8972,19 @@
             }
         }
     }
-    [data-theme="nav-window"],
-    [data-theme="auth-menu-v2"] {
+    .tippy-box[data-theme="nav-window"],
+    .tippy-box[data-theme="auth-menu-v2"] {
         padding: var(--item-list-gap) !important;
-        background: hsl(var(--menu-bg), 85%);
+        background: hsl(var(--menu-bg), 90%);
         border-radius: var(--card-radius) !important;
         box-shadow: var(--override-full-shadow, var(--overlay-shadow)) !important;
         border: 1px solid var(--card-border-base) !important;
         overflow: hidden;
         animation: menu_in 0.25s var(--trans-function);
         transform-origin: top;
+
+        backdrop-filter: var(--solarium);
+        -webkit-backdrop-filter: var(--solarium);
 
         text-align: left;
 
@@ -8994,7 +8997,7 @@
             overflow: hidden;
         }
 
-        &.tippy-box[data-theme="nav-window"] {
+        &[data-theme="nav-window"] {
             max-width: 600px !important;
         }
 
@@ -12579,8 +12582,8 @@
 
         [data-bleh--solarium="false"] & {
             background: hsl(var(--b8));
-            backdrop-filter: none;
-            -webkit-backdrop-filter: none;
+            backdrop-filter: none !important;
+            -webkit-backdrop-filter: none !important;
         }
 
         text-align: center;
@@ -12752,6 +12755,9 @@
             color: hsl(var(--c2));
             animation: menu_in 0.25s var(--trans-function);
             transform-origin: top;
+
+            backdrop-filter: var(--solarium);
+            -webkit-backdrop-filter: var(--solarium);
 
             text-align: left;
 
@@ -17493,16 +17499,24 @@
     }
 
     .range {
-        /*&:active {
-            .track {
-                .nub {
-                    background-color: transparent;
-                    box-shadow: var(--primary-shadow);
-                    backdrop-filter: blur(2px) saturate(var(--blur-saturate)) brightness(var(--blur-brightness)) contrast(var(--blur-contrast));
-                    -webkit-backdrop-filter: blur(2px) saturate(var(--blur-saturate)) brightness(var(--blur-brightness)) contrast(var(--blur-contrast));
+        --nub-w: 12px;
+        --nub-h: 16px;
+
+        [data-bleh--solarium="true"] & {
+            &:active {
+                --nub-w: 22px;
+                --nub-h: 14px;
+
+                .track {
+                    .nub {
+                        background-color: transparent;
+                        box-shadow: var(--primary-shadow);
+                        backdrop-filter: blur(2px) saturate(var(--blur-saturate)) brightness(var(--blur-brightness)) contrast(var(--blur-contrast));
+                        -webkit-backdrop-filter: blur(2px) saturate(var(--blur-saturate)) brightness(var(--blur-brightness)) contrast(var(--blur-contrast));
+                    }
                 }
             }
-        }*/
+        }
 
         .track {
             display: flex;
@@ -17521,19 +17535,18 @@
                 background-color: hsl(var(--h3));
                 border-radius: var(--item-big-radius);
                 box-shadow: var(--primary-shadow), 0 3px 12px hsl(var(--h4), 32%);
-                transition: width 0.04s var(--trans-function);
             }
 
             .nub {
                 display: flex;
-                width: 12px;
-                height: 16px;
+                width: var(--nub-w);
+                height: var(--nub-h);
                 background-color: hsl(var(--h3));
                 border-radius: var(--item-big-radius);
                 box-shadow: var(--primary-shadow), 0 3px 12px hsl(var(--h4), 32%);
-                margin: -4px -7px;
+                margin: calc(-1 * ((var(--nub-h) - 8px) / 2)) calc(-1 * (var(--nub-w) / 2));
 
-                transition-property: opacity, background-color, box-shadow, backdrop-filter, -webkit-backdrop-filter;
+                transition-property: opacity, width, height, margin, background-color, box-shadow, backdrop-filter, -webkit-backdrop-filter;
                 transition-duration: var(--trans);
                 transition-timing-function: var(--trans-function);
             }
