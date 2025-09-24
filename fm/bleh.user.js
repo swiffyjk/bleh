@@ -36931,7 +36931,7 @@
     render(page.structure.side, html`
         <section class="current-mini-settings" ref=${(el) => mini_settings = el} />
         <section class="mini-faq">
-            <p class="card-tip">${tl(trans.by_user, { "u": valid_minis.collage.by.join(",") })}</p>
+            <p class="card-tip">${tl(trans.value_by_user, { "v": valid_minis.collage.name, "u": valid_minis.collage.by.join(",") })}</p>
         </section>
     `);
     collage({
@@ -36951,7 +36951,7 @@
     render(page.structure.side, html`
         <section class="current-mini-settings" ref=${(el) => mini_settings = el} />
         <section class="mini-faq">
-            <p class="card-tip">${tl(trans.by_user, { "u": valid_minis.compare.by.join(",") })}</p>
+            <p class="card-tip">${tl(trans.value_by_user, { "v": valid_minis.compare.name, "u": valid_minis.compare.by.join(",") })}</p>
         </section>
     `);
     compare({
@@ -36971,7 +36971,7 @@
     render(page.structure.side, html`
         <section class="current-mini-settings" ref=${(el) => mini_settings = el} />
         <section class="mini-faq">
-            <p class="card-tip">${tl(trans.by_user, { "u": valid_minis.pixel.by.join(",") })}</p>
+            <p class="card-tip">${tl(trans.value_by_user, { "v": valid_minis.pixel.name, "u": valid_minis.pixel.by.join(",") })}</p>
         </section>
     `);
     pixel({
@@ -56164,6 +56164,11 @@
       de: " von {a}",
       pt: " por {a}"
     },
+    value_by_user: {
+      en: "{v} by {u}",
+      de: "{v} von {u}",
+      pt: "{v} por {u}"
+    },
     average: {
       // scrobble average
       en: "Average",
@@ -62186,11 +62191,11 @@
     },
     rabbit_shortcut: {
       default: "s",
-      title: trans.profile_shortcut.name,
+      title: trans.starred_friend.name,
       type: "text",
       min: 1,
       max: 1,
-      icon: "icon-16-profile-shortcut",
+      icon: "icon-16-starred-friend",
       placeholder: "none",
       keybind: ["\u2318", "S"],
       warn_if_empty: true

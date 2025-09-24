@@ -1831,6 +1831,11 @@ export const trans = {
         de: ' von {a}',
         pt: ' por {a}'
     },
+    value_by_user: {
+        en: '{v} by {u}',
+        de: '{v} von {u}',
+        pt: '{v} por {u}'
+    },
     average: {
         // scrobble average
         en: 'Average',

@@ -701,13 +701,7 @@
 
         --rain: 0, 0%, 100%;
 
-        --solarium: var(--card-blur);
-
-        @supports (filter: url(#solarium)) {
-            body {
-                --solarium: var(--card-blur) url(#solarium);
-            }
-        }
+        --solarium: var(--card-blur) url(#solarium);
 
         &[data-bleh--theme_type="light"], [data-bleh--theme_type="light"] > & {
             --card-shadow: hsla(var(--b7), 0.05) 0 2px 4px 0;
@@ -752,6 +746,12 @@
             --modal-bg: hsl(var(--b3), 0.35);
 
             --menu-bg: var(--b5);
+        }
+    }
+
+    @-moz-document url-prefix() {
+        body {
+            --solarium: var(--card-blur);
         }
     }
 

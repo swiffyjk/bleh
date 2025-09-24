@@ -1032,11 +1032,11 @@ export let settings_store = {
     },
     rabbit_shortcut: {
         default: 's',
-        title: trans.profile_shortcut.name,
+        title: trans.starred_friend.name,
         type: 'text',
         min: 1,
         max: 1,
-        icon: 'icon-16-profile-shortcut',
+        icon: 'icon-16-starred-friend',
         placeholder: 'none',
         keybind: ['⌘', 'S'],
         warn_if_empty: true
