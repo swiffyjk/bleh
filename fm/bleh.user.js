@@ -46813,8 +46813,7 @@
             ` : ""}
         </div>
         <div class="bleh--panel">
-            <h4>${tl(trans.about)}</h4>
-            <p>${version.brand} ${version.build}.${version.sku}</p>
+            <p class="card-tip">${version.brand} ${version.build}.${version.sku}</p>
         </div>
     `);
     page.structure.row.insertBefore(nav, page.structure.content);
