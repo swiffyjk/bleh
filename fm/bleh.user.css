@@ -12634,6 +12634,9 @@
             animation: menu_in 0.25s var(--trans-function);
             transform-origin: top;
 
+            backdrop-filter: var(--solarium);
+            -webkit-backdrop-filter: var(--solarium);
+
             [data-bleh--solarium="false"] & {
                 background: hsl(var(--menu-bg)) !important;
             }

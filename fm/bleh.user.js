@@ -63280,7 +63280,8 @@
     solarium: {
       default: true,
       title: trans.solarium.name,
-      body: trans.solarium.body
+      body: trans.solarium.body,
+      new_release: true
     },
     gloss: {
       css: "gloss",
