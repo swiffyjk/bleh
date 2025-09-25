@@ -703,13 +703,13 @@ export function patch_titles(search=page.structure.main) {
             const show_album_text = (is_active || settings.expand_tracks == 'always') && settings.expand_tracks != 'never';
             track.setAttribute('data-show-album-text', show_album_text);
 
-            if (!is_album && !has_bar && show_album_text) {
+            if (!is_album) {
                 let image_wrap = track.querySelector('.chartlist-image');
                 if (image_wrap) {
                     let link = image_wrap.querySelector('.cover-art');
                     let image = link.querySelector('img');
 
-                    if (!settings.album_text) {
+                    if (show_album_text && !has_bar && !settings.album_text) {
                         let alt = correct_item_by_artist(image.getAttribute('alt'), track_artist);
 
                         track.appendChild(html.node`
@@ -719,7 +719,9 @@ export function patch_titles(search=page.structure.main) {
                         `);
                     }
 
-                    if (!settings.colourful_tracks || !is_active) return;
+                    if (!settings.colourful_tracks && !settings.colourful_tracks_all) return;
+
+                    if (!settings.colourful_tracks_all && !is_active) return;
 
                     image.setAttribute('crossorigin', 'anonymous');
                     try {

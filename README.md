@@ -2,7 +2,7 @@
 
 bleh is my passion project and a take on a full [Last.fm](https://last.fm) redesign. It is still a work-in-progress but is entering a very stable state as of recent. If you're interested in what it has to offer along with more screenshots, head to the site above (which has a convenient download link too :3 !!) Community contributions are welcome, please see below!
 
-![preview](https://bleh.katelyn.moe/img/bleh-ash.jpg)
+![preview](https://bleh.katelyn.moe/img/bleh-void.jpg)
 
 ## Support
 
