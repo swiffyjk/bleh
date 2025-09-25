@@ -289,7 +289,6 @@ export function oracle_process() {
             `);
         }
 
-        const tracks = data.media[0].tracks;
 
         const artist = page.sister.toLowerCase();
         const album  = page.name.toLowerCase();
@@ -307,12 +306,29 @@ export function oracle_process() {
         }
         log('entry', 'oracle', 'info', {oracle_entry});
 
+        const media = data.media;
+        const discs = media.filter(item => item.tracks != null);
+
         const track_panel = html.node`
             <section class="oracle-tracks">
                 <h3 class="text-18">${tl(trans.tracklist)}<span class="new-badge beta">${tl(trans.beta)}</span></h3>
+                ${discs.map(disc => render_tracklist(disc, discs.length))}
+            </section>
+        `;
+
+        info_panel.after(track_panel);
+
+        function render_tracklist(disc, length) {
+            return html.node`
+                ${length > 1 ? html.node`
+                <div class="sub-text normal disc-header">
+                    <span class="bleh-icon" style="--icon: var(--mask)" />
+                    ${tl(trans.disc_number, {'n': disc.position})}
+                </div>
+                ` : ''}
                 <table class="chartlist chartlist--with-index chartlist--with-index--length-1 chartlist--with-artist chartlist--with-more chartlist--with-duration chartlist--with-bar">
                     <tbody>
-                        ${tracks.map(track => {
+                        ${disc.tracks.map(track => {
                             const artist_lower = track['artist-credit'][0].name.toLowerCase();
                             const title_lower = track.title.toLowerCase();
 
@@ -372,10 +388,8 @@ export function oracle_process() {
                         })}
                     </tbody>
                 </table>
-            </section>
-        `;
-
-        info_panel.after(track_panel);
+            `;
+        }
     }
 
     function oracle_track_releases(data) {

@@ -27515,6 +27515,19 @@
     }
 
 
+    .sub-text.normal.disc-header {
+        --mask: var(--icon-16-album);
+        gap: 12px !important;
+        margin-bottom: unset !important;
+
+        & > .bleh-icon {
+            display: none;
+        }
+
+        .chartlist + & {
+            margin-top: 10px;
+        }
+    }
     .oracle {
         display: flex;
         gap: var(--icon-gap);

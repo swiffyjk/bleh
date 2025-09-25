@@ -35391,7 +35391,6 @@
                 </div>
             `);
       }
-      const tracks = data2.media[0].tracks;
       const artist = page.sister.toLowerCase();
       const album = page.name.toLowerCase();
       const defaults2 = {
@@ -35402,40 +35401,54 @@
         ...oracle_albums.hasOwnProperty(artist) && oracle_albums[artist].hasOwnProperty(album) ? oracle_albums[artist][album] : {}
       };
       log("entry", "oracle", "info", { oracle_entry });
+      const media = data2.media;
+      const discs = media.filter((item) => item.tracks != null);
       const track_panel = html.node`
             <section class="oracle-tracks">
                 <h3 class="text-18">${tl(trans.tracklist)}<span class="new-badge beta">${tl(trans.beta)}</span></h3>
+                ${discs.map((disc) => render_tracklist(disc, discs.length))}
+            </section>
+        `;
+      info_panel.after(track_panel);
+      function render_tracklist(disc, length) {
+        return html.node`
+                ${length > 1 ? html.node`
+                <div class="sub-text normal disc-header">
+                    <span class="bleh-icon" style="--icon: var(--mask)" />
+                    ${tl(trans.disc_number, { "n": disc.position })}
+                </div>
+                ` : ""}
                 <table class="chartlist chartlist--with-index chartlist--with-index--length-1 chartlist--with-artist chartlist--with-more chartlist--with-duration chartlist--with-bar">
                     <tbody>
-                        ${tracks.map((track) => {
-        const artist_lower = track["artist-credit"][0].name.toLowerCase();
-        const title_lower = track.title.toLowerCase();
-        const track_entry = oracle_tracks.hasOwnProperty(artist_lower) && oracle_tracks[artist_lower].hasOwnProperty(title_lower) ? oracle_tracks[artist_lower][title_lower] : null;
-        const total_s = Math.floor(track.length / 1e3);
-        const m = Math.floor(total_s / 60);
-        const s2 = total_s % 60;
-        const disambig = track.recording.disambiguation;
-        const video = track.recording.video;
-        if (video) return html.node``;
-        let title = track.title;
-        if (track_entry) {
-          title = track_entry;
-        } else if (oracle_entry.guests_in_title) {
-          const artists = track["artist-credit"];
-          const guests = artists.filter(
-            (artist2) => artist2.name.toLowerCase() != page.sister.toLowerCase()
-          );
-          if (artists.length > 1) {
-            title += ` (${artists[0].joinphrase.trim()} `;
-            guests.forEach((artist2, index3) => {
-              let joinphrase = artist2.joinphrase;
-              if (index3 == guests.length - 2 && oracle_entry.final_guest_separator) joinphrase = oracle_entry.final_guest_separator;
-              title += `${artist2.name}${joinphrase}`;
-            });
-            title += ")";
+                        ${disc.tracks.map((track) => {
+          const artist_lower = track["artist-credit"][0].name.toLowerCase();
+          const title_lower = track.title.toLowerCase();
+          const track_entry = oracle_tracks.hasOwnProperty(artist_lower) && oracle_tracks[artist_lower].hasOwnProperty(title_lower) ? oracle_tracks[artist_lower][title_lower] : null;
+          const total_s = Math.floor(track.length / 1e3);
+          const m = Math.floor(total_s / 60);
+          const s2 = total_s % 60;
+          const disambig = track.recording.disambiguation;
+          const video = track.recording.video;
+          if (video) return html.node``;
+          let title = track.title;
+          if (track_entry) {
+            title = track_entry;
+          } else if (oracle_entry.guests_in_title) {
+            const artists = track["artist-credit"];
+            const guests = artists.filter(
+              (artist2) => artist2.name.toLowerCase() != page.sister.toLowerCase()
+            );
+            if (artists.length > 1) {
+              title += ` (${artists[0].joinphrase.trim()} `;
+              guests.forEach((artist2, index3) => {
+                let joinphrase = artist2.joinphrase;
+                if (index3 == guests.length - 2 && oracle_entry.final_guest_separator) joinphrase = oracle_entry.final_guest_separator;
+                title += `${artist2.name}${joinphrase}`;
+              });
+              title += ")";
+            }
           }
-        }
-        const elem = html.node`
+          const elem = html.node`
                                 <tr class="chartlist-row" data-disambig=${disambig}>
                                     <td class="chartlist-index">${track.position}</td>
                                     <td class="chartlist-name">
@@ -35448,13 +35461,12 @@
                                     </td>
                                 </tr>
                             `;
-        return elem;
-      })}
+          return elem;
+        })}
                     </tbody>
                 </table>
-            </section>
-        `;
-      info_panel.after(track_panel);
+            `;
+      }
     }
     function oracle_track_releases(data2) {
       let releases = [];
@@ -60145,6 +60157,9 @@
     },
     romanise_ko: {
       en: "\uD55C\uAD6D\uC5B4 (Korean)"
+    },
+    disc_number: {
+      en: "Disc {n}"
     }
   };
   var trans_legacy = {

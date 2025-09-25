@@ -4613,6 +4613,9 @@ export const trans = {
     },
     romanise_ko: {
         en: '한국어 (Korean)'
+    },
+    disc_number: {
+        en: 'Disc {n}'
     }
 }
 
