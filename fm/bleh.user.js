@@ -24417,9 +24417,6 @@
     }, step);
     return notif;
   }
-  unsafeWindow._notify_rm = function(notif) {
-    notify_rm(notif);
-  };
   function notify_rm(notif) {
     notif.classList.add("fade-out");
     setTimeout(function() {
