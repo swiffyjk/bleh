@@ -1057,8 +1057,7 @@ export let settings_store = {
     prefer_no_redirect: {
         default: true,
         title: trans.prefer_no_redirect.name,
-        body: trans.prefer_no_redirect.body,
-        new_release: true
+        body: trans.prefer_no_redirect.body
     },
     inbox_view: {
         default: 'notifications',

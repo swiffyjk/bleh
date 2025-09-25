@@ -50558,9 +50558,11 @@
       has_multi = true;
     page.multi = false;
     if (!has_multi) {
-      if (!settings.corrections)
+      if (!settings.corrections) {
+        title.textContent = romanise(title_text);
         return;
-      title.textContent = correct_artist(title_text, true);
+      }
+      title.textContent = romanise(correct_artist(title_text, true));
     } else {
       title_text = title_text.replaceAll(" & ", ";").replaceAll(", ", ";").replace("Tyler;the", "Tyler, The").replace("Tyler;The", "Tyler, The").replace("Marina;the Diamonds", "Marina and The Diamonds").replace(/selena gomez;the scene/gi, "Selena Gomez & the Scene").replaceAll(";;", ";");
       page.multi = true;
@@ -50569,7 +50571,7 @@
       if (split.length < 2) {
         page.multi = false;
         if (!settings.corrections) return;
-        title.textContent = correct_artist(title_text, true);
+        title.textContent = romanise(correct_artist(title_text, true));
         return;
       }
       split.forEach((artist, index3) => {
@@ -50579,37 +50581,25 @@
         part.classList.add("multi-artist-part");
         part.setAttribute("href", `${root}music/${redirect()}${sanitise(artist)}`);
         if (settings.corrections)
-          part.textContent = correct_artist(artist);
+          part.textContent = romanise(correct_artist(artist));
         else
-          part.textContent = artist;
+          part.textContent = romanise(artist);
         title.appendChild(part);
       });
     }
   }
   function patch_header_title() {
     page.suggest = null;
-    if (!settings.corrections && !settings.format_guest_features && !page.multi)
-      return;
+    if (!settings.corrections && !settings.format_guest_features && !page.multi) return;
     page.corrected = false;
     let track_title = document.body.querySelector(".header-new-title");
     let track_artist = document.body.querySelector(".header-new-crumb span");
-    if (!track_title)
-      return;
-    if (!track_artist) {
-      if (artist_corrections.hasOwnProperty(track_title.textContent)) {
-        let corrected_artist = artist_corrections[track_title.textContent];
-        log(`corrected ${track_title.textContent} as ${corrected_artist}`, "lotus");
-        track_title.textContent = romanise(corrected_artist);
-        page.corrected = true;
-      } else {
-        track_title.textContent = romanise(track_title.textContent);
-      }
-      return;
-    } else {
+    if (!track_title) return;
+    if (track_artist) {
       if (artist_corrections.hasOwnProperty(track_artist.textContent)) {
         let corrected_artist = artist_corrections[track_artist.textContent];
         log(`corrected ${track_artist.textContent} as ${corrected_artist}`, "lotus");
-        track_artist.parentElement.setAttribute("href", `${root}music/${redirect()}${sanitise(corrected_artist)}`);
+        track_artist.parentElement.setAttribute("href", `${root}music/${redirect()}${sanitise(track_artist.textContent)}`);
         track_artist.textContent = romanise(corrected_artist);
       } else {
         track_artist.parentElement.setAttribute("href", `${root}music/${redirect()}${sanitise(track_artist.textContent)}`);
@@ -64178,8 +64168,7 @@
     prefer_no_redirect: {
       default: true,
       title: trans.prefer_no_redirect.name,
-      body: trans.prefer_no_redirect.body,
-      new_release: true
+      body: trans.prefer_no_redirect.body
     },
     inbox_view: {
       default: "notifications",
