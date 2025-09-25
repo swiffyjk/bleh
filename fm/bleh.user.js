@@ -57990,6 +57990,9 @@
       album_track: {
         en: "Album and track corrections",
         sv: "Album och sp\xE5rredigeringar"
+      },
+      combined_artists: {
+        en: "Combined artist profiles"
       }
     },
     correct_titles_with_lotus: {

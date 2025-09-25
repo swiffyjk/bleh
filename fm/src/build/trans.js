@@ -2459,6 +2459,9 @@ export const trans = {
         album_track: {
             en: 'Album and track corrections',
             sv: 'Album och spårredigeringar'
+        },
+        combined_artists: {
+            en: 'Combined artist profiles'
         }
     },
     correct_titles_with_lotus: {
