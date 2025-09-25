@@ -4044,611 +4044,126 @@
     }
   });
 
-  // node_modules/hangul-js/hangul.js
-  var require_hangul = __commonJS({
-    "node_modules/hangul-js/hangul.js"(exports, module) {
-      (function() {
-        "use strict";
-        var CHO = [
-          "\u3131",
-          "\u3132",
-          "\u3134",
-          "\u3137",
-          "\u3138",
-          "\u3139",
-          "\u3141",
-          "\u3142",
-          "\u3143",
-          "\u3145",
-          "\u3146",
-          "\u3147",
-          "\u3148",
-          "\u3149",
-          "\u314A",
-          "\u314B",
-          "\u314C",
-          "\u314D",
-          "\u314E"
-        ], JUNG = [
-          "\u314F",
-          "\u3150",
-          "\u3151",
-          "\u3152",
-          "\u3153",
-          "\u3154",
-          "\u3155",
-          "\u3156",
-          "\u3157",
-          ["\u3157", "\u314F"],
-          ["\u3157", "\u3150"],
-          ["\u3157", "\u3163"],
-          "\u315B",
-          "\u315C",
-          ["\u315C", "\u3153"],
-          ["\u315C", "\u3154"],
-          ["\u315C", "\u3163"],
-          "\u3160",
-          "\u3161",
-          ["\u3161", "\u3163"],
-          "\u3163"
-        ], JONG = [
-          "",
-          "\u3131",
-          "\u3132",
-          ["\u3131", "\u3145"],
-          "\u3134",
-          ["\u3134", "\u3148"],
-          ["\u3134", "\u314E"],
-          "\u3137",
-          "\u3139",
-          ["\u3139", "\u3131"],
-          ["\u3139", "\u3141"],
-          ["\u3139", "\u3142"],
-          ["\u3139", "\u3145"],
-          ["\u3139", "\u314C"],
-          ["\u3139", "\u314D"],
-          ["\u3139", "\u314E"],
-          "\u3141",
-          "\u3142",
-          ["\u3142", "\u3145"],
-          "\u3145",
-          "\u3146",
-          "\u3147",
-          "\u3148",
-          "\u314A",
-          "\u314B",
-          "\u314C",
-          "\u314D",
-          "\u314E"
-        ], HANGUL_OFFSET = 44032, CONSONANTS2 = [
-          "\u3131",
-          "\u3132",
-          "\u3133",
-          "\u3134",
-          "\u3135",
-          "\u3136",
-          "\u3137",
-          "\u3138",
-          "\u3139",
-          "\u313A",
-          "\u313B",
-          "\u313C",
-          "\u313D",
-          "\u313E",
-          "\u313F",
-          "\u3140",
-          "\u3141",
-          "\u3142",
-          "\u3143",
-          "\u3144",
-          "\u3145",
-          "\u3146",
-          "\u3147",
-          "\u3148",
-          "\u3149",
-          "\u314A",
-          "\u314B",
-          "\u314C",
-          "\u314D",
-          "\u314E"
-        ], COMPLETE_CHO = [
-          "\u3131",
-          "\u3132",
-          "\u3134",
-          "\u3137",
-          "\u3138",
-          "\u3139",
-          "\u3141",
-          "\u3142",
-          "\u3143",
-          "\u3145",
-          "\u3146",
-          "\u3147",
-          "\u3148",
-          "\u3149",
-          "\u314A",
-          "\u314B",
-          "\u314C",
-          "\u314D",
-          "\u314E"
-        ], COMPLETE_JUNG = [
-          "\u314F",
-          "\u3150",
-          "\u3151",
-          "\u3152",
-          "\u3153",
-          "\u3154",
-          "\u3155",
-          "\u3156",
-          "\u3157",
-          "\u3158",
-          "\u3159",
-          "\u315A",
-          "\u315B",
-          "\u315C",
-          "\u315D",
-          "\u315E",
-          "\u315F",
-          "\u3160",
-          "\u3161",
-          "\u3162",
-          "\u3163"
-        ], COMPLETE_JONG = [
-          "",
-          "\u3131",
-          "\u3132",
-          "\u3133",
-          "\u3134",
-          "\u3135",
-          "\u3136",
-          "\u3137",
-          "\u3139",
-          "\u313A",
-          "\u313B",
-          "\u313C",
-          "\u313D",
-          "\u313E",
-          "\u313F",
-          "\u3140",
-          "\u3141",
-          "\u3142",
-          "\u3144",
-          "\u3145",
-          "\u3146",
-          "\u3147",
-          "\u3148",
-          "\u314A",
-          "\u314B",
-          "\u314C",
-          "\u314D",
-          "\u314E"
-        ], COMPLEX_CONSONANTS = [
-          ["\u3131", "\u3145", "\u3133"],
-          ["\u3134", "\u3148", "\u3135"],
-          ["\u3134", "\u314E", "\u3136"],
-          ["\u3139", "\u3131", "\u313A"],
-          ["\u3139", "\u3141", "\u313B"],
-          ["\u3139", "\u3142", "\u313C"],
-          ["\u3139", "\u3145", "\u313D"],
-          ["\u3139", "\u314C", "\u313E"],
-          ["\u3139", "\u314D", "\u313F"],
-          ["\u3139", "\u314E", "\u3140"],
-          ["\u3142", "\u3145", "\u3144"]
-        ], COMPLEX_VOWELS = [
-          ["\u3157", "\u314F", "\u3158"],
-          ["\u3157", "\u3150", "\u3159"],
-          ["\u3157", "\u3163", "\u315A"],
-          ["\u315C", "\u3153", "\u315D"],
-          ["\u315C", "\u3154", "\u315E"],
-          ["\u315C", "\u3163", "\u315F"],
-          ["\u3161", "\u3163", "\u3162"]
-        ], CONSONANTS_HASH, CHO_HASH, JUNG_HASH, JONG_HASH, COMPLEX_CONSONANTS_HASH, COMPLEX_VOWELS_HASH;
-        function _makeHash(array) {
-          var length = array.length, hash3 = { 0: 0 };
-          for (var i = 0; i < length; i++) {
-            if (array[i])
-              hash3[array[i].charCodeAt(0)] = i;
-          }
-          return hash3;
+  // node_modules/hangul-romanization/dist/conversionSystems/revisedRomanizationOfKorean.js
+  var require_revisedRomanizationOfKorean = __commonJS({
+    "node_modules/hangul-romanization/dist/conversionSystems/revisedRomanizationOfKorean.js"(exports) {
+      "use strict";
+      Object.defineProperty(exports, "__esModule", { value: true });
+      exports.REVISED_ROMANIZATION_OF_KOREAN = void 0;
+      exports.REVISED_ROMANIZATION_OF_KOREAN = {
+        vowels: [
+          "a",
+          "ae",
+          "ya",
+          "yee",
+          "eo",
+          "e",
+          "yeo",
+          "ye",
+          "o",
+          "wa",
+          "wae",
+          "oe",
+          "yo",
+          "u",
+          "wo",
+          "we",
+          "wi",
+          "yu",
+          "eu",
+          "ui",
+          "i"
+          // ㅣ
+        ],
+        consonants: {
+          initial: [
+            "g",
+            "kk",
+            "n",
+            "d",
+            "tt",
+            "r",
+            "m",
+            "b",
+            "pp",
+            "s",
+            "ss",
+            "",
+            "j",
+            "jj",
+            "ch",
+            "k",
+            "t",
+            "p",
+            "h"
+            // ㅎ
+          ],
+          final: [
+            "",
+            "k",
+            "k",
+            "kt",
+            "n",
+            "nt",
+            "nh",
+            "t",
+            "l",
+            "lk",
+            "lm",
+            "lp",
+            "lt",
+            "lt",
+            "lp",
+            "lh",
+            "m",
+            "p",
+            "pt",
+            "t",
+            "tt",
+            "ng",
+            "t",
+            "t",
+            "k",
+            "t",
+            "p",
+            "h"
+            // ㅎ
+          ]
         }
-        CONSONANTS_HASH = _makeHash(CONSONANTS2);
-        CHO_HASH = _makeHash(COMPLETE_CHO);
-        JUNG_HASH = _makeHash(COMPLETE_JUNG);
-        JONG_HASH = _makeHash(COMPLETE_JONG);
-        function _makeComplexHash(array) {
-          var length = array.length, hash3 = {}, code1, code2;
-          for (var i = 0; i < length; i++) {
-            code1 = array[i][0].charCodeAt(0);
-            code2 = array[i][1].charCodeAt(0);
-            if (typeof hash3[code1] === "undefined") {
-              hash3[code1] = {};
-            }
-            hash3[code1][code2] = array[i][2].charCodeAt(0);
-          }
-          return hash3;
-        }
-        COMPLEX_CONSONANTS_HASH = _makeComplexHash(COMPLEX_CONSONANTS);
-        COMPLEX_VOWELS_HASH = _makeComplexHash(COMPLEX_VOWELS);
-        function _isConsonant(c) {
-          return typeof CONSONANTS_HASH[c] !== "undefined";
-        }
-        function _isCho(c) {
-          return typeof CHO_HASH[c] !== "undefined";
-        }
-        function _isJung(c) {
-          return typeof JUNG_HASH[c] !== "undefined";
-        }
-        function _isJong(c) {
-          return typeof JONG_HASH[c] !== "undefined";
-        }
-        function _isHangul(c) {
-          return 44032 <= c && c <= 55203;
-        }
-        function _isJungJoinable(a, b) {
-          return COMPLEX_VOWELS_HASH[a] && COMPLEX_VOWELS_HASH[a][b] ? COMPLEX_VOWELS_HASH[a][b] : false;
-        }
-        function _isJongJoinable(a, b) {
-          return COMPLEX_CONSONANTS_HASH[a] && COMPLEX_CONSONANTS_HASH[a][b] ? COMPLEX_CONSONANTS_HASH[a][b] : false;
-        }
-        var disassemble = function(string, grouped) {
-          if (string === null) {
-            throw new Error("Arguments cannot be null");
-          }
-          if (typeof string === "object") {
-            string = string.join("");
-          }
-          var result = [], length = string.length, cho, jung, jong, code, r;
-          for (var i = 0; i < length; i++) {
-            var temp = [];
-            code = string.charCodeAt(i);
-            if (_isHangul(code)) {
-              code -= HANGUL_OFFSET;
-              jong = code % 28;
-              jung = (code - jong) / 28 % 21;
-              cho = parseInt((code - jong) / 28 / 21);
-              temp.push(CHO[cho]);
-              if (typeof JUNG[jung] === "object") {
-                temp = temp.concat(JUNG[jung]);
-              } else {
-                temp.push(JUNG[jung]);
-              }
-              if (jong > 0) {
-                if (typeof JONG[jong] === "object") {
-                  temp = temp.concat(JONG[jong]);
-                } else {
-                  temp.push(JONG[jong]);
-                }
-              }
-            } else if (_isConsonant(code)) {
-              if (_isCho(code)) {
-                r = CHO[CHO_HASH[code]];
-              } else {
-                r = JONG[JONG_HASH[code]];
-              }
-              if (typeof r === "string") {
-                temp.push(r);
-              } else {
-                temp = temp.concat(r);
-              }
-            } else if (_isJung(code)) {
-              r = JUNG[JUNG_HASH[code]];
-              if (typeof r === "string") {
-                temp.push(r);
-              } else {
-                temp = temp.concat(r);
-              }
-            } else {
-              temp.push(string.charAt(i));
-            }
-            if (grouped) result.push(temp);
-            else result = result.concat(temp);
-          }
+      };
+    }
+  });
+
+  // node_modules/hangul-romanization/dist/index.js
+  var require_dist = __commonJS({
+    "node_modules/hangul-romanization/dist/index.js"(exports) {
+      "use strict";
+      Object.defineProperty(exports, "__esModule", { value: true });
+      exports.convert = void 0;
+      var revisedRomanizationOfKorean_1 = require_revisedRomanizationOfKorean();
+      var UNICODE_OFFSET = 44032;
+      var UNICODE_MAX = 55215;
+      function convertCharacter(char) {
+        var charCode = char.charCodeAt(0);
+        var isHangul = charCode >= UNICODE_OFFSET && charCode < UNICODE_MAX;
+        if (isHangul) {
+          var unicodeOffset = charCode - UNICODE_OFFSET;
+          var trailerOffset = unicodeOffset % revisedRomanizationOfKorean_1.REVISED_ROMANIZATION_OF_KOREAN.consonants.final.length;
+          unicodeOffset -= trailerOffset;
+          unicodeOffset /= revisedRomanizationOfKorean_1.REVISED_ROMANIZATION_OF_KOREAN.consonants.final.length;
+          var vowelOffset = unicodeOffset % revisedRomanizationOfKorean_1.REVISED_ROMANIZATION_OF_KOREAN.vowels.length;
+          unicodeOffset -= vowelOffset;
+          unicodeOffset /= revisedRomanizationOfKorean_1.REVISED_ROMANIZATION_OF_KOREAN.vowels.length;
+          var leadOffset = unicodeOffset;
+          var result = revisedRomanizationOfKorean_1.REVISED_ROMANIZATION_OF_KOREAN.consonants.initial[leadOffset] + revisedRomanizationOfKorean_1.REVISED_ROMANIZATION_OF_KOREAN.vowels[vowelOffset] + revisedRomanizationOfKorean_1.REVISED_ROMANIZATION_OF_KOREAN.consonants.final[trailerOffset];
           return result;
-        };
-        var disassembleToString = function(str) {
-          if (typeof str !== "string") {
-            return "";
-          }
-          str = disassemble(str);
-          return str.join("");
-        };
-        var assemble = function(array) {
-          if (typeof array === "string") {
-            array = disassemble(array);
-          }
-          var result = [], length = array.length, code, stage = 0, complete_index = -1, previous_code, jong_joined = false;
-          function _makeHangul(index3) {
-            var code2, cho, jung1, jung2, jong1 = 0, jong2, hangul2 = "";
-            jong_joined = false;
-            if (complete_index + 1 > index3) {
-              return;
-            }
-            for (var step = 1; ; step++) {
-              if (step === 1) {
-                cho = array[complete_index + step].charCodeAt(0);
-                if (_isJung(cho)) {
-                  if (complete_index + step + 1 <= index3 && _isJung(jung1 = array[complete_index + step + 1].charCodeAt(0))) {
-                    result.push(String.fromCharCode(_isJungJoinable(cho, jung1)));
-                    complete_index = index3;
-                    return;
-                  } else {
-                    result.push(array[complete_index + step]);
-                    complete_index = index3;
-                    return;
-                  }
-                } else if (!_isCho(cho)) {
-                  result.push(array[complete_index + step]);
-                  complete_index = index3;
-                  return;
-                }
-                hangul2 = array[complete_index + step];
-              } else if (step === 2) {
-                jung1 = array[complete_index + step].charCodeAt(0);
-                if (_isCho(jung1)) {
-                  cho = _isJongJoinable(cho, jung1);
-                  hangul2 = String.fromCharCode(cho);
-                  result.push(hangul2);
-                  complete_index = index3;
-                  return;
-                } else {
-                  hangul2 = String.fromCharCode((CHO_HASH[cho] * 21 + JUNG_HASH[jung1]) * 28 + HANGUL_OFFSET);
-                }
-              } else if (step === 3) {
-                jung2 = array[complete_index + step].charCodeAt(0);
-                if (_isJungJoinable(jung1, jung2)) {
-                  jung1 = _isJungJoinable(jung1, jung2);
-                } else {
-                  jong1 = jung2;
-                }
-                hangul2 = String.fromCharCode((CHO_HASH[cho] * 21 + JUNG_HASH[jung1]) * 28 + JONG_HASH[jong1] + HANGUL_OFFSET);
-              } else if (step === 4) {
-                jong2 = array[complete_index + step].charCodeAt(0);
-                if (_isJongJoinable(jong1, jong2)) {
-                  jong1 = _isJongJoinable(jong1, jong2);
-                } else {
-                  jong1 = jong2;
-                }
-                hangul2 = String.fromCharCode((CHO_HASH[cho] * 21 + JUNG_HASH[jung1]) * 28 + JONG_HASH[jong1] + HANGUL_OFFSET);
-              } else if (step === 5) {
-                jong2 = array[complete_index + step].charCodeAt(0);
-                jong1 = _isJongJoinable(jong1, jong2);
-                hangul2 = String.fromCharCode((CHO_HASH[cho] * 21 + JUNG_HASH[jung1]) * 28 + JONG_HASH[jong1] + HANGUL_OFFSET);
-              }
-              if (complete_index + step >= index3) {
-                result.push(hangul2);
-                complete_index = index3;
-                return;
-              }
-            }
-          }
-          for (var i = 0; i < length; i++) {
-            code = array[i].charCodeAt(0);
-            if (!_isCho(code) && !_isJung(code) && !_isJong(code)) {
-              _makeHangul(i - 1);
-              _makeHangul(i);
-              stage = 0;
-              continue;
-            }
-            if (stage === 0) {
-              if (_isCho(code)) {
-                stage = 1;
-              } else if (_isJung(code)) {
-                stage = 4;
-              }
-            } else if (stage == 1) {
-              if (_isJung(code)) {
-                stage = 2;
-              } else {
-                if (_isJongJoinable(previous_code, code)) {
-                  stage = 5;
-                } else {
-                  _makeHangul(i - 1);
-                }
-              }
-            } else if (stage == 2) {
-              if (_isJong(code)) {
-                stage = 3;
-              } else if (_isJung(code)) {
-                if (_isJungJoinable(previous_code, code)) {
-                } else {
-                  _makeHangul(i - 1);
-                  stage = 4;
-                }
-              } else {
-                _makeHangul(i - 1);
-                stage = 1;
-              }
-            } else if (stage == 3) {
-              if (_isJong(code)) {
-                if (!jong_joined && _isJongJoinable(previous_code, code)) {
-                  jong_joined = true;
-                } else {
-                  _makeHangul(i - 1);
-                  stage = 1;
-                }
-              } else if (_isCho(code)) {
-                _makeHangul(i - 1);
-                stage = 1;
-              } else if (_isJung(code)) {
-                _makeHangul(i - 2);
-                stage = 2;
-              }
-            } else if (stage == 4) {
-              if (_isJung(code)) {
-                if (_isJungJoinable(previous_code, code)) {
-                  _makeHangul(i);
-                  stage = 0;
-                } else {
-                  _makeHangul(i - 1);
-                }
-              } else {
-                _makeHangul(i - 1);
-                stage = 1;
-              }
-            } else if (stage == 5) {
-              if (_isJung(code)) {
-                _makeHangul(i - 2);
-                stage = 2;
-              } else {
-                _makeHangul(i - 1);
-                stage = 1;
-              }
-            }
-            previous_code = code;
-          }
-          _makeHangul(i - 1);
-          return result.join("");
-        };
-        var search = function(a, b) {
-          var ad = disassemble(a).join(""), bd = disassemble(b).join("");
-          return ad.indexOf(bd);
-        };
-        var rangeSearch = function(haystack, needle) {
-          var hex2 = disassemble(haystack).join(""), nex = disassemble(needle).join(""), grouped = disassemble(haystack, true), re = new RegExp(nex, "gi"), indices = [], result;
-          if (!needle.length) return [];
-          while (result = re.exec(hex2)) {
-            indices.push(result.index);
-          }
-          function findStart(index3) {
-            for (var i = 0, length = 0; i < grouped.length; ++i) {
-              length += grouped[i].length;
-              if (index3 < length) return i;
-            }
-          }
-          function findEnd(index3) {
-            for (var i = 0, length = 0; i < grouped.length; ++i) {
-              length += grouped[i].length;
-              if (index3 + nex.length <= length) return i;
-            }
-          }
-          return indices.map(function(i) {
-            return [findStart(i), findEnd(i)];
-          });
-        };
-        function Searcher(string) {
-          this.string = string;
-          this.disassembled = disassemble(string).join("");
         }
-        Searcher.prototype.search = function(string) {
-          return disassemble(string).join("").indexOf(this.disassembled);
-        };
-        var endsWithConsonant = function(string) {
-          if (typeof string === "object") {
-            string = string.join("");
-          }
-          var code = string.charCodeAt(string.length - 1);
-          if (_isHangul(code)) {
-            code -= HANGUL_OFFSET;
-            var jong = code % 28;
-            if (jong > 0) {
-              return true;
-            }
-          } else if (_isConsonant(code)) {
-            return true;
-          }
-          return false;
-        };
-        var endsWith = function(string, target) {
-          return disassemble(string).pop() === target;
-        };
-        var hangul = {
-          disassemble,
-          d: disassemble,
-          // alias for disassemble
-          disassembleToString,
-          ds: disassembleToString,
-          // alias for disassembleToString
-          assemble,
-          a: assemble,
-          // alias for assemble
-          search,
-          rangeSearch,
-          Searcher,
-          endsWithConsonant,
-          endsWith,
-          isHangul: function(c) {
-            if (typeof c === "string")
-              c = c.charCodeAt(0);
-            return _isHangul(c);
-          },
-          isComplete: function(c) {
-            if (typeof c === "string")
-              c = c.charCodeAt(0);
-            return _isHangul(c);
-          },
-          isConsonant: function(c) {
-            if (typeof c === "string")
-              c = c.charCodeAt(0);
-            return _isConsonant(c);
-          },
-          isVowel: function(c) {
-            if (typeof c === "string")
-              c = c.charCodeAt(0);
-            return _isJung(c);
-          },
-          isCho: function(c) {
-            if (typeof c === "string")
-              c = c.charCodeAt(0);
-            return _isCho(c);
-          },
-          isJong: function(c) {
-            if (typeof c === "string")
-              c = c.charCodeAt(0);
-            return _isJong(c);
-          },
-          isHangulAll: function(str) {
-            if (typeof str !== "string") return false;
-            for (var i = 0; i < str.length; i++) {
-              if (!_isHangul(str.charCodeAt(i))) return false;
-            }
-            return true;
-          },
-          isCompleteAll: function(str) {
-            if (typeof str !== "string") return false;
-            for (var i = 0; i < str.length; i++) {
-              if (!_isHangul(str.charCodeAt(i))) return false;
-            }
-            return true;
-          },
-          isConsonantAll: function(str) {
-            if (typeof str !== "string") return false;
-            for (var i = 0; i < str.length; i++) {
-              if (!_isConsonant(str.charCodeAt(i))) return false;
-            }
-            return true;
-          },
-          isVowelAll: function(str) {
-            if (typeof str !== "string") return false;
-            for (var i = 0; i < str.length; i++) {
-              if (!_isJung(str.charCodeAt(i))) return false;
-            }
-            return true;
-          },
-          isChoAll: function(str) {
-            if (typeof str !== "string") return false;
-            for (var i = 0; i < str.length; i++) {
-              if (!_isCho(str.charCodeAt(i))) return false;
-            }
-            return true;
-          },
-          isJongAll: function(str) {
-            if (typeof str !== "string") return false;
-            for (var i = 0; i < str.length; i++) {
-              if (!_isJong(str.charCodeAt(i))) return false;
-            }
-            return true;
-          }
-        };
-        if (typeof define == "function" && define.amd) {
-          define(function() {
-            return hangul;
-          });
-        } else if (typeof module !== "undefined") {
-          module.exports = hangul;
-        } else {
-          window.Hangul = hangul;
-        }
-      })();
+        return char;
+      }
+      function convert2(text3) {
+        return text3.split("").map(convertCharacter).join("");
+      }
+      exports.convert = convert2;
     }
   });
 
@@ -25740,7 +25255,7 @@
   }
 
   // src/build/tools.js
-  var import_hangul_js = __toESM(require_hangul(), 1);
+  var hangulRomanization = __toESM(require_dist(), 1);
   function hex_to_hsl(hex2) {
     let result = new RegExp(/^#?([a-f\d]{2})([a-f\d]{2})([a-f\d]{2})$/i).exec(hex2);
     let r = parseInt(result[1], 16);
@@ -25969,7 +25484,7 @@
     if (/[\u30A0-\u30FF\u3040-\u309F]/.test(text3) && settings.romanise_jp)
       return title_case(toRomaji(text3));
     if (/[\uAC00-\uD7AF]/.test(text3) && settings.romanise_ko)
-      return title_case(import_hangul_js.default.romanize(text3));
+      return title_case(hangulRomanization.convert(text3));
     return text3;
   }
   function title_case(text3) {
@@ -79778,6 +79293,12 @@ moment/moment.js:
   (*! authors : Tim Wood, Iskren Chernev, Moment.js contributors *)
   (*! license : MIT *)
   (*! momentjs.com *)
+
+hangul-romanization/dist/conversionSystems/revisedRomanizationOfKorean.js:
+hangul-romanization/dist/index.js:
+  (**
+   * @license MIT Copyright 2016 Daniel Imms (http://www.growingwiththeweb.com)
+   *)
 
 color-thief-browser/dist/color-thief.min.js:
   (*!

@@ -11,7 +11,7 @@ import { settings } from './config.js';
 import {html} from "lighterhtml";
 import { root } from './page.js';
 import * as wanakana from 'wanakana';
-import Hangul from 'hangul-js';
+import * as hangulRomanization from 'hangul-romanization';
 
 // https://stackoverflow.com/questions/46432335/hex-to-hsl-convert-javascript
 /**
@@ -395,7 +395,7 @@ export function romanise(text) {
 
     // korean
     if (/[\uAC00-\uD7AF]/.test(text) && settings.romanise_ko)
-        return title_case(Hangul.romanize(text));
+        return title_case(hangulRomanization.convert(text));
 
     return text;
 }
