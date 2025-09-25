@@ -306,7 +306,7 @@
             "date": "2025-09-20"
         },
         "mesmerizer": {
-            "default": false,
+            "default": true,
             "name": "Redesigned artwork uploader",
             "date": "2025-09-25"
         }

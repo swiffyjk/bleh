@@ -64347,7 +64347,8 @@
     colourful_tracks_all: {
       default: false,
       type: "checkbox",
-      title: trans.colourful_all
+      title: trans.colourful_all,
+      new_release: true
     },
     feature_flags: {
       default: {},
@@ -64822,7 +64823,8 @@
       default: false,
       title: trans.oracle_beta.name,
       body: trans.oracle_beta.body,
-      beta: true
+      beta: true,
+      new_release: true
     },
     control_center: {
       default: [],
@@ -65216,7 +65218,7 @@
         date: "2025-09-20"
       },
       mesmerizer: {
-        default: false,
+        default: true,
         name: "Redesigned artwork uploader",
         date: "2025-09-25"
       }

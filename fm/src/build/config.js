@@ -741,7 +741,8 @@ export let settings_store = {
     colourful_tracks_all: {
         default: false,
         type: 'checkbox',
-        title: trans.colourful_all
+        title: trans.colourful_all,
+        new_release: true
     },
     feature_flags: {
         default: {},
@@ -1216,7 +1217,8 @@ export let settings_store = {
         default: false,
         title: trans.oracle_beta.name,
         body: trans.oracle_beta.body,
-        beta: true
+        beta: true,
+        new_release: true
     },
     control_center: {
         default: [],
