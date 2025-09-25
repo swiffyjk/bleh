@@ -37200,7 +37200,7 @@
             let link = image_wrap.querySelector(".cover-art");
             let image2 = link.querySelector("img");
             if (show_album_text && !has_bar && !settings.album_text) {
-              let alt = correct_item_by_artist(image2.getAttribute("alt"), track_artist);
+              let alt = romanise(correct_item_by_artist(image2.getAttribute("alt"), track_artist));
               track.appendChild(html.node`
                             <td class="chartlist-album custom-album-text">
                                 <a href="${link.getAttribute("href")}">${alt}</a>
