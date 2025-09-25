@@ -231,16 +231,18 @@ export function subscribe_to_events() {
 
 
     let upload_img_form = document.body.querySelector('form[action$="/+images/upload"]:not([data-bleh-subscribed])');
-    if (upload_img_form != null) {
+    if (upload_img_form) {
         upload_img_form.setAttribute('data-bleh-subscribed', 'true');
 
         let btn = upload_img_form.querySelector('.form-submit button');
+        if (!btn) btn = upload_img_form.querySelector('button[type="submit"]');
+        if (btn) {
+            btn.addEventListener('click', (event) => {
+                log('heard', 'event', 'info', event);
 
-        btn.addEventListener('click', (event) => {
-            log('heard', 'event', 'info', event);
-
-            register_activity('image_upload', [{name: page.name, type: page.type, sister: page.sister}], window.location.href);
-        }, false);
+                register_activity('image_upload', [{name: page.name, type: page.type, sister: page.sister}], window.location.href);
+            }, false);
+        }
     }
 }
 

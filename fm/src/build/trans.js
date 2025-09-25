@@ -3393,6 +3393,15 @@ export const trans = {
         pt: 'Enviar',
         sv: 'Ladda upp'
     },
+    upload_image: {
+        en: 'Upload image'
+    },
+    title: {
+        en: 'Title'
+    },
+    description: {
+        en: 'Description'
+    },
     change_avatar: {
         en: 'Change avatar',
         pt: 'Mudar foto de perfil',

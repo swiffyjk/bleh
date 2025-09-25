@@ -304,6 +304,11 @@
             "default": false,
             "name": "Control center",
             "date": "2025-09-20"
+        },
+        "mesmerizer": {
+            "default": false,
+            "name": "Redesigned artwork uploader",
+            "date": "2025-09-25"
         }
     }
 }

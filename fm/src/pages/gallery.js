@@ -270,39 +270,112 @@ export function create_divider() {
 
 
 export function bleh_gallery_upload() {
+    // remove content top
+    let content_top = document.body.querySelector('.page-content');
+    content_top.innerHTML = '';
+
+    if (!ff('mesmerizer')) {
+        page.structure.row.insertBefore(html.node`
+            <section class="gallery-section gallery--initialised">
+                <div class="gallery-image-container">
+                    <div class="gallery-slides">
+                        <div class="gallery-image gallery-slide image-preview active-slide">
+                            <img class="image-preview-hook" ref=${el => page.state.image_preview = el} />
+                        </div>
+                    </div>
+                </div>
+            </section>
+        `, page.structure.row.firstElementChild);
+
+        // apply card style to form
+        let form = page.structure.main.querySelector('.form-horizontal');
+        form.classList.add('panel-form');
+
+        // upload rules
+        let upload_rules_group = form.querySelector('.form-group--description + .form-group');
+        let rules = upload_rules_group.querySelector('.gallery-upload-rules');
+
+        let rules_panel = document.createElement('section');
+        rules_panel.classList.add('rules-panel');
+        rules_panel.innerHTML = rules.innerHTML;
+
+        page.structure.side.appendChild(rules_panel);
+
+        form.removeChild(upload_rules_group);
+
+        return;
+    }
+
+    const form = page.structure.main.querySelector(':scope > form');
+
+    // upload rules
+    const upload_rules_group = form.querySelector('.form-group--description + .form-group');
+    const rules = upload_rules_group.querySelector('.gallery-upload-rules');
+
+    page.structure.side.appendChild(html.node`
+        <section class="rules-panel">
+            ${{html: rules.innerHTML}}
+        </section>
+    `);
+    form.removeChild(upload_rules_group);
+
+    const token = form.querySelector(':scope > [name="csrfmiddlewaretoken"]');
+
+    const title = form.querySelector('[name="title"]');
+    const description = form.querySelector('[name="description"]');
+
+    let file_input;
+
+    const formats = form.querySelector('.form-row-help-text');
+
+    const panel = html.node`
+        <section class="gallery-upload-panel bleh--panel">
+            <h4>${tl(trans.upload_image)}</h4>
+            <form method="post" action=${form.getAttribute('action')} enctype=${form.getAttribute('enctype')}>
+                ${token}
+                <input type="file" name="image" required id="id_image" ref=${el => file_input = el} style="display: none">
+                <div class="setting-group">
+                    <div class="setting" data-type="text">
+                        <div class="heading">
+                            <h5>${tl(trans.title)}</h5>
+                        </div>
+                        <div class="input-container content-form">
+                            ${title}
+                        </div>
+                    </div>
+                    <div class="setting" data-type="text">
+                        <div class="heading">
+                            <h5>${tl(trans.description)}</h5>
+                        </div>
+                        <div class="input-container content-form textarea">
+                            ${description}
+                        </div>
+                    </div>
+                </div>
+                <div class="settings-footer end">
+                    <button class="btn primary icon" data-type="upload" type="submit">
+                        ${tl(trans.upload)}
+                    </button>
+                </div>
+            </form>
+        </section>
+    `;
+
+    page.structure.main.appendChild(panel);
+
     page.structure.row.insertBefore(html.node`
         <section class="gallery-section gallery--initialised">
             <div class="gallery-image-container">
                 <div class="gallery-slides">
                     <div class="gallery-image gallery-slide image-preview active-slide">
                         <img class="image-preview-hook" ref=${el => page.state.image_preview = el} />
+                        <div class="card-tip">${formats.textContent}</div>
                     </div>
                 </div>
             </div>
         </section>
     `, page.structure.row.firstElementChild);
-
-
-    // remove content top
-    let content_top = document.body.querySelector('.page-content');
-    content_top.innerHTML = '';
-
-    // apply card style to form
-    let form = page.structure.main.querySelector('.form-horizontal');
-    form.classList.add('panel-form');
-
-
-    // upload rules
-    let upload_rules_group = form.querySelector('.form-group--description + .form-group');
-    let rules = upload_rules_group.querySelector('.gallery-upload-rules');
-
-    let rules_panel = document.createElement('section');
-    rules_panel.classList.add('rules-panel');
-    rules_panel.innerHTML = rules.innerHTML;
-
-    page.structure.side.appendChild(rules_panel);
-
-    form.removeChild(upload_rules_group);
+    form.remove();
 }
 
 export function bleh_gallery_upload_check() {

@@ -18142,8 +18142,11 @@
         .input-container {
             display: flex;
             gap: var(--button-list-gap);
-            height: 32px;
             margin: unset;
+
+            &:not(.textarea) {
+                height: 32px;
+            }
 
             input {
                 width: calc(var(--max) * 6);
