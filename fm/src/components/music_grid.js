@@ -194,6 +194,7 @@ export function music_grids(search=page.structure.main, use_colour = true) {
             insights.artist.labels.push(name.textContent);
         } else {
             artist = grid.querySelector('.grid-items-item-aux-block');
+            if (!artist) artist = grid.querySelector('.grid-items-item-aux-text');
             if (!artist) return;
 
             if (settings.format_guest_features) {
