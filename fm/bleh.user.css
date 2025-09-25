@@ -7302,14 +7302,18 @@
         justify-content: center;
         align-items: center;
 
+        & > p,
         .loading-data-text {
             color: hsl(var(--c3));
+            user-select: none;
+            cursor: default;
+        }
+
+        .loading-data-text {
             position: relative;
             padding-left: calc(var(--icon-size) + var(--icon-gap));
             --left: 0;
             --mask: var(--icon-16-spinner);
-            user-select: none;
-            cursor: default;
 
             &:before {
                 animation: spinner 1.2s linear infinite;
@@ -23779,7 +23783,7 @@
         font-size: 16px;
         line-height: 20px;
 
-        width: 420px;
+        min-width: 420px;
         cursor: default;
 
         font-weight: var(--font-weight-medium);
