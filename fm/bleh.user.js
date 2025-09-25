@@ -28572,9 +28572,11 @@
         </section>
     `;
     page.structure.main.appendChild(panel);
+    let dropzone;
+    let container;
     page.structure.row.insertBefore(html.node`
         <section class="gallery-section gallery--initialised">
-            <div class="gallery-image-container">
+            <div class="gallery-image-container" ref=${(el) => container = el}>
                 <div class="gallery-slides">
                     <div class="gallery-image gallery-slide image-preview active-slide">
                         <img class="image-preview-hook" ref=${(el) => page.state.image_preview = el} />
@@ -28582,12 +28584,47 @@
                     </div>
                 </div>
             </div>
+            <div class="dropzone" ref=${(el) => dropzone = el} onclick=${() => {
+      file_input.click();
+    }} />
         </section>
     `, page.structure.row.firstElementChild);
-    form.remove();
+    ["dragenter", "dragover"].forEach((type) => {
+      dropzone.addEventListener(type, (e) => {
+        e.preventDefault();
+        e.stopPropagation();
+        container.setAttribute("data-dragging", true);
+        dropzone.setAttribute("data-dragging", true);
+      });
+    });
+    ["dragleave", "drop"].forEach((type) => {
+      dropzone.addEventListener(type, (e) => {
+        e.preventDefault();
+        e.stopPropagation();
+        container.setAttribute("data-dragging", false);
+        dropzone.setAttribute("data-dragging", false);
+      });
+    });
+    dropzone.addEventListener("drop", (e) => {
+      const files = e.dataTransfer.files;
+      if (files.length) file_input.files = files;
+      file_input.dispatchEvent(new Event("change"));
+    });
+    file_input.addEventListener("change", () => {
+      log("file input changed", "gallery", "info", { files: file_input.files });
+      if (!file_input.files.length) return;
+      const file = file_input.files[0];
+      const reader = new FileReader();
+      reader.onload = (event3) => {
+        page.state.image_preview.src = event3.target.result;
+      };
+      reader.readAsDataURL(file);
+    });
+    form.style.setProperty("display", "none");
   }
   function bleh_gallery_upload_check() {
     if (page.subpage != "images_image-upload" || !page.state.image_preview) return;
+    if (ff("mesmerizer")) return;
     const image_preview = page.structure.main.querySelector(".form-image-preview");
     if (!image_preview) return;
     page.state.image_preview.setAttribute("src", image_preview.getAttribute("src"));

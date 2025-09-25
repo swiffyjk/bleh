@@ -20856,6 +20856,8 @@
                 -webkit-backdrop-filter: var(--solarium);
             }
 
+            --upload-trans: 0.2s;
+
             .gallery-image-container {
                 background: unset;
                 padding: unset;
@@ -20867,6 +20869,16 @@
                 }
                 .gallery-previous {
                     right: 50%;
+                }
+
+                transition-property: transform, filter, opacity;
+                transition-duration: var(--upload-trans);
+                transition-timing-function: var(--trans-function);
+
+                &[data-dragging="true"] {
+                    transform: scale(0.95);
+                    opacity: 0.5;
+                    filter: blur(2px);
                 }
             }
 
@@ -20901,6 +20913,35 @@
 
                 ul {
                     overflow: unset;
+                }
+            }
+
+            & > .dropzone {
+                position: absolute;
+                inset: 0;
+                cursor: pointer;
+
+                &:before {
+                    content: '';
+                    display: block;
+                    position: absolute;
+                    inset: var(--card-padding);
+                    border: 2px dashed hsl(var(--l3-c));
+                    border-radius: var(--card-radius);
+
+                    transform: scale(1.01);
+                    opacity: 0;
+
+                    transition-property: transform, opacity;
+                    transition-duration: var(--upload-trans);
+                    transition-timing-function: var(--trans-function);
+                }
+
+                &[data-dragging="true"] {
+                    &:before {
+                        transform: scale(1);
+                        opacity: 0.5;
+                    }
                 }
             }
         }
@@ -21076,6 +21117,10 @@
                     display: inline-block;
                     max-height: 100%;
                     max-width: 100%;
+
+                    &.image-preview-hook {
+                        height: calc(100% - (18px + var(--card-gap)));
+                    }
                 }
             }
         }
