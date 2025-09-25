@@ -25497,6 +25497,7 @@
   // src/build/music.js
   var artist_corrections = {};
   var album_track_corrections = {};
+  var combined_artists = {};
   var ranks = {
     15: {
       start: 6e4,
@@ -50325,9 +50326,11 @@
     let lotus_artist_expire = new Date(localStorage.getItem("lotus_artist_expire"));
     let lotus_album_track = localStorage.getItem("lotus_album_track");
     let lotus_album_track_expire = new Date(localStorage.getItem("lotus_album_track_expire"));
+    let lotus_combined_artists = localStorage.getItem("lotus_combined_artists");
+    let lotus_combined_artists_expire = new Date(localStorage.getItem("lotus_combined_artists_expire"));
     let current_time = /* @__PURE__ */ new Date();
     if (!lotus_artist) {
-      console.info("lotus - artist list is not cached, fetching");
+      log("artist list is not cached, fetching", "lotus");
       lotus_request("artist", true);
     } else {
       Object.assign(artist_corrections, JSON.parse(lotus_artist));
@@ -50337,8 +50340,8 @@
         lotus_request("artist", true);
       }
     }
-    if (lotus_album_track == null) {
-      console.info("lotus - album_track list is not cached, fetching");
+    if (!lotus_album_track) {
+      log("album track list is not cached, fetching", "lotus");
       lotus_request("album_track", true);
     } else {
       Object.assign(album_track_corrections, JSON.parse(lotus_album_track));
@@ -50346,6 +50349,17 @@
         lotus_request("album_track");
       } else if (force) {
         lotus_request("album_track", true);
+      }
+    }
+    if (!lotus_combined_artists) {
+      log("combined artists list is not cached, fetching", "lotus");
+      lotus_request("combined_artists", true);
+    } else {
+      Object.assign(combined_artists, JSON.parse(lotus_combined_artists));
+      if (lotus_combined_artists_expire < current_time && !force) {
+        lotus_request("combined_artists");
+      } else if (force) {
+        lotus_request("combined_artists", true);
       }
     }
   }
@@ -50366,8 +50380,10 @@
       if (xhr.status == 200) {
         if (type == "artist") {
           Object.assign(artist_corrections, JSON.parse(this.response));
-        } else {
+        } else if (type == "album_track") {
           Object.assign(album_track_corrections, JSON.parse(this.response));
+        } else {
+          Object.assign(combined_artists, JSON.parse(this.response));
         }
         if (send_notify)
           status({
@@ -50535,8 +50551,14 @@
     });
     let song_guests = [];
     extras.forEach((extra) => {
-      if (extra.group !== "guests") return;
-      const normalised = extra.text.replace(/\b(?:feat|ft|featuring)\.?\b/gi, "").replace(/\bwith\b/gi, "").replace(/w\//gi, "").replace(/ & /g, ";").replace(/, /g, ";").replace(/ and /gi, ";").replace(/- /g, "").replace(/,;/g, ";").replace(/tyler;the/gi, "Tyler, The").replace(/ of bts/gi, ";BTS").replace(/marina;the diamonds/gi, "Marina and The Diamonds").replace(/selena gomez;the scene/gi, "Selena Gomez & the Scene").replace(/^[\.\-\s;]+/, "").trim();
+      if (extra.group != "guests") return;
+      let normalised = extra.text.replace(/\b(?:feat|ft|featuring)\.?\b/gi, "").replace(/\bwith\b/gi, "").replace(/w\//gi, "").replace(/&/g, ";").replace(/, /g, ";").replace(/ and /gi, ";").replace(/- /g, "").replace(/,;/g, ";").replace(/^[\.\-\s;]+/, "").trim();
+      for (const [key, value] of Object.entries(combined_artists)) {
+        if (key == "version") continue;
+        const escaped = key.replace(/[.*+?^${}()|[\]\\]/g, "\\$&");
+        const regex = new RegExp(escaped, "gi");
+        normalised = normalised.replace(regex, value);
+      }
       const guests = normalised.split(/;+/).map((s2) => s2.trim()).filter(Boolean).map(correct_artist);
       song_guests.push(...guests);
     });
@@ -50554,7 +50576,7 @@
     let title = document.body.querySelector(".header-new-title");
     let title_text = title.textContent.trim();
     let has_multi = false;
-    if (title_text.includes(", ") || title_text.includes(" & "))
+    if (title_text.includes(", ") || title_text.includes("&"))
       has_multi = true;
     page.multi = false;
     if (!has_multi) {
@@ -50564,7 +50586,13 @@
       }
       title.textContent = romanise(correct_artist(title_text, true));
     } else {
-      title_text = title_text.replaceAll(" & ", ";").replaceAll(", ", ";").replace("Tyler;the", "Tyler, The").replace("Tyler;The", "Tyler, The").replace("Marina;the Diamonds", "Marina and The Diamonds").replace(/selena gomez;the scene/gi, "Selena Gomez & the Scene").replaceAll(";;", ";");
+      title_text = title_text.replaceAll("&", ";").replaceAll(", ", ";").replaceAll(";;", ";");
+      for (const [key, value] of Object.entries(combined_artists)) {
+        if (key == "version") continue;
+        const escaped = key.replace(/[.*+?^${}()|[\]\\]/g, "\\$&");
+        const regex = new RegExp(escaped, "gi");
+        title_text = title_text.replace(regex, value);
+      }
       page.multi = true;
       title.innerHTML = "";
       let split = title_text.split(";");

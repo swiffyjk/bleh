@@ -528,7 +528,7 @@
             .grid-items-item-details > p > a
             ) {
             --c1: var(--hue), calc(var(--sat) * 6%), 0%;
-            --c2: var(--hue), calc(var(--sat) * 4%), 8%;
+            --c2: var(--hue), calc(var(--sat) * 4%), 6%;
             --c3: var(--hue), calc(var(--sat) * 2%), 38%;
             --ov-c1: var(--hue), calc(var(--sat) * 40%), 100%;
 
@@ -560,7 +560,7 @@
 
             --opposite-text: var(--c1);
 
-            --primary-shadow: inset 0 1px 0 0 hsl(var(--l2-c)), inset 0 -30px 20px -20px hsl(var(--h4), 70%);
+            --primary-shadow: inset 0 1px 0 0 hsl(var(--h4), 30%), inset 0 -30px 20px -20px hsl(var(--h4), 70%);
             --bar-shadow: inset 0 0 0 1px hsla(var(--h4), 0.08), inset 0 -30px 20px -20px hsl(var(--h4), 60%);
 
             --shout-vote-indicator: linear-gradient(90deg, transparent 20%, hsl(var(--h4), 15%));
@@ -16880,7 +16880,7 @@
     code, kbd, samp {
         color: hsl(var(--c3));
         background-color: hsl(var(--b6));
-        padding: 0 6px;
+        padding: 0 4px;
         font-size: calc(var(--font-size) - 1px);
         line-height: var(--line-height);
         font-family: var(--font-code);
@@ -21722,7 +21722,8 @@
                 margin-top: 2px;
                 margin-left: 12px;
                 color: hsl(var(--c2), 80%);
-                font-size: 13px;
+                --font-size: 13px;
+                font-size: var(--font-size);
             }
 
             & + li {

@@ -6,6 +6,7 @@
 
 export let artist_corrections = {};
 export let album_track_corrections = {};
+export let combined_artists = {};
 
 export let ranks = {
     15: {
