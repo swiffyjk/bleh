@@ -35306,6 +35306,8 @@
       if (best) return best;
       best = filtered.find((recording) => recording.disambiguation?.toLowerCase().includes("clean"));
       if (best) return best;
+      best = filtered.find((recording) => !recording.disambiguation?.toLowerCase().includes("english"));
+      if (best) return best;
       return filtered[0];
     }
     function oracle_pick_release(data2) {
@@ -35328,6 +35330,8 @@
       best = filtered.find((release) => release.disambiguation?.toLowerCase().includes("explicit"));
       if (best) return best;
       best = filtered.find((release) => release.disambiguation?.toLowerCase().includes("clean"));
+      if (best) return best;
+      best = filtered.find((release) => !release.disambiguation?.toLowerCase().includes("english"));
       if (best) return best;
       return filtered[0];
     }

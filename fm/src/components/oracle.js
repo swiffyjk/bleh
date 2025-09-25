@@ -166,6 +166,12 @@ export function oracle_process() {
         best = filtered.find(recording => recording.disambiguation?.toLowerCase().includes('clean'));
         if (best) return best;
 
+        // avoid anything referencing english
+        // usually an english translation of
+        // e.g. a japanese album
+        best = filtered.find(recording => !recording.disambiguation?.toLowerCase().includes('english'));
+        if (best) return best;
+
         // otherwise any
         return filtered[0];
     }
@@ -206,6 +212,12 @@ export function oracle_process() {
 
         // try anything clean
         best = filtered.find(release => release.disambiguation?.toLowerCase().includes('clean'));
+        if (best) return best;
+
+        // avoid anything referencing english
+        // usually an english translation of
+        // e.g. a japanese album
+        best = filtered.find(release => !release.disambiguation?.toLowerCase().includes('english'));
         if (best) return best;
 
         // otherwise any
