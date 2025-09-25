@@ -184,11 +184,9 @@ export let includes = {
         '- first', '(first', '[first',
         '- hummed', '(hummed', '[hummed',
         '- second', '(second', '[second',
-        '- songwriting', '(songwriting', '[songwriting'
-        '- stereo', '(stereo', '[stereo',
-        '- strings', '(strings', '[strings'
+        '- songwriting', '(songwriting', '[songwriting',
+        '- strings', '(strings', '[strings',
         '- take', '(take', '[take',
-        '- takes', '(takes', '[takes',
         '- unnumbered', '(unnumbered', '[unnumbered',
         '- vocal', '(vocal', '[vocal',
         '- without', '(without', '[without',
@@ -273,9 +271,9 @@ export let includes = {
         '(12 reg. tracks', // confessions madonna
         '- special', '(special', '[special',
         '- highlights from', '(highlights from', '[highlights from',
-        '- disc 1', '- disc 2', '- disc 3', '- disc 4', '- disc 5', '- disc 6', '- disc 7', '- disc 8', '- disc 9', 
-        '(disc 1', '(disc 2', '(disc 3', '(disc 4', '(disc 5', '(disc 6', '(disc 7', '(disc 8', '(disc 9', 
-        '[disc 1', '[disc 2', '[disc 3', '[disc 4', '[disc 5', '[disc 6', '[disc 7', '[disc 8', '[disc 9', 
+        '- disc 1', '- disc 2', '- disc 3', '- disc 4', '- disc 5', '- disc 6', '- disc 7', '- disc 8', '- disc 9',
+        '(disc 1', '(disc 2', '(disc 3', '(disc 4', '(disc 5', '(disc 6', '(disc 7', '(disc 8', '(disc 9',
+        '[disc 1', '[disc 2', '[disc 3', '[disc 4', '[disc 5', '[disc 6', '[disc 7', '[disc 8', '[disc 9',
         //,
         '- 19', '- 20', '(19', '(20', '[19', '[20',
         '- 10th', '- 25th', '- 30th', '- 35th', '- 40th', '- 50th', '- 60th',
