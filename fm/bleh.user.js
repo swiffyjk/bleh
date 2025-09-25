@@ -28537,14 +28537,16 @@
     const token = form.querySelector(':scope > [name="csrfmiddlewaretoken"]');
     const title = form.querySelector('[name="title"]');
     const description = form.querySelector('[name="description"]');
-    let file_input;
+    const file_input = form.querySelector('input[type="file"]');
     const formats = form.querySelector(".form-row-help-text");
     const panel = html.node`
         <section class="gallery-upload-panel bleh--panel">
             <h4>${tl(trans.upload_image)}</h4>
             <form method="post" action=${form.getAttribute("action")} enctype=${form.getAttribute("enctype")}>
                 ${token}
-                <input type="file" name="image" required id="id_image" ref=${(el) => file_input = el} style="display: none">
+                <div style="display: none">
+                    ${file_input}
+                </div>
                 <div class="setting-group">
                     <div class="setting" data-type="text">
                         <div class="heading">
@@ -28624,7 +28626,27 @@
   }
   function bleh_gallery_upload_check() {
     if (page.subpage != "images_image-upload" || !page.state.image_preview) return;
-    if (ff("mesmerizer")) return;
+    if (ff("mesmerizer")) {
+      const artwork_finder = page.structure.main.querySelector("#lfmmaf-widget:not([data-bleh])");
+      if (artwork_finder) {
+        artwork_finder.setAttribute("data-bleh", true);
+        const group = page.structure.main.querySelector(".setting-group");
+        const controls = artwork_finder.querySelectorAll(".form-group-controls > *");
+        let info;
+        group.insertBefore(html.node`
+                <div class="setting" data-type="info">
+                    <div class="heading">
+                        <h5>${{ html: artwork_finder.querySelector("label").innerHTML }}</h5>
+                    </div>
+                    <div class="info artwork-finder-info" ref=${(el) => info = el} />
+                </div>
+            `, group.firstElementChild);
+        controls.forEach((control) => {
+          info.appendChild(control);
+        });
+      }
+      return;
+    }
     const image_preview = page.structure.main.querySelector(".form-image-preview");
     if (!image_preview) return;
     page.state.image_preview.setAttribute("src", image_preview.getAttribute("src"));

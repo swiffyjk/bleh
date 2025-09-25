@@ -21122,7 +21122,7 @@
                     max-width: 100%;
 
                     &.image-preview-hook {
-                        height: unset;
+                        height: calc(500px - (var(--card-padding) * 2) - (18px + var(--card-gap)));
                         flex: 1;
                     }
                 }
@@ -27571,5 +27571,12 @@
             --mask-size: 22px;
             margin: auto 6px auto 0;
         }
+    }
+
+    .info.artwork-finder-info {
+        max-width: 500px;
+        flex-direction: column;
+        align-items: end;
+        flex-shrink: 1;
     }
 }
