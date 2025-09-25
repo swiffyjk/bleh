@@ -28576,6 +28576,9 @@
     let container;
     page.structure.row.insertBefore(html.node`
         <section class="gallery-section gallery--initialised">
+            <div class="dropzone" ref=${(el) => dropzone = el} onclick=${() => {
+      file_input.click();
+    }} />
             <div class="gallery-image-container" ref=${(el) => container = el}>
                 <div class="gallery-slides">
                     <div class="gallery-image gallery-slide image-preview active-slide">
@@ -28584,9 +28587,6 @@
                     </div>
                 </div>
             </div>
-            <div class="dropzone" ref=${(el) => dropzone = el} onclick=${() => {
-      file_input.click();
-    }} />
         </section>
     `, page.structure.row.firstElementChild);
     ["dragenter", "dragover"].forEach((type) => {

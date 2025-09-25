@@ -20920,6 +20920,7 @@
                 position: absolute;
                 inset: 0;
                 cursor: pointer;
+                z-index: 20;
 
                 &:before {
                     content: '';
@@ -21106,7 +21107,9 @@
             width: 100%;
 
             .gallery-image {
-                display: block;
+                display: flex;
+                flex-direction: column;
+                align-items: center;
                 height: 100%;
                 left: 0;
                 position: absolute;
@@ -21119,7 +21122,8 @@
                     max-width: 100%;
 
                     &.image-preview-hook {
-                        height: calc(100% - (18px + var(--card-gap)));
+                        height: unset;
+                        flex: 1;
                     }
                 }
             }
@@ -26162,6 +26166,9 @@
     }
     .compare {
         --mask: var(--icon-16-arrows);
+    }
+    [data-type="upload"] {
+        --mask: var(--icon-16-upload);
     }
     [data-type="download"] {
         --mask: var(--icon-16-download);
