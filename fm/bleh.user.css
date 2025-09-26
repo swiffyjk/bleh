@@ -14454,7 +14454,7 @@
             position: absolute;
             top: var(--offset);
             right: var(--offset);
-            z-index: 13;
+            z-index: 33;
             border-radius: 50px;
 
             display: var(--show-icon);
@@ -14469,7 +14469,7 @@
             transition-timing-function: var(--trans-function);
         }
         &:after {
-            z-index: 14;
+            z-index: 34;
 
             box-shadow: unset;
             padding: unset;
