@@ -19,6 +19,9 @@ export function oracle_process() {
     if (!ff('oracle_connect') || page.type == 'artist') return;
 
     let tries = 2;
+    let cache = JSON.parse(localStorage.getItem('oracle_artist_ids')) || {};
+    const artist = page.sister.toLowerCase();
+    let artist_id;
 
     const info_panel = page.structure.main.firstElementChild;
     const header = page.structure.container.querySelector('.redesigned-header');
@@ -61,7 +64,65 @@ export function oracle_process() {
     const albums_and_lyrics_row = page.structure.main.querySelector('.album-and-lyrics-row');
     if (page.type == 'track') albums_and_lyrics_row.classList.add('oracle-hidden');
 
-    oracle_connect();
+    oracle_obtain_artist();
+
+    function oracle_obtain_artist() {
+        if (cache.hasOwnProperty(artist)) {
+            artist_id = cache[artist];
+            oracle_connect();
+            return;
+        }
+
+        oracle_get_artist();
+    }
+
+    function oracle_get_artist() {
+        if (tries < 1) return;
+        tries--;
+
+        const url = `http://musicbrainz.org/ws/2/artist?query=${sanitise(artist, ' ')}`;
+
+        log(`using url ${encodeURI(url)} with ${tries} tries available`, 'oracle');
+
+        GM_xmlhttpRequest({
+            method: 'GET',
+            url,
+            headers: {
+                'User-Agent': `bleh/${version.build} <https://github.com/katelyynn/bleh>`,
+                'Accept': 'application/json'
+            },
+            onload: function(response) {
+                if (response.status < 200 || response.status >= 300) {
+                    log('error fetching artist data', 'oracle', 'error', {response});
+                    return;
+                }
+
+                let data;
+                try {
+                    data = JSON.parse(response.responseText);
+                } catch (e) {
+                    log('failed to parse', 'oracle', 'error', {e});
+                    return;
+                }
+
+                log('received artist data', 'oracle', 'info', {data});
+
+                artist_id = data.artists[0].id;
+                cache[artist] = artist_id;
+                localStorage.setItem('oracle_artist_ids', JSON.stringify(cache));
+
+                tries = 2;
+                oracle_connect();
+            },
+            onerror: function(err) {
+                console.error('oracle', err);
+
+                setTimeout(() => {
+                    oracle_get_artist();
+                }, 1000);
+            }
+        });
+    }
 
     function oracle_connect() {
         if (tries < 1) return;
@@ -70,9 +131,9 @@ export function oracle_process() {
         let url;
 
         if (page.type == 'track')
-            url = `https://musicbrainz.org/ws/2/recording?query="${sanitise(clean_title(page.name), ' ')}" AND artist:"${sanitise(page.sister, ' ')}" AND status:Official`;
+            url = `https://musicbrainz.org/ws/2/recording?query="${sanitise(clean_title(page.name), ' ')}" AND arid:"${artist_id}" AND status:Official`;
         else if (page.type == 'album')
-            url = `http://musicbrainz.org/ws/2/release?query=release:"${sanitise(clean_title(page.name), ' ')}" AND artist:"${sanitise(page.sister, ' ')}"`;
+            url = `http://musicbrainz.org/ws/2/release?query=release:"${sanitise(clean_title(page.name), ' ')}" AND arid:"${artist_id}"`;
 
         log(`using url ${encodeURI(url)} with ${tries} tries available`, 'oracle');
 
