@@ -694,6 +694,7 @@ export function create_correction(
                     type: 'text',
                     value: current,
                     placeholder: current,
+                    warn_if_empty: true,
                     warn_if_not_matching_lower: current.toLowerCase()
                 }))}
                 <p class="form-tip">${tl(trans.correction_tip)}</p>
