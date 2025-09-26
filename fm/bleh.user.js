@@ -35255,7 +35255,7 @@
     const albums_and_lyrics_row = page.structure.main.querySelector(".album-and-lyrics-row");
     if (page.type == "track") albums_and_lyrics_row.classList.add("oracle-hidden");
     function oracle_aliases(artist2, desired) {
-      if (artist2.name == desired || artist_data.aliases.some((alias) => alias.name == desired))
+      if (artist2.name == desired || artist_data.aliases && artist_data.aliases.some((alias) => alias.name == desired))
         return desired;
       return artist2;
     }
@@ -50725,6 +50725,7 @@
       split.forEach((artist, index3) => {
         if (index3 > 0)
           title.innerHTML += ",";
+        artist = artist.trim();
         let part = document.createElement("a");
         part.classList.add("multi-artist-part");
         part.setAttribute("href", `${root}music/${redirect()}${sanitise(artist)}`);

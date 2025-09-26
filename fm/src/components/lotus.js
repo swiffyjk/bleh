@@ -489,6 +489,8 @@ export function artist_title() {
             if (index > 0)
                 title.innerHTML += ',';
 
+            artist = artist.trim();
+
             let part = document.createElement('a');
             part.classList.add('multi-artist-part');
             part.setAttribute('href',`${root}music/${redirect()}${sanitise(artist)}`);
