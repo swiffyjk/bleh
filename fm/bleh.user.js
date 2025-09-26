@@ -37629,7 +37629,7 @@
         scale: cv_scale,
         onclone: (doc) => {
           doc.querySelectorAll("*").forEach((el) => {
-            el.style.setProperty("font-family", "Nunito Sans, Overpass, Inter, Ubuntu Sans, Spline Sans, Roboto, Noto Sans, Noto Sans JP, Noto Sans KR, Noto Sans TC, Lucida Grande, Verdana, Tahoma, -apple-system, BlinkMacSystemFont, sans-serif");
+            el.style.setProperty("font-family", "Figtree, Overpass, Inter, Ubuntu Sans, Spline Sans, Roboto, Noto Sans, Noto Sans JP, Noto Sans KR, Noto Sans TC, Lucida Grande, Verdana, Tahoma, -apple-system, BlinkMacSystemFont, sans-serif");
           });
         }
       }).then((canvas) => {
