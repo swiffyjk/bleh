@@ -42145,8 +42145,7 @@
           name: page.name,
           type: "collage",
           link: `${root}bleh/minis/collage`,
-          text: tl(trans.collage),
-          updated: true
+          text: tl(trans.collage)
         });
       }
     }

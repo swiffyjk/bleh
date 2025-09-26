@@ -193,8 +193,7 @@ export function redesign_profile_header(is_own_profile, is_following) {
                 name: page.name,
                 type: 'collage',
                 link: `${root}bleh/minis/collage`,
-                text: tl(trans.collage),
-                updated: true
+                text: tl(trans.collage)
             });
         }
     }
