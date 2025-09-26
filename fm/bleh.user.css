@@ -15463,6 +15463,8 @@
             /*background: var(--card-specific-background) !important;
             --card-specific-background: linear-gradient(hsl(var(--b5)), hsl(var(--g4)));*/
             --card-specific-background: transparent;
+            backdrop-filter: none !important;
+            -webkit-backdrop-filter: none !important;
             box-shadow: none !important;
             width: 600px;
             max-width: var(--cards-width);
