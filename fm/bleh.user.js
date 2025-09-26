@@ -52643,7 +52643,7 @@
           let img = item.querySelector("img")?.src;
           if (type == "track") {
             const top_track = page.structure.main.querySelector("#top-tracks .cover-art img");
-            if (top_track) img = top_track.src.replace("/64s/", "/avatar170s/");
+            if (top_track && !top_track.src.endsWith("4128a6eb29f94943c9d206c08e625904.jpg")) img = top_track.src.replace("/64s/", "/avatar170s/");
           }
           return html.node`
                             <div class="featured-artist-item">
