@@ -27202,6 +27202,7 @@
     maxlength,
     warn_if_empty = false,
     warn_if_matches_auth = false,
+    warn_if_not_matching_lower = "",
     focus = false,
     disabled,
     show_time = true,
@@ -27225,7 +27226,11 @@
     let container = html.node`
         <div class="content-form input-container colourful" data-type=${type} data-has-error="false">
             ${type == "colour" ? html.node`<span class="colour-block" ref=${(el) => colour_block = el} />` : ""}
-            <input class="modern-input" disabled=${disabled} autofocus=${focus} type=${type} value=${value} placeholder=${placeholder} min=${min2} max=${max2} maxlength=${maxlength} ref=${(el) => input_box = el} />
+            ${type == "textarea" ? html.node`
+                <textarea class="modern-input" disabled=${disabled} autofocus=${focus} value=${value} placeholder=${placeholder} min=${min2} max=${max2} maxlength=${maxlength} ref=${(el) => input_box = el} />
+            ` : html.node`
+                <input class="modern-input" disabled=${disabled} autofocus=${focus} type=${type} value=${value} placeholder=${placeholder} min=${min2} max=${max2} maxlength=${maxlength} ref=${(el) => input_box = el} />
+            `}
         </div>
     `;
     error_tooltip = tippy_esm_default(input_box, {
@@ -27262,10 +27267,8 @@
     };
     container.disabled = (state = null) => {
       if (state === null) return input_box.getAttribute("disabled") || false;
-      if (state === true)
-        input_box.setAttribute("disabled", "true");
-      else
-        input_box.removeAttribute("disabled");
+      if (state === true) input_box.setAttribute("disabled", "true");
+      else input_box.removeAttribute("disabled");
       return state;
     };
     return container;
@@ -27279,6 +27282,8 @@
           error_input2(tl(trans.keep_within_the_range));
         } else if (warn_if_matches_auth && input_box.value == auth.name) {
           error_input2(tl(trans.please_dont_clone_yourself));
+        } else if (warn_if_not_matching_lower != "" && input_box.value.toLowerCase() != warn_if_not_matching_lower) {
+          error_input2(tl(trans.please_match_the_format));
         }
       }
       if (type == "number" && !skip_most) {
@@ -28494,7 +28499,8 @@
     func,
     can_api
   } = {}) {
-    if (!can_api) can_api = localStorage.getItem("bleh_auth") && localStorage.getItem("bleh_auth_valid") === "true";
+    if (!can_api)
+      can_api = localStorage.getItem("bleh_auth") && localStorage.getItem("bleh_auth_valid") === "true";
     if (!can_api) {
       window.location.href = `${root}bleh/general`;
       return;
@@ -28518,27 +28524,27 @@
                 ${track = input({
         type: "text",
         value: pre_track,
-        placeholder: tl(trans.example).replace("{v}", random.track),
+        placeholder: tl(trans.example, { v: random.track }),
         warn_if_empty: true
       })}
                 <p class="generic-label">${tl(trans.album)}</p>
                 ${album = input({
         type: "text",
         value: pre_album,
-        placeholder: tl(trans.example).replace("{v}", random.album)
+        placeholder: tl(trans.example, { v: random.album })
       })}
                 <p class="generic-label">${tl(trans.artist)}</p>
                 ${artist = input({
         type: "text",
         value: pre_artist,
-        placeholder: tl(trans.example).replace("{v}", random.artist),
+        placeholder: tl(trans.example, { v: random.artist }),
         warn_if_empty: true
       })}
                 <p class="generic-label">${tl(trans.album_artist)}</p>
                 ${album_artist = input({
         type: "text",
         value: pre_album_artist,
-        placeholder: tl(trans.example).replace("{v}", random.album_artist)
+        placeholder: tl(trans.example, { v: random.album_artist })
       })}
                 <p class="generic-label">${tl(trans.time)}</p>
                 <div class="toggle-and-time">
@@ -28579,7 +28585,8 @@
         use_current.disabled(true);
         date.disabled(true);
         create_scrobble.disabled = true;
-        if (album.value() != "" && album_artist.value() == "") album_artist.value(artist.value());
+        if (album.value() != "" && album_artist.value() == "")
+          album_artist.value(artist.value());
         let params = {
           sk: localStorage.getItem("bleh_auth"),
           artist: artist.value(),
@@ -28587,7 +28594,8 @@
           timestamp: Math.floor(date.value() / 1e3)
         };
         if (album.value() != "") params.album = album.value();
-        if (album_artist.value() != "") params.albumArtist = album_artist.value();
+        if (album_artist.value() != "")
+          params.albumArtist = album_artist.value();
         const res = await fetch(
           "https://jufufu.katelyn.moe/api/lastfm",
           {
@@ -28600,7 +28608,9 @@
           }
         );
         const json = await res.json();
-        log("received response", "submit scrobble", "info", { result: json });
+        log("received response", "submit scrobble", "info", {
+          result: json
+        });
         function re_enable() {
           track.disabled(false);
           album.disabled(false);
@@ -28624,7 +28634,9 @@
         }
         const error_code = json.scrobbles.scrobble.ignoredMessage.code;
         if (error_code > 0) {
-          log("error", "submit scrobble", "error", { error_code });
+          log("error", "submit scrobble", "error", {
+            error_code
+          });
           notify({
             id: "submit_scrobble",
             title: tl(trans.scrobble_failed),
@@ -35778,10 +35790,18 @@
     let katsune = ff("katsune");
     show_numbers_on_side(page.type);
     const page_is_blocked = !page.structure.main.querySelector("#shoutbox");
-    log(`${page_is_blocked ? "page is blocked" : "page is not blocked"}`, "music");
+    log(
+      `${page_is_blocked ? "page is blocked" : "page is not blocked"}`,
+      "music"
+    );
     if (page.subpage == "overview") {
       let tabs = document.createElement("nav");
-      tabs.classList.add("navlist", "secondary-nav", "navlist--more", "redesigned-navigation");
+      tabs.classList.add(
+        "navlist",
+        "secondary-nav",
+        "navlist--more",
+        "redesigned-navigation"
+      );
       if (page.type == "artist") {
         tabs.appendChild(html.node`
                 <ul class="navlist-items">
@@ -35907,14 +35927,18 @@
       page.structure.container.insertBefore(tabs, page.structure.row);
       page.structure.tabs = tabs;
     }
-    let col_main = page.structure.container.querySelector(".top-overview-panel");
-    if (!col_main)
-      col_main = document.body.querySelector(".col-main");
+    let col_main = page.structure.container.querySelector(
+      ".top-overview-panel"
+    );
+    if (!col_main) col_main = document.body.querySelector(".col-main");
     if (page.type == "track") {
       let new_panel = document.createElement("section");
       new_panel.classList.add("track-info-panel");
       new_panel.innerHTML = col_main.innerHTML;
-      page.structure.main.insertBefore(new_panel, page.structure.main.firstElementChild);
+      page.structure.main.insertBefore(
+        new_panel,
+        page.structure.main.firstElementChild
+      );
       col_main.style.setProperty("display", "none");
       page.structure.row.appendChild(col_main);
       console.info(col_main, new_panel);
@@ -35922,8 +35946,7 @@
     }
     let top_container = document.createElement("div");
     top_container.classList.add("top-container");
-    if (katsune)
-      top_container.classList.add("katsune-button-row");
+    if (katsune) top_container.classList.add("katsune-button-row");
     let listen_container = document.createElement("div");
     listen_container.classList.add("listen-container");
     const no_auth_callout = page.structure.main.querySelector(".catalogue-callout");
@@ -35944,13 +35967,17 @@
       avi: auth.avatar,
       katsune
     };
-    let scrobble_button = col_main.querySelector(".personal-stats-item--scrobbles .hidden-xs a");
+    let scrobble_button = col_main.querySelector(
+      ".personal-stats-item--scrobbles .hidden-xs a"
+    );
     if (scrobble_button) {
       your_listens.listens = clean_number(scrobble_button.textContent.trim());
     }
     create_listen_item(listen_container, your_listens, page.type);
     if (settings.starred_friend != "") {
-      const cache2 = await load_profile_cache_externally(settings.starred_friend);
+      const cache2 = await load_profile_cache_externally(
+        settings.starred_friend
+      );
       let shortcut_listens = {
         name: settings.starred_friend,
         listens: -1,
@@ -35958,48 +35985,86 @@
         avi: cache2.avatar,
         katsune
       };
-      const listen_item = create_listen_item(listen_container, shortcut_listens);
-      fetch(`${root}user/${shortcut_listens.name}/library/music/${redirect()}${scrobble_page}`).then(function(response) {
+      const listen_item = create_listen_item(
+        listen_container,
+        shortcut_listens
+      );
+      fetch(
+        `${root}user/${shortcut_listens.name}/library/music/${redirect()}${scrobble_page}`
+      ).then(function(response) {
         console.log("returned", response, response.text);
         return response.text();
       }).then(function(dom) {
         const doc = new DOMParser().parseFromString(dom, "text/html");
-        let first_metadata_item = doc.querySelector(".metadata-item .metadata-display");
+        let first_metadata_item = doc.querySelector(
+          ".metadata-item .metadata-display"
+        );
         let listens = 0;
-        if (first_metadata_item) listens = clean_number(first_metadata_item.textContent.trim());
+        if (first_metadata_item)
+          listens = clean_number(
+            first_metadata_item.textContent.trim()
+          );
         let p;
         listen_item.setAttribute("data-listens", listens);
-        render(listen_item, html`
-                <img class="view-item-avatar" src=${shortcut_listens.avi} alt=${shortcut_listens.name}>
-                <div class="listen-badge star colourful">
-                    <div class="bleh-icon" />
-                </div>
-                <div class="info">
-                    <h3>${shortcut_listens.name}</h3>
-                    <p class="colourful" ref=${(el) => p = el}>${tl(trans.listens.count).replace("{c}", listens.toLocaleString(lang))}</p>
-                </div>
-            `);
+        render(
+          listen_item,
+          html`
+                        <img
+                            class="view-item-avatar"
+                            src=${shortcut_listens.avi}
+                            alt=${shortcut_listens.name}
+                        />
+                        <div class="listen-badge star colourful">
+                            <div class="bleh-icon" />
+                        </div>
+                        <div class="info">
+                            <h3>${shortcut_listens.name}</h3>
+                            <p class="colourful" ref=${(el) => p = el}>
+                                ${tl(trans.listens.count).replace(
+            "{c}",
+            listens.toLocaleString(lang)
+          )}
+                            </p>
+                        </div>
+                    `
+        );
         if (settings.colourful_counts && page.type == "artist") {
           let parsed_scrobble_as_rank = parse_scrobbles_as_rank(listens);
-          listen_item.setAttribute("data-bleh--scrobble-milestone", parsed_scrobble_as_rank.milestone);
-          p.style.setProperty("--hue-over", parsed_scrobble_as_rank.hue);
-          p.style.setProperty("--sat-over", parsed_scrobble_as_rank.sat);
-          p.style.setProperty("--lit-over", parsed_scrobble_as_rank.lit);
+          listen_item.setAttribute(
+            "data-bleh--scrobble-milestone",
+            parsed_scrobble_as_rank.milestone
+          );
+          p.style.setProperty(
+            "--hue-over",
+            parsed_scrobble_as_rank.hue
+          );
+          p.style.setProperty(
+            "--sat-over",
+            parsed_scrobble_as_rank.sat
+          );
+          p.style.setProperty(
+            "--lit-over",
+            parsed_scrobble_as_rank.lit
+          );
         }
       });
     }
-    if (page.type != "artist")
-      listen_container.appendChild(create_divider());
-    create_listen_item(listen_container, {
-      name: "other",
-      listens: -3,
-      link: scrobble_page,
-      button: true,
-      katsune
-    }, page.type);
+    if (page.type != "artist") listen_container.appendChild(create_divider());
+    create_listen_item(
+      listen_container,
+      {
+        name: "other",
+        listens: -3,
+        link: scrobble_page,
+        button: true,
+        katsune
+      },
+      page.type
+    );
     col_main.insertBefore(listen_container, col_main.firstElementChild);
     if (ff("oracle") && settings.oracle_beta && page.type != "artist") {
-      col_main.insertBefore(html.node`
+      col_main.insertBefore(
+        html.node`
             <div class="oracle">
                 <span class="bleh-icon" />
                 <p>${{ html: tl(trans.oracle_notice).replace("oracle", "<i>oracle</i>") }}</p>
@@ -36007,20 +36072,28 @@
                     ${tl(trans.send_feedback)}
                 </a>
             </div>
-        `, listen_container);
+        `,
+        listen_container
+      );
     }
     if (!katsune)
       col_main.insertBefore(top_container, col_main.firstElementChild);
     else
       page.structure.container.querySelector(".bleh-background").after(top_container);
     if (page.type == "artist") {
-      let other_container = col_main.querySelector(".personal-stats-item--listeners");
+      let other_container = col_main.querySelector(
+        ".personal-stats-item--listeners"
+      );
       if (other_container) {
         let listen_divider = document.createElement("div");
         listen_divider.classList.add("listen-divider");
         listen_container.appendChild(listen_divider);
-        let avatars = other_container.querySelectorAll(".personal-stats-listener-avatar img");
-        let count = other_container.querySelector(".header-metadata-display a");
+        let avatars = other_container.querySelectorAll(
+          ".personal-stats-listener-avatar img"
+        );
+        let count = other_container.querySelector(
+          ".header-metadata-display a"
+        );
         let other_listeners = {
           name: "others",
           listens: -2,
@@ -36044,8 +36117,7 @@
     buttons.forEach((button) => {
       if (button.classList[0] != "header-new-playlink")
         button.classList.add("btn", "side-action");
-      else
-        button.classList.add("dropdown-menu-clickable-item");
+      else button.classList.add("dropdown-menu-clickable-item");
       if (button.classList[0] == "header-new-more-button")
         interact_container.removeChild(button.parentElement);
       if (button.classList[1] == "header-new-love-button") {
@@ -36059,10 +36131,11 @@
     links.forEach((button) => {
       if (button.classList[0] != "header-new-playlink")
         button.classList.add("btn", "side-action");
-      else
-        button.classList.add("dropdown-menu-clickable-item");
+      else button.classList.add("dropdown-menu-clickable-item");
     });
-    let obsession_form = header_actions.querySelector('form[action$="obsessions"]');
+    let obsession_form = header_actions.querySelector(
+      'form[action$="obsessions"]'
+    );
     if (obsession_form) {
       let obsession_btn = obsession_form.querySelector("button");
       obsession_btn.classList = "btn side-action";
@@ -36073,7 +36146,9 @@
     if (ff("submit_scrobble")) {
       const can_api = localStorage.getItem("bleh_auth") && localStorage.getItem("bleh_auth_valid") === "true";
       const source_album = page.structure.main.querySelector(".source-album-name");
-      const source_album_artist = page.structure.main.querySelector(".source-album-artist");
+      const source_album_artist = page.structure.main.querySelector(
+        ".source-album-artist"
+      );
       let props = {
         can_api
       };
@@ -36114,9 +36189,15 @@
     if (play_btn) interact_container.removeChild(play_btn);
     if (auth.name) {
       if (!page.mobile)
-        page.structure.side.insertBefore(interact_container, page.structure.side.firstElementChild);
+        page.structure.side.insertBefore(
+          interact_container,
+          page.structure.side.firstElementChild
+        );
       else
-        page.structure.main.insertBefore(interact_container, page.structure.main.firstElementChild);
+        page.structure.main.insertBefore(
+          interact_container,
+          page.structure.main.firstElementChild
+        );
     }
     const new_playlist = page.structure.side.querySelector(":scope > form");
     if (new_playlist) {
@@ -36131,24 +36212,33 @@
     const metadata = col_main.querySelector(".metadata-column");
     if (metadata) {
       let groups = [];
-      let headers = metadata.querySelectorAll(".catalogue-metadata-heading:not(.visible-xs)");
+      let headers = metadata.querySelectorAll(
+        ".catalogue-metadata-heading:not(.visible-xs)"
+      );
       headers.forEach((item, index3) => {
         groups[index3] = {
           header: item
         };
       });
-      let values = metadata.querySelectorAll(".catalogue-metadata-description:not(.visible-xs)");
+      let values = metadata.querySelectorAll(
+        ".catalogue-metadata-description:not(.visible-xs)"
+      );
       values.forEach((item, index3) => {
         groups[index3].value = item;
       });
-      render(metadata, html`
-            ${groups.map((group) => html.node`
+      render(
+        metadata,
+        html`
+                ${groups.map(
+          (group) => html.node`
                 <div class="metadata-group">
                     ${group.header}
                     ${group.value}
                 </div>
-            `)}
-        `);
+            `
+        )}
+            `
+      );
       if (groups.length > 2) {
         if (settings.simulate_scroll) {
           metadata.addEventListener("wheel", (e) => {
@@ -36173,11 +36263,14 @@
       }
     }
     if (page_is_blocked) {
-      page.structure.main.insertBefore(html.node`
+      page.structure.main.insertBefore(
+        html.node`
             <section class="cta blocked-cta">
                 <strong>${tl(trans.blocked_page)}</strong>
             </section>
-        `, page.structure.main.firstElementChild);
+        `,
+        page.structure.main.firstElementChild
+      );
       return;
     }
     let play_on;
@@ -36191,11 +36284,15 @@
       header.classList.add("sub-text", "music-small-header");
       header.textContent = tl(trans.find_on);
       link_group.appendChild(header);
-      play_on = page.structure.side.querySelector(".play-this-track-playlinks");
+      play_on = page.structure.side.querySelector(
+        ".play-this-track-playlinks"
+      );
       play_on.parentElement.remove();
       play_links = play_on.querySelectorAll("li");
       play_links.forEach((item) => {
-        const link = item.querySelector(".play-this-track-playlink:not(.visible-xs)");
+        const link = item.querySelector(
+          ".play-this-track-playlink:not(.visible-xs)"
+        );
         link.classList.remove("play-this-track-playlink");
         link.classList.add("music-link");
         const replace = item.querySelector(".replace-playlink");
@@ -36249,69 +36346,197 @@
       header.textContent = tl(trans.find_on);
       link_group.appendChild(header);
       if (page.type == "album") {
-        render(link_container, html`
-                <a class="music-link play-this-track-playlink--spotify" href="https://open.spotify.com/search/${sanitise(page.sister, " ")} ${sanitise(page.name, " ")}" target="_blank">
-                    Spotify
-                </a>
-                <a class="music-link play-this-track-playlink--itunes" href="https://music.apple.com/gb/search?term=${sanitise(page.sister, " ")} ${sanitise(page.name, " ")}" target="_blank">
-                    Apple
-                </a>
-                <a class="music-link play-this-track-playlink--youtube-music" href="https://music.youtube.com/search?q=${sanitise(page.sister)}+${sanitise(page.name)}" target="_blank">
-                    YouTube
-                </a>
-                <a class="music-link play-this-track-playlink--tidal" href="https://listen.tidal.com/search?q=${sanitise(page.sister, " ")} ${sanitise(page.name, " ")}" target="_blank">
-                    Tidal
-                </a>
-                <a class="music-link play-this-track-playlink--discogs" href="https://www.discogs.com/search?q=${sanitise(page.sister)}+${sanitise(page.name)}&type=all" target="_blank">
-                    Discogs
-                </a>
-                <a class="music-link play-this-track-playlink--qobuz" href="https://www.qobuz.com/search/albums/${sanitise(page.sister, " ")}%20${sanitise(page.name, " ")}" target="_blank">
-                    Qobuz
-                </a>
-                <a class="music-link play-this-track-playlink--aoty" href="https://www.albumoftheyear.org/search/?q=${sanitise(page.sister)}+${sanitise(page.name)}" target="_blank">
-                    AOTY
-                </a>
-                <a class="music-link play-this-track-playlink--rym" href="https://rateyourmusic.com/search?searchterm=${sanitise(page.sister, " ")} ${sanitise(page.name, " ")}" target="_blank">
-                    RYM
-                </a>
-                <a class="music-link play-this-track-playlink--genius" href="https://genius.com/search?q=${sanitise(page.sister)}+${sanitise(page.name)}" target="_blank">
-                    Genius
-                </a>
-            `);
+        render(
+          link_container,
+          html`
+                    <a
+                        class="music-link play-this-track-playlink--spotify"
+                        href="https://open.spotify.com/search/${sanitise(
+            page.sister,
+            " "
+          )} ${sanitise(page.name, " ")}"
+                        target="_blank"
+                    >
+                        Spotify
+                    </a>
+                    <a
+                        class="music-link play-this-track-playlink--itunes"
+                        href="https://music.apple.com/gb/search?term=${sanitise(
+            page.sister,
+            " "
+          )} ${sanitise(page.name, " ")}"
+                        target="_blank"
+                    >
+                        Apple
+                    </a>
+                    <a
+                        class="music-link play-this-track-playlink--youtube-music"
+                        href="https://music.youtube.com/search?q=${sanitise(
+            page.sister
+          )}+${sanitise(page.name)}"
+                        target="_blank"
+                    >
+                        YouTube
+                    </a>
+                    <a
+                        class="music-link play-this-track-playlink--tidal"
+                        href="https://listen.tidal.com/search?q=${sanitise(
+            page.sister,
+            " "
+          )} ${sanitise(page.name, " ")}"
+                        target="_blank"
+                    >
+                        Tidal
+                    </a>
+                    <a
+                        class="music-link play-this-track-playlink--discogs"
+                        href="https://www.discogs.com/search?q=${sanitise(
+            page.sister
+          )}+${sanitise(page.name)}&type=all"
+                        target="_blank"
+                    >
+                        Discogs
+                    </a>
+                    <a
+                        class="music-link play-this-track-playlink--qobuz"
+                        href="https://www.qobuz.com/search/albums/${sanitise(
+            page.sister,
+            " "
+          )}%20${sanitise(page.name, " ")}"
+                        target="_blank"
+                    >
+                        Qobuz
+                    </a>
+                    <a
+                        class="music-link play-this-track-playlink--aoty"
+                        href="https://www.albumoftheyear.org/search/?q=${sanitise(
+            page.sister
+          )}+${sanitise(page.name)}"
+                        target="_blank"
+                    >
+                        AOTY
+                    </a>
+                    <a
+                        class="music-link play-this-track-playlink--rym"
+                        href="https://rateyourmusic.com/search?searchterm=${sanitise(
+            page.sister,
+            " "
+          )} ${sanitise(page.name, " ")}"
+                        target="_blank"
+                    >
+                        RYM
+                    </a>
+                    <a
+                        class="music-link play-this-track-playlink--genius"
+                        href="https://genius.com/search?q=${sanitise(
+            page.sister
+          )}+${sanitise(page.name)}"
+                        target="_blank"
+                    >
+                        Genius
+                    </a>
+                `
+        );
       } else {
-        render(link_container, html`
-                <a class="music-link play-this-track-playlink--spotify" href="https://open.spotify.com/search/${sanitise(page.name, " ")}" target="_blank">
-                    Spotify
-                </a>
-                <a class="music-link play-this-track-playlink--itunes" href="https://music.apple.com/gb/search?term=${sanitise(page.name, " ")}" target="_blank">
-                    Apple
-                </a>
-                <a class="music-link play-this-track-playlink--youtube-music" href="https://music.youtube.com/search?q=${sanitise(page.name)}" target="_blank">
-                    YouTube
-                </a>
-                <a class="music-link play-this-track-playlink--tidal" href="https://listen.tidal.com/search?q=${sanitise(page.name, " ")}" target="_blank">
-                    Tidal
-                </a>
-                <a class="music-link play-this-track-playlink--discogs" href="https://www.discogs.com/search?q=${sanitise(page.name)}&type=artist" target="_blank">
-                    Discogs
-                </a>
-                <a class="music-link play-this-track-playlink--qobuz" href="https://www.qobuz.com/search/artists/${sanitise(page.name, " ")}" target="_blank">
-                    Qobuz
-                </a>
-                <a class="music-link play-this-track-playlink--aoty" href="https://www.albumoftheyear.org/search/?q=${sanitise(page.name)}" target="_blank">
-                    AOTY
-                </a>
-                <a class="music-link play-this-track-playlink--rym" href="https://rateyourmusic.com/search?searchterm=${sanitise(page.name, " ")}" target="_blank">
-                    RYM
-                </a>
-                <a class="music-link play-this-track-playlink--genius" href="https://genius.com/search?q=${sanitise(page.name)}" target="_blank">
-                    Genius
-                </a>
-            `);
-        let externals = page.structure.side.querySelector(".resource-external-links");
+        render(
+          link_container,
+          html`
+                    <a
+                        class="music-link play-this-track-playlink--spotify"
+                        href="https://open.spotify.com/search/${sanitise(
+            page.name,
+            " "
+          )}"
+                        target="_blank"
+                    >
+                        Spotify
+                    </a>
+                    <a
+                        class="music-link play-this-track-playlink--itunes"
+                        href="https://music.apple.com/gb/search?term=${sanitise(
+            page.name,
+            " "
+          )}"
+                        target="_blank"
+                    >
+                        Apple
+                    </a>
+                    <a
+                        class="music-link play-this-track-playlink--youtube-music"
+                        href="https://music.youtube.com/search?q=${sanitise(
+            page.name
+          )}"
+                        target="_blank"
+                    >
+                        YouTube
+                    </a>
+                    <a
+                        class="music-link play-this-track-playlink--tidal"
+                        href="https://listen.tidal.com/search?q=${sanitise(
+            page.name,
+            " "
+          )}"
+                        target="_blank"
+                    >
+                        Tidal
+                    </a>
+                    <a
+                        class="music-link play-this-track-playlink--discogs"
+                        href="https://www.discogs.com/search?q=${sanitise(
+            page.name
+          )}&type=artist"
+                        target="_blank"
+                    >
+                        Discogs
+                    </a>
+                    <a
+                        class="music-link play-this-track-playlink--qobuz"
+                        href="https://www.qobuz.com/search/artists/${sanitise(
+            page.name,
+            " "
+          )}"
+                        target="_blank"
+                    >
+                        Qobuz
+                    </a>
+                    <a
+                        class="music-link play-this-track-playlink--aoty"
+                        href="https://www.albumoftheyear.org/search/?q=${sanitise(
+            page.name
+          )}"
+                        target="_blank"
+                    >
+                        AOTY
+                    </a>
+                    <a
+                        class="music-link play-this-track-playlink--rym"
+                        href="https://rateyourmusic.com/search?searchterm=${sanitise(
+            page.name,
+            " "
+          )}"
+                        target="_blank"
+                    >
+                        RYM
+                    </a>
+                    <a
+                        class="music-link play-this-track-playlink--genius"
+                        href="https://genius.com/search?q=${sanitise(
+            page.name
+          )}"
+                        target="_blank"
+                    >
+                        Genius
+                    </a>
+                `
+        );
+        let externals = page.structure.side.querySelector(
+          ".resource-external-links"
+        );
         if (externals) {
           page.structure.side.removeChild(externals.parentElement);
-          let externals_links = externals.querySelectorAll(".resource-external-link");
+          let externals_links = externals.querySelectorAll(
+            ".resource-external-link"
+          );
           externals_links.forEach((link) => {
             link.classList.add("music-link");
             let type = link.classList[1];
@@ -36336,41 +36561,68 @@
       col_main.appendChild(header_tags);
       col_main.appendChild(tags);
     }
-    const no_info = col_main.querySelector(":scope > .section-with-separator.buffer-4");
+    const no_info = col_main.querySelector(
+      ":scope > .section-with-separator.buffer-4"
+    );
     if (no_info) {
       no_info.classList = "loading-data-container";
-      render(no_info, html`
-            <div class="loading-data-text info">${tl(trans.missing_album_info)}</div>
-        `);
+      render(
+        no_info,
+        html`
+                <div class="loading-data-text info">
+                    ${tl(trans.missing_album_info)}
+                </div>
+            `
+      );
     }
     if (!settings.corrections) return;
     page.structure.side.appendChild(html.node`
         <section class="lotus cta">
             <strong>${tl(trans.lotus_cta[page.corrected]).replace("{t}", tl(trans[`${page.type}_lower`]))}</strong>
-            <a class="see-more" href="https://github.com/katelyynn/lotus/issues/new/choose" target="_blank">${tl(trans.suggest_correction)}</a>
+            ${ff("refreshed_lotus") ? html.node`
+                <button class="see-more" onclick=${() => create_correction(page.type)}>${tl(trans.suggest_correction)}</button>
+            ` : html.node`
+                <a class="see-more" href="https://github.com/katelyynn/lotus/issues/new/choose" target="_blank">${tl(trans.suggest_correction)}</a>
+            `}
         </section>
     `);
     if (ff("oracle") && settings.oracle_beta) oracle_process();
   }
   function create_listen_item(parent, { name, listens, link, avi, count = 0, button = false, katsune = false }, header_type) {
     if (!name) return;
-    log(`creating listen item of ${name}, ${count}, ${listens}`, "artist", "info", { avi, link });
+    log(
+      `creating listen item of ${name}, ${count}, ${listens}`,
+      "artist",
+      "info",
+      { avi, link }
+    );
     let listen_item;
     if (button) listen_item = html.node`<button />`;
     else listen_item = html.node`<a />`;
     listen_item.classList.add("btn", "listen-item");
-    listen_item.setAttribute("href", `${root}user/${name}/library/music/${redirect()}${link}`);
+    listen_item.setAttribute(
+      "href",
+      `${root}user/${name}/library/music/${redirect()}${link}`
+    );
     listen_item.setAttribute("data-listens", listens);
     listen_item.setAttribute("id", `listen-item--${name}`);
     let p;
     if (listens > -1) {
-      render(listen_item, html`
-            <img class="view-item-avatar" src=${avi} alt=${name}>
-            <div class="info">
-                <h3>${name}</h3>
-                <p class="colourful" ref=${(el) => p = el}>${tl(trans.listens.count).replace("{c}", listens.toLocaleString(lang))}</p>
-            </div>
-        `);
+      render(
+        listen_item,
+        html`
+                <img class="view-item-avatar" src=${avi} alt=${name} />
+                <div class="info">
+                    <h3>${name}</h3>
+                    <p class="colourful" ref=${(el) => p = el}>
+                        ${tl(trans.listens.count).replace(
+          "{c}",
+          listens.toLocaleString(lang)
+        )}
+                    </p>
+                </div>
+            `
+      );
       let menu = tippy_esm_default(listen_item, {
         theme: "context-menu",
         content: html.node`
@@ -36391,16 +36643,21 @@
       });
       register_menu(listen_item, menu);
     } else if (listens > -2) {
-      render(listen_item, html`
-            <img class="view-item-avatar" src=${avi} alt=${name}>
-            <div class="listen-badge star colourful">
-                <div class="bleh-icon" />
-            </div>
-            <div class="info">
-                <h3>${name}</h3>
-                <p class="colourful" ref=${(el) => p = el}>${tl(trans.listens)}</p>
-            </div>
-        `);
+      render(
+        listen_item,
+        html`
+                <img class="view-item-avatar" src=${avi} alt=${name} />
+                <div class="listen-badge star colourful">
+                    <div class="bleh-icon" />
+                </div>
+                <div class="info">
+                    <h3>${name}</h3>
+                    <p class="colourful" ref=${(el) => p = el}>
+                        ${tl(trans.listens)}
+                    </p>
+                </div>
+            `
+      );
       let menu = tippy_esm_default(listen_item, {
         theme: "context-menu",
         content: html.node`
@@ -36432,20 +36689,31 @@
         content: tl(trans.view_others_library)
       });
     } else {
-      render(listen_item, html`
-            ${avi[0] ? html.node`<img class="view-item-avatar" src=${avi[0].getAttribute("src")} alt="">` : ""}
-            ${avi[1] ? html.node`<img class="view-item-avatar" src=${avi[1].getAttribute("src")} alt="">` : ""}
-            ${avi[2] ? html.node`<img class="view-item-avatar" src=${avi[2].getAttribute("src")} alt="">` : ""}
-            <div class="info">
-                <h3>${tl(trans.following)}</h3>
-                <p class="colourful" ref=${(el) => p = el}>${tl(trans.others_count).replace("{c}", count)}</p>
-            </div>
-        `);
-      listen_item.setAttribute("href", `${window.location.href}/+listeners/you-know`);
+      render(
+        listen_item,
+        html`
+                ${avi[0] ? html.node`<img class="view-item-avatar" src=${avi[0].getAttribute("src")} alt="">` : ""}
+                ${avi[1] ? html.node`<img class="view-item-avatar" src=${avi[1].getAttribute("src")} alt="">` : ""}
+                ${avi[2] ? html.node`<img class="view-item-avatar" src=${avi[2].getAttribute("src")} alt="">` : ""}
+                <div class="info">
+                    <h3>${tl(trans.following)}</h3>
+                    <p class="colourful" ref=${(el) => p = el}>
+                        ${tl(trans.others_count).replace("{c}", count)}
+                    </p>
+                </div>
+            `
+      );
+      listen_item.setAttribute(
+        "href",
+        `${window.location.href}/+listeners/you-know`
+      );
     }
     if (settings.colourful_counts && listens > -1 && header_type == "artist") {
       let parsed_scrobble_as_rank = parse_scrobbles_as_rank(listens);
-      listen_item.setAttribute("data-bleh--scrobble-milestone", parsed_scrobble_as_rank.milestone);
+      listen_item.setAttribute(
+        "data-bleh--scrobble-milestone",
+        parsed_scrobble_as_rank.milestone
+      );
       p.style.setProperty("--hue-user", parsed_scrobble_as_rank.hue);
       p.style.setProperty("--sat-user", parsed_scrobble_as_rank.sat);
       p.style.setProperty("--lit-user", parsed_scrobble_as_rank.lit);
@@ -36472,22 +36740,29 @@
         scrobbles.abbr = value.textContent.trim();
       } else if (index3 == 2) {
         let link = item.querySelector("a");
-        if (!link)
-          return;
+        if (!link) return;
         metascore.text = text3;
         metascore.abbr = value.textContent.trim();
         metascore.link = link.getAttribute("href");
       }
     });
     page.structure.side.classList.remove("hidden-xs");
-    let panel = page.structure.side.querySelector("section.section-with-separator:has(.listener-trend)");
+    let panel = page.structure.side.querySelector(
+      "section.section-with-separator:has(.listener-trend)"
+    );
     if (!panel) {
       panel = document.createElement("section");
       panel.classList.add("section-with-separator");
       if (!page.mobile)
-        page.structure.side.insertBefore(panel, page.structure.side.firstElementChild);
+        page.structure.side.insertBefore(
+          panel,
+          page.structure.side.firstElementChild
+        );
       else
-        page.structure.main.insertBefore(panel, page.structure.main.firstElementChild);
+        page.structure.main.insertBefore(
+          panel,
+          page.structure.main.firstElementChild
+        );
     }
     panel.classList.add("listen-panel");
     panel.setAttribute("data-auth-name", auth.name);
@@ -36511,19 +36786,35 @@
     `;
     panel.insertBefore(row, panel.firstElementChild);
     if (page.mobile)
-      page.structure.main.insertBefore(panel, page.structure.main.firstElementChild);
+      page.structure.main.insertBefore(
+        panel,
+        page.structure.main.firstElementChild
+      );
     tippy_esm_default(row.querySelector(".listener-side p"), {
-      content: tl(trans.count_listeners).replace("{c}", listeners.value.toLocaleString(lang))
+      content: tl(trans.count_listeners).replace(
+        "{c}",
+        listeners.value.toLocaleString(lang)
+      )
     });
     tippy_esm_default(row.querySelector(".scrobble-side p"), {
-      content: tl(trans.count_scrobbles).replace("{c}", scrobbles.value.toLocaleString(lang))
+      content: tl(trans.count_scrobbles).replace(
+        "{c}",
+        scrobbles.value.toLocaleString(lang)
+      )
     });
     if (page.type == "album") {
-      let album_artwork = document.body.querySelector(".artwork-and-metadata-row");
+      let album_artwork = document.body.querySelector(
+        ".artwork-and-metadata-row"
+      );
       if (album_artwork)
-        page.structure.side.insertBefore(album_artwork, page.structure.side.firstElementChild);
+        page.structure.side.insertBefore(
+          album_artwork,
+          page.structure.side.firstElementChild
+        );
     }
-    let masonry = page.structure.row.querySelector(":scope > .col-sidebar.masonry-right");
+    let masonry = page.structure.row.querySelector(
+      ":scope > .col-sidebar.masonry-right"
+    );
     if (masonry) {
       page.structure.row.appendChild(masonry);
     }
@@ -36535,23 +36826,34 @@
       new_upper.classList.add("top-overview-panel");
       new_upper.setAttribute("data-page-type", page.type);
       new_upper.innerHTML = upper.innerHTML;
-      page.structure.main.insertBefore(new_upper, page.structure.main.firstElementChild);
+      page.structure.main.insertBefore(
+        new_upper,
+        page.structure.main.firstElementChild
+      );
     }
     if (page.type == "track") {
-      let video_col = document.body.querySelector(".track-overview-video-column.col-sidebar");
+      let video_col = document.body.querySelector(
+        ".track-overview-video-column.col-sidebar"
+      );
       if (!video_col) {
         video_unavailable(video_col);
         return;
       }
       video_col.classList.remove("col-sidebar");
-      page.structure.side.insertBefore(video_col, page.structure.side.firstElementChild);
+      page.structure.side.insertBefore(
+        video_col,
+        page.structure.side.firstElementChild
+      );
       let video = video_col.querySelector(".video-preview");
       if (!video) {
         video_unavailable(video_col);
         return;
       }
       video_col.classList.remove("col-sidebar");
-      page.structure.side.insertBefore(video_col, page.structure.side.firstElementChild);
+      page.structure.side.insertBefore(
+        video_col,
+        page.structure.side.firstElementChild
+      );
       let playlink = video.querySelector(".video-preview-playlink a");
       let replace = video_col.querySelector(".video-preview-replace a");
       video.appendChild(html.node`
@@ -36574,12 +36876,15 @@
     let cta = page.structure.side.querySelector(".video-preview-upload-cta");
     if (cta) return;
     if (video_col) page.structure.side.removeChild(video_col);
-    page.structure.side.insertBefore(html.node`
+    page.structure.side.insertBefore(
+      html.node`
         <section class="video-placeholder">
             <div class="bleh-icon" style="--icon: var(--icon-16-video-broken)"></div>
             ${tl(trans.video_removed)}
         </section>
-    `, page.structure.side.firstElementChild);
+    `,
+      page.structure.side.firstElementChild
+    );
   }
   function bleh_music_page_charts() {
     if (!ff("music_page_charts")) return;
@@ -36588,8 +36893,7 @@
     let trend = panel.querySelector(".listener-trend");
     if (!trend) return;
     let previous_chart = panel.querySelector(".scrobble-canvas-container");
-    if (previous_chart)
-      panel.removeChild(previous_chart);
+    if (previous_chart) panel.removeChild(previous_chart);
     let table = trend.querySelector("tbody");
     let days = table.querySelectorAll("tr");
     let labels = [];
@@ -36597,15 +36901,14 @@
     let has_seen_more_than_0 = false;
     days.forEach((day, index3) => {
       if (!day) return;
-      let label = DateTime.fromISO(day.querySelector("time").getAttribute("datetime"));
+      let label = DateTime.fromISO(
+        day.querySelector("time").getAttribute("datetime")
+      );
       let value = day.querySelector(".js-value");
       console.log("day", index3, label, day, day.innerHTML);
-      if (!value.getAttribute("data-value"))
-        value = 0;
-      else
-        value = value.getAttribute("data-value");
-      if (value == "0" && index3 < 120 && !has_seen_more_than_0)
-        return;
+      if (!value.getAttribute("data-value")) value = 0;
+      else value = value.getAttribute("data-value");
+      if (value == "0" && index3 < 120 && !has_seen_more_than_0) return;
       has_seen_more_than_0 = true;
       labels.push(label);
       values.push(value);
@@ -36628,16 +36931,18 @@
       type: "line",
       data: {
         labels,
-        datasets: [{
-          data: values,
-          borderWidth: 2,
-          backgroundColor: gradient,
-          borderColor: page.state.chart_colours.link_col,
-          fill: true,
-          pointRadius: 0,
-          pointHitRadius: 20,
-          tension: 0.1
-        }]
+        datasets: [
+          {
+            data: values,
+            borderWidth: 2,
+            backgroundColor: gradient,
+            borderColor: page.state.chart_colours.link_col,
+            fill: true,
+            pointRadius: 0,
+            pointHitRadius: 20,
+            tension: 0.1
+          }
+        ]
       },
       options: page.state.chart_line_options
     });
@@ -36664,7 +36969,9 @@
     panel.insertBefore(view_buttons, panel.firstElementChild);
     refresh_all();
     let legacy_top_listeners_container = panel.querySelector(".top-listeners");
-    let legacy_top_listeners = legacy_top_listeners_container.querySelectorAll(".top-listeners-item");
+    let legacy_top_listeners = legacy_top_listeners_container.querySelectorAll(
+      ".top-listeners-item"
+    );
     let new_container = document.createElement("ul");
     new_container.classList.add("user-list", "top-listeners-list");
     legacy_top_listeners.forEach((listener, index3) => {
@@ -36701,11 +37008,22 @@
                 ` : ""}
             </div>
         `;
-      let badge = patch_avatar(new_listener.querySelector(".user-list-avatar"), name, "listener");
+      let badge = patch_avatar(
+        new_listener.querySelector(".user-list-avatar"),
+        name,
+        "listener"
+      );
       if (track_wrap) {
-        let track_link = new_listener.querySelector(".user-list-about-me a");
-        let artist = return_artist_from_track(track_link.getAttribute("href"), false);
-        track_link.textContent = romanise(correct_item_by_artist(track_link.textContent.trim(), artist));
+        let track_link = new_listener.querySelector(
+          ".user-list-about-me a"
+        );
+        let artist = return_artist_from_track(
+          track_link.getAttribute("href"),
+          false
+        );
+        track_link.textContent = romanise(
+          correct_item_by_artist(track_link.textContent.trim(), artist)
+        );
       }
       new_container.appendChild(new_listener);
     });
@@ -50443,11 +50761,17 @@
   function lotus(force = false) {
     if (!settings.corrections) return;
     let lotus_artist = localStorage.getItem("lotus_artist");
-    let lotus_artist_expire = new Date(localStorage.getItem("lotus_artist_expire"));
+    let lotus_artist_expire = new Date(
+      localStorage.getItem("lotus_artist_expire")
+    );
     let lotus_album_track = localStorage.getItem("lotus_album_track");
-    let lotus_album_track_expire = new Date(localStorage.getItem("lotus_album_track_expire"));
+    let lotus_album_track_expire = new Date(
+      localStorage.getItem("lotus_album_track_expire")
+    );
     let lotus_combined_artists = localStorage.getItem("lotus_combined_artists");
-    let lotus_combined_artists_expire = new Date(localStorage.getItem("lotus_combined_artists_expire"));
+    let lotus_combined_artists_expire = new Date(
+      localStorage.getItem("lotus_combined_artists_expire")
+    );
     let current_time = /* @__PURE__ */ new Date();
     if (!lotus_artist) {
       log("artist list is not cached, fetching", "lotus");
@@ -50485,15 +50809,17 @@
   }
   function lotus_request(type = "artist", send_notify = false) {
     let button = document.body.querySelector('[onclick="_lotus_check()"]');
-    if (button != null)
-      button.setAttribute("disabled", "");
+    if (button != null) button.setAttribute("disabled", "");
     let xhr = new XMLHttpRequest();
     let url = `https://katelyynn.github.io/lotus/${type}.json?${Math.random()}`;
     xhr.open("GET", url, true);
     xhr.onload = function() {
       log(`${type} list responded with ${xhr.status}`, "lotus");
       if (xhr.status != 200) {
-        log("request has been cancelled, will request again in 1h", "lotus");
+        log(
+          "request has been cancelled, will request again in 1h",
+          "lotus"
+        );
         api_expire.setHours(api_expire.getHours() + 1);
       }
       let api_expire = /* @__PURE__ */ new Date();
@@ -50501,21 +50827,26 @@
         if (type == "artist") {
           Object.assign(artist_corrections, JSON.parse(this.response));
         } else if (type == "album_track") {
-          Object.assign(album_track_corrections, JSON.parse(this.response));
+          Object.assign(
+            album_track_corrections,
+            JSON.parse(this.response)
+          );
         } else {
           Object.assign(combined_artists, JSON.parse(this.response));
         }
         if (send_notify)
           status({
-            title: tl(trans.downloaded_value).replace("{v}", tl(trans.lotus[type]))
+            title: tl(trans.downloaded_value).replace(
+              "{v}",
+              tl(trans.lotus[type])
+            )
           });
         localStorage.setItem(`lotus_${type}`, this.response);
         api_expire.setHours(api_expire.getHours() + 4);
         log(`${type} list cached until ${api_expire}`, "lotus");
       }
       localStorage.setItem(`lotus_${type}_expire`, api_expire);
-      if (button != null)
-        button.removeAttribute("disabled");
+      if (button != null) button.removeAttribute("disabled");
     };
     xhr.send();
   }
@@ -50545,9 +50876,13 @@
     albums.forEach((album) => {
       if (!album.hasAttribute("data-kate-processed")) {
         album.setAttribute("data-kate-processed", "true");
-        let artist_name = album.querySelector(`.${parent.replace("-details", "")}-name a`);
+        let artist_name = album.querySelector(
+          `.${parent.replace("-details", "")}-name a`
+        );
         if (!artist_name) return;
-        artist_name.textContent = romanise(correct_artist(artist_name.textContent));
+        artist_name.textContent = romanise(
+          correct_artist(artist_name.textContent)
+        );
       }
     });
   }
@@ -50558,12 +50893,23 @@
     albums.forEach((album) => {
       if (!album.hasAttribute("data-kate-processed")) {
         album.setAttribute("data-kate-processed", "true");
-        let album_name = album.querySelector(`.${parent.replace("-details", "")}-name a`);
+        let album_name = album.querySelector(
+          `.${parent.replace("-details", "")}-name a`
+        );
         if (!album_name) return;
-        let artist_name = album.querySelector(`.${parent.replace("-details", "")}-artist a`);
+        let artist_name = album.querySelector(
+          `.${parent.replace("-details", "")}-artist a`
+        );
         if (!artist_name) return;
-        let corrected_album_name = romanise(correct_item_by_artist(album_name.textContent, artist_name.textContent));
-        let corrected_artist_name = romanise(correct_artist(artist_name.textContent));
+        let corrected_album_name = romanise(
+          correct_item_by_artist(
+            album_name.textContent,
+            artist_name.textContent
+          )
+        );
+        let corrected_artist_name = romanise(
+          correct_artist(artist_name.textContent)
+        );
         album_name.textContent = corrected_album_name;
         artist_name.textContent = corrected_artist_name;
       }
@@ -50576,10 +50922,16 @@
     albums.forEach((album) => {
       if (!album.hasAttribute("data-kate-processed")) {
         album.setAttribute("data-kate-processed", "true");
-        let album_name = album.querySelector(`.${parent.replace("-details", "")}-name a`);
+        let album_name = album.querySelector(
+          `.${parent.replace("-details", "")}-name a`
+        );
         if (!album_name) return;
-        let artist_name = return_artist_from_generic(album_name.getAttribute("href"));
-        album_name.textContent = romanise(correct_item_by_artist(album_name.textContent, artist_name));
+        let artist_name = return_artist_from_generic(
+          album_name.getAttribute("href")
+        );
+        album_name.textContent = romanise(
+          correct_item_by_artist(album_name.textContent, artist_name)
+        );
       }
     });
   }
@@ -50589,7 +50941,10 @@
     try {
       if (album_track_corrections.hasOwnProperty(artist)) {
         if (album_track_corrections[artist].hasOwnProperty(item)) {
-          log(`corrected ${item} by ${artist} as ${album_track_corrections[artist][item]}`, "lotus");
+          log(
+            `corrected ${item} by ${artist} as ${album_track_corrections[artist][item]}`,
+            "lotus"
+          );
           return album_track_corrections[artist][item];
         } else {
           return item;
@@ -50607,13 +50962,14 @@
     if (!settings.corrections) return artist;
     try {
       if (artist_corrections.hasOwnProperty(artist)) {
-        log(`corrected ${artist} as ${artist_corrections[artist]}`, "lotus");
-        if (broadcast)
-          page.corrected = true;
+        log(
+          `corrected ${artist} as ${artist_corrections[artist]}`,
+          "lotus"
+        );
+        if (broadcast) page.corrected = true;
         return artist_corrections[artist];
       } else {
-        if (broadcast)
-          page.corrected = false;
+        if (broadcast) page.corrected = false;
         return artist;
       }
     } catch (e) {
@@ -50630,7 +50986,10 @@
       const corr_map = album_track_corrections[artist_key];
       if (corr_map.hasOwnProperty(formatted_title)) {
         formatted_title = corr_map[formatted_title];
-        log(`corrected ${original_title} by ${original_artist} as ${formatted_title}`, "lotus");
+        log(
+          `corrected ${original_title} by ${original_artist} as ${formatted_title}`,
+          "lotus"
+        );
         original_title_corrected = true;
       }
     }
@@ -50644,9 +51003,7 @@
       return !(m.group === "remasters" && !lower_title.includes(" remaster") && !lower_title.includes("(remaster"));
     }).sort((a, b) => a.idx - b.idx);
     if (artist_corrections.hasOwnProperty(original_artist) && settings.corrections) {
-      original_artist = correct_artist(
-        artist_corrections[original_artist]
-      );
+      original_artist = correct_artist(artist_corrections[original_artist]);
     }
     if (matches.length === 0) {
       const result2 = [
@@ -50696,8 +51053,7 @@
     let title = document.body.querySelector(".header-new-title");
     let title_text = title.textContent.trim();
     let has_multi = false;
-    if (title_text.includes(", ") || title_text.includes("&"))
-      has_multi = true;
+    if (title_text.includes(", ") || title_text.includes("&")) has_multi = true;
     page.multi = false;
     if (!has_multi) {
       if (!settings.corrections) {
@@ -50723,23 +51079,25 @@
         return;
       }
       split.forEach((artist, index3) => {
-        if (index3 > 0)
-          title.innerHTML += ",";
+        if (index3 > 0) title.innerHTML += ",";
         artist = artist.trim();
         let part = document.createElement("a");
         part.classList.add("multi-artist-part");
-        part.setAttribute("href", `${root}music/${redirect()}${sanitise(artist)}`);
+        part.setAttribute(
+          "href",
+          `${root}music/${redirect()}${sanitise(artist)}`
+        );
         if (settings.corrections)
           part.textContent = romanise(correct_artist(artist));
-        else
-          part.textContent = romanise(artist);
+        else part.textContent = romanise(artist);
         title.appendChild(part);
       });
     }
   }
   function patch_header_title() {
     page.suggest = null;
-    if (!settings.corrections && !settings.format_guest_features && !page.multi) return;
+    if (!settings.corrections && !settings.format_guest_features && !page.multi)
+      return;
     page.corrected = false;
     let track_title = document.body.querySelector(".header-new-title");
     let track_artist = document.body.querySelector(".header-new-crumb span");
@@ -50747,11 +51105,20 @@
     if (track_artist) {
       if (artist_corrections.hasOwnProperty(track_artist.textContent)) {
         let corrected_artist = artist_corrections[track_artist.textContent];
-        log(`corrected ${track_artist.textContent} as ${corrected_artist}`, "lotus");
-        track_artist.parentElement.setAttribute("href", `${root}music/${redirect()}${sanitise(track_artist.textContent)}`);
+        log(
+          `corrected ${track_artist.textContent} as ${corrected_artist}`,
+          "lotus"
+        );
+        track_artist.parentElement.setAttribute(
+          "href",
+          `${root}music/${redirect()}${sanitise(track_artist.textContent)}`
+        );
         track_artist.textContent = romanise(corrected_artist);
       } else {
-        track_artist.parentElement.setAttribute("href", `${root}music/${redirect()}${sanitise(track_artist.textContent)}`);
+        track_artist.parentElement.setAttribute(
+          "href",
+          `${root}music/${redirect()}${sanitise(track_artist.textContent)}`
+        );
         track_artist.textContent = romanise(track_artist.textContent);
       }
     }
@@ -50759,18 +51126,29 @@
       try {
         if (!track_title.hasAttribute("data-kate-processed")) {
           track_title.setAttribute("data-kate-processed", "true");
-          let formatted_title = name_includes(track_title.textContent, track_artist.textContent);
+          let formatted_title = name_includes(
+            track_title.textContent,
+            track_artist.textContent
+          );
           let song_title = formatted_title[0];
           let song_tags = formatted_title[1];
           page.corrected = formatted_title[4];
-          render(track_title, html.node`
+          render(
+            track_title,
+            html.node`
                 <div class="title">${romanise(song_title.trim())}</div>
-                ${song_tags.map((tag) => html.node`
+                ${song_tags.map(
+              (tag) => html.node`
                     <div class="feat" data-bleh--tag-type=${tag.type} data-bleh--tag-group=${tag.group}>${romanise(tag.text)}</div>
-                `)}
-            `);
-          if (song_tags.some((tag) => tag.group == "form")) page.suggest = sanitise(song_title.trim());
-          let song_artist_element = document.body.querySelector('span[itemprop="byArtist"]');
+                `
+            )}
+            `
+          );
+          if (song_tags.some((tag) => tag.group == "form"))
+            page.suggest = sanitise(song_title.trim());
+          let song_artist_element = document.body.querySelector(
+            'span[itemprop="byArtist"]'
+          );
           let song_guests = formatted_title[3];
           page.sister_others = formatted_title[3];
           song_artist_element.innerHTML = song_artist_element.innerHTML.trim();
@@ -50786,13 +51164,75 @@
     } else {
       if (!track_title.hasAttribute("data-kate-processed")) {
         track_title.setAttribute("data-kate-processed", "true");
-        let corrected_title = correct_item_by_artist(track_title.textContent, track_artist.textContent);
-        log(`corrected ${track_title.textContent} by ${track_artist.textContent} as ${corrected_title}`, "lotus");
+        let corrected_title = correct_item_by_artist(
+          track_title.textContent,
+          track_artist.textContent
+        );
+        log(
+          `corrected ${track_title.textContent} by ${track_artist.textContent} as ${corrected_title}`,
+          "lotus"
+        );
         if (corrected_title != track_title.textContent)
           page.corrected = true;
         track_title.textContent = romanise(corrected_title);
       }
     }
+  }
+  function create_correction(type, name = page.name, sister = page.sister) {
+    let title;
+    let current = page.name;
+    let link = window.location.href;
+    let correction;
+    let sources;
+    let template;
+    if (type == "artist") {
+      title = page.sister;
+      template = "1-artist.yml";
+    } else {
+      title = `${page.sister} - ${page.name}`;
+      template = "2-album_track.yml";
+    }
+    dialog({
+      id: "lotus_correction",
+      title: tl(trans.suggest_correction),
+      body: html.node`
+            <div class="new-scrobble-form">
+                <p class="generic-label">${tl(trans.current)}</p>
+                ${input({
+        type: "text",
+        value: current,
+        disabled: true
+      })}
+                <p class="form-tip">${tl(trans.current_tip)}</p>
+                <p class="generic-label">${tl(trans.correction)}</p>
+                ${correction = input({
+        type: "text",
+        value: current,
+        placeholder: current,
+        warn_if_not_matching_lower: current.toLowerCase()
+      })}
+                <p class="form-tip">${tl(trans.correction_tip)}</p>
+                <p class="generic-label">${tl(trans.sources)}</p>
+                ${sources = input({
+        type: "textarea"
+      })}
+                <p class="form-tip">${tl(trans.sources_tip)}</p>
+            </div>
+            <div class="modal-footer">
+                <button class="see-more cancel" onclick=${() => dialog_rm({ id: "lotus_correction" })}>
+                    ${tl(trans.cancel)}
+                </button>
+                <div class="fill" />
+                <button class="btn primary continue" onclick=${() => {
+        open(
+          `https://github.com/katelyynn/lotus/issues/new?template=${template}&title=${title}&current=${current}&correction=${correction.value()}&link=${link}&sources=${sources.value()}`
+        );
+      }}>
+                    ${tl(trans.suggest)}
+                </button>
+            </div>
+        `
+    });
   }
 
   // src/activity.js
@@ -57097,6 +57537,30 @@
         sv: "St\xE4mmer kapitaliseringen p\xE5 {t}-namnet?"
       }
     },
+    current: {
+      en: "Current"
+    },
+    current_tip: {
+      en: "This is the original capitalisation present on Last.fm"
+    },
+    correction: {
+      en: "Correction"
+    },
+    correction_tip: {
+      en: "This is the correct capitalisation, as decided by the artist"
+    },
+    sources: {
+      en: "Sources"
+    },
+    sources_tip: {
+      en: "Provide reputable sources where this capitalisation is present, excluding sites like Wikipedia, RYM, AOTY, and MusicBrainz"
+    },
+    suggest: {
+      en: "Suggest"
+    },
+    please_match_the_format: {
+      en: "Only capitalisation changes are allowed"
+    },
     suggest_correction: {
       // suggest a correction for the above system
       en: "Suggest a correction",
@@ -61017,9 +61481,7 @@
           api: {
             name: "API access",
             bio: "Enter a Last.fm API key to use new features, such as:",
-            features: [
-              {}
-            ],
+            features: [{}],
             placeholder: "Enter API key",
             saved: "Saved your API key, testing..",
             confirmed: "Verified your API key, enjoy!",
@@ -63370,7 +63832,10 @@
             let hsl = rgb_to_hsl(colour2[0], colour2[1], colour2[2]);
             auth.sets.hue = hsl.h;
             auth.sets.sat = clamp_sat2(hsl.s / 100 * 3);
-            auth.sets.lit = clamp_lit(auth.sets.sat, hsl.l / 100 + 0.35);
+            auth.sets.lit = clamp_lit(
+              auth.sets.sat,
+              hsl.l / 100 + 0.35
+            );
           });
         } catch (e) {
         }
@@ -64904,6 +65369,11 @@
         default: true,
         name: "Redesigned artwork uploader",
         date: "2025-09-25"
+      },
+      refreshed_lotus: {
+        default: false,
+        name: "Refreshed flow for submitting a lotus correction",
+        date: "2025-09-26"
       }
     }
   };

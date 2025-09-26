@@ -1,12 +1,12 @@
-import {html} from 'lighterhtml';
-import {random_list, root} from '../build/page';
-import {tl, trans} from '../build/trans';
-import {dialog, dialog_rm} from './dialog';
-import {input} from './input';
-import {notify} from "./notify.js";
-import {log} from "../build/log.js";
-import {toggle} from "./toggle.js";
-import {pad2} from "../build/tools.js";
+import { html } from 'lighterhtml';
+import { random_list, root } from '../build/page';
+import { tl, trans } from '../build/trans';
+import { dialog, dialog_rm } from './dialog';
+import { input } from './input';
+import { notify } from './notify.js';
+import { log } from '../build/log.js';
+import { toggle } from './toggle.js';
+import { pad2 } from '../build/tools.js';
 
 export function submit_scrobble({
     pre_track = '',
@@ -15,8 +15,11 @@ export function submit_scrobble({
     pre_album_artist = '',
     func,
     can_api
-}={}) {
-    if (!can_api) can_api = localStorage.getItem('bleh_auth') && localStorage.getItem('bleh_auth_valid') === 'true';
+} = {}) {
+    if (!can_api)
+        can_api =
+            localStorage.getItem('bleh_auth') &&
+            localStorage.getItem('bleh_auth_valid') === 'true';
 
     if (!can_api) {
         window.location.href = `${root}bleh/general`;
@@ -43,54 +46,54 @@ export function submit_scrobble({
         body: html.node`
             <div class="new-scrobble-form">
                 <p class="generic-label">${tl(trans.track)}</p>
-                ${track = input({
+                ${(track = input({
                     type: 'text',
                     value: pre_track,
-                    placeholder: tl(trans.example).replace('{v}', random.track),
+                    placeholder: tl(trans.example, { v: random.track }),
                     warn_if_empty: true
-                })}
+                }))}
                 <p class="generic-label">${tl(trans.album)}</p>
-                ${album = input({
+                ${(album = input({
                     type: 'text',
                     value: pre_album,
-                    placeholder: tl(trans.example).replace('{v}', random.album)
-                })}
+                    placeholder: tl(trans.example, { v: random.album })
+                }))}
                 <p class="generic-label">${tl(trans.artist)}</p>
-                ${artist = input({
+                ${(artist = input({
                     type: 'text',
                     value: pre_artist,
-                    placeholder: tl(trans.example).replace('{v}', random.artist),
+                    placeholder: tl(trans.example, { v: random.artist }),
                     warn_if_empty: true
-                })}
+                }))}
                 <p class="generic-label">${tl(trans.album_artist)}</p>
-                ${album_artist = input({
+                ${(album_artist = input({
                     type: 'text',
                     value: pre_album_artist,
-                    placeholder: tl(trans.example).replace('{v}', random.album_artist)
-                })}
+                    placeholder: tl(trans.example, { v: random.album_artist })
+                }))}
                 <p class="generic-label">${tl(trans.time)}</p>
                 <div class="toggle-and-time">
-                    ${use_current = toggle({
+                    ${(use_current = toggle({
                         value: true,
                         type: 'checkbox',
                         title: tl(trans.use_current_time),
                         func: (state) => {
                             date.disabled(state);
                         }
-                    })}
-                    ${date = input({
+                    }))}
+                    ${(date = input({
                         type: 'date',
                         max: `${max_date.getFullYear()}-${pad2(max_date.getMonth() + 1)}-${pad2(max_date.getDate())}`,
                         disabled: true
-                    })}
+                    }))}
                 </div>
             </div>
             <div class="modal-footer">
-                <button class="see-more cancel" onclick=${() => dialog_rm({id: 'submit_scrobble'})}>
+                <button class="see-more cancel" onclick=${() => dialog_rm({ id: 'submit_scrobble' })}>
                     ${tl(trans.cancel)}
                 </button>
                 <div class="fill" />
-                <button class="btn primary icon" data-type="add" ref=${el => create_scrobble = el} onclick=${async () => {
+                <button class="btn primary icon" data-type="add" ref=${(el) => (create_scrobble = el)} onclick=${async () => {
                     if (track.value() == '' || artist.value() == '') {
                         notify({
                             id: 'submit_scrobble',
@@ -109,7 +112,8 @@ export function submit_scrobble({
                     date.disabled(true);
                     create_scrobble.disabled = true;
 
-                    if (album.value() != '' && album_artist.value() == '') album_artist.value(artist.value());
+                    if (album.value() != '' && album_artist.value() == '')
+                        album_artist.value(artist.value());
 
                     let params = {
                         sk: localStorage.getItem('bleh_auth'),
@@ -119,7 +123,8 @@ export function submit_scrobble({
                     };
 
                     if (album.value() != '') params.album = album.value();
-                    if (album_artist.value() != '') params.albumArtist = album_artist.value();
+                    if (album_artist.value() != '')
+                        params.albumArtist = album_artist.value();
 
                     const res = await fetch(
                         'https://jufufu.katelyn.moe/api/lastfm',
@@ -134,7 +139,9 @@ export function submit_scrobble({
                     );
 
                     const json = await res.json();
-                    log('received response', 'submit scrobble', 'info', {result: json});
+                    log('received response', 'submit scrobble', 'info', {
+                        result: json
+                    });
 
                     function re_enable() {
                         track.disabled(false);
@@ -159,9 +166,12 @@ export function submit_scrobble({
                         return;
                     }
 
-                    const error_code = json.scrobbles.scrobble.ignoredMessage.code;
+                    const error_code =
+                        json.scrobbles.scrobble.ignoredMessage.code;
                     if (error_code > 0) {
-                        log('error', 'submit scrobble', 'error', {error_code});
+                        log('error', 'submit scrobble', 'error', {
+                            error_code
+                        });
                         notify({
                             id: 'submit_scrobble',
                             title: tl(trans.scrobble_failed),
@@ -179,7 +189,7 @@ export function submit_scrobble({
                         body: params.track,
                         type: 'success'
                     });
-                    dialog_rm({id: 'submit_scrobble'});
+                    dialog_rm({ id: 'submit_scrobble' });
 
                     if (func) func();
                 }}>

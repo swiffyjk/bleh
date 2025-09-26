@@ -5,12 +5,12 @@
 //
 
 import moment from 'moment';
-import {handle_error_500} from "../page";
-import {log} from "./log";
-import {auth, auth_link, setRoot} from "./page";
-import {clamp_lit, clamp_sat, rgb_to_hsl} from "./tools";
-import ColorThief from "color-thief-browser";
-import {Settings} from 'luxon';
+import { handle_error_500 } from '../page';
+import { log } from './log';
+import { auth, auth_link, setRoot } from './page';
+import { clamp_lit, clamp_sat, rgb_to_hsl } from './tools';
+import ColorThief from 'color-thief-browser';
+import { Settings } from 'luxon';
 
 // loads your selected language in last.fm
 export let lang = 'en';
@@ -24,24 +24,24 @@ export let lang_info = {
     de: {
         name: 'Deutsch',
         by: ['evangelicgirl', 'clairedoll'],
-        last_updated:  '2025-05-11'
+        last_updated: '2025-05-11'
     },
     pl: {
         name: 'Polski',
         by: ['iwas15with100k'],
-        last_updated:  '2024-06-17'
+        last_updated: '2024-06-17'
     },
     pt: {
         name: 'Português',
         by: ['ArthRMH', 'fr0r'],
-        last_updated:  '2025-08-10'
+        last_updated: '2025-08-10'
     },
-        sv: {
+    sv: {
         name: 'Svenska',
         by: ['Lrexie'],
-        last_updated:  '2025-09-23'
+        last_updated: '2025-09-23'
     }
-}
+};
 
 export const trans = {
     page_templates: {
@@ -989,7 +989,6 @@ export const trans = {
         de: 'Einrichtung',
         pt: 'Instalação',
         sv: 'Installation'
-
     },
     import: {
         en: 'Import',
@@ -1444,6 +1443,30 @@ export const trans = {
             pt: 'Esse(a) {t} está capitalizado(a) corretamente?',
             sv: 'Stämmer kapitaliseringen på {t}-namnet?'
         }
+    },
+    current: {
+        en: 'Current'
+    },
+    current_tip: {
+        en: 'This is the original capitalisation present on Last.fm'
+    },
+    correction: {
+        en: 'Correction'
+    },
+    correction_tip: {
+        en: 'This is the correct capitalisation, as decided by the artist'
+    },
+    sources: {
+        en: 'Sources'
+    },
+    sources_tip: {
+        en: 'Provide reputable sources where this capitalisation is present, excluding sites like Wikipedia, RYM, AOTY, and MusicBrainz'
+    },
+    suggest: {
+        en: 'Suggest'
+    },
+    please_match_the_format: {
+        en: 'Only capitalisation changes are allowed'
     },
     suggest_correction: {
         // suggest a correction for the above system
@@ -2390,7 +2413,7 @@ export const trans = {
         en: 'You cannot delete pre-existing shouts on your profile',
         de: 'Du kannst bereits vorhandene Shouts auf deinem Profil nicht löschen',
         pt: 'Você não pode deletar mensagens já existentes em seu perfil',
-        sv:' Du kan inte ta bort deras tidigare hojtningar från din profil'
+        sv: ' Du kan inte ta bort deras tidigare hojtningar från din profil'
     },
     blocked_user_view_profile: {
         en: 'They can still view your profile',
@@ -4050,7 +4073,7 @@ export const trans = {
         en: 'e.g. {v}',
         de: 'z.B. {v}',
         pt: 'ex.: {v}',
-        sv: 't.ex. {v}',
+        sv: 't.ex. {v}'
     },
     item_is_unavailable_on_platform: {
         en: '{i} is unavailable on {p}',
@@ -4256,7 +4279,7 @@ export const trans = {
     },
     receipt: {
         name: {
-            en: 'Receipt',
+            en: 'Receipt'
         },
         body: {
             en: 'Print out your top tracks as a receipt',
@@ -4641,7 +4664,7 @@ export const trans = {
     create_playlist: {
         en: 'Create playlist'
     }
-}
+};
 
 export const trans_legacy = {
     en: {
@@ -4694,9 +4717,11 @@ export const trans_legacy = {
                 account_overview: 'account · settings',
                 website: 'website · settings',
                 subscription_overview: 'last.fm pro · settings',
-                'subscription_automatic-edits_albums': 'album auto edits · settings',
-                'subscription_automatic-edits_tracks': 'track auto edits · settings',
-                applications_overview: 'applications · settings',
+                'subscription_automatic-edits_albums':
+                    'album auto edits · settings',
+                'subscription_automatic-edits_tracks':
+                    'track auto edits · settings',
+                applications_overview: 'applications · settings'
             },
             inbox: {
                 overview: 'incoming inbox',
@@ -4738,7 +4763,7 @@ export const trans_legacy = {
                 obsessions: '{name} · profile obsessions',
                 events: '{name} · profile events',
                 playlists_playlists: '{name} · profile playlists',
-                tags_overview: '{name} · profile tags',
+                tags_overview: '{name} · profile tags'
             },
             artist: {
                 overview: '{name} · artist',
@@ -4825,7 +4850,8 @@ export const trans_legacy = {
             artist: 'Artist corrections have been downloaded!',
             album_track: 'Album and track corrections have been downloaded!',
             version: 'You are running lotus version {v}.',
-            tooltip: 'lotus is the community correction system used in bleh and bwaa',
+            tooltip:
+                'lotus is the community correction system used in bleh and bwaa',
             check: 'Check for updates',
             correct: {
                 name: 'Correct capitalisation',
@@ -4888,7 +4914,8 @@ export const trans_legacy = {
             bookmarks: 'Bookmarks',
             settings: 'Settings',
             logout: 'Logout',
-            seasonal_notice: 'To watch the counter update live, click and stay on the tab that opens.',
+            seasonal_notice:
+                'To watch the counter update live, click and stay on the tab that opens.',
             seasonal_live: 'Counter is updating live!'
         },
         music: {
@@ -5095,12 +5122,14 @@ export const trans_legacy = {
                         yes: 'You are a sponsor, thank you!',
                         no: 'Become a sponsor to get a custom badge',
                         badge: 'To configure your custom badge, get in touch with me.',
-                        one_time: 'A custom badge is available only when selecting monthly.'
+                        one_time:
+                            'A custom badge is available only when selecting monthly.'
                     },
                     manage: 'Manage sponsorship',
                     check: 'Refresh badges',
                     download: 'Sponsorship and badge data downloaded!',
-                    version: 'You have version {v} of the sponsorship/badge data downloaded.'
+                    version:
+                        'You have version {v} of the sponsorship/badge data downloaded.'
                 }
             },
             appearance: {
@@ -5136,7 +5165,7 @@ export const trans_legacy = {
                 bio: 'Configure your music-related settings for profiles, artists, albums, and tracks.',
                 profile_shortcut: {
                     name: 'Profile shortcut',
-                    bio: 'Quickly access a user\'s plays on an artist, album, or track page.',
+                    bio: "Quickly access a user's plays on an artist, album, or track page.",
                     placeholder: 'Profile',
                     header: 'Enter username',
                     saved: 'Profile shortcut is valid',
@@ -5145,7 +5174,8 @@ export const trans_legacy = {
                 show_bulk_edit_album: {
                     name: 'Show album in chartlists',
                     bio: 'This is disabled by default as hovering over tracks reveals the album title in all areas',
-                    require: 'Only applicable with the ‘Last.fm Bulk Edit’ extension'
+                    require:
+                        'Only applicable with the ‘Last.fm Bulk Edit’ extension'
                 },
                 grid_glow: {
                     name: 'Show a glow around grid items'
@@ -5153,7 +5183,8 @@ export const trans_legacy = {
             },
             accessibility: {
                 name: 'Accessibility',
-                shout_preview: 'some completely random text that doesn\'t mean <a href="https://cutensilly.org">anything at all</a>',
+                shout_preview:
+                    'some completely random text that doesn\'t mean <a href="https://cutensilly.org">anything at all</a>',
                 accessible_name_colours: {
                     name: 'Prefer accessible name colours',
                     bio: 'Use the default header text colour over a accented text colour.'
@@ -5190,7 +5221,8 @@ export const trans_legacy = {
                             hue: 'Accent colour',
                             sat: 'Saturation',
                             lit: 'Lightness',
-                            seasonal_alert: 'The current season is overriding your accent colour, adjust sliders to disable.'
+                            seasonal_alert:
+                                'The current season is overriding your accent colour, adjust sliders to disable.'
                         }
                     },
                     swatches: {
@@ -5227,7 +5259,8 @@ export const trans_legacy = {
                         current: 'The current season is {season} for {time}.',
                         started: 'started {time}',
                         none: 'There is no active season currently.',
-                        disabled: 'You have seasons disabled, enable to view current event.'
+                        disabled:
+                            'You have seasons disabled, enable to view current event.'
                     },
                     particles: {
                         name: 'Display particles during select seasons',
@@ -5336,7 +5369,8 @@ export const trans_legacy = {
                             }
                         },
                         continue: {
-                            next_step: 'Once you have the extension installed, hit "Install style" on the new tab that will open.'
+                            next_step:
+                                'Once you have the extension installed, hit "Install style" on the new tab that will open.'
                         },
                         finish: {
                             alert: 'All done! From now on, styling will be handled via Stylus.'
@@ -5357,8 +5391,8 @@ export const trans_legacy = {
                     placeholder: 'Enter a local note for this user',
                     edit: 'Edit note',
                     delete: 'Remove note',
-                    edit_user: 'Edit {u}\'s note',
-                    delete_user: 'Remove {u}\'s note',
+                    edit_user: "Edit {u}'s note",
+                    delete_user: "Remove {u}'s note",
                     view: 'View your profile notes'
                 },
                 you: 'You',
@@ -5368,9 +5402,7 @@ export const trans_legacy = {
                 api: {
                     name: 'API access',
                     bio: 'Enter a Last.fm API key to use new features, such as:',
-                    features: [
-                        {}
-                    ],
+                    features: [{}],
                     placeholder: 'Enter API key',
                     saved: 'Saved your API key, testing..',
                     confirmed: 'Verified your API key, enjoy!',
@@ -5381,14 +5413,14 @@ export const trans_legacy = {
             },
             redirects: {
                 name: 'Redirects',
-                bio: 'Manage last.fm\'s (not) handy redirection system as best as possible.',
+                bio: "Manage last.fm's (not) handy redirection system as best as possible.",
                 travis: {
                     name: 'Hide redirect messages on music pages',
-                    bio: 'No, I didn\'t mean Travi$ Scott'
+                    bio: "No, I didn't mean Travi$ Scott"
                 },
                 autocorrect: {
                     name: 'Scrobble auto-correction',
-                    bio: 'By default, last.fm will \'auto-correct\' some of your scrobbles using this system. This will make your scrobbles appear as <i>Travis Scott</i> rather than <i>Travi$ Scott</i>, however the redirection system is not fully disabled.',
+                    bio: "By default, last.fm will 'auto-correct' some of your scrobbles using this system. This will make your scrobbles appear as <i>Travis Scott</i> rather than <i>Travi$ Scott</i>, however the redirection system is not fully disabled.",
                     action: 'Open Settings'
                 }
             },
@@ -5417,7 +5449,7 @@ export const trans_legacy = {
                 },
                 show_remaster_tags: {
                     name: 'Show remaster tags',
-                    bio: 'Nobody likes remasters (or the tags), if you\'d prefer to still listen but remove the annoyance hide them!'
+                    bio: "Nobody likes remasters (or the tags), if you'd prefer to still listen but remove the annoyance hide them!"
                 },
                 submit: {
                     name: 'Submit new correction',
@@ -5442,8 +5474,10 @@ export const trans_legacy = {
             },
             text: {
                 name: 'Text',
-                shout_preview_md: 'some <strong>completely</strong> random!<br>text that doesn\'t mean <a href="https://cutensilly.org">anything at all</a>',
-                shout_preview: 'some completely random! text that doesn\'t mean anything at all',
+                shout_preview_md:
+                    'some <strong>completely</strong> random!<br>text that doesn\'t mean <a href="https://cutensilly.org">anything at all</a>',
+                shout_preview:
+                    "some completely random! text that doesn't mean anything at all",
                 markdown: {
                     name: 'Use markdown formatting',
                     bio: 'Enables line-breaks, bold, italics, and links.',
@@ -5479,7 +5513,8 @@ export const trans_legacy = {
                         aka: 'aka.',
                         pronouns: 'pronouns'
                     },
-                    pronoun_tip: 'When pronouns are placed first, "aka." will change to "pronouns".',
+                    pronoun_tip:
+                        'When pronouns are placed first, "aka." will change to "pronouns".',
                     country: 'Country',
                     website: 'Website',
                     about: 'About',
@@ -5488,7 +5523,8 @@ export const trans_legacy = {
                         bio: 'Preview how your bio looks to others',
                         note: 'For non-bleh users, multiple lines display as spaces and links, bold, italics will be plain text. Any images embedded will appear as manic text, so be aware.'
                     },
-                    banner_tip: 'Images can be embedded using ![](link). You can also set a custom profile banner with ![banner](link).',
+                    banner_tip:
+                        'Images can be embedded using ![](link). You can also set a custom profile banner with ![banner](link).',
                     avatar: {
                         name: 'Edit avatar',
                         upload: 'Upload file',
@@ -5637,7 +5673,7 @@ export const trans_legacy = {
                     'Configuring your accent colour',
                     'Changing your interface theme',
                     'Adjusting song corrections and tagging',
-                    'If you\'re already set, you can skip.'
+                    "If you're already set, you can skip."
                 ],
                 pick_theme: 'Which theme would you prefer?',
                 change_later: 'You can modify all your settings at any time.'
@@ -5645,7 +5681,8 @@ export const trans_legacy = {
             appearance: {
                 name: 'Your colour',
                 bio: 'Configure the colour of bleh from one of the available presets, or make your own colour combination!',
-                subtext: 'During seasonal events, the default colour changes automatically.'
+                subtext:
+                    'During seasonal events, the default colour changes automatically.'
             },
             music: {
                 change_later: 'More detailed options available in settings.'
@@ -5814,7 +5851,8 @@ export const trans_legacy = {
             artist: 'Artist corrections have been downloaded!',
             album_track: 'Album and track corrections have been downloaded!',
             version: 'You are running lotus version {v}.',
-            tooltip: 'lotus is the community correction system used in bleh and bwaa',
+            tooltip:
+                'lotus is the community correction system used in bleh and bwaa',
             check: 'Check for updates',
             correct: {
                 name: 'Correct capitalisation',
@@ -6078,12 +6116,14 @@ export const trans_legacy = {
                         yes: 'You are a sponsor, thank you!',
                         no: 'Become a sponsor to get a custom badge',
                         badge: 'To configure your custom badge, get in touch with me.',
-                        one_time: 'A custom badge is available only when selecting monthly.'
+                        one_time:
+                            'A custom badge is available only when selecting monthly.'
                     },
                     manage: 'Manage sponsorship',
                     check: 'Refresh badges',
                     download: 'Sponsorship and badge data downloaded!',
-                    version: 'You have version {v} of the sponsorship/badge data downloaded.'
+                    version:
+                        'You have version {v} of the sponsorship/badge data downloaded.'
                 }
             },
             appearance: {
@@ -6128,7 +6168,8 @@ export const trans_legacy = {
                 show_bulk_edit_album: {
                     name: 'Show album in chartlists',
                     bio: 'This is disabled by default as hovering over tracks reveals the album title in all areas',
-                    require: 'Only applicable with the ‘Last.fm Bulk Edit’ extension'
+                    require:
+                        'Only applicable with the ‘Last.fm Bulk Edit’ extension'
                 },
                 grid_glow: {
                     name: 'Show a glow around grid items'
@@ -6136,7 +6177,8 @@ export const trans_legacy = {
             },
             accessibility: {
                 name: 'Zugänglichkeit',
-                shout_preview: 'some completely random text that doesn\'t mean <a href="https://cutensilly.org">anything at all</a>',
+                shout_preview:
+                    'some completely random text that doesn\'t mean <a href="https://cutensilly.org">anything at all</a>',
                 accessible_name_colours: {
                     name: 'Zugängliche Namensfarben bevorzugen',
                     bio: 'Use the default header text colour over a accented text colour.'
@@ -6175,11 +6217,13 @@ export const trans_legacy = {
                     default: 'Standardfarbe',
                     modals: {
                         custom_colour: {
-                            preface: 'Farben werden durch drei Werte gesteuert: Farbton, Sättigung und Helligkeit. Probiere den Schieberegler aus, um ein Gefühl dafür zu bekommen.',
+                            preface:
+                                'Farben werden durch drei Werte gesteuert: Farbton, Sättigung und Helligkeit. Probiere den Schieberegler aus, um ein Gefühl dafür zu bekommen.',
                             hue: 'Akzentfarbe',
                             sat: 'Sättigung',
                             lit: 'Helligkeit',
-                            seasonal_alert: 'Die aktuelle Saison überschreibt deine Akzentfarbe. Passe den Schieberegler an, um sie zu deaktivieren.'
+                            seasonal_alert:
+                                'Die aktuelle Saison überschreibt deine Akzentfarbe. Passe den Schieberegler an, um sie zu deaktivieren.'
                         }
                     }
                 },
@@ -6210,7 +6254,8 @@ export const trans_legacy = {
                         current: 'Die aktuelle Saison ist {season} für {time}',
                         started: '{time} angefangen',
                         none: 'Derzeit gibt es keine aktive Saison.',
-                        disabled: 'Saisons sind deaktiviert. Aktiviere diese, um die aktuelle Saison anzuzeigen.'
+                        disabled:
+                            'Saisons sind deaktiviert. Aktiviere diese, um die aktuelle Saison anzuzeigen.'
                     },
                     particles: {
                         name: 'Partikel während bestimmter Jahreszeiten anzeigen',
@@ -6232,8 +6277,10 @@ export const trans_legacy = {
                     fruitcake: 'fruitcake',
                     mistletoe: 'Mistletoe',
                     festival: 'Christmas Eve',
-                    exclusive_for_season: 'Exclusive for <span class="season-name">{season}</span>',
-                    exclusive_for_season_and_more: 'Exclusive for <span class="season-name">{season}</span> and 1 more',
+                    exclusive_for_season:
+                        'Exclusive for <span class="season-name">{season}</span>',
+                    exclusive_for_season_and_more:
+                        'Exclusive for <span class="season-name">{season}</span> and 1 more',
                     view: 'Open seasonal tab'
                 },
                 artwork: {
@@ -6320,7 +6367,8 @@ export const trans_legacy = {
                             }
                         },
                         continue: {
-                            next_step: 'Once you have the extension installed, hit "Install style" on the new tab that will open.'
+                            next_step:
+                                'Once you have the extension installed, hit "Install style" on the new tab that will open.'
                         },
                         finish: {
                             alert: 'All done! From now on, styling will be handled via Stylus.'
@@ -6341,22 +6389,22 @@ export const trans_legacy = {
                     placeholder: 'Enter a local note for this user',
                     edit: 'Edit note',
                     delete: 'Remove note',
-                    edit_user: 'Edit {u}\'s note',
-                    delete_user: 'Remove {u}\'s note',
+                    edit_user: "Edit {u}'s note",
+                    delete_user: "Remove {u}'s note",
                     view: 'View your profile notes'
                 },
                 you: 'You'
             },
             redirects: {
                 name: 'Weiterleitungen',
-                bio: 'Manage last.fm\'s (not) handy redirection system as best as possible.',
+                bio: "Manage last.fm's (not) handy redirection system as best as possible.",
                 travis: {
                     name: 'Hide redirect messages on music pages',
-                    bio: 'No, I didn\'t mean Travi$ Scott'
+                    bio: "No, I didn't mean Travi$ Scott"
                 },
                 autocorrect: {
                     name: 'Scrobble auto-correction',
-                    bio: 'By default, last.fm will \'auto-correct\' some of your scrobbles using this system. This will make your scrobbles appear as <i>Travis Scott</i> rather than <i>Travi$ Scott</i>, however the redirection system is not fully disabled.',
+                    bio: "By default, last.fm will 'auto-correct' some of your scrobbles using this system. This will make your scrobbles appear as <i>Travis Scott</i> rather than <i>Travi$ Scott</i>, however the redirection system is not fully disabled.",
                     action: 'Open Settings'
                 }
             },
@@ -6385,7 +6433,7 @@ export const trans_legacy = {
                 },
                 show_remaster_tags: {
                     name: 'Remaster-Tags anzeigen',
-                    bio: 'Nobody likes remasters (or the tags), if you\'d prefer to still listen but remove the annoyance hide them!'
+                    bio: "Nobody likes remasters (or the tags), if you'd prefer to still listen but remove the annoyance hide them!"
                 },
                 submit: {
                     name: 'Neue Korrektur einreichen',
@@ -6409,8 +6457,10 @@ export const trans_legacy = {
             },
             text: {
                 name: 'Text',
-                shout_preview_md: 'some <strong>completely</strong> random!<br>text that doesn\'t mean <a href="https://cutensilly.org">anything at all</a>',
-                shout_preview: 'some completely random! text that doesn\'t mean anything at all',
+                shout_preview_md:
+                    'some <strong>completely</strong> random!<br>text that doesn\'t mean <a href="https://cutensilly.org">anything at all</a>',
+                shout_preview:
+                    "some completely random! text that doesn't mean anything at all",
                 markdown: {
                     name: 'Markdown-Formatierung verwenden',
                     bio: 'Aktiviert Zeilenumbrüche, Fettdruck, Kursivschrift und Links.',
@@ -6444,7 +6494,8 @@ export const trans_legacy = {
                     subtitle: {
                         name: 'Untertitel'
                     },
-                    pronoun_tip: 'Wenn Pronomen an den Anfang gestellt werden, ändert sich „aka.“ in „Pronomen“.',
+                    pronoun_tip:
+                        'Wenn Pronomen an den Anfang gestellt werden, ändert sich „aka.“ in „Pronomen“.',
                     country: 'Land',
                     website: 'Website',
                     about: 'Über mich',
@@ -6453,7 +6504,8 @@ export const trans_legacy = {
                         bio: 'Vorschau deiner biographie für andere',
                         note: 'Für nicht bleh Benutzer, mehrere Zeilen werden als Leerzeichen und Links angezeigt, Fett- und Kursivschrift wird als einfacher Text angezeigt. Jegliche eingelegte Bilder werden als Text angezeigt.'
                     },
-                    banner_tip: 'Bilder können mithilfe von ![](link) eingelegt werden. Du kannst auch ein benutzerdefiniertes Banner mithilfe von ![banner](link) festlegen.',
+                    banner_tip:
+                        'Bilder können mithilfe von ![](link) eingelegt werden. Du kannst auch ein benutzerdefiniertes Banner mithilfe von ![banner](link) festlegen.',
                     avatar: {
                         name: 'Profilbild bearbeiten',
                         upload: 'Datei hochladen',
@@ -6598,12 +6650,13 @@ export const trans_legacy = {
                     'Configuring your accent colour',
                     'Changing your interface theme',
                     'Adjusting song corrections and tagging',
-                    'If you\'re already set, you can skip.'
+                    "If you're already set, you can skip."
                 ]
             },
             appearance: {
                 bio: 'Configure the colour of bleh from one of the available presets, or make your own colour combination!',
-                subtext: 'During seasonal events, the default colour changes automatically.'
+                subtext:
+                    'During seasonal events, the default colour changes automatically.'
             }
         },
         gallery: {
@@ -6740,7 +6793,7 @@ export const trans_legacy = {
                 reason: 'Translated for a supported language'
             },
             cat: {
-                name: 'it\'s a kitty!!'
+                name: "it's a kitty!!"
             },
             sponsor: {
                 name: 'Sponsoring',
@@ -6764,7 +6817,8 @@ export const trans_legacy = {
             artist: 'Artist corrections have been downloaded!',
             album_track: 'Album and track corrections have been downloaded!',
             version: 'You are running lotus version {v}.',
-            tooltip: 'lotus is the community correction system used in bleh and bwaa',
+            tooltip:
+                'lotus is the community correction system used in bleh and bwaa',
             check: 'Check for updates',
             correct: {
                 name: 'Correct capitalisation',
@@ -7028,12 +7082,14 @@ export const trans_legacy = {
                         yes: 'You are a sponsor, thank you!',
                         no: 'Become a sponsor to get a custom badge',
                         badge: 'To configure your custom badge, get in touch with me.',
-                        one_time: 'A custom badge is available only when selecting monthly.'
+                        one_time:
+                            'A custom badge is available only when selecting monthly.'
                     },
                     manage: 'Manage sponsorship',
                     check: 'Refresh badges',
                     download: 'Sponsorship and badge data downloaded!',
-                    version: 'You have version {v} of the sponsorship/badge data downloaded.'
+                    version:
+                        'You have version {v} of the sponsorship/badge data downloaded.'
                 }
             },
             appearance: {
@@ -7069,7 +7125,7 @@ export const trans_legacy = {
                 bio: 'Configure your music-related settings for profiles, artists, albums, and tracks.',
                 profile_shortcut: {
                     name: 'Profile shortcut',
-                    bio: 'Quickly access a user\'s plays on an artist, album, or track page.',
+                    bio: "Quickly access a user's plays on an artist, album, or track page.",
                     placeholder: 'Profile',
                     header: 'Enter username',
                     saved: 'Profile shortcut is valid',
@@ -7078,7 +7134,8 @@ export const trans_legacy = {
                 show_bulk_edit_album: {
                     name: 'Show album in chartlists',
                     bio: 'This is disabled by default as hovering over tracks reveals the album title in all areas',
-                    require: 'Only applicable with the ‘Last.fm Bulk Edit’ extension'
+                    require:
+                        'Only applicable with the ‘Last.fm Bulk Edit’ extension'
                 },
                 grid_glow: {
                     name: 'Show a glow around grid items'
@@ -7086,7 +7143,8 @@ export const trans_legacy = {
             },
             accessibility: {
                 name: 'Accessibility',
-                shout_preview: 'jakikolwiek losowy tekst, który <a href="https://cutensilly.org">nic nie znaczy</a>',
+                shout_preview:
+                    'jakikolwiek losowy tekst, który <a href="https://cutensilly.org">nic nie znaczy</a>',
                 accessible_name_colours: {
                     name: 'Preferowane kolory dostępnej nazwy',
                     bio: 'Użyj domyślnego koloru tekstu nagłówka zamiast koloru akcentowego.'
@@ -7125,11 +7183,13 @@ export const trans_legacy = {
                     default: 'Default colour',
                     modals: {
                         custom_colour: {
-                            preface: 'Kolory są kontrolowane przez trzy wartości: odcień (hue), nasycenie (saturation) i jasność (lightness). Przesuń suwaki, aby dostosować kolor.',
+                            preface:
+                                'Kolory są kontrolowane przez trzy wartości: odcień (hue), nasycenie (saturation) i jasność (lightness). Przesuń suwaki, aby dostosować kolor.',
                             hue: 'Kolor akcentu (hue)',
                             sat: 'Nasycenie (saturation)',
                             lit: 'Jasność (lightness)',
-                            seasonal_alert: 'The current season is overriding your accent colour, adjust sliders to disable.'
+                            seasonal_alert:
+                                'The current season is overriding your accent colour, adjust sliders to disable.'
                         }
                     }
                 },
@@ -7160,7 +7220,8 @@ export const trans_legacy = {
                         current: 'The current season is {season} for {time}.',
                         started: 'started {time}',
                         none: 'There is no active season currently.',
-                        disabled: 'You have seasons disabled, enable to view current event.'
+                        disabled:
+                            'You have seasons disabled, enable to view current event.'
                     },
                     particles: {
                         name: 'Display particles during select seasons',
@@ -7182,8 +7243,10 @@ export const trans_legacy = {
                     fruitcake: 'fruitcake',
                     mistletoe: 'Mistletoe',
                     festival: 'Christmas Eve',
-                    exclusive_for_season: 'Exclusive for <span class="season-name">{season}</span>',
-                    exclusive_for_season_and_more: 'Exclusive for <span class="season-name">{season}</span> and 1 more',
+                    exclusive_for_season:
+                        'Exclusive for <span class="season-name">{season}</span>',
+                    exclusive_for_season_and_more:
+                        'Exclusive for <span class="season-name">{season}</span> and 1 more',
                     view: 'Open seasonal tab'
                 },
                 artwork: {
@@ -7270,7 +7333,8 @@ export const trans_legacy = {
                             }
                         },
                         continue: {
-                            next_step: 'Gdy już zainstalujesz rozszerzenie, kliknij "Zainstaluj styl" na nowej karcie, która się otworzy.'
+                            next_step:
+                                'Gdy już zainstalujesz rozszerzenie, kliknij "Zainstaluj styl" na nowej karcie, która się otworzy.'
                         },
                         finish: {
                             alert: 'Gotowe! Od teraz motyw będzie obsługiwany za pomocą Stylus.'
@@ -7288,7 +7352,8 @@ export const trans_legacy = {
                 notes: {
                     name: 'Notatki',
                     header: 'Notatka',
-                    placeholder: 'Wprowadź lokalną notatkę dla tego użytkownika',
+                    placeholder:
+                        'Wprowadź lokalną notatkę dla tego użytkownika',
                     edit: 'Edytuj notatkę',
                     delete: 'Usuń notatkę',
                     edit_user: 'Edytuj notatkę dla {u}',
@@ -7298,20 +7363,20 @@ export const trans_legacy = {
             },
             redirects: {
                 name: 'Redirects',
-                bio: 'Manage last.fm\'s (not) handy redirection system as best as possible.',
+                bio: "Manage last.fm's (not) handy redirection system as best as possible.",
                 travis: {
                     name: 'Hide redirect messages on music pages',
-                    bio: 'No, I didn\'t mean Travi$ Scott'
+                    bio: "No, I didn't mean Travi$ Scott"
                 },
                 autocorrect: {
                     name: 'Scrobble auto-correction',
-                    bio: 'By default, last.fm will \'auto-correct\' some of your scrobbles using this system. This will make your scrobbles appear as <i>Travis Scott</i> rather than <i>Travi$ Scott</i>, however the redirection system is not fully disabled.',
+                    bio: "By default, last.fm will 'auto-correct' some of your scrobbles using this system. This will make your scrobbles appear as <i>Travis Scott</i> rather than <i>Travi$ Scott</i>, however the redirection system is not fully disabled.",
                     action: 'Open Settings'
                 }
             },
             corrections: {
                 name: 'Corrections',
-                bio: 'Manage bleh\'s in-built correction system for artist, album, and track titles.',
+                bio: "Manage bleh's in-built correction system for artist, album, and track titles.",
                 toggle: {
                     name: 'Enable the correction system'
                 },
@@ -7334,7 +7399,7 @@ export const trans_legacy = {
                 },
                 show_remaster_tags: {
                     name: 'Show remaster tags',
-                    bio: 'Nobody likes remasters (or the tags), if you\'d prefer to still listen but remove the annoyance hide them!'
+                    bio: "Nobody likes remasters (or the tags), if you'd prefer to still listen but remove the annoyance hide them!"
                 },
                 submit: {
                     name: 'Submit new correction',
@@ -7358,7 +7423,8 @@ export const trans_legacy = {
             },
             text: {
                 name: 'Text',
-                shout_preview_md: 'jakikolwiek <strong>losowy</strong> tekst,<br>który <a href="https://cutensilly.org">nic nie znaczy</a>',
+                shout_preview_md:
+                    'jakikolwiek <strong>losowy</strong> tekst,<br>który <a href="https://cutensilly.org">nic nie znaczy</a>',
                 shout_preview: 'jakikolwiek losowy tekst, który nic nie znaczy',
                 markdown: {
                     name: 'Use markdown formatting',
@@ -7395,7 +7461,8 @@ export const trans_legacy = {
                         aka: 'aka.',
                         pronouns: 'zaimki'
                     },
-                    pronoun_tip: 'Jeśli zaimki są umieszczone jako pierwsze, "aka." zmieni się na "zaimki".',
+                    pronoun_tip:
+                        'Jeśli zaimki są umieszczone jako pierwsze, "aka." zmieni się na "zaimki".',
                     country: 'Kraj',
                     website: 'Strona internetowa',
                     about: 'O mnie',
@@ -7404,7 +7471,8 @@ export const trans_legacy = {
                         bio: 'Podgląd, jak twój profil wygląda dla innych',
                         note: 'Uwaga: Nowe linie, linki itp. są widoczne tylko dla innych użytkowników bleh, zwykli użytkownicy Last.fm widzą nowe linie jako spacje.'
                     },
-                    banner_tip: 'Images can be embedded using ![](link). You can also set a custom profile banner with ![banner](link).',
+                    banner_tip:
+                        'Images can be embedded using ![](link). You can also set a custom profile banner with ![banner](link).',
                     avatar: {
                         name: 'Edytuj awatar',
                         upload: 'Prześlij plik',
@@ -7646,46 +7714,46 @@ export const trans_legacy = {
             name: 'Home',
             welcome: 'Welcome back {m}'
         }
-    },
-}
+    }
+};
 moment.updateLocale('de', {
-    relativeTime : {
+    relativeTime: {
         future: 'in %s',
-        past:   'vor %s',
-        s:      'ein paar Sekunden',
-        ss:     '%d Sekunden',
-        m:      'eine Minute',
-        mm:     '%d Minuten',
-        h:      'eine Stunde',
-        hh:     '%d Stunden',
-        d:      'ein Tag',
-        dd:     '%d Tagen',
-        w:      'eine Woche',
-        ww:     '%d Wochen',
-        M:      'im Monat',
-        MM:     '%d Monate',
-        y:      'ein Jahr',
-        yy:     '%d Jahre'
+        past: 'vor %s',
+        s: 'ein paar Sekunden',
+        ss: '%d Sekunden',
+        m: 'eine Minute',
+        mm: '%d Minuten',
+        h: 'eine Stunde',
+        hh: '%d Stunden',
+        d: 'ein Tag',
+        dd: '%d Tagen',
+        w: 'eine Woche',
+        ww: '%d Wochen',
+        M: 'im Monat',
+        MM: '%d Monate',
+        y: 'ein Jahr',
+        yy: '%d Jahre'
     }
 });
 moment.updateLocale('pt', {
-    relativeTime : {
+    relativeTime: {
         future: 'em %s',
-        past:   'há %s',
-        s:      'alguns segundos',
-        ss:     '%d segundos',
-        m:      'um minuto',
-        mm:     '%d minutos',
-        h:      'uma hora',
-        hh:     '%d horas',
-        d:      'um dia',
-        dd:     '%d dias',
-        w:      'uma semana',
-        ww:     '%d semanas',
-        M:      'um mês',
-        MM:     '%d meses',
-        y:      'um ano',
-        yy:     '%d anos'
+        past: 'há %s',
+        s: 'alguns segundos',
+        ss: '%d segundos',
+        m: 'um minuto',
+        mm: '%d minutos',
+        h: 'uma hora',
+        hh: '%d horas',
+        d: 'um dia',
+        dd: '%d dias',
+        w: 'uma semana',
+        ww: '%d semanas',
+        M: 'um mês',
+        MM: '%d meses',
+        y: 'um ano',
+        yy: '%d anos'
     }
 });
 
@@ -7744,9 +7812,12 @@ export function lookup_lang() {
 
                     auth.sets.hue = hsl.h;
                     auth.sets.sat = clamp_sat((hsl.s / 100) * 3);
-                    auth.sets.lit = clamp_lit(auth.sets.sat, (hsl.l / 100) + 0.35);
+                    auth.sets.lit = clamp_lit(
+                        auth.sets.sat,
+                        hsl.l / 100 + 0.35
+                    );
                 });
-            } catch(e) {}
+            } catch (e) {}
         }
     }
     lang = document.documentElement.getAttribute('lang');
