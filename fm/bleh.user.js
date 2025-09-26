@@ -35530,7 +35530,7 @@
                                 <tr class="chartlist-row" data-disambig=${disambig}>
                                     <td class="chartlist-index">${track.position}</td>
                                     <td class="chartlist-name">
-                                        <a href="${root}music/${sanitise(track["artist-credit"][0].name)}/_/${sanitise(title)}" data-name="${title}">
+                                        <a href="${root}music/${oracle_aliases(sanitise(track["artist-credit"][0].name), page.sister)}/_/${sanitise(title)}" data-name="${title}">
                                             ${title}
                                         </a>
                                     </td>
