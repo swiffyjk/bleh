@@ -1,7 +1,7 @@
 import { html, render } from 'lighterhtml';
 import { log } from '../build/log';
 import { oracle_albums, oracle_tracks, page, root } from '../build/page';
-import { sanitise } from '../build/tools';
+import { romanise, sanitise } from '../build/tools';
 import { ff } from '../sku';
 import { correct_artist, correct_item_by_artist } from './lotus';
 import { tl, trans } from '../build/trans';
@@ -21,7 +21,7 @@ export function oracle_process() {
     let tries = 2;
     let cache = JSON.parse(localStorage.getItem('oracle_artist_ids')) || {};
     const artist = page.sister.toLowerCase();
-    let artist_id;
+    let artist_data;
 
     const info_panel = page.structure.main.firstElementChild;
     const header = page.structure.container.querySelector('.redesigned-header');
@@ -64,11 +64,18 @@ export function oracle_process() {
     const albums_and_lyrics_row = page.structure.main.querySelector('.album-and-lyrics-row');
     if (page.type == 'track') albums_and_lyrics_row.classList.add('oracle-hidden');
 
+    function oracle_aliases(artist, desired) {
+        if (artist.name == desired || artist_data.aliases.some(alias => alias.name == desired))
+            return desired;
+
+        return artist;
+    }
+
     oracle_obtain_artist();
 
     function oracle_obtain_artist() {
         if (cache.hasOwnProperty(artist)) {
-            artist_id = cache[artist];
+            artist_data = cache[artist];
             oracle_connect();
             return;
         }
@@ -107,8 +114,11 @@ export function oracle_process() {
 
                 log('received artist data', 'oracle', 'info', {data});
 
-                artist_id = data.artists[0].id;
-                cache[artist] = artist_id;
+                artist_data = data.artists[0];
+                cache[artist] = artist_data;
+
+                if (Object.keys(cache).length > 100) delete cache[0];
+
                 localStorage.setItem('oracle_artist_ids', JSON.stringify(cache));
 
                 tries = 2;
@@ -131,9 +141,9 @@ export function oracle_process() {
         let url;
 
         if (page.type == 'track')
-            url = `https://musicbrainz.org/ws/2/recording?query="${sanitise(clean_title(page.name), ' ')}" AND arid:"${artist_id}" AND status:Official`;
+            url = `https://musicbrainz.org/ws/2/recording?query="${sanitise(clean_title(page.name), ' ')}" AND arid:"${artist_data.id}" AND status:Official`;
         else if (page.type == 'album')
-            url = `http://musicbrainz.org/ws/2/release?query=release:"${sanitise(clean_title(page.name), ' ')}" AND arid:"${artist_id}"`;
+            url = `http://musicbrainz.org/ws/2/release?query=release:"${sanitise(clean_title(page.name), ' ')}" AND arid:"${artist_data.id}"`;
 
         log(`using url ${encodeURI(url)} with ${tries} tries available`, 'oracle');
 
@@ -514,7 +524,7 @@ export function oracle_process() {
 
                         log('release', 'oracle', 'log', {release});
                         let title = clean_title(release.title);
-                        const artist = release['artist-credit']?.[0]?.name || recording['artist-credit'][0].name;
+                        const artist = oracle_aliases(release['artist-credit']?.[0]?.name || recording['artist-credit'][0].name, page.sister);
                         const type = release['release-group']['primary-type'];
 
                         const artist_lower = page.sister.toLowerCase();
@@ -565,8 +575,8 @@ export function oracle_process() {
                                     ` : ''}
                                 </div>
                                 <div class="source-album-details" data-kate-processed="true">
-                                    <h4 class="source-album-name">${correct_item_by_artist(title, artist)}</h4>
-                                    <p class="source-album-artist">${correct_artist(artist)}</p>
+                                    <h4 class="source-album-name">${romanise(correct_item_by_artist(title, artist))}</h4>
+                                    <p class="source-album-artist">${romanise(correct_artist(artist))}</p>
                                     <p class="source-album-stats oracle-stats" ref=${el => stats = el}>
                                         ${type}
                                         ${match ? html.node`

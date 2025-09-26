@@ -35214,7 +35214,7 @@
     let tries = 2;
     let cache2 = JSON.parse(localStorage.getItem("oracle_artist_ids")) || {};
     const artist = page.sister.toLowerCase();
-    let artist_id;
+    let artist_data;
     const info_panel = page.structure.main.firstElementChild;
     const header = page.structure.container.querySelector(".redesigned-header");
     let releases_panel;
@@ -35254,10 +35254,15 @@
     }
     const albums_and_lyrics_row = page.structure.main.querySelector(".album-and-lyrics-row");
     if (page.type == "track") albums_and_lyrics_row.classList.add("oracle-hidden");
+    function oracle_aliases(artist2, desired) {
+      if (artist2.name == desired || artist_data.aliases.some((alias) => alias.name == desired))
+        return desired;
+      return artist2;
+    }
     oracle_obtain_artist();
     function oracle_obtain_artist() {
       if (cache2.hasOwnProperty(artist)) {
-        artist_id = cache2[artist];
+        artist_data = cache2[artist];
         oracle_connect();
         return;
       }
@@ -35288,8 +35293,9 @@
             return;
           }
           log("received artist data", "oracle", "info", { data: data2 });
-          artist_id = data2.artists[0].id;
-          cache2[artist] = artist_id;
+          artist_data = data2.artists[0];
+          cache2[artist] = artist_data;
+          if (Object.keys(cache2).length > 100) delete cache2[0];
           localStorage.setItem("oracle_artist_ids", JSON.stringify(cache2));
           tries = 2;
           oracle_connect();
@@ -35307,9 +35313,9 @@
       tries--;
       let url;
       if (page.type == "track")
-        url = `https://musicbrainz.org/ws/2/recording?query="${sanitise(clean_title(page.name), " ")}" AND arid:"${artist_id}" AND status:Official`;
+        url = `https://musicbrainz.org/ws/2/recording?query="${sanitise(clean_title(page.name), " ")}" AND arid:"${artist_data.id}" AND status:Official`;
       else if (page.type == "album")
-        url = `http://musicbrainz.org/ws/2/release?query=release:"${sanitise(clean_title(page.name), " ")}" AND arid:"${artist_id}"`;
+        url = `http://musicbrainz.org/ws/2/release?query=release:"${sanitise(clean_title(page.name), " ")}" AND arid:"${artist_data.id}"`;
       log(`using url ${encodeURI(url)} with ${tries} tries available`, "oracle");
       GM_xmlhttpRequest({
         method: "GET",
@@ -35585,7 +35591,7 @@
           if (index3 > 1) return html.node``;
           log("release", "oracle", "log", { release });
           let title = clean_title(release.title);
-          const artist2 = release["artist-credit"]?.[0]?.name || recording["artist-credit"][0].name;
+          const artist2 = oracle_aliases(release["artist-credit"]?.[0]?.name || recording["artist-credit"][0].name, page.sister);
           const type = release["release-group"]["primary-type"];
           const artist_lower = page.sister.toLowerCase();
           const title_lower = title.toLowerCase();
@@ -35624,8 +35630,8 @@
                                     ` : ""}
                                 </div>
                                 <div class="source-album-details" data-kate-processed="true">
-                                    <h4 class="source-album-name">${correct_item_by_artist(title, artist2)}</h4>
-                                    <p class="source-album-artist">${correct_artist(artist2)}</p>
+                                    <h4 class="source-album-name">${romanise(correct_item_by_artist(title, artist2))}</h4>
+                                    <p class="source-album-artist">${romanise(correct_artist(artist2))}</p>
                                     <p class="source-album-stats oracle-stats" ref=${(el) => stats = el}>
                                         ${type}
                                         ${match3 ? html.node`
