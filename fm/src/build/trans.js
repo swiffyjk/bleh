@@ -535,6 +535,27 @@ export const trans = {
         pt: 'Novo scrobble',
         sv: 'Ny skrobbel'
     },
+    scrobble_failed: {
+        en: 'Scrobble could not be sent'
+    },
+    scrobble_error_codes: {
+        // https://www.last.fm/api/show/track.scrobble
+        1: {
+            en: 'Artist name was ignored'
+        },
+        2: {
+            en: 'Track name was ignored'
+        },
+        3: {
+            en: 'Timestamp is too old'
+        },
+        4: {
+            en: 'Timestamp is too new'
+        },
+        5: {
+            en: 'Daily scrobble limit exceeded'
+        }
+    },
     artist: {
         en: 'Artist',
         de: 'Künstler',

@@ -28601,16 +28601,38 @@
         );
         const json = await res.json();
         log("received response", "submit scrobble", "info", { result: json });
+        function re_enable() {
+          track.disabled(false);
+          album.disabled(false);
+          artist.disabled(false);
+          album_artist.disabled(false);
+          use_current.disabled(false);
+          date.disabled(false);
+          create_scrobble.disabled = false;
+        }
         if (json.error) {
           log("error", "submit scrobble", "error");
           notify({
             id: "submit_scrobble",
-            title: tl(trans.new_scrobble),
+            title: tl(trans.scrobble_failed),
             body: json.message,
             type: "error",
             persist: true
           });
-          dialog_rm({ id: "submit_scrobble" });
+          re_enable();
+          return;
+        }
+        const error_code = json.scrobbles.scrobble.ignoredMessage.code;
+        if (error_code > 0) {
+          log("error", "submit scrobble", "error", { error_code });
+          notify({
+            id: "submit_scrobble",
+            title: tl(trans.scrobble_failed),
+            body: tl(trans.scrobble_error_codes[error_code]),
+            type: "error",
+            persist: true
+          });
+          re_enable();
           return;
         }
         notify({
@@ -56108,6 +56130,27 @@
       en: "New scrobble",
       pt: "Novo scrobble",
       sv: "Ny skrobbel"
+    },
+    scrobble_failed: {
+      en: "Scrobble could not be sent"
+    },
+    scrobble_error_codes: {
+      // https://www.last.fm/api/show/track.scrobble
+      1: {
+        en: "Artist name was ignored"
+      },
+      2: {
+        en: "Track name was ignored"
+      },
+      3: {
+        en: "Timestamp is too old"
+      },
+      4: {
+        en: "Timestamp is too new"
+      },
+      5: {
+        en: "Daily scrobble limit exceeded"
+      }
     },
     artist: {
       en: "Artist",
