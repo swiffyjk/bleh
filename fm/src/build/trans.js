@@ -4616,6 +4616,9 @@ export const trans = {
     },
     disc_number: {
         en: 'Disc {n}'
+    },
+    create_playlist: {
+        en: 'Create playlist'
     }
 }
 

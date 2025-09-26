@@ -500,6 +500,7 @@ export async function show_your_scrobbles() {
         let playlist_button = new_playlist.querySelector('button');
         playlist_button.classList = 'btn side-action';
         playlist_button.setAttribute('data-type', 'playlist');
+        playlist_button.textContent = tl(trans.create_playlist);
 
         interact_container.appendChild(new_playlist);
     }
