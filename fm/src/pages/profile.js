@@ -357,7 +357,7 @@ export async function bleh_profiles() {
         if (featured_track_panel) bleh_featured_profile_track(featured_track_panel);
 
         let about_me_header = about_me_sidebar.querySelector('h2');
-        about_me_header.textContent = tl(trans.about);
+        about_me_header.remove();
 
         let profile_note;
 
@@ -368,9 +368,15 @@ export async function bleh_profiles() {
 
         let settings_btn;
         let add_note;
+        let info_tip;
         about_me_sidebar.insertBefore(html.node`
             <div class="top-container">
-                ${about_me_header}
+                <h2>
+                    ${tl(trans.about)}
+                    <span class="info-tip" ref=${el => info_tip = el}>
+                        <span class="bleh-icon" data-type="info" style="--icon: var(--mask)" />
+                    </span>
+                </h2>
                 <div class="view-buttons blend blend-v2">
                     ${is_own_profile ? html.node`
                     <a class="left-icon blend-v2-btn" data-type="edit" href="${root}settings#id_about_me">
@@ -410,6 +416,30 @@ export async function bleh_profiles() {
                 refresh_all(instance.popper);
             }
         });
+
+        if (cache.banner || cache.hue || cache.sat || cache.lit) {
+            tippy(info_tip, {
+                content: html.node`
+                    <div class="profile-items">
+                        ${cache.banner ? html.node`
+                        <div class="profile-item" data-type="banner">
+                            <span class="bleh-icon" style="--icon: var(--mask)" />
+                            <p>${tl(trans.profile_banner.name)}</p>
+                        </div>
+                        ` : ''}
+                        ${cache.hue > -1 && cache.sat > -1 && cache.lit > -1 ? html.node`
+                        <div class="profile-item" data-type="accent">
+                            <span class="bleh-icon" style="--icon: var(--mask)" />
+                            <p>${tl(trans.profile_accent.name)}</p>
+                            <p class="subtle">${cache.hue}, ${cache.sat}, ${cache.lit}</p>
+                        </div>
+                        ` : ''}
+                    </div>
+                `
+            });
+        } else {
+            info_tip.remove();
+        }
 
         if (ff('redesigned_profile_header'))
             redesign_profile_header(is_own_profile, is_following);
