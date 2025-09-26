@@ -20866,6 +20866,16 @@
                 -webkit-backdrop-filter: var(--card-blur);
             }
 
+            [data-bleh--solarium="false"] & {
+                background: hsl(var(--b6), 40%) !important;
+
+                &:before {
+                    background: hsl(var(--b6));
+                    backdrop-filter: none;
+                    -webkit-backdrop-filter: none;
+                }
+            }
+
             --upload-trans: 0.2s;
 
             .gallery-image-container {
