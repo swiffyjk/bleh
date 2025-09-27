@@ -26753,11 +26753,15 @@
     const locale = void 0;
     const months2 = Array.from(
       { length: 12 },
-      (_, i) => new Intl.DateTimeFormat(locale, { month: "short" }).format(new Date(2e3, i, 1))
+      (_, i) => new Intl.DateTimeFormat(locale, { month: "short" }).format(
+        new Date(2e3, i, 1)
+      )
     );
     const raw_weekdays = Array.from(
       { length: 7 },
-      (_, i) => new Intl.DateTimeFormat(locale, { weekday: "short" }).format(new Date(1970, 0, 4 + i))
+      (_, i) => new Intl.DateTimeFormat(locale, { weekday: "short" }).format(
+        new Date(1970, 0, 4 + i)
+      )
     );
     const weekdays2 = raw_weekdays.slice(1).concat(raw_weekdays[0]);
     function months_between(a, b) {
@@ -26823,6 +26827,7 @@
       interactive: true,
       interactiveBorder: 10,
       trigger: "click",
+      appendTo: document.body,
       onShow() {
         last_action = "";
         render_popup();
@@ -26863,9 +26868,11 @@
       }
       tooltip.setContent(html.node`<div class="calendar">${inner}</div>`);
       if (date_button) tippy_esm_default(date_button, { content: tl(trans.change_zoom) });
-      if (manual_button) tippy_esm_default(manual_button, { content: manual_button.textContent });
+      if (manual_button)
+        tippy_esm_default(manual_button, { content: manual_button.textContent });
       if (up_button) tippy_esm_default(up_button, { content: up_button.textContent });
-      if (down_button) tippy_esm_default(down_button, { content: down_button.textContent });
+      if (down_button)
+        tippy_esm_default(down_button, { content: down_button.textContent });
     }
     function render_day_view() {
       return html.node`
@@ -27017,17 +27024,19 @@
                 </button>
             </div>
             <div class="years">
-                ${Array.from({ length: 10 }, (_, i) => decade_start + i).map((yr) => {
-        return html.node`
+                ${Array.from({ length: 10 }, (_, i) => decade_start + i).map(
+        (yr) => {
+          return html.node`
                         <button class="year" aria-selected=${yr === state.year} disabled=${yr < min_date.getFullYear() || yr > max_date.getFullYear()} onclick=${() => {
-          view.year = yr;
-          view.level = "month";
-          render_popup();
-        }}>
+            view.year = yr;
+            view.level = "month";
+            render_popup();
+          }}>
                             ${yr}
                         </button>
                     `;
-      })}
+        }
+      )}
             </div>
         `;
     }
@@ -27065,11 +27074,11 @@
         type: "text",
         value: `${state.year}-${pad2(state.month)}-${pad2(state.day)}`,
         func: (value2) => {
-          const parsed2 = validate_text_date(
-            value2
-          );
+          const parsed2 = validate_text_date(value2);
           if (!parsed2) {
-            manual_date.value(`${state.year}-${pad2(state.month)}-${pad2(state.day)}`);
+            manual_date.value(
+              `${state.year}-${pad2(state.month)}-${pad2(state.day)}`
+            );
             return;
           }
           state.year = parsed2.getFullYear();
@@ -27092,17 +27101,9 @@
       return elem;
     }
     function days(year, month) {
-      const raw_first = new Date(
-        year,
-        month - 1,
-        1
-      ).getDay();
+      const raw_first = new Date(year, month - 1, 1).getDay();
       const offset3 = (raw_first + 6) % 7;
-      const days_in_month = new Date(
-        year,
-        month,
-        0
-      ).getDate();
+      const days_in_month = new Date(year, month, 0).getDate();
       const cells = [];
       for (let i = 0; i < offset3; i++) cells.push({ type: "empty" });
       for (let day = 1; day <= days_in_month; day++) {
@@ -27110,11 +27111,7 @@
           type: "day",
           day,
           month: state.month,
-          date: new Date(
-            year,
-            month - 1,
-            day
-          )
+          date: new Date(year, month - 1, day)
         });
       }
       const rem = (7 - cells.length % 7) % 7;
@@ -27135,14 +27132,12 @@
         state.secs
       );
       legacy_date.value = `${state.year}-${pad2(state.month)}-${pad2(state.day)}`;
-      container.dispatchEvent(new CustomEvent("change"), { detail: date_object });
+      container.dispatchEvent(new CustomEvent("change"), {
+        detail: date_object
+      });
     }
     function format_date({ year, month, day }) {
-      const date_object = new Date(
-        year,
-        month - 1,
-        day
-      );
+      const date_object = new Date(year, month - 1, day);
       return date_object.toLocaleDateString(void 0, {
         year: "numeric",
         month: "short",
@@ -27171,15 +27166,14 @@
       view.month = state.month;
       render_popup();
       update_display();
-      if (time_input) time_input.value = `${pad2(state.hours)}:${pad2(state.mins)}:${pad2(state.secs)}`;
+      if (time_input)
+        time_input.value = `${pad2(state.hours)}:${pad2(state.mins)}:${pad2(state.secs)}`;
       return date_object;
     };
     container.disabled = (val = null) => {
       if (val === null) return time_input.disabled;
-      if (!val)
-        date_display.removeAttribute("disabled");
-      else
-        date_display.setAttribute("disabled", "true");
+      if (!val) date_display.removeAttribute("disabled");
+      else date_display.setAttribute("disabled", "true");
       if (time_input) time_input.disabled = val;
       return val;
     };
@@ -42033,22 +42027,27 @@
 
   // src/pages/glacier.js
   function bleh_user_library() {
-    let date_items = page.structure.side.querySelectorAll(":scope > :is(div, figure)");
+    let date_items = page.structure.side.querySelectorAll(
+      ":scope > :is(div, figure)"
+    );
     let date_panel = document.createElement("section");
     date_panel.classList.add("date-panel");
-    date_panel.setAttribute("data-glacier-graphs", settings.glacier_library_graphs);
+    date_panel.setAttribute(
+      "data-glacier-graphs",
+      settings.glacier_library_graphs
+    );
     date_items.forEach((item, index3) => {
       date_panel.appendChild(item);
-      if (item.classList.contains("row"))
-        item.classList = "date-selector";
-      if (index3 == 0)
-        page.structure.glacier.selector = item;
+      if (item.classList.contains("row")) item.classList = "date-selector";
+      if (index3 == 0) page.structure.glacier.selector = item;
     });
     if (date_items.length > 0) {
-      if (!page.mobile)
-        page.structure.side.appendChild(date_panel);
+      if (!page.mobile) page.structure.side.appendChild(date_panel);
       else
-        page.structure.main.insertBefore(date_panel, page.structure.main.firstChild);
+        page.structure.main.insertBefore(
+          date_panel,
+          page.structure.main.firstChild
+        );
     }
     page.structure.glacier.date_panel = date_panel;
     let search = page.structure.content_top.querySelector(".library-search");
@@ -42056,7 +42055,11 @@
     let tabs = nav.querySelector(".navlist-items");
     if (page.name == auth.name) {
       let velocity_tab = document.createElement("li");
-      velocity_tab.classList.add("navlist-item", "secondary-nav-item", "secondary-nav-item--velocity");
+      velocity_tab.classList.add(
+        "navlist-item",
+        "secondary-nav-item",
+        "secondary-nav-item--velocity"
+      );
       velocity_tab.innerHTML = `
             <a class="secondary-nav-item-link" href="${root}labs/artist-velocity" target="_blank">
                 ${tl(trans.velocity)}
@@ -42086,11 +42089,14 @@
       page.structure.content_top.style.display = "none";
       page.structure.content_top.after(toolbar);
     }
-    if (!ff("glacier_library"))
-      return;
+    if (!ff("glacier_library")) return;
     if (settings.glacier_library_graphs && date_items.length > 0) {
       let chart_view_selector = document.createElement("div");
-      chart_view_selector.classList.add("view-buttons", "chart-view-selector", "view-buttons-middle");
+      chart_view_selector.classList.add(
+        "view-buttons",
+        "chart-view-selector",
+        "view-buttons-middle"
+      );
       chart_view_selector.innerHTML = `
             <button class="btn view-item" id="toggle-chart_view-line" data-toggle="chart_view" data-toggle-value="line" onclick="_update_item('chart_view', 'line')">
                 ${tl(trans.line)}
@@ -42104,7 +42110,11 @@
         `;
       page.structure.glacier.selector.after(chart_view_selector);
       let chart_axis_selector = document.createElement("div");
-      chart_axis_selector.classList.add("view-buttons", "chart-axis-selector", "view-buttons-middle");
+      chart_axis_selector.classList.add(
+        "view-buttons",
+        "chart-axis-selector",
+        "view-buttons-middle"
+      );
       chart_axis_selector.innerHTML = `
             <button class="btn view-item" id="toggle-chart_bar_axis-horizontal" data-toggle="chart_bar_axis" data-toggle-value="horizontal" onclick="_update_item('chart_bar_axis', 'horizontal')">
                 ${tl(trans.horizontal)}
@@ -42116,11 +42126,12 @@
       chart_view_selector.after(chart_axis_selector);
       refresh_all(page.structure.glacier.date_panel);
     }
-    if (date_items.length > 0)
-      bleh_glacier_library_date();
+    if (date_items.length > 0) bleh_glacier_library_date();
     if (page.subpage == "library_overview" || page.subpage.endsWith("-search")) {
       bleh_glacier_library_top(true);
-      const pagination = page.structure.main.querySelector(":scope > .pagination");
+      const pagination = page.structure.main.querySelector(
+        ":scope > .pagination"
+      );
       page.structure.main.appendChild(html.node`
             <section class="pagination-panel">
                 ${pagination}
@@ -42172,21 +42183,31 @@
     }
   }
   function bleh_glacier_library_date() {
-    let button = page.structure.glacier.date_panel.querySelector(".date-range-picker-button.disclose-trigger:not([data-glacier-library-date])");
+    let button = page.structure.glacier.date_panel.querySelector(
+      ".date-range-picker-button.disclose-trigger:not([data-glacier-library-date])"
+    );
     if (!button) return;
     button.setAttribute("data-glacier-library-date", "true");
     console.info("button", button);
-    let date_picker = page.structure.glacier.date_panel.querySelector(".library-controls-datepicker");
-    let old_date_btn = date_picker.querySelector(".date-range-picker-button:not(.disclose-trigger)");
+    let date_picker = page.structure.glacier.date_panel.querySelector(
+      ".library-controls-datepicker"
+    );
+    let old_date_btn = date_picker.querySelector(
+      ".date-range-picker-button:not(.disclose-trigger)"
+    );
     if (old_date_btn) old_date_btn.remove();
     let date_btn = html.node`
         <button class="date-range-picker-button">${button.querySelector(".date-range-picker-button-inner").textContent}</button>
     `;
     date_picker.appendChild(date_btn);
-    let picker_content = page.structure.glacier.date_panel.querySelector(".date-range-picker-content:not([data-glacier-library-date])");
+    let picker_content = page.structure.glacier.date_panel.querySelector(
+      ".date-range-picker-content:not([data-glacier-library-date])"
+    );
     if (!picker_content) return;
     picker_content.setAttribute("data-glacier-library-date", "true");
-    let picker_presets = picker_content.querySelectorAll(".date-range-picker-presets-wrap > .date-range-picker-presets");
+    let picker_presets = picker_content.querySelectorAll(
+      ".date-range-picker-presets-wrap > .date-range-picker-presets"
+    );
     let params = new URLSearchParams(document.location.search);
     page.requested.from = params.get("from");
     page.requested.to = params.get("to");
@@ -42220,32 +42241,36 @@
       interactive: true,
       interactiveBorder: 10,
       trigger: "click",
-      appendTo: document.body
+      appendTo: document.body,
+      hideOnClick: "toggle"
     });
     let form = picker_content.querySelector(":scope > .date-range-picker-form");
     let from_group = form.querySelector(".form-group--from");
     let from_input = from_group.querySelector("input");
     let to_group = form.querySelector(".form-group--to");
     let to_input = to_group.querySelector("input");
-    form.insertBefore(html.node`
+    form.insertBefore(
+      html.node`
         <div class="input-group library-date-group">
             ${input({
-      type: "date",
-      value: from_input.value,
-      name: from_input.name,
-      min: "2000-01-01",
-      show_time: false
-    })}
+        type: "date",
+        value: from_input.value,
+        name: from_input.name,
+        min: "2000-01-01",
+        show_time: false
+      })}
             <div class="bleh-icon" style="--icon: var(--icon-16-arrow-right)" />
             ${input({
-      type: "date",
-      value: to_input.value,
-      name: to_input.name,
-      min: "2000-01-01",
-      show_time: false
-    })}
+        type: "date",
+        value: to_input.value,
+        name: to_input.name,
+        min: "2000-01-01",
+        show_time: false
+      })}
         </div>
-    `, form.firstChild);
+    `,
+      form.firstChild
+    );
     from_group.remove();
     to_group.remove();
   }
@@ -42255,24 +42280,26 @@
     bleh_glacier_date_graph();
   }
   function bleh_glacier_library_table() {
-    if (!ff("glacier_library"))
-      return;
+    if (!ff("glacier_library")) return;
     let table = page.structure.glacier.date_panel.querySelector(".highcharts-root");
-    if (table == null)
-      return;
+    if (table == null) return;
     console.log("glacier library", table);
     log("refresh is now marked false (table log)", "glacier library", "log");
     page.structure.glacier.refresh = false;
-    let current_view = page.structure.glacier.date_panel.querySelector(".date-range-picker-button-inner");
+    let current_view = page.structure.glacier.date_panel.querySelector(
+      ".date-range-picker-button-inner"
+    );
     if (current_view == null) {
-      console.log("glacier library current view", page.structure.glacier.date_panel.innerHTML);
+      console.log(
+        "glacier library current view",
+        page.structure.glacier.date_panel.innerHTML
+      );
       log("returned as current view is null", "glacier library");
       log("refresh is now marked true", "glacier library");
       page.structure.glacier.refresh = true;
       return;
     }
-    if (table.hasAttribute("data-glacier-library-table"))
-      return;
+    if (table.hasAttribute("data-glacier-library-table")) return;
     table.setAttribute("data-glacier-library-table", "true");
     page.structure.glacier.table = table;
     log("refresh is now marked true (table found)", "glacier library");
@@ -42280,8 +42307,7 @@
     log("pending refresh", "glacier library");
   }
   function bleh_glacier_library_top(static_page = false) {
-    if (!ff("glacier_library"))
-      return;
+    if (!ff("glacier_library")) return;
     let legacy_top_header;
     if (!static_page)
       legacy_top_header = page.structure.main.querySelector(".library-top");
@@ -42294,8 +42320,7 @@
         legacy_top_header.removeAttribute("data-glacier-library-top");
         return;
       }
-      if (legacy_top_header.hasAttribute("data-glacier-library-top"))
-        return;
+      if (legacy_top_header.hasAttribute("data-glacier-library-top")) return;
       legacy_top_header.setAttribute("data-glacier-library-top", "true");
     }
     log("loading top", "glacier library");
@@ -42313,7 +42338,9 @@
       glacier_meta = document.createElement("div");
       glacier_meta.classList.add("glacier-library-metadata");
     } else {
-      glacier_meta = page.structure.glacier.top.querySelector(".glacier-library-metadata");
+      glacier_meta = page.structure.glacier.top.querySelector(
+        ".glacier-library-metadata"
+      );
       glacier_meta.innerHTML = "";
     }
     metadata.forEach((meta, index3) => {
@@ -42322,8 +42349,7 @@
       if (text3) {
         text3 = text3.textContent;
         if (page.subpage == "library_overview") {
-          if (index3 == 1)
-            text3 = tl(trans.average);
+          if (index3 == 1) text3 = tl(trans.average);
         } else if (page.subpage == "library_artists") {
           text3 = tl(trans.artists);
         } else if (page.subpage == "library_albums") {
@@ -42345,10 +42371,8 @@
             </div>
         `);
     });
-    if (first_run)
-      glacier_top.appendChild(glacier_meta);
-    if (!first_run)
-      return;
+    if (first_run) glacier_top.appendChild(glacier_meta);
+    if (!first_run) return;
     let top_wrap = page.structure.main.querySelector(".library-top-wrap");
     let view_buttons = document.createElement("div");
     view_buttons.classList.add("view-buttons", "glacier-library-buttons");
@@ -42360,7 +42384,11 @@
         sort_button = sort.querySelector(".dropdown-menu-clickable-button");
         add_divider = true;
         if (sort_button) {
-          sort_button.classList.add("btn", "view-item", "glacier-library-button");
+          sort_button.classList.add(
+            "btn",
+            "view-item",
+            "glacier-library-button"
+          );
           let sort_menu = sort.querySelector(".dropdown-menu-clickable");
           view_buttons.appendChild(sort_button);
           view_buttons.appendChild(sort_menu);
@@ -42369,7 +42397,12 @@
     }
     if (!static_page && page.subpage != "library_tracks") {
       let format_button = document.createElement("button");
-      format_button.classList.add("btn", "view-item", "glacier-library-button", "glacier-view-button");
+      format_button.classList.add(
+        "btn",
+        "view-item",
+        "glacier-library-button",
+        "glacier-view-button"
+      );
       format_button.setAttribute("onclick", "_update_glacier_view()");
       page.structure.glacier.format = format_button;
       add_divider = true;
@@ -42388,7 +42421,13 @@
       view_buttons.appendChild(listen_divider);
     }
     let configure_button = document.createElement("button");
-    configure_button.classList.add("btn", "view-item", "glacier-library-button", "glacier-configure-button", "panel-settings-button");
+    configure_button.classList.add(
+      "btn",
+      "view-item",
+      "glacier-library-button",
+      "glacier-configure-button",
+      "panel-settings-button"
+    );
     configure_button.textContent = tl(trans.settings);
     tippy_esm_default(configure_button, {
       content: tl(trans.settings)
@@ -42433,12 +42472,14 @@
     view_buttons.appendChild(configure_button);
     glacier_top.appendChild(view_buttons);
     page.structure.glacier.top = glacier_top;
-    page.structure.main.insertBefore(glacier_top, page.structure.main.firstElementChild);
+    page.structure.main.insertBefore(
+      glacier_top,
+      page.structure.main.firstElementChild
+    );
   }
   unsafeWindow._update_glacier_view = function() {
     let format = page.structure.main.querySelector(".library-view-button");
-    if (format == null)
-      return;
+    if (format == null) return;
     format.click();
     if (format.getAttribute("href") && format.getAttribute("href").endsWith("reset")) {
       page.structure.glacier.format.setAttribute("data-glacier-view", "list");
@@ -42449,20 +42490,27 @@
     }
   };
   function bleh_glacier_date_graph(static_page = false, own_table = null) {
-    if (!page.structure.glacier.refresh)
-      return;
-    if (!settings.glacier_library_graphs)
-      return;
+    if (!page.structure.glacier.refresh) return;
+    if (!settings.glacier_library_graphs) return;
     log("reviewing graph situation", "glacier library");
     if (own_table != null) {
-      log("table has been passed to function (from network request presumably?)", "glacier library", "info", own_table);
+      log(
+        "table has been passed to function (from network request presumably?)",
+        "glacier library",
+        "info",
+        own_table
+      );
     } else {
-      log("no table has been passed, must source ourselves", "glacier library");
+      log(
+        "no table has been passed, must source ourselves",
+        "glacier library"
+      );
     }
     bleh_glacier_library_date();
-    let current_view = page.structure.glacier.date_panel.querySelector(".date-range-picker-button-inner");
-    if (!current_view)
-      return;
+    let current_view = page.structure.glacier.date_panel.querySelector(
+      ".date-range-picker-button-inner"
+    );
+    if (!current_view) return;
     current_view = current_view.textContent.trim();
     let tab_matches;
     if (page.name == page.state.glacier.name && (page.subpage == "library_overview" || page.subpage == "library_artists" || page.subpage == "library_albums" || page.subpage == "library_tracks") && (page.state.glacier.current_tab == "library_overview" || page.state.glacier.current_tab == "library_artists" || page.state.glacier.current_tab == "library_albums" || page.state.glacier.current_tab == "library_tracks"))
@@ -42471,11 +42519,16 @@
       bleh_glacier_date_graph_generate();
       log("refresh is now marked false", "glacier library");
       page.structure.glacier.refresh = false;
-      log(`returned as view (${current_view}) matches ${page.state.glacier.current_view}. last tab was ${page.state.glacier.current_tab} (${page.state.glacier.name}) and current tab is ${page.subpage} (${page.name})`, "glacier library");
+      log(
+        `returned as view (${current_view}) matches ${page.state.glacier.current_view}. last tab was ${page.state.glacier.current_tab} (${page.state.glacier.name}) and current tab is ${page.subpage} (${page.name})`,
+        "glacier library"
+      );
       return;
     }
     page.state.glacier.current_view = current_view;
-    let scrobble_chart_content = page.structure.row.querySelector("#scrobble-chart-content");
+    let scrobble_chart_content = page.structure.row.querySelector(
+      "#scrobble-chart-content"
+    );
     if (!scrobble_chart_content) return;
     if (scrobble_chart_content.getAttribute("data-highcharts-chart") && scrobble_chart_content.getAttribute("data-highcharts-chart") == "0") {
       log("highchart registered", "glacier library");
@@ -42484,19 +42537,19 @@
       return;
     }
     let scrobble_chart_wrap = page.structure.row.querySelector(".scrobble-table");
-    if (!scrobble_chart_wrap)
-      return;
+    if (!scrobble_chart_wrap) return;
     let scrobble_table;
-    if (own_table)
-      scrobble_table = own_table;
-    else
-      scrobble_table = scrobble_chart_wrap.querySelector(".table");
+    if (own_table) scrobble_table = own_table;
+    else scrobble_table = scrobble_chart_wrap.querySelector(".table");
     if (!scrobble_table) {
       let request_url;
       if (window.location.search == "")
         request_url = `${window.location.href}/chart?ajax=1`;
       else
-        request_url = window.location.href.replace(window.location.search, `/chart${window.location.search}&ajax=1`);
+        request_url = window.location.href.replace(
+          window.location.search,
+          `/chart${window.location.search}&ajax=1`
+        );
       bleh_glacier_library_request(request_url);
       return;
     }
@@ -42512,8 +42565,7 @@
       page.state.glacier.labels.push(period.textContent.trim());
       page.state.glacier.links.push(period.getAttribute("href"));
       page.state.glacier.values.push(value);
-      if (value != "0")
-        values_not_empty += 1;
+      if (value != "0") values_not_empty += 1;
     });
     if (values_not_empty == 0) {
       log("graph cancelled as all values are 0", "glacier library");
@@ -42540,26 +42592,49 @@
         page.state.glacier.insights.album.display = false;
       }
       for (let item in insights) {
-        log(`checking insights status of item ${item} - display of ${insights[item].display}`, "glacier library", "log", { checking: insights[item], global: page.state.glacier.insights[item] });
+        log(
+          `checking insights status of item ${item} - display of ${insights[item].display}`,
+          "glacier library",
+          "log",
+          {
+            checking: insights[item],
+            global: page.state.glacier.insights[item]
+          }
+        );
         if (insights[item].display && JSON.stringify(insights[item]) != JSON.stringify(page.state.glacier.insights[item])) {
-          log(`confirmed insights status of item ${item} - is different`, "glacier library");
+          log(
+            `confirmed insights status of item ${item} - is different`,
+            "glacier library"
+          );
           page.state.glacier.insights[item] = insights[item];
-          bleh_glacier_insights_generate(item, page.state.glacier.insights[item]);
+          bleh_glacier_insights_generate(
+            item,
+            page.state.glacier.insights[item]
+          );
         }
       }
     } else {
       for (let item in page.state.glacier.insights) {
         if (page.state.glacier.insights[item].display)
-          bleh_glacier_insights_generate(item, page.state.glacier.insights[item]);
+          bleh_glacier_insights_generate(
+            item,
+            page.state.glacier.insights[item]
+          );
       }
     }
   }
   function bleh_glacier_insights_generate(type, item) {
-    if (item.highest.value == 0)
-      return;
-    log(`requesting insights generator for ${type}`, "glacier library", "info", item);
+    if (item.highest.value == 0) return;
+    log(
+      `requesting insights generator for ${type}`,
+      "glacier library",
+      "info",
+      item
+    );
     let new_run = false;
-    let scrobble_insights_panel = page.structure.side.querySelector(`.scrobble-insights-panel[data-type="${type}"]`);
+    let scrobble_insights_panel = page.structure.side.querySelector(
+      `.scrobble-insights-panel[data-type="${type}"]`
+    );
     if (!scrobble_insights_panel) {
       scrobble_insights_panel = document.createElement("section");
       scrobble_insights_panel.classList.add("scrobble-insights-panel");
@@ -42568,7 +42643,9 @@
     }
     scrobble_insights_panel.innerHTML = `<h2>${trans_legacy.en[type].plural}</h2>`;
     let scrobble_canvas_container = document.createElement("div");
-    scrobble_canvas_container.classList.add("scrobble-insights-canvas-container");
+    scrobble_canvas_container.classList.add(
+      "scrobble-insights-canvas-container"
+    );
     let scrobble_canvas = document.createElement("canvas");
     scrobble_canvas.classList.add("scrobble-insights-canvas");
     Chart.defaults.color = page.state.chart_colours.text_col;
@@ -42585,16 +42662,18 @@
         type: "line",
         data: {
           labels: item.labels,
-          datasets: [{
-            data: item.values,
-            borderWidth: 2,
-            backgroundColor: gradient,
-            borderColor: page.state.chart_colours.link_col,
-            fill: true,
-            pointRadius: 0,
-            pointHitRadius: 20,
-            tension: 0.1
-          }]
+          datasets: [
+            {
+              data: item.values,
+              borderWidth: 2,
+              backgroundColor: gradient,
+              borderColor: page.state.chart_colours.link_col,
+              fill: true,
+              pointRadius: 0,
+              pointHitRadius: 20,
+              tension: 0.1
+            }
+          ]
         },
         options: page.state.chart_library_line_options_no_click
       });
@@ -42603,36 +42682,38 @@
         type: "pie",
         data: {
           labels: item.labels,
-          datasets: [{
-            data: item.values,
-            borderWidth: 2,
-            backgroundColor: [
-              `hsl(${page.state.chart_colours.link_h_col.replace(page.state.chart_colours.hue, "360")})`,
-              `hsl(${page.state.chart_colours.link_h_col.replace(page.state.chart_colours.hue, "340")})`,
-              `hsl(${page.state.chart_colours.link_h_col.replace(page.state.chart_colours.hue, "320")})`,
-              `hsl(${page.state.chart_colours.link_h_col.replace(page.state.chart_colours.hue, "300")})`,
-              `hsl(${page.state.chart_colours.link_h_col.replace(page.state.chart_colours.hue, "280")})`,
-              `hsl(${page.state.chart_colours.link_h_col.replace(page.state.chart_colours.hue, "270")})`,
-              `hsl(${page.state.chart_colours.link_h_col.replace(page.state.chart_colours.hue, "255")})`,
-              `hsl(${page.state.chart_colours.link_h_col.replace(page.state.chart_colours.hue, "235")})`,
-              `hsl(${page.state.chart_colours.link_h_col.replace(page.state.chart_colours.hue, "220")})`,
-              `hsl(${page.state.chart_colours.link_h_col.replace(page.state.chart_colours.hue, "208")})`,
-              `hsl(${page.state.chart_colours.link_h_col.replace(page.state.chart_colours.hue, "200")})`,
-              `hsl(${page.state.chart_colours.link_h_col.replace(page.state.chart_colours.hue, "180")})`,
-              `hsl(${page.state.chart_colours.link_h_col.replace(page.state.chart_colours.hue, "160")})`,
-              `hsl(${page.state.chart_colours.link_h_col.replace(page.state.chart_colours.hue, "140")})`,
-              `hsl(${page.state.chart_colours.link_h_col.replace(page.state.chart_colours.hue, "120")})`,
-              `hsl(${page.state.chart_colours.link_h_col.replace(page.state.chart_colours.hue, "100")})`,
-              `hsl(${page.state.chart_colours.link_h_col.replace(page.state.chart_colours.hue, "80")})`,
-              `hsl(${page.state.chart_colours.link_h_col.replace(page.state.chart_colours.hue, "60")})`,
-              `hsl(${page.state.chart_colours.link_h_col.replace(page.state.chart_colours.hue, "40")})`,
-              `hsl(${page.state.chart_colours.link_h_col.replace(page.state.chart_colours.hue, "20")})`
-            ],
-            borderColor: page.state.chart_colours.bg_col,
-            pointRadius: 0,
-            pointHitRadius: 20,
-            tension: 0.1
-          }]
+          datasets: [
+            {
+              data: item.values,
+              borderWidth: 2,
+              backgroundColor: [
+                `hsl(${page.state.chart_colours.link_h_col.replace(page.state.chart_colours.hue, "360")})`,
+                `hsl(${page.state.chart_colours.link_h_col.replace(page.state.chart_colours.hue, "340")})`,
+                `hsl(${page.state.chart_colours.link_h_col.replace(page.state.chart_colours.hue, "320")})`,
+                `hsl(${page.state.chart_colours.link_h_col.replace(page.state.chart_colours.hue, "300")})`,
+                `hsl(${page.state.chart_colours.link_h_col.replace(page.state.chart_colours.hue, "280")})`,
+                `hsl(${page.state.chart_colours.link_h_col.replace(page.state.chart_colours.hue, "270")})`,
+                `hsl(${page.state.chart_colours.link_h_col.replace(page.state.chart_colours.hue, "255")})`,
+                `hsl(${page.state.chart_colours.link_h_col.replace(page.state.chart_colours.hue, "235")})`,
+                `hsl(${page.state.chart_colours.link_h_col.replace(page.state.chart_colours.hue, "220")})`,
+                `hsl(${page.state.chart_colours.link_h_col.replace(page.state.chart_colours.hue, "208")})`,
+                `hsl(${page.state.chart_colours.link_h_col.replace(page.state.chart_colours.hue, "200")})`,
+                `hsl(${page.state.chart_colours.link_h_col.replace(page.state.chart_colours.hue, "180")})`,
+                `hsl(${page.state.chart_colours.link_h_col.replace(page.state.chart_colours.hue, "160")})`,
+                `hsl(${page.state.chart_colours.link_h_col.replace(page.state.chart_colours.hue, "140")})`,
+                `hsl(${page.state.chart_colours.link_h_col.replace(page.state.chart_colours.hue, "120")})`,
+                `hsl(${page.state.chart_colours.link_h_col.replace(page.state.chart_colours.hue, "100")})`,
+                `hsl(${page.state.chart_colours.link_h_col.replace(page.state.chart_colours.hue, "80")})`,
+                `hsl(${page.state.chart_colours.link_h_col.replace(page.state.chart_colours.hue, "60")})`,
+                `hsl(${page.state.chart_colours.link_h_col.replace(page.state.chart_colours.hue, "40")})`,
+                `hsl(${page.state.chart_colours.link_h_col.replace(page.state.chart_colours.hue, "20")})`
+              ],
+              borderColor: page.state.chart_colours.bg_col,
+              pointRadius: 0,
+              pointHitRadius: 20,
+              tension: 0.1
+            }
+          ]
         },
         options: page.state.chart_library_pie_options_no_click
       });
@@ -42641,45 +42722,46 @@
         type: "bar",
         data: {
           labels: item.labels,
-          datasets: [{
-            data: item.values,
-            borderWidth: 0,
-            backgroundColor: [
-              `hsl(${page.state.chart_colours.link_h_col.replace(page.state.chart_colours.hue, "360")})`,
-              `hsl(${page.state.chart_colours.link_h_col.replace(page.state.chart_colours.hue, "340")})`,
-              `hsl(${page.state.chart_colours.link_h_col.replace(page.state.chart_colours.hue, "320")})`,
-              `hsl(${page.state.chart_colours.link_h_col.replace(page.state.chart_colours.hue, "300")})`,
-              `hsl(${page.state.chart_colours.link_h_col.replace(page.state.chart_colours.hue, "280")})`,
-              `hsl(${page.state.chart_colours.link_h_col.replace(page.state.chart_colours.hue, "270")})`,
-              `hsl(${page.state.chart_colours.link_h_col.replace(page.state.chart_colours.hue, "255")})`,
-              `hsl(${page.state.chart_colours.link_h_col.replace(page.state.chart_colours.hue, "235")})`,
-              `hsl(${page.state.chart_colours.link_h_col.replace(page.state.chart_colours.hue, "220")})`,
-              `hsl(${page.state.chart_colours.link_h_col.replace(page.state.chart_colours.hue, "208")})`,
-              `hsl(${page.state.chart_colours.link_h_col.replace(page.state.chart_colours.hue, "200")})`,
-              `hsl(${page.state.chart_colours.link_h_col.replace(page.state.chart_colours.hue, "180")})`,
-              `hsl(${page.state.chart_colours.link_h_col.replace(page.state.chart_colours.hue, "160")})`,
-              `hsl(${page.state.chart_colours.link_h_col.replace(page.state.chart_colours.hue, "140")})`,
-              `hsl(${page.state.chart_colours.link_h_col.replace(page.state.chart_colours.hue, "120")})`,
-              `hsl(${page.state.chart_colours.link_h_col.replace(page.state.chart_colours.hue, "100")})`,
-              `hsl(${page.state.chart_colours.link_h_col.replace(page.state.chart_colours.hue, "80")})`,
-              `hsl(${page.state.chart_colours.link_h_col.replace(page.state.chart_colours.hue, "60")})`,
-              `hsl(${page.state.chart_colours.link_h_col.replace(page.state.chart_colours.hue, "40")})`,
-              `hsl(${page.state.chart_colours.link_h_col.replace(page.state.chart_colours.hue, "20")})`
-            ],
-            borderColor: page.state.chart_colours.bg_col,
-            pointRadius: 0,
-            pointHitRadius: 20,
-            tension: 0.1,
-            borderRadius: 9
-          }]
+          datasets: [
+            {
+              data: item.values,
+              borderWidth: 0,
+              backgroundColor: [
+                `hsl(${page.state.chart_colours.link_h_col.replace(page.state.chart_colours.hue, "360")})`,
+                `hsl(${page.state.chart_colours.link_h_col.replace(page.state.chart_colours.hue, "340")})`,
+                `hsl(${page.state.chart_colours.link_h_col.replace(page.state.chart_colours.hue, "320")})`,
+                `hsl(${page.state.chart_colours.link_h_col.replace(page.state.chart_colours.hue, "300")})`,
+                `hsl(${page.state.chart_colours.link_h_col.replace(page.state.chart_colours.hue, "280")})`,
+                `hsl(${page.state.chart_colours.link_h_col.replace(page.state.chart_colours.hue, "270")})`,
+                `hsl(${page.state.chart_colours.link_h_col.replace(page.state.chart_colours.hue, "255")})`,
+                `hsl(${page.state.chart_colours.link_h_col.replace(page.state.chart_colours.hue, "235")})`,
+                `hsl(${page.state.chart_colours.link_h_col.replace(page.state.chart_colours.hue, "220")})`,
+                `hsl(${page.state.chart_colours.link_h_col.replace(page.state.chart_colours.hue, "208")})`,
+                `hsl(${page.state.chart_colours.link_h_col.replace(page.state.chart_colours.hue, "200")})`,
+                `hsl(${page.state.chart_colours.link_h_col.replace(page.state.chart_colours.hue, "180")})`,
+                `hsl(${page.state.chart_colours.link_h_col.replace(page.state.chart_colours.hue, "160")})`,
+                `hsl(${page.state.chart_colours.link_h_col.replace(page.state.chart_colours.hue, "140")})`,
+                `hsl(${page.state.chart_colours.link_h_col.replace(page.state.chart_colours.hue, "120")})`,
+                `hsl(${page.state.chart_colours.link_h_col.replace(page.state.chart_colours.hue, "100")})`,
+                `hsl(${page.state.chart_colours.link_h_col.replace(page.state.chart_colours.hue, "80")})`,
+                `hsl(${page.state.chart_colours.link_h_col.replace(page.state.chart_colours.hue, "60")})`,
+                `hsl(${page.state.chart_colours.link_h_col.replace(page.state.chart_colours.hue, "40")})`,
+                `hsl(${page.state.chart_colours.link_h_col.replace(page.state.chart_colours.hue, "20")})`
+              ],
+              borderColor: page.state.chart_colours.bg_col,
+              pointRadius: 0,
+              pointHitRadius: 20,
+              tension: 0.1,
+              borderRadius: 9
+            }
+          ]
         },
         options: page.state.chart_library_bar_options_no_click
       });
     }
     scrobble_canvas_container.appendChild(scrobble_canvas);
     scrobble_insights_panel.appendChild(scrobble_canvas_container);
-    if (new_run)
-      page.structure.side.appendChild(scrobble_insights_panel);
+    if (new_run) page.structure.side.appendChild(scrobble_insights_panel);
   }
   function bleh_glacier_library_open_index(index3) {
     const link = page.state.glacier.links[index3];
@@ -42692,13 +42774,21 @@
     page.structure.glacier.refresh = false;
     page.structure.glacier.date_panel.classList.add("data-is-loading");
     fetch(request_url).then(function(response) {
-      console.log("glacier library returned", response, response.text, response.status);
-      if (response.status != 200)
-        throw new Error();
+      console.log(
+        "glacier library returned",
+        response,
+        response.text,
+        response.status
+      );
+      if (response.status != 200) throw new Error();
       return response.text();
     }).then(function(html3) {
       let doc = new DOMParser().parseFromString(html3, "text/html");
-      console.log("glacier library DOC", doc, doc.querySelector(".table"));
+      console.log(
+        "glacier library DOC",
+        doc,
+        doc.querySelector(".table")
+      );
       log("received response", "glacier library");
       log("refresh is now marked true", "glacier library");
       page.structure.glacier.refresh = true;
@@ -42708,9 +42798,17 @@
       } else {
         log("table is null?", "glacier library", "error");
         console.info("glacier library", doc.body.innerHTML);
-        console.info("glacier library", new DOMParser().parseFromString(doc.body.innerHTML, "text/html"));
+        console.info(
+          "glacier library",
+          new DOMParser().parseFromString(
+            doc.body.innerHTML,
+            "text/html"
+          )
+        );
       }
-      page.structure.glacier.date_panel.classList.remove("data-is-loading");
+      page.structure.glacier.date_panel.classList.remove(
+        "data-is-loading"
+      );
     });
   }
   function bleh_glacier_date_graph_generate() {
@@ -42723,7 +42821,9 @@
     });
     prep_chart_colours();
     let new_run = false;
-    let scrobble_canvas_container = page.structure.glacier.date_panel.querySelector(".scrobble-canvas-container");
+    let scrobble_canvas_container = page.structure.glacier.date_panel.querySelector(
+      ".scrobble-canvas-container"
+    );
     if (scrobble_canvas_container == null) {
       scrobble_canvas_container = document.createElement("div");
       scrobble_canvas_container.classList.add("scrobble-canvas-container");
@@ -42747,16 +42847,18 @@
         type: "line",
         data: {
           labels: page.state.glacier.labels,
-          datasets: [{
-            data: page.state.glacier.values,
-            borderWidth: 2,
-            backgroundColor: gradient,
-            borderColor: page.state.chart_colours.link_col,
-            fill: true,
-            pointRadius: 0,
-            pointHitRadius: 20,
-            tension: 0.1
-          }]
+          datasets: [
+            {
+              data: page.state.glacier.values,
+              borderWidth: 2,
+              backgroundColor: gradient,
+              borderColor: page.state.chart_colours.link_col,
+              fill: true,
+              pointRadius: 0,
+              pointHitRadius: 20,
+              tension: 0.1
+            }
+          ]
         },
         options: page.state.chart_library_line_options
       });
@@ -42765,36 +42867,38 @@
         type: "pie",
         data: {
           labels: page.state.glacier.labels,
-          datasets: [{
-            data: page.state.glacier.values,
-            borderWidth: 2,
-            backgroundColor: [
-              `hsl(${page.state.chart_colours.link_h_col.replace(page.state.chart_colours.hue, "360")})`,
-              `hsl(${page.state.chart_colours.link_h_col.replace(page.state.chart_colours.hue, "340")})`,
-              `hsl(${page.state.chart_colours.link_h_col.replace(page.state.chart_colours.hue, "320")})`,
-              `hsl(${page.state.chart_colours.link_h_col.replace(page.state.chart_colours.hue, "300")})`,
-              `hsl(${page.state.chart_colours.link_h_col.replace(page.state.chart_colours.hue, "280")})`,
-              `hsl(${page.state.chart_colours.link_h_col.replace(page.state.chart_colours.hue, "270")})`,
-              `hsl(${page.state.chart_colours.link_h_col.replace(page.state.chart_colours.hue, "255")})`,
-              `hsl(${page.state.chart_colours.link_h_col.replace(page.state.chart_colours.hue, "235")})`,
-              `hsl(${page.state.chart_colours.link_h_col.replace(page.state.chart_colours.hue, "220")})`,
-              `hsl(${page.state.chart_colours.link_h_col.replace(page.state.chart_colours.hue, "208")})`,
-              `hsl(${page.state.chart_colours.link_h_col.replace(page.state.chart_colours.hue, "200")})`,
-              `hsl(${page.state.chart_colours.link_h_col.replace(page.state.chart_colours.hue, "180")})`,
-              `hsl(${page.state.chart_colours.link_h_col.replace(page.state.chart_colours.hue, "160")})`,
-              `hsl(${page.state.chart_colours.link_h_col.replace(page.state.chart_colours.hue, "140")})`,
-              `hsl(${page.state.chart_colours.link_h_col.replace(page.state.chart_colours.hue, "120")})`,
-              `hsl(${page.state.chart_colours.link_h_col.replace(page.state.chart_colours.hue, "100")})`,
-              `hsl(${page.state.chart_colours.link_h_col.replace(page.state.chart_colours.hue, "80")})`,
-              `hsl(${page.state.chart_colours.link_h_col.replace(page.state.chart_colours.hue, "60")})`,
-              `hsl(${page.state.chart_colours.link_h_col.replace(page.state.chart_colours.hue, "40")})`,
-              `hsl(${page.state.chart_colours.link_h_col.replace(page.state.chart_colours.hue, "20")})`
-            ],
-            borderColor: page.state.chart_colours.bg_col,
-            pointRadius: 0,
-            pointHitRadius: 20,
-            tension: 0.1
-          }]
+          datasets: [
+            {
+              data: page.state.glacier.values,
+              borderWidth: 2,
+              backgroundColor: [
+                `hsl(${page.state.chart_colours.link_h_col.replace(page.state.chart_colours.hue, "360")})`,
+                `hsl(${page.state.chart_colours.link_h_col.replace(page.state.chart_colours.hue, "340")})`,
+                `hsl(${page.state.chart_colours.link_h_col.replace(page.state.chart_colours.hue, "320")})`,
+                `hsl(${page.state.chart_colours.link_h_col.replace(page.state.chart_colours.hue, "300")})`,
+                `hsl(${page.state.chart_colours.link_h_col.replace(page.state.chart_colours.hue, "280")})`,
+                `hsl(${page.state.chart_colours.link_h_col.replace(page.state.chart_colours.hue, "270")})`,
+                `hsl(${page.state.chart_colours.link_h_col.replace(page.state.chart_colours.hue, "255")})`,
+                `hsl(${page.state.chart_colours.link_h_col.replace(page.state.chart_colours.hue, "235")})`,
+                `hsl(${page.state.chart_colours.link_h_col.replace(page.state.chart_colours.hue, "220")})`,
+                `hsl(${page.state.chart_colours.link_h_col.replace(page.state.chart_colours.hue, "208")})`,
+                `hsl(${page.state.chart_colours.link_h_col.replace(page.state.chart_colours.hue, "200")})`,
+                `hsl(${page.state.chart_colours.link_h_col.replace(page.state.chart_colours.hue, "180")})`,
+                `hsl(${page.state.chart_colours.link_h_col.replace(page.state.chart_colours.hue, "160")})`,
+                `hsl(${page.state.chart_colours.link_h_col.replace(page.state.chart_colours.hue, "140")})`,
+                `hsl(${page.state.chart_colours.link_h_col.replace(page.state.chart_colours.hue, "120")})`,
+                `hsl(${page.state.chart_colours.link_h_col.replace(page.state.chart_colours.hue, "100")})`,
+                `hsl(${page.state.chart_colours.link_h_col.replace(page.state.chart_colours.hue, "80")})`,
+                `hsl(${page.state.chart_colours.link_h_col.replace(page.state.chart_colours.hue, "60")})`,
+                `hsl(${page.state.chart_colours.link_h_col.replace(page.state.chart_colours.hue, "40")})`,
+                `hsl(${page.state.chart_colours.link_h_col.replace(page.state.chart_colours.hue, "20")})`
+              ],
+              borderColor: page.state.chart_colours.bg_col,
+              pointRadius: 0,
+              pointHitRadius: 20,
+              tension: 0.1
+            }
+          ]
         },
         options: page.state.chart_library_pie_options
       });
@@ -42803,44 +42907,48 @@
         type: "bar",
         data: {
           labels: page.state.glacier.labels,
-          datasets: [{
-            data: page.state.glacier.values,
-            borderWidth: 0,
-            backgroundColor: [
-              `hsl(${page.state.chart_colours.link_h_col.replace(page.state.chart_colours.hue, "360")})`,
-              `hsl(${page.state.chart_colours.link_h_col.replace(page.state.chart_colours.hue, "340")})`,
-              `hsl(${page.state.chart_colours.link_h_col.replace(page.state.chart_colours.hue, "320")})`,
-              `hsl(${page.state.chart_colours.link_h_col.replace(page.state.chart_colours.hue, "300")})`,
-              `hsl(${page.state.chart_colours.link_h_col.replace(page.state.chart_colours.hue, "280")})`,
-              `hsl(${page.state.chart_colours.link_h_col.replace(page.state.chart_colours.hue, "270")})`,
-              `hsl(${page.state.chart_colours.link_h_col.replace(page.state.chart_colours.hue, "255")})`,
-              `hsl(${page.state.chart_colours.link_h_col.replace(page.state.chart_colours.hue, "235")})`,
-              `hsl(${page.state.chart_colours.link_h_col.replace(page.state.chart_colours.hue, "220")})`,
-              `hsl(${page.state.chart_colours.link_h_col.replace(page.state.chart_colours.hue, "208")})`,
-              `hsl(${page.state.chart_colours.link_h_col.replace(page.state.chart_colours.hue, "200")})`,
-              `hsl(${page.state.chart_colours.link_h_col.replace(page.state.chart_colours.hue, "180")})`,
-              `hsl(${page.state.chart_colours.link_h_col.replace(page.state.chart_colours.hue, "160")})`,
-              `hsl(${page.state.chart_colours.link_h_col.replace(page.state.chart_colours.hue, "140")})`,
-              `hsl(${page.state.chart_colours.link_h_col.replace(page.state.chart_colours.hue, "120")})`,
-              `hsl(${page.state.chart_colours.link_h_col.replace(page.state.chart_colours.hue, "100")})`,
-              `hsl(${page.state.chart_colours.link_h_col.replace(page.state.chart_colours.hue, "80")})`,
-              `hsl(${page.state.chart_colours.link_h_col.replace(page.state.chart_colours.hue, "60")})`,
-              `hsl(${page.state.chart_colours.link_h_col.replace(page.state.chart_colours.hue, "40")})`,
-              `hsl(${page.state.chart_colours.link_h_col.replace(page.state.chart_colours.hue, "20")})`
-            ],
-            borderColor: page.state.chart_colours.bg_col,
-            pointRadius: 0,
-            pointHitRadius: 20,
-            tension: 0.1,
-            borderRadius: 9
-          }]
+          datasets: [
+            {
+              data: page.state.glacier.values,
+              borderWidth: 0,
+              backgroundColor: [
+                `hsl(${page.state.chart_colours.link_h_col.replace(page.state.chart_colours.hue, "360")})`,
+                `hsl(${page.state.chart_colours.link_h_col.replace(page.state.chart_colours.hue, "340")})`,
+                `hsl(${page.state.chart_colours.link_h_col.replace(page.state.chart_colours.hue, "320")})`,
+                `hsl(${page.state.chart_colours.link_h_col.replace(page.state.chart_colours.hue, "300")})`,
+                `hsl(${page.state.chart_colours.link_h_col.replace(page.state.chart_colours.hue, "280")})`,
+                `hsl(${page.state.chart_colours.link_h_col.replace(page.state.chart_colours.hue, "270")})`,
+                `hsl(${page.state.chart_colours.link_h_col.replace(page.state.chart_colours.hue, "255")})`,
+                `hsl(${page.state.chart_colours.link_h_col.replace(page.state.chart_colours.hue, "235")})`,
+                `hsl(${page.state.chart_colours.link_h_col.replace(page.state.chart_colours.hue, "220")})`,
+                `hsl(${page.state.chart_colours.link_h_col.replace(page.state.chart_colours.hue, "208")})`,
+                `hsl(${page.state.chart_colours.link_h_col.replace(page.state.chart_colours.hue, "200")})`,
+                `hsl(${page.state.chart_colours.link_h_col.replace(page.state.chart_colours.hue, "180")})`,
+                `hsl(${page.state.chart_colours.link_h_col.replace(page.state.chart_colours.hue, "160")})`,
+                `hsl(${page.state.chart_colours.link_h_col.replace(page.state.chart_colours.hue, "140")})`,
+                `hsl(${page.state.chart_colours.link_h_col.replace(page.state.chart_colours.hue, "120")})`,
+                `hsl(${page.state.chart_colours.link_h_col.replace(page.state.chart_colours.hue, "100")})`,
+                `hsl(${page.state.chart_colours.link_h_col.replace(page.state.chart_colours.hue, "80")})`,
+                `hsl(${page.state.chart_colours.link_h_col.replace(page.state.chart_colours.hue, "60")})`,
+                `hsl(${page.state.chart_colours.link_h_col.replace(page.state.chart_colours.hue, "40")})`,
+                `hsl(${page.state.chart_colours.link_h_col.replace(page.state.chart_colours.hue, "20")})`
+              ],
+              borderColor: page.state.chart_colours.bg_col,
+              pointRadius: 0,
+              pointHitRadius: 20,
+              tension: 0.1,
+              borderRadius: 9
+            }
+          ]
         },
         options: settings.chart_bar_axis == "horizontal" ? page.state.chart_library_bar_options : page.state.chart_library_bar_v_options
       });
     }
     scrobble_canvas_container.appendChild(scrobble_canvas);
     if (new_run)
-      page.structure.glacier.date_panel.appendChild(scrobble_canvas_container);
+      page.structure.glacier.date_panel.appendChild(
+        scrobble_canvas_container
+      );
   }
   function bleh_glacier_library_focused() {
     page.state.glacier.insights.artist = {
@@ -42856,22 +42964,17 @@
     };
     let legacy_header = page.structure.main.querySelector(".library-header");
     let type;
-    if (page.subpage.startsWith("library_artist"))
-      type = "artist";
-    else if (page.subpage.startsWith("library_album"))
-      type = "album";
-    else if (page.subpage.startsWith("library_track"))
-      type = "track";
+    if (page.subpage.startsWith("library_artist")) type = "artist";
+    else if (page.subpage.startsWith("library_album")) type = "album";
+    else if (page.subpage.startsWith("library_track")) type = "track";
     let header_title = legacy_header.querySelector(".library-header-crumb");
     if (!header_title)
       header_title = legacy_header.querySelector(".library-header-title");
     let duration = header_title.querySelector(".library-header-title-duration");
-    if (duration)
-      header_title.removeChild(duration);
+    if (duration) header_title.removeChild(duration);
     header_title = header_title.textContent.trim();
     let artist = legacy_header.querySelector(".text-colour-link");
-    if (artist)
-      artist = artist.textContent.trim();
+    if (artist) artist = artist.textContent.trim();
     let image = legacy_header.querySelector(".library-header-image img");
     let link = `${root}music/${redirect()}${sanitise(header_title)}`;
     if (type == "album")
@@ -42879,7 +42982,10 @@
     else if (type == "track")
       link = `${root}music/${redirect()}${sanitise(artist)}/_/${sanitise(header_title)}`;
     let header = document.createElement("section");
-    header.classList.add("glacier-library-top", "glacier-library-focused-header");
+    header.classList.add(
+      "glacier-library-top",
+      "glacier-library-focused-header"
+    );
     let upper_wrap = document.createElement("div");
     upper_wrap.classList.add("glacier-library-top-upper");
     let current_suffix = window.location.search;
@@ -42903,17 +43009,16 @@
     let view_buttons = document.createElement("div");
     view_buttons.classList.add("view-buttons", "glacier-library-buttons");
     let cta = legacy_header.querySelector(".library-header-ctas");
-    let love_form = legacy_header.querySelector(".library-header-love-form:not(:has(button))");
+    let love_form = legacy_header.querySelector(
+      ".library-header-love-form:not(:has(button))"
+    );
     if (love_form) {
       let state = love_form.querySelector(":scope > .love-button-toggle").getAttribute("data-ajax-form-state");
-      if (state == "loved")
-        state = 0;
-      else
-        state = 1;
+      if (state == "loved") state = 0;
+      else state = 1;
       let love_form_items = love_form.querySelectorAll(":scope > div > div");
       love_form_items.forEach((item, index3) => {
-        if (state != index3)
-          item.classList.add("hide");
+        if (state != index3) item.classList.add("hide");
         cta.appendChild(item);
       });
     }
@@ -42924,13 +43029,13 @@
         console.info("wrapper", wrapper);
         if (wrapper.classList[0] == "library-header-cta-item")
           button = wrapper;
-        else
-          button = wrapper.querySelector("button");
-        if (!button)
-          button = wrapper.querySelector("span");
+        else button = wrapper.querySelector("button");
+        if (!button) button = wrapper.querySelector("span");
         if (!button) return;
         button.classList.add("btn", "view-item", "glacier-library-button");
-        let tooltips = wrapper.querySelectorAll(".user-library-controls-tooltip");
+        let tooltips = wrapper.querySelectorAll(
+          ".user-library-controls-tooltip"
+        );
         tooltips.forEach((tooltip) => {
           tooltip.parentElement.removeChild(tooltip);
         });
@@ -42945,7 +43050,11 @@
             view_buttons.appendChild(listen_divider);
             button = wrapper.querySelector("button:not(.btn)");
             if (button)
-              button.classList.add("btn", "view-item", "glacier-library-button");
+              button.classList.add(
+                "btn",
+                "view-item",
+                "glacier-library-button"
+              );
           }
         } else {
           if (button.classList.contains("delete-icon")) {
@@ -42961,18 +43070,31 @@
     }
     if (page.subpage == "library_artist_overview" && auth.pro) {
       let search = document.createElement("a");
-      search.classList.add("btn", "view-item", "glacier-library-button", "glacier-search-button");
+      search.classList.add(
+        "btn",
+        "view-item",
+        "glacier-library-button",
+        "glacier-search-button"
+      );
       search.textContent = tl(trans.search);
-      search.setAttribute("href", `${root}user/${page.name}/library/tracks/search?query=${sanitise(correct_artist(header_title))}`);
+      search.setAttribute(
+        "href",
+        `${root}user/${page.name}/library/tracks/search?query=${sanitise(correct_artist(header_title))}`
+      );
       tippy_esm_default(search, {
         content: tl(trans.search_guest)
       });
       let divider = view_buttons.querySelector(".listen-divider");
-      if (divider)
-        view_buttons.insertBefore(search, divider);
+      if (divider) view_buttons.insertBefore(search, divider);
     }
     let configure_button = document.createElement("button");
-    configure_button.classList.add("btn", "view-item", "glacier-library-button", "glacier-configure-button", "panel-settings-button");
+    configure_button.classList.add(
+      "btn",
+      "view-item",
+      "glacier-library-button",
+      "glacier-configure-button",
+      "panel-settings-button"
+    );
     configure_button.textContent = tl(trans.settings);
     tippy_esm_default(configure_button, {
       content: tl(trans.settings)
@@ -43007,7 +43129,9 @@
     `;
     let legacy_meta_wrap = page.structure.main.querySelector(".metadata-list");
     if (legacy_meta_wrap) {
-      let metadatas = legacy_meta_wrap.querySelectorAll(".metadata-item:not(.library-header-ctas__wrapper)");
+      let metadatas = legacy_meta_wrap.querySelectorAll(
+        ".metadata-item:not(.library-header-ctas__wrapper)"
+      );
       metadatas.forEach((meta) => {
         let glacier_meta_item = document.createElement("div");
         glacier_meta_item.classList.add("glacier-library-metadata-item");
@@ -43019,8 +43143,13 @@
       });
       header.appendChild(lower_wrap);
     }
-    page.structure.main.insertBefore(header, page.structure.main.firstElementChild);
-    let overview_headers = page.structure.main.querySelectorAll(".library-overview-header");
+    page.structure.main.insertBefore(
+      header,
+      page.structure.main.firstElementChild
+    );
+    let overview_headers = page.structure.main.querySelectorAll(
+      ".library-overview-header"
+    );
     overview_headers.forEach((top2) => {
       top2.classList = "top-container";
       let header2 = top2.querySelector("h2");
@@ -43029,7 +43158,11 @@
         top2.classList.add("spacing");
         return;
       }
-      select_btn.classList.add("select-button", "link-select", "blend-v2-btn");
+      select_btn.classList.add(
+        "select-button",
+        "link-select",
+        "blend-v2-btn"
+      );
       select_btn.classList.remove("dropdown-menu-list-button");
       header2.after(html.node`
             <div class="accompany view-buttons blend blend-v2">
@@ -43037,27 +43170,39 @@
             </div>
         `);
     });
-    let overview_header = page.structure.main.querySelector(":scope > .top-container");
+    let overview_header = page.structure.main.querySelector(
+      ":scope > .top-container"
+    );
     if (!overview_header) return;
-    overview_header.nextElementSibling.insertBefore(overview_header, overview_header.nextElementSibling.firstElementChild);
+    overview_header.nextElementSibling.insertBefore(
+      overview_header,
+      overview_header.nextElementSibling.firstElementChild
+    );
   }
   function bleh_glacier_library_bulk_edit() {
     let library_header = page.structure.main.querySelector(".library-header");
     let bulk_edit = library_header.querySelector('[href="javascript:void(0)"]');
     if (!bulk_edit) return;
-    let view_buttons = page.structure.main.querySelector(".glacier-library-buttons");
+    let view_buttons = page.structure.main.querySelector(
+      ".glacier-library-buttons"
+    );
     if (!view_buttons) return;
     let pre_existing_bulk = view_buttons.querySelector(".bulk-edit-button");
     if (pre_existing_bulk) return;
-    let edit_form = view_buttons.querySelector(":scope > .library-header-edit-form");
+    let edit_form = view_buttons.querySelector(
+      ":scope > .library-header-edit-form"
+    );
     let delete_button = view_buttons.querySelector(":scope > .delete-icon");
     if (!delete_button) return;
-    bulk_edit.classList.add("btn", "view-item", "glacier-library-button", "bulk-edit-button");
+    bulk_edit.classList.add(
+      "btn",
+      "view-item",
+      "glacier-library-button",
+      "bulk-edit-button"
+    );
     bulk_edit.textContent = trans_legacy.en.glacier.bulk_edit;
-    if (!edit_form)
-      view_buttons.insertBefore(bulk_edit, delete_button);
-    else
-      view_buttons.insertBefore(bulk_edit, edit_form);
+    if (!edit_form) view_buttons.insertBefore(bulk_edit, delete_button);
+    else view_buttons.insertBefore(bulk_edit, edit_form);
   }
 
   // src/chart.js
@@ -53061,13 +53206,20 @@ ${e ? html.node`<span class="error-type">${e.name}</span>: ${e.message}` : ""}</
     const update_required = localStorage.getItem("bleh_update_required") || "false";
     let home_link;
     render(masthead_logo, html``);
-    render(masthead_logo, html`
-        <a href="/">Last.fm</a>
-        <a class="home-link" href="${root}music" ref=${(el) => home_link = el}>
-            <div class="bleh-logo">${version.brand}</div>
-            <div class="lastfm-logo">Last.fm</div>
-        </a>
-    `);
+    render(
+      masthead_logo,
+      html`
+            <a href="/">Last.fm</a>
+            <a
+                class="home-link"
+                href="${root}music"
+                ref=${(el) => home_link = el}
+            >
+                <div class="bleh-logo">${version.brand}</div>
+                <div class="lastfm-logo">Last.fm</div>
+            </a>
+        `
+    );
     const head_menu = tippy_esm_default(home_link, {
       theme: "window",
       content: html.node`
@@ -53128,7 +53280,10 @@ ${e ? html.node`<span class="error-type">${e.name}</span>: ${e.message}` : ""}</
       theme: "context-menu",
       content: html.node`
             <a class="dropdown-menu-clickable-item" data-type="update" href="${root}bleh/general">
-                ${last_checked ? tl(trans.last_checked_date).replace("{d}", (0, import_moment4.default)(last_checked).fromNow()) : tl(trans.never_checked)}
+                ${last_checked ? tl(trans.last_checked_date).replace(
+        "{d}",
+        (0, import_moment4.default)(last_checked).fromNow()
+      ) : tl(trans.never_checked)}
             </a>
         `,
       placement: "right-start",
@@ -53246,31 +53401,39 @@ ${e ? html.node`<span class="error-type">${e.name}</span>: ${e.message}` : ""}</
     const search = inner.querySelector(".masthead-search-form");
     const form = search.querySelector(".masthead-search-field");
     form.placeholder = tl(trans.search);
-    inner.insertBefore(html.node`
+    inner.insertBefore(
+      html.node`
         <div class="masthead-search-wrap">
             ${search}
         </div>
-    `, navs);
+    `,
+      navs
+    );
     let new_auth = masthead.querySelector(".auth-dropdown-menu");
     let links = masthead.querySelector(".masthead-nav .navlist-items");
     render(links, html``);
-    let auth_link2 = masthead.querySelector(".masthead-nav-wrap > .site-auth .auth-link");
+    let auth_link2 = masthead.querySelector(
+      ".masthead-nav-wrap > .site-auth .auth-link"
+    );
     if (!auth_link2) {
-      render(links, html`
-            ${() => {
-        const elem = html.node`
+      render(
+        links,
+        html`
+                ${() => {
+          const elem = html.node`
                     <li class="masthead-nav-item">
                         <a class="masthead-nav-control chibi" href="${root}bleh" data-label="bleh_no_auth">
                             ${tl(trans.bleh_settings)}
                         </a>
                     </li>
                 `;
-        tippy_esm_default(elem, {
-          content: tl(trans.bleh_settings)
-        });
-        return elem;
-      }}
-        `);
+          tippy_esm_default(elem, {
+            content: tl(trans.bleh_settings)
+          });
+          return elem;
+        }}
+            `
+      );
       return;
     }
     if (auth_link2.hasAttribute("data-bleh")) return;
@@ -53278,31 +53441,6 @@ ${e ? html.node`<span class="error-type">${e.name}</span>: ${e.message}` : ""}</
     auth_link2.appendChild(html.node`
         <p>${auth.name}</p>
     `);
-    const auth_drop_menu = tippy_esm_default(auth_link2, {
-      theme: "context-menu",
-      content: html.node`
-            <a class="dropdown-menu-clickable-item" data-type="quick_access" href="${root}bleh/interface">
-                ${tl(trans.edit_quick_access)}
-            </a>
-            <button class="dropdown-menu-clickable-item" data-type="copy" onclick=${() => copy(auth.name)}>
-                ${tl(trans.copy_username)}
-            </button>
-            <button class="dropdown-menu-clickable-item" data-type="link" onclick=${() => copy(`https://www.last.fm${root}user/${auth.name}`)}>
-                ${tl(trans.copy_link)}
-            </button>
-        `,
-      placement: "right-start",
-      trigger: "manual",
-      interactive: true,
-      interactiveBorder: 10,
-      offset: [0, 0],
-      onShow(instance) {
-        instance.popper.addEventListener("click", (event3) => {
-          instance.hide();
-        });
-      }
-    });
-    register_menu(auth_link2, auth_drop_menu);
     let badges = load_badges(auth.name, true);
     if (badges) {
       auth_link2.appendChild(create_badge(badges[0], false, false, true));
@@ -53375,10 +53513,14 @@ ${e ? html.node`<span class="error-type">${e.name}</span>: ${e.message}` : ""}</
       }
     });
     links.appendChild(more_button);
-    let notif_count = new_auth.querySelector('[data-analytics-label="notifications"] + .auth-avatar-notification-count-badge');
+    let notif_count = new_auth.querySelector(
+      '[data-analytics-label="notifications"] + .auth-avatar-notification-count-badge'
+    );
     if (!notif_count) notif_count = "0";
     else notif_count = notif_count.textContent;
-    let inbox_count = new_auth.querySelector('[data-analytics-label="inbox"] + .auth-avatar-notification-count-badge');
+    let inbox_count = new_auth.querySelector(
+      '[data-analytics-label="inbox"] + .auth-avatar-notification-count-badge'
+    );
     if (!inbox_count) inbox_count = "0";
     else inbox_count = inbox_count.textContent;
     const count = parseInt(notif_count) + parseInt(inbox_count);
@@ -53432,58 +53574,81 @@ ${e ? html.node`<span class="error-type">${e.name}</span>: ${e.message}` : ""}</
     function render_notifications(notifications) {
       if (settings.inbox_view != "notifications") return;
       bleh_notification_list(notifications, true);
-      render(content, html`
-            <div class="mini-notifications">
-                ${notifications}
-                <p class="more-link">
-                    <a href="${root}inbox/notifications">${tl(trans.read_more)}</a>
-                </p>
-            </div>
-        `);
+      render(
+        content,
+        html`
+                <div class="mini-notifications">
+                    ${notifications}
+                    <p class="more-link">
+                        <a href="${root}inbox/notifications"
+                            >${tl(trans.read_more)}</a
+                        >
+                    </p>
+                </div>
+            `
+      );
     }
     function render_messages(messages) {
       if (settings.inbox_view != "messages") return;
-      render(content, html`
-            <div class="mini-notifications">
-                <div class="alert alert-danger">This is a work in progress, sorry! >_<</div>
-                <p class="more-link">
-                    <a href="${root}inbox">${tl(trans.read_more)}</a>
-                </p>
-            </div>
-        `);
+      render(
+        content,
+        html`
+                <div class="mini-notifications">
+                    <div class="alert alert-danger">
+                        This is a work in progress, sorry! >_<
+                    </div>
+                    <p class="more-link">
+                        <a href="${root}inbox">${tl(trans.read_more)}</a>
+                    </p>
+                </div>
+            `
+      );
       return;
-      render(content, html`
-            <div class="mini-notifications">
-                ${messages}
-                <p class="more-link">
-                    <a href="${root}inbox">${tl(trans.read_more)}</a>
-                </p>
-            </div>
-        `);
+      render(
+        content,
+        html`
+                <div class="mini-notifications">
+                    ${messages}
+                    <p class="more-link">
+                        <a href="${root}inbox">${tl(trans.read_more)}</a>
+                    </p>
+                </div>
+            `
+      );
     }
     function render_inbox() {
       const view = settings.inbox_view;
       log(`rendering view ${view}`, "navigation");
       if (!content) return;
       if (content) {
-        render(content, html`
-                <div class="mini-notifications content-loading">
-                    <div class="loading-data-container">
-                        <div class="loading-data-text">${tl(trans.loading)}</div>
+        render(
+          content,
+          html`
+                    <div class="mini-notifications content-loading">
+                        <div class="loading-data-container">
+                            <div class="loading-data-text">
+                                ${tl(trans.loading)}
+                            </div>
+                        </div>
                     </div>
-                </div>
-            `);
+                `
+        );
       }
       if (view == "notifications") {
-        if (page.notifications.list) render_notifications(page.notifications.list);
-        fetch_notifications().then((notifications) => render_notifications(notifications));
+        if (page.notifications.list)
+          render_notifications(page.notifications.list);
+        fetch_notifications().then(
+          (notifications) => render_notifications(notifications)
+        );
       } else {
         if (page.messages.list) render_messages(page.messages.list);
         fetch_messages().then((messages) => render_messages(messages));
       }
     }
     links.appendChild(inbox);
-    let selected_language = document.querySelector(".footer-language--active strong")?.textContent;
+    let selected_language = document.querySelector(
+      ".footer-language--active strong"
+    )?.textContent;
     let language_options = document.querySelectorAll(".footer-language-form");
     const language_menu = html.node`
         <div class="language-menu">
@@ -53504,20 +53669,30 @@ ${e ? html.node`<span class="error-type">${e.name}</span>: ${e.message}` : ""}</
       const button = language_option.querySelector("button");
       const key = button.getAttribute("name");
       button.classList.remove("mimic-link");
-      button.classList.add("dropdown-menu-clickable-item", "lang-item", "flex-button");
+      button.classList.add(
+        "dropdown-menu-clickable-item",
+        "lang-item",
+        "flex-button"
+      );
       button.setAttribute("data-lang", key);
-      button.style.setProperty("--flag-url", `url('https://katelyynn.github.io/bleh/fm/flags/${key}.svg')`);
+      button.style.setProperty(
+        "--flag-url",
+        `url('https://katelyynn.github.io/bleh/fm/flags/${key}.svg')`
+      );
       if (lang_info.hasOwnProperty(key)) {
-        render(button, html`
-                <div class="auth-dropdown-item-row">
-                    <span class="auth-dropdown-item-left">
-                        ${button.textContent}
-                    </span>
-                    <span class="auth-dropdown-item-right">
-                        <div class="bleh-icon checkmark" />
-                    </span>
-                </div>
-            `);
+        render(
+          button,
+          html`
+                    <div class="auth-dropdown-item-row">
+                        <span class="auth-dropdown-item-left">
+                            ${button.textContent}
+                        </span>
+                        <span class="auth-dropdown-item-right">
+                            <div class="bleh-icon checkmark" />
+                        </span>
+                    </div>
+                `
+        );
       }
       language_menu.appendChild(language_option);
     });
@@ -53595,7 +53770,9 @@ ${e ? html.node`<span class="error-type">${e.name}</span>: ${e.message}` : ""}</
                             </div>
                             ${cache2.banner ? html.node`
                             <div class="bg" style="background-image: url(${cache2.banner})" />
-                            ` : !auth.avatar.endsWith("818148bf682d429dc215c1705eb27b98.png") ? html.node`
+                            ` : !auth.avatar.endsWith(
+          "818148bf682d429dc215c1705eb27b98.png"
+        ) ? html.node`
                             <div class="bg" style="background-image: url(${auth.avatar.replace("avatar42s", "avatar170s")})" />
                             ` : ""}
                             <div class="name">${auth.name}</div>
@@ -53651,7 +53828,9 @@ ${e ? html.node`<span class="error-type">${e.name}</span>: ${e.message}` : ""}</
                                     <button class="dropdown-menu-clickable-item chibi" data-type="starred_friend" data-is-shortcut="false" onclick=${() => open_starred_friend_window()}>${tl(trans.starred_friend.name)}</button>
                                 `;
           tippy_esm_default(button, {
-            content: tl(trans.starred_friend.name)
+            content: tl(
+              trans.starred_friend.name
+            )
           });
           return button;
         }}
@@ -53663,27 +53842,34 @@ ${e ? html.node`<span class="error-type">${e.name}</span>: ${e.message}` : ""}</
                             ${current.map((val) => {
           let elem;
           const formal = page.state.quick_access_items[val];
-          if (formal.url) elem = html.node`<a href=${formal.url} />`;
-          else elem = html.node`<button onclick=${formal.action} />`;
+          if (formal.url)
+            elem = html.node`<a href=${formal.url} />`;
+          else
+            elem = html.node`<button onclick=${formal.action} />`;
           elem.classList = "dropdown-menu-clickable-item";
           elem.setAttribute("data-type", formal.icon);
           elem.textContent = formal.name;
           let count2 = 0;
-          if (val == "notifications")
-            count2 = notif_count;
-          else if (val == "messages")
-            count2 = inbox_count;
+          if (val == "notifications") count2 = notif_count;
+          else if (val == "messages") count2 = inbox_count;
           if (count2) {
-            render(elem, html`
-                                        <div class="auth-dropdown-item-row">
-                                            <span class="auth-dropdown-item-left">
-                                                ${formal.name}
-                                            </span>
-                                            <span class="auth-dropdown-item-right">
-                                                ${count2}
-                                            </span>
-                                        </div>
-                                    `);
+            render(
+              elem,
+              html`
+                                            <div class="auth-dropdown-item-row">
+                                                <span
+                                                    class="auth-dropdown-item-left"
+                                                >
+                                                    ${formal.name}
+                                                </span>
+                                                <span
+                                                    class="auth-dropdown-item-right"
+                                                >
+                                                    ${count2}
+                                                </span>
+                                            </div>
+                                        `
+            );
           }
           return elem;
         })}
@@ -53695,42 +53881,76 @@ ${e ? html.node`<span class="error-type">${e.name}</span>: ${e.message}` : ""}</
                                 <button class="dropdown-menu-clickable-item chibi" data-type="continue" disabled=${themes_disabled} onclick=${() => {
           let buttons = [];
           render(page_2, html``);
-          render(page_2, html`
-                                        <button class="dropdown-menu-clickable-item" data-type="back" onclick=${() => {
-            side.setAttribute("data-page", "1");
-          }}>
-                                            ${tl(trans.back)}
-                                        </button>
-                                        ${themes.map((theme) => {
-            if (theme.hide) return html.node``;
-            if (!theme.formal) theme.formal = theme.id;
-            const btn = html.node`
+          render(
+            page_2,
+            html`
+                                            <button
+                                                class="dropdown-menu-clickable-item"
+                                                data-type="back"
+                                                onclick=${() => {
+              side.setAttribute(
+                "data-page",
+                "1"
+              );
+            }}
+                                            >
+                                                ${tl(trans.back)}
+                                            </button>
+                                            ${themes.map((theme) => {
+              if (theme.hide)
+                return html.node``;
+              if (!theme.formal)
+                theme.formal = theme.id;
+              const btn = html.node`
                                                 <button class="dropdown-menu-clickable-item theme-item-in-menu" aria-selected=${!settings.theme_schedule ? settings.theme == theme.id : theme.id == "adaptive"} data-bleh-theme=${theme.id} data-type="theme_${theme.formal}" onclick="${() => {
-              if (theme.id != "adaptive") {
-                save_setting("theme_schedule", false);
-                save_setting("theme", theme.id);
-              } else {
-                save_setting("theme_schedule", true);
-                match2();
-              }
-              buttons.forEach((button) => {
-                const type = button.getAttribute("data-bleh-theme");
-                if (!settings.theme_schedule) {
-                  button.setAttribute("aria-selected", settings.theme == type);
-                } else if (type == "adaptive") {
-                  button.setAttribute("aria-selected", true);
+                if (theme.id != "adaptive") {
+                  save_setting(
+                    "theme_schedule",
+                    false
+                  );
+                  save_setting(
+                    "theme",
+                    theme.id
+                  );
                 } else {
-                  button.setAttribute("aria-selected", false);
+                  save_setting(
+                    "theme_schedule",
+                    true
+                  );
+                  match2();
                 }
-              });
-            }}">
+                buttons.forEach(
+                  (button) => {
+                    const type = button.getAttribute(
+                      "data-bleh-theme"
+                    );
+                    if (!settings.theme_schedule) {
+                      button.setAttribute(
+                        "aria-selected",
+                        settings.theme == type
+                      );
+                    } else if (type == "adaptive") {
+                      button.setAttribute(
+                        "aria-selected",
+                        true
+                      );
+                    } else {
+                      button.setAttribute(
+                        "aria-selected",
+                        false
+                      );
+                    }
+                  }
+                );
+              }}">
                                                     ${theme.name}
                                                 </button>
                                             `;
-            buttons.push(btn);
-            return btn;
-          })}
-                                    `);
+              buttons.push(btn);
+              return btn;
+            })}
+                                        `
+          );
           side.setAttribute("data-page", "2");
         }}>
                                     ${tl(trans.more)}
@@ -53739,28 +53959,48 @@ ${e ? html.node`<span class="error-type">${e.name}</span>: ${e.message}` : ""}</
                             ${show_language ? html.node`
                             <div class="button-combo">
                                 <button class="dropdown-menu-clickable-item" data-menu-item="language" onclick=${() => {
-          render(page_2, html`
-                                        <button class="dropdown-menu-clickable-item" data-type="back" onclick=${() => {
-            side.setAttribute("data-page", "1");
-          }}>
-                                            ${tl(trans.back)}
-                                        </button>
-                                        ${language_menu}
-                                    `);
+          render(
+            page_2,
+            html`
+                                            <button
+                                                class="dropdown-menu-clickable-item"
+                                                data-type="back"
+                                                onclick=${() => {
+              side.setAttribute(
+                "data-page",
+                "1"
+              );
+            }}
+                                            >
+                                                ${tl(trans.back)}
+                                            </button>
+                                            ${language_menu}
+                                        `
+          );
           side.setAttribute("data-page", "2");
         }}>
                                     ${tl(trans.language)}
                                 </button>
                                 <div class="button-combo-sep" />
                                 <button class="dropdown-menu-clickable-item chibi" data-type="continue" onclick=${() => {
-          render(page_2, html`
-                                        <button class="dropdown-menu-clickable-item" data-type="back" onclick=${() => {
-            side.setAttribute("data-page", "1");
-          }}>
-                                            ${tl(trans.back)}
-                                        </button>
-                                        ${language_menu}
-                                    `);
+          render(
+            page_2,
+            html`
+                                            <button
+                                                class="dropdown-menu-clickable-item"
+                                                data-type="back"
+                                                onclick=${() => {
+              side.setAttribute(
+                "data-page",
+                "1"
+              );
+            }}
+                                            >
+                                                ${tl(trans.back)}
+                                            </button>
+                                            ${language_menu}
+                                        `
+          );
           side.setAttribute("data-page", "2");
         }}>
                                     ${tl(trans.more)}
@@ -53805,17 +54045,21 @@ ${e ? html.node`<span class="error-type">${e.name}</span>: ${e.message}` : ""}</
             `);
         function render_status_container(status2) {
           if (!status2) return;
-          render(status_container, html`
-                    <div class="status">
-                        <div class="bleh-icon" />
-                        <div class="status-bg" style="background-image: url(${status2.avatar})" />
-                        <div class="status-text">
-                            ${status2.name}
-                            ${tl(trans.by)}
-                            ${status2.artist}
+          render(
+            status_container,
+            html`
+                        <div class="status">
+                            <div class="bleh-icon" />
+                            <div
+                                class="status-bg"
+                                style="background-image: url(${status2.avatar})"
+                            />
+                            <div class="status-text">
+                                ${status2.name} ${tl(trans.by)} ${status2.artist}
+                            </div>
                         </div>
-                    </div>
-                `);
+                    `
+          );
         }
         if (ff("status_in_menu") && auth.pro) {
           if (page.now.name) render_status_container(page.now);
@@ -53823,9 +54067,37 @@ ${e ? html.node`<span class="error-type">${e.name}</span>: ${e.message}` : ""}</
         }
       },
       onHide(instance) {
-        page.structure.notifications.setAttribute("data-auth-open", "false");
+        page.structure.notifications.setAttribute(
+          "data-auth-open",
+          "false"
+        );
       }
     });
+    const auth_drop_menu = tippy_esm_default(auth_link2, {
+      theme: "context-menu",
+      content: html.node`
+            <a class="dropdown-menu-clickable-item" data-type="quick_access" href="${root}bleh/interface">
+                ${tl(trans.edit_quick_access)}
+            </a>
+            <button class="dropdown-menu-clickable-item" data-type="copy" onclick=${() => copy(auth.name)}>
+                ${tl(trans.copy_username)}
+            </button>
+            <button class="dropdown-menu-clickable-item" data-type="link" onclick=${() => copy(`https://www.last.fm${root}user/${auth.name}`)}>
+                ${tl(trans.copy_link)}
+            </button>
+        `,
+      placement: "right-start",
+      trigger: "manual",
+      interactive: true,
+      interactiveBorder: 10,
+      offset: [0, 0],
+      onShow(instance) {
+        instance.popper.addEventListener("click", (event3) => {
+          instance.hide();
+        });
+      }
+    });
+    register_menu(auth_link2, auth_drop_menu);
     let container = new_auth.parentElement;
     container.parentElement.removeChild(container);
     auth_link2.removeAttribute("aria-controls");
@@ -53858,7 +54130,8 @@ ${e ? html.node`<span class="error-type">${e.name}</span>: ${e.message}` : ""}</
     `);
   }
   async function live_status() {
-    if (page.now.next_fetch && Date.now() < page.now.next_fetch) return page.now;
+    if (page.now.next_fetch && Date.now() < page.now.next_fetch)
+      return page.now;
     try {
       const res = await fetch(`${root}user/${auth.name}/partial/now`);
       if (!res.ok) {
@@ -53881,7 +54154,9 @@ ${e ? html.node`<span class="error-type">${e.name}</span>: ${e.message}` : ""}</
       artist.removeAttribute("target");
       album.removeAttribute("target");
       artist.textContent = romanise(correct_artist(artist.textContent));
-      track.textContent = romanise(correct_item_by_artist(track.textContent, artist.textContent));
+      track.textContent = romanise(
+        correct_item_by_artist(track.textContent, artist.textContent)
+      );
       let next = /* @__PURE__ */ new Date();
       next.setMinutes(next.getMinutes() + 1);
       page.now = {
@@ -53898,7 +54173,8 @@ ${e ? html.node`<span class="error-type">${e.name}</span>: ${e.message}` : ""}</
     }
   }
   async function fetch_notifications() {
-    if (page.notifications.next_fetch && Date.now() < page.notifications.next_fetch) return page.notifications.list;
+    if (page.notifications.next_fetch && Date.now() < page.notifications.next_fetch)
+      return page.notifications.list;
     try {
       const res = await fetch(`${root}inbox/notifications`);
       if (!res.ok) {
@@ -53921,7 +54197,8 @@ ${e ? html.node`<span class="error-type">${e.name}</span>: ${e.message}` : ""}</
     }
   }
   async function fetch_messages() {
-    if (page.messages.next_fetch && Date.now() < page.messages.next_fetch) return page.messages.list;
+    if (page.messages.next_fetch && Date.now() < page.messages.next_fetch)
+      return page.messages.list;
     try {
       const res = await fetch(`${root}inbox`);
       if (!res.ok) {

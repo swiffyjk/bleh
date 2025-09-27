@@ -8246,7 +8246,7 @@
                 var(--cards-overlay-image-subtlest, none),
                 color-mix(in hsl, hsl(var(--h4)), hsl(var(--h3)) 60%) !important;
             --col: hsl(var(--b7)) !important;
-            --force-font-weight: var(--font-weight-medium) !important;
+            --force-font-weight: var(--font-weight-bold) !important;
             &:not(.chibi) {
                 --mask-colour: hsl(var(--b7), 70%) !important;
             }
@@ -9272,7 +9272,7 @@
                     hsl(var(--l3-c)),
                     hsl(var(--l4-c)) 40%
                 );
-                --force-font-weight: var(--font-weight-medium) !important;
+                --force-font-weight: var(--font-weight-bold) !important;
 
                 &:before {
                     background: hsl(var(--h3)) !important;
@@ -10821,6 +10821,7 @@
                 --mask-size: 12px;
                 --right: 0;
                 --btn-bottom: 0;
+                --force-font-weight: var(--font-weight-medium);
 
                 font-size: 16px !important;
                 line-height: 20px !important;
