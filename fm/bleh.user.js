@@ -35264,8 +35264,11 @@
         `;
       info_panel.after(releases_panel);
     }
-    const albums_and_lyrics_row = page.structure.main.querySelector(".album-and-lyrics-row");
-    if (page.type == "track") albums_and_lyrics_row.classList.add("oracle-hidden");
+    const albums_and_lyrics_row = page.structure.main.querySelector(
+      ".album-and-lyrics-row"
+    );
+    if (page.type == "track")
+      albums_and_lyrics_row.classList.add("oracle-hidden");
     function oracle_aliases(artist2, desired) {
       if (artist2.name == desired || artist_data.aliases && artist_data.aliases.some((alias) => alias.name == desired))
         return desired;
@@ -35284,17 +35287,22 @@
       if (tries < 1) return;
       tries--;
       const url = `http://musicbrainz.org/ws/2/artist?query=${sanitise(artist, " ")}`;
-      log(`using url ${encodeURI(url)} with ${tries} tries available`, "oracle");
+      log(
+        `using url ${encodeURI(url)} with ${tries} tries available`,
+        "oracle"
+      );
       GM_xmlhttpRequest({
         method: "GET",
         url,
         headers: {
           "User-Agent": `bleh/${version.build} <https://github.com/katelyynn/bleh>`,
-          "Accept": "application/json"
+          Accept: "application/json"
         },
         onload: function(response) {
           if (response.status < 200 || response.status >= 300) {
-            log("error fetching artist data", "oracle", "error", { response });
+            log("error fetching artist data", "oracle", "error", {
+              response
+            });
             return;
           }
           let data2;
@@ -35308,7 +35316,10 @@
           artist_data = data2.artists[0];
           cache2[artist] = artist_data;
           if (Object.keys(cache2).length > 100) delete cache2[0];
-          localStorage.setItem("oracle_artist_ids", JSON.stringify(cache2));
+          localStorage.setItem(
+            "oracle_artist_ids",
+            JSON.stringify(cache2)
+          );
           tries = 2;
           oracle_connect();
         },
@@ -35328,17 +35339,22 @@
         url = `https://musicbrainz.org/ws/2/recording?query="${sanitise(clean_title(page.name), " ")}" AND arid:"${artist_data.id}" AND status:Official`;
       else if (page.type == "album")
         url = `http://musicbrainz.org/ws/2/release?query=release:"${sanitise(clean_title(page.name), " ")}" AND arid:"${artist_data.id}"`;
-      log(`using url ${encodeURI(url)} with ${tries} tries available`, "oracle");
+      log(
+        `using url ${encodeURI(url)} with ${tries} tries available`,
+        "oracle"
+      );
       GM_xmlhttpRequest({
         method: "GET",
         url,
         headers: {
           "User-Agent": `bleh/${version.build} <https://github.com/katelyynn/bleh>`,
-          "Accept": "application/json"
+          Accept: "application/json"
         },
         onload: function(response) {
           if (response.status < 200 || response.status >= 300) {
-            log("error fetching connect data", "oracle", "error", { response });
+            log("error fetching connect data", "oracle", "error", {
+              response
+            });
             return;
           }
           let data2;
@@ -35367,10 +35383,16 @@
         tries = 2;
         const release = oracle_pick_release(data2);
         if (!release) {
-          log("no data to use, ending", "oracle", "info", { data: data2, release });
+          log("no data to use, ending", "oracle", "info", {
+            data: data2,
+            release
+          });
           return;
         }
-        log("picked release, proceeding", "oracle", "info", { data: data2, release });
+        log("picked release, proceeding", "oracle", "info", {
+          data: data2,
+          release
+        });
         setTimeout(() => {
           oracle_album_fetch(release);
         }, 400);
@@ -35379,24 +35401,37 @@
     function oracle_pick_recording(data2) {
       if (!data2 || !data2.recordings) return null;
       const filtered = data2.recordings.filter((recording) => {
-        if (!recording.releases || recording.releases.length === 0) return false;
+        if (!recording.releases || recording.releases.length === 0)
+          return false;
         return recording.releases.some((release) => {
           const artists = release["artist-credit"] || [];
-          const various = artists.some((artist2) => artist2.name === "Various Artists");
+          const various = artists.some(
+            (artist2) => artist2.name === "Various Artists"
+          );
           const official = release.status === "Official";
           return !various && official;
         });
       });
       if (filtered.length === 0) return null;
-      let best = filtered.find((recording) => recording.disambiguation?.toLowerCase() === "explicit");
+      let best = filtered.find(
+        (recording) => recording.disambiguation?.toLowerCase() === "explicit"
+      );
       if (best) return best;
-      best = filtered.find((recording) => recording.disambiguation?.toLowerCase() === "clean");
+      best = filtered.find(
+        (recording) => recording.disambiguation?.toLowerCase() === "clean"
+      );
       if (best) return best;
-      best = filtered.find((recording) => recording.disambiguation?.toLowerCase().includes("explicit"));
+      best = filtered.find(
+        (recording) => recording.disambiguation?.toLowerCase().includes("explicit")
+      );
       if (best) return best;
-      best = filtered.find((recording) => recording.disambiguation?.toLowerCase().includes("clean"));
+      best = filtered.find(
+        (recording) => recording.disambiguation?.toLowerCase().includes("clean")
+      );
       if (best) return best;
-      best = filtered.find((recording) => !recording.disambiguation?.toLowerCase().includes("english"));
+      best = filtered.find(
+        (recording) => !recording.disambiguation?.toLowerCase().includes("english")
+      );
       if (best) return best;
       return filtered[0];
     }
@@ -35404,24 +35439,40 @@
       if (!data2 || !data2.releases) return null;
       const filtered = data2.releases.filter((release) => {
         const artists = release["artist-credit"] || [];
-        const various = artists.some((artist2) => artist2.name == "Various Artists");
+        const various = artists.some(
+          (artist2) => artist2.name == "Various Artists"
+        );
         const official = release.status == "Official";
         return !various && official;
       });
       if (filtered.length == 0) return null;
-      let best = filtered.find((release) => release.disambiguation?.toLowerCase() == "explicit");
+      let best = filtered.find(
+        (release) => release.disambiguation?.toLowerCase() == "explicit"
+      );
       if (best) return best;
-      best = filtered.find((release) => release.disambiguation?.toLowerCase() == "clean");
+      best = filtered.find(
+        (release) => release.disambiguation?.toLowerCase() == "clean"
+      );
       if (best) return best;
-      best = filtered.find((release) => release.disambiguation?.toLowerCase() == "hi-res");
+      best = filtered.find(
+        (release) => release.disambiguation?.toLowerCase() == "hi-res"
+      );
       if (best) return best;
-      best = filtered.find((release) => release.disambiguation?.toLowerCase() == "dolby atmos mix");
+      best = filtered.find(
+        (release) => release.disambiguation?.toLowerCase() == "dolby atmos mix"
+      );
       if (best) return best;
-      best = filtered.find((release) => release.disambiguation?.toLowerCase().includes("explicit"));
+      best = filtered.find(
+        (release) => release.disambiguation?.toLowerCase().includes("explicit")
+      );
       if (best) return best;
-      best = filtered.find((release) => release.disambiguation?.toLowerCase().includes("clean"));
+      best = filtered.find(
+        (release) => release.disambiguation?.toLowerCase().includes("clean")
+      );
       if (best) return best;
-      best = filtered.find((release) => !release.disambiguation?.toLowerCase().includes("english"));
+      best = filtered.find(
+        (release) => !release.disambiguation?.toLowerCase().includes("english")
+      );
       if (best) return best;
       return filtered[0];
     }
@@ -35429,17 +35480,22 @@
       if (tries < 1) return;
       tries--;
       const url = `http://musicbrainz.org/ws/2/release/${data2.id}?inc=recordings+labels+artist-credits`;
-      log(`using url ${encodeURI(url)} with ${tries} tries available`, "oracle");
+      log(
+        `using url ${encodeURI(url)} with ${tries} tries available`,
+        "oracle"
+      );
       GM_xmlhttpRequest({
         method: "GET",
         url,
         headers: {
           "User-Agent": `bleh/${version.build} <https://github.com/katelyynn/bleh>`,
-          "Accept": "application/json"
+          Accept: "application/json"
         },
         onload: function(response) {
           if (response.status < 200 || response.status >= 300) {
-            log("error fetching connect data", "oracle", "error", { response });
+            log("error fetching connect data", "oracle", "error", {
+              response
+            });
             return;
           }
           let data3;
@@ -35472,19 +35528,21 @@
                 </div>
                 <div class="music-labels catalogue-tags">
                     <ul class="tags-list">
-                        ${labels.map((label) => html.node`
+                        ${labels.map(
+          (label) => html.node`
                             <li class="tag">
                                 <a class="music-label" href="${root}tag/${sanitise(label.label.name, "+")}">${label.label.name}</a>
                             </li>
-                        `)}
+                        `
+        )}
                     </ul>
                 </div>
             `);
       }
-      const artist2 = page.sister.toLowerCase();
+      const artist2 = data2["artist-credit"][0].name.toLowerCase();
       const album = page.name.toLowerCase();
       const defaults2 = {
-        guests_in_title: false
+        guests_in_title: true
       };
       const oracle_entry = {
         ...defaults2,
@@ -35496,16 +35554,16 @@
       const track_panel = html.node`
             <section class="oracle-tracks">
                 <h3 class="text-18">${tl(trans.tracklist)}<span class="new-badge beta">${tl(trans.beta)}</span></h3>
-                ${discs.map((disc) => render_tracklist(disc, discs.length))}
+                ${discs.map((disc) => render_tracklist(disc, discs.length, artist2))}
             </section>
         `;
       info_panel.after(track_panel);
-      function render_tracklist(disc, length) {
+      function render_tracklist(disc, length, retrieved_artist) {
         return html.node`
                 ${length > 1 ? html.node`
                 <div class="sub-text normal disc-header">
                     <span class="bleh-icon" style="--icon: var(--mask)" />
-                    ${tl(trans.disc_number, { "n": disc.position })}
+                    ${tl(trans.disc_number, { n: disc.position })}
                 </div>
                 ` : ""}
                 <table class="chartlist chartlist--with-index chartlist--with-index--length-1 chartlist--with-artist chartlist--with-more chartlist--with-duration chartlist--with-bar">
@@ -35513,7 +35571,9 @@
                         ${disc.tracks.map((track) => {
           const artist_lower = track["artist-credit"][0].name.toLowerCase();
           const title_lower = track.title.toLowerCase();
-          const track_entry = oracle_tracks.hasOwnProperty(artist_lower) && oracle_tracks[artist_lower].hasOwnProperty(title_lower) ? oracle_tracks[artist_lower][title_lower] : null;
+          const track_entry = oracle_tracks.hasOwnProperty(artist_lower) && oracle_tracks[artist_lower].hasOwnProperty(
+            title_lower
+          ) ? oracle_tracks[artist_lower][title_lower] : null;
           const total_s = Math.floor(track.length / 1e3);
           const m = Math.floor(total_s / 60);
           const s2 = total_s % 60;
@@ -35526,13 +35586,23 @@
           } else if (oracle_entry.guests_in_title) {
             const artists = track["artist-credit"];
             const guests = artists.filter(
-              (artist3) => artist3.name.toLowerCase() != page.sister.toLowerCase()
+              (artist3) => artist3.name.toLowerCase() != retrieved_artist
             );
+            let first_joinphrase = artists[0].joinphrase.trim();
+            if (["&", ","].includes(first_joinphrase))
+              first_joinphrase = "with";
             if (artists.length > 1) {
-              title += ` (${artists[0].joinphrase.trim()} `;
+              title += ` (${first_joinphrase} `;
               guests.forEach((artist3, index3) => {
+                log(
+                  `guest ${index3}`,
+                  "oracle",
+                  "info",
+                  { artist: artist3 }
+                );
                 let joinphrase = artist3.joinphrase;
-                if (index3 == guests.length - 2 && oracle_entry.final_guest_separator) joinphrase = oracle_entry.final_guest_separator;
+                if (index3 == guests.length - 2 && oracle_entry.final_guest_separator)
+                  joinphrase = oracle_entry.final_guest_separator;
                 title += `${artist3.name}${joinphrase}`;
               });
               title += ")";
@@ -35567,27 +35637,43 @@
           title: release.querySelector(".source-album-name").textContent,
           artist: release.querySelector(".source-album-artist").textContent,
           plays: release.querySelector(".source-album-stats").firstChild.textContent.trim(),
-          artwork: release.querySelector(".source-album-art > .cover-art > img").src
+          artwork: release.querySelector(
+            ".source-album-art > .cover-art > img"
+          ).src
         });
       });
       const recording = oracle_pick_recording(data2);
       if (!recording) {
-        render(releases_panel, html`
-                <h3 class="text-18">${tl(trans.releases)}<span class="new-badge beta">${tl(trans.beta)}</span></h3>
-                <div class="loading-data-container">
-                    <div class="loading-data-text failed">No releases found</div>
-                </div>
-            `);
+        render(
+          releases_panel,
+          html`
+                    <h3 class="text-18">
+                        ${tl(trans.releases)}<span class="new-badge beta"
+                            >${tl(trans.beta)}</span
+                        >
+                    </h3>
+                    <div class="loading-data-container">
+                        <div class="loading-data-text failed">
+                            No releases found
+                        </div>
+                    </div>
+                `
+        );
         return;
       }
       if (recording) {
-        log("releases in recording", "oracle", "info", { recording, releases: recording.releases });
+        log("releases in recording", "oracle", "info", {
+          recording,
+          releases: recording.releases
+        });
         recording.releases.forEach((release) => {
           const artist2 = release["artist-credit"] ? release["artist-credit"][0].name : recording["artist-credit"].name;
           if (artist2 == "Various Artists") return;
           releases.push(release);
         });
-        log("releases in recording after parsing", "oracle", "info", { releases });
+        log("releases in recording after parsing", "oracle", "info", {
+          releases
+        });
         releases = releases.filter(
           (release, index3, self3) => index3 === self3.findIndex((r) => {
             const r_artist = r["artist-credit"]?.[0]?.name;
@@ -35595,44 +35681,59 @@
             return r.title === release.title && r_artist === release_artist;
           })
         );
-        log("releases in recording after filter", "oracle", "info", { releases });
-        render(releases_panel, html`
-                <h3 class="text-18">${tl(trans.releases)}<span class="new-badge beta">${tl(trans.beta)}</span></h3>
-                <div class="source-albums">
-                    ${releases.map((release, index3) => {
-          if (index3 > 1) return html.node``;
-          log("release", "oracle", "log", { release });
-          let title = clean_title(release.title);
-          const artist2 = oracle_aliases(release["artist-credit"]?.[0]?.name || recording["artist-credit"][0].name, page.sister);
-          const type = release["release-group"]["primary-type"];
-          const artist_lower = page.sister.toLowerCase();
-          const title_lower = title.toLowerCase();
-          const defaults2 = {
-            guests_in_title: false
-          };
-          const oracle_entry = {
-            ...defaults2,
-            ...oracle_albums.hasOwnProperty(artist_lower) && oracle_albums[artist_lower].hasOwnProperty(title_lower) ? oracle_albums[artist_lower][title_lower] : {}
-          };
-          log("entry", "oracle", "info", { oracle_entry });
-          if (oracle_entry.disambiguation) {
-            if (oracle_entry.disambiguation[release.disambiguation])
-              title = oracle_entry.disambiguation[release.disambiguation];
-            else if (oracle_entry.disambiguation.other)
-              title = oracle_entry.disambiguation.other;
-          }
-          const match3 = lastfm_releases.find(
-            (r) => r.title == title && r.artist == artist2
-          );
-          let plays = 0;
-          let artwork;
-          if (match3) {
-            plays = match3.plays;
-            artwork = match3.artwork;
-          }
-          let artwork_container;
-          let stats;
-          const elem = html.node`
+        log("releases in recording after filter", "oracle", "info", {
+          releases
+        });
+        render(
+          releases_panel,
+          html`
+                    <h3 class="text-18">
+                        ${tl(trans.releases)}<span class="new-badge beta"
+                            >${tl(trans.beta)}</span
+                        >
+                    </h3>
+                    <div class="source-albums">
+                        ${releases.map((release, index3) => {
+            if (index3 > 1) return html.node``;
+            log("release", "oracle", "log", { release });
+            let title = clean_title(release.title);
+            const artist2 = oracle_aliases(
+              release["artist-credit"]?.[0]?.name || recording["artist-credit"][0].name,
+              page.sister
+            );
+            const type = release["release-group"]["primary-type"];
+            const artist_lower = page.sister.toLowerCase();
+            const title_lower = title.toLowerCase();
+            const defaults2 = {
+              guests_in_title: false
+            };
+            const oracle_entry = {
+              ...defaults2,
+              ...oracle_albums.hasOwnProperty(
+                artist_lower
+              ) && oracle_albums[artist_lower].hasOwnProperty(
+                title_lower
+              ) ? oracle_albums[artist_lower][title_lower] : {}
+            };
+            log("entry", "oracle", "info", { oracle_entry });
+            if (oracle_entry.disambiguation) {
+              if (oracle_entry.disambiguation[release.disambiguation])
+                title = oracle_entry.disambiguation[release.disambiguation];
+              else if (oracle_entry.disambiguation.other)
+                title = oracle_entry.disambiguation.other;
+            }
+            const match3 = lastfm_releases.find(
+              (r) => r.title == title && r.artist == artist2
+            );
+            let plays = 0;
+            let artwork;
+            if (match3) {
+              plays = match3.plays;
+              artwork = match3.artwork;
+            }
+            let artwork_container;
+            let stats;
+            const elem = html.node`
                             <div class="source-album js-link-block link-block-cover-link" data-match=${match3 != null}>
                                 <div class="source-album-art" ref=${(el) => artwork_container = el}>
                                     ${artwork ? html.node`
@@ -35657,35 +35758,58 @@
                                 </div>
                             </div>
                         `;
-          if (!artwork) load_cover_art(artwork_container, title, artist2, stats, type);
-          return elem;
-        })}
-                </div>
-            `);
+            if (!artwork)
+              load_cover_art(
+                artwork_container,
+                title,
+                artist2,
+                stats,
+                type
+              );
+            return elem;
+          })}
+                    </div>
+                `
+        );
         const artist_elem = header.querySelector("h2");
         if (recording.disambiguation == "explicit") {
-          artist_elem.insertBefore(html.node`
+          artist_elem.insertBefore(
+            html.node`
                     <span class="track-explicit">${tl(trans.explicit)}</span>
-                `, artist_elem.firstChild);
+                `,
+            artist_elem.firstChild
+          );
         }
       } else {
-        render(releases_panel, html`
-                <h3 class="text-18">${tl(trans.releases)}<span class="new-badge beta">${tl(trans.beta)}</span></h3>
-                <div class="loading-data-container">
-                    <div class="loading-data-text failed">No releases found</div>
-                </div>
-            `);
+        render(
+          releases_panel,
+          html`
+                    <h3 class="text-18">
+                        ${tl(trans.releases)}<span class="new-badge beta"
+                            >${tl(trans.beta)}</span
+                        >
+                    </h3>
+                    <div class="loading-data-container">
+                        <div class="loading-data-text failed">
+                            No releases found
+                        </div>
+                    </div>
+                `
+        );
       }
     }
     function load_cover_art(parent, title, artist2, stats = null, type = null) {
-      render(parent, html`
-            <span class="cover-art oracle-loading">
-                <span class="loading-spinner">
-                    <span class="bleh-icon" />
+      render(
+        parent,
+        html`
+                <span class="cover-art oracle-loading">
+                    <span class="loading-spinner">
+                        <span class="bleh-icon" />
+                    </span>
+                    <img class="empty" />
                 </span>
-                <img class="empty">
-            </span>
-        `);
+            `
+      );
       if (!ff("oracle_fetch_artwork")) return;
       fetch(`${root}music/${sanitise(artist2)}/${sanitise(title)}/`).then((res) => {
         if (!res.ok) {
@@ -35695,31 +35819,47 @@
         return res.text();
       }).then((dom) => {
         const doc = new DOMParser().parseFromString(dom, "text/html");
-        const background_image = doc.querySelector(".header-new-background-image");
+        const background_image = doc.querySelector(
+          ".header-new-background-image"
+        );
         if (!background_image) {
-          render(parent, html`
-                        <span class="cover-art">
-                            <img class="missing-album">
-                        </span>
-                    `);
+          render(
+            parent,
+            html`
+                            <span class="cover-art">
+                                <img class="missing-album" />
+                            </span>
+                        `
+          );
           return;
         }
-        render(parent, html`
-                    <span class="cover-art">
-                        <img src=${background_image.getAttribute("content").replace("/ar0/", "/300x300/")} alt=${title}>
-                    </span>
-                `);
+        render(
+          parent,
+          html`
+                        <span class="cover-art">
+                            <img
+                                src=${background_image.getAttribute("content").replace("/ar0/", "/300x300/")}
+                                alt=${title}
+                            />
+                        </span>
+                    `
+        );
         if (!stats || !type) return;
-        const listeners = doc.querySelector(".header-new-info-desktop .header-metadata-tnew-display > p > abbr");
+        const listeners = doc.querySelector(
+          ".header-new-info-desktop .header-metadata-tnew-display > p > abbr"
+        );
         console.info("oracle", listeners);
         if (!listeners) return;
-        render(stats, html`
-                    ${type}
-                    <span class="plays">
-                        <span class="bleh-icon" />
-                        ${listeners.title}
-                    </span>
-                `);
+        render(
+          stats,
+          html`
+                        ${type}
+                        <span class="plays">
+                            <span class="bleh-icon" />
+                            ${listeners.title}
+                        </span>
+                    `
+        );
       }).catch((err) => {
         console.error("oracle", err);
         return;
@@ -35729,9 +35869,13 @@
   function oracle_data(force = false) {
     if (!(ff("oracle") && settings.oracle_beta)) return;
     let cached_albums = localStorage.getItem("oracle_albums");
-    let cached_albums_expire = new Date(localStorage.getItem("oracle_albums_expire"));
+    let cached_albums_expire = new Date(
+      localStorage.getItem("oracle_albums_expire")
+    );
     let cached_tracks = localStorage.getItem("oracle_tracks");
-    let cached_tracks_expire = new Date(localStorage.getItem("oracle_tracks_expire"));
+    let cached_tracks_expire = new Date(
+      localStorage.getItem("oracle_tracks_expire")
+    );
     let current_time = /* @__PURE__ */ new Date();
     if (!cached_albums) {
       log("albums list is not cached, fetching", "oracle");
@@ -35763,7 +35907,10 @@
     xhr.onload = function() {
       log(`${type} list responded with ${xhr.status}`, "oracle");
       if (xhr.status != 200) {
-        log("request has been cancelled, will request again in 1h", "oracle");
+        log(
+          "request has been cancelled, will request again in 1h",
+          "oracle"
+        );
         api_expire.setHours(api_expire.getHours() + 1);
       }
       let api_expire = /* @__PURE__ */ new Date();
