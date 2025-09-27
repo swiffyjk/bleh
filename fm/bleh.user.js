@@ -39313,13 +39313,7 @@
     let selected_search;
     let fake;
     let back;
-    const allowed_pages = [
-      "user",
-      "artist",
-      "album",
-      "track",
-      "tag"
-    ];
+    const allowed_pages = ["user", "artist", "album", "track", "tag"];
     document.addEventListener("keydown", (e) => {
       const cmd = e.getModifierState("Control") || e.getModifierState("Meta");
       const key = e.key.toLowerCase();
@@ -39333,7 +39327,9 @@
         } else {
           rabbit();
         }
-      } else if (page.structure.dialogs.hasChildNodes() && page.structure.dialogs.querySelector(':scope > [data-modal-type="rabbit"]')) {
+      } else if (page.structure.dialogs.hasChildNodes() && page.structure.dialogs.querySelector(
+        ':scope > [data-modal-type="rabbit"]'
+      )) {
         if (e.key == "Escape") {
           if (depth == 0 && input_box.querySelector("input").value == "" || !back) {
             dialog_rm({ id: "rabbit" });
@@ -39349,28 +39345,20 @@
         }
         if (e.key == "ArrowDown") {
           e.preventDefault();
-          if (selected < matches.length - 1)
-            selected++;
-          else
-            selected = 0;
+          if (selected < matches.length - 1) selected++;
+          else selected = 0;
           if (matches[selected].disabled) {
-            if (selected + 1 < matches.length - 1)
-              selected++;
-            else
-              selected = 0;
+            if (selected + 1 < matches.length - 1) selected++;
+            else selected = 0;
           }
           rabbit_select();
         } else if (e.key == "ArrowUp") {
           e.preventDefault();
-          if (selected > 0)
-            selected--;
-          else
-            selected = matches.length - 1;
+          if (selected > 0) selected--;
+          else selected = matches.length - 1;
           if (matches[selected].disabled) {
-            if (selected - 1 > 0)
-              selected--;
-            else
-              selected = 0;
+            if (selected - 1 > 0) selected--;
+            else selected = 0;
           }
           rabbit_select();
         } else if (e.key == "Enter") {
@@ -39443,6 +39431,10 @@
       if (depth < 2) {
         input_box.querySelector("input").style.removeProperty("display");
         fake.style.display = "none";
+        input_box.querySelector("input").placeholder = tl(
+          trans.switch_placeholder
+        );
+        input_box.setAttribute("data-showing-fake", false);
       }
       selected = 0;
       if (!pre_matches && depth == 0) {
@@ -39467,7 +39459,10 @@
           {
             type: "profile",
             text: auth.name,
-            body: tl(trans.opens_your_value).replace("{v}", tl(trans.profile)),
+            body: tl(trans.opens_your_value).replace(
+              "{v}",
+              tl(trans.profile)
+            ),
             keywords: ["profile", "user", "me"],
             action: () => window.location.href = `${root}user/${auth.name}`,
             keybind: ["\u2318", settings.rabbit_profile.toUpperCase()]
@@ -39475,8 +39470,17 @@
           {
             type: "starred_friend",
             text: settings.starred_friend,
-            body: tl(trans.opens_your_value).replace("{v}", tl(trans.starred_friend.name)),
-            keywords: ["profile", "user", "shortcut", "friends", "starred"],
+            body: tl(trans.opens_your_value).replace(
+              "{v}",
+              tl(trans.starred_friend.name)
+            ),
+            keywords: [
+              "profile",
+              "user",
+              "shortcut",
+              "friends",
+              "starred"
+            ],
             action: () => window.location.href = `${root}user/${settings.starred_friend}`,
             hide: settings.starred_friend == "",
             keybind: ["\u2318", settings.rabbit_shortcut.toUpperCase()]
@@ -39484,50 +39488,112 @@
           {
             type: "notifications",
             text: tl(trans.notifications),
-            body: tl(trans.opens_your_value).replace("{v}", tl(trans.notifications)),
+            body: tl(trans.opens_your_value).replace(
+              "{v}",
+              tl(trans.notifications)
+            ),
             keywords: ["bell", "updates"],
             action: () => window.location.href = `${root}inbox/notifications`
           },
           {
             type: "messages",
             text: tl(trans.messages),
-            body: tl(trans.opens_your_value).replace("{v}", tl(trans.messages)),
+            body: tl(trans.opens_your_value).replace(
+              "{v}",
+              tl(trans.messages)
+            ),
             keywords: ["messages", "direct", "dms"],
             action: () => window.location.href = `${root}inbox`
           },
           {
             type: "theme",
             text: tl(trans.themes.name),
-            body: tl(trans.opens_the_value).replace("{v}", tl(trans.theme_picker)),
-            keywords: ["themes", "light", "dark", "ash", "darker", "oled", "amoled", "midnight", "void", "abyss", "dark reader", "adaptive", "auto", "system", "change theme"],
+            body: tl(trans.opens_the_value).replace(
+              "{v}",
+              tl(trans.theme_picker)
+            ),
+            keywords: [
+              "themes",
+              "light",
+              "dark",
+              "ash",
+              "darker",
+              "oled",
+              "amoled",
+              "midnight",
+              "void",
+              "abyss",
+              "dark reader",
+              "adaptive",
+              "auto",
+              "system",
+              "change theme"
+            ],
             action: () => bleh_theme_picker()
           },
           {
             type: "minis",
             text: tl(trans.minis),
-            body: tl(trans.opens_your_value).replace("{v}", tl(trans.minis)),
-            keywords: ["bleh", "minis", "tools", "labs", "games", "collage", "compare"],
+            body: tl(trans.opens_your_value).replace(
+              "{v}",
+              tl(trans.minis)
+            ),
+            keywords: [
+              "bleh",
+              "minis",
+              "tools",
+              "labs",
+              "games",
+              "collage",
+              "compare"
+            ],
             action: () => window.location.href = `${root}bleh/minis`
           },
           {
             type: "news",
             text: tl(trans.news),
-            body: tl(trans.opens_the_value).replace("{v}", tl(trans.news)),
+            body: tl(trans.opens_the_value).replace(
+              "{v}",
+              tl(trans.news)
+            ),
             keywords: ["bleh", "extension", "changelog", "feed"],
             action: () => news()
           },
           {
             type: "settings",
             text: tl(trans.settings),
-            body: tl(trans.opens_your_value_settings).replace("{v}", tl(trans.profile)),
-            keywords: ["profile", "user", "pfp", "avi", "avatar", "config", "configuration", "configure", "picture", "photo"],
+            body: tl(trans.opens_your_value_settings).replace(
+              "{v}",
+              tl(trans.profile)
+            ),
+            keywords: [
+              "profile",
+              "user",
+              "pfp",
+              "avi",
+              "avatar",
+              "config",
+              "configuration",
+              "configure",
+              "picture",
+              "photo"
+            ],
             action: () => window.location.href = `${root}settings`
           },
           {
             type: "bleh_settings",
             text: tl(trans.settings),
-            body: tl(trans.opens_the_value).replace("{v}", tl(trans.bleh_settings)),
-            keywords: ["bleh", "extension", "config", "configuration", "configure"],
+            body: tl(trans.opens_the_value).replace(
+              "{v}",
+              tl(trans.bleh_settings)
+            ),
+            keywords: [
+              "bleh",
+              "extension",
+              "config",
+              "configuration",
+              "configure"
+            ],
             action: () => window.location.href = `${root}bleh`,
             keybind: ["\u2318", settings.rabbit_bleh_settings.toUpperCase()]
           }
@@ -39549,14 +39615,14 @@
               match3 = true;
             }
           });
-          if (item.hide)
-            match3 = false;
-          if (match3)
-            matches.push(item);
+          if (item.hide) match3 = false;
+          if (match3) matches.push(item);
         });
-        render(rabbit_hole, html`
-                ${matches.length > 0 ? matches.map((item, index3) => () => {
-          let button = html.node`
+        render(
+          rabbit_hole,
+          html`
+                    ${matches.length > 0 ? matches.map((item, index3) => () => {
+            let button = html.node`
                         <button class="dropdown-menu-clickable-item rabbit-hole-item" data-type=${item.type} onclick=${item.action} disabled=${item.disabled}>
                             <div class="info">
                                 <div class="text">${item.text}</div>
@@ -39564,19 +39630,20 @@
                             ${item.keybind ? keybind(item.keybind) : ""}
                         </button>
                     `;
-          if (!item.disabled) {
-            button.addEventListener("mouseover", () => {
-              selected = index3;
-              rabbit_select(false, true);
-            });
-          }
-          return button;
-        }) : html.node`
+            if (!item.disabled) {
+              button.addEventListener("mouseover", () => {
+                selected = index3;
+                rabbit_select(false, true);
+              });
+            }
+            return button;
+          }) : html.node`
                     <div class="loading-data-container">
                         <div class="loading-data-text failed">${tl(trans.nothing_matches_your_search)}</div>
                     </div>
                 `}
-            `);
+                `
+        );
         rabbit_select();
       } else {
         matches = feed;
@@ -39615,18 +39682,19 @@
       input_box.querySelector("input").focus();
     }
     function rabbit_tip(text3) {
-      render(tip, html`
-        <div class="left">
-            ${depth == 0 ? html.node`
+      render(
+        tip,
+        html`
+                <div class="left">
+                    ${depth == 0 ? html.node`
             <kbd>Esc</kbd> ${tl(trans.close)}
             ` : html.node`
             <kbd>Esc</kbd> ${tl(trans.back)}
             `}
-        </div>
-        <div class="right">
-            ${text3}
-        </div>
-        `);
+                </div>
+                <div class="right">${text3}</div>
+            `
+      );
     }
     function rabbit_enter() {
       rabbit_select(true);
@@ -39634,13 +39702,16 @@
     function append_search(id) {
       if (id == "artist" || id == "user" || id == "tag")
         selected_search = "primary";
-      else
-        selected_search = "secondary";
+      else selected_search = "secondary";
+      input_box.querySelector("input").placeholder = tl(trans.rabbit_search, {
+        v: tl(trans[id])
+      });
       depth = 3;
       searching[selected_search].type = id;
       input_box.querySelector("input").value = "";
       input_box.querySelector("input").style.removeProperty("display");
       fake.style.display = "none";
+      input_box.setAttribute("data-showing-fake", false);
     }
     function bleh_theme_picker() {
       depth = 1;
@@ -39709,20 +39780,17 @@
       ]);
     }
     function use_page_as_ctx() {
-      if (!allowed_pages.includes(page.type))
-        return;
+      if (!allowed_pages.includes(page.type)) return;
       depth = 1;
       let url_start = root;
-      if (page.type == "user")
-        url_start += "user/";
+      if (page.type == "user") url_start += "user/";
       else if (page.type == "album" || page.type == "artist" || page.type == "track")
         url_start += "music/";
       if (page.type == "album")
         url_start += `${sanitise(page.sister)}/${sanitise(page.name)}`;
       else if (page.type == "track")
         url_start += `${sanitise(page.sister)}/_/${sanitise(page.name)}`;
-      else
-        url_start += sanitise(page.name);
+      else url_start += sanitise(page.name);
       if (page.type == "user") {
         rabbit_search("internal:ctx", [
           {
@@ -39736,21 +39804,41 @@
             type: "reports",
             text: tl(trans.reports),
             body: tl(trans.opens_the_value_for_type).replace("{v}", tl(trans.reports)).replace("{t}", page.name),
-            keywords: ["listening report", "reports", "wrapped", "playback", "spotify"],
+            keywords: [
+              "listening report",
+              "reports",
+              "wrapped",
+              "playback",
+              "spotify"
+            ],
             action: () => window.location.href = url_start + "/listening-report"
           },
           {
             type: "library",
             text: tl(trans.library),
             body: tl(trans.opens_the_value_for_type).replace("{v}", tl(trans.library)).replace("{t}", page.name),
-            keywords: ["library", "music", "artists", "albums", "tracks", "scrobbles", "history"],
+            keywords: [
+              "library",
+              "music",
+              "artists",
+              "albums",
+              "tracks",
+              "scrobbles",
+              "history"
+            ],
             action: () => window.location.href = url_start + "/library"
           },
           {
             type: "friends",
             text: tl(trans.friends),
             body: tl(trans.opens_the_value_for_type).replace("{v}", tl(trans.friends)).replace("{t}", page.name),
-            keywords: ["friends", "following", "followers", "neighbours", "similar"],
+            keywords: [
+              "friends",
+              "following",
+              "followers",
+              "neighbours",
+              "similar"
+            ],
             action: () => window.location.href = url_start + "/following"
           },
           {
@@ -39785,14 +39873,27 @@
             type: "loved",
             text: tl(trans.loved),
             body: tl(trans.opens_the_value_for_type).replace("{v}", tl(trans.loved)).replace("{t}", page.name),
-            keywords: ["loved", "hearted", "favourites", "favorites", "luved"],
+            keywords: [
+              "loved",
+              "hearted",
+              "favourites",
+              "favorites",
+              "luved"
+            ],
             action: () => window.location.href = url_start + "/loved"
           },
           {
             type: "obsessions",
             text: tl(trans.obsessions),
             body: tl(trans.opens_the_value_for_type).replace("{v}", tl(trans.obsessions)).replace("{t}", page.name),
-            keywords: ["loved", "hearted", "favourites", "favorites", "obsessions", "looping"],
+            keywords: [
+              "loved",
+              "hearted",
+              "favourites",
+              "favorites",
+              "obsessions",
+              "looping"
+            ],
             action: () => window.location.href = url_start + "/obsessions"
           },
           {
@@ -39813,13 +39914,22 @@
             type: "tags",
             text: tl(trans.tags),
             body: tl(trans.opens_the_value_for_type).replace("{v}", tl(trans.tags)).replace("{t}", page.name),
-            keywords: ["tags", "tagged", "related", "groups", "grouped"],
+            keywords: [
+              "tags",
+              "tagged",
+              "related",
+              "groups",
+              "grouped"
+            ],
             action: () => window.location.href = url_start + "/tags"
           },
           {
             type: "compare",
             text: tl(trans.compare),
-            body: tl(trans.compares_your_taste).replace("{v}", page.name),
+            body: tl(trans.compares_your_taste).replace(
+              "{v}",
+              page.name
+            ),
             keywords: ["similar", "taste", "music", "shared"],
             action: () => compare(),
             hide: page.name == auth.name
@@ -39859,7 +39969,13 @@
             type: "photos",
             text: tl(trans.photos),
             body: tl(trans.opens_the_value_for_type).replace("{v}", tl(trans.photos)).replace("{t}", page.name),
-            keywords: ["gallery", "artwork", "image", "picture", "avatar"],
+            keywords: [
+              "gallery",
+              "artwork",
+              "image",
+              "picture",
+              "avatar"
+            ],
             action: () => window.location.href = url_start + "/+images"
           },
           {
@@ -39908,7 +40024,13 @@
             type: "tags",
             text: tl(trans.tags),
             body: tl(trans.opens_the_value_for_type).replace("{v}", tl(trans.tags)).replace("{t}", page.name),
-            keywords: ["tags", "tagged", "related", "groups", "grouped"],
+            keywords: [
+              "tags",
+              "tagged",
+              "related",
+              "groups",
+              "grouped"
+            ],
             action: () => window.location.href = url_start + "/+tags"
           }
         ]);
@@ -39932,7 +40054,13 @@
             type: "photos",
             text: tl(trans.artwork),
             body: tl(trans.opens_the_value_for_type).replace("{v}", tl(trans.artwork)).replace("{t}", page.name),
-            keywords: ["gallery", "artwork", "image", "picture", "avatar"],
+            keywords: [
+              "gallery",
+              "artwork",
+              "image",
+              "picture",
+              "avatar"
+            ],
             action: () => window.location.href = url_start + "/+images"
           },
           {
@@ -39946,7 +40074,13 @@
             type: "tags",
             text: tl(trans.tags),
             body: tl(trans.opens_the_value_for_type).replace("{v}", tl(trans.tags)).replace("{t}", page.name),
-            keywords: ["tags", "tagged", "related", "groups", "grouped"],
+            keywords: [
+              "tags",
+              "tagged",
+              "related",
+              "groups",
+              "grouped"
+            ],
             action: () => window.location.href = url_start + "/+tags"
           }
         ]);
@@ -39984,7 +40118,13 @@
             type: "tags",
             text: tl(trans.tags),
             body: tl(trans.opens_the_value_for_type).replace("{v}", tl(trans.tags)).replace("{t}", page.name),
-            keywords: ["tags", "tagged", "related", "groups", "grouped"],
+            keywords: [
+              "tags",
+              "tagged",
+              "related",
+              "groups",
+              "grouped"
+            ],
             action: () => window.location.href = url_start + "/+tags"
           }
         ]);
@@ -40037,8 +40177,7 @@
     }
     function search() {
       depth = 2;
-      if (!page.structure.dialogs.hasChildNodes())
-        rabbit();
+      if (!page.structure.dialogs.hasChildNodes()) rabbit();
       searching = {
         primary: {
           name: "",
@@ -40055,22 +40194,27 @@
       depth = 2;
       input_box.querySelector("input").style.display = "none";
       fake.style.removeProperty("display");
+      input_box.setAttribute("data-showing-fake", true);
       if (searching.primary.type && searching.secondary.type) {
-        render(fake, html`
-                <label>${searching.primary.type}:</label>
-                <p>${searching.primary.name}</p>
-                <label>${searching.secondary.type}:</label>
-                <p>${searching.secondary.name}</p>
-            `);
+        render(
+          fake,
+          html`
+                    <label>${searching.primary.type}:</label>
+                    <p>${searching.primary.name}</p>
+                    <label>${searching.secondary.type}:</label>
+                    <p>${searching.secondary.name}</p>
+                `
+        );
       } else if (searching.primary.type) {
-        render(fake, html`
-                <label>${searching.primary.type}:</label>
-                <p>${searching.primary.name}</p>
-            `);
+        render(
+          fake,
+          html`
+                    <label>${searching.primary.type}:</label>
+                    <p>${searching.primary.name}</p>
+                `
+        );
       } else {
-        render(fake, html`
-                <i>${tl(trans.choose_a_search_type)}</i>
-            `);
+        render(fake, html` <i>${tl(trans.choose_a_search_type)}</i> `);
       }
       if (searching.primary.type == "artist") {
         rabbit_search("internal:search", [
@@ -40084,21 +40228,30 @@
           {
             type: "artist",
             text: tl(trans.artist),
-            body: tl(trans.search_for_value).replace("{v}", tl(trans.artist)),
+            body: tl(trans.search_for_value).replace(
+              "{v}",
+              tl(trans.artist)
+            ),
             keywords: ["profile"],
             action: () => append_search("artist")
           },
           {
             type: "album",
             text: tl(trans.album),
-            body: tl(trans.search_for_value).replace("{v}", tl(trans.album)),
+            body: tl(trans.search_for_value).replace(
+              "{v}",
+              tl(trans.album)
+            ),
             keywords: ["record"],
             action: () => append_search("album")
           },
           {
             type: "track",
             text: tl(trans.track),
-            body: tl(trans.search_for_value).replace("{v}", tl(trans.track)),
+            body: tl(trans.search_for_value).replace(
+              "{v}",
+              tl(trans.track)
+            ),
             keywords: ["song"],
             action: () => append_search("track")
           }
@@ -40115,7 +40268,10 @@
           {
             type: "user",
             text: tl(trans.profile),
-            body: tl(trans.search_for_value).replace("{v}", tl(trans.profile)),
+            body: tl(trans.search_for_value).replace(
+              "{v}",
+              tl(trans.profile)
+            ),
             keywords: [],
             action: () => append_search("user")
           }
@@ -40132,7 +40288,10 @@
           {
             type: "tag",
             text: tl(trans.tag),
-            body: tl(trans.search_for_value).replace("{v}", tl(trans.tag)),
+            body: tl(trans.search_for_value).replace(
+              "{v}",
+              tl(trans.tag)
+            ),
             keywords: ["genre"],
             action: () => append_search("tag")
           }
@@ -40142,7 +40301,10 @@
           {
             type: "artist",
             text: tl(trans.artist),
-            body: tl(trans.search_for_value).replace("{v}", tl(trans.artist)),
+            body: tl(trans.search_for_value).replace(
+              "{v}",
+              tl(trans.artist)
+            ),
             keywords: ["profile"],
             action: () => append_search("artist")
           }
@@ -40152,35 +40314,50 @@
           {
             type: "artist",
             text: tl(trans.artist),
-            body: tl(trans.search_for_value).replace("{v}", tl(trans.artist)),
+            body: tl(trans.search_for_value).replace(
+              "{v}",
+              tl(trans.artist)
+            ),
             keywords: ["profile"],
             action: () => append_search("artist")
           },
           {
             type: "album",
             text: tl(trans.album),
-            body: tl(trans.search_for_value).replace("{v}", tl(trans.album)),
+            body: tl(trans.search_for_value).replace(
+              "{v}",
+              tl(trans.album)
+            ),
             keywords: ["record"],
             action: () => append_search("album")
           },
           {
             type: "track",
             text: tl(trans.track),
-            body: tl(trans.search_for_value).replace("{v}", tl(trans.track)),
+            body: tl(trans.search_for_value).replace(
+              "{v}",
+              tl(trans.track)
+            ),
             keywords: ["song"],
             action: () => append_search("track")
           },
           {
             type: "user",
             text: tl(trans.profile),
-            body: tl(trans.search_for_value).replace("{v}", tl(trans.profile)),
+            body: tl(trans.search_for_value).replace(
+              "{v}",
+              tl(trans.profile)
+            ),
             keywords: [],
             action: () => append_search("user")
           },
           {
             type: "tag",
             text: tl(trans.tag),
-            body: tl(trans.search_for_value).replace("{v}", tl(trans.tag)),
+            body: tl(trans.search_for_value).replace(
+              "{v}",
+              tl(trans.tag)
+            ),
             keywords: ["genre"],
             action: () => append_search("tag")
           }
@@ -60230,6 +60407,9 @@
       en: "Quick switch to a page or action",
       pt: "Alternar rapidamente para uma p\xE1gina ou a\xE7\xE3o",
       sv: "Hoppa snabbt till en sida eller annan \xE5tg\xE4rd"
+    },
+    rabbit_search: {
+      en: "Enter {v} name"
     },
     compares_your_taste: {
       en: "Compare your taste with {v}",

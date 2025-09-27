@@ -3804,6 +3804,9 @@ export const trans = {
         pt: 'Alternar rapidamente para uma página ou ação',
         sv: 'Hoppa snabbt till en sida eller annan åtgärd'
     },
+    rabbit_search: {
+        en: 'Enter {v} name'
+    },
     compares_your_taste: {
         en: 'Compare your taste with {v}',
         pt: 'Compare o seu gosto com {v}',
