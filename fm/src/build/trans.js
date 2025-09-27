@@ -4669,6 +4669,14 @@ export const trans = {
     },
     create_playlist: {
         en: 'Create playlist'
+    },
+    music_links: {
+        name: {
+            en: 'Music linking'
+        },
+        body: {
+            en: 'Choose which services to display for artists, albums, and tracks'
+        }
     }
 };
 

@@ -13,7 +13,7 @@ import {
     clean_number,
     return_artist_from_track,
     romanise,
-    sanitise,
+    sanitise
 } from '../build/tools';
 import { lang, tl, trans } from '../build/trans';
 import { prep_chart_colours } from '../chart';
@@ -30,7 +30,7 @@ import { Chart } from '../main.js';
 import { DateTime } from 'luxon';
 import {
     load_profile_cache_externally,
-    open_starred_friend_window,
+    open_starred_friend_window
 } from '../pages/profile.js';
 import { oracle_process } from './oracle.js';
 
@@ -47,7 +47,7 @@ export async function show_your_scrobbles() {
     const page_is_blocked = !page.structure.main.querySelector('#shoutbox');
     log(
         `${page_is_blocked ? 'page is blocked' : 'page is not blocked'}`,
-        'music',
+        'music'
     );
 
     if (page.subpage == 'overview') {
@@ -56,7 +56,7 @@ export async function show_your_scrobbles() {
             'navlist',
             'secondary-nav',
             'navlist--more',
-            'redesigned-navigation',
+            'redesigned-navigation'
         );
 
         if (page.type == 'artist') {
@@ -199,7 +199,7 @@ export async function show_your_scrobbles() {
     }
 
     let col_main = page.structure.container.querySelector(
-        '.top-overview-panel',
+        '.top-overview-panel'
     );
     if (!col_main) col_main = document.body.querySelector('.col-main');
 
@@ -210,7 +210,7 @@ export async function show_your_scrobbles() {
 
         page.structure.main.insertBefore(
             new_panel,
-            page.structure.main.firstElementChild,
+            page.structure.main.firstElementChild
         );
 
         col_main.style.setProperty('display', 'none');
@@ -260,11 +260,11 @@ export async function show_your_scrobbles() {
         listens: 0,
         link: scrobble_page,
         avi: auth.avatar,
-        katsune: katsune,
+        katsune: katsune
     };
     // check to see if you have scrobbles
     let scrobble_button = col_main.querySelector(
-        '.personal-stats-item--scrobbles .hidden-xs a',
+        '.personal-stats-item--scrobbles .hidden-xs a'
     );
     if (scrobble_button) {
         your_listens.listens = clean_number(scrobble_button.textContent.trim());
@@ -275,7 +275,7 @@ export async function show_your_scrobbles() {
     // profile shortcut :3
     if (settings.starred_friend != '') {
         const cache = await load_profile_cache_externally(
-            settings.starred_friend,
+            settings.starred_friend
         );
 
         let shortcut_listens = {
@@ -283,16 +283,16 @@ export async function show_your_scrobbles() {
             listens: -1,
             link: scrobble_page,
             avi: cache.avatar,
-            katsune: katsune,
+            katsune: katsune
         };
         // create child for them
         const listen_item = create_listen_item(
             listen_container,
-            shortcut_listens,
+            shortcut_listens
         );
 
         fetch(
-            `${root}user/${shortcut_listens.name}/library/music/${redirect()}${scrobble_page}`,
+            `${root}user/${shortcut_listens.name}/library/music/${redirect()}${scrobble_page}`
         )
             .then(function (response) {
                 console.log('returned', response, response.text);
@@ -303,7 +303,7 @@ export async function show_your_scrobbles() {
                 const doc = new DOMParser().parseFromString(dom, 'text/html');
 
                 let first_metadata_item = doc.querySelector(
-                    '.metadata-item .metadata-display',
+                    '.metadata-item .metadata-display'
                 );
 
                 let listens = 0;
@@ -313,7 +313,7 @@ export async function show_your_scrobbles() {
                 // but i guess i should?
                 if (first_metadata_item)
                     listens = clean_number(
-                        first_metadata_item.textContent.trim(),
+                        first_metadata_item.textContent.trim()
                     );
 
                 let p;
@@ -335,11 +335,11 @@ export async function show_your_scrobbles() {
                             <p class="colourful" ref=${(el) => (p = el)}>
                                 ${tl(trans.listens.count).replace(
                                     '{c}',
-                                    listens.toLocaleString(lang),
+                                    listens.toLocaleString(lang)
                                 )}
                             </p>
                         </div>
-                    `,
+                    `
                 );
 
                 // colourful counts
@@ -349,19 +349,19 @@ export async function show_your_scrobbles() {
 
                     listen_item.setAttribute(
                         'data-bleh--scrobble-milestone',
-                        parsed_scrobble_as_rank.milestone,
+                        parsed_scrobble_as_rank.milestone
                     );
                     p.style.setProperty(
                         '--hue-over',
-                        parsed_scrobble_as_rank.hue,
+                        parsed_scrobble_as_rank.hue
                     );
                     p.style.setProperty(
                         '--sat-over',
-                        parsed_scrobble_as_rank.sat,
+                        parsed_scrobble_as_rank.sat
                     );
                     p.style.setProperty(
                         '--lit-over',
-                        parsed_scrobble_as_rank.lit,
+                        parsed_scrobble_as_rank.lit
                     );
                 }
             });
@@ -376,9 +376,9 @@ export async function show_your_scrobbles() {
             listens: -3,
             link: scrobble_page,
             button: true,
-            katsune: katsune,
+            katsune: katsune
         },
-        page.type,
+        page.type
     );
 
     // append
@@ -395,7 +395,7 @@ export async function show_your_scrobbles() {
                 </a>
             </div>
         `,
-            listen_container,
+            listen_container
         );
     }
 
@@ -410,7 +410,7 @@ export async function show_your_scrobbles() {
     if (page.type == 'artist') {
         //
         let other_container = col_main.querySelector(
-            '.personal-stats-item--listeners',
+            '.personal-stats-item--listeners'
         );
         if (other_container) {
             let listen_divider = document.createElement('div');
@@ -419,10 +419,10 @@ export async function show_your_scrobbles() {
             listen_container.appendChild(listen_divider);
 
             let avatars = other_container.querySelectorAll(
-                '.personal-stats-listener-avatar img',
+                '.personal-stats-listener-avatar img'
             );
             let count = other_container.querySelector(
-                '.header-metadata-display a',
+                '.header-metadata-display a'
             );
 
             let other_listeners = {
@@ -432,7 +432,7 @@ export async function show_your_scrobbles() {
                 avi: avatars,
                 count:
                     count != null ? clean_number(count.textContent.trim()) : 5,
-                katsune: katsune,
+                katsune: katsune
             };
             // create child for them
             create_listen_item(listen_container, other_listeners, page.type);
@@ -482,7 +482,7 @@ export async function show_your_scrobbles() {
 
     // obsession
     let obsession_form = header_actions.querySelector(
-        'form[action$="obsessions"]',
+        'form[action$="obsessions"]'
     );
     if (obsession_form) {
         let obsession_btn = obsession_form.querySelector('button');
@@ -501,11 +501,11 @@ export async function show_your_scrobbles() {
         const source_album =
             page.structure.main.querySelector('.source-album-name');
         const source_album_artist = page.structure.main.querySelector(
-            '.source-album-artist',
+            '.source-album-artist'
         );
 
         let props = {
-            can_api,
+            can_api
         };
 
         if (page.type == 'track')
@@ -516,20 +516,20 @@ export async function show_your_scrobbles() {
                 pre_album: source_album ? source_album.textContent : null,
                 pre_album_artist: source_album_artist
                     ? source_album_artist.textContent
-                    : page.sister,
+                    : page.sister
             };
         else if (page.type == 'album')
             props = {
                 ...props,
                 pre_album: page.name,
                 pre_artist: page.sister,
-                pre_album_artist: page.sister,
+                pre_album_artist: page.sister
             };
         else if (page.type == 'artist')
             props = {
                 ...props,
                 pre_artist: page.name,
-                pre_album_artist: page.name,
+                pre_album_artist: page.name
             };
 
         const scrobble_btn = html.node`
@@ -540,7 +540,7 @@ export async function show_your_scrobbles() {
 
         if (!can_api) {
             tippy(scrobble_btn, {
-                content: tl(trans.requires_api_in_settings),
+                content: tl(trans.requires_api_in_settings)
             });
         }
 
@@ -567,12 +567,12 @@ export async function show_your_scrobbles() {
         if (!page.mobile)
             page.structure.side.insertBefore(
                 interact_container,
-                page.structure.side.firstElementChild,
+                page.structure.side.firstElementChild
             );
         else
             page.structure.main.insertBefore(
                 interact_container,
-                page.structure.main.firstElementChild,
+                page.structure.main.firstElementChild
             );
     }
 
@@ -595,15 +595,15 @@ export async function show_your_scrobbles() {
         let groups = [];
 
         let headers = metadata.querySelectorAll(
-            '.catalogue-metadata-heading:not(.visible-xs)',
+            '.catalogue-metadata-heading:not(.visible-xs)'
         );
         headers.forEach((item, index) => {
             groups[index] = {
-                header: item,
+                header: item
             };
         });
         let values = metadata.querySelectorAll(
-            '.catalogue-metadata-description:not(.visible-xs)',
+            '.catalogue-metadata-description:not(.visible-xs)'
         );
         values.forEach((item, index) => {
             groups[index].value = item;
@@ -618,9 +618,9 @@ export async function show_your_scrobbles() {
                     ${group.header}
                     ${group.value}
                 </div>
-            `,
+            `
                 )}
-            `,
+            `
         );
 
         if (groups.length > 2) {
@@ -632,13 +632,13 @@ export async function show_your_scrobbles() {
                         metadata.scrollBy({
                             top: 0,
                             left: +200,
-                            behavior: 'smooth',
+                            behavior: 'smooth'
                         });
                     } else {
                         metadata.scrollBy({
                             top: 0,
                             left: -200,
-                            behavior: 'smooth',
+                            behavior: 'smooth'
                         });
                     }
                 });
@@ -655,7 +655,7 @@ export async function show_your_scrobbles() {
                 <strong>${tl(trans.blocked_page)}</strong>
             </section>
         `,
-            page.structure.main.firstElementChild,
+            page.structure.main.firstElementChild
         );
 
         return;
@@ -677,7 +677,7 @@ export async function show_your_scrobbles() {
         link_group.appendChild(header);
 
         play_on = page.structure.side.querySelector(
-            '.play-this-track-playlinks',
+            '.play-this-track-playlinks'
         );
         play_on.parentElement.remove();
 
@@ -685,7 +685,7 @@ export async function show_your_scrobbles() {
 
         play_links.forEach((item) => {
             const link = item.querySelector(
-                '.play-this-track-playlink:not(.visible-xs)',
+                '.play-this-track-playlink:not(.visible-xs)'
             );
 
             link.classList.remove('play-this-track-playlink');
@@ -721,7 +721,7 @@ export async function show_your_scrobbles() {
                         instance.popper.addEventListener('click', (event) => {
                             instance.hide();
                         });
-                    },
+                    }
                 });
 
                 register_menu(link, menu);
@@ -761,7 +761,7 @@ export async function show_your_scrobbles() {
                         class="music-link play-this-track-playlink--spotify"
                         href="https://open.spotify.com/search/${sanitise(
                             page.sister,
-                            ' ',
+                            ' '
                         )} ${sanitise(page.name, ' ')}"
                         target="_blank"
                     >
@@ -771,7 +771,7 @@ export async function show_your_scrobbles() {
                         class="music-link play-this-track-playlink--itunes"
                         href="https://music.apple.com/gb/search?term=${sanitise(
                             page.sister,
-                            ' ',
+                            ' '
                         )} ${sanitise(page.name, ' ')}"
                         target="_blank"
                     >
@@ -780,7 +780,7 @@ export async function show_your_scrobbles() {
                     <a
                         class="music-link play-this-track-playlink--youtube-music"
                         href="https://music.youtube.com/search?q=${sanitise(
-                            page.sister,
+                            page.sister
                         )}+${sanitise(page.name)}"
                         target="_blank"
                     >
@@ -790,7 +790,7 @@ export async function show_your_scrobbles() {
                         class="music-link play-this-track-playlink--tidal"
                         href="https://listen.tidal.com/search?q=${sanitise(
                             page.sister,
-                            ' ',
+                            ' '
                         )} ${sanitise(page.name, ' ')}"
                         target="_blank"
                     >
@@ -799,7 +799,7 @@ export async function show_your_scrobbles() {
                     <a
                         class="music-link play-this-track-playlink--discogs"
                         href="https://www.discogs.com/search?q=${sanitise(
-                            page.sister,
+                            page.sister
                         )}+${sanitise(page.name)}&type=all"
                         target="_blank"
                     >
@@ -809,7 +809,7 @@ export async function show_your_scrobbles() {
                         class="music-link play-this-track-playlink--qobuz"
                         href="https://www.qobuz.com/search/albums/${sanitise(
                             page.sister,
-                            ' ',
+                            ' '
                         )}%20${sanitise(page.name, ' ')}"
                         target="_blank"
                     >
@@ -818,7 +818,7 @@ export async function show_your_scrobbles() {
                     <a
                         class="music-link play-this-track-playlink--aoty"
                         href="https://www.albumoftheyear.org/search/?q=${sanitise(
-                            page.sister,
+                            page.sister
                         )}+${sanitise(page.name)}"
                         target="_blank"
                     >
@@ -828,7 +828,7 @@ export async function show_your_scrobbles() {
                         class="music-link play-this-track-playlink--rym"
                         href="https://rateyourmusic.com/search?searchterm=${sanitise(
                             page.sister,
-                            ' ',
+                            ' '
                         )} ${sanitise(page.name, ' ')}"
                         target="_blank"
                     >
@@ -837,13 +837,13 @@ export async function show_your_scrobbles() {
                     <a
                         class="music-link play-this-track-playlink--genius"
                         href="https://genius.com/search?q=${sanitise(
-                            page.sister,
+                            page.sister
                         )}+${sanitise(page.name)}"
                         target="_blank"
                     >
                         Genius
                     </a>
-                `,
+                `
             );
         } else {
             render(
@@ -853,7 +853,7 @@ export async function show_your_scrobbles() {
                         class="music-link play-this-track-playlink--spotify"
                         href="https://open.spotify.com/search/${sanitise(
                             page.name,
-                            ' ',
+                            ' '
                         )}"
                         target="_blank"
                     >
@@ -863,7 +863,7 @@ export async function show_your_scrobbles() {
                         class="music-link play-this-track-playlink--itunes"
                         href="https://music.apple.com/gb/search?term=${sanitise(
                             page.name,
-                            ' ',
+                            ' '
                         )}"
                         target="_blank"
                     >
@@ -872,7 +872,7 @@ export async function show_your_scrobbles() {
                     <a
                         class="music-link play-this-track-playlink--youtube-music"
                         href="https://music.youtube.com/search?q=${sanitise(
-                            page.name,
+                            page.name
                         )}"
                         target="_blank"
                     >
@@ -882,7 +882,7 @@ export async function show_your_scrobbles() {
                         class="music-link play-this-track-playlink--tidal"
                         href="https://listen.tidal.com/search?q=${sanitise(
                             page.name,
-                            ' ',
+                            ' '
                         )}"
                         target="_blank"
                     >
@@ -891,7 +891,7 @@ export async function show_your_scrobbles() {
                     <a
                         class="music-link play-this-track-playlink--discogs"
                         href="https://www.discogs.com/search?q=${sanitise(
-                            page.name,
+                            page.name
                         )}&type=artist"
                         target="_blank"
                     >
@@ -901,7 +901,7 @@ export async function show_your_scrobbles() {
                         class="music-link play-this-track-playlink--qobuz"
                         href="https://www.qobuz.com/search/artists/${sanitise(
                             page.name,
-                            ' ',
+                            ' '
                         )}"
                         target="_blank"
                     >
@@ -910,7 +910,7 @@ export async function show_your_scrobbles() {
                     <a
                         class="music-link play-this-track-playlink--aoty"
                         href="https://www.albumoftheyear.org/search/?q=${sanitise(
-                            page.name,
+                            page.name
                         )}"
                         target="_blank"
                     >
@@ -920,7 +920,7 @@ export async function show_your_scrobbles() {
                         class="music-link play-this-track-playlink--rym"
                         href="https://rateyourmusic.com/search?searchterm=${sanitise(
                             page.name,
-                            ' ',
+                            ' '
                         )}"
                         target="_blank"
                     >
@@ -929,22 +929,22 @@ export async function show_your_scrobbles() {
                     <a
                         class="music-link play-this-track-playlink--genius"
                         href="https://genius.com/search?q=${sanitise(
-                            page.name,
+                            page.name
                         )}"
                         target="_blank"
                     >
                         Genius
                     </a>
-                `,
+                `
             );
 
             let externals = page.structure.side.querySelector(
-                '.resource-external-links',
+                '.resource-external-links'
             );
             if (externals) {
                 page.structure.side.removeChild(externals.parentElement);
                 let externals_links = externals.querySelectorAll(
-                    '.resource-external-link',
+                    '.resource-external-link'
                 );
                 externals_links.forEach((link) => {
                     link.classList.add('music-link');
@@ -978,7 +978,7 @@ export async function show_your_scrobbles() {
 
     // no album info
     const no_info = col_main.querySelector(
-        ':scope > .section-with-separator.buffer-4',
+        ':scope > .section-with-separator.buffer-4'
     );
     if (no_info) {
         no_info.classList = 'loading-data-container';
@@ -989,7 +989,7 @@ export async function show_your_scrobbles() {
                 <div class="loading-data-text info">
                     ${tl(trans.missing_album_info)}
                 </div>
-            `,
+            `
         );
     }
 
@@ -1017,7 +1017,7 @@ export async function show_your_scrobbles() {
 function create_listen_item(
     parent,
     { name, listens, link, avi, count = 0, button = false, katsune = false },
-    header_type,
+    header_type
 ) {
     if (!name) return;
 
@@ -1025,7 +1025,7 @@ function create_listen_item(
         `creating listen item of ${name}, ${count}, ${listens}`,
         'artist',
         'info',
-        { avi: avi, link: link },
+        { avi: avi, link: link }
     );
 
     let listen_item;
@@ -1036,7 +1036,7 @@ function create_listen_item(
     listen_item.classList.add('btn', 'listen-item');
     listen_item.setAttribute(
         'href',
-        `${root}user/${name}/library/music/${redirect()}${link}`,
+        `${root}user/${name}/library/music/${redirect()}${link}`
     );
     listen_item.setAttribute('data-listens', listens);
     listen_item.setAttribute('id', `listen-item--${name}`);
@@ -1054,11 +1054,11 @@ function create_listen_item(
                     <p class="colourful" ref=${(el) => (p = el)}>
                         ${tl(trans.listens.count).replace(
                             '{c}',
-                            listens.toLocaleString(lang),
+                            listens.toLocaleString(lang)
                         )}
                     </p>
                 </div>
-            `,
+            `
         );
 
         let menu = tippy(listen_item, {
@@ -1078,7 +1078,7 @@ function create_listen_item(
                 instance.popper.addEventListener('click', (event) => {
                     instance.hide();
                 });
-            },
+            }
         });
 
         register_menu(listen_item, menu);
@@ -1097,7 +1097,7 @@ function create_listen_item(
                         ${tl(trans.listens)}
                     </p>
                 </div>
-            `,
+            `
         );
 
         let menu = tippy(listen_item, {
@@ -1121,7 +1121,7 @@ function create_listen_item(
                 instance.popper.addEventListener('click', (event) => {
                     instance.hide();
                 });
-            },
+            }
         });
 
         register_menu(listen_item, menu);
@@ -1132,7 +1132,7 @@ function create_listen_item(
         listen_item.setAttribute('onclick', `_other_listener('${link}')`);
 
         tippy(listen_item, {
-            content: tl(trans.view_others_library),
+            content: tl(trans.view_others_library)
         });
     } else {
         // other listeners by clicking this link (artist)
@@ -1154,11 +1154,11 @@ function create_listen_item(
                         ${tl(trans.others_count).replace('{c}', count)}
                     </p>
                 </div>
-            `,
+            `
         );
         listen_item.setAttribute(
             'href',
-            `${window.location.href}/+listeners/you-know`,
+            `${window.location.href}/+listeners/you-know`
         );
     }
 
@@ -1168,7 +1168,7 @@ function create_listen_item(
 
         listen_item.setAttribute(
             'data-bleh--scrobble-milestone',
-            parsed_scrobble_as_rank.milestone,
+            parsed_scrobble_as_rank.milestone
         );
         p.style.setProperty('--hue-user', parsed_scrobble_as_rank.hue);
         p.style.setProperty('--sat-user', parsed_scrobble_as_rank.sat);
@@ -1217,7 +1217,7 @@ function show_numbers_on_side(header_type) {
 
     // get panel
     let panel = page.structure.side.querySelector(
-        'section.section-with-separator:has(.listener-trend)',
+        'section.section-with-separator:has(.listener-trend)'
     );
 
     if (!panel) {
@@ -1227,12 +1227,12 @@ function show_numbers_on_side(header_type) {
         if (!page.mobile)
             page.structure.side.insertBefore(
                 panel,
-                page.structure.side.firstElementChild,
+                page.structure.side.firstElementChild
             );
         else
             page.structure.main.insertBefore(
                 panel,
-                page.structure.main.firstElementChild,
+                page.structure.main.firstElementChild
             );
     }
 
@@ -1267,37 +1267,37 @@ function show_numbers_on_side(header_type) {
     if (page.mobile)
         page.structure.main.insertBefore(
             panel,
-            page.structure.main.firstElementChild,
+            page.structure.main.firstElementChild
         );
 
     tippy(row.querySelector('.listener-side p'), {
         content: tl(trans.count_listeners).replace(
             '{c}',
-            listeners.value.toLocaleString(lang),
-        ),
+            listeners.value.toLocaleString(lang)
+        )
     });
     tippy(row.querySelector('.scrobble-side p'), {
         content: tl(trans.count_scrobbles).replace(
             '{c}',
-            scrobbles.value.toLocaleString(lang),
-        ),
+            scrobbles.value.toLocaleString(lang)
+        )
     });
 
     // is there album artwork?
     if (page.type == 'album') {
         let album_artwork = document.body.querySelector(
-            '.artwork-and-metadata-row',
+            '.artwork-and-metadata-row'
         );
 
         if (album_artwork)
             page.structure.side.insertBefore(
                 album_artwork,
-                page.structure.side.firstElementChild,
+                page.structure.side.firstElementChild
             );
     }
 
     let masonry = page.structure.row.querySelector(
-        ':scope > .col-sidebar.masonry-right',
+        ':scope > .col-sidebar.masonry-right'
     );
     if (masonry) {
         // make last-child
@@ -1317,14 +1317,14 @@ function show_numbers_on_side(header_type) {
 
         page.structure.main.insertBefore(
             new_upper,
-            page.structure.main.firstElementChild,
+            page.structure.main.firstElementChild
         );
     }
 
     // is there a video?
     if (page.type == 'track') {
         let video_col = document.body.querySelector(
-            '.track-overview-video-column.col-sidebar',
+            '.track-overview-video-column.col-sidebar'
         );
 
         if (!video_col) {
@@ -1335,7 +1335,7 @@ function show_numbers_on_side(header_type) {
         video_col.classList.remove('col-sidebar');
         page.structure.side.insertBefore(
             video_col,
-            page.structure.side.firstElementChild,
+            page.structure.side.firstElementChild
         );
 
         let video = video_col.querySelector('.video-preview');
@@ -1348,7 +1348,7 @@ function show_numbers_on_side(header_type) {
         video_col.classList.remove('col-sidebar');
         page.structure.side.insertBefore(
             video_col,
-            page.structure.side.firstElementChild,
+            page.structure.side.firstElementChild
         );
 
         let playlink = video.querySelector('.video-preview-playlink a');
@@ -1388,7 +1388,7 @@ function video_unavailable(video_col = null) {
             ${tl(trans.video_removed)}
         </section>
     `,
-        page.structure.side.firstElementChild,
+        page.structure.side.firstElementChild
     );
 }
 
@@ -1418,7 +1418,7 @@ export function bleh_music_page_charts() {
 
         //let label = day.querySelector('time').textContent.trim();
         let label = DateTime.fromISO(
-            day.querySelector('time').getAttribute('datetime'),
+            day.querySelector('time').getAttribute('datetime')
         );
         let value = day.querySelector('.js-value');
 
@@ -1467,11 +1467,11 @@ export function bleh_music_page_charts() {
                     fill: true,
                     pointRadius: 0,
                     pointHitRadius: 20,
-                    tension: 0.1,
-                },
-            ],
+                    tension: 0.1
+                }
+            ]
         },
-        options: page.state.chart_line_options,
+        options: page.state.chart_line_options
     });
 
     scrobble_canvas_container.appendChild(scrobble_canvas);
@@ -1506,7 +1506,7 @@ export function bleh_top_listeners() {
 
     let legacy_top_listeners_container = panel.querySelector('.top-listeners');
     let legacy_top_listeners = legacy_top_listeners_container.querySelectorAll(
-        '.top-listeners-item',
+        '.top-listeners-item'
     );
 
     let new_container = document.createElement('ul');
@@ -1559,20 +1559,20 @@ export function bleh_top_listeners() {
         let badge = patch_avatar(
             new_listener.querySelector('.user-list-avatar'),
             name,
-            'listener',
+            'listener'
         );
 
         if (track_wrap) {
             let track_link = new_listener.querySelector(
-                '.user-list-about-me a',
+                '.user-list-about-me a'
             );
             let artist = return_artist_from_track(
                 track_link.getAttribute('href'),
-                false,
+                false
             );
 
             track_link.textContent = romanise(
-                correct_item_by_artist(track_link.textContent.trim(), artist),
+                correct_item_by_artist(track_link.textContent.trim(), artist)
             );
         }
 
@@ -1587,4 +1587,57 @@ export function bleh_top_listeners() {
 export function redirect() {
     if (settings.prefer_no_redirect) return '+noredirect/';
     else return '';
+}
+
+export function prepare_music() {
+    page.state.music_links = {
+        spotify: {
+            name: 'Spotify'
+        },
+        itunes: {
+            name: 'Apple'
+        },
+        youtube: {
+            name: 'YouTube'
+        },
+        tidal: {
+            name: 'Tidal'
+        },
+        deezer: {
+            name: 'Deezer'
+        },
+        amazon: {
+            name: 'Amazon'
+        },
+        discogs: {
+            name: 'Discogs'
+        },
+        qobuz: {
+            name: 'Qobuz'
+        },
+        aoty: {
+            name: 'AOTY'
+        },
+        rym: {
+            name: 'RYM'
+        },
+        genius: {
+            name: 'Genius'
+        },
+        website: {
+            name: tl(trans.website)
+        },
+        twitter: {
+            name: 'Twitter'
+        },
+        facebook: {
+            name: 'Facebook'
+        },
+        soundcloud: {
+            name: 'SoundCloud'
+        },
+        instagram: {
+            name: 'Instagram'
+        }
+    };
 }

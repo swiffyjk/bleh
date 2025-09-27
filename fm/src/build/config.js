@@ -4,7 +4,7 @@
 // Licensed under GPLv3
 //
 
-import {trans} from "./trans.js";
+import { trans } from './trans.js';
 
 export let settings = {};
 export let settings_template = {
@@ -405,7 +405,7 @@ export let settings_base = {
     grid_glow: {
         css: 'show_grid_glow',
         unit: '',
-        value:  true,
+        value: true,
         values: [true, false],
         type: 'toggle'
     },
@@ -576,7 +576,7 @@ export let inbuilt_settings = {
         values: [true, false],
         type: 'toggle'
     }
-}
+};
 
 export let settings_store = {
     theme: {
@@ -592,7 +592,7 @@ export let settings_store = {
         type: 'select',
         title: trans.theme_day.name,
         body: trans.theme_day.body,
-        incompatible: {theme_schedule: false},
+        incompatible: { theme_schedule: false },
         hide_if_incompatible: true
     },
     theme_night: {
@@ -600,7 +600,7 @@ export let settings_store = {
         type: 'select',
         title: trans.theme_night.name,
         body: trans.theme_night.body,
-        incompatible: {theme_schedule: false},
+        incompatible: { theme_schedule: false },
         hide_if_incompatible: true
     },
     high_contrast: {
@@ -641,7 +641,7 @@ export let settings_store = {
         step: 0.2,
         title: trans.card_background_saturation.name,
         body: trans.card_background_saturation.body,
-        incompatible: {theme: 'light'}
+        incompatible: { theme: 'light' }
     },
     lit: {
         css: 'lit-user',
@@ -736,7 +736,7 @@ export let settings_store = {
         default: true,
         type: 'checkbox',
         title: trans.colourful_active,
-        incompatible: {colourful_tracks_all: true}
+        incompatible: { colourful_tracks_all: true }
     },
     colourful_tracks_all: {
         default: false,
@@ -896,9 +896,7 @@ export let settings_store = {
         default: false,
         title: trans.show_bulk_edit_album.name,
         body: trans.show_bulk_edit_album.body,
-        extensions: [
-            trans.bulk_edit_extension
-        ]
+        extensions: [trans.bulk_edit_extension]
     },
     grid_glow: {
         default: true,
@@ -1072,11 +1070,7 @@ export let settings_store = {
         }
     },
     navigation_items: {
-        default: [
-            'home',
-            'library',
-            'shouts'
-        ],
+        default: ['home', 'library', 'shouts'],
         type: 'list',
         title: trans.navigation_items.name,
         body: trans.navigation_items.body,
@@ -1117,7 +1111,7 @@ export let settings_store = {
                 name: trans.never
             }
         },
-        incompatible: {stacked_chartlist_info: false}
+        incompatible: { stacked_chartlist_info: false }
     },
     rain: {
         default: false,
@@ -1234,5 +1228,24 @@ export let settings_store = {
         type: 'checkbox',
         title: trans.romanise_ko,
         new_release: true
+    },
+    music_links: {
+        default: [
+            'spotify',
+            'itunes',
+            'youtube',
+            'tidal',
+            'rym',
+            'genius',
+            'website',
+            'twitter',
+            'soundcloud',
+            'instagram'
+        ],
+        type: 'list',
+        title: trans.music_links.name,
+        body: trans.music_links.body,
+        new_release: true,
+        predefined: true
     }
-}
+};

@@ -85,6 +85,7 @@ import { load_status } from './components/status.js';
 import { load_dismissed } from './components/dismissed.js';
 import { oracle_data } from './components/oracle.js';
 import { dynamic_theming } from './components/dynamic_theming.js';
+import { prepare_music } from './components/music.js';
 
 export function bleh() {
     let head_observer = new MutationObserver((mutations) => {
@@ -506,18 +507,13 @@ function load_page() {
     detect_scroll();
 
     function detect_scroll() {
-        const scroll = window.scrollY;
-        if (page.structure.content)
-            page.structure.content.style.setProperty(
-                '--scroll',
-                `-${scroll}px`
-            );
-
         return;
 
         if (scroll > 30) masthead.classList.add('scrolled');
         else masthead.classList.remove('scrolled');
     }
+
+    prepare_music();
 
     detect_mobile();
     page.platform = detect_platform();

@@ -795,8 +795,8 @@
                 1px
         );
 
-        --item-small-radius: 5px;
-        --item-med-radius: 8px;
+        --item-small-radius: 7px;
+        --item-med-radius: 10px;
         --item-big-radius: 12px;
 
         --profile-header-background-height: 350px;
@@ -28231,6 +28231,11 @@
                 --bg-atv: hsl(var(--b4), 60%);
                 --shadow: none;
                 margin: 0 calc(-1 * var(--button-sides));
+
+                --button-height: 30px;
+                --btn-top: 5px;
+                --btn-bottom: 5px;
+                --radius: var(--item-med-radius);
 
                 & > .info {
                     flex: 1;

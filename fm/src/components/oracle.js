@@ -516,10 +516,11 @@ export function oracle_process() {
 
                                 let first_joinphrase =
                                     artists[0].joinphrase.trim();
-                                if (['&', ','].includes(first_joinphrase))
-                                    first_joinphrase = 'with';
 
-                                if (artists.length > 1) {
+                                if (
+                                    artists.length > 1 &&
+                                    !['&', ','].includes(first_joinphrase)
+                                ) {
                                     title += ` (${first_joinphrase} `;
 
                                     guests.forEach((artist, index) => {
