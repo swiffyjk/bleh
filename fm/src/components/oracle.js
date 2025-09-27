@@ -356,6 +356,12 @@ export function oracle_process() {
         );
         if (best) return best;
 
+        // avoid a music video
+        best = filtered.find(
+            (release) => !release.disambiguation?.toLowerCase().endsWith('mv')
+        );
+        if (best) return best;
+
         // otherwise any
         return filtered[0];
     }

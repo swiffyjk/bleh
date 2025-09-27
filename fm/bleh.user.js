@@ -35478,6 +35478,10 @@
         (release) => !release.disambiguation?.toLowerCase().includes("english")
       );
       if (best) return best;
+      best = filtered.find(
+        (release) => !release.disambiguation?.toLowerCase().endsWith("mv")
+      );
+      if (best) return best;
       return filtered[0];
     }
     function oracle_album_fetch(data2) {
