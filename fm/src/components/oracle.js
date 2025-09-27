@@ -627,6 +627,11 @@ export function oracle_process() {
 
                 if (artist == 'Various Artists') return;
 
+                const status = release.status.toLowerCase();
+
+                // seems to ignore english translations of jp albums sometimes
+                if (status.startsWith('pseudo')) return;
+
                 releases.push(release);
             });
             log('releases in recording after parsing', 'oracle', 'info', {
