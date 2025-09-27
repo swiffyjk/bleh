@@ -806,7 +806,7 @@ export function setting({
                     html`
                         ${current.map((val) => {
                             return html.node`
-                                <button class="setting-list-item current" onclick=${() => {
+                                <button class="setting-list-item current" data-host=${list[val]?.host} onclick=${() => {
                                     const new_list = current.filter(
                                         (item) => item != val
                                     );
@@ -817,7 +817,7 @@ export function setting({
                                     if (func) func(new_list);
                                 }}>
                                     ${
-                                        list[val]?.icon
+                                        list[val]?.icon != null
                                             ? html.node`
                                     <div class="bleh-icon" data-type=${list[val].icon} />
                                     `
@@ -888,7 +888,7 @@ export function setting({
                             ? html.node`
                         ${Object.entries(available).map(([val, formal]) => {
                             return html.node`
-                                <button class="setting-list-item" onclick=${() => {
+                                <button class="setting-list-item" data-host=${formal.host} onclick=${() => {
                                     const new_list = [...current, val];
 
                                     save_setting(id, new_list);
@@ -897,7 +897,7 @@ export function setting({
                                     if (func) func(new_list);
                                 }}>
                                     ${
-                                        formal.icon
+                                        formal.icon != null
                                             ? html.node`
                                     <div class="bleh-icon" data-type=${formal.icon} />
                                     `

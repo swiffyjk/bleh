@@ -1592,52 +1592,83 @@ export function redirect() {
 export function prepare_music() {
     page.state.music_links = {
         spotify: {
-            name: 'Spotify'
+            name: 'Spotify',
+            icon: '',
+            host: 'spotify.com'
         },
         itunes: {
-            name: 'Apple'
+            name: 'Apple',
+            icon: '',
+            host: 'music.apple.com'
         },
         youtube: {
-            name: 'YouTube'
+            name: 'YouTube',
+            icon: '',
+            host: 'youtube.com'
         },
         tidal: {
-            name: 'Tidal'
+            name: 'Tidal',
+            icon: '',
+            host: 'tidal.com'
         },
         deezer: {
-            name: 'Deezer'
+            name: 'Deezer',
+            icon: '',
+            host: 'deezer.com'
         },
         amazon: {
-            name: 'Amazon'
+            name: 'Amazon',
+            icon: '',
+            host: 'music.amazon.com'
         },
         discogs: {
-            name: 'Discogs'
+            name: 'Discogs',
+            icon: '',
+            host: 'discogs.com'
         },
         qobuz: {
-            name: 'Qobuz'
+            name: 'Qobuz',
+            icon: '',
+            host: 'qobuz.com'
         },
         aoty: {
-            name: 'AOTY'
+            name: 'AOTY',
+            icon: '',
+            host: 'albumoftheyear.org'
         },
         rym: {
-            name: 'RYM'
+            name: 'RYM',
+            icon: '',
+            host: 'rateyourmusic.com'
         },
         genius: {
-            name: 'Genius'
+            name: 'Genius',
+            icon: '',
+            host: 'genius.com'
         },
         website: {
-            name: tl(trans.website)
+            name: tl(trans.website),
+            icon: 'link'
         },
         twitter: {
-            name: 'Twitter'
+            name: 'Twitter',
+            icon: '',
+            host: 'twitter.com'
         },
         facebook: {
-            name: 'Facebook'
+            name: 'Facebook',
+            icon: '',
+            host: 'facebook.com'
         },
         soundcloud: {
-            name: 'SoundCloud'
+            name: 'SoundCloud',
+            icon: '',
+            host: 'soundcloud.com'
         },
         instagram: {
-            name: 'Instagram'
+            name: 'Instagram',
+            icon: '',
+            host: 'instagram.com'
         }
     };
 }

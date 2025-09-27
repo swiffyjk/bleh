@@ -37193,52 +37193,83 @@
   function prepare_music() {
     page.state.music_links = {
       spotify: {
-        name: "Spotify"
+        name: "Spotify",
+        icon: "",
+        host: "spotify.com"
       },
       itunes: {
-        name: "Apple"
+        name: "Apple",
+        icon: "",
+        host: "music.apple.com"
       },
       youtube: {
-        name: "YouTube"
+        name: "YouTube",
+        icon: "",
+        host: "youtube.com"
       },
       tidal: {
-        name: "Tidal"
+        name: "Tidal",
+        icon: "",
+        host: "tidal.com"
       },
       deezer: {
-        name: "Deezer"
+        name: "Deezer",
+        icon: "",
+        host: "deezer.com"
       },
       amazon: {
-        name: "Amazon"
+        name: "Amazon",
+        icon: "",
+        host: "music.amazon.com"
       },
       discogs: {
-        name: "Discogs"
+        name: "Discogs",
+        icon: "",
+        host: "discogs.com"
       },
       qobuz: {
-        name: "Qobuz"
+        name: "Qobuz",
+        icon: "",
+        host: "qobuz.com"
       },
       aoty: {
-        name: "AOTY"
+        name: "AOTY",
+        icon: "",
+        host: "albumoftheyear.org"
       },
       rym: {
-        name: "RYM"
+        name: "RYM",
+        icon: "",
+        host: "rateyourmusic.com"
       },
       genius: {
-        name: "Genius"
+        name: "Genius",
+        icon: "",
+        host: "genius.com"
       },
       website: {
-        name: tl(trans.website)
+        name: tl(trans.website),
+        icon: "link"
       },
       twitter: {
-        name: "Twitter"
+        name: "Twitter",
+        icon: "",
+        host: "twitter.com"
       },
       facebook: {
-        name: "Facebook"
+        name: "Facebook",
+        icon: "",
+        host: "facebook.com"
       },
       soundcloud: {
-        name: "SoundCloud"
+        name: "SoundCloud",
+        icon: "",
+        host: "soundcloud.com"
       },
       instagram: {
-        name: "Instagram"
+        name: "Instagram",
+        icon: "",
+        host: "instagram.com"
       }
     };
   }
@@ -41240,7 +41271,7 @@
             html`
                         ${current.map((val) => {
               return html.node`
-                                <button class="setting-list-item current" onclick=${() => {
+                                <button class="setting-list-item current" data-host=${list[val]?.host} onclick=${() => {
                 const new_list = current.filter(
                   (item) => item != val
                 );
@@ -41248,7 +41279,7 @@
                 render_list_items(new_list);
                 if (func) func(new_list);
               }}>
-                                    ${list[val]?.icon ? html.node`
+                                    ${list[val]?.icon != null ? html.node`
                                     <div class="bleh-icon" data-type=${list[val].icon} />
                                     ` : ""}
                                     <div class="info">
@@ -41305,13 +41336,13 @@
                         ${settings_store[id].predefined ? html.node`
                         ${Object.entries(available).map(([val, formal]) => {
               return html.node`
-                                <button class="setting-list-item" onclick=${() => {
+                                <button class="setting-list-item" data-host=${formal.host} onclick=${() => {
                 const new_list = [...current, val];
                 save_setting(id, new_list);
                 render_list_items(new_list);
                 if (func) func(new_list);
               }}>
-                                    ${formal.icon ? html.node`
+                                    ${formal.icon != null ? html.node`
                                     <div class="bleh-icon" data-type=${formal.icon} />
                                     ` : ""}
                                     <div class="info">
