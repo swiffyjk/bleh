@@ -9677,6 +9677,7 @@
                 display: flex;
                 justify-content: center;
                 position: relative;
+                font-size: 13px;
                 padding: 0
                     calc(var(--icon-size) + var(--item-list-gap) + var(--side));
 
