@@ -4,13 +4,13 @@
 // Licensed under GPLv3
 //
 
-import {auth, page, root} from "../build/page";
-import {html} from "lighterhtml";
-import {patch_wiki_contents} from "../pages/wiki.js";
-import {redirect} from "./music.js";
-import showdown from "showdown";
-import DOMPurify from "dompurify";
-import {expand_avatar} from "../avatar.js";
+import { auth, page, root } from '../build/page';
+import { html } from 'lighterhtml';
+import { patch_wiki_contents } from '../pages/wiki.js';
+import { redirect } from './music.js';
+import showdown from 'showdown';
+import DOMPurify from 'dompurify';
+import { expand_avatar } from '../avatar.js';
 import { tl, trans } from '../build/trans.js';
 import { dialog, dialog_rm } from './dialog.js';
 import { settings, settings_store } from '../build/config.js';
@@ -21,30 +21,61 @@ import { save_setting } from './settings.js';
 import { load_chart_colours } from '../chart.js';
 import { sponsor_list } from '../build/sponsor.js';
 
-export function markdown(text, {
-    allow_headers = false,
-    starting_header = 3,
-    allow_links = true,
-    line_breaks = true,
-    allow_banners = false,
-    in_dialog = false,
-    allow_icons = false,
-    allow_hue = false,
-    take_effect = false,
-    cache = false,
-    allow_socials = false,
-    name = page.name
-}={}) {
-    log('rendering', 'markdown', 'log', {text});
+export function markdown(
+    text,
+    {
+        allow_headers = false,
+        starting_header = 3,
+        allow_links = true,
+        line_breaks = true,
+        allow_banners = false,
+        in_dialog = false,
+        allow_icons = false,
+        allow_hue = false,
+        take_effect = false,
+        cache = false,
+        allow_socials = false,
+        allow_lists = true,
+        name = page.name
+    } = {}
+) {
+    log('rendering', 'markdown', 'log', { text });
 
-    const ALLOWED_TAGS = [
-        'div', 'p', 'span', 'em', 'u', 'strong', 'a', 'ul', 'ol', 'li', 'br', 'code', 'pre', 'img', 'blockquote',
-        'h1', 'h2', 'h3', 'h4', 'h5'
+    let ALLOWED_TAGS = [
+        'div',
+        'p',
+        'span',
+        'em',
+        'u',
+        'strong',
+        'a',
+        'br',
+        'code',
+        'pre',
+        'img',
+        'blockquote',
+        'h1',
+        'h2',
+        'h3',
+        'h4',
+        'h5'
     ];
     const ALLOWED_ATTR = [
-        'href', 'class', 'target', 'src', 'alt', 'title', 'style',
-        'data-hue', 'data-sat', 'data-lit'
+        'href',
+        'class',
+        'target',
+        'src',
+        'alt',
+        'title',
+        'style',
+        'data-hue',
+        'data-sat',
+        'data-lit'
     ];
+
+    if (allow_lists) {
+        ALLOWED_TAGS.push('ul', 'ol', 'li');
+    }
 
     let hue;
     let sat;
@@ -52,154 +83,177 @@ export function markdown(text, {
 
     let links = [];
 
+    const banner = () => [
+        {
+            type: 'lang',
+            regex: /\[banner=([^\]]+)\]/g,
+            replace: (_, url) => {
+                try {
+                    const safe = new URL(url);
+                    if (!['http:', 'https:'].includes(safe.protocol)) return '';
 
-    const banner = () => [{
-        type: 'lang',
-        regex: /\[banner=([^\]]+)\]/g,
-        replace: (_, url) => {
-            try {
-                const safe = new URL(url);
-                if (!['http:', 'https:'].includes(safe.protocol)) return '';
+                    const escaped = safe.href.replace(/"/g, '&quot;');
 
-                const escaped = safe.href.replace(/"/g, '&quot;');
+                    const image = `<img src="${escaped}" alt="banner" loading="lazy">`;
 
-                const image = `<img src="${escaped}" alt="banner" loading="lazy">`;
-
-                return DOMPurify.sanitize(image, {
-                    ALLOWED_TAGS: ['img'],
-                    ALLOWED_ATTR: ['src', 'alt', 'loading']
-                });
-            } catch {
-                return '';
+                    return DOMPurify.sanitize(image, {
+                        ALLOWED_TAGS: ['img'],
+                        ALLOWED_ATTR: ['src', 'alt', 'loading']
+                    });
+                } catch {
+                    return '';
+                }
             }
         }
-    }];
-
+    ];
 
     // supports
     // ::: center
     // ::: left
     // ::: right
-    const aligner = () => [{
-        type: 'lang',
-        regex: /\[(center|left|right)]\s*([\s\S]*?)\s*\[\/\1]/g,
-        replace: (_, align, content, offset, text) => {
-            // dont replace in codeblocks
-            let backticks = 0;
-            for (let i = 0; i < offset; i++)
-                if (text[i] == '`') backticks++;
+    const aligner = () => [
+        {
+            type: 'lang',
+            regex: /\[(center|left|right)]\s*([\s\S]*?)\s*\[\/\1]/g,
+            replace: (_, align, content, offset, text) => {
+                // dont replace in codeblocks
+                let backticks = 0;
+                for (let i = 0; i < offset; i++)
+                    if (text[i] == '`') backticks++;
 
-            if (backticks % 2 == 1) return _;
+                if (backticks % 2 == 1) return _;
 
-            const inner = converter.makeHtml(content.trim());
+                const inner = converter.makeHtml(content.trim());
 
-            const clean = DOMPurify.sanitize(inner, {
-                ALLOWED_TAGS,
-                ALLOWED_ATTR
-            });
-            return `<div class="text-${align}">${clean}</div>`;
+                const clean = DOMPurify.sanitize(inner, {
+                    ALLOWED_TAGS,
+                    ALLOWED_ATTR
+                });
+                return `<div class="text-${align}">${clean}</div>`;
+            }
         }
-    }];
+    ];
 
     // this should be like as safe as can be
     // you can't escape the boundaries due to the regex
-    const icons = () => [{
-        type: 'lang',
-        regex: /\[icon=([a-zA-Z-]+)\]/g,
-        replace: (_, icon) => {
-            return `<span class="bleh-icon in-markdown" style="--icon: var(--icon-16-${icon})">A</span>`;
+    const icons = () => [
+        {
+            type: 'lang',
+            regex: /\[icon=([a-zA-Z-]+)\]/g,
+            replace: (_, icon) => {
+                return `<span class="bleh-icon in-markdown" style="--icon: var(--icon-16-${icon})">A</span>`;
+            }
         }
-    }];
+    ];
 
     // sets a profile's hsl values
-    const accent = () => [{
-        type: 'lang',
-        regex: /\[accent=([0-9]{1,3}),([0-9]*\.?[0-9]+),([0-9]*\.?[0-9]+)\]/,
-        replace: (_, h, s, l) => {
-            hue = Math.min(settings_store.hue.max, Math.max(settings_store.hue.min, parseInt(h, 10)));
-            sat = Math.min(settings_store.sat.max, Math.max(settings_store.sat.min, parseFloat(s)));
-            lit = Math.min(settings_store.lit.max, Math.max(settings_store.lit.min, parseFloat(l)));
+    const accent = () => [
+        {
+            type: 'lang',
+            regex: /\[accent=([0-9]{1,3}),([0-9]*\.?[0-9]+),([0-9]*\.?[0-9]+)\]/,
+            replace: (_, h, s, l) => {
+                hue = Math.min(
+                    settings_store.hue.max,
+                    Math.max(settings_store.hue.min, parseInt(h, 10))
+                );
+                sat = Math.min(
+                    settings_store.sat.max,
+                    Math.max(settings_store.sat.min, parseFloat(s))
+                );
+                lit = Math.min(
+                    settings_store.lit.max,
+                    Math.max(settings_store.lit.min, parseFloat(l))
+                );
 
-            return '';
+                return '';
+            }
         }
-    }];
+    ];
 
     // retrieves social links if a user supplies them
-    const social_links = () => [{
-        type: 'lang',
-        regex: /\[links\]([\s\S]*?)\[\/links\]/g,
-        replace: (_, content) => {
-            const lines = content.trim().split(/\n+/);
+    const social_links = () => [
+        {
+            type: 'lang',
+            regex: /\[links\]([\s\S]*?)\[\/links\]/g,
+            replace: (_, content) => {
+                const lines = content.trim().split(/\n+/);
 
-            lines.forEach(line => {
-                line = line.trim();
-                if (!line) return;
-                console.info('line', line, line.trim());
+                lines.forEach((line) => {
+                    line = line.trim();
+                    if (!line) return;
+                    console.info('line', line, line.trim());
 
-                const markdown_regex = line.match(/^\[(.+?)\]\((.+?)\)$/);
+                    const markdown_regex = line.match(/^\[(.+?)\]\((.+?)\)$/);
 
-                let url;
-                let name;
+                    let url;
+                    let name;
 
-                if (markdown_regex) {
-                    url = markdown_regex[2].trim();
-                    name = markdown_regex[1].trim();
-                } else {
-                    url = line;
-                }
-
-                try {
-                    const link = new URL(url, `https://www.last.fm${root}`);
-                    const host = link.hostname;
-                    const protocol = link.protocol;
-                    const path = link.pathname;
-
-                    console.info('proto', protocol, link);
-
-                    if (protocol != 'http:' && protocol != 'https:') return;
-
-                    let final = {
-                        host,
-                        path,
-                        url: link.href
+                    if (markdown_regex) {
+                        url = markdown_regex[2].trim();
+                        name = markdown_regex[1].trim();
+                    } else {
+                        url = line;
                     }
 
-                    if (name) final.name = DOMPurify.sanitize(name, {ALLOWED_TAGS: []});
+                    try {
+                        const link = new URL(url, `https://www.last.fm${root}`);
+                        const host = link.hostname;
+                        const protocol = link.protocol;
+                        const path = link.pathname;
 
-                    links.push(final);
-                } catch(e) {
-                    return;
-                }
-            });
+                        console.info('proto', protocol, link);
 
-            return '';
+                        if (protocol != 'http:' && protocol != 'https:') return;
+
+                        let final = {
+                            host,
+                            path,
+                            url: link.href
+                        };
+
+                        if (name)
+                            final.name = DOMPurify.sanitize(name, {
+                                ALLOWED_TAGS: []
+                            });
+
+                        links.push(final);
+                    } catch (e) {
+                        return;
+                    }
+                });
+
+                return '';
+            }
         }
-    }];
-
-    const header_minify = () => [{
-        type: 'output',
-        regex: /<(\/?)h[1-5]>/gi,
-        replace: '<$1strong>'
-    }];
-
-    const mentions = () => [{
-        type: 'lang',
-        regex: /(?<=^|[\s([{.,])@([a-zA-Z0-9_]+)\b(?!@)/g,
-        replace: (_, username) => {
-            return `<a class="mention" href="${root}user/${username}" target="_blank">@${username}</a>`;
-        }
-    }];
-
-    const blockquotes = () => [{
-        type: 'lang',
-        regex: /^ *>.*(?:\n *>.*)*/gm,
-        replace: (m) => m.replace(/>/g, '&gt;')
-    }];
-
-    let extensions = [
-        aligner(),
-        blockquotes()
     ];
+
+    const header_minify = () => [
+        {
+            type: 'output',
+            regex: /<(\/?)h[1-5]>/gi,
+            replace: '<$1strong>'
+        }
+    ];
+
+    const mentions = () => [
+        {
+            type: 'lang',
+            regex: /(?<=^|[\s([{.,])@([a-zA-Z0-9_]+)\b(?!@)/g,
+            replace: (_, username) => {
+                return `<a class="mention" href="${root}user/${username}" target="_blank">@${username}</a>`;
+            }
+        }
+    ];
+
+    const blockquotes = () => [
+        {
+            type: 'lang',
+            regex: /^ *>.*(?:\n *>.*)*/gm,
+            replace: (m) => m.replace(/>/g, '&gt;')
+        }
+    ];
+
+    let extensions = [aligner(), blockquotes()];
 
     if (allow_banners) extensions.push(banner());
     if (allow_icons) extensions.push(icons());
@@ -212,7 +266,7 @@ export function markdown(text, {
         extensions,
         emoji: true,
         excludeTrailingPunctuationFromURLs: true,
-        headerLevelStart: (allow_headers) ? starting_header : 5,
+        headerLevelStart: allow_headers ? starting_header : 5,
         noHeaderId: true,
         openLinksInNewWindow: true,
         requireSpaceBeforeHeadingText: true,
@@ -224,33 +278,31 @@ export function markdown(text, {
         smartIndentationFix: true
     });
     const markdown = text
-    .replace(
-        /\[artist\]([^[\]]+)\[\/artist\]/g,
-        (match, artist) =>
-            `[${artist}](${root}music/${redirect()}${encodeURIComponent(artist)})`
-    )
-    .replace(
-        /\[album artist=([^[\]]+)\]([^[\]]+)\[\/album\]/g,
-        (match, artist, album) =>
-            `[${album}](${root}music/` +
-            `${encodeURIComponent(artist)}/${encodeURIComponent(album)})`
-    )
-    .replace(
-        /\[track artist=([^[\]]+)\]([^[\]]+)\[\/track\]/g,
-        (match, artist, track) =>
-            `[${track}](${root}music/` +
-            `${encodeURIComponent(artist)}/_/${encodeURIComponent(track)})`
-    )
-    .replace(
-        /\[url=([^[\]]+)\]([^[\]]+)\[\/url\]/g,
-        (match, url, text) =>
-            `[${text}](${encodeURI(url)})`
-    )
-    .replace(
-        /\[url\]([^[\]]+)\[\/url\]/g,
-        (match, url) =>
-            `[${url}](${encodeURI(url)})`
-    );
+        .replace(
+            /\[artist\]([^[\]]+)\[\/artist\]/g,
+            (match, artist) =>
+                `[${artist}](${root}music/${redirect()}${encodeURIComponent(artist)})`
+        )
+        .replace(
+            /\[album artist=([^[\]]+)\]([^[\]]+)\[\/album\]/g,
+            (match, artist, album) =>
+                `[${album}](${root}music/` +
+                `${encodeURIComponent(artist)}/${encodeURIComponent(album)})`
+        )
+        .replace(
+            /\[track artist=([^[\]]+)\]([^[\]]+)\[\/track\]/g,
+            (match, artist, track) =>
+                `[${track}](${root}music/` +
+                `${encodeURIComponent(artist)}/_/${encodeURIComponent(track)})`
+        )
+        .replace(
+            /\[url=([^[\]]+)\]([^[\]]+)\[\/url\]/g,
+            (match, url, text) => `[${text}](${encodeURI(url)})`
+        )
+        .replace(
+            /\[url\]([^[\]]+)\[\/url\]/g,
+            (match, url) => `[${url}](${encodeURI(url)})`
+        );
 
     const raw_html = converter.makeHtml(markdown);
 
@@ -286,7 +338,7 @@ export function markdown(text, {
         'facebook.com': 'Facebook',
         'www.discogs.com': 'Discogs',
         'discogs.com': 'Discogs'
-    }
+    };
 
     if (links.length > 0) {
         body.appendChild(html.node`
@@ -295,7 +347,7 @@ export function markdown(text, {
                     ${tl(trans.links)}
                 </div>
                 <div class="music-links social-links">
-                    ${links.map(link => {
+                    ${links.map((link) => {
                         let label = link.host;
 
                         if (link.name) {
@@ -326,17 +378,21 @@ export function markdown(text, {
     let profile_cache;
 
     const will_cache = cache === true;
-    log(`prepare new cache is ${will_cache}`, 'markdown', 'log', {cache});
+    log(`prepare new cache is ${will_cache}`, 'markdown', 'log', { cache });
 
     // this looks like a mess, but essentially profile colours are
     // a nice 'thank you' vanity reward for sponsors <3
     if (allow_hue) {
-        if (!sponsor_list || (sponsor_list && !sponsor_list.sponsors.includes(name)))
+        if (
+            !sponsor_list ||
+            (sponsor_list && !sponsor_list.sponsors.includes(name))
+        )
             allow_hue = false;
     }
 
     if ((allow_banners || allow_hue) && will_cache) {
-        profile_cache = JSON.parse(localStorage.getItem('bleh_profile_cache')) || {};
+        profile_cache =
+            JSON.parse(localStorage.getItem('bleh_profile_cache')) || {};
         cache = profile_cache[page.name] || {};
     }
 
@@ -382,7 +438,11 @@ export function markdown(text, {
             cache.sat = sat;
             cache.lit = lit;
 
-            log('custom accent settings present', 'profile', 'info', {hue, sat, lit});
+            log('custom accent settings present', 'profile', 'info', {
+                hue,
+                sat,
+                lit
+            });
         } else {
             if (cache.hue) delete cache.hue;
             if (cache.sat) delete cache.sat;
@@ -393,7 +453,9 @@ export function markdown(text, {
     }
 
     if (cache && will_cache) {
-        log('finalised cache from markdown parsing', 'markdown', 'info', {cache});
+        log('finalised cache from markdown parsing', 'markdown', 'info', {
+            cache
+        });
         save_profile_cache(cache, profile_cache, name);
     }
 
@@ -406,7 +468,7 @@ export function markdown_prompt({
     line_breaks = true,
     allow_banners = false,
     in_dialog = false
-}={}) {
+} = {}) {
     const examples = [
         {
             name: tl(trans.supports_markdown.bold.name),
@@ -453,7 +515,7 @@ export function markdown_prompt({
             name: 'Right-alignment',
             string: '[right]text[/right]'
         }
-    ]
+    ];
 
     dialog({
         id: 'markdown',
@@ -469,23 +531,27 @@ export function markdown_prompt({
                     </tr>
                 </thead>
                 <tbody>
-                    ${examples.map(example => {
+                    ${examples.map((example) => {
                         if (example.hide_if) return html.node``;
 
                         return html.node`
                             <tr>
                                 <td>${example.name}</td>
                                 <td><code>${example.string_display ? example.string_display : example.string}</code></td>
-                                ${example.explain ? html.node`
+                                ${
+                                    example.explain
+                                        ? html.node`
                                     <td>
                                         <div class="icon-combo">
                                             <div class="bleh-icon" data-type="info" style="--icon: var(--mask)" />
                                             ${example.explain}
                                         </div>
                                     </td>
-                                ` : html.node`
-                                    <td class="markdown-body">${markdown(example.string, {in_dialog: true})}</td>
-                                `}
+                                `
+                                        : html.node`
+                                    <td class="markdown-body">${markdown(example.string, { in_dialog: true })}</td>
+                                `
+                                }
                             </tr>
                         `;
                     })}
@@ -496,12 +562,19 @@ export function markdown_prompt({
 }
 
 function local_restriction(text) {
-    if (text.textContent.trim().startsWith('Due to local laws, we are temporarily'))
+    if (
+        text.textContent
+            .trim()
+            .startsWith('Due to local laws, we are temporarily')
+    )
         text.classList.add('local-restriction');
 }
 
 export function external_url_prompt(url, dangerous = false) {
-    log(`prompted warning for url ${url}, dangerous is ${dangerous}`, 'markdown');
+    log(
+        `prompted warning for url ${url}, dangerous is ${dangerous}`,
+        'markdown'
+    );
 
     const link = new URL(url);
     const scheme = link.protocol;
@@ -515,41 +588,60 @@ export function external_url_prompt(url, dangerous = false) {
         type: 'leaving_site',
         body: html.node`
             <div class="modal-vertical-inner leaving-site-inner">
-                ${!dangerous ? html.node`
+                ${
+                    !dangerous
+                        ? html.node`
                 <h1>${tl(trans.leaving_site.name)}</h1>
                 <p>${tl(trans.leaving_site.body)}</p>
-                ` : html.node`
+                `
+                        : html.node`
                 <h1>${tl(trans.leaving_site_dangerous.name)}</h1>
                 <p>${tl(trans.leaving_site_dangerous.body)}</p>
-                `}
+                `
+                }
                 <div class="external-warn-input" data-dangerous=${dangerous}>
                     <span class="scheme">
                         ${scheme}//
                     </span>
-                    ${hostname ? html.node`
+                    ${
+                        hostname
+                            ? html.node`
                     <span class="hostname">
                         ${hostname}
                     </span>
-                    ` : html.node`
+                    `
+                            : html.node`
                     <span class="hostname">
                         ${path}
                     </span>
-                    `}
-                    ${path != '/' && hostname ? html.node`
+                    `
+                    }
+                    ${
+                        path != '/' && hostname
+                            ? html.node`
                     <span class="path">
                         ${path}
                     </span>
-                    ` : ''}
+                    `
+                            : ''
+                    }
                 </div>
-                ${hostname != '' ? html.node`
-                ${trust_site = toggle({
+                ${
+                    hostname != ''
+                        ? html.node`
+                ${(trust_site = toggle({
                     type: 'checkbox',
-                    title: tl(trans.leaving_site_checkbox).replace('{v}', hostname)
-                })}
-                ` : ''}
+                    title: tl(trans.leaving_site_checkbox).replace(
+                        '{v}',
+                        hostname
+                    )
+                }))}
+                `
+                        : ''
+                }
             </div>
             <div class="modal-footer">
-                <button class="see-more cancel" onclick=${() => dialog_rm({id: 'external_url'})}>
+                <button class="see-more cancel" onclick=${() => dialog_rm({ id: 'external_url' })}>
                     ${tl(trans.back)}
                 </button>
                 <div class="fill"></div>
@@ -563,7 +655,7 @@ export function external_url_prompt(url, dangerous = false) {
                     }
 
                     open(url, '_blank');
-                    dialog_rm({id: 'external_url'});
+                    dialog_rm({ id: 'external_url' });
                 }}>
                     ${tl(trans.visit)}
                 </button>

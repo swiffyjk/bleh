@@ -47613,10 +47613,11 @@
     take_effect = false,
     cache: cache2 = false,
     allow_socials = false,
+    allow_lists = true,
     name = page.name
   } = {}) {
     log("rendering", "markdown", "log", { text: text3 });
-    const ALLOWED_TAGS = [
+    let ALLOWED_TAGS = [
       "div",
       "p",
       "span",
@@ -47624,9 +47625,6 @@
       "u",
       "strong",
       "a",
-      "ul",
-      "ol",
-      "li",
       "br",
       "code",
       "pre",
@@ -47650,121 +47648,149 @@
       "data-sat",
       "data-lit"
     ];
+    if (allow_lists) {
+      ALLOWED_TAGS.push("ul", "ol", "li");
+    }
     let hue2;
     let sat;
     let lit;
     let links = [];
-    const banner = () => [{
-      type: "lang",
-      regex: /\[banner=([^\]]+)\]/g,
-      replace: (_, url) => {
-        try {
-          const safe = new URL(url);
-          if (!["http:", "https:"].includes(safe.protocol)) return "";
-          const escaped = safe.href.replace(/"/g, "&quot;");
-          const image = `<img src="${escaped}" alt="banner" loading="lazy">`;
-          return purify.sanitize(image, {
-            ALLOWED_TAGS: ["img"],
-            ALLOWED_ATTR: ["src", "alt", "loading"]
+    const banner = () => [
+      {
+        type: "lang",
+        regex: /\[banner=([^\]]+)\]/g,
+        replace: (_, url) => {
+          try {
+            const safe = new URL(url);
+            if (!["http:", "https:"].includes(safe.protocol)) return "";
+            const escaped = safe.href.replace(/"/g, "&quot;");
+            const image = `<img src="${escaped}" alt="banner" loading="lazy">`;
+            return purify.sanitize(image, {
+              ALLOWED_TAGS: ["img"],
+              ALLOWED_ATTR: ["src", "alt", "loading"]
+            });
+          } catch {
+            return "";
+          }
+        }
+      }
+    ];
+    const aligner = () => [
+      {
+        type: "lang",
+        regex: /\[(center|left|right)]\s*([\s\S]*?)\s*\[\/\1]/g,
+        replace: (_, align, content, offset3, text4) => {
+          let backticks = 0;
+          for (let i = 0; i < offset3; i++)
+            if (text4[i] == "`") backticks++;
+          if (backticks % 2 == 1) return _;
+          const inner = converter.makeHtml(content.trim());
+          const clean2 = purify.sanitize(inner, {
+            ALLOWED_TAGS,
+            ALLOWED_ATTR
           });
-        } catch {
+          return `<div class="text-${align}">${clean2}</div>`;
+        }
+      }
+    ];
+    const icons = () => [
+      {
+        type: "lang",
+        regex: /\[icon=([a-zA-Z-]+)\]/g,
+        replace: (_, icon) => {
+          return `<span class="bleh-icon in-markdown" style="--icon: var(--icon-16-${icon})">A</span>`;
+        }
+      }
+    ];
+    const accent = () => [
+      {
+        type: "lang",
+        regex: /\[accent=([0-9]{1,3}),([0-9]*\.?[0-9]+),([0-9]*\.?[0-9]+)\]/,
+        replace: (_, h, s2, l2) => {
+          hue2 = Math.min(
+            settings_store.hue.max,
+            Math.max(settings_store.hue.min, parseInt(h, 10))
+          );
+          sat = Math.min(
+            settings_store.sat.max,
+            Math.max(settings_store.sat.min, parseFloat(s2))
+          );
+          lit = Math.min(
+            settings_store.lit.max,
+            Math.max(settings_store.lit.min, parseFloat(l2))
+          );
           return "";
         }
       }
-    }];
-    const aligner = () => [{
-      type: "lang",
-      regex: /\[(center|left|right)]\s*([\s\S]*?)\s*\[\/\1]/g,
-      replace: (_, align, content, offset3, text4) => {
-        let backticks = 0;
-        for (let i = 0; i < offset3; i++)
-          if (text4[i] == "`") backticks++;
-        if (backticks % 2 == 1) return _;
-        const inner = converter.makeHtml(content.trim());
-        const clean2 = purify.sanitize(inner, {
-          ALLOWED_TAGS,
-          ALLOWED_ATTR
-        });
-        return `<div class="text-${align}">${clean2}</div>`;
-      }
-    }];
-    const icons = () => [{
-      type: "lang",
-      regex: /\[icon=([a-zA-Z-]+)\]/g,
-      replace: (_, icon) => {
-        return `<span class="bleh-icon in-markdown" style="--icon: var(--icon-16-${icon})">A</span>`;
-      }
-    }];
-    const accent = () => [{
-      type: "lang",
-      regex: /\[accent=([0-9]{1,3}),([0-9]*\.?[0-9]+),([0-9]*\.?[0-9]+)\]/,
-      replace: (_, h, s2, l2) => {
-        hue2 = Math.min(settings_store.hue.max, Math.max(settings_store.hue.min, parseInt(h, 10)));
-        sat = Math.min(settings_store.sat.max, Math.max(settings_store.sat.min, parseFloat(s2)));
-        lit = Math.min(settings_store.lit.max, Math.max(settings_store.lit.min, parseFloat(l2)));
-        return "";
-      }
-    }];
-    const social_links = () => [{
-      type: "lang",
-      regex: /\[links\]([\s\S]*?)\[\/links\]/g,
-      replace: (_, content) => {
-        const lines = content.trim().split(/\n+/);
-        lines.forEach((line) => {
-          line = line.trim();
-          if (!line) return;
-          console.info("line", line, line.trim());
-          const markdown_regex = line.match(/^\[(.+?)\]\((.+?)\)$/);
-          let url;
-          let name2;
-          if (markdown_regex) {
-            url = markdown_regex[2].trim();
-            name2 = markdown_regex[1].trim();
-          } else {
-            url = line;
-          }
-          try {
-            const link = new URL(url, `https://www.last.fm${root}`);
-            const host = link.hostname;
-            const protocol = link.protocol;
-            const path = link.pathname;
-            console.info("proto", protocol, link);
-            if (protocol != "http:" && protocol != "https:") return;
-            let final = {
-              host,
-              path,
-              url: link.href
-            };
-            if (name2) final.name = purify.sanitize(name2, { ALLOWED_TAGS: [] });
-            links.push(final);
-          } catch (e) {
-            return;
-          }
-        });
-        return "";
-      }
-    }];
-    const header_minify = () => [{
-      type: "output",
-      regex: /<(\/?)h[1-5]>/gi,
-      replace: "<$1strong>"
-    }];
-    const mentions = () => [{
-      type: "lang",
-      regex: /(?<=^|[\s([{.,])@([a-zA-Z0-9_]+)\b(?!@)/g,
-      replace: (_, username2) => {
-        return `<a class="mention" href="${root}user/${username2}" target="_blank">@${username2}</a>`;
-      }
-    }];
-    const blockquotes = () => [{
-      type: "lang",
-      regex: /^ *>.*(?:\n *>.*)*/gm,
-      replace: (m) => m.replace(/>/g, "&gt;")
-    }];
-    let extensions = [
-      aligner(),
-      blockquotes()
     ];
+    const social_links = () => [
+      {
+        type: "lang",
+        regex: /\[links\]([\s\S]*?)\[\/links\]/g,
+        replace: (_, content) => {
+          const lines = content.trim().split(/\n+/);
+          lines.forEach((line) => {
+            line = line.trim();
+            if (!line) return;
+            console.info("line", line, line.trim());
+            const markdown_regex = line.match(/^\[(.+?)\]\((.+?)\)$/);
+            let url;
+            let name2;
+            if (markdown_regex) {
+              url = markdown_regex[2].trim();
+              name2 = markdown_regex[1].trim();
+            } else {
+              url = line;
+            }
+            try {
+              const link = new URL(url, `https://www.last.fm${root}`);
+              const host = link.hostname;
+              const protocol = link.protocol;
+              const path = link.pathname;
+              console.info("proto", protocol, link);
+              if (protocol != "http:" && protocol != "https:") return;
+              let final = {
+                host,
+                path,
+                url: link.href
+              };
+              if (name2)
+                final.name = purify.sanitize(name2, {
+                  ALLOWED_TAGS: []
+                });
+              links.push(final);
+            } catch (e) {
+              return;
+            }
+          });
+          return "";
+        }
+      }
+    ];
+    const header_minify = () => [
+      {
+        type: "output",
+        regex: /<(\/?)h[1-5]>/gi,
+        replace: "<$1strong>"
+      }
+    ];
+    const mentions = () => [
+      {
+        type: "lang",
+        regex: /(?<=^|[\s([{.,])@([a-zA-Z0-9_]+)\b(?!@)/g,
+        replace: (_, username2) => {
+          return `<a class="mention" href="${root}user/${username2}" target="_blank">@${username2}</a>`;
+        }
+      }
+    ];
+    const blockquotes = () => [
+      {
+        type: "lang",
+        regex: /^ *>.*(?:\n *>.*)*/gm,
+        replace: (m) => m.replace(/>/g, "&gt;")
+      }
+    ];
+    let extensions = [aligner(), blockquotes()];
     if (allow_banners) extensions.push(banner());
     if (allow_icons) extensions.push(icons());
     if (allow_hue) extensions.push(accent());
@@ -47905,7 +47931,11 @@
         cache2.hue = hue2;
         cache2.sat = sat;
         cache2.lit = lit;
-        log("custom accent settings present", "profile", "info", { hue: hue2, sat, lit });
+        log("custom accent settings present", "profile", "info", {
+          hue: hue2,
+          sat,
+          lit
+        });
       } else {
         if (cache2.hue) delete cache2.hue;
         if (cache2.sat) delete cache2.sat;
@@ -47914,7 +47944,9 @@
       }
     }
     if (cache2 && will_cache) {
-      log("finalised cache from markdown parsing", "markdown", "info", { cache: cache2 });
+      log("finalised cache from markdown parsing", "markdown", "info", {
+        cache: cache2
+      });
       save_profile_cache(cache2, profile_cache, name);
     }
     return body;
@@ -48016,7 +48048,10 @@
       text3.classList.add("local-restriction");
   }
   function external_url_prompt(url, dangerous = false) {
-    log(`prompted warning for url ${url}, dangerous is ${dangerous}`, "markdown");
+    log(
+      `prompted warning for url ${url}, dangerous is ${dangerous}`,
+      "markdown"
+    );
     const link = new URL(url);
     const scheme = link.protocol;
     const hostname = link.hostname;
@@ -48056,7 +48091,10 @@
                 ${hostname != "" ? html.node`
                 ${trust_site = toggle({
         type: "checkbox",
-        title: tl(trans.leaving_site_checkbox).replace("{v}", hostname)
+        title: tl(trans.leaving_site_checkbox).replace(
+          "{v}",
+          hostname
+        )
       })}
                 ` : ""}
             </div>
@@ -55334,7 +55372,9 @@
 
   // src/pages/users.js
   function bleh_users() {
-    let users = page.structure.main.querySelectorAll(".user-list-item:not(.user-list-item-mobile-ad)");
+    let users = page.structure.main.querySelectorAll(
+      ".user-list-item:not(.user-list-item-mobile-ad)"
+    );
     users.forEach((user) => {
       let avatar3 = user.querySelector(".user-list-avatar");
       let name = user.querySelector(".user-list-link").textContent;
@@ -55345,10 +55385,14 @@
       });
       let md = user.querySelector(".user-list-about-me");
       if (md) {
-        render(md, markdown(md.textContent, {
-          allow_headers: false,
-          line_breaks: false
-        }));
+        render(
+          md,
+          markdown(md.textContent, {
+            allow_headers: false,
+            line_breaks: false,
+            allow_lists: false
+          })
+        );
       }
     });
   }
