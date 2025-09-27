@@ -35638,6 +35638,7 @@
     }
     function oracle_track_releases(data2) {
       let releases = [];
+      let releases_to_move = [];
       let lastfm_releases = [];
       const lastfm_source_albums = albums_and_lyrics_row.querySelectorAll(".source-album");
       lastfm_source_albums.forEach((release) => {
@@ -35678,9 +35679,17 @@
           const artist2 = release["artist-credit"] ? release["artist-credit"][0].name : recording["artist-credit"].name;
           if (artist2 == "Various Artists") return;
           const status2 = release.status.toLowerCase();
+          const disambiguation = release.disambiguation?.toLowerCase();
           if (status2.startsWith("pseudo")) return;
+          if (disambiguation) {
+            if (disambiguation.includes("english")) {
+              releases_to_move.push(release);
+              return;
+            }
+          }
           releases.push(release);
         });
+        releases.push(...releases_to_move);
         log("releases in recording after parsing", "oracle", "info", {
           releases
         });

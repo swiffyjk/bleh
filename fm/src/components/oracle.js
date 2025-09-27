@@ -571,6 +571,7 @@ export function oracle_process() {
         // let's comb through the releases to remove
         // various artists
         let releases = [];
+        let releases_to_move = [];
 
         // let's also look thru the last.fm provided ones
         // to possibly get listener and cover data
@@ -628,12 +629,23 @@ export function oracle_process() {
                 if (artist == 'Various Artists') return;
 
                 const status = release.status.toLowerCase();
+                const disambiguation = release.disambiguation?.toLowerCase();
 
                 // seems to ignore english translations of jp albums sometimes
                 if (status.startsWith('pseudo')) return;
 
+                if (disambiguation) {
+                    if (disambiguation.includes('english')) {
+                        releases_to_move.push(release);
+                        return;
+                    }
+                }
+
                 releases.push(release);
             });
+
+            releases.push(...releases_to_move);
+
             log('releases in recording after parsing', 'oracle', 'info', {
                 releases
             });
