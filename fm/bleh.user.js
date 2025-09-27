@@ -53081,38 +53081,56 @@
     artist_title();
     let is_subpage = artist_header.classList.contains("header-new--subpage");
     if (auth.pro) {
-      page.structure.container = document.body.querySelector(".page-content:not(.visible-xs, :has(.content-top-lower-row, a + .js-gallery-heading))");
+      page.structure.container = document.body.querySelector(
+        ".page-content:not(.visible-xs, :has(.content-top-lower-row, a + .js-gallery-heading))"
+      );
     } else {
       if (!is_subpage) {
-        page.structure.container = document.body.querySelector(".full-bleed-ad-container + .page-content:not(.visible-xs)");
+        page.structure.container = document.body.querySelector(
+          ".full-bleed-ad-container + .page-content:not(.visible-xs)"
+        );
         if (!page.structure.container)
           page.structure.container = document.body.querySelector(".page-content");
       } else {
-        page.structure.container = document.body.querySelector(".page-content:not(.visible-xs, :has(.content-top-lower-row, a + .js-gallery-heading))");
+        page.structure.container = document.body.querySelector(
+          ".page-content:not(.visible-xs, :has(.content-top-lower-row, a + .js-gallery-heading))"
+        );
       }
     }
     try {
       page.structure.row = page.structure.container.querySelector(".row");
       if (!is_subpage)
-        page.structure.main = page.structure.row.querySelector(".col-main.buffer-standard");
+        page.structure.main = page.structure.row.querySelector(
+          ".col-main.buffer-standard"
+        );
       else
         page.structure.main = page.structure.row.querySelector(".col-main");
       if (auth.pro) {
-        page.structure.side = page.structure.row.querySelector(".col-sidebar:not(.masonry-right)");
+        page.structure.side = page.structure.row.querySelector(
+          ".col-sidebar:not(.masonry-right)"
+        );
       } else {
-        page.structure.side = page.structure.row.querySelector(".col-sidebar:not(.section-with-separator--col)");
+        page.structure.side = page.structure.row.querySelector(
+          ".col-sidebar:not(.section-with-separator--col)"
+        );
       }
     } catch (e) {
       log("unable to find elements", "page structure");
     }
     checkup_page_structure(is_subpage, artist_header);
     let katsune = ff("katsune");
-    let featured_items = artist_header.querySelector(".artist-header-featured-items");
+    let featured_items = artist_header.querySelector(
+      ".artist-header-featured-items"
+    );
     if (ff("refreshed_music_nav")) {
-      let avatar3 = artist_header.querySelector(".header-new-background-image");
+      let avatar3 = artist_header.querySelector(
+        ".header-new-background-image"
+      );
       let title = artist_header.querySelector(".header-new-title");
       let on_tour = artist_header.querySelector(".header-new-on-tour");
-      let position = artist_header.querySelector(".header-new-chart-position-number");
+      let position = artist_header.querySelector(
+        ".header-new-chart-position-number"
+      );
       if (on_tour) on_tour.classList.add("label", "no-hover");
       let multi_info_box;
       let redesigned_artist_header = html.node`
@@ -53157,17 +53175,21 @@
         });
       }
       let bg;
-      if (avatar3)
-        bg = register_background(avatar3.getAttribute("content"));
-      else
-        bg = register_background(null);
-      page.structure.container.insertBefore(redesigned_artist_header, page.structure.container.firstElementChild);
+      if (avatar3) bg = register_background(avatar3.getAttribute("content"));
+      else bg = register_background(null);
+      page.structure.container.insertBefore(
+        redesigned_artist_header,
+        page.structure.container.firstElementChild
+      );
       artist_header.classList.add("legacy-header");
       let avatar_side = redesigned_artist_header.querySelector(".avatar-side");
       let avatar_link = avatar_side.querySelector("a");
       if (avatar3 != null && avatar_link != null) {
         if (settings.default_avatar_action == "expand" && avatar3 != null)
-          avatar_link.setAttribute("onclick", `_expand_avatar('${avatar3.getAttribute("content")}')`);
+          avatar_link.setAttribute(
+            "onclick",
+            `_expand_avatar('${avatar3.getAttribute("content")}')`
+          );
         else if (settings.default_avatar_action == "gallery")
           avatar_link.href = `${root}music/${redirect()}${sanitise(page.name)}/+images`;
         let menu = tippy_esm_default(avatar_side, {
@@ -53234,15 +53256,24 @@
         let top2 = top_tracks.querySelector(".section-controls");
         top2.classList = "top-container";
         let header = top2.querySelector("h3");
-        let select_btn = top2.querySelector(".dropdown-menu-clickable-button");
+        let select_btn = top2.querySelector(
+          ".dropdown-menu-clickable-button"
+        );
         if (select_btn) {
-          select_btn.classList.add("select-button", "link-select", "blend-v2-btn");
+          select_btn.classList.add(
+            "select-button",
+            "link-select",
+            "blend-v2-btn"
+          );
           select_btn.classList.remove("dropdown-menu-clickable-button");
         }
         let play = top2.querySelector(".section-playlink");
         if (play) {
           play.classList.add("blend-v2-btn", "radio");
-          play.classList.remove("section-playlink", "hover-section-control");
+          play.classList.remove(
+            "section-playlink",
+            "hover-section-control"
+          );
           play.setAttribute("data-type", "play");
         }
         header.after(html.node`
@@ -53278,9 +53309,15 @@
         let top2 = top_albums.querySelector(".section-controls");
         top2.classList = "top-container";
         let header = top2.querySelector("h3");
-        let select_btn = top2.querySelector(".dropdown-menu-clickable-button");
+        let select_btn = top2.querySelector(
+          ".dropdown-menu-clickable-button"
+        );
         if (select_btn) {
-          select_btn.classList.add("select-button", "link-select", "blend-v2-btn");
+          select_btn.classList.add(
+            "select-button",
+            "link-select",
+            "blend-v2-btn"
+          );
           select_btn.classList.remove("dropdown-menu-clickable-button");
           header.after(html.node`
                     <div class="accompany view-buttons blend blend-v2">
@@ -53292,23 +53329,42 @@
       if (katsune && featured_items) {
         let featured_panel = html.node`
                 <section class="featured-items-panel">
-                    ${Array.from(featured_items.querySelectorAll("li")).map((item) => {
-          item.classList.remove("artist-header-featured-items-item-wrap--video-thumbnail");
-          let type = item.getAttribute("itemprop");
-          let text3 = tl(trans.latest_album);
-          if (type == "track")
-            text3 = tl(trans.popular_now);
-          let header = item.querySelector(".artist-header-featured-items-item-header");
-          header.parentElement.removeChild(header);
-          let name = correct_item_by_artist(item.querySelector(".artist-header-featured-items-item-name").textContent.trim(), page.name);
-          let aux = item.querySelector(".artist-header-featured-items-item-aux-text")?.textContent.trim();
-          let link = item.querySelector(".link-block-cover-link")?.getAttribute("href");
-          let img = item.querySelector("img")?.src;
-          if (type == "track") {
-            const top_track = page.structure.main.querySelector("#top-tracks .cover-art img");
-            if (top_track && !top_track.src.endsWith("4128a6eb29f94943c9d206c08e625904.jpg")) img = top_track.src.replace("/64s/", "/avatar170s/");
-          }
-          return html.node`
+                    ${Array.from(featured_items.querySelectorAll("li")).map(
+          (item) => {
+            item.classList.remove(
+              "artist-header-featured-items-item-wrap--video-thumbnail"
+            );
+            let type = item.getAttribute("itemprop");
+            let text3 = tl(trans.latest_album);
+            if (type == "track") text3 = tl(trans.popular_now);
+            let header = item.querySelector(
+              ".artist-header-featured-items-item-header"
+            );
+            header.parentElement.removeChild(header);
+            let name = correct_item_by_artist(
+              item.querySelector(
+                ".artist-header-featured-items-item-name"
+              ).textContent.trim(),
+              page.name
+            );
+            let aux = item.querySelector(
+              ".artist-header-featured-items-item-aux-text"
+            )?.textContent.trim();
+            let link = item.querySelector(".link-block-cover-link")?.getAttribute("href");
+            let img = item.querySelector("img")?.src;
+            if (type == "track") {
+              const top_track = page.structure.main.querySelector(
+                "#top-tracks .cover-art img"
+              );
+              if (top_track && !top_track.src.endsWith(
+                "4128a6eb29f94943c9d206c08e625904.jpg"
+              ))
+                img = top_track.src.replace(
+                  "/64s/",
+                  "/avatar170s/"
+                );
+            }
+            return html.node`
                             <div class="featured-artist-item">
                                 <div class="sub-text normal" data-type=${type}>
                                     <span class="bleh-icon" style="--icon: var(--mask)" />
@@ -53330,7 +53386,8 @@
                                 </div>
                             </div>
                         `;
-        })}
+          }
+        )}
                 </section>
             `;
         page.structure.main.querySelector(".top-overview-panel").after(featured_panel);
@@ -53339,20 +53396,26 @@
       let btn_add = page.structure.side.querySelector(".add-button");
       if (btn_add) btn_add.setAttribute("data-page-subpage", page.subpage);
       if (page.subpage.startsWith("listeners_")) {
-        let toolbar = page.structure.row.querySelector(":scope > .toolbar > .navlist > .navlist-items");
-        let overview = toolbar.querySelector(".secondary-nav-item--overview");
+        let toolbar = page.structure.row.querySelector(
+          ":scope > .toolbar > .navlist > .navlist-items"
+        );
+        let overview = toolbar.querySelector(
+          ".secondary-nav-item--overview"
+        );
         overview.classList.remove("secondary-nav-item--overview");
         overview.classList.add("secondary-nav-item--global");
         overview.querySelector("a").textContent = tl(trans.global);
-        let mutuals = toolbar.querySelector(".secondary-nav-item--you-know a");
+        let mutuals = toolbar.querySelector(
+          ".secondary-nav-item--you-know a"
+        );
         mutuals.textContent = tl(trans.mutuals);
-        if (page.subpage == "listeners_overview")
-          bleh_top_listeners();
-        else if (page.subpage == "listeners_you-know")
-          bleh_listeners();
+        if (page.subpage == "listeners_overview") bleh_top_listeners();
+        else if (page.subpage == "listeners_you-know") bleh_listeners();
       }
       if (page.subpage == "events") {
-        const tabs = page.structure.row.querySelectorAll(":scope > .toolbar .secondary-nav-item-link");
+        const tabs = page.structure.row.querySelectorAll(
+          ":scope > .toolbar .secondary-nav-item-link"
+        );
         tabs.forEach((tab, index3) => {
           if (index3 < 1) return;
           tab.classList.add("has-tab-num");
@@ -53364,20 +53427,13 @@
                 `);
         });
       }
-      if (page.subpage == "images_image-upload")
-        bleh_gallery_upload();
-      else if (page.subpage == "images_overview")
-        bleh_gallery_list();
-      else if (page.subpage == "wiki_overview")
-        bleh_wiki();
-      else if (page.subpage == "wiki_history")
-        bleh_wiki_history();
-      else if (page.subpage == "wiki_edit")
-        bleh_wiki_editor();
-      else if (page.subpage == "tracks")
-        bleh_artist_tracks();
-      else if (page.subpage == "albums")
-        bleh_artist_albums();
+      if (page.subpage == "images_image-upload") bleh_gallery_upload();
+      else if (page.subpage == "images_overview") bleh_gallery_list();
+      else if (page.subpage == "wiki_overview") bleh_wiki();
+      else if (page.subpage == "wiki_history") bleh_wiki_history();
+      else if (page.subpage == "wiki_edit") bleh_wiki_editor();
+      else if (page.subpage == "tracks") bleh_artist_tracks();
+      else if (page.subpage == "albums") bleh_artist_albums();
     }
     log("status is", "page", "info", page);
     update_page();
@@ -53392,7 +53448,11 @@
       header.classList.remove("subpage-title");
       let select_btn = top2.querySelector(".dropdown-menu-clickable-button");
       if (select_btn) {
-        select_btn.classList.add("select-button", "link-select", "blend-v2-btn");
+        select_btn.classList.add(
+          "select-button",
+          "link-select",
+          "blend-v2-btn"
+        );
         select_btn.classList.remove("dropdown-menu-clickable-button");
       }
       header.after(html.node`
@@ -53424,14 +53484,20 @@
     }
   }
   function bleh_artist_albums() {
-    let top_albums = page.structure.main.querySelector("#artist-albums-section");
+    let top_albums = page.structure.main.querySelector(
+      "#artist-albums-section"
+    );
     if (top_albums) {
       let top2 = top_albums.querySelector(".section-controls");
       top2.classList = "top-container";
       let header = top2.querySelector("h3");
       let select_btn = top2.querySelector(".dropdown-menu-clickable-button");
       if (select_btn) {
-        select_btn.classList.add("select-button", "link-select", "blend-v2-btn");
+        select_btn.classList.add(
+          "select-button",
+          "link-select",
+          "blend-v2-btn"
+        );
         select_btn.classList.remove("dropdown-menu-clickable-button");
       }
       header.after(html.node`
@@ -53440,27 +53506,40 @@
             </div>
         `);
     }
+    correct_generic_combo_no_artist("resource-list--release-list-item");
   }
   function bleh_listeners() {
-    const buffer = page.structure.main.querySelector(":scope > .buffer-standard");
+    const buffer = page.structure.main.querySelector(
+      ":scope > .buffer-standard"
+    );
     const no_data = buffer.querySelector(":scope > .no-data-message");
     if (!no_data) {
       const p = buffer.querySelector(":scope > p");
       const match3 = p.textContent.match(/\d+/);
       const count = parseInt(match3[0]);
       p.remove();
-      buffer.insertBefore(html.node`
+      buffer.insertBefore(
+        html.node`
             <h2>${tl(trans.count_mutual_listeners).replace("{c}", count.toString())}</h2>
-        `, buffer.firstElementChild);
+        `,
+        buffer.firstElementChild
+      );
     } else {
-      render(buffer, html`
-            <h2>${tl(trans.no_mutual_listeners)}</h2>
-            <div class="loading-data-container">
-                <div class="loading-data-text info">${tl(trans.no_mutual_listeners_explain)}</div>
-            </div>
-        `);
+      render(
+        buffer,
+        html`
+                <h2>${tl(trans.no_mutual_listeners)}</h2>
+                <div class="loading-data-container">
+                    <div class="loading-data-text info">
+                        ${tl(trans.no_mutual_listeners_explain)}
+                    </div>
+                </div>
+            `
+      );
     }
-    const friends = settings.friends.filter((friend) => friend != settings.starred_friend);
+    const friends = settings.friends.filter(
+      (friend) => friend != settings.starred_friend
+    );
     page.structure.side.appendChild(html.node`
         <section class="side-actions">
             <a class="btn side-action" data-type="profile" href="${root}user/${auth.name}/library/music/${redirect()}${sanitise(page.name)}">
@@ -53474,11 +53553,13 @@
                 </span>
             </a>
             ` : ""}
-            ${friends.map((friend) => html.node`
+            ${friends.map(
+      (friend) => html.node`
             <a class="btn side-action" data-type="profile" href="${root}user/${friend}/library/music/${redirect()}${sanitise(page.name)}">
                 ${friend}
             </a>
-            `)}
+            `
+    )}
             <a class="btn side-action" data-type="add" href="${root}bleh/profile">
                 ${tl(trans.add_friends)}
             </a>
