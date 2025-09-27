@@ -1,5 +1,5 @@
 {
-    "latest": "2025.0924",
+    "latest": "2025.0927",
     "sponsors": [
         "clairedoll", "kateshapedbox", "evangelicgirl",
         "astrablooms", "ItsProyal", "vwvwvwvwvwvwv", "Orofil",
@@ -237,6 +237,14 @@
                 "hue": 352,
                 "sat": 1.5,
                 "lit": 0.71
+            },
+            {
+                "icon": "data:image/svg+xml;base64,PHN2ZyAgeG1sbnM9Imh0dHA6Ly93d3cudzMub3JnLzIwMDAvc3ZnIiAgd2lkdGg9IjI0IiAgaGVpZ2h0PSIyNCIgIHZpZXdCb3g9IjAgMCAyNCAyNCIgIGZpbGw9Im5vbmUiICBzdHJva2U9ImN1cnJlbnRDb2xvciIgIHN0cm9rZS13aWR0aD0iMiIgIHN0cm9rZS1saW5lY2FwPSJyb3VuZCIgIHN0cm9rZS1saW5lam9pbj0icm91bmQiICBjbGFzcz0iaWNvbiBpY29uLXRhYmxlciBpY29ucy10YWJsZXItb3V0bGluZSBpY29uLXRhYmxlci1idXR0ZXJmbHkiPjxwYXRoIHN0cm9rZT0ibm9uZSIgZD0iTTAgMGgyNHYyNEgweiIgZmlsbD0ibm9uZSIvPjxwYXRoIGQ9Ik0xMiAxOC4xNzZhMyAzIDAgMSAxIC00Ljk1MyAtMi40NDlsLS4wMjUgLjAyM2E0LjUwMiA0LjUwMiAwIDAgMSAxLjQ4MyAtOC43NWMxLjQxNCAwIDIuNjc1IC42NTIgMy41IDEuNjcxYTQuNSA0LjUgMCAxIDEgNC45ODMgNy4wNzlhMyAzIDAgMSAxIC00Ljk4MyAyLjI1eiIgLz48cGF0aCBkPSJNMTIgMTl2LTEwIiAvPjxwYXRoIGQ9Ik05IDNsMyAybDMgLTIiIC8+PC9zdmc+",
+                "name": "lantern of moths",
+                "reason": "sponsor",
+                "hue": 141,
+                "sat": 0.24,
+                "lit": 1.02
             }
         ],
         "I3xi": {
