@@ -35450,6 +35450,7 @@
         return !various && official;
       });
       if (filtered.length == 0) return null;
+      log("filtered releases before picking", "oracle", "info", { filtered });
       let best = filtered.find(
         (release) => release.disambiguation?.toLowerCase() == "explicit"
       );
@@ -35474,13 +35475,10 @@
         (release) => release.disambiguation?.toLowerCase().includes("clean")
       );
       if (best) return best;
-      best = filtered.find(
-        (release) => !release.disambiguation?.toLowerCase().includes("english")
-      );
-      if (best) return best;
-      best = filtered.find(
-        (release) => !release.disambiguation?.toLowerCase().endsWith("mv")
-      );
+      best = filtered.find((release) => {
+        const disambiguation = release.disambiguation?.toLowerCase() || "";
+        return !disambiguation.includes("english") && !disambiguation.endsWith("mv");
+      });
       if (best) return best;
       return filtered[0];
     }

@@ -309,6 +309,8 @@ export function oracle_process() {
 
         if (filtered.length == 0) return null;
 
+        log('filtered releases before picking', 'oracle', 'info', { filtered });
+
         // prefer explicit
         let best = filtered.find(
             (release) => release.disambiguation?.toLowerCase() == 'explicit'
@@ -350,16 +352,14 @@ export function oracle_process() {
         // avoid anything referencing english
         // usually an english translation of
         // e.g. a japanese album
-        best = filtered.find(
-            (release) =>
-                !release.disambiguation?.toLowerCase().includes('english')
-        );
-        if (best) return best;
-
-        // avoid a music video
-        best = filtered.find(
-            (release) => !release.disambiguation?.toLowerCase().endsWith('mv')
-        );
+        // also avoid music videos
+        best = filtered.find((release) => {
+            const disambiguation = release.disambiguation?.toLowerCase() || '';
+            return (
+                !disambiguation.includes('english') &&
+                !disambiguation.endsWith('mv')
+            );
+        });
         if (best) return best;
 
         // otherwise any
