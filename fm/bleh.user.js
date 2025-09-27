@@ -49902,15 +49902,6 @@
                     </div>
                 </section>
                 <section class="bleh--panel">
-                    <h4>${tl(trans.overview)}</h4>
-                    <div class="setting-group">
-                        ${setting({
-          id: "music_links",
-          list: page.state.music_links
-        })}
-                    </div>
-                </section>
-                <section class="bleh--panel">
                     <div class="inner-preview pad">
                         <div class="bars" ref=${(el) => bars2 = el}>
                             ${() => {
@@ -49923,6 +49914,15 @@
                     </div>
                     <div class="setting-group">
                         ${setting({ id: "colourful_counts" })}
+                    </div>
+                </section>
+                <section class="bleh--panel">
+                    <h4>${tl(trans.overview)}</h4>
+                    <div class="setting-group">
+                        ${setting({
+          id: "music_links",
+          list: page.state.music_links
+        })}
                     </div>
                 </section>
                 ${!page.mobile ? html.node`
