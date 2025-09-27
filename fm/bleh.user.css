@@ -795,8 +795,8 @@
                 1px
         );
 
-        --item-small-radius: 7px;
-        --item-med-radius: 10px;
+        --item-small-radius: 5px;
+        --item-med-radius: 8px;
         --item-big-radius: 12px;
 
         --profile-header-background-height: 350px;
@@ -6166,36 +6166,15 @@
     }
 
     .lastfm-bulk-edit-chartlist-scrobbles {
-        [data-bleh--show_bulk_edit_album="false"] & {
-            .chartlist-album:not(.custom-album-text) {
-                display: none;
-            }
+        .chartlist-album:not(.custom-album-text) {
+            display: none;
         }
-        [data-bleh--show_bulk_edit_album="true"] & {
-            .chartlist-name,
-            .chartlist-artist {
-                width: 40% !important;
-            }
+    }
 
-            .chartlist-album:not(.custom-album-text) {
-                position: relative;
-                left: 20px;
-                margin: unset !important;
-                color: hsl(var(--c3));
-
-                width: 18%;
-
-                .lastfm-bulk-edit-text-danger {
-                    color: hsla(var(--c3), 60%);
-                }
-            }
-        }
-
-        [data-bleh--stacked_chartlist_info="false"] & {
-            .chartlist-name {
-                margin-top: unset !important;
-                margin-bottom: unset !important;
-            }
+    [data-bleh--stacked_chartlist_info="false"] {
+        .chartlist-name {
+            margin-top: unset !important;
+            margin-bottom: unset !important;
         }
     }
 
@@ -18501,6 +18480,7 @@
             }
         }
 
+        .setting-lists,
         .primary-selections {
             flex: 0 0 100%;
         }
@@ -22856,7 +22836,12 @@
 
                     .info-side {
                         h1 {
-                            display: block;
+                            display: -webkit-box;
+                            overflow: hidden;
+                            text-overflow: ellipsis;
+                            line-clamp: 1;
+                            -webkit-line-clamp: 1;
+                            -webkit-box-orient: vertical;
                             font-size: 30px;
                             line-height: 36px;
 
@@ -23121,6 +23106,7 @@
 
         .info-side {
             flex: 1;
+            overflow: hidden;
 
             .sub-text {
                 justify-content: unset;
@@ -23256,6 +23242,13 @@
                 line-height: 22px;
                 color: hsla(var(--c2), 80%);
                 cursor: default;
+
+                display: -webkit-box;
+                overflow: hidden;
+                text-overflow: ellipsis;
+                line-clamp: 1;
+                -webkit-line-clamp: 1;
+                -webkit-box-orient: vertical;
 
                 .header-new-crumb {
                     font-size: inherit;
@@ -28205,57 +28198,49 @@
 
     .setting-lists {
         display: flex;
-        gap: var(--card-gap);
+        flex-wrap: wrap;
+        gap: 6px;
 
-        .setting-list {
+        margin: 0 calc(-1 * var(--button-sides));
+
+        .setting-list-item {
             display: flex;
-            flex-direction: column;
-            width: 180px;
+            align-items: center;
+            gap: var(--icon-gap);
+            text-align: left;
 
-            &.available {
-                .setting-list-item {
-                    --col: hsl(var(--c3));
-                }
+            &:not(.current) {
+                --col: hsl(var(--c3));
             }
 
-            --font-weight-medium: var(--font-weight);
+            --bg: transparent;
+            --bg-hov: hsl(var(--b4), 40%);
+            --bg-atv: hsl(var(--b4), 60%);
+            --shadow: none;
 
-            .setting-list-item {
-                display: flex;
-                align-items: center;
-                gap: var(--icon-gap);
-                text-align: left;
+            --button-height: 28px;
+            --btn-top: 5px;
+            --btn-bottom: 5px;
+            --radius: var(--item-med-radius);
 
-                --bg: transparent;
-                --bg-hov: hsl(var(--b4), 40%);
-                --bg-atv: hsl(var(--b4), 60%);
-                --shadow: none;
-                margin: 0 calc(-1 * var(--button-sides));
+            & > .info {
+                flex: 1;
+            }
 
-                --button-height: 30px;
-                --btn-top: 5px;
-                --btn-bottom: 5px;
-                --radius: var(--item-med-radius);
+            & > .bleh-icon {
+                --icon: var(--mask);
+                --icon-size: 16px;
+            }
 
-                & > .info {
-                    flex: 1;
-                }
-
-                & > .bleh-icon {
-                    --icon: var(--mask);
-                    --icon-size: 16px;
-                }
-
-                .indicator {
-                    --icon-size: 14px;
-                }
+            .indicator {
+                --icon-size: 14px;
             }
         }
 
         .setting-list-sep {
             width: 1px;
             background: hsl(var(--b4), 60%);
-            display: block;
+            display: none;
         }
     }
 

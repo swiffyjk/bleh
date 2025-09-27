@@ -892,12 +892,6 @@ export let settings_store = {
         body: trans.font_emoji.body,
         platforms: ['win32', 'linux', 'android', 'other']
     },
-    show_bulk_edit_album: {
-        default: false,
-        title: trans.show_bulk_edit_album.name,
-        body: trans.show_bulk_edit_album.body,
-        extensions: [trans.bulk_edit_extension]
-    },
     grid_glow: {
         default: true,
         title: trans.grid_glow.name,

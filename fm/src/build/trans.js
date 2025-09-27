@@ -2850,20 +2850,6 @@ export const trans = {
             sv: 'Välj mellan en liten fördröjning för en stor mängd olika diagramalternativ eller använd äldre Last.fm-diagram'
         }
     },
-    show_bulk_edit_album: {
-        name: {
-            en: 'Show ‘Bulk Edit’ powered album name in tracklists',
-            de: 'Albumnamen mit ‚Massenbearbeitung‘ in Titellisten anzeigen',
-            pt: 'Exibir o nome do álbum ajustado pelo ‘Bulk Edit’ nas listas de faixas.',
-            sv: 'Visa albumnamn under låtlistor inom bibliotek med ‘Bulk Edit’-tillägget'
-        },
-        body: {
-            en: 'With this extension the album name is displayed on all tracks by default, whereas with bleh the album name is only displayed on active tracks',
-            de: 'Mit dieser Erweiterung wird der Albumname standardmäßig auf allen Titeln angezeigt, während mit bleh der Albumname nur auf aktiven Titeln angezeigt wird',
-            pt: 'Com esta extensão, o nome do álbum é exibido em todas as faixas por padrão, enquanto no bleh ele é mostrado apenas nas faixas que estão sendo tocadas no momento.',
-            sv: 'Med det här tillägget visas albumnamnet alltid under låttiteln, medans med bleh så visas albumnamnet bara på låten som aktivt skrobblas'
-        }
-    },
     gendered_tags: {
         name: {
             en: 'Hide gender-based tags',

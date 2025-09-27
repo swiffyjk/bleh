@@ -937,7 +937,6 @@ export async function render_setting_page(page_id) {
                                 column_view.compat(val);
                             }
                         }))}
-                        ${setting({ id: 'show_bulk_edit_album' })}
                     </div>
                 </section>
                 <section class="bleh--panel">
@@ -2063,7 +2062,6 @@ export async function render_setting_page(page_id) {
                     <div class="setting-group">
                         ${setting({ id: 'stacked_chartlist_info' })}
                         ${setting({ id: 'expand_tracks' })}
-                        ${setting({ id: 'show_bulk_edit_album' })}
                         ${setting({ id: 'glacier_library_graphs' })}
                     </div>
                     <div class="inner-preview pad">

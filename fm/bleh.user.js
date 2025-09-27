@@ -37248,10 +37248,17 @@
   function patch_titles(search = page.structure.main) {
     if (page.subpage === "tags_overview") return;
     if (!search) {
-      log("tracks could not be searched as search was undefined", "tracks", "log", { search });
+      log(
+        "tracks could not be searched as search was undefined",
+        "tracks",
+        "log",
+        { search }
+      );
       return;
     }
-    const tracklists = search.querySelectorAll(".chartlist:not(.chartlist__placeholder)");
+    const tracklists = search.querySelectorAll(
+      ".chartlist:not(.chartlist__placeholder)"
+    );
     let insights = {
       artist: {
         display: false,
@@ -37290,11 +37297,17 @@
     tracklists.forEach((tracklist) => {
       if (!tracklist) return;
       log("found, checking", "tracks", "log", { tracklist, search });
-      if (tracklist.querySelector("tbody > .chartlist-row:first-child > .kate-placeholder"))
+      if (tracklist.querySelector(
+        "tbody > .chartlist-row:first-child > .kate-placeholder"
+      ))
         return;
       log("new!", "tracks", "info", { tracklist });
-      const wide = tracklist.classList.contains("chartlist--wide-artist-column");
-      const tracks = tracklist.querySelectorAll(":is(.chartlist-row:not(.chartlist__placeholder-row), .chartlist-row--interlist-ad)");
+      const wide = tracklist.classList.contains(
+        "chartlist--wide-artist-column"
+      );
+      const tracks = tracklist.querySelectorAll(
+        ":is(.chartlist-row:not(.chartlist__placeholder-row), .chartlist-row--interlist-ad)"
+      );
       tracks.forEach((track, index3) => {
         console.log("track", track);
         if (track.getAttribute("data-track-type")) return;
@@ -37306,10 +37319,15 @@
         track.appendChild(html.node`
                 <div class="kate-placeholder" />
             `);
-        let track_title = track.querySelector(".chartlist-name a:not(.offset-section-anchor)");
+        let track_title = track.querySelector(
+          ".chartlist-name a:not(.offset-section-anchor)"
+        );
         if (!track_title) return;
         if (track_title.hasAttribute("title")) {
-          track_title.setAttribute("data-name", track_title.getAttribute("title"));
+          track_title.setAttribute(
+            "data-name",
+            track_title.getAttribute("title")
+          );
           track_title.removeAttribute("title");
         }
         let is_user = track.querySelector(".chartlist-image .avatar");
@@ -37326,7 +37344,11 @@
           is_user = false;
           is_artist = true;
         }
-        log(`is user: ${is_user}, is artist: ${is_artist}`, "tracks", "log");
+        log(
+          `is user: ${is_user}, is artist: ${is_artist}`,
+          "tracks",
+          "log"
+        );
         if (is_user) {
           track.setAttribute("data-track-type", "user");
           if (settings.colourful_counts)
@@ -37338,16 +37360,23 @@
           track.classList.remove("chartlist-row--with-artist");
           track.setAttribute("data-track-type", "artist");
           if (settings.corrections)
-            track_title.textContent = correct_artist(track_title.getAttribute("data-name"));
+            track_title.textContent = correct_artist(
+              track_title.getAttribute("data-name")
+            );
           let bar2 = track.querySelector(".chartlist-count-bar-slug");
           if (bar2) {
-            if (settings.colourful_counts) patch_artist_ranks_in_list_view(track);
+            if (settings.colourful_counts)
+              patch_artist_ranks_in_list_view(track);
             insights.artist.display = true;
             let value = parseInt(bar2.getAttribute("data-stat-value"));
             insights.artist.values.push(value);
             if (value > insights.artist.highest.value)
               insights.artist.highest.value = value;
-            log(`pushed insight artist label of ${track_title.textContent}`, "glacier library", "log");
+            log(
+              `pushed insight artist label of ${track_title.textContent}`,
+              "glacier library",
+              "log"
+            );
             insights.artist.labels.push(track_title.textContent);
             log("finished artist stuff, returning", "tracks", "log");
           }
@@ -37355,7 +37384,10 @@
         }
         let is_album = track.hasAttribute("data-album-row");
         if (is_album) track.classList.add("bleh--is-album");
-        let track_artist = return_artist_from_track(track_title.getAttribute("href"), is_album);
+        let track_artist = return_artist_from_track(
+          track_title.getAttribute("href"),
+          is_album
+        );
         if (!wide) track.classList.add("chartlist-row--with-artist");
         const bar = track.querySelector(".chartlist-count-bar-slug");
         if (bar) {
@@ -37372,10 +37404,14 @@
               insights.track.highest.value = value;
           }
         }
-        const is_active = track.classList.contains("chartlist-row--now-scrobbling");
+        const is_active = track.classList.contains(
+          "chartlist-row--now-scrobbling"
+        );
         const has_bar = track.querySelector(":scope > .chartlist-bar");
         let track_legacy_menu = track.querySelector(".chartlist-more-menu");
-        let track_timestamp = track.querySelector(".chartlist-timestamp span");
+        let track_timestamp = track.querySelector(
+          ".chartlist-timestamp span"
+        );
         let track_timestamp_contents;
         if (track_timestamp && !is_active) {
           track_timestamp_contents = track_timestamp.getAttribute("title");
@@ -37389,11 +37425,17 @@
         }
         let album = track.querySelector(".chartlist-album a");
         if (!is_album && album)
-          album.textContent = correct_item_by_artist(album.textContent, track_artist);
+          album.textContent = correct_item_by_artist(
+            album.textContent,
+            track_artist
+          );
         let image = track.querySelector(".chartlist-image img");
         const album_link = track.querySelector(".chartlist-image a");
         if (settings.format_guest_features) {
-          let formatted_title = name_includes(track_title.getAttribute("data-name"), track_artist);
+          let formatted_title = name_includes(
+            track_title.getAttribute("data-name"),
+            track_artist
+          );
           console.log("formatted", formatted_title);
           let song_title = track_title.getAttribute("data-name");
           let song_tags = {};
@@ -37401,23 +37443,53 @@
             song_title = formatted_title[0];
             song_tags = formatted_title[1];
           }
-          track_title.setAttribute("data-name", correct_item_by_artist(track_title.getAttribute("data-name"), track_artist));
-          render(track_title, html`
-                    <div class="title">${romanise(song_title.trim())}</div>
-                    ${song_tags.map((tag) => html.node`
+          track_title.setAttribute(
+            "data-name",
+            correct_item_by_artist(
+              track_title.getAttribute("data-name"),
+              track_artist
+            )
+          );
+          render(
+            track_title,
+            html`
+                        <div class="title">${romanise(song_title.trim())}</div>
+                        ${song_tags.map(
+              (tag) => html.node`
                         <div class="feat" data-bleh--tag-type="${tag.type}" data-bleh--tag-group="${tag.group}">${romanise(tag.text)}</div>
-                    `)}
-                `);
+                    `
+            )}
+                    `
+          );
           let song_artist_element = track.querySelector(".chartlist-artist");
           if (!song_artist_element && !is_user) {
             song_artist_element = document.createElement("td");
             song_artist_element.classList.add("chartlist-artist");
             track.appendChild(song_artist_element);
           }
-          console.log("artist matches", song_artist_element.textContent.replaceAll("+", " ").trim() === track_artist, "artist is blank", song_artist_element.textContent.trim() === "", song_artist_element.textContent.trim(), formatted_title[2]);
+          console.log(
+            "artist matches",
+            song_artist_element.textContent.replaceAll("+", " ").trim() === track_artist,
+            "artist is blank",
+            song_artist_element.textContent.trim() === "",
+            song_artist_element.textContent.trim(),
+            formatted_title[2]
+          );
           if (song_artist_element.textContent.replaceAll("+", " ").trim() === track_artist || song_artist_element.textContent.trim() === "") {
-            log("artist either matches or is blank, replacing", "tracks", "log");
-            render(song_artist_element, html`<a href="${root}music/${redirect()}${sanitise(formatted_title[2])}">${romanise(formatted_title[2])}</a>`);
+            log(
+              "artist either matches or is blank, replacing",
+              "tracks",
+              "log"
+            );
+            render(
+              song_artist_element,
+              html`<a
+                            href="${root}music/${redirect()}${sanitise(
+                formatted_title[2]
+              )}"
+                            >${romanise(formatted_title[2])}</a
+                        >`
+            );
             let song_guests = formatted_title[3];
             for (let guest in song_guests) {
               song_artist_element.appendChild(html.node`
@@ -37426,9 +37498,12 @@
             }
           }
           if (track.getAttribute("data-disambig") == "explicit") {
-            song_artist_element.insertBefore(html.node`
+            song_artist_element.insertBefore(
+              html.node`
                         <span class="track-explicit">${tl(trans.explicit)}</span>
-                    `, song_artist_element.firstChild);
+                    `,
+              song_artist_element.firstChild
+            );
           }
           if (track_legacy_menu) {
             track.preview = html.node`
@@ -37442,9 +37517,11 @@
                                 <h5 class="title">${song_title}</h5>
                                 <p class="artist">${song_artist_element.firstElementChild.textContent}</p>
                                 <div class="tags">
-                                    ${song_tags.map((tag) => html.node`
+                                    ${song_tags.map(
+              (tag) => html.node`
                                         <div class="feat" data-bleh--tag-type="${tag.type}" data-bleh--tag-group="${tag.group}">${tag.text}</div>
-                                    `)}
+                                    `
+            )}
                                 </div>
                                 ${is_album ? "" : html.node`<p class="album">${image && album_link ? correct_item_by_artist(image.getAttribute("alt"), track_artist) : album ? album.textContent : ""}</p>`}
                                 ${track_timestamp && track_timestamp_contents ? html.node`<p class="timestamp">${track_timestamp_contents}</p>` : ""}
@@ -37453,23 +37530,35 @@
                     `;
           }
         } else if (settings.corrections) {
-          let song_artist_element = track.querySelector(".chartlist-artist a");
+          let song_artist_element = track.querySelector(
+            ".chartlist-artist a"
+          );
           if (song_artist_element) {
-            let corrected_title = correct_item_by_artist(track_title.textContent, song_artist_element.textContent);
+            let corrected_title = correct_item_by_artist(
+              track_title.textContent,
+              song_artist_element.textContent
+            );
             track_title.textContent = corrected_title;
             track_title.setAttribute("data-name", corrected_title);
-            let corrected_artist = correct_artist(song_artist_element.textContent);
+            let corrected_artist = correct_artist(
+              song_artist_element.textContent
+            );
             song_artist_element.textContent = corrected_artist;
             song_artist_element.setAttribute("title", corrected_artist);
           } else {
-            let corrected_title = correct_item_by_artist(track_title.textContent, track_artist);
+            let corrected_title = correct_item_by_artist(
+              track_title.textContent,
+              track_artist
+            );
             track_title.textContent = corrected_title;
             track_title.setAttribute("data-name", corrected_title);
           }
         }
         if (track_legacy_menu) {
           let menu;
-          let previous = track.querySelector(":scope > .more-button-wrapper");
+          let previous = track.querySelector(
+            ":scope > .more-button-wrapper"
+          );
           if (previous) previous.style.display = "none";
           const is_own_profile = page.type == "user" && page.name == auth.name;
           const can_edit = is_own_profile && !is_active && (!is_album ? !has_bar : true) && auth.pro;
@@ -37501,37 +37590,136 @@
                     </td>
                 `);
           setTimeout(() => {
-            let edit_button = track_legacy_menu.querySelector('[data-analytics-action="EditScrobbleOpen"]');
-            let bulk_edit_button = track_legacy_menu.querySelector('[data-analytics-action="BulkEditScrobblesOpen"]');
+            let edit_button = track_legacy_menu.querySelector(
+              '[data-analytics-action="EditScrobbleOpen"]'
+            );
+            let bulk_edit_button = track_legacy_menu.querySelector(
+              '[data-analytics-action="BulkEditScrobblesOpen"]'
+            );
             let delete_button = track_legacy_menu.querySelector(".more-item--delete");
             if (edit_button) {
               let form = edit_button.parentElement;
-              page.token = form.querySelector('[name="csrfmiddlewaretoken"]').value;
-              track.setAttribute("data-action", form.getAttribute("action"));
+              page.token = form.querySelector(
+                '[name="csrfmiddlewaretoken"]'
+              ).value;
+              track.setAttribute(
+                "data-action",
+                form.getAttribute("action")
+              );
               if (!is_album) {
-                let album_name2 = form.querySelector('[name="album_name"]');
-                let album_artist_name = form.querySelector('[name="album_artist_name"]');
-                track.setAttribute("data-artist-name", correct_artist(form.querySelector('[name="artist_name"]').value));
-                track.setAttribute("data-track-name", correct_item_by_artist(form.querySelector('[name="track_name"]').value, form.querySelector('[name="artist_name"]').value));
-                if (album_name2) track.setAttribute("data-album-name", correct_item_by_artist(album_name2.value, form.querySelector('[name="artist_name"]').value));
-                if (album_artist_name) track.setAttribute("data-album-artist-name", correct_artist(album_artist_name.value));
-                track.setAttribute("data-timestamp", form.querySelector('[name="timestamp"]').value);
+                let album_name2 = form.querySelector(
+                  '[name="album_name"]'
+                );
+                let album_artist_name = form.querySelector(
+                  '[name="album_artist_name"]'
+                );
+                track.setAttribute(
+                  "data-artist-name",
+                  correct_artist(
+                    form.querySelector('[name="artist_name"]').value
+                  )
+                );
+                track.setAttribute(
+                  "data-track-name",
+                  correct_item_by_artist(
+                    form.querySelector('[name="track_name"]').value,
+                    form.querySelector('[name="artist_name"]').value
+                  )
+                );
+                if (album_name2)
+                  track.setAttribute(
+                    "data-album-name",
+                    correct_item_by_artist(
+                      album_name2.value,
+                      form.querySelector(
+                        '[name="artist_name"]'
+                      ).value
+                    )
+                  );
+                if (album_artist_name)
+                  track.setAttribute(
+                    "data-album-artist-name",
+                    correct_artist(album_artist_name.value)
+                  );
+                track.setAttribute(
+                  "data-timestamp",
+                  form.querySelector('[name="timestamp"]').value
+                );
               } else {
-                track.setAttribute("data-album-name", correct_item_by_artist(form.querySelector('[name="album_name"]').value, form.querySelector('[name="album_artist_name"]').value));
-                track.setAttribute("data-album-artist-name", correct_artist(form.querySelector('[name="album_artist_name"]').value));
-                track.setAttribute("data-album-name-original", correct_item_by_artist(form.querySelector('[name="album_name_original"]').value, form.querySelector('[name="album_artist_name_original"]').value));
-                track.setAttribute("data-album-artist-name-original", correct_artist(form.querySelector('[name="album_artist_name_original"]').value));
-                track.setAttribute("data-album-image", form.querySelector('[name="album_image"]').value);
-                track.setAttribute("data-count", form.querySelector('[name="count"]').value);
+                track.setAttribute(
+                  "data-album-name",
+                  correct_item_by_artist(
+                    form.querySelector('[name="album_name"]').value,
+                    form.querySelector(
+                      '[name="album_artist_name"]'
+                    ).value
+                  )
+                );
+                track.setAttribute(
+                  "data-album-artist-name",
+                  correct_artist(
+                    form.querySelector(
+                      '[name="album_artist_name"]'
+                    ).value
+                  )
+                );
+                track.setAttribute(
+                  "data-album-name-original",
+                  correct_item_by_artist(
+                    form.querySelector(
+                      '[name="album_name_original"]'
+                    ).value,
+                    form.querySelector(
+                      '[name="album_artist_name_original"]'
+                    ).value
+                  )
+                );
+                track.setAttribute(
+                  "data-album-artist-name-original",
+                  correct_artist(
+                    form.querySelector(
+                      '[name="album_artist_name_original"]'
+                    ).value
+                  )
+                );
+                track.setAttribute(
+                  "data-album-image",
+                  form.querySelector('[name="album_image"]').value
+                );
+                track.setAttribute(
+                  "data-count",
+                  form.querySelector('[name="count"]').value
+                );
               }
             } else if (delete_button) {
               let form = delete_button.parentElement;
-              page.token = form.querySelector('[name="csrfmiddlewaretoken"]').value;
-              track.setAttribute("data-artist-name", correct_artist(form.querySelector('[name="artist_name"]').value));
-              track.setAttribute("data-track-name", correct_item_by_artist(form.querySelector('[name="track_name"]').value, form.querySelector('[name="artist_name"]').value));
-              track.setAttribute("data-timestamp", form.querySelector('[name="timestamp"]').value);
+              page.token = form.querySelector(
+                '[name="csrfmiddlewaretoken"]'
+              ).value;
+              track.setAttribute(
+                "data-artist-name",
+                correct_artist(
+                  form.querySelector('[name="artist_name"]').value
+                )
+              );
+              track.setAttribute(
+                "data-track-name",
+                correct_item_by_artist(
+                  form.querySelector('[name="track_name"]').value,
+                  form.querySelector('[name="artist_name"]').value
+                )
+              );
+              track.setAttribute(
+                "data-timestamp",
+                form.querySelector('[name="timestamp"]').value
+              );
             }
-            let album_name = sanitise(image ? correct_item_by_artist(image.getAttribute("alt"), track_artist) : album ? album.textContent : "");
+            let album_name = sanitise(
+              image ? correct_item_by_artist(
+                image.getAttribute("alt"),
+                track_artist
+              ) : album ? album.textContent : ""
+            );
             menu = tippy_esm_default(more_button, {
               theme: "context-menu",
               content: html.node`
@@ -37572,10 +37760,17 @@
                                 ${bulk_edit_button ? html.node`
                                     <div class="button-combo-sep" />
                                     ${() => {
-                let button = track_legacy_menu.querySelector('[data-analytics-action="BulkEditScrobblesOpen"]');
+                let button = track_legacy_menu.querySelector(
+                  '[data-analytics-action="BulkEditScrobblesOpen"]'
+                );
                 button.classList = "dropdown-menu-clickable-item chibi";
-                button.textContent = tl(trans.bulk_edit);
-                button.setAttribute("data-type", "bulk-edit");
+                button.textContent = tl(
+                  trans.bulk_edit
+                );
+                button.setAttribute(
+                  "data-type",
+                  "bulk-edit"
+                );
                 tippy_esm_default(button, {
                   content: tl(trans.bulk_edit),
                   appendTo: document.body
@@ -37589,7 +37784,9 @@
                             ${() => {
                 let container = track.querySelector(".chartlist-play");
                 if (!container) return;
-                let button = container.querySelector(".chartlist-play-button");
+                let button = container.querySelector(
+                  ".chartlist-play-button"
+                );
                 if (!button) return;
                 button.classList = "dropdown-menu-clickable-item";
                 button.textContent = tl(trans.play);
@@ -37734,28 +37931,47 @@
                   let form_data = new FormData(form);
                   console.info(form_data);
                   try {
-                    track.setAttribute("data-ajax-form-state", "deleted");
+                    track.setAttribute(
+                      "data-ajax-form-state",
+                      "deleted"
+                    );
                     await fetch(url, {
                       method: "POST",
                       body: form_data
                     }).then((res) => {
                       if (!res.ok) {
-                        log("failed to delete", "form", "error", { res });
-                        track.removeAttribute("data-ajax-form-state");
+                        log(
+                          "failed to delete",
+                          "form",
+                          "error",
+                          { res }
+                        );
+                        track.removeAttribute(
+                          "data-ajax-form-state"
+                        );
                         return;
                       }
-                      log("received response", "form", "info", { res });
+                      log(
+                        "received response",
+                        "form",
+                        "info",
+                        { res }
+                      );
                       notify({
                         id: "delete",
                         title: tl(trans.deleted),
-                        body: track_title.getAttribute("data-name"),
+                        body: track_title.getAttribute(
+                          "data-name"
+                        ),
                         icon: "icon-16-trash",
                         type: "error"
                       });
                     });
                   } catch (e2) {
                     console.error(e2);
-                    track.removeAttribute("data-ajax-form-state");
+                    track.removeAttribute(
+                      "data-ajax-form-state"
+                    );
                   }
                 }}>
                                         <input type="hidden" name="csrfmiddlewaretoken" value=${page.token}>
@@ -37776,9 +37992,12 @@
               appendTo: document.body,
               onShow(instance) {
                 track.setAttribute("data-has-menu", true);
-                instance.popper.addEventListener("click", (event3) => {
-                  instance.hide();
-                });
+                instance.popper.addEventListener(
+                  "click",
+                  (event3) => {
+                    instance.hide();
+                  }
+                );
               },
               onClickOutside(instance) {
                 instance.hide();
@@ -37791,13 +38010,25 @@
           }, 100);
         }
         if (is_album) {
-          log(`pushed insight album label of ${track_title.getAttribute("data-name")}`, "glacier library", "log");
-          insights.album.labels.push(track_title.getAttribute("data-name"));
+          log(
+            `pushed insight album label of ${track_title.getAttribute("data-name")}`,
+            "glacier library",
+            "log"
+          );
+          insights.album.labels.push(
+            track_title.getAttribute("data-name")
+          );
         } else {
-          log(`pushed insight track label of ${track_title.getAttribute("data-name")}`, "glacier library", "log");
-          insights.track.labels.push(track_title.getAttribute("data-name"));
+          log(
+            `pushed insight track label of ${track_title.getAttribute("data-name")}`,
+            "glacier library",
+            "log"
+          );
+          insights.track.labels.push(
+            track_title.getAttribute("data-name")
+          );
         }
-        const show_album_text = (is_active || settings.expand_tracks == "always") && settings.expand_tracks != "never";
+        const show_album_text = (is_active || settings.expand_tracks == "always") && settings.expand_tracks != "never" && settings.stacked_chartlist_info;
         track.setAttribute("data-show-album-text", show_album_text);
         if (!is_album) {
           let image_wrap = track.querySelector(".chartlist-image");
@@ -37805,23 +38036,36 @@
             let link = image_wrap.querySelector(".cover-art");
             let image2 = link.querySelector("img");
             if (show_album_text && !has_bar && !settings.album_text) {
-              let alt = romanise(correct_item_by_artist(image2.getAttribute("alt"), track_artist));
+              let alt = romanise(
+                correct_item_by_artist(
+                  image2.getAttribute("alt"),
+                  track_artist
+                )
+              );
               track.appendChild(html.node`
                             <td class="chartlist-album custom-album-text">
                                 <a href="${link.getAttribute("href")}">${alt}</a>
                             </td>
                         `);
             }
-            if (!settings.colourful_tracks && !settings.colourful_tracks_all) return;
+            if (!settings.colourful_tracks && !settings.colourful_tracks_all)
+              return;
             if (!settings.colourful_tracks_all && !is_active) return;
             image2.setAttribute("crossorigin", "anonymous");
             try {
               image2.addEventListener("load", function() {
                 let thief = new import_color_thief_browser2.default();
                 let colour2 = thief.getColor(image2);
-                let hsl = rgb_to_hsl(colour2[0], colour2[1], colour2[2]);
+                let hsl = rgb_to_hsl(
+                  colour2[0],
+                  colour2[1],
+                  colour2[2]
+                );
                 track.style.setProperty("--hue-over", hsl.h);
-                track.style.setProperty("--sat-over", clamp_sat2(hsl.s / 100 * 3));
+                track.style.setProperty(
+                  "--sat-over",
+                  clamp_sat2(hsl.s / 100 * 3)
+                );
                 track.style.setProperty("--lit-over", 1);
               });
             } catch (e) {
@@ -37830,8 +38074,7 @@
         }
       });
     });
-    if (page.subpage.startsWith("library"))
-      bleh_glacier_insights(insights);
+    if (page.subpage.startsWith("library")) bleh_glacier_insights(insights);
   }
 
   // src/components/collage.js
@@ -40459,9 +40702,14 @@
   }) {
     try {
       let value = settings[id];
-      log(`creating ${id} with value ${value}`, "settings", "log", { settings, settings_id: settings[id] });
+      log(`creating ${id} with value ${value}`, "settings", "log", {
+        settings,
+        settings_id: settings[id]
+      });
       if (!settings_store[id])
-        return setting_fail(id, { message: "No settings store entry present" });
+        return setting_fail(id, {
+          message: "No settings store entry present"
+        });
       const type = settings_store[id].type || "toggle";
       const title = settings_store[id].title ? tl(settings_store[id].title) : id;
       let body = settings_store[id].body ? tl(settings_store[id].body) : null;
@@ -40477,12 +40725,19 @@
         disabled_reason = tl(trans.item_is_unavailable_on_platform).replace("{i}", title).replace("{p}", tl(trans.platforms[page.platform]));
       }
       if (disabled && disabled_reason)
-        return setting_fail(id, { message: disabled_reason, unavailable: true });
+        return setting_fail(id, {
+          message: disabled_reason,
+          unavailable: true
+        });
       let html_title = html.node`${title}`;
       if (settings_store[id].beta)
-        html_title.appendChild(html.node`<span class="new-badge beta">${tl(trans.beta)}</span>`);
+        html_title.appendChild(
+          html.node`<span class="new-badge beta">${tl(trans.beta)}</span>`
+        );
       if (settings_store[id].new_release)
-        html_title.appendChild(html.node`<span class="new-badge new">${tl(trans.new)}</span>`);
+        html_title.appendChild(
+          html.node`<span class="new-badge new">${tl(trans.new)}</span>`
+        );
       if (type === "toggle") {
         let update_toggle = function() {
           if (elem.getAttribute("disabled") == "true") {
@@ -40512,17 +40767,21 @@
                     ` : ""}
                     ${settings_store[id].extensions ? html.node`
                     <div class="extensions">
-                        ${settings_store[id].extensions.map((extension) => () => {
-          let container = html.node`
+                        ${settings_store[id].extensions.map(
+          (extension) => () => {
+            let container = html.node`
                                 <div class="extension">
                                     <div class="bleh-icon" />
                                 </div>
                             `;
-          tippy_esm_default(container, {
-            content: tl(trans.requires_extension_value).replace("{v}", tl(extension))
-          });
-          return container;
-        })}
+            tippy_esm_default(container, {
+              content: tl(
+                trans.requires_extension_value
+              ).replace("{v}", tl(extension))
+            });
+            return container;
+          }
+        )}
                     </div>
                     ` : ""}
                     ${setting_incompatible_block(settings_store[id].incompatible)}
@@ -40538,9 +40797,11 @@
           elem.setAttribute("disabled", "false");
           Object.entries(incompatible_with).forEach(([key, val]) => {
             if (Array.isArray(val)) {
-              if (val.includes(settings[key])) elem.setAttribute("disabled", "true");
+              if (val.includes(settings[key]))
+                elem.setAttribute("disabled", "true");
             } else {
-              if (JSON.stringify(val) == JSON.stringify(settings[key])) elem.setAttribute("disabled", "true");
+              if (JSON.stringify(val) == JSON.stringify(settings[key]))
+                elem.setAttribute("disabled", "true");
             }
           });
         };
@@ -40549,9 +40810,15 @@
       } else if (type === "range") {
         let update_range = function(val) {
           input2.value = val;
-          track.style.setProperty("--percent", `${(val - settings_store[id].min) / max_range * 100}%`);
+          track.style.setProperty(
+            "--percent",
+            `${(val - settings_store[id].min) / max_range * 100}%`
+          );
           marker.textContent = `${val}${settings_store[id].suffix || ""}`;
-          option.setAttribute("data-modified", val != settings_store[id].default);
+          option.setAttribute(
+            "data-modified",
+            val != settings_store[id].default
+          );
           save_setting(id, val);
           if (func) func(val);
         }, reset_range = function() {
@@ -40565,7 +40832,9 @@
         let max2 = settings_store[id].max || 0;
         let step = settings_store[id].step || 0;
         if (min2 >= max2 || step === 0)
-          return setting_fail(id, { message: "A range type requires a min, max, and step defined in the settings store" });
+          return setting_fail(id, {
+            message: "A range type requires a min, max, and step defined in the settings store"
+          });
         let reset_btn;
         let track;
         let input2;
@@ -40581,17 +40850,21 @@
                     ` : ""}
                     ${settings_store[id].extensions ? html.node`
                     <div class="extensions">
-                        ${settings_store[id].extensions.map((extension) => () => {
-          let container = html.node`
+                        ${settings_store[id].extensions.map(
+          (extension) => () => {
+            let container = html.node`
                                 <div class="extension">
                                     <div class="bleh-icon" />
                                 </div>
                             `;
-          tippy_esm_default(container, {
-            content: tl(trans.requires_extension_value).replace("{v}", tl(extension))
-          });
-          return container;
-        })}
+            tippy_esm_default(container, {
+              content: tl(
+                trans.requires_extension_value
+              ).replace("{v}", tl(extension))
+            });
+            return container;
+          }
+        )}
                     </div>
                     ` : ""}
                     ${setting_incompatible_block(settings_store[id].incompatible)}
@@ -40610,9 +40883,11 @@
           elem.setAttribute("disabled", "false");
           Object.entries(incompatible_with).forEach(([key, val]) => {
             if (Array.isArray(val)) {
-              if (val.includes(settings[key])) elem.setAttribute("disabled", "true");
+              if (val.includes(settings[key]))
+                elem.setAttribute("disabled", "true");
             } else {
-              if (JSON.stringify(val) == JSON.stringify(settings[key])) elem.setAttribute("disabled", "true");
+              if (JSON.stringify(val) == JSON.stringify(settings[key]))
+                elem.setAttribute("disabled", "true");
             }
           });
         };
@@ -40630,7 +40905,9 @@
         let min2 = settings_store[id].min || 0;
         let max2 = settings_store[id].max || 0;
         if (max2 === 0)
-          return setting_fail(id, { message: "A text type requires a max defined in the settings store" });
+          return setting_fail(id, {
+            message: "A text type requires a max defined in the settings store"
+          });
         let reset_btn;
         let avatar3;
         let input2;
@@ -40638,7 +40915,8 @@
         let input_container;
         let error_tooltip;
         let placeholder = settings_store[id].placeholder;
-        if (placeholder && placeholder != "empty") placeholder = tl(placeholder);
+        if (placeholder && placeholder != "empty")
+          placeholder = tl(placeholder);
         let container = html.node`
                 <div class="setting v2 ${standalone ? "standalone" : ""}" data-type="text" disabled=${disabled} data-hide=${hide_if_incompatible} ref=${(el) => option = el} data-modified=${value != settings_store[id].default}>
                     ${icon ? html.node`
@@ -40654,17 +40932,21 @@
                     ` : ""}
                     ${settings_store[id].extensions ? html.node`
                     <div class="extensions">
-                        ${settings_store[id].extensions.map((extension) => () => {
-          let container2 = html.node`
+                        ${settings_store[id].extensions.map(
+          (extension) => () => {
+            let container2 = html.node`
                                 <div class="extension">
                                     <div class="bleh-icon" />
                                 </div>
                             `;
-          tippy_esm_default(container2, {
-            content: tl(trans.requires_extension_value).replace("{v}", tl(extension))
-          });
-          return container2;
-        })}
+            tippy_esm_default(container2, {
+              content: tl(
+                trans.requires_extension_value
+              ).replace("{v}", tl(extension))
+            });
+            return container2;
+          }
+        )}
                     </div>
                     ` : ""}
                     ${setting_incompatible_block(settings_store[id].incompatible)}
@@ -40686,9 +40968,11 @@
           container.setAttribute("disabled", "false");
           Object.entries(incompatible_with).forEach(([key, val]) => {
             if (Array.isArray(val)) {
-              if (val.includes(settings[key])) container.setAttribute("disabled", "true");
+              if (val.includes(settings[key]))
+                container.setAttribute("disabled", "true");
             } else {
-              if (JSON.stringify(val) == JSON.stringify(settings[key])) container.setAttribute("disabled", "true");
+              if (JSON.stringify(val) == JSON.stringify(settings[key]))
+                container.setAttribute("disabled", "true");
             }
           });
         };
@@ -40705,8 +40989,7 @@
         tippy_esm_default(submit, {
           content: tl(trans.save)
         });
-        if (focus)
-          input2.focus();
+        if (focus) input2.focus();
         error_tooltip = tippy_esm_default(input2, {
           theme: "error",
           placement: "top",
@@ -40719,15 +41002,35 @@
           submit.disabled = false;
           if (type == "number") {
             if (input2.value == "") {
-              error_input(tl(trans.only_numbers_are_allowed), input_container, error_tooltip, submit);
+              error_input(
+                tl(trans.only_numbers_are_allowed),
+                input_container,
+                error_tooltip,
+                submit
+              );
             } else if (parseInt(input2.value) > max2 || parseInt(input2.value) < min2) {
-              error_input(tl(trans.keep_within_the_range), input_container, error_tooltip, submit);
+              error_input(
+                tl(trans.keep_within_the_range),
+                input_container,
+                error_tooltip,
+                submit
+              );
             }
           } else if (type == "text") {
             if (settings_store[id].warn_if_empty && input2.value == "") {
-              error_input(tl(trans.this_field_is_required), input_container, error_tooltip, submit);
+              error_input(
+                tl(trans.this_field_is_required),
+                input_container,
+                error_tooltip,
+                submit
+              );
             } else if (settings_store[id].warn_if_matches_auth && input2.value == auth.name) {
-              error_input(tl(trans.please_dont_clone_yourself), input_container, error_tooltip, submit);
+              error_input(
+                tl(trans.please_dont_clone_yourself),
+                input_container,
+                error_tooltip,
+                submit
+              );
             }
           }
         });
@@ -40761,17 +41064,21 @@
                     ` : ""}
                     ${settings_store[id].extensions ? html.node`
                     <div class="extensions">
-                        ${settings_store[id].extensions.map((extension) => () => {
-          let container = html.node`
+                        ${settings_store[id].extensions.map(
+          (extension) => () => {
+            let container = html.node`
                                 <div class="extension">
                                     <div class="bleh-icon" />
                                 </div>
                             `;
-          tippy_esm_default(container, {
-            content: tl(trans.requires_extension_value).replace("{v}", tl(extension))
-          });
-          return container;
-        })}
+            tippy_esm_default(container, {
+              content: tl(
+                trans.requires_extension_value
+              ).replace("{v}", tl(extension))
+            });
+            return container;
+          }
+        )}
                     </div>
                     ` : ""}
                     ${setting_incompatible_block(settings_store[id].incompatible)}
@@ -40787,9 +41094,11 @@
           elem.setAttribute("disabled", "false");
           Object.entries(incompatible_with).forEach(([key, val]) => {
             if (Array.isArray(val)) {
-              if (val.includes(settings[key])) elem.setAttribute("disabled", "true");
+              if (val.includes(settings[key]))
+                elem.setAttribute("disabled", "true");
             } else {
-              if (JSON.stringify(val) == JSON.stringify(settings[key])) elem.setAttribute("disabled", "true");
+              if (JSON.stringify(val) == JSON.stringify(settings[key]))
+                elem.setAttribute("disabled", "true");
             }
           });
         };
@@ -40800,31 +41109,42 @@
         let buttons = [];
         const tabs = html.node`
                 <div class="view-buttons view-buttons-middle">
-                    ${Object.entries(settings_store[id].values).map(([key, val]) => {
-          const icon2 = val.icon || key;
-          const button = html.node`
+                    ${Object.entries(settings_store[id].values).map(
+          ([key, val]) => {
+            const icon2 = val.icon || key;
+            const button = html.node`
                             <button class="btn view-item" data-type=${icon2} data-value=${key} onclick=${() => {
-            save_setting(id, key);
-            buttons.forEach((btn) => {
-              btn.setAttribute("aria-checked", btn.getAttribute("data-value") == key);
-            });
-            if (func) func(key);
-          }} aria-checked=${value == key}>
+              save_setting(id, key);
+              buttons.forEach((btn) => {
+                btn.setAttribute(
+                  "aria-checked",
+                  btn.getAttribute("data-value") == key
+                );
+              });
+              if (func) func(key);
+            }} aria-checked=${value == key}>
                                 ${tl(val.name)}
                             </button>
                         `;
-          buttons.push(button);
-          return button;
-        })}
+            buttons.push(button);
+            return button;
+          }
+        )}
                 </div>
             `;
         return tabs;
       } else if (type == "radio") {
         let update_radio = function(val) {
           save_setting(id, val);
-          elem.setAttribute("data-modified", val != settings_store[id].default);
+          elem.setAttribute(
+            "data-modified",
+            val != settings_store[id].default
+          );
           buttons.forEach((btn) => {
-            btn.setAttribute("aria-checked", btn.getAttribute("data-value") == val);
+            btn.setAttribute(
+              "aria-checked",
+              btn.getAttribute("data-value") == val
+            );
           });
           if (func) func(val);
         }, reset_radio = function() {
@@ -40851,33 +41171,39 @@
                     ` : ""}
                     ${settings_store[id].extensions ? html.node`
                     <div class="extensions">
-                        ${settings_store[id].extensions.map((extension) => () => {
-          let container = html.node`
+                        ${settings_store[id].extensions.map(
+          (extension) => () => {
+            let container = html.node`
                                 <div class="extension">
                                     <div class="bleh-icon" />
                                 </div>
                             `;
-          tippy_esm_default(container, {
-            content: tl(trans.requires_extension_value).replace("{v}", tl(extension))
-          });
-          return container;
-        })}
+            tippy_esm_default(container, {
+              content: tl(
+                trans.requires_extension_value
+              ).replace("{v}", tl(extension))
+            });
+            return container;
+          }
+        )}
                     </div>
                     ` : ""}
                     ${setting_incompatible_block(settings_store[id].incompatible)}
                     <div class="primary-selections">
-                        ${Object.entries(settings_store[id].values).map(([key, val]) => {
-          const icon2 = val.icon || key;
-          const button = html.node`
+                        ${Object.entries(settings_store[id].values).map(
+          ([key, val]) => {
+            const icon2 = val.icon || key;
+            const button = html.node`
                                 <button class="btn primary-selection no-icon" data-type=${icon2} data-value=${key} onclick=${() => {
-            update_radio(key);
-          }} aria-checked=${value == key}>
+              update_radio(key);
+            }} aria-checked=${value == key}>
                                     <h5>${typeof val.name === "object" ? tl(val.name) : val.name}</h5>
                                 </button>
                             `;
-          buttons.push(button);
-          return button;
-        })}
+            buttons.push(button);
+            return button;
+          }
+        )}
                     </div>
                 </div>
             `;
@@ -40886,9 +41212,11 @@
           elem.setAttribute("disabled", "false");
           Object.entries(incompatible_with).forEach(([key, val]) => {
             if (Array.isArray(val)) {
-              if (val.includes(settings[key])) elem.setAttribute("disabled", "true");
+              if (val.includes(settings[key]))
+                elem.setAttribute("disabled", "true");
             } else {
-              if (JSON.stringify(val) == JSON.stringify(settings[key])) elem.setAttribute("disabled", "true");
+              if (JSON.stringify(val) == JSON.stringify(settings[key]))
+                elem.setAttribute("disabled", "true");
             }
           });
         };
@@ -40902,19 +41230,24 @@
           let available = current;
           if (settings_store[id].predefined) {
             available = Object.fromEntries(
-              Object.entries(list).filter(([key]) => !current.includes(key))
+              Object.entries(list).filter(
+                ([key]) => !current.includes(key)
+              )
             );
           }
-          render(lists, html`
-                    <div class="setting-list current">
+          render(
+            lists,
+            html`
                         ${current.map((val) => {
-            return html.node`
-                                <button class="setting-list-item" onclick=${() => {
-              const new_list = current.filter((item) => item != val);
-              save_setting(id, new_list);
-              render_list_items(new_list);
-              if (func) func(new_list);
-            }}>
+              return html.node`
+                                <button class="setting-list-item current" onclick=${() => {
+                const new_list = current.filter(
+                  (item) => item != val
+                );
+                save_setting(id, new_list);
+                render_list_items(new_list);
+                if (func) func(new_list);
+              }}>
                                     ${list[val]?.icon ? html.node`
                                     <div class="bleh-icon" data-type=${list[val].icon} />
                                     ` : ""}
@@ -40925,20 +41258,20 @@
                                     <div class="bleh-icon indicator" data-type="minus" />
                                 </button>
                             `;
-          })}
+            })}
                         ${!settings_store[id].predefined ? html.node`
-                            <button class="setting-list-item" onclick=${() => {
-            let input_box;
-            dialog({
-              id: `add_to_list_${id}`,
-              title,
-              body: html.node`
+                            <button class="setting-list-item current" onclick=${() => {
+              let input_box;
+              dialog({
+                id: `add_to_list_${id}`,
+                title,
+                body: html.node`
                                         ${input_box = input({
-                focus: true,
-                func: complete_add,
-                warn_if_matches_auth: settings_store[id].warn_if_matches_auth,
-                warn_if_empty: true
-              })}
+                  focus: true,
+                  func: complete_add,
+                  warn_if_matches_auth: settings_store[id].warn_if_matches_auth,
+                  warn_if_empty: true
+                })}
                                         <div class="modal-footer">
                                             <button class="see-more cancel" onclick=${() => dialog_rm({ id: `add_to_list_${id}` })}>
                                                 ${tl(trans.cancel)}
@@ -40949,37 +41282,35 @@
                                             </button>
                                         </div>
                                     `
-            });
-            setTimeout(() => {
-              input_box.focus();
-            }, 1);
-            function complete_add(val) {
-              if (val == auth.name || val.length < 1) return;
-              dialog_rm({ id: `add_to_list_${id}` });
-              const new_list = [...current, val];
-              save_setting(id, new_list);
-              render_list_items(new_list);
-              if (func) func(new_list);
-            }
-          }}>
+              });
+              setTimeout(() => {
+                input_box.focus();
+              }, 1);
+              function complete_add(val) {
+                if (val == auth.name || val.length < 1)
+                  return;
+                dialog_rm({ id: `add_to_list_${id}` });
+                const new_list = [...current, val];
+                save_setting(id, new_list);
+                render_list_items(new_list);
+                if (func) func(new_list);
+              }
+            }}>
                                 <div class="info">
                                     ${tl(trans.add)}
                                 </div>
                                 <div class="bleh-icon indicator" data-type="add" />
                             </button>
                         ` : ""}
-                    </div>
-                    ${settings_store[id].predefined ? html.node`
-                    <div class="setting-list-sep" />
-                    <div class="setting-list available">
+                        ${settings_store[id].predefined ? html.node`
                         ${Object.entries(available).map(([val, formal]) => {
-            return html.node`
+              return html.node`
                                 <button class="setting-list-item" onclick=${() => {
-              const new_list = [...current, val];
-              save_setting(id, new_list);
-              render_list_items(new_list);
-              if (func) func(new_list);
-            }}>
+                const new_list = [...current, val];
+                save_setting(id, new_list);
+                render_list_items(new_list);
+                if (func) func(new_list);
+              }}>
                                     <div class="bleh-icon" data-type=${formal.icon} />
                                     <div class="info">
                                         ${formal.name}
@@ -40988,12 +41319,15 @@
                                     <div class="bleh-icon indicator" data-type="add" />
                                 </button>
                             `;
-          })}
-                    </div>
+            })}
                     ` : ""}
-                `);
+                    `
+          );
         };
-        if (!list && settings_store[id].predefined) return setting_fail(id, { message: "List type requires you to pass available items for matching." });
+        if (!list && settings_store[id].predefined)
+          return setting_fail(id, {
+            message: "List type requires you to pass available items for matching."
+          });
         let lists;
         const elem = html.node`
                 <div class="setting v2" data-type="list">
@@ -41016,9 +41350,11 @@
           elem.setAttribute("disabled", "false");
           Object.entries(incompatible_with).forEach(([key, val]) => {
             if (Array.isArray(val)) {
-              if (val.includes(settings[key])) elem.setAttribute("disabled", "true");
+              if (val.includes(settings[key]))
+                elem.setAttribute("disabled", "true");
             } else {
-              if (JSON.stringify(val) == JSON.stringify(settings[key])) elem.setAttribute("disabled", "true");
+              if (JSON.stringify(val) == JSON.stringify(settings[key]))
+                elem.setAttribute("disabled", "true");
             }
           });
         };
@@ -41029,7 +41365,10 @@
         let update_select = function(val) {
           if (!elem) return;
           save_setting(id, val);
-          elem.setAttribute("data-modified", val != settings_store[id].default);
+          elem.setAttribute(
+            "data-modified",
+            val != settings_store[id].default
+          );
           if (func) func(val);
         }, reset_select = function() {
           menu.set(settings_store[id].default);
@@ -41037,7 +41376,10 @@
             title: tl(trans.reset_item_to_default)
           });
         };
-        if (!list) return setting_fail(id, { message: "Select type requires you to pass available items." });
+        if (!list)
+          return setting_fail(id, {
+            message: "Select type requires you to pass available items."
+          });
         if (func) func(value);
         let reset_btn;
         let menu;
@@ -41058,17 +41400,21 @@
                     ` : ""}
                     ${settings_store[id].extensions ? html.node`
                     <div class="extensions">
-                        ${settings_store[id].extensions.map((extension) => () => {
-          let container = html.node`
+                        ${settings_store[id].extensions.map(
+          (extension) => () => {
+            let container = html.node`
                                 <div class="extension">
                                     <div class="bleh-icon" />
                                 </div>
                             `;
-          tippy_esm_default(container, {
-            content: tl(trans.requires_extension_value).replace("{v}", tl(extension))
-          });
-          return container;
-        })}
+            tippy_esm_default(container, {
+              content: tl(
+                trans.requires_extension_value
+              ).replace("{v}", tl(extension))
+            });
+            return container;
+          }
+        )}
                     </div>
                     ` : ""}
                     ${setting_incompatible_block(settings_store[id].incompatible)}
@@ -41082,9 +41428,11 @@
           elem.setAttribute("disabled", "false");
           Object.entries(incompatible_with).forEach(([key, val]) => {
             if (Array.isArray(val)) {
-              if (val.includes(settings[key])) elem.setAttribute("disabled", "true");
+              if (val.includes(settings[key]))
+                elem.setAttribute("disabled", "true");
             } else {
-              if (JSON.stringify(val) == JSON.stringify(settings[key])) elem.setAttribute("disabled", "true");
+              if (JSON.stringify(val) == JSON.stringify(settings[key]))
+                elem.setAttribute("disabled", "true");
             }
           });
         };
@@ -41109,8 +41457,7 @@
     submit.disabled = true;
   }
   function setting_incompatible_block(entries2) {
-    if (!entries2)
-      return "";
+    if (!entries2) return "";
     return "";
     return html.node`
         <div class="incompatible">
@@ -41121,7 +41468,10 @@
                     </div>
                 `;
       tippy_esm_default(container, {
-        content: tl(trans.incompatible_with_value).replace("{v}", tl(settings_store[incompatible.setting].title))
+        content: tl(trans.incompatible_with_value).replace(
+          "{v}",
+          tl(settings_store[incompatible.setting].title)
+        )
       });
       return container;
     })}
@@ -41142,7 +41492,7 @@
         <div class="setting">
             <div class="alert alert-error no-margin">
                 ${tl(trans.value_failed_to_load).replace("{v}", id)}
-                ${e && e.message ? html`<br>${e.message}` : ""}
+                ${e && e.message ? html`<br />${e.message}` : ""}
             </div>
         </div>
     `;
@@ -41170,7 +41520,16 @@
     save_setting(id, value);
   }
   function reset_text(id, input2, submit, option, reset_btn, avatar3) {
-    update_text(id, input2, submit, option, settings_store[id].default, reset_btn, avatar3, true);
+    update_text(
+      id,
+      input2,
+      submit,
+      option,
+      settings_store[id].default,
+      reset_btn,
+      avatar3,
+      true
+    );
     notify({
       id: "reset_setting",
       title: tl(trans.settings),
@@ -41187,24 +41546,41 @@
       } else {
         settings.theme_type = "dark";
       }
-      document.documentElement.setAttribute(`data-bleh--theme_type`, settings.theme_type);
+      document.documentElement.setAttribute(
+        `data-bleh--theme_type`,
+        settings.theme_type
+      );
       chart_reflow();
     }
     if (settings_store[id] && value == settings_store[id].default && ["hue", "sat", "lit"].includes(id)) {
       document.body.style.removeProperty(`--${settings_store[id].css}`);
     } else if (settings_store[id].css) {
-      document.body.style.setProperty(`--${settings_store[id].css}`, `${value}${settings_store[id].suffix || ""}`);
+      document.body.style.setProperty(
+        `--${settings_store[id].css}`,
+        `${value}${settings_store[id].suffix || ""}`
+      );
     }
     if (settings_store[id].require_reload == true || settings_store[id].require_reload == "partial" && page.type != "bleh_settings")
       request_reload();
     compile_settings();
-    log(`saved ${id} as ${value}`, "settings", "log", { settings, settings_id: settings[id] });
+    log(`saved ${id} as ${value}`, "settings", "log", {
+      settings,
+      settings_id: settings[id]
+    });
   }
   function compile_settings() {
     let clone6 = structuredClone(settings);
     for (let setting2 in clone6) {
       if (settings_store[setting2] && JSON.stringify(clone6[setting2]) == JSON.stringify(settings_store[setting2].default) && setting2 != "version") {
-        log(`dropped ${setting2} as value matches default`, "settings", "log", { value: clone6[setting2], default: settings_store[setting2].default });
+        log(
+          `dropped ${setting2} as value matches default`,
+          "settings",
+          "log",
+          {
+            value: clone6[setting2],
+            default: settings_store[setting2].default
+          }
+        );
         delete clone6[setting2];
       }
     }
@@ -49521,7 +49897,6 @@
             column_view.compat(val);
           }
         })}
-                        ${setting({ id: "show_bulk_edit_album" })}
                     </div>
                 </section>
                 <section class="bleh--panel">
@@ -50582,7 +50957,6 @@
                     <div class="setting-group">
                         ${setting({ id: "stacked_chartlist_info" })}
                         ${setting({ id: "expand_tracks" })}
-                        ${setting({ id: "show_bulk_edit_album" })}
                         ${setting({ id: "glacier_library_graphs" })}
                     </div>
                     <div class="inner-preview pad">
@@ -59974,20 +60348,6 @@ ${e ? html.node`<span class="error-type">${e.name}</span>: ${e.message}` : ""}</
         sv: "V\xE4lj mellan en liten f\xF6rdr\xF6jning f\xF6r en stor m\xE4ngd olika diagramalternativ eller anv\xE4nd \xE4ldre Last.fm-diagram"
       }
     },
-    show_bulk_edit_album: {
-      name: {
-        en: "Show \u2018Bulk Edit\u2019 powered album name in tracklists",
-        de: "Albumnamen mit \u201AMassenbearbeitung\u2018 in Titellisten anzeigen",
-        pt: "Exibir o nome do \xE1lbum ajustado pelo \u2018Bulk Edit\u2019 nas listas de faixas.",
-        sv: "Visa albumnamn under l\xE5tlistor inom bibliotek med \u2018Bulk Edit\u2019-till\xE4gget"
-      },
-      body: {
-        en: "With this extension the album name is displayed on all tracks by default, whereas with bleh the album name is only displayed on active tracks",
-        de: "Mit dieser Erweiterung wird der Albumname standardm\xE4\xDFig auf allen Titeln angezeigt, w\xE4hrend mit bleh der Albumname nur auf aktiven Titeln angezeigt wird",
-        pt: "Com esta extens\xE3o, o nome do \xE1lbum \xE9 exibido em todas as faixas por padr\xE3o, enquanto no bleh ele \xE9 mostrado apenas nas faixas que est\xE3o sendo tocadas no momento.",
-        sv: "Med det h\xE4r till\xE4gget visas albumnamnet alltid under l\xE5ttiteln, medans med bleh s\xE5 visas albumnamnet bara p\xE5 l\xE5ten som aktivt skrobblas"
-      }
-    },
     gendered_tags: {
       name: {
         en: "Hide gender-based tags",
@@ -65691,12 +66051,6 @@ ${e ? html.node`<span class="error-type">${e.name}</span>: ${e.message}` : ""}</
       title: trans.font_emoji.name,
       body: trans.font_emoji.body,
       platforms: ["win32", "linux", "android", "other"]
-    },
-    show_bulk_edit_album: {
-      default: false,
-      title: trans.show_bulk_edit_album.name,
-      body: trans.show_bulk_edit_album.body,
-      extensions: [trans.bulk_edit_extension]
     },
     grid_glow: {
       default: true,
