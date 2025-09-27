@@ -27244,10 +27244,10 @@
       update_input();
     });
     input_box.addEventListener("keydown", (event3) => {
-      if (event3.keyCode === 13) {
+      if (event3.keyCode == 13 && type != "textarea") {
         event3.preventDefault();
         if (func) func(input_box.value);
-      } else if (event3.keyCode === 27) {
+      } else if (event3.keyCode == 27) {
         event3.preventDefault();
         if (func_esc) func_esc(input_box.value);
       }
@@ -27261,7 +27261,7 @@
       }, 5);
     };
     container.value = (val = null) => {
-      if (val === null) return input_box.value;
+      if (val == null) return input_box.value;
       input_box.value = val;
       return val;
     };
@@ -51225,8 +51225,9 @@
                 </button>
                 <div class="fill" />
                 <button class="btn primary continue" onclick=${() => {
+        console.info("sources", sources.value());
         open(
-          `https://github.com/katelyynn/lotus/issues/new?template=${template}&title=${title}&current=${current}&correction=${correction.value()}&link=${link}&sources=${sources.value()}`
+          `https://github.com/katelyynn/lotus/issues/new?template=${template}&title=${sanitise(title, " ")}&current=${sanitise(current, " ")}&correction=${sanitise(correction.value(), " ")}&link=${link}&sources=${sanitise(sources.value(), " ")}`
         );
       }}>
                     ${tl(trans.suggest)}

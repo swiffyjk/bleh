@@ -710,8 +710,9 @@ export function create_correction(
                 </button>
                 <div class="fill" />
                 <button class="btn primary continue" onclick=${() => {
+                    console.info('sources', sources.value());
                     open(
-                        `https://github.com/katelyynn/lotus/issues/new?template=${template}&title=${title}&current=${current}&correction=${correction.value()}&link=${link}&sources=${sources.value()}`
+                        `https://github.com/katelyynn/lotus/issues/new?template=${template}&title=${sanitise(title, ' ')}&current=${sanitise(current, ' ')}&correction=${sanitise(correction.value(), ' ')}&link=${link}&sources=${sanitise(sources.value(), ' ')}`
                     );
                 }}>
                     ${tl(trans.suggest)}

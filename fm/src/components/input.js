@@ -72,11 +72,11 @@ export function input({
     });
 
     input_box.addEventListener('keydown', (event) => {
-        if (event.keyCode === 13) {
+        if (event.keyCode == 13 && type != 'textarea') {
             event.preventDefault();
 
             if (func) func(input_box.value);
-        } else if (event.keyCode === 27) {
+        } else if (event.keyCode == 27) {
             event.preventDefault();
 
             if (func_esc) func_esc(input_box.value);
@@ -94,7 +94,7 @@ export function input({
     };
 
     container.value = (val = null) => {
-        if (val === null) return input_box.value;
+        if (val == null) return input_box.value;
 
         input_box.value = val;
         return val;
