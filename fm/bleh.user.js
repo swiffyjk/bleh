@@ -53434,6 +53434,7 @@
       else if (page.subpage == "wiki_edit") bleh_wiki_editor();
       else if (page.subpage == "tracks") bleh_artist_tracks();
       else if (page.subpage == "albums") bleh_artist_albums();
+      else if (page.subpage == "similar") bleh_artist_similar();
     }
     log("status is", "page", "info", page);
     update_page();
@@ -53507,6 +53508,30 @@
         `);
     }
     correct_generic_combo_no_artist("resource-list--release-list-item");
+  }
+  function bleh_artist_similar() {
+    const similar = page.structure.main.querySelector(
+      ":scope > .similar-artists"
+    );
+    if (!similar) return;
+    const artists = similar.querySelectorAll(".similar-artists-item-wrap");
+    render(
+      page.structure.main,
+      html`
+            <section class="similar-panel">
+                <h2 class="text-18">
+                    ${tl(trans.artists_similar_to_name, {
+        n: romanise(correct_artist(page.name))
+      })}
+                </h2>
+                ${similar}
+            </section>
+        `
+    );
+    artists.forEach((artist) => {
+      const name = artist.querySelector(".similar-artists-item-name a");
+      name.textContent = romanise(correct_artist(name.textContent));
+    });
   }
   function bleh_listeners() {
     const buffer = page.structure.main.querySelector(
@@ -57709,6 +57734,9 @@
       de: "\xC4hnliche K\xFCnstler*innen",
       pt: "Artistas similares",
       sv: "Liknande artister"
+    },
+    artists_similar_to_name: {
+      en: "Artists similar to {n}"
     },
     biography: {
       en: "Biography",

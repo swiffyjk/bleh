@@ -1359,6 +1359,9 @@ export const trans = {
         pt: 'Artistas similares',
         sv: 'Liknande artister'
     },
+    artists_similar_to_name: {
+        en: 'Artists similar to {n}'
+    },
     biography: {
         en: 'Biography',
         de: 'Biographie',

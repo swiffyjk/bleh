@@ -2836,7 +2836,6 @@
     /* neighbours */ .friends-col-main,
     .panel-form,
     /* listeners */ .col-main:not(.bleh--gallery) > .buffer-standard,
-    /* similar artists */ .similar-artists,
     .no-data-message--gallery:not([data-page-subpage="images_overview"] .no-data-message--gallery), .no-data-message--album,
     .auth-container-signup, .login-form {
         content: "";
@@ -23816,6 +23815,81 @@
     /*     SIMILAR ARTISTS     */
     .similar-artists {
         margin: unset;
+
+        display: flex;
+        flex-direction: column;
+        gap: var(--card-gap);
+
+        .similar-artists-item-wrap {
+            margin: unset !important;
+
+            .similar-artists-item {
+                --image-size: 140px;
+                --gap: var(--card-gap);
+
+                min-height: var(--image-size);
+                padding-left: calc(var(--image-size) + var(--gap));
+
+                display: flex;
+                flex-direction: column;
+                gap: 10px;
+
+                &:before,
+                &:after {
+                    display: none;
+                }
+
+                .similar-artists-item-media-top {
+                    .similar-artists-item-name {
+                        font-size: 16px;
+                        line-height: 20px;
+                        font-weight: var(--font-weight-medium);
+                        color: hsl(var(--c2));
+                    }
+
+                    .similar-artists-item-aux-text {
+                        color: hsl(var(--c3));
+                    }
+                }
+
+                .similar-artists-item-wiki-cta,
+                .similar-artists-item-wiki {
+                    margin: unset;
+                    display: none !important;
+
+                    &.visible-lg {
+                        display: flex !important;
+                    }
+                }
+
+                .media-item {
+                    width: var(--image-size);
+                    height: var(--image-size);
+
+                    & > .avatar {
+                        background: var(--avatar-generic-background);
+                        border-radius: var(--item-med-radius);
+                        box-shadow: var(--interact-shadow);
+                        aspect-ratio: 1 / 1;
+                        --mask-size: var(--cover-size-200);
+
+                        &:after {
+                            content: "" !important;
+                            display: block !important;
+                            position: absolute;
+                            inset: 0;
+                            background-image: var(--gloss-image) !important;
+                            background-size: 100% !important;
+                            opacity: var(--gloss);
+                            pointer-events: none;
+                            padding: unset !important;
+                            box-shadow: unset !important;
+                            border-radius: inherit;
+                        }
+                    }
+                }
+            }
+        }
     }
 
     .event-value-top-header {
