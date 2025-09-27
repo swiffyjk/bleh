@@ -41311,7 +41311,9 @@
                 render_list_items(new_list);
                 if (func) func(new_list);
               }}>
+                                    ${formal.icon ? html.node`
                                     <div class="bleh-icon" data-type=${formal.icon} />
+                                    ` : ""}
                                     <div class="info">
                                         ${formal.name}
                                         ${formal.new_release ? html.node`<span class="new-badge new">${tl(trans.new)}</span>` : ""}
