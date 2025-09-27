@@ -60,7 +60,7 @@ export function markdown(
         'h4',
         'h5'
     ];
-    const ALLOWED_ATTR = [
+    let ALLOWED_ATTR = [
         'href',
         'class',
         'target',
@@ -253,8 +253,9 @@ export function markdown(
         }
     ];
 
-    let extensions = [aligner(), blockquotes()];
+    let extensions = [];
 
+    if (line_breaks) extensions.push(aligner(), blockquotes());
     if (allow_banners) extensions.push(banner());
     if (allow_icons) extensions.push(icons());
     if (allow_hue) extensions.push(accent());
@@ -370,10 +371,12 @@ export function markdown(
     patch_wiki_contents(body);
 
     // funny local restriction message
-    local_restriction(body);
-    body.querySelectorAll('p').forEach((text) => {
-        local_restriction(text);
-    });
+    if (line_breaks) {
+        local_restriction(body);
+        body.querySelectorAll('p').forEach((text) => {
+            local_restriction(text);
+        });
+    }
 
     let profile_cache;
 
@@ -409,6 +412,11 @@ export function markdown(
 
     // add lazy-loading to images
     body.querySelectorAll('img').forEach((image) => {
+        if (!line_breaks) {
+            image.remove();
+            return;
+        }
+
         image.setAttribute('loading', 'lazy');
 
         let func = () => expand_avatar(image.src, image.alt);

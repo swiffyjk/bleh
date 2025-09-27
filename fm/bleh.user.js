@@ -47636,7 +47636,7 @@
       "h4",
       "h5"
     ];
-    const ALLOWED_ATTR = [
+    let ALLOWED_ATTR = [
       "href",
       "class",
       "target",
@@ -47790,7 +47790,8 @@
         replace: (m) => m.replace(/>/g, "&gt;")
       }
     ];
-    let extensions = [aligner(), blockquotes()];
+    let extensions = [];
+    if (line_breaks) extensions.push(aligner(), blockquotes());
     if (allow_banners) extensions.push(banner());
     if (allow_icons) extensions.push(icons());
     if (allow_hue) extensions.push(accent());
@@ -47885,10 +47886,12 @@
         `);
     }
     patch_wiki_contents(body);
-    local_restriction(body);
-    body.querySelectorAll("p").forEach((text4) => {
-      local_restriction(text4);
-    });
+    if (line_breaks) {
+      local_restriction(body);
+      body.querySelectorAll("p").forEach((text4) => {
+        local_restriction(text4);
+      });
+    }
     let profile_cache;
     const will_cache = cache2 === true;
     log(`prepare new cache is ${will_cache}`, "markdown", "log", { cache: cache2 });
@@ -47910,6 +47913,10 @@
       }
     }
     body.querySelectorAll("img").forEach((image) => {
+      if (!line_breaks) {
+        image.remove();
+        return;
+      }
       image.setAttribute("loading", "lazy");
       let func = () => expand_avatar(image.src, image.alt);
       if (in_dialog) func = () => open(image.src);
