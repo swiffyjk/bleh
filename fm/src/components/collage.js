@@ -1,25 +1,22 @@
-import {lang, tl, trans} from "../build/trans.js";
-import {html, render} from "lighterhtml";
-import {select} from "./select.js";
-import {setting} from "./settings.js";
-import {input} from "./input.js";
-import {auth, page, root} from "../build/page.js";
-import {notify, notify_rm} from "./notify.js";
-import {clean_number, pad2, sanitise} from "../build/tools.js";
-import {log} from "../build/log.js";
-import {music_grids} from "./music_grid.js";
-import {settings} from "../build/config.js";
-import {version} from "../main.js";
-import {download} from "./share.js";
-import {render_user} from "../pages/minis.js";
-import {redirect} from "./music.js";
-import tippy from "tippy.js";
+import { lang, tl, trans } from '../build/trans.js';
+import { html, render } from 'lighterhtml';
+import { select } from './select.js';
+import { setting } from './settings.js';
+import { input } from './input.js';
+import { auth, page, root } from '../build/page.js';
+import { notify, notify_rm } from './notify.js';
+import { clean_number, pad2, sanitise } from '../build/tools.js';
+import { log } from '../build/log.js';
+import { music_grids } from './music_grid.js';
+import { settings } from '../build/config.js';
+import { version } from '../main.js';
+import { download } from './share.js';
+import { render_user } from '../pages/minis.js';
+import { redirect } from './music.js';
+import tippy from 'tippy.js';
 import html2canvas from 'html2canvas-pro';
 
-export function collage({
-    host,
-    sidebar
-}={}) {
+export function collage({ host, sidebar } = {}) {
     if (!host || !sidebar) return;
 
     let width;
@@ -40,7 +37,8 @@ export function collage({
     let previous_year = current_year - 1;
 
     const default_type = page.requested.type || 'albums';
-    const default_timeframe = page.requested.timeframe || 'date_preset=LAST_90_DAYS';
+    const default_timeframe =
+        page.requested.timeframe || 'date_preset=LAST_90_DAYS';
 
     if (page.requested.redirect) {
         setTimeout(() => {
@@ -55,126 +53,196 @@ export function collage({
     }
 
     let user;
-    render(host, html`
-        <div class="compare-header">
-            <div class="compare-users">
-                <div class="compare-user focus" ref=${el => user = el}>
-                    ${render_user(page.name, page.avatar, user, true)}
+    render(
+        host,
+        html`
+            <div class="compare-header">
+                <div class="compare-users">
+                    <div class="compare-user focus" ref=${(el) => (user = el)}>
+                        ${render_user(page.name, page.avatar, user, true)}
+                    </div>
+                </div>
+                <div class="compare-selection">
+                    <div class="input-group">
+                        ${(width = input({
+                            type: 'number',
+                            value: value,
+                            placeholder: value,
+                            min: min,
+                            max: max
+                        }))}
+                        <div
+                            class="bleh-icon"
+                            style="--icon: var(--icon-16-x)"
+                        />
+                        ${(height = input({
+                            type: 'number',
+                            value: value,
+                            placeholder: value,
+                            min: min,
+                            max: max
+                        }))}
+                    </div>
+                    ${(type = select(
+                        [
+                            {
+                                value: 'artists',
+                                text: html`<div
+                                        class="bleh-icon"
+                                        style="--icon: var(--icon-16-artist)"
+                                    />
+                                    ${tl(trans.artists)}`
+                            },
+                            {
+                                value: 'albums',
+                                text: html`<div
+                                        class="bleh-icon"
+                                        style="--icon: var(--icon-16-album)"
+                                    />
+                                    ${tl(trans.albums)}`
+                            },
+                            {
+                                value: 'tracks',
+                                text: html`<div
+                                        class="bleh-icon"
+                                        style="--icon: var(--icon-16-track)"
+                                    />
+                                    ${tl(trans.tracks)}`
+                            }
+                        ],
+                        default_type
+                    ))}
+                    ${(timeframe = select(
+                        [
+                            {
+                                value: 'date_preset=LAST_7_DAYS',
+                                text: tl(trans.last_count_days).replace(
+                                    '{c}',
+                                    '7'
+                                )
+                            },
+                            {
+                                value: 'date_preset=LAST_30_DAYS',
+                                text: tl(trans.last_count_days).replace(
+                                    '{c}',
+                                    '30'
+                                )
+                            },
+                            {
+                                value: 'date_preset=LAST_90_DAYS',
+                                text: tl(trans.last_count_days).replace(
+                                    '{c}',
+                                    '90'
+                                )
+                            },
+                            {
+                                value: 'date_preset=LAST_180_DAYS',
+                                text: tl(trans.last_count_days).replace(
+                                    '{c}',
+                                    '180'
+                                )
+                            },
+                            {
+                                value: 'date_preset=LAST_365_DAYS',
+                                text: tl(trans.last_count_days).replace(
+                                    '{c}',
+                                    '365'
+                                )
+                            },
+                            {
+                                value: 'date_preset=ALL',
+                                text: tl(trans.all_time)
+                            },
+                            {
+                                value: `from=${current_year}-01-01&rangetype=year`,
+                                text: current_year
+                            },
+                            {
+                                value: `from=${previous_year}-01-01&rangetype=year`,
+                                text: previous_year
+                            }
+                        ],
+                        default_timeframe
+                    ))}
+                    <button
+                        class="btn primary icon"
+                        data-type="collage"
+                        ref=${(el) => (submit = el)}
+                        onclick=${() => make_collage()}
+                    >
+                        ${tl(trans.generate)}
+                    </button>
                 </div>
             </div>
-            <div class="compare-selection">
-                <div class="input-group">
-                    ${width = input({
-                        type: 'number',
-                        value: value,
-                        placeholder: value,
-                        min: min,
-                        max: max
-                    })}
-                    <div class="bleh-icon" style="--icon: var(--icon-16-x)" />
-                    ${height = input({
-                        type: 'number',
-                        value: value,
-                        placeholder: value,
-                        min: min,
-                        max: max
-                    })}
+            <div
+                class="compare-body"
+                data-filled="false"
+                ref=${(el) => (body = el)}
+            >
+                <div class="loading-data-container">
+                    <div class="loading-data-text info">
+                        ${tl(trans.choose_a_timeframe_above)}
+                    </div>
                 </div>
-                ${type = select([
-                    {
-                        value: 'artists',
-                        text: html`<div class="bleh-icon" style="--icon: var(--icon-16-artist)" />${tl(trans.artists)}`,
-                    },
-                    {
-                        value: 'albums',
-                        text: html`<div class="bleh-icon" style="--icon: var(--icon-16-album)" />${tl(trans.albums)}`,
-                    },
-                    {
-                        value: 'tracks',
-                        text: html`<div class="bleh-icon" style="--icon: var(--icon-16-track)" />${tl(trans.tracks)}`,
-                    }
-                ], default_type)}
-                ${timeframe = select([
-                    {
-                        value: 'date_preset=LAST_7_DAYS',
-                        text: tl(trans.last_count_days).replace('{c}', '7'),
-                    },
-                    {
-                        value: 'date_preset=LAST_30_DAYS',
-                        text: tl(trans.last_count_days).replace('{c}', '30'),
-                    },
-                    {
-                        value: 'date_preset=LAST_90_DAYS',
-                        text: tl(trans.last_count_days).replace('{c}', '90'),
-                    },
-                    {
-                        value: 'date_preset=LAST_180_DAYS',
-                        text: tl(trans.last_count_days).replace('{c}', '180'),
-                    },
-                    {
-                        value: 'date_preset=LAST_365_DAYS',
-                        text: tl(trans.last_count_days).replace('{c}', '365'),
-                    },
-                    {
-                        value: 'date_preset=ALL',
-                        text: tl(trans.all_time),
-                    },
-                    {
-                        value: `from=${current_year}-01-01&rangetype=year`,
-                        text: current_year
-                    },
-                    {
-                        value: `from=${previous_year}-01-01&rangetype=year`,
-                        text: previous_year
-                    }
-                ], default_timeframe)}
-                <button class="btn primary icon" data-type="collage" ref=${el => submit = el} onclick=${() => make_collage()}>${tl(trans.generate)}</button>
             </div>
-        </div>
-        <div class="compare-body" data-filled="false" ref=${el => body = el}>
-            <div class="loading-data-container">
-                <div class="loading-data-text info">${tl(trans.choose_a_timeframe_above)}</div>
-            </div>
-        </div>
-    `);
+        `
+    );
 
     let setting_group;
     let inputter;
-    render(sidebar, html`
-        <h2>${tl(trans.settings)}</h2>
-        <div class="setting-group" ref=${el => setting_group = el}>
-            <div class="setting v" data-type="text">
-                <div class="heading">
-                    <h5>${tl(trans.profile)}</h5>
-                </div>
-                <div class="input-container content-form">
-                    <input type="text" class="input" ref=${el => inputter = el} placeholder=${tl(trans.enter_a_profile)} value=${page.requested.profile} onchange=${e => {
-                        page.requested.profile = e.target.value;
-                        page.name = page.requested.profile;
+    render(
+        sidebar,
+        html`
+            <h2>${tl(trans.settings)}</h2>
+            <div class="setting-group" ref=${(el) => (setting_group = el)}>
+                <div class="setting v" data-type="text">
+                    <div class="heading">
+                        <h5>${tl(trans.profile)}</h5>
+                    </div>
+                    <div class="input-container content-form">
+                        <input
+                            type="text"
+                            class="input"
+                            ref=${(el) => (inputter = el)}
+                            placeholder=${tl(trans.enter_a_profile)}
+                            value=${page.requested.profile}
+                            onchange=${(e) => {
+                                page.requested.profile = e.target.value;
+                                page.name = page.requested.profile;
 
-                        page.avatar = '';
-                        if (page.name == auth.name) page.avatar = auth.avatar;
+                                page.avatar = '';
+                                if (page.name == auth.name)
+                                    page.avatar = auth.avatar;
 
-                        render(user, html`
-                            ${render_user(page.name, page.avatar, user, true)}
-                        `);
-                    }}>
-                    ${() => {
-                        let btn = html.node`
+                                render(
+                                    user,
+                                    html`
+                                        ${render_user(
+                                            page.name,
+                                            page.avatar,
+                                            user,
+                                            true
+                                        )}
+                                    `
+                                );
+                            }}
+                        />
+                        ${() => {
+                            let btn = html.node`
                             <button class="btn chibi icon" data-type="profile" onclick=${() => {
                                 inputter.value = auth.name;
                                 inputter.dispatchEvent(new Event('change'));
                             }}>${tl(trans.profile)}</button>
                         `;
 
-                        tippy(btn, {
-                            content: tl(trans.profile)
-                        });
+                            tippy(btn, {
+                                content: tl(trans.profile)
+                            });
 
-                        return btn;
-                    }}
-                    ${() => {
-                        let btn = html.node`
+                            return btn;
+                        }}
+                        ${() => {
+                            let btn = html.node`
                             <button class="btn chibi icon" data-type="starred_friend" data-is-shortcut=${settings.starred_friend != ''} onclick=${() => {
                                 if (settings.starred_friend == '') return;
 
@@ -183,32 +251,39 @@ export function collage({
                             }}>${tl(trans.starred_friend.name)}</button>
                         `;
 
-                        tippy(btn, {
-                            content: tl(trans.starred_friend.name)
-                        });
+                            tippy(btn, {
+                                content: tl(trans.starred_friend.name)
+                            });
 
-                        return btn;
-                    }}
+                            return btn;
+                        }}
+                    </div>
                 </div>
+                ${setting({ id: 'collage_title' })}
+                ${setting({ id: 'collage_grid_gap' })}
+                ${setting({ id: 'collage_centered' })}
+                ${setting({ id: 'collage_grid_text' })}
+                ${setting({ id: 'collage_grid_plays' })}
             </div>
-            ${setting({id: 'collage_title'})}
-            ${setting({id: 'collage_grid_gap'})}
-            ${setting({id: 'collage_centered'})}
-            ${setting({id: 'collage_grid_text'})}
-            ${setting({id: 'collage_grid_plays'})}
-        </div>
-    `);
+        `
+    );
     let collage_settings = setting_group.querySelectorAll(':scope > .setting');
 
     function make_collage(bypass = false) {
         if (
-            width.value() == '' || height.value() == '' ||
-            parseInt(width.value()) < min || parseInt(width.value()) > max ||
-            parseInt(height.value()) < min || parseInt(height.value()) > max
+            width.value() == '' ||
+            height.value() == '' ||
+            parseInt(width.value()) < min ||
+            parseInt(width.value()) > max ||
+            parseInt(height.value()) < min ||
+            parseInt(height.value()) > max
         ) {
             notify({
                 id: 'collage_failed',
-                title: tl(trans.name_failed).replace('{name}', tl(trans.collage)),
+                title: tl(trans.name_failed).replace(
+                    '{name}',
+                    tl(trans.collage)
+                ),
                 body: tl(trans.your_settings_are_invalid),
                 type: 'error'
             });
@@ -218,7 +293,10 @@ export function collage({
         if (!auth.name) {
             notify({
                 id: 'collage_failed',
-                title: tl(trans.name_failed).replace('{name}', tl(trans.collage)),
+                title: tl(trans.name_failed).replace(
+                    '{name}',
+                    tl(trans.collage)
+                ),
                 body: tl(trans.you_need_to_be_logged_in),
                 type: 'error'
             });
@@ -232,7 +310,10 @@ export function collage({
             let warn = notify({
                 id: 'collage_warning',
                 title: tl(trans.are_you_sure),
-                body: tl(trans.this_will_require_loading_count_pages).replace('{c}', pages),
+                body: tl(trans.this_will_require_loading_count_pages).replace(
+                    '{c}',
+                    pages
+                ),
                 type: 'warning',
                 actions: [
                     {
@@ -251,7 +332,7 @@ export function collage({
 
         type.querySelector('button').disabled = true;
         timeframe.querySelector('button').disabled = true;
-        collage_settings.forEach(option => {
+        collage_settings.forEach((option) => {
             option.setAttribute('disabled', true);
         });
         submit.disabled = true;
@@ -261,19 +342,29 @@ export function collage({
     }
 
     function get_grid(current_page, pages) {
-        render(body, html`
-            <div class="loading-data-container">
-                <div class="loading-data-text">${tl(trans.gathering_plays_for_user_pages).replace('{u}', page.name).replace('{current_page}', current_page).replace('{pages}', pages)}</div>
-            </div>
-        `);
+        render(
+            body,
+            html`
+                <div class="loading-data-container">
+                    <div class="loading-data-text">
+                        ${tl(trans.gathering_plays_for_user_pages)
+                            .replace('{u}', page.name)
+                            .replace('{current_page}', current_page)
+                            .replace('{pages}', pages)}
+                    </div>
+                </div>
+            `
+        );
 
-        fetch(`${root}user/${page.name}/library/${type.value()}?format=list&${timeframe.value()}&page=${current_page}&ajax=1`)
-            .then(function(response) {
+        fetch(
+            `${root}user/${page.name}/library/${type.value()}?format=list&${timeframe.value()}&page=${current_page}&ajax=1`
+        )
+            .then(function (response) {
                 console.log('returned', response, response.text);
 
                 return response.text();
             })
-            .then(function(dom) {
+            .then(function (dom) {
                 let doc = new DOMParser().parseFromString(dom, 'text/html');
                 console.log('DOC', doc);
 
@@ -284,20 +375,33 @@ export function collage({
                     tracks.forEach((track) => {
                         let item = {};
 
-                        item.avatar = track.querySelector('.chartlist-image img');
+                        item.avatar = track.querySelector(
+                            '.chartlist-image img'
+                        );
                         if (item.avatar)
                             item.avatar = item.avatar.getAttribute('src');
-                        item.name = track.querySelector('.chartlist-name a').textContent.trim();
+                        item.name = track
+                            .querySelector('.chartlist-name a')
+                            .textContent.trim();
                         if (type.value() != 'artists')
-                            item.sister = track.querySelector('.chartlist-artist a').textContent.trim();
-                        item.plays = clean_number(track.querySelector('.chartlist-count-bar-slug').getAttribute('data-stat-value'));
+                            item.sister = track
+                                .querySelector('.chartlist-artist a')
+                                .textContent.trim();
+                        item.plays = clean_number(
+                            track
+                                .querySelector('.chartlist-count-bar-slug')
+                                .getAttribute('data-stat-value')
+                        );
 
                         page.state.collage.push(item);
                     });
-                } catch(e) {
+                } catch (e) {
                     notify({
                         id: 'collage_failed',
-                        title: tl(trans.name_failed).replace('{name}', tl(trans.collage)),
+                        title: tl(trans.name_failed).replace(
+                            '{name}',
+                            tl(trans.collage)
+                        ),
                         body: tl(trans.there_was_a_network_error),
                         type: 'error'
                     });
@@ -316,15 +420,20 @@ export function collage({
         log('gathered initial values', 'collage', 'info', page.state.collage);
 
         if (page.state.collage.length == 0) {
-            render(body, html`
-                <div class="loading-data-container">
-                    <div class="loading-data-text failed">${tl(trans.no_plays_in_range)}</div>
-                </div>
-            `);
+            render(
+                body,
+                html`
+                    <div class="loading-data-container">
+                        <div class="loading-data-text failed">
+                            ${tl(trans.no_plays_in_range)}
+                        </div>
+                    </div>
+                `
+            );
 
             type.querySelector('button').disabled = false;
             timeframe.querySelector('button').disabled = false;
-            collage_settings.forEach(option => {
+            collage_settings.forEach((option) => {
                 option.setAttribute('disabled', false);
             });
             submit.disabled = false;
@@ -342,61 +451,88 @@ export function collage({
         }
 
         let total = width.value() * height.value() - 1;
-        grid.style.setProperty('--highest', Math.max(+width.value(), +height.value()).toString());
+        grid.style.setProperty(
+            '--highest',
+            Math.max(+width.value(), +height.value()).toString()
+        );
 
         page.state.collage.some((data, index) => {
-            if (index > total)
-                return false;
+            if (index > total) return false;
 
             let template;
-            if (type.value() == 'artists')
-                template = sanitise(data.name);
-            else
-                template = `${sanitise(data.sister)}/${sanitise(data.name)}`;
+            if (type.value() == 'artists') template = sanitise(data.name);
+            else template = `${sanitise(data.sister)}/${sanitise(data.name)}`;
 
             grid.appendChild(html.node`
                 <li class="compare-item grid-items-item">
                     <div class="grid-items-cover-image">
-                        <div class="grid-items-cover-image-image ${(data.avatar.endsWith('/c6f59c1e5e7240a4c0d427abd71f3dbb.jpg') || data.avatar.endsWith('/2a96cbd8b46e442fc41c2b86b821562f.jpg')) ? 'grid-items-cover-default' : ''}">
+                        <div class="grid-items-cover-image-image ${data.avatar.endsWith('/c6f59c1e5e7240a4c0d427abd71f3dbb.jpg') || data.avatar.endsWith('/2a96cbd8b46e442fc41c2b86b821562f.jpg') ? 'grid-items-cover-default' : ''}">
                             <img src="${data.avatar.replace('/avatar70s/', '/avatar300s/').replace('/64s/', '/avatar300s/')}" alt="${data.name}" loading="lazy">
                         </div>
-                        ${settings.collage_grid_text || settings.collage_grid_plays ? html.node`
+                        ${
+                            settings.collage_grid_text ||
+                            settings.collage_grid_plays
+                                ? html.node`
                         <div class="grid-items-item-details">
-                            ${settings.collage_grid_text ? html.node`
+                            ${
+                                settings.collage_grid_text
+                                    ? html.node`
                             <p class="grid-items-item-main-text">
                                 <a class="link-block-target" href="${root}music/${redirect()}${template}" title="${data.name}">
                                     ${data.name}
                                 </a>
                             </p>
-                            ` : ''}
-                            ${(type.value() != 'artists') ? html.node`
+                            `
+                                    : ''
+                            }
+                            ${
+                                type.value() != 'artists'
+                                    ? html.node`
                             <p class="grid-items-item-aux-text">
-                                ${settings.collage_grid_text ? html.node`
+                                ${
+                                    settings.collage_grid_text
+                                        ? html.node`
                                 <a class="grid-items-item-aux-block" href="${root}music/${redirect()}${data.sister}">
                                     ${data.sister}
                                 </a>
-                                ${settings.collage_grid_plays ? html.node`
+                                ${
+                                    settings.collage_grid_plays
+                                        ? html.node`
                                 <a class="grid-item-plays" href="${root}user/${page.name}/library/music/${redirect()}${template}?date_preset=${timeframe.value()}" target="_blank">
                                     ${data.plays.toLocaleString(lang)}
                                 </a>
-                                ` : ''}
-                                ` : settings.collage_grid_plays ? html.node`
+                                `
+                                        : ''
+                                }
+                                `
+                                        : settings.collage_grid_plays
+                                          ? html.node`
                                 <a class="grid-item-plays" href="${root}user/${page.name}/library/music/${redirect()}${template}?date_preset=${timeframe.value()}" target="_blank">
                                     ${data.plays.toLocaleString(lang)}${tl(trans.plays_lower)}
                                 </a>
-                                ` : ''}
+                                `
+                                          : ''
+                                }
                             </p>
-                            ` : html.node`
-                            ${settings.collage_grid_plays ? html.node`
+                            `
+                                    : html.node`
+                            ${
+                                settings.collage_grid_plays
+                                    ? html.node`
                             <p class="grid-items-item-aux-text">
                                 <a class="grid-item-plays" href="${root}user/${page.name}/library/music/${redirect()}${template}?date_preset=${timeframe.value()}" target="_blank">
                                     ${data.plays.toLocaleString(lang)}${tl(trans.plays_lower)}
                                 </a>
                             </p>
-                            ` : ''}
-                            `}
+                            `
+                                    : ''
+                            }
+                            `
+                            }
                         </div>
-                        ` : ''}
+                        `
+                                : ''
+                        }
                     </div>
                 </li>
             `);
@@ -404,7 +540,9 @@ export function collage({
 
         let collage_dom = html.node`
             <div class="collage">
-                ${settings.collage_title ? html.node`
+                ${
+                    settings.collage_title
+                        ? html.node`
                 <div class="header">
                     <div class="type" data-type=${type.value()}>
                         <div class="bleh-icon" />
@@ -420,16 +558,23 @@ export function collage({
                         <strong>${page.name}</strong>
                     </div>
                 </div>
-                ` : ''}
+                `
+                        : ''
+                }
                 ${grid}
             </div>
         `;
-        render(body, html`
-            <div class="loading-data-container">
-                <div class="loading-data-text">${tl(trans.waiting_for_images)}</div>
-            </div>
-            ${collage_dom}
-        `);
+        render(
+            body,
+            html`
+                <div class="loading-data-container">
+                    <div class="loading-data-text">
+                        ${tl(trans.waiting_for_images)}
+                    </div>
+                </div>
+                ${collage_dom}
+            `
+        );
 
         music_grids(grid, false);
 
@@ -441,13 +586,20 @@ export function collage({
 
         const grid_item_size = Math.min(
             default_size,
-            Math.floor(default_size * base / highest)
+            Math.floor((default_size * base) / highest)
         );
-        const grid_item_gap = (settings.collage_grid_gap) ? 10 : 0;
-        const padding = (settings.collage_grid_gap) ? 15 : 0;
-        const title_height = (settings.collage_title) ? (32 + 15) : 0;
-        const cv_width = padding * 2 + grid_item_size * width.value() + grid_item_gap * (width.value() - 1);
-        const cv_height = padding * 2 + title_height + grid_item_size * height.value() + grid_item_gap * (height.value() - 1);
+        const grid_item_gap = settings.collage_grid_gap ? 10 : 0;
+        const padding = settings.collage_grid_gap ? 15 : 0;
+        const title_height = settings.collage_title ? 32 + 15 : 0;
+        const cv_width =
+            padding * 2 +
+            grid_item_size * width.value() +
+            grid_item_gap * (width.value() - 1);
+        const cv_height =
+            padding * 2 +
+            title_height +
+            grid_item_size * height.value() +
+            grid_item_gap * (height.value() - 1);
 
         const cv_scale = 1;
 
@@ -456,7 +608,10 @@ export function collage({
         collage_dom.style.padding = `${padding}px`;
         collage_dom.style.gap = `${padding}px`;
         collage_dom.style.setProperty('--item-list-gap', `${grid_item_gap}px`);
-        collage_dom.style.setProperty('--grid-item-size', `${grid_item_size}px`);
+        collage_dom.style.setProperty(
+            '--grid-item-size',
+            `${grid_item_size}px`
+        );
 
         let initial_canvas = html.node`
             <canvas width=${cv_width * cv_scale} height=${cv_height * cv_scale} />
@@ -469,53 +624,66 @@ export function collage({
             scale: cv_scale,
             onclone: (doc) => {
                 doc.querySelectorAll('*').forEach((el) => {
-                    el.style.setProperty('font-family', 'Figtree, Overpass, Inter, Ubuntu Sans, Spline Sans, Roboto, Noto Sans, Noto Sans JP, Noto Sans KR, Noto Sans TC, Lucida Grande, Verdana, Tahoma, -apple-system, BlinkMacSystemFont, sans-serif');
+                    el.style.setProperty(
+                        'font-family',
+                        'Overpass, Inter, Ubuntu Sans, Spline Sans, Roboto, Noto Sans, Noto Sans JP, Noto Sans KR, Noto Sans TC, Lucida Grande, Verdana, Tahoma, -apple-system, BlinkMacSystemFont, sans-serif'
+                    );
                 });
             }
-        }).then((canvas => {
-            canvas.toBlob(blob => {
+        }).then((canvas) => {
+            canvas.toBlob((blob) => {
                 const blob_url = URL.createObjectURL(blob);
 
                 const date = new Date();
 
                 const filename = tl(trans.chart_template_filename)
-                    .replace('{timeframe}', timeframe.querySelector('button').textContent)
+                    .replace(
+                        '{timeframe}',
+                        timeframe.querySelector('button').textContent
+                    )
                     .replace('{user}', page.name)
                     .replace('{type}', tl(trans[type.value()]))
                     .replace('{size}', `${width.value()}×${height.value()}`)
                     .replace('{brand}', version.brand)
-                    .replace('{date}', `${date.getFullYear()}-${pad2(date.getMonth() + 1)}-${pad2(date.getDate())}`);
+                    .replace(
+                        '{date}',
+                        `${date.getFullYear()}-${pad2(date.getMonth() + 1)}-${pad2(date.getDate())}`
+                    );
 
-                render(body, html`
-                    <div class="collage-finished">
-                        <strong>${tl(trans.your_collage_is_ready)}</strong>
-                        <div class="button-group">
-                            <button
-                                class="btn primary icon"
-                                data-type="download"
-                                onclick=${() => download(blob_url, filename)}
-                            >
-                                ${tl(trans.download)}
-                            </button>
-                            <button
-                                class="btn open"
-                                data-type="open"
-                                onclick=${() => open(blob_url)}
-                            >
-                                ${tl(trans.open)}
-                            </button>
+                render(
+                    body,
+                    html`
+                        <div class="collage-finished">
+                            <strong>${tl(trans.your_collage_is_ready)}</strong>
+                            <div class="button-group">
+                                <button
+                                    class="btn primary icon"
+                                    data-type="download"
+                                    onclick=${() =>
+                                        download(blob_url, filename)}
+                                >
+                                    ${tl(trans.download)}
+                                </button>
+                                <button
+                                    class="btn open"
+                                    data-type="open"
+                                    onclick=${() => open(blob_url)}
+                                >
+                                    ${tl(trans.open)}
+                                </button>
+                            </div>
                         </div>
-                    </div>
-                    ${canvas}
-                `);
+                        ${canvas}
+                    `
+                );
 
                 type.querySelector('button').disabled = false;
                 timeframe.querySelector('button').disabled = false;
-                collage_settings.forEach(option => {
+                collage_settings.forEach((option) => {
                     option.setAttribute('disabled', false);
                 });
                 submit.disabled = false;
             }, 'image/png');
-        }));
+        });
     }
 }
