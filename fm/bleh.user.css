@@ -11036,7 +11036,10 @@
         --mask-colour: color-mix(in hsl, hsl(var(--c2)), hsl(var(--c3)) 50%);
         background-color: var(--bg) !important;
         color: var(--col) !important;
-        padding: var(--padding, 7px var(--button-sides)) !important;
+        padding: var(
+            --padding,
+            var(--button-verts) var(--button-sides)
+        ) !important;
         line-height: var(--line-height);
         font-size: var(--font-size) !important;
         font-weight: var(--font-weight) !important;
@@ -11044,7 +11047,7 @@
         border-radius: var(--radius, var(--button-radius)) !important;
         box-shadow: var(--shadow, var(--interact-shadow)) !important;
         border: unset !important;
-        height: 32px;
+        height: var(--button-height);
         transition-property:
             background-color, transform, box-shadow, color, border;
         transition-duration: var(--trans);
@@ -18706,7 +18709,7 @@
             margin: unset;
 
             &:not(.textarea) {
-                height: 32px;
+                height: var(--button-height);
             }
 
             input {

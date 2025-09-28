@@ -22,9 +22,9 @@ export function calendar({
     if (value != null) now = new Date(value);
 
     const min_date =
-        min != null
-            ? new Date(min)
-            : new Date(now.getTime() - 14 * 24 * 60 * 60 * 1000);
+        min != null ?
+            new Date(min)
+        :   new Date(now.getTime() - 14 * 24 * 60 * 60 * 1000);
     min_date.setHours(0, 0, 0, 0);
 
     const max_date = max != null ? new Date(max) : new Date();
@@ -101,13 +101,13 @@ export function calendar({
                 <div class="date-input modern-input" ref=${(el) => (date_display = el)} disabled=${disabled}>${format_date(state)}</div>
             </div>
             ${
-                show_time
-                    ? html.node`
+                show_time ?
+                    html.node`
             <div class="content-form input-container" data-type="time">
                 <input class="modern-input" type="time" step="1" ref=${(el) => (time_input = el)} disabled=${disabled} value="${pad2(state.hours)}:${pad2(state.mins)}:${pad2(state.secs)}">
             </div>
             `
-                    : ''
+                :   ''
             }
         </div>
     `;
@@ -172,6 +172,7 @@ export function calendar({
         interactive: true,
         interactiveBorder: 10,
         offset: [0, 0],
+        appendTo: document.body,
 
         onShow(instance) {
             instance.popper.addEventListener('click', (event) => {
@@ -252,9 +253,9 @@ export function calendar({
             </div>
             <div class="days" data-last-action=${last_action}>
                 ${days(view.year, view.month).map((cell) =>
-                    cell.type == 'empty'
-                        ? html.node`<button class="day empty" type="button" disabled />`
-                        : html.node`
+                    cell.type == 'empty' ?
+                        html.node`<button class="day empty" type="button" disabled />`
+                    :   html.node`
                             <button class="day" type="button" aria-selected=${cell.day == state.day && cell.date >= min_date && cell.date <= max_date && cell.month == view.month ? 'true' : 'false'} disabled=${cell.date < min_date || cell.date > max_date} onclick=${() => {
                                 state.day = cell.day;
                                 state.year = view.year;

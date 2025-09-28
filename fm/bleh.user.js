@@ -26853,6 +26853,7 @@
       interactive: true,
       interactiveBorder: 10,
       offset: [0, 0],
+      appendTo: document.body,
       onShow(instance) {
         instance.popper.addEventListener("click", (event3) => {
           instance.hide();
@@ -42402,7 +42403,12 @@
       interactiveBorder: 10,
       trigger: "click",
       appendTo: document.body,
-      hideOnClick: "toggle"
+      onClickOutside(instance, event3) {
+        if (instance.querySelector('[aria-expanded="true"]')) {
+          return;
+        }
+        instance.hide();
+      }
     });
     let form = picker_content.querySelector(":scope > .date-range-picker-form");
     let from_group = form.querySelector(".form-group--from");

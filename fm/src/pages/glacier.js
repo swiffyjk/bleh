@@ -309,7 +309,14 @@ function bleh_glacier_library_date() {
         interactiveBorder: 10,
         trigger: 'click',
         appendTo: document.body,
-        hideOnClick: 'toggle'
+
+        onClickOutside(instance, event) {
+            if (instance.querySelector('[aria-expanded="true"]')) {
+                return;
+            }
+
+            instance.hide();
+        }
     });
 
     let form = picker_content.querySelector(':scope > .date-range-picker-form');
@@ -560,8 +567,8 @@ function bleh_glacier_library_top(static_page = false) {
             <div class="dialog-settings">
                 <div class="setting-group blend">
                     ${
-                        page.subpage == 'library_artists'
-                            ? html.node`
+                        page.subpage == 'library_artists' ?
+                            html.node`
                     <div class="setting" data-type="toggle" id="container-colourful_counts" onclick="_update_item('colourful_counts')">
                         <div class="heading">
                             <h5>${tl(trans.colourful_counts.name)}</h5>
@@ -574,19 +581,21 @@ function bleh_glacier_library_top(static_page = false) {
                         </div>
                     </div>
                     `
-                            : html.node`
+                        :   html.node`
                     ${setting({ id: 'format_guest_features' })}
                     ${setting({ id: 'show_guest_features' })}
                     `
                     }
                     ${
-                        (page.subpage == 'library_artists' ||
-                            page.subpage == 'library_albums') &&
-                        auth.pro
-                            ? html.node`
+                        (
+                            (page.subpage == 'library_artists' ||
+                                page.subpage == 'library_albums') &&
+                            auth.pro
+                        ) ?
+                            html.node`
                     ${setting({ id: 'grid_glow' })}
                     `
-                            : ''
+                        :   ''
                     }
                     ${setting({ id: 'glacier_library_graphs' })}
                 </div>
@@ -1196,9 +1205,9 @@ export function bleh_glacier_date_graph_generate() {
                 ]
             },
             options:
-                settings.chart_bar_axis == 'horizontal'
-                    ? page.state.chart_library_bar_options
-                    : page.state.chart_library_bar_v_options
+                settings.chart_bar_axis == 'horizontal' ?
+                    page.state.chart_library_bar_options
+                :   page.state.chart_library_bar_v_options
         });
     }
 
