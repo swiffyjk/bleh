@@ -8,9 +8,12 @@ import { tl, trans } from '../build/trans';
 import { clean_title } from '../build/music';
 import { version } from '../main';
 import { settings } from '../build/config';
+import { dialog } from './dialog';
 
 export function oracle_process() {
     log('beginning', 'oracle');
+
+    page.state.oracle_debug = {};
 
     if (ff('oracle_album_reordering') && page.type == 'track') {
     }
@@ -154,6 +157,8 @@ export function oracle_process() {
 
         let url;
 
+        page.state.oracle_debug.artist_id = artist_data.id;
+
         if (page.type == 'track')
             url = `https://musicbrainz.org/ws/2/recording?query="${sanitise(clean_title(page.name), ' ')}" AND arid:"${artist_data.id}" AND status:Official`;
         else if (page.type == 'album')
@@ -218,6 +223,7 @@ export function oracle_process() {
                 return;
             }
 
+            page.state.oracle_debug.release_id = release.id;
             log('picked release, proceeding', 'oracle', 'info', {
                 data,
                 release
@@ -416,6 +422,8 @@ export function oracle_process() {
     }
 
     function oracle_album(data) {
+        page.state.oracle_debug.album_id = data.id;
+
         const labels = data['label-info'];
         if (labels && labels.length > 0) {
             info_panel.appendChild(html.node`
@@ -447,10 +455,12 @@ export function oracle_process() {
 
         const oracle_entry = {
             ...defaults,
-            ...(oracle_albums.hasOwnProperty(artist) &&
-            oracle_albums[artist].hasOwnProperty(album)
-                ? oracle_albums[artist][album]
-                : {})
+            ...((
+                oracle_albums.hasOwnProperty(artist) &&
+                oracle_albums[artist].hasOwnProperty(album)
+            ) ?
+                oracle_albums[artist][album]
+            :   {})
         };
         log('entry', 'oracle', 'info', { oracle_entry });
 
@@ -469,14 +479,14 @@ export function oracle_process() {
         function render_tracklist(disc, length, retrieved_artist) {
             return html.node`
                 ${
-                    length > 1
-                        ? html.node`
+                    length > 1 ?
+                        html.node`
                 <div class="sub-text normal disc-header">
                     <span class="bleh-icon" style="--icon: var(--mask)" />
                     ${tl(trans.disc_number, { n: disc.position })}
                 </div>
                 `
-                        : ''
+                    :   ''
                 }
                 <table class="chartlist chartlist--with-index chartlist--with-index--length-1 chartlist--with-artist chartlist--with-more chartlist--with-duration chartlist--with-bar">
                     <tbody>
@@ -486,12 +496,16 @@ export function oracle_process() {
                             const title_lower = track.title.toLowerCase();
 
                             const track_entry =
-                                oracle_tracks.hasOwnProperty(artist_lower) &&
-                                oracle_tracks[artist_lower].hasOwnProperty(
-                                    title_lower
-                                )
-                                    ? oracle_tracks[artist_lower][title_lower]
-                                    : null;
+                                (
+                                    oracle_tracks.hasOwnProperty(
+                                        artist_lower
+                                    ) &&
+                                    oracle_tracks[artist_lower].hasOwnProperty(
+                                        title_lower
+                                    )
+                                ) ?
+                                    oracle_tracks[artist_lower][title_lower]
+                                :   null;
 
                             const total_s = Math.floor(track.length / 1000);
                             const m = Math.floor(total_s / 60);
@@ -623,9 +637,10 @@ export function oracle_process() {
                 releases: recording.releases
             });
             recording.releases.forEach((release) => {
-                const artist = release['artist-credit']
-                    ? release['artist-credit'][0].name
-                    : recording['artist-credit'].name;
+                const artist =
+                    release['artist-credit'] ?
+                        release['artist-credit'][0].name
+                    :   recording['artist-credit'].name;
 
                 if (artist == 'Various Artists') return;
 
@@ -699,14 +714,16 @@ export function oracle_process() {
 
                             const oracle_entry = {
                                 ...defaults,
-                                ...(oracle_albums.hasOwnProperty(
-                                    artist_lower
-                                ) &&
-                                oracle_albums[artist_lower].hasOwnProperty(
-                                    title_lower
-                                )
-                                    ? oracle_albums[artist_lower][title_lower]
-                                    : {})
+                                ...((
+                                    oracle_albums.hasOwnProperty(
+                                        artist_lower
+                                    ) &&
+                                    oracle_albums[artist_lower].hasOwnProperty(
+                                        title_lower
+                                    )
+                                ) ?
+                                    oracle_albums[artist_lower][title_lower]
+                                :   {})
                             };
                             log('entry', 'oracle', 'info', { oracle_entry });
 
@@ -743,13 +760,13 @@ export function oracle_process() {
                             <div class="source-album js-link-block link-block-cover-link" data-match=${match != null}>
                                 <div class="source-album-art" ref=${(el) => (artwork_container = el)}>
                                     ${
-                                        artwork
-                                            ? html.node`
+                                        artwork ?
+                                            html.node`
                                     <span class="cover-art">
                                         <img src=${artwork} alt=${title}>
                                     </span>
                                     `
-                                            : ''
+                                        :   ''
                                     }
                                 </div>
                                 <div class="source-album-details" data-kate-processed="true">
@@ -758,14 +775,14 @@ export function oracle_process() {
                                     <p class="source-album-stats oracle-stats" ref=${(el) => (stats = el)}>
                                         ${type}
                                         ${
-                                            match
-                                                ? html.node`
+                                            match ?
+                                                html.node`
                                         <span class="plays">
                                             <span class="bleh-icon" />
                                             ${plays}
                                         </span>
                                         `
-                                                : ''
+                                            :   ''
                                         }
                                     </p>
                                     <a class="js-link-block-cover-link link-block-cover-link" href="${root}music/${sanitise(artist)}/${sanitise(title)}" tabindex="-1" aria-hidden="true" />
@@ -980,4 +997,46 @@ function oracle_request(type = 'albums') {
     };
 
     xhr.send();
+}
+
+export function oracle_debug() {
+    const debug = page.state.oracle_debug;
+    log('debug', 'oracle', 'info', { debug });
+
+    dialog({
+        id: 'oracle_debug',
+        title: 'oracle',
+        body: html.node`
+            <table class="fancy-table oracle-debug">
+                <tbody>
+                    ${Object.entries(debug).map(([item, val]) => {
+                        let va;
+                        const entry = html.node`
+                            <tr>
+                                <td>${item}</td>
+                                <td ref=${(el) => (va = el)}>${val}</td>
+                            </tr>
+                        `;
+
+                        if ((item = 'artist_id')) {
+                            render(
+                                va,
+                                html`
+                                    ${val}
+                                    <a
+                                        class="see-more"
+                                        href="https://musicbrainz.org/artist/${val}"
+                                        target="_blank"
+                                        >view</a
+                                    >
+                                `
+                            );
+                        }
+
+                        return entry;
+                    })}
+                </tbody>
+            </table>
+        `
+    });
 }

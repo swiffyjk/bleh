@@ -14480,6 +14480,9 @@
     [data-type="issue"] {
         --mask: var(--icon-16-issues);
     }
+    [data-type="debug"] {
+        --mask: var(--icon-plaster);
+    }
 
     /*     PLAY THIS TRACK     */
     .replace-playlink {
@@ -28338,9 +28341,13 @@
     }
     .oracle {
         display: flex;
-        gap: var(--icon-gap);
+        gap: var(--card-gap);
         --icon: var(--icon-16-oracle);
         --icon-colour: hsl(var(--l3-c));
+
+        & > .bleh-icon {
+            margin-right: calc(-1 * (var(--card-gap) - var(--icon-gap)));
+        }
 
         & > p {
             flex: 1;
@@ -28354,6 +28361,7 @@
             cursor: default;
         }
 
+        & > button,
         & > span,
         & > a {
             flex-shrink: 0;
@@ -28363,6 +28371,16 @@
         padding: var(--card-padding);
         margin: calc(-1 * var(--card-padding)) calc(-1 * var(--card-padding)) 0
             calc(-1 * var(--card-padding));
+    }
+    .oracle-debug {
+        width: 600px;
+
+        & > tbody > tr {
+            & > td:not(:first-child) {
+                display: flex;
+                gap: var(--item-list-gap);
+            }
+        }
     }
 
     .track-explicit {

@@ -35245,6 +35245,7 @@
   // src/components/oracle.js
   function oracle_process() {
     log("beginning", "oracle");
+    page.state.oracle_debug = {};
     if (ff("oracle_album_reordering") && page.type == "track") {
     }
     if (!ff("oracle_connect") || page.type == "artist") return;
@@ -35360,6 +35361,7 @@
       if (tries < 1) return;
       tries--;
       let url;
+      page.state.oracle_debug.artist_id = artist_data.id;
       if (page.type == "track")
         url = `https://musicbrainz.org/ws/2/recording?query="${sanitise(clean_title(page.name), " ")}" AND arid:"${artist_data.id}" AND status:Official`;
       else if (page.type == "album")
@@ -35414,6 +35416,7 @@
           });
           return;
         }
+        page.state.oracle_debug.release_id = release.id;
         log("picked release, proceeding", "oracle", "info", {
           data: data2,
           release
@@ -35549,6 +35552,7 @@
       });
     }
     function oracle_album(data2) {
+      page.state.oracle_debug.album_id = data2.id;
       const labels = data2["label-info"];
       if (labels && labels.length > 0) {
         info_panel.appendChild(html.node`
@@ -35602,7 +35606,9 @@
                         ${disc.tracks.map((track) => {
           const artist_lower = track["artist-credit"][0].name.toLowerCase();
           const title_lower = track.title.toLowerCase();
-          const track_entry = oracle_tracks.hasOwnProperty(artist_lower) && oracle_tracks[artist_lower].hasOwnProperty(
+          const track_entry = oracle_tracks.hasOwnProperty(
+            artist_lower
+          ) && oracle_tracks[artist_lower].hasOwnProperty(
             title_lower
           ) ? oracle_tracks[artist_lower][title_lower] : null;
           const total_s = Math.floor(track.length / 1e3);
@@ -35968,6 +35974,44 @@
     };
     xhr.send();
   }
+  function oracle_debug() {
+    const debug = page.state.oracle_debug;
+    log("debug", "oracle", "info", { debug });
+    dialog({
+      id: "oracle_debug",
+      title: "oracle",
+      body: html.node`
+            <table class="fancy-table oracle-debug">
+                <tbody>
+                    ${Object.entries(debug).map(([item, val]) => {
+        let va;
+        const entry = html.node`
+                            <tr>
+                                <td>${item}</td>
+                                <td ref=${(el) => va = el}>${val}</td>
+                            </tr>
+                        `;
+        if (item = "artist_id") {
+          render(
+            va,
+            html`
+                                    ${val}
+                                    <a
+                                        class="see-more"
+                                        href="https://musicbrainz.org/artist/${val}"
+                                        target="_blank"
+                                        >view</a
+                                    >
+                                `
+          );
+        }
+        return entry;
+      })}
+                </tbody>
+            </table>
+        `
+    });
+  }
 
   // src/components/music.js
   unsafeWindow._other_listener = function(id) {
@@ -36255,6 +36299,9 @@
             <div class="oracle">
                 <span class="bleh-icon" />
                 <p>${{ html: tl(trans.oracle_notice).replace("oracle", "<i>oracle</i>") }}</p>
+                <button class="see-more left-icon" data-type="debug" onclick=${() => oracle_debug()}>
+                    ${tl(trans.debug)}
+                </button>
                 <a class="see-more" href="https://github.com/katelyynn/bleh/issues/new/choose" target="_blank">
                     ${tl(trans.send_feedback)}
                 </a>
@@ -59630,7 +59677,7 @@ ${e ? html.node`<span class="error-type">${e.name}</span>: ${e.message}` : ""}</
       }
     },
     theme_schedule: {
-      en: "Choose which theme preference to apply within bleh based on your system theme."
+      en: "Choose which theme preference to apply based on your system theme."
     },
     themes: {
       name: {
@@ -59716,8 +59763,8 @@ ${e ? html.node`<span class="error-type">${e.name}</span>: ${e.message}` : ""}</
       en: "Links",
       sv: "L\xE4nkar"
     },
-    //sounds kinda weird so i changed back to english as the final version for event ; german festival sites use 'line-up' aswell so ill stick to that ~stel
     event: {
+      // DE: sounds kinda weird so i changed back to english as the final version for event ; german festival sites use 'line-up' aswell so ill stick to that ~stel
       en: "Event",
       pt: "Evento",
       sv: "Evenemang"
@@ -59878,22 +59925,26 @@ ${e ? html.node`<span class="error-type">${e.name}</span>: ${e.message}` : ""}</
       sv: "\xC5rstidsevenemang h\xE5lls i din tidszon, som vi r\xE4knade ut vara {offset}"
     },
     calculated_offset: {
+      // timezone offset
       en: "Calculated offset based on timezone",
       pt: "Offset calculado com base no fuso hor\xE1rio",
       sv: "F\xF6rskjutning kalkylerats fr\xE5n tidszon"
     },
     started: {
+      // eg. season started 1 day ago
       en: "Started",
       de: "Gestartet",
       pt: "Come\xE7ou",
       sv: "Har b\xF6rjat"
     },
     next_in: {
+      // eg. next season in 5 days
       en: "Next in",
       pt: "Pr\xF3ximo em",
       sv: "N\xE4sta om"
     },
     ends_in: {
+      // eg. season ends in 3 days
       en: "Ends in",
       de: "Endet in",
       pt: "Termina em",
@@ -60108,10 +60159,10 @@ ${e ? html.node`<span class="error-type">${e.name}</span>: ${e.message}` : ""}</
     },
     solarium: {
       name: {
-        en: "Enable blurred glass effects"
+        en: "Enable solarium glass effects"
       },
       body: {
-        en: "Makes certain UI elements see-through, which may degrade performance on some devices"
+        en: "Apply a see-through glassy material to many surfaces, which may degrade performance on some devices"
       }
     },
     seasonal_warning: {
@@ -63627,6 +63678,9 @@ ${e ? html.node`<span class="error-type">${e.name}</span>: ${e.message}` : ""}</
     },
     oracle_notice: {
       en: "You are currently testing \u2018oracle\u2019, a redesigned album and track view"
+    },
+    debug: {
+      en: "Debug"
     },
     send_feedback: {
       en: "Send feedback"

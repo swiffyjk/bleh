@@ -645,7 +645,7 @@ export const trans = {
         }
     },
     theme_schedule: {
-        en: 'Choose which theme preference to apply within bleh based on your system theme.'
+        en: 'Choose which theme preference to apply based on your system theme.'
     },
     themes: {
         name: {
@@ -731,8 +731,8 @@ export const trans = {
         en: 'Links',
         sv: 'Länkar'
     },
-    //sounds kinda weird so i changed back to english as the final version for event ; german festival sites use 'line-up' aswell so ill stick to that ~stel
     event: {
+        // DE: sounds kinda weird so i changed back to english as the final version for event ; german festival sites use 'line-up' aswell so ill stick to that ~stel
         en: 'Event',
         pt: 'Evento',
         sv: 'Evenemang'
@@ -893,22 +893,26 @@ export const trans = {
         sv: 'Årstidsevenemang hålls i din tidszon, som vi räknade ut vara {offset}'
     },
     calculated_offset: {
+        // timezone offset
         en: 'Calculated offset based on timezone',
         pt: 'Offset calculado com base no fuso horário',
         sv: 'Förskjutning kalkylerats från tidszon'
     },
     started: {
+        // eg. season started 1 day ago
         en: 'Started',
         de: 'Gestartet',
         pt: 'Começou',
         sv: 'Har börjat'
     },
     next_in: {
+        // eg. next season in 5 days
         en: 'Next in',
         pt: 'Próximo em',
         sv: 'Nästa om'
     },
     ends_in: {
+        // eg. season ends in 3 days
         en: 'Ends in',
         de: 'Endet in',
         pt: 'Termina em',
@@ -1123,10 +1127,10 @@ export const trans = {
     },
     solarium: {
         name: {
-            en: 'Enable blurred glass effects'
+            en: 'Enable solarium glass effects'
         },
         body: {
-            en: 'Makes certain UI elements see-through, which may degrade performance on some devices'
+            en: 'Apply a see-through glassy material to many surfaces, which may degrade performance on some devices'
         }
     },
     seasonal_warning: {
@@ -4642,6 +4646,9 @@ export const trans = {
     },
     oracle_notice: {
         en: 'You are currently testing ‘oracle’, a redesigned album and track view'
+    },
+    debug: {
+        en: 'Debug'
     },
     send_feedback: {
         en: 'Send feedback'

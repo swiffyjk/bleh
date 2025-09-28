@@ -32,7 +32,7 @@ import {
     load_profile_cache_externally,
     open_starred_friend_window
 } from '../pages/profile.js';
-import { oracle_process } from './oracle.js';
+import { oracle_debug, oracle_process } from './oracle.js';
 
 unsafeWindow._other_listener = function (id) {
     other_listener(id);
@@ -390,6 +390,9 @@ export async function show_your_scrobbles() {
             <div class="oracle">
                 <span class="bleh-icon" />
                 <p>${{ html: tl(trans.oracle_notice).replace('oracle', '<i>oracle</i>') }}</p>
+                <button class="see-more left-icon" data-type="debug" onclick=${() => oracle_debug()}>
+                    ${tl(trans.debug)}
+                </button>
                 <a class="see-more" href="https://github.com/katelyynn/bleh/issues/new/choose" target="_blank">
                     ${tl(trans.send_feedback)}
                 </a>
