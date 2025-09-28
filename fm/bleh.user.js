@@ -44231,7 +44231,9 @@
   var import_cropperjs = __toESM(require_cropper(), 1);
   var cropper;
   function bleh_native_settings() {
-    let no_data = page.structure.container.querySelector(":scope > .no-data-message");
+    let no_data = page.structure.container.querySelector(
+      ":scope > .no-data-message"
+    );
     if (no_data) {
       page.structure.main.appendChild(no_data);
     }
@@ -44252,17 +44254,21 @@
       page.structure.main.appendChild(merch);
       page.structure.main.appendChild(history);
       let button = subscription.querySelector(".btn-primary");
-      if (button) button.classList.add("subscription-button", "icon", "primary");
+      if (button)
+        button.classList.add("subscription-button", "icon", "primary");
       let more_link_wrap = edits.querySelector(".more-link");
       if (more_link_wrap) {
         more_link_wrap.classList = "";
         let edit_buttons = more_link_wrap.querySelectorAll("a");
         edit_buttons.forEach((edit_button, index3) => {
-          edit_button.classList.add("btn", "edit-lead-button", "icon", "primary");
-          if (index3 == 0)
-            edit_button.classList.add("edit-album");
-          else
-            edit_button.classList.add("edit-track");
+          edit_button.classList.add(
+            "btn",
+            "edit-lead-button",
+            "icon",
+            "primary"
+          );
+          if (index3 == 0) edit_button.classList.add("edit-album");
+          else edit_button.classList.add("edit-track");
         });
       }
     } else if (page.subpage.startsWith("subscription_automatic-edits")) {
@@ -44278,7 +44284,11 @@
     }
     if (ff("katsune")) return;
     let edit_header = document.createElement("section");
-    edit_header.classList.add("redesigned-header", "edit-header", "no-background");
+    edit_header.classList.add(
+      "redesigned-header",
+      "edit-header",
+      "no-background"
+    );
     edit_header.innerHTML = `
         <div class="tag-side">
             <div class="tag-icon cog-icon"></div>
@@ -44288,7 +44298,10 @@
             <h1>${header_text}</h1>
         </div>
     `;
-    page.structure.container.insertBefore(edit_header, page.structure.container.firstElementChild);
+    page.structure.container.insertBefore(
+      edit_header,
+      page.structure.container.firstElementChild
+    );
   }
   function patch_settings_profile_tab() {
     let update_picture = page.structure.main.querySelector("#update-picture");
@@ -44299,23 +44312,30 @@
   }
   function patch_settings_charts_panel(token) {
     let charts_panel = document.getElementById("update-chart");
-    if (charts_panel.hasAttribute("data-kate-processed"))
-      return;
+    if (charts_panel.hasAttribute("data-kate-processed")) return;
     charts_panel.setAttribute("data-kate-processed", "true");
     charts_panel.classList.add("bleh--panel");
     let original_chart_settings = {
       recent: {
-        recent_artwork: document.getElementById("id_show_recent_tracks_artwork").checked,
+        recent_artwork: document.getElementById(
+          "id_show_recent_tracks_artwork"
+        ).checked,
         count: document.getElementById("id_chart_length_recent_tracks").outerHTML,
-        recent_realtime: document.getElementById("id_auto_refresh_recent_tracks").checked
+        recent_realtime: document.getElementById(
+          "id_auto_refresh_recent_tracks"
+        ).checked
       },
       artists: {
         timeframe: document.getElementById("id_chart_range_top_artists").outerHTML,
-        style: document.getElementById("id_chart_style_and_length_top_artists").outerHTML
+        style: document.getElementById(
+          "id_chart_style_and_length_top_artists"
+        ).outerHTML
       },
       albums: {
         timeframe: document.getElementById("id_chart_range_top_albums").outerHTML,
-        style: document.getElementById("id_chart_style_and_length_top_albums").outerHTML
+        style: document.getElementById(
+          "id_chart_style_and_length_top_albums"
+        ).outerHTML
       },
       tracks: {
         count: document.getElementById("id_chart_length_top_tracks").outerHTML,
@@ -44620,21 +44640,53 @@
             </div>
         </form>
     `;
-    custom_select(charts_panel.querySelector("#id_chart_length_recent_tracks"), charts_panel.querySelector("#id_chart_length_recent_tracks_select"));
-    custom_select(charts_panel.querySelector("#id_chart_range_top_artists"), charts_panel.querySelector("#id_chart_range_top_artists_select"));
-    custom_select(charts_panel.querySelector("#id_chart_style_and_length_top_artists"), charts_panel.querySelector("#id_chart_style_and_length_top_artists_select"));
-    custom_select(charts_panel.querySelector("#id_chart_range_top_albums"), charts_panel.querySelector("#id_chart_range_top_albums_select"));
-    custom_select(charts_panel.querySelector("#id_chart_style_and_length_top_albums"), charts_panel.querySelector("#id_chart_style_and_length_top_albums_select"));
-    custom_select(charts_panel.querySelector("#id_chart_range_top_tracks"), charts_panel.querySelector("#id_chart_range_top_tracks_select"));
-    custom_select(charts_panel.querySelector("#id_chart_length_top_tracks"), charts_panel.querySelector("#id_chart_length_top_tracks_select"));
+    custom_select(
+      charts_panel.querySelector("#id_chart_length_recent_tracks"),
+      charts_panel.querySelector("#id_chart_length_recent_tracks_select")
+    );
+    custom_select(
+      charts_panel.querySelector("#id_chart_range_top_artists"),
+      charts_panel.querySelector("#id_chart_range_top_artists_select")
+    );
+    custom_select(
+      charts_panel.querySelector("#id_chart_style_and_length_top_artists"),
+      charts_panel.querySelector(
+        "#id_chart_style_and_length_top_artists_select"
+      )
+    );
+    custom_select(
+      charts_panel.querySelector("#id_chart_range_top_albums"),
+      charts_panel.querySelector("#id_chart_range_top_albums_select")
+    );
+    custom_select(
+      charts_panel.querySelector("#id_chart_style_and_length_top_albums"),
+      charts_panel.querySelector(
+        "#id_chart_style_and_length_top_albums_select"
+      )
+    );
+    custom_select(
+      charts_panel.querySelector("#id_chart_range_top_tracks"),
+      charts_panel.querySelector("#id_chart_range_top_tracks_select")
+    );
+    custom_select(
+      charts_panel.querySelector("#id_chart_length_top_tracks"),
+      charts_panel.querySelector("#id_chart_length_top_tracks_select")
+    );
     for (let category in original_chart_settings) {
       for (let setting2 in original_chart_settings[category]) {
-        update_inbuilt_item(setting2, original_chart_settings[category][setting2], false);
+        update_inbuilt_item(
+          setting2,
+          original_chart_settings[category][setting2],
+          false
+        );
       }
     }
     let selects = document.body.querySelectorAll("select");
     selects.forEach((select2) => {
-      select2.setAttribute("onchange", `_update_inbuilt_select('${select2.getAttribute("id")}', this.value)`);
+      select2.setAttribute(
+        "onchange",
+        `_update_inbuilt_select('${select2.getAttribute("id")}', this.value)`
+      );
       update_inbuilt_select(select2.getAttribute("id"), select2.value);
     });
   }
@@ -44661,163 +44713,291 @@
       allow_hue: true,
       cache: true,
       take_effect: false,
-      allow_socials: true
+      allow_socials: true,
+      allow_alignment: true
     };
     let banner_setting;
     let accent_setting;
-    render(update_picture, html`
-        <h4>${tl(trans.profile)}</h4>
-        <div class="banner-preview"></div>
-        <div class="profile-container">
-            <div class="avatar-side">
-                <div class="avatar image-upload-preview" onclick=${() => avatar2(token)}>
-                    <img src=${avatar_url} alt=${tl(trans.your_avatar)} loading="lazy">
-                    <div class="avatar-overlay"></div>
-                </div>
-            </div>
-            <div class="info-side">
-                <div class="header-info">
-                    <div class="header">
-                        <h1>${auth.name}</h1>
+    render(
+      update_picture,
+      html`
+            <h4>${tl(trans.profile)}</h4>
+            <div class="banner-preview"></div>
+            <div class="profile-container">
+                <div class="avatar-side">
+                    <div
+                        class="avatar image-upload-preview"
+                        onclick=${() => avatar2(token)}
+                    >
+                        <img
+                            src=${avatar_url}
+                            alt=${tl(trans.your_avatar)}
+                            loading="lazy"
+                        />
+                        <div class="avatar-overlay"></div>
                     </div>
-                    <div class="header-title-secondary">
-                        <span class="header-title-secondary--pre" id="header-title-display-name--pre"></span>
-                        <span class="header-title-display-name" id="header-title-display-name"></span>
-                        <!--<span class="header-title-secondary--pre" id="header-scrobble-since--pre">created</span>
+                </div>
+                <div class="info-side">
+                    <div class="header-info">
+                        <div class="header">
+                            <h1>${auth.name}</h1>
+                        </div>
+                        <div class="header-title-secondary">
+                            <span
+                                class="header-title-secondary--pre"
+                                id="header-title-display-name--pre"
+                            ></span>
+                            <span
+                                class="header-title-display-name"
+                                id="header-title-display-name"
+                            ></span>
+                            <!--<span class="header-title-secondary--pre" id="header-scrobble-since--pre">created</span>
                         <span class="header-scrobble-since" id="header-scrobble-since"></span>-->
+                        </div>
                     </div>
-                </div>
-                <div class="sub-info">
-                    <form action="${root}settings#update-profile" name="profile-form" data-form-type="identity" method="post">
-                        <input type="hidden" name="csrfmiddlewaretoken" value="${token}">
-                        <div class="info-grid">
-                            <div class="info-row">
-                                <div class="title">
-                                    ${tl(trans.subtitle)}
-                                </div>
-                                <div class="input">
-                                    <input type="text" name="full_name" value=${form_display_name} maxlength="36" id="id_full_name" oninput="_update_display_name(this.value)" data-form-type="other">
-                                    <div class="tip">${tl(trans.pronoun_tip)}</div>
-                                </div>
-                            </div>
-                            <div class="info-row">
-                                <div class="title">
-                                    ${tl(trans.country)}
-                                </div>
-                                ${select(select_prepare(form_country), form_country.value, "country")}
-                            </div>
-                            <div class="info-row">
-                                <div class="title">
-                                    ${tl(trans.about)}
-                                </div>
-                                <div class="input about-me" id="about_me">
-                                    <textarea name="about_me" placeholder=${tl(trans.anything_you_can_imagine)} cols="40" rows="10" class="textarea--s" maxlength="500" id="id_about_me" oninput=${() => update_about()} ref=${(el) => about = el} data-form-type="other">${form_about_me}</textarea>
-                                    <div class="dual-tip">
-                                        <div class="tip markdown-enabled" onclick=${() => markdown_prompt(markdown_settings)}>${tl(trans.supports_markdown)}</div>
-                                        <div class="tip characters" ref=${(el) => chars = el}>
-                                            ${tl(trans.value_characters_max).replace("{v}", "500")}
+                    <div class="sub-info">
+                        <form
+                            action="${root}settings#update-profile"
+                            name="profile-form"
+                            data-form-type="identity"
+                            method="post"
+                        >
+                            <input
+                                type="hidden"
+                                name="csrfmiddlewaretoken"
+                                value="${token}"
+                            />
+                            <div class="info-grid">
+                                <div class="info-row">
+                                    <div class="title">
+                                        ${tl(trans.subtitle)}
+                                    </div>
+                                    <div class="input">
+                                        <input
+                                            type="text"
+                                            name="full_name"
+                                            value=${form_display_name}
+                                            maxlength="36"
+                                            id="id_full_name"
+                                            oninput="_update_display_name(this.value)"
+                                            data-form-type="other"
+                                        />
+                                        <div class="tip">
+                                            ${tl(trans.pronoun_tip)}
                                         </div>
                                     </div>
                                 </div>
-                            </div>
-                            <div class="info-row">
-                                <div class="title">
-                                    ${tl(trans.about_me_preview)}
+                                <div class="info-row">
+                                    <div class="title">
+                                        ${tl(trans.country)}
+                                    </div>
+                                    ${select(
+        select_prepare(form_country),
+        form_country.value,
+        "country"
+      )}
                                 </div>
-                                <span class="bleh--about-me-preview markdown-body" ref=${(el) => preview = el}></span>
-                            </div>
-                            <div class="info-row" style="display: none">
-                                <div class="title">
-                                    ${tl(trans.website)}
+                                <div class="info-row">
+                                    <div class="title">${tl(trans.about)}</div>
+                                    <div class="input about-me" id="about_me">
+                                        <textarea
+                                            name="about_me"
+                                            placeholder=${tl(
+        trans.anything_you_can_imagine
+      )}
+                                            cols="40"
+                                            rows="10"
+                                            class="textarea--s"
+                                            maxlength="500"
+                                            id="id_about_me"
+                                            oninput=${() => update_about()}
+                                            ref=${(el) => about = el}
+                                            data-form-type="other"
+                                        >
+                                            ${form_about_me}
+                                        </textarea
+                                        >
+                                        <div class="dual-tip">
+                                            <div
+                                                class="tip markdown-enabled"
+                                                onclick=${() => markdown_prompt(
+        markdown_settings
+      )}
+                                            >
+                                                ${tl(trans.supports_markdown)}
+                                            </div>
+                                            <div
+                                                class="tip characters"
+                                                ref=${(el) => chars = el}
+                                            >
+                                                ${tl(
+        trans.value_characters_max,
+        { v: "500" }
+      )}
+                                            </div>
+                                        </div>
+                                    </div>
                                 </div>
-                                <div class="input">
-                                    <input type="url" name="homepage" value="${form_website}" id="id_homepage" data-form-type="website">
+                                <div class="info-row">
+                                    <div class="title">
+                                        ${tl(trans.about_me_preview)}
+                                    </div>
+                                    <span
+                                        class="bleh--about-me-preview markdown-body"
+                                        ref=${(el) => preview = el}
+                                    ></span>
+                                </div>
+                                <div class="info-row" style="display: none">
+                                    <div class="title">
+                                        ${tl(trans.website)}
+                                    </div>
+                                    <div class="input">
+                                        <input
+                                            type="url"
+                                            name="homepage"
+                                            value="${form_website}"
+                                            id="id_homepage"
+                                            data-form-type="website"
+                                        />
+                                    </div>
                                 </div>
                             </div>
-                        </div>
-                        <div class="save-row">
-                            <div class="form-submit">
-                                <button type="submit" class="btn-primary save" data-form-type="action">
-                                    ${tl(trans.save)}
-                                </button>
-                                <input type="hidden" value="profile" name="submit">
+                            <div class="save-row">
+                                <div class="form-submit">
+                                    <button
+                                        type="submit"
+                                        class="btn-primary save"
+                                        data-form-type="action"
+                                    >
+                                        ${tl(trans.save)}
+                                    </button>
+                                    <input
+                                        type="hidden"
+                                        value="profile"
+                                        name="submit"
+                                    />
+                                </div>
                             </div>
-                        </div>
-                    </form>
+                        </form>
+                    </div>
                 </div>
             </div>
-        </div>
-        <div class="setting-group">
-            <div class="setting" data-type="info" ref=${(el) => banner_setting = el} />
-            <div class="setting" data-type="info" disabled=${!auth.sponsor} ref=${(el) => accent_setting = el} />
-            ${setting({ id: "avatar_radius" })}
-        </div>
-    `);
-    page.structure.main.removeChild(page.structure.main.querySelector("#update-profile"));
+            <div class="setting-group">
+                <div
+                    class="setting"
+                    data-type="info"
+                    ref=${(el) => banner_setting = el}
+                />
+                <div
+                    class="setting"
+                    data-type="info"
+                    disabled=${!auth.sponsor}
+                    ref=${(el) => accent_setting = el}
+                />
+                ${setting({ id: "avatar_radius" })}
+            </div>
+        `
+    );
+    page.structure.main.removeChild(
+      page.structure.main.querySelector("#update-profile")
+    );
     update_about();
     function update_about() {
       log("re-rendering", "about", "log");
-      let value = about.value;
-      chars.textContent = tl(trans.value_characters_max).replace("{v}", `${value.length}/500`);
+      const value = about.value;
+      chars.textContent = tl(trans.value_characters_max, {
+        v: `${value.length}/500`
+      });
       chars.setAttribute("data-exceeded", value.length >= 500);
       render(preview, markdown(value, markdown_settings));
       let profile_cache = JSON.parse(localStorage.getItem("bleh_profile_cache")) || {};
       let cache2 = profile_cache[auth.name];
       console.info("cache", cache2);
-      render(banner_setting, html`
-            <div class="heading">
-                <h5>${tl(trans.profile_banner.name)}</h5>
-                <p>${tl(trans.profile_banner.body)}</p>
-                ${cache2.banner ? html.node`
+      render(
+        banner_setting,
+        html`
+                <div class="heading">
+                    <h5>${tl(trans.profile_banner.name)}</h5>
+                    <p>${tl(trans.profile_banner.body)}</p>
+                    ${cache2.banner ? html.node`
                 <p>${tl(trans.current_banner_value).replace("{v}", cache2.banner)}</p>
                 ` : ""}
-            </div>
-            ${() => {
-        if (!cache2.banner)
-          return html.node`
+                </div>
+                ${() => {
+          if (!cache2.banner)
+            return html.node`
                         <div class="info">
                             <p>${tl(trans.none)}</p>
                         </div>
                     `;
-        let banner_image = html.node`
+          let banner_image = html.node`
                     <div class="banner-image" style="background-image: url(${cache2.banner})" />
                 `;
-        tippy_esm_default(banner_image, {
-          content: cache2.banner
-        });
-        return banner_image;
-      }}
-        `);
+          tippy_esm_default(banner_image, {
+            content: cache2.banner
+          });
+          return banner_image;
+        }}
+            `
+      );
       const accent_regex = /\[accent=([0-9]{1,3}),([0-9]*\.?[0-9]+),([0-9]*\.?[0-9]+)\]/;
-      console.info("cache update", about.value, cache2.hue, cache2.sat, cache2.lit);
+      console.info(
+        "cache update",
+        about.value,
+        cache2.hue,
+        cache2.sat,
+        cache2.lit
+      );
       let edit;
-      render(accent_setting, html`
-            <div class="heading">
-                <h5>${tl(trans.profile_accent.name)}<span class="new-badge sponsor-related">${tl(trans.sponsors_only)}</span><span class="new-badge beta">${tl(trans.new)}</span></h5>
-                <p>${tl(trans.profile_accent.body)}</p>
-            </div>
-            <div class="info">
-                <div class="colour-tile colourful" style="--hue-over: ${cache2.hue}; --sat-over: ${cache2.sat}; --lit-over: ${cache2.lit}" />
-                <div class="swatch-group palette">
-                    <button class="swatch-container" ref=${(el) => edit = el} onclick=${() => {
-        let hue_range;
-        let sat_range;
-        let lit_range;
-        const match3 = about.value.match(accent_regex);
-        console.info(match3);
-        if (match3) {
-          save_setting("profile_hue", parseInt(match3[1], 10));
-          save_setting("profile_sat", parseFloat(match3[2]));
-          save_setting("profile_lit", parseFloat(match3[3]));
-          settings_store.profile_hue.default = settings.hue;
-          settings_store.profile_sat.default = settings.sat;
-          settings_store.profile_lit.default = settings.lit;
-        }
-        let accent_preview;
-        dialog({
-          id: "profile_accent",
-          title: tl(trans.profile_accent.name),
-          body: html.node`
+      render(
+        accent_setting,
+        html`
+                <div class="heading">
+                    <h5>
+                        ${tl(trans.profile_accent.name)}<span
+                            class="new-badge sponsor-related"
+                            >${tl(trans.sponsors_only)}</span
+                        ><span class="new-badge beta">${tl(trans.new)}</span>
+                    </h5>
+                    <p>${tl(trans.profile_accent.body)}</p>
+                </div>
+                <div class="info">
+                    <div
+                        class="colour-tile colourful"
+                        style="--hue-over: ${cache2.hue}; --sat-over: ${cache2.sat}; --lit-over: ${cache2.lit}"
+                    />
+                    <div class="swatch-group palette">
+                        <button
+                            class="swatch-container"
+                            ref=${(el) => edit = el}
+                            onclick=${() => {
+          let hue_range;
+          let sat_range;
+          let lit_range;
+          const match3 = about.value.match(accent_regex);
+          console.info(match3);
+          if (match3) {
+            save_setting(
+              "profile_hue",
+              parseInt(match3[1], 10)
+            );
+            save_setting(
+              "profile_sat",
+              parseFloat(match3[2])
+            );
+            save_setting(
+              "profile_lit",
+              parseFloat(match3[3])
+            );
+            settings_store.profile_hue.default = settings.hue;
+            settings_store.profile_sat.default = settings.sat;
+            settings_store.profile_lit.default = settings.lit;
+          }
+          let accent_preview;
+          dialog({
+            id: "profile_accent",
+            title: tl(trans.profile_accent.name),
+            body: html.node`
                                 <div class="setting-group">
                                     <div class="setting" data-type="info">
                                         <div class="heading">
@@ -44834,18 +45014,22 @@
                                         </div>
                                         <div class="input-container content-form">
                                             ${colour = input({
-            type: "colour",
-            value: "#999999",
-            maxlength: 7,
-            warn_if_empty: true
-          })}
+              type: "colour",
+              value: "#999999",
+              maxlength: 7,
+              warn_if_empty: true
+            })}
                                             <button class="btn primary icon convert" onclick=${() => {
-            const value2 = colour.value();
-            const hsl = hex_to_hsl(value2);
-            hue_range.set(hsl.h);
-            sat_range.set(clamp_sat(hsl.s / 100 * 3));
-            lit_range.set(hsl.l / 100 + 0.35);
-          }}>${tl(trans.convert)}</button>
+              const value2 = colour.value();
+              const hsl = hex_to_hsl(value2);
+              hue_range.set(hsl.h);
+              sat_range.set(
+                clamp_sat(hsl.s / 100 * 3)
+              );
+              lit_range.set(
+                hsl.l / 100 + 0.35
+              );
+            }}>${tl(trans.convert)}</button>
                                         </div>
                                     </div>
                                     ` : ""}
@@ -44859,37 +45043,52 @@
                                     </button>
                                     <div class="fill"></div>
                                     <button class="btn primary continue" onclick=${() => {
-            const new_accent = `[accent=${settings.profile_hue},${settings.profile_sat},${settings.profile_lit}]`;
-            if (match3) {
-              about.value = about.value.replace(accent_regex, new_accent);
-            } else {
-              const trimmed = about.value.trimEnd();
-              if (trimmed.length == 0) {
-                about.value = new_accent;
+              const new_accent = `[accent=${settings.profile_hue},${settings.profile_sat},${settings.profile_lit}]`;
+              if (match3) {
+                about.value = about.value.replace(
+                  accent_regex,
+                  new_accent
+                );
               } else {
-                about.value = trimmed + "\n\n" + new_accent;
+                const trimmed = about.value.trimEnd();
+                if (trimmed.length == 0) {
+                  about.value = new_accent;
+                } else {
+                  about.value = trimmed + "\n\n" + new_accent;
+                }
               }
-            }
-            about.dispatchEvent(new InputEvent("input", { bubbles: true, cancelable: true }));
-            dialog_rm({ id: "profile_accent" });
-            status({
-              title: tl(trans.profile_accent.reminder)
-            });
-          }}>
+              about.dispatchEvent(
+                new InputEvent("input", {
+                  bubbles: true,
+                  cancelable: true
+                })
+              );
+              dialog_rm({ id: "profile_accent" });
+              status({
+                title: tl(
+                  trans.profile_accent.reminder
+                )
+              });
+            }}>
                                         ${tl(trans.change)}
                                     </button>
                                 </div>
                             `
-        });
-        function update_colour_preview() {
-          accent_preview.style = `--hue-over: ${settings.profile_hue}; --sat-over: ${settings.profile_sat}; --lit-over: ${settings.profile_lit}`;
-        }
-      }}>
-                        <div class="swatch colourful" data-swatch-type="customise" />
-                    </button>
+          });
+          function update_colour_preview() {
+            accent_preview.style = `--hue-over: ${settings.profile_hue}; --sat-over: ${settings.profile_sat}; --lit-over: ${settings.profile_lit}`;
+          }
+        }}
+                        >
+                            <div
+                                class="swatch colourful"
+                                data-swatch-type="customise"
+                            />
+                        </button>
+                    </div>
                 </div>
-            </div>
-        `);
+            `
+      );
       tippy_esm_default(edit, {
         content: tl(trans.edit)
       });
@@ -44906,7 +45105,8 @@
   }
   function use_pronouns(value) {
     value = value.replaceAll(" ", "");
-    if (value.startsWith("she/") || value.startsWith("he/") || value.startsWith("they/") || value.startsWith("it/") || value.startsWith("xe/") || value.startsWith("any/")) return true;
+    if (value.startsWith("she/") || value.startsWith("he/") || value.startsWith("they/") || value.startsWith("it/") || value.startsWith("xe/") || value.startsWith("any/"))
+      return true;
     return false;
   }
   function avatar2(token = "") {
@@ -44948,7 +45148,9 @@
     });
     page.state.avatar_changer.querySelector('[name="avatar-form"]').onsubmit = finish_saving_avatar;
     const file_button = page.state.avatar_changer.querySelector(".btn-file");
-    const save_button = page.state.avatar_changer.querySelector(".modal-footer .primary");
+    const save_button = page.state.avatar_changer.querySelector(
+      ".modal-footer .primary"
+    );
     let form;
     function update_avatar(e) {
       console.info(e);
@@ -45004,7 +45206,11 @@
           });
           const canvas = cropper.getCroppedCanvas();
           canvas.toBlob((blob) => {
-            const cropped_file = new File([blob], "avatar.png", { type: "image/png" });
+            const cropped_file = new File(
+              [blob],
+              "avatar.png",
+              { type: "image/png" }
+            );
             const inner_form = form.querySelector("form");
             inner_form.style.display = "none";
             crop_dialog.querySelector(".bleh-modal-body").appendChild(inner_form);
@@ -45052,7 +45258,11 @@
     panel.classList.add("bleh--panel");
     let list = panel.querySelectorAll(".ignore-list tr");
     let new_list = document.createElement("div");
-    new_list.classList.add("generic-table-list", "user-vertical-list", "take-space");
+    new_list.classList.add(
+      "generic-table-list",
+      "user-vertical-list",
+      "take-space"
+    );
     let exceeded = false;
     let exceed_amount = 10;
     let amount = 0;
@@ -45077,10 +45287,8 @@
                 </div>
             </div>
         `;
-      if (index3 > exceed_amount && !exceeded)
-        exceeded = true;
-      if (exceeded)
-        entry.classList.add("entry-is-exceeded");
+      if (index3 > exceed_amount && !exceeded) exceeded = true;
+      if (exceeded) entry.classList.add("entry-is-exceeded");
       new_list.appendChild(entry);
       amount += 1;
     });
@@ -45101,50 +45309,83 @@
     let form = page.structure.main.querySelector('[name="ignorelist"]');
     if (page.token == "")
       page.token = form.querySelector('[name="csrfmiddlewaretoken"]').getAttribute("value");
-    render(panel, html`
-        <h4>${tl(trans.block_list)}</h4>
-        <div class="user-top-panel">
-            <div class="user-top-avatar user-top-avatar-side-left">
-                <div class="bleh-icon"></div>
+    render(
+      panel,
+      html`
+            <h4>${tl(trans.block_list)}</h4>
+            <div class="user-top-panel">
+                <div class="user-top-avatar user-top-avatar-side-left">
+                    <div class="bleh-icon"></div>
+                </div>
+                <img
+                    class="user-top-avatar user-top-avatar-main"
+                    src=${auth.avatar.replace("avatar42s", "avatar300s")}
+                    alt=${auth.name}
+                />
+                <div class="user-top-avatar user-top-avatar-side-right">
+                    <div class="bleh-icon"></div>
+                </div>
             </div>
-            <img class="user-top-avatar user-top-avatar-main" src=${auth.avatar.replace("avatar42s", "avatar300s")}
-                alt=${auth.name}>
-            <div class="user-top-avatar user-top-avatar-side-right">
-                <div class="bleh-icon"></div>
+            <div class="setting" data-type="text">
+                <div class="heading">
+                    <h5>${tl(trans.profile)}</h5>
+                    <form
+                        action="${root}settings/privacy#ignorelist"
+                        name="ignorelist"
+                        method="post"
+                    >
+                        <input
+                            type="hidden"
+                            name="csrfmiddlewaretoken"
+                            value=${page.token}
+                        />
+                        <div class="input-container">
+                            <input
+                                type="text"
+                                maxlength="80"
+                                id="id_user"
+                                name="user"
+                                placeholder=${tl(trans.enter_username)}
+                            />
+                            <input
+                                type="hidden"
+                                name="listaction"
+                                value="add"
+                            />
+                            <input
+                                type="hidden"
+                                name="submit"
+                                value="ignorelist"
+                            />
+                            <button
+                                class="bleh--btn primary icon block"
+                                type="submit"
+                            >
+                                ${tl(trans.block)}
+                            </button>
+                        </div>
+                    </form>
+                </div>
             </div>
-        </div>
-        <div class="setting" data-type="text">
-            <div class="heading">
-                <h5>${tl(trans.profile)}</h5>
-                <form action="${root}settings/privacy#ignorelist" name="ignorelist" method="post">
-                    <input type="hidden" name="csrfmiddlewaretoken" value=${page.token}>
-                    <div class="input-container">
-                        <input type="text" maxlength="80" id="id_user" name="user" placeholder=${tl(trans.enter_username)}>
-                        <input type="hidden" name="listaction" value="add">
-                        <input type="hidden" name="submit" value="ignorelist">
-                        <button class="bleh--btn primary icon block" type="submit">${tl(trans.block)}</button>
-                    </div>
-                </form>
+            <div class="alert alert-info">
+                ${tl(trans.blocked_count).replace("{c}", amount)}
             </div>
-        </div>
-        <div class="alert alert-info">
-            ${tl(trans.blocked_count).replace("{c}", amount)}
-        </div>
-        ${new_list}
-        <div class="sep" />
-        <h5>${tl(trans.when_blocked)}</h5>
-        <div class="to-consider">
-            <ul class="to-consider-good">
-                <li>${tl(trans.blocked_user_public)}</li>
-                <li>${tl(trans.blocked_user_message)}</li>
-                <li>${tl(trans.blocked_user_new_shouts)}</li>
-            </ul>
-            <ul class="to-consider-bad">
-                <li>${tl(trans.blocked_user_old_shouts)}</li>
-                <li>${tl(trans.blocked_user_view_profile)}</li>
-            </ul>
-        </div>
-    `);
+            ${new_list}
+            <div class="sep" />
+            <h5>${tl(trans.when_blocked)}</h5>
+            <div class="to-consider">
+                <ul class="to-consider-good">
+                    <li>${tl(trans.blocked_user_public)}</li>
+                    <li>${tl(trans.blocked_user_message)}</li>
+                    <li>${tl(trans.blocked_user_new_shouts)}</li>
+                </ul>
+                <ul class="to-consider-bad">
+                    <li>${tl(trans.blocked_user_old_shouts)}</li>
+                    <li>${tl(trans.blocked_user_view_profile)}</li>
+                </ul>
+            </div>
+        `
+    );
   }
   function patch_settings_privacy_panel(token, privacy_panel) {
     privacy_panel.classList.add("bleh--panel");
@@ -45294,7 +45535,10 @@
     }
     let selects = document.body.querySelectorAll("select");
     selects.forEach((select2) => {
-      select2.setAttribute("onchange", `_update_inbuilt_select('${select2.getAttribute("id")}', this.value)`);
+      select2.setAttribute(
+        "onchange",
+        `_update_inbuilt_select('${select2.getAttribute("id")}', this.value)`
+      );
       update_inbuilt_select(select2.getAttribute("id"), select2.value);
     });
   }
@@ -45302,137 +45546,247 @@
     let token = page.structure.main.querySelector('[name="csrfmiddlewaretoken"]').getAttribute("value");
     let original_settings = {
       email_language: page.structure.main.querySelector('[name="language"]'),
-      marketing_emails: page.structure.main.querySelector('[name="opt_in_marketing"]'),
+      marketing_emails: page.structure.main.querySelector(
+        '[name="opt_in_marketing"]'
+      ),
       email: page.structure.main.querySelector('[name="email"]').value,
       captcha: page.structure.main.querySelector(".lfm-recaptcha")
     };
-    render(page.structure.main, html`
-        <section class="bleh--panel">
-            <h4>${tl(trans.information)}</h4>
-            <div class="setting-group">
-                <form action="${root}settings/change-username/send-email" method="post">
-                    <input type="hidden" name="csrfmiddlewaretoken" value="${token}">
-                    <div class="setting" data-type="text">
-                        <div class="heading">
-                            <h5>${tl(trans.username.name)}</h5>
-                            <p>${{ html: tl(trans.username.body).replace("{a}", `<a href="https://support.last.fm/" target="_blank">`).replace("{/a}", "</a>") }}</p>
+    render(
+      page.structure.main,
+      html`
+            <section class="bleh--panel">
+                <h4>${tl(trans.information)}</h4>
+                <div class="setting-group">
+                    <form
+                        action="${root}settings/change-username/send-email"
+                        method="post"
+                    >
+                        <input
+                            type="hidden"
+                            name="csrfmiddlewaretoken"
+                            value="${token}"
+                        />
+                        <div class="setting" data-type="text">
+                            <div class="heading">
+                                <h5>${tl(trans.username.name)}</h5>
+                                <p>
+                                    ${{
+        html: tl(trans.username.body).replace(
+          "{a}",
+          `<a href="https://support.last.fm/" target="_blank">`
+        ).replace("{/a}", "</a>")
+      }}
+                                </p>
+                            </div>
+                            <div class="input-container content-form">
+                                <input
+                                    id="id_current_username"
+                                    type="text"
+                                    name="current_username"
+                                    value="${auth.name}"
+                                    disabled
+                                    required
+                                />
+                                <button class="btn chibi icon primary submit">
+                                    ${tl(trans.send)}
+                                </button>
+                                <input
+                                    type="hidden"
+                                    value="change_username"
+                                    name="submit"
+                                />
+                            </div>
                         </div>
-                        <div class="input-container content-form">
-                            <input id="id_current_username" type="text" name="current_username" value="${auth.name}" disabled required>
-                            <button class="btn chibi icon primary submit">${tl(trans.send)}</button>
-                            <input type="hidden" value="change_username" name="submit">
+                    </form>
+                    <form
+                        action="${root}settings/account"
+                        name="change-email"
+                        method="post"
+                    >
+                        <input
+                            type="hidden"
+                            name="csrfmiddlewaretoken"
+                            value="${token}"
+                        />
+                        <div class="setting" data-type="text">
+                            <div class="heading">
+                                <h5>${tl(trans.email)}</h5>
+                            </div>
+                            <div class="input-container content-form">
+                                <input
+                                    id="id_email"
+                                    type="text"
+                                    name="email"
+                                    value="${original_settings.email}"
+                                    required
+                                />
+                                <button class="btn chibi icon primary submit">
+                                    ${tl(trans.save)}
+                                </button>
+                                <input
+                                    type="hidden"
+                                    value="email_update"
+                                    name="submit"
+                                />
+                            </div>
+                        </div>
+                    </form>
+                </div>
+                <form
+                    class="password-container"
+                    action="${root}settings/account/password#change-password"
+                    name="change-password"
+                    method="post"
+                >
+                    <input
+                        type="hidden"
+                        name="csrfmiddlewaretoken"
+                        value="${token}"
+                    />
+                    <div class="setting-group">
+                        <div class="setting" data-type="text">
+                            <div class="heading">
+                                <h5>${tl(trans.password)}</h5>
+                            </div>
+                            <div class="input-container content-form">
+                                <input
+                                    id="id_password"
+                                    type="password"
+                                    name="password"
+                                    required
+                                />
+                            </div>
+                        </div>
+                        <div class="setting" data-type="text">
+                            <div class="heading">
+                                <h5>${tl(trans.new_password)}</h5>
+                            </div>
+                            <div class="input-container content-form">
+                                <input
+                                    id="id_new_password"
+                                    type="password"
+                                    name="new_password"
+                                    required
+                                />
+                            </div>
+                        </div>
+                        <div class="setting" data-type="text">
+                            <div class="heading">
+                                <h5>${tl(trans.confirm_password)}</h5>
+                            </div>
+                            <div class="input-container content-form">
+                                <input
+                                    id="id_new_password_confirmation"
+                                    type="password"
+                                    name="new_password_confirmation"
+                                    required
+                                />
+                            </div>
+                        </div>
+                        ${original_settings.captcha}
+                    </div>
+                    <div class="settings-footer end">
+                        <button class="btn-primary save" type="submit">
+                            ${tl(trans.change)}
+                        </button>
+                    </div>
+                </form>
+            </section>
+            <section class="bleh--panel">
+                <h4>${tl(trans.communication)}</h4>
+                <form
+                    action="${root}settings/account"
+                    name="email-settings"
+                    method="post"
+                >
+                    <input
+                        type="hidden"
+                        name="csrfmiddlewaretoken"
+                        value="${token}"
+                    />
+                    <div class="setting-group">
+                        <div class="setting" data-type="select">
+                            <div class="heading">
+                                <h5>${tl(trans.email_language)}</h5>
+                            </div>
+                            <div class="select-wrap custom-selector">
+                                ${select(
+        select_prepare(
+          original_settings.email_language
+        ),
+        original_settings.email_language.value,
+        original_settings.email_language.name
+      )}
+                            </div>
+                        </div>
+                        ${toggle({
+        value: original_settings.marketing_emails.checked,
+        name: original_settings.marketing_emails.name,
+        title: tl(trans.marketing_emails.name),
+        body: tl(trans.marketing_emails.body),
+        standalone: false
+      })}
+                    </div>
+                    <div class="settings-footer end">
+                        <button class="btn-primary save" type="submit">
+                            ${tl(trans.save)}
+                        </button>
+                        <input
+                            type="hidden"
+                            value="email_settings"
+                            name="submit"
+                        />
+                    </div>
+                </form>
+            </section>
+            <section class="bleh--panel">
+                <h4>${tl(trans.security)}</h4>
+                <form
+                    action="${root}settings/account"
+                    name="email-settings"
+                    method="post"
+                >
+                    <input
+                        type="hidden"
+                        name="csrfmiddlewaretoken"
+                        value="${token}"
+                    />
+                    <div class="setting-group">
+                        <div class="setting" data-type="action">
+                            <div class="heading">
+                                <h5>${tl(trans.logout_everywhere)}</h5>
+                            </div>
+                            <div class="toggle-wrap">
+                                <a
+                                    class="see-more danger logout"
+                                    href="${root}settings/account/logout-everywhere"
+                                >
+                                    ${tl(trans.logout)}
+                                </a>
+                            </div>
+                        </div>
+                        <div class="setting" data-type="action">
+                            <div class="heading">
+                                <h5>${tl(trans.delete_account.name)}</h5>
+                                <p>${tl(trans.delete_account.body)}</p>
+                            </div>
+                            <div class="toggle-wrap">
+                                <a
+                                    class="see-more danger delete-account"
+                                    href="${root}settings/account/delete"
+                                >
+                                    ${tl(
+        trans.delete_account_permanently
+      ).replace("{u}", auth.name)}
+                                </a>
+                            </div>
                         </div>
                     </div>
                 </form>
-                <form action="${root}settings/account" name="change-email" method="post">
-                    <input type="hidden" name="csrfmiddlewaretoken" value="${token}">
-                    <div class="setting" data-type="text">
-                        <div class="heading">
-                            <h5>${tl(trans.email)}</h5>
-                        </div>
-                        <div class="input-container content-form">
-                            <input id="id_email" type="text" name="email" value="${original_settings.email}" required>
-                            <button class="btn chibi icon primary submit">${tl(trans.save)}</button>
-                            <input type="hidden" value="email_update" name="submit">
-                        </div>
-                    </div>
-                </form>
-            </div>
-            <form class="password-container" action="${root}settings/account/password#change-password" name="change-password" method="post">
-                <input type="hidden" name="csrfmiddlewaretoken" value="${token}">
-                <div class="setting-group">
-                    <div class="setting" data-type="text">
-                        <div class="heading">
-                            <h5>${tl(trans.password)}</h5>
-                        </div>
-                        <div class="input-container content-form">
-                            <input id="id_password" type="password" name="password" required>
-                        </div>
-                    </div>
-                    <div class="setting" data-type="text">
-                        <div class="heading">
-                            <h5>${tl(trans.new_password)}</h5>
-                        </div>
-                        <div class="input-container content-form">
-                            <input id="id_new_password" type="password" name="new_password" required>
-                        </div>
-                    </div>
-                    <div class="setting" data-type="text">
-                        <div class="heading">
-                            <h5>${tl(trans.confirm_password)}</h5>
-                        </div>
-                        <div class="input-container content-form">
-                            <input id="id_new_password_confirmation" type="password" name="new_password_confirmation" required>
-                        </div>
-                    </div>
-                    ${original_settings.captcha}
-                </div>
-                <div class="settings-footer end">
-                    <button class="btn-primary save" type="submit">
-                        ${tl(trans.change)}
-                    </button>
-                </div>
-            </form>
-        </section>
-        <section class="bleh--panel">
-            <h4>${tl(trans.communication)}</h4>
-            <form action="${root}settings/account" name="email-settings" method="post">
-                <input type="hidden" name="csrfmiddlewaretoken" value="${token}">
-                <div class="setting-group">
-                    <div class="setting" data-type="select">
-                        <div class="heading">
-                            <h5>${tl(trans.email_language)}</h5>
-                        </div>
-                        <div class="select-wrap custom-selector">
-                            ${select(select_prepare(original_settings.email_language), original_settings.email_language.value, original_settings.email_language.name)}
-                        </div>
-                    </div>
-                    ${toggle({
-      value: original_settings.marketing_emails.checked,
-      name: original_settings.marketing_emails.name,
-      title: tl(trans.marketing_emails.name),
-      body: tl(trans.marketing_emails.body),
-      standalone: false
-    })}
-                </div>
-                <div class="settings-footer end">
-                    <button class="btn-primary save" type="submit">
-                        ${tl(trans.save)}
-                    </button>
-                    <input type="hidden" value="email_settings" name="submit">
-                </div>
-            </form>
-        </section>
-        <section class="bleh--panel">
-            <h4>${tl(trans.security)}</h4>
-            <form action="${root}settings/account" name="email-settings" method="post">
-                <input type="hidden" name="csrfmiddlewaretoken" value="${token}">
-                <div class="setting-group">
-                    <div class="setting" data-type="action">
-                        <div class="heading">
-                            <h5>${tl(trans.logout_everywhere)}</h5>
-                        </div>
-                        <div class="toggle-wrap">
-                            <a class="see-more danger logout" href="${root}settings/account/logout-everywhere">
-                                ${tl(trans.logout)}
-                            </a>
-                        </div>
-                    </div>
-                    <div class="setting" data-type="action">
-                        <div class="heading">
-                            <h5>${tl(trans.delete_account.name)}</h5>
-                            <p>${tl(trans.delete_account.body)}</p>
-                        </div>
-                        <div class="toggle-wrap">
-                            <a class="see-more danger delete-account" href="${root}settings/account/delete">
-                                ${tl(trans.delete_account_permanently).replace("{u}", auth.name)}
-                            </a>
-                        </div>
-                    </div>
-                </div>
-            </form>
-        </section>
-    `);
+            </section>
+        `
+    );
     for (let setting2 in original_settings) {
       update_inbuilt_item(setting2, original_settings[setting2], false);
     }
@@ -45443,25 +45797,30 @@
   }
   function bleh_website() {
     const token = page.structure.row.querySelector('[name="csrfmiddlewaretoken"]').getAttribute("value");
-    const auto_correct = page.structure.main.querySelector('[name="corrections_enabled"]');
+    const auto_correct = page.structure.main.querySelector(
+      '[name="corrections_enabled"]'
+    );
     const timezone = page.structure.main.querySelector('[name="timezone"]');
     const help_text = page.structure.main.querySelector(".js-field-help-text");
-    const location = page.structure.main.querySelector('[data-require="components/location-form-field-v2"]');
+    const location = page.structure.main.querySelector(
+      '[data-require="components/location-form-field-v2"]'
+    );
     const radius = page.structure.main.querySelector('[name="event_radius"]');
     let timezone_text;
-    page.structure.main.insertBefore(html.node`
+    page.structure.main.insertBefore(
+      html.node`
         <form class="dont-move" action="${root}settings/website" method="post">
             <input type="hidden" name="csrfmiddlewaretoken" value="${token}">
             <section class="bleh--panel">
                 <h4>${tl(trans.website)}</h4>
                 <div class="setting-group">
                     ${toggle({
-      value: auto_correct.checked,
-      name: auto_correct.name,
-      title: tl(trans.auto_correct_scrobbles.name),
-      body: tl(trans.auto_correct_scrobbles.body),
-      standalone: false
-    })}
+        value: auto_correct.checked,
+        name: auto_correct.name,
+        title: tl(trans.auto_correct_scrobbles.name),
+        body: tl(trans.auto_correct_scrobbles.body),
+        standalone: false
+      })}
                 </div>
                 <div class="alert alert-danger">
                     ${tl(trans.auto_correct_scrobbles.warning)}
@@ -45475,15 +45834,32 @@
                             <h5>${tl(trans.timezone)}</h5>
                             <p ref=${(el) => timezone_text = el}>${help_text.textContent.trim()}</p>
                         </div>
-                        ${select(select_prepare(timezone), timezone.value, timezone.name, (val) => {
-      fetch(`${root}settings/partial/timezone-help-text?tz=${val}&ajax=1`).then((res) => res.text()).then((dom) => {
-        const parser = new DOMParser();
-        const doc = parser.parseFromString(dom, "text/html");
-        const text3 = doc.querySelector("p");
-        if (!text3) return;
-        timezone_text.textContent = text3.textContent;
-      }).catch((e) => log("unable to get text", "timezone", "error", { e }));
-    })}
+                        ${select(
+        select_prepare(timezone),
+        timezone.value,
+        timezone.name,
+        (val) => {
+          fetch(
+            `${root}settings/partial/timezone-help-text?tz=${val}&ajax=1`
+          ).then((res) => res.text()).then((dom) => {
+            const parser = new DOMParser();
+            const doc = parser.parseFromString(
+              dom,
+              "text/html"
+            );
+            const text3 = doc.querySelector("p");
+            if (!text3) return;
+            timezone_text.textContent = text3.textContent;
+          }).catch(
+            (e) => log(
+              "unable to get text",
+              "timezone",
+              "error",
+              { e }
+            )
+          );
+        }
+      )}
                     </div>
                     <div class="setting v2" data-type="action">
                         <div class="heading">
@@ -45509,7 +45885,9 @@
                 </div>
             </section>
         </form>
-    `, page.structure.main.firstElementChild);
+    `,
+      page.structure.main.firstElementChild
+    );
     const website = page.structure.main.querySelector("#website");
     website.remove();
   }
@@ -45523,20 +45901,27 @@
     } else {
       connected = session_types[0];
     }
-    render(page.structure.main, html`
-        <section class="applications">
-            <div class="section-intro">
-                <h3>Applications</h3>
-                <p>Connect your account to third-party services for a better scrobbling experience. Make sure you trust the services below.</p>
-            </div>
-            ${suggested ? html`
-            <h2>Suggested</h2>
-            ${suggested}
-            ` : ""}
-            <h2>Connected</h2>
-            ${connected}
-        </section>
-    `);
+    render(
+      page.structure.main,
+      html`
+            <section class="applications">
+                <div class="section-intro">
+                    <h3>Applications</h3>
+                    <p>
+                        Connect your account to third-party services for a
+                        better scrobbling experience. Make sure you trust the
+                        services below.
+                    </p>
+                </div>
+                ${suggested ? html`
+                        <h2>Suggested</h2>
+                        ${suggested}
+                    ` : ""}
+                <h2>Connected</h2>
+                ${connected}
+            </section>
+        `
+    );
     session_types.forEach((session_type) => {
       let sessions = session_type.querySelectorAll(".api-session");
       sessions.forEach((session) => {
@@ -45552,24 +45937,29 @@
         const status2 = details.querySelector(".api-session-status");
         const image = details.querySelector(".api-session-app-image");
         image.classList = "";
-        const default_image = image.src.endsWith("14d19fbdca555c1782176cd789e81af7.png");
-        render(session, html`
-                <div class="session-header">
-                    <div class="session-image" data-default-image=${default_image}>
-                        ${image}
+        const default_image = image.src.endsWith(
+          "14d19fbdca555c1782176cd789e81af7.png"
+        );
+        render(
+          session,
+          html`
+                    <div class="session-header">
+                        <div
+                            class="session-image"
+                            data-default-image=${default_image}
+                        >
+                            ${image}
+                        </div>
+                        <div class="session-details">${name} ${desc}</div>
+                        ${form}
                     </div>
-                    <div class="session-details">
-                        ${name}
-                        ${desc}
-                    </div>
-                    ${form}
-                </div>
-                ${status2 ? html.node`
+                    ${status2 ? html.node`
                 <div class="session-footer">
                     ${status2}
                 </div>
                 ` : ""}
-            `);
+                `
+        );
       });
     });
   }
@@ -47197,7 +47587,8 @@
         allow_hue: true,
         cache: cache2,
         take_effect,
-        allow_socials: true
+        allow_socials: true,
+        allow_alignment: true
       })
     );
     return temp;
@@ -49001,6 +49392,7 @@
     cache: cache2 = false,
     allow_socials = false,
     allow_lists = true,
+    allow_alignment = false,
     name = page.name
   } = {}) {
     log("rendering", "markdown", "log", { text: text3 });
@@ -49178,7 +49570,9 @@
       }
     ];
     let extensions = [];
-    if (line_breaks) extensions.push(aligner(), blockquotes());
+    if (!line_breaks) allow_alignment = false;
+    if (allow_alignment) extensions.push(aligner());
+    if (line_breaks) extensions.push(blockquotes());
     if (allow_banners) extensions.push(banner());
     if (allow_icons) extensions.push(icons());
     if (allow_hue) extensions.push(accent());
@@ -49347,12 +49741,23 @@
   }
   function markdown_prompt({
     allow_headers = false,
+    starting_header = 3,
     allow_links = true,
     line_breaks = true,
     allow_banners = false,
-    in_dialog = false
+    allow_icons = false,
+    allow_hue = false,
+    allow_socials = false,
+    allow_lists = true,
+    allow_alignment = false
   } = {}) {
+    if (!line_breaks) allow_alignment = false;
     const examples = [
+      {
+        name: tl(trans.supports_markdown.header.name),
+        string: tl(trans.supports_markdown.header.string),
+        hide_if: !allow_headers
+      },
       {
         name: tl(trans.supports_markdown.bold.name),
         string: tl(trans.supports_markdown.bold.string)
@@ -49371,11 +49776,13 @@
       },
       {
         name: "Fancy link",
-        string: "[example >~<](https://katelyn.moe)"
+        string: "[example >~<](https://katelyn.moe)",
+        hide_if: !allow_links
       },
       {
         name: "Simple link",
-        string: `https://last.fm${root}user/${auth.name}`
+        string: `https://last.fm${root}user/${auth.name}`,
+        hide_if: !allow_links
       },
       {
         name: "Mentioned user",
@@ -49384,19 +49791,23 @@
       {
         name: "Image",
         string: `![alt text](${auth.avatar})`,
-        string_display: "![alt text](image url here)"
+        string_display: "![alt text](image url here)",
+        hide_if: !line_breaks
       },
       {
         name: "Left-alignment",
-        string: "[left]text[/left]"
+        string: "[left]text[/left]",
+        hide_if: !allow_alignment
       },
       {
         name: "Center-alignment",
-        string: "[center]text[/center]"
+        string: "[center]text[/center]",
+        hide_if: !allow_alignment
       },
       {
         name: "Right-alignment",
-        string: "[right]text[/right]"
+        string: "[right]text[/right]",
+        hide_if: !allow_alignment
       }
     ];
     dialog({
@@ -49418,7 +49829,7 @@
         return html.node`
                             <tr>
                                 <td>${example.name}</td>
-                                <td><code>${example.string_display ? example.string_display : example.string}</code></td>
+                                <td class="subtle">${example.string_display ? example.string_display : example.string}</td>
                                 ${example.explain ? html.node`
                                     <td>
                                         <div class="icon-combo">
@@ -49427,13 +49838,76 @@
                                         </div>
                                     </td>
                                 ` : html.node`
-                                    <td class="markdown-body">${markdown(example.string, { in_dialog: true })}</td>
+                                    <td class="markdown-body">${markdown(
+          example.string,
+          {
+            allow_headers,
+            starting_header,
+            allow_links,
+            line_breaks,
+            allow_banners,
+            allow_icons,
+            allow_hue,
+            allow_socials,
+            allow_lists,
+            allow_alignment,
+            in_dialog: true
+          }
+        )}</td>
                                 `}
                             </tr>
                         `;
       })}
                 </tbody>
             </table>
+        `
+    });
+  }
+  function markdown_preview(text3, {
+    allow_headers = false,
+    starting_header = 3,
+    allow_links = true,
+    line_breaks = true,
+    allow_banners = false,
+    allow_icons = false,
+    allow_hue = false,
+    allow_socials = false,
+    allow_lists = true,
+    allow_alignment = false
+  } = {}) {
+    if (!line_breaks) allow_alignment = false;
+    dialog({
+      id: "markdown",
+      title: tl(trans.preview),
+      body: html.node`
+            <div class="shout-container">
+                <div class="shout" style="--delay: 0s">
+                    <h3 class="shout-user">
+                        <a href="${root}user/${auth.name}">${auth.name}</a>
+                    </h3>
+                    <span class="avatar shout-user-avatar">
+                        <img src=${auth.avatar} alt=${tl(trans.your_avatar)} loading="lazy">
+                    </span>
+                    <a class="shout-user-avatar-link js-link-block-cover-link" href="${root}user/${auth.name}" tabindex="-1" />
+                    <div class="shout-body">
+                        <p class="markdown-body">
+                            ${markdown(text3, {
+        allow_headers,
+        starting_header,
+        allow_links,
+        line_breaks,
+        allow_banners,
+        allow_icons,
+        allow_hue,
+        allow_socials,
+        allow_lists,
+        allow_alignment,
+        in_dialog: true
+      })}
+                        </p>
+                    </div>
+                </div>
+            </div>
         `
     });
   }
@@ -57014,19 +57488,26 @@ ${e ? html.node`<span class="error-type">${e.name}</span>: ${e.message}` : ""}</
   // src/shout.js
   function patch_shouts() {
     if (!page.structure.main) return;
-    let shout_controls = page.structure.main.querySelector(".shoutbox-controls-wrapper:not([data-shouts])");
+    let shout_controls = page.structure.main.querySelector(
+      ".shoutbox-controls-wrapper:not([data-shouts])"
+    );
     if (shout_controls) {
       shout_controls.setAttribute("data-shouts", "true");
       shout_header(shout_controls);
     }
-    let shouts = page.structure.main.querySelectorAll(".shout:not([data-kate-processed])");
+    let shouts = page.structure.main.querySelectorAll(
+      ".shout:not([data-kate-processed])"
+    );
     shouts.forEach((shout, index3) => {
       try {
         let vote_button = function() {
           setTimeout(() => {
             const modified = form.getAttribute("data-ajax-form-state") == "modified-state";
             const current_is_voted = initial_is_voted != modified;
-            indicator.setAttribute("aria-checked", current_is_voted.toString());
+            indicator.setAttribute(
+              "aria-checked",
+              current_is_voted.toString()
+            );
           }, 0);
         };
         shout.setAttribute("data-kate-processed", "true");
@@ -57037,13 +57518,17 @@ ${e ? html.node`<span class="error-type">${e.name}</span>: ${e.message}` : ""}</
         let shout_avatar = shout.querySelector(".shout-user-avatar");
         let badge = patch_avatar(shout_avatar, shout_name_text, "shout");
         if (badge && badge.type) {
-          if (badge.type == "avatar-status-dot--staff") shout.classList.add("staff-shout");
+          if (badge.type == "avatar-status-dot--staff")
+            shout.classList.add("staff-shout");
           if (badge.hue > -1 && badge.sat > -1 && badge.lit > -1) {
             shout_name.style.setProperty("--hue-over", badge.hue);
             shout_name.style.setProperty("--sat-over", badge.sat);
             shout_name.style.setProperty("--lit-over", badge.lit);
           } else {
-            shout_name.classList.add(`user-status--bleh-${badge.type}`, `user-status--bleh-user-${badge.user}`);
+            shout_name.classList.add(
+              `user-status--bleh-${badge.type}`,
+              `user-status--bleh-user-${badge.user}`
+            );
           }
         } else if (badge) {
           shout_name.classList.add(badge.type);
@@ -57064,7 +57549,9 @@ ${e ? html.node`<span class="error-type">${e.name}</span>: ${e.message}` : ""}</
           });
           shout_timestamp.removeAttribute("title");
         }
-        let actions = shout.querySelectorAll(".shout-actions .shout-action");
+        let actions = shout.querySelectorAll(
+          ".shout-actions .shout-action"
+        );
         actions.forEach((action) => {
           let buttons2 = action.querySelectorAll("button, a");
           buttons2.forEach((button) => {
@@ -57073,7 +57560,9 @@ ${e ? html.node`<span class="error-type">${e.name}</span>: ${e.message}` : ""}</
         });
         const form = shout.querySelector(".vote-button-toggle");
         const voted_button = form.querySelector(".vote-button--voted");
-        const unvote_button = form.querySelector(".vote-button:not(.vote-button--voted)");
+        const unvote_button = form.querySelector(
+          ".vote-button:not(.vote-button--voted)"
+        );
         if (!voted_button || !unvote_button) return;
         const initial_is_voted = voted_button.getAttribute("data-ajax-form-sets-state") == "modified-state";
         indicator.setAttribute("aria-checked", initial_is_voted.toString());
@@ -57089,14 +57578,17 @@ ${e ? html.node`<span class="error-type">${e.name}</span>: ${e.message}` : ""}</
             button.textContent = tl(trans.report);
           }
         });
-        menu.insertBefore(html.node`
+        menu.insertBefore(
+          html.node`
                 <button class="dropdown-menu-clickable-item" data-type="copy" onclick=${() => {
-          copy(shout_text);
-        }}>
+            copy(shout_text);
+          }}>
                     ${tl(trans.copy)}
                 </button>
                 <div class="sep" />
-            `, menu.firstElementChild);
+            `,
+          menu.firstElementChild
+        );
         let send_button = shout.querySelector(".form-group--submit");
         shout_send(send_button);
       } catch (e) {
@@ -57112,13 +57604,46 @@ ${e ? html.node`<span class="error-type">${e.name}</span>: ${e.message}` : ""}</
     });
     if (settings.shout_markdown && shout_parse_queue.length > 0)
       parse_shout_queue();
-    const shout_forms = document.querySelectorAll(".shout-form:not([data-kate-processed])");
+    const shout_forms = document.querySelectorAll(
+      ".shout-form:not([data-kate-processed])"
+    );
     shout_forms.forEach((shout_form) => {
       shout_form.setAttribute("data-kate-processed", "true");
       let shout_avatar = shout_form.querySelector(".shout-user-avatar");
       patch_avatar(shout_avatar, auth.name);
       let send_button = shout_form.querySelector(".form-group--submit");
       shout_send(send_button);
+      const help_text = shout_form.querySelector(".form-row-help-text");
+      help_text.classList.add("dual-tip");
+      const textarea = shout_form.querySelector("textarea");
+      let chars;
+      render(
+        help_text,
+        html`
+                <div
+                    class="tip markdown-enabled"
+                    onclick=${() => markdown_prompt()}
+                >
+                    ${tl(trans.supports_markdown)}
+                </div>
+                <div
+                    class="tip preview"
+                    onclick=${() => markdown_preview(textarea.value)}
+                >
+                    ${tl(trans.preview)}
+                </div>
+                <div class="tip characters" ref=${(el) => chars = el}>
+                    ${tl(trans.value_characters_max, { v: "500" })}
+                </div>
+            `
+      );
+      textarea.addEventListener("input", () => {
+        const value = textarea.value;
+        chars.textContent = tl(trans.value_characters_max, {
+          v: `${value.length}/500`
+        });
+        chars.setAttribute("data-exceeded", value.length >= 500);
+      });
       shout_form.addEventListener("keydown", (e) => {
         if (e.ctrlKey && e.keyCode == 13) {
           e.preventDefault();
@@ -57141,7 +57666,10 @@ ${e ? html.node`<span class="error-type">${e.name}</span>: ${e.message}` : ""}</
     button.textContent = tl(trans.send);
     if (page.mobile) return;
     tippy_esm_default(button, {
-      content: tl(trans.send_quickly_with).replace("{kbd}", keybind(["\u2318", "\u23CE"]).outerHTML),
+      content: tl(trans.send_quickly_with).replace(
+        "{kbd}",
+        keybind(["\u2318", "\u23CE"]).outerHTML
+      ),
       allowHTML: true,
       delay: [500, 0]
     });
@@ -57153,7 +57681,8 @@ ${e ? html.node`<span class="error-type">${e.name}</span>: ${e.message}` : ""}</
     if (page.subpage == "shoutbox_shout") {
       panel = page.structure.main.querySelector(":scope > section");
       let link = window.location.href;
-      panel.insertBefore(html.node`
+      panel.insertBefore(
+        html.node`
             <div class="top-container">
                 <h2>
                     <a class="text-colour-link" href=${link}>${tl(trans.shouts)}</a>
@@ -57167,7 +57696,9 @@ ${e ? html.node`<span class="error-type">${e.name}</span>: ${e.message}` : ""}</
                     </button>
                 </div>
             </div>
-        `, panel.firstElementChild);
+        `,
+        panel.firstElementChild
+      );
     } else {
       panel = shout_controls.parentElement;
       let select_btn = panel.querySelector(".dropdown-menu-clickable-button");
@@ -57175,9 +57706,11 @@ ${e ? html.node`<span class="error-type">${e.name}</span>: ${e.message}` : ""}</
       if (header) header.parentElement.removeChild(header);
       let link = window.location.href;
       let shoutbox_link = "+shoutbox";
-      if (page.type == "user" || page.type == "event") shoutbox_link = "shoutbox";
+      if (page.type == "user" || page.type == "event")
+        shoutbox_link = "shoutbox";
       if (!page.subpage.startsWith("shoutbox")) link += `/${shoutbox_link}`;
-      panel.insertBefore(html.node`
+      panel.insertBefore(
+        html.node`
             <div class="top-container">
                 <h2>
                     <a class="text-colour-link" href=${link}>${tl(trans.shouts)}</a>
@@ -57185,10 +57718,17 @@ ${e ? html.node`<span class="error-type">${e.name}</span>: ${e.message}` : ""}</
                 ${select_btn ? html.node`
                     <div class="accompany view-buttons blend blend-v2">
                         ${() => {
-        select_btn.classList.add("select-button", "link-select", "blend-v2-btn");
-        select_btn.classList.remove("section-control", "dropdown-menu-clickable-button");
-        return shout_controls;
-      }}
+          select_btn.classList.add(
+            "select-button",
+            "link-select",
+            "blend-v2-btn"
+          );
+          select_btn.classList.remove(
+            "section-control",
+            "dropdown-menu-clickable-button"
+          );
+          return shout_controls;
+        }}
                     </div>
                 ` : ""}
                 <div class="view-buttons blend blend-v2">
@@ -57197,7 +57737,9 @@ ${e ? html.node`<span class="error-type">${e.name}</span>: ${e.message}` : ""}</
                     </button>
                 </div>
             </div>
-        `, panel.firstElementChild);
+        `,
+        panel.firstElementChild
+      );
     }
     tippy_esm_default(settings_btn, {
       theme: "window",
@@ -57218,13 +57760,16 @@ ${e ? html.node`<span class="error-type">${e.name}</span>: ${e.message}` : ""}</
     });
     const cant_shout = panel.querySelector(".shouting-unavailable");
     if (cant_shout) {
-      render(cant_shout, html`
-            <div class="loading-data-container">
-                <div class="loading-data-text static" data-type="shouts">
-                    ${tl(trans.cant_shout)}
+      render(
+        cant_shout,
+        html`
+                <div class="loading-data-container">
+                    <div class="loading-data-text static" data-type="shouts">
+                        ${tl(trans.cant_shout)}
+                    </div>
                 </div>
-            </div>
-        `);
+            `
+      );
     }
   }
   function parse_shout_queue() {
@@ -57234,12 +57779,13 @@ ${e ? html.node`<span class="error-type">${e.name}</span>: ${e.message}` : ""}</
     shout.element.classList.add("markdown-body");
     render(shout.element, html.node`${parsed2}`);
     log("parsed one shout", "shout", "log");
-    if (shout_parse_queue.length > 0)
-      setTimeout(parse_shout_queue, 50);
+    if (shout_parse_queue.length > 0) setTimeout(parse_shout_queue, 50);
   }
   function shout_messages() {
     if (!page.structure.main) return;
-    let alerts = page.structure.main.querySelectorAll(".shout-messages > .alert");
+    let alerts = page.structure.main.querySelectorAll(
+      ".shout-messages > .alert"
+    );
     alerts.forEach((alert2) => {
       if (alert2.classList.contains("alert-danger")) {
         notify({
@@ -61034,6 +61580,14 @@ ${e ? html.node`<span class="error-type">${e.name}</span>: ${e.message}` : ""}</
       de: "Unterst\xFCtzt Markdown",
       pt: "Suporta o Markdown",
       sv: "St\xF6der Markdown",
+      header: {
+        name: {
+          en: "Header"
+        },
+        string: {
+          en: "# hi!!"
+        }
+      },
       bold: {
         name: {
           en: "Bold",

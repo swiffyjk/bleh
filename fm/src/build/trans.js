@@ -2601,6 +2601,14 @@ export const trans = {
         de: 'Unterstützt Markdown',
         pt: 'Suporta o Markdown',
         sv: 'Stöder Markdown',
+        header: {
+            name: {
+                en: 'Header'
+            },
+            string: {
+                en: '# hi!!'
+            }
+        },
         bold: {
             name: {
                 en: 'Bold',

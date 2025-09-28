@@ -36,6 +36,7 @@ export function markdown(
         cache = false,
         allow_socials = false,
         allow_lists = true,
+        allow_alignment = false,
         name = page.name
     } = {}
 ) {
@@ -255,7 +256,10 @@ export function markdown(
 
     let extensions = [];
 
-    if (line_breaks) extensions.push(aligner(), blockquotes());
+    if (!line_breaks) allow_alignment = false;
+
+    if (allow_alignment) extensions.push(aligner());
+    if (line_breaks) extensions.push(blockquotes());
     if (allow_banners) extensions.push(banner());
     if (allow_icons) extensions.push(icons());
     if (allow_hue) extensions.push(accent());
@@ -472,12 +476,24 @@ export function markdown(
 
 export function markdown_prompt({
     allow_headers = false,
+    starting_header = 3,
     allow_links = true,
     line_breaks = true,
     allow_banners = false,
-    in_dialog = false
+    allow_icons = false,
+    allow_hue = false,
+    allow_socials = false,
+    allow_lists = true,
+    allow_alignment = false
 } = {}) {
+    if (!line_breaks) allow_alignment = false;
+
     const examples = [
+        {
+            name: tl(trans.supports_markdown.header.name),
+            string: tl(trans.supports_markdown.header.string),
+            hide_if: !allow_headers
+        },
         {
             name: tl(trans.supports_markdown.bold.name),
             string: tl(trans.supports_markdown.bold.string)
@@ -496,11 +512,13 @@ export function markdown_prompt({
         },
         {
             name: 'Fancy link',
-            string: '[example >~<](https://katelyn.moe)'
+            string: '[example >~<](https://katelyn.moe)',
+            hide_if: !allow_links
         },
         {
             name: 'Simple link',
-            string: `https://last.fm${root}user/${auth.name}`
+            string: `https://last.fm${root}user/${auth.name}`,
+            hide_if: !allow_links
         },
         {
             name: 'Mentioned user',
@@ -509,19 +527,23 @@ export function markdown_prompt({
         {
             name: 'Image',
             string: `![alt text](${auth.avatar})`,
-            string_display: '![alt text](image url here)'
+            string_display: '![alt text](image url here)',
+            hide_if: !line_breaks
         },
         {
             name: 'Left-alignment',
-            string: '[left]text[/left]'
+            string: '[left]text[/left]',
+            hide_if: !allow_alignment
         },
         {
             name: 'Center-alignment',
-            string: '[center]text[/center]'
+            string: '[center]text[/center]',
+            hide_if: !allow_alignment
         },
         {
             name: 'Right-alignment',
-            string: '[right]text[/right]'
+            string: '[right]text[/right]',
+            hide_if: !allow_alignment
         }
     ];
 
@@ -545,10 +567,10 @@ export function markdown_prompt({
                         return html.node`
                             <tr>
                                 <td>${example.name}</td>
-                                <td><code>${example.string_display ? example.string_display : example.string}</code></td>
+                                <td class="subtle">${example.string_display ? example.string_display : example.string}</td>
                                 ${
-                                    example.explain
-                                        ? html.node`
+                                    example.explain ?
+                                        html.node`
                                     <td>
                                         <div class="icon-combo">
                                             <div class="bleh-icon" data-type="info" style="--icon: var(--mask)" />
@@ -556,8 +578,23 @@ export function markdown_prompt({
                                         </div>
                                     </td>
                                 `
-                                        : html.node`
-                                    <td class="markdown-body">${markdown(example.string, { in_dialog: true })}</td>
+                                    :   html.node`
+                                    <td class="markdown-body">${markdown(
+                                        example.string,
+                                        {
+                                            allow_headers,
+                                            starting_header,
+                                            allow_links,
+                                            line_breaks,
+                                            allow_banners,
+                                            allow_icons,
+                                            allow_hue,
+                                            allow_socials,
+                                            allow_lists,
+                                            allow_alignment,
+                                            in_dialog: true
+                                        }
+                                    )}</td>
                                 `
                                 }
                             </tr>
@@ -565,6 +602,59 @@ export function markdown_prompt({
                     })}
                 </tbody>
             </table>
+        `
+    });
+}
+
+export function markdown_preview(
+    text,
+    {
+        allow_headers = false,
+        starting_header = 3,
+        allow_links = true,
+        line_breaks = true,
+        allow_banners = false,
+        allow_icons = false,
+        allow_hue = false,
+        allow_socials = false,
+        allow_lists = true,
+        allow_alignment = false
+    } = {}
+) {
+    if (!line_breaks) allow_alignment = false;
+
+    dialog({
+        id: 'markdown',
+        title: tl(trans.preview),
+        body: html.node`
+            <div class="shout-container">
+                <div class="shout" style="--delay: 0s">
+                    <h3 class="shout-user">
+                        <a href="${root}user/${auth.name}">${auth.name}</a>
+                    </h3>
+                    <span class="avatar shout-user-avatar">
+                        <img src=${auth.avatar} alt=${tl(trans.your_avatar)} loading="lazy">
+                    </span>
+                    <a class="shout-user-avatar-link js-link-block-cover-link" href="${root}user/${auth.name}" tabindex="-1" />
+                    <div class="shout-body">
+                        <p class="markdown-body">
+                            ${markdown(text, {
+                                allow_headers,
+                                starting_header,
+                                allow_links,
+                                line_breaks,
+                                allow_banners,
+                                allow_icons,
+                                allow_hue,
+                                allow_socials,
+                                allow_lists,
+                                allow_alignment,
+                                in_dialog: true
+                            })}
+                        </p>
+                    </div>
+                </div>
+            </div>
         `
     });
 }
@@ -597,12 +687,12 @@ export function external_url_prompt(url, dangerous = false) {
         body: html.node`
             <div class="modal-vertical-inner leaving-site-inner">
                 ${
-                    !dangerous
-                        ? html.node`
+                    !dangerous ?
+                        html.node`
                 <h1>${tl(trans.leaving_site.name)}</h1>
                 <p>${tl(trans.leaving_site.body)}</p>
                 `
-                        : html.node`
+                    :   html.node`
                 <h1>${tl(trans.leaving_site_dangerous.name)}</h1>
                 <p>${tl(trans.leaving_site_dangerous.body)}</p>
                 `
@@ -612,31 +702,31 @@ export function external_url_prompt(url, dangerous = false) {
                         ${scheme}//
                     </span>
                     ${
-                        hostname
-                            ? html.node`
+                        hostname ?
+                            html.node`
                     <span class="hostname">
                         ${hostname}
                     </span>
                     `
-                            : html.node`
+                        :   html.node`
                     <span class="hostname">
                         ${path}
                     </span>
                     `
                     }
                     ${
-                        path != '/' && hostname
-                            ? html.node`
+                        path != '/' && hostname ?
+                            html.node`
                     <span class="path">
                         ${path}
                     </span>
                     `
-                            : ''
+                        :   ''
                     }
                 </div>
                 ${
-                    hostname != ''
-                        ? html.node`
+                    hostname != '' ?
+                        html.node`
                 ${(trust_site = toggle({
                     type: 'checkbox',
                     title: tl(trans.leaving_site_checkbox).replace(
@@ -645,7 +735,7 @@ export function external_url_prompt(url, dangerous = false) {
                     )
                 }))}
                 `
-                        : ''
+                    :   ''
                 }
             </div>
             <div class="modal-footer">
