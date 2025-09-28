@@ -57570,14 +57570,14 @@ ${e ? html.node`<span class="error-type">${e.name}</span>: ${e.message}` : ""}</
         let shout_name_text = shout_name.textContent;
         let shout_avatar = shout.querySelector(".shout-user-avatar");
         let badge = patch_avatar(shout_avatar, shout_name_text, "shout");
-        if (badge && badge.type) {
-          if (badge.type == "avatar-status-dot--staff")
+        if (badge) {
+          if (badge.type && badge.type == "avatar-status-dot--staff")
             shout.classList.add("staff-shout");
           if (badge.hue > -1 && badge.sat > -1 && badge.lit > -1) {
             shout_name.style.setProperty("--hue-over", badge.hue);
             shout_name.style.setProperty("--sat-over", badge.sat);
             shout_name.style.setProperty("--lit-over", badge.lit);
-          } else {
+          } else if (badge.type) {
             shout_name.classList.add(
               `user-status--bleh-${badge.type}`,
               `user-status--bleh-user-${badge.user}`
