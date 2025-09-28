@@ -1486,7 +1486,9 @@ export function bleh_music_page_charts() {
 export function bleh_top_listeners() {
     if (!ff('unify_top_listeners')) return;
 
-    let panel = page.structure.main.querySelector(':scope > .buffer-standard');
+    const panel = page.structure.main.querySelector(
+        ':scope > .buffer-standard'
+    );
 
     // view-related buttons
     let view_buttons = document.createElement('div');

@@ -4719,11 +4719,8 @@
     .badges .label,
     .title-container .label,
     .header-new-on-tour {
-        /*width: 100%;*/
-        max-width: var(--icon-size);
-        height: var(--icon-size);
         font-size: var(--font-size);
-        font-weight: var(--font-weight-medium) !important;
+        font-weight: var(--font-weight) !important;
         display: flex;
         align-items: center;
         color: hsl(var(--l3-c)) !important;
@@ -4734,69 +4731,67 @@
         overflow: hidden;
         letter-spacing: unset;
         text-transform: unset;
-        padding-left: calc(var(--icon-size) + var(--icon-gap));
+        padding: unset !important;
         box-shadow: unset !important;
         min-height: unset;
         line-height: unset;
-        background-repeat: no-repeat;
-        transition-property: padding-right, background-color, max-width, color;
-        transition-duration: calc(var(--trans) * 2);
+        transition-property: background-color;
+        transition-duration: var(--trans);
         transition-timing-function: var(--trans-function);
         /* */
         background: none !important;
         position: relative;
-        --mask-size: 18px;
-        --left: 0;
-        --top: 0;
-        --margin-top: 0;
+        --mask-size: var(--icon-size);
 
-        &:not(:hover) {
-            transition-delay: 0.2s;
+        --sides: 8px;
+
+        --left: var(--sides);
+        --top: 50%;
+        --margin-left: none;
+        --margin-top: calc(-1 * var(--mask-size) / 2);
+        height: 28px;
+        min-width: calc(var(--mask-size) + (var(--sides) * 2));
+        max-width: unset;
+        transition-delay: 0s !important;
+
+        --bg: hsl(var(--f4), 20%);
+        --bg-hov: hsl(var(--f4), 40%);
+        box-shadow: 0px 0px 10px 0px hsl(var(--l3-c), 8%) inset !important;
+        background-color: var(--bg) !important;
+        border-radius: var(--item-big-radius) !important;
+        cursor: pointer;
+
+        backdrop-filter: blur(4px);
+        -webkit-backdrop-filter: blur(4px);
+
+        &:hover {
+            background-color: var(--bg-hov) !important;
+            transition-duration: 0s !important;
         }
 
-        &:not(.no-hover):hover {
-            max-width: 220px;
-            padding-right: 6px;
-            background-color: hsla(var(--h4), 30%) !important;
+        &:not(.expand) {
+            font-size: 0 !important;
         }
 
-        &.no-hover {
-            --left: 50%;
-            --top: 50%;
-            --margin-left: calc(-1 * var(--icon-size) / 2);
-            --margin-top: calc(-1 * var(--icon-size) / 2);
-            height: 30px;
-            padding-left: calc(var(--icon-size) + (8px * 2));
-            transition-delay: 0s !important;
+        &.expand {
+            padding-left: calc(
+                var(--mask-size) + var(--sides) + 4px
+            ) !important;
+            padding-right: var(--sides) !important;
+        }
 
-            --bg: hsl(var(--f4), 20%);
-            --bg-hov: hsl(var(--f4), 40%);
-            box-shadow: 0px 0px 10px 0px hsl(var(--l3-c), 20%) inset !important;
-            background-color: var(--bg) !important;
-            border-radius: 50px !important;
-            cursor: pointer;
+        .auth-link > & {
+            --mask-size: 16px;
+            --left: 0;
+            min-width: 16px;
+            height: 16px;
 
-            backdrop-filter: blur(4px);
-            -webkit-backdrop-filter: blur(4px);
-
-            &:hover {
-                background-color: var(--bg-hov) !important;
-                transition-duration: 0s !important;
-            }
-
-            .auth-link > & {
-                padding-left: 16px;
-                --mask-size: 16px;
-                width: 16px;
-                height: 16px;
-
-                --bg: transparent;
-                --bg-hov: transparent;
-                box-shadow: none !important;
-                border-radius: 0 !important;
-                backdrop-filter: none !important;
-                -webkit-backdrop-filter: none !important;
-            }
+            --bg: transparent;
+            --bg-hov: transparent;
+            box-shadow: none !important;
+            border-radius: 0 !important;
+            backdrop-filter: none !important;
+            -webkit-backdrop-filter: none !important;
         }
     }
 
@@ -9980,7 +9975,9 @@
     }
 
     .expand {
-        --mask: var(--icon-16-expand);
+        &:not(.label) {
+            --mask: var(--icon-16-expand);
+        }
     }
 
     .see-more.sponsor {
@@ -23102,7 +23099,7 @@
                     }
                 }
 
-                .badges {
+                & > .badges {
                     display: flex;
                     flex-direction: row-reverse;
                     gap: 4px;
@@ -23117,13 +23114,6 @@
                     }
                     & > .user-follow {
                         order: -2;
-                    }
-
-                    & > .label {
-                        max-width: unset;
-                        --margin-left: none;
-                        --left: 9px;
-                        padding-right: 8px;
                     }
                 }
 
@@ -25374,13 +25364,6 @@
 
                     &.user-status-subscriber {
                         order: -1;
-                    }
-
-                    &.long {
-                        max-width: unset;
-                        --margin-left: none;
-                        --left: 9px;
-                        padding-right: 8px;
                     }
                 }
             }
@@ -28408,7 +28391,15 @@
             height: 20px;
             border-radius: 6px;
             --mask-size: 22px;
-            margin: auto 6px auto 0;
+
+            position: absolute;
+            top: calc((28px - 20px) / 2);
+            left: 0;
+        }
+
+        h2:has(> &) {
+            position: relative;
+            padding-left: calc(20px + 6px);
         }
     }
 

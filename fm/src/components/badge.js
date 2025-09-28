@@ -4,18 +4,17 @@
 // Licensed under GPLv3
 //
 
-import {log} from "../build/log";
-import {sponsor_list} from "../build/sponsor";
-import {tl, trans} from "../build/trans";
-import {html} from "lighterhtml";
-import {sponsor} from "../sponsor.js";
-import tippy from "tippy.js";
+import { log } from '../build/log';
+import { sponsor_list } from '../build/sponsor';
+import { tl, trans } from '../build/trans';
+import { html } from 'lighterhtml';
+import { sponsor } from '../sponsor.js';
+import tippy from 'tippy.js';
 
 export function load_badges(user, solo = false) {
     if (!sponsor_list || !sponsor_list.badges) return;
 
-    if (!sponsor_list.badges.hasOwnProperty(user))
-        return;
+    if (!sponsor_list.badges.hasOwnProperty(user)) return;
 
     let badges = [];
 
@@ -23,12 +22,20 @@ export function load_badges(user, solo = false) {
         log('1 badge found', 'sponsor', 'info', sponsor_list.badges[user]);
         badges.push(sponsor_list.badges[user]);
     } else {
-        log('multiple badges found', 'sponsor', 'info', sponsor_list.badges[user]);
+        log(
+            'multiple badges found',
+            'sponsor',
+            'info',
+            sponsor_list.badges[user]
+        );
 
         if (solo)
-            badges.push(sponsor_list.badges[user][Object.keys(sponsor_list.badges[user]).length - 1])
-        else
-            badges = sponsor_list.badges[user];
+            badges.push(
+                sponsor_list.badges[user][
+                    Object.keys(sponsor_list.badges[user]).length - 1
+                ]
+            );
+        else badges = sponsor_list.badges[user];
     }
 
     // now we run thru to add missing metadata
@@ -46,35 +53,42 @@ export function load_badges(user, solo = false) {
 
         if (trans.badges[badge.type] && trans.badges[badge.type].reason)
             badge.reason = tl(trans.badges[badge.type].reason);
-        else if (badge.reason && trans.badges[badge.reason] && trans.badges[badge.reason].reason)
+        else if (
+            badge.reason &&
+            trans.badges[badge.reason] &&
+            trans.badges[badge.reason].reason
+        )
             badge.reason = tl(trans.badges[badge.reason].reason);
 
-        if (badge.reason)
-            return;
+        if (badge.reason) return;
 
         if (badge.type == 'sponsor' || badge.type == 'contributor')
             badge.reason = badge.type;
         else if (badge.type == 'cute' || badge.type == 'queen')
             badge.reason = tl(trans.badges.cute.reason);
-        else
-            badge.reason = tl(trans.badges.reserved.reason);
+        else badge.reason = tl(trans.badges.reserved.reason);
     });
 
     log('final badge list', 'sponsor', 'info', badges);
     return badges;
 }
 
-export function create_badge(badge={
-    type: '',
-    icon: '',
-    reason: '',
-    hue: -1,
-    sat: -1,
-    lit: -1,
-    name: '',
-    user: '',
-    inbuilt: false
-}, on_avatar = false, long = false, small = false) {
+export function create_badge(
+    badge = {
+        type: '',
+        icon: '',
+        reason: '',
+        hue: -1,
+        sat: -1,
+        lit: -1,
+        name: '',
+        user: '',
+        inbuilt: false
+    },
+    on_avatar = false,
+    long = false,
+    small = false
+) {
     const classlist = on_avatar ? 'avatar-status-dot' : 'label no-hover';
 
     let elem = html.node`
@@ -83,9 +97,14 @@ export function create_badge(badge={
         </span>
     `;
 
-    if (long) elem.classList.add('long');
+    if (long) elem.classList.add('expand');
 
-    if (badge.icon != '' && badge.hue > -1 && badge.sat > -1 && badge.lit > -1) {
+    if (
+        badge.icon != '' &&
+        badge.hue > -1 &&
+        badge.sat > -1 &&
+        badge.lit > -1
+    ) {
         // new style badge
         elem.style.setProperty('--mask', `url(${badge.icon})`);
         elem.style.setProperty('--hue-over', badge.hue);
@@ -94,7 +113,10 @@ export function create_badge(badge={
     } else if (badge.inbuilt) {
         elem.classList.add(badge.type);
     } else {
-        elem.classList.add(`user-status--bleh-${badge.type}`, `user-status--bleh-user-${badge.user}`);
+        elem.classList.add(
+            `user-status--bleh-${badge.type}`,
+            `user-status--bleh-user-${badge.user}`
+        );
     }
 
     if (on_avatar || small) return elem;
@@ -105,11 +127,10 @@ export function create_badge(badge={
         content: html.node`
             <div class="badge-name">${badge.name}</div>
             <div class="badge-reason">${badge.reason}</div>
-        `,
+        `
     });
 
-    if (badge.type == 'sponsor')
-        elem.onclick = sponsor;
+    if (badge.type == 'sponsor') elem.onclick = sponsor;
 
     return elem;
 }
