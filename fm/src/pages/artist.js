@@ -19,6 +19,7 @@ import { register_menu } from '../components/menu';
 import {
     bleh_music_page_charts,
     bleh_top_listeners,
+    convert_top_listener,
     redirect,
     show_your_scrobbles
 } from '../components/music';
@@ -117,18 +118,18 @@ export function bleh_artists() {
             <section class="redesigned-header redesigned-artist-header no-background">
                 <div class="avatar-side">
                     ${
-                        avatar
-                            ? html.node`
+                        avatar ?
+                            html.node`
                     <img src="${avatar.getAttribute('content').replace('/ar0/', '/avatar300s/')}">
                     <a class="bleh--avatar-clickable-link"></a>
                     `
-                            : html.node`<img class="missing-artist">`
+                        :   html.node`<img class="missing-artist">`
                     }
                 </div>
                 <div class="info-side">
                     ${
-                        page.multi
-                            ? html.node`
+                        page.multi ?
+                            html.node`
                     <div class="sub-text">
                         ${tl(trans.artists)}
                         <div class="info-tip" ref=${(el) => (multi_info_box = el)}>
@@ -136,7 +137,7 @@ export function bleh_artists() {
                         </div>
                     </div>
                     `
-                            : html.node`
+                        :   html.node`
                     <div class="sub-text">${tl(trans.artist)}</div>
                     `
                     }
@@ -144,13 +145,13 @@ export function bleh_artists() {
                         ${title}
                         ${position}
                         ${
-                            on_tour
-                                ? html.node`
+                            on_tour ?
+                                html.node`
                         <div class="badges">
                             ${on_tour}
                         </div>
                         `
-                                : ''
+                            :   ''
                         }
                     </div>
                 </div>
@@ -197,13 +198,13 @@ export function bleh_artists() {
                 theme: 'context-menu',
                 content: html.node`
                     ${
-                        avatar != null
-                            ? html.node`
+                        avatar != null ?
+                            html.node`
                     <button class="dropdown-menu-clickable-item" onclick=${() => expand_avatar(avatar.getAttribute('content'))} data-menu-item="expand">
                         ${tl(trans.expand)}
                     </button>
                     `
-                            : ''
+                        :   ''
                     }
                     <a class="dropdown-menu-clickable-item" href="${root}music/${redirect()}${sanitise(page.name)}/+images" data-menu-item="gallery">
                         ${tl(trans.photos)}
@@ -445,6 +446,23 @@ export function bleh_artists() {
                 .querySelector('.top-overview-panel')
                 .after(featured_panel);
         }
+
+        const listeners_section =
+            page.structure.main.querySelector('.listeners-section');
+        if (listeners_section) {
+            const listeners = listeners_section.querySelectorAll(
+                '.listeners-section-item'
+            );
+
+            listeners_section.classList = 'user-list top-listeners-list small';
+            render(listeners_section, html``);
+
+            listeners.forEach((listener, index) => {
+                listeners_section.appendChild(
+                    convert_top_listener(listener, index, 'listeners-section')
+                );
+            });
+        }
     } else {
         let btn_add = page.structure.side.querySelector('.add-button');
         if (btn_add) btn_add.setAttribute('data-page-subpage', page.subpage);
@@ -662,8 +680,8 @@ function bleh_listeners() {
                 ${auth.name}
             </a>
             ${
-                settings.starred_friend != ''
-                    ? html.node`
+                settings.starred_friend != '' ?
+                    html.node`
             <a class="btn side-action" data-type="profile" href="${root}user/${settings.starred_friend}/library/music/${redirect()}${sanitise(page.name)}">
                 ${settings.starred_friend}
                 <span class="star-icon colourful">
@@ -671,7 +689,7 @@ function bleh_listeners() {
                 </span>
             </a>
             `
-                    : ''
+                :   ''
             }
             ${friends.map(
                 (friend) => html.node`

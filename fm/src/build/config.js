@@ -1241,5 +1241,11 @@ export let settings_store = {
         body: trans.music_links.body,
         new_release: true,
         predefined: true
+    },
+    inverse_compare: {
+        default: false,
+        title: trans.inverse_compare.name,
+        body: trans.inverse_compare.body,
+        new_release: true
     }
 };

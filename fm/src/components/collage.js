@@ -86,6 +86,9 @@ export function collage({ host, sidebar } = {}) {
                     ${(type = select(
                         [
                             {
+                                text: tl(trans.item_type)
+                            },
+                            {
                                 value: 'artists',
                                 text: html`<div
                                         class="bleh-icon"
@@ -114,6 +117,9 @@ export function collage({ host, sidebar } = {}) {
                     ))}
                     ${(timeframe = select(
                         [
+                            {
+                                text: tl(trans.timeframe)
+                            },
                             {
                                 value: 'date_preset=LAST_7_DAYS',
                                 text: tl(trans.last_count_days).replace(
@@ -470,68 +476,70 @@ export function collage({ host, sidebar } = {}) {
                             <img src="${data.avatar.replace('/avatar70s/', '/avatar300s/').replace('/64s/', '/avatar300s/')}" alt="${data.name}" loading="lazy">
                         </div>
                         ${
-                            settings.collage_grid_text ||
-                            settings.collage_grid_plays
-                                ? html.node`
+                            (
+                                settings.collage_grid_text ||
+                                settings.collage_grid_plays
+                            ) ?
+                                html.node`
                         <div class="grid-items-item-details">
                             ${
-                                settings.collage_grid_text
-                                    ? html.node`
+                                settings.collage_grid_text ?
+                                    html.node`
                             <p class="grid-items-item-main-text">
                                 <a class="link-block-target" href="${root}music/${redirect()}${template}" title="${data.name}">
                                     ${data.name}
                                 </a>
                             </p>
                             `
-                                    : ''
+                                :   ''
                             }
                             ${
-                                type.value() != 'artists'
-                                    ? html.node`
+                                type.value() != 'artists' ?
+                                    html.node`
                             <p class="grid-items-item-aux-text">
                                 ${
-                                    settings.collage_grid_text
-                                        ? html.node`
+                                    settings.collage_grid_text ?
+                                        html.node`
                                 <a class="grid-items-item-aux-block" href="${root}music/${redirect()}${data.sister}">
                                     ${data.sister}
                                 </a>
                                 ${
-                                    settings.collage_grid_plays
-                                        ? html.node`
+                                    settings.collage_grid_plays ?
+                                        html.node`
                                 <a class="grid-item-plays" href="${root}user/${page.name}/library/music/${redirect()}${template}?date_preset=${timeframe.value()}" target="_blank">
                                     ${data.plays.toLocaleString(lang)}
                                 </a>
                                 `
-                                        : ''
+                                    :   ''
                                 }
                                 `
-                                        : settings.collage_grid_plays
-                                          ? html.node`
+                                    : settings.collage_grid_plays ?
+                                        html.node`
                                 <a class="grid-item-plays" href="${root}user/${page.name}/library/music/${redirect()}${template}?date_preset=${timeframe.value()}" target="_blank">
                                     ${data.plays.toLocaleString(lang)}${tl(trans.plays_lower)}
                                 </a>
                                 `
-                                          : ''
+                                    :   ''
                                 }
                             </p>
                             `
-                                    : html.node`
+                                :   html.node`
                             ${
-                                settings.collage_grid_plays
-                                    ? html.node`
+                                settings.collage_grid_plays ?
+                                    html.node`
                             <p class="grid-items-item-aux-text">
                                 <a class="grid-item-plays" href="${root}user/${page.name}/library/music/${redirect()}${template}?date_preset=${timeframe.value()}" target="_blank">
                                     ${data.plays.toLocaleString(lang)}${tl(trans.plays_lower)}
                                 </a>
                             </p>
                             `
-                                    : ''
+                                :   ''
                             }
                             `
                             }
                         </div>
                         `
-                                : ''
+                            :   ''
                         }
                     </div>
                 </li>
@@ -541,8 +549,8 @@ export function collage({ host, sidebar } = {}) {
         let collage_dom = html.node`
             <div class="collage">
                 ${
-                    settings.collage_title
-                        ? html.node`
+                    settings.collage_title ?
+                        html.node`
                 <div class="header">
                     <div class="type" data-type=${type.value()}>
                         <div class="bleh-icon" />
@@ -559,7 +567,7 @@ export function collage({ host, sidebar } = {}) {
                     </div>
                 </div>
                 `
-                        : ''
+                    :   ''
                 }
                 ${grid}
             </div>

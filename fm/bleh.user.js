@@ -27647,13 +27647,16 @@
       return html.node``;
     }
     if (initial == "")
-      initial = values[0].value;
+      initial = values.find((v) => "value" in v)?.value ?? initial;
     let container = html.node`
         <div class="select-wrap custom-selector">
             <select ref=${(el) => select2 = el} name=${name}>
-                ${values.map((value) => html.node`
-                    <option value=${value.value} selected=${value.value == initial}>${value.text}</option>
-                `)}
+                ${values.map((value) => {
+      if (value.value == null) return html.node``;
+      return html.node`
+                        <option value=${value.value} selected=${value.value == initial}>${value.text}</option>
+                    `;
+    })}
             </select>
             <button class="select-button" type="button" ref=${(el) => button = el} />
         </div>
@@ -27694,14 +27697,26 @@
       });
       select2.value = selected;
       if (name != "")
-        document.documentElement.setAttribute(`data-bleh--inbuilt-id_${name}`, selected);
+        document.documentElement.setAttribute(
+          `data-bleh--inbuilt-id_${name}`,
+          selected
+        );
       if (func) func(selected);
       menu.setContent(html.node`
-        ${values.map((value) => html.node`
-            <button class="btn dropdown-menu-clickable-item select-item" aria-checked=${selected == value.value} onclick=${() => set_select(value.value)}>
-                ${value.text}
-            </button>
-        `)}
+        ${values.map((value) => {
+        if (value.value == null) {
+          return html.node`
+                    <div class="select-header">
+                        ${value.text}
+                    </div>
+                `;
+        }
+        return html.node`
+                <button class="btn dropdown-menu-clickable-item select-item" aria-checked=${selected == value.value} onclick=${() => set_select(value.value)}>
+                    ${value.text}
+                </button>
+            `;
+      })}
     `);
     }
   }
@@ -27731,8 +27746,15 @@
       let object_value = object.getAttribute("value");
       let object_text = object.textContent;
       let item = document.createElement("button");
-      item.classList.add("btn", "dropdown-menu-clickable-item", "select-item");
-      item.setAttribute("onclick", `_set_custom_select_value('${id}', '${object_value}')`);
+      item.classList.add(
+        "btn",
+        "dropdown-menu-clickable-item",
+        "select-item"
+      );
+      item.setAttribute(
+        "onclick",
+        `_set_custom_select_value('${id}', '${object_value}')`
+      );
       item.setAttribute("data-value", object_value);
       item.setAttribute("type", "button");
       item.textContent = object_text;
@@ -27742,12 +27764,12 @@
     button.classList.add("select-button");
     button.setAttribute("id", `select-${id}`);
     button.setAttribute("type", "button");
-    button.textContent = menu_list.querySelector(`[data-value="${value}"]`).textContent;
+    button.textContent = menu_list.querySelector(
+      `[data-value="${value}"]`
+    ).textContent;
     let theme_menu_item = tippy_esm_default(button, {
       theme: "select-menu",
-      content: html.node([
-        menu_list.innerHTML
-      ]),
+      content: html.node([menu_list.innerHTML]),
       placement: "bottom",
       interactive: true,
       interactiveBorder: 10,
@@ -27762,8 +27784,15 @@
     let select2 = document.getElementById(select_id);
     select2.value = value;
     console.info(select2, `#select-${select_id}`);
-    update_custom_select(document.getElementById(`select-${select_id}`)._tippy.popper, value, select_id);
-    document.documentElement.setAttribute(`data-bleh--inbuilt-${select_id}`, value);
+    update_custom_select(
+      document.getElementById(`select-${select_id}`)._tippy.popper,
+      value,
+      select_id
+    );
+    document.documentElement.setAttribute(
+      `data-bleh--inbuilt-${select_id}`,
+      value
+    );
   };
   function update_custom_select(element = document.body, value = "", select_id = "") {
     let btns = element.querySelectorAll(".dropdown-menu-clickable-item");
@@ -27772,7 +27801,9 @@
         btn.classList.remove("active");
       } else {
         btn.classList.add("active");
-        let sel_button = document.body.querySelector(`#select-${select_id}`);
+        let sel_button = document.body.querySelector(
+          `#select-${select_id}`
+        );
         console.log(sel_button);
         if (!sel_button) return;
         sel_button.textContent = btn.textContent;
@@ -37122,63 +37153,59 @@
     let legacy_top_listeners = legacy_top_listeners_container.querySelectorAll(
       ".top-listeners-item"
     );
-    let new_container = document.createElement("ul");
-    new_container.classList.add("user-list", "top-listeners-list");
+    const new_container = html.node`
+        <ul class="user-list top-listeners-list" />
+    `;
     legacy_top_listeners.forEach((listener, index3) => {
-      let new_listener = document.createElement("li");
-      new_listener.classList.add("user-list-item", "listener-list-item");
-      let position = index3 + 1;
-      if (page.requested.page != null && page.requested.page != "1")
-        position += (parseInt(page.requested.page) - 1) * 30;
-      let name_wrap = listener.querySelector(".top-listeners-item-name a");
-      let name = name_wrap.textContent;
-      let track_wrap = listener.querySelector(".top-listeners-track");
-      let avatar3 = listener.querySelector(".top-listeners-item-image");
-      let follow = listener.querySelector(".class");
-      new_listener.innerHTML = `
+      new_container.appendChild(convert_top_listener(listener, index3));
+    });
+    view_buttons.after(new_container);
+    legacy_top_listeners_container.remove();
+  }
+  function convert_top_listener(listener, index3, key = "top-listeners") {
+    let position = index3 + 1;
+    if (page.requested.page != null && page.requested.page != "1" && key == "top-listeners")
+      position += (parseInt(page.requested.page) - 1) * 30;
+    let avatar3 = listener.querySelector(`.${key}-item-image`);
+    let name_wrap = listener.querySelector(`.${key}-item-name a`);
+    let name = name_wrap.textContent;
+    let track_wrap = listener.querySelector(`.${key}-track`);
+    let follow = listener.querySelector(".class");
+    let user_list_avatar;
+    let about_me;
+    const new_listener = html.node`
+        <li class="user-list-item listener-list-item" data-position=${position}>
             <div class="user-list-inner-wrap">
                 <span class="listener-list-position">
                     ${position}
                 </span>
                 <h4 class="user-list-name">
-                    <a class="user-list-link link-block-target" href="${name_wrap.getAttribute("href")}">
+                    <a class="user-list-link link-block-target" href=${name_wrap.getAttribute("href")}>
                         ${name}
                     </a>
                 </h4>
-                <span class="avatar user-list-avatar">
-                    ${avatar3.innerHTML}
+                <span class="avatar user-list-avatar" ref=${(el) => user_list_avatar = el}>
+                    ${{ html: avatar3.innerHTML }}
                 </span>
-                ${follow ? follow.outerHTML : ""}
-                ${track_wrap ? `
+                ${follow}
+                ${track_wrap ? html.node`
                 <div class="user-list-description">
-                    <p class="user-list-about-me">
-                        ${track_wrap.innerHTML}
+                    <p class="user-list-about-me" ref=${(el) => about_me = el}>
+                        ${{ html: track_wrap.innerHTML }}
                     </p>
                 </div>
                 ` : ""}
             </div>
-        `;
-      let badge = patch_avatar(
-        new_listener.querySelector(".user-list-avatar"),
-        name,
-        "listener"
+        </li>
+    `;
+    let badge = patch_avatar(user_list_avatar, name, "listener");
+    if (track_wrap) {
+      let track_link = about_me.querySelector("a");
+      track_link.textContent = romanise(
+        correct_item_by_artist(track_link.textContent.trim(), page.sister)
       );
-      if (track_wrap) {
-        let track_link = new_listener.querySelector(
-          ".user-list-about-me a"
-        );
-        let artist = return_artist_from_track(
-          track_link.getAttribute("href"),
-          false
-        );
-        track_link.textContent = romanise(
-          correct_item_by_artist(track_link.textContent.trim(), artist)
-        );
-      }
-      new_container.appendChild(new_listener);
-    });
-    view_buttons.after(new_container);
-    panel.removeChild(legacy_top_listeners_container);
+    }
+    return new_listener;
   }
   function redirect() {
     if (settings.prefer_no_redirect) return "+noredirect/";
@@ -38165,6 +38192,9 @@
                     ${type = select(
         [
           {
+            text: tl(trans.item_type)
+          },
+          {
             value: "artists",
             text: html`<div
                                         class="bleh-icon"
@@ -38193,6 +38223,9 @@
       )}
                     ${timeframe = select(
         [
+          {
+            text: tl(trans.timeframe)
+          },
           {
             value: "date_preset=LAST_7_DAYS",
             text: tl(trans.last_count_days).replace(
@@ -39209,10 +39242,7 @@
   }
 
   // src/components/compare.js
-  function compare({
-    host,
-    sidebar
-  } = {}) {
+  function compare({ host, sidebar } = {}) {
     if (!host || !sidebar) return;
     let pages;
     let timeframe;
@@ -39229,140 +39259,228 @@
     const default_type = page.requested.type || "albums";
     const default_timeframe = page.requested.timeframe || "date_preset=LAST_90_DAYS";
     let user;
-    render(host, html`
-        <div class="compare-header">
-            <div class="compare-users">
-                <div class="compare-user">
-                    <div class="avatar">
-                        <img src="${auth.avatar.replace("/avatar42s/", "/avatar170s/")}" alt="${tl(trans.your_avatar)}">
+    render(
+      host,
+      html`
+            <div class="compare-header">
+                <div class="compare-users">
+                    <div class="compare-user">
+                        <div class="avatar">
+                            <img
+                                src="${auth.avatar.replace(
+        "/avatar42s/",
+        "/avatar170s/"
+      )}"
+                                alt="${tl(trans.your_avatar)}"
+                            />
+                        </div>
+                        <strong>${auth.name}</strong>
                     </div>
-                    <strong>${auth.name}</strong>
+                    <div class="bleh-icon"></div>
+                    <div class="compare-user focus" ref=${(el) => user = el}>
+                        ${render_user(page.name, page.avatar, user, true)}
+                    </div>
                 </div>
-                <div class="bleh-icon"></div>
-                <div class="compare-user focus" ref=${(el) => user = el}>
-                    ${render_user(page.name, page.avatar, user, true)}
+                <div class="compare-selection">
+                    ${pages = select(
+        [
+          {
+            text: tl(trans.page_count)
+          },
+          {
+            value: "1",
+            text: 50
+          },
+          {
+            value: "2",
+            text: 100
+          },
+          {
+            value: "3",
+            text: 150
+          },
+          {
+            value: "4",
+            text: 200
+          },
+          {
+            value: "5",
+            text: 250
+          },
+          {
+            value: "6",
+            text: 300
+          }
+        ],
+        "3"
+      )}
+                    ${type = select(
+        [
+          {
+            text: tl(trans.item_type)
+          },
+          {
+            value: "artists",
+            text: html`<div
+                                        class="bleh-icon"
+                                        style="--icon: var(--icon-16-artist)"
+                                    />
+                                    ${tl(trans.artists)}`
+          },
+          {
+            value: "albums",
+            text: html`<div
+                                        class="bleh-icon"
+                                        style="--icon: var(--icon-16-album)"
+                                    />
+                                    ${tl(trans.albums)}`
+          },
+          {
+            value: "tracks",
+            text: html`<div
+                                        class="bleh-icon"
+                                        style="--icon: var(--icon-16-track)"
+                                    />
+                                    ${tl(trans.tracks)}`
+          }
+        ],
+        default_type
+      )}
+                    ${timeframe = select(
+        [
+          {
+            text: tl(trans.timeframe)
+          },
+          {
+            value: "date_preset=LAST_7_DAYS",
+            text: tl(trans.last_count_days).replace(
+              "{c}",
+              "7"
+            )
+          },
+          {
+            value: "date_preset=LAST_30_DAYS",
+            text: tl(trans.last_count_days).replace(
+              "{c}",
+              "30"
+            )
+          },
+          {
+            value: "date_preset=LAST_90_DAYS",
+            text: tl(trans.last_count_days).replace(
+              "{c}",
+              "90"
+            )
+          },
+          {
+            value: "date_preset=LAST_180_DAYS",
+            text: tl(trans.last_count_days).replace(
+              "{c}",
+              "180"
+            )
+          },
+          {
+            value: "date_preset=LAST_365_DAYS",
+            text: tl(trans.last_count_days).replace(
+              "{c}",
+              "365"
+            )
+          },
+          {
+            value: "date_preset=ALL",
+            text: tl(trans.all_time)
+          },
+          {
+            value: `from=${current_year}-01-01&rangetype=year`,
+            text: current_year
+          },
+          {
+            value: `from=${previous_year}-01-01&rangetype=year`,
+            text: previous_year
+          }
+        ],
+        default_timeframe
+      )}
+                    <button
+                        class="btn icon primary compare"
+                        ref=${(el) => submit = el}
+                        onclick=${() => begin_comparing()}
+                    >
+                        ${tl(trans.compare)}
+                    </button>
                 </div>
             </div>
-            <div class="compare-selection">
-                ${pages = select([
-      {
-        value: "1",
-        text: 50
-      },
-      {
-        value: "2",
-        text: 100
-      },
-      {
-        value: "3",
-        text: 150
-      },
-      {
-        value: "4",
-        text: 200
-      },
-      {
-        value: "5",
-        text: 250
-      },
-      {
-        value: "6",
-        text: 300
-      }
-    ], "3")}
-                ${type = select([
-      {
-        value: "artists",
-        text: html`<div class="bleh-icon" style="--icon: var(--icon-16-artist)" />${tl(trans.artists)}`
-      },
-      {
-        value: "albums",
-        text: html`<div class="bleh-icon" style="--icon: var(--icon-16-album)" />${tl(trans.albums)}`
-      },
-      {
-        value: "tracks",
-        text: html`<div class="bleh-icon" style="--icon: var(--icon-16-track)" />${tl(trans.tracks)}`
-      }
-    ], default_type)}
-                ${timeframe = select([
-      {
-        value: "date_preset=LAST_7_DAYS",
-        text: tl(trans.last_count_days).replace("{c}", "7")
-      },
-      {
-        value: "date_preset=LAST_30_DAYS",
-        text: tl(trans.last_count_days).replace("{c}", "30")
-      },
-      {
-        value: "date_preset=LAST_90_DAYS",
-        text: tl(trans.last_count_days).replace("{c}", "90")
-      },
-      {
-        value: "date_preset=LAST_180_DAYS",
-        text: tl(trans.last_count_days).replace("{c}", "180")
-      },
-      {
-        value: "date_preset=LAST_365_DAYS",
-        text: tl(trans.last_count_days).replace("{c}", "365")
-      },
-      {
-        value: "date_preset=ALL",
-        text: tl(trans.all_time)
-      },
-      {
-        value: `from=${current_year}-01-01&rangetype=year`,
-        text: current_year
-      },
-      {
-        value: `from=${previous_year}-01-01&rangetype=year`,
-        text: previous_year
-      }
-    ], default_timeframe)}
-                <button class="btn icon primary compare" ref=${(el) => submit = el} onclick=${() => begin_comparing()}>${tl(trans.compare)}</button>
+            <div
+                class="compare-body"
+                data-filled="false"
+                ref=${(el) => body = el}
+            >
+                <div class="loading-data-container">
+                    <div class="loading-data-text info">
+                        ${tl(trans.choose_a_timeframe_above)}
+                    </div>
+                </div>
             </div>
-        </div>
-        <div class="compare-body" data-filled="false" ref=${(el) => body = el}>
-            <div class="loading-data-container">
-                <div class="loading-data-text info">${tl(trans.choose_a_timeframe_above)}</div>
-            </div>
-        </div>
-    `);
+        `
+    );
     let setting_group;
     let input2;
-    render(sidebar, html`
-        <h2>${tl(trans.settings)}</h2>
-        <div class="setting-group" ref=${(el) => setting_group = el}>
-            <div class="setting v" data-type="text">
-                <div class="heading">
-                    <h5>${tl(trans.compare_with)}</h5>
-                </div>
-                <div class="input-container content-form">
-                    <input type="text" class="input" ref=${(el) => inputter = el} placeholder=${tl(trans.enter_a_profile)} value=${page.requested.profile} onchange=${(e) => {
-      page.requested.profile = e.target.value;
-      page.name = page.requested.profile;
-      page.avatar = "";
-      if (page.name == auth.name) page.avatar = auth.avatar;
-      render(user, html`
-                            ${render_user(page.name, page.avatar, user, true)}
-                        `);
-    }}>
-                    ${() => {
-      let btn = html.node`
+    render(
+      sidebar,
+      html`
+            <h2>${tl(trans.settings)}</h2>
+            <div class="setting-group" ref=${(el) => setting_group = el}>
+                <div class="setting v" data-type="text">
+                    <div class="heading">
+                        <h5>${tl(trans.compare_with)}</h5>
+                    </div>
+                    <div class="input-container content-form">
+                        <input
+                            type="text"
+                            class="input"
+                            ref=${(el) => inputter = el}
+                            placeholder=${tl(trans.enter_a_profile)}
+                            value=${page.requested.profile}
+                            onchange=${(e) => {
+        page.requested.profile = e.target.value;
+        page.name = page.requested.profile;
+        page.avatar = "";
+        if (page.name == auth.name)
+          page.avatar = auth.avatar;
+        render(
+          user,
+          html`
+                                        ${render_user(
+            page.name,
+            page.avatar,
+            user,
+            true
+          )}
+                                    `
+        );
+      }}
+                        />
+                        ${() => {
+        let btn = html.node`
                             <button class="btn chibi icon" data-type="starred_friend" data-is-shortcut=${settings.starred_friend != ""} onclick=${() => {
-        if (settings.starred_friend == "") return;
-        inputter.value = settings.starred_friend;
-        inputter.dispatchEvent(new Event("change"));
-      }}>${tl(trans.starred_friend.name)}</button>
+          if (settings.starred_friend == "") return;
+          inputter.value = settings.starred_friend;
+          inputter.dispatchEvent(new Event("change"));
+        }}>${tl(trans.starred_friend.name)}</button>
                         `;
-      tippy_esm_default(btn, {
-        content: tl(trans.starred_friend.name)
-      });
-      return btn;
-    }}
+        tippy_esm_default(btn, {
+          content: tl(trans.starred_friend.name)
+        });
+        return btn;
+      }}
+                    </div>
                 </div>
+                ${ff("inverse_compare") ? html.node`
+                        ${setting({ id: "inverse_compare" })}
+                    ` : ""}
             </div>
-        </div>
-    `);
+        `
+    );
     let compare_settings = setting_group.querySelectorAll(":scope > .setting");
     function begin_comparing(bypass = false) {
       if (page.name == "") return;
@@ -39370,7 +39488,10 @@
         let warn = notify({
           id: "compare_warning",
           title: tl(trans.are_you_sure),
-          body: tl(trans.this_will_require_loading_count_pages).replace("{c}", parseInt(pages.value()) * 2),
+          body: tl(trans.this_will_require_loading_count_pages).replace(
+            "{c}",
+            parseInt(pages.value()) * 2
+          ),
           type: "warning",
           actions: [
             {
@@ -39389,7 +39510,10 @@
       if (!auth.name) {
         notify({
           id: "compare_failed",
-          title: tl(trans.name_failed).replace("{name}", tl(trans.compare)),
+          title: tl(trans.name_failed).replace(
+            "{name}",
+            tl(trans.compare)
+          ),
           body: tl(trans.you_need_to_be_logged_in),
           type: "error"
         });
@@ -39410,12 +39534,19 @@
       get_grid(auth.name, 1, parseInt(pages.value()), page.name);
     }
     function get_grid(user2, current_page, page_count, next_user = null) {
-      render(body, html`
-            <div class="loading-data-container">
-                <div class="loading-data-text">${tl(trans.gathering_plays_for_user_pages).replace("{u}", user2).replace("{current_page}", current_page).replace("{pages}", page_count)}</div>
-            </div>
-        `);
-      fetch(`${root}user/${user2}/library/${type.value()}?format=list&${timeframe.value()}&page=${current_page}&ajax=1`).then(function(response) {
+      render(
+        body,
+        html`
+                <div class="loading-data-container">
+                    <div class="loading-data-text">
+                        ${tl(trans.gathering_plays_for_user_pages).replace("{u}", user2).replace("{current_page}", current_page).replace("{pages}", page_count)}
+                    </div>
+                </div>
+            `
+      );
+      fetch(
+        `${root}user/${user2}/library/${type.value()}?format=list&${timeframe.value()}&page=${current_page}&ajax=1`
+      ).then(function(response) {
         console.log("returned", response, response.text);
         return response.text();
       }).then(function(dom) {
@@ -39426,17 +39557,19 @@
           let tracks = doc.querySelectorAll(".chartlist-row");
           tracks.forEach((track) => {
             let item = {};
-            item.avatar = track.querySelector(".chartlist-image img");
+            item.avatar = track.querySelector(
+              ".chartlist-image img"
+            );
             if (item.avatar)
               item.avatar = item.avatar.getAttribute("src");
             item.name = track.querySelector(".chartlist-name a").textContent.trim();
             if (type.value() != "artists")
               item.sister = track.querySelector(".chartlist-artist a").textContent.trim();
-            item.plays = clean_number(track.querySelector(".chartlist-count-bar-slug").getAttribute("data-stat-value"));
-            if (next_user)
-              page.state.compare.you.push(item);
-            else
-              page.state.compare.other.push(item);
+            item.plays = clean_number(
+              track.querySelector(".chartlist-count-bar-slug").getAttribute("data-stat-value")
+            );
+            if (next_user) page.state.compare.you.push(item);
+            else page.state.compare.other.push(item);
           });
         } catch (e) {
           notify({
@@ -39468,9 +39601,13 @@
       page.state.compare.you.forEach((your_item) => {
         let other_item;
         if (type.value() == "albums")
-          other_item = page.state.compare.other.find((other) => your_item.name === other.name && your_item.sister === other.sister);
+          other_item = page.state.compare.other.find(
+            (other) => your_item.name === other.name && your_item.sister === other.sister
+          );
         else
-          other_item = page.state.compare.other.find((other) => your_item.name === other.name);
+          other_item = page.state.compare.other.find(
+            (other) => your_item.name === other.name
+          );
         if (other_item) {
           page.state.compare.shared.push({
             avatar: your_item.avatar,
@@ -39484,24 +39621,34 @@
           });
         }
       });
-      page.state.compare.shared.sort((a, b) => b.plays.shared - a.plays.shared);
+      page.state.compare.shared.sort(
+        (a, b) => b.plays.shared - a.plays.shared
+      );
       log("gathered shared values", "compare", "info", page.state.compare);
       body.innerHTML = "";
       if (page.state.compare.shared.length == 0) {
-        render(body, html`
-                <div class="loading-data-container">
-                    <div class="loading-data-text failed">${tl(trans.nothing_in_common)}</div>
-                </div>
-            `);
+        render(
+          body,
+          html`
+                    <div class="loading-data-container">
+                        <div class="loading-data-text failed">
+                            ${tl(trans.nothing_in_common)}
+                        </div>
+                    </div>
+                `
+        );
         return;
       }
       if (type.value() != "tracks") {
         let grid = document.createElement("ol");
-        grid.classList.add("grid-items", "grid-items--numbered", "compare-grid");
+        grid.classList.add(
+          "grid-items",
+          "grid-items--numbered",
+          "compare-grid"
+        );
         page.state.compare.shared.forEach((data2) => {
           let template;
-          if (type.value() == "artists")
-            template = sanitise(data2.name);
+          if (type.value() == "artists") template = sanitise(data2.name);
           else
             template = `${sanitise(data2.sister)}/${sanitise(data2.name)}`;
           grid.appendChild(html.node`
@@ -39547,15 +39694,21 @@
         music_grids(grid);
       } else {
         let table = document.createElement("table");
-        table.classList.add("chartlist", "chartlist--with-index", "chartlist--with-index--length-2", "chartlist--with-image", "chartlist--with-artist", "chartlist--with-bar", "compare-chartlist");
+        table.classList.add(
+          "chartlist",
+          "chartlist--with-index",
+          "chartlist--with-index--length-2",
+          "chartlist--with-image",
+          "chartlist--with-artist",
+          "chartlist--with-bar",
+          "compare-chartlist"
+        );
         let tbody = document.createElement("tbody");
         table.appendChild(tbody);
         let max2 = 0;
         page.state.compare.shared.forEach((item) => {
-          if (item.plays.you > max2)
-            max2 = item.plays.you;
-          if (item.plays.other > max2)
-            max2 = item.plays.other;
+          if (item.plays.you > max2) max2 = item.plays.you;
+          if (item.plays.other > max2) max2 = item.plays.other;
         });
         page.state.compare.shared.forEach((data2, index3) => {
           let template = `${sanitise(data2.sister)}/_/${sanitise(data2.name)}`;
@@ -49510,7 +49663,7 @@
                 <button
                     class="btn side-action"
                     data-type="import"
-                    onclick=${() => import_settings19()}
+                    onclick=${() => import_settings20()}
                 >
                     ${tl(trans.import)}
                 </button>
@@ -51825,7 +51978,7 @@ ${e ? html.node`<span class="error-type">${e.name}</span>: ${e.message}` : ""}</
       }
     }
   }
-  function import_settings19() {
+  function import_settings20() {
     let text3;
     const modal = dialog({
       id: "import_settings",
@@ -54938,6 +55091,19 @@ ${e ? html.node`<span class="error-type">${e.name}</span>: ${e.message}` : ""}</
                 </section>
             `;
         page.structure.main.querySelector(".top-overview-panel").after(featured_panel);
+      }
+      const listeners_section = page.structure.main.querySelector(".listeners-section");
+      if (listeners_section) {
+        const listeners = listeners_section.querySelectorAll(
+          ".listeners-section-item"
+        );
+        listeners_section.classList = "user-list top-listeners-list small";
+        render(listeners_section, html``);
+        listeners.forEach((listener, index3) => {
+          listeners_section.appendChild(
+            convert_top_listener(listener, index3, "listeners-section")
+          );
+        });
       }
     } else {
       let btn_add = page.structure.side.querySelector(".add-button");
@@ -58257,6 +58423,14 @@ ${e ? html.node`<span class="error-type">${e.name}</span>: ${e.message}` : ""}</
       pt: "Comparar reprodu\xE7\xF5es",
       sv: "J\xE4mf\xF6r spelningar"
     },
+    inverse_compare: {
+      name: {
+        en: "Inverse comparison method"
+      },
+      body: {
+        en: "Show items you do not share instead"
+      }
+    },
     one_page: {
       en: "1 page",
       pt: "1 p\xE1gina",
@@ -60252,6 +60426,15 @@ ${e ? html.node`<span class="error-type">${e.name}</span>: ${e.message}` : ""}</
       pt: "Per\xEDodo padr\xE3o",
       ja: "\u30C7\u30D5\u30A9\u30EB\u30C8\u671F\u9593",
       sv: "Standardtidsram"
+    },
+    timeframe: {
+      en: "Timeframe"
+    },
+    item_type: {
+      en: "Item type"
+    },
+    page_count: {
+      en: "Page count"
     },
     chart_style: {
       en: "Chart style",
@@ -66827,6 +67010,12 @@ ${e ? html.node`<span class="error-type">${e.name}</span>: ${e.message}` : ""}</
       body: trans.music_links.body,
       new_release: true,
       predefined: true
+    },
+    inverse_compare: {
+      default: false,
+      title: trans.inverse_compare.name,
+      body: trans.inverse_compare.body,
+      new_release: true
     }
   };
 
@@ -67212,6 +67401,11 @@ ${e ? html.node`<span class="error-type">${e.name}</span>: ${e.message}` : ""}</
         default: false,
         name: "Refreshed flow for submitting a lotus correction",
         date: "2025-09-26"
+      },
+      inverse_compare: {
+        default: false,
+        name: "Introduce new inverse comparison option",
+        date: "2025-09-28"
       }
     }
   };

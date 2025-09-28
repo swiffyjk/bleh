@@ -78,8 +78,8 @@ export async function show_your_scrobbles() {
                         </a>
                     </li>
                     ${
-                        !page_is_blocked
-                            ? html.node`
+                        !page_is_blocked ?
+                            html.node`
                     <li class="navlist-item secondary-nav-item secondary-nav-item--images">
                         <a class="secondary-nav-item-link" href="${window.location.href}/+images">
                             ${tl(trans.photos)}
@@ -116,7 +116,7 @@ export async function show_your_scrobbles() {
                         </a>
                     </li>
                     `
-                            : ''
+                        :   ''
                     }
                 </ul>
             `);
@@ -129,8 +129,8 @@ export async function show_your_scrobbles() {
                         </a>
                     </li>
                     ${
-                        !page_is_blocked
-                            ? html.node`
+                        !page_is_blocked ?
+                            html.node`
                     <li class="navlist-item secondary-nav-item secondary-nav-item--wiki">
                         <a class="secondary-nav-item-link" href="${window.location.href}/+wiki">
                             ${tl(trans.wiki)}
@@ -152,7 +152,7 @@ export async function show_your_scrobbles() {
                         </a>
                     </li>
                     `
-                            : ''
+                        :   ''
                     }
                 </ul>
             `);
@@ -170,8 +170,8 @@ export async function show_your_scrobbles() {
                         </a>
                     </li>
                     ${
-                        !page_is_blocked
-                            ? html.node`
+                        !page_is_blocked ?
+                            html.node`
                     <li class="navlist-item secondary-nav-item secondary-nav-item--wiki">
                         <a class="secondary-nav-item-link" href="${window.location.href}/+wiki">
                             ${tl(trans.wiki)}
@@ -188,7 +188,7 @@ export async function show_your_scrobbles() {
                         </a>
                     </li>
                     `
-                            : ''
+                        :   ''
                     }
                 </ul>
             `);
@@ -514,9 +514,10 @@ export async function show_your_scrobbles() {
                 pre_track: page.name,
                 pre_artist: page.sister,
                 pre_album: source_album ? source_album.textContent : null,
-                pre_album_artist: source_album_artist
-                    ? source_album_artist.textContent
-                    : page.sister
+                pre_album_artist:
+                    source_album_artist ?
+                        source_album_artist.textContent
+                    :   page.sister
             };
         else if (page.type == 'album')
             props = {
@@ -1000,11 +1001,11 @@ export async function show_your_scrobbles() {
         <section class="lotus cta">
             <strong>${tl(trans.lotus_cta[page.corrected]).replace('{t}', tl(trans[`${page.type}_lower`]))}</strong>
             ${
-                ff('refreshed_lotus')
-                    ? html.node`
+                ff('refreshed_lotus') ?
+                    html.node`
                 <button class="see-more" onclick=${() => create_correction(page.type)}>${tl(trans.suggest_correction)}</button>
             `
-                    : html.node`
+                :   html.node`
                 <a class="see-more" href="https://github.com/katelyynn/lotus/issues/new/choose" target="_blank">${tl(trans.suggest_correction)}</a>
             `
             }
@@ -1139,15 +1140,15 @@ function create_listen_item(
         render(
             listen_item,
             html`
-                ${avi[0]
-                    ? html.node`<img class="view-item-avatar" src=${avi[0].getAttribute('src')} alt="">`
-                    : ''}
-                ${avi[1]
-                    ? html.node`<img class="view-item-avatar" src=${avi[1].getAttribute('src')} alt="">`
-                    : ''}
-                ${avi[2]
-                    ? html.node`<img class="view-item-avatar" src=${avi[2].getAttribute('src')} alt="">`
-                    : ''}
+                ${avi[0] ?
+                    html.node`<img class="view-item-avatar" src=${avi[0].getAttribute('src')} alt="">`
+                :   ''}
+                ${avi[1] ?
+                    html.node`<img class="view-item-avatar" src=${avi[1].getAttribute('src')} alt="">`
+                :   ''}
+                ${avi[2] ?
+                    html.node`<img class="view-item-avatar" src=${avi[2].getAttribute('src')} alt="">`
+                :   ''}
                 <div class="info">
                     <h3>${tl(trans.following)}</h3>
                     <p class="colourful" ref=${(el) => (p = el)}>
@@ -1250,14 +1251,14 @@ function show_numbers_on_side(header_type) {
                 <p>${scrobbles.abbr}</p>
             </div>
             ${
-                metascore.text
-                    ? html.node`
+                metascore.text ?
+                    html.node`
             <div class="metascore-side">
                 <h3>${metascore.text}</h3>
                 <p><a href="${metascore.link}" target="_blank">${metascore.abbr}</a></p>
             </div>
             `
-                    : ''
+                :   ''
             }
         </div>
     `;
@@ -1509,78 +1510,78 @@ export function bleh_top_listeners() {
         '.top-listeners-item'
     );
 
-    let new_container = document.createElement('ul');
-    new_container.classList.add('user-list', 'top-listeners-list');
+    const new_container = html.node`
+        <ul class="user-list top-listeners-list" />
+    `;
 
     legacy_top_listeners.forEach((listener, index) => {
-        let new_listener = document.createElement('li');
-        new_listener.classList.add('user-list-item', 'listener-list-item');
+        new_container.appendChild(convert_top_listener(listener, index));
+    });
 
-        let position = index + 1;
-        if (page.requested.page != null && page.requested.page != '1')
-            position += (parseInt(page.requested.page) - 1) * 30;
+    view_buttons.after(new_container);
+    legacy_top_listeners_container.remove();
+}
 
-        let name_wrap = listener.querySelector('.top-listeners-item-name a');
-        let name = name_wrap.textContent;
-        let track_wrap = listener.querySelector('.top-listeners-track');
+export function convert_top_listener(listener, index, key = 'top-listeners') {
+    let position = index + 1;
+    if (
+        page.requested.page != null &&
+        page.requested.page != '1' &&
+        key == 'top-listeners'
+    )
+        position += (parseInt(page.requested.page) - 1) * 30;
 
-        let avatar = listener.querySelector('.top-listeners-item-image');
+    let avatar = listener.querySelector(`.${key}-item-image`);
+    let name_wrap = listener.querySelector(`.${key}-item-name a`);
+    let name = name_wrap.textContent;
 
-        let follow = listener.querySelector('.class');
+    let track_wrap = listener.querySelector(`.${key}-track`);
 
-        new_listener.innerHTML = `
+    let follow = listener.querySelector('.class');
+
+    let user_list_avatar;
+    let about_me;
+    const new_listener = html.node`
+        <li class="user-list-item listener-list-item" data-position=${position}>
             <div class="user-list-inner-wrap">
                 <span class="listener-list-position">
                     ${position}
                 </span>
                 <h4 class="user-list-name">
-                    <a class="user-list-link link-block-target" href="${name_wrap.getAttribute('href')}">
+                    <a class="user-list-link link-block-target" href=${name_wrap.getAttribute('href')}>
                         ${name}
                     </a>
                 </h4>
-                <span class="avatar user-list-avatar">
-                    ${avatar.innerHTML}
+                <span class="avatar user-list-avatar" ref=${(el) => (user_list_avatar = el)}>
+                    ${{ html: avatar.innerHTML }}
                 </span>
-                ${follow ? follow.outerHTML : ''}
+                ${follow}
                 ${
-                    track_wrap
-                        ? `
+                    track_wrap ?
+                        html.node`
                 <div class="user-list-description">
-                    <p class="user-list-about-me">
-                        ${track_wrap.innerHTML}
+                    <p class="user-list-about-me" ref=${(el) => (about_me = el)}>
+                        ${{ html: track_wrap.innerHTML }}
                     </p>
                 </div>
                 `
-                        : ''
+                    :   ''
                 }
             </div>
-        `;
+        </li>
+    `;
 
-        let badge = patch_avatar(
-            new_listener.querySelector('.user-list-avatar'),
-            name,
-            'listener'
+    let badge = patch_avatar(user_list_avatar, name, 'listener');
+
+    if (track_wrap) {
+        let track_link = about_me.querySelector('a');
+
+        track_link.textContent = romanise(
+            correct_item_by_artist(track_link.textContent.trim(), page.sister)
         );
+    }
 
-        if (track_wrap) {
-            let track_link = new_listener.querySelector(
-                '.user-list-about-me a'
-            );
-            let artist = return_artist_from_track(
-                track_link.getAttribute('href'),
-                false
-            );
-
-            track_link.textContent = romanise(
-                correct_item_by_artist(track_link.textContent.trim(), artist)
-            );
-        }
-
-        new_container.appendChild(new_listener);
-    });
-
-    view_buttons.after(new_container);
-    panel.removeChild(legacy_top_listeners_container);
+    return new_listener;
 }
 
 // allows controlling auto +noredirect

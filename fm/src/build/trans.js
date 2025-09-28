@@ -333,6 +333,14 @@ export const trans = {
         pt: 'Comparar reproduções',
         sv: 'Jämför spelningar'
     },
+    inverse_compare: {
+        name: {
+            en: 'Inverse comparison method'
+        },
+        body: {
+            en: 'Show items you do not share instead'
+        }
+    },
     one_page: {
         en: '1 page',
         pt: '1 página',
@@ -2328,6 +2336,15 @@ export const trans = {
         pt: 'Período padrão',
         ja: 'デフォルト期間',
         sv: 'Standardtidsram'
+    },
+    timeframe: {
+        en: 'Timeframe'
+    },
+    item_type: {
+        en: 'Item type'
+    },
+    page_count: {
+        en: 'Page count'
     },
     chart_style: {
         en: 'Chart style',

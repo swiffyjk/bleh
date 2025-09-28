@@ -14639,16 +14639,10 @@
         padding: 0 var(--item-list-gap);
 
         &.listener-list-item {
-            padding-left: calc(
-                var(--item-list-gap) + 18px + var(--item-list-gap)
-            );
-
             .listener-list-position {
-                position: absolute;
-                left: calc(-18px - var(--item-list-gap));
-                top: 50%;
-                margin-top: -9px;
+                font-size: 13px;
                 color: hsl(var(--c3));
+                cursor: pointer;
             }
         }
 
@@ -14687,15 +14681,8 @@
                 padding: var(--item-list-gap);
                 border-radius: var(--item-big-radius);
 
-                &.listeners-section-item-wrap:first-child,
-                &.top-listeners-item-wrap:first-child {
-                    background: hsla(var(--h4), 20%);
-                }
-
-                &.listener-list-item {
-                    padding-left: calc(
-                        var(--item-list-gap) + 18px + var(--item-list-gap)
-                    );
+                &[data-position="1"] {
+                    background: hsla(var(--h4), 15%);
                 }
             }
 
@@ -14706,9 +14693,12 @@
                 margin: unset;
                 height: 56px;
                 padding-left: calc(56px + 10px);
+                position: relative;
 
-                .top-listeners-item-image,
                 .user-list-avatar {
+                    position: absolute;
+                    top: 0;
+                    left: 0;
                     width: 56px;
                     height: 56px;
                     --mask-size: var(--cover-size-50);
@@ -14748,25 +14738,6 @@
 
                     .user-list-item:has(&) {
                         background: hsla(var(--h4), 15%);
-
-                        .user-list-follower-btn {
-                            --bg: hsla(var(--h4), 0%);
-                            --bg-hov: hsla(var(--h4), 20%);
-                            --bg-atv: hsla(var(--h4), 20%);
-                            --shadow: none;
-                            --shadow-hov: none;
-
-                            .user-list-item:not(:hover)
-                                [data-toggle-button-current-state="followed"]
-                                & {
-                                --col: hsl(var(--l3-c));
-                                --mask-colour: color-mix(
-                                    in hsl,
-                                    hsl(var(--l3-c)),
-                                    hsl(var(--l4-c)) 30%
-                                );
-                            }
-                        }
                     }
                 }
 
@@ -14915,90 +14886,9 @@
         display: none;
     }
 
-    .listeners-section-track {
-        -webkit-line-clamp: 1;
-        line-height: var(--line-height);
-    }
-
     /*     TOP ARTIST LISTENERS     */
-    .listeners-section-item,
-    .top-listeners-item {
-        justify-content: unset;
-        min-height: unset;
-    }
-    .top-listeners-item-wrap:not(:last-child, :nth-last-child(2)) {
-        padding-bottom: 9px;
-        border-bottom: 1px solid hsl(var(--b4));
-    }
-    .listeners-section-item-wrap:not(:nth-child(3), :nth-child(6)) {
-        padding-bottom: 9px;
-        border-bottom: 1px solid hsl(var(--b4));
-    }
-    /* sidenote this actually uses a grid wtf? rare */
-    .listeners-section {
-        grid-gap: unset;
-        gap: 9px;
-        grid-template-columns: repeat(2, calc(400px - (9px / 2)));
-        grid-template-rows: repeat(3, 1fr);
-        margin-top: unset;
-    }
-
     .top-listeners {
         margin: unset;
-    }
-
-    .listeners-section,
-    .top-listeners {
-        counter-reset: listener;
-    }
-    .listeners-section-item-wrap:before,
-    .top-listeners-item-wrap:before {
-        counter-increment: listener;
-        content: counter(listener);
-        color: hsl(var(--c3));
-        position: absolute;
-        top: 0;
-        left: var(--button-list-gap);
-        bottom: 0;
-        display: flex;
-        align-items: center;
-    }
-    .listeners-section-item-wrap,
-    .top-listeners-item-wrap {
-        padding-left: 25px;
-    }
-
-    .top-listeners-item-wrap {
-        padding-right: unset;
-        width: unset;
-    }
-    .top-listeners-item-wrap:nth-child(even) {
-        position: relative;
-        left: 9px;
-    }
-
-    .top-listeners-item .user-list-follower-btn {
-        top: 16px;
-    }
-
-    .top-listeners-item-wrap:nth-child(n + 3) {
-        margin-top: 9px;
-    }
-
-    .listeners-section-item-wrap:first-child,
-    .top-listeners-item-wrap:first-child {
-        background: linear-gradient(
-            0deg,
-            hsla(var(--h4), 20%) 0%,
-            transparent 100%
-        );
-        border-color: hsla(var(--l3-c), 60%);
-    }
-
-    .listeners-section-item .media-item,
-    .listeners-section-item .media-item + .link-block-cover-link {
-        width: 32px;
-        height: 32px;
     }
 
     /*     SETTINGS     */
@@ -28527,5 +28417,12 @@
         flex-direction: column;
         align-items: end;
         flex-shrink: 1;
+    }
+
+    .select-header {
+        color: hsl(var(--c3));
+        font-weight: var(--font-weight-medium);
+        padding: 3px var(--button-sides) 4px;
+        cursor: default;
     }
 }
