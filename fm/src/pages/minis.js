@@ -1,11 +1,17 @@
-import {update_page} from "../page.js";
-import {auth, page, root} from "../build/page.js";
-import {html, render} from "lighterhtml";
-import {tl, trans} from "../build/trans.js";
-import {collage} from "../components/collage.js";
-import {compare} from "../components/compare.js";
-import {pixel} from "../components/pixel.js";
-import {ff} from "../sku.js";
+//
+// bleh, an extension for the music site Last.fm
+// Copyright (c) 2025 katelyn and contributors
+// Licensed under GPLv3
+//
+
+import { update_page } from '../page.js';
+import { auth, page, root } from '../build/page.js';
+import { html, render } from 'lighterhtml';
+import { tl, trans } from '../build/trans.js';
+import { collage } from '../components/collage.js';
+import { compare } from '../components/compare.js';
+import { pixel } from '../components/pixel.js';
+import { ff } from '../sku.js';
 
 let valid_minis;
 
@@ -68,17 +74,22 @@ export function bleh_minis(skip = false) {
             func: bleh_minis_receipt,
             hide_if: !ff('unlock_minis')
         }
-    }
+    };
 
     if (mini && (!valid_minis[mini] || valid_minis[mini].hide_if)) {
-        render(page.structure.main, html`
-            <section class="minis">
-                ${return_to_minis()}
-                <div class="loading-data-container">
-                    <div class="loading-data-text error">${tl(trans.no_mini_found).replace('{v}', mini)}</div>
-                </div>
-            </section>
-        `);
+        render(
+            page.structure.main,
+            html`
+                <section class="minis">
+                    ${return_to_minis()}
+                    <div class="loading-data-container">
+                        <div class="loading-data-text error">
+                            ${tl(trans.no_mini_found).replace('{v}', mini)}
+                        </div>
+                    </div>
+                </section>
+            `
+        );
         return;
     }
 
@@ -95,20 +106,29 @@ export function bleh_minis(skip = false) {
         return;
     }
 
-    render(page.structure.main, html`
-        <section class="minis">
-            <div class="minis-header main">
-                <h2>${tl(trans.minis)}</h2>
-                <p>${tl(trans.minis_description)}</p>
-            </div>
-            <div class="mini-list">
-                ${Object.entries(valid_minis).map(([id, mini]) => {
-                    if (mini.hide_if) return html.node``;
+    render(
+        page.structure.main,
+        html`
+            <section class="minis">
+                <div class="minis-header main">
+                    <h2>${tl(trans.minis)}</h2>
+                    <p>${tl(trans.minis_description)}</p>
+                </div>
+                <div class="mini-list">
+                    ${Object.entries(valid_minis).map(([id, mini]) => {
+                        if (mini.hide_if) return html.node``;
 
-                    return html.node`
+                        return html.node`
                         <button class="mini" data-type=${id} data-mini=${id} onclick=${() => {
-                            window.history.replaceState(id, '', `${root}bleh/minis/${id}`);
-                            page.structure.container.setAttribute('data-mini', id);
+                            window.history.replaceState(
+                                id,
+                                '',
+                                `${root}bleh/minis/${id}`
+                            );
+                            page.structure.container.setAttribute(
+                                'data-mini',
+                                id
+                            );
                             render(page.structure.main, html``);
                             valid_minis[id].func();
                         }}>
@@ -122,14 +142,24 @@ export function bleh_minis(skip = false) {
                             <div class="bleh-icon mini-arrow" style="--icon: var(--mask)" data-type="arrow-right" />
                         </button>
                     `;
-                })}
-            </div>
-            <p class="card-tip">${{html: tl(trans.labs_cta).replace('{a}', `<a class="see-more" href="${root}labs">`).replace('{/a}', '</a>')}}</p>
-        </section>
-    `);
+                    })}
+                </div>
+                <p class="card-tip">
+                    ${{
+                        html: tl(trans.labs_cta)
+                            .replace(
+                                '{a}',
+                                `<a class="see-more" href="${root}labs">`
+                            )
+                            .replace('{/a}', '</a>')
+                    }}
+                </p>
+            </section>
+        `
+    );
 }
 
-function return_to_minis(mini='') {
+function return_to_minis(mini = '') {
     return html.node`
         <div class="minis-header">
             <h2 class="previous" onclick=${() => {
@@ -146,19 +176,33 @@ function bleh_minis_collage() {
     let content;
     let mini_settings;
 
-    render(page.structure.main, html`
-        <section class="minis">
-            ${return_to_minis('collage')}
-            <div class="minis-content" ref=${el => content = el} />
-        </section>
-    `);
+    render(
+        page.structure.main,
+        html`
+            <section class="minis">
+                ${return_to_minis('collage')}
+                <div class="minis-content" ref=${(el) => (content = el)} />
+            </section>
+        `
+    );
 
-    render(page.structure.side, html`
-        <section class="current-mini-settings" ref=${el => mini_settings = el} />
-        <section class="mini-faq">
-            <p class="card-tip">${tl(trans.value_by_user, {'v': valid_minis.collage.name, 'u': valid_minis.collage.by.join(',')})}</p>
-        </section>
-    `);
+    render(
+        page.structure.side,
+        html`
+            <section
+                class="current-mini-settings"
+                ref=${(el) => (mini_settings = el)}
+            />
+            <section class="mini-faq">
+                <p class="card-tip">
+                    ${tl(trans.value_by_user, {
+                        v: valid_minis.collage.name,
+                        u: valid_minis.collage.by.join(',')
+                    })}
+                </p>
+            </section>
+        `
+    );
 
     collage({
         host: content,
@@ -170,19 +214,33 @@ function bleh_minis_compare() {
     let content;
     let mini_settings;
 
-    render(page.structure.main, html`
-        <section class="minis">
-            ${return_to_minis('compare')}
-            <div class="minis-content" ref=${el => content = el} />
-        </section>
-    `);
+    render(
+        page.structure.main,
+        html`
+            <section class="minis">
+                ${return_to_minis('compare')}
+                <div class="minis-content" ref=${(el) => (content = el)} />
+            </section>
+        `
+    );
 
-    render(page.structure.side, html`
-        <section class="current-mini-settings" ref=${el => mini_settings = el} />
-        <section class="mini-faq">
-            <p class="card-tip">${tl(trans.value_by_user, {'v': valid_minis.compare.name, 'u': valid_minis.compare.by.join(',')})}</p>
-        </section>
-    `);
+    render(
+        page.structure.side,
+        html`
+            <section
+                class="current-mini-settings"
+                ref=${(el) => (mini_settings = el)}
+            />
+            <section class="mini-faq">
+                <p class="card-tip">
+                    ${tl(trans.value_by_user, {
+                        v: valid_minis.compare.name,
+                        u: valid_minis.compare.by.join(',')
+                    })}
+                </p>
+            </section>
+        `
+    );
 
     compare({
         host: content,
@@ -194,19 +252,36 @@ function bleh_minis_pixel() {
     let content;
     let mini_settings;
 
-    render(page.structure.main, html`
-        <section class="minis">
-            ${return_to_minis('pixel')}
-            <div class="minis-content pixel-content" ref=${el => content = el} />
-        </section>
-    `);
+    render(
+        page.structure.main,
+        html`
+            <section class="minis">
+                ${return_to_minis('pixel')}
+                <div
+                    class="minis-content pixel-content"
+                    ref=${(el) => (content = el)}
+                />
+            </section>
+        `
+    );
 
-    render(page.structure.side, html`
-        <section class="current-mini-settings" ref=${el => mini_settings = el} />
-        <section class="mini-faq">
-            <p class="card-tip">${tl(trans.value_by_user, {'v': valid_minis.pixel.name, 'u': valid_minis.pixel.by.join(',')})}</p>
-        </section>
-    `);
+    render(
+        page.structure.side,
+        html`
+            <section
+                class="current-mini-settings"
+                ref=${(el) => (mini_settings = el)}
+            />
+            <section class="mini-faq">
+                <p class="card-tip">
+                    ${tl(trans.value_by_user, {
+                        v: valid_minis.pixel.name,
+                        u: valid_minis.pixel.by.join(',')
+                    })}
+                </p>
+            </section>
+        `
+    );
 
     pixel({
         host: content,
@@ -215,27 +290,24 @@ function bleh_minis_pixel() {
 }
 
 function bleh_minis_lyrics() {
-    render(page.structure.main, html`
-        <section class="minis">
-            ${return_to_minis('lyrics')}
-        </section>
-    `);
+    render(
+        page.structure.main,
+        html` <section class="minis">${return_to_minis('lyrics')}</section> `
+    );
 }
 
 function bleh_minis_rainbow() {
-    render(page.structure.main, html`
-        <section class="minis">
-            ${return_to_minis('rainbow')}
-        </section>
-    `);
+    render(
+        page.structure.main,
+        html` <section class="minis">${return_to_minis('rainbow')}</section> `
+    );
 }
 
 function bleh_minis_receipt() {
-    render(page.structure.main, html`
-        <section class="minis">
-            ${return_to_minis('receipt')}
-        </section>
-    `);
+    render(
+        page.structure.main,
+        html` <section class="minis">${return_to_minis('receipt')}</section> `
+    );
 }
 
 export function render_user(name, avatar, user, replace_page = false) {
@@ -251,15 +323,22 @@ export function render_user(name, avatar, user, replace_page = false) {
                 console.log('DOC', doc);
 
                 try {
-                    avatar = doc.querySelector('.header-avatar-inner-wrap img').getAttribute('src');
-                    name = doc.querySelector('.header-title').textContent.trim();
+                    avatar = doc
+                        .querySelector('.header-avatar-inner-wrap img')
+                        .getAttribute('src');
+                    name = doc
+                        .querySelector('.header-title')
+                        .textContent.trim();
 
                     if (replace_page) {
                         page.avatar = avatar;
                         page.name = name;
                     }
 
-                    if (!user) user = page.structure.main.querySelector('.compare-user.focus');
+                    if (!user)
+                        user = page.structure.main.querySelector(
+                            '.compare-user.focus'
+                        );
                     render(user, render_user(name, avatar, user, replace_page));
                 } catch (e) {
                     console.error(e);
@@ -274,7 +353,10 @@ export function render_user(name, avatar, user, replace_page = false) {
 
     return html`
         <div class="avatar">
-            <img src=${avatar} alt=${tl(trans.avatar_for_user).replace('{u}', name)}>
+            <img
+                src=${avatar}
+                alt=${tl(trans.avatar_for_user).replace('{u}', name)}
+            />
         </div>
         <strong>${name}</strong>
     `;

@@ -26425,11 +26425,7 @@
       document.body.appendChild(notification_host);
     }
   }
-  function status({
-    title,
-    body,
-    type
-  }) {
+  function status({ title, body, type }) {
     let icon = "icon-16-info";
     if (type == "error") {
       icon = "icon-16-x";
@@ -28594,10 +28590,8 @@
     };
     elem.disabled = (state2 = null) => {
       if (state2 === null) return checkbox.getAttribute("disabled") || false;
-      if (state2 === true)
-        checkbox.setAttribute("disabled", "true");
-      else
-        checkbox.removeAttribute("disabled");
+      if (state2 === true) checkbox.setAttribute("disabled", "true");
+      else checkbox.removeAttribute("disabled");
       return state2;
     };
     return elem;
@@ -39304,14 +39298,19 @@
       }
     };
     if (mini && (!valid_minis[mini] || valid_minis[mini].hide_if)) {
-      render(page.structure.main, html`
-            <section class="minis">
-                ${return_to_minis()}
-                <div class="loading-data-container">
-                    <div class="loading-data-text error">${tl(trans.no_mini_found).replace("{v}", mini)}</div>
-                </div>
-            </section>
-        `);
+      render(
+        page.structure.main,
+        html`
+                <section class="minis">
+                    ${return_to_minis()}
+                    <div class="loading-data-container">
+                        <div class="loading-data-text error">
+                            ${tl(trans.no_mini_found).replace("{v}", mini)}
+                        </div>
+                    </div>
+                </section>
+            `
+      );
       return;
     }
     render(page.structure.side, html``);
@@ -39323,22 +39322,31 @@
       valid_minis[mini].func();
       return;
     }
-    render(page.structure.main, html`
-        <section class="minis">
-            <div class="minis-header main">
-                <h2>${tl(trans.minis)}</h2>
-                <p>${tl(trans.minis_description)}</p>
-            </div>
-            <div class="mini-list">
-                ${Object.entries(valid_minis).map(([id, mini2]) => {
-      if (mini2.hide_if) return html.node``;
-      return html.node`
+    render(
+      page.structure.main,
+      html`
+            <section class="minis">
+                <div class="minis-header main">
+                    <h2>${tl(trans.minis)}</h2>
+                    <p>${tl(trans.minis_description)}</p>
+                </div>
+                <div class="mini-list">
+                    ${Object.entries(valid_minis).map(([id, mini2]) => {
+        if (mini2.hide_if) return html.node``;
+        return html.node`
                         <button class="mini" data-type=${id} data-mini=${id} onclick=${() => {
-        window.history.replaceState(id, "", `${root}bleh/minis/${id}`);
-        page.structure.container.setAttribute("data-mini", id);
-        render(page.structure.main, html``);
-        valid_minis[id].func();
-      }}>
+          window.history.replaceState(
+            id,
+            "",
+            `${root}bleh/minis/${id}`
+          );
+          page.structure.container.setAttribute(
+            "data-mini",
+            id
+          );
+          render(page.structure.main, html``);
+          valid_minis[id].func();
+        }}>
                             <div class="mini-icon colourful">
                                 <div class="bleh-icon" />
                             </div>
@@ -39349,11 +39357,19 @@
                             <div class="bleh-icon mini-arrow" style="--icon: var(--mask)" data-type="arrow-right" />
                         </button>
                     `;
-    })}
-            </div>
-            <p class="card-tip">${{ html: tl(trans.labs_cta).replace("{a}", `<a class="see-more" href="${root}labs">`).replace("{/a}", "</a>") }}</p>
-        </section>
-    `);
+      })}
+                </div>
+                <p class="card-tip">
+                    ${{
+        html: tl(trans.labs_cta).replace(
+          "{a}",
+          `<a class="see-more" href="${root}labs">`
+        ).replace("{/a}", "</a>")
+      }}
+                </p>
+            </section>
+        `
+    );
   }
   function return_to_minis(mini = "") {
     return html.node`
@@ -39370,18 +39386,32 @@
   function bleh_minis_collage() {
     let content;
     let mini_settings;
-    render(page.structure.main, html`
-        <section class="minis">
-            ${return_to_minis("collage")}
-            <div class="minis-content" ref=${(el) => content = el} />
-        </section>
-    `);
-    render(page.structure.side, html`
-        <section class="current-mini-settings" ref=${(el) => mini_settings = el} />
-        <section class="mini-faq">
-            <p class="card-tip">${tl(trans.value_by_user, { "v": valid_minis.collage.name, "u": valid_minis.collage.by.join(",") })}</p>
-        </section>
-    `);
+    render(
+      page.structure.main,
+      html`
+            <section class="minis">
+                ${return_to_minis("collage")}
+                <div class="minis-content" ref=${(el) => content = el} />
+            </section>
+        `
+    );
+    render(
+      page.structure.side,
+      html`
+            <section
+                class="current-mini-settings"
+                ref=${(el) => mini_settings = el}
+            />
+            <section class="mini-faq">
+                <p class="card-tip">
+                    ${tl(trans.value_by_user, {
+        v: valid_minis.collage.name,
+        u: valid_minis.collage.by.join(",")
+      })}
+                </p>
+            </section>
+        `
+    );
     collage({
       host: content,
       sidebar: mini_settings
@@ -39390,18 +39420,32 @@
   function bleh_minis_compare() {
     let content;
     let mini_settings;
-    render(page.structure.main, html`
-        <section class="minis">
-            ${return_to_minis("compare")}
-            <div class="minis-content" ref=${(el) => content = el} />
-        </section>
-    `);
-    render(page.structure.side, html`
-        <section class="current-mini-settings" ref=${(el) => mini_settings = el} />
-        <section class="mini-faq">
-            <p class="card-tip">${tl(trans.value_by_user, { "v": valid_minis.compare.name, "u": valid_minis.compare.by.join(",") })}</p>
-        </section>
-    `);
+    render(
+      page.structure.main,
+      html`
+            <section class="minis">
+                ${return_to_minis("compare")}
+                <div class="minis-content" ref=${(el) => content = el} />
+            </section>
+        `
+    );
+    render(
+      page.structure.side,
+      html`
+            <section
+                class="current-mini-settings"
+                ref=${(el) => mini_settings = el}
+            />
+            <section class="mini-faq">
+                <p class="card-tip">
+                    ${tl(trans.value_by_user, {
+        v: valid_minis.compare.name,
+        u: valid_minis.compare.by.join(",")
+      })}
+                </p>
+            </section>
+        `
+    );
     compare({
       host: content,
       sidebar: mini_settings
@@ -39410,43 +39454,57 @@
   function bleh_minis_pixel() {
     let content;
     let mini_settings;
-    render(page.structure.main, html`
-        <section class="minis">
-            ${return_to_minis("pixel")}
-            <div class="minis-content pixel-content" ref=${(el) => content = el} />
-        </section>
-    `);
-    render(page.structure.side, html`
-        <section class="current-mini-settings" ref=${(el) => mini_settings = el} />
-        <section class="mini-faq">
-            <p class="card-tip">${tl(trans.value_by_user, { "v": valid_minis.pixel.name, "u": valid_minis.pixel.by.join(",") })}</p>
-        </section>
-    `);
+    render(
+      page.structure.main,
+      html`
+            <section class="minis">
+                ${return_to_minis("pixel")}
+                <div
+                    class="minis-content pixel-content"
+                    ref=${(el) => content = el}
+                />
+            </section>
+        `
+    );
+    render(
+      page.structure.side,
+      html`
+            <section
+                class="current-mini-settings"
+                ref=${(el) => mini_settings = el}
+            />
+            <section class="mini-faq">
+                <p class="card-tip">
+                    ${tl(trans.value_by_user, {
+        v: valid_minis.pixel.name,
+        u: valid_minis.pixel.by.join(",")
+      })}
+                </p>
+            </section>
+        `
+    );
     pixel({
       host: content,
       sidebar: mini_settings
     });
   }
   function bleh_minis_lyrics() {
-    render(page.structure.main, html`
-        <section class="minis">
-            ${return_to_minis("lyrics")}
-        </section>
-    `);
+    render(
+      page.structure.main,
+      html` <section class="minis">${return_to_minis("lyrics")}</section> `
+    );
   }
   function bleh_minis_rainbow() {
-    render(page.structure.main, html`
-        <section class="minis">
-            ${return_to_minis("rainbow")}
-        </section>
-    `);
+    render(
+      page.structure.main,
+      html` <section class="minis">${return_to_minis("rainbow")}</section> `
+    );
   }
   function bleh_minis_receipt() {
-    render(page.structure.main, html`
-        <section class="minis">
-            ${return_to_minis("receipt")}
-        </section>
-    `);
+    render(
+      page.structure.main,
+      html` <section class="minis">${return_to_minis("receipt")}</section> `
+    );
   }
   function render_user(name, avatar3, user, replace_page = false) {
     if (avatar3 == "" && name != "") {
@@ -39463,7 +39521,10 @@
             page.avatar = avatar3;
             page.name = name;
           }
-          if (!user) user = page.structure.main.querySelector(".compare-user.focus");
+          if (!user)
+            user = page.structure.main.querySelector(
+              ".compare-user.focus"
+            );
           render(user, render_user(name, avatar3, user, replace_page));
         } catch (e) {
           console.error(e);
@@ -39476,7 +39537,10 @@
     }
     return html`
         <div class="avatar">
-            <img src=${avatar3} alt=${tl(trans.avatar_for_user).replace("{u}", name)}>
+            <img
+                src=${avatar3}
+                alt=${tl(trans.avatar_for_user).replace("{u}", name)}
+            />
         </div>
         <strong>${name}</strong>
     `;
@@ -40112,10 +40176,8 @@
   }
   function match2(media = page.state.media) {
     if (!settings.theme_schedule) return;
-    if (media.matches)
-      apply_theme("night");
-    else
-      apply_theme("day");
+    if (media.matches) apply_theme("night");
+    else apply_theme("day");
   }
   function apply_theme(time) {
     log(`applying theme for time ${time}`, "dynamic theming");
@@ -54350,9 +54412,13 @@ ${e ? html.node`<span class="error-type">${e.name}</span>: ${e.message}` : ""}</
     let notifications = list.querySelectorAll(".inbox-notifications__item");
     notifications.forEach((notification, index3) => {
       if (mini && index3 > 4) notification.style.display = "none";
-      const link = notification.querySelector(".inbox-notifications__item-link");
+      const link = notification.querySelector(
+        ".inbox-notifications__item-link"
+      );
       const href = link.getAttribute("href");
-      const active = link.classList.contains("inbox-notifications__item--highlight");
+      const active = link.classList.contains(
+        "inbox-notifications__item--highlight"
+      );
       notification.classList = "notification";
       if (active) notification.classList.add("active");
       if (mini) notification.classList.add("mini");
@@ -54376,7 +54442,10 @@ ${e ? html.node`<span class="error-type">${e.name}</span>: ${e.message}` : ""}</
         const desc_split = desc.split(" \u2014 ");
         context.type = "track";
         context.sister = correct_artist(desc_split[0]);
-        context.name = correct_item_by_artist(desc_split[1], context.sister);
+        context.name = correct_item_by_artist(
+          desc_split[1],
+          context.sister
+        );
       } else if (href.endsWith("/listening-report/month")) {
         type = "listening-report";
         involved.push(strongs[0].textContent);
@@ -54396,7 +54465,10 @@ ${e ? html.node`<span class="error-type">${e.name}</span>: ${e.message}` : ""}</
         context.name = split[1];
         strongs.forEach((strong, index4) => {
           if (index4 == strongs.length - 1 && strongs.length > 1) {
-            obtain_additional_info(strong.previousSibling.textContent, strong.nextSibling.textContent);
+            obtain_additional_info(
+              strong.previousSibling.textContent,
+              strong.nextSibling.textContent
+            );
             return;
           } else if (index4 == strongs.length - 1 && strongs.length == 1) {
             obtain_additional_info(strong.nextSibling.textContent);
@@ -54410,15 +54482,24 @@ ${e ? html.node`<span class="error-type">${e.name}</span>: ${e.message}` : ""}</
         } else if (split[2] == "_") {
           context.type = "track";
           context.sister = correct_artist(desanitise(split[1]));
-          context.name = correct_item_by_artist(desanitise(split[3]), context.sister);
+          context.name = correct_item_by_artist(
+            desanitise(split[3]),
+            context.sister
+          );
         } else {
           context.type = "album";
           context.sister = correct_artist(desanitise(split[1]));
-          context.name = correct_item_by_artist(desanitise(split[2]), context.sister);
+          context.name = correct_item_by_artist(
+            desanitise(split[2]),
+            context.sister
+          );
         }
         strongs.forEach((strong, index4) => {
           if (index4 == strongs.length - 1) {
-            obtain_additional_info(strong.previousSibling.textContent, strong.nextSibling.textContent);
+            obtain_additional_info(
+              strong.previousSibling.textContent,
+              strong.nextSibling.textContent
+            );
             return;
           }
           involved.push(strong.textContent);
@@ -54428,7 +54509,10 @@ ${e ? html.node`<span class="error-type">${e.name}</span>: ${e.message}` : ""}</
         context.name = split[1];
         strongs.forEach((strong, index4) => {
           if (index4 == strongs.length - 1) {
-            obtain_additional_info(strong.previousSibling.textContent, strong.nextSibling.textContent);
+            obtain_additional_info(
+              strong.previousSibling.textContent,
+              strong.nextSibling.textContent
+            );
             return;
           }
           involved.push(strong.textContent);
@@ -54436,39 +54520,61 @@ ${e ? html.node`<span class="error-type">${e.name}</span>: ${e.message}` : ""}</
       }
       console.info(split, context, type, involved);
       patch_avatar(avatar3, involved[0]);
-      render(notification, html`
-            <div class="notification-avatar">
-                ${avatar3}
-            </div>
-            <div class="bleh-icon" data-type=${type} style="--icon: var(--mask)" />
-            <div class="notification-content">
-                <div class="notification-title">
-                    ${type == "shoutbox" ? html.node`
+      render(
+        notification,
+        html`
+                <div class="notification-avatar">${avatar3}</div>
+                <div
+                    class="bleh-icon"
+                    data-type=${type}
+                    style="--icon: var(--mask)"
+                />
+                <div class="notification-content">
+                    <div class="notification-title">
+                        ${type == "shoutbox" ? html.node`
                     ${others_included == 0 ? html.node`
                         ${is_reply ? tl(trans.user_replied).replace("{u}", involved.join(", ")) : tl(trans.user_commented).replace("{u}", involved.join(", "))}
                     ` : html.node`
                         ${is_reply ? tl(trans.users_replied).replace("{u}", involved.join(", ")).replace("{c}", others_included) : tl(trans.users_commented).replace("{u}", involved.join(", ")).replace("{c}", others_included)}
                     `}
-                    ` : type == "obsession" ? tl(trans.obsession_expired) : type == "listening-report" ? tl(trans.listening_report_available).replace("{m}", involved[0]) : ""}
+                    ` : type == "obsession" ? tl(trans.obsession_expired) : type == "listening-report" ? tl(trans.listening_report_available).replace(
+          "{m}",
+          involved[0]
+        ) : ""}
+                    </div>
+                    <div class="notification-context">
+                        <span
+                            class="bleh-icon"
+                            style="--icon: var(--icon-16-indent)"
+                        />
+                        <span
+                            class="notification-type"
+                            data-type=${context.type}
+                        >
+                            <span
+                                class="bleh-icon"
+                                style="--icon: var(--mask)"
+                            />
+                            <span
+                                >${context.sister ? `${context.name} ${tl(trans.by)} ${context.sister}` : context.name}</span
+                            >
+                        </span>
+                    </div>
                 </div>
-                <div class="notification-context">
-                    <span class="bleh-icon" style="--icon: var(--icon-16-indent)" />
-                    <span class="notification-type" data-type=${context.type}>
-                        <span class="bleh-icon" style="--icon: var(--mask)" />
-                        <span>${context.sister ? `${context.name} ${tl(trans.by)} ${context.sister}` : context.name}</span>
-                    </span>
-                </div>
-            </div>
-            <div class="notification-time">
-                ${time}
-            </div>
-            <a class="link-block-cover-link" href=${link.getAttribute("href")} />
-        `);
+                <div class="notification-time">${time}</div>
+                <a
+                    class="link-block-cover-link"
+                    href=${link.getAttribute("href")}
+                />
+            `
+      );
       function obtain_additional_info(text3, backup_text = null) {
         const match3 = text3.match(/\d+/);
         if (match3) others_included = parseInt(match3[0]);
-        if (text3.includes(tl(trans.notification_replied_ctx))) is_reply = true;
-        else if (backup_text && backup_text.trim().includes(tl(trans.notification_replied_ctx))) is_reply = true;
+        if (text3.includes(tl(trans.notification_replied_ctx)))
+          is_reply = true;
+        else if (backup_text && backup_text.trim().includes(tl(trans.notification_replied_ctx)))
+          is_reply = true;
       }
     });
   }
@@ -58282,19 +58388,48 @@ ${e ? html.node`<span class="error-type">${e.name}</span>: ${e.message}` : ""}</
         </div>
     `;
     let kate = "katelyn";
-    if (sponsor_list && sponsor_list.special)
-      kate = sponsor_list.special[0];
-    render(footer, html`
-        <div class="footer-credit">
-            ${{ html: tl(trans.made_with_love).replace("{u}", `<a href="${root}user/${kate}">${kate}</a>`).replace("{c}", '<a href="https://github.com/katelyynn/bleh/graphs/contributors" target="_blank">').replace("{/c}", "</a>").replace("{h}", `<span class="bleh-icon heart sponsor-related">${tl(trans.love_lower)}</span>`) }}
-        </div>
-        <div class="footer-web music-links">
-            <a class="music-link" data-type="source" href="https://github.com/katelyynn/bleh" target="_blank">${tl(trans.view_source)}</a>
-            <a class="music-link" data-type="issue" href="https://github.com/katelyynn/bleh/issues/new/choose" target="_blank">${tl(trans.report_issue)}</a>
-            <a class="more" onclick=${() => extras.toggleAttribute("aria-expanded")}><span class="bleh-icon" /></a>
-        </div>
-        ${extras}
-    `);
+    if (sponsor_list && sponsor_list.special) kate = sponsor_list.special[0];
+    render(
+      footer,
+      html`
+            <div class="footer-credit">
+                ${{
+        html: tl(trans.made_with_love).replace(
+          "{u}",
+          `<a href="${root}user/${kate}">${kate}</a>`
+        ).replace(
+          "{c}",
+          '<a href="https://github.com/katelyynn/bleh/graphs/contributors" target="_blank">'
+        ).replace("{/c}", "</a>").replace(
+          "{h}",
+          `<span class="bleh-icon heart sponsor-related">${tl(trans.love_lower)}</span>`
+        )
+      }}
+            </div>
+            <div class="footer-web music-links">
+                <a
+                    class="music-link"
+                    data-type="source"
+                    href="https://github.com/katelyynn/bleh"
+                    target="_blank"
+                    >${tl(trans.view_source)}</a
+                >
+                <a
+                    class="music-link"
+                    data-type="issue"
+                    href="https://github.com/katelyynn/bleh/issues/new/choose"
+                    target="_blank"
+                    >${tl(trans.report_issue)}</a
+                >
+                <a
+                    class="more"
+                    onclick=${() => extras.toggleAttribute("aria-expanded")}
+                    ><span class="bleh-icon"
+                /></a>
+            </div>
+            ${extras}
+        `
+    );
     let heart = footer.querySelector(".heart");
     heart.addEventListener("click", () => sponsor());
   }
@@ -58483,12 +58618,10 @@ ${e ? html.node`<span class="error-type">${e.name}</span>: ${e.message}` : ""}</
     }
     checkup_page_structure();
     const cache3 = await load_profile_cache_externally(auth.name);
-    if (cache3.banner)
-      register_background(cache3.banner);
+    if (cache3.banner) register_background(cache3.banner);
     else if (!auth.avatar.endsWith("818148bf682d429dc215c1705eb27b98.png"))
       register_background(auth.avatar.replace("/avatar42s/", "/ar0/"));
-    else
-      register_background(null);
+    else register_background(null);
     page.type = "bleh_auth";
     page.subpage = "";
     log("status is", "page", "info", page);
@@ -58499,75 +58632,100 @@ ${e ? html.node`<span class="error-type">${e.name}</span>: ${e.message}` : ""}</
     page.structure.container.removeAttribute("data-short");
     page.structure.content.classList.add("cards-view");
     if (!page.requested.token) {
-      render(page.structure.main, html`
-            <section class="api-connector sour">
-                <div class="loading-data-container">
-                    <div class="loading-data-text error">${tl(trans.no_token_provided)}</div>
-                </div>
-            </section>
-        `);
+      render(
+        page.structure.main,
+        html`
+                <section class="api-connector sour">
+                    <div class="loading-data-container">
+                        <div class="loading-data-text error">
+                            ${tl(trans.no_token_provided)}
+                        </div>
+                    </div>
+                </section>
+            `
+      );
       return;
     }
-    render(page.structure.main, html`
-        <section class="api-connector sour">
-            <div class="loading-data-container">
-                <div class="loading-data-text">${tl(trans.loading)}</div>
-            </div>
-        </section>
-    `);
-    const res = await fetch(
-      "https://jufufu.katelyn.moe/api/lastfm",
-      {
-        method: "POST",
-        headers: { "content-type": "application/json" },
-        body: JSON.stringify({
-          method: "auth.getSession",
-          params: { token: page.requested.token }
-        })
-      }
+    render(
+      page.structure.main,
+      html`
+            <section class="api-connector sour">
+                <div class="loading-data-container">
+                    <div class="loading-data-text">${tl(trans.loading)}</div>
+                </div>
+            </section>
+        `
     );
+    const res = await fetch("https://jufufu.katelyn.moe/api/lastfm", {
+      method: "POST",
+      headers: { "content-type": "application/json" },
+      body: JSON.stringify({
+        method: "auth.getSession",
+        params: { token: page.requested.token }
+      })
+    });
     const json = await res.json();
     if (json.error) {
       log("error", "auth", "error", json);
-      render(page.structure.main, html`
-            <section class="api-connector sour">
-                <div class="loading-data-container">
-                    <div class="loading-data-text error">${json.message}</div>
-                </div>
-            </section>
-        `);
+      render(
+        page.structure.main,
+        html`
+                <section class="api-connector sour">
+                    <div class="loading-data-container">
+                        <div class="loading-data-text error">
+                            ${json.message}
+                        </div>
+                    </div>
+                </section>
+            `
+      );
       return;
     }
     const { name, key } = json.session;
     log(`authorised as ${name}`, "auth", "info", json.session);
     localStorage.setItem("bleh_auth", key);
     localStorage.setItem("bleh_auth_valid", "true");
-    render(page.structure.main, html`
-        <section class="api-connector sour">
-            <div class="avatar">
-                <img src="${auth.avatar.replace("/avatar42s/", "/avatar170s/")}" alt="${tl(trans.your_avatar)}">
-            </div>
-            <div class="info">
-                <h1>bleh</h1>
-                <div class="sub-text no-margin">${tl(trans.has_been_connected)}</div>
-            </div>
-            <div class="sep"></div>
-            <div class="description">${tl(trans.you_can_now_close_this_tab)}</div>
-            <div class="connector-footer">
-                <div class="btn-fill"/>
-                <a class="btn primary continue" href="${root}bleh">
-                    ${tl(trans.continue)}
-                </a>
-                <div class="btn-fill"/>
-            </div>
-        </section>
-    `);
+    render(
+      page.structure.main,
+      html`
+            <section class="api-connector sour">
+                <div class="avatar">
+                    <img
+                        src="${auth.avatar.replace(
+        "/avatar42s/",
+        "/avatar170s/"
+      )}"
+                        alt="${tl(trans.your_avatar)}"
+                    />
+                </div>
+                <div class="info">
+                    <h1>bleh</h1>
+                    <div class="sub-text no-margin">
+                        ${tl(trans.has_been_connected)}
+                    </div>
+                </div>
+                <div class="sep"></div>
+                <div class="description">
+                    ${tl(trans.you_can_now_close_this_tab)}
+                </div>
+                <div class="connector-footer">
+                    <div class="btn-fill" />
+                    <a class="btn primary continue" href="${root}bleh">
+                        ${tl(trans.continue)}
+                    </a>
+                    <div class="btn-fill" />
+                </div>
+            </section>
+        `
+    );
   }
 
   // src/pages/labs.js
   function bleh_labs() {
     if (page.subpage != "overview") return;
-    let quilt = document.body.querySelector('[data-analytics-action="LaunchAlbumQuilt"]');
+    let quilt = document.body.querySelector(
+      '[data-analytics-action="LaunchAlbumQuilt"]'
+    );
     if (quilt) {
       page.avatar = auth.avatar;
       page.name = auth.name;

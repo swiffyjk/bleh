@@ -1,3 +1,9 @@
+//
+// bleh, an extension for the music site Last.fm
+// Copyright (c) 2025 katelyn and contributors
+// Licensed under GPLv3
+//
+
 import { lang, tl, trans } from '../build/trans.js';
 import { html, render } from 'lighterhtml';
 import { select } from './select.js';
