@@ -68309,7 +68309,7 @@ ${e ? html.node`<span class="error-type">${e.name}</span>: ${e.message}` : ""}</
   var build_default = {
     brand: "bleh",
     build: "2025.0929",
-    sku: "alice",
+    sku: "vivian",
     bio: "bleh!!! ^-^",
     author: "katelyn",
     url: "https://github.com/katelyynn/bleh/raw/uwu/fm/bleh.user.js",
