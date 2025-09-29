@@ -36684,7 +36684,7 @@
         }
         link_container.appendChild(item);
       });
-      if (["genius", "tidal", "qobuz"].some(
+      if (["genius", "tidal", "deezer", "qobuz"].some(
         (service) => settings.music_links.includes(service)
       )) {
         link_container.appendChild(html.node`
@@ -36696,6 +36696,11 @@
                 ${settings.music_links.includes("tidal") ? html.node`
                     <a class="music-link play-this-track-playlink--tidal" href="https://listen.tidal.com/search?q=${sanitise(page.sister, " ")} ${sanitise(page.name, " ")}" target="_blank">
                         Tidal
+                    </a>
+                ` : ""}
+                ${settings.music_links.includes("deezer") ? html.node`
+                    <a class="music-link play-this-track-playlink--deezer" href="https://www.deezer.com/search/${sanitise(page.sister, " ")} ${sanitise(page.name, " ")}" target="_blank">
+                        Deezer
                     </a>
                 ` : ""}
                 ${settings.music_links.includes("qobuz") ? html.node`
@@ -36755,6 +36760,18 @@
                                 target="_blank"
                             >
                                 Tidal
+                            </a>
+                    ` : ""}
+                    ${settings.music_links.includes("deezer") ? html.node`
+                            <a
+                                class="music-link play-this-track-playlink--deezer"
+                                href="https://www.deezer.com/search/${sanitise(
+            page.sister,
+            " "
+          )} ${sanitise(page.name, " ")}"
+                                target="_blank"
+                            >
+                                Deezer
                             </a>
                     ` : ""}
                     ${settings.music_links.includes("discogs") ? html.node`
@@ -36865,6 +36882,18 @@
                                 target="_blank"
                             >
                                 Tidal
+                            </a>
+                    ` : ""}
+                    ${settings.music_links.includes("deezer") ? html.node`
+                            <a
+                                class="music-link play-this-track-playlink--deezer"
+                                href="https://www.deezer.com/search/${sanitise(
+            page.name,
+            " "
+          )}"
+                                target="_blank"
+                            >
+                                Deezer
                             </a>
                     ` : ""}
                     ${settings.music_links.includes("discogs") ? html.node`
@@ -37454,11 +37483,6 @@
         name: "Deezer",
         icon: "",
         host: "deezer.com"
-      },
-      amazon: {
-        name: "Amazon",
-        icon: "",
-        host: "music.amazon.com"
       },
       discogs: {
         name: "Discogs",

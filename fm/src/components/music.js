@@ -741,7 +741,7 @@ export async function show_your_scrobbles() {
         });
 
         if (
-            ['genius', 'tidal', 'qobuz'].some((service) =>
+            ['genius', 'tidal', 'deezer', 'qobuz'].some((service) =>
                 settings.music_links.includes(service)
             )
         ) {
@@ -760,6 +760,15 @@ export async function show_your_scrobbles() {
                         html.node`
                     <a class="music-link play-this-track-playlink--tidal" href="https://listen.tidal.com/search?q=${sanitise(page.sister, ' ')} ${sanitise(page.name, ' ')}" target="_blank">
                         Tidal
+                    </a>
+                `
+                    :   ''
+                }
+                ${
+                    settings.music_links.includes('deezer') ?
+                        html.node`
+                    <a class="music-link play-this-track-playlink--deezer" href="https://www.deezer.com/search/${sanitise(page.sister, ' ')} ${sanitise(page.name, ' ')}" target="_blank">
+                        Deezer
                     </a>
                 `
                     :   ''
@@ -832,6 +841,20 @@ export async function show_your_scrobbles() {
                                 target="_blank"
                             >
                                 Tidal
+                            </a>
+                    `
+                    :   ''}
+                    ${settings.music_links.includes('deezer') ?
+                        html.node`
+                            <a
+                                class="music-link play-this-track-playlink--deezer"
+                                href="https://www.deezer.com/search/${sanitise(
+                                    page.sister,
+                                    ' '
+                                )} ${sanitise(page.name, ' ')}"
+                                target="_blank"
+                            >
+                                Deezer
                             </a>
                     `
                     :   ''}
@@ -960,6 +983,20 @@ export async function show_your_scrobbles() {
                                 target="_blank"
                             >
                                 Tidal
+                            </a>
+                    `
+                    :   ''}
+                    ${settings.music_links.includes('deezer') ?
+                        html.node`
+                            <a
+                                class="music-link play-this-track-playlink--deezer"
+                                href="https://www.deezer.com/search/${sanitise(
+                                    page.name,
+                                    ' '
+                                )}"
+                                target="_blank"
+                            >
+                                Deezer
                             </a>
                     `
                     :   ''}
@@ -1711,11 +1748,6 @@ export function prepare_music() {
             name: 'Deezer',
             icon: '',
             host: 'deezer.com'
-        },
-        amazon: {
-            name: 'Amazon',
-            icon: '',
-            host: 'music.amazon.com'
         },
         discogs: {
             name: 'Discogs',
