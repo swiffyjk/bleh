@@ -668,18 +668,17 @@ export async function show_your_scrobbles() {
     let play_on;
     let play_links;
 
-    let link_group = document.createElement('div');
-    link_group.classList.add('metadata-group');
-
-    let link_container = document.createElement('div');
-    link_container.classList.add('music-links');
+    let link_container;
+    const link_group = html.node`
+        <div class="metadata-group">
+            <div class="sub-text music-small-header">
+                ${tl(trans.find_on)}
+            </div>
+            <div class="music-links" ref=${(el) => (link_container = el)} />
+        </div>
+    `;
 
     if (page.type == 'track') {
-        let header = document.createElement('div');
-        header.classList.add('sub-text', 'music-small-header');
-        header.textContent = tl(trans.find_on);
-        link_group.appendChild(header);
-
         play_on = page.structure.side.querySelector(
             '.play-this-track-playlinks'
         );
@@ -734,211 +733,296 @@ export async function show_your_scrobbles() {
             link_container.appendChild(item);
         });
 
-        link_container.appendChild(html.node`
-            <li>
-                <a class="music-link play-this-track-playlink--genius" href="https://genius.com/search?q=${sanitise(page.sister)}+${sanitise(page.name)}" target="_blank">
-                    Genius
-                </a>
-            </li>
-            <li>
-                <a class="music-link play-this-track-playlink--tidal" href="https://listen.tidal.com/search?q=${sanitise(page.sister, ' ')} ${sanitise(page.name, ' ')}" target="_blank">
-                    Tidal
-                </a>
-            </li>
-            <li>
-                <a class="music-link play-this-track-playlink--qobuz" href="https://www.qobuz.com/search/tracks/${sanitise(page.sister, ' ')}%20${sanitise(page.name, ' ')}" target="_blank">
-                    Qobuz
-                </a>
-            </li>
-        `);
+        if (
+            ['genius', 'tidal', 'qobuz'].some((service) =>
+                settings.music_links.includes(service)
+            )
+        ) {
+            link_container.appendChild(html.node`
+                ${
+                    settings.music_links.includes('genius') ?
+                        html.node`
+                    <a class="music-link play-this-track-playlink--genius" href="https://genius.com/search?q=${sanitise(page.sister)}+${sanitise(page.name)}" target="_blank">
+                        Genius
+                    </a>
+                `
+                    :   ''
+                }
+                ${
+                    settings.music_links.includes('tidal') ?
+                        html.node`
+                    <a class="music-link play-this-track-playlink--tidal" href="https://listen.tidal.com/search?q=${sanitise(page.sister, ' ')} ${sanitise(page.name, ' ')}" target="_blank">
+                        Tidal
+                    </a>
+                `
+                    :   ''
+                }
+                ${
+                    settings.music_links.includes('qobuz') ?
+                        html.node`
+                    <a class="music-link play-this-track-playlink--qobuz" href="https://www.qobuz.com/search/tracks/${sanitise(page.sister, ' ')}%20${sanitise(page.name, ' ')}" target="_blank">
+                        Qobuz
+                    </a>
+                `
+                    :   ''
+                }
+            `);
+        }
     } else {
-        let header = document.createElement('div');
-        header.classList.add('sub-text', 'music-small-header');
-        header.textContent = tl(trans.find_on);
-        link_group.appendChild(header);
-
         if (page.type == 'album') {
             render(
                 link_container,
                 html`
-                    <a
-                        class="music-link play-this-track-playlink--spotify"
-                        href="https://open.spotify.com/search/${sanitise(
-                            page.sister,
-                            ' '
-                        )} ${sanitise(page.name, ' ')}"
-                        target="_blank"
-                    >
-                        Spotify
-                    </a>
-                    <a
-                        class="music-link play-this-track-playlink--itunes"
-                        href="https://music.apple.com/gb/search?term=${sanitise(
-                            page.sister,
-                            ' '
-                        )} ${sanitise(page.name, ' ')}"
-                        target="_blank"
-                    >
-                        Apple
-                    </a>
-                    <a
-                        class="music-link play-this-track-playlink--youtube-music"
-                        href="https://music.youtube.com/search?q=${sanitise(
-                            page.sister
-                        )}+${sanitise(page.name)}"
-                        target="_blank"
-                    >
-                        YouTube
-                    </a>
-                    <a
-                        class="music-link play-this-track-playlink--tidal"
-                        href="https://listen.tidal.com/search?q=${sanitise(
-                            page.sister,
-                            ' '
-                        )} ${sanitise(page.name, ' ')}"
-                        target="_blank"
-                    >
-                        Tidal
-                    </a>
-                    <a
-                        class="music-link play-this-track-playlink--discogs"
-                        href="https://www.discogs.com/search?q=${sanitise(
-                            page.sister
-                        )}+${sanitise(page.name)}&type=all"
-                        target="_blank"
-                    >
-                        Discogs
-                    </a>
-                    <a
-                        class="music-link play-this-track-playlink--qobuz"
-                        href="https://www.qobuz.com/search/albums/${sanitise(
-                            page.sister,
-                            ' '
-                        )}%20${sanitise(page.name, ' ')}"
-                        target="_blank"
-                    >
-                        Qobuz
-                    </a>
-                    <a
-                        class="music-link play-this-track-playlink--aoty"
-                        href="https://www.albumoftheyear.org/search/?q=${sanitise(
-                            page.sister
-                        )}+${sanitise(page.name)}"
-                        target="_blank"
-                    >
-                        AOTY
-                    </a>
-                    <a
-                        class="music-link play-this-track-playlink--rym"
-                        href="https://rateyourmusic.com/search?searchterm=${sanitise(
-                            page.sister,
-                            ' '
-                        )} ${sanitise(page.name, ' ')}"
-                        target="_blank"
-                    >
-                        RYM
-                    </a>
-                    <a
-                        class="music-link play-this-track-playlink--genius"
-                        href="https://genius.com/search?q=${sanitise(
-                            page.sister
-                        )}+${sanitise(page.name)}"
-                        target="_blank"
-                    >
-                        Genius
-                    </a>
+                    ${settings.music_links.includes('spotify') ?
+                        html.node`
+                            <a
+                                class="music-link play-this-track-playlink--spotify"
+                                href="https://open.spotify.com/search/${sanitise(
+                                    page.sister,
+                                    ' '
+                                )} ${sanitise(page.name, ' ')}"
+                                target="_blank"
+                            >
+                                Spotify
+                            </a>
+                    `
+                    :   ''}
+                    ${settings.music_links.includes('itunes') ?
+                        html.node`
+                            <a
+                                class="music-link play-this-track-playlink--itunes"
+                                href="https://music.apple.com/gb/search?term=${sanitise(
+                                    page.sister,
+                                    ' '
+                                )} ${sanitise(page.name, ' ')}"
+                                target="_blank"
+                            >
+                                Apple
+                            </a>
+                    `
+                    :   ''}
+                    ${settings.music_links.includes('youtube') ?
+                        html.node`
+                            <a
+                                class="music-link play-this-track-playlink--youtube-music"
+                                href="https://music.youtube.com/search?q=${sanitise(
+                                    page.sister
+                                )}+${sanitise(page.name)}"
+                                target="_blank"
+                            >
+                                YouTube
+                            </a>
+                    `
+                    :   ''}
+                    ${settings.music_links.includes('tidal') ?
+                        html.node`
+                            <a
+                                class="music-link play-this-track-playlink--tidal"
+                                href="https://listen.tidal.com/search?q=${sanitise(
+                                    page.sister,
+                                    ' '
+                                )} ${sanitise(page.name, ' ')}"
+                                target="_blank"
+                            >
+                                Tidal
+                            </a>
+                    `
+                    :   ''}
+                    ${settings.music_links.includes('discogs') ?
+                        html.node`
+                            <a
+                                class="music-link play-this-track-playlink--discogs"
+                                href="https://www.discogs.com/search?q=${sanitise(
+                                    page.sister
+                                )}+${sanitise(page.name)}&type=all"
+                                target="_blank"
+                            >
+                                Discogs
+                            </a>
+                    `
+                    :   ''}
+                    ${settings.music_links.includes('qobuz') ?
+                        html.node`
+                            <a
+                                class="music-link play-this-track-playlink--qobuz"
+                                href="https://www.qobuz.com/search/albums/${sanitise(
+                                    page.sister,
+                                    ' '
+                                )}%20${sanitise(page.name, ' ')}"
+                                target="_blank"
+                            >
+                                Qobuz
+                            </a>
+                    `
+                    :   ''}
+                    ${settings.music_links.includes('aoty') ?
+                        html.node`
+                            <a
+                                class="music-link play-this-track-playlink--aoty"
+                                href="https://www.albumoftheyear.org/search/?q=${sanitise(
+                                    page.sister
+                                )}+${sanitise(page.name)}"
+                                target="_blank"
+                            >
+                                AOTY
+                            </a>
+                    `
+                    :   ''}
+                    ${settings.music_links.includes('rym') ?
+                        html.node`
+                            <a
+                                class="music-link play-this-track-playlink--rym"
+                                href="https://rateyourmusic.com/search?searchterm=${sanitise(
+                                    page.sister,
+                                    ' '
+                                )} ${sanitise(page.name, ' ')}"
+                                target="_blank"
+                            >
+                                RYM
+                            </a>
+                    `
+                    :   ''}
+                    ${settings.music_links.includes('genius') ?
+                        html.node`
+                            <a
+                                class="music-link play-this-track-playlink--genius"
+                                href="https://genius.com/search?q=${sanitise(
+                                    page.sister
+                                )}+${sanitise(page.name)}"
+                                target="_blank"
+                            >
+                                Genius
+                            </a>
+                    `
+                    :   ''}
                 `
             );
         } else {
             render(
                 link_container,
                 html`
-                    <a
-                        class="music-link play-this-track-playlink--spotify"
-                        href="https://open.spotify.com/search/${sanitise(
-                            page.name,
-                            ' '
-                        )}"
-                        target="_blank"
-                    >
-                        Spotify
-                    </a>
-                    <a
-                        class="music-link play-this-track-playlink--itunes"
-                        href="https://music.apple.com/gb/search?term=${sanitise(
-                            page.name,
-                            ' '
-                        )}"
-                        target="_blank"
-                    >
-                        Apple
-                    </a>
-                    <a
-                        class="music-link play-this-track-playlink--youtube-music"
-                        href="https://music.youtube.com/search?q=${sanitise(
-                            page.name
-                        )}"
-                        target="_blank"
-                    >
-                        YouTube
-                    </a>
-                    <a
-                        class="music-link play-this-track-playlink--tidal"
-                        href="https://listen.tidal.com/search?q=${sanitise(
-                            page.name,
-                            ' '
-                        )}"
-                        target="_blank"
-                    >
-                        Tidal
-                    </a>
-                    <a
-                        class="music-link play-this-track-playlink--discogs"
-                        href="https://www.discogs.com/search?q=${sanitise(
-                            page.name
-                        )}&type=artist"
-                        target="_blank"
-                    >
-                        Discogs
-                    </a>
-                    <a
-                        class="music-link play-this-track-playlink--qobuz"
-                        href="https://www.qobuz.com/search/artists/${sanitise(
-                            page.name,
-                            ' '
-                        )}"
-                        target="_blank"
-                    >
-                        Qobuz
-                    </a>
-                    <a
-                        class="music-link play-this-track-playlink--aoty"
-                        href="https://www.albumoftheyear.org/search/?q=${sanitise(
-                            page.name
-                        )}"
-                        target="_blank"
-                    >
-                        AOTY
-                    </a>
-                    <a
-                        class="music-link play-this-track-playlink--rym"
-                        href="https://rateyourmusic.com/search?searchterm=${sanitise(
-                            page.name,
-                            ' '
-                        )}"
-                        target="_blank"
-                    >
-                        RYM
-                    </a>
-                    <a
-                        class="music-link play-this-track-playlink--genius"
-                        href="https://genius.com/search?q=${sanitise(
-                            page.name
-                        )}"
-                        target="_blank"
-                    >
-                        Genius
-                    </a>
+                    ${settings.music_links.includes('spotify') ?
+                        html.node`
+                            <a
+                                class="music-link play-this-track-playlink--spotify"
+                                href="https://open.spotify.com/search/${sanitise(
+                                    page.name,
+                                    ' '
+                                )}"
+                                target="_blank"
+                            >
+                                Spotify
+                            </a>
+                    `
+                    :   ''}
+                    ${settings.music_links.includes('itunes') ?
+                        html.node`
+                            <a
+                                class="music-link play-this-track-playlink--itunes"
+                                href="https://music.apple.com/gb/search?term=${sanitise(
+                                    page.name,
+                                    ' '
+                                )}"
+                                target="_blank"
+                            >
+                                Apple
+                            </a>
+                    `
+                    :   ''}
+                    ${settings.music_links.includes('youtube') ?
+                        html.node`
+                            <a
+                                class="music-link play-this-track-playlink--youtube-music"
+                                href="https://music.youtube.com/search?q=${sanitise(
+                                    page.name
+                                )}"
+                                target="_blank"
+                            >
+                                YouTube
+                            </a>
+                    `
+                    :   ''}
+                    ${settings.music_links.includes('tidal') ?
+                        html.node`
+                            <a
+                                class="music-link play-this-track-playlink--tidal"
+                                href="https://listen.tidal.com/search?q=${sanitise(
+                                    page.name,
+                                    ' '
+                                )}"
+                                target="_blank"
+                            >
+                                Tidal
+                            </a>
+                    `
+                    :   ''}
+                    ${settings.music_links.includes('discogs') ?
+                        html.node`
+                            <a
+                                class="music-link play-this-track-playlink--discogs"
+                                href="https://www.discogs.com/search?q=${sanitise(
+                                    page.name
+                                )}&type=artist"
+                                target="_blank"
+                            >
+                                Discogs
+                            </a>
+                    `
+                    :   ''}
+                    ${settings.music_links.includes('qobuz') ?
+                        html.node`
+                            <a
+                                class="music-link play-this-track-playlink--qobuz"
+                                href="https://www.qobuz.com/search/artists/${sanitise(
+                                    page.name,
+                                    ' '
+                                )}"
+                                target="_blank"
+                            >
+                                Qobuz
+                            </a>
+                    `
+                    :   ''}
+                    ${settings.music_links.includes('aoty') ?
+                        html.node`
+                            <a
+                                class="music-link play-this-track-playlink--aoty"
+                                href="https://www.albumoftheyear.org/search/?q=${sanitise(
+                                    page.name
+                                )}"
+                                target="_blank"
+                            >
+                                AOTY
+                            </a>
+                    `
+                    :   ''}
+                    ${settings.music_links.includes('rym') ?
+                        html.node`
+                            <a
+                                class="music-link play-this-track-playlink--rym"
+                                href="https://rateyourmusic.com/search?searchterm=${sanitise(
+                                    page.name,
+                                    ' '
+                                )}"
+                                target="_blank"
+                            >
+                                RYM
+                            </a>
+                    `
+                    :   ''}
+                    ${settings.music_links.includes('genius') ?
+                        html.node`
+                            <a
+                                class="music-link play-this-track-playlink--genius"
+                                href="https://genius.com/search?q=${sanitise(
+                                    page.name
+                                )}"
+                                target="_blank"
+                            >
+                                Genius
+                            </a>
+                    `
+                    :   ''}
                 `
             );
 
@@ -967,8 +1051,7 @@ export async function show_your_scrobbles() {
         }
     }
 
-    link_group.appendChild(link_container);
-    col_main.appendChild(link_group);
+    if (link_container.childNodes.length > 0) col_main.appendChild(link_group);
 
     const tags = col_main.querySelector('.catalogue-tags');
     if (tags) {
