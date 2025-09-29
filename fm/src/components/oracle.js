@@ -1,6 +1,12 @@
 import { html, render } from 'lighterhtml';
 import { log } from '../build/log';
-import { oracle_albums, oracle_tracks, page, root } from '../build/page';
+import {
+    oracle_albums,
+    oracle_artists,
+    oracle_tracks,
+    page,
+    root
+} from '../build/page';
 import { romanise, sanitise } from '../build/tools';
 import { ff } from '../sku';
 import { correct_artist, correct_item_by_artist } from './lotus';
@@ -21,9 +27,10 @@ export function oracle_process() {
     if (!ff('oracle_connect') || page.type == 'artist') return;
 
     let tries = 2;
-    let cache = JSON.parse(localStorage.getItem('oracle_artist_ids')) || {};
     const artist = page.sister.toLowerCase();
     let artist_data;
+
+    let artist_template = `artist:"${page.sister}"`;
 
     const info_panel = page.structure.main.firstElementChild;
     const header = page.structure.container.querySelector('.redesigned-header');
@@ -70,11 +77,7 @@ export function oracle_process() {
         albums_and_lyrics_row.classList.add('oracle-hidden');
 
     function oracle_aliases(artist, desired) {
-        if (
-            artist.name == desired ||
-            (artist_data.aliases &&
-                artist_data.aliases.some((alias) => alias.name == desired))
-        )
+        if (artist.name == desired || artist.id == artist_data.id)
             return desired;
 
         return artist;
@@ -83,13 +86,21 @@ export function oracle_process() {
     oracle_obtain_artist();
 
     function oracle_obtain_artist() {
-        if (cache.hasOwnProperty(artist)) {
-            artist_data = cache[artist];
+        if (oracle_artists.hasOwnProperty(artist)) {
+            artist_data = {
+                type: 'id',
+                name: oracle_artists[artist]
+            };
+            artist_template = `arid:"${oracle_artists[artist]}"`;
             oracle_connect();
             return;
         }
 
-        oracle_get_artist();
+        artist_data = {
+            type: 'name',
+            name: page.sister
+        };
+        oracle_connect();
     }
 
     function oracle_get_artist() {
@@ -157,12 +168,13 @@ export function oracle_process() {
 
         let url;
 
-        page.state.oracle_debug.artist_id = artist_data.id;
+        page.state.oracle_debug.artist = artist_data;
+        log('using artist data', 'oracle', 'info', { artist_data });
 
         if (page.type == 'track')
-            url = `https://musicbrainz.org/ws/2/recording?query="${sanitise(clean_title(page.name), ' ')}" AND arid:"${artist_data.id}" AND status:Official`;
+            url = `https://musicbrainz.org/ws/2/recording?query="${sanitise(clean_title(page.name), ' ')}" AND ${artist_template} AND status:Official`;
         else if (page.type == 'album')
-            url = `http://musicbrainz.org/ws/2/release?query=release:"${sanitise(clean_title(page.name), ' ')}" AND arid:"${artist_data.id}"`;
+            url = `http://musicbrainz.org/ws/2/release?query=release:"${sanitise(clean_title(page.name), ' ')}" AND ${artist_template}`;
 
         log(
             `using url ${encodeURI(url)} with ${tries} tries available`,
@@ -564,7 +576,7 @@ export function oracle_process() {
                                 <tr class="chartlist-row" data-disambig=${disambig}>
                                     <td class="chartlist-index">${track.position}</td>
                                     <td class="chartlist-name">
-                                        <a href="${root}music/${oracle_aliases(sanitise(track['artist-credit'][0].name), page.sister)}/_/${sanitise(title)}" data-name="${title}">
+                                        <a href="${root}music/${oracle_aliases(track['artist-credit'][0], page.sister)}/_/${sanitise(title)}" data-name="${title}">
                                             ${title}
                                         </a>
                                     </td>
@@ -698,8 +710,8 @@ export function oracle_process() {
                             log('release', 'oracle', 'log', { release });
                             let title = clean_title(release.title);
                             const artist = oracle_aliases(
-                                release['artist-credit']?.[0]?.name ||
-                                    recording['artist-credit'][0].name,
+                                release['artist-credit']?.[0] ||
+                                    recording['artist-credit'][0],
                                 page.sister
                             );
                             const type =
@@ -918,6 +930,11 @@ export function oracle_process() {
 export function oracle_data(force = false) {
     if (!(ff('oracle') && settings.oracle_beta)) return;
 
+    let cached_artists = localStorage.getItem('oracle_artists');
+    let cached_artists_expire = new Date(
+        localStorage.getItem('oracle_artists_expire')
+    );
+
     let cached_albums = localStorage.getItem('oracle_albums');
     let cached_albums_expire = new Date(
         localStorage.getItem('oracle_albums_expire')
@@ -929,6 +946,21 @@ export function oracle_data(force = false) {
     );
 
     let current_time = new Date();
+
+    if (!cached_artists) {
+        log('artists list is not cached, fetching', 'oracle');
+        oracle_request('artists', true);
+    } else {
+        // we prefer to load the current cache before waiting for a new response
+        Object.assign(oracle_artists, JSON.parse(cached_artists));
+
+        // is it valid?
+        if (cached_artists_expire < current_time && !force) {
+            oracle_request();
+        } else if (force) {
+            oracle_request('artistms', true);
+        }
+    }
 
     if (!cached_albums) {
         log('albums list is not cached, fetching', 'oracle');
@@ -981,7 +1013,9 @@ function oracle_request(type = 'albums') {
         let api_expire = new Date();
 
         if (xhr.status == 200) {
-            if (type == 'albums') {
+            if (type == 'artists') {
+                Object.assign(oracle_artists, JSON.parse(this.response));
+            } else if (type == 'albums') {
                 Object.assign(oracle_albums, JSON.parse(this.response));
             } else {
                 Object.assign(oracle_tracks, JSON.parse(this.response));

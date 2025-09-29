@@ -19587,7 +19587,7 @@
   }
   function parseAttributes(node, holes, parts, path) {
     var attributes = node.attributes;
-    var cache2 = [];
+    var cache3 = [];
     var remove2 = [];
     var array = normalizeAttributes(attributes, parts);
     var length = array.length;
@@ -19598,8 +19598,8 @@
       var sparse;
       if (direct || 1 < (sparse = attribute2.value.split(UIDC)).length) {
         var name = attribute2.name;
-        if (cache2.indexOf(name) < 0) {
-          cache2.push(name);
+        if (cache3.indexOf(name) < 0) {
+          cache3.push(name);
           var realName = parts.shift().replace(
             direct ? /^(?:|[\S\s]*?\s)(\S+?)\s*=\s*('|")?$/ : new RegExp(
               "^(?:|[\\S\\s]*?\\s)(" + name + `)\\s*=\\s*('|")[\\S\\s]*`,
@@ -20138,13 +20138,13 @@
   // node_modules/lighterhtml/esm/index.js
   var { create, freeze, keys } = Object;
   var tProto = Tagger.prototype;
-  var cache = esm_default3(new esm_default());
+  var cache2 = esm_default3(new esm_default());
   var createRender = (Tagger2) => ({
     html: outer("html", Tagger2),
     svg: outer("svg", Tagger2),
     render(where, what) {
       const hole = typeof what === "function" ? what() : what;
-      const info = cache.get(where) || cache.set(where, createCache());
+      const info = cache2.get(where) || cache2.set(where, createCache());
       const wire = hole instanceof LighterHole ? unroll(Tagger2, info, hole) : hole;
       if (wire !== info.wire) {
         info.wire = wire;
@@ -20156,12 +20156,12 @@
   });
   var createCache = () => ({ stack: [], entry: null, wire: null });
   var outer = (type, Tagger2) => {
-    const cache2 = esm_default3(new esm_default());
+    const cache3 = esm_default3(new esm_default());
     const fixed = (info) => function() {
       return unroll(Tagger2, info, hole.apply(null, arguments));
     };
     hole.for = (ref2, id) => {
-      const memo = cache2.get(ref2) || cache2.set(ref2, create(null));
+      const memo = cache3.get(ref2) || cache3.set(ref2, create(null));
       return memo[id] || (memo[id] = fixed(createCache()));
     };
     hole.node = function() {
@@ -23104,6 +23104,7 @@
   var mualani_url = "{root}bleh/mualani";
   var api_key = "85c118b69b1437844fe75fcd2bf27261";
   var discord = "xU9KxGQpVw";
+  var oracle_artists = {};
   var oracle_albums = {};
   var oracle_tracks = {};
   var theme_preview = () => html.node`
@@ -24556,17 +24557,17 @@
     if (isEqual2 === void 0) {
       isEqual2 = areInputsEqual;
     }
-    var cache2 = null;
+    var cache3 = null;
     function memoized() {
       var newArgs = [];
       for (var _i = 0; _i < arguments.length; _i++) {
         newArgs[_i] = arguments[_i];
       }
-      if (cache2 && cache2.lastThis === this && isEqual2(newArgs, cache2.lastArgs)) {
-        return cache2.lastResult;
+      if (cache3 && cache3.lastThis === this && isEqual2(newArgs, cache3.lastArgs)) {
+        return cache3.lastResult;
       }
       var lastResult = resultFn.apply(this, newArgs);
-      cache2 = {
+      cache3 = {
         lastResult,
         lastArgs: newArgs,
         lastThis: this
@@ -24574,7 +24575,7 @@
       return lastResult;
     }
     memoized.clear = function clear() {
-      cache2 = null;
+      cache3 = null;
     };
     return memoized;
   }
@@ -35337,9 +35338,9 @@
     }
     if (!ff("oracle_connect") || page.type == "artist") return;
     let tries = 2;
-    let cache2 = JSON.parse(localStorage.getItem("oracle_artist_ids")) || {};
     const artist = page.sister.toLowerCase();
     let artist_data;
+    let artist_template = `artist:"${page.sister}"`;
     const info_panel = page.structure.main.firstElementChild;
     const header = page.structure.container.querySelector(".redesigned-header");
     let releases_panel;
@@ -35383,18 +35384,26 @@
     if (page.type == "track")
       albums_and_lyrics_row.classList.add("oracle-hidden");
     function oracle_aliases(artist2, desired) {
-      if (artist2.name == desired || artist_data.aliases && artist_data.aliases.some((alias) => alias.name == desired))
+      if (artist2.name == desired || artist2.id == artist_data.id)
         return desired;
       return artist2;
     }
     oracle_obtain_artist();
     function oracle_obtain_artist() {
-      if (cache2.hasOwnProperty(artist)) {
-        artist_data = cache2[artist];
+      if (oracle_artists.hasOwnProperty(artist)) {
+        artist_data = {
+          type: "id",
+          name: oracle_artists[artist]
+        };
+        artist_template = `arid:"${oracle_artists[artist]}"`;
         oracle_connect();
         return;
       }
-      oracle_get_artist();
+      artist_data = {
+        type: "name",
+        name: page.sister
+      };
+      oracle_connect();
     }
     function oracle_get_artist() {
       if (tries < 1) return;
@@ -35427,11 +35436,11 @@
           }
           log("received artist data", "oracle", "info", { data: data2 });
           artist_data = data2.artists[0];
-          cache2[artist] = artist_data;
-          if (Object.keys(cache2).length > 100) delete cache2[0];
+          cache[artist] = artist_data;
+          if (Object.keys(cache).length > 100) delete cache[0];
           localStorage.setItem(
             "oracle_artist_ids",
-            JSON.stringify(cache2)
+            JSON.stringify(cache)
           );
           tries = 2;
           oracle_connect();
@@ -35448,11 +35457,12 @@
       if (tries < 1) return;
       tries--;
       let url;
-      page.state.oracle_debug.artist_id = artist_data.id;
+      page.state.oracle_debug.artist = artist_data;
+      log("using artist data", "oracle", "info", { artist_data });
       if (page.type == "track")
-        url = `https://musicbrainz.org/ws/2/recording?query="${sanitise(clean_title(page.name), " ")}" AND arid:"${artist_data.id}" AND status:Official`;
+        url = `https://musicbrainz.org/ws/2/recording?query="${sanitise(clean_title(page.name), " ")}" AND ${artist_template} AND status:Official`;
       else if (page.type == "album")
-        url = `http://musicbrainz.org/ws/2/release?query=release:"${sanitise(clean_title(page.name), " ")}" AND arid:"${artist_data.id}"`;
+        url = `http://musicbrainz.org/ws/2/release?query=release:"${sanitise(clean_title(page.name), " ")}" AND ${artist_template}`;
       log(
         `using url ${encodeURI(url)} with ${tries} tries available`,
         "oracle"
@@ -35734,7 +35744,7 @@
                                 <tr class="chartlist-row" data-disambig=${disambig}>
                                     <td class="chartlist-index">${track.position}</td>
                                     <td class="chartlist-name">
-                                        <a href="${root}music/${oracle_aliases(sanitise(track["artist-credit"][0].name), page.sister)}/_/${sanitise(title)}" data-name="${title}">
+                                        <a href="${root}music/${oracle_aliases(track["artist-credit"][0], page.sister)}/_/${sanitise(title)}" data-name="${title}">
                                             ${title}
                                         </a>
                                     </td>
@@ -35831,7 +35841,7 @@
             log("release", "oracle", "log", { release });
             let title = clean_title(release.title);
             const artist2 = oracle_aliases(
-              release["artist-credit"]?.[0]?.name || recording["artist-credit"][0].name,
+              release["artist-credit"]?.[0] || recording["artist-credit"][0],
               page.sister
             );
             const type = release["release-group"]["primary-type"];
@@ -36001,6 +36011,10 @@
   }
   function oracle_data(force = false) {
     if (!(ff("oracle") && settings.oracle_beta)) return;
+    let cached_artists = localStorage.getItem("oracle_artists");
+    let cached_artists_expire = new Date(
+      localStorage.getItem("oracle_artists_expire")
+    );
     let cached_albums = localStorage.getItem("oracle_albums");
     let cached_albums_expire = new Date(
       localStorage.getItem("oracle_albums_expire")
@@ -36010,6 +36024,17 @@
       localStorage.getItem("oracle_tracks_expire")
     );
     let current_time = /* @__PURE__ */ new Date();
+    if (!cached_artists) {
+      log("artists list is not cached, fetching", "oracle");
+      oracle_request("artists", true);
+    } else {
+      Object.assign(oracle_artists, JSON.parse(cached_artists));
+      if (cached_artists_expire < current_time && !force) {
+        oracle_request();
+      } else if (force) {
+        oracle_request("artistms", true);
+      }
+    }
     if (!cached_albums) {
       log("albums list is not cached, fetching", "oracle");
       oracle_request("albums", true);
@@ -36048,7 +36073,9 @@
       }
       let api_expire = /* @__PURE__ */ new Date();
       if (xhr.status == 200) {
-        if (type == "albums") {
+        if (type == "artists") {
+          Object.assign(oracle_artists, JSON.parse(this.response));
+        } else if (type == "albums") {
           Object.assign(oracle_albums, JSON.parse(this.response));
         } else {
           Object.assign(oracle_tracks, JSON.parse(this.response));
@@ -36293,14 +36320,14 @@
     }
     create_listen_item(listen_container, your_listens, page.type);
     if (settings.starred_friend != "") {
-      const cache2 = await load_profile_cache_externally(
+      const cache3 = await load_profile_cache_externally(
         settings.starred_friend
       );
       let shortcut_listens = {
         name: settings.starred_friend,
         listens: -1,
         link: scrobble_page,
-        avi: cache2.avatar,
+        avi: cache3.avatar,
         katsune
       };
       const listen_item = create_listen_item(
@@ -45051,30 +45078,30 @@
       chars.setAttribute("data-exceeded", value.length >= 500);
       render(preview, markdown(value, markdown_settings));
       let profile_cache = JSON.parse(localStorage.getItem("bleh_profile_cache")) || {};
-      let cache2 = profile_cache[auth.name];
-      console.info("cache", cache2);
+      let cache3 = profile_cache[auth.name];
+      console.info("cache", cache3);
       render(
         banner_setting,
         html`
                 <div class="heading">
                     <h5>${tl(trans.profile_banner.name)}</h5>
                     <p>${tl(trans.profile_banner.body)}</p>
-                    ${cache2.banner ? html.node`
-                <p>${tl(trans.current_banner_value).replace("{v}", cache2.banner)}</p>
+                    ${cache3.banner ? html.node`
+                <p>${tl(trans.current_banner_value).replace("{v}", cache3.banner)}</p>
                 ` : ""}
                 </div>
                 ${() => {
-          if (!cache2.banner)
+          if (!cache3.banner)
             return html.node`
                         <div class="info">
                             <p>${tl(trans.none)}</p>
                         </div>
                     `;
           let banner_image = html.node`
-                    <div class="banner-image" style="background-image: url(${cache2.banner})" />
+                    <div class="banner-image" style="background-image: url(${cache3.banner})" />
                 `;
           tippy_esm_default(banner_image, {
-            content: cache2.banner
+            content: cache3.banner
           });
           return banner_image;
         }}
@@ -45084,9 +45111,9 @@
       console.info(
         "cache update",
         about.value,
-        cache2.hue,
-        cache2.sat,
-        cache2.lit
+        cache3.hue,
+        cache3.sat,
+        cache3.lit
       );
       let edit;
       render(
@@ -45104,7 +45131,7 @@
                 <div class="info">
                     <div
                         class="colour-tile colourful"
-                        style="--hue-over: ${cache2.hue}; --sat-over: ${cache2.sat}; --lit-over: ${cache2.lit}"
+                        style="--hue-over: ${cache3.hue}; --sat-over: ${cache3.sat}; --lit-over: ${cache3.lit}"
                     />
                     <div class="swatch-group palette">
                         <button
@@ -46314,14 +46341,14 @@
     );
     let new_account = false;
     let profile_cache = JSON.parse(localStorage.getItem("bleh_profile_cache")) || {};
-    let cache2 = profile_cache[page.name] || {};
+    let cache3 = profile_cache[page.name] || {};
     let about_me_sidebar = page.structure.row.querySelector(".about-me-sidebar");
     if (page.subpage == "overview") {
       if (!about_me_sidebar) {
-        delete cache2.banner;
-        delete cache2.hue;
-        delete cache2.sat;
-        delete cache2.lit;
+        delete cache3.banner;
+        delete cache3.hue;
+        delete cache3.sat;
+        delete cache3.lit;
         about_me_sidebar = html.node`
                 <section class="about-me-sidebar">
                     <h2>${tl(trans.about)}</h2>
@@ -46335,7 +46362,7 @@
       } else {
         if (settings.bio_markdown) {
           let about_me_text = about_me_sidebar.querySelector("p");
-          let result = bio_parse(about_me_text, cache2);
+          let result = bio_parse(about_me_text, cache3);
           about_me_text.after(result);
           about_me_text.remove();
         }
@@ -46357,7 +46384,7 @@
       title_wrap.querySelector(".header-title a").classList.add("bleh--name-is-cute");
     }
     let pronouns;
-    if (cache2.aka) pronouns = use_pronouns(cache2.aka);
+    if (cache3.aka) pronouns = use_pronouns(cache3.aka);
     let expander;
     let redesigned_profile_header = html.node`
         <section class="redesigned-header redesigned-profile-header no-background">
@@ -46367,21 +46394,21 @@
             <div class="info-side">
                 <div class="sub-text">${tl(trans.profile)}</div>
                 ${title_wrap ? html.node`<div class="title-container">${title_wrap}</div>` : ""}
-                ${sub_wrap ? sub_wrap : cache2.aka || cache2.created ? html.node`
+                ${sub_wrap ? sub_wrap : cache3.aka || cache3.created ? html.node`
                 <p class="header-title-secondary">
-                    ${cache2.aka ? html.node`
+                    ${cache3.aka ? html.node`
                     <span class="header-title-secondary--pre">
                         ${pronouns ? tl(trans.account_pronouns) : tl(trans.aka)}
                     </span>
                     <span class="header-title-display-name">
-                        ${cache2.aka}
+                        ${cache3.aka}
                     </span>
                     ` : ""}
                     <span class="header-title-secondary--pre">
                         ${tl(trans.account_created)}
                     </span>
                     <span class="header-scrobble-since">
-                        ${cache2.created}
+                        ${cache3.created}
                     </span>
                 </p>
                 ` : ""}
@@ -46396,13 +46423,13 @@
         </section>
     `;
     const avatar_img = avatar3.querySelector(":scope > img");
-    cache2.avatar = avatar_img.src;
+    cache3.avatar = avatar_img.src;
     if (page.name == auth.name && !settings.profile_header_own) {
       register_background(null, "hidden");
     } else if (page.name != auth.name && !settings.profile_header_others) {
       register_background(null, "hidden");
-    } else if (cache2.banner) {
-      register_background(cache2.banner, "bio");
+    } else if (cache3.banner) {
+      register_background(cache3.banner, "bio");
     } else {
       if (settings.profile_avi_background) {
         if (avatar_img)
@@ -46574,7 +46601,7 @@
         ".redesigned-profile-header .header-title-secondary"
       );
       if (profile_sub_text)
-        parse_sub_text(profile_sub_text, page.name, cache2);
+        parse_sub_text(profile_sub_text, page.name, cache3);
       let featured_track_panel = profile_header.querySelector(
         ".header-featured-track"
       );
@@ -46638,21 +46665,21 @@
           refresh_all(instance.popper);
         }
       });
-      if (cache2.banner || cache2.hue || cache2.sat || cache2.lit) {
+      if (cache3.banner || cache3.hue || cache3.sat || cache3.lit) {
         tippy_esm_default(info_tip, {
           content: html.node`
                     <div class="profile-items">
-                        ${cache2.banner ? html.node`
+                        ${cache3.banner ? html.node`
                         <div class="profile-item" data-type="banner">
                             <span class="bleh-icon" style="--icon: var(--mask)" />
                             <p>${tl(trans.profile_banner.name)}</p>
                         </div>
                         ` : ""}
-                        ${cache2.hue > -1 && cache2.sat > -1 && cache2.lit > -1 ? html.node`
+                        ${cache3.hue > -1 && cache3.sat > -1 && cache3.lit > -1 ? html.node`
                         <div class="profile-item" data-type="accent">
                             <span class="bleh-icon" style="--icon: var(--mask)" />
                             <p>${tl(trans.profile_accent.name)}</p>
-                            <p class="subtle">${cache2.hue}, ${cache2.sat}, ${cache2.lit}</p>
+                            <p class="subtle">${cache3.hue}, ${cache3.sat}, ${cache3.lit}</p>
                         </div>
                         ` : ""}
                     </div>
@@ -46666,7 +46693,7 @@
       if (!is_own_profile && profile_note)
         create_profile_note_panel(page.name, profile_note);
     } else {
-      load_profile_cache(page.name, cache2, profile_cache);
+      load_profile_cache(page.name, cache3, profile_cache);
       let btn_add = page.structure.side.querySelector(".add-button");
       if (btn_add) btn_add.setAttribute("data-page-subpage", page.subpage);
       if (page.subpage.startsWith("library")) {
@@ -46937,7 +46964,7 @@
       label_container.appendChild(badge);
     });
     profile_name_obj.appendChild(label_container);
-    save_profile_cache(cache2, profile_cache, page.name);
+    save_profile_cache(cache3, profile_cache, page.name);
   }
   function create_profile_note_panel(username2, has_note) {
     let about_me_sidebar = page.structure.row.querySelector(".about-me-sidebar");
@@ -47715,7 +47742,7 @@
       appendTo: document.body
     });
   }
-  function bio_parse(text3, cache2 = true, take_effect = true) {
+  function bio_parse(text3, cache3 = true, take_effect = true) {
     let temp = document.createElement("div");
     temp.classList.add("markdown-body");
     render(
@@ -47725,7 +47752,7 @@
         allow_banners: true,
         allow_icons: true,
         allow_hue: true,
-        cache: cache2,
+        cache: cache3,
         take_effect,
         allow_socials: true,
         allow_alignment: true
@@ -47868,9 +47895,9 @@
   }
   async function checkup_friend_cache(list = settings.friends) {
     for (const friend of list) {
-      const cache2 = await load_profile_cache_externally(friend);
+      const cache3 = await load_profile_cache_externally(friend);
       log(`finalised cache for friend ${friend}`, "profile", "info", {
-        cache: cache2
+        cache: cache3
       });
     }
   }
@@ -47892,53 +47919,53 @@
     if (!name) return;
     log(`requested profile cache for ${name}`, "cache");
     let profile_cache = JSON.parse(localStorage.getItem("bleh_profile_cache")) || {};
-    let cache2 = profile_cache[name];
-    if (cache2) {
-      if (cache2.hue || cache2.sat || cache2.lit) {
+    let cache3 = profile_cache[name];
+    if (cache3) {
+      if (cache3.hue || cache3.sat || cache3.lit) {
         if (!sponsor_list || sponsor_list && !sponsor_list.sponsors.includes(name)) {
-          delete cache2.hue;
-          delete cache2.sat;
-          delete cache2.lit;
+          delete cache3.hue;
+          delete cache3.sat;
+          delete cache3.lit;
         }
       }
       log(`returning pre-cached result for ${name}`, "cache", "info", {
-        cache: cache2
+        cache: cache3
       });
-      return cache2;
+      return cache3;
     }
     return await request_profile_cache(name);
   }
-  function load_profile_cache(name = page.name, cache2 = null, profile_cache = null) {
+  function load_profile_cache(name = page.name, cache3 = null, profile_cache = null) {
     if (!name) return;
     if (!profile_cache)
       profile_cache = JSON.parse(localStorage.getItem("bleh_profile_cache")) || {};
-    if (!cache2) cache2 = profile_cache[name] || {};
-    if (cache2) {
-      if (cache2.hue || cache2.sat || cache2.lit) {
+    if (!cache3) cache3 = profile_cache[name] || {};
+    if (cache3) {
+      if (cache3.hue || cache3.sat || cache3.lit) {
         if (!sponsor_list || sponsor_list && !sponsor_list.sponsors.includes(name)) {
-          delete cache2.hue;
-          delete cache2.sat;
-          delete cache2.lit;
+          delete cache3.hue;
+          delete cache3.sat;
+          delete cache3.lit;
         }
       }
-      const hue2 = cache2.hue;
-      const sat = cache2.sat;
-      const lit = cache2.lit;
-      const banner = cache2.banner;
+      const hue2 = cache3.hue;
+      const sat = cache3.sat;
+      const lit = cache3.lit;
+      const banner = cache3.banner;
       if (hue2) document.body.style.setProperty("--hue-album", hue2);
       if (sat) document.body.style.setProperty("--sat-album", sat);
       if (lit) document.body.style.setProperty("--lit-album", lit);
       if (banner) register_background(banner, "bio");
       return;
     }
-    return request_profile_cache(name, cache2, profile_cache);
+    return request_profile_cache(name, cache3, profile_cache);
   }
-  function request_profile_cache(name = page.name, cache2 = null, profile_cache = null) {
+  function request_profile_cache(name = page.name, cache3 = null, profile_cache = null) {
     log(`requesting fetch of profile cache for ${name}`, "cache");
-    const will_cache = !cache2 || !profile_cache;
+    const will_cache = !cache3 || !profile_cache;
     if (!profile_cache)
       profile_cache = JSON.parse(localStorage.getItem("bleh_profile_cache")) || {};
-    if (!cache2) cache2 = profile_cache[name] || {};
+    if (!cache3) cache3 = profile_cache[name] || {};
     return new Promise((resolve2, reject) => {
       fetch(`${root}user/${name}`).then(function(response) {
         console.log("returned", response, response.text);
@@ -47949,23 +47976,23 @@
         const about_me_sidebar = doc.querySelector(".about-me-sidebar");
         if (about_me_sidebar) {
           let about_me_text = about_me_sidebar.querySelector("p");
-          bio_parse(about_me_text, cache2 ? cache2 : true, false);
+          bio_parse(about_me_text, cache3 ? cache3 : true, false);
         } else {
-          delete cache2.banner;
-          delete cache2.hue;
-          delete cache2.sat;
-          delete cache2.lit;
+          delete cache3.banner;
+          delete cache3.hue;
+          delete cache3.sat;
+          delete cache3.lit;
         }
         const avatar3 = doc.querySelector(".header-avatar .avatar img");
-        if (avatar3) cache2.avatar = avatar3.src;
+        if (avatar3) cache3.avatar = avatar3.src;
         const secondary = doc.querySelector(".header-title-secondary");
-        parse_sub_text(secondary, name, cache2);
-        if (will_cache) save_profile_cache(cache2, profile_cache, name);
-        resolve2(cache2 || {});
+        parse_sub_text(secondary, name, cache3);
+        if (will_cache) save_profile_cache(cache3, profile_cache, name);
+        resolve2(cache3 || {});
       }).catch(reject);
     });
   }
-  function parse_sub_text(profile_sub_text, name = page.name, cache2) {
+  function parse_sub_text(profile_sub_text, name = page.name, cache3) {
     const display_name = profile_sub_text.querySelector(
       ".header-title-display-name"
     );
@@ -47990,8 +48017,8 @@
     `,
       scrobble_since
     );
-    cache2.aka = display_name.textContent.trim();
-    cache2.created = scrobble_since.textContent.trim();
+    cache3.aka = display_name.textContent.trim();
+    cache3.created = scrobble_since.textContent.trim();
   }
   function bleh_profile_events() {
     const selected_tab = page.structure.toolbar?.querySelector(
@@ -49529,7 +49556,7 @@
     allow_icons = false,
     allow_hue = false,
     take_effect = false,
-    cache: cache2 = false,
+    cache: cache3 = false,
     allow_socials = false,
     allow_lists = true,
     allow_alignment = false,
@@ -49814,23 +49841,23 @@
       });
     }
     let profile_cache;
-    const will_cache = cache2 === true;
-    log(`prepare new cache is ${will_cache}`, "markdown", "log", { cache: cache2 });
+    const will_cache = cache3 === true;
+    log(`prepare new cache is ${will_cache}`, "markdown", "log", { cache: cache3 });
     if (allow_hue) {
       if (!sponsor_list || sponsor_list && !sponsor_list.sponsors.includes(name))
         allow_hue = false;
     }
     if ((allow_banners || allow_hue) && will_cache) {
       profile_cache = JSON.parse(localStorage.getItem("bleh_profile_cache")) || {};
-      cache2 = profile_cache[page.name] || {};
+      cache3 = profile_cache[page.name] || {};
     }
     if (allow_banners) {
       const banner2 = body.querySelector('img[alt="banner"]');
       if (banner2) {
         const src = banner2.src;
-        cache2.banner = src;
+        cache3.banner = src;
       } else {
-        delete cache2.banner;
+        delete cache3.banner;
       }
     }
     body.querySelectorAll("img").forEach((image) => {
@@ -49856,26 +49883,26 @@
           document.body.style.setProperty("--lit-album", lit);
           load_chart_colours();
         }
-        cache2.hue = hue2;
-        cache2.sat = sat;
-        cache2.lit = lit;
+        cache3.hue = hue2;
+        cache3.sat = sat;
+        cache3.lit = lit;
         log("custom accent settings present", "profile", "info", {
           hue: hue2,
           sat,
           lit
         });
       } else {
-        if (cache2.hue) delete cache2.hue;
-        if (cache2.sat) delete cache2.sat;
-        if (cache2.lit) delete cache2.lit;
+        if (cache3.hue) delete cache3.hue;
+        if (cache3.sat) delete cache3.sat;
+        if (cache3.lit) delete cache3.lit;
         log("cleared custom accent settings", "profile", "log");
       }
     }
-    if (cache2 && will_cache) {
+    if (cache3 && will_cache) {
       log("finalised cache from markdown parsing", "markdown", "info", {
-        cache: cache2
+        cache: cache3
       });
-      save_profile_cache(cache2, profile_cache, name);
+      save_profile_cache(cache3, profile_cache, name);
     }
     return body;
   }
@@ -51990,7 +52017,7 @@
         return;
       }
       register_skip_to([]);
-      const cache2 = await load_profile_cache_externally(auth.name);
+      const cache3 = await load_profile_cache_externally(auth.name);
       let friends;
       let starred2;
       console.info("friends", settings.friends, settings);
@@ -52037,8 +52064,8 @@
           "/avatar300s/"
         )})"
                             ></div>
-                            ${cache2.banner ? html.node`
-                        <div class="profile-mockup-background from-banner" style="background-image: url(${cache2.banner})"></div>
+                            ${cache3.banner ? html.node`
+                        <div class="profile-mockup-background from-banner" style="background-image: url(${cache3.banner})"></div>
                         ` : html.node`
                         <div class="profile-mockup-background from-track" style="background-image: url(https://lastfm.freetls.fastly.net/i/u/avatar300s/df927f4f88034b7f9a651636b965c9d7)"></div>
                         `}
@@ -54862,8 +54889,8 @@ ${e ? html.node`<span class="error-type">${e.name}</span>: ${e.message}` : ""}</
         badges = load_badges(auth.name);
         let page_2;
         let side;
-        const cache2 = await load_profile_cache_externally(auth.name);
-        console.info("awaited", cache2);
+        const cache3 = await load_profile_cache_externally(auth.name);
+        console.info("awaited", cache3);
         let status_container;
         const current = settings.navigation_items;
         let length = current.length;
@@ -54878,8 +54905,8 @@ ${e ? html.node`<span class="error-type">${e.name}</span>: ${e.message}` : ""}</
                             <div class="avatar">
                                 <img src="${auth.avatar.replace("avatar42s", "avatar170s")}" alt="${auth.name}" />
                             </div>
-                            ${cache2.banner ? html.node`
-                            <div class="bg" style="background-image: url(${cache2.banner})" />
+                            ${cache3.banner ? html.node`
+                            <div class="bg" style="background-image: url(${cache3.banner})" />
                             ` : !auth.avatar.endsWith(
           "818148bf682d429dc215c1705eb27b98.png"
         ) ? html.node`
@@ -56821,11 +56848,11 @@ ${e ? html.node`<span class="error-type">${e.name}</span>: ${e.message}` : ""}</
     checkup_page_structure(false, content_top);
     log("status is", "page", "info", page);
     update_page();
-    let cache2;
+    let cache3;
     if (auth.name) {
-      cache2 = await load_profile_cache_externally(auth.name);
-      if (cache2.banner)
-        register_background(cache2.banner);
+      cache3 = await load_profile_cache_externally(auth.name);
+      if (cache3.banner)
+        register_background(cache3.banner);
       else if (auth.avatar && !auth.avatar.endsWith("818148bf682d429dc215c1705eb27b98.png"))
         register_background(auth.avatar.replace("/avatar42s/", "/ar0/"));
       else
@@ -57401,11 +57428,11 @@ ${e ? html.node`<span class="error-type">${e.name}</span>: ${e.message}` : ""}</
             </div>
         </section>
     `, page.structure.container.firstElementChild);
-    let cache2;
+    let cache3;
     if (auth.name) {
-      cache2 = await load_profile_cache_externally(auth.name);
-      if (cache2.banner)
-        register_background(cache2.banner);
+      cache3 = await load_profile_cache_externally(auth.name);
+      if (cache3.banner)
+        register_background(cache3.banner);
       else if (auth.avatar && !auth.avatar.endsWith("818148bf682d429dc215c1705eb27b98.png"))
         register_background(auth.avatar.replace("/avatar42s/", "/ar0/"));
       else
@@ -57999,9 +58026,9 @@ ${e ? html.node`<span class="error-type">${e.name}</span>: ${e.message}` : ""}</
     checkup_page_structure(false, content_top);
     log("status is", "page", "info", page);
     update_page();
-    const cache2 = await load_profile_cache_externally(auth.name);
-    if (cache2.banner)
-      register_background(cache2.banner);
+    const cache3 = await load_profile_cache_externally(auth.name);
+    if (cache3.banner)
+      register_background(cache3.banner);
     else if (!auth.avatar.endsWith("818148bf682d429dc215c1705eb27b98.png"))
       register_background(auth.avatar.replace("/avatar42s/", "/ar0/"));
     else
@@ -58311,9 +58338,9 @@ ${e ? html.node`<span class="error-type">${e.name}</span>: ${e.message}` : ""}</
       log("unable to find elements", "page structure");
     }
     checkup_page_structure();
-    const cache2 = await load_profile_cache_externally(auth.name);
-    if (cache2.banner)
-      register_background(cache2.banner);
+    const cache3 = await load_profile_cache_externally(auth.name);
+    if (cache3.banner)
+      register_background(cache3.banner);
     else if (!auth.avatar.endsWith("818148bf682d429dc215c1705eb27b98.png"))
       register_background(auth.avatar.replace("/avatar42s/", "/ar0/"));
     else
@@ -69981,14 +70008,14 @@ ${e ? html.node`<span class="error-type">${e.name}</span>: ${e.message}` : ""}</
     }
     return longest;
   }
-  function _longestText(ctx, font, arrayOfThings, cache2) {
-    cache2 = cache2 || {};
-    let data2 = cache2.data = cache2.data || {};
-    let gc = cache2.garbageCollect = cache2.garbageCollect || [];
-    if (cache2.font !== font) {
-      data2 = cache2.data = {};
-      gc = cache2.garbageCollect = [];
-      cache2.font = font;
+  function _longestText(ctx, font, arrayOfThings, cache3) {
+    cache3 = cache3 || {};
+    let data2 = cache3.data = cache3.data || {};
+    let gc = cache3.garbageCollect = cache3.garbageCollect || [];
+    if (cache3.font !== font) {
+      data2 = cache3.data = {};
+      gc = cache3.garbageCollect = [];
+      cache3.font = font;
     }
     ctx.save();
     ctx.font = font;
@@ -70389,7 +70416,7 @@ ${e ? html.node`<span class="error-type">${e.name}</span>: ${e.message}` : ""}</
     if (typeof fallback === "undefined") {
       fallback = _resolve("_fallback", scopes);
     }
-    const cache2 = {
+    const cache3 = {
       [Symbol.toStringTag]: "Object",
       _cacheable: true,
       _scopes: scopes,
@@ -70401,7 +70428,7 @@ ${e ? html.node`<span class="error-type">${e.name}</span>: ${e.message}` : ""}</
         ...scopes
       ], prefixes, finalRootScopes, fallback)
     };
-    return new Proxy(cache2, {
+    return new Proxy(cache3, {
       /**
       * A trap for the delete operator.
       */
@@ -70454,7 +70481,7 @@ ${e ? html.node`<span class="error-type">${e.name}</span>: ${e.message}` : ""}</
     });
   }
   function _attachContext(proxy, context, subProxy, descriptorDefaults) {
-    const cache2 = {
+    const cache3 = {
       _cacheable: false,
       _proxy: proxy,
       _context: context,
@@ -70464,7 +70491,7 @@ ${e ? html.node`<span class="error-type">${e.name}</span>: ${e.message}` : ""}</
       setContext: (ctx) => _attachContext(proxy, ctx, subProxy, descriptorDefaults),
       override: (scope) => _attachContext(proxy.override(scope), context, subProxy, descriptorDefaults)
     };
-    return new Proxy(cache2, {
+    return new Proxy(cache3, {
       /**
       * A trap for the delete operator.
       */
@@ -71389,15 +71416,15 @@ ${e ? html.node`<span class="error-type">${e.name}</span>: ${e.message}` : ""}</
     if (!prevStyle) {
       return false;
     }
-    const cache2 = [];
+    const cache3 = [];
     const replacer = function(key, value) {
       if (!isPatternOrGradient(value)) {
         return value;
       }
-      if (!cache2.includes(value)) {
-        cache2.push(value);
+      if (!cache3.includes(value)) {
+        cache3.push(value);
       }
-      return cache2.indexOf(value);
+      return cache3.indexOf(value);
     };
     return JSON.stringify(style, replacer) !== JSON.stringify(prevStyle, replacer);
   }
@@ -72369,9 +72396,9 @@ ${e ? html.node`<span class="error-type">${e.name}</span>: ${e.message}` : ""}</
     }
     _resolveElementOptions(elementType, mode = "default", index3) {
       const active = mode === "active";
-      const cache2 = this._cachedDataOpts;
+      const cache3 = this._cachedDataOpts;
       const cacheKey = elementType + "-" + mode;
-      const cached = cache2[cacheKey];
+      const cached = cache3[cacheKey];
       const sharing = this.enableOptionSharing && defined(index3);
       if (cached) {
         return cloneIfNotShared(cached, sharing);
@@ -72393,15 +72420,15 @@ ${e ? html.node`<span class="error-type">${e.name}</span>: ${e.message}` : ""}</
       const values = config.resolveNamedOptions(scopes, names2, context, prefixes);
       if (values.$shared) {
         values.$shared = sharing;
-        cache2[cacheKey] = Object.freeze(cloneIfNotShared(values, sharing));
+        cache3[cacheKey] = Object.freeze(cloneIfNotShared(values, sharing));
       }
       return values;
     }
     _resolveAnimations(index3, transition, active) {
       const chart = this.chart;
-      const cache2 = this._cachedDataOpts;
+      const cache3 = this._cachedDataOpts;
       const cacheKey = `animation-${transition}`;
-      const cached = cache2[cacheKey];
+      const cached = cache3[cacheKey];
       if (cached) {
         return cached;
       }
@@ -72414,7 +72441,7 @@ ${e ? html.node`<span class="error-type">${e.name}</span>: ${e.message}` : ""}</
       }
       const animations = new Animations(chart, options && options.animations);
       if (options && options._cacheable) {
-        cache2[cacheKey] = Object.freeze(animations);
+        cache3[cacheKey] = Object.freeze(animations);
       }
       return animations;
     }
@@ -75085,13 +75112,13 @@ ${e ? html.node`<span class="error-type">${e.name}</span>: ${e.message}` : ""}</
     return lineValue;
   }
   function garbageCollect(caches, length) {
-    each(caches, (cache2) => {
-      const gc = cache2.gc;
+    each(caches, (cache3) => {
+      const gc = cache3.gc;
       const gcLen = gc.length / 2;
       let i;
       if (gcLen > length) {
         for (i = 0; i < gcLen; ++i) {
-          delete cache2.data[gc[i]];
+          delete cache3.data[gc[i]];
         }
         gc.splice(0, gcLen);
       }
@@ -75616,25 +75643,25 @@ ${e ? html.node`<span class="error-type">${e.name}</span>: ${e.message}` : ""}</
       const increment = Math.floor(length / getTicksLimit(length, maxTicksLimit));
       let widestLabelSize = 0;
       let highestLabelSize = 0;
-      let i, j, jlen, label, tickFont, fontString, cache2, lineHeight, width, height, nestedLabel;
+      let i, j, jlen, label, tickFont, fontString, cache3, lineHeight, width, height, nestedLabel;
       for (i = 0; i < length; i += increment) {
         label = ticks[i].label;
         tickFont = this._resolveTickFontOptions(i);
         ctx.font = fontString = tickFont.string;
-        cache2 = caches[fontString] = caches[fontString] || {
+        cache3 = caches[fontString] = caches[fontString] || {
           data: {},
           gc: []
         };
         lineHeight = tickFont.lineHeight;
         width = height = 0;
         if (!isNullOrUndef(label) && !isArray2(label)) {
-          width = _measureText(ctx, cache2.data, cache2.gc, width, label);
+          width = _measureText(ctx, cache3.data, cache3.gc, width, label);
           height = lineHeight;
         } else if (isArray2(label)) {
           for (j = 0, jlen = label.length; j < jlen; ++j) {
             nestedLabel = label[j];
             if (!isNullOrUndef(nestedLabel) && !isArray2(nestedLabel)) {
-              width = _measureText(ctx, cache2.data, cache2.gc, width, nestedLabel);
+              width = _measureText(ctx, cache3.data, cache3.gc, width, nestedLabel);
               height += lineHeight;
             }
           }
@@ -76845,17 +76872,17 @@ ${e ? html.node`<span class="error-type">${e.name}</span>: ${e.message}` : ""}</
     }
     _cachedScopes(mainScope, resetCache) {
       const _scopeCache = this._scopeCache;
-      let cache2 = _scopeCache.get(mainScope);
-      if (!cache2 || resetCache) {
-        cache2 = /* @__PURE__ */ new Map();
-        _scopeCache.set(mainScope, cache2);
+      let cache3 = _scopeCache.get(mainScope);
+      if (!cache3 || resetCache) {
+        cache3 = /* @__PURE__ */ new Map();
+        _scopeCache.set(mainScope, cache3);
       }
-      return cache2;
+      return cache3;
     }
     getOptionScopes(mainScope, keyLists, resetCache) {
       const { options, type } = this;
-      const cache2 = this._cachedScopes(mainScope, resetCache);
-      const cached = cache2.get(keyLists);
+      const cache3 = this._cachedScopes(mainScope, resetCache);
+      const cached = cache3.get(keyLists);
       if (cached) {
         return cached;
       }
@@ -76875,7 +76902,7 @@ ${e ? html.node`<span class="error-type">${e.name}</span>: ${e.message}` : ""}</
         array.push(/* @__PURE__ */ Object.create(null));
       }
       if (keysCached.has(keyLists)) {
-        cache2.set(keyLists, array);
+        cache3.set(keyLists, array);
       }
       return array;
     }
@@ -76919,20 +76946,20 @@ ${e ? html.node`<span class="error-type">${e.name}</span>: ${e.message}` : ""}</
     }
   };
   function getResolver(resolverCache, scopes, prefixes) {
-    let cache2 = resolverCache.get(scopes);
-    if (!cache2) {
-      cache2 = /* @__PURE__ */ new Map();
-      resolverCache.set(scopes, cache2);
+    let cache3 = resolverCache.get(scopes);
+    if (!cache3) {
+      cache3 = /* @__PURE__ */ new Map();
+      resolverCache.set(scopes, cache3);
     }
     const cacheKey = prefixes.join();
-    let cached = cache2.get(cacheKey);
+    let cached = cache3.get(cacheKey);
     if (!cached) {
       const resolver = _createResolver(scopes, prefixes);
       cached = {
         resolver,
         subPrefixes: prefixes.filter((p) => !p.toLowerCase().includes("hover"))
       };
-      cache2.set(cacheKey, cached);
+      cache3.set(cacheKey, cached);
     }
     return cached;
   }

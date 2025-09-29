@@ -4,8 +4,8 @@
 // Licensed under GPLv3
 //
 
-import {html} from "lighterhtml";
-import tippy from "tippy.js";
+import { html } from 'lighterhtml';
+import tippy from 'tippy.js';
 import { version } from '../main';
 // require page reload
 export let reload_pending = {
@@ -48,7 +48,7 @@ export let auth = {
 };
 export let auth_link = {
     state: ''
-}
+};
 
 /**
  * Start of page URL based on language, examples:
@@ -144,9 +144,7 @@ export let page = {
     requested: {
         tab: null
     },
-    header: {
-
-    },
+    header: {},
     state: {
         settings_reload: false,
         glacier: {
@@ -203,12 +201,13 @@ export const api_key = '85c118b69b1437844fe75fcd2bf27261';
 
 export const discord = 'xU9KxGQpVw';
 
+export let oracle_artists = {};
 export let oracle_albums = {};
 export let oracle_tracks = {};
 
 export let has_prompted_for_update = {
     state: false
-}
+};
 
 export let theme_preview = () => html.node`
     <div class="preview-inner">
@@ -317,7 +316,7 @@ export const random_list = [
         album_artist: 'Juice WRLD'
     },
     {
-        track: 'Wouldn\'t Leave',
+        track: "Wouldn't Leave",
         album: 'ye',
         artist: 'Kanye West',
         album_artist: 'Kanye West'
@@ -426,13 +425,13 @@ export const random_list = [
     },
     {
         track: 'Don’t Smile',
-        album: 'Short n\' Sweet (Deluxe)',
+        album: "Short n' Sweet (Deluxe)",
         artist: 'Sabrina Carpenter',
         album_artist: 'Sabrina Carpenter'
     },
     {
         track: 'Espresso',
-        album: 'Short n\' Sweet (Deluxe)',
+        album: "Short n' Sweet (Deluxe)",
         artist: 'Sabrina Carpenter',
         album_artist: 'Sabrina Carpenter'
     },
@@ -486,7 +485,7 @@ export const random_list = [
     },
     {
         track: 'Lie To Girls',
-        album: 'Short n\' Sweet (Deluxe)',
+        album: "Short n' Sweet (Deluxe)",
         artist: 'Sabrina Carpenter',
         album_artist: 'Sabrina Carpenter'
     },
@@ -696,7 +695,7 @@ export const random_list = [
     },
     {
         track: 'Peppers (feat. Tommy Genesis)',
-        album: 'Did you know that there\'s a tunnel under Ocean Blvd',
+        album: "Did you know that there's a tunnel under Ocean Blvd",
         artist: 'Lana Del Rey',
         album_artist: 'Lana Del Rey'
     },
@@ -787,8 +786,8 @@ export const random_list = [
     {
         track: '(March 19th 1983) It Was Probably Green',
         album: 'Songs About Leaving',
-        artist: 'Carissa\'s Wierd',
-        album_artist: 'Carissa\'s Wierd'
+        artist: "Carissa's Wierd",
+        album_artist: "Carissa's Wierd"
     },
     {
         track: 'clairbourne practice',
@@ -899,7 +898,7 @@ export const random_list = [
         album_artist: 'Kahlil Blu'
     },
     {
-        track: '01\'beigecamry',
+        track: "01'beigecamry",
         album: 'Farley',
         artist: 'Sideshow',
         album_artist: 'Sideshow'
@@ -954,7 +953,7 @@ export const random_list = [
     },
     {
         track: 'Never Catch Me',
-        album: 'You\'re Dead!',
+        album: "You're Dead!",
         artist: 'Flying Lotus',
         album_artist: 'Flying Lotus'
     },
@@ -989,7 +988,7 @@ export const random_list = [
         album_artist: 'Bladee'
     },
     {
-        track: 'Wesley\'s Theory',
+        track: "Wesley's Theory",
         album: 'To Pimp A Butterfly',
         artist: 'Kendrick Lamar',
         album_artist: 'Kendrick Lamar'
@@ -1085,13 +1084,13 @@ export const random_list = [
         album_artist: 'The Roots'
     },
     {
-        track: 'Gotta Touch \'Em - (Pt. 2)',
+        track: "Gotta Touch 'Em - (Pt. 2)",
         album: 'Mystic Stylez',
         artist: 'Three 6 Mafia',
         album_artist: 'Three 6 Mafia'
     },
     {
-        track: 'J\'OUVERT',
+        track: "J'OUVERT",
         album: 'iridescence',
         artist: 'BROCKHAMPTON',
         album_artist: 'BROCKHAMPTON'
@@ -1346,7 +1345,8 @@ export const random_list = [
         track: 'オレンジ',
         album: 'オレンジ',
         artist: '逢坂大河・櫛枝実乃梨・川嶋亜美(釘宮理恵、堀江由衣、喜多村英梨)',
-        album_artist: '逢坂大河・櫛枝実乃梨・川嶋亜美（CV：釘宮理恵・堀江由衣・喜多村英梨）'
+        album_artist:
+            '逢坂大河・櫛枝実乃梨・川嶋亜美（CV：釘宮理恵・堀江由衣・喜多村英梨）'
     },
     {
         track: 'Just Wanna Rock',
