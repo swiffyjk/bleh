@@ -57946,9 +57946,9 @@ ${e ? html.node`<span class="error-type">${e.name}</span>: ${e.message}` : ""}</
               `user-status--bleh-${badge.type}`,
               `user-status--bleh-user-${badge.user}`
             );
+          } else {
+            shout_name.classList.add(badge.type);
           }
-        } else if (badge) {
-          shout_name.classList.add(badge.type);
         }
         const shout_body = shout.querySelector(".shout-body p");
         const shout_text = shout_body.textContent.trim();
