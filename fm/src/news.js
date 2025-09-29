@@ -117,7 +117,11 @@ function open_changelog(changelog) {
                     ${(version == '2025.0113') ? html.node`<h4 class="header-over">${changelog[version].name}</h4>` : ''}
                 </div>
                 <div class="version-item-body markdown-body">
-                    ${markdown(changelog[version].bio)}
+                    ${markdown(changelog[version].bio, {
+                        allow_headers: true,
+                        starting_header: 5,
+                        in_dialog: true
+                    })}
                 </div>
             </div>
         `;

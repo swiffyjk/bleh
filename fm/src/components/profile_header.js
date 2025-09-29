@@ -11,11 +11,8 @@ import {sponsor_list} from "../build/sponsor";
 import {sanitise} from "../build/tools";
 import {tl, trans} from "../build/trans";
 import {ff} from "../sku";
-import {compare} from './compare';
 import {correct_artist} from "./lotus";
-import {open_profile_shortcut_window, set_profile_as_shortcut} from './profile_shortcut';
 import {html} from "lighterhtml";
-import {collage} from "./collage.js";
 import {sponsor} from "../sponsor.js";
 import {redirect} from "./music.js";
 import tippy from "tippy.js";
@@ -196,8 +193,7 @@ export function redesign_profile_header(is_own_profile, is_following) {
                 name: page.name,
                 type: 'collage',
                 link: `${root}bleh/minis/collage`,
-                text: tl(trans.collage),
-                updated: true
+                text: tl(trans.collage)
             });
         }
     }

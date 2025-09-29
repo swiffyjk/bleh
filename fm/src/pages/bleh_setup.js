@@ -6,17 +6,22 @@
 
 import {register_activity} from "../activity";
 import {log} from "../build/log";
-import {auth, page, root} from "../build/page";
+import {auth, discord, page, root} from "../build/page";
 import {tl, trans, trans_legacy} from "../build/trans";
 import {request_changelog} from "../news.js";
 import {notify} from "../components/notify";
 import {checkup_page_structure} from '../components/structure';
-import {refresh_all} from "../config";
+import {refresh_all, update_colour_swatches} from "../config";
 import {version} from "../main";
 import {register_background, update_page} from '../page';
 import {display_colour_presets, theme_bubbles} from "./bleh_config";
 import {html, render} from "lighterhtml";
 import {setting} from "../components/settings.js";
+import { ff } from '../sku.js';
+import { sponsor } from '../sponsor.js';
+import { settings } from '../build/config.js';
+import { dialog } from '../components/dialog.js';
+import { match } from '../components/dynamic_theming.js';
 
 export function bleh_setup() {
     page.structure.container = document.body.querySelector('.page-content');
@@ -64,7 +69,7 @@ export function bleh_setup() {
             <div class="info">
                 <h1>${tl(trans.bleh_setup)}</h1>
                 <div class="subtle">
-                    ${tl(trans.logged_in_as).replace('{user}', `<a class="mention" href="${root}user/${auth.name}">@${auth.name}</a>`)}
+                    ${{html: tl(trans.logged_in_as).replace('{user}', `<a class="mention" href="${root}user/${auth.name}">@${auth.name}</a>`)}}
                 </div>
             </div>
             ` : html.node`
@@ -116,6 +121,79 @@ unsafeWindow._setup_themes = function() {
     page.structure.setup.setAttribute('data-page', 'themes');
     page.structure.setup.setAttribute('data-animating', 'true');
 
+    let adaptive_tip;
+    let bubbles;
+
+    function render_tip() {
+        adaptive_tip.setAttribute('aria-hidden', !settings.theme_schedule);
+
+        render(adaptive_tip, html`
+            ${tl(trans.adaptive_tip, {'day': tl(trans.themes[settings.theme_day]), 'night': tl(trans.themes[settings.theme_night])})}<a onclick=${() => {
+                dialog({
+                    id: 'auto_theme',
+                    title: tl(trans.themes.name),
+                    body: html.node`
+                        <div class="setting-group">
+                            ${theme_day = setting({id: 'theme_day', list: [
+                                {
+                                    value: 'light',
+                                    text: tl(trans.themes.light)
+                                },
+                                {
+                                    value: 'ink',
+                                    text: tl(trans.themes.ink)
+                                },
+                                {
+                                    value: 'dark',
+                                    text: tl(trans.themes.dark)
+                                },
+                                {
+                                    value: 'darker',
+                                    text: tl(trans.themes.darker)
+                                },
+                                {
+                                    value: 'oled',
+                                    text: tl(trans.themes.oled)
+                                }
+                            ], func: () => {
+                                render_tip();
+                                bubbles.re_render();
+                                match();
+                            }})}
+                            ${theme_night = setting({id: 'theme_night', list: [
+                                {
+                                    value: 'light',
+                                    text: tl(trans.themes.light)
+                                },
+                                {
+                                    value: 'ink',
+                                    text: tl(trans.themes.ink)
+                                },
+                                {
+                                    value: 'dark',
+                                    text: tl(trans.themes.dark)
+                                },
+                                {
+                                    value: 'darker',
+                                    text: tl(trans.themes.darker)
+                                },
+                                {
+                                    value: 'oled',
+                                    text: tl(trans.themes.oled)
+                                }
+                            ], func: () => {
+                                render_tip();
+                                bubbles.re_render();
+                                match();
+                            }})}
+                        </div>
+                        <p class="card-tip">${tl(trans.theme_schedule)}</p>
+                    `
+                });
+            }}>${tl(trans.change_schedule)}</a>
+        `);
+    }
+
     setTimeout(function() {
         page.structure.setup.setAttribute('data-animating', 'false');
         render(page.structure.setup_content, html`
@@ -124,10 +202,17 @@ unsafeWindow._setup_themes = function() {
                     <div class="heading">
                         <h5>${tl(trans.themes.name)}</h5>
                     </div>
-                    <div class="info">
-                        ${theme_bubbles}
+                    <div class="info v">
+                        ${bubbles = theme_bubbles(() => {
+                            sat_bg.compat();
+
+                            render_tip();
+                            match();
+                        })}
+                        <p class="card-tip" ref=${el => adaptive_tip = el} />
                     </div>
                 </div>
+                ${setting({id: 'solarium'})}
                 <div class="setting" data-type="action">
                     <div class="heading">
                         <h5>${tl(trans.hue)}</h5>
@@ -138,6 +223,9 @@ unsafeWindow._setup_themes = function() {
                         <div id="colour_palette" class="swatch-group palette"></div>
                     </div>
                 </div>
+                ${ff('card_saturation') ? html.node`
+                ${sat_bg = setting({id: 'sat_bg'})}
+                ` : ''}
             </div>
         `);
         page.structure.setup_footer.innerHTML = (`
@@ -150,9 +238,10 @@ unsafeWindow._setup_themes = function() {
             </button>
         `);
 
-        show_theme_change_in_settings();
+        render_tip();
+
         display_colour_presets();
-        refresh_all(page.structure.setup_content);
+        update_colour_swatches();
     }, page.state.trans);
 }
 
@@ -246,6 +335,26 @@ unsafeWindow._setup_end = function() {
         page.structure.setup.setAttribute('data-animating', 'false');
         render(page.structure.setup_content, html`
             <p>${{html: tl(trans.setup_end).replace('{a}', `<a href="${root}bleh">`).replace('{/a}', '</a>')}}</p>
+            <div class="mini-list">
+                <a class="btn mini" href="https://discord.gg/${discord}" target="_blank">
+                    <div class="mini-icon colourful" data-type="discord">
+                        <div class="bleh-icon" />
+                    </div>
+                    <div class="mini-info">
+                        <h5>${tl(trans.join_discord)}</h5>
+                    </div>
+                    <div class="bleh-icon mini-arrow" style="--icon: var(--mask)" data-type="arrow-right"></div>
+                </a>
+                <button class="btn mini" onclick=${() => sponsor()}>
+                    <div class="mini-icon colourful" data-type="sponsor">
+                        <div class="bleh-icon" />
+                    </div>
+                    <div class="mini-info">
+                        <h5>${tl(trans.sponsor)}</h5>
+                    </div>
+                    <div class="bleh-icon mini-arrow" style="--icon: var(--mask)" data-type="arrow-right"></div>
+                </button>
+            </div>
         `);
 
         if (auth.name) {

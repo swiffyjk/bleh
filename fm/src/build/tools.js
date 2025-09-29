@@ -4,14 +4,16 @@
 // Licensed under GPLv3
 //
 
-// https://stackoverflow.com/questions/46432335/hex-to-hsl-convert-javascript
 import {log} from "./log.js";
 import {notify} from "../components/notify.js";
 import {tl, trans} from "./trans.js";
 import { settings } from './config.js';
 import {html} from "lighterhtml";
 import { root } from './page.js';
+import * as wanakana from 'wanakana';
+import * as hangulRomanization from 'hangul-romanization';
 
+// https://stackoverflow.com/questions/46432335/hex-to-hsl-convert-javascript
 /**
  * Converts hex to {h, s, l}
  * @param {string} hex
@@ -119,7 +121,7 @@ function round_two(value) {
  * @returns {number}
  */
 export function clean_number(string) {
-    return parseInt(string
+    return int(string
     .replaceAll(',','')
     .replaceAll('.','')
     );
@@ -183,7 +185,11 @@ export function return_artist_from_track(url, is_album) {
 
     // for some reason last.fm double-encodes urls sometimes,
     // leading to the % being encoded as %25 (very stupid)
-    if (/%[0-9A-Fa-f]{2}/.test(desanitised)) return desanitise(desanitised);
+    let passes = 0;
+    while (/%[0-9A-Fa-f]{2}/.test(desanitised) && passes < 5) {
+        desanitised = desanitise(desanitised, '+');
+        passes++;
+    }
 
     return desanitised;
 }
@@ -380,4 +386,27 @@ export function is_link_external(url) {
     } catch {
         return false;
     }
+}
+
+export function romanise(text) {
+    // japanese
+    if (/[\u30A0-\u30FF\u3040-\u309F]/.test(text) && settings.romanise_jp)
+        return title_case(wanakana.toRomaji(text));
+
+    // korean
+    if (/[\uAC00-\uD7AF]/.test(text) && settings.romanise_ko)
+        return title_case(hangulRomanization.convert(text));
+
+    return text;
+}
+
+export function title_case(text) {
+    return text
+        .split(' ')
+        .map(word => word.charAt(0).toUpperCase() + word.slice(1))
+        .join(' ');
+}
+
+export function int(num) {
+    return parseInt(num.replace(/\u00A0/g, ''));
 }

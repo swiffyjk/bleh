@@ -1,7 +1,7 @@
 {
     "brand": "bleh",
-    "build": "2025.0831",
-    "sku": "yuzuha",
+    "build": "2025.0929",
+    "sku": "alice",
     "bio": "bleh!!! ^-^",
     "author": "katelyn",
     "url": "https://github.com/katelyynn/bleh/raw/uwu/fm/bleh.user.js",
@@ -102,7 +102,7 @@
             "date": "2024-12-24"
         },
         "skip_to_setting": {
-            "default": true,
+            "default": false,
             "name": "Skip to... in settings",
             "date": "2024-12-24"
         },
@@ -271,7 +271,7 @@
             "date": "2025-08-18"
         },
         "adaptive_theme": {
-            "default": false,
+            "default": true,
             "name": "Adaptive theme controls",
             "date": "2025-08-29"
         },
@@ -279,6 +279,46 @@
             "default": false,
             "name": "Adaptive colour controls",
             "date": "2025-08-29"
+        },
+        "oracle": {
+            "default": true,
+            "name": "Experimental new music page features",
+            "date": "2025-09-11"
+        },
+        "oracle_connect": {
+            "default": true,
+            "name": "Experimental new album and track fetching via MusicBrainz",
+            "date": "2025-09-11"
+        },
+        "oracle_album_reordering": {
+            "default": true,
+            "name": "Re-order listed albums on track pages based on listener count",
+            "date": "2025-09-11"
+        },
+        "oracle_fetch_artwork": {
+            "default": true,
+            "name": "Allow oracle to fetch cover art from album tag pages",
+            "date": "2025-09-11"
+        },
+        "control_center": {
+            "default": false,
+            "name": "Control center",
+            "date": "2025-09-20"
+        },
+        "mesmerizer": {
+            "default": true,
+            "name": "Redesigned artwork uploader",
+            "date": "2025-09-25"
+        },
+        "refreshed_lotus": {
+            "default": false,
+            "name": "Refreshed flow for submitting a lotus correction",
+            "date": "2025-09-26"
+        },
+        "inverse_compare": {
+            "default": false,
+            "name": "Introduce new inverse comparison option",
+            "date": "2025-09-28"
         }
     }
 }

@@ -233,7 +233,7 @@ export async function bleh_home() {
                         <h2>${tl(trans.activity)}</h2>
                         ${render_activity_list()}
                         <div class="more-link">
-                            <a href="${root}bleh/profiles?setting=activities">${tl(trans.activity_settings)}</a>
+                            <a href="${root}bleh/profile?setting=activities">${tl(trans.activity_settings)}</a>
                         </div>
                     </section>
                 </div>

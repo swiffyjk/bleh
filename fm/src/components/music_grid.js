@@ -5,14 +5,17 @@
 //
 
 import {settings} from "../build/config";
-import {page} from "../build/page";
-import {clamp_sat, clean_number, rgb_to_hsl} from "../build/tools";
+import {page, root} from "../build/page";
+import {clamp_sat, clean_number, copy, rgb_to_hsl, romanise} from "../build/tools";
 import {lang, tl, trans} from "../build/trans";
 import {bleh_glacier_insights} from "../pages/glacier";
 import {parse_scrobbles_as_rank} from "./colourful_counts";
 import {correct_artist, correct_item_by_artist, name_includes} from "./lotus";
 import {html, render} from "lighterhtml";
 import ColorThief from "color-thief-browser";
+import { register_menu } from './menu';
+import tippy from 'tippy.js';
+import { expand_avatar } from '../avatar';
 
 export function music_grids(search=page.structure.main, use_colour = true) {
     if (!search) return;
@@ -184,11 +187,14 @@ export function music_grids(search=page.structure.main, use_colour = true) {
         let name = grid.querySelector('.grid-items-item-main-text a');
         if (!name) return;
 
+        let artist;
+
         if (!is_album) {
-            name.textContent = correct_artist(name.textContent.trim());
+            name.textContent = romanise(correct_artist(name.textContent.trim()));
             insights.artist.labels.push(name.textContent);
         } else {
-            let artist = grid.querySelector('.grid-items-item-aux-block');
+            artist = grid.querySelector('.grid-items-item-aux-block');
+            if (!artist) artist = grid.querySelector('.grid-items-item-aux-text');
             if (!artist) return;
 
             if (settings.format_guest_features) {
@@ -201,25 +207,151 @@ export function music_grids(search=page.structure.main, use_colour = true) {
                 let song_tags = {};
 
                 if (formatted_title) {
-                    song_title = formatted_title[0];
+                    song_title = romanise(formatted_title[0].trim());
                     insights.album.labels.push(song_title);
                     song_tags = formatted_title[1];
-                    artist.textContent = formatted_title[2];
+                    artist.textContent = romanise(formatted_title[2]);
                 }
 
                 // combine
                 render(name_elem, html.node`
-                    <span class="title">${song_title.trim()}</span>
+                    <span class="title">${song_title}</span>
                     ${song_tags.map((tag) => html.node`
-                        <span class="feat" data-bleh--tag-type="${tag.type}" data-bleh--tag-group="${tag.group}">${tag.text}</span>
+                        <span class="feat" data-bleh--tag-type="${tag.type}" data-bleh--tag-group="${tag.group}">${romanise(tag.text)}</span>
                     `)}
                 `);
             } else {
-                artist.textContent = correct_artist(artist.textContent.trim());
+                artist.textContent = romanise(correct_artist(artist.textContent.trim()));
 
-                name.textContent = correct_item_by_artist(name.textContent.trim(), artist.textContent.trim());
+                name.textContent = romanise(correct_item_by_artist(name.textContent.trim(), artist.textContent.trim()));
             }
         }
+
+        const menu = tippy(grid, {
+            theme: 'context-menu',
+            content: html.node`
+                ${!is_album ? html.node`
+                <div class="button-combo">
+                    ${() => {
+                        return html.node`
+                            <a class="dropdown-menu-clickable-item" data-type="artist" href=${name.getAttribute('href')}>
+                                ${tl(trans.artist)}
+                            </a>
+                        `;
+                    }}
+                    <div class="button-combo-sep"/>
+                    ${() => {
+                        let button = html.node`
+                            <a class="dropdown-menu-clickable-item chibi" data-type="continue" href="${root}user/${page.name}/library${name.getAttribute('href')}">
+                                ${tl(trans.explore_in_library)}
+                            </a>
+                        `;
+
+                        tippy(button, {
+                            content: tl(trans.explore_in_library),
+                            delay: [500, 0],
+                            appendTo: document.body
+                        });
+
+                        return button;
+                    }}
+                </div>
+                ` : html.node`
+                <div class="button-combo">
+                    ${() => {
+                        return html.node`
+                            <a class="dropdown-menu-clickable-item" data-type="album" href=${name.getAttribute('href')}>
+                                ${tl(trans.album)}
+                            </a>
+                        `;
+                    }}
+                    <div class="button-combo-sep"/>
+                    ${() => {
+                        let button = html.node`
+                            <a class="dropdown-menu-clickable-item chibi" data-type="continue" href="${root}user/${page.name}/library${name.getAttribute('href')}">
+                                ${tl(trans.explore_in_library)}
+                            </a>
+                        `;
+
+                        tippy(button, {
+                            content: tl(trans.explore_in_library),
+                            delay: [500, 0],
+                            appendTo: document.body
+                        });
+
+                        return button;
+                    }}
+                </div>
+                <div class="button-combo">
+                    ${() => {
+                        return html.node`
+                            <a class="dropdown-menu-clickable-item" data-type="artist" href=${artist.getAttribute('href')}>
+                                ${tl(trans.artist)}
+                            </a>
+                        `;
+                    }}
+                    <div class="button-combo-sep"/>
+                    ${() => {
+                        let button = html.node`
+                            <a class="dropdown-menu-clickable-item chibi" data-type="continue" href="${root}user/${page.name}/library${artist.getAttribute('href')}">
+                                ${tl(trans.explore_in_library)}
+                            </a>
+                        `;
+
+                        tippy(button, {
+                            content: tl(trans.explore_in_library),
+                            delay: [500, 0],
+                            appendTo: document.body
+                        });
+
+                        return button;
+                    }}
+                </div>
+                `}
+                <a class="dropdown-menu-clickable-item" data-type="gallery" href="${name.getAttribute('href')}/+images">
+                    ${is_album ? tl(trans.artwork) : tl(trans.photos)}
+                </a>
+                <a class="dropdown-menu-clickable-item" data-type="wiki" href="${name.getAttribute('href')}/+wiki">
+                    ${is_album ? tl(trans.wiki) : tl(trans.biography)}
+                </a>
+                ${!is_album ? html.node`
+                <a class="dropdown-menu-clickable-item" data-type="listeners" href="${name.getAttribute('href')}/+listeners/you-know">
+                    ${tl(trans.listeners)}
+                </a>
+                ` : ''}
+                <a class="dropdown-menu-clickable-item" data-type="shouts" href="${name.getAttribute('href')}/+shoutbox">
+                    ${tl(trans.shouts)}
+                </a>
+                <a class="dropdown-menu-clickable-item" data-type="tags" href="${name.getAttribute('href')}/+tags">
+                    ${tl(trans.tags)}
+                </a>
+                <div class="sep" />
+                <button class="dropdown-menu-clickable-item" data-type="expand" onclick=${() => {
+                    expand_avatar(image.src.replace('/avatar300s/', '/ar0/').replace('/500x500/', 'ar0'));
+                }}>
+                    ${tl(trans.expand)}
+                </button>
+                <button class="dropdown-menu-clickable-item" data-type="link" onclick=${() => {
+                    copy(name.href);
+                }}>
+                    ${tl(trans.copy)}
+                </button>
+            `,
+            placement: 'right-start',
+            trigger: 'manual',
+            interactive: true,
+            interactiveBorder: 10,
+            offset: [0, 0],
+            appendTo: document.body,
+
+            onShow(instance) {
+                instance.popper.addEventListener('click', event => {
+                    instance.hide();
+                });
+            }
+        });
+
+        register_menu(grid, menu);
     });
 
     if (page.subpage.startsWith('library'))

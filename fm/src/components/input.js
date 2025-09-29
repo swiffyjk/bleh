@@ -4,10 +4,10 @@
 // Licensed under GPLv3
 //
 
-import {html} from "lighterhtml";
-import {tl, trans} from "../build/trans.js";
-import {log} from "../build/log.js";
-import tippy from "tippy.js";
+import { html } from 'lighterhtml';
+import { tl, trans } from '../build/trans.js';
+import { log } from '../build/log.js';
+import tippy from 'tippy.js';
 import { calendar } from './calendar.js';
 import { auth } from '../build/page.js';
 
@@ -20,11 +20,13 @@ export function input({
     maxlength,
     warn_if_empty = false,
     warn_if_matches_auth = false,
+    warn_if_not_matching_lower = '',
     focus = false,
     disabled,
     show_time = true,
     name,
-    func
+    func,
+    func_esc
 }) {
     if (type == 'date') {
         return calendar({
@@ -44,8 +46,16 @@ export function input({
 
     let container = html.node`
         <div class="content-form input-container colourful" data-type=${type} data-has-error="false">
-            ${type == 'colour' ? html.node`<span class="colour-block" ref=${el => colour_block = el} />` : ''}
-            <input class="modern-input" disabled=${disabled} autofocus=${focus} type=${type} value=${value} placeholder=${placeholder} min=${min} max=${max} maxlength=${maxlength} ref=${el => input_box = el} />
+            ${type == 'colour' ? html.node`<span class="colour-block" ref=${(el) => (colour_block = el)} />` : ''}
+            ${
+                type == 'textarea'
+                    ? html.node`
+                <textarea class="modern-input" disabled=${disabled} autofocus=${focus} value=${value} placeholder=${placeholder} min=${min} max=${max} maxlength=${maxlength} ref=${(el) => (input_box = el)} />
+            `
+                    : html.node`
+                <input class="modern-input" disabled=${disabled} autofocus=${focus} type=${type} value=${value} placeholder=${placeholder} min=${min} max=${max} maxlength=${maxlength} ref=${(el) => (input_box = el)} />
+            `
+            }
         </div>
     `;
 
@@ -62,36 +72,42 @@ export function input({
     });
 
     input_box.addEventListener('keydown', (event) => {
-        if (event.keyCode === 13) {
+        if (event.keyCode == 13 && type != 'textarea') {
             event.preventDefault();
 
             if (func) func(input_box.value);
+        } else if (event.keyCode == 27) {
+            event.preventDefault();
+
+            if (func_esc) func_esc(input_box.value);
         }
     });
+
+    container.submit = () => {
+        if (func) func(input_box.value);
+    };
 
     container.focus = () => {
         setTimeout(() => {
             input_box.focus();
         }, 5);
-    }
+    };
 
     container.value = (val = null) => {
-        if (val === null) return input_box.value;
+        if (val == null) return input_box.value;
 
         input_box.value = val;
         return val;
-    }
+    };
 
     container.disabled = (state = null) => {
         if (state === null) return input_box.getAttribute('disabled') || false;
 
-        if (state === true)
-            input_box.setAttribute('disabled', 'true');
-        else
-            input_box.removeAttribute('disabled');
+        if (state === true) input_box.setAttribute('disabled', 'true');
+        else input_box.removeAttribute('disabled');
 
         return state;
-    }
+    };
 
     return container;
 
@@ -106,6 +122,11 @@ export function input({
                 error_input(tl(trans.keep_within_the_range));
             } else if (warn_if_matches_auth && input_box.value == auth.name) {
                 error_input(tl(trans.please_dont_clone_yourself));
+            } else if (
+                warn_if_not_matching_lower != '' &&
+                input_box.value.toLowerCase() != warn_if_not_matching_lower
+            ) {
+                error_input(tl(trans.please_match_the_format));
             }
         }
 
@@ -113,7 +134,10 @@ export function input({
             // is a number?
             if (input_box.value == '') {
                 error_input(tl(trans.only_numbers_are_allowed));
-            } else if (parseInt(input_box.value) > max || parseInt(input_box.value) < min) {
+            } else if (
+                parseInt(input_box.value) > max ||
+                parseInt(input_box.value) < min
+            ) {
                 error_input(tl(trans.keep_within_the_range));
             }
         } else if (type == 'colour') {

@@ -4,29 +4,37 @@
 // Licensed under GPLv3
 //
 
-import {patch_avatar} from "./avatar";
-import {settings} from "./build/config";
-import {log} from "./build/log";
-import {auth, page, shout_parse_queue} from "./build/page";
-import {tl, trans} from "./build/trans";
-import {notify} from "./components/notify";
-import {html, render} from "lighterhtml";
-import {setting} from "./components/settings.js";
-import {markdown} from "./components/markdown.js";
-import {copy} from "./build/tools.js";
-import tippy from "tippy.js";
+import { patch_avatar } from './avatar';
+import { settings } from './build/config';
+import { log } from './build/log';
+import { auth, page, shout_parse_queue } from './build/page';
+import { tl, trans } from './build/trans';
+import { notify } from './components/notify';
+import { html, render } from 'lighterhtml';
+import { setting } from './components/settings.js';
+import {
+    markdown,
+    markdown_preview,
+    markdown_prompt
+} from './components/markdown.js';
+import { copy } from './build/tools.js';
+import tippy from 'tippy.js';
 import { keybind } from './components/rabbit.js';
 
 export function patch_shouts() {
     if (!page.structure.main) return;
 
-    let shout_controls = page.structure.main.querySelector('.shoutbox-controls-wrapper:not([data-shouts])');
+    let shout_controls = page.structure.main.querySelector(
+        '.shoutbox-controls-wrapper:not([data-shouts])'
+    );
     if (shout_controls) {
         shout_controls.setAttribute('data-shouts', 'true');
         shout_header(shout_controls);
     }
 
-    let shouts = page.structure.main.querySelectorAll('.shout:not([data-kate-processed])');
+    let shouts = page.structure.main.querySelectorAll(
+        '.shout:not([data-kate-processed])'
+    );
 
     shouts.forEach((shout, index) => {
         try {
@@ -42,15 +50,19 @@ export function patch_shouts() {
 
             let badge = patch_avatar(shout_avatar, shout_name_text, 'shout');
 
-            if (badge && badge.type) {
-                if (badge.type == 'avatar-status-dot--staff') shout.classList.add('staff-shout');
+            if (badge) {
+                if (badge.type && badge.type == 'avatar-status-dot--staff')
+                    shout.classList.add('staff-shout');
 
                 if (badge.hue > -1 && badge.sat > -1 && badge.lit > -1) {
                     shout_name.style.setProperty('--hue-over', badge.hue);
                     shout_name.style.setProperty('--sat-over', badge.sat);
                     shout_name.style.setProperty('--lit-over', badge.lit);
-                } else {
-                    shout_name.classList.add(`user-status--bleh-${badge.type}`, `user-status--bleh-user-${badge.user}`);
+                } else if (badge.type) {
+                    shout_name.classList.add(
+                        `user-status--bleh-${badge.type}`,
+                        `user-status--bleh-user-${badge.user}`
+                    );
                 }
             } else if (badge) {
                 shout_name.classList.add(badge.type);
@@ -59,15 +71,13 @@ export function patch_shouts() {
             const shout_body = shout.querySelector('.shout-body p');
             const shout_text = shout_body.textContent.trim();
             if (settings.shout_markdown) {
-                shout_parse_queue.push({element: shout_body});
+                shout_parse_queue.push({ element: shout_body });
             }
-
 
             const indicator = html.node`
                 <div class="shout-vote-indicator colourful" aria-checked="false" />
             `;
             shout.appendChild(indicator);
-
 
             // timestamp
             let shout_timestamp = shout.querySelector('.shout-timestamp time');
@@ -79,8 +89,9 @@ export function patch_shouts() {
                 shout_timestamp.removeAttribute('title');
             }
 
-
-            let actions = shout.querySelectorAll('.shout-actions .shout-action');
+            let actions = shout.querySelectorAll(
+                '.shout-actions .shout-action'
+            );
             actions.forEach((action) => {
                 let buttons = action.querySelectorAll('button, a');
                 buttons.forEach((button) => {
@@ -88,33 +99,40 @@ export function patch_shouts() {
                 });
             });
 
-
             // detect vote status
             const form = shout.querySelector('.vote-button-toggle');
 
             const voted_button = form.querySelector('.vote-button--voted');
-            const unvote_button = form.querySelector('.vote-button:not(.vote-button--voted)');
+            const unvote_button = form.querySelector(
+                '.vote-button:not(.vote-button--voted)'
+            );
 
             if (!voted_button || !unvote_button) return;
 
             // if the ALREADY VOTED button changes to MODIFIED STATE when clicked,
             // that means the server gave us a shout that is ALREADY VOTED
-            const initial_is_voted = voted_button.getAttribute('data-ajax-form-sets-state') == 'modified-state';
+            const initial_is_voted =
+                voted_button.getAttribute('data-ajax-form-sets-state') ==
+                'modified-state';
 
             indicator.setAttribute('aria-checked', initial_is_voted.toString());
 
-            voted_button.addEventListener('click', (e) => vote_button())
+            voted_button.addEventListener('click', (e) => vote_button());
             unvote_button.addEventListener('click', (e) => vote_button());
 
             function vote_button() {
                 setTimeout(() => {
-                    const modified = form.getAttribute('data-ajax-form-state') == 'modified-state';
+                    const modified =
+                        form.getAttribute('data-ajax-form-state') ==
+                        'modified-state';
                     const current_is_voted = initial_is_voted != modified;
 
-                    indicator.setAttribute('aria-checked', current_is_voted.toString());
+                    indicator.setAttribute(
+                        'aria-checked',
+                        current_is_voted.toString()
+                    );
                 }, 0);
             }
-
 
             const menu = shout.querySelector('.shout-more-actions-menu');
 
@@ -128,19 +146,21 @@ export function patch_shouts() {
                 }
             });
 
-            menu.insertBefore(html.node`
+            menu.insertBefore(
+                html.node`
                 <button class="dropdown-menu-clickable-item" data-type="copy" onclick=${() => {
                     copy(shout_text);
                 }}>
                     ${tl(trans.copy)}
                 </button>
                 <div class="sep" />
-            `, menu.firstElementChild);
-
+            `,
+                menu.firstElementChild
+            );
 
             let send_button = shout.querySelector('.form-group--submit');
             shout_send(send_button);
-        } catch(e) {
+        } catch (e) {
             notify({
                 id: 'shout',
                 title: tl(trans.shouts),
@@ -148,7 +168,7 @@ export function patch_shouts() {
                 type: 'error',
                 icon: 'icon-16-shoutbox'
             });
-            log('failed to modify', 'shout', 'error', {error: e});
+            log('failed to modify', 'shout', 'error', { error: e });
         }
     });
 
@@ -156,24 +176,54 @@ export function patch_shouts() {
         parse_shout_queue();
 
     // enter a shout field
-    const shout_forms = document.querySelectorAll('.shout-form:not([data-kate-processed])');
+    const shout_forms = document.querySelectorAll(
+        '.shout-form:not([data-kate-processed])'
+    );
     shout_forms.forEach((shout_form) => {
         shout_form.setAttribute('data-kate-processed', 'true');
         let shout_avatar = shout_form.querySelector('.shout-user-avatar');
 
         patch_avatar(shout_avatar, auth.name);
 
-
         let send_button = shout_form.querySelector('.form-group--submit');
         shout_send(send_button);
 
-        //let textarea = shout_form.querySelector('textarea');
+        const help_text = shout_form.querySelector('.form-row-help-text');
+        help_text.classList.add('dual-tip');
+
+        const textarea = shout_form.querySelector('textarea');
+
+        let chars;
+        render(
+            help_text,
+            html`
+                <div
+                    class="tip markdown-enabled"
+                    onclick=${() => markdown_prompt()}
+                >
+                    ${tl(trans.supports_markdown)}
+                </div>
+                <div
+                    class="tip preview"
+                    onclick=${() => markdown_preview(textarea.value)}
+                >
+                    ${tl(trans.preview)}
+                </div>
+                <div class="tip characters" ref=${(el) => (chars = el)}>
+                    ${tl(trans.value_characters_max, { v: '0/1000' })}
+                </div>
+            `
+        );
+
+        textarea.addEventListener('input', () => {
+            const value = textarea.value;
+            chars.textContent = tl(trans.value_characters_max, {
+                v: `${value.length}/1000`
+            });
+            chars.setAttribute('data-exceeded', value.length >= 1000);
+        });
+
         shout_form.addEventListener('keydown', (e) => {
-            //console.info('key', e, e.keyCode, e.target, textarea, e.target == textarea);
-
-            /*if (e.target != textarea)
-                return;*/
-
             // CTRL + ENTER
             if (e.ctrlKey && e.keyCode == 13) {
                 e.preventDefault();
@@ -202,7 +252,10 @@ function shout_send(send_button) {
     if (page.mobile) return;
 
     tippy(button, {
-        content: tl(trans.send_quickly_with).replace('{kbd}', keybind(['⌘', '⏎']).outerHTML),
+        content: tl(trans.send_quickly_with).replace(
+            '{kbd}',
+            keybind(['⌘', '⏎']).outerHTML
+        ),
         allowHTML: true,
         delay: [500, 0]
     });
@@ -219,7 +272,8 @@ export function shout_header(shout_controls) {
 
         let link = window.location.href;
 
-        panel.insertBefore(html.node`
+        panel.insertBefore(
+            html.node`
             <div class="top-container">
                 <h2>
                     <a class="text-colour-link" href=${link}>${tl(trans.shouts)}</a>
@@ -228,12 +282,14 @@ export function shout_header(shout_controls) {
                     <p class="notice">${tl(trans.single_shout)}</p>
                 </div>
                 <div class="view-buttons blend blend-v2">
-                    <button class="left-icon blend-v2-btn" data-type="settings" ref=${el => settings_btn = el}>
+                    <button class="left-icon blend-v2-btn" data-type="settings" ref=${(el) => (settings_btn = el)}>
                         ${tl(trans.settings)}
                     </button>
                 </div>
             </div>
-        `, panel.firstElementChild);
+        `,
+            panel.firstElementChild
+        );
     } else {
         panel = shout_controls.parentElement;
 
@@ -244,31 +300,46 @@ export function shout_header(shout_controls) {
 
         let link = window.location.href;
         let shoutbox_link = '+shoutbox';
-        if (page.type == 'user' || page.type == 'event') shoutbox_link = 'shoutbox';
+        if (page.type == 'user' || page.type == 'event')
+            shoutbox_link = 'shoutbox';
 
         if (!page.subpage.startsWith('shoutbox')) link += `/${shoutbox_link}`;
 
-        panel.insertBefore(html.node`
+        panel.insertBefore(
+            html.node`
             <div class="top-container">
                 <h2>
                     <a class="text-colour-link" href=${link}>${tl(trans.shouts)}</a>
                 </h2>
-                ${select_btn ? html.node`
+                ${
+                    select_btn ?
+                        html.node`
                     <div class="accompany view-buttons blend blend-v2">
                         ${() => {
-                            select_btn.classList.add('select-button', 'link-select', 'blend-v2-btn');
-                            select_btn.classList.remove('section-control', 'dropdown-menu-clickable-button');
+                            select_btn.classList.add(
+                                'select-button',
+                                'link-select',
+                                'blend-v2-btn'
+                            );
+                            select_btn.classList.remove(
+                                'section-control',
+                                'dropdown-menu-clickable-button'
+                            );
                             return shout_controls;
                         }}
                     </div>
-                ` : ''}
+                `
+                    :   ''
+                }
                 <div class="view-buttons blend blend-v2">
-                    <button class="left-icon blend-v2-btn" data-type="settings" ref=${el => settings_btn = el}>
+                    <button class="left-icon blend-v2-btn" data-type="settings" ref=${(el) => (settings_btn = el)}>
                         ${tl(trans.settings)}
                     </button>
                 </div>
             </div>
-        `, panel.firstElementChild);
+        `,
+            panel.firstElementChild
+        );
     }
 
     tippy(settings_btn, {
@@ -276,27 +347,31 @@ export function shout_header(shout_controls) {
         content: html.node`
             <div class="dialog-settings">
                 <div class="setting-group blend">
-                    ${setting({id: 'shout_markdown'})}
-                    ${setting({id: 'accessible_name_colours'})}
-                    ${setting({id: 'underline_links'})}
+                    ${setting({ id: 'shout_markdown' })}
+                    ${setting({ id: 'accessible_name_colours' })}
+                    ${setting({ id: 'underline_links' })}
                 </div>
             </div>
         `,
         placement: 'bottom',
         interactive: true,
         interactiveBorder: 10,
-        trigger: 'click'
+        trigger: 'click',
+        appendTo: document.body
     });
 
     const cant_shout = panel.querySelector('.shouting-unavailable');
     if (cant_shout) {
-        render(cant_shout, html`
-            <div class="loading-data-container">
-                <div class="loading-data-text static" data-type="shouts">
-                    ${tl(trans.cant_shout)}
+        render(
+            cant_shout,
+            html`
+                <div class="loading-data-container">
+                    <div class="loading-data-text static" data-type="shouts">
+                        ${tl(trans.cant_shout)}
+                    </div>
                 </div>
-            </div>
-        `);
+            `
+        );
     }
 }
 
@@ -312,14 +387,15 @@ export function parse_shout_queue() {
 
     log('parsed one shout', 'shout', 'log');
 
-    if (shout_parse_queue.length > 0)
-        setTimeout(parse_shout_queue, 50);
+    if (shout_parse_queue.length > 0) setTimeout(parse_shout_queue, 50);
 }
 
 export function shout_messages() {
     if (!page.structure.main) return;
 
-    let alerts = page.structure.main.querySelectorAll('.shout-messages > .alert');
+    let alerts = page.structure.main.querySelectorAll(
+        '.shout-messages > .alert'
+    );
     alerts.forEach((alert) => {
         if (alert.classList.contains('alert-danger')) {
             // assume its the generic rate limit

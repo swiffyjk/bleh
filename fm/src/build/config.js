@@ -4,7 +4,7 @@
 // Licensed under GPLv3
 //
 
-import {trans} from "./trans.js";
+import { trans } from './trans.js';
 
 export let settings = {};
 export let settings_template = {
@@ -405,7 +405,7 @@ export let settings_base = {
     grid_glow: {
         css: 'show_grid_glow',
         unit: '',
-        value:  true,
+        value: true,
         values: [true, false],
         type: 'toggle'
     },
@@ -576,13 +576,32 @@ export let inbuilt_settings = {
         values: [true, false],
         type: 'toggle'
     }
-}
+};
 
 export let settings_store = {
     theme: {
-        default: 'dark',
+        default: 'darker',
         type: 'radio',
         title: trans.theme
+    },
+    theme_schedule: {
+        default: false
+    },
+    theme_day: {
+        default: 'light',
+        type: 'select',
+        title: trans.theme_day.name,
+        body: trans.theme_day.body,
+        incompatible: { theme_schedule: false },
+        hide_if_incompatible: true
+    },
+    theme_night: {
+        default: 'darker',
+        type: 'select',
+        title: trans.theme_night.name,
+        body: trans.theme_night.body,
+        incompatible: { theme_schedule: false },
+        hide_if_incompatible: true
     },
     high_contrast: {
         default: false,
@@ -622,7 +641,7 @@ export let settings_store = {
         step: 0.2,
         title: trans.card_background_saturation.name,
         body: trans.card_background_saturation.body,
-        incompatible: [{setting: 'theme', value: 'light'}]
+        incompatible: { theme: 'light' }
     },
     lit: {
         css: 'lit-user',
@@ -633,6 +652,12 @@ export let settings_store = {
         step: 0.01,
         title: trans.lit,
         vertical: true
+    },
+    solarium: {
+        default: true,
+        title: trans.solarium.name,
+        body: trans.solarium.body,
+        new_release: true
     },
     gloss: {
         css: 'gloss',
@@ -710,7 +735,14 @@ export let settings_store = {
     colourful_tracks: {
         default: true,
         type: 'checkbox',
-        title: trans.colourful_tracks
+        title: trans.colourful_active,
+        incompatible: { colourful_tracks_all: true }
+    },
+    colourful_tracks_all: {
+        default: false,
+        type: 'checkbox',
+        title: trans.colourful_all,
+        new_release: true
     },
     feature_flags: {
         default: {},
@@ -762,7 +794,8 @@ export let settings_store = {
         type: 'range',
         css: 'avatar-radius',
         suffix: '%',
-        title: trans.avatar_radius
+        title: trans.avatar_radius.name,
+        body: trans.avatar_radius.body
     },
     hue_from_album: {
         default: true,
@@ -825,7 +858,7 @@ export let settings_store = {
     },
     font_weight: {
         css: 'custom_font_weight',
-        default: 500,
+        default: 400,
         min: 100,
         max: 600,
         step: 10,
@@ -835,7 +868,7 @@ export let settings_store = {
     },
     font_weight_medium: {
         css: 'custom_font_weight_medium',
-        default: 600,
+        default: 500,
         min: 400,
         max: 750,
         step: 10,
@@ -845,7 +878,7 @@ export let settings_store = {
     },
     font_weight_bold: {
         css: 'custom_font_weight_bold',
-        default: 700,
+        default: 600,
         min: 500,
         max: 900,
         step: 10,
@@ -858,14 +891,6 @@ export let settings_store = {
         title: trans.font_emoji.name,
         body: trans.font_emoji.body,
         platforms: ['win32', 'linux', 'android', 'other']
-    },
-    show_bulk_edit_album: {
-        default: false,
-        title: trans.show_bulk_edit_album.name,
-        body: trans.show_bulk_edit_album.body,
-        extensions: [
-            trans.bulk_edit_extension
-        ]
     },
     grid_glow: {
         default: true,
@@ -1001,11 +1026,11 @@ export let settings_store = {
     },
     rabbit_shortcut: {
         default: 's',
-        title: trans.profile_shortcut.name,
+        title: trans.starred_friend.name,
         type: 'text',
         min: 1,
         max: 1,
-        icon: 'icon-16-profile-shortcut',
+        icon: 'icon-16-starred-friend',
         placeholder: 'none',
         keybind: ['⌘', 'S'],
         warn_if_empty: true
@@ -1024,8 +1049,7 @@ export let settings_store = {
     prefer_no_redirect: {
         default: true,
         title: trans.prefer_no_redirect.name,
-        body: trans.prefer_no_redirect.body,
-        new_release: true
+        body: trans.prefer_no_redirect.body
     },
     inbox_view: {
         default: 'notifications',
@@ -1040,22 +1064,16 @@ export let settings_store = {
         }
     },
     navigation_items: {
-        default: [
-            'home',
-            'library',
-            'shouts'
-        ],
+        default: ['home', 'library', 'shouts'],
         type: 'list',
         title: trans.navigation_items.name,
         body: trans.navigation_items.body,
-        new_release: true,
         predefined: true
     },
     navigation_language: {
         default: true,
         type: 'checkbox',
-        title: trans.navigation_language,
-        new_release: true
+        title: trans.navigation_language
     },
     branding_type: {
         default: 'bleh',
@@ -1069,8 +1087,7 @@ export let settings_store = {
             lastfm: {
                 name: 'Last.fm'
             }
-        },
-        new_release: true
+        }
     },
     expand_tracks: {
         default: 'active',
@@ -1088,21 +1105,18 @@ export let settings_store = {
                 name: trans.never
             }
         },
-        new_release: true
+        incompatible: { stacked_chartlist_info: false }
     },
     rain: {
         default: false,
         title: trans.rain.name,
-        body: trans.rain.body
+        body: trans.rain.body,
+        require_reload: true
     },
     collage_centered: {
         default: true,
         title: trans.collage_centered.name,
-        body: trans.collage_centered.body,
-        new_release: true
-    },
-    images: {
-        en: 'Images'
+        body: trans.collage_centered.body
     },
     static_gifs: {
         default: 'always',
@@ -1174,7 +1188,6 @@ export let settings_store = {
         type: 'list',
         title: trans.friends,
         body: trans.friends_setting,
-        new_release: true,
         warn_if_matches_auth: true
     },
     starred_friend: {
@@ -1186,5 +1199,53 @@ export let settings_store = {
     dismissed: {
         default: [],
         type: 'list'
+    },
+    oracle_beta: {
+        default: false,
+        title: trans.oracle_beta.name,
+        body: trans.oracle_beta.body,
+        beta: true,
+        new_release: true
+    },
+    control_center: {
+        default: [],
+        type: 'list'
+    },
+    romanise_jp: {
+        default: false,
+        type: 'checkbox',
+        title: trans.romanise_jp,
+        new_release: true
+    },
+    romanise_ko: {
+        default: false,
+        type: 'checkbox',
+        title: trans.romanise_ko,
+        new_release: true
+    },
+    music_links: {
+        default: [
+            'spotify',
+            'itunes',
+            'youtube',
+            'tidal',
+            'rym',
+            'genius',
+            'website',
+            'twitter',
+            'soundcloud',
+            'instagram'
+        ],
+        type: 'list',
+        title: trans.music_links.name,
+        body: trans.music_links.body,
+        new_release: true,
+        predefined: true
+    },
+    inverse_compare: {
+        default: false,
+        title: trans.inverse_compare.name,
+        body: trans.inverse_compare.body,
+        new_release: true
     }
-}
+};

@@ -4,25 +4,36 @@
 // Licensed under GPLv3
 //
 
-import {settings} from "../build/config";
-import {log} from "../build/log";
-import {auth, page, root} from "../build/page";
-import {sanitise} from "../build/tools";
-import {tl, trans, trans_legacy} from "../build/trans";
-import {artist_title, correct_item_by_artist} from "../components/lotus";
-import {register_menu} from "../components/menu";
-import {bleh_music_page_charts, bleh_top_listeners, redirect, show_your_scrobbles} from "../components/music";
-import {checkup_page_structure} from "../components/structure";
-import {register_background, update_page} from "../page";
-import {ff} from "../sku";
-import {bleh_gallery_list, bleh_gallery_upload} from "./gallery";
-import {bleh_tags_mini} from "./tag";
-import {bleh_wiki, bleh_wiki_editor, bleh_wiki_history} from "./wiki";
-import {html, render} from "lighterhtml";
-import {expand_avatar} from "../avatar.js";
-import {other_listener} from "../components/profile_shortcut.js";
-import {setting} from "../components/settings.js";
-import tippy from "tippy.js";
+import { settings } from '../build/config';
+import { log } from '../build/log';
+import { auth, page, root } from '../build/page';
+import { romanise, sanitise } from '../build/tools';
+import { tl, trans, trans_legacy } from '../build/trans';
+import {
+    artist_title,
+    correct_artist,
+    correct_generic_combo_no_artist,
+    correct_item_by_artist
+} from '../components/lotus';
+import { register_menu } from '../components/menu';
+import {
+    bleh_music_page_charts,
+    bleh_top_listeners,
+    convert_top_listener,
+    redirect,
+    show_your_scrobbles
+} from '../components/music';
+import { checkup_page_structure } from '../components/structure';
+import { register_background, update_page } from '../page';
+import { ff } from '../sku';
+import { bleh_gallery_list, bleh_gallery_upload } from './gallery';
+import { bleh_tags_mini } from './tag';
+import { bleh_wiki, bleh_wiki_editor, bleh_wiki_history } from './wiki';
+import { html, render } from 'lighterhtml';
+import { expand_avatar } from '../avatar.js';
+import { other_listener } from '../components/profile_shortcut.js';
+import { setting } from '../components/settings.js';
+import tippy from 'tippy.js';
 
 export function bleh_artists() {
     let artist_header = document.body.querySelector('.header-new--artist');
@@ -34,53 +45,71 @@ export function bleh_artists() {
 
     let is_subpage = artist_header.classList.contains('header-new--subpage');
 
-
     // without pro theres two containers
     if (auth.pro) {
         // pro
 
-        page.structure.container = document.body.querySelector('.page-content:not(.visible-xs, :has(.content-top-lower-row, a + .js-gallery-heading))');
+        page.structure.container = document.body.querySelector(
+            '.page-content:not(.visible-xs, :has(.content-top-lower-row, a + .js-gallery-heading))'
+        );
     } else {
         // not pro
 
         if (!is_subpage) {
             // normal, is there an ad then a container?
-            page.structure.container = document.body.querySelector('.full-bleed-ad-container + .page-content:not(.visible-xs)');
+            page.structure.container = document.body.querySelector(
+                '.full-bleed-ad-container + .page-content:not(.visible-xs)'
+            );
 
             // death grips for some reason
             if (!page.structure.container)
-                page.structure.container = document.body.querySelector('.page-content');
+                page.structure.container =
+                    document.body.querySelector('.page-content');
         } else {
-            page.structure.container = document.body.querySelector('.page-content:not(.visible-xs, :has(.content-top-lower-row, a + .js-gallery-heading))');
+            page.structure.container = document.body.querySelector(
+                '.page-content:not(.visible-xs, :has(.content-top-lower-row, a + .js-gallery-heading))'
+            );
         }
     }
     try {
         page.structure.row = page.structure.container.querySelector('.row');
 
         if (!is_subpage)
-            page.structure.main = page.structure.row.querySelector('.col-main.buffer-standard');
+            page.structure.main = page.structure.row.querySelector(
+                '.col-main.buffer-standard'
+            );
         else
             page.structure.main = page.structure.row.querySelector('.col-main');
 
         if (auth.pro) {
-            page.structure.side = page.structure.row.querySelector('.col-sidebar:not(.masonry-right)');
+            page.structure.side = page.structure.row.querySelector(
+                '.col-sidebar:not(.masonry-right)'
+            );
         } else {
-            page.structure.side = page.structure.row.querySelector('.col-sidebar:not(.section-with-separator--col)');
+            page.structure.side = page.structure.row.querySelector(
+                '.col-sidebar:not(.section-with-separator--col)'
+            );
         }
-    } catch(e) {
+    } catch (e) {
         log('unable to find elements', 'page structure');
     }
 
     checkup_page_structure(is_subpage, artist_header);
 
     let katsune = ff('katsune');
-    let featured_items = artist_header.querySelector('.artist-header-featured-items');
+    let featured_items = artist_header.querySelector(
+        '.artist-header-featured-items'
+    );
 
     if (ff('refreshed_music_nav')) {
-        let avatar = artist_header.querySelector('.header-new-background-image');
+        let avatar = artist_header.querySelector(
+            '.header-new-background-image'
+        );
         let title = artist_header.querySelector('.header-new-title');
         let on_tour = artist_header.querySelector('.header-new-on-tour');
-        let position = artist_header.querySelector('.header-new-chart-position-number');
+        let position = artist_header.querySelector(
+            '.header-new-chart-position-number'
+        );
 
         if (on_tour) on_tour.classList.add('label', 'no-hover');
 
@@ -88,30 +117,42 @@ export function bleh_artists() {
         let redesigned_artist_header = html.node`
             <section class="redesigned-header redesigned-artist-header no-background">
                 <div class="avatar-side">
-                    ${(avatar) ? html.node`
+                    ${
+                        avatar ?
+                            html.node`
                     <img src="${avatar.getAttribute('content').replace('/ar0/', '/avatar300s/')}">
                     <a class="bleh--avatar-clickable-link"></a>
-                    ` : html.node`<img class="missing-artist">`}
+                    `
+                        :   html.node`<img class="missing-artist">`
+                    }
                 </div>
                 <div class="info-side">
-                    ${(page.multi) ? html.node`
+                    ${
+                        page.multi ?
+                            html.node`
                     <div class="sub-text">
                         ${tl(trans.artists)}
-                        <div class="info-tip" ref=${el => multi_info_box = el}>
+                        <div class="info-tip" ref=${(el) => (multi_info_box = el)}>
                             <div class="bleh-icon bleh-info-icon"></div>
                         </div>
                     </div>
-                    ` : html.node`
+                    `
+                        :   html.node`
                     <div class="sub-text">${tl(trans.artist)}</div>
-                    `}
+                    `
+                    }
                     <div class="title-container" data-multi=${page.multi}>
                         ${title}
                         ${position}
-                        ${on_tour ? html.node`
+                        ${
+                            on_tour ?
+                                html.node`
                         <div class="badges">
                             ${on_tour}
                         </div>
-                        ` : ''}
+                        `
+                            :   ''
+                        }
                     </div>
                 </div>
             </section>
@@ -131,32 +172,40 @@ export function bleh_artists() {
 
         let bg;
 
-        if (avatar)
-            bg = register_background(avatar.getAttribute('content'));
-        else
-            bg = register_background(null);
+        if (avatar) bg = register_background(avatar.getAttribute('content'));
+        else bg = register_background(null);
 
-        page.structure.container.insertBefore(redesigned_artist_header, page.structure.container.firstElementChild);
+        page.structure.container.insertBefore(
+            redesigned_artist_header,
+            page.structure.container.firstElementChild
+        );
         artist_header.classList.add('legacy-header');
 
-
-        let avatar_side = redesigned_artist_header.querySelector('.avatar-side');
+        let avatar_side =
+            redesigned_artist_header.querySelector('.avatar-side');
         let avatar_link = avatar_side.querySelector('a');
 
         if (avatar != null && avatar_link != null) {
             if (settings.default_avatar_action == 'expand' && avatar != null)
-                avatar_link.setAttribute('onclick', `_expand_avatar('${avatar.getAttribute('content')}')`);
+                avatar_link.setAttribute(
+                    'onclick',
+                    `_expand_avatar('${avatar.getAttribute('content')}')`
+                );
             else if (settings.default_avatar_action == 'gallery')
                 avatar_link.href = `${root}music/${redirect()}${sanitise(page.name)}/+images`;
 
             let menu = tippy(avatar_side, {
                 theme: 'context-menu',
                 content: html.node`
-                    ${(avatar != null) ? html.node`
+                    ${
+                        avatar != null ?
+                            html.node`
                     <button class="dropdown-menu-clickable-item" onclick=${() => expand_avatar(avatar.getAttribute('content'))} data-menu-item="expand">
                         ${tl(trans.expand)}
                     </button>
-                    ` : ''}
+                    `
+                        :   ''
+                    }
                     <a class="dropdown-menu-clickable-item" href="${root}music/${redirect()}${sanitise(page.name)}/+images" data-menu-item="gallery">
                         ${tl(trans.photos)}
                     </a>
@@ -172,7 +221,7 @@ export function bleh_artists() {
                 offset: [0, 0],
 
                 onShow(instance) {
-                    instance.popper.addEventListener('click', event => {
+                    instance.popper.addEventListener('click', (event) => {
                         instance.hide();
                     });
                 }
@@ -182,7 +231,8 @@ export function bleh_artists() {
         }
 
         if (!is_subpage) {
-            let view_button = redesigned_artist_header.querySelector('.view-all-button');
+            let view_button =
+                redesigned_artist_header.querySelector('.view-all-button');
 
             if (view_button) {
                 let view_menu = tippy(view_button, {
@@ -199,7 +249,7 @@ export function bleh_artists() {
                     offset: [0, 0],
 
                     onShow(instance) {
-                        instance.popper.addEventListener('click', event => {
+                        instance.popper.addEventListener('click', (event) => {
                             instance.hide();
                         });
                     }
@@ -217,7 +267,6 @@ export function bleh_artists() {
 
         bleh_tags_mini();
 
-
         let top_tracks = page.structure.main.querySelector('#top-tracks');
         if (top_tracks) {
             let settings_btn;
@@ -227,16 +276,25 @@ export function bleh_artists() {
 
             let header = top.querySelector('h3');
 
-            let select_btn = top.querySelector('.dropdown-menu-clickable-button');
+            let select_btn = top.querySelector(
+                '.dropdown-menu-clickable-button'
+            );
             if (select_btn) {
-                select_btn.classList.add('select-button', 'link-select', 'blend-v2-btn');
+                select_btn.classList.add(
+                    'select-button',
+                    'link-select',
+                    'blend-v2-btn'
+                );
                 select_btn.classList.remove('dropdown-menu-clickable-button');
             }
 
             let play = top.querySelector('.section-playlink');
             if (play) {
                 play.classList.add('blend-v2-btn', 'radio');
-                play.classList.remove('section-playlink', 'hover-section-control');
+                play.classList.remove(
+                    'section-playlink',
+                    'hover-section-control'
+                );
                 play.setAttribute('data-type', 'play');
             }
 
@@ -246,7 +304,7 @@ export function bleh_artists() {
                 </div>
                 <div class="view-buttons blend blend-v2">
                     ${play}
-                    <button class="left-icon blend-v2-btn" data-type="settings" ref=${el => settings_btn = el}>
+                    <button class="left-icon blend-v2-btn" data-type="settings" ref=${(el) => (settings_btn = el)}>
                         ${tl(trans.settings)}
                     </button>
                 </div>
@@ -257,15 +315,16 @@ export function bleh_artists() {
                 content: html.node`
                     <div class="dialog-settings">
                         <div class="setting-group blend">
-                            ${setting({id: 'format_guest_features'})}
-                            ${setting({id: 'show_guest_features'})}
+                            ${setting({ id: 'format_guest_features' })}
+                            ${setting({ id: 'show_guest_features' })}
                         </div>
                     </div>
                 `,
                 placement: 'bottom',
                 interactive: true,
                 interactiveBorder: 10,
-                trigger: 'click'
+                trigger: 'click',
+                appendTo: document.body
             });
         }
 
@@ -276,10 +335,16 @@ export function bleh_artists() {
 
             let header = top.querySelector('h3');
 
-            let select_btn = top.querySelector('.dropdown-menu-clickable-button');
+            let select_btn = top.querySelector(
+                '.dropdown-menu-clickable-button'
+            );
 
             if (select_btn) {
-                select_btn.classList.add('select-button', 'link-select', 'blend-v2-btn');
+                select_btn.classList.add(
+                    'select-button',
+                    'link-select',
+                    'blend-v2-btn'
+                );
                 select_btn.classList.remove('dropdown-menu-clickable-button');
 
                 // TODO: if we ever add settings for this album view, move out of here
@@ -291,30 +356,60 @@ export function bleh_artists() {
             }
         }
 
-
         if (katsune && featured_items) {
             let featured_panel = html.node`
                 <section class="featured-items-panel">
-                    ${Array.from(featured_items.querySelectorAll('li')).map(item => {
-                        item.classList.remove('artist-header-featured-items-item-wrap--video-thumbnail');
-                        let type = item.getAttribute('itemprop');
-                        
-                        let text = tl(trans.latest_album);
-                        if (type == 'track')
-                            text = tl(trans.popular_now);
-                        
-                        let header = item.querySelector('.artist-header-featured-items-item-header');
-                        header.parentElement.removeChild(header);
-                        
-                        let name = correct_item_by_artist(item.querySelector('.artist-header-featured-items-item-name').textContent.trim(), page.name);
-                        let aux = item.querySelector('.artist-header-featured-items-item-aux-text')?.textContent.trim();
-                        let link = item.querySelector('.link-block-cover-link')?.getAttribute('href');
-                        let img = item.querySelector('img')?.src;
-                        
-                        if (type == 'track')
-                            img = img.replace('0.jpg', 'mqdefault.jpg');
-                        
-                        return html.node`
+                    ${Array.from(featured_items.querySelectorAll('li')).map(
+                        (item) => {
+                            item.classList.remove(
+                                'artist-header-featured-items-item-wrap--video-thumbnail'
+                            );
+                            let type = item.getAttribute('itemprop');
+
+                            let text = tl(trans.latest_album);
+                            if (type == 'track') text = tl(trans.popular_now);
+
+                            let header = item.querySelector(
+                                '.artist-header-featured-items-item-header'
+                            );
+                            header.parentElement.removeChild(header);
+
+                            let name = correct_item_by_artist(
+                                item
+                                    .querySelector(
+                                        '.artist-header-featured-items-item-name'
+                                    )
+                                    .textContent.trim(),
+                                page.name
+                            );
+                            let aux = item
+                                .querySelector(
+                                    '.artist-header-featured-items-item-aux-text'
+                                )
+                                ?.textContent.trim();
+                            let link = item
+                                .querySelector('.link-block-cover-link')
+                                ?.getAttribute('href');
+                            let img = item.querySelector('img')?.src;
+
+                            if (type == 'track') {
+                                const top_track =
+                                    page.structure.main.querySelector(
+                                        '#top-tracks .cover-art img'
+                                    );
+                                if (
+                                    top_track &&
+                                    !top_track.src.endsWith(
+                                        '4128a6eb29f94943c9d206c08e625904.jpg'
+                                    )
+                                )
+                                    img = top_track.src.replace(
+                                        '/64s/',
+                                        '/avatar170s/'
+                                    );
+                            }
+
+                            return html.node`
                             <div class="featured-artist-item">
                                 <div class="sub-text normal" data-type=${type}>
                                     <span class="bleh-icon" style="--icon: var(--mask)" />
@@ -336,7 +431,8 @@ export function bleh_artists() {
                                 </div>
                             </div>
                         `;
-                    })}
+                        }
+                    )}
                 </section>
             `;
 
@@ -346,43 +442,78 @@ export function bleh_artists() {
             else
                 page.structure.side.insertBefore(featured_panel, page.structure.side.firstElementChild);*/
 
-            page.structure.main.querySelector('.top-overview-panel').after(featured_panel);
+            page.structure.main
+                .querySelector('.top-overview-panel')
+                .after(featured_panel);
+        }
+
+        const listeners_section =
+            page.structure.main.querySelector('.listeners-section');
+        if (listeners_section) {
+            const listeners = listeners_section.querySelectorAll(
+                '.listeners-section-item'
+            );
+
+            listeners_section.classList = 'user-list top-listeners-list small';
+            render(listeners_section, html``);
+
+            listeners.forEach((listener, index) => {
+                listeners_section.appendChild(
+                    convert_top_listener(listener, index, 'listeners-section')
+                );
+            });
         }
     } else {
         let btn_add = page.structure.side.querySelector('.add-button');
         if (btn_add) btn_add.setAttribute('data-page-subpage', page.subpage);
 
         if (page.subpage.startsWith('listeners_')) {
-            let toolbar = page.structure.row.querySelector(':scope > .toolbar > .navlist > .navlist-items');
+            let toolbar = page.structure.row.querySelector(
+                ':scope > .toolbar > .navlist > .navlist-items'
+            );
 
-            let overview = toolbar.querySelector('.secondary-nav-item--overview');
+            let overview = toolbar.querySelector(
+                '.secondary-nav-item--overview'
+            );
             overview.classList.remove('secondary-nav-item--overview');
             overview.classList.add('secondary-nav-item--global');
             overview.querySelector('a').textContent = tl(trans.global);
 
-            let mutuals = toolbar.querySelector('.secondary-nav-item--you-know a');
+            let mutuals = toolbar.querySelector(
+                '.secondary-nav-item--you-know a'
+            );
             mutuals.textContent = tl(trans.mutuals);
 
-            if (page.subpage == 'listeners_overview')
-                bleh_top_listeners();
-            else if (page.subpage == 'listeners_you-know')
-                bleh_listeners();
+            if (page.subpage == 'listeners_overview') bleh_top_listeners();
+            else if (page.subpage == 'listeners_you-know') bleh_listeners();
         }
 
-        if (page.subpage == 'images_image-upload')
-            bleh_gallery_upload();
-        else if (page.subpage == 'images_overview')
-            bleh_gallery_list();
-        else if (page.subpage == 'wiki_overview')
-            bleh_wiki();
-        else if (page.subpage == 'wiki_history')
-            bleh_wiki_history();
-        else if (page.subpage == 'wiki_edit')
-            bleh_wiki_editor();
-        else if (page.subpage == 'tracks')
-            bleh_artist_tracks();
-        else if (page.subpage == 'albums')
-            bleh_artist_albums();
+        if (page.subpage == 'events') {
+            const tabs = page.structure.row.querySelectorAll(
+                ':scope > .toolbar .secondary-nav-item-link'
+            );
+            tabs.forEach((tab, index) => {
+                if (index < 1) return;
+
+                tab.classList.add('has-tab-num');
+
+                const num = tab.firstChild.textContent.trim().slice(-2);
+                tab.appendChild(html.node`
+                    <span class="tab-num">
+                        ${num}
+                    </span>
+                `);
+            });
+        }
+
+        if (page.subpage == 'images_image-upload') bleh_gallery_upload();
+        else if (page.subpage == 'images_overview') bleh_gallery_list();
+        else if (page.subpage == 'wiki_overview') bleh_wiki();
+        else if (page.subpage == 'wiki_history') bleh_wiki_history();
+        else if (page.subpage == 'wiki_edit') bleh_wiki_editor();
+        else if (page.subpage == 'tracks') bleh_artist_tracks();
+        else if (page.subpage == 'albums') bleh_artist_albums();
+        else if (page.subpage == 'similar') bleh_artist_similar();
     }
 
     log('status is', 'page', 'info', page);
@@ -403,7 +534,11 @@ function bleh_artist_tracks() {
         let select_btn = top.querySelector('.dropdown-menu-clickable-button');
 
         if (select_btn) {
-            select_btn.classList.add('select-button', 'link-select', 'blend-v2-btn');
+            select_btn.classList.add(
+                'select-button',
+                'link-select',
+                'blend-v2-btn'
+            );
             select_btn.classList.remove('dropdown-menu-clickable-button');
         }
 
@@ -412,7 +547,7 @@ function bleh_artist_tracks() {
                     ${select_btn}
                 </div>
                 <div class="view-buttons blend blend-v2">
-                    <button class="left-icon blend-v2-btn" data-type="settings" ref=${el => settings_btn = el}>
+                    <button class="left-icon blend-v2-btn" data-type="settings" ref=${(el) => (settings_btn = el)}>
                         ${tl(trans.settings)}
                     </button>
                 </div>
@@ -423,21 +558,24 @@ function bleh_artist_tracks() {
             content: html.node`
                 <div class="dialog-settings">
                     <div class="setting-group blend">
-                        ${setting({id: 'format_guest_features'})}
-                        ${setting({id: 'show_guest_features'})}
+                        ${setting({ id: 'format_guest_features' })}
+                        ${setting({ id: 'show_guest_features' })}
                     </div>
                 </div>
             `,
             placement: 'bottom',
             interactive: true,
             interactiveBorder: 10,
-            trigger: 'click'
+            trigger: 'click',
+            appendTo: document.body
         });
     }
 }
 
 function bleh_artist_albums() {
-    let top_albums = page.structure.main.querySelector('#artist-albums-section');
+    let top_albums = page.structure.main.querySelector(
+        '#artist-albums-section'
+    );
     if (top_albums) {
         let top = top_albums.querySelector('.section-controls');
         top.classList = 'top-container';
@@ -447,7 +585,11 @@ function bleh_artist_albums() {
         let select_btn = top.querySelector('.dropdown-menu-clickable-button');
 
         if (select_btn) {
-            select_btn.classList.add('select-button', 'link-select', 'blend-v2-btn');
+            select_btn.classList.add(
+                'select-button',
+                'link-select',
+                'blend-v2-btn'
+            );
             select_btn.classList.remove('dropdown-menu-clickable-button');
         }
 
@@ -457,10 +599,43 @@ function bleh_artist_albums() {
             </div>
         `);
     }
+
+    correct_generic_combo_no_artist('resource-list--release-list-item');
+}
+
+function bleh_artist_similar() {
+    const similar = page.structure.main.querySelector(
+        ':scope > .similar-artists'
+    );
+
+    if (!similar) return;
+
+    const artists = similar.querySelectorAll('.similar-artists-item-wrap');
+
+    render(
+        page.structure.main,
+        html`
+            <section class="similar-panel">
+                <h2 class="text-18">
+                    ${tl(trans.artists_similar_to_name, {
+                        n: romanise(correct_artist(page.name))
+                    })}
+                </h2>
+                ${similar}
+            </section>
+        `
+    );
+
+    artists.forEach((artist) => {
+        const name = artist.querySelector('.similar-artists-item-name a');
+        name.textContent = romanise(correct_artist(name.textContent));
+    });
 }
 
 function bleh_listeners() {
-    const buffer = page.structure.main.querySelector(':scope > .buffer-standard');
+    const buffer = page.structure.main.querySelector(
+        ':scope > .buffer-standard'
+    );
 
     const no_data = buffer.querySelector(':scope > .no-data-message');
 
@@ -473,18 +648,30 @@ function bleh_listeners() {
 
         p.remove();
 
-        buffer.insertBefore(html.node`
+        buffer.insertBefore(
+            html.node`
             <h2>${tl(trans.count_mutual_listeners).replace('{c}', count.toString())}</h2>
-        `, buffer.firstElementChild);
+        `,
+            buffer.firstElementChild
+        );
     } else {
         // no listeners
-        render(buffer, html`
-            <h2>${tl(trans.no_mutual_listeners)}</h2>
-            <div class="loading-data-container">
-                <div class="loading-data-text info">${tl(trans.no_mutual_listeners_explain)}</div>
-            </div>
-        `);
+        render(
+            buffer,
+            html`
+                <h2>${tl(trans.no_mutual_listeners)}</h2>
+                <div class="loading-data-container">
+                    <div class="loading-data-text info">
+                        ${tl(trans.no_mutual_listeners_explain)}
+                    </div>
+                </div>
+            `
+        );
     }
+
+    const friends = settings.friends.filter(
+        (friend) => friend != settings.starred_friend
+    );
 
     // i could just render away the ad here but courtesy
     page.structure.side.appendChild(html.node`
@@ -492,11 +679,28 @@ function bleh_listeners() {
             <a class="btn side-action" data-type="profile" href="${root}user/${auth.name}/library/music/${redirect()}${sanitise(page.name)}">
                 ${auth.name}
             </a>
-            ${settings.profile_shortcut != '' ? html.node`
-            <a class="btn side-action" data-type="profile_shortcut" href="${root}user/${settings.profile_shortcut}/library/music/${redirect()}${sanitise(page.name)}">
-                ${settings.profile_shortcut}
+            ${
+                settings.starred_friend != '' ?
+                    html.node`
+            <a class="btn side-action" data-type="profile" href="${root}user/${settings.starred_friend}/library/music/${redirect()}${sanitise(page.name)}">
+                ${settings.starred_friend}
+                <span class="star-icon colourful">
+                    <span class="bleh-icon" />
+                </span>
             </a>
-            ` : ''}
+            `
+                :   ''
+            }
+            ${friends.map(
+                (friend) => html.node`
+            <a class="btn side-action" data-type="profile" href="${root}user/${friend}/library/music/${redirect()}${sanitise(page.name)}">
+                ${friend}
+            </a>
+            `
+            )}
+            <a class="btn side-action" data-type="add" href="${root}bleh/profile">
+                ${tl(trans.add_friends)}
+            </a>
             <div class="sep" />
             <button class="btn side-action" data-type="add" onclick=${() => other_listener(sanitise(page.name))}>
                 ${tl(trans.custom)}

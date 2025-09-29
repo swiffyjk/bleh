@@ -339,10 +339,8 @@ export function patch_wiki() {
         let wiki_col = page.structure.main.querySelector('.wiki-column');
         let wiki_empty = false;
 
-        if (!wiki_col) {
-            wiki_col = page.structure.main.querySelector('.wiki-section');
-            return;
-        }
+        if (!wiki_col) wiki_col = page.structure.main.querySelector('.wiki-section');
+        if (!wiki_col) return;
 
         let wiki_block = wiki_col.querySelector('.wiki-block.visible-lg .wiki-block-inner-2');
 
@@ -382,22 +380,50 @@ export function patch_wiki_contents(wiki_block) {
 
         if (!href.startsWith(root)) {
             if (href && is_link_external(href)) {
-                link.addEventListener('click', e => {
-                    const link = new URL(href);
-                    const hostname = link.hostname;
+                const url = new URL(href);
+                const scheme = url.protocol;
+                const hostname = url.hostname;
+                const path = url.pathname + url.search + url.hash;
 
+                let dangerous = false;
+
+                if (!scheme || !scheme.startsWith('http')) dangerous = true;
+
+                link.addEventListener('click', e => {
                     if (settings.trusted_sites.includes(hostname)) return;
 
                     e.preventDefault();
 
-                    external_url_prompt(href);
+                    external_url_prompt(href, dangerous);
                 });
 
                 if (link.textContent != href) {
                     tippy(link, {
                         theme: 'name-sister-combo',
                         content: html.node`
-                            <span class="name">${href}</span>
+                            <span class="name">
+                                <span class="link">
+                                    ${scheme != 'https:' ? html.node`
+                                    <span class="scheme">
+                                        ${scheme}//
+                                    </span>
+                                    ` : ''}
+                                    ${hostname ? html.node`
+                                    <span class="hostname">
+                                        ${hostname}
+                                    </span>
+                                    ` : html.node`
+                                    <span class="hostname">
+                                        ${path}
+                                    </span>
+                                    `}
+                                    ${path != '/' && hostname ? html.node`
+                                    <span class="path">
+                                        ${path}
+                                    </span>
+                                    ` : ''}
+                                </span>
+                            </span>
                             <span class="sister">${tl(trans.external)}</span>
                         `
                     });

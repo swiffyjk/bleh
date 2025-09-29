@@ -28,8 +28,10 @@ export function append_style() {
     let url_length = url_split.length - 1;
 
     // style is neither fetched nor applied in these interfaces
-    if (url_split[url_length] == 'playback' || url_split[url_length - 1] == 'labs')
+    if ((url_split[url_length] == 'playback' && url_split[2] == 'listening-report') || url_split[0] == 'labs') {
+        log('disabled loading for special interface', 'style');
         return;
+    }
 
     document.documentElement.setAttribute('data-bleh--theme', settings.theme);
     document.documentElement.appendChild(html.node`<style>${cropper_css}</style>`);

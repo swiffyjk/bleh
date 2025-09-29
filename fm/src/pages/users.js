@@ -4,14 +4,16 @@
 // Licensed under GPLv3
 //
 
-import {render} from 'lighterhtml';
-import {page} from '../build/page';
-import {markdown} from '../components/markdown';
-import {patch_avatar} from "../avatar.js";
-import {correct_artist} from "../components/lotus.js";
+import { render } from 'lighterhtml';
+import { page } from '../build/page';
+import { markdown } from '../components/markdown';
+import { patch_avatar } from '../avatar.js';
+import { correct_artist } from '../components/lotus.js';
 
 export function bleh_users() {
-    let users = page.structure.main.querySelectorAll('.user-list-item:not(.user-list-item-mobile-ad)');
+    let users = page.structure.main.querySelectorAll(
+        '.user-list-item:not(.user-list-item-mobile-ad)'
+    );
     users.forEach((user) => {
         let avatar = user.querySelector('.user-list-avatar');
         let name = user.querySelector('.user-list-link').textContent;
@@ -25,10 +27,14 @@ export function bleh_users() {
 
         let md = user.querySelector('.user-list-about-me');
         if (md) {
-            render(md, markdown(md.textContent, {
-                allow_headers: false,
-                line_breaks: false
-            }));
+            render(
+                md,
+                markdown(md.textContent, {
+                    allow_headers: false,
+                    line_breaks: false,
+                    allow_lists: false
+                })
+            );
         }
     });
 }
