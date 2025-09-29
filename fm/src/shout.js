@@ -210,7 +210,7 @@ export function patch_shouts() {
                     ${tl(trans.preview)}
                 </div>
                 <div class="tip characters" ref=${(el) => (chars = el)}>
-                    ${tl(trans.value_characters_max, { v: '500' })}
+                    ${tl(trans.value_characters_max, { v: '0/1000' })}
                 </div>
             `
         );
@@ -218,9 +218,9 @@ export function patch_shouts() {
         textarea.addEventListener('input', () => {
             const value = textarea.value;
             chars.textContent = tl(trans.value_characters_max, {
-                v: `${value.length}/500`
+                v: `${value.length}/1000`
             });
-            chars.setAttribute('data-exceeded', value.length >= 500);
+            chars.setAttribute('data-exceeded', value.length >= 1000);
         });
 
         shout_form.addEventListener('keydown', (e) => {
