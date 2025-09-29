@@ -13,6 +13,7 @@ import { ff } from '../sku';
 import { html, render } from 'lighterhtml';
 import { share } from '../components/share.js';
 import tippy from 'tippy.js';
+import { correct_artist, correct_item_by_artist } from '../components/lotus.js';
 
 export function bleh_gallery() {
     if (page.subpage != 'image') return;
@@ -366,9 +367,15 @@ export function bleh_gallery_upload() {
 
     const formats = form.querySelector('.form-row-help-text');
 
+    if (page.type == 'artist') {
+        title.value = correct_artist(page.name);
+    } else {
+        title.value = correct_item_by_artist(page.name, page.sister);
+    }
+
     const panel = html.node`
         <section class="gallery-upload-panel bleh--panel">
-            <h4>${tl(trans.upload_image)}</h4>
+            <h4>${tl(trans.image_details)}</h4>
             <form method="post" action=${form.getAttribute('action')} enctype=${form.getAttribute('enctype')}>
                 ${token}
                 <div style="display: none">
@@ -379,7 +386,7 @@ export function bleh_gallery_upload() {
                         <div class="heading">
                             <h5>${tl(trans.title)}</h5>
                         </div>
-                        <div class="input-container content-form">
+                        <div class="input-container content-form wide">
                             ${title}
                         </div>
                     </div>

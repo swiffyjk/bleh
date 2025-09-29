@@ -18715,6 +18715,16 @@
                 height: var(--button-height);
             }
 
+            &.textarea,
+            &.wide {
+                width: 400px;
+
+                & > input {
+                    flex: 1;
+                    max-width: unset;
+                }
+            }
+
             input {
                 width: calc(var(--max) * 6);
                 min-width: 60px;

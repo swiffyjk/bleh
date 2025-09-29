@@ -28119,9 +28119,14 @@
     const description = form.querySelector('[name="description"]');
     const file_input = form.querySelector('input[type="file"]');
     const formats = form.querySelector(".form-row-help-text");
+    if (page.type == "artist") {
+      title.value = correct_artist(page.name);
+    } else {
+      title.value = correct_item_by_artist(page.name, page.sister);
+    }
     const panel = html.node`
         <section class="gallery-upload-panel bleh--panel">
-            <h4>${tl(trans.upload_image)}</h4>
+            <h4>${tl(trans.image_details)}</h4>
             <form method="post" action=${form.getAttribute("action")} enctype=${form.getAttribute("enctype")}>
                 ${token}
                 <div style="display: none">
@@ -28132,7 +28137,7 @@
                         <div class="heading">
                             <h5>${tl(trans.title)}</h5>
                         </div>
-                        <div class="input-container content-form">
+                        <div class="input-container content-form wide">
                             ${title}
                         </div>
                     </div>
@@ -62577,6 +62582,9 @@ ${e ? html.node`<span class="error-type">${e.name}</span>: ${e.message}` : ""}</
     },
     upload_image: {
       en: "Upload image"
+    },
+    image_details: {
+      en: "Image details"
     },
     title: {
       en: "Title"

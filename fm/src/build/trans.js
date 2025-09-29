@@ -3464,6 +3464,9 @@ export const trans = {
     upload_image: {
         en: 'Upload image'
     },
+    image_details: {
+        en: 'Image details'
+    },
     title: {
         en: 'Title'
     },
