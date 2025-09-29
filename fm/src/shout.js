@@ -194,6 +194,7 @@ export function patch_shouts() {
         const textarea = shout_form.querySelector('textarea');
 
         let chars;
+        let preview;
         render(
             help_text,
             html`
@@ -206,6 +207,8 @@ export function patch_shouts() {
                 <div
                     class="tip preview"
                     onclick=${() => markdown_preview(textarea.value)}
+                    ref=${(el) => (preview = el)}
+                    disabled="true"
                 >
                     ${tl(trans.preview)}
                 </div>
@@ -221,6 +224,8 @@ export function patch_shouts() {
                 v: `${value.length}/1000`
             });
             chars.setAttribute('data-exceeded', value.length >= 1000);
+
+            preview.setAttribute('disabled', value.length <= 0);
         });
 
         shout_form.addEventListener('keydown', (e) => {

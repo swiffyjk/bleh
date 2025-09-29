@@ -19660,6 +19660,11 @@
             --sat-over: 1;
             --lit-over: 1;
         }
+
+        &[disabled="true"] {
+            opacity: 0.8;
+            pointer-events: none;
+        }
     }
 
     /*     RAIN     */

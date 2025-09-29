@@ -58034,6 +58034,7 @@ ${e ? html.node`<span class="error-type">${e.name}</span>: ${e.message}` : ""}</
       help_text.classList.add("dual-tip");
       const textarea = shout_form.querySelector("textarea");
       let chars;
+      let preview;
       render(
         help_text,
         html`
@@ -58046,6 +58047,8 @@ ${e ? html.node`<span class="error-type">${e.name}</span>: ${e.message}` : ""}</
                 <div
                     class="tip preview"
                     onclick=${() => markdown_preview(textarea.value)}
+                    ref=${(el) => preview = el}
+                    disabled="true"
                 >
                     ${tl(trans.preview)}
                 </div>
@@ -58060,6 +58063,7 @@ ${e ? html.node`<span class="error-type">${e.name}</span>: ${e.message}` : ""}</
           v: `${value.length}/1000`
         });
         chars.setAttribute("data-exceeded", value.length >= 1e3);
+        preview.setAttribute("disabled", value.length <= 0);
       });
       shout_form.addEventListener("keydown", (e) => {
         if (e.ctrlKey && e.keyCode == 13) {
