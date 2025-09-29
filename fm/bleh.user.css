@@ -21571,7 +21571,14 @@
                 position: absolute;
                 inset: 0;
                 cursor: pointer;
-                z-index: 20;
+                z-index: 2000;
+
+                display: flex;
+                flex-direction: column;
+                align-items: center;
+                justify-content: center;
+                font-size: 16px;
+                line-height: 20px;
 
                 &:before {
                     content: "";
@@ -21593,6 +21600,12 @@
                     &:before {
                         transform: scale(1);
                         opacity: 0.5;
+                    }
+                }
+
+                &[data-has-file="true"] {
+                    & > div {
+                        display: none;
                     }
                 }
             }

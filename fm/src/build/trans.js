@@ -1365,6 +1365,9 @@ export const trans = {
         pt: 'Arte de capa',
         sv: 'Konst'
     },
+    dropzone: {
+        en: 'Drag-and-drop an image or click here'
+    },
     similar_artists: {
         en: 'Similar Artists',
         de: 'Ähnliche Künstler*innen',
