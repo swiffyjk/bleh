@@ -35384,9 +35384,14 @@
     if (page.type == "track")
       albums_and_lyrics_row.classList.add("oracle-hidden");
     function oracle_aliases(artist2, desired) {
-      if (artist2.name == desired || artist2.id == artist_data.id)
+      log("aliase request", "oracle", "log", {
+        artist: artist2,
+        desired,
+        artist_data
+      });
+      if (artist2.name == desired || artist_data.id && artist2.id == artist_data.id)
         return desired;
-      return artist2;
+      return artist2.name;
     }
     oracle_obtain_artist();
     function oracle_obtain_artist() {
@@ -36105,17 +36110,20 @@
                                 <td ref=${(el) => va = el}>${val}</td>
                             </tr>
                         `;
-        if (item = "artist_id") {
+        if (item = "artist") {
           render(
             va,
             html`
-                                    ${val}
+                                    <p>type: ${val.type}</p>
+                                    <p>name: ${val.name}</p>
+                                    ${val.type == "id" ? html.node`
                                     <a
                                         class="see-more"
-                                        href="https://musicbrainz.org/artist/${val}"
+                                        href="https://musicbrainz.org/artist/${val.name}"
                                         target="_blank"
                                         >view</a
                                     >
+                                    ` : ""}
                                 `
           );
         }
@@ -38309,13 +38317,13 @@
     let settings_btn;
     let submit;
     let body;
-    let value = 5;
+    let value = 3;
     let min2 = 1;
     let max2 = 20;
     let current_year = (/* @__PURE__ */ new Date()).getFullYear();
     let previous_year = current_year - 1;
     const default_type = page.requested.type || "albums";
-    const default_timeframe = page.requested.timeframe || "date_preset=LAST_90_DAYS";
+    const default_timeframe = page.requested.timeframe || "date_preset=LAST_7_DAYS";
     if (page.requested.redirect) {
       setTimeout(() => {
         notify({
@@ -51664,6 +51672,26 @@
                 <h4>${tl(trans.oracle_heading)}</h4>
                 <div class="setting-group">
                     ${setting({ id: "oracle_beta" })}
+                    <div
+                        class="setting"
+                        data-type="info"
+                        disabled=${!oracle_artists.version || !oracle_albums.version || !oracle_tracks.version}
+                    >
+                        <div class="heading">
+                            <h5>${tl(trans.current_version)}</h5>
+                        </div>
+                        <div class="info">
+                            <p>
+                                ${oracle_artists.version}, ${oracle_albums.version}, ${oracle_tracks.version}
+                            </p>
+                            <button
+                                class="see-more update-check"
+                                onclick=${() => oracle_data(true)}
+                            >
+                                ${tl(trans.update_check)}
+                            </button>
+                        </div>
+                    </div>
                 </div>
             </section>
             ` : ""}
@@ -53420,18 +53448,14 @@ ${e ? html.node`<span class="error-type">${e.name}</span>: ${e.message}` : ""}</
                 <div
                     class="inner theme-preview"
                     data-bleh--theme=${settings.theme_day}
-                    data-bleh--theme_type=${["light", "ink"].includes(
-          settings.theme_day
-        ) ? "light" : "dark"}
+                    data-bleh--theme_type=${["light", "ink"].includes(settings.theme_day) ? "light" : "dark"}
                 >
                     ${theme_preview()}
                 </div>
                 <div
                     class="inner theme-preview"
                     data-bleh--theme=${settings.theme_night}
-                    data-bleh--theme_type=${["light", "ink"].includes(
-          settings.theme_night
-        ) ? "light" : "dark"}
+                    data-bleh--theme_type=${["light", "ink"].includes(settings.theme_night) ? "light" : "dark"}
                 >
                     ${theme_preview()}
                 </div>

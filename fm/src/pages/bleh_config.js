@@ -6,7 +6,16 @@
 
 import { settings } from '../build/config';
 import { album_track_corrections, artist_corrections } from '../build/music';
-import { api_key, auth, page, root, theme_preview } from '../build/page';
+import {
+    api_key,
+    auth,
+    oracle_albums,
+    oracle_artists,
+    oracle_tracks,
+    page,
+    root,
+    theme_preview
+} from '../build/page';
 import { stored_season } from '../build/seasonal';
 import { sponsor_list } from '../build/sponsor';
 import { clamp_sat, hex_to_hsl } from '../build/tools';
@@ -44,6 +53,7 @@ import {
 import { select_prepare_list } from '../components/select.js';
 import { status } from '../components/status.js';
 import { match } from '../components/dynamic_theming.js';
+import { oracle_data } from '../components/oracle.js';
 
 export function bleh_settings() {
     page.name = auth.name;
@@ -137,12 +147,12 @@ export function bleh_settings() {
         page.structure.side,
         html`
             <div class="cta first priority sponsor colourful">
-                ${auth.sponsor
-                    ? html.node`
+                ${auth.sponsor ?
+                    html.node`
             <strong>${tl(trans.you_are_a_sponsor)}</strong>
             <a class="see-more" onclick="_sponsor_manage()">${tl(trans.manage_sponsor)}</a>
             `
-                    : html.node`
+                :   html.node`
             <strong>${tl(trans.news_sponsor_cta)}</strong>
             <a class="see-more" onclick="_sponsor()">${tl(trans.sponsor)}</a>
             `}
@@ -170,14 +180,14 @@ export function bleh_settings() {
                     ${tl(trans.reset)}
                 </button>
             </section>
-            ${ff('skip_to_setting')
-                ? html.node`
+            ${ff('skip_to_setting') ?
+                html.node`
         <div class="bleh--panel">
             <h4>${tl(trans.skip_to)}</h4>
             <div class="skip-to-list"></div>
         </div>
         `
-                : ''}
+            :   ''}
             <div class="bleh--panel">
                 <p class="card-tip">
                     ${version.brand} ${version.build}.${version.sku}
@@ -247,8 +257,8 @@ export async function render_setting_page(page_id) {
             html`
                 <section class="bleh--panel">
                     <div class="update-center-header">
-                        ${paused === 'true'
-                            ? html.node`
+                        ${paused === 'true' ?
+                            html.node`
                     <div class="update-center-icon">
                         <div class="update-container">
                             <div class="bleh-icon" data-type="update" />
@@ -263,30 +273,30 @@ export async function render_setting_page(page_id) {
                     </div>
                     <button class="btn primary icon" data-type="update" ref=${(el) => (update_btn = el)} disabled>${tl(trans.check)}</button>
                     `
-                            : update_required === 'false'
-                              ? html.node`
+                        : update_required === 'false' ?
+                            html.node`
                     <div class="update-center-icon">
                         <div class="update-container">
                             <div class="bleh-icon" data-type="update" />
                         </div>
                         ${
-                            last_checked
-                                ? html.node`
+                            last_checked ?
+                                html.node`
                         <div class="check-circle colourful">
                             <div class="bleh-icon" data-type="check-thick" />
                         </div>
                         `
-                                : ''
+                            :   ''
                         }
                     </div>
                     <div class="update-center-details">
                         ${
-                            last_checked
-                                ? html.node`
+                            last_checked ?
+                                html.node`
                         <h2>${tl(trans.you_are_up_to_date)}</h2>
                         <p class="last-checked">${tl(trans.last_checked_date).replace('{d}', moment(last_checked).fromNow())}</p>
                         `
-                                : html.node`
+                            :   html.node`
                         <h2>${tl(trans.missing_updates)}</h2>
                         <p class="last-checked">${tl(trans.never_checked)}</p>
                         `
@@ -303,7 +313,7 @@ export async function render_setting_page(page_id) {
                             render_setting_page('update');
                         })}>${tl(trans.check)}</button>
                     `
-                              : html.node`
+                        :   html.node`
                     <div class="update-center-icon">
                         <div class="update-container">
                             <div class="bleh-icon" data-type="update" />
@@ -312,11 +322,11 @@ export async function render_setting_page(page_id) {
                     <div class="update-center-details">
                         <h2>${tl(trans.update_available_to_install)}</h2>
                         ${
-                            last_checked
-                                ? html.node`
+                            last_checked ?
+                                html.node`
                         <p class="last-checked">${tl(trans.last_checked_date).replace('{d}', moment(last_checked).fromNow())}</p>
                         `
-                                : html.node`
+                            :   html.node`
                         <p class="last-checked">${tl(trans.never_checked)}</p>
                         `
                         }
@@ -324,21 +334,23 @@ export async function render_setting_page(page_id) {
                     <button class="btn primary icon" data-type="update" ref=${(el) => (update_btn = el)} onclick=${() => start_update()}>${tl(trans.install_now)}</button>
                     `}
                     </div>
-                    ${last_checked &&
-                    paused === 'false' &&
-                    update_required === 'true'
-                        ? html.node`
+                    ${(
+                        last_checked &&
+                        paused === 'false' &&
+                        update_required === 'true'
+                    ) ?
+                        html.node`
                 <div class="alert alert-info">${tl(trans.you_are_installing_version).replace('{v}', version_to_install)}</div>
                 `
-                        : html.node`
+                    :   html.node`
                 <div class="alert alert-info">${tl(trans.you_are_running_version).replace('{v}', version.build)}</div>
                 `}
                 </section>
                 <section class="bleh--panel">
                     <h4>${tl(trans.profile)}</h4>
                     <div class="setting-group">
-                        ${auth.name
-                            ? html.node`
+                        ${auth.name ?
+                            html.node`
                     <div class="setting" data-type="info">
                         <div class="avatar-container">
                             <div class="avatar-inner">
@@ -351,8 +363,8 @@ export async function render_setting_page(page_id) {
                         <div class="info">
                             <p>${tl(trans.profile_and_badges).replace('{c}', badge_count.toString())}</p>
                             ${
-                                badge_count > 0
-                                    ? html.node`
+                                badge_count > 0 ?
+                                    html.node`
                             <button class="see-more" onclick=${() => {
                                 dialog({
                                     id: 'badges',
@@ -360,22 +372,22 @@ export async function render_setting_page(page_id) {
                                     body: html.node`
                                         <div class="generic-table-list badge-list">
                                             ${
-                                                badges
-                                                    ? badges.map((badge) => {
-                                                          let style;
-                                                          let classname = '';
-                                                          if (
-                                                              badge.icon &&
-                                                              badge.hue &&
-                                                              badge.sat &&
-                                                              badge.lit
-                                                          ) {
-                                                              style = `--mask: url(${badge.icon}); --hue: ${badge.hue}; --sat: ${badge.sat}; --lit: ${badge.lit}`;
-                                                          } else {
-                                                              classname = `user-status--bleh-${badge.type} user-status--bleh-user-${auth.name}`;
-                                                          }
+                                                badges ?
+                                                    badges.map((badge) => {
+                                                        let style;
+                                                        let classname = '';
+                                                        if (
+                                                            badge.icon &&
+                                                            badge.hue &&
+                                                            badge.sat &&
+                                                            badge.lit
+                                                        ) {
+                                                            style = `--mask: url(${badge.icon}); --hue: ${badge.hue}; --sat: ${badge.sat}; --lit: ${badge.lit}`;
+                                                        } else {
+                                                            classname = `user-status--bleh-${badge.type} user-status--bleh-user-${auth.name}`;
+                                                        }
 
-                                                          return html.node`
+                                                        return html.node`
                                                     <div class="generic-table-list-entry badge-list-entry">
                                                         <div class="icon-container colourful ${classname}" style=${style}>
                                                             <div class="bleh-icon" style="--icon: var(--mask)" />
@@ -388,12 +400,12 @@ export async function render_setting_page(page_id) {
                                                         </div>
                                                     </div>
                                                 `;
-                                                      })
-                                                    : ''
+                                                    })
+                                                :   ''
                                             }
                                             ${
-                                                auth.pro
-                                                    ? html.node`
+                                                auth.pro ?
+                                                    html.node`
                                                 <div class="generic-table-list-entry badge-list-entry">
                                                     <div class="icon-container colourful user-status-subscriber">
                                                         <div class="bleh-icon" style="--icon: var(--mask)" />
@@ -406,21 +418,21 @@ export async function render_setting_page(page_id) {
                                                     </div>
                                                 </div>
                                             `
-                                                    : ''
+                                                :   ''
                                             }
                                         </div>
                                     `
                                 });
                             }}>${tl(trans.view)}</button>
                             `
-                                    : ''
+                                :   ''
                             }
                         </div>
                     </div>
                     `
-                            : ''}
-                        ${auth.sponsor
-                            ? html.node`
+                        :   ''}
+                        ${auth.sponsor ?
+                            html.node`
                     <div class="setting" data-type="action">
                         <div class="heading">
                             <h5>${tl(trans.you_are_a_sponsor)}</h5>
@@ -433,7 +445,7 @@ export async function render_setting_page(page_id) {
                         </div>
                     </div>
                     `
-                            : html.node`
+                        :   html.node`
                     <div class="setting" data-type="action">
                         <div class="heading">
                             <h5>${tl(trans.news_sponsor_cta)}</h5>
@@ -462,8 +474,8 @@ export async function render_setting_page(page_id) {
                         </div>
                     </div>
                 </section>
-                ${!page.mobile
-                    ? html.node`
+                ${!page.mobile ?
+                    html.node`
             <section class="bleh--panel">
                 <h4>${tl(trans.branding)}</h4>
                 <div class="setting-group">
@@ -471,9 +483,9 @@ export async function render_setting_page(page_id) {
                 </div>
             </section>
             `
-                    : ''}
-                ${auth.name
-                    ? html.node`
+                :   ''}
+                ${auth.name ?
+                    html.node`
             <section class="bleh--panel">
                 <h4>${tl(trans.api.short)}</h4>
                 <div class="setting-group">
@@ -494,11 +506,11 @@ export async function render_setting_page(page_id) {
                         </div>
                         <div class="info">
                             ${
-                                auth_key && auth_valid === 'true'
-                                    ? html.node`
+                                auth_key && auth_valid === 'true' ?
+                                    html.node`
                             <p>${tl(trans.connected)}</p>
                             `
-                                    : html.node`
+                                :   html.node`
                             <p>${tl(trans.not_connected)}</p>
                             `
                             }
@@ -507,7 +519,7 @@ export async function render_setting_page(page_id) {
                 </div>
             </section>
             `
-                    : ''}
+                :   ''}
                 <section class="bleh--panel">
                     <h4>${tl(trans.language)}</h4>
                     <div class="setting-group">
@@ -533,13 +545,13 @@ export async function render_setting_page(page_id) {
                                         <p>${{ html: tl(trans.by_user, { u: language.by.map((user) => `<a href="${root}user/${user}">${user}</a>`).join(', ') }) }}</p>
                                     </div>
                                     ${
-                                        language.new
-                                            ? html.node`
+                                        language.new ?
+                                            html.node`
                                     <div class="badges">
                                         <div class="new-badge">${tl(trans.new)}</div>
                                     </div>
                                     `
-                                            : html.node`<div class="badges"></div>`
+                                        :   html.node`<div class="badges"></div>`
                                     }
                                     <div class="date" ref=${(el) => (date = el)}>
                                         <p>${language.last_updated != 'latest' ? moment(language.last_updated).fromNow() : language.last_updated}</p>
@@ -711,9 +723,9 @@ export async function render_setting_page(page_id) {
                             </div>
                         </div>
                         ${setting({ id: 'solarium' })}
-                        ${ff('high_contrast')
-                            ? setting({ id: 'high_contrast' })
-                            : ''}
+                        ${ff('high_contrast') ?
+                            setting({ id: 'high_contrast' })
+                        :   ''}
                         <div class="setting" data-type="action">
                             <div class="heading">
                                 <h5>${tl(trans.hue)}</h5>
@@ -756,11 +768,11 @@ export async function render_setting_page(page_id) {
                                 }))}
                             </div>
                         </div>
-                        ${ff('card_saturation')
-                            ? html.node`
+                        ${ff('card_saturation') ?
+                            html.node`
                     ${(sat_bg = setting({ id: 'sat_bg' }))}
                     `
-                            : ''}
+                        :   ''}
                     </div>
                 </section>
                 <section class="bleh--panel">
@@ -968,8 +980,8 @@ export async function render_setting_page(page_id) {
                         })}
                     </div>
                 </section>
-                ${!page.mobile
-                    ? html.node`
+                ${!page.mobile ?
+                    html.node`
             <section class="bleh--panel">
                 <h4>${tl(trans.navigation_items.name)}</h4>
                 <div class="setting-group">
@@ -978,7 +990,7 @@ export async function render_setting_page(page_id) {
                 </div>
             </section>
             `
-                    : ''}
+                :   ''}
                 <section class="bleh--panel">
                     <h4>${tl(trans.shouts)}</h4>
                     <div class="inner-preview pad flex">
@@ -986,8 +998,8 @@ export async function render_setting_page(page_id) {
                             class="shout js-shout js-link-block"
                             data-kate-processed="true"
                         >
-                            ${auth.name
-                                ? html.node`
+                            ${auth.name ?
+                                html.node`
                         <h3 class="shout-user">
                             <a>${auth.name}</a>
                         </h3>
@@ -995,7 +1007,7 @@ export async function render_setting_page(page_id) {
                             <img src="${auth.avatar.replace('/avatar42s/', '/avatar170s/')}" alt="${tl(trans.your_avatar)}" loading="lazy">
                         </span>
                         `
-                                : html.node`
+                            :   html.node`
                         <h3 class="shout-user">
                             <a>${tl(trans.profile)}</a>
                         </h3>
@@ -1023,8 +1035,8 @@ export async function render_setting_page(page_id) {
                         ${setting({ id: 'shout_markdown' })}
                     </div>
                 </section>
-                ${!page.mobile
-                    ? html.node`
+                ${!page.mobile ?
+                    html.node`
             <section class="bleh--panel">
                 <h4>${tl(trans.quick_switcher)}</h4>
                 <div class="setting-group">
@@ -1056,7 +1068,7 @@ export async function render_setting_page(page_id) {
                 </div>
             </section>
             `
-                    : ''}
+                :   ''}
                 <section class="bleh--panel">
                     <h4>${trans_legacy.en.settings.customise.display.name}</h4>
                     <div class="inner-preview pad flex">
@@ -1155,10 +1167,12 @@ export async function render_setting_page(page_id) {
                             </div>
                             <div class="info">
                                 <p>
-                                    ${artist_corrections.version ==
-                                    album_track_corrections.version
-                                        ? artist_corrections.version
-                                        : `${artist_corrections.version}, ${album_track_corrections.version}`}
+                                    ${(
+                                        artist_corrections.version ==
+                                        album_track_corrections.version
+                                    ) ?
+                                        artist_corrections.version
+                                    :   `${artist_corrections.version}, ${album_track_corrections.version}`}
                                 </p>
                                 <button
                                     class="see-more update-check"
@@ -1289,16 +1303,40 @@ export async function render_setting_page(page_id) {
                         ${setting({ id: 'glacier_library_graphs' })}
                     </div>
                 </section>
-                ${ff('oracle')
-                    ? html.node`
+                ${ff('oracle') ?
+                    html.node`
             <section class="bleh--panel">
                 <h4>${tl(trans.oracle_heading)}</h4>
                 <div class="setting-group">
                     ${setting({ id: 'oracle_beta' })}
+                    <div
+                        class="setting"
+                        data-type="info"
+                        disabled=${
+                            !oracle_artists.version ||
+                            !oracle_albums.version ||
+                            !oracle_tracks.version
+                        }
+                    >
+                        <div class="heading">
+                            <h5>${tl(trans.current_version)}</h5>
+                        </div>
+                        <div class="info">
+                            <p>
+                                ${oracle_artists.version}, ${oracle_albums.version}, ${oracle_tracks.version}
+                            </p>
+                            <button
+                                class="see-more update-check"
+                                onclick=${() => oracle_data(true)}
+                            >
+                                ${tl(trans.update_check)}
+                            </button>
+                        </div>
+                    </div>
                 </div>
             </section>
             `
-                    : ''}
+                :   ''}
             `
         );
     } else if (page_id == 'customise') {
@@ -1403,10 +1441,12 @@ export async function render_setting_page(page_id) {
                                 </div>
                             </div>
                         </div>
-                        ${stored_season.id != 'none' &&
-                        stored_season.start &&
-                        stored_season.end
-                            ? html.node`
+                        ${(
+                            stored_season.id != 'none' &&
+                            stored_season.start &&
+                            stored_season.end
+                        ) ?
+                            html.node`
                     <div class="setting" data-type="info">
                         <div class="heading">
                             <h5>${tl(trans.started)}</h5>
@@ -1424,8 +1464,8 @@ export async function render_setting_page(page_id) {
                         </div>
                     </div>
                     `
-                            : settings.seasonal
-                              ? html.node`
+                        : settings.seasonal ?
+                            html.node`
                     <div class="setting" data-type="info">
                         <div class="heading">
                             <h5>${tl(trans.next_in)}</h5>
@@ -1435,9 +1475,9 @@ export async function render_setting_page(page_id) {
                         </div>
                     </div>
                     `
-                              : ''}
-                        ${settings.seasonal
-                            ? html.node`
+                        :   ''}
+                        ${settings.seasonal ?
+                            html.node`
                     <div class="setting" data-type="info">
                         <div class="heading">
                             <h5>${tl(trans.calculated_offset)}</h5>
@@ -1447,7 +1487,7 @@ export async function render_setting_page(page_id) {
                         </div>
                     </div>
                     `
-                            : ''}
+                        :   ''}
                     </div>
                     <h4>${tl(trans.settings)}</h4>
                     <div class="setting-group">
@@ -1718,11 +1758,11 @@ export async function render_setting_page(page_id) {
                                     '/avatar300s/'
                                 )})"
                             ></div>
-                            ${cache.banner
-                                ? html.node`
+                            ${cache.banner ?
+                                html.node`
                         <div class="profile-mockup-background from-banner" style="background-image: url(${cache.banner})"></div>
                         `
-                                : html.node`
+                            :   html.node`
                         <div class="profile-mockup-background from-track" style="background-image: url(https://lastfm.freetls.fastly.net/i/u/avatar300s/df927f4f88034b7f9a651636b965c9d7)"></div>
                         `}
                         </div>
@@ -1746,8 +1786,8 @@ export async function render_setting_page(page_id) {
                         ${setting({ id: 'profile_avi_background' })}
                     </div>
                 </section>
-                ${ff('friends')
-                    ? html.node`
+                ${ff('friends') ?
+                    html.node`
             <section class="bleh--panel">
                 <h4>${tl(trans.friends)}</h4>
                 <div class="setting-group">
@@ -1768,7 +1808,7 @@ export async function render_setting_page(page_id) {
                 <p class="card-tip">${tl(trans.friend_difference)}</p>
             </section>
             `
-                    : ''}
+                :   ''}
                 <section class="bleh--panel">
                     <h4>${tl(trans.other)}</h4>
                     <div class="setting-group">
@@ -1884,8 +1924,8 @@ export async function render_setting_page(page_id) {
                         ${setting({ id: 'underline_links' })}
                     </div>
                 </section>
-                ${ff('static_gifs')
-                    ? html.node`
+                ${ff('static_gifs') ?
+                    html.node`
             <section class="bleh--panel">
                 <h4>${tl(trans.images)}</h4>
                 <div class="setting-group">
@@ -1903,7 +1943,7 @@ export async function render_setting_page(page_id) {
                 </div>
             </section>
             `
-                    : ''}
+                :   ''}
             `
         );
     } else if (page_id == 'sku') {
@@ -2176,9 +2216,9 @@ export function change_settings_page(page_id, setting = null) {
                             )}
                         </div>
                         <pre class="error-info">
-${e
-                                ? html.node`<span class="error-type">${e.name}</span>: ${e.message}`
-                                : ''}</pre
+${e ?
+                                html.node`<span class="error-type">${e.name}</span>: ${e.message}`
+                            :   ''}</pre
                         >
                     </div>
                 </div>
@@ -2216,9 +2256,9 @@ ${e
                 stored_season.next_start
                     .replace(
                         'y0',
-                        stored_season.next_is_new_year
-                            ? stored_season.year + 1
-                            : stored_season.year
+                        stored_season.next_is_new_year ?
+                            stored_season.year + 1
+                        :   stored_season.year
                     )
                     .replace('{offset}', stored_season.offset)
             ).toLocaleString(lang)
@@ -2490,8 +2530,8 @@ export function display_colour_presets() {
                         <div class="dialog-settings">
                             <div class="setting-group blend">
                                 ${
-                                    ff('colour_based_on_hex')
-                                        ? html.node`
+                                    ff('colour_based_on_hex') ?
+                                        html.node`
                                 <div class="setting" data-type="text">
                                     <div class="heading">
                                         <h5>${tl(trans.convert_from_hex)}</h5>
@@ -2516,7 +2556,7 @@ export function display_colour_presets() {
                                     </div>
                                 </div>
                                 `
-                                        : ''
+                                    :   ''
                                 }
                                 ${(hue_range = setting({ id: 'hue', func: update_colour_swatches }))}
                                 ${(sat_range = setting({ id: 'sat', func: update_colour_swatches }))}
@@ -3227,8 +3267,8 @@ export function theme_bubbles(func = null) {
                     <button class="theme-bubble" data-theme-id=${theme.id} onclick=${() => update_theme_bubble(theme.id)}>
                         <div class="bubble">
                             ${
-                                theme.id == 'adaptive'
-                                    ? html.node`
+                                theme.id == 'adaptive' ?
+                                    html.node`
                             <div class="inner theme-preview" data-bleh--theme=${settings.theme_day} data-bleh--theme_type=${['light', 'ink'].includes(settings.theme_day) ? 'light' : 'dark'}>
                                 ${theme_preview()}
                             </div>
@@ -3236,7 +3276,7 @@ export function theme_bubbles(func = null) {
                                 ${theme_preview()}
                             </div>
                             `
-                                    : html.node`
+                                :   html.node`
                             <div class="inner theme-preview" data-bleh--theme=${theme.id} data-bleh--theme_type=${theme.type}>
                                 ${theme_preview()}
                             </div>
@@ -3270,22 +3310,22 @@ export function theme_bubbles(func = null) {
                 <div
                     class="inner theme-preview"
                     data-bleh--theme=${settings.theme_day}
-                    data-bleh--theme_type=${['light', 'ink'].includes(
-                        settings.theme_day
-                    )
-                        ? 'light'
-                        : 'dark'}
+                    data-bleh--theme_type=${(
+                        ['light', 'ink'].includes(settings.theme_day)
+                    ) ?
+                        'light'
+                    :   'dark'}
                 >
                     ${theme_preview()}
                 </div>
                 <div
                     class="inner theme-preview"
                     data-bleh--theme=${settings.theme_night}
-                    data-bleh--theme_type=${['light', 'ink'].includes(
-                        settings.theme_night
-                    )
-                        ? 'light'
-                        : 'dark'}
+                    data-bleh--theme_type=${(
+                        ['light', 'ink'].includes(settings.theme_night)
+                    ) ?
+                        'light'
+                    :   'dark'}
                 >
                     ${theme_preview()}
                 </div>

@@ -29,7 +29,7 @@ export function collage({ host, sidebar } = {}) {
     let submit;
     let body;
 
-    let value = 5;
+    let value = 3;
     let min = 1;
     let max = 20;
 
@@ -38,7 +38,7 @@ export function collage({ host, sidebar } = {}) {
 
     const default_type = page.requested.type || 'albums';
     const default_timeframe =
-        page.requested.timeframe || 'date_preset=LAST_90_DAYS';
+        page.requested.timeframe || 'date_preset=LAST_7_DAYS';
 
     if (page.requested.redirect) {
         setTimeout(() => {

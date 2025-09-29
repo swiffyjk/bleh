@@ -77,10 +77,19 @@ export function oracle_process() {
         albums_and_lyrics_row.classList.add('oracle-hidden');
 
     function oracle_aliases(artist, desired) {
-        if (artist.name == desired || artist.id == artist_data.id)
+        log('aliase request', 'oracle', 'log', {
+            artist,
+            desired,
+            artist_data
+        });
+
+        if (
+            artist.name == desired ||
+            (artist_data.id && artist.id == artist_data.id)
+        )
             return desired;
 
-        return artist;
+        return artist.name;
     }
 
     oracle_obtain_artist();
@@ -1052,17 +1061,22 @@ export function oracle_debug() {
                             </tr>
                         `;
 
-                        if ((item = 'artist_id')) {
+                        if ((item = 'artist')) {
                             render(
                                 va,
                                 html`
-                                    ${val}
+                                    <p>type: ${val.type}</p>
+                                    <p>name: ${val.name}</p>
+                                    ${val.type == 'id' ?
+                                        html.node`
                                     <a
                                         class="see-more"
-                                        href="https://musicbrainz.org/artist/${val}"
+                                        href="https://musicbrainz.org/artist/${val.name}"
                                         target="_blank"
                                         >view</a
                                     >
+                                    `
+                                    :   ''}
                                 `
                             );
                         }

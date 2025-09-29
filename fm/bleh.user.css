@@ -10787,7 +10787,6 @@
         .date-selector {
             display: flex;
             flex-direction: column;
-            gap: 2px;
 
             .user-sidebar-header {
                 margin: unset !important;
@@ -13000,7 +12999,6 @@
             div {
                 display: flex;
                 flex-direction: column;
-                gap: 2px;
 
                 position: relative;
                 --left: 0;
@@ -13024,7 +13022,6 @@
                     cursor: default;
 
                     display: flex;
-                    gap: 2px;
 
                     img {
                         width: 16px;
@@ -21831,7 +21828,6 @@
         line-height: var(--line-height);
         font-weight: var(--font-weight);
         cursor: default;
-        margin-bottom: 2px;
 
         &.no-margin {
             margin: unset;
@@ -21860,7 +21856,6 @@
 
         @media (max-width: 600px) {
             flex-direction: column;
-            gap: 2px;
             justify-content: unset;
         }
 
@@ -21936,7 +21931,6 @@
         &.header-style {
             .breadcrumb {
                 flex-direction: column;
-                gap: 2px;
 
                 a {
                     &:before {
@@ -24295,8 +24289,8 @@
 
         .glacier-library-metadata-avatar {
             position: relative;
-            width: 40px;
-            height: 40px;
+            width: 38px;
+            height: 38px;
             background: var(--avatar-generic-background);
             border-radius: var(--item-med-radius);
             box-shadow: var(--card-shadow);
@@ -24304,8 +24298,8 @@
             flex-shrink: 0;
 
             img {
-                width: 40px;
-                height: 40px;
+                width: 38px;
+                height: 38px;
             }
         }
     }
@@ -26197,7 +26191,6 @@
         &.cta {
             display: flex;
             flex-direction: column;
-            gap: 2px;
             margin: 0 var(--card-padding);
 
             .bleh-modal-body > & {
@@ -26831,9 +26824,9 @@
             gap: var(--item-list-gap);
             cursor: default;
 
-            .avatar {
-                width: 32px;
-                height: 32px;
+            & > .avatar {
+                width: var(--button-height);
+                height: var(--button-height);
                 background: var(--avatar-generic-background);
                 border-radius: var(--avatar-radius);
                 --mask-size: 18px;
