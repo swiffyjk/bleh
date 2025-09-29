@@ -36653,12 +36653,16 @@
         link.classList.remove("play-this-track-playlink");
         link.classList.add("music-link");
         const replace = item.querySelector(".replace-playlink");
-        if (link.classList.contains("play-this-track-playlink--youtube"))
+        if (link.classList.contains("play-this-track-playlink--youtube")) {
           link.textContent = "YouTube";
-        else if (link.classList.contains("play-this-track-playlink--spotify"))
+          if (!settings.music_links.includes("youtube")) return;
+        } else if (link.classList.contains("play-this-track-playlink--spotify")) {
           link.textContent = "Spotify";
-        else if (link.classList.contains("play-this-track-playlink--itunes"))
+          if (!settings.music_links.includes("spotify")) return;
+        } else if (link.classList.contains("play-this-track-playlink--itunes")) {
           link.textContent = "Apple";
+          if (!settings.music_links.includes("itunes")) return;
+        }
         if (replace) {
           replace.classList.add("dropdown-menu-clickable-item");
           item.removeChild(replace);

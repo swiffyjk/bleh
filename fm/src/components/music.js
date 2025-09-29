@@ -696,16 +696,23 @@ export async function show_your_scrobbles() {
 
             const replace = item.querySelector('.replace-playlink');
 
-            if (link.classList.contains('play-this-track-playlink--youtube'))
+            if (link.classList.contains('play-this-track-playlink--youtube')) {
                 link.textContent = 'YouTube';
-            else if (
+
+                if (!settings.music_links.includes('youtube')) return;
+            } else if (
                 link.classList.contains('play-this-track-playlink--spotify')
-            )
+            ) {
                 link.textContent = 'Spotify';
-            else if (
+
+                if (!settings.music_links.includes('spotify')) return;
+            } else if (
                 link.classList.contains('play-this-track-playlink--itunes')
-            )
+            ) {
                 link.textContent = 'Apple';
+
+                if (!settings.music_links.includes('itunes')) return;
+            }
 
             if (replace) {
                 replace.classList.add('dropdown-menu-clickable-item');
