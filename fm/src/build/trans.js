@@ -39,7 +39,7 @@ export let lang_info = {
     sv: {
         name: 'Svenska',
         by: ['Lrexie'],
-        last_updated: '2025-09-23'
+        last_updated: '2025-09-30'
     }
 };
 
@@ -335,10 +335,12 @@ export const trans = {
     },
     inverse_compare: {
         name: {
-            en: 'Inverse comparison method'
+            en: 'Inverse comparison method',
+            sv: 'Invertera jämförelse'
         },
         body: {
-            en: 'Show items you do not share instead'
+            en: 'Show items you do not share instead',
+            sv: 'Visa istället objekt ni inte delar alls'
         }
     },
     one_page: {
@@ -418,7 +420,8 @@ export const trans = {
         sv: 'Håll koll på vad dina vänner lyssnar på'
     },
     add_friends: {
-        en: 'Add friends'
+        en: 'Add friends',
+        sv: 'Lägg till vänner'
     },
     starred_friend: {
         name: {
@@ -480,7 +483,8 @@ export const trans = {
     },
     aka: {
         en: 'aka.',
-        pt: 'vulgo'
+        pt: 'vulgo',
+        sv: 'också känd som'
     },
     account_pronouns: {
         en: 'pronouns',
@@ -544,24 +548,30 @@ export const trans = {
         sv: 'Ny skrobbel'
     },
     scrobble_failed: {
-        en: 'Scrobble could not be sent'
+        en: 'Scrobble could not be sent',
+        sv: 'Skrobblingen kunde inte skickas'
     },
     scrobble_error_codes: {
         // https://www.last.fm/api/show/track.scrobble
         1: {
-            en: 'Artist name was ignored'
+            en: 'Artist name was ignored',
+            sv: 'Artistnamnet var ignorerad'
         },
         2: {
-            en: 'Track name was ignored'
+            en: 'Track name was ignored',
+            sv: 'Låttiteln var ignorerad'
         },
         3: {
-            en: 'Timestamp is too old'
+            en: 'Timestamp is too old',
+            sv: 'Tidsstämpeln är för gammal'
         },
         4: {
-            en: 'Timestamp is too new'
+            en: 'Timestamp is too new',
+            sv: 'Tidsstämpeln är för ny'
         },
         5: {
-            en: 'Daily scrobble limit exceeded'
+            en: 'Daily scrobble limit exceeded',
+            sv: 'Max dagliga skrobblingar har nåtts'
         }
     },
     artist: {
@@ -630,22 +640,27 @@ export const trans = {
     },
     theme_day: {
         name: {
-            en: 'Day'
+            en: 'Day',
+            sv: 'Dag'
         },
         body: {
-            en: 'When your system reports light theme'
+            en: 'When your system reports light theme',
+            sv: 'När ditt system rapporterar ett ljust tema'
         }
     },
     theme_night: {
         name: {
-            en: 'Night'
+            en: 'Night',
+            sv: 'Natt'
         },
         body: {
-            en: 'When your system reports dark theme'
+            en: 'When your system reports dark theme',
+            sv: 'När ditt system rapporterar ett mörk tema'
         }
     },
     theme_schedule: {
-        en: 'Choose which theme preference to apply based on your system theme.'
+        en: 'Choose which theme preference to apply based on your system theme.',
+        sv: 'Välj föredraget tema att tillämpa utgående från ditt systemtema.'
     },
     themes: {
         name: {
@@ -697,7 +712,8 @@ export const trans = {
             sv: 'Använd kontextbaserad accentfärg när'
         },
         body: {
-            en: 'Temporarily override your selected accent to match album art'
+            en: 'Temporarily override your selected accent to match album art',
+            sv: 'Ändra tillfälligt din valda accentfärg för att matcha albumkonsten'
         }
     },
     adaptive: {
@@ -705,10 +721,12 @@ export const trans = {
         sv: 'Adaptiv'
     },
     adaptive_tip: {
-        en: 'Your theme preference will be either {day} or {night}, based on your system. '
+        en: 'Your theme preference will be either {day} or {night}, based on your system. ',
+        sv: 'Ditt föredragna tema blir antigen {day} eller {night}, beroende på ditt system. '
     },
     change_schedule: {
-        en: 'Change schedule'
+        en: 'Change schedule',
+        sv: 'Ändra schema'
     },
     hue_from_album: {
         en: 'Browsing album pages',
@@ -719,7 +737,8 @@ export const trans = {
         sv: 'Aktivt skrobblar en låt'
     },
     colourful_all: {
-        en: 'Viewing any track'
+        en: 'Viewing any track',
+        sv: 'Visar en låt'
     },
     configure: {
         en: 'Configure',
@@ -1127,10 +1146,12 @@ export const trans = {
     },
     solarium: {
         name: {
-            en: 'Enable solarium glass effects'
+            en: 'Enable solarium glass effects',
+            sv: 'Aktivera solariumsglaseffekter'
         },
         body: {
-            en: 'Apply a see-through glassy material to many surfaces, which may degrade performance on some devices'
+            en: 'Apply a see-through glassy material to many surfaces, which may degrade performance on some devices',
+            sv: 'Läg till ett genomskinligt glasliknande material till många ytor, som kan degradera prestanda på vissa enheter'
         }
     },
     seasonal_warning: {
@@ -1366,7 +1387,8 @@ export const trans = {
         sv: 'Konst'
     },
     dropzone: {
-        en: 'Drag-and-drop an image or click here'
+        en: 'Drag-and-drop an image or click here',
+        sv: 'Dra och släpp en bild eller klicka här'
     },
     similar_artists: {
         en: 'Similar Artists',
@@ -1375,7 +1397,8 @@ export const trans = {
         sv: 'Liknande artister'
     },
     artists_similar_to_name: {
-        en: 'Artists similar to {n}'
+        en: 'Artists similar to {n}',
+        sv: 'Liknande artister till {n}'
     },
     biography: {
         en: 'Biography',
@@ -1406,7 +1429,7 @@ export const trans = {
     },
     tag: {
         en: 'Tag',
-        sv: 'Tagga'
+        sv: 'Tagg'
     },
     tags: {
         en: 'Tags',
@@ -1427,7 +1450,7 @@ export const trans = {
         en: 'artist',
         de: 'Künstler',
         pt: 'artista',
-        sv: 'artist'
+        sv: 'artistnamnet'
     },
     album_lower: {
         // used inside a sentence not on its own,
@@ -1435,7 +1458,7 @@ export const trans = {
         en: 'album',
         de: 'Album',
         pt: 'álbum',
-        sv: 'album'
+        sv: 'albumtiteln'
     },
     track_lower: {
         // used inside a sentence not on its own,
@@ -1443,7 +1466,7 @@ export const trans = {
         en: 'track',
         de: 'Titel',
         pt: 'faixa',
-        sv: 'låt'
+        sv: 'låten'
     },
     lotus_cta: {
         // {t} is replaced by one of the 3 above
@@ -1453,45 +1476,53 @@ export const trans = {
             en: 'This {t} is being re-capitalised, is it correct?',
             de: '{t} wird neu großgeschrieben, ist das richtig?',
             pt: '{t} teve a capitalização ajustada, está correto?',
-            sv: '{t}-namnet har nu ändrad kapitalisering, stämmer det här?'
+            sv: 'Nurvarande {t} har ändrad kapitalisering, stämmer det här?'
         },
         false: {
             en: 'Is this {t} capitalised correctly?',
             de: 'Ist {t} richtig großgeschrieben?',
             pt: 'Esse(a) {t} está capitalizado(a) corretamente?',
-            sv: 'Stämmer kapitaliseringen på {t}-namnet?'
+            sv: 'Stämmer kapitaliseringen på {t}?'
         }
     },
     current: {
-        en: 'Current'
+        en: 'Current',
+        sv: 'Nuvarande'
     },
     current_tip: {
-        en: 'This is the original capitalisation present on Last.fm'
+        en: 'This is the original capitalisation present on Last.fm',
+        sv: 'Det här är den originella kapitaliseringen som finns på Last.fm'
     },
     correction: {
-        en: 'Correction'
+        en: 'Correction',
+        sv: 'Korrigering'
     },
     correction_tip: {
-        en: 'This is the correct capitalisation, as decided by the artist'
+        en: 'This is the correct capitalisation, as decided by the artist',
+        sv: 'Det här är rätt kapitalisering, som bestämd av artisten'
     },
     sources: {
-        en: 'Sources'
+        en: 'Sources',
+        sv: 'Källor'
     },
     sources_tip: {
-        en: 'Provide reputable sources where this capitalisation is present, excluding sites like Wikipedia, RYM, AOTY, and MusicBrainz'
+        en: 'Provide reputable sources where this capitalisation is present, excluding sites like Wikipedia, RYM, AOTY, and MusicBrainz',
+        sv: 'Visa pålitliga källor där man kan se att denna kapitalisering stämmer, förutom sidor som Wikipedia, RYM, AOTY och MusicBrainz'
     },
     suggest: {
-        en: 'Suggest'
+        en: 'Suggest',
+        sv: 'Föreslå'
     },
     please_match_the_format: {
-        en: 'Only capitalisation changes are allowed'
+        en: 'Only capitalisation changes are allowed',
+        sv: 'Endast ändringar på kapitalisering är tillåtet'
     },
     suggest_correction: {
         // suggest a correction for the above system
         en: 'Suggest a correction',
         de: 'eine Korrektur vorschlagen',
         pt: 'Sugira uma correção',
-        sv: 'Förslå en ändring'
+        sv: 'Föreslå en ändring'
     },
     recent_tracks: {
         en: 'Recent Tracks',
@@ -1565,7 +1596,8 @@ export const trans = {
         sv: 'Meddela'
     },
     join_discord: {
-        en: 'Join Discord'
+        en: 'Join Discord',
+        sv: 'Gå med i Discord'
     },
     sponsor_details: {
         en: 'Sponsor and badge details',
@@ -1804,10 +1836,12 @@ export const trans = {
         sv: 'Kopiera'
     },
     copy_username: {
-        en: 'Copy username'
+        en: 'Copy username',
+        sv: 'Kopiera användarnamn'
     },
     copy_link: {
-        en: 'Copy link'
+        en: 'Copy link',
+        sv: 'Kopiera länk,
     },
     copied_to_clipboard: {
         en: 'Copied to clipboard',
@@ -2345,13 +2379,16 @@ export const trans = {
         sv: 'Standardtidsram'
     },
     timeframe: {
-        en: 'Timeframe'
+        en: 'Timeframe',
+        sv: 'Tidsram'
     },
     item_type: {
-        en: 'Item type'
+        en: 'Item type',
+        sv: 'Objekttyp'
     },
     page_count: {
-        en: 'Page count'
+        en: 'Page count',
+        sv: 'Mängd sidor'
     },
     chart_style: {
         en: 'Chart style',
@@ -2532,7 +2569,8 @@ export const trans = {
             sv: 'Album och spårredigeringar'
         },
         combined_artists: {
-            en: 'Combined artist profiles'
+            en: 'Combined artist profiles',
+            sv: 'Kombinerade artistprofiler'
         }
     },
     correct_titles_with_lotus: {
@@ -2610,10 +2648,12 @@ export const trans = {
         sv: 'Stöder Markdown',
         header: {
             name: {
-                en: 'Header'
+                en: 'Header',
+                sv: 'Rubrik'
             },
             string: {
-                en: '# hi!!'
+                en: '# hi!!',
+                sv: '# hej!!'
             }
         },
         bold: {
@@ -2717,7 +2757,8 @@ export const trans = {
             sv: 'Profilbildsform'
         },
         body: {
-            en: 'Applies to all profiles, only visible to you'
+            en: 'Applies to all profiles, only visible to you',
+            sv: 'Tillämpas på alla profiler, syns bara för dig'
         }
     },
     notes: {
@@ -3185,7 +3226,7 @@ export const trans = {
         name: {
             en: 'Are you fluent in a supported language?',
             pt: 'Você é fluente em algum dos idiomas suportados?',
-            sv: 'Kan du tala ett språk som stöds flytande?'
+            sv: 'Talar du ett språk som stöds flytande?'
         },
         body: {
             en: 'Translations are powered by community contributions from wonderful people like you',
@@ -3258,7 +3299,8 @@ export const trans = {
     },
     going: {
         en: 'Going',
-        pt: 'Indo'
+        pt: 'Indo',
+        sv: 'Ska gå på'
     },
     beware_notice: {
         en: 'Beware! Only change these settings if you know what you’re doing',
@@ -3462,16 +3504,20 @@ export const trans = {
         sv: 'Ladda upp'
     },
     upload_image: {
-        en: 'Upload image'
+        en: 'Upload image',
+        sv: 'Ladda upp bild'
     },
     image_details: {
-        en: 'Image details'
+        en: 'Image details',
+        sv: 'Bildinformation'
     },
     title: {
-        en: 'Title'
+        en: 'Title',
+        sv: 'Titel'
     },
     description: {
-        en: 'Description'
+        en: 'Description',
+        sv: 'Beskrivning'
     },
     change_avatar: {
         en: 'Change avatar',
@@ -3545,7 +3591,8 @@ export const trans = {
         sv: 'Inkompatibelt med {v}'
     },
     incompatible_alert: {
-        en: 'Incompatible with current settings'
+        en: 'Incompatible with current settings',
+        sv: 'Inkompatibelt med nuvarande inställningar'
     },
     bulk_edit_extension: {
         en: 'Last.fm Bulk Edit',
@@ -3826,7 +3873,8 @@ export const trans = {
         sv: 'Hoppa snabbt till en sida eller annan åtgärd'
     },
     rabbit_search: {
-        en: 'Enter {v} name'
+        en: 'Enter {v} name',
+        sv: 'Skriv {v}namn'
     },
     compares_your_taste: {
         en: 'Compare your taste with {v}',
@@ -4368,23 +4416,28 @@ export const trans = {
         sv: 'Rör om igen'
     },
     begin: {
-        en: 'Begin'
+        en: 'Begin',
+        sv: 'Börja'
     },
     jumbled_guess: {
         en: 'Guess the album name with the pixelated cover, jumbled title, and hints!',
         sv: 'Gissa albumtiteln med pixellerad konst, omrörd titel, och ledtrådar!'
     },
     add_hint: {
-        en: 'Add hint'
+        en: 'Add hint',
+        sv: 'Lägg till ledtråd'
     },
     give_up: {
-        en: 'Give up'
+        en: 'Give up',
+        sv: 'Ge upp'
     },
     you_guessed_correctly: {
-        en: 'You guessed correctly!'
+        en: 'You guessed correctly!',
+        sv: 'Du gissade rätt!'
     },
     guess: {
-        en: 'Guess'
+        en: 'Guess',
+        sv: 'Gissa'
     },
     enter_a_guess: {
         en: 'Enter a guess',
@@ -4394,26 +4447,33 @@ export const trans = {
         en: 'Hints',
         sv: 'Ledtrådar',
         plays: {
-            en: 'You have {v} plays on this album'
+            en: 'You have {v} plays on this album',
+            sv: 'Du har {v} lyssningar på det här albumet'
         },
         release: {
-            en: 'Album was released on {v}'
+            en: 'Album was released on {v}',
+            sv: 'Albumet släpptes {v}'
         },
         tag: {
-            en: 'The artist is tagged with {v}'
+            en: 'The artist is tagged with {v}',
+            sv: 'Artisten har taggats som {v}'
         },
         born: {
-            en: 'The artist was born {v}'
+            en: 'The artist was born {v}',
+            sv: 'Artisten var född {v}'
         }
     },
     reveal: {
-        en: 'The album was {name} by {artist}'
+        en: 'The album was {name} by {artist}',
+        sv: 'Albumet var {name} av {artist}'
     },
     time_up: {
-        en: 'Time is up!'
+        en: 'Time is up!',
+        sv: 'Slut på tid!'
     },
     global: {
-        en: 'Global'
+        en: 'Global',
+        sv: 'Globalt'
     },
     mutuals: {
         en: 'Mutuals',
@@ -4592,18 +4652,22 @@ export const trans = {
     },
     leaving_site: {
         name: {
-            en: 'Don’t get lost'
+            en: 'Don’t get lost',
+            sv: 'Gå inte vilse'
         },
         body: {
-            en: 'This link is taking you to the following location'
+            en: 'This link is taking you to the following location',
+            sv: 'Länken tar dig till den här platsen'
         }
     },
     leaving_site_dangerous: {
         name: {
-            en: 'Be careful'
+            en: 'Be careful',
+            sv: 'Var försiktig'
         },
         body: {
-            en: 'This link can open an application on your device'
+            en: 'This link can open an application on your device',
+            sv: 'Länken kan öppna en applikation på din enhet'
         }
     },
     leaving_site_checkbox: {
@@ -4671,35 +4735,44 @@ export const trans = {
         }
     },
     label: {
-        en: 'Label'
+        en: 'Label',
+        sv: 'Skivbolag'
     },
     explicit: {
         en: 'Explicit'
     },
     control_center: {
-        en: 'Control center'
+        en: 'Control center',
+        sv: 'Kontrollcenter'
     },
     romanise_titles: {
-        en: 'Romanise music titles and artist names for'
+        en: 'Romanise music titles and artist names for',
+        sv: 'Romanisera låttitlar och artistnamn för'
     },
     romanise_jp: {
-        en: '日本語 (Japanese)'
+        en: '日本語 (Japanese)',
+        sv: '日本語 (Japanska)'
     },
     romanise_ko: {
-        en: '한국어 (Korean)'
+        en: '한국어 (Korean)',
+        sv: '한국어 (Koreanska)'
     },
     disc_number: {
-        en: 'Disc {n}'
+        en: 'Disc {n}',
+        sv: 'Skiva {n}'
     },
     create_playlist: {
-        en: 'Create playlist'
+        en: 'Create playlist',
+        sv: 'Skapa spellista'
     },
     music_links: {
         name: {
-            en: 'Music linking'
+            en: 'Music linking',
+            sv: 'Musiklänkar'
         },
         body: {
-            en: 'Choose which services to display for artists, albums, and tracks'
+            en: 'Choose which services to display for artists, albums, and tracks',
+            sv: 'Välj vilka tjänster att visa för artister, album, och låtar'
         }
     }
 };
